@@ -15,26 +15,26 @@ specdojo:
     rubric: grade-rubric-v1
     target: kata
     verdict: pass
-    score: 100
-    graded_at: "2026-09-13T17:55:50.612Z"
-    graded_by: gemma-expert-executor
+    score: 91
+    graded_at: "2026-09-14T16:10:01.432Z"
+    graded_by: codex-expert-executor
     content_hash: 5efc666d921f464fcfdb4cee32c5cd7e01515e375eef351cde8823515e8bc389
     categories:
-      consistency: { score: 100 }
+      consistency: { score: 75 }
       usability: { score: 100 }
       architecture: { score: 100 }
-      quality: { score: 100 }
+      quality: { score: 88 }
     viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
+      vp-arc-cross-document-consistency: { level: 3, score: 75 }
       vp-arc-conciseness: { level: 4, score: 100 }
       vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
+      vp-qe-verifiability: { level: 3, score: 75 }
+      vp-qe-omissions-consistency: { level: 3, score: 75 }
       vp-qe-kata-conformance: { level: 4, score: 100 }
       vp-ux-readability: { level: 4, score: 100 }
       vp-ux-language-consistency: { level: 4, score: 100 }
       vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 0, note: 0 }
+    findings: { blocker: 0, major: 0, minor: 4, note: 0 }
 ---
 
 # 概念データフロー図（ユースケース別）作成ルール
@@ -44,6 +44,8 @@ Conceptual Data Flow Diagram Use Case Documentation Rulebook
 全体概要で選定した一つの横断ユースケースについて、複数のプロセスグループを通る順序、グループ間で引き渡す情報、引き渡し条件、条件不成立時の戻り先を、表と Mermaid 図で合意可能にするためのルールです。グループ内部のプロセスと状態遷移は、それぞれプロセスグループ別 CDFD と STSD / CSTD を参照します。
 
 ## 1. 全体方針
+
+<!-- specdojo:finding id=F003 severity=minor rule=vp-qe-omissions-consistency line=10 「プロセス領域」と図の双方を横断順序の正本としており、不一致時にどちらを修正すべきか決定できないため、正本を一方に限定し、他方を正本に一致させる対応表現として定義してください。 -->
 
 - 一文書は、全体概要の「詳細 CDFD 一覧」にある一つのケース ID とユースケースを詳細化します。単一のプロセスグループに閉じる業務には作成しません。
 - 「プロセス領域」を順序とグループ別責務の正本、「データストア」を引き渡しで使う上位一覧の部分集合、「引き渡し」を情報・条件・戻す条件の正本、図を開始から終了までの横断順序の正本として併用します。
@@ -87,6 +89,8 @@ Conceptual Data Flow Diagram Use Case Documentation Rulebook
 | rulebook   | `specdojo:cdfd-uc-rulebook`                           | ○    |
 | based_on   | 全体概要など、依存関係上許可された直接の内容根拠の ID | 任意 |
 | supersedes | 置き換える旧ユースケース別 CDFD の ID                 | 任意 |
+
+<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-verifiability line=54 `ready` 昇格条件が「所定の承認」「定められた承認者」に留まり、承認者の参照元と承認証跡を確認する場所が定義されていないため, 責任分担文書の参照方法と登録簿・レビュー結果などの確認可能な証跡を指定してください。 -->
 
 - `based_on` に全体概要を記載する場合も product 成果物 ID を使用し、成果物カタログの `depends_on` の推移閉包に含まれる根拠だけを列挙します。
 - ケース ID、ユースケース名、対象者、開始・終了条件は本文で定義し、未定義の Frontmatter 項目を追加しません。
@@ -142,6 +146,8 @@ Conceptual Data Flow Diagram Use Case Documentation Rulebook
 
 ### 6.5. 概念データフロー
 
+<!-- specdojo:finding id=F001 severity=minor rule=vp-arc-cross-document-consistency line=110 `specdojo:cdfd-mermaid-rulebook` は各図直後に各ノード形状の意味を直接記述するよう求める一方、本行は全体概要の共通凡例への参照だけを求めているため、包含規則に対する優先関係を明示するか凡例の記載要件を統一してください。 -->
+
 - Mermaid のノード、エッジ、形状、線種は Frontmatter の `includes` で指定した記法ルールに従います。
 - プロセスノードは「プロセス領域」の各表の一行に対応する代表ノードとし、ラベルにグループ名と含む領域 ID を記載します。内部プロセス ID や処理名は描きません。
 - 開始イベント、引き渡し条件、終了条件をイベントノードとして置き、引き渡し ID と情報名をエッジラベルまたはイベントラベルで追跡可能にします。
@@ -150,6 +156,8 @@ Conceptual Data Flow Diagram Use Case Documentation Rulebook
 - 一図で順序を追えない場合は連続する引き渡し単位で分割し、前図の終了側と後図の開始側へ同じ引き渡し ID を記載します。
 
 ### 6.6. 引き渡し
+
+<!-- specdojo:finding id=F004 severity=minor rule=vp-qe-omissions-consistency line=118 戻しが発生しない引き渡しを許容する一方、「例外時の戻り先」では全引き渡し ID の行と戻り先を求めており記入方法が定義されていないため、該当なしを表す値と理由の記載方法、または戻り先表から除外できる条件を定めてください。 -->
 
 - 一行を一つのグループ間引き渡しとし、「引き渡し ID」「送り元グループ」「受け側グループ」「引き渡す情報」「引き渡し条件」「戻す条件」の 6 列を使用します。
 - 引き渡す情報は「補充依頼」「承認済みの評価結果」のような業務上の名詞で記述し、ファイル形式や API 項目へ展開しません。

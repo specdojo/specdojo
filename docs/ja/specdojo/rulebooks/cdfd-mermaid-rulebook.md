@@ -12,27 +12,27 @@ specdojo:
   grade:
     rubric: grade-rubric-v1
     target: kata
-    verdict: pass
-    score: 100
-    graded_at: "2026-09-13T16:34:02.269Z"
-    graded_by: gemma-expert-executor
+    verdict: needs-work
+    score: 78
+    graded_at: "2026-09-14T15:34:50.669Z"
+    graded_by: codex-expert-executor
     content_hash: b70cbc3c85399cbed136c6a439bc40a6a6838b2cfc7c4433cccd846b1954d051
     categories:
-      consistency: { score: 100 }
-      usability: { score: 100 }
+      consistency: { score: 63 }
+      usability: { score: 75 }
       architecture: { score: 100 }
-      quality: { score: 100 }
+      quality: { score: 75 }
     viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
+      vp-arc-cross-document-consistency: { level: 2, score: 50 }
       vp-arc-conciseness: { level: 4, score: 100 }
       vp-arc-single-responsibility: { level: 4, score: 100 }
       vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 4, score: 100 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
+      vp-qe-omissions-consistency: { level: 3, score: 75 }
+      vp-qe-kata-conformance: { level: 2, score: 50 }
+      vp-ux-readability: { level: 3, score: 75 }
+      vp-ux-language-consistency: { level: 2, score: 50 }
       vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 0, note: 0 }
+    findings: { blocker: 0, major: 3, minor: 6, note: 0 }
 ---
 
 # Mermaid を用いた概念データフロー図 作成ルール
@@ -43,6 +43,8 @@ Mermaid の `flowchart` 構文で CDFD のプロセス、イベント、デー�
 
 ## 1. 全体方針
 
+<!-- specdojo:finding id=F001 severity=minor rule=vp-arc-cross-document-consistency line=8 CDFD を「時系列・因果の流れ」と説明しているが、`cdfd-overview-rulebook` は矢印を情報・実行要求の受け渡しであり実行順ではないと定義しているため、順序を意味しないデータフローも含む説明へ修正する必要がある。 -->
+
 - Mermaid の `flowchart` を使用し、方向は全体概要・詳細 CDFD を問わず `LR` を基本とします。CDFD は時系列・因果の流れを表すため、横書き言語で自然な左から右の視線移動に合わせます。`TB` は、対象が時系列・因果の流れではなく階層構造（組織・分類など）を表す場合にだけ使用します。
 
 - 図が読みにくくなる原因は方向ではなく規模です。ノード数が多く一画面で関係を追いにくい場合は、方向を変えるのではなく、「凡例と可読性」の分割方針に従って図を分けます。分割の観点（全体概要はデータストアの区分、プロセスグループ別 CDFD は業務の性質が近いプロセス）とノード数の目安は包含元の rulebook が定めます。
@@ -51,6 +53,11 @@ Mermaid の `flowchart` 構文で CDFD のプロセス、イベント、デー�
 
 - 情報の流れと物の流れは線種で区別し、すべてのエッジへ内容を表す名詞形のラベルを付けます。
 - 図の目的は業務上の合意であり、装飾や実装構造の再現ではありません。ノード形状で意味を区別することを基本とし、色は形状だけでは判別しにくい場合の視認性向上に、プロセス／イベント／データストア／外部主体という概念の大分類単位でのみ付けます。物理名、詳細な操作は使用しません。
+
+<!-- specdojo:finding id=F002 severity=major rule=vp-arc-cross-document-consistency line=19 「プロセス」の例は `P-01` を個別プロセス ID として表示しているが、`cdfd-rulebook` は個別プロセスを `P-＜nn＞-＜nn＞` とし `P-01` 形式を禁止しており、全体概要とユースケース別では `P-01` は領域 ID としてグループ代表ノードに併記するため、適用先と矛盾しない例へ修正する必要がある。 -->
+<!-- specdojo:finding id=F006 severity=major rule=vp-qe-kata-conformance line=19 共通記法 rulebook の「プロセス」例が、適用先の `cdfd-rulebook` で明示的に禁止された `P-01` 形式の個別プロセス ID を生成するため、`P-＜nn＞-＜nn＞` 形式を使う例へ修正する必要がある。 -->
+<!-- specdojo:finding id=F008 severity=minor rule=vp-ux-readability line=20 概念と Mermaid 表現の表に空行が入り、GFM では「プロセス」までだけが表として描画され、プロセスグループ以降が通常段落になるため、表内の空行を削除して全記号を一つの表として表示する必要がある。 -->
+<!-- specdojo:finding id=F009 severity=major rule=vp-ux-language-consistency line=19 `P-01` は包含元ではプロセス領域 ID であるのに「プロセス」の表示例へ付与されており、プロセス・プロセス領域・プロセスグループの識別を混乱させるため、個別プロセス ID の `P-＜nn＞-＜nn＞` と領域 ID 範囲を併記する代表ノードを明確に使い分ける必要がある。 -->
 
 | 概念     | Mermaid 表現         | 表示例                                        |
 | -------- | -------------------- | --------------------------------------------- |
@@ -168,6 +175,9 @@ flowchart LR
 
 ### 6.4. 凡例と可読性
 
+<!-- specdojo:finding id=F003 severity=minor rule=vp-arc-cross-document-consistency line=133 各図直後に全ノード形状の意味を記述する規定は, 包含元が本プロダクト共通の凡例を参照し色・絵文字を再掲しないとしている運用と噛み合わないため、共通凡例への参照と図固有の線種・省略事項だけを記載する規定へ統一する必要がある。 -->
+<!-- specdojo:finding id=F004 severity=minor rule=vp-qe-omissions-consistency line=133 物理保管のスタジアム形を定義している一方、凡例に記述する形状の列挙からスタジアム形が欠けているため、物理保管を使用した図ではその形状の意味も必須で記載する条件を追加する必要がある。 -->
+
 - 図の直後に、角丸長方形、六角形、円柱、四角と、使用した線種の意味を記述します。
 - 物の流れを使わない場合は「`-->` は情報の流れ。本図は物の流れを対象外とする」と記述します。
 
@@ -175,6 +185,9 @@ flowchart LR
 - ノードの表示ラベルは1行あたり全角20字（半角40字）程度を目安にし、超える場合は `<br>` で改行して2行程度に収めます。LR ではラベルの行の長さがそのままノード幅となり横方向の占有幅に直結するため、特にイベント・データストアで長い説明文になりやすい箇所に注意します。エッジラベルは改行に頼らず短い名詞句に収めます。
 
 ### 6.5. 見栄えを整える最小限スタイル（任意）
+
+<!-- specdojo:finding id=F005 severity=minor rule=vp-qe-omissions-consistency line=145 全体方針は色を概念の大分類単位でのみ付けると限定している一方、本節は大分類内のサブ分類による塗り分けを許可しているため、全体方針にも同系統色によるサブ分類を例外として明記する必要がある。 -->
+<!-- specdojo:finding id=F007 severity=minor rule=vp-qe-kata-conformance line=145 `rulebook-authoring-standard` は章参照を章タイトルで記載するよう求めているが、「凡例（6.4節）」は番号を併記しているため、「凡例と可読性」のような章タイトル参照へ改める必要がある。 -->
 
 - ノード形状による意味区別を優先し、色は形状だけでは見分けにくい場合の補助として使います。
 - 色を付ける場合は `classDef` のみを使用し、`style` によるノード単位の個別指定はしません。

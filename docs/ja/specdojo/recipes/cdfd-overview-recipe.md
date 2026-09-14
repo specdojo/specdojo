@@ -7,15 +7,14 @@ specdojo:
   sample: specdojo:cdfd-overview-sample
   grade:
     rubric: grade-rubric-v1
-    reference: specdojo:prj-overview-recipe
     target: kata
     verdict: pass
-    score: 98
-    graded_at: "2026-09-13T15:15:12.765Z"
+    score: 95
+    graded_at: "2026-09-14T15:14:43.981Z"
     graded_by: gemma-expert-executor
     content_hash: 1eca8c27f397d5cd6e2eb46f63dd7efc95d42362f833326603e2b71d89ee7694
     categories:
-      consistency: { score: 88 }
+      consistency: { score: 75 }
       usability: { score: 100 }
       architecture: { score: 100 }
       quality: { score: 100 }
@@ -24,12 +23,12 @@ specdojo:
       vp-arc-conciseness: { level: 4, score: 100 }
       vp-arc-single-responsibility: { level: 4, score: 100 }
       vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 3, score: 75 }
+      vp-qe-omissions-consistency: { level: 2, score: 50 }
       vp-qe-kata-conformance: { level: 4, score: 100 }
       vp-ux-readability: { level: 4, score: 100 }
       vp-ux-language-consistency: { level: 4, score: 100 }
       vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 3, note: 0 }
+    findings: { blocker: 0, major: 0, minor: 4, note: 0 }
 ---
 
 # 概念データフロー図（全体概要）作成レシピ
@@ -128,6 +127,8 @@ Conceptual Data Flow Diagram Overview Writing Recipe
 
 問い:
 
+<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-omissions-consistency line=102 「プロセス領域」章の冒頭に記載すべき「領域数、プロセスグループ数、正本の所在」に関する記述ガイドが欠けている。 -->
+
 - 代表ノードはプロセスグループごとに一つで、ラベルにグループ名と含む領域 ID の範囲がありますか。`subgraph` で囲んでいませんか。
 - データストアのノードは「データストア」の各行と一対一で、名称が一致していますか。
 - 各エッジは「プロセス領域」の各グループの主要入力・主要出力のどれかに対応していますか。対応のないエッジ、エッジのない入出力はありませんか。
@@ -142,7 +143,7 @@ Conceptual Data Flow Diagram Overview Writing Recipe
 
 問い:
 
-<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-omissions-consistency line=113 「データストア」章の冒頭に記載すべき「区分の意味、パスの略記、除外対象」に関する記述ガイドが欠けている。 -->
+<!-- specdojo:finding id=F003 severity=minor rule=vp-qe-omissions-consistency line=114 「データストア」章の冒頭に記載すべき「区分の意味、パスの略記、除外対象」に関する記述ガイドが欠けている。 -->
 
 - 章の冒頭で、プロセスグループ別 CDFD とユースケース別 CDFD の役割分担を示していますか。
 - 状態の定義は STSD、状態遷移は CSTD を正本とし、詳細 CDFD は参照に留める役割分担を示していますか。
@@ -160,7 +161,7 @@ Conceptual Data Flow Diagram Overview Writing Recipe
 - 全体概要と詳細 CDFD の各図が、この章の定義を再掲せず参照する形になっていますか。
 - サンプル図には、`specdojo:cdfd-mermaid-rulebook` が定義する全ノード種別が一つずつ含まれていますか。
 
-<!-- specdojo:finding id=F003 severity=minor rule=vp-qe-omissions-consistency line=124 「概念データフロー（概要）」章の冒頭に記載すべき「ノード構成、矢印の意味、更新エッジ、外部主体の扱い」に関する記述ガイドが欠けている。 -->
+<!-- specdojo:finding id=F004 severity=minor rule=vp-qe-omissions-consistency line=127 「概念データフロー（概要）」章の冒頭に記載すべき「ノード構成、矢印の意味、更新エッジ、外部主体の扱い」に関する記述ガイドが欠けている。 -->
 
 詳細 CDFD が複数あり、色・絵文字の割り当てを毎回説明し直すと負担になる場合に設けます。単一の CDFD しかない場合は省略します。
 

@@ -7,12 +7,11 @@ specdojo:
   sample: specdojo:cdfd-uc-sample
   grade:
     rubric: grade-rubric-v1
-    reference: specdojo:prj-overview-recipe
     target: kata
     verdict: pass
     score: 100
-    graded_at: "2026-09-13T16:08:58.961Z"
-    graded_by: gemma-expert-executor
+    graded_at: "2026-09-14T15:27:51.872Z"
+    graded_by: codex-expert-executor
     content_hash: af0428e9a3389def16b48bf703d60abbce02417033263fbf28a87be46f781cc7
     categories:
       consistency: { score: 100 }

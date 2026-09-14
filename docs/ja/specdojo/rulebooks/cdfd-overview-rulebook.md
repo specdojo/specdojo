@@ -14,27 +14,27 @@ specdojo:
   grade:
     rubric: grade-rubric-v1
     target: kata
-    verdict: needs-work
-    score: 66
-    graded_at: "2026-09-13T17:10:42.597Z"
+    verdict: pass
+    score: 84
+    graded_at: "2026-09-14T16:04:19.314Z"
     graded_by: codex-expert-executor
-    content_hash: 9d936a74079121bc5fcbabe8308a67f1ea54d1f8326ed50df5bae95fdba47540
+    content_hash: b12bd6a70a114d992bc68364a6c68b331270a29ca0166c9f3688308e95392c65
     categories:
-      consistency: { score: 50 }
-      usability: { score: 75 }
+      consistency: { score: 75 }
+      usability: { score: 92 }
       architecture: { score: 100 }
-      quality: { score: 50 }
+      quality: { score: 75 }
     viewpoints:
-      vp-arc-cross-document-consistency: { level: 2, score: 50 }
-      vp-arc-conciseness: { level: 3, score: 75 }
+      vp-arc-cross-document-consistency: { level: 3, score: 75 }
+      vp-arc-conciseness: { level: 4, score: 100 }
       vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 2, score: 50 }
-      vp-qe-omissions-consistency: { level: 2, score: 50 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 3, score: 75 }
+      vp-qe-verifiability: { level: 3, score: 75 }
+      vp-qe-omissions-consistency: { level: 3, score: 75 }
+      vp-qe-kata-conformance: { level: 3, score: 75 }
+      vp-ux-readability: { level: 4, score: 100 }
       vp-ux-language-consistency: { level: 3, score: 75 }
       vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 4, minor: 4, note: 0 }
+    findings: { blocker: 0, major: 0, minor: 5, note: 0 }
 ---
 
 # 概念データフロー図（全体概要）作成ルール
@@ -120,6 +120,8 @@ Conceptual Data Flow Diagram Overview Documentation Rulebook
 - 「凡例（本プロダクト共通）」を省略する場合、章番号は詰めます。「未決事項」は最終章とします。
 - 「概念データフロー（概要）」を 2 図に分ける場合は `5.1.`、`5.2.` の節を設け、分けない場合は節を設けず 1 図を置きます。
 
+<!-- specdojo:finding id=F004 severity=minor rule=vp-qe-kata-conformance line=84 対応 recipe の章別手順には必須の導入文に対する問いと、プロセス領域・データストア・概念データフロー各章の冒頭宣言を確認する問いが欠けているため、本書の記述ガイドを再現可能な作成手順へ反映する必要がある。 -->
+
 ## 6. 記述ガイド
 
 本章は作成方法と各規則の理由を説明します。`ready` 昇格の pass / fail は「完成判定」だけをチェックリストの正本として判定します。
@@ -185,6 +187,8 @@ Conceptual Data Flow Diagram Overview Documentation Rulebook
 
 ### 6.6. 概念データフロー（概要）
 
+<!-- specdojo:finding id=F001 severity=minor rule=vp-arc-cross-document-consistency line=158 `specdojo:cdfd-mermaid-rulebook` は CDFD を時系列・因果の流れと説明する一方、本書は矢印を実行順ではない受け渡しと定義し、本行の優先規則も要素種別に限られるため、矢印の意味について本書を優先すると明記するか包含先と定義を統一する必要がある。 -->
+
 - 章の冒頭で、ノードの構成（プロセスグループの代表ノードとデータストア）、矢印の意味（情報または実行要求の受け渡しであり実行順ではない）、更新エッジが参照を含むこと、外部主体の扱いを各一文で示します。
 - 代表ノードはプロセスグループごとに一つとし、ラベルにグループ名と含む領域 ID の範囲を書きます。`subgraph` で領域や代表ノードを囲みません。
 - データストアのノードは「データストア」の各行と一対一とし、同じ名称を使います。
@@ -218,6 +222,10 @@ Conceptual Data Flow Diagram Overview Documentation Rulebook
 ### 6.10. 完成判定
 
 本節だけを `ready` 昇格のチェックリストの正本とします。記述ガイドと禁止事項は作成方法と理由の説明であり、独立した追加条件ではありません。次の全項目を満たす必要があります。
+
+<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-verifiability line=189 物理保管を一覧へ含めることを必須にしながら、一覧をマスタ・構成データとトランザクションデータの2表に限定して物理保管をどちらへ置けば pass か定義していないため、条件付きの物理保管表または既存表へ配置する明示的な判定規則が必要である。 -->
+<!-- specdojo:finding id=F003 severity=minor rule=vp-qe-omissions-consistency line=189 「データストア」を2区分へ分ける規則と物理保管も一覧化する規則を両立させる分類方法がなく、sample では「売場棚」をトランザクションデータ表へ置きながら凡例でどちらの区分にも属さないと説明しているため, 物理保管の所属または例外を定義する必要がある。 -->
+<!-- specdojo:finding id=F005 severity=minor rule=vp-ux-language-consistency line=189 「物理保管」の定義と、データストア・トランザクションデータとの包含関係が用語表にないため、sample の「売場棚」がトランザクションデータなのか図示上だけ同系統として扱う別概念なのかを統一して定義する必要がある。 -->
 
 - Frontmatter に `id`、`type: flow`、`status`、`rulebook: specdojo:cdfd-overview-rulebook` があり、`id` と `status` が「推奨 Frontmatter 項目」の制約を満たしています。`based_on` と `supersedes` を記載する場合も同節の条件を満たしています。
 - H1 直下の導入文が対象業務または運用を一文で定義しています。

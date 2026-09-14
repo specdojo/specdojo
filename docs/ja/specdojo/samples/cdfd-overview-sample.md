@@ -10,26 +10,26 @@ specdojo:
     rubric: grade-rubric-v1
     target: kata
     verdict: needs-work
-    score: 93
-    graded_at: "2026-09-13T18:31:49.497Z"
-    graded_by: gemma-expert-executor
-    content_hash: d625a50f0ad7f959a6896797ed75ba1e502299c7de5aefede46139b5d6720582
+    score: 78
+    graded_at: "2026-09-14T16:40:52.345Z"
+    graded_by: codex-expert-executor
+    content_hash: f3f87a89f75c1ae4474df70cd599b1cfb1b18e1293a22dc5274b728518293288
     categories:
-      consistency: { score: 75 }
+      consistency: { score: 63 }
       usability: { score: 92 }
       architecture: { score: 100 }
-      quality: { score: 100 }
+      quality: { score: 63 }
     viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
+      vp-arc-cross-document-consistency: { level: 3, score: 75 }
       vp-arc-conciseness: { level: 4, score: 100 }
       vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
+      vp-qe-verifiability: { level: 2, score: 50 }
       vp-qe-omissions-consistency: { level: 2, score: 50 }
-      vp-qe-kata-conformance: { level: 4, score: 100 }
+      vp-qe-kata-conformance: { level: 3, score: 75 }
       vp-ux-readability: { level: 4, score: 100 }
       vp-ux-language-consistency: { level: 3, score: 75 }
       vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 1, minor: 2, note: 0 }
+    findings: { blocker: 0, major: 2, minor: 5, note: 0 }
 ---
 
 # 概念データフロー図（全体概要）: 駄菓子屋きぬや販売管理
@@ -46,6 +46,9 @@ specdojo:
 - 同行レビュー担当は、領域とプロセスグループ別 CDFD の対応から重複・欠落を確認する。
 
 ## 2. 適用範囲
+
+<!-- specdojo:finding id=F001 severity=minor rule=vp-arc-cross-document-consistency line=19 共通 sample 文脈と参照先のプロジェクト概要では家族の店番利用者を「家族利用者代表」としているが、本書は未定義の「店番担当」を使用しているため、正式な役割名へ統一するか両者の対応を明記する必要がある。 -->
+<!-- specdojo:finding id=F006 severity=minor rule=vp-ux-language-consistency line=19 「店主代表」「家族利用者代表」を用いる共通 sample 文脈に対して「店主」「店番担当」を併用しているため、正式な役割名へ統一するか用語の対応を定義する必要がある。 -->
 
 - 対象は、単一店舗での仕入計画から入荷、店頭販売、在庫確認と補充判断、常連客の登録とつけ精算、日次締めと月次見直しまでの店舗運営全体である。
 - 本書が扱うのは、プロセス領域の分割と、領域間・データストア間の受け渡しまでである。各領域の内部（レジ操作の手順、記録項目、値引き・取消を行う処理、記録漏れ時の復旧手順）は対象外とし、プロセスグループ別 CDFD で詳細化する。状態名・意味・成立条件はステータス定義（Status Definition: STSD）、遷移元・遷移先・イベント・遷移条件は概念状態遷移図（Conceptual State Transition Diagram: CSTD）を正本とし、詳細 CDFD は参照に留める。
@@ -86,7 +89,11 @@ specdojo:
 
 ### 3.3. 在庫（P-05〜P-06）
 
+<!-- specdojo:finding id=F002 severity=major rule=vp-qe-verifiability line=55 仕入の `P-02` と在庫の `P-05` がともに入荷数量を在庫記録へ反映すると定義されているため、入荷時の更新責務を一方へ定め、他方を受け渡しまたは参照として表現しなければ更新の成否を一意に判定できない。 -->
+
 販売記録と入荷数量から在庫記録を更新し、商品台帳の補充基準を下回った商品について仕入へ補充を依頼する。
+
+<!-- specdojo:finding id=F003 severity=major rule=vp-qe-omissions-consistency line=57 主要入力の「仕入からの入荷数量」に対応する図のエッジが在庫グループへ到達せず `仕入 → 在庫記録` となり、さらに在庫グループも同じ在庫記録を更新しているため、単一の更新責務とそれに対応する受け渡し経路へ修正する必要がある。 -->
 
 - **主要入力**: 販売記録の販売数量、仕入からの入荷数量、商品台帳の補充基準
 - **主要出力**: 在庫記録、仕入への補充依頼
@@ -140,6 +147,8 @@ specdojo:
 
 ### 4.2. トランザクションデータ
 
+<!-- specdojo:finding id=F004 severity=minor rule=vp-qe-omissions-consistency line=118 「売場棚」をトランザクションデータ表へ配置している一方、凡例では物理保管はいずれのデータ区分にも属さないと定義しているため、物理保管用の区分を設けるかトランザクションデータ表へ置く例外規則を明記する必要がある。 -->
+<!-- specdojo:finding id=F005 severity=minor rule=vp-qe-kata-conformance line=118 完成例が「売場棚」をトランザクションデータ表へ置きながら凡例で同区分に属さないと説明しているため、rulebook・template と合わせて物理保管の配置規則を確定し、その規則に従う完成例へ修正する必要がある。 -->
 <!-- prettier-ignore -->
 | データストア | 主な内容 | 主な保管先 |
 | --- | --- | --- |
@@ -295,6 +304,8 @@ flowchart LR
 | 外部主体 | 四角 | グレー（`#f5f7fa` / `#607d8b`） | 主体が伝わる絵文字（例: 🧑） |
 | 情報の流れ | ラベル付き `-->` | — | — |
 | 物の流れ | ラベル付き `==>` | — | — |
+
+<!-- specdojo:finding id=F007 severity=minor rule=vp-ux-language-consistency line=265 第4章では売場棚を「トランザクションデータ」に含めている一方、本段落では物理保管を「いずれの区分にも属さない」と定義しており、売場棚の分類を読み手が一意に識別できないため表現を統一する必要がある。 -->
 
 データストアの色分けは、大分類「データストア」の中の業務上のサブ分類を表す。マスタ・構成データは、他のプロセスから参照される比較的安定した基準情報（商品台帳、顧客台帳）を指す。トランザクションデータは、業務活動に伴い都度更新される記録（販売記録、仕入記録、在庫記録、つけ台帳、締めの記録）を指す。物理保管は現物の保管先であり、いずれの区分にも属さないため、便宜上トランザクションデータと同じ色を用いる。
 
