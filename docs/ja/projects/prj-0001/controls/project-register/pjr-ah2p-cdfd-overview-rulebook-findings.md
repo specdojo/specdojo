@@ -41,6 +41,18 @@ category は consistency 50 / quality 50 / usability 75 / architecture 100。PJR
 - ノード総数: sample の記述を 14 に直し、外部主体を含めないことを rulebook で明記する。
 - 用語: 用語表に STSD / CSTD / retrofit / Orchestrator を追加し、Role code は `pm-roles` の参照を付ける。
 
+### 1.3. 追加（2026-09-14）: `cdfd-overview` 本体の finding から見えた規則の不足
+
+9/14 6 時枠の成果物評価で [[cdfd-overview]] が needs-work 72 となった。完了条件の不整合（DC-001 / DC-003）は
+`dct-data-flow.yaml` を現行モデルへ更新して対処済み。残りは rulebook の規則に起因するため本項目で扱う。
+
+<!-- prettier-ignore -->
+| finding | 指摘 | rulebook で決めること |
+| --- | --- | --- |
+| F004（major） | Onboarding の「目的・文脈、メンバーとロール、agent・provider」、Plan の「判明した事項と意思決定」、Action の「構成変更要求と承認結果、非推奨化の判断」、Orchestrator の「参加者の意図」に対応するエッジがない | 参加者は外部主体として描かないため、参加者由来の入力は構造的にエッジを持てない。箇条書きで「参加者から」と明記し、エッジとの相互対応の対象外とする規則を加える |
+| F005（major） | 成果物の保管先 `docs/ja/product/` が保管庫 `docs/ja/product/trash/` を包含し、評価結果の「成果物 Frontmatter の `grade`」も成果物と重複 | 保管先の一意性の規則に、包含・共有を注記付きで許す条件を加える（本項目 1.2 の保管先重複と同じ論点） |
+| F006 / F007（minor） | STSD / CSTD の参照先なし、担当列に「運用担当」「タスク owner」「レビュー担当者」「runner」と Role code が混在 | 用語表の補完と、担当列は Role code へ統一し呼称との対応を示す規則 |
+
 ## 2. 完了条件
 
 - `cdfd-overview-sample` のデータストア表が rulebook の保管先の判定基準を満たしている（規則の条件付き緩和か sample の分離のいずれか）。
@@ -58,6 +70,9 @@ category は consistency 50 / quality 50 / usability 75 / architecture 100。PJR
 | 2   | 完成判定を全必須条件に拡充し、反復を参照に絞る           | ARC  | open | F003 / F004 / F005 / F007            |
 | 3   | ノード総数の定義を揃え、sample を 14 に直す              | ARC  | open | F002                                 |
 | 4   | 用語表を補い、finding コメントを解消する                 | ARC  | open | F008。再評価は次回の定期実行に任せる |
+| 5   | 参加者由来の入力の扱いを rulebook に規定する             | ARC  | open | overview 本体の F004                 |
+| 6   | 保管先の包含・共有の条件を rulebook に規定する           | ARC  | open | overview 本体の F005（1 と同じ論点） |
+| 7   | overview 本体の担当列を Role code に統一し参照を付ける   | ARC  | open | F006 / F007                          |
 
 ## 4. 対応結果
 
