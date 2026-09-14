@@ -40,7 +40,7 @@ specdojo:
 - 根拠は `based_on: [cdfd-overview]` と、成果物カタログの `evidence_refs` に書く現行実装（`src/`）とする。旧 CDFD を `based_on` や参考資料にしない。
 - タイムライン（`<project-id>/timeline/`）の位置付けは [[cdfd-overview]] で Schedule（track）に含めている。`cdfd-plan` または `cdfd-check` の作成時に、生成物としての扱いと閲覧提供との関係を確定する。
 - ユースケース別 CDFD は、複数のプロセスグループをまたぐ順序と引き渡し条件だけを定め、グループ内部のプロセスは再掲せずプロセスグループ別 CDFD を参照する。
-- 本件は [[prj-0001:sch-track-data-flow]] の作り直しにあたる。`data-flow` track の既存タスクは全件 done のため、新 track は作らず [[prj-0001:dct-data-flow]] に新 8 件を追加して同じ track を `schedule build --force` で再生成する。旧 10 件は `deliverable trash` でエントリと task ID を維持したまま `trash/` へ退避するため、done タスクの整合は保たれる。timeline の変更は不要。
+- 本件は [[prj-0001:sch-track-data-flow]] の作り直しにあたる。当初は同じ track の再生成で進めたが、[[prj-0001:pjr-s190-strategy-scope-local-ids]] で strategy の scope を成果物単位にできるようになったため、新 track `data-flow-pdca` を作って進める（2026-09-15）。`data-flow` の strategy は `local_ids` で旧 12 件に限定し 69 タスクの完了履歴として閉じ、`sch-strategy-data-flow-pdca.yaml` は新 8 件だけを scope にする。旧 10 件は `deliverable trash` でエントリと task ID を維持したまま `trash/` へ退避済み。timeline に `data-flow-pdca` を追加する。
 
 ### 1.1. 実行方式の変更（2026-09-13）
 
@@ -49,23 +49,23 @@ specdojo:
 ## 2. 完了条件
 
 - 旧 10 件が `deliverable trash` で `docs/ja/product/trash/` へ退避され、[[prj-0001:dct-data-flow]] のエントリと task ID が維持されている。
-- [[prj-0001:dct-data-flow]] に新規成果物 8 件が登録され、`data-flow` track が再生成されて 8 件分のタスクを含む。
+- [[prj-0001:dct-data-flow]] に新規成果物 8 件が登録され、`tml-index.yaml` の `data-flow-pdca` track と `sch-strategy-data-flow-pdca.yaml` から生成した track が 8 件分のタスクを含む。
 - 六つのプロセスグループ別 CDFD（`cdfd-onboarding`、`cdfd-plan`、`cdfd-do`、`cdfd-check`、`cdfd-action`、`cdfd-orchestrator`）と二つのユースケース別 CDFD（`cdfd-uc-register`、`cdfd-uc-deliverable`）が `docs/ja/product/010-business-specs/010-data-flow/` に存在し、それぞれの rulebook に準拠している。
 - [[cdfd-overview]] の各領域の主要入力・主要出力・データストアが、対応するプロセスグループ別 CDFD の「プロセス領域」章で矛盾なく詳細化されている。
-- `data-flow` track の全タスクが done で、Ready / doing が残っていない。
+- `data-flow-pdca` track の全タスクが done で、Ready / doing が残っていない。
 - 旧 CDFD を参照していた wikilink が新 CDFD へ付け替えられ、[[cdfd-overview]] の「詳細 CDFD 一覧」の ID が実際の文書 ID と一致している。
 - `npm run -s lint:md` と `npm run docs:build` がエラーなしで通る。
 
 ## 3. 作業内容
 
-| No  | 作業                                                                                                                                                     | 担当 | 状態 | メモ                                                                                               |
-| --- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- | ---- | -------------------------------------------------------------------------------------------------- |
-| 1   | 旧 10 件を `deliverable trash` で退避する                                                                                                                | PM   | open | エントリと task ID は維持。wikilink の付け替えは作業 6                                             |
-| 2   | プロセスグループ別・ユースケース別 CDFD の rulebook・template を整備する（`cdfd-overview-rulebook` の改訂含む）                                          | BA   | done | overview 側は本項目、グループ別は PJR-4NXR、ユースケース別は PJR-ZKNA、章構成の統一は PJR-V8FV     |
-| 3   | [[prj-0001:dct-data-flow]] に新グループ「プロセスグループ別 CDFD」「ユースケース別 CDFD」を追加し 8 件を登録する                                         | PM   | open | `rulebook` はグループ別 `specdojo:cdfd-rulebook`、uc は `specdojo:cdfd-uc-rulebook`。根拠は `src/` |
-| 4   | [[prj-0001:sch-strategy-data-flow]] の `approach_rules` に 8 件を `author-deliverable` で追加し、`schedule build --track data-flow --force` で再生成する | PM   | open | 旧 10 件のルールは done タスクの整合のため残す。`tml-index.yaml` は note のみ更新                  |
-| 5   | 8 件のタスク群を Schedule で実行し、全タスクの done を確認する                                                                                           | BA   | open | `exec run --auto` または `rtn-exec-cycle`。進捗は `exec status`                                    |
-| 6   | 旧 CDFD を参照していた wikilink を新 CDFD へ付け替え、[[cdfd-overview]] の「詳細 CDFD 一覧」と実際の ID の一致を確認する                                 | BA   | open | -                                                                                                  |
+| No  | 作業                                                                                                                                                                                                               | 担当 | 状態 | メモ                                                                                               |
+| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---- | ---- | -------------------------------------------------------------------------------------------------- |
+| 1   | 旧 10 件を `deliverable trash` で退避する                                                                                                                                                                          | PM   | open | エントリと task ID は維持。wikilink の付け替えは作業 6                                             |
+| 2   | プロセスグループ別・ユースケース別 CDFD の rulebook・template を整備する（`cdfd-overview-rulebook` の改訂含む）                                                                                                    | BA   | done | overview 側は本項目、グループ別は PJR-4NXR、ユースケース別は PJR-ZKNA、章構成の統一は PJR-V8FV     |
+| 3   | [[prj-0001:dct-data-flow]] に新グループ「プロセスグループ別 CDFD」「ユースケース別 CDFD」を追加し 8 件を登録する                                                                                                   | PM   | open | `rulebook` はグループ別 `specdojo:cdfd-rulebook`、uc は `specdojo:cdfd-uc-rulebook`。根拠は `src/` |
+| 4   | `tml-index.yaml` に `data-flow-pdca` を追加し、`sch-strategy-data-flow-pdca.yaml`（scope は 8 件の `local_ids`、author → refine → review → finalize）を新設して `schedule build --track data-flow-pdca` で生成する | PM   | done | `data-flow` の strategy は `local_ids` で旧 12 件に限定し 69 タスクへ戻した（2026-09-15）          |
+| 5   | `data-flow-pdca` track の 32 タスクを Schedule で実行し、全タスクの done を確認する                                                                                                                                | BA   | open | `exec run --auto` または `rtn-exec-cycle`。進捗は `exec status`                                    |
+| 6   | 旧 CDFD を参照していた wikilink を新 CDFD へ付け替え、[[cdfd-overview]] の「詳細 CDFD 一覧」と実際の ID の一致を確認する                                                                                           | BA   | open | -                                                                                                  |
 
 ## 4. 対応結果
 

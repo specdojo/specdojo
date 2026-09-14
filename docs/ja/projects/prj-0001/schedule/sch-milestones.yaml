@@ -94,14 +94,6 @@ milestones:
       - T-DATA-FLOW-cdfd-derived-content-070
       - T-DATA-FLOW-cdfd-reporting-070
       - T-DATA-FLOW-cdfd-deprecation-070
-      - T-DATA-FLOW-cdfd-onboarding-070
-      - T-DATA-FLOW-cdfd-plan-070
-      - T-DATA-FLOW-cdfd-do-070
-      - T-DATA-FLOW-cdfd-check-070
-      - T-DATA-FLOW-cdfd-action-070
-      - T-DATA-FLOW-cdfd-orchestrator-070
-      - T-DATA-FLOW-cdfd-uc-register-070
-      - T-DATA-FLOW-cdfd-uc-deliverable-070
     owner: PM
   - id: G-DATA-FLOW-review-pass
     name: review-pass 完了
@@ -118,14 +110,6 @@ milestones:
       - T-DATA-FLOW-cdfd-derived-content-090
       - T-DATA-FLOW-cdfd-reporting-090
       - T-DATA-FLOW-cdfd-deprecation-090
-      - T-DATA-FLOW-cdfd-onboarding-090
-      - T-DATA-FLOW-cdfd-plan-090
-      - T-DATA-FLOW-cdfd-do-090
-      - T-DATA-FLOW-cdfd-check-090
-      - T-DATA-FLOW-cdfd-action-090
-      - T-DATA-FLOW-cdfd-orchestrator-090
-      - T-DATA-FLOW-cdfd-uc-register-090
-      - T-DATA-FLOW-cdfd-uc-deliverable-090
     owner: PM
   - id: M-DATA-FLOW-data-flow
     name: ドメイン完了
@@ -137,10 +121,6 @@ milestones:
       - T-DATA-FLOW-cdfd-agent-config-operation-140
       - T-DATA-FLOW-cdfd-reporting-140
       - T-DATA-FLOW-cdfd-deprecation-140
-      - T-DATA-FLOW-cdfd-onboarding-140
-      - T-DATA-FLOW-cdfd-orchestrator-140
-      - T-DATA-FLOW-cdfd-uc-register-140
-      - T-DATA-FLOW-cdfd-uc-deliverable-140
     owner: PM
   - id: G-DATA-FLOW-retrofit-pass-2
     name: retrofit-pass-2 完了
@@ -208,4 +188,39 @@ milestones:
       - T-PLANNING-sch-defaults-090
       - T-PLANNING-sch-strategy-launch-090
       - T-PLANNING-sch-strategy-data-flow-090
+    owner: PM
+  - id: G-DATA-FLOW-PDCA-author-pass
+    name: author-pass 完了
+    artifact_name: データフロー（PDCA）
+    depends_on:
+      - T-DATA-FLOW-PDCA-cdfd-onboarding-010
+      - T-DATA-FLOW-PDCA-cdfd-plan-010
+      - T-DATA-FLOW-PDCA-cdfd-do-010
+      - T-DATA-FLOW-PDCA-cdfd-check-010
+      - T-DATA-FLOW-PDCA-cdfd-action-010
+      - T-DATA-FLOW-PDCA-cdfd-orchestrator-010
+      - T-DATA-FLOW-PDCA-cdfd-uc-register-010
+      - T-DATA-FLOW-PDCA-cdfd-uc-deliverable-010
+    owner: PM
+  - id: G-DATA-FLOW-PDCA-review-pass
+    name: review-pass 完了
+    artifact_name: データフロー（PDCA）
+    depends_on:
+      - T-DATA-FLOW-PDCA-cdfd-onboarding-090
+      - T-DATA-FLOW-PDCA-cdfd-plan-090
+      - T-DATA-FLOW-PDCA-cdfd-do-090
+      - T-DATA-FLOW-PDCA-cdfd-check-090
+      - T-DATA-FLOW-PDCA-cdfd-action-090
+      - T-DATA-FLOW-PDCA-cdfd-orchestrator-090
+      - T-DATA-FLOW-PDCA-cdfd-uc-register-090
+      - T-DATA-FLOW-PDCA-cdfd-uc-deliverable-090
+    owner: PM
+  - id: M-DATA-FLOW-PDCA-data-flow
+    name: PDCA 構成の CDFD 完了
+    artifact_name: データフロー（PDCA）
+    depends_on:
+      - T-DATA-FLOW-PDCA-cdfd-onboarding-140
+      - T-DATA-FLOW-PDCA-cdfd-orchestrator-140
+      - T-DATA-FLOW-PDCA-cdfd-uc-register-140
+      - T-DATA-FLOW-PDCA-cdfd-uc-deliverable-140
     owner: PM
