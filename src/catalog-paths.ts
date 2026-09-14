@@ -21,3 +21,10 @@ export function resolveDeliverablePath(sectionBase: string, itemPath: string | u
   if (itemPath.startsWith("/")) return itemPath.slice(1);
   return sectionBase ? `${sectionBase}/${itemPath}` : itemPath;
 }
+
+// Deprecated deliverables remain in the catalog after being moved to a trash directory.
+// Callers that discover active documents use this segment-based check so similarly named
+// paths (for example, `trash-bin`) remain eligible.
+export function isTrashedPath(repoRelativePath: string): boolean {
+  return repoRelativePath.split("/").includes("trash");
+}

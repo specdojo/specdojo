@@ -11,7 +11,7 @@ import yaml from "js-yaml";
 import Ajv2020Module from "ajv/dist/2020.js";
 import type { ValidateFunction } from "ajv";
 import { collectResolvedDeliverables, loadCatalogDocs } from "./catalog-build.js";
-import { resolveBasePath } from "./catalog-paths.js";
+import { isTrashedPath, resolveBasePath } from "./catalog-paths.js";
 import type {
   DctDeliverableItem,
   DctSection,
@@ -245,10 +245,6 @@ function toRepoRelative(absolutePath: string, repoRoot: string): string {
 }
 
 // ---- input resolution --------------------------------------------------------
-
-function isTrashedPath(repoRelativePath: string): boolean {
-  return repoRelativePath.split("/").includes("trash");
-}
 
 export type PlanInputResolution = {
   inputs: DctPlanInput[];

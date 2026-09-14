@@ -161,6 +161,67 @@ describe("grade target filters", () => {
     }
   });
 
+  it("excludes trashed deliverables for every selection mode and rejects explicit selection", () => {
+    const directory = mkdtempSync(join(tmpdir(), "specdojo-grade-target-"));
+    const catalogRoot = join(directory, "docs/ja/projects/prj-0001/010-deliverables-catalog");
+    const currentPath = join(directory, "docs/ja/product/current.md");
+    const trashedPath = join(directory, "docs/ja/product/trash/retired.md");
+    mkdirSync(catalogRoot, { recursive: true });
+    mkdirSync(join(directory, "docs/ja/product/trash"), { recursive: true });
+    writeFileSync(currentPath, markdown, "utf8");
+    writeFileSync(trashedPath, markdown, "utf8");
+    writeFileSync(
+      join(catalogRoot, "dct-test.yaml"),
+      yaml.dump({
+        id: "prj-0001:dct-test",
+        type: "project",
+        status: "draft",
+        title: "Test catalog",
+        rulebook: "specdojo:dct-rulebook",
+        project_id: "prj-0001",
+        domain: "test",
+        base_path: "/docs/ja/product",
+        groups: [
+          {
+            deliverables: [
+              {
+                local_id: "current",
+                name: "Current",
+                kind: "work",
+                overview: "Current deliverable",
+                path: "current.md",
+              },
+              {
+                local_id: "retired",
+                name: "Retired",
+                kind: "work",
+                overview: "Retired deliverable",
+                path: "trash/retired.md",
+              },
+            ],
+          },
+        ],
+      }),
+      "utf8",
+    );
+
+    try {
+      for (const filters of [{}, { changedOnly: true }, { ungraded: true }]) {
+        expect(discoverGradeTargets({ target: "deliverable", ...filters }, directory)).toEqual([
+          currentPath,
+        ]);
+      }
+      expect(() =>
+        discoverGradeTargets(
+          { target: "deliverable", paths: ["docs/ja/product/trash/retired.md"] },
+          directory,
+        ),
+      ).toThrow("docs/ja/product/trash/retired.md: trashed documents cannot be graded");
+    } finally {
+      rmSync(directory, { recursive: true, force: true });
+    }
+  });
+
   it("combines verdict, score, finding-count, and changed-only filters", () => {
     const graded = gradeMarkdownContent({
       content: markdown,

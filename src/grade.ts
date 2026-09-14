@@ -7,7 +7,7 @@ import remarkParse from "remark-parse";
 import { unified } from "unified";
 import { extractJsonText } from "./agent-response.js";
 import { collectResolvedDeliverables, loadCatalogDocs } from "./catalog-build.js";
-import { resolveBasePath } from "./catalog-paths.js";
+import { isTrashedPath, resolveBasePath } from "./catalog-paths.js";
 import { resolveViewpointsDoc } from "./review-plan.js";
 import type { GradeRubric, ReviewViewpoint, ReviewViewpointsDoc } from "./review-types.js";
 import {
@@ -653,6 +653,10 @@ function isGeneratedGradeTarget(path: string, rootDir = specdojoRootDir()): bool
   return relativePathFromRoot(path, rootDir).split("/").includes("generated");
 }
 
+function isTrashedGradeTarget(path: string, rootDir = specdojoRootDir()): boolean {
+  return isTrashedPath(relativePathFromRoot(path, rootDir));
+}
+
 type DeliverableCatalogEntry = {
   path: string;
   localId: string;
@@ -683,6 +687,7 @@ function loadDeliverableCatalog(
     for (const item of resolved) {
       if (item.item.kind === "generated" || !item.item.path) continue;
       if (!item.resolvedPath.endsWith(".md")) continue;
+      if (isTrashedPath(item.resolvedPath)) continue;
       const path = resolve(root, item.resolvedPath);
       if (!existsSync(path) || entries.has(path)) continue;
       entries.set(path, {
@@ -963,6 +968,12 @@ export function discoverGradeTargets(
         `${relativePathFromRoot(generated, rootDir)}: generated documents cannot be graded`,
       );
     }
+    const trashed = candidates.find((path) => isTrashedGradeTarget(path, rootDir));
+    if (trashed) {
+      throw new Error(
+        `${relativePathFromRoot(trashed, rootDir)}: trashed documents cannot be graded`,
+      );
+    }
   } else if (opts.target === "kata") {
     candidates = KATA_DIRS.flatMap((dir) =>
       listFilesRecursive(join(rootDir, "docs/ja/specdojo", dir)).filter((path) =>
@@ -974,6 +985,7 @@ export function discoverGradeTargets(
   }
   const unique = [...new Set(candidates)]
     .filter((path) => !isGeneratedGradeTarget(path, rootDir))
+    .filter((path) => !isTrashedGradeTarget(path, rootDir))
     .sort();
   if (
     !opts.changedOnly &&

@@ -1,0 +1,12 @@
+実装完了です。
+
+- [`isTrashedPath`](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-1D5G/src/catalog-paths.ts:28) を共通化し、grade の自動選択から trash 配下を除外。
+- 明示的な `--path` 指定も拒否。
+- 通常／`--changed-only`／`--ungraded` と明示指定拒否の単体テストを追加。
+- 実データで `trash_count=0` を確認。
+- [コマンドリファレンス](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-1D5G/docs/ja/specdojo/references/command-reference.md:487) と[個票](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-1D5G/docs/ja/projects/prj-0001/controls/project-register/pjr-1d5g-grade-exclude-trash.md:58)を更新。個票の lifecycle status は変更していません。
+- result は executor 指示どおり未編集です。unit／integration／schema 検証は親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"final_message":"grade の全候補選択から trash 配下を除外し、明示指定拒否・テスト・関連文書更新まで完了","validations":[{"command":"npx prettier --write src/catalog-paths.ts src/catalog-plan.ts src/grade.ts tests/src/catalog-paths.test.ts tests/src/grade.test.ts docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-1d5g-grade-exclude-trash.md && npx markdownlint docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-1d5g-grade-exclude-trash.md","status":"passed","summary":"対象7ファイルを整形し、Markdown検査に合格"},{"command":"set -o pipefail; node --import tsx src/specdojo.ts grade list --target deliverable --project prj-0001 | awk 'BEGIN { count = 0 } /(^|\\/)trash\\// { count++ } END { print \"trash_count=\" count }'","status":"passed","summary":"実カタログで trash_count=0"},{"command":"test -f docs/ja/product/trash/cdfd-register-operation.md && output=$(node --import tsx src/specdojo.ts grade list --target deliverable --project prj-0001 --path docs/ja/product/trash/cdfd-register-operation.md 2>&1); status=$?; test \"$status\" -eq 1; test \"$output\" = \"docs/ja/product/trash/cdfd-register-operation.md: trashed documents cannot be graded\"; printf '%s\\n' \"$output\"","status":"passed","summary":"trash 文書の明示指定が所定メッセージで拒否された"},{"command":"npm run typecheck","status":"passed","summary":"TypeScript型検査に合格"},{"command":"npm run lint:ts","status":"passed","summary":"ESLintに合格"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"カタログ検証に合格。既存の未作成成果物に関する警告のみ"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿生成に成功"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"文書索引1682件を生成"},{"command":"git diff --check","status":"passed","summary":"差分の空白エラーなし"}]}
+</specdojo_executor_evidence>

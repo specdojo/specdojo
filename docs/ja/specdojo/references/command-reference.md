@@ -484,7 +484,7 @@ specdojo grade apply --target kata --path <document.md> \
 specdojo grade validate --target kata --project prj-0001
 ```
 
-`--target` は `kata` または `deliverable` です。`--path` は繰り返し指定でき、明示した Markdown 文書だけを対象にします。ただし、パス要素に `generated` を含む生成文書は自動探索から除外し、`--path` で明示した場合も入力エラーとして拒否します。`--changed-only` は既存 grade の `content_hash` と、grade・finding を除いた現在内容のハッシュを比較するため、評価結果の書き込み自体を変更として再検出しません。ハッシュの計算前に改行を LF へ統一し、行末空白を除去して、連続する空行を1行へ畳みます。この正規化により、`grade apply` 後の Prettier 整形だけでは再評価対象になりません。
+`--target` は `kata` または `deliverable` です。`--path` は繰り返し指定でき、明示した Markdown 文書だけを対象にします。ただし、パス要素に `generated` を含む生成文書と `trash` を含む退避済み文書は自動探索から除外し、`--path` で明示した場合も入力エラーとして拒否します。`--changed-only` は既存 grade の `content_hash` と、grade・finding を除いた現在内容のハッシュを比較するため、評価結果の書き込み自体を変更として再検出しません。ハッシュの計算前に改行を LF へ統一し、行末空白を除去して、連続する空行を1行へ畳みます。この正規化により、`grade apply` 後の Prettier 整形だけでは再評価対象になりません。
 
 保存済みの判定結果では、`--verdict <pass|needs-work|fail>` で最新 verdict、`--min-score <score>` で総合 score が指定値以上、`--max-findings <count>` で全 severity の finding 合計が指定件数以下の文書に絞れます。score は 0 から 100 の整数で指定します。`--ungraded` は `specdojo.grade` が存在しない文書だけ、`--incomplete` は同じ本文に対する3段評価が未完了で連続失敗上限に達していない文書だけを選びます。複数の選択条件は AND で適用され、`--path` や `--changed-only` とも併用できます。保存済み grade を前提とする `--verdict`、`--min-score`、`--max-findings` のいずれかと `--ungraded` の併用は入力エラーです。`grade list` はこの選択規則を plan の生成や文書更新なしで利用するための機械可読な入口で、標準出力にはリポジトリ相対パスだけを辞書順で出力します。定期再評価の呼び出し側は変更済み、未評価、段未完了を別々に列挙して和集合を取ります。
 
