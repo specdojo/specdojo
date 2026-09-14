@@ -24,6 +24,7 @@ import {
   validateGradedMarkdown,
   writeGradePlans,
   type GradeDoneCriterion,
+  type GradePipelineState,
   type GradeSubmission,
 } from "../../src/grade.js";
 import type { ReviewViewpointsDoc } from "../../src/review-types.js";
@@ -270,6 +271,53 @@ describe("grade target filters", () => {
         minScore: 96,
       }),
     ).toThrow("--ungraded cannot be combined");
+  });
+
+  it("selects only current, retryable pipeline state as incomplete", () => {
+    const graded = gradeMarkdownContent({
+      content: markdown,
+      path: passSubmission.documents[0].path,
+      input: passSubmission.documents[0],
+      viewpoints,
+      target: "kata",
+      gradedBy: "test-agent",
+      now: new Date("2026-08-31T00:00:00.000Z"),
+    });
+    const frontmatter = yaml.load(graded.match(/^---\n([\s\S]*?)\n---/)?.[1] ?? "") as {
+      specdojo: { grade: { content_hash: string } };
+    };
+    const state: GradePipelineState = {
+      version: 1,
+      project_id: "prj-0001",
+      target: "kata",
+      document: "example.md",
+      content_hash: frontmatter.specdojo.grade.content_hash,
+      stage_completed: 2,
+      stage_failed: 3,
+      stage_total: 3,
+      consecutive_failures: 1,
+      max_failures: 3,
+      last_run_id: "fixture-run",
+      updated_at: "2026-08-31T00:00:00.000Z",
+    };
+
+    expect(matchesGradeTargetFilters(graded, "example.md", { incomplete: true }, state)).toBe(true);
+    expect(
+      matchesGradeTargetFilters(
+        graded,
+        "example.md",
+        { incomplete: true },
+        { ...state, consecutive_failures: 3 },
+      ),
+    ).toBe(false);
+    expect(
+      matchesGradeTargetFilters(
+        graded,
+        "example.md",
+        { incomplete: true },
+        { ...state, content_hash: "0".repeat(64) },
+      ),
+    ).toBe(false);
   });
 
   it("rejects invalid score and finding thresholds", () => {

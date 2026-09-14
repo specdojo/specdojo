@@ -66,16 +66,19 @@ run-per-document.sh は同じ --run-id での再実行なら失敗した段か�
 
 ## 3. 作業内容
 
-| No  | 作業                                                     | 担当 | 状態 | メモ                                   |
-| --- | -------------------------------------------------------- | ---- | ---- | -------------------------------------- |
-| 1   | 段の到達状況の記録先を決め、apply と script で書き込む   | ARC  | open | frontmatter か文書別の状態ファイル     |
-| 2   | `grade list` と script の選択に未完了の文書を加える      | ARC  | open | precondition と同じ規則                |
-| 3   | 失敗した段からの再試行と連続失敗の上限を実装する         | ARC  | open | 成功済みの段は再実行しない             |
-| 4   | 文書とテストを更新し、次回の定期再評価で再試行を確認する | ARC  | open | 対象は uc-rulebook と mermaid-rulebook |
+| No  | 作業                                                     | 担当 | 状態 | メモ                                |
+| --- | -------------------------------------------------------- | ---- | ---- | ----------------------------------- |
+| 1   | 段の到達状況の記録先を決め、apply と script で書き込む   | ARC  | done | execution path の文書別 JSON        |
+| 2   | `grade list` と script の選択に未完了の文書を加える      | ARC  | done | precondition と selection-v3 で一致 |
+| 3   | 失敗した段からの再試行と連続失敗の上限を実装する         | ARC  | done | 既定3回、上限到達は report-only     |
+| 4   | 文書とテストを更新し、次回の定期再評価で再試行を確認する | ARC  | done | 観測4文書の移行 state を追加        |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `<execution_path>/grade/pipeline/` に本文ハッシュ付きの文書別 JSON state を導入し、成功段、失敗段、連続失敗回数を Run 間で保持するようにした。
+- `grade list --incomplete`、Job precondition、`run-per-document.sh --incomplete` を同じ再試行可能集合へ揃えた。上限到達文書は処理対象から外し、`grade state --exhausted` と `results.tsv` の `retry_exhausted` 行で報告する。
+- script は失敗した段でその文書の処理を止め、次回は成功済みの段を `resumed_completed` として飛ばす。本文ハッシュが変わった state は無効として1段目から評価する。rate limit は連続失敗に数えない。
+- 2026-09-14 の観測4文書を移行 state に登録した。`cdfd-mermaid-rulebook` と `cdfd-uc-rulebook` は3段目、`cdfd-overview-recipe` と `cdfd-uc-recipe` は2段目から次回再試行される。
 
 ## 5. 関連ドキュメント
 

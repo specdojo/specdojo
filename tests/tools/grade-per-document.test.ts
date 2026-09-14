@@ -19,6 +19,7 @@ function makeFixture(): {
   root: string;
   fakeSpecdojo: string;
   stateFile: string;
+  pipelineStateFile: string;
   argsFile: string;
   target: string;
 } {
@@ -27,6 +28,7 @@ function makeFixture(): {
   const rulebooks = join(root, "docs/ja/specdojo/rulebooks");
   const target = join(rulebooks, "fixture-rulebook.md");
   const stateFile = join(root, "fake-apply-count.txt");
+  const pipelineStateFile = join(root, "fake-pipeline-state.json");
   const argsFile = join(root, "fake-args.log");
   const fakeSpecdojo = join(root, "fake-specdojo.mjs");
 
@@ -54,7 +56,43 @@ import { dirname, join } from "node:path";
 
 const args = process.argv.slice(2);
 if (process.env.FAKE_ARGS_FILE) appendFileSync(process.env.FAKE_ARGS_FILE, args.join(" ") + "\\n");
-const value = (option) => args[args.indexOf(option) + 1];
+const value = (option) => {
+  const index = args.indexOf(option);
+  return index < 0 ? undefined : args[index + 1];
+};
+if (args[0] === "grade" && args[1] === "state") {
+  const statePath = process.env.FAKE_PIPELINE_STATE_FILE;
+  const previous = existsSync(statePath) ? JSON.parse(readFileSync(statePath, "utf8")) : undefined;
+  if (args.includes("--exhausted")) {
+    if (previous && previous.consecutive_failures >= previous.max_failures) {
+      process.stdout.write(previous.document + "\\n");
+    }
+    process.exit(0);
+  }
+  const status = value("--status");
+  if (!status) {
+    if (previous) process.stdout.write(JSON.stringify(previous) + "\\n");
+    process.exit(0);
+  }
+  const stage = Number(value("--stage"));
+  if (status === "complete" || (status === "passed" && stage >= 3)) {
+    if (existsSync(statePath)) unlinkSync(statePath);
+    process.exit(0);
+  }
+  const failed = status === "failed";
+  const state = {
+    stage_completed: failed ? Math.min(previous?.stage_completed ?? 0, stage - 1) : stage,
+    stage_failed: failed ? stage : null,
+    consecutive_failures: failed
+      ? previous?.stage_failed === stage ? previous.consecutive_failures + 1 : 1
+      : 0,
+    max_failures: Number(value("--max-failures")),
+    document: value("--path"),
+  };
+  writeFileSync(statePath, JSON.stringify(state));
+  process.stdout.write(JSON.stringify(state) + "\\n");
+  process.exit(0);
+}
 if (args[0] === "grade" && args[1] === "list") {
   const mode = process.env.FAKE_GRADE_LIST_MODE ?? "changed";
   if (mode === "empty") process.exit(0);
@@ -65,6 +103,15 @@ if (args[0] === "grade" && args[1] === "list") {
   if (args.includes("--ungraded")) {
     process.stdout.write("docs/ja/specdojo/rulebooks/fixture-rulebook.md\\n");
     process.stdout.write("docs/ja/specdojo/samples/prj-overview-sample.md\\n");
+  }
+  if (args.includes("--incomplete")) {
+    const statePath = process.env.FAKE_PIPELINE_STATE_FILE;
+    if (existsSync(statePath)) {
+      const state = JSON.parse(readFileSync(statePath, "utf8"));
+      if (state.consecutive_failures < state.max_failures) {
+        process.stdout.write(state.document + "\\n");
+      }
+    }
   }
   process.exit(0);
 }
@@ -93,6 +140,8 @@ if (args[0] === "grade" && args[1] === "apply") {
   const countPath = process.env.FAKE_STATE_FILE;
   const count = existsSync(countPath) ? Number(readFileSync(countPath, "utf8")) + 1 : 1;
   writeFileSync(countPath, String(count));
+  const failFrom = Number(process.env.FAKE_APPLY_FAIL_FROM ?? 0);
+  if (failFrom > 0 && count >= failFrom) process.exit(1);
   const score = count === 1 ? 80 : count === 2 ? 100 : 95;
   const target = value("--path");
   writeFileSync(target,
@@ -105,20 +154,21 @@ process.exit(1);
 `,
   );
   chmodSync(fakeSpecdojo, 0o755);
-  return { root, fakeSpecdojo, stateFile, argsFile, target };
+  return { root, fakeSpecdojo, stateFile, pipelineStateFile, argsFile, target };
 }
 
 function runPipeline(
   fixture: ReturnType<typeof makeFixture>,
   extraEnv: Record<string, string> = {},
   extraArguments: string[] = [],
+  runId = "fixture-run",
 ) {
   return spawnSync(
     "bash",
     [
       script,
       "--run-id",
-      "fixture-run",
+      runId,
       "--kind",
       "rulebook",
       "--path",
@@ -133,6 +183,7 @@ function runPipeline(
       env: {
         ...process.env,
         FAKE_STATE_FILE: fixture.stateFile,
+        FAKE_PIPELINE_STATE_FILE: fixture.pipelineStateFile,
         FAKE_ARGS_FILE: fixture.argsFile,
         ...extraEnv,
       },
@@ -235,7 +286,9 @@ describe("grade per-document pipeline", () => {
     ]);
 
     expect(result.status, result.stderr).toBe(0);
-    expect(result.stdout).toContain("kind=all changed_only=true ungraded=true documents=3");
+    expect(result.stdout).toContain(
+      "kind=all changed_only=true ungraded=true incomplete=false max_stage_failures=3 documents=3",
+    );
     expect(result.stdout).toContain("reference=per-kind");
     expect(result.stdout.match(/fixture-rulebook\.md/g)).toHaveLength(1);
     expect(result.stdout).toContain("docs/ja/specdojo/recipes/prj-overview-recipe.md");
@@ -305,6 +358,90 @@ describe("grade per-document pipeline", () => {
     const invocations = readFileSync(fixture.argsFile, "utf8");
     expect(invocations).toContain("grade plan --target deliverable");
     expect(invocations).toContain("grade apply --target deliverable");
+  });
+
+  it("retries a failed stage in a new run without repeating completed stages", () => {
+    const fixture = makeFixture();
+
+    const failed = runPipeline(fixture, { FAKE_APPLY_FAIL_FROM: "3" }, [], "fixture-failed");
+    expect(failed.status, failed.stderr).toBe(0);
+    expect(failed.stdout).toContain("document incomplete:");
+    expect(failed.stdout).toContain("failed_stage=3");
+    expect(JSON.parse(readFileSync(fixture.pipelineStateFile, "utf8"))).toMatchObject({
+      stage_completed: 2,
+      stage_failed: 3,
+      consecutive_failures: 1,
+    });
+
+    const retried = runPipeline(fixture, {}, [], "fixture-retried");
+    expect(retried.status, retried.stderr).toBe(0);
+    expect(retried.stdout).toContain("start_stage=3");
+    expect(retried.stdout).toContain("stage=1 document=");
+    expect(retried.stdout).toContain("status=resumed_completed");
+    expect(readFileSync(fixture.stateFile, "utf8")).toBe("4");
+    expect(existsSync(fixture.pipelineStateFile)).toBe(false);
+  });
+
+  it("excludes an exhausted stage from retries and reports it", () => {
+    const fixture = makeFixture();
+
+    for (const runId of ["fixture-failure-1", "fixture-failure-2", "fixture-failure-3"]) {
+      const result = runPipeline(fixture, { FAKE_APPLY_FAIL_FROM: "3" }, [], runId);
+      expect(result.status, result.stderr).toBe(0);
+    }
+    expect(JSON.parse(readFileSync(fixture.pipelineStateFile, "utf8"))).toMatchObject({
+      stage_completed: 2,
+      stage_failed: 3,
+      consecutive_failures: 3,
+      max_failures: 3,
+    });
+
+    const reported = runPipeline(
+      fixture,
+      { FAKE_APPLY_FAIL_FROM: "3" },
+      ["--incomplete"],
+      "fixture-exhausted-report",
+    );
+    expect(reported.status, reported.stderr).toBe(0);
+    expect(reported.stdout).toContain("documents=0 exhausted=1");
+    expect(reported.stdout).toContain("selected=0 processed=0");
+    expect(
+      readFileSync(
+        join(fixture.root, "logs/grade/runs/per-document/fixture-exhausted-report/results.tsv"),
+        "utf8",
+      ),
+    ).toContain("\t3\tretry_exhausted\t");
+    expect(readFileSync(fixture.stateFile, "utf8")).toBe("5");
+  });
+
+  it("does not reselect an exhausted ungraded document through the filter union", () => {
+    const fixture = makeFixture();
+
+    for (const runId of [
+      "fixture-stage-1-failure-1",
+      "fixture-stage-1-failure-2",
+      "fixture-stage-1-failure-3",
+    ]) {
+      const result = runPipeline(fixture, { FAKE_APPLY_FAIL_FROM: "1" }, [], runId);
+      expect(result.status, result.stderr).toBe(0);
+    }
+    expect(JSON.parse(readFileSync(fixture.pipelineStateFile, "utf8"))).toMatchObject({
+      stage_completed: 0,
+      stage_failed: 1,
+      consecutive_failures: 3,
+      max_failures: 3,
+    });
+
+    const reported = runPipeline(
+      fixture,
+      { FAKE_APPLY_FAIL_FROM: "1" },
+      ["--ungraded", "--incomplete", "--limit", "1"],
+      "fixture-exhausted-ungraded-report",
+    );
+    expect(reported.status, reported.stderr).toBe(0);
+    expect(reported.stdout).toContain("documents=0 exhausted=1");
+    expect(reported.stdout).toContain("selected=0 processed=0");
+    expect(readFileSync(fixture.stateFile, "utf8")).toBe("3");
   });
 
   it("leaves the current stage incomplete on rate limit and resumes it", () => {

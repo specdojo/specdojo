@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "project_id": "prj-0001",
+  "target": "kata",
+  "document": "docs/ja/specdojo/rulebooks/cdfd-mermaid-rulebook.md",
+  "content_hash": "b70cbc3c85399cbed136c6a439bc40a6a6838b2cfc7c4433cccd846b1954d051",
+  "stage_completed": 2,
+  "stage_failed": 3,
+  "stage_total": 3,
+  "consecutive_failures": 1,
+  "max_failures": 3,
+  "last_run_id": "JBR-grade-kata-f41e0255f31d",
+  "updated_at": "2026-09-13T16:40:30.000Z"
+}

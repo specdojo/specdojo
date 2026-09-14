@@ -16,13 +16,16 @@ inputs:
   ungraded:
     type: boolean
     default: false
+  incomplete:
+    type: boolean
+    default: false
 task:
   mode: command
   owner: ARC
   precondition:
     command: |
       selection=$(
-        if [ "{{inputs.changed_only}}" = "false" ] && [ "{{inputs.ungraded}}" = "false" ]; then
+        if [ "{{inputs.changed_only}}" = "false" ] && [ "{{inputs.ungraded}}" = "false" ] && [ "{{inputs.incomplete}}" = "false" ]; then
           {{specdojo}} grade list --target deliverable --project {{project_id}}
         else
           if [ "{{inputs.changed_only}}" = "true" ]; then
@@ -30,6 +33,11 @@ task:
           fi
           if [ "{{inputs.ungraded}}" = "true" ]; then
             {{specdojo}} grade list --target deliverable --project {{project_id}} --ungraded || exit $?
+          fi
+          if [ "{{inputs.incomplete}}" = "true" ]; then
+            {{specdojo}} grade list --target deliverable --project {{project_id}} --incomplete || exit $?
+            # 上限到達成果物は処理対象外だが、report-only Job を起動するため precondition に含める。
+            {{specdojo}} grade state --target deliverable --project {{project_id}} --exhausted || exit $?
           fi
         fi
       )
@@ -42,7 +50,7 @@ task:
     skip_when: empty-output
   command: |
     npm run build
-    tools/grade/run-per-document.sh --run-id {{job_run_id}} --target deliverable --limit {{inputs.limit}} --changed-only={{inputs.changed_only}} --ungraded={{inputs.ungraded}}
+    tools/grade/run-per-document.sh --run-id {{job_run_id}} --target deliverable --limit {{inputs.limit}} --changed-only={{inputs.changed_only}} --ungraded={{inputs.ungraded}} --incomplete={{inputs.incomplete}}
     cat logs/grade/runs/per-document/{{job_run_id}}/results.tsv
   analysis:
     agent: gemma-reporter
@@ -54,6 +62,8 @@ task:
         `--run-id` で再開できる状態かを確認する。
       - `failed` の段があるか。ある場合は agent 側の失敗、`grade apply` の忠実性検証、
         done_criteria の過不足のいずれかへ切り分ける。
+      - `retry_exhausted` の成果物があるか。ある場合は失敗段と連続失敗回数を示し、人手での
+        原因解消または state の再開判断を促す。
       - 3段目が実行されなかった成果物について、閾値未満と2段目の失敗のどちらが理由か。
       - 未充足の done_criteria がある成果物と、その確認担当ロールを特定する。
 
@@ -62,4 +72,4 @@ task:
   paths:
     - docs/ja/projects/prj-0001
 run:
-  idempotency_key: "{{job_id}}:command-v2:{{scheduled_at}}:{{inputs.limit}}:{{inputs.changed_only}}:{{inputs.ungraded}}"
+  idempotency_key: "{{job_id}}:command-v3:{{scheduled_at}}:{{inputs.limit}}:{{inputs.changed_only}}:{{inputs.ungraded}}:{{inputs.incomplete}}"

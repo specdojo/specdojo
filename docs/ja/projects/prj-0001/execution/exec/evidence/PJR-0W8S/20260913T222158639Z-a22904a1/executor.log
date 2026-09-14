@@ -1,0 +1,15 @@
+失敗段の永続化と次回 Run での段再開を実装しました。
+
+- `grade list --incomplete` と `grade state` を追加。
+- 連続3回失敗で再試行対象から除外し、`retry_exhausted` として報告。
+- 定期 Job／Routine の選択条件を更新。
+- 観測済み4文書の移行 state を追加し、rulebook 2件は3段目から再開。
+- 個票・運用ガイド・コマンドリファレンス・テストを更新。
+- 登録簿ステータスと result は変更していません。
+- unit／integration／schema テストは指示どおり親 runner に委ねています。
+
+<specdojo_executor_evidence>
+{"final_message":"grade失敗段を文書別stateへ永続化し、次回定期評価での段再開、3回失敗時の除外・報告、既存4文書の移行を実装した。","validations":[{"command":"npx prettier --write src/grade.ts tests/src/grade.test.ts tests/src/cli-verb-taxonomy.test.ts tests/tools/grade-per-document.test.ts package.json docs/specdojo/schemas/v1/grade-pipeline-state.schema.yaml docs/ja/projects/prj-0001/execution/grade/pipeline/cdfd-overview-recipe-64f5d1f88327.json docs/ja/projects/prj-0001/execution/grade/pipeline/cdfd-uc-recipe-9edf172ca392.json docs/ja/projects/prj-0001/execution/grade/pipeline/cdfd-mermaid-rulebook-030c7311d187.json docs/ja/projects/prj-0001/execution/grade/pipeline/cdfd-uc-rulebook-c03ac3f5bb5d.json docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml docs/ja/projects/prj-0001/routines/rtn-grade-recheck.yaml docs/ja/projects/prj-0001/routines/rtn-grade-deliverable-recheck.yaml docs/ja/specdojo/references/command-reference.md docs/ja/specdojo/guides/routine-operation-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-0w8s-grade-retry-failed-stage.md","status":"passed","summary":"変更したTS・JSON・YAML・Markdownを整形"},{"command":"bash -n tools/grade/run-per-document.sh","status":"passed","summary":"shell構文エラーなし"},{"command":"npm run typecheck","status":"passed","summary":"TypeScript型エラーなし"},{"command":"npm run lint:ts","status":"passed","summary":"ESLint違反なし"},{"command":"npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-0w8s-grade-retry-failed-stage.md docs/ja/specdojo/references/command-reference.md docs/ja/specdojo/guides/routine-operation-guide.md","status":"passed","summary":"Markdownエラーなし"},{"command":"npm run build","status":"passed","summary":"CLIビルド成功"},{"command":"node dist/specdojo.js job validate --project prj-0001","status":"passed","summary":"8 Job、0エラー"},{"command":"node dist/specdojo.js routine validate --project prj-0001","status":"passed","summary":"8 Routine、0エラー"},{"command":"node dist/specdojo.js register build --project prj-0001","status":"passed","summary":"登録簿生成成功"},{"command":"node dist/specdojo.js catalog validate --project prj-0001","status":"passed","summary":"全CatalogがOK、既存の文書未作成警告のみ"},{"command":"node dist/specdojo.js index build","status":"passed","summary":"1672件の文書インデックスを生成"},{"command":"tools/grade/run-per-document.sh --run-id pjr-0w8s-dry-run --kind all --changed-only --ungraded --incomplete --limit 10 --dry-run --specdojo-bin dist/specdojo.js","status":"passed","summary":"移行対象4文書を含む未完了選択を確認"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>
+
+agent-config-write: protected configuration changes detected; paths=package.json; agent must record the required change in the result handoff for human or orchestrator application

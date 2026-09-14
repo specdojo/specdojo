@@ -91,11 +91,11 @@ action:
 
 ### 1.2. grade の段階評価
 
-Kata の定期評価は、ローカル評価を2回行った後、見落としの疑いが強い文書だけを expert で再確認します。この3段は文書ごとに通しで実行し、`rtn-grade-kata` は単一の `job-grade-kata` を起動するだけです。段の順序と対象の繰り返しは `tools/grade/run-per-document.sh` が持ちます。変更済み・未評価だけを横断的に再評価する `rtn-grade-recheck` も同じ Job を使い、`kind: all`、`changed_only: true`、`ungraded: true`、`limit: 5` を入力します。
+Kata の定期評価は、ローカル評価を2回行った後、見落としの疑いが強い文書だけを expert で再確認します。この3段は文書ごとに通しで実行し、`rtn-grade-kata` は単一の `job-grade-kata` を起動するだけです。段の順序と対象の繰り返しは `tools/grade/run-per-document.sh` が持ちます。変更済み・未評価・段未完了を横断的に再評価する `rtn-grade-recheck` も同じ Job を使い、`kind: all`、`changed_only: true`、`ungraded: true`、`incomplete: true`、`limit: 10` を入力します。
 
-成果物は `rtn-grade-deliverable-recheck` が `job-grade-deliverable` を起動します。Job は同じ script を `--target deliverable` で実行し、成果物カタログから変更済み・未評価の Markdown 成果物だけを選びます。評価結果は成果物の最新 grade と成果物ごとの done_criteria 詳細へ上書きされるため、実行ごとの review result は増やしません。
+成果物は `rtn-grade-deliverable-recheck` が `job-grade-deliverable` を起動します。Job は同じ script を `--target deliverable` で実行し、成果物カタログから変更済み・未評価・段未完了の Markdown 成果物だけを選びます。評価結果は成果物の最新 grade と成果物ごとの done_criteria 詳細へ上書きされるため、実行ごとの review result は増やしません。
 
-`rtn-grade-recheck` と `rtn-grade-deliverable-recheck` では、Job の `task.precondition` が `grade list` を使って script の selection-v2 と同じ和集合・辞書順・対象種別・件数上限を先に評価します。選択が 0 件なら Job Run、plan、result、evidence を作らず、command と analysis reporter も起動しません。routine はこの結果を `skipped` として受け取り、`routine-state.json` の `last_run` / `last_result` と、cron の場合は `last_scheduled_for` を更新します。選択が 1 件以上なら従来どおり Job Run を生成して3段評価へ進みます。
+`rtn-grade-recheck` と `rtn-grade-deliverable-recheck` では、Job の `task.precondition` が `grade list` を使って script の selection-v3 と同じ変更済み・未評価・再試行可能な段未完了の和集合、辞書順、対象種別、件数上限を先に評価します。連続失敗上限に達した文書は `grade state --exhausted` で同じ和集合に加えてから件数上限を適用し、処理対象からは外して report-only 対象にします。処理対象も report-only 対象も 0 件なら Job Run、plan、result、evidence を作らず、command と analysis reporter も起動しません。routine はこの結果を `skipped` として受け取り、`routine-state.json` の `last_run` / `last_result` と、cron の場合は `last_scheduled_for` を更新します。
 
 | 段  | executor / reporter                        | 対象と役割                                                  |
 | --- | ------------------------------------------ | ----------------------------------------------------------- |
@@ -107,7 +107,7 @@ Kata の定期評価は、ローカル評価を2回行った後、見落とし�
 
 Job runnerは、この入口をmaterialize済みの引数で1回起動し、コマンド、終了コード、stdout/stderrをevidenceへ記録します。コマンドが成功した場合だけanalysis reporterが、未完了の段、失敗の切り分け、3段目がスキップされた理由、閾値の見直し要否を判断します。段ごとのagent、リファレンス、対象種別、件数上限はscriptの引数であり、Jobの`inputs`から解決します。
 
-各段は直前の `grade apply` 後の文書を入力にします。未解消 finding は次の plan へ引き継がれ、後段の agent が severity を下げて提出しても `grade apply` が前回値を維持します。scriptの`--run-id`にはJob Run IDを渡すため、rate limitや中断後に同じJob Runをretryすると完了済みの段を飛ばして再開し、次の日次実行枠では新しい状態から対象を選択します。`period`は対象期間の表示だけに使い、実行や再開の同一性には使いません。閾値は固定の永続値ではなく、expert 再確認の対象率と偽陰性を定期レビューし、変更時は Job、routine、本節、根拠となる登録項目を同時に更新します。
+各段は直前の `grade apply` 後の文書を入力にします。未解消 finding は次の plan へ引き継がれ、後段の agent が severity を下げて提出しても `grade apply` が前回値を維持します。scriptの`--run-id`にはJob Run IDを渡すため、rate limitや中断後に同じJob Runをretryすると完了済みの段を飛ばして再開します。通常の agent / apply 失敗は `<execution_path>/grade/pipeline/` に完了段、失敗段、本文ハッシュ、連続失敗回数を保存します。次の日次実行枠でも本文ハッシュが同じなら失敗段から再開し、成功済みの段は実行しません。本文が変われば古い到達状況を使わず1段目から評価します。rate limit は失敗回数に数えません。既定で同じ段が3回連続失敗すると再試行から外し、結果の `retry_exhausted` 行で人手対応を報告します。`period`は対象期間の表示だけに使い、実行や再開の同一性には使いません。expert 再確認の閾値は固定の永続値ではなく、対象率と偽陰性を定期レビューし、変更時は Job、routine、本節、根拠となる登録項目を同時に更新します。
 
 ## 2. due判定と実行
 

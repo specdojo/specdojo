@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "project_id": "prj-0001",
+  "target": "kata",
+  "document": "docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md",
+  "content_hash": "5efc666d921f464fcfdb4cee32c5cd7e01515e375eef351cde8823515e8bc389",
+  "stage_completed": 2,
+  "stage_failed": 3,
+  "stage_total": 3,
+  "consecutive_failures": 1,
+  "max_failures": 3,
+  "last_run_id": "JBR-grade-kata-f41e0255f31d",
+  "updated_at": "2026-09-13T18:02:14.000Z"
+}

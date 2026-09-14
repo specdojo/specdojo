@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from "node:fs";
 import { basename, dirname, extname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import { type Command } from "commander";
 import yaml from "js-yaml";
@@ -33,6 +33,22 @@ export type GradeTargetFilters = {
   minScore?: number;
   maxFindings?: number;
   ungraded?: boolean;
+  incomplete?: boolean;
+};
+
+export type GradePipelineState = {
+  version: 1;
+  project_id: string;
+  target: GradeTarget;
+  document: string;
+  content_hash: string;
+  stage_completed: number;
+  stage_failed: number | null;
+  stage_total: number;
+  consecutive_failures: number;
+  max_failures: number;
+  last_run_id: string;
+  updated_at: string;
 };
 
 export type GradeFindingInput = {
@@ -702,6 +718,233 @@ export function resolveDeliverableDoneCriteria(
   return result;
 }
 
+function gradePipelineStateDirectory(projectOption?: string, rootDir = specdojoRootDir()): string {
+  const { project } = resolveProject(projectOption);
+  return resolve(rootDir, getProjectExecutionPath(project), "grade", "pipeline");
+}
+
+function gradePipelineStatePath(
+  documentPath: string,
+  projectOption?: string,
+  rootDir = specdojoRootDir(),
+): string {
+  const relativeDocument = relativePathFromRoot(resolve(rootDir, documentPath), rootDir);
+  const stem = basename(relativeDocument, extname(relativeDocument)).replace(
+    /[^A-Za-z0-9._-]/g,
+    "-",
+  );
+  const digest = createHash("sha256").update(relativeDocument).digest("hex").slice(0, 12);
+  return join(gradePipelineStateDirectory(projectOption, rootDir), `${stem}-${digest}.json`);
+}
+
+function parseGradePipelineState(value: unknown, path: string): GradePipelineState {
+  if (!isRecord(value)) throw new Error(`${path}: grade pipeline state must be an object`);
+  const integer = (key: keyof GradePipelineState, minimum: number): number => {
+    const candidate = value[key];
+    if (!Number.isSafeInteger(candidate) || (candidate as number) < minimum) {
+      throw new Error(`${path}: ${key} must be an integer >= ${minimum}`);
+    }
+    return candidate as number;
+  };
+  const text = (key: keyof GradePipelineState): string => {
+    const candidate = value[key];
+    if (typeof candidate !== "string" || !candidate.trim()) {
+      throw new Error(`${path}: ${key} must be a non-empty string`);
+    }
+    return candidate;
+  };
+  const target = value.target;
+  if (target !== "kata" && target !== "deliverable") {
+    throw new Error(`${path}: target must be kata or deliverable`);
+  }
+  const stageFailed = value.stage_failed;
+  if (stageFailed !== null && (!Number.isSafeInteger(stageFailed) || (stageFailed as number) < 1)) {
+    throw new Error(`${path}: stage_failed must be null or a positive integer`);
+  }
+  const state: GradePipelineState = {
+    version: integer("version", 1) as 1,
+    project_id: text("project_id"),
+    target,
+    document: text("document"),
+    content_hash: text("content_hash"),
+    stage_completed: integer("stage_completed", 0),
+    stage_failed: stageFailed as number | null,
+    stage_total: integer("stage_total", 1),
+    consecutive_failures: integer("consecutive_failures", 0),
+    max_failures: integer("max_failures", 1),
+    last_run_id: text("last_run_id"),
+    updated_at: text("updated_at"),
+  };
+  if (state.version !== 1) throw new Error(`${path}: unsupported grade pipeline state version`);
+  if (!/^[a-f0-9]{64}$/.test(state.content_hash)) {
+    throw new Error(`${path}: content_hash must be a SHA-256 hex digest`);
+  }
+  if (
+    isAbsolute(state.document) ||
+    !state.document.startsWith("docs/") ||
+    state.document.split("/").includes("..")
+  ) {
+    throw new Error(`${path}: document must be a repository-relative path below docs/`);
+  }
+  if (state.stage_completed >= state.stage_total) {
+    throw new Error(`${path}: completed pipeline state must be removed`);
+  }
+  if (state.stage_failed !== null && state.stage_failed !== state.stage_completed + 1) {
+    throw new Error(`${path}: stage_failed must immediately follow stage_completed`);
+  }
+  if (
+    (state.stage_failed === null && state.consecutive_failures !== 0) ||
+    (state.stage_failed !== null && state.consecutive_failures < 1)
+  ) {
+    throw new Error(`${path}: consecutive_failures does not match stage_failed`);
+  }
+  return state;
+}
+
+function loadGradePipelineStates(
+  projectOption?: string,
+  rootDir = specdojoRootDir(),
+): Map<string, GradePipelineState> {
+  const states = new Map<string, GradePipelineState>();
+  const projectId = resolveProject(projectOption).id;
+  for (const path of listFilesRecursive(gradePipelineStateDirectory(projectOption, rootDir))) {
+    if (!path.endsWith(".json")) continue;
+    const state = parseGradePipelineState(
+      JSON.parse(readFileSync(path, "utf8")),
+      relativePathFromRoot(path, rootDir),
+    );
+    if (state.project_id !== projectId) {
+      throw new Error(`${relativePathFromRoot(path, rootDir)}: project_id must be ${projectId}`);
+    }
+    states.set(state.document, state);
+  }
+  return states;
+}
+
+function currentGradePipelineState(
+  document: MarkdownDocument,
+  path: string,
+  state: GradePipelineState | undefined,
+  target?: GradeTarget,
+): GradePipelineState | undefined {
+  if (!state || state.document !== path || (target !== undefined && state.target !== target)) {
+    return undefined;
+  }
+  return state.content_hash === stableContentHash(document) ? state : undefined;
+}
+
+function isIncompleteGradePipelineState(state: GradePipelineState | undefined): boolean {
+  return state !== undefined && state.consecutive_failures < state.max_failures;
+}
+
+export function readGradePipelineState(opts: {
+  target: GradeTarget;
+  project?: string;
+  path: string;
+}): GradePipelineState | undefined {
+  const absolute = resolveSafeMarkdownPath(opts.path);
+  const relativeDocument = repoRelativePath(absolute);
+  const statePath = gradePipelineStatePath(relativeDocument, opts.project);
+  if (!existsSync(statePath)) return undefined;
+  const state = parseGradePipelineState(
+    JSON.parse(readFileSync(statePath, "utf8")),
+    repoRelativePath(statePath),
+  );
+  const projectId = resolveProject(opts.project).id;
+  if (state.project_id !== projectId) {
+    throw new Error(`${repoRelativePath(statePath)}: project_id must be ${projectId}`);
+  }
+  const document = parseMarkdown(readFileSync(absolute, "utf8"), relativeDocument);
+  return currentGradePipelineState(document, relativeDocument, state, opts.target);
+}
+
+export function listExhaustedGradePipelineStates(opts: {
+  target: GradeTarget;
+  project?: string;
+}): GradePipelineState[] {
+  const states = loadGradePipelineStates(opts.project);
+  return [...states.values()]
+    .filter((state) => {
+      if (state.target !== opts.target || state.consecutive_failures < state.max_failures)
+        return false;
+      const absolute = resolve(specdojoRootDir(), state.document);
+      if (!existsSync(absolute)) return false;
+      const document = parseMarkdown(readFileSync(absolute, "utf8"), state.document);
+      return currentGradePipelineState(document, state.document, state, opts.target) !== undefined;
+    })
+    .sort((left, right) => left.document.localeCompare(right.document));
+}
+
+export function recordGradePipelineStage(opts: {
+  target: GradeTarget;
+  project?: string;
+  path: string;
+  runId: string;
+  stage: number;
+  stageTotal: number;
+  maxFailures: number;
+  status: "passed" | "failed" | "complete";
+  now?: Date;
+}): GradePipelineState | undefined {
+  const absolute = resolveSafeMarkdownPath(opts.path);
+  const relativeDocument = repoRelativePath(absolute);
+  const statePath = gradePipelineStatePath(relativeDocument, opts.project);
+  if (opts.status === "complete") {
+    if (existsSync(statePath)) unlinkSync(statePath);
+    return undefined;
+  }
+  if (
+    !Number.isSafeInteger(opts.stage) ||
+    opts.stage < 1 ||
+    !Number.isSafeInteger(opts.stageTotal) ||
+    opts.stageTotal < opts.stage ||
+    !Number.isSafeInteger(opts.maxFailures) ||
+    opts.maxFailures < 1
+  ) {
+    throw new Error("grade pipeline stage, total, and failure limit are invalid");
+  }
+  const document = parseMarkdown(readFileSync(absolute, "utf8"), relativeDocument);
+  const previous = readGradePipelineState({
+    target: opts.target,
+    project: opts.project,
+    path: relativeDocument,
+  });
+  const previousCompleted = previous?.stage_completed ?? 0;
+  if (opts.stage !== previousCompleted + 1) {
+    throw new Error(
+      `grade pipeline stage ${opts.stage} must immediately follow completed stage ${previousCompleted}`,
+    );
+  }
+  const stageCompleted =
+    opts.status === "passed" ? opts.stage : Math.min(previousCompleted, opts.stage - 1);
+  if (stageCompleted >= opts.stageTotal) {
+    if (existsSync(statePath)) unlinkSync(statePath);
+    return undefined;
+  }
+  const state: GradePipelineState = {
+    version: 1,
+    project_id: resolveProject(opts.project).id,
+    target: opts.target,
+    document: relativeDocument,
+    content_hash: stableContentHash(document),
+    stage_completed: stageCompleted,
+    stage_failed: opts.status === "failed" ? opts.stage : null,
+    stage_total: opts.stageTotal,
+    consecutive_failures:
+      opts.status === "failed"
+        ? previous?.stage_failed === opts.stage
+          ? previous.consecutive_failures + 1
+          : 1
+        : 0,
+    max_failures: opts.maxFailures,
+    last_run_id: opts.runId,
+    updated_at: (opts.now ?? new Date()).toISOString(),
+  };
+  mkdirSync(dirname(statePath), { recursive: true });
+  writeFileSync(statePath, `${JSON.stringify(state, null, 2)}\n`, "utf8");
+  return state;
+}
+
 export function discoverGradeTargets(
   opts: {
     target: GradeTarget;
@@ -737,16 +980,28 @@ export function discoverGradeTargets(
     opts.verdict === undefined &&
     opts.minScore === undefined &&
     opts.maxFindings === undefined &&
-    !opts.ungraded
+    !opts.ungraded &&
+    !opts.incomplete
   ) {
     return unique;
   }
+  const pipelineStates = opts.incomplete
+    ? loadGradePipelineStates(opts.project, rootDir)
+    : new Map<string, GradePipelineState>();
   return unique.filter((path) => {
     const rel = relativePathFromRoot(path, rootDir);
+    const document = parseMarkdown(readFileSync(path, "utf8"), rel);
+    const pipelineState = currentGradePipelineState(
+      document,
+      rel,
+      pipelineStates.get(rel),
+      opts.target,
+    );
     return matchesParsedGradeTargetFilters(
-      parseMarkdown(readFileSync(path, "utf8"), rel),
+      document,
       rel,
       opts,
+      isIncompleteGradePipelineState(pipelineState),
     );
   });
 }
@@ -808,9 +1063,11 @@ function matchesParsedGradeTargetFilters(
   document: MarkdownDocument,
   path: string,
   filters: GradeTargetFilters,
+  incomplete = false,
 ): boolean {
   const specdojo = document.data.specdojo as Record<string, unknown>;
   const grade = isRecord(specdojo.grade) ? specdojo.grade : undefined;
+  if (filters.incomplete && !incomplete) return false;
   if (filters.ungraded && grade !== undefined) return false;
   if (filters.verdict !== undefined && grade?.verdict !== filters.verdict) return false;
   if (
@@ -832,9 +1089,17 @@ export function matchesGradeTargetFilters(
   content: string,
   path: string,
   filters: GradeTargetFilters,
+  pipelineState?: GradePipelineState,
 ): boolean {
   validateGradeTargetFilters(filters);
-  return matchesParsedGradeTargetFilters(parseMarkdown(content, path), path, filters);
+  const document = parseMarkdown(content, path);
+  const currentState = currentGradePipelineState(document, path, pipelineState);
+  return matchesParsedGradeTargetFilters(
+    document,
+    path,
+    filters,
+    isIncompleteGradePipelineState(currentState),
+  );
 }
 
 function continuousViewpoints(doc: ReviewViewpointsDoc, target: GradeTarget): ReviewViewpoint[] {
@@ -2124,6 +2389,21 @@ function requireMinScore(value: string): number {
   return parsed;
 }
 
+function requirePositiveInteger(value: string): number {
+  const parsed = Number(value);
+  if (!Number.isSafeInteger(parsed) || parsed < 1) {
+    throw new Error("value must be a positive integer");
+  }
+  return parsed;
+}
+
+function requirePipelineStatus(value: string): "passed" | "failed" | "complete" {
+  if (value !== "passed" && value !== "failed" && value !== "complete") {
+    throw new Error("--status must be passed, failed, or complete");
+  }
+  return value;
+}
+
 function commandError(error: unknown): void {
   process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
   process.exitCode = 1;
@@ -2159,7 +2439,8 @@ export function registerGradeCommand(program: Command): void {
         "Select graded documents with at most this many findings",
         requireMaxFindings,
       )
-      .option("--ungraded", "Select documents without a stored grade", false);
+      .option("--ungraded", "Select documents without a stored grade", false)
+      .option("--incomplete", "Select documents with a retryable incomplete pipeline", false);
 
   addSelection(
     grade.command("list").description("Print selected document paths without writing grade plans"),
@@ -2174,6 +2455,7 @@ export function registerGradeCommand(program: Command): void {
         minScore: options.minScore,
         maxFindings: options.maxFindings,
         ungraded: options.ungraded,
+        incomplete: options.incomplete,
       });
       for (const path of paths) process.stdout.write(`${repoRelativePath(path)}\n`);
     } catch (error) {
@@ -2207,6 +2489,7 @@ export function registerGradeCommand(program: Command): void {
           minScore: options.minScore,
           maxFindings: options.maxFindings,
           ungraded: options.ungraded,
+          incomplete: options.incomplete,
         });
         if (options.reference && options.randomReference) {
           throw new Error("--reference and --random-reference cannot be combined");
@@ -2290,6 +2573,7 @@ export function registerGradeCommand(program: Command): void {
             minScore: options.minScore,
             maxFindings: options.maxFindings,
             ungraded: options.ungraded,
+            incomplete: options.incomplete,
           }).map(repoRelativePath),
         );
         const doneCriteriaByPath =
@@ -2355,6 +2639,7 @@ export function registerGradeCommand(program: Command): void {
         minScore: options.minScore,
         maxFindings: options.maxFindings,
         ungraded: options.ungraded,
+        incomplete: options.incomplete,
       });
       const errors = paths.flatMap(validateGradedDocument);
       for (const error of errors) process.stderr.write(`ERROR: ${error}\n`);
@@ -2364,4 +2649,64 @@ export function registerGradeCommand(program: Command): void {
       commandError(error);
     }
   });
+
+  grade
+    .command("state")
+    .description("Read or update persistent per-document grade pipeline state")
+    .requiredOption("--target <target>", "kata or deliverable")
+    .option("--project <projectId>", "Project id in specdojo.config.json")
+    .option("--path <path>", "Markdown document whose pipeline state is read or updated")
+    .option("--status <status>", "Record passed, failed, or complete", requirePipelineStatus)
+    .option("--stage <number>", "Current pipeline stage", requirePositiveInteger)
+    .option("--stage-total <number>", "Total pipeline stages", requirePositiveInteger, 3)
+    .option(
+      "--max-failures <number>",
+      "Consecutive failures allowed before reporting only",
+      requirePositiveInteger,
+      3,
+    )
+    .option("--run-id <id>", "Job Run id that observed this state")
+    .option("--exhausted", "List documents whose consecutive failure limit was reached", false)
+    .action((options) => {
+      try {
+        const target = requireTarget(options.target);
+        if (options.exhausted) {
+          if (options.path || options.status) {
+            throw new Error("--exhausted cannot be combined with --path or --status");
+          }
+          for (const state of listExhaustedGradePipelineStates({
+            target,
+            project: options.project,
+          })) {
+            process.stdout.write(`${state.document}\n`);
+          }
+          return;
+        }
+        if (!options.path) throw new Error("--path is required unless --exhausted is used");
+        if (options.status) {
+          if (!options.runId) throw new Error("--run-id is required with --status");
+          if (!options.stage) throw new Error("--stage is required with --status");
+          const state = recordGradePipelineStage({
+            target,
+            project: options.project,
+            path: options.path,
+            runId: options.runId,
+            stage: options.stage,
+            stageTotal: options.stageTotal,
+            maxFailures: options.maxFailures,
+            status: options.status,
+          });
+          if (state) process.stdout.write(`${JSON.stringify(state)}\n`);
+          return;
+        }
+        const state = readGradePipelineState({
+          target,
+          project: options.project,
+          path: options.path,
+        });
+        if (state) process.stdout.write(`${JSON.stringify(state)}\n`);
+      } catch (error) {
+        commandError(error);
+      }
+    });
 }

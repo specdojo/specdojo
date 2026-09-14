@@ -20,13 +20,16 @@ inputs:
   ungraded:
     type: boolean
     default: false
+  incomplete:
+    type: boolean
+    default: false
 task:
   mode: command
   owner: ARC
   precondition:
     command: |
       selection=$(
-        if [ "{{inputs.changed_only}}" = "false" ] && [ "{{inputs.ungraded}}" = "false" ]; then
+        if [ "{{inputs.changed_only}}" = "false" ] && [ "{{inputs.ungraded}}" = "false" ] && [ "{{inputs.incomplete}}" = "false" ]; then
           {{specdojo}} grade list --target kata --project {{project_id}}
         else
           if [ "{{inputs.changed_only}}" = "true" ]; then
@@ -34,6 +37,11 @@ task:
           fi
           if [ "{{inputs.ungraded}}" = "true" ]; then
             {{specdojo}} grade list --target kata --project {{project_id}} --ungraded || exit $?
+          fi
+          if [ "{{inputs.incomplete}}" = "true" ]; then
+            {{specdojo}} grade list --target kata --project {{project_id}} --incomplete || exit $?
+            # 上限到達文書は処理対象外だが、report-only Job を起動するため precondition に含める。
+            {{specdojo}} grade state --target kata --project {{project_id}} --exhausted || exit $?
           fi
         fi
       )
@@ -48,7 +56,7 @@ task:
     skip_when: empty-output
   command: |
     npm run build
-    tools/grade/run-per-document.sh --run-id {{job_run_id}} --kind {{inputs.kind}} --limit {{inputs.limit}} --changed-only={{inputs.changed_only}} --ungraded={{inputs.ungraded}}
+    tools/grade/run-per-document.sh --run-id {{job_run_id}} --kind {{inputs.kind}} --limit {{inputs.limit}} --changed-only={{inputs.changed_only}} --ungraded={{inputs.ungraded}} --incomplete={{inputs.incomplete}}
     cat logs/grade/runs/per-document/{{job_run_id}}/results.tsv
   analysis:
     agent: gemma-reporter
@@ -60,6 +68,8 @@ task:
         `--run-id` で再開できる状態かを確認する。
       - `failed` の段があるか。ある場合は rate limit、agent 側の失敗、`grade apply` の
         忠実性検証による拒否のいずれかへ切り分ける。
+      - `retry_exhausted` の文書があるか。ある場合は失敗段と連続失敗回数を示し、人手での
+        原因解消または state の再開判断を促す。
       - 3段目が実行されなかった文書について、閾値未満と2段目の失敗のどちらが理由か。
       - verdict と score の分布に、3段目の閾値の見直しを要する偏りがあるか。
 
@@ -72,4 +82,4 @@ task:
     - docs/ja/specdojo/templates
 run:
   # scheduled_at は routine の論理実行枠を表す。同じ枠の再試行は同じ Run、次の枠は別 Run にする。
-  idempotency_key: "{{job_id}}:command-v3:{{scheduled_at}}:{{inputs.kind}}:{{inputs.limit}}:{{inputs.changed_only}}:{{inputs.ungraded}}"
+  idempotency_key: "{{job_id}}:command-v4:{{scheduled_at}}:{{inputs.kind}}:{{inputs.limit}}:{{inputs.changed_only}}:{{inputs.ungraded}}:{{inputs.incomplete}}"

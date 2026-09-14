@@ -8,7 +8,8 @@ Usage: tools/grade/run-per-document.sh --run-id <id> [options]
 
 Run the three-stage grade pipeline to completion for one document before moving
 to the next document. Completed stages are persisted below --work-dir so the
-same command resumes after an interruption.
+same command resumes after an interruption. Incomplete pipelines are also
+persisted below the project execution path so a later Job Run can retry them.
 
 Options:
   --run-id <id>                 Stable id used for resume state (required)
@@ -19,6 +20,9 @@ Options:
   --path <markdown>             Limit to one document (repeatable)
   --changed-only[=true|false]   Select documents changed since the latest grade
   --ungraded[=true|false]       Select documents without a stored grade
+  --incomplete[=true|false]     Select retryable incomplete pipelines
+  --max-stage-failures <count>  Stop retrying a stage after this many failures
+                                (default: 3)
   --limit <count>               Process at most this many selected documents
   --work-dir <directory>        State and result directory
   --stage-1-executor <nickname> (default: gemma-expert-executor)
@@ -63,8 +67,11 @@ dry_run=false
 specdojo_bin=
 changed_only=false
 ungraded=false
+incomplete=false
+max_stage_failures=3
 declare -a selected_paths=()
 declare -a requested_paths=()
+declare -a exhausted_paths=()
 
 stage_1_executor=gemma-expert-executor
 stage_1_reporter=gemma-reporter
@@ -119,6 +126,19 @@ while [[ $# -gt 0 ]]; do
     --ungraded=*)
       ungraded=${1#*=}
       shift
+      ;;
+    --incomplete)
+      incomplete=true
+      shift
+      ;;
+    --incomplete=*)
+      incomplete=${1#*=}
+      shift
+      ;;
+    --max-stage-failures)
+      require_value "$@"
+      max_stage_failures=$2
+      shift 2
       ;;
     --limit)
       require_value "$@"
@@ -202,6 +222,9 @@ done
 [[ "$changed_only" == true || "$changed_only" == false ]] ||
   fail "--changed-only must be true or false"
 [[ "$ungraded" == true || "$ungraded" == false ]] || fail "--ungraded must be true or false"
+[[ "$incomplete" == true || "$incomplete" == false ]] || fail "--incomplete must be true or false"
+[[ "$max_stage_failures" =~ ^[1-9][0-9]*$ ]] ||
+  fail "--max-stage-failures must be a positive integer"
 [[ "$target" == kata || "$target" == deliverable ]] ||
   fail "--target must be kata or deliverable"
 
@@ -325,15 +348,20 @@ select_documents() {
   local root
   local path
   local output
+  local requested
+  local requested_path
   local -a candidates=()
+  local -a exhausted_candidates=()
+  local -a limited_candidates=()
+  local -A exhausted_set=()
   local -a list_command=(grade list --target "$target" --project "$project")
   for path in "${requested_paths[@]}"; do
     list_command+=(--path "$path")
   done
 
-  if ! $changed_only && ! $ungraded && [[ ${#requested_paths[@]} -gt 0 ]]; then
+  if ! $changed_only && ! $ungraded && ! $incomplete && [[ ${#requested_paths[@]} -gt 0 ]]; then
     candidates=("${requested_paths[@]}")
-  elif ! $changed_only && ! $ungraded && [[ "$target" == kata ]]; then
+  elif ! $changed_only && ! $ungraded && ! $incomplete && [[ "$target" == kata ]]; then
     if [[ ${#requested_paths[@]} -eq 0 ]]; then
       for root in "${target_roots[@]}"; do
         while IFS= read -r path; do
@@ -341,7 +369,7 @@ select_documents() {
         done < <(find "$root" -type f -name '*.md' -not -path '*/generated/*' -print)
       done
     fi
-  elif ! $changed_only && ! $ungraded; then
+  elif ! $changed_only && ! $ungraded && ! $incomplete; then
     output=$("${specdojo_command[@]}" "${list_command[@]}") || fail "grade list failed"
     while IFS= read -r path; do
       [[ -n "$path" ]] && candidates+=("$path")
@@ -361,26 +389,62 @@ select_documents() {
         [[ -n "$path" ]] && candidates+=("$path")
       done <<<"$output"
     fi
+    if $incomplete; then
+      output=$("${specdojo_command[@]}" "${list_command[@]}" --incomplete) ||
+        fail "grade list --incomplete failed"
+      while IFS= read -r path; do
+        [[ -n "$path" ]] && candidates+=("$path")
+      done <<<"$output"
+    fi
+  fi
+
+  exhausted_paths=()
+  if $incomplete; then
+    output=$("${specdojo_command[@]}" grade state --target "$target" --project "$project" --exhausted) ||
+      fail "grade state --exhausted failed"
+    while IFS= read -r path; do
+      [[ -n "$path" ]] && path_matches_target "$path" || continue
+      if [[ ${#requested_paths[@]} -gt 0 ]]; then
+        requested=false
+        for requested_path in "${requested_paths[@]}"; do
+          if [[ "$path" == "$requested_path" ]]; then
+            requested=true
+            break
+          fi
+        done
+        $requested || continue
+      fi
+      exhausted_candidates+=("$path")
+      exhausted_set["$path"]=1
+    done <<<"$output"
   fi
 
   selected_paths=()
   while IFS= read -r path; do
     if [[ -n "$path" ]] && path_matches_target "$path"; then
+      limited_candidates+=("$path")
+    fi
+  done < <(printf '%s\n' "${candidates[@]}" "${exhausted_candidates[@]}" | LC_ALL=C sort -u)
+  if ((limit > 0 && ${#limited_candidates[@]} > limit)); then
+    limited_candidates=("${limited_candidates[@]:0:limit}")
+  fi
+  for path in "${limited_candidates[@]}"; do
+    if [[ -n "${exhausted_set[$path]-}" ]]; then
+      exhausted_paths+=("$path")
+    else
       selected_paths+=("$path")
     fi
-  done < <(printf '%s\n' "${candidates[@]}" | LC_ALL=C sort -u)
-  if ((limit > 0 && ${#selected_paths[@]} > limit)); then
-    selected_paths=("${selected_paths[@]:0:limit}")
-  fi
+  done
 }
 
 requested_signature=$(printf '%s\n' "${requested_paths[@]}" | node -e \
   'const c=require("node:crypto");let s="";process.stdin.on("data",d=>s+=d).on("end",()=>process.stdout.write(c.createHash("sha256").update(s).digest("hex")))')
-expected_config=$(printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
-  "$project" "$target" "$kind" "$limit" "$changed_only" "$ungraded" "$requested_signature" \
+expected_config=$(printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
+  "$project" "$target" "$kind" "$limit" "$changed_only" "$ungraded" "$incomplete" \
+  "$max_stage_failures" "$requested_signature" \
   "$stage_1_executor" "$stage_1_reporter" "$stage_1_reference" \
   "$stage_2_executor:$stage_2_reporter:$stage_2_reference" \
-  "$stage_3_executor:$stage_3_reporter:$stage_3_reference" "selection-v2" "pipeline-v2")
+  "$stage_3_executor:$stage_3_reporter:$stage_3_reference" "selection-v3" "pipeline-v3")
 config_file="$work_dir/config.tsv"
 selection_file="$work_dir/selection.txt"
 results_file="$work_dir/results.tsv"
@@ -410,9 +474,10 @@ else
 fi
 
 print_configuration() {
-  printf 'run_id=%s project=%s target=%s kind=%s changed_only=%s ungraded=%s documents=%s work_dir=%s\n' \
-    "$run_id" "$project" "$target" "$kind" "$changed_only" "$ungraded" \
-    "${#selected_paths[@]}" "$work_dir"
+  printf 'run_id=%s project=%s target=%s kind=%s changed_only=%s ungraded=%s incomplete=%s max_stage_failures=%s documents=%s exhausted=%s work_dir=%s\n' \
+    "$run_id" "$project" "$target" "$kind" "$changed_only" "$ungraded" "$incomplete" \
+    "$max_stage_failures" \
+    "${#selected_paths[@]}" "${#exhausted_paths[@]}" "$work_dir"
   printf 'stage=1 executor=%s reporter=%s reference=%s\n' \
     "$stage_1_executor" "$stage_1_reporter" "$stage_1_reference"
   printf 'stage=2 executor=%s reporter=%s reference=%s\n' \
@@ -426,11 +491,14 @@ if $dry_run; then
   if [[ ${#selected_paths[@]} -gt 0 ]]; then
     printf '%s\n' "${selected_paths[@]}"
   fi
+  for path in "${exhausted_paths[@]}"; do
+    printf 'retry_exhausted document=%s\n' "$path"
+  done
   exit 0
 fi
 
 if [[ ! -f "$results_file" ]]; then
-  printf 'recorded_at\tdocument\tstage\tstatus\tduration_seconds\tverdict\tscore\tfindings\texecutor\treporter\treference\n' >"$results_file"
+  printf 'recorded_at\tdocument\tstage\tstatus\tduration_seconds\tverdict\tscore\tfindings\texecutor\treporter\treference\tconsecutive_failures\tmax_failures\n' >"$results_file"
 fi
 
 current_document=
@@ -484,10 +552,62 @@ record_result() {
   local executor=$8
   local reporter=$9
   local reference=${10}
-  printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
+  local consecutive_failures=${11-}
+  local max_failures=${12-}
+  printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
     "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$document" "$stage" "$status" "$duration" \
-    "$verdict" "$score" "$findings" "$executor" "$reporter" "$reference" >>"$results_file"
+    "$verdict" "$score" "$findings" "$executor" "$reporter" "$reference" \
+    "$consecutive_failures" "$max_failures" >>"$results_file"
 }
+
+read_pipeline_state() {
+  local document=$1
+  "${specdojo_command[@]}" grade state --target "$target" --project "$project" --path "$document"
+}
+
+pipeline_state_fields() {
+  # shellcheck disable=SC2016
+  node -e '
+    let source = "";
+    process.stdin.on("data", (chunk) => source += chunk).on("end", () => {
+      if (!source.trim()) return;
+      const state = JSON.parse(source);
+      process.stdout.write([
+        state.stage_completed,
+        state.stage_failed ?? "none",
+        state.consecutive_failures,
+        state.max_failures,
+      ].join("\t") + "\n");
+    });
+  '
+}
+
+record_pipeline_stage() {
+  local document=$1
+  local stage=$2
+  local status=$3
+  local state_output
+  pipeline_consecutive_failures=
+  pipeline_max_failures=
+  state_output=$("${specdojo_command[@]}" grade state --target "$target" --project "$project" \
+    --path "$document" --status "$status" --stage "$stage" --stage-total 3 \
+    --max-failures "$max_stage_failures" --run-id "$run_id") ||
+    fail "could not persist pipeline state for document=$document stage=$stage status=$status"
+  if [[ "$status" == failed ]]; then
+    IFS=$'\t' read -r _ _ pipeline_consecutive_failures pipeline_max_failures < <(
+      printf '%s' "$state_output" | pipeline_state_fields
+    )
+  fi
+}
+
+for document in "${exhausted_paths[@]}"; do
+  pipeline_state=$(read_pipeline_state "$document") || fail "grade state read failed: $document"
+  IFS=$'\t' read -r _ exhausted_stage exhausted_failures exhausted_max < <(
+    printf '%s' "$pipeline_state" | pipeline_state_fields
+  )
+  record_result "$document" "$exhausted_stage" retry_exhausted 0 "" "" "" "" "" none \
+    "$exhausted_failures" "$exhausted_max"
+done
 
 save_stage_state() {
   local state_file=$1
@@ -536,8 +656,11 @@ execute_stage() {
 
   if [[ -f "$state_file" ]]; then
     IFS=$'\t' read -r stage_status stage_verdict stage_score stage_findings <"$state_file"
-    printf 'resume stage=%s document=%s status=%s\n' "$stage" "$document" "$stage_status"
-    return 0
+    if [[ "$stage_status" != failed ]]; then
+      printf 'resume stage=%s document=%s status=%s\n' "$stage" "$document" "$stage_status"
+      return 0
+    fi
+    printf 'retry stage=%s document=%s previous_status=failed\n' "$stage" "$document"
   fi
 
   current_stage=$stage
@@ -552,7 +675,8 @@ execute_stage() {
     :
   else
     exit_code=$?
-    record_result "$document" "$stage" failed "$((SECONDS - started_at))" "" "" "" "$executor" "$reporter" "$reference"
+    record_pipeline_stage "$document" "$stage" failed
+    record_result "$document" "$stage" failed "$((SECONDS - started_at))" "" "" "" "$executor" "$reporter" "$reference" "$pipeline_consecutive_failures" "$pipeline_max_failures"
     save_stage_state "$state_file" failed "" "" ""
     stage_status=failed
     return 0
@@ -562,7 +686,8 @@ execute_stage() {
   mapfile -t reporter_plans < <(find "$stage_dir/plans" -maxdepth 1 -type f -name '*-grade-reporter-plan.md' -print)
   if [[ ${#executor_plans[@]} -ne 1 || ${#reporter_plans[@]} -ne 1 ]]; then
     printf 'expected exactly one executor and reporter plan\n' >>"$log_file"
-    record_result "$document" "$stage" failed "$((SECONDS - started_at))" "" "" "" "$executor" "$reporter" "$reference"
+    record_pipeline_stage "$document" "$stage" failed
+    record_result "$document" "$stage" failed "$((SECONDS - started_at))" "" "" "" "$executor" "$reporter" "$reference" "$pipeline_consecutive_failures" "$pipeline_max_failures"
     save_stage_state "$state_file" failed "" "" ""
     stage_status=failed
     return 0
@@ -578,7 +703,8 @@ execute_stage() {
       record_result "$document" "$stage" rate_limited "$((SECONDS - started_at))" "" "" "" "$executor" "$reporter" "$reference"
       return 75
     fi
-    record_result "$document" "$stage" failed "$((SECONDS - started_at))" "" "" "" "$executor" "$reporter" "$reference"
+    record_pipeline_stage "$document" "$stage" failed
+    record_result "$document" "$stage" failed "$((SECONDS - started_at))" "" "" "" "$executor" "$reporter" "$reference" "$pipeline_consecutive_failures" "$pipeline_max_failures"
     save_stage_state "$state_file" failed "" "" ""
     stage_status=failed
     return 0
@@ -599,7 +725,8 @@ execute_stage() {
       record_result "$document" "$stage" rate_limited "$((SECONDS - started_at))" "" "" "" "$executor" "$reporter" "$reference"
       return 75
     fi
-    record_result "$document" "$stage" failed "$((SECONDS - started_at))" "" "" "" "$executor" "$reporter" "$reference"
+    record_pipeline_stage "$document" "$stage" failed
+    record_result "$document" "$stage" failed "$((SECONDS - started_at))" "" "" "" "$executor" "$reporter" "$reference" "$pipeline_consecutive_failures" "$pipeline_max_failures"
     save_stage_state "$state_file" failed "" "" ""
     stage_status=failed
     return 0
@@ -608,7 +735,8 @@ execute_stage() {
   if run_specdojo "$log_file" "${apply_command[@]}"; then
     :
   else
-    record_result "$document" "$stage" failed "$((SECONDS - started_at))" "" "" "" "$executor" "$reporter" "$reference"
+    record_pipeline_stage "$document" "$stage" failed
+    record_result "$document" "$stage" failed "$((SECONDS - started_at))" "" "" "" "$executor" "$reporter" "$reference" "$pipeline_consecutive_failures" "$pipeline_max_failures"
     save_stage_state "$state_file" failed "" "" ""
     stage_status=failed
     return 0
@@ -617,7 +745,8 @@ execute_stage() {
   IFS=$'\t' read -r stage_verdict stage_score stage_findings < <(read_grade_metrics "$document")
   if [[ -z "$stage_score" || -z "$stage_findings" || "$stage_verdict" == ungraded ]]; then
     printf 'grade metrics missing after apply\n' >>"$log_file"
-    record_result "$document" "$stage" failed "$((SECONDS - started_at))" "$stage_verdict" "$stage_score" "$stage_findings" "$executor" "$reporter" "$reference"
+    record_pipeline_stage "$document" "$stage" failed
+    record_result "$document" "$stage" failed "$((SECONDS - started_at))" "$stage_verdict" "$stage_score" "$stage_findings" "$executor" "$reporter" "$reference" "$pipeline_consecutive_failures" "$pipeline_max_failures"
     save_stage_state "$state_file" failed "$stage_verdict" "$stage_score" "$stage_findings"
     stage_status=failed
     return 0
@@ -626,6 +755,7 @@ execute_stage() {
   stage_status=passed
   record_result "$document" "$stage" passed "$((SECONDS - started_at))" "$stage_verdict" "$stage_score" "$stage_findings" "$executor" "$reporter" "$reference"
   save_stage_state "$state_file" passed "$stage_verdict" "$stage_score" "$stage_findings"
+  record_pipeline_stage "$document" "$stage" passed
 }
 
 mark_stage_skipped() {
@@ -638,6 +768,7 @@ mark_stage_skipped() {
   local reason=$7
   local state_file="$document_dir/stage-$stage.state.tsv"
   if [[ ! -f "$state_file" ]]; then
+    printf 'resume stage=%s document=%s status=%s\n' "$stage" "$document" "$reason"
     record_result "$document" "$stage" "$reason" 0 "" "" "" "$executor" "$reporter" "$reference"
     save_stage_state "$state_file" "$reason" "" "" ""
   fi
@@ -678,6 +809,7 @@ stage_1_reference_for_document() {
 
 processed=0
 completed=0
+incomplete_documents=0
 for document in "${selected_paths[@]}"; do
   current_document=$document
   current_stage=
@@ -693,24 +825,60 @@ for document in "${selected_paths[@]}"; do
   processed=$((processed + 1))
   printf 'document start: %s\n' "$document"
   document_stage_1_reference=$(stage_1_reference_for_document "$document")
-
-  if execute_stage "$document" "$document_dir" 1 "$stage_1_executor" "$stage_1_reporter" "$document_stage_1_reference"; then
-    :
-  else
-    exit_code=$?
-    [[ $exit_code -eq 75 ]] && exit 75
-    exit "$exit_code"
+  pipeline_state=$(read_pipeline_state "$document") || fail "grade state read failed: $document"
+  start_stage=1
+  if [[ -n "$pipeline_state" ]]; then
+    IFS=$'\t' read -r completed_stage failed_stage _ _ < <(
+      printf '%s' "$pipeline_state" | pipeline_state_fields
+    )
+    if [[ "$failed_stage" != none ]]; then
+      start_stage=$failed_stage
+    else
+      start_stage=$((completed_stage + 1))
+    fi
+    printf 'document resume: %s start_stage=%s\n' "$document" "$start_stage"
   fi
 
-  if execute_stage "$document" "$document_dir" 2 "$stage_2_executor" "$stage_2_reporter" "$stage_2_reference"; then
-    stage_2_status=$stage_status
-    stage_2_verdict=$stage_verdict
-    stage_2_score=$stage_score
-    stage_2_findings=$stage_findings
+  if ((start_stage <= 1)); then
+    if execute_stage "$document" "$document_dir" 1 "$stage_1_executor" "$stage_1_reporter" "$document_stage_1_reference"; then
+      :
+    else
+      exit_code=$?
+      [[ $exit_code -eq 75 ]] && exit 75
+      exit "$exit_code"
+    fi
+    if [[ "$stage_status" == failed ]]; then
+      incomplete_documents=$((incomplete_documents + 1))
+      printf 'document incomplete: %s failed_stage=1\n' "$document"
+      continue
+    fi
   else
-    exit_code=$?
-    [[ $exit_code -eq 75 ]] && exit 75
-    exit "$exit_code"
+    mark_stage_skipped "$document" "$document_dir" 1 "$stage_1_executor" "$stage_1_reporter" "$document_stage_1_reference" resumed_completed
+  fi
+
+  if ((start_stage <= 2)); then
+    if execute_stage "$document" "$document_dir" 2 "$stage_2_executor" "$stage_2_reporter" "$stage_2_reference"; then
+      stage_2_status=$stage_status
+      stage_2_verdict=$stage_verdict
+      stage_2_score=$stage_score
+      stage_2_findings=$stage_findings
+    else
+      exit_code=$?
+      [[ $exit_code -eq 75 ]] && exit 75
+      exit "$exit_code"
+    fi
+    if [[ "$stage_2_status" == failed ]]; then
+      incomplete_documents=$((incomplete_documents + 1))
+      printf 'document incomplete: %s failed_stage=2\n' "$document"
+      continue
+    fi
+  else
+    mark_stage_skipped "$document" "$document_dir" 2 "$stage_2_executor" "$stage_2_reporter" "$stage_2_reference" resumed_completed
+    # A persistent stage-3 retry exists only after stage 2 passed the expert threshold.
+    stage_2_status=passed
+    stage_2_verdict=pass
+    stage_2_score=96
+    stage_2_findings=0
   fi
 
   if [[ "$stage_2_status" == passed && "$stage_2_verdict" == pass && "$stage_2_score" -ge 96 && "$stage_2_findings" -le 1 ]]; then
@@ -721,10 +889,16 @@ for document in "${selected_paths[@]}"; do
       [[ $exit_code -eq 75 ]] && exit 75
       exit "$exit_code"
     fi
+    if [[ "$stage_status" == failed ]]; then
+      incomplete_documents=$((incomplete_documents + 1))
+      printf 'document incomplete: %s failed_stage=3\n' "$document"
+      continue
+    fi
   else
     mark_stage_skipped "$document" "$document_dir" 3 "$stage_3_executor" "$stage_3_reporter" "$stage_3_reference" skipped_condition
   fi
 
+  record_pipeline_stage "$document" 3 complete
   printf '%s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" >"$complete_file"
   completed=$((completed + 1))
   printf 'document complete: %s\n' "$document"
@@ -732,5 +906,6 @@ done
 
 current_document=
 current_stage=
-printf 'grade pipeline complete: selected=%s processed=%s completed_now=%s results=%s\n' \
-  "${#selected_paths[@]}" "$processed" "$completed" "$results_file"
+printf 'grade pipeline complete: selected=%s processed=%s completed_now=%s incomplete=%s exhausted=%s results=%s\n' \
+  "${#selected_paths[@]}" "$processed" "$completed" "$incomplete_documents" \
+  "${#exhausted_paths[@]}" "$results_file"
