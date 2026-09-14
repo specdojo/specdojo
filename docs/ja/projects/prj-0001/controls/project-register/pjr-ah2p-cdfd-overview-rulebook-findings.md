@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-ah2p-cdfd-overview-rulebook-findings
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-09-13T21:55:54Z"
   due_on: "2026-09-30"
+  completed_at: "2026-09-14T13:54:16Z"
+  conclusion: cdfd-overview-rulebook の finding 8 件と cdfd-overview 本体の finding 4 件を解消した。保管先は物理媒体の共有を注記付きで許す条件を加えて sample を顧客欄・つけ欄に分離、完成判定を 16 項目へ拡充、ノード総数は外部主体を含めないと明記、用語表に STSD / CSTD / retrofit / Orchestrator を追加、参加者由来の入力はエッジ対応の対象外と規定、overview の担当列を Role code 主体で実担当を併記する形に統一した。
 ---
 
 # PJR-AH2P cdfd-overview-rulebook の grade finding 8 件（sample との保管先重複・完成判定の網羅性・用語）を解消する

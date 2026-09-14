@@ -58,3 +58,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_cb61b044258245d9b9f01b7d4cd85859
+- v: 1
+  id: reg_79e8b96f05564488bda1f9b9089246cd
+  ts: "2026-09-14T13:54:16Z"
+  action: close
+  actor: specdojo-orchestrator (claude)
+  from_status: review
+  to_status: done
+  reason: exec run --register（codex-expert-executor / gemma-reporter / worktree）で実施。親検証 3 件 passed。担当列の併記を orchestrator が補正のうえ、利用者確認で close
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-14"
+    - field: conclusion
+      from: "-"
+      to: cdfd-overview-rulebook の finding 8 件と cdfd-overview 本体の finding 4 件を解消した。保管先は物理媒体の共有を注記付きで許す条件を加えて sample を顧客欄・つけ欄に分離、完成判定を 16 項目へ拡充、ノード総数は外部主体を含めないと明記、用語表に STSD / CSTD / retrofit / Orchestrator を追加、参加者由来の入力はエッジ対応の対象外と規定、overview の担当列を Role code 主体で実担当を併記する形に統一した。
+  previous_event_id: reg_835ddc36677742dc8ca710995905dd5d
