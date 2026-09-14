@@ -134,13 +134,14 @@ Personal Access Token は次の条件で発行する。
 
 ## 6. 作業内容
 
-| No  | 作業                               | 担当 | 状態 | メモ                                |
-| --- | ---------------------------------- | ---- | ---- | ----------------------------------- |
-| 1   | publisher `specdojo` を作成する    | ARC  | open | ID は変更できないため確認して行う   |
-| 2   | Personal Access Token を発行する   | ARC  | open | All accessible / Marketplace Manage |
-| 3   | `package.json` の公開項目を揃える  | ARC  | open | repository、license、icon ほか      |
-| 4   | 公開して動作を確認する             | ARC  | open | インストールして検証する            |
-| 5   | 公開手順とトークン更新を文書化する | ARC  | open | 再現できる形にする                  |
+| No  | 作業                               | 担当 | 状態 | メモ                                                                           |
+| --- | ---------------------------------- | ---- | ---- | ------------------------------------------------------------------------------ |
+| 1   | publisher `specdojo` を作成する    | ARC  | open | ID は変更できないため確認して行う                                              |
+| 2   | Personal Access Token を発行する   | ARC  | open | All accessible / Marketplace Manage                                            |
+| 3   | `package.json` の公開項目を揃える  | ARC  | open | repository、license、icon ほか                                                 |
+| 4   | 公開して動作を確認する             | ARC  | open | インストールして検証する                                                       |
+| 5   | 公開手順とトークン更新を文書化する | ARC  | open | 再現できる形にする                                                             |
+| 6   | 公開後に導入手順と推奨を差し替える | ARC  | open | docs-editing-guide の vsix 手順を Marketplace へ、extensions.json に拡張を追加 |
 
 ## 7. 対応結果
 
