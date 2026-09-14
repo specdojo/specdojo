@@ -32,3 +32,22 @@
     - field: due
       from: ""
       to: "2026-09-30"
+- v: 1
+  id: reg_5e9f55303dec4a74934f1618bcf54602
+  ts: "2026-09-14T12:58:47Z"
+  action: close
+  actor: specdojo-orchestrator (claude)
+  from_status: open
+  to_status: decided
+  reason: 決定者 ARC。実装（拡張の 2 コマンド、fmt-md-table.ts の削除、tasks.json の委譲、guide の追従）が決定内容と一致することをオーケストレーターが確認して close
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-09-14"
+    - field: conclusion
+      from: "-"
+      to: VS Code 依存の編集支援機能（表整形、[[id]] のリンク表示と遷移）を packages/vscode-specdojo 拡張へ集約し、Marketplace 配布を正とする。fmt-md-table.ts は拡張へ移して削除済み、tasks.json のタスクは移行期間中は拡張コマンドへ委譲する形で残す。実装が決定どおり揃っていることを確認し、公開（PJR-0143）と導入手順（PJR-0142）は個別に追跡する。
+  previous_event_id: reg_14c7ad95dc374cfcbc5259e3ef6398b5

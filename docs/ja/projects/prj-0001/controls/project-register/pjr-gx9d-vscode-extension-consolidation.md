@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-gx9d-vscode-extension-consolidation
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: medium
   owner: ARC
   registered_at: "2026-09-05T23:49:57Z"
   due_on: "2026-09-30"
+  completed_at: "2026-09-14T12:58:47Z"
+  conclusion: VS Code 依存の編集支援機能（表整形、[[id]] のリンク表示と遷移）を packages/vscode-specdojo 拡張へ集約し、Marketplace 配布を正とする。fmt-md-table.ts は拡張へ移して削除済み、tasks.json のタスクは移行期間中は拡張コマンドへ委譲する形で残す。実装が決定どおり揃っていることを確認し、公開（PJR-0143）と導入手順（PJR-0142）は個別に追跡する。
 ---
 
 # PJR-GX9D VS Code 関連機能を SpecDojo 拡張へ集約する方針を定める
@@ -76,10 +78,10 @@ CLI 引数を読んでファイルへ書く単体スクリプトである。エ�
 
 ## 5. 承認
 
-| 項目   | 内容   |
-| ------ | ------ |
-| 決定者 | _TODO_ |
-| 決定日 | _TODO_ |
+| 項目   | 内容       |
+| ------ | ---------- |
+| 決定者 | ARC        |
+| 決定日 | 2026-09-14 |
 
 ## 6. 影響範囲とフォローアップ
 
@@ -92,7 +94,7 @@ CLI 引数を読んでファイルへ書く単体スクリプトである。エ�
 | 3   | PJR-0143 | Marketplace へ公開する           | 公開後でないと導入手順を書けない         |
 | 4   | PJR-0142 | 編集ガイドへ導入手順を追記する   | 公開先が定まってから書く                 |
 
-各項目の完了条件は本決定を受けて個別に記述する。現在はいずれも `_TODO_` のままである。
+各項目の完了条件は本決定を受けて個別に記述する。2026-09-14 時点で PJR-K513 と PJR-0144 は done、PJR-0143 と PJR-0142 は open で個別に追跡する。
 
 `.vscode/tasks.json` の `Format Markdown Table` は、拡張の公開後も当面残す。既存利用者が
 拡張を導入するまでの移行期間を設けるためである。撤去の時期は PJR-0142 の完了後に判断する。
