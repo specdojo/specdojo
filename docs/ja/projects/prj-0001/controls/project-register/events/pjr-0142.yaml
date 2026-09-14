@@ -82,3 +82,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_ed8c64a7b2ba49b3be957eaebef255bc
+- v: 1
+  id: reg_0986b98706cb469fa3396c43480e00b1
+  ts: "2026-09-14T23:11:41Z"
+  action: close
+  actor: specdojo-orchestrator (claude)
+  from_status: review
+  to_status: done
+  reason: exec run --register（codex-expert-executor / gemma-reporter / worktree）で実施。親検証 3 件 passed。章番号参照をタイトル参照へ orchestrator が補正のうえ、利用者確認で close
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-15"
+    - field: conclusion
+      from: "-"
+      to: docs-editing-guide に「VS Code 拡張を準備する」を新設し、必要な拡張 4 件（remark、markdownlint、Markdown All in One、SpecDojo）の ID・役割・扱い、SpecDojo 拡張の VSIX からの導入手順と公開後の差し替え、提供機能 3 件（リンク表示・遷移、ID で開く、表整形）を記載した。guide-authoring-standard のタスク参照は拡張のコマンドへ追従済み。.vscode/extensions.json への追加は未公開 ID を推奨に入れないため公開後（PJR-0143 作業 6）とする。
+  previous_event_id: reg_7de1dcca52c9480ea23c1da5fe50f68f

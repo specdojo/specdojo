@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-0142-vs-code-specdojo
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   owner: ARC
   due_on: "2026-10-31"
+  completed_at: "2026-09-14T23:11:41Z"
+  conclusion: docs-editing-guide に「VS Code 拡張を準備する」を新設し、必要な拡張 4 件（remark、markdownlint、Markdown All in One、SpecDojo）の ID・役割・扱い、SpecDojo 拡張の VSIX からの導入手順と公開後の差し替え、提供機能 3 件（リンク表示・遷移、ID で開く、表整形）を記載した。guide-authoring-standard のタスク参照は拡張のコマンドへ追従済み。.vscode/extensions.json への追加は未公開 ID を推奨に入れないため公開後（PJR-0143 作業 6）とする。
 ---
 
 # PJR-0142 ドキュメント編集ガイドにVS Code拡張とSpecDojo拡張の説明を追加
