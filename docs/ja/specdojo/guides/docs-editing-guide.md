@@ -29,15 +29,15 @@ SpecDojo で扱うドキュメントの編集に役立つ、Visual Studio Code�
 VS Code を使う場合は、次の拡張を用途に応じて導入してください。拡張の利用は推奨であり、
 SpecDojo 文書そのものを VS Code 以外のエディタで編集することもできます。
 
-| 拡張                | 拡張 ID                          | 役割                                                       | 扱い                                       |
-| ------------------- | -------------------------------- | ---------------------------------------------------------- | ------------------------------------------ |
-| remark              | `unifiedjs.vscode-remark`        | Markdown を remark の設定に従って整形します                | このリポジトリの推奨拡張                   |
-| markdownlint        | `davidanson.vscode-markdownlint` | Markdown の記法違反を編集中に表示します                    | このリポジトリの推奨拡張                   |
-| Markdown All in One | `yzhang.markdown-all-in-one`     | 見出し番号を追加・更新します                               | 2章の手順を使う場合に導入                  |
-| SpecDojo            | `specdojo.vscode-specdojo`       | 文書 ID のリンク表示・遷移と Markdown 表の整形を提供します | Marketplace 公開までは VSIX から手動で導入 |
+| 拡張                | 拡張 ID                          | 役割                                                       | 扱い                                         |
+| ------------------- | -------------------------------- | ---------------------------------------------------------- | -------------------------------------------- |
+| remark              | `unifiedjs.vscode-remark`        | Markdown を remark の設定に従って整形します                | このリポジトリの推奨拡張                     |
+| markdownlint        | `davidanson.vscode-markdownlint` | Markdown の記法違反を編集中に表示します                    | このリポジトリの推奨拡張                     |
+| Markdown All in One | `yzhang.markdown-all-in-one`     | 見出し番号を追加・更新します                               | 「見出しに番号を付与」の手順を使う場合に導入 |
+| SpecDojo            | `specdojo.vscode-specdojo`       | 文書 ID のリンク表示・遷移と Markdown 表の整形を提供します | Marketplace 公開までは VSIX から手動で導入   |
 
 リポジトリを VS Code で開くと、`.vscode/extensions.json` に記載された remark と markdownlint の
-インストールが提案されます。Markdown All in One は、2章の見出し番号操作を使う場合に Marketplace
+インストールが提案されます。Markdown All in One は、「見出しに番号を付与」の操作を使う場合に Marketplace
 で拡張 ID を検索してインストールしてください。
 
 ### 1.1. SpecDojo 拡張を VSIX から導入する
@@ -72,7 +72,7 @@ SpecDojo 拡張は、ワークスペースの `.specdojo/doc-index.json` を使�
 文書リンクは、本文では `[[id]]` または `[[id|表示名]]` と記述します。Markdown 表のセル内では、
 列区切りとの衝突を避けるため `[[id\|表示名]]` と記述してください。
 
-表整形の詳細と Prettier を併用する場合の注意点は4章を参照してください。
+表整形の詳細と Prettier を併用する場合の注意点は「Markdown 表フォーマットガイド」を参照してください。
 
 ## 2. 見出しに番号を付与
 
