@@ -77,19 +77,33 @@ Marketplace で `specdojo` が未取得であることを確認済みである�
 アカウントの所有主体（個人か個人事業主か）は Marketplace の機能に影響しない。税務・管理責任の
 観点で別途判断する。
 
+#### 4.3.1. 表示名と所有アカウント（2026-09-15 決定）
+
+| 項目                      | 決定                                                                                                 |
+| ------------------------- | ---------------------------------------------------------------------------------------------------- |
+| publisher 表示名          | `SpecDojo`。ID・GitHub 組織・npm と揃える。事業者名は表示名にしない                                  |
+| publisher 説明            | SpecDojo が仕様駆動開発のためのドキュメントフレームワークであることと、TinyShrine が開発・保守する旨 |
+| Web サイト・認証ドメイン  | SpecDojo のドメインがあればそれ、なければ `tinyshrine.dev`。認証済みバッジは DNS の TXT で証明       |
+| 所有 Microsoft アカウント | TinyShrine の Microsoft アカウント（MSA）。職場の Entra ID アカウントは使わない                      |
+| メンバー                  | 個人アカウントを owner として追加し、所有アカウントに問題が起きても公開を止めない                    |
+| 拡張の `displayName`      | `SpecDojo`（記載済み）                                                                               |
+
+所有アカウントを屋号側にするのは責任の移転ではなく、公開資産・PAT の通知・規約同意を事業側に揃えて
+記録を整理するためである。屋号は法的には個人と同一主体であり、規約上の責任主体は変わらない。
+
 ### 4.4. 取得手順
 
 publisher の作成は Azure DevOps アカウントの作成から始まる。
 
-| 順  | 手順                                                                   |
-| --- | ---------------------------------------------------------------------- |
-| 1   | Microsoft アカウントを用意する。既存のものでよい                       |
-| 2   | `https://aka.ms/vscode-create-publisher` で publisher を作成する       |
-| 3   | ID に `specdojo` を入力する。ID は後から変更できない                   |
-| 4   | 表示名、説明、アイコンなど公開情報を設定する。表示名は後から変更できる |
-| 5   | Azure DevOps で Personal Access Token を発行する                       |
-| 6   | `npx @vscode/vsce login specdojo` でトークンを登録する                 |
-| 7   | `npx @vscode/vsce publish` で公開する                                  |
+| 順  | 手順                                                                                             |
+| --- | ------------------------------------------------------------------------------------------------ |
+| 1   | TinyShrine の Microsoft アカウント（MSA）を用意する。無ければ屋号のメールで作成する              |
+| 2   | `https://aka.ms/vscode-create-publisher` で publisher を作成する                                 |
+| 3   | ID に `specdojo` を入力する。ID は後から変更できない                                             |
+| 4   | 表示名 `SpecDojo`、説明、Web サイト、アイコンを設定し、個人アカウントを owner メンバーに追加する |
+| 5   | Azure DevOps で Personal Access Token を発行する                                                 |
+| 6   | `npx @vscode/vsce login specdojo` でトークンを登録する                                           |
+| 7   | `npx @vscode/vsce publish` で公開する                                                            |
 
 Personal Access Token は次の条件で発行する。
 
