@@ -1,0 +1,13 @@
+3文書を更新しました。
+
+- [docs-editing-guide.md](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0142/docs/ja/specdojo/guides/docs-editing-guide.md): 推奨拡張、VSIX 導入手順、SpecDojo 拡張の機能を追加
+- [guide-authoring-standard.md](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0142/docs/ja/specdojo/standards/guide-authoring-standard.md): 表整形コマンドの提供元を明確化
+- [PJR-0142 個票](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0142/docs/ja/projects/prj-0001/controls/project-register/pjr-0142-vs-code-specdojo.md): 作業内容と対応結果を更新
+
+Marketplace 未公開のため推奨拡張への追加は PJR-0143 に継続しました。result と登録簿ステータスは変更していません。
+
+Markdown、catalog、index、文書生成は成功しています。docs-site build のみ、Mermaid 用 Chromium のソケット操作が sandbox に拒否され、完走できませんでした。
+
+<specdojo_executor_evidence>
+{"final_message":"3文書の編集と主要検証は完了。docs-site buildのみsandboxのChromium制約で未完走。","validations":[{"command":"npx prettier --write docs/ja/specdojo/guides/docs-editing-guide.md docs/ja/specdojo/standards/guide-authoring-standard.md docs/ja/projects/prj-0001/controls/project-register/pjr-0142-vs-code-specdojo.md","status":"passed","summary":"3ファイルを整形済み"},{"command":"npx markdownlint docs/ja/specdojo/guides/docs-editing-guide.md docs/ja/specdojo/standards/guide-authoring-standard.md docs/ja/projects/prj-0001/controls/project-register/pjr-0142-vs-code-specdojo.md","status":"passed","summary":"対象3ファイルに違反なし"},{"command":"npm run -s lint:md","status":"passed","summary":"全Markdown検査成功"},{"command":"npx tsx src/specdojo.ts register build","status":"failed","summary":"tsxのIPCソケット作成がsandboxでEPERM"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"IPCを使わない代替起動で生成成功"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"検証成功。既存の未配置文書に関する警告のみ"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1688件のインデックスを生成"},{"command":"npm run build","status":"passed","summary":"SpecDojo CLIをコンパイル"},{"command":"node dist/specdojo.js build","status":"passed","summary":"文書生成の全6工程が成功"},{"command":"npm run docs:build","status":"failed","summary":"前段tsxのIPCソケット作成がsandboxでEPERM"},{"command":"PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium npm --prefix packages/docs-site run docs:build","status":"failed","summary":"Mermaid用Chromiumのソケット操作がsandboxで拒否された"},{"command":"git diff --check","status":"passed","summary":"差分の空白エラーなし"}]}
+</specdojo_executor_evidence>

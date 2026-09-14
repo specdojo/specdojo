@@ -58,17 +58,25 @@ SpecDojo 拡張そのものも推奨に含まれておらず、利用者は存�
 
 ## 5. 作業内容
 
-| No  | 作業                                | 担当 | 状態 | メモ                            |
-| --- | ----------------------------------- | ---- | ---- | ------------------------------- |
-| 1   | 必要な VS Code 拡張と役割を記載する | ARC  | open | remark、markdownlint ほか       |
-| 2   | SpecDojo 拡張の導入手順を記載する   | ARC  | open | 公開前は vsix、公開後に差し替え |
-| 3   | 提供機能を説明する                  | ARC  | open | リンク表示、文書を開く、表整形  |
-| 4   | タスク参照の記述を追従させる        | ARC  | open | ガイドと standard の2箇所       |
-| 5   | `extensions.json` の推奨を判断する  | ARC  | open | 公開後に追加する判断を記録      |
+| No  | 作業                                | 担当 | 状態 | メモ                                                               |
+| --- | ----------------------------------- | ---- | ---- | ------------------------------------------------------------------ |
+| 1   | 必要な VS Code 拡張と役割を記載する | ARC  | done | remark、markdownlint、Markdown All in One、SpecDojo の役割を記載   |
+| 2   | SpecDojo 拡張の導入手順を記載する   | ARC  | done | 公開前の VSIX 作成・導入手順と公開後の差し替えを記載               |
+| 3   | 提供機能を説明する                  | ARC  | done | リンク表示・遷移、ID 指定による文書表示、表整形を記載              |
+| 4   | タスク参照の記述を追従させる        | ARC  | done | ガイドと standard が拡張のコマンドを参照することを確認・明確化     |
+| 5   | `extensions.json` の推奨を判断する  | ARC  | done | 未公開 ID は追加せず、公開後の追加を PJR-0143 の作業として継続する |
 
 ## 6. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- [[specdojo:docs-editing-guide]] に、文書編集で使う VS Code 拡張の役割、SpecDojo 拡張の
+  VSIX 導入手順、提供機能、文書インデックスの更新方法を追加した。
+- [[specdojo:guide-authoring-standard]] の表整形手順が SpecDojo VS Code 拡張のコマンドを
+  参照することを明確にした。
+- SpecDojo 拡張は Marketplace 未公開のため `.vscode/extensions.json` には追加しなかった。
+  Marketplace 公開後のガイド差し替えと推奨拡張への追加は
+  [[prj-0001:pjr-0143-vs-code-marketplace]] の作業項目 6 で継続する。
+- 既存の `.vscode/tasks.json` の `Format Markdown Table` タスクは拡張コマンドへ委譲済みであり、
+  移行期間中の互換経路として残した。
 
 ## 7. 関連ドキュメント
 
