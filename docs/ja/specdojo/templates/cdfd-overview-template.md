@@ -14,27 +14,27 @@ specdojo:
   grade:
     rubric: grade-rubric-v1
     target: kata
-    verdict: needs-work
-    score: 53
-    graded_at: "2026-09-09T17:17:11.749Z"
+    verdict: pass
+    score: 98
+    graded_at: "2026-09-14T01:37:14.517Z"
     graded_by: codex-expert-executor
-    content_hash: 6adca7b3f4da8ce90f5310ac3219a25dbc0fb4dd577fda26c8fea2d3e70a4eba
+    content_hash: 8d2b8240fc38d3efd83f6e6324f98765e1dd1b05cdebffc7bd5cc9cda6a35402
     categories:
-      consistency: { score: 25 }
-      usability: { score: 58 }
+      consistency: { score: 100 }
+      usability: { score: 92 }
       architecture: { score: 100 }
-      quality: { score: 38 }
+      quality: { score: 100 }
     viewpoints:
-      vp-arc-cross-document-consistency: { level: 1, score: 25 }
+      vp-arc-cross-document-consistency: { level: 4, score: 100 }
       vp-arc-conciseness: { level: 4, score: 100 }
       vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 2, score: 50 }
-      vp-qe-omissions-consistency: { level: 1, score: 25 }
-      vp-qe-kata-conformance: { level: 1, score: 25 }
-      vp-ux-readability: { level: 1, score: 25 }
-      vp-ux-language-consistency: { level: 2, score: 50 }
+      vp-qe-verifiability: { level: 4, score: 100 }
+      vp-qe-omissions-consistency: { level: 4, score: 100 }
+      vp-qe-kata-conformance: { level: 4, score: 100 }
+      vp-ux-readability: { level: 4, score: 100 }
+      vp-ux-language-consistency: { level: 3, score: 75 }
       vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 16, minor: 3, note: 0 }
+    findings: { blocker: 0, major: 0, minor: 1, note: 0 }
 ---
 
 # 概念データフロー図（全体概要）: _TARGET_NAME_
@@ -50,6 +50,8 @@ _TODO_: 全体像を整理する目的と、後続のプロセスグループ別
 - _ROLE_ は、_TODO_
 
 ## 2. 適用範囲
+
+<!-- specdojo:finding id=F001 severity=minor rule=vp-ux-language-consistency line=16 STSD と CSTD が正式名称・役割・文書 ID または参照先の説明なしに使用され、生成文書の読み手が状態定義と状態遷移の正本を特定できないため、初出時に正式名称と参照先を記入する指示を追加する必要がある。 -->
 
 - 対象は、_TODO_: 開始点、終了点、対象業務、組織またはシステム境界を書く。
 - 本書が扱うのは、プロセス領域の分割と、領域間・データストア間の受け渡しまでである。各領域の内部（_TODO_: 操作手順、更新内容、処理の分岐、状態を変える処理と起点イベント、例外時の復旧手順など）は対象外とし、プロセスグループ別 CDFD で詳細化する。状態の定義は STSD、状態遷移は CSTD を正本とし、詳細 CDFD は参照に留める。

@@ -1,0 +1,44 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: tsd-index-grade-criteria
+document: tsd-index
+path: docs/ja/product/030-architecture/020-infrastructure/tsd-index.md
+graded_at: "2026-09-14T00:32:17.517Z"
+graded_by: gemma-expert-executor
+content_hash: 60c89a384b0f5e9e637f1ba239d5d23e7b88aacea4584bdfc054253d3413a237
+summary:
+  satisfied: 3
+  unsatisfied: 2
+  total: 5
+criteria:
+  - id: DC-001
+    text: 採用技術の選定理由と制約が業務要件と整合していること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: unsatisfied
+    reason: 選定理由と制約が業務要件と整合していることを示す記述が不足しています。
+  - id: DC-002
+    text: 技術スタック選定を承認できること
+    roles:
+      - PO
+    viewpoint: vp-po-decision-readiness
+    status: satisfied
+  - id: DC-003
+    text: 技術的制約・ライセンス・バージョン方針が識別できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: unsatisfied
+    reason: ライセンスおよび詳細な技術的制約を識別できる記述が不足しています。
+  - id: DC-004
+    text: テストフレームワーク・CI/CD環境の参照として使えること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: satisfied
+  - id: DC-005
+    text: 開発環境構築・ライブラリ選定の参照として使えること
+    roles:
+      - DEV
+    viewpoint: vp-dev-implementation-readiness
+    status: satisfied

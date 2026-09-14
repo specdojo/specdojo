@@ -12,6 +12,30 @@ specdojo:
       based_on:
         - cdfd-overview
       supersedes: []
+  grade:
+    rubric: grade-rubric-v1
+    target: kata
+    verdict: pass
+    score: 100
+    graded_at: "2026-09-14T02:27:12.614Z"
+    graded_by: codex-expert-executor
+    content_hash: 885863f58405bab24cb47c60ea2417520170d47ad8d6899c9ef9fa346b2736e7
+    categories:
+      consistency: { score: 100 }
+      usability: { score: 100 }
+      architecture: { score: 100 }
+      quality: { score: 100 }
+    viewpoints:
+      vp-arc-cross-document-consistency: { level: 4, score: 100 }
+      vp-arc-conciseness: { level: 4, score: 100 }
+      vp-arc-single-responsibility: { level: 4, score: 100 }
+      vp-qe-verifiability: { level: 4, score: 100 }
+      vp-qe-omissions-consistency: { level: 4, score: 100 }
+      vp-qe-kata-conformance: { level: 4, score: 100 }
+      vp-ux-readability: { level: 4, score: 100 }
+      vp-ux-language-consistency: { level: 4, score: 100 }
+      vp-arc-document-structure: { level: 4, score: 100 }
+    findings: { blocker: 0, major: 0, minor: 0, note: 0 }
 ---
 
 # 概念データフロー図（ユースケース別）: _USE_CASE_NAME_

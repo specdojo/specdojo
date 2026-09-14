@@ -6,6 +6,39 @@ specdojo:
   rulebook: specdojo:cdfd-overview-rulebook
   based_on: []
   supersedes: []
+  grade:
+    rubric: grade-rubric-v1
+    target: deliverable
+    verdict: needs-work
+    score: 72
+    graded_at: "2026-09-13T23:34:22.020Z"
+    graded_by: codex-expert-executor
+    content_hash: 7e0b13fc02d9c7764c81278a71cfa5efaeefccc59f65e5abaeea205ad505ccd3
+    categories:
+      consistency: { score: 38 }
+      usability: { score: 88 }
+      architecture: { score: 100 }
+      quality: { score: 67 }
+    viewpoints:
+      vp-arc-cross-document-consistency: { level: 2, score: 50 }
+      vp-arc-conciseness: { level: 4, score: 100 }
+      vp-arc-single-responsibility: { level: 4, score: 100 }
+      vp-qe-done-criteria: { level: 2, score: 50 }
+      vp-qe-verifiability: { level: 2, score: 50 }
+      vp-qe-omissions-consistency: { level: 1, score: 25 }
+      vp-ux-readability: { level: 3, score: 75 }
+      vp-ux-user-flow: { level: 4, score: 100 }
+      vp-ux-language-consistency: { level: 3, score: 75 }
+      vp-arc-document-structure: { level: 4, score: 100 }
+      vp-qe-config-validity: { level: 4, score: 100 }
+    findings: { blocker: 0, major: 5, minor: 2, note: 0 }
+    done_criteria:
+      satisfied: 2
+      total: 4
+      unsatisfied:
+        DC-001: [BA]
+        DC-003: [ARC]
+      detail_ref: cdfd-overview-grade-criteria
 ---
 
 # 概念データフロー図（全体概要）: SpecDojo
@@ -23,6 +56,8 @@ SpecDojo を活用した仕様駆動開発の全体像を、プロセス領域�
 
 ## 2. 適用範囲
 
+<!-- specdojo:finding id=F006 severity=minor rule=vp-ux-readability line=17 STSDとCSTDが正式名称や具体的な参照先なしで使われているため, 初出で定義するか対応する正本文書IDを示す必要がある。 -->
+
 - 対象は、SpecDojo を用いたプロジェクト開始から、成果物作成・改造の計画（P）、実行（D）、評価（C）、改善（A）を含むプロジェクトライフサイクル全体である。
 - 本書が扱うのは、プロセス領域の分割と、領域間・データストア間の受け渡しまでである。各領域の内部（個別コマンドの操作手順、ファイル単位の更新内容、領域内の処理の分岐、状態を変える処理と起点イベント、例外時の復旧手順）は対象外とし、プロセスグループ別 CDFD で詳細化する。状態の定義は STSD、状態遷移は CSTD を正本とし、詳細 CDFD は参照に留める。
 - `list`、`where`、`status`、`validate`、`dry-run` など、状態や成果物を変更しない参照・検証操作は独立した業務フローに含めず、各領域を支える補助操作として扱う。
@@ -30,11 +65,17 @@ SpecDojo を活用した仕様駆動開発の全体像を、プロセス領域�
 
 ## 3. プロセス領域
 
+<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=23 本書は14領域・6グループを正本とする一方, 成果物カタログのDC-001とScheduleのcdfd-overview作業記述が旧「9領域・一ノード一領域・領域別CDFD」を要求しているため, カタログとScheduleを現行のプロセスグループ別モデルへ同期する必要がある。 -->
+<!-- specdojo:finding id=F002 severity=major rule=vp-qe-done-criteria line=23 DC-001の旧領域列挙とDC-003の領域単位入出力要求が, 本文および現行rulebookのグループ単位モデルと一致しないため, 完了条件を現行モデルへ改訂するか各条件を満たす追跡情報を追加する必要がある。 -->
+<!-- specdojo:finding id=F003 severity=major rule=vp-qe-verifiability line=23 各領域の表には起点イベントだけがあり主要入力・主要出力・データストアはグループ単位に集約されているため, DC-003をグループ単位へ改訂するか領域別詳細CDFDへの検証可能な対応表を追加する必要がある。 -->
+
 業務は 14 のプロセス領域に分かれ、六つのプロセスグループにまとめる。領域の分割と領域間の受け渡しは本書を正本とし、領域内の詳細はプロセスグループ別 CDFD を正本とする。各グループの主要入力・主要出力・データストアは「概念データフロー（概要）」のエッジの根拠である。
 
 ### 3.1. Onboarding（P-01）
 
 SpecDojo を導入して Kata を配置し、その雛形から稼働構成の初期状態を整える。
+
+<!-- specdojo:finding id=F004 severity=major rule=vp-qe-omissions-consistency line=29 Onboardingの「プロジェクトの目的・文脈、参加メンバーとロール、agent・provider」、Planの「判明事項・管理判断・定型要件」、Actionの「構成変更要求・非推奨化判断」、Orchestratorの「参加者の意図」に対応する図のエッジがなく, 主要入出力とエッジの相互対応を満たしていない。 -->
 
 - **主要入力**: プロジェクトの目的・文脈、参加メンバーとロール、利用する agent・provider、Kata の provider 別雛形
 - **主要出力**: 配置した Kata、稼働構成の初期状態
@@ -53,6 +94,7 @@ SpecDojo を導入して Kata を配置し、その雛形から稼働構成の�
 - **主要出力**: 登録項目・決定記録、成果物カタログ、スケジュール戦略、Schedule（track）とマイルストーン、実行計画、定期実行定義、ジョブ定義
 - **データストア**: 稼働構成、Kata、登録簿、成果物カタログ、スケジュール戦略、Schedule（track）、実行計画、定期実行定義、ジョブ定義
 
+<!-- specdojo:finding id=F007 severity=minor rule=vp-ux-language-consistency line=52 「運用担当」「タスク owner」「レビュー担当者」「runner」が正式なRole codeであるOPS・QE等と混在し責任定義を一意に追跡できないため, Role codeへ統一するか各呼称とRole codeの対応を明記する必要がある。 -->
 <!-- prettier-ignore -->
 | 領域 ID | プロセス領域 | 業務目的 | 主な担当 | 起点イベント |
 | --- | --- | --- | --- | --- |
@@ -136,6 +178,7 @@ SpecDojo のプロジェクト運営で読み書きするデータストアを�
 
 ### 4.2. トランザクションデータ
 
+<!-- specdojo:finding id=F005 severity=major rule=vp-qe-omissions-consistency line=136 成果物の保管先である`docs/ja/product/`が保管庫の`docs/ja/product/trash/`を包含し, 成果物Frontmatterの`grade`も評価結果として重複しているため, 保管先を非重複の範囲へ限定するか共有を許す境界規則を明記する必要がある。 -->
 <!-- prettier-ignore -->
 | データストア | 主な内容 | 主な保管先 |
 | --- | --- | --- |

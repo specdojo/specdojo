@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "run_id": "JBR-grade-kata-57c42419b5c8",
+  "job_id": "job-grade-kata",
+  "idempotency_key": "job-grade-kata:command-v3:2026-09-13T23:00:00.000Z:all:10:true:true",
+  "project_id": "prj-0001",
+  "trigger": "routine",
+  "scheduled_at": "2026-09-13T23:00:00.000Z",
+  "created_at": "2026-09-14T00:55:24.724Z",
+  "updated_at": "2026-09-14T02:30:16.966Z",
+  "state": "succeeded",
+  "inputs": {
+    "period": "2026-W38",
+    "kind": "all",
+    "limit": 10,
+    "changed_only": true,
+    "ungraded": true
+  },
+  "task": {
+    "mode": "command",
+    "precondition": {
+      "command": "selection=$(\n  if [ \"true\" = \"false\" ] && [ \"true\" = \"false\" ]; then\n    '/usr/local/bin/node' '/workspaces/specdojo-workspace/specdojo/dist/specdojo.js' grade list --target kata --project prj-0001\n  else\n    if [ \"true\" = \"true\" ]; then\n      '/usr/local/bin/node' '/workspaces/specdojo-workspace/specdojo/dist/specdojo.js' grade list --target kata --project prj-0001 --changed-only || exit $?\n    fi\n    if [ \"true\" = \"true\" ]; then\n      '/usr/local/bin/node' '/workspaces/specdojo-workspace/specdojo/dist/specdojo.js' grade list --target kata --project prj-0001 --ungraded || exit $?\n    fi\n  fi\n)\nprintf '%s\\n' \"$selection\" | LC_ALL=C sort -u | awk -v kind=\"all\" -v limit=\"10\" '\n  NF && (kind == \"all\" || index($0, \"docs/ja/specdojo/\" kind \"s/\") == 1) {\n    if (limit == 0 || selected < limit) {\n      print\n      selected++\n    }\n  }\n'",
+      "skip_when": "empty-output"
+    },
+    "command": "npm run build\ntools/grade/run-per-document.sh --run-id JBR-grade-kata-57c42419b5c8 --kind all --limit 10 --changed-only=true --ungraded=true\ncat logs/grade/runs/per-document/JBR-grade-kata-57c42419b5c8/results.tsv",
+    "analysis": {
+      "agent": "gemma-reporter",
+      "description": "runner が記録した command evidence の終了コードと、stdout に出力された\n`results.tsv` から次を判断して報告する。\n\n- 終了コード75（rate limit）または中断で未完了の段が残っているか。残る場合は同じ\n  `--run-id` で再開できる状態かを確認する。\n- `failed` の段があるか。ある場合は rate limit、agent 側の失敗、`grade apply` の\n  忠実性検証による拒否のいずれかへ切り分ける。\n- 3段目が実行されなかった文書について、閾値未満と2段目の失敗のどちらが理由か。\n- verdict と score の分布に、3段目の閾値の見直しを要する偏りがあるか。\n\n選択された文書が0件の場合は no-op と判断する。判断できない事象は推測で埋めず、\n観測した事実と未確認の範囲を分けて報告する。"
+    },
+    "paths": [
+      "docs/ja/specdojo/rulebooks",
+      "docs/ja/specdojo/recipes",
+      "docs/ja/specdojo/samples",
+      "docs/ja/specdojo/templates"
+    ],
+    "owner": "ARC"
+  },
+  "checkpoint_before": {},
+  "plan_ref": "exec/plans/JBR-grade-kata-57c42419b5c8-plan.md",
+  "result_ref": "exec/results/JBR-grade-kata-57c42419b5c8-result.md",
+  "attempts": [
+    {
+      "attempt": 1,
+      "started_at": "2026-09-14T00:55:24.724Z",
+      "status": "succeeded",
+      "completed_at": "2026-09-14T02:30:16.966Z",
+      "result_ref": "exec/results/JBR-grade-kata-57c42419b5c8-result.md",
+      "evidence_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-57c42419b5c8/attempt-1/evidence.json",
+      "exit_code": 0
+    }
+  ]
+}

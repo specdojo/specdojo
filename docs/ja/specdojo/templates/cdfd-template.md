@@ -12,6 +12,30 @@ specdojo:
       based_on:
         - cdfd-overview
       supersedes: []
+  grade:
+    rubric: grade-rubric-v1
+    target: kata
+    verdict: pass
+    score: 93
+    graded_at: "2026-09-14T02:05:23.181Z"
+    graded_by: codex-expert-executor
+    content_hash: ba41235b054e6d459a4d6f0cffb668d46e86560b5d33a0d03eb97efe1f9741cd
+    categories:
+      consistency: { score: 88 }
+      usability: { score: 100 }
+      architecture: { score: 100 }
+      quality: { score: 88 }
+    viewpoints:
+      vp-arc-cross-document-consistency: { level: 3, score: 75 }
+      vp-arc-conciseness: { level: 4, score: 100 }
+      vp-arc-single-responsibility: { level: 4, score: 100 }
+      vp-qe-verifiability: { level: 4, score: 100 }
+      vp-qe-omissions-consistency: { level: 4, score: 100 }
+      vp-qe-kata-conformance: { level: 3, score: 75 }
+      vp-ux-readability: { level: 4, score: 100 }
+      vp-ux-language-consistency: { level: 4, score: 100 }
+      vp-arc-document-structure: { level: 4, score: 100 }
+    findings: { blocker: 0, major: 0, minor: 2, note: 0 }
 ---
 
 # 概念データフロー図（プロセスグループ別）: _GROUP_NAME_
@@ -135,6 +159,9 @@ _TODO_: この表が扱う領域または業務上のまとまりを数行で要
 <!-- 概念データフローを分けた単位と同じ節を設け、全プロセスをいずれか一つの表へ一行ずつ追加する。 -->
 
 ## 7. 状態遷移の参照
+
+<!-- specdojo:finding id=F001 severity=minor rule=vp-arc-cross-document-consistency line=123 状態変更プロセスがない場合に章を保持して事実と確認根拠を記載する指示は rulebook と一致する一方、recipe 4.7 の「章を省略」という案内とは矛盾するため、kata 内で適用方法を統一してください。 -->
+<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-kata-conformance line=123 状態変更プロセスがない場合に章を保持するテンプレートの適用方法は rulebook と一致するが recipe 4.7 は章の省略を指示しているため、recipe を章保持・表削除・確認根拠記載の手順へ統一してください。 -->
 
 _TODO_: 状態を変えるプロセスがある場合は次の表へ記入する。CDFD には状態名、状態説明、遷移元・遷移先、遷移条件を記載しない。状態を変えるプロセスがない場合は、その事実と確認根拠を一文で記述して表を削除する。
 

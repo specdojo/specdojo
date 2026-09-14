@@ -13,6 +13,40 @@ specdojo:
     - sysd-claude-agent-settings
     - sysd-codex-agent-settings
     - sysd-github-copilot-agent-settings
+  grade:
+    rubric: grade-rubric-v1
+    target: deliverable
+    verdict: needs-work
+    score: 89
+    graded_at: "2026-09-13T23:53:04.813Z"
+    graded_by: gemma-expert-executor
+    content_hash: 8f861937dd50968fb1168128903f185015cd62d0d7b5797b9be03a1fba2f7407
+    categories:
+      consistency: { score: 75 }
+      usability: { score: 100 }
+      architecture: { score: 100 }
+      quality: { score: 83 }
+    viewpoints:
+      vp-arc-cross-document-consistency: { level: 4, score: 100 }
+      vp-arc-conciseness: { level: 4, score: 100 }
+      vp-arc-single-responsibility: { level: 4, score: 100 }
+      vp-qe-done-criteria: { level: 2, score: 50 }
+      vp-qe-verifiability: { level: 4, score: 100 }
+      vp-qe-omissions-consistency: { level: 2, score: 50 }
+      vp-ux-readability: { level: 4, score: 100 }
+      vp-ux-user-flow: { level: 4, score: 100 }
+      vp-ux-language-consistency: { level: 4, score: 100 }
+      vp-arc-document-structure: { level: 4, score: 100 }
+      vp-qe-config-validity: { level: 4, score: 100 }
+    findings: { blocker: 0, major: 2, minor: 0, note: 0 }
+    done_criteria:
+      satisfied: 2
+      total: 5
+      unsatisfied:
+        DC-001: [BA]
+        DC-002: [PO]
+        DC-003: [ARC]
+      detail_ref: tsd-home-mac-dev-server-usage-grade-criteria
 ---
 
 # 自宅 MacBook Pro 開発サーバ運用ガイド
@@ -64,6 +98,9 @@ tmux ls
 ```
 
 `specdojo exec run --loop` は tmux 内で実行する。
+
+<!-- specdojo:finding id=F001 severity=major rule=vp-qe-done-criteria line=50 DC-001, DC-002, DC-003 を満たす記述（選定理由、承認判断情報、技術的制約・ライセンス方針）が不足している。 -->
+<!-- specdojo:finding id=F002 severity=major rule=vp-qe-omissions-consistency line=50 TSDルールブックで必須とされる「採用理由」の記述が欠落している。 -->
 
 ```bash
 tmux new -s specdojo-exec

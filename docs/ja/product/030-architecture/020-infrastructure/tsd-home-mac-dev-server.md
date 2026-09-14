@@ -13,13 +13,51 @@ specdojo:
     - sysd-claude-agent-settings
     - sysd-codex-agent-settings
     - sysd-github-copilot-agent-settings
+  grade:
+    rubric: grade-rubric-v1
+    target: deliverable
+    verdict: needs-work
+    score: 79
+    graded_at: "2026-09-14T00:18:49.916Z"
+    graded_by: codex-expert-executor
+    content_hash: 4d1135c3ff81a270a47709fe9cc3133ebc18bc97073c7379d0d17bc70937177f
+    categories:
+      consistency: { score: 63 }
+      usability: { score: 94 }
+      architecture: { score: 100 }
+      quality: { score: 67 }
+    viewpoints:
+      vp-arc-cross-document-consistency: { level: 3, score: 75 }
+      vp-arc-conciseness: { level: 4, score: 100 }
+      vp-arc-single-responsibility: { level: 4, score: 100 }
+      vp-qe-done-criteria: { level: 2, score: 50 }
+      vp-qe-verifiability: { level: 2, score: 50 }
+      vp-qe-omissions-consistency: { level: 2, score: 50 }
+      vp-ux-readability: { level: 4, score: 100 }
+      vp-ux-user-flow: { level: 4, score: 100 }
+      vp-ux-language-consistency: { level: 3, score: 75 }
+      vp-arc-document-structure: { level: 4, score: 100 }
+      vp-qe-config-validity: { level: 4, score: 100 }
+    findings: { blocker: 0, major: 3, minor: 3, note: 0 }
+    done_criteria:
+      satisfied: 2
+      total: 5
+      unsatisfied:
+        DC-003: [ARC]
+        DC-004: [QE]
+        DC-005: [DEV]
+      detail_ref: tsd-home-mac-dev-server-grade-criteria
 ---
+
+<!-- specdojo:finding id=F001 severity=minor rule=vp-arc-cross-document-consistency line=1 成果物カタログの `depends_on` に含まれる `ifd-specdojo` がFrontmatterの `based_on` に反映されておらず、依存関係の追跡結果が一致しない。 -->
 
 # 自宅 MacBook Pro 開発サーバ技術スタック定義
 
 MacBook Pro を自宅用の常時起動開発サーバとして利用し、Mac 上の devcontainer を主作業環境にして、ローカル LLM、SSH、VS Code Remote SSH、SpecDojo agent 実行の接続先にするための構成を定義する。本構成は個人または小規模開発用途を対象とし、インターネットへ SSH や LLM API を直接公開しない。
 
 ## 1. 位置付け
+
+<!-- specdojo:finding id=F006 severity=minor rule=vp-ux-language-consistency line=7 同一の開発サーバを `Host Mac`、`Home MacBook Pro`、`接続先 Mac` と定義せずに呼び分けており、接続元もMacの場合に識別しづらいため、冒頭で正式呼称と別名を定義して統一する必要がある。 -->
 
 本書は、Host Mac 上で動作する Docker Desktop / devcontainer / Ollama と、外部端末からの VS Code Remote SSH 接続をつなぐ実行基盤の設定を扱う。ローカル LLM 自体のモデル構成は [[tsd-ollama]] を正本とし、SpecDojo agent の責務分担と agent CLI 個別設定は [[sysd-agent-settings]] と子設計を正本とする。
 
@@ -67,6 +105,9 @@ Home MacBook Pro
 開発コマンドは外部端末ではなく Mac 上の devcontainer 内で実行する。外部端末は VS Code の UI としてのみ使い、SpecDojo CLI、agent CLI、Git、Node.js、テスト実行は devcontainer 内に閉じる。
 
 LLM API は原則として Host Mac の `localhost` に閉じる。devcontainer からは Docker Desktop が提供する `host.docker.internal` で Host Mac の Ollama に接続する。外部端末から直接 `11434` を叩く必要はなく、外部端末上のツールから LLM API を使う場合だけ SSH local forwarding を追加する。
+
+<!-- specdojo:finding id=F003 severity=major rule=vp-qe-done-criteria line=54 DC-003のライセンス・バージョン方針、DC-004のテストフレームワーク・CI/CD環境、DC-005のライブラリ選定が採用設定または参照先として示されていない。 -->
+<!-- specdojo:finding id=F005 severity=major rule=vp-qe-omissions-consistency line=54 採用設定に各技術のバージョン方針とライセンス条件がなく、テストフレームワーク、CI/CD環境、依存ライブラリの選定または正本への参照も欠落している。 -->
 
 ## 3. 採用設定
 
@@ -508,6 +549,8 @@ VS Code 接続断後の復帰、tmux session の維持、SpecDojo と agent CLI 
 
 本リポジトリの `.devcontainer/devcontainer.json` を devcontainer 設定の正本とする。現在の構成では、次を devcontainer 内に用意する。
 
+<!-- specdojo:finding id=F002 severity=minor rule=vp-arc-cross-document-consistency line=502 正本の `.devcontainer/post-create.sh` はCodex公式インストーラを優先しnpm版をフォールバックにしているが、本文は `@openai/codex` のnpm global installと断定しているため、現在の導入方法に合わせて更新する必要がある。 -->
+
 | 設定                               | 内容                                                                                                                        | 用途                                                               |
 | ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
 | `remoteUser`                       | `node`                                                                                                                      | agent CLI と開発コマンドの実行ユーザー                             |
@@ -685,6 +728,8 @@ VS Code から接続した場合は、Remote SSH で Mac に入り `Dev Containe
 ```bash
 tmux new-session -A -s specdojo
 ```
+
+<!-- specdojo:finding id=F004 severity=major rule=vp-qe-verifiability line=672 初期確認にテストフレームワークとCI/CD環境の参照・確認手順がなく、`pmset -g assertions`、`pwd`、`git status`にも合格となる期待状態が示されていないため、必要な受入判定をpass/failで確定できない。 -->
 
 ## 5. 初期セットアップの確認
 

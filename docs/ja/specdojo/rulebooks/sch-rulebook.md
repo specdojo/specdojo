@@ -14,9 +14,9 @@ specdojo:
     target: kata
     verdict: needs-work
     score: 87
-    graded_at: "2026-09-03T09:26:42.823Z"
+    graded_at: "2026-09-14T01:11:32.676Z"
     graded_by: gemma-expert-executor
-    content_hash: 2e8ce07a6b2a7ca9b578db4edc23109496dbf9217cb9da981d9f4944ef063529
+    content_hash: 6cb884e0b24834dac74c762b4ef7af1125e4047def49fdd6d826a076861c5a7e
     categories:
       consistency: { score: 100 }
       usability: { score: 67 }
@@ -137,6 +137,10 @@ schema で機械検証できない記述規範だけを定める。設計の考�
 - `cross_deliverable_passes` は完了済みの `after_gate` と後続の `before_phase_set` の間に置き、scope を `catalogs` / `groups` / `local_ids` で明示する。
 - レビュー担当ロールは各成果物の `done_criteria` から取得されるため、strategy に重複して記載しない。
 
+<!-- specdojo:finding id=F001 severity=major rule=vp-arc-conciseness line=103 Section 5.5 describes generation flow, contradicting the statement in line 45 and 49 that refers to `specdojo:schedule-design-guide`. -->
+<!-- specdojo:finding id=F002 severity=major rule=vp-arc-single-responsibility line=103 The document mixes detailed tool generator logic (Section 5.5) with authoring rules; this belongs in a design guide or tool specification. -->
+<!-- specdojo:finding id=F003 severity=major rule=vp-ux-readability line=103 Contradiction between line 45/49 and section 5.5 creates confusion regarding the authoritative source for generation flow and logic. -->
+
 ### 5.5. intent と grade からの strategy 生成
 
 - `schedule strategy generate --track <track>` は、既存 strategy の `scope.catalogs` と catalog ごとの `local_ids` を優先し、新規 track では Timeline の `domains` から物理分割を含む DCT を解決する。scope は `include_kinds: [work]` 固定とし、既存の `local_ids` がある場合は選択部分集合だけを生成対象にする。
@@ -161,7 +165,3 @@ schema で機械検証できない記述規範だけを定める。設計の考�
 - `sch-strategy-<track>.yaml` の `owner_rules` にカタログの `done_criteria` のレビューロールを重複して記載すること。
 - intent の欠落・重複、必須パラメータ不足、参照切れ、必要な grade の欠落を暫定値で補って strategy を生成すること。
 - ジェネレーターが管理する標準 phase の ID・suffix・duration を track ごとに複製実装すること。
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-conciseness Section 5.5 describes generation flow, contradicting the statement in line 45 and 49 that refers to `specdojo:schedule-design-guide`. -->
-<!-- specdojo:finding id=F002 severity=major rule=vp-arc-single-responsibility The document mixes detailed tool generator logic (Section 5.5) with authoring rules; this belongs in a design guide or tool specification. -->
-<!-- specdojo:finding id=F003 severity=major rule=vp-ux-readability Contradiction between line 45/49 and section 5.5 creates confusion regarding the authoritative source for generation flow and logic. -->

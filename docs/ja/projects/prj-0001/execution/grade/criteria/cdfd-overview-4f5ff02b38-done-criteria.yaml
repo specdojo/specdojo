@@ -1,13 +1,13 @@
 # yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
-id: prj-0001:cdfd-overview-grade-criteria
-document: prj-0001:cdfd-overview
+id: cdfd-overview-grade-criteria
+document: cdfd-overview
 path: docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md
-graded_at: "2026-09-13T01:19:41.250Z"
+graded_at: "2026-09-13T23:34:22.020Z"
 graded_by: codex-expert-executor
-content_hash: 1713b41c0164a3e19563b155aa6a279aebe98e9e7d999bed391fa71b240d7338
+content_hash: 7e0b13fc02d9c7764c81278a71cfa5efaeefccc59f65e5abaeea205ad505ccd3
 summary:
-  satisfied: 3
-  unsatisfied: 1
+  satisfied: 2
+  unsatisfied: 2
   total: 4
 criteria:
   - id: DC-001
@@ -15,7 +15,8 @@ criteria:
     roles:
       - BA
     viewpoint: vp-ba-business-value
-    status: satisfied
+    status: unsatisfied
+    reason: 登録簿ライフサイクルと定期処理は定義領域へ変更され、並行処理は独立領域ではなく実行形態に統合されているため、条件が列挙する各領域を表と図で確認できない。
   - id: DC-002
     text: 対象とするプロセス領域、および独立した業務フローに含めない補助操作の境界を承認できること
     roles:
@@ -28,7 +29,7 @@ criteria:
       - ARC
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
-    reason: "`P-03`、`P-04`、`P-08`、`P-09` が参照する登録簿、Schedule、成果物カタログ、費用・作業記録の一部が領域別のデータストア列から欠落している。"
+    reason: 起点イベントは領域単位で確認できるが、主要入力・主要出力・データストアはプロセスグループ単位でしか記載されていない。
   - id: DC-004
     text: 領域別CDFDへの分割に重複または欠落がないことを、全体図との対応で確認できること
     roles:

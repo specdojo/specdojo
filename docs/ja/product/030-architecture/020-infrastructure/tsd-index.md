@@ -4,6 +4,39 @@ specdojo:
   type: architecture
   status: draft
   rulebook: specdojo:tsd-index-rulebook
+  grade:
+    rubric: grade-rubric-v1
+    target: deliverable
+    verdict: needs-work
+    score: 95
+    graded_at: "2026-09-14T00:32:17.517Z"
+    graded_by: gemma-expert-executor
+    content_hash: 60c89a384b0f5e9e637f1ba239d5d23e7b88aacea4584bdfc054253d3413a237
+    categories:
+      consistency: { score: 100 }
+      usability: { score: 100 }
+      architecture: { score: 100 }
+      quality: { score: 83 }
+    viewpoints:
+      vp-arc-cross-document-consistency: { level: 4, score: 100 }
+      vp-arc-conciseness: { level: 4, score: 100 }
+      vp-arc-single-responsibility: { level: 4, score: 100 }
+      vp-qe-done-criteria: { level: 2, score: 50 }
+      vp-qe-verifiability: { level: 4, score: 100 }
+      vp-qe-omissions-consistency: { level: 4, score: 100 }
+      vp-ux-readability: { level: 4, score: 100 }
+      vp-ux-user-flow: { level: 4, score: 100 }
+      vp-ux-language-consistency: { level: 4, score: 100 }
+      vp-arc-document-structure: { level: 4, score: 100 }
+      vp-qe-config-validity: { level: 4, score: 100 }
+    findings: { blocker: 0, major: 1, minor: 0, note: 0 }
+    done_criteria:
+      satisfied: 3
+      total: 5
+      unsatisfied:
+        DC-001: [BA]
+        DC-003: [ARC]
+      detail_ref: tsd-index-grade-criteria
 ---
 
 # SpecDojo 技術スタック定義
@@ -40,3 +73,5 @@ SpecDojo が採用する技術の一覧。各技術の担当責務を明示し�
 - opencode の設定は [[tsd-ollama-opencode]] を参照。
 - VitePress と Mermaid CLI は `@specdojo/docs-site` が所有する。`specdojo` CLI はこのパッケージを
   optional dependency にせず、文書サイトを構築する環境だけが明示導入する。
+
+<!-- specdojo:finding id=F001 severity=major rule=vp-qe-done-criteria line=41 DC-001 および DC-003 が要求する「選定理由」「技術的制約」「ライセンス」の記述が不足しています。 -->
