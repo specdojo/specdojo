@@ -136,7 +136,7 @@ Personal Access Token は次の条件で発行する。
 
 | No  | 作業                               | 担当 | 状態 | メモ                                                                           |
 | --- | ---------------------------------- | ---- | ---- | ------------------------------------------------------------------------------ |
-| 1   | publisher `specdojo` を作成する    | ARC  | open | ID は変更できないため確認して行う                                              |
+| 1   | publisher `specdojo` を作成する    | ARC  | done | 2026-09-15 に Azure DevOps で取得済み                                          |
 | 2   | Personal Access Token を発行する   | ARC  | open | All accessible / Marketplace Manage                                            |
 | 3   | `package.json` の公開項目を揃える  | ARC  | open | repository、license、icon ほか                                                 |
 | 4   | 公開して動作を確認する             | ARC  | open | インストールして検証する                                                       |
