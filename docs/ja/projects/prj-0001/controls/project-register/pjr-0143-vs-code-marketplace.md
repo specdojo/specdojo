@@ -93,23 +93,39 @@ Marketplace で `specdojo` が未取得であることを確認済みである�
 
 ### 4.4. 取得手順
 
-publisher の作成は Azure DevOps アカウントの作成から始まる。
+publisher の作成（Marketplace 管理ポータル）と、Personal Access Token の発行元になる Azure DevOps
+組織は別のものである。publisher を作っただけでは組織は作られないため、PAT の前に組織を作る。
 
-| 順  | 手順                                                                                             |
-| --- | ------------------------------------------------------------------------------------------------ |
-| 1   | TinyShrine の Microsoft アカウント（MSA）を用意する。無ければ屋号のメールで作成する              |
-| 2   | `https://aka.ms/vscode-create-publisher` で publisher を作成する                                 |
-| 3   | ID に `specdojo` を入力する。ID は後から変更できない                                             |
-| 4   | 表示名 `SpecDojo`、説明、Web サイト、アイコンを設定し、個人アカウントを owner メンバーに追加する |
-| 5   | Azure DevOps で Personal Access Token を発行する                                                 |
-| 6   | `npx @vscode/vsce login specdojo` でトークンを登録する                                           |
-| 7   | `npx @vscode/vsce publish` で公開する                                                            |
+| 順  | 手順                                                                                             | 状態             |
+| --- | ------------------------------------------------------------------------------------------------ | ---------------- |
+| 1   | TinyShrine の Microsoft アカウント（MSA）を用意する。無ければ屋号のメールで作成する              | 済               |
+| 2   | `https://aka.ms/vscode-create-publisher` で publisher を作成する                                 | 済（2026-09-15） |
+| 3   | ID に `specdojo` を入力する。ID は後から変更できない                                             | 済               |
+| 4   | 表示名 `SpecDojo`、説明、Web サイト、アイコンを設定し、個人アカウントを owner メンバーに追加する | -                |
+| 5   | 同じ MSA で `https://dev.azure.com` に入り、Azure DevOps 組織 `tinyshrine` を作成する            | -                |
+| 6   | Azure DevOps で Personal Access Token を発行する                                                 | -                |
+| 7   | `npx @vscode/vsce login specdojo` でトークンを登録する                                           | -                |
+| 8   | `npx @vscode/vsce publish` で公開する                                                            | -                |
+
+Azure DevOps 組織は次のとおり扱う。
+
+- 組織名は `tinyshrine` とする（取得済みなら `tinyshrine-dev` など）。組織は PAT を発行する所有者側の器であり
+  Marketplace には表示されないため、publisher ID `specdojo` と揃える必要はない。公開名はプロダクト名
+  （publisher）、所有者側の器は屋号（MSA と組織）で切り分ける。
+- 組織の中にプロジェクトやリポジトリは作らない。
+- publisher と同じ Microsoft アカウントで作る。別アカウントの組織で発行した PAT では `vsce login specdojo` が
+  失敗する。
 
 Personal Access Token は次の条件で発行する。
 
+- 場所: 右上のプロフィール画像の隣の User settings → Personal access tokens → New Token
 - Organization: **All accessible organizations** を選ぶ。特定組織に限ると publish が失敗する
-- Scopes: **Marketplace の Manage** を選ぶ
-- 有効期限: 既定は 90 日。更新の運用を決めておく
+- Scopes: **Custom defined** → **Show all scopes** を押して一覧を展開し、**Marketplace の Manage** を選ぶ
+- 有効期限: 既定は 30 日（最長 1 年）。更新の運用を決めておく
+- トークンは作成時にしか表示されない。すぐにパスワードマネージャーへ保存する
+
+PAT は 2026-12-01 で廃止予定と Microsoft が告知している。初回公開は PAT で行い、以後の更新運用は
+Microsoft Entra ID の workload identity federation による自動公開への移行を前提にする。
 
 トークンはリポジトリへ含めない。`vsce login` はローカルへ保存するため、CI で使う場合は
 シークレットとして注入する。
@@ -134,14 +150,14 @@ Personal Access Token は次の条件で発行する。
 
 ## 6. 作業内容
 
-| No  | 作業                               | 担当 | 状態 | メモ                                                                           |
-| --- | ---------------------------------- | ---- | ---- | ------------------------------------------------------------------------------ |
-| 1   | publisher `specdojo` を作成する    | ARC  | done | 2026-09-15 に Azure DevOps で取得済み                                          |
-| 2   | Personal Access Token を発行する   | ARC  | open | All accessible / Marketplace Manage                                            |
-| 3   | `package.json` の公開項目を揃える  | ARC  | open | repository、license、icon ほか                                                 |
-| 4   | 公開して動作を確認する             | ARC  | open | インストールして検証する                                                       |
-| 5   | 公開手順とトークン更新を文書化する | ARC  | open | 再現できる形にする                                                             |
-| 6   | 公開後に導入手順と推奨を差し替える | ARC  | open | docs-editing-guide の vsix 手順を Marketplace へ、extensions.json に拡張を追加 |
+| No  | 作業                               | 担当 | 状態 | メモ                                                                                      |
+| --- | ---------------------------------- | ---- | ---- | ----------------------------------------------------------------------------------------- |
+| 1   | publisher `specdojo` を作成する    | ARC  | done | 2026-09-15 に Azure DevOps で取得済み                                                     |
+| 2   | Personal Access Token を発行する   | ARC  | open | 先に Azure DevOps 組織 tinyshrine を作る。All accessible / Marketplace Manage             |
+| 3   | `package.json` の公開項目を揃える  | ARC  | open | repository、license、icon ほか                                                            |
+| 4   | 公開して動作を確認する             | ARC  | open | インストールして検証する                                                                  |
+| 5   | 公開手順とトークン更新を文書化する | ARC  | open | PAT は 2026-12-01 廃止予定。Entra ID の workload identity federation への移行を前提にする |
+| 6   | 公開後に導入手順と推奨を差し替える | ARC  | open | docs-editing-guide の vsix 手順を Marketplace へ、extensions.json に拡張を追加            |
 
 ## 7. 対応結果
 
