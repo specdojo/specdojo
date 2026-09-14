@@ -66,17 +66,23 @@ category は consistency 50 / quality 50 / usability 75 / architecture 100。PJR
 
 | No  | 作業                                                     | 担当 | 状態 | メモ                                 |
 | --- | -------------------------------------------------------- | ---- | ---- | ------------------------------------ |
-| 1   | 保管先の共有条件を rulebook に定めるか sample を分離する | ARC  | open | F001 / F006                          |
-| 2   | 完成判定を全必須条件に拡充し、反復を参照に絞る           | ARC  | open | F003 / F004 / F005 / F007            |
-| 3   | ノード総数の定義を揃え、sample を 14 に直す              | ARC  | open | F002                                 |
-| 4   | 用語表を補い、finding コメントを解消する                 | ARC  | open | F008。再評価は次回の定期実行に任せる |
-| 5   | 参加者由来の入力の扱いを rulebook に規定する             | ARC  | open | overview 本体の F004                 |
-| 6   | 保管先の包含・共有の条件を rulebook に規定する           | ARC  | open | overview 本体の F005（1 と同じ論点） |
-| 7   | overview 本体の担当列を Role code に統一し参照を付ける   | ARC  | open | F006 / F007                          |
+| 1   | 保管先の共有条件を rulebook に定めるか sample を分離する | ARC  | done | F001 / F006                          |
+| 2   | 完成判定を全必須条件に拡充し、反復を参照に絞る           | ARC  | done | F003 / F004 / F005 / F007            |
+| 3   | ノード総数の定義を揃え、sample を 14 に直す              | ARC  | done | F002                                 |
+| 4   | 用語表を補い、finding コメントを解消する                 | ARC  | done | F008。再評価は次回の定期実行に任せる |
+| 5   | 参加者由来の入力の扱いを rulebook に規定する             | ARC  | done | overview 本体の F004                 |
+| 6   | 保管先の包含・共有の条件を rulebook に規定する           | ARC  | done | overview 本体の F005（1 と同じ論点） |
+| 7   | overview 本体の担当列を Role code に統一し参照を付ける   | ARC  | done | F006 / F007                          |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `cdfd-overview-rulebook` に保管先の共有・包含・埋め込みを許容する条件と論理境界の注記規則を追加し、完成判定を Frontmatter、導入文、必須章・表、図、詳細 CDFD 一覧、未決事項、PO 承認記録まで含むチェックリストの正本へ拡充した。
+- ノード総数から外部主体を除外すること、参加者由来の主要入力を図のエッジとの相互対応から除外できる条件、プロジェクト管理文書の「主な担当」を採用済み Role code へ統一する規則を追加した。
+- 用語表へ STSD、CSTD、Role code、PO、retrofit、Orchestrator の定義と正本を追加し、解消した finding コメントを削除した。
+- `cdfd-overview-sample` は共有ノート内の顧客欄・つけ欄、販売明細欄・日次締め欄を論理境界として明記し、ノード総数を外部主体を除く 14 に修正した。STSD / CSTD は初出で正式名称と役割を示した。
+- `cdfd-overview` 本体は参加者由来入力の記載と図示省略条件、保管先の共有・包含境界、STSD / CSTD の参照先を明記し、「主な担当」を [[prj-0001:pm-roles|ロール一覧]] の Role code に統一した。
+- 対象ファイル限定の Frontmatter 検査は成功した。全体の `npm run lint:fm` は変更対象外の `docs/ja/specdojo/samples/br-sample.md` にある既存の Frontmatter schema 警告で終了コード 1 となったため、本項目では同ファイルを変更していない。
+- 次回の `rtn-grade-recheck` による再評価は定期実行へ委ねる。対象成果物の内容に残る課題はない。
 
 ## 5. 関連ドキュメント
 

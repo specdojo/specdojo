@@ -1,0 +1,140 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-AH2P",
+  "run_id": "20260914T125455152Z-8968fc2b",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-14T12:54:55.152Z",
+    "completed_at": "2026-09-14T13:07:54.453Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-ah2p-cdfd-overview-rulebook-findings.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/cdfd-overview-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 4,
+    "summary": ".../010-data-flow/cdfd-overview.md                 | 46 +++++------\n .../pjr-ah2p-cdfd-overview-rulebook-findings.md    | 22 ++++--\n .../specdojo/rulebooks/cdfd-overview-rulebook.md   | 92 ++++++++++++----------\n docs/ja/specdojo/samples/cdfd-overview-sample.md   | 19 ++---\n 4 files changed, 91 insertions(+), 88 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md docs/ja/specdojo/samples/cdfd-overview-sample.md docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md",
+      "status": "passed",
+      "summary": "対象3文書を整形"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-ah2p-cdfd-overview-rulebook-findings.md",
+      "status": "passed",
+      "summary": "個票を整形"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md docs/ja/specdojo/samples/cdfd-overview-sample.md docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md docs/ja/projects/prj-0001/controls/project-register/pjr-ah2p-cdfd-overview-rulebook-findings.md",
+      "status": "passed",
+      "summary": "対象4ファイルにエラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run -s lint:md",
+      "status": "passed",
+      "summary": "全Markdown検査に成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run -s lint:fm",
+      "status": "failed",
+      "summary": "変更対象外のdocs/ja/specdojo/samples/br-sample.mdにある既存Frontmatter schema警告で終了コード1"
+    },
+    {
+      "source": "executor",
+      "command": "npx remark docs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md docs/ja/specdojo/samples/cdfd-overview-sample.md docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md docs/ja/projects/prj-0001/controls/project-register/pjr-ah2p-cdfd-overview-rulebook-findings.md --quiet --frail",
+      "status": "passed",
+      "summary": "変更対象のFrontmatter検査に成功"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts register build",
+      "status": "failed",
+      "summary": "sandboxがtsxのIPCソケット作成をEPERMで拒否"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "IPCを使わない同等経路で登録簿生成に成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "終了コード0。既存の未作成成果物警告のみ"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "1684件の索引生成に成功"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run docs:build",
+      "status": "not_run",
+      "summary": "リポジトリのhook方針でOOM回避のため検証対象外"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-AH2P\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nInstalling worktree dependencies: .\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/unmerged.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/stale.md\n  src/unrelated.t…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.1.0 validate:schema:yaml\n> tsx tools/docs/src/validate-yaml-schema.ts --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-…"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-AH2P\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-yb8XLQ/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-Bx9873/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-BUVk6T/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-nEOEwv/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-VW7LEr/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-9JZNVH/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\nWrote agent stdout: /tmp/specdojo-agent-command-VUX3JD/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-lnzx02/outputs/partial.txt\n\n Test Files  102 passed (102)\n      Tests  1468 passed (1468)\n   Start at  22:08:12\n   Duration  22.32s (transform 1.75s, setup 403ms, impor…"
+    }
+  ],
+  "final_message": "grade finding 8件と追加findingを修正。対象ファイルの検証は成功し、全体lint:fmのみ既存のタスク外警告で失敗。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-AH2P/20260914T125455152Z-8968fc2b/executor.log",
+      "bytes": 3518,
+      "truncated": false
+    }
+  ]
+}
