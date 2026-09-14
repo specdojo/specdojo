@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-0w8s-grade-retry-failed-stage
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-09-13T21:49:34Z"
   due_on: "2026-09-30"
+  completed_at: "2026-09-14T11:39:40Z"
   block_reason: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=package.json; agent must record the required change in the result …"
+  conclusion: 段の到達状況を execution/grade/pipeline/`<doc>.json`（stage_completed / stage_failed / consecutive_failures / max_failures）に記録し、grade list --incomplete と run-per-document.sh --incomplete で失敗した段から再試行するようにした。両 routine の inputs に incomplete を追加し、schema と validate:schema を整備した。実機で昨夜段が失敗した 4 件が --incomplete で選択されることを確認した。
 ---
 
 # PJR-0W8S grade の段が失敗した文書を次回の定期再評価で失敗した段から再試行する

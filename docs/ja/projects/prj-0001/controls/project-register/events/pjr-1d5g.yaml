@@ -58,3 +58,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_d7df57af55a34519a16a2b7080965b1a
+- v: 1
+  id: reg_6bc185c401c74abaa0fef225fbdf6b4b
+  ts: "2026-09-14T11:39:40Z"
+  action: close
+  actor: specdojo-orchestrator (claude)
+  from_status: review
+  to_status: done
+  reason: exec run --register（codex-expert-executor / gemma-reporter / worktree）で実施。親検証 3 件 passed、実機確認済み。利用者確認のうえ close
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-14"
+    - field: conclusion
+      from: "-"
+      to: isTrashedPath を catalog-paths.ts に共通化し、grade の成果物候補生成から trash 配下を除外、--path での明示指定を拒否するようにした。実機で grade list --target deliverable の trash 件数が 11 から 0 になり、明示指定が trashed documents cannot be graded で拒否されることを確認した。
+  previous_event_id: reg_cbf39e9e80c2414a825fe5fcc894c479

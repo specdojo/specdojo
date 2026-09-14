@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-1d5g-grade-exclude-trash
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: ARC
   registered_at: "2026-09-13T21:39:54Z"
   due_on: "2026-09-30"
+  completed_at: "2026-09-14T11:39:40Z"
+  conclusion: isTrashedPath を catalog-paths.ts に共通化し、grade の成果物候補生成から trash 配下を除外、--path での明示指定を拒否するようにした。実機で grade list --target deliverable の trash 件数が 11 から 0 になり、明示指定が trashed documents cannot be graded で拒否されることを確認した。
 ---
 
 # PJR-1D5G grade の成果物選択から trash 配下の非推奨文書を除外する

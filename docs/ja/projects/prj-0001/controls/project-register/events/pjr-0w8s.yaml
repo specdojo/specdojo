@@ -87,3 +87,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_9d39dd53ed7a4164ac6875cf554f22a5
+- v: 1
+  id: reg_d9d8da17f08d41919ff872effde2f549
+  ts: "2026-09-14T11:39:40Z"
+  action: close
+  actor: specdojo-orchestrator (claude)
+  from_status: review
+  to_status: done
+  reason: exec run --register で実施。package.json の申し送りを orchestrator が適用して resume。親検証 3 件 passed。利用者確認のうえ close
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-14"
+    - field: conclusion
+      from: "-"
+      to: 段の到達状況を execution/grade/pipeline/`<doc>.json`（stage_completed / stage_failed / consecutive_failures / max_failures）に記録し、grade list --incomplete と run-per-document.sh --incomplete で失敗した段から再試行するようにした。両 routine の inputs に incomplete を追加し、schema と validate:schema を整備した。実機で昨夜段が失敗した 4 件が --incomplete で選択されることを確認した。
+  previous_event_id: reg_3223a7134447426b9d8c16bcecf4155c

@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-s190-strategy-scope-local-ids
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-09-13T22:02:55Z"
   due_on: "2026-10-31"
+  completed_at: "2026-09-14T11:39:39Z"
+  conclusion: sch-strategy の scope.catalogs[] に任意の local_ids を追加し、指定時はその成果物だけを scope として approach_rules / owner_rules の網羅検査とタスク生成を行うようにした。省略時は従来どおり全件。同じ成果物を複数 track が選択でき、track ごとに独立した task ID を持つ。schedule strategy generate も同じ選択に従い、track-design-guide・schedule-design-guide・sch-rulebook に分担・再修正の意味を記述した。
 ---
 
 # PJR-S190 strategy の scope を成果物単位にし、1 ドメインを複数トラックで分担・再修正できるようにする
