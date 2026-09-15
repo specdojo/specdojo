@@ -68,13 +68,18 @@ Unresolved ID reference(s): prj-0001:cdfd-overview
 
 | No  | 作業                                                        | 担当 | 状態 | メモ                                 |
 | --- | ----------------------------------------------------------- | ---- | ---- | ------------------------------------ |
-| 1   | 成果物の doc id を配置と frontmatter から解決する関数を作る | ARC  | open | `exec-plans.ts`                      |
-| 2   | `depends_on` / `targets` の生成をその関数に寄せる           | ARC  | open | 文字列組み立てを残さない             |
-| 3   | テストを追加し、dry-run で警告が消えることを確認する        | ARC  | open | product / project、作成済み / 未作成 |
+| 1   | 成果物の doc id を配置と frontmatter から解決する関数を作る | ARC  | done | `exec-plans.ts`                      |
+| 2   | `depends_on` / `targets` の生成をその関数に寄せる           | ARC  | done | 文字列組み立てを共通関数へ集約       |
+| 3   | テストを追加し、dry-run で警告が消えることを確認する        | ARC  | done | product / project、作成済み / 未作成 |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `src/exec-plans.ts` に、既存文書では frontmatter の `specdojo.id`、未作成文書では配置規約から成果物 ID を解決する共通関数を追加した。
+- 通常・横断タスクの `targets`、`depends_on`、横断成果物の見出しと文書参照を共通関数へ寄せた。product 配下はローカル ID、projects 配下は project 修飾 ID になる。
+- product / project の両配置と、作成済み / 未作成の両状態を対象とする単体テストを追加した。
+- `T-DATA-FLOW-PDCA-cdfd-action-010` の plan を一時出力して、`targets` が `cdfd-action`、`depends_on` が `[[cdfd-overview]]` となり、dry-run で未解決警告が出ないことを確認した。
+- [[specdojo:plan-result-lifecycle-guide]] の `targets` の説明を配置別 ID 規約へ更新した。
+- 残課題: なし。
 
 ## 5. 関連ドキュメント
 

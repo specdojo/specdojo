@@ -6,6 +6,7 @@ import { describe, expect, it } from "vitest";
 import { existsSync } from "node:fs";
 import {
   buildInPlaceStem,
+  deliverableDocId,
   finalizeResultSectionsForDeliverable,
   generateSinglePlan,
   ownerRoleFields,
@@ -89,6 +90,45 @@ describe("ownerRoleFields", () => {
     const actual = ownerRoleFields("DEV", roles, vpMapOf(PO_VIEWPOINTS));
 
     expect(actual.viewpoints).toBe("_MISSING_");
+  });
+});
+
+describe("deliverableDocId", () => {
+  it("既存文書では配置にかかわらず frontmatter の id を返す", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-deliverable-doc-id-"));
+    const productPath = join(root, "product.md");
+    const projectPath = join(root, "project.md");
+
+    try {
+      writeFileSync(
+        productPath,
+        "---\nspecdojo:\n  id: cdfd-existing\n  type: flow\n  status: draft\n---\n",
+      );
+      writeFileSync(
+        projectPath,
+        '---\nspecdojo:\n  id: "prj-test:prj-existing"\n  type: project\n  status: draft\n---\n',
+      );
+
+      expect(deliverableDocId("prj-test", "catalog-product", productPath)).toBe("cdfd-existing");
+      expect(deliverableDocId("prj-test", "catalog-project", projectPath)).toBe(
+        "prj-test:prj-existing",
+      );
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("未作成文書では product 配下をローカル ID、projects 配下を project 修飾 ID にする", () => {
+    expect(
+      deliverableDocId("prj-test", "cdfd-new", "docs/ja/product/010-business-specs/cdfd-new.md"),
+    ).toBe("cdfd-new");
+    expect(
+      deliverableDocId(
+        "prj-test",
+        "prj-new",
+        "docs/ja/projects/prj-test/020-project-definition/prj-new.md",
+      ),
+    ).toBe("prj-test:prj-new");
   });
 });
 
