@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "ts": "2026-09-15T22:29:52Z",
+  "type": "unblock",
+  "task_id": "T-DATA-FLOW-PDCA-cdfd-uc-deliverable-010",
+  "by": "codex-expert-executor",
+  "msg": "result の末尾改行不足（MD047）で事前検査に block。runner の空白正規化を追加し、result を整えて統合段から再開"
+}
