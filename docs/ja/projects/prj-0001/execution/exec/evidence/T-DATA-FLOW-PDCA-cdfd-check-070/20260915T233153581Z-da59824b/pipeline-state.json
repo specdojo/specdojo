@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "task_id": "T-DATA-FLOW-PDCA-cdfd-check-070",
+  "run_id": "20260915T233153581Z-da59824b",
+  "updated_at": "2026-09-15T23:56:29.624Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "qwen-executor",
+      "attempts": 1,
+      "started_at": "2026-09-15T23:32:34.580Z",
+      "completed_at": "2026-09-15T23:46:33.506Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-PDCA-cdfd-check-070/20260915T233153581Z-da59824b/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "qwen-reporter",
+      "attempts": 3,
+      "started_at": "2026-09-15T23:47:17.833Z",
+      "completed_at": "2026-09-15T23:56:29.624Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/T-DATA-FLOW-PDCA-cdfd-check-070-result.md"
+    }
+  }
+}
