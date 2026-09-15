@@ -1,0 +1,7 @@
+[cdfd-plan.md](/workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-plan-010/docs/ja/product/010-business-specs/010-data-flow/cdfd-plan.md) を新規作成しました。
+
+P-02〜P-06のプロセス、9データストアの読み書き、主要例外と再開条件、STSD/CSTD参照、グループ外委譲を定義しています。result ファイルは pipeline 指示に従い変更していません。
+
+<specdojo_executor_evidence>
+{"final_message":"cdfd-plan.mdを新規作成し、Planグループのプロセス、データフロー、例外・復旧、状態参照、委譲境界を定義した","validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-plan.md && npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-plan.md","status":"passed","summary":"Markdownの整形と静的検査が成功"},{"command":"npx tsx src/specdojo.ts index build","status":"failed","summary":"sandboxがtsxのIPCソケット作成をEPERMで拒否"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"IPCを使用しない同一エントリの実行で1708件の索引生成に成功"},{"command":"git diff --check -- docs/ja/product/010-business-specs/010-data-flow/cdfd-plan.md","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>
