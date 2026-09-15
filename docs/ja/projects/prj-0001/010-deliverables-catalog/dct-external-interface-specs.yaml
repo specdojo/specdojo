@@ -26,11 +26,8 @@ groups:
         note: interfaces の kind はコマンドを使用し、個別の ifx-cmd-<term> 詳細仕様が未作成の間は spec_ref を TBD とする
         evidence_refs:
           - kind: implementation
-            path: src/exec-agent-config.ts
-            purpose: AI provider CLIの起動コマンド解決・非対話実行
-          - kind: implementation
-            path: src/exec-worktree.ts
-            purpose: Git操作（worktree作成・commit・push等）の実行箇所
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達するAI provider CLIの起動コマンド解決・非対話実行、Git操作（worktree作成・commit・push等）の実行箇所
         done_criteria:
           - text: 外部連携の一覧・連携方式・タイミングが業務観点で整理されていること
             roles: [BA]

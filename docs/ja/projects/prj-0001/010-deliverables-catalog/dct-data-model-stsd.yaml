@@ -50,8 +50,8 @@ groups:
         rulebook: specdojo:stsd-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/exec-schedule-index.ts
-            purpose: タスク状態（ready/doing/blocked/done等）をevent列から再構成する規則
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達するタスク状態（ready/doing/blocked/done等）をevent列から再構成する規則
         done_criteria:
           - text: ステータス名・説明が業務観点で正確に定義されていること
             roles: [BA]

@@ -47,14 +47,11 @@ groups:
             path: src/specdojo-config.ts
             purpose: プロジェクト設定の読込・初期化経路
           - kind: implementation
-            path: src/catalog-scaffold.ts
-            purpose: 成果物カタログの初期生成処理
+            path: src/catalog.ts
+            purpose: catalog コマンド入口から到達する成果物カタログの初期生成処理
           - kind: implementation
-            path: src/exec-provider-scaffold.ts
-            purpose: 実行provider設定の初期生成処理
-          - kind: implementation
-            path: src/review-plan.ts
-            purpose: レビュー観点ファイル（pm-review-viewpoints.yaml）の初期生成処理
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達する実行provider設定の初期生成処理、レビュー観点ファイル（pm-review-viewpoints.yaml）の初期生成処理
         depends_on:
           - cdfd-overview
         done_criteria:
@@ -79,19 +76,10 @@ groups:
         evidence_refs:
           - kind: implementation
             path: src/register.ts
-            purpose: 登録簿項目の生成・状態遷移・派生ビュー更新・ID競合復旧
+            purpose: register コマンド入口から到達する登録簿項目の生成・状態遷移・派生ビュー更新・ID競合復旧、個票Frontmatter正本の読込・更新・検証と一覧値の導出、個票のGit履歴から登録項目単位の変更履歴を再構成する処理、登録日・完了日のタイムゾーン解決と検証
           - kind: implementation
-            path: src/register-item.ts
-            purpose: 個票Frontmatter正本の読込・更新・検証と一覧値の導出
-          - kind: implementation
-            path: src/register-history.ts
-            purpose: 個票のGit履歴から登録項目単位の変更履歴を再構成する処理
-          - kind: implementation
-            path: src/exec-register.ts
-            purpose: 登録簿項目を実行タスクとして扱う経路
-          - kind: implementation
-            path: src/register-date.ts
-            purpose: 登録日・完了日のタイムゾーン解決と検証
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達する登録簿項目を実行タスクとして扱う経路
         depends_on:
           - cdfd-init
         note: 廃止済み。新規参照は cdfd-register-lifecycle を使用する。
@@ -117,19 +105,10 @@ groups:
         evidence_refs:
           - kind: implementation
             path: src/register.ts
-            purpose: 登録簿項目の生成・状態遷移・派生ビュー更新・ID競合復旧
+            purpose: register コマンド入口から到達する登録簿項目の生成・状態遷移・派生ビュー更新・ID競合復旧、個票Frontmatter正本の読込・更新・検証と一覧値の導出、個票のGit履歴から登録項目単位の変更履歴を再構成する処理、登録日・完了日のタイムゾーン解決と検証
           - kind: implementation
-            path: src/register-item.ts
-            purpose: 個票Frontmatter正本の読込・更新・検証と一覧値の導出
-          - kind: implementation
-            path: src/register-history.ts
-            purpose: 個票のGit履歴から登録項目単位の変更履歴を再構成する処理
-          - kind: implementation
-            path: src/exec-register.ts
-            purpose: 登録簿項目を実行タスクとして扱う経路
-          - kind: implementation
-            path: src/register-date.ts
-            purpose: 登録日・完了日のタイムゾーン解決と検証
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達する登録簿項目を実行タスクとして扱う経路
         depends_on:
           - cdfd-init
         note: cdfd-register-operation（廃止済み）の後継。id-and-file-naming-standard.md 9.2 経路B に従い、実績は initial_state.completed_deliverables で引き継ぐ。
@@ -154,14 +133,14 @@ groups:
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/catalog-build.ts
-            purpose: 成果物カタログの検証・表示ビュー生成
+            path: src/catalog.ts
+            purpose: catalog コマンド入口から到達する成果物カタログの検証・表示ビュー生成
           - kind: implementation
-            path: src/schedule-build.ts
-            purpose: カタログと戦略からScheduleへ展開する処理
+            path: src/schedule.ts
+            purpose: schedule コマンド入口から到達するカタログと戦略からScheduleへ展開する処理
           - kind: implementation
-            path: src/exec-schedule.ts
-            purpose: Scheduleから実行状態・CPM・timelineへ展開する処理
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達するScheduleから実行状態・CPM・timelineへ展開する処理
         depends_on:
           - cdfd-init
         done_criteria:
@@ -182,20 +161,8 @@ groups:
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/exec-run.ts
-            purpose: agent・humanタスクの実行制御と結果処理
-          - kind: implementation
-            path: src/exec-run-lock.ts
-            purpose: project単位の実行排他とbusy時の方針
-          - kind: implementation
-            path: src/exec-events.ts
-            purpose: claim・complete・block等の状態イベント処理
-          - kind: implementation
-            path: src/exec-worktree.ts
-            purpose: task worktreeの作成・依存導入・統合制御
-          - kind: implementation
-            path: src/exec-worktree-ops.ts
-            purpose: worktreeでの変更許可・commit・統合境界
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達するagent・humanタスクの実行制御と結果処理、project単位の実行排他とbusy時の方針、claim・complete・block等の状態イベント処理、task worktreeの作成・依存導入・統合制御、worktreeでの変更許可・commit・統合境界
         depends_on:
           - cdfd-catalog-planning
         done_criteria:
@@ -224,8 +191,8 @@ groups:
             path: src/routine.ts
             purpose: routineのdue判定・委譲・実行結果更新
           - kind: implementation
-            path: src/exec-run.ts
-            purpose: resume・状態再計算・autoを単一ロック内で順次実行するcycle制御
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達するresume・状態再計算・autoを単一ロック内で順次実行するcycle制御
           - kind: implementation
             path: src/job.ts
             purpose: Job Definition検証・Job Run生成・checkpoint更新
@@ -250,11 +217,8 @@ groups:
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/exec-project.ts
-            purpose: プロジェクト単位の実行ブランチ・worktree制御
-          - kind: implementation
-            path: src/exec-worktree.ts
-            purpose: タスクworktreeの作成・同期・後片付け
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達するプロジェクト単位の実行ブランチ・worktree制御、タスクworktreeの作成・同期・後片付け
         depends_on:
           - cdfd-init
         done_criteria:
@@ -275,11 +239,8 @@ groups:
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/exec-agent-config.ts
-            purpose: agent・provider設定の解決とコマンド生成
-          - kind: implementation
-            path: src/exec-strategy.ts
-            purpose: phaseの実行要件とapproachの解決
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達するagent・provider設定の解決とコマンド生成、phaseの実行要件とapproachの解決
         depends_on:
           - cdfd-task-execution
         done_criteria:
@@ -306,14 +267,14 @@ groups:
             path: src/build-command.ts
             purpose: 派生生成コマンド全体の起動順序
           - kind: implementation
-            path: src/catalog-generate.ts
-            purpose: カタログから成果物雛形を生成する処理
+            path: src/catalog.ts
+            purpose: catalog コマンド入口から到達するカタログから成果物雛形を生成する処理
           - kind: implementation
-            path: src/doc-index.ts
-            purpose: 文書索引の収集・生成処理
+            path: src/index-command.ts
+            purpose: index コマンド入口から到達する文書索引の収集・生成処理
           - kind: implementation
-            path: src/yaml-pages.ts
-            purpose: YAML正本から表示ページを生成する処理
+            path: src/yaml-pages-command.ts
+            purpose: yaml-pages コマンド入口から到達するYAML正本から表示ページを生成する処理
         depends_on:
           - cdfd-register-lifecycle
           - cdfd-catalog-planning
@@ -336,17 +297,11 @@ groups:
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/exec-task-view.ts
-            purpose: Ready・doing等の実行状態ビュー生成
-          - kind: implementation
-            path: src/exec-schedule-cpm.ts
-            purpose: CPM・余裕時間・クリティカルパスの計算
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達するReady・doing等の実行状態ビュー生成、CPM・余裕時間・クリティカルパスの計算
           - kind: implementation
             path: src/register.ts
-            purpose: 登録簿から課題・リスク・決定等の管理ビューを生成する処理
-          - kind: implementation
-            path: src/register-history.ts
-            purpose: 登録項目の追加・変更・削除と状態遷移の監査履歴を再構成する処理
+            purpose: register コマンド入口から到達する登録簿から課題・リスク・決定等の管理ビューを生成する処理、登録項目の追加・変更・削除と状態遷移の監査履歴を再構成する処理
         depends_on:
           - cdfd-register-lifecycle
           - cdfd-task-execution
@@ -372,14 +327,11 @@ groups:
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/deliverable-trash.ts
-            purpose: 非推奨化した成果物ファイルのtrashディレクトリへの移動とカタログpath書き換え
+            path: src/deliverable.ts
+            purpose: deliverable コマンド入口から到達する非推奨化した成果物ファイルのtrashディレクトリへの移動とカタログpath書き換え、frontmatterのspecdojo名前空間・status読込
           - kind: implementation
-            path: src/catalog-paths.ts
-            purpose: base_path・pathの解決規則
-          - kind: implementation
-            path: src/frontmatter-namespace.ts
-            purpose: frontmatterのspecdojo名前空間・status読込
+            path: src/catalog.ts
+            purpose: catalog コマンド入口から到達するbase_path・pathの解決規則
         depends_on:
           - cdfd-init
         done_criteria:
@@ -408,11 +360,11 @@ groups:
             path: src/specdojo-config.ts
             purpose: specdojo.config.json の読込と初期化
           - kind: implementation
-            path: src/exec-provider-scaffold.ts
-            purpose: provider 別の agent 定義・設定の雛形配置
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達するprovider 別の agent 定義・設定の雛形配置
           - kind: implementation
-            path: src/catalog-scaffold.ts
-            purpose: 成果物カタログの雛形生成
+            path: src/catalog.ts
+            purpose: catalog コマンド入口から到達する成果物カタログの雛形生成
           - kind: implementation
             path: src/register.ts
             purpose: 登録簿の初期化（scaffold）
@@ -440,14 +392,11 @@ groups:
             path: src/register.ts
             purpose: 登録項目の起票・更新・状態遷移
           - kind: implementation
-            path: src/catalog-build.ts
-            purpose: 成果物カタログの検証と派生生成
+            path: src/catalog.ts
+            purpose: catalog コマンド入口から到達する成果物カタログの検証と派生生成
           - kind: implementation
-            path: src/schedule-build.ts
-            purpose: 成果物カタログとスケジュール戦略からの track 生成
-          - kind: implementation
-            path: src/schedule-strategy-generate.ts
-            purpose: intent と Kata grade からの approach 導出
+            path: src/schedule.ts
+            purpose: schedule コマンド入口から到達する成果物カタログとスケジュール戦略からの track 生成、intent と Kata grade からの approach 導出
           - kind: implementation
             path: src/routine.ts
             purpose: 定期実行定義の検証と due 判定
@@ -478,17 +427,8 @@ groups:
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/exec-run.ts
-            purpose: plan の生成、agent の起動、result の記録、状態遷移
-          - kind: implementation
-            path: src/exec-worktree.ts
-            purpose: worktree による並行実行と統合
-          - kind: implementation
-            path: src/exec-agent-protected-config.ts
-            purpose: agent が変更できない設定の保護
-          - kind: implementation
-            path: src/exec-protection-handoff.ts
-            purpose: 保護対象の変更を申し送りへ記録
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達するplan の生成、agent の起動、result の記録、状態遷移、worktree による並行実行と統合、agent が変更できない設定の保護、保護対象の変更を申し送りへ記録
         depends_on:
           - cdfd-overview
         note: 全体概要の Do（P-07）を詳細化する。executor / reporter pipeline、worktree 隔離、保護機構による block と申し送りを主要例外として扱う。旧 cdfd-task-execution・cdfd-multi-project は参照しない
@@ -522,8 +462,8 @@ groups:
             path: src/build-command.ts
             purpose: 派生生成の一括実行
           - kind: implementation
-            path: src/doc-index.ts
-            purpose: 文書索引の生成
+            path: src/index-command.ts
+            purpose: index コマンド入口から到達する文書索引の生成
         depends_on:
           - cdfd-overview
         note: 全体概要の Check（P-08〜P-10）を詳細化する。成果物評価（grade）と review の責務分担を明示する。旧 cdfd-reporting・cdfd-derived-content は参照しない
@@ -545,14 +485,11 @@ groups:
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/exec-register.ts
-            purpose: 登録項目の review と close の遷移
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達する登録項目の review と close の遷移、agent・provider・実行既定値の稼働構成
           - kind: implementation
-            path: src/exec-agent-config.ts
-            purpose: agent・provider・実行既定値の稼働構成
-          - kind: implementation
-            path: src/deliverable-trash.ts
-            purpose: 非推奨化した成果物の trash への退避
+            path: src/deliverable.ts
+            purpose: deliverable コマンド入口から到達する非推奨化した成果物の trash への退避
         depends_on:
           - cdfd-overview
         note: 全体概要の Action（P-11〜P-13）を詳細化する。完了確定、構成変更の承認、非推奨化の判断は人間が担う。旧 cdfd-agent-config-operation・cdfd-deprecation は参照しない
@@ -577,8 +514,8 @@ groups:
             path: src/routine.ts
             purpose: 定期実行の due 判定と起動、routine-state の記録
           - kind: implementation
-            path: src/exec-run.ts
-            purpose: auto 実行と Ready task の選択
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達するauto 実行と Ready task の選択
           - kind: implementation
             path: .claude/agents/specdojo-orchestrator.md
             purpose: 対話型オーケストレーターの入口指示
@@ -608,8 +545,8 @@ groups:
         rulebook: specdojo:cdfd-uc-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/exec-register.ts
-            purpose: 登録項目を対象とする exec run の遷移
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達する登録項目を対象とする exec run の遷移
         depends_on:
           - cdfd-plan
           - cdfd-do
@@ -634,11 +571,11 @@ groups:
         rulebook: specdojo:cdfd-uc-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/schedule-build.ts
-            purpose: 成果物カタログから Schedule task への展開
+            path: src/schedule.ts
+            purpose: schedule コマンド入口から到達する成果物カタログから Schedule task への展開
           - kind: implementation
-            path: src/exec-run.ts
-            purpose: Schedule task を対象とする実行と完了
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達するSchedule task を対象とする実行と完了
         depends_on:
           - cdfd-plan
           - cdfd-do

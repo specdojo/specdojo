@@ -52,8 +52,8 @@ groups:
             rulebook: specdojo:bdd-rulebook
             evidence_refs:
               - kind: implementation
-                path: src/exec-agent-config.ts
-                purpose: pm-members.yaml・.specdojo/exec-defaults.yamlの読込、provider別設定の解決規則
+                path: src/exec.ts
+                purpose: exec コマンド入口から到達するpm-members.yaml・.specdojo/exec-defaults.yamlの読込、provider別設定の解決規則
             done_criteria:
               - text: エンティティ・属性の業務的定義が正確に記述されていること
                 roles: [BA]
@@ -80,11 +80,8 @@ groups:
             rulebook: specdojo:bdd-rulebook
             evidence_refs:
               - kind: implementation
-                path: src/register-item.ts
-                purpose: 登録項目個票のフィールド定義（type・priority・status・owner・due_on等）と生成規則
-              - kind: implementation
                 path: src/register.ts
-                purpose: 登録項目の状態遷移・派生ビュー更新・ID競合復旧の扱い
+                purpose: register コマンド入口から到達する登録項目個票のフィールド定義（type・priority・status・owner・due_on等）と生成規則、登録項目の状態遷移・派生ビュー更新・ID競合復旧の扱い
             done_criteria:
               - text: エンティティ・属性の業務的定義が正確に記述されていること
                 roles: [BA]
@@ -111,11 +108,8 @@ groups:
             rulebook: specdojo:bdd-rulebook
             evidence_refs:
               - kind: implementation
-                path: src/catalog-types.ts
-                purpose: dct-<domain>.yamlのgroups・deliverables・done_criteria等の型定義
-              - kind: implementation
                 path: src/catalog.ts
-                purpose: 成果物カタログの読込・検証・依存解決
+                purpose: catalog コマンド入口から到達するdct-<domain>.yamlのgroups・deliverables・done_criteria等の型定義、成果物カタログの読込・検証・依存解決
             done_criteria:
               - text: エンティティ・属性の業務的定義が正確に記述されていること
                 roles: [BA]
@@ -140,8 +134,8 @@ groups:
             rulebook: specdojo:bdd-rulebook
             evidence_refs:
               - kind: implementation
-                path: src/exec-strategy.ts
-                purpose: sch-strategy-<track>.yamlのphase_sets・owner_rules・cross_deliverable_passes等の型・解決規則
+                path: src/exec.ts
+                purpose: exec コマンド入口から到達するsch-strategy-<track>.yamlのphase_sets・owner_rules・cross_deliverable_passes等の型・解決規則
             done_criteria:
               - text: エンティティ・属性の業務的定義が正確に記述されていること
                 roles: [BA]
@@ -166,8 +160,8 @@ groups:
             rulebook: specdojo:bdd-rulebook
             evidence_refs:
               - kind: implementation
-                path: src/exec-types.ts
-                purpose: task・milestone・依存関係の型定義
+                path: src/exec.ts
+                purpose: exec コマンド入口から到達するtask・milestone・依存関係の型定義
               - kind: implementation
                 path: src/schedule.ts
                 purpose: sch-track-<track>.yamlの読込・タスクID導出・依存解決
@@ -197,8 +191,8 @@ groups:
             rulebook: specdojo:bdd-rulebook
             evidence_refs:
               - kind: implementation
-                path: src/exec-events.ts
-                purpose: 実行イベント（claim/complete/block/reopen等）のスキーマ・追記規則
+                path: src/exec.ts
+                purpose: exec コマンド入口から到達する実行イベント（claim/complete/block/reopen等）のスキーマ・追記規則
             done_criteria:
               - text: エンティティ・属性の業務的定義が正確に記述されていること
                 roles: [BA]
@@ -223,11 +217,8 @@ groups:
             rulebook: specdojo:bdd-rulebook
             evidence_refs:
               - kind: implementation
-                path: src/exec-schedule-ready.ts
-                purpose: Ready task算出のためのtask状態・依存判定
-              - kind: implementation
-                path: src/exec-schedule-cpm.ts
-                purpose: CPM・クリティカルパス・slackの算出
+                path: src/exec.ts
+                purpose: exec コマンド入口から到達するReady task算出のためのtask状態・依存判定、CPM・クリティカルパス・slackの算出
             done_criteria:
               - text: エンティティ・属性の業務的定義が正確に記述されていること
                 roles: [BA]
@@ -252,11 +243,8 @@ groups:
             rulebook: specdojo:bdd-rulebook
             evidence_refs:
               - kind: implementation
-                path: src/exec-plans.ts
-                purpose: edit/review plan frontmatterの生成・scaffold規則
-              - kind: implementation
-                path: src/exec-results.ts
-                purpose: result frontmatter・必須節のscaffold・記入検証
+                path: src/exec.ts
+                purpose: exec コマンド入口から到達するedit/review plan frontmatterの生成・scaffold規則、result frontmatter・必須節のscaffold・記入検証
             done_criteria:
               - text: エンティティ・属性の業務的定義が正確に記述されていること
                 roles: [BA]
@@ -281,8 +269,8 @@ groups:
             rulebook: specdojo:bdd-rulebook
             evidence_refs:
               - kind: implementation
-                path: src/exec-evidence.ts
-                purpose: 実施根拠記録（evidence）の格納先・構造
+                path: src/exec.ts
+                purpose: exec コマンド入口から到達する実施根拠記録（evidence）の格納先・構造
             done_criteria:
               - text: エンティティ・属性の業務的定義が正確に記述されていること
                 roles: [BA]
@@ -309,11 +297,8 @@ groups:
             rulebook: specdojo:bdd-rulebook
             evidence_refs:
               - kind: implementation
-                path: src/exec-worktree.ts
-                purpose: worktree・branchの命名規則・配置
-              - kind: implementation
-                path: src/exec-worktree-ops.ts
-                purpose: worktreeの作成・削除・同期操作
+                path: src/exec.ts
+                purpose: exec コマンド入口から到達するworktree・branchの命名規則・配置、worktreeの作成・削除・同期操作
             done_criteria:
               - text: エンティティ・属性の業務的定義が正確に記述されていること
                 roles: [BA]
@@ -420,11 +405,11 @@ groups:
             rulebook: specdojo:bdd-rulebook
             evidence_refs:
               - kind: implementation
-                path: src/catalog-generate.ts
-                purpose: 成果物カタログ表示ビュー（generated/dct-<domain>.md）の生成規則
+                path: src/catalog.ts
+                purpose: catalog コマンド入口から到達する成果物カタログ表示ビュー（generated/dct-<domain>.md）の生成規則
               - kind: implementation
-                path: src/doc-index.ts
-                purpose: 文書ID索引（.specdojo/doc-index.json）の構造・生成規則
+                path: src/index-command.ts
+                purpose: index コマンド入口から到達する文書ID索引（.specdojo/doc-index.json）の構造・生成規則
             done_criteria:
               - text: エンティティ・属性の業務的定義が正確に記述されていること
                 roles: [BA]

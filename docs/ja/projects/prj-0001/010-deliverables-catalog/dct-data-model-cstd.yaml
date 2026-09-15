@@ -57,11 +57,8 @@ groups:
         rulebook: specdojo:cstd-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/exec-schedule-index.ts
-            purpose: タスク状態のevent列からの再構成規則（claim/complete/block/reopen等の遷移条件）
-          - kind: implementation
-            path: src/exec-events.ts
-            purpose: 状態遷移を引き起こすイベント種別の定義
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達するタスク状態のevent列からの再構成規則（claim/complete/block/reopen等の遷移条件）、状態遷移を引き起こすイベント種別の定義
         done_criteria:
           - text: 状態・遷移・イベント・条件が業務観点で正確に表現されていること
             roles: [BA]
@@ -89,8 +86,8 @@ groups:
         rulebook: specdojo:cstd-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/deliverable-trash.ts
-            purpose: deprecated化・trash移動時の状態遷移規則
+            path: src/deliverable.ts
+            purpose: deliverable コマンド入口から到達するdeprecated化・trash移動時の状態遷移規則
         done_criteria:
           - text: 状態・遷移・イベント・条件が業務観点で正確に表現されていること
             roles: [BA]

@@ -116,8 +116,8 @@ groups:
             path: .devcontainer/devcontainer.json
             purpose: SpecDojo CLI実行環境（devcontainer）のネットワーク・接続構成
           - kind: implementation
-            path: src/exec-agent-config.ts
-            purpose: クラウドAI providerへの接続解決規則
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達するクラウドAI providerへの接続解決規則
         done_criteria:
           - text: 実行環境・ネットワーク・コンポーネント構成が業務制約と整合していること
             roles: [BA]

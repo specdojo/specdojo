@@ -54,16 +54,19 @@ grade で `evidence_refs` を参照する人・agent が気づく運用とし、
 
 ## 3. 作業内容
 
-| No  | 作業                                                   | 担当 | 状態 | メモ                                   |
-| --- | ------------------------------------------------------ | ---- | ---- | -------------------------------------- |
-| 1   | lefthook の `catalog-validate` の glob を広げる        | ARC  | open | `src/**`、`tools/**`、`packages/**`    |
-| 2   | CI に `validate:catalog` を入れる                      | ARC  | open | 保護対象の workflow は申し送り経由     |
-| 3   | dct-rulebook の `evidence_refs` 規約に粒度の指針を追記 | ARC  | open | 入口・責務単位、内部ヘルパーは指さない |
-| 4   | 既存カタログの参照を見直して入口へ寄せる               | ARC  | open | 3 カタログ 69 参照                     |
+| No  | 作業                                                   | 担当 | 状態    | メモ                                                         |
+| --- | ------------------------------------------------------ | ---- | ------- | ------------------------------------------------------------ |
+| 1   | lefthook の `catalog-validate` の glob を広げる        | ARC  | waiting | `src/**`、`tools/**`、`packages/**`。PJR-3S8Q に従い申し送り |
+| 2   | CI に `validate:catalog` を入れる                      | ARC  | waiting | 保護対象の workflow は申し送り経由                           |
+| 3   | dct-rulebook の `evidence_refs` 規約に粒度の指針を追記 | ARC  | done    | 入口・責務単位、内部ヘルパーは指さない                       |
+| 4   | 既存カタログの参照を見直して入口へ寄せる               | ARC  | done    | 現行 11 カタログの内部ヘルパー参照を安定入口へ集約           |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- [[specdojo:dct-rulebook]] に、コマンド入口または責務単位のディレクトリを調査起点とし、内部ヘルパーを直接参照しない規約と refactor 耐性の理由を追記した。
+- 現行 12 カタログを再調査し、うち 11 カタログで `exec-*`、`catalog-*`、`register-*` などの内部ヘルパー参照を `src/exec.ts`、`src/catalog.ts`、`src/register.ts` などのコマンド入口へ集約した。同一成果物内で入口が重複する場合は `purpose` を統合した。
+- `lefthook.yml` と CI workflow は [[prj-0001:pjr-3s8q-agent-writable-config-scope]] が定める保護対象であるため、executor では変更していない。人間または orchestrator が `catalog-validate.glob` に `src/**`・`tools/**`・`packages/**` を追加し、`deploy.yml` と `publish-specdojo.yml` の依存導入後へ `npm run validate:catalog` を追加する必要がある。
+- hook に追加するカタログ検証は、sandbox の IPC 制約を避けた同等起動 `node --import tsx src/specdojo.ts catalog validate` で実測し、経過 1.401 秒（user 0.837 秒、system 0.173 秒）だった。設定適用後は hook 経由でも再計測する。現時点では完了条件 1・2 が未完了である。
 
 ## 5. 関連ドキュメント
 
