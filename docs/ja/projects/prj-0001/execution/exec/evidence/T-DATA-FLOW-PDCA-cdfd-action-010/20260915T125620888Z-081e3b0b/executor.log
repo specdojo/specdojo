@@ -1,0 +1,11 @@
+[cdfd-action.md](/workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-action-010/docs/ja/product/010-business-specs/010-data-flow/cdfd-action.md) を新規作成しました。
+
+- P-11〜P-13 の7プロセス、判断境界、例外・復旧、Plan への再計画委譲を定義
+- Action が利用する9データストアを全体概要と同じ名称・区分で記載
+- STSD / CSTD の文書 ID は根拠資料にないため、未決事項として明示
+- executor 指示に従い result は未編集
+- 親 runner 管轄の unit・integration・schema 検証は未実行
+
+<specdojo_executor_evidence>
+{"final_message":"cdfd-action.mdを新規作成し、Actionのプロセス、判断、例外、データフローを定義した","validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-action.md && npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-action.md","status":"passed","summary":"整形済み、Markdown違反なし"},{"command":"npx tsx src/specdojo.ts index build","status":"failed","summary":"sandboxでtsxのIPCソケット生成がEPERMとなった"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"IPC不要の同一エントリポイントで1697件の索引を生成"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>
