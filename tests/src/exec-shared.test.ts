@@ -8,6 +8,7 @@ import {
   safeSlug,
   stripTerminalControlSequences,
   tsForFilenameUtc,
+  expandTemplate,
 } from "../../src/exec-shared.js";
 
 // ESC(0x1B) を String.fromCharCode で構築し、ソースへ生の制御文字を混入させない。
@@ -129,5 +130,13 @@ describe("stripTerminalControlSequences", () => {
 
   it("制御文字を含まない文字列は変更しない", () => {
     expect(stripTerminalControlSequences("plain text")).toBe("plain text");
+  });
+});
+
+describe("expandTemplate", () => {
+  it("strips trailing whitespace left when a placeholder expands to a nested list", () => {
+    const actual = expandTemplate("- `depends_on`: _DEPS_\n", { _DEPS_: "\n  - [[a]]\n  - [[b]]" });
+
+    expect(actual).toBe("- `depends_on`:\n  - [[a]]\n  - [[b]]\n");
   });
 });

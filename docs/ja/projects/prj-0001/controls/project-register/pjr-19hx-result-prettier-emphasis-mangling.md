@@ -100,6 +100,13 @@ commit が失敗する。
   `templates/codex/agents/` の同名ファイルは更新済みで、内容をコピーすれば同期できる。人間または
   runner 側で反映する。unit / integration / schema 検証は pipeline の親 runner が実行する。
 
+### 4.1. 補足（2026-09-16）
+
+`.prettierignore` で plan を整形対象から外した直後、生成 plan の `- \`depends_on\`:`の行末に残る空白 1 つが
+markdownlint の MD009 で検出され、checkpoint commit（prepare execution）が失敗して author タスク 3 件が claim 直後に
+release された。これまでは commit 時の prettier が空白を除いていたため表面化していなかった。`expandTemplate`（`src/exec-shared.ts`）で置換後の行末空白を取り除く修正を orchestrator が直接行い、
+単体テストを追加した。
+
 ## 5. 関連ドキュメント
 
 - 発生した run: `T-DATA-FLOW-PDCA-cdfd-check-010`（[[prj-0001:pjr-6pd7-cdfd-overview]] の作業 5）
