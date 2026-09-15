@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_8835e06b02554b8b8a1f31627465262f
+  ts: "2026-09-15T11:50:15Z"
+  action: add
+  actor: specdojo-orchestrator (claude)
+  from_status: null
+  to_status: open
+  reason: "docs(register): evidence_refs の陳腐化検知と粒度規約の todo を起票する"
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: evidence_refs の陳腐化を refactor 側の commit で検知し、参照を安定した入口に寄せる
+    - field: description
+      from: ""
+      to: 成果物カタログの evidence_refs は src/ 配下の 69 ファイルを指しており、refactor で rename・削除されると陳腐化する。catalog validate は存在しないパスをエラーにするが、pre-commit hook の catalog-validate は glob が docs/ja/projects/** のため src だけを変える commit では走らず、CI にも含まれていない。hook の glob に src/**、tools/**、packages/** を加え、CI に validate:catalog を入れて refactor 側で検知する。あわせて dct-rulebook の evidence_refs 規約に「コマンドの入口や責務単位のディレクトリを指し、内部ヘルパーは指さない」を追記し、既存参照を見直す。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-15"
+    - field: due
+      from: ""
+      to: "2026-09-30"
