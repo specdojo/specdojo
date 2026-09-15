@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "mode": "edit",
+  "outcome": "complete",
+  "summary": [
+    "cdfd-overview の P-01 群（Onboarding）および成果物カタログの `done_criteria`・`evidence_refs` を根拠に、`docs/ja/product/010-business-specs/010-data-flow/cdfd-onboarding.md` に概念データフロー図を新規作成した。",
+    "領域内プロセス、起点イベント、例外・復旧、データストアの読み書きを定義し、Kata の配置と稼働構成の初期化をプロセス単位で記述した。状態の定義と遷移は STSD / CSTD を正本として参照に留めた。",
+    "`based_on` は `depends_on` の推移閉包に含まれる `cdfd-overview.md` のみを使用し、プロジェクトコンテキストの `prj-overview.md` は本文へ反映済みで frontmatter へ転記していない。"
+  ],
+  "changed_files": [
+    {
+      "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-onboarding.md",
+      "summary": "Onboarding グループ（P-01）の概念データフロー図を新規作成。領域内プロセス、起点イベント、主要例外・復旧、Kata と稼働構成をデータストアとして読み書きする流れを定義し、後続 Plan へのグループ外委譲を示した。`based_on` は `cdfd-overview.md` に限定。frontmatter の `status` は `draft`、`owner` は BA として維持。"
+    }
+  ],
+  "handoff": [
+    "[ARC] 各プロセスの起動条件、読み書きするデータストア（Kata、稼働構成）、生成先は成果物から識別できる。Plan への引き渡しはグループ外委譲として示されている。",
+    "[QE] 既存設定の検出、雛形の不足、権限不足など、成果の採否を変える主要例外の検出条件と再開条件が記述されている。",
+    "状態の遷移詳細は STSD / CSTD が正本のため、本図では参照に留めている。後続タスクで状態の詳細定義が必要となる場合は該当文書を根拠にすること。"
+  ],
+  "approach": "進め方: plan の rulebook `docs/ja/specdojo/rulebooks/cdfd-rulebook.md`、併設 `docs/ja/specdojo/mermaid-rulebook.md`（cdfd-mermaid）、recipe `docs/ja/specdojo/recipes/cdfd-recipe.md` に従い、`depends_on` である `cdfd-overview.md` とプロジェクトコンテキストの `prj-overview.md` を参照して新規作成した。実践の型が `_MISSING_` や内容が薄い場合は result へ記録する運用に従い、章構成は既存の対象成果物と rulebook を骨組みとした。root 権限での実行により `index build` を実行し、文書索引は 1726 件生成済み。runner 検証 `test-integration` / `validate-schema` / `test-unit` はすべて passed。executor サンドボックス内の prettier・markdownlint・`git diff --check` もすべて passed のため、成果物編集の完成度は十分。",
+  "block_reason": ""
+}
+{
+   "schema_version": 1,
+   "mode": "edit",
+   "outcome": "complete",
+   "summary": [
+     "cdfd-overview の P-01（Onboarding）と成果物カタログの `done_criteria`・`evidence_refs` を根拠に、`docs/ja/product/010-business-specs/010-data-flow/cdfd-onboarding.md` を新規作成した。",
+     "領域内プロセス、起点イベント、例外・復旧、データストアの読み書きを定義し、Kata の配置と稼働構成の初期化をプロセス単位で記述した。状態の定義・遷移は STSD / CSTD を正本として参照に留めた。",
+     "`based_on` は `depends_on` の推移閉包に含まれる `cdfd-overview.md` のみに限定し、プロジェクトコンテキストの `prj-overview.md` は本文へ反映したが frontmatter へ転記していない。frontmatter の `status` は `draft` のまま、`owner` は BA を維持した。"
+   ],
+   "changed_files": [
+     {
+       "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-onboarding.md",
+       "summary": "Onboarding グループ（P-01）の概念データフロー図を新規作成。領域内プロセス、起点イベント、主要例外・復旧、Kata と稼働構成をデータストアとして読み書きする流れを定義し、後続 Plan へのグループ外委譲を示した。`based_on` は `cdfd-overview.md` に限定。"
+     }
+   ],
+   "handoff": [
+     "[ARC] 各プロセスの起動条件、読み書きするデータストア（Kata、稼働構成）、生成先は成果物から识别できる。Plan への引き渡しはグループ外委譲として示されている。",
+     "[QE] 既存設定の検出、雛形の不足、権限不足など、成果の采否を変える主要例外の検出条件と再開条件が記述されている。",
+     "状態遷移の詳細は STSD / CSTD が正本のため、本図では参照に留めている。後続タスクで詳細が必要になれば該当文書を根拠にすること。"
+   ],
+   "approach": "plan の rulebook `docs/ja/specdojo/rulebooks/cdfd-rulebook.md`、併設する `docs/ja/specdojo/rulebooks/cdfd-mermaid-rulebook.md`、recipe `docs/ja/specdojo/recipes/cdfd-recipe.md` に従い、`depends_on` である `cdfd-overview.md` とプロジェクトコンテキストの `prj-overview.md` を参照して新規作成した。実践の型が `_MISSING_` または薄い場合は result へ記録する運用に従い、章構成は既存対象成果物と rulebook を骨組みとした。executor evidence では prettier・markdownlint・`git diff --check`・index build がすべて passed、runner 検証 `test-integration` / `validate-schema` / `test-unit` もすべて passed であるため、編集の完成度は十分。結果ファイルの記入が executor に委ねられていなくても、本 reporter の JSON 返却が result 記入の役割を満たす。",
+   "block_reason": ""
+}

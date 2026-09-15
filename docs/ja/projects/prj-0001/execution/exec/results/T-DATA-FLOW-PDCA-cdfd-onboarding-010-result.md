@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-DATA-FLOW-PDCA-cdfd-onboarding-010
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: exec/plans/T-DATA-FLOW-PDCA-cdfd-onboarding-010-plan.md
   started_at: "2026-09-15T22:45:28.498Z"
+  completed_at: "2026-09-15T23:04:44.329Z"
   agent: codex-expert-executor
   execution: agent
   approach: fully-guided
@@ -19,16 +20,18 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- Onboarding グループ（P-01）の概念データフロー図（CDFD）を新規作成しました。
+- `cdfd-overview.md` の定義に基づき、プロセス領域における主要な入力・出力、データストアの読み書き、および主要な例外・復旧条件を詳細化しました。
+- 後続の Plan への引き渡しをグループ外委譲として明記し、ARC/QE 各ロールの入力要件を満たす構成としています。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/product/010-business-specs/010-data-flow/cdfd-onboarding.md`: Onboarding グループの概念データフロー図を新規作成
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 成果物の `status` は `draft` のままであり、人間によるレビュー後の昇格が必要です。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`fully-guided` で rulebook / recipe / sample / template をどう使い分けたか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+指定された `cdfd-rulebook.md` および `cdfd-mermaid-rulebook.md` の基準に従い、`cdfd-recipe.md` の観点を用いて内容を構成しました。`depends_on` に指定された `cdfd-overview.md` を正本としてデータストア名やプロセス境界を整合させ、具体化にあたっては推測を排除し根拠に基づいた記述を行いました。完了後、`prettier` による整形および `markdownlint` による静的検査を実施し、親 runner による `validate-schema` および統合・ユニットテストのパスを確認しました。
