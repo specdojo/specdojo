@@ -13,6 +13,10 @@ public/mermaid
 # specdojo 生成物
 .specdojo/doc-index.json
 
+# exec 履歴は commit 時に本文を書き換えない
+docs/ja/projects/**/execution/exec/plans/**
+docs/ja/projects/**/execution/exec/results/**
+
 # vscode extension build
 tools/vscode-specdojo/node_modules
 tools/vscode-specdojo/out

@@ -315,6 +315,10 @@ JSON Schema, without Markdown fences or commentary. Use outcome=blocked when the
 support a complete result. The runner owns frontmatter and Markdown rendering: it writes your JSON
 response, verbatim, into the plan's result file.
 
+The runner renders your free-text JSON fields as Markdown. Wrap every identifier or field name
+containing an underscore in inline code (for example, \`depends_on\`) so Markdown parsers do not
+misread it as emphasis.
+
 The plan below was written as generic instructions for a single agent that both edits the
 deliverable and records its own result. In this pipeline, those two responsibilities are split:
 the executor already completed the deliverable edit and intentionally left the result file

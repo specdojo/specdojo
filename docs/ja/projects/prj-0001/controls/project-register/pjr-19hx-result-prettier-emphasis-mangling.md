@@ -32,7 +32,7 @@ commit 時の lefthook `markdown` hook（`prettier --write`）を通すと次に
 commit が失敗する。
 
 ```text
-- 対象、depends_on の cdfd-overview を根拠とし、判断不能箇所があれば \_TODO*/_ASSUMPTION_ を残す方針。
+- 対象、depends*on の cdfd-overview を根拠とし、判断不能箇所があれば \_TODO*/_ASSUMPTION_ を残す方針。
 ```
 
 `depends_on` をインラインコードで囲むと壊れない。原因は、囲まれていない `depends_on` の `_` を remark が強調の開始と
@@ -68,13 +68,36 @@ commit が失敗する。
 
 | No  | 作業                                                          | 担当 | 状態 | メモ                         |
 | --- | ------------------------------------------------------------- | ---- | ---- | ---------------------------- |
-| 1   | `.prettierignore` に exec の result・plan を加える            | ARC  | open | 履歴ファイルは整形しない     |
-| 2   | executor・reporter の指示に識別子のインラインコード化を加える | ARC  | open | exec-templates と agent 定義 |
-| 3   | runner の commit 前に result の markdownlint を実行する       | ARC  | open | 理由を残して block           |
+| 1   | `.prettierignore` に exec の result・plan を加える            | ARC  | done | 履歴ファイルは整形しない     |
+| 2   | executor・reporter の指示に識別子のインラインコード化を加える | ARC  | done | exec-templates と agent 定義 |
+| 3   | runner の commit 前に result の markdownlint を実行する       | ARC  | done | 理由を残して block           |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `.prettierignore` に `docs/ja/projects/**/execution/exec/plans/**` と
+  `docs/ja/projects/**/execution/exec/results/**` を追加し、exec 履歴の Markdown を commit hook の
+  Prettier 書き換え対象から外した。通常の Markdown 成果物は従来どおり整形対象である。
+- runner 自身も result の描画（`renderReporterResult` / `updateResultStatus` など）と plan 生成の後に
+  Prettier API（`format`）で整形しており、API は `.prettierignore` を参照しないため hook を除外しても
+  reporter 本文が同じように壊れる。`formatMarkdownFile` が対象ファイルから上位へ最も近い
+  `.prettierignore` を探し、除外対象なら整形を省略するようにした。`.prettierignore` を持たない
+  利用プロジェクトでは従来どおり整形する。除外後の生成 plan（`exec plan --register`）が Prettier
+  差分なし・markdownlint 違反なしであることを実測で確認した。
+- exec plan の共通規約、executor / reporter の動的 prompt、Claude / OpenCode のプロジェクト定義、
+  Codex / OpenCode の配布用 agent 定義に、`_` を含む識別子・フィールド名をインラインコードで
+  囲む指示を追加した。
+- `commitWorktreeChanges` が stage / commit より前に対象 result へ markdownlint を実行するようにした。
+  markdownlint の終了コード 1（記法違反）のときは `Result Markdown notation violation before commit` と
+  lint 詳細を理由にして統合を block する。それ以外の失敗（spawn 失敗・想定外の終了コード）は
+  `Failed to run markdownlint on ... before commit` として区別する。`markdownlint-cli` は devDependency
+  のため、worktree と SpecDojo package のどちらの `node_modules` にも無い環境では検査を省略し、
+  標準出力に省略した旨を残して hook 側の検査に委ねる。
+- `.prettierignore` の plan / result パスと非履歴 Markdown の非除外、commit 前 lint の成功・失敗
+  （MD049 の単純例と、`depends_on` 未囲みの文を prettier に通した実出力）を固定する単体テストを追加した。
+- 残課題: `.codex/agents/codex-executor.toml` と `.codex/agents/codex-expert-executor.toml`（このリポジトリ
+  自身の Codex subagent 定義）は、executor の sandbox が `.codex/` への書き込みを許可しないため未更新。
+  `templates/codex/agents/` の同名ファイルは更新済みで、内容をコピーすれば同期できる。人間または
+  runner 側で反映する。unit / integration / schema 検証は pipeline の親 runner が実行する。
 
 ## 5. 関連ドキュメント
 

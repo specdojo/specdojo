@@ -120,6 +120,8 @@ describe("reporter structured output", () => {
     expect(prompt).toContain("<specdojo_reporter_output_schema");
     expect(prompt).toContain('source="runner"');
     expect(prompt).toContain('outcome="blocked"');
+    expect(prompt).toContain("identifier or field name");
+    expect(prompt).toContain("`depends_on`");
     expect(prompt).not.toContain("raw_diff");
     expect(prompt).not.toContain("executor log body");
   });

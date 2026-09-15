@@ -1,0 +1,224 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-19HX",
+  "run_id": "20260915T145227292Z-5b2d7399",
+  "stage": {
+    "role": "executor",
+    "actor": "claude-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-15T14:52:27.292Z",
+    "completed_at": "2026-09-15T15:01:58.739Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": ".claude/agents/claude-executor.md",
+      "status": "M"
+    },
+    {
+      "path": ".claude/agents/claude-expert-executor.md",
+      "status": "M"
+    },
+    {
+      "path": ".claude/agents/claude-reporter.md",
+      "status": "M"
+    },
+    {
+      "path": ".opencode/agents/gemma-executor.md",
+      "status": "M"
+    },
+    {
+      "path": ".opencode/agents/gemma-expert-executor.md",
+      "status": "M"
+    },
+    {
+      "path": ".opencode/agents/gemma-reporter.md",
+      "status": "M"
+    },
+    {
+      "path": ".opencode/agents/qwen-executor.md",
+      "status": "M"
+    },
+    {
+      "path": ".opencode/agents/qwen-expert-executor.md",
+      "status": "M"
+    },
+    {
+      "path": ".opencode/agents/qwen-reporter.md",
+      "status": "M"
+    },
+    {
+      "path": ".prettierignore",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-19hx-result-prettier-emphasis-mangling.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xep-common-conventions-template.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-format.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-reporter.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-worktree-ops.ts",
+      "status": "M"
+    },
+    {
+      "path": "templates/codex/agents/codex-executor.toml",
+      "status": "M"
+    },
+    {
+      "path": "templates/codex/agents/codex-expert-executor.toml",
+      "status": "M"
+    },
+    {
+      "path": "templates/opencode/agents/opencode-executor.md",
+      "status": "M"
+    },
+    {
+      "path": "templates/opencode/agents/opencode-reporter.md",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-format.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-reporter.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-run.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-worktree-ops.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-worktree-ops.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 25,
+    "summary": ".claude/agents/claude-executor.md                  |  2 +\n .claude/agents/claude-expert-executor.md           |  2 +\n .claude/agents/claude-reporter.md                  |  2 +\n .opencode/agents/gemma-executor.md                 |  2 +\n .opencode/agents/gemma-expert-executor.md          |  2 +\n .opencode/agents/gemma-reporter.md                 |  2 +\n .opencode/agents/qwen-executor.md                  |  2 +\n .opencode/agents/qwen-expert-executor.md           |  2 +\n .opencode/agents/qwen-reporter.md                  |  2 +\n .prettierignore                                    |  4 ++\n .../pjr-19hx-result-prettier-emphasis-mangling.md  | 33 +++++++++--\n .../pjr-19hx-20260915T142324Z-98d4-result.md       |  4 +-\n .../xep-common-conventions-template.md             |  1 +\n src/exec-format.ts                                 | 40 ++++++++++---\n src/exec-reporter.ts                               |  4 ++\n src/exec-run.ts                                    |  3 +\n src/exec-worktree-ops.ts                           | 66 +++++++++++++++++++++-\n templates/codex/agents/codex-executor.toml         |  2 +\n templates/codex/agents/codex-expert-executor.toml  |  2 +\n templates/opencode/agents/opencode-executor.md     |  2 +\n templates/opencode/agents/opencode-reporter.md     |  2 +\n tests/src/exec-format.test.ts                      | 66 +++++++++++++++++++++-\n tests/src/exec-reporter.test.ts                    |  2 +\n tests/src/exec-run.test.ts                         |  7 +++\n tests/src/exec-worktree-ops.integration.test.ts    | 22 ++++++++\n 25 files changed, 262 insertions(+), 16 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run -s typecheck",
+      "status": "passed",
+      "summary": "exit 0"
+    },
+    {
+      "source": "executor",
+      "command": "npm run -s lint:ts",
+      "status": "passed",
+      "summary": "exit 0"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --check <changed files> / npx prettier --write <files touched in this run>",
+      "status": "passed",
+      "summary": "all files formatted; exec results/plans reported ignored: true"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint <changed md files>",
+      "status": "passed",
+      "summary": "exit 0"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "exit 0 (pre-existing WARN only)"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "exit 0"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "generated views regenerated"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx tools/docs/src/validate-history-links.ts",
+      "status": "passed",
+      "summary": "exit 0"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts exec plan --register PJR-19HX --out <ignored plans dir> && prettier --check && markdownlint (temp file removed)",
+      "status": "passed",
+      "summary": "raw unformatted plan is prettier-clean and lint-clean"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:unit",
+      "status": "not_run",
+      "summary": "delegated to parent runner"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:integration",
+      "status": "not_run",
+      "summary": "delegated to parent runner"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema",
+      "status": "not_run",
+      "summary": "delegated to parent runner"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-19HX\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nUpdated: /tmp/specdojo-register-pipeline-e2e-vzJzXn/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)\nUpdated: /tmp/specdojo-register-pipeline-e2e-vzJzXn/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml\nUpdated: /tmp/specdojo-register-resume-e2e-tDhQaY/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)\nUpdated: /tmp/specdojo-register-resume-e2e-tDhQaY/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml\nGenerated: /tmp/spe…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.1.0 validate:schema:yaml\n> tsx tools/docs/src/validate-yaml-schema.ts --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-…"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-19HX\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-8HjogA/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-ONuyAm/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-YErwoh/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-x3DZ5Q/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-cALbJi/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-3urBfC/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\nWrote agent stdout: /tmp/specdojo-agent-command-8adlWp/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-zQ7f1L/outputs/partial.txt\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\n\n Test Files  103 passed (103)\n      Tes…"
+    }
+  ],
+  "final_message": "Took over the rate-limited codex run: verified .prettierignore/agent-instruction/pre-commit markdownlint changes, fixed runner-side prettier API formatting to honor .prettierignore (formatMarkdownFile), distinguished markdownlint lint errors from tool failures, added unit/integration tests, corrected the register sheet reproduction text. Residual: .codex/agents/*.toml not writable from sandbox (templates/codex/agents updated).",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-19HX/20260915T145227292Z-5b2d7399/executor.log",
+      "bytes": 4665,
+      "truncated": false
+    }
+  ]
+}

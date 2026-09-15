@@ -138,6 +138,13 @@ describe("extractBlockReason", () => {
     expect(extractBlockReason("   \n  \n")).toBe("agent exited with non-zero code");
   });
 
+  it("executor evidence で underscore 付き識別子をコード化するよう指示する", () => {
+    const prompt = buildExecutorPrompt("# Plan\n");
+
+    expect(prompt).toContain("identifiers or field names containing an");
+    expect(prompt).toContain("`depends_on`");
+  });
+
   it("truncates an overly long reason to keep the block event log readable", () => {
     const longReason = `blocked: ${"x".repeat(600)}`;
     const actual = extractBlockReason(longReason);

@@ -1,0 +1,772 @@
+Reading prompt from stdin...
+2026-09-15T14:24:32.410661Z ERROR codex_models_manager::manager: failed to load models cache: missing field `supports_parallel_tool_calls` at line 133 column 5
+OpenAI Codex v0.147.0
+--------
+workdir: /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-19HX
+model: gpt-5.6-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: high
+reasoning summaries: none
+session id: 01a0a574-8865-7b90-8aec-4f38a73b9628
+--------
+user
+---
+specdojo:
+  id: prj-0001:xep-pjr-19hx-20260915t142324z-98d4
+  type: exec-plan
+  rulebook: none
+  task_id: PJR-19HX
+  name: "reporter の result が commit 時の prettier で壊れて統合段で block する問題を防ぐ"
+  mode: edit
+  status: ready
+  project_id: prj-0001
+  origin: register
+  owner: ARC
+---
+
+# Edit Plan: PJR-19HX reporter の result が commit 時の prettier で壊れて統合段で block する問題を防ぐ
+
+## 1. このタスクで行うこと
+
+プロジェクト登録簿の項目 PJR-19HX「reporter の result が commit 時の prettier で壊れて統合段で block する問題を防ぐ」に対応する。
+
+`data-flow-pdca` の `cdfd-check-010` で、executor・reporter・親検証がすべて成功したのに統合段の commit が失敗して block した。reporter が result に書いた文に、インラインコードで囲まれていない `depends_on`（`_` を含む識別子）と `_TODO_/_ASSUMPTION_` が同居し、commit 時の prettier が `_on` から `_TODO` までを強調と解釈して `\_TODO*/_ASSUMPTION_` に書き換え、markdownlint の MD049 で pre-commit が失敗した。prettier には強調の正規化を止めるオプションが無い。履歴ファイル（exec の result・plan）を `.prettierignore` で整形対象から外し、markdownlint は残す。あわせて reporter・executor の指示に「`_` を含む識別子はインラインコードで囲む」を加え、runner が commit の前に markdownlint を実行して明確な理由で止めるようにする。
+
+## 2. 対象項目
+
+- `id`: PJR-19HX
+- `type`: todo
+- `priority`: high
+- `owner`: ARC
+- `due`: 2026-09-30
+- `登録簿`: `docs/ja/projects/prj-0001/controls/project-register/pjr-index.md`
+- `個票`: `docs/ja/projects/prj-0001/controls/project-register/pjr-19hx-result-prettier-emphasis-mangling.md`
+- `result`: `docs/ja/projects/prj-0001/execution/exec/results/pjr-19hx-20260915T142324Z-98d4-result.md`
+
+## 3. 進め方
+
+1. 登録簿の該当行と個票（存在する場合）を読み、目的・完了条件・制約を把握する。
+2. 個票に完了条件がある場合はそれを作業の基準にする。無い場合はタイトルと説明から完了条件の仮説を立て、その仮説を result に明記する。
+3. 関連する成果物・設計書・実装を確認し、対象ファイルを特定して変更する。
+4. 個票が存在する場合は、個票の作業内容・対応結果セクションを実施内容で更新する。
+5. 判断に迷う箇所は _TODO_ / _ASSUMPTION_ で残し、根拠と次のアクションを result に書く。
+
+## 4. 完了手順
+
+1. 「進め方」に従って対応を完了する。
+2. 共通規約に従って、必要な整形・静的検査を実行する。
+3. result に実施内容・変更ファイル・申し送りを記入する。これはタスク完了に必須であり、_TODO_ を残したまま終了しない（詳細は共通規約を参照）。
+4. 登録簿（`pjr-index.md`）の行と個票のステータス項目は変更しない。状態遷移（review / close など）は runner と人間が行う。
+
+## 5. 異常終了の条件
+
+- 前提不足・対象ファイル不明・静的検査未解消の場合は異常終了する（終了コード 1）。
+- 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
+- agent 自身は登録簿の状態を変更せず、終了コードと標準エラー出力で runner に結果を返す。
+
+## 共通: 記法・成果物規約
+
+この規約は、生成される全 exec plan に共通で適用される。result の完了条件、他文書を参照する際のリンク記法、成果物の状態（status）の扱いを統一する。
+
+- result（review plan の場合は review result）への記入は、タスク完了に必須の作業である。成果物の編集とは別に、最後に必ず実施する。
+- 終了コード 0 で完了する前に、result の必須セクションをすべて実際の内容で埋め、プレースホルダ（_TODO_ など）や未記入のセクションを残さない。
+- 成果物に変更が不要と判断した場合でも、result の記入は省略しない。変更不要と判断した理由と根拠を result に記入してから完了する。
+- result が未記入・プレースホルダのまま終了コード 0 で終了すると、runner は成果物未完了（block）として扱い、タスクはやり直しになる。完了前に result の記入漏れがないことを必ず確認する。
+- result の frontmatter は scaffold 済みの構造を正本とする。`id` / `task_id` / `mode` / `project_id` / `plan_ref` / `agent` / `execution` / `approach` / `targets` はキーの追加・削除・改名をせず、scaffold された値のまま維持する。見出し構成（`# Edit Result` などの H1、`## 1.` 以降の章立て）も独自の構成に置き換えない。埋めるのは本文セクションの `_TODO_` プレースホルダの中身だけである。`status` と `completed_at` は完了処理（runner 側）が更新するため、自分で書き換えない。
+- 文書へのリンクは、対象文書が既に存在する場合は `[[id|title]]` 形式で記載する（`id` は project 修飾 doc id）。
+- リンクを表（テーブル）のセル内に置く場合は、区切りの `|` を `[[id\|title]]` のようにエスケープする。エスケープしないと列がずれて表が壊れ、prettier 整形でセルが分割されて固定化される。
+- まだ存在しない文書を参照する場合は、`[[...]]` ではなく `` `id` `` または `` `filename` `` のようにバッククォートで仮置きする。
+- 成果物 frontmatter の `status` を `ready` に変更しない。`ready` への昇格は人間のみが行うため、`draft` のまま据え置く（exec のコミット時ガードでも昇格はブロックされる）。
+- plan に「プロジェクトコンテキスト」章がある場合、そこに挙がる文書はプロジェクト共通の前提を読むための参照であり、成果物 frontmatter の `based_on` へ転記しない。参照して得た前提は本文の記述内容へ反映する。
+- 成果物 frontmatter の `based_on` に書けるのは、その成果物の `depends_on` の推移閉包に含まれる先行成果物だけである。閉包外の ID を書くと `catalog validate` が「`based_on` が `depends_on` の推移閉包に含まれていません」としてエラーになり、コミットがブロックされる。`based_on` を増やす必要が生じた場合は、自分で転記せず、根拠不足として result に記録する。
+- ファイルの読み取り・書き込み・編集は、作業ディレクトリ（カレントディレクトリ）からの相対パスで指定する。絶対パスを自分で組み立てたり、作業ディレクトリ名を推測して指定したりしない（作業ディレクトリ名の取り違えは外部パス扱いになり拒否される）。
+- 編集・書き込みが作業ディレクトリ外（`external_directory`）として拒否された場合、原因はパス指定の誤り（誤った絶対パス・ディレクトリ名の取り違え）である。bash の heredoc などへ回避的に切り替えず、相対パスに直したうえで同じ編集ツールで再実行する。
+- 整形・静的検査は、この plan の完了手順または本共通規約で明示されたコマンドを実行する。変更対象に必要な test、build、schema 検証は、plan に個別記載がなくても実行してよい。同じ test script では対象限定と全件を同一 executor run 内で連続実行せず、どちらか一方に絞る。下表、plan、またはプロジェクト標準が全件 test を求める場合は、全件を1回だけ実行して対象限定の実行を省く。この制約は executor が sandbox 内で実行する test script の回数に対するものであり、親検証に設定された ID のコマンドは対象外である（親 runner が別途実行する）。実行したコマンド・対象・結果は result に記録する。
+- executor / reporter pipeline で親 runner の検証が設定されている場合、executor は設定済み ID に対応するコマンドを sandbox 内で実行せず、executor 終了後に親 runner が固定許可リストから実行して evidence へ追記する。`validate-schema` は `npm run validate:schema`、`test-unit` は `npm run test:unit`、`test-integration` は `npm run test:integration` に対応する。executor は親検証と同じコマンドの対象限定版も追加せず、二重実行しない。
+- Markdown 成果物を編集した後は、`npx prettier --write <対象ファイル>` で整形し、`npx markdownlint <対象ファイル>` で静的検査を実施する。検査でエラーが出た場合は修正してから完了とする。
+- 終了する前に、コミット時に実行される検査（pre-commit 相当）を先回りで実行し、失敗をすべて修正してから完了する。コミット時に初めて失敗が判明すると commit がブロックされ、成果物の内容が完成していてもタスクは block になる。
+- 実行対象は、変更したファイルの種別で判断する。下表のうち、変更したファイルが該当する行の検査をすべて実行する。該当行がない場合は追加の検査は不要である。ただし親検証に設定された ID のコマンドは下表よりも優先し、executor は実行しない。下表に同じコマンドが挙がっていても、親 runner の実行に委ねる。
+- 検査コマンドの正本はリポジトリの hook 設定（`lefthook.yml` など）である。下表と設定が食い違う場合は設定側に合わせ、実行したコマンドと結果を result に記録する。`specdojo` コマンドは、リポジトリで定められた起動方法（`npx tsx src/specdojo.ts <subcommand>` など）で実行する。
+
+| 変更したファイル                                                                                       | 実行する検査                                                                                                                          |
+| ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `*.md`                                                                                                 | `npx prettier --write <対象ファイル>`、`npx markdownlint <対象ファイル>`                                                              |
+| `*.ts` / `*.js` / `*.json` / `*.yaml` / `*.yml`                                                        | `npx prettier --write <対象ファイル>`                                                                                                 |
+| `src/`、`tests/`、`scripts/`、`tools/`、`tsconfig*.json`                                               | `npm run typecheck`                                                                                                                   |
+| `src/`、`tests/`、`docs/ja/specdojo/templates/`、`docs/ja/specdojo/exec-templates/`、`vitest.config.*` | pipeline executor は `npm run test:unit`、それ以外は `npm test`（`test-unit` が親検証に設定されている場合は executor では実行しない） |
+| `docs/ja/projects/` 配下                                                                               | `specdojo catalog validate`                                                                                                           |
+| `dct-*.yaml`                                                                                           | `specdojo catalog build`                                                                                                              |
+| `pjr-index.md`                                                                                         | `specdojo register build`                                                                                                             |
+| `sch-*.yaml`                                                                                           | `specdojo exec refresh`                                                                                                               |
+| `docs/` 配下                                                                                           | `specdojo index build`                                                                                                                |
+
+---
+
+# Pipeline executor stage instructions
+
+This invocation is the executor stage of an executor/reporter pipeline. Edit and validate the
+artifacts required by the plan, but do not create or update the result file. Any plan instruction
+that assigns result writing or lifecycle transitions to the agent belongs to the later reporter or
+runner stage and does not apply here.
+
+The parent runner owns Git commits and repository configuration. Do not run git commit or change
+local, global, or system Git configuration, including user.name and user.email. A Git state change
+will stop the pipeline before validation, reporting, commit, or merge.
+
+The SpecDojo parent runner will execute these allowlisted validations after you exit: test-integration, validate-schema, test-unit (npm run test:integration, npm run validate:schema, npm run test:unit). Do not run those commands inside the agent sandbox or report duplicate executor results for them. Run only the remaining sandbox-safe validations required by the plan. Parent-run results will be appended to evidence with source=runner and are authoritative.
+
+
+End the final response with exactly one machine-readable report using this envelope. Do not place
+Markdown fences around the JSON.
+
+<specdojo_executor_evidence>
+{"final_message":"concise outcome","validations":[{"command":"exact command","status":"passed|failed|not_run","summary":"concise result"}]}
+</specdojo_executor_evidence>
+
+codex
+関連設計書・登録簿・個票を先に確認し、現行の hook／runner／executor・reporter 指示の配置を特定します。その後、履歴ファイルの Prettier 除外、Markdown 記法ガード、commit 前 lint を最小範囲で実装し、親 runner 管轄外の検査だけ実行します。
+  → 登録簿・個票・関連設計書と現行実装を確認する
+  • Prettier 除外・指示文・commit 前 markdownlint を実装する
+  • 対象を整形し、親 runner 管轄外の静的検査を実行する
+2026-09-15T14:24:43.438631Z ERROR codex_models_manager::manager: failed to renew cache TTL: missing field `supports_parallel_tool_calls` at line 133 column 5
+exec
+/bin/bash -lc "rg --files -g 'AGENTS.md' -g 'pjr-index.md' -g '*pjr-19hx*' -g 'lefthook.yml' -g '.prettierignore' -g '*.md' -g '*.ts' | sed -n '1,240p'" in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-19HX
+ succeeded in 0ms:
+CONTRIBUTING.md
+lefthook.yml
+src/schedule.ts
+src/schedule-strategy-profiles.ts
+src/deliverable-trash.ts
+src/role-types.ts
+src/timeline-build.ts
+src/exec-parent-validation.ts
+src/exec-reporter.ts
+src/build-if-stale.ts
+src/specdojo-config.ts
+src/exec-schedule-initial.ts
+src/exec-schedule-gantt-chart.ts
+src/agent-response.ts
+src/frontmatter-namespace.ts
+src/dist-freshness.ts
+src/catalog-paths.ts
+src/exec-shared.ts
+src/exec-strategy.ts
+src/review-plan.ts
+src/exec-schedule-ready.ts
+src/catalog-generate.ts
+src/catalog-build.ts
+src/yaml-pages.ts
+src/exec-schedule-cpm.ts
+src/exec-schedule-calendar.ts
+src/review-types.ts
+src/grade.ts
+src/exec-protection-handoff.ts
+src/exec-plans.ts
+CLAUDE.md
+vitest.config.ts
+AGENTS.md
+src/exec-results.ts
+vitest.unit.config.ts
+src/doc-index.ts
+src/package-paths.ts
+src/dashboard.ts
+src/register-item.ts
+src/register-migrate-timestamps.ts
+src/schedule-phase-sets.ts
+src/catalog-types.ts
+src/exec-provider-scaffold.ts
+src/catalog-plan-generate.ts
+src/agent.ts
+src/exec-project.ts
+src/exec-task-view.ts
+src/exec-schedule-progress.ts
+src/git-environment.ts
+src/exec-register.ts
+src/watch.ts
+src/catalog-plan.ts
+src/routine.ts
+src/exec-agent-protected-config.ts
+src/exec-pipeline-state.ts
+src/template-frontmatter.ts
+src/specdojo.ts
+src/register-date.ts
+src/exec-run-lock.ts
+src/exec-evidence.ts
+src/exec-schedule-gantt-chart-scope.ts
+src/catalog-scaffold.ts
+src/index-command.ts
+src/exec-trial.ts
+src/exec-worktree-command.ts
+src/build-command.ts
+src/register.ts
+src/exec-worktree.ts
+src/exec-worktree-ops.ts
+src/yaml-pages-command.ts
+src/exec-types.ts
+src/exec-limit.ts
+src/kata.ts
+src/schedule-approach.ts
+src/job.ts
+src/exec-schedule.ts
+src/exec.ts
+src/exec-schedule-hash.ts
+src/register-events.ts
+src/exec-schedule-index.ts
+src/exec-agent-config.ts
+src/spawn-self.ts
+src/exec-register-resume.ts
+src/practice-id.ts
+src/timeline.ts
+src/template-resolution.ts
+src/exec-events.ts
+src/yaml-schema-modeline.ts
+src/exec-schedule-gantt-chart-render.ts
+src/exec-run.ts
+src/exec-format.ts
+src/exec-agent-git-state.ts
+src/schedule-build.ts
+src/schedule-strategy-generate.ts
+src/deliverable.ts
+src/catalog-plan-prompt.ts
+src/register-history.ts
+src/catalog.ts
+README.md
+.prettierignore
+vitest.integration.config.ts
+docs/en/index.md
+templates/opencode/README.md
+templates/claude/README.md
+tests/helpers/git-environment.ts
+tests/helpers/schema.ts
+tests/src/exec-shared.test.ts
+tests/src/catalog-generate.test.ts
+tests/src/exec-schedule-ready.test.ts
+tests/src/grade.test.ts
+tests/src/register-item.test.ts
+tests/src/exec-run-downgrade-unfilled.test.ts
+tests/src/exec-evidence.test.ts
+tests/src/exec-plans.test.ts
+tests/src/register.test.ts
+tests/src/catalog-plan.test.ts
+tests/src/register-commands.test.ts
+tests/src/dist-freshness.test.ts
+tests/src/catalog-scaffold.test.ts
+tests/src/exec-worktree.integration.test.ts
+tests/src/exec-shared-display-width.test.ts
+tests/src/catalog-index.test.ts
+tests/src/exec-worktree.test.ts
+tests/src/deliverable-trash.integration.test.ts
+tests/src/cli-verb-taxonomy.test.ts
+tests/src/register-migrate-events.test.ts
+tests/src/exec.test.ts
+tests/src/catalog-merge.test.ts
+tests/src/exec-register-worktree.integration.test.ts
+tests/src/kata.test.ts
+tests/src/routine.test.ts
+tests/src/exec-provider-scaffold.test.ts
+tests/src/exec-deliverable.test.ts
+tests/src/exec-release-all-blocked.test.ts
+tests/src/review-plan.test.ts
+tests/src/exec-run.test.ts
+tests/src/exec-worktree-ops.integration.test.ts
+tests/src/exec-event-msg-default.test.ts
+tests/src/catalog-build.test.ts
+tests/src/schedule-command.test.ts
+tests/src/exec-parent-validation.test.ts
+tests/src/exec-register-resume.test.ts
+tests/src/register-history.test.ts
+tests/src/exec-agent-git-state.integration.test.ts
+tests/src/exec-register-multiple-ids.test.ts
+tests/src/exec-run-lock.test.ts
+tests/src/exec-run-lock-command.test.ts
+tests/src/exec-run-resolve-claiming-actor.test.ts
+tests/src/doc-index.test.ts
+tests/src/template-resolution.test.ts
+tests/src/agent-response.test.ts
+tests/src/exec-scheduler-command.test.ts
+tests/src/exec-strategy.test.ts
+tests/src/exec-pipeline-e2e.integration.test.ts
+tests/src/register-date.test.ts
+tests/src/exec-run-inplace.test.ts
+tests/src/exec-cycle.integration.test.ts
+tests/src/yaml-pages.test.ts
+tests/src/register-migration.test.ts
+tests/src/exec-schedule-hash.test.ts
+tests/src/exec-register-multiple-ids.integration.test.ts
+tests/src/register-migrate-timestamps.test.ts
+tests/src/exec-protection-handoff.test.ts
+tests/src/exec-worktree-command.integration.test.ts
+tests/src/exec-schedule-calendar.test.ts
+tests/src/exec-format.test.ts
+tests/src/exec-release-reset-worktree.integration.test.ts
+tests/src/exec-schedule-validation.test.ts
+tests/src/catalog-plan-generate.test.ts
+tests/src/job.test.ts
+tests/src/exec-project.test.ts
+tests/src/catalog-plan-command.test.ts
+tests/src/exec-register-plan-escape.test.ts
+tests/src/exec-events.test.ts
+tests/src/spawn-self.test.ts
+tests/src/exec-register-pipeline-e2e.integration.test.ts
+tests/src/specdojo-config-env.test.ts
+tests/src/exec-schedule-gantt-chart-render.test.ts
+tests/src/schedule-build.test.ts
+tests/src/exec-run-worker-pool.test.ts
+tests/src/exec-schedule-cpm.test.ts
+tests/src/exec-schedule-progress.test.ts
+tests/src/practice-id.test.ts
+tests/src/agent-command.test.ts
+tests/src/exec-schedule-gantt-chart-scope.test.ts
+tests/src/exec-agent-config-command.test.ts
+tests/src/exec-pipeline-state.test.ts
+tests/src/exec-reporter.test.ts
+tests/src/schedule-strategy-generate.test.ts
+tests/src/exec-reopen-command.test.ts
+tests/src/exec-agent-config.test.ts
+tests/src/register-view-order.test.ts
+tests/src/exec-results.test.ts
+tests/src/catalog-paths.test.ts
+tests/src/timeline-build.test.ts
+tests/src/exec-run-resolve-command.test.ts
+tests/src/specdojo-config-command.test.ts
+tests/src/git-environment-isolation.test.ts
+tests/src/dashboard.test.ts
+tests/src/exec-trial.test.ts
+tests/src/exec-agent-protected-config.test.ts
+tests/src/exec-register.test.ts
+tests/src/exec-limit.test.ts
+tests/src/template-frontmatter.test.ts
+tests/src/specdojo-config.test.ts
+tests/src/exec-register-resume.integration.test.ts
+tests/src/catalog-based-on.test.ts
+docs/index.md
+templates/claude/agents/claude-review-executor.md
+templates/claude/agents/claude-expert-review-executor.md
+packages/docs-site/README.md
+packages/docs-site/src/gen-mermaid-svg.ts
+packages/vscode-specdojo/src/markdown-table.ts
+templates/opencode/agents/opencode-executor.md
+tools/e2e/exec-run-e2e.ts
+packages/vscode-specdojo/src/extension.ts
+templates/opencode/agents/opencode-review-executor.md
+templates/opencode/agents/opencode-reporter.md
+tests/fixtures/grade/previous-findings.md
+templates/copilot/README.md
+tests/vscode-markdown-table.test.ts
+templates/codex/README.md
+tests/tools/open-agent-worktree.integration.test.ts
+tests/tools/build-if-stale.test.ts
+tests/docs/specdojo/schemas/sch-strategy-schema.test.ts
+tests/tools/protect-main-push.test.ts
+tests/tools/validate-orchestrator-sync.test.ts
+tests/setup/git-environment.ts
+tests/docs/specdojo/schemas/pm-members-schema.test.ts
+tests/tools/grade-per-document.test.ts
+tools/docs/src/history-links.ts
+tools/docs/src/validate-rulebook-schema-enums.ts
+tools/docs/src/validate-history-links.ts
+tools/docs/src/remark-md-content.ts
+tools/docs/src/validate-yaml-schema.ts
+tools/docs/src/remark-no-unescaped-angle-placeholder.ts
+tools/docs/src/validate-md-content.ts
+tests/packages/docs-site/gen-mermaid-svg.test.ts
+docs/ja/index.md
+tests/tools/docs/src/remark-frontmatter-ajv2020.test.ts
+
+2026-09-15T14:24:47.724084Z ERROR codex_models_manager::manager: failed to renew cache TTL: missing field `supports_parallel_tool_calls` at line 133 column 5
+exec
+/bin/bash -lc "sed -n '1,220p' AGENTS.md && sed -n '1,220p' docs/ja/projects/prj-0001/controls/project-register/pjr-19hx-result-prettier-emphasis-mangling.md && rg -n \"PJR-19HX|pjr-19hx\" docs/ja/projects/prj-0001/controls/project-register/pjr-index.md && sed -n '1,200p' .prettierignore && sed -n '1,240p' lefthook.yml" in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-19HX
+ exited 2 in 0ms:
+# Agent Instructions
+
+## Language
+
+- 回答は原則として日本語で行う。
+
+## Project Policy
+
+- 変更前に関連する設計書を確認する。
+- タスクに関係しない変更を行わない。
+
+## Safety
+
+- 認証情報、秘密鍵、`.env`、`secrets/` を読み込まない。
+- 破壊的変更や `git push` を行わない。
+---
+specdojo:
+  id: prj-0001:pjr-19hx-result-prettier-emphasis-mangling
+  type: project
+  status: draft
+  rulebook: specdojo:pjr-rulebook
+  part_of:
+    - prj-0001:pjr-index
+  item_type: todo
+  item_status: in-progress
+  priority: high
+  owner: ARC
+  registered_at: "2026-09-15T14:15:35Z"
+  due_on: "2026-09-30"
+---
+
+# PJR-19HX reporter の result が commit 時の prettier で壊れて統合段で block する問題を防ぐ
+
+## 1. 概要
+
+`data-flow-pdca` の `cdfd-check-010` で、executor・reporter・親検証がすべて成功したのに統合段の commit が失敗して block した。reporter が result に書いた文に、インラインコードで囲まれていない `depends_on`（`_` を含む識別子）と `_TODO_/_ASSUMPTION_` が同居し、commit 時の prettier が `_on` から `_TODO` までを強調と解釈して `\_TODO*/_ASSUMPTION_` に書き換え、markdownlint の MD049 で pre-commit が失敗した。prettier には強調の正規化を止めるオプションが無い。履歴ファイル（exec の result・plan）を `.prettierignore` で整形対象から外し、markdownlint は残す。あわせて reporter・executor の指示に「`_` を含む識別子はインラインコードで囲む」を加え、runner が commit の前に markdownlint を実行して明確な理由で止めるようにする。
+
+### 1.1. 再現
+
+reporter（qwen-reporter）が result の「進め方と実践の型の適用」に書いた文（抜粋）。
+
+```text
+- 対象、depends_on の cdfd-overview を根拠とし、判断不能箇所があれば _TODO_/_ASSUMPTION_ を残す方針。
+```
+
+commit 時の lefthook `markdown` hook（`prettier --write`）を通すと次になり、markdownlint の MD049（強調記法の不統一）で
+commit が失敗する。
+
+```text
+- 対象、depends_on の cdfd-overview を根拠とし、判断不能箇所があれば \_TODO*/_ASSUMPTION_ を残す方針。
+```
+
+`depends_on` をインラインコードで囲むと壊れない。原因は、囲まれていない `depends_on` の `_` を remark が強調の開始と
+解釈し、後方の `_TODO_` と対にすることである。`_TODO_/_ASSUMPTION_` 単体では壊れない。
+
+### 1.2. 影響
+
+- executor・reporter・親検証がすべて成功した run が統合段で block し、worktree が残る。回復には
+  [[prj-0001:pjr-j3g0-exec-resume-integrate-schedule-task]] の手順が要る。
+- reporter は自由文を書くため、識別子を囲み忘れる確率は下がらない。同じ失敗が繰り返される。
+
+### 1.3. 対処
+
+- prettier には強調記法の正規化を止めるオプションが無い。`.prettierignore` に exec の result と plan
+  （`docs/ja/projects/**/execution/exec/results/**`、`.../plans/**`）を加え、履歴ファイルを整形対象から外す。
+  markdownlint の検査は残す。
+- executor・reporter の指示（exec-templates、agent 定義）に「`_` を含む識別子・フィールド名はインラインコードで囲む」を加える。
+  Markdown 記述ルールでは既に規定されているが、result の自由記述には徹底されていない。
+- runner が worktree の commit 前に result へ markdownlint を実行し、失敗時は hook のエラーではなく
+  「result の記法違反」として理由を残して block する。
+
+## 2. 完了条件
+
+- `.prettierignore` により exec の result と plan が prettier の整形対象外になり、上記の再現文を含む result を commit しても
+  内容が書き換えられない。
+- reporter・executor の指示に識別子のインラインコード化が明記され、result の自由記述で `depends_on` のような識別子が
+  囲まれる。
+- runner が commit 前に result の markdownlint を実行し、違反時に result の記法違反である旨の理由で block する。
+- 単体テストに、`.prettierignore` の対象パスと、markdownlint 違反で block する経路がある。
+- `npm run typecheck`、`npm run lint:ts`、`npm run test:unit`、`npm run test:integration` が成功する。
+
+## 3. 作業内容
+
+| No  | 作業                                                          | 担当 | 状態 | メモ                         |
+| --- | ------------------------------------------------------------- | ---- | ---- | ---------------------------- |
+| 1   | `.prettierignore` に exec の result・plan を加える            | ARC  | open | 履歴ファイルは整形しない     |
+| 2   | executor・reporter の指示に識別子のインラインコード化を加える | ARC  | open | exec-templates と agent 定義 |
+| 3   | runner の commit 前に result の markdownlint を実行する       | ARC  | open | 理由を残して block           |
+
+## 4. 対応結果
+
+_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+
+## 5. 関連ドキュメント
+
+- 発生した run: `T-DATA-FLOW-PDCA-cdfd-check-010`（[[prj-0001:pjr-6pd7-cdfd-overview]] の作業 5）
+- 統合段の再開: [[prj-0001:pjr-j3g0-exec-resume-integrate-schedule-task]]
+- 記述ルール: `.github/instructions/markdown.instructions.md`
+rg: docs/ja/projects/prj-0001/controls/project-register/pjr-index.md: IO error for operation on docs/ja/projects/prj-0001/controls/project-register/pjr-index.md: No such file or directory (os error 2)
+
+2026-09-15T14:24:52.727588Z ERROR codex_models_manager::manager: failed to renew cache TTL: missing field `supports_parallel_tool_calls` at line 133 column 5
+exec
+/bin/bash -lc "find docs/ja/projects/prj-0001 -name 'pjr-index.md' -o -name '*pjr-19hx*'; sed -n '1,200p' .prettierignore; sed -n '1,260p' lefthook.yml; rg -n \"executor stage|reporter stage|reporter|markdownlint|commitWorktree|commit.*worktree|git commit|exec-templates\" src templates docs/ja/specdojo tests/src -g '*.ts' -g '*.md' | sed -n '1,320p'" in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-19HX
+ succeeded in 93ms:
+tests/src/exec-shared.test.ts:103:    const boxed = `${ESC}[90m│${ESC}[0m ${ESC}[31mmarkdownlint${ESC}[0m ${ESC}[90m│${ESC}[0m`;
+tests/src/exec-shared.test.ts:105:    expect(stripTerminalControlSequences(boxed)).toBe("│ markdownlint │");
+tests/src/job.test.ts:29:    "docs/ja/specdojo/exec-templates",
+tests/src/job.test.ts:43:    join(repo, "docs/ja/specdojo/exec-templates/xep-job-template.md"),
+tests/src/job.test.ts:47:    join(repo, "docs/ja/specdojo/exec-templates/xep-common-conventions-template.md"),
+tests/src/job.test.ts:68:      "    reporter: gemma-reporter",
+tests/src/job.test.ts:103:  it("keeps the delegated executor and reporter nicknames on the task", () => {
+tests/src/job.test.ts:112:          agent: { executor: "claude-expert-executor", reporter: "claude-reporter" },
+tests/src/job.test.ts:123:      reporter: "claude-reporter",
+tests/src/job.test.ts:148:  it("rejects an unknown key under agent so a typo cannot drop the reporter stage", () => {
+tests/src/job.test.ts:157:          agent: { executor: "claude-expert-executor", reporters: "claude-reporter" },
+tests/src/job.test.ts:164:    expect(parsed.errors).toContain("job-report.yaml: task.agent has unknown key(s): reporters");
+tests/src/job.test.ts:177:            agent: "gemma-reporter",
+tests/src/job.test.ts:191:      analysis: { agent: "gemma-reporter" },
+tests/src/job.test.ts:587:        reporter: "gemma-reporter",
+tests/src/exec-worktree.test.ts:53:      "git commit failed: error: cannot commit " +
+tests/src/register.test.ts:7:import { lint } from "markdownlint/sync";
+tests/src/register.test.ts:62:function markdownlintErrors(content: string): unknown[] {
+tests/src/register.test.ts:63:  const parsed = load(readFileSync(join(specdojoRootDir(), ".markdownlint.yaml"), "utf8"));
+tests/src/register.test.ts:200:      expect(markdownlintErrors(content)).toEqual([]);
+tests/src/exec-register-pipeline-e2e.integration.test.ts:21:// PJR-TNDH: `exec run --register` を executor/reporter パイプラインで実行する E2E 検証。
+tests/src/exec-register-pipeline-e2e.integration.test.ts:22:// register 項目は agent_pipeline を持たないため、--executor-by / --reporter-by の明示指定だけで
+tests/src/exec-register-pipeline-e2e.integration.test.ts:23:// pipeline モードへ切り替わることと、reporter が result 本文を描画して register が review へ
+tests/src/exec-register-pipeline-e2e.integration.test.ts:128:    "executor/reporter pipeline の E2E 検証用ダミー項目。",
+tests/src/exec-register-pipeline-e2e.integration.test.ts:160:const role = nickname.startsWith("exec-") ? "executor" : "reporter";
+tests/src/exec-register-pipeline-e2e.integration.test.ts:182:if (role === "reporter") {
+tests/src/exec-register-pipeline-e2e.integration.test.ts:185:    process.stderr.write("reporter settings profile is missing: " + settings + "\\n");
+tests/src/exec-register-pipeline-e2e.integration.test.ts:236:        join(REAL_REPO_ROOT, "docs/ja/specdojo/exec-templates"),
+tests/src/exec-register-pipeline-e2e.integration.test.ts:237:        join(root, "docs/ja/specdojo/exec-templates"),
+tests/src/exec-register-pipeline-e2e.integration.test.ts:243:      // exec-templates とは別ディレクトリのため、両方を用意する必要がある。
+tests/src/exec-register-pipeline-e2e.integration.test.ts:284:          "    stage_role: reporter",
+tests/src/exec-register-pipeline-e2e.integration.test.ts:375:describe("exec run --register executor/reporter pipeline (E2E)", () => {
+tests/src/exec-register-pipeline-e2e.integration.test.ts:377:    "resolves --executor-by/--reporter-by, runs both stages, and transitions the item to review",
+tests/src/exec-register-pipeline-e2e.integration.test.ts:392:          "--reporter-by",
+tests/src/exec-register-pipeline-e2e.integration.test.ts:409:        // executor evidence が記録されていること（reporter へ渡す根拠）。
+tests/src/exec-register-pipeline-e2e.integration.test.ts:437:          "--reporter-by",
+tests/src/exec-register-pipeline-e2e.integration.test.ts:471:    "rejects --register with only one of --executor-by/--reporter-by",
+tests/src/exec-register-pipeline-e2e.integration.test.ts:495:          "--register pipeline execution requires both --executor-by and --reporter-by.",
+tests/src/exec-register-pipeline-e2e.integration.test.ts:521:          "--reporter-by",
+tests/src/exec-register-plan-escape.test.ts:6:import { lint } from "markdownlint/sync";
+tests/src/exec-register-plan-escape.test.ts:21:  const configPath = path.join(specdojoRootDir(), ".markdownlint.yaml");
+tests/src/exec-results.test.ts:5:import { lint } from "markdownlint/sync";
+tests/src/exec-results.test.ts:18:function markdownlintErrors(content: string): unknown[] {
+tests/src/exec-results.test.ts:19:  const parsed = yaml.load(readFileSync(join(specdojoRootDir(), ".markdownlint.yaml"), "utf8"));
+tests/src/exec-results.test.ts:542:  it("deterministically renders a validated edit reporter result without changing frontmatter", async () => {
+tests/src/exec-results.test.ts:574:    expect(markdownlintErrors(first)).toEqual([]);
+tests/src/exec-results.test.ts:620:    expect(markdownlintErrors(content)).toEqual([]);
+tests/src/grade.test.ts:137:    expect(targets).not.toContainEqual(expect.stringContaining("/exec-templates/"));
+tests/src/grade.test.ts:814:  it("renders a reporter plan that only structures the executor declaration", () => {
+tests/src/grade.test.ts:823:    expect(plan).toContain("grade pipeline の reporter stage");
+tests/src/grade.test.ts:831:  it("parses free-form executor rationale and rejects reporter judgment changes", () => {
+tests/src/grade.test.ts:844:    const reporterSubmission: GradeSubmission = {
+tests/src/grade.test.ts:865:        submission: reporterSubmission,
+tests/src/grade.test.ts:871:    expect(validateGradeSubmission(reporterSubmission, viewpoints, "kata")).toEqual([]);
+tests/src/grade.test.ts:873:    const changed = structuredClone(reporterSubmission);
+tests/src/grade.test.ts:890:          message: expect.stringContaining("severity executor=major reporter=blocker"),
+tests/src/grade.test.ts:895:    const omitted = structuredClone(reporterSubmission);
+tests/src/grade.test.ts:907:        message: expect.stringContaining("reporter omitted executor finding"),
+tests/src/grade.test.ts:911:    const added = structuredClone(reporterSubmission);
+tests/src/grade.test.ts:926:        message: expect.stringContaining("reporter added finding not declared by executor"),
+tests/src/grade.test.ts:941:    const reporterSubmission: GradeSubmission = {
+tests/src/grade.test.ts:967:        submission: reporterSubmission,
+tests/src/grade.test.ts:985:    const reporterSubmission: GradeSubmission = {
+tests/src/grade.test.ts:1011:        submission: reporterSubmission,
+tests/src/grade.test.ts:1019:          /severity executor=major reporter=minor; line executor=7 reporter=8; message executor=/,
+tests/src/grade.test.ts:1314:  it("adds a done_criteria template to the reporter plan", () => {
+tests/src/grade.test.ts:1406:  it("rejects reporter changes to criterion status or reason", () => {
+tests/src/grade.test.ts:1433:        message: "reporter status satisfied differs from executor status unsatisfied",
+tests/src/grade.test.ts:1436:        message: expect.stringContaining("reporter changed executor reason"),
+tests/src/grade.test.ts:1452:      expect.objectContaining({ message: "reporter omitted executor criterion: DC-001" }),
+tests/src/grade.test.ts:1453:      expect.objectContaining({ message: "reporter omitted executor criterion: DC-002" }),
+templates/opencode/README.md:20:配布する role は、従来の edit / review に加え、成果物編集と検証だけを担う `opencode-executor`、入力された evidence から構造化結果だけを返す `opencode-reporter` を含みます。
+templates/opencode/README.md:39:- executor の result パス deny と reporter の全ツール deny は、pipeline の責務境界なので維持する。
+templates/opencode/README.md:40:- `bash` は deny 基点の許可リストを維持する。`git add` / `git commit` を許可しないこと（許可すると specdojo CLI の commit 許可リストを迂回できる）。
+tests/src/exec-protection-handoff.test.ts:27:  evidence: ["--- a/package.json", "+++ b/package.json", '+    "lint:md": "markdownlint ."'].join(
+tests/src/exec-protection-handoff.test.ts:115:    expect(section).toContain('+    "lint:md": "markdownlint ."');
+tests/src/exec-register-resume.test.ts:51:    reporterStatus?: PipelineState["stages"]["reporter"]["status"];
+tests/src/exec-register-resume.test.ts:62:    reporterActor: "report-1",
+tests/src/exec-register-resume.test.ts:78:      reporter: {
+tests/src/exec-register-resume.test.ts:79:        ...state.stages.reporter,
+tests/src/exec-register-resume.test.ts:80:        status: overrides.reporterStatus ?? "failed",
+tests/src/exec-register-resume.test.ts:118:    stage_role: "reporter",
+tests/src/exec-register-resume.test.ts:138:  it("executor が succeeded で reporter 未完了の最新 run を再開対象にする", () => {
+tests/src/exec-register-resume.test.ts:150:    expect(actual.target.stage).toBe("reporter");
+tests/src/exec-register-resume.test.ts:151:    if (actual.target.stage !== "reporter") return;
+tests/src/exec-register-resume.test.ts:171:  it("executor evidence 保存後に running のまま中断した run は reporter 再開対象にする", () => {
+tests/src/exec-register-resume.test.ts:189:    expect(actual.target.stage).toBe("reporter");
+tests/src/exec-register-resume.test.ts:213:    // reporter へ進めない。
+tests/src/exec-register-resume.test.ts:250:      reason: 'executor stage is "failed" for run run-new; re-run the item instead',
+tests/src/exec-register-resume.test.ts:254:  it("reporter が succeeded の run は統合段からの再開対象にする", () => {
+tests/src/exec-register-resume.test.ts:255:    const candidate = makeCandidate({ state: makeState({ reporterStatus: "succeeded" }) });
+tests/src/exec-register-resume.test.ts:267:      state: makeState({ reporterStatus: "succeeded", integrateStatus: "failed" }),
+tests/src/exec-register-resume.test.ts:281:      state: makeState({ reporterStatus: "succeeded", integrateStatus: "succeeded" }),
+tests/src/exec-register-resume.test.ts:378:    expect(actual.target.stage).toBe("reporter");
+tests/src/exec-register-resume.test.ts:513:  it("--reporter-by を最優先で解決する", () => {
+tests/src/exec-register-resume.test.ts:521:      { reporterBy: "report-2" },
+tests/src/exec-register-resume.test.ts:532:  it("--reporter-by 省略時は pipeline-state に記録された reporter actor を使う", () => {
+tests/src/exec-register-resume.test.ts:543:  it("reporter を特定できない場合は --reporter-by の指定を促す", () => {
+tests/src/exec-register-resume.test.ts:548:      message: "reporter agent is unknown for this run; specify --reporter-by <nickname>",
+tests/src/exec-register-resume.test.ts:552:  it("stage_role が reporter でない nickname はエラーにする", () => {
+tests/src/exec-register-resume.test.ts:557:    const actual = resolveRegisterResumeReporter(roster, { reporterBy: "exec-1" }, {}, null);
+tests/src/exec-register-resume.test.ts:561:    expect(actual.message).toMatch(/--reporter-by agent must have stage_role: reporter/);
+docs/ja/specdojo/standards/template-authoring-standard.md:17:- 対象外: `docs/ja/specdojo/exec-templates/` 配下の plan / result 生成用内部テンプレート。rulebook から宣言される実践の型ではなく、生成処理が消費する実行基盤の部品として [plan/result ライフサイクルガイド](../guides/plan-result-lifecycle-guide.md) に従う
+tests/src/exec-worktree-command.integration.test.ts:160:  it("prepares, commits, merges, and removes a task worktree", async () => {
+tests/src/exec-agent-config-command.test.ts:66:  it("expands the report profile for a reporter member", () => {
+tests/src/exec-agent-config-command.test.ts:69:      buildMember({ nickname: "claude-reporter", mode: "report" }),
+tests/src/exec-agent-config-command.test.ts:73:      "claude -p --agent claude-reporter --settings .specdojo/claude/settings.report.json",
+tests/src/exec-agent-config-command.test.ts:134:      buildMember({ nickname: "claude-reporter", mode: "report" }),
+tests/src/exec-agent-config-command.test.ts:138:      "claude -p --agent claude-reporter --settings .specdojo/claude/settings.report.json",
+templates/opencode/agents/opencode-executor.md:25:    "npx markdownlint*": allow
+templates/opencode/agents/opencode-executor.md:50:plan に共通規約として result 更新手順が含まれていても、それは reporter / runner の責務として扱い、executor は実行しません。変更ファイルと検証結果はツール出力および最終応答へ簡潔に残し、runner が evidence として収集できるようにしてください。
+templates/opencode/agents/opencode-reporter.md:2:description: SpecDojo pipeline の reporter。渡された evidence だけから指定スキーマの構造化結果を返す。
+templates/opencode/agents/opencode-reporter.md:20:あなたは SpecDojo pipeline の OpenCode reporter です。
+tests/src/exec-pipeline-state.test.ts:85:      reporterActor: "reporter-a",
+tests/src/exec-pipeline-state.test.ts:165:      reporterActor: "reporter-a",
+tests/src/exec-pipeline-state.test.ts:175:        actor: "reporter-a",
+tests/src/exec-pipeline-state.test.ts:191:      actor: "reporter-a",
+tests/src/exec-run-resolve-command.test.ts:138:            { stage_role: "reporter" },
+tests/src/exec-run-resolve-command.test.ts:149:  it("rejects a legacy --by override for a pipeline executor stage", () => {
+tests/src/exec-run-resolve-command.test.ts:154:            stages: [{ stage_role: "executor" }, { stage_role: "reporter" }],
+tests/src/exec-run-resolve-command.test.ts:166:        stages: [{ stage_role: "executor" }, { stage_role: "reporter" }],
+tests/src/exec-agent-git-state.integration.test.ts:59:  it("ignores runner register commits outside the agent worktree", () => {
+tests/src/exec-agent-git-state.integration.test.ts:80:  it("still detects a commit in the agent worktree while runner commits are present", () => {
+templates/opencode/agents/opencode-review-executor.md:40:plan に共通規約として result 更新手順が含まれていても、それは reporter / runner の責務として扱い、executor は実行しません。レビュー結果（一致・乖離・未確認範囲・根拠）はツール出力および最終応答へ簡潔に残し、runner が evidence として収集できるようにしてください。
+tests/src/exec-evidence.test.ts:156:  it("persists failed reporter stdout and stderr as redacted bounded evidence refs", () => {
+tests/src/exec-evidence.test.ts:157:    const root = mkdtempSync(join(tmpdir(), "specdojo-reporter-evidence-"));
+tests/src/exec-reporter.test.ts:12:} from "../../src/exec-reporter.js";
+tests/src/exec-reporter.test.ts:74:describe("reporter structured output", () => {
+tests/src/exec-reporter.test.ts:91:  it("keeps the published JSON schema aligned with valid reporter output", () => {
+tests/src/exec-reporter.test.ts:100:      "exec-reporter-output.schema.yaml",
+tests/src/exec-reporter.test.ts:111:  it("passes only plan, bounded evidence, and schema to the reporter", () => {
+tests/src/exec-reporter.test.ts:120:    expect(prompt).toContain("<specdojo_reporter_output_schema");
+tests/src/exec-reporter.test.ts:127:  it("tells the reporter its own response fulfills the plan's result-recording requirement", () => {
+tests/src/exec-reporter.test.ts:128:    // Regression: without this, a reporter reading a plan written for a single edit+record
+tests/src/exec-reporter.test.ts:130:    // leaves the result file untouched (writing it is the reporter's job, not the executor's)
+tests/src/exec-reporter.test.ts:143:  it("retries only the reporter after a format error and reuses the same evidence", async () => {
+tests/src/exec-reporter.test.ts:173:  it("stops after the bounded reporter format attempts", async () => {
+tests/src/exec-reporter.test.ts:197:  it("returns the raw streams when the reporter process exits non-zero", async () => {
+tests/src/exec-provider-scaffold.test.ts:31:  it("ships a reporter profile that cannot edit files or commit changes", async () => {
+tests/src/exec-provider-scaffold.test.ts:45:      "Bash(git commit *)",
+tests/src/exec-plans.test.ts:641:      const path = join("docs/ja/specdojo/exec-templates", template);
+tests/src/exec-plans.test.ts:665:    const source = readFileSync(join("docs/ja/specdojo/exec-templates", template), "utf8");
+tests/src/exec-plans.test.ts:687:    const source = readFileSync(join("docs/ja/specdojo/exec-templates", template), "utf8");
+tests/src/exec-plans.test.ts:706:      const source = readFileSync(join("docs/ja/specdojo/exec-templates", template), "utf8");
+docs/ja/specdojo/standards/document-metadata-standard.md:59:- `docs/ja/specdojo/exec-templates/` 配下の exec / result テンプレートは、plan / result 生成処理が消費する内部テンプレートである。実践の型の `type: template` 文書ではないため、ファイル自身の Frontmatter は持たない。本文先頭に `_FRONTMATTER_` を置き、生成処理が `specdojo:` 名前空間形の Frontmatter を注入する。
+tests/src/exec-strategy.test.ts:146:  it("resolves the executor/reporter stages declared on the selected phase", () => {
+tests/src/exec-strategy.test.ts:163:          "          - stage_role: reporter",
+tests/src/exec-strategy.test.ts:178:          { stage_role: "reporter", proficiency: "normal" },
+tests/src/exec-run-inplace.test.ts:26:function configurePipeline(repo: string, reporterCommandOverride?: string): void {
+tests/src/exec-run-inplace.test.ts:32:  const reporterOutput = JSON.stringify({
+tests/src/exec-run-inplace.test.ts:42:  const reporterOutputBase64 = Buffer.from(reporterOutput, "utf8").toString("base64");
+tests/src/exec-run-inplace.test.ts:43:  const reporterCommand =
+tests/src/exec-run-inplace.test.ts:44:    reporterCommandOverride ??
+tests/src/exec-run-inplace.test.ts:46:      `fs.writeSync(1,Buffer.from('${reporterOutputBase64}','base64'))"`;
+tests/src/exec-run-inplace.test.ts:63:      "  - nickname: pipeline-reporter",
+tests/src/exec-run-inplace.test.ts:68:      "    stage_role: reporter",
+tests/src/exec-run-inplace.test.ts:71:      `    command: ${JSON.stringify(reporterCommand)}`,
+tests/src/exec-run-inplace.test.ts:93:      "          - stage_role: reporter",
+tests/src/exec-run-inplace.test.ts:125:  mkdirSync(join(repo, "docs", "ja", "specdojo", "exec-templates"), { recursive: true });
+tests/src/exec-run-inplace.test.ts:213:    join(repo, "docs", "ja", "specdojo", "exec-templates", "xep-template.md"),
+tests/src/exec-run-inplace.test.ts:218:    join(repo, "docs", "ja", "specdojo", "exec-templates", "xer-template.md"),
+tests/src/exec-run-inplace.test.ts:223:    join(repo, "docs", "ja", "specdojo", "exec-templates", "xrp-viewpoint-detail-template.md"),
+tests/src/exec-run-inplace.test.ts:228:    join(repo, "docs", "ja", "specdojo", "exec-templates", "xep-common-conventions-template.md"),
+tests/src/exec-run-inplace.test.ts:233:    join(repo, "docs", "ja", "specdojo", "exec-templates", "xep-job-template.md"),
+tests/src/exec-run-inplace.test.ts:393:  it("fails directly on a non-zero command without starting the analysis reporter", async () => {
+tests/src/exec-run-inplace.test.ts:395:    const reporterOutput = JSON.stringify({
+tests/src/exec-run-inplace.test.ts:399:      summary: ["reporter should not run"],
+tests/src/exec-run-inplace.test.ts:402:      approach: "unexpected reporter invocation",
+tests/src/exec-run-inplace.test.ts:405:    const reporterOutputBase64 = Buffer.from(reporterOutput, "utf8").toString("base64");
+tests/src/exec-run-inplace.test.ts:408:      `node -e "const fs=require('node:fs');fs.writeFileSync('reporter-ran.txt','yes');` +
+tests/src/exec-run-inplace.test.ts:409:        `fs.writeSync(1,Buffer.from('${reporterOutputBase64}','base64'))"`,
+tests/src/exec-run-inplace.test.ts:423:        "    agent: pipeline-reporter",
+tests/src/exec-run-inplace.test.ts:438:      expect(existsSync(join(repo, "reporter-ran.txt"))).toBe(false);
+tests/src/exec-run-inplace.test.ts:471:  it("runs only analysis reporter after a successful command that starts a nested process", async () => {
+tests/src/exec-run-inplace.test.ts:473:    const reporterOutput = JSON.stringify({
+tests/src/exec-run-inplace.test.ts:483:    const reporterOutputBase64 = Buffer.from(reporterOutput, "utf8").toString("base64");
+tests/src/exec-run-inplace.test.ts:487:        `fs.writeFileSync('reporter-prompt.txt',prompt);` +
+tests/src/exec-run-inplace.test.ts:488:        `fs.writeSync(1,Buffer.from('${reporterOutputBase64}','base64'))"`,
+tests/src/exec-run-inplace.test.ts:502:        "    agent: pipeline-reporter",
+tests/src/exec-run-inplace.test.ts:522:      const reporterPrompt = readFileSync(join(repo, "reporter-prompt.txt"), "utf8");
+tests/src/exec-run-inplace.test.ts:523:      expect(reporterPrompt).toContain('"stdout_ref"');
+tests/src/exec-run-inplace.test.ts:524:      expect(reporterPrompt).toContain('"stderr_ref"');
+tests/src/exec-run-inplace.test.ts:525:      expect(reporterPrompt).toContain('"stdout": "analysis input\\n"');
+tests/src/exec-run-inplace.test.ts:526:      expect(reporterPrompt).toContain('"stderr": "analysis warning\\n"');
+tests/src/exec-run-inplace.test.ts:543:      ) as { stages: { executor: { actor: string }; reporter: { status: string } } };
+tests/src/exec-run-inplace.test.ts:545:      expect(state.stages.reporter.status).toBe("succeeded");
+tests/src/exec-run-inplace.test.ts:553:  it("runs executor and reporter stages and renders the result from validated JSON", async () => {
+tests/src/exec-run-inplace.test.ts:574:        "--reporter-by",
+tests/src/exec-run-inplace.test.ts:575:        "pipeline-reporter",
+tests/src/exec-run-inplace.test.ts:616:          reporter: { status: string; attempts: number; artifact_ref: string };
+tests/src/exec-run-inplace.test.ts:624:      expect(pipelineState.stages.reporter).toMatchObject({
+tests/src/exec-run-inplace.test.ts:628:      expect(pipelineState.stages.reporter.artifact_ref).toContain("/T-TEST-doc-010-result.md");
+tests/src/exec-run-inplace.test.ts:636:  it("persists succeeded executor state when the reporter fails", async () => {
+tests/src/exec-run-inplace.test.ts:640:      `node -e "require('node:fs').readFileSync(0,'utf8');process.stderr.write('reporter failed');process.exit(1)"`,
+tests/src/exec-run-inplace.test.ts:656:        "--reporter-by",
+tests/src/exec-run-inplace.test.ts:657:        "pipeline-reporter",
+tests/src/exec-run-inplace.test.ts:667:      ) as { stages: { executor: { status: string }; reporter: { status: string } } };
+tests/src/exec-run-inplace.test.ts:669:      expect(state.stages.reporter.status).toBe("failed");
+tests/src/exec-run-inplace.test.ts:907:      join(repo, "docs", "ja", "specdojo", "exec-templates", "xer-template.md"),
+tests/src/dashboard.test.ts:259:    // 末尾が空行2行になり markdownlint の MD012 に触れる。
+docs/ja/specdojo/standards/git-branching-standard.md:166:- `exec` 実行に伴う runner の自動 commit（register 状態遷移、worktree の統合など）は、既存の生成規則をそのまま用います。人が書く commit と形式を揃えるために書き換えません。
+docs/ja/specdojo/standards/git-branching-standard.md:186:| 未commit変更を確認せず worktree または branch を削除する | 成果物と result を失う可能性があるため             |
+tests/src/exec-scheduler-command.test.ts:40:  mkdirSync(join(repo, "docs", "ja", "specdojo", "exec-templates"), { recursive: true });
+tests/src/exec-scheduler-command.test.ts:82:    join(repo, "docs", "ja", "specdojo", "exec-templates", "xer-template.md"),
+docs/ja/specdojo/exec-templates/xrp-rulebook-maintenance-template.md:23:<!-- markdownlint-disable MD055 MD056 -->
+docs/ja/specdojo/exec-templates/xrp-rulebook-maintenance-template.md:31:<!-- markdownlint-enable MD055 MD056 -->
+tests/src/exec-pipeline-e2e.integration.test.ts:20:// executor / reporter パイプラインの E2E 検証。plan 生成、agent 起動、evidence 収集、
+tests/src/exec-pipeline-e2e.integration.test.ts:21:// reporter 出力の検証、result 描画までを CLI 経路で通し、従来の単一 agent フローとの
+tests/src/exec-pipeline-e2e.integration.test.ts:28:// executor が stdout へ出すが evidence 本文には載らないマーカー。ログ本文が reporter へ
+tests/src/exec-pipeline-e2e.integration.test.ts:33:  role: "executor" | "reporter" | "legacy";
+tests/src/exec-pipeline-e2e.integration.test.ts:48:// 受け取り、behavior ファイルの指定に従って executor / reporter / 従来 agent として振る舞う。
+tests/src/exec-pipeline-e2e.integration.test.ts:91:if (behavior.role === "reporter") {
+tests/src/exec-pipeline-e2e.integration.test.ts:93:    process.stderr.write("reporter process failed\\n");
+tests/src/exec-pipeline-e2e.integration.test.ts:189:      // ローカル LLM の pipeline 構成（executor / reporter とも同一 provider）
+tests/src/exec-pipeline-e2e.integration.test.ts:191:      ...member("local-gemma-reporter", "opencode", "normal", "reporter"),
+tests/src/exec-pipeline-e2e.integration.test.ts:192:      // クラウド executor（reporter はローカルと共通）
+tests/src/exec-pipeline-e2e.integration.test.ts:242:    "          - stage_role: reporter",
+tests/src/exec-pipeline-e2e.integration.test.ts:338:  const templates = join(repo, "docs", "ja", "specdojo", "exec-templates");
+tests/src/exec-pipeline-e2e.integration.test.ts:384:    join(repo, "docs", "ja", "specdojo", "exec-templates"),
+tests/src/exec-pipeline-e2e.integration.test.ts:466:        "local-gemma-reporter": { role: "reporter", kind: "ok" },
+tests/src/exec-pipeline-e2e.integration.test.ts:547:describe("executor / reporter pipeline E2E", () => {
+tests/src/exec-pipeline-e2e.integration.test.ts:578:    expect(invocations[0].prompt).not.toContain("executor stage");
+tests/src/exec-pipeline-e2e.integration.test.ts:587:  it("runs a local LLM executor and reporter selected from the same provider template", async () => {
+tests/src/exec-pipeline-e2e.integration.test.ts:597:      "local-gemma-reporter",
+tests/src/exec-pipeline-e2e.integration.test.ts:601:    expect(invocations[0].prompt).toContain("executor stage");
+tests/src/exec-pipeline-e2e.integration.test.ts:606:    // 成果物は executor が更新し、result は reporter の構造化出力から runner が描画する。
+tests/src/exec-pipeline-e2e.integration.test.ts:658:    expect(state.stages.reporter).toMatchObject({
+tests/src/exec-pipeline-e2e.integration.test.ts:660:      actor: "local-gemma-reporter",
+tests/src/exec-pipeline-e2e.integration.test.ts:664:  it("hands the reporter bounded evidence only, keeping raw log text and secrets out of the prompt", async () => {
+tests/src/exec-pipeline-e2e.integration.test.ts:669:    const reporterPrompt = readInvocations(target.logPath)[1].prompt;
+tests/src/exec-pipeline-e2e.integration.test.ts:670:    // reporter へ渡すのは plan と上限つき evidence とスキーマだけで、生ログ本文は渡さない。
+tests/src/exec-pipeline-e2e.integration.test.ts:671:    expect(reporterPrompt).toContain("# Edit Plan: T-TEST-doc-010");
+tests/src/exec-pipeline-e2e.integration.test.ts:672:    expect(reporterPrompt).toContain("pipeline-artifact.md を更新し、検証を実行した。");
+tests/src/exec-pipeline-e2e.integration.test.ts:673:    expect(reporterPrompt).not.toContain(RAW_LOG_MARKER);
+tests/src/exec-pipeline-e2e.integration.test.ts:688:  it("runs a cloud executor with the shared reporter and result path", async () => {
+tests/src/exec-pipeline-e2e.integration.test.ts:693:    // expert 要件の stage はクラウド provider の executor を選び、reporter と result 生成は
+tests/src/exec-pipeline-e2e.integration.test.ts:698:      "local-gemma-reporter",
+tests/src/exec-pipeline-e2e.integration.test.ts:715:    expect(state.stages.reporter).toMatchObject({
+tests/src/exec-pipeline-e2e.integration.test.ts:717:      actor: "local-gemma-reporter",
+tests/src/exec-pipeline-e2e.integration.test.ts:721:  it("blocks on executor failure without starting the reporter", async () => {
+tests/src/exec-pipeline-e2e.integration.test.ts:743:    expect(state.stages.reporter.status).toBe("pending");
+tests/src/exec-pipeline-e2e.integration.test.ts:750:  it("records a failed parent validation and blocks even if the reporter returns complete", async () => {
+tests/src/exec-pipeline-e2e.integration.test.ts:759:      "reporter",
+tests/src/exec-pipeline-e2e.integration.test.ts:777:  it("blocks on reporter output that never validates, keeping the executor evidence for resume", async () => {
+tests/src/exec-pipeline-e2e.integration.test.ts:780:      "local-gemma-reporter": { role: "reporter", kind: "invalid" },
+tests/src/exec-pipeline-e2e.integration.test.ts:786:    // 形式エラーは reporter だけを再実行し、executor は再実行しない。
+tests/src/exec-pipeline-e2e.integration.test.ts:789:    expect(invocations.filter((item) => item.role === "reporter")).toHaveLength(3);
+tests/src/exec-pipeline-e2e.integration.test.ts:797:    expect(state.stages.reporter.status).toBe("failed");
+tests/src/exec-pipeline-e2e.integration.test.ts:804:  it("blocks when the reporter reports outcome blocked", async () => {
+tests/src/exec-pipeline-e2e.integration.test.ts:807:      "local-gemma-reporter": { role: "reporter", kind: "blocked" },
+tests/src/exec-pipeline-e2e.integration.test.ts:836:// worktree 経路の失敗と復旧。block イベントに残した stage checkpoint から reporter だけを
+tests/src/exec-pipeline-e2e.integration.test.ts:839:describe("executor / reporter pipeline resume E2E (worktree)", () => {
+tests/src/exec-pipeline-e2e.integration.test.ts:857:  it("resumes the reporter from persisted evidence instead of rerunning the executor", async () => {
+tests/src/exec-pipeline-e2e.integration.test.ts:873:    // 1回目: reporter がプロセス失敗し、executor evidence を残したまま blocked になる。
+tests/src/exec-pipeline-e2e.integration.test.ts:875:      "local-gemma-reporter": { role: "reporter", kind: "fail" },
+tests/src/exec-pipeline-e2e.integration.test.ts:892:    expect(blockEvent?.meta).toMatchObject({ pipeline_stage: "reporter" });
+tests/src/exec-pipeline-e2e.integration.test.ts:896:    // 2回目: reporter を復旧させて再開する。executor は再実行されない。
+tests/src/exec-pipeline-e2e.integration.test.ts:910:    expect(invocations.filter((item) => item.role === "reporter")).toHaveLength(2);
+tests/src/exec-pipeline-e2e.integration.test.ts:921:  it("revalidates a resolved parent-validation failure before resuming the reporter", async () => {
+tests/src/exec-pipeline-e2e.integration.test.ts:965:      readInvocations(fixture.logPath).filter((item) => item.role === "reporter"),
+tests/src/exec-pipeline-e2e.integration.test.ts:978:  it("keeps blocking when parent validation still fails after reporter resume", async () => {
+tests/src/exec-trial.test.ts:35:      reporter: "reporter-a",
+tests/src/exec-trial.test.ts:46:    expect(record.trials.every((trial) => trial.reporter_agent === "reporter-a")).toBe(true);
+tests/src/exec-trial.test.ts:47:    expect(record.reporter_mode).toBe("shared");
+tests/src/exec-trial.test.ts:96:    expect(record.reporter_mode).toBe("none");
+tests/src/exec-trial.test.ts:97:    expect(record.trials[0].reporter).toMatchObject({
+tests/src/exec-trial.test.ts:168:  it("records distinct executor/reporter pairs as end-to-end trials", () => {
+tests/src/exec-trial.test.ts:179:        { executor: "qwen-executor", reporter: "qwen-reporter" },
+tests/src/exec-trial.test.ts:180:        { executor: "gemma-executor", reporter: "gemma-reporter" },
+tests/src/exec-trial.test.ts:185:    expect(record.reporter_mode).toBe("paired");
+tests/src/exec-trial.test.ts:187:      "qwen-executor-qwen-reporter",
+tests/src/exec-trial.test.ts:188:      "gemma-executor-gemma-reporter",
+tests/src/exec-trial.test.ts:190:    expect(record.trials.map((trial) => trial.reporter_agent)).toEqual([
+tests/src/exec-trial.test.ts:191:      "qwen-reporter",
+tests/src/exec-trial.test.ts:192:      "gemma-reporter",
+tests/src/exec-trial.test.ts:217:  it("extracts repository paths from a plan and classifies reporter failures", () => {
+tests/src/exec-trial.test.ts:227:        "reporter output invalid after 3 format attempts: invalid JSON",
+src/schedule-strategy-generate.ts:557:            { stage_role: "reporter", proficiency: "normal" },
+docs/ja/specdojo/standards/job-definition-standard.md:27:- 判断（観測した結果の解釈、失敗の切り分け、次の行動の提案）が必要な command Job だけ、`task.analysis` で reporter agent と判断内容を指定する。
+docs/ja/specdojo/standards/job-definition-standard.md:42:| 委譲 | どの agent に任せるか                                      | `task.analysis.agent` または `task.agent`             | reporter / executor の nickname 指名             |
+docs/ja/specdojo/standards/job-definition-standard.md:56:- result を executor が書かない構成（stage_role を持つ pipeline member）では、`task.agent.reporter` に reporter の nickname を書く。両方を指名した Run は executor → reporter の2段で実行され、result は reporter が書く。
+docs/ja/specdojo/standards/job-definition-standard.md:57:- `task.agent.reporter` を省略した場合、executor が Job Run の result まで記入する。result を書かない agent を単独で指名してはならない。
+docs/ja/specdojo/standards/job-definition-standard.md:59:- `exec run --by` は単一 agent 実行としての単発の差し替え、`--executor-by` / `--reporter-by` は段ごとの差し替えとして、いずれも Job の指名より優先する。
+docs/ja/specdojo/standards/job-definition-standard.md:60:- command Job で判断が必要な場合は `task.analysis.agent` に `stage_role: reporter` の nickname を指定する。`--reporter-by` で差し替えられるが、runner 実行を `--by` / `--executor-by` で agent に置き換えることはできない。
+docs/ja/specdojo/standards/job-definition-standard.md:67:- precondition による skip では Job Run、plan、result、evidence を作らず、analysis reporter と `task.command` も起動しない。routine 起動では routine に `skipped` を返し、routine 側だけが `last_run` / `last_result` を更新する。
+docs/ja/specdojo/standards/job-definition-standard.md:72:- runner はコマンド、終了コード、標準出力、標準エラーを bounded・redacted evidence として保存する。stdout / stderr は監査用ログへの参照に加え、analysis reporter が追加のファイル読取なしで判断できるよう evidence 本体にも同じ bounded 内容を含める。
+docs/ja/specdojo/standards/job-definition-standard.md:73:- `ta
