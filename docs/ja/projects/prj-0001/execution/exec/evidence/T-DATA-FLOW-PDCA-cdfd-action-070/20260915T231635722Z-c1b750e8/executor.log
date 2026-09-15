@@ -1,0 +1,77 @@
+The skill that's relevant here isn't customize-opencode. Let me start by reading the target artifact and the required reference files.
+The prj-overview path is different. Let me find it and read the rulebooks/recipe as required by the plan.
+Let me read the project context and check the result file existence and lefthook config.
+Now I have a comprehensive understanding. Let me verify the existing draft against the rulebook systematically, checking process IDs, data store names, and the group delegation references.
+I have all the information needed. The draft is largely complete and well-formed. Based on my systematic analysis against the rulebook:
+
+**Key findings:**
+
+1. **Structure & rulebook compliance**: All 9 mandatory sections present, process IDs are `P-<nn>-<nn>` format, data store names match overview, delegation target `cdfd-plan` exists, state reference uses `_TODO_` as required by recipe §6.6.
+
+2. **One substantive gap**: The overview group-level outputs include two distinct items — "完了・決定の記録" and "再計画要求" — but the P-11 domain unit outputs only list "完了・決定の記録、完了記録、再計画要求". However "再計画要求" is already captured in §8.2 (グループ外への委譲) table. The P-11 域 unit I/O should explicitly map the group-level "再計画要求" to the delegation, which is currently implicit only.
+
+3. **Another gap**: The overview group inputs include "参加者からの非推奨化の判断" for P-13, but P-13 domain input says "参加者からの非推奨化候補と判断に必要な情報". This is consistent (the "非推奨化候補" represents the judgment). No change needed.
+
+4. **One inconsistency I notice**: The group-level 主要入力 in the overview includes "参加者からの構成変更要求と承認結果" but P-12's input says "Orchestrator からの改善要求、参加者からの構成変更要求". The "承認結果" is covered by the 構成変更承認 process itself (P-12-01), not an external input. This is fine per recipe - group-level inputs are a collection; domain level decomposes them.
+
+5. **Process table vs I/O table consistency**: `P-12-01` in §3.2 lists 主要出力 as "構成変更の決定記録、更新した稼働構成、Kata のバージョン更新、更新した成果物カタログ" which includes all three master store updates. But the process table §3.2 and §6.2 show P-12-01's I/O is only the decision/registration. This seems reasonable — the decision *authorizes* the subsequent update by P-12-02, not performs it.
+
+**Conclusion**: The document is substantially complete. The one area where a minimal fix is warranted per `done_criteria` is ensuring the group-level "再計画要求" appears as a domain-level output traceable to §8.2 delegation. Let me check if P-11's 主要出力 already covers this adequately.
+
+Looking at P-11 line 43: `**主要出力**: 完了・決定の記録、完了記録、再計画要求` — yes, "再計画要求" is already there. So the group-level mapping is complete.
+
+The document appears to fully satisfy all done criteria. Let me run formatting checks and proceed to finalize.
+Pre-tty and markdownlint both passed. Let me also run the catalog validate since this file is under `docs/ja/projects/` (actually it's under `docs/ja/product/`, so catalog-validate triggers for `docs/ja/projects/**` — not triggered here). No additional checks needed.
+Based on the systematic analysis:
+
+**The draft fully satisfies all done_criteria and rulebook requirements:**
+
+1. **Owner done criteria**: All three域 (P-11, P-12, P-13) domain-level 主要入力/主要出力/データストア collectively match the group-level 箇条書き in cdfd-overview §3.5 without contradiction:
+   - 主要入力 union: Orchestrator 完了要求 + 評価結果 + 進捗報告判断事項 + 完了条件 + Orchestrator 改善要求 + 参加者構成変更要求 + 参加者非推奨化候補 → matches group input
+   - 主要出力 union: 完了・決定の記録 + 完了記録 + 更新した稼働構成 + Kataバージョン + 更新した成果物カタログ + 非推奨化した文書 + 保管した文書 + 再計画要求 → matches group output
+   - データストア union: 成果物カタログ, 登録簿, 実行記録, 評価結果, 進捗報告 (P-11) ∪ 稼働構成, Kata, 成果物カタログ, 登録簿 (P-12) ∪ 成果物カタログ, 登録簿, 成果物, 保管庫（trash）(P-13) → matches all 9 group data stores
+
+2. **ARC input suitability**: P-11/P-12/P-13 process-level I/O in §6 clearly identifies 完了记录/構成変更/Kataバージョン更新/成果物カタログ/保管 updates per process; E-11-01 and §8.2 shows Plan 再計画委譲.
+
+3. **PO input suitability**: P-11-01 "人間が照合、完了可否を確定", P-12-01 "人間が判断", P-13-01 "人間が判断" — all express human judgment with approval boundaries.
+
+4. **Rulebook compliance**: §3 structure (領域節で主要入力/出力/データストア + プロセス表), §4 データストア (区分 and 部分集合), §5 概念データフロー (one node per process, 各図直後 note with 凡例/線種/省略), §6 個別プロセス主要入出力 (no duplication of 業務目的/担当/起動条件/必須性), §7 状態遷移の参照 (table with STSD/CSTD _TODO_ refs), §8 主要例外とグループ外への委譲 (E-11-01, E-12-01, E-13-01 and delegation to `cdfd-plan` — which exists).
+
+No edits to the file are needed. The draft is already complete and consistent. Prettier confirms no formatting changes required (file was "unchanged").
+
+<specdojo_executor_evidence>
+{"final_message":"cdfd-action.md は完全な草案であり、rulebook 必須要素・完成判定・owner/ARC/PO の各 done_criteria を満たしている。変更不要で確認済みのみを記録。","validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-action.md","status":"passed","summary":"unchanged（整形不要と判定）"},{"command":"npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-action.md","status":"passed","summary":"エラーなし"}]}
+</specdojo_executor_evidence>
+
+## 分析結果の詳細
+
+### 参照した文書
+- **対象成果物**: `cdfd-action.md`（draft）
+- **depends_on**: `cdfd-overview.md`（全体概要、§3.5 Action グループ、§4 データストア、§7 凡例）
+- **rulebook**: `cdfd-rulebook.md`（本文要件 §5、記述ガイド §6、禁止事項 §7、完成判定 §6.8）
+- **併せて適用 rulebook**: `cdfd-mermaid-rulebook.md`（記法 §1〜§7）
+- **recipe**: `cdfd-recipe.md`（§3 作成手順、§4 各章の書き方、§8 仕上げチェック）
+- **プロジェクトコンテキスト**: `prj-overview.md`（CH-01、価値仮説 BV-01〜BV-04、責任分担原則 §3）
+
+### 整合性確認結果（done_criteria 準拠）
+
+| 観点 | 判定 | 根拠箇所 |
+|---|---|---|
+| P-11〜P-13 が `プロセス領域` に各 1 節として存在 | 適合 | §3.1〜§3.3 |
+| 領域単位 I/O の合算がグループ単位の箇条書きと矛盾しない | 適合 | §3.1〜3.3 vs cdfd-overview §3.5（9 data store、主要入力、主要出力の対比） |
+| プロセス ID が `P-<nn>-<nn>` 形式 | 適合 | P-11-01,02 / P-12-01,02 / P-13-01,02,03 |
+| データストアが cdfd-overview §4 の部分集合 | 適合 | マスタ(稼働構成, Kata, 成果物カタログ) + トランザクション(登録簿, 実行記録, 成果物, 保管庫(trash), 評価結果, 進捗報告) = 全 9 件 |
+| 各表と図と I/O 表で ID・名称・ノード一致 | 適合 | 全 7 プロセスが §3 / §5 / §6 で同一 ID・同名で登場 |
+| 状態遷移の参照に _TODO_ が明記 | 適合 | §7 と §9（recipe §4.7 に従い、STSD/CSTD 未作成のためバッククォート仮置きは使わず `_TODO_` で論点として残す） |
+| グループ外委譲の参照先が実在 | 適合 | §8.2 → `cdfd-plan`（ファイル実在を確認済み） |
+| 人間の最終判断が明示（完了/構成変更承認/非推奨化） | 適合 | P-11-01, P-12-01, P-13-01 の業務目的で「人間が…判断」 |
+| 禁止事項抵触なし | 適合 | 補助操作は独立プロセス化していない、状態遷移図/表を複製していない、他グループ内部を展開していない |
+
+### 変更の判断理由（4.2 既存記述の扱い）
+- **変更不要箇所**：全節が rulebook 必須要素を満たし、矛盾・重複・欠落なし。`npx prettier --write` が "unchanged" を返し、フォーマットも整っている状態。
+- **修正対象（該当なし）**：`depends_on`（cdfd-overview）と明確に矛盾する箇所なし、rulebook 禁止事項に抵触する箇所なし、重複記述なし、rulebook/done_criteria に寄与しない記述なし。
+- **_TODO_ を残した箇所**：§7 の STSD/CSTD 文書 ID（recipe §4.7 に従い、未作成の参照先はバッククォート仮置きまたは論点として残す。成果物本文へ状態内容を複製しないのは rulebook §6.6 に適合）。
+
+<specdojo_executor_evidence>
+{"final_message":"cdfd-action.md は完全な草案。rulebook必須要素・done_criteria・禁止事項すべて適合し、変更なしで通過。","validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-action.md","status":"passed","summary":"unchanged"},{"command":"npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-action.md","status":"passed","summary":"エラーなし"}]}
+</specdojo_executor_evidence>
