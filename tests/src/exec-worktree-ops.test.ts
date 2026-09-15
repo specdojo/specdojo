@@ -1,8 +1,12 @@
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { assertResultMarkdownlint, type WorktreeOpsContext } from "../../src/exec-worktree-ops.js";
+import {
+  assertResultMarkdownlint,
+  type WorktreeOpsContext,
+  normalizeResultWhitespace,
+} from "../../src/exec-worktree-ops.js";
 import type { ExecWorktree } from "../../src/exec-worktree.js";
 
 function fixture(result: string): {
@@ -68,6 +72,22 @@ describe("assertResultMarkdownlint", () => {
       expect(() => assertResultMarkdownlint(target.context, target.worktree, "TASK")).not.toThrow();
     } finally {
       rmSync(target.root, { recursive: true, force: true });
+    }
+  });
+});
+
+describe("normalizeResultWhitespace", () => {
+  it("strips trailing spaces and ensures a single trailing newline without touching emphasis", () => {
+    const dir = mkdtempSync(join(tmpdir(), "specdojo-result-ws-"));
+    try {
+      const file = join(dir, "result.md");
+      writeFileSync(file, "# R\n\n- _TODO_ を残す \n- 末尾", "utf8");
+
+      normalizeResultWhitespace(file);
+
+      expect(readFileSync(file, "utf8")).toBe("# R\n\n- _TODO_ を残す\n- 末尾\n");
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
     }
   });
 });

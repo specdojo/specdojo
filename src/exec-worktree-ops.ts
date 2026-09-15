@@ -1,5 +1,5 @@
 import { spawnSync } from "node:child_process";
-import { existsSync, lstatSync, readFileSync } from "node:fs";
+import { existsSync, lstatSync, readFileSync, writeFileSync } from "node:fs";
 import { join, relative, resolve, sep } from "node:path";
 import { load } from "js-yaml";
 import { acquireSchedulerLock, releaseSchedulerLock } from "./exec-events.js";
@@ -414,6 +414,13 @@ function findMarkdownlintExecutable(worktreePath: string): string | undefined {
 // commit 前に markdownlint を直接実行する。hook 由来の汎用的な git commit 失敗ではなく、
 // result の記法違反として block 理由を残せるようにする。
 // markdownlint-cli が見つからない環境では検査を省略し、hook 側の検査に委ねる。
+// 行末の空白を除き、ファイル末尾を改行 1 つに揃える。強調記法など内容に関わる置換は行わない。
+export function normalizeResultWhitespace(resultPath: string): void {
+  const content = readFileSync(resultPath, "utf8");
+  const normalized = content.replace(/[ \t]+$/gm, "").replace(/\n*$/, "\n");
+  if (normalized !== content) writeFileSync(resultPath, normalized, "utf8");
+}
+
 export function assertResultMarkdownlint(
   context: WorktreeOpsContext,
   worktree: ExecWorktree,
@@ -427,6 +434,11 @@ export function assertResultMarkdownlint(
     );
     return;
   }
+
+  // reporter の出力に由来する行末の空白と末尾改行の不足は、内容に影響しない空白だけの違反
+  // （MD009 / MD047）であり、以前は commit hook の Prettier が黙って整えていた。Prettier の
+  // 対象外にした分をここで補い、記法違反として block するのは内容に関わる違反に限る。
+  normalizeResultWhitespace(resultPath);
 
   const executable = findMarkdownlintExecutable(worktree.path);
   if (!executable) {
