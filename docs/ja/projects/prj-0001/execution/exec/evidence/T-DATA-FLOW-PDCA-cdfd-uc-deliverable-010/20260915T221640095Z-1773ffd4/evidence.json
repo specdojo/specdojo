@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "task_id": "T-DATA-FLOW-PDCA-cdfd-uc-deliverable-010",
+  "run_id": "20260915T221640095Z-1773ffd4",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-15T22:17:24.795Z",
+    "completed_at": "2026-09-15T22:24:08.248Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-deliverable.md",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ""
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-deliverable.md",
+      "status": "passed",
+      "summary": "対象 Markdown を整形した。"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-deliverable.md",
+      "status": "passed",
+      "summary": "Markdown lint エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts index build",
+      "status": "failed",
+      "summary": "sandbox が tsx の IPC ソケット作成を EPERM で拒否した。成果物内容に起因しない環境制限。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "同じ SpecDojo エントリポイントで 1720 件の索引生成に成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-deliverable.md",
+      "status": "passed",
+      "summary": "最終内容が Prettier 形式に適合している。"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-uc-deliverable-010\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nUpdated: /tmp/specdojo-register-resume-e2e-4P69hb/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)\nUpdated: /tmp/specdojo-register-resume-e2e-4P69hb/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml\nUpdated: /tmp/specdojo-register-pipeline-e2e-1gkMJL/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)\nUpdated: /tmp/specdojo-register-pipeline-e2e-1gkMJL/docs/ja/projects/test/controls/project-register/events/p…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.1.0 validate:schema:yaml\n> tsx tools/docs/src/validate-yaml-schema.ts --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-…"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-uc-deliverable-010\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-WOAvCL/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-JbYU6s/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-DDv036/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-AJvox1/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-VBc38C/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-SBZiRy/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\nWrote agent stdout: /tmp/specdojo-agent-command-ir0LFa/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-WHs3Lc/outputs/partial.txt\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\n\n Test F…"
+    }
+  ],
+  "final_message": "成果物作成から完了記録までの CDFD を新規作成し、引き渡し条件・戻り先・レビューと grade の責務分担を定義した。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-PDCA-cdfd-uc-deliverable-010/20260915T221640095Z-1773ffd4/executor.log",
+      "bytes": 2070,
+      "truncated": false
+    }
+  ]
+}
