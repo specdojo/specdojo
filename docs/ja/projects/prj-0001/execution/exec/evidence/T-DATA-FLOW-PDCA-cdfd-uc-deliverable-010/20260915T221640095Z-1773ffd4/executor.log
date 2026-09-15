@@ -1,0 +1,14 @@
+[cdfd-uc-deliverable.md](/workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-uc-deliverable-010/docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-deliverable.md) を新規作成しました。
+
+- Plan → Do → Check → Action の横断フローと H-01〜H-03 を定義
+- 引き渡す情報、成立条件、戻す条件、戻り先、再開条件を明記
+- Do のレビュー・検証と Check の grade 評価を区別
+- 数値ケース ID は参照資料にないため推測せず、成果物 ID を追跡キーとして明記
+- `status: draft` を維持
+- pipeline 指示に従い result ファイルは未更新
+
+Markdown の整形・lint・索引生成は成功しています。hook と同じ `npx tsx` は sandbox の IPC 制限で失敗しましたが、同じエントリポイントを `node --import tsx` で実行し、1720件の索引生成に成功しました。
+
+<specdojo_executor_evidence>
+{"final_message":"成果物作成から完了記録までの CDFD を新規作成し、引き渡し条件・戻り先・レビューと grade の責務分担を定義した。","validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-deliverable.md","status":"passed","summary":"対象 Markdown を整形した。"},{"command":"npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-deliverable.md","status":"passed","summary":"Markdown lint エラーなし。"},{"command":"npx tsx src/specdojo.ts index build","status":"failed","summary":"sandbox が tsx の IPC ソケット作成を EPERM で拒否した。成果物内容に起因しない環境制限。"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"同じ SpecDojo エントリポイントで 1720 件の索引生成に成功した。"},{"command":"npx prettier --check docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-deliverable.md","status":"passed","summary":"最終内容が Prettier 形式に適合している。"}]}
+</specdojo_executor_evidence>
