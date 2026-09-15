@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-veq4-evidence-refs-staleness-detection
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-09-15T11:50:15Z"
   due_on: "2026-09-30"
+  completed_at: "2026-09-15T23:16:19Z"
+  conclusion: lefthook の catalog-validate の glob に src/**・tools/**・packages/** を加え、CI に validate:catalog を入れて evidence_refs の陳腐化を refactor 側の commit で検知するようにした。dct-rulebook の evidence_refs 規約に入口・責務単位を指し内部ヘルパーを指さない指針を追記し、既存カタログの参照を見直した。
 ---
 
 # PJR-VEQ4 evidence_refs の陳腐化を refactor 側の commit で検知し、参照を安定した入口に寄せる

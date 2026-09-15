@@ -87,3 +87,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_2be2b2a2b14a4410882079b10d5b14da
+- v: 1
+  id: reg_fb6d5869742b495abcf7263c34784b66
+  ts: "2026-09-15T23:16:20Z"
+  action: close
+  actor: specdojo-orchestrator (claude)
+  from_status: review
+  to_status: done
+  reason: exec run --register で実施。codex の利用制限で中断後 claude-expert-executor が resume。親検証 3 件 passed。副作用 2 件を orchestrator が修正のうえ、利用者確認で close
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-16"
+    - field: conclusion
+      from: "-"
+      to: .prettierignore で exec の plan・result を整形対象から外し、executor・reporter の指示に識別子のインラインコード化を加え、runner が commit 前に result の markdownlint を実行して記法違反として block するようにした。副作用として露出した生成 plan の行末空白（MD009）と result の末尾改行不足（MD047）は、expandTemplate と事前検査の空白正規化で orchestrator が直接解消した。data-flow-pdca の author 8 件で運用を確認した。
+  previous_event_id: reg_ed05bcb578a6471bb21d91e9aa8f018e

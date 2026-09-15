@@ -58,3 +58,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_5b6397c024f44ee9b72c555e25b0cbaf
+- v: 1
+  id: reg_3974fb96dd214fa2ba4a7dd83fca857b
+  ts: "2026-09-15T23:16:19Z"
+  action: close
+  actor: specdojo-orchestrator (claude)
+  from_status: review
+  to_status: done
+  reason: exec run --register（codex-expert-executor / gemma-reporter / worktree）で実施。親検証 3 件 passed。利用者確認のうえ close
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-16"
+    - field: conclusion
+      from: "-"
+      to: lefthook の catalog-validate の glob に src/**・tools/**・packages/** を加え、CI に validate:catalog を入れて evidence_refs の陳腐化を refactor 側の commit で検知するようにした。dct-rulebook の evidence_refs 規約に入口・責務単位を指し内部ヘルパーを指さない指針を追記し、既存カタログの参照を見直した。
+  previous_event_id: reg_0a229b373de0474abe42842aa4ea10eb

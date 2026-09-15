@@ -58,3 +58,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_11ef3061720f4714ab932c11e696abce
+- v: 1
+  id: reg_b19808751bda417591f55e067b765f3c
+  ts: "2026-09-15T23:16:19Z"
+  action: close
+  actor: specdojo-orchestrator (claude)
+  from_status: review
+  to_status: done
+  reason: exec run --register（codex-expert-executor / gemma-reporter / worktree）で実施。親検証 3 件 passed、dry-run で確認。利用者確認のうえ close
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-16"
+    - field: conclusion
+      from: "-"
+      to: exec plan の depends_on と targets の doc id を、カタログの解決済みパスと配置（product はローカル ID、project は project 修飾）から解決するようにした。data-flow-pdca の author タスクで Unresolved ID reference が消え、targets が cdfd-action、project 文書の plan では prj-0001:dct-index になることを確認した。
+  previous_event_id: reg_222cfdc048ce4130997179d55ab40033

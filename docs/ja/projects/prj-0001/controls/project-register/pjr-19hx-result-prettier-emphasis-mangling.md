@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-19hx-result-prettier-emphasis-mangling
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: ARC
   registered_at: "2026-09-15T14:15:35Z"
   due_on: "2026-09-30"
+  completed_at: "2026-09-15T23:16:20Z"
   block_reason: rate limit reached
+  conclusion: .prettierignore で exec の plan・result を整形対象から外し、executor・reporter の指示に識別子のインラインコード化を加え、runner が commit 前に result の markdownlint を実行して記法違反として block するようにした。副作用として露出した生成 plan の行末空白（MD009）と result の末尾改行不足（MD047）は、expandTemplate と事前検査の空白正規化で orchestrator が直接解消した。data-flow-pdca の author 8 件で運用を確認した。
 ---
 
 # PJR-19HX reporter の result が commit 時の prettier で壊れて統合段で block する問題を防ぐ

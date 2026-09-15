@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-05gc-exec-plan-doc-id-qualification
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: ARC
   registered_at: "2026-09-15T12:42:16Z"
   due_on: "2026-09-30"
+  completed_at: "2026-09-15T23:16:19Z"
+  conclusion: exec plan の depends_on と targets の doc id を、カタログの解決済みパスと配置（product はローカル ID、project は project 修飾）から解決するようにした。data-flow-pdca の author タスクで Unresolved ID reference が消え、targets が cdfd-action、project 文書の plan では prj-0001:dct-index になることを確認した。
 ---
 
 # PJR-05GC exec plan の depends_on / targets の doc id を成果物の配置に応じて解決する
