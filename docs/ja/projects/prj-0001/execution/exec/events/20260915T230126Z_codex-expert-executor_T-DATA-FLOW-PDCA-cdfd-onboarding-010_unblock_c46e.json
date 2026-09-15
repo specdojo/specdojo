@@ -1,0 +1,16 @@
+{
+  "v": 1,
+  "ts": "2026-09-15T23:01:26Z",
+  "type": "unblock",
+  "task_id": "T-DATA-FLOW-PDCA-cdfd-onboarding-010",
+  "by": "codex-expert-executor",
+  "msg": "resume reporter from persisted pipeline state",
+  "meta": {
+    "limit_deferred": "false",
+    "pipeline_stage": "reporter",
+    "evidence_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-PDCA-cdfd-onboarding-010/20260915T224527989Z-4e543c34/evidence.json",
+    "pipeline_state_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-PDCA-cdfd-onboarding-010/20260915T224527989Z-4e543c34/pipeline-state.json",
+    "pipeline_run_id": "20260915T224527989Z-4e543c34",
+    "pipeline_resume_claimed": "true"
+  }
+}
