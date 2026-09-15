@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "ts": "2026-09-15T22:05:18Z",
+  "type": "release",
+  "task_id": "T-PLANNING-dct-index-020",
+  "by": "codex-expert-executor",
+  "msg": "auto loop の実行中にメモリ不足でプロセスが kill され、agent は起動していない。claim を解除して todo へ戻す"
+}
