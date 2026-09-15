@@ -74,3 +74,16 @@
       from: waiting
       to: in-progress
   previous_event_id: reg_e69b0709c68749baa5ee8b4f496c519b
+- v: 1
+  id: reg_ed05bcb578a6471bb21d91e9aa8f018e
+  ts: "2026-09-15T15:07:08Z"
+  action: review
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_2be2b2a2b14a4410882079b10d5b14da
