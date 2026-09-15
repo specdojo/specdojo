@@ -473,6 +473,28 @@ describe("exec worktree ops", () => {
     );
   });
 
+  it("blocks committing with a notation reason when the result violates markdownlint", () => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-010";
+    const worktree = prepare(fixture, taskId);
+
+    writeFile(join(worktree.path, "docs", "a.md"), "deliverable\n");
+    // The reporter wrote an unwrapped `depends_on` next to `_TODO_`; this is what
+    // `prettier --write` turns it into, and markdownlint MD049 rejects it (PJR-19HX).
+    writeFile(
+      join(worktree.path, "execution", "exec", "results", `${taskId}-result.md`),
+      `# Result ${taskId}\n\n- depends*on を根拠とし、判断不能箇所があれば \\_TODO*/_ASSUMPTION_ を残す。\n`,
+    );
+
+    expect(() => commitWorktreeChanges({ context: fixture.context, worktree, taskId })).toThrow(
+      /^Result Markdown notation violation before commit: .*MD049/,
+    );
+
+    expect(git(worktree.path, "log", "-1", "--pretty=%s")).toBe(
+      `exec(${taskId}): prepare execution`,
+    );
+  });
+
   it('blocks committing when an agent flips an existing deliverable from draft to "ready"', () => {
     const fixture = setupRepository();
     // A draft deliverable exists at root before the task runs.

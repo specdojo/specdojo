@@ -1,0 +1,26 @@
+## 実施内容（executor stage）
+
+前回 run（codex-expert-executor、rate limit で中断）の未コミット変更を引き継ぎ、精査・補完しました。
+
+### 引き継いだ変更（内容確認済み）
+
+- `.prettierignore` に `docs/ja/projects/**/execution/exec/plans/**` と `.../results/**` を追加（`npx prettier --file-info` で result が `ignored: true` を実測）。
+- exec plan 共通規約テンプレ、executor / reporter の動的 prompt（`src/exec-run.ts`・`src/exec-reporter.ts`）、`.claude/agents`・`.opencode/agents`・`templates/{codex,opencode}/agents` に「`_` を含む識別子はインラインコードで囲む」指示を追加。
+- `commitWorktreeChanges` の commit 前に result へ markdownlint を実行する `assertResultMarkdownlint` と各テスト。
+
+### この run で追加・修正した点
+
+- `src/exec-format.ts`: runner 自身が `renderReporterResult` / `updateResultStatus` / plan 生成後に prettier API を呼んでおり、API は `.prettierignore` を参照しないため hook 除外だけでは reporter 本文が壊れることを実測で確認（`depends_on` 未囲み文 → `depends*on ... \_TODO*`）。`formatMarkdownFile` が上位の `.prettierignore` を探索して除外対象なら整形を省略するようにした（`findPrettierIgnorePath` / `isPrettierIgnored`）。除外後に生の plan を `exec plan --register --out` で生成し、prettier 差分なし・markdownlint 違反なしを確認。
+- `src/exec-worktree-ops.ts`: markdownlint 終了コード 1 のみを「記法違反」として block し、spawn 失敗等は `Failed to run markdownlint ...` に区別。`markdownlint-cli` は devDependency のため未検出時は省略して標準出力に残す。result 不在時も省略。
+- テスト: `tests/src/exec-worktree-ops.test.ts`（再現文の実出力で MD049 block・正常通過・result 不在）、`tests/src/exec-format.test.ts`（ignore 時に本文不変・`findPrettierIgnorePath`）、`tests/src/exec-worktree-ops.integration.test.ts`（commit 経路での block）。
+- 個票 `pjr-19hx-result-prettier-emphasis-mangling.md`: 再現例を実測出力（`depends*on`）に訂正、対応結果を上記に合わせて更新。
+
+### 申し送り
+
+- `.codex/agents/codex-executor.toml` と `.codex/agents/codex-expert-executor.toml` は executor sandbox（`Edit` 許可は `docs/**`・`src/**`・`tests/**`）で書き込めず未更新。`templates/codex/agents/` の同名ファイルをコピーすれば同期できる。
+- result ファイルの差分（`status: blocked` 等）は前回 run の runner によるもので、本 run では触れていない。
+- `test-unit` / `test-integration` / `validate-schema` は親 runner に委ねた。
+
+<specdojo_executor_evidence>
+{"final_message":"Took over the rate-limited codex run: verified .prettierignore/agent-instruction/pre-commit markdownlint changes, fixed runner-side prettier API formatting to honor .prettierignore (formatMarkdownFile), distinguished markdownlint lint errors from tool failures, added unit/integration tests, corrected the register sheet reproduction text. Residual: .codex/agents/*.toml not writable from sandbox (templates/codex/agents updated).","validations":[{"command":"npm run -s typecheck","status":"passed","summary":"exit 0"},{"command":"npm run -s lint:ts","status":"passed","summary":"exit 0"},{"command":"npx prettier --check <changed files> / npx prettier --write <files touched in this run>","status":"passed","summary":"all files formatted; exec results/plans reported ignored: true"},{"command":"npx markdownlint <changed md files>","status":"passed","summary":"exit 0"},{"command":"npx tsx src/specdojo.ts catalog validate","status":"passed","summary":"exit 0 (pre-existing WARN only)"},{"command":"npx tsx src/specdojo.ts index build","status":"passed","summary":"exit 0"},{"command":"npx tsx src/specdojo.ts register build","status":"passed","summary":"generated views regenerated"},{"command":"npx tsx tools/docs/src/validate-history-links.ts","status":"passed","summary":"exit 0"},{"command":"npx tsx src/specdojo.ts exec plan --register PJR-19HX --out <ignored plans dir> && prettier --check && markdownlint (temp file removed)","status":"passed","summary":"raw unformatted plan is prettier-clean and lint-clean"},{"command":"npm run test:unit","status":"not_run","summary":"delegated to parent runner"},{"command":"npm run test:integration","status":"not_run","summary":"delegated to parent runner"},{"command":"npm run validate:schema","status":"not_run","summary":"delegated to parent runner"}]}
+</specdojo_executor_evidence>

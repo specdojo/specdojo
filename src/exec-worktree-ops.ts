@@ -1,5 +1,6 @@
+import { spawnSync } from "node:child_process";
 import { existsSync, lstatSync, readFileSync } from "node:fs";
-import { relative, resolve, sep } from "node:path";
+import { join, relative, resolve, sep } from "node:path";
 import { load } from "js-yaml";
 import { acquireSchedulerLock, releaseSchedulerLock } from "./exec-events.js";
 import {
@@ -14,11 +15,13 @@ import {
   agentProtectedConfigViolation,
 } from "./exec-agent-protected-config.js";
 import { recordProtectedConfigBlock } from "./exec-protection-handoff.js";
+import { specdojoPackageRootDir } from "./package-paths.js";
 import {
   ensureExecWorktree,
   execBranchExists,
   findExecWorktree,
   generateWorktreeArtifacts,
+  gitEnvironment,
   gitOutput,
   gitResult,
   listRegisteredWorktrees,
@@ -393,6 +396,66 @@ export function stageCommitTargets(repoRoot: string, paths: readonly string[]): 
   gitOutput(repoRoot, ["add", "-A", "--", ...stageable]);
 }
 
+// markdownlint-cli の終了コード。1 だけが記法違反を表し、それ以外は実行環境の問題である。
+const MARKDOWNLINT_EXIT_LINT_ERRORS = 1;
+
+// worktree または SpecDojo package の node_modules から markdownlint-cli を探す。
+// markdownlint-cli は devDependency のため、配布先の利用プロジェクトでは存在しないことがある。
+function findMarkdownlintExecutable(worktreePath: string): string | undefined {
+  const executableName = process.platform === "win32" ? "markdownlint.cmd" : "markdownlint";
+  const candidates = [
+    join(worktreePath, "node_modules", ".bin", executableName),
+    join(specdojoPackageRootDir(), "node_modules", ".bin", executableName),
+  ];
+  return candidates.find(existsSync);
+}
+
+// result は commit hook の Prettier 実行対象から除外するため（.prettierignore）、runner が
+// commit 前に markdownlint を直接実行する。hook 由来の汎用的な git commit 失敗ではなく、
+// result の記法違反として block 理由を残せるようにする。
+// markdownlint-cli が見つからない環境では検査を省略し、hook 側の検査に委ねる。
+export function assertResultMarkdownlint(
+  context: WorktreeOpsContext,
+  worktree: ExecWorktree,
+  taskId: string,
+): void {
+  const { resultRel } = taskPaths(context, taskId);
+  const resultPath = resolve(worktree.path, resultRel);
+  if (!existsSync(resultPath)) {
+    process.stdout.write(
+      `result-markdownlint: result ${resultRel} not found; skipped pre-commit lint\n`,
+    );
+    return;
+  }
+
+  const executable = findMarkdownlintExecutable(worktree.path);
+  if (!executable) {
+    process.stdout.write(
+      `result-markdownlint: markdownlint-cli not found; skipped pre-commit lint of ${resultRel}\n`,
+    );
+    return;
+  }
+
+  const result = spawnSync(executable, [resultRel], {
+    cwd: worktree.path,
+    encoding: "utf8",
+    env: gitEnvironment(),
+    stdio: ["ignore", "pipe", "pipe"],
+  });
+  if (!result.error && result.status === 0) return;
+
+  const output = stripTerminalControlSequences(
+    [result.stdout, result.stderr, result.error?.message].filter(Boolean).join("\n"),
+  )
+    .trim()
+    .replace(/\s+/g, " ");
+  const detail = output ? output.slice(0, 1_000) : `exit ${result.status ?? "unknown"}`;
+  if (!result.error && result.status === MARKDOWNLINT_EXIT_LINT_ERRORS) {
+    throw new Error(`Result Markdown notation violation before commit: ${detail}`);
+  }
+  throw new Error(`Failed to run markdownlint on ${resultRel} before commit: ${detail}`);
+}
+
 export function stabilizeCommitTargets(
   repoRoot: string,
   listRemainingPaths: () => string[],
@@ -471,6 +534,7 @@ export function commitWorktreeChanges(params: {
   process.stdout.write(`commit-targets:\n${paths.map((path) => `  ${path}`).join("\n")}\n`);
   if (params.dryRun) return { targets: paths, committed: false };
 
+  assertResultMarkdownlint(context, worktree, taskId);
   stageCommitTargets(worktree.path, paths);
   const staged = gitResult(worktree.path, ["diff", "--cached", "--quiet", "--", ...paths]);
   if (staged.status === 0) {

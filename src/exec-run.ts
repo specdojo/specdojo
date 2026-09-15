@@ -785,6 +785,9 @@ runner stage and does not apply here.
 The parent runner owns Git commits and repository configuration. Do not run git commit or change
 local, global, or system Git configuration, including user.name and user.email. A Git state change
 will stop the pipeline before validation, reporting, commit, or merge.
+
+When writing Markdown in the final evidence, wrap identifiers or field names containing an
+underscore in inline code (for example, \`depends_on\`).
 ${parentValidationInstruction}
 
 End the final response with exactly one machine-readable report using this envelope. Do not place
