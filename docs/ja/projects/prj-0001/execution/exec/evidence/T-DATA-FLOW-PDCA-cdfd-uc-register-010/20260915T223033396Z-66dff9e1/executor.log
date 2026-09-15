@@ -1,0 +1,7 @@
+[cdfd-uc-register.md](/workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-uc-register-010/docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md) を新規作成しました。
+
+Plan → Do → Check → Action の引き渡し条件・戻り先・人間による完了確定境界を定義しています。参照資料にないケース ID と STSD/CSTD 文書 ID は `_UNDECIDED_` としました。pipeline 指示どおり result は更新していません。
+
+<specdojo_executor_evidence>
+{"final_message":"cdfd-uc-register を新規作成し、引き渡し条件・戻り先・完了確定境界を定義した","validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md && npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md","status":"passed","summary":"Markdown の整形と静的検査が完了"},{"command":"TSX_DISABLE_CACHE=1 node --import tsx src/specdojo.ts index build","status":"passed","summary":"1723件の文書索引を生成し、IDとリンクを解決"},{"command":"TSX_DISABLE_CACHE=1 node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"全カタログの検証が成功。未作成成果物に関する既存警告のみ"},{"command":"completion assertions for required headings, H-01 through H-03, draft status, and absence of _TODO_ or internal process IDs","status":"passed","summary":"必須構造とユースケース境界を確認"}]}
+</specdojo_executor_evidence>
