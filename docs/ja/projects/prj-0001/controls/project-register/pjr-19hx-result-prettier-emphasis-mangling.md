@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: high
   owner: ARC
   registered_at: "2026-09-15T14:15:35Z"
   due_on: "2026-09-30"
+  block_reason: rate limit reached
 ---
 
 # PJR-19HX reporter の result が commit 時の prettier で壊れて統合段で block する問題を防ぐ
