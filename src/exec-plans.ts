@@ -1,5 +1,5 @@
 import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
-import { basename, join, relative } from "node:path";
+import { basename, join, relative, resolve } from "node:path";
 import { load } from "js-yaml";
 import { DEFAULT_PROJECT_CONTEXT, specdojoRootDir } from "./specdojo-config.js";
 import {
@@ -342,16 +342,23 @@ function kataRefState(refPath: string): "existing" | "missing" | "unresolved" {
 }
 
 // 対象成果物の depends_on を、依存先 doc の [[id]] 参照の入れ子リストで提示する。
-// id は project 修飾 doc id（<projectId>:<local_id>）にする。素の local_id は doc-index で
-// 解決しないため。agent へ plan を渡すときに expandPromptRefs（src/exec-run.ts, format:'path'）が
+// id は依存先の frontmatter、未作成なら配置規約から解決する。agent へ plan を渡すときに
+// expandPromptRefs（src/exec-run.ts, format:'path'）が
 // この [[id]] を doc-index 経由でリポジトリ相対パスへ展開し、agent が先行成果物を直接開ける。
 // テンプレート側はラベル直後にこの値を差し込むため、件数 0・成果物未解決時は先頭スペース付きの
 // インライン値、依存ありの場合は改行始まりの入れ子リストを返す。
-function deliverableDependsOn(deliverable: DeliverableInfo | null, projectId: string): string {
+function deliverableDependsOn(
+  deliverable: DeliverableInfo | null,
+  projectId: string,
+  catalogPath: string,
+): string {
   if (!deliverable) return ` ${MISSING}`;
   const deps = deliverable.deliverable.depends_on ?? [];
   if (deps.length === 0) return " -";
-  const lines = deps.map((dep) => `  - [[${projectId ? `${projectId}:${dep}` : dep}]]`);
+  const lines = deps.map((dep) => {
+    const info = findDeliverableInfo(catalogPath, dep);
+    return `  - [[${deliverableDocId(projectId, dep, info?.resolvedPath)}]]`;
+  });
   return `\n${lines.join("\n")}`;
 }
 
@@ -376,7 +383,11 @@ function projectContextSection(
 ): string {
   if (!deliverable || (approach && PROJECT_CONTEXT_EXCLUDED_APPROACHES.has(approach))) return "";
 
-  const targetId = qualifiedDocId(projectId, deliverable.deliverable.local_id);
+  const targetId = deliverableDocId(
+    projectId,
+    deliverable.deliverable.local_id,
+    deliverable.resolvedPath,
+  );
   const qualifiedRefs = [
     ...new Set(
       refs
@@ -488,7 +499,32 @@ function qualifiedDocId(projectId: string, localId: string): string {
   return projectId ? `${projectId}:${localId}` : localId;
 }
 
-// タスクが対象とする文書の doc id リスト。先頭は対象成果物（project 修飾 doc id）、
+// 成果物の doc id は、既存文書では frontmatter を正本とする。author 前など文書が
+// 未作成の場合は配置規約に従い、product 配下だけをローカル ID、projects 配下を含む
+// その他の配置を従来どおり project 修飾 ID とする。
+export function deliverableDocId(
+  projectId: string,
+  localId: string,
+  resolvedPath: string | undefined,
+): string {
+  if (resolvedPath) {
+    const absolutePath = resolve(specdojoRootDir(), resolvedPath);
+    if (existsSync(absolutePath)) {
+      try {
+        const id = readSpecdojoNamespace(readFileSync(absolutePath, "utf8")).id;
+        if (typeof id === "string" && id.trim()) return id.trim();
+      } catch {
+        // 読み取り不能・不正 frontmatter は配置によるフォールバックへ進む。
+      }
+    }
+
+    const normalizedPath = resolvedPath.replaceAll("\\", "/").replace(/^\/+/, "");
+    if (/^docs\/[a-z]{2}\/product(?:\/|$)/.test(normalizedPath)) return localId;
+  }
+  return qualifiedDocId(projectId, localId);
+}
+
+// タスクが対象とする文書の doc id リスト。先頭は対象成果物（配置に対応する doc id）、
 // 以降は approach に応じて変更・確定しうる実践の型の doc id。いずれも doc-index で
 // パスへ解決できる id にし、schedule やファイル名の命名規約に依存せず対象を機械的に
 // 取得できるようにする。解決できない実践の型（_MISSING_）は含めない。
@@ -503,7 +539,9 @@ function targetDocIds(
   if (!deliverable) {
     return fallbackLocalId ? [qualifiedDocId(projectId, fallbackLocalId)] : [];
   }
-  const ids = [qualifiedDocId(projectId, deliverable.deliverable.local_id)];
+  const ids = [
+    deliverableDocId(projectId, deliverable.deliverable.local_id, deliverable.resolvedPath),
+  ];
   const kinds = approach ? (TARGET_REF_KINDS[approach] ?? []) : [];
   if (kinds.length === 0) return ids;
   const refs = resolveKataRefs(deliverable.deliverable.rulebook, deliverable.deliverable.kind);
@@ -518,9 +556,13 @@ function targetDocIdsForTask(
   projectId: string,
   task: Pick<ReadyTaskView, "local_id" | "target_local_ids" | "approach">,
   deliverable: DeliverableInfo | null,
+  crossDeliverables: ReadonlyMap<string, DeliverableInfo>,
 ): string[] {
   if (task.target_local_ids && task.target_local_ids.length > 0) {
-    return [...new Set(task.target_local_ids)].map((localId) => qualifiedDocId(projectId, localId));
+    return [...new Set(task.target_local_ids)].map((localId) => {
+      const info = crossDeliverables.get(localId);
+      return deliverableDocId(projectId, localId, info?.resolvedPath);
+    });
   }
   return targetDocIds(projectId, deliverable, task.approach, task.local_id);
 }
@@ -562,9 +604,10 @@ export function targetDocIdsForScheduledTask(
   projectId: string,
 ): string[] | undefined {
   if (task.target_local_ids && task.target_local_ids.length > 0) {
-    const ids = [...new Set(task.target_local_ids)].map((localId) =>
-      qualifiedDocId(projectId, localId),
-    );
+    const ids = [...new Set(task.target_local_ids)].map((localId) => {
+      const info = findDeliverableInfo(catalogPath, localId);
+      return deliverableDocId(projectId, localId, info?.resolvedPath);
+    });
     return ids.length > 0 ? ids : undefined;
   }
   return targetDocIdsForDeliverable(catalogPath, task.local_id, projectId, task.approach);
@@ -574,17 +617,19 @@ function crossDeliverableTargetDetails(
   projectId: string,
   localIds: readonly string[],
   deliverables: Map<string, DeliverableInfo>,
+  catalogPath: string,
 ): string {
   const lines: string[] = [];
   for (const localId of localIds) {
     const info = deliverables.get(localId);
-    lines.push(`### ${qualifiedDocId(projectId, localId)}`);
+    const docId = deliverableDocId(projectId, localId, info?.resolvedPath);
+    lines.push(`### ${docId}`);
     lines.push("");
-    lines.push(`- document: [[${qualifiedDocId(projectId, localId)}]]`);
+    lines.push(`- document: [[${docId}]]`);
     lines.push(`- name: ${deliverableName(info ?? null)}`);
     lines.push(`- path: \`${deliverablePath(info ?? null)}\``);
     lines.push(`- overview: ${deliverableOverview(info ?? null)}`);
-    lines.push(`- depends_on:${deliverableDependsOn(info ?? null, projectId)}`);
+    lines.push(`- depends_on:${deliverableDependsOn(info ?? null, projectId, catalogPath)}`);
     lines.push("- done_criteria:");
     const criteria = info?.deliverable.done_criteria ?? [];
     if (criteria.length === 0) lines.push(`  - ${MISSING}`);
@@ -792,6 +837,7 @@ function buildEditPlanMarkdown(
   roleMap: Map<string, RoleDefinition>,
   vpMap: Map<string, ReviewViewpoint>,
   projectId: string,
+  catalogPath: string,
   projectContext: readonly string[],
   resultRef: string,
   stem: string,
@@ -799,7 +845,7 @@ function buildEditPlanMarkdown(
 ): string {
   const cpm = task.cpm;
   const onCriticalPath = cpm !== undefined && cpm.slack === 0;
-  const targets = targetDocIdsForTask(projectId, task, deliverable);
+  const targets = targetDocIdsForTask(projectId, task, deliverable, crossDeliverables);
 
   const meta: ExecPlanMeta = {
     id: execDocId(projectId, "xep", stem),
@@ -824,7 +870,7 @@ function buildEditPlanMarkdown(
     _TASK_ID_: task.id,
     _PHASE_DESCRIPTION_: phaseDescriptionText(task),
     _DELIVERABLE_NAME_: deliverableName(deliverable),
-    _DELIVERABLE_DEPENDS_ON_: deliverableDependsOn(deliverable, projectId),
+    _DELIVERABLE_DEPENDS_ON_: deliverableDependsOn(deliverable, projectId, catalogPath),
     _PROJECT_CONTEXT_: projectContextSection(projectContext, deliverable, task.approach, projectId),
     _DELIVERABLE_OVERVIEW_: deliverableOverview(deliverable),
     _IMPLEMENTATION_EVIDENCE_: implementationEvidence(deliverable),
@@ -852,6 +898,7 @@ function buildEditPlanMarkdown(
       projectId,
       task.target_local_ids ?? [],
       crossDeliverables,
+      catalogPath,
     ),
   };
   return expandTemplate(template, values);
@@ -866,6 +913,7 @@ function buildReviewPlanMarkdown(
   vpMap: Map<string, ReviewViewpoint>,
   coverageMap: Map<string, CoverageType>,
   projectId: string,
+  catalogPath: string,
   projectContext: readonly string[],
   resultRef: string,
   stem: string,
@@ -896,7 +944,7 @@ function buildReviewPlanMarkdown(
     _TASK_ID_: task.id,
     _PHASE_DESCRIPTION_: phaseDescriptionText(task),
     _DELIVERABLE_NAME_: deliverableName(deliverable),
-    _DELIVERABLE_DEPENDS_ON_: deliverableDependsOn(deliverable, projectId),
+    _DELIVERABLE_DEPENDS_ON_: deliverableDependsOn(deliverable, projectId, catalogPath),
     _PROJECT_CONTEXT_: projectContextSection(projectContext, deliverable, task.approach, projectId),
     _DELIVERABLE_OVERVIEW_: deliverableOverview(deliverable),
     _IMPLEMENTATION_EVIDENCE_: implementationEvidence(deliverable),
@@ -988,6 +1036,7 @@ async function writeTaskPlan(
           ctx.vpMap,
           ctx.coverageMap,
           ctx.projectId,
+          ctx.catalogPath,
           ctx.projectContext,
           resultRef,
           stem,
@@ -999,6 +1048,7 @@ async function writeTaskPlan(
           ctx.roleMap,
           ctx.vpMap,
           ctx.projectId,
+          ctx.catalogPath,
           ctx.projectContext,
           resultRef,
           stem,

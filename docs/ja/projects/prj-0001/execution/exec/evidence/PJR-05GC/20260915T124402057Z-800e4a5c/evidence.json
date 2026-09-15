@@ -1,0 +1,156 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-05GC",
+  "run_id": "20260915T124402057Z-800e4a5c",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-15T12:44:02.057Z",
+    "completed_at": "2026-09-15T12:51:30.390Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-05gc-exec-plan-doc-id-qualification.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/plan-result-lifecycle-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-plans.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-deliverable.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-plans.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 5,
+    "summary": ".../pjr-05gc-exec-plan-doc-id-qualification.md     | 13 +++-\n .../specdojo/guides/plan-result-lifecycle-guide.md |  2 +-\n src/exec-plans.ts                                  | 86 +++++++++++++++++-----\n tests/src/exec-deliverable.test.ts                 | 10 +--\n tests/src/exec-plans.test.ts                       | 40 ++++++++++\n 5 files changed, 123 insertions(+), 28 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "TypeScript型検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "ESLint成功"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write src/exec-plans.ts tests/src/exec-plans.test.ts tests/src/exec-deliverable.test.ts docs/ja/specdojo/guides/plan-result-lifecycle-guide.md",
+      "status": "passed",
+      "summary": "対象ファイル整形成功"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-05gc-exec-plan-doc-id-qualification.md",
+      "status": "passed",
+      "summary": "個票整形成功"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-05gc-exec-plan-doc-id-qualification.md docs/ja/specdojo/guides/plan-result-lifecycle-guide.md",
+      "status": "passed",
+      "summary": "Markdown静的検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts exec plan --project prj-0001 --task T-DATA-FLOW-PDCA-cdfd-action-010 --out /tmp/pjr-05gc-cdfd-action-plan.md",
+      "status": "passed",
+      "summary": "targets=cdfd-action、depends_on=[[cdfd-overview]]を確認"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts exec run --project prj-0001 --plan /tmp/pjr-05gc-cdfd-action-plan.md --by codex-executor --dry-run",
+      "status": "passed",
+      "summary": "未解決ID警告なし"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿派生ビュー生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate --project prj-0001",
+      "status": "passed",
+      "summary": "検証成功。既存の未作成成果物警告のみ"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "1694件の索引生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:unit",
+      "status": "not_run",
+      "summary": "親runnerのallowlisted validationへ委譲"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:integration",
+      "status": "not_run",
+      "summary": "親runnerのallowlisted validationへ委譲"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema",
+      "status": "not_run",
+      "summary": "親runnerのallowlisted validationへ委譲"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-05GC\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/unmerged.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/stale.md\n  src/unrelated.t…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.1.0 validate:schema:yaml\n> tsx tools/docs/src/validate-yaml-schema.ts --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-…"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-05GC\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-vF3FnU/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-8mvqys/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-s1QcPy/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-BXIy5Z/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-1MvgKY/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-fkU6Cx/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\nWrote agent stdout: /tmp/specdojo-agent-command-KiL6mN/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-XWtAhY/outputs/partial.txt\n\n Test Files  102 passed (102)\n      Tests  1470 passed (1470)\n   Start at  21:51:49\n   Duration  24.58s (transform 1.98s, setup 418ms, impor…"
+    }
+  ],
+  "final_message": "配置別doc ID解決を実装し、対象taskのplan生成とdry-runで未解決警告が消えることを確認した",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-05GC/20260915T124402057Z-800e4a5c/executor.log",
+      "bytes": 3173,
+      "truncated": false
+    }
+  ]
+}

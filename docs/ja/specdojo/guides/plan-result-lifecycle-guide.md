@@ -36,7 +36,7 @@ plan と result が持つ役割と、それぞれの配置場所を示します�
 
 plan と result は git 管理対象の通常ファイルとして扱います。`generated/` のような再生成物ではありません。
 
-plan / result の frontmatter には `targets`（対象文書の doc id リスト）を必須項目として焼き込みます。通常タスクの先頭は対象成果物の project 修飾 doc id（`<project-id>:<local_id>`）、以降は `approach` に応じて変更・確定の対象になる実践の型の doc id です（`bootstrap` / `bootstrap-finalize` は rulebook / recipe / sample / template、`<kind>-maintenance` は対象の 1 種。解決できない実践の型は含めません）。`cross-deliverable-dedup` では schedule の `target_local_ids` に対応する複数成果物だけを列挙し、実践の型は変更対象に含めません。いずれも doc-index（`index lookup`）でパスへ解決できます。agent は plan、human は result を正本にするため、schedule やファイル名の命名規約に依存せず対象文書を機械的に取得できます。
+plan / result の frontmatter には `targets`（対象文書の doc id リスト）を必須項目として焼き込みます。通常タスクの先頭は対象成果物の配置に対応する doc id（プロダクト文書は `<local-id>`、プロジェクト文書は `<project-id>:<local-id>`）、以降は `approach` に応じて変更・確定の対象になる実践の型の doc id です。既存の成果物は frontmatter の `specdojo.id` を正本とし、未作成の成果物はカタログで解決した配置から ID 形式を決めます。`bootstrap` / `bootstrap-finalize` は rulebook / recipe / sample / template、`<kind>-maintenance` は対象の 1 種を含め、解決できない実践の型は含めません。`cross-deliverable-dedup` では schedule の `target_local_ids` に対応する複数成果物だけを列挙し、実践の型は変更対象に含めません。いずれも doc-index（`index lookup`）でパスへ解決できます。agent は plan、human は result を正本にするため、schedule やファイル名の命名規約に依存せず対象文書を機械的に取得できます。
 
 `bootstrap` と `<kind>-maintenance` の edit plan 本文には、成果物のパスに加えて、rulebook frontmatter の宣言から解決した実践の型の repo 相対パスと状態を記載します。状態は、既存文書を編集する `existing`、宣言済みパスへ新規作成する `missing`、宣言からパスを解決できず前提確認が必要な `unresolved` の3値です。`unresolved` のときは命名規則から対象を推測しません。
 
