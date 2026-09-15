@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "ts": "2026-09-15T13:39:35Z",
+  "type": "complete",
+  "task_id": "T-DATA-FLOW-PDCA-cdfd-check-010",
+  "by": "codex-expert-executor",
+  "msg": "統合段の commit を orchestrator が再実行して完了"
+}

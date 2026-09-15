@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "ts": "2026-09-15T13:38:28Z",
+  "type": "unblock",
+  "task_id": "T-DATA-FLOW-PDCA-cdfd-check-010",
+  "by": "codex-expert-executor",
+  "msg": "reporter result の _TODO_/_ASSUMPTION_ 表記が prettier で壊れ MD049 で commit 失敗。orchestrator が result をインラインコードへ修正し統合段から再開"
+}
