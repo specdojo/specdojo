@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_4120f6e915ae45e48f5bbd03511039b6
+  ts: "2026-09-15T14:15:35Z"
+  action: add
+  actor: specdojo-orchestrator (claude)
+  from_status: null
+  to_status: open
+  reason: "docs(register): result の prettier 破壊による統合段 block の対処を起票する"
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: reporter の result が commit 時の prettier で壊れて統合段で block する問題を防ぐ
+    - field: description
+      from: ""
+      to: data-flow-pdca の cdfd-check-010 で、executor・reporter・親検証がすべて成功したのに統合段の commit が失敗して block した。reporter が result に書いた文に、インラインコードで囲まれていない depends_on（_ を含む識別子）と _TODO_/_ASSUMPTION_ が同居し、commit 時の prettier が _on〜_TODO を強調と解釈して \_TODO*/_ASSUMPTION_ に書き換え、markdownlint の MD049 で pre-commit が失敗した。prettier には強調の正規化を止めるオプションが無い。履歴ファイル（exec の result・plan）を .prettierignore で整形対象から外し、markdownlint は残す。あわせて reporter・executor の指示に「_ を含む識別子はインラインコードで囲む」を加え、runner が commit の前に markdownlint を実行して明確な理由で止めるようにする。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-15"
+    - field: due
+      from: ""
+      to: "2026-09-30"
