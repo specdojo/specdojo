@@ -1,0 +1,15 @@
+[cdfd-do.md](/workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-do-010/docs/ja/product/010-business-specs/010-data-flow/cdfd-do.md) を新規作成しました。
+
+- P-07 を実行受入・遂行・検証・条件付き統合・結果記録へ詳細化
+- Schedule task・登録項目・Job・定期実行を共通フロー化
+- worktree 隔離と統合ブランチへの merge を明記
+- 利用制限、保護対象、検証失敗、統合失敗の検出・再開条件を定義
+- 人間による承認・完了確定と AI Agent の責任を分離
+- 未提示の STSD / CSTD 文書 ID は推測せず未決事項として記録
+- pipeline 指示どおり result ファイルは未更新
+
+検査はすべて通過しました。カタログ検証には既存の未作成成果物に関する警告がありますが、終了コードは 0 で、本成果物のエラーはありません。
+
+<specdojo_executor_evidence>
+{"final_message":"cdfd-do.mdを新規作成し、Do領域の共通実行フロー、並行統合、主要例外、人間判断境界を定義した。","validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-do.md","status":"passed","summary":"対象Markdownを整形した"},{"command":"npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-do.md","status":"passed","summary":"Markdown lintエラーなし"},{"command":"npx prettier --check docs/ja/product/010-business-specs/010-data-flow/cdfd-do.md","status":"passed","summary":"Prettier形式に適合"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1705件の文書索引を正常生成し、cdfd-doの登録を確認"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"全カタログ検証が終了コード0。本タスク外の未作成成果物に関する既存警告のみ"}]}
+</specdojo_executor_evidence>
