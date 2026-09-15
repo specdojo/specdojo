@@ -1,0 +1,14 @@
+[cdfd-onboarding.md](/workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-onboarding-010/docs/ja/product/010-business-specs/010-data-flow/cdfd-onboarding.md:12) を新規作成しました。
+
+- P-01を3プロセスへ詳細化
+- Kata・稼働構成の読み書きとMermaid図を定義
+- 既存設定、雛形不足、権限不足の例外・再開条件を明記
+- Planへの委譲を定義
+- 未特定のSTSD/CSTD文書IDは、推測せず未決事項として記録
+- executor指示に従いresultは未変更
+
+標準の`npx tsx`起動はsandboxのIPC制約で失敗しましたが、同じCLIをIPC不要の方法で起動し、索引ビルドは成功しています。親runner担当の3検証は実行していません。
+
+<specdojo_executor_evidence>
+{"final_message":"Onboarding CDFDを新規作成し、必須構成・主要例外・Planへの委譲を定義した","validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-onboarding.md","status":"passed","summary":"対象Markdownを整形済み"},{"command":"npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-onboarding.md","status":"passed","summary":"エラーなし"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"文書索引1726件を生成"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"},{"command":"npm run test:integration","status":"not_run","summary":"親runner実行対象"},{"command":"npm run validate:schema","status":"not_run","summary":"親runner実行対象"},{"command":"npm run test:unit","status":"not_run","summary":"親runner実行対象"}]}
+</specdojo_executor_evidence>
