@@ -45,3 +45,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_76ad27a1367a42b2962b7aa554a61974
+- v: 1
+  id: reg_0cd692f8e4044d2f876f55fc87dc8569
+  ts: "2026-09-16T23:19:49Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: 親 runner による `test-unit` (`npm run test:unit`) が失敗（exit 1）しており、`tests/src/catalog-merge.test.ts` においてテンプレートの章構成に関するテスト失敗が報告されているため"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: 親 runner による `test-unit` (`npm run test:unit`) が失敗（exit 1）しており、`tests/src/catalog-merge.test.ts` においてテンプレートの章構成に関するテスト失敗が報告されているため"
+  previous_event_id: reg_0e9982e2b50445dfacd742ec63b25702
