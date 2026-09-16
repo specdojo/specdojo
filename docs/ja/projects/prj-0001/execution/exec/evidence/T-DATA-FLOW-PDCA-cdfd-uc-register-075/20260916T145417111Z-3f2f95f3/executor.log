@@ -1,0 +1,13 @@
+[cdfd-uc-register.md](/workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-uc-register-075/docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md) を更新しました。
+
+- H-01 に稼働構成・権限確認を追加
+- H-03 の進捗報告を任意入力として明確化
+- Mermaid 凡例にデータストアの色区分を追加
+- 対象本文に `specdojo:finding` コメントは存在しませんでした
+- executor 指示に従い result は未更新です
+
+標準の索引生成は sandbox の IPC 制約で起動できなかったため、同じエントリポイントを `node --import tsx` で実行し、正常完了を確認しました。
+
+<specdojo_executor_evidence>
+{"final_message":"cdfd-uc-register の引き渡し条件、データストア、図凡例を依存成果物と rulebook に整合させた。result は executor 指示に従い未更新。","validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md","status":"passed","summary":"整形済み、再実行時も変更なし"},{"command":"npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md","status":"passed","summary":"Markdown lint エラーなし"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"文書索引1770件を正常生成"},{"command":"git diff --check","status":"passed","summary":"空白・差分形式エラーなし"}]}
+</specdojo_executor_evidence>
