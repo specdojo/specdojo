@@ -42,13 +42,29 @@ tasks:
       グループ外委譲の参照先が実在することを確認し、不足や不整合だけを最小限修正して、
       成果物カタログの done_criteria を満たす状態へ整える。
   - local_id: cdfd-onboarding
+    phase_suffix: "075"
+    phase_set: refine-2-pass
+    phase_id: refine-2
+    name: grade の指摘を解消する磨き込み
+    duration_days: 0.5
+    depends_on:
+      - T-DATA-FLOW-PDCA-cdfd-onboarding-070
+    owner: BA
+    description: |
+      1 回目の磨き込みは normal 帯の agent が担い、rulebook・done_criteria との照合で不足を検出
+      できず成果物をほぼ変更しなかった。本パスは expert 帯の agent が、成果物評価（grade）が本文へ
+      残した `specdojo:finding` コメントの指摘を一つずつ確認し、妥当な指摘は本文を修正して解消し、
+      妥当でない指摘はその理由を result に記録する。あわせて rulebook の完成判定と cdfd-overview の
+      プロセス領域・データストアとの対応を照合し、不足だけを最小限修正する。finding コメント自体は
+      削除せず残す（次回の grade が解消を判定する）。trash へ退避した旧領域別 CDFD は参照しない。
+  - local_id: cdfd-onboarding
     phase_suffix: "090"
     phase_set: review-pass
     phase_id: review
     name: 完成版レビュー
     duration_days: 0.25
     depends_on:
-      - T-DATA-FLOW-PDCA-cdfd-onboarding-070
+      - T-DATA-FLOW-PDCA-cdfd-onboarding-075
     owner: BA
     description: |
       完成版の CDFD を変更せず、rulebook の完成判定、cdfd-overview との対応、DCT の
@@ -100,13 +116,29 @@ tasks:
       グループ外委譲の参照先が実在することを確認し、不足や不整合だけを最小限修正して、
       成果物カタログの done_criteria を満たす状態へ整える。
   - local_id: cdfd-plan
+    phase_suffix: "075"
+    phase_set: refine-2-pass
+    phase_id: refine-2
+    name: grade の指摘を解消する磨き込み
+    duration_days: 0.5
+    depends_on:
+      - T-DATA-FLOW-PDCA-cdfd-plan-070
+    owner: BA
+    description: |
+      1 回目の磨き込みは normal 帯の agent が担い、rulebook・done_criteria との照合で不足を検出
+      できず成果物をほぼ変更しなかった。本パスは expert 帯の agent が、成果物評価（grade）が本文へ
+      残した `specdojo:finding` コメントの指摘を一つずつ確認し、妥当な指摘は本文を修正して解消し、
+      妥当でない指摘はその理由を result に記録する。あわせて rulebook の完成判定と cdfd-overview の
+      プロセス領域・データストアとの対応を照合し、不足だけを最小限修正する。finding コメント自体は
+      削除せず残す（次回の grade が解消を判定する）。trash へ退避した旧領域別 CDFD は参照しない。
+  - local_id: cdfd-plan
     phase_suffix: "090"
     phase_set: review-pass
     phase_id: review
     name: 完成版レビュー
     duration_days: 0.25
     depends_on:
-      - T-DATA-FLOW-PDCA-cdfd-plan-070
+      - T-DATA-FLOW-PDCA-cdfd-plan-075
     owner: BA
     description: |
       完成版の CDFD を変更せず、rulebook の完成判定、cdfd-overview との対応、DCT の
@@ -158,13 +190,29 @@ tasks:
       グループ外委譲の参照先が実在することを確認し、不足や不整合だけを最小限修正して、
       成果物カタログの done_criteria を満たす状態へ整える。
   - local_id: cdfd-do
+    phase_suffix: "075"
+    phase_set: refine-2-pass
+    phase_id: refine-2
+    name: grade の指摘を解消する磨き込み
+    duration_days: 0.5
+    depends_on:
+      - T-DATA-FLOW-PDCA-cdfd-do-070
+    owner: BA
+    description: |
+      1 回目の磨き込みは normal 帯の agent が担い、rulebook・done_criteria との照合で不足を検出
+      できず成果物をほぼ変更しなかった。本パスは expert 帯の agent が、成果物評価（grade）が本文へ
+      残した `specdojo:finding` コメントの指摘を一つずつ確認し、妥当な指摘は本文を修正して解消し、
+      妥当でない指摘はその理由を result に記録する。あわせて rulebook の完成判定と cdfd-overview の
+      プロセス領域・データストアとの対応を照合し、不足だけを最小限修正する。finding コメント自体は
+      削除せず残す（次回の grade が解消を判定する）。trash へ退避した旧領域別 CDFD は参照しない。
+  - local_id: cdfd-do
     phase_suffix: "090"
     phase_set: review-pass
     phase_id: review
     name: 完成版レビュー
     duration_days: 0.25
     depends_on:
-      - T-DATA-FLOW-PDCA-cdfd-do-070
+      - T-DATA-FLOW-PDCA-cdfd-do-075
     owner: BA
     description: |
       完成版の CDFD を変更せず、rulebook の完成判定、cdfd-overview との対応、DCT の
@@ -216,13 +264,29 @@ tasks:
       グループ外委譲の参照先が実在することを確認し、不足や不整合だけを最小限修正して、
       成果物カタログの done_criteria を満たす状態へ整える。
   - local_id: cdfd-check
+    phase_suffix: "075"
+    phase_set: refine-2-pass
+    phase_id: refine-2
+    name: grade の指摘を解消する磨き込み
+    duration_days: 0.5
+    depends_on:
+      - T-DATA-FLOW-PDCA-cdfd-check-070
+    owner: BA
+    description: |
+      1 回目の磨き込みは normal 帯の agent が担い、rulebook・done_criteria との照合で不足を検出
+      できず成果物をほぼ変更しなかった。本パスは expert 帯の agent が、成果物評価（grade）が本文へ
+      残した `specdojo:finding` コメントの指摘を一つずつ確認し、妥当な指摘は本文を修正して解消し、
+      妥当でない指摘はその理由を result に記録する。あわせて rulebook の完成判定と cdfd-overview の
+      プロセス領域・データストアとの対応を照合し、不足だけを最小限修正する。finding コメント自体は
+      削除せず残す（次回の grade が解消を判定する）。trash へ退避した旧領域別 CDFD は参照しない。
+  - local_id: cdfd-check
     phase_suffix: "090"
     phase_set: review-pass
     phase_id: review
     name: 完成版レビュー
     duration_days: 0.25
     depends_on:
-      - T-DATA-FLOW-PDCA-cdfd-check-070
+      - T-DATA-FLOW-PDCA-cdfd-check-075
     owner: BA
     description: |
       完成版の CDFD を変更せず、rulebook の完成判定、cdfd-overview との対応、DCT の
@@ -274,13 +338,29 @@ tasks:
       グループ外委譲の参照先が実在することを確認し、不足や不整合だけを最小限修正して、
       成果物カタログの done_criteria を満たす状態へ整える。
   - local_id: cdfd-action
+    phase_suffix: "075"
+    phase_set: refine-2-pass
+    phase_id: refine-2
+    name: grade の指摘を解消する磨き込み
+    duration_days: 0.5
+    depends_on:
+      - T-DATA-FLOW-PDCA-cdfd-action-070
+    owner: BA
+    description: |
+      1 回目の磨き込みは normal 帯の agent が担い、rulebook・done_criteria との照合で不足を検出
+      できず成果物をほぼ変更しなかった。本パスは expert 帯の agent が、成果物評価（grade）が本文へ
+      残した `specdojo:finding` コメントの指摘を一つずつ確認し、妥当な指摘は本文を修正して解消し、
+      妥当でない指摘はその理由を result に記録する。あわせて rulebook の完成判定と cdfd-overview の
+      プロセス領域・データストアとの対応を照合し、不足だけを最小限修正する。finding コメント自体は
+      削除せず残す（次回の grade が解消を判定する）。trash へ退避した旧領域別 CDFD は参照しない。
+  - local_id: cdfd-action
     phase_suffix: "090"
     phase_set: review-pass
     phase_id: review
     name: 完成版レビュー
     duration_days: 0.25
     depends_on:
-      - T-DATA-FLOW-PDCA-cdfd-action-070
+      - T-DATA-FLOW-PDCA-cdfd-action-075
     owner: BA
     description: |
       完成版の CDFD を変更せず、rulebook の完成判定、cdfd-overview との対応、DCT の
@@ -336,13 +416,29 @@ tasks:
       グループ外委譲の参照先が実在することを確認し、不足や不整合だけを最小限修正して、
       成果物カタログの done_criteria を満たす状態へ整える。
   - local_id: cdfd-orchestrator
+    phase_suffix: "075"
+    phase_set: refine-2-pass
+    phase_id: refine-2
+    name: grade の指摘を解消する磨き込み
+    duration_days: 0.5
+    depends_on:
+      - T-DATA-FLOW-PDCA-cdfd-orchestrator-070
+    owner: BA
+    description: |
+      1 回目の磨き込みは normal 帯の agent が担い、rulebook・done_criteria との照合で不足を検出
+      できず成果物をほぼ変更しなかった。本パスは expert 帯の agent が、成果物評価（grade）が本文へ
+      残した `specdojo:finding` コメントの指摘を一つずつ確認し、妥当な指摘は本文を修正して解消し、
+      妥当でない指摘はその理由を result に記録する。あわせて rulebook の完成判定と cdfd-overview の
+      プロセス領域・データストアとの対応を照合し、不足だけを最小限修正する。finding コメント自体は
+      削除せず残す（次回の grade が解消を判定する）。trash へ退避した旧領域別 CDFD は参照しない。
+  - local_id: cdfd-orchestrator
     phase_suffix: "090"
     phase_set: review-pass
     phase_id: review
     name: 完成版レビュー
     duration_days: 0.25
     depends_on:
-      - T-DATA-FLOW-PDCA-cdfd-orchestrator-070
+      - T-DATA-FLOW-PDCA-cdfd-orchestrator-075
     owner: BA
     description: |
       完成版の CDFD を変更せず、rulebook の完成判定、cdfd-overview との対応、DCT の
@@ -398,13 +494,29 @@ tasks:
       グループ外委譲の参照先が実在することを確認し、不足や不整合だけを最小限修正して、
       成果物カタログの done_criteria を満たす状態へ整える。
   - local_id: cdfd-uc-register
+    phase_suffix: "075"
+    phase_set: refine-2-pass
+    phase_id: refine-2
+    name: grade の指摘を解消する磨き込み
+    duration_days: 0.5
+    depends_on:
+      - T-DATA-FLOW-PDCA-cdfd-uc-register-070
+    owner: BA
+    description: |
+      1 回目の磨き込みは normal 帯の agent が担い、rulebook・done_criteria との照合で不足を検出
+      できず成果物をほぼ変更しなかった。本パスは expert 帯の agent が、成果物評価（grade）が本文へ
+      残した `specdojo:finding` コメントの指摘を一つずつ確認し、妥当な指摘は本文を修正して解消し、
+      妥当でない指摘はその理由を result に記録する。あわせて rulebook の完成判定と cdfd-overview の
+      プロセス領域・データストアとの対応を照合し、不足だけを最小限修正する。finding コメント自体は
+      削除せず残す（次回の grade が解消を判定する）。trash へ退避した旧領域別 CDFD は参照しない。
+  - local_id: cdfd-uc-register
     phase_suffix: "090"
     phase_set: review-pass
     phase_id: review
     name: 完成版レビュー
     duration_days: 0.25
     depends_on:
-      - T-DATA-FLOW-PDCA-cdfd-uc-register-070
+      - T-DATA-FLOW-PDCA-cdfd-uc-register-075
     owner: BA
     description: |
       完成版の CDFD を変更せず、rulebook の完成判定、cdfd-overview との対応、DCT の
@@ -460,13 +572,29 @@ tasks:
       グループ外委譲の参照先が実在することを確認し、不足や不整合だけを最小限修正して、
       成果物カタログの done_criteria を満たす状態へ整える。
   - local_id: cdfd-uc-deliverable
+    phase_suffix: "075"
+    phase_set: refine-2-pass
+    phase_id: refine-2
+    name: grade の指摘を解消する磨き込み
+    duration_days: 0.5
+    depends_on:
+      - T-DATA-FLOW-PDCA-cdfd-uc-deliverable-070
+    owner: BA
+    description: |
+      1 回目の磨き込みは normal 帯の agent が担い、rulebook・done_criteria との照合で不足を検出
+      できず成果物をほぼ変更しなかった。本パスは expert 帯の agent が、成果物評価（grade）が本文へ
+      残した `specdojo:finding` コメントの指摘を一つずつ確認し、妥当な指摘は本文を修正して解消し、
+      妥当でない指摘はその理由を result に記録する。あわせて rulebook の完成判定と cdfd-overview の
+      プロセス領域・データストアとの対応を照合し、不足だけを最小限修正する。finding コメント自体は
+      削除せず残す（次回の grade が解消を判定する）。trash へ退避した旧領域別 CDFD は参照しない。
+  - local_id: cdfd-uc-deliverable
     phase_suffix: "090"
     phase_set: review-pass
     phase_id: review
     name: 完成版レビュー
     duration_days: 0.25
     depends_on:
-      - T-DATA-FLOW-PDCA-cdfd-uc-deliverable-070
+      - T-DATA-FLOW-PDCA-cdfd-uc-deliverable-075
     owner: BA
     description: |
       完成版の CDFD を変更せず、rulebook の完成判定、cdfd-overview との対応、DCT の

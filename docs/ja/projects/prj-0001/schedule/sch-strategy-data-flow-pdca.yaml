@@ -87,6 +87,28 @@ phase_sets:
         グループ外委譲の参照先が実在することを確認し、不足や不整合だけを最小限修正して、
         成果物カタログの done_criteria を満たす状態へ整える。
 
+  refine-2-pass:
+    - id: refine-2
+      name: grade の指摘を解消する磨き込み
+      execution: agent
+      mode: edit
+      approach: fully-guided
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: expert
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "075"
+      duration_days: 0.5
+      description: |
+        1 回目の磨き込みは normal 帯の agent が担い、rulebook・done_criteria との照合で不足を検出
+        できず成果物をほぼ変更しなかった。本パスは expert 帯の agent が、成果物評価（grade）が本文へ
+        残した `specdojo:finding` コメントの指摘を一つずつ確認し、妥当な指摘は本文を修正して解消し、
+        妥当でない指摘はその理由を result に記録する。あわせて rulebook の完成判定と cdfd-overview の
+        プロセス領域・データストアとの対応を照合し、不足だけを最小限修正する。finding コメント自体は
+        削除せず残す（次回の grade が解消を判定する）。trash へ退避した旧領域別 CDFD は参照しない。
+
   review-pass:
     - id: review
       name: 完成版レビュー
@@ -96,7 +118,7 @@ phase_sets:
       agent_pipeline:
         stages:
           - stage_role: executor
-            proficiency: normal
+            proficiency: expert
           - stage_role: reporter
             proficiency: normal
       task_suffix: "090"
@@ -123,6 +145,7 @@ phase_sets:
 default_phase_sets:
   - phase_set: author-pass
   - phase_set: refine-pass
+  - phase_set: refine-2-pass
   - phase_set: review-pass
   - phase_set: finalize-pass
 
