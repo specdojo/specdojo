@@ -1,0 +1,14 @@
+[cdfd-check.md](/workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-check-075/docs/ja/product/010-business-specs/010-data-flow/cdfd-check.md:55) を更新しました。
+
+- 6件の finding を解消する4箇所を修正
+- finding コメントはすべて保持
+- review と grade の責務境界を明記
+- 責任分担の正本、委譲先文書へのリンクを追加
+- 評価対象変更例外へ `P-08-03` を追加
+- result ファイルは pipeline 指示に従い未変更
+
+Markdown lint、索引生成、差分検査は通過しました。索引生成は sandbox の IPC 制約を避け、同じエントリポイントを Node ローダー経由で実行しています。
+
+<specdojo_executor_evidence>
+{"final_message":"cdfd-check の全6件の finding に対応する最小修正を完了し、コメントを保持したまま検証を通過しました。","validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-check.md","status":"passed","summary":"対象 Markdown の整形完了"},{"command":"npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-check.md","status":"passed","summary":"警告・エラーなし"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"文書索引1758件を生成し、追加した4リンクの対象IDを確認"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>
