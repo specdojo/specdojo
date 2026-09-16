@@ -1,0 +1,12 @@
+`cdfd-onboarding.md` を更新し、finding コメントを保持したまま以下を解消しました。
+
+- STSD/CSTD の仮置き ID を `stsd-onboarding` / `cstd-onboarding` として明示
+- 解消済みの `_TODO_` と不要になった「未決事項」章を削除
+- Prettier、Markdownlint、索引生成、差分検査を完了
+- pipeline 指示に従い result ファイルは未更新
+
+標準の索引生成コマンドは sandbox の IPC 制約で失敗しましたが、同じ CLI を IPC を使わない起動方法で実行し成功しています。
+
+<specdojo_executor_evidence>
+{"final_message":"STSD/CSTD参照先を仮置きIDで確定し、未解決TODOを除去した。findingコメントは保持し、resultはpipeline指示に従い未更新。","validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-onboarding.md","status":"passed","summary":"整形済み。変更なし。"},{"command":"npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-onboarding.md","status":"passed","summary":"Markdownlintエラーなし。"},{"command":"npx tsx src/specdojo.ts index build","status":"failed","summary":"sandboxのtsx IPCソケット作成がEPERMで拒否された。成果物内容に起因しない環境制約。"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"同じSpecDojo CLIによる文書索引生成に成功。1762件を生成。"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし。"}]}
+</specdojo_executor_evidence>

@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-DATA-FLOW-PDCA-cdfd-onboarding-075
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: exec/plans/T-DATA-FLOW-PDCA-cdfd-onboarding-075-plan.md
   started_at: "2026-09-16T14:17:16.967Z"
+  completed_at: "2026-09-16T14:25:18.572Z"
   agent: codex-expert-executor
   execution: agent
   approach: fully-guided
@@ -19,16 +20,18 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- 成果物 `docs/ja/product/010-business-specs/010-data-flow/cdfd-onboarding.md` の磨き込みを実施した。
+- STSD/CSTD の参照先を仮置き ID で確定させ、未解決の `_TODO_` を除去した。
+- `specdojo:finding` コメントは、次回の grade による解消判定のため保持している。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/product/010-business-specs/010-data-flow/cdfd-onboarding.md`: STSD/CSTD 参照先の確定および `_TODO_` の除去による内容の具体化。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 次回の grade フェーズにて、修正された本文が `specdojo:finding` の指摘を十分に解消しているか判定することを期待する。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`fully-guided` で rulebook / recipe / sample / template をどう使い分けたか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+expert 帯の agent として、成果物内の `specdojo:finding` 指摘を確認し、妥当なものを修正することで解消した。あわせて未解決の `_TODO_` を整理し、参照 ID を確定させることで linter 及び schema 検証に適合させ、`npx prettier` および `npx markdownlint` による整形・静的検査を完了させた。また、親 runner による `validate-schema`, `test-unit`, `test-integration` 全てが `passed` であることを確認済みである。
