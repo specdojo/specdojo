@@ -26,6 +26,7 @@ import {
   type GradeDoneCriterion,
   type GradePipelineState,
   type GradeSubmission,
+  pipelineContentHash,
 } from "../../src/grade.js";
 import type { ReviewViewpointsDoc } from "../../src/review-types.js";
 import type { MemberRoster } from "../../src/specdojo-config.js";
@@ -344,15 +345,14 @@ describe("grade target filters", () => {
       gradedBy: "test-agent",
       now: new Date("2026-08-31T00:00:00.000Z"),
     });
-    const frontmatter = yaml.load(graded.match(/^---\n([\s\S]*?)\n---/)?.[1] ?? "") as {
-      specdojo: { grade: { content_hash: string } };
-    };
+    const parts = graded.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
+    const frontmatter = yaml.load(parts?.[1] ?? "") as Record<string, unknown>;
     const state: GradePipelineState = {
       version: 1,
       project_id: "prj-0001",
       target: "kata",
       document: "example.md",
-      content_hash: frontmatter.specdojo.grade.content_hash,
+      content_hash: pipelineContentHash({ data: frontmatter, body: parts?.[2] ?? "" }),
       stage_completed: 2,
       stage_failed: 3,
       stage_total: 3,
@@ -1579,5 +1579,26 @@ DC-002: unsatisfied: 承認時点の記載がない。
     } finally {
       rmSync(directory, { recursive: true, force: true });
     }
+  });
+});
+
+describe("pipelineContentHash", () => {
+  const data = { specdojo: { id: "x", type: "flow", status: "draft" } };
+
+  it("ignores blank lines and finding comments introduced by grade apply between stages", () => {
+    const before = { data, body: "# T\n\n<!-- prettier-ignore -->\n| a | b |\n| --- | --- |\n" };
+    const after = {
+      data,
+      body: "# T\n\n<!-- specdojo:finding id=F001 severity=minor rule=vp-ux-readability line=3 x -->\n\n<!-- prettier-ignore -->\n\n| a | b |\n| --- | --- |\n",
+    };
+
+    expect(pipelineContentHash(after)).toBe(pipelineContentHash(before));
+  });
+
+  it("changes when non-blank content changes", () => {
+    const before = { data, body: "# T\n\n本文\n" };
+    const after = { data, body: "# T\n\n本文を修正\n" };
+
+    expect(pipelineContentHash(after)).not.toBe(pipelineContentHash(before));
   });
 });

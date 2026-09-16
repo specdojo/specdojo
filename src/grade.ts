@@ -294,6 +294,25 @@ function stableContentHash(document: MarkdownDocument): string {
     .digest("hex");
 }
 
+// pipeline 状態の同一性判定に使うハッシュ。stableContentHash と異なり空行を無視する。
+// grade apply は段ごとに finding コメントを除去して挿入し直し、ブロック直前に空行を
+// 補うため、finding を除いた本文でも空行の位置と数が段の間で変わる。空行だけの差で
+// 前段の状態を「古い」と判定すると、次段の apply が stage の連続性検査に失敗する。
+export function pipelineContentHash(document: MarkdownDocument): string {
+  const cloned = structuredClone(document.data);
+  const specdojo = isRecord(cloned.specdojo) ? cloned.specdojo : {};
+  delete specdojo.grade;
+  const body = normalizeContentForHash(withoutFindingComments(document.body))
+    .split("\n")
+    .filter((line) => line.trim() !== "")
+    .join("\n");
+  return createHash("sha256")
+    .update(yaml.dump(cloned, { sortKeys: true, noRefs: true, lineWidth: -1 }))
+    .update("\n")
+    .update(body)
+    .digest("hex");
+}
+
 function sanitizeCommentText(value: string): string {
   return (
     value
@@ -835,7 +854,7 @@ function currentGradePipelineState(
   if (!state || state.document !== path || (target !== undefined && state.target !== target)) {
     return undefined;
   }
-  return state.content_hash === stableContentHash(document) ? state : undefined;
+  return state.content_hash === pipelineContentHash(document) ? state : undefined;
 }
 
 function isIncompleteGradePipelineState(state: GradePipelineState | undefined): boolean {
@@ -931,7 +950,7 @@ export function recordGradePipelineStage(opts: {
     project_id: resolveProject(opts.project).id,
     target: opts.target,
     document: relativeDocument,
-    content_hash: stableContentHash(document),
+    content_hash: pipelineContentHash(document),
     stage_completed: stageCompleted,
     stage_failed: opts.status === "failed" ? opts.stage : null,
     stage_total: opts.stageTotal,
