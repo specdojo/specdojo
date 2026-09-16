@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "task_id": "T-DATA-FLOW-PDCA-cdfd-plan-070",
+  "run_id": "20260916T091021016Z-c59cf175",
+  "updated_at": "2026-09-16T09:30:36.790Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "qwen-executor",
+      "attempts": 1,
+      "started_at": "2026-09-16T09:11:04.770Z",
+      "completed_at": "2026-09-16T09:26:53.772Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-PDCA-cdfd-plan-070/20260916T091021016Z-c59cf175/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "qwen-reporter",
+      "attempts": 1,
+      "started_at": "2026-09-16T09:27:39.641Z",
+      "completed_at": "2026-09-16T09:30:36.790Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/T-DATA-FLOW-PDCA-cdfd-plan-070-result.md"
+    }
+  }
+}
