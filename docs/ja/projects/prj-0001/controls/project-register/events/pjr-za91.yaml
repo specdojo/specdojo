@@ -61,3 +61,16 @@
       from: "-"
       to: "agent exited with non-zero code: 親 runner による `test-unit` (`npm run test:unit`) が失敗（exit 1）しており、`tests/src/catalog-merge.test.ts` においてテンプレートの章構成に関するテスト失敗が報告されているため"
   previous_event_id: reg_0e9982e2b50445dfacd742ec63b25702
+- v: 1
+  id: reg_47007295c8324461a7b641debd4966b6
+  ts: "2026-09-16T23:24:47Z"
+  action: review
+  actor: specdojo-orchestrator (claude)
+  from_status: waiting
+  to_status: review
+  reason: 親検証 test-unit の失敗はテンプレート削除に伴う期待件数の陳腐化。テストを更新して develop へ統合したため review へ遷移
+  changes:
+    - field: status
+      from: waiting
+      to: review
+  previous_event_id: reg_0cd692f8e4044d2f876f55fc87dc8569
