@@ -1,0 +1,11 @@
+[cdfd-plan.md](/workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-plan-075/docs/ja/product/010-business-specs/010-data-flow/cdfd-plan.md:247) を更新しました。
+
+- `P-04-02` と Schedule（track）のタスク状態を STSD / CSTD 参照表へ追加
+- 状態定義・遷移の本文内再定義は回避
+- 対象内に `specdojo:finding` コメントはありませんでした
+- result ファイルは executor 指示どおり未更新です
+- Markdown lint、索引ビルド、差分検査は通過しました
+
+<specdojo_executor_evidence>
+{"final_message":"Schedule（track）の状態参照漏れを最小修正し、必要な検査を完了した。","validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-plan.md","status":"passed","summary":"対象 Markdown を整形した。"},{"command":"npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-plan.md","status":"passed","summary":"警告・エラーなし。"},{"command":"npx tsx src/specdojo.ts index build","status":"failed","summary":"sandbox の IPC ソケット作成制約により EPERM。"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"同じエントリポイントで索引1766件を生成した。"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし。"}]}
+</specdojo_executor_evidence>
