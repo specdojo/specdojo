@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-DATA-FLOW-PDCA-cdfd-plan-075
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: exec/plans/T-DATA-FLOW-PDCA-cdfd-plan-075-plan.md
   started_at: "2026-09-16T14:35:42.999Z"
+  completed_at: "2026-09-16T14:43:43.503Z"
   agent: codex-expert-executor
   execution: agent
   approach: fully-guided
@@ -19,16 +20,18 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- 成果物 `docs/ja/product/010-business-specs/010-data-flow/cdfd-plan.md` において、Schedule（track）の状態参照漏れ等の指摘内容を解消する最小限の修正を実施した。
+- 静的検査として `npx prettier --write` および `npx markdownlint` を実行し、すべてパスした。
+- 索引生成（`node --import tsx src/specdojo.ts index build`）および親検証の `test-integration`, `validate-schema`, `test-unit` をすべて通過した。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/product/010-business-specs/010-data-flow/cdfd-plan.md`: Schedule（track）の状態参照漏れ等の指摘に基づき、プロセス記述を修正。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 次回の `grade` フェーズにて、解消された `specdojo:finding` コメントの判定を依頼する。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`fully-guided` で rulebook / recipe / sample / template をどう使い分けたか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+成果物内の `specdojo:finding` コメントおよび `depends_on` である `cdfd-overview.md` との整合性を確認し、不足していた状態参照等の記述を最小限に修正した。修正後は共通規約に従い、整形、静的検査、および索引ビルドによる検証を実施した。
