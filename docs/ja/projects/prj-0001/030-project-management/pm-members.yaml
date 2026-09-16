@@ -119,7 +119,7 @@ members:
 
   - nickname: qwen-reporter
     disabled: false
-    priority: 1
+    priority: 2
     display_name: Qwen Reporter
     email: null
     roles: []
@@ -171,7 +171,7 @@ members:
 
   - nickname: gemma-reporter
     disabled: false
-    priority: 2
+    priority: 1
     display_name: Gemma Reporter
     email: null
     roles: []
