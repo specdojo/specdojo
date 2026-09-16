@@ -1,0 +1,55 @@
+I'll start by reading the reference documents and the target artifact. Let me load them in parallel.
+Now let me read the four CDFD documents that this orchestrator CDFD delegates to (depends_on). I'll read them in parallel.
+Now let me read the rulebooks and recipe referenced in the plan.
+I have read all the reference materials. Now let me create a todo list and analyze the consistency issues I need to verify and fix.
+I've read all reference materials. Let me analyze the consistency across docs. The key finding: cdfd-orchestrator.md's prose style differs from peer CDFD docs (plan/do/check/action), and its data stores are a subset. Let me check the project overview context and verify whether it's referenced anywhere, plus check tooling availability.
+I see — general bash is denied but specific patterns (`npx prettier`, `npx markdownlint`, `specdojo`, `ls`) are allowed. Project context is now clear (BV-03: no single-point dependency → judgment left human, shared source of record). Let me verify cross-document consistency on 主な担当 and the 状態遷移の参照 style before editing.
+The orchestrator's prose style mirrors cdfd-check.md (same 組織境界 phrasing, bold itemized purpose, `**主要入力**` in §3.1 and §2). Its §7/§9 placeholder style matches cdfd-plan exactly. The one clear cross-document inconsistency is the 主な担当 cell format in its process tables (P-14 + P-14-01..04), which differs from the peer CDFD docs' `PM（<処理名>は runner が支援）` convention. Let me run a consistency scan on process IDs / data store names, then make the minimal edit.
+Let me use the Grep tool instead (general bash is denied, but the dedicated grep tool and `grep`/`sed` patterns are allowed). Let me count process ID occurrences via the dedicated tool.
+All process IDs (P-14-01..04) are consistent across the §3.1 table, the mermaid diagram, §6 I/O table, §7 state reference, and the exception table — names match everywhere (運転要求確定, 実行競合判定, PDCA 要求発行, 実行状態追跡). The §7 and §9 placeholder style matches cdfd-plan exactly (no change needed). 
+
+The one cross-document inconsistency is the 主な担当 cell format. Let me confirm the exact peer convention with sed before standardizing.
+`sed` doesn't pass the whitelist matcher. Let me re-read the peer 主な担当 cells via the Read tool (offsets I can target).
+Confirmed the peer convention: support role is always expressed as `PM（<処理名>は … が支援／…へ委譲可）`, with the support action named and the human role first. The orchestrator's `P-14-01` cell `PM（参加者が意図を判断し、runner が支援）` is a genuine cross-document inconsistency — it expresses 対話型/自動の運転分担, not a `<処理名>は…` support clause. I'll normalize all six process cells to the supported format, mapping the content-preserving pieces to the closest peer convention.
+Now I'll make the minimal edits. First, the §3.1 process table 主な担当 column (P-14-01..04), normalizing to the supported peer format:
+The edit was applied but `oldString` matched with different padding than I typed, which suggests the file may already have been reformatted by prettier. Let me read the current state of the file to get exact content before proceeding.
+The §3.1 table now reads in the supported peer format. Now let me re-read the whole file from the top to get exact current content before the remaining edits (the file may be prettier-reformatted, so I'll base edits on actual current text).
+Now I'll add the 責任分担 reference in §2, matching the peer CDFD pattern and the overview's `cdfd-overview`「適用範囲」reference convention (no project-specific phrasing like 運転目的, staying product-agnostic):
+Now the §3 group-intro 正本 relationship, matching the peer docs (they point `cdfd-overview` as the master for group-level I/O/data stores):
+Now the remaining two: the §5.1 diagram 主な担当 cells (keep role only, matching cdfd-do/cdfd-check) and the §3.1 intro sentence. Let me read the current §5 region for exact content.
+The §5.1 diagram nodes keep role-only `（担当: PM）` labels, matching cdfd-do/cdfd-check (support detail lives in the §3.1 table). I'll add one `参加者` node to the mermaid diagram — it's declared and receives an edge but is referenced in no outgoing edge, which violates the mermaid rulebook prohibition against a node that has neither start nor destination. This lets the §5.1 diagram self-consistently show "対話型/自動運転 in the same 要求発行 process." Then run prettier + markdownlint to finalize table alignment and confirm validity.
+Let me re-read the diagram block to check what the edit actually produced, since my newString referenced `オルケストレーター` which isn't declared.
+I introduced an undeclared node (`オルケストレーター`). My intent was to connect `参加者` into the flow (the actor node had no outgoing edge — a mermaid-rulebook violation), pointing at the P-14-01 process. Let me fix line 104 to point at `運転要求確定` instead:
+Now add `参加者` to its actor class line (it was declared as an actor node but absent from the class assignment). Let me find that line.
+`参加者` is already in the actor class (line 133). I'll update the §5.1 note to mention the newly added direct edge, keeping the "対話型/自動運転 are both driven into P-14-01" message:
+Now the §3.1 intro sentence — connect the two 運転 modes to the unified process to align with the plan's "対話型・自動運転を同じ要求発行プロセスで説明" intent (keeping it minimal, pointing to §5.1):
+Let me read the §6, §7, §8, §9 sections to verify exact current content before any further edits and the format/lint run.
+All §6–§9 content is consistent: process IDs/names/data stores match throughout, §7 placeholder style matches cdfd-plan, exception IDs `E-14-*` are well-formed, and delegation cross-references resolve. Now let me run prettier to normalize table alignment and markdownlint. I'll first check for a prettier config, then run both on the target file.
+The bare `ls` failed the matcher; I'll use the allowed `npx` commands directly. Let me run prettier then markdownlint on the target file.
+The `EXIT=$?` broke the matcher. Let me run markdownlint alone.
+markdownlint passed (no output = clean). Let me confirm prettier's alignment changes by reading the edited regions.
+Prettier normalized all table alignment (main columns aligned at width 60). The 主な担当 cells now match the peer `<ロール>（<処理名>は runner/AI Agent が支援）` convention. Let me run `specdojo catalog validate` (required for docs/ changes) to confirm no breakage.
+`specdojo catalog validate` ended with `OK: dct-index.yaml` — the many WARN lines are pre-existing "based_on を検証する文書が見つかりません" notices for other deliverables (not caused by my edit, and not blocking). Let me do a final full read of the edited file to confirm coherence before concluding.
+Let me verify the §2 result after my 責任分担 addition, then finalize.
+All edits are coherent after prettier reformatting: §2 has the 責任分担 reference, §3 points `cdfd-overview` as master, §3.1 explains 対話型/自動運転 share the same flow, §5.1 diagram is consistent, and §6–§9 are unchanged and consistent. Let me re-confirm prettier idempotency after these reads.
+Prettier confirms clean (idempotent) and markdownlint passed. All edits are coherent and consistent. Let me finalize the todo list.
+I'll add one minimal, content-preserving refinement to §3.1: since `cdfd-orchestrator`'s frontmatter does not list `cdfd-overview` in `based_on` (only the four PDCA CDFDs), cross-document linking to it would be a scope concern I should avoid for this task. The 対話型/自動運転 "same 要求発行 process" message is already self-contained in §3.1 prose and §5.1, so I'll replace the chapter reference with an explicitly self-contained phrasing rather than adding an unlisted cross-reference:
+Now re-run prettier and markdownlint to confirm the final state is clean after this edit.
+Prettier reports "unchanged" and markdownlint produced no errors. Let me do a final confirmatory read of §3.1 to verify the exact text.
+The final §3.1 text is clean and self-contained. All changes are complete and validated. Let me do a final full read to confirm the whole document's integrity (the earlier §5/§6 reads were before prettier's last reformat, so I'll verify the post-reformat end state).
+The entire document is now consistent and well-formed: §6 input/output tables, §7 state references (placeholder style matching `cdfd-action`), §8.1 exceptions (`E-14-*` well-formed with detect/stop/resume conditions) and §8.2 delegations (cross-references resolve to real docs), and §9 undecided items are all coherent. 
+
+Consistency cross-checks passed:
+- Process IDs/names `P-14-01..04` are identical across the §3.1 table, §5.1 mermaid nodes/edges (§7 and §8.1 reference them too) — names 運転要求確定/実行競合判定/PDCA 要求発行/実行状態追跡 match everywhere.
+- Data stores 稼働構成/成果物カタログ/スケジュール戦略/定期実行定義/実行計画/実行記録 are a consistent subset of `cdfd-overview`§4 (Orchestrator's P-14 store list), matching the §3.1 group-level 主な入力/出力, and the §5.1 diagram nodes correspond one-to-one.
+- 主な担当 cells now use the peer CDFD convention `PM（<処理名>は runner が支援／runner または AI Agent が支援）`.
+- Exceptions cover the three "cycle-altering" failure modes the done criteria require: `E-14-01` (実行ロックの競合), `E-14-02` (定期実行の取りこぼし), `E-14-03` (要求先の失敗/ブロック).
+- §5.1 diagram is self-consistent (no orphan node; 参加者 feeds P-14-01 directly, matching the §3.1 prose that both 対話型 and 自動運転 enter at `P-14-01`).
+
+I deliberately did not add a `cdfd-overview` cross-reference in the §3.1 "same 要求発行 process" sentence (it's not in this doc's `based_on`, which lists only the four PDCA CDFDs), keeping the message self-contained instead.
+
+Validations: `npx prettier --write ... cdfd-orchestrator.md` → clean (idempotent); `npx markdownlint ... cdfd-orchestrator.md` → no errors; `specdojo catalog validate` → `OK: dct-index.yaml` (pre-existing WARNs for other deliverables are unrelated to this edit). I did not run `test-unit` / `validate-schema` / `test-integration` (reserved for the parent runner) and made no git commit.
+
+<specdojo_executor_evidence>
+{"final_message":"cfd-orchestrator.md を保守的に磨き込み、整合性を確認した。主な担当欄を先行 CDFD の支援表現形式へ統一、責任分担参照を追加、対話型/自動運転が同じ要求発行プロセス(P-14-01)へ入る点を §3.1・§5.1 で明示し、mermaid 図の孤立ノードを解消。プロセスID・名称・データストア・例外・委譲は全文書間で一致。prettier/markdownlint/catalog validate を実行してクリーンに終了。","validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-orchestrator.md","status":"passed","summary":"整形済み（最終で unchanged）"},{"command":"npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-orchestrator.md","status":"passed","summary":"エラーなし"},{"command":"specdojo catalog validate","status":"passed","summary":"OK: dct-index.yaml（他成果物の based_on 未解決 WARN は本編集と無関係・既存）"}]}
+</specdojo_executor_evidence>
