@@ -1,0 +1,13 @@
+[cdfd-do.md](/workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-do-075/docs/ja/product/010-business-specs/010-data-flow/cdfd-do.md) を更新しました。
+
+- STSD/CSTD をバッククォート形式の仮置き文書 ID に変更
+- 解消済みの `_TODO_` と「未決事項」章を削除
+- `specdojo:finding` コメントは維持
+- overview・rulebook との照合では追加修正不要
+- executor 指示に従い result ファイルは未変更
+
+`tsx` の通常起動は sandbox の IPC 制限で失敗しましたが、同じ処理を Node import 経由で実行し、索引生成は成功しています。
+
+<specdojo_executor_evidence>
+{"final_message":"cdfd-do の grade 指摘2件を最小修正し、finding コメントを維持したまま検証を完了しました。","validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-do.md && npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-do.md","status":"passed","summary":"Markdown の整形と静的検査が成功"},{"command":"npx tsx src/specdojo.ts index build","status":"failed","summary":"tsx CLI の IPC ソケット作成が sandbox の EPERM で失敗"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"IPC を使わない同等起動で1760件の索引を生成"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>
