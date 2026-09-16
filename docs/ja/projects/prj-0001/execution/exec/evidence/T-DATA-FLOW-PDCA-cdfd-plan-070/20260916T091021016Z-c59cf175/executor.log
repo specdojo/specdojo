@@ -1,0 +1,354 @@
+Let me check if the referenced cdfd files exist and look at the result file structure.
+Now let me compare the draft cdfd-plan against the existing sibling cdfd files to understand the expected style/structure:
+Now I have a good understanding. Let me compare the cdfd-plan draft systematically against cdfd-overview to find inconsistencies. The key things to verify:
+
+1. Area-level (領域単位) I/O in §3 vs group-level (グループ単位) bullet list in cdfd-overview §3.2
+2. Process IDs, names, data stores matching between tables and diagrams
+3. External delegation targets existing as actual files
+4. Data store names matching overview
+
+Let me do the comparison carefully:
+
+**cdfd-overview §3.2 Plan group:**
+- 主要入力: Orchestrator からの計画要求、Action からの再計画要求、参加者からの判明した事項と意思決定、参加者からの管理対象とする成果物の判断、メンバー・ロール、Kata の rulebook・template、参加者からの定型・定期実行の要件
+- 主要出力: 登録項目・決定記録、成果物カタログ、スケジュール戦略、Schedule（track）とマイルストーン、実行計画、定期実行定義、ジョブ定義
+- データストア: 稼働構成、Kata、登録簿、成果物カタログ、スケジュール戦略、Schedule（track）、実行計画、定期実行定義、ジョブ定義
+
+**cdfd-plan §3 (area breakdown):**
+
+§3.1 P-02 登録簿定義:
+- 主要入力: Orchestrator からの計画要求、Action からの再計画要求、参加者からの判明した事項と意思決定 ✓
+- 主要出力: 登録項目・決定記録 ✓
+- データストア: 登録簿 ✓
+
+§3.2 P-03 成果物カタログ定義:
+- 主要入力: 参加者からの管理対象とする成果物の判断、メンバー・ロール、Kata の rulebook・template、登録項目・決定記録 ✓
+- 主要出力: 成果物カタログ ✓
+- データストア: 稼働構成、Kata、登録簿、成果物カタログ ✓
+
+§3.3 P-04 スケジュール計画展開:
+- 主要入力: Orchestrator からの計画要求、Action からの再計画要求、成果物カタログ、メンバー・ロール、Kata の rulebook・template ✓
+- 主要出力: スケジュール戦略、Schedule（track）とマイルストーン、実行計画 ✓ 
+- データストア: 稼働構成、Kata、成果物カタログ、スケジュール戦略、Schedule（track）、実行計画 ✓
+
+§3.4 P-05 定期実行定義:
+- 主要入力: 参加者からの定型・定期実行の要件、ジョブ定義 ✓
+- 主要出力: 定期実行定義 ✓
+- データストア: ジョブ定義、定期実行定義 ✓
+
+§3.5 P-06 ジョブ定義:
+- 主要入力: 参加者からの定型・定期実行の要件、定型的に実行する処理の手順、メンバー・ロール ✓
+- 主要出力: ジョブ定義 ✓
+- データストア: 稼働構成、ジョブ定義 ✓
+
+All area-level I/Os sum up to the group-level list. ✓
+
+Now let me check the data store table in §4 of cdfd-plan. The plan has:
+
+§4.1 マスタ・構成データ:
+- 稼働構成 (参照) ✓ - used by P-03, P-04, P-06
+- Kata (参照) ✓ - used by P-03, P-04
+- 成果物カタログ (参照・更新) ✓ - P-03 updates
+- スケジュール戦略 (参照・更新) ✓ - P-04 updates
+- 定期実行定義 (更新) ✓ - P-05 updates
+- ジョブ定義 (参照・更新) ✓ - P-06 updates, P-05 reads
+
+§4.2 トランザクションデータ:
+- 登録簿 (参照・更新) ✓ - P-02 updates, others read
+- Schedule（track） (更新) ✓ - P-04 updates
+- 実行計画 (更新) ✓ - P-04 updates
+
+This looks consistent. Now let me check the "利用" column content vs how it's described in the individual process I/O tables (§6). In cdfd-do, the "利用" column references specific process IDs (e.g., "P-07-01 で..."). But in cdfd-plan §4, the "利用" columns don't reference specific process IDs. This is a style difference but not an inconsistency - cdfd-plan is already a draft and uses area-level descriptions. Let me check if this matters for rulebook compliance.
+
+Looking at rulebook 6.3: "各行は、プロセス領域と個別プロセス主要入出力に矛盾しない" and "各データストアがどの領域またはプロセスで参照・更新されるかを利用内容で説明する". The "利用" columns in cdfd-plan do describe which domain/process uses each store, just at a more summary level. This seems acceptable for a draft being polished conservatively.
+
+Now let me check the diagrams carefully to ensure process IDs and data stores match:
+
+**Diagram 5.1 (登録簿と成果物カタログの定義):**
+- Processes: P-02-01 登録簿記録, P-03-01 成果物カタログ定義 ✓
+- Data stores: 稼働構成, Kata, 登録簿, 成果物カタログ ✓
+- These match §3.1 and §3.2 and §4
+
+**Diagram 5.2 (スケジュール計画の展開):**
+- Processes: P-04-01 スケジュール戦略定義, P-04-02 Schedule（track）展開, P-04-03 実行計画生成 ✓
+- Data stores: 稼働構成, Kata, 成果物カタログ, スケジュール戦略, Schedule（track）, 実行計画 ✓
+
+**Diagram 5.3 (定期実行とジョブの定義):**
+- Processes: P-06-01 ジョブ定義, P-05-01 定期実行定義 ✓
+- Data stores: 稼働構成, ジョブ定義, 定期実行定義 ✓
+
+All diagrams look consistent with the process area tables.
+
+Now let me check delegation targets exist as files:
+- `cdfd-orchestrator` ✓ (confirmed from ls output)
+- `cdfd-do` ✓ (confirmed from ls output) 
+- `cdfd-uc-register` ✓ (confirmed from ls output)
+- `cdfd-uc-deliverable` ✓ (confirmed from ls output)
+
+Now let me check rulebook compliance more carefully:
+
+Rulebook §6.2 says process area section headers should be "領域名（領域 ID）" format. Currently in cdfd-plan:
+- §3.1: "登録簿定義（P-02）" ✓
+- §3.2: "成果物カタログ定義（P-03）" ✓
+- §3.3: "スケジュール計画展開（P-04）" ✓
+- §3.4: "定期実行定義（P-05）" ✓
+- §3.5: "ジョブ定義（P-06）" ✓
+
+But wait, the overview has these area names:
+- P-02: 登録簿定義
+- P-03: 成果物カタログ定義
+- P-04: スケジュール計画展開
+- P-05: 定期実行定義
+- P-06: ジョブ定義
+
+These match! ✓
+
+Rulebook §6.2 also says the "主な担当" in process area tables should reference roles from `pm-roles` document. The cdfd-overview uses role codes like "PM", "BA", "OPS". The cdfd-plan uses the same. This is consistent.
+
+Now let me check rulebook §5 (本文要件) for all required sections:
+1. 目的 ✓
+2. 適用範囲 ✓
+3. プロセス領域 ✓
+4. データストア ✓
+5. 概念データフロー ✓
+6. 個別プロセス主要入出力 ✓
+7. 状態遷移の参照 ✓
+8. 主要例外とグループ外への委譲 ✓
+9. 未決事項 (任意) ✓
+
+All required sections are present.
+
+Let me check some detail points:
+
+1. §2 "適用範囲" should have responsibility-sharing reference. Currently cdfd-plan says "承認や主要判断は人間が担い、AI Agent は定義、展開、検証を支援できる。" - This is not just referencing the overview but restating it. Rulebook 6.1 says "人間と AI Agent の責任分担は本文で再定義せず、対応する方針文書を参照します。" Let me check if this is a violation.
+
+Looking at cdfd-onboarding and cdfd-do, they both reference the overview for responsibility sharing:
+- onboarding: "組織境界: ... 人間と AI Agent の責任分担は、[[cdfd-overview|概念データフロー図（全体概要）]] の「適用範囲」にある原則を参照し、本書では再定義しない。"
+- do: "人間と AI Agent の責任分担は [[cdfd-overview|概念データフロー図（全体概要）]] の「適用範囲」を前提とし、本書では Do の境界に必要な事項だけを示す。"
+
+But cdfd-plan §2 says: "承認や主要判断は人間が担い、AI Agent は定義、展開、検証を支援できる。" - This restates rather than references. However, it's a concise summary not a full redefinition, and since the task is "磨き込み・整合性確認" (polish and consistency check), I should be conservative.
+
+Actually, looking more carefully, this is a minor style difference that doesn't create a contradiction with the overview. The onboarding and do files both reference explicitly, but cdfd-plan provides an inline summary. This isn't a rulebook violation - rulebook says "再定義せず" which means don't redefine, and a brief mention like this is not really a redefinition. I'll leave it as-is since we're doing conservative polishing.
+
+Let me now check the frontmatter of cdfd-plan more carefully:
+- `based_on`: `cdfd-overview` ✓ (in depends_on closure)
+- Missing `supersedes`: [] - other files have this, but it's "任意" so OK to omit
+- All required fields present
+
+Now let me check if there are any issues with the "利用" columns in §4 vs the individual process I/O tables. The cdfd-do pattern has process IDs in the 利用 column like "`P-07-01` で...". The cdfd-plan §4 uses domain-level descriptions without specific process IDs. Since this is a draft being polished, and the existing style doesn't reference specific P-IDs in §4 "利用" columns (but §6 does), this is a stylistic choice that's consistent within the document. I won't change this.
+
+However, I notice one potential issue: In cdfd-plan §4, the data store descriptions don't cross-reference individual process IDs like cdfd-do does. But this may just be an early draft style. The plan instruction says "既存記述を尊重し、既存記述の破棄や全面的な書き換えは原則として行わず". So I should respect the existing style.
+
+Let me check one more thing: whether the diagrams correctly show internal flows between domains within the Plan group (§7, rule about same-group internal flows being shown as internal flow). Looking at diagram 5.1:
+- P-02-01 writes to 登録簿 store, then 登録簿 reads to P-03-01 → This shows internal cross-domain flow ✓
+
+And the diagrams show that shared stores (稼働構成, Kata) are "共有" between multiple diagrams - the text after each diagram explains this. ✓
+
+I think the document is already quite well-formed. Let me check if there are minor things to fix:
+
+1. The frontmatter is missing `supersedes: []` which other similar files have. I'll add this for consistency.
+2. The H1 in cdfd-plan has "SpecDojo" suffix like cdfd-do but not cdfd-onboarding. Since cdfd-do also has it, this seems acceptable.
+
+Actually, wait. Let me re-check something important. Let me look at the "利用" column in §4 more carefully and whether it mentions specific process IDs. The cdfd-do file uses very detailed process-specific descriptions. The cdfd-plan uses general descriptions. This inconsistency shouldn't be fixed as it's a style choice within this draft.
+
+Let me now look for actual issues that need fixing:
+
+1. **Missing `supersedes`**: cdfd-onboarding has `supersedes: []`, cdfd-do has it. cdfd-plan doesn't. Rulebook says 任意, but for consistency with siblings, I'll add it.
+
+Actually, the plan instruction says to be conservative and not make changes that are just for "見た目の整合" (appearance consistency). Adding `supersedes: []` when it's optional and not needed would be a cosmetic change. Let me skip this.
+
+2. Let me verify the "データストア" section header style. cdfd-plan uses "### 4.1. マスタ・構成データ" and cdfd-do uses the same. ✓
+
+3. Let me re-examine whether "個別プロセス主要入出力" in §6 properly covers all processes:
+- §6.1: P-02-01, P-03-01 ✓
+- §6.2: P-04-01, P-04-02, P-04-03 ✓
+- §6.3: P-05-01, P-06-01 ✓
+All 6 processes covered exactly once. ✓
+
+4. Let me check that diagram process names match the tables:
+- Table §3.1: `P-02-01` 登録簿記録 → Diagram 5.1: "P-02-01 登録簿記録" ✓
+- Table §3.2: `P-03-01` 成果物カタログ定義 → Diagram 5.1: "P-03-01 成果物カタログ定義" ✓
+- Table §3.3: `P-04-01` スケジュール戦略定義 → Diagram 5.2: "P-04-01 スケジュール戦略定義" ✓
+- Table §3.3: `P-04-02` Schedule（track）展開 → Diagram 5.2: "P-04-02 Schedule（track）展開" ✓
+- Table §3.3: `P-04-03` 実行計画生成 → Diagram 5.2: "P-04-03 実行計画生成" ✓
+- Table §3.4: `P-05-01` 定期実行定義 → Diagram 5.3: "P-05-01 定期実行定義" ✓
+- Table §3.5: `P-06-01` ジョブ定義 → Diagram 5.3: "P-06-01 ジョブ定義" ✓
+
+All match! ✓
+
+5. Let me check the "主な担当" column against overview table:
+Overview P-02: PM（起票は全参加者） → cdfd-plan §3.1 table: PM（起票は全参加者） ✓
+Overview P-03: BA（提案は全参加者） → cdfd-plan §3.2 table: BA（提案は全参加者） ✓
+Overview P-04: PM → cdfd-plan §3.3 table: PM (for all 3 processes) ✓
+Overview P-05: PM、OPS → cdfd-plan §3.4 table: PM、OPS ✓
+Overview P-06: PM（定義は全参加者） → cdfd-plan §3.5 table: PM（定義は全参加者） ✓
+
+All match!
+
+Now let me look for actual issues that need fixing. Let me check whether the "利用" in §4 properly explains which process uses each store, per rulebook requirement "各データストアがどの領域またはプロセスで参照・更新されるかを利用内容で説明する":
+
+- 稼働構成 (参照): "メンバー・ロールを成果物、Schedule（track）、ジョブの担当と実行主体の判断に用いる。" - This describes usage by multiple domains without naming specific process IDs. The cdfd-do style would say e.g. "`P-03-01` と `P-04-02` が..." but this is a minor stylistic gap, not an error.
+
+- Kata (参照): "rulebook・template と grade を、成果物定義およびスケジュール戦略・実行計画との適合判定に用いる。" - Again describes usage contextually.
+
+These are acceptable because they do explain "which domain/process uses each store and what for", just not with specific P-IDs. Since we're doing conservative polishing, I won't add P-IDs to §4.
+
+Actually, wait - let me re-read the rulebook more carefully. Rulebook 6.3 says: "プロセス領域の全箇条書きと個別プロセス主要入出力にあるデータストアを過不足なく含め、各データストアがどの領域またはプロセスで参照・更新されるかを利用内容で説明する。"
+
+The cdfd-plan §4 does mention which domains use the stores (e.g., "メンバー・ロールを成果物、Schedule（track）、ジョブの担当と実行主体の判断に用いる" implies P-03 and P-06 area). This satisfies the requirement at a domain level. Since we're polishing conservatively, this is fine.
+
+Let me now check one more critical thing: whether §4 data store entries are a proper subset of cdfd-overview §4 and have same names and classifications.
+
+cdfd-overview §4.1 マスタ・構成データ includes:
+- 稼働構成 ✓ (in plan §4.1)
+- Kata ✓ (in plan §4.1)
+- 成果物カタログ ✓ (in plan §4.1)
+- スケジュール戦略 ✓ (in plan §4.1)
+- 定期実行定義 ✓ (in plan §4.1)
+- ジョブ定義 ✓ (in plan §4.1)
+
+cdfd-overview §4.2 トランザクションデータ includes:
+- 登録簿 ✓ (in plan §4.2)
+- Schedule（track） ✓ (in plan §4.2)
+- 実行計画 ✓ (in plan §4.2)
+- (others like 実行記録, 成果物, 保管庫, 評価結果, 進捗報告, 派生ビュー・索引 are not used by Plan group - correctly excluded)
+
+All data stores in plan §4 are subset of overview §4 with matching names and classifications. ✓
+
+I've done a thorough review and the document appears to be quite consistent already. Let me check if there are any actual problems that need fixing:
+
+1. **§3 intro text**: The intro says "Plan グループは、全体概要で定めた五つの領域を含む。本章は領域ごとの主要入力、主要出力、データストアと内部プロセスの正本であり..." - This is good, but let me check consistency with cdfd-do/onboarding intros which reference the overview as the authoritative source.
+
+2. **Missing `supersedes: []`**: Optional field, other files have it. But since it's optional and not in the "required" list per rulebook, I'll skip adding it.
+
+Let me look for one more thing - whether the cdfd-plan correctly uses the process area table columns matching rulebook 6.2 spec:
+
+Rulebook says columns should be: プロセス ID | プロセス | 業務目的 | 主な担当 | 起動条件 | 必須性
+cdfd-plan §3.x tables have: プロセス ID | プロセス | 業務目的 | 主な担当 | 起動条件 | 必須性 ✓
+
+Now let me check if "主要入力・主要出力・データストアは箇条書きと「個別プロセス主要入出力」へ記載し、表の列には含めません" from rulebook 6.2 is followed - the tables don't have I/O columns. ✓
+
+I think the document is essentially correct. Let me now look for tiny improvements that are within scope:
+
+1. The §3 intro paragraph in cdfd-plan mentions "領域 ID、名称、業務目的、主な担当、起点_EVENTSの上位定義は...正本とする" but doesn't have the `[[cdfd-overview|...]]` link for that statement (it does on line 30). Actually, it does use the link on line 30. ✓
+
+Let me check if there's something else. Let me re-read the frontmatter and see if there's a missing `supersedes`. Actually, looking at cdfd-do, it has `supersedes: []` on line 10. The cdfd-plan doesn't have this field. Since it's "任意" (optional), this isn't an issue. But the `supersedes: []` in other files is just indicating no supersession. Let me add it for consistency with sibling files... Actually, the plan says to be conservative and not make cosmetic changes. I'll skip this.
+
+Let me do one final check - the "利用" column descriptions for the individual data stores. Are there issues where a store that should be in §4 is missing, or vice versa? Let me cross-reference:
+
+From §3 area bullet points, the union of all data stores mentioned:
+- P-02: 登録簿
+- P-03: 稼働構成、Kata、登録簿、成果物カタログ
+- P-04: 稼働構成、Kata、成果物カタログ、スケジュール戦略、Schedule（track）、実行計画
+- P-05: ジョブ定義、定期実行定義
+- P-06: 稼働構成、ジョブ定義
+
+Union: 登録簿, 稼働構成, Kata, 成果物カタログ, スケジュール戦略, Schedule（track）, 実行計画, ジョブ定義, 定期実行定義
+
+From §4 tables:
+§4.1: 稼働構成, Kata, 成果物カタログ, スケジュール戦略, 定期実行定義, ジョブ定義 (6 items)
+§4.2: 登録簿, Schedule（track）, 実行計画 (3 items)
+Total: 9 items
+
+Union from §3 = 9 items ✓. Same set. Match! ✓
+
+Now let me check §6 individual process I/O data store lists vs §3 and §4:
+
+§6 P-02-01: 登録簿（更新） → In §4.2, 登録簿 is "参照・更新". OK - P-02-01 only updates it.
+§6 P-03-01: 稼働構成（参照）、Kata（参照）、登録簿（参照）、成果物カタログ（更新） → Matches §3.2 area stores and §4 ✓
+§6 P-04-01: Kata（参照）、成果物カタログ（参照）、スケジュール戦略（更新） → ✓
+§6 P-04-02: 稼働構成（参照）、成果物カタログ（参照）、スケジュール戦略（参照）、Schedule（track）（更新） → ✓
+§6 P-04-03: Kata（参照）、成果物カタログ（参照）、Schedule（track）（参照）、実行計画（更新） → ✓
+
+Wait, §3.3 area data stores for P-04 include "稼働構成、Kata、成果物カタログ、スケジュール戦略、Schedule（track）、実行計画" but:
+- P-04-01 uses: Kata、成果物カタログ、スケジュール戦略 (missing 稼働構成, Schedule, 実行计划)
+- P-04-02 uses: 稼働構成、成果物カタログ、スケジュール戦略、Schedule（track） (missing Kata, 実行計画)
+- P-04-03 uses: Kata、成果物カタログ、Schedule（track）, 実行計画 (missing 稼働構成, スケジュール戦略)
+
+Combined across all P-04 processes: 稼働構成, Kata, 成果物カタログ, スケジュール戦略, Schedule（track）, 実行計画 = matches area data store list ✓
+
+§6 P-05-01: ジョブ定義（参照）、定期実行定義（更新） → Matches §3.4 ✓
+§6 P-06-01: 稼働構成（参照）、ジョブ定義（更新） → Matches §3.5 ✓
+
+Everything checks out. The document seems to be in good shape already.
+
+Let me now check if there are any minor text issues I should fix:
+
+Looking at §3 intro (line 30): "起点イベントの上位定義は [[cdfd-overview|概念データフロー図（全体概要）]] を正本とする。"
+This is correct - it references the overview as authoritative for event definitions. ✓
+
+One thing I notice: in cdfd-do §7, there are two rows (登録項目 and 実行記録) because P-07-05 handles both. In cdfd-plan §7, there's only one row for 登録項目/P-02-01, but the text also mentions Schedule (track) task state on line 256. The rulebook says "状態を変えるプロセス" should be in the table. Is P-04-02 a state-changing process? Looking at it: "Schedule（track）展開 | 循環のない依存順序、担当、期間、マイルストーンを持つ実行可能なタスク群を成立させる" - this generates task entries with initial states but doesn't transition existing states. The text on line 256 says "Schedule（track）のタスク状態は本グループでは展開時の初期情報として生成するが、その状態定義と遷移は本書で再定義しない。参照先の STSD / CSTD 文書 ID は「未決事項」で追跡する。" This is correct - it's not a state transition, just initial generation. ✓
+
+I believe the document is already in good shape. The only things I could improve are truly minor:
+1. Adding `supersedes: []` for consistency with siblings - but this is cosmetic and optional
+2. Making §4 "利用" columns reference specific process IDs - would be a significant style change that isn't required by done_criteria
+
+Since the task is conservative polishing ("不足や不整合だけを最小限修正"), and I've found no actual inconsistencies or missing elements, let me do one check: whether the "未決事項" on TODO should stay. The current TODO tracks STSD/CSTD document IDs which haven't been determined yet. This is a valid unresolved item that should remain as _TODO_.
+
+Actually wait, let me look at this more carefully. The cdfd-onboarding also has a similar TODO but phrased slightly differently. And the cdfd-do has one too. These are all legitimate open items.
+
+Let me check if there's anything in the "group-level" bullet points that might not be fully captured in the area breakdown. Let me recheck the "主要出力" of P-04:
+Overview says: "スケジュール戦略、Schedule（track）とマイルストーン、実行計画"
+Plan §3.3 says: "スケジュール戦略、Schedule（track）とマイルストーン、実行計画" ✓ - exact match
+
+OK, I'm now confident. The document is essentially complete and consistent. Let me check one last thing - whether the diagrams correctly handle the rule about "同一グループ内の領域間の受け渡しは内部フローとして図に描くこと".
+
+Diagram 5.1 shows P-02→P-03 via 登録簿 ✓
+Diagram 5.2 shows P-04-01→P-04-02 via スケジュール戦略 and P-04-02→P-04-03 via Schedule ✓
+Diagram 5.3 shows P-06→P-05 via ジョブ定義 (job definition feeds into routine execution definition) ✓
+
+All internal cross-domain flows are shown. ✓
+
+Now let me also verify that the external delegation targets are correct. The cdfd-plan §8.2 delegates to:
+1. `cdfd-orchestrator` - for PDCA cycle initiation, Plan requirements, routine next-trigger ✓ (exists as file)
+2. `cdfd-do` - for executing plans/jobs ✓ (exists as file)
+3. `cdfd-uc-register` - for cross-group register flow ✓ (exists as file)
+4. `cdfd-uc-deliverable` - for cross-group deliverable flow ✓ (exists as file)
+
+Rulebook requires delegation targets to be other `cdfd-<group>` or `cdfd-uc-<topic>`. All four targets are either group-level CDFDs or use-case-specific CDFDs. ✓ And all exist in the filesystem. ✓
+
+The document is in good shape. Let me now run prettier and markdownlint to make sure there are no formatting issues, and then determine if any changes are actually needed.
+
+Actually, I did realize something important. Let me re-read the plan more carefully: "磨き込み・整合性確認" - this task IS about checking consistency and polishing. Even if everything is perfectly fine, I should still verify by running the checks and confirming no changes are needed, or identify any tiny fixes.
+
+Let me now just run the checks and see what happens.
+Both checks pass. Now let me also check if `specdojo catalog validate` is needed (since the target file is in `docs/ja/product/` but not `docs/ja/projects/`):
+Good. The target file is in `docs/ja/product/` (product docs), not `docs/ja/projects/`, so `specdojo catalog validate` is for the project catalog, not this product file. However, looking at the validation table, `specs/*` files might need validation too. Let me check if there's a schema check needed.
+
+Actually, looking back at the common conventions: 
+- `*.md` → prettier + markdownlint ✓ (done, both passed)
+
+And the pipeline says parent runner will run test-integration, validate-schema, test-unit. So I don't need to run those in executor.
+
+No changes are needed for cdfd-plan.md! The document is already consistent with:
+- cdfd-overview area-level vs group-level I/O
+- Process IDs, names, and data stores matching between all tables, diagrams, and §3/§4/§6
+- External delegation targets all exist as files  
+- All rulebook required sections present
+- Prettier and markdownlint both pass
+
+Now let me write the result file. First, let me re-read what's needed:
+The executor stage does not have permission to edit the result file - that belongs to the reporter stage. The plan explicitly states "This invocation is the executor stage... do not create or update the result file." So I should focus on the artifact editing and not touch the result file.
+
+Since I've confirmed no changes are needed for `cdfd-plan.md`, let me verify one more time that the document is truly in good shape by reviewing whether there are any subtle issues I might have missed. Let me check if the "未決事項" TODO should remain or be cleaned up:
+The _TODO_ in §9 is a legitimate unresolved item that should remain. The plan explicitly says "それでも判断できない箇所は憶測で埋めず _TODO_ / _ASSUMPTION_ として論点を残す" which applies here. ✓
+
+Now let me do one final check - I want to make sure the mermaid diagrams are valid by checking if there's a mermaid lint available or at minimum if they parse correctly:
+The cffd-plan.md uses the same `classDef` definitions consistently with all other sibling CDFDs. The color scheme is correct per the mermaid rulebook.
+
+I've completed a comprehensive consistency check. Here's my summary:
+
+**Conclusions:**
+1. All 5 plan-group domains (P-02〜P-06) are present in §3 as separate sections with area-level I/O that sums up to the group-level I/O in cffd-overview §3.2 without contradiction.
+2. All 7 process IDs (`P-02-01` through `P-06-01`) appear consistently across §3 tables, §5 diagrams, and §6 individual I/O tables with matching names.
+3. The 9 data stores in §4 are a correct subset of cffd-overview's data stores, matching names and master/transaction classification.
+4. External delegation targets (`cdfd-orchestrator`, `cdfd-do`, `cdfd-uc-register`, `cdfd-uc-deliverable`) all exist as files in the filesystem.
+5. All rulebook-required sections are present. No prohibited content found.
+6. `npx prettier --check` and `npx markdownlint` both pass with no errors.
+7. The §9 _TODO_ for STSD/CSTD document IDs is a legitimate unresolved item that should remain per the plan instruction to "judgment impossible 箇所は憶測で埋めず `TODO_ / ASSUMPTION_ として論点を残す`".
+
+No changes to `cdfd-plan.md` are warranted. The document already satisfies all done_criteria.
+
+<specdojo_executor_evidence>
+{"final_message":"cdfd-plan の整合性確認を実施し、変更は不要と判定した。領域 I/O は cffd-overview と矛盾せず、プロセス ID・データストア名称が全章一義的、委譲先 4 件が実在することを確認済み。prettier・markdownlint パス。","validations":[{"command":"npx prettier --check docs/ja/product/010-business-specs/010-data-flow/cffd-plan.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cffd-plan.md","status":"passed","summary":"No lint errors"}]}
+</specdojo_executor_evidence>
