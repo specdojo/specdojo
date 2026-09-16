@@ -1,0 +1,30 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: cdfd-onboarding-grade-criteria
+document: cdfd-onboarding
+path: docs/ja/product/010-business-specs/010-data-flow/cdfd-onboarding.md
+graded_at: "2026-09-16T12:14:18.668Z"
+graded_by: gemma-expert-executor
+content_hash: bfa933fc76ef5d41285ac3a684e44888932084f70822805903a378385ebceafc
+summary:
+  satisfied: 3
+  unsatisfied: 0
+  total: 3
+criteria:
+  - id: DC-001
+    text: 全体概要の P-01 の主要入力・主要出力・データストアが「プロセス領域」章で矛盾なく詳細化され、Kata の配置と稼働構成の初期化がプロセス単位で確認できること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: satisfied
+  - id: DC-002
+    text: 各プロセスの起動条件、読み書きするデータストア（Kata、稼働構成）、生成先が識別でき、後続の Plan への引き渡しがグループ外委譲として示されていること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: satisfied
+  - id: DC-003
+    text: 既存設定の検出、雛形の不足、権限不足など、成果の採否を変える主要例外の検出条件と再開条件が判定できること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: satisfied

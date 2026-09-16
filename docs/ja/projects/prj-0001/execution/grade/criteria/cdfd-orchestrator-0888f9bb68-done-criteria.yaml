@@ -1,0 +1,30 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: cdfd-orchestrator-grade-criteria
+document: cdfd-orchestrator
+path: docs/ja/product/010-business-specs/010-data-flow/cdfd-orchestrator.md
+graded_at: "2026-09-16T12:26:53.370Z"
+graded_by: gemma-expert-executor
+content_hash: 9958237dc24f9ffe1d1993bb90e47a5d7520d49753d65e5d037072b0b9aa45d7
+summary:
+  satisfied: 3
+  unsatisfied: 0
+  total: 3
+criteria:
+  - id: DC-001
+    text: 全体概要の P-14 の主要入力・主要出力・データストアが「プロセス領域」章で矛盾なく詳細化され、対話型運転と自動運転が同じ要求発行のプロセスで説明できること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: satisfied
+  - id: DC-002
+    text: 稼働構成、成果物カタログ、スケジュール戦略、定期実行定義、実行計画、実行記録への読み書きと、Plan・Do・Check・Action への要求がグループ外委譲として識別できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: satisfied
+  - id: DC-003
+    text: 実行ロックの競合、定期実行の取りこぼし、要求先の失敗など、サイクルの継続を変える主要例外の検出条件と再開条件が判定できること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: satisfied

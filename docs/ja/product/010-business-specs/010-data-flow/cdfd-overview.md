@@ -10,34 +10,31 @@ specdojo:
     rubric: grade-rubric-v1
     target: deliverable
     verdict: needs-work
-    score: 72
-    graded_at: "2026-09-13T23:34:22.020Z"
+    score: 88
+    graded_at: "2026-09-16T13:19:19.588Z"
     graded_by: codex-expert-executor
-    content_hash: 7e0b13fc02d9c7764c81278a71cfa5efaeefccc59f65e5abaeea205ad505ccd3
+    content_hash: 0b99f7c3463de294326f6b857877742d9294b77e1b80275a8bced7257a86d82b
     categories:
-      consistency: { score: 38 }
-      usability: { score: 88 }
+      consistency: { score: 50 }
+      usability: { score: 100 }
       architecture: { score: 100 }
-      quality: { score: 67 }
+      quality: { score: 100 }
     viewpoints:
       vp-arc-cross-document-consistency: { level: 2, score: 50 }
       vp-arc-conciseness: { level: 4, score: 100 }
       vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-done-criteria: { level: 2, score: 50 }
-      vp-qe-verifiability: { level: 2, score: 50 }
-      vp-qe-omissions-consistency: { level: 1, score: 25 }
-      vp-ux-readability: { level: 3, score: 75 }
+      vp-qe-done-criteria: { level: 4, score: 100 }
+      vp-qe-verifiability: { level: 4, score: 100 }
+      vp-qe-omissions-consistency: { level: 2, score: 50 }
+      vp-ux-readability: { level: 4, score: 100 }
       vp-ux-user-flow: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 3, score: 75 }
+      vp-ux-language-consistency: { level: 4, score: 100 }
       vp-arc-document-structure: { level: 4, score: 100 }
       vp-qe-config-validity: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 5, minor: 2, note: 0 }
+    findings: { blocker: 0, major: 2, minor: 2, note: 0 }
     done_criteria:
-      satisfied: 2
+      satisfied: 4
       total: 4
-      unsatisfied:
-        DC-001: [BA]
-        DC-003: [ARC]
       detail_ref: cdfd-overview-grade-criteria
 ---
 
@@ -62,6 +59,8 @@ SpecDojo を活用した仕様駆動開発の全体像を、プロセス領域�
 - 人間と AI Agent の責任分担は、承認、完了判断、構成変更の承認、非推奨化の判断を人間が担い、成果物の作成・評価・派生生成は人が担うほか AI Agent へ委譲できる、という原則に従う。本書の各領域はこの原則を前提とし、人間の判断を自動処理に置き換えない。
 
 ## 3. プロセス領域
+
+<!-- specdojo:finding id=F004 severity=major rule=vp-qe-omissions-consistency line=23 現行の14領域・六グループへの改訂を PO が承認した記録を特定できず、既存の `T-DATA-FLOW-cdfd-overview-140-result.md` は9領域・三グループ版の承認であるため、現在の境界に対する承認記録を追加して `ready` 昇格条件を満たす必要がある。 -->
 
 業務は 14 のプロセス領域に分かれ、六つのプロセスグループにまとめる。領域の分割と領域間の受け渡しは本書を正本とし、領域内の詳細はプロセスグループ別 CDFD を正本とする。各グループの主要入力・主要出力・データストアは「概念データフロー（概要）」のエッジの根拠である。
 
@@ -88,6 +87,7 @@ SpecDojo を導入して Kata を配置し、その雛形から稼働構成の�
 - **主要出力**: 登録項目・決定記録、成果物カタログ、スケジュール戦略、Schedule（track）とマイルストーン、実行計画、定期実行定義、ジョブ定義
 - **データストア**: 稼働構成、Kata、登録簿、成果物カタログ、スケジュール戦略、Schedule（track）、実行計画、定期実行定義、ジョブ定義
 
+<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=52 P-03「成果物カタログ定義」の主な担当を BA としているが、RACI では成果物カタログの A/R が ARC であり、定義・更新の責任者を一意に判断できないため両文書の責任割当を統一する必要がある。 -->
 <!-- prettier-ignore -->
 | 領域 ID | プロセス領域 | 業務目的 | 主な担当 | 起点イベント |
 | --- | --- | --- | --- | --- |
@@ -319,6 +319,7 @@ flowchart LR
 
 ### 6.1. プロセスグループ別 CDFD
 
+<!-- specdojo:finding id=F002 severity=minor rule=vp-arc-cross-document-consistency line=287 詳細化先 `cdfd-orchestrator` は本文で本書を正本として参照している一方, Frontmatter の `based_on` に `cdfd-overview` がなく、生成元の追跡情報を追加する必要がある。 -->
 <!-- prettier-ignore -->
 | プロセスグループ | 含む領域 | プロセスグループ別 CDFD |
 | --- | --- | --- |
@@ -333,6 +334,7 @@ flowchart LR
 
 複数のプロセスグループを横断する業務のうち、順序と引き渡し条件を定める必要があるものを示す。定期実行とジョブの運転、進捗報告と閲覧提供、稼働構成の変更、文書の非推奨化と保管は、Orchestrator または単一グループの CDFD で扱い、必要になった時点でユースケース別 CDFD を追加する。
 
+<!-- specdojo:finding id=F003 severity=minor rule=vp-arc-cross-document-consistency line=297 本書は `C-02` を `cdfd-uc-deliverable` に割り当てているが、同文書は `C-02` を確定せず BA の判断事項としており、ケース ID の正本関係を統一する必要がある。 -->
 <!-- prettier-ignore -->
 | ケース ID | ユースケース | 業務目的 | 横断するプロセスグループ | ユースケース別 CDFD |
 | --- | --- | --- | --- | --- |

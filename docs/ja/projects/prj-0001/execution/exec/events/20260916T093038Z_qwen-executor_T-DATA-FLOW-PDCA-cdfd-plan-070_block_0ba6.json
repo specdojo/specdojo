@@ -1,0 +1,11 @@
+{
+  "v": 1,
+  "ts": "2026-09-16T09:30:38Z",
+  "type": "block",
+  "task_id": "T-DATA-FLOW-PDCA-cdfd-plan-070",
+  "by": "qwen-executor",
+  "msg": "Result Markdown notation violation before commit: docs/ja/projects/prj-0001/execution/exec/results/T-DATA-FLOW-PDCA-cdfd-plan-070-result.md:38:1015 error MD026/no-trailing-punctuation Trailing punctuation in heading [Punctuation: '。']",
+  "meta": {
+    "limit_deferred": "false"
+  }
+}

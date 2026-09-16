@@ -7,6 +7,36 @@ specdojo:
   based_on:
     - cdfd-overview
   supersedes: []
+  grade:
+    rubric: grade-rubric-v1
+    target: deliverable
+    verdict: needs-work
+    score: 92
+    graded_at: "2026-09-16T11:49:07.413Z"
+    graded_by: gemma-expert-executor
+    content_hash: 17cb02d4fca8924e0bd8dded31d2ac68e350bd074be8666b8b004274260cd819
+    categories:
+      consistency: { score: 88 }
+      usability: { score: 100 }
+      architecture: { score: 100 }
+      quality: { score: 83 }
+    viewpoints:
+      vp-arc-cross-document-consistency: { level: 4, score: 100 }
+      vp-arc-conciseness: { level: 4, score: 100 }
+      vp-arc-single-responsibility: { level: 4, score: 100 }
+      vp-qe-done-criteria: { level: 4, score: 100 }
+      vp-qe-verifiability: { level: 4, score: 100 }
+      vp-qe-omissions-consistency: { level: 3, score: 75 }
+      vp-ux-readability: { level: 4, score: 100 }
+      vp-ux-user-flow: { level: 4, score: 100 }
+      vp-ux-language-consistency: { level: 4, score: 100 }
+      vp-arc-document-structure: { level: 4, score: 100 }
+      vp-qe-config-validity: { level: 2, score: 50 }
+    findings: { blocker: 0, major: 1, minor: 1, note: 0 }
+    done_criteria:
+      satisfied: 4
+      total: 4
+      detail_ref: cdfd-do-grade-criteria
 ---
 
 # 概念データフロー図（Do）: SpecDojo
@@ -185,3 +215,7 @@ flowchart LR
 ## 9. 未決事項
 
 - _TODO_: 登録項目と実行記録について、状態定義を正本とする STSD と状態遷移を正本とする CSTD の文書 ID を確定する。影響範囲は `P-07-05` と `E-07-01`〜`E-07-04`、決定者は ARC と BA、決定時期は本書を `ready` とする前とする。
+
+<!-- specdojo:finding id=F002 severity=major rule=vp-qe-config-validity line=177 未解決の _TODO_ / _ASSUMPTION_ が残っています。 -->
+
+<!-- specdojo:finding id=F001 severity=minor rule=vp-qe-omissions-consistency line=187 未作成の STSD/CSTD 文書 ID を「未提示」と表記せず、ルール通りバッククォートを用いた仮置き ID（例: `stsd-placeholder`）で記述してください。 -->

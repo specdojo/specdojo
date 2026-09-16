@@ -6,6 +6,36 @@ specdojo:
   rulebook: specdojo:cdfd-rulebook
   based_on:
     - cdfd-overview
+  grade:
+    rubric: grade-rubric-v1
+    target: deliverable
+    verdict: needs-work
+    score: 89
+    graded_at: "2026-09-16T01:50:29.716Z"
+    graded_by: gemma-expert-executor
+    content_hash: d90abc6f54eb312db75129313b373403c2825826bbef6fe098aae6af5da73375
+    categories:
+      consistency: { score: 75 }
+      usability: { score: 100 }
+      architecture: { score: 100 }
+      quality: { score: 83 }
+    viewpoints:
+      vp-arc-cross-document-consistency: { level: 4, score: 100 }
+      vp-arc-conciseness: { level: 4, score: 100 }
+      vp-arc-single-responsibility: { level: 4, score: 100 }
+      vp-qe-done-criteria: { level: 4, score: 100 }
+      vp-qe-verifiability: { level: 4, score: 100 }
+      vp-qe-omissions-consistency: { level: 2, score: 50 }
+      vp-ux-readability: { level: 4, score: 100 }
+      vp-ux-user-flow: { level: 4, score: 100 }
+      vp-ux-language-consistency: { level: 4, score: 100 }
+      vp-arc-document-structure: { level: 4, score: 100 }
+      vp-qe-config-validity: { level: 2, score: 50 }
+    findings: { blocker: 0, major: 2, minor: 1, note: 0 }
+    done_criteria:
+      satisfied: 3
+      total: 3
+      detail_ref: cdfd-action-grade-criteria
 ---
 
 # 概念データフロー図（Action）
@@ -245,6 +275,8 @@ flowchart LR
 
 状態の名称、意味、成立条件、遷移元・遷移先・遷移条件は本書で定義しない。状態を変えるプロセスと参照先の対応だけを示す。
 
+<!-- specdojo:finding id=F003 severity=major rule=vp-qe-config-validity line=238 未解決の _TODO_ / _ASSUMPTION_ が残っています。 -->
+
 | 対象   | 状態を変えるプロセス   | 状態定義（STSD）                     | 状態遷移（CSTD）                     |
 | ------ | ---------------------- | ------------------------------------ | ------------------------------------ |
 | タスク | `P-11-02` 完了確定記録 | _TODO_: タスクの STSD 文書 ID を確定 | _TODO_: タスクの CSTD 文書 ID を確定 |
@@ -271,3 +303,6 @@ flowchart LR
 | 論点                                                                                | 影響範囲                         | 決定者  | 決定時期                    |
 | ----------------------------------------------------------------------------------- | -------------------------------- | ------- | --------------------------- |
 | _TODO_: タスクと文書の状態定義・状態遷移を参照する STSD / CSTD の文書 ID を確定する | P-11-02、P-13-02、状態遷移の参照 | BA、ARC | 本書を `ready` に昇格する前 |
+
+<!-- specdojo:finding id=F001 severity=major rule=vp-qe-omissions-consistency line=281 未解決の _TODO_ / _ASSUMPTION_ が残っています。 -->
+<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-omissions-consistency line=281 状態遷移の参照表における未作成参照先の表記を、`_TODO_` からバッククォート囲みの暫定文書 ID へ変更してください。 -->

@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "ts": "2026-09-16T09:33:08Z",
+  "type": "unblock",
+  "task_id": "T-DATA-FLOW-PDCA-cdfd-plan-070",
+  "by": "qwen-executor",
+  "msg": "reporter の result の見出し末尾の句点（MD026）で事前検査に block。orchestrator が見出しを直して統合段から再開"
+}

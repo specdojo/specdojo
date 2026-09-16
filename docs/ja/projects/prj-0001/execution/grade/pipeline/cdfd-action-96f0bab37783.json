@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "project_id": "prj-0001",
+  "target": "deliverable",
+  "document": "docs/ja/product/010-business-specs/010-data-flow/cdfd-action.md",
+  "content_hash": "fbaf8e2c6de27d3597f6c4849efb3deafdb202904eaa50ffb4f406751a054aa7",
+  "stage_completed": 1,
+  "stage_failed": null,
+  "stage_total": 3,
+  "consecutive_failures": 0,
+  "max_failures": 3,
+  "last_run_id": "JBR-grade-deliverable-f07157bb99d7",
+  "updated_at": "2026-09-16T01:35:29.644Z"
+}

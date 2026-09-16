@@ -7,6 +7,36 @@ specdojo:
   based_on:
     - cdfd-overview
   supersedes: []
+  grade:
+    rubric: grade-rubric-v1
+    target: deliverable
+    verdict: needs-work
+    score: 89
+    graded_at: "2026-09-16T12:14:18.668Z"
+    graded_by: gemma-expert-executor
+    content_hash: bfa933fc76ef5d41285ac3a684e44888932084f70822805903a378385ebceafc
+    categories:
+      consistency: { score: 75 }
+      usability: { score: 100 }
+      architecture: { score: 100 }
+      quality: { score: 83 }
+    viewpoints:
+      vp-arc-cross-document-consistency: { level: 4, score: 100 }
+      vp-arc-conciseness: { level: 4, score: 100 }
+      vp-arc-single-responsibility: { level: 4, score: 100 }
+      vp-qe-done-criteria: { level: 4, score: 100 }
+      vp-qe-verifiability: { level: 4, score: 100 }
+      vp-qe-omissions-consistency: { level: 2, score: 50 }
+      vp-ux-readability: { level: 4, score: 100 }
+      vp-ux-user-flow: { level: 4, score: 100 }
+      vp-ux-language-consistency: { level: 4, score: 100 }
+      vp-arc-document-structure: { level: 4, score: 100 }
+      vp-qe-config-validity: { level: 2, score: 50 }
+    findings: { blocker: 0, major: 2, minor: 0, note: 0 }
+    done_criteria:
+      satisfied: 3
+      total: 3
+      detail_ref: cdfd-onboarding-grade-criteria
 ---
 
 # 概念データフロー図（Onboarding）
@@ -125,4 +155,8 @@ Kata の配置と稼働構成の初期化に伴う状態名・意味・成立条
 
 ## 9. 未決事項
 
+<!-- specdojo:finding id=F002 severity=major rule=vp-qe-config-validity line=117 未解決の _TODO_ / _ASSUMPTION_ が残っています。 -->
+
 - _TODO_: Kata と稼働構成に対応する STSD / CSTD の文書 ID を特定する。`P-01-02`、`P-01-03` の状態参照に影響するため、ARC と BA が本書の `ready` 昇格前に決定する。
+
+<!-- specdojo:finding id=F001 severity=major rule=vp-qe-omissions-consistency line=159 未解決の _TODO_ （STSD / CSTD 文書 ID の特定）が残っています。 -->

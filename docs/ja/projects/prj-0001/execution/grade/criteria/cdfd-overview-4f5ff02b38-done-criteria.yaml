@@ -2,21 +2,20 @@
 id: cdfd-overview-grade-criteria
 document: cdfd-overview
 path: docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md
-graded_at: "2026-09-13T23:34:22.020Z"
+graded_at: "2026-09-16T13:19:19.588Z"
 graded_by: codex-expert-executor
-content_hash: 7e0b13fc02d9c7764c81278a71cfa5efaeefccc59f65e5abaeea205ad505ccd3
+content_hash: 0b99f7c3463de294326f6b857877742d9294b77e1b80275a8bced7257a86d82b
 summary:
-  satisfied: 2
-  unsatisfied: 2
+  satisfied: 4
+  unsatisfied: 0
   total: 4
 criteria:
   - id: DC-001
-    text: 初期セットアップ・登録簿ライフサイクル・計画展開・タスク実行・定期処理・並行処理・構成変更・派生生成・報告の各プロセス領域と相互の情報の流れが表と図で確認できること
+    text: Onboarding・Plan・Do・Check・Action・Orchestrator の六つのプロセスグループに属する 14 のプロセス領域と、グループとデータストアの間の情報・実行要求の流れが表と図で確認できること
     roles:
       - BA
     viewpoint: vp-ba-business-value
-    status: unsatisfied
-    reason: 登録簿ライフサイクルと定期処理は定義領域へ変更され、並行処理は独立領域ではなく実行形態に統合されているため、条件が列挙する各領域を表と図で確認できない。
+    status: satisfied
   - id: DC-002
     text: 対象とするプロセス領域、および独立した業務フローに含めない補助操作の境界を承認できること
     roles:
@@ -24,14 +23,13 @@ criteria:
     viewpoint: vp-po-purpose-alignment
     status: satisfied
   - id: DC-003
-    text: 各領域の起点イベント・主要入力・主要出力・データストアが識別でき、領域別CDFDの構成方針として参照できること
+    text: 各領域の起点イベントと、プロセスグループ単位の主要入力・主要出力・データストアが識別でき、概念データフローのエッジと相互に対応し、プロセスグループ別 CDFD の構成方針として参照できること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
-    status: unsatisfied
-    reason: 起点イベントは領域単位で確認できるが、主要入力・主要出力・データストアはプロセスグループ単位でしか記載されていない。
+    status: satisfied
   - id: DC-004
-    text: 領域別CDFDへの分割に重複または欠落がないことを、全体図との対応で確認できること
+    text: プロセスグループ別 CDFD とユースケース別 CDFD への分割に重複または欠落がないことを、詳細 CDFD 一覧と各領域の対応で確認できること
     roles:
       - QE
     viewpoint: vp-qe-omissions-consistency

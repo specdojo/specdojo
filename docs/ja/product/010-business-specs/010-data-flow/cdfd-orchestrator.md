@@ -9,6 +9,36 @@ specdojo:
     - cdfd-do
     - cdfd-check
     - cdfd-action
+  grade:
+    rubric: grade-rubric-v1
+    target: deliverable
+    verdict: needs-work
+    score: 92
+    graded_at: "2026-09-16T12:26:53.370Z"
+    graded_by: gemma-expert-executor
+    content_hash: 9958237dc24f9ffe1d1993bb90e47a5d7520d49753d65e5d037072b0b9aa45d7
+    categories:
+      consistency: { score: 88 }
+      usability: { score: 100 }
+      architecture: { score: 100 }
+      quality: { score: 83 }
+    viewpoints:
+      vp-arc-cross-document-consistency: { level: 3, score: 75 }
+      vp-arc-conciseness: { level: 4, score: 100 }
+      vp-arc-single-responsibility: { level: 4, score: 100 }
+      vp-qe-done-criteria: { level: 4, score: 100 }
+      vp-qe-verifiability: { level: 4, score: 100 }
+      vp-qe-omissions-consistency: { level: 4, score: 100 }
+      vp-ux-readability: { level: 4, score: 100 }
+      vp-ux-user-flow: { level: 4, score: 100 }
+      vp-ux-language-consistency: { level: 4, score: 100 }
+      vp-arc-document-structure: { level: 4, score: 100 }
+      vp-qe-config-validity: { level: 2, score: 50 }
+    findings: { blocker: 0, major: 1, minor: 1, note: 0 }
+    done_criteria:
+      satisfied: 3
+      total: 3
+      detail_ref: cdfd-orchestrator-grade-criteria
 ---
 
 # 概念データフロー図（Orchestrator）: SpecDojo
@@ -16,6 +46,8 @@ specdojo:
 ## 1. 目的
 
 本書は、Orchestrator グループ（P-14）を詳細化し、参加者の意図に基づく対話型運転と、定期実行定義に基づく自動運転を、共通の要求発行と実行状態の追跡として合意できるようにする。
+
+<!-- specdojo:finding id=F001 severity=minor rule=vp-arc-cross-document-consistency line=8 `based_on` に、プロセスグループの定義正本である `cdfd-overview` を含めてください。 -->
 
 - BA と PM は、参加者の意図または定期実行の到来から、Plan・Do・Check・Action のどこへ何を要求するか、および人間の判断が必要な境界を確認する。
 - ARC は、稼働構成、成果物カタログ、スケジュール戦略、定期実行定義、実行計画、実行記録の読み書きと、各グループへの委譲を設計入力として使う。
@@ -176,6 +208,8 @@ flowchart LR
 | [[cdfd-action\|概念データフロー図（Action）]] | 完了・改善の人間判断、必要な構成変更、完了不能時の再計画 | 完了・改善要求、評価結果、進捗報告の判断事項、完了条件、必要に応じた構成変更要求              | 完了・改善の判断、完了記録、再計画要求、または承認結果に基づく更新結果が引き渡された。                 |
 
 ## 9. 未決事項
+
+<!-- specdojo:finding id=F002 severity=major rule=vp-qe-config-validity line=169 未解決の _TODO_ / _ASSUMPTION_ が残っています。 -->
 
 | 論点                                                                            | 影響範囲                                   | 決定者  | 決定時期                    |
 | ------------------------------------------------------------------------------- | ------------------------------------------ | ------- | --------------------------- |
