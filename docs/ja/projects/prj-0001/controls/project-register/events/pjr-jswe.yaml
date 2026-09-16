@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_54a0958960ad49fcb00d3d5705cea3a6
+  ts: "2026-09-16T23:05:55Z"
+  action: add
+  actor: specdojo-orchestrator (claude)
+  from_status: null
+  to_status: open
+  reason: 設計方針の判断根拠を登録簿に残すため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: agent ワークフローを plan/result/git に置き skills 等の agent 固有機能へ依存しない方針の分析
+    - field: description
+      from: ""
+      to: SpecDojo が skills などの agent 固有機能に頼らず plan・result・git 履歴で agent ワークフローを構成する方針の妥当性と、skill へ切り出す判断基準を整理した分析
+    - field: type
+      from: ""
+      to: note
+    - field: priority
+      from: ""
+      to: low
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-17"
