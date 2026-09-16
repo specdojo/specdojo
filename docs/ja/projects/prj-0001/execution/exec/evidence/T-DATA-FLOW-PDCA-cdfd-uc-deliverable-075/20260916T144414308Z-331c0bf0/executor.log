@@ -1,0 +1,14 @@
+[cdfd-uc-deliverable.md](/workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-uc-deliverable-075/docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-deliverable.md) を更新しました。
+
+- ケース ID を `C-02` に統一
+- 評価不能時の Check → Action → Plan の引き渡しを明確化
+- Do のレビューと Check の独立評価を明確化
+- Mermaid のデータストア色区分を凡例へ追加
+- 現行ファイルに finding コメントは存在せず、削除はしていません
+- executor 指示に従い result は未更新です
+
+`npx tsx` は sandbox の IPC 制限で失敗しましたが、同じ index build を IPC 不要の起動方法で実行し成功しています。
+
+<specdojo_executor_evidence>
+{"final_message":"C-02 の追跡性、評価不能時の横断フロー、図の凡例を補強し、対象成果物を更新した。","validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-deliverable.md && npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-deliverable.md","status":"passed","summary":"Markdown の整形と静的検査に成功"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1768件の文書索引を生成"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>

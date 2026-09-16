@@ -4,10 +4,11 @@ specdojo:
   type: exec-result
   task_id: T-DATA-FLOW-PDCA-cdfd-uc-deliverable-075
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   plan_ref: exec/plans/T-DATA-FLOW-PDCA-cdfd-uc-deliverable-075-plan.md
   started_at: "2026-09-16T14:44:14.828Z"
+  completed_at: "2026-09-16T14:53:45.921Z"
   agent: codex-expert-executor
   execution: agent
   approach: fully-guided
@@ -19,16 +20,16 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- grade の指摘（`specdojo:finding`）に基づき、C-02 の追跡性、評価不能時の横断フロー、および図の凡例を補強し、`docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-deliverable.md` を更新した。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-deliverable.md`: C-02 の追跡性、評価不能時の横断フロー、図の凡例を補強
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 次回の `grade` フェーズにて、今回の修正による `specdojo:finding` 指摘の解消状況を確認する必要がある。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`fully-guided` で rulebook / recipe / sample / template をどう使い分けたか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+expert 帯の agent として、成果物評価（grade）で提示された `specdojo:finding` コメントを精査し、妥当な指摘に対して本文の修正を行うことで解消を図った。修正後、`prettier` による整形および `markdownlint` による静的検査を実施し、品質を担保した。
