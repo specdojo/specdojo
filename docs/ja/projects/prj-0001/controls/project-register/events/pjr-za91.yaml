@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_76ad27a1367a42b2962b7aa554a61974
+  ts: "2026-09-16T22:29:17Z"
+  action: add
+  actor: specdojo-orchestrator (claude)
+  from_status: null
+  to_status: open
+  reason: STSD/CSTD の分離による重複と参照のばらつきを解消するため、ARC の判断で統合を決定
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: STSD と CSTD を STSD へ統合し状態一覧と状態遷移図を 1 文書で扱う
+    - field: description
+      from: ""
+      to: ステータス定義（STSD）と概念状態遷移図（CSTD）を STSD へ統合し、状態一覧と遷移図を 1 文書で確認できるようにする。Kata・カタログ・CDFD 参照を単一参照へ更新する
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-17"
+    - field: due
+      from: ""
+      to: "2026-09-30"
