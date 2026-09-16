@@ -1,0 +1,268 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-ZA91",
+  "run_id": "20260916T225310964Z-ce75ea09",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-16T22:53:10.964Z",
+    "completed_at": "2026-09-16T23:15:04.890Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-action.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-check.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-do.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-onboarding.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-orchestrator.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-plan.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-deliverable.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-cstd.yaml",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-stsd.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-za91-stsd-cstd-merge.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-zffz-cdfd-3-stsd-cstd.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/schedule/sch-strategy-data-flow-pdca.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/schedule/sch-track-data-flow-pdca.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/sample-gcs-product/010-業務仕様/040-概念状態遷移図/README.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/recipes/cdfd-overview-recipe.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/recipes/cdfd-recipe.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/recipes/cdfd-uc-recipe.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/deliverables-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/directory-layout-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cdfd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cstd-mermaid-rulebook.md",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cstd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/stsd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/cdfd-overview-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/cdfd-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/cdfd-uc-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/cstd-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/stsd-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/id-and-file-naming-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/cdfd-overview-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/cdfd-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/cdfd-uc-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/dct-data-model-cstd-template.yaml",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/dct-data-model-stsd-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/recipes/stsd-recipe.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/stsd-mermaid-rulebook.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/stsd-template.md",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 42,
+    "summary": ".../010-data-flow/cdfd-action.md                   |  17 +-\n .../010-business-specs/010-data-flow/cdfd-check.md |   2 +-\n .../010-business-specs/010-data-flow/cdfd-do.md    |  14 +-\n .../010-data-flow/cdfd-onboarding.md               |  11 +-\n .../010-data-flow/cdfd-orchestrator.md             |  10 +-\n .../010-data-flow/cdfd-overview.md                 |   4 +-\n .../010-business-specs/010-data-flow/cdfd-plan.md  |  16 +-\n .../010-data-flow/cdfd-uc-deliverable.md           |   2 +-\n .../010-data-flow/cdfd-uc-register.md              |   8 +-\n .../010-deliverables-catalog/dct-data-flow.yaml    |   2 +-\n .../dct-data-model-cstd.yaml                       | 135 -----------\n .../dct-data-model-stsd.yaml                       |  48 ++--\n .../project-register/pjr-za91-stsd-cstd-merge.md   |  25 +-\n .../project-register/pjr-zffz-cdfd-3-stsd-cstd.md  |  14 +-\n .../schedule/sch-strategy-data-flow-pdca.yaml      |   2 +-\n .../schedule/sch-track-data-flow-pdca.yaml         |  16 +-\n .../010-業務仕様/040-概念状態遷移図/README.md      |   4 +-\n docs/ja/specdojo/recipes/cdfd-overview-recipe.md   |   2 +-\n docs/ja/specdojo/recipes/cdfd-recipe.md            |  26 +--\n docs/ja/specdojo/recipes/cdfd-uc-recipe.md         |  32 +--\n .../specdojo/references/deliverables-reference.md  |   7 +-\n .../references/directory-layout-reference.md       |   5 +-\n .../specdojo/rulebooks/cdfd-overview-rulebook.md   |  13 +-\n docs/ja/specdojo/rulebooks/cdfd-rulebook.md        |  40 ++--\n docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md     |   8 +-\n .../ja/specdojo/rulebooks/cstd-mermaid-rulebook.md | 243 -------------------\n docs/ja/specdojo/rulebooks/cstd-rulebook.md        | 211 +----------------\n docs/ja/specdojo/rulebooks/stsd-rulebook.md        | 259 ++++++++++++---------\n docs/ja/specdojo/samples/cdfd-overview-sample.md   |   4 +-\n docs/ja/specdojo/samples/cdfd-sample.md            |  12 +-\n docs/ja/specdojo/samples/cdfd-uc-sample.md         |   2 +-\n docs/ja/specdojo/samples/cstd-sample.md            |  68 +-----\n docs/ja/specdojo/samples/stsd-sample.md            | 111 ++++-----\n .../standards/id-and-file-naming-standard.md       |   3 +-\n .../specdojo/templates/cdfd-overview-template.md   |   6 +-\n docs/ja/specdojo/templates/cdfd-template.md        |   8 +-\n docs/ja/specdojo/templates/cdfd-uc-template.md     |   2 +-\n .../templates/dct-data-model-cstd-template.yaml    |  47 ----\n .../templates/dct-data-model-stsd-template.yaml    |  13 +-\n 39 files changed, 386 insertions(+), 1066 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run -s lint:md",
+      "status": "passed",
+      "summary": "全Markdownファイルのlintが成功"
+    },
+    {
+      "source": "executor",
+      "command": "{ git diff --name-only --diff-filter=ACMR -z; printf '%s\\0' docs/ja/specdojo/recipes/stsd-recipe.md docs/ja/specdojo/rulebooks/stsd-mermaid-rulebook.md docs/ja/specdojo/templates/stsd-template.md; } | sort -zu | xargs -0 npx prettier --check",
+      "status": "passed",
+      "summary": "変更・新規ファイルのPrettier整形を確認"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "全DCTを検証し、統合後のdct-data-model-stsdを含め成功。既存の未作成成果物に関する警告のみ"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog build",
+      "status": "passed",
+      "summary": "成果物カタログを正常生成"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "プロジェクト登録簿を正常生成"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts exec refresh",
+      "status": "passed",
+      "summary": "スケジュール検証・生成に成功。現行スケジュール外の既存履歴イベント4件の警告のみ"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "1773件の文書索引を正常生成"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーおよび競合マーカーなし"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-ZA91\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nUpdated: /tmp/specdojo-register-pipeline-e2e-H4Nyvv/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)\nUpdated: /tmp/specdojo-register-pipeline-e2e-H4Nyvv/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml\nUpdated: /tmp/specdojo-register-resume-e2e-Dqp2xq/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)\nUpdated: /tmp/specdojo-register-resume-e2e-Dqp2xq/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml\nGenerated: /tmp/spe…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.1.0 validate:schema:yaml\n> tsx tools/docs/src/validate-yaml-schema.ts --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-…"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.1.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-ZA91\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-AeRo2B/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-MLvBiC/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-3Y9w3p/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-Sv5mLB/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-4zIay3/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-Z0Tkxx/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\n ❯ tests/src/catalog-merge.test.ts (11 tests | 1 failed) 35ms\n     × builds the seven kind-split data-model templates as two chapters 20ms\nWrote agent stdout: /tmp/specdojo-agent-command-aDYMR1/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-mPCAdM/outputs/partial.txt\nre…"
+    }
+  ],
+  "final_message": "STSDへの統合、CSTDの非推奨化、DCT・CDFD・関連規約の単一参照化を完了した",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-ZA91/20260916T225310964Z-ce75ea09/executor.log",
+      "bytes": 2416,
+      "truncated": false
+    }
+  ]
+}

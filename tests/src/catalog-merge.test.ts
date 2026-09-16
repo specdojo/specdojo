@@ -285,7 +285,7 @@ describe("buildCatalog", () => {
     expect(errors.some((e) => /duplicate local_id 'dup'/.test(e))).toBe(true);
   });
 
-  it("builds the seven kind-split data-model templates as two chapters", () => {
+  it("builds the six kind-split data-model templates as two chapters", () => {
     root = mkdtempSync(join(tmpdir(), "specdojo-template-merge-"));
     const catalogPath = join(root, "catalog");
     const scaffolded = runScaffold({
@@ -304,7 +304,6 @@ describe("buildCatalog", () => {
       "dct-data-model-ccd.yaml",
       "dct-data-model-cdsd.yaml",
       "dct-data-model-cld.yaml",
-      "dct-data-model-cstd.yaml",
       "dct-data-model-sld.yaml",
       "dct-data-model-stsd.yaml",
     ]);

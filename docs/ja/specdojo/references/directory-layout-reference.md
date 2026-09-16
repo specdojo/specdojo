@@ -194,10 +194,9 @@ docs/
 │       │   │   ├── bdd-sales-management.md       # 業務データ辞書（例：販売管理）
 │       │   │   ├── cdsd-sales-management.md      # 概念データストア定義（例：販売管理）
 │       │   │   ├── sld-sales-management.md       # 保管場所定義（例：倉庫・店舗）
-│       │   │   ├── stsd-product-lifecycle.md     # ステータス定義（例：商品ライフサイクル）
+│       │   │   ├── stsd-product-lifecycle.md     # ステータス定義（状態一覧・状態遷移図の例：商品ライフサイクル）
 │       │   │   ├── cld-product-category.md       # 分類定義（例：商品カテゴリ）
-│       │   │   ├── ccd-sales-management.md       # 概念クラス図（例：販売管理）
-│       │   │   └── cstd-product-lifecycle.md     # 概念状態遷移図（例：商品ライフサイクル）
+│       │   │   └── ccd-sales-management.md       # 概念クラス図（例：販売管理）
 │       │   ├── 030-business-model/               # 業務モデル
 │       │   │   ├── bps-sales-order-flow.md       # 業務プロセス仕様（例：受注フロー）
 │       │   │   ├── br-reorder-point.md           # ビジネスルール（例：発注点判定）

@@ -130,16 +130,7 @@ flowchart LR
 
 ## 7. 状態遷移の参照
 
-Kata の配置と稼働構成の初期化に伴う状態名・意味・成立条件は STSD、遷移元・遷移先・イベント・遷移条件は CSTD を正本とし、本書では定義しない。参照先は未作成のため、Onboarding グループの状態を扱う文書 ID を仮置きして対応を示す。
-
-<!-- specdojo:finding id=F002 severity=major rule=vp-qe-config-validity line=117 未解決の _TODO_ / _ASSUMPTION_ が残っています。 -->
-
-| 対象     | 状態を変えるプロセス       | 状態定義（STSD）  | 状態遷移（CSTD）  |
-| -------- | -------------------------- | ----------------- | ----------------- |
-| Kata     | `P-01-02` Kata の配置      | `stsd-onboarding` | `cstd-onboarding` |
-| 稼働構成 | `P-01-03` 稼働構成の初期化 | `stsd-onboarding` | `cstd-onboarding` |
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-qe-omissions-consistency line=159 未解決の _TODO_ （STSD / CSTD 文書 ID の特定）が残っています。 -->
+本グループには状態を変更するプロセスはない。`P-01-02` は Kata の配置を、`P-01-03` は稼働構成の初期値を作成するが、Kata と稼働構成はいずれもライフサイクル状態を持つ対象として管理しないため、対応する STSD はない。
 
 ## 8. 主要例外とグループ外への委譲
 

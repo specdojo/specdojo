@@ -877,9 +877,8 @@ specdojo deliverable trash --project prj-0001 --local-id cdfd-register-operation
 | 業務データ辞書 | Business Data Dictionary | bdd- | bdd-common, bdd-sales |
 | 概念データストア定義 | Conceptual Data Store Definition | cdsd- | cdsd-common, cdsd-sales |
 | 保管場所定義 | Storage Location Definition | sld- | sld-common, sld-sales |
-| ステータス定義 | Status Definition | stsd- | stsd-product |
+| ステータス定義（状態一覧・状態遷移図） | Status Definition | stsd- | stsd-product |
 | 分類定義 | Classification Definition | cld- | cld-product |
-| 概念状態遷移図 | Conceptual State Transition Diagram | cstd- | cstd-product |
 | 業務プロセス仕様 | Business Process Specification | bps- | bps-order-flow |
 | ビジネスルール | Business Rule | br- | br-discount |
 | 画面仕様 | UI Specification | uis- | uis-order-edit |

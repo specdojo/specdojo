@@ -413,7 +413,7 @@ groups:
           - text: 登録簿、成果物カタログ、スケジュール戦略、Schedule（track）、実行計画、定期実行定義、ジョブ定義への読み書きがプロセス単位で識別でき、名称が全体概要の「データストア」と一致していること
             roles: [ARC]
             viewpoint: vp-arc-cross-document-consistency
-          - text: 登録項目の状態の定義と遷移を本書で再定義せず、STSD / CSTD への参照に留めていること
+          - text: 登録項目の状態の定義と遷移を本書で再定義せず、STSD への参照に留めていること
             roles: [ARC]
             viewpoint: vp-arc-document-structure
           - text: カタログ検証の失敗、依存の循環、strategy と Kata grade の不整合など、後続起動を変える主要例外の検出条件と再開条件が判定できること
