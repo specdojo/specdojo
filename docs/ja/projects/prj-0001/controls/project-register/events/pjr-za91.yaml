@@ -74,3 +74,19 @@
       from: waiting
       to: review
   previous_event_id: reg_0cd692f8e4044d2f876f55fc87dc8569
+- v: 1
+  id: reg_47c2f341505442b5b6c333db42c625f2
+  ts: "2026-09-16T23:27:06Z"
+  action: close
+  actor: specdojo-orchestrator (claude)
+  from_status: review
+  to_status: done
+  reason: codex-expert-executor が worktree で統合作業を実施。親検証 test-unit の期待件数をオーケストレーターが更新して develop へ統合し、利用者が内容を確認して close
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-17"
+  previous_event_id: reg_47007295c8324461a7b641debd4966b6

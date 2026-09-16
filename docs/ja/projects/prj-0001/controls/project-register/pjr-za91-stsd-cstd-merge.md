@@ -2,16 +2,17 @@
 specdojo:
   id: prj-0001:pjr-za91-stsd-cstd-merge
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-09-16T22:29:16Z"
   due_on: "2026-09-30"
+  completed_at: "2026-09-16T23:27:06Z"
   block_reason: "agent exited with non-zero code: 親 runner による `test-unit` (`npm run test:unit`) が失敗（exit 1）しており、`tests/src/catalog-merge.test.ts` においてテンプレートの章構成に関するテスト失敗が報告されているため"
 ---
 
