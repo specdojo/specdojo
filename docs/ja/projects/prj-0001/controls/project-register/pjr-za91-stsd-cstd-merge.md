@@ -45,28 +45,31 @@ specdojo:
 
 ## 3. 作業内容
 
-| No  | 作業                                                                                                                | 担当 | 状態 | メモ                                                          |
-| --- | ------------------------------------------------------------------------------------------------------------------- | ---- | ---- | ------------------------------------------------------------- |
-| 1   | `stsd-rulebook` を `cstd-rulebook` の内容を土台に統合構成へ改訂し、sample / template / recipe を整合させる          | ARC  | open | codex-expert-executor / gemma-reporter / worktree で実行      |
-| 2   | `cstd-rulebook` / `cstd-sample` を deprecated にし、`cstd-mermaid-rulebook` を `stsd-mermaid-rulebook` へ改名する   | ARC  | open | 作業 1 と同一タスクで実施                                     |
-| 3   | `dct-data-model-cstd.yaml` を `dct-data-model-stsd.yaml` へ統合し、参照・標準 3 文書の CSTD 行を更新する            | ARC  | open | -                                                             |
-| 4   | `cdfd-rulebook` / `cdfd-uc-rulebook` / template / sample / `cdfd-overview` の「状態遷移の参照」を単一参照へ更新する | ARC  | open | -                                                             |
-| 5   | `data-flow-pdca` の 8 文書の「状態遷移の参照」を単一参照へ書き換え、参照 ID を決定事項の対応表に揃える              | ARC  | open | オーケストレーターが直接対応。review-pass（`-090`）の前に実施 |
-| 6   | PJR-ZFFZ の作業 1（移設先の要否と ID 確定）を本決定で更新する                                                       | ARC  | open | オーケストレーターが直接対応                                  |
+| No  | 作業                                                                                                                | 担当 | 状態 | メモ                                                      |
+| --- | ------------------------------------------------------------------------------------------------------------------- | ---- | ---- | --------------------------------------------------------- |
+| 1   | `stsd-rulebook` を `cstd-rulebook` の内容を土台に統合構成へ改訂し、sample / template / recipe を整合させる          | ARC  | done | 統合構成と完成例、作成手順、雛形を追加                    |
+| 2   | `cstd-rulebook` / `cstd-sample` を deprecated にし、`cstd-mermaid-rulebook` を `stsd-mermaid-rulebook` へ改名する   | ARC  | done | CSTD は移行方針だけを残し、Mermaid 記法を STSD 配下へ移行 |
+| 3   | `dct-data-model-cstd.yaml` を `dct-data-model-stsd.yaml` へ統合し、参照・標準 3 文書の CSTD 行を更新する            | ARC  | done | 5 件の STSD に状態遷移観点を統合                          |
+| 4   | `cdfd-rulebook` / `cdfd-uc-rulebook` / template / sample / `cdfd-overview` の「状態遷移の参照」を単一参照へ更新する | ARC  | done | CDFD の状態責務を STSD 単一参照へ統一                     |
+| 5   | `data-flow-pdca` の 8 文書の「状態遷移の参照」を単一参照へ書き換え、参照 ID を決定事項の対応表に揃える              | ARC  | done | 登録項目・タスク・成果物・実行記録の対応 ID を反映        |
+| 6   | PJR-ZFFZ の作業 1（移設先の要否と ID 確定）を本決定で更新する                                                       | ARC  | done | CSTD を作らず STSD へ統合する方針を反映                   |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+STSD の rulebook、sample、template、recipe を、状態一覧・状態遷移図・遷移説明を一文書で扱う構成へ統合した。旧 CSTD の rulebook と sample は deprecated とし、Mermaid 記法は `stsd-mermaid-rulebook` へ移行した。
+
+データモデルカタログは独立した CSTD 4 件を廃止し、STSD 5 件へ遷移観点と PO・設計・テスト・実装の完了条件を統合した。CDFD の rulebook、recipe、template、sample、全体概要、および data-flow-pdca の 8 文書は STSD 単一参照へ変更し、登録項目、タスク、成果物、実行記録の参照 ID を決定事項へ揃えた。Kata と稼働構成は状態を持たない根拠を明記した。
+
+参照・命名・ディレクトリの 3 文書と PJR-ZFFZ の移設判断も統合方針へ更新した。残課題はなく、検証結果は exec result へ記録する。
 
 ## 5. 関連ドキュメント
 
 - [[specdojo:stsd-rulebook]]
+- [[specdojo:stsd-mermaid-rulebook]]
 - [[specdojo:cstd-rulebook]]
-- [[specdojo:cstd-mermaid-rulebook]]
 - [[specdojo:cdfd-rulebook]]
 - [[specdojo:cdfd-uc-rulebook]]
 - [[prj-0001:dct-data-model-stsd]]
-- [[prj-0001:dct-data-model-cstd]]
 - [[prj-0001:cdfd-overview]]
 - [[prj-0001:pjr-zffz-cdfd-3-stsd-cstd]]
 - [[prj-0001:pjr-6pd7-cdfd-overview]]

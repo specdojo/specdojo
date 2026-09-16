@@ -1,71 +1,54 @@
 ---
 specdojo:
   id: specdojo:stsd-sample
-  type: project
+  type: sample
   status: draft
   rulebook: specdojo:stsd-rulebook
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: fail
-    score: 44
-    graded_at: "2026-09-06T02:25:44.411Z"
-    graded_by: gemma-expert-executor
-    content_hash: 61c3c940bddaa9cad92af6241f786eadfff1819c56b66dd145e61cf4ec4d36b5
-    categories:
-      consistency: { score: 25 }
-      usability: { score: 58 }
-      architecture: { score: 100 }
-      quality: { score: 13 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 2, score: 50 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 1, score: 25 }
-      vp-qe-omissions-consistency: { level: 0, score: 0 }
-      vp-qe-kata-conformance: { level: 0, score: 0 }
-      vp-ux-readability: { level: 1, score: 25 }
-      vp-ux-language-consistency: { level: 2, score: 50 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 2, major: 4, minor: 0, note: 0 }
+  based_on:
+    - specdojo:sample-authoring-standard
 ---
 
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=1 メタデータの `id` および `type` が rulebook の規約に準拠していない。 -->
-<!-- specdojo:finding id=F006 severity=major rule=vp-ux-language-consistency line=1 メタデータの `type` の値が rulebook の定義と不整合である。 -->
+# 商品のステータス定義
 
-# [業務データ辞書 / ステータス定義](../rulebooks/stsd-rulebook.md) サンプル
+駄菓子屋きぬやの商品について、納品から販売または返品までの状態と遷移を定義する。店主代表と店番担当は仕入記録と在庫記録から現在状態を判定し、開発担当と品質確認担当は状態変更の設計・検証に利用する。
 
-<!-- specdojo:finding id=F003 severity=blocker rule=vp-qe-omissions-consistency line=2 必須構成要素である「ステータス定義」および「ステータス一覧」の章および表が欠落している。 -->
-<!-- specdojo:finding id=F004 severity=blocker rule=vp-qe-kata-conformance line=2 本文構成が rulebook の標準テンプレに従っておらず、成果物の正本例となっていない。 -->
+## 1. 概要
 
-## 1. 目的と適用範囲
+- 対象: 店舗が仕入先へ発注し、納品を受けた商品
+- スコープ: 現行業務（AS-IS）の入荷受入、検品、売場補充、販売、返品
+- 状態の正本: 仕入記録と在庫記録。現物の配置は売場棚または返品保管箱で確認する
 
-本書は、業務上のエンティティが取り得る状態（ステータス）を一覧で定義するための最小サンプルである。
+## 2. 状態一覧
 
-## 2. 入力情報
+| 値             | 状態名   | 通称     | 意味                                         | 成立条件                                               | 管理場所             |
+| -------------- | -------- | -------- | -------------------------------------------- | ------------------------------------------------------ | -------------------- |
+| received       | 入荷済み | 入った品 | 店舗が納品を受け、検品結果が未確定の商品     | 納品情報を発注内容へ照合し、店舗で商品を受け取った     | 仕入記録、検品場所   |
+| sellable       | 販売可能 | 売れる品 | 検品に合格し、店頭販売できる商品             | 数量と品質の検品結果が合格で、在庫数量へ反映された     | 在庫記録、売場棚     |
+| sold           | 販売済み | 売れた品 | 会計を終え、店舗在庫から顧客へ引き渡した商品 | 会計が完了し、販売数量を在庫記録から減算した           | 販売記録             |
+| return-pending | 返品待ち | 返す品   | 数量違いまたは品質不良により受入不可の商品   | 検品結果が不合格で、返品対象として仕入記録へ記録された | 仕入記録、返品保管箱 |
+| returned       | 返品済み | 返した品 | 仕入先へ返却し、店舗の管理対象から外れた商品 | 仕入先への商品の引き渡しと返品記録の更新が完了した     | 仕入記録             |
 
-- 対象: 駄菓子屋の販売管理システム
-- 前提: プロジェクト文脈は handbook の共通方針に準拠する
-- 参照: `../rulebooks/stsd-rulebook.md`
+## 3. 状態遷移図
 
-## 3. 記述内容
+```mermaid
+stateDiagram-v2
+  [*] --> 入荷済み : 入荷受入 / 納品情報と発注内容を対応付けた
+  入荷済み --> 販売可能 : 検品完了 / 納品数量と品質がともに合格した
+  入荷済み --> 返品待ち : 検品完了 / 数量違いまたは品質不良が一つ以上ある
+  販売可能 --> 販売済み : 会計完了 / 販売数量を在庫記録から減算した
+  返品待ち --> 返品済み : 返品引渡し / 仕入先が返品対象の商品を受領した
+  販売済み --> [*] : 顧客引渡し / 会計済みの商品を顧客へ渡した
+  返品済み --> [*] : 返品記録確定 / 商品引渡しと返品記録の双方を確認した
+```
 
-- 主な内容: 対象、ステータス名、呼称、説明 など
-- 必須観点: 対象、条件、判定基準、責任者
+## 4. 遷移の説明
 
-<!-- specdojo:finding id=F002 severity=major rule=vp-qe-verifiability line=19 ステータス説明に含めるべき「成立条件」および「終了条件」の具体例が不足している。 -->
-<!-- specdojo:finding id=F005 severity=major rule=vp-ux-readability line=19 成果物の完成例（具体的な表形式と内容）が提示されておらず、サンプルとして不十分である。 -->
-
-## 4. 最小記述例
-
-| 項目         | 値                                                               | 備考                                 |
-| ------------ | ---------------------------------------------------------------- | ------------------------------------ |
-| ドキュメント | [業務データ辞書 / ステータス定義](../rulebooks/stsd-rulebook.md) | 最小サンプル                         |
-| 目的         | 業務上のエンティティが取り得る状態（ステータス）を一覧で定義する | specdojo:deliverables-reference 準拠 |
-| 主な内容     | 対象、ステータス名、呼称、説明 など                              | 要点のみ記載                         |
-
-## 5. 未解決事項
-
-| 論点           | 処理方針                 |
-| -------------- | ------------------------ |
-| 要件詳細の補強 | 実案件適用時に具体化する |
+| 遷移 ID | 遷移元   | 遷移先   | イベント     | 条件                                 | 補足                                           |
+| ------- | -------- | -------- | ------------ | ------------------------------------ | ---------------------------------------------- |
+| `T-01`  | 開始     | 入荷済み | 入荷受入     | 納品情報と発注内容を対応付けた       | 仕入記録へ受入日時と数量を記録する             |
+| `T-02`  | 入荷済み | 販売可能 | 検品完了     | 納品数量と品質がともに合格した       | 在庫記録を更新し、売場棚へ配置できる           |
+| `T-03`  | 入荷済み | 返品待ち | 検品完了     | 数量違いまたは品質不良が一つ以上ある | 受入品と返品対象を分け、返品理由を記録する     |
+| `T-04`  | 販売可能 | 販売済み | 会計完了     | 販売数量を在庫記録から減算した       | 顧客への引き渡し前に販売記録を確定する         |
+| `T-05`  | 返品待ち | 返品済み | 返品引渡し   | 仕入先が返品対象の商品を受領した     | 仕入記録へ返品日と数量を記録する               |
+| `T-06`  | 販売済み | 終了     | 顧客引渡し   | 会計済みの商品を顧客へ渡した         | 店舗在庫としてのライフサイクルを終了する       |
+| `T-07`  | 返品済み | 終了     | 返品記録確定 | 商品引渡しと返品記録の双方を確認した | 店舗の管理対象としてのライフサイクルを終了する |

@@ -1,7 +1,7 @@
 # 概念状態遷移図
 
-業務上の概念（例: 商品、お金）が取り得る状態と遷移を、概念レベルの状態遷移図として定義します。
+このディレクトリは、STSD 統合前に作成された概念状態遷移図の例を保管します。新規作成では状態一覧と状態遷移図を `stsd-<term>` 一文書へ統合します。
 
 ## 記法ガイド
 
-1. 図の作成・更新ルールは [cstd-mermaid-rulebook.md](../../../specdojo/rulebooks/cstd-mermaid-rulebook.md) を参照してください。
+1. 図の作成・更新ルールは [stsd-mermaid-rulebook.md](../../../specdojo/rulebooks/stsd-mermaid-rulebook.md) を参照してください。

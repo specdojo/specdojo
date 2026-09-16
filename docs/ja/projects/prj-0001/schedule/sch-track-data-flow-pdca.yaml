@@ -24,7 +24,7 @@ tasks:
       done_criteria・evidence_refs の現行実装を根拠に、rulebook / recipe / sample / template に
       従って新規に作成する。trash へ退避した旧領域別 CDFD は参照しない。データストア名は
       cdfd-overview の「データストア」と一致させ、凡例は「凡例（本プロダクト共通）」を参照する。
-      状態の定義と遷移は STSD / CSTD を正本として参照に留める。
+      状態の定義と遷移は STSD を正本として参照に留める。
   - local_id: cdfd-onboarding
     phase_suffix: "070"
     phase_set: refine-pass
@@ -98,7 +98,7 @@ tasks:
       done_criteria・evidence_refs の現行実装を根拠に、rulebook / recipe / sample / template に
       従って新規に作成する。trash へ退避した旧領域別 CDFD は参照しない。データストア名は
       cdfd-overview の「データストア」と一致させ、凡例は「凡例（本プロダクト共通）」を参照する。
-      状態の定義と遷移は STSD / CSTD を正本として参照に留める。
+      状態の定義と遷移は STSD を正本として参照に留める。
   - local_id: cdfd-plan
     phase_suffix: "070"
     phase_set: refine-pass
@@ -172,7 +172,7 @@ tasks:
       done_criteria・evidence_refs の現行実装を根拠に、rulebook / recipe / sample / template に
       従って新規に作成する。trash へ退避した旧領域別 CDFD は参照しない。データストア名は
       cdfd-overview の「データストア」と一致させ、凡例は「凡例（本プロダクト共通）」を参照する。
-      状態の定義と遷移は STSD / CSTD を正本として参照に留める。
+      状態の定義と遷移は STSD を正本として参照に留める。
   - local_id: cdfd-do
     phase_suffix: "070"
     phase_set: refine-pass
@@ -246,7 +246,7 @@ tasks:
       done_criteria・evidence_refs の現行実装を根拠に、rulebook / recipe / sample / template に
       従って新規に作成する。trash へ退避した旧領域別 CDFD は参照しない。データストア名は
       cdfd-overview の「データストア」と一致させ、凡例は「凡例（本プロダクト共通）」を参照する。
-      状態の定義と遷移は STSD / CSTD を正本として参照に留める。
+      状態の定義と遷移は STSD を正本として参照に留める。
   - local_id: cdfd-check
     phase_suffix: "070"
     phase_set: refine-pass
@@ -320,7 +320,7 @@ tasks:
       done_criteria・evidence_refs の現行実装を根拠に、rulebook / recipe / sample / template に
       従って新規に作成する。trash へ退避した旧領域別 CDFD は参照しない。データストア名は
       cdfd-overview の「データストア」と一致させ、凡例は「凡例（本プロダクト共通）」を参照する。
-      状態の定義と遷移は STSD / CSTD を正本として参照に留める。
+      状態の定義と遷移は STSD を正本として参照に留める。
   - local_id: cdfd-action
     phase_suffix: "070"
     phase_set: refine-pass
@@ -398,7 +398,7 @@ tasks:
       done_criteria・evidence_refs の現行実装を根拠に、rulebook / recipe / sample / template に
       従って新規に作成する。trash へ退避した旧領域別 CDFD は参照しない。データストア名は
       cdfd-overview の「データストア」と一致させ、凡例は「凡例（本プロダクト共通）」を参照する。
-      状態の定義と遷移は STSD / CSTD を正本として参照に留める。
+      状態の定義と遷移は STSD を正本として参照に留める。
   - local_id: cdfd-orchestrator
     phase_suffix: "070"
     phase_set: refine-pass
@@ -476,7 +476,7 @@ tasks:
       done_criteria・evidence_refs の現行実装を根拠に、rulebook / recipe / sample / template に
       従って新規に作成する。trash へ退避した旧領域別 CDFD は参照しない。データストア名は
       cdfd-overview の「データストア」と一致させ、凡例は「凡例（本プロダクト共通）」を参照する。
-      状態の定義と遷移は STSD / CSTD を正本として参照に留める。
+      状態の定義と遷移は STSD を正本として参照に留める。
   - local_id: cdfd-uc-register
     phase_suffix: "070"
     phase_set: refine-pass
@@ -554,7 +554,7 @@ tasks:
       done_criteria・evidence_refs の現行実装を根拠に、rulebook / recipe / sample / template に
       従って新規に作成する。trash へ退避した旧領域別 CDFD は参照しない。データストア名は
       cdfd-overview の「データストア」と一致させ、凡例は「凡例（本プロダクト共通）」を参照する。
-      状態の定義と遷移は STSD / CSTD を正本として参照に留める。
+      状態の定義と遷移は STSD を正本として参照に留める。
   - local_id: cdfd-uc-deliverable
     phase_suffix: "070"
     phase_set: refine-pass

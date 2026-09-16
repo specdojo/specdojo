@@ -1,0 +1,14 @@
+STSD/CSTD の統合を完了しました。
+
+- STSD に状態一覧・遷移図・遷移説明を統合し、template・recipe・sample を追加・更新
+- CSTD を deprecated 化し、Mermaid 規約を STSD 名へ移行
+- CSTD の DCT を廃止して STSD の 5 成果物へ統合
+- CDFD、スケジュール、参照・命名規約を STSD 単一参照へ更新
+- 個票の作業内容・対応結果を更新。登録項目のステータスと result は executor 指示どおり未変更
+- 既存の未追跡 evidence ディレクトリは未操作
+
+`npx tsx` は sandbox の IPC 制約で起動できなかったため、同じ CLI を `node --import tsx` で実行し、検証に成功しています。カタログの警告は既存の未作成成果物、`exec refresh` の警告は既存の履歴イベントに関するものです。
+
+<specdojo_executor_evidence>
+{"final_message":"STSDへの統合、CSTDの非推奨化、DCT・CDFD・関連規約の単一参照化を完了した","validations":[{"command":"npm run -s lint:md","status":"passed","summary":"全Markdownファイルのlintが成功"},{"command":"{ git diff --name-only --diff-filter=ACMR -z; printf '%s\\0' docs/ja/specdojo/recipes/stsd-recipe.md docs/ja/specdojo/rulebooks/stsd-mermaid-rulebook.md docs/ja/specdojo/templates/stsd-template.md; } | sort -zu | xargs -0 npx prettier --check","status":"passed","summary":"変更・新規ファイルのPrettier整形を確認"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"全DCTを検証し、統合後のdct-data-model-stsdを含め成功。既存の未作成成果物に関する警告のみ"},{"command":"node --import tsx src/specdojo.ts catalog build","status":"passed","summary":"成果物カタログを正常生成"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"プロジェクト登録簿を正常生成"},{"command":"node --import tsx src/specdojo.ts exec refresh","status":"passed","summary":"スケジュール検証・生成に成功。現行スケジュール外の既存履歴イベント4件の警告のみ"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1773件の文書索引を正常生成"},{"command":"git diff --check","status":"passed","summary":"空白エラーおよび競合マーカーなし"}]}
+</specdojo_executor_evidence>
