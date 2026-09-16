@@ -1,0 +1,72 @@
+I'll start by reading the execution plan's referenced files to understand the task. Let me load the key context first.
+Now let me read the depends_on deliverables (the group-specific CDFDs) and the rulebooks.
+Now let me read the remaining depends_on deliverables and the rulebooks.
+Now let me read the rulebooks and recipe referenced in the plan.
+I have read all the referenced files. Now let me do a thorough consistency check using grep to verify cross-references, process IDs, and deliverable references.
+Let me check the git history and look at a sibling UC deliverable for structure reference.
+Now I have a complete picture. Let me verify all cross-references and consistency across the four group CDFDs vs. the UC deliverable. Let me check the project overview context too, and verify the data store / process ID consistency with grep.
+I now have all the context. Let me create a task list and perform the consistency verification systematically.
+I've read all referenced files. Now let me do the consistency verification carefully by comparing the group-level I/O in UC §3 against cdfd-overview, and cross-checking the four group CDFDs.
+
+Let me analyze the key data points:
+
+**UC §3.1 Plan 主要入力**: `管理対象とする成果物の判断、登録項目・決定記録、メンバー・ロール、Kata`
+- overview §3.2 Plan 主要入力: `Orchestrator からの計画要求、Action からの再計画要求、参加者からの判明した事項と意思決定、参加者からの管理対象とする成果物の判断、メンバー・ロール、Kata の rulebook・template、参加者からの定型・定期実行の要件`
+- UC is a subset focused on the deliverable flow. No contradiction (UC narrows to C-02 scope). The plan CDFD §3.2 P-03-01 主要入力 = `管理対象成果物の判断、登録項目・決定記録、メンバー・ロール、rulebook・template` — matches UC's Plan inputs.
+
+**UC §3.1 Plan 主要出力**: `done_criteria・evidence_refs を含む検証済み成果物カタログ、Schedule（track）、実行計画`
+- plan CDFD P-03-01 outputs 成果物カタログ, P-04 outputs Schedule（track）/実行計画. Consistent.
+
+The main task is a polish/consistency task on an already-drafted document. Let me verify the group委譲 references exist as deliverables and check the cdfd-orchestrator reference. The UC deliverable references `cdfd-plan`, `cdfd-do`, `cdfd-check`, `cdfd-action` — all exist (confirmed by glob). It also references `cdfd-overview`. All consistent.
+Now let me check the key question: case ID. The `cdfd-overview` (status: ready) §6.2 maps C-02 → `cdfd-uc-deliverable`. The draft currently uses the product ID as a "tracking key" instead of `C-02`, which is now resolvable. Let me first run prettier to normalize, then verify formatting state before deciding on the case-ID correction.
+The `&&` chain may be the issue. Let me run each command separately.
+The `;` and `echo "EXIT=$?"` likely trigger the denial. Let me run markdownlint alone.
+markdownlint passed (no output = clean), prettier reports unchanged. Now the key consistency question: the case ID. The `cdfd-overview` (status: ready, §6.2 line 340) explicitly maps `C-02` → `cdfd-uc-deliverable`, and the draft's `based_on` includes the four group CDFDs + overview. But UC deliverable §2 "ケース" treats `C-02` as unprovided. Let me verify what each depends_on group CDFD says about its case ID, to check whether the "未提示" claim holds against the dependencies.
+I've now completed the verification. Let me update my todos and record findings.
+
+Key finding: The draft's §2 "ケース" claim (line 31) that "許可された参照資料には全体概要の `C-<nn>` 形式のケース ID が提示されていないため" is contradicted by `cdfd-overview` §6.2 (line 340), which explicitly maps `C-02` → `cdfd-uc-deliverable`. Since `C-02` is in the `based_on`-closure of the overview, this is resolvable. However, per 4.1/4.3 and the rulebook's "不採番" constraint plus the explicit "グループ間の不一致・矛盾を直さない" guidance, I will NOT renumber or rewrite existing content — I'll add a minimal clarifying note that flags the inconsistency for the deciding role (BA), rather than assert a value.
+I've completed the verification. Now let me reconsider the case-ID inconsistency. Before deciding to edit, let me check the spec of how the catalog drives this task and whether overview is a permitted reference (via `based_on` transitive closure).
+Let me read the catalog entry to confirm `done_criteria` and the `based_on` closure.
+Let me read the previous completion result (task 010) and the current plan's done_criteria to align my approach.
+Now I have the complete picture. Let me verify the consistency findings:
+
+1. **Process IDs / names / data stores — table vs diagram**: All four group nodes (Plan P-02〜P-06, Do P-07, Check P-08〜P-10, Action P-11〜P-13), H-01/H-02/H-03 event nodes, and the 9 data stores (Kata, 成果物カタログ as master; Schedule（track）, 実行計画, 成果物, 実行記録, 評価結果, 進捗報告, 登録簿 as transaction) match between §3 tables, §4 tables, and §5 diagram. ✓
+
+2. **Group-level I/O vs overview**: §3.1-3.4 主要入力/出力 are a narrowed subset consistent with cdfd-overview §3.2-3.5. No contradiction. ✓
+
+3. **委譲先 references exist**: `cdfd-plan`, `cdfd-do`, `cdfd-check`, `cdfd-action` all exist as group CDFDs. ✓
+
+4. **Case ID inconsistency**: §2 "ケース" claims `C-<nn>` is "提示されていない", but cdfd-overview §6.2 (line 340, in `based_on` closure via group CDFDs) explicitly maps `C-02` → `cdfd-uc-deliverable`. The draft is wrong here. Per 4.3/4.1 and rulebook "不採番", I will not assert a value or rewrite existing content; I'll add a minimal `_ASSUMPTION_`/clarification flag pointing to the overview's authoritative mapping for BA to resolve, without renumbering.
+
+5. **done_criteria satisfaction**: H-01/H-02/H-03 引き渡し表 has all 6 columns with no empty cells; §7 covers all H IDs group-level with no internal exception; ARC separation (review/確定 vs grade評価) is in H-02 condition + §6 closing. ✓
+
+The document already satisfies done_criteria and structural requirements. The only genuine inconsistency is the case-ID claim. Let me make a minimal, conservative clarification note that flags it for BA without rewriting or renumbering.
+Now I'll make the minimal, conservative edit: correct only the false justification within the existing line (not rewriting content or renumbering), and add a single minimal note flagging the inconsistency for BA to resolve — without asserting `C-02` authoritatively.
+Now run formatting and lint on the edited file, and check whether index rebuild is needed for the `docs/` change. Let me also verify the catalog validate won't be affected.
+markdownlint passes. The change is under `docs/`, so I should run the `specdojo index build`. Let me check what's available and whether `based_on` resolution needs catalog validation.
+The `specdojo` CLI isn't installed locally. Let me check how the parent runner runs it and whether index build is even executable here (the prior task noted an EPERM issue). First, let me re-read the edited section to confirm correctness.
+The edit reads well and is self-contained. Now let me attempt the `specdojo index build` for the `docs/` change, following the repo's documented startup method.
+The `| tail` pipe and `2>&1` are not allowed. The allowed pattern is bare `specdojo *` or `./node_modules/.bin/specdojo *`. Let me run it plainly with the proper invocation form.
+The allowed pattern is bare `specdojo` (no `npx tsx` prefix). Let me try that form, and also check if there's an npm script for it.
+The pipe `| head` breaks it. The allowed commands are bare invocations. Let me run `specdojo index build` and `specdojo catalog validate` as bare commands (these match the allow-patterns even though the binary isn't in .bin — I'll see if a global is available).
+Index build succeeded. Now run catalog validate (since `docs/ja/projects/` and the catalog reference consistency matter, and the frontmatter `based_on` closure must hold).
+The `catalog validate` ends with `OK: dct-index.yaml`. The WARN lines are pre-existing (other deliverables' `based_on` docs not yet created — unrelated to my change). Let me confirm there are no ERRORS and verify the specific target's validation by grepping for errors/warnings related to data-flow.
+No `ERROR` lines, and the data-flow catalog validates cleanly (`OK: dct-data-flow.yaml`). The WARNs are all pre-existing and unrelated to my change. Let me confirm whether the generated `doc-index.json` was modified by the index build, since that determines what files changed overall.
+The only tracked change is the deliverable itself; `doc-index.json` was not modified (already up-to-date). The evidence dir is runner-created. Let me do a final confirmation read of the full edited document to ensure coherence, and verify no `_TODO_`/inconsistency remains in my scope.
+The deliverable is coherent and complete. All done_criteria are satisfied:
+- **Owner (BA)**: H-01/H-02/H-03 table (§6) has sender group, receiver group, transferred info, transfer condition, return condition — all 6 columns filled. ✓
+- **Downstream [QE]**: §7 shows group-level return destinations for all H-IDs; no internal-process exception handling. ✓
+- **Downstream [ARC]**: review/確定 (Do) vs grade評価 (Check) separation is in H-02's transfer condition + §6 closing. ✓
+
+Let me update todos and final-check the evidence dir that the runner created.
+The evidence dir is runner-created (untracked), not my concern for editing. Let me finalize the todos and verify the final state once more with markdownlint to be safe.
+All verification and edits are complete. Let me do a final clean read of the edited section to confirm coherence before reporting.
+The edited document is coherent and consistent. All validations pass. I'm ready to report.
+
+Summary of work:
+- Verified §3 group-level I/O against `cdfd-overview` group bullets — consistent (subset, no contradiction).
+- Verified table/figure consistency for process IDs/names/data stores across §3, §4, §5 — all match.
+- Verified 委譲先 references (`cdfd-plan`, `cdfd-do`, `cdfd-check`, `cdfd-action`) exist.
+- Confirmed done_criteria + downstream input-fit satisfaction with QC.
+- Found the only genuine inconsistency: §2 "ケース" claimed `C-<nn>` was "提示されていない", but `cdfd-overview` §6.2 (in the `based_on` closure via the group CDFDs) explicitly maps `C-02`. Applied a minimal, non-rewriting clarification that flags it for BA without asserting/renumbering (per 4.3 rootless-specification prohibition; consistent with sibling `cdfd-uc-register`'s `_UNDECIDED_` stance which I did not touch).
+- Ran prettier (unchanged), markdownlint (clean), `specdojo index build` (built, 1741 entries), `specdojo catalog validate` (`OK: dct-data-flow.yaml`, no errors; WARNs are pre-existing/unrelated).
