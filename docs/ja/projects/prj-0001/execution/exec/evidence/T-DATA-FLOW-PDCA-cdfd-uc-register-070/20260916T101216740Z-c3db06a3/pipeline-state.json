@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "task_id": "T-DATA-FLOW-PDCA-cdfd-uc-register-070",
+  "run_id": "20260916T101216740Z-c3db06a3",
+  "updated_at": "2026-09-16T10:42:28.582Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "qwen-executor",
+      "attempts": 1,
+      "started_at": "2026-09-16T10:13:06.313Z",
+      "completed_at": "2026-09-16T10:36:41.756Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-PDCA-cdfd-uc-register-070/20260916T101216740Z-c3db06a3/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "qwen-reporter",
+      "attempts": 1,
+      "started_at": "2026-09-16T10:37:27.610Z",
+      "completed_at": "2026-09-16T10:42:28.582Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/T-DATA-FLOW-PDCA-cdfd-uc-register-070-result.md"
+    }
+  }
+}

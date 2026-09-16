@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "task_id": "T-DATA-FLOW-PDCA-cdfd-uc-register-070",
+  "run_id": "20260916T101216740Z-c3db06a3",
+  "stage": {
+    "role": "executor",
+    "actor": "qwen-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-16T10:13:06.313Z",
+    "completed_at": "2026-09-16T10:36:41.577Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../product/010-business-specs/010-data-flow/cdfd-uc-register.md   | 7 +++----\n 1 file changed, 3 insertions(+), 4 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md",
+      "status": "passed",
+      "summary": "整形を実行、後段で --check も合格（All matched files use Prettier code style!）"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md",
+      "status": "passed",
+      "summary": "エラーなし（出力空）でクリア"
+    },
+    {
+      "source": "executor",
+      "command": "specdojo catalog validate",
+      "status": "passed",
+      "summary": "全 dct-* が OK。WARN は他 worktree 由来の既存 based_on 欠落 noise で、register 関連の FAIL なし"
+    },
+    {
+      "source": "executor",
+      "command": "specdojo index build",
+      "status": "passed",
+      "summary": "Built index: 1743 entries → .specdojo/doc-index.json"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:integration / npm run validate:schema / npm run test:unit",
+      "status": "not_run",
+      "summary": "親 runner の allowlist 検証のため executor では未実行（重複実行回避。parent が source=runner で追記）"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-uc-register-070\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nUpdated: /tmp/specdojo-register-resume-e2e-PjU965/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)\nUpdated: /tmp/specdojo-register-resume-e2e-PjU965/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml\nUpdated: /tmp/specdojo-register-pipeline-e2e-FrEwto/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)\nUpdated: /tmp/specdojo-register-pipeline-e2e-FrEwto/docs/ja/projects/test/controls/project-register/events/pjr-…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.1.0 validate:schema:yaml\n> tsx tools/docs/src/validate-yaml-schema.ts --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-…"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-uc-register-070\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-Y0aWvM/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-o7MqhJ/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-jstGox/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-feIuzh/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-FfG3W9/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-ZDX3rU/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\nWrote agent stdout: /tmp/specdojo-agent-command-gj82XR/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-NUIZHh/outputs/partial.txt\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\n\n Test File…"
+    }
+  ],
+  "final_message": "磨き込み・整合性確認を完了。cdfd-uc-register.md のケース ID 不整合（本文の _UNDECIDED_ と正本 cdfd-overview が割当てる C-01 の矛盾）を最小修正し、廃止された未決事項 row を削除。prettier/markdownlint/catalog validate/index build サンドボックス検査はすべて通過。result 記述は reporter の責務のため未実施。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-PDCA-cdfd-uc-register-070/20260916T101216740Z-c3db06a3/executor.log",
+      "bytes": 10019,
+      "truncated": false
+    }
+  ]
+}
