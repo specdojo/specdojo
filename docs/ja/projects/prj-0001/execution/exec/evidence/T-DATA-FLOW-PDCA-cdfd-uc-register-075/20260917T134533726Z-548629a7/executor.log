@@ -1,0 +1,14 @@
+[cdfd-uc-register.md](/workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-uc-register-075/docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md) を更新しました。
+
+- 5件の finding を本文で解消（コメントは保持）
+- H-01 の承認条件・承認者・確認対象を明確化
+- H-03 の不足条件ごとに戻り先・戻す情報・再開条件を追加
+- 完了要求を Orchestrator からの外部入力として図示
+- result ファイルは pipeline 指示どおり未変更
+- 親 runner 所管の検証は未実行
+
+標準の `npx tsx` は sandbox の IPC 制約で失敗したため、同等の IPC 不要な起動方法で索引ビルドを完了しました。
+
+<specdojo_executor_evidence>
+{"final_message":"cdfd-uc-register の finding 5件を最小差分で解消し、result は変更していません。","validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md","status":"passed","summary":"対象 Markdown を整形"},{"command":"npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md","status":"passed","summary":"lint エラーなし"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"文書索引1784件を生成"},{"command":"git diff --check","status":"passed","summary":"空白・差分形式エラーなし"}]}
+</specdojo_executor_evidence>
