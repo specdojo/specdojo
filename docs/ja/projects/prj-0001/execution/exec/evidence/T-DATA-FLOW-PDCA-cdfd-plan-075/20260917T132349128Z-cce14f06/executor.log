@@ -1,0 +1,13 @@
+[cdfd-plan.md](/workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-plan-075/docs/ja/product/010-business-specs/010-data-flow/cdfd-plan.md) を更新しました。
+
+- 9件中8件の finding を本文で解消
+- `owner` を成果物カタログから除外し、`owner_rules` による担当生成へ修正
+- 図と入出力表をP-02〜P-06の五領域単位へ分割
+- 主要例外の検出・再開条件を具体化
+- 責任分担の正本参照を追加
+- P-03担当のみ、上位正本がBAのため変更せず（ARCへの変更は上位文書の是正が先）
+- result ファイルは後段 reporter の担当につき未変更
+
+<specdojo_executor_evidence>
+{"final_message":"cdfd-plan.mdのgrade指摘9件中8件を本文修正で解消。P-03担当はrulebookが正本とするcdfd-overviewがBAのため維持し、上位文書側の整合課題として残した。","validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-plan.md","status":"passed","summary":"対象Markdownを整形"},{"command":"npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-plan.md","status":"passed","summary":"警告・エラーなし"},{"command":"npx tsx src/specdojo.ts index build","status":"failed","summary":"sandboxがtsxのIPCソケット作成をEPERMで拒否"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"IPC不要の同一エントリポイントで1784件の索引生成に成功"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>
