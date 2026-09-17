@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "task_id": "T-DATA-FLOW-PDCA-cdfd-do-075",
+  "run_id": "20260917T133514057Z-4fac8874",
+  "updated_at": "2026-09-17T13:45:06.386Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "codex-expert-executor",
+      "attempts": 1,
+      "started_at": "2026-09-17T13:36:02.281Z",
+      "completed_at": "2026-09-17T13:41:30.969Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-PDCA-cdfd-do-075/20260917T133514057Z-4fac8874/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma-reporter",
+      "attempts": 1,
+      "started_at": "2026-09-17T13:42:12.923Z",
+      "completed_at": "2026-09-17T13:45:06.386Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/T-DATA-FLOW-PDCA-cdfd-do-075-result.md"
+    }
+  }
+}
