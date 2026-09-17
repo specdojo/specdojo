@@ -65,6 +65,7 @@ SpecDojo を活用した仕様駆動開発の全体像を、プロセス領域�
 <!-- specdojo:finding id=F004 severity=major rule=vp-qe-done-criteria line=23 DC-002（PO による対象範囲と領域分割の承認）を満たす承認記録が特定できず、未充足である。 -->
 
 <!-- specdojo:finding id=F005 severity=major rule=vp-qe-omissions-consistency line=24 現行の14領域・六グループへの改訂を PO が承認した記録を特定できず、既存の `T-DATA-FLOW-cdfd-overview-140-result.md` は9領域・三グループ版の承認であるため、現在の境界に対する承認記録を追加して `ready` 昇格条件を満たす必要がある。 -->
+
 業務は 14 のプロセス領域に分かれ、六つのプロセスグループにまとめる。領域の分割と領域間の受け渡しは本書を正本とし、領域内の詳細はプロセスグループ別 CDFD を正本とする。各グループの主要入力・主要出力・データストアは「概念データフロー（概要）」のエッジの根拠である。
 
 「主な担当」は [[prj-0001:pm-roles|ロール一覧]] の Role code に統一する。実際にタスクを実行する member・agent は Role とは区別し、タスク固有の実行責任は Schedule の `owner`、runner は実行主体として管理する。対象範囲内の参加者から直接受け取る入力は、外部主体のエッジを設けず、各グループの「主要入力」で「参加者からの〜」と明記する。
@@ -148,7 +149,7 @@ Check の結果と人間の判断に基づき、タスクの完了確定、稼�
 Plan・Do・Check・Action へ要求を発行して PDCA を回す。参加者の意図に基づく対話型の運転と、定期実行定義に基づく自動運転を含み、各領域の内部処理は担当しない。
 
 - **主要入力**: 稼働構成の agent 定義・実行既定値、参加者からの意図、成果物カタログの完了条件、スケジュール戦略の作業要件、定期実行定義、実行状態
-- **主要出力**: Plan・Do・Check・Action への要求、生成した実行計画、サイクルの実行記録
+- **主要出力**: Plan・Do・Check・Action への要求、サイクルの実行記録
 - **データストア**: 稼働構成、成果物カタログ、スケジュール戦略、定期実行定義、実行計画、実行記録
 
 <!-- prettier-ignore -->
@@ -225,7 +226,7 @@ flowchart LR
   Orchestrator -->|"完了・改善要求"| Action
   ExecLog -->|"実行状態"| Orchestrator
   Orchestrator -->|"サイクルの実行記録"| ExecLog
-  Orchestrator -->|"生成した実行計画"| ExecPlan
+  ExecPlan -->|"対象・手順・完了条件"| Orchestrator
 
   Plan -->|"登録項目・決定記録"| Register
   Plan -->|"Schedule（track）"| Schedule
