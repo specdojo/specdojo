@@ -86,6 +86,21 @@ docker exec -it <container_name> bash
 docker exec -it awesome_app_devcontainer bash
 ```
 
+### 4.4. 残った VS Code Server のプロセスを掃除する
+
+`devcontainer.json` は `"shutdownAction": "none"` でコンテナを生かし続けるため、VS Code の再接続や更新のたびに旧 server や親を失った extension host がコンテナ内に残り、メモリを圧迫することがあります。`"init": true` で PID 1 を init にして孤児プロセスを回収し、接続時（`postAttachCommand`）に残骸を自動で停止します。
+
+手動で確認・停止する場合は次を使います。
+
+```bash
+npm run vscode:ps          # vscode-server 系プロセスをメモリ順に表示する
+npm run vscode:kill-stale  # 最新 commit 以外の server と孤児プロセスを停止する
+```
+
+停止対象は「最新 commit 以外の `server-main.js` とその子孫」と「PID 1 の子になった vscode-server 系プロセス」だけで、稼働中の接続は対象にしません。`bash tools/devcontainer/kill-stale-vscode.sh --dry-run` で対象を表示だけできます。
+
+`init` の変更はコンテナの rebuild（`Dev Containers: Rebuild Container`）後に有効になります。
+
 ## 7. 推奨しない使い方
 
 ### 7.1. 実行中のコンテナに VS Code で直接アタッチする
