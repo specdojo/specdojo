@@ -2,12 +2,12 @@
 id: cdfd-action-grade-criteria
 document: cdfd-action
 path: docs/ja/product/010-business-specs/010-data-flow/cdfd-action.md
-graded_at: "2026-09-16T01:50:29.716Z"
-graded_by: gemma-expert-executor
-content_hash: d90abc6f54eb312db75129313b373403c2825826bbef6fe098aae6af5da73375
+graded_at: "2026-09-17T00:02:38.844Z"
+graded_by: codex-expert-executor
+content_hash: 4eb8de6f207847cddcf0bbed278729b6af57f3c38b4ed7afc074dca1ebb5bbbd
 summary:
-  satisfied: 3
-  unsatisfied: 0
+  satisfied: 2
+  unsatisfied: 1
   total: 3
 criteria:
   - id: DC-001
@@ -15,7 +15,8 @@ criteria:
     roles:
       - BA
     viewpoint: vp-ba-requirements-completeness
-    status: satisfied
+    status: unsatisfied
+    reason: 全体概要が外部入力とする P-12 の承認結果と P-13 の非推奨化判断が、領域別詳細では内部生成する判断へ変更されている。
   - id: DC-002
     text: 完了記録、稼働構成、Kata のバージョン、成果物カタログ、保管庫への更新がプロセス単位で識別でき、Plan への再計画要求がグループ外委譲として示されていること
     roles:

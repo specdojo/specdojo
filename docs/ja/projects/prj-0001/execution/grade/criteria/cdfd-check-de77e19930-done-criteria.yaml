@@ -2,9 +2,9 @@
 id: cdfd-check-grade-criteria
 document: cdfd-check
 path: docs/ja/product/010-business-specs/010-data-flow/cdfd-check.md
-graded_at: "2026-09-16T11:14:24.653Z"
+graded_at: "2026-09-17T00:35:16.831Z"
 graded_by: codex-expert-executor
-content_hash: 7b17da07cb41e27165af5e7ada87b89af32edc61a3e1eb57771885751d507811
+content_hash: 37417642aa32e297ae82d9e2791edb40db0dfa1eb2c13e500caa36f4de529a11
 summary:
   satisfied: 3
   unsatisfied: 0

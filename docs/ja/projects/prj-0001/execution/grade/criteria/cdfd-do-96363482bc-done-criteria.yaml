@@ -2,12 +2,12 @@
 id: cdfd-do-grade-criteria
 document: cdfd-do
 path: docs/ja/product/010-business-specs/010-data-flow/cdfd-do.md
-graded_at: "2026-09-16T11:49:07.413Z"
-graded_by: gemma-expert-executor
-content_hash: 17cb02d4fca8924e0bd8dded31d2ac68e350bd074be8666b8b004274260cd819
+graded_at: "2026-09-17T01:11:21.727Z"
+graded_by: codex-expert-executor
+content_hash: 53fb8189060d2b48dacc7fee719f4f855fea1f8fd8510d2dc602b3addf2af0a5
 summary:
-  satisfied: 4
-  unsatisfied: 0
+  satisfied: 3
+  unsatisfied: 1
   total: 4
 criteria:
   - id: DC-001
@@ -27,7 +27,8 @@ criteria:
     roles:
       - QE
     viewpoint: vp-qe-verifiability
-    status: satisfied
+    status: unsatisfied
+    reason: 保護対象変更を agent が行った場合の保護機構による block, result への申し送り, 人間または対話型 Orchestrator による実行外適用と再開条件が示されていない。
   - id: DC-004
     text: 人間が担う判断（承認、完了確定）を AI Agent の自動処理として表していないこと
     roles:

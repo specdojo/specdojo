@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: cdfd-uc-register-grade-criteria
+document: cdfd-uc-register
+path: docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md
+graded_at: "2026-09-17T04:21:54.140Z"
+graded_by: codex-expert-executor
+content_hash: d20690d58951bb8c790e324f7323c98bec1db938168f0f17274b2ea776cb0f87
+summary:
+  satisfied: 2
+  unsatisfied: 1
+  total: 3
+criteria:
+  - id: DC-001
+    text: 起票から完了記録までの各引き渡しについて、送り元グループ、受け側グループ、引き渡す情報、引き渡し条件、戻す条件が表で確認できること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: satisfied
+  - id: DC-002
+    text: 引き渡し条件を満たさない場合の戻り先がグループ単位で示され、グループ内部の例外を扱っていないこと
+    roles:
+      - QE
+    viewpoint: vp-qe-omissions-consistency
+    status: unsatisfied
+    reason: H-03 の「完了要求または完了条件を特定できない」「進捗報告の判断事項を確認できない」に対応するグループ単位の戻り先、戻す情報、再開条件が示されていない。
+  - id: DC-003
+    text: 完了記録を人間が確定する境界が承認できること
+    roles:
+      - PO
+    viewpoint: vp-po-decision-readiness
+    status: satisfied

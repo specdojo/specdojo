@@ -10,31 +10,33 @@ specdojo:
     rubric: grade-rubric-v1
     target: deliverable
     verdict: needs-work
-    score: 89
-    graded_at: "2026-09-16T01:50:29.716Z"
-    graded_by: gemma-expert-executor
-    content_hash: d90abc6f54eb312db75129313b373403c2825826bbef6fe098aae6af5da73375
+    score: 81
+    graded_at: "2026-09-17T00:02:38.844Z"
+    graded_by: codex-expert-executor
+    content_hash: 4eb8de6f207847cddcf0bbed278729b6af57f3c38b4ed7afc074dca1ebb5bbbd
     categories:
-      consistency: { score: 75 }
-      usability: { score: 100 }
+      consistency: { score: 50 }
+      usability: { score: 94 }
       architecture: { score: 100 }
       quality: { score: 83 }
     viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
+      vp-arc-cross-document-consistency: { level: 2, score: 50 }
       vp-arc-conciseness: { level: 4, score: 100 }
       vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-done-criteria: { level: 4, score: 100 }
+      vp-qe-done-criteria: { level: 2, score: 50 }
       vp-qe-verifiability: { level: 4, score: 100 }
       vp-qe-omissions-consistency: { level: 2, score: 50 }
       vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-user-flow: { level: 4, score: 100 }
+      vp-ux-user-flow: { level: 3, score: 75 }
       vp-ux-language-consistency: { level: 4, score: 100 }
       vp-arc-document-structure: { level: 4, score: 100 }
-      vp-qe-config-validity: { level: 2, score: 50 }
-    findings: { blocker: 0, major: 2, minor: 1, note: 0 }
+      vp-qe-config-validity: { level: 4, score: 100 }
+    findings: { blocker: 0, major: 3, minor: 2, note: 0 }
     done_criteria:
-      satisfied: 3
+      satisfied: 2
       total: 3
+      unsatisfied:
+        DC-001: [BA]
       detail_ref: cdfd-action-grade-criteria
 ---
 
@@ -81,6 +83,9 @@ Action グループは、全体概要で定義された三つの領域を扱う�
 
 稼働構成の変更要求について人間が採否を判断し、承認した変更だけを稼働構成へ反映する。変更が Kata のバージョンまたは成果物定義へ及ぶ場合は、対応する正本も同じ承認結果に基づいて更新する。
 
+<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=44 P-12 の主要入力から全体概要が定める「参加者からの構成変更要求と承認結果」の承認結果が欠け、P-13 も上位の「参加者からの非推奨化の判断」を候補情報へ置き換えて内部判断としているため、上位正本と承認境界が一致するよう入力・起点を揃えてください。 -->
+<!-- specdojo:finding id=F002 severity=major rule=vp-qe-done-criteria line=44 DC-001 が要求する上位主要入力との無矛盾な詳細化に対し、P-12 の承認結果と P-13 の非推奨化判断が外部入力から内部生成へ変更されているため、全体概要との対応を修正してください。 -->
+<!-- specdojo:finding id=F003 severity=major rule=vp-qe-omissions-consistency line=44 上位概要で Action の主要入力とされた P-12 の承認結果および P-13 の非推奨化判断が領域別入力へ引き継がれていないため、入力として維持するか上位正本を先に改訂して矛盾を解消してください。 -->
 - **主要入力**: Orchestrator からの改善要求、参加者からの構成変更要求
 - **主要出力**: 構成変更の決定記録、更新した稼働構成、Kata のバージョン更新、更新した成果物カタログ
 - **データストア**: 稼働構成、Kata、成果物カタログ、登録簿
@@ -163,6 +168,7 @@ flowchart LR
   class 評価結果,進捗報告,登録簿,実行記録 storeTransaction
 ```
 
+<!-- specdojo:finding id=F004 severity=minor rule=vp-qe-omissions-consistency line=126 P-11・P-12・P-13 の各図は「成果物カタログ」と「登録簿」を共有しているため、三つの図注記にある「別図と共有するノードはない」を共有ノードの列挙へ修正してください。 -->
 凡例は [[cdfd-overview|概念データフロー図（全体概要）]] の「凡例（本プロダクト共通）」に従う。`-->` は情報の流れであり、本図は物の流れを対象外とする。Plan はグループ外委譲先の代表ノードであり、内部処理を省略する。参加者は領域の担当であるため外部主体として描かない。本図は P-11 の入力、出力、判断分岐に限定し、他領域のデータストアを省略する。別図と共有するノードはない。
 
 ### 5.2. 稼働構成管理（P-12）
@@ -292,6 +298,7 @@ flowchart LR
 
 ### 8.2. グループ外への委譲
 
+<!-- specdojo:finding id=F005 severity=minor rule=vp-ux-user-flow line=257 実在する再計画先 `cdfd-plan` がコード表記のみで文書へ遷移できないため、文書名を伴う wikilink に変更してください。 -->
 | 委譲先      | 委譲する事項                         | 引き渡す情報                     | 本グループへ戻す条件                                                             |
 | ----------- | ------------------------------------ | -------------------------------- | -------------------------------------------------------------------------------- |
 | `cdfd-plan` | タスク完了に至らなかった事項の再計画 | 完了条件の未充足事項、再計画要求 | 再計画に基づく対応と評価を経て、完了条件を照合できる評価結果と完了要求がそろった |

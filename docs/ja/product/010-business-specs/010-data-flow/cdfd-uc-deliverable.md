@@ -9,6 +9,36 @@ specdojo:
     - cdfd-do
     - cdfd-check
     - cdfd-action
+  grade:
+    rubric: grade-rubric-v1
+    target: deliverable
+    verdict: needs-work
+    score: 86
+    graded_at: "2026-09-17T03:51:44.966Z"
+    graded_by: codex-expert-executor
+    content_hash: 1ab0075e5f155ece6d83d91afd141938081234ee6b20cecd8ca5aba073c4e2a7
+    categories:
+      consistency: { score: 50 }
+      usability: { score: 94 }
+      architecture: { score: 100 }
+      quality: { score: 100 }
+    viewpoints:
+      vp-arc-cross-document-consistency: { level: 2, score: 50 }
+      vp-arc-conciseness: { level: 4, score: 100 }
+      vp-arc-single-responsibility: { level: 4, score: 100 }
+      vp-qe-done-criteria: { level: 4, score: 100 }
+      vp-qe-verifiability: { level: 4, score: 100 }
+      vp-qe-omissions-consistency: { level: 2, score: 50 }
+      vp-ux-readability: { level: 4, score: 100 }
+      vp-ux-user-flow: { level: 4, score: 100 }
+      vp-ux-language-consistency: { level: 3, score: 75 }
+      vp-arc-document-structure: { level: 4, score: 100 }
+      vp-qe-config-validity: { level: 4, score: 100 }
+    findings: { blocker: 0, major: 2, minor: 1, note: 0 }
+    done_criteria:
+      satisfied: 3
+      total: 3
+      detail_ref: cdfd-uc-deliverable-grade-criteria
 ---
 
 # 概念データフロー図（成果物の作成から完了まで）: SpecDojo
@@ -17,6 +47,7 @@ specdojo:
 
 ## 1. 目的
 
+<!-- specdojo:finding id=F003 severity=minor rule=vp-ux-language-consistency line=7 「各成果物の owner」は現行の責任定義である Schedule のタスク owner と対象粒度が異なるため、「Schedule（track）の task owner」など正本と一致する用語へ統一してください。 -->
 本書は、BA、各成果物の owner、QE、PO、PM が、成果物の定義から完了までの順序と責任境界を合意し、限られた参加者でも同じ正本から判断と作業を引き継げるようにする。
 
 - BA は、成果物カタログの `done_criteria`・`evidence_refs` が実行、評価、完了判断へ欠落なく引き渡されることを確認する。
@@ -96,6 +127,7 @@ Check から確定した評価結果と判断事項を受け取り、PO・PM が
 
 ### 4.1. マスタ・構成データ
 
+<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=89 成果物カタログを `owner` の正本としているが、現行 DCT schema と当該カタログに `owner` はなく、担当はスケジュール戦略から Schedule（track）へ生成されるため、正本と引き渡し元を Schedule（track）へ修正してください。 -->
 | データストア   | 関連引き渡し     | 横断上の利用                                                                                    |
 | -------------- | ---------------- | ----------------------------------------------------------------------------------------------- |
 | Kata           | H-01、H-02、H-03 | Plan と Do では作成・レビュー・検証の基準、Check では grade・finding の評価基準として参照する。 |
@@ -180,6 +212,7 @@ flowchart LR
 
 ## 6. 引き渡し
 
+<!-- specdojo:finding id=F002 severity=major rule=vp-qe-omissions-consistency line=172 DCT schema に存在しない `owner` を成果物カタログの必須情報としているため、H-01 の引き渡し情報からカタログ由来の `owner` を除き、Schedule（track）の担当へ統一してください。 -->
 | 引き渡し ID | 送り元グループ | 受け側グループ | 引き渡す情報                                                                                                                 | 引き渡し条件                                                                                                                                                                                                                                                                    | 戻す条件                                                                                                                                                                                        |
 | ----------- | -------------- | -------------- | ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | H-01        | Plan           | Do             | 対象成果物、依存、owner、`done_criteria`、`evidence_refs` を含む成果物カタログ、Schedule（track）の対象タスク、実行計画      | 成果物カタログの検証が成功し、Schedule（track）で依存順序と担当を一意に特定でき、実行計画で対象、手順、完了条件、適用する Kata を特定できる。                                                                                                                                   | 成果物定義の必須情報が不足する、カタログ検証が失敗する、依存順序が確定しない、担当・対象・完了条件・適用する Kata のいずれかを一意に特定できず、Do が実行受入を完了できない場合は Plan へ戻す。 |

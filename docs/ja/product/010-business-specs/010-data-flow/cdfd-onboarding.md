@@ -11,17 +11,17 @@ specdojo:
     rubric: grade-rubric-v1
     target: deliverable
     verdict: needs-work
-    score: 89
-    graded_at: "2026-09-16T12:14:18.668Z"
-    graded_by: gemma-expert-executor
-    content_hash: bfa933fc76ef5d41285ac3a684e44888932084f70822805903a378385ebceafc
+    score: 88
+    graded_at: "2026-09-17T01:40:30.001Z"
+    graded_by: codex-expert-executor
+    content_hash: 1bb15533767353bb33991ee65baa3584896836b1b28c1b434d5d47c9e9863c7c
     categories:
-      consistency: { score: 75 }
+      consistency: { score: 50 }
       usability: { score: 100 }
       architecture: { score: 100 }
-      quality: { score: 83 }
+      quality: { score: 100 }
     viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
+      vp-arc-cross-document-consistency: { level: 2, score: 50 }
       vp-arc-conciseness: { level: 4, score: 100 }
       vp-arc-single-responsibility: { level: 4, score: 100 }
       vp-qe-done-criteria: { level: 4, score: 100 }
@@ -31,7 +31,7 @@ specdojo:
       vp-ux-user-flow: { level: 4, score: 100 }
       vp-ux-language-consistency: { level: 4, score: 100 }
       vp-arc-document-structure: { level: 4, score: 100 }
-      vp-qe-config-validity: { level: 2, score: 50 }
+      vp-qe-config-validity: { level: 4, score: 100 }
     findings: { blocker: 0, major: 2, minor: 0, note: 0 }
     done_criteria:
       satisfied: 3
@@ -49,6 +49,8 @@ Onboarding グループの内部プロセス、主要例外、Plan への引き�
 
 ## 2. 適用範囲
 
+<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=12 成果物カタログは repository からの導入、既存プロジェクトへの導入、Detached Unit の複数ケースを扱うよう要求しているが、本書は「新しいプロジェクト」の初期セットアップだけに限定しているため、参照文書間で採用する範囲を統一し、各対象ケースの起動条件・差分・例外を追跡可能にする必要がある。 -->
+<!-- specdojo:finding id=F002 severity=major rule=vp-qe-omissions-consistency line=12 成果物カタログの note にある repository からの導入、既存プロジェクトへの導入、Detached Unit の各ケースが本文に現れず、新規プロジェクト以外の開始条件・正常経路・例外処理を確認できないため、カタログとの範囲差を解消する必要がある。 -->
 - **対象グループ**: Onboarding。[[cdfd-overview|概念データフロー図（全体概要）]] で定義されたプロジェクト初期セットアップ（`P-01`）だけを含む。
 - **開始と終了**: PO が新しいプロジェクトを立ち上げた時点から、選択した provider の雛形に基づく Kata の配置と稼働構成の初期化が完了し、Plan へ引き渡せる時点までを扱う。
 - **期間境界**: 新しいプロジェクトの初期セットアップを対象とし、引き渡し後の継続的な稼働構成変更は Action の責務として扱う。

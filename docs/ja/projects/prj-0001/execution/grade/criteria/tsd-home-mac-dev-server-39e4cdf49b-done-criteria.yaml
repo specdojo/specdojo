@@ -2,9 +2,9 @@
 id: tsd-home-mac-dev-server-grade-criteria
 document: tsd-home-mac-dev-server
 path: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md
-graded_at: "2026-09-14T00:18:49.916Z"
-graded_by: codex-expert-executor
-content_hash: 4d1135c3ff81a270a47709fe9cc3133ebc18bc97073c7379d0d17bc70937177f
+graded_at: "2026-09-17T04:49:48.107Z"
+graded_by: gemma-expert-executor
+content_hash: a18be9b453fcd5a90908f3d9c36121ee68687a511d90712b95e433a8511b38ec
 summary:
   satisfied: 2
   unsatisfied: 3
@@ -28,18 +28,18 @@ criteria:
       - ARC
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
-    reason: 採用技術のライセンス条件とバージョン固定・更新方針を本文から識別できない。
+    reason: 技術的制約・ライセンス・バージョン方針が識別できない。
   - id: DC-004
     text: テストフレームワーク・CI/CD環境の参照として使えること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
     status: unsatisfied
-    reason: テストフレームワークとCI/CD環境の名称、設定、または正本への参照がない。
+    reason: テストフレームワーク・CI/CD環境の参照先が示されていない。
   - id: DC-005
     text: 開発環境構築・ライブラリ選定の参照として使えること
     roles:
       - DEV
     viewpoint: vp-dev-implementation-readiness
     status: unsatisfied
-    reason: 開発環境構築手順はあるが、依存ライブラリの選定内容またはその正本への参照がない。
+    reason: 依存ライブラリの選定基準または正本への参照が欠落している。

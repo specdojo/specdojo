@@ -10,29 +10,29 @@ specdojo:
   grade:
     rubric: grade-rubric-v1
     target: deliverable
-    verdict: needs-work
-    score: 86
-    graded_at: "2026-09-16T11:14:24.653Z"
+    verdict: pass
+    score: 91
+    graded_at: "2026-09-17T00:35:16.831Z"
     graded_by: codex-expert-executor
-    content_hash: 7b17da07cb41e27165af5e7ada87b89af32edc61a3e1eb57771885751d507811
+    content_hash: 37417642aa32e297ae82d9e2791edb40db0dfa1eb2c13e500caa36f4de529a11
     categories:
-      consistency: { score: 50 }
-      usability: { score: 94 }
+      consistency: { score: 75 }
+      usability: { score: 88 }
       architecture: { score: 100 }
       quality: { score: 100 }
     viewpoints:
-      vp-arc-cross-document-consistency: { level: 2, score: 50 }
+      vp-arc-cross-document-consistency: { level: 3, score: 75 }
       vp-arc-conciseness: { level: 4, score: 100 }
       vp-arc-single-responsibility: { level: 4, score: 100 }
       vp-qe-done-criteria: { level: 4, score: 100 }
       vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 2, score: 50 }
-      vp-ux-readability: { level: 4, score: 100 }
+      vp-qe-omissions-consistency: { level: 3, score: 75 }
+      vp-ux-readability: { level: 3, score: 75 }
       vp-ux-user-flow: { level: 3, score: 75 }
       vp-ux-language-consistency: { level: 4, score: 100 }
       vp-arc-document-structure: { level: 4, score: 100 }
       vp-qe-config-validity: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 2, minor: 4, note: 0 }
+    findings: { blocker: 0, major: 0, minor: 4, note: 0 }
     done_criteria:
       satisfied: 3
       total: 3
@@ -54,9 +54,10 @@ specdojo:
 
 ## 2. 適用範囲
 
-<!-- specdojo:finding id=F002 severity=minor rule=vp-arc-cross-document-consistency line=19 QE・PM・ARC と AI Agent／runner の責任分担を本文で定義している一方、正本であるロール定義または RACI を参照していないため、責任分担の記述を正本への参照と結び付けてください。 -->
-<!-- specdojo:finding id=F004 severity=minor rule=vp-qe-omissions-consistency line=19 rulebook が要求する人間と AI Agent の責任分担文書への参照が欠落しているため、ロール定義または RACI の正本を参照してください。 -->
-
+<!-- specdojo:finding id=F001 severity=minor rule=vp-arc-cross-document-consistency line=19 「member・agent・runner の責任分担」の正本を `pm-roles` としているが、同ファイルは Role code と責務だけを定義し、兼務・実行主体は `pm-members.yaml`、人間と AI Agent の責任分担原則は `cdfd-overview` に委譲しているため、参照先を責務ごとに分けてください。 -->
+<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-omissions-consistency line=19 rulebook が求める人間と AI Agent の責任分担の対応文書として `pm-roles` だけを示しているが、同文書は実行主体の割当を `pm-members.yaml` へ委譲しているため、`pm-members` と `cdfd-overview` への参照を補ってください。 -->
+<!-- specdojo:finding id=F003 severity=minor rule=vp-ux-readability line=19 適用範囲で Role code の語彙と member・agent・runner の責任分担を一つの `pm-roles` 正本へまとめて表現しており, 初見の読者がロール定義と実行主体割当の違いを読み分けにくいため、正本を分けて記述してください。 -->
+<!-- specdojo:finding id=F004 severity=minor rule=vp-ux-user-flow line=19 member・agent・runner の責任分担を確認する導線が Role code の一覧である `pm-roles` に止まり、実行主体の正本 `pm-members` と人間／AI の原則を示す `cdfd-overview` へ直接到達できないため、参照を分けてください。 -->
 - **対象グループ**: Check。成果物評価（P-08）、進捗可視化報告（P-09）、派生生成閲覧提供（P-10）の全領域を扱う。
 - **開始**: Orchestrator から評価・報告要求が到来し各領域の起動条件を満たした時点、または派生成果物の生成が要求された時点とする。
 - **終了**: 評価結果（grade、finding）、進捗報告、または整合性を確認した派生ビュー・索引が、それぞれのデータストアへ記録され、必要な出力が Action または参加者の閲覧へ提供可能になった時点とする。
@@ -69,9 +70,6 @@ specdojo:
 Check グループは P-08〜P-10 の 3 領域からなる。領域 ID と名称、およびグループ単位の主要入力・主要出力・データストアは [[cdfd-overview|概念データフロー図（全体概要）]] を正本とし、本章では領域内部を詳細化する。
 
 ### 3.1. 成果物評価（P-08）
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=29 成果物カタログは成果物評価（grade）と review の責務分担の明示を要求しているが、P-08 の説明と主要入力から「review は Do、独立した grade 確定は Check」という境界を識別できないため、この責務分担を明記してください。 -->
-<!-- specdojo:finding id=F003 severity=major rule=vp-qe-omissions-consistency line=29 成果物カタログが要求する grade と review の責務分担が本文にないため、Do で完了する review・検証と、Check で独立に確定する grade・finding の境界を明記してください。 -->
 
 Do で完了する review・検証は成果物の改善と検証可能な実行記録を残すまでを担い、grade・finding は確定しない。P-08 は、その成果物と実行記録を review から独立して根拠と照合し、QE が grade・finding を評価結果として確定する。非適合という判定は正常な評価結果として扱い、評価そのものを完了できない場合とは区別する。
 
@@ -348,8 +346,6 @@ flowchart LR
 
 ### 8.1. 主要例外
 
-<!-- specdojo:finding id=F005 severity=minor rule=vp-qe-omissions-consistency line=306 E-08-01 は「確定前」の変更も検出対象にする一方で対象プロセスを P-08-02 のみに限定しており、P-08-03 の起動条件で検知した変更の扱いを追跡できないため、対象プロセスに P-08-03 を含めるか例外を分割してください。 -->
-
 | 例外 ID   | 対象プロセス         | 検出条件                                                                                                                           | 本グループでの扱い                                                                                                                      | 継続・再開条件                                                                                           |
 | --------- | -------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
 | `E-08-01` | `P-08-02`、`P-08-03` | `P-08-01` で確定した評価対象が根拠照合中または確定前に変更され、評価案が同じ対象を示さなくなった                                   | 当該評価案を確定せず、変更検知を評価結果の代わりに Action へ渡さない。ほかの独立した評価対象は継続できる                                | 変更後の成果物または登録項目と対応する evidence_refs が利用可能になった後、`P-08-01` から再開する        |
@@ -358,8 +354,6 @@ flowchart LR
 | `E-10-01` | `P-10-03`            | 生成候補に参照元との差異、対象の欠落・重複、または生成中の参照元変更があり、同じ生成対象を示さない                                 | 不整合のある生成候補を派生ビュー・索引へ記録せず、閲覧提供を停止する。既に整合を確認した別の生成対象は提供を継続できる                  | 参照元と生成対象を再確定し、不整合の原因を除いた後、`P-10-01` から再開する                               |
 
 ### 8.2. グループ外への委譲
-
-<!-- specdojo:finding id=F006 severity=minor rule=vp-ux-user-flow line=316 実在する `cdfd-orchestrator`、`cdfd-uc-register`、`cdfd-uc-deliverable` がコード表記のみで関連文書へ遷移できないため、`cdfd-action` と同様に文書リンクへ変更してください。 -->
 
 | 委譲先                                                                                | 委譲する事項                                     | 引き渡す情報                                                                                       | 本グループへ戻す条件                                                                 |
 | ------------------------------------------------------------------------------------- | ------------------------------------------------ | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |

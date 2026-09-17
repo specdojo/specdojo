@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: cdfd-plan-grade-criteria
+document: cdfd-plan
+path: docs/ja/product/010-business-specs/010-data-flow/cdfd-plan.md
+graded_at: "2026-09-17T03:24:20.944Z"
+graded_by: codex-expert-executor
+content_hash: 0809a990589cbe53b2a97edfd7e7242ec3c3e6a808e1200318c16a6bfe09a08e
+summary:
+  satisfied: 3
+  unsatisfied: 1
+  total: 4
+criteria:
+  - id: DC-001
+    text: 全体概要の P-02〜P-06 の主要入力・主要出力・データストアが「プロセス領域」章で領域ごとに矛盾なく詳細化されていること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: satisfied
+  - id: DC-002
+    text: 登録簿、成果物カタログ、スケジュール戦略、Schedule（track）、実行計画、定期実行定義、ジョブ定義への読み書きがプロセス単位で識別でき、名称が全体概要の「データストア」と一致していること
+    roles:
+      - ARC
+    viewpoint: vp-arc-cross-document-consistency
+    status: satisfied
+  - id: DC-003
+    text: 登録項目の状態の定義と遷移を本書で再定義せず、STSD への参照に留めていること
+    roles:
+      - ARC
+    viewpoint: vp-arc-document-structure
+    status: satisfied
+  - id: DC-004
+    text: カタログ検証の失敗、依存の循環、strategy と Kata grade の不整合など、後続起動を変える主要例外の検出条件と再開条件が判定できること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: unsatisfied
+    reason: E-03-01 が現行カタログに存在しない `owner` を検証対象とし、E-04-02 も strategy と Kata grade の不整合を判定する具体的な対応規則を示していない。
