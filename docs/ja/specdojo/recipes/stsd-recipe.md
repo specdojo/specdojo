@@ -5,6 +5,30 @@ specdojo:
   status: draft
   rulebook: specdojo:stsd-rulebook
   sample: specdojo:stsd-sample
+  grade:
+    rubric: grade-rubric-v1
+    target: kata
+    verdict: pass
+    score: 96
+    graded_at: "2026-09-17T08:40:40.059Z"
+    graded_by: codex-expert-executor
+    content_hash: 85af4ab2949752dd6840cd8c32431fcdfe7f8a496d7fc5586277f4163ff5958d
+    categories:
+      consistency: { score: 100 }
+      usability: { score: 100 }
+      architecture: { score: 100 }
+      quality: { score: 88 }
+    viewpoints:
+      vp-arc-cross-document-consistency: { level: 4, score: 100 }
+      vp-arc-conciseness: { level: 4, score: 100 }
+      vp-arc-single-responsibility: { level: 4, score: 100 }
+      vp-qe-verifiability: { level: 4, score: 100 }
+      vp-qe-omissions-consistency: { level: 4, score: 100 }
+      vp-qe-kata-conformance: { level: 3, score: 75 }
+      vp-ux-readability: { level: 4, score: 100 }
+      vp-ux-language-consistency: { level: 4, score: 100 }
+      vp-arc-document-structure: { level: 4, score: 100 }
+    findings: { blocker: 0, major: 0, minor: 1, note: 0 }
 ---
 
 # ステータス定義（STSD）作成レシピ
@@ -125,6 +149,7 @@ Status Definition Authoring Recipe
 | テスト可能性 | 初期、正常、例外、終了の経路と分岐条件から状態遷移テストを設計できる | 品質確認担当           |
 | 用語整合     | 状態名・通称・イベント名が関連文書と一致する                         | 業務分析担当           |
 
+<!-- specdojo:finding id=F001 severity=minor rule=vp-qe-kata-conformance line=119 rulebook で定義された具体的なラベル（`_TODO_:`、`_UNDECIDED_:`、`_ASSUMPTION_:`）を明記し、使用を促す記述にする必要がある。 -->
 ## 8. 仕上げチェック
 
 - 一文書が一つの対象と一つの AS-IS / TO-BE スコープだけを扱っている。

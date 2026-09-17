@@ -9,6 +9,30 @@ specdojo:
   template: not-needed
   based_on:
     - specdojo:rulebook-authoring-standard
+  grade:
+    rubric: grade-rubric-v1
+    target: kata
+    verdict: needs-work
+    score: 71
+    graded_at: "2026-09-17T10:35:20.122Z"
+    graded_by: codex-expert-executor
+    content_hash: 1250979498e1b8d70fb9851fe383e7d8e0a8d2899458632762225a5f95bbd352
+    categories:
+      consistency: { score: 50 }
+      usability: { score: 75 }
+      architecture: { score: 100 }
+      quality: { score: 63 }
+    viewpoints:
+      vp-arc-cross-document-consistency: { level: 2, score: 50 }
+      vp-arc-conciseness: { level: 4, score: 100 }
+      vp-arc-single-responsibility: { level: 4, score: 100 }
+      vp-qe-verifiability: { level: 3, score: 75 }
+      vp-qe-omissions-consistency: { level: 2, score: 50 }
+      vp-qe-kata-conformance: { level: 2, score: 50 }
+      vp-ux-readability: { level: 2, score: 50 }
+      vp-ux-language-consistency: { level: 3, score: 75 }
+      vp-arc-document-structure: { level: 4, score: 100 }
+    findings: { blocker: 0, major: 4, minor: 3, note: 0 }
 ---
 
 # STSD の状態遷移図を Mermaid で記述するルール
@@ -75,10 +99,15 @@ stateDiagram-v2
 
 ### 6.2. 分岐と自己遷移
 
+<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=66 `＜＜choice＞＞` の疑似状態と前後の矢印は、上位 `stsd-rulebook` が定める「遷移元・遷移先は状態一覧の状態名または開始・終了」という表形式へ対応できないため、表への記載方法を上位規則と整合する形で定義するか、choice を使用しない構文へ変更する必要がある。 -->
+<!-- specdojo:finding id=F004 severity=major rule=vp-qe-omissions-consistency line=66 `＜＜choice＞＞` を許可しながら、choice 出力遷移におけるイベントの扱いと「遷移の説明」への対応方法が欠落しており、行74〜75の条件のみのラベルが本文要件および完成判定と矛盾するため、choice 専用の例外規則と表への対応規則を追加するか例を通常遷移へ修正する必要がある。 -->
+<!-- specdojo:finding id=F007 severity=minor rule=vp-ux-language-consistency line=66 `＜＜choice＞＞` と例中の「判定」が、状態一覧へ載せる業務状態とは異なる疑似状態であることを定義していないため、「状態一覧にある状態名だけを使用する」という用語上の境界との関係を明記する必要がある。 -->
 - 同じ状態・イベントから分岐する条件は、読み手が重複なく判定できる表現にします。
 - 分岐の判断自体を強調する必要がある場合だけ `<<choice>>` を使用します。
 - 自己遷移は業務上の状態を保ったまま記録更新や再確認を行う場合だけ記載します。
 
+<!-- specdojo:finding id=F005 severity=major rule=vp-qe-kata-conformance line=74 分岐例の2本の出力遷移は `イベント / 条件` ではなく条件だけを記載しており、本文要件と完成判定に適合する完成例になっていないため、イベントを含む形式へ直すか choice 遷移を明示的な例外として定義する必要がある。 -->
+<!-- specdojo:finding id=F006 severity=major rule=vp-ux-readability line=74 choice からの矢印だけイベントと `/` がない理由の説明がなく、必須形式の例外か誤記かを読者が判別できないため、例外の理由・適用範囲・「遷移の説明」との対応を説明するか通常形式へ統一する必要がある。 -->
 ```mermaid
 stateDiagram-v2
   [*] --> 検品中 : 検品開始 / 対象商品あり
@@ -90,12 +119,14 @@ stateDiagram-v2
 
 ### 6.3. 複合状態と図の分割
 
+<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-verifiability line=81 図の分割条件である「正常系と例外系を同時に追えない」には確認手順や判定基準がなく結果が判定者に依存するため、追跡対象とする経路や読解不能と判定する条件を明示する必要がある。 -->
 - 複合状態は、親状態の内部に独立した下位ライフサイクルがあり、状態一覧でも階層関係を説明できる場合だけ使用します。
 - 状態数が 15 を超える、または正常系と例外系を同時に追えない場合は、同じ STSD 内で図を分割します。
 - 分割した図で共有する状態は同じ名称を使い、別名を付けません。
 
 ### 6.4. 完成判定
 
+<!-- specdojo:finding id=F003 severity=minor rule=vp-qe-verifiability line=88 「主要な終了または継続状態」の「主要」と対象となる継続状態の特定方法が未定義で、到達不能な例外終端を許容するか判断できないため、確認対象を全終端・継続状態とするか対象選定規則を定義する必要がある。 -->
 - 状態一覧の全状態が少なくとも一つの図に登場しています。
 - 図の業務状態はすべて状態一覧にあります。
 - 開始から主要な終了または継続状態まで遷移をたどれます。

@@ -9,13 +9,13 @@ specdojo:
     rubric: grade-rubric-v1
     target: kata
     verdict: pass
-    score: 95
-    graded_at: "2026-09-14T15:14:43.981Z"
+    score: 96
+    graded_at: "2026-09-17T07:28:40.267Z"
     graded_by: gemma-expert-executor
-    content_hash: 1eca8c27f397d5cd6e2eb46f63dd7efc95d42362f833326603e2b71d89ee7694
+    content_hash: fb1f0e9210443a9842a0911b3d1c3dfef156b638bbf8eeabf89380b0d5f25d26
     categories:
-      consistency: { score: 75 }
-      usability: { score: 100 }
+      consistency: { score: 88 }
+      usability: { score: 92 }
       architecture: { score: 100 }
       quality: { score: 100 }
     viewpoints:
@@ -23,12 +23,12 @@ specdojo:
       vp-arc-conciseness: { level: 4, score: 100 }
       vp-arc-single-responsibility: { level: 4, score: 100 }
       vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 2, score: 50 }
+      vp-qe-omissions-consistency: { level: 3, score: 75 }
       vp-qe-kata-conformance: { level: 4, score: 100 }
-      vp-ux-readability: { level: 4, score: 100 }
+      vp-ux-readability: { level: 3, score: 75 }
       vp-ux-language-consistency: { level: 4, score: 100 }
       vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 4, note: 0 }
+    findings: { blocker: 0, major: 0, minor: 5, note: 0 }
 ---
 
 # 概念データフロー図（全体概要）作成レシピ
@@ -110,9 +110,9 @@ Conceptual Data Flow Diagram Overview Writing Recipe
 
 グループごとに節を設け、説明文、主要入力・主要出力・データストアの箇条書き、領域の表の順に書きます。業務目的は手段名ではなく、対象者が利用する成果または維持したい状態で書きます。領域を分けるか迷う場合は、起点、最終出力、更新する正本の三点を比較します。領域単位の入出力は書かず、プロセスグループ別 CDFD へ委ねます。
 
-### 4.4. データストア
+<!-- specdojo:finding id=F001 severity=minor rule=vp-qe-omissions-consistency line=80 成果物の必須構成要素である「導入文」について、他の章と同様に「問い」および「書き方」のガイドが提供されていない。 -->
 
-<!-- specdojo:finding id=F001 severity=minor rule=vp-qe-omissions-consistency line=81 成果物の必須構成要素である「導入文」について、他の章と同様に「問い」および「書き方」のガイドが提供されていない。 -->
+### 4.4. データストア
 
 問い:
 
@@ -128,7 +128,6 @@ Conceptual Data Flow Diagram Overview Writing Recipe
 問い:
 
 <!-- specdojo:finding id=F002 severity=minor rule=vp-qe-omissions-consistency line=102 「プロセス領域」章の冒頭に記載すべき「領域数、プロセスグループ数、正本の所在」に関する記述ガイドが欠けている。 -->
-
 - 代表ノードはプロセスグループごとに一つで、ラベルにグループ名と含む領域 ID の範囲がありますか。`subgraph` で囲んでいませんか。
 - データストアのノードは「データストア」の各行と一対一で、名称が一致していますか。
 - 各エッジは「プロセス領域」の各グループの主要入力・主要出力のどれかに対応していますか。対応のないエッジ、エッジのない入出力はありませんか。
@@ -143,14 +142,14 @@ Conceptual Data Flow Diagram Overview Writing Recipe
 
 問い:
 
-<!-- specdojo:finding id=F003 severity=minor rule=vp-qe-omissions-consistency line=114 「データストア」章の冒頭に記載すべき「区分の意味、パスの略記、除外対象」に関する記述ガイドが欠けている。 -->
-
+<!-- specdojo:finding id=F005 severity=minor rule=vp-ux-readability line=114 前回の指摘内容（finding）が HTML コメントとして本文中に残っており、不要な記述となっている。 -->
 - 章の冒頭で、プロセスグループ別 CDFD とユースケース別 CDFD の役割分担を示していますか。
 - 状態の定義と遷移は STSD を正本とし、詳細 CDFD は参照に留める役割分担を示していますか。
 - プロセスグループ別 CDFD の表に全グループが 1 行ずつあり、各領域がちょうど一つの行に属していますか。
 - ユースケース別 CDFD の表に載せた業務は、複数のグループを横断し、順序と引き渡し条件を定める必要がありますか。単一グループに閉じる業務を載せていませんか。
 - 「未作成」などの作成状況を本文に書いていませんか。
 
+<!-- specdojo:finding id=F003 severity=minor rule=vp-qe-omissions-consistency line=116 「データストア」章の冒頭に記載すべき「区分の意味、パスの略記、除外対象」に関する記述ガイドが欠けている。 -->
 作成状況は登録簿で追跡し、本文には ID だけを書きます。単一グループに閉じる業務は、必要になった時点でユースケース別 CDFD を追加する旨を本文に書きます。
 
 ### 4.7. 凡例（本プロダクト共通）（任意）
@@ -161,9 +160,9 @@ Conceptual Data Flow Diagram Overview Writing Recipe
 - 全体概要と詳細 CDFD の各図が、この章の定義を再掲せず参照する形になっていますか。
 - サンプル図には、`specdojo:cdfd-mermaid-rulebook` が定義する全ノード種別が一つずつ含まれていますか。
 
-<!-- specdojo:finding id=F004 severity=minor rule=vp-qe-omissions-consistency line=127 「概念データフロー（概要）」章の冒頭に記載すべき「ノード構成、矢印の意味、更新エッジ、外部主体の扱い」に関する記述ガイドが欠けている。 -->
-
 詳細 CDFD が複数あり、色・絵文字の割り当てを毎回説明し直すと負担になる場合に設けます。単一の CDFD しかない場合は省略します。
+
+<!-- specdojo:finding id=F004 severity=minor rule=vp-qe-omissions-consistency line=127 「概念データフロー（概要）」章の冒頭に記載すべき「ノード構成、矢印の意味、更新エッジ、外部主体の扱い」に関する記述ガイドが欠けている。 -->
 
 ### 4.8. 未決事項（条件付き）
 

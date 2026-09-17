@@ -1,0 +1,63 @@
+
+> specdojo@0.1.0 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-kata-8a8333596f2e project=prj-0001 target=kata kind=all changed_only=true ungraded=true incomplete=true max_stage_failures=3 documents=10 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-kata-8a8333596f2e
+stage=1 executor=gemma-expert-executor reporter=gemma-reporter reference=per-kind
+stage=2 executor=gemma-expert-executor reporter=gemma-reporter reference=none
+stage=3 executor=codex-expert-executor reporter=gemma-reporter reference=none condition="pass, score>=96, findings<=1"
+document start: docs/ja/specdojo/recipes/cdfd-overview-recipe.md
+resume stage=3 document=docs/ja/specdojo/recipes/cdfd-overview-recipe.md status=skipped_condition
+document complete: docs/ja/specdojo/recipes/cdfd-overview-recipe.md
+document start: docs/ja/specdojo/recipes/cdfd-recipe.md
+document complete: docs/ja/specdojo/recipes/cdfd-recipe.md
+document start: docs/ja/specdojo/recipes/cdfd-uc-recipe.md
+document complete: docs/ja/specdojo/recipes/cdfd-uc-recipe.md
+document start: docs/ja/specdojo/recipes/stsd-recipe.md
+document complete: docs/ja/specdojo/recipes/stsd-recipe.md
+document start: docs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md
+resume stage=3 document=docs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md status=skipped_condition
+document complete: docs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md
+document start: docs/ja/specdojo/rulebooks/cdfd-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/cdfd-rulebook.md
+document start: docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md
+resume stage=3 document=docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md status=skipped_condition
+document complete: docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md
+document start: docs/ja/specdojo/rulebooks/cstd-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/cstd-rulebook.md
+document start: docs/ja/specdojo/rulebooks/stsd-mermaid-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/stsd-mermaid-rulebook.md
+document start: docs/ja/specdojo/rulebooks/stsd-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/stsd-rulebook.md
+grade pipeline complete: selected=10 processed=10 completed_now=10 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-kata-8a8333596f2e/results.tsv
+recorded_at	document	stage	status	duration_seconds	verdict	score	findings	executor	reporter	reference	consecutive_failures	max_failures
+2026-09-17T07:14:38Z	docs/ja/specdojo/recipes/cdfd-overview-recipe.md	1	passed	870	pass	95	4	gemma-expert-executor	gemma-reporter	docs/ja/specdojo/recipes/prj-overview-recipe.md		
+2026-09-17T07:28:40Z	docs/ja/specdojo/recipes/cdfd-overview-recipe.md	2	passed	841	pass	96	5	gemma-expert-executor	gemma-reporter	none		
+2026-09-17T07:28:40Z	docs/ja/specdojo/recipes/cdfd-overview-recipe.md	3	skipped_condition	0				codex-expert-executor	gemma-reporter	none		
+2026-09-17T07:42:41Z	docs/ja/specdojo/recipes/cdfd-recipe.md	1	passed	839	pass	100	0	gemma-expert-executor	gemma-reporter	docs/ja/specdojo/recipes/prj-overview-recipe.md		
+2026-09-17T07:52:57Z	docs/ja/specdojo/recipes/cdfd-recipe.md	2	passed	616	pass	100	0	gemma-expert-executor	gemma-reporter	none		
+2026-09-17T07:55:54Z	docs/ja/specdojo/recipes/cdfd-recipe.md	3	passed	177	pass	100	0	codex-expert-executor	gemma-reporter	none		
+2026-09-17T08:07:20Z	docs/ja/specdojo/recipes/cdfd-uc-recipe.md	1	passed	684	pass	98	1	gemma-expert-executor	gemma-reporter	docs/ja/specdojo/recipes/prj-overview-recipe.md		
+2026-09-17T08:17:17Z	docs/ja/specdojo/recipes/cdfd-uc-recipe.md	2	passed	596	pass	98	1	gemma-expert-executor	gemma-reporter	none		
+2026-09-17T08:20:23Z	docs/ja/specdojo/recipes/cdfd-uc-recipe.md	3	passed	186	pass	98	1	codex-expert-executor	gemma-reporter	none		
+2026-09-17T08:30:26Z	docs/ja/specdojo/recipes/stsd-recipe.md	1	passed	601	pass	96	1	gemma-expert-executor	gemma-reporter	docs/ja/specdojo/recipes/prj-overview-recipe.md		
+2026-09-17T08:37:49Z	docs/ja/specdojo/recipes/stsd-recipe.md	2	passed	442	pass	96	1	gemma-expert-executor	gemma-reporter	none		
+2026-09-17T08:40:40Z	docs/ja/specdojo/recipes/stsd-recipe.md	3	passed	170	pass	96	1	codex-expert-executor	gemma-reporter	none		
+2026-09-17T08:55:58Z	docs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md	1	passed	917	pass	84	5	gemma-expert-executor	gemma-reporter	docs/ja/specdojo/rulebooks/prj-overview-rulebook.md		
+2026-09-17T09:10:28Z	docs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md	2	passed	869	pass	84	5	gemma-expert-executor	gemma-reporter	none		
+2026-09-17T09:10:28Z	docs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md	3	skipped_condition	0				codex-expert-executor	gemma-reporter	none		
+2026-09-17T09:21:57Z	docs/ja/specdojo/rulebooks/cdfd-rulebook.md	1	passed	688	pass	100	0	gemma-expert-executor	gemma-reporter	docs/ja/specdojo/rulebooks/prj-overview-rulebook.md		
+2026-09-17T09:31:43Z	docs/ja/specdojo/rulebooks/cdfd-rulebook.md	2	passed	585	pass	100	0	gemma-expert-executor	gemma-reporter	none		
+2026-09-17T09:39:08Z	docs/ja/specdojo/rulebooks/cdfd-rulebook.md	3	passed	444	needs-work	75	11	codex-expert-executor	gemma-reporter	none		
+2026-09-17T09:51:46Z	docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md	1	passed	756	needs-work	84	5	gemma-expert-executor	gemma-reporter	docs/ja/specdojo/rulebooks/prj-overview-rulebook.md		
+2026-09-17T10:03:35Z	docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md	2	passed	708	needs-work	84	5	gemma-expert-executor	gemma-reporter	none		
+2026-09-17T10:03:36Z	docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md	3	skipped_condition	0				codex-expert-executor	gemma-reporter	none		
+2026-09-17T10:09:50Z	docs/ja/specdojo/rulebooks/cstd-rulebook.md	1	passed	373	pass	100	0	gemma-expert-executor	gemma-reporter	docs/ja/specdojo/rulebooks/prj-overview-rulebook.md		
+2026-09-17T10:13:49Z	docs/ja/specdojo/rulebooks/cstd-rulebook.md	2	passed	238	pass	100	0	gemma-expert-executor	gemma-reporter	none		
+2026-09-17T10:18:31Z	docs/ja/specdojo/rulebooks/cstd-rulebook.md	3	passed	282	needs-work	93	2	codex-expert-executor	gemma-reporter	none		
+2026-09-17T10:25:46Z	docs/ja/specdojo/rulebooks/stsd-mermaid-rulebook.md	1	passed	433	pass	100	0	gemma-expert-executor	gemma-reporter	docs/ja/specdojo/rulebooks/prj-overview-rulebook.md		
+2026-09-17T10:31:25Z	docs/ja/specdojo/rulebooks/stsd-mermaid-rulebook.md	2	passed	338	pass	100	0	gemma-expert-executor	gemma-reporter	none		
+2026-09-17T10:35:20Z	docs/ja/specdojo/rulebooks/stsd-mermaid-rulebook.md	3	passed	234	needs-work	71	7	codex-expert-executor	gemma-reporter	none		
+2026-09-17T10:43:56Z	docs/ja/specdojo/rulebooks/stsd-rulebook.md	1	passed	514	pass	100	0	gemma-expert-executor	gemma-reporter	docs/ja/specdojo/rulebooks/prj-overview-rulebook.md		
+2026-09-17T10:52:25Z	docs/ja/specdojo/rulebooks/stsd-rulebook.md	2	passed	509	pass	100	0	gemma-expert-executor	gemma-reporter	none		
+2026-09-17T10:57:06Z	docs/ja/specdojo/rulebooks/stsd-rulebook.md	3	passed	280	needs-work	73	8	codex-expert-executor	gemma-reporter	none		

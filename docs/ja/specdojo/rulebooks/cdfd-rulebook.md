@@ -14,27 +14,27 @@ specdojo:
   grade:
     rubric: grade-rubric-v1
     target: kata
-    verdict: pass
-    score: 93
-    graded_at: "2026-09-13T17:35:43.492Z"
-    graded_by: gemma-expert-executor
-    content_hash: 0e828fbb9e7cf9d30831f726c2135f1ffe1fe187d1a10c4c1cc2bc4f34e1503a
+    verdict: needs-work
+    score: 75
+    graded_at: "2026-09-17T09:39:08.533Z"
+    graded_by: codex-expert-executor
+    content_hash: 3b604f47c7d6a7e6a9bc2b831477688e0b6d95f2f92b474e5bd1b2794363a961
     categories:
-      consistency: { score: 88 }
-      usability: { score: 100 }
+      consistency: { score: 63 }
+      usability: { score: 83 }
       architecture: { score: 100 }
-      quality: { score: 88 }
+      quality: { score: 63 }
     viewpoints:
-      vp-arc-cross-document-consistency: { level: 3, score: 75 }
+      vp-arc-cross-document-consistency: { level: 2, score: 50 }
       vp-arc-conciseness: { level: 4, score: 100 }
       vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 3, score: 75 }
+      vp-qe-verifiability: { level: 3, score: 75 }
+      vp-qe-omissions-consistency: { level: 3, score: 75 }
+      vp-qe-kata-conformance: { level: 2, score: 50 }
       vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
+      vp-ux-language-consistency: { level: 2, score: 50 }
       vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 2, note: 0 }
+    findings: { blocker: 0, major: 3, minor: 8, note: 0 }
 ---
 
 # 概念データフロー図（プロセスグループ別）作成ルール
@@ -72,6 +72,7 @@ Conceptual Data Flow Diagram Process Group Documentation Rulebook
 
 ## 3. ファイル命名・ID規則
 
+<!-- specdojo:finding id=F010 severity=major rule=vp-ux-language-consistency line=40 本書では `P-01` を領域 ID とし個別プロセスでの使用を禁止している一方、`cdfd-mermaid-rulebook` は「プロセス」の表示例へ `P-01` を付けているため、領域 ID と個別プロセス ID の表記を包含先と統一してください。 -->
 - 対象プロダクトの業務仕様配下にあるデータフローディレクトリへ配置します。
 - ファイル名と成果物 ID は `cdfd-<group>` とし、ファイル名だけ `.md` を付けます。`<group>` は全体概要のプロセスグループ名を表す英小文字・数字・ハイフンのスラッグです。
 - product 成果物の ID にプロジェクト ID や authority は付けません。例: ファイル名 `cdfd-sales.md`、ID `cdfd-sales`。
@@ -98,6 +99,8 @@ Conceptual Data Flow Diagram Process Group Documentation Rulebook
 
 ## 5. 本文要件
 
+<!-- specdojo:finding id=F005 severity=minor rule=vp-qe-verifiability line=71 「主要例外とグループ外への委譲」を必須章としている一方、主要例外または委譲先が0件の場合に表を省略するのか、該当なしの事実と確認根拠を残すのかが未定義なため、0件時の合格条件を明記してください。 -->
+<!-- specdojo:finding id=F007 severity=minor rule=vp-qe-omissions-consistency line=71 必須章内で主要例外またはグループ外委譲が存在しない場合の節・表の扱いが欠けており、template のプレースホルダーを削除した後の正しい形を判断できないため、0件時の記載規則を追加してください。 -->
 | 番号 | 見出し                       | 必須 | 内容                                                                                                  |
 | ---- | ---------------------------- | ---- | ----------------------------------------------------------------------------------------------------- |
 | 1    | 目的                         | ○    | 対象者と利用場面                                                                                      |
@@ -147,6 +150,9 @@ Conceptual Data Flow Diagram Process Group Documentation Rulebook
 
 ### 6.4. 概念データフロー
 
+<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=111 `includes` 先の `cdfd-mermaid-rulebook` は個別プロセスの表示例に `P-01` を使用しており、本書が必須とする `P-＜nn＞-＜nn＞` 形式および `P-01` の使用禁止と衝突するため、記法 rulebook の例を修正するか適用時の優先規則を明記してください。 -->
+<!-- specdojo:finding id=F002 severity=minor rule=vp-arc-cross-document-consistency line=115 本書は図直後に共通凡例を参照して色・絵文字を再掲しないよう求める一方、`cdfd-mermaid-rulebook` は全ノード形状と色の意味を図ごとに記述するよう求めているため, 図直後の必須記載範囲を統一してください。 -->
+<!-- specdojo:finding id=F008 severity=major rule=vp-qe-kata-conformance line=111 本書が適用を要求する `cdfd-mermaid-rulebook` の個別プロセス例は本書で禁止された `P-01` 形式を生成するため、共通記法の例を `P-＜nn＞-＜nn＞` 形式へ修正して kata の適用結果を一意にしてください。 -->
 - Mermaid のノード、エッジ、形状、線種は Frontmatter の `includes` で指定した記法ルールに従います。
 - 全体概要の各領域を一つの代表ノードとして再掲せず、「プロセス領域」の各表の行を一つずつ個別のプロセスノードとして配置します。
 - 同一グループ内の領域間の受け渡しは、双方のプロセスを同じ図または対応する分割図に置いて示します。他グループは内部プロセスを描かず、委譲先の代表ノードまたは起点・完了イベントだけを置きます。
@@ -170,6 +176,11 @@ Conceptual Data Flow Diagram Process Group Documentation Rulebook
 
 ### 6.7. 主要例外とグループ外への委譲
 
+<!-- specdojo:finding id=F003 severity=minor rule=vp-arc-cross-document-consistency line=136 対応 sample はプロセス出力と概念データフローで「入荷数量」を使用する一方、`cdfd-sales` への引き渡し情報だけを「在庫数量」としているため、委譲情報を同一概念の名称へ統一してください。 -->
+<!-- specdojo:finding id=F004 severity=minor rule=vp-qe-verifiability line=134 完成判定では主要例外の「停止範囲」を説明できることを求めているが、主要例外表の必須列や「本グループでの扱い」の記載基準に停止範囲が明記されていないため、停止対象を判定できる必須記載として定義してください。 -->
+<!-- specdojo:finding id=F006 severity=minor rule=vp-qe-omissions-consistency line=134 「検出条件」「扱い」「継続・再開条件」の規定には完成判定で要求する停止範囲の記載先が含まれていないため、「本グループでの扱い」の必須内容として停止範囲を追加するか専用列を設けてください。 -->
+<!-- specdojo:finding id=F009 severity=minor rule=vp-qe-kata-conformance line=136 対応 sample の `cdfd-sales` 委譲行だけが内部プロセスおよび図にない「在庫数量」を引き渡し情報として使用しているため、完成例を本書の名称一致規則に適合させてください。 -->
+<!-- specdojo:finding id=F011 severity=minor rule=vp-ux-language-consistency line=136 対応 sample は同じ受入結果に「入荷数量」と「在庫数量」を併用して別概念に読めるため、委譲表を含む全箇所で意図する情報名を統一してください。 -->
 - 主要例外は「例外 ID」「対象プロセス」「検出条件」「本グループでの扱い」「継続・再開条件」の表で示します。単なる内部エラー名やログメッセージは列挙しません。
 - 条件付きプロセスを起動しない判断そのものは主要例外に含めません。非起動時の正常な扱いは「プロセス領域」の表にある必須性と図で示します。
 - グループ外委譲は「委譲先」「委譲する事項」「引き渡す情報」「本グループへ戻す条件」の表で示します。
@@ -197,6 +208,3 @@ Conceptual Data Flow Diagram Process Group Documentation Rulebook
 - 一覧、検索、状態参照、検証、dry-run など、独自の業務成果を持たない補助操作を独立プロセスにしません。
 - プロセス領域の表と個別プロセス主要入出力、図直後の注記、例外表の間で同じ事実を重複記載しません。
 - すべての内部エラー、ログ、再試行を主要例外として列挙せず、停止範囲や再開条件を判定できない曖昧な記述を残しません。
-
-<!-- specdojo:finding id=F001 severity=minor rule=vp-arc-cross-document-consistency line=170 状態変更プロセスがない場合の章の扱いについて、レシピ(4.7)の「章を省略」という案内が、本書の「必須章として事実と確認根拠を記載する」方針と矛盾している。 -->
-<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-kata-conformance line=170 状態変更プロセスがない場合の章の扱いについて、レシピ(4.7)の案内が、本書およびテンプレートで定義されている「章を保持して該当なしの事実を記載する」適用方法と矛盾している。 -->

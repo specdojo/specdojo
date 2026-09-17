@@ -11,6 +11,30 @@ specdojo:
     - specdojo:stsd-mermaid-rulebook
   based_on:
     - specdojo:rulebook-authoring-standard
+  grade:
+    rubric: grade-rubric-v1
+    target: kata
+    verdict: needs-work
+    score: 73
+    graded_at: "2026-09-17T10:57:06.680Z"
+    graded_by: codex-expert-executor
+    content_hash: a0539f3eb1d337c4f13ab26a43d454870a3f83f6c946d463926618a465c594d9
+    categories:
+      consistency: { score: 50 }
+      usability: { score: 83 }
+      architecture: { score: 100 }
+      quality: { score: 63 }
+    viewpoints:
+      vp-arc-cross-document-consistency: { level: 2, score: 50 }
+      vp-arc-conciseness: { level: 4, score: 100 }
+      vp-arc-single-responsibility: { level: 4, score: 100 }
+      vp-qe-verifiability: { level: 3, score: 75 }
+      vp-qe-omissions-consistency: { level: 2, score: 50 }
+      vp-qe-kata-conformance: { level: 2, score: 50 }
+      vp-ux-readability: { level: 3, score: 75 }
+      vp-ux-language-consistency: { level: 3, score: 75 }
+      vp-arc-document-structure: { level: 4, score: 100 }
+    findings: { blocker: 0, major: 3, minor: 5, note: 0 }
 ---
 
 # ステータス定義（Status Definition: STSD）作成ルール
@@ -21,6 +45,7 @@ Status Definition Documentation Rulebook
 
 ## 1. 全体方針
 
+<!-- specdojo:finding id=F007 severity=minor rule=vp-ux-readability line=10 状態遷移図と遷移の説明を遷移元・遷移先・イベント・条件の「正本」と同時に位置付けているため、不一致時の優先関係が曖昧であり、どちらを正本として他方を投影・照合するのか、または一体でのみ正本となるのかを明示する必要がある。 -->
 - 一文書は一つの対象（エンティティまたは業務概念）だけを扱います。対象が異なる場合は `stsd-<term>` を分けます。
 - 状態一覧を状態名・意味・成立条件の正本、状態遷移図と遷移の説明を遷移元・遷移先・イベント・条件の正本として同じ文書で管理します。
 - 状態一覧の全状態を状態遷移図と遷移の説明へ対応付け、図だけ、表だけで意味が決まる状態を残しません。
@@ -86,6 +111,7 @@ Status Definition Documentation Rulebook
 
 ### 6.2. 状態一覧
 
+<!-- specdojo:finding id=F005 severity=minor rule=vp-qe-omissions-consistency line=76 外部参照に使う「値」について形式だけを定め、文書内での一意性と重複確認を要求していないため、同じ値が複数状態を指すことを防ぐ完成判定を追加する必要がある。 -->
 | 列名     | 記述ルール                                                            |
 | -------- | --------------------------------------------------------------------- |
 | 値       | 外部参照に使う安定した `lower-kebab-case`。コードを持たない場合は `-` |
@@ -101,6 +127,9 @@ Status Definition Documentation Rulebook
 
 ### 6.3. 状態遷移図
 
+<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=89 `includes` 先の `stsd-mermaid-rulebook` は `＜＜choice＞＞` 疑似状態とイベントを持たない出力遷移を許可しており、本書の「状態一覧の状態名だけを使う」「全遷移にイベントと条件を持たせる」「遷移の説明と一致させる」という規則に反するため, choice を禁止するか、疑似状態・イベント・遷移表への対応方法を両文書で整合させる必要がある。 -->
+<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-verifiability line=93 図を分割する条件の「通常系と例外系を同時に追えない」は確認手順や判定基準がなく判定者に依存するため、追跡対象とする経路数、交差、読解不能とみなす条件などを明示する必要がある。 -->
+<!-- specdojo:finding id=F008 severity=minor rule=vp-ux-language-consistency line=89 `includes` 先で使用される `＜＜choice＞＞` と「判定」が、状態一覧へ載せる業務状態とは異なる疑似状態であることを本書の用語体系で定義していないため、許可する場合は名称・役割・状態一覧および遷移説明との関係を明記する必要がある。 -->
 - Mermaid の `stateDiagram-v2` を使用し、Frontmatter の `includes` で指定された記法ルールに従います。
 - 状態一覧の「状態名」を図の状態ラベルにそのまま使用します。
 - 遷移ラベルは `イベント / 条件` とし、条件がない場合も業務イベントを省略しません。
@@ -130,6 +159,7 @@ Status Definition Documentation Rulebook
 
 ### 6.6. 完成判定
 
+<!-- specdojo:finding id=F003 severity=minor rule=vp-qe-verifiability line=121 完成判定の「主要な例外経路」について主要性の選定基準がなく、確認対象から除外できる例外を判定できないため、全例外経路を対象とするか、影響度・発生頻度などの選定条件を定義する必要がある。 -->
 - 状態一覧の全状態が状態遷移図に登場し、図の業務状態がすべて状態一覧にあります。
 - 状態一覧の成立条件だけで現在状態を判定でき、複数状態へ同時に該当する場合の扱いが明示されています。
 - 図の全遷移が遷移の説明へ一度ずつ対応し、遷移元・遷移先・イベント・条件が一致しています。
@@ -147,6 +177,8 @@ Status Definition Documentation Rulebook
 
 ## 8. サンプル
 
+<!-- specdojo:finding id=F004 severity=major rule=vp-qe-omissions-consistency line=148 サンプルは「受入から販売終了まで」を対象としながら販売可能までしか定義せず、終了点または継続状態の説明、AS-IS / TO-BE、利用者、状態の正本も欠くため、行56・68-70・121の必須要件を満たす自己完結した例へ修正する必要がある。 -->
+<!-- specdojo:finding id=F006 severity=major rule=vp-qe-kata-conformance line=148 rulebook 内サンプルは販売終了までを扱うと宣言しながら終了までの状態・遷移を示さず、必須の概要情報も欠いているため、外部 `stsd-sample` と同様に本書の必須要件と完成判定を満たす最小完成例へ修正する必要がある。 -->
 ````markdown
 ---
 specdojo:
