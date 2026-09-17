@@ -1,0 +1,14 @@
+[cdfd-do.md](/workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-do-075/docs/ja/product/010-business-specs/010-data-flow/cdfd-do.md) を更新しました。
+
+- 保護設定変更の block、差分申し送り、実行外適用、再開条件を明確化
+- 一般的な承認待ちを別例外へ分離
+- 委譲先5文書を Wiki リンク化
+- finding コメントは保持
+- result は executor 指示に従い未変更
+- Markdown lint・索引生成・差分検査は通過
+
+標準の索引起動は sandbox の IPC 制限で失敗しましたが、同じソースを Node ローダーで実行して正常完了しています。
+
+<specdojo_executor_evidence>
+{"final_message":"cdfd-do の全7件の finding を本文修正で解消し、コメントは保持しました。","validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-do.md && npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-do.md","status":"passed","summary":"整形および Markdown 静的検査が完了"},{"command":"for f in docs/ja/product/010-business-specs/010-data-flow/cdfd-orchestrator.md docs/ja/product/010-business-specs/010-data-flow/cdfd-check.md docs/ja/product/010-business-specs/010-data-flow/cdfd-action.md docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-deliverable.md; do test -f \"$f\" || exit 1; done","status":"passed","summary":"Wikiリンク化した委譲先5文書の存在を確認"},{"command":"npx tsx src/specdojo.ts index build","status":"failed","summary":"sandbox が tsx の IPC ソケット作成を EPERM で拒否"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"IPC不使用の等価起動で1784件の文書索引生成に成功"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>
