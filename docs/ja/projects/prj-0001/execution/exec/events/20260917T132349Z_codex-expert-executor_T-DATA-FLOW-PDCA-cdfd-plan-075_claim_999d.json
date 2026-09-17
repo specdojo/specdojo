@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-09-17T13:23:49Z",
+  "type": "claim",
+  "task_id": "T-DATA-FLOW-PDCA-cdfd-plan-075",
+  "by": "codex-expert-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "BA"
+  }
+}
