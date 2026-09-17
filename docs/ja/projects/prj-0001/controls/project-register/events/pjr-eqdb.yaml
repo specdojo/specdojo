@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_aa16a5b591fe404e9a4c342dea8c3ebe
+  ts: "2026-09-17T13:17:10Z"
+  action: add
+  actor: specdojo-orchestrator (claude)
+  from_status: null
+  to_status: open
+  reason: rtn-grade-recheck（JBR-grade-kata-8a8333596f2e）で needs-work となった rulebook 3 件の是正を追跡するため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: cdfd-rulebook と stsd 系 rulebook の grade 指摘を解消する
+    - field: description
+      from: ""
+      to: STSD/CSTD 統合後の Kata 評価で cdfd-rulebook（75、11 件）、stsd-rulebook（73、8 件）、stsd-mermaid-rulebook（71、7 件）に残った finding を解消し、includes 先の mermaid rulebook との整合を取る
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-17"
+    - field: due
+      from: ""
+      to: "2026-09-30"
