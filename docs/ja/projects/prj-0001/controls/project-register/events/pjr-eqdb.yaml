@@ -45,3 +45,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_aa16a5b591fe404e9a4c342dea8c3ebe
+- v: 1
+  id: reg_f19928ffbee4405584870aa1df269fb3
+  ts: "2026-09-18T23:36:11Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: 'agent exited with non-zero code: 親検証 (`source="runner"`) の `test-unit` が `failed` となっているため、完了条件を満たしていない。'
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: 'agent exited with non-zero code: 親検証 (`source="runner"`) の `test-unit` が `failed` となっているため、完了条件を満たしていない。'
+  previous_event_id: reg_03e719303e7d4ca6b5f4f4e68945b693
