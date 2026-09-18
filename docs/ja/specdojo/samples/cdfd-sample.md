@@ -12,9 +12,9 @@ specdojo:
     target: kata
     verdict: pass
     score: 96
-    graded_at: "2026-09-13T19:00:10.982Z"
-    graded_by: codex-expert-executor
-    content_hash: e249f71063077096d306fbce9809ada3fd3a11738f93197cf90c736a65407bde
+    graded_at: "2026-09-18T07:53:17.480Z"
+    graded_by: gemma-expert-executor
+    content_hash: de1c73c30992ab7dece8b08e1c3a5bf5eb88f3d2eb4c1f187938007334da1be0
     categories:
       consistency: { score: 88 }
       usability: { score: 92 }
@@ -245,11 +245,11 @@ flowchart LR
 
 ### 8.2. グループ外への委譲
 
-<!-- specdojo:finding id=F001 severity=minor rule=vp-arc-cross-document-consistency line=216 `cdfd-sales` への引き渡し情報を「在庫数量」としているが、全体概要で仕入グループの出力は「入荷数量」、販売グループの入力は「売場棚の商品」であり、「在庫数量」は販売への引き渡しとして定義されていないため、上位文書と整合する名称と内容へ修正してください。 -->
-<!-- specdojo:finding id=F002 severity=minor rule=vp-ux-language-consistency line=216 `P-02-03` の出力、概念データフロー、領域の主要出力では「入荷数量」を使用している一方、`cdfd-sales` への引き渡しだけ「在庫数量」となっており別概念に読めるため、意図する情報名へ統一してください。 -->
-
 | 委譲先                  | 委譲する事項                                         | 引き渡す情報                           | 本グループへ戻す条件                                         |
 | ----------------------- | ---------------------------------------------------- | -------------------------------------- | ------------------------------------------------------------ |
 | `cdfd-inventory`        | 在庫数の算出、補充基準との比較、補充対象・数量の判断 | 発注不可となった商品・数量、在庫情報   | 新規または修正した補充依頼が仕入グループへ渡された           |
 | `cdfd-sales`            | 売場棚の商品を用いた店頭販売                         | 売場商品、在庫数量                     | 販売後の在庫が補充基準を下回り、在庫グループが補充を依頼した |
 | `cdfd-uc-replenishment` | 在庫・仕入・販売を横断する順序と引き渡し条件         | 補充依頼、発注結果、入荷数量、売場商品 | グループ間の引き渡し条件を変更する判断が生じた               |
+
+<!-- specdojo:finding id=F001 severity=minor rule=vp-arc-cross-document-consistency line=252 `cdfd-sales` への引き渡し情報を「在庫数量」としているが, 全体概要で仕入グループの出力は「入荷数量」、販売グループの入力は「売場棚の商品」であり、「在庫数量」は販売への引き渡しとして定義されていないため、上位文書と整合する名称と内容へ修正してください。 -->
+<!-- specdojo:finding id=F002 severity=minor rule=vp-ux-language-consistency line=252 `P-02-03` の出力、概念データフロー、領域の主要出力では「入荷数量」を使用している一方、`cdfd-sales` への引き渡しだけ「在庫数量」となっており別概念に読めるため、意図する情報名へ統一してください。 -->

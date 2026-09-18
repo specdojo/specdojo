@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "project_id": "prj-0001",
+  "target": "kata",
+  "document": "docs/ja/specdojo/samples/cdfd-uc-sample.md",
+  "content_hash": "b8dbbd2a949b0e915b3464fcc4c24a91df80e6337595ad9549875359dafc8061",
+  "stage_completed": 2,
+  "stage_failed": 3,
+  "stage_total": 3,
+  "consecutive_failures": 1,
+  "max_failures": 3,
+  "last_run_id": "JBR-grade-kata-0d959bf6bead",
+  "updated_at": "2026-09-18T08:19:26.663Z"
+}

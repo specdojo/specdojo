@@ -16,26 +16,26 @@ specdojo:
     rubric: grade-rubric-v1
     target: kata
     verdict: pass
-    score: 93
-    graded_at: "2026-09-14T02:05:23.181Z"
+    score: 86
+    graded_at: "2026-09-18T09:54:14.797Z"
     graded_by: codex-expert-executor
-    content_hash: ba41235b054e6d459a4d6f0cffb668d46e86560b5d33a0d03eb97efe1f9741cd
+    content_hash: 2b006d5c7fd02d88cfa084136f11ff3eb9aa766a5016397c4651aeeb01887e79
     categories:
-      consistency: { score: 88 }
+      consistency: { score: 75 }
       usability: { score: 100 }
       architecture: { score: 100 }
-      quality: { score: 88 }
+      quality: { score: 75 }
     viewpoints:
       vp-arc-cross-document-consistency: { level: 3, score: 75 }
       vp-arc-conciseness: { level: 4, score: 100 }
       vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
+      vp-qe-verifiability: { level: 3, score: 75 }
+      vp-qe-omissions-consistency: { level: 3, score: 75 }
       vp-qe-kata-conformance: { level: 3, score: 75 }
       vp-ux-readability: { level: 4, score: 100 }
       vp-ux-language-consistency: { level: 4, score: 100 }
       vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 2, note: 0 }
+    findings: { blocker: 0, major: 0, minor: 10, note: 0 }
 ---
 
 # 概念データフロー図（プロセスグループ別）: _GROUP_NAME_
@@ -112,6 +112,10 @@ _TODO_
 
 ## 5. 概念データフロー
 
+<!-- specdojo:finding id=F001 severity=minor rule=vp-arc-cross-document-consistency line=75 recipe は条件付き・選択プロセスの非起動時の正常経路を図で示すよう求めているが、概念データフローの作成指示には当該経路が含まれていないため、起動経路と非起動経路を図へ記載する指示を追加してください。 -->
+<!-- specdojo:finding id=F003 severity=minor rule=vp-qe-verifiability line=75 条件付き・選択プロセスについて非起動時の正常経路を図へ示す条件がないため、必須性セルだけを満たした図を合格とするか判定できず, 起動時と非起動時の両経路を確認できる要件を追加してください。 -->
+<!-- specdojo:finding id=F006 severity=minor rule=vp-qe-omissions-consistency line=75 条件付き・選択プロセスの非起動時の正常経路を概念データフローへ反映する指示が欠けているため、図の必須要素として追加してください。 -->
+<!-- specdojo:finding id=F009 severity=minor rule=vp-qe-kata-conformance line=75 recipe が要求する条件付き・選択プロセスの非起動時の正常経路がテンプレートの図作成指示に反映されていないため、生成物が recipe の検証条件を満たすよう明記してください。 -->
 _TODO_: 「プロセス領域」の各表の行を一つのプロセスノードとして配置し、同一グループ内の領域間の受け渡し、起点イベント、「データストア」の各行、必要な外部主体、グループ外の委譲先をつなぐ。図は領域ごと、または業務の性質が近いプロセスごとに分ける。一図のプロセスノードが 15 個を超える場合も分割する。
 
 ### 5.1. _FLOW_SCOPE_NAME_（_AREA_ID_RANGE_）
@@ -160,19 +164,22 @@ _TODO_: この表が扱う領域または業務上のまとまりを数行で要
 
 ## 7. 状態遷移の参照
 
-<!-- specdojo:finding id=F001 severity=minor rule=vp-arc-cross-document-consistency line=123 状態変更プロセスがない場合に章を保持して事実と確認根拠を記載する指示は rulebook と一致する一方、recipe 4.7 の「章を省略」という案内とは矛盾するため、kata 内で適用方法を統一してください。 -->
-<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-kata-conformance line=123 状態変更プロセスがない場合に章を保持するテンプレートの適用方法は rulebook と一致するが recipe 4.7 は章の省略を指示しているため、recipe を章保持・表削除・確認根拠記載の手順へ統一してください。 -->
-
 _TODO_: 状態を変えるプロセスがある場合は次の表へ記入する。CDFD には状態名、状態説明、遷移元・遷移先、遷移条件を記載しない。状態を変えるプロセスがない場合は、その事実と確認根拠を一文で記述して表を削除する。
 
 | 対象           | 状態を変えるプロセス | ステータス定義（STSD） |
 | -------------- | -------------------- | ---------------------- |
 | _STATE_TARGET_ | `_PROCESS_ID_`       | `stsd-_TERM_`          |
 
+<!-- specdojo:finding id=F005 severity=minor rule=vp-qe-verifiability line=129 主要例外またはグループ外委譲が0件の場合に、表を削除して確認根拠を残すのか節ごと省略するのかが未定義なため、プレースホルダー除去後の合格形を明記してください。 -->
+<!-- specdojo:finding id=F008 severity=minor rule=vp-qe-omissions-consistency line=129 必須章内で主要例外またはグループ外委譲が存在しない場合の節・表・確認根拠の扱いが欠けているため、各0件時の記載規則を追加してください。 -->
 ## 8. 主要例外とグループ外への委譲
 
 ### 8.1. 主要例外
 
+<!-- specdojo:finding id=F002 severity=minor rule=vp-arc-cross-document-consistency line=133 recipe と rulebook の完成判定は主要例外の停止範囲を要求しているが、例外表のプレースホルダーや補足には停止対象を記述する指示がないため、「本グループでの扱い」に停止範囲を含めることを明記してください。 -->
+<!-- specdojo:finding id=F004 severity=minor rule=vp-qe-verifiability line=133 `_EXCEPTION_HANDLING_` に停止範囲を含める指示がなく、主要例外がどの後続処理を停止するかを完成判定できないため、停止対象を必須記載として定義してください。 -->
+<!-- specdojo:finding id=F007 severity=minor rule=vp-qe-omissions-consistency line=133 主要例外の完成判定に必要な停止範囲の記載指示が例外表から欠けているため、「本グループでの扱い」の必須内容として追加してください。 -->
+<!-- specdojo:finding id=F010 severity=minor rule=vp-qe-kata-conformance line=133 recipe と rulebook の完成判定で確認する主要例外の停止範囲がテンプレートの骨組みに現れていないため、該当列の記入要件として追加してください。 -->
 | 例外 ID          | 対象プロセス   | 検出条件              | 本グループでの扱い   | 継続・再開条件                |
 | ---------------- | -------------- | --------------------- | -------------------- | ----------------------------- |
 | `_EXCEPTION_ID_` | `_PROCESS_ID_` | _DETECTION_CONDITION_ | _EXCEPTION_HANDLING_ | _RESUME_OR_HANDOFF_CONDITION_ |

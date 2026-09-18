@@ -15,26 +15,26 @@ specdojo:
     rubric: grade-rubric-v1
     target: kata
     verdict: pass
-    score: 98
-    graded_at: "2026-09-14T01:37:14.517Z"
+    score: 84
+    graded_at: "2026-09-18T09:25:41.579Z"
     graded_by: codex-expert-executor
-    content_hash: 8d2b8240fc38d3efd83f6e6324f98765e1dd1b05cdebffc7bd5cc9cda6a35402
+    content_hash: 06f6ec37d26c4792e8d6c17b560edfd69f84f167250380d16b49b0174bbe2131
     categories:
-      consistency: { score: 100 }
+      consistency: { score: 75 }
       usability: { score: 92 }
       architecture: { score: 100 }
-      quality: { score: 100 }
+      quality: { score: 75 }
     viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
+      vp-arc-cross-document-consistency: { level: 3, score: 75 }
       vp-arc-conciseness: { level: 4, score: 100 }
       vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 4, score: 100 }
+      vp-qe-verifiability: { level: 3, score: 75 }
+      vp-qe-omissions-consistency: { level: 3, score: 75 }
+      vp-qe-kata-conformance: { level: 3, score: 75 }
       vp-ux-readability: { level: 4, score: 100 }
       vp-ux-language-consistency: { level: 3, score: 75 }
       vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 1, note: 0 }
+    findings: { blocker: 0, major: 0, minor: 7, note: 0 }
 ---
 
 # 概念データフロー図（全体概要）: _TARGET_NAME_
@@ -89,10 +89,15 @@ _TODO_
 | --- | --- | --- | --- | --- |
 | `_PROCESS_AREA_ID_` | _PROCESS_AREA_NAME_ | _BUSINESS_PURPOSE_ | _OWNER_ROLE_ | _START_EVENT_ |
 
+<!-- specdojo:finding id=F001 severity=minor rule=vp-arc-cross-document-consistency line=53 第4章は一覧を「マスタ・構成データ」「トランザクションデータ」の2表に限定する一方、rulebookは図に必要な物理保管も一覧へ含めるよう要求し、第7章は物理保管を両区分外と定義しているため、物理保管用の条件付き表を設けるか既存表に置く例外規則をtemplate・rulebook・sampleで統一する必要がある。 -->
+<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-verifiability line=53 物の流れを扱う場合、物理保管をどの一覧表へ置けば「図のノードは一覧の各行と一対一」と「物理保管はいずれの区分にも属さない」を同時に満たすか判定できないため、配置先とpass条件を明記する必要がある。 -->
+<!-- specdojo:finding id=F003 severity=minor rule=vp-qe-omissions-consistency line=53 図に必要な物理保管を一覧へ含めるための行または条件付き表がなく、物の流れを含む成果物で一覧と図を一対一に対応させる骨組みが欠けている。 -->
+<!-- specdojo:finding id=F006 severity=minor rule=vp-qe-kata-conformance line=53 rulebookは図に必要な物理保管も一覧化するよう求めるが, templateには両データ区分の外にある物理保管の配置欄がないため、rulebookを適用できる骨組みへ修正する必要がある。 -->
 ## 4. データストア
 
 _TODO_: 区分の意味、パスの略記（例: `<project-id>` が指す範囲）、データストアとして扱わないもの（リポジトリ基盤、開発環境の設定など）を各一文で書く。
 
+<!-- specdojo:finding id=F004 severity=minor rule=vp-qe-omissions-consistency line=57 複数の論理データストアが保管先を共有・包含する場合に、論理境界、共有相手、正本関係を注記する記入指示がなく、rulebookの完成判定に必要な情報を漏らす可能性がある。 -->
 <!-- 「主な保管先」列は条件付き。実装が先にある場合は必須、設計中で候補がある場合は置いて未確定セルを _UNDECIDED_ にし、概念段階では列ごと削除する。 -->
 
 ### 4.1. マスタ・構成データ
@@ -136,6 +141,7 @@ flowchart LR
   class _TRANSACTION_STORE_NODE_ID_ storeTransaction
 ```
 
+<!-- specdojo:finding id=F005 severity=minor rule=vp-qe-omissions-consistency line=100 対象範囲内の参加者から直接受け取る主要入力を図から省略した場合、その入力を図直後の注記に列挙するための記入指示がなく、rulebookの完成判定に必要な注記が欠けている。 -->
 凡例は「凡例（本プロダクト共通）」に従う。`-->` は情報の流れであり、_TODO_: 物の流れ（`==>`）を使う場合はその旨、使わない場合は「本図は物の流れを対象外とする」と書く。各領域の起点イベントと担当は「プロセス領域」の表に記載し、本図では省略する。_TODO_: 外部主体の有無を書く。
 
 ## 6. 詳細 CDFD 一覧
@@ -208,6 +214,7 @@ flowchart LR
 | 情報の流れ | ラベル付き `-->` | — | — |
 | 物の流れ | ラベル付き `==>` | — | — |
 
+<!-- specdojo:finding id=F007 severity=minor rule=vp-ux-language-consistency line=172 「データストア」をマスタ・構成データとトランザクションデータに分けながら、物理保管を「いずれの区分にも属さない」としており、物理保管が一覧上のデータストアなのか図示専用の別概念なのか識別できないため、用語の包含関係を統一する必要がある。 -->
 データストアの色分けは、大分類「データストア」の中の業務上のサブ分類を表す。マスタ・構成データは、他のプロセスから参照される比較的安定した基準情報を指す。トランザクションデータは、業務活動に伴い都度更新される記録を指す。物理保管は現物の保管先であり、いずれの区分にも属さないため、便宜上トランザクションデータと同じ色を用いる。
 
 ノード形状・線種そのものの記法は `specdojo:cdfd-mermaid-rulebook` に従う。本章は、その記法に基づき _TARGET_NAME_ が実際に採用する色・絵文字の割り当てを固定する。

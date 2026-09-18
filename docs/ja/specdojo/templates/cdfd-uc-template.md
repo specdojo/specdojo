@@ -16,26 +16,26 @@ specdojo:
     rubric: grade-rubric-v1
     target: kata
     verdict: pass
-    score: 100
-    graded_at: "2026-09-14T02:27:12.614Z"
+    score: 95
+    graded_at: "2026-09-18T10:14:59.222Z"
     graded_by: codex-expert-executor
-    content_hash: 885863f58405bab24cb47c60ea2417520170d47ad8d6899c9ef9fa346b2736e7
+    content_hash: 50c0382c8c2ebe57e3ba11a472cf22cc9f930f535769bec86c95c0b458ef8795
     categories:
-      consistency: { score: 100 }
+      consistency: { score: 75 }
       usability: { score: 100 }
       architecture: { score: 100 }
       quality: { score: 100 }
     viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
+      vp-arc-cross-document-consistency: { level: 3, score: 75 }
       vp-arc-conciseness: { level: 4, score: 100 }
       vp-arc-single-responsibility: { level: 4, score: 100 }
       vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
+      vp-qe-omissions-consistency: { level: 3, score: 75 }
       vp-qe-kata-conformance: { level: 4, score: 100 }
       vp-ux-readability: { level: 4, score: 100 }
       vp-ux-language-consistency: { level: 4, score: 100 }
       vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 0, note: 0 }
+    findings: { blocker: 0, major: 0, minor: 2, note: 0 }
 ---
 
 # 概念データフロー図（ユースケース別）: _USE_CASE_NAME_
@@ -141,6 +141,7 @@ flowchart LR
   class _TRANSACTION_STORE_NODE_ID_ storeTransaction
 ```
 
+<!-- specdojo:finding id=F001 severity=minor rule=vp-arc-cross-document-consistency line=104 ノード形状の意味を全体概要の共通凡例への参照に留める記入指示は、包含される `specdojo:cdfd-mermaid-rulebook` の各図直後に使用したノード形状の意味を直接記述する要件と一致しないため、包含規則との優先関係を明示するか記載要件を統一してください。 -->
 _TODO_: 全体概要の「凡例（本プロダクト共通）」への参照、`-->` / `==>` のうち使用した線種、グループ内部を省略したこと、図に置いたデータストアと選定理由を書く。
 
 <!-- 物を引き渡す場合は ==> を使用する。関連データストアがない場合は該当ノード、エッジ、class を削除する。グループや引き渡しが多く一図で追えない場合は 5.1、5.2 の連続する引き渡し単位へ分け、接続点に同じ引き渡し ID を置く。 -->
@@ -151,6 +152,7 @@ _TODO_: 全体概要の「凡例（本プロダクト共通）」への参照、
 | -------------- | -------------------- | -------------------- | --------------------- | ------------------- | ------------------ |
 | `_HANDOFF_ID_` | _PROCESS_GROUP_NAME_ | _PROCESS_GROUP_NAME_ | _HANDOFF_INFORMATION_ | _HANDOFF_CONDITION_ | _RETURN_CONDITION_ |
 
+<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-omissions-consistency line=114 rulebook は戻しが発生しない引き渡しに根拠を記載することを許容する一方、本テンプレートは戻す条件を空欄不可とし全 ID の戻り先確認を求めるだけなので、該当なしを表す値と理由の記載方法、および「例外時の戻り先」表へ記載するか除外するかを定めてください。 -->
 <!-- 引き渡し ID は正常順序に沿った H-01 形式にする。隣接する全グループ間の引き渡しを一行ずつ追加し、情報、引き渡し条件、戻す条件を空欄にしない。 -->
 
 ## 7. 例外時の戻り先

@@ -1,0 +1,58 @@
+
+> specdojo@0.1.0 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-kata-0d959bf6bead project=prj-0001 target=kata kind=all changed_only=true ungraded=true incomplete=true max_stage_failures=3 documents=9 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-kata-0d959bf6bead
+stage=1 executor=gemma-expert-executor reporter=gemma-reporter reference=per-kind
+stage=2 executor=gemma-expert-executor reporter=gemma-reporter reference=none
+stage=3 executor=codex-expert-executor reporter=gemma-reporter reference=none condition="pass, score>=96, findings<=1"
+document start: docs/ja/specdojo/samples/cdfd-overview-sample.md
+resume stage=3 document=docs/ja/specdojo/samples/cdfd-overview-sample.md status=skipped_condition
+document complete: docs/ja/specdojo/samples/cdfd-overview-sample.md
+document start: docs/ja/specdojo/samples/cdfd-sample.md
+resume stage=3 document=docs/ja/specdojo/samples/cdfd-sample.md status=skipped_condition
+document complete: docs/ja/specdojo/samples/cdfd-sample.md
+document start: docs/ja/specdojo/samples/cdfd-uc-sample.md
+document incomplete: docs/ja/specdojo/samples/cdfd-uc-sample.md failed_stage=3
+document start: docs/ja/specdojo/samples/cstd-sample.md
+document complete: docs/ja/specdojo/samples/cstd-sample.md
+document start: docs/ja/specdojo/samples/stsd-sample.md
+document complete: docs/ja/specdojo/samples/stsd-sample.md
+document start: docs/ja/specdojo/templates/cdfd-overview-template.md
+document complete: docs/ja/specdojo/templates/cdfd-overview-template.md
+document start: docs/ja/specdojo/templates/cdfd-template.md
+document complete: docs/ja/specdojo/templates/cdfd-template.md
+document start: docs/ja/specdojo/templates/cdfd-uc-template.md
+document complete: docs/ja/specdojo/templates/cdfd-uc-template.md
+document start: docs/ja/specdojo/templates/stsd-template.md
+resume stage=3 document=docs/ja/specdojo/templates/stsd-template.md status=skipped_condition
+document complete: docs/ja/specdojo/templates/stsd-template.md
+grade pipeline complete: selected=9 processed=9 completed_now=8 incomplete=1 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-kata-0d959bf6bead/results.tsv
+recorded_at	document	stage	status	duration_seconds	verdict	score	findings	executor	reporter	reference	consecutive_failures	max_failures
+2026-09-18T07:15:02Z	docs/ja/specdojo/samples/cdfd-overview-sample.md	1	passed	892	needs-work	78	7	gemma-expert-executor	gemma-reporter	docs/ja/specdojo/samples/prj-overview-sample.md		
+2026-09-18T07:29:28Z	docs/ja/specdojo/samples/cdfd-overview-sample.md	2	passed	866	needs-work	78	7	gemma-expert-executor	gemma-reporter	none		
+2026-09-18T07:29:28Z	docs/ja/specdojo/samples/cdfd-overview-sample.md	3	skipped_condition	0				codex-expert-executor	gemma-reporter	none		
+2026-09-18T07:41:48Z	docs/ja/specdojo/samples/cdfd-sample.md	1	passed	738	pass	96	2	gemma-expert-executor	gemma-reporter	docs/ja/specdojo/samples/prj-overview-sample.md		
+2026-09-18T07:53:17Z	docs/ja/specdojo/samples/cdfd-sample.md	2	passed	688	pass	96	2	gemma-expert-executor	gemma-reporter	none		
+2026-09-18T07:53:18Z	docs/ja/specdojo/samples/cdfd-sample.md	3	skipped_condition	0				codex-expert-executor	gemma-reporter	none		
+2026-09-18T08:04:50Z	docs/ja/specdojo/samples/cdfd-uc-sample.md	1	passed	691	pass	100	0	gemma-expert-executor	gemma-reporter	docs/ja/specdojo/samples/prj-overview-sample.md		
+2026-09-18T08:14:11Z	docs/ja/specdojo/samples/cdfd-uc-sample.md	2	passed	560	pass	100	0	gemma-expert-executor	gemma-reporter	none		
+2026-09-18T08:19:26Z	docs/ja/specdojo/samples/cdfd-uc-sample.md	3	failed	314				codex-expert-executor	gemma-reporter	none	1	3
+2026-09-18T08:26:26Z	docs/ja/specdojo/samples/cstd-sample.md	1	passed	419	pass	100	0	gemma-expert-executor	gemma-reporter	docs/ja/specdojo/samples/prj-overview-sample.md		
+2026-09-18T08:31:38Z	docs/ja/specdojo/samples/cstd-sample.md	2	passed	311	pass	100	0	gemma-expert-executor	gemma-reporter	none		
+2026-09-18T08:34:07Z	docs/ja/specdojo/samples/cstd-sample.md	3	passed	148	pass	100	0	codex-expert-executor	gemma-reporter	none		
+2026-09-18T08:42:52Z	docs/ja/specdojo/samples/stsd-sample.md	1	passed	524	pass	100	0	gemma-expert-executor	gemma-reporter	docs/ja/specdojo/samples/prj-overview-sample.md		
+2026-09-18T08:51:42Z	docs/ja/specdojo/samples/stsd-sample.md	2	passed	530	pass	100	0	gemma-expert-executor	gemma-reporter	none		
+2026-09-18T08:57:58Z	docs/ja/specdojo/samples/stsd-sample.md	3	passed	375	needs-work	64	10	codex-expert-executor	gemma-reporter	none		
+2026-09-18T09:09:03Z	docs/ja/specdojo/templates/cdfd-overview-template.md	1	passed	663	pass	100	0	gemma-expert-executor	gemma-reporter	docs/ja/specdojo/templates/prj-overview-template.md		
+2026-09-18T09:20:45Z	docs/ja/specdojo/templates/cdfd-overview-template.md	2	passed	701	pass	100	0	gemma-expert-executor	gemma-reporter	none		
+2026-09-18T09:25:41Z	docs/ja/specdojo/templates/cdfd-overview-template.md	3	passed	295	pass	84	7	codex-expert-executor	gemma-reporter	none		
+2026-09-18T09:38:42Z	docs/ja/specdojo/templates/cdfd-template.md	1	passed	779	pass	100	0	gemma-expert-executor	gemma-reporter	docs/ja/specdojo/templates/prj-overview-template.md		
+2026-09-18T09:49:03Z	docs/ja/specdojo/templates/cdfd-template.md	2	passed	621	pass	100	0	gemma-expert-executor	gemma-reporter	none		
+2026-09-18T09:54:14Z	docs/ja/specdojo/templates/cdfd-template.md	3	passed	310	pass	86	10	codex-expert-executor	gemma-reporter	none		
+2026-09-18T10:03:46Z	docs/ja/specdojo/templates/cdfd-uc-template.md	1	passed	570	pass	100	0	gemma-expert-executor	gemma-reporter	docs/ja/specdojo/templates/prj-overview-template.md		
+2026-09-18T10:11:42Z	docs/ja/specdojo/templates/cdfd-uc-template.md	2	passed	475	pass	100	0	gemma-expert-executor	gemma-reporter	none		
+2026-09-18T10:14:59Z	docs/ja/specdojo/templates/cdfd-uc-template.md	3	passed	196	pass	95	2	codex-expert-executor	gemma-reporter	none		
+2026-09-18T10:26:53Z	docs/ja/specdojo/templates/stsd-template.md	1	passed	712	pass	91	3	gemma-expert-executor	gemma-reporter	docs/ja/specdojo/templates/prj-overview-template.md		
+2026-09-18T10:38:20Z	docs/ja/specdojo/templates/stsd-template.md	2	passed	686	pass	91	3	gemma-expert-executor	gemma-reporter	none		
+2026-09-18T10:38:21Z	docs/ja/specdojo/templates/stsd-template.md	3	skipped_condition	0				codex-expert-executor	gemma-reporter	none		
