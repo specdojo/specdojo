@@ -97,7 +97,7 @@ npm run vscode:ps          # vscode-server 系プロセスをメモリ順に表�
 npm run vscode:kill-stale  # 最新 commit 以外の server と孤児プロセスを停止する
 ```
 
-停止対象は「最新 commit 以外の `server-main.js` とその子孫」と「PID 1 の子になった vscode-server 系プロセス」だけで、稼働中の接続は対象にしません。`bash tools/devcontainer/kill-stale-vscode.sh --dry-run` で対象を表示だけできます。
+停止対象は「最新 commit 以外の `server-main.js` とその子孫」と「PID 1 の子になった vscode-server 系プロセス」だけで、稼働中の接続は対象にしません。`bash .devcontainer/kill-stale-vscode.sh --dry-run` で対象を表示だけできます。
 
 `init` の変更はコンテナの rebuild（`Dev Containers: Rebuild Container`）後に有効になります。
 

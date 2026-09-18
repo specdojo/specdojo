@@ -37,14 +37,14 @@ devcontainer は `"shutdownAction": "none"` でコンテナを生かし続ける
 | No  | 作業                                                                                         | 担当 | 状態 | メモ                                                          |
 | --- | -------------------------------------------------------------------------------------------- | ---- | ---- | ------------------------------------------------------------- |
 | 1   | `devcontainer.json` に `init: true` と `postAttachCommand` を追加する                        | OPS  | done | オーケストレーターが直接対応                                  |
-| 2   | `tools/devcontainer/kill-stale-vscode.sh` を作成し、`vscode:ps` / `vscode:kill-stale` を追加 | OPS  | done | 孤児の疑似プロセスで検出・停止を確認                          |
+| 2   | `.devcontainer/kill-stale-vscode.sh` を作成し、`vscode:ps` / `vscode:kill-stale` を追加 | OPS  | done | 孤児の疑似プロセスで検出・停止を確認                          |
 | 3   | CONTRIBUTING に掃除の手順と `init` 反映に rebuild が必要な旨を記載する                       | OPS  | done | -                                                             |
 | 4   | コンテナを rebuild して PID 1 が init になることと、接続時の自動掃除を確認する               | OPS  | open | 利用者が rebuild 後に `ps -p 1` と `npm run vscode:ps` で確認 |
 
 ## 4. 対応結果
 
-- `.devcontainer/devcontainer.json`: `"init": true`、`"postAttachCommand": "bash tools/devcontainer/kill-stale-vscode.sh"` を追加。
-- `tools/devcontainer/kill-stale-vscode.sh`: bash と `ps` だけで動く。最新 commit の `server-main.js` を正とし、(1) 他 commit の server とその子孫、(2) PPID が 1 の vscode-server 系プロセス（生きている server 本体は除外）を SIGTERM → 3 秒後に SIGKILL で停止する。`--dry-run` で対象表示、`--list` で全 vscode-server 系プロセスをメモリ順に表示する。
+- `.devcontainer/devcontainer.json`: `"init": true`、`"postAttachCommand": "bash .devcontainer/kill-stale-vscode.sh"` を追加。
+- `.devcontainer/kill-stale-vscode.sh`: bash と `ps` だけで動く。最新 commit の `server-main.js` を正とし、(1) 他 commit の server とその子孫、(2) PPID が 1 の vscode-server 系プロセス（生きている server 本体は除外）を SIGTERM → 3 秒後に SIGKILL で停止する。`--dry-run` で対象表示、`--list` で全 vscode-server 系プロセスをメモリ順に表示する。
 - `package.json`: `vscode:ps`、`vscode:kill-stale` を追加。
 - `CONTRIBUTING.md`: 「残った VS Code Server のプロセスを掃除する」を追加。
 - 検証: `shellcheck` / `shfmt -i 2` 通過。`/home/node/.vscode-server/fake/orphan-test` を名乗る孤児プロセスを起動し、`--dry-run` で `[orphan]` として検出、実行で停止することを確認。現行の稼働中プロセスは対象外（`no stale processes`）。
@@ -53,5 +53,5 @@ devcontainer は `"shutdownAction": "none"` でコンテナを生かし続ける
 ## 5. 関連ドキュメント
 
 - `.devcontainer/devcontainer.json`
-- `tools/devcontainer/kill-stale-vscode.sh`
+- `.devcontainer/kill-stale-vscode.sh`
 - `CONTRIBUTING.md`
