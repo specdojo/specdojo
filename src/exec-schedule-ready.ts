@@ -119,6 +119,7 @@ export function buildReadySnapshot(
       ...(node?.iteration !== undefined ? { iteration: node.iteration } : {}),
       name: node?.name,
       owner: node?.owner,
+      ...(node?.agent ? { agent: node.agent } : {}),
       schedule_file: node?.schedule_file ? toScheduleFilePath(projectPath, node.schedule_file) : "",
       fifo_rank: fifoRank.get(id) ?? 0,
       critical_first_rank: criticalRank.get(id) ?? 0,

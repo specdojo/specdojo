@@ -276,13 +276,14 @@ phase_sets:
       proficiency: expert
 ```
 
-| フィールド     | 用途                                     |
-| -------------- | ---------------------------------------- |
-| `execution`    | `agent` または `human`。省略時は `agent` |
-| `mode`         | `edit` または `review`。省略時は `edit`  |
-| `approach`     | plan テンプレートの進め方を選ぶ          |
-| `capabilities` | 必要なツールや能力を示す                 |
-| `proficiency`  | 必要な習熟度を示す                       |
+| フィールド     | 用途                                       |
+| -------------- | ------------------------------------------ |
+| `execution`    | `agent` または `human`。省略時は `agent`   |
+| `mode`         | `edit` または `review`。省略時は `edit`    |
+| `approach`     | plan テンプレートの進め方を選ぶ            |
+| `capabilities` | 必要なツールや能力を示す                   |
+| `proficiency`  | 必要な習熟度を示す                         |
+| `agent`        | executor / reporter を nickname で指名する |
 
 `approach` の値ごとの意味と、rulebook / recipe / sample / template の参照方針は [実践の進め方ガイド](ryu-guide.md) を参照します。エージェント選択の詳細は [exec設定ガイド](exec-config-guide.md) を参照します。
 
@@ -298,6 +299,9 @@ phase_sets:
       execution: agent
       task_suffix: "020"
       mode: edit
+      agent:
+        executor: codex-expert-executor
+        reporter: gemma-reporter
       agent_pipeline:
         stages:
           - stage_role: executor
@@ -315,7 +319,9 @@ phase_sets:
 - `agent_pipeline` は phase 単位の任意設定です。省略した phase は従来の単一 agent フローのまま動作します。
 - pipeline を指定した phase は agent 実行専用です。`execution: human` と併用できません。
 - `mode` と `approach` は phase 全体へ適用し、各 stage の agent 選択要件は stage 内の `capabilities` と `proficiency` で定義します。
-- stage には `pm-members.yaml` の nickname を書きません。`stage_role` と実行要件に一致する member を実行時に解決します。
+- 通常は `stage_role` と実行要件に一致する member を実行時に自動選択します。provider の利用枠を phase ごとに計画する場合は、phase の `agent.executor` / `agent.reporter` に `pm-members.yaml` の nickname を指定します。
+- `agent` と `agent_pipeline` は併用できます。`--executor-by` / `--reporter-by`、phase の `agent`、stage の `capabilities` / `proficiency` による自動選択の順で解決します。`owner_rules[].phase_overrides[].agent` では成果物単位に指名を上書きできます。
+- by-name の agent が rate limit になった場合は別 agent へ自動フォールバックせず、タスクを待機状態にします。再開時も同じ agent を使い、緊急の差し替えだけを CLI の stage override で行います。
 - 登録簿の項目（`exec run --register`）は per-item のパイプライン宣言を持たないため、`agent_pipeline` の YAML 定義は使いません。代わりに `--executor-by <nickname>` と `--reporter-by <nickname>` を両方指定すると、同じ executor/reporter 2段階（evidence の受け渡し・result 描画を含む）で実行します。詳細は [CLIコマンドリファレンス](../references/command-reference.md) の `exec run` を参照します。
 
 ### 3.3. `bootstrap` と `retrofit` のフェーズ順序

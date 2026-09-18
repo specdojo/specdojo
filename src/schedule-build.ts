@@ -2,6 +2,8 @@ import { existsSync } from "node:fs";
 import { resolve } from "node:path";
 import { readYaml } from "./exec-shared.js";
 import type { DctDoc, DctSection } from "./catalog-types.js";
+import type { AgentAssignment } from "./exec-types.js";
+import type { MemberRoster } from "./specdojo-config.js";
 import {
   expandPhaseSetSelection,
   normalizePhaseSetSelection,
@@ -22,6 +24,7 @@ type StrategyPhase = {
   task_suffix: string;
   duration_days: number;
   description?: string;
+  agent?: AgentAssignment;
 };
 
 type OwnerRule = {
@@ -29,6 +32,7 @@ type OwnerRule = {
   owner: string;
   phase_sets?: PhaseSetSelection;
   phase_set?: string;
+  phase_overrides?: Array<{ phase: string; agent?: AgentAssignment }>;
 };
 
 type CrossDomainDep = {
@@ -66,6 +70,7 @@ type CrossDeliverablePass = {
   approach?: string;
   capabilities?: string[];
   proficiency?: string;
+  agent?: AgentAssignment;
   description?: string;
   scope: PhaseGateScope;
 };
@@ -137,6 +142,7 @@ export type GeneratedTask = {
   owner: string;
   tags?: string[];
   description?: string;
+  agent?: AgentAssignment;
 };
 
 export type GeneratedMilestone = {
@@ -306,7 +312,43 @@ function topoSort(deliverables: DeliverableInfo[], crossDeps: CrossDomainDep[]):
 
 // --- Main export ---
 
-export function buildScheduleTrack(strategyPath: string, baseDir: string): BuildResult {
+function validateAgentAssignment(
+  label: string,
+  assignment: AgentAssignment,
+  roster: MemberRoster | null,
+  errors: string[],
+): void {
+  if (!roster) {
+    errors.push(`${label}: agent assignment requires a configured pm-members.yaml`);
+    return;
+  }
+  for (const [stageRole, nickname] of [
+    ["executor", assignment.executor],
+    ["reporter", assignment.reporter],
+  ] as const) {
+    if (!nickname) continue;
+    const members = roster.members.filter(
+      (member) => member.type === "agent" && member.nickname === nickname,
+    );
+    if (members.length !== 1) {
+      errors.push(
+        `${label}.agent.${stageRole}: nickname '${nickname}' was not found uniquely in pm-members.yaml`,
+      );
+      continue;
+    }
+    if (members[0].stage_role !== stageRole) {
+      errors.push(
+        `${label}.agent.${stageRole}: nickname '${nickname}' must have stage_role: ${stageRole}`,
+      );
+    }
+  }
+}
+
+export function buildScheduleTrack(
+  strategyPath: string,
+  baseDir: string,
+  roster?: MemberRoster | null,
+): BuildResult {
   const errors: string[] = [];
   const warnings: string[] = [];
 
@@ -321,6 +363,38 @@ export function buildScheduleTrack(strategyPath: string, baseDir: string): Build
 
   const projectId = String(strategy.id ?? "").split(":")[0] ?? "unknown";
   const startDate = strategy.settings?.start_date ?? null;
+
+  if (roster !== undefined) {
+    for (const [phaseSet, phases] of Object.entries(strategy.phase_sets)) {
+      for (const phase of phases) {
+        if (phase.agent) {
+          validateAgentAssignment(
+            `phase_sets.${phaseSet}.${phase.id}`,
+            phase.agent,
+            roster,
+            errors,
+          );
+        }
+      }
+    }
+    for (const [ruleIndex, rule] of strategy.owner_rules.entries()) {
+      for (const override of rule.phase_overrides ?? []) {
+        if (override.agent) {
+          validateAgentAssignment(
+            `owner_rules.${ruleIndex}.phase_overrides.${override.phase}`,
+            override.agent,
+            roster,
+            errors,
+          );
+        }
+      }
+    }
+    for (const pass of strategy.cross_deliverable_passes ?? []) {
+      if (pass.agent) {
+        validateAgentAssignment(`cross_deliverable_passes.${pass.id}`, pass.agent, roster, errors);
+      }
+    }
+  }
 
   // Load deliverables from catalogs
   const allDeliverables: DeliverableInfo[] = [];
@@ -550,6 +624,10 @@ export function buildScheduleTrack(strategyPath: string, baseDir: string): Build
         );
         continue;
       }
+      const overrideAgent = (ownerRule?.phase_overrides ?? []).find(
+        (override) => override.phase === phase.id && override.agent !== undefined,
+      )?.agent;
+      const effectiveAgent = overrideAgent ?? phase.agent;
       taskMap.set(taskId, {
         local_id: d.local_id,
         phase_suffix: phase.task_suffix,
@@ -561,6 +639,7 @@ export function buildScheduleTrack(strategyPath: string, baseDir: string): Build
         duration_days: phase.duration_days,
         depends_on: i === 0 ? [...firstDeps] : [prevId!],
         owner,
+        ...(effectiveAgent ? { agent: effectiveAgent } : {}),
         ...(phase.description ? { description: phase.description } : {}),
       });
       const boundary = byCycle.get(expanded.cycleNumber) ?? {
@@ -699,6 +778,7 @@ export function buildScheduleTrack(strategyPath: string, baseDir: string): Build
       duration_days: pass.duration_days,
       depends_on: [pass.after_gate],
       owner: pass.owner,
+      ...(pass.agent ? { agent: pass.agent } : {}),
       tags: ["cross-deliverable"],
       ...(pass.artifact_name !== undefined ? { artifact_name: pass.artifact_name } : {}),
       ...(pass.description ? { description: pass.description } : {}),

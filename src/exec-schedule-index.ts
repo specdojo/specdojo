@@ -292,6 +292,18 @@ export function buildScheduleIndex(projectPath: string): ScheduleIndex {
           ? tv["artifact_name"]
           : undefined;
       const taskDescription = typeof tv["description"] === "string" ? tv["description"] : undefined;
+      const rawAgent = tv["agent"];
+      const taskAgent =
+        rawAgent && typeof rawAgent === "object" && !Array.isArray(rawAgent)
+          ? (rawAgent as { executor?: unknown; reporter?: unknown })
+          : undefined;
+      const agent =
+        typeof taskAgent?.executor === "string"
+          ? {
+              executor: taskAgent.executor,
+              ...(typeof taskAgent.reporter === "string" ? { reporter: taskAgent.reporter } : {}),
+            }
+          : undefined;
       nodes.set(id, {
         id,
         ...(taskLocalId ? { local_id: taskLocalId } : {}),
@@ -312,6 +324,7 @@ export function buildScheduleIndex(projectPath: string): ScheduleIndex {
         schedule_file: f,
         ...(taskTags ? { tags: taskTags } : {}),
         ...(taskDescription ? { description: taskDescription } : {}),
+        ...(agent ? { agent } : {}),
       });
     }
 

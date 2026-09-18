@@ -9,7 +9,10 @@ import {
   getProjectTimelinePath,
   loadConfig,
   loadEnv,
+  loadMemberRoster,
   specdojoRootDir,
+  type MemberRoster,
+  type SpecDojoProjectConfig,
 } from "./specdojo-config.js";
 import {
   buildScheduleTrack,
@@ -27,6 +30,7 @@ type ResolvedScheduleContext = {
   catalogPath: string | null;
   timelinePath: string;
   rolesPath?: string;
+  project: SpecDojoProjectConfig;
 };
 
 function resolveSchedulePath(opts: { project?: string }): ResolvedScheduleContext {
@@ -64,6 +68,7 @@ function resolveSchedulePath(opts: { project?: string }): ResolvedScheduleContex
     catalogPath: catalogPath ? resolve(baseDir, catalogPath) : null,
     timelinePath: resolve(baseDir, getProjectTimelinePath(project)),
     ...(rolesPath ? { rolesPath } : {}),
+    project,
   };
 }
 
@@ -78,6 +83,7 @@ export function collectProjectMilestones(
   baseDir: string,
   projectId: string,
   prebuilt?: { strategyPath: string; result: BuildResult },
+  roster?: MemberRoster | null,
 ): ProjectMilestoneBuild {
   const milestones: GeneratedMilestone[] = [];
   const errors: string[] = [];
@@ -95,7 +101,7 @@ export function collectProjectMilestones(
       result =
         prebuilt && prebuiltPath === resolve(strategyPath)
           ? prebuilt.result
-          : buildScheduleTrack(strategyPath, baseDir);
+          : buildScheduleTrack(strategyPath, baseDir, roster);
     } catch (error) {
       errors.push(`${file}: ${error instanceof Error ? error.message : String(error)}`);
       continue;
@@ -432,7 +438,8 @@ export function registerScheduleCommands(program: Command): void {
   bcmd.option("--dry-run", "Print generated YAML to stdout without writing", false);
   bcmd.action((opts) => {
     try {
-      const { schedulePath, baseDir } = resolveSchedulePath(opts);
+      const { schedulePath, baseDir, project } = resolveSchedulePath(opts);
+      const roster = loadMemberRoster(baseDir, project);
       const track = opts.track.trim();
 
       const strategyFile = join(schedulePath, `sch-strategy-${track}.yaml`);
@@ -447,7 +454,7 @@ export function registerScheduleCommands(program: Command): void {
         );
       }
 
-      const targetResult = buildScheduleTrack(strategyFile, baseDir);
+      const targetResult = buildScheduleTrack(strategyFile, baseDir, roster);
       const { projectId, status, startDate, tasks, errors } = targetResult;
 
       for (const e of errors) process.stdout.write(`ERROR: ${e}\n`);
@@ -457,10 +464,16 @@ export function registerScheduleCommands(program: Command): void {
         return;
       }
 
-      const projectMilestones = collectProjectMilestones(schedulePath, baseDir, projectId, {
-        strategyPath: strategyFile,
-        result: targetResult,
-      });
+      const projectMilestones = collectProjectMilestones(
+        schedulePath,
+        baseDir,
+        projectId,
+        {
+          strategyPath: strategyFile,
+          result: targetResult,
+        },
+        roster,
+      );
       for (const w of projectMilestones.warnings) process.stdout.write(`WARN: ${w}\n`);
       for (const e of projectMilestones.errors) process.stdout.write(`ERROR: ${e}\n`);
       if (projectMilestones.errors.length > 0) {

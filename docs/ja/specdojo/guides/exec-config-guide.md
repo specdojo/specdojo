@@ -37,11 +37,11 @@ SpecDojo のエージェント実行は、`sch-strategy-<track>.yaml` の phase 
 
 | ファイル                       | 役割                                                                                     | 粒度         |
 | ------------------------------ | ---------------------------------------------------------------------------------------- | ------------ |
-| `sch-strategy-<track>.yaml`    | phase ごとの `mode`・`approach`・実行要件・任意の `agent_pipeline`                       | トラック     |
+| `sch-strategy-<track>.yaml`    | phase ごとの `mode`・`approach`・実行要件・任意の `agent` / `agent_pipeline`             | トラック     |
 | `pm-members.yaml`              | 誰が作業するか（identity・capabilities・proficiency・priority・任意の `stage_role`）     | プロジェクト |
 | `.specdojo/exec-defaults.yaml` | provider 別起動コマンドテンプレート・rate limit 検出条件・リトライポリシー・同時実行上限 | システム     |
 
-`sch-strategy` は agent 個体を指定しません。phase に「どんな能力が必要か」を書き、`pm-members.yaml` に「誰がその能力を持つか」を書きます。
+`sch-strategy` は通常、phase に「どんな能力が必要か」を書き、`pm-members.yaml` の候補から自動選択します。provider の利用枠を計画する phase だけは `agent` で個体を指名できます。
 
 ## 2. phase の実行要件
 
@@ -81,13 +81,14 @@ phase_sets:
 | `approach`       | 任意 | `fully-guided` / `recipe-guided` / `freeform` / `bootstrap` / `retrofit` / `cross-deliverable-dedup` / `rulebook-maintenance` / `recipe-maintenance` / `sample-maintenance` / `template-maintenance` |
 | `capabilities`   | 任意 | 必要なツールリスト。ツール不要の場合は省略                                                                                                                                                           |
 | `proficiency`    | 任意 | 必要な品質水準。省略すると全水準が候補                                                                                                                                                               |
+| `agent`          | 任意 | `executor`（必須）と `reporter`（任意）の nickname。CLI の stage override に次いで優先                                                                                                               |
 | `agent_pipeline` | 任意 | executor、reporter の 2 stage と stage ごとの `capabilities` / `proficiency`。省略時は従来の単一 agent フロー                                                                                        |
 
 `approach` の値ごとの意味と、rulebook / recipe / sample / template の参照方針は [実践の進め方ガイド](ryu-guide.md) を参照します。
 
-pipeline では `agent_pipeline.stages` を `executor`、`reporter` の順に定義します。各 stage は `stage_role` と任意の `capabilities` / `proficiency` を持ち、nickname は持ちません。pipeline の構造例は [Schedule設計ガイド](schedule-design-guide.md) の `executor / reporter pipeline` を参照してください。
+pipeline では `agent_pipeline.stages` を `executor`、`reporter` の順に定義します。各 stage は `stage_role` と任意の `capabilities` / `proficiency` を持ちます。特定 member を使う phase は、これと併せて `agent.executor` / `agent.reporter` を指定します。pipeline の構造例は [Schedule設計ガイド](schedule-design-guide.md) の `executor / reporter pipeline` を参照してください。
 
-pipeline stage の agent を CLI で固定する場合は `--executor-by <nickname>` と `--reporter-by <nickname>` を使います。指定した member は対応する `stage_role` を持つ必要があります。片方だけ指定した場合、未指定 stage は `capabilities`、`proficiency`、`priority` による自動選択を維持します。従来の単一 agent タスクではこの2オプションを使用できません。
+解決順序は `--executor-by` / `--reporter-by`、phase の `agent`、`capabilities` / `proficiency` / `priority` による自動選択です。CLI は緊急の差し替えに使います。指定した member は対応する `stage_role` を持つ必要があり、`schedule build` が phase の nickname と role を検証します。従来の単一 agent タスクでは stage override を使用できません。
 
 ## 3. エージェントの定義
 
@@ -124,7 +125,9 @@ pipeline 専用 agent には `stage_role: executor` または `stage_role: repor
 2. `priority` 昇順（同値なら次へ）。
 3. 余剰 capabilities 数の少ない順。
 
-ソート後、`exec-defaults.yaml` の `providers.<provider>.max_concurrency` が設定された provider について、現在実行中の agent が上限に達していれば、その provider の候補を除外します。別 provider の候補が残ればそれを実行者に繰り上げます。すべての候補の provider が上限に達している場合は、claim も worktree 生成も行わずにそのタスクを繰り延べます（タスクは `todo` のまま保持され、取りこぼしません）。`--loop` 実行では、agent 終了時に provider の枠を解放し、空いた `--parallel` 枠へ次の Ready タスクを投入します。`max_concurrency` はグローバルな `--parallel` を下げないため、他 provider は並列実行を維持します。`max_concurrency` は auto 選択のみに適用し、`--by` / `--edit-by` / `--review-by` / `--executor-by` / `--reporter-by` による明示指定や resume 実行には適用しません。
+ソート後、`exec-defaults.yaml` の `providers.<provider>.max_concurrency` が設定された provider について、現在実行中の agent が上限に達していれば、その provider の候補を除外します。別 provider の候補が残ればそれを実行者に繰り上げます。すべての候補の provider が上限に達している場合は、claim も worktree 生成も行わずにそのタスクを繰り延べます（タスクは `todo` のまま保持され、取りこぼしません）。`--loop` 実行では、agent 終了時に provider の枠を解放し、空いた `--parallel` 枠へ次の Ready タスクを投入します。`max_concurrency` はグローバルな `--parallel` を下げないため、他 provider は並列実行を維持します。`max_concurrency` は auto 選択のみに適用し、phase の `agent`、`--by` / `--edit-by` / `--review-by` / `--executor-by` / `--reporter-by` による明示指定や resume 実行には適用しません。
+
+phase の by-name agent が rate limit になった場合は、別 agent へ自動フォールバックせず待機状態にします。`exec resume` は同じ agent を再開し、運用者が差し替える場合だけ stage override を指定します。
 
 ## 4. 実行フロー
 
@@ -132,7 +135,7 @@ pipeline 専用 agent には `stage_role: executor` または `stage_role: repor
 
 手動 CLI の busy 時既定は `--if-busy fail` です。必要に応じて `wait` または `skip` を明示します。routine は待機で cron worker を占有しないよう常に `--if-busy skip` を渡し、再試行は次回の cron tick に委ねます。
 
-rate limit を検知したら、まず待機なしで次の優先順 agent に切り替えて再実行します（次候補は別アカウント/プロバイダ想定）。全候補が rate limit の場合のみ `rate_limit_policy.on_critical.retry` の wait+backoff で再パスを行い、`max_attempts` 回（初回パスを 1 回目として数える）まで繰り返します。この再試行は critical / non-critical を問わず全タスクに適用します。
+自動選択で rate limit を検知したら、まず待機なしで次の優先順 agent に切り替えて再実行します（次候補は別アカウント/プロバイダ想定）。全候補が rate limit の場合のみ `rate_limit_policy.on_critical.retry` の wait+backoff で再パスを行い、`max_attempts` 回（初回パスを 1 回目として数える）まで繰り返します。phase の `agent` で指名した場合は候補がその1件に固定されるため、別 agent へは切り替えません。この再試行は critical / non-critical を問わず全タスクに適用します。
 
 ```mermaid
 flowchart LR
@@ -287,7 +290,7 @@ providers:
 
 ### 6.2. クラウド executor とローカル reporter の混在構成
 
-複雑な編集判断が必要な phase では、executor だけをクラウド provider の expert agent にし、reporter はローカルのまま共有できます。stage ごとに要件を分けるだけで、reporter と result 生成の経路は `ローカルLLM構成（executor / reporter とも同一 provider）` と同じです。
+複雑な編集判断が必要な phase では、executor だけをクラウド provider の expert agent にし、reporter はローカルのまま共有できます。provider の利用枠を phase 単位で割り当てる場合は `agent` で固定し、誰でもよい場合は stage ごとの要件だけを定義します。
 
 ```yaml
 phase_sets:
@@ -297,6 +300,9 @@ phase_sets:
       execution: agent
       task_suffix: "010"
       mode: edit
+      agent:
+        executor: codex-expert-executor
+        reporter: opencode-reporter
       agent_pipeline:
         stages:
           - stage_role: executor
@@ -323,7 +329,7 @@ members:
     priority: 1
 ```
 
-stage の agent を固定したい場合は `--executor-by` / `--reporter-by` を使います。片方だけ指定すると、もう一方は要件と優先度による自動選択のままです。
+通常運用の固定先は phase の `agent` に保存します。緊急時だけ `--executor-by` / `--reporter-by` で差し替えます。片方だけ指定すると、もう一方は phase の by-name 指定、未指定なら要件と優先度による自動選択を使います。
 
 ```sh
 specdojo exec run --project <project-id> --task <task-id> \

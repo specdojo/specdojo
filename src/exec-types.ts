@@ -37,6 +37,11 @@ export type AgentPipeline = {
   stages: [AgentPipelineStage, AgentPipelineStage];
 };
 
+export type AgentAssignment = {
+  executor: string;
+  reporter?: string;
+};
+
 export type ExecEventType =
   | "claim"
   | "note"
@@ -110,6 +115,7 @@ export type ScheduleNode = {
   schedule_file: string;
   tags?: string[];
   description?: string;
+  agent?: AgentAssignment;
 };
 
 export type ScheduleCalendar = {
@@ -188,9 +194,9 @@ export type ReadyTaskView = {
   mode?: TaskMode;
   execution?: "agent" | "human";
   approach?: Approach;
-  // Nickname pinned by the task definition (Job `task.agent`). Used when the run has no
-  // explicit --by, and takes precedence over capability based auto selection.
-  agent?: string;
+  // Nickname pinned by a Job or Schedule phase. Schedule tasks retain the executor/reporter
+  // mapping; legacy Job materialization may retain the executor nickname shorthand.
+  agent?: string | AgentAssignment;
   capabilities?: string[];
   proficiency?: Proficiency;
   agent_pipeline?: AgentPipeline;
