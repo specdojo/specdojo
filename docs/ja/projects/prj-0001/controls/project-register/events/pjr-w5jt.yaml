@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_6e1ceecbbc7b41c4a524adcb7d41f151
+  ts: "2026-09-18T13:12:32Z"
+  action: add
+  actor: specdojo-orchestrator (claude)
+  from_status: null
+  to_status: open
+  reason: 利用者の判断。3 段構成の実測（gemma 2 段で 23 分、codex 6 分、gemma の誤判定）に基づく
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: grade を codex 単段にし定期実行を夜間へ寄せる
+    - field: description
+      from: ""
+      to: gemma の 1・2 段目が前回 finding の再掲と major の見落としで門番として機能せず、3 段目の codex に届かない文書が出ているため、grade を codex 単段に変更する。あわせて定期実行を 0:00 / 2:00 の夜間に寄せ、日中の exec run と衝突しないようにする
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-18"
+    - field: due
+      from: ""
+      to: "2026-09-25"
