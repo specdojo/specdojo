@@ -14,34 +14,33 @@ specdojo:
     rubric: grade-rubric-v1
     target: deliverable
     verdict: needs-work
-    score: 67
-    graded_at: "2026-09-17T02:11:47.937Z"
-    graded_by: codex-expert-executor
-    content_hash: 1fac6fcecc0a2a46acc226ecf555b08d512ced2f59e9a685ec6a0c7817cae360
+    score: 81
+    graded_at: "2026-09-18T11:51:53.476Z"
+    graded_by: gemma-expert-executor
+    content_hash: 54b40f0e657dd761016966db1775ec307b353d67e1f55353c2f76e8262b758bc
     categories:
-      consistency: { score: 25 }
+      consistency: { score: 50 }
       usability: { score: 94 }
       architecture: { score: 100 }
-      quality: { score: 58 }
+      quality: { score: 83 }
     viewpoints:
-      vp-arc-cross-document-consistency: { level: 1, score: 25 }
+      vp-arc-cross-document-consistency: { level: 2, score: 50 }
       vp-arc-conciseness: { level: 4, score: 100 }
       vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-done-criteria: { level: 1, score: 25 }
-      vp-qe-verifiability: { level: 2, score: 50 }
-      vp-qe-omissions-consistency: { level: 1, score: 25 }
+      vp-qe-done-criteria: { level: 2, score: 50 }
+      vp-qe-verifiability: { level: 4, score: 100 }
+      vp-qe-omissions-consistency: { level: 2, score: 50 }
       vp-ux-readability: { level: 4, score: 100 }
       vp-ux-user-flow: { level: 4, score: 100 }
       vp-ux-language-consistency: { level: 3, score: 75 }
       vp-arc-document-structure: { level: 4, score: 100 }
       vp-qe-config-validity: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 7, minor: 3, note: 0 }
+    findings: { blocker: 0, major: 3, minor: 1, note: 0 }
     done_criteria:
-      satisfied: 1
+      satisfied: 2
       total: 3
       unsatisfied:
         DC-001: [BA]
-        DC-003: [QE]
       detail_ref: cdfd-orchestrator-grade-criteria
 ---
 
@@ -71,17 +70,9 @@ specdojo:
 
 Orchestrator グループは P-14 の一領域を含む。領域 ID と名称、およびグループ単位の主要入力・主要出力・データストアは [[cdfd-overview|概念データフロー図（全体概要）]] を正本とし、本章は領域の主要入力、主要出力、データストアと内部プロセスの正本として詳細化する。Plan・Do・Check・Action との受け渡しは各 CDFD の定義と整合させる。
 
-<!-- specdojo:finding id=F003 severity=minor rule=vp-arc-cross-document-consistency line=27 全体概要で P-14 の領域名は「オーケストレーター」だが、本書の領域見出しはグループ名と同じ「Orchestrator」になっているため、領域名を上位正本と一致させてください。 -->
-<!-- specdojo:finding id=F009 severity=minor rule=vp-qe-omissions-consistency line=27 rulebook が要求する上位文書と同一の領域名に対し、P-14 の「オーケストレーター」が「Orchestrator」へ置き換わっているため修正してください。 -->
-<!-- specdojo:finding id=F010 severity=minor rule=vp-ux-language-consistency line=27 全体概要の領域名は「オーケストレーター」だが、本書ではグループ名の「Orchestrator」を領域見出しにも使用しているため、グループ名と領域名を区別して上位正本の表記へ統一してください。 -->
-
 ### 3.1. オーケストレーター（P-14）
 
 参加者の意図、定期実行の到来、または前段グループの応答を運転要求として確定し、同じ対象に対する実行の競合がないことを確認する。要求先と必要な情報を特定して Plan・Do・Check・Action のいずれかへ要求を発行し、応答を記録して次の要求または終了判断へつなぐ。対話型運転は参加者の運転意図から、自動運転は定期実行の周期・条件の到来からそれぞれ `P-14-01` へ入り、以降は同じ要求発行と追跡の流れを共有する。
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=31 全体概要では「生成した実行計画」を P-14 の主要出力および Orchestrator から実行計画への更新としているが、本書は Plan 応答として主要入力に置き P-14 の主要出力から外しているため、生成責任とデータの方向を正本間で統一してください。 -->
-<!-- specdojo:finding id=F004 severity=major rule=vp-qe-done-criteria line=31 DC-001 が要求する P-14 の主要出力との無矛盾な詳細化に対し、全体概要で主要出力とされる「生成した実行計画」を Plan からの主要入力へ変更しているため, 全体概要と本書の生成責任を統一してください。 -->
-<!-- specdojo:finding id=F007 severity=major rule=vp-qe-omissions-consistency line=32 全体概要が P-14 の主要出力として定義する「生成した実行計画」が主要出力、図、個別プロセス主要入出力のいずれにもなく、代わりに Plan 応答の入力へ移されているため、上位出力の欠落または全体概要側の責任誤りを正本間で解消してください。 -->
 
 - **主要入力**: 参加者の運転意図、稼働構成の agent 定義・実行既定値、成果物カタログの完了条件、スケジュール戦略の作業要件、定期実行の周期・条件、Plan の計画要求への応答（生成した実行計画を含む）、Do の実行状態・ブロック理由・判断依頼、Check の評価結果・進捗報告・派生ビュー・索引、Action の完了・改善判断と再計画要求
 - **主要出力**: Plan への計画要求、Do への実行要求、Check への評価・報告・生成要求、Action への完了・改善要求、記録された要求・応答・実行状態、次回の継続・再開条件
@@ -116,6 +107,10 @@ Orchestrator グループは P-14 の一領域を含む。領域 ID と名称、
 
 ### 5.1. 対話型・自動運転の要求発行と追跡
 
+<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=78 全体概要で P-14 の主要出力とされる「生成した実行計画」が主要出力から欠落し、Plan 応答の入力（line 77）へ移されているため、生成責任とデータの方向を上位正本と統一してください。 -->
+<!-- specdojo:finding id=F002 severity=major rule=vp-qe-done-criteria line=78 DC-001 が要求する P-14 の主要出力との無矛盾な詳細化に対し、全体概要での主要出力「生成した実行計画」が本書では主要入力（line 77）となっており、正本間で矛盾しているため修正してください。 -->
+<!-- specdojo:finding id=F003 severity=major rule=vp-qe-omissions-consistency line=78 全体概要が P-14 の主要出力として定義する「生成した実行計画」が主要出力（line 78）および個別プロセス主要入出力から欠落しているため、上位修正または本書への追加により不整合を解消してください。 -->
+<!-- specdojo:finding id=F004 severity=minor rule=vp-ux-language-consistency line=73 タイトルおよび適用範囲などでグループ名に「Orchestrator」を使用している一方で、領域見出しには「オーケストレーター」を使用しており、日本語表記への統一が不十分であるため修正してください。 -->
 ```mermaid
 flowchart LR
   classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
@@ -196,11 +191,6 @@ flowchart LR
 ## 8. 主要例外とグループ外への委譲
 
 ### 8.1. 主要例外
-
-<!-- specdojo:finding id=F002 severity=major rule=vp-arc-cross-document-consistency line=147 成果物カタログの evidence_refs が示す routine・scheduler は排他ロック取得で競合を検出する一方、E-14-01 は未応答要求の重複だけを検出するため、実行ロックの競合と、解放または stale 回収後の再開を現行動作と対応付けてください。 -->
-<!-- specdojo:finding id=F005 severity=major rule=vp-qe-done-criteria line=147 DC-003 が要求する実行ロック競合について、E-14-01 は未応答要求の重複しか扱わず、ロック取得失敗の検出条件と、ロック解放または stale 回収後の再開条件を判定できないため、主要例外へ追加してください。 -->
-<!-- specdojo:finding id=F006 severity=major rule=vp-qe-verifiability line=147 E-14-01 は未応答要求の重複だけを検出しており、routine・scheduler の排他ロック取得失敗、生存中か stale かの判定、および解放または回収後の再開条件を検証できる表現になっていません。 -->
-<!-- specdojo:finding id=F008 severity=major rule=vp-qe-omissions-consistency line=147 成果物カタログの DC-003 と evidence_refs が要求する実行ロック競合の検出・復旧が主要例外から欠落しているため、未応答要求の競合とは区別して記載してください。 -->
 
 | 例外 ID   | 対象プロセス | 検出条件                                                                                                                       | 本グループでの扱い                                                                                                                                                       | 継続・再開条件                                                                                                                        |
 | --------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- |

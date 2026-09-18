@@ -13,33 +13,31 @@ specdojo:
     rubric: grade-rubric-v1
     target: deliverable
     verdict: needs-work
-    score: 78
-    graded_at: "2026-09-17T04:21:54.140Z"
-    graded_by: codex-expert-executor
-    content_hash: d20690d58951bb8c790e324f7323c98bec1db938168f0f17274b2ea776cb0f87
+    score: 95
+    graded_at: "2026-09-18T13:52:35.051Z"
+    graded_by: gemma-expert-executor
+    content_hash: 971e61404f30fe9bb731c0150997c582418fd9c7a6fd9d91270339ead5e226e0
     categories:
-      consistency: { score: 50 }
+      consistency: { score: 100 }
       usability: { score: 100 }
       architecture: { score: 100 }
-      quality: { score: 67 }
+      quality: { score: 83 }
     viewpoints:
-      vp-arc-cross-document-consistency: { level: 2, score: 50 }
+      vp-arc-cross-document-consistency: { level: 4, score: 100 }
       vp-arc-conciseness: { level: 4, score: 100 }
       vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-done-criteria: { level: 2, score: 50 }
+      vp-qe-done-criteria: { level: 4, score: 100 }
       vp-qe-verifiability: { level: 2, score: 50 }
-      vp-qe-omissions-consistency: { level: 2, score: 50 }
+      vp-qe-omissions-consistency: { level: 4, score: 100 }
       vp-ux-readability: { level: 4, score: 100 }
       vp-ux-user-flow: { level: 4, score: 100 }
       vp-ux-language-consistency: { level: 4, score: 100 }
       vp-arc-document-structure: { level: 4, score: 100 }
       vp-qe-config-validity: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 4, minor: 1, note: 0 }
+    findings: { blocker: 0, major: 1, minor: 0, note: 0 }
     done_criteria:
-      satisfied: 2
+      satisfied: 3
       total: 3
-      unsatisfied:
-        DC-002: [QE]
       detail_ref: cdfd-uc-register-grade-criteria
 ---
 
@@ -70,8 +68,6 @@ BA が登録項目の起票から完了記録までの通過順と責任境界�
 ### 3.1. Plan（P-02〜P-06）
 
 参加者から起票された事項を追跡可能な登録項目・決定記録として確定し、対象登録項目、対応を開始するための情報、実行計画を Do へ渡す。
-
-<!-- specdojo:finding id=F005 severity=minor rule=vp-qe-omissions-consistency line=31 Plan のデータストアに成果物カタログを挙げる一方, データストア表では同カタログを H-02・H-03 だけに対応付け、H-01 の図にも配置していないため、このケースで Plan が利用するのかを統一してください。 -->
 
 - **主要入力**: 参加者からの判明事項、問題・課題、メモ、意思決定、計画・再計画要求
 - **主要出力**: 登録項目・決定記録、対象登録項目を特定する情報、実行計画
@@ -110,8 +106,6 @@ Do から対応済み登録項目と実行記録を受け取り、成果物カ�
 Check から評価結果と判断事項を受け取り、PO と PM が完了条件との照合によって完了可否を判断する。完了可能な場合は PM が完了・決定の記録と完了記録を残し、未充足の場合は Plan へ再計画要求を戻す。
 
 完了要求は Check からの H-03 には含めず、Orchestrator から Action へのグループ外入力として受け取る。
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=65 Action の主要入力と H-03 の成立条件に「完了要求」を置いているが、図と引き渡し表に供給元がなく、`cdfd-overview` および `cdfd-action` が定める Orchestrator から Action への完了要求との対応を追跡できないため、グループ外入力として図へ示すか H-03 から分離してください。 -->
 
 - **主要入力**: 完了要求、評価結果、進捗報告の判断事項、成果物カタログの完了条件
 - **主要出力**: 完了・決定の記録、完了記録、または完了条件の未充足事項と再計画要求
@@ -236,10 +230,6 @@ flowchart LR
 
 ## 6. 引き渡し
 
-<!-- specdojo:finding id=F002 severity=major rule=vp-qe-done-criteria line=188 DC-002 が要求する全条件不成立時の戻り先を確認できず、H-03 の「完了要求または完了条件を特定できない」「進捗報告の判断事項を確認できない」に対応する戻り先グループ、戻す情報、再開条件を例外表へ追加する必要があります。 -->
-<!-- specdojo:finding id=F003 severity=major rule=vp-qe-verifiability line=186 H-01 の「必要な人間の承認」は承認が必要となる条件、承認者, 確認する証跡または正本が特定されておらず、Do が受理可否を一意に判定できないため、適用条件と確認対象を明示してください。 -->
-<!-- specdojo:finding id=F004 severity=major rule=vp-qe-omissions-consistency line=188 H-03 の戻す条件にある「完了要求または完了条件を特定できない」「進捗報告の判断事項を確認できない」が例外時の戻り先表に反映されておらず、条件不成立から補完責任と再開条件までを追跡できません。 -->
-
 | 引き渡し ID | 送り元グループ | 受け側グループ | 引き渡す情報                                                                                         | 引き渡し条件                                                                                                                                                                                                                                  | 戻す条件                                                                                                                                                                                                                                |
 | ----------- | -------------- | -------------- | ---------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | H-01        | Plan           | Do             | 対象登録項目、登録項目・決定記録、実行計画、対応開始を判断できる情報                                 | 登録項目を一意に特定でき、実行計画に対象・手順・完了条件があり、適用する Kata、実行主体、利用可能な権限を Do が確認できる。実行計画が保護設定以外の保護対象の変更または統合を含む場合は、権限を持つ人間の承認結果が実行計画と対応付いている。 | 登録項目または実行計画を特定できない、対象・手順・完了条件が不足する、適用する Kata・実行主体・利用可能な権限を確認できない、または承認が必要な変更・統合について権限を持つ人間の承認結果を実行計画と対応付けられず遂行を開始できない。 |
@@ -258,3 +248,5 @@ flowchart LR
 | H-03         | PO と PM の照合により完了条件の未充足事項が特定された。                                                                                                                    | Plan           | 完了条件の未充足事項、再計画要求                                       | 再計画に基づく対応と評価が完了し、完了条件を照合できる評価結果と完了要求がそろった後、H-01 から横断順序を再開できる。                                                                      |
 
 戻り先はプロセスグループまでとし、グループ内部の再開位置や例外処理は各グループ別 CDFD を正本とする。
+
+<!-- specdojo:finding id=F001 severity=major rule=vp-qe-verifiability line=235 H-01 の「権限を持つ人間の承認」は、具体的な責任ロールまたは権限の参照先が明示されておらず、また「実行計画と対応付いている」という証跡の確認方法が不明確なため、受理可否を一意に判定できない。 -->

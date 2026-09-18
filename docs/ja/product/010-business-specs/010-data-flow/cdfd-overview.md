@@ -11,9 +11,9 @@ specdojo:
     target: deliverable
     verdict: needs-work
     score: 82
-    graded_at: "2026-09-17T02:48:29.747Z"
+    graded_at: "2026-09-18T12:25:04.250Z"
     graded_by: gemma-expert-executor
-    content_hash: af17e9a6da4f468e81c80e9c6cca89bf858ebca71b96f80175a3f40b30ca5691
+    content_hash: a22d5ecff5bee64e24a5f0de93c039d37846cb8a172d0f2ee81b14bb155429cf
     categories:
       consistency: { score: 50 }
       usability: { score: 100 }
@@ -62,10 +62,6 @@ SpecDojo を活用した仕様駆動開発の全体像を、プロセス領域�
 
 ## 3. プロセス領域
 
-<!-- specdojo:finding id=F004 severity=major rule=vp-qe-done-criteria line=23 DC-002（PO による対象範囲と領域分割の承認）を満たす承認記録が特定できず、未充足である。 -->
-
-<!-- specdojo:finding id=F005 severity=major rule=vp-qe-omissions-consistency line=24 現行の14領域・六グループへの改訂を PO が承認した記録を特定できず、既存の `T-DATA-FLOW-cdfd-overview-140-result.md` は9領域・三グループ版の承認であるため、現在の境界に対する承認記録を追加して `ready` 昇格条件を満たす必要がある。 -->
-
 業務は 14 のプロセス領域に分かれ、六つのプロセスグループにまとめる。領域の分割と領域間の受け渡しは本書を正本とし、領域内の詳細はプロセスグループ別 CDFD を正本とする。各グループの主要入力・主要出力・データストアは「概念データフロー（概要）」のエッジの根拠である。
 
 「主な担当」は [[prj-0001:pm-roles|ロール一覧]] の Role code に統一する。実際にタスクを実行する member・agent は Role とは区別し、タスク固有の実行責任は Schedule の `owner`、runner は実行主体として管理する。対象範囲内の参加者から直接受け取る入力は、外部主体のエッジを設けず、各グループの「主要入力」で「参加者からの〜」と明記する。
@@ -91,7 +87,6 @@ SpecDojo を導入して Kata を配置し、その雛形から稼働構成の�
 - **主要出力**: 登録項目・決定記録、成果物カタログ、スケジュール戦略、Schedule（track）とマイルストーン、実行計画、定期実行定義、ジョブ定義
 - **データストア**: 稼働構成、Kata、登録簿、成果物カタログ、スケジュール戦略、Schedule（track）、実行計画、定期実行定義、ジョブ定義
 
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=51 P-03「成果物カタログ定義」の主な担当を BA としているが、RACI では成果物カタログの A/R が ARC であり、定義・更新の責任者を一意に判断できないため両文書の責任割当を統一する必要がある。 -->
 <!-- prettier-ignore -->
 | 領域 ID | プロセス領域 | 業務目的 | 主な担当 | 起点イベント |
 | --- | --- | --- | --- | --- |
@@ -109,6 +104,8 @@ Plan の実行指示に基づき、人または AI Agent が Kata を参照し�
 - **主要出力**: 作成・更新した成果物、登録項目の状態遷移、実行記録（result）、実行状態（ブロック・判断依頼を含む）
 - **データストア**: Kata、稼働構成、実行計画、ジョブ定義、登録簿、実行記録、成果物
 
+<!-- specdojo:finding id=F004 severity=major rule=vp-qe-done-criteria line=65 DC-002（PO による対象範囲と領域分割の承認）を満たす承認記録が特定できず、未充足である。 -->
+<!-- specdojo:finding id=F005 severity=major rule=vp-qe-omissions-consistency line=65 現行の 14 領域・六グループへの改訂を PO が承認した記録を特定できず、現在の境界に対する承認記録を追加する必要がある。 -->
 <!-- prettier-ignore -->
 | 領域 ID | プロセス領域 | 業務目的 | 主な担当 | 起点イベント |
 | --- | --- | --- | --- | --- |
@@ -137,6 +134,7 @@ Check の結果と人間の判断に基づき、タスクの完了確定、稼�
 - **主要出力**: 完了・決定の記録、完了記録、更新した稼働構成（Kata のバージョン更新を含む）、更新した成果物カタログ、非推奨化した文書、保管した文書、再計画要求
 - **データストア**: 稼働構成、Kata、成果物カタログ、登録簿、実行記録、成果物、保管庫（trash）、評価結果、進捗報告
 
+<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=94 P-03「成果物カタログ定義」の主な担当を BA としているが、RACI では成果物カタログの A/R が ARC であり、責任割当を統一する必要がある。 -->
 <!-- prettier-ignore -->
 | 領域 ID | プロセス領域 | 業務目的 | 主な担当 | 起点イベント |
 | --- | --- | --- | --- | --- |
@@ -323,7 +321,6 @@ flowchart LR
 
 ### 6.1. プロセスグループ別 CDFD
 
-<!-- specdojo:finding id=F002 severity=minor rule=vp-arc-cross-document-consistency line=283 詳細化先 `cdfd-orchestrator` は本文で本書を正本として参照している一方, Frontmatter の `based_on` に `cdfd-overview` がなく、生成元の追跡情報を追加する必要がある。 -->
 <!-- prettier-ignore -->
 | プロセスグループ | 含む領域 | プロセスグループ別 CDFD |
 | --- | --- | --- |
@@ -338,7 +335,6 @@ flowchart LR
 
 複数のプロセスグループを横断する業務のうち、順序と引き渡し条件を定める必要があるものを示す。定期実行とジョブの運転、進捗報告と閲覧提供、稼働構成の変更、文書の非推奨化と保管は、Orchestrator または単一グループの CDFD で扱い、必要になった時点でユースケース別 CDFD を追加する。
 
-<!-- specdojo:finding id=F003 severity=minor rule=vp-arc-cross-document-consistency line=298 本書は `C-02` を `cdfd-uc-deliverable` に割り当てているが、同文書は `C-02` を確定せず BA の判断事項としており、ケース ID の正本関係を統一する必要がある。 -->
 <!-- prettier-ignore -->
 | ケース ID | ユースケース | 業務目的 | 横断するプロセスグループ | ユースケース別 CDFD |
 | --- | --- | --- | --- | --- |
@@ -377,6 +373,7 @@ flowchart LR
   class 外部主体 actor
 ```
 
+<!-- specdojo:finding id=F002 severity=minor rule=vp-arc-cross-document-consistency line=332 詳細化先 `cdfd-orchestrator` の Frontmatter に `based_on: cdfd-overview` がなく、生成元の追跡情報を追加する必要がある。 -->
 <!-- prettier-ignore -->
 | 概念 | 形状 | 色 | 絵文字例 |
 | --- | --- | --- | --- |
@@ -388,6 +385,8 @@ flowchart LR
 | 外部主体 | 四角 | グレー（`#f5f7fa` / `#607d8b`） | 主体が伝わる絵文字（例: 👤） |
 | 情報の流れ | ラベル付き `-->` | — | — |
 | 物の流れ | ラベル付き `==>` | — | — |
+
+<!-- specdojo:finding id=F003 severity=minor rule=vp-arc-cross-document-consistency line=342 本書は `C-02` を `cdfd-uc-deliverable` に割り当てているが、同文書側でケース ID が確定していないため、正本関係を統一する必要がある。 -->
 
 データストアの色分けは、大分類「データストア」の中の業務上のサブ分類を表す。マスタ・構成データは、他のプロセスから参照される比較的安定した基準情報（稼働構成、Kata、成果物カタログ、スケジュール戦略、定期実行定義、ジョブ定義など）を指す。トランザクションデータは、業務活動に伴い都度更新される記録（登録簿、実行記録、成果物、進捗報告など）を指す。物理保管は現物の保管先であり、マスタ・構成データとトランザクションデータのいずれの区分にも属さないため、便宜上トランザクションデータと同じ色を用いる。
 

@@ -2,9 +2,9 @@
 id: cdfd-do-grade-criteria
 document: cdfd-do
 path: docs/ja/product/010-business-specs/010-data-flow/cdfd-do.md
-graded_at: "2026-09-17T01:11:21.727Z"
+graded_at: "2026-09-18T11:22:12.840Z"
 graded_by: codex-expert-executor
-content_hash: 53fb8189060d2b48dacc7fee719f4f855fea1f8fd8510d2dc602b3addf2af0a5
+content_hash: 0626b4ea6f7bc2d113f28f78d3d950cdd1a7e55eeb250b375d6664c6a2b86915
 summary:
   satisfied: 3
   unsatisfied: 1
@@ -21,14 +21,14 @@ criteria:
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
-    status: satisfied
+    status: unsatisfied
+    reason: 登録簿を P-07-03 が参照するかについてデータストア表と個別プロセス主要入出力表が一致せず、読み書きをプロセス単位で一意に識別できない。
   - id: DC-003
     text: 利用制限、保護対象の変更、検証失敗、統合失敗など、成果の採否と再開位置を変える主要例外の検出条件と再開条件が判定できること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
-    status: unsatisfied
-    reason: 保護対象変更を agent が行った場合の保護機構による block, result への申し送り, 人間または対話型 Orchestrator による実行外適用と再開条件が示されていない。
+    status: satisfied
   - id: DC-004
     text: 人間が担う判断（承認、完了確定）を AI Agent の自動処理として表していないこと
     roles:

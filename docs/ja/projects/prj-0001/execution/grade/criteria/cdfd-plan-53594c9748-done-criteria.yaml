@@ -2,12 +2,12 @@
 id: cdfd-plan-grade-criteria
 document: cdfd-plan
 path: docs/ja/product/010-business-specs/010-data-flow/cdfd-plan.md
-graded_at: "2026-09-17T03:24:20.944Z"
-graded_by: codex-expert-executor
-content_hash: 0809a990589cbe53b2a97edfd7e7242ec3c3e6a808e1200318c16a6bfe09a08e
+graded_at: "2026-09-18T12:55:32.797Z"
+graded_by: gemma-expert-executor
+content_hash: cf3435b0fcde87793cadf6712e988f80dd0a19a1bad0e4095d1c0cdfd893e12f
 summary:
-  satisfied: 3
-  unsatisfied: 1
+  satisfied: 4
+  unsatisfied: 0
   total: 4
 criteria:
   - id: DC-001
@@ -33,5 +33,4 @@ criteria:
     roles:
       - QE
     viewpoint: vp-qe-verifiability
-    status: unsatisfied
-    reason: E-03-01 が現行カタログに存在しない `owner` を検証対象とし、E-04-02 も strategy と Kata grade の不整合を判定する具体的な対応規則を示していない。
+    status: satisfied

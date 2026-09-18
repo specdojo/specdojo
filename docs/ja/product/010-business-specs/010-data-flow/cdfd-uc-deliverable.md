@@ -12,29 +12,29 @@ specdojo:
   grade:
     rubric: grade-rubric-v1
     target: deliverable
-    verdict: needs-work
-    score: 86
-    graded_at: "2026-09-17T03:51:44.966Z"
+    verdict: pass
+    score: 100
+    graded_at: "2026-09-18T13:24:01.471Z"
     graded_by: codex-expert-executor
-    content_hash: 1ab0075e5f155ece6d83d91afd141938081234ee6b20cecd8ca5aba073c4e2a7
+    content_hash: 2074ddb1ab747d93ee121fb18839da58d941a8cb7a99a2d35ef710644b9395aa
     categories:
-      consistency: { score: 50 }
-      usability: { score: 94 }
+      consistency: { score: 100 }
+      usability: { score: 100 }
       architecture: { score: 100 }
       quality: { score: 100 }
     viewpoints:
-      vp-arc-cross-document-consistency: { level: 2, score: 50 }
+      vp-arc-cross-document-consistency: { level: 4, score: 100 }
       vp-arc-conciseness: { level: 4, score: 100 }
       vp-arc-single-responsibility: { level: 4, score: 100 }
       vp-qe-done-criteria: { level: 4, score: 100 }
       vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 2, score: 50 }
+      vp-qe-omissions-consistency: { level: 4, score: 100 }
       vp-ux-readability: { level: 4, score: 100 }
       vp-ux-user-flow: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 3, score: 75 }
+      vp-ux-language-consistency: { level: 4, score: 100 }
       vp-arc-document-structure: { level: 4, score: 100 }
       vp-qe-config-validity: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 2, minor: 1, note: 0 }
+    findings: { blocker: 0, major: 0, minor: 0, note: 0 }
     done_criteria:
       satisfied: 3
       total: 3
@@ -46,8 +46,6 @@ specdojo:
 ケース `C-02`「成果物の作成から完了まで」について、成果物カタログの定義からタスク展開、実行、評価、人間による完了記録までを Plan → Do → Check → Action の順に横断する引き渡しを定める。
 
 ## 1. 目的
-
-<!-- specdojo:finding id=F003 severity=minor rule=vp-ux-language-consistency line=7 「各成果物の owner」は現行の責任定義である Schedule のタスク owner と対象粒度が異なるため、「Schedule（track）の task owner」など正本と一致する用語へ統一してください。 -->
 
 本書は、BA、Schedule（track）の task owner、QE、PO、PM が、成果物の定義から完了までの順序と責任境界を合意し、限られた参加者でも同じ正本から判断と作業を引き継げるようにする。
 
@@ -127,8 +125,6 @@ Check から確定した評価結果と判断事項を受け取り、PO・PM が
 引き渡す情報または引き渡し条件の判定に使うデータストアだけを、全体概要と同じ名称・区分で示す。
 
 ### 4.1. マスタ・構成データ
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=89 成果物カタログを `owner` の正本としているが、現行 DCT schema と当該カタログに `owner` はなく、担当はスケジュール戦略から Schedule（track）へ生成されるため、正本と引き渡し元を Schedule（track）へ修正してください。 -->
 
 | データストア   | 関連引き渡し     | 横断上の利用                                                                                                                                |
 | -------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -213,8 +209,6 @@ flowchart LR
 凡例は [[cdfd-overview|概念データフロー図（全体概要）]] の「凡例（本プロダクト共通）」に従う。本図では、角丸長方形は一つのプロセスグループ、六角形は開始・引き渡し・終了の判定可能なイベント、円柱はデータストアを表す。円柱の濃い緑はマスタ・構成データ、薄い緑はトランザクションデータである。`-->` は情報の流れであり、物の流れは対象外とする。グループ内部のプロセスと例外、状態の定義と遷移は省略した。図のデータストアは、引き渡す情報、引き渡し条件、または完了記録の正本となるものに限定した。
 
 ## 6. 引き渡し
-
-<!-- specdojo:finding id=F002 severity=major rule=vp-qe-omissions-consistency line=172 DCT schema に存在しない `owner` を成果物カタログの必須情報としているため、H-01 の引き渡し情報からカタログ由来の `owner` を除き、Schedule（track）の担当へ統一してください。 -->
 
 | 引き渡し ID | 送り元グループ | 受け側グループ | 引き渡す情報                                                                                                                  | 引き渡し条件                                                                                                                                                                                                                                                                    | 戻す条件                                                                                                                                                                                        |
 | ----------- | -------------- | -------------- | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

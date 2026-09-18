@@ -10,33 +10,31 @@ specdojo:
     rubric: grade-rubric-v1
     target: deliverable
     verdict: needs-work
-    score: 70
-    graded_at: "2026-09-17T03:24:20.944Z"
-    graded_by: codex-expert-executor
-    content_hash: 0809a990589cbe53b2a97edfd7e7242ec3c3e6a808e1200318c16a6bfe09a08e
+    score: 94
+    graded_at: "2026-09-18T12:55:32.797Z"
+    graded_by: gemma-expert-executor
+    content_hash: cf3435b0fcde87793cadf6712e988f80dd0a19a1bad0e4095d1c0cdfd893e12f
     categories:
-      consistency: { score: 38 }
-      usability: { score: 94 }
+      consistency: { score: 75 }
+      usability: { score: 100 }
       architecture: { score: 100 }
-      quality: { score: 58 }
+      quality: { score: 100 }
     viewpoints:
-      vp-arc-cross-document-consistency: { level: 1, score: 25 }
+      vp-arc-cross-document-consistency: { level: 2, score: 50 }
       vp-arc-conciseness: { level: 4, score: 100 }
       vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-done-criteria: { level: 2, score: 50 }
-      vp-qe-verifiability: { level: 1, score: 25 }
-      vp-qe-omissions-consistency: { level: 2, score: 50 }
+      vp-qe-done-criteria: { level: 4, score: 100 }
+      vp-qe-verifiability: { level: 4, score: 100 }
+      vp-qe-omissions-consistency: { level: 4, score: 100 }
       vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-user-flow: { level: 3, score: 75 }
+      vp-ux-user-flow: { level: 4, score: 100 }
       vp-ux-language-consistency: { level: 4, score: 100 }
       vp-arc-document-structure: { level: 4, score: 100 }
       vp-qe-config-validity: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 6, minor: 3, note: 0 }
+    findings: { blocker: 0, major: 1, minor: 0, note: 0 }
     done_criteria:
-      satisfied: 3
+      satisfied: 4
       total: 4
-      unsatisfied:
-        DC-004: [QE]
       detail_ref: cdfd-plan-grade-criteria
 ---
 
@@ -49,9 +47,6 @@ specdojo:
 これにより、技術参加者と非技術参加者が同じ正本を介して計画を引き継ぎ、判断や作業が特定個人の記憶に集中しないプロジェクト運営を支える。
 
 ## 2. 適用範囲
-
-<!-- specdojo:finding id=F008 severity=minor rule=vp-qe-omissions-consistency line=14 人間と AI Agent の責任分担を本文で再定義している一方、rulebook が要求する対応方針文書への参照がないため、RACI 等の正本を明示して本文は参照に留めてください。 -->
-<!-- specdojo:finding id=F009 severity=minor rule=vp-ux-user-flow line=14 人間と AI Agent の責任境界を確認するための RACI または責任分担文書への参照がなく、利用者が判断根拠の正本へ移動できません。 -->
 
 - **対象グループ**: Plan（P-02〜P-06）。登録簿定義、成果物カタログ定義、スケジュール計画展開、定期実行定義、ジョブ定義を含む。
 - **開始**: Orchestrator から計画要求を受けた、Action から再計画要求を受けた、または参加者が登録、成果物管理、定期実行、定型処理の必要事項を確定した時点とする。
@@ -78,16 +73,11 @@ Plan グループは、全体概要で定めた五つの領域を含む。本章
 
 ### 3.2. 成果物カタログ定義（P-03）
 
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=36 成果物カタログに `owner` を含めて P-04-02 へ渡す構成だが、現行 DCT schema と成果物カタログには `owner` がなく、担当はスケジュール戦略の `owner_rules` から生成されるため、正しいデータストアとフローへ修正してください。 -->
-<!-- specdojo:finding id=F007 severity=major rule=vp-qe-omissions-consistency line=36 DCT schema の成果物項目には `owner` がなく、担当はスケジュール戦略で管理されるため、成果物カタログの必須情報と後続入力を現行 schema に合わせてください。 -->
-
 参加者が管理対象と判断した成果物について、Kata を参照し、成果物 ID、依存、`done_criteria`、`evidence_refs` を含む成果物カタログとして確定する。カタログの検証は独立した業務成果にせず、定義を確定するための判定に含める。担当の割り当ては成果物カタログへ保持せず、スケジュール戦略の `owner_rules` に基づき Schedule（track）展開時に行う。
 
 - **主要入力**: 参加者からの管理対象とする成果物の判断、Kata の rulebook・template、登録項目・決定記録
 - **主要出力**: 成果物カタログ
 - **データストア**: Kata、登録簿、成果物カタログ
-
-<!-- specdojo:finding id=F002 severity=major rule=vp-arc-cross-document-consistency line=44 `P-03-01` の主担当を BA としているが、RACI は成果物カタログの A/R を ARC と定めており、定義・更新の責任者を一意に判断できないため責任割当を統一してください。 -->
 
 | プロセス ID | プロセス           | 業務目的                                                               | 主な担当             | 起動条件                                   | 必須性 |
 | ----------- | ------------------ | ---------------------------------------------------------------------- | -------------------- | ------------------------------------------ | ------ |
@@ -131,6 +121,7 @@ Plan グループは、全体概要で定めた五つの領域を含む。本章
 | ----------- | ---------- | ------------------------------------------------------------------------------ | -------------------- | ------------------------------------ | --------------------------------------------------------------------------------------- |
 | `P-06-01`   | ジョブ定義 | 定型処理を、実行主体、委譲の要否、成功条件が判定できる再利用可能な定義にする。 | PM（定義は全参加者） | 定型的に実行する処理の手順が定まった | 条件付き。定型処理がない場合は定義を作らず、Plan グループの他の出力だけで正常完了する。 |
 
+<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=84 `P-03-01` の主担当を BA としているが、RACI は成果物カタログの A/R を ARC と定めており、定義・更新の責任者を一意に判断できないため責任割当を統一してください。 -->
 ## 4. データストア
 
 本章は、全体概要の「データストア」から Plan グループが読み書きする部分集合を、同じ名称と区分で示す。
@@ -155,8 +146,6 @@ Plan グループは、全体概要で定めた五つの領域を含む。本章
 | 実行計画          | 更新       | Schedule（track）の各タスクについて、実施手順、対象文書、完了条件を生成する。                    |
 
 ## 5. 概念データフロー
-
-<!-- specdojo:finding id=F003 severity=minor rule=vp-arc-cross-document-consistency line=109 成果物カタログの note は五領域の概念データフローを領域ごとに分割すると指定しているが、本書は P-02/P-03 と P-05/P-06 をそれぞれ一図に統合しているため、カタログの指定を更新するか五領域単位へ分割してください。 -->
 
 ### 5.1. 登録簿定義
 
@@ -343,10 +332,6 @@ flowchart LR
 ## 8. 主要例外とグループ外への委譲
 
 ### 8.1. 主要例外
-
-<!-- specdojo:finding id=F004 severity=major rule=vp-qe-done-criteria line=253 DC-004 が求める主要例外の判定可能性を満たすには、現行 schema にない `owner` をカタログ検証条件から除外または正しい正本へ移し、strategy と Kata grade の具体的な不整合判定規則も明示してください。 -->
-<!-- specdojo:finding id=F005 severity=major rule=vp-qe-verifiability line=253 E-03-01 は現行 DCT schema に存在しない `owner` を検証対象としているため、カタログ検証の pass/fail 条件として実行できません。 -->
-<!-- specdojo:finding id=F006 severity=major rule=vp-qe-verifiability line=255 E-04-02 は「整合しない」とだけ記載され、どの strategy 要件とどの Kata grade の組合せを不整合とするかがないため、停止条件と再開条件を客観的に判定できません。 -->
 
 | 例外 ID   | 対象プロセス | 検出条件                                                                                                                                                                              | 本グループでの扱い                                                        | 継続・再開条件                                                                                                                                           |
 | --------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |

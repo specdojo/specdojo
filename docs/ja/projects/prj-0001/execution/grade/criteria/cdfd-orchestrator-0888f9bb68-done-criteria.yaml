@@ -2,12 +2,12 @@
 id: cdfd-orchestrator-grade-criteria
 document: cdfd-orchestrator
 path: docs/ja/product/010-business-specs/010-data-flow/cdfd-orchestrator.md
-graded_at: "2026-09-17T02:11:47.937Z"
-graded_by: codex-expert-executor
-content_hash: 1fac6fcecc0a2a46acc226ecf555b08d512ced2f59e9a685ec6a0c7817cae360
+graded_at: "2026-09-18T11:51:53.476Z"
+graded_by: gemma-expert-executor
+content_hash: 54b40f0e657dd761016966db1775ec307b353d67e1f55353c2f76e8262b758bc
 summary:
-  satisfied: 1
-  unsatisfied: 2
+  satisfied: 2
+  unsatisfied: 1
   total: 3
 criteria:
   - id: DC-001
@@ -16,7 +16,7 @@ criteria:
       - BA
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
-    reason: 全体概要で P-14 の主要出力とされる「生成した実行計画」が、本書では Plan からの主要入力へ変更されており、主要入出力を矛盾なく詳細化できていない。
+    reason: P-14 の主要出力における「生成した実行計画」が欠落し、入力として定義されており、全体概要と矛盾している。
   - id: DC-002
     text: 稼働構成、成果物カタログ、スケジュール戦略、定期実行定義、実行計画、実行記録への読み書きと、Plan・Do・Check・Action への要求がグループ外委譲として識別できること
     roles:
@@ -28,5 +28,4 @@ criteria:
     roles:
       - QE
     viewpoint: vp-qe-verifiability
-    status: unsatisfied
-    reason: E-14-01 は未応答要求の重複を扱うだけで、実行ロック取得の競合を検出する条件と、ロック解放または stale 回収後の再開条件を判定できない。
+    status: satisfied

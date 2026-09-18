@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "task_id": "JBR-grade-deliverable-0f3d658814b3",
+  "run_id": "attempt-1",
+  "stage": {
+    "role": "executor",
+    "actor": "specdojo-runner",
+    "status": "succeeded",
+    "started_at": "2026-09-18T10:50:12.992Z",
+    "completed_at": "2026-09-18T13:52:36.559Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-do.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-orchestrator.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-plan.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-deliverable.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-do-96363482bc-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-orchestrator-0888f9bb68-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-overview-4f5ff02b38-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-plan-53594c9748-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-uc-deliverable-20176468f7-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-uc-register-7fa05372dd-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-deliverable-0f3d658814b3.json",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 13,
+    "summary": ".../010-business-specs/010-data-flow/cdfd-do.md    | 43 ++++++++-------------\n .../010-data-flow/cdfd-orchestrator.md             | 42 ++++++++------------\n .../010-data-flow/cdfd-overview.md                 | 17 ++++----\n .../010-business-specs/010-data-flow/cdfd-plan.md  | 45 ++++++++--------------\n .../010-data-flow/cdfd-uc-deliverable.md           | 26 +++++--------\n .../010-data-flow/cdfd-uc-register.md              | 34 +++++++---------\n .../criteria/cdfd-do-96363482bc-done-criteria.yaml | 10 ++---\n ...cdfd-orchestrator-0888f9bb68-done-criteria.yaml | 15 ++++----\n .../cdfd-overview-4f5ff02b38-done-criteria.yaml    |  4 +-\n .../cdfd-plan-53594c9748-done-criteria.yaml        | 13 +++----\n ...fd-uc-deliverable-20176468f7-done-criteria.yaml |  4 +-\n .../cdfd-uc-register-7fa05372dd-done-criteria.yaml | 13 +++----\n 12 files changed, 107 insertions(+), 159 deletions(-)"
+  },
+  "validations": [
+    {
+      "id": "job-command",
+      "source": "runner",
+      "command": "npm run build\ntools/grade/run-per-document.sh --run-id JBR-grade-deliverable-0f3d658814b3 --target deliverable --limit 6 --changed-only=true --ungraded=false --incomplete=false\ncat logs/grade/runs/per-document/JBR-grade-deliverable-0f3d658814b3/results.tsv",
+      "status": "passed",
+      "summary": "exit 0"
+    }
+  ],
+  "final_message": "Runner command exit 0.",
+  "command": {
+    "shell": "/bin/sh -eu",
+    "value": "npm run build\ntools/grade/run-per-document.sh --run-id JBR-grade-deliverable-0f3d658814b3 --target deliverable --limit 6 --changed-only=true --ungraded=false --incomplete=false\ncat logs/grade/runs/per-document/JBR-grade-deliverable-0f3d658814b3/results.tsv",
+    "exit_code": 0,
+    "stdout_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-deliverable-0f3d658814b3/attempt-1/command.stdout.log",
+    "stderr_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-deliverable-0f3d658814b3/attempt-1/command.stderr.log",
+    "stdout": "\n> specdojo@0.1.0 build\n> node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.build.json && node -e \"require('node:fs').chmodSync('dist/specdojo.js', 0o755)\"\n\nrun_id=JBR-grade-deliverable-0f3d658814b3 project=prj-0001 target=deliverable kind=none changed_only=true ungraded=false incomplete=false max_stage_failures=3 documents=6 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-deliverable-0f3d658814b3\nstage=1 executor=gemma-expert-executor reporter=gemma-reporter reference=none\nstage=2 executor=gemma-expert-executor reporter=gemma-reporter reference=none\nstage=3 executor=codex-expert-executor reporter=gemma-reporter reference=none condition=\"pass, score>=96, findings<=1\"\ndocument start: docs/ja/product/010-business-specs/010-data-flow/cdfd-do.md\ndocument complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-do.md\ndocument start: docs/ja/product/010-business-specs/010-data-flow/cdfd-orchestrator.md\nresume stage=3 document=docs/ja/product/010-business-specs/010-data-flow/cdfd-orchestrator.md status=skipped_condition\ndocument complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-orchestrator.md\ndocument start: docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md\nresume stage=3 document=docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md status=skipped_condition\ndocument complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md\ndocument start: docs/ja/product/010-business-specs/010-data-flow/cdfd-plan.md\nresume stage=3 document=docs/ja/product/010-business-specs/010-data-flow/cdfd-plan.md status=skipped_condition\ndocument complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-plan.md\ndocument start: docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-deliverable.md\ndocument complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-deliverable.md\ndocument start: docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md\nresume stage=3 document=docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md status=skipped_condition\ndocument complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md\ngrade pipeline complete: selected=6 processed=6 completed_now=6 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-deliverable-0f3d658814b3/results.tsv\nrecorded_at\tdocument\tstage\tstatus\tduration_seconds\tverdict\tscore\tfindings\texecutor\treporter\treference\tconsecutive_failures\tmax_failures\n2026-09-18T11:02:21Z\tdocs/ja/product/010-business-specs/010-data-flow/cdfd-do.md\t1\tpassed\t725\tpass\t100\t0\tgemma-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-18T11:15:47Z\tdocs/ja/product/010-business-specs/010-data-flow/cdfd-do.md\t2\tpassed\t805\tpass\t100\t0\tgemma-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-18T11:22:12Z\tdocs/ja/product/010-business-specs/010-data-flow/cdfd-do.md\t3\tpassed\t385\tpass\t95\t2\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-18T11:37:13Z\tdocs/ja/product/010-business-specs/010-data-flow/cdfd-orchestrator.md\t1\tpassed\t899\tneeds-work\t81\t4\tgemma-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-18T11:51:53Z\tdocs/ja/product/010-business-specs/010-data-flow/cdfd-orchestrator.md\t2\tpassed\t879\tneeds-work\t81\t4\tgemma-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-18T11:51:54Z\tdocs/ja/product/010-business-specs/010-data-flow/cdfd-orchestrator.md\t3\tskipped_condition\t0\t\t\t\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-18T12:09:46Z\tdocs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md\t1\tpassed\t1071\tneeds-work\t82\t5\tgemma-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-18T12:25:04Z\tdocs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md\t2\tpassed\t917\tneeds-work\t82\t5\tgemma-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-18T12:25:05Z\tdocs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md\t3\tskipped_condition\t0\t\t\t\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-18T12:42:18Z\tdocs/ja/product/010-business-specs/010-data-flow/cdfd-plan.md\t1\tpassed\t1031\tneeds-work\t94\t1\tgemma-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-18T12:55:32Z\tdocs/ja/product/010-business-specs/010-data-flow/cdfd-plan.md\t2\tpassed\t793\tneeds-work\t94\t1\tgemma-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-18T12:55:33Z\tdocs/ja/product/010-business-specs/010-data-flow/cdfd-plan.md\t3\tskipped_condition\t0\t\t\t\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-18T13:07:02Z\tdocs/ja/product/010-business-specs/010-data-flow/cdfd-uc-deliverable.md\t1\tpassed\t688\tpass\t100\t0\tgemma-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-18T13:19:45Z\tdocs/ja/product/010-business-specs/010-data-flow/cdfd-uc-deliverable.md\t2\tpassed\t762\tpass\t100\t0\tgemma-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-18T13:24:01Z\tdocs/ja/product/010-business-specs/010-data-flow/cdfd-uc-deliverable.md\t3\tpassed\t255\tpass\t100\t0\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-18T13:37:57Z\tdocs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md\t1\tpassed\t834\tneeds-work\t95\t1\tgemma-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-18T13:52:35Z\tdocs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md\t2\tpassed\t878\tneeds-work\t95\t1\tgemma-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-18T13:52:35Z\tdocs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md\t3\tskipped_condition\t0\t\t\t\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n",
+    "stderr": ""
+  },
+  "log_refs": [
+    {
+      "kind": "command-stdout",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-deliverable-0f3d658814b3/attempt-1/command.stdout.log",
+      "bytes": 5359,
+      "truncated": false
+    },
+    {
+      "kind": "command-stderr",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-deliverable-0f3d658814b3/attempt-1/command.stderr.log",
+      "bytes": 0,
+      "truncated": false
+    }
+  ]
+}

@@ -10,34 +10,34 @@ specdojo:
   grade:
     rubric: grade-rubric-v1
     target: deliverable
-    verdict: needs-work
-    score: 75
-    graded_at: "2026-09-17T01:11:21.727Z"
+    verdict: pass
+    score: 95
+    graded_at: "2026-09-18T11:22:12.840Z"
     graded_by: codex-expert-executor
-    content_hash: 53fb8189060d2b48dacc7fee719f4f855fea1f8fd8510d2dc602b3addf2af0a5
+    content_hash: 0626b4ea6f7bc2d113f28f78d3d950cdd1a7e55eeb250b375d6664c6a2b86915
     categories:
-      consistency: { score: 50 }
-      usability: { score: 88 }
+      consistency: { score: 88 }
+      usability: { score: 100 }
       architecture: { score: 100 }
-      quality: { score: 67 }
+      quality: { score: 92 }
     viewpoints:
-      vp-arc-cross-document-consistency: { level: 2, score: 50 }
+      vp-arc-cross-document-consistency: { level: 4, score: 100 }
       vp-arc-conciseness: { level: 4, score: 100 }
       vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-done-criteria: { level: 2, score: 50 }
-      vp-qe-verifiability: { level: 2, score: 50 }
-      vp-qe-omissions-consistency: { level: 2, score: 50 }
-      vp-ux-readability: { level: 3, score: 75 }
-      vp-ux-user-flow: { level: 3, score: 75 }
+      vp-qe-done-criteria: { level: 3, score: 75 }
+      vp-qe-verifiability: { level: 4, score: 100 }
+      vp-qe-omissions-consistency: { level: 3, score: 75 }
+      vp-ux-readability: { level: 4, score: 100 }
+      vp-ux-user-flow: { level: 4, score: 100 }
       vp-ux-language-consistency: { level: 4, score: 100 }
       vp-arc-document-structure: { level: 4, score: 100 }
       vp-qe-config-validity: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 4, minor: 3, note: 0 }
+    findings: { blocker: 0, major: 0, minor: 2, note: 0 }
     done_criteria:
       satisfied: 3
       total: 4
       unsatisfied:
-        DC-003: [QE]
+        DC-002: [ARC]
       detail_ref: cdfd-do-grade-criteria
 ---
 
@@ -72,8 +72,6 @@ Do グループはタスク実行（P-07）の一領域で構成する。領域 
 - **主要出力**: 作成・更新した成果物、登録項目の状態遷移、実行記録（result）、実行状態（ブロック・判断依頼を含む）
 - **データストア**: Kata、稼働構成、実行計画、ジョブ定義、登録簿、実行記録、成果物
 
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=35 P-07-02 は保護対象を人間が承認すれば人または AI Agent が変更できる記述だが, 実装では agent の保護設定変更は承認有無によらず block され, result への申し送り後に人間または対話型 Orchestrator が実行外で適用するため, 起動条件・担当・E-07-02 の検出条件と再開条件を実態に合わせて修正してください。 -->
-
 | プロセス ID | プロセス     | 業務目的                                                                                       | 主な担当                                                                 | 起動条件                                                                                                           | 必須性                                                                                                                 |
 | ----------- | ------------ | ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------- |
 | `P-07-01`   | 実行受入     | 実行対象、基準、実行主体、利用可能な権限を対応付け、遂行可否と隔離方法を判断可能にする。       | PM（受入処理は runner が支援）                                           | Orchestrator から実行要求があり、対応する実行計画と対象を特定できる。                                              | 必須。利用制限、入力不足、承認待ちの場合も、遂行せず実行結果記録へ渡す。                                               |
@@ -94,6 +92,8 @@ Do グループはタスク実行（P-07）の一領域で構成する。領域 
 
 ### 4.2. トランザクションデータ
 
+<!-- specdojo:finding id=F001 severity=minor rule=vp-qe-done-criteria line=56 DC-002 が求めるプロセス単位の読み書きについて、「データストア」表は登録簿の参照を P-07-01・P-07-02 とする一方、「個別プロセス主要入出力」は P-07-03 にも登録簿を含めており、P-07-03 の参照有無を一意に識別できるよう統一する必要がある。 -->
+<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-omissions-consistency line=56 登録簿の利用を P-07-01・P-07-02・P-07-05 とするデータストア表と、P-07-03 にも登録簿を割り当てる個別プロセス表が矛盾するため、P-07-03 の登録簿参照を追加するか同プロセスのデータストア欄から削除する必要がある。 -->
 | データストア | 読み書き   | 本グループでの利用                                                                                                   |
 | ------------ | ---------- | -------------------------------------------------------------------------------------------------------------------- |
 | 実行計画     | 参照       | `P-07-01` で対象、手順、完了条件を受け取り、`P-07-02` と `P-07-03` の遂行・検証基準として使う。                      |
@@ -200,10 +200,6 @@ flowchart LR
 
 ### 8.1. 主要例外
 
-<!-- specdojo:finding id=F003 severity=major rule=vp-qe-done-criteria line=158 DC-003 が求める保護対象変更の例外について, E-07-02 は承認不足だけを検出条件としており, agent の変更を保護機構が block して差分を申し送り, 人間または対話型 Orchestrator が実行外で適用する条件と再開位置を判定できるよう修正してください。 -->
-<!-- specdojo:finding id=F004 severity=major rule=vp-qe-verifiability line=158 E-07-02 は人間の承認がない場合しか検出できず, 承認済みでも agent が保護設定を変更すれば block される条件, result への申し送り, 人間による実行外適用後の再開条件が欠けているため, 検証可能な条件へ修正してください。 -->
-<!-- specdojo:finding id=F005 severity=major rule=vp-qe-omissions-consistency line=158 成果物カタログが主要例外として指定する「保護機構による block と申し送り」がなく, E-07-02 が一般的な承認待ちだけを扱っているため, agent の変更検知, block, 差分の申し送り, 実行外適用を追加してください。 -->
-
 | 例外 ID   | 対象プロセス                           | 検出条件                                                                                           | 本グループでの扱い                                                                                                                                                   | 継続・再開条件                                                                                                                                                            |
 | --------- | -------------------------------------- | -------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `E-07-01` | `P-07-01` 実行受入                     | 稼働構成の権限または利用制限により、指定された人、AI Agent、runner が必要な処理を実行できない。    | 遂行を開始せず、影響するタスクだけをブロックして、制限内容と代替実行主体の判断依頼を記録する。                                                                       | 権限内の実行主体または方法が人間により選択され、実行計画と対応付けられた後に `P-07-01` から再開する。                                                                     |
@@ -214,8 +210,6 @@ flowchart LR
 
 ### 8.2. グループ外への委譲
 
-<!-- specdojo:finding id=F007 severity=minor rule=vp-ux-user-flow line=164 現存する `cdfd-orchestrator`, `cdfd-check`, `cdfd-action`, `cdfd-uc-register`, `cdfd-uc-deliverable` がコード表記のため, 各文書への Wiki リンクへ変更して委譲先を直接たどれるようにしてください。 -->
-
 | 委譲先                                                    | 委譲する事項                                             | 引き渡す情報                                                           | 本グループへ戻す条件                                                                        |
 | --------------------------------------------------------- | -------------------------------------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
 | [[cdfd-orchestrator\|概念データフロー図（Orchestrator）]] | タスクの起動、再開、実行主体と保護設定の実行外適用の調整 | 実行状態、ブロック理由、保護設定の変更差分、判断依頼、再開位置         | 必要な判断と保護設定の適用結果がそろい、実行要求または再開要求が発行された。                |
@@ -223,8 +217,5 @@ flowchart LR
 | [[cdfd-action\|概念データフロー図（Action）]]             | 評価後の人間による承認、タスクの完了確定、再計画判断     | Check の評価対象となった成果・実行結果と、Check からの評価結果         | 人間の判断により再実行または改善が必要となり、Orchestrator から新たな実行要求が発行された。 |
 | [[cdfd-uc-register\|概念データフロー図（登録項目）]]      | 登録項目の起票から評価・完了記録までのグループ横断順序   | 対象登録項目、対応内容、状態遷移、実行記録                             | 登録項目への追加対応が必要と判断され、新たな実行要求が発行された。                          |
 | [[cdfd-uc-deliverable\|概念データフロー図（成果物）]]     | 成果物の定義から評価・完了記録までのグループ横断順序     | 対象成果物、作成・更新した成果、検証結果、実行記録                     | 成果物への追加対応が必要と判断され、新たな実行要求が発行された。                            |
-
-<!-- specdojo:finding id=F002 severity=minor rule=vp-arc-cross-document-consistency line=172 委譲先5文書はすべて現存するのに未作成としてコード表記しているため, 現状に合わせて説明を修正し, 既存文書へのリンクへ変更してください。 -->
-<!-- specdojo:finding id=F006 severity=minor rule=vp-ux-readability line=172 現存する委譲先文書を未作成と説明しているため, 読者が関連文書の有無を誤認しないよう現在の作成状況と参照方法へ更新してください。 -->
 
 委譲先の文書はすべて現存するため Wiki リンクで参照し、内部プロセスを本書へ展開しない。
