@@ -4,6 +4,7 @@ import { buildScheduleIndex } from "./exec-schedule.js";
 import { readReadySnapshot } from "./exec-schedule-ready.js";
 import {
   buildPhaseModeIndex,
+  resolveAgentAssignment,
   resolveAgentPipeline,
   resolveApproach,
   resolveTaskCapabilities,
@@ -41,6 +42,7 @@ export function buildTaskView(
     fifo_rank: 0,
     critical_first_rank: 0,
     description: node.description,
+    agent: node.agent,
   };
   const readyPath = join(executionPath, "generated", "ready.json");
   if (existsSync(readyPath)) {
@@ -70,5 +72,8 @@ export function buildTaskView(
   task.agent_pipeline =
     task.agent_pipeline ??
     resolveAgentPipeline(task.local_id, task.id, phaseIndex, task.phase_suffix, task.phase_set);
+  task.agent =
+    task.agent ??
+    resolveAgentAssignment(task.local_id, task.id, phaseIndex, task.phase_suffix, task.phase_set);
   return task;
 }

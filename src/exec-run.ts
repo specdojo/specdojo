@@ -159,6 +159,8 @@ import {
 import { recordGitStateBlock, recordProtectedConfigBlock } from "./exec-protection-handoff.js";
 import {
   buildPhaseModeIndex,
+  resolveAgentAssignment,
+  resolveAgentPipeline,
   resolveApproach,
   resolveTaskCapabilities,
   resolveTaskExecution,
@@ -299,6 +301,14 @@ export type AgentOverrideResolution =
 // A runnable agent candidate: the shell command plus the provider it belongs to.
 // The provider selects the per-provider failure-handling override in exec-defaults.yaml.
 type AgentRunCandidate = { command: string; actor?: string; provider?: AgentProvider };
+
+function pinnedExecutor(task: ReadyTaskView | null | undefined): string | undefined {
+  return typeof task?.agent === "string" ? task.agent : task?.agent?.executor;
+}
+
+function pinnedReporter(task: ReadyTaskView | null | undefined): string | undefined {
+  return typeof task?.agent === "object" ? task.agent.reporter : undefined;
+}
 
 // Resolve the agent override for a task's mode. A single explicit --by nickname wins for every
 // mode. Otherwise the mode-specific --edit-by / --review-by nickname applies. Commands are always
@@ -1278,8 +1288,8 @@ async function prepareSingleTask(
   const overrideResolution = resolveAgentOverride(
     mode,
     task.agent_pipeline
-      ? (stageAgentOverrides.executor ?? agentNicknameOverride)
-      : agentNicknameOverride,
+      ? (stageAgentOverrides.executor ?? agentNicknameOverride ?? pinnedExecutor(task))
+      : (agentNicknameOverride ?? pinnedExecutor(task)),
     modeAgentOverrides,
     roster,
     execDefaults,
@@ -1390,7 +1400,7 @@ async function prepareSingleTask(
       roster,
       execDefaults,
       collectBusyActors(schedulePath),
-      stageAgentOverrides.reporter,
+      stageAgentOverrides.reporter ?? pinnedReporter(task),
     );
     if (reporterCandidates.length === 0) {
       process.stdout.write(
@@ -2579,6 +2589,24 @@ async function runManualMode(opts: RunOpts): Promise<void> {
         task.phase_suffix,
         task.phase_set,
       );
+    task.agent_pipeline =
+      task.agent_pipeline ??
+      resolveAgentPipeline(
+        task.local_id,
+        task.id,
+        phaseModeIndex,
+        task.phase_suffix,
+        task.phase_set,
+      );
+    task.agent =
+      task.agent ??
+      resolveAgentAssignment(
+        task.local_id,
+        task.id,
+        phaseModeIndex,
+        task.phase_suffix,
+        task.phase_set,
+      );
   }
 
   // If the task is already in "doing" state and --by is not specified,
@@ -2654,7 +2682,9 @@ export function resolveInPlaceCommand(
   // A task definition can pin the delegated agent by nickname (Job `task.agent`). An explicit
   // --by still wins so an operator can redirect a single run without editing the definition.
   const by = (
-    task?.agent_pipeline ? (opts.executorBy ?? opts.by) : (opts.by ?? task?.agent)
+    task?.agent_pipeline
+      ? (opts.executorBy ?? opts.by ?? pinnedExecutor(task))
+      : (opts.by ?? pinnedExecutor(task))
   )?.trim();
   if (by) {
     const member = roster?.members.find((m) => m.nickname === by && m.type === "agent");
@@ -2840,7 +2870,13 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
   const { command, actor, provider } = resolveInPlaceCommand(task, roster, opts, execDefaults);
   const reporterCandidates =
     task?.agent_pipeline && task
-      ? resolveReporterAgentCandidates(task, roster, execDefaults, undefined, opts.reporterBy)
+      ? resolveReporterAgentCandidates(
+          task,
+          roster,
+          execDefaults,
+          undefined,
+          opts.reporterBy ?? pinnedReporter(task),
+        )
       : undefined;
   if (task?.agent_pipeline && !reporterCandidates?.length) {
     throw new Error("No agent found for reporter pipeline stage.");
@@ -2849,8 +2885,10 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
 
   if (opts.dryRun) {
     process.stdout.write(`[dry-run] target: ${label} (state ignored)\n`);
+    process.stdout.write(`[dry-run] agent: ${actor}\n`);
     process.stdout.write(`[dry-run] command: ${command}\n`);
     if (reporterCandidates?.[0]) {
+      process.stdout.write(`[dry-run] reporter agent: ${reporterCandidates[0].actor ?? "-"}\n`);
       process.stdout.write(`[dry-run] reporter command: ${reporterCandidates[0].command}\n`);
     }
     process.stdout.write(`[dry-run] cwd: ${repoRoot}\n`);

@@ -115,6 +115,9 @@ phase_sets:
       execution: agent
       mode: review
       approach: fully-guided
+      agent:
+        executor: codex-expert-review-executor
+        reporter: gemma-reporter
       agent_pipeline:
         stages:
           - stage_role: executor

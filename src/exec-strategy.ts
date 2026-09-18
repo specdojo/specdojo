@@ -1,5 +1,6 @@
 import { listFilesRecursive, readYaml } from "./exec-shared.js";
 import type {
+  AgentAssignment,
   AgentPipeline,
   AgentPipelineStage,
   AgentStageRole,
@@ -23,6 +24,7 @@ type StrategyPhaseMinimal = {
   capabilities?: unknown;
   proficiency?: unknown;
   agent_pipeline?: unknown;
+  agent?: unknown;
 };
 
 type StrategyPhaseOverrideMinimal = {
@@ -32,6 +34,7 @@ type StrategyPhaseOverrideMinimal = {
   approach?: unknown;
   capabilities?: unknown;
   proficiency?: unknown;
+  agent?: unknown;
 };
 
 type StrategyMinimal = {
@@ -55,10 +58,12 @@ type StrategyMinimal = {
     capabilities?: unknown;
     proficiency?: unknown;
     agent_pipeline?: unknown;
+    agent?: unknown;
   }>;
 };
 
 export type PhaseModeIndex = {
+  tracks: string[];
   localIdToPhaseSets: Map<string, string[]>;
   phaseSetSuffixToMode: Map<string, TaskMode>;
   phaseSetSuffixToExecution: Map<string, "agent" | "human">;
@@ -67,17 +72,20 @@ export type PhaseModeIndex = {
   phaseSetSuffixToCapabilities: Map<string, string[]>;
   phaseSetSuffixToProficiency: Map<string, Proficiency>;
   phaseSetSuffixToAgentPipeline: Map<string, AgentPipeline>;
+  phaseSetSuffixToAgent: Map<string, AgentAssignment>;
   localIdSuffixToExecution: Map<string, "agent" | "human">;
   localIdSuffixToMode: Map<string, TaskMode>;
   localIdSuffixToApproach: Map<string, Approach>;
   localIdSuffixToCapabilities: Map<string, string[]>;
   localIdSuffixToProficiency: Map<string, Proficiency>;
+  localIdSuffixToAgent: Map<string, AgentAssignment>;
   taskIdToMode: Map<string, TaskMode>;
   taskIdToExecution: Map<string, "agent" | "human">;
   taskIdToApproach: Map<string, Approach>;
   taskIdToCapabilities: Map<string, string[]>;
   taskIdToProficiency: Map<string, Proficiency>;
   taskIdToAgentPipeline: Map<string, AgentPipeline>;
+  taskIdToAgent: Map<string, AgentAssignment>;
   defaultMode: TaskMode;
 };
 
@@ -138,6 +146,34 @@ function asAgentPipeline(value: unknown): AgentPipeline | undefined {
   return { stages: [parsed[0], parsed[1]] };
 }
 
+function asAgentAssignment(value: unknown): AgentAssignment | undefined {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return undefined;
+  const item = value as Record<string, unknown>;
+  if (typeof item.executor !== "string" || item.executor.length === 0) return undefined;
+  if (
+    item.reporter !== undefined &&
+    (typeof item.reporter !== "string" || item.reporter.length === 0)
+  ) {
+    return undefined;
+  }
+  return {
+    executor: item.executor,
+    ...(typeof item.reporter === "string" ? { reporter: item.reporter } : {}),
+  };
+}
+
+function taskTrack(taskId: string, index: PhaseModeIndex): string | undefined {
+  return index.tracks.find((track) => taskId.startsWith(`T-${track.toUpperCase()}-`));
+}
+
+function phaseKey(track: string, phaseSet: string, suffix: string): string {
+  return `${track}:${phaseSet}:${suffix}`;
+}
+
+function localKey(track: string, localId: string, suffix?: string): string {
+  return suffix === undefined ? `${track}:${localId}` : `${track}:${localId}:${suffix}`;
+}
+
 /**
  * Builds a phase metadata index from sch-strategy files.
  * sch-strategy maps localId → phaseSet and phaseSet+phaseId → suffix, and phase
@@ -145,6 +181,7 @@ function asAgentPipeline(value: unknown): AgentPipeline | undefined {
  * capabilities, and proficiency.
  */
 export function buildPhaseModeIndex(schedulePath: string): PhaseModeIndex {
+  const tracks = new Set<string>();
   const localIdToPhaseSets = new Map<string, string[]>();
   // phaseSet:phaseId → suffix (used to cross-reference phase_overrides)
   const phaseSetPhaseIdToSuffix = new Map<string, string>();
@@ -157,18 +194,21 @@ export function buildPhaseModeIndex(schedulePath: string): PhaseModeIndex {
   const phaseSetSuffixToCapabilities = new Map<string, string[]>();
   const phaseSetSuffixToProficiency = new Map<string, Proficiency>();
   const phaseSetSuffixToAgentPipeline = new Map<string, AgentPipeline>();
+  const phaseSetSuffixToAgent = new Map<string, AgentAssignment>();
   // localId:suffix → metadata declared on owner_rules[].phase_overrides (takes precedence)
   const localIdSuffixToExecution = new Map<string, "agent" | "human">();
   const localIdSuffixToMode = new Map<string, TaskMode>();
   const localIdSuffixToApproach = new Map<string, Approach>();
   const localIdSuffixToCapabilities = new Map<string, string[]>();
   const localIdSuffixToProficiency = new Map<string, Proficiency>();
+  const localIdSuffixToAgent = new Map<string, AgentAssignment>();
   const taskIdToMode = new Map<string, TaskMode>();
   const taskIdToExecution = new Map<string, "agent" | "human">();
   const taskIdToApproach = new Map<string, Approach>();
   const taskIdToCapabilities = new Map<string, string[]>();
   const taskIdToProficiency = new Map<string, Proficiency>();
   const taskIdToAgentPipeline = new Map<string, AgentPipeline>();
+  const taskIdToAgent = new Map<string, AgentAssignment>();
 
   const defaultMode: TaskMode = "edit";
 
@@ -185,6 +225,9 @@ export function buildPhaseModeIndex(schedulePath: string): PhaseModeIndex {
       continue;
     }
     if (!strategy?.phase_sets) continue;
+    const track = typeof strategy.track === "string" ? strategy.track : "";
+    if (!track) continue;
+    tracks.add(track);
 
     let defaultPhaseSetNames: string[];
     try {
@@ -208,29 +251,33 @@ export function buildPhaseModeIndex(schedulePath: string): PhaseModeIndex {
         const suffix = String(p.task_suffix ?? "");
         const phaseId = String(p.id ?? "");
         if (suffix && phaseId) {
-          phaseSetPhaseIdToSuffix.set(`${phaseSetName}:${phaseId}`, suffix);
+          phaseSetPhaseIdToSuffix.set(`${track}:${phaseSetName}:${phaseId}`, suffix);
           phaseSetSuffixToMode.set(
-            `${phaseSetName}:${suffix}`,
+            phaseKey(track, phaseSetName, suffix),
             isTaskMode(p.mode) ? p.mode : defaultMode,
           );
           // execution: human or agent (default: agent)
           const execution = p.execution === "human" ? "human" : "agent";
-          phaseSetSuffixToExecution.set(`${phaseSetName}:${suffix}`, execution);
+          phaseSetSuffixToExecution.set(phaseKey(track, phaseSetName, suffix), execution);
           // Global map: suffix is unique within a track across all phase sets
-          suffixToExecution.set(suffix, execution);
+          suffixToExecution.set(`${track}:${suffix}`, execution);
           if (isApproach(p.approach)) {
-            phaseSetSuffixToApproach.set(`${phaseSetName}:${suffix}`, p.approach);
+            phaseSetSuffixToApproach.set(phaseKey(track, phaseSetName, suffix), p.approach);
           }
           const capabilities = asCapabilityList(p.capabilities);
           if (capabilities !== undefined) {
-            phaseSetSuffixToCapabilities.set(`${phaseSetName}:${suffix}`, capabilities);
+            phaseSetSuffixToCapabilities.set(phaseKey(track, phaseSetName, suffix), capabilities);
           }
           if (isProficiency(p.proficiency)) {
-            phaseSetSuffixToProficiency.set(`${phaseSetName}:${suffix}`, p.proficiency);
+            phaseSetSuffixToProficiency.set(phaseKey(track, phaseSetName, suffix), p.proficiency);
           }
           const agentPipeline = asAgentPipeline(p.agent_pipeline);
           if (agentPipeline !== undefined) {
-            phaseSetSuffixToAgentPipeline.set(`${phaseSetName}:${suffix}`, agentPipeline);
+            phaseSetSuffixToAgentPipeline.set(phaseKey(track, phaseSetName, suffix), agentPipeline);
+          }
+          const agent = asAgentAssignment(p.agent);
+          if (agent !== undefined) {
+            phaseSetSuffixToAgent.set(phaseKey(track, phaseSetName, suffix), agent);
           }
         }
       }
@@ -250,7 +297,7 @@ export function buildPhaseModeIndex(schedulePath: string): PhaseModeIndex {
         }
         const localIds = rule.local_ids ?? [];
         for (const localId of localIds) {
-          localIdToPhaseSets.set(localId, rulePhaseSetNames);
+          localIdToPhaseSets.set(localKey(track, localId), rulePhaseSetNames);
         }
 
         for (const override of rule.phase_overrides ?? []) {
@@ -264,33 +311,46 @@ export function buildPhaseModeIndex(schedulePath: string): PhaseModeIndex {
           const overrideProficiency = isProficiency(override.proficiency)
             ? override.proficiency
             : undefined;
+          const overrideAgent = asAgentAssignment(override.agent);
           if (
             overrideExecution === undefined &&
             overrideMode === undefined &&
             overrideApproach === undefined &&
             overrideCapabilities === undefined &&
-            overrideProficiency === undefined
+            overrideProficiency === undefined &&
+            overrideAgent === undefined
           )
             continue;
 
           for (const phaseSetName of rulePhaseSetNames) {
-            const suffix = phaseSetPhaseIdToSuffix.get(`${phaseSetName}:${override.phase}`);
+            const suffix = phaseSetPhaseIdToSuffix.get(
+              `${track}:${phaseSetName}:${override.phase}`,
+            );
             if (!suffix) continue;
             for (const localId of localIds) {
               if (overrideExecution !== undefined) {
-                localIdSuffixToExecution.set(`${localId}:${suffix}`, overrideExecution);
+                localIdSuffixToExecution.set(localKey(track, localId, suffix), overrideExecution);
               }
               if (overrideMode !== undefined) {
-                localIdSuffixToMode.set(`${localId}:${suffix}`, overrideMode);
+                localIdSuffixToMode.set(localKey(track, localId, suffix), overrideMode);
               }
               if (overrideApproach !== undefined) {
-                localIdSuffixToApproach.set(`${localId}:${suffix}`, overrideApproach);
+                localIdSuffixToApproach.set(localKey(track, localId, suffix), overrideApproach);
               }
               if (overrideCapabilities !== undefined) {
-                localIdSuffixToCapabilities.set(`${localId}:${suffix}`, overrideCapabilities);
+                localIdSuffixToCapabilities.set(
+                  localKey(track, localId, suffix),
+                  overrideCapabilities,
+                );
               }
               if (overrideProficiency !== undefined) {
-                localIdSuffixToProficiency.set(`${localId}:${suffix}`, overrideProficiency);
+                localIdSuffixToProficiency.set(
+                  localKey(track, localId, suffix),
+                  overrideProficiency,
+                );
+              }
+              if (overrideAgent !== undefined) {
+                localIdSuffixToAgent.set(localKey(track, localId, suffix), overrideAgent);
               }
             }
           }
@@ -314,11 +374,14 @@ export function buildPhaseModeIndex(schedulePath: string): PhaseModeIndex {
         if (agentPipeline !== undefined) {
           taskIdToAgentPipeline.set(taskId, agentPipeline);
         }
+        const agent = asAgentAssignment(pass.agent);
+        if (agent !== undefined) taskIdToAgent.set(taskId, agent);
       }
     }
   }
 
   return {
+    tracks: [...tracks].sort((a, b) => b.length - a.length || a.localeCompare(b)),
     localIdToPhaseSets,
     phaseSetSuffixToMode,
     phaseSetSuffixToExecution,
@@ -327,19 +390,48 @@ export function buildPhaseModeIndex(schedulePath: string): PhaseModeIndex {
     phaseSetSuffixToCapabilities,
     phaseSetSuffixToProficiency,
     phaseSetSuffixToAgentPipeline,
+    phaseSetSuffixToAgent,
     localIdSuffixToExecution,
     localIdSuffixToMode,
     localIdSuffixToApproach,
     localIdSuffixToCapabilities,
     localIdSuffixToProficiency,
+    localIdSuffixToAgent,
     taskIdToMode,
     taskIdToExecution,
     taskIdToApproach,
     taskIdToCapabilities,
     taskIdToProficiency,
     taskIdToAgentPipeline,
+    taskIdToAgent,
     defaultMode,
   };
+}
+
+/** Resolves optional executor/reporter nicknames pinned on a phase or pass. */
+export function resolveAgentAssignment(
+  localId: string | undefined,
+  taskId: string,
+  index: PhaseModeIndex,
+  phaseSuffix?: string,
+  phaseSet?: string,
+): AgentAssignment | undefined {
+  const taskAgent = index.taskIdToAgent.get(taskId);
+  if (taskAgent !== undefined) return taskAgent;
+  if (!localId) return undefined;
+  const track = taskTrack(taskId, index);
+  if (!track) return undefined;
+  const suffix = phaseSuffix ?? extractPhaseSuffix(taskId);
+  if (!suffix) return undefined;
+  const overridden = index.localIdSuffixToAgent.get(localKey(track, localId, suffix));
+  if (overridden !== undefined) return overridden;
+  const phaseSets = phaseSet ? [phaseSet] : index.localIdToPhaseSets.get(localKey(track, localId));
+  if (!phaseSets) return undefined;
+  for (const name of phaseSets) {
+    const agent = index.phaseSetSuffixToAgent.get(phaseKey(track, name, suffix));
+    if (agent !== undefined) return agent;
+  }
+  return undefined;
 }
 
 /** Resolves the optional executor/reporter pipeline declared on a phase. */
@@ -353,12 +445,14 @@ export function resolveAgentPipeline(
   // Cross-deliverable-pass tasks (target_local_ids, no single local_id) declare
   // agent_pipeline directly on the pass, indexed by the generated task ID.
   if (!localId) return index.taskIdToAgentPipeline.get(taskId);
+  const track = taskTrack(taskId, index);
+  if (!track) return undefined;
   const suffix = phaseSuffix ?? extractPhaseSuffix(taskId);
   if (!suffix) return undefined;
-  const phaseSets = phaseSet ? [phaseSet] : index.localIdToPhaseSets.get(localId);
+  const phaseSets = phaseSet ? [phaseSet] : index.localIdToPhaseSets.get(localKey(track, localId));
   if (!phaseSets) return undefined;
   for (const name of phaseSets) {
-    const pipeline = index.phaseSetSuffixToAgentPipeline.get(`${name}:${suffix}`);
+    const pipeline = index.phaseSetSuffixToAgentPipeline.get(phaseKey(track, name, suffix));
     if (pipeline !== undefined) return pipeline;
   }
   return undefined;
@@ -415,16 +509,18 @@ export function resolveApproach(
   const taskApproach = index.taskIdToApproach.get(taskId);
   if (taskApproach !== undefined) return taskApproach;
   if (!localId) return undefined;
+  const track = taskTrack(taskId, index);
+  if (!track) return undefined;
   const suffix = phaseSuffix ?? extractPhaseSuffix(taskId);
   if (!suffix) return undefined;
 
-  const overridden = index.localIdSuffixToApproach.get(`${localId}:${suffix}`);
+  const overridden = index.localIdSuffixToApproach.get(localKey(track, localId, suffix));
   if (overridden !== undefined) return overridden;
 
-  const phaseSets = phaseSet ? [phaseSet] : index.localIdToPhaseSets.get(localId);
+  const phaseSets = phaseSet ? [phaseSet] : index.localIdToPhaseSets.get(localKey(track, localId));
   if (phaseSets) {
     for (const phaseSet of phaseSets) {
-      const approach = index.phaseSetSuffixToApproach.get(`${phaseSet}:${suffix}`);
+      const approach = index.phaseSetSuffixToApproach.get(phaseKey(track, phaseSet, suffix));
       if (approach !== undefined) return approach;
     }
   }
@@ -448,17 +544,21 @@ export function resolveTaskMode(
   const taskMode = index.taskIdToMode.get(taskId);
   if (taskMode !== undefined) return taskMode;
   if (localId) {
+    const track = taskTrack(taskId, index);
+    if (!track) return index.defaultMode;
     const suffix = phaseSuffix ?? extractPhaseSuffix(taskId);
     if (suffix) {
-      const overridden = index.localIdSuffixToMode.get(`${localId}:${suffix}`);
+      const overridden = index.localIdSuffixToMode.get(localKey(track, localId, suffix));
       if (overridden !== undefined) return overridden;
     }
 
-    const phaseSets = phaseSet ? [phaseSet] : index.localIdToPhaseSets.get(localId);
+    const phaseSets = phaseSet
+      ? [phaseSet]
+      : index.localIdToPhaseSets.get(localKey(track, localId));
     if (phaseSets) {
       if (suffix) {
         for (const phaseSet of phaseSets) {
-          const mode = index.phaseSetSuffixToMode.get(`${phaseSet}:${suffix}`);
+          const mode = index.phaseSetSuffixToMode.get(phaseKey(track, phaseSet, suffix));
           if (mode !== undefined) return mode;
         }
       }
@@ -484,16 +584,20 @@ export function resolveTaskCapabilities(
   const taskCapabilities = index.taskIdToCapabilities.get(taskId);
   if (taskCapabilities !== undefined) return taskCapabilities;
   if (!localId) return [];
+  const track = taskTrack(taskId, index);
+  if (!track) return [];
   const suffix = phaseSuffix ?? extractPhaseSuffix(taskId);
   if (!suffix) return [];
 
-  const overridden = index.localIdSuffixToCapabilities.get(`${localId}:${suffix}`);
+  const overridden = index.localIdSuffixToCapabilities.get(localKey(track, localId, suffix));
   if (overridden !== undefined) return overridden;
 
-  const phaseSets = phaseSet ? [phaseSet] : index.localIdToPhaseSets.get(localId);
+  const phaseSets = phaseSet ? [phaseSet] : index.localIdToPhaseSets.get(localKey(track, localId));
   if (phaseSets) {
     for (const phaseSet of phaseSets) {
-      const capabilities = index.phaseSetSuffixToCapabilities.get(`${phaseSet}:${suffix}`);
+      const capabilities = index.phaseSetSuffixToCapabilities.get(
+        phaseKey(track, phaseSet, suffix),
+      );
       if (capabilities !== undefined) return capabilities;
     }
   }
@@ -517,16 +621,18 @@ export function resolveTaskProficiency(
   const taskProficiency = index.taskIdToProficiency.get(taskId);
   if (taskProficiency !== undefined) return taskProficiency;
   if (!localId) return undefined;
+  const track = taskTrack(taskId, index);
+  if (!track) return undefined;
   const suffix = phaseSuffix ?? extractPhaseSuffix(taskId);
   if (!suffix) return undefined;
 
-  const overridden = index.localIdSuffixToProficiency.get(`${localId}:${suffix}`);
+  const overridden = index.localIdSuffixToProficiency.get(localKey(track, localId, suffix));
   if (overridden !== undefined) return overridden;
 
-  const phaseSets = phaseSet ? [phaseSet] : index.localIdToPhaseSets.get(localId);
+  const phaseSets = phaseSet ? [phaseSet] : index.localIdToPhaseSets.get(localKey(track, localId));
   if (phaseSets) {
     for (const phaseSet of phaseSets) {
-      const proficiency = index.phaseSetSuffixToProficiency.get(`${phaseSet}:${suffix}`);
+      const proficiency = index.phaseSetSuffixToProficiency.get(phaseKey(track, phaseSet, suffix));
       if (proficiency !== undefined) return proficiency;
     }
   }
@@ -549,22 +655,26 @@ export function resolveTaskExecution(
   if (taskExecution !== undefined) return taskExecution;
   const suffix = phaseSuffix ?? extractPhaseSuffix(taskId);
   if (!suffix) return "agent";
+  const track = taskTrack(taskId, index);
+  if (!track) return "agent";
 
   if (localId) {
-    const overridden = index.localIdSuffixToExecution.get(`${localId}:${suffix}`);
+    const overridden = index.localIdSuffixToExecution.get(localKey(track, localId, suffix));
     if (overridden !== undefined) return overridden;
   }
 
   // First try phaseSet-specific lookup (works when owner_rule has explicit phase_set(s))
   if (localId) {
-    const phaseSets = phaseSet ? [phaseSet] : index.localIdToPhaseSets.get(localId);
+    const phaseSets = phaseSet
+      ? [phaseSet]
+      : index.localIdToPhaseSets.get(localKey(track, localId));
     if (phaseSets) {
       for (const phaseSet of phaseSets) {
-        const execution = index.phaseSetSuffixToExecution.get(`${phaseSet}:${suffix}`);
+        const execution = index.phaseSetSuffixToExecution.get(phaseKey(track, phaseSet, suffix));
         if (execution !== undefined) return execution;
       }
     }
   }
   // Fallback: global suffix map (covers default_phase_sets case)
-  return index.suffixToExecution.get(suffix) ?? "agent";
+  return index.suffixToExecution.get(`${track}:${suffix}`) ?? "agent";
 }

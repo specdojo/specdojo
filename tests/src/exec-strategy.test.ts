@@ -4,6 +4,7 @@ import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
   buildPhaseModeIndex,
+  resolveAgentAssignment,
   resolveAgentPipeline,
   resolveApproach,
   resolveOwnerForLocalId,
@@ -178,6 +179,100 @@ describe("agent pipeline metadata", () => {
           { stage_role: "reporter", proficiency: "normal" },
         ],
       });
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("resolves a phase assignment and a per-deliverable override without dropping proficiency", () => {
+    const dir = mkdtempSync(join(tmpdir(), "specdojo-strategy-agent-"));
+    try {
+      writeFileSync(
+        join(dir, "sch-strategy-launch.yaml"),
+        [
+          "kind: strategy",
+          "track: launch",
+          "phase_sets:",
+          "  review-pass:",
+          "    - id: review",
+          "      task_suffix: '090'",
+          "      proficiency: expert",
+          "      agent:",
+          "        executor: codex-expert-review-executor",
+          "        reporter: gemma-reporter",
+          "owner_rules:",
+          "  - local_ids: [doc]",
+          "    owner: ARC",
+          "    phase_set: review-pass",
+          "  - local_ids: [special]",
+          "    owner: ARC",
+          "    phase_set: review-pass",
+          "    phase_overrides:",
+          "      - phase: review",
+          "        agent:",
+          "          executor: claude-expert-review-executor",
+          "",
+        ].join("\n"),
+        "utf8",
+      );
+
+      const index = buildPhaseModeIndex(dir);
+      expect(resolveTaskProficiency("doc", "T-LAUNCH-doc-090", index, "090", "review-pass")).toBe(
+        "expert",
+      );
+      expect(
+        resolveAgentAssignment("doc", "T-LAUNCH-doc-090", index, "090", "review-pass"),
+      ).toEqual({
+        executor: "codex-expert-review-executor",
+        reporter: "gemma-reporter",
+      });
+      expect(
+        resolveAgentAssignment("special", "T-LAUNCH-special-090", index, "090", "review-pass"),
+      ).toEqual({ executor: "claude-expert-review-executor" });
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("keeps same-named phase sets isolated by track", () => {
+    const dir = mkdtempSync(join(tmpdir(), "specdojo-strategy-track-scope-"));
+    try {
+      for (const [track, localId, proficiency, executor] of [
+        ["alpha", "alpha-doc", "expert", "alpha-executor"],
+        ["beta", "beta-doc", "normal", "beta-executor"],
+      ] as const) {
+        writeFileSync(
+          join(dir, `sch-strategy-${track}.yaml`),
+          [
+            "kind: strategy",
+            `track: ${track}`,
+            "phase_sets:",
+            "  review-pass:",
+            "    - id: review",
+            "      task_suffix: '090'",
+            `      proficiency: ${proficiency}`,
+            "      agent:",
+            `        executor: ${executor}`,
+            "owner_rules:",
+            `  - local_ids: [${localId}]`,
+            "    owner: ARC",
+            "    phase_set: review-pass",
+            "",
+          ].join("\n"),
+          "utf8",
+        );
+      }
+
+      const index = buildPhaseModeIndex(dir);
+      expect(
+        resolveTaskProficiency("alpha-doc", "T-ALPHA-alpha-doc-090", index, "090", "review-pass"),
+      ).toBe("expert");
+      expect(
+        resolveAgentAssignment("alpha-doc", "T-ALPHA-alpha-doc-090", index, "090", "review-pass"),
+      ).toEqual({ executor: "alpha-executor" });
+      expect(
+        resolveAgentAssignment("beta-doc", "T-BETA-beta-doc-090", index, "090", "review-pass"),
+      ).toEqual({ executor: "beta-executor" });
     } finally {
       rmSync(dir, { recursive: true, force: true });
     }

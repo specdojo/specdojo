@@ -7,6 +7,7 @@ import { buildInitialStateFromStrategy } from "../../src/exec-schedule-initial.j
 import { buildScheduleIndex } from "../../src/exec-schedule-index.js";
 import { buildScheduleTrack } from "../../src/schedule-build.js";
 import { createScheduleTrackDocument } from "../../src/schedule.js";
+import type { MemberRoster } from "../../src/specdojo-config.js";
 
 function writeCatalog(dir: string): void {
   writeFileSync(
@@ -48,6 +49,101 @@ function writeTrack(dir: string, tasks: unknown[], track = "test"): void {
     "utf8",
   );
 }
+
+const pipelineRoster: MemberRoster = {
+  version: 1,
+  project_id: "prj-test",
+  members: [
+    {
+      nickname: "pinned-executor",
+      display_name: "Pinned Executor",
+      email: null,
+      roles: [],
+      type: "agent",
+      stage_role: "executor",
+    },
+    {
+      nickname: "pinned-reporter",
+      display_name: "Pinned Reporter",
+      email: null,
+      roles: [],
+      type: "agent",
+      stage_role: "reporter",
+    },
+  ],
+};
+
+describe("buildScheduleTrack agent assignments", () => {
+  function writeAgentStrategy(dir: string, executor = "pinned-executor"): string {
+    writeCatalog(dir);
+    const strategyPath = join(dir, "sch-strategy-test.yaml");
+    writeFileSync(
+      strategyPath,
+      yaml.dump({
+        kind: "strategy",
+        id: "prj-test:sch-strategy-test",
+        type: "project",
+        status: "draft",
+        track: "test",
+        scope: {
+          catalogs: [{ id: "prj-test:catalog", path: "/catalog.yaml" }],
+          include_kinds: ["work"],
+        },
+        phase_sets: {
+          review: [
+            {
+              id: "review",
+              name: "Review",
+              task_suffix: "090",
+              duration_days: 1,
+              agent: { executor, reporter: "pinned-reporter" },
+            },
+          ],
+        },
+        default_phase_sets: ["review"],
+        owner_rules: [{ local_ids: ["doc"], owner: "ARC" }],
+      }),
+      "utf8",
+    );
+    return strategyPath;
+  }
+
+  it("validates stage roles and carries by-name assignments into generated tracks", () => {
+    const dir = mkdtempSync(join(tmpdir(), "specdojo-schedule-agent-"));
+    try {
+      const result = buildScheduleTrack(writeAgentStrategy(dir), dir, pipelineRoster);
+
+      expect(result.errors).toEqual([]);
+      expect(result.tasks[0].agent).toEqual({
+        executor: "pinned-executor",
+        reporter: "pinned-reporter",
+      });
+      writeTrack(dir, result.tasks);
+      expect(buildScheduleIndex(dir).nodes.get("T-TEST-doc-090")?.agent).toEqual(
+        result.tasks[0].agent,
+      );
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("rejects unknown nicknames and stage-role mismatches", () => {
+    const dir = mkdtempSync(join(tmpdir(), "specdojo-schedule-agent-invalid-"));
+    try {
+      const unknown = buildScheduleTrack(writeAgentStrategy(dir, "missing"), dir, pipelineRoster);
+      expect(unknown.errors.join("\n")).toContain("nickname 'missing'");
+
+      const wrongRole = buildScheduleTrack(
+        writeAgentStrategy(dir, "pinned-reporter"),
+        dir,
+        pipelineRoster,
+      );
+      expect(wrongRole.errors.join("\n")).toContain("must have stage_role: executor");
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+});
 
 function writeScopedStrategy(
   dir: string,

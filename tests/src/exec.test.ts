@@ -77,6 +77,7 @@ describe("exec strategy metadata resolution", () => {
       writeFileSync(
         join(dir, "sch-strategy-test.yaml"),
         [
+          "track: launch",
           "phase_sets:",
           "  reference-pass:",
           "    - id: improve",
@@ -219,6 +220,7 @@ describe("exec strategy metadata resolution", () => {
       writeFileSync(
         join(scheduleDir, "sch-strategy-test.yaml"),
         [
+          "track: launch",
           "phase_sets:",
           "  first-pass:",
           "    - id: draft",

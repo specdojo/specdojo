@@ -71,6 +71,37 @@ describe("sch-strategy.schema.yaml agent_pipeline", () => {
     expect(valid).toBe(true);
   });
 
+  it("accepts by-name agent assignments on phases, overrides, and cross-deliverable passes", () => {
+    const strategy = loadStrategyFixture();
+    firstPhase(strategy).agent = { executor: "codex-executor", reporter: "gemma-reporter" };
+    const ownerRules = strategy.owner_rules as Array<Record<string, unknown>>;
+    ownerRules[0].phase_overrides = [
+      { phase: firstPhase(strategy).id, agent: { executor: "claude-executor" } },
+    ];
+    strategy.cross_deliverable_passes = [
+      {
+        id: "dedup",
+        name: "Deduplicate",
+        task_suffix: "060",
+        duration_days: 1,
+        owner: "ARC",
+        after_gate: "G-TEST",
+        before_phase_set: Object.keys(strategy.phase_sets)[0],
+        scope: { local_ids: ["a", "b"] },
+        agent: { executor: "codex-executor", reporter: "gemma-reporter" },
+      },
+    ];
+
+    expect(validate(strategy), JSON.stringify(validate.errors)).toBe(true);
+  });
+
+  it("rejects malformed agent assignments", () => {
+    const strategy = loadStrategyFixture();
+    firstPhase(strategy).agent = { reporter: "gemma-reporter" };
+
+    expect(validate(strategy)).toBe(false);
+  });
+
   it("rejects reversed pipeline stages", () => {
     const strategy = loadStrategyFixture();
     firstPhase(strategy).agent_pipeline = {

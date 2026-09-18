@@ -66,6 +66,9 @@ tasks:
     depends_on:
       - T-DATA-FLOW-PDCA-cdfd-onboarding-075
     owner: BA
+    agent:
+      executor: codex-expert-review-executor
+      reporter: gemma-reporter
     description: |
       完成版の CDFD を変更せず、rulebook の完成判定、cdfd-overview との対応、DCT の
       evidence_refs が示す現在動作、および done_criteria を照合する。プロセスグループ別 CDFD は
@@ -140,6 +143,9 @@ tasks:
     depends_on:
       - T-DATA-FLOW-PDCA-cdfd-plan-075
     owner: BA
+    agent:
+      executor: codex-expert-review-executor
+      reporter: gemma-reporter
     description: |
       完成版の CDFD を変更せず、rulebook の完成判定、cdfd-overview との対応、DCT の
       evidence_refs が示す現在動作、および done_criteria を照合する。プロセスグループ別 CDFD は
@@ -214,6 +220,9 @@ tasks:
     depends_on:
       - T-DATA-FLOW-PDCA-cdfd-do-075
     owner: BA
+    agent:
+      executor: codex-expert-review-executor
+      reporter: gemma-reporter
     description: |
       完成版の CDFD を変更せず、rulebook の完成判定、cdfd-overview との対応、DCT の
       evidence_refs が示す現在動作、および done_criteria を照合する。プロセスグループ別 CDFD は
@@ -288,6 +297,9 @@ tasks:
     depends_on:
       - T-DATA-FLOW-PDCA-cdfd-check-075
     owner: BA
+    agent:
+      executor: codex-expert-review-executor
+      reporter: gemma-reporter
     description: |
       完成版の CDFD を変更せず、rulebook の完成判定、cdfd-overview との対応、DCT の
       evidence_refs が示す現在動作、および done_criteria を照合する。プロセスグループ別 CDFD は
@@ -362,6 +374,9 @@ tasks:
     depends_on:
       - T-DATA-FLOW-PDCA-cdfd-action-075
     owner: BA
+    agent:
+      executor: codex-expert-review-executor
+      reporter: gemma-reporter
     description: |
       完成版の CDFD を変更せず、rulebook の完成判定、cdfd-overview との対応、DCT の
       evidence_refs が示す現在動作、および done_criteria を照合する。プロセスグループ別 CDFD は
@@ -440,6 +455,9 @@ tasks:
     depends_on:
       - T-DATA-FLOW-PDCA-cdfd-orchestrator-075
     owner: BA
+    agent:
+      executor: codex-expert-review-executor
+      reporter: gemma-reporter
     description: |
       完成版の CDFD を変更せず、rulebook の完成判定、cdfd-overview との対応、DCT の
       evidence_refs が示す現在動作、および done_criteria を照合する。プロセスグループ別 CDFD は
@@ -518,6 +536,9 @@ tasks:
     depends_on:
       - T-DATA-FLOW-PDCA-cdfd-uc-register-075
     owner: BA
+    agent:
+      executor: codex-expert-review-executor
+      reporter: gemma-reporter
     description: |
       完成版の CDFD を変更せず、rulebook の完成判定、cdfd-overview との対応、DCT の
       evidence_refs が示す現在動作、および done_criteria を照合する。プロセスグループ別 CDFD は
@@ -596,6 +617,9 @@ tasks:
     depends_on:
       - T-DATA-FLOW-PDCA-cdfd-uc-deliverable-075
     owner: BA
+    agent:
+      executor: codex-expert-review-executor
+      reporter: gemma-reporter
     description: |
       完成版の CDFD を変更せず、rulebook の完成判定、cdfd-overview との対応、DCT の
       evidence_refs が示す現在動作、および done_criteria を照合する。プロセスグループ別 CDFD は

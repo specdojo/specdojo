@@ -47,17 +47,22 @@ Schedule（`sch-strategy-<track>.yaml`）の phase は `agent_pipeline.stages[].
 
 ## 3. 作業内容
 
-| No  | 作業                                                                                                           | 担当 | 状態 | メモ                                                                                        |
-| --- | -------------------------------------------------------------------------------------------------------------- | ---- | ---- | ------------------------------------------------------------------------------------------- |
-| 1   | schema に `agent` を追加し、`schedule build` で nickname と `stage_role` を検証する                            | DEV  | open | codex-expert-executor / gemma-reporter / worktree                                           |
-| 2   | `exec-strategy` / `exec-run` で解決順序と rate limit 時の待機動作を実装し、テストを追加する                    | DEV  | open | 作業 1 と同一タスク                                                                         |
-| 3   | review-pass の proficiency が ready.json に落ちない原因を特定して修正する                                      | DEV  | open | 同上。`exec-strategy.ts` の `phaseSetSuffixToAgentPipeline` から track 生成までの経路を確認 |
-| 4   | `sch-strategy-data-flow-pdca.yaml` の review-pass を by-name に書き換え、track を再生成して dry-run で確認する | ARC  | open | オーケストレーターが直接対応                                                                |
-| 5   | schedule-design-guide / exec-config-guide に自動選択と by-name の使い分けを記載する                            | DEV  | open | 作業 1 と同一タスク                                                                         |
+| No  | 作業                                                                                                           | 担当 | 状態 | メモ                                                            |
+| --- | -------------------------------------------------------------------------------------------------------------- | ---- | ---- | --------------------------------------------------------------- |
+| 1   | schema に `agent` を追加し、`schedule build` で nickname と `stage_role` を検証する                            | DEV  | done | phase・override・cross-deliverable pass に対応                  |
+| 2   | `exec-strategy` / `exec-run` で解決順序と rate limit 時の待機動作を実装し、テストを追加する                    | DEV  | done | CLI > by-name > 自動選択。by-name は候補を1件に固定             |
+| 3   | review-pass の proficiency が ready.json に落ちない原因を特定して修正する                                      | DEV  | done | strategy index の track 間衝突と Ready 外タスクの復元漏れを修正 |
+| 4   | `sch-strategy-data-flow-pdca.yaml` の review-pass を by-name に書き換え、track を再生成して dry-run で確認する | ARC  | done | codex-expert-review-executor / gemma-reporter を確認            |
+| 5   | schedule-design-guide / exec-config-guide に自動選択と by-name の使い分けを記載する                            | DEV  | done | 解決順序、rate limit、通常固定と緊急差し替えの使い分けを追記    |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- strategy と生成 track に `agent.executor` / `agent.reporter` を保持し、`exec refresh` で Ready タスクへ引き継ぐようにした。`owner_rules[].phase_overrides` と `cross_deliverable_passes` にも対応した。
+- `schedule build` は `pm-members.yaml` の nickname の一意な存在と、executor / reporter の `stage_role` 一致を検証する。
+- 実行時は CLI の `--executor-by` / `--reporter-by`、phase の by-name、自動選択の順に解決する。by-name は実行候補を1件に固定するため、rate limit 時に別 agent へフォールバックせず待機となる。
+- review-pass の事象は、strategy index が同名の phase set / suffix を track で区別せず、後から読んだ別 track の normal 条件で expert 条件を上書きしていたことが主因だった。index のキーを track 修飾し、同名 phase の回帰テストを追加した。あわせて Ready 外（claim 済みなど）の `--task` 実行で `agent_pipeline` を復元していなかった経路も修正し、by-name と stage 条件を保持した。
+- `data-flow-pdca` の review-pass を codex-expert-review-executor / gemma-reporter に固定し、track 再生成後の dry-run で両 agent を確認した。
+- [[specdojo:schedule-design-guide]] と [[specdojo:exec-config-guide]] に自動選択との使い分け、解決順序、rate limit 時の動作を追記した。残課題はない。
 
 ## 5. 関連ドキュメント
 

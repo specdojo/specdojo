@@ -33,6 +33,19 @@ function buildRoster(): MemberRoster {
         proficiency: "expert",
       },
       {
+        nickname: "backup-executor",
+        display_name: "Backup Executor",
+        email: null,
+        roles: [],
+        type: "agent",
+        capabilities: [],
+        priority: 2,
+        command: "run backup-executor",
+        mode: "edit",
+        stage_role: "executor",
+        proficiency: "expert",
+      },
+      {
         nickname: "opencode-edit-agent",
         display_name: "OpenCode Edit",
         email: null,
@@ -177,5 +190,23 @@ describe("resolveInPlaceCommand actor derivation", () => {
         executorBy: "executor",
       } as RunOpts),
     ).toThrow(/require an agent_pipeline task/);
+  });
+
+  it("uses a schedule-pinned executor before auto selection and lets --executor-by override it", () => {
+    const pipelineTask = buildTask({
+      agent: { executor: "executor" },
+      agent_pipeline: {
+        stages: [{ stage_role: "executor" }, { stage_role: "reporter" }],
+      },
+    });
+
+    expect(resolveInPlaceCommand(pipelineTask, buildRoster(), {} as RunOpts).actor).toBe(
+      "executor",
+    );
+    expect(
+      resolveInPlaceCommand(pipelineTask, buildRoster(), {
+        executorBy: "backup-executor",
+      } as RunOpts).actor,
+    ).toBe("backup-executor");
   });
 });
