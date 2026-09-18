@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   owner: ARC
   registered_at: "2026-09-18T13:16:03Z"
   due_on: "2026-09-30"
+  block_reason: "agent exited with non-zero code: runner による検証 `test-unit` が失敗したため。具体的に `tests/src/exec-strategy.test.ts` 内のproficiency を維持したまま phase assignment と per-deliverable override を解決するテストケースで失敗が発生している。"
 ---
 
 # PJR-7WFE Schedule の phase に agent の by-name 指定を追加する
