@@ -42,7 +42,7 @@ export type RoutineDoc = {
     timezone: string;
   };
   policy?: {
-    missed_run?: "latest" | "all";
+    missed_run?: "skip" | "latest" | "all";
     overlap?: "skip";
   };
   action: RoutineActionList;
@@ -203,6 +203,16 @@ export function cronOccurrences(
   const parsedLast = lastScheduledFor ? new Date(lastScheduledFor) : null;
   if (parsedLast && Number.isNaN(parsedLast.getTime())) return cronOccurrences(doc, undefined, now);
 
+  if (doc.policy?.missed_run === "skip") {
+    const lastMinute = parsedLast
+      ? Math.floor(parsedLast.getTime() / 60_000) * 60_000
+      : Number.NEGATIVE_INFINITY;
+    return nowMinute.getTime() > lastMinute &&
+      cronMatches(doc.trigger.cron, doc.trigger.timezone, nowMinute)
+      ? [nowMinute]
+      : [];
+  }
+
   if (!parsedLast) {
     for (let offset = 0; offset <= MAX_CRON_LOOKBACK_MINUTES; offset++) {
       const candidate = new Date(nowMinute.getTime() - offset * 60_000);
@@ -357,12 +367,14 @@ export function parseRoutineDoc(
     else {
       const missed = value.policy.missed_run;
       const overlap = value.policy.overlap;
-      if (missed !== undefined && missed !== "latest" && missed !== "all") {
-        errors.push("policy.missed_run must be latest or all");
+      if (missed !== undefined && missed !== "skip" && missed !== "latest" && missed !== "all") {
+        errors.push("policy.missed_run must be skip, latest, or all");
       }
       if (overlap !== undefined && overlap !== "skip") errors.push("policy.overlap must be skip");
       policy = {
-        ...(missed === "latest" || missed === "all" ? { missed_run: missed } : {}),
+        ...(missed === "skip" || missed === "latest" || missed === "all"
+          ? { missed_run: missed }
+          : {}),
         ...(overlap === "skip" ? { overlap } : {}),
       };
     }

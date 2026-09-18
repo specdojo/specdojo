@@ -75,7 +75,8 @@ if (args[0] === "grade" && args[1] === "state") {
     process.exit(0);
   }
   const stage = Number(value("--stage"));
-  if (status === "complete" || (status === "passed" && stage >= 3)) {
+  const stageTotal = Number(value("--stage-total"));
+  if (status === "complete" || (status === "passed" && stage >= stageTotal)) {
     if (existsSync(statePath)) unlinkSync(statePath);
     process.exit(0);
   }
@@ -83,6 +84,7 @@ if (args[0] === "grade" && args[1] === "state") {
   const state = {
     stage_completed: failed ? Math.min(previous?.stage_completed ?? 0, stage - 1) : stage,
     stage_failed: failed ? stage : null,
+    stage_total: stageTotal,
     consecutive_failures: failed
       ? previous?.stage_failed === stage ? previous.consecutive_failures + 1 : 1
       : 0,
@@ -287,7 +289,7 @@ describe("grade per-document pipeline", () => {
 
     expect(result.status, result.stderr).toBe(0);
     expect(result.stdout).toContain(
-      "kind=all changed_only=true ungraded=true incomplete=false max_stage_failures=3 documents=3",
+      "kind=all changed_only=true ungraded=true incomplete=false max_stage_failures=3 stages=3 documents=3",
     );
     expect(result.stdout).toContain("reference=per-kind");
     expect(result.stdout.match(/fixture-rulebook\.md/g)).toHaveLength(1);
@@ -343,6 +345,59 @@ describe("grade per-document pipeline", () => {
     expect(resumed.status, resumed.stderr).toBe(0);
     expect(resumed.stdout).toContain("resume skip document=");
     expect(readFileSync(fixture.stateFile, "utf8")).toBe("3");
+  });
+
+  it("runs a single codex stage without the conditional later stages", () => {
+    const fixture = makeFixture();
+
+    const result = runPipeline(fixture, {}, ["--stages", "1"]);
+
+    expect(result.status, result.stderr).toBe(0);
+    expect(result.stdout).toContain("stages=1");
+    expect(result.stdout).toContain(
+      "stage=1 executor=codex-expert-executor reporter=gemma-reporter reference=none",
+    );
+    expect(result.stdout).not.toContain("stage=2 executor=");
+    expect(result.stdout).not.toContain("stage=3 executor=");
+    expect(readFileSync(fixture.stateFile, "utf8")).toBe("1");
+
+    const results = readFileSync(
+      join(fixture.root, "logs/grade/runs/per-document/fixture-run/results.tsv"),
+      "utf8",
+    );
+    expect(results).toContain("\t1\tpassed\t");
+    expect(results).not.toContain("\t2\t");
+    expect(results).not.toContain("\t3\t");
+    expect(readFileSync(fixture.argsFile, "utf8")).toContain("agent run --project prj-0001");
+    expect(readFileSync(fixture.argsFile, "utf8")).toContain("--by codex-expert-executor");
+  });
+
+  it("treats a current three-stage state as complete when switching to one stage", () => {
+    const fixture = makeFixture();
+    writeFileSync(
+      fixture.pipelineStateFile,
+      JSON.stringify({
+        stage_completed: 2,
+        stage_failed: 3,
+        stage_total: 3,
+        consecutive_failures: 1,
+        max_failures: 3,
+        document: "docs/ja/specdojo/rulebooks/fixture-rulebook.md",
+      }),
+    );
+
+    const result = runPipeline(fixture, {}, ["--stages", "1"]);
+
+    expect(result.status, result.stderr).toBe(0);
+    expect(result.stdout).toContain("migrated_stage_total=3");
+    expect(existsSync(fixture.stateFile)).toBe(false);
+    expect(existsSync(fixture.pipelineStateFile)).toBe(false);
+    expect(
+      readFileSync(
+        join(fixture.root, "logs/grade/runs/per-document/fixture-run/results.tsv"),
+        "utf8",
+      ),
+    ).toContain("\t1\tresumed_completed\t");
   });
 
   it("routes deliverables through deliverable grade plans and apply", () => {

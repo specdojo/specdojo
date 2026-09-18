@@ -13,7 +13,7 @@ Routine Operation Guide
 
 routineは、既存の未完了Schedule/Register項目を探索するほか、再利用可能なJob Definitionから期間・revisionごとのJob Runを生成できます。週報や変更文書の翻訳は[Job実行設計](../../product/040-system-design/sysd-job-execution.md)を参照してください。
 
-継続品質評価は `job-grade-kata` や `job-grade-deliverable` の Job Definition から `action.kind: job` の routine で定期起動します。文書の選択、段の順序、各文書の executor / reporter 実行、`grade apply --path --analysis-from` の逐次処理は `tools/grade/run-per-document.sh` が持ちます。Job runnerは`task.command`からその入口を直接起動してevidenceを記録し、成功後の結果判断だけを`task.analysis`のreporter agentへ委譲します。責務の切り分け基準は [Job定義標準](../standards/job-definition-standard.md) を参照します。
+継続品質評価は `job-grade-kata` や `job-grade-deliverable` の Job Definition から `action.kind: job` の routine で定期起動します。文書の選択、各文書の executor / reporter 実行、`grade apply --path --analysis-from` の逐次処理は `tools/grade/run-per-document.sh` が持ちます。定期 Job は `--stages 1` で codex 単段を選びます。Job runnerは`task.command`からその入口を直接起動してevidenceを記録し、成功後の結果判断だけを`task.analysis`のreporter agentへ委譲します。責務の切り分け基準は [Job定義標準](../standards/job-definition-standard.md) を参照します。
 
 **対象読者**
 
@@ -89,25 +89,23 @@ action:
 }
 ```
 
-### 1.2. grade の段階評価
+### 1.2. grade の単段評価
 
-Kata の定期評価は、ローカル評価を2回行った後、見落としの疑いが強い文書だけを expert で再確認します。この3段は文書ごとに通しで実行し、`rtn-grade-kata` は単一の `job-grade-kata` を起動するだけです。段の順序と対象の繰り返しは `tools/grade/run-per-document.sh` が持ちます。変更済み・未評価・段未完了を横断的に再評価する `rtn-grade-recheck` も同じ Job を使い、`kind: all`、`changed_only: true`、`ungraded: true`、`incomplete: true`、`limit: 10` を入力します。
+Kata と成果物の定期評価は、`codex-expert-executor` と `gemma-reporter` の単段で実行します。`job-grade-kata` と `job-grade-deliverable` は `tools/grade/run-per-document.sh --stages 1` を起動し、条件付きの後続段は持ちません。変更済み・未評価・段未完了を横断的に再評価する `rtn-grade-recheck` は `kind: all`、`changed_only: true`、`ungraded: true`、`incomplete: true`、`limit: 15` を入力します。
 
-成果物は `rtn-grade-deliverable-recheck` が `job-grade-deliverable` を起動します。Job は同じ script を `--target deliverable` で実行し、成果物カタログから変更済み・未評価・段未完了の Markdown 成果物だけを選びます。評価結果は成果物の最新 grade と成果物ごとの done_criteria 詳細へ上書きされるため、実行ごとの review result は増やしません。
+成果物は `rtn-grade-deliverable-recheck` が `job-grade-deliverable` を起動します。Job は同じ script を `--stages 1 --target deliverable` で実行し、成果物カタログから変更済み・未評価・段未完了の Markdown 成果物だけを最大10件選びます。評価結果は成果物の最新 grade と成果物ごとの `done_criteria` 詳細へ上書きされるため、実行ごとの review result は増やしません。
 
-`rtn-grade-recheck` と `rtn-grade-deliverable-recheck` では、Job の `task.precondition` が `grade list` を使って script の selection-v3 と同じ変更済み・未評価・再試行可能な段未完了の和集合、辞書順、対象種別、件数上限を先に評価します。連続失敗上限に達した文書は `grade state --exhausted` で同じ和集合に加えてから件数上限を適用し、処理対象からは外して report-only 対象にします。処理対象も report-only 対象も 0 件なら Job Run、plan、result、evidence を作らず、command と analysis reporter も起動しません。routine はこの結果を `skipped` として受け取り、`routine-state.json` の `last_run` / `last_result` と、cron の場合は `last_scheduled_for` を更新します。
+`rtn-grade-deliverable-recheck` は毎日0時、`rtn-grade-recheck` は毎日2時に実行し、いずれも `missed_run: skip` とします。devcontainer の cron は0時・2時・5時に `routine run --due` を呼び、5時は dashboard 更新など同じ due runner を使う別 routine の起動機会です。コンテナ停止中の実行枠を日中へ持ち越さず、対話的な register 実行との競合を避けます。
 
-| 段  | executor / reporter                        | 対象と役割                                                  |
-| --- | ------------------------------------------ | ----------------------------------------------------------- |
-| 1   | `gemma-expert-executor` / `gemma-reporter` | 比較リファレンスありで評価し、具体的な不足を検出する        |
-| 2   | `gemma-expert-executor` / `gemma-reporter` | 同じ文書をリファレンスなしで再評価し、1段目の失敗を補完する |
-| 3   | `codex-expert-executor` / `gemma-reporter` | 2段目が高信頼 pass の文書だけを再確認し、見落としを検出する |
+両 routine では、Job の `task.precondition` が `grade list` を使って script の selection-v4 と同じ変更済み・未評価・再試行可能な段未完了の和集合、辞書順、対象種別、件数上限を先に評価します。連続失敗上限に達した文書は `grade state --exhausted` で同じ和集合に加えてから件数上限を適用し、処理対象からは外して report-only 対象にします。処理対象も report-only 対象も0件なら Job Run、plan、result、evidence を作らず、command と analysis reporter も起動しません。routine はこの結果を `skipped` として受け取り、`routine-state.json` の `last_run` / `last_result` と、cron の場合は `last_scheduled_for` を更新します。
 
-3段目の高信頼 pass は、2段目の保存結果に対して `--verdict pass --min-score 96 --max-findings 1` を AND 適用した集合です。96点は、ローカルが `dec-rulebook.md` を finding 1件で pass とした一方、expert が12件を検出した実測上の偽陰性境界です。9件のサンプル評価でも pass の score は91、96、100に分かれ、96点以上かつ finding 1件以下を「問題がない」だけでなく「検出できていない」可能性がある層として扱います。score 96でも `needs-work` なら修正対象が既に確定しているため、verdict 条件で除外します。
+| 段  | executor / reporter                        | 対象と役割                                 |
+| --- | ------------------------------------------ | ------------------------------------------ |
+| 1   | `codex-expert-executor` / `gemma-reporter` | 対象文書をリファレンスなしで評価し確定する |
 
-Job runnerは、この入口をmaterialize済みの引数で1回起動し、コマンド、終了コード、stdout/stderrをevidenceへ記録します。コマンドが成功した場合だけanalysis reporterが、未完了の段、失敗の切り分け、3段目がスキップされた理由、閾値の見直し要否を判断します。段ごとのagent、リファレンス、対象種別、件数上限はscriptの引数であり、Jobの`inputs`から解決します。
+Job runnerは、この入口をmaterialize済みの引数で1回起動し、コマンド、終了コード、stdout/stderrをevidenceへ記録します。コマンドが成功した場合だけanalysis reporterが、未完了の段、失敗の切り分け、verdict と score の偏りを判断します。executor、reporter、対象種別、件数上限はscriptの引数またはJobの`inputs`から解決します。
 
-各段は直前の `grade apply` 後の文書を入力にします。未解消 finding は次の plan へ引き継がれ、後段の agent が severity を下げて提出しても `grade apply` が前回値を維持します。scriptの`--run-id`にはJob Run IDを渡すため、rate limitや中断後に同じJob Runをretryすると完了済みの段を飛ばして再開します。通常の agent / apply 失敗は `<execution_path>/grade/pipeline/` に完了段、失敗段、本文ハッシュ、連続失敗回数を保存します。次の日次実行枠でも本文ハッシュが同じなら失敗段から再開し、成功済みの段は実行しません。本文が変われば古い到達状況を使わず1段目から評価します。rate limit は失敗回数に数えません。既定で同じ段が3回連続失敗すると再試行から外し、結果の `retry_exhausted` 行で人手対応を報告します。`period`は対象期間の表示だけに使い、実行や再開の同一性には使いません。expert 再確認の閾値は固定の永続値ではなく、対象率と偽陰性を定期レビューし、変更時は Job、routine、本節、根拠となる登録項目を同時に更新します。
+scriptの`--run-id`にはJob Run IDを渡すため、rate limitや中断後に同じJob Runをretryすると完了済みの処理を飛ばして再開します。通常の agent / apply 失敗は `<execution_path>/grade/pipeline/` に完了段、失敗段、本文ハッシュ、連続失敗回数を保存します。次の日次実行枠でも本文ハッシュが同じなら失敗段から再開し、本文が変われば古い到達状況を使わず1段目から評価します。3段構成から単段へ切り替えた時点で、現在本文に対して有効な `stage_total: 3` の state が残っている場合は、既存評価を完了済みとみなして state を削除します。rate limit は失敗回数に数えません。既定で同じ段が3回連続失敗すると再試行から外し、結果の `retry_exhausted` 行で人手対応を報告します。`period`は対象期間の表示だけに使い、実行や再開の同一性には使いません。
 
 ## 2. due判定と実行
 
@@ -213,7 +211,7 @@ routine 自体は実行機構を持たないトリガー層です。何を実行
 | 新しい実行単位の反復 | 毎週分の週報を作る                      | `kind: job`で期間ごとのRunを生成する |
 | checkpoint差分の反復 | 前回成功後に更新された文書を翻訳する    | Jobのcheckpointを使用する            |
 
-`interval: 1w`は前回実行から7日が経過したかを判定します。「毎週金曜日17時」のような暦上の予定は`trigger.cron`と`trigger.timezone`で定義します。取りこぼした実行枠は`policy.missed_run: latest|all`、実行中の重複起動は`policy.overlap: skip`で扱います。
+`interval: 1w`は前回実行から7日が経過したかを判定します。「毎週金曜日17時」のような暦上の予定は`trigger.cron`と`trigger.timezone`で定義します。取りこぼした実行枠は`policy.missed_run: skip|latest|all`で扱います。`skip`は現在の分が cron に一致するときだけ実行し、停止中の枠を再実行しません。実行中の重複起動は`policy.overlap: skip`で扱います。
 
 ### 3.2. 順次実行（exec-cycle）
 

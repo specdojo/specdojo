@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=../../../../specdojo/schemas/v1/job.schema.yaml
 id: job-grade-deliverable
 name: 成果物の継続品質評価
-description: 成果物を文書単位の3段評価へ流し、最新の品質と done_criteria 充足状況を更新する。
+description: 成果物を文書単位の codex 単段評価へ流し、最新の品質と done_criteria 充足状況を更新する。
 inputs:
   period:
     type: string
@@ -50,7 +50,7 @@ task:
     skip_when: empty-output
   command: |
     npm run build
-    tools/grade/run-per-document.sh --run-id {{job_run_id}} --target deliverable --limit {{inputs.limit}} --changed-only={{inputs.changed_only}} --ungraded={{inputs.ungraded}} --incomplete={{inputs.incomplete}}
+    tools/grade/run-per-document.sh --run-id {{job_run_id}} --stages 1 --target deliverable --limit {{inputs.limit}} --changed-only={{inputs.changed_only}} --ungraded={{inputs.ungraded}} --incomplete={{inputs.incomplete}}
     cat logs/grade/runs/per-document/{{job_run_id}}/results.tsv
   analysis:
     agent: gemma-reporter
@@ -64,7 +64,7 @@ task:
         done_criteria の過不足のいずれかへ切り分ける。
       - `retry_exhausted` の成果物があるか。ある場合は失敗段と連続失敗回数を示し、人手での
         原因解消または state の再開判断を促す。
-      - 3段目が実行されなかった成果物について、閾値未満と2段目の失敗のどちらが理由か。
+      - codex 単段の verdict と score に、評価設定の見直しを要する偏りがあるか。
       - 未充足の done_criteria がある成果物と、その確認担当ロールを特定する。
 
       選択された成果物が0件の場合は no-op と判断する。判断できない事象は推測で埋めず、
@@ -72,4 +72,4 @@ task:
   paths:
     - docs/ja/projects/prj-0001
 run:
-  idempotency_key: "{{job_id}}:command-v3:{{scheduled_at}}:{{inputs.limit}}:{{inputs.changed_only}}:{{inputs.ungraded}}:{{inputs.incomplete}}"
+  idempotency_key: "{{job_id}}:command-v4:{{scheduled_at}}:{{inputs.limit}}:{{inputs.changed_only}}:{{inputs.ungraded}}:{{inputs.incomplete}}"

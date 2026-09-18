@@ -1,20 +1,20 @@
 # yaml-language-server: $schema=../../../../specdojo/schemas/v1/routine.schema.yaml
 id: rtn-grade-deliverable-recheck
 name: 変更済み・未評価・段未完了成果物の定期再評価
-description: 毎日6時（Asia/Tokyo）に、変更済み、未評価、または段未完了の成果物を最大5件再評価する。
+description: 毎日0時（Asia/Tokyo）に、変更済み、未評価、または段未完了の成果物を最大10件再評価する。
 enabled: true
 trigger:
-  cron: "0 6 * * *"
+  cron: "0 0 * * *"
   timezone: Asia/Tokyo
 action:
   kind: job
   job: job-grade-deliverable
   inputs:
     period: "{{scheduled_at | iso_week}}"
-    limit: "5"
+    limit: "10"
     changed_only: "true"
     ungraded: "true"
     incomplete: "true"
 policy:
-  missed_run: latest
+  missed_run: skip
   overlap: skip

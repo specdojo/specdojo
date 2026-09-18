@@ -6,7 +6,7 @@ usage() {
   cat <<'USAGE'
 Usage: tools/grade/run-per-document.sh --run-id <id> [options]
 
-Run the three-stage grade pipeline to completion for one document before moving
+Run the configured grade pipeline to completion for one document before moving
 to the next document. Completed stages are persisted below --work-dir so the
 same command resumes after an interruption. Incomplete pipelines are also
 persisted below the project execution path so a later Job Run can retry them.
@@ -21,11 +21,13 @@ Options:
   --changed-only[=true|false]   Select documents changed since the latest grade
   --ungraded[=true|false]       Select documents without a stored grade
   --incomplete[=true|false]     Select retryable incomplete pipelines
+  --stages <1|3>                Number of stages to run (default: 3)
   --max-stage-failures <count>  Stop retrying a stage after this many failures
                                 (default: 3)
   --limit <count>               Process at most this many selected documents
   --work-dir <directory>        State and result directory
-  --stage-1-executor <nickname> (default: gemma-expert-executor)
+  --stage-1-executor <nickname> (default: gemma-expert-executor for 3 stages,
+                                codex-expert-executor for 1 stage)
   --stage-1-reporter <nickname> (default: gemma-reporter)
   --stage-1-reference <path>    Comparison document. Kata defaults to the
                                 same-kind prj-overview; deliverable defaults to none
@@ -69,11 +71,13 @@ changed_only=false
 ungraded=false
 incomplete=false
 max_stage_failures=3
+stages=3
 declare -a selected_paths=()
 declare -a requested_paths=()
 declare -a exhausted_paths=()
 
 stage_1_executor=gemma-expert-executor
+stage_1_executor_explicit=false
 stage_1_reporter=gemma-reporter
 stage_1_reference=
 stage_1_reference_explicit=false
@@ -140,6 +144,11 @@ while [[ $# -gt 0 ]]; do
       max_stage_failures=$2
       shift 2
       ;;
+    --stages)
+      require_value "$@"
+      stages=$2
+      shift 2
+      ;;
     --limit)
       require_value "$@"
       limit=$2
@@ -153,6 +162,7 @@ while [[ $# -gt 0 ]]; do
     --stage-1-executor)
       require_value "$@"
       stage_1_executor=$2
+      stage_1_executor_explicit=true
       shift 2
       ;;
     --stage-1-reporter)
@@ -223,10 +233,15 @@ done
   fail "--changed-only must be true or false"
 [[ "$ungraded" == true || "$ungraded" == false ]] || fail "--ungraded must be true or false"
 [[ "$incomplete" == true || "$incomplete" == false ]] || fail "--incomplete must be true or false"
+[[ "$stages" == 1 || "$stages" == 3 ]] || fail "--stages must be 1 or 3"
 [[ "$max_stage_failures" =~ ^[1-9][0-9]*$ ]] ||
   fail "--max-stage-failures must be a positive integer"
 [[ "$target" == kata || "$target" == deliverable ]] ||
   fail "--target must be kata or deliverable"
+
+if [[ "$stages" == 1 ]] && ! $stage_1_executor_explicit; then
+  stage_1_executor=codex-expert-executor
+fi
 
 declare -a target_roots=()
 if [[ "$target" == kata ]]; then
@@ -248,7 +263,9 @@ if [[ "$target" == kata ]]; then
   if [[ "$kind" != all ]]; then
     stage_1_reference_root=${target_roots[0]}
   fi
-  if ! $stage_1_reference_explicit; then
+  if [[ "$stages" == 1 ]] && ! $stage_1_reference_explicit; then
+    stage_1_reference=none
+  elif ! $stage_1_reference_explicit; then
     if [[ "$kind" == all ]]; then
       stage_1_reference=per-kind
     else
@@ -441,10 +458,10 @@ requested_signature=$(printf '%s\n' "${requested_paths[@]}" | node -e \
   'const c=require("node:crypto");let s="";process.stdin.on("data",d=>s+=d).on("end",()=>process.stdout.write(c.createHash("sha256").update(s).digest("hex")))')
 expected_config=$(printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
   "$project" "$target" "$kind" "$limit" "$changed_only" "$ungraded" "$incomplete" \
-  "$max_stage_failures" "$requested_signature" \
+  "$max_stage_failures" "$stages:$requested_signature" \
   "$stage_1_executor" "$stage_1_reporter" "$stage_1_reference" \
   "$stage_2_executor:$stage_2_reporter:$stage_2_reference" \
-  "$stage_3_executor:$stage_3_reporter:$stage_3_reference" "selection-v3" "pipeline-v3")
+  "$stage_3_executor:$stage_3_reporter:$stage_3_reference" "selection-v4" "pipeline-v4")
 config_file="$work_dir/config.tsv"
 selection_file="$work_dir/selection.txt"
 results_file="$work_dir/results.tsv"
@@ -474,16 +491,18 @@ else
 fi
 
 print_configuration() {
-  printf 'run_id=%s project=%s target=%s kind=%s changed_only=%s ungraded=%s incomplete=%s max_stage_failures=%s documents=%s exhausted=%s work_dir=%s\n' \
+  printf 'run_id=%s project=%s target=%s kind=%s changed_only=%s ungraded=%s incomplete=%s max_stage_failures=%s stages=%s documents=%s exhausted=%s work_dir=%s\n' \
     "$run_id" "$project" "$target" "$kind" "$changed_only" "$ungraded" "$incomplete" \
-    "$max_stage_failures" \
+    "$max_stage_failures" "$stages" \
     "${#selected_paths[@]}" "${#exhausted_paths[@]}" "$work_dir"
   printf 'stage=1 executor=%s reporter=%s reference=%s\n' \
     "$stage_1_executor" "$stage_1_reporter" "$stage_1_reference"
-  printf 'stage=2 executor=%s reporter=%s reference=%s\n' \
-    "$stage_2_executor" "$stage_2_reporter" "$stage_2_reference"
-  printf 'stage=3 executor=%s reporter=%s reference=%s condition="pass, score>=96, findings<=1"\n' \
-    "$stage_3_executor" "$stage_3_reporter" "$stage_3_reference"
+  if [[ "$stages" == 3 ]]; then
+    printf 'stage=2 executor=%s reporter=%s reference=%s\n' \
+      "$stage_2_executor" "$stage_2_reporter" "$stage_2_reference"
+    printf 'stage=3 executor=%s reporter=%s reference=%s condition="pass, score>=96, findings<=1"\n' \
+      "$stage_3_executor" "$stage_3_reporter" "$stage_3_reference"
+  fi
 }
 
 print_configuration
@@ -577,6 +596,7 @@ pipeline_state_fields() {
         state.stage_failed ?? "none",
         state.consecutive_failures,
         state.max_failures,
+        state.stage_total,
       ].join("\t") + "\n");
     });
   '
@@ -590,7 +610,7 @@ record_pipeline_stage() {
   pipeline_consecutive_failures=
   pipeline_max_failures=
   state_output=$("${specdojo_command[@]}" grade state --target "$target" --project "$project" \
-    --path "$document" --status "$status" --stage "$stage" --stage-total 3 \
+    --path "$document" --status "$status" --stage "$stage" --stage-total "$stages" \
     --max-failures "$max_stage_failures" --run-id "$run_id") ||
     fail "could not persist pipeline state for document=$document stage=$stage status=$status"
   if [[ "$status" == failed ]]; then
@@ -602,9 +622,15 @@ record_pipeline_stage() {
 
 for document in "${exhausted_paths[@]}"; do
   pipeline_state=$(read_pipeline_state "$document") || fail "grade state read failed: $document"
-  IFS=$'\t' read -r _ exhausted_stage exhausted_failures exhausted_max < <(
+  IFS=$'\t' read -r _ exhausted_stage exhausted_failures exhausted_max exhausted_stage_total < <(
     printf '%s' "$pipeline_state" | pipeline_state_fields
   )
+  if [[ "$stages" == 1 && "$exhausted_stage_total" != "$stages" ]]; then
+    record_result "$document" 1 resumed_completed 0 "" "" "" "$stage_1_executor" "$stage_1_reporter" "$stage_1_reference"
+    record_pipeline_stage "$document" 1 complete
+    printf 'document complete: %s migrated_stage_total=%s\n' "$document" "$exhausted_stage_total"
+    continue
+  fi
   record_result "$document" "$exhausted_stage" retry_exhausted 0 "" "" "" "" "" none \
     "$exhausted_failures" "$exhausted_max"
 done
@@ -828,9 +854,17 @@ for document in "${selected_paths[@]}"; do
   pipeline_state=$(read_pipeline_state "$document") || fail "grade state read failed: $document"
   start_stage=1
   if [[ -n "$pipeline_state" ]]; then
-    IFS=$'\t' read -r completed_stage failed_stage _ _ < <(
+    IFS=$'\t' read -r completed_stage failed_stage _ _ persisted_stage_total < <(
       printf '%s' "$pipeline_state" | pipeline_state_fields
     )
+    if [[ "$stages" == 1 && "$persisted_stage_total" != "$stages" ]]; then
+      mark_stage_skipped "$document" "$document_dir" 1 "$stage_1_executor" "$stage_1_reporter" "$document_stage_1_reference" resumed_completed
+      record_pipeline_stage "$document" 1 complete
+      printf '%s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" >"$complete_file"
+      completed=$((completed + 1))
+      printf 'document complete: %s migrated_stage_total=%s\n' "$document" "$persisted_stage_total"
+      continue
+    fi
     if [[ "$failed_stage" != none ]]; then
       start_stage=$failed_stage
     else
@@ -854,6 +888,14 @@ for document in "${selected_paths[@]}"; do
     fi
   else
     mark_stage_skipped "$document" "$document_dir" 1 "$stage_1_executor" "$stage_1_reporter" "$document_stage_1_reference" resumed_completed
+  fi
+
+  if [[ "$stages" == 1 ]]; then
+    record_pipeline_stage "$document" 1 complete
+    printf '%s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" >"$complete_file"
+    completed=$((completed + 1))
+    printf 'document complete: %s\n' "$document"
+    continue
   fi
 
   if ((start_stage <= 2)); then

@@ -3,7 +3,7 @@ $schema: "https://json-schema.org/draft/2020-12/schema"
 title: "SpecDojo grade pipeline state schema"
 description: >
   Validates retry state written below <execution_path>/grade/pipeline/. A file exists only while
-  a document has an unfinished three-stage grade pipeline or has reached its consecutive failure
+  a document has an unfinished configured grade pipeline or has reached its consecutive failure
   limit. Completed pipelines remove their state file. content_hash prevents stages completed for
   older document content from being reused after the document changes.
 type: object
