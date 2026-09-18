@@ -61,3 +61,16 @@
       from: "-"
       to: "agent exited with non-zero code: runner による検証 `test-unit` が失敗したため。具体的に `tests/src/exec-strategy.test.ts` 内のproficiency を維持したまま phase assignment と per-deliverable override を解決するテストケースで失敗が発生している。"
   previous_event_id: reg_f0fe2b0e85b3489099819ad82fd61055
+- v: 1
+  id: reg_d3ea74d65e8a4ff085e060669491b34f
+  ts: "2026-09-18T23:08:13Z"
+  action: review
+  actor: specdojo-orchestrator (claude)
+  from_status: waiting
+  to_status: review
+  reason: 親検証 test-unit の失敗は fixture の誤り（override 対象と非対象を同じ owner_rule に置いていた）。修正して develop へ統合し、--auto の dry-run で review-pass が codex-expert-review-executor を選ぶことを確認
+  changes:
+    - field: status
+      from: waiting
+      to: review
+  previous_event_id: reg_18d826e28e944e91a876deb825a08487
