@@ -1,0 +1,14 @@
+grade の codex 単段化と夜間スケジュールへの移行を実装しました。
+
+- [`--stages 1` と旧 state 移行](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-W5JT/tools/grade/run-per-document.sh:24)を追加。
+- Job を codex／gemma 単段へ変更。
+- 成果物評価を0時・10件、Kata評価を2時・15件へ変更。cron は0・2・5時です。
+- [`missed_run: skip` の実装](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-W5JT/src/routine.ts:206)とテストを追加。
+- [個票の作業内容・対応結果](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-W5JT/docs/ja/projects/prj-0001/controls/project-register/pjr-w5jt-grade-single-stage-nightly.md:49)を更新。ステータスは維持しています。
+- result ファイルは後段 reporter の担当なので更新していません。
+
+対象検証は通過しています。リポジトリ全体の `lint:fm` のみ、未変更の `br-sample.md` に既存スキーマ警告があり失敗しました。親 runner 担当の unit・integration・schema 検証は未実行です。
+
+<specdojo_executor_evidence>
+{"final_message":"grade の codex 単段化、旧3段 state の移行、夜間スケジュール、missed_run: skip 対応を実装。対象検証は通過し、全体 lint:fm のみ未変更ファイルの既存警告で失敗。","validations":[{"command":"npm run typecheck","status":"passed","summary":"TypeScript 型検査通過"},{"command":"npm run lint:ts","status":"passed","summary":"ESLint 通過"},{"command":"bash -n tools/grade/run-per-document.sh","status":"passed","summary":"shell 構文検査通過"},{"command":"npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-w5jt-grade-single-stage-nightly.md docs/ja/specdojo/guides/routine-operation-guide.md docs/ja/specdojo/references/command-reference.md","status":"passed","summary":"変更Markdownのlint通過"},{"command":"npx remark docs/ja/projects/prj-0001/controls/project-register/pjr-w5jt-grade-single-stage-nightly.md docs/ja/specdojo/guides/routine-operation-guide.md docs/ja/specdojo/references/command-reference.md --quiet --frail","status":"passed","summary":"変更MarkdownのFrontmatter検査通過"},{"command":"npm run lint:fm","status":"failed","summary":"未変更の docs/ja/specdojo/samples/br-sample.md に既存の unevaluatedProperties 警告1件"},{"command":"node --import tsx src/specdojo.ts job validate --project prj-0001","status":"passed","summary":"8 Job、エラー0件"},{"command":"node --import tsx src/specdojo.ts routine validate --project prj-0001","status":"passed","summary":"8 Routine、エラー0件"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"終了コード0。既存の欠落文書警告あり"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿生成成功"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1810件の索引生成成功"},{"command":"node --import tsx tools/docs/src/validate-history-links.ts","status":"passed","summary":"履歴リンク検証通過"},{"command":"tools/grade/run-per-document.sh --run-id pjr-w5jt-smoke --stages 1 --kind rulebook --path docs/ja/specdojo/rulebooks/bps-rulebook.md --dry-run","status":"passed","summary":"codex-expert-executor / gemma-reporter、リファレンスなしの単段構成を確認"},{"command":"git diff --check","status":"passed","summary":"差分の空白エラーなし"}]}
+</specdojo_executor_evidence>

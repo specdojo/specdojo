@@ -486,9 +486,9 @@ specdojo grade validate --target kata --project prj-0001
 
 `--target` は `kata` または `deliverable` です。`--path` は繰り返し指定でき、明示した Markdown 文書だけを対象にします。ただし、パス要素に `generated` を含む生成文書と `trash` を含む退避済み文書は自動探索から除外し、`--path` で明示した場合も入力エラーとして拒否します。`--changed-only` は既存 grade の `content_hash` と、grade・finding を除いた現在内容のハッシュを比較するため、評価結果の書き込み自体を変更として再検出しません。ハッシュの計算前に改行を LF へ統一し、行末空白を除去して、連続する空行を1行へ畳みます。この正規化により、`grade apply` 後の Prettier 整形だけでは再評価対象になりません。
 
-保存済みの判定結果では、`--verdict <pass|needs-work|fail>` で最新 verdict、`--min-score <score>` で総合 score が指定値以上、`--max-findings <count>` で全 severity の finding 合計が指定件数以下の文書に絞れます。score は 0 から 100 の整数で指定します。`--ungraded` は `specdojo.grade` が存在しない文書だけ、`--incomplete` は同じ本文に対する3段評価が未完了で連続失敗上限に達していない文書だけを選びます。複数の選択条件は AND で適用され、`--path` や `--changed-only` とも併用できます。保存済み grade を前提とする `--verdict`、`--min-score`、`--max-findings` のいずれかと `--ungraded` の併用は入力エラーです。`grade list` はこの選択規則を plan の生成や文書更新なしで利用するための機械可読な入口で、標準出力にはリポジトリ相対パスだけを辞書順で出力します。定期再評価の呼び出し側は変更済み、未評価、段未完了を別々に列挙して和集合を取ります。
+保存済みの判定結果では、`--verdict <pass|needs-work|fail>` で最新 verdict、`--min-score <score>` で総合 score が指定値以上、`--max-findings <count>` で全 severity の finding 合計が指定件数以下の文書に絞れます。score は 0 から 100 の整数で指定します。`--ungraded` は `specdojo.grade` が存在しない文書だけ、`--incomplete` は同じ本文に対する設定済み段数の評価が未完了で連続失敗上限に達していない文書だけを選びます。複数の選択条件は AND で適用され、`--path` や `--changed-only` とも併用できます。保存済み grade を前提とする `--verdict`、`--min-score`、`--max-findings` のいずれかと `--ungraded` の併用は入力エラーです。`grade list` はこの選択規則を plan の生成や文書更新なしで利用するための機械可読な入口で、標準出力にはリポジトリ相対パスだけを辞書順で出力します。定期再評価の呼び出し側は変更済み、未評価、段未完了を別々に列挙して和集合を取ります。
 
-段の到達状況は `<execution_path>/grade/pipeline/` の文書別 JSON に保存します。`stage_completed`、`stage_failed`、`stage_total`、`consecutive_failures`、`max_failures` から再開段と上限到達を判定し、`content_hash` が現在本文と異なる古い state は再開に使いません。`grade state --target <target> --project <id> --path <document>` は現在本文に有効な state を JSON で返し、`--exhausted` は上限到達文書のパスを返します。state の更新は3段実行 script が担い、pipeline 完了時にファイルを削除します。
+段の到達状況は `<execution_path>/grade/pipeline/` の文書別 JSON に保存します。`stage_completed`、`stage_failed`、`stage_total`、`consecutive_failures`、`max_failures` から再開段と上限到達を判定し、`content_hash` が現在本文と異なる古い state は再開に使いません。`grade state --target <target> --project <id> --path <document>` は現在本文に有効な state を JSON で返し、`--exhausted` は上限到達文書のパスを返します。state の更新は文書単位の実行 script が担い、pipeline 完了時にファイルを削除します。
 
 `grade plan` は対象ごとに executor plan と reporter plan の2ファイルを生成し、既定では `<execution_path>/grade/generated/plans/<target>/` へ保存します。`generated/` 配下は再生成可能な派生生成物の置き場で、git 管理と文書索引の対象外です。`--out <directory>` で保存先を変更できます。ファイル名は対象パスから決定され、同じ対象の再生成は同じファイルを上書きするため履歴を増やしません。executor plan は評価対象を1件だけリポジトリ相対パスで示し、Kata の `rulebook` / `recipe` / `sample` / `template` 参照と逆参照から解決した対応文書も参考資料のパスとして列挙します。`--random-reference` を指定した場合は、同じ種別で `status: ready` の別文書から良い実例を1件無作為に選び、記載水準を比較するリファレンスとして記録します。Kata は同じ rulebook / recipe / sample / template 種別、成果物は同じ `specdojo.type` を候補範囲とします。実例は評価対象ではなく、`ready` も品質保証ではありません。対象・参考資料・実例の本文は plan に埋め込みません。再生成のたびに候補集合から選び直すため、同じ対象の plan でも実例だけが変わることがあります。`--random-reference` も `--reference` も指定しなければリファレンスは付けません。reporter plan は対象の固定 facts と GradeSubmission テンプレートだけを持ち、評価資料は持ちません。
 
@@ -508,29 +508,31 @@ finding の忠実性照合では、message に限り、Unicode の正準等価�
 
 複数対象は、生成された plan の組を順に処理し、executor 応答を保存して reporter へ引き渡し、1件の GradeSubmission を直ちに `grade apply --path <document> --analysis-from <executor-output>` で反映します。agent 起動は `agent run`、stage 間の応答受け渡しは呼び出し側が担い、`grade` は plan の生成と結果の検証・反映に限定されます。この単位で処理すると、後続文書が失敗しても適用済みの grade は保持されます。保存済み executor plan は `exec trial` などで同じ入力を複数 agent へ渡す用途にも利用できます。
 
-### 8.1. 文書単位の3段評価
+### 8.1. 文書単位の grade pipeline
 
-3段評価を「文書を外側、段を内側」の順で実行する場合は、リポジトリルートから `tools/grade/run-per-document.sh` を実行します。`--target kata` では `--kind` に `rulebook` / `recipe` / `sample` / `template` のいずれか、または `all` を指定します。`--target deliverable` では成果物カタログの Markdown 成果物を対象にし、`--kind` は使いません。`--path` を繰り返すと明示した文書だけを処理できます。`--changed-only`、`--ungraded`、`--incomplete` は `grade list` の選択結果を利用し、複数指定時は各結果の和集合を処理します。既定 target は `kata`、既定 kind は `rulebook` です。
+文書ごとに grade pipeline を実行する場合は、リポジトリルートから `tools/grade/run-per-document.sh` を実行します。`--stages 1` は codex 単段、既定の `--stages 3` は従来の3段構成です。`--target kata` では `--kind` に `rulebook` / `recipe` / `sample` / `template` のいずれか、または `all` を指定します。`--target deliverable` では成果物カタログの Markdown 成果物を対象にし、`--kind` は使いません。`--path` を繰り返すと明示した文書だけを処理できます。`--changed-only`、`--ungraded`、`--incomplete` は `grade list` の選択結果を利用し、複数指定時は各結果の和集合を処理します。既定 target は `kata`、既定 kind は `rulebook` です。
 
 ```bash
 # 対象と agent / reference の確認だけを行う
 tools/grade/run-per-document.sh --run-id 20260901-rulebooks --limit 3 --dry-run
 
-# rulebook を文書単位で3段評価する。同じ run-id で再実行すると中断箇所から再開する
-tools/grade/run-per-document.sh --run-id 20260901-rulebooks --kind rulebook
+# rulebook を codex 単段で評価する。同じ run-id で再実行すると中断箇所から再開する
+tools/grade/run-per-document.sh --run-id 20260901-rulebooks --stages 1 --kind rulebook
 
 # 変更済み、未評価、または段未完了の4種別を最大5件再評価する
 tools/grade/run-per-document.sh --run-id 20260908-recheck --kind all \
-  --changed-only --ungraded --incomplete --limit 5
+  --stages 1 --changed-only --ungraded --incomplete --limit 15
 
 # 変更済み、未評価、または段未完了の成果物を最大5件再評価する
 tools/grade/run-per-document.sh --run-id 20260912-deliverables --target deliverable \
-  --changed-only --ungraded --incomplete --limit 5
+  --stages 1 --changed-only --ungraded --incomplete --limit 10
 ```
 
-各段は executor と reporter を個別に指定できます。1段目の比較リファレンスは `--kind` に応じて `docs/ja/specdojo/<種別ディレクトリ>/prj-overview-<kind>.md` を既定とします。たとえば `--kind recipe` では `docs/ja/specdojo/recipes/prj-overview-recipe.md` です。対応する既定文書が存在しない場合は警告し、1段目もリファレンスなしで続行します。`--stage-1-reference` の明示指定は既定値より優先しますが、選択した種別のディレクトリにある `prj-overview` 系 Markdown だけを受理し、異なる種別や `none` は入力エラーとします。解決した値（欠落時の `none` を含む）は `--dry-run` の `stage=1` 行で確認できます。2段目はリファレンスなし、3段目は `codex-expert-executor` によるリファレンスなしの確認が既定です。2段目が `pass`、score 96以上、finding 1件以下の3条件をすべて満たす場合だけ3段目を実行します。
+`--stages 1` では stage 1 の既定を `codex-expert-executor` / `gemma-reporter` / リファレンスなしとし、stage 2・3は実行しません。定期実行する `job-grade-kata` と `job-grade-deliverable` はこの構成を指定します。
 
-Run 内の実行 state は既定で `logs/grade/runs/per-document/<run-id>/documents/` に文書・段ごとに保存し、保存先を変える場合は `--work-dir` で指定します。初回に選択した文書は同じ Run の `selection.txt` へ固定し、再開時に grade の更新で選択結果が変わっても、未完了の段を同じ対象で継続します。Run をまたぐ到達状況は前述の文書別 JSON に保存し、新しい Run は `stage_failed`、または `stage_completed + 1` から再開します。`logs/` へ plan を置くのは、段ごとの plan が同じ文書 ID を持ち、`docs/` 配下では `index build` が重複 ID で失敗するためです。agent が rate limit を返した場合は終了コード75で中断し、その段を失敗回数には数えません。同じ引数と `--run-id` で再実行すると、完了済みの段を再適用せず未完了の段から続行します。設定が保存済み Run state と異なる場合は、別条件の結果を混在させず、新しい `--run-id` を要求します。
+互換用の `--stages 3` では、各段の executor と reporter を個別に指定できます。1段目の比較リファレンスは `--kind` に応じて `docs/ja/specdojo/<種別ディレクトリ>/prj-overview-<kind>.md` を既定とします。たとえば `--kind recipe` では `docs/ja/specdojo/recipes/prj-overview-recipe.md` です。対応する既定文書が存在しない場合は警告し、1段目もリファレンスなしで続行します。`--stage-1-reference` の明示指定は既定値より優先しますが、選択した種別のディレクトリにある `prj-overview` 系 Markdown だけを受理し、異なる種別や `none` は入力エラーとします。2段目はリファレンスなし、3段目は `codex-expert-executor` によるリファレンスなしの確認が既定です。2段目が `pass`、score 96以上、finding 1件以下の3条件をすべて満たす場合だけ3段目を実行します。解決した構成は `--dry-run` の `stage=<n>` 行で確認できます。
+
+Run 内の実行 state は既定で `logs/grade/runs/per-document/<run-id>/documents/` に文書・段ごとに保存し、保存先を変える場合は `--work-dir` で指定します。初回に選択した文書は同じ Run の `selection.txt` へ固定し、再開時に grade の更新で選択結果が変わっても、未完了の段を同じ対象で継続します。Run をまたぐ到達状況は前述の文書別 JSON に保存し、新しい Run は `stage_failed`、または `stage_completed + 1` から再開します。単段への切り替え時に、`grade state` が現在本文に有効な `stage_total: 3` の state を返した場合は既存評価を完了済みとみなし、単段の incomplete として再開せず state を削除します。`content_hash` が現在本文と異なる state は `grade state` が返さないため、この移行処理の対象になりません。`logs/` へ plan を置くのは、段ごとの plan が同じ文書 ID を持ち、`docs/` 配下では `index build` が重複 ID で失敗するためです。agent が rate limit を返した場合は終了コード75で中断し、その段を失敗回数には数えません。同じ引数と `--run-id` で再実行すると、完了済みの段を再適用せず未完了の段から続行します。設定が保存済み Run state と異なる場合は、別条件の結果を混在させず、新しい `--run-id` を要求します。
 
 各段の status、所要秒数、verdict、score、finding 件数、executor、reporter、reference、連続失敗回数は同ディレクトリの `results.tsv` で確認できます。通常の agent / apply 失敗はその段で文書処理を止め、成功済みの前段を残して次回同じ段から再試行します。既定の連続失敗上限は3回で、`--max-stage-failures` で変更できます。上限到達文書は処理対象から外れますが、`retry_exhausted` 行として `results.tsv` に含め、reporter が人手対応を促せるようにします。
 

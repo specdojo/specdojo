@@ -172,6 +172,21 @@ describe("parseRoutineDoc", () => {
       'rtn-invalid-step.yaml: action[1].kind must be job (got "unknown")',
     );
   });
+
+  it("取りこぼした cron 枠を実行しない policy を受け入れる", () => {
+    const { doc, errors } = parseRoutineDoc(
+      {
+        id: "rtn-nightly",
+        trigger: { cron: "0 2 * * *", timezone: "Asia/Tokyo" },
+        policy: { missed_run: "skip", overlap: "skip" },
+        action: { kind: "job", job: "job-nightly" },
+      },
+      "rtn-nightly.yaml",
+    );
+
+    expect(errors).toEqual([]);
+    expect(doc?.policy).toEqual({ missed_run: "skip", overlap: "skip" });
+  });
 });
 
 describe("aggregateRoutineActionResults", () => {
@@ -232,6 +247,23 @@ describe("cron Job routine", () => {
     );
     expect(occurrences.map((date) => date.toISOString())).toEqual(["2026-08-07T08:00:00.000Z"]);
     expect(isoWeek(occurrences[0], "Asia/Tokyo")).toBe("2026-W32");
+  });
+
+  it("skips missed occurrences and selects only the current matching minute", () => {
+    const doc = makeRoutine({
+      interval: undefined,
+      trigger: { cron: "0 2 * * *", timezone: "Asia/Tokyo" },
+      policy: { missed_run: "skip" },
+    });
+
+    expect(cronOccurrences(doc, "2026-08-06T17:00:00Z", new Date("2026-08-08T03:00:00Z"))).toEqual(
+      [],
+    );
+    expect(
+      cronOccurrences(doc, "2026-08-06T17:00:00Z", new Date("2026-08-08T17:00:30Z")).map((date) =>
+        date.toISOString(),
+      ),
+    ).toEqual(["2026-08-08T17:00:00.000Z"]);
   });
 
   it("builds exec run --job arguments with occurrence inputs", () => {

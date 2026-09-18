@@ -50,14 +50,19 @@ grade は gemma（1・2 段）→ codex-expert（3 段、1・2 段が pass か�
 
 | No  | 作業                                                                                                       | 担当 | 状態 | メモ                                                           |
 | --- | ---------------------------------------------------------------------------------------------------------- | ---- | ---- | -------------------------------------------------------------- |
-| 1   | `run-per-document.sh` に `--stages` を追加し、単段の分岐と既存 state の互換を実装・テストする              | DEV  | open | codex-expert-executor / gemma-reporter / worktree              |
-| 2   | job 定義 2 件を `--stages 1` に変更し、guide / command-reference を更新する                                | DEV  | open | 作業 1 と同一タスク                                            |
-| 3   | routine 2 件の cron・limit・`missed_run` と cron.d を変更する                                              | OPS  | open | オーケストレーターが直接対応。PJR-2JYE の 5 時追加と整合させる |
+| 1   | `run-per-document.sh` に `--stages` を追加し、単段の分岐と既存 state の互換を実装・テストする              | DEV  | done | codex-expert-executor / gemma-reporter / worktree              |
+| 2   | job 定義 2 件を `--stages 1` に変更し、guide / command-reference を更新する                                | DEV  | done | 作業 1 と同一タスク                                            |
+| 3   | routine 2 件の cron・limit・`missed_run` と cron.d を変更する                                              | OPS  | done | オーケストレーターが直接対応。PJR-2JYE の 5 時追加と整合させる |
 | 4   | 単段で `cdfd-orchestrator` / `cdfd-overview` を評価し直し、gemma の再掲 finding が解消されることを確認する | ARC  | open | 作業 1 の後                                                    |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `tools/grade/run-per-document.sh` に `--stages 1|3` を追加した。既定の3段構成は互換用に維持し、単段では stage 1 を `codex-expert-executor` / `gemma-reporter` / リファレンスなしで実行して stage 2・3へ進まない。
+- 現在本文に対して有効な旧 `stage_total: 3` state は、単段への切り替え時に既存評価を完了済みとして削除する。単段の失敗 state は従来どおり失敗段・連続失敗回数を保存して再開できる。
+- `job-grade-kata` と `job-grade-deliverable` を `--stages 1` へ変更し、単段の `results.tsv` を前提とする analysis と新しい冪等キーバージョンへ更新した。
+- `rtn-grade-deliverable-recheck` を毎日0時・上限10件、`rtn-grade-recheck` を毎日2時・上限15件へ変更し、両方を `missed_run: skip` とした。routine 本体とスキーマにも `skip` を追加し、現在の cron 分だけを実行対象とする挙動をテストした。
+- devcontainer の due runner を0時・2時・5時へ変更し、運用ガイドとコマンドリファレンスを codex 単段・夜間実行・旧 state 移行の説明へ更新した。
+- `cdfd-orchestrator` / `cdfd-overview` の実 agent による再評価は、変更を統合して定期 Job の実行環境へ反映した後の運用確認として残す。
 
 ## 5. 関連ドキュメント
 

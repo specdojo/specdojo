@@ -39,7 +39,7 @@ properties:
     additionalProperties: false
     properties:
       missed_run:
-        enum: [latest, all]
+        enum: [skip, latest, all]
       overlap:
         const: skip
   action:

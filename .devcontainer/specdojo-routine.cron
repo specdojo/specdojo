@@ -1,6 +1,6 @@
 # /etc/cron.d entry for SpecDojo routines in this devcontainer.
 # The routine definition owns the same Asia/Tokyo schedule; this cron entry invokes
-# the due runner at 00:00, 08:00, and 16:00 while the container is running.
+# the due runner at 00:00, 02:00, and 05:00 while the container is running.
 SHELL=/bin/bash
 HOME=/home/node
 PATH=/home/node/.local/bin:/usr/local/share/npm-global/bin:/usr/local/bin:/usr/bin:/bin
@@ -10,4 +10,4 @@ CRON_TZ=Asia/Tokyo
 
 # cron 自体の停止を routine の実行結果と区別できるよう、5分ごとに生存時刻を更新する。
 */5 * * * * node /usr/bin/date -u +\%Y-\%m-\%dT\%H:\%M:\%SZ > __WORKSPACE_DIR__/logs/routine-cron-heartbeat.log
-0 0,8,16 * * * node cd __WORKSPACE_DIR__ && /usr/local/bin/node dist/specdojo.js routine run --project prj-0001 --due >> logs/routine-exec-cycle.log 2>&1
+0 0,2,5 * * * node cd __WORKSPACE_DIR__ && /usr/local/bin/node dist/specdojo.js routine run --project prj-0001 --due >> logs/routine-exec-cycle.log 2>&1

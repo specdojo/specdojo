@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=../../../../specdojo/schemas/v1/job.schema.yaml
 id: job-grade-kata
 name: 実践の型の品質評価
-description: 文書単位の3段評価を起動し、その実行結果に異常がないかを判断する。
+description: 文書単位の codex 単段評価を起動し、その実行結果に異常がないかを判断する。
 inputs:
   period:
     type: string
@@ -56,7 +56,7 @@ task:
     skip_when: empty-output
   command: |
     npm run build
-    tools/grade/run-per-document.sh --run-id {{job_run_id}} --kind {{inputs.kind}} --limit {{inputs.limit}} --changed-only={{inputs.changed_only}} --ungraded={{inputs.ungraded}} --incomplete={{inputs.incomplete}}
+    tools/grade/run-per-document.sh --run-id {{job_run_id}} --stages 1 --kind {{inputs.kind}} --limit {{inputs.limit}} --changed-only={{inputs.changed_only}} --ungraded={{inputs.ungraded}} --incomplete={{inputs.incomplete}}
     cat logs/grade/runs/per-document/{{job_run_id}}/results.tsv
   analysis:
     agent: gemma-reporter
@@ -70,8 +70,7 @@ task:
         忠実性検証による拒否のいずれかへ切り分ける。
       - `retry_exhausted` の文書があるか。ある場合は失敗段と連続失敗回数を示し、人手での
         原因解消または state の再開判断を促す。
-      - 3段目が実行されなかった文書について、閾値未満と2段目の失敗のどちらが理由か。
-      - verdict と score の分布に、3段目の閾値の見直しを要する偏りがあるか。
+      - codex 単段の verdict と score の分布に、評価設定の見直しを要する偏りがあるか。
 
       選択された文書が0件の場合は no-op と判断する。判断できない事象は推測で埋めず、
       観測した事実と未確認の範囲を分けて報告する。
@@ -82,4 +81,4 @@ task:
     - docs/ja/specdojo/templates
 run:
   # scheduled_at は routine の論理実行枠を表す。同じ枠の再試行は同じ Run、次の枠は別 Run にする。
-  idempotency_key: "{{job_id}}:command-v4:{{scheduled_at}}:{{inputs.kind}}:{{inputs.limit}}:{{inputs.changed_only}}:{{inputs.ungraded}}:{{inputs.incomplete}}"
+  idempotency_key: "{{job_id}}:command-v5:{{scheduled_at}}:{{inputs.kind}}:{{inputs.limit}}:{{inputs.changed_only}}:{{inputs.ungraded}}:{{inputs.incomplete}}"
