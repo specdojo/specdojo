@@ -50,15 +50,24 @@ register 項目の `exec run --register --worktree --resume` には統合段の�
 
 ## 3. 作業内容
 
-| No  | 作業                                                | 担当 | 状態 | メモ               |
-| --- | --------------------------------------------------- | ---- | ---- | ------------------ |
-| 1   | Schedule タスクの pipeline-state に統合段を記録する | ARC  | open | register と同じ形  |
-| 2   | `exec resume --task` に統合段だけの再開を追加する   | ARC  | open | agent を起動しない |
-| 3   | 統合テストと exec-operation-guide を更新する        | ARC  | open | 2 ケース           |
+| No  | 作業                                                | 担当 | 状態 | メモ                                 |
+| --- | --------------------------------------------------- | ---- | ---- | ------------------------------------ |
+| 1   | Schedule タスクの pipeline-state に統合段を記録する | ARC  | done | 開始・失敗・成功を run state に記録  |
+| 2   | `exec resume --task` に統合段だけの再開を追加する   | ARC  | done | agent を起動せず既存 worktree を統合 |
+| 3   | 統合テストと exec-operation-guide を更新する        | ARC  | done | commit 失敗と merge 済み再開を追加   |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- Schedule pipeline の通常統合で `pipeline-state.json` の `integrate` を `running`、`succeeded`、
+  `failed` に更新し、統合失敗の block event へ `pipeline_stage=integrate` と
+  `pipeline_state_ref` を記録するようにした。
+- `exec resume --task <task-id>` が統合失敗の block を同じ claim で再開し、executor と reporter が
+  `succeeded` であることを検証したうえで agent を起動せず統合だけを実行するようにした。
+- exec branch が既に統合先へ merge 済みの場合は commit と merge を再実行せず、runner が残した
+  result / pipeline-state の lifecycle 差分だけを確認・復元して worktree 撤去と complete を行う。
+- Schedule pipeline の E2E テストへ、commit 失敗後の統合再開と、merge 後の worktree 撤去失敗からの
+  再開を追加した。運用手順は [[specdojo:exec-operation-guide]] へ反映した。
+- 残課題はない。
 
 ## 5. 関連ドキュメント
 

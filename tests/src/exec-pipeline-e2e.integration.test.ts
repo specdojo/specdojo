@@ -1,5 +1,6 @@
 import { execFileSync } from "node:child_process";
 import {
+  chmodSync,
   existsSync,
   mkdirSync,
   mkdtempSync,
@@ -33,6 +34,7 @@ type AgentBehavior = {
   role: "executor" | "reporter" | "legacy";
   kind?: "ok" | "fail" | "invalid" | "blocked";
   task?: string;
+  lockWorktree?: boolean;
 };
 
 type AgentInvocation = {
@@ -47,6 +49,7 @@ type AgentInvocation = {
 // テスト用の agent 実装。provider の command_template から nickname / model / effort を
 // 受け取り、behavior ファイルの指定に従って executor / reporter / 従来 agent として振る舞う。
 const FAKE_AGENT_SCRIPT = `
+import { execFileSync } from "node:child_process";
 import { appendFileSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -74,6 +77,9 @@ if (behavior.role === "executor") {
   if (behavior.kind === "fail") {
     process.stderr.write("blocked: validation command failed; need=fix the failing test\\n");
     process.exit(1);
+  }
+  if (behavior.lockWorktree) {
+    execFileSync("git", ["worktree", "lock", "--reason", "integration-test", "."]);
   }
   writeFileSync("pipeline-artifact.md", "# " + nickname + " / " + model + "\\n", "utf8");
   process.stdout.write("${RAW_LOG_MARKER} api_key: sk-proj-abcdefgh12345678\\n");
@@ -533,6 +539,31 @@ function readWorktreeResult(
   );
 }
 
+function onlyWorktreePath(worktreeBase: string): string {
+  const entries = readdirSync(worktreeBase, { withFileTypes: true }).filter((entry) =>
+    entry.isDirectory(),
+  );
+  if (entries.length !== 1) {
+    throw new Error(`expected exactly one worktree under ${worktreeBase}, found ${entries.length}`);
+  }
+  return join(worktreeBase, entries[0]!.name);
+}
+
+function readWorktreePipelineState(
+  worktreeBase: string,
+  fixture: PipelineFixture,
+  taskId: string,
+): { stages: Record<string, { status: string; attempts: number }> } {
+  const worktreePath = onlyWorktreePath(worktreeBase);
+  const executionRelativePath = relative(fixture.repo, fixture.executionPath);
+  const taskDir = join(worktreePath, executionRelativePath, "exec", "evidence", taskId);
+  const runs = readdirSync(taskDir).sort();
+  expect(runs).toHaveLength(1);
+  return JSON.parse(readFileSync(join(taskDir, runs[0]!, "pipeline-state.json"), "utf8")) as {
+    stages: Record<string, { status: string; attempts: number }>;
+  };
+}
+
 afterEach(() => {
   process.chdir(originalCwd);
   clearProjectEnv();
@@ -659,6 +690,8 @@ describe("executor / reporter pipeline E2E", () => {
       status: "succeeded",
       actor: "local-gemma-reporter",
     });
+    // in-place 実行は worktree の統合段を持たないため integrate は記録されない。
+    expect(state.stages.integrate).toBeUndefined();
   });
 
   it("hands the reporter bounded evidence only, keeping raw log text and secrets out of the prompt", async () => {
@@ -917,6 +950,145 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
     const eventTypes = readTaskEvents(fixture, "T-TEST-doc-010").map((event) => event.type);
     expect(eventTypes.sort()).toEqual(["block", "claim", "complete", "unblock"]);
   }, 20_000);
+
+  it("resumes only integration after a commit failure", async () => {
+    fixture = setupPipelineRepository();
+    worktreeBase = mkdtempSync(join(tmpdir(), "specdojo-pipeline-e2e-wt-"));
+    vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+    vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+    vi.spyOn(spawnSelfModule, "selfRunArgs").mockImplementation((subArgs: string[]) => [
+      process.execPath,
+      [
+        join(specdojoRoot, "node_modules", ".bin", "tsx"),
+        join(specdojoRoot, "src", "specdojo.ts"),
+        ...subArgs,
+      ],
+    ]);
+    process.chdir(fixture.repo);
+
+    const rejectMarker = join(fixture.repo, ".git", "reject-integration-commit");
+    // checkpoint commit（prepare execution）は通し、統合 commit（apply task changes）だけを
+    // 落とすため、commit message を見られる commit-msg hook で判定する。
+    const hookPath = join(fixture.repo, ".git", "hooks", "commit-msg");
+    writeFileSync(rejectMarker, "reject\n", "utf8");
+    writeFileSync(
+      hookPath,
+      [
+        "#!/bin/sh",
+        `if [ -f '${rejectMarker}' ] && grep -q 'apply task changes' "$1"; then`,
+        '  echo "intentional integration commit failure" >&2',
+        "  exit 1",
+        "fi",
+        "exit 0",
+        "",
+      ].join("\n"),
+      "utf8",
+    );
+    chmodSync(hookPath, 0o755);
+
+    await runExec([
+      "run",
+      "--project",
+      "test",
+      "--task",
+      "T-TEST-doc-010",
+      "--worktree",
+      "--worktree-base",
+      worktreeBase,
+    ]);
+
+    expect(process.exitCode).toBe(1);
+    expect(
+      readWorktreePipelineState(worktreeBase, fixture, "T-TEST-doc-010").stages.integrate,
+    ).toMatchObject({ status: "failed", attempts: 1 });
+    expect(
+      readTaskEvents(fixture, "T-TEST-doc-010").find((event) => event.type === "block")?.meta,
+    ).toMatchObject({ pipeline_stage: "integrate" });
+
+    rmSync(rejectMarker);
+    await runExec([
+      "resume",
+      "--project",
+      "test",
+      "--task",
+      "T-TEST-doc-010",
+      "--worktree-base",
+      worktreeBase,
+    ]);
+
+    expect(process.exitCode ?? 0).toBe(0);
+    const invocations = readInvocations(fixture.logPath);
+    expect(invocations.filter((item) => item.role === "executor")).toHaveLength(1);
+    expect(invocations.filter((item) => item.role === "reporter")).toHaveLength(1);
+    expect(readResult(fixture, "T-TEST-doc-010")).toContain("status: complete");
+    const mergedState = JSON.parse(
+      readFileSync(join(evidenceRunDir(fixture, "T-TEST-doc-010"), "pipeline-state.json"), "utf8"),
+    ) as { stages: Record<string, { status: string; attempts: number }> };
+    expect(mergedState.stages.integrate).toMatchObject({ status: "succeeded", attempts: 2 });
+  }, 30_000);
+
+  it("skips commit and merge when resuming after the branch was already merged", async () => {
+    fixture = setupPipelineRepository();
+    worktreeBase = mkdtempSync(join(tmpdir(), "specdojo-pipeline-e2e-wt-"));
+    vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+    vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+    vi.spyOn(spawnSelfModule, "selfRunArgs").mockImplementation((subArgs: string[]) => [
+      process.execPath,
+      [
+        join(specdojoRoot, "node_modules", ".bin", "tsx"),
+        join(specdojoRoot, "src", "specdojo.ts"),
+        ...subArgs,
+      ],
+    ]);
+    process.chdir(fixture.repo);
+    setBehavior(fixture.behaviorPath, {
+      "local-gemma-executor": { role: "executor", kind: "ok", lockWorktree: true },
+    });
+
+    await runExec([
+      "run",
+      "--project",
+      "test",
+      "--task",
+      "T-TEST-doc-010",
+      "--worktree",
+      "--worktree-base",
+      worktreeBase,
+    ]);
+
+    expect(process.exitCode).toBe(1);
+    const worktreePath = onlyWorktreePath(worktreeBase);
+    expect(
+      readTaskEvents(fixture, "T-TEST-doc-010").find((event) => event.type === "block")?.meta,
+    ).toMatchObject({ pipeline_stage: "integrate" });
+    expect(
+      readWorktreePipelineState(worktreeBase, fixture, "T-TEST-doc-010").stages.integrate,
+    ).toMatchObject({ status: "failed", attempts: 1 });
+    const mergedHead = git(fixture.repo, "rev-parse", "HEAD");
+    git(fixture.repo, "worktree", "unlock", worktreePath);
+
+    await runExec([
+      "resume",
+      "--project",
+      "test",
+      "--task",
+      "T-TEST-doc-010",
+      "--worktree-base",
+      worktreeBase,
+    ]);
+
+    expect(process.exitCode ?? 0).toBe(0);
+    expect(git(fixture.repo, "rev-parse", "HEAD")).toBe(mergedHead);
+    expect(existsSync(worktreePath)).toBe(false);
+    const invocations = readInvocations(fixture.logPath);
+    expect(invocations.filter((item) => item.role === "executor")).toHaveLength(1);
+    expect(invocations.filter((item) => item.role === "reporter")).toHaveLength(1);
+    expect(
+      readTaskEvents(fixture, "T-TEST-doc-010")
+        .map((event) => event.type)
+        .sort(),
+    ).toEqual(["block", "claim", "complete", "unblock"]);
+  }, 30_000);
 
   it("revalidates a resolved parent-validation failure before resuming the reporter", async () => {
     fixture = setupPipelineRepository();
