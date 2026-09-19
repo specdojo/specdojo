@@ -52,12 +52,25 @@
   actor: codex-expert-executor
   from_status: in-progress
   to_status: waiting
-  reason: 'agent exited with non-zero code: 親検証 (`source="runner"`) の `test-unit` が `failed` となっているため、完了条件を満たしていない。'
+  reason: "agent exited with non-zero code: 親検証 (`source=\"runner\"`) の `test-unit` が `failed` となっているため、完了条件を満たしていない。"
   changes:
     - field: status
       from: in-progress
       to: waiting
     - field: block_reason
       from: "-"
-      to: 'agent exited with non-zero code: 親検証 (`source="runner"`) の `test-unit` が `failed` となっているため、完了条件を満たしていない。'
+      to: "agent exited with non-zero code: 親検証 (`source=\"runner\"`) の `test-unit` が `failed` となっているため、完了条件を満たしていない。"
   previous_event_id: reg_03e719303e7d4ca6b5f4f4e68945b693
+- v: 1
+  id: reg_3e32376a7a284faf8249ad111a4dfefb
+  ts: "2026-09-19T00:08:08Z"
+  action: review
+  actor: specdojo-orchestrator (claude)
+  from_status: waiting
+  to_status: review
+  reason: 親検証 test-unit の失敗は stsd-template の HTML コメント内 <<choice>> が山括弧プレースホルダ検査に掛かったもの。全角表記に直して develop へ統合。作業 4（再 grade）は夜間 routine で確認
+  changes:
+    - field: status
+      from: waiting
+      to: review
+  previous_event_id: reg_f19928ffbee4405584870aa1df269fb3

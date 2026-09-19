@@ -7,12 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: medium
   owner: ARC
   registered_at: "2026-09-17T13:17:10Z"
   due_on: "2026-09-30"
-  block_reason: 'agent exited with non-zero code: 親検証 (`source="runner"`) の `test-unit` が `failed` となっているため、完了条件を満たしていない。'
+  block_reason: "agent exited with non-zero code: 親検証 (`source=\"runner\"`) の `test-unit` が `failed` となっているため、完了条件を満たしていない。"
 ---
 
 # PJR-EQDB cdfd-rulebook と stsd 系 rulebook の grade 指摘を解消する
