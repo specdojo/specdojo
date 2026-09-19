@@ -593,6 +593,8 @@ specdojo exec worktree prune --project prj-0001
 | `watch`  | ファイル変更を監視して対象 build を実行する | `specdojo watch --project prj-0001 --scope exec` |
 | `build`  | 全生成物または指定 scope を一括再生成する   | `specdojo build --project prj-0001 --scope all`  |
 
+`dashboard build --project <id>` は `execution/generated/dashboard.md` を再生成します。通常の進捗集計に加え、`routines/generated/routine-runs.jsonl` から昨日の実行と本日の予定を、登録簿個票から着手候補のおすすめ順を、register / exec の event から解除待ちの理由と次の行動を表示します。
+
 `--scope` は `exec`、`catalog`、`register`、`index`、`all` を指定します。
 
 ## 12. job
@@ -636,6 +638,8 @@ specdojo exec run --job job-grade-kata --project prj-0001 --input period=2026-W3
 | `--dry-run` | 実行も `last_run` 記録も行わず、対象を表示する  |
 
 `action` は単一オブジェクト、または先頭から順に実行する1件以上の配列を受け付けます。単一オブジェクトの `action.kind`、配列の各要素の `kind` とも `job` だけを受け付け、実行内容と入力検証は参照先の Job Definition が担います。`register` / `exec-auto` / `exec-resume` / `exec-cycle` の旧 kind は廃止済みです。定義ファイルの配置、`interval`または`trigger.cron`の書式、複数 action の失敗方針、due判定は [routine運用ガイド](../guides/routine-operation-guide.md) を参照します。
+
+各 routine の実行完了時には、`routine-state.json` の最新状態とは別に、`routines/generated/routine-runs.jsonl` へ `routine_id`、`scheduled_for`、開始・終了時刻、結果、Job Run ID を1実行1行で追記します。この履歴が dashboard の「routine 実行状況（昨日・本日）」の正本です。
 
 ```bash
 # due な routine をまとめて実行する（cron / CI から呼ぶ想定）

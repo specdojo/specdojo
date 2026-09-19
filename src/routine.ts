@@ -1,5 +1,5 @@
 import { spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, rmSync, statSync } from "node:fs";
+import { appendFileSync, existsSync, mkdirSync, readdirSync, rmSync, statSync } from "node:fs";
 import { basename, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { type Command } from "commander";
@@ -16,6 +16,7 @@ import {
   writeJson,
 } from "./exec-shared.js";
 import { ROUTINE_BUSY_SKIP_EXIT_CODE, ROUTINE_EXEC_ENV } from "./exec-run-lock.js";
+import { resolveJobPaths } from "./job.js";
 
 // ================================
 // Types
@@ -58,6 +59,7 @@ export type RoutinePaths = {
   routinesPath: string;
   generatedPath: string;
   statePath: string;
+  runsPath: string;
 };
 
 export type RoutineExecutionResult = "success" | "failure" | "skipped";
@@ -73,6 +75,16 @@ export type RoutineActionResult = {
   index: number;
   kind: RoutineActionKind;
   result: RoutineExecutionResult;
+};
+
+export type RoutineRunHistoryEntry = {
+  version: 1;
+  routine_id: string;
+  scheduled_for: string;
+  started_at: string;
+  completed_at: string;
+  result: RoutineExecutionResult;
+  job_run_ids: string[];
 };
 
 export function routineActionKindLabel(action: RoutineActionList): string {
@@ -451,6 +463,7 @@ export function resolveRoutinePaths(opts: { project?: string }): RoutinePaths {
     routinesPath: absRoutinesPath,
     generatedPath,
     statePath: join(generatedPath, "routine-state.json"),
+    runsPath: join(generatedPath, "routine-runs.jsonl"),
   };
 }
 
@@ -520,6 +533,11 @@ function readRoutineState(statePath: string): RoutineStateFile {
 function writeRoutineState(paths: RoutinePaths, state: RoutineStateFile): void {
   ensureDir(paths.generatedPath);
   writeJson(paths.statePath, state);
+}
+
+export function appendRoutineRunHistory(runsPath: string, entry: RoutineRunHistoryEntry): void {
+  ensureDir(resolve(runsPath, ".."));
+  appendFileSync(runsPath, `${JSON.stringify(entry)}\n`, "utf8");
 }
 
 // ================================
@@ -657,7 +675,35 @@ function executeRoutineAction(
 type RoutineRunResult = {
   result: RoutineExecutionResult;
   actionResults?: RoutineActionResult[];
+  jobRunIds: string[];
 };
+
+function findJobRunId(
+  action: RoutineAction,
+  projectId: string,
+  scheduledAt: Date,
+): string | undefined {
+  const runsPath = resolveJobPaths(projectId).runsPath;
+  if (!existsSync(runsPath)) return undefined;
+  const scheduledFor = scheduledAt.toISOString();
+  for (const file of readdirSync(runsPath)
+    .filter((name) => name.endsWith(".json"))
+    .sort()) {
+    try {
+      const run = readJson(join(runsPath, file)) as Record<string, unknown>;
+      if (
+        run.job_id === action.job &&
+        run.scheduled_at === scheduledFor &&
+        typeof run.run_id === "string"
+      ) {
+        return run.run_id;
+      }
+    } catch {
+      // Job Run の検証は job 側の責務。履歴追記では壊れた別 Run を無視する。
+    }
+  }
+  return undefined;
+}
 
 // action が配列なら、前段の結果にかかわらず先頭から全段を順次実行する。
 // 段別結果を返し、全体結果は failure > skipped > success の順に集約する。
@@ -673,8 +719,11 @@ function executeRoutine(
   process.stdout.write(`[routine] ${doc.id}: ${label}\n`);
 
   if (!Array.isArray(doc.action)) {
+    const result = executeRoutineAction(doc, doc.action, projectId, dryRun, scheduledAt);
+    const jobRunId = dryRun ? undefined : findJobRunId(doc.action, projectId, scheduledAt);
     return {
-      result: executeRoutineAction(doc, doc.action, projectId, dryRun, scheduledAt),
+      result,
+      jobRunIds: jobRunId ? [jobRunId] : [],
     };
   }
 
@@ -688,7 +737,13 @@ function executeRoutine(
   process.stdout.write(
     `  action summary: ${actionResults.map((item) => `${item.index}:${item.result}`).join(", ")} => ${result}\n`,
   );
-  return { result, actionResults };
+  const jobRunIds = dryRun
+    ? []
+    : doc.action.flatMap((action) => {
+        const runId = findJobRunId(action, projectId, scheduledAt);
+        return runId ? [runId] : [];
+      });
+  return { result, actionResults, jobRunIds };
 }
 
 // ================================
@@ -724,6 +779,7 @@ export function registerRoutineCommands(program: Command): void {
       process.stdout.write(`project:  ${paths.projectId}\n`);
       process.stdout.write(`routines: ${paths.routinesPath}\n`);
       process.stdout.write(`state:    ${paths.statePath}\n`);
+      process.stdout.write(`runs:     ${paths.runsPath}\n`);
       const files = listFilesRecursive(paths.routinesPath).filter(isRoutineYamlFile).sort();
       for (const filePath of files) {
         process.stdout.write(`  ${filePath}\n`);
@@ -871,12 +927,13 @@ export function registerRoutineCommands(program: Command): void {
       let skipped = 0;
       for (const selectedRun of selected) {
         const { entry, scheduledAt } = selectedRun;
+        const startedAt = nowUtcIsoSeconds();
         // 実行の試行自体を last_run として先に記録する。失敗した routine が次の
         // 発火まで再試行されない代わりに、失敗が高頻度で連続発火することを防ぐ。
         if (!dryRun) {
           state.routines[entry.doc.id] = {
             ...state.routines[entry.doc.id],
-            last_run: nowUtcIsoSeconds(),
+            last_run: startedAt,
             ...(entry.doc.trigger ? { last_scheduled_for: scheduledAt.toISOString() } : {}),
           };
           writeRoutineState(paths, state);
@@ -897,6 +954,15 @@ export function registerRoutineCommands(program: Command): void {
             last_action_results: execution.actionResults,
           };
           writeRoutineState(paths, state);
+          appendRoutineRunHistory(paths.runsPath, {
+            version: 1,
+            routine_id: entry.doc.id,
+            scheduled_for: scheduledAt.toISOString(),
+            started_at: startedAt,
+            completed_at: nowUtcIsoSeconds(),
+            result,
+            job_run_ids: execution.jobRunIds,
+          });
         }
       }
 

@@ -1,0 +1,14 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/routine.schema.yaml
+id: rtn-dashboard-refresh
+name: dashboard の毎朝更新
+description: 毎朝 5:00（Asia/Tokyo）にプロジェクト dashboard を再生成する。
+enabled: true
+trigger:
+  cron: "0 5 * * *"
+  timezone: Asia/Tokyo
+policy:
+  missed_run: skip
+  overlap: skip
+action:
+  kind: job
+  job: job-dashboard-build
