@@ -1,9 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import {
   aggregateRoutineActionResults,
+  appendRoutineRunHistory,
   buildJobRunArgs,
   cronOccurrences,
   executeRoutineActions,
@@ -16,6 +17,42 @@ import {
   routineActionKindLabel,
   type RoutineDoc,
 } from "../../src/routine.js";
+
+describe("appendRoutineRunHistory", () => {
+  it("1 実行を JSON Lines の1行として追記する", async () => {
+    const dir = await mkdtemp(path.join(tmpdir(), "specdojo-routine-history-"));
+    const runsPath = path.join(dir, "generated", "routine-runs.jsonl");
+    try {
+      appendRoutineRunHistory(runsPath, {
+        version: 1,
+        routine_id: "rtn-dashboard-refresh",
+        scheduled_for: "2026-09-19T20:00:00.000Z",
+        started_at: "2026-09-19T20:00:01Z",
+        completed_at: "2026-09-19T20:00:03Z",
+        result: "success",
+        job_run_ids: ["JBR-dashboard-abc123"],
+      });
+      appendRoutineRunHistory(runsPath, {
+        version: 1,
+        routine_id: "rtn-dashboard-refresh",
+        scheduled_for: "2026-09-20T20:00:00.000Z",
+        started_at: "2026-09-20T20:00:01Z",
+        completed_at: "2026-09-20T20:00:03Z",
+        result: "skipped",
+        job_run_ids: [],
+      });
+
+      const lines = (await readFile(runsPath, "utf8")).trim().split("\n");
+      expect(lines).toHaveLength(2);
+      expect(JSON.parse(lines[0])).toMatchObject({
+        routine_id: "rtn-dashboard-refresh",
+        result: "success",
+      });
+    } finally {
+      await rm(dir, { recursive: true, force: true });
+    }
+  });
+});
 
 function makeRoutine(overrides: Partial<RoutineDoc> = {}): RoutineDoc {
   return {

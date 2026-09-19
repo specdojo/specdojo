@@ -1,0 +1,11 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/job.schema.yaml
+id: job-dashboard-build
+name: プロジェクト dashboard 再生成
+description: Schedule、Timeline、登録簿、routine の日次判断情報を dashboard へ再集計する。
+task:
+  mode: command
+  owner: PM
+  command: |
+    {{specdojo}} dashboard build --project "{{project_id}}"
+run:
+  idempotency_key: "{{job_id}}:{{scheduled_at}}"

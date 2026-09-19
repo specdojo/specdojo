@@ -4,8 +4,9 @@ import yaml from "js-yaml";
 import type { Command } from "commander";
 import { defaultScheduleCalendar, buildScheduleIndex } from "./exec-schedule-index.js";
 import { addWorkingDaysToDate } from "./exec-schedule-calendar.js";
-import type { ScheduleCalendar, StateSnapshot } from "./exec-types.js";
+import type { ExecEventV1, ScheduleCalendar, StateSnapshot } from "./exec-types.js";
 import { readJson, toArtifactPath } from "./exec-shared.js";
+import { readAllEventFiles } from "./exec-events.js";
 import {
   getProjectExecutionPath,
   getProjectRoutinesPath,
@@ -16,7 +17,17 @@ import {
   specdojoRootDir,
 } from "./specdojo-config.js";
 import type { SpecDojoProjectConfig } from "./specdojo-config.js";
-import { resolveRegisterPaths, loadRegisterItems, type PjrItem } from "./register.js";
+import {
+  resolveRegisterPaths,
+  loadRegisterItems,
+  type PjrItem,
+  type RegisterItemView,
+} from "./register.js";
+import {
+  readRegisterEventsFromContent,
+  registerEventFilePath,
+  type RegisterEventV1,
+} from "./register-events.js";
 import {
   buildTimelineWaves,
   loadTimelineIndex,
@@ -27,9 +38,12 @@ import {
 // 関数で算出する。CLI 出力の転記ではなく、routine.ts の実装へ流用して文言解析に依存しない。
 import {
   type RoutineDoc,
+  cronMatches,
   cronOccurrences,
   isRoutineDue,
   routineActionKindLabel,
+  type RoutineExecutionResult,
+  type RoutineRunHistoryEntry,
 } from "./routine.js";
 
 // ================================
@@ -37,7 +51,7 @@ import {
 // ================================
 
 function generatedBanner(command: string): string {
-  return `> このページは \`${command}\` が生成した派生ビューです。正本は Schedule / Timeline（tml-index.yaml）/ 登録簿個票 / routine（rtn-*.yaml・generated/routine-state.json）の機械可読な成果物であり、このページを手編集しても次回のビルドで失われます。`;
+  return `> このページは \`${command}\` が生成した派生ビューです。正本は Schedule / Timeline（tml-index.yaml）/ 登録簿個票・event / exec event / routine（rtn-*.yaml・generated/routine-state.json・generated/routine-runs.jsonl）の機械可読な成果物であり、このページを手編集しても次回のビルドで失われます。`;
 }
 
 export type DashboardPaths = {
@@ -354,6 +368,149 @@ function aggregateRegister(projectId: string): RegisterAggregates {
   return result;
 }
 
+const EXECUTABLE_REGISTER_TYPES = new Set(["todo", "issue", "change-request", "question", "risk"]);
+const PRIORITY_RANK: Record<string, number> = { high: 0, medium: 1, low: 2 };
+
+export type DashboardRegisterCandidate = {
+  id: string;
+  title: string;
+  type: string;
+  priority: string;
+  due: string;
+  registeredAt: string;
+  relatedOpenPjrCount: number;
+};
+
+export type DashboardAttentionRow = {
+  source: "register" | "exec";
+  id: string;
+  reason: string;
+  nextAction: string;
+};
+
+function dateOnlyMs(value: string): number | undefined {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return undefined;
+  const time = Date.parse(`${value}T00:00:00Z`);
+  return Number.isNaN(time) ? undefined : time;
+}
+
+export function rankRegisterCandidates(
+  candidates: DashboardRegisterCandidate[],
+  today: string,
+): DashboardRegisterCandidate[] {
+  const todayMs = dateOnlyMs(today) ?? 0;
+  const dueRank = (item: DashboardRegisterCandidate): number => dateOnlyMs(item.due) ?? Infinity;
+  const registeredRank = (item: DashboardRegisterCandidate): number =>
+    Date.parse(item.registeredAt) || Infinity;
+
+  return [...candidates].sort((a, b) => {
+    const aDue = dueRank(a);
+    const bDue = dueRank(b);
+    const aOverdue = aDue < todayMs ? 0 : 1;
+    const bOverdue = bDue < todayMs ? 0 : 1;
+    return (
+      aOverdue - bOverdue ||
+      aDue - bDue ||
+      (PRIORITY_RANK[a.priority] ?? 99) - (PRIORITY_RANK[b.priority] ?? 99) ||
+      Number(a.relatedOpenPjrCount > 0) - Number(b.relatedOpenPjrCount > 0) ||
+      registeredRank(a) - registeredRank(b) ||
+      a.id.localeCompare(b.id)
+    );
+  });
+}
+
+function pjrLinks(content: string): string[] {
+  return [
+    ...content.matchAll(/\[\[[^\]\n|]*:pjr-([0-9a-z]{4})(?:-[^\]\n|]*)?(?:\|[^\]\n]*)?\]\]/gi),
+  ].map((match) => `PJR-${match[1].toUpperCase()}`);
+}
+
+function buildRegisterCandidates(
+  paths: ReturnType<typeof resolveRegisterPaths>,
+): DashboardRegisterCandidate[] {
+  const views = loadRegisterItems(paths);
+  const openIds = new Set(
+    views.filter((view) => view.item.status === "open").map((view) => view.id),
+  );
+  return views
+    .filter((view) => view.item.status === "open" && EXECUTABLE_REGISTER_TYPES.has(view.item.type))
+    .map((view) => {
+      const links = view.ticketPath
+        ? pjrLinks(readFileSync(view.ticketPath, "utf8")).filter(
+            (id) => id !== view.id && openIds.has(id),
+          )
+        : [];
+      return {
+        id: view.id,
+        title: view.item.title,
+        type: view.item.type,
+        priority: view.item.priority,
+        due: view.item.due,
+        registeredAt: view.item.registeredAt,
+        relatedOpenPjrCount: new Set(links).size,
+      };
+    });
+}
+
+export function latestRegisterWaitReason(events: RegisterEventV1[]): string | undefined {
+  return [...events].reverse().find((event) => event.action === "wait")?.reason;
+}
+
+export function latestExecBlockReasons(
+  blockedIds: Iterable<string>,
+  events: ExecEventV1[],
+): Map<string, string> {
+  const blocked = new Set(blockedIds);
+  const reasons = new Map<string, string>();
+  for (const event of events) {
+    if (blocked.has(event.task_id) && event.type === "block") reasons.set(event.task_id, event.msg);
+  }
+  return reasons;
+}
+
+function readRegisterEvents(view: RegisterItemView, registerPath: string): RegisterEventV1[] {
+  const path = registerEventFilePath(registerPath, view.id);
+  if (!existsSync(path)) return [];
+  return readRegisterEventsFromContent(readFileSync(path, "utf8"), path);
+}
+
+function aggregateAttention(paths: DashboardPaths): DashboardAttentionRow[] {
+  const rows: DashboardAttentionRow[] = [];
+  const registerPaths = resolveRegisterPaths({ project: paths.projectId });
+  const views = loadRegisterItems(registerPaths);
+  for (const view of views.filter((item) => item.item.status === "waiting")) {
+    rows.push({
+      source: "register",
+      id: view.id,
+      reason:
+        latestRegisterWaitReason(readRegisterEvents(view, registerPaths.projectRegisterPath)) ??
+        "-",
+      nextAction: `待機理由を解消し \`specdojo register start --project ${paths.projectId} --id ${view.id}\``,
+    });
+  }
+
+  if (!paths.schedulePath) return rows;
+  const statePath = join(paths.executionGeneratedPath, "state.json");
+  if (!existsSync(statePath)) return rows;
+  const state = readJson(statePath) as StateSnapshot;
+  const blockedIds = Object.entries(state.tasks)
+    .filter(([, task]) => task.state === "blocked")
+    .map(([id]) => id);
+  const reasons = latestExecBlockReasons(
+    blockedIds,
+    readAllEventFiles(paths.schedulePath).map(({ event }) => event),
+  );
+  for (const id of blockedIds.sort()) {
+    rows.push({
+      source: "exec",
+      id,
+      reason: reasons.get(id) ?? state.tasks[id].last_msg ?? "-",
+      nextAction: `原因を解消し \`specdojo exec unblock --project ${paths.projectId} --task ${id} --by <actor> --msg <reason>\``,
+    });
+  }
+  return rows;
+}
+
 // ================================
 // 4. Routine aggregation (rtn-*.yaml + generated/routine-state.json)
 // ================================
@@ -370,6 +527,8 @@ export type DashboardRoutineRow = {
 
 type RoutineAggregates = {
   rows: DashboardRoutineRow[];
+  docs: RoutineDoc[];
+  history: RoutineRunHistoryEntry[];
   error?: string;
 };
 
@@ -382,9 +541,14 @@ export type DashboardRoutineStateEntry = {
 // routine ファイル（rtn-*.yaml）を読み、状態ファイル generated/routine-state.json と突き合わせて
 // 最終実行・実行結果・due 状況を得る。CLI 出力（routine list）の転記に依存しない。
 function aggregateRoutines(routinesPath: string | undefined): RoutineAggregates {
-  if (!routinesPath || !existsSync(routinesPath)) return { rows: [] };
+  if (!routinesPath || !existsSync(routinesPath)) return { rows: [], docs: [], history: [] };
 
-  const result: RoutineAggregates = { rows: [], error: undefined };
+  const result: RoutineAggregates = {
+    rows: [],
+    docs: [],
+    history: readRoutineRunHistory(join(routinesPath, "generated", "routine-runs.jsonl")),
+    error: undefined,
+  };
   const stateEntries = readRoutineStateEntries(
     join(routinesPath, "generated", "routine-state.json"),
   );
@@ -398,6 +562,7 @@ function aggregateRoutines(routinesPath: string | undefined): RoutineAggregates 
     try {
       const doc = parseRoutineFileSafe(join(routinesPath, file));
       if (!doc?.id || typeof doc.id !== "string") continue;
+      result.docs.push(doc);
       buildRoutineRow(result, doc, stateEntries, now);
     } catch {
       result.error = `routine file parse failed: ${file}`;
@@ -406,6 +571,123 @@ function aggregateRoutines(routinesPath: string | undefined): RoutineAggregates 
 
   result.rows.sort((a, b) => a.id.localeCompare(b.id));
   return result;
+}
+
+export function readRoutineRunHistory(historyPath: string): RoutineRunHistoryEntry[] {
+  if (!existsSync(historyPath)) return [];
+  const entries: RoutineRunHistoryEntry[] = [];
+  for (const [index, line] of readFileSync(historyPath, "utf8").split(/\r?\n/).entries()) {
+    if (!line.trim()) continue;
+    try {
+      const value = JSON.parse(line) as RoutineRunHistoryEntry;
+      if (
+        value.version === 1 &&
+        typeof value.routine_id === "string" &&
+        typeof value.scheduled_for === "string" &&
+        typeof value.started_at === "string" &&
+        typeof value.completed_at === "string" &&
+        ["success", "failure", "skipped"].includes(value.result) &&
+        Array.isArray(value.job_run_ids)
+      ) {
+        entries.push(value);
+      } else {
+        throw new Error("invalid routine history entry");
+      }
+    } catch {
+      throw new Error(`routine history parse failed at line ${index + 1}`);
+    }
+  }
+  return entries;
+}
+
+export type DashboardDailyRoutineRow = {
+  day: "昨日" | "本日";
+  routineId: string;
+  scheduledFor: string;
+  startedAt: string;
+  completedAt: string;
+  result: RoutineExecutionResult | "予定";
+  jobRunIds: string[];
+};
+
+function zonedDateKey(date: Date, timeZone: string): string {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(date);
+}
+
+function previousDateKey(dateKey: string): string {
+  const [year, month, day] = dateKey.split("-").map(Number);
+  const previous = new Date(Date.UTC(year, month - 1, day - 1));
+  return previous.toISOString().slice(0, 10);
+}
+
+function scheduledToday(doc: RoutineDoc, today: string, now: Date, timeZone: string): Date[] {
+  if (!doc.trigger || doc.enabled === false) return [];
+  const start = Math.floor((now.getTime() - 36 * 60 * 60 * 1000) / 60_000) * 60_000;
+  const end = Math.floor((now.getTime() + 36 * 60 * 60 * 1000) / 60_000) * 60_000;
+  const matches: Date[] = [];
+  for (let cursor = start; cursor <= end; cursor += 60_000) {
+    const candidate = new Date(cursor);
+    if (
+      zonedDateKey(candidate, timeZone) === today &&
+      cronMatches(doc.trigger.cron, doc.trigger.timezone, candidate)
+    ) {
+      matches.push(candidate);
+    }
+  }
+  return matches;
+}
+
+export function buildDailyRoutineRows(
+  docs: RoutineDoc[],
+  history: RoutineRunHistoryEntry[],
+  now: Date,
+  timeZone = "Asia/Tokyo",
+): DashboardDailyRoutineRow[] {
+  const today = zonedDateKey(now, timeZone);
+  const yesterday = previousDateKey(today);
+  const rows: DashboardDailyRoutineRow[] = history
+    .filter((entry) => {
+      const key = zonedDateKey(new Date(entry.scheduled_for), timeZone);
+      return key === yesterday || key === today;
+    })
+    .map((entry) => ({
+      day: zonedDateKey(new Date(entry.scheduled_for), timeZone) === yesterday ? "昨日" : "本日",
+      routineId: entry.routine_id,
+      scheduledFor: entry.scheduled_for,
+      startedAt: entry.started_at,
+      completedAt: entry.completed_at,
+      result: entry.result,
+      jobRunIds: entry.job_run_ids,
+    }));
+  const completedKeys = new Set(
+    history.map(
+      (entry) => `${entry.routine_id}:${new Date(entry.scheduled_for).toISOString().slice(0, 16)}`,
+    ),
+  );
+  for (const doc of docs) {
+    for (const scheduledFor of scheduledToday(doc, today, now, timeZone)) {
+      const key = `${doc.id}:${scheduledFor.toISOString().slice(0, 16)}`;
+      if (completedKeys.has(key)) continue;
+      rows.push({
+        day: "本日",
+        routineId: doc.id,
+        scheduledFor: scheduledFor.toISOString(),
+        startedAt: "-",
+        completedAt: "-",
+        result: "予定",
+        jobRunIds: [],
+      });
+    }
+  }
+  return rows.sort(
+    (a, b) =>
+      a.scheduledFor.localeCompare(b.scheduledFor) || a.routineId.localeCompare(b.routineId),
+  );
 }
 
 // generated/routine-state.json の routines.<id> が状態の正本。破損時は空。
@@ -713,7 +995,7 @@ function renderRegisterSection(projectId: string): string[] {
 
 function renderRoutineSection(paths: DashboardPaths): string[] {
   const agg = aggregateRoutines(paths.routinesPath);
-  const lines = ["## 4. routine実行状況", ""];
+  const lines = ["## 4. routine定義・最終実行", ""];
 
   if (agg.error) lines.push(`- routine 集計に失敗しました: ${agg.error}`);
   if (agg.rows.length === 0) {
@@ -730,6 +1012,87 @@ function renderRoutineSection(paths: DashboardPaths): string[] {
     );
   }
 
+  lines.push("");
+  return lines;
+}
+
+function renderDailyRoutineSection(paths: DashboardPaths): string[] {
+  const lines = ["## 5. routine 実行状況（昨日・本日）", ""];
+  const agg = aggregateRoutines(paths.routinesPath);
+  const rows = buildDailyRoutineRows(agg.docs, agg.history, new Date());
+  if (rows.length === 0) {
+    lines.push("- （昨日の実行履歴・本日の予定はありません）", "");
+    return lines;
+  }
+  lines.push("| 日 | routine | scheduled_for | started_at | completed_at | 結果 | Job Run |");
+  lines.push("| --- | --- | --- | --- | --- | --- | --- |");
+  for (const row of rows) {
+    lines.push(
+      `| ${row.day} | \`${row.routineId}\` | ${row.scheduledFor} | ${row.startedAt} | ${row.completedAt} | ${row.result} | ${row.jobRunIds.map((id) => `\`${id}\``).join(", ") || "-"} |`,
+    );
+  }
+  lines.push("");
+  return lines;
+}
+
+function renderRecommendedRegisterSection(projectId: string): string[] {
+  const lines = ["## 6. 着手可能な登録項目（おすすめ順）", ""];
+  let rows: DashboardRegisterCandidate[];
+  let today: string;
+  try {
+    const paths = resolveRegisterPaths({ project: projectId });
+    today = zonedDateKey(new Date(), paths.registerDateTimeZone);
+    rows = rankRegisterCandidates(buildRegisterCandidates(paths), today).slice(0, 10);
+  } catch (error) {
+    lines.push(
+      `- 登録簿の集計に失敗しました: ${error instanceof Error ? error.message : String(error)}`,
+      "",
+    );
+    return lines;
+  }
+  if (rows.length === 0) {
+    lines.push("- （着手可能な登録項目はありません）", "");
+    return lines;
+  }
+  lines.push("| 順位 | id | type | title | 期日 | 優先度 | 関連 open PJR | 登録日時 | 根拠 |");
+  lines.push("| ---: | --- | --- | --- | --- | --- | ---: | --- | --- |");
+  const todayMs = dateOnlyMs(today) ?? 0;
+  rows.forEach((row, index) => {
+    const dueMs = dateOnlyMs(row.due);
+    const dueReason =
+      dueMs === undefined
+        ? "期日なし"
+        : dueMs < todayMs
+          ? `期日超過 ${Math.ceil((todayMs - dueMs) / 86_400_000)}日`
+          : `期日まで ${Math.ceil((dueMs - todayMs) / 86_400_000)}日`;
+    lines.push(
+      `| ${index + 1} | \`${row.id}\` | \`${row.type}\` | ${escapeCell(row.title)} | ${row.due} | \`${row.priority}\` | ${row.relatedOpenPjrCount} | ${row.registeredAt} | ${dueReason}、優先度 ${row.priority}、関連 open PJR ${row.relatedOpenPjrCount}件 |`,
+    );
+  });
+  lines.push("");
+  return lines;
+}
+
+function renderAttentionSection(paths: DashboardPaths): string[] {
+  const lines = ["## 7. 要対応（解除待ち）", ""];
+  try {
+    const rows = aggregateAttention(paths);
+    if (rows.length === 0) {
+      lines.push("- （解除待ちの登録項目・exec タスクはありません）", "");
+      return lines;
+    }
+    lines.push("| 種別 | id | 理由 | 次の行動 |");
+    lines.push("| --- | --- | --- | --- |");
+    for (const row of rows) {
+      lines.push(
+        `| ${row.source} | \`${row.id}\` | ${escapeCell(row.reason)} | ${escapeCell(row.nextAction)} |`,
+      );
+    }
+  } catch (error) {
+    lines.push(
+      `- 要対応一覧の集計に失敗しました: ${error instanceof Error ? error.message : String(error)}`,
+    );
+  }
   lines.push("");
   return lines;
 }
@@ -762,6 +1125,9 @@ export function buildDashboardMarkdown(paths: DashboardPaths): string {
   lines.push(...renderTimelineSection(paths));
   lines.push(...renderRegisterSection(paths.projectId));
   lines.push(...renderRoutineSection(paths));
+  lines.push(...renderDailyRoutineSection(paths));
+  lines.push(...renderRecommendedRegisterSection(paths.projectId));
+  lines.push(...renderAttentionSection(paths));
 
   // 各セクションは次のセクションとの区切りとして空行で終わる。最後のセクションの空行を
   // そのまま残すと、書き出し時に付ける改行と合わさって末尾が空行2行になり markdownlint の

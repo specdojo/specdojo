@@ -1,0 +1,12 @@
+dashboard の日次ブリーフィング機能を実装しました。
+
+- routine 実行履歴を JSONL へ追記
+- 昨日・本日の routine 状況、登録項目おすすめ順、解除待ち一覧を追加
+- 毎朝5時の dashboard 更新 Job/routine を追加
+- cron、運用ガイド、CLI リファレンス、個票を更新
+- 型検査、lint、定義検証、dashboard 実生成、catalog/index 検証を通過
+- 単体・統合・schema 検証は指示どおり親 runner に委譲
+
+<specdojo_executor_evidence>
+{"final_message":"dashboard 日次ブリーフィング、routine 実行履歴、毎朝5時更新を実装し、親 runner 担当外の検証を完了した","validations":[{"command":"npx prettier --write src/dashboard.ts src/routine.ts tests/src/dashboard.test.ts tests/src/routine.test.ts docs/specdojo/schemas/v1/routine-run.schema.yaml docs/ja/projects/prj-0001/jobs/job-dashboard-build.yaml docs/ja/projects/prj-0001/routines/rtn-dashboard-refresh.yaml docs/ja/specdojo/references/command-reference.md docs/ja/specdojo/guides/routine-operation-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-2jye-dashboard-daily-briefing.md","status":"passed","summary":"対象ファイルを整形済み"},{"command":"npm run typecheck","status":"passed","summary":"TypeScript 型検査成功"},{"command":"npx eslint src/dashboard.ts src/routine.ts tests/src/dashboard.test.ts tests/src/routine.test.ts","status":"passed","summary":"ESLint エラーなし"},{"command":"npx markdownlint docs/ja/specdojo/references/command-reference.md docs/ja/specdojo/guides/routine-operation-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-2jye-dashboard-daily-briefing.md docs/ja/projects/prj-0001/execution/generated/dashboard.md","status":"passed","summary":"Markdown 検査成功"},{"command":"node --import tsx src/specdojo.ts routine validate --project prj-0001","status":"passed","summary":"9 routine、エラー0件"},{"command":"node --import tsx src/specdojo.ts job validate --project prj-0001","status":"passed","summary":"9 Job、エラー0件"},{"command":"node --import tsx src/specdojo.ts dashboard build --project prj-0001","status":"passed","summary":"dashboard とタイムライン SVG を生成"},{"command":"node --import tsx src/specdojo.ts register build --project prj-0001","status":"passed","summary":"登録簿派生ビューを生成"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"検証成功。既存の欠落成果物に関する警告のみ"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1820件の文書 index を生成"},{"command":"npm run test:unit","status":"not_run","summary":"親 runner の allowlisted validation に委譲"},{"command":"npm run test:integration","status":"not_run","summary":"親 runner の allowlisted validation に委譲"},{"command":"npm run validate:schema","status":"not_run","summary":"親 runner の allowlisted validation に委譲"}]}
+</specdojo_executor_evidence>

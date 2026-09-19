@@ -44,18 +44,22 @@ specdojo:
 
 ## 3. 作業内容
 
-| No  | 作業                                                                                    | 担当 | 状態 | メモ                                              |
-| --- | --------------------------------------------------------------------------------------- | ---- | ---- | ------------------------------------------------- |
-| 1   | `routine run` に `routine-runs.jsonl` の追記を実装し、schema とテストを追加する         | DEV  | open | codex-expert-executor / gemma-reporter / worktree |
-| 2   | dashboard に routine 実行状況（昨日・本日）の節を追加する                               | DEV  | open | 作業 1 と同一タスク                               |
-| 3   | dashboard に着手可能な登録項目のおすすめ順と要対応（waiting / blocked）の節を追加する   | DEV  | open | 同上                                              |
-| 4   | `rtn-dashboard-refresh` / `job-dashboard-build` を定義し、cron に 5:00・6:00 を追加する | OPS  | open | 同上                                              |
-| 5   | guide / command-reference を更新する                                                    | DEV  | open | 同上                                              |
-| 6   | 生成結果を確認し、順位付けの根拠列や表の粒度を調整する                                  | PM   | open | オーケストレーターが直接対応                      |
+| No  | 作業                                                                                    | 担当 | 状態 | メモ                                               |
+| --- | --------------------------------------------------------------------------------------- | ---- | ---- | -------------------------------------------------- |
+| 1   | `routine run` に `routine-runs.jsonl` の追記を実装し、schema とテストを追加する         | DEV  | done | 1実行1行の JSON Lines 履歴と schema を追加         |
+| 2   | dashboard に routine 実行状況（昨日・本日）の節を追加する                               | DEV  | done | Asia/Tokyo の日付境界で実績と予定を集計            |
+| 3   | dashboard に着手可能な登録項目のおすすめ順と要対応（waiting / blocked）の節を追加する   | DEV  | done | 根拠列、解除理由、次の行動を表示                   |
+| 4   | `rtn-dashboard-refresh` / `job-dashboard-build` を定義し、cron に 5:00・6:00 を追加する | OPS  | done | 5時更新と due runner の追加確認枠を定義            |
+| 5   | guide / command-reference を更新する                                                    | DEV  | done | 履歴正本、dashboard 新節、cron 設定を記載          |
+| 6   | 生成結果を確認し、順位付けの根拠列や表の粒度を調整する                                  | PM   | done | 上位10件に期日・優先度・関連項目数・登録日時を表示 |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `routine run` が完了時に `routines/generated/routine-runs.jsonl` へ実行枠、開始・終了時刻、結果、Job Run ID を追記するようにした。
+- dashboard に昨日・本日の routine、着手可能な登録項目の上位10件、register の `waiting` と exec の `blocked` をまとめた解除待ち一覧を追加した。
+- `job-dashboard-build` と毎朝5時の `rtn-dashboard-refresh` を追加し、devcontainer の due runner を0時・1時・5時・6時・8時・16時に起動する構成へ更新した。既存の1時の成果物評価枠は維持した。
+- 単体テストへ履歴追記、Asia/Tokyo の日付境界、候補の並び順、最新の `wait` / `block` 理由抽出を追加した。
+- 残課題はない。routine の実行履歴は次回の実運用実行から蓄積される。
 
 ## 5. 関連ドキュメント
 

@@ -1,0 +1,36 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: SpecDojo Routine Run History Entry
+description: One JSON Lines record written for each routine execution.
+type: object
+additionalProperties: false
+required:
+  - version
+  - routine_id
+  - scheduled_for
+  - started_at
+  - completed_at
+  - result
+  - job_run_ids
+properties:
+  version:
+    const: 1
+  routine_id:
+    type: string
+    pattern: "^rtn-[a-z0-9][a-z0-9-]*$"
+  scheduled_for:
+    type: string
+    format: date-time
+  started_at:
+    type: string
+    format: date-time
+  completed_at:
+    type: string
+    format: date-time
+  result:
+    enum: [success, failure, skipped]
+  job_run_ids:
+    type: array
+    uniqueItems: true
+    items:
+      type: string
+      pattern: "^JBR-[A-Za-z0-9-]+$"
