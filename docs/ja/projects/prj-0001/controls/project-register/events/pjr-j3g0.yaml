@@ -61,3 +61,16 @@
       from: "-"
       to: "agent exited with non-zero code: runner による検証 `test-integration` が failed となっているため。プランの完了条件である静的検査およびテストの成功を満たしていない。"
   previous_event_id: reg_fc31824c0ae247618c24ce8db4d8c53e
+- v: 1
+  id: reg_b099837de7964db2b0abc6e2159e9c74
+  ts: "2026-09-19T09:20:47Z"
+  action: review
+  actor: specdojo-orchestrator (claude)
+  from_status: waiting
+  to_status: review
+  reason: 親検証 test-integration の失敗は E2E fixture の hook が統合 commit に届かない・checkpoint も落とす問題と、統合 commit 失敗後の merge 済み誤判定。fixture と判定を修正して develop へ統合
+  changes:
+    - field: status
+      from: waiting
+      to: review
+  previous_event_id: reg_bd9e804e86f347fca5c32034d72c5d16
