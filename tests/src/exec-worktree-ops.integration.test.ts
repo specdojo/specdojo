@@ -8,6 +8,7 @@ import {
   commitWorktreeChanges,
   deliverableStatus,
   discardStaleExecWorktree,
+  isExecBranchMergedIntoCurrent,
   mergeWorktreeIntoCurrent,
   listOrphanedExecBranches,
   pruneOrphanedExecBranches,
@@ -903,6 +904,39 @@ describe("exec worktree ops", () => {
 
     mergeWorktreeIntoCurrent({ context: fixture.context, worktree, taskId });
     expect(existsSync(join(fixture.repo, "docs", "removed.yaml"))).toBe(false);
+  });
+});
+
+describe("isExecBranchMergedIntoCurrent", () => {
+  it("統合 commit が失敗して先端が checkpoint のままの exec ブランチは merge 済みとみなさない", () => {
+    const fixture = setupRepository();
+    git(fixture.repo, "branch", "exec/test-T-DOC-010");
+    const worktree: ExecWorktree = {
+      path: join(fixture.worktreeBase, "test-T-DOC-010"),
+      branch: "exec/test-T-DOC-010",
+      name: "test-T-DOC-010",
+      created: false,
+    };
+
+    expect(isExecBranchMergedIntoCurrent({ context: fixture.context, worktree })).toBe(false);
+  });
+
+  it("--no-ff で merge 済みの exec ブランチは merge 済みとみなす", () => {
+    const fixture = setupRepository();
+    git(fixture.repo, "checkout", "-b", "exec/test-T-DOC-010");
+    writeFile(join(fixture.repo, "docs", "doc.md"), "task change\n");
+    git(fixture.repo, "add", "docs/doc.md");
+    git(fixture.repo, "commit", "-m", "exec(T-DOC-010): apply task changes");
+    git(fixture.repo, "checkout", "-");
+    git(fixture.repo, "merge", "--no-ff", "--no-edit", "exec/test-T-DOC-010");
+    const worktree: ExecWorktree = {
+      path: join(fixture.worktreeBase, "test-T-DOC-010"),
+      branch: "exec/test-T-DOC-010",
+      name: "test-T-DOC-010",
+      created: false,
+    };
+
+    expect(isExecBranchMergedIntoCurrent({ context: fixture.context, worktree })).toBe(true);
   });
 });
 

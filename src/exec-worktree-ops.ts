@@ -647,18 +647,25 @@ export function mergeWorktreeIntoCurrent(params: {
 // stage retry uses this to stay idempotent: when a previous attempt merged but failed afterwards
 // (for example while removing the worktree), re-running the merge would fail with "No commits to
 // merge", so the retry skips the merge and continues with the remaining integration steps.
+// exec ブランチが統合ブランチへ merge 済みかを判定する。ancestor 判定だけでは、統合 commit が
+// 失敗して exec ブランチの先端が checkpoint（統合ブランチ上の commit）のままの場合も true に
+// なる。runner の統合は --no-ff で merge するため、merge 済みなら先端は HEAD の first-parent
+// 連鎖には含まれない。先端が first-parent 連鎖上にあるなら、task の commit がまだ無い状態とみなす。
 export function isExecBranchMergedIntoCurrent(params: {
   context: WorktreeOpsContext;
   worktree: ExecWorktree;
 }): boolean {
-  return (
-    gitResult(params.context.repoRoot, [
-      "merge-base",
-      "--is-ancestor",
-      params.worktree.branch,
-      "HEAD",
-    ]).status === 0
-  );
+  const repoRoot = params.context.repoRoot;
+  const isAncestor =
+    gitResult(repoRoot, ["merge-base", "--is-ancestor", params.worktree.branch, "HEAD"]).status ===
+    0;
+  if (!isAncestor) return false;
+  const tip = gitResult(repoRoot, ["rev-parse", "--verify", `${params.worktree.branch}^{commit}`]);
+  if (tip.status !== 0 || typeof tip.stdout !== "string") return false;
+  const firstParentChain = gitOutput(repoRoot, ["rev-list", "--first-parent", "HEAD"])
+    .split("\n")
+    .map((line) => line.trim());
+  return !firstParentChain.includes(tip.stdout.trim());
 }
 
 // Remove a task worktree once its commit-target changes are committed and merged.

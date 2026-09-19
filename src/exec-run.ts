@@ -136,6 +136,7 @@ import {
 } from "./exec-worktree.js";
 import {
   checkpointAndEnsureWorktree,
+  commitTargetPaths,
   commitWorktreeChanges,
   discardStaleExecWorktree,
   isExecBranchMergedIntoCurrent,
@@ -195,6 +196,7 @@ import {
   updatePipelineStage,
   writePipelineState,
   type PipelineStageState,
+  type PipelineStageRole,
   type PipelineState,
 } from "./exec-pipeline-state.js";
 
@@ -371,7 +373,7 @@ type PreparedTask = {
   resultScaffold?: Record<string, unknown>;
   priorLimitAttempts?: number;
   pipelineRunId?: string;
-  pipelineResumeStage?: AgentStageRole;
+  pipelineResumeStage?: PipelineStageRole;
   pipelineStateRef?: string;
   reporterCandidates?: AgentRunCandidate[];
 };
@@ -1664,6 +1666,7 @@ async function runPreparedTask(
   let pipelineStatePath: string | undefined;
   let pipelineStateRef: string | undefined;
   let resumeReporter = false;
+  let resumeIntegration = false;
 
   if (!prepared.pipelineRunId) {
     process.stdout.write(`  Running: ${prepared.agentCandidates[0]?.command ?? ""}\n`);
@@ -1693,7 +1696,21 @@ async function runPreparedTask(
       pipelineState = checkpoint.state;
       pipelineStatePath = checkpoint.statePath;
       pipelineStateRef = prepared.pipelineStateRef;
-      if (
+      if (prepared.pipelineResumeStage === "integrate") {
+        if (
+          checkpoint.state.stages.executor.status !== "succeeded" ||
+          checkpoint.state.stages.reporter.status !== "succeeded"
+        ) {
+          throw new Error(
+            `integration resume requires succeeded executor and reporter stages for ${prepared.task.id}`,
+          );
+        }
+        executorEvidenceRef = checkpoint.state.stages.executor.artifact_ref ?? undefined;
+        resumeIntegration = true;
+        process.stdout.write(
+          `  Resuming runner-owned integration from pipeline state: ${prepared.pipelineStateRef}\n`,
+        );
+      } else if (
         prepared.pipelineResumeStage === "reporter" &&
         checkpoint.evidence &&
         checkpoint.state.stages.executor.artifact_ref
@@ -1722,6 +1739,12 @@ async function runPreparedTask(
     }
   }
 
+  if (prepared.pipelineResumeStage === "integrate" && !resumeIntegration) {
+    throw new Error(
+      `pipeline state is missing or invalid for integration resume: ${prepared.task.id}`,
+    );
+  }
+
   if (prepared.pipelineRunId && !pipelineState) {
     const now = new Date().toISOString();
     const location = pipelineStateLocation({
@@ -1743,7 +1766,13 @@ async function runPreparedTask(
     writePipelineState(pipelineStatePath, pipelineState);
   }
 
-  if (prepared.pipelineRunId && !resumeReporter && pipelineState && pipelineStatePath) {
+  if (
+    prepared.pipelineRunId &&
+    !resumeReporter &&
+    !resumeIntegration &&
+    pipelineState &&
+    pipelineStatePath
+  ) {
     const executorStartedAt = new Date().toISOString();
     pipelineState = updatePipelineStage(
       pipelineState,
@@ -1824,7 +1853,7 @@ async function runPreparedTask(
     }
   }
 
-  if (prepared.pipelineRunId && result === "success") {
+  if (prepared.pipelineRunId && result === "success" && !resumeIntegration) {
     pipelineFailureStage = "reporter";
     if (
       !executorEvidence ||
@@ -1985,30 +2014,79 @@ async function runPreparedTask(
         return "failure";
       }
 
-      // Record completion in the worktree result, then commit (result + deliverables) onto the
-      // exec branch and merge it into the current root branch so the changes are integrated.
-      // Integration guards (e.g. human-only "ready" promotion) can reject the commit; treat such
-      // a rejection as a block so the agent's run does not silently land or crash the loop.
-      if (worktreeResultPath) await updateResultStatus(worktreeResultPath, "complete", completedAt);
+      // A previous attempt may have merged successfully and failed only while removing the
+      // worktree. In that case the branch is already contained in HEAD: do not create another
+      // commit or merge. Discard only runner-owned lifecycle diffs left by the failure handler,
+      // then continue with removal and completion.
+      const alreadyMerged =
+        resumeIntegration &&
+        isExecBranchMergedIntoCurrent({ context, worktree: prepared.worktree });
       try {
-        commitWorktreeChanges({ context, worktree: prepared.worktree, taskId: prepared.task.id });
-        mergeWorktreeIntoCurrent({
-          context,
-          worktree: prepared.worktree,
-          taskId: prepared.task.id,
-        });
-      } catch (error) {
-        const reason = error instanceof Error ? error.message : String(error);
-        if (worktreeResultPath)
-          await updateResultStatus(worktreeResultPath, "blocked", completedAt, reason);
-        spawnBlock(projectId, prepared.task.id, prepared.actor, reason);
-        process.stderr.write(`${reason}\n`);
-        process.stdout.write(
-          `  Blocked: ${prepared.task.id} (worktree kept: ${prepared.worktree.path})\n`,
-        );
-        return "failure";
-      }
-      try {
+        if (alreadyMerged) {
+          const lifecyclePaths = new Set(
+            [worktreeResultPath, pipelineStatePath]
+              .filter((path): path is string => !!path)
+              .map((path) => relative(prepared.worktree.path, path).split(sep).join("/")),
+          );
+          const dirtyTargets = commitTargetPaths(context, prepared.worktree, prepared.task.id);
+          const unexpected = dirtyTargets.filter((path) => !lifecyclePaths.has(path));
+          if (unexpected.length > 0) {
+            throw new Error(
+              `already-merged worktree has new task changes: ${unexpected.join(", ")}`,
+            );
+          }
+          if (dirtyTargets.length > 0) {
+            gitOutput(prepared.worktree.path, [
+              "restore",
+              "--source=HEAD",
+              "--staged",
+              "--worktree",
+              "--",
+              ...dirtyTargets,
+            ]);
+          }
+          process.stdout.write(
+            `  [integrate] already merged: ${prepared.worktree.branch} (skipping commit and merge)\n`,
+          );
+        } else {
+          // Record completion and integration start before the first commit. The succeeded state
+          // is committed on the exec branch before the single merge, so successful runs retain a
+          // durable integrate checkpoint after the worktree is removed.
+          if (worktreeResultPath)
+            await updateResultStatus(worktreeResultPath, "complete", completedAt);
+          const integrateStartedAt = new Date().toISOString();
+          recordIntegrateStage(pipelineStatePath, integrateStartedAt, (current) => ({
+            status: "running",
+            actor: prepared.actor,
+            attempts: (current?.attempts ?? 0) + 1,
+            started_at: integrateStartedAt,
+            completed_at: null,
+          }));
+          commitWorktreeChanges({
+            context,
+            worktree: prepared.worktree,
+            taskId: prepared.task.id,
+          });
+
+          if (pipelineStatePath) {
+            const integrateCompletedAt = new Date().toISOString();
+            recordIntegrateStage(pipelineStatePath, integrateCompletedAt, () => ({
+              status: "succeeded",
+              completed_at: integrateCompletedAt,
+            }));
+            commitWorktreeChanges({
+              context,
+              worktree: prepared.worktree,
+              taskId: prepared.task.id,
+            });
+          }
+          mergeWorktreeIntoCurrent({
+            context,
+            worktree: prepared.worktree,
+            taskId: prepared.task.id,
+          });
+        }
+
         removeWorktree({
           context,
           worktree: prepared.worktree,
@@ -2016,10 +2094,39 @@ async function runPreparedTask(
           deleteBranch: true,
         });
       } catch (error) {
-        if (!(error instanceof WorktreeRemovedBranchDeletionError)) throw error;
-        // The task changes are already merged and the worktree is gone. Keep task completion
-        // independent from branch housekeeping, but make the residue and recovery command clear.
-        process.stderr.write(`Warning: ${error.message}; run exec worktree prune.\n`);
+        if (error instanceof WorktreeRemovedBranchDeletionError) {
+          // The task changes are already merged and the worktree is gone. Keep task completion
+          // independent from branch housekeeping, but make the residue and recovery command clear.
+          process.stderr.write(`Warning: ${error.message}; run exec worktree prune.\n`);
+        } else {
+          const reason = error instanceof Error ? error.message : String(error);
+          const integrateFailedAt = new Date().toISOString();
+          recordIntegrateStage(pipelineStatePath, integrateFailedAt, () => ({
+            status: "failed",
+            completed_at: integrateFailedAt,
+          }));
+          if (worktreeResultPath)
+            await updateResultStatus(worktreeResultPath, "blocked", completedAt, reason);
+          spawnBlock(
+            projectId,
+            prepared.task.id,
+            prepared.actor,
+            reason,
+            pipelineStateRef
+              ? pipelineRecoveryMeta({
+                  stage: "integrate",
+                  evidenceRef: executorEvidenceRef,
+                  stateRef: pipelineStateRef,
+                  runId: pipelineState?.run_id ?? prepared.pipelineRunId,
+                })
+              : { limit_deferred: "false" },
+          );
+          process.stderr.write(`${reason}\n`);
+          process.stdout.write(
+            `  Blocked: ${prepared.task.id} (worktree kept: ${prepared.worktree.path})\n`,
+          );
+          return "failure";
+        }
       }
       spawnComplete(projectId, prepared.task.id, prepared.actor);
       process.stdout.write(`  Done: ${prepared.task.id}\n`);
@@ -2241,7 +2348,7 @@ export function extractBlockReason(stderr: string): string {
 }
 
 export function pipelineRecoveryMeta(input: {
-  stage: AgentStageRole;
+  stage: PipelineStageRole;
   evidenceRef?: string;
   stateRef?: string;
   runId?: string;
@@ -4434,10 +4541,9 @@ function registerWaitSummary(params: {
   };
 }
 
-// 統合段（commit → merge → worktree 撤去）の進捗を pipeline-state へ記録する。state は
-// worktree 内にあり、統合成功時は worktree ごと撤去されるため、記録するのは開始（running）と
-// 失敗（failed）だけにする。merge 後に書き込むと commit 対象が未コミットのまま残り、
-// removeWorktree のガードに掛かって撤去できなくなる。記帳の失敗で統合自体を止めない。
+// 統合段（commit → merge → worktree 撤去）の進捗を pipeline-state へ記録する。Schedule は
+// succeeded を exec branch へ commit してから merge し、register は開始と失敗を worktree に
+// 記録する。記帳の失敗で統合自体を止めない。
 function recordIntegrateStage(
   statePath: string | undefined,
   updatedAt: string,
@@ -5908,6 +6014,65 @@ export function registerCycleCommand(exec: Command): void {
   });
 }
 
+// Restore a Schedule pipeline at its runner-owned integration stage without resolving or starting
+// an agent. The block event supplies the run-scoped state reference; both agent stages must still
+// be succeeded and the original worktree/result must exist before any lifecycle state is changed.
+function prepareScheduleIntegrationResume(params: {
+  task: ReadyTaskView;
+  taskState: CurrentState | undefined;
+  actor: string;
+  projectId: string | undefined;
+  repoRoot: string;
+  executionPath: string;
+}): PreparedTask {
+  const { task, taskState, actor, projectId, repoRoot, executionPath } = params;
+  const stateRef =
+    typeof taskState?.meta?.pipeline_state_ref === "string"
+      ? taskState.meta.pipeline_state_ref
+      : undefined;
+  if (!stateRef) {
+    throw new Error(`integration resume has no pipeline_state_ref for ${task.id}`);
+  }
+
+  const worktree = findExecWorktree(repoRoot, qualifyTaskId(projectId, task.id));
+  if (!worktree) throw new Error(`no exec worktree to resume integration for ${task.id}`);
+
+  const checkpoint = loadPipelineResumeCheckpoint({
+    worktreePath: worktree.path,
+    stateRef,
+    taskId: task.id,
+  });
+  if (!checkpoint) throw new Error(`pipeline state is missing or invalid for ${task.id}`);
+  if (
+    checkpoint.state.stages.executor.status !== "succeeded" ||
+    checkpoint.state.stages.reporter.status !== "succeeded"
+  ) {
+    throw new Error(
+      `integration resume requires succeeded executor and reporter stages for ${task.id}`,
+    );
+  }
+
+  const resultPath = join(executionPath, "exec", "results", `${task.id}-result.md`);
+  const worktreeResultPath = pathInsideWorktree(repoRoot, worktree.path, resultPath);
+  if (!existsSync(resultPath) || !existsSync(worktreeResultPath)) {
+    throw new Error(`result is missing for integration resume: ${task.id}-result.md`);
+  }
+
+  return {
+    task,
+    actor,
+    agentCandidates: [],
+    plan: "",
+    prompt: "",
+    worktree,
+    resultPath,
+    resultScaffold: readResultFrontmatterSnapshot(resultPath),
+    pipelineRunId: checkpoint.state.run_id,
+    pipelineResumeStage: "integrate",
+    pipelineStateRef: stateRef,
+  };
+}
+
 // Resume tasks left in "doing" state by an interrupted run. Unlike --auto (which selects from
 // ready.json and provably excludes "doing"/"blocked" tasks), resume folds the event log to find
 // in-flight tasks and re-runs each on its existing worktree, reusing the claiming actor and the
@@ -5996,11 +6161,12 @@ async function runResumeMode(opts: RunOpts): Promise<void> {
 
     if (opts.task) {
       const taskState = snapshot.tasks[opts.task];
-      const canResumeBlockedReporter =
+      const blockedPipelineStage = taskState?.meta?.pipeline_stage;
+      const canResumeBlockedPipeline =
         taskState?.state === "blocked" &&
-        taskState.meta?.pipeline_stage === "reporter" &&
+        (blockedPipelineStage === "reporter" || blockedPipelineStage === "integrate") &&
         typeof taskState.meta?.pipeline_state_ref === "string";
-      if (canResumeBlockedReporter) {
+      if (canResumeBlockedPipeline) {
         const actor = taskState.last_by ?? opts.by ?? "exec-pipeline-resume";
         if (!dryRun) {
           const meta = Object.entries(taskState.meta ?? {}).map(
@@ -6012,7 +6178,10 @@ async function runResumeMode(opts: RunOpts): Promise<void> {
             buildEvent("unblock", {
               task: opts.task,
               by: actor,
-              msg: "resume reporter from persisted pipeline state",
+              msg:
+                blockedPipelineStage === "integrate"
+                  ? "resume integration from persisted pipeline state"
+                  : "resume reporter from persisted pipeline state",
               meta,
             }),
           );
@@ -6056,38 +6225,48 @@ async function runResumeMode(opts: RunOpts): Promise<void> {
       try {
         const task = buildTaskView(schedulePath, executionPath, taskId);
         const resolved = resolveClaimingActor(snapshot.tasks[taskId], opts.by);
-        const prepared = await prepareSingleTask(
-          task,
-          projectId,
-          repoRoot,
-          schedulePath,
-          executionPath,
-          roster,
-          localIdToPhaseSets,
-          phaseSetSuffixToId,
-          resolved.actor,
-          { edit: opts.editBy, review: opts.reviewBy },
-          { executor: opts.executorBy, reporter: opts.reporterBy },
-          resolved.actor,
-          dryRun,
-          true, // skipClaim: the task is already "doing" and remains claimed
-          worktreeBase,
-          planGenPaths,
-          execDefaults,
-          undefined,
-          {
-            stage:
-              snapshot.tasks[taskId]?.meta?.pipeline_stage === "reporter"
-                ? "reporter"
-                : snapshot.tasks[taskId]?.meta?.pipeline_stage === "executor"
-                  ? "executor"
-                  : undefined,
-            stateRef:
-              typeof snapshot.tasks[taskId]?.meta?.pipeline_state_ref === "string"
-                ? snapshot.tasks[taskId]?.meta?.pipeline_state_ref
-                : undefined,
-          },
-        );
+        const prepared =
+          snapshot.tasks[taskId]?.meta?.pipeline_stage === "integrate"
+            ? prepareScheduleIntegrationResume({
+                task,
+                taskState: snapshot.tasks[taskId],
+                actor: resolved.actor ?? snapshot.tasks[taskId]?.last_by ?? "exec-pipeline-resume",
+                projectId,
+                repoRoot,
+                executionPath,
+              })
+            : await prepareSingleTask(
+                task,
+                projectId,
+                repoRoot,
+                schedulePath,
+                executionPath,
+                roster,
+                localIdToPhaseSets,
+                phaseSetSuffixToId,
+                resolved.actor,
+                { edit: opts.editBy, review: opts.reviewBy },
+                { executor: opts.executorBy, reporter: opts.reporterBy },
+                resolved.actor,
+                dryRun,
+                true, // skipClaim: the task is already "doing" and remains claimed
+                worktreeBase,
+                planGenPaths,
+                execDefaults,
+                undefined,
+                {
+                  stage:
+                    snapshot.tasks[taskId]?.meta?.pipeline_stage === "reporter"
+                      ? "reporter"
+                      : snapshot.tasks[taskId]?.meta?.pipeline_stage === "executor"
+                        ? "executor"
+                        : undefined,
+                  stateRef:
+                    typeof snapshot.tasks[taskId]?.meta?.pipeline_state_ref === "string"
+                      ? snapshot.tasks[taskId]?.meta?.pipeline_state_ref
+                      : undefined,
+                },
+              );
         if (typeof prepared !== "string") {
           const attempts = snapshot.tasks[taskId]?.meta?.limit_attempts;
           prepared.priorLimitAttempts =
@@ -6151,11 +6330,14 @@ export function registerResumeCommand(exec: Command): void {
   const cmd = exec
     .command("resume")
     .description(
-      'Resume tasks left in "doing" state, or due deferred-limit tasks, on existing worktrees',
+      "Resume in-flight tasks, blocked reporter/integration stages, or due deferred-limit tasks on existing worktrees",
     );
 
   cmd.option("--project <projectId>", "Project id in .specdojo/specdojo.config.json");
-  cmd.option("--task <taskId>", 'Resume only this task ("doing", or due with --due)');
+  cmd.option(
+    "--task <taskId>",
+    'Resume only this task ("doing", blocked pipeline stage, or due with --due)',
+  );
   cmd.option(
     "--due",
     "Atomically claim and resume only retryable limit blocks whose resume time has arrived",

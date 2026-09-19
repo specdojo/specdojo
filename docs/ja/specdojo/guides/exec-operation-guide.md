@@ -193,17 +193,18 @@ agent起動時はhook由来の`GIT_DIR`などを継承せず、各trialのcwdか
 
 `blocked` は人の判断や外部対応が必要な障害を表します。状況に応じて次のコマンドを使います。
 
-| 状況                              | コマンド                  | 結果                       |
-| --------------------------------- | ------------------------- | -------------------------- |
-| 中断で `doing` のまま             | `exec resume`             | 既存 worktree 上で継続     |
-| pipeline の reporter で `blocked` | `exec resume --task <id>` | executor evidence から再開 |
-| 障害を解消し同じ試行を続ける      | `exec unblock`            | `blocked -> doing`         |
-| 試行を破棄して最初からやり直す    | `exec release`            | `blocked -> todo`          |
-| 着手前のタスクを恒久的に中止する  | `exec cancel`             | `todo -> cancelled`        |
+| 状況                              | コマンド                  | 結果                         |
+| --------------------------------- | ------------------------- | ---------------------------- |
+| 中断で `doing` のまま             | `exec resume`             | 既存 worktree 上で継続       |
+| pipeline の reporter で `blocked` | `exec resume --task <id>` | executor evidence から再開   |
+| pipeline の統合段で `blocked`     | `exec resume --task <id>` | agent を起動せず統合だけ再開 |
+| 障害を解消し同じ試行を続ける      | `exec unblock`            | `blocked -> doing`           |
+| 試行を破棄して最初からやり直す    | `exec release`            | `blocked -> todo`            |
+| 着手前のタスクを恒久的に中止する  | `exec cancel`             | `todo -> cancelled`          |
 
 `release` は `doing` / `blocked` の試行を破棄して `todo` に戻します。`cancel` は `todo` のタスクを終端状態にする操作です。
 
-executor / reporter pipeline では、run ごとの `exec/evidence/<task>/<run>/pipeline-state.json` に各段（executor / reporter と、runner が担う統合段 `integrate`）の状態、agent、試行回数、evidence / result 参照を保存します。reporter 失敗の block event は `pipeline_stage=reporter`、`pipeline_state_ref`、`evidence_ref` を保持します。`exec resume --task <task-id>` はこの block を同じ task claim のまま再開し、state と succeeded executor evidence の task ID / run ID が一致する場合だけ executor を省略します。state または evidence が欠損・不整合なら executor を重複利用せず、新しい run として安全に実行し直します。
+executor / reporter pipeline では、run ごとの `exec/evidence/<task>/<run>/pipeline-state.json` に各段（executor / reporter と、runner が担う統合段 `integrate`）の状態、agent、試行回数、evidence / result 参照を保存します。reporter 失敗の block event は `pipeline_stage=reporter`、統合失敗の block event は `pipeline_stage=integrate` を持ち、どちらも `pipeline_state_ref` から同じ run を再開します。`exec resume --task <task-id>` は state に応じて reporter または統合段だけを再開し、完了済みの agent 段を重複実行しません。
 
 stage agent を明示する場合は次のように指定します。片方を省略すると、その stage は要件と優先度から自動選択されます。
 
@@ -339,6 +340,7 @@ stage 別の失敗と対応は次のとおりです。
 | reporter の出力形式エラー     | reporter を最大3回再実行した後に `failed`              | 同上（executor は再実行されない）                                    |
 | 親 runner の検証失敗          | evidence の `source: runner` が `failed`               | 原因を解消して reporter を再開する（親検証だけ再実行される）         |
 | reporter の `outcome=blocked` | result が `blocked` になり `block_reason` に理由が残る | 理由を読み、成果物側の不足を解消してから再実行する                   |
+| commit / merge / 撤去の失敗   | executor・reporter が `succeeded`、統合が `failed`     | `exec resume --task <task-id>` で統合段だけ再開する                  |
 
 reporter で止まったタスクは、同じ claim のまま reporter だけを再開できます。再開時は `pipeline-state.json` と executor evidence の task ID / run ID の一致を確認し、一致しない場合や欠損している場合は evidence を再利用せず、新しい run として executor から実行し直します。保存済みの親 runner 検証だけが失敗している場合は、現在の worktree でその固定許可リスト検証を再実行し、結果を evidence へ反映してから reporter を起動します。`source: executor` の検証失敗は成果物側の記録なので、この経路では再評価しません。
 
@@ -348,6 +350,8 @@ specdojo exec resume \
   --task <task-id> \
   --reporter-by <reporter-nickname>
 ```
+
+executor と reporter が成功した後の commit・merge・worktree 撤去で止まった場合、`exec resume --task <task-id>` は agent を起動せず、`pipeline-state.json` の `integrate` 段から統合だけを再開します。前回の merge が完了している場合は exec branch を再 merge せず、runner が残した lifecycle 差分を確認したうえで worktree 撤去と `exec complete` だけを行います。通常実行の成功時は `integrate.status=succeeded`、失敗時は `failed` と block event の `pipeline_state_ref` が残ります。
 
 ### 2.7. register実行の再開
 

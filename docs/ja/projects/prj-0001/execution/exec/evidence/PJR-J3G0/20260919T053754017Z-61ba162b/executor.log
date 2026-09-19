@@ -1,0 +1,14 @@
+Schedule タスクの統合段のみを再開できるよう実装しました。
+
+- `integrate` の開始・成功・失敗を pipeline state に記録
+- commit／merge／撤去失敗後、agent を再起動せず `exec resume --task` で再開
+- merge 済みの場合は再 merge を回避
+- 指定された2つの統合テストを追加
+- 個票と運用ガイドを更新
+- 型検査、lint、文書・カタログ検査は成功
+
+`test:unit`、`test:integration`、`validate:schema` は指示どおり親 runner に委ねています。
+
+<specdojo_executor_evidence>
+{"final_message":"Schedule pipelineの統合段状態記録とagentを起動しない統合再開を実装し、commit失敗・merge済み再開のE2Eテストと運用文書を更新した。","validations":[{"command":"npx prettier --write src/exec-run.ts tests/src/exec-pipeline-e2e.integration.test.ts docs/ja/specdojo/guides/exec-operation-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-j3g0-exec-resume-integrate-schedule-task.md","status":"passed","summary":"対象4ファイルを整形した。"},{"command":"git diff --check","status":"passed","summary":"空白エラーはなかった。"},{"command":"npm run typecheck","status":"passed","summary":"TypeScript型検査が成功した。"},{"command":"npm run lint:ts","status":"passed","summary":"TypeScript ESLint検査が成功した。"},{"command":"npx markdownlint docs/ja/specdojo/guides/exec-operation-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-j3g0-exec-resume-integrate-schedule-task.md","status":"passed","summary":"変更したMarkdownの静的検査が成功した。"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"カタログ検証が成功した。既存の参照先未作成警告のみ。"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"文書索引を1821件で再生成し、追跡差分は発生しなかった。"}]}
+</specdojo_executor_evidence>
