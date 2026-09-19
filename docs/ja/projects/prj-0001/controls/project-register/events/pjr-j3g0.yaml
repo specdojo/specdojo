@@ -45,3 +45,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_fe67aa811b4645bcb761ed8a129c848b
+- v: 1
+  id: reg_bd9e804e86f347fca5c32034d72c5d16
+  ts: "2026-09-19T05:53:09Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: runner による検証 `test-integration` が failed となっているため。プランの完了条件である静的検査およびテストの成功を満たしていない。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: runner による検証 `test-integration` が failed となっているため。プランの完了条件である静的検査およびテストの成功を満たしていない。"
+  previous_event_id: reg_fc31824c0ae247618c24ce8db4d8c53e

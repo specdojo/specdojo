@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   owner: ARC
   registered_at: "2026-09-15T14:15:36Z"
   due_on: "2026-09-30"
+  block_reason: "agent exited with non-zero code: runner による検証 `test-integration` が failed となっているため。プランの完了条件である静的検査およびテストの成功を満たしていない。"
 ---
 
 # PJR-J3G0 Schedule タスクの統合段だけを再開できるようにする
