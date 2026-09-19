@@ -112,11 +112,7 @@ _TODO_
 
 ## 5. 概念データフロー
 
-<!-- specdojo:finding id=F001 severity=minor rule=vp-arc-cross-document-consistency line=75 recipe は条件付き・選択プロセスの非起動時の正常経路を図で示すよう求めているが、概念データフローの作成指示には当該経路が含まれていないため、起動経路と非起動経路を図へ記載する指示を追加してください。 -->
-<!-- specdojo:finding id=F003 severity=minor rule=vp-qe-verifiability line=75 条件付き・選択プロセスについて非起動時の正常経路を図へ示す条件がないため、必須性セルだけを満たした図を合格とするか判定できず, 起動時と非起動時の両経路を確認できる要件を追加してください。 -->
-<!-- specdojo:finding id=F006 severity=minor rule=vp-qe-omissions-consistency line=75 条件付き・選択プロセスの非起動時の正常経路を概念データフローへ反映する指示が欠けているため、図の必須要素として追加してください。 -->
-<!-- specdojo:finding id=F009 severity=minor rule=vp-qe-kata-conformance line=75 recipe が要求する条件付き・選択プロセスの非起動時の正常経路がテンプレートの図作成指示に反映されていないため、生成物が recipe の検証条件を満たすよう明記してください。 -->
-_TODO_: 「プロセス領域」の各表の行を一つのプロセスノードとして配置し、同一グループ内の領域間の受け渡し、起点イベント、「データストア」の各行、必要な外部主体、グループ外の委譲先をつなぐ。図は領域ごと、または業務の性質が近いプロセスごとに分ける。一図のプロセスノードが 15 個を超える場合も分割する。
+_TODO_: 「プロセス領域」の各表の行を一つのプロセスノードとして配置し、同一グループ内の領域間の受け渡し、起点イベント、「データストア」の各行、必要な外部主体、グループ外の委譲先をつなぐ。条件付き・選択プロセスは、起動する経路と非起動でも正常完了する経路の双方をたどれるようにする。図は領域ごと、または業務の性質が近いプロセスごとに分ける。一図のプロセスノードが 15 個を超える場合も分割する。
 
 ### 5.1. _FLOW_SCOPE_NAME_（_AREA_ID_RANGE_）
 
@@ -170,21 +166,15 @@ _TODO_: 状態を変えるプロセスがある場合は次の表へ記入する
 | -------------- | -------------------- | ---------------------- |
 | _STATE_TARGET_ | `_PROCESS_ID_`       | `stsd-_TERM_`          |
 
-<!-- specdojo:finding id=F005 severity=minor rule=vp-qe-verifiability line=129 主要例外またはグループ外委譲が0件の場合に、表を削除して確認根拠を残すのか節ごと省略するのかが未定義なため、プレースホルダー除去後の合格形を明記してください。 -->
-<!-- specdojo:finding id=F008 severity=minor rule=vp-qe-omissions-consistency line=129 必須章内で主要例外またはグループ外委譲が存在しない場合の節・表・確認根拠の扱いが欠けているため、各0件時の記載規則を追加してください。 -->
 ## 8. 主要例外とグループ外への委譲
 
 ### 8.1. 主要例外
 
-<!-- specdojo:finding id=F002 severity=minor rule=vp-arc-cross-document-consistency line=133 recipe と rulebook の完成判定は主要例外の停止範囲を要求しているが、例外表のプレースホルダーや補足には停止対象を記述する指示がないため、「本グループでの扱い」に停止範囲を含めることを明記してください。 -->
-<!-- specdojo:finding id=F004 severity=minor rule=vp-qe-verifiability line=133 `_EXCEPTION_HANDLING_` に停止範囲を含める指示がなく、主要例外がどの後続処理を停止するかを完成判定できないため、停止対象を必須記載として定義してください。 -->
-<!-- specdojo:finding id=F007 severity=minor rule=vp-qe-omissions-consistency line=133 主要例外の完成判定に必要な停止範囲の記載指示が例外表から欠けているため、「本グループでの扱い」の必須内容として追加してください。 -->
-<!-- specdojo:finding id=F010 severity=minor rule=vp-qe-kata-conformance line=133 recipe と rulebook の完成判定で確認する主要例外の停止範囲がテンプレートの骨組みに現れていないため、該当列の記入要件として追加してください。 -->
-| 例外 ID          | 対象プロセス   | 検出条件              | 本グループでの扱い   | 継続・再開条件                |
-| ---------------- | -------------- | --------------------- | -------------------- | ----------------------------- |
-| `_EXCEPTION_ID_` | `_PROCESS_ID_` | _DETECTION_CONDITION_ | _EXCEPTION_HANDLING_ | _RESUME_OR_HANDOFF_CONDITION_ |
+| 例外 ID          | 対象プロセス   | 検出条件              | 停止範囲         | 本グループでの扱い   | 継続・再開条件                |
+| ---------------- | -------------- | --------------------- | ---------------- | -------------------- | ----------------------------- |
+| `_EXCEPTION_ID_` | `_PROCESS_ID_` | _DETECTION_CONDITION_ | _STOPPING_SCOPE_ | _EXCEPTION_HANDLING_ | _RESUME_OR_HANDOFF_CONDITION_ |
 
-<!-- 例外 ID は最初に検出する領域番号を使った E-01-01 形式にし、主要例外を一行ずつ追加する。 -->
+<!-- 例外 ID は最初に検出する領域番号を使った E-01-01 形式にし、主要例外を一行ずつ追加する。停止範囲には、確定または起動してはならない後続プロセス、出力、委譲を書く。主要例外が 0 件なら表を削除し、正常系・条件付きプロセス・更新失敗を確認した範囲と該当なしの結論を一文で残す。 -->
 
 ### 8.2. グループ外への委譲
 
@@ -193,7 +183,7 @@ _TODO_: 状態を変えるプロセスがある場合は次の表へ記入する
 | `cdfd-_OTHER_GROUP_` | _DELEGATED_RESPONSIBILITY_ | _HANDOFF_INFORMATION_ | _RETURN_CONDITION_   |
 | `cdfd-uc-_TOPIC_`    | _CROSS_GROUP_SEQUENCE_     | _HANDOFF_INFORMATION_ | _RETURN_CONDITION_   |
 
-<!-- 同一グループ内の領域間受け渡しは本表に置かず、概念データフローへ描く。委譲先が未作成の場合も ID をバッククォートで示し、他グループの内部プロセスは展開しない。 -->
+<!-- 同一グループ内の領域間受け渡しは本表に置かず、概念データフローへ描く。委譲先が未作成の場合も ID をバッククォートで示し、他グループの内部プロセスは展開しない。グループ外委譲が 0 件なら表を削除し、対象外の他グループ責務と横断ユースケースを確認した範囲と該当なしの結論を一文で残す。 -->
 
 <!-- 未決事項がある場合のみ、以下の章を追加する。追加時は章番号を 9 とする。ない場合は章ごと削除する。
 

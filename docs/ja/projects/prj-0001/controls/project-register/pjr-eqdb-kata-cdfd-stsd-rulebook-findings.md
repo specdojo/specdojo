@@ -47,13 +47,17 @@ PJR-ZA91（STSD/CSTD 統合）で変更した Kata を 16 時の定期評価 `rt
 | No  | 作業                                                                                                                                                                 | 担当 | 状態 | メモ                                                                                                               |
 | --- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- | ---- | ------------------------------------------------------------------------------------------------------------------ |
 | 1   | `＜＜choice＞＞` の可否と、許す場合の記法（イベントの扱い・状態一覧との関係）を決める                                                                                | ARC  | done | 2026-09-17 決定: 許さない。分岐は各出力遷移の `イベント / 条件` で表現し、状態一覧に載らない疑似状態を図に置かない |
-| 2   | `stsd-mermaid-rulebook` と `stsd-rulebook` を決定に沿って改訂し、rulebook 内サンプルと `stsd-sample` を整合させる                                                    | ARC  | open | codex-expert-executor / gemma-reporter / worktree                                                                  |
-| 3   | `cdfd-mermaid-rulebook` の例を `cdfd-rulebook` の ID 形式・凡例方針に合わせ、`cdfd-rulebook` に 0 件時の扱いと停止範囲の記載先を追加し、`cdfd-sample` の用語を揃える | ARC  | open | 作業 2 と同一タスクで実施可                                                                                        |
+| 2   | `stsd-mermaid-rulebook` と `stsd-rulebook` を決定に沿って改訂し、rulebook 内サンプルと `stsd-sample` を整合させる                                                    | ARC  | done | 疑似状態禁止、分岐・分割・到達性・値一意性を規定し、sample と template を追従                                      |
+| 3   | `cdfd-mermaid-rulebook` の例を `cdfd-rulebook` の ID 形式・凡例方針に合わせ、`cdfd-rulebook` に 0 件時の扱いと停止範囲の記載先を追加し、`cdfd-sample` の用語を揃える | ARC  | done | `P-<nn>-<nn>`、共通凡例参照、0 件時の確認根拠、停止範囲列、売場商品の用語へ統一                                    |
 | 4   | 再 grade で 3 件の解消を確認する                                                                                                                                     | ARC  | open | `rtn-grade-recheck` または手動 `--changed-only`                                                                    |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- [[specdojo:cdfd-mermaid-rulebook]] の個別プロセス例を `P-<nn>-<nn>` 形式へ統一し、図直後は共通凡例への参照、使用線種、省略事項、共有ノードだけを記録する方針へ揃えた。
+- [[specdojo:cdfd-rulebook]] と template に、主要例外・グループ外委譲が 0 件の場合の確認範囲と該当なしの残し方を追加した。主要例外表には「停止範囲」を独立列として定義し、[[specdojo:cdfd-sample]] の例外表を追従させた。販売グループへの引き渡しは「売場商品」に統一した。
+- [[specdojo:stsd-mermaid-rulebook]] と [[specdojo:stsd-rulebook]] で `<<choice>>` などの疑似状態を禁止し、同じ遷移元からの複数遷移へ各 `イベント / 条件` を記載する方式に統一した。図の分割閾値、終了・継続状態の判定、全経路の到達性、外部参照値の一意性も明文化した。
+- [[specdojo:stsd-sample]] と rulebook 内サンプルは、売場補充後に販売可能となり、販売・返品の完了事実を各終了状態への進入条件に含めるライフサイクルへ揃えた。STSD template にも同じ一意性・分岐・分割規則を反映した。
+- 残課題は次回 grade による verdict の pass 確認のみであり、作業 4 で追跡する。
 
 ## 5. 関連ドキュメント
 
