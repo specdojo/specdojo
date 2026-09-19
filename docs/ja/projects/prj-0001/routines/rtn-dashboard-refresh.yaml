@@ -1,14 +1,16 @@
 # yaml-language-server: $schema=../../../../specdojo/schemas/v1/routine.schema.yaml
+# dashboard build は Markdown / JSON の読み取りと派生生成だけで agent を呼ばないため、
+# exec の実行ロックを取らない specdojo action で毎時再生成する。
 id: rtn-dashboard-refresh
-name: dashboard の毎朝更新
-description: 毎朝 5:00（Asia/Tokyo）にプロジェクト dashboard を再生成する。
+name: dashboard の毎時更新
+description: 毎時 0 分（Asia/Tokyo）にプロジェクト dashboard を再生成する。grade や register の実行中でも並行して動く。
 enabled: true
 trigger:
-  cron: "0 5 * * *"
+  cron: "0 * * * *"
   timezone: Asia/Tokyo
 policy:
   missed_run: skip
   overlap: skip
 action:
-  kind: job
-  job: job-dashboard-build
+  kind: specdojo
+  args: [dashboard, build]

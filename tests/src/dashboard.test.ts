@@ -5,6 +5,8 @@ import { join } from "node:path";
 import {
   buildDashboardMarkdown,
   buildDailyRoutineRows,
+  collapseFrequentRoutineRows,
+  formatZonedDateTime,
   buildTimelineGanttSvg,
   computeRoutineDue,
   computeTimelineTrackSchedules,
@@ -307,8 +309,56 @@ describe("daily briefing", () => {
 
     expect(rows.map((row) => [row.day, row.scheduledFor, row.result])).toEqual([
       ["昨日", "2026-09-18T20:00:00.000Z", "success"],
-      ["本日", "2026-09-19T20:00:00.000Z", "予定"],
+      ["本日", "2026-09-19T20:00:00.000Z", "未実行"],
     ]);
+  });
+
+  it("予定時刻が未到来なら予定、過ぎていて履歴がなければ未実行にする", () => {
+    const rows = buildDailyRoutineRows(
+      [
+        {
+          id: "rtn-grade-recheck",
+          enabled: true,
+          trigger: { cron: "0 6,18 * * *", timezone: "Asia/Tokyo" },
+          action: { kind: "job", job: "job-grade-kata" },
+        },
+      ],
+      [],
+      new Date("2026-09-20T00:30:00Z"),
+    );
+
+    expect(rows.map((row) => [row.scheduledFor, row.result])).toEqual([
+      ["2026-09-19T21:00:00.000Z", "未実行"],
+      ["2026-09-20T09:00:00.000Z", "予定"],
+    ]);
+  });
+
+  it("1 日に 3 回以上動く routine は最新の実行 1 行に実行回数をまとめる", () => {
+    const history = ["05:00", "06:00", "07:00"].map((time, index) => ({
+      version: 1 as const,
+      routine_id: "rtn-dashboard-refresh",
+      scheduled_for: `2026-09-19T${time}:00.000Z`,
+      started_at: `2026-09-19T${time}:01Z`,
+      completed_at: `2026-09-19T${time}:02Z`,
+      result: index === 1 ? ("failure" as const) : ("success" as const),
+      job_run_ids: [],
+    }));
+    const rows = collapseFrequentRoutineRows(
+      buildDailyRoutineRows([], history, new Date("2026-09-19T08:30:00Z")),
+    );
+
+    expect(rows).toHaveLength(1);
+    expect(rows[0]).toMatchObject({
+      routineId: "rtn-dashboard-refresh",
+      scheduledFor: "2026-09-19T07:00:00.000Z",
+      runCount: 3,
+      result: "failure",
+    });
+  });
+
+  it("formatZonedDateTime は指定タイムゾーンの月日と時分だけを返す", () => {
+    expect(formatZonedDateTime("2026-09-18T20:00:00.000Z", "Asia/Tokyo")).toBe("09-19 05:00");
+    expect(formatZonedDateTime("not-a-date", "Asia/Tokyo")).toBe("not-a-date");
   });
 
   it("期日、優先度、関連 open PJR、登録日時の順で候補を並べる", () => {

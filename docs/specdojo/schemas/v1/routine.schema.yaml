@@ -51,6 +51,10 @@ properties:
           $ref: "#/$defs/action"
 $defs:
   action:
+    oneOf:
+      - $ref: "#/$defs/jobAction"
+      - $ref: "#/$defs/specdojoAction"
+  jobAction:
     type: object
     additionalProperties: false
     required: [kind, job]
@@ -64,3 +68,20 @@ $defs:
         type: object
         additionalProperties:
           type: string
+  specdojoAction:
+    description: >
+      Runs a specdojo subcommand directly with --project appended, without taking the exec run
+      lock. Use only for read-and-generate commands (e.g. dashboard build) that call no agent
+      and do not conflict with a running exec.
+    type: object
+    additionalProperties: false
+    required: [kind, args]
+    properties:
+      kind:
+        const: specdojo
+      args:
+        type: array
+        minItems: 1
+        items:
+          type: string
+          minLength: 1

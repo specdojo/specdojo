@@ -637,9 +637,9 @@ specdojo exec run --job job-grade-kata --project prj-0001 --input period=2026-W3
 | `--id <id>` | due 判定と無関係に特定の routine を即時実行する |
 | `--dry-run` | 実行も `last_run` 記録も行わず、対象を表示する  |
 
-`action` は単一オブジェクト、または先頭から順に実行する1件以上の配列を受け付けます。単一オブジェクトの `action.kind`、配列の各要素の `kind` とも `job` だけを受け付け、実行内容と入力検証は参照先の Job Definition が担います。`register` / `exec-auto` / `exec-resume` / `exec-cycle` の旧 kind は廃止済みです。定義ファイルの配置、`interval`または`trigger.cron`の書式、複数 action の失敗方針、due判定は [routine運用ガイド](../guides/routine-operation-guide.md) を参照します。
+`action` は単一オブジェクト、または先頭から順に実行する1件以上の配列を受け付けます。単一オブジェクトの `action.kind`、配列の各要素の `kind` は `job` または `specdojo` を受け付けます。`job` は実行内容と入力検証を参照先の Job Definition に委ね、`exec run --job` 経由で実行ロックに従います。`specdojo` は `args` に書いた specdojo サブコマンド（例: `[dashboard, build]`）へ `--project` を付けて直接起動し、実行ロックを取りません（agent を呼ばない読み取り・派生生成専用。`exec` と `--project` は `args` に書けません）。`register` / `exec-auto` / `exec-resume` / `exec-cycle` の旧 kind は廃止済みです。定義ファイルの配置、`interval`または`trigger.cron`の書式、複数 action の失敗方針、due判定は [routine運用ガイド](../guides/routine-operation-guide.md) を参照します。
 
-各 routine の実行完了時には、`routine-state.json` の最新状態とは別に、`routines/generated/routine-runs.jsonl` へ `routine_id`、`scheduled_for`、開始・終了時刻、結果、Job Run ID を1実行1行で追記します。この履歴が dashboard の「routine 実行状況（昨日・本日）」の正本です。
+各 routine の実行完了時には、`routine-state.json` の最新状態とは別に、`routines/generated/routine-runs.jsonl` へ `routine_id`、`scheduled_for`、開始・終了時刻、結果、Job Run ID（`specdojo` action では空）を1実行1行で追記します。この履歴が dashboard の「routine 実行状況（昨日・本日）」の正本です。
 
 ```bash
 # due な routine をまとめて実行する（cron / CI から呼ぶ想定）

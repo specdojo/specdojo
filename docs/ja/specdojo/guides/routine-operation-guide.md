@@ -89,13 +89,33 @@ action:
 }
 ```
 
+### 1.2. exec を経由しない specdojo action
+
+agent を呼ばず、読み取りと派生生成だけを行うコマンド（`dashboard build` など）は、`action.kind: specdojo` で specdojo のサブコマンドを直接起動できます。`exec run` を経由しないため実行ロックを取らず、grade や register の実行中でも skip されません。`args` には `exec` と `--project` を含められず、`--project` は routine が付与します。
+
+```yaml
+id: rtn-dashboard-refresh
+enabled: true
+trigger:
+  cron: "0 * * * *"
+  timezone: Asia/Tokyo
+policy:
+  missed_run: skip
+  overlap: skip
+action:
+  kind: specdojo
+  args: [dashboard, build]
+```
+
+Job Definition を持たないため、実行記録は `generated/routine-runs.jsonl` の 1 行だけで、Job Run と evidence は作られません。agent を呼ぶ処理や成果物を変更する処理には使わず、`kind: job` を使います。
+
 ### 1.2. grade の単段評価
 
 Kata と成果物の定期評価は、`codex-expert-executor` と `gemma-reporter` の単段で実行します。`job-grade-kata` と `job-grade-deliverable` は `tools/grade/run-per-document.sh --stages 1` を起動し、条件付きの後続段は持ちません。変更済み・未評価・段未完了を横断的に再評価する `rtn-grade-recheck` は `kind: all`、`changed_only: true`、`ungraded: true`、`incomplete: true`、`limit: 15` を入力します。
 
 成果物は `rtn-grade-deliverable-recheck` が `job-grade-deliverable` を起動します。Job は同じ script を `--stages 1 --target deliverable` で実行し、成果物カタログから変更済み・未評価・段未完了の Markdown 成果物だけを最大10件選びます。評価結果は成果物の最新 grade と成果物ごとの `done_criteria` 詳細へ上書きされるため、実行ごとの review result は増やしません。
 
-`rtn-grade-deliverable-recheck` は毎日1時、`rtn-grade-recheck` は毎日6時に実行し、いずれも `missed_run: skip` とします。`rtn-dashboard-refresh` は毎日5時に `job-dashboard-build` を起動します。devcontainer の cron は0時・1時・5時・6時・8時・16時に `routine run --due` を呼びます。コンテナ停止中の実行枠を日中へ持ち越さず、対話的な register 実行との競合を避けます。
+`rtn-grade-deliverable-recheck` は毎日1時、`rtn-grade-recheck` は毎日6時に実行し、いずれも `missed_run: skip` とします。`rtn-dashboard-refresh` は `action.kind: specdojo` で毎時 `dashboard build` を直接起動します（exec の実行ロックを取らないため、grade や register の実行中でも並行して動きます）。devcontainer の cron は毎時 `routine run --due` を呼びますが、各 routine の発火時刻は routine 側の cron で決まります。コンテナ停止中の実行枠を日中へ持ち越さず、対話的な register 実行との競合を避けます。
 
 両 routine では、Job の `task.precondition` が `grade list` を使って script の selection-v4 と同じ変更済み・未評価・再試行可能な段未完了の和集合、辞書順、対象種別、件数上限を先に評価します。連続失敗上限に達した文書は `grade state --exhausted` で同じ和集合に加えてから件数上限を適用し、処理対象からは外して report-only 対象にします。処理対象も report-only 対象も0件なら Job Run、plan、result、evidence を作らず、command と analysis reporter も起動しません。routine はこの結果を `skipped` として受け取り、`routine-state.json` の `last_run` / `last_result` と、cron の場合は `last_scheduled_for` を更新します。
 
@@ -115,13 +135,12 @@ scriptの`--run-id`にはJob Run IDを渡すため、rate limitや中断後に�
 
 単一オブジェクトの `action.kind`、配列の各要素の `kind` とも `job` だけを受け付けます。routine は `job-*.yaml` から一意な Job Run を生成して `exec run --job` へ委譲し、コマンド、入力の型・値域、冪等キーは Job Definition が担います。旧 `register` / `exec-auto` / `exec-resume` / `exec-cycle` kind は 2026-09-09 に廃止し、同等の command Job へ移行しました。
 
-| Job                   | 動作                                                                                  |
-| --------------------- | ------------------------------------------------------------------------------------- |
-| `job-register-sweep`  | flat list 入力で登録簿を絞り込み、選択した項目を `exec run --register` 相当で実行する |
-| `job-exec-auto`       | `exec run --auto` を実行する                                                          |
-| `job-exec-resume`     | `exec resume --due` を実行する                                                        |
-| `job-exec-cycle`      | `exec cycle` を実行する                                                               |
-| `job-dashboard-build` | `dashboard build` を実行し、昨日・本日の routine、着手候補、解除待ちを再集計する      |
+| Job                  | 動作                                                                                  |
+| -------------------- | ------------------------------------------------------------------------------------- |
+| `job-register-sweep` | flat list 入力で登録簿を絞り込み、選択した項目を `exec run --register` 相当で実行する |
+| `job-exec-auto`      | `exec run --auto` を実行する                                                          |
+| `job-exec-resume`    | `exec resume --due` を実行する                                                        |
+| `job-exec-cycle`     | `exec cycle` を実行する                                                               |
 
 週報Jobを毎週金曜日17時（Asia/Tokyo）に起動する例です。
 
@@ -164,7 +183,7 @@ specdojo routine run --project <project-id> --due --dry-run
 
 このリポジトリのdevcontainerでは、`.devcontainer/specdojo-routine.cron`をcron設定のテンプレートとして管理します。コンテナ起動時に`.devcontainer/post-start.sh`がワークスペースの絶対パスを埋め込み、`/etc/cron.d/specdojo-routine`へ登録してcronを起動します。これはユーザーcrontabではないため、`crontab -l`には表示されません。
 
-現在のテンプレートは、devcontainerが稼働している間、`prj-0001`のdueなroutineを毎日0時・1時・5時・6時・8時・16時（Asia/Tokyo）に確認します。1時は既存の成果物評価を維持するための枠で、5時の枠では `rtn-dashboard-refresh` が dashboard を更新します。
+現在のテンプレートは、devcontainerが稼働している間、`prj-0001`のdueなroutineを毎時0分（Asia/Tokyo）に確認します。どの routine がどの時刻に動くかは各 `rtn-*.yaml` の cron で決まり、成果物評価は1時、Kata 評価は6時、dashboard 更新は毎時です。
 
 ```cron
 TZ=Asia/Tokyo

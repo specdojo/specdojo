@@ -6,6 +6,7 @@ import {
   aggregateRoutineActionResults,
   appendRoutineRunHistory,
   buildJobRunArgs,
+  buildSpecdojoActionArgs,
   cronOccurrences,
   executeRoutineActions,
   formatRoutineLastRun,
@@ -99,6 +100,38 @@ describe("isRoutineDue", () => {
 });
 
 describe("parseRoutineDoc", () => {
+  it("specdojo kind は args を受け入れ、--project を付けて起動引数を組み立てる", () => {
+    const { doc, errors } = parseRoutineDoc(
+      {
+        id: "rtn-dashboard-refresh",
+        trigger: { cron: "0 * * * *", timezone: "Asia/Tokyo" },
+        action: { kind: "specdojo", args: ["dashboard", "build"] },
+      },
+      "rtn-dashboard-refresh.yaml",
+    );
+
+    expect(errors).toEqual([]);
+    expect(doc?.action).toEqual({ kind: "specdojo", args: ["dashboard", "build"] });
+    expect(
+      buildSpecdojoActionArgs({ kind: "specdojo", args: ["dashboard", "build"] }, "prj-0001"),
+    ).toEqual(["dashboard", "build", "--project", "prj-0001"]);
+  });
+
+  it("specdojo kind は exec や --project を含む args を拒否する", () => {
+    const { errors } = parseRoutineDoc(
+      {
+        id: "rtn-bad",
+        interval: "1h",
+        action: { kind: "specdojo", args: ["exec", "run", "--auto"] },
+      },
+      "rtn-bad.yaml",
+    );
+
+    expect(errors).toEqual([
+      "rtn-bad.yaml: action.args must not include exec or --project (project is appended)",
+    ]);
+  });
+
   it("job kind の妥当な定義を受け入れる", () => {
     const { doc, errors } = parseRoutineDoc(
       {
@@ -163,7 +196,7 @@ describe("parseRoutineDoc", () => {
     );
 
     expect(errors).toEqual([
-      'rtn-legacy.yaml: action.kind must be job (got "exec-auto")',
+      'rtn-legacy.yaml: action.kind must be job or specdojo (got "exec-auto")',
       "rtn-legacy.yaml: action.job must match job-<slug>",
     ]);
   });
@@ -206,7 +239,7 @@ describe("parseRoutineDoc", () => {
 
     expect(empty.errors).toContain("rtn-empty.yaml: action must contain at least one action");
     expect(invalid.errors).toContain(
-      'rtn-invalid-step.yaml: action[1].kind must be job (got "unknown")',
+      'rtn-invalid-step.yaml: action[1].kind must be job or specdojo (got "unknown")',
     );
   });
 

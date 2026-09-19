@@ -22,13 +22,22 @@ import { resolveJobPaths } from "./job.js";
 // Types
 // ================================
 
-export type RoutineActionKind = "job";
+export type RoutineActionKind = "job" | "specdojo";
 
-export type RoutineAction = {
+export type RoutineJobAction = {
   kind: "job";
   job: string;
   inputs?: Record<string, string>;
 };
+
+// exec の実行ロックを取らずに specdojo サブコマンドを直接起動する action。dashboard build のように
+// 読み取りと派生生成だけを行い、agent を呼ばず他の実行と衝突しない処理に限って使う。
+export type RoutineSpecdojoAction = {
+  kind: "specdojo";
+  args: string[];
+};
+
+export type RoutineAction = RoutineJobAction | RoutineSpecdojoAction;
 
 export type RoutineActionList = RoutineAction | RoutineAction[];
 
@@ -282,6 +291,27 @@ function parseRoutineAction(
   }
 
   const kind = typeof value.kind === "string" ? value.kind : "";
+  if (kind === "specdojo") {
+    const unknownKeys = Object.keys(value).filter((key) => key !== "kind" && key !== "args");
+    if (unknownKeys.length > 0) {
+      errors.push(`${fieldName} has unknown key(s): ${unknownKeys.sort().join(", ")}`);
+    }
+    const args = value.args;
+    if (
+      !Array.isArray(args) ||
+      args.length === 0 ||
+      args.some((item) => typeof item !== "string" || item.length === 0)
+    ) {
+      errors.push(`${fieldName}.args must be a non-empty list of strings`);
+      return undefined;
+    }
+    if (args.includes("exec") || args.includes("--project")) {
+      errors.push(`${fieldName}.args must not include exec or --project (project is appended)`);
+      return undefined;
+    }
+    return { kind: "specdojo", args: args as string[] };
+  }
+
   const unknownKeys = Object.keys(value).filter(
     (key) => key !== "kind" && key !== "job" && key !== "inputs",
   );
@@ -289,7 +319,7 @@ function parseRoutineAction(
     errors.push(`${fieldName} has unknown key(s): ${unknownKeys.sort().join(", ")}`);
   }
   if (kind !== "job") {
-    errors.push(`${fieldName}.kind must be job (got "${kind}")`);
+    errors.push(`${fieldName}.kind must be job or specdojo (got "${kind}")`);
   }
   if (typeof value.job !== "string" || !/^job-[a-z0-9][a-z0-9-]*$/.test(value.job)) {
     errors.push(`${fieldName}.job must match job-<slug>`);
@@ -610,7 +640,7 @@ function renderRoutineInput(value: string, scheduledAt: Date, timezone: string):
 }
 
 export function buildJobRunArgs(
-  action: RoutineAction,
+  action: RoutineJobAction,
   projectId: string,
   scheduledAt: Date,
   timezone = "UTC",
@@ -664,12 +694,23 @@ function executeRoutineAction(
   dryRun: boolean,
   scheduledAt = new Date(),
 ): RoutineExecutionResult {
-  const args = buildJobRunArgs(action, projectId, scheduledAt, doc.trigger?.timezone ?? "UTC");
+  const args =
+    action.kind === "specdojo"
+      ? buildSpecdojoActionArgs(action, projectId)
+      : buildJobRunArgs(action, projectId, scheduledAt, doc.trigger?.timezone ?? "UTC");
   if (dryRun) {
     process.stdout.write(`  [dry-run] specdojo ${args.join(" ")}\n`);
     return "success";
   }
   return spawnSelf(args);
+}
+
+// specdojo action は exec run を経由せず、指定したサブコマンドに --project を付けて起動する。
+export function buildSpecdojoActionArgs(
+  action: RoutineSpecdojoAction,
+  projectId: string,
+): string[] {
+  return [...action.args, "--project", projectId];
 }
 
 type RoutineRunResult = {
@@ -683,6 +724,7 @@ function findJobRunId(
   projectId: string,
   scheduledAt: Date,
 ): string | undefined {
+  if (action.kind !== "job") return undefined;
   const runsPath = resolveJobPaths(projectId).runsPath;
   if (!existsSync(runsPath)) return undefined;
   const scheduledFor = scheduledAt.toISOString();

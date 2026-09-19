@@ -606,9 +606,29 @@ export type DashboardDailyRoutineRow = {
   scheduledFor: string;
   startedAt: string;
   completedAt: string;
-  result: RoutineExecutionResult | "予定";
+  result: RoutineExecutionResult | "予定" | "未実行";
   jobRunIds: string[];
+  /** 同じ routine・同じ日の実行をまとめた件数。1 は単独行。 */
+  runCount: number;
 };
+
+// 毎時の dashboard 更新のように 1 日に何度も動く routine は、日ごとに 1 行へまとめる。
+const ROUTINE_ROW_COLLAPSE_THRESHOLD = 3;
+
+export function formatZonedDateTime(iso: string, timeZone: string): string {
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return iso;
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone,
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).formatToParts(date);
+  const get = (type: string): string => parts.find((part) => part.type === type)?.value ?? "";
+  return `${get("month")}-${get("day")} ${get("hour")}:${get("minute")}`;
+}
 
 function zonedDateKey(date: Date, timeZone: string): string {
   return new Intl.DateTimeFormat("en-CA", {
@@ -663,6 +683,7 @@ export function buildDailyRoutineRows(
       completedAt: entry.completed_at,
       result: entry.result,
       jobRunIds: entry.job_run_ids,
+      runCount: 1,
     }));
   const completedKeys = new Set(
     history.map(
@@ -679,15 +700,47 @@ export function buildDailyRoutineRows(
         scheduledFor: scheduledFor.toISOString(),
         startedAt: "-",
         completedAt: "-",
-        result: "予定",
+        // 予定時刻を過ぎても履歴がなければ、skip や cron 停止で動かなかったことを示す。
+        result: scheduledFor.getTime() <= now.getTime() ? "未実行" : "予定",
         jobRunIds: [],
+        runCount: 1,
       });
     }
   }
-  return rows.sort(
+  return collapseFrequentRoutineRows(rows).sort(
     (a, b) =>
       a.scheduledFor.localeCompare(b.scheduledFor) || a.routineId.localeCompare(b.routineId),
   );
+}
+
+// 同じ routine・同じ日の行が閾値以上あれば、最新の実行 1 行に件数をまとめる。
+export function collapseFrequentRoutineRows(
+  rows: DashboardDailyRoutineRow[],
+): DashboardDailyRoutineRow[] {
+  const groups = new Map<string, DashboardDailyRoutineRow[]>();
+  for (const row of rows) {
+    const key = `${row.day}:${row.routineId}`;
+    groups.set(key, [...(groups.get(key) ?? []), row]);
+  }
+  const collapsed: DashboardDailyRoutineRow[] = [];
+  for (const group of groups.values()) {
+    if (group.length < ROUTINE_ROW_COLLAPSE_THRESHOLD) {
+      collapsed.push(...group);
+      continue;
+    }
+    const executed = group.filter((row) => row.result !== "予定" && row.result !== "未実行");
+    const latest = [...(executed.length > 0 ? executed : group)].sort((a, b) =>
+      b.scheduledFor.localeCompare(a.scheduledFor),
+    )[0];
+    const failures = executed.filter((row) => row.result === "failure").length;
+    collapsed.push({
+      ...latest,
+      runCount: executed.length > 0 ? executed.length : group.length,
+      jobRunIds: [],
+      result: failures > 0 ? "failure" : latest.result,
+    });
+  }
+  return collapsed;
 }
 
 // generated/routine-state.json の routines.<id> が状態の正本。破損時は空。
@@ -1024,11 +1077,18 @@ function renderDailyRoutineSection(paths: DashboardPaths): string[] {
     lines.push("- （昨日の実行履歴・本日の予定はありません）", "");
     return lines;
   }
-  lines.push("| 日 | routine | scheduled_for | started_at | completed_at | 結果 | Job Run |");
-  lines.push("| --- | --- | --- | --- | --- | --- | --- |");
+  const timeZone = "Asia/Tokyo";
+  lines.push(
+    `- 時刻は ${timeZone}。1 日に ${ROUTINE_ROW_COLLAPSE_THRESHOLD} 回以上動く routine は最新の実行 1 行に件数をまとめる。`,
+  );
+  lines.push("");
+  lines.push("| 日 | routine | 予定 | 開始 | 完了 | 結果 | 回数 | Job Run |");
+  lines.push("| --- | --- | --- | --- | --- | --- | ---: | --- |");
   for (const row of rows) {
+    const fmt = (value: string): string =>
+      value === "-" ? "-" : formatZonedDateTime(value, timeZone);
     lines.push(
-      `| ${row.day} | \`${row.routineId}\` | ${row.scheduledFor} | ${row.startedAt} | ${row.completedAt} | ${row.result} | ${row.jobRunIds.map((id) => `\`${id}\``).join(", ") || "-"} |`,
+      `| ${row.day} | \`${row.routineId}\` | ${fmt(row.scheduledFor)} | ${fmt(row.startedAt)} | ${fmt(row.completedAt)} | ${row.result} | ${row.runCount} | ${row.jobRunIds.map((id) => `\`${id}\``).join(", ") || "-"} |`,
     );
   }
   lines.push("");
