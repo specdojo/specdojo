@@ -64,6 +64,10 @@ grade は gemma（1・2 段）→ codex-expert（3 段、1・2 段が pass か�
 - devcontainer の due runner を0時・2時・5時へ変更し、運用ガイドとコマンドリファレンスを codex 単段・夜間実行・旧 state 移行の説明へ更新した。
 - `cdfd-orchestrator` / `cdfd-overview` の実 agent による再評価は、変更を統合して定期 Job の実行環境へ反映した後の運用確認として残す。
 
+### 4.1. 追記（2026-09-19）
+
+初回の 0:00 実行が、直前まで動いていた register の実行（PJR-7WFE）と重なり `exec busy` で skip された。0:00 は日中から続く実行と重なりやすいため、利用者の判断で `rtn-grade-deliverable-recheck` を 1:00、`rtn-grade-recheck` を 6:00 へ移し、cron の `routine run --due` を 1 / 5 / 6 時に変更した（オーケストレーターが直接対応）。5:00 の dashboard 更新（PJR-2JYE）は Kata grade の前になるため、朝の dashboard には前夜の成果物 grade までが反映される。
+
 ## 5. 関連ドキュメント
 
 - [[specdojo:routine-operation-guide]]

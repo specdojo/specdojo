@@ -95,7 +95,7 @@ Kata と成果物の定期評価は、`codex-expert-executor` と `gemma-reporte
 
 成果物は `rtn-grade-deliverable-recheck` が `job-grade-deliverable` を起動します。Job は同じ script を `--stages 1 --target deliverable` で実行し、成果物カタログから変更済み・未評価・段未完了の Markdown 成果物だけを最大10件選びます。評価結果は成果物の最新 grade と成果物ごとの `done_criteria` 詳細へ上書きされるため、実行ごとの review result は増やしません。
 
-`rtn-grade-deliverable-recheck` は毎日0時、`rtn-grade-recheck` は毎日2時に実行し、いずれも `missed_run: skip` とします。devcontainer の cron は0時・2時・5時に `routine run --due` を呼び、5時は dashboard 更新など同じ due runner を使う別 routine の起動機会です。コンテナ停止中の実行枠を日中へ持ち越さず、対話的な register 実行との競合を避けます。
+`rtn-grade-deliverable-recheck` は毎日1時、`rtn-grade-recheck` は毎日6時に実行し、いずれも `missed_run: skip` とします。devcontainer の cron は1時・5時・6時に `routine run --due` を呼び、5時は dashboard 更新など同じ due runner を使う別 routine の起動機会です。コンテナ停止中の実行枠を日中へ持ち越さず、対話的な register 実行との競合を避けます。
 
 両 routine では、Job の `task.precondition` が `grade list` を使って script の selection-v4 と同じ変更済み・未評価・再試行可能な段未完了の和集合、辞書順、対象種別、件数上限を先に評価します。連続失敗上限に達した文書は `grade state --exhausted` で同じ和集合に加えてから件数上限を適用し、処理対象からは外して report-only 対象にします。処理対象も report-only 対象も0件なら Job Run、plan、result、evidence を作らず、command と analysis reporter も起動しません。routine はこの結果を `skipped` として受け取り、`routine-state.json` の `last_run` / `last_result` と、cron の場合は `last_scheduled_for` を更新します。
 
