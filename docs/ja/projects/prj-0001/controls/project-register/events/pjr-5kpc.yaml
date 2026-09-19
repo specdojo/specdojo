@@ -32,3 +32,19 @@
     - field: due
       from: ""
       to: "2026-09-30"
+- v: 1
+  id: reg_896e8f9e9bdf418e81bb2ed454cf28b6
+  ts: "2026-09-19T05:36:20Z"
+  action: close
+  actor: specdojo-orchestrator (claude)
+  from_status: open
+  to_status: done
+  reason: オーケストレーターが直接対応した pipelineContentHash を、9/17〜18 の成果物評価 3 run で確認して close
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-19"
+  previous_event_id: reg_853cd1a85819401cb8874df02383cc0c
