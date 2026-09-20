@@ -1,0 +1,78 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:opr-access-control-sample
+path: docs/ja/specdojo/samples/opr-access-control-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: fail
+score: 72
+graded_at: "2026-09-05T14:15:55.311Z"
+graded_by: gemma-expert-executor
+content_hash: f3853bfd37f375c6d9277d2fc3ee5f54bf6173c4b909007a2a162e15927c5beb
+categories:
+  consistency:
+    score: 25
+  usability:
+    score: 83
+  architecture:
+    score: 100
+  quality:
+    score: 75
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 0
+    score: 0
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 2
+    score: 50
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 1
+  major: 3
+  minor: 0
+  note: 0
+findings:
+  - id: F002
+    severity: blocker
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: "`opr-rulebook` で定義されている必須章（概要、適用範囲・前提、定期点検、障害対応、アラート対応、バックアップ・リストア、バッチ再実行、運用変更、問い合わせ一次対応、証跡、関連文書導線）がすべて欠落している。"
+    anchor: ""
+  - id: F004
+    severity: major
+    rule: vp-ux-readability
+    line: 1
+    message: 必須構成を大幅に省略しているため、`opr-＜term＞` 文書を正しく作成するためのサンプルとして不十分である。
+    anchor: ""
+  - id: F003
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 5
+    message: 「アカウント付与/剥奪手順」の見出し番号が `## 1` となっているが、ルール規定の順序に従い `## 9` とすべきである。
+    anchor: ""
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 6
+    message: Frontmatter の `rulebook` が `specdojo:opd-rulebook` となっており、手順書であるため `specdojo:opr-rulebook` とすべきである。
+    anchor: "## 1. アカウント付与/剥奪手順"

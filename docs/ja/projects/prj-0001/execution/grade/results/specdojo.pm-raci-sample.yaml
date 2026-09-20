@@ -1,0 +1,66 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:pm-raci-sample
+path: docs/ja/specdojo/samples/pm-raci-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: pass
+score: 98
+graded_at: "2026-09-05T20:49:23.750Z"
+graded_by: gemma-expert-executor
+content_hash: ed4bc499d2c44481bbf277ebf699ed65220826e5c30daa91dc0ee5040a2fbdea
+categories:
+  consistency:
+    score: 88
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 100
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 4
+    score: 100
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 2
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 40
+    message: Schedule・実行主体との対応において、RACI と Schedule owner が不一致となった場合にどちらを正本として更新するかの方針が不足している。
+    anchor: "- 成果物を統合・分割した場合も、各作業の `A` が不明にならないようにする。"
+  - id: F002
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 45
+    message: 見直し条件において、更新トリガーのみが記載されており、ルールブックで例示されている「確認すること（確認内容）」の記述が不足している。
+    anchor: 採用 Role code、成果物区分、Schedule の owner、主要判断、兼務の継続可能性が変わった場合に見直す。

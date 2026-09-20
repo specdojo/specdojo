@@ -1,0 +1,54 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:pjr-views-by-owner-template
+path: docs/ja/specdojo/templates/pjr-views-by-owner-template.md
+target: kata
+rubric: grade-rubric-v1
+verdict: pass
+score: 100
+graded_at: "2026-09-06T09:27:31.662Z"
+graded_by: codex-expert-executor
+content_hash: bf541d7ea3e25242b61be687eab33ed5cf122f69b061fe2cfba7999a153f051d
+categories:
+  consistency:
+    score: 100
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 100
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
+    level: 4
+    score: 100
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 0
+  note: 0
+findings: []

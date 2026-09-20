@@ -4,30 +4,6 @@ specdojo:
   type: project
   status: draft
   rulebook: specdojo:pm-issue-log-rulebook
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 95
-    graded_at: "2026-09-05T19:25:34.522Z"
-    graded_by: gemma-expert-executor
-    content_hash: 76bf33278f4a2df7c38b469bee3b5200b67227a597a317c59213e10169150f2f
-    categories:
-      consistency: { score: 75 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 100 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 2, score: 50 }
-      vp-qe-kata-conformance: { level: 4, score: 100 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 1, minor: 1, note: 0 }
 ---
 
 # 課題ログ サンプル
@@ -37,8 +13,6 @@ specdojo:
 本書は、駄菓子屋の販売管理システム構築プロジェクトで発生した課題を追跡管理する最小サンプルである。
 
 ## 2. 課題ログ一覧
-
-<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-omissions-consistency line=11 更新責任者が未記載である（rulebook 6.1 違反）。 -->
 
 | 課題ID | 発生日     | 内容                 | 優先度 | 対応策                   | 担当     | 期限       | ステータス |
 | ------ | ---------- | -------------------- | ------ | ------------------------ | -------- | ---------- | ---------- |
@@ -53,8 +27,6 @@ specdojo:
 | IS-002 | 中     | 2026-04-11 | 業務確認待ち       |
 
 ## 4. 対応計画
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-qe-omissions-consistency line=22 優先度基準および期限設定ルールが未記載である（rulebook 6.3 違反）。 -->
 
 | 課題ID | 対応策                   | 依存事項     | 完了条件           |
 | ------ | ------------------------ | ------------ | ------------------ |

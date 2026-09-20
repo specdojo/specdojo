@@ -7,30 +7,6 @@ specdojo:
   recipe: undecided
   sample: specdojo:gl-sample
   template: undecided
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: pass
-    score: 96
-    graded_at: "2026-09-02T17:17:25.191Z"
-    graded_by: gemma-expert-executor
-    content_hash: 92524554b892d6d7d5206948f893ef1dfca792afc91bd81cafe26a4d78672291
-    categories:
-      consistency: { score: 100 }
-      usability: { score: 83 }
-      architecture: { score: 100 }
-      quality: { score: 100 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 3, score: 75 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 4, score: 100 }
-      vp-ux-readability: { level: 3, score: 75 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 2, note: 0 }
 ---
 
 # 用語集（Glossary）作成ルール
@@ -104,9 +80,6 @@ specdojo:
 - 関連が強い（同じ業務文脈でセットで出る）ものを中心にし、増やしすぎないことを推奨します。
 
 ## 5. 禁止事項
-
-<!-- specdojo:finding id=F001 severity=minor rule=vp-arc-conciseness 第5章の「禁止事項」が第3章の内容と重複しているため、統合が必要。 -->
-<!-- specdojo:finding id=F002 severity=minor rule=vp-ux-readability 「禁止事項」の節が重複して存在しており、情報の配置として不自然である。 -->
 
 - 用語定義に実装詳細（クラス名、SQL、内部コード）を記載しない。
 - 用語IDを未採番または重複させない。

@@ -9,30 +9,6 @@ specdojo:
   template: specdojo:pm-raci-template
   based_on:
     - specdojo:people-and-organization-definition-standard
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 68
-    graded_at: "2026-09-03T04:49:07.178Z"
-    graded_by: codex-expert-executor
-    content_hash: 897b6a6a602e4ea1289eb2e1cbab57eaf9ffcd3b3f7a90fa8e7264e24efc2ba5
-    categories:
-      consistency: { score: 50 }
-      usability: { score: 83 }
-      architecture: { score: 100 }
-      quality: { score: 50 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 2, score: 50 }
-      vp-arc-conciseness: { level: 3, score: 75 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 2, score: 50 }
-      vp-qe-omissions-consistency: { level: 2, score: 50 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 3, score: 75 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 4, minor: 4, note: 0 }
 ---
 
 # RACI 作成ルール
@@ -76,9 +52,6 @@ RACI Documentation Rulebook
 | based_on   | 組織定義、ロール定義などの ID    | 任意 |
 | supersedes | 置き換え対象の旧文書 ID          | 任意 |
 
-<!-- specdojo:finding id=F003 severity=minor rule=vp-arc-conciseness Frontmatterでtemplateを宣言しているにもかかわらず見出し骨格を本文構成表へ再掲し、主要制約も後続節で反復しているため、本文要件には各章の目的・必須性・判定規則だけを残し、骨格はtemplateへ集約してください。 -->
-<!-- specdojo:finding id=F007 severity=minor rule=vp-qe-kata-conformance templateを文書IDで宣言した系統では骨組みをtemplateの正本とするRulebook記述標準に反して同じ見出し一覧を再掲しているため、章の目的と必須性だけを残して構造の正本をtemplateへ統一してください。 -->
-
 ## 5. 本文構成（標準テンプレ）
 
 | 番号 | 見出し                     | 必須 | 内容                                         |
@@ -99,19 +72,11 @@ RACI Documentation Rulebook
 
 ### 6.2. 成果物別 RACI
 
-<!-- specdojo:finding id=F002 severity=minor rule=vp-arc-cross-document-consistency 採用済みRole codeだけを列に使う規則に対し,rulebookとtemplateが`PO`、`PM`、`BA`、`ARC`、`QE`の固定列を示し,sampleは`DEV`を採用して`ARC`を省略しているため,列を可変プレースホルダーにするか例示であることを明記してください。 -->
-<!-- specdojo:finding id=F006 severity=major rule=vp-qe-kata-conformance rulebookが採用済みRole codeだけを列に使うよう求める一方、対応templateは固定Role列を編集対象として示しておらず未採用Roleを含む成果物を生成し得るため、templateの列を可変プレースホルダー化し追加・削除手順をrecipeへ明記してください。 -->
-<!-- specdojo:finding id=F008 severity=minor rule=vp-ux-readability `PO`、`PM`、`BA`、`ARC`、`QE`の表が例示か必須構造か示されず、採用済みRole codeだけを使うという直前の規則と読み分けにくいため、「列は例であり採用Roleに置換する」と表の直前に明記してください。 -->
-
 | 成果物 | PO  | PM  | BA  | ARC | QE  |
 | ------ | --- | --- | --- | --- | --- |
 
-<!-- specdojo:finding id=F005 severity=major rule=vp-qe-omissions-consistency 成果物カタログの`pm-raci`完了条件が要求する業務・技術・品質の各観点の責任分担を確認する網羅条件がないため、対象を絞る場合でも三観点それぞれの責任境界を確認できることを必須要件へ追加してください。 -->
-
 - 初期スコープの主要成果物、管理計画、公開対象など責任衝突があり得る単位へ絞ります。
 - 生成ビューは正本と責任が同じ場合に独立行を作りません。
-
-<!-- specdojo:finding id=F004 severity=major rule=vp-qe-verifiability 一つ以上の`R`を許容する一方で複数`R`から主たる`R`を識別する表記または選定規則がなく、Schedule ownerとの一致をpass/fail判定できないため、主担当の明示方法かタスクactionに基づく選定手順を定義してください。 -->
 
 - 各行に一つの `A` と一つ以上の `R` があることを確認します。
 
@@ -125,8 +90,6 @@ RACI Documentation Rulebook
 - 通常の作業手順を網羅せず、責任境界が必要なプロセスだけを置きます。
 
 ### 6.4. Schedule・実行主体との対応
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency Schedule ownerを常に主たる`R`と一致させる規則は、上位標準が承認・レビューを独立タスク化した場合に`A`または`C`をownerにできるとする例外、およびSchedule rulebookが一致対象を成果物作成・更新タスクに限定する規則と矛盾するため、タスク種別ごとの対応規則へ修正してください。 -->
 
 - Schedule owner は成果物行またはプロセス行の主たる `R` と一致させます。
 - 実際のmember・兼務はメンバー定義で割り当て、RACIへ個人名を記載しません。

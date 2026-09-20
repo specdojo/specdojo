@@ -1,0 +1,60 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:mtp-rulebook
+path: docs/ja/specdojo/rulebooks/mtp-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 91
+graded_at: "2026-09-02T21:48:45.914Z"
+graded_by: gemma-expert-executor
+content_hash: 79265a7e33a8d2ab1152706ede850aaf22bcc8af3c3a84b26503d4d728531312
+categories:
+  consistency:
+    score: 100
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 75
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 1
+  minor: 0
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: 参照しているサンプルファイル (specdojo:mtp-sample) が、本ルールブックで定義した Frontmatter 設定や本文構成に従っておらず, 具体例としての責務を果たしていない。
+    anchor: ""

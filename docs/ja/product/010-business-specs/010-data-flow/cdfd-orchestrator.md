@@ -10,36 +10,6 @@ specdojo:
     - cdfd-do
     - cdfd-check
     - cdfd-action
-  grade:
-    rubric: grade-rubric-v1
-    target: deliverable
-    verdict: pass
-    score: 94
-    graded_at: "2026-09-20T04:54:14.700Z"
-    graded_by: codex-expert-executor
-    content_hash: 54b40f0e657dd761016966db1775ec307b353d67e1f55353c2f76e8262b758bc
-    categories:
-      consistency: { score: 75 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 100 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 3, score: 75 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-done-criteria: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 3, score: 75 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-user-flow: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-      vp-qe-config-validity: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 3, note: 0 }
-    done_criteria:
-      satisfied: 3
-      total: 3
-      detail_ref: cdfd-orchestrator-grade-criteria
 ---
 
 # 概念データフロー図（Orchestrator）: SpecDojo
@@ -54,8 +24,6 @@ specdojo:
 
 これにより、技術参加者と非技術参加者が同じ正本と記録を介して PDCA を始動・継続でき、判断や調整が特定個人の記憶に集中しない運転を支える。
 
-<!-- specdojo:finding id=F001 severity=minor rule=vp-arc-cross-document-consistency line=13 rulebook 6.1 と recipe 4.2 は適用範囲への期間の明記を要求している一方、本節には対象期間または期間を限定しない旨がないため追記してください。 -->
-<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-omissions-consistency line=13 rulebook と recipe が必須とする適用期間または期間を限定しない旨が適用範囲から欠落しているため追記してください。 -->
 ## 2. 適用範囲
 
 - **対象グループ**: Orchestrator。対象領域は P-14 の一領域である。
@@ -188,7 +156,6 @@ flowchart LR
 
 ### 8.1. 主要例外
 
-<!-- specdojo:finding id=F003 severity=minor rule=vp-qe-omissions-consistency line=149 rulebook 6.7 と template が必須とする「停止範囲」列が例外表にないため、各例外で確定・起動してはならない後続プロセス、出力、委譲を独立した列として明示してください。 -->
 | 例外 ID   | 対象プロセス | 検出条件                                                                                                                       | 本グループでの扱い                                                                                                                                                       | 継続・再開条件                                                                                                                        |
 | --------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
 | `E-14-01` | `P-14-02`    | 実行記録に、同じ対象へ発行済みで要求先の応答が記録されていない要求があり、新しい要求と競合する。                               | 新しい要求を発行せず、競合する対象と要求を実行記録へ対応付けて待機させる。                                                                                               | 先行要求の応答が記録された後、待機要求の対象と必要性を再確認して `P-14-02` から再開する。                                             |

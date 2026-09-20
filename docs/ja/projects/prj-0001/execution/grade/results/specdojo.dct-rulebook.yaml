@@ -1,0 +1,104 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:dct-rulebook
+path: docs/ja/specdojo/rulebooks/dct-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 77
+graded_at: "2026-09-16T07:25:35.663Z"
+graded_by: gemma-expert-executor
+content_hash: 2565ef5da09bf68b49f17ab5b16f91fc4cc66e9a40342dfbc080eeb17a295946
+categories:
+  consistency:
+    score: 50
+  usability:
+    score: 83
+  architecture:
+    score: 100
+  quality:
+    score: 75
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 3
+    score: 75
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 3
+  minor: 4
+  note: 0
+findings:
+  - id: F002
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 80
+    message: 「4. 推奨メタ項目」と「5.1. ルート構造」でトップレベルキーの定義が重複しており, 冗長であるため。
+    anchor: "### 5.1. ルート構造"
+  - id: F006
+    severity: minor
+    rule: vp-ux-readability
+    line: 80
+    message: 「推奨メタ項目」と「ルート構造」が同じトップレベルキーを連続して再掲し、両節の役割差を読み分けにくいため。
+    anchor: "### 5.1. ルート構造"
+  - id: F007
+    severity: minor
+    rule: vp-ux-readability
+    line: 132
+    message: 「5.1」の空行と「5.3」の finding コメントがフィールド表を途中で分断し、`domain` 以降および `depends_on` 以降が列見出しに結び付かない表示になるため。
+    anchor: "| `kind`     | ○    | エビデンス種別。現在は `implementation` のみ               |"
+  - id: F003
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 140
+    message: >-
+      `groups` と `deliverables` はどちらか一方だけを持つと規定しているが、`dct.schema.yaml` は `anyOf` のため両方を持つ構造も検証に合格し, rulebook
+      上の親・葉グループ境界を機械検証できないため。
+    anchor: "| `text`      | ○    | 成果物が満たすべき検証可能な条件                                                           |"
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 203
+    message: >-
+      `sch-track-＜track＞` は対応する `sch-strategy-＜track＞` を `depends_on` に宣言すると規定しているが、`dct-project-management-template` の
+      `sch-track-launch` は `depends_on: []` であり、生成元 `sch-strategy-launch` へのトレーサビリティが欠落しているため。
+    anchor: "- `work` 成果物には最低 1 件の完了条件を記載する。"
+  - id: F005
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 219
+    message: >-
+      recipe・sample・template の要否と所在は rulebook Frontmatter を正本とすると定義している一方、既存の DCT template 群が本 rulebook を参照しているのに
+      `template` 宣言がなく、fully-guided の参照ハブから適用テンプレートを解決できないため。
+    anchor: "- テンプレートでは `local_id` や `part_of` にアンダースコアで囲んだプレースホルダ（例: `_PROJECT_ID_:dct-index`）を使用できる。"
+  - id: F004
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 260
+    message: >-
+      `min_size` は `type: template` でのみ使用可能と規定しているが、`dct.schema.yaml` は project の group と deliverable でも受理するため、禁止事項と
+      schema 検証結果が一致しないため。
+    anchor: ""

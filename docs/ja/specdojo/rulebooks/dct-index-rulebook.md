@@ -9,30 +9,6 @@ specdojo:
   template: specdojo:dct-index-template
   based_on:
     - specdojo:rulebook-authoring-standard
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: pass
-    score: 100
-    graded_at: "2026-09-02T15:19:55.035Z"
-    graded_by: codex-expert-executor
-    content_hash: 2bad3d346348b3b3c7ad1120e41fb24012de5243952dff6126b7e1f4d09e09b7
-    categories:
-      consistency: { score: 100 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 100 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 4, score: 100 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 0, note: 0 }
 ---
 
 # 成果物カタログ（インデックス）作成ルール

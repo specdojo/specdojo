@@ -33,7 +33,7 @@ SpecDojo は道場のメタファーとして、進め方（`approach`）を「R
 | 判断                                                       | 正本・担当                             | 根拠・出力                        |
 | ---------------------------------------------------------- | -------------------------------------- | --------------------------------- |
 | タスク目的                                                 | strategy の `approach_rules`           | 成果物ごとの `intent`             |
-| 内容が作成・更新基準として信頼できるか                     | `specdojo grade`                       | Kata の `grade.verdict`           |
+| 内容が作成・更新基準として信頼できるか                     | `specdojo grade`                       | grade result の `verdict`         |
 | 実在・要否宣言・参照切れ・実装エビデンスと approach の導出 | コード（`schedule strategy generate`） | 生成 strategy の phase `approach` |
 
 実行時は strategy から生成された `approach` に従います。導出規則は [Schedule設計ガイド](schedule-design-guide.md) の `intent 宣言と approach の決定論的導出` を参照してください。

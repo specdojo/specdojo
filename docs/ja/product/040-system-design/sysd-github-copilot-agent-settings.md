@@ -6,46 +6,10 @@ specdojo:
   rulebook: specdojo:sysd-rulebook
   part_of:
     - sysd-agent-settings
-  grade:
-    rubric: grade-rubric-v1
-    target: deliverable
-    verdict: needs-work
-    score: 58
-    graded_at: "2026-09-19T16:40:32.193Z"
-    graded_by: codex-expert-executor
-    content_hash: 3673aa9228f471b201b56d456068deb6aa112af4ad4f2e62ad3808224a75ce6c
-    categories:
-      consistency: { score: 25 }
-      usability: { score: 56 }
-      architecture: { score: 100 }
-      quality: { score: 58 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 1, score: 25 }
-      vp-arc-conciseness: { level: 3, score: 75 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-done-criteria: { level: 1, score: 25 }
-      vp-qe-verifiability: { level: 2, score: 50 }
-      vp-qe-omissions-consistency: { level: 1, score: 25 }
-      vp-ux-readability: { level: 2, score: 50 }
-      vp-ux-user-flow: { level: 2, score: 50 }
-      vp-ux-language-consistency: { level: 2, score: 50 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-      vp-qe-config-validity: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 12, minor: 2, note: 0 }
-    done_criteria:
-      satisfied: 1
-      total: 5
-      unsatisfied:
-        DC-001: [BA]
-        DC-002: [PO]
-        DC-004: [QE]
-        DC-005: [DEV]
-      detail_ref: sysd-github-copilot-agent-settings-grade-criteria
 ---
 
 # GitHub Copilot エージェント設定
 
-<!-- specdojo:finding id=F005 severity=major rule=vp-qe-done-criteria line=3 GitHub Copilot を採用する業務上の要求、採用理由、代替 provider との選択条件が示されず、DC-001 の整合性を確認できない。 -->
 SpecDojo CLI と GitHub Copilot CLI / Copilot cloud agent を組み合わせてマルチエージェント実行を行うための設定・構成を定義する。
 
 ## 1. 設計方針
@@ -67,10 +31,8 @@ GitHub Copilot は GitHub アカウント、Copilot CLI、GitHub.com の cloud a
 
 3層の共通責務は親設計に従う。Copilot agent は、Copilot 固有の custom instructions、custom agent、モデル、ツール許可を使用して plan を処理する。claim、complete、reopen、block、並列起動、worktree 管理は行わない。
 
-<!-- specdojo:finding id=F010 severity=major rule=vp-qe-omissions-consistency line=24 現行必須構成である executor、reporter、runner による result 反映の各 stage と責務境界が全体フローから欠落している。 -->
 ## 3. 全体フロー
 
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=30 現行は executor が成果物編集またはレビューだけを行い、reporter の出力を runner が result へ反映する2段 pipeline であるため、Copilot agent が result を直接編集するフローを修正する必要がある。 -->
 ```text
 specdojo exec run
    -> providers.copilot の command template から解決した copilot -p "$(cat)" ... を起動
@@ -167,7 +129,6 @@ Copilot custom agent は `.github/agents/<name>.md` に YAML frontmatter と pro
 
 frontmatter では `tools` と `model` を指定できる。`tools` は agent が利用可能なツールの絞り込みであり、実行時の自動許可ではない。自動実行時の許可・拒否は `.specdojo/exec-defaults.yaml` の command template に `--allow-tool` / `--deny-tool` として定義する。
 
-<!-- specdojo:finding id=F012 severity=major rule=vp-ux-readability line=122 custom agent は `specdojo exec run` の worker 選択に関与しないと説明した後で同名を member・実行例に使用しており、手動選択用 profile と pipeline executor/reporter の違いを一意に理解できない。 -->
 exec の無人実行の command template は `--agent` を指定しない（`起動コマンドの設計` を参照）。本節の custom agent は Copilot Chat / cloud agent で明示的に選択する用途であり、`specdojo exec run` の worker 選択には関与しない。
 
 ### 8.1. frontmatter フィールド
@@ -223,7 +184,6 @@ review agent には `edit` tool を含めない。ただし CLI の tool filter 
 
 ### 9.1. 起動コマンドの設計
 
-<!-- specdojo:finding id=F003 severity=minor rule=vp-arc-cross-document-consistency line=177 現行の `providers.copilot.command_template` は個人設定への依存を避けるため `—model auto` を明示しているため、掲載する command template を一致させる必要がある。 -->
 起動コマンドは親設計の `起動コマンドの解決` に従い、`.specdojo/exec-defaults.yaml` の `providers.copilot` で定義する。`pm-members.yaml` の member には `command` を書かない。edit / review とも同一の許可リスト構成のため、プレースホルダと `command_params` は使わない。権限設計の根拠は [specdojo:exec-config-guide](../../specdojo/guides/exec-config-guide.md) の `agent 権限とプロンプトインジェクション対策` を正本とする。
 
 ```yaml
@@ -248,10 +208,6 @@ providers:
 - URL アクセスは許可しない（`--allow-url` を追加しない）ため、member に `web_search` capability を持たせない。
 - `--allow-all`、`--allow-all-tools`、`--allow-all-paths`、`--yolo`、環境変数 `COPILOT_ALLOW_ALL` は権限を広げすぎるため使用しない。
 
-<!-- specdojo:finding id=F002 severity=major rule=vp-arc-cross-document-consistency line=201 現行 member は `copilot-executor`、`copilot-review-executor`、`copilot-reporter` と `stage_role` で構成されており、記載された2 member の nickname・属性・reporter 欠落を現行 `pm-members.yaml` に合わせる必要がある。 -->
-<!-- specdojo:finding id=F006 severity=major rule=vp-qe-done-criteria line=201 運用検証が未完了であるにもかかわらず完了条件・解除基準がなく、DC-002 の承認判断に必要な情報が不足している。 -->
-<!-- specdojo:finding id=F009 severity=major rule=vp-qe-verifiability line=201 「運用検証が完了するまで」および rate-limit pattern の実出力確認について、対象 CLI バージョン、確認コマンド、期待結果、解除条件、証跡先が定義されておらず合否判定できない。 -->
-<!-- specdojo:finding id=F014 severity=major rule=vp-ux-language-consistency line=201 `copilot-edit-agent`、`copilot-review-agent` という member 名は現行の `copilot-executor`、`copilot-review-executor`、`copilot-reporter` と一致しないため、custom agent 名と pipeline member 名を区別して統一する必要がある。 -->
 `pm-members.yaml` の member は選択属性だけを持つ。運用検証が完了するまで `disabled: true` で定義し、`exec run --auto` の候補から除外しておく。
 
 ```yaml
@@ -307,7 +263,6 @@ Copilot の limit は、消費量ベースの premium request クォータと、
 
 `429` / `rate limit` を rate limit シグナルとして検出する。quota / premium request 上限を示すメッセージは `quota_exhausted` として検出する。premium 超過後も Copilot 側で included model にフォールバックして継続する場合があるため、共通層では `limited` として扱いつつ、継続失敗時にのみ try_next / block へ進む。残量や reset 時刻を安定取得する共通非対話 API は前提にせず、`/usage` を人が確認する補助情報とし、自動制御は stderr message / JSONL error / OTel の error 情報に基づく。汎用的な `exit_codes: [1]` は使わず stderr で判定する。
 
-<!-- specdojo:finding id=F007 severity=major rule=vp-qe-done-criteria line=256 制約ごとの検証方法、期待結果、テスト参照がなく、DC-004 のテスト設計・検証観点として使用できない。 -->
 stderr の実文言は CLI バージョンで変わりうるため、上記 pattern は実際の出力で検証してから確定する。
 
 実際のファイル: `.specdojo/exec-defaults.yaml`
@@ -316,8 +271,6 @@ stderr の実文言は CLI バージョンで変わりうるため、上記 patt
 
 共通の実行コマンドは親設計を参照する。Copilot member は phase の `capabilities` / `proficiency` と `pm-members.yaml` の属性により自動選択される。
 
-<!-- specdojo:finding id=F008 severity=major rule=vp-qe-done-criteria line=264 member 名、pipeline stage、reporter、実行コマンドが現行構成と一致せず, DC-005 の実装基礎として参照できない。 -->
-<!-- specdojo:finding id=F013 severity=major rule=vp-ux-user-flow line=264 実在しない `copilot-edit-agent` と `copilot-review-agent` を `—by` に指定しており、現行の `copilot-executor` と `copilot-reporter` を用いる executor/reporter 指定手順へ更新する必要がある。 -->
 memberを明示して実行する場合は `--by` にnicknameを指定する。
 
 ```bash
@@ -331,7 +284,6 @@ specdojo exec run --by copilot-review-agent --task <task-id>
 
 Copilot CLI には `/usage` と OpenTelemetry monitoring があり、token usage、cost、AIU、session shutdown 時の集計値を観測できる。これらは実績値の可観測性として扱い、残り quota や premium request 残数の真値とは分離する。
 
-<!-- specdojo:finding id=F004 severity=minor rule=vp-arc-conciseness line=277 9.1節と同一の全フラグを10節で再掲しているため、10節は9.1節への参照と標準入力による再現方法だけに絞り、二重管理を解消する必要がある。 -->
 `specdojo exec run` との統合では、plan は標準入力で渡され、引数必須の `-p` は `"$(cat)"` で受ける。plan 全体が引用済みの単一引数になるため、YAML frontmatter の `---` がコマンドラインオプションとして誤認されない。手動で同じ動作を再現する場合は次のとおり（フラグ構成は `起動コマンドの設計` の command template と同一）。
 
 ```bash
@@ -352,7 +304,6 @@ cat exec/plans/<task-id>-plan.md | copilot -p "$(cat)" --no-color --no-ask-user 
 
 worktree のライフサイクル、配置、ブランチ名、イベントファイル名は親設計に従う。edit worker の並列実行では worktree を使用する。review worker は成果物を変更せず result だけを更新するため、成果物競合防止を目的とした worktree 分離は不要とする。
 
-<!-- specdojo:finding id=F011 severity=major rule=vp-qe-omissions-consistency line=297 関連文書が公式仕様だけに限定され、rulebook が要求する設計制約ごとのテスト・設定検証、実装 SSOT、横断ルールへの検証導線が欠落している。 -->
 ## 12. 公式仕様参照
 
 - [Adding repository custom instructions for GitHub Copilot](https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/add-custom-instructions/add-repository-instructions)

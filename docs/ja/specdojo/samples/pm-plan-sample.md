@@ -9,30 +9,6 @@ specdojo:
     - specdojo:prj-scope-sample
     - specdojo:prj-success-criteria-and-acceptance-criteria-sample
     - specdojo:pm-organization-sample
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 68
-    graded_at: "2026-09-09T15:55:32.496Z"
-    graded_by: gemma-expert-executor
-    content_hash: 6c7c2a143916d1fdc41b1078b8e70c913fca95bea0cbef077f645bdc371c3f03
-    categories:
-      consistency: { score: 38 }
-      usability: { score: 92 }
-      architecture: { score: 100 }
-      quality: { score: 50 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 1, score: 25 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 3, score: 75 }
-      vp-qe-omissions-consistency: { level: 2, score: 50 }
-      vp-qe-kata-conformance: { level: 1, score: 25 }
-      vp-ux-readability: { level: 3, score: 75 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 5, minor: 4, note: 0 }
 ---
 
 # プロジェクト管理計画: 駄菓子屋きぬや 販売管理システム
@@ -62,14 +38,7 @@ specdojo:
 
 品質・費用・個人情報に重大な懸念がある場合、担当ロールは作業を止め、PM が PO の判断材料を整理する。
 
-<!-- specdojo:finding id=F007 severity=major rule=vp-qe-kata-conformance line=27 現金支出、作業時間、運用負荷を区別して管理する規則 (6.2) が適用されず、「参加者の時間」に混在している。 -->
-
 ## 4. 正本・報告・見直し
-
-<!-- specdojo:finding id=F002 severity=major rule=vp-arc-cross-document-consistency line=35 判断ゲートの条件に成功基準等の ID（SC-01等）による参照がなく、正本との追跡可能性が欠如している。 -->
-<!-- specdojo:finding id=F003 severity=minor rule=vp-qe-verifiability line=35 判断条件が総称的であり、具体的にどの項目で pass/fail を判定するかが不明確である。 -->
-<!-- specdojo:finding id=F006 severity=major rule=vp-qe-kata-conformance line=35 判断ゲートにおいて条件 ID を参照せず総称で記載しており、rulebook (6.3) に違反している。 -->
-<!-- specdojo:finding id=F009 severity=minor rule=vp-ux-readability line=35 判断ゲートの条件が抽象的であり、参照先を即座に特定できないため、可読性が低い。 -->
 
 | 情報                     | 正本                   | 更新・報告契機         | 主な確認者 |
 | ------------------------ | ---------------------- | ---------------------- | ---------- |
@@ -86,8 +55,3 @@ specdojo:
 | 論点                                 | 決定期限           | 判断者 |
 | ------------------------------------ | ------------------ | ------ |
 | 現金支出と試用準備時間の具体的な上限 | 初期リリース着手前 | PO     |
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=46 正本表に RACI が含まれておらず、責任の正本が不明確である。 -->
-<!-- specdojo:finding id=F004 severity=major rule=vp-qe-omissions-consistency line=46 正本表に RACI が欠落している。 -->
-<!-- specdojo:finding id=F005 severity=minor rule=vp-qe-omissions-consistency line=55 未決事項表に template で定義されている「現状」列が欠落している。 -->
-<!-- specdojo:finding id=F008 severity=minor rule=vp-qe-kata-conformance line=57 未決事項に _UNDECIDED_: ラベルが付与されておらず、rulebook (6.5) に違反している。 -->

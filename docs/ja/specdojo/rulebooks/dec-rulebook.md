@@ -5,30 +5,6 @@ specdojo:
   status: draft
   target_format: markdown
   sample: specdojo:dec-sample
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: pass
-    score: 96
-    graded_at: "2026-09-02T16:04:46.577Z"
-    graded_by: gemma-expert-executor
-    content_hash: f439191dc5423c4366c488ddbe175ac97f5518a3e476c1c7c8fec46c0bcaa9db
-    categories:
-      consistency: { score: 88 }
-      usability: { score: 92 }
-      architecture: { score: 100 }
-      quality: { score: 100 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 3, score: 75 }
-      vp-qe-kata-conformance: { level: 4, score: 100 }
-      vp-ux-readability: { level: 3, score: 75 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 3, note: 0 }
 ---
 
 # 決定記録 作成ルール
@@ -45,8 +21,6 @@ Decision Log Documentation Rulebook
 
 ## 2. 位置づけと用語定義（必要に応じて）
 
-<!-- specdojo:finding id=F002 severity=minor rule=vp-ux-readability 「位置づけ」において、成果物リファレンス等の上位ガイドへの参照を記述し、プロジェクト全体における役割を明確にすべきである。 -->
-
 - 決定記録はプロジェクト運営・設計判断の証跡である。
 - 課題ログ、変更要求ログと相互参照する。
 
@@ -59,8 +33,6 @@ Decision Log Documentation Rulebook
 
 | 項目 | 説明 | 必須 |
 | ---- | ---- | ---- |
-
-<!-- specdojo:finding id=F001 severity=minor rule=vp-qe-omissions-consistency Frontmatter 必須項目に rulebook ID の指定を追加し、成果物とルールのトレーサビリティを確保すべきである。 -->
 
 | id | `dec-<NNNN>-<topic>` | ○ |
 | type | `project` | ○ |
@@ -79,8 +51,6 @@ Decision Log Documentation Rulebook
 ## 6. 記述ガイド
 
 - 選択肢は少なくとも2案以上を記載する。
-
-<!-- specdojo:finding id=F003 severity=minor rule=vp-ux-readability 「記述ガイド」の具体性が不足しており、「判断軸」の書き方や曖昧さを排除する記述方法など、作成者が迷わないための具体的な指針を追記すべきである。 -->
 
 - 採択理由は判断軸とともに記載する。
 - 影響範囲は仕様・実装・運用の観点で示す。

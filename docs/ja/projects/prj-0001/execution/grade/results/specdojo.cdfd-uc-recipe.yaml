@@ -1,0 +1,60 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:cdfd-uc-recipe
+path: docs/ja/specdojo/recipes/cdfd-uc-recipe.md
+target: kata
+rubric: grade-rubric-v1
+verdict: pass
+score: 98
+graded_at: "2026-09-17T08:20:23.259Z"
+graded_by: codex-expert-executor
+content_hash: 311babc9ddd6ec7074c1515a4fe3400c305f98bc15ac7edbdbc76e075230a01f
+categories:
+  consistency:
+    score: 88
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 100
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 4
+    score: 100
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 1
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 83
+    message: 「4. 各章の書き方」において、rulebook で必須とされている「導入文」に関する問いや具体的な記述ガイドが欠落している。
+    anchor: 各節の表の一行を一つの代表ノードへ対応させます。同じグループが正常系で再登場する場合は節を分け、前回と異なる引き渡し目的を説明します。内部の処理順や担当は書き写しません。

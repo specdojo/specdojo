@@ -12,30 +12,6 @@ specdojo:
       based_on:
         - _PROJECT_ID_:prj-overview
       supersedes: []
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: pass
-    score: 84
-    graded_at: "2026-09-06T15:00:40.532Z"
-    graded_by: codex-expert-executor
-    content_hash: 050f2b64cee07879f11c0a30d813736541ef5f1635b7946eac315760a8aa3624
-    categories:
-      consistency: { score: 75 }
-      usability: { score: 92 }
-      architecture: { score: 100 }
-      quality: { score: 75 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 3, score: 75 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 3, score: 75 }
-      vp-qe-omissions-consistency: { level: 3, score: 75 }
-      vp-qe-kata-conformance: { level: 3, score: 75 }
-      vp-ux-readability: { level: 3, score: 75 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 6, note: 0 }
 ---
 
 # プロジェクトスコープ: _PROJECT_NAME_

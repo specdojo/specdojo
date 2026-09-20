@@ -6,30 +6,6 @@ specdojo:
   recipe: undecided
   sample: specdojo:bds-sample
   template: undecided
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 82
-    graded_at: "2026-09-01T23:01:49.166Z"
-    graded_by: gemma-expert-executor
-    content_hash: b10b8d42eba0d778844d080b2f94dd47478a2899fc41400b8241d154b59bda89
-    categories:
-      consistency: { score: 75 }
-      usability: { score: 83 }
-      architecture: { score: 100 }
-      quality: { score: 75 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 2, score: 50 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 2, score: 50 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 3, minor: 0, note: 0 }
 ---
 
 # 帳票仕様 作成ルール
@@ -75,9 +51,6 @@ Frontmatter は `docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml` �
 | type | `domain` 固定 | ○ |
 | title | 帳票名 | ○ |
 
-<!-- specdojo:finding id=F001 severity=major rule=vp-qe-omissions-consistency Frontmatterのtype項目に「domain固定」とあるが, 49行目で「type: dataは...」と記述されており, 指定値が矛盾している。 -->
-<!-- specdojo:finding id=F003 severity=major rule=vp-ux-language-consistency Frontmatterのtypeに指定される用語が「domain」と「data」で混在しており, 統一されていない。 -->
-
 | status | `draft`/`ready`/`deprecated` | ○ |
 | based_on | 根拠となる仕様ID（BPS/UIS/BR/BES 等） | 任意 |
 | supersedes | 置き換え関係（古仕様→新仕様） | 任意 |
@@ -90,8 +63,6 @@ Frontmatter は `docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml` �
 ## 5. 本文構成（標準テンプレ）
 
 各 BDS ファイルは以下見出しを順番に並べます。
-
-<!-- specdojo:finding id=F002 severity=major rule=vp-qe-kata-conformance 参照されているサンプル（specdojo:bds-sample）の内容が, 本書の「5. 本文構成（標準テンプレ）」に従っておらず, 実例としての機能が不十分である。 -->
 
 1. 概要
 2. 利用者/利用目的

@@ -1,0 +1,72 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:bds-rulebook
+path: docs/ja/specdojo/rulebooks/bds-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 82
+graded_at: "2026-09-01T23:01:49.166Z"
+graded_by: gemma-expert-executor
+content_hash: 7b792421b274ce3aafd1068345d61d0f4a6b3f7501b66d0ffbe1a9261fea70f9
+categories:
+  consistency:
+    score: 75
+  usability:
+    score: 83
+  architecture:
+    score: 100
+  quality:
+    score: 75
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 2
+    score: 50
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 3
+  minor: 0
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: "Frontmatterのtype項目に「domain固定」とあるが, 49行目で「type: dataは...」と記述されており, 指定値が矛盾している。"
+    anchor: "# 帳票仕様 作成ルール"
+  - id: F003
+    severity: major
+    rule: vp-ux-language-consistency
+    line: 1
+    message: Frontmatterのtypeに指定される用語が「domain」と「data」で混在しており, 統一されていない。
+    anchor: "# 帳票仕様 作成ルール"
+  - id: F002
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: 参照されているサンプル（specdojo:bds-sample）の内容が, 本書の「5. 本文構成（標準テンプレ）」に従っておらず, 実例としての機能が不十分である。
+    anchor: "# 帳票仕様 作成ルール"

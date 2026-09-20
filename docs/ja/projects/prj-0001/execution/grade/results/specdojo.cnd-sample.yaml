@@ -1,0 +1,96 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:cnd-sample
+path: docs/ja/specdojo/samples/cnd-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: fail
+score: 53
+graded_at: "2026-09-05T00:16:12.693Z"
+graded_by: gemma-expert-executor
+content_hash: 292a90cdd4a78acc494f3a1d21eafc954ead3c156f45d759c80b431f35226018
+categories:
+  consistency:
+    score: 25
+  usability:
+    score: 58
+  architecture:
+    score: 100
+  quality:
+    score: 38
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
+    level: 0
+    score: 0
+  vp-qe-kata-conformance:
+    level: 0
+    score: 0
+  vp-ux-readability:
+    level: 0
+    score: 0
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 3
+  major: 1
+  minor: 3
+  note: 0
+findings:
+  - id: F002
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 1
+    message: 本文中のルールブック参照先が Frontmatter の指定 (`cnd-mermaid-rulebook`) と不整合である。
+    anchor: ""
+  - id: F004
+    severity: blocker
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: 標準構成で必須とされる「C4コンテナ図（Mermaid）」および「要素の説明」の章が完全に欠落している。
+    anchor: ""
+  - id: F005
+    severity: blocker
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: rulebook の必須要素（Mermaid図および要素説明）を満たしておらず、最小完成例となっていない。
+    anchor: ""
+  - id: F006
+    severity: blocker
+    rule: vp-ux-readability
+    line: 1
+    message: 実際の Mermaid 図面が提示されていないため、成果物の完成イメージを把握できず、利用者が目的（図の作成）を達成するための手段を理解できない。
+    anchor: ""
+  - id: F007
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 1
+    message: 準拠ルールブックの表記が Frontmatter と本文で不整合である。
+    anchor: ""
+  - id: F001
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 4
+    message: Frontmatter の `type` は `architecture` である必要がある。
+    anchor: "## 1. 目的と適用範囲"
+  - id: F003
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 26
+    message: サンプルとして、判定基準（Pass/Fail）を具体的にどう記述すべきかの例示が不足している。
+    anchor: ""

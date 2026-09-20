@@ -52,15 +52,17 @@ grade は成果物の frontmatter（`specdojo.grade`: verdict / score / viewpoin
 
 | No  | 作業                                                                                                                     | 担当 | 状態 | メモ                                              |
 | --- | ------------------------------------------------------------------------------------------------------------------------ | ---- | ---- | ------------------------------------------------- |
-| 1   | サイドカーの schema と読み書き（`grade apply` / `list` / `validate` / `state`）を実装し、`content_hash` の特別扱いを除く | DEV  | open | codex-expert-executor / gemma-reporter / worktree |
-| 2   | `grade migrate` を実装し、既存の成果物・Kata からの一括移行と `grade validate` 0 件を確認する                            | DEV  | open | 作業 1 と同一タスク                               |
-| 3   | exec plan テンプレート 4 本と plan 生成を、サイドカーの finding を本文へ展開する形に改める                               | DEV  | open | 同上                                              |
-| 4   | dashboard と docs-site の表示時合成、frontmatter schema の更新、guide の更新                                             | DEV  | open | 同上                                              |
+| 1   | サイドカーの schema と読み書き（`grade apply` / `list` / `validate` / `state`）を実装し、`content_hash` の特別扱いを除く | DEV  | done | codex-expert-executor / gemma-reporter / worktree |
+| 2   | `grade migrate` を実装し、既存の成果物・Kata からの一括移行と `grade validate` 0 件を確認する                            | DEV  | done | 作業 1 と同一タスク                               |
+| 3   | exec plan テンプレート 4 本と plan 生成を、サイドカーの finding を本文へ展開する形に改める                               | DEV  | done | 同上                                              |
+| 4   | dashboard と docs-site の表示時合成、frontmatter schema の更新、guide の更新                                             | DEV  | done | 同上                                              |
 | 5   | prj-0001 で migrate を実行し、成果物と Kata から grade が消えたことと夜間 routine の commit 範囲を確認する               | ARC  | open | オーケストレーターが直接対応                      |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- grade の結果と finding を `execution/grade/results/<doc-id>.yaml` のサイドカーへ移し、成果物・Kata から `specdojo.grade` と `specdojo:finding` を除去した（`grade migrate` で 288 件を移行、`grade validate` 0 件）。ファイル名は `:` を `.` に置き換える。
+- `src/grade-result.ts` と schema を新設し、`grade apply` / `list` / `validate` / `state` / `plan` / `result` / `migrate`、`schedule-approach`、dashboard、`run-per-document.sh`、docs-site（`GradeSummary.vue`）、exec テンプレート 6 本、guide / standard / command-reference を更新した。`content_hash` は成果物の内容全体から計算し、特別扱いをなくした。
+- executor（codex-expert）は利用制限で中断し、テスト更新・ファイル名規則・standards の残存記述・記録はオーケストレーターが直接対応した。作業 5（routine の commit 範囲の確認）は次回の夜間 grade で確認する。
 
 ## 5. 関連ドキュメント
 

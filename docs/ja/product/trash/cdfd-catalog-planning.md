@@ -8,36 +8,6 @@ specdojo:
     - prj-0001:cdfd-init
     - prj-0001:cdfd-overview
   supersedes: []
-  grade:
-    rubric: grade-rubric-v1
-    target: deliverable
-    verdict: needs-work
-    score: 78
-    graded_at: "2026-09-13T00:09:15.777Z"
-    graded_by: gemma-expert-executor
-    content_hash: 3f6d2b25d7b5e7c578bc240cf7b9f32f5083bf27d291c2ae7e5404f4ba59dadc
-    categories:
-      consistency: { score: 25 }
-      usability: { score: 88 }
-      architecture: { score: 100 }
-      quality: { score: 100 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 1, score: 25 }
-      vp-arc-conciseness: { level: 3, score: 75 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-done-criteria: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 1, score: 25 }
-      vp-ux-readability: { level: 3, score: 75 }
-      vp-ux-user-flow: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-      vp-qe-config-validity: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 4, minor: 8, note: 0 }
-    done_criteria:
-      satisfied: 3
-      total: 3
-      detail_ref: prj-0001:cdfd-catalog-planning-grade-criteria
 ---
 
 # 概念データフロー図（カタログ〜計画展開）: SpecDojo
@@ -131,11 +101,6 @@ flowchart LR
 凡例: ノード形状・色・絵文字は [[prj-0001:cdfd-overview|概念データフロー図（全体概要）]] の「凡例（本プロダクト共通）」に従い、`-->` は情報の流れを表す。`Schedule` は計画情報更新のフロー（4.2）と同一のデータストアを指す。本図は現物の流れを扱わず、event だけが追加された場合は起動しない。
 
 ### 4.2. Schedule・event からの計画情報更新（必須）
-
-<!-- specdojo:finding id=F003 severity=minor rule=vp-arc-conciseness line=133 4.1 の凡例にある「event だけが追加された場合は起動しない」は適用範囲とプロセス一覧の起動条件を再掲しているため, 正本への参照に置き換える必要がある。 -->
-<!-- specdojo:finding id=F007 severity=major rule=vp-qe-omissions-consistency line=103 主要例外表では `E-03` の対象に `P-03-01` を含めているが、4.1 の図ではカタログ検証から `E-03` への経路がなく `P-03-02` からしか到達できないため、`P-03-01` の依存不整合停止経路を追加する必要がある。 -->
-<!-- specdojo:finding id=F008 severity=major rule=vp-qe-omissions-consistency line=118 strategy だけを変更した経路では `P-03-02` へ直接到達するが、必須入力である検証済みカタログの流入が図示されていないため、現行の検証済みカタログを読み込む経路または保持先を図示する必要がある。 -->
-<!-- specdojo:finding id=F009 severity=minor rule=vp-ux-readability line=133 4.1 の凡例において起動条件を再掲しているため、判断情報を正本章へ集約し参照へ置き換える必要がある。 -->
 
 ```mermaid
 flowchart LR
@@ -243,9 +208,6 @@ event が存在しない初回更新は例外ではなく、戦略の初期状�
 
 ### 6.2. 領域外への委譲
 
-<!-- specdojo:finding id=F004 severity=minor rule=vp-arc-conciseness line=204 4.2 の凡例にある主要例外の停止範囲と再開位置は6.1の内容を再掲しているため、凡例から除き主要例外表へ一本化する必要がある。 -->
-<!-- specdojo:finding id=F010 severity=minor rule=vp-ux-readability line=204 4.2 の凡例において主要例外の処理内容を再掲しているため、記号説明と共通ノードの説明のみを残し正本章へ集約する必要がある。 -->
-
 | 委譲先                                                                          | 委譲する事項                                                   | 引き渡す情報                                                        | 本領域へ戻す条件                                                                    |
 | ------------------------------------------------------------------------------- | -------------------------------------------------------------- | ------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
 | `P-01` [[prj-0001:cdfd-init\|初期セットアップ]]                                 | 計画展開に必要なカタログ・構成の初期受け皿を作る               | プロジェクト構成、成果物カタログ、任意の実行補助設定                | 初期正本の不足または配置不整合が原因で `E-01` または `E-02` になった                |
@@ -253,10 +215,3 @@ event が存在しない初回更新は例外ではなく、戦略の初期状�
 | `P-04` [[prj-0001:cdfd-task-execution\|タスク実行ライフサイクル]]               | Ready から task を選択し、実行結果を event と成果物へ反映する  | Ready、Schedule、task の mode・execution・approach・capability 条件 | event の追加、task の完了・中断、または依存へ影響する結果により再計算が必要になった |
 | `P-07` [[prj-0001:cdfd-agent-config-operation\|agent・provider 構成の運用変更]] | strategy、provider、agent、実行条件の変更を承認・適用する      | 変更要求、影響、承認結果、更新済み構成                              | 承認済み変更により Schedule または実行計画の再展開が必要になった                    |
 | `P-08` [[prj-0001:cdfd-derived-content\|成果物・派生ビュー・索引生成]]          | 計画情報を成果物、索引、一般的な派生ビューとして生成・公開する | Schedule、state、Ready、CPM、timeline                               | 表示元となる正本・計画情報の不整合が判明し、再計算が必要になった                    |
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=232 `P-03-04`・`P-03-05` の生成先は `execution/exec/generated`、timeline は `timeline*.md/svg` とされているが、実装では `execution/generated` に出力し、日程表示名は `gantt-chart*.md/svg` であるため、実装に合わせて生成先を訂正する必要がある。 -->
-<!-- specdojo:finding id=F002 severity=major rule=vp-arc-cross-document-consistency line=244 `E-02` は strategy に対応する最新 Schedule がない場合に更新を停止すると定義しているが、現行実装は missing・outdated track を warning として処理を継続するため、停止を実装するか仕様を現行動作へ合わせる必要がある。 -->
-<!-- specdojo:finding id=F005 severity=minor rule=vp-arc-conciseness line=213 5.1 のグループ要約に起動条件（初めて準備・変更した場合）が再掲されているため、グループが扱うプロセス範囲の説明だけに絞る必要がある。 -->
-<!-- specdojo:finding id=F006 severity=minor rule=vp-arc-conciseness line=225 5.2 のグループ要約に起動条件（生成・変更、event 追加、更新要求を受けた場合）が再掲されているため、グループが扱うプロセス範囲の説明だけに絞る必要がある。 -->
-<!-- specdojo:finding id=F011 severity=minor rule=vp-ux-readability line=213 5.1 のグループ要約に起動条件を再掲しているため、記述をプロセス範囲の説明だけに絞る必要がある。 -->
-<!-- specdojo:finding id=F012 severity=minor rule=vp-ux-readability line=225 5.2 のグループ要約に起動条件を再掲しているため、記述をプロセス範囲の説明だけに絞る必要がある。 -->

@@ -6,41 +6,6 @@ specdojo:
   rulebook: specdojo:sysd-rulebook
   part_of:
     - sysd-agent-settings
-  grade:
-    rubric: grade-rubric-v1
-    target: deliverable
-    verdict: needs-work
-    score: 58
-    graded_at: "2026-09-19T16:24:54.832Z"
-    graded_by: codex-expert-executor
-    content_hash: 59f6b61ff14943d60c3ca70348d55b9e47a58e1f2f6ae921b5f251993c805122
-    categories:
-      consistency: { score: 25 }
-      usability: { score: 56 }
-      architecture: { score: 100 }
-      quality: { score: 58 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 1, score: 25 }
-      vp-arc-conciseness: { level: 3, score: 75 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-done-criteria: { level: 1, score: 25 }
-      vp-qe-verifiability: { level: 2, score: 50 }
-      vp-qe-omissions-consistency: { level: 1, score: 25 }
-      vp-ux-readability: { level: 2, score: 50 }
-      vp-ux-user-flow: { level: 2, score: 50 }
-      vp-ux-language-consistency: { level: 2, score: 50 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-      vp-qe-config-validity: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 14, minor: 1, note: 0 }
-    done_criteria:
-      satisfied: 1
-      total: 5
-      unsatisfied:
-        DC-001: [BA]
-        DC-002: [PO]
-        DC-004: [QE]
-        DC-005: [DEV]
-      detail_ref: sysd-codex-agent-settings-grade-criteria
 ---
 
 # Codex エージェント設定
@@ -49,13 +14,10 @@ SpecDojo CLI と Codex CLI を組み合わせてマルチエージェント実�
 
 ## 1. 設計方針
 
-<!-- specdojo:finding id=F005 severity=major rule=vp-qe-done-criteria line=7 Codex 採用理由を自動化・CIへの適性だけで説明しており、対応する業務要件または要求成果物への参照がないため DC-001 の整合性を確認できない。 -->
 共通の責務分担、実行フロー、割り当て、失敗処理、worktree は [エージェント共通設定](sysd-agent-settings.md) に従う。本書では Codex CLI 固有の設定だけを定義する。
 
 Codex CLI は非対話実行、sandbox、reasoning effort、構造化出力を組み合わせられるため、自動化・CI・複雑な実装タスクに適する。
 
-<!-- specdojo:finding id=F013 severity=major rule=vp-ux-readability line=17 review が result 更新のため `workspace-write` を使うとの説明は、123行目の「成果物・result を変更しない」および385行目の「resultだけを更新する」と衝突するため, workspace-write の理由と各 stage の書き込み責務を一つの説明へ統一する必要がある。 -->
-<!-- specdojo:finding id=F015 severity=major rule=vp-ux-language-consistency line=17 review executor を「result更新のため workspace-write」と表現する箇所と「成果物・result のいずれも変更しない」とする箇所が混在しているため、役割名ごとの変更可能範囲を統一する必要がある。 -->
 - **非対話実行は `codex exec`**: TUI を起動せず、タスクプロンプトを渡して応答後に終了する。`approval_policy="never"` を指定し、sandbox 外の操作は承認待ちにせず失敗としてrunnerへ返す。
 - **用途別モデル分担**: 標準作業を高速・低コストモデル、複雑な設計判断を高性能モデルで分担する。
 - **制限情報は実行結果から扱う**: token usage は JSONL から取得できるが、session limit や quota 残量を返す専用 status API を前提にしない。
@@ -115,7 +77,6 @@ API key はジョブ全体の環境変数に設定せず、`codex exec` 実行�
 
 モデルは `.codex/config.toml` の `model` または `codex exec --model` で指定する。モデル名と推奨モデルは Codex の更新に合わせて見直す。
 
-<!-- specdojo:finding id=F004 severity=minor rule=vp-arc-conciseness line=70 同じモデル・役割対応を複数の表とコマンド例で再掲せず、正本設定への参照と固有の設計判断だけに集約して更新箇所を一意にする必要がある。 -->
 | 用途                 | モデル例       | reasoning effort | 方針                               |
 | -------------------- | -------------- | ---------------- | ---------------------------------- |
 | 標準 edit / review   | `gpt-5.4-mini` | `medium`         | 高速・低コストな通常作業           |
@@ -127,8 +88,6 @@ API key はジョブ全体の環境変数に設定せず、`codex exec` 実行�
 
 実際のファイル: `.codex/config.toml`
 
-<!-- specdojo:finding id=F009 severity=major rule=vp-qe-omissions-consistency line=81 rulebook が設定全文を一次情報への参照に留めるよう要求しているのに `.codex/config.toml`、`AGENTS.md`、member 定義を再掲しており、既にモデル値の同期漏れが発生しているため参照中心へ改める必要がある。 -->
-<!-- specdojo:finding id=F010 severity=major rule=vp-qe-omissions-consistency line=90 `agents.max_depth` は現行の公式設定リファレンスで確認できないため、対応する Codex CLI バージョンと有効性を示すか、サポートされる設定へ置き換える必要がある。 -->
 ```toml
 model = "gpt-5.5"
 model_reasoning_effort = "high"
@@ -290,8 +249,6 @@ workerのnicknameとcustom subagentのnameは運用上同じ名称に揃えて�
 
 起動コマンドは親設計の `起動コマンドの解決` に従い、`.specdojo/exec-defaults.yaml` の `providers.codex` で定義する。`pm-members.yaml` の member には `command` を書かない。`codex exec` には worker 名を選択するオプションがないため、テンプレートに `{nickname}` は含めず、モデルと reasoning effort を `command_params.by_proficiency` で切り替える。
 
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=248 worker のモデルを `gpt-5.4-mini` / `gpt-5.5` としているが、正本 `.specdojo/exec-defaults.yaml` は `gpt-5.6-terra` / `gpt-5.6-sol` であり、モデル表・worker 表・実行例を現行値へ整合させる必要がある。 -->
-<!-- specdojo:finding id=F006 severity=major rule=vp-qe-done-criteria line=248 モデル値、検証実行主体、review executor の書き込み責務が正本または本文内で矛盾しているため、DC-002 の承認判断と DC-005 の実装基礎として利用できない。 -->
 ```yaml
 providers:
   codex:
@@ -366,7 +323,6 @@ phase の共通契約は親設計に従う。Codex の Web 検索が必要な ph
 
 共通の retry / fallback / block 方針とグローバル既定 / provider 別上書きの2層構造は親設計に従う。Codex 固有の検出条件は `providers.codex.rate_limit_detection` に置き、`pm-members.yaml` で `provider: codex` の member に適用する。
 
-<!-- specdojo:finding id=F002 severity=major rule=vp-arc-cross-document-consistency line=316 `npm run test:unit` を Codex worker が実行するとしているが, 正本では `test-unit` と `validate-schema` も `pipeline.parent_validations` に含まれ親 runner が実行するため、実行主体と掲載例を修正する必要がある。 -->
 Codex worker は `workspace-write` sandbox 内で `npm run test:unit` を実行する。実 Git・worktree・CLI 子プロセスを必要とする integration テストは sandbox を広げず、SpecDojo 親 runner の固定許可リストへ分離する。
 
 ```yaml
@@ -397,7 +353,6 @@ Codex は API 利用と ChatGPT プラン利用で limit の考え方が異な�
 
 `429` または rate limit を示すメッセージを rate limit シグナルとして検出する。session limit / weekly limit も CLI の stderr message として現れうるため検出対象に含める。共通層では `limited` として扱うが、provider 固有シグナルでは `rate_limit` / `session_limit` / `quota_exhausted` を区別して保持する。残量と reset 時刻は `codex` の `/status` で人が確認する補助情報とし、自動制御は message pattern と exit code に基づく。汎用的な `exit_codes: [1]` は使わず stderr で判定する。
 
-<!-- specdojo:finding id=F008 severity=major rule=vp-qe-verifiability line=346 rate-limit pattern を「実際の出力で検証してから確定」とするだけで、対象 CLI バージョン、入力 fixture、期待する `provider_signal.kind`、終了コードとの組合せ、合否条件が定義されていない。 -->
 stderr の実文言は CLI バージョンで変わりうるため、上記 pattern は実際の出力で検証してから確定する。
 
 実際のファイル: `.specdojo/exec-defaults.yaml`
@@ -437,13 +392,8 @@ cat exec/plans/<task-id>-plan.md | codex exec \
 
 ## 11. worktree 分離セットアップ
 
-<!-- specdojo:finding id=F003 severity=major rule=vp-arc-cross-document-consistency line=385 review worker が「resultだけを更新する」としているが、123行目、review agent 定義、`pm-members.yaml` は成果物・result の双方を変更しないとしており、責務を正本へ統一する必要がある。 -->
-<!-- specdojo:finding id=F011 severity=major rule=vp-qe-omissions-consistency line=385 review executor の result 更新可否が本文内および実ファイルと矛盾しており、責務に関する禁止事項が一意に定まらない。 -->
 worktree のライフサイクル、配置、ブランチ名、イベントファイル名は親設計に従う。edit worker の並列実行ではworktreeを使用する。review workerは `workspace-write` だが成果物を変更せずresultだけを更新するため、成果物競合防止を目的としたworktree分離は不要とする。
 
-<!-- specdojo:finding id=F007 severity=major rule=vp-qe-done-criteria line=387 Codex 固有の制約を確認するテスト、設定検証、レビュー項目への参照がなく、DC-004 のテスト設計・検証観点として利用できない。 -->
-<!-- specdojo:finding id=F012 severity=major rule=vp-qe-omissions-consistency line=387 rulebook 必須の「検証観点・関連文書」に相当する章がなく、Codex 固有設定を確認するテスト、横断ルール、重要フローへの導線が欠落している。 -->
-<!-- specdojo:finding id=F014 severity=major rule=vp-ux-user-flow line=387 関連文書一覧に Codex 固有の設定検証、member 選択、親検証、書き込み禁止を確認するテストや横断ルールへのリンクを追加し、実装後の確認先へ到達できるようにする必要がある。 -->
 ## 12. 公式仕様参照
 
 - [Codex configuration](https://developers.openai.com/codex/config-basic)

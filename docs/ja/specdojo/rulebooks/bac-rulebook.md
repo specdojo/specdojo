@@ -6,30 +6,6 @@ specdojo:
   recipe: undecided
   sample: specdojo:bac-sample
   template: undecided
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: pass
-    score: 91
-    graded_at: "2026-09-01T22:33:17.915Z"
-    graded_by: gemma-expert-executor
-    content_hash: e7afbf9eae13c937ed970d9dcb1adc0d3abbcdf486bb28caa5f442ad3e1f95e1
-    categories:
-      consistency: { score: 88 }
-      usability: { score: 92 }
-      architecture: { score: 100 }
-      quality: { score: 88 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 3, score: 75 }
-      vp-qe-kata-conformance: { level: 3, score: 75 }
-      vp-ux-readability: { level: 3, score: 75 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 4, note: 0 }
 ---
 
 # 業務受入条件 作成ルール
@@ -38,11 +14,7 @@ Business Acceptance Criteria (BAC) Documentation Rules
 
 本ドキュメントは、業務分析・要求定義のために **業務受入条件を統一形式で記述する標準ルール**です。
 
-<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-kata-conformance recipe が undecided となっているため、作成手順を定義した recipe ファイルを整備し指定してください。 -->
-
 BAC は「業務側から見て、このシステムで業務が回せる」ことを確認するための受入条件を定義します。
-
-<!-- specdojo:finding id=F003 severity=minor rule=vp-qe-kata-conformance template が undecided となっているため、標準骨組みを定義した template ファイルを整備し指定してください。 -->
 
 ## 1. 全体方針
 
@@ -75,8 +47,6 @@ Frontmatter は `docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml` �
 
 | 項目 | 説明 | 必須 |
 | ---- | ---- | ---- |
-
-<!-- specdojo:finding id=F001 severity=minor rule=vp-qe-omissions-consistency 成果物の役割やライフサイクル上の位置づけ（トラック設計ガイドや成果物リファレンスとの関係）を明記する「位置づけ」節を追加してください。 -->
 
 | id | 受入条件ID（`bac-...`） | ○ |
 | type | `test` 固定 | ○ |
@@ -211,8 +181,6 @@ supersedes: []
 
 - 売上が記録される
 - 商品の在庫が減少する
-
-<!-- specdojo:finding id=F004 severity=minor rule=vp-ux-readability 第9章の各サンプルの見出しレベル（H2/H3）と番号付けを統一してください。 -->
 
 ## メモ / 将来課題
 

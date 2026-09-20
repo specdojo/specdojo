@@ -1,0 +1,66 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:prj-assumptions-constraints-dependencies-template
+path: docs/ja/specdojo/templates/prj-assumptions-constraints-dependencies-template.md
+target: kata
+rubric: grade-rubric-v1
+verdict: pass
+score: 94
+graded_at: "2026-09-10T16:31:59.583Z"
+graded_by: gemma-expert-executor
+content_hash: 679271da72ceddb82cca68e9258c289effaced3e24abd5918c763876bb094ecf
+categories:
+  consistency:
+    score: 100
+  usability:
+    score: 92
+  architecture:
+    score: 100
+  quality:
+    score: 88
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 2
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 27
+    message: 依存関係表の列名が、正本である rulebook 6.3 節の推奨形式と乖離しており、Kata としての整合性が欠けている。
+    anchor: "| _DEPENDENCY_ID_ | _TODO_       | _TODO_         | _TODO_         | _TODO_         | _TODO_ | _TODO_   |"
+  - id: F002
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 27
+    message: 依存関係表の列名に使用されている用語が, rulebook の推奨表記（「内容または依存先」等）と統一されていない。
+    anchor: "| _DEPENDENCY_ID_ | _TODO_       | _TODO_         | _TODO_         | _TODO_         | _TODO_ | _TODO_   |"

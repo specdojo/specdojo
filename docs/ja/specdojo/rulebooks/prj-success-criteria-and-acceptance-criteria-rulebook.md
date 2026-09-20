@@ -7,30 +7,6 @@ specdojo:
   recipe: specdojo:prj-success-criteria-and-acceptance-criteria-recipe
   sample: specdojo:prj-success-criteria-and-acceptance-criteria-sample
   template: specdojo:prj-success-criteria-and-acceptance-criteria-template
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: pass
-    score: 96
-    graded_at: "2026-09-03T08:58:42.710Z"
-    graded_by: codex-expert-executor
-    content_hash: 3d45a1db6f1c781a44219ba718ea60cfd44fb0abf7fe2e2cea10a0adffdd9c7f
-    categories:
-      consistency: { score: 100 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 88 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 3, score: 75 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 1, note: 0 }
 ---
 
 # 成功基準と受入条件 作成ルール
@@ -125,8 +101,6 @@ flowchart LR
 ## 5. 本文構成（標準テンプレ）
 
 ### 5.1. 成功基準と受入条件（Success Criteria and Acceptance Criteria）
-
-<!-- specdojo:finding id=F001 severity=minor rule=vp-qe-kata-conformance 「本文構成（標準テンプレ）」節で番号と見出し順を正本化しているため、骨組みの定義は template に一元化し、本節では各章の記述目的や必須要件などの「本文要件」としての解説に留めるべきである。 -->
 
 | 番号 | 見出し               | 必須 | 内容（要点）                               |
 | ---- | -------------------- | ---- | ------------------------------------------ |

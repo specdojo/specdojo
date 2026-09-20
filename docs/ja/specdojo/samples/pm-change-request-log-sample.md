@@ -4,39 +4,11 @@ specdojo:
   type: project
   status: draft
   rulebook: specdojo:pm-change-request-log-rulebook
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: pass
-    score: 93
-    graded_at: "2026-09-05T18:45:30.520Z"
-    graded_by: gemma-expert-executor
-    content_hash: 13faf65e39957a0252eaa4617e9c7331313f43df3963d6df8837c5c4a48bc034
-    categories:
-      consistency: { score: 88 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 88 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 3, score: 75 }
-      vp-qe-kata-conformance: { level: 3, score: 75 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 3, note: 0 }
 ---
 
 # 変更要求ログ サンプル
 
-<!-- specdojo:finding id=F003 severity=minor rule=vp-qe-kata-conformance line=2 テンプレートで定義されている「個票から生成された派生ビュー（再生成可能）」という性質や注記が反映されておらず、手動管理のログ形式となっている。 -->
-
 ## 1. 概要
-
-<!-- specdojo:finding id=F001 severity=minor rule=vp-qe-omissions-consistency line=5 概要に「運用期間」と「記録単位」の記載が不足している。 -->
 
 本書は、駄菓子屋の販売管理システム構築プロジェクトにおける変更要求の申請・審査・決定・実施追跡を管理する最小サンプルである。
 
@@ -48,8 +20,6 @@ specdojo:
 | CR-002 | 日次売上CSVの列順を変更          | 店舗責任者 | 2026-04-03 | 承認   |
 
 ## 3. 影響評価
-
-<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-omissions-consistency line=19 影響評価の一覧に, rulebook で指定されている「品質」への影響項目が不足している。 -->
 
 | 変更ID | 影響範囲  | 工数見積 | 納期影響 | 評価 |
 | ------ | --------- | -------- | -------- | ---- |

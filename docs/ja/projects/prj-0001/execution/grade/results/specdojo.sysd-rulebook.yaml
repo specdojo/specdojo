@@ -1,0 +1,66 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:sysd-rulebook
+path: docs/ja/specdojo/rulebooks/sysd-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: pass
+score: 93
+graded_at: "2026-09-03T12:27:21.713Z"
+graded_by: gemma-expert-executor
+content_hash: 6bd9b649216f82bc700b5b881fdf6d7f394aa4fe94a621a076330744cc49f609
+categories:
+  consistency:
+    score: 88
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 88
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 2
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: rulebook としての完備性を確保するため、作成者が参照すべき recipe および sample の定義を Frontmatter に追加することを推奨する。
+    anchor: "# 個別システム設計（SYSD）作成ルール"
+  - id: F002
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: 「標準テンプレ」という表記と、「章構成は柔軟に決められる」という記述が矛盾しているため、整合性をとり「推奨構成」や「必須観点」等の適切な表記に修正すべきである。
+    anchor: "# 個別システム設計（SYSD）作成ルール"

@@ -6,30 +6,6 @@ specdojo:
   recipe: undecided
   sample: specdojo:nfr-operations-sample
   template: undecided
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 89
-    graded_at: "2026-09-02T23:00:32.403Z"
-    graded_by: gemma-expert-executor
-    content_hash: 0833d82c3377f109dfdbd8b3039d6808025e823735aaab02b44a14ab308e19eb
-    categories:
-      consistency: { score: 88 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 75 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 3, score: 75 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 1, minor: 1, note: 0 }
 ---
 
 # 非機能要件 / 運用 作成ルール
@@ -38,8 +14,6 @@ Non-Functional Requirements Operations Documentation Rules
 
 本ドキュメントは、非機能要件のうち運用（監視、バックアップ、手順、体制）を定義する `nfr-operations` の作成ルールを定義する。
 運用要件は、平常時監視と異常時対応が継続可能であることを基準化する。
-
-<!-- specdojo:finding id=F002 severity=major rule=vp-qe-kata-conformance 参照サンプル specdojo:nfr-operations-sample の構成がルールブックで定義した標準テンプレ（第5節）に準拠しておらず、正しくない例となっている。 -->
 
 ## 1. 全体方針
 
@@ -75,8 +49,6 @@ Non-Functional Requirements Operations Documentation Rules
 ### 4.1. 設定内容
 
 Frontmatter は共通スキーマに従います（参照: [docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml](../../../specdojo/schemas/v1/deliverable-frontmatter.schema.yaml) / [document-metadata-standard.md](../standards/document-metadata-standard.md)）。
-
-<!-- specdojo:finding id=F001 severity=minor rule=vp-qe-omissions-consistency 生成対象ドキュメントの推奨配置ディレクトリ（フォルダ構成）に関する記述を追加してください。 -->
 
 | 項目    | 説明                                | 必須 |
 | ------- | ----------------------------------- | ---- |

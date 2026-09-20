@@ -1,0 +1,72 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:dec-rulebook
+path: docs/ja/specdojo/rulebooks/dec-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: pass
+score: 96
+graded_at: "2026-09-02T16:04:46.577Z"
+graded_by: gemma-expert-executor
+content_hash: 94a8b4b4306aff73c3510ab181df5c4ebc5b120b1f926cc0f373ebd4645edfd9
+categories:
+  consistency:
+    score: 88
+  usability:
+    score: 92
+  architecture:
+    score: 100
+  quality:
+    score: 100
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 4
+    score: 100
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 3
+  note: 0
+findings:
+  - id: F002
+    severity: minor
+    rule: vp-ux-readability
+    line: 1
+    message: 「位置づけ」において、成果物リファレンス等の上位ガイドへの参照を記述し、プロジェクト全体における役割を明確にすべきである。
+    anchor: "# 決定記録 作成ルール"
+  - id: F001
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: Frontmatter 必須項目に rulebook ID の指定を追加し、成果物とルールのトレーサビリティを確保すべきである。
+    anchor: "# 決定記録 作成ルール"
+  - id: F003
+    severity: minor
+    rule: vp-ux-readability
+    line: 1
+    message: 「記述ガイド」の具体性が不足しており、「判断軸」の書き方や曖昧さを排除する記述方法など、作成者が迷わないための具体的な指針を追記すべきである。
+    anchor: "# 決定記録 作成ルール"

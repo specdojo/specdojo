@@ -4,37 +4,7 @@ specdojo:
   type: project
   status: draft
   rulebook: specdojo:cxd-mermaid-rulebook
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 58
-    graded_at: "2026-09-05T02:04:16.161Z"
-    graded_by: gemma-expert-executor
-    content_hash: dcf92da7cfdbf49c7ce54b5fb28775907489bc8cc62d2cb55eeea271c993587a
-    categories:
-      consistency: { score: 50 }
-      usability: { score: 75 }
-      architecture: { score: 100 }
-      quality: { score: 25 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 3, score: 75 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 1, score: 25 }
-      vp-qe-omissions-consistency: { level: 1, score: 25 }
-      vp-qe-kata-conformance: { level: 1, score: 25 }
-      vp-ux-readability: { level: 1, score: 25 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 4, minor: 1, note: 0 }
 ---
-
-<!-- specdojo:finding id=F001 severity=minor rule=vp-arc-cross-document-consistency line=1 H1のリンク先がFrontmatterのrulebook指定と不整合である。 -->
-<!-- specdojo:finding id=F002 severity=major rule=vp-qe-verifiability line=1 具体的記述が欠落しているため、成功基準や品質基準の妥当性を検証できない。 -->
-<!-- specdojo:finding id=F003 severity=major rule=vp-qe-omissions-consistency line=1 C4コンテキスト図として必須となる「Mermaidによる図」および「要素の詳細説明」が欠落している。 -->
-<!-- specdojo:finding id=F004 severity=major rule=vp-qe-kata-conformance line=1 サンプルとしての責務（完成例の提示）を果たしておらず、成果物のメタ記述に留まっている。 -->
-<!-- specdojo:finding id=F005 severity=major rule=vp-ux-readability line=1 具体的な記述例（図と文章の両方）が提示されていないため、成果物の品質基準や記載水準を理解することができない。 -->
 
 # [C4コンテキスト図](../rulebooks/cxd-rulebook.md) サンプル
 

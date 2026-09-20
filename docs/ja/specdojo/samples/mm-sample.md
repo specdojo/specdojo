@@ -4,34 +4,7 @@ specdojo:
   type: project
   status: draft
   rulebook: specdojo:mm-rulebook
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: pass
-    score: 93
-    graded_at: "2026-09-05T09:36:57.162Z"
-    graded_by: gemma-expert-executor
-    content_hash: ffbc82ff7986dc8a1b86ff8c45acd18fc01f782605ce169744fe366f86f29b26
-    categories:
-      consistency: { score: 88 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 88 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 3, score: 75 }
-      vp-qe-kata-conformance: { level: 3, score: 75 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 2, note: 0 }
 ---
-
-<!-- specdojo:finding id=F001 severity=minor rule=vp-qe-omissions-consistency line=1 Frontmatterのidがルールブックで定義された命名規則(mm-＜yyyy-mm-dd＞-＜nn＞)に準拠していない。 -->
-<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-kata-conformance line=1 サンプルのidがルールブックの定義する形式に準拠しておらず、正解例としての役割を十分に果たしていない。 -->
 
 # 議事録 サンプル
 

@@ -1,0 +1,66 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:pm-communication-plan-rulebook
+path: docs/ja/specdojo/rulebooks/pm-communication-plan-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: pass
+score: 96
+graded_at: "2026-09-03T02:44:13.430Z"
+graded_by: gemma-expert-executor
+content_hash: f816cef26ab691548cb25692742af7f12ecccd0b26c0f9c44b3eacb407573e7b
+categories:
+  consistency:
+    score: 88
+  usability:
+    score: 92
+  architecture:
+    score: 100
+  quality:
+    score: 100
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 4
+    score: 100
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 2
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: 「位置づけ」という見出しがあるが、他成果物から見た本文書の役割や依存関係などの位置づけに関する記述が不足している。
+    anchor: "# コミュニケーション計画 作成ルール"
+  - id: F002
+    severity: minor
+    rule: vp-ux-readability
+    line: 1
+    message: 見出しに「位置づけ」が含まれているが、具体的な位置づけの説明がないため、利用者が文書の役割を把握しにくい。
+    anchor: "# コミュニケーション計画 作成ルール"

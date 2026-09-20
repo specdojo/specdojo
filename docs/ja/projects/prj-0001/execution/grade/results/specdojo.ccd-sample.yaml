@@ -1,0 +1,78 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:ccd-sample
+path: docs/ja/specdojo/samples/ccd-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 75
+graded_at: "2026-09-04T22:16:44.056Z"
+graded_by: gemma-expert-executor
+content_hash: 90808f2bc0a26d89402e55d4fd4de7b5a66e22016645cfb620b7b5b0f3d980a0
+categories:
+  consistency:
+    score: 63
+  usability:
+    score: 83
+  architecture:
+    score: 100
+  quality:
+    score: 63
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 1
+    score: 25
+  vp-qe-kata-conformance:
+    level: 1
+    score: 25
+  vp-ux-readability:
+    level: 2
+    score: 50
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 3
+  minor: 1
+  note: 0
+findings:
+  - id: F003
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 16
+    message: 概念クラス図のサンプルとして不適切な「必須観点（判定基準、責任者など）」が記述されており、成果物の責務と矛盾している。
+    anchor: "- 必須観点: 対象、条件、判定基準、責任者"
+  - id: F001
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 18
+    message: rulebook が定義する成果物の具体例（Mermaid 構文によるクラス図）が完全に欠落している。
+    anchor: "## 4. 最小記述例"
+  - id: F002
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 18
+    message: 概念クラス図のサンプルでありながら、肝心の Mermaid CCD 記述例（図）が一切含まれておらず、完成例として機能していない。
+    anchor: "## 4. 最小記述例"
+  - id: F004
+    severity: major
+    rule: vp-ux-readability
+    line: 18
+    message: 具体的な概念クラス図の記述が存在しないため、読者がどのような成果物を目指すべきか理解できない。
+    anchor: "## 4. 最小記述例"

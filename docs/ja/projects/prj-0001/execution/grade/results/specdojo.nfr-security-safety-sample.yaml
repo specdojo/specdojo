@@ -1,0 +1,78 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:nfr-security-safety-sample
+path: docs/ja/specdojo/samples/nfr-security-safety-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: fail
+score: 56
+graded_at: "2026-09-05T11:49:44.821Z"
+graded_by: gemma-expert-executor
+content_hash: 314888ab8330ced724ff4791d3971e075a4c404d515e62dcc9f273fc69c07719
+categories:
+  consistency:
+    score: 63
+  usability:
+    score: 75
+  architecture:
+    score: 100
+  quality:
+    score: 13
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 1
+    score: 25
+  vp-qe-omissions-consistency:
+    level: 1
+    score: 25
+  vp-qe-kata-conformance:
+    level: 0
+    score: 0
+  vp-ux-readability:
+    level: 1
+    score: 25
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 1
+  major: 3
+  minor: 0
+  note: 0
+findings:
+  - id: F002
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 3
+    message: ルールブックで定義された必須構成（見出し 1〜5）がすべて欠落している。
+    anchor: "## 1. 目的と適用範囲"
+  - id: F003
+    severity: blocker
+    rule: vp-qe-kata-conformance
+    line: 3
+    message: ルールブックで指定された順序固定の必須見出し構成に全く準拠していない。
+    anchor: "## 1. 目的と適用範囲"
+  - id: F004
+    severity: major
+    rule: vp-ux-readability
+    line: 17
+    message: 具体的な記述例ではなく抽象的な項目リストとなっており、実装ガイドとしての役割を果たしていない。
+    anchor: ""
+  - id: F001
+    severity: major
+    rule: vp-qe-verifiability
+    line: 23
+    message: 判定基準や具体的数値などの検証可能な表現が欠落しており、非機能要件のサンプルとして機能していない。
+    anchor: "| 目的         | 不正利用防止とセキュリティを定義する                                        | specdojo:deliverables-reference 準拠 |"

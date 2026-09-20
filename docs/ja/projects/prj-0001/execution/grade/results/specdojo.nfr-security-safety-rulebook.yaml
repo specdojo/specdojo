@@ -1,0 +1,78 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:nfr-security-safety-rulebook
+path: docs/ja/specdojo/rulebooks/nfr-security-safety-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 73
+graded_at: "2026-09-02T23:42:43.164Z"
+graded_by: gemma-expert-executor
+content_hash: 2bd1162734d21b5c4611af0c5c633e134bdafdd8c99a98f88e856385f67ae268
+categories:
+  consistency:
+    score: 75
+  usability:
+    score: 83
+  architecture:
+    score: 100
+  quality:
+    score: 50
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-qe-kata-conformance:
+    level: 1
+    score: 25
+  vp-ux-readability:
+    level: 2
+    score: 50
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 3
+  minor: 1
+  note: 0
+findings:
+  - id: F002
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: Frontmatter の recipe および template が undecided となっており、成果物生成のための定義が不足している。
+    anchor: ""
+  - id: F003
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: 参照サンプル (specdojo:nfr-security-safety-sample) の構成が本ルールで定める必須見出し構成と完全に乖離しており、整合性が取れていない。
+    anchor: ""
+  - id: F001
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 1
+    message: 記述ガイドにおいて、判定基準を具体化するための例示が不十分であり、検証可能な表現への誘導が弱い。
+    anchor: ""
+  - id: F004
+    severity: major
+    rule: vp-ux-readability
+    line: 1
+    message: サンプルとの乖離により期待成果物の形式に混乱を招くため、また記述ガイドが抽象的で具体性に欠けるため、読者の理解を妨げる。
+    anchor: ""

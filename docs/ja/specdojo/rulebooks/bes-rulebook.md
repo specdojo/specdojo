@@ -6,30 +6,6 @@ specdojo:
   recipe: undecided
   sample: specdojo:bes-sample
   template: undecided
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 77
-    graded_at: "2026-09-01T23:27:34.195Z"
-    graded_by: gemma-expert-executor
-    content_hash: 3c0890b3c61fc7d50a76b51dd803e41e73da6901b8a98d49041f392993e0c842
-    categories:
-      consistency: { score: 50 }
-      usability: { score: 83 }
-      architecture: { score: 100 }
-      quality: { score: 75 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 2, score: 50 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 2, score: 50 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 2, score: 50 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 4, minor: 0, note: 0 }
 ---
 
 # 業務イベント仕様 作成ルール
@@ -37,9 +13,6 @@ specdojo:
 Business Event Specification (BES) Documentation Rules
 
 BES は、BEL（業務イベント一覧）の各イベントについて、**重要/複雑なものだけ** を詳細化するための仕様です。
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency 参照先のサンプルファイル `docs/ja/specdojo/samples/bes-sample.md` が本ルールの形式に従った BES インスタンスになっていない。 -->
-<!-- specdojo:finding id=F003 severity=major rule=vp-qe-kata-conformance 指定されたサンプル `specdojo:bes-sample` が BES の具体例（インスタンス）になっていない。 -->
 
 ## 1. 位置づけ
 
@@ -123,8 +96,6 @@ BES の責務は次に **限定** し、各項目を見出しとしてこの順�
 ```markdown
 ---
 
-<!-- specdojo:finding id=F002 severity=major rule=vp-qe-omissions-consistency Frontmatter の `type` 項目において, 表内では `domain` とするが, 直後の説明とサンプルでは `data` となっており矛盾している。 -->
-<!-- specdojo:finding id=F004 severity=major rule=vp-ux-language-consistency Frontmatter の `type` 指定値において `domain` と `data` の表記ゆれ（矛盾）がある。 -->
 id: bes-sale-checkout
 type: data
 title: 業務イベント: 会計確定（販売）

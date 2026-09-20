@@ -20,7 +20,7 @@ import {
 } from "../src/gen-mermaid-svg";
 import * as path from "path";
 import { fileURLToPath } from "url";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 
 const CONFIG_DIR = path.dirname(fileURLToPath(import.meta.url));
 const PACKAGE_ROOT = path.resolve(CONFIG_DIR, "..");
@@ -119,6 +119,49 @@ function getSpecdojoDocId(frontmatter: Record<string, unknown> | undefined): str
 
   const trimmedId = id.trim();
   return trimmedId.length > 0 ? trimmedId : undefined;
+}
+
+type GradeSummary = {
+  verdict: string;
+  score: number;
+  findings: number;
+  gradedAt: string;
+  gradedBy: string;
+};
+
+function readGradeSummary(docId: string): GradeSummary | undefined {
+  const projectsRoot = path.join(WORKSPACE_ROOT, "docs", "ja", "projects");
+  if (!existsSync(projectsRoot)) return undefined;
+  for (const entry of readdirSync(projectsRoot, { withFileTypes: true })) {
+    if (!entry.isDirectory()) continue;
+    const resultPath = path.join(
+      projectsRoot,
+      entry.name,
+      "execution",
+      "grade",
+      "results",
+      // src/grade-result.ts の gradeResultFileName と同じ規則（":" を "." に置換）。
+      `${docId.replace(/:/g, ".")}.yaml`,
+    );
+    if (!existsSync(resultPath)) continue;
+    const content = readFileSync(resultPath, "utf8");
+    const verdict = content.match(/^verdict:\s*(\S+)\s*$/m)?.[1];
+    const score = Number(content.match(/^score:\s*(\d+)\s*$/m)?.[1]);
+    const gradedAt = content.match(/^graded_at:\s*["']?([^"'\s]+)["']?\s*$/m)?.[1];
+    const gradedBy = content.match(/^graded_by:\s*["']?(.+?)["']?\s*$/m)?.[1];
+    const counts = [...content.matchAll(/^  (?:blocker|major|minor|note):\s*(\d+)\s*$/gm)];
+    if (!verdict || !Number.isFinite(score) || !gradedAt || !gradedBy || counts.length !== 4) {
+      return undefined;
+    }
+    return {
+      verdict,
+      score,
+      findings: counts.reduce((sum, match) => sum + Number(match[1]), 0),
+      gradedAt,
+      gradedBy,
+    };
+  }
+  return undefined;
 }
 
 function escapeHtml(value: string): string {
@@ -849,8 +892,13 @@ export default defineConfig({
       pageData.frontmatter,
       pageData.relativePath,
     );
-    if (Object.keys(frontmatterDocLinks).length > 0) {
-      return { frontmatterDocLinks };
+    const docId = getSpecdojoDocId(pageData.frontmatter);
+    const gradeSummary = docId ? readGradeSummary(docId) : undefined;
+    if (Object.keys(frontmatterDocLinks).length > 0 || gradeSummary) {
+      return {
+        ...(Object.keys(frontmatterDocLinks).length > 0 ? { frontmatterDocLinks } : {}),
+        ...(gradeSummary ? { gradeSummary } : {}),
+      };
     }
   },
 

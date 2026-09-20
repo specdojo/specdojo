@@ -1,0 +1,84 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:cdfd-overview-recipe
+path: docs/ja/specdojo/recipes/cdfd-overview-recipe.md
+target: kata
+rubric: grade-rubric-v1
+verdict: pass
+score: 96
+graded_at: "2026-09-17T07:28:40.267Z"
+graded_by: gemma-expert-executor
+content_hash: 17bbb3be23983437907bf00a7a348ca6446afd929a952727a19ed9c91e0b526d
+categories:
+  consistency:
+    score: 88
+  usability:
+    score: 92
+  architecture:
+    score: 100
+  quality:
+    score: 100
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 4
+    score: 100
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 5
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 80
+    message: 成果物の必須構成要素である「導入文」について、他の章と同様に「問い」および「書き方」のガイドが提供されていない。
+    anchor: "### 4.4. データストア"
+  - id: F002
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 102
+    message: 「プロセス領域」章の冒頭に記載すべき「領域数、プロセスグループ数、正本の所在」に関する記述ガイドが欠けている。
+    anchor: ""
+  - id: F005
+    severity: minor
+    rule: vp-ux-readability
+    line: 114
+    message: 前回の指摘内容（finding）が HTML コメントとして本文中に残っており、不要な記述となっている。
+    anchor: ""
+  - id: F003
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 116
+    message: 「データストア」章の冒頭に記載すべき「区分の意味、パスの略記、除外対象」に関する記述ガイドが欠けている。
+    anchor: ""
+  - id: F004
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 127
+    message: 「概念データフロー（概要）」章の冒頭に記載すべき「ノード構成、矢印の意味、更新エッジ、外部主体の扱い」に関する記述ガイドが欠けている。
+    anchor: "### 4.8. 未決事項（条件付き）"

@@ -5,30 +5,6 @@ specdojo:
   status: draft
   target_format: yaml
   sample: specdojo:dct-sample
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 77
-    graded_at: "2026-09-16T07:25:35.663Z"
-    graded_by: gemma-expert-executor
-    content_hash: ee0fc9059109d014d79b24a66ecab469c5718aa4a9c1e72d878aecdca4586c04
-    categories:
-      consistency: { score: 50 }
-      usability: { score: 83 }
-      architecture: { score: 100 }
-      quality: { score: 75 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 2, score: 50 }
-      vp-arc-conciseness: { level: 3, score: 75 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 2, score: 50 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 3, score: 75 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 3, minor: 4, note: 0 }
 ---
 
 # 成果物カタログ（ドメイン別）作成ルール
@@ -110,9 +86,6 @@ YAML 成果物のため、Markdown Frontmatter ではなくファイル先頭の
 
 ## 5. 本文構成（標準テンプレ）
 
-<!-- specdojo:finding id=F002 severity=minor rule=vp-arc-conciseness line=80 「4. 推奨メタ項目」と「5.1. ルート構造」でトップレベルキーの定義が重複しており, 冗長であるため。 -->
-<!-- specdojo:finding id=F006 severity=minor rule=vp-ux-readability line=80 「推奨メタ項目」と「ルート構造」が同じトップレベルキーを連続して再掲し、両節の役割差を読み分けにくいため。 -->
-
 ### 5.1. ルート構造
 
 `dct-<domain>.yaml` は次のルート構造を標準とする。
@@ -163,8 +136,6 @@ YAML 成果物のため、Markdown Frontmatter ではなくファイル先頭の
 
 ### 5.4. `evidence_refs[]`（非成果物エビデンス）
 
-<!-- specdojo:finding id=F007 severity=minor rule=vp-ux-readability line=132 「5.1」の空行と「5.3」の finding コメントがフィールド表を途中で分断し、`domain` 以降および `depends_on` 以降が列見出しに結び付かない表示になるため。 -->
-
 | フィールド | 必須 | 内容                                                       |
 | ---------- | ---- | ---------------------------------------------------------- |
 | `kind`     | ○    | エビデンス種別。現在は `implementation` のみ               |
@@ -172,8 +143,6 @@ YAML 成果物のため、Markdown Frontmatter ではなくファイル先頭の
 | `purpose`  | ○    | この参照から確認する現在動作・制約                         |
 
 ### 5.5. `done_criteria[]`（完了条件）
-
-<!-- specdojo:finding id=F003 severity=major rule=vp-qe-omissions-consistency line=140 `groups` と `deliverables` はどちらか一方だけを持つと規定しているが、`dct.schema.yaml` は `anyOf` のため両方を持つ構造も検証に合格し, rulebook 上の親・葉グループ境界を機械検証できないため。 -->
 
 | フィールド  | 必須 | 内容                                                                                       |
 | ----------- | ---- | ------------------------------------------------------------------------------------------ |
@@ -233,8 +202,6 @@ YAML 成果物のため、Markdown Frontmatter ではなくファイル先頭の
 
 ### 6.6. `base_path` と `path` の解決
 
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=203 `sch-track-＜track＞` は対応する `sch-strategy-＜track＞` を `depends_on` に宣言すると規定しているが、`dct-project-management-template` の `sch-track-launch` は `depends_on: []` であり、生成元 `sch-strategy-launch` へのトレーサビリティが欠落しているため。 -->
-
 - 先頭が `/` のパスはリポジトリルートからの絶対パスとして解決する。
 - 先頭が `/` でないパスは相対パスとし、最も近い祖先（グループまたはドメイン）の解決済み `base_path` に連結する。
 - ドメインの `base_path` は絶対パス（先頭 `/`）で記載することを推奨する。
@@ -254,8 +221,6 @@ YAML 成果物のため、Markdown Frontmatter ではなくファイル先頭の
 - プレースホルダは小文字を波括弧で囲んで記述し、固定語はハイフンで連結する。
 
 ### 6.9. テンプレート固有項目
-
-<!-- specdojo:finding id=F005 severity=major rule=vp-qe-kata-conformance line=219 recipe・sample・template の要否と所在は rulebook Frontmatter を正本とすると定義している一方、既存の DCT template 群が本 rulebook を参照しているのに `template` 宣言がなく、fully-guided の参照ハブから適用テンプレートを解決できないため。 -->
 
 - `type: template` のファイルでのみ `min_size`（`small` / `medium` / `large`）を使用できる。
 
@@ -295,8 +260,6 @@ YAML 成果物のため、Markdown Frontmatter ではなくファイル先頭の
 - 判定計画の存在はカタログの `primary` 確定を意味しない。判定計画は draft 作成支援であり、`catalog_status` の更新は人間の確認を経て行う。
 
 ### 6.13. 判定計画からの決定論的生成
-
-<!-- specdojo:finding id=F004 severity=minor rule=vp-qe-omissions-consistency line=260 `min_size` は `type: template` でのみ使用可能と規定しているが、`dct.schema.yaml` は project の group と deliverable でも受理するため、禁止事項と schema 検証結果が一致しないため。 -->
 
 - 保存済みの判定計画からカタログを生成する場合は、`catalog scaffold --plan --domain <domain>` を使用する。`--var` は併用せず、placeholder 値は根拠付きの `variables` を正本とする。
 - ジェネレーターは template の `min_size`、placeholder 展開、`part_of`、`domain`、`base_path`、group 構造を scaffold と共通の処理で適用する。物理分割された template は、同じ `domain` を持つ全ファイルをファイル名順に処理し、対応する `dct-<domain>-<part>.yaml` を生成する。

@@ -1,0 +1,78 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:imp-operations-sample
+path: docs/ja/specdojo/samples/imp-operations-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: pass
+score: 93
+graded_at: "2026-09-05T08:18:30.133Z"
+graded_by: codex-expert-executor
+content_hash: 73bf5ed2ed037d2038632ecdece3e811755f466b8bd0dbda4e455b349a46a30d
+categories:
+  consistency:
+    score: 88
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 88
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 4
+    score: 100
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 4
+  note: 0
+findings:
+  - id: F004
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 7
+    message: 「目的と適用範囲」に、rulebook 6.1 が明記を求める対象期間が記載されていない。
+    anchor: ""
+  - id: F002
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 13
+    message: 「運用品質を維持」「初動遅延を防止」を達成したと判定するための指標、閾値、確認時点が定義されていない。
+    anchor: ""
+  - id: F001
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 30
+    message: 影響度（高・中・低）を判定するための具体的な尺度（判定基準）が定義されていない。
+    anchor: "| 日次締め運用       | 要       | 中     | 代替     | 全手順を即時更新すると教育負荷が高いため、当面は差分手順書を併用して段階移行する。     | 2 週間後に一本化判断を行う。     |"
+  - id: F003
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 33
+    message: 「想定外問い合わせ増加時」の増加を判定する基準値または比較期間がなく、再評価条件の成立を客観的に判定できない。
+    anchor: "## 5. 対応方針"

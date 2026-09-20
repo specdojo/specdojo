@@ -1,0 +1,134 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:pm-organization-sample
+path: docs/ja/specdojo/samples/pm-organization-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 64
+graded_at: "2026-09-05T19:46:51.191Z"
+graded_by: codex-expert-executor
+content_hash: 15f203d7960787993b48aa2333d7f3555b8211da9036bee82e6dbc6c12ee543b
+categories:
+  consistency:
+    score: 38
+  usability:
+    score: 75
+  architecture:
+    score: 100
+  quality:
+    score: 50
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 1
+    score: 25
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 2
+    score: 50
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 7
+  minor: 4
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 10
+    message: >-
+      「計画・調整」の最終判断を PM に一括しているが、`pm-raci-sample.md` では費用・参加時間上限の A は PO、作業順序・課題・リスク管理の A は PM
+      であるため、判断項目を分割して最終判断者を一致させてください。
+    anchor: "| 計画・調整 | 作業順序、課題、費用・時間上限を管理する | PM       | PM             |"
+  - id: F002
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 11
+    message: >-
+      「実現・品質」の最終判断を PO に一括しているが、`pm-raci-sample.md` では実装・データ設計の A/R は DEV、品質計画・試験結果の A は PO
+      であるため、実現と品質を分けて責任割当を一致させてください。
+    anchor: "| 実現・品質 | 実装、検証、是正、公開適性を分けて扱う   | PO       | DEV、QE        |"
+  - id: F011
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 9
+    message: 「実行・確認」欄で Role code の `BA` と Role code を持たないステークホルダー名の「家族利用者」を同列に記載しているため、内部 Role と利用者による確認を別列または注記で区別してください。
+    anchor: "| 価値・業務 | 店舗課題、優先順位、利用継続を判断する   | PO       | BA、家族利用者 |"
+  - id: F003
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 17
+    message: >-
+      `pm-roles.yaml` を使用可能 Role code の正本としているため、組織定義が採用／未採用 Role と使用可能な owner を保持する上位標準の責務に反し、`pm-roles-sample.yaml`
+      の8ロールと5ロールだけを使う RACI の関係も判定できないので、本書に採用判断と owner 可否を明示してください。
+    anchor: "- 使用可能な Role code は `pm-roles.yaml` を正本とする。"
+  - id: F004
+    severity: major
+    rule: vp-qe-verifiability
+    line: 17
+    message: >-
+      使用可能な owner を具体的な Role code で確定していないため, Schedule の owner と RACI 列を pass / fail 判定できないので、採用 Role と owner
+      使用可否の一覧を本書に追加してください。
+    anchor: "- 使用可能な Role code は `pm-roles.yaml` を正本とする。"
+  - id: F006
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 17
+    message: 上位標準が必須とする採用 Role、未採用 Role と代替方針、使用可能な owner が欠落しているため、プロジェクト固有の採用判断を `pm-roles.yaml` へ委譲せず本書に追加してください。
+    anchor: "- 使用可能な Role code は `pm-roles.yaml` を正本とする。"
+  - id: F009
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 17
+    message: >-
+      sample が採用／未採用 Role と使用可能 owner を `pm-roles.yaml` へ委譲する完成例を示しており、上位標準が `pm-organization.md`
+      に求める適用方法と矛盾するため、プロジェクト固有の採用判断を埋めた例へ修正してください。
+    anchor: "- 使用可能な Role code は `pm-roles.yaml` を正本とする。"
+  - id: F010
+    severity: major
+    rule: vp-ux-readability
+    line: 17
+    message: >-
+      組織定義の中心判断である採用／未採用 Role と使用可能 owner が示されず、読者が `pm-roles.yaml`、責任領域表、RACI の関係を読み分けられないため、本書に採用結果と owner
+      可否を明示してください。
+    anchor: "- 使用可能な Role code は `pm-roles.yaml` を正本とする。"
+  - id: F007
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 24
+    message: >-
+      正本表に `specdojo:people-and-organization-definition-standard` への参照がなく、Role・Member・owner・RACI
+      の共通定義へ到達できないため、関連文書として追加してください。
+    anchor: "| 情報                   | 正本                   |"
+  - id: F005
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 35
+    message: 「兼務による滞留」と「必要な責務から先に分離する」には判定条件、確認事項、更新先がなく見直し実施を再現できないため、観測可能なトリガーと確認方法、更新対象、判断者を明記してください。
+    anchor: 参加者の増減、兼務による滞留、新しい責任領域、公開・運用責任の発生時に見直す。見直し時も、人間の PO に最終判断を残し、必要な責務から先に分離する。
+  - id: F008
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 35
+    message: rulebook・recipe・template が見直し条件に求める更新先と判断者が欠落しているため、各トリガーについて確認事項、更新先、判断者を記載してください。
+    anchor: 参加者の増減、兼務による滞留、新しい責任領域、公開・運用責任の発生時に見直す。見直し時も、人間の PO に最終判断を残し、必要な責務から先に分離する。

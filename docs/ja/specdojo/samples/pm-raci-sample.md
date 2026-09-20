@@ -8,30 +8,6 @@ specdojo:
     - specdojo:pm-organization-sample
     - specdojo:pm-roles-sample
     - specdojo:pm-members-sample
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: pass
-    score: 98
-    graded_at: "2026-09-05T20:49:23.750Z"
-    graded_by: gemma-expert-executor
-    content_hash: 54eec4689387779511a1ee3d778d86bb7c004ed37480ae7109d1b16c81ba6bd9
-    categories:
-      consistency: { score: 88 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 100 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 3, score: 75 }
-      vp-qe-kata-conformance: { level: 4, score: 100 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 2, note: 0 }
 ---
 
 # RACI: 駄菓子屋きぬや 販売管理システム
@@ -71,15 +47,11 @@ specdojo:
 
 ## 4. Schedule・実行主体との対応
 
-<!-- specdojo:finding id=F001 severity=minor rule=vp-qe-omissions-consistency line=40 Schedule・実行主体との対応において、RACI と Schedule owner が不一致となった場合にどちらを正本として更新するかの方針が不足している。 -->
-
 - Schedule の `owner` は、その作業を主導する `R` の Role code と一致させる。
 - 実行主体と兼務は `pm-members.yaml` で管理し、本書へ個人名や agent 名を記載しない。
 - 成果物を統合・分割した場合も、各作業の `A` が不明にならないようにする。
 - 同じ実行主体が `A` と `R` を兼ねる場合も、判断と作業の証跡を分ける。
 
 ## 5. 見直し条件
-
-<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-omissions-consistency line=45 見直し条件において、更新トリガーのみが記載されており、ルールブックで例示されている「確認すること（確認内容）」の記述が不足している。 -->
 
 採用 Role code、成果物区分、Schedule の owner、主要判断、兼務の継続可能性が変わった場合に見直す。

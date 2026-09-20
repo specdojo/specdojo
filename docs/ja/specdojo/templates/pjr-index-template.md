@@ -9,30 +9,6 @@ specdojo:
       type: project
       status: ready
       rulebook: specdojo:pjr-rulebook
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: pass
-    score: 100
-    graded_at: "2026-09-06T07:57:51.742Z"
-    graded_by: codex-expert-executor
-    content_hash: d4b9e829526ff8930468c5cc6370f629d66a34f2a8d8a761abfb3fb7fb7bec31
-    categories:
-      consistency: { score: 100 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 100 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 4, score: 100 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 0, note: 0 }
 ---
 
 # プロジェクト登録簿

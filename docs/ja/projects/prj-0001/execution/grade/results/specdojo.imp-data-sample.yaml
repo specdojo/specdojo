@@ -1,0 +1,72 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:imp-data-sample
+path: docs/ja/specdojo/samples/imp-data-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 78
+graded_at: "2026-09-09T00:10:56.301Z"
+graded_by: gemma-expert-executor
+content_hash: a0afee676c959042dac6be1ecb9542100bbb675af3bc914ec1e3e5621fb14679
+categories:
+  consistency:
+    score: 75
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 50
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 3
+  minor: 0
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-qe-verifiability
+    line: 24
+    message: 変更要求の概要に、判定可能な「成功条件」が記載されていないため、目標状態の検証ができない。
+    anchor: "## 4. 影響詳細一覧"
+  - id: F002
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 24
+    message: 記述ガイド 6.2 で必須とされている「成功条件」の記述が欠落している。
+    anchor: "## 4. 影響詳細一覧"
+  - id: F003
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 28
+    message: 禁止事項（尺度定義なしの高・中・低の混在）に抵触しており、影響度の判定基準が不明確である。
+    anchor: "| 商品マスタ           | 要       | 高     | 実施     | 商品コード未登録のままではバーコード会計時に照合失敗が発生し、会計停止が起こるため。 | 上位 30 品目を先行整備する。 |"

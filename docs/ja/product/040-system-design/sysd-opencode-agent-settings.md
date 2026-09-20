@@ -8,63 +8,22 @@ specdojo:
     - sysd-agent-settings
   based_on:
     - tsd-ollama-opencode
-  grade:
-    rubric: grade-rubric-v1
-    target: deliverable
-    verdict: needs-work
-    score: 56
-    graded_at: "2026-09-19T16:57:37.778Z"
-    graded_by: codex-expert-executor
-    content_hash: 9573566fdf1285ef385384dad171d2ceb67117e9e8786f52577fee72fa11b6e0
-    categories:
-      consistency: { score: 25 }
-      usability: { score: 50 }
-      architecture: { score: 100 }
-      quality: { score: 58 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 1, score: 25 }
-      vp-arc-conciseness: { level: 3, score: 75 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-done-criteria: { level: 1, score: 25 }
-      vp-qe-verifiability: { level: 2, score: 50 }
-      vp-qe-omissions-consistency: { level: 1, score: 25 }
-      vp-ux-readability: { level: 1, score: 25 }
-      vp-ux-user-flow: { level: 3, score: 75 }
-      vp-ux-language-consistency: { level: 1, score: 25 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-      vp-qe-config-validity: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 15, minor: 2, note: 0 }
-    done_criteria:
-      satisfied: 1
-      total: 5
-      unsatisfied:
-        DC-001: [BA]
-        DC-002: [PO]
-        DC-004: [QE]
-        DC-005: [DEV]
-      detail_ref: sysd-opencode-agent-settings-grade-criteria
 ---
 
 # OpenCode エージェント設定（Ollama）
 
-<!-- specdojo:finding id=F010 severity=major rule=vp-qe-omissions-consistency line=3 文書の対象技術は示されているが、実装・検証・運用判断に利用する読者、対象外、運用文書へ委譲する範囲が明示されておらず、rulebookの目的・適用範囲要件を満たしていない。 -->
 SpecDojo CLI と OpenCode を組み合わせ、Ollama のローカルLLMでマルチエージェント実行を行うための設定・構成を定義する。
 
-<!-- specdojo:finding id=F007 severity=major rule=vp-qe-done-criteria line=5 設計方針に対応する業務要件または上位要求への参照と承認条件がないため、DC-001の整合性およびDC-002の承認可否を確認できない。 -->
 ## 1. 設計方針
 
 共通の責務分担、実行フロー、割り当て、失敗処理、worktree は [エージェント共通設定](sysd-agent-settings.md) に従う。本書では OpenCode と Ollama 固有の設定だけを定義する。
 
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=9 `ollama-local` だけに限定すると宣言しているが、実際の `opencode.json` には `enabled_providers` がなく、`based_on` の `tsd-ollama-opencode` も既存 provider との併存を定義しているため、採用方針と実設定を一致させる必要がある。 -->
 本設計では OpenCode の provider を `ollama-local` に限定する。API key と外部クラウドLLMを必要としない一方、ホスト側 Ollama の稼働状態、モデルロード時間、メモリ容量が制約になる。
 
 OpenCode は Qwen 3.8 と Gemma 4 を用途別 agent として使い分ける。ただし全 agent は同じ `opencode` provider を使い、`max_concurrency: 1` により同時実行を1件へ制限して、異なるモデルの同時ロードを防ぐ。
 
 コンテキスト長は 64k とする。fully-guided の磨き込みタスクは rulebook / recipe と `depends_on` 成果物、対象成果物をまとめて読み込むため、32k では作業セットが収まらず agent がツール呼び出しに至らないまま終了（result 未記入のまま exit 0）する事象が確認された。64k にして作業セットに余裕を持たせる。ただし KV キャッシュは 32k 比でおおよそ倍のメモリを消費するため、ホスト側 Ollama の空きメモリを前提として確認する。
 
-<!-- specdojo:finding id=F002 severity=major rule=vp-arc-cross-document-consistency line=19 review agent が result 以外を編集禁止との記述は、実際の review agent 定義および本書7.3節の「成果物・resultとも編集禁止」と矛盾するため、権限境界を統一する必要がある。 -->
-<!-- specdojo:finding id=F012 severity=major rule=vp-ux-readability line=19 review agentがresultを編集できるように読める方針と、7.3節の全面編集禁止が衝突しており、安全境界を判断できない。 -->
-<!-- specdojo:finding id=F015 severity=major rule=vp-ux-language-consistency line=19 review agentの編集範囲が「result以外は禁止」と「すべて禁止」の二通りで表現されているため、用語と状態を一つの契約へ統一する必要がある。 -->
 - **非対話実行は `opencode run`**: TUI を起動せず、SpecDojo が生成した plan を標準入力で渡す。
 - **provider とモデル一覧は `opencode.json`**: 実際に利用可能なローカルモデルをプロジェクト設定として共有する。
 - **agent 定義は `.opencode/agents/*.md`**: モデル、primary / subagent、permission、最小限の実行契約を定義する。タスク固有の指示は edit / review plan を正本とする。
@@ -233,8 +192,6 @@ providers:
 
 `pm-members.yaml` の member は選択属性だけを持ち、`command` を書かない。
 
-<!-- specdojo:finding id=F003 severity=major rule=vp-arc-cross-document-consistency line=185 例示された `opencode-executor` 等の nickname に対応する agent ファイルが存在せず、実際の `pm-members.yaml` は `qwen-*`・`gemma-*` を使用しているため、この設定では記載された command template による起動が成立しない。 -->
-<!-- specdojo:finding id=F016 severity=major rule=vp-ux-language-consistency line=185 agent一覧では `qwen-*`・`gemma-*` を正式名としているのに、割り当て例では `opencode-*`、現状表では `opencode-*-agent` を使用しており、nicknameを実在するagent名へ統一する必要がある。 -->
 ```yaml
 members:
   - nickname: opencode-executor
@@ -267,9 +224,6 @@ members:
     scheduler_strategy: fifo
 ```
 
-<!-- specdojo:finding id=F004 severity=major rule=vp-arc-cross-document-consistency line=215 全memberの優先度・capability・既定モデルに関する説明が実際の `pm-members.yaml` と各agent定義に一致せず、Qwen/Gemmaの選択結果を誤認させるため, 実設定に合わせて書き直す必要がある。 -->
-<!-- specdojo:finding id=F013 severity=major rule=vp-ux-readability line=215 Qwen/Gemmaを用途別に使うという前段およびagent一覧に対し、全memberがGemmaを使うと断定しており、実際のモデル選択方針を読み取れない。 -->
-<!-- specdojo:finding id=F017 severity=major rule=vp-ux-language-consistency line=215 「全OpenCode memberはGemma」「edit/reviewはいずれもGemma」という表現が、Qwen/Gemmaの用途別選択および各agentの `model` と矛盾するため、モデル選択ラベルを統一する必要がある。 -->
 OpenCode の executor（edit / review）は `websearch` と `webfetch` を利用できるため、`capabilities: [web_search]` とする。reporter は渡された evidence だけを扱うため capability を持たせない。normal taskでは、Web検索の要否にかかわらず `priority: 1` によりOpenCodeを最初の候補とする。すべてのOpenCode member は既定モデル `gemma4:31b-mlx-work-64k` を使用する。
 
 ### 8.2. `sch-strategy-<track>.yaml`
@@ -278,7 +232,6 @@ phase の共通契約は親設計に従う。外部Web検索が必要なphaseは
 
 ### 8.3. `.specdojo/exec-defaults.yaml`
 
-<!-- specdojo:finding id=F006 severity=minor rule=vp-arc-conciseness line=223 8.3節は正本の設定ブロックを再掲した後、ローカル資源・limit・wait/retryに関する1章の方針を複数段落で繰り返しているため、設定値は正本参照へ寄せ、固有の判断理由と例外だけに集約すると必要十分になる。 -->
 共通の retry / fallback / block 方針とグローバル既定 / provider 別上書きの2層構造は親設計に従う。Ollama では API rate limit より、モデルロード待ち、メモリ不足、接続タイムアウトが主な失敗要因になるため、OpenCode 固有の検出条件とポリシーを `providers.opencode` に置き、`pm-members.yaml` で `provider: opencode` の member に適用する。
 
 ```yaml
@@ -360,10 +313,8 @@ opencode run \
 
 worktree のライフサイクル、配置、ブランチ名、イベントファイル名は親設計に従う。OpenCode の edit agent を並列実行する場合は worktree を使用し、成果物を変更しない review agent では不要とする。
 
-<!-- specdojo:finding id=F008 severity=major rule=vp-qe-done-criteria line=304 導入状況が実設定と食い違い、確認手順にも期待結果・合否条件・テスト設計参照がないため、DC-004の検証用途およびDC-005の実装基礎として利用できない。 -->
 ## 12. 現状差分と導入順序
 
-<!-- specdojo:finding id=F005 severity=major rule=vp-arc-cross-document-consistency line=311 現状欄のmember名が実在しない `opencode-*-agent` となり、`exec-defaults.yaml` も既にcommand templateとOllama固有エラーを定義済みであるため、現状差分表を現在の生成物に同期する必要がある。 -->
 | 項目                    | 現状                                          | 対応                                                    |
 | ----------------------- | --------------------------------------------- | ------------------------------------------------------- |
 | `opencode.json`         | provider・3モデル・デフォルトモデルを定義済み | 必要に応じて `instructions` と provider 制限を追加      |
@@ -372,11 +323,8 @@ worktree のライフサイクル、配置、ブランチ名、イベントフ�
 | `pm-members.yaml`       | `opencode-*-agent` の選択属性を定義済み       | 単一タスク実行で起動を確認                              |
 | `exec-defaults.yaml`    | `rate limit` / `429` を検出                   | command template と Ollama 固有エラーを必要に応じて追加 |
 
-<!-- specdojo:finding id=F009 severity=major rule=vp-qe-verifiability line=314 agent認識・単一タスク・並列実行を列挙するだけで、実行コマンド、期待される出力や状態、失敗条件、64kコンテキスト・同時実行上限・permissionを確認する方法が定義されていないため、受入判定可能な検証項目を追加する必要がある。 -->
-<!-- specdojo:finding id=F014 severity=minor rule=vp-ux-user-flow line=314 導入確認の各段階から実行コマンド、期待結果、失敗時の参照先へ進むリンクまたは表がないため、利用者が確認完了まで迷わず進める導線を追加する必要がある。 -->
 導入確認は agent 認識確認、`exec-defaults.yaml` の command template 更新、単一タスク実行、並列実行の順で行う。
 
-<!-- specdojo:finding id=F011 severity=major rule=vp-qe-omissions-consistency line=316 公式仕様へのリンクだけで、設計制約ごとの確認方法、テスト設計、横断ルール、運用設計・手順への具体的な導線がなく、rulebook必須の「検証観点・関連文書」が欠落している。 -->
 ## 13. 公式仕様参照
 
 - [OpenCode Config](https://opencode.ai/docs/config/)

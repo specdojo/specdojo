@@ -1,0 +1,96 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:prj-comparison-of-alternatives-rulebook
+path: docs/ja/specdojo/rulebooks/prj-comparison-of-alternatives-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 82
+graded_at: "2026-09-03T07:08:37.549Z"
+graded_by: codex-expert-executor
+content_hash: 3af0dafde04b081c68310ac5418c491ca554714f596db73648120e6513fa0990
+categories:
+  consistency:
+    score: 75
+  usability:
+    score: 83
+  architecture:
+    score: 100
+  quality:
+    score: 75
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 3
+    score: 75
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 2
+  minor: 5
+  note: 0
+findings:
+  - id: F003
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 1
+    message: Frontmatter で template を骨組みの正本として宣言している一方、「本文構成（標準テンプレ）」で同じ見出し構成を再掲しており、各章の目的・必須性・記述規約だけを残せば判断情報を失わずに重複を削減できる。
+    anchor: "# 代替案比較 作成ルール"
+  - id: F005
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: 著述標準は template 宣言済み系統の第5章を「本文要件」とし、見出し順・表・記入欄の骨組みを template の正本として転載しないよう定めているが、本書は「本文構成（標準テンプレ）」として見出し一覧を再掲している。
+    anchor: "# 代替案比較 作成ルール"
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 1
+    message: ルールブックは「リスク」と「技術実現性」を評価軸の最低ラインとし省略理由を要求しているが、sample の評価軸・比較結果は両軸と省略理由を欠いており、参照成果物間で必須条件が一致していない。
+    anchor: "# 代替案比較 作成ルール"
+  - id: F004
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: 完成例である sample が最低ラインの評価軸「リスク」「技術実現性」を評価軸・比較結果から省略し、その理由も示していないため、rulebook を適用した正しい完成例として機能していない。
+    anchor: "# 代替案比較 作成ルール"
+  - id: F007
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 1
+    message: 最低ラインの評価軸として「運用適合」と記載されているが、sample/template では「業務適合」となっており、用語が不統一である。
+    anchor: "# 代替案比較 作成ルール"
+  - id: F002
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 1
+    message: ルールブックは評価軸を省略する場合の理由記載を要求しているが, template は「不要な軸を削除」とだけ案内して省略理由の記入を促しておらず、適用手順が一致していない。
+    anchor: "# 代替案比較 作成ルール"
+  - id: F006
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: template は評価軸を削除できると案内しながら省略理由の記入を指示しておらず、rulebook が定める適用方法を骨組みに十分反映していない。
+    anchor: "# 代替案比較 作成ルール"

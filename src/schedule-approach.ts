@@ -10,6 +10,7 @@ import type { DctDoc, DctKind } from "./catalog-types.js";
 import { readYaml } from "./exec-shared.js";
 import { readSpecdojoNamespace } from "./frontmatter-namespace.js";
 import { validateGradedMarkdown } from "./grade.js";
+import { readGradeResultForDocument, validateGradeResult } from "./grade-result.js";
 import { KATA_MISSING, loadRulebookRefs, resolveKataRefs, type KataRefs } from "./kata.js";
 import type { Approach } from "./exec-types.js";
 
@@ -73,11 +74,20 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-function readGrade(repoRoot: string, relPath: string): GradeFact | undefined {
+function readGrade(repoRoot: string, relPath: string, projectId: string): GradeFact | undefined {
   const filePath = join(repoRoot, relPath);
   if (!existsSync(filePath)) return undefined;
   try {
     const content = readFileSync(filePath, "utf8");
+    const stored = readGradeResultForDocument({
+      documentPath: relPath,
+      project: projectId,
+      rootDir: repoRoot,
+    });
+    if (stored) {
+      if (validateGradeResult(stored, content, relPath, "kata").length > 0) return undefined;
+      return { verdict: stored.verdict };
+    }
     let metadata: Record<string, unknown>;
     if (relPath.endsWith(".md")) {
       if (validateGradedMarkdown(content, relPath).length > 0) return undefined;
@@ -102,6 +112,7 @@ function readGrade(repoRoot: string, relPath: string): GradeFact | undefined {
 
 function kataFact(
   repoRoot: string,
+  projectId: string,
   kind: KataKindKey,
   rulebookId: string | undefined,
   refs: KataRefs,
@@ -118,7 +129,7 @@ function kataFact(
   else if (path) declaration = "conventional";
   else declaration = "unresolved";
   const exists = path ? existsSync(join(repoRoot, path)) : false;
-  const grade = path && exists ? readGrade(repoRoot, path) : undefined;
+  const grade = path && exists ? readGrade(repoRoot, path, projectId) : undefined;
   return {
     declaration,
     exists,
@@ -172,14 +183,23 @@ export function collectApproachFacts(opts: { repoRoot: string; scope: StrategySc
       const kata = {
         rulebook: kataFact(
           opts.repoRoot,
+          opts.scope.projectId,
           "rulebook",
           item.kind === "generated" ? "not-needed" : item.rulebook,
           refs,
           undefined,
         ),
-        recipe: kataFact(opts.repoRoot, "recipe", item.rulebook, refs, derived ?? declared.recipe),
+        recipe: kataFact(
+          opts.repoRoot,
+          opts.scope.projectId,
+          "recipe",
+          item.rulebook,
+          refs,
+          derived ?? declared.recipe,
+        ),
         sample: kataFact(
           opts.repoRoot,
+          opts.scope.projectId,
           "sample",
           item.rulebook,
           refs,
@@ -187,6 +207,7 @@ export function collectApproachFacts(opts: { repoRoot: string; scope: StrategySc
         ),
         template: kataFact(
           opts.repoRoot,
+          opts.scope.projectId,
           "template",
           item.rulebook,
           refs,

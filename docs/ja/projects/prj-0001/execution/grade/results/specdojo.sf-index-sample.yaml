@@ -1,0 +1,84 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:sf-index-sample
+path: docs/ja/specdojo/samples/sf-index-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 68
+graded_at: "2026-09-06T01:06:01.735Z"
+graded_by: gemma-expert-executor
+content_hash: 9651c7be7576fa9d1453da3d72214b00263a799462ac84b36977c8d48a5d4e27
+categories:
+  consistency:
+    score: 50
+  usability:
+    score: 83
+  architecture:
+    score: 100
+  quality:
+    score: 50
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 2
+    score: 50
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 5
+  minor: 0
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 1
+    message: H1のリンク先が、定義されているルールブック(sf-index-rulebook.md)ではなく別ドキュメント(sf-rulebook.md)を指している。
+    anchor: ""
+  - id: F002
+    severity: major
+    rule: vp-qe-verifiability
+    line: 18
+    message: 必須章である「4. 検証観点」が欠落しており、判定基準の記述例が示されていない。
+    anchor: ""
+  - id: F003
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 18
+    message: ルールブックで必須と定義されている「4. 検証観点」章が欠落している。
+    anchor: ""
+  - id: F004
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 18
+    message: 本文構成がルールブックの標準テンプレと異なり、「4. 検証観点」が「4. 最小記述例」に置換されている。
+    anchor: ""
+  - id: F005
+    severity: major
+    rule: vp-ux-readability
+    line: 20
+    message: 「4. 最小記述例」の内容がドキュメントのメタデータ説明に留まっており、機能一覧としての具体的な記述例（機能IDや名称等の例）が示されていない。
+    anchor: ""

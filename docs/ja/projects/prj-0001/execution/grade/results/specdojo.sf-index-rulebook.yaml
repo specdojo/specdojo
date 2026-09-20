@@ -1,0 +1,90 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:sf-index-rulebook
+path: docs/ja/specdojo/rulebooks/sf-index-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 70
+graded_at: "2026-09-03T09:39:09.863Z"
+graded_by: gemma-expert-executor
+content_hash: 0c02fc0b4a0fc930c6bc00189bdaf4d8b693d6f1d77e0b6e6b6a135b43880907
+categories:
+  consistency:
+    score: 38
+  usability:
+    score: 83
+  architecture:
+    score: 100
+  quality:
+    score: 63
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
+    level: 1
+    score: 25
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 2
+    score: 50
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 5
+  minor: 1
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 1
+    message: H1に成果物名の代わりに別ドキュメントへのリンクが記述されており、成果物の識別を混乱させる。
+    anchor: ""
+  - id: F006
+    severity: major
+    rule: vp-ux-readability
+    line: 1
+    message: 成果物の位置づけや責務境界が具体化されていないため、作成者が判断に迷う。
+    anchor: ""
+  - id: F002
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 1
+    message: 判定可能な記述を求める指示はあるが, 具体的にどのような状態が「判定可能」であるかの基準が不足している。
+    anchor: ""
+  - id: F003
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: 「2. 位置づけと用語定義」がテンプレートの指示文のままであり、実際の定義が記載されていない。
+    anchor: ""
+  - id: F004
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: 第5節で定義した必須章（目的、入力情報、記述内容、検証観点）に対する具体的な記述ガイドが不足している。
+    anchor: ""
+  - id: F005
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: 本文構成の定義（必須章）と、対応するサンプルの構成が矛盾しており、適用方法が不透明である。
+    anchor: ""

@@ -9,30 +9,6 @@ specdojo:
   template: not-needed
   based_on:
     - specdojo:rulebook-authoring-standard
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 87
-    graded_at: "2026-09-14T01:11:32.676Z"
-    graded_by: gemma-expert-executor
-    content_hash: 6cb884e0b24834dac74c762b4ef7af1125e4047def49fdd6d826a076861c5a7e
-    categories:
-      consistency: { score: 100 }
-      usability: { score: 67 }
-      architecture: { score: 75 }
-      quality: { score: 100 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 2, score: 50 }
-      vp-arc-single-responsibility: { level: 2, score: 50 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 4, score: 100 }
-      vp-ux-readability: { level: 2, score: 50 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 3, minor: 0, note: 0 }
 ---
 
 # スケジュール作成ルール
@@ -136,10 +112,6 @@ schema で機械検証できない記述規範だけを定める。設計の考�
 - `cross_domain_dependencies` は、カタログの `depends_on` に含まれないドメイン間依存だけを補完し、重複して記載しない。
 - `cross_deliverable_passes` は完了済みの `after_gate` と後続の `before_phase_set` の間に置き、scope を `catalogs` / `groups` / `local_ids` で明示する。
 - レビュー担当ロールは各成果物の `done_criteria` から取得されるため、strategy に重複して記載しない。
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-conciseness line=103 Section 5.5 describes generation flow, contradicting the statement in line 45 and 49 that refers to `specdojo:schedule-design-guide`. -->
-<!-- specdojo:finding id=F002 severity=major rule=vp-arc-single-responsibility line=103 The document mixes detailed tool generator logic (Section 5.5) with authoring rules; this belongs in a design guide or tool specification. -->
-<!-- specdojo:finding id=F003 severity=major rule=vp-ux-readability line=103 Contradiction between line 45/49 and section 5.5 creates confusion regarding the authoritative source for generation flow and logic. -->
 
 ### 5.5. intent と grade からの strategy 生成
 

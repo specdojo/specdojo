@@ -1,0 +1,84 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:cdsd-rulebook
+path: docs/ja/specdojo/rulebooks/cdsd-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 67
+graded_at: "2026-09-02T01:43:13.691Z"
+graded_by: gemma-expert-executor
+content_hash: e9d81a8eb54f505a943356543d89418c1546b07407ee31ae1c053bf5d1cadea9
+categories:
+  consistency:
+    score: 75
+  usability:
+    score: 75
+  architecture:
+    score: 100
+  quality:
+    score: 38
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-qe-kata-conformance:
+    level: 1
+    score: 25
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 2
+    score: 50
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 4
+  minor: 1
+  note: 0
+findings:
+  - id: F003
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: 指定されているサンプル `specdojo:cdsd-sample` が、本ルールで定義した標準列（line 80-92）を一切使用しておらず、整合性が完全に欠如している。
+    anchor: "# 概念データストア定義 作成ルール"
+  - id: F002
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: 「位置づけ」節および「禁止事項」節が欠落しており、成果物の役割定義と制約事項の提示が不十分である。
+    anchor: "# 概念データストア定義 作成ルール"
+  - id: F004
+    severity: minor
+    rule: vp-ux-readability
+    line: 1
+    message: 「位置づけ」の記述がないため、初見の読者がプロジェクトのどのタイミングで、どのような目的で本書を扱うべきか把握しにくい。
+    anchor: "# 概念データストア定義 作成ルール"
+  - id: F001
+    severity: major
+    rule: vp-qe-verifiability
+    line: 1
+    message: メタデータ項目 `type` の指定値について、表（line 54）と説明文（line 65）で矛盾があり、正誤判定が不能である。
+    anchor: "# 概念データストア定義 作成ルール"
+  - id: F005
+    severity: major
+    rule: vp-ux-language-consistency
+    line: 1
+    message: メタデータの `type` 項目の値について、「domain」と「data」という異なる表記が混在しており、統一されていない。
+    anchor: "# 概念データストア定義 作成ルール"

@@ -1,0 +1,74 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:cnd-rulebook
+path: docs/ja/specdojo/rulebooks/cnd-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: pass
+score: 91
+graded_at: "2026-09-02T02:37:17.001Z"
+graded_by: gemma-expert-executor
+content_hash: 4b32dc55a54b7161a69542761a12f9f07a90d0673ebf61be4f3e74eece119f86
+categories:
+  consistency:
+    score: 75
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 88
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 3
+    score: 75
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 3
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 1
+    message: >-
+      指定されているサンプル `specdojo:cnd-sample` の Frontmatter で、準拠ルールが `specdojo:cnd-rulebook` ではなく
+      `specdojo:cnd-mermaid-rulebook` になっている。
+    anchor: "# C4コンテナ図 ドキュメント作成ルール"
+  - id: F002
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: Frontmatter の必須項目一覧に `rulebook` が含まれていない。
+    anchor: "# C4コンテナ図 ドキュメント作成ルール"
+  - id: F003
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: 指定されているサンプル `specdojo:cnd-sample` が第6章の標準構成に従っておらず、適用例として不十分である。
+    anchor: "# C4コンテナ図 ドキュメント作成ルール"

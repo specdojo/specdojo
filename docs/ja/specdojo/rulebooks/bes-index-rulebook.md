@@ -7,30 +7,6 @@ specdojo:
   recipe: undecided
   sample: specdojo:bes-index-sample
   template: undecided
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 89
-    graded_at: "2026-09-01T23:13:48.659Z"
-    graded_by: gemma-expert-executor
-    content_hash: 08c693cdff860b087ed52b35c00d17adaab88f7ea62a27afcb506f242634f6e5
-    categories:
-      consistency: { score: 88 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 75 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 3, score: 75 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 1, minor: 1, note: 0 }
 ---
 
 # 業務イベント仕様 全体構成 作成ルール
@@ -40,8 +16,6 @@ Business Event Specification Index (BES Index) Documentation Rules
 業務で発生する主要イベント（販売、仕入、在庫調整など）を一覧化し、後続の BPS・BR・UI・テスト仕様と追跡可能につなぐための作成ルールを定義する。
 
 ## 1. 全体方針
-
-<!-- specdojo:finding id=F002 severity=major rule=vp-qe-kata-conformance 参照先のサンプル `specdojo:bes-index-sample` において、5章で定義した「業務イベント一覧（表）」を具体的に実装し、記述ルールに準拠した完成例を示すこと。 -->
 
 - 業務イベントは「業務的に意味のある出来事」の一覧として整理し、実装設計ではなく概念レベルで記述する。
 - 一覧は後工程（BPS / BR / UI / テスト）の参照元として扱い、イベントIDの一意性と可読性を優先する。
@@ -84,8 +58,6 @@ Business Event Specification Index (BES Index) Documentation Rules
 | 1   | 業務イベント一覧（表） | ○    |
 
 ### 5.1. 業務イベント一覧の標準列
-
-<!-- specdojo:finding id=F001 severity=minor rule=vp-qe-omissions-consistency 共通のFrontmatterスキーマやメタ情報標準への参照リンクを追記し、全社標準との整合性を明示すること。 -->
 
 | 列名         | 説明                                  | 必須 |
 | ------------ | ------------------------------------- | ---- |

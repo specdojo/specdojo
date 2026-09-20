@@ -1,0 +1,60 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:stsd-recipe
+path: docs/ja/specdojo/recipes/stsd-recipe.md
+target: kata
+rubric: grade-rubric-v1
+verdict: pass
+score: 96
+graded_at: "2026-09-17T08:40:40.059Z"
+graded_by: codex-expert-executor
+content_hash: d406c471857d6d282ed3110e9fefc1ddfdd838811c33d71846743e202f9f4ece
+categories:
+  consistency:
+    score: 100
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 88
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 1
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 119
+    message: rulebook で定義された具体的なラベル（`_TODO_:`、`_UNDECIDED_:`、`_ASSUMPTION_:`）を明記し、使用を促す記述にする必要がある。
+    anchor: "## 8. 仕上げチェック"

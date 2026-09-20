@@ -251,41 +251,31 @@ specdojo:
 
 ### 6.2. 継続品質評価（`grade`）
 
-Markdown 文書の最新の継続品質評価は `specdojo.grade` に記録します。これは履歴ではなく状態のスナップショットであり、`specdojo grade apply` は同じキーを冪等に上書きします。履歴と合意形成は review result が担います。成果物の現在品質を参照するときは review result の実行日時ではなく、grade の `content_hash` が現在内容と一致することを確認します。
+Markdown 文書の最新の継続品質評価は、プロジェクトの `<execution_path>/grade/results/<doc-id>.yaml` にサイドカーとして記録します。成果物の Frontmatter と本文には grade や finding を書き込みません。サイドカーは最新状態のスナップショットであり、`specdojo grade apply` は文書 ID ごとの同じファイルを冪等に上書きします。履歴は Job Run と evidence、合意形成は review result が担います。成果物の現在品質を参照するときは、サイドカーの `content_hash` が現在のファイル全体と一致することを確認します。
 
-| 項目            | 意味                                                                                |
-| --------------- | ----------------------------------------------------------------------------------- |
-| `rubric`        | 判定に使った共通 rubric の版                                                        |
-| `target`        | `kata` または `deliverable`                                                         |
-| `verdict`       | `pass` / `needs-work` / `fail`                                                      |
-| `score`         | category の重み付き総合点（0-100）                                                  |
-| `graded_at/by`  | 評価日時と `pm-members.yaml` の判定主体 nickname                                    |
-| `content_hash`  | grade と finding コメントを除き、改行・行末空白・連続空行を正規化した内容の SHA-256 |
-| `categories`    | category 別 score                                                                   |
-| `viewpoints`    | viewpoint 別 level / score                                                          |
-| `findings`      | `blocker` / `major` / `minor` / `note` の本文コメント件数                           |
-| `done_criteria` | 成果物カタログの完了条件の充足数・総数、未充足条件の担当 Role code、詳細参照        |
+| 項目             | 意味                                                                         |
+| ---------------- | ---------------------------------------------------------------------------- |
+| `rubric`         | 判定に使った共通 rubric の版                                                 |
+| `target`         | `kata` または `deliverable`                                                  |
+| `verdict`        | `pass` / `needs-work` / `fail`                                               |
+| `score`          | category の重み付き総合点（0-100）                                           |
+| `graded_at/by`   | 評価日時と `pm-members.yaml` の判定主体 nickname                             |
+| `content_hash`   | 成果物ファイル全体の SHA-256                                                 |
+| `categories`     | category 別 score                                                            |
+| `viewpoints`     | viewpoint 別 level / score                                                   |
+| `finding_counts` | `blocker` / `major` / `minor` / `note` の件数                                |
+| `findings`       | `id` / `severity` / `rule` / `line` / `anchor` / `message` の指摘一覧        |
+| `done_criteria`  | 成果物カタログの完了条件の充足数・総数、未充足条件の担当 Role code、詳細参照 |
 
-`target: deliverable` で成果物カタログに `done_criteria` がある場合、Frontmatter には要約だけを記録します。条件文、条件ごとの判定、不足理由は `<execution_path>/grade/criteria/` 配下の成果物ごとの YAML に記録し、`detail_ref` から参照します。同じ成果物の詳細ファイルは再評価ごとに上書きし、過去の判定は Git 履歴で追跡します。`satisfied` / `total` と総合 `score` / `verdict` は独立した評価軸であり、一方の値から他方を補完・上書きしません。
+`target: deliverable` で成果物カタログに `done_criteria` がある場合、サイドカーに要約を記録します。条件文、条件ごとの判定、不足理由は `<execution_path>/grade/criteria/` 配下の成果物ごとの YAML に記録し、`detail_ref` から参照します。同じ成果物の詳細ファイルは再評価ごとに上書きします。`satisfied` / `total` と総合 `score` / `verdict` は独立した評価軸であり、一方の値から他方を補完・上書きしません。
 
-未充足条件がある場合だけ `done_criteria.unsatisfied` を置き、条件 ID をキー、その条件の `roles` を値として記録します。これにより詳細を Frontmatter へ複製せず、次の確認担当を特定できます。詳細 YAML は `grade-done-criteria.schema.yaml` に従い、成果物と同じ `content_hash` を持ちます。
+未充足条件がある場合だけ `done_criteria.unsatisfied` を置き、条件 ID をキー、その条件の `roles` を値として記録します。これにより詳細を grade result へ複製せず、次の確認担当を特定できます。詳細 YAML は `grade-done-criteria.schema.yaml` に従い、成果物と同じ `content_hash` を持ちます。
 
-Frontmatter の肥大化を抑えつつ観点単位の差分を保つため、`categories` と `viewpoints` は項目ごとの値（score または level / score）をフロースタイルで記録し、collection 自体はブロックスタイルを維持します。`findings` は severity 別件数のマッピング全体をフロースタイルで記録します。この書式は `specdojo.grade` だけに適用し、同じ Frontmatter の他の項目には波及させません。
-
-要修正箇所を含む最上位 Markdown ブロックの直前には、独立行で次のコメントを置きます。
-リスト、表、引用、コードフェンス、複数行段落の内部へコメントを挿入してはなりません。`rule` は
-共通 viewpoint ID、`line` は Frontmatter を除く本文での指摘行（1始まり）です。構造上安全な
-位置へコメントを移しても、`line` により指摘行との対応を維持します。`grade validate` は
-Frontmatter の severity 別件数、本文コメント数、内容ハッシュを突き合わせます。`line` を持たない
-既存コメントも引き続き読み取り対象とします。
-
-```markdown
-<!-- specdojo:finding id=F001 severity=major rule=vp-qe-omissions-consistency line=42 必須の禁止事項が欠落している。 -->
-```
+`findings[].line` は Frontmatter を除く本文での指摘行（1始まり）、`anchor` は評価時点の該当行の引用です。本文編集で行番号がずれた場合は `anchor` を照合に使います。`grade validate` はサイドカーの文書 ID・対象・件数・内容ハッシュを成果物と突き合わせます。
 
 再評価で同じ message の finding が残る場合は未解消として扱い、severity を前回より引き下げません。前回の問題が解消され、別の軽微な問題だけが残る場合は、新しい finding の message に severity を引き下げる根拠を含めます。
 
-YAML / JSON は Markdown Frontmatter と HTML コメントの契約を持たないため、現行 grade のインライン記録対象外です。別形式を黙って書き換えず、将来のサイドカー schema 導入まではエラーとして扱います。
+サイドカーは `grade-result.schema.yaml` に従います。現在の評価対象は Markdown 文書であり、YAML / JSON を対象へ指定した場合はエラーとします。
 
 ## 7. 成果物の値制約
 

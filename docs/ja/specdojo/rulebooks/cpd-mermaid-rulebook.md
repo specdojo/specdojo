@@ -9,33 +9,7 @@ specdojo:
   template: undecided
   based_on:
     - specdojo:rulebook-authoring-standard
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 87
-    graded_at: "2026-09-02T03:34:07.545Z"
-    graded_by: codex-expert-executor
-    content_hash: 0eb3ff2435af288790c8b791e1658c82ee142b9a84358aec25c0306777eaf48f
-    categories:
-      consistency: { score: 88 }
-      usability: { score: 92 }
-      architecture: { score: 100 }
-      quality: { score: 75 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 3, score: 75 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 3, score: 75 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 1, minor: 2, note: 0 }
 ---
-
-<!-- specdojo:finding id=F002 severity=major rule=vp-qe-kata-conformance Frontmatter で対応 sample として宣言した docs/ja/specdojo/samples/cpd-sample.md に Mermaid 図の完成例がなく、本ルールのノード、境界、関係、スタイルを適用した成果物を確認できない。 -->
 
 # Mermaid を用いたC4コンポーネント図 作成ルール
 
@@ -44,8 +18,6 @@ C4 Component Diagram (CPD) Documentation Rules using Mermaid
 本ドキュメントは、アーキテクチャ設計のために、**Mermaid の `flowchart` 構文を使って C4 コンポーネント図（Component Diagram）を描く際の標準ルール**です。
 
 C4 コンポーネント図は、C4 コンテナ図で示した「コンテナ（実行/配備単位）」の内部を、**主要コンポーネント（責務のまとまり）** に分解して俯瞰し、コンポーネント間の依存やデータの流れを、概念レベルで合意するために用います。
-
-<!-- specdojo:finding id=F001 severity=minor rule=vp-arc-cross-document-consistency 参照サンプル (docs/ja/specdojo/samples/cpd-sample.md) 内のリンク先が本ルールのファイル名と不整合である。 -->
 
 ## 1. 全体方針
 
@@ -66,8 +38,6 @@ C4 の要素を、以下のように Mermaid の記号にマッピングする�
 | External Software System（外部システム） | 連携先システム                          | `会計システム["会計システム"]`                                       |
 | Container Boundary（対象コンテナ境界）   | 対象コンテナの範囲                      | `subgraph 境界["対象コンテナ"] ... end`                              |
 | Relationship（関係）                     | 利用・連携・参照・データ入出力概念      | `UI -->\|"売上登録"\| 売上API`/`売上API --> \|"売上データ"\| 販売DB` |
-
-<!-- specdojo:finding id=F003 severity=minor rule=vp-ux-readability 「2.1. 標準の色分け」を章「2. C4要素と Mermaid 記号の対応」と同じ H2 にしているため、H3 の「2.1.1」「2.1.2」を含む階層が番号体系と一致するよう見出しレベルを修正する必要がある。 -->
 
 ## 2.1. 標準の色分け（推奨）
 

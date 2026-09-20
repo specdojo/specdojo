@@ -5,30 +5,6 @@ specdojo:
   status: ready
   rulebook: specdojo:pm-members-rulebook
   sample: specdojo:pm-members-sample
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: pass
-    score: 98
-    graded_at: "2026-09-04T14:13:41.528Z"
-    graded_by: gemma-expert-executor
-    content_hash: 3f9a06737cd453690ff38a368d864d256de7ec10413dc086785385af55beefc9
-    categories:
-      consistency: { score: 88 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 100 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 3, score: 75 }
-      vp-qe-kata-conformance: { level: 4, score: 100 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 4, note: 0 }
 ---
 
 # メンバー定義 作成レシピ
@@ -106,9 +82,6 @@ Project Member Roster Writing Recipe
 
 書き方:
 
-<!-- specdojo:finding id=F001 severity=minor rule=vp-qe-omissions-consistency line=76 メタ項目の設定手順において、rulebook で必須とされる `title` が漏れている。 -->
-<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-omissions-consistency line=76 メタ項目の設定手順において、rulebook で必須とされる `status` が漏れている。 -->
-
 - Role code は大文字の標準表記で記載する。
 - 汎用 agent は `roles: []` としてよいが、実行時にはタスク `owner` または plan で対象 Role を補う。
 - Schedule の `owner` に member nickname を書く代替として `roles` を使わない。
@@ -121,8 +94,6 @@ Project Member Roster Writing Recipe
 - `proficiency` と `priority` は scheduler の選択条件として使えるか。
 - `provider` に対応する `command_template` が `.specdojo/exec-defaults.yaml` に存在するか。
 - `command` を上書きする場合、秘密情報や個人環境依存のパスを含めていないか。
-
-<!-- specdojo:finding id=F003 severity=minor rule=vp-qe-omissions-consistency line=90 `members` の問いにおいて、必須項目である `display_name` の確認が漏れている。 -->
 
 書き方:
 
@@ -142,8 +113,6 @@ Project Member Roster Writing Recipe
 7. PO 以外に最終承認、公開可否、説明責任が移っていないことを確認する。
 
 ## 6. 良い例 / 悪い例
-
-<!-- specdojo:finding id=F004 severity=minor rule=vp-qe-omissions-consistency line=112 書き方において、`stage_role` の設定基準や nickname の許容文字に関する rulebook 記載の具体ルールが記述されていない。 -->
 
 | 観点           | 良い例                                           | 悪い例                                              |
 | -------------- | ------------------------------------------------ | --------------------------------------------------- |

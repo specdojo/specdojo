@@ -1,0 +1,96 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:tml-rulebook
+path: docs/ja/specdojo/rulebooks/tml-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 68
+graded_at: "2026-09-03T12:47:03.387Z"
+graded_by: codex-expert-executor
+content_hash: 6e7480a30812d4154396d61e99f03516ea6b7c6dc657eb40d1403182513f5178
+categories:
+  consistency:
+    score: 50
+  usability:
+    score: 83
+  architecture:
+    score: 100
+  quality:
+    score: 50
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 3
+    score: 75
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 4
+  minor: 2
+  note: 0
+findings:
+  - id: F006
+    severity: minor
+    rule: vp-ux-readability
+    line: 1
+    message: >-
+      構造の schema とトラック設計ガイドだけでなく、`timeline build` の生成フロー、検証、更新タイミングを説明する `specdojo:timeline-design-guide`
+      を次に読む文書として案内する。
+    anchor: "# タイムライン作成ルール"
+  - id: F004
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: "`tracks[]` 内の track id 重複は `timeline build` がエラーにする一方で本書に一意性規則がないため、同じ `track` 値を複数定義してはならないことを命名規則または禁止事項へ追加する。"
+    anchor: "# タイムライン作成ルール"
+  - id: F002
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 1
+    message: 「キー一覧は本書に複製しない」という方針と直後のキー列挙が両立していないため、列挙を削除して schema 参照へ統一するか、主要キーだけを補足する方針へ文言を修正する。
+    anchor: "# タイムライン作成ルール"
+  - id: F005
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: >-
+      YAML rulebook のキー定義が schema の一部だけを列挙しており `planned_start_date` と `notes` の要否・用途を判断できないため、全キーを定義するか、列挙をやめて schema
+      参照へ完全に統一したうえで schema だけでは表せない適用規則を補う。
+    anchor: "# タイムライン作成ルール"
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 1
+    message: >-
+      schema と現行 `tml-index.yaml` で利用される `planned_start_date` がキー説明から欠落しているため、任意性、YYYY-MM-DD 制約、Schedule カレンダーとの関係、Gantt
+      の日付起点になることを追記する。
+    anchor: "# タイムライン作成ルール"
+  - id: F003
+    severity: major
+    rule: vp-qe-verifiability
+    line: 1
+    message: 複数の `domains` に未作成・draft・確定済みのカタログが混在する場合の `catalog_status` 判定が一意でないため、全対象カタログの最低状態を採用するなど、track 単位への集約条件を明記する。
+    anchor: "# タイムライン作成ルール"

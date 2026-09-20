@@ -7,30 +7,6 @@ specdojo:
   recipe: not-needed
   sample: specdojo:ifx-msg-sample
   template: not-needed
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: pass
-    score: 98
-    graded_at: "2026-09-02T18:57:39.385Z"
-    graded_by: gemma-expert-executor
-    content_hash: 2cbbd5289d4f20f84a0109cdd758106decbbb6baeb1f2a229b49ea29881826fa
-    categories:
-      consistency: { score: 100 }
-      usability: { score: 92 }
-      architecture: { score: 100 }
-      quality: { score: 100 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 4, score: 100 }
-      vp-ux-readability: { level: 3, score: 75 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 2, note: 0 }
 ---
 
 # 外部メッセージ仕様（External Message Specification: EMS）作成ルール
@@ -75,8 +51,6 @@ ESIL 側の `spec_ref: ifx-msg-...` は、このEMSのID（およびファイル
 - `asyncapi`
 - `info`（`title`, `version` を含む）
 
-<!-- specdojo:finding id=F001 severity=minor rule=vp-ux-readability 成果物の位置づけについて言及があるが、関連するルールブックやガイドへのリンクがなく、ナビゲーションが不十分である。 -->
-
 - `x-spec-meta`（`id`, `type`, `status` を含む）
 - `channels`（少なくとも1つ）
 - `components/messages`（少なくとも1つ）
@@ -103,7 +77,5 @@ CloudEventsの「属性」は仕様で名前が固定です（snake_caseに変�
 - `time`: 発生時刻（RFC3339）
 - `datacontenttype`: `application/json`
 - `subject`: 任意（推奨。対象を識別できる文字列）
-
-<!-- specdojo:finding id=F002 severity=minor rule=vp-ux-readability 禁止事項に理由（例：設計詳細への委譲など）が記載されていないため、記述範囲の境界判断が困難である。 -->
 
 - `data`: 業務ペイロード（この中のプロパティ名は snake_case 推奨）

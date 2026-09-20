@@ -5,37 +5,11 @@ specdojo:
   status: ready
   rulebook: specdojo:prj-charter-rulebook
   sample: specdojo:prj-charter-sample
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: pass
-    score: 98
-    graded_at: "2026-09-04T17:14:46.512Z"
-    graded_by: codex-expert-executor
-    content_hash: 8d05b3a6f5973aeb754daa1572adafe719cb00e850783eb85aea1c00040fa0da
-    categories:
-      consistency: { score: 88 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 100 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 3, score: 75 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 4, score: 100 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 1, note: 0 }
 ---
 
 # プロジェクト憲章 作成レシピ
 
 Project Charter Writing Recipe
-
-<!-- specdojo:finding id=F001 severity=minor rule=vp-arc-cross-document-consistency line=5 承認主体として「PO」のみが記載されており、ルールブックの「PO またはスポンサー」という定義およびルールブック内の指摘（F001, F007）と整合していません。 -->
 
 本書は、プロジェクト憲章を、PO が立ち上げ認可、権限委譲、予算枠、後続判断条件を判断できる内容に仕上げるための作り方である。本書では問い、深掘り、具体化、レビュー観点を扱う。
 

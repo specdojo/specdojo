@@ -4,35 +4,7 @@ specdojo:
   type: project
   status: draft
   rulebook: specdojo:dmd-index-rulebook
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 84
-    graded_at: "2026-09-05T02:40:47.468Z"
-    graded_by: gemma-expert-executor
-    content_hash: a9434c716ea95717ecbc5a89712977379bb1539af349317f7515eb0edc47b106
-    categories:
-      consistency: { score: 63 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 75 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 2, score: 50 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 3, score: 75 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 2, minor: 1, note: 0 }
 ---
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=1 Frontmatter の id および type が、参照先の rulebook で定義されている必須値と矛盾している。 -->
-<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-omissions-consistency line=1 Frontmatter に必須項目である title が欠落している。 -->
-<!-- specdojo:finding id=F003 severity=major rule=vp-qe-kata-conformance line=1 rulebook で定義された Frontmatter の制約を遵守しておらず、サンプルとしての正しさを欠いている。 -->
 
 # データ移行設計 サンプル
 

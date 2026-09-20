@@ -6,36 +6,6 @@ specdojo:
   rulebook: specdojo:cdfd-rulebook
   based_on:
     - cdfd-overview
-  grade:
-    rubric: grade-rubric-v1
-    target: deliverable
-    verdict: pass
-    score: 97
-    graded_at: "2026-09-20T05:07:24.369Z"
-    graded_by: codex-expert-executor
-    content_hash: cf3435b0fcde87793cadf6712e988f80dd0a19a1bad0e4095d1c0cdfd893e12f
-    categories:
-      consistency: { score: 88 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 100 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-done-criteria: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 3, score: 75 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-user-flow: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-      vp-qe-config-validity: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 2, note: 0 }
-    done_criteria:
-      satisfied: 4
-      total: 4
-      detail_ref: cdfd-plan-grade-criteria
 ---
 
 # 概念データフロー図（Plan）: SpecDojo
@@ -46,7 +16,6 @@ specdojo:
 
 これにより、技術参加者と非技術参加者が同じ正本を介して計画を引き継ぎ、判断や作業が特定個人の記憶に集中しないプロジェクト運営を支える。
 
-<!-- specdojo:finding id=F001 severity=minor rule=vp-qe-omissions-consistency line=9 rulebook 6.1 が適用範囲に対象期間の明示を求めているが、本書は期間または期間を限定しない旨を示していないため、対象期間の記載を追加してください。 -->
 ## 2. 適用範囲
 
 - **対象グループ**: Plan（P-02〜P-06）。登録簿定義、成果物カタログ定義、スケジュール計画展開、定期実行定義、ジョブ定義を含む。
@@ -333,7 +302,6 @@ flowchart LR
 
 ### 8.1. 主要例外
 
-<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-omissions-consistency line=296 主要例外表に rulebook 6.7 と template が必須とする「停止範囲」列がなく、「本グループでの扱い」に停止内容が混在しているため、停止対象と対応を別列で識別できるようにしてください。 -->
 | 例外 ID   | 対象プロセス | 検出条件                                                                                                                                                                              | 本グループでの扱い                                                        | 継続・再開条件                                                                                                                                           |
 | --------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `E-03-01` | `P-03-01`    | 成果物 ID、依存、`done_criteria`、`evidence_refs` の必須項目が欠落している、成果物 ID が重複している、または依存先を解決できない                                                      | 成果物カタログを確定せず、P-04 の起動を止め、検出事項を定義担当へ戻す     | 不適合箇所が修正され、成果物カタログの検証が成功した時点で `P-03-01` の確定判定から再開する                                                              |

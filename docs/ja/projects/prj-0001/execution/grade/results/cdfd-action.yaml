@@ -1,0 +1,101 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: cdfd-action
+path: docs/ja/product/010-business-specs/010-data-flow/cdfd-action.md
+target: deliverable
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 81
+graded_at: "2026-09-17T00:02:38.844Z"
+graded_by: codex-expert-executor
+content_hash: 2dd596a49fb81ad9e1a6f92ecdd1800cb3e8049c4d209cbdecb67b35aedb7a3e
+categories:
+  consistency:
+    score: 50
+  usability:
+    score: 94
+  architecture:
+    score: 100
+  quality:
+    score: 83
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 2
+    score: 50
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 3
+  minor: 2
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 44
+    message: >-
+      P-12 の主要入力から全体概要が定める「参加者からの構成変更要求と承認結果」の承認結果が欠け、P-13
+      も上位の「参加者からの非推奨化の判断」を候補情報へ置き換えて内部判断としているため、上位正本と承認境界が一致するよう入力・起点を揃えてください。
+    anchor: "- **主要入力**: Orchestrator からの改善要求、参加者からの構成変更要求"
+  - id: F002
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 44
+    message: DC-001 が要求する上位主要入力との無矛盾な詳細化に対し、P-12 の承認結果と P-13 の非推奨化判断が外部入力から内部生成へ変更されているため、全体概要との対応を修正してください。
+    anchor: "- **主要入力**: Orchestrator からの改善要求、参加者からの構成変更要求"
+  - id: F003
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 44
+    message: 上位概要で Action の主要入力とされた P-12 の承認結果および P-13 の非推奨化判断が領域別入力へ引き継がれていないため、入力として維持するか上位正本を先に改訂して矛盾を解消してください。
+    anchor: "- **主要入力**: Orchestrator からの改善要求、参加者からの構成変更要求"
+  - id: F004
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 126
+    message: P-11・P-12・P-13 の各図は「成果物カタログ」と「登録簿」を共有しているため、三つの図注記にある「別図と共有するノードはない」を共有ノードの列挙へ修正してください。
+    anchor: >-
+      凡例は [[cdfd-overview|概念データフロー図（全体概要）]] の「凡例（本プロダクト共通）」に従う。`-->` は情報の流れであり、本図は物の流れを対象外とする。Plan
+      はグループ外委譲先の代表ノードであり、内部処理を省略する。参加者は領域の担当であるため外部主体として描かない。本図は P-11 の入力、出力、判断分岐に限定し、他領域のデータストアを省略する。別図と共有するノードはない。
+  - id: F005
+    severity: minor
+    rule: vp-ux-user-flow
+    line: 257
+    message: 実在する再計画先 `cdfd-plan` がコード表記のみで文書へ遷移できないため、文書名を伴う wikilink に変更してください。
+    anchor: "| `cdfd-plan` | タスク完了に至らなかった事項の再計画 | 完了条件の未充足事項、再計画要求 | 再計画に基づく対応と評価を経て、完了条件を照合できる評価結果と完了要求がそろった |"
+done_criteria:
+  satisfied: 2
+  total: 3
+  unsatisfied:
+    DC-001:
+      - BA
+  detail_ref: cdfd-action-grade-criteria

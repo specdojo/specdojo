@@ -1,0 +1,70 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:cdfd-uc-template
+path: docs/ja/specdojo/templates/cdfd-uc-template.md
+target: kata
+rubric: grade-rubric-v1
+verdict: pass
+score: 95
+graded_at: "2026-09-18T10:14:59.222Z"
+graded_by: codex-expert-executor
+content_hash: 015b67b0a02213bdf92c43c5bbd1b25c22e9b2d093f877ca9bdd373164bbdb4b
+categories:
+  consistency:
+    score: 75
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 100
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 3
+    score: 75
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 4
+    score: 100
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 2
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 104
+    message: >-
+      ノード形状の意味を全体概要の共通凡例への参照に留める記入指示は、包含される `specdojo:cdfd-mermaid-rulebook`
+      の各図直後に使用したノード形状の意味を直接記述する要件と一致しないため、包含規則との優先関係を明示するか記載要件を統一してください。
+    anchor: "_TODO_: 全体概要の「凡例（本プロダクト共通）」への参照、`-->` / `==>` のうち使用した線種、グループ内部を省略したこと、図に置いたデータストアと選定理由を書く。"
+  - id: F002
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 114
+    message: >-
+      rulebook は戻しが発生しない引き渡しに根拠を記載することを許容する一方、本テンプレートは戻す条件を空欄不可とし全 ID
+      の戻り先確認を求めるだけなので、該当なしを表す値と理由の記載方法、および「例外時の戻り先」表へ記載するか除外するかを定めてください。
+    anchor: <!-- 引き渡し ID は正常順序に沿った H-01 形式にする。隣接する全グループ間の引き渡しを一行ずつ追加し、情報、引き渡し条件、戻す条件を空欄にしない。 -->

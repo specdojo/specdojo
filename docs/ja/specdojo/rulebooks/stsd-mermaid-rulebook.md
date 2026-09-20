@@ -9,30 +9,6 @@ specdojo:
   template: not-needed
   based_on:
     - specdojo:rulebook-authoring-standard
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 84
-    graded_at: "2026-09-19T21:18:33.330Z"
-    graded_by: codex-expert-executor
-    content_hash: ed610f8d3588e4799d8ceba6bad282f1e6710fb799e42619eaecf980715f68c7
-    categories:
-      consistency: { score: 75 }
-      usability: { score: 92 }
-      architecture: { score: 100 }
-      quality: { score: 75 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 2, score: 50 }
-      vp-qe-omissions-consistency: { level: 2, score: 50 }
-      vp-qe-kata-conformance: { level: 4, score: 100 }
-      vp-ux-readability: { level: 3, score: 75 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 2, minor: 2, note: 0 }
 ---
 
 # STSD の状態遷移図を Mermaid で記述するルール
@@ -62,7 +38,6 @@ STSD の「状態遷移図」を Mermaid の `stateDiagram-v2` で一貫して�
 
 ## 3. ファイル命名・ID規則
 
-<!-- specdojo:finding id=F003 severity=minor rule=vp-qe-omissions-consistency line=31 別名構文で `state_id` を導入していますが、許容文字と図内一意性が未定義のため、異なる状態の ID 衝突を防げる命名規則を追加してください。 -->
 - 本 rulebook 単独の成果物は作成せず、`stsd-<term>.md` の「状態遷移図」に適用します。
 - 状態名は日本語の名詞句にし、STSD の状態一覧と同じ表記を使います。
 - イベント名は短い業務用語、条件は業務上判定可能な事実で記述します。
@@ -82,9 +57,6 @@ STSD の「状態遷移図」を Mermaid の `stateDiagram-v2` で一貫して�
 | 初期点     | 原則必須 | `[*] --> 初期状態 : イベント / 条件` で示す                          |
 | 終了点     | 任意     | 業務上の終了がある場合に `終了状態 --> [*] : イベント / 条件` で示す |
 
-<!-- specdojo:finding id=F001 severity=major rule=vp-qe-verifiability line=47 本文要件は初期点の省略を許容していますが、完成判定は常に「初期点から」全終端への到達を要求しており、省略時の pass / fail を判定できません。初期点の省略条件を削除するか、省略時の入口状態と到達性確認手順を定義してください。 -->
-<!-- specdojo:finding id=F002 severity=major rule=vp-qe-omissions-consistency line=47 初期点を省略できる要件に対し、初期点がない場合の入口状態、到達性、完了条件が定義されていないため、省略ケースにも適用できる代替基準を追加してください。 -->
-<!-- specdojo:finding id=F004 severity=minor rule=vp-ux-readability line=47 初期点を省略できる説明と初期点を起点にする完成判定が両立せず、読者が省略可否と確認手順を判断できないため, 省略時の入口状態と代替チェックを一続きで明示してください。 -->
 初期点または終了点を省略する場合は、STSD の「概要」で継続的な状態管理である理由を説明します。
 
 ## 6. 記述ガイド

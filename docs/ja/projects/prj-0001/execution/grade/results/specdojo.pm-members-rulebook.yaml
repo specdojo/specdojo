@@ -1,0 +1,102 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:pm-members-rulebook
+path: docs/ja/specdojo/rulebooks/pm-members-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 74
+graded_at: "2026-09-03T03:24:28.009Z"
+graded_by: gemma-expert-executor
+content_hash: ddf79788ea8bd929483e6c12a2518ecbc94a46554552f9578d33459369b15df0
+categories:
+  consistency:
+    score: 88
+  usability:
+    score: 75
+  architecture:
+    score: 100
+  quality:
+    score: 50
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 3
+    score: 75
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 2
+  minor: 5
+  note: 0
+findings:
+  - id: F003
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 1
+    message: >-
+      `members[].nickname`の許容文字だけを示し、先頭を英小文字または数字とする条件と最大63文字のschema制約を示していないため,
+      rulebook上は許容されてもschemaでrejectされる値を作成できる。
+    anchor: "# プロジェクトメンバー定義 作成ルール"
+  - id: F004
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: schemaが任意のルートメタ項目として許可する`supersedes`が「推奨メタ項目」とルート構造の双方から欠落しており、置き換え関係の記述可否をrulebookから判断できない。
+    anchor: "# プロジェクトメンバー定義 作成ルール"
+  - id: F001
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 1
+    message: 4節の「推奨メタ項目」と 5節の「本文構成（標準テンプレ）」で共通メタ項目の定義が重複しており、YAML 形式において冗長な記述となっている。
+    anchor: "# プロジェクトメンバー定義 作成ルール"
+  - id: F006
+    severity: minor
+    rule: vp-ux-readability
+    line: 1
+    message: 「推奨メタ項目」と「本文構成（標準テンプレ）」で同じ8個のメタ項目を再掲しているため、読者が二つの表を比較しなければ差分の有無を判断できない。
+    anchor: "# プロジェクトメンバー定義 作成ルール"
+  - id: F005
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: >-
+      YAML rulebookのフィールド定義がschema必須のagent項目を推奨扱いとし、現行の`report`起動プロファイルも定義していないため,
+      Rulebook記述標準が求める実装可能な必須キー・型制約の正本として機能していない。
+    anchor: "# プロジェクトメンバー定義 作成ルール"
+  - id: F002
+    severity: major
+    rule: vp-qe-verifiability
+    line: 1
+    message: >-
+      `priority`、`proficiency`、`capabilities`を「agent 推奨」としているが, schemaは全ての`type: agent`で3項目を必須としているため,
+      rulebookに従った成果物がschema検証に失敗し得る。
+    anchor: "# プロジェクトメンバー定義 作成ルール"
+  - id: F007
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 1
+    message: "`mode`を担当できる「実行モード」と説明する一方, 実運用ではreporter権限を選ぶ「起動プロファイル」としても使うため, task modeとlaunch profileの用語を区別できていない。"
+    anchor: "# プロジェクトメンバー定義 作成ルール"

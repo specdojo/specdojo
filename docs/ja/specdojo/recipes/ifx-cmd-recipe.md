@@ -5,30 +5,6 @@ specdojo:
   status: draft
   rulebook: specdojo:ifx-cmd-rulebook
   sample: specdojo:ifx-cmd-sample
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 84
-    graded_at: "2026-09-04T13:30:46.996Z"
-    graded_by: codex-expert-executor
-    content_hash: 39253959e72704f943ce7bb4f493cc7b62b3f10c8c116dd7553b2b41f29febe3
-    categories:
-      consistency: { score: 63 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 75 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 1, score: 25 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 3, minor: 0, note: 0 }
 ---
 
 # 外部コマンド連携仕様 作成レシピ
@@ -58,9 +34,6 @@ External Command Interface Specification Writing Recipe
 | 運用時の判定 | 再試行できる条件、打ち切り条件、再認証が必要な条件、ログから除外する値   |
 
 ## 3. 全体の作成手順
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=32 `positional` を引数種別として指示しているが、対応 schema の `arguments[].kind` は `argument` と `option` しか許可しないため、recipe に従った成果物が検証エラーにならないよう recipe・rulebook・schema の許容値を統一してください。 -->
-<!-- specdojo:finding id=F003 severity=major rule=vp-qe-kata-conformance line=32 recipe と rulebook が許容する `positional` および `rate_limit` を対応 schema が拒否し、template のプレースホルダを recipe に従って埋めても有効な成果物にならない場合があるため、kata 一式と schema を同一の引数種別・終了カテゴリ契約へ統一してください。 -->
 
 1. ESIL の 1 連携に対応する実行目的を 1 文で書き、別の入出力契約を持つサブコマンドが混じっていないか確認する。
 2. ID、タイトル、状態、準拠ルール、仕様バージョンを設定し、ESIL の `spec_ref` と対応させる。
@@ -140,8 +113,6 @@ External Command Interface Specification Writing Recipe
 6. 呼び出し側が「成功」「再試行」「人の対応待ち」「入力修正」を仕様だけで分岐できるか確認する。
 
 ## 6. 良い例 / 悪い例
-
-<!-- specdojo:finding id=F002 severity=major rule=vp-arc-cross-document-consistency line=114 `rate_limit` を終了カテゴリとして扱う例になっているが、対応 schema の `exit_codes[].category` は `rate_limit` を許可しないため, 正しく識別したレート制限でも成果物が検証エラーにならないようカテゴリ契約を統一してください。 -->
 
 | 観点         | 良い例                                                      | 悪い例                                             |
 | ------------ | ----------------------------------------------------------- | -------------------------------------------------- |

@@ -7,36 +7,6 @@ specdojo:
   based_on:
     - prj-0001:cdfd-overview
   supersedes: []
-  grade:
-    rubric: grade-rubric-v1
-    target: deliverable
-    verdict: pass
-    score: 92
-    graded_at: "2026-09-12T01:40:35.527Z"
-    graded_by: codex-expert-executor
-    content_hash: 7a904a2e3a19490759d869e39da48686c089e037a97d605d7ebbc6d1c89fa55f
-    categories:
-      consistency: { score: 88 }
-      usability: { score: 81 }
-      architecture: { score: 100 }
-      quality: { score: 100 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 3, score: 75 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-done-criteria: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 3, score: 75 }
-      vp-ux-readability: { level: 3, score: 75 }
-      vp-ux-user-flow: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 3, score: 75 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-      vp-qe-config-validity: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 5, note: 0 }
-    done_criteria:
-      satisfied: 4
-      total: 4
-      detail_ref: prj-0001:cdfd-init-grade-criteria
 ---
 
 # 概念データフロー図（初期セットアップ）: SpecDojo
@@ -132,8 +102,6 @@ flowchart LR
 
 ### 4.2. 条件付きプロセスのフロー（P-01-04・P-01-05）
 
-<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-omissions-consistency line=116 条件付きフローの `provider実行構成` ノードは `.specdojo/＜provider＞/` だけを示し、5.2にあるagent定義の生成先 `.＜provider＞/agents/` が欠落しているため、図へ追加するか省略対象と理由を図の直後に明記する必要がある。 -->
-
 ```mermaid
 flowchart LR
   classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
@@ -194,10 +162,6 @@ flowchart LR
 
 ### 5.1. 必須プロセス（P-01-01〜P-01-03）
 
-<!-- specdojo:finding id=F001 severity=minor rule=vp-arc-conciseness line=154 5.1と5.2のグループ要約が3章で確定済みの必須性・起動条件を再掲しているため、各グループが扱う範囲の説明だけに絞る必要がある。 -->
-<!-- specdojo:finding id=F003 severity=minor rule=vp-qe-omissions-consistency line=154 5.1と5.2のグループ要約が、rulebookで3章を正本とする必須性・起動条件を重複記載しているため、範囲説明へ置き換える必要がある。 -->
-<!-- specdojo:finding id=F004 severity=minor rule=vp-ux-readability line=154 5.1と5.2の要約は必須性と起動条件を繰り返しており、表へ進む際の新しい判断情報がないため, グループ固有の対象範囲を示す説明へ差し替える必要がある。 -->
-
 config init、register scaffold、catalog scaffold は計画開始に必要な必須プロセスであり、いずれも完了して初めて計画展開へ引き渡せる。
 
 <!-- prettier-ignore -->
@@ -208,8 +172,6 @@ config init、register scaffold、catalog scaffold は計画開始に必要な�
 | `P-01-03` | catalog scaffold | プロジェクト構成、成果物カタログのテンプレート、プロジェクト規模、対象ドメイン、置換値 | 選択条件を反映したカタログ初期ファイル | `docs/ja/projects/<project-id>/010-deliverables-catalog/dct-<domain>.yaml` |
 
 ### 5.2. 条件付きプロセス（P-01-04・P-01-05）
-
-<!-- specdojo:finding id=F005 severity=minor rule=vp-ux-language-consistency line=165 `P-01-04`と`P-01-05`は見出し・一覧では「条件付き」だが本文では「任意プロセス」と呼ばれ、rulebookの別分類「選択」と混同し得るため、「条件付きプロセス」に統一する必要がある。 -->
 
 provider 設定初期化と exec scaffold は、それぞれの利用方針が承認され、必要入力がそろった場合だけ起動する独立した任意プロセスである。
 

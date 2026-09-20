@@ -1,0 +1,75 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: tsd-index
+path: docs/ja/product/030-architecture/020-infrastructure/tsd-index.md
+target: deliverable
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 95
+graded_at: "2026-09-14T00:32:17.517Z"
+graded_by: gemma-expert-executor
+content_hash: cbad622e8ac5d2ea57ea31392d814e3f2b9d46778df9fbabeea8aa75e222058b
+categories:
+  consistency:
+    score: 100
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 83
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 2
+    score: 50
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 1
+  minor: 0
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 41
+    message: DC-001 および DC-003 が要求する「選定理由」「技術的制約」「ライセンス」の記述が不足しています。
+    anchor: ""
+done_criteria:
+  satisfied: 3
+  total: 5
+  unsatisfied:
+    DC-001:
+      - BA
+    DC-003:
+      - ARC
+  detail_ref: tsd-index-grade-criteria

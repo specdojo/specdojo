@@ -6,30 +6,6 @@ specdojo:
   recipe: not-needed
   sample: specdojo:tsd-index-sample
   template: not-needed
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: pass
-    score: 100
-    graded_at: "2026-09-03T13:35:04.684Z"
-    graded_by: gemma-expert-executor
-    content_hash: f78fc631c03b7410c85b21611766381140f0d3e105520953946c240bf4e98d95
-    categories:
-      consistency: { score: 100 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 100 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 4, score: 100 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 0, note: 0 }
 ---
 
 # 技術スタック定義（TSD Index）作成ルール

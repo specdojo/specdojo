@@ -1,0 +1,61 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:cop-index-rulebook
+path: docs/ja/specdojo/rulebooks/cop-index-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+reference: specdojo:prj-overview-rulebook
+verdict: needs-work
+score: 91
+graded_at: "2026-09-02T02:46:57.724Z"
+graded_by: gemma-expert-executor
+content_hash: 4af6a4bdcdcbba0f4644395e59f4165151a8d2c27a6703cc0cbfb4f76c29ab65
+categories:
+  consistency:
+    score: 100
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 75
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 1
+  minor: 0
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: サンプル specdojo:cop-index-sample の Frontmatter type が project となっており、ルールで定義された migration と矛盾している。
+    anchor: "# カットオーバー計画（本番切替手順） 作成ルール"

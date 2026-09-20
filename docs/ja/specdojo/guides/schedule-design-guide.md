@@ -359,7 +359,7 @@ phase や owner rule に書く `approach` は、タスクの目的と実践の�
 | 段階     | 正本・担当                             | 出力                                                         |
 | -------- | -------------------------------------- | ------------------------------------------------------------ |
 | 目的宣言 | strategy の `approach_rules`           | 7 種の `intent` と必要な target / scope                      |
-| 品質評価 | `specdojo grade`                       | Kata 文書の保存済み `grade.verdict`                          |
+| 品質評価 | `specdojo grade`                       | grade result サイドカーの保存済み `verdict`                  |
 | 事実収集 | コード                                 | 実在、要否宣言、参照切れ、実装エビデンス                     |
 | 規則適用 | コード（`schedule strategy generate`） | 成果物ごとの approach                                        |
 | 構造生成 | コード（`schedule strategy generate`） | scope・profile・owner・gate・依存・milestone を持つ strategy |

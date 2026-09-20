@@ -1,0 +1,96 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:cdfd-template
+path: docs/ja/specdojo/templates/cdfd-template.md
+target: kata
+rubric: grade-rubric-v1
+verdict: pass
+score: 86
+graded_at: "2026-09-19T21:39:33.737Z"
+graded_by: codex-expert-executor
+content_hash: ecc665f11fad4a263608f351b6c63af5ab77f9ca753fb958f26a6ca4b43fb7a5
+categories:
+  consistency:
+    score: 75
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 75
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 3
+    score: 75
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 7
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 15
+    message: rulebook と recipe は適用範囲に期間の明記を求めているため、「対象期間」または期間を限定しない旨の記入欄を追加してください。
+    anchor: "- 対象グループ: _GROUP_NAME_（_AREA_ID_RANGE_）。_TODO_: 全体概要と同じグループ名と含む領域を書く。"
+  - id: F004
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 15
+    message: 必須の適用範囲に対象期間または期間を限定しない旨の記入欄がないため、組織境界・システム境界と並ぶ項目として追加してください。
+    anchor: "- 対象グループ: _GROUP_NAME_（_AREA_ID_RANGE_）。_TODO_: 全体概要と同じグループ名と含む領域を書く。"
+  - id: F006
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 15
+    message: rulebook 6.1 と recipe 4.2 が要求する適用期間を生成物へ反映できるよう、「対象期間」のプレースホルダーを追加してください。
+    anchor: "- 対象グループ: _GROUP_NAME_（_AREA_ID_RANGE_）。_TODO_: 全体概要と同じグループ名と含む領域を書く。"
+  - id: F002
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 37
+    message: rulebook と recipe は各プロセスに一つの完了条件を求めているため、プロセス表または対応する別表に完了条件の記入先を設けてください。
+    anchor: "| プロセス ID    | プロセス       | 業務目的           | 主な担当     | 起動条件          | 必須性        |"
+  - id: F003
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 37
+    message: 各プロセスが完了したと判定する条件の記入欄がなく、一プロセス一完了条件を検証できないため、完了条件とその判定可能な状態または出力を記録する列か対応表を追加してください。
+    anchor: "| プロセス ID    | プロセス       | 業務目的           | 主な担当     | 起動条件          | 必須性        |"
+  - id: F005
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 37
+    message: プロセスを分割・完成判定するための完了条件が表の必須項目から漏れているため、全プロセスについて記録できる欄を追加してください。
+    anchor: "| プロセス ID    | プロセス       | 業務目的           | 主な担当     | 起動条件          | 必須性        |"
+  - id: F007
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 37
+    message: rulebook の一プロセス一完了条件と recipe のプロセス分割・確認手順を生成物へ反映できるよう、完了条件のプレースホルダーを追加してください。
+    anchor: "| プロセス ID    | プロセス       | 業務目的           | 主な担当     | 起動条件          | 必須性        |"

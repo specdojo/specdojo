@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { createHash } from "node:crypto";
 import yaml from "js-yaml";
 import { format } from "prettier";
 import {
@@ -1213,13 +1214,50 @@ LEVEL: 4
 
   it("carries previous finding facts into the next plan without previous scores", () => {
     const path = "tests/fixtures/grade/previous-findings.md";
-    const plan = renderGradePlan({
-      target: "kata",
-      path,
-      references: [],
-      viewpoints,
-      projectId: "prj-0001",
-    });
+    // 前回の finding は本文コメントではなく grade result サイドカーから読む。
+    const resultsDirectory = mkdtempSync(join(tmpdir(), "specdojo-grade-results-"));
+    writeFileSync(
+      join(resultsDirectory, "specdojo.previous-findings-test.yaml"),
+      yaml.dump({
+        version: 1,
+        document: "specdojo:previous-findings-test",
+        path,
+        target: "kata",
+        rubric: "grade-rubric-v1",
+        verdict: "needs-work",
+        score: 70,
+        graded_at: "2026-09-01T00:00:00.000Z",
+        graded_by: "codex-expert-executor",
+        content_hash: "0".repeat(64),
+        categories: {},
+        viewpoints: {},
+        finding_counts: { blocker: 0, major: 1, minor: 0, note: 0 },
+        findings: [
+          {
+            id: "F042",
+            severity: "major",
+            rule: "vp-qe-kata-conformance",
+            line: 11,
+            anchor: "本文です。",
+            message: "必須の禁止事項が欠落している。",
+          },
+        ],
+      }),
+      "utf8",
+    );
+    let plan: string;
+    try {
+      plan = renderGradePlan({
+        target: "kata",
+        path,
+        references: [],
+        viewpoints,
+        projectId: "prj-0001",
+        resultsDirectory,
+      });
+    } finally {
+      rmSync(resultsDirectory, { recursive: true, force: true });
+    }
     const previousSection = plan.match(/### 3\.1\. 前回の指摘\n([\s\S]*?)\n### 3\.2\. Rubric/)?.[1];
 
     expect(previousSection).toBeDefined();
@@ -1580,19 +1618,57 @@ DC-002: unsatisfied: 承認時点の記載がない。
       rmSync(directory, { recursive: true, force: true });
     }
   });
+
+  it("writes the latest result sidecar without changing the deliverable", () => {
+    const directory = "logs/grade-apply-sidecar-test";
+    const documentPath = `${directory}/example-doc.md`;
+    const resultsDirectory = `${directory}/results`;
+    const criteriaDirectory = `${directory}/criteria`;
+    mkdirSync(directory, { recursive: true });
+    writeFileSync(documentPath, deliverableMarkdown, "utf8");
+    try {
+      const before = readFileSync(documentPath, "utf8");
+      const changed = applyGradeSubmission({
+        submission: {
+          rubric: "grade-rubric-v1",
+          documents: [{ ...deliverableInput, path: documentPath }],
+        },
+        viewpoints,
+        target: "deliverable",
+        gradedBy: "codex-executor",
+        now: new Date("2026-09-20T00:00:00.000Z"),
+        doneCriteriaByPath: new Map([[documentPath, doneCriteria]]),
+        criteriaDirectory,
+        resultsDirectory,
+      });
+
+      expect(readFileSync(documentPath, "utf8")).toBe(before);
+      expect(changed).toEqual([
+        expect.stringMatching(/-done-criteria\.yaml$/),
+        expect.stringMatching(/results\/prj-0001\.example-doc\.yaml$/),
+      ]);
+      const sidecar = readFileSync(join(resultsDirectory, "prj-0001.example-doc.yaml"), "utf8");
+      expect(sidecar).toContain("findings: []");
+      expect(sidecar).toContain(
+        `content_hash: ${createHash("sha256").update(before).digest("hex")}`,
+      );
+    } finally {
+      rmSync(directory, { recursive: true, force: true });
+    }
+  });
 });
 
 describe("pipelineContentHash", () => {
   const data = { specdojo: { id: "x", type: "flow", status: "draft" } };
 
-  it("ignores blank lines and finding comments introduced by grade apply between stages", () => {
+  it("hashes blank lines and legacy finding comments as document content", () => {
     const before = { data, body: "# T\n\n<!-- prettier-ignore -->\n| a | b |\n| --- | --- |\n" };
     const after = {
       data,
       body: "# T\n\n<!-- specdojo:finding id=F001 severity=minor rule=vp-ux-readability line=3 x -->\n\n<!-- prettier-ignore -->\n\n| a | b |\n| --- | --- |\n",
     };
 
-    expect(pipelineContentHash(after)).toBe(pipelineContentHash(before));
+    expect(pipelineContentHash(after)).not.toBe(pipelineContentHash(before));
   });
 
   it("changes when non-blank content changes", () => {

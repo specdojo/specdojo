@@ -6,30 +6,6 @@ specdojo:
   recipe: undecided
   sample: specdojo:tsp-index-sample
   template: undecided
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 87
-    graded_at: "2026-09-03T14:12:05.198Z"
-    graded_by: gemma-expert-executor
-    content_hash: 08ec3572ff0badd0a3dc22aff4e909b8a6d6a1cab8836f9d0bf01fa6ba7f728a
-    categories:
-      consistency: { score: 88 }
-      usability: { score: 92 }
-      architecture: { score: 100 }
-      quality: { score: 75 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 3, score: 75 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 3, score: 75 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 1, minor: 3, note: 0 }
 ---
 
 # テスト戦略・方針 作成ルール
@@ -38,8 +14,6 @@ Test Strategy and Policy (TSP) Index Documentation Rules
 
 本ドキュメントは、品質保証・テスト設計のために **テスト戦略・方針を統一形式で記述する標準ルール**です。
 TSP は「全体として、どのようにテストで品質を担保するか」を明文化し、テスト設計・実施・受入判断の認識ズレを防ぎます。
-
-<!-- specdojo:finding id=F004 severity=major rule=vp-qe-kata-conformance 指定された sample ファイルが成果物の実例ではなく説明書となっており、サンプルの責務を満たしていない。 -->
 
 TSP は「個別のテストケース集」ではありません。
 各テストレベル（単体/内部結合/外部結合/総合/受入など）の **目的・範囲・体制**、および **フェーズ間の入口／出口条件（品質ゲート）** を合意することが主目的です。
@@ -69,8 +43,6 @@ TSP は「個別のテストケース集」ではありません。
 
 TSP と下位ドキュメント（テストカタログ、テストコード／CI成果物）の関係を示します。
 
-<!-- specdojo:finding id=F001 severity=minor rule=vp-arc-conciseness 責任分界（保証すること/やらないこと）の明文化に関する記述が重複しており、整理が必要である。 -->
-
 ```mermaid
 flowchart BT
   TSP["tsp-index<br>テスト戦略・方針"]
@@ -91,8 +63,6 @@ flowchart BT
   class TSP target
 
 ```
-
-<!-- specdojo:finding id=F002 severity=minor rule=vp-arc-conciseness 曖昧表現の禁止に関する記述が本文内で重複しているため、共通原則として集約することを推奨する。 -->
 
 `<level>`はテストレベル（ut:単体、it:内部結合、et:外部結合、st:総合、at:受入）
 
@@ -178,8 +148,6 @@ Frontmatter は共通スキーマに従います（参照: [docs/specdojo/schema
 | テストレベル | 単体/結合/システム/受け入れ等                  |
 | 目的         | そのレベルで何を保証したいか                   |
 | 範囲         | 対象（例: モジュール/画面/API/バッチ/外部I/F） |
-
-<!-- specdojo:finding id=F003 severity=minor rule=vp-qe-omissions-consistency 集約ドキュメントの ID 例に `tsp-overview` が使用されているが、デフォルトの `tsp-index` と整合させるべきである。 -->
 
 | 実施体制・備考 | 実施主体、ツール、自動化方針、除外など |
 

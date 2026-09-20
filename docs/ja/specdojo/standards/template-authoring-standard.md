@@ -97,6 +97,5 @@ Template Authoring Standard
 
 - 対応成果物の rulebook 本文要件や schema が変わった場合は、テンプレートの構成・キーを追従させる。
 - プレースホルダ名を変更する場合は、対応する recipe / 生成処理との整合を確認する。
-- `grade apply` がテンプレートへ付与する `specdojo:finding` コメントは評価注釈として扱い、テンプレートから生成する成果物へ複製しない。生成処理はコメントを除去してから Frontmatter の展開とプレースホルダ置換を行う。
-- npm 公開前は、同梱するテンプレートに `specdojo:finding` コメントが残っていないことを確認する。
+- `grade apply` はテンプレートを変更せず、評価結果と finding を `execution/grade/results/` のサイドカーに書く。テンプレート本文に評価注釈を書き込まない。
 - 表は必要に応じて `SpecDojo: Format Markdown Table` コマンドで揃える。

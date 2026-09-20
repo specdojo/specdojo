@@ -1,0 +1,143 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: sysd-index
+path: docs/ja/product/040-system-design/sysd-index.md
+target: deliverable
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 67
+graded_at: "2026-09-19T16:45:51.883Z"
+graded_by: codex-expert-executor
+content_hash: 21eb4cf38ac3c7ca9157dd2c5ceb0c29f1edfaeb09802bb7583af11ecbe68813
+categories:
+  consistency:
+    score: 38
+  usability:
+    score: 81
+  architecture:
+    score: 100
+  quality:
+    score: 58
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 1
+    score: 25
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 1
+    score: 25
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-user-flow:
+    level: 2
+    score: 50
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 7
+  minor: 4
+  note: 0
+findings:
+  - id: F007
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: Frontmatter に rulebook が必須とする `title` がないため、共通メタデータを補う必要がある。
+    anchor: "# SpecDojo システム設計"
+  - id: F009
+    severity: minor
+    rule: vp-ux-readability
+    line: 3
+    message: SSOT、CPM、CDFD、OPD、SYSD などの略語が本文内で定義されていないため、初出時の展開または用語定義への導線を追加する必要がある。
+    anchor: SpecDojo のシステム設計情報と、コード・設定ファイルを正本とする SSOT への入口を集約する。本文へ詳細仕様を複製せず、変更時に最初に確認・更新する場所を示す。
+  - id: F008
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 9
+    message: 第2節から第4節の見出しが rulebook の順序固定見出しから括弧内の説明を省略しているため、規定の見出し名へ統一する必要がある。
+    anchor: "## 2. SSOT 一覧"
+  - id: F003
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 12
+    message: SSOT 一覧に API 定義と DB スキーマの参照先または非該当である旨がなく、DC-001 を確認できない。
+    anchor: "| 種別 | SSOT | 参照先 | 更新責任 | 備考 |"
+  - id: F006
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 12
+    message: API、DB Schema、Observability の SSOT が一覧になく、存在しない場合の非該当宣言もないため、rulebook と成果物カタログが要求する参照範囲を満たしていない。
+    anchor: "| 種別 | SSOT | 参照先 | 更新責任 | 備考 |"
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 34
+    message: >-
+      `npm run docs:index` は package scripts に存在しないため、実在する `npm run docs:generate` または `specdojo index build`
+      へ修正する必要がある。
+    anchor: >-
+      | 文書索引           | Markdown Frontmatter           | `npm run docs:index`      | VitePress参照用索引                  |
+      コマンド生成      |
+  - id: F004
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 48
+    message: 運用文書ディレクトリだけが示され、運用・監視設定そのものの SSOT が特定できないため DC-004 を確認できない。
+    anchor: >-
+      | 運用手順変更           | `docs/ja/product/090-operations/`            | OPD、関連SYSD                      |
+      手順・完了条件・証跡を確認    |
+  - id: F005
+    severity: major
+    rule: vp-qe-verifiability
+    line: 41
+    message: 「代表実行成功」「経路を検証」「分離を確認」などの完了条件について、実行する検査・対象ケース・期待結果を明記しなければ判定者ごとに合否が変わる。
+    anchor: "| 変更トリガー           | 最初に直す場所（SSOT）                       | 併せて確認する場所                 | 完了条件                      |"
+  - id: F002
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 59
+    message: >-
+      `cdfd-task-execution` と `cdfd-register-lifecycle` は deprecated として trash 配下へ移動済みであり、現行の `cdfd-do` と `cdfd-plan`
+      など後継 SSOT への参照へ更新する必要がある。
+    anchor: "| データフロー   | `cdfd-task-execution`       | task状態・実行ライフサイクル       |"
+  - id: F010
+    severity: minor
+    rule: vp-ux-user-flow
+    line: 52
+    message: 関連文書の ID がコード表記だけでリンク化されていないため、解決可能な wikilink または Markdown リンクへ変更する必要がある。
+    anchor: "| 種別           | ドキュメントID              | 目的                               |"
+  - id: F011
+    severity: major
+    rule: vp-ux-user-flow
+    line: 59
+    message: データフローの導線が廃止済み文書を指しており、利用者が現行の Plan・Do 設計へ到達できないため後継文書への導線へ置き換える必要がある。
+    anchor: "| データフロー   | `cdfd-task-execution`       | task状態・実行ライフサイクル       |"
+done_criteria:
+  satisfied: 2
+  total: 4
+  unsatisfied:
+    DC-001:
+      - ARC
+    DC-004:
+      - OPS
+  detail_ref: sysd-index-grade-criteria

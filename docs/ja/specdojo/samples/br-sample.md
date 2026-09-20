@@ -5,30 +5,6 @@ specdojo:
   title: 在庫不足判定
   status: draft
   rulebook: specdojo:br-rulebook
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: pass
-    score: 100
-    graded_at: "2026-09-08T23:53:57.687Z"
-    graded_by: codex-expert-executor
-    content_hash: d61b018250e0c73e636e4c69812fe9ade85eff9e5ee3c502f11061e26bf6270a
-    categories:
-      consistency: { score: 100 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 100 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 4, score: 100 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 0, note: 0 }
 ---
 
 <!-- markdownlint-disable MD025 -->

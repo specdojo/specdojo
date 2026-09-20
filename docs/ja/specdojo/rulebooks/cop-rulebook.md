@@ -4,30 +4,6 @@ specdojo:
   type: rulebook
   status: draft
   sample: specdojo:cop-sample
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 87
-    graded_at: "2026-09-02T03:12:37.759Z"
-    graded_by: gemma-expert-executor
-    content_hash: 054ca644533d68996aaf901b8e4ea586e577c2af4774bad85f31552b89d39bf5
-    categories:
-      consistency: { score: 100 }
-      usability: { score: 83 }
-      architecture: { score: 100 }
-      quality: { score: 75 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 2, score: 50 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 2, minor: 0, note: 0 }
 ---
 
 # カットオーバー計画 作成ルール
@@ -35,8 +11,6 @@ specdojo:
 Cutover Plan (COP) Documentation Rules
 
 本ドキュメントは、カットオーバー計画（本番切替手順）の対象別ドキュメント `cop-<term>` を統一形式で記述するためのルールです。
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-qe-kata-conformance 指定されているサンプル `specdojo:cop-sample` が、本ルールブックで定義した必須構成（見出し10項目など）を遵守しておらず、成果物の完成例として不適切である。 -->
 
 全体方針と判断体系は `cop-index` を正とし、本書では対象固有の実行手順を定義します。
 
@@ -89,8 +63,6 @@ Frontmatter は共通スキーマに従います（参照: [docs/specdojo/schema
 | supersedes | 置き換え関係（ID配列。未指定は `[]` 可）     | 任意 |
 
 ### 4.2. 推奨ルール
-
-<!-- specdojo:finding id=F002 severity=major rule=vp-ux-language-consistency Frontmatterの `type` 定義（`migration`）と、サンプル内の記述（`project`）で値が不統一であり、どちらが正解か判別できない。 -->
 
 - `based_on` には切替判断に直接利用した成果物（例: `mip-index` / `mtp-index` / `dmd-*` / `issue-*`）のみ列挙する
 - `based_on` / `supersedes` は ID 配列（未指定は `[]` 可）

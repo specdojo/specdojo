@@ -6,30 +6,6 @@ specdojo:
   recipe: undecided
   sample: specdojo:imp-interface-sample
   template: undecided
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: pass
-    score: 96
-    graded_at: "2026-09-02T19:48:47.613Z"
-    graded_by: gemma-expert-executor
-    content_hash: bc52403c6a53f063207e336746a316f9057809814bcc8ecb7611a41b2b13aa07
-    categories:
-      consistency: { score: 88 }
-      usability: { score: 92 }
-      architecture: { score: 100 }
-      quality: { score: 100 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 3, score: 75 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 4, score: 100 }
-      vp-ux-readability: { level: 3, score: 75 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 2, note: 0 }
 ---
 
 # 影響調査（I/F）作成ルール
@@ -92,10 +68,6 @@ Impact Analysis (Interface) Rulebook
 | 6   | 未解決事項     | ○    | 意思決定待ちや調査不足を明示する              |
 
 ## 6. 記述ガイド
-
-<!-- specdojo:finding id=F001 severity=minor rule=vp-arc-cross-document-consistency ドキュメントIDを固定値 `imp-interface` としているが、プロジェクト固有のIDとなるよう `＜project-id＞:imp-interface` 形式で定義すべきである。 -->
-
-<!-- specdojo:finding id=F002 severity=minor rule=vp-ux-readability 推奨ファイル名の記述はあるが、作成者が適切に配置できるよう、推奨されるディレクトリパス（例: `docs/ja/projects/＜project-id＞/` 配下など）を明記すべきである。 -->
 
 ### 6.1. 目的と適用範囲
 

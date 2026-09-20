@@ -1,0 +1,82 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:prj-overview-recipe
+path: docs/ja/specdojo/recipes/prj-overview-recipe.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 80
+graded_at: "2026-09-04T18:32:04.714Z"
+graded_by: codex-expert-executor
+content_hash: 4aa02110d26564fa1200a6031bd9c54575e7e7cdaec4fe8b448511a19915456c
+categories:
+  consistency:
+    score: 75
+  usability:
+    score: 92
+  architecture:
+    score: 100
+  quality:
+    score: 63
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 2
+  minor: 2
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 196
+    message: 推奨表に具体的な「判定時期」と「初期仮説／確定値」の記入欄または記入指示がなく、本文177行目および仕上げチェック276行目の確認事項を表の適用だけでは判定できないため、これらを各指標へ記録できるようにする必要がある。
+    anchor: "推奨表（観点・指標・目標・測定方法を 1 行ずつ書く。下記は三つの時間軸の記入例）:"
+  - id: F002
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 214
+    message: >-
+      「前提条件」の問いと書き方が対象・対象外・判断責任・未決事項に偏り、rulebook と template
+      が要求する「変えない前提」「依存前提」「公開方針」「取捨選択方針」を成果物へ反映する問いと確認項目が欠けているため、各項目の記述手順を追加する必要がある。
+    anchor: "問い:"
+  - id: F003
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 214
+    message: >-
+      recipe-guided でも成果物を組み立てられるという Recipe 記述標準に対し、「前提条件」の問いが rulebook・template
+      の変えない前提、依存前提、公開方針、取捨選択方針を導出しないため、対応する問い・具体化手順・レビュー項目を追加する必要がある。
+    anchor: "問い:"
+  - id: F004
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 248
+    message: 第6章の「基本方針」は本文見出しおよび対応資料の「基本的な考え方」と表記が異なり、別の項目と誤読され得るため、正式な章名へ統一する必要がある。
+    anchor: "| 基本方針       | 高度な分析より日々の記録継続を優先する                                     | 使いやすく高機能にする       |"

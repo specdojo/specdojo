@@ -9,30 +9,6 @@ specdojo:
     - specdojo:prj-scope-sample
     - specdojo:prj-assumptions-constraints-dependencies-sample
   supersedes: []
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: pass
-    score: 96
-    graded_at: "2026-09-05T23:05:19.877Z"
-    graded_by: codex-expert-executor
-    content_hash: 4e1def71d6da3ca384100e604283fafbd03f02901417f7da6a1a1f6076c9b40c
-    categories:
-      consistency: { score: 100 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 88 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 3, score: 75 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 1, note: 0 }
 ---
 
 # プロジェクト課題と解決アプローチ: 駄菓子屋きぬや 販売管理システム
@@ -85,8 +61,6 @@ specdojo:
 | リスク       | 店主代表がタブレット操作に慣れず記録が止まる       | 操作メモを用意し、初期運用期間に確認する |
 
 ## 6. 次の検討事項（ToDo）
-
-<!-- specdojo:finding id=F001 severity=minor rule=vp-qe-kata-conformance line=54 次の検討事項（ToDo）の項目に、Recipe で指定された `_TODO_:` または `_UNDECIDED` ラベルが付与されていない。 -->
 
 | ToDo                                   | 目的                                 | 責任ロール |
 | -------------------------------------- | ------------------------------------ | ---------- |

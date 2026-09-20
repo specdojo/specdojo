@@ -1,0 +1,78 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:bac-rulebook
+path: docs/ja/specdojo/rulebooks/bac-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: pass
+score: 91
+graded_at: "2026-09-01T22:33:17.915Z"
+graded_by: gemma-expert-executor
+content_hash: 1a1db098c7daebe7d4218c433c57194ab7fab1c083c28927648b6806def19515
+categories:
+  consistency:
+    score: 88
+  usability:
+    score: 92
+  architecture:
+    score: 100
+  quality:
+    score: 88
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 4
+  note: 0
+findings:
+  - id: F002
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: recipe が undecided となっているため、作成手順を定義した recipe ファイルを整備し指定してください。
+    anchor: "# 業務受入条件 作成ルール"
+  - id: F003
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: template が undecided となっているため、標準骨組みを定義した template ファイルを整備し指定してください。
+    anchor: "# 業務受入条件 作成ルール"
+  - id: F001
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: 成果物の役割やライフサイクル上の位置づけ（トラック設計ガイドや成果物リファレンスとの関係）を明記する「位置づけ」節を追加してください。
+    anchor: "# 業務受入条件 作成ルール"
+  - id: F004
+    severity: minor
+    rule: vp-ux-readability
+    line: 1
+    message: 第9章の各サンプルの見出しレベル（H2/H3）と番号付けを統一してください。
+    anchor: "# 業務受入条件 作成ルール"

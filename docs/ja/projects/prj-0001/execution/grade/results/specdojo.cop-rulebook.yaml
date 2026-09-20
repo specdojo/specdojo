@@ -1,0 +1,66 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:cop-rulebook
+path: docs/ja/specdojo/rulebooks/cop-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 87
+graded_at: "2026-09-02T03:12:37.759Z"
+graded_by: gemma-expert-executor
+content_hash: 64b300df0091e976045a190daae19ba2078f1c9a9761d97e618d286913a2a98b
+categories:
+  consistency:
+    score: 100
+  usability:
+    score: 83
+  architecture:
+    score: 100
+  quality:
+    score: 75
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 2
+    score: 50
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 2
+  minor: 0
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: 指定されているサンプル `specdojo:cop-sample` が、本ルールブックで定義した必須構成（見出し10項目など）を遵守しておらず、成果物の完成例として不適切である。
+    anchor: "# カットオーバー計画 作成ルール"
+  - id: F002
+    severity: major
+    rule: vp-ux-language-consistency
+    line: 1
+    message: Frontmatterの `type` 定義（`migration`）と、サンプル内の記述（`project`）で値が不統一であり、どちらが正解か判別できない。
+    anchor: "# カットオーバー計画 作成ルール"

@@ -8,38 +8,6 @@ specdojo:
     - prj-0001:cdfd-task-execution
     - prj-0001:cdfd-overview
   supersedes: []
-  grade:
-    rubric: grade-rubric-v1
-    target: deliverable
-    verdict: needs-work
-    score: 75
-    graded_at: "2026-09-12T23:36:16.658Z"
-    graded_by: gemma-expert-executor
-    content_hash: da1677315afc69a241c75535d0f2b5a38862c57953d5ee4331c60d1874f1e5a4
-    categories:
-      consistency: { score: 38 }
-      usability: { score: 81 }
-      architecture: { score: 100 }
-      quality: { score: 83 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 1, score: 25 }
-      vp-arc-conciseness: { level: 3, score: 75 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-done-criteria: { level: 2, score: 50 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 2, score: 50 }
-      vp-ux-readability: { level: 3, score: 75 }
-      vp-ux-user-flow: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 3, score: 75 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-      vp-qe-config-validity: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 5, minor: 4, note: 0 }
-    done_criteria:
-      satisfied: 3
-      total: 4
-      unsatisfied:
-        DC-002: [ARC]
-      detail_ref: prj-0001:cdfd-agent-config-operation-grade-criteria
 ---
 
 # 概念データフロー図（agent・provider 構成の運用変更）: SpecDojo
@@ -77,11 +45,6 @@ specdojo:
 変更要求・実行問題を必ず評価するプロセス、変更が必要な場合に構成案を作成・承認するプロセス、承認後に設定を適用・検証するプロセスでは起動条件と参加者が異なるため、フローを三図に分ける。
 
 ### 4.1. 必須プロセスのフロー
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=47 上位の cdfd-overview は P-07 の起点を「運用構成の変更が承認された」と定義している一方, 本書は未承認の作業要件・実行問題から評価・承認までを P-07 内へ含めており, 継承すると宣言した領域境界が矛盾するため, overview または本書の起点と責務を統一する必要がある。 -->
-<!-- specdojo:finding id=F002 severity=major rule=vp-arc-cross-document-consistency line=69 cdfd-task-execution の P-07 への引き渡し情報には設定不整合が含まれていない一方, 本書は P-04 から設定不整合が報告されると定義しているため, 領域間インターフェースの項目を双方で一致させる必要がある。 -->
-<!-- specdojo:finding id=F007 severity=major rule=vp-qe-omissions-consistency line=47 上位 CDFD の P-07 は承認済み変更を起点とするのに, 本書は変更要否評価と承認を領域内プロセスとしており, rulebook が要求する上位領域境界の継承を満たしていない。 -->
-<!-- specdojo:finding id=F009 severity=minor rule=vp-ux-language-consistency line=69 正式な Role code である BA・PM・ARC・PO・QE と, task owner・セキュリティ確認者・構成承認者・設定管理者・実行管理者を同じ担当欄で併用しているが, pm-roles.yaml への参照や対応関係がないため, 公式 Role code へ統一するか対応を明示する必要がある。 -->
 
 ```mermaid
 flowchart LR
@@ -123,9 +86,6 @@ flowchart LR
 凡例: ノード形状・色・絵文字は [[prj-0001:cdfd-overview|概念データフロー図（全体概要）]] の「凡例（本プロダクト共通）」に従い、`-->` は情報の流れを表す。`P-02` と `P-04` は委譲先の代表ノードであり、内部処理は対象外とする。本図は現物の流れを扱わない。構成変更が必要な場合は `構成変更が必要と評価された` イベントを 4.2 の起点として引き渡す。
 
 ### 4.2. 構成案作成・承認のフロー（P-07-02〜P-07-04）
-
-<!-- specdojo:finding id=F004 severity=minor rule=vp-arc-conciseness line=123 4.1〜4.3 の凡例が委譲境界, 後続への引き渡し, 未承認・未検証構成の禁止を繰り返しているため, 共通記号と複数図間で同一となるノード・イベントの説明だけに絞る必要がある。 -->
-<!-- specdojo:finding id=F008 severity=minor rule=vp-ux-readability line=123 各図の凡例に記号説明だけでなく委譲・ゲート・後続条件が反復され, 業務規則の正本が一覧・適用範囲・例外表のどこかを判断しにくいため, 凡例を図の解釈に必要な情報へ限定する必要がある。 -->
 
 ```mermaid
 flowchart LR
@@ -294,8 +254,6 @@ flowchart LR
 
 ### 6.1. 主要例外
 
-<!-- specdojo:finding id=F005 severity=minor rule=vp-arc-conciseness line=250 5.2 と 5.3 のグループ要約が「変更が必要な場合だけ」「承認後」という起動条件を3章から再掲しているため, 各グループが扱う範囲の説明だけに整理する必要がある。 -->
-
 | 例外 ID | 対象プロセス         | 検出条件                                                                                                                                                                       | 本領域での扱い                                                                                                                                                                                 | 継続・再開条件                                                                                                       |
 | ------- | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
 | `E-01`  | `P-07-01`、`P-07-06` | phase が要求する mode・capability・proficiency・execution を満たす有効な member が存在せず、対象 task を安全に選択できない                                                     | 作業要件を暗黙に弱めず、対象 task の再実行を停止する。要件を直す案、能力を持つ member を追加する案、人間実行へ変更する案を分けて構成案へ差し戻す                                               | 要件と member 属性が整合し、必要な能力・熟練度・実行主体を満たす候補を選択でき、変更が再承認される                   |
@@ -312,6 +270,3 @@ flowchart LR
 | `P-02` [[prj-0001:cdfd-register-lifecycle\|登録簿ライフサイクル]] | 変更要求、承認判断、却下・留保、未解決リスク、再開条件の継続管理 | 変更目的、影響、代替案、安全性確認、承認結果、担当、再確認時期          | 判断と前提が確定し、構成案作成・再承認・変更終了のいずれかを選べる                |
 | `P-03` [[prj-0001:cdfd-catalog-planning\|カタログ〜計画展開]]     | 検証済み phase 要件から Schedule・Ready を再展開する             | 更新 strategy、検証結果、影響 track・成果物、再計画条件                 | 再展開後に capability 不足、参照不整合、実行不能が検出される                      |
 | `P-04` [[prj-0001:cdfd-task-execution\|タスク実行ライフサイクル]] | 検証済みの member・provider・権限で task を再選択・再実行する    | 利用可能な実行条件、member 候補、provider 方針、安全境界、再開対象 task | 選択失敗、provider 利用不能、設定不整合、権限超過、または新しい作業要件が発生する |
-
-<!-- specdojo:finding id=F003 severity=major rule=vp-arc-cross-document-consistency line=275 現行の exec-defaults.yaml は Codex のモデル・reasoning effort・sandbox や Copilot のモデル・tool 権限も管理しているが, 本表はモデルと edit／review 権限を provider 固有設定だけの責務としているため, 実設定および provider 別 SYSD に合わせて責務境界を修正する必要がある。 -->
-<!-- specdojo:finding id=F006 severity=major rule=vp-qe-done-criteria line=275 DC-002について, exec-defaults.yaml が実際に管理するモデル・sandbox・tool 権限が責務表から欠落し provider 固有設定へ誤配分されているため, 現行正本と整合する変更責務および相互参照を示す必要がある。 -->

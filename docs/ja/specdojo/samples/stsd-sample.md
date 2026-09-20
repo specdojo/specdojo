@@ -6,30 +6,6 @@ specdojo:
   rulebook: specdojo:stsd-rulebook
   based_on:
     - specdojo:sample-authoring-standard
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 68
-    graded_at: "2026-09-19T21:34:35.714Z"
-    graded_by: codex-expert-executor
-    content_hash: 20239dc878640b0c2778d519ff0601a0cf14afa23b361930dfa10dd28000a01e
-    categories:
-      consistency: { score: 50 }
-      usability: { score: 83 }
-      architecture: { score: 100 }
-      quality: { score: 50 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 2, score: 50 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 2, score: 50 }
-      vp-qe-omissions-consistency: { level: 2, score: 50 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 3, score: 75 }
-      vp-ux-language-consistency: { level: 3, score: 75 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 4, minor: 3, note: 0 }
 ---
 
 # 商品のステータス定義
@@ -44,12 +20,6 @@ specdojo:
 
 ## 2. 状態一覧
 
-<!-- specdojo:finding id=F002 severity=minor rule=vp-arc-cross-document-consistency line=19 返品経路では「返品記録」を条件にしている一方、概要、管理場所、`T-05` の補足では「仕入記録」を正本としているため、返品記録が仕入記録の一部であることを明記するか正本名称を統一してください。 -->
-<!-- specdojo:finding id=F003 severity=major rule=vp-qe-verifiability line=15 「入荷済み」の受領事実は販売後や返品後も成立し、「販売可能」は販売後も、「返品待ち」は返品後も成立し続けるため、現在の記録状態を示す条件、後続状態の除外条件、または優先順位を追加して各商品が同時に一状態だけへ該当するよう修正してください。 -->
-<!-- specdojo:finding id=F004 severity=major rule=vp-qe-omissions-consistency line=15 状態の成立条件が重複した場合の排他条件または優先関係が定義されておらず、rulebook の完成判定を満たせないため、状態一覧または概要へ一意判定規則を追加してください。 -->
-<!-- specdojo:finding id=F005 severity=major rule=vp-qe-kata-conformance line=15 完成例である sample が、累積して重複する成立条件と遷移先を成立させない遷移条件を正例として示しているため、rulebook の完成判定を満たす排他的な状態条件と整合する遷移条件へ修正してください。 -->
-<!-- specdojo:finding id=F006 severity=minor rule=vp-ux-readability line=19 「返品記録」が概要で示した正本の「仕入記録」と別の記録か、その一部かを判断できないため、関係を説明するか「仕入記録」に統一してください。 -->
-<!-- specdojo:finding id=F007 severity=minor rule=vp-ux-language-consistency line=19 返品済みの成立条件と `T-05` の条件にある「返品記録」を、管理場所と補足で使う「仕入記録」と統一するか、両者の包含関係を用語として定義してください。 -->
 | 値             | 状態名   | 通称     | 意味                                         | 成立条件                                               | 管理場所             |
 | -------------- | -------- | -------- | -------------------------------------------- | ------------------------------------------------------ | -------------------- |
 | received       | 入荷済み | 入った品 | 店舗が納品を受け、検品結果が未確定の商品     | 納品情報を発注内容へ照合し、店舗で商品を受け取った     | 仕入記録、検品場所   |
@@ -60,7 +30,6 @@ specdojo:
 
 ## 3. 状態遷移図
 
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=25 `T-01` は商品の受領を確認せず「納品情報と発注内容を対応付けた」だけで「入荷済み」へ遷移でき、`T-03` も返品対象の仕入記録への記録前に「返品待ち」へ遷移できるため、各遷移条件を遷移先の成立条件が確実に成立する内容へ揃えてください。 -->
 ```mermaid
 stateDiagram-v2
   [*] --> 入荷済み : 入荷受入 / 納品情報と発注内容を対応付けた

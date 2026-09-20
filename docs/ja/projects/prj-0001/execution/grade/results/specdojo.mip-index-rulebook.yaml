@@ -1,0 +1,66 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:mip-index-rulebook
+path: docs/ja/specdojo/rulebooks/mip-index-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 91
+graded_at: "2026-09-02T21:15:34.356Z"
+graded_by: gemma-expert-executor
+content_hash: 123a4da38aa1faf4ed0fcb32ef9208e81485245eb52bae4a940d6eb7e6e2f4a5
+categories:
+  consistency:
+    score: 100
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 75
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 1
+  minor: 1
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: 参照先のサンプル `docs/ja/specdojo/samples/mip-index-sample.md` が、本書で定義した必須構成（1〜9章の順序固定）および命名規則に従っておらず、著者に誤読を招く。
+    anchor: "# 移行計画 作成ルール"
+  - id: F002
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: ルール内のサンプルにおける Frontmatter の `type` が `project` となっており、4.1 節の規定（`migration` 固定）と矛盾している。
+    anchor: "# 移行計画 作成ルール"

@@ -1,0 +1,60 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:prj-issues-and-approach-template
+path: docs/ja/specdojo/templates/prj-issues-and-approach-template.md
+target: kata
+rubric: grade-rubric-v1
+verdict: pass
+score: 96
+graded_at: "2026-09-10T16:57:03.791Z"
+graded_by: codex-expert-executor
+content_hash: 597049d71afff504334d9179c6d322717d37a26a31dcff5d4350c0c6bafb3cbd
+categories:
+  consistency:
+    score: 100
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 88
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 1
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 59
+    message: Recipe で指定された `_TODO_:` または `_UNDECIDED` ラベルを項目先頭に付与するよう、ガイドラインに追記する。
+    anchor: "_TODO_: 追加調査・確認・承認が必要な事項と責任ロールを記述する。任意章のため不要なら削除する。"

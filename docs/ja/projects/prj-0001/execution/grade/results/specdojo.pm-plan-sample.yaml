@@ -1,0 +1,108 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:pm-plan-sample
+path: docs/ja/specdojo/samples/pm-plan-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 68
+graded_at: "2026-09-09T15:55:32.496Z"
+graded_by: gemma-expert-executor
+content_hash: d7ffe63f7c636e8a02f1689b7635a24f5ddc9804d892a5b7bfd58d085abb9f43
+categories:
+  consistency:
+    score: 38
+  usability:
+    score: 92
+  architecture:
+    score: 100
+  quality:
+    score: 50
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 1
+    score: 25
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-qe-kata-conformance:
+    level: 1
+    score: 25
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 5
+  minor: 4
+  note: 0
+findings:
+  - id: F007
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 27
+    message: 現金支出、作業時間、運用負荷を区別して管理する規則 (6.2) が適用されず、「参加者の時間」に混在している。
+    anchor: ""
+  - id: F002
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 35
+    message: 判断ゲートの条件に成功基準等の ID（SC-01等）による参照がなく、正本との追跡可能性が欠如している。
+    anchor: "| 品質結果                 | レビュー・試験記録     | 各判断ゲート前         | QE、PO     |"
+  - id: F003
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 35
+    message: 判断条件が総称的であり、具体的にどの項目で pass/fail を判定するかが不明確である。
+    anchor: "| 品質結果                 | レビュー・試験記録     | 各判断ゲート前         | QE、PO     |"
+  - id: F006
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 35
+    message: 判断ゲートにおいて条件 ID を参照せず総称で記載しており、rulebook (6.3) に違反している。
+    anchor: "| 品質結果                 | レビュー・試験記録     | 各判断ゲート前         | QE、PO     |"
+  - id: F009
+    severity: minor
+    rule: vp-ux-readability
+    line: 35
+    message: 判断ゲートの条件が抽象的であり、参照先を即座に特定できないため、可読性が低い。
+    anchor: "| 品質結果                 | レビュー・試験記録     | 各判断ゲート前         | QE、PO     |"
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 46
+    message: 正本表に RACI が含まれておらず、責任の正本が不明確である。
+    anchor: ""
+  - id: F004
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 46
+    message: 正本表に RACI が欠落している。
+    anchor: ""
+  - id: F005
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 55
+    message: 未決事項表に template で定義されている「現状」列が欠落している。
+    anchor: ""
+  - id: F008
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 57
+    message: "未決事項に _UNDECIDED_: ラベルが付与されておらず、rulebook (6.5) に違反している。"
+    anchor: ""

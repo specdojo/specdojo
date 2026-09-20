@@ -8,38 +8,6 @@ specdojo:
     - tsd-index
   based_on:
     - tsd-ollama
-  grade:
-    rubric: grade-rubric-v1
-    target: deliverable
-    verdict: needs-work
-    score: 84
-    graded_at: "2026-09-14T00:52:34.197Z"
-    graded_by: gemma-expert-executor
-    content_hash: 6a2e8a914c823d523d7a196b491bdce4f73bed40bda70d055f7f15823711f4cd
-    categories:
-      consistency: { score: 100 }
-      usability: { score: 75 }
-      architecture: { score: 100 }
-      quality: { score: 67 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-done-criteria: { level: 2, score: 50 }
-      vp-qe-verifiability: { level: 2, score: 50 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-ux-readability: { level: 2, score: 50 }
-      vp-ux-user-flow: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 2, score: 50 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-      vp-qe-config-validity: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 4, minor: 0, note: 0 }
-    done_criteria:
-      satisfied: 4
-      total: 5
-      unsatisfied:
-        DC-004: [QE]
-      detail_ref: tsd-ollama-opencode-grade-criteria
 ---
 
 # Ollama の opencode 接続定義
@@ -181,8 +149,3 @@ Host Mac 側で Ollama が停止していると、devcontainer からの接続�
 ## 7. 参照
 
 - [tsd-ollama](tsd-ollama.md)
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-qe-done-criteria line=141 検証用コマンドのモデル名に誤記があり、完了条件 DC-004 を十分に満たしていない。 -->
-<!-- specdojo:finding id=F002 severity=major rule=vp-qe-verifiability line=141 検証用コマンドのモデル名 (`gemma4:e4b-light-8k`) が, 4.2節で定義したモデル名 (`gemma4:e4b-mlx-light-8k`) と不整合であり、そのままでは動作しない。 -->
-<!-- specdojo:finding id=F003 severity=major rule=vp-ux-readability line=141 検証用コマンドのモデル名に誤記があり、正しく疎通確認が行えないため, 読者に誤解を招く。 -->
-<!-- specdojo:finding id=F004 severity=major rule=vp-ux-language-consistency line=141 4.2節で定義した `gemma4:e4b-mlx-light-8k` と、109行目の `gemma4:e4b-light-8k` で表記が揺れており、不整合が生じている。 -->

@@ -14,30 +14,6 @@ specdojo:
     - specdojo:opr-monitoring-sample
     - specdojo:opr-support-sample
   template: specdojo:opr-template
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 86
-    graded_at: "2026-09-03T01:24:01.614Z"
-    graded_by: gemma-expert-executor
-    content_hash: 0b9c37a944764d8fbab454a9455c34150e57888fb0d3edbf988919685bd2d0cd
-    categories:
-      consistency: { score: 75 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 75 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 2, score: 50 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 2, minor: 0, note: 0 }
 ---
 
 # 運用手順 作成ルール
@@ -113,8 +89,6 @@ Frontmatter は共通スキーマに従います（参照: [docs/specdojo/schema
 ## 5. 本文要件
 
 本文の見出し順と記入欄の骨組みは Frontmatter で宣言した template を正本とし、本章では各章の目的と必須性だけを定めます。
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency Frontmatter の定義表に `rulebook` 項目が欠落しており、`opr-template.md` の定義と矛盾している。 -->
 
 - 概要、適用範囲・前提、定期点検、障害対応、アラート対応、バックアップ・リストア、バッチ再実行、運用変更、アカウント付与・剥奪、問い合わせ一次対応、証跡、関連文書導線を必須とします。
 - 各章は、実施条件、実施者、判断条件、完了条件、証跡のうち該当する要素を第三者が再現できる粒度で定義します。
@@ -287,8 +261,6 @@ supersedes: []
 
 | 頻度 | 手順 | 実施者 | 完了条件 | 証跡 |
 | ---- | ---- | ------ | -------- | ---- |
-
-<!-- specdojo:finding id=F002 severity=major rule=vp-qe-kata-conformance 内部サンプル（8.1 〜 8.8）の Frontmatter で `rulebook` 指定が漏れており、テンプレートの定義と不整合である。 -->
 
 | 日次 | 監視ダッシュ確認 | Ops当番 | P1相当の異常がない、または起票済み | 日次チェックシート |
 | 週次 | 主要アラートの誤検知レビュー | Ops Lead | 誤検知が棚卸し済み | 週次レビュー記録 |

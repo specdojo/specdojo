@@ -5,30 +5,6 @@ specdojo:
   status: draft
   sample: specdojo:tsd-sample
   template: not-needed
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 91
-    graded_at: "2026-09-03T13:53:18.825Z"
-    graded_by: gemma-expert-executor
-    content_hash: 26123bbc3f8452cf6afd26d4a96d9f5ee8337c526b7b8a958345b8898d482074
-    categories:
-      consistency: { score: 100 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 75 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 1, minor: 0, note: 0 }
 ---
 
 # 特定領域 技術スタック詳細定義（TSD）作成ルール
@@ -36,8 +12,6 @@ specdojo:
 Domain-Specific Technology Stack Definition (TSD) Documentation Rules
 
 `tsd-<term>.md` は、特定の技術領域（例: ローカル LLM、CI/CD、DB）の **詳細設定・構成・セットアップ手順** を定義するドキュメントである。`tsd-index.md` が全体インベントリの入口であるのに対し、`tsd-<term>.md` は1つの技術領域に絞った詳細情報を提供する。
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-qe-kata-conformance 指定されている sample (specdojo:tsd-sample) が「技術スタック一覧（インデックス）」の構成となっており、本ルールブックが定義する「特定領域詳細定義」の記述ルールや Frontmatter 必須項目を全く反映していないため。 -->
 
 ## 1. 全体方針
 

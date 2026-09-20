@@ -1,0 +1,72 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:pm-change-request-log-template
+path: docs/ja/specdojo/templates/pm-change-request-log-template.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 81
+graded_at: "2026-09-10T07:44:04.973Z"
+graded_by: gemma-expert-executor
+content_hash: 299496596264acadbe5a362a6ecab73a4e2e4695505402a98048dccd5502e288
+categories:
+  consistency:
+    score: 50
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 75
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 3
+  minor: 0
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 13
+    message: rulebook に指定されている ID が `specdojo:pjr-rulebook` となっており、専用の `specdojo:pm-change-request-log-rulebook` と不整合である。
+    anchor: ""
+  - id: F002
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 44
+    message: ルールブックで定義されている必須 6 章（概要〜関連ドキュメント）が不足しており、表スロットのみの構成となっているため、標準構成と矛盾している。
+    anchor: ""
+  - id: F003
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 42
+    message: 本テンプレートが前提とする「個票からの派生ビュー（生成物）」という性質が、ルールブックで定義されている手動作成ルールと矛盾している。
+    anchor: ""

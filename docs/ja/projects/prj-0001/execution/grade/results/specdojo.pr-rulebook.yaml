@@ -1,0 +1,84 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:pr-rulebook
+path: docs/ja/specdojo/rulebooks/pr-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: pass
+score: 91
+graded_at: "2026-09-03T05:49:11.261Z"
+graded_by: gemma-expert-executor
+content_hash: b9d5579d9ecb726f94a36b3a1378c4e4e64df38ba17e93e87ba6dd78dcb0c669
+categories:
+  consistency:
+    score: 88
+  usability:
+    score: 92
+  architecture:
+    score: 100
+  quality:
+    score: 88
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 4
+    score: 100
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 5
+  note: 0
+findings:
+  - id: F004
+    severity: minor
+    rule: vp-ux-readability
+    line: 1
+    message: 位置づけにおいて、報告のサイクル（頻度）および想定読者を明記し、運用の目的を明確にすることを推奨する。
+    anchor: "# 進捗報告 作成ルール"
+  - id: F002
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: "ファイル命名規則だけでなく、推奨される配置ディレクトリ（例: `docs/ja/projects/＜project-id＞/progress-reports/`）を明記することを推奨する。"
+    anchor: "# 進捗報告 作成ルール"
+  - id: F003
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: 推奨 Frontmatter 項目表に、適用ルールを明示するための `rulebook` 項目を追加することを推奨する。
+    anchor: "# 進捗報告 作成ルール"
+  - id: F001
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 1
+    message: 記述ガイドにおいて、完了事項やリスクなどの報告における「根拠」として具体的に何を提示すべきか（成果物ID、定量値など）の基準を明記することを推奨する。
+    anchor: "# 進捗報告 作成ルール"
+  - id: F005
+    severity: minor
+    rule: vp-ux-readability
+    line: 1
+    message: 記述ガイドにおいて、各項目の書き方のポイントや、避けるべき具体例などを詳細に記述し、作成者の迷いを減らす工夫をすることを推奨する。
+    anchor: "# 進捗報告 作成ルール"

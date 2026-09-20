@@ -5,30 +5,6 @@ specdojo:
   status: ready
   rulebook: specdojo:pm-communication-plan-rulebook
   sample: specdojo:pm-communication-plan-sample
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 89
-    graded_at: "2026-09-04T13:48:35.997Z"
-    graded_by: gemma-expert-executor
-    content_hash: 9d57817f113d6c6cc28d94a7e0c5ef79aedbbc54d7ff433ecd4bc3b303d8a2cb
-    categories:
-      consistency: { score: 75 }
-      usability: { score: 92 }
-      architecture: { score: 100 }
-      quality: { score: 88 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 3, score: 75 }
-      vp-qe-omissions-consistency: { level: 2, score: 50 }
-      vp-qe-kata-conformance: { level: 4, score: 100 }
-      vp-ux-readability: { level: 3, score: 75 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 1, minor: 3, note: 0 }
 ---
 
 # コミュニケーション計画 作成レシピ
@@ -97,8 +73,6 @@ Communication Plan Writing Recipe
 3. 証跡のない会議や報告を削除します。
 4. 日常課題を登録簿へ移します。
 
-<!-- specdojo:finding id=F003 severity=minor rule=vp-ux-readability line=68 各章の書き方に「問い」と「具体例（良い例/悪い例）」を導入し、作成者が判断に迷わない具体性を確保してほしい。 -->
-
 ## 6. 良い例 / 悪い例
 
 | 観点 | 良い例                                   | 悪い例                   |
@@ -121,7 +95,3 @@ Communication Plan Writing Recipe
 - 関係者一覧やRole code定義を再掲していない。
 - Agentに合意・承認を委ねていない。
 - 各コミュニケーション機会が、元の判断・情報要求と結果の証跡に対応している。
-
-<!-- specdojo:finding id=F001 severity=minor rule=vp-qe-verifiability line=114 レビュー観点における判定基準を具体化し、何を根拠に pass/fail を判断するかを明記してほしい。 -->
-<!-- specdojo:finding id=F002 severity=major rule=vp-qe-omissions-consistency line=96 「各章の書き方」に、ルールブックの内容に基づいた「4.5. 見直し条件と未決事項」の記述ガイドを追加してほしい。 -->
-<!-- specdojo:finding id=F004 severity=minor rule=vp-ux-readability line=114 レビュー観点を表形式にし、「観点」と「確認内容（判定基準）」を明確に分けて記述してほしい。 -->

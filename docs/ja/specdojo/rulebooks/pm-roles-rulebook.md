@@ -9,30 +9,6 @@ specdojo:
   template: specdojo:pm-roles-template
   based_on:
     - specdojo:people-and-organization-definition-standard
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 77
-    graded_at: "2026-09-03T05:34:59.058Z"
-    graded_by: codex-expert-executor
-    content_hash: 0c827cbcd63a2d54b08922bcd8a5b0ee08880895d3c0d43cbdb644d2a5bdda18
-    categories:
-      consistency: { score: 50 }
-      usability: { score: 83 }
-      architecture: { score: 100 }
-      quality: { score: 75 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 2, score: 50 }
-      vp-arc-conciseness: { level: 3, score: 75 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 2, score: 50 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 3, score: 75 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 3, minor: 4, note: 0 }
 ---
 
 # プロジェクトロール定義 作成ルール
@@ -44,8 +20,6 @@ Project Role Definition Documentation Rulebook
 ## 1. 全体方針
 
 - `pm-roles.yaml` には、プロジェクトで使用する全 Role code を記載する。現時点で専任 member が存在しない Role code も、Schedule の `owner` 語彙として必要なら含める。
-
-<!-- specdojo:finding id=F005 severity=major rule=vp-qe-omissions-consistency 上位標準では `PO` が最低限の必須 Role code だが、本行は8コードから任意に選べるように読めるため、`roles` に `PO` を必須とする条件を明記しなければ最終判断主体を欠く成果物を許してしまう。 -->
 
 - 標準 Role code は `PO`, `PM`, `BA`, `ARC`, `DEV`, `QE`, `UX`, `OPS` を基本セットとし、プロジェクト内で採用する責務語彙をこの集合から選ぶ。
 - Role code の共通定義・責務・規模別パターンは上位標準を参照し、本ファイルに再掲しない。
@@ -62,8 +36,6 @@ Project Role Definition Documentation Rulebook
 | 文書                 | 役割                                           | 正本とする内容                         |
 | -------------------- | ---------------------------------------------- | -------------------------------------- |
 | `pm-organization.md` | ロール・メンバー構成の方針と設計根拠を記述する | 採用方針、最終判断の集約先、見直し条件 |
-
-<!-- specdojo:finding id=F002 severity=minor rule=vp-arc-cross-document-consistency 本行は `pm-roles.yaml` を `owner` 語彙の正本とするが、`based_on` の人と組織の定義標準は採用 Role code と使用可能な `owner` を `pm-organization.md` の管理対象としているため、正本と machine-readable な転記先の関係を両文書で統一する必要がある。 -->
 
 | `pm-roles.yaml` | 採用した Role code を machine-readable な YAML として一覧化する | `owner` 語彙、Role code 名、プロジェクト固有メモ |
 | `pm-members.yaml` | 実行主体と対応する Role code の対応を管理する | member nickname、agent、人間、兼務割り当て |
@@ -98,18 +70,12 @@ YAML 成果物のため、Markdown Frontmatter ではなく YAML 先頭のメタ
 | `status` | `draft` / `ready` / `deprecated`         | ○    |
 | `title`  | ドキュメント名。表示ページの見出しになる | ○    |
 
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency `rulebook` は schema の必須キーで sample・template にも存在する一方、対応 recipe が schema 非許可キーとして追加を禁止しているため、recipe の手順と悪い例を本行および schema に合わせて修正しなければ生成物が schema 不適合になる。 -->
-
 | `rulebook` | `specdojo:pm-roles-rulebook` 固定 | ○ |
 | `based_on` | 根拠ドキュメント ID の配列 | 任意 |
 | `version` | データバージョン。初期値は `1` | ○ |
 | `project_id` | プロジェクト ID | ○ |
 
 schema に定義されていないメタ項目は `pm-roles.yaml` には追加しない。
-
-<!-- specdojo:finding id=F003 severity=minor rule=vp-arc-conciseness 第5章の `id` から `project_id` までの表は第4章のメタ項目表と重複するため, メタ項目は第4章へ一本化し、第5章は `roles` のルート要件だけに絞る必要がある。 -->
-<!-- specdojo:finding id=F006 severity=major rule=vp-qe-kata-conformance 対応 recipe が本章の構造・必須キー・禁止事項を独自に再定義し、特に必須の `rulebook` を禁止しているため、recipe は問いと作成手順に責務を限定し、本 rulebook・schema と矛盾しない内容へ修正する必要がある。 -->
-<!-- specdojo:finding id=F007 severity=minor rule=vp-ux-readability 第4章とほぼ同じメタ項目表を再掲しているため、第5章を `roles` 固有のルート構造と配列要件に絞り、初見の読者が主要な判断点へ直接進める構成にする必要がある。 -->
 
 ## 5. 本文構成（標準テンプレ）
 
@@ -144,8 +110,6 @@ schema に定義されていないメタ項目は `pm-roles.yaml` には追加�
 - 標準 Role code のみを使用し、プロジェクト固有の独自コードを追加しない。
 - `roles[].code` は重複させない。
 - 専任 member がいない Role code でも、Schedule の `owner`、RACI、レビュー観点、下流文書で責務語彙として使う場合は残す。
-
-<!-- specdojo:finding id=F004 severity=minor rule=vp-arc-conciseness `roles[].code` 節の標準コード限定・独自コード禁止は直前の `roles` 節と重複するため、配列全体の規則と各 code 値の規則を分担させて反復を除く必要がある。 -->
 
 ### 6.2. `roles[].code`
 

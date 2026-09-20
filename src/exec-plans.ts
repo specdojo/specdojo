@@ -26,6 +26,7 @@ import type { Approach, ExecPlanMeta, ReadyTaskView, TaskMode, TaskOrigin } from
 import type { CriteriaItem, DctDeliverableItem, DctDoc, DctSection } from "./catalog-types.js";
 import type { CoverageType, ReviewViewpoint } from "./review-types.js";
 import type { RoleDefinition, RolesDoc } from "./role-types.js";
+import { readGradeResultForDocument } from "./grade-result.js";
 
 // ---------------------------------------------------------------------------
 // Internal types
@@ -331,6 +332,36 @@ function deliverablePath(deliverable: DeliverableInfo | null): string {
 
 function deliverableName(deliverable: DeliverableInfo | null): string {
   return deliverable?.deliverable.name ?? MISSING;
+}
+
+function gradeFindingsText(projectId: string, targetPath: string): string {
+  if (!targetPath || targetPath === MISSING || !existsSync(join(specdojoRootDir(), targetPath))) {
+    return "- なし";
+  }
+  try {
+    const result = readGradeResultForDocument({ documentPath: targetPath, project: projectId });
+    if (!result || result.findings.length === 0) return "- なし";
+    return result.findings
+      .map(
+        (finding) =>
+          `- ${finding.id} [${finding.severity}/${finding.rule}; line=${finding.line}; anchor=${JSON.stringify(finding.anchor)}]: ${finding.message}`,
+      )
+      .join("\n");
+  } catch {
+    return "- なし";
+  }
+}
+
+function gradeFindingTargetPath(
+  approach: Approach | undefined,
+  deliverable: DeliverableInfo | null,
+  refs: KataRefs,
+): string {
+  if (approach === "rulebook-maintenance") return refs.rulebook;
+  if (approach === "recipe-maintenance") return refs.recipe;
+  if (approach === "sample-maintenance") return refs.sample;
+  if (approach === "template-maintenance") return refs.template;
+  return deliverablePath(deliverable);
 }
 
 // plan に表示する実践の型の状態。宣言からパスを解決できたがファイルが無い場合と、
@@ -894,6 +925,10 @@ function buildEditPlanMarkdown(
     _DONE_CRITERIA_GOALS_: doneCriteriaGoals(criteria, task.owner),
     _DONE_CRITERIA_CHECKLIST_: doneCriteriaChecklist(criteria),
     _DONE_CRITERIA_ITEMS_: doneCriteriaItems(criteria),
+    _GRADE_FINDINGS_: gradeFindingsText(
+      projectId,
+      gradeFindingTargetPath(task.approach, deliverable, refs),
+    ),
     _TARGET_DELIVERABLES_: crossDeliverableTargetDetails(
       projectId,
       task.target_local_ids ?? [],

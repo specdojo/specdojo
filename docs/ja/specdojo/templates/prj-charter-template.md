@@ -13,30 +13,6 @@ specdojo:
         - _PROJECT_ID_:prj-overview
         - _PROJECT_ID_:prj-stakeholder-register
       supersedes: []
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: pass
-    score: 98
-    graded_at: "2026-09-06T13:26:47.141Z"
-    graded_by: gemma-expert-executor
-    content_hash: c2c4fde13a4582411718ec60f4389d856ba02e89183d280c97b661bd1307e463
-    categories:
-      consistency: { score: 88 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 100 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 3, score: 75 }
-      vp-qe-kata-conformance: { level: 4, score: 100 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 2, note: 0 }
 ---
 
 # プロジェクト憲章: _PROJECT_NAME_

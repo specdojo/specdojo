@@ -41,9 +41,13 @@ _OWNER_ROLE_VIEWPOINTS_
 
 参照の向きを「成果物 → rulebook」に切り替え、対象成果物に紐づく rulebook を「見直す対象」として編集する。根拠となる成果物・review result・対象領域の慣行に加え、finding が指す規範も実際に読み込んだうえで判断する。読み込まずに記憶や推測で代替しない。
 
+### grade result から展開された finding
+
+_GRADE_FINDINGS_
+
 1. 見直し対象の rulebook を読み込み、現状の章構成・必須項目・禁止事項・判定基準を把握する。
-2. 対象 rulebook に `specdojo.grade` と `specdojo:finding` がある場合は、severity にかかわらず、各 finding の message と同じ viewpoint ID の判定根拠を修正要件として読み取る。message と判定根拠から指摘の根拠となる規範を特定し、対象 rulebook の frontmatter から辿れる recipe / sample / template、`併せて適用する rulebook`、該当する執筆標準のうち必要な文書を読み、指摘された問題を解消するよう該当箇所を修正する。finding コメントの削除だけを修正として扱わない。
-3. 修正後、各 finding の問題が判定根拠に照らして解消したことを確認し、解消を確認できた finding コメントだけを削除する。未解消、根拠不足、または判断不能の finding コメントは残し、理由と次のアクションを result の `進め方と実践の型の適用` セクションに記録する。この「修正 → 確認 → 削除」の順序を変えない。
+2. plan に展開された finding は severity にかかわらず、message と同じ viewpoint ID の判定根拠を修正要件として読み取る。message と判定根拠から指摘の根拠となる規範を特定し、対象 rulebook の frontmatter から辿れる recipe / sample / template、`併せて適用する rulebook`、該当する執筆標準のうち必要な文書を読み、指摘された問題を解消するよう該当箇所を修正する。
+3. 修正後、各 finding の問題が判定根拠に照らして解消したことを確認する。未解消、根拠不足、または判断不能の finding は、理由と次のアクションを result の `進め方と実践の型の適用` セクションに記録する。grade result サイドカーは再評価時に更新されるため、本タスクでは直接編集しない。
 4. 複数の成果物・review result・対象領域の慣行を根拠に、それらが成果物の実態と合っているかを見直す。
 5. 成果物側で繰り返し守られていない規定は、規定が過剰なのか成果物側の不備なのかを判断し、根拠とともに rulebook へ反映するか result に記録する。
 6. 既存記述のうち、根拠と整合しない・陳腐化したものは見直し、整合するものは維持する。

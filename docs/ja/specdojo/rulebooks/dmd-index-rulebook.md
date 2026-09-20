@@ -6,30 +6,6 @@ specdojo:
   recipe: undecided
   sample: specdojo:dmd-index-sample
   template: undecided
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 93
-    graded_at: "2026-09-02T16:18:52.722Z"
-    graded_by: gemma-expert-executor
-    content_hash: e5764058b2613da08652d59d3873c9e9127b6d56392949be528003d6a2b91cad
-    categories:
-      consistency: { score: 75 }
-      usability: { score: 92 }
-      architecture: { score: 100 }
-      quality: { score: 100 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 2, score: 50 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 4, score: 100 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 3, score: 75 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 1, minor: 1, note: 0 }
 ---
 
 # データ移行設計 作成ルール
@@ -90,8 +66,6 @@ Data Migration Design Documentation Rules
 
 ### 6.2. 共通方針（抽出/変換/除外/冪等性/ログ）
 
-<!-- specdojo:finding id=F002 severity=minor rule=vp-ux-language-consistency ID規則において、プロジェクトIDを含む具体的な命名パターン（例: ＜project-id＞:dmd-index）が明示されていない。 -->
-
 - 抽出（フル/増分）の採用方針と増分基準を定義する。
 - 変換/除外の原則（再実行で同一結果）と根拠リンクの方針を定義する。
 - 冪等性とログ要件（最低限残す項目）を定義する。
@@ -99,8 +73,6 @@ Data Migration Design Documentation Rules
 ### 6.3. run_id 規約（命名/採番/記録/参照方法）
 
 - 命名規則（例: `DMD-YYYYMMDD-<term>-NN`）と採番方法を定義する。
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency Frontmatter の type, title, id の定義が、対応するサンプル成果物 dmd-index-sample.md と矛盾している。 -->
 
 - run_id をログ/投入データ/照合レポートに紐づける。
 

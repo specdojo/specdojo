@@ -1,0 +1,78 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:pm-change-request-log-rulebook
+path: docs/ja/specdojo/rulebooks/pm-change-request-log-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 80
+graded_at: "2026-09-03T02:28:49.015Z"
+graded_by: gemma-expert-executor
+content_hash: b65cfcc30036ebd04e48e64af1e9e54aa87689a40cf7cf4f8995d90cd9494cb2
+categories:
+  consistency:
+    score: 75
+  usability:
+    score: 92
+  architecture:
+    score: 100
+  quality:
+    score: 63
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 2
+  minor: 2
+  note: 0
+findings:
+  - id: F002
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: テンプレート側で指定されている rulebook-id (`specdojo:pjr-rulebook`) と本ルールの ID が不整合である。
+    anchor: "# 変更要求ログ 作成ルール"
+  - id: F003
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: テンプレートが「生成された派生ビュー」を前提としているのに対し、本ルールは手動での「作成ルール」を定義しており、成果物の性質と生成プロセスが矛盾している。
+    anchor: "# 変更要求ログ 作成ルール"
+  - id: F004
+    severity: minor
+    rule: vp-ux-readability
+    line: 1
+    message: 「位置づけ」がドキュメント名の列挙に留まっており、他文書との関係性や参照タイミングなどのコンテキストが不足している。
+    anchor: "# 変更要求ログ 作成ルール"
+  - id: F001
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 1
+    message: 記述ガイドが項目の列挙に留まっており、「判定可能な形」にするための具体的な書き方や基準が示されていない。
+    anchor: "# 変更要求ログ 作成ルール"

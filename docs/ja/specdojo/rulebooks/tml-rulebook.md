@@ -9,30 +9,6 @@ specdojo:
   template: not-needed
   based_on:
     - specdojo:rulebook-authoring-standard
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 68
-    graded_at: "2026-09-03T12:47:03.387Z"
-    graded_by: codex-expert-executor
-    content_hash: 2bcb13a5deb3118da6e699946b433d7d89aa32cf52d3bcbd8a5d718e553b8ff5
-    categories:
-      consistency: { score: 50 }
-      usability: { score: 83 }
-      architecture: { score: 100 }
-      quality: { score: 50 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 2, score: 50 }
-      vp-arc-conciseness: { level: 3, score: 75 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 2, score: 50 }
-      vp-qe-omissions-consistency: { level: 2, score: 50 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 3, score: 75 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 4, minor: 2, note: 0 }
 ---
 
 # タイムライン作成ルール
@@ -41,8 +17,6 @@ Timeline Documentation Rules
 
 本ドキュメントは、Timeline（`tml-index.yaml`）を一貫した粒度と命名で作成・更新するためのルールです。
 Timeline は「どのトラックを、どの順で、いつ着手するか」というマクロな順序を**人間が着手前に決めて記録する計画層**であり、成果物カタログ作成からトラック実行までの見通しを 1 ファイルで表します。
-
-<!-- specdojo:finding id=F006 severity=minor rule=vp-ux-readability 構造の schema とトラック設計ガイドだけでなく、`timeline build` の生成フロー、検証、更新タイミングを説明する `specdojo:timeline-design-guide` を次に読む文書として案内する。 -->
 
 本書は命名・ID 規則と schema で表現できない記述規範を定義し、構造・必須キーは schema を、トラックの標準構成と実行順序の考え方は [[specdojo:track-design-guide]] を参照します。
 
@@ -95,8 +69,6 @@ Timeline・Schedule・成果物カタログは、決める時点と粒度が異�
 
 ### 3.3. `track` と `domains` の値
 
-<!-- specdojo:finding id=F004 severity=major rule=vp-qe-omissions-consistency `tracks[]` 内の track id 重複は `timeline build` がエラーにする一方で本書に一意性規則がないため、同じ `track` 値を複数定義してはならないことを命名規則または禁止事項へ追加する。 -->
-
 - `track` は `sch-strategy-<track>.yaml` / `sch-track-<track>.yaml` の `<track>` と同じ識別子を使う。まだ Schedule が存在しないトラックでも、将来使う予定の識別子を先に決めて記載する。
 - `track` の値は [[specdojo:track-design-guide]] の標準トラック構成に定義された id を優先して使い、プロジェクト固有のトラックを足す場合だけ新しい id を定義する。
 - `domains` には、そのトラックが対象とする `dct-<domain>.yaml` の `domain` 値を配列で記載する。1 トラックが複数ドメインを対象にしてよい。
@@ -104,16 +76,11 @@ Timeline・Schedule・成果物カタログは、決める時点と粒度が異�
 
 ## 4. 本文構成（標準テンプレ）
 
-<!-- specdojo:finding id=F002 severity=minor rule=vp-arc-conciseness 「キー一覧は本書に複製しない」という方針と直後のキー列挙が両立していないため、列挙を削除して schema 参照へ統一するか、主要キーだけを補足する方針へ文言を修正する。 -->
-<!-- specdojo:finding id=F005 severity=major rule=vp-qe-kata-conformance YAML rulebook のキー定義が schema の一部だけを列挙しており `planned_start_date` と `notes` の要否・用途を判断できないため、全キーを定義するか、列挙をやめて schema 参照へ完全に統一したうえで schema だけでは表せない適用規則を補う。 -->
-
 Timeline は Markdown の章構成を持たない YAML 成果物であり、ルートキー・必須キー・型は次の schema を正本とする。キー一覧は本書に複製しない。
 
 | ファイル         | schema                                           |
 | ---------------- | ------------------------------------------------ |
 | `tml-index.yaml` | `docs/specdojo/schemas/v1/tml-index.schema.yaml` |
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency schema と現行 `tml-index.yaml` で利用される `planned_start_date` がキー説明から欠落しているため、任意性、YYYY-MM-DD 制約、Schedule カレンダーとの関係、Gantt の日付起点になることを追記する。 -->
 
 - ルートには `id` / `type` / `status` / `title` / `rulebook` / `version` / `project_id` / `tracks` を必須で置く。
 - `tracks[]` の各要素には `track` / `domains` / `catalog_status` / `order` / `depends_on` を必須で置き、`catalog_duration_estimate_days` / `parallel_group` / `note` は任意とする。
@@ -124,8 +91,6 @@ Timeline は Markdown の章構成を持たない YAML 成果物であり、ル�
 schema で機械検証できない記述規範だけを定める。トラックの標準構成・情報の流れ・進め方別の実行順序は [[specdojo:track-design-guide]] を参照する。
 
 ### 5.1. `catalog_status` の判定基準
-
-<!-- specdojo:finding id=F003 severity=major rule=vp-qe-verifiability 複数の `domains` に未作成・draft・確定済みのカタログが混在する場合の `catalog_status` 判定が一意でないため、全対象カタログの最低状態を採用するなど、track 単位への集約条件を明記する。 -->
 
 3値の判定は成果物カタログの実体と使われ方で決める。ファイルの `status` 値をそのまま転記しない。
 

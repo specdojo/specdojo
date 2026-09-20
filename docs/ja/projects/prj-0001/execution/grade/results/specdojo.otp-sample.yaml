@@ -1,0 +1,90 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:otp-sample
+path: docs/ja/specdojo/samples/otp-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 91
+graded_at: "2026-09-05T18:24:32.725Z"
+graded_by: gemma-expert-executor
+content_hash: f0b7b8a2b5623f0b3ee006a726aac5271cd6a4e65f62bc704925804ba3d4931d
+categories:
+  consistency:
+    score: 75
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 88
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-qe-kata-conformance:
+    level: 4
+    score: 100
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 1
+  minor: 5
+  note: 0
+findings:
+  - id: F003
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: Frontmatter に必須項目である `title` を追加すること。
+    anchor: ""
+  - id: F004
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 15
+    message: 第3章「バックアップ/リストア」において、リストア時の完了基準（整合性確認等）を明記すること。
+    anchor: "## 3. バックアップ/リストア"
+  - id: F005
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 32
+    message: 第6章「問合せ窓口/一次対応」において、エスカレーション条件（一次で止めない条件）を明記すること。
+    anchor: ""
+  - id: F006
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 54
+    message: 第10章「移行完了後のクローズ条件」において、クローズ判断者および最終報告物を明記すること。
+    anchor: "- P1=0が30日、P2が収束傾向、問い合わせが基準以下"
+  - id: F001
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 56
+    message: 完了条件における「基準以下」の具体的な数値や定義を明記し、判定を可能にすること。
+    anchor: ""
+  - id: F002
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 57
+    message: 「運用引継ぎが完了」の状態を定義するチェックリストや成果物を明記し、客観的に判定可能にすること。
+    anchor: "## 11. 関連ドキュメント（必須）"

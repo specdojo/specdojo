@@ -5,30 +5,6 @@ specdojo:
   status: draft
   sample: specdojo:pm-risk-register-sample
   template: specdojo:pm-risk-register-template
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: fail
-    score: 71
-    graded_at: "2026-09-03T05:09:17.412Z"
-    graded_by: gemma-expert-executor
-    content_hash: 563f7d3698f5d14970989cbd6f6664e68a2b5d61214082bcd5e6df0019788712
-    categories:
-      consistency: { score: 50 }
-      usability: { score: 92 }
-      architecture: { score: 100 }
-      quality: { score: 50 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 2, score: 50 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 2, score: 50 }
-      vp-qe-kata-conformance: { level: 0, score: 0 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 3, score: 75 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 1, major: 2, minor: 1, note: 0 }
 ---
 
 # リスク登録簿 作成ルール
@@ -43,8 +19,6 @@ Risk Register Documentation Rules
 - リスクごとに発生確率、影響度、優先度、対応策、責任者を明記する。
 - 曖昧表現を避け、対応着手判断が可能な記述にする。
 
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency テンプレート側で参照される rulebook が `specdojo:pjr-rulebook` となっており、本ルールブックと矛盾している。 -->
-
 ## 2. 位置づけと用語定義（必要に応じて）
 
 - `pm-plan`: 全体管理方針。
@@ -58,8 +32,6 @@ Risk Register Documentation Rules
 
 ## 4. 推奨 Frontmatter 項目
 
-<!-- specdojo:finding id=F004 severity=minor rule=vp-ux-language-consistency 見出しでは「推奨 Frontmatter 項目」としているが、表内では「必須：○」と定義されており、表記が矛盾している。 -->
-
 | 項目       | 説明                             | 必須 |
 | ---------- | -------------------------------- | ---- |
 | id         | `pm-risk-register`               | ○    |
@@ -67,9 +39,6 @@ Risk Register Documentation Rules
 | status     | `draft` / `ready` / `deprecated` | ○    |
 | based_on   | 根拠仕様ID（配列）               | 任意 |
 | supersedes | 置換関係ID（配列）               | 任意 |
-
-<!-- specdojo:finding id=F002 severity=major rule=vp-qe-omissions-consistency テンプレートに、本節で定義されている必須本文構成（概要〜関連ドキュメント）が含まれておらず、整合性が取れていない。 -->
-<!-- specdojo:finding id=F003 severity=blocker rule=vp-qe-kata-conformance 手動作成を前提とした本文構成ルールを定義しているが、対応するテンプレートは自動生成ビューの定義となっており、成果物の種別と責務が根本的に矛盾している。 -->
 
 ## 5. 本文構成（標準テンプレ）
 

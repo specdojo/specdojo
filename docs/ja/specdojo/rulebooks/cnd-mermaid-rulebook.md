@@ -9,30 +9,6 @@ specdojo:
   template: undecided
   based_on:
     - specdojo:rulebook-authoring-standard
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 84
-    graded_at: "2026-09-02T02:21:10.655Z"
-    graded_by: codex-expert-executor
-    content_hash: d8bfd834af0dd4ec5168a885296cca0c2bfb8c1ea4375d495129a4c54d0f8a15
-    categories:
-      consistency: { score: 63 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 75 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 2, score: 50 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 3, score: 75 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 2, minor: 2, note: 0 }
 ---
 
 # Mermaid を用いたC4コンテナ図 作成ルール
@@ -69,8 +45,6 @@ C4 の要素を、以下のように Mermaid の記号にマッピングする�
 
 ---
 
-<!-- specdojo:finding id=F003 severity=minor rule=vp-qe-omissions-consistency `## 2.1 標準の色分け（推奨）` は H2 の章として非整数番号になっているため、Rulebook 記述標準の連番規則に合わせて H3 の `### 2.1. 標準の色分け（推奨）` とし、配下の 2.1.1、2.1.2 も階層と番号末尾を整合させる必要がある。 -->
-
 ## 2.1 標準の色分け（推奨）
 
 C4コンテナ図は色が必須ではありませんが、読み手が「人 / 対象システム内の要素 / 外部システム」を一目で区別できるよう、以下の色分けを推奨します。
@@ -83,8 +57,6 @@ C4コンテナ図は色が必須ではありませんが、読み手が「人 / 
 Mermaid `flowchart` では `classDef` + `class`、境界は `style` を使用します。
 
 ### 2.1.1 標準スタイル定義（コピーして利用）
-
-<!-- specdojo:finding id=F002 severity=minor rule=vp-arc-cross-document-consistency 参照サンプル `docs/ja/specdojo/samples/cnd-sample.md` の line 9 および 30 において、本ルールブックへのパスが `cnd-rulebook.md` と誤記されており, 正しくは `cnd-mermaid-rulebook.md` である。 -->
 
 ※ 既存の C4 コンテキスト図（CXD）と同じ色指定を利用します。
 
@@ -239,9 +211,6 @@ flowchart LR
 ---
 
 ## 7. サンプル（最小）
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency `sample: specdojo:cnd-sample` で宣言された参照サンプルには Mermaid の C4 コンテナ図がなく、概要表だけでは本ルールブックのノード、境界、関係、スタイル規則を適用した完成例として整合性を確認できない。 -->
-<!-- specdojo:finding id=F004 severity=major rule=vp-qe-kata-conformance 対応 sample の `docs/ja/specdojo/samples/cnd-sample.md` は完成した Mermaid 図を提示していないため、Sample 記述標準が求める「rulebook の必須要素を満たす最小完成例」として、ノード、境界、ラベル付き関係、スタイルを適用した図へ置き換える必要がある。 -->
 
 ```mermaid
 flowchart LR

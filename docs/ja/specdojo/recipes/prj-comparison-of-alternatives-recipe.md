@@ -5,30 +5,6 @@ specdojo:
   status: ready
   rulebook: specdojo:prj-comparison-of-alternatives-rulebook
   sample: specdojo:prj-comparison-of-alternatives-sample
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 78
-    graded_at: "2026-09-04T17:42:43.165Z"
-    graded_by: codex-expert-executor
-    content_hash: f4396f34d5a3efa85a86ce0b4f808bc8aab2f873ae5b9b8b956dd8769cc2c8ea
-    categories:
-      consistency: { score: 63 }
-      usability: { score: 92 }
-      architecture: { score: 100 }
-      quality: { score: 63 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 2, score: 50 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 3, score: 75 }
-      vp-qe-omissions-consistency: { level: 3, score: 75 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 3, score: 75 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 2, minor: 7, note: 0 }
 ---
 
 # 代替案比較 作成レシピ
@@ -136,12 +112,6 @@ Comparison of Alternatives Writing Recipe
 
 書き方:
 
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=106 評価軸の最低ラインに「リスク」「技術実現性」を含めると定めている一方、完成例 sample の評価軸・比較結果は両軸と省略理由を欠いており、recipe に従った完成例として成果物間の条件が一致していない。 -->
-<!-- specdojo:finding id=F002 severity=minor rule=vp-arc-cross-document-consistency line=107 重みの理由と低いほどよい軸の判定方向を「備考」に書くよう指示しているが、template の評価軸表には備考欄がなく、雛形から recipe の指示を実行できない。 -->
-<!-- specdojo:finding id=F003 severity=minor rule=vp-arc-cross-document-consistency line=106 rulebook は理由を記載すれば評価軸を省略でき、template も不要な軸の削除を案内しているが、recipe は6軸を例外のない最低ラインとしており、省略時の適用方法が一致していない。 -->
-<!-- specdojo:finding id=F006 severity=major rule=vp-qe-kata-conformance line=106 recipe と rulebook が最低評価軸とする「リスク」「技術実現性」を完成例 sample が評価軸・比較結果に含めず省略理由も示していないため、sample が recipe を適用した正しい完成例として機能していない。 -->
-<!-- specdojo:finding id=F008 severity=minor rule=vp-ux-language-consistency line=106 最低評価軸を「運用適合」と呼ぶ一方、同じ節と良い例では「業務適合」、sample/template では「業務適合」「利用者・業務適合」としており、同一軸か別軸かを判断できるよう名称を統一または定義する必要がある。 -->
-
 - 効果、コスト、期間、リスク、運用適合、技術実現性を最低ラインにし、比較目的に応じて適応性、追跡性、AI 適合、成熟度を追加する。
 - 重みを使う場合は、重みの理由を備考に書く。
 - 低いほどよい軸は、備考で判定方向を明示する。
@@ -152,8 +122,6 @@ Comparison of Alternatives Writing Recipe
 ### 4.4. 比較結果と採択理由
 
 問い:
-
-<!-- specdojo:finding id=F009 severity=minor rule=vp-ux-language-consistency line=119 比較試行の条件を問いでは「終了条件」、書き方と template では「完了条件」と呼んでいるため、同じ条件を指すラベルを「完了条件」などに統一する必要がある。 -->
 
 - 採択案は、どの評価軸で優位なのか。
 - 非採択案や一部採択案の理由は、再評価時に使える粒度か。
@@ -247,12 +215,7 @@ Comparison of Alternatives Writing Recipe
 | 人間の判断責任       | 採択案の最終判断者が `PO` など人間の責任ロールになっているか                                         |
 | 再評価可能性         | 見直し条件と記録先が明記されているか                                                                 |
 
-<!-- specdojo:finding id=F005 severity=minor rule=vp-qe-omissions-consistency line=209 「仕上げチェック」に個人名・個人連絡先・非公開の組織情報など公開範囲に不適切な情報がないことを確認する項目がなく、Recipe 記述標準が要求する公開適性を判定できない。 -->
-<!-- specdojo:finding id=F007 severity=minor rule=vp-qe-kata-conformance line=209 Recipe 記述標準が「仕上げチェック」に要求する公開適性の確認項目がなく、recipe 種別の必須責務を完全には満たしていない。 -->
-
 ## 8. 仕上げチェック
-
-<!-- specdojo:finding id=F004 severity=minor rule=vp-qe-verifiability line=211 「必須表がそろっている」ことを求めているが, recipe 内では各表の必須・推奨を定義していないため、どの表が欠けた場合に fail とするのか判定できない。 -->
 
 - 「全体の作成手順」で示した章立てと必須表がそろっている。
 - 比較対象案が最低 2 案ある。

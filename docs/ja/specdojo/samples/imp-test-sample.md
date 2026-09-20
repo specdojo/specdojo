@@ -8,30 +8,6 @@ specdojo:
     - cr-2026-004
   part_of:
     - prj-0001
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 65
-    graded_at: "2026-09-09T15:10:05.915Z"
-    graded_by: gemma-expert-executor
-    content_hash: 6ec937a37bae05c733a971f108dccb9eecf3f97b74b90865e7bdf1a60e87732c
-    categories:
-      consistency: { score: 63 }
-      usability: { score: 75 }
-      architecture: { score: 100 }
-      quality: { score: 38 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 1, score: 25 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 2, score: 50 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 1, score: 25 }
-      vp-ux-readability: { level: 3, score: 75 }
-      vp-ux-language-consistency: { level: 2, score: 50 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 9, minor: 2, note: 0 }
 ---
 
 # 影響調査（テスト）サンプル
@@ -41,9 +17,6 @@ specdojo:
 本書は、変更要求 `cr-2026-004` が駄菓子屋の販売管理システムのテストへ与える影響を判断するための文書である。
 対象は「単体テスト」「結合テスト」「業務受入テスト」「回帰テスト」の 4 テスト領域とする。
 
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=7 対象期間の記載が漏れている。 -->
-<!-- specdojo:finding id=F005 severity=major rule=vp-qe-kata-conformance line=7 必須要素である対象期間が欠落しており、完成最小例として不十分である。 -->
-
 ## 2. 変更要求の概要
 
 - 背景: バーコード会計とキャンペーン値引きの導入で、既存検証ケースでは網羅不足が懸念される。
@@ -52,10 +25,6 @@ specdojo:
 
 ## 3. 影響分析サマリ
 
-<!-- specdojo:finding id=F002 severity=major rule=vp-arc-cross-document-consistency line=15 成功条件の記述が漏れている。 -->
-<!-- specdojo:finding id=F004 severity=major rule=vp-qe-verifiability line=15 成功条件に指標・状態・閾値などの判定基準がなく、検証不可能な状態である。 -->
-<!-- specdojo:finding id=F006 severity=major rule=vp-qe-kata-conformance line=15 必須要素である成功条件が欠落しており、完成最小例として不十分である。 -->
-
 評価観点は、欠陥流出リスク、回帰範囲、実行コストの 3 点とする。
 
 | 影響度 | 件数 | 主な対象テスト             | 優先対応 |
@@ -63,10 +32,6 @@ specdojo:
 | 高     | 2    | 結合テスト、業務受入テスト | 要       |
 | 中     | 1    | 回帰テスト                 | 要       |
 | 低     | 1    | 単体テスト                 | 否       |
-
-<!-- specdojo:finding id=F003 severity=major rule=vp-arc-cross-document-consistency line=24 影響度の判定尺度（高・中・低の定義）を定めずに使用しており、禁止事項に抵触している。 -->
-<!-- specdojo:finding id=F007 severity=major rule=vp-qe-kata-conformance line=24 影響度の判定尺度を定義せずに使用しており、rulebook の禁止事項に抵触している。 -->
-<!-- specdojo:finding id=F009 severity=minor rule=vp-ux-readability line=24 影響度の判定基準が不明確であり、判断に曖昧さが残る。 -->
 
 ## 4. 影響詳細一覧
 
@@ -87,10 +52,6 @@ specdojo:
 | 低     | 単体テスト見送り再評価 | 2026-07-31      | 開発リード（佐藤）   | 実装差分レビュー結果の確認 |
 
 ## 6. 未解決事項
-
-<!-- specdojo:finding id=F008 severity=major rule=vp-qe-kata-conformance line=48 担当者欄に個人名を使用しており、sample 記述標準の禁止事項に抵触している。 -->
-<!-- specdojo:finding id=F010 severity=major rule=vp-ux-language-consistency line=48 定義外の役割ラベルおよび個人名が使用されており、識別子として統一されていない。 -->
-<!-- specdojo:finding id=F011 severity=minor rule=vp-ux-language-consistency line=46 「影響度」と「優先度」という用語が使い分けられており、概念の整合性が不明確である。 -->
 
 | 論点                     | 不足情報                         | 決定期限   | 担当               | 処理方針                                      |
 | ------------------------ | -------------------------------- | ---------- | ------------------ | --------------------------------------------- |

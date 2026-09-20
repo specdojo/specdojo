@@ -1,0 +1,60 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:prj-success-criteria-and-acceptance-criteria-rulebook
+path: docs/ja/specdojo/rulebooks/prj-success-criteria-and-acceptance-criteria-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: pass
+score: 96
+graded_at: "2026-09-03T08:58:42.710Z"
+graded_by: codex-expert-executor
+content_hash: 52c72d93e1b54b4b5f94f0fd0be16191b8235df64c6ef112a56484cf57abc43f
+categories:
+  consistency:
+    score: 100
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 88
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 1
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: 「本文構成（標準テンプレ）」節で番号と見出し順を正本化しているため、骨組みの定義は template に一元化し、本節では各章の記述目的や必須要件などの「本文要件」としての解説に留めるべきである。
+    anchor: "# 成功基準と受入条件 作成ルール"

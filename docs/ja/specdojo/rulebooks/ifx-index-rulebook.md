@@ -7,30 +7,6 @@ specdojo:
   recipe: not-needed
   sample: not-needed
   template: not-needed
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: pass
-    score: 93
-    graded_at: "2026-09-02T18:44:08.560Z"
-    graded_by: gemma-expert-executor
-    content_hash: 5a7edb605d48e478826d995585e9ccca5c13ad2d413c0185c1fac9a9e5f51725
-    categories:
-      consistency: { score: 88 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 88 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 3, score: 75 }
-      vp-qe-omissions-consistency: { level: 3, score: 75 }
-      vp-qe-kata-conformance: { level: 4, score: 100 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 2, note: 0 }
 ---
 
 # 外部システムIF一覧（External System Interface List: ESIL）作成ルール
@@ -88,8 +64,6 @@ ESIL は「どの外部システムと」「何を」「どの方向で」「ど
 ## 5. サンプル（YAML）
 
 ```yaml
-
-<!-- specdojo:finding id=F001 severity=minor rule=vp-qe-verifiability 記述内容の指示に「短い」「簡潔に」などの曖昧な表現が含まれており、客観的な品質判定基準が不明確である。 -->
 id: ifx-main
 type: api
 title: 外部システムIF一覧(main)
@@ -106,7 +80,6 @@ interfaces:
     timing: 発注確定時
     error_handling: 異常時は再送・管理者通知
 
-<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-omissions-consistency 誤用を防止するための「禁止事項」セクションが不足しており, 詳細仕様への委譲などの制約をより強く明示すべきである。 -->
     spec_ref: ifx-file-orders
 
   - name: 決済依頼/結果

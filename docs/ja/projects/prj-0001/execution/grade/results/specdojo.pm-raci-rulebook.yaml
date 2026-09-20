@@ -1,0 +1,111 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:pm-raci-rulebook
+path: docs/ja/specdojo/rulebooks/pm-raci-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 68
+graded_at: "2026-09-03T04:49:07.178Z"
+graded_by: codex-expert-executor
+content_hash: 9230b43d5f1ed94c813c217f9db2d23a7275d6286b9da22223943c5329c3bc5b
+categories:
+  consistency:
+    score: 50
+  usability:
+    score: 83
+  architecture:
+    score: 100
+  quality:
+    score: 50
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 3
+    score: 75
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 4
+  minor: 4
+  note: 0
+findings:
+  - id: F003
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 1
+    message: >-
+      Frontmatterでtemplateを宣言しているにもかかわらず見出し骨格を本文構成表へ再掲し、主要制約も後続節で反復しているため、本文要件には各章の目的・必須性・判定規則だけを残し、骨格はtemplateへ集約してください。
+    anchor: "# RACI 作成ルール"
+  - id: F007
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: templateを文書IDで宣言した系統では骨組みをtemplateの正本とするRulebook記述標準に反して同じ見出し一覧を再掲しているため、章の目的と必須性だけを残して構造の正本をtemplateへ統一してください。
+    anchor: "# RACI 作成ルール"
+  - id: F002
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 1
+    message: >-
+      採用済みRole
+      codeだけを列に使う規則に対し,rulebookとtemplateが`PO`、`PM`、`BA`、`ARC`、`QE`の固定列を示し,sampleは`DEV`を採用して`ARC`を省略しているため,列を可変プレースホルダーにするか例示であることを明記してください。
+    anchor: "# RACI 作成ルール"
+  - id: F006
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: >-
+      rulebookが採用済みRole
+      codeだけを列に使うよう求める一方、対応templateは固定Role列を編集対象として示しておらず未採用Roleを含む成果物を生成し得るため、templateの列を可変プレースホルダー化し追加・削除手順をrecipeへ明記してください。
+    anchor: "# RACI 作成ルール"
+  - id: F008
+    severity: minor
+    rule: vp-ux-readability
+    line: 1
+    message: "`PO`、`PM`、`BA`、`ARC`、`QE`の表が例示か必須構造か示されず、採用済みRole codeだけを使うという直前の規則と読み分けにくいため、「列は例であり採用Roleに置換する」と表の直前に明記してください。"
+    anchor: "# RACI 作成ルール"
+  - id: F005
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: 成果物カタログの`pm-raci`完了条件が要求する業務・技術・品質の各観点の責任分担を確認する網羅条件がないため、対象を絞る場合でも三観点それぞれの責任境界を確認できることを必須要件へ追加してください。
+    anchor: "# RACI 作成ルール"
+  - id: F004
+    severity: major
+    rule: vp-qe-verifiability
+    line: 1
+    message: >-
+      一つ以上の`R`を許容する一方で複数`R`から主たる`R`を識別する表記または選定規則がなく、Schedule
+      ownerとの一致をpass/fail判定できないため、主担当の明示方法かタスクactionに基づく選定手順を定義してください。
+    anchor: "# RACI 作成ルール"
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 1
+    message: >-
+      Schedule ownerを常に主たる`R`と一致させる規則は、上位標準が承認・レビューを独立タスク化した場合に`A`または`C`をownerにできるとする例外、およびSchedule
+      rulebookが一致対象を成果物作成・更新タスクに限定する規則と矛盾するため、タスク種別ごとの対応規則へ修正してください。
+    anchor: "# RACI 作成ルール"

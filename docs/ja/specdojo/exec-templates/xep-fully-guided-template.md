@@ -43,6 +43,12 @@ _OWNER_ROLE_VIEWPOINTS_
 
 磨き込みでは sample / template は読み込まない。粒度・文体・表現・章構成は、既存の対象成果物を基準としてそろえる。複数の文書間で記述に矛盾がある場合は rulebook を正とする。
 
+### grade result から展開された finding
+
+_GRADE_FINDINGS_
+
+plan に展開された finding は、message と同じ viewpoint ID の判定根拠に照らして解消する。未解消、根拠不足、または判断不能の場合は、理由と次のアクションを result の `進め方と実践の型の適用` セクションに記録する。grade result サイドカーは再評価時に更新されるため、本タスクでは直接編集しない。
+
 参照してよい文書は、この plan に記載されたものに限定する。具体的には、本セクションの rulebook / 併せて適用する rulebook / recipe、`対象成果物` セクションの `depends_on` 成果物、プロジェクトコンテキストである。plan に列挙されていない他のプロジェクト文書を独自に探索・参照しない。成果物の作成・更新は plan に記載された資料とこの plan 自身の記述（フェーズ説明・レビュー観点）だけを根拠に行い、不足があっても未記載の文書を追加で読んで補わない。それでも判断できない箇所は憶測で埋めず _TODO_ / _ASSUMPTION_ として論点を残す。
 
 本タスクの実行に必要な fully-guided の参照方針は、このセクションで完結する。approach 全体の定義（他 approach との対比や review への適用）を確認したい場合のみ、参考として [[specdojo:ryu-guide]] を参照する。

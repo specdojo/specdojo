@@ -11,30 +11,6 @@ specdojo:
     - specdojo:cdfd-mermaid-rulebook
   based_on:
     - specdojo:rulebook-authoring-standard
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 84
-    graded_at: "2026-09-17T10:03:35.776Z"
-    graded_by: gemma-expert-executor
-    content_hash: 944084212f20d06cf7e76ab53164fe1d4520da21d83c7797a81e5793c620652a
-    categories:
-      consistency: { score: 63 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 75 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 3, score: 75 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 3, score: 75 }
-      vp-qe-omissions-consistency: { level: 2, score: 50 }
-      vp-qe-kata-conformance: { level: 3, score: 75 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 1, minor: 4, note: 0 }
 ---
 
 # 概念データフロー図（ユースケース別）作成ルール
@@ -79,7 +55,6 @@ Conceptual Data Flow Diagram Use Case Documentation Rulebook
 
 ## 4. 推奨 Frontmatter 項目
 
-<!-- specdojo:finding id=F003 severity=major rule=vp-qe-omissions-consistency line=50 「プロセス領域」と図の双方を横断順序の正本としており、不一致時にどちらを修正すべきか決定できないため、正本を一方に限定し、他方を正本に一致させる対応表現として定義してください。 -->
 | 項目       | 説明                                                  | 必須 |
 | ---------- | ----------------------------------------------------- | ---- |
 | id         | プロジェクト修飾なしの `cdfd-uc-<topic>`              | ○    |
@@ -128,7 +103,6 @@ Conceptual Data Flow Diagram Use Case Documentation Rulebook
 
 ### 6.3. プロセス領域
 
-<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-verifiability line=95 `ready` 昇格条件が「所定の承認」「定められた承認者」に留まり、承認者の参照元と承認証跡を確認する場所が定義されていないため, 責任分担文書の参照方法と登録簿・レビュー結果などの確認可能な証跡を指定してください。 -->
 - 章の冒頭で、ケース ID、参加グループ数、正常系の通過順、全体概要との正本関係を示します。
 - 正常系で通過するプロセスグループごとに節（`3.1.`、`3.2.`、…）を設け、見出しは「グループ名（含む領域 ID の範囲）」とします。同じグループが正常系で再登場する場合は別の節とし、その理由を説明します。
 - 各節は、そのグループが前段から何を受け取り次段へ何を渡すかを示す 1〜3 文の説明、`**主要入力**`・`**主要出力**`・`**データストア**` の箇条書き、横断上の役割を示す表の順で構成します。
@@ -141,8 +115,6 @@ Conceptual Data Flow Diagram Use Case Documentation Rulebook
 - 表の列は「データストア」「関連引き渡し」「横断上の利用」とします。関連引き渡しには `H-<nn>` を記載し、どの情報または条件の正本かを利用内容で説明します。
 - 名称と区分は全体概要から変更しません。新しいデータストアまたは区分変更が必要なら先に全体概要を変更し、本章だけへ追加しません。
 - 各行は概念データフローの同名ノードに対応させます。図に置かないデータストアや、本章に行のないデータストアノードを残しません。
-
-<!-- specdojo:finding id=F005 severity=minor rule=vp-qe-kata-conformance line=103 rulebook で必須としている「導入文」の定義があるが、対応する recipe の記述ガイドに導入文に関する項目が欠落しており、作成者が迷うため recipe 側への反映または rulebook 側での補足が必要である。 -->
 
 ### 6.5. 概念データフロー
 
@@ -187,7 +159,6 @@ Conceptual Data Flow Diagram Use Case Documentation Rulebook
 
 ## 7. 禁止事項
 
-<!-- specdojo:finding id=F001 severity=minor rule=vp-arc-cross-document-consistency line=154 `specdojo:cdfd-mermaid-rulebook` は各図直後に各ノード形状の意味を直接記述するよう求める一方、本行は全体概要の共通凡例への参照だけを求めているため、包含規則に対する優先関係を明示するか凡例の記載要件を統一してください。 -->
 - 単一グループに閉じる業務へユースケース別 CDFD を作成したり、全体概要にないケースを先に詳細化したりしません。
 - product 成果物 ID を `<project-id>:cdfd-uc-<topic>` にしたり、`cdfd-<group>` と同じ命名で作成したりしません。
 - ケース ID を採番し直したり、引き渡し ID を図・引き渡し表・例外時の戻り先で不一致にしたりしません。
@@ -198,5 +169,3 @@ Conceptual Data Flow Diagram Use Case Documentation Rulebook
 - 物理テーブル、カラム、SQL、実装クラス、詳細 API、画面操作を概念フローへ記載しません。
 - 受け側グループ、戻り先グループ、引き渡す情報のいずれかがない矢印や表行を残しません。
 - 作成状況やレビュー状態を成果物本文へ記載せず、登録簿で追跡します。
-
-<!-- specdojo:finding id=F004 severity=minor rule=vp-qe-omissions-consistency line=166 戻しが発生しない引き渡しを許容する一方、「例外時の戻り先」では全引き渡し ID の行と戻り先を求めており記入方法が定義されていないため、該当なしを表す値と理由の記載方法、または戻り先表から除外できる条件を定めてください。 -->

@@ -1,0 +1,81 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: cdfd-plan
+path: docs/ja/product/010-business-specs/010-data-flow/cdfd-plan.md
+target: deliverable
+rubric: grade-rubric-v1
+verdict: pass
+score: 97
+graded_at: "2026-09-20T05:07:24.369Z"
+graded_by: codex-expert-executor
+content_hash: 19e15a748c25dd2b3e5dab04727d17dcf40b01f58d9208dd0f9b97cda5e5c032
+categories:
+  consistency:
+    score: 88
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 100
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 2
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 9
+    message: rulebook 6.1 が適用範囲に対象期間の明示を求めているが、本書は期間または期間を限定しない旨を示していないため、対象期間の記載を追加してください。
+    anchor: "## 2. 適用範囲"
+  - id: F002
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 296
+    message: 主要例外表に rulebook 6.7 と template が必須とする「停止範囲」列がなく、「本グループでの扱い」に停止内容が混在しているため、停止対象と対応を別列で識別できるようにしてください。
+    anchor: >-
+      | --------- | ------------ |
+      -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+      | ------------------------------------------------------------------------- |
+      --------------------------------------------------------------------------------------------------------------------------------------------------------
+      |
+done_criteria:
+  satisfied: 4
+  total: 4
+  detail_ref: cdfd-plan-grade-criteria

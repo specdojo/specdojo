@@ -1,0 +1,84 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:nfr-maintainability-sample
+path: docs/ja/specdojo/samples/nfr-maintainability-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: fail
+score: 62
+graded_at: "2026-09-05T10:49:14.991Z"
+graded_by: gemma-expert-executor
+content_hash: 93c93b71b4ba9362e994f39a7e6af9bc078ec8c4988fd4b5ab2a7d8f4242c4ca
+categories:
+  consistency:
+    score: 63
+  usability:
+    score: 83
+  architecture:
+    score: 100
+  quality:
+    score: 25
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 1
+    score: 25
+  vp-qe-kata-conformance:
+    level: 0
+    score: 0
+  vp-ux-readability:
+    level: 2
+    score: 50
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 1
+  major: 4
+  minor: 0
+  note: 0
+findings:
+  - id: F003
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: Frontmatter に必須項目である `title` が記述されていない。
+    anchor: ""
+  - id: F002
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 3
+    message: rulebook で必須と定義されている「保守性要件一覧」「測定・検証方法」「関連ドキュメント導線」の各章が欠落している。
+    anchor: ""
+  - id: F004
+    severity: blocker
+    rule: vp-qe-kata-conformance
+    line: 3
+    message: rulebook で定義された標準テンプレの見出し構成および順序を完全に無視しており、成果物の型に従っていない。
+    anchor: ""
+  - id: F005
+    severity: major
+    rule: vp-ux-readability
+    line: 3
+    message: 対応する rulebook の必須構造や制約を反映しておらず、正解例としての役割を果たしていないため、利用者に誤解を与える。
+    anchor: ""
+  - id: F001
+    severity: major
+    rule: vp-qe-verifiability
+    line: 18
+    message: 要件の判定基準に定量的な閾値が記載されておらず、rulebook の禁止事項に抵触している。
+    anchor: ""

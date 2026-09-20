@@ -7,38 +7,6 @@ specdojo:
   based_on:
     - cdfd-overview
   supersedes: []
-  grade:
-    rubric: grade-rubric-v1
-    target: deliverable
-    verdict: pass
-    score: 95
-    graded_at: "2026-09-18T11:22:12.840Z"
-    graded_by: codex-expert-executor
-    content_hash: 0626b4ea6f7bc2d113f28f78d3d950cdd1a7e55eeb250b375d6664c6a2b86915
-    categories:
-      consistency: { score: 88 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 92 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-done-criteria: { level: 3, score: 75 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 3, score: 75 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-user-flow: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-      vp-qe-config-validity: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 2, note: 0 }
-    done_criteria:
-      satisfied: 3
-      total: 4
-      unsatisfied:
-        DC-002: [ARC]
-      detail_ref: cdfd-do-grade-criteria
 ---
 
 # 概念データフロー図（Do）: SpecDojo
@@ -92,8 +60,6 @@ Do グループはタスク実行（P-07）の一領域で構成する。領域 
 
 ### 4.2. トランザクションデータ
 
-<!-- specdojo:finding id=F001 severity=minor rule=vp-qe-done-criteria line=56 DC-002 が求めるプロセス単位の読み書きについて、「データストア」表は登録簿の参照を P-07-01・P-07-02 とする一方、「個別プロセス主要入出力」は P-07-03 にも登録簿を含めており、P-07-03 の参照有無を一意に識別できるよう統一する必要がある。 -->
-<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-omissions-consistency line=56 登録簿の利用を P-07-01・P-07-02・P-07-05 とするデータストア表と、P-07-03 にも登録簿を割り当てる個別プロセス表が矛盾するため、P-07-03 の登録簿参照を追加するか同プロセスのデータストア欄から削除する必要がある。 -->
 | データストア | 読み書き   | 本グループでの利用                                                                                                   |
 | ------------ | ---------- | -------------------------------------------------------------------------------------------------------------------- |
 | 実行計画     | 参照       | `P-07-01` で対象、手順、完了条件を受け取り、`P-07-02` と `P-07-03` の遂行・検証基準として使う。                      |

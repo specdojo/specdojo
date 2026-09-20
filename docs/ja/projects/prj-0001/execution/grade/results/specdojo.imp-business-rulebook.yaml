@@ -1,0 +1,84 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:imp-business-rulebook
+path: docs/ja/specdojo/rulebooks/imp-business-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: pass
+score: 85
+graded_at: "2026-09-02T19:17:09.307Z"
+graded_by: codex-expert-executor
+content_hash: c6dc089eb56b153b0b5fe2aa0d50dfdaaff47399f1f18063172fb9b668f15437
+categories:
+  consistency:
+    score: 88
+  usability:
+    score: 83
+  architecture:
+    score: 100
+  quality:
+    score: 75
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 3
+    score: 75
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 5
+  note: 0
+findings:
+  - id: F002
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 1
+    message: 影響度の尺度を定義するよう禁止事項にあるが、記述ガイド（6.3）では評価観点を示すのみとなっており、尺度の定義方法についての指示が不十分である。
+    anchor: "# 影響調査（業務）作成ルール"
+  - id: F004
+    severity: minor
+    rule: vp-ux-readability
+    line: 1
+    message: 影響詳細一覧の必須カラム表が「変更要否」の直後の空行で分断され、Markdown 描画では「影響度」以降の4行が表にならないため、空行を削除して1つの表に統合する必要がある。
+    anchor: "# 影響調査（業務）作成ルール"
+  - id: F005
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 1
+    message: 本文全体では「影響度」、参考 sample の対応方針では「優先度」を用いている一方、この箇所だけ未定義の「重要度」を使用しているため、「影響度」または定義済みの優先順位用語へ統一する必要がある。
+    anchor: "# 影響調査（業務）作成ルール"
+  - id: F001
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 1
+    message: 禁止事項では影響度の尺度定義を必須としているが、参考 sample は評価観点だけを示して高・中・低の尺度を定義しておらず、rulebook と完成例が整合していない。
+    anchor: "# 影響調査（業務）作成ルール"
+  - id: F003
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: Frontmatter で参照する sample が、禁止事項で要求した影響度尺度を定義せずに高・中・低を使用しているため、完成例として rulebook の適用方法を完全には示せていない。
+    anchor: "# 影響調査（業務）作成ルール"

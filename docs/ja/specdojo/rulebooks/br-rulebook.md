@@ -6,30 +6,6 @@ specdojo:
   recipe: undecided
   sample: specdojo:br-sample
   template: undecided
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 79
-    graded_at: "2026-09-08T23:20:58.711Z"
-    graded_by: codex-expert-executor
-    content_hash: 04f19adc6a0f3bd9775f8caddb43e1df1be7753fc5853aa7ce739079ebe8ff9a
-    categories:
-      consistency: { score: 50 }
-      usability: { score: 92 }
-      architecture: { score: 100 }
-      quality: { score: 75 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 2, score: 50 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 2, score: 50 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 3, score: 75 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 3, minor: 2, note: 0 }
 ---
 
 # ビジネスルール 作成ルール
@@ -62,16 +38,10 @@ Business Rule (BR) Documentation Rules
   - `title`: 「在庫不足判定」など。
   - サブルールへ分割する場合: `br-low-stock-threshold`, `br-stock-reservation-deduction` などの id を付与し、サブルール側で `part_of: [br-low-stock-judgment]` を指定。
 
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=31 第4節の Frontmatter 定義は、共通メタデータ標準と参照 sample が必須とする `specdojo:` 名前空間および `rulebook` を示さず、スキーマで許可されない `title` を必須としているため、この規則から作成した BR が成果物 Frontmatter 検証に失敗する。 -->
-<!-- specdojo:finding id=F002 severity=major rule=vp-qe-omissions-consistency line=31 第4節と第11節は、成果物 Frontmatter の必須キー `rulebook` と `specdojo:` 名前空間を欠き、共通スキーマで未定義の `title` を必須化しているため、必須キー一覧と最小例を `deliverable-frontmatter.schema.yaml` に合わせて修正する必要がある。 -->
-
 ## 4. 推奨 Frontmatter 項目
 
 | 項目 | 説明 | 必須 |
 | ---- | ---- | ---- |
-
-<!-- specdojo:finding id=F003 severity=minor rule=vp-qe-omissions-consistency line=36 第4節の ID 形式の記述 `(br-xxx-xxxx)` が、第3節や第11節で例示されているセマンティックな ID 形式 `br-low-stock-judgment` と矛盾している。 -->
-<!-- specdojo:finding id=F005 severity=minor rule=vp-ux-language-consistency line=37 `id` の説明だけが `(br-xxx-xxxx)` となっており、第3節、NG/OK例、第11節で一貫して使用する `br-low-stock-judgment` 型のセマンティックな kebab-case 表記と統一されていない。 -->
 
 | id | ルールID (br-xxx-xxxx) | ○ |
 | type | `rule` 固定 | ○ |
@@ -179,8 +149,6 @@ function 在庫不足判定(商品: 商品, 在庫: 在庫): boolean {
 - BPSの手順を流用 → 本ドキュメントでは判断・計算のみを記述。
 
 ## 11. サンプル（簡易）
-
-<!-- specdojo:finding id=F004 severity=major rule=vp-qe-kata-conformance line=144 第11節の最小例は、成果物 Frontmatter を `specdojo:` 配下に置かず必須の `rulebook` と H1 を欠き、規定した見出し名「例外 / 異常系」「メモ / 将来課題」も短縮しているため, rulebook の適用例として成立していない。 -->
 
 ```markdown
 ---

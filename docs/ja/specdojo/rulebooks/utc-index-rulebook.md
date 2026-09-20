@@ -6,31 +6,6 @@ specdojo:
   recipe: undecided
   sample: specdojo:utc-index-sample
   template: undecided
-  grade:
-    rubric: grade-rubric-v1
-    reference: specdojo:prj-overview-rulebook
-    target: kata
-    verdict: needs-work
-    score: 91
-    graded_at: "2026-09-03T14:39:50.198Z"
-    graded_by: gemma-expert-executor
-    content_hash: 19449dadf32538bbc8632e0b1ba5519e487c3b8dcf0901aa197e2c984644f314
-    categories:
-      consistency: { score: 100 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 75 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 1, minor: 0, note: 0 }
 ---
 
 # 単体テストカタログ概要 作成ルール
@@ -39,8 +14,6 @@ Unit Test Catalog (UTC) Index Documentation Rules
 
 本ドキュメントは、単体テストカタログ（UTC）の全体概要 `utc-index` を統一形式で記述するためのルールです。
 TSPに基づき、単体テストに共通するルールや方針を定義します。
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-qe-kata-conformance 参照しているサンプル `docs/ja/specdojo/samples/utc-index-sample.md` が、本書の「5. 本文構成（標準テンプレ）」で定義した必須見出し構成および順序と整合しておらず、ルールを逸脱している。 -->
 
 個別単体テストカタログ（`utc-<term>`）の記述ルールは [utc-rulebook.md](utc-rulebook.md) を参照してください。
 

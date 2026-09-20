@@ -539,25 +539,19 @@ document_key() {
 }
 
 read_grade_metrics() {
-  # JavaScript template expressions belong to node, not bash.
-  # shellcheck disable=SC2016
-  node -e '
-    const fs = require("node:fs");
-    const source = fs.readFileSync(process.argv[1], "utf8").match(/^---\r?\n([\s\S]*?)\r?\n---/);
-    const frontmatter = source?.[1] ?? "";
-    if (!/^  grade:\s*$/m.test(frontmatter)) {
+  "${specdojo_command[@]}" grade result --project "$project" --path "$1" | node -e '
+    let source = "";
+    process.stdin.on("data", (chunk) => source += chunk).on("end", () => {
+      if (!source.trim()) {
       process.stdout.write("ungraded\t\t");
-      process.exit(0);
-    }
-    const verdict = frontmatter.match(/^    verdict:\s*([^\s#]+)\s*$/m)?.[1] ?? "";
-    const score = frontmatter.match(/^    score:\s*([0-9]+)\s*$/m)?.[1] ?? "";
-    const findingLine = frontmatter.match(/^    findings:\s*(.*)$/m)?.[1] ?? "";
-    const counts = [...findingLine.matchAll(/(?:blocker|major|minor|note):\s*([0-9]+)/g)];
-    const findings = counts.length === 4
-      ? counts.reduce((total, match) => total + Number(match[1]), 0)
-      : "";
-    process.stdout.write(`${verdict}\t${score}\t${findings}\n`);
-  ' "$1"
+        return;
+      }
+      const result = JSON.parse(source);
+      const findings = Object.values(result.finding_counts ?? {})
+        .reduce((total, count) => total + Number(count), 0);
+      process.stdout.write(`${result.verdict ?? ""}\t${result.score ?? ""}\t${findings}\n`);
+    });
+  '
 }
 
 record_result() {

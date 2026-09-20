@@ -5,30 +5,6 @@ specdojo:
   status: ready
   rulebook: specdojo:prj-success-criteria-and-acceptance-criteria-rulebook
   sample: specdojo:prj-success-criteria-and-acceptance-criteria-sample
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: pass
-    score: 98
-    graded_at: "2026-09-04T19:41:52.944Z"
-    graded_by: codex-expert-executor
-    content_hash: f8051f710714c49c5d508645f5459083ac85ce81fe0e45e2d4ba841d13213c0c
-    categories:
-      consistency: { score: 100 }
-      usability: { score: 92 }
-      architecture: { score: 100 }
-      quality: { score: 100 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 4, score: 100 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 3, score: 75 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 1, note: 0 }
 ---
 
 # 成功基準と受入条件 作成レシピ
@@ -147,8 +123,6 @@ Success Criteria and Acceptance Criteria Writing Recipe
 - 決定しない場合に誰が影響を受けるか。
 
 書き方:
-
-<!-- specdojo:finding id=F001 severity=minor rule=vp-ux-language-consistency line=119 recipe 自身を「本ルールブック」と呼んでおり文書種別を誤認させるため、「本書」または「本成果物」に改めて _UNDECIDED_: の統一先を明確にする必要がある。 -->
 
 - 未確定は _UNDECIDED_: で明示し、決定する時期と責任者を添える。
 - スコープなど依存文書の未決事項を転記する場合、元のラベル（例: _TODO_:）をそのまま残さず、本ルールブックの _UNDECIDED_: に統一する。

@@ -6,43 +6,15 @@ specdojo:
   recipe: undecided
   sample: specdojo:cxd-sample
   template: undecided
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: pass
-    score: 91
-    graded_at: "2026-09-02T14:55:02.448Z"
-    graded_by: gemma-expert-executor
-    content_hash: c506ec832bf31e6279afb9dbebf6b28005bbefc5e7aec05bcd8ac426d52be920
-    categories:
-      consistency: { score: 88 }
-      usability: { score: 92 }
-      architecture: { score: 100 }
-      quality: { score: 88 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 3, score: 75 }
-      vp-qe-kata-conformance: { level: 3, score: 75 }
-      vp-ux-readability: { level: 3, score: 75 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 4, note: 0 }
 ---
 
 # C4コンテキスト図 ドキュメント作成ルール
 
 C4 Contextual Diagram (CXD) Documentation Rules
 
-<!-- specdojo:finding id=F001 severity=minor rule=vp-qe-omissions-consistency Frontmatter に `target_format: markdown` が不足している。 -->
-
 本ドキュメントは、アーキテクチャ設計のために **C4コンテキスト図と、その図を説明する文章**を、統一した粒度・表現で作成するためのルールです。
 
 この章の成果物は、次の2つをセットで扱います。
-
-<!-- specdojo:finding id=F003 severity=minor rule=vp-qe-kata-conformance 参照しているサンプル `specdojo:cxd-sample` が具体的な成果物の例ではなくメタ記述となっており、実装リファレンスとして不十分である。 -->
 
 - **C4コンテキスト図（Mermaid）**: 対象システムと「境界外」の人・外部システムとの関係を俯瞰で合意する
 - **説明（Markdown）**: 図の要素（人/対象/外部/境界/関係）の意味を文章で合意する
@@ -57,8 +29,6 @@ Mermaid 記法そのもののルールは [cxd-mermaid-rulebook.md](cxd-mermaid-
 - 図は「正確さ（過剰な詳細）」よりも「解釈が割れないこと（合意）」を優先する。
 
 ## 2. ファイル命名・ID規則
-
-<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-omissions-consistency 他の rulebook と同様に、設計フローにおける本書の位置づけを定義する「位置づけ」節を設けるべきである。 -->
 
 - ファイル名: `cxd-<番号>-<短い日本語名>.md`
 
@@ -295,7 +265,6 @@ flowchart LR
   subgraph 境界["対象システム"]
     販売管理システム("駄菓子屋きぬや<br>販売管理システム")
 
-<!-- specdojo:finding id=F004 severity=minor rule=vp-ux-readability サンプル節において Mermaid コードブロックの直後に同一内容の plaintext ブロックが重複して記載されており冗長である。 -->
   end
 
   %% Relationships

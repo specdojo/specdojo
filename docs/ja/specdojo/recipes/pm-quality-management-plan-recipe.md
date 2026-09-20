@@ -5,30 +5,6 @@ specdojo:
   status: ready
   rulebook: specdojo:pm-quality-management-plan-rulebook
   sample: specdojo:pm-quality-management-plan-sample
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: pass
-    score: 91
-    graded_at: "2026-09-04T15:33:11.670Z"
-    graded_by: gemma-expert-executor
-    content_hash: b0a67c2c94731153566d0c1a9566971b6a83b2b1070ca29801d986b41f12638e
-    categories:
-      consistency: { score: 88 }
-      usability: { score: 92 }
-      architecture: { score: 100 }
-      quality: { score: 88 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 3, score: 75 }
-      vp-qe-kata-conformance: { level: 3, score: 75 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 3, score: 75 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 5, note: 0 }
 ---
 
 # 品質管理計画 作成レシピ
@@ -43,8 +19,6 @@ Quality Management Plan Writing Recipe
 - 品質目標・メトリクス・検査基準を品質ゲートへ統合します。
 - レビュー、証跡、是正、再判定を接続します。
 - 利用者価値と品質リスク（Why）、合格状態とゲート（What）、検査・是正・再判定（How）を整理し、成功基準・受入条件 ID と検証証跡で追跡します（Trace）。成功基準や個別検証手順は再掲しません。
-
-<!-- specdojo:finding id=F004 severity=minor rule=vp-ux-language-consistency line=14 用語「利用者価値」が rulebook で定義された「価値品質」と不整合である。 -->
 
 ## 2. 作成前に集める情報
 
@@ -76,8 +50,6 @@ Quality Management Plan Writing Recipe
 
 ### 4.2. 品質ゲート
 
-<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-kata-conformance line=44 各章の書き方が問い形式ではなく指示文となっており、recipe としての責務に不十分である。 -->
-
 - 成功基準ID、受入条件ID、検証結果を参照します。
 - 代表試行、主要変更、公開前など必要な時点だけを置きます。
 - 費用・負荷は現金支出、作業時間、継続運用負荷を分けます。
@@ -103,8 +75,6 @@ Quality Management Plan Writing Recipe
 
 ## 6. 良い例 / 悪い例
 
-<!-- specdojo:finding id=F001 severity=minor rule=vp-qe-omissions-consistency line=68 rulebook で定義されている「5. 見直し条件と未決事項」の書き方ガイドが欠落している。 -->
-
 | 観点       | 良い例                             | 悪い例                 |
 | ---------- | ---------------------------------- | ---------------------- |
 | 価値品質   | 利用者が主要操作を完遂できる       | lintが成功する         |
@@ -120,12 +90,8 @@ Quality Management Plan Writing Recipe
 
 ## 8. 仕上げチェック
 
-<!-- specdojo:finding id=F003 severity=minor rule=vp-qe-kata-conformance line=84 レビュー観点が表形式ではなく箇条書きとなっており、authoring standard に準拠していない。 -->
-
 - 品質ゲート、レビュー、是正がそろっている。
 - 費用と人の負荷を必要に応じて分けている。
 - 生成物の直接編集を認めていない。
 - Agentに価値・例外・公開判断を委ねていない。
 - 各品質ゲートが、守る価値または品質リスク、合格条件、検査・是正方法、証跡に対応している。
-
-<!-- specdojo:finding id=F005 severity=minor rule=vp-ux-language-consistency line=96 「AI Agent」(line 49) と 「Agent」(line 96) の表記が混在している。 -->

@@ -1,0 +1,84 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:trc-requirements-to-tests-sample
+path: docs/ja/specdojo/samples/trc-requirements-to-tests-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 75
+graded_at: "2026-09-09T16:28:14.587Z"
+graded_by: gemma-expert-executor
+content_hash: 94e8359c86922d7e3f7dc9cb8a80eae3b248e1a8d62fd630cf955869fa64c375
+categories:
+  consistency:
+    score: 50
+  usability:
+    score: 92
+  architecture:
+    score: 100
+  quality:
+    score: 63
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-qe-kata-conformance:
+    level: 1
+    score: 25
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 3
+  minor: 2
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 9
+    message: Frontmatter の `based_on` に記載された生成元が、本文で定義されている参照元（req-2026-r1, atc-* 等）を網羅しておらず不整合である。
+    anchor: "- 要求参照元: 要求一覧 `req-2026-r1`"
+  - id: F003
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 9
+    message: Frontmatter の `based_on` に、本文で参照されている要求一覧および受入テスト仕様の ID が漏れている。
+    anchor: "- 要求参照元: 要求一覧 `req-2026-r1`"
+  - id: F002
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 78
+    message: 担当者欄に Role code ではなく自由記述の役割名（テスト設計担当等）が使用されており、プロジェクト標準と不整合である。
+    anchor: ""
+  - id: F004
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 85
+    message: rulebook で禁止されている「ビューの手編集」を前提とした更新ルール（手動での充足状況管理やチケット ID 追記）が定義されており、成果物の型定義に違反している。
+    anchor: ""
+  - id: F005
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 78
+    message: 担当者欄における表記が Role code ではなく役職名・役割名の自由記述となっており、表記が不統一である。
+    anchor: ""

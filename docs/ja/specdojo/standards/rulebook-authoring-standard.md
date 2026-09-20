@@ -135,7 +135,6 @@ specdojo:
   `docs/specdojo/schemas/v1/<prefix>.schema.yaml` がともに存在する場合、同じ成果物系統として
   `validate:schema:rulebook-enums` の検査対象になる。
 - 検査対象の rulebook 本文には、対応 schema の文字列 enum 値を独立した値としてすべて明記する。
-  Frontmatter、`specdojo:finding` コメント、scaffold 専用の `_PLACEHOLDER_` 値は網羅判定に
-  使用しない。
+  Frontmatter と scaffold 専用の `_PLACEHOLDER_` 値は網羅判定に使用しない。
 - 対応 schema がない rulebook、`draft` / `deprecated` の rulebook、Markdown を対象とする
   rulebook は enum 網羅検査の対象外とする。

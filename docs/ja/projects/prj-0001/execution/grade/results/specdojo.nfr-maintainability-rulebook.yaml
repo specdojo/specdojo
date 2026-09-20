@@ -1,0 +1,66 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:nfr-maintainability-rulebook
+path: docs/ja/specdojo/rulebooks/nfr-maintainability-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 89
+graded_at: "2026-09-02T22:46:39.386Z"
+graded_by: gemma-expert-executor
+content_hash: d066eb3ff0ae9cd1bd00a520dbc6dfc1499e8e986d330f8d6217149fa06df6a5
+categories:
+  consistency:
+    score: 88
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 75
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 3
+    score: 75
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 1
+  minor: 1
+  note: 0
+findings:
+  - id: F002
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: 指定されているサンプル成果物 `specdojo:nfr-maintainability-sample` が、本書で定義した標準テンプレの構成に従っていない。
+    anchor: "# 非機能要件 / 保守性 作成ルール"
+  - id: F001
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 1
+    message: スキーマへの相対パスが誤っており、正しくは `../../../../specdojo/schemas/v1/deliverable-frontmatter.schema.yaml` となる。
+    anchor: "# 非機能要件 / 保守性 作成ルール"

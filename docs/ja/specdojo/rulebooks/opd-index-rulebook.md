@@ -7,35 +7,9 @@ specdojo:
   recipe: undecided
   sample: specdojo:opd-index-sample
   template: undecided
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 75
-    graded_at: "2026-09-03T00:21:52.179Z"
-    graded_by: gemma-expert-executor
-    content_hash: 09efa9048598d9b42ae591c5fe9f6d56c826a07d9a9748a822ac47a909a91474
-    categories:
-      consistency: { score: 38 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 63 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 1, score: 25 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 2, score: 50 }
-      vp-qe-kata-conformance: { level: 1, score: 25 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 4, minor: 3, note: 0 }
 ---
 
 # 運用方針・設計 全体構成 作成ルール
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency サンプル `specdojo:opd-index-sample` における rulebook 参照 ID と本ルールの ID が不整合である。 -->
 
 Operations Policy and Design Index Documentation Rules
 
@@ -73,8 +47,6 @@ Operations Policy and Design Index Documentation Rules
 | `based_on` | 根拠仕様 ID 配列 | 任意 |
 | `supersedes` | 置換関係 ID 配列 | 任意 |
 
-<!-- specdojo:finding id=F005 severity=major rule=vp-qe-kata-conformance サンプルとしての整合性がなく、rulebook としての機能（ exemplification ）を果たしていない。 -->
-
 ## 5. 本文構成（標準テンプレ）
 
 | 章  | 内容 | 必須 |
@@ -83,15 +55,11 @@ Operations Policy and Design Index Documentation Rules
 | 1 | 概要（index） | ○ |
 | 2 | 運用の範囲・前提 | ○ |
 
-<!-- specdojo:finding id=F006 severity=minor rule=vp-qe-kata-conformance recipe が undecided であり、具体的な記述手順への導線が未定義である。 -->
-
 | 3 | SLO・SLA・KPI | ○ |
 | 4 | 体制・責任分界（RACI・当番・エスカレーション） | ○ |
 | 5 | 監視・アラート方針（指標・閾値・通知先・初動） | ○ |
 | 6 | 障害対応方針（優先度・停止判断・周知） | ○ |
 | 7 | 変更管理（リリース・設定変更・承認・ロールバック） | ○ |
-
-<!-- specdojo:finding id=F007 severity=minor rule=vp-qe-kata-conformance template が undecided であり、骨組みの提供がなされていない。 -->
 
 | 8 | バックアップ・リストア方針（RTO/RPO） | ○ |
 | 9 | 権限・アカウント運用（棚卸し・監査ログ） | ○ |
@@ -114,7 +82,3 @@ Operations Policy and Design Index Documentation Rules
 - SLO/SLA/KPI を定量化せず曖昧語のみで記載しない。
 - 責任分界やエスカレーション条件を未定義のまま確定しない。
 - 変更承認条件とロールバック条件を省略しない。
-
-<!-- specdojo:finding id=F002 severity=major rule=vp-arc-cross-document-consistency 本ルールで12章すべてを必須としているが、対応するサンプルに実装されておらず、実効性に欠ける。 -->
-<!-- specdojo:finding id=F003 severity=major rule=vp-qe-omissions-consistency 推奨されるファイル配置（ディレクトリパス）の定義が欠落している。 -->
-<!-- specdojo:finding id=F004 severity=minor rule=vp-qe-omissions-consistency Frontmatter の参照スキーマ（deliverable-frontmatter.schema.yaml 等）への言及がなく、共通標準との整合性が不明確である。 -->

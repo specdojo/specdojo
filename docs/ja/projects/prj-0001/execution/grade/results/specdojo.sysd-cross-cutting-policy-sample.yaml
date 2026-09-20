@@ -1,0 +1,84 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:sysd-cross-cutting-policy-sample
+path: docs/ja/specdojo/samples/sysd-cross-cutting-policy-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: fail
+score: 51
+graded_at: "2026-09-06T02:59:08.418Z"
+graded_by: gemma-expert-executor
+content_hash: 8ffd53e1593d0f356a49b72f133bac1092bbb137de4838cd8a23cf069a105bdb
+categories:
+  consistency:
+    score: 50
+  usability:
+    score: 67
+  architecture:
+    score: 100
+  quality:
+    score: 13
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 1
+    score: 25
+  vp-qe-omissions-consistency:
+    level: 0
+    score: 0
+  vp-qe-kata-conformance:
+    level: 0
+    score: 0
+  vp-ux-readability:
+    level: 1
+    score: 25
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 2
+  major: 2
+  minor: 1
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-qe-verifiability
+    line: 3
+    message: ルールブックで必須とされる検証手段（Enforcement）を含む具体的なルール定義が記述されておらず、検証可能性を担保できていない。
+    anchor: "## 1. 目的と適用範囲"
+  - id: F002
+    severity: blocker
+    rule: vp-qe-omissions-consistency
+    line: 3
+    message: ルールブックで必須とされる 5 つの構成章（概要、ルール一覧、各ルール詳細、例外、関連ドキュメント導線）がすべて欠落しており、文書として不成立である。
+    anchor: "## 1. 目的と適用範囲"
+  - id: F003
+    severity: blocker
+    rule: vp-qe-kata-conformance
+    line: 3
+    message: ルールブックで定義されている必須の見出し構成および順序を遵守しておらず、正しい成果物の完成例として機能していない。
+    anchor: "## 1. 目的と適用範囲"
+  - id: F004
+    severity: major
+    rule: vp-ux-readability
+    line: 3
+    message: ルールブックで定義された標準構造に従っていないため、成果物の記述方法を具体的に示すサンプルとしての役割を果たしていない。
+    anchor: "## 1. 目的と適用範囲"
+  - id: F005
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 4
+    message: Frontmatter の `type` が `project` となっているが、ルールブック 4.1 節および 8 節に基づき `architecture` とすべきである。
+    anchor: ""

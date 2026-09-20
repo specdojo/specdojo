@@ -4,30 +4,6 @@ specdojo:
   type: project
   status: draft
   rulebook: specdojo:nfr-performance-rulebook
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: fail
-    score: 68
-    graded_at: "2026-09-05T11:20:37.356Z"
-    graded_by: gemma-expert-executor
-    content_hash: f74ef9422ecd200cf2ffa326760c88979737bf7316132ec27529ef8d62bdf237
-    categories:
-      consistency: { score: 50 }
-      usability: { score: 83 }
-      architecture: { score: 100 }
-      quality: { score: 50 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 2, score: 50 }
-      vp-qe-omissions-consistency: { level: 0, score: 0 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 2, score: 50 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 1, major: 3, minor: 0, note: 0 }
 ---
 
 # [非機能要件 / 性能](../rulebooks/nfr-performance-rulebook.md) サンプル
@@ -36,12 +12,7 @@ specdojo:
 
 本書は、応答性と処理能力を定義するための最小サンプルである。
 
-<!-- specdojo:finding id=F002 severity=blocker rule=vp-qe-omissions-consistency line=6 ルールブックで定義された必須見出し構成（順序固定）に従っていない。 -->
-<!-- specdojo:finding id=F004 severity=major rule=vp-ux-readability line=6 ルールブックの構成を無視しているため、正解例としての可読性・参照価値が著しく低い。 -->
-
 ## 2. 入力情報
-
-<!-- specdojo:finding id=F003 severity=major rule=vp-qe-kata-conformance line=9 成果物の「完成例」ではなく「記述ガイド」になっており、sample の責務を果たしていない。 -->
 
 - 対象: 駄菓子屋の販売管理システム
 - 前提: プロジェクト文脈は handbook の共通方針に準拠する
@@ -53,8 +24,6 @@ specdojo:
 - 必須観点: 対象、条件、判定基準、責任者
 
 ## 4. 最小記述例
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-qe-verifiability line=19 具体的な判定基準（数値や閾値）が記載されておらず、検証不可能な状態である。 -->
 
 | 項目         | 値                                                            | 備考                                 |
 | ------------ | ------------------------------------------------------------- | ------------------------------------ |

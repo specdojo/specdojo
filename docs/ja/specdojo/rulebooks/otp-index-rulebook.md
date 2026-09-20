@@ -6,30 +6,6 @@ specdojo:
   recipe: undecided
   sample: specdojo:otp-index-sample
   template: undecided
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 76
-    graded_at: "2026-09-03T01:37:37.628Z"
-    graded_by: gemma-expert-executor
-    content_hash: d28091bae60763f285be38115f0339cdd0d2e2a096d2c8bc41fd18b938b63581
-    categories:
-      consistency: { score: 75 }
-      usability: { score: 92 }
-      architecture: { score: 100 }
-      quality: { score: 50 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 2, score: 50 }
-      vp-qe-omissions-consistency: { level: 2, score: 50 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 3, score: 75 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 3, minor: 1, note: 0 }
 ---
 
 # 運用切替計画（ハイパーケア含む） 作成ルール
@@ -62,12 +38,7 @@ Operations Transition Plan Documentation Rules
 | 項目 | 説明 | 必須 |
 | ---- | ---- | ---- |
 
-<!-- specdojo:finding id=F002 severity=major rule=vp-qe-omissions-consistency ID指定が `otp-index` とのみされており、プロジェクト識別子（`＜project-id＞:`）を付与する標準的な ID 命名規則に準拠していない。 -->
-
 | id | `otp-index` | ○ |
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-qe-verifiability Frontmatter `type` に `migration` 固定と記述されているが、提供サンプル では `project` となっており、正解が不明確で検証不能である。 -->
-<!-- specdojo:finding id=F003 severity=major rule=vp-qe-kata-conformance サンプル `specdojo:otp-index-sample` が、本ルールブックで定義した Frontmatter の `type: migration` 固定の制約を遵守していない。 -->
 
 | type | `migration` 固定 | ○ |
 | title | `運用切替計画: 全体` | ○ |
@@ -96,8 +67,6 @@ Operations Transition Plan Documentation Rules
 ## 6. 記述ガイド
 
 ### 6.1. 概要（index）
-
-<!-- specdojo:finding id=F004 severity=minor rule=vp-ux-readability 記述ガイドが項目の列挙に留まっており、良例（`prj-overview-rulebook.md`）のような「事実と仮説を混ぜない」等の具体的な記述品質への指針が不足している。 -->
 
 - 運用安定化の目的と適用範囲を 1〜3 行で示す。
 - 本書が入口（SSOT）であり、詳細は `otp-<term>` にあることを明記する。

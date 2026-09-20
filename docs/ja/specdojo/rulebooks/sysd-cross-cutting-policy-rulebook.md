@@ -4,30 +4,6 @@ specdojo:
   type: rulebook
   status: draft
   sample: specdojo:sysd-cross-cutting-policy-sample
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 89
-    graded_at: "2026-09-03T11:46:31.749Z"
-    graded_by: gemma-expert-executor
-    content_hash: ce214cb4e305b5893e29a831fbdf59fe44b10c831793c974395bb30e20b0680e
-    categories:
-      consistency: { score: 100 }
-      usability: { score: 92 }
-      architecture: { score: 100 }
-      quality: { score: 75 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 3, score: 75 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 1, minor: 1, note: 0 }
 ---
 
 # システム設計 / 横断ルール 作成ルール
@@ -35,8 +11,6 @@ specdojo:
 System Design Cross-cutting Policy (SYSD-CCP) Documentation Rules
 
 本ドキュメントは、システム設計情報を **コード（定義ファイル）へ寄せる運用（Code as Spec）** を前提に、
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-qe-kata-conformance 参照サンプルが本文構成（標準テンプレ）および Frontmatter の type 定義と矛盾しており、作成例として機能していない。 -->
 
 実装全体に影響する共通ルールを最小限でSSOT化する **System Design Cross-cutting Policy (SYSD-CCP)** の記述ルールを定義する。
 
@@ -171,8 +145,6 @@ Frontmatter は共通スキーマに従います（参照: [docs/specdojo/schema
 ### 6.6. SYSD-CCP が扱う対象（推奨カテゴリ）
 
 - API契約の共通ルール（バージョニング、互換性、エラー形式）
-
-<!-- specdojo:finding id=F002 severity=minor rule=vp-ux-language-consistency 関連ドキュメント導線の見出し名において、第5章の構成表（SDI/SYSD Critical Flows）と表記が不一致である。 -->
 
 - 例外/エラー処理（分類、再試行可否、ユーザ通知）
 - タイムアウト/リトライ（回数、バックオフ、打ち切り、冪等前提）

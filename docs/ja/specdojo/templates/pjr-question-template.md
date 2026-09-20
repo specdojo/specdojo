@@ -14,30 +14,6 @@ specdojo:
       item_type: question
       item_status: open
       priority: medium
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: pass
-    score: 98
-    graded_at: "2026-09-06T08:43:22.953Z"
-    graded_by: codex-expert-executor
-    content_hash: 853ee3b143bd4da002c43804994e8c6411a72ce29ff1487c9d5aabc2d3bb16e6
-    categories:
-      consistency: { score: 100 }
-      usability: { score: 92 }
-      architecture: { score: 100 }
-      quality: { score: 100 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 3, score: 75 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 4, score: 100 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 1, note: 0 }
 ---
 
 # _PJR-XXXX_ _QUESTION_TITLE_

@@ -6,33 +6,7 @@ specdojo:
   recipe: undecided
   sample: specdojo:cld-sample
   template: undecided
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 82
-    graded_at: "2026-09-02T01:59:22.083Z"
-    graded_by: gemma-expert-executor
-    content_hash: f28ff1cd5488f2e524f45bc1b1dcf4dd79e5287165c7256224c199e3c8fabfd8
-    categories:
-      consistency: { score: 75 }
-      usability: { score: 83 }
-      architecture: { score: 100 }
-      quality: { score: 75 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 3, score: 75 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 2, score: 50 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 3, score: 75 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 2, minor: 2, note: 0 }
 ---
-
-<!-- specdojo:finding id=F003 severity=major rule=vp-qe-kata-conformance 参照されているサンプル specdojo:cld-sample が具体例となっておらず、正本の適用方法を検証できない。 -->
 
 # 分類一覧（Classification List）作成ルール
 
@@ -42,9 +16,6 @@ specdojo:
 分類は業務データ辞書（BDD）の enum や画面の選択肢、集計軸として重要な役割を持つため、ここでのルールは他仕様（BDD／ステータス／用語集）と一貫させることを目的とします。
 
 ## 0. 概要
-
-<!-- specdojo:finding id=F001 severity=minor rule=vp-arc-conciseness 第0章と第3章で分類種類の概要説明が重複しており、冗長である。 -->
-<!-- specdojo:finding id=F004 severity=minor rule=vp-ux-readability 分類種類の定義が重複して記載されており、効率的な読み取りを妨げている。 -->
 
 分類（Classification）とは、**業務データを意味的にグループ化する構造**である。
 
@@ -78,8 +49,6 @@ specdojo:
 | 項目 | 説明                           | 必須 |
 | ---- | ------------------------------ | ---- |
 | id   | 分類一覧ID（例：cll-xxx-xxxx） | ○    |
-
-<!-- specdojo:finding id=F002 severity=major rule=vp-qe-omissions-consistency メタデータの type が 「domain 固定」 とされる一方で、記述ルールやサンプルでは 「data」 が使用されており矛盾している。 -->
 
 | type | `domain` 固定 | ○ |
 | title | 分類一覧名 | ○ |

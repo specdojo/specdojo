@@ -1,0 +1,66 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:ifx-index-rulebook
+path: docs/ja/specdojo/rulebooks/ifx-index-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: pass
+score: 93
+graded_at: "2026-09-02T18:44:08.560Z"
+graded_by: gemma-expert-executor
+content_hash: c62aee29df9c3cae873fe62aa530b947de3c7ec1ad9dcfffcc0b046423ffa549
+categories:
+  consistency:
+    score: 88
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 88
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 4
+    score: 100
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 2
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 1
+    message: 記述内容の指示に「短い」「簡潔に」などの曖昧な表現が含まれており、客観的な品質判定基準が不明確である。
+    anchor: "# 外部システムIF一覧（External System Interface List: ESIL）作成ルール"
+  - id: F002
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: 誤用を防止するための「禁止事項」セクションが不足しており, 詳細仕様への委譲などの制約をより強く明示すべきである。
+    anchor: "# 外部システムIF一覧（External System Interface List: ESIL）作成ルール"

@@ -8,30 +8,6 @@ specdojo:
     - cr-2026-004
   part_of:
     - prj-0001
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 78
-    graded_at: "2026-09-09T00:10:56.301Z"
-    graded_by: gemma-expert-executor
-    content_hash: 3bf30bdf3d2e7716ac9cc480e5595b8b2c69001e4adad16d85e7b1502b0cfe74
-    categories:
-      consistency: { score: 75 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 50 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 2, score: 50 }
-      vp-qe-omissions-consistency: { level: 2, score: 50 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 3, minor: 0, note: 0 }
 ---
 
 # 影響調査（データ）サンプル
@@ -57,12 +33,7 @@ specdojo:
 | 中     | 1    | キャンペーン適用履歴 | 要       |
 | 低     | 1    | 価格履歴             | 否       |
 
-<!-- specdojo:finding id=F001 severity=major rule=vp-qe-verifiability line=24 変更要求の概要に、判定可能な「成功条件」が記載されていないため、目標状態の検証ができない。 -->
-<!-- specdojo:finding id=F002 severity=major rule=vp-qe-omissions-consistency line=24 記述ガイド 6.2 で必須とされている「成功条件」の記述が欠落している。 -->
-
 ## 4. 影響詳細一覧
-
-<!-- specdojo:finding id=F003 severity=major rule=vp-qe-kata-conformance line=28 禁止事項（尺度定義なしの高・中・低の混在）に抵触しており、影響度の判定基準が不明確である。 -->
 
 | 影響対象データ       | 変更要否 | 影響度 | 対応方針 | 判断根拠                                                                             | 備考                         |
 | -------------------- | -------- | ------ | -------- | ------------------------------------------------------------------------------------ | ---------------------------- |

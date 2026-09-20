@@ -13,30 +13,6 @@ specdojo:
         - _PROJECT_ID_:pm-plan
         - _PROJECT_ID_:prj-success-criteria-and-acceptance-criteria
       supersedes: []
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 80
-    graded_at: "2026-09-06T11:50:10.027Z"
-    graded_by: gemma-expert-executor
-    content_hash: b6f9314dc9866943f625649365e5eb03a98ef0f7bb58a6fd737f407d28b62405
-    categories:
-      consistency: { score: 63 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 63 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 1, score: 25 }
-      vp-qe-kata-conformance: { level: 1, score: 25 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 4, minor: 0, note: 0 }
 ---
 
 # 品質管理計画: _PROJECT_NAME_

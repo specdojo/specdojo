@@ -7,30 +7,6 @@ specdojo:
   recipe: specdojo:prj-overview-recipe
   sample: specdojo:prj-overview-sample
   template: specdojo:prj-overview-template
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: pass
-    score: 92
-    graded_at: "2026-09-03T07:54:12.599Z"
-    graded_by: codex-expert-executor
-    content_hash: e453d952d0e24f12636e55ec356ca91b6c88e97ad5d3e344fc920b03f5084446
-    categories:
-      consistency: { score: 100 }
-      usability: { score: 83 }
-      architecture: { score: 100 }
-      quality: { score: 88 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 3, score: 75 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 3, score: 75 }
-      vp-ux-readability: { level: 3, score: 75 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 3, note: 0 }
 ---
 
 # プロジェクト概要 作成ルール
@@ -98,8 +74,6 @@ Frontmatter は共通スキーマに従います（あわせてドキュメン�
 - `based_on` は、既存の経営方針・制度資料・過去 DEC など、根拠として直接参照するものがある場合のみ列挙します。
 - ドキュメント名は Frontmatter ではなく本文 H1 に記述します（例: `# プロジェクト概要: <プロジェクト名>`）。
 - H1 直下には、対象プロジェクトまたはフレームワークを一文で説明する導入文を置きます。
-
-<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-kata-conformance 対応 template を宣言済みなのに「本文構成（標準テンプレ）」として見出し順を rulebook 側でも正本化しているため、この章を「本文要件」として各章の目的・必須性・記述規約に限定し、骨組みの正本は template に統一する必要がある。 -->
 
 ## 5. 本文構成（標準テンプレ）
 
@@ -193,9 +167,6 @@ Frontmatter は共通スキーマに従います（あわせてドキュメン�
 - 人間の判断責任、AI Agent の役割、適用範囲、公開方針、利用時の取捨選択方針などを明示します。
 
 ### 6.9. プロジェクト憲章・成功基準との分担
-
-<!-- specdojo:finding id=F001 severity=minor rule=vp-arc-conciseness 憲章と成功基準への委譲方針が全体方針および禁止事項と重複しているため、本節を責務境界の正本として他箇所を短い参照へ統合すると、判断情報を失わず簡潔にできる。 -->
-<!-- specdojo:finding id=F003 severity=minor rule=vp-ux-readability 憲章・成功基準との分担が全体方針と禁止事項でも繰り返されているため、本節に詳細を集約し、他箇所は要約または参照にすると主要な判断点をより追いやすくできる。 -->
 
 - 本書では、背景・必要性・基本的な考え方・実現したいこと・期待効果を中心に記述します。
 - 承認者、承認日、権限委譲、承認経路、証跡リンクは `prj-charter` 側で管理します。

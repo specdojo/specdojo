@@ -1,0 +1,96 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:sysd-critical-flows-sample
+path: docs/ja/specdojo/samples/sysd-critical-flows-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: fail
+score: 50
+graded_at: "2026-09-06T02:43:15.913Z"
+graded_by: gemma-expert-executor
+content_hash: a152fa706968e804e5137191852c059685a41fd1958ce03af6f2e3561c9b8eb1
+categories:
+  consistency:
+    score: 25
+  usability:
+    score: 83
+  architecture:
+    score: 75
+  quality:
+    score: 25
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 2
+    score: 50
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 0
+    score: 0
+  vp-qe-kata-conformance:
+    level: 0
+    score: 0
+  vp-ux-readability:
+    level: 2
+    score: 50
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 2
+  major: 4
+  minor: 0
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 1
+    message: rulebook で必須とされている「5. 関連ドキュメント導線」章が欠落しており、他成果物との整合性を確認できない。
+    anchor: ""
+  - id: F002
+    severity: major
+    rule: vp-arc-single-responsibility
+    line: 1
+    message: 成果物の完成例（sample）としての責務ではなく、書き方のガイドとしての記述になっており、役割が不適切である。
+    anchor: ""
+  - id: F005
+    severity: blocker
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: rulebook が定義する構成に従っておらず、具体的な完成例として機能していないため, sample として不適格である。
+    anchor: ""
+  - id: F004
+    severity: blocker
+    rule: vp-qe-omissions-consistency
+    line: 3
+    message: rulebook で順序固定とされている5章構成（概要、一覧、詳細、観測性、導線）を無視し、必須項目がほぼすべて欠落している。
+    anchor: ""
+  - id: F003
+    severity: major
+    rule: vp-qe-verifiability
+    line: 21
+    message: 冪等性や失敗時挙動など, pass/fail を判定可能な具体的な設定値や基準の例が記載されていない。
+    anchor: >-
+      | 項目         |
+      値                                                                                                                               
+      | 備考                                 |
+  - id: F006
+    severity: major
+    rule: vp-ux-readability
+    line: 21
+    message: 「最小記述例」の内容がドキュメントのメタ情報に留まっており、初見の読者が重要フローの書き方を理解できる具体例になっていない。
+    anchor: >-
+      | 項目         |
+      値                                                                                                                               
+      | 備考                                 |

@@ -8,36 +8,6 @@ specdojo:
     - prj-0001:cdfd-init
     - prj-0001:cdfd-overview
   supersedes: []
-  grade:
-    rubric: grade-rubric-v1
-    target: deliverable
-    verdict: pass
-    score: 97
-    graded_at: "2026-09-12T00:34:56.336Z"
-    graded_by: codex-expert-executor
-    content_hash: 1aafa1ae01cb0ff923bbd1f05480aa4b6d6273788ad81d55acb920370687377c
-    categories:
-      consistency: { score: 100 }
-      usability: { score: 88 }
-      architecture: { score: 100 }
-      quality: { score: 100 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 3, score: 75 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-done-criteria: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-ux-readability: { level: 3, score: 75 }
-      vp-ux-user-flow: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-      vp-qe-config-validity: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 2, note: 0 }
-    done_criteria:
-      satisfied: 4
-      total: 4
-      detail_ref: prj-0001:cdfd-deprecation-grade-criteria
 ---
 
 # 概念データフロー図（非推奨化・保管）: SpecDojo
@@ -127,9 +97,6 @@ flowchart LR
   class 現行文書,新ID文書 storeTransaction
   class 人間判断者,運用担当 actor
 ```
-
-<!-- specdojo:finding id=F001 severity=minor rule=vp-arc-conciseness line=89 4章導入ですでに説明した経路Aの直接遷移と経路Bだけが領域外委譲を経由する説明を凡例で再掲しているため、いずれかへ一本化する必要がある。 -->
-<!-- specdojo:finding id=F002 severity=minor rule=vp-ux-readability line=89 4.1直後の凡例が直前の4章導入と同じ経路A・Bの分岐を再説明しているため、図固有の記号説明と領域外ノードの補足だけに絞る必要がある。 -->
 
 凡例: ノード形状・線種・色・絵文字は [[prj-0001:cdfd-overview|概念データフロー図（全体概要）]] の「凡例（本プロダクト共通）」に従う。`元の文書領域` は委譲先を示す領域外の代表ノードであり、内部処理は本図の対象外とする。経路 A は `P-10-01` から `P-10-02` への直接の遷移であり、経路 B だけが「対象領域外（経路 B のみ）」の委譲を経由する。非推奨化後の保管実行は「4.2. 保管フロー（必須）」を参照する。`-->` は情報の流れであり、本図は現物の流れを扱わない。
 

@@ -1,0 +1,104 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: cdfd-check
+path: docs/ja/product/010-business-specs/010-data-flow/cdfd-check.md
+target: deliverable
+rubric: grade-rubric-v1
+verdict: pass
+score: 91
+graded_at: "2026-09-17T00:35:16.831Z"
+graded_by: codex-expert-executor
+content_hash: e900b46419b0a3f48113b73d7c57485468f4cb9b6abc951c9f5021d0d59f228d
+categories:
+  consistency:
+    score: 75
+  usability:
+    score: 88
+  architecture:
+    score: 100
+  quality:
+    score: 100
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 3
+    score: 75
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-user-flow:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 4
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 19
+    message: >-
+      「member・agent・runner の責任分担」の正本を `pm-roles` としているが、同ファイルは Role code と責務だけを定義し、兼務・実行主体は `pm-members.yaml`、人間と AI
+      Agent の責任分担原則は `cdfd-overview` に委譲しているため、参照先を責務ごとに分けてください。
+    anchor: >-
+      - **期間・組織境界**: SpecDojo を利用するプロジェクトの実行期間を対象とし、QE、PM、ARC を含む参加者と、支援を委譲された AI Agent または runner の協働を扱う。主担当のロールコードと
+      member・agent・runner の責任分担は [[prj-0001:pm-roles|ロール一覧]] を正本とし、本書では各プロセスの最終判断者と委譲可能な支援だけを示す。
+  - id: F002
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 19
+    message: >-
+      rulebook が求める人間と AI Agent の責任分担の対応文書として `pm-roles` だけを示しているが、同文書は実行主体の割当を `pm-members.yaml` へ委譲しているため、`pm-members`
+      と `cdfd-overview` への参照を補ってください。
+    anchor: >-
+      - **期間・組織境界**: SpecDojo を利用するプロジェクトの実行期間を対象とし、QE、PM、ARC を含む参加者と、支援を委譲された AI Agent または runner の協働を扱う。主担当のロールコードと
+      member・agent・runner の責任分担は [[prj-0001:pm-roles|ロール一覧]] を正本とし、本書では各プロセスの最終判断者と委譲可能な支援だけを示す。
+  - id: F003
+    severity: minor
+    rule: vp-ux-readability
+    line: 19
+    message: >-
+      適用範囲で Role code の語彙と member・agent・runner の責任分担を一つの `pm-roles` 正本へまとめて表現しており,
+      初見の読者がロール定義と実行主体割当の違いを読み分けにくいため、正本を分けて記述してください。
+    anchor: >-
+      - **期間・組織境界**: SpecDojo を利用するプロジェクトの実行期間を対象とし、QE、PM、ARC を含む参加者と、支援を委譲された AI Agent または runner の協働を扱う。主担当のロールコードと
+      member・agent・runner の責任分担は [[prj-0001:pm-roles|ロール一覧]] を正本とし、本書では各プロセスの最終判断者と委譲可能な支援だけを示す。
+  - id: F004
+    severity: minor
+    rule: vp-ux-user-flow
+    line: 19
+    message: >-
+      member・agent・runner の責任分担を確認する導線が Role code の一覧である `pm-roles` に止まり、実行主体の正本 `pm-members` と人間／AI の原則を示す
+      `cdfd-overview` へ直接到達できないため、参照を分けてください。
+    anchor: >-
+      - **期間・組織境界**: SpecDojo を利用するプロジェクトの実行期間を対象とし、QE、PM、ARC を含む参加者と、支援を委譲された AI Agent または runner の協働を扱う。主担当のロールコードと
+      member・agent・runner の責任分担は [[prj-0001:pm-roles|ロール一覧]] を正本とし、本書では各プロセスの最終判断者と委譲可能な支援だけを示す。
+done_criteria:
+  satisfied: 3
+  total: 3
+  detail_ref: cdfd-check-grade-criteria

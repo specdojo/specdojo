@@ -7,31 +7,6 @@ specdojo:
   recipe: specdojo:prj-stakeholder-register-recipe
   sample: specdojo:prj-stakeholder-register-sample
   template: specdojo:prj-stakeholder-register-template
-  grade:
-    rubric: grade-rubric-v1
-    reference: specdojo:prj-overview-rulebook
-    target: kata
-    verdict: pass
-    score: 96
-    graded_at: "2026-09-03T08:22:59.699Z"
-    graded_by: gemma-expert-executor
-    content_hash: fdceceee1135575193f84d6c97a214040a335f4a10a5c32b05f382762ffeab54
-    categories:
-      consistency: { score: 100 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 88 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 3, score: 75 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 1, note: 0 }
 ---
 
 # ステークホルダー登録簿 作成ルール
@@ -117,8 +92,6 @@ Stakeholder Register Documentation Rulebook
 | 3    | エンゲージメント方針   | ○    | 現状、目標、対応方針、責任者、期限、証跡                              |
 | 4    | コミュニケーション要件 | ○    | 情報要求、希望チャネル、合意・報告の必要性、証跡要件、計画への反映    |
 | 5    | 見直し条件             | ○    | 更新トリガー、見直し内容、見直し責任者、承認者、証跡                  |
-
-<!-- specdojo:finding id=F001 severity=minor rule=vp-qe-kata-conformance 対応 template を宣言済みなのに「本文構成（標準テンプレ）」として見出し順を rulebook 側でも正本化しているため、この章を「本文要件」として各章の目的・必須性・記述規約に限定し、骨組みの正本は template に統一する必要がある。 -->
 
 ## 6. 記述ガイド
 

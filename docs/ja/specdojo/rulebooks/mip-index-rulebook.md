@@ -6,30 +6,6 @@ specdojo:
   recipe: undecided
   sample: specdojo:mip-index-sample
   template: undecided
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 91
-    graded_at: "2026-09-02T21:15:34.356Z"
-    graded_by: gemma-expert-executor
-    content_hash: 6113286a3f1f575579aaec0eb0fd0ec198dfe3e84e47e93cd801d9db8dd8b5eb
-    categories:
-      consistency: { score: 100 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 75 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 1, minor: 1, note: 0 }
 ---
 
 # 移行計画 作成ルール
@@ -38,8 +14,6 @@ Migration Plan (MIP) Documentation Rules
 
 本ドキュメントは、移行計画ドキュメント（`mip-index`）を統一形式で記述するためのルールです。
 移行全体を「1冊で説明できる状態」にし、関係者の合意と実行の基準点となる内容を定義します。
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-qe-kata-conformance 参照先のサンプル `docs/ja/specdojo/samples/mip-index-sample.md` が、本書で定義した必須構成（1〜9章の順序固定）および命名規則に従っておらず、著者に誤読を招く。 -->
 
 ## 1. 全体方針
 
@@ -246,8 +220,6 @@ supersedes: []
 ```
 
 ### 8.1. 移行の背景/目的
-
-<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-kata-conformance ルール内のサンプルにおける Frontmatter の `type` が `project` となっており、4.1 節の規定（`migration` 固定）と矛盾している。 -->
 
 既存システムの保守限界に伴い、新基盤へ移行するための計画を定義する。
 
