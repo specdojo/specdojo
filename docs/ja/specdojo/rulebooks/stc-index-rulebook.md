@@ -6,30 +6,6 @@ specdojo:
   recipe: undecided
   sample: specdojo:stc-index-sample
   template: undecided
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 85
-    graded_at: "2026-09-03T10:28:39.135Z"
-    graded_by: gemma-expert-executor
-    content_hash: 797ff8a5d93ec5fe76dc84e53840eea4a94c52b0a6039ebb02f766785c56e9ae
-    categories:
-      consistency: { score: 88 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 63 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 3, score: 75 }
-      vp-qe-kata-conformance: { level: 1, score: 25 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 2, minor: 1, note: 0 }
 ---
 
 # 総合テストカタログ 概要 作成ルール
@@ -37,8 +13,6 @@ specdojo:
 System Test Catalog (STC) Index Documentation Rules
 
 本ドキュメントは、総合テストカタログ（STC）の全体概要 `stc-index` を統一形式で記述するためのルールです。
-
-<!-- specdojo:finding id=F001 severity=minor rule=vp-qe-omissions-consistency Frontmatter の `recipe` および `template` が `undecided` となっており、 rulebook としての定義が不十分である。 -->
 
 TSPに基づき、総合テストに共通するルールや方針（対象分割・観点/条件・環境/証跡）を定義します。
 
@@ -107,8 +81,6 @@ Frontmatter は共通スキーマに従います（参照: [docs/specdojo/schema
 
 - `based_on` / `supersedes` は ID 配列（未指定は `[]` 可）。
 
-<!-- specdojo:finding id=F002 severity=major rule=vp-qe-kata-conformance サンプル `stc-index-sample.md` の `type` が `project` となっており、本節で定義された `test` 固定のルールと矛盾している。 -->
-
 ## 5. 本文構成（標準テンプレ）
 
 `stc-index` は以下の見出し構成を **順序固定** で配置します。
@@ -124,8 +96,6 @@ Frontmatter は共通スキーマに従います（参照: [docs/specdojo/schema
 
 | 7 | 総合テスト共通の境界/環境の扱い | ○ |
 | 8 | ケース表の共通カラム | ○ |
-
-<!-- specdojo:finding id=F003 severity=major rule=vp-qe-kata-conformance サンプル `stc-index-sample.md` の見出し構成が、本節で定義された「順序固定」の必須構成（## 1... ## 9）と完全に乖離しており、ルールの適用例となっていない。 -->
 
 | 9 | メモ / 将来課題 | 任意 |
 

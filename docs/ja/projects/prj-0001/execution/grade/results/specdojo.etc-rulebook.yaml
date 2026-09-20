@@ -1,0 +1,80 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:etc-rulebook
+path: docs/ja/specdojo/rulebooks/etc-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 79
+graded_at: "2026-09-02T17:06:33.086Z"
+graded_by: codex-expert-executor
+content_hash: 4dd4decae9f6952039f015f1cd8c6956564c73da27dd3e6b67edba5ea714d063
+categories:
+  consistency:
+    score: 50
+  usability:
+    score: 92
+  architecture:
+    score: 100
+  quality:
+    score: 75
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 3
+  minor: 1
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 1
+    message: 対応 sample が本書必須の1〜6章、trace_key、条件・ケース表を欠き、独自の章構成と「責任者」など本書にない必須観点を示しているため、本書と同じ成果物形式へ同期する必要がある。
+    anchor: ""
+  - id: F003
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: "指定の sample は必須と定義された本文構成（1〜6章）を無視し、Frontmatter の type に `project` を指定しているため, 本書に準拠する `type: test` の完成最小例へ改める必要がある。"
+    anchor: ""
+  - id: F002
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: >-
+      Frontmatter 必須項目へ `rulebook: specdojo:etc-rulebook` を追加し、`title` を除外したうえで、最小例を `specdojo:`
+      名前空間で包まなければ参照スキーマを満たせない。
+    anchor: ""
+  - id: F004
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 1
+    message: 標準見出しの `観点:＜観点＞` と最小例の `観点：再送と冪等性` でコロン表記が異なるため、生成物で採用する表記へ統一する必要がある。
+    anchor: ""

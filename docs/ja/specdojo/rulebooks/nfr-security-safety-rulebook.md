@@ -6,33 +6,7 @@ specdojo:
   recipe: undecided
   sample: specdojo:nfr-security-safety-sample
   template: undecided
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 73
-    graded_at: "2026-09-02T23:42:43.164Z"
-    graded_by: gemma-expert-executor
-    content_hash: 82a0c297ac7ae5f4caa542365dcf125db6cdcf09a7b19b5ff057f1c18b882fa7
-    categories:
-      consistency: { score: 75 }
-      usability: { score: 83 }
-      architecture: { score: 100 }
-      quality: { score: 50 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 3, score: 75 }
-      vp-qe-omissions-consistency: { level: 2, score: 50 }
-      vp-qe-kata-conformance: { level: 1, score: 25 }
-      vp-ux-readability: { level: 2, score: 50 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 3, minor: 1, note: 0 }
 ---
-
-<!-- specdojo:finding id=F002 severity=major rule=vp-qe-omissions-consistency Frontmatter の recipe および template が undecided となっており、成果物生成のための定義が不足している。 -->
 
 # 非機能要件 / 機密性・安全性 作成ルール
 
@@ -99,8 +73,6 @@ Frontmatter は共通スキーマに従います（参照: [docs/specdojo/schema
 | 3    | 機密性・安全性要件一覧 | ○    |
 | 4    | 測定・検証方法         | ○    |
 
-<!-- specdojo:finding id=F003 severity=major rule=vp-qe-kata-conformance 参照サンプル (specdojo:nfr-security-safety-sample) の構成が本ルールで定める必須見出し構成と完全に乖離しており、整合性が取れていない。 -->
-
 | 5 | 関連ドキュメント導線 | ○ |
 
 ## 6. 記述ガイド
@@ -114,10 +86,6 @@ Frontmatter は共通スキーマに従います（参照: [docs/specdojo/schema
 ### 6.2. 適用範囲・脅威前提
 
 生成する本文の見出しは **## 2. 適用範囲・脅威前提**
-
-<!-- specdojo:finding id=F001 severity=minor rule=vp-qe-verifiability 記述ガイドにおいて、判定基準を具体化するための例示が不十分であり、検証可能な表現への誘導が弱い。 -->
-
-<!-- specdojo:finding id=F004 severity=major rule=vp-ux-readability サンプルとの乖離により期待成果物の形式に混乱を招くため、また記述ガイドが抽象的で具体性に欠けるため、読者の理解を妨げる。 -->
 
 - 想定脅威、対象境界、対象外を明記する。
 

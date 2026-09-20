@@ -1,0 +1,66 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:bes-index-rulebook
+path: docs/ja/specdojo/rulebooks/bes-index-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 89
+graded_at: "2026-09-01T23:13:48.659Z"
+graded_by: gemma-expert-executor
+content_hash: fa83473288a2256a51c55ca0c51ac1009badd7d7433068652366b1862170d70e
+categories:
+  consistency:
+    score: 88
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 75
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 1
+  minor: 1
+  note: 0
+findings:
+  - id: F002
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: 参照先のサンプル `specdojo:bes-index-sample` において、5章で定義した「業務イベント一覧（表）」を具体的に実装し、記述ルールに準拠した完成例を示すこと。
+    anchor: "# 業務イベント仕様 全体構成 作成ルール"
+  - id: F001
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: 共通のFrontmatterスキーマやメタ情報標準への参照リンクを追記し、全社標準との整合性を明示すること。
+    anchor: "# 業務イベント仕様 全体構成 作成ルール"

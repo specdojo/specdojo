@@ -1,0 +1,117 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: cdfd-overview
+path: docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md
+target: deliverable
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 77
+graded_at: "2026-09-20T05:01:28.643Z"
+graded_by: codex-expert-executor
+content_hash: 2424fc6bf88b17de009642ea4d7a07c0b27debe63012e93345cfc1d97248fa87
+categories:
+  consistency:
+    score: 38
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 75
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 1
+    score: 25
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 1
+    score: 25
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 5
+  minor: 2
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 38
+    message: >-
+      成果物カタログの `cdfd-onboarding` は repository からの導入、既存プロジェクトへの導入、Detached Unit を対象に含めるが、本書の P-01 は起点を「PO
+      が新しいプロジェクトを立ち上げた」に限定しており、詳細化範囲と起動条件を統一する必要がある。
+    anchor: "| `P-01` | プロジェクト初期セットアップ | プロジェクトの推進環境を整備する。 | PO、ARC | PO が新しいプロジェクトを立ち上げた |"
+  - id: F004
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 65
+    message: DC-002（PO による対象範囲と領域分割の承認）を満たす承認記録が特定できず、未充足である。
+    anchor: <!-- prettier-ignore -->
+  - id: F006
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 65
+    message: 現行の 14 領域・六グループへの改訂を PO が承認した記録を特定できず、現在の境界に対する承認記録を追加する必要がある。
+    anchor: <!-- prettier-ignore -->
+  - id: F002
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 91
+    message: >-
+      本書は Action の主要入力を「参加者からの構成変更要求と承認結果」「参加者からの非推奨化の判断」とする一方、`cdfd-action` は承認結果と非推奨化判断を Action
+      内部で生成しており、人間の判断境界を統一する必要がある。
+    anchor: "- **データストア**: 稼働構成、Kata、成果物カタログ、登録簿、実行記録、成果物、保管庫（trash）、評価結果、進捗報告"
+  - id: F003
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 107
+    message: >-
+      `cdfd-orchestrator` は実行計画を主要入力として扱い、本書の図にも `実行計画 → Orchestrator` があるが, Orchestrator
+      の「主要入力」に実行計画がなく、入出力契約を統一する必要がある。
+    anchor: ""
+  - id: F005
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 107
+    message: DC-003 が要求する主要入力と概念データフローの相互対応について、Orchestrator の図にある実行計画入力が「主要入力」から欠落している。
+    anchor: ""
+  - id: F007
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 107
+    message: Orchestrator のデータストアと図には実行計画があるが「主要入力」には記載されていないため、図の `実行計画 → Orchestrator` エッジに対応する入力を追加する必要がある。
+    anchor: ""
+done_criteria:
+  satisfied: 2
+  total: 4
+  unsatisfied:
+    DC-002:
+      - PO
+    DC-003:
+      - ARC
+  detail_ref: cdfd-overview-grade-criteria

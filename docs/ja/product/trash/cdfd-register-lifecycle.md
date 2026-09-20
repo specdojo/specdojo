@@ -8,43 +8,9 @@ specdojo:
     - prj-0001:cdfd-init
   supersedes:
     - prj-0001:cdfd-register-operation
-  grade:
-    rubric: grade-rubric-v1
-    target: deliverable
-    verdict: needs-work
-    score: 79
-    graded_at: "2026-09-13T02:01:55.073Z"
-    graded_by: codex-expert-executor
-    content_hash: 3d31b48c2993b52355cebd1ac50abc0d5da560bd0c66c2e1c1870c0742db123a
-    categories:
-      consistency: { score: 50 }
-      usability: { score: 88 }
-      architecture: { score: 100 }
-      quality: { score: 83 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 2, score: 50 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-done-criteria: { level: 2, score: 50 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 2, score: 50 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-user-flow: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 2, score: 50 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-      vp-qe-config-validity: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 4, minor: 1, note: 0 }
-    done_criteria:
-      satisfied: 3
-      total: 4
-      unsatisfied:
-        DC-004: [PO]
-      detail_ref: prj-0001:cdfd-register-lifecycle-grade-criteria
 ---
 
 # 概念データフロー図（登録簿ライフサイクル）: SpecDojo
-
-<!-- specdojo:finding id=F002 severity=minor rule=vp-arc-cross-document-consistency line=3 本文は `prj-0001:cdfd-overview` の `P-02` 境界を直接継承すると宣言しているが Frontmatter の `based_on` には `prj-0001:cdfd-init` しかなく、直接の内容根拠を追跡できないため上位 CDFD を追加する必要がある。 -->
 
 本書は、[[prj-0001:cdfd-overview|概念データフロー図（全体概要）]] が定める `P-02 登録簿ライフサイクル` の境界を引き継ぎ、立ち上げ時の未整理事項と運用中の計画外事項を、個票の起票から対応、審査、終了、再開、派生生成、履歴確認、例外復旧まで継続管理する概念仕様である。BA が登録簿と Schedule の境界を整理し、PO、ARC、QE が人間の判断責任、正本、状態遷移、主要例外を同じ表と図から確認するために使用する。
 
@@ -92,11 +58,6 @@ specdojo:
 `registered_at` と `completed_at` は UTC・RFC 3339・秒精度で正本に保持し、一覧の登録日・完了日はプロジェクトの IANA タイムゾーンへ変換した暦日として導出する。期限は同タイムゾーン上の暦日として保持する。
 
 ### 2.3. type 別の審査と承認方式
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=58 `note` を項目 owner の確認後に `done` とする定義は、正本の登録簿運用ガイドおよび pjr-rulebook が定める「`note` は `open` のまま終端させない」という規則と矛盾するため、承認者・遷移・後続行動を非終端運用へ修正する必要がある。 -->
-<!-- specdojo:finding id=F003 severity=major rule=vp-qe-done-criteria line=58 DC-004 が要求する type 別の承認・遷移境界について、非終端である `note` に審査者と `done` 遷移を定義しているため、`note` は承認・終了対象外で `open` のまま更新することを明示しなければ完了条件を満たさない。 -->
-<!-- specdojo:finding id=F004 severity=major rule=vp-qe-omissions-consistency line=58 `note` は正本規則上 `open` のまま保持し `done`・`decided`・`rejected`・`deferred` へ遷移させてはならないが、本表は `done` を通常経路としているため、禁止事項と type 別状態遷移の整合を回復する必要がある。 -->
-<!-- specdojo:finding id=F005 severity=major rule=vp-ux-language-consistency line=58 正規用語では `note` の `open` は未対応ではなく継続更新可能な記録を意味し終端状態を使用しないため、「記録充足後に `done`」を削除して非終端の状態表現へ統一する必要がある。 -->
 
 | type             | 審査・承認者               | `review` 後の主な判断                      | 既定の証跡       |
 | ---------------- | -------------------------- | ------------------------------------------ | ---------------- |

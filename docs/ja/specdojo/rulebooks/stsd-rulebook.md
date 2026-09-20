@@ -11,30 +11,6 @@ specdojo:
     - specdojo:stsd-mermaid-rulebook
   based_on:
     - specdojo:rulebook-authoring-standard
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 73
-    graded_at: "2026-09-17T10:57:06.680Z"
-    graded_by: codex-expert-executor
-    content_hash: a0539f3eb1d337c4f13ab26a43d454870a3f83f6c946d463926618a465c594d9
-    categories:
-      consistency: { score: 50 }
-      usability: { score: 83 }
-      architecture: { score: 100 }
-      quality: { score: 63 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 2, score: 50 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 3, score: 75 }
-      vp-qe-omissions-consistency: { level: 2, score: 50 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 3, score: 75 }
-      vp-ux-language-consistency: { level: 3, score: 75 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 3, minor: 5, note: 0 }
 ---
 
 # ステータス定義（Status Definition: STSD）作成ルール

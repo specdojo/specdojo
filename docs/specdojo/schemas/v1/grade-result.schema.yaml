@@ -1,0 +1,118 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: Grade Result Sidecar
+type: object
+additionalProperties: false
+required:
+  - version
+  - document
+  - path
+  - target
+  - rubric
+  - verdict
+  - score
+  - graded_at
+  - graded_by
+  - content_hash
+  - categories
+  - viewpoints
+  - finding_counts
+  - findings
+properties:
+  version:
+    const: 1
+  document:
+    type: string
+    pattern: "^[a-z0-9][a-z0-9-:]*$"
+  path:
+    type: string
+    minLength: 1
+  target:
+    enum: [kata, deliverable]
+  rubric:
+    type: string
+    pattern: "^[a-z][a-z0-9-]*$"
+  reference:
+    type: string
+    pattern: "^[a-z0-9][a-z0-9-:]*$"
+  verdict:
+    enum: [pass, needs-work, fail]
+  score:
+    type: integer
+    minimum: 0
+    maximum: 100
+  graded_at:
+    type: string
+    format: date-time
+  graded_by:
+    type: string
+    minLength: 1
+  content_hash:
+    type: string
+    pattern: "^[a-f0-9]{64}$"
+  categories:
+    type: object
+    propertyNames:
+      pattern: "^[a-z][a-z0-9_-]*$"
+    additionalProperties:
+      $ref: "#/$defs/score"
+  viewpoints:
+    type: object
+    propertyNames:
+      pattern: "^vp-[a-z][a-z0-9-]*$"
+    additionalProperties:
+      type: object
+      additionalProperties: false
+      required: [level, score]
+      properties:
+        level:
+          type: integer
+          minimum: 0
+          maximum: 4
+        score:
+          type: integer
+          minimum: 0
+          maximum: 100
+  finding_counts:
+    type: object
+    additionalProperties: false
+    required: [blocker, major, minor, note]
+    properties:
+      blocker: { type: integer, minimum: 0 }
+      major: { type: integer, minimum: 0 }
+      minor: { type: integer, minimum: 0 }
+      note: { type: integer, minimum: 0 }
+  findings:
+    type: array
+    items:
+      type: object
+      additionalProperties: false
+      required: [id, severity, rule, line, anchor, message]
+      properties:
+        id:
+          type: string
+          pattern: "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+        severity:
+          enum: [blocker, major, minor, note]
+        rule:
+          type: string
+          pattern: "^vp-[a-z][a-z0-9-]*$"
+        line:
+          type: integer
+          minimum: 1
+        anchor:
+          type: string
+        message:
+          type: string
+          minLength: 1
+  done_criteria:
+    type: object
+$defs:
+  score:
+    type: object
+    additionalProperties: false
+    required: [score]
+    properties:
+      score:
+        type: integer
+        minimum: 0
+        maximum: 100

@@ -4,30 +4,6 @@ specdojo:
   type: project
   status: draft
   rulebook: specdojo:pr-rulebook
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: pass
-    score: 94
-    graded_at: "2026-09-05T21:23:35.916Z"
-    graded_by: gemma-expert-executor
-    content_hash: d6ed63e06858d034977ade8af63545e13f1be09b27ee2339f3b97bb1d340bb59
-    categories:
-      consistency: { score: 100 }
-      usability: { score: 92 }
-      architecture: { score: 100 }
-      quality: { score: 88 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 3, score: 75 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 4, score: 100 }
-      vp-ux-readability: { level: 3, score: 75 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 2, note: 0 }
 ---
 
 # 進捗報告 サンプル
@@ -45,12 +21,8 @@ specdojo:
 
 ## 3. 進行中事項
 
-<!-- specdojo:finding id=F001 severity=minor rule=vp-qe-verifiability line=17 「進捗60%」という表記は判定基準が曖昧であり、具体的にどの状態をもって 60% としたかの根拠または定義が必要である。 -->
-
 - レジ締め手順の改訂案を作成中（進捗60%）。
 - 日次報告テンプレートの項目統合を検討中。
-
-<!-- specdojo:finding id=F002 severity=minor rule=vp-ux-readability line=18 「項目統合を検討中」という記述は抽象的であり、何を統合しようとしているか、またはどのような判断を検討しているかの具体性が不足している。 -->
 
 ## 4. リスク・課題
 

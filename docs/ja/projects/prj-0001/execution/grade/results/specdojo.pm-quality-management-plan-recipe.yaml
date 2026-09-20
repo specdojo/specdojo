@@ -1,0 +1,84 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:pm-quality-management-plan-recipe
+path: docs/ja/specdojo/recipes/pm-quality-management-plan-recipe.md
+target: kata
+rubric: grade-rubric-v1
+verdict: pass
+score: 91
+graded_at: "2026-09-04T15:33:11.670Z"
+graded_by: gemma-expert-executor
+content_hash: f7ebae152365c2f4612495388eecbdeb66acea278f1124e90df824e32b4384c9
+categories:
+  consistency:
+    score: 88
+  usability:
+    score: 92
+  architecture:
+    score: 100
+  quality:
+    score: 88
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 5
+  note: 0
+findings:
+  - id: F004
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 14
+    message: 用語「利用者価値」が rulebook で定義された「価値品質」と不整合である。
+    anchor: "## 2. 作成前に集める情報"
+  - id: F002
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 44
+    message: 各章の書き方が問い形式ではなく指示文となっており、recipe としての責務に不十分である。
+    anchor: "- 成功基準ID、受入条件ID、検証結果を参照します。"
+  - id: F001
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 68
+    message: rulebook で定義されている「5. 見直し条件と未決事項」の書き方ガイドが欠落している。
+    anchor: ""
+  - id: F003
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 84
+    message: レビュー観点が表形式ではなく箇条書きとなっており、authoring standard に準拠していない。
+    anchor: "- 品質ゲート、レビュー、是正がそろっている。"
+  - id: F005
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 96
+    message: 「AI Agent」(line 49) と 「Agent」(line 96) の表記が混在している。
+    anchor: ""

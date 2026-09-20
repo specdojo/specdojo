@@ -5,30 +5,6 @@ specdojo:
   status: draft
   sample: specdojo:pm-issue-log-sample
   template: specdojo:pm-issue-log-template
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 80
-    graded_at: "2026-09-03T03:02:21.178Z"
-    graded_by: gemma-expert-executor
-    content_hash: 6aa58ddb78754ce33b3679d2ef7e32aa775729128e9ede3f71e79acbb5ad1b97
-    categories:
-      consistency: { score: 63 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 63 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 1, score: 25 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 1, score: 25 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 2, minor: 0, note: 0 }
 ---
 
 # 課題ログ 作成ルール
@@ -36,9 +12,6 @@ specdojo:
 Issue Log Documentation Rules
 
 本ドキュメントは、`課題ログ` を一貫した粒度で作成するためのルールを定義する。
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency 参照先の template (`specdojo:pm-issue-log-template`) が異なる rulebook ID を指定しており、かつ構造（派生ビュー）が本ルールブックの記述ルールと根本的に矛盾している。 -->
-<!-- specdojo:finding id=F002 severity=major rule=vp-qe-kata-conformance 連携するテンプレートファイルの内容が、本ルールブックで定義する構成を無視して自動生成ビューとして定義されており、実効的な乖離がある。 -->
 
 ## 1. 全体方針
 

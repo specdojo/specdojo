@@ -1,0 +1,68 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:pm-organization-rulebook
+path: docs/ja/specdojo/rulebooks/pm-organization-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 90
+graded_at: "2026-09-03T03:44:11.788Z"
+graded_by: codex-expert-executor
+content_hash: abaf0d512a3e8862ae1948f20053e4d0946513a9b57c98eec498951cc7774ab9
+categories:
+  consistency:
+    score: 50
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 100
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-qe-kata-conformance:
+    level: 4
+    score: 100
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 2
+  minor: 0
+  note: 0
+findings:
+  - id: F002
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: 本文要件に上位標準が必須とする採用／未採用 Role code、使用可能な owner、同標準への参照がなく、生成物だけではSchedule・RACIのRole code適合を判定できないため、必須項目として追加してください。
+    anchor: "# 組織定義 作成ルール"
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 1
+    message: >-
+      全Role codeを組織定義へ記載しない方針は、上位標準が同文書を採用／未採用 Role code と使用可能な owner
+      の正本としてSchedule・RACIを検証する規則と矛盾するため、採用判断を組織定義に残す責務境界へ修正してください。
+    anchor: "# 組織定義 作成ルール"

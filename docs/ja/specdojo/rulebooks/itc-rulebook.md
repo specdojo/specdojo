@@ -6,30 +6,6 @@ specdojo:
   recipe: undecided
   sample: specdojo:itc-sample
   template: undecided
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 89
-    graded_at: "2026-09-02T21:00:45.359Z"
-    graded_by: gemma-expert-executor
-    content_hash: f663f877912ef223d1fa2f520e2ce6d833a798caa3578a61990e7d87ad11a7b0
-    categories:
-      consistency: { score: 100 }
-      usability: { score: 92 }
-      architecture: { score: 100 }
-      quality: { score: 75 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 3, score: 75 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 1, minor: 1, note: 0 }
 ---
 
 # 内部結合テストカタログ 対象別 作成ルール
@@ -54,8 +30,6 @@ Internal Integration Test Catalog (ITC) Documentation Rules
 ## 2. 位置づけ（他ドキュメントとの関係）
 
 個別 ITC（`itc-<term>`）と他ドキュメントの関係を示します。
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-qe-kata-conformance 参照サンプル `specdojo:itc-sample` が本ルールブックで定義した構成（第5節）に従っておらず、実例として不適切である。 -->
 
 ```mermaid
 flowchart BT
@@ -160,8 +134,6 @@ Frontmatter は共通スキーマに従います（あわせてドキュメン�
 ### 6.3. 対象外
 
 生成する `itc-<term>` 本文の見出しは **## 3. 対象外**
-
-<!-- specdojo:finding id=F002 severity=minor rule=vp-ux-language-consistency `utc-＜term＞` は `itc-＜term＞` の誤記である。 -->
 
 本節では、「この対象カタログ（`itc-<term>`）ではやらないこと」を明示します。
 `itc-index` の「対象外・除外理由（共通）」と矛盾しないことが前提です。

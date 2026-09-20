@@ -6,30 +6,6 @@ specdojo:
   recipe: undecided
   sample: specdojo:nfr-availability-sample
   template: undecided
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 91
-    graded_at: "2026-09-02T22:03:58.961Z"
-    graded_by: gemma-expert-executor
-    content_hash: 2ce08b170dadbdaeb8e8857788545f531a2506aa59040a12689327752ba07b96
-    categories:
-      consistency: { score: 100 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 75 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 1, minor: 0, note: 0 }
 ---
 
 # 非機能要件 / 可用性 作成ルール
@@ -124,8 +100,6 @@ Frontmatter は共通スキーマに従います（参照: [docs/specdojo/schema
 生成する本文の見出しは **## 4. 測定・検証方法**
 
 - 監視値、障害訓練、復旧試験の判定方法を定義する。
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-qe-kata-conformance 参照サンプル specdojo:nfr-availability-sample が、Section 5 で定義した必須の見出し構成に準拠していない。 -->
 
 ### 6.5. 関連ドキュメント導線
 

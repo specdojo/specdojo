@@ -6,30 +6,6 @@ specdojo:
   recipe: undecided
   sample: specdojo:sf-sample
   template: undecided
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 71
-    graded_at: "2026-09-03T09:54:00.148Z"
-    graded_by: gemma-expert-executor
-    content_hash: 81c55adec41ebc6666d7c5176dd96fa4b7615ce2d356ced26cedb0bc26e5b4cd
-    categories:
-      consistency: { score: 50 }
-      usability: { score: 58 }
-      architecture: { score: 100 }
-      quality: { score: 75 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 2, score: 50 }
-      vp-arc-conciseness: { level: 3, score: 75 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 2, score: 50 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 2, score: 50 }
-      vp-ux-language-consistency: { level: 2, score: 50 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 5, minor: 1, note: 0 }
 ---
 
 # システム化機能一覧（System Function List, SFL）作成ルール
@@ -86,18 +62,12 @@ type: data
 title: システム化機能一覧(main)
 status: draft
 
-<!-- specdojo:finding id=F003 severity=major rule=vp-qe-omissions-consistency メタデータ定義（10行目）の domain 固定という指定と、本行およびサンプルでの data という記述が矛盾している。 -->
 supersedes: []
 
-<!-- specdojo:finding id=F005 severity=major rule=vp-ux-readability type 値の矛盾および指定サンプルの不整合により、正しくどのような成果物を作成すべきか判断できず、読者を混乱させる。 -->
 ---
-
-<!-- specdojo:finding id=F006 severity=major rule=vp-ux-language-consistency メタデータの type フィールドにおいて, 定義値 (domain) と解説・サンプル値 (data) が統一されていない。 -->
 ```
 
 ### 3.2 機能一覧（表）
-
-<!-- specdojo:finding id=F002 severity=minor rule=vp-arc-conciseness IDの正規表現定義が 17 行目と重複しているため、統合して簡潔に記述すべきである。 -->
 
 | 機能ID              | 機能名   | 概要                                           | 入出力                                      | 関連プロセス | 関連仕様ID                 | 備考 |
 | ------------------- | -------- | ---------------------------------------------- | ------------------------------------------- | ------------ | -------------------------- | ---- |
@@ -121,6 +91,3 @@ supersedes: []
 - 実装クラス名、SQL、内部設計の詳細を記載しない。
 - 関連仕様IDを空欄で確定しない。
 - 用語不整合のまま登録しない。
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency 指定サンプル sf-sample.md が, 本ルールで定義されている「1行1機能の表形式」に従わず, 個別機能の詳細定義文書となっており矛盾している。 -->
-<!-- specdojo:finding id=F004 severity=major rule=vp-qe-kata-conformance 指定サンプル sf-sample.md の構成が本ルールの定義（機能一覧表の作成）と完全に乖離しており、適用方法が不明確である。 -->

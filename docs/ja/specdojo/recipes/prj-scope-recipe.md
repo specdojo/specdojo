@@ -5,30 +5,6 @@ specdojo:
   status: ready
   rulebook: specdojo:prj-scope-rulebook
   sample: specdojo:prj-scope-sample
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 75
-    graded_at: "2026-09-04T18:52:39.257Z"
-    graded_by: codex-expert-executor
-    content_hash: c9db92a418dfbfdd9724ccc559f59bd81be3219a0fe257c90cfcd777a97cab3c
-    categories:
-      consistency: { score: 50 }
-      usability: { score: 92 }
-      architecture: { score: 100 }
-      quality: { score: 63 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 2, score: 50 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 3, score: 75 }
-      vp-qe-omissions-consistency: { level: 2, score: 50 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 3, score: 75 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 3, minor: 5, note: 0 }
 ---
 
 # プロジェクトスコープ 作成レシピ
@@ -39,9 +15,6 @@ Project Scope Writing Recipe
 本書では問い、深掘り手順、具体化のコツ、レビュー観点を扱います。
 
 ## 1. このレシピの使い方
-
-<!-- specdojo:finding id=F006 severity=minor rule=vp-qe-kata-conformance line=13 委譲先を「後続成果物」とだけ記載し、実在する `prj-success-criteria-and-acceptance-criteria`、`prj-assumptions-constraints-dependencies`、`prj-issues-and-approach` を識別できないため、Recipe 記述標準のリンク規約に従ってリンクまたは文書 ID を明示する必要がある。 -->
-<!-- specdojo:finding id=F008 severity=minor rule=vp-ux-readability line=13 「後続成果物」という総称だけでは次に見る文書を識別できないため、成功基準・受入条件, 前提・制約・依存関係, 課題と解決アプローチの各文書 ID またはリンクを明示する必要がある。 -->
 
 - 最初に、プロジェクト概要や上位方針から「何を実現したいか」を短く抜き出す。
 - 次に、対象業務、対象システム、対象期間、スコープ外を分けて書く。
@@ -217,15 +190,7 @@ Project Scope Writing Recipe
 | 責務分担         | 受入条件、設計詳細、実装詳細を書きすぎていないか                   |
 | 公開適性         | 個人情報、非公開情報、機密情報が含まれていないか                   |
 
-<!-- specdojo:finding id=F004 severity=minor rule=vp-qe-omissions-consistency line=184 「仕上げチェック」に個人情報・非公開情報・機密情報を含まないことの最終確認がなく、Recipe 記述標準が同章に求める公開適性チェックを満たさないため、確認項目を追加する必要がある。 -->
-<!-- specdojo:finding id=F007 severity=minor rule=vp-qe-kata-conformance line=184 Recipe 記述標準が「仕上げチェック」に要求する公開適性の最終確認がないため、個人情報・非公開情報・機密情報を含まないことを確認する項目を追加する必要がある。 -->
-
 ## 8. 仕上げチェック
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=186 「全体の作成手順」の全章を仕上げ条件にしているため、rulebook が任意とする「境界の判断基準」「スコープ変更方針」を省略した適合成果物が不合格になる；両章を任意として扱う条件付きチェックへ改める必要がある。 -->
-<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-verifiability line=192 各対象・対象外を「変更記録」へ追跡する条件が変更済み項目に限られるのか初版にも適用されるのか不明なため、初版は上位目的・境界理由、変更後は変更記録も確認するなど状態別の判定条件へ分ける必要がある。 -->
-<!-- specdojo:finding id=F003 severity=major rule=vp-qe-omissions-consistency line=186 「全体の作成手順」の全章を仕上げ条件にしているため、rulebook が任意とする「境界の判断基準」「スコープ変更方針」を省略した適合成果物が不合格になる；両章を任意として扱う条件付きチェックへ改める必要がある。 -->
-<!-- specdojo:finding id=F005 severity=major rule=vp-qe-kata-conformance line=186 Recipe 記述標準が成果物の構造・必須項目の正本を rulebook と定めているのに、rulebook の任意章である「境界の判断基準」「スコープ変更方針」を必須の仕上げ条件として再定義しているため、任意区分を一致させる必要がある。 -->
 
 - 「全体の作成手順」で示した章立てがそろっている。
 - 対象業務、対象システム、対象期間、スコープ外がすべて記述されている。

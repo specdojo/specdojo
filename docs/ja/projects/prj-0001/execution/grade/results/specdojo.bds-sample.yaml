@@ -1,0 +1,96 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:bds-sample
+path: docs/ja/specdojo/samples/bds-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: fail
+score: 48
+graded_at: "2026-09-04T20:55:39.025Z"
+graded_by: gemma-expert-executor
+content_hash: 404b35d9fd06e8f65b3440209727990730a96bb3ef65cb190470b520fd80efc8
+categories:
+  consistency:
+    score: 25
+  usability:
+    score: 58
+  architecture:
+    score: 100
+  quality:
+    score: 25
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 0
+    score: 0
+  vp-qe-kata-conformance:
+    level: 0
+    score: 0
+  vp-ux-readability:
+    level: 1
+    score: 25
+  vp-ux-language-consistency:
+    level: 2
+    score: 50
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 3
+  major: 4
+  minor: 0
+  note: 0
+findings:
+  - id: F005
+    severity: blocker
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: 本文書は BDS のサンプルとして定義されているが、BDS ルールブックの構成案および命名規則に一切準拠していない。
+    anchor: ""
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 3
+    message: ID `specdojo:bds-sample` がルールブックで規定された命名形式（bds-xxx）に準拠していない。
+    anchor: ""
+  - id: F003
+    severity: blocker
+    rule: vp-qe-omissions-consistency
+    line: 4
+    message: "Frontmatter の `type: project` がルールブック指定の `domain` / `data` と矛盾している。"
+    anchor: "## 1. 目的と適用範囲"
+  - id: F007
+    severity: major
+    rule: vp-ux-language-consistency
+    line: 4
+    message: Frontmatter の `type` に、ルールブックで定義されていない `project` が使用されており、表記が統一されていない。
+    anchor: "## 1. 目的と適用範囲"
+  - id: F004
+    severity: blocker
+    rule: vp-qe-omissions-consistency
+    line: 11
+    message: ルールブックで定義された必須構成（概要、利用者/利用目的、出力タイミング等）がすべて省略されており、BDS としての形式を成していない。
+    anchor: "- 前提: プロジェクト文脈は handbook の共通方針に準拠する"
+  - id: F006
+    severity: major
+    rule: vp-ux-readability
+    line: 11
+    message: ルールブックの標準構成に従わない独自の見出し構成となっており、正しい BDS の記述方法を理解させるためのガイドとして機能していない。
+    anchor: "- 前提: プロジェクト文脈は handbook の共通方針に準拠する"
+  - id: F002
+    severity: major
+    rule: vp-qe-verifiability
+    line: 31
+    message: 目的の記述例が抽象的であり、具体的かつ検証可能な判定基準を提示するサンプルとしての機能が不十分である。
+    anchor: "| 要件詳細の補強 | 実案件適用時に具体化する |"

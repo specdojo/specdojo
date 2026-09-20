@@ -1,0 +1,87 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:sysd-index-sample
+path: docs/ja/specdojo/samples/sysd-index-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: fail
+score: 65
+graded_at: "2026-09-06T03:16:57.460Z"
+graded_by: gemma-expert-executor
+content_hash: 41644465d2e1732f8a0a9e58c4a69caabcda77157e962d0d49c802c77eda465e
+categories:
+  consistency:
+    score: 63
+  usability:
+    score: 75
+  architecture:
+    score: 100
+  quality:
+    score: 38
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
+    level: 1
+    score: 25
+  vp-qe-kata-conformance:
+    level: 0
+    score: 0
+  vp-ux-readability:
+    level: 2
+    score: 50
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 1
+  major: 2
+  minor: 2
+  note: 0
+findings:
+  - id: F002
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: Frontmatter の title 不足、および必須章（SSOT一覧, 変更の入口, 関連ドメイン導線）と更新責任（Owner）が欠落している。
+    anchor: ""
+  - id: F003
+    severity: blocker
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: rulebook 第5節で定義された必須見出し構成および順序に準拠していない。
+    anchor: ""
+  - id: F004
+    severity: major
+    rule: vp-ux-readability
+    line: 1
+    message: rulebook が定義する SSOT 一覧表などの核心的要素が実装されておらず、作成サンプルとしての有用性を欠いている。
+    anchor: ""
+  - id: F005
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 7
+    message: 見出し名が規定の「概要（対象範囲・更新責任）」ではなく「目的と適用範囲」となっている。
+    anchor: ""
+  - id: F001
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 23
+    message: 「最小記述例」の内容が成果物自体のメタデータに留まっており、具体的な SSOT 定義の書き方を示す検証可能な例になっていない。
+    anchor: >-
+      | ドキュメント |
+      全体構成（リンク集）                                                                                                                                                        
+      | 最小サンプル                         |

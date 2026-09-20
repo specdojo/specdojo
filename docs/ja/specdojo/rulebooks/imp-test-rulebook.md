@@ -6,30 +6,6 @@ specdojo:
   recipe: undecided
   sample: specdojo:imp-test-sample
   template: undecided
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 67
-    graded_at: "2026-09-02T20:26:47.594Z"
-    graded_by: codex-expert-executor
-    content_hash: bec948abac4be5fc47f2a25211c3a6906948591f3c2ea5248399a68ef5288f87
-    categories:
-      consistency: { score: 63 }
-      usability: { score: 83 }
-      architecture: { score: 100 }
-      quality: { score: 38 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 1, score: 25 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 2, score: 50 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 1, score: 25 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 2, score: 50 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 7, minor: 1, note: 0 }
 ---
 
 # 影響調査（テスト）作成ルール
@@ -94,15 +70,10 @@ Impact Analysis (Test) Rulebook
 
 ### 6.1. 目的と適用範囲
 
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency 対応 sample は、必須とされた対象期間と成功条件を記載しておらず、rulebook が定める「目的と適用範囲」および「変更要求の概要」の記述要件と整合しない。 -->
-<!-- specdojo:finding id=F004 severity=major rule=vp-qe-kata-conformance 対応 sample は、rulebook が必須とする対象期間と成功条件を欠いており、必須要素を満たす完成最小例として成立していない。 -->
-
 - 対象変更要求の識別子、対象テスト範囲、対象期間を明記する。
 - 「何を判断する文書か」を 2〜4 行で示す。
 
 ### 6.2. 変更要求の概要
-
-<!-- specdojo:finding id=F003 severity=major rule=vp-qe-verifiability 成功条件に指標・状態・閾値・判定方法を求めず、影響度についても評価観点から高・中・低へ写像する条件や複数観点が割れた場合の決定規則を定めていないため、中心となる成功条件と影響度を再現可能な pass / fail 条件として検証できない。 -->
 
 - 変更の背景、狙い、成功条件を簡潔に記述する。
 - 要求詳細は原文を転記せず、判断に必要な要点のみを要約する。
@@ -127,10 +98,6 @@ Impact Analysis (Test) Rulebook
 
 ### 6.5. 対応方針
 
-<!-- specdojo:finding id=F006 severity=major rule=vp-qe-kata-conformance 対応 sample の担当欄は「井上」「高橋」「山本」「佐藤」という個人名を使用しており、sample 本文で人物名を使用しないとする Sample 記述標準の禁止事項に抵触している。 -->
-<!-- specdojo:finding id=F007 severity=major rule=vp-ux-language-consistency 対応 sample の担当欄は、共通人物台帳にない個人名と「テスト管理」「業務受入」などの未定義ラベルを使用しており、Sample 記述標準が要求する役割名・nickname・Role code による識別と統一されていない。 -->
-<!-- specdojo:finding id=F008 severity=minor rule=vp-ux-language-consistency 本文では並べ替え基準を未定義の「重要度」と呼ぶ一方、他節では「影響度」、対応 sample では「優先度」を使用しているため、同一概念か別の判断軸かを判別できるよう用語と対応関係を統一する必要がある。 -->
-
 - 重要度が高い項目から順に、実施時期、担当、前提条件を記載する。
 - 見送りの場合は、再評価条件と時期を必ず記載する。
 
@@ -143,9 +110,6 @@ Impact Analysis (Test) Rulebook
 
 - 実装詳細（SQL 全文、クラス名、API リクエスト構造）を記載しない。
 - 「影響あり」「要対応」のみで根拠を記載しない。
-
-<!-- specdojo:finding id=F002 severity=major rule=vp-arc-cross-document-consistency 対応 sample は評価観点だけを列挙し、高・中・低の判定尺度を定義しないまま影響度を使用しているため, rulebook の禁止事項と整合しない。 -->
-<!-- specdojo:finding id=F005 severity=major rule=vp-qe-kata-conformance 対応 sample は高・中・低の尺度を定義しないまま影響度を使用しており、rulebook の禁止事項に抵触している。 -->
 
 - 影響度の尺度を定義せずに高・中・低を混在させない。
 - 未解決事項に期限や担当を設定せずに放置しない。

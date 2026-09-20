@@ -6,31 +6,6 @@ specdojo:
   recipe: undecided
   sample: specdojo:imp-operations-sample
   template: undecided
-  grade:
-    rubric: grade-rubric-v1
-    reference: specdojo:prj-overview-rulebook
-    target: kata
-    verdict: pass
-    score: 94
-    graded_at: "2026-09-02T19:58:19.714Z"
-    graded_by: gemma-expert-executor
-    content_hash: cad21332665300ec05b6813d4d24d74766a64e8ba93d6cb787bded1ded685282
-    categories:
-      consistency: { score: 100 }
-      usability: { score: 92 }
-      architecture: { score: 100 }
-      quality: { score: 88 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 3, score: 75 }
-      vp-ux-readability: { level: 3, score: 75 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 3, note: 0 }
 ---
 
 # 影響調査（運用）作成ルール
@@ -39,11 +14,7 @@ Impact Analysis (Operations) Rulebook
 
 本ドキュメントは、変更要求が運用へ与える影響を整理するための「影響調査（運用）」の記述ルールを定義します。プロジェクト関係者が変更要否・影響度・対応方針・未解決事項を同じ粒度で判断できる状態を目標とします。
 
-<!-- specdojo:finding id=F001 severity=minor rule=vp-qe-kata-conformance Frontmatter の recipe が undecided となっており、対応する recipe への参照が定義されていない。 -->
-
 ## 1. 全体方針
-
-<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-kata-conformance Frontmatter の template が undecided となっており、対応する template への参照が定義されていない。 -->
 
 - 対象は「変更要求による運用影響の把握と判断」であり、実運用手順の詳細化は扱わない。
 - 記載粒度は「運用責任者とプロジェクト管理者が合意形成できるレベル」とし、影響の有無だけでなく、判断根拠を簡潔に残す。
@@ -58,8 +29,6 @@ Impact Analysis (Operations) Rulebook
 | 影響対象運用 | 変更要求の影響を受ける監視、アラート、手順、体制、運用統制、SLA 運用       |
 | 変更要否     | 影響対象に対して変更が必要かどうかの判定                                   |
 | 影響度       | 影響の強さ。運用品質、障害対応力、継続運用性、利用者影響を踏まえて評価する |
-
-<!-- specdojo:finding id=F003 severity=minor rule=vp-ux-readability 委譲先として「各ドキュメント」と記載されているが、具体的にどの成果物種別に委譲すべきかの例示がなく、境界が曖昧である。 -->
 
 | 対応方針 | 影響に対して採用する対処方針（実施、代替、見送りなど） |
 | 未解決事項 | 判断や実施に必要な情報が不足している課題 |

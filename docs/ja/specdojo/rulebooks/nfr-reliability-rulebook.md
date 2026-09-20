@@ -6,30 +6,6 @@ specdojo:
   recipe: undecided
   sample: specdojo:nfr-reliability-sample
   template: undecided
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 91
-    graded_at: "2026-09-02T23:27:15.316Z"
-    graded_by: gemma-expert-executor
-    content_hash: ac5ba1cd76dac66612f7be41838a46a258d0d49f6ac3ffaf2dcef44695025b19
-    categories:
-      consistency: { score: 100 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 75 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 1, minor: 0, note: 0 }
 ---
 
 # 非機能要件 / 信頼性 作成ルール
@@ -73,8 +49,6 @@ Non-Functional Requirements Reliability Documentation Rules
 ### 4.1. 設定内容
 
 Frontmatter は共通スキーマに従います（参照: [docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml](../../../specdojo/schemas/v1/deliverable-frontmatter.schema.yaml) / [document-metadata-standard.md](../standards/document-metadata-standard.md)）。
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-qe-kata-conformance 指定サンプル(nfr-reliability-sample.md)の構成を、第5章で定義した必須構成(順序固定)に準拠させること。 -->
 
 | 項目     | 説明                                | 必須 |
 | -------- | ----------------------------------- | ---- |

@@ -6,30 +6,6 @@ specdojo:
   recipe: undecided
   sample: specdojo:itc-index-sample
   template: undecided
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 82
-    graded_at: "2026-09-02T20:44:19.739Z"
-    graded_by: gemma-expert-executor
-    content_hash: 28eb41de2c198bdf8bae615ecb2bdc6d54a9ab4cafcb74f180e76c58b1d6342a
-    categories:
-      consistency: { score: 75 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 63 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 2, score: 50 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 1, score: 25 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 2, minor: 0, note: 0 }
 ---
 
 # 内部結合テストカタログ概要 作成ルール
@@ -116,8 +92,6 @@ Frontmatter は共通スキーマに従います（参照: [docs/specdojo/schema
 | 4    | 観点の立て方（共通）           | ○    |
 | 5    | 条件の立て方（共通）           | ○    |
 
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency IDを `itc-index` 固定とする指定は、プロジェクト一意性を担保する `＜project-id＞:id` 形式の命名慣習と矛盾している。 -->
-
 | 6 | 観点/条件の採用基準と対象別への分配方針（共通） | ○ |
 | 7 | 内部結合テスト共通の境界/依存の扱い | ○ |
 | 8 | テスト環境・データの共通方針 | ○ |
@@ -146,8 +120,6 @@ Frontmatter は共通スキーマに従います（参照: [docs/specdojo/schema
 
 - SSOTの一次情報は `itc-index` / `itc-<term>` とし、テストコード／CIは **実装と実行結果の証跡（Evidence）** として扱う。
 - 本書が扱う粒度：**判断基準・共通ルールまで**（個別ケースの列挙は禁止）
-
-<!-- specdojo:finding id=F002 severity=major rule=vp-qe-kata-conformance 参照サンプル `specdojo:itc-index-sample` が、本文第5章で定義した必須構成（固定見出し順）に従っておらず、完成例として不整合である。 -->
 
 - ITで保証する範囲（例）：
   - コンポーネント間の結合（I/F、変換、永続化、トランザクション境界）

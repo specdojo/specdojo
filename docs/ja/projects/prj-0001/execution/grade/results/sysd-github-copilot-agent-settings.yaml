@@ -1,0 +1,177 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: sysd-github-copilot-agent-settings
+path: docs/ja/product/040-system-design/sysd-github-copilot-agent-settings.md
+target: deliverable
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 58
+graded_at: "2026-09-19T16:40:32.193Z"
+graded_by: codex-expert-executor
+content_hash: d10cad720566f4d096c0ce40c2bece543d5aa638691ec4c16b8ce9b7203b119b
+categories:
+  consistency:
+    score: 25
+  usability:
+    score: 56
+  architecture:
+    score: 100
+  quality:
+    score: 58
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 1
+    score: 25
+  vp-arc-conciseness:
+    level: 3
+    score: 75
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 1
+    score: 25
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 1
+    score: 25
+  vp-ux-readability:
+    level: 2
+    score: 50
+  vp-ux-user-flow:
+    level: 2
+    score: 50
+  vp-ux-language-consistency:
+    level: 2
+    score: 50
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 12
+  minor: 2
+  note: 0
+findings:
+  - id: F005
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 3
+    message: GitHub Copilot を採用する業務上の要求、採用理由、代替 provider との選択条件が示されず、DC-001 の整合性を確認できない。
+    anchor: SpecDojo CLI と GitHub Copilot CLI / Copilot cloud agent を組み合わせてマルチエージェント実行を行うための設定・構成を定義する。
+  - id: F010
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 24
+    message: 現行必須構成である executor、reporter、runner による result 反映の各 stage と責務境界が全体フローから欠落している。
+    anchor: "## 3. 全体フロー"
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 30
+    message: >-
+      現行は executor が成果物編集またはレビューだけを行い、reporter の出力を runner が result へ反映する2段 pipeline であるため、Copilot agent が result
+      を直接編集するフローを修正する必要がある。
+    anchor: "-> Copilot agent が成果物または result を編集"
+  - id: F012
+    severity: major
+    rule: vp-ux-readability
+    line: 122
+    message: >-
+      custom agent は `specdojo exec run` の worker 選択に関与しないと説明した後で同名を member・実行例に使用しており、手動選択用 profile と pipeline
+      executor/reporter の違いを一意に理解できない。
+    anchor: >-
+      exec の無人実行の command template は `--agent` を指定しない（`起動コマンドの設計` を参照）。本節の custom agent は Copilot Chat / cloud agent
+      で明示的に選択する用途であり、`specdojo exec run` の worker 選択には関与しない。
+  - id: F003
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 177
+    message: >-
+      現行の `providers.copilot.command_template` は個人設定への依存を避けるため `—model auto` を明示しているため、掲載する command template
+      を一致させる必要がある。
+    anchor: >-
+      起動コマンドは親設計の `起動コマンドの解決` に従い、`.specdojo/exec-defaults.yaml` の `providers.copilot` で定義する。`pm-members.yaml` の member
+      には `command` を書かない。edit / review とも同一の許可リスト構成のため、プレースホルダと `command_params` は使わない。権限設計の根拠は
+      [specdojo:exec-config-guide](../../specdojo/guides/exec-config-guide.md) の `agent 権限とプロンプトインジェクション対策` を正本とする。
+  - id: F002
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 201
+    message: >-
+      現行 member は `copilot-executor`、`copilot-review-executor`、`copilot-reporter` と `stage_role` で構成されており、記載された2 member
+      の nickname・属性・reporter 欠落を現行 `pm-members.yaml` に合わせる必要がある。
+    anchor: "`pm-members.yaml` の member は選択属性だけを持つ。運用検証が完了するまで `disabled: true` で定義し、`exec run --auto` の候補から除外しておく。"
+  - id: F006
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 201
+    message: 運用検証が未完了であるにもかかわらず完了条件・解除基準がなく、DC-002 の承認判断に必要な情報が不足している。
+    anchor: "`pm-members.yaml` の member は選択属性だけを持つ。運用検証が完了するまで `disabled: true` で定義し、`exec run --auto` の候補から除外しておく。"
+  - id: F009
+    severity: major
+    rule: vp-qe-verifiability
+    line: 201
+    message: 「運用検証が完了するまで」および rate-limit pattern の実出力確認について、対象 CLI バージョン、確認コマンド、期待結果、解除条件、証跡先が定義されておらず合否判定できない。
+    anchor: "`pm-members.yaml` の member は選択属性だけを持つ。運用検証が完了するまで `disabled: true` で定義し、`exec run --auto` の候補から除外しておく。"
+  - id: F014
+    severity: major
+    rule: vp-ux-language-consistency
+    line: 201
+    message: >-
+      `copilot-edit-agent`、`copilot-review-agent` という member 名は現行の
+      `copilot-executor`、`copilot-review-executor`、`copilot-reporter` と一致しないため、custom agent 名と pipeline member
+      名を区別して統一する必要がある。
+    anchor: "`pm-members.yaml` の member は選択属性だけを持つ。運用検証が完了するまで `disabled: true` で定義し、`exec run --auto` の候補から除外しておく。"
+  - id: F007
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 256
+    message: 制約ごとの検証方法、期待結果、テスト参照がなく、DC-004 のテスト設計・検証観点として使用できない。
+    anchor: stderr の実文言は CLI バージョンで変わりうるため、上記 pattern は実際の出力で検証してから確定する。
+  - id: F008
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 264
+    message: member 名、pipeline stage、reporter、実行コマンドが現行構成と一致せず, DC-005 の実装基礎として参照できない。
+    anchor: memberを明示して実行する場合は `--by` にnicknameを指定する。
+  - id: F013
+    severity: major
+    rule: vp-ux-user-flow
+    line: 264
+    message: >-
+      実在しない `copilot-edit-agent` と `copilot-review-agent` を `—by` に指定しており、現行の `copilot-executor` と `copilot-reporter`
+      を用いる executor/reporter 指定手順へ更新する必要がある。
+    anchor: memberを明示して実行する場合は `--by` にnicknameを指定する。
+  - id: F004
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 277
+    message: 9.1節と同一の全フラグを10節で再掲しているため、10節は9.1節への参照と標準入力による再現方法だけに絞り、二重管理を解消する必要がある。
+    anchor: >-
+      `specdojo exec run` との統合では、plan は標準入力で渡され、引数必須の `-p` は `"$(cat)"` で受ける。plan 全体が引用済みの単一引数になるため、YAML frontmatter の
+      `---` がコマンドラインオプションとして誤認されない。手動で同じ動作を再現する場合は次のとおり（フラグ構成は `起動コマンドの設計` の command template と同一）。
+  - id: F011
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 297
+    message: 関連文書が公式仕様だけに限定され、rulebook が要求する設計制約ごとのテスト・設定検証、実装 SSOT、横断ルールへの検証導線が欠落している。
+    anchor: "## 12. 公式仕様参照"
+done_criteria:
+  satisfied: 1
+  total: 5
+  unsatisfied:
+    DC-001:
+      - BA
+    DC-002:
+      - PO
+    DC-004:
+      - QE
+    DC-005:
+      - DEV
+  detail_ref: sysd-github-copilot-agent-settings-grade-criteria

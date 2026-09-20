@@ -10,30 +10,6 @@ specdojo:
   based_on:
     - specdojo:rulebook-authoring-standard
   supersedes: []
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 78
-    graded_at: "2026-09-03T06:16:48.818Z"
-    graded_by: codex-expert-executor
-    content_hash: 19794ab9632cb2fd254b19e2556db7c21f3efd17203d8b77ebde487aa56c3674
-    categories:
-      consistency: { score: 63 }
-      usability: { score: 92 }
-      architecture: { score: 100 }
-      quality: { score: 63 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 2, score: 50 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 3, score: 75 }
-      vp-qe-omissions-consistency: { level: 3, score: 75 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 3, score: 75 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 2, minor: 6, note: 0 }
 ---
 
 # 前提・制約・依存関係 作成ルール
@@ -89,9 +65,6 @@ flowchart LR
 - rulebook は `docs/ja/specdojo/rulebooks/prj-assumptions-constraints-dependencies-rulebook.md` に配置する。
 - recipe、sample、template は、それぞれ `docs/ja/specdojo/recipes/`、`samples/`、`templates/` の同じ prefix を持つファイルに配置する。
 
-<!-- specdojo:finding id=F003 severity=minor rule=vp-qe-verifiability 各表と変更記録で項目 ID を必須の追跡キーとして使う一方, 「ドキュメント ID」では文書 ID しか定義していないため, 前提・制約・依存ごとの接頭辞, 文書内一意性, 採番後の不変性を規定する必要がある。 -->
-<!-- specdojo:finding id=F004 severity=minor rule=vp-qe-omissions-consistency sample は `ACD-A01`・`ACD-C01`・`ACD-D01` を使用し, template も種別別 ID を要求しているが, rulebook は項目 ID の形式・一意性・安定性を定義していないため, 必須キーの規則として追加する必要がある。 -->
-
 ### 3.2. ドキュメント ID
 
 - 成果物 ID: `<project-id>:prj-assumptions-constraints-dependencies`
@@ -144,10 +117,6 @@ flowchart LR
 - 根拠が不足する場合は事実として断定せず、_ASSUMPTION_: または _TODO_: として確認先を残す。
 - スコープで定義済みの境界に該当する前提は再掲せず、章冒頭でスコープの該当章へ委譲する。追加する前提がない場合は、その旨と追加時の記載条件を明記する（章は省略しない）。
 
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency 継続提供される基盤を依存関係とする本規定に対し, recipe の「4.1. 前提条件」は「店頭で使う端末を利用できる」を前提の例とし, sample の ACD-D01 は同じ端末可用性を依存関係としているため, 誤登録を防ぐよう分類を統一する必要がある。 -->
-<!-- specdojo:finding id=F005 severity=major rule=vp-qe-kata-conformance rulebook と sample は継続利用する端末・作業基盤を依存関係として扱うが, recipe は店頭端末の利用可能性を前提条件の例としているため, recipe による適用結果が rulebook に反しないよう分類例を統一する必要がある。 -->
-<!-- specdojo:finding id=F006 severity=minor rule=vp-qe-kata-conformance `rulebook-authoring-standard` は章参照を章タイトルで記載するよう求めているが, 「依存関係（6.3.）」は番号で参照しているため, 「依存関係」のような章タイトル参照へ改める必要がある。 -->
-
 - リポジトリ、作業環境、外部ツールなど、外部から継続的に提供される基盤の可用性は、前提条件ではなく依存関係（6.3.）として扱う。
 
 推奨表:
@@ -175,10 +144,6 @@ flowchart LR
 - 意思決定待ちの依存は、プロジェクト登録簿の項目として登録し、本書からは登録項目 ID を参照する。決定後に本書へ影響がある場合は該当項目へ反映する。
 
 推奨表:
-
-<!-- specdojo:finding id=F002 severity=minor rule=vp-arc-cross-document-consistency 依存関係の推奨表は「内容または依存先」「確認方法または成立条件」等を用いる一方, template と sample は「依存先・条件」「受領・成立条件」等を用いているため, 列の必須意味が揺れないよう名称を統一する必要がある。 -->
-<!-- specdojo:finding id=F007 severity=minor rule=vp-qe-kata-conformance rulebook の依存関係表と template・sample の列名が一致せず, 成立条件と確認方法の必須性が異なって読めるため, rulebook を正本として同一の項目定義へ揃える必要がある。 -->
-<!-- specdojo:finding id=F008 severity=minor rule=vp-ux-language-consistency 「内容または依存先」「影響・必要な理由」「確認方法または成立条件」「トリガー」は, template・sample の「依存先・条件」「必要となる理由」「受領・成立条件」「変化のトリガー」と表記と意味範囲が異なるため, 読み手が同じ必須項目として認識できる名称へ統一する必要がある。 -->
 
 | ID  | 内容または依存先 | 影響・必要な理由 | 確認方法または成立条件 | トリガー | 所有者 | 対応方針 |
 | --- | ---------------- | ---------------- | ---------------------- | -------- | ------ | -------- |

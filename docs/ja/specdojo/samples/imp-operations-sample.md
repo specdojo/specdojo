@@ -8,30 +8,6 @@ specdojo:
     - cr-2026-004
   part_of:
     - prj-0001
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: pass
-    score: 93
-    graded_at: "2026-09-05T08:18:30.133Z"
-    graded_by: codex-expert-executor
-    content_hash: cb8f71d433ade224aec9ca3ec284a873d2fac065f17471630a7a465293673684
-    categories:
-      consistency: { score: 88 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 88 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 3, score: 75 }
-      vp-qe-omissions-consistency: { level: 3, score: 75 }
-      vp-qe-kata-conformance: { level: 4, score: 100 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 4, note: 0 }
 ---
 
 # 影響調査（運用）サンプル
@@ -41,15 +17,11 @@ specdojo:
 本書は、変更要求 `cr-2026-004` が駄菓子屋の販売管理システムの運用へ与える影響を判断するための文書である。
 対象は「監視運用」「アラート初動」「日次締め運用」「問い合わせ一次対応」の 4 運用領域とする。
 
-<!-- specdojo:finding id=F004 severity=minor rule=vp-qe-omissions-consistency line=7 「目的と適用範囲」に、rulebook 6.1 が明記を求める対象期間が記載されていない。 -->
-
 ## 2. 変更要求の概要
 
 - 背景: バーコード会計とキャンペーン値引き導入に伴い、運用監視と初動手順の見直しが必要となった。
 - 要求内容: 監視項目の追加、アラート判定条件の調整、日次締め運用の確認手順更新。
 - 狙い: 変更後も運用品質を維持し、障害時の初動遅延を防止する。
-
-<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-verifiability line=13 「運用品質を維持」「初動遅延を防止」を達成したと判定するための指標、閾値、確認時点が定義されていない。 -->
 
 ## 3. 影響分析サマリ
 
@@ -63,16 +35,12 @@ specdojo:
 
 ## 4. 影響詳細一覧
 
-<!-- specdojo:finding id=F001 severity=minor rule=vp-qe-verifiability line=30 影響度（高・中・低）を判定するための具体的な尺度（判定基準）が定義されていない。 -->
-
 | 影響対象運用       | 変更要否 | 影響度 | 対応方針 | 判断根拠                                                                               | 備考                             |
 | ------------------ | -------- | ------ | -------- | -------------------------------------------------------------------------------------- | -------------------------------- |
 | 監視運用           | 要       | 高     | 実施     | 値引き適用エラー監視がないと、売上差異を早期検知できず日次締めで手戻りが発生するため。 | 新規監視 3 項目を追加する。      |
 | アラート初動       | 要       | 高     | 実施     | 初動判定条件が旧仕様のままだと誤検知が増え、対応遅延につながるため。                   | 初動手順を改訂し当番へ共有。     |
 | 日次締め運用       | 要       | 中     | 代替     | 全手順を即時更新すると教育負荷が高いため、当面は差分手順書を併用して段階移行する。     | 2 週間後に一本化判断を行う。     |
 | 問い合わせ一次対応 | 否       | 低     | 見送り   | 問い合わせ分類に大きな変更がなく、既存テンプレートで対応可能なため。                   | 想定外問い合わせ増加時に再評価。 |
-
-<!-- specdojo:finding id=F003 severity=minor rule=vp-qe-verifiability line=33 「想定外問い合わせ増加時」の増加を判定する基準値または比較期間がなく、再評価条件の成立を客観的に判定できない。 -->
 
 ## 5. 対応方針
 

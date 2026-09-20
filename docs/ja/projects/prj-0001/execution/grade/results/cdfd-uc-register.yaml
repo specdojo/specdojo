@@ -1,0 +1,77 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: cdfd-uc-register
+path: docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md
+target: deliverable
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 95
+graded_at: "2026-09-20T05:11:28.995Z"
+graded_by: codex-expert-executor
+content_hash: 7d688ba3fe34dfe1f0921ef2d9e8b75179c31a9fd0acd24137af851d370f1bce
+categories:
+  consistency:
+    score: 100
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 83
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 1
+  minor: 0
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-qe-verifiability
+    line: 193
+    message: H-01 の「権限を持つ人間の承認」は、具体的な責任ロールまたは権限の参照先が明示されておらず, また「実行計画と対応付いている」という証跡の確認方法が不明確なため, 受理可否を一意に判定できない。
+    anchor: >-
+      | H-02        | Do             | Check          |
+      対応済み登録項目、対応内容、検証結果、result、evidence、実行状態                                     |
+      登録項目への対応が完了し、対象と対応内容が登録簿で対応付き、`done_criteria` ごとの評価に使う result・evidence・実行状態を Check
+      が特定できる。                                                                                                |
+      評価対象が対応後に変更された、対応内容と実行記録を対応付けられない、必要な evidence
+      を取得できない、または実行状態から対応完了を確認できない。                                                                                         
+      |
+done_criteria:
+  satisfied: 3
+  total: 3
+  detail_ref: cdfd-uc-register-grade-criteria

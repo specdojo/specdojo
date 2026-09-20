@@ -1,0 +1,90 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:opr-index-rulebook
+path: docs/ja/specdojo/rulebooks/opr-index-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 74
+graded_at: "2026-09-03T00:59:32.747Z"
+graded_by: gemma-expert-executor
+content_hash: e8852014a5822ed8cce209cbdb1cb2b4a26358e1de6ee7d6d09750816c3262f9
+categories:
+  consistency:
+    score: 100
+  usability:
+    score: 83
+  architecture:
+    score: 100
+  quality:
+    score: 38
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
+    level: 1
+    score: 25
+  vp-ux-readability:
+    level: 2
+    score: 50
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 4
+  minor: 2
+  note: 0
+findings:
+  - id: F002
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: "`recipe` および `template` が `undecided` のままであり、作成支援資産が不足している。"
+    anchor: "# 運用手順 全体構成 作成ルール"
+  - id: F003
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: 対応サンプル `specdojo:opr-index-sample` が本ルールブックに従っておらず、Frontmatter の `rulebook` 指定が誤っている（`opd-rulebook` になっている）。
+    anchor: "# 運用手順 全体構成 作成ルール"
+  - id: F001
+    severity: major
+    rule: vp-qe-verifiability
+    line: 1
+    message: 本文構成表に「内容（要点）」や「記述基準」の列がなく、各章で具体的に何を記述すべきかの判定条件が不明確である。
+    anchor: "# 運用手順 全体構成 作成ルール"
+  - id: F004
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: 本ルールブックで 12 章すべてを必須（○）としているが、対応サンプルでは 4 章分しか実装されておらず、整合していない。
+    anchor: "# 運用手順 全体構成 作成ルール"
+  - id: F005
+    severity: major
+    rule: vp-ux-readability
+    line: 1
+    message: 本文構成表に記述要点がなく、章タイトルから内容を推測させる形式となっており、作成者の判断に依存する。
+    anchor: "# 運用手順 全体構成 作成ルール"
+  - id: F006
+    severity: minor
+    rule: vp-ux-readability
+    line: 1
+    message: 12 章という多範な構成を要求していながら、記述ガイドが一部の章（障害対応、バッチ等）に限定されており、他の必須章に対するガイダンスが不足している。
+    anchor: "# 運用手順 全体構成 作成ルール"

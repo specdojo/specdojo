@@ -1,0 +1,127 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: sysd-job-execution
+path: docs/ja/product/040-system-design/sysd-job-execution.md
+target: deliverable
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 68
+graded_at: "2026-09-19T16:51:39.478Z"
+graded_by: codex-expert-executor
+content_hash: 32bdb45ec2ed79a3242b1fe18859e7acb2389cc4156752f5cad701de897d141a
+categories:
+  consistency:
+    score: 50
+  usability:
+    score: 63
+  architecture:
+    score: 100
+  quality:
+    score: 67
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 3
+    score: 75
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 2
+    score: 50
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-user-flow:
+    level: 2
+    score: 50
+  vp-ux-language-consistency:
+    level: 2
+    score: 50
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 6
+  minor: 4
+  note: 0
+findings:
+  - id: F008
+    severity: major
+    rule: vp-ux-user-flow
+    line: 31
+    message: "`job-definition-standard`をSSOTとして示しているがリンクがなく、関連文書一覧も存在しないため、実装者・検証者・運用者が必要な正本へ到達できるリンク付き導線を追加する必要がある。"
+    anchor: ""
+  - id: F002
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 75
+    message: ファイル名とJob IDの一致は`job-definition-standard`で必須の判定基準だが、「案を基本とする」と任意に読めるため、必須規則として表現を統一する必要がある。
+    anchor: ""
+  - id: F010
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 75
+    message: 冒頭では実装済みと宣言している一方で「案を基本とする」「追加し」「既定案」と未確定に見える表現が残るため、現行仕様と将来案を明示的に区別する必要がある。
+    anchor: ""
+  - id: F007
+    severity: minor
+    rule: vp-ux-readability
+    line: 125
+    message: precondition、shell実行、evidence、失敗判定、analysis、lock継承という複数論点が一段落に集中しているため、小見出しまたは表へ分割して条件と結果を対応付ける必要がある。
+    anchor: ""
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 238
+    message: "`owner: TR` は `pm-roles.yaml` に存在しないため、Schedule taskと共通のRole codeを使うという方針に従い、登録済みRole codeへ置換する必要がある。"
+    anchor: "description: |"
+  - id: F009
+    severity: major
+    rule: vp-ux-language-consistency
+    line: 238
+    message: 翻訳Job例の`TR`はプロジェクトで定義されたRole codeではなく、ownerの語彙を混乱させるため登録済みRole codeへ統一する必要がある。
+    anchor: "description: |"
+  - id: F004
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 286
+    message: 設計制約ごとの検査方法、対象テスト、期待結果、またはテスト設計への参照がないため、DC-004「テスト設計・検証観点の参照として使えること」を確認できない。
+    anchor: ""
+  - id: F005
+    severity: major
+    rule: vp-qe-verifiability
+    line: 286
+    message: Job生成、重複排除、precondition、retry、checkpoint、権限・秘密情報の各制約について検証手段と期待結果を対応付けた検証観点を追加する必要がある。
+    anchor: ""
+  - id: F006
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 286
+    message: "`sysd-rulebook`で必須の検証観点・関連文書がなく、`sysd-index`、横断ルール、テスト設計、運用ガイド、`job-definition-standard`への解決可能な導線を追加する必要がある。"
+    anchor: ""
+  - id: F003
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 290
+    message: command実行・analysis起動・失敗判定の説明が第3節と第4節を反復しているため、この節では現在未対応の差分と実装上の制約だけを残して前節を参照する形へ整理する必要がある。
+    anchor: "- cronは5フィールド形式を扱い、数値、`*`、リスト、範囲、stepを受け付ける。"
+done_criteria:
+  satisfied: 4
+  total: 5
+  unsatisfied:
+    DC-004:
+      - QE
+  detail_ref: sysd-job-execution-grade-criteria

@@ -6,39 +6,6 @@ specdojo:
   rulebook: specdojo:cdfd-overview-rulebook
   based_on: []
   supersedes: []
-  grade:
-    rubric: grade-rubric-v1
-    target: deliverable
-    verdict: needs-work
-    score: 77
-    graded_at: "2026-09-20T05:01:28.643Z"
-    graded_by: codex-expert-executor
-    content_hash: a22d5ecff5bee64e24a5f0de93c039d37846cb8a172d0f2ee81b14bb155429cf
-    categories:
-      consistency: { score: 38 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 75 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 1, score: 25 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-done-criteria: { level: 1, score: 25 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 2, score: 50 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-user-flow: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-      vp-qe-config-validity: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 5, minor: 2, note: 0 }
-    done_criteria:
-      satisfied: 2
-      total: 4
-      unsatisfied:
-        DC-002: [PO]
-        DC-003: [ARC]
-      detail_ref: cdfd-overview-grade-criteria
 ---
 
 # 概念データフロー図（全体概要）: SpecDojo
@@ -75,7 +42,6 @@ SpecDojo を導入して Kata を配置し、その雛形から稼働構成の�
 - **主要出力**: 配置した Kata、稼働構成の初期状態
 - **データストア**: Kata、稼働構成
 
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=38 成果物カタログの `cdfd-onboarding` は repository からの導入、既存プロジェクトへの導入、Detached Unit を対象に含めるが、本書の P-01 は起点を「PO が新しいプロジェクトを立ち上げた」に限定しており、詳細化範囲と起動条件を統一する必要がある。 -->
 <!-- prettier-ignore -->
 | 領域 ID | プロセス領域 | 業務目的 | 主な担当 | 起点イベント |
 | --- | --- | --- | --- | --- |
@@ -106,8 +72,6 @@ Plan の実行指示に基づき、人または AI Agent が Kata を参照し�
 - **主要出力**: 作成・更新した成果物、登録項目の状態遷移、実行記録（result）、実行状態（ブロック・判断依頼を含む）
 - **データストア**: Kata、稼働構成、実行計画、ジョブ定義、登録簿、実行記録、成果物
 
-<!-- specdojo:finding id=F004 severity=major rule=vp-qe-done-criteria line=65 DC-002（PO による対象範囲と領域分割の承認）を満たす承認記録が特定できず、未充足である。 -->
-<!-- specdojo:finding id=F006 severity=major rule=vp-qe-omissions-consistency line=65 現行の 14 領域・六グループへの改訂を PO が承認した記録を特定できず、現在の境界に対する承認記録を追加する必要がある。 -->
 <!-- prettier-ignore -->
 | 領域 ID | プロセス領域 | 業務目的 | 主な担当 | 起点イベント |
 | --- | --- | --- | --- | --- |
@@ -132,8 +96,6 @@ Plan の実行指示に基づき、人または AI Agent が Kata を参照し�
 
 Check の結果と人間の判断に基づき、タスクの完了確定、稼働構成の変更反映、役割を終えた文書の退避を行い、必要に応じて Plan へ再計画を要求する。
 
-<!-- specdojo:finding id=F002 severity=major rule=vp-arc-cross-document-consistency line=91 本書は Action の主要入力を「参加者からの構成変更要求と承認結果」「参加者からの非推奨化の判断」とする一方、`cdfd-action` は承認結果と非推奨化判断を Action 内部で生成しており、人間の判断境界を統一する必要がある。 -->
-
 - **主要入力**: Orchestrator からの完了・改善要求、評価結果、進捗報告の判断事項、完了条件、参加者からの構成変更要求と承認結果、参加者からの非推奨化の判断
 - **主要出力**: 完了・決定の記録、完了記録、更新した稼働構成（Kata のバージョン更新を含む）、更新した成果物カタログ、非推奨化した文書、保管した文書、再計画要求
 - **データストア**: 稼働構成、Kata、成果物カタログ、登録簿、実行記録、成果物、保管庫（trash）、評価結果、進捗報告
@@ -152,10 +114,6 @@ Plan・Do・Check・Action へ要求を発行して PDCA を回す。参加者�
 - **主要入力**: 稼働構成の agent 定義・実行既定値、参加者からの意図、成果物カタログの完了条件、スケジュール戦略の作業要件、実行計画（対象・手順・完了条件）、定期実行定義、実行状態
 - **主要出力**: Plan・Do・Check・Action への要求、サイクルの実行記録
 - **データストア**: 稼働構成、成果物カタログ、スケジュール戦略、定期実行定義、実行計画、実行記録
-
-<!-- specdojo:finding id=F003 severity=minor rule=vp-arc-cross-document-consistency line=107 `cdfd-orchestrator` は実行計画を主要入力として扱い、本書の図にも `実行計画 → Orchestrator` があるが, Orchestrator の「主要入力」に実行計画がなく、入出力契約を統一する必要がある。 -->
-<!-- specdojo:finding id=F005 severity=major rule=vp-qe-done-criteria line=107 DC-003 が要求する主要入力と概念データフローの相互対応について、Orchestrator の図にある実行計画入力が「主要入力」から欠落している。 -->
-<!-- specdojo:finding id=F007 severity=minor rule=vp-qe-omissions-consistency line=107 Orchestrator のデータストアと図には実行計画があるが「主要入力」には記載されていないため、図の `実行計画 → Orchestrator` エッジに対応する入力を追加する必要がある。 -->
 
 <!-- prettier-ignore -->
 | 領域 ID | プロセス領域 | 業務目的 | 主な担当 | 起点イベント |

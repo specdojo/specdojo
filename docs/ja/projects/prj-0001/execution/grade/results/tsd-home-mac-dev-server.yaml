@@ -1,0 +1,116 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: tsd-home-mac-dev-server
+path: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md
+target: deliverable
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 77
+graded_at: "2026-09-17T04:49:48.107Z"
+graded_by: gemma-expert-executor
+content_hash: 5b6e8238ca207912e1d9600ed1f79ce5789442559d414400da5cbc7c2fd838f7
+categories:
+  consistency:
+    score: 63
+  usability:
+    score: 94
+  architecture:
+    score: 100
+  quality:
+    score: 58
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 3
+    score: 75
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 1
+    score: 25
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 3
+  minor: 3
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 1
+    message: 成果物カタログの `depends_on` に含まれる `ifd-specdojo` がFrontmatterの `based_on` に反映されておらず、依存関係の追跡結果が一致しない。
+    anchor: ""
+  - id: F006
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 8
+    message: 同一の開発サーバを `Host Mac`、`Home MacBook Pro`、`接続先 Mac` と定義せずに呼び分けており、接続元もMacの場合に識別しづらいため、冒頭で正式呼称と別名を定義して統一する必要がある。
+    anchor: >-
+      本書は、Host Mac 上で動作する Docker Desktop / devcontainer / Ollama と、外部端末からの VS Code Remote SSH 接続をつなぐ実行基盤の設定を扱う。ローカル LLM
+      自体のモデル構成は [[tsd-ollama]] を正本とし、SpecDojo agent の責務分担と agent CLI 個別設定は [[sysd-agent-settings]] と子設計を正本とする。
+  - id: F003
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 55
+    message: DC-003のライセンス・バージョン方針、DC-004のテストフレームワーク・CI/CD環境、DC-005のライブラリ選定が採用設定または参照先として示されていない。
+    anchor: "## 3. 採用設定"
+  - id: F005
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 55
+    message: 採用設定に各技術のバージョン方針とライセンス条件がなく、テストフレームワーク、CI/CD環境、依存ライブラリの選定または正本への参照も欠落している。
+    anchor: "## 3. 採用設定"
+  - id: F002
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 506
+    message: >-
+      正本の `.devcontainer/post-create.sh` はCodex公式インストーラを優先しnpm版をフォールバックにしているが、本文は `@openai/codex` のnpm global
+      installと断定しているため、現在の導入方法に合わせて更新する必要がある。
+    anchor: >-
+      | `customizations.vscode.extensions` | Claude Code / ChatGPT / GitHub Copilot / GitHub Copilot Chat
+      等                                                             | VS Code
+      側の補助機能                                               |
+  - id: F004
+    severity: major
+    rule: vp-qe-verifiability
+    line: 676
+    message: >-
+      初期確認にテストフレームワークとCI/CD環境の参照・確認手順がなく、`pmset -g assertions`、`pwd`、`git
+      status`にも合格となる期待状態が示されていないため、必要な受入判定をpass/failで確定できない。
+    anchor: ""
+done_criteria:
+  satisfied: 2
+  total: 5
+  unsatisfied:
+    DC-003:
+      - ARC
+    DC-004:
+      - QE
+    DC-005:
+      - DEV
+  detail_ref: tsd-home-mac-dev-server-grade-criteria

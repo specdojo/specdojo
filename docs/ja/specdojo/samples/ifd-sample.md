@@ -4,30 +4,6 @@ specdojo:
   type: project
   status: draft
   rulebook: specdojo:ifd-mermaid-rulebook
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 69
-    graded_at: "2026-09-05T06:55:54.476Z"
-    graded_by: gemma-expert-executor
-    content_hash: 6b9025d3a9c35fc3c36b5ae88b57986cb0807846933de62651052e0c13c7d1f9
-    categories:
-      consistency: { score: 63 }
-      usability: { score: 75 }
-      architecture: { score: 100 }
-      quality: { score: 50 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 3, score: 75 }
-      vp-qe-omissions-consistency: { level: 1, score: 25 }
-      vp-qe-kata-conformance: { level: 1, score: 25 }
-      vp-ux-readability: { level: 1, score: 25 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 4, minor: 1, note: 0 }
 ---
 
 # [インフラ構成図](../rulebooks/ifd-mermaid-rulebook.md) サンプル
@@ -49,23 +25,14 @@ specdojo:
 
 ## 4. 最小記述例
 
-<!-- specdojo:finding id=F002 severity=major rule=vp-qe-omissions-consistency line=24 ルールブック（ifd-mermaid-rulebook.md）に定義のない「必須観点: 対象、条件、判定基準、責任者」を記載しており、整合性に矛盾がある。 -->
-
 | 項目         | 値                                                                                                   | 備考                                 |
 | ------------ | ---------------------------------------------------------------------------------------------------- | ------------------------------------ |
 | ドキュメント | [インフラ構成図](../rulebooks/ifd-mermaid-rulebook.md)                                               | 最小サンプル                         |
 | 目的         | インフラの論理的な境界（環境 / ネットワーク / ゾーン）と、主要コンポーネント間の通信の流れを定義する | specdojo:deliverables-reference 準拠 |
 | 主な内容     | 実行環境、ネットワーク、論理ゾーン、Webアプリ、API Server、DB など                                   | 要点のみ記載                         |
 
-<!-- specdojo:finding id=F003 severity=major rule=vp-qe-omissions-consistency line=26 成果物の核心である Mermaid によるインフラ構成図の記述が完全に欠落している。 -->
-<!-- specdojo:finding id=F005 severity=major rule=vp-ux-readability line=26 具現化された図表がなく、メタ情報の表のみとなっているため、ルールブックの具体的な適用方法を理解することができない。 -->
-
 ## 5. 未解決事項
-
-<!-- specdojo:finding id=F004 severity=major rule=vp-qe-kata-conformance line=28 ルールブックが定義する Mermaid 記法を用いた具体例が含まれておらず、sample 型としての責務を果たしていない。 -->
 
 | 論点           | 処理方針                 |
 | -------------- | ------------------------ |
 | 要件詳細の補強 | 実案件適用時に具体化する |
-
-<!-- specdojo:finding id=F001 severity=minor rule=vp-qe-verifiability line=31 「specdojo:deliverables-reference 準拠」という記述だけでは、具体的にどの基準を満たしているか判定できず、検証可能性が低い。 -->

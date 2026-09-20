@@ -5,30 +5,6 @@ specdojo:
   status: ready
   rulebook: specdojo:prj-issues-and-approach-rulebook
   sample: specdojo:prj-issues-and-approach-sample
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: pass
-    score: 84
-    graded_at: "2026-09-04T18:08:29.988Z"
-    graded_by: codex-expert-executor
-    content_hash: 85f06de2ed21875641bf33dbbd71f3a71652da2a916d79776bdbaebb20a24eb7
-    categories:
-      consistency: { score: 75 }
-      usability: { score: 92 }
-      architecture: { score: 100 }
-      quality: { score: 75 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 3, score: 75 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 3, score: 75 }
-      vp-qe-omissions-consistency: { level: 3, score: 75 }
-      vp-qe-kata-conformance: { level: 3, score: 75 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 3, score: 75 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 7, note: 0 }
 ---
 
 # プロジェクト課題と解決アプローチ 作成レシピ
@@ -126,8 +102,6 @@ Project Issues and Approach Writing Recipe
 - 案IDを振り、採用アプローチや代替案比較から参照できるようにする。
 - 同じ判断を置き換える案の詳細比較は代替案比較へ委譲し、本書では比較が必要な論点を示す。
 
-<!-- specdojo:finding id=F004 severity=minor rule=vp-qe-kata-conformance line=95 存在する関連成果物「代替案比較」をリンクまたは仮置き識別子で示しておらず Recipe 記述標準のリンク規約を満たさないため, 参照先リンクまたは `prj-comparison-of-alternatives` を明示する。 -->
-
 ### 4.4. 採用アプローチと理由
 
 問い:
@@ -165,9 +139,6 @@ Project Issues and Approach Writing Recipe
 - それぞれの責任ロールは誰か。
 
 書き方:
-
-<!-- specdojo:finding id=F005 severity=minor rule=vp-qe-kata-conformance line=136 _TODO_ と _UNDECIDED_ を同列の選択肢にし, 意思決定未了の「GitHub を採用するか決定する」を _TODO_ の例にしているため, 「要確認・追記は _TODO_, 意思決定未了は _UNDECIDED_」という共通定義に合わせて用途と例を分ける。 -->
-<!-- specdojo:finding id=F007 severity=minor rule=vp-ux-language-consistency line=136 意思決定待ちにも _TODO_ を使用できる説明は _UNDECIDED_ との意味境界を曖昧にするため, 要確認・追記と意思決定未了を区別し, それぞれ対応するラベルを一意に示す。 -->
 
 - 「ToDo」「目的」「責任ロール」の表にする。
 - ToDo の項目は、未確定事項を示す場合は _TODO_: または _UNDECIDED_ ラベルを先頭に付け、後続で検索・フィルタできるようにする（例: _TODO_: 公開先にGitHub を採用するか決定する）。
@@ -226,15 +197,9 @@ Project Issues and Approach Writing Recipe
 
 ## 8. 仕上げチェック
 
-<!-- specdojo:finding id=F001 severity=minor rule=vp-arc-cross-document-consistency line=192 仕上げチェックは「必須表」が揃うことを要求しているが, rulebook の各表は推奨扱いで recipe 内にも必須表の定義がないため, 表の必須性を rulebook と統一する。 -->
-<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-verifiability line=192 「必須表」が本文中で定義されておらず, 対応 rulebook の表も推奨扱いであるため, 仕上げ時にどの表の有無を pass / fail 判定するのか列挙するか, 「必須章・必須項目」に改める。 -->
-
 - 「全体の作成手順」で示した章立てと必須表がそろっている。
 - 課題一覧、原因、解決策候補、採用アプローチと理由がすべて記述されている。
 - 解決策候補が 2 件以上あり、代替・補完の関係と対応課題がある。
 - 採用アプローチに判断軸と採用理由がある。
 - 各採用アプローチを、目指す価値、課題・原因、候補案、採否理由、見直し記録へ ID で追跡できる。
 - 曖昧表現や設計詳細を書きすぎていない。
-
-<!-- specdojo:finding id=F003 severity=minor rule=vp-qe-omissions-consistency line=197 「仕上げチェック」に Recipe 記述標準が求める公開適性の最終確認がなく, 業務課題・リスク・根拠に非公開情報を含めてよいか判定できないため, 機密情報や公開可否を確認する項目を追加する。 -->
-<!-- specdojo:finding id=F006 severity=minor rule=vp-qe-kata-conformance line=197 Recipe 記述標準が「仕上げチェック」に求める公開適性の最終確認がないため, 対象成果物に機密情報・個人情報など公開不適切な内容が含まれないことを確認する項目を追加する。 -->

@@ -9,30 +9,6 @@ specdojo:
   template: specdojo:pm-communication-plan-template
   based_on:
     - specdojo:people-and-organization-definition-standard
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: pass
-    score: 96
-    graded_at: "2026-09-03T02:44:13.430Z"
-    graded_by: gemma-expert-executor
-    content_hash: 00ebacdedfc4d7c0832d38b2f555a7e7d01c8654695da96e7df64d5b80a12a34
-    categories:
-      consistency: { score: 88 }
-      usability: { score: 92 }
-      architecture: { score: 100 }
-      quality: { score: 100 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 3, score: 75 }
-      vp-qe-kata-conformance: { level: 4, score: 100 }
-      vp-ux-readability: { level: 3, score: 75 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 2, note: 0 }
 ---
 
 # コミュニケーション計画 作成ルール
@@ -88,9 +64,6 @@ Communication Plan Documentation Rulebook
 | 5    | 見直し条件と未決事項   | 任意 | 見直しトリガー、未決論点、判断者             |
 
 ## 6. 記述ガイド
-
-<!-- specdojo:finding id=F001 severity=minor rule=vp-qe-omissions-consistency 「位置づけ」という見出しがあるが、他成果物から見た本文書の役割や依存関係などの位置づけに関する記述が不足している。 -->
-<!-- specdojo:finding id=F002 severity=minor rule=vp-ux-readability 見出しに「位置づけ」が含まれているが、具体的な位置づけの説明がないため、利用者が文書の役割を把握しにくい。 -->
 
 ### 6.1. 方針と適用範囲
 

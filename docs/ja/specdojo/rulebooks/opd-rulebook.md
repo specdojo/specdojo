@@ -11,31 +11,6 @@ specdojo:
     - specdojo:opd-incident-management-sample
     - specdojo:opd-monitoring-sample
   template: undecided
-  grade:
-    rubric: grade-rubric-v1
-    reference: specdojo:prj-overview-rulebook
-    target: kata
-    verdict: pass
-    score: 96
-    graded_at: "2026-09-03T00:32:30.551Z"
-    graded_by: gemma-expert-executor
-    content_hash: cf9d99d98c81c141bd88e369616166d1e2133914b65920851785d05a77884cbe
-    categories:
-      consistency: { score: 100 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 88 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 3, score: 75 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 1, note: 0 }
 ---
 
 # 運用方針・設計 作成ルール
@@ -46,8 +21,6 @@ Operations Policy and Design (OPD) Documentation Rules
 切替後の恒常運用を「あるべき姿」として定義し、運用品質（SLO/SLA・責任分界・統制）を SSOT 化するための内容を定義します。
 
 ## 1. 全体方針
-
-<!-- specdojo:finding id=F001 severity=minor rule=vp-qe-kata-conformance サンプルとして指定されている `specdojo:opd-sample` が、本ルールで定義した必須構成および Frontmatter (type: operations) に準拠していない。 -->
 
 `opd-index`（必要に応じて `opd-<term>`）は、恒常運用の方針と統制基準を一元化する SSOT とする。
 

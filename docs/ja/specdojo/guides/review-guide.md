@@ -179,9 +179,9 @@ grade は継続監視の最新スナップショット、review result は完成
 
 #### 成果物 grade と review result の責務境界
 
-成果物の現在品質と変更後の再評価は `grade --target deliverable` を正とします。成果物カタログの `done_criteria` は grade plan に取り込まれ、score とは独立して条件ごとの充足を判定します。成果物 Frontmatter には充足数・総数・未充足条件の担当 Role code・詳細参照だけを置き、条件文と不足理由は成果物ごとの grade 詳細ファイルに記録します。
+成果物の現在品質と変更後の再評価は `grade --target deliverable` を正とします。成果物カタログの `done_criteria` は grade plan に取り込まれ、score とは独立して条件ごとの充足を判定します。充足数・総数・未充足条件の担当 Role code・詳細参照は grade result サイドカーに置き、条件文と不足理由は成果物ごとの grade 詳細ファイルに記録します。
 
-評価が現在内容に対するものかは、保存された `content_hash` と grade・finding を除いた現在内容のハッシュが一致するかで判断します。不一致の grade と、実行後に成果物が変更された review result は、どちらも現在品質の根拠には使いません。`grade list --target deliverable --changed-only` と定期 routine は、この不一致を再評価対象として検出します。
+評価が現在内容に対するものかは、保存された `content_hash` と現在の成果物ファイル全体のハッシュが一致するかで判断します。不一致の grade と、実行後に成果物が変更された review result は、どちらも現在品質の根拠には使いません。`grade list --target deliverable --changed-only` と定期 routine は、この不一致を再評価対象として検出します。
 
 review result は特定時点に誰が何を確認し、どの合意を行ったかを残す不変の履歴です。既存 review result は削除・移行せず、最新状態の判定には利用しません。090 の review タスクと `G-*-review-pass` は人の合意形成・最終承認のゲートとして維持し、継続品質の再評価は grade が担います。これにより二つの結果を同じ最新状態として同期させる必要をなくします。
 

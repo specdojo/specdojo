@@ -1,0 +1,80 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: cdfd-onboarding
+path: docs/ja/product/010-business-specs/010-data-flow/cdfd-onboarding.md
+target: deliverable
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 88
+graded_at: "2026-09-17T01:40:30.001Z"
+graded_by: codex-expert-executor
+content_hash: 5fb92a5bd306477a435c70f95f95a2d51cb54b10aa32d685ccbb4234795bdf33
+categories:
+  consistency:
+    score: 50
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 100
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 2
+  minor: 0
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 12
+    message: >-
+      成果物カタログは repository からの導入、既存プロジェクトへの導入、Detached Unit
+      の複数ケースを扱うよう要求しているが、本書は「新しいプロジェクト」の初期セットアップだけに限定しているため、参照文書間で採用する範囲を統一し、各対象ケースの起動条件・差分・例外を追跡可能にする必要がある。
+    anchor: "- **開始と終了**: PO が新しいプロジェクトを立ち上げた時点から、選択した provider の雛形に基づく Kata の配置と稼働構成の初期化が完了し、Plan へ引き渡せる時点までを扱う。"
+  - id: F002
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 12
+    message: >-
+      成果物カタログの note にある repository からの導入、既存プロジェクトへの導入、Detached Unit
+      の各ケースが本文に現れず、新規プロジェクト以外の開始条件・正常経路・例外処理を確認できないため、カタログとの範囲差を解消する必要がある。
+    anchor: "- **開始と終了**: PO が新しいプロジェクトを立ち上げた時点から、選択した provider の雛形に基づく Kata の配置と稼働構成の初期化が完了し、Plan へ引き渡せる時点までを扱う。"
+done_criteria:
+  satisfied: 3
+  total: 3
+  detail_ref: cdfd-onboarding-grade-criteria

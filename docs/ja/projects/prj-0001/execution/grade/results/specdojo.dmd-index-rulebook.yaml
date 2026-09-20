@@ -1,0 +1,66 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:dmd-index-rulebook
+path: docs/ja/specdojo/rulebooks/dmd-index-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 93
+graded_at: "2026-09-02T16:18:52.722Z"
+graded_by: gemma-expert-executor
+content_hash: 21996265fb560ba9ee3ebfbd600cc5cbc73bc6d5d0941d88494a39a7038c99df
+categories:
+  consistency:
+    score: 75
+  usability:
+    score: 92
+  architecture:
+    score: 100
+  quality:
+    score: 100
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
+    level: 4
+    score: 100
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 1
+  minor: 1
+  note: 0
+findings:
+  - id: F002
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 1
+    message: "ID規則において、プロジェクトIDを含む具体的な命名パターン（例: ＜project-id＞:dmd-index）が明示されていない。"
+    anchor: "# データ移行設計 作成ルール"
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 1
+    message: Frontmatter の type, title, id の定義が、対応するサンプル成果物 dmd-index-sample.md と矛盾している。
+    anchor: "# データ移行設計 作成ルール"

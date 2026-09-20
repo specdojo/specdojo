@@ -9,42 +9,16 @@ specdojo:
   template: not-needed
   based_on:
     - specdojo:rulebook-authoring-standard
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 78
-    graded_at: "2026-09-19T21:04:45.681Z"
-    graded_by: codex-expert-executor
-    content_hash: acdd3bc479b1cc9bade955d469ed3dcd49f76664c982c403e204fd8b9510c93e
-    categories:
-      consistency: { score: 63 }
-      usability: { score: 75 }
-      architecture: { score: 100 }
-      quality: { score: 75 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 2, score: 50 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 3, score: 75 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 3, score: 75 }
-      vp-ux-language-consistency: { level: 2, score: 50 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 3, minor: 2, note: 0 }
 ---
 
 # Mermaid を用いた概念データフロー図 作成ルール
 
 Conceptual Data Flow Diagram Notation Rulebook for Mermaid
 
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=5 「主 CDFD rulebook」と「本プロダクト共通の凡例」が document_id またはパスで特定されておらず、`includes` 関係、分割基準、形状・色の正本との整合を照合できません。 -->
 Mermaid の `flowchart` 構文で CDFD のプロセス、イベント、データストア、外部主体、情報・物の流れを一貫して表すための記法ルールです。主 CDFD rulebook から `includes` される共通部品として適用します。
 
 ## 1. 全体方針
 
-<!-- specdojo:finding id=F004 severity=minor rule=vp-ux-readability line=9 「詳細 CDFD」が後続の「プロセスグループ別 CDFD」と「ユースケース別 CDFD」のどちらを含む名称か定義されていないため、三つの図種別との対応を明記してください。 -->
 - Mermaid の `flowchart` を使用し、方向は全体概要・詳細 CDFD を問わず `LR` を基本とします。CDFD の矢印は情報・物・実行要求の受け渡しを表し、ユースケース別など包含元が明示した場合だけ業務上の順序も表します。`TB` は、対象が階層構造（組織・分類など）を表す場合にだけ使用します。
 
 - 図が読みにくくなる原因は方向ではなく規模です。ノード数が多く一画面で関係を追いにくい場合は、方向を変えるのではなく、「凡例と可読性」の分割方針に従って図を分けます。分割の観点（全体概要はデータストアの区分、プロセスグループ別 CDFD は業務の性質が近いプロセス）とノード数の目安は包含元の rulebook が定めます。
@@ -75,7 +49,6 @@ Mermaid の `flowchart` 構文で CDFD のプロセス、イベント、デー�
 | エッジラベル | 移動する情報・物、またはイベントから伝わる起動条件の名称                   |
 | サブグラフ   | 関連するプロセスを囲む視覚上のまとまり。プロセスグループの表現には使わない |
 
-<!-- specdojo:finding id=F005 severity=major rule=vp-ux-language-consistency line=41 イベント名を「〜された」「〜が到来した」「〜を要求した」という発生済み表現にする規則に対し、各実例は「顧客が商品を購入する」という非過去形を使用しているため、正しいラベル形式を一方へ統一してください。 -->
 - ノード ID と表示ラベルは同じ名称を基本とし、空白、記号、補足を含む表示が必要な場合だけ分けます。
 - 担当を表示する場合は、プロセスの表示ラベル末尾へ `<br>（担当: ロール）` を付けます。
 - イベントは「〜された」「〜が到来した」「〜を要求した」など、発生を判断できる短い文にします。
@@ -89,7 +62,6 @@ Mermaid の `flowchart` 構文で CDFD のプロセス、イベント、デー�
 
 ## 4. 推奨 Frontmatter 項目
 
-<!-- specdojo:finding id=F003 severity=major rule=vp-qe-kata-conformance line=52 `includes` を持つ主 CDFD rulebook の document_id または参照先と Frontmatter の具体例が示されておらず、利用者がこの rulebook を対象成果物へ適用する経路を一意に実装できません。 -->
 - 本 rulebook は主 CDFD rulebook の `includes` から適用されるため、成果物 Frontmatter に記法 rulebook を重複記載しません。
 - 成果物の `rulebook` は、構造を定義する主 CDFD rulebook を指定します。
 - 記法だけを別ファイルで適用する運用は行わず、主 CDFD rulebook と組み合わせます。
@@ -98,7 +70,6 @@ Mermaid の `flowchart` 構文で CDFD のプロセス、イベント、デー�
 
 Mermaid コードブロック内は、次の順序を基本とします。必須の判定は図種別で異なります。全体概要ではプロセスグループの代表ノード、データストア、情報の流れ、凡例の参照を必須とし、イベントはプロセス領域の表に記載して図に描きません。プロセスグループ別 CDFD では個別プロセス、イベント、データストア、情報・物の流れ、凡例を必須とします。ユースケース別 CDFD ではプロセスグループの代表ノード、開始・引き渡し・終了のイベント、情報・物の流れ、凡例を必須とし、データストアは引き渡し条件の判定に必要な場合だけ置きます。外部主体と物理保管はいずれの図種別でも存在する場合だけ置きます。
 
-<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-omissions-consistency line=60 物理保管は概念一覧と本文で条件付き要素として導入されている一方、標準テンプレ表に行がなく、6.1 のノード規則にも記載されていないため、配置順と必須条件を一貫して確認できるよう両方へ反映してください。 -->
 | 順序 | 区分           | 必須     | 内容                                                                                             |
 | ---- | -------------- | -------- | ------------------------------------------------------------------------------------------------ |
 | 1    | flowchart 宣言 | ○        | `flowchart LR` または `flowchart TB`                                                             |

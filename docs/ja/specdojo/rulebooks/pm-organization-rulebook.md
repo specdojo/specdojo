@@ -9,30 +9,6 @@ specdojo:
   template: specdojo:pm-organization-template
   based_on:
     - specdojo:people-and-organization-definition-standard
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 90
-    graded_at: "2026-09-03T03:44:11.788Z"
-    graded_by: codex-expert-executor
-    content_hash: 928ac86bc43b65916f7d241f01ba5b14cc906b4d5e00aa815d35d1fb7cb9608a
-    categories:
-      consistency: { score: 50 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 100 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 2, score: 50 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 2, score: 50 }
-      vp-qe-kata-conformance: { level: 4, score: 100 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 2, minor: 0, note: 0 }
 ---
 
 # 組織定義 作成ルール
@@ -76,8 +52,6 @@ Organization Definition Documentation Rulebook
 | based_on   | 概要、スコープ、ステークホルダーなどのID | 任意 |
 | supersedes | 置き換え対象の旧文書 ID                  | 任意 |
 
-<!-- specdojo:finding id=F002 severity=major rule=vp-qe-omissions-consistency 本文要件に上位標準が必須とする採用／未採用 Role code、使用可能な owner、同標準への参照がなく、生成物だけではSchedule・RACIのRole code適合を判定できないため、必須項目として追加してください。 -->
-
 ## 5. 本文構成（標準テンプレ）
 
 | 番号 | 見出し            | 必須 | 内容                                          |
@@ -93,8 +67,6 @@ Organization Definition Documentation Rulebook
 
 | 責任領域 | 設計方針 | 最終判断 | 実行・確認 |
 | -------- | -------- | -------- | ---------- |
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency 全Role codeを組織定義へ記載しない方針は、上位標準が同文書を採用／未採用 Role code と使用可能な owner の正本としてSchedule・RACIを検証する規則と矛盾するため、採用判断を組織定義に残す責務境界へ修正してください。 -->
 
 - 目的達成に必要な責任領域だけを示し、全Role codeを列挙しません。
 - 当事者・利用者による価値確認と、プロジェクト内部の管理責任を区別します。

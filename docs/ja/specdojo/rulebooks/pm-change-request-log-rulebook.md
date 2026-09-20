@@ -5,35 +5,9 @@ specdojo:
   status: draft
   sample: specdojo:pm-change-request-log-sample
   template: specdojo:pm-change-request-log-template
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 80
-    graded_at: "2026-09-03T02:28:49.015Z"
-    graded_by: gemma-expert-executor
-    content_hash: 1180aae104b5d9843ce59a30ab2168c66df384e31f6bdb15509963714beb9ad5
-    categories:
-      consistency: { score: 75 }
-      usability: { score: 92 }
-      architecture: { score: 100 }
-      quality: { score: 63 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 3, score: 75 }
-      vp-qe-omissions-consistency: { level: 2, score: 50 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 3, score: 75 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 2, minor: 2, note: 0 }
 ---
 
 # 変更要求ログ 作成ルール
-
-<!-- specdojo:finding id=F002 severity=major rule=vp-qe-omissions-consistency テンプレート側で指定されている rulebook-id (`specdojo:pjr-rulebook`) と本ルールの ID が不整合である。 -->
 
 Change Request Log Documentation Rules
 
@@ -47,8 +21,6 @@ Change Request Log Documentation Rules
 
 ## 2. 位置づけと用語定義（必要に応じて）
 
-<!-- specdojo:finding id=F003 severity=major rule=vp-qe-kata-conformance テンプレートが「生成された派生ビュー」を前提としているのに対し、本ルールは手動での「作成ルール」を定義しており、成果物の性質と生成プロセスが矛盾している。 -->
-
 - `pm-plan`: プロジェクト全体の管理方針。
 - `pm-issue-log`: 顕在化した課題の管理。
 - `pm-risk-register`: 潜在リスクの管理。
@@ -58,8 +30,6 @@ Change Request Log Documentation Rules
 
 - `id` は `pm-change-request-log` を使用する。
 - ファイル名は `pm-change-request-log-変更要求ログ.md` など、プロジェクト内で一意にする。
-
-<!-- specdojo:finding id=F004 severity=minor rule=vp-ux-readability 「位置づけ」がドキュメント名の列挙に留まっており、他文書との関係性や参照タイミングなどのコンテキストが不足している。 -->
 
 ## 4. 推奨 Frontmatter 項目
 
@@ -93,8 +63,6 @@ Change Request Log Documentation Rules
 - 変更 ID、要求内容、申請者、申請日、状態を一覧化する。
 
 推奨フォーマット（表）:
-
-<!-- specdojo:finding id=F001 severity=minor rule=vp-qe-verifiability 記述ガイドが項目の列挙に留まっており、「判定可能な形」にするための具体的な書き方や基準が示されていない。 -->
 
 | 変更ID | 要求内容 | 申請者 | 申請日 | 状態 |
 | ------ | -------- | ------ | ------ | ---- |

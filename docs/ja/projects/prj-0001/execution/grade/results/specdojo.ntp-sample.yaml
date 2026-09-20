@@ -1,0 +1,84 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:ntp-sample
+path: docs/ja/specdojo/samples/ntp-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 69
+graded_at: "2026-09-05T12:15:53.886Z"
+graded_by: gemma-expert-executor
+content_hash: a418e6503b9dfb56b6d4bdfd9b189ce5c033f191790ed553e7f152a44d69f615
+categories:
+  consistency:
+    score: 75
+  usability:
+    score: 67
+  architecture:
+    score: 100
+  quality:
+    score: 50
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 2
+    score: 50
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 2
+    score: 50
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 5
+  minor: 0
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-arc-conciseness
+    line: 20
+    message: 「4. 最小記述例」の内容が前節の内容の反復に留まっており、冗長である。
+    anchor: "| 項目         | 値                                                         | 備考                                 |"
+  - id: F003
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 20
+    message: rulebook で必須とされている「4. 検証観点」が欠落し、代わりに「4. 最小記述例」となっている。
+    anchor: "| 項目         | 値                                                         | 備考                                 |"
+  - id: F004
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 20
+    message: rulebook の本文構成（標準テンプレ）に準拠しておらず、サンプルとしての整合性が欠けている。
+    anchor: "| 項目         | 値                                                         | 備考                                 |"
+  - id: F005
+    severity: major
+    rule: vp-ux-readability
+    line: 20
+    message: サンプルとしての具体性に欠け、各項目の記述水準や具体例が不明確であるため、初見の読者が作成内容を判断できない。
+    anchor: "| 項目         | 値                                                         | 備考                                 |"
+  - id: F002
+    severity: major
+    rule: vp-qe-verifiability
+    line: 25
+    message: 判定基準などの具体例が提示されておらず、rulebook が求める「判定可能な記述」の具体像を読者が把握できない。
+    anchor: ""

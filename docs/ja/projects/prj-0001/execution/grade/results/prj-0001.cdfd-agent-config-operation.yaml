@@ -1,0 +1,135 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: prj-0001:cdfd-agent-config-operation
+path: docs/ja/product/trash/cdfd-agent-config-operation.md
+target: deliverable
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 75
+graded_at: "2026-09-12T23:36:16.658Z"
+graded_by: gemma-expert-executor
+content_hash: 4f8ab11752252380f217cc6ca1e69a1ab1166950946cd157fb412a03bd34961f
+categories:
+  consistency:
+    score: 38
+  usability:
+    score: 81
+  architecture:
+    score: 100
+  quality:
+    score: 83
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 1
+    score: 25
+  vp-arc-conciseness:
+    level: 3
+    score: 75
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 2
+    score: 50
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-user-flow:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 5
+  minor: 4
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 47
+    message: >-
+      上位の cdfd-overview は P-07 の起点を「運用構成の変更が承認された」と定義している一方, 本書は未承認の作業要件・実行問題から評価・承認までを P-07 内へ含めており,
+      継承すると宣言した領域境界が矛盾するため, overview または本書の起点と責務を統一する必要がある。
+    anchor: 登録簿ライフサイクル["P-02 登録簿ライフサイクル"]
+  - id: F002
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 69
+    message: >-
+      cdfd-task-execution の P-07 への引き渡し情報には設定不整合が含まれていない一方, 本書は P-04 から設定不整合が報告されると定義しているため,
+      領域間インターフェースの項目を双方で一致させる必要がある。
+    anchor: class 運用構成定義 storeMaster
+  - id: F007
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 47
+    message: 上位 CDFD の P-07 は承認済み変更を起点とするのに, 本書は変更要否評価と承認を領域内プロセスとしており, rulebook が要求する上位領域境界の継承を満たしていない。
+    anchor: 登録簿ライフサイクル["P-02 登録簿ライフサイクル"]
+  - id: F009
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 69
+    message: >-
+      正式な Role code である BA・PM・ARC・PO・QE と, task owner・セキュリティ確認者・構成承認者・設定管理者・実行管理者を同じ担当欄で併用しているが, pm-roles.yaml
+      への参照や対応関係がないため, 公式 Role code へ統一するか対応を明示する必要がある。
+    anchor: class 運用構成定義 storeMaster
+  - id: F004
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 123
+    message: 4.1〜4.3 の凡例が委譲境界, 後続への引き渡し, 未承認・未検証構成の禁止を繰り返しているため, 共通記号と複数図間で同一となるノード・イベントの説明だけに絞る必要がある。
+    anchor: class スケジュール戦略,memberRoster,provider実行既定,provider固有設定,認証ストア storeMaster
+  - id: F008
+    severity: minor
+    rule: vp-ux-readability
+    line: 123
+    message: 各図の凡例に記号説明だけでなく委譲・ゲート・後続条件が反復され, 業務規則の正本が一覧・適用範囲・例外表のどこかを判断しにくいため, 凡例を図の解釈に必要な情報へ限定する必要がある。
+    anchor: class スケジュール戦略,memberRoster,provider実行既定,provider固有設定,認証ストア storeMaster
+  - id: F005
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 250
+    message: 5.2 と 5.3 のグループ要約が「変更が必要な場合だけ」「承認後」という起動条件を3章から再掲しているため, 各グループが扱う範囲の説明だけに整理する必要がある。
+    anchor: >-
+      | `E-04`  | `P-07-03`、`P-07-06` | agent が task の targets・mode
+      を超えて書き込める、権限確認を回避できる、認証情報を設定へ保存する、不要な外部送信が可能、または文書中の指示が commit・コマンド範囲を拡大し得る | 変更を承認・適用せず、権限をその場で拡大しない。対象
+      provider・task の起動を停止し、許可リスト、隔離、認証分離、入力検証、外部通信境界を構成案へ戻す                                           |
+      最小権限と多層防御が構成案・provider 設定・検証条件で確認され、人間が安全境界を再承認する                            |
+  - id: F003
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 275
+    message: >-
+      現行の exec-defaults.yaml は Codex のモデル・reasoning effort・sandbox や Copilot のモデル・tool 権限も管理しているが, 本表はモデルと edit／review
+      権限を provider 固有設定だけの責務としているため, 実設定および provider 別 SYSD に合わせて責務境界を修正する必要がある。
+    anchor: ""
+  - id: F006
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 275
+    message: >-
+      DC-002について, exec-defaults.yaml が実際に管理するモデル・sandbox・tool 権限が責務表から欠落し provider 固有設定へ誤配分されているため,
+      現行正本と整合する変更責務および相互参照を示す必要がある。
+    anchor: ""
+done_criteria:
+  satisfied: 3
+  total: 4
+  unsatisfied:
+    DC-002:
+      - ARC
+  detail_ref: prj-0001:cdfd-agent-config-operation-grade-criteria

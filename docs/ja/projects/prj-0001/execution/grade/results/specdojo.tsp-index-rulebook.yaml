@@ -1,0 +1,78 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:tsp-index-rulebook
+path: docs/ja/specdojo/rulebooks/tsp-index-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 87
+graded_at: "2026-09-03T14:12:05.198Z"
+graded_by: gemma-expert-executor
+content_hash: 13b354cf671a70dfd9ca18efcea1dc5f1ac26834ccf696d3d89e59c500d279ab
+categories:
+  consistency:
+    score: 88
+  usability:
+    score: 92
+  architecture:
+    score: 100
+  quality:
+    score: 75
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 3
+    score: 75
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 1
+  minor: 3
+  note: 0
+findings:
+  - id: F004
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: 指定された sample ファイルが成果物の実例ではなく説明書となっており、サンプルの責務を満たしていない。
+    anchor: "# テスト戦略・方針 作成ルール"
+  - id: F001
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 1
+    message: 責任分界（保証すること/やらないこと）の明文化に関する記述が重複しており、整理が必要である。
+    anchor: "# テスト戦略・方針 作成ルール"
+  - id: F002
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 1
+    message: 曖昧表現の禁止に関する記述が本文内で重複しているため、共通原則として集約することを推奨する。
+    anchor: "# テスト戦略・方針 作成ルール"
+  - id: F003
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: 集約ドキュメントの ID 例に `tsp-overview` が使用されているが、デフォルトの `tsp-index` と整合させるべきである。
+    anchor: "# テスト戦略・方針 作成ルール"

@@ -7,36 +7,6 @@ specdojo:
   based_on:
     - cdfd-overview
   supersedes: []
-  grade:
-    rubric: grade-rubric-v1
-    target: deliverable
-    verdict: pass
-    score: 91
-    graded_at: "2026-09-17T00:35:16.831Z"
-    graded_by: codex-expert-executor
-    content_hash: 37417642aa32e297ae82d9e2791edb40db0dfa1eb2c13e500caa36f4de529a11
-    categories:
-      consistency: { score: 75 }
-      usability: { score: 88 }
-      architecture: { score: 100 }
-      quality: { score: 100 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 3, score: 75 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-done-criteria: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 3, score: 75 }
-      vp-ux-readability: { level: 3, score: 75 }
-      vp-ux-user-flow: { level: 3, score: 75 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-      vp-qe-config-validity: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 4, note: 0 }
-    done_criteria:
-      satisfied: 3
-      total: 3
-      detail_ref: cdfd-check-grade-criteria
 ---
 
 # 概念データフロー図（Check）: SpecDojo
@@ -54,10 +24,6 @@ specdojo:
 
 ## 2. 適用範囲
 
-<!-- specdojo:finding id=F001 severity=minor rule=vp-arc-cross-document-consistency line=19 「member・agent・runner の責任分担」の正本を `pm-roles` としているが、同ファイルは Role code と責務だけを定義し、兼務・実行主体は `pm-members.yaml`、人間と AI Agent の責任分担原則は `cdfd-overview` に委譲しているため、参照先を責務ごとに分けてください。 -->
-<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-omissions-consistency line=19 rulebook が求める人間と AI Agent の責任分担の対応文書として `pm-roles` だけを示しているが、同文書は実行主体の割当を `pm-members.yaml` へ委譲しているため、`pm-members` と `cdfd-overview` への参照を補ってください。 -->
-<!-- specdojo:finding id=F003 severity=minor rule=vp-ux-readability line=19 適用範囲で Role code の語彙と member・agent・runner の責任分担を一つの `pm-roles` 正本へまとめて表現しており, 初見の読者がロール定義と実行主体割当の違いを読み分けにくいため、正本を分けて記述してください。 -->
-<!-- specdojo:finding id=F004 severity=minor rule=vp-ux-user-flow line=19 member・agent・runner の責任分担を確認する導線が Role code の一覧である `pm-roles` に止まり、実行主体の正本 `pm-members` と人間／AI の原則を示す `cdfd-overview` へ直接到達できないため、参照を分けてください。 -->
 - **対象グループ**: Check。成果物評価（P-08）、進捗可視化報告（P-09）、派生生成閲覧提供（P-10）の全領域を扱う。
 - **開始**: Orchestrator から評価・報告要求が到来し各領域の起動条件を満たした時点、または派生成果物の生成が要求された時点とする。
 - **終了**: 評価結果（grade、finding）、進捗報告、または整合性を確認した派生ビュー・索引が、それぞれのデータストアへ記録され、必要な出力が Action または参加者の閲覧へ提供可能になった時点とする。

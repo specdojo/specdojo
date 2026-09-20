@@ -11,30 +11,6 @@ specdojo:
     - specdojo:rulebook-authoring-standard
   supersedes:
     - pjr-index-rulebook
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 93
-    graded_at: "2026-09-03T02:14:11.547Z"
-    graded_by: codex-expert-executor
-    content_hash: 29e61fbb6df5f09bbb6be9e0d515ae9b250d49975bef3bd9769914de7b552e06
-    categories:
-      consistency: { score: 75 }
-      usability: { score: 92 }
-      architecture: { score: 100 }
-      quality: { score: 100 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 2, score: 50 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 4, score: 100 }
-      vp-ux-readability: { level: 3, score: 75 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 1, minor: 1, note: 0 }
 ---
 
 # プロジェクト登録簿 作成ルール
@@ -78,9 +54,6 @@ Project Register Documentation Rules
 ## 3. 推奨 Frontmatter 項目
 
 個票には `register-item-frontmatter.schema.yaml` が定義する次の項目を置く。未定の担当、期限、完了日時、結論は表用のプレースホルダを保存せず、該当キーを省略する（期限なしだけは `due_on: null`）。
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency 本文と schema は未定の owner / due を省略し、`deferred` では `completed_at` を持たない規則だが、`register-operation-guide.md` は Frontmatter に `_TODO_` を残し、`defer` 時にも完了日時を記録すると説明しているため、関連ガイドを正本と同じ保存規則へ修正しないと schema 違反または誤った履歴を生成する。 -->
-<!-- specdojo:finding id=F002 severity=minor rule=vp-ux-readability `register-item-frontmatter.schema.yaml` と `register-events.schema.yaml` がファイル名だけで参照先パスまたはリンクを持たず、コマンドの選択基準を扱う register operation guide への案内もないため, 初見の読者が次に確認すべき正本へ直接移動できる導線を追加する必要がある。 -->
 
 | 項目            | 説明                                         | 必須 |
 | --------------- | -------------------------------------------- | ---- |

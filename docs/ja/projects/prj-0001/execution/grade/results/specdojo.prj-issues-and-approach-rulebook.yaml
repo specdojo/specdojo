@@ -1,0 +1,66 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:prj-issues-and-approach-rulebook
+path: docs/ja/specdojo/rulebooks/prj-issues-and-approach-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: pass
+score: 93
+graded_at: "2026-09-03T07:33:12.652Z"
+graded_by: codex-expert-executor
+content_hash: 988f4e909acf1b495d67e836016d1c0d0e99d9b7b62a4bb584c11e3c6f0b76b2
+categories:
+  consistency:
+    score: 88
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 88
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 2
+  note: 0
+findings:
+  - id: F002
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: recipe・template・sample が導入部に求める承認者、利用ロールごとの利用目的、合意対象・非合意対象を rulebook の本文要件にも追加し、各成果物の必須内容を正本から追跡できるようにする。
+    anchor: "# プロジェクト課題と解決アプローチ 作成ルール"
+  - id: F001
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: 「最小でも課題の列挙」は課題だけでも成立すると読める一方、記述ガイドでは各課題の「影響」と「優先度」を最低要件としているため、「各課題に課題・影響・優先度を記載する」など一意な必須条件へ統一する。
+    anchor: "# プロジェクト課題と解決アプローチ 作成ルール"

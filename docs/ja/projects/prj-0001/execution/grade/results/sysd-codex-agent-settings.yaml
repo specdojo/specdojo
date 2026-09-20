@@ -1,0 +1,187 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: sysd-codex-agent-settings
+path: docs/ja/product/040-system-design/sysd-codex-agent-settings.md
+target: deliverable
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 58
+graded_at: "2026-09-19T16:24:54.832Z"
+graded_by: codex-expert-executor
+content_hash: 2e3269bd969d836047e87a7897916f48182efa75d064163f045bf2d3d9280746
+categories:
+  consistency:
+    score: 25
+  usability:
+    score: 56
+  architecture:
+    score: 100
+  quality:
+    score: 58
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 1
+    score: 25
+  vp-arc-conciseness:
+    level: 3
+    score: 75
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 1
+    score: 25
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 1
+    score: 25
+  vp-ux-readability:
+    level: 2
+    score: 50
+  vp-ux-user-flow:
+    level: 2
+    score: 50
+  vp-ux-language-consistency:
+    level: 2
+    score: 50
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 14
+  minor: 1
+  note: 0
+findings:
+  - id: F005
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 7
+    message: Codex 採用理由を自動化・CIへの適性だけで説明しており、対応する業務要件または要求成果物への参照がないため DC-001 の整合性を確認できない。
+    anchor: 共通の責務分担、実行フロー、割り当て、失敗処理、worktree は [エージェント共通設定](sysd-agent-settings.md) に従う。本書では Codex CLI 固有の設定だけを定義する。
+  - id: F013
+    severity: major
+    rule: vp-ux-readability
+    line: 17
+    message: >-
+      review が result 更新のため `workspace-write` を使うとの説明は、123行目の「成果物・result を変更しない」および385行目の「resultだけを更新する」と衝突するため,
+      workspace-write の理由と各 stage の書き込み責務を一つの説明へ統一する必要がある。
+    anchor: >-
+      - **権限は最小化する**: edit / review ともresult更新のため `workspace-write` を使用する。reviewはplanで成果物変更を禁止する。`danger-full-access` と
+      `--yolo` は使用しない。
+  - id: F015
+    severity: major
+    rule: vp-ux-language-consistency
+    line: 17
+    message: >-
+      review executor を「result更新のため workspace-write」と表現する箇所と「成果物・result
+      のいずれも変更しない」とする箇所が混在しているため、役割名ごとの変更可能範囲を統一する必要がある。
+    anchor: >-
+      - **権限は最小化する**: edit / review ともresult更新のため `workspace-write` を使用する。reviewはplanで成果物変更を禁止する。`danger-full-access` と
+      `--yolo` は使用しない。
+  - id: F004
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 70
+    message: 同じモデル・役割対応を複数の表とコマンド例で再掲せず、正本設定への参照と固有の設計判断だけに集約して更新箇所を一意にする必要がある。
+    anchor: "| 用途                 | モデル例       | reasoning effort | 方針                               |"
+  - id: F009
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 81
+    message: >-
+      rulebook が設定全文を一次情報への参照に留めるよう要求しているのに `.codex/config.toml`、`AGENTS.md`、member
+      定義を再掲しており、既にモデル値の同期漏れが発生しているため参照中心へ改める必要がある。
+    anchor: "```toml"
+  - id: F010
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 90
+    message: "`agents.max_depth` は現行の公式設定リファレンスで確認できないため、対応する Codex CLI バージョンと有効性を示すか、サポートされる設定へ置き換える必要がある。"
+    anchor: max_depth = 1
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 248
+    message: >-
+      worker のモデルを `gpt-5.4-mini` / `gpt-5.5` としているが、正本 `.specdojo/exec-defaults.yaml` は `gpt-5.6-terra` / `gpt-5.6-sol`
+      であり、モデル表・worker 表・実行例を現行値へ整合させる必要がある。
+    anchor: "normal: { model: gpt-5.4-mini, effort: medium }"
+  - id: F006
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 248
+    message: モデル値、検証実行主体、review executor の書き込み責務が正本または本文内で矛盾しているため、DC-002 の承認判断と DC-005 の実装基礎として利用できない。
+    anchor: "normal: { model: gpt-5.4-mini, effort: medium }"
+  - id: F002
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 316
+    message: >-
+      `npm run test:unit` を Codex worker が実行するとしているが, 正本では `test-unit` と `validate-schema` も
+      `pipeline.parent_validations` に含まれ親 runner が実行するため、実行主体と掲載例を修正する必要がある。
+    anchor: >-
+      Codex worker は `workspace-write` sandbox 内で `npm run test:unit` を実行する。実 Git・worktree・CLI 子プロセスを必要とする integration
+      テストは sandbox を広げず、SpecDojo 親 runner の固定許可リストへ分離する。
+  - id: F008
+    severity: major
+    rule: vp-qe-verifiability
+    line: 346
+    message: >-
+      rate-limit pattern を「実際の出力で検証してから確定」とするだけで、対象 CLI バージョン、入力 fixture、期待する
+      `provider_signal.kind`、終了コードとの組合せ、合否条件が定義されていない。
+    anchor: stderr の実文言は CLI バージョンで変わりうるため、上記 pattern は実際の出力で検証してから確定する。
+  - id: F003
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 385
+    message: >-
+      review worker が「resultだけを更新する」としているが、123行目、review agent 定義、`pm-members.yaml` は成果物・result
+      の双方を変更しないとしており、責務を正本へ統一する必要がある。
+    anchor: >-
+      worktree のライフサイクル、配置、ブランチ名、イベントファイル名は親設計に従う。edit worker の並列実行ではworktreeを使用する。review workerは `workspace-write`
+      だが成果物を変更せずresultだけを更新するため、成果物競合防止を目的としたworktree分離は不要とする。
+  - id: F011
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 385
+    message: review executor の result 更新可否が本文内および実ファイルと矛盾しており、責務に関する禁止事項が一意に定まらない。
+    anchor: >-
+      worktree のライフサイクル、配置、ブランチ名、イベントファイル名は親設計に従う。edit worker の並列実行ではworktreeを使用する。review workerは `workspace-write`
+      だが成果物を変更せずresultだけを更新するため、成果物競合防止を目的としたworktree分離は不要とする。
+  - id: F007
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 387
+    message: Codex 固有の制約を確認するテスト、設定検証、レビュー項目への参照がなく、DC-004 のテスト設計・検証観点として利用できない。
+    anchor: "## 12. 公式仕様参照"
+  - id: F012
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 387
+    message: rulebook 必須の「検証観点・関連文書」に相当する章がなく、Codex 固有設定を確認するテスト、横断ルール、重要フローへの導線が欠落している。
+    anchor: "## 12. 公式仕様参照"
+  - id: F014
+    severity: major
+    rule: vp-ux-user-flow
+    line: 387
+    message: 関連文書一覧に Codex 固有の設定検証、member 選択、親検証、書き込み禁止を確認するテストや横断ルールへのリンクを追加し、実装後の確認先へ到達できるようにする必要がある。
+    anchor: "## 12. 公式仕様参照"
+done_criteria:
+  satisfied: 1
+  total: 5
+  unsatisfied:
+    DC-001:
+      - BA
+    DC-002:
+      - PO
+    DC-004:
+      - QE
+    DC-005:
+      - DEV
+  detail_ref: sysd-codex-agent-settings-grade-criteria

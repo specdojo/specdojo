@@ -22,12 +22,14 @@ function makeFixture(): {
   pipelineStateFile: string;
   argsFile: string;
   target: string;
+  resultFile: string;
 } {
   const root = mkdtempSync(join(tmpdir(), "specdojo-grade-per-document-"));
   fixtureDirectories.push(root);
   const rulebooks = join(root, "docs/ja/specdojo/rulebooks");
   const target = join(rulebooks, "fixture-rulebook.md");
   const stateFile = join(root, "fake-apply-count.txt");
+  const resultFile = join(root, "fake-grade-result.json");
   const pipelineStateFile = join(root, "fake-pipeline-state.json");
   const argsFile = join(root, "fake-args.log");
   const fakeSpecdojo = join(root, "fake-specdojo.mjs");
@@ -145,18 +147,30 @@ if (args[0] === "grade" && args[1] === "apply") {
   const failFrom = Number(process.env.FAKE_APPLY_FAIL_FROM ?? 0);
   if (failFrom > 0 && count >= failFrom) process.exit(1);
   const score = count === 1 ? 80 : count === 2 ? 100 : 95;
-  const target = value("--path");
-  writeFileSync(target,
-    "---\\nspecdojo:\\n  id: specdojo:fixture-rulebook\\n  type: rulebook\\n  status: draft\\n" +
-    "  grade:\\n    verdict: pass\\n    score: " + score +
-    "\\n    findings: { blocker: 0, major: 0, minor: 0, note: 0 }\\n---\\n\\n# Fixture\\n");
+  // apply は成果物を変更せず、grade result サイドカーだけを書く。
+  const resultFile = process.env.FAKE_RESULT_FILE;
+  writeFileSync(resultFile, JSON.stringify({
+    version: 1,
+    document: "specdojo:fixture-rulebook",
+    path: value("--path"),
+    target: "kata",
+    verdict: "pass",
+    score,
+    finding_counts: { blocker: 0, major: 0, minor: 0, note: 0 },
+    findings: [],
+  }) + "\\n");
+  process.exit(0);
+}
+if (args[0] === "grade" && args[1] === "result") {
+  const resultFile = process.env.FAKE_RESULT_FILE;
+  if (resultFile && existsSync(resultFile)) process.stdout.write(readFileSync(resultFile, "utf8"));
   process.exit(0);
 }
 process.exit(1);
 `,
   );
   chmodSync(fakeSpecdojo, 0o755);
-  return { root, fakeSpecdojo, stateFile, pipelineStateFile, argsFile, target };
+  return { root, fakeSpecdojo, stateFile, pipelineStateFile, argsFile, target, resultFile };
 }
 
 function runPipeline(
@@ -185,6 +199,7 @@ function runPipeline(
       env: {
         ...process.env,
         FAKE_STATE_FILE: fixture.stateFile,
+        FAKE_RESULT_FILE: fixture.resultFile,
         FAKE_PIPELINE_STATE_FILE: fixture.pipelineStateFile,
         FAKE_ARGS_FILE: fixture.argsFile,
         ...extraEnv,

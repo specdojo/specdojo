@@ -6,30 +6,6 @@ specdojo:
   recipe: undecided
   sample: specdojo:utc-sample
   template: undecided
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 91
-    graded_at: "2026-09-03T15:02:50.082Z"
-    graded_by: gemma-expert-executor
-    content_hash: 60f20c9b4472d24cf9604ddbe70d43ef1df7971c1f3da1fcd7eed62e9a71108f
-    categories:
-      consistency: { score: 100 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 75 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 1, minor: 0, note: 0 }
 ---
 
 # 単体テストカタログ 対象別 作成ルール
@@ -73,8 +49,6 @@ flowchart BT
   classDef target stroke-width:4px
   class TCDetail target
 ```
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-qe-kata-conformance 指定されているサンプル `specdojo:utc-sample` が、第 5 章で定義した標準テンプレートに従っておらず、具体的な記述例として機能していない。 -->
 
 ## 3. ファイル命名・ID規則
 

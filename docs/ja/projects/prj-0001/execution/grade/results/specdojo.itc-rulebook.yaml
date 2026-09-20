@@ -1,0 +1,66 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:itc-rulebook
+path: docs/ja/specdojo/rulebooks/itc-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 89
+graded_at: "2026-09-02T21:00:45.359Z"
+graded_by: gemma-expert-executor
+content_hash: bb7165214fa0566163a623da7d1bcc43f57d2737bec1f01b4613feb017922165
+categories:
+  consistency:
+    score: 100
+  usability:
+    score: 92
+  architecture:
+    score: 100
+  quality:
+    score: 75
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 1
+  minor: 1
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: 参照サンプル `specdojo:itc-sample` が本ルールブックで定義した構成（第5節）に従っておらず、実例として不適切である。
+    anchor: "# 内部結合テストカタログ 対象別 作成ルール"
+  - id: F002
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 1
+    message: "`utc-＜term＞` は `itc-＜term＞` の誤記である。"
+    anchor: "# 内部結合テストカタログ 対象別 作成ルール"

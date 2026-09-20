@@ -7,30 +7,6 @@ specdojo:
   recipe: specdojo:prj-charter-recipe
   sample: specdojo:prj-charter-sample
   template: specdojo:prj-charter-template
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: pass
-    score: 85
-    graded_at: "2026-09-03T06:39:10.740Z"
-    graded_by: codex-expert-executor
-    content_hash: b539ad35cff0c873c4e84e211887e6bc0a961280f5303826ea229e33687e1dc8
-    categories:
-      consistency: { score: 75 }
-      usability: { score: 75 }
-      architecture: { score: 100 }
-      quality: { score: 88 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 3, score: 75 }
-      vp-arc-conciseness: { level: 3, score: 75 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 3, score: 75 }
-      vp-qe-kata-conformance: { level: 3, score: 75 }
-      vp-ux-readability: { level: 3, score: 75 }
-      vp-ux-language-consistency: { level: 3, score: 75 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 7, note: 0 }
 ---
 
 # プロジェクト憲章 作成ルール
@@ -141,9 +117,6 @@ flowchart LR
 | 8    | 承認                            | ○    | 承認日、承認者、承認対象、証跡リンク                                   |
 | 9    | 未決事項                        | 任意 | 今後の意思決定が必要な論点、期限、担当、対応方針                       |
 
-<!-- specdojo:finding id=F002 severity=minor rule=vp-arc-conciseness H1直下に立ち上げ認可・権限委譲・本格実行開始を承認しない旨を書く規則は直後の6.1共通ルールでより具体的に再掲されているため、本行を削除または6.1への参照へ置き換えてください。 -->
-<!-- specdojo:finding id=F006 severity=minor rule=vp-ux-readability 冒頭文の必須内容は直後の6.1で文数を含めて具体化されているため、本行を統合し、読者が同じ規則を二度確認しなくてよい構成にしてください。 -->
-
 立ち上げ認可文書であること、委譲する範囲、本格実行開始を承認しないことは、専用の章を設けず H1 直下の冒頭文に書く。
 
 ## 6. 記述ガイド
@@ -153,14 +126,9 @@ flowchart LR
 - H1 直下の冒頭文に、立ち上げ認可と権限委譲の文書であること、承認責任者、本格実行開始・外部公開を承認しないことを 2〜3 文で書く。
 - 立ち上げ認可と権限委譲に集中し、詳細計画や設計の本文を先取りしない。後続文書は根拠として先取りせず、詳細化先として参照する。
 
-<!-- specdojo:finding id=F004 severity=minor rule=vp-qe-kata-conformance 作成済み参照先をwikilinkへ更新する規則に対し、完成例のsampleでは実在する参照先が相対MarkdownリンクまたはバッククォートIDのままなので、完成例が規則どおりの参照形式を示すよう整合させてください。 -->
-
 - 後続文書への参照（`詳細化先` 列や記録先）は、参照先が未作成の間は ID をバッククォートで仮置きし（例: `prj-scope`）、作成後に `[[<project-id>:prj-scope|プロジェクトスコープ]]` のような wikilink へ更新する。
 - 事実、判断、未決事項を分ける。未確定は _TODO_:、_UNDECIDED_:、_ASSUMPTION_: を用いる。
 - 認可しない範囲を明記し、憲章承認と本格実行開始を混同しない。
-
-<!-- specdojo:finding id=F001 severity=minor rule=vp-arc-cross-document-consistency 全体方針と権限委譲の定義では「PO またはスポンサー」を判断主体としている一方、本行、recipe、成果物カタログの完了条件は PO のみを主体としているため、スポンサーが PO Role code を兼ねる必要があるのかを明記して責任定義を統一してください。 -->
-<!-- specdojo:finding id=F007 severity=minor rule=vp-ux-language-consistency 「PO またはスポンサー」を選択可能とする前段に対して本行以降は「人間のPO」だけを最終判断主体としているため、スポンサーをPO Role codeへ対応付けるのか、承認責任者という共通語へ統一するのかを明示してください。 -->
 
 - 公開文書では、公開してよい情報だけを記載し、最終判断と説明責任を人間の PO が担う前提を崩さない。
 
@@ -198,8 +166,6 @@ flowchart LR
 
 - 立ち上げ時点で認可する大まかな対象範囲だけを示す。
 - 対象外と未確定を同じ表で明示し、後続のスコープ詳細化へ渡す。
-
-<!-- specdojo:finding id=F005 severity=minor rule=vp-qe-kata-conformance AI Agentの支援範囲を含める規則がsampleとtemplateのハイレベルスコープに反映されていないため、適用条件を明記するか、該当する記入欄と完成例を追加してください。 -->
 
 - AI Agent の支援範囲、人間の判断責任、公開情報の範囲など、責任境界に関わる事項を含める。
 - 成果物群の一覧・配置・派生関係と、憲章承認後に作成する文書の一覧は成果物カタログを正とし、専用の章を設けず本章から参照する。
@@ -245,8 +211,6 @@ flowchart LR
 - 判断結果の記録先を明記し、口頭合意だけで完了扱いにしない。
 
 ### 6.9. 承認と未決事項
-
-<!-- specdojo:finding id=F003 severity=minor rule=vp-qe-omissions-consistency frontmatterのstatusを文書状態の正本としつつ認可状態との関係を定義しておらず、sampleがstatus: readyのまま本文で「ドラフト」と表現しているため、statusは文書成熟度、承認履歴は認可状態という独立した状態軸であることを明記してください。 -->
 
 - 承認履歴は、承認日、承認者、承認対象、証跡リンクを必須とする。版番号は管理せず、承認対象の文書状態は証跡リンクで特定する（文書の状態は frontmatter の `status` と Git の履歴が正本）。
 - 証跡リンクには、承認の意思表示と承認対象の文書状態の両方を特定できる記録（決定記録、Pull Request、Issue、議事録など）を記載する。

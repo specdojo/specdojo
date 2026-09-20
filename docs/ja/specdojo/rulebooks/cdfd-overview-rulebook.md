@@ -11,30 +11,6 @@ specdojo:
     - specdojo:cdfd-mermaid-rulebook
   based_on:
     - specdojo:rulebook-authoring-standard
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: pass
-    score: 84
-    graded_at: "2026-09-17T09:10:27.957Z"
-    graded_by: gemma-expert-executor
-    content_hash: 859ea00f6d4290e6269b66a8af9f1b0e09e1e9ed8fa487c079e6d77d751e8a75
-    categories:
-      consistency: { score: 75 }
-      usability: { score: 92 }
-      architecture: { score: 100 }
-      quality: { score: 75 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 3, score: 75 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 3, score: 75 }
-      vp-qe-omissions-consistency: { level: 3, score: 75 }
-      vp-qe-kata-conformance: { level: 3, score: 75 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 3, score: 75 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 5, note: 0 }
 ---
 
 # 概念データフロー図（全体概要）作成ルール
@@ -102,8 +78,6 @@ Conceptual Data Flow Diagram Overview Documentation Rulebook
 
 ## 5. 本文要件
 
-<!-- specdojo:finding id=F005 severity=minor rule=vp-ux-language-consistency line=65 「物理保管」の定義と、データストア・トランザクションデータとの包含関係が用語表にないため, sample の「売場棚」がトランザクションデータなのか図示上だけ同系統として扱う別概念なのかを統一して定義する必要がある。 -->
-
 見出し順・表・記入欄の骨組みは template を正本とします。本章は各章の目的と必須・任意を定めます。
 
 | 番号 | 見出し                   | 必須     | 内容（要点）                                                                                                                            |
@@ -146,7 +120,6 @@ Conceptual Data Flow Diagram Overview Documentation Rulebook
 
 ### 6.4. プロセス領域
 
-<!-- specdojo:finding id=F004 severity=minor rule=vp-qe-kata-conformance line=110 対応 recipe の章別手順には必須の導入文に対する問いと、プロセス領域・データストア・概念データフロー各章の冒頭宣言を確認する問いが欠けているため、本書の記述ガイドを再現可能な作成手順へ反映する必要がある。 -->
 - 章の冒頭で、領域数、プロセスグループ数、正本の所在（領域の分割と受け渡しは本書、領域内部はプロセスグループ別 CDFD）を宣言します。
 - プロセスグループごとに節（`3.1.`、`3.2.`、…）を設け、見出しは「グループ名（含む領域 ID の範囲）」とします。各節は次の順で構成します。
   - グループの役割と、グループ内の領域がどう連携するかを 1〜3 文で要約した説明文。
@@ -221,8 +194,6 @@ Conceptual Data Flow Diagram Overview Documentation Rulebook
 
 本節だけを `ready` 昇格のチェックリストの正本とします。記述ガイドと禁止事項は作成方法と理由の説明であり、独立した追加条件ではありません。次の全項目を満たす必要があります。
 
-<!-- specdojo:finding id=F001 severity=minor rule=vp-arc-cross-document-consistency line=191 `specdojo:cdfd-mermaid-rulebook` は CDFD を時系列・因果の流れと説明する一方、本書は矢印を実行順ではない受け渡しと定義し、本行の優先規則も要素種別に限られるため、矢印の意味について本書を優先すると明記するか包含先と定義を統一する必要がある。 -->
-<!-- specdojo:finding id=F003 severity=minor rule=vp-qe-omissions-consistency line=185 「データストア」を2区分へ分ける規則と物理保管も一覧化する規則を両立させる分類方法がなく、sample では「売場棚」をトランザクションデータ表へ置きながら凡例でどちらの区分にも属さないと説明しているため, 物理保管の所属または例外を定義する必要がある。 -->
 - Frontmatter に `id`、`type: flow`、`status`、`rulebook: specdojo:cdfd-overview-rulebook` があり、`id` と `status` が「推奨 Frontmatter 項目」の制約を満たしています。`based_on` と `supersedes` を記載する場合も同節の条件を満たしています。
 - H1 直下の導入文が対象業務または運用を一文で定義しています。
 - 「目的」に対象者と利用場面が対応付けられ、対象範囲と領域分割の承認、後続のプロセスグループ別・ユースケース別 CDFD への詳細化、設計入力、網羅性確認の利用結果を判定できます。
@@ -259,5 +230,3 @@ Conceptual Data Flow Diagram Overview Documentation Rulebook
 | 特定プロジェクトの実行計画・スケジュール上のフェーズ名を、前提知識なしの読者に説明なく使う | product 仕様書がプロジェクト管理の実装詳細に依存し、可読性を損なうため |
 | 詳細 CDFD 一覧や本文に「未作成」「TODO」などの作成状況を書く | 作成状況は登録簿で追跡するものであり、成果物本文が陳腐化するため |
 | 作業メモや検討中の論点を HTML コメントで本文に残す | 読み手に見えない未決事項が生まれるため。「未決事項」章または登録簿へ移す |
-
-<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-verifiability line=234 物理保管を一覧へ含めることを必須にしながら、一覧をマスタ・構成データとトランザクションデータの2表に限定して物理保管をどちらへ置けば pass か定義していないため、条件付きの物理保管表または既存表へ配置する明示的な判定規則が必要である。 -->

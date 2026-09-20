@@ -1,0 +1,78 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:cld-rulebook
+path: docs/ja/specdojo/rulebooks/cld-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 82
+graded_at: "2026-09-02T01:59:22.083Z"
+graded_by: gemma-expert-executor
+content_hash: 3924b7fab041e7f3164955e1c1b11008dc4a676f169e39f9c7578350d23b9fb5
+categories:
+  consistency:
+    score: 75
+  usability:
+    score: 83
+  architecture:
+    score: 100
+  quality:
+    score: 75
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 3
+    score: 75
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 2
+  minor: 2
+  note: 0
+findings:
+  - id: F003
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: 参照されているサンプル specdojo:cld-sample が具体例となっておらず、正本の適用方法を検証できない。
+    anchor: ""
+  - id: F001
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 1
+    message: 第0章と第3章で分類種類の概要説明が重複しており、冗長である。
+    anchor: ""
+  - id: F004
+    severity: minor
+    rule: vp-ux-readability
+    line: 1
+    message: 分類種類の定義が重複して記載されており、効率的な読み取りを妨げている。
+    anchor: ""
+  - id: F002
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: メタデータの type が 「domain 固定」 とされる一方で、記述ルールやサンプルでは 「data」 が使用されており矛盾している。
+    anchor: ""

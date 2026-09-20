@@ -13,30 +13,6 @@ specdojo:
         - _PROJECT_ID_:prj-overview
         - _PROJECT_ID_:prj-stakeholder-register
       supersedes: []
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 68
-    graded_at: "2026-09-06T11:17:05.005Z"
-    graded_by: codex-expert-executor
-    content_hash: 6fc581b32807aa4bc69df0268b8ca3929024402efced39d84ed425a6fcd6bda6
-    categories:
-      consistency: { score: 50 }
-      usability: { score: 83 }
-      architecture: { score: 100 }
-      quality: { score: 50 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 2, score: 50 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 2, score: 50 }
-      vp-qe-omissions-consistency: { level: 2, score: 50 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 2, score: 50 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 5, minor: 1, note: 0 }
 ---
 
 # 組織定義: _PROJECT_NAME_

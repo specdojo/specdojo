@@ -5,30 +5,6 @@ specdojo:
   status: ready
   rulebook: specdojo:pm-roles-rulebook
   sample: specdojo:pm-roles-sample
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 89
-    graded_at: "2026-09-08T22:59:50.357Z"
-    graded_by: gemma-expert-executor
-    content_hash: 44b9f221a80f11ff5f550385a758c6c0bea2cb0dcd043d5a2f3e6e4d56b6f3f8
-    categories:
-      consistency: { score: 88 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 75 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 3, score: 75 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 1, minor: 1, note: 0 }
 ---
 
 # ロール定義 作成レシピ
@@ -46,8 +22,6 @@ Project Role Definition Writing Recipe
 - 組織上必要な責任領域（Why）、採用する Role code（What）、プロジェクト固有の責務強調（How）を扱い、`based_on` と下流の Role code 参照で追跡する（Trace）。割り当てや一般責務は各正本へ委譲する。
 
 ## 2. 作成前に集める情報
-
-<!-- specdojo:finding id=F002 severity=major rule=vp-qe-kata-conformance line=21 必須項目である `rulebook` キーの追加を禁止しており、rulebook および schema と矛盾している。 -->
 
 | 項目                 | 集める情報                                                   |
 | -------------------- | ------------------------------------------------------------ |
@@ -71,8 +45,6 @@ Project Role Definition Writing Recipe
 7. PO が承認できるよう、全 Role code の過不足、公開可否、下流文書への入力適合を確認する。
 
 ## 4. 各要素の書き方
-
-<!-- specdojo:finding id=F001 severity=minor rule=vp-qe-omissions-consistency line=39 必須メタ項目である `title` の設定指示が不足している。 -->
 
 ### 4.1. メタ項目
 

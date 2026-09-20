@@ -1,0 +1,102 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:pm-roles-rulebook
+path: docs/ja/specdojo/rulebooks/pm-roles-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 77
+graded_at: "2026-09-03T05:34:59.058Z"
+graded_by: codex-expert-executor
+content_hash: 1e0fddcee286403832ae19be315c633efce314e762e1a0f2dc3b7bc09f9855fb
+categories:
+  consistency:
+    score: 50
+  usability:
+    score: 83
+  architecture:
+    score: 100
+  quality:
+    score: 75
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 3
+    score: 75
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 3
+  minor: 4
+  note: 0
+findings:
+  - id: F005
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: 上位標準では `PO` が最低限の必須 Role code だが、本行は8コードから任意に選べるように読めるため、`roles` に `PO` を必須とする条件を明記しなければ最終判断主体を欠く成果物を許してしまう。
+    anchor: "# プロジェクトロール定義 作成ルール"
+  - id: F002
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 1
+    message: >-
+      本行は `pm-roles.yaml` を `owner` 語彙の正本とするが、`based_on` の人と組織の定義標準は採用 Role code と使用可能な `owner` を `pm-organization.md`
+      の管理対象としているため、正本と machine-readable な転記先の関係を両文書で統一する必要がある。
+    anchor: "# プロジェクトロール定義 作成ルール"
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 1
+    message: >-
+      `rulebook` は schema の必須キーで sample・template にも存在する一方、対応 recipe が schema 非許可キーとして追加を禁止しているため、recipe の手順と悪い例を本行および
+      schema に合わせて修正しなければ生成物が schema 不適合になる。
+    anchor: "# プロジェクトロール定義 作成ルール"
+  - id: F003
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 1
+    message: 第5章の `id` から `project_id` までの表は第4章のメタ項目表と重複するため, メタ項目は第4章へ一本化し、第5章は `roles` のルート要件だけに絞る必要がある。
+    anchor: "# プロジェクトロール定義 作成ルール"
+  - id: F006
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: >-
+      対応 recipe が本章の構造・必須キー・禁止事項を独自に再定義し、特に必須の `rulebook` を禁止しているため、recipe は問いと作成手順に責務を限定し、本 rulebook・schema
+      と矛盾しない内容へ修正する必要がある。
+    anchor: "# プロジェクトロール定義 作成ルール"
+  - id: F007
+    severity: minor
+    rule: vp-ux-readability
+    line: 1
+    message: 第4章とほぼ同じメタ項目表を再掲しているため、第5章を `roles` 固有のルート構造と配列要件に絞り、初見の読者が主要な判断点へ直接進める構成にする必要がある。
+    anchor: "# プロジェクトロール定義 作成ルール"
+  - id: F004
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 1
+    message: "`roles[].code` 節の標準コード限定・独自コード禁止は直前の `roles` 節と重複するため、配列全体の規則と各 code 値の規則を分担させて反復を除く必要がある。"
+    anchor: "# プロジェクトロール定義 作成ルール"

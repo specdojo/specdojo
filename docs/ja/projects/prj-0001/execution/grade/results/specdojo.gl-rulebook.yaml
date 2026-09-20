@@ -1,0 +1,66 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:gl-rulebook
+path: docs/ja/specdojo/rulebooks/gl-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: pass
+score: 96
+graded_at: "2026-09-02T17:17:25.191Z"
+graded_by: gemma-expert-executor
+content_hash: 99fdf6ecc8dab54352ecb54f98c7b8c579f6c8dd886af2ad457d38b51cf11381
+categories:
+  consistency:
+    score: 100
+  usability:
+    score: 83
+  architecture:
+    score: 100
+  quality:
+    score: 100
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 3
+    score: 75
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
+    level: 4
+    score: 100
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 2
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 1
+    message: 第5章の「禁止事項」が第3章の内容と重複しているため、統合が必要。
+    anchor: "# 用語集（Glossary）作成ルール"
+  - id: F002
+    severity: minor
+    rule: vp-ux-readability
+    line: 1
+    message: 「禁止事項」の節が重複して存在しており、情報の配置として不自然である。
+    anchor: "# 用語集（Glossary）作成ルール"

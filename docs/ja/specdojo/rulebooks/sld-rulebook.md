@@ -6,30 +6,6 @@ specdojo:
   recipe: undecided
   sample: specdojo:sld-sample
   template: undecided
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 51
-    graded_at: "2026-09-03T10:09:34.385Z"
-    graded_by: gemma-expert-executor
-    content_hash: fb5066db7f0812d89a54b0ebaa59d101ae36075b83617df2125258f55414c920
-    categories:
-      consistency: { score: 50 }
-      usability: { score: 50 }
-      architecture: { score: 100 }
-      quality: { score: 25 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 1, score: 25 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 1, score: 25 }
-      vp-qe-omissions-consistency: { level: 3, score: 75 }
-      vp-qe-kata-conformance: { level: 1, score: 25 }
-      vp-ux-readability: { level: 1, score: 25 }
-      vp-ux-language-consistency: { level: 1, score: 25 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 5, minor: 1, note: 0 }
 ---
 
 # 保管場所一覧 （Storage Locations List）作成ルール
@@ -68,9 +44,6 @@ specdojo:
 | **主な保管対象** | 主に保管する対象（商品在庫、現金など） |
 | **主な内容・目的** | 管理目的や作業内容（名詞句中心で簡潔に） |
 
-<!-- specdojo:finding id=F005 severity=major rule=vp-ux-readability サンプルでの名称不一致およびメタデータ定義の矛盾により、成果物の正体と分類が判別しにくい。 -->
-<!-- specdojo:finding id=F006 severity=major rule=vp-ux-language-consistency ルールブックの「保管場所一覧」とサンプルの「保管場所定義 / 業務データ辞書」の間で名称が統一されていない。 -->
-
 | **関連プロセス** | 関連する業務領域（例：調達、販売、会計）※複数の場合は「、」区切り |
 | **管理頻度** | 更新・確認の頻度（例：日次、随時、納品時・補充時） |
 
@@ -79,10 +52,6 @@ specdojo:
 ## 3. サンプル
 
 ### 3.1 メタデータ（front-matter YAML）
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency `sld-sample.md` の `type: project` がルールブックの規定（`domain` または `data`）と矛盾している。 -->
-<!-- specdojo:finding id=F002 severity=major rule=vp-qe-verifiability 20行目の「`domain` 固定」という記述と 28行目の 「`type: data`」 という記述が矛盾しており、正しい設定値が判定不能である。 -->
-<!-- specdojo:finding id=F004 severity=major rule=vp-qe-kata-conformance サンプル `sld-sample.md` のメタデータがルールブックの規定に従っていない。 -->
 
 ```yaml
 ---
@@ -100,8 +69,6 @@ supersedes: []
 | ------------ | ------------------------------------ | ---------------------------------------------------------------- | ------------ | -------------- |
 | バックヤード | 商品在庫（未陳列）、段ボール、予備棚 | 納品された商品を保管し、数量と賞味期限を管理。補充元として機能。 | 調達、販売   | 納品時・補充時 |
 | 売り場棚     | 販売中の商品                         | お客様が手に取る商品を配置、価格表示、補充、前出しを行う。       | 販売         | 開店前・営業中 |
-
-<!-- specdojo:finding id=F003 severity=minor rule=vp-qe-omissions-consistency 他成果物との関係性を定義する「位置づけ」節が欠落しており、文書の役割が不明確である。 -->
 
 | レジ | 現金、レジ記録 | 日次の売上金を管理し、入出金記録を保持。 | 会計 | 日次 |
 | 金庫 | 日次売上金 | 売上金を安全に保管し、必要に応じて出金。 | 会計 | 日次 |

@@ -5,30 +5,6 @@ specdojo:
   status: ready
   rulebook: specdojo:pm-plan-rulebook
   sample: specdojo:pm-plan-sample
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 89
-    graded_at: "2026-09-04T15:10:44.945Z"
-    graded_by: gemma-expert-executor
-    content_hash: 34a18b92c6c3be5b3b2faae3ad6871df031d2d4a4a43a60009460916f56e3f10
-    categories:
-      consistency: { score: 88 }
-      usability: { score: 83 }
-      architecture: { score: 100 }
-      quality: { score: 88 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 3, score: 75 }
-      vp-qe-kata-conformance: { level: 3, score: 75 }
-      vp-ux-readability: { level: 2, score: 50 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 1, minor: 2, note: 0 }
 ---
 
 # プロジェクト管理計画 作成レシピ
@@ -99,11 +75,6 @@ Project Management Plan Writing Recipe
 4. 個別計画へ委譲できる説明を削除します。
 
 ## 6. 良い例 / 悪い例
-
-<!-- specdojo:finding id=F001 severity=minor rule=vp-qe-omissions-consistency line=69 第4章「各章の書き方」において、rulebook の標準構成に含まれる「未決事項」の記述ガイドが欠落している。 -->
-
-<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-kata-conformance line=71 成果物の具体化を支援するという recipe の種別責務に対し、第4章の内容が不十分であり、rulebook の要約に近い形式になっている。 -->
-<!-- specdojo:finding id=F003 severity=major rule=vp-ux-readability line=71 第4章「各章の書き方」に、読者の思考を促す問いや具体化のための詳細なガイドがなく、構成案の提示に留まっているため、実用的レシピとしての記述水準が不足している。 -->
 
 | 観点     | 良い例                           | 悪い例                       |
 | -------- | -------------------------------- | ---------------------------- |

@@ -9,30 +9,6 @@ specdojo:
   template: undecided
   based_on:
     - specdojo:rulebook-authoring-standard
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 84
-    graded_at: "2026-09-02T14:32:30.292Z"
-    graded_by: gemma-expert-executor
-    content_hash: 3ebcb73f27a918b0f1358c20cdc5460179ef738617f9c5985ebd44666c2873e7
-    categories:
-      consistency: { score: 63 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 75 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 3, score: 75 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 2, score: 50 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 2, minor: 1, note: 0 }
 ---
 
 # Mermaid を用いたC4コンテキスト図 作成ルール
@@ -78,10 +54,6 @@ Mermaid `flowchart` では `classDef` + `class`、境界は `style` を使用し
 
 ### 2.1.1 標準スタイル定義（コピーして利用）
 
-<!-- specdojo:finding id=F001 severity=minor rule=vp-arc-cross-document-consistency サンプルのH1におけるルールブックへのリンク先ファイル名が、実際のもの（cxd-mermaid-rulebook.md）と不整合である。 -->
-
-<!-- specdojo:finding id=F002 severity=major rule=vp-qe-omissions-consistency 成果物の配置場所、ファイル命名規則、および Frontmatter の詳細定義など, 管理上の必須ルールが欠落している。 -->
-
 ```mermaid
 flowchart LR
   %% --- Standard styles (recommended) ---
@@ -95,8 +67,6 @@ flowchart LR
   style 境界 fill:#ffffff,fill-opacity:0,stroke:#868e96,stroke-width:1px,stroke-dasharray: 5 5;
 
 ```
-
-<!-- specdojo:finding id=F003 severity=major rule=vp-qe-kata-conformance rulebook としての責務（成果物の識別・管理定義）が不足しており、作図リファレンスの構成になっている。 -->
 
 ```plainText
 flowchart LR

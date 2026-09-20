@@ -1,0 +1,109 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: prj-0001:cdfd-derived-content
+path: docs/ja/product/trash/cdfd-derived-content.md
+target: deliverable
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 72
+graded_at: "2026-09-12T01:08:20.793Z"
+graded_by: codex-expert-executor
+content_hash: c15e90f004c2abad66bf5be43dc1e76228990cac046284312b51cb9c2a198e60
+categories:
+  consistency:
+    score: 38
+  usability:
+    score: 88
+  architecture:
+    score: 100
+  quality:
+    score: 67
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 2
+    score: 50
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 1
+    score: 25
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 2
+    score: 50
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 6
+  minor: 0
+  note: 0
+findings:
+  - id: F004
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 12
+    message: 適用範囲に開始・終了と責任分担はあるが, rulebookが必須とする対象組織の境界とシステム境界が明示されていないため、どの組織・実行環境・文書領域までを本書が扱うか追記する必要がある。
+    anchor: "## 2. 適用範囲"
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 15
+    message: >-
+      一括 `build` は実装上 `exec → catalog → register → yaml-pages → dashboard → index` であり、`watch` も `P-08-07` を起動せず変更種別ごとに
+      `exec`・`catalog`・`register`・`index` を直接起動するため、表・図・例外の起動関係を現行実装へ合わせ、`dashboard build` の責務境界も追加する必要がある。
+    anchor: >-
+      - 一括再生成は、適用可能なプロセスを実行情報更新、カタログ表示生成、登録簿ビュー生成、YAML 表示ページ生成、文書索引生成の順に起動し、いずれかが失敗した時点で後続を起動しない。対象 project
+      に必要な正本の配置がない条件付きプロセスは、一括対象から外れる。
+  - id: F002
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 44
+    message: >-
+      DC-001が要求する一括 `build`・`watch` の正しい起動関係を表と図から確認できるよう、`dashboard build` を含む一括順序、watch
+      の個別scope起動、および条件付き工程をスキップする経路を反映する必要がある。
+    anchor: "### 4.1. project 構成に依存するプロセスのフロー（P-08-02〜P-08-04・P-08-07）"
+  - id: F003
+    severity: major
+    rule: vp-qe-verifiability
+    line: 44
+    message: "`P-08-02`〜`P-08-04` が適用外の場合の分岐先と領域完了条件が図示されていないため、各条件付き工程を起動しない構成でも一括生成のpass／failと次工程を判定できる経路を追加する必要がある。"
+    anchor: "### 4.1. project 構成に依存するプロセスのフロー（P-08-02〜P-08-04・P-08-07）"
+  - id: F005
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 44
+    message: rulebookとrecipeが要求する条件付きプロセスの非起動時の正常経路が三つの図に存在せず、正本配置がない場合の工程省略と後続起動を追跡できないため、分岐または明示的なバイパスを図へ追加する必要がある。
+    anchor: "### 4.1. project 構成に依存するプロセスのフロー（P-08-02〜P-08-04・P-08-07）"
+  - id: F006
+    severity: major
+    rule: vp-ux-user-flow
+    line: 44
+    message: project構成に依存する工程を起動しない場合の遷移が図にないため、利用者が自分の構成に該当する開始点・次工程・完了点へ迷わず到達できるスキップ経路を示す必要がある。
+    anchor: "### 4.1. project 構成に依存するプロセスのフロー（P-08-02〜P-08-04・P-08-07）"
+done_criteria:
+  satisfied: 2
+  total: 3
+  unsatisfied:
+    DC-001:
+      - BA
+  detail_ref: prj-0001:cdfd-derived-content-grade-criteria

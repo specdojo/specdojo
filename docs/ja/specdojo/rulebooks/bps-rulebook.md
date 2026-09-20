@@ -6,30 +6,6 @@ specdojo:
   recipe: undecided
   sample: specdojo:bps-sample
   template: undecided
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 88
-    graded_at: "2026-09-01T23:44:07.599Z"
-    graded_by: gemma-expert-executor
-    content_hash: 571e7d6eb679d856b0d4c7dc2602f1a352ce9366038ef1ba96f946249d10ee1d
-    categories:
-      consistency: { score: 63 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 88 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 2, score: 50 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 3, score: 75 }
-      vp-qe-kata-conformance: { level: 3, score: 75 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 1, minor: 2, note: 0 }
 ---
 
 # 業務プロセス仕様書 作成ルール
@@ -38,8 +14,6 @@ Business Process Specification (BPS) Documentation Rules
 
 本ドキュメントは、業務分析・要求定義のために **業務プロセス仕様を統一形式で記述する標準ルール**です。
 業務プロセス仕様は、概念データフローで定義された各プロセスについて、開始条件・手順・入出力・例外処理などを詳細に記述します。
-
-<!-- specdojo:finding id=F003 severity=minor rule=vp-qe-kata-conformance 指定のサンプルファイル (`specdojo:bps-sample`) が実質的なメタ説明に留まっており、具体的な作成例が不十分である。 -->
 
 ## 1. 全体方針
 
@@ -115,8 +89,6 @@ Business Process Specification (BPS) Documentation Rules
 - 必要に応じて用語集の用語ID(tm-xxx-xxx)を併記。
 - 外部システム IF の場合は IF 仕様の ID を引用。
 - イベントの付帯情報（ペイロード）は、BES があれば BES を正とし、BPS にはこのプロセスで参照する範囲を記述します。
-
-<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-omissions-consistency Frontmatter の定義に、メタ情報標準や共通スキーマへの参照がなく、具体性が不足している。 -->
 
 ### 6.5 処理
 
@@ -255,8 +227,6 @@ based_on: [bes-stock-amount-updated]
 ### 処理（擬似コード例）
 
 ```ts
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency サンプル内の Frontmatter で `type: data` となっているが、第 4 章の定義では `domain` 固定とされており矛盾している。 -->
 // 例外処理は省略
 // トリガー: bes-stock-amount-updated「在庫数更新」イベント
 type 在庫数更新イベント = {

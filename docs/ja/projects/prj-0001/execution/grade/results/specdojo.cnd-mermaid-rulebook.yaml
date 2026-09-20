@@ -1,0 +1,86 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:cnd-mermaid-rulebook
+path: docs/ja/specdojo/rulebooks/cnd-mermaid-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 84
+graded_at: "2026-09-02T02:21:10.655Z"
+graded_by: codex-expert-executor
+content_hash: 3c91455b63d10941ccef99cfc91f6b3116a13620355c8044a6140e8fc96717da
+categories:
+  consistency:
+    score: 63
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 75
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 2
+  minor: 2
+  note: 0
+findings:
+  - id: F003
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: >-
+      `## 2.1 標準の色分け（推奨）` は H2 の章として非整数番号になっているため、Rulebook 記述標準の連番規則に合わせて H3 の `### 2.1. 標準の色分け（推奨）` とし、配下の 2.1.1、2.1.2
+      も階層と番号末尾を整合させる必要がある。
+    anchor: "# Mermaid を用いたC4コンテナ図 作成ルール"
+  - id: F002
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 1
+    message: >-
+      参照サンプル `docs/ja/specdojo/samples/cnd-sample.md` の line 9 および 30 において、本ルールブックへのパスが `cnd-rulebook.md` と誤記されており, 正しくは
+      `cnd-mermaid-rulebook.md` である。
+    anchor: "# Mermaid を用いたC4コンテナ図 作成ルール"
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 1
+    message: >-
+      `sample: specdojo:cnd-sample` で宣言された参照サンプルには Mermaid の C4
+      コンテナ図がなく、概要表だけでは本ルールブックのノード、境界、関係、スタイル規則を適用した完成例として整合性を確認できない。
+    anchor: "# Mermaid を用いたC4コンテナ図 作成ルール"
+  - id: F004
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: >-
+      対応 sample の `docs/ja/specdojo/samples/cnd-sample.md` は完成した Mermaid 図を提示していないため、Sample 記述標準が求める「rulebook
+      の必須要素を満たす最小完成例」として、ノード、境界、ラベル付き関係、スタイルを適用した図へ置き換える必要がある。
+    anchor: "# Mermaid を用いたC4コンテナ図 作成ルール"

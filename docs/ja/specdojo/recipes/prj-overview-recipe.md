@@ -5,30 +5,6 @@ specdojo:
   status: ready
   rulebook: specdojo:prj-overview-rulebook
   sample: specdojo:prj-overview-sample
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 80
-    graded_at: "2026-09-04T18:32:04.714Z"
-    graded_by: codex-expert-executor
-    content_hash: 2926cb8d03ca6c46ed625f6e132653a1e6868f94f7a1277007fc7360b330b0d9
-    categories:
-      consistency: { score: 75 }
-      usability: { score: 92 }
-      architecture: { score: 100 }
-      quality: { score: 63 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 3, score: 75 }
-      vp-qe-omissions-consistency: { level: 2, score: 50 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 3, score: 75 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 2, minor: 2, note: 0 }
 ---
 
 # プロジェクト概要 作成レシピ
@@ -226,8 +202,6 @@ Project Overview Writing Recipe
 - 売上、欠品、負担、事業継続、社会課題への寄与、参加機会、透明性など、プロジェクトの最終目的に近い成果を置く。
 - 外部要因の影響を受ける場合は、単独の因果を断定せず、利用前後の変化と当該プロジェクトの寄与を確認する。
 
-<!-- specdojo:finding id=F001 severity=minor rule=vp-qe-verifiability line=196 推奨表に具体的な「判定時期」と「初期仮説／確定値」の記入欄または記入指示がなく、本文177行目および仕上げチェック276行目の確認事項を表の適用だけでは判定できないため、これらを各指標へ記録できるようにする必要がある。 -->
-
 推奨表（観点・指標・目標・測定方法を 1 行ずつ書く。下記は三つの時間軸の記入例）:
 
 | 時間軸   | 観点     | 指標                                           | 目標                  | 測定方法                                   |
@@ -245,9 +219,6 @@ Project Overview Writing Recipe
 ### 4.7. 前提条件
 
 前提条件では、プロジェクト概要を読む人が誤解しやすい境界を明示する。
-
-<!-- specdojo:finding id=F002 severity=major rule=vp-qe-omissions-consistency line=214 「前提条件」の問いと書き方が対象・対象外・判断責任・未決事項に偏り、rulebook と template が要求する「変えない前提」「依存前提」「公開方針」「取捨選択方針」を成果物へ反映する問いと確認項目が欠けているため、各項目の記述手順を追加する必要がある。 -->
-<!-- specdojo:finding id=F003 severity=major rule=vp-qe-kata-conformance line=214 recipe-guided でも成果物を組み立てられるという Recipe 記述標準に対し、「前提条件」の問いが rulebook・template の変えない前提、依存前提、公開方針、取捨選択方針を導出しないため、対応する問い・具体化手順・レビュー項目を追加する必要がある。 -->
 
 問い:
 
@@ -277,8 +248,6 @@ Project Overview Writing Recipe
 8. **後続文書へ委譲する詳細** を切り出す。
 
 ## 6. 良い例 / 悪い例
-
-<!-- specdojo:finding id=F004 severity=minor rule=vp-ux-language-consistency line=248 第6章の「基本方針」は本文見出しおよび対応資料の「基本的な考え方」と表記が異なり、別の項目と誤読され得るため、正式な章名へ統一する必要がある。 -->
 
 | 観点           | 良い例                                                                     | 悪い例                       |
 | -------------- | -------------------------------------------------------------------------- | ---------------------------- |

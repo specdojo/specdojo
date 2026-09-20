@@ -5,30 +5,6 @@ specdojo:
   status: ready
   rulebook: specdojo:prj-assumptions-constraints-dependencies-rulebook
   sample: specdojo:prj-assumptions-constraints-dependencies-sample
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 91
-    graded_at: "2026-09-04T16:44:19.668Z"
-    graded_by: gemma-expert-executor
-    content_hash: 7bc7338925034d4b0a4895aa11fc3e8c35ec3f540d4de12c9534ba351a3bf034
-    categories:
-      consistency: { score: 100 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 75 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 1, minor: 0, note: 0 }
 ---
 
 # 前提・制約・依存関係 作成レシピ
@@ -115,8 +91,6 @@ Assumptions, Constraints and Dependencies Writing Recipe
 - 期限や責任者が未確定なら、推測で埋めず決定先を残す。
 
 ### 4.4. 影響評価と対応方針
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-qe-kata-conformance line=86 前提条件の例として「店頭で使う端末を利用できる」を挙げているが, 直前の記述（line 85）および rulebook の規定に反しており, 依存関係（4.3.）の例とするべきである。 -->
 
 問い:
 

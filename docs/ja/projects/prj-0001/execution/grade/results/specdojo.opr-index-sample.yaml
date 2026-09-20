@@ -1,0 +1,72 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:opr-index-sample
+path: docs/ja/specdojo/samples/opr-index-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 84
+graded_at: "2026-09-05T16:20:21.088Z"
+graded_by: gemma-expert-executor
+content_hash: fb7d1232ddeaa53f4aab4e2732f91067211de2662c69f19451620f8e8a9a52d5
+categories:
+  consistency:
+    score: 63
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 75
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 1
+    score: 25
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 2
+  minor: 1
+  note: 0
+findings:
+  - id: F003
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 3
+    message: 参照先のパスおよびファイル名（`opr-rulebook.md`）が、実際のルールブック（`opr-index-rulebook.md`）と一致していない。
+    anchor: "- 参照: `../rulebooks/opr-rulebook.md`"
+  - id: F002
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 6
+    message: Frontmatter の `rulebook` 指定が `opd-rulebook` になっており、対象成果物の種別と不整合である。
+    anchor: ""
+  - id: F001
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 11
+    message: ルールブックで必須とされている本文構成（2, 4-10章）が欠落しており、サンプルとして不完全である。
+    anchor: "| 頻度 | 手順                         | 実施者   | 完了条件                           | 証跡               |"

@@ -6,30 +6,6 @@ specdojo:
   rulebook: specdojo:cdfd-overview-rulebook
   based_on: []
   supersedes: []
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 78
-    graded_at: "2026-09-18T07:29:28.358Z"
-    graded_by: gemma-expert-executor
-    content_hash: 36d9dd0b5833cbc45dc8caaf1575b2b58b23190496dd9764cb69d77e0d480916
-    categories:
-      consistency: { score: 63 }
-      usability: { score: 92 }
-      architecture: { score: 100 }
-      quality: { score: 63 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 3, score: 75 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 2, score: 50 }
-      vp-qe-omissions-consistency: { level: 2, score: 50 }
-      vp-qe-kata-conformance: { level: 3, score: 75 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 3, score: 75 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 2, minor: 5, note: 0 }
 ---
 
 # 概念データフロー図（全体概要）: 駄菓子屋きぬや販売管理
@@ -52,8 +28,6 @@ specdojo:
 - 商品検索、在庫参照、つけ残高参照など、記録を変更しない参照操作は独立した業務フローに含めず、各領域を支える補助操作として扱う。EC、複数店舗、本格会計、仕入先とのシステム連携は対象外とする。
 - 店主と家族の店番担当、およびシステムの責任分担は [[specdojo:prj-overview-sample|プロジェクト概要]] に従う。補充の判断、つけの承認、締めの確定は店主が担い、システムは記録と確認を支援する。
 
-<!-- specdojo:finding id=F001 severity=minor rule=vp-arc-cross-document-consistency line=21 共通 sample 文脈と参照先のプロジェクト概要では家族の店番利用者を「家族利用者代表」としているが、本書は未定義の「店番担当」を使用しているため、正式な役割名へ統一するか両者の対応を明記する必要がある。 -->
-<!-- specdojo:finding id=F006 severity=minor rule=vp-ux-language-consistency line=21 「店主代表」「家族利用者代表」を用いる共通 sample 文脈に対して「店主」「店番担当」を併用しているため、正式な役割名へ統一するか用語の対応を定義する必要がある。 -->
 ## 3. プロセス領域
 
 業務は 10 のプロセス領域に分かれ、五つのプロセスグループにまとめる。領域の分割と領域間の受け渡しは本書を正本とし、領域内の詳細はプロセスグループ別 CDFD を正本とする。各グループの主要入力・主要出力・データストアは「概念データフロー（概要）」のエッジの根拠である。
@@ -101,8 +75,6 @@ specdojo:
 | `P-06` | 補充判断 | 補充基準を下回った商品を特定し、補充対象と数量を判断する。 | 店主代表 | 在庫が補充基準を下回った |
 
 ### 3.4. 顧客（P-07〜P-08）
-
-<!-- specdojo:finding id=F002 severity=major rule=vp-qe-verifiability line=69 仕入の `P-02` と在庫の `P-05` がともに入荷数量を在庫記録へ反映すると定義されているため、入荷時の更新責務を一方へ定め、他方を受け渡しまたは参照として表現しなければ更新の成否を一意に判定できない。 -->
 
 常連客を顧客台帳へ登録してつけ上限を定め、つけ台帳の残高を精算する。
 
@@ -159,9 +131,6 @@ specdojo:
 
 プロセスは五つのプロセスグループの代表ノード、データストアは「データストア」の各行をノードとして示す。矢印は情報または実行要求の受け渡しであり、実行順や毎回の通過を意味しない。更新のエッジは更新前の参照を含む。店主代表と店番担当は各領域の担当として内側にいるため外部主体としては描かず、対象範囲外の顧客と仕入先を外部主体として描く。ノード総数は、外部主体を除く代表ノード 5 とデータストア 9 の計 14 のため 1 図で示す。
 
-<!-- specdojo:finding id=F003 severity=major rule=vp-qe-omissions-consistency line=163 主要入力の「仕入からの入荷数量」に対応する図のエッジが在庫グループへ到達せず `仕入 → 在庫記録` となり、さらに在庫グループも同じ在庫記録を更新しているため、単一の更新責務とそれに対応する受け渡し経路へ修正する必要がある。 -->
-<!-- specdojo:finding id=F004 severity=minor rule=vp-qe-omissions-consistency line=125 「売場棚」をトランザクションデータ表へ配置している一方、凡例では物理保管はいずれのデータストア区分にも属さないと定義しているため、物理保管用の区分を設けるかトランザクションデータ表へ置く例外規則を明記する必要がある。 -->
-<!-- specdojo:finding id=F005 severity=minor rule=vp-qe-kata-conformance line=125 完成例が「売場棚」をトランザクションデータ表へ置きながら凡例で同区分に属さないと説明しているため、rulebook・template と合わせて物理保管の配置規則を確定し、その規則に従う完成例へ修正する必要がある。 -->
 ```mermaid
 flowchart LR
   classDef process fill:#e3f2fd,stroke:#1e88e5,color:#000
@@ -309,7 +278,6 @@ flowchart LR
 
 ## 8. 未決事項
 
-<!-- specdojo:finding id=F007 severity=minor rule=vp-ux-language-consistency line=273 第4章では売場棚を「トランザクションデータ」に含めている一方、本段落では物理保管を「いずれの区分にも属さない」と定義しており、売場棚の分類を読み手が一意に識別できないため表現を統一する必要がある。 -->
 <!-- prettier-ignore -->
 | 論点 | 影響 | 決定者 | 決定時期 | 状態 |
 | --- | --- | --- | --- | --- |

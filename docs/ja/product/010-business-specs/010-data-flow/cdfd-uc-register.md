@@ -9,36 +9,6 @@ specdojo:
     - cdfd-do
     - cdfd-check
     - cdfd-action
-  grade:
-    rubric: grade-rubric-v1
-    target: deliverable
-    verdict: needs-work
-    score: 95
-    graded_at: "2026-09-20T05:11:28.995Z"
-    graded_by: codex-expert-executor
-    content_hash: ee4d8d400a71463971e672a79571c4b7f216d780f737081785ab232ce1735cee
-    categories:
-      consistency: { score: 100 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 83 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-done-criteria: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 2, score: 50 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-user-flow: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-      vp-qe-config-validity: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 1, minor: 0, note: 0 }
-    done_criteria:
-      satisfied: 3
-      total: 3
-      detail_ref: cdfd-uc-register-grade-criteria
 ---
 
 # 概念データフロー図（登録簿起票から完了まで）
@@ -230,7 +200,6 @@ flowchart LR
 
 ## 6. 引き渡し
 
-<!-- specdojo:finding id=F001 severity=major rule=vp-qe-verifiability line=193 H-01 の「権限を持つ人間の承認」は、具体的な責任ロールまたは権限の参照先が明示されておらず, また「実行計画と対応付いている」という証跡の確認方法が不明確なため, 受理可否を一意に判定できない。 -->
 | 引き渡し ID | 送り元グループ | 受け側グループ | 引き渡す情報                                                                                         | 引き渡し条件                                                                                                                                                                                                                                  | 戻す条件                                                                                                                                                                                                                                |
 | ----------- | -------------- | -------------- | ---------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | H-01        | Plan           | Do             | 対象登録項目、登録項目・決定記録、実行計画、対応開始を判断できる情報                                 | 登録項目を一意に特定でき、実行計画に対象・手順・完了条件があり、適用する Kata、実行主体、利用可能な権限を Do が確認できる。実行計画が保護設定以外の保護対象の変更または統合を含む場合は、権限を持つ人間の承認結果が実行計画と対応付いている。 | 登録項目または実行計画を特定できない、対象・手順・完了条件が不足する、適用する Kata・実行主体・利用可能な権限を確認できない、または承認が必要な変更・統合について権限を持つ人間の承認結果を実行計画と対応付けられず遂行を開始できない。 |

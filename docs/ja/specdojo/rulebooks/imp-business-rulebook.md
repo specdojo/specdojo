@@ -6,30 +6,6 @@ specdojo:
   recipe: undecided
   sample: specdojo:imp-business-sample
   template: undecided
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: pass
-    score: 85
-    graded_at: "2026-09-02T19:17:09.307Z"
-    graded_by: codex-expert-executor
-    content_hash: 257dd14477bdfca84c2b6dc9fe821fbc60c967f26cb539f8a7ac041f8ba98efa
-    categories:
-      consistency: { score: 88 }
-      usability: { score: 83 }
-      architecture: { score: 100 }
-      quality: { score: 75 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 3, score: 75 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 3, score: 75 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 3, score: 75 }
-      vp-ux-readability: { level: 3, score: 75 }
-      vp-ux-language-consistency: { level: 3, score: 75 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 5, note: 0 }
 ---
 
 # 影響調査（業務）作成ルール
@@ -102,8 +78,6 @@ Impact Analysis (Business) Rulebook
 - 変更の背景、狙い、成功条件を簡潔に記述する。
 - 要求詳細は原文を転記せず、判断に必要な要点のみを要約する。
 
-<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-verifiability 影響度の尺度を定義するよう禁止事項にあるが、記述ガイド（6.3）では評価観点を示すのみとなっており、尺度の定義方法についての指示が不十分である。 -->
-
 ### 6.3. 影響分析サマリ
 
 - 高・中・低の影響度で件数を整理し、優先対応対象を明記する。
@@ -118,16 +92,12 @@ Impact Analysis (Business) Rulebook
 | 影響対象業務 | 影響を受ける業務名または業務プロセス |
 | 変更要否     | `要` / `否`                          |
 
-<!-- specdojo:finding id=F004 severity=minor rule=vp-ux-readability 影響詳細一覧の必須カラム表が「変更要否」の直後の空行で分断され、Markdown 描画では「影響度」以降の4行が表にならないため、空行を削除して1つの表に統合する必要がある。 -->
-
 | 影響度 | `高` / `中` / `低` |
 | 対応方針 | 実施・代替・見送りなどの方針 |
 | 判断根拠 | 判定理由の要点 |
 | 備考 | 制約、前提、関連ドキュメント |
 
 ### 6.5. 対応方針
-
-<!-- specdojo:finding id=F005 severity=minor rule=vp-ux-language-consistency 本文全体では「影響度」、参考 sample の対応方針では「優先度」を用いている一方、この箇所だけ未定義の「重要度」を使用しているため、「影響度」または定義済みの優先順位用語へ統一する必要がある。 -->
 
 - 重要度が高い項目から順に、実施時期、担当、前提条件を記載する。
 - 見送りの場合は、再評価条件と時期を必ず記載する。
@@ -141,9 +111,6 @@ Impact Analysis (Business) Rulebook
 
 - 実装詳細（SQL 全文、クラス名、API リクエスト構造）を記載しない。
 - 「影響あり」「要対応」のみで根拠を記載しない。
-
-<!-- specdojo:finding id=F001 severity=minor rule=vp-arc-cross-document-consistency 禁止事項では影響度の尺度定義を必須としているが、参考 sample は評価観点だけを示して高・中・低の尺度を定義しておらず、rulebook と完成例が整合していない。 -->
-<!-- specdojo:finding id=F003 severity=minor rule=vp-qe-kata-conformance Frontmatter で参照する sample が、禁止事項で要求した影響度尺度を定義せずに高・中・低を使用しているため、完成例として rulebook の適用方法を完全には示せていない。 -->
 
 - 影響度の尺度を定義せずに高・中・低を混在させない。
 - 未解決事項に期限や担当を設定せずに放置しない。

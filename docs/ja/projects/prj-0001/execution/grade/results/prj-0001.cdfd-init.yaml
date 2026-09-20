@@ -1,0 +1,96 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: prj-0001:cdfd-init
+path: docs/ja/product/trash/cdfd-init.md
+target: deliverable
+rubric: grade-rubric-v1
+verdict: pass
+score: 92
+graded_at: "2026-09-12T01:40:35.527Z"
+graded_by: codex-expert-executor
+content_hash: b39588de5c5eb90ffa8bed2cec788c4a9e91beca3ed788c0338c923761d595cb
+categories:
+  consistency:
+    score: 88
+  usability:
+    score: 81
+  architecture:
+    score: 100
+  quality:
+    score: 100
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 3
+    score: 75
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-user-flow:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 5
+  note: 0
+findings:
+  - id: F002
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 116
+    message: >-
+      条件付きフローの `provider実行構成` ノードは `.specdojo/＜provider＞/` だけを示し、5.2にあるagent定義の生成先 `.＜provider＞/agents/`
+      が欠落しているため、図へ追加するか省略対象と理由を図の直後に明記する必要がある。
+    anchor: provider実行構成[("🧩 provider 実行構成<br>.specdojo/<br>&lt;provider&gt;/")]
+  - id: F001
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 154
+    message: 5.1と5.2のグループ要約が3章で確定済みの必須性・起動条件を再掲しているため、各グループが扱う範囲の説明だけに絞る必要がある。
+    anchor: config init、register scaffold、catalog scaffold は計画開始に必要な必須プロセスであり、いずれも完了して初めて計画展開へ引き渡せる。
+  - id: F003
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 154
+    message: 5.1と5.2のグループ要約が、rulebookで3章を正本とする必須性・起動条件を重複記載しているため、範囲説明へ置き換える必要がある。
+    anchor: config init、register scaffold、catalog scaffold は計画開始に必要な必須プロセスであり、いずれも完了して初めて計画展開へ引き渡せる。
+  - id: F004
+    severity: minor
+    rule: vp-ux-readability
+    line: 154
+    message: 5.1と5.2の要約は必須性と起動条件を繰り返しており、表へ進む際の新しい判断情報がないため, グループ固有の対象範囲を示す説明へ差し替える必要がある。
+    anchor: config init、register scaffold、catalog scaffold は計画開始に必要な必須プロセスであり、いずれも完了して初めて計画展開へ引き渡せる。
+  - id: F005
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 165
+    message: "`P-01-04`と`P-01-05`は見出し・一覧では「条件付き」だが本文では「任意プロセス」と呼ばれ、rulebookの別分類「選択」と混同し得るため、「条件付きプロセス」に統一する必要がある。"
+    anchor: provider 設定初期化と exec scaffold は、それぞれの利用方針が承認され、必要入力がそろった場合だけ起動する独立した任意プロセスである。
+done_criteria:
+  satisfied: 4
+  total: 4
+  detail_ref: prj-0001:cdfd-init-grade-criteria

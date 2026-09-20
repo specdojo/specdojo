@@ -1,0 +1,84 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:bdd-rulebook
+path: docs/ja/specdojo/rulebooks/bdd-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 78
+graded_at: "2026-09-01T22:46:40.744Z"
+graded_by: gemma-expert-executor
+content_hash: 5f09868c748f77fdc4b23397c0822e21029309e902b065110486a34f61b4c0ab
+categories:
+  consistency:
+    score: 63
+  usability:
+    score: 92
+  architecture:
+    score: 100
+  quality:
+    score: 63
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 1
+    score: 25
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 3
+  minor: 2
+  note: 0
+findings:
+  - id: F003
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: "成果物の種別（type: data）と、メタデータ項目としての設定値（type: domain）の内容が矛盾しており、正解の設定値が不明確である。"
+    anchor: "# 業務データ辞書 作成ルール"
+  - id: F005
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 1
+    message: 「type」という用語が成果物の種別とメタデータ項目名の両義的に使用されており、混同を招く恐れがある。
+    anchor: "# 業務データ辞書 作成ルール"
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 1
+    message: IDの正規表現 `^bdd-[a-z0-9-]+$` が、サンプル (`specdojo:bdd-sample`) のID形式（コロンを含む形式）と矛盾している。
+    anchor: "# 業務データ辞書 作成ルール"
+  - id: F004
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: IDの正規表現 `^bdd-[a-z0-9-]+$` が、サンプル (`specdojo:bdd-sample`) のID形式（コロンを含む形式）と矛盾している。
+    anchor: "# 業務データ辞書 作成ルール"
+  - id: F002
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: 推奨される配置ディレクトリの記述が不足しており、プロジェクト内での標準的な配置場所が不明である。
+    anchor: "# 業務データ辞書 作成ルール"

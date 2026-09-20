@@ -4,56 +4,18 @@ specdojo:
   type: architecture
   status: draft
   rulebook: specdojo:sysd-index-rulebook
-  grade:
-    rubric: grade-rubric-v1
-    target: deliverable
-    verdict: needs-work
-    score: 67
-    graded_at: "2026-09-19T16:45:51.883Z"
-    graded_by: codex-expert-executor
-    content_hash: a9a332d23bd2a0d607f7074b65bcff508c883a7ab696d992fdb57d3791fe10d7
-    categories:
-      consistency: { score: 38 }
-      usability: { score: 81 }
-      architecture: { score: 100 }
-      quality: { score: 58 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 1, score: 25 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-done-criteria: { level: 1, score: 25 }
-      vp-qe-verifiability: { level: 2, score: 50 }
-      vp-qe-omissions-consistency: { level: 2, score: 50 }
-      vp-ux-readability: { level: 3, score: 75 }
-      vp-ux-user-flow: { level: 2, score: 50 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-      vp-qe-config-validity: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 7, minor: 4, note: 0 }
-    done_criteria:
-      satisfied: 2
-      total: 4
-      unsatisfied:
-        DC-001: [ARC]
-        DC-004: [OPS]
-      detail_ref: sysd-index-grade-criteria
 ---
 
-<!-- specdojo:finding id=F007 severity=minor rule=vp-qe-omissions-consistency line=1 Frontmatter に rulebook が必須とする `title` がないため、共通メタデータを補う必要がある。 -->
 # SpecDojo システム設計
 
-<!-- specdojo:finding id=F009 severity=minor rule=vp-ux-readability line=3 SSOT、CPM、CDFD、OPD、SYSD などの略語が本文内で定義されていないため、初出時の展開または用語定義への導線を追加する必要がある。 -->
 SpecDojo のシステム設計情報と、コード・設定ファイルを正本とする SSOT への入口を集約する。本文へ詳細仕様を複製せず、変更時に最初に確認・更新する場所を示す。
 
 ## 1. 概要（対象範囲・更新責任）
 
 対象は SpecDojo CLI、ドキュメント生成、agent 実行、Git / worktree 統合、定期処理である。ARC が構成と導線、DEV がコード・schema、PM がプロジェクト実行定義、OPS が運用設定の更新責任を持つ。
 
-<!-- specdojo:finding id=F008 severity=minor rule=vp-qe-omissions-consistency line=9 第2節から第4節の見出しが rulebook の順序固定見出しから括弧内の説明を省略しているため、規定の見出し名へ統一する必要がある。 -->
 ## 2. SSOT 一覧
 
-<!-- specdojo:finding id=F003 severity=major rule=vp-qe-done-criteria line=12 SSOT 一覧に API 定義と DB スキーマの参照先または非該当である旨がなく、DC-001 を確認できない。 -->
-<!-- specdojo:finding id=F006 severity=major rule=vp-qe-omissions-consistency line=12 API、DB Schema、Observability の SSOT が一覧になく、存在しない場合の非該当宣言もないため、rulebook と成果物カタログが要求する参照範囲を満たしていない。 -->
 <!-- prettier-ignore -->
 | 種別 | SSOT | 参照先 | 更新責任 | 備考 |
 | --- | --- | --- | --- | --- |
@@ -75,7 +37,6 @@ SpecDojo のシステム設計情報と、コード・設定ファイルを正�
 
 ## 3. 自動生成物
 
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=34 `npm run docs:index` は package scripts に存在しないため、実在する `npm run docs:generate` または `specdojo index build` へ修正する必要がある。 -->
 | 生成物             | 入力SSOT                       | 生成コマンド              | 生成先                               | 更新方式          |
 | ------------------ | ------------------------------ | ------------------------- | ------------------------------------ | ----------------- |
 | 文書索引           | Markdown Frontmatter           | `npm run docs:index`      | VitePress参照用索引                  | コマンド生成      |
@@ -85,8 +46,6 @@ SpecDojo のシステム設計情報と、コード・設定ファイルを正�
 
 ## 4. 変更の入口
 
-<!-- specdojo:finding id=F004 severity=major rule=vp-qe-done-criteria line=48 運用文書ディレクトリだけが示され、運用・監視設定そのものの SSOT が特定できないため DC-004 を確認できない。 -->
-<!-- specdojo:finding id=F005 severity=major rule=vp-qe-verifiability line=41 「代表実行成功」「経路を検証」「分離を確認」などの完了条件について、実行する検査・対象ケース・期待結果を明記しなければ判定者ごとに合否が変わる。 -->
 | 変更トリガー           | 最初に直す場所（SSOT）                       | 併せて確認する場所                 | 完了条件                      |
 | ---------------------- | -------------------------------------------- | ---------------------------------- | ----------------------------- |
 | CLIコマンド変更        | `src/`                                       | schema、guide、test                | test・lint・docs build成功    |
@@ -98,9 +57,6 @@ SpecDojo のシステム設計情報と、コード・設定ファイルを正�
 
 ## 5. 関連ドキュメント導線
 
-<!-- specdojo:finding id=F002 severity=major rule=vp-arc-cross-document-consistency line=59 `cdfd-task-execution` と `cdfd-register-lifecycle` は deprecated として trash 配下へ移動済みであり、現行の `cdfd-do` と `cdfd-plan` など後継 SSOT への参照へ更新する必要がある。 -->
-<!-- specdojo:finding id=F010 severity=minor rule=vp-ux-user-flow line=52 関連文書の ID がコード表記だけでリンク化されていないため、解決可能な wikilink または Markdown リンクへ変更する必要がある。 -->
-<!-- specdojo:finding id=F011 severity=major rule=vp-ux-user-flow line=59 データフローの導線が廃止済み文書を指しており、利用者が現行の Plan・Do 設計へ到達できないため後継文書への導線へ置き換える必要がある。 -->
 | 種別           | ドキュメントID              | 目的                               |
 | -------------- | --------------------------- | ---------------------------------- |
 | 横断ルール     | `sysd-cross-cutting-policy` | 複数設計へ適用する必須・禁止事項   |

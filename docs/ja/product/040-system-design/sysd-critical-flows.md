@@ -10,36 +10,6 @@ specdojo:
     - prj-0001:cdfd-task-execution
     - prj-0001:cdfd-register-lifecycle
     - prj-0001:cdfd-multi-project
-  grade:
-    rubric: grade-rubric-v1
-    target: deliverable
-    verdict: needs-work
-    score: 86
-    graded_at: "2026-09-19T16:29:47.712Z"
-    graded_by: codex-expert-executor
-    content_hash: 0c053df264b820997c73427fd43ce256296cc1a9a9486c6e08649b547c4686a5
-    categories:
-      consistency: { score: 75 }
-      usability: { score: 88 }
-      architecture: { score: 100 }
-      quality: { score: 83 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-done-criteria: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 2, score: 50 }
-      vp-qe-omissions-consistency: { level: 2, score: 50 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-user-flow: { level: 2, score: 50 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-      vp-qe-config-validity: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 3, minor: 0, note: 0 }
-    done_criteria:
-      satisfied: 5
-      total: 5
-      detail_ref: sysd-critical-flows-grade-criteria
 ---
 
 # SpecDojo システム設計重要フロー
@@ -68,7 +38,6 @@ specdojo:
 - **トリガー**: 留保事項を含む変更またはproject昇格候補がレビュー可能になった。
 - **範囲**: decision個票、対象成果物、PR review、branch protection、merge、証跡書き戻しを含む。通常のagent commitは含まない。
 
-<!-- specdojo:finding id=F002 severity=major rule=vp-qe-omissions-consistency line=27 5件の図にシステム内外・サービス境界と主要識別子を追加し、各フローのtrace伝搬範囲または非採用理由と、IDかリポジトリ相対パスで一意に辿れるテスト・運用参照を補う必要がある。 -->
 ```mermaid
 flowchart LR
   A[Author] -->|commit / PR| PR[Pull Request]
@@ -132,7 +101,6 @@ flowchart LR
 
 ### 3.4. scf-004: agent worker poolの並列実行
 
-<!-- specdojo:finding id=F001 severity=major rule=vp-qe-verifiability line=90 最大並列数、provider別parallel limit、retry上限・backoffおよび監視条件について、設定キー・値または一意な参照先と確認手順を示し、pass / failを判定可能にする必要がある。 -->
 - **目的**: Ready taskを最大並列数まで安全に実行し、task終了ごとに依存関係を再計算して空き枠を補充する。
 - **トリガー**: `exec run --auto`をparallel指定で開始する。
 - **範囲**: Ready抽出、member選択、claim、provider別上限、agent実行、直列統合、refresh、次task投入を含む。worktree内部はscf-002で扱う。
@@ -193,7 +161,6 @@ flowchart LR
 
 ## 5. 関連ドキュメント導線（SDI/テスト/運用/DEC）
 
-<!-- specdojo:finding id=F003 severity=major rule=vp-ux-user-flow line=150 関連ドキュメント表の一般名称とglob風表記を、実在する文書IDまたはリポジトリ相対パスへ置き換え、未作成OPRには作成予定のIDまたは追跡先を示す必要がある。 -->
 | Flow ID | SDI・一次情報                                     | テスト                    | 運用                  | DEC・判断記録 |
 | ------- | ------------------------------------------------- | ------------------------- | --------------------- | ------------- |
 | scf-001 | Git運用標準、register CDFD、`.github/`            | branch protection確認     | 登録簿運用ガイド      | `PJR-0126`    |

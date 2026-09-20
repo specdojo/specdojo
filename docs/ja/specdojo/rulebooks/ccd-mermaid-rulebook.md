@@ -9,34 +9,7 @@ specdojo:
   template: undecided
   based_on:
     - specdojo:rulebook-authoring-standard
-  grade:
-    rubric: grade-rubric-v1
-    reference: specdojo:prj-overview-rulebook
-    target: kata
-    verdict: needs-work
-    score: 80
-    graded_at: "2026-09-02T00:11:05.932Z"
-    graded_by: gemma-expert-executor
-    content_hash: 91810b142372469aaa85e7f7144037ecf17fe6353d18c13b7357bca2afd28bf1
-    categories:
-      consistency: { score: 88 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 50 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 2, score: 50 }
-      vp-qe-omissions-consistency: { level: 3, score: 75 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 2, minor: 1, note: 0 }
 ---
-
-<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-omissions-consistency 成果物作成を支援するための recipe および template が未定義（undecided）である。 -->
 
 # Mermaid を用いた概念クラス図（CCD）作成ルール
 
@@ -131,8 +104,6 @@ class 売上明細 {
 | 参照関係 | `A --> B`     | ゆるい関連（reference） |
 
 ### 6.4 接続線に「意味（役割名）」を必ず記述する
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-qe-verifiability 「推奨（必須）」という矛盾した表現になっており、ルールとして推奨なのか必須なのかが判定できない。 -->
 
 - 全ての関係線に **`: 関係の意味（役割名）` を付与することを推奨（必須）**
 - 関係の意味は短く明確にする（例：`参照する`、`構成する`、`種類`）
@@ -239,8 +210,6 @@ direction LR
 - 英語と日本語のランダム混在
 - 過剰な階層継承（3階層以上）
 - 関係線ラベル未記載、または曖昧語（「関連」「関係」）のみ
-
-<!-- specdojo:finding id=F003 severity=major rule=vp-qe-kata-conformance 参照されているサンプル `specdojo:ccd-sample` に具体的な Mermaid CCD の記述例が含まれておらず、完成例として機能していない。 -->
 
 ## 11. サンプル
 

@@ -1,0 +1,80 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:nfr-availability-sample
+path: docs/ja/specdojo/samples/nfr-availability-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: fail
+score: 53
+graded_at: "2026-09-05T10:07:42.435Z"
+graded_by: gemma-expert-executor
+content_hash: 7e02345806258b330f8ea29e21cb7e558393a3e9009b47fe94b3cdcf465bb4f7
+categories:
+  consistency:
+    score: 50
+  usability:
+    score: 75
+  architecture:
+    score: 100
+  quality:
+    score: 13
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 1
+    score: 25
+  vp-qe-omissions-consistency:
+    level: 0
+    score: 0
+  vp-qe-kata-conformance:
+    level: 0
+    score: 0
+  vp-ux-readability:
+    level: 1
+    score: 25
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 2
+  major: 2
+  minor: 0
+  note: 0
+findings:
+  - id: F002
+    severity: blocker
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: 必須章（概要、適用範囲・除外条件、可用性要件一覧、測定・検証方法、関連ドキュメント導線）がすべて欠落している。
+    anchor: ""
+  - id: F003
+    severity: blocker
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: rulebook Section 5 で定義された必須の見出し構成に準拠しておらず、完成例としての責務を果たしていない。
+    anchor: ""
+  - id: F004
+    severity: major
+    rule: vp-ux-readability
+    line: 1
+    message: 具体的な記述例を欠いたメタ記述のみとなっており、初見の読者が「どのように書くべきか」を理解できるサンプルとしての機能を果たしていない。
+    anchor: ""
+  - id: F001
+    severity: major
+    rule: vp-qe-verifiability
+    line: 21
+    message: 可用性要件の核心である定量的な判定基準（稼働率 % や RTO/RPO の値など）が一切記述されておらず、検証不能である。
+    anchor: >-
+      | 項目         | 値                                                               |
+      備考                                 |

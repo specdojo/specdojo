@@ -7,30 +7,6 @@ specdojo:
   based_on:
     - specdojo:pm-plan-sample
     - specdojo:prj-success-criteria-and-acceptance-criteria-sample
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 89
-    graded_at: "2026-09-09T16:13:07.473Z"
-    graded_by: gemma-expert-executor
-    content_hash: 49a98703300496c0196ccd8075a71aa539611d4c24e44196c53cbec463e83c54
-    categories:
-      consistency: { score: 75 }
-      usability: { score: 92 }
-      architecture: { score: 100 }
-      quality: { score: 88 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 3, score: 75 }
-      vp-qe-omissions-consistency: { level: 2, score: 50 }
-      vp-qe-kata-conformance: { level: 4, score: 100 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 3, score: 75 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 1, minor: 2, note: 0 }
 ---
 
 # 品質管理計画: 駄菓子屋きぬや 販売管理システム
@@ -48,8 +24,6 @@ specdojo:
 | 技術・公開 | 安全に再現・公開できる     | 必須検証が成功し、個人情報・秘密情報を含まない     | lint、test、build、公開前レビュー | 変更時、公開前 | QE / PO         |
 | 中期価値   | 記録が意思決定に役立つ     | 売れ筋、在庫、つけ状況の把握に利用された事例がある | 利用事例、振り返り記録            | 運用定着後     | BA / PO         |
 
-<!-- specdojo:finding id=F002 severity=major rule=vp-qe-omissions-consistency line=16 「品質方針と適用範囲」において, rulebook で必須とされている「対象期間」および「人と AI の境界」の記述が欠落している。 -->
-
 中期価値ゲートは初期リリースの合否条件には含めず、継続判断に用いる。
 
 ## 3. レビューと証跡
@@ -63,9 +37,6 @@ specdojo:
 証跡には、対象版、実施日、結果、未解決事項、再判定条件を残す。
 
 ## 4. 不適合と是正
-
-<!-- specdojo:finding id=F001 severity=minor rule=vp-qe-verifiability line=31 レビュー表に「出口条件」が含まれておらず、pass / fail の判定基準が不明確である。 -->
-<!-- specdojo:finding id=F003 severity=minor rule=vp-ux-language-consistency line=31 レビュー表の列名（レビュー、実施者、証跡）が、rulebook の定義（対象、実施責任、出口条件・証跡）と不整合である。 -->
 
 | 区分                                   | 対応                                 | 再判定 | 記録先             |
 | -------------------------------------- | ------------------------------------ | ------ | ------------------ |

@@ -10,30 +10,6 @@ specdojo:
   based_on:
     - specdojo:rulebook-authoring-standard
   supersedes: []
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: pass
-    score: 93
-    graded_at: "2026-09-03T07:33:12.652Z"
-    graded_by: codex-expert-executor
-    content_hash: fb7f36efa5a1b4d02ba5075995538175c199ef11b69f76cfdc32b2d3111845b9
-    categories:
-      consistency: { score: 88 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 88 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 3, score: 75 }
-      vp-qe-kata-conformance: { level: 3, score: 75 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 2, note: 0 }
 ---
 
 # プロジェクト課題と解決アプローチ 作成ルール
@@ -148,8 +124,6 @@ specdojo:
 ---
 ```
 
-<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-kata-conformance recipe・template・sample が導入部に求める承認者、利用ロールごとの利用目的、合意対象・非合意対象を rulebook の本文要件にも追加し、各成果物の必須内容を正本から追跡できるようにする。 -->
-
 ## 5. 本文構成（標準テンプレ）
 
 プロジェクト課題と解決アプローチは以下の見出し構成を **順序固定** で配置します。
@@ -158,8 +132,6 @@ specdojo:
 
 | 番号 | 見出し | 必須 | 内容（要点） |
 | ---- | ------ | ---- | ------------ |
-
-<!-- specdojo:finding id=F001 severity=minor rule=vp-qe-omissions-consistency 「最小でも課題の列挙」は課題だけでも成立すると読める一方、記述ガイドでは各課題の「影響」と「優先度」を最低要件としているため、「各課題に課題・影響・優先度を記載する」など一意な必須条件へ統一する。 -->
 
 | 1 | 課題一覧 | ○ | 課題、影響、優先度（最小でも課題の列挙） |
 | 2 | 原因（仮説でも可） | ○ | 課題の原因（事実と仮説を分ける） |

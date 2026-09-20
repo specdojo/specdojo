@@ -1,0 +1,78 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:bes-rulebook
+path: docs/ja/specdojo/rulebooks/bes-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 77
+graded_at: "2026-09-01T23:27:34.195Z"
+graded_by: gemma-expert-executor
+content_hash: 1b9b1520eb472f1b299902f6f7edc4bb2d1c5d6c890518aca12f77c64054c790
+categories:
+  consistency:
+    score: 50
+  usability:
+    score: 83
+  architecture:
+    score: 100
+  quality:
+    score: 75
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 2
+    score: 50
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 4
+  minor: 0
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 1
+    message: 参照先のサンプルファイル `docs/ja/specdojo/samples/bes-sample.md` が本ルールの形式に従った BES インスタンスになっていない。
+    anchor: "# 業務イベント仕様 作成ルール"
+  - id: F003
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: 指定されたサンプル `specdojo:bes-sample` が BES の具体例（インスタンス）になっていない。
+    anchor: "# 業務イベント仕様 作成ルール"
+  - id: F002
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: Frontmatter の `type` 項目において, 表内では `domain` とするが, 直後の説明とサンプルでは `data` となっており矛盾している。
+    anchor: "# 業務イベント仕様 作成ルール"
+  - id: F004
+    severity: major
+    rule: vp-ux-language-consistency
+    line: 1
+    message: Frontmatter の `type` 指定値において `domain` と `data` の表記ゆれ（矛盾）がある。
+    anchor: "# 業務イベント仕様 作成ルール"

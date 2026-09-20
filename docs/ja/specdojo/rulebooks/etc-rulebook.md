@@ -6,34 +6,7 @@ specdojo:
   recipe: undecided
   sample: specdojo:etc-sample
   template: undecided
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 79
-    graded_at: "2026-09-02T17:06:33.086Z"
-    graded_by: codex-expert-executor
-    content_hash: ea2e1ad450653e8bf0ee445460fe8caee2ee5ceda0c8883851492b500cc7c64f
-    categories:
-      consistency: { score: 50 }
-      usability: { score: 92 }
-      architecture: { score: 100 }
-      quality: { score: 75 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 2, score: 50 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 2, score: 50 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 3, score: 75 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 3, minor: 1, note: 0 }
 ---
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency 対応 sample が本書必須の1〜6章、trace_key、条件・ケース表を欠き、独自の章構成と「責任者」など本書にない必須観点を示しているため、本書と同じ成果物形式へ同期する必要がある。 -->
-<!-- specdojo:finding id=F003 severity=major rule=vp-qe-kata-conformance 指定の sample は必須と定義された本文構成（1〜6章）を無視し、Frontmatter の type に `project` を指定しているため, 本書に準拠する `type: test` の完成最小例へ改める必要がある。 -->
 
 # 外部結合テストカタログ 対象別 作成ルール
 
@@ -92,8 +65,6 @@ Frontmatter は共通スキーマに従います（あわせてドキュメン�
 
 - 参照スキーマ: [docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml](../../../specdojo/schemas/v1/deliverable-frontmatter.schema.yaml)
 - メタ情報標準: [document-metadata-standard.md](../standards/document-metadata-standard.md)
-
-<!-- specdojo:finding id=F002 severity=major rule=vp-qe-omissions-consistency Frontmatter 必須項目へ `rulebook: specdojo:etc-rulebook` を追加し、`title` を除外したうえで、最小例を `specdojo:` 名前空間で包まなければ参照スキーマを満たせない。 -->
 
 | 項目       | 説明                                                                             | 必須 |
 | ---------- | -------------------------------------------------------------------------------- | ---- |
@@ -222,8 +193,6 @@ Frontmatter は共通スキーマに従います（あわせてドキュメン�
 本節は `etc-<term>` の中心です。観点（見出し）→ ケース表（末端表）の順で構成します。
 
 #### 6.6.1. 観点:<観点>
-
-<!-- specdojo:finding id=F004 severity=minor rule=vp-ux-language-consistency 標準見出しの `観点:＜観点＞` と最小例の `観点：再送と冪等性` でコロン表記が異なるため、生成物で採用する表記へ統一する必要がある。 -->
 
 生成する `etc-<term>` 本文の見出しは **### 6.1. 観点:<観点>**
 

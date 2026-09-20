@@ -7,30 +7,6 @@ specdojo:
   based_on:
     - specdojo:prj-scope-sample
   supersedes: []
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: pass
-    score: 94
-    graded_at: "2026-09-05T21:48:25.978Z"
-    graded_by: gemma-expert-executor
-    content_hash: b1a231c6dfe9fb5201992ec41fd1046ef86bbda88d264256204bfeec7ee72542
-    categories:
-      consistency: { score: 100 }
-      usability: { score: 92 }
-      architecture: { score: 100 }
-      quality: { score: 88 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 3, score: 75 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 3, score: 75 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 2, note: 0 }
 ---
 
 # 前提・制約・依存関係: 駄菓子屋きぬや 販売管理システム
@@ -79,6 +55,3 @@ specdojo:
 - 営業日の販売・在庫・つけの記録状況を確認し、スコープ変更や関連文書の改訂が起きたときに見直す。
 - 変更記録には、項目 ID、変化内容、影響範囲、一次対応者、判断者、対応状況を残す。記録先はプロジェクト登録簿（`pjr-index.md`）を第一候補とする。
 - 店主代表は業務判断を行い、開発担当は文書整合と手順見直しを支援する。
-
-<!-- specdojo:finding id=F001 severity=minor rule=vp-qe-kata-conformance line=63 依存関係表の列名（「依存先・条件」「必要となる理由」等）が、rulebook 6.3 節の推奨表（「内容または依存先」「影響・必要な理由」等）と一致していない。 -->
-<!-- specdojo:finding id=F002 severity=minor rule=vp-ux-language-consistency line=63 依存関係表の列名に使用されている用語が, rulebook の推奨表記（「内容または依存先」等）と統一されていない。 -->

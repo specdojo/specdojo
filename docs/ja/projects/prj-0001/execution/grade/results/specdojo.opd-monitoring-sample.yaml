@@ -1,0 +1,78 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:opd-monitoring-sample
+path: docs/ja/specdojo/samples/opd-monitoring-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 82
+graded_at: "2026-09-05T13:29:57.981Z"
+graded_by: gemma-expert-executor
+content_hash: b31cf6371dcb1159ed2ae518afab2900629bd7ca15411b9d16cebd3237119a1c
+categories:
+  consistency:
+    score: 63
+  usability:
+    score: 92
+  architecture:
+    score: 100
+  quality:
+    score: 75
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 1
+    score: 25
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 2
+  minor: 2
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: Frontmatter の必須項目 `title` が不足している。
+    anchor: ""
+  - id: F002
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 7
+    message: "`opd-rulebook` の「5. 本文構成（標準テンプレ）」で定義されている必須見出し（2, 3, 4, 6, 7, 8, 9, 10, 11）が不足している。"
+    anchor: ""
+  - id: F004
+    severity: minor
+    rule: vp-ux-readability
+    line: 7
+    message: 必須構成を省略しているため、`opd-＜term＞` 文書を正しく作成するためのサンプルとして不十分である。
+    anchor: ""
+  - id: F003
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 12
+    message: "見出し番号が `opd-rulebook` の定義する順序（## 5. 監視・アラート方針... ## 12. 関連ドキュメント導線...）と不一致である。"
+    anchor: "| 監視対象 | 指標/閾値             | 通知先 | 初動（誰が何をするか）                       | 備考             |"

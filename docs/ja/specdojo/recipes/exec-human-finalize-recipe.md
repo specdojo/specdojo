@@ -4,30 +4,6 @@ specdojo:
   type: recipe
   status: ready
   rulebook: none
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 59
-    graded_at: "2026-09-04T13:06:47.162Z"
-    graded_by: codex-expert-executor
-    content_hash: 8ad49bed2e30873aa488ce1c95ca20cf49dc45dc7bedca1c633ab178d86de4e1
-    categories:
-      consistency: { score: 25 }
-      usability: { score: 67 }
-      architecture: { score: 100 }
-      quality: { score: 50 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 1, score: 25 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 2, score: 50 }
-      vp-qe-omissions-consistency: { level: 1, score: 25 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 2, score: 50 }
-      vp-ux-language-consistency: { level: 2, score: 50 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 8, minor: 2, note: 0 }
 ---
 
 # Human Finalize 実行レシピ
@@ -56,15 +32,6 @@ Human Finalize Execution Recipe
 
 ## 3. 全体の実行手順
 
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=34 差し戻し時にも無条件で `specdojo exec complete` を実行するとタスクが done になり後続が進み得るため、承認時の complete と差し戻し時の block・再対応経路を明確に分岐させる必要がある。 -->
-<!-- specdojo:finding id=F002 severity=major rule=vp-arc-cross-document-consistency line=34 「再度 build」は現行 CLI と運用ガイドが定める `specdojo exec refresh —project ＜project-id＞` と一致せず次の Ready を更新できないため、実在する完全な refresh コマンドへ修正する必要がある。 -->
-<!-- specdojo:finding id=F003 severity=major rule=vp-qe-verifiability line=34 `judgement: 承認` と `judgement: 差し戻し` の双方が同じ complete 操作へ到達して判定結果とタスク状態が対応しないため、各判定に対応する状態イベントと確認可能な終端状態を定義する必要がある。 -->
-<!-- specdojo:finding id=F004 severity=major rule=vp-qe-omissions-consistency line=34 差し戻し時に complete せずタスクを停止し、修正対象を再対応へ戻した後に再確認する手順がないため、未充足のまま後続タスクを Ready にしない状態遷移を追記する必要がある。 -->
-<!-- specdojo:finding id=F005 severity=major rule=vp-qe-omissions-consistency line=34 完了 event 後に必要な `specdojo exec refresh —project ＜project-id＞` が手順から欠落し「再度 build」とだけ記載されているため、Ready 更新の必須操作を完全なコマンドで明記する必要がある。 -->
-<!-- specdojo:finding id=F006 severity=major rule=vp-qe-kata-conformance line=34 差し戻し判定後も complete する適用方法では human finalize の否認ゲートを再現できないため、承認と差し戻しの実行手順を分けた再利用可能な recipe に修正する必要がある。 -->
-<!-- specdojo:finding id=F009 severity=major rule=vp-ux-readability line=34 承認と差し戻しの分岐がないうえ「build」がどのコマンドを指すか示されておらず、読者が実行すべき状態イベントと次の Ready 更新操作を一意に選べないため、結果別の手順と完全なコマンドを明記する必要がある。 -->
-<!-- specdojo:finding id=F010 severity=major rule=vp-ux-language-consistency line=34 本文行27では Ready 更新を `specdojo exec refresh` としているのに終了時だけ「build」と表記しており別操作と誤認させるため、操作名を `specdojo exec refresh` に統一する必要がある。 -->
-
 1. `specdojo exec refresh --project <project-id>` を実行し、対象タスクが Ready であることを確認します。refresh は human plan を生成しません。
 2. `specdojo exec claim --project <project-id> --task <task-id> --by <actor> --msg "<message>"` で claim し、生成された result を開きます。
 3. result frontmatter の `targets` を確認し、doc-index で対象文書を解決します。
@@ -73,8 +40,6 @@ Human Finalize Execution Recipe
 6. 対象文書に必要な整形・静的検査・schema 検証を行い、確定できる文書の `status` を `ready` に更新します。
 7. result のチェックリスト、確定判断、備考を実際の結果で埋めます。未確認項目が残る場合は差し戻しとし、その理由を記録します。
 8. `specdojo exec complete --project <project-id> --task <task-id> --by <actor> --msg "<message>"` で完了を記録し、再度 build して次の Ready を更新します。
-
-<!-- specdojo:finding id=F007 severity=minor rule=vp-qe-kata-conformance line=36 「各確認の進め方」が指示文だけで構成され、Recipe 記述標準が各章の書き方に求める書き手の問いを置いていないため、各確認で答えるべき具体的な問いを追加する必要がある。 -->
 
 ## 4. 各確認の進め方
 
@@ -118,8 +83,6 @@ Human Finalize Execution Recipe
 | 修正範囲 | 未充足条件に必要な最小差分だけを加える           | 確定と無関係な改善を同じ作業へ混ぜる   |
 | 確定判断 | 未確認項目があれば理由付きで差し戻す             | 空欄や未確認項目を残したまま承認する   |
 | 証跡     | 修正内容、検証結果、判断を同じ result に記録する | 口頭確認や作業者の記憶だけに依存する   |
-
-<!-- specdojo:finding id=F008 severity=minor rule=vp-qe-kata-conformance line=79 「レビュー観点」が箇条書きであり、Recipe 記述標準が必須章に求める表形式になっていないため、観点と判定内容を対応付けた表へ修正する必要がある。 -->
 
 ## 7. レビュー観点
 

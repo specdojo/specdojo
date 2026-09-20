@@ -1,0 +1,72 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:bps-rulebook
+path: docs/ja/specdojo/rulebooks/bps-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 88
+graded_at: "2026-09-01T23:44:07.599Z"
+graded_by: gemma-expert-executor
+content_hash: 4d9d3158e071e8cd1b7d8c21e168bbbe11b064c93aa92f337a3792a146f444b5
+categories:
+  consistency:
+    score: 63
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 88
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 1
+  minor: 2
+  note: 0
+findings:
+  - id: F003
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: 指定のサンプルファイル (`specdojo:bps-sample`) が実質的なメタ説明に留まっており、具体的な作成例が不十分である。
+    anchor: "# 業務プロセス仕様書 作成ルール"
+  - id: F002
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: Frontmatter の定義に、メタ情報標準や共通スキーマへの参照がなく、具体性が不足している。
+    anchor: "# 業務プロセス仕様書 作成ルール"
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 1
+    message: "サンプル内の Frontmatter で `type: data` となっているが、第 4 章の定義では `domain` 固定とされており矛盾している。"
+    anchor: "# 業務プロセス仕様書 作成ルール"

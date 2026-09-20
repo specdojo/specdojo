@@ -1,0 +1,106 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:ifx-cmd-rulebook
+path: docs/ja/specdojo/rulebooks/ifx-cmd-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 70
+graded_at: "2026-09-02T18:15:58.959Z"
+graded_by: codex-expert-executor
+content_hash: 803782aa7074dcfb613e0108db1eb2331e5c98933da344becd70cbda3c4db936
+categories:
+  consistency:
+    score: 38
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 50
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 1
+    score: 25
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 6
+  minor: 1
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 1
+    message: >-
+      `version` に SemVer、`supersedes` に ID 配列を許可していますが、対応 schema は `version` を正整数に限定し、`supersedes` を許可していないため, メタ項目の契約を
+      schema と一致させてください。
+    anchor: "# 外部コマンド連携仕様作成ルール"
+  - id: F004
+    severity: major
+    rule: vp-qe-verifiability
+    line: 1
+    message: >-
+      ルートキーだけでなく、`command`、`arguments`、`streams`、`authentication`、`execution`、`error_handling`
+      の各入れ子キーについて必須・任意と条件付き必須を明記し、仕様だけで pass / fail を判定できるようにしてください。
+    anchor: "# 外部コマンド連携仕様作成ルール"
+  - id: F006
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: >-
+      対応 schema が必須とする
+      `command.purpose`、`command.subcommands`、`command.shell`、各引数属性、各認証属性、実行属性、エラー処理属性の必須性を本文要件へ追加してください。
+    anchor: "# 外部コマンド連携仕様作成ルール"
+  - id: F002
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 1
+    message: >-
+      `arguments[].kind` の `positional`、`position` キー、`value_source` の `config` は対応 schema で許可されず、rulebook
+      に従った引数定義が検証エラーになるため、許容キーと enum を統一してください。
+    anchor: "# 外部コマンド連携仕様作成ルール"
+  - id: F007
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: >-
+      rulebook と recipe が許容する `positional` および rulebook が許容する `config` を対応 schema
+      が拒否するため、rulebook・recipe・template・schemaを通じた引数契約を統一してください。
+    anchor: "# 外部コマンド連携仕様作成ルール"
+  - id: F003
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 1
+    message: 終了カテゴリとして定義した `rate_limit` は対応 schema の `exit_codes[].category` で許可されていないため、rulebook と schema の enum を一致させてください。
+    anchor: "# 外部コマンド連携仕様作成ルール"
+  - id: F005
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 1
+    message: error_handling 内で記載すべき具体的なキー名（timeout_action, malformed_output_action, authentication_failure_action 等）を明記してください。
+    anchor: "# 外部コマンド連携仕様作成ルール"

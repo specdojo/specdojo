@@ -12,30 +12,6 @@ specdojo:
       based_on:
         - cdfd-overview
       supersedes: []
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: pass
-    score: 86
-    graded_at: "2026-09-19T21:39:33.737Z"
-    graded_by: codex-expert-executor
-    content_hash: f13cd641774ac740d19f1fce27dcd50da2ac7fe239b3afa5f0f7df1816c6d3fc
-    categories:
-      consistency: { score: 75 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 75 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 3, score: 75 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 3, score: 75 }
-      vp-qe-omissions-consistency: { level: 3, score: 75 }
-      vp-qe-kata-conformance: { level: 3, score: 75 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 7, note: 0 }
 ---
 
 # 概念データフロー図（プロセスグループ別）: _GROUP_NAME_
@@ -52,9 +28,6 @@ _TODO_: 対象者ごとに、この CDFD から承認、後続設計、品質確
 
 ## 2. 適用範囲
 
-<!-- specdojo:finding id=F001 severity=minor rule=vp-arc-cross-document-consistency line=15 rulebook と recipe は適用範囲に期間の明記を求めているため、「対象期間」または期間を限定しない旨の記入欄を追加してください。 -->
-<!-- specdojo:finding id=F004 severity=minor rule=vp-qe-omissions-consistency line=15 必須の適用範囲に対象期間または期間を限定しない旨の記入欄がないため、組織境界・システム境界と並ぶ項目として追加してください。 -->
-<!-- specdojo:finding id=F006 severity=minor rule=vp-qe-kata-conformance line=15 rulebook 6.1 と recipe 4.2 が要求する適用期間を生成物へ反映できるよう、「対象期間」のプレースホルダーを追加してください。 -->
 - 対象グループ: _GROUP_NAME_（_AREA_ID_RANGE_）。_TODO_: 全体概要と同じグループ名と含む領域を書く。
 - 対象業務: _TODO_: どのイベントから、どの出力がそろうまでを対象とするかを書く。
 - 組織境界: _TODO_: グループ内部の担当と外部主体を書く。
@@ -77,10 +50,6 @@ _TODO_: 領域の役割と、領域内のプロセスがどう連携するかを
 - **主要出力**: _TODO_: 外部主体、他領域、データストアへ渡す主要な情報・物を名詞で列挙する。
 - **データストア**: _TODO_: 「データストア」と同じ名称で、参照・更新するデータストアを列挙する。
 
-<!-- specdojo:finding id=F002 severity=minor rule=vp-arc-cross-document-consistency line=37 rulebook と recipe は各プロセスに一つの完了条件を求めているため、プロセス表または対応する別表に完了条件の記入先を設けてください。 -->
-<!-- specdojo:finding id=F003 severity=minor rule=vp-qe-verifiability line=37 各プロセスが完了したと判定する条件の記入欄がなく、一プロセス一完了条件を検証できないため、完了条件とその判定可能な状態または出力を記録する列か対応表を追加してください。 -->
-<!-- specdojo:finding id=F005 severity=minor rule=vp-qe-omissions-consistency line=37 プロセスを分割・完成判定するための完了条件が表の必須項目から漏れているため、全プロセスについて記録できる欄を追加してください。 -->
-<!-- specdojo:finding id=F007 severity=minor rule=vp-qe-kata-conformance line=37 rulebook の一プロセス一完了条件と recipe のプロセス分割・確認手順を生成物へ反映できるよう、完了条件のプレースホルダーを追加してください。 -->
 | プロセス ID    | プロセス       | 業務目的           | 主な担当     | 起動条件          | 必須性        |
 | -------------- | -------------- | ------------------ | ------------ | ----------------- | ------------- |
 | `_PROCESS_ID_` | _PROCESS_NAME_ | _BUSINESS_PURPOSE_ | _OWNER_ROLE_ | _START_CONDITION_ | _REQUIREMENT_ |

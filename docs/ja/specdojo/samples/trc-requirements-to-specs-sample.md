@@ -8,35 +8,9 @@ specdojo:
     - bac-cashier-flow
     - bes-product-master
   supersedes: []
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 93
-    graded_at: "2026-09-06T03:32:42.814Z"
-    graded_by: gemma-expert-executor
-    content_hash: 7902dbd921efb500fbf0f0374f7b9b4530ab9a4ad5ea9a367cae9a0f18e89138
-    categories:
-      consistency: { score: 75 }
-      usability: { score: 92 }
-      architecture: { score: 100 }
-      quality: { score: 100 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 2, score: 50 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 4, score: 100 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 3, score: 75 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 1, minor: 1, note: 0 }
 ---
 
 # トレーサビリティ（要求→仕様）サンプル
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=3 Frontmatter の `based_on` と本文のトレースマトリクスで参照されている仕様 ID が不整合である。 -->
 
 ## 1. 目的と適用範囲
 
@@ -50,8 +24,6 @@ specdojo:
 - 対象外: 次期リリース要求（`req-r2-*`）は対象外とする
 
 ## 3. トレースマトリクス
-
-<!-- specdojo:finding id=F002 severity=minor rule=vp-ux-language-consistency line=19 ギャップ欄に rulebook で指定された `_UNDECIDED_:` ではなく `_TODO_:` が使用されており、語彙が統一されていない。 -->
 
 | 要求ID     | 要求要約                         | 対応仕様ID                          | 充足状況 | ギャップ                                  | 備考                       |
 | ---------- | -------------------------------- | ----------------------------------- | -------- | ----------------------------------------- | -------------------------- |

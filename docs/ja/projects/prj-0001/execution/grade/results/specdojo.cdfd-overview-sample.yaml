@@ -1,0 +1,96 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:cdfd-overview-sample
+path: docs/ja/specdojo/samples/cdfd-overview-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 78
+graded_at: "2026-09-18T07:29:28.358Z"
+graded_by: gemma-expert-executor
+content_hash: 8800ec24df147719a638e562710e1c8a35a552adae92de1ee889943109a4ddbc
+categories:
+  consistency:
+    score: 63
+  usability:
+    score: 92
+  architecture:
+    score: 100
+  quality:
+    score: 63
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 3
+    score: 75
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 2
+  minor: 5
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 21
+    message: 共通 sample 文脈と参照先のプロジェクト概要では家族の店番利用者を「家族利用者代表」としているが、本書は未定義の「店番担当」を使用しているため、正式な役割名へ統一するか両者の対応を明記する必要がある。
+    anchor: "## 3. プロセス領域"
+  - id: F006
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 21
+    message: 「店主代表」「家族利用者代表」を用いる共通 sample 文脈に対して「店主」「店番担当」を併用しているため、正式な役割名へ統一するか用語の対応を定義する必要がある。
+    anchor: "## 3. プロセス領域"
+  - id: F002
+    severity: major
+    rule: vp-qe-verifiability
+    line: 69
+    message: 仕入の `P-02` と在庫の `P-05` がともに入荷数量を在庫記録へ反映すると定義されているため、入荷時の更新責務を一方へ定め、他方を受け渡しまたは参照として表現しなければ更新の成否を一意に判定できない。
+    anchor: 常連客を顧客台帳へ登録してつけ上限を定め、つけ台帳の残高を精算する。
+  - id: F003
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 163
+    message: 主要入力の「仕入からの入荷数量」に対応する図のエッジが在庫グループへ到達せず `仕入 → 在庫記録` となり、さらに在庫グループも同じ在庫記録を更新しているため、単一の更新責務とそれに対応する受け渡し経路へ修正する必要がある。
+    anchor: つけ台帳 -->|"つけ残高"| 販売
+  - id: F004
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 125
+    message: 「売場棚」をトランザクションデータ表へ配置している一方、凡例では物理保管はいずれのデータストア区分にも属さないと定義しているため、物理保管用の区分を設けるかトランザクションデータ表へ置く例外規則を明記する必要がある。
+    anchor: flowchart LR
+  - id: F005
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 125
+    message: 完成例が「売場棚」をトランザクションデータ表へ置きながら凡例で同区分に属さないと説明しているため、rulebook・template と合わせて物理保管の配置規則を確定し、その規則に従う完成例へ修正する必要がある。
+    anchor: flowchart LR
+  - id: F007
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 273
+    message: 第4章では売場棚を「トランザクションデータ」に含めている一方、本段落では物理保管を「いずれの区分にも属さない」と定義しており、売場棚の分類を読み手が一意に識別できないため表現を統一する必要がある。
+    anchor: "| --- | --- | --- | --- | --- |"

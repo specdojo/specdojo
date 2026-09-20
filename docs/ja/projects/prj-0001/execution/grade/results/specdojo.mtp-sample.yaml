@@ -1,0 +1,90 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:mtp-sample
+path: docs/ja/specdojo/samples/mtp-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: fail
+score: 58
+graded_at: "2026-09-09T15:33:44.853Z"
+graded_by: gemma-expert-executor
+content_hash: 1992ce64d94d6c23edb0a5f7a35f710997d710fe3f8c7bc701b8a949a53300b1
+categories:
+  consistency:
+    score: 50
+  usability:
+    score: 75
+  architecture:
+    score: 100
+  quality:
+    score: 25
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 0
+    score: 0
+  vp-qe-kata-conformance:
+    level: 0
+    score: 0
+  vp-ux-readability:
+    level: 1
+    score: 25
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 2
+  major: 3
+  minor: 1
+  note: 0
+findings:
+  - id: F003
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 3
+    message: Frontmatter に必須項目である `title` が欠落している。
+    anchor: "## 1. 目的と適用範囲"
+  - id: F004
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 4
+    message: Frontmatter の type が `project` となっているが、ルールブックの定義に従い `migration` 固定とする必要がある。
+    anchor: ""
+  - id: F001
+    severity: major
+    rule: vp-qe-verifiability
+    line: 61
+    message: サンプルの例示として、判定基準を具体的にどう記述すべきか（Pass/Failが客観的に判定可能な表現）が示されておらず、検証可能性の例として不十分である。
+    anchor: ""
+  - id: F002
+    severity: blocker
+    rule: vp-qe-omissions-consistency
+    line: 37
+    message: "ルールブックで定義されている必須構成（## 1.概要 〜 ## 9.関連ドキュメント）がすべて欠落しており、ルールを無視した独自の構成となっている。"
+    anchor: ""
+  - id: F005
+    severity: blocker
+    rule: vp-qe-kata-conformance
+    line: 37
+    message: 本文構成がルールブックで指定された順序固定の必須見出しに従っておらず、具体例としての責務を果たしていない。
+    anchor: ""
+  - id: F006
+    severity: major
+    rule: vp-ux-readability
+    line: 37
+    message: ルールブックと全く異なる構成で記述されているため、初見の読者が正しい MTP の書き方を理解できず、誤った形式を模倣させるリスクがある。
+    anchor: ""

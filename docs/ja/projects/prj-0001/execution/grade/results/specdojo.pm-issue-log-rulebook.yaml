@@ -1,0 +1,66 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:pm-issue-log-rulebook
+path: docs/ja/specdojo/rulebooks/pm-issue-log-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 80
+graded_at: "2026-09-03T03:02:21.178Z"
+graded_by: gemma-expert-executor
+content_hash: e93ea591e89456fa566d06131011aebbfc8eb8bddb1623f7dddea5f1386abea3
+categories:
+  consistency:
+    score: 63
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 63
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 1
+    score: 25
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
+    level: 1
+    score: 25
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 2
+  minor: 0
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 1
+    message: 参照先の template (`specdojo:pm-issue-log-template`) が異なる rulebook ID を指定しており、かつ構造（派生ビュー）が本ルールブックの記述ルールと根本的に矛盾している。
+    anchor: "# 課題ログ 作成ルール"
+  - id: F002
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: 連携するテンプレートファイルの内容が、本ルールブックで定義する構成を無視して自動生成ビューとして定義されており、実効的な乖離がある。
+    anchor: "# 課題ログ 作成ルール"

@@ -7,36 +7,6 @@ specdojo:
   based_on:
     - prj-0001:cdfd-init
   supersedes: []
-  grade:
-    rubric: grade-rubric-v1
-    target: deliverable
-    verdict: pass
-    score: 96
-    graded_at: "2026-09-13T00:42:11.623Z"
-    graded_by: codex-expert-executor
-    content_hash: 691cd78e6c6c1068e26195063c3951edf12d83a4aacc4bb6e1a503f4c84e3614
-    categories:
-      consistency: { score: 88 }
-      usability: { score: 94 }
-      architecture: { score: 100 }
-      quality: { score: 100 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-done-criteria: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 3, score: 75 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-user-flow: { level: 3, score: 75 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-      vp-qe-config-validity: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 2, note: 0 }
-    done_criteria:
-      satisfied: 3
-      total: 3
-      detail_ref: prj-0001:cdfd-multi-project-grade-criteria
 ---
 
 # 概念データフロー図（複数プロジェクト・ブランチ並行処理）: SpecDojo
@@ -201,9 +171,6 @@ flowchart LR
 凡例: ノード形状・線種・色・絵文字は [[prj-0001:cdfd-overview|概念データフロー図（全体概要）]] の「凡例（本プロダクト共通）」に従う。`P-04 タスク実行` は委譲先を示す領域外の代表ノードであり、内部処理は本図の対象外とする。`実行方式と担当が割り当てられた` は必須プロセスのフロー（4.1）、`統合対象の commit が確定した` は同期・統合のフロー（4.3）の同名イベントと同一の対象を指す。本図は現物の流れを扱わない。
 
 ### 4.3. 同期・統合のフロー（P-06-07・P-06-08）
-
-<!-- specdojo:finding id=F001 severity=minor rule=vp-qe-omissions-consistency line=190 `P-06-07` は未取込 commit がない場合に起動しない正常経路と定義されているが、4.3図には「統合対象の commit が確定した」から `P-06-08` へ直接進む経路がなく、条件付きプロセスの非起動経路を図から追跡できない。 -->
-<!-- specdojo:finding id=F002 severity=minor rule=vp-ux-user-flow line=190 対象 project `develop` に未取込 commit がない利用者は `P-06-07` を省略して `P-06-08` へ進む必要があるが、その分岐が4.3図にないため、本文を参照し直さないと次のプロセスへ到達できない。 -->
 
 ```mermaid
 flowchart LR

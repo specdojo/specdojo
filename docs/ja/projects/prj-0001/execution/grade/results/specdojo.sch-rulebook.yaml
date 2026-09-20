@@ -1,0 +1,78 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:sch-rulebook
+path: docs/ja/specdojo/rulebooks/sch-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 87
+graded_at: "2026-09-14T01:11:32.676Z"
+graded_by: gemma-expert-executor
+content_hash: 5bcc515ceaba2dd7606e8795826beb6dcfb68e17a2c179462e27635b298fd327
+categories:
+  consistency:
+    score: 100
+  usability:
+    score: 67
+  architecture:
+    score: 75
+  quality:
+    score: 100
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 2
+    score: 50
+  vp-arc-single-responsibility:
+    level: 2
+    score: 50
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
+    level: 4
+    score: 100
+  vp-ux-readability:
+    level: 2
+    score: 50
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 3
+  minor: 0
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-arc-conciseness
+    line: 103
+    message: >-
+      Section 5.5 describes generation flow, contradicting the statement in line 45 and 49 that refers to
+      `specdojo:schedule-design-guide`.
+    anchor: "### 5.5. intent と grade からの strategy 生成"
+  - id: F002
+    severity: major
+    rule: vp-arc-single-responsibility
+    line: 103
+    message: >-
+      The document mixes detailed tool generator logic (Section 5.5) with authoring rules; this belongs in a design
+      guide or tool specification.
+    anchor: "### 5.5. intent と grade からの strategy 生成"
+  - id: F003
+    severity: major
+    rule: vp-ux-readability
+    line: 103
+    message: >-
+      Contradiction between line 45/49 and section 5.5 creates confusion regarding the authoritative source for
+      generation flow and logic.
+    anchor: "### 5.5. intent と grade からの strategy 生成"

@@ -1,0 +1,63 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:prj-stakeholder-register-rulebook
+path: docs/ja/specdojo/rulebooks/prj-stakeholder-register-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+reference: specdojo:prj-overview-rulebook
+verdict: pass
+score: 96
+graded_at: "2026-09-03T08:22:59.699Z"
+graded_by: gemma-expert-executor
+content_hash: b2b142248bd05db51667c3a31b22e3ea6e69a160fc6b61d35d3f7992a0499381
+categories:
+  consistency:
+    score: 100
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 88
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 1
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: >-
+      対応 template を宣言済みなのに「本文構成（標準テンプレ）」として見出し順を rulebook 側でも正本化しているため、この章を「本文要件」として各章の目的・必須性・記述規約に限定し、骨組みの正本は template
+      に統一する必要がある。
+    anchor: "# ステークホルダー登録簿 作成ルール"

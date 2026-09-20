@@ -4,38 +4,9 @@ specdojo:
   type: project
   status: draft
   rulebook: specdojo:dmd-rulebook
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 89
-    graded_at: "2026-09-05T02:58:36.361Z"
-    graded_by: gemma-expert-executor
-    content_hash: 56e4c3f894d3f571f18738472b64cc981cfdb616b7b602ea510cdc198b404edd
-    categories:
-      consistency: { score: 88 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 75 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 3, score: 75 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 1, minor: 2, note: 0 }
 ---
 
-<!-- specdojo:finding id=F001 severity=minor rule=vp-qe-omissions-consistency line=1 Frontmatter の必須項目である `title` が不足している。 -->
-<!-- specdojo:finding id=F002 severity=major rule=vp-qe-kata-conformance line=1 Frontmatter の `type` は `migration` 固定とする必要があるが、`project` となっている。 -->
-
 # データ移行設計 サンプル
-
-<!-- specdojo:finding id=F003 severity=minor rule=vp-qe-kata-conformance line=3 見出し中の `＜term＞` (`order-data`) が、ドキュメント ID に使用されている `＜term＞` (`sample`) と一致していない。 -->
 
 ## 1. 概要（order-data）
 

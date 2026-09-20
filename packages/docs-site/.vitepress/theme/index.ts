@@ -3,6 +3,7 @@ import type { Router } from "vitepress";
 import { h } from "vue";
 import SidebarToggle from "./SidebarToggle.vue";
 import FrontmatterTable from "./FrontmatterTable.vue";
+import GradeSummary from "./GradeSummary.vue";
 import "./custom.css";
 
 export default {
@@ -10,7 +11,7 @@ export default {
   Layout: () =>
     h(DefaultTheme.Layout, null, {
       "nav-bar-title-after": () => h(SidebarToggle),
-      "doc-before": () => h(FrontmatterTable),
+      "doc-before": () => h("div", [h(GradeSummary), h(FrontmatterTable)]),
     }),
   enhanceApp({ router }: { router: Router }) {
     if (typeof window === "undefined") return;

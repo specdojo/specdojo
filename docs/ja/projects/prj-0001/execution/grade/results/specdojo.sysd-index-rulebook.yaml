@@ -1,0 +1,74 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:sysd-index-rulebook
+path: docs/ja/specdojo/rulebooks/sysd-index-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 87
+graded_at: "2026-09-03T12:06:46.238Z"
+graded_by: gemma-expert-executor
+content_hash: a5cbbee6f8e6b639d8b4364eaaf6dfacc3b6dd98d236c4692d6d7aadaa4482ef
+categories:
+  consistency:
+    score: 100
+  usability:
+    score: 83
+  architecture:
+    score: 100
+  quality:
+    score: 75
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 1
+  minor: 2
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: >-
+      指定されているサンプル specdojo:sysd-index-sample が、本書の「5. 本文構成（標準テンプレ）」で定義されている必須見出し構成と順序に全く準拠しておらず、 rulebook
+      の適用例として機能していない。
+    anchor: "# システム設計-全体構成 作成ルール"
+  - id: F002
+    severity: minor
+    rule: vp-ux-readability
+    line: 1
+    message: 見出し 「## 5. 関連ドキュメント導線）」 の末尾に不要な閉じ括弧がある。
+    anchor: "# システム設計-全体構成 作成ルール"
+  - id: F003
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 1
+    message: 表内の「種別」列で「アーキ」「品質」などの略称が使われており、2.1節で定義した標準的な識別子（C4 / NFR / OPD / DEC）と表記が統一されていない。
+    anchor: "# システム設計-全体構成 作成ルール"

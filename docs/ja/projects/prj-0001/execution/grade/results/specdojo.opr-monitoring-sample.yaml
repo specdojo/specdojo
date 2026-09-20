@@ -1,0 +1,90 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:opr-monitoring-sample
+path: docs/ja/specdojo/samples/opr-monitoring-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 70
+graded_at: "2026-09-05T16:49:07.103Z"
+graded_by: gemma-expert-executor
+content_hash: a5e181f141fbbf211260b27422d71a975e26bc9b540d82a72ce3c14b7c11ef57
+categories:
+  consistency:
+    score: 38
+  usability:
+    score: 83
+  architecture:
+    score: 100
+  quality:
+    score: 63
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
+    level: 1
+    score: 25
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 2
+    score: 50
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 4
+  minor: 2
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 1
+    message: Frontmatter の `rulebook` が `specdojo:opd-rulebook` となっており、成果物種別（operations/OPR）と矛盾している。
+    anchor: ""
+  - id: F003
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: Frontmatter の必須項目 `title` が不足している。
+    anchor: ""
+  - id: F002
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 17
+    message: 完了条件「影響拡大が止まる」などの記述が抽象的であり、判定基準として不十分である。
+    anchor: "| 誤検知   | 根拠を記録し閾値/抑止を提案      | 再発防止（閾値調整）   | 設定変更記録 |"
+  - id: F004
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 12
+    message: "`opr-rulebook` で定義されている必須章（2, 3, 4, 6, 7, 8, 9, 10, 11, 12）がすべて省略されており、理由の記載もないためルールに違反している。"
+    anchor: "| 段階     | 手順                             | 完了条件               | 証跡         |"
+  - id: F005
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 12
+    message: "見出し番号が `opr-rulebook` および `opr-template.md` で定義された固定順序に従っておらず、## 2 となっている（正しくは ## 5）。"
+    anchor: "| 段階     | 手順                             | 完了条件               | 証跡         |"
+  - id: F006
+    severity: major
+    rule: vp-ux-readability
+    line: 12
+    message: 必須構成を大幅に省略しており、`opr-＜term＞` 文書を作成するための完成形サンプルとして不十分である。
+    anchor: "| 段階     | 手順                             | 完了条件               | 証跡         |"

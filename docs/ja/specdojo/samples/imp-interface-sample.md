@@ -8,30 +8,6 @@ specdojo:
     - cr-2026-004
   part_of:
     - prj-0001
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: pass
-    score: 93
-    graded_at: "2026-09-05T07:56:28.198Z"
-    graded_by: gemma-expert-executor
-    content_hash: 442221fabe89efbbf50e5e0702526ad65d5d65b0f0ccedf23096698f7bc2ec02
-    categories:
-      consistency: { score: 88 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 88 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 3, score: 75 }
-      vp-qe-kata-conformance: { level: 3, score: 75 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 2, note: 0 }
 ---
 
 # 影響調査（I/F）サンプル
@@ -75,8 +51,6 @@ specdojo:
 | 中     | CSV 連携の段階導入       | 2026-05-31 まで | 連携運用担当（山本）   | 取引先通知スケジュール合意   |
 | 低     | Webhook 見送り再評価     | 2026-07-31      | PM（中村）             | 障害件数推移の確認           |
 
-<!-- specdojo:finding id=F001 severity=minor rule=vp-qe-omissions-consistency line=42 「目的と適用範囲」において、ルールブックで求められている「対象期間」の記載が不足している。 -->
-
 ## 6. 未解決事項
 
 | 論点                     | 不足情報                         | 決定期限   | 担当             | 処理方針                                           |
@@ -84,5 +58,3 @@ specdojo:
 | API 追加項目の互換方針   | 既存クライアントの未対応項目扱い | 2026-05-09 | I/F 担当（鈴木） | 互換試験結果を確認し、仕様注記を確定する。         |
 | バッチ再実行時の整合条件 | 冪等キーの適用範囲               | 2026-05-12 | 開発担当（佐藤） | 再実行テストを実施し、運用手順へ反映する。         |
 | 取引先通知の段階展開     | 取引先ごとの受入可能時期         | 2026-05-15 | 連携運用（山本） | 取引先ヒアリング結果を反映し、展開計画を更新する。 |
-
-<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-kata-conformance line=53 ルールブックの禁止事項に基づき、影響度（高・中・低）を判定するための尺度定義を明記すべきである。 -->

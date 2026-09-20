@@ -7,30 +7,6 @@ specdojo:
   recipe: specdojo:ifx-cmd-recipe
   sample: specdojo:ifx-cmd-sample
   template: specdojo:ifx-cmd-template
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 70
-    graded_at: "2026-09-02T18:15:58.959Z"
-    graded_by: codex-expert-executor
-    content_hash: 2cd207ac91202a93d9ac4e03a84a0d7c8df1ba9452b8b09e0f6002a4b63dd1be
-    categories:
-      consistency: { score: 38 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 50 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 1, score: 25 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 2, score: 50 }
-      vp-qe-omissions-consistency: { level: 2, score: 50 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 6, minor: 1, note: 0 }
 ---
 
 # 外部コマンド連携仕様作成ルール
@@ -77,8 +53,6 @@ YAML の先頭に次のメタ項目を置きます。
 | status   | `draft` / `ready` / `deprecated`                 | ○    |
 | rulebook | `specdojo:ifx-cmd-rulebook`                      | ○    |
 
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency `version` に SemVer、`supersedes` に ID 配列を許可していますが、対応 schema は `version` を正整数に限定し、`supersedes` を許可していないため, メタ項目の契約を schema と一致させてください。 -->
-
 | version | 呼び出し契約の変更を追跡する整数または SemVer | 任意 |
 | based_on | 作成時に直接確認した設計・運用文書の ID 配列 | 任意 |
 | supersedes | 置き換え対象の文書 ID 配列 | 任意 |
@@ -86,9 +60,6 @@ YAML の先頭に次のメタ項目を置きます。
 `based_on` は実際に内容を確認した文書だけとします。コマンドのバージョン制約はメタ項目の `version` ではなく、`command.version_constraint` に記載します。
 
 ## 5. YAML構成（標準テンプレ）
-
-<!-- specdojo:finding id=F004 severity=major rule=vp-qe-verifiability ルートキーだけでなく、`command`、`arguments`、`streams`、`authentication`、`execution`、`error_handling` の各入れ子キーについて必須・任意と条件付き必須を明記し、仕様だけで pass / fail を判定できるようにしてください。 -->
-<!-- specdojo:finding id=F006 severity=major rule=vp-qe-omissions-consistency 対応 schema が必須とする `command.purpose`、`command.subcommands`、`command.shell`、各引数属性、各認証属性、実行属性、エラー処理属性の必須性を本文要件へ追加してください。 -->
 
 | ルートキー     | 定義内容                                                                         | 必須 |
 | -------------- | -------------------------------------------------------------------------------- | ---- |
@@ -109,9 +80,6 @@ YAML の先頭に次のメタ項目を置きます。
 - `command.executable` は実行可能ファイル名または配布済みパスを記載し、引数やパイプを連結しない。`command.subcommands` は起動順の文字列配列とする。
 - `command.shell` は `false` 固定とする。複数コマンドの連携は実行側のワークフローで表し、文字列のシェルスクリプトとして仕様化しない。
 
-<!-- specdojo:finding id=F002 severity=major rule=vp-arc-cross-document-consistency `arguments[].kind` の `positional`、`position` キー、`value_source` の `config` は対応 schema で許可されず、rulebook に従った引数定義が検証エラーになるため、許容キーと enum を統一してください。 -->
-<!-- specdojo:finding id=F007 severity=major rule=vp-qe-kata-conformance rulebook と recipe が許容する `positional` および rulebook が許容する `config` を対応 schema が拒否するため、rulebook・recipe・template・schemaを通じた引数契約を統一してください。 -->
-
 - `arguments[].kind` は `option` / `positional`、`value_type` は `string` / `integer` / `boolean` / `path` / `json`、`value_source` は `literal` / `config` / `generated` のいずれかとする。
 - positional 引数は `position` を 1 始まりで付け、option 引数は `name` に CLI の表記を記載する。可変値は `example` に実値ではなく公開可能な例を置く。
 
@@ -128,8 +96,6 @@ YAML の先頭に次のメタ項目を置きます。
 | ------- | ------------------------------------------ | ---- |
 | code    | CLI が返す整数の終了コード                 | ○    |
 | meaning | CLI 固有の意味と呼び出し元が識別できる条件 | ○    |
-
-<!-- specdojo:finding id=F003 severity=major rule=vp-arc-cross-document-consistency 終了カテゴリとして定義した `rate_limit` は対応 schema の `exit_codes[].category` で許可されていないため、rulebook と schema の enum を一致させてください。 -->
 
 | category | `success` / `input_error` / `authentication_error` / `authorization_error` / `rate_limit` / `transient_failure` / `permanent_failure` | ○ |
 | retryable | 同じ入力で自動再試行してよいか | ○ |
@@ -150,8 +116,6 @@ YAML の先頭に次のメタ項目を置きます。
 - `error_handling.retry.on_categories` は `exit_codes` の category と一致させ、`max_attempts` と `backoff` を記載する。認証失敗や入力不正は自動再試行しない。
 
 - タイムアウト時のプロセス終了、不完全出力の破棄、stdout の解析失敗、認証失敗の再認証依頼をそれぞれ別のキーで記載する。
-
-<!-- specdojo:finding id=F005 severity=minor rule=vp-qe-verifiability error_handling 内で記載すべき具体的なキー名（timeout_action, malformed_output_action, authentication_failure_action 等）を明記してください。 -->
 
 ## 7. 禁止事項
 

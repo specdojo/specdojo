@@ -6,30 +6,6 @@ specdojo:
   recipe: undecided
   sample: specdojo:cpd-sample
   template: undecided
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 91
-    graded_at: "2026-09-02T13:46:38.850Z"
-    graded_by: gemma-expert-executor
-    content_hash: b5be568fd9b604acde6096c0eafcf943190680f8b246e9defbccde40bcb53440
-    categories:
-      consistency: { score: 100 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 75 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 1, minor: 0, note: 0 }
 ---
 
 # C4コンポーネント図 ドキュメント作成ルール
@@ -73,8 +49,6 @@ Frontmatter の共通ルールは [document-metadata-standard.md](../standards/d
 | part_of    | 上位ドキュメントID（分割している場合）         | 任意 |
 | based_on   | 根拠となる定義（用語集、外部IF、上位方針など） | 任意 |
 | supersedes | 置き換え関係（古い図→新しい図）                | 任意 |
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-qe-kata-conformance Frontmatter で指定されているサンプル (`specdojo:cpd-sample`) の構成と type が、本書の定義する標準構成 (`architecture` 固定、4章構成) と矛盾している。 -->
 
 ### 3.1. `based_on` の考え方（例）
 

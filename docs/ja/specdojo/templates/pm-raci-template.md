@@ -13,30 +13,6 @@ specdojo:
         - specdojo:people-and-organization-definition-standard
         - _PROJECT_ID_:pm-organization
       supersedes: []
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 80
-    graded_at: "2026-09-06T12:14:53.908Z"
-    graded_by: gemma-expert-executor
-    content_hash: 3d43e9805448fb78fb6d99d90250fb489dd0562fad5ae6ffeda6dda8f66af2f1
-    categories:
-      consistency: { score: 75 }
-      usability: { score: 92 }
-      architecture: { score: 100 }
-      quality: { score: 63 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 2, score: 50 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 3, score: 75 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 3, score: 75 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 2, minor: 2, note: 0 }
 ---
 
 # RACI: _PROJECT_NAME_

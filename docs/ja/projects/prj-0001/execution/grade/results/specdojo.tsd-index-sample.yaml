@@ -1,0 +1,80 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:tsd-index-sample
+path: docs/ja/specdojo/samples/tsd-index-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 79
+graded_at: "2026-09-06T04:01:22.726Z"
+graded_by: codex-expert-executor
+content_hash: 548e9f8b88d63bdb542d5066d5b8dbb0441283f7f7d294e71502510879214e3a
+categories:
+  consistency:
+    score: 50
+  usability:
+    score: 92
+  architecture:
+    score: 100
+  quality:
+    score: 75
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 3
+  minor: 1
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 20
+    message: >-
+      `tsd-database.md` と `tsd-hosting.md` を参照先として示しているが、該当文書が存在せず Markdown
+      リンクにもなっていないため、実在する詳細成果物へのリンクを追加するか、未作成・例示上の参照であることを明記してください。
+    anchor: "- DB の詳細設定・バージョン固定手順は `tsd-database.md` を参照。"
+  - id: F002
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 20
+    message: rulebook が要求する詳細文書へのリンクが欠落し、記載された2つの参照先も存在しないため、利用可能な Markdown リンクを設けるか、参照記述を現在の成果物構成に合わせて修正してください。
+    anchor: "- DB の詳細設定・バージョン固定手順は `tsd-database.md` を参照。"
+  - id: F003
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 20
+    message: 完成例の補足がファイル名のコード表記だけで、rulebook の「詳細ドキュメントへのリンクを記載する」を実演していないため、実在する sample 詳細文書への Markdown リンクとして提示してください。
+    anchor: "- DB の詳細設定・バージョン固定手順は `tsd-database.md` を参照。"
+  - id: F004
+    severity: minor
+    rule: vp-ux-readability
+    line: 20
+    message: 次に見る文書名は識別できるもののリンクとして移動できないため、参照先を Markdown リンクにして読者が詳細へ辿れるようにしてください。
+    anchor: "- DB の詳細設定・バージョン固定手順は `tsd-database.md` を参照。"

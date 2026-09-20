@@ -5,30 +5,6 @@ specdojo:
   status: ready
   rulebook: specdojo:prj-stakeholder-register-rulebook
   sample: specdojo:prj-stakeholder-register-sample
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 71
-    graded_at: "2026-09-04T19:15:13.710Z"
-    graded_by: codex-expert-executor
-    content_hash: 6ffe348603d7de303d130c3da05c329eb57ec00ccd8fbbe7623ba4b7a4d7af23
-    categories:
-      consistency: { score: 50 }
-      usability: { score: 92 }
-      architecture: { score: 100 }
-      quality: { score: 50 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 2, score: 50 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 2, score: 50 }
-      vp-qe-omissions-consistency: { level: 2, score: 50 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 3, score: 75 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 4, minor: 3, note: 0 }
 ---
 
 # ステークホルダー登録簿 作成レシピ
@@ -126,8 +102,6 @@ Stakeholder Register Writing Recipe
 
 書き方:
 
-<!-- specdojo:finding id=F002 severity=minor rule=vp-arc-cross-document-consistency line=97 会議日時や配信頻度を重複管理しない方針に対し、対応 sample は「週次相談」を関係者一覧・エンゲージメント方針・コミュニケーション計画への反映へ重複記載しているため、期限条件として許容する範囲を明示するか sample と方針を統一する必要がある。 -->
-
 - 情報要求は「進捗」だけでなく、優先順位、変更理由、利用手順など判断に必要な情報に分解する。
 - 会議の日時や配信頻度の詳細を重複管理しない。
 - 合意・報告の必要性と、証跡要件を同じ行に置く。
@@ -183,13 +157,6 @@ Stakeholder Register Writing Recipe
 | 実行主体の境界         | AI Agent やツールなどの実行主体が、責任を持つ人の役割に対応付けられているか |
 
 ## 8. 仕上げチェック
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=153 「見直し条件まで同じ ID で追跡できる」ことを要求しているが、rulebook・sample・template の見直し条件表はいずれもステークホルダー ID 列を持たないため、追跡範囲を証跡要件までに限定するか、型一式の見直し条件表に対応 ID を追加して統一する必要がある。 -->
-<!-- specdojo:finding id=F003 severity=major rule=vp-qe-verifiability line=158 「各必須表のカラム」の対象表とカラム一覧が recipe 内に定義されていないため, recipe-guided 利用時に充足・未充足を判定できず、具体的な内容確認条件へ置き換えるか recipe 単体で対象を特定できるようにする必要がある。 -->
-<!-- specdojo:finding id=F004 severity=major rule=vp-qe-omissions-consistency line=153 見直し条件まで同一ステークホルダー ID で追跡する要件に対し、対応する rulebook と template の見直し条件には ID キーがなく、sample にも記載できないため、要件または表構造のどちらかが欠落している状態を解消する必要がある。 -->
-<!-- specdojo:finding id=F005 severity=major rule=vp-qe-kata-conformance line=153 recipe が見直し条件までステークホルダー ID を要求する一方で、骨組みの正本である template と本文要件を定める rulebook は見直し条件を更新トリガー単位としており ID 欄を持たないため、recipe-guided と fully-guided で異なる成果物が導出されないよう適用契約を統一する必要がある。 -->
-<!-- specdojo:finding id=F006 severity=minor rule=vp-qe-kata-conformance line=158 構造・必須項目を正本化する rulebook の責務に属する「必須表のカラム充足」を recipe の仕上げ条件として参照しているため、recipe では各項目の内容品質を判定する条件へ限定する必要がある。 -->
-<!-- specdojo:finding id=F007 severity=minor rule=vp-ux-readability line=153 同一 ID の追跡範囲が本行では「見直し条件まで」、159行では「証跡要件へ」と異なり、見直し条件にも ID を記載するのか読者が判断できないため、追跡の終点を一つに統一する必要がある。 -->
 
 - 「全体の作成手順」で示した章立てがそろっている。
 - 各関係者が、関係者一覧から見直し条件まで同じ ID で追跡できる。

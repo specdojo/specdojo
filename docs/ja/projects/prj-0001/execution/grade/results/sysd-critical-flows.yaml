@@ -1,0 +1,84 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: sysd-critical-flows
+path: docs/ja/product/040-system-design/sysd-critical-flows.md
+target: deliverable
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 86
+graded_at: "2026-09-19T16:29:47.712Z"
+graded_by: codex-expert-executor
+content_hash: 966617c380ef236d4b8e01cde7d9122583b38dadea3d63971773790324dc133f
+categories:
+  consistency:
+    score: 75
+  usability:
+    score: 88
+  architecture:
+    score: 100
+  quality:
+    score: 83
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 2
+    score: 50
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 3
+  minor: 0
+  note: 0
+findings:
+  - id: F002
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 27
+    message: 5件の図にシステム内外・サービス境界と主要識別子を追加し、各フローのtrace伝搬範囲または非採用理由と、IDかリポジトリ相対パスで一意に辿れるテスト・運用参照を補う必要がある。
+    anchor: "```mermaid"
+  - id: F001
+    severity: major
+    rule: vp-qe-verifiability
+    line: 90
+    message: 最大並列数、provider別parallel limit、retry上限・backoffおよび監視条件について、設定キー・値または一意な参照先と確認手順を示し、pass / failを判定可能にする必要がある。
+    anchor: "- **目的**: Ready taskを最大並列数まで安全に実行し、task終了ごとに依存関係を再計算して空き枠を補充する。"
+  - id: F003
+    severity: major
+    rule: vp-ux-user-flow
+    line: 150
+    message: 関連ドキュメント表の一般名称とglob風表記を、実在する文書IDまたはリポジトリ相対パスへ置き換え、未作成OPRには作成予定のIDまたは追跡先を示す必要がある。
+    anchor: >-
+      | Flow ID | SDI・一次情報                                     | テスト                    | 運用                  | DEC・判断記録
+      |
+done_criteria:
+  satisfied: 5
+  total: 5
+  detail_ref: sysd-critical-flows-grade-criteria

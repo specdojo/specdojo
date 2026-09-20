@@ -8,30 +8,6 @@ specdojo:
     - cr-2026-004
   part_of:
     - prj-0001
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: pass
-    score: 93
-    graded_at: "2026-09-05T07:27:11.114Z"
-    graded_by: gemma-expert-executor
-    content_hash: 1c9f2ce8b335ee38c4694aa143f086356c60d77b2ee31f336fb63f45f6fef1a4
-    categories:
-      consistency: { score: 88 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 88 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 3, score: 75 }
-      vp-qe-kata-conformance: { level: 3, score: 75 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 2, note: 0 }
 ---
 
 # 影響調査（業務）サンプル
@@ -52,9 +28,6 @@ specdojo:
 ## 3. 影響分析サマリ
 
 評価観点は、利用者影響、運用影響、手戻りリスクの 3 点とする。
-
-<!-- specdojo:finding id=F001 severity=minor rule=vp-qe-omissions-consistency line=20 影響度（高・中・低）の判定尺度（基準）が定義されておらず、rulebook の禁止事項に抵触している。 -->
-<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-kata-conformance line=20 影響度の尺度定義を必須とする rulebook の禁止事項に従っていない。 -->
 
 | 影響度 | 件数 | 主な対象業務       | 優先対応 |
 | ------ | ---- | ------------------ | -------- |

@@ -1,0 +1,92 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:pm-risk-register-sample
+path: docs/ja/specdojo/samples/pm-risk-register-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: fail
+score: 73
+graded_at: "2026-09-05T21:08:23.208Z"
+graded_by: gemma-expert-executor
+content_hash: 4f988167bf337bd56344365e99b203a13bb930a82ed05ccec17c8fc79d6878a2
+categories:
+  consistency:
+    score: 75
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 38
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-qe-kata-conformance:
+    level: 0
+    score: 0
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 1
+  major: 1
+  minor: 4
+  note: 0
+findings:
+  - id: F006
+    severity: blocker
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: >-
+      本書は rulebook
+      に基づき手動作成の形式をとっているが、対応するテンプレート（specdojo:pm-risk-register-template）では自動生成ビューとして定義されており、成果物の種別と責務が根本的に矛盾している。
+    anchor: ""
+  - id: F003
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 6
+    message: 概要に「見直し頻度」と「責任者」の記述が不足している。
+    anchor: 本書は、駄菓子屋の販売管理システム構築プロジェクトの潜在リスクと対応策を管理する最小サンプルである。
+  - id: F004
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 17
+    message: 評価基準に「再評価条件」の記述が不足している。
+    anchor: "- 発生確率: 低/中/高"
+  - id: F001
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 27
+    message: 「閾値以内」という表現は具体的数値や判定基準が不明確であり、客観的な検証可能性が低い。
+    anchor: ""
+  - id: F002
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 28
+    message: 「合意完了」という表現は、誰が誰に、何を合意すれば完了とするのかが不明確である。
+    anchor: "## 5. モニタリング"
+  - id: F005
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 33
+    message: モニタリングに「状態更新ルール」の記述が不足している。
+    anchor: "## 6. 関連ドキュメント"

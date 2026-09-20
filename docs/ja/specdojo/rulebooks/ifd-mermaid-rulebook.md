@@ -9,30 +9,6 @@ specdojo:
   template: undecided
   based_on:
     - specdojo:rulebook-authoring-standard
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 89
-    graded_at: "2026-09-02T17:34:14.814Z"
-    graded_by: gemma-expert-executor
-    content_hash: 5fb132a637650705fd8a1c3fcc274a674bd2bfd0c39e36b3ea138ed6e68bf139
-    categories:
-      consistency: { score: 88 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 75 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 3, score: 75 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 1, minor: 2, note: 0 }
 ---
 
 # Mermaidを用いたインフラ構成図 作成ルール
@@ -41,15 +17,9 @@ Infrastructure Flow Diagram (IFD) Documentation Rules using Mermaid
 
 本ドキュメントは、アーキテクチャ検討・合意形成のために **インフラ構成図** を Mermaid の `flowchart` で記述するための標準ルールを定義します。
 
-<!-- specdojo:finding id=F001 severity=minor rule=vp-qe-omissions-consistency recipe が undecided であり、作成手順（問い）が定義されていない。 -->
-
 IFD は、インフラの **論理的な境界（環境 / ネットワーク / ゾーン）** と、主要コンポーネント間の **通信の流れ** を示すことを目的とします。
 
-<!-- specdojo:finding id=F003 severity=major rule=vp-qe-kata-conformance 参照するサンプル specdojo:ifd-sample が Mermaid 図を含まず、ルールブックと矛盾する「必須観点」を記述しているため、正しく適用されていない。 -->
-
 以下の内容は IFD の責務外とし、別ドキュメントで扱います。
-
-<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-omissions-consistency template が undecided であり、成果物の骨組みが定義されていない。 -->
 
 - 物理構成（CIDR、IP、ポート、AZ）
 - スケーリング、冗長化、台数

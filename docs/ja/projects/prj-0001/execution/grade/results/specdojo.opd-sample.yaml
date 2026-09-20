@@ -1,0 +1,90 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:opd-sample
+path: docs/ja/specdojo/samples/opd-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: fail
+score: 53
+graded_at: "2026-09-05T13:51:23.651Z"
+graded_by: gemma-expert-executor
+content_hash: 2bda7adf7d909fa7fb1215c6939233fa35033ef454facfa15bf189b92e56fd89
+categories:
+  consistency:
+    score: 50
+  usability:
+    score: 75
+  architecture:
+    score: 100
+  quality:
+    score: 13
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 1
+    score: 25
+  vp-qe-omissions-consistency:
+    level: 0
+    score: 0
+  vp-qe-kata-conformance:
+    level: 0
+    score: 0
+  vp-ux-readability:
+    level: 1
+    score: 25
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 3
+  major: 3
+  minor: 0
+  note: 0
+findings:
+  - id: F002
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: Frontmatter に必須項目 `title` が不足している。
+    anchor: ""
+  - id: F003
+    severity: blocker
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: Frontmatter の `type` が `project` となっており、ルール規定の `operations` と不一致である。
+    anchor: ""
+  - id: F005
+    severity: blocker
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: 成果物の具体例を示す「サンプル」としての責務を果たしておらず、ルールの適用例が提示されていない。
+    anchor: ""
+  - id: F006
+    severity: major
+    rule: vp-ux-readability
+    line: 1
+    message: 必須構成を省略し形式的な説明に留まっているため、読者が完成形のイメージを把握できず、サンプルとして機能していない。
+    anchor: ""
+  - id: F004
+    severity: blocker
+    rule: vp-qe-omissions-consistency
+    line: 3
+    message: "`opd-rulebook` で定義された必須構成（見出し 1〜12）がすべて欠落しており、独自の構成になっている。"
+    anchor: ""
+  - id: F001
+    severity: major
+    rule: vp-qe-verifiability
+    line: 26
+    message: SLO/SLA/KPI 等の判定基準が具体的に記述されておらず、検証不能である。
+    anchor: ""

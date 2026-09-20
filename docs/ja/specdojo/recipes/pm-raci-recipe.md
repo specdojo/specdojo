@@ -5,30 +5,6 @@ specdojo:
   status: ready
   rulebook: specdojo:pm-raci-rulebook
   sample: specdojo:pm-raci-sample
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 75
-    graded_at: "2026-09-04T16:01:16.899Z"
-    graded_by: codex-expert-executor
-    content_hash: ab2cba2300d587723e327a7f7216561719b261879538fb343129698b11d7d4cc
-    categories:
-      consistency: { score: 63 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 50 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 2, score: 50 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 2, score: 50 }
-      vp-qe-omissions-consistency: { level: 3, score: 75 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 3, minor: 3, note: 0 }
 ---
 
 # RACI 作成レシピ
@@ -56,17 +32,12 @@ RACI Writing Recipe
 
 ## 3. 全体の作成手順
 
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=30 Schedule ownerを常に主たる`R`と一致させる手順は、上位の人と組織の定義標準がWBS ownerを優先し、承認・レビューを独立Task/Milestoneにした場合は`A`または`C`をownerにできるとする規則と矛盾するため、タスク種別と正本の優先順を含む対応手順へ修正してください。 -->
-<!-- specdojo:finding id=F002 severity=major rule=vp-qe-verifiability line=28 `R`を一つ以上許容しながら、複数`R`から「主たる`R`」を識別する表記またはタスクactionに基づく選定手順がないため, Schedule ownerとの一致をpass/fail判定できる方法を定義してください。 -->
-
 1. 責任衝突の可能性がある成果物・判断だけを選びます。
 2. 使用するRole code列を必要最小限に絞ります。
 3. 各行へ一つの`A`と一つ以上の`R`を置きます。
 4. 相談が必要なRoleに`C`、結果共有だけのRoleに`I`を置きます。
 5. Schedule ownerと主たる`R`を一致させます。
 6. 生成ビューや通常手順の重複行を削除します。
-
-<!-- specdojo:finding id=F005 severity=major rule=vp-qe-kata-conformance line=33 `各章の書き方`が指示文だけで、Recipe記述標準が必須とする「書き手が答えるべき問い」を一つも示していないため、各必須章に成果物固有の問いを追加してください。 -->
 
 ## 4. 各章の書き方
 
@@ -103,8 +74,6 @@ RACI Writing Recipe
 
 ## 6. 良い例 / 悪い例
 
-<!-- specdojo:finding id=F004 severity=minor rule=vp-qe-omissions-consistency line=67 rulebook で必須とされている「見直し条件」章の書き方ガイドが、「4. 各章の書き方」から漏れているため追加してください。 -->
-
 | 観点 | 良い例                       | 悪い例                  |
 | ---- | ---------------------------- | ----------------------- |
 | 対象 | 主要成果物と公開判断へ絞る   | 全カタログ行を転記する  |
@@ -112,8 +81,6 @@ RACI Writing Recipe
 | 実行 | ownerと主たる`R`を一致させる | 個人名をownerと列に使う |
 
 ## 7. レビュー観点
-
-<!-- specdojo:finding id=F006 severity=minor rule=vp-qe-kata-conformance line=76 `レビュー観点`が箇条書きであり、Recipe記述標準が必須とする表形式になっていないため、各観点と確認内容を列にした表へ変更してください。 -->
 
 - 一行に`A`が一つ、`R`が一つ以上あるか。
 - 未採用Roleや個人名を使っていないか。
@@ -127,5 +94,3 @@ RACI Writing Recipe
 - member・Agent割り当てを再掲していない。
 - Agentに`A`を割り当てていない。
 - 各行の採用理由、`A` / `R`、Schedule owner または判断記録先の対応を追跡できる。
-
-<!-- specdojo:finding id=F003 severity=minor rule=vp-qe-verifiability line=89 仕上げチェックが各行の採用理由と判断記録先の追跡を求める一方、本文に記録先・識別子・照合手順がなくsample/templateにも対応欄がないため、追跡方法と確認手順を定義してください。 -->

@@ -1,0 +1,90 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:nfr-operations-sample
+path: docs/ja/specdojo/samples/nfr-operations-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 62
+graded_at: "2026-09-05T11:05:06.216Z"
+graded_by: gemma-expert-executor
+content_hash: f2149764d8d1aafe4c917786979762e73c9738c32b9b3926341709a640a59e72
+categories:
+  consistency:
+    score: 50
+  usability:
+    score: 75
+  architecture:
+    score: 100
+  quality:
+    score: 38
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 3
+    score: 75
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 1
+    score: 25
+  vp-qe-kata-conformance:
+    level: 1
+    score: 25
+  vp-ux-readability:
+    level: 2
+    score: 50
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 4
+  minor: 2
+  note: 0
+findings:
+  - id: F003
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 2
+    message: Frontmatter に必須項目である `title` が欠落している。
+    anchor: ""
+  - id: F001
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 4
+    message: "Frontmatter `type: project` は不適切であり、NFR 定義書として妥当な `architecture` 等であるべき。"
+    anchor: ""
+  - id: F004
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 5
+    message: ルールブック第5節で定義された必須の見出し構成（概要、適用範囲・体制前提、運用要件一覧、測定・検証方法、関連ドキュメント導線）に一切準拠しておらず、サンプルとして不適切である。
+    anchor: 本書は、監視・手順・継続運用を定義するための最小サンプルである。
+  - id: F005
+    severity: major
+    rule: vp-ux-readability
+    line: 5
+    message: 参照ルールブックの構成を無視した記述となっており、初見の読者が正しい運用要件書の書き方を理解できず、サンプルとしての目的を果たしていない。
+    anchor: 本書は、監視・手順・継続運用を定義するための最小サンプルである。
+  - id: F006
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 5
+    message: 見出し名称（例：「目的と適用範囲」）が、ルールブックで指定された標準名称（例：「概要（対象・目的）」）と乖離しており、統一されていない。
+    anchor: 本書は、監視・手順・継続運用を定義するための最小サンプルである。
+  - id: F002
+    severity: major
+    rule: vp-qe-verifiability
+    line: 32
+    message: "「アラート検知率」などの指標が挙げられているが、pass/fail を判定できる具体的な基準値（例: 10分以内）が記述されておらず、検証可能性が示せていない。"
+    anchor: ""

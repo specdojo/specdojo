@@ -1,0 +1,130 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:prj-charter-sample
+path: docs/ja/specdojo/samples/prj-charter-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 78
+graded_at: "2026-09-05T22:16:14.979Z"
+graded_by: codex-expert-executor
+content_hash: adc2b858213c7deecc09400107c307d7621ddcd63467224c7fc0fd3fc9cb1797
+categories:
+  consistency:
+    score: 63
+  usability:
+    score: 75
+  architecture:
+    score: 100
+  quality:
+    score: 75
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 2
+    score: 50
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 2
+  minor: 9
+  note: 0
+findings:
+  - id: F007
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 13
+    message: >-
+      参照先が作成済みであるにもかかわらず、直接根拠は相対Markdownリンク、成功基準・スコープ・成果物カタログ・管理文書などはバッククォートIDのままであるため、rulebook
+      6.1に従い実在するdocument_idへのwikilinkへ更新してください。
+    anchor: "| 直接根拠        | [プロジェクト概要サンプル](prj-overview-sample.md)、[ステークホルダー登録簿サンプル](prj-stakeholder-register-sample.md) |"
+  - id: F009
+    severity: minor
+    rule: vp-ux-readability
+    line: 30
+    message: 成功基準、スコープ、成果物カタログ、前提・制約、管理計画、組織定義、RACI、品質計画が作成済みでもクリック可能な参照になっていないため、表示名を伴うwikilinkへ置き換えて次に読む正本へ直接到達できるようにしてください。
+    anchor: 成功判定の観点と受入条件は `prj-success-criteria-and-acceptance-criteria` を正とする。
+  - id: F004
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 32
+    message: rulebookがハイレベルスコープに要求し、メンバー定義にも複数のagentが存在するAI Agentの支援範囲が記載されていないため、許可する支援作業と人間に残す判断責任を追加してください。
+    anchor: "## 3. ハイレベルスコープ"
+  - id: F008
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 32
+    message: rulebook 6.4が求めるAI Agentの支援範囲がハイレベルスコープの完成例へ反映されていないため、適用する支援範囲を具体値で示してください。
+    anchor: "## 3. ハイレベルスコープ"
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 48
+    message: >-
+      初期ステークホルダー表が直接根拠の登録簿と一致せず、`STH-SHOP-OWNER`を`STH-OWNER`、`STH-DEVELOPER`（`DEV`）を`STH-DEVELOPMENT`（`PM`）へ変更し,
+      家族利用者へ未登録の`BA`を割り当て、未登録の常連客・仕入れ先を追加する一方で技術メンターを欠落させているため、登録簿のID・Role code・掲載対象に合わせてください。
+    anchor: "| `STH-OWNER`             | 店主代表       | スポンサー / 意思決定者 / 利用者 | `PO`           | 目的、優先順位、予算枠、リリース可否を判断する   |"
+  - id: F010
+    severity: major
+    rule: vp-ux-language-consistency
+    line: 48
+    message: >-
+      店主代表、家族利用者、開発担当のID・名称・Role
+      codeがステークホルダー登録簿およびメンバー定義と一致せず、特に開発担当の`DEV`と`PM`、家族利用者とagentの`BA`を区別できないため、正本に合わせて識別子とRole codeを統一してください。
+    anchor: "| `STH-OWNER`             | 店主代表       | スポンサー / 意思決定者 / 利用者 | `PO`           | 目的、優先順位、予算枠、リリース可否を判断する   |"
+  - id: F005
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 64
+    message: rulebookがPO承認事項として必須化しているライセンス方針の確定が箇条書きから欠落しているため、承認対象へ追加してください。
+    anchor: 次の事項は店主代表（`PO`）の承認を必要とする。
+  - id: F006
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 80
+    message: rulebookが公開文書の制約として要求する秘密情報および非公開組織情報の禁止がなく、個人情報だけに限定されているため、公開対象外となる情報区分を補完してください。
+    anchor: "| 制約 | 顧客情報は必要最小限にし、公開サンプルには個人情報を含めない                           | `prj-assumptions-constraints-dependencies` |"
+  - id: F002
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 88
+    message: >-
+      GO / Not GO表の「矛盾しない」「責任範囲が確認できる」「整っている」には判定項目や必須状態がなくpass / failが一意にならないため、照合対象、必須承認、必要なstatusやgrade
+      verdictなどの合格条件を明示してください。
+    anchor: "| 目的整合 | 成果物体系、公開対象、優先順位がプロジェクトの目的と矛盾しない   | `pm-plan` / 決定記録          |"
+  - id: F011
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 100
+    message: >-
+      Frontmatterの`status:
+      ready`に対して本文が無限定に「本書はドラフト」と記して文書状態が矛盾して見えるため、本文を「立ち上げ認可は未承認」などに改め、成果物の成熟度とプロジェクト認可状態を区別してください。
+    anchor: 本書はドラフトであり、承認日と証跡リンクが確定するまでは正式な立ち上げ認可文書として扱わない。
+  - id: F003
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 106
+    message: 未決事項4件の期限がすべて`_UNDECIDED_`で解消期限を判定できないため、日付が未確定でも「詳細計画承認前」「初期運用開始前」など確認可能な期限条件を記載してください。
+    anchor: "| 初回承認日         | _UNDECIDED_ | 店主代表（`PO`） | 憲章初版の承認時に記録する                                      |"

@@ -1,0 +1,78 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:uis-rulebook
+path: docs/ja/specdojo/rulebooks/uis-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 77
+graded_at: "2026-09-03T14:28:35.123Z"
+graded_by: gemma-expert-executor
+content_hash: 3ee76f984850c0e5141eb03bb2ccd84e1ac8bb9248f00aacf4948db4480275e2
+categories:
+  consistency:
+    score: 50
+  usability:
+    score: 83
+  architecture:
+    score: 100
+  quality:
+    score: 75
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 2
+    score: 50
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 4
+  minor: 0
+  note: 0
+findings:
+  - id: F003
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: 参照しているサンプル specdojo:uis-sample が、本書で定義した標準構成（概要、対象ユーザー等）に従っておらず、実装例として機能していない。
+    anchor: "# 画面仕様(UI) 作成ルール"
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 1
+    message: "推奨 Frontmatter の type 項目について、定義表の「screen 固定」と OK例の「type: ui」で値が矛盾している。"
+    anchor: "# 画面仕様(UI) 作成ルール"
+  - id: F002
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: Frontmatter の type 項目において、定義表と OK例で指定値が矛盾しており、正本として不十分である。
+    anchor: "# 画面仕様(UI) 作成ルール"
+  - id: F004
+    severity: major
+    rule: vp-ux-language-consistency
+    line: 1
+    message: Frontmatter の type プロパティにおいて、定義表の「screen」と例示の「ui」で表記が揺れている。
+    anchor: "# 画面仕様(UI) 作成ルール"

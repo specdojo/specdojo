@@ -1,0 +1,92 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:br-rulebook
+path: docs/ja/specdojo/rulebooks/br-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 79
+graded_at: "2026-09-08T23:20:58.711Z"
+graded_by: codex-expert-executor
+content_hash: 36bda5acdf84debf780bb1283429d9a7d524eb98e1105ee2adcd186fe20930e3
+categories:
+  consistency:
+    score: 50
+  usability:
+    score: 92
+  architecture:
+    score: 100
+  quality:
+    score: 75
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 3
+  minor: 2
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 31
+    message: >-
+      第4節の Frontmatter 定義は、共通メタデータ標準と参照 sample が必須とする `specdojo:` 名前空間および `rulebook` を示さず、スキーマで許可されない `title`
+      を必須としているため、この規則から作成した BR が成果物 Frontmatter 検証に失敗する。
+    anchor: "## 4. 推奨 Frontmatter 項目"
+  - id: F002
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 31
+    message: >-
+      第4節と第11節は、成果物 Frontmatter の必須キー `rulebook` と `specdojo:` 名前空間を欠き、共通スキーマで未定義の `title` を必須化しているため、必須キー一覧と最小例を
+      `deliverable-frontmatter.schema.yaml` に合わせて修正する必要がある。
+    anchor: "## 4. 推奨 Frontmatter 項目"
+  - id: F003
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 36
+    message: 第4節の ID 形式の記述 `(br-xxx-xxxx)` が、第3節や第11節で例示されているセマンティックな ID 形式 `br-low-stock-judgment` と矛盾している。
+    anchor: "| id | ルールID (br-xxx-xxxx) | ○ |"
+  - id: F005
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 37
+    message: >-
+      `id` の説明だけが `(br-xxx-xxxx)` となっており、第3節、NG/OK例、第11節で一貫して使用する `br-low-stock-judgment` 型のセマンティックな kebab-case
+      表記と統一されていない。
+    anchor: "| type | `rule` 固定 | ○ |"
+  - id: F004
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 144
+    message: >-
+      第11節の最小例は、成果物 Frontmatter を `specdojo:` 配下に置かず必須の `rulebook` と H1 を欠き、規定した見出し名「例外 / 異常系」「メモ / 将来課題」も短縮しているため,
+      rulebook の適用例として成立していない。
+    anchor: "---"

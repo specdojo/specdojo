@@ -1,0 +1,72 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:dec-sample
+path: docs/ja/specdojo/samples/dec-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: pass
+score: 89
+graded_at: "2026-09-05T02:24:31.407Z"
+graded_by: codex-expert-executor
+content_hash: ef065dd96bad6163c6f940de292c155c6e030bf81ff865c2cbbf3acee0dfefd2
+categories:
+  consistency:
+    score: 88
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 75
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 3
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 28
+    message: 影響範囲の3項目に担当者・期限・完了条件または確認方法がなく、フォローアップの完了を pass / fail 判定できないため追記する必要がある。
+    anchor: ""
+  - id: F002
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 28
+    message: rulebook の全体方針が求める「決定後のフォローアップ」が独立項目または影響範囲内に示されていないため、実施事項・担当・状態を追記する必要がある。
+    anchor: ""
+  - id: F003
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 28
+    message: 完成例でありながら決定後のフォローアップを記載しておらず、rulebook の全体方針を対象成果物へ適用する方法を sample が実演できていないため追記する必要がある。
+    anchor: ""

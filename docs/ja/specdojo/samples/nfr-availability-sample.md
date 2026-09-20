@@ -4,35 +4,7 @@ specdojo:
   type: project
   status: draft
   rulebook: specdojo:nfr-availability-rulebook
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: fail
-    score: 53
-    graded_at: "2026-09-05T10:07:42.435Z"
-    graded_by: gemma-expert-executor
-    content_hash: a16045598f80213e0b8cb666fcc64a6a18c6ce67fdb5e0298d13d9cd994668a6
-    categories:
-      consistency: { score: 50 }
-      usability: { score: 75 }
-      architecture: { score: 100 }
-      quality: { score: 13 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 1, score: 25 }
-      vp-qe-omissions-consistency: { level: 0, score: 0 }
-      vp-qe-kata-conformance: { level: 0, score: 0 }
-      vp-ux-readability: { level: 1, score: 25 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 2, major: 2, minor: 0, note: 0 }
 ---
-
-<!-- specdojo:finding id=F002 severity=blocker rule=vp-qe-omissions-consistency line=1 必須章（概要、適用範囲・除外条件、可用性要件一覧、測定・検証方法、関連ドキュメント導線）がすべて欠落している。 -->
-<!-- specdojo:finding id=F003 severity=blocker rule=vp-qe-kata-conformance line=1 rulebook Section 5 で定義された必須の見出し構成に準拠しておらず、完成例としての責務を果たしていない。 -->
-<!-- specdojo:finding id=F004 severity=major rule=vp-ux-readability line=1 具体的な記述例を欠いたメタ記述のみとなっており、初見の読者が「どのように書くべきか」を理解できるサンプルとしての機能を果たしていない。 -->
 
 # [非機能要件 / 可用性](../rulebooks/nfr-availability-rulebook.md) サンプル
 
@@ -52,8 +24,6 @@ specdojo:
 - 必須観点: 対象、条件、判定基準、責任者
 
 ## 4. 最小記述例
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-qe-verifiability line=21 可用性要件の核心である定量的な判定基準（稼働率 % や RTO/RPO の値など）が一切記述されておらず、検証不能である。 -->
 
 | 項目         | 値                                                               | 備考                                 |
 | ------------ | ---------------------------------------------------------------- | ------------------------------------ |

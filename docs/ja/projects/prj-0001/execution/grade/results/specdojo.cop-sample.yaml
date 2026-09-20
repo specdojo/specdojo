@@ -1,0 +1,90 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:cop-sample
+path: docs/ja/specdojo/samples/cop-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: fail
+score: 48
+graded_at: "2026-09-05T01:00:09.969Z"
+graded_by: gemma-expert-executor
+content_hash: b35fdc47a428bfa15c040417abe7518644a3b626294b3231d96863aca2372f44
+categories:
+  consistency:
+    score: 25
+  usability:
+    score: 58
+  architecture:
+    score: 100
+  quality:
+    score: 25
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 0
+    score: 0
+  vp-qe-kata-conformance:
+    level: 0
+    score: 0
+  vp-ux-readability:
+    level: 1
+    score: 25
+  vp-ux-language-consistency:
+    level: 2
+    score: 50
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 2
+  major: 4
+  minor: 0
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 4
+    message: Frontmatter の `type` が `project` となっており、ルールブックで定義されている `migration` と矛盾している。
+    anchor: ""
+  - id: F006
+    severity: major
+    rule: vp-ux-language-consistency
+    line: 4
+    message: Frontmatter の `type` 定義が `project` となっており、ルールブックの規定（`migration`）と不整合である。
+    anchor: ""
+  - id: F003
+    severity: blocker
+    rule: vp-qe-omissions-consistency
+    line: 9
+    message: ルールブックで必須とされている本文構成（見出し1〜10）がすべて欠落しており、成果物としての最低限の構成を満たしていない。
+    anchor: "- 対象: 駄菓子屋の販売管理システム"
+  - id: F004
+    severity: blocker
+    rule: vp-qe-kata-conformance
+    line: 9
+    message: サンプルとしての責務（完成例の提示）を果たしておらず、ルールブックで定義された構造や記述ガイドを完全に無視した内容となっている。
+    anchor: "- 対象: 駄菓子屋の販売管理システム"
+  - id: F005
+    severity: major
+    rule: vp-ux-readability
+    line: 9
+    message: 初見の読者が本サンプルを参考にしても、ルールブックが規定する切替計画の具体的な記述方法（タイムラインや判定ポイント等）を理解することができず、ガイドとして機能していない。
+    anchor: "- 対象: 駄菓子屋の販売管理システム"
+  - id: F002
+    severity: major
+    rule: vp-qe-verifiability
+    line: 28
+    message: 最小記述例の「値」が抽象的な説明に留まっており、ルールブックが求める「分単位の時刻」や「具体的判定基準」などの検証可能な表現を提示できていない。
+    anchor: "| 論点           | 処理方針                 |"

@@ -10,30 +10,6 @@ specdojo:
   based_on:
     - specdojo:rulebook-authoring-standard
   supersedes: []
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 82
-    graded_at: "2026-09-03T07:08:37.549Z"
-    graded_by: codex-expert-executor
-    content_hash: 99b4831bd7f31b49b57d30dd6479daa5f53a1f0a6759037272ede64408638c91
-    categories:
-      consistency: { score: 75 }
-      usability: { score: 83 }
-      architecture: { score: 100 }
-      quality: { score: 75 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 2, score: 50 }
-      vp-arc-conciseness: { level: 3, score: 75 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 3, score: 75 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 2, minor: 5, note: 0 }
 ---
 
 # 代替案比較 作成ルール
@@ -136,9 +112,6 @@ flowchart LR
 - 評価軸は固定し、案ごとに評価基準を変えません。
 - 配点や重みを使う場合は、判定への使い方を明示します。
 
-<!-- specdojo:finding id=F003 severity=minor rule=vp-arc-conciseness Frontmatter で template を骨組みの正本として宣言している一方、「本文構成（標準テンプレ）」で同じ見出し構成を再掲しており、各章の目的・必須性・記述規約だけを残せば判断情報を失わずに重複を削減できる。 -->
-<!-- specdojo:finding id=F005 severity=minor rule=vp-qe-kata-conformance 著述標準は template 宣言済み系統の第5章を「本文要件」とし、見出し順・表・記入欄の骨組みを template の正本として転載しないよう定めているが、本書は「本文構成（標準テンプレ）」として見出し一覧を再掲している。 -->
-
 ## 5. 本文構成（標準テンプレ）
 
 ### 5.1. 代替案比較（Comparison of Alternatives）
@@ -187,14 +160,7 @@ flowchart LR
 
 ### 6.3. 評価軸と評価基準
 
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency ルールブックは「リスク」と「技術実現性」を評価軸の最低ラインとし省略理由を要求しているが、sample の評価軸・比較結果は両軸と省略理由を欠いており、参照成果物間で必須条件が一致していない。 -->
-<!-- specdojo:finding id=F004 severity=major rule=vp-qe-kata-conformance 完成例である sample が最低ラインの評価軸「リスク」「技術実現性」を評価軸・比較結果から省略し、その理由も示していないため、rulebook を適用した正しい完成例として機能していない。 -->
-<!-- specdojo:finding id=F007 severity=minor rule=vp-ux-language-consistency 最低ラインの評価軸として「運用適合」と記載されているが、sample/template では「業務適合」となっており、用語が不統一である。 -->
-
 - 評価軸は効果、コスト、期間、リスク、運用適合、技術実現性の 6 観点を最低ラインとします。
-
-<!-- specdojo:finding id=F002 severity=minor rule=vp-arc-cross-document-consistency ルールブックは評価軸を省略する場合の理由記載を要求しているが, template は「不要な軸を削除」とだけ案内して省略理由の記入を促しておらず、適用手順が一致していない。 -->
-<!-- specdojo:finding id=F006 severity=minor rule=vp-qe-kata-conformance template は評価軸を削除できると案内しながら省略理由の記入を指示しておらず、rulebook が定める適用方法を骨組みに十分反映していない。 -->
 
 - 観点を省略する場合は省略理由を記載します。
 - 技術実現性は、既存環境、データ移行、外部依存、運用継続、後続成果物への影響を見ます。

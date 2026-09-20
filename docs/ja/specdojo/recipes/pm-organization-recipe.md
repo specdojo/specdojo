@@ -5,30 +5,6 @@ specdojo:
   status: ready
   rulebook: specdojo:pm-organization-rulebook
   sample: specdojo:pm-organization-sample
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 93
-    graded_at: "2026-09-04T14:39:32.873Z"
-    graded_by: gemma-expert-executor
-    content_hash: ab44f3dd254996a03dca47324d425e3c21092428de99463c659be147d659b213
-    categories:
-      consistency: { score: 75 }
-      usability: { score: 92 }
-      architecture: { score: 100 }
-      quality: { score: 100 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 2, score: 50 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 4, score: 100 }
-      vp-ux-readability: { level: 3, score: 75 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 1, minor: 1, note: 0 }
 ---
 
 # 組織定義 作成レシピ
@@ -73,13 +49,9 @@ Organization Definition Writing Recipe
 
 ### 4.2. ロール・owner方針
 
-<!-- specdojo:finding id=F002 severity=minor rule=vp-ux-readability line=44 各章の書き方において, 良質な実例（prj-overview-recipe）のような「問い」と「書き方（コツ）」の形式を採用し, 執筆者が具体的に何を記述すべきか導く構成にしてください。 -->
-
 - Role codeの採用と専任member配置を区別します。
 - Schedule ownerは採用済みRole codeに限定します。
 - 実行主体と兼務はメンバー定義へ委譲します。
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=46 採用判断を組織定義に残す責務境界として記述するよう誘導し、全Role codeを列挙しない方針との矛盾を解消してください。 -->
 
 ### 4.3. 正本と責任境界
 

@@ -6,30 +6,6 @@ specdojo:
   recipe: undecided
   sample: specdojo:uis-sample
   template: undecided
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 77
-    graded_at: "2026-09-03T14:28:35.123Z"
-    graded_by: gemma-expert-executor
-    content_hash: 28f497d9dd64cda16cd0b9ce457bd4524be55071bbc261a03c2dd5462f424154
-    categories:
-      consistency: { score: 50 }
-      usability: { score: 83 }
-      architecture: { score: 100 }
-      quality: { score: 75 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 2, score: 50 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 2, score: 50 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 2, score: 50 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 4, minor: 0, note: 0 }
 ---
 
 # 画面仕様(UI) 作成ルール
@@ -37,8 +13,6 @@ specdojo:
 本ドキュメントは、業務分析・要求定義のために **画面仕様（User Interface: UI）を統一形式で記述する標準ルール**です。
 
 ## 1. 全体方針
-
-<!-- specdojo:finding id=F003 severity=major rule=vp-qe-kata-conformance 参照しているサンプル specdojo:uis-sample が、本書で定義した標準構成（概要、対象ユーザー等）に従っておらず、実装例として機能していない。 -->
 
 - 画面仕様は、**業務ユーザー視点**での画面の目的・表示項目・操作・遷移を明確に記述します。
 - 画面の機能に着目し、**画面のレイアウトやワイヤーフレームは含めません**。
@@ -77,10 +51,6 @@ specdojo:
 
 - NG例: `id: UI_ProductList`（大文字/アンダースコアNG）, `type: data`（`screen`以外NG）, `extra: foo`（未定義プロパティNG）
 - OK例: `id: uis-product-list`, `type: ui`, `status: ready`
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency 推奨 Frontmatter の type 項目について、定義表の「screen 固定」と OK例の「type: ui」で値が矛盾している。 -->
-<!-- specdojo:finding id=F002 severity=major rule=vp-qe-omissions-consistency Frontmatter の type 項目において、定義表と OK例で指定値が矛盾しており、正本として不十分である。 -->
-<!-- specdojo:finding id=F004 severity=major rule=vp-ux-language-consistency Frontmatter の type プロパティにおいて、定義表の「screen」と例示の「ui」で表記が揺れている。 -->
 
 ## 5. 本文構成（標準テンプレ）
 

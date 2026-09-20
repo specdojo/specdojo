@@ -6,30 +6,6 @@ specdojo:
   recipe: undecided
   sample: specdojo:nfr-index-sample
   template: undecided
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 86
-    graded_at: "2026-09-02T22:17:50.524Z"
-    graded_by: gemma-expert-executor
-    content_hash: 7645c4bc3c80d8a980d2a2085149865c3d32b89c2894f795e982ec453e0eb542
-    categories:
-      consistency: { score: 75 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 75 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 2, score: 50 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 2, minor: 0, note: 0 }
 ---
 
 # 非機能要件インデックス 作成ルール
@@ -130,9 +106,6 @@ Frontmatter は共通スキーマに従います（参照: [docs/specdojo/schema
 生成する本文の見出しは **## 3. 分冊ドキュメント一覧（ID/参照先/Owner）**
 
 - 各カテゴリの分冊ID、参照先、更新責任、備考を表形式で記載する。
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-qe-omissions-consistency 指定サンプル `specdojo:nfr-index-sample` に、第5章で定義された必須見出し構成（1.概要〜5.関連導線）が含まれていない。 -->
-<!-- specdojo:finding id=F002 severity=major rule=vp-qe-kata-conformance 指定サンプル `specdojo:nfr-index-sample` がルールブックの定義に従っておらず、実例として不適切である。 -->
 
 - 参照先はリポジトリ相対パスかIDで一意に辿れる形にする。
 

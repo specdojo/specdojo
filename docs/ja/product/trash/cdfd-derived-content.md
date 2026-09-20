@@ -9,38 +9,6 @@ specdojo:
     - prj-0001:cdfd-catalog-planning
     - prj-0001:cdfd-task-execution
   supersedes: []
-  grade:
-    rubric: grade-rubric-v1
-    target: deliverable
-    verdict: needs-work
-    score: 72
-    graded_at: "2026-09-12T01:08:20.793Z"
-    graded_by: codex-expert-executor
-    content_hash: 9a8ad943c25b8b62f500a9f60198d226a5b3b0784d4b3c65843372fab8fae86f
-    categories:
-      consistency: { score: 38 }
-      usability: { score: 88 }
-      architecture: { score: 100 }
-      quality: { score: 67 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 2, score: 50 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-done-criteria: { level: 2, score: 50 }
-      vp-qe-verifiability: { level: 2, score: 50 }
-      vp-qe-omissions-consistency: { level: 1, score: 25 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-user-flow: { level: 2, score: 50 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-      vp-qe-config-validity: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 6, minor: 0, note: 0 }
-    done_criteria:
-      satisfied: 2
-      total: 3
-      unsatisfied:
-        DC-001: [BA]
-      detail_ref: prj-0001:cdfd-derived-content-grade-criteria
 ---
 
 # 概念データフロー図（成果物・派生ビュー・索引生成）: SpecDojo
@@ -54,11 +22,7 @@ specdojo:
 - QE は、正本不足、検証失敗、部分生成失敗、生成物の陳腐化を検知した場合の停止条件と再実行経路を確認する。
 - 成果物 owner は、scaffold 後の成果物本体が人の編集する正本であり、明示的な再材料化以外では上書きされないことを確認する。
 
-<!-- specdojo:finding id=F004 severity=major rule=vp-qe-omissions-consistency line=12 適用範囲に開始・終了と責任分担はあるが, rulebookが必須とする対象組織の境界とシステム境界が明示されていないため、どの組織・実行環境・文書領域までを本書が扱うか追記する必要がある。 -->
-
 ## 2. 適用範囲
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=15 一括 `build` は実装上 `exec → catalog → register → yaml-pages → dashboard → index` であり、`watch` も `P-08-07` を起動せず変更種別ごとに `exec`・`catalog`・`register`・`index` を直接起動するため、表・図・例外の起動関係を現行実装へ合わせ、`dashboard build` の責務境界も追加する必要がある。 -->
 
 - 対象は、正本の更新または派生生成の要求を起点に、成果物本体の初期材料化、実行・計画派生情報、カタログ表示、登録簿ビュー、YAML 表示ページ、文書索引を生成し、利用者が同じ正本から参照できる状態にするまでである。
 - 一括再生成は、適用可能なプロセスを実行情報更新、カタログ表示生成、登録簿ビュー生成、YAML 表示ページ生成、文書索引生成の順に起動し、いずれかが失敗した時点で後続を起動しない。対象 project に必要な正本の配置がない条件付きプロセスは、一括対象から外れる。
@@ -89,11 +53,6 @@ specdojo:
 ## 4. 概念データフロー
 
 一括再生成に組み込まれるプロセスのうち project 構成に依存するものと文書全体を対象とするもの、および一括再生成の外で起動するプロセスでは、起動条件と参照する正本が異なるため、フローを三つの図に分ける。図間で登場する `P-08-07 一括再生成`、`登録簿ビュー生成`、`成果物カタログ`、`project 構成` は、同一のプロセスおよびデータストアを指す。
-
-<!-- specdojo:finding id=F002 severity=major rule=vp-qe-done-criteria line=44 DC-001が要求する一括 `build`・`watch` の正しい起動関係を表と図から確認できるよう、`dashboard build` を含む一括順序、watch の個別scope起動、および条件付き工程をスキップする経路を反映する必要がある。 -->
-<!-- specdojo:finding id=F003 severity=major rule=vp-qe-verifiability line=44 `P-08-02`〜`P-08-04` が適用外の場合の分岐先と領域完了条件が図示されていないため、各条件付き工程を起動しない構成でも一括生成のpass／failと次工程を判定できる経路を追加する必要がある。 -->
-<!-- specdojo:finding id=F005 severity=major rule=vp-qe-omissions-consistency line=44 rulebookとrecipeが要求する条件付きプロセスの非起動時の正常経路が三つの図に存在せず、正本配置がない場合の工程省略と後続起動を追跡できないため、分岐または明示的なバイパスを図へ追加する必要がある。 -->
-<!-- specdojo:finding id=F006 severity=major rule=vp-ux-user-flow line=44 project構成に依存する工程を起動しない場合の遷移が図にないため、利用者が自分の構成に該当する開始点・次工程・完了点へ迷わず到達できるスキップ経路を示す必要がある。 -->
 
 ### 4.1. project 構成に依存するプロセスのフロー（P-08-02〜P-08-04・P-08-07）
 

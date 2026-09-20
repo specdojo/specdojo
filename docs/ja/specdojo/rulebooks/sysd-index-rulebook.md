@@ -5,30 +5,6 @@ specdojo:
   status: draft
   recipe: not-needed
   sample: specdojo:sysd-index-sample
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 87
-    graded_at: "2026-09-03T12:06:46.238Z"
-    graded_by: gemma-expert-executor
-    content_hash: 9a629c50bad4fa237bbd5adbe9c1f6ffa84f895e61965837c885eab316abd8e5
-    categories:
-      consistency: { score: 100 }
-      usability: { score: 83 }
-      architecture: { score: 100 }
-      quality: { score: 75 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 3, score: 75 }
-      vp-ux-language-consistency: { level: 3, score: 75 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 1, minor: 2, note: 0 }
 ---
 
 # システム設計-全体構成 作成ルール
@@ -99,8 +75,6 @@ Frontmatter は共通スキーマに従います（参照: [docs/specdojo/schema
 - `based_on` / `supersedes` は ID 配列（未指定は `[]` 可）。
 
 ## 5. 本文構成（標準テンプレ）
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-qe-kata-conformance 指定されているサンプル specdojo:sysd-index-sample が、本書の「5. 本文構成（標準テンプレ）」で定義されている必須見出し構成と順序に全く準拠しておらず、 rulebook の適用例として機能していない。 -->
 
 `sysd-index` は以下の見出し構成を **順序固定** で配置する。
 
@@ -186,8 +160,6 @@ SDI の中核は **SSOT 一覧表** とする。
 
 生成する本文の見出しは **## 5. 関連ドキュメント導線）**
 
-<!-- specdojo:finding id=F002 severity=minor rule=vp-ux-readability 見出し 「## 5. 関連ドキュメント導線）」 の末尾に不要な閉じ括弧がある。 -->
-
 - C4 / NFR / OPD / DEC など、判断・方針系ドキュメントへの導線を明記する。
 - 分冊が無い場合でも `（なし）` または `（本書のみ）` を明記する。
 
@@ -269,8 +241,6 @@ supersedes: []
 | ------ | ------------------- | ---------------------- | ---------------------- |
 | アーキ | cpd-business-domain | 外部境界・依存先の把握 | 入口として必須         |
 | 品質   | nfr-index           | 非機能要件との整合確認 | 可用性・性能の判断基準 |
-
-<!-- specdojo:finding id=F003 severity=minor rule=vp-ux-language-consistency 表内の「種別」列で「アーキ」「品質」などの略称が使われており、2.1節で定義した標準的な識別子（C4 / NFR / OPD / DEC）と表記が統一されていない。 -->
 
 | 運用方針 | opd-index | 運用統制（監視/証跡/権限）確認 | 監査観点で参照 |
 | 決定記録 | dec-index | 設計判断の背景追跡 | 破壊的変更時に必須 |

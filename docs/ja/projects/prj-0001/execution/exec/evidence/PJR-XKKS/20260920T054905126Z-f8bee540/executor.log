@@ -1,0 +1,648 @@
+Reading prompt from stdin...
+OpenAI Codex v0.155.1
+--------
+workdir: /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-XKKS
+model: gpt-5.6-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: high
+reasoning summaries: none
+session id: 01a0bd5c-6bcc-7ac0-af57-d326637b6c79
+--------
+user
+---
+specdojo:
+  id: prj-0001:xep-pjr-xkks-20260920t054757z-4b22
+  type: exec-plan
+  rulebook: none
+  task_id: PJR-XKKS
+  name: "grade の結果と finding を成果物から切り離しサイドカーへ移す"
+  mode: edit
+  status: ready
+  project_id: prj-0001
+  origin: register
+  owner: ARC
+---
+
+# Edit Plan: PJR-XKKS grade の結果と finding を成果物から切り離しサイドカーへ移す
+
+## 1. このタスクで行うこと
+
+プロジェクト登録簿の項目 PJR-XKKS「grade の結果と finding を成果物から切り離しサイドカーへ移す」に対応する。
+
+grade は成果物の frontmatter（`specdojo.grade`: verdict / score / viewpoints / `content_hash` / findings 件数）と本文（`<!-- specdojo:finding … -->`）に評価を書き込む。この設計が次の問題を生んでいる。
+
+## 2. 対象項目
+
+- `id`: PJR-XKKS
+- `type`: todo
+- `priority`: high
+- `owner`: ARC
+- `due`: 2026-09-30
+- `登録簿`: `docs/ja/projects/prj-0001/controls/project-register/pjr-index.md`
+- `個票`: `docs/ja/projects/prj-0001/controls/project-register/pjr-xkks-grade-sidecar.md`
+- `result`: `docs/ja/projects/prj-0001/execution/exec/results/pjr-xkks-20260920T054757Z-4b22-result.md`
+
+## 3. 進め方
+
+1. 登録簿の該当行と個票（存在する場合）を読み、目的・完了条件・制約を把握する。
+2. 個票に完了条件がある場合はそれを作業の基準にする。無い場合はタイトルと説明から完了条件の仮説を立て、その仮説を result に明記する。
+3. 関連する成果物・設計書・実装を確認し、対象ファイルを特定して変更する。
+4. 個票が存在する場合は、個票の作業内容・対応結果セクションを実施内容で更新する。
+5. 判断に迷う箇所は _TODO_ / _ASSUMPTION_ で残し、根拠と次のアクションを result に書く。
+
+## 4. 完了手順
+
+1. 「進め方」に従って対応を完了する。
+2. 共通規約に従って、必要な整形・静的検査を実行する。
+3. result に実施内容・変更ファイル・申し送りを記入する。これはタスク完了に必須であり、_TODO_ を残したまま終了しない（詳細は共通規約を参照）。
+4. 登録簿（`pjr-index.md`）の行と個票のステータス項目は変更しない。状態遷移（review / close など）は runner と人間が行う。
+
+## 5. 異常終了の条件
+
+- 前提不足・対象ファイル不明・静的検査未解消の場合は異常終了する（終了コード 1）。
+- 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
+- agent 自身は登録簿の状態を変更せず、終了コードと標準エラー出力で runner に結果を返す。
+
+## 共通: 記法・成果物規約
+
+この規約は、生成される全 exec plan に共通で適用される。result の完了条件、他文書を参照する際のリンク記法、成果物の状態（status）の扱いを統一する。
+
+- result（review plan の場合は review result）への記入は、タスク完了に必須の作業である。成果物の編集とは別に、最後に必ず実施する。
+- 終了コード 0 で完了する前に、result の必須セクションをすべて実際の内容で埋め、プレースホルダ（_TODO_ など）や未記入のセクションを残さない。
+- 成果物に変更が不要と判断した場合でも、result の記入は省略しない。変更不要と判断した理由と根拠を result に記入してから完了する。
+- result が未記入・プレースホルダのまま終了コード 0 で終了すると、runner は成果物未完了（block）として扱い、タスクはやり直しになる。完了前に result の記入漏れがないことを必ず確認する。
+- result の frontmatter は scaffold 済みの構造を正本とする。`id` / `task_id` / `mode` / `project_id` / `plan_ref` / `agent` / `execution` / `approach` / `targets` はキーの追加・削除・改名をせず、scaffold された値のまま維持する。見出し構成（`# Edit Result` などの H1、`## 1.` 以降の章立て）も独自の構成に置き換えない。埋めるのは本文セクションの `_TODO_` プレースホルダの中身だけである。`status` と `completed_at` は完了処理（runner 側）が更新するため、自分で書き換えない。
+- 文書へのリンクは、対象文書が既に存在する場合は `[[id|title]]` 形式で記載する（`id` は project 修飾 doc id）。
+- リンクを表（テーブル）のセル内に置く場合は、区切りの `|` を `[[id\|title]]` のようにエスケープする。エスケープしないと列がずれて表が壊れ、prettier 整形でセルが分割されて固定化される。
+- まだ存在しない文書を参照する場合は、`[[...]]` ではなく `` `id` `` または `` `filename` `` のようにバッククォートで仮置きする。
+- Markdown の自由記述では、`_` を含む識別子・フィールド名（例: `depends_on`）を必ずインラインコードで囲む。result に描画される executor evidence や reporter の自由記述も同じ記法にする。
+- 成果物 frontmatter の `status` を `ready` に変更しない。`ready` への昇格は人間のみが行うため、`draft` のまま据え置く（exec のコミット時ガードでも昇格はブロックされる）。
+- plan に「プロジェクトコンテキスト」章がある場合、そこに挙がる文書はプロジェクト共通の前提を読むための参照であり、成果物 frontmatter の `based_on` へ転記しない。参照して得た前提は本文の記述内容へ反映する。
+- 成果物 frontmatter の `based_on` に書けるのは、その成果物の `depends_on` の推移閉包に含まれる先行成果物だけである。閉包外の ID を書くと `catalog validate` が「`based_on` が `depends_on` の推移閉包に含まれていません」としてエラーになり、コミットがブロックされる。`based_on` を増やす必要が生じた場合は、自分で転記せず、根拠不足として result に記録する。
+- ファイルの読み取り・書き込み・編集は、作業ディレクトリ（カレントディレクトリ）からの相対パスで指定する。絶対パスを自分で組み立てたり、作業ディレクトリ名を推測して指定したりしない（作業ディレクトリ名の取り違えは外部パス扱いになり拒否される）。
+- 編集・書き込みが作業ディレクトリ外（`external_directory`）として拒否された場合、原因はパス指定の誤り（誤った絶対パス・ディレクトリ名の取り違え）である。bash の heredoc などへ回避的に切り替えず、相対パスに直したうえで同じ編集ツールで再実行する。
+- 整形・静的検査は、この plan の完了手順または本共通規約で明示されたコマンドを実行する。変更対象に必要な test、build、schema 検証は、plan に個別記載がなくても実行してよい。同じ test script では対象限定と全件を同一 executor run 内で連続実行せず、どちらか一方に絞る。下表、plan、またはプロジェクト標準が全件 test を求める場合は、全件を1回だけ実行して対象限定の実行を省く。この制約は executor が sandbox 内で実行する test script の回数に対するものであり、親検証に設定された ID のコマンドは対象外である（親 runner が別途実行する）。実行したコマンド・対象・結果は result に記録する。
+- executor / reporter pipeline で親 runner の検証が設定されている場合、executor は設定済み ID に対応するコマンドを sandbox 内で実行せず、executor 終了後に親 runner が固定許可リストから実行して evidence へ追記する。`validate-schema` は `npm run validate:schema`、`test-unit` は `npm run test:unit`、`test-integration` は `npm run test:integration` に対応する。executor は親検証と同じコマンドの対象限定版も追加せず、二重実行しない。
+- Markdown 成果物を編集した後は、`npx prettier --write <対象ファイル>` で整形し、`npx markdownlint <対象ファイル>` で静的検査を実施する。検査でエラーが出た場合は修正してから完了とする。
+- 終了する前に、コミット時に実行される検査（pre-commit 相当）を先回りで実行し、失敗をすべて修正してから完了する。コミット時に初めて失敗が判明すると commit がブロックされ、成果物の内容が完成していてもタスクは block になる。
+- 実行対象は、変更したファイルの種別で判断する。下表のうち、変更したファイルが該当する行の検査をすべて実行する。該当行がない場合は追加の検査は不要である。ただし親検証に設定された ID のコマンドは下表よりも優先し、executor は実行しない。下表に同じコマンドが挙がっていても、親 runner の実行に委ねる。
+- 検査コマンドの正本はリポジトリの hook 設定（`lefthook.yml` など）である。下表と設定が食い違う場合は設定側に合わせ、実行したコマンドと結果を result に記録する。`specdojo` コマンドは、リポジトリで定められた起動方法（`npx tsx src/specdojo.ts <subcommand>` など）で実行する。
+
+| 変更したファイル                                                                                       | 実行する検査                                                                                                                          |
+| ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `*.md`                                                                                                 | `npx prettier --write <対象ファイル>`、`npx markdownlint <対象ファイル>`                                                              |
+| `*.ts` / `*.js` / `*.json` / `*.yaml` / `*.yml`                                                        | `npx prettier --write <対象ファイル>`                                                                                                 |
+| `src/`、`tests/`、`scripts/`、`tools/`、`tsconfig*.json`                                               | `npm run typecheck`                                                                                                                   |
+| `src/`、`tests/`、`docs/ja/specdojo/templates/`、`docs/ja/specdojo/exec-templates/`、`vitest.config.*` | pipeline executor は `npm run test:unit`、それ以外は `npm test`（`test-unit` が親検証に設定されている場合は executor では実行しない） |
+| `docs/ja/projects/` 配下                                                                               | `specdojo catalog validate`                                                                                                           |
+| `dct-*.yaml`                                                                                           | `specdojo catalog build`                                                                                                              |
+| `pjr-index.md`                                                                                         | `specdojo register build`                                                                                                             |
+| `sch-*.yaml`                                                                                           | `specdojo exec refresh`                                                                                                               |
+| `docs/` 配下                                                                                           | `specdojo index build`                                                                                                                |
+
+---
+
+# Pipeline executor stage instructions
+
+This invocation is the executor stage of an executor/reporter pipeline. Edit and validate the
+artifacts required by the plan, but do not create or update the result file. Any plan instruction
+that assigns result writing or lifecycle transitions to the agent belongs to the later reporter or
+runner stage and does not apply here.
+
+The parent runner owns Git commits and repository configuration. Do not run git commit or change
+local, global, or system Git configuration, including user.name and user.email. A Git state change
+will stop the pipeline before validation, reporting, commit, or merge.
+
+When writing Markdown in the final evidence, wrap identifiers or field names containing an
+underscore in inline code (for example, `depends_on`).
+
+The SpecDojo parent runner will execute these allowlisted validations after you exit: test-integration, validate-schema, test-unit (npm run test:integration, npm run validate:schema, npm run test:unit). Do not run those commands inside the agent sandbox or report duplicate executor results for them. Run only the remaining sandbox-safe validations required by the plan. Parent-run results will be appended to evidence with source=runner and are authoritative.
+
+
+End the final response with exactly one machine-readable report using this envelope. Do not place
+Markdown fences around the JSON.
+
+<specdojo_executor_evidence>
+{"final_message":"concise outcome","validations":[{"command":"exact command","status":"passed|failed|not_run","summary":"concise result"}]}
+</specdojo_executor_evidence>
+
+codex
+計画に従い、まず登録簿・個票と関連設計を確認し、grade の現行書き込み箇所とサイドカーの既存規約を特定します。result は reporter 管轄なので編集せず、実装・文書・必要な検証だけを行います。
+exec
+/bin/bash -lc 'pwd && rg -n "PJR-XKKS|grade|finding|sidecar|サイドカー" docs/ja/projects/prj-0001/controls/project-register/pjr-index.md docs/ja/projects/prj-0001/controls/project-register/pjr-xkks-grade-sidecar.md docs/ja/specdojo src tests package.json lefthook.yml 2>/dev/null' in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-XKKS
+ exited 2 in 0ms:
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-XKKS
+package.json:91:    "validate:schema:grade-pipeline": "tsx tools/docs/src/validate-yaml-schema.ts --schema docs/specdojo/schemas/v1/grade-pipeline-state.schema.yaml --data \"docs/ja/**/execution/grade/pipeline/*.json\" --allow-empty",
+package.json:93:    "validate:schema": "npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums",
+docs/ja/projects/prj-0001/controls/project-register/pjr-xkks-grade-sidecar.md:3:  id: prj-0001:pjr-xkks-grade-sidecar
+docs/ja/projects/prj-0001/controls/project-register/pjr-xkks-grade-sidecar.md:17:# PJR-XKKS grade の結果と finding を成果物から切り離しサイドカーへ移す
+docs/ja/projects/prj-0001/controls/project-register/pjr-xkks-grade-sidecar.md:21:grade は成果物の frontmatter（`specdojo.grade`: verdict / score / viewpoints / content_hash / findings 件数）と本文（`<!-- specdojo:finding … -->`）に評価を書き込む。この設計が次の問題を生んでいる。
+docs/ja/projects/prj-0001/controls/project-register/pjr-xkks-grade-sidecar.md:24:- finding コメントの挿入が `prettier-ignore` や表を分断し、`content_hash` がずれた（PJR-3KBG、PJR-5KPC）。ハッシュ計算から grade と finding を除外する特別扱いをコードに持ち込んで回避した。
+docs/ja/projects/prj-0001/controls/project-register/pjr-xkks-grade-sidecar.md:25:- 本文に前回の finding が同居するため、評価者（gemma）がそれを読んで再掲する。
+docs/ja/projects/prj-0001/controls/project-register/pjr-xkks-grade-sidecar.md:26:- frontmatter の件数と本文コメント数の二重管理が `grade validate` の不一致（`comments=0`）を生む。
+docs/ja/projects/prj-0001/controls/project-register/pjr-xkks-grade-sidecar.md:27:- Detached Unit では `docs/ja/product` はプロダクト実装リポジトリ（`app1/`）側に置く（PJR-QHKA 2.4.3）。成果物へ書き込む限り、grade routine の commit がプロダクト実装の履歴に流れ込む。
+docs/ja/projects/prj-0001/controls/project-register/pjr-xkks-grade-sidecar.md:32:- grade の結果は成果物に書かず、サイドカー `execution/grade/results/<doc-id>.yaml`（doc-id ごと 1 ファイル、最新のみ）に置く。履歴は Job Run と evidence に残す。既存の `execution/grade/criteria/` と `pipeline/` と同じ置き場に揃える。
+docs/ja/projects/prj-0001/controls/project-register/pjr-xkks-grade-sidecar.md:33:- finding はサイドカーの `findings[]` に `id` / `severity` / `rule` / `line` / `anchor`（該当行の引用）/ `message` で持ち、本文コメントは廃止する。`anchor` により行ずれに耐える。
+docs/ja/projects/prj-0001/controls/project-register/pjr-xkks-grade-sidecar.md:34:- Kata の grade は SpecDojo 本体（prj-0001）の `execution/grade/results/` に置く。利用プロジェクトは Kata を評価しない。
+docs/ja/projects/prj-0001/controls/project-register/pjr-xkks-grade-sidecar.md:35:- `content_hash` は成果物の内容そのもの（frontmatter 全体 + 本文）から計算し、grade と finding の除外という特別扱いをなくす。
+docs/ja/projects/prj-0001/controls/project-register/pjr-xkks-grade-sidecar.md:36:- agent への finding 提示は plan 生成時にサイドカーから plan 本文へ展開する（本文コメントを読ませない）。refine / rulebook-maintenance / recipe-maintenance / bootstrap の各テンプレートを改める。
+docs/ja/projects/prj-0001/controls/project-register/pjr-xkks-grade-sidecar.md:37:- 読み手への提示は dashboard（成果物ごとの verdict / score / finding 件数）と docs-site の表示時合成で行う。成果物ページの frontmatter 表示に依存しない。
+docs/ja/projects/prj-0001/controls/project-register/pjr-xkks-grade-sidecar.md:38:- 既存の成果物・Kata から `specdojo.grade` と `specdojo:finding` を一括で剥がし、サイドカーへ移行する（1 回限りの migrate コマンド）。
+docs/ja/projects/prj-0001/controls/project-register/pjr-xkks-grade-sidecar.md:42:- `grade apply` がサイドカーだけを書き、成果物と Kata のファイルを変更しない。
+docs/ja/projects/prj-0001/controls/project-register/pjr-xkks-grade-sidecar.md:43:- `grade list --changed-only` / `--ungraded` / `--incomplete`、`grade validate`、`grade state`、`schedule-approach` の grade 参照がサイドカーを読む。
+docs/ja/projects/prj-0001/controls/project-register/pjr-xkks-grade-sidecar.md:44:- `content_hash` の計算から grade / finding の除外がなくなり、`stableContentHash` と `pipelineContentHash` が単純化されている。
+docs/ja/projects/prj-0001/controls/project-register/pjr-xkks-grade-sidecar.md:45:- exec plan テンプレート（refine-2 の finding 解消、rulebook / recipe maintenance、bootstrap）が、サイドカーの finding を plan 本文に展開する形になっている。
+docs/ja/projects/prj-0001/controls/project-register/pjr-xkks-grade-sidecar.md:46:- dashboard に成果物ごとの grade 概要が出る。docs-site で成果物ページに grade が表示時合成される。
+docs/ja/projects/prj-0001/controls/project-register/pjr-xkks-grade-sidecar.md:47:- `grade migrate` で既存の frontmatter `specdojo.grade` と本文 finding コメントがサイドカーへ移り、成果物側から消えている。`grade validate` のエラーが 0 件になる。
+docs/ja/projects/prj-0001/controls/project-register/pjr-xkks-grade-sidecar.md:48:- deliverable-frontmatter / rulebook-frontmatter の schema から `grade` が外れ、サイドカーの schema が `docs/specdojo/schemas/v1/` に追加されている。
+docs/ja/projects/prj-0001/controls/project-register/pjr-xkks-grade-sidecar.md:49:- `npm run check` が通過し、単体テストにサイドカーの読み書き・移行・plan 展開が含まれている。
+docs/ja/projects/prj-0001/controls/project-register/pjr-xkks-grade-sidecar.md:55:| 1   | サイドカーの schema と読み書き（`grade apply` / `list` / `validate` / `state`）を実装し、`content_hash` の特別扱いを除く | DEV  | open | codex-expert-executor / gemma-reporter / worktree |
+docs/ja/projects/prj-0001/controls/project-register/pjr-xkks-grade-sidecar.md:56:| 2   | `grade migrate` を実装し、既存の成果物・Kata からの一括移行と `grade validate` 0 件を確認する                            | DEV  | open | 作業 1 と同一タスク                               |
+docs/ja/projects/prj-0001/controls/project-register/pjr-xkks-grade-sidecar.md:57:| 3   | exec plan テンプレート 4 本と plan 生成を、サイドカーの finding を本文へ展開する形に改める                               | DEV  | open | 同上                                              |
+docs/ja/projects/prj-0001/controls/project-register/pjr-xkks-grade-sidecar.md:59:| 5   | prj-0001 で migrate を実行し、成果物と Kata から grade が消えたことと夜間 routine の commit 範囲を確認する               | ARC  | open | オーケストレーターが直接対応                      |
+docs/ja/projects/prj-0001/controls/project-register/pjr-xkks-grade-sidecar.md:69:- [[prj-0001:pjr-3kbg-grade-finding-insertion-prettier-ignore]]
+docs/ja/projects/prj-0001/controls/project-register/pjr-xkks-grade-sidecar.md:70:- [[prj-0001:pjr-5kpc-grade-pipeline-hash-blank-lines]]
+docs/ja/projects/prj-0001/controls/project-register/pjr-xkks-grade-sidecar.md:71:- `src/grade.ts`
+src/catalog.ts:147:// Runs schema + semantic validation for one plan and prints findings.
+tests/fixtures/grade/previous-findings.md:3:  id: specdojo:previous-findings-test
+tests/fixtures/grade/previous-findings.md:9:# Previous findings test fixture
+tests/fixtures/grade/previous-findings.md:11:<!-- specdojo:finding id=F042 severity=major rule=vp-qe-kata-conformance 必須の禁止事項が欠落している。 -->
+src/exec-results.ts:454:    "## 2. findings",
+src/exec-results.ts:456:    reporterBulletList(output.findings, "なし"),
+src/review-types.ts:12:  grade_targets?: ("kata" | "deliverable")[];
+src/review-types.ts:60:  grade_rubric?: GradeRubric;
+tests/src/catalog-generate.test.ts:222:<!-- specdojo:finding id=F001 severity=major rule=vp-test line=1 複製しない -->
+tests/src/catalog-generate.test.ts:241:    expect(content).not.toContain("specdojo:finding");
+src/schedule.ts:292:// `schedule strategy generate` derives approach from strategy intent declarations and grades.
+src/schedule.ts:301:    .description("Generate sch-strategy-<track>.yaml from DCT, Timeline, intents and grades");
+src/grade.ts:35:  ungraded?: boolean;
+src/grade.ts:68:  findings?: GradeFindingInput[];
+src/grade.ts:87:  /** @deprecated grade apply ignores this agent-supplied value; use --by instead. */
+src/grade.ts:88:  graded_by?: string;
+src/grade.ts:115:  graded_at: string;
+src/grade.ts:116:  graded_by: string;
+src/grade.ts:130:  /^[ \t]*<!--[ \t]*specdojo:finding[ \t]+id=([^ \t]+)[ \t]+severity=(blocker|major|minor|note)[ \t]+rule=([^ \t]+)(?:[ \t]+line=([1-9][0-9]*))?[ \t]+(.*?)[ \t]*-->[ \t]*(?:\r?\n|$)/gm;
+src/grade.ts:136:const DONE_CRITERIA_SCHEMA = "docs/specdojo/schemas/v1/grade-done-criteria.schema.yaml";
+src/grade.ts:152:  for (const finding of previousGradeFindings(body)) {
+src/grade.ts:153:    const message = sanitizeCommentText(finding.message);
+src/grade.ts:157:      SEVERITY_LEVEL_CAP[finding.severity] < SEVERITY_LEVEL_CAP[previous]
+src/grade.ts:159:      previousByMessage.set(message, finding.severity);
+src/grade.ts:164:    const findings = (viewpoint.findings ?? []).map((finding) => {
+src/grade.ts:165:      const previous = previousByMessage.get(sanitizeCommentText(finding.message));
+src/grade.ts:167:        SEVERITY_LEVEL_CAP[previous] < SEVERITY_LEVEL_CAP[finding.severity]
+src/grade.ts:168:        ? { ...finding, severity: previous }
+src/grade.ts:169:        : { ...finding };
+src/grade.ts:173:      findings,
+src/grade.ts:174:      level: Math.min(viewpoint.level, levelCapForFindings(findings)),
+src/grade.ts:179:function levelCapForFindings(findings: readonly GradeFindingInput[]): number {
+src/grade.ts:180:  const majorCount = findings.filter((finding) => finding.severity === "major").length;
+src/grade.ts:181:  const severityCap = findings.reduce(
+src/grade.ts:182:    (current, finding) => Math.min(current, SEVERITY_LEVEL_CAP[finding.severity]),
+src/grade.ts:202:function serializeGrade(grade: Record<string, unknown>): string {
+src/grade.ts:203:  const gradeForDump = structuredClone(grade);
+src/grade.ts:204:  const findings = isRecord(gradeForDump.findings) ? gradeForDump.findings : undefined;
+src/grade.ts:205:  if (findings) gradeForDump.findings = GRADE_FINDINGS_PLACEHOLDER;
+src/grade.ts:206:  const doneCriteria = isRecord(gradeForDump.done_criteria)
+src/grade.ts:207:    ? gradeForDump.done_criteria
+src/grade.ts:215:      { grade: gradeForDump },
+src/grade.ts:216:      // categories / viewpoints の各値だけをフロー化する。grade 全体や各 collection
+src/grade.ts:221:  if (findings) {
+src/grade.ts:223:      .dump(findings, { lineWidth: -1, noRefs: true, flowLevel: 0 })
+src/grade.ts:249:  const grade = specdojo && isRecord(specdojo.grade) ? specdojo.grade : undefined;
+src/grade.ts:250:  if (!specdojo || !grade) {
+src/grade.ts:254:  specdojo.grade = GRADE_PLACEHOLDER;
+src/grade.ts:255:  const gradeBlock = serializeGrade(grade)
+src/grade.ts:262:    .replace(`  grade: ${GRADE_PLACEHOLDER}`, gradeBlock);
+src/grade.ts:289:  delete specdojo.grade;
+src/grade.ts:298:// grade apply は段ごとに finding コメントを除去して挿入し直し、ブロック直前に空行を
+src/grade.ts:299:// 補うため、finding を除いた本文でも空行の位置と数が段の間で変わる。空行だけの差で
+src/grade.ts:304:  delete specdojo.grade;
+src/grade.ts:329:function findingComment(
+src/grade.ts:330:  finding: Required<Pick<GradeFindingInput, "id">> & GradeFindingInput,
+src/grade.ts:333:  return `<!-- specdojo:finding id=${finding.id} severity=${finding.severity} rule=${rule} line=${finding.line ?? 1} ${sanitizeCommentText(finding.message)} -->`;
+src/grade.ts:392:      (viewpoint.findings ?? []).flatMap((finding) => (finding.id ? [finding.id] : [])),
+src/grade.ts:397:    for (const finding of viewpoint.findings ?? []) {
+src/grade.ts:398:      let id = finding.id?.trim();
+src/grade.ts:406:      const requestedIndex = Math.max(0, Math.min(lines.length, (finding.line ?? 1) - 1));
+src/grade.ts:407:      // finding は対象行を含む最上位 Markdown ブロックの直前へ置く。これにより、
+src/grade.ts:412:      existing.push(findingComment({ ...finding, id }, viewpoint.id));
+src/grade.ts:433:      // grade apply の出力だけで lint 可能な状態にする。走査は文書ごとの apply 間に
+src/grade.ts:444:  if (!config) throw new Error("grade commands require .specdojo/specdojo.config.json");
+src/grade.ts:455:  if (!path) throw new Error("viewpoints_path is required for grade");
+src/grade.ts:462:  if (!roster) throw new Error("members_path is required for grade apply --by");
+src/grade.ts:471:  const rubric = doc.grade_rubric;
+src/grade.ts:472:  if (!rubric) throw new Error("Resolved viewpoints do not define grade_rubric");
+src/grade.ts:565:function gradeReferenceExampleFamily(
+src/grade.ts:595:      family: gradeReferenceExampleFamily(target, absolute, metadata),
+src/grade.ts:612:  const family = gradeReferenceExampleFamily(opts.target, target, targetMetadata);
+src/grade.ts:655:    throw new Error(`${input}: grade currently writes inline findings only for Markdown`);
+src/grade.ts:689:// カタログの Markdown 成果物を絶対パスで引ける形にする。grade の対象探索と
+src/grade.ts:745:function gradePipelineStateDirectory(projectOption?: string, rootDir = specdojoRootDir()): string {
+src/grade.ts:747:  return resolve(rootDir, getProjectExecutionPath(project), "grade", "pipeline");
+src/grade.ts:750:function gradePipelineStatePath(
+src/grade.ts:761:  return join(gradePipelineStateDirectory(projectOption, rootDir), `${stem}-${digest}.json`);
+src/grade.ts:765:  if (!isRecord(value)) throw new Error(`${path}: grade pipeline state must be an object`);
+src/grade.ts:802:  if (state.version !== 1) throw new Error(`${path}: unsupported grade pipeline state version`);
+src/grade.ts:834:  for (const path of listFilesRecursive(gradePipelineStateDirectory(projectOption, rootDir))) {
+src/grade.ts:871:  const statePath = gradePipelineStatePath(relativeDocument, opts.project);
+src/grade.ts:915:  const statePath = gradePipelineStatePath(relativeDocument, opts.project);
+src/grade.ts:928:    throw new Error("grade pipeline stage, total, and failure limit are invalid");
+src/grade.ts:939:      `grade pipeline stage ${opts.stage} must immediately follow completed stage ${previousCompleted}`,
+src/grade.ts:987:        `${relativePathFromRoot(generated, rootDir)}: generated documents cannot be graded`,
+src/grade.ts:993:        `${relativePathFromRoot(trashed, rootDir)}: trashed documents cannot be graded`,
+src/grade.ts:1014:    !opts.ungraded &&
+src/grade.ts:1059:    throw new Error("--max-findings must be a non-negative integer");
+src/grade.ts:1062:    filters.ungraded &&
+src/grade.ts:1067:    throw new Error("--ungraded cannot be combined with --verdict, --min-score, or --max-findings");
+src/grade.ts:1071:function storedGradeScore(grade: Record<string, unknown>, path: string): number {
+src/grade.ts:1072:  const score = grade.score;
+src/grade.ts:1074:    throw new Error(`${path}: specdojo.grade.score must be an integer between 0 and 100`);
+src/grade.ts:1079:function storedFindingCount(grade: Record<string, unknown>, path: string): number {
+src/grade.ts:1080:  const findings = grade.findings;
+src/grade.ts:1081:  if (!isRecord(findings)) throw new Error(`${path}: specdojo.grade.findings is missing`);
+src/grade.ts:1083:    const count = findings[severity];
+src/grade.ts:1086:        `${path}: specdojo.grade.findings.${severity} must be a non-negative integer`,
+src/grade.ts:1100:  const grade = isRecord(specdojo.grade) ? specdojo.grade : undefined;
+src/grade.ts:1102:  if (filters.ungraded && grade !== undefined) return false;
+src/grade.ts:1103:  if (filters.verdict !== undefined && grade?.verdict !== filters.verdict) return false;
+src/grade.ts:1106:    (grade === undefined || storedGradeScore(grade, path) < filters.minScore)
+src/grade.ts:1112:    (grade === undefined || storedFindingCount(grade, path) > filters.maxFindings)
+src/grade.ts:1116:  return !filters.changedOnly || grade?.content_hash !== stableContentHash(document);
+src/grade.ts:1141:      (viewpoint.grade_targets === undefined || viewpoint.grade_targets.includes(target)),
+src/grade.ts:1158:    const findings: GradeFindingInput[] = [];
+src/grade.ts:1163:          findings.push({
+src/grade.ts:1171:        findings.push({ severity: "major", message: "本文に H1 見出しがありません。", line: 1 });
+src/grade.ts:1179:        findings.push({
+src/grade.ts:1186:    const cap = levelCapForFindings(findings);
+src/grade.ts:1187:    results.push({ id: viewpoint.id, level: cap, findings });
+src/grade.ts:1245:            id: `${opts.projectId}:grade-${opts.target}-${taskHash.toLowerCase()}-plan`,
+src/grade.ts:1249:            name: `grade: ${rel}`,
+src/grade.ts:1261:    `# Review Plan: ${taskId} grade: ${rel}`,
+src/grade.ts:1263:    "この plan は grade pipeline の executor stage 用である。評価と根拠の記述だけを行い、GradeSubmission JSON は作成しない。後続の reporter が判定内容を変更せず JSON へ構造化する。",
+src/grade.ts:1299:    "4. 評価対象を次の rubric と viewpoint に照らし、各 viewpoint を 0-4 で判定する。ある viewpoint の finding の有無から、ほかの viewpoint の判定を推論しない。",
+src/grade.ts:1300:    "5. level 3 以下には finding を付ける。finding には severity（blocker / major / minor / note）、対象直前の本文行番号、具体的な修正理由を含める。line は Frontmatter を除く本文の1始まり（通常は H1 が1行目）とする。level 4 は finding なしとする。",
+src/grade.ts:1301:    "6. 前回の指摘を対象の現在内容と照合し、解消済みか確認する。未解消なら前回の message を変更せず今回の finding に含め、severity は前回と同等以上を指定する。前回の rule は前回評価時の分類として扱い、各 viewpoint は現在の根拠から独立に評価する。前回の問題が解消され、別の軽微な問題だけが残るため severity を引き下げる場合は、その根拠を新しい finding の message に含める。",
+src/grade.ts:1311:    "対象文書に現在記録されている finding の事実情報を示す。",
+src/grade.ts:1334:    "1. すべての agent viewpoint の判定と、必要な finding が揃っていることを確認する。",
+src/grade.ts:1336:    "3. `LEVEL` と各 `FINDING` は reporter が忠実性を機械検証する申告値である。message は1行で具体的に記し、reporter が一字一句コピーできるようにする。finding がない場合は `FINDING` 行を記さない。",
+src/grade.ts:1337:    "4. すべての viewpoint marker、0-4 の level、level 3 以下の finding、severity と非空 message が揃っていることを確認する。",
+src/grade.ts:1369:    "- すべての viewpoint の level と finding を申告できない場合は異常終了する。",
+src/grade.ts:1400:            id: `${opts.projectId}:grade-${opts.target}-${taskHash.toLowerCase()}-reporter-plan`,
+src/grade.ts:1404:            name: `grade reporter: ${rel}`,
+src/grade.ts:1416:    `# Reporter Plan: ${taskId} grade: ${rel}`,
+src/grade.ts:1418:    "この plan は grade pipeline の reporter stage 用である。executor の最終応答が `<grade_executor_output>` としてこの plan と一緒に渡される。評価やファイル読み取りは行わず、申告済みの判定を GradeSubmission JSON へ忠実に構造化する。",
+src/grade.ts:1422:    "executor が申告した全 viewpoint の level と finding を、追加・省略・変更せず GradeSubmission JSON へ写す。",
+src/grade.ts:1433:    "1. `<grade_executor_output>` の `[VIEWPOINT <id>]` ごとに `LEVEL` とすべての `FINDING` を読み取る。対象文書や参考資料は読まない。",
+src/grade.ts:1435:    "3. executor が述べていない finding を追加せず、述べた finding を省略しない。finding の `id` は出力しない。",
+src/grade.ts:1446:    "2. すべての agent viewpoint が1回ずつあり、level と finding が executor の申告と一致することを確認する。",
+src/grade.ts:1466:              findings: [],
+src/grade.ts:1486:    "- `<grade_executor_output>` が渡されていない、または marker 契約を解析できない場合は異常終了する。",
+src/grade.ts:1492:function gradePlanFilename(path: string): string {
+src/grade.ts:1499:  return `${stem || "document"}-${hash}-grade-plan.md`;
+src/grade.ts:1502:function gradeReporterPlanFilename(path: string): string {
+src/grade.ts:1503:  return gradePlanFilename(path).replace(/-grade-plan\.md$/, "-grade-reporter-plan.md");
+src/grade.ts:1537:    const output = join(outputDirectory, gradePlanFilename(absolute));
+src/grade.ts:1538:    const reporterOutput = join(outputDirectory, gradeReporterPlanFilename(absolute));
+src/grade.ts:1588:        findings: GradeFindingInput[];
+src/grade.ts:1629:      current = { id: start[1], findings: [] };
+src/grade.ts:1637:      viewpoints.push({ id: current.id, level: current.level, findings: current.findings });
+src/grade.ts:1654:    const finding = line.match(
+src/grade.ts:1657:    if (finding) {
+src/grade.ts:1658:      current.findings.push({
+src/grade.ts:1659:        severity: finding[1] as GradeSeverity,
+src/grade.ts:1660:        ...(finding[2] ? { line: Number(finding[2]) } : {}),
+src/grade.ts:1661:        message: finding[3].trim(),
+src/grade.ts:1690:function findingFidelityKey(finding: GradeFindingInput): string {
+src/grade.ts:1692:    severity: finding.severity,
+src/grade.ts:1693:    line: finding.line ?? null,
+src/grade.ts:1694:    message: normalizeFindingMessageForFidelity(finding.message),
+src/grade.ts:1702:  const remainingReported = reported.map((finding) => ({
+src/grade.ts:1703:    finding,
+src/grade.ts:1707:  for (const finding of declared) {
+src/grade.ts:1708:    const key = findingFidelityKey(finding);
+src/grade.ts:1710:      (candidate) => !candidate.matched && findingFidelityKey(candidate.finding) === key,
+src/grade.ts:1713:    else unmatchedDeclared.push(finding);
+src/grade.ts:1719:      .map((candidate) => candidate.finding),
+src/grade.ts:1723:function findingDifferenceMessage(
+src/grade.ts:1747:function findingSimilarity(declared: GradeFindingInput, reported: GradeFindingInput): number {
+src/grade.ts:1874:    const unmatched = unmatchedFindings(declared.findings ?? [], reported.findings ?? []);
+src/grade.ts:1880:          findingSimilarity(executorFinding, unmatched.reported[index]) >
+src/grade.ts:1881:          findingSimilarity(executorFinding, unmatched.reported[bestIndex])
+src/grade.ts:1888:        path: `documents[0].viewpoints.${declared.id}.findings`,
+src/grade.ts:1889:        message: `reporter changed executor finding: ${findingDifferenceMessage(executorFinding, reporterFinding)}`,
+src/grade.ts:1892:    for (const finding of unmatched.declared) {
+src/grade.ts:1894:        path: `documents[0].viewpoints.${declared.id}.findings`,
+src/grade.ts:1895:        message: `reporter omitted executor finding: ${JSON.stringify(finding)}`,
+src/grade.ts:1898:    for (const finding of unmatched.reported) {
+src/grade.ts:1900:        path: `documents[0].viewpoints.${declared.id}.findings`,
+src/grade.ts:1901:        message: `reporter added finding not declared by executor: ${JSON.stringify(finding)}`,
+src/grade.ts:1921:    (value.graded_by !== undefined && typeof value.graded_by !== "string") ||
+src/grade.ts:2031:    const findingIds = new Set<string>();
+src/grade.ts:2047:      const findings = result.findings ?? [];
+src/grade.ts:2048:      if (!Array.isArray(findings)) {
+src/grade.ts:2049:        issues.push({ path: resultPath, message: "findings must be an array" });
+src/grade.ts:2052:      if (result.level < 4 && findings.length === 0) {
+src/grade.ts:2053:        issues.push({ path: resultPath, message: "level 0-3 requires at least one finding" });
+src/grade.ts:2055:      for (const [findingIndex, finding] of findings.entries()) {
+src/grade.ts:2057:          !finding ||
+src/grade.ts:2058:          !Object.hasOwn(SEVERITY_LEVEL_CAP, finding.severity) ||
+src/grade.ts:2059:          typeof finding.message !== "string" ||
+src/grade.ts:2060:          !finding.message.trim()
+src/grade.ts:2063:            path: `${resultPath}.findings[${findingIndex}]`,
+src/grade.ts:2068:        if (finding.id !== undefined) {
+src/grade.ts:2069:          if (!/^[A-Za-z0-9][A-Za-z0-9._-]*$/.test(finding.id)) {
+src/grade.ts:2071:              path: `${resultPath}.findings[${findingIndex}].id`,
+src/grade.ts:2074:          } else if (findingIds.has(finding.id)) {
+src/grade.ts:2076:              path: `${resultPath}.findings[${findingIndex}].id`,
+src/grade.ts:2077:              message: `duplicate finding id: ${finding.id}`,
+src/grade.ts:2080:          findingIds.add(finding.id);
+src/grade.ts:2082:        if (finding.line !== undefined && (!Number.isInteger(finding.line) || finding.line < 1)) {
+src/grade.ts:2084:            path: `${resultPath}.findings[${findingIndex}].line`,
+src/grade.ts:2089:      const cap = levelCapForFindings(findings);
+src/grade.ts:2091:        issues.push({ path: resultPath, message: `finding severity caps level at ${cap}` });
+src/grade.ts:2118:    for (const finding of result.findings ?? []) counts[finding.severity] += 1;
+src/grade.ts:2137:  return { score, verdict, categories, viewpoints: viewpointOutput, findings: counts };
+src/grade.ts:2141:// grade 本体と同じ方式であり、実行ごとにファイルを増やすと最新の評価を判別できなくなる。
+src/grade.ts:2147:    gradePlanFilename(absolute).replace(/-grade-plan\.md$/, "-done-criteria.yaml"),
+src/grade.ts:2152:  if (documentId) return `${documentId}-grade-criteria`;
+src/grade.ts:2157:  return `grade-criteria-${hash}`;
+src/grade.ts:2174:  gradedBy: string;
+src/grade.ts:2200:    const graded = gradeMarkdownDocument({
+src/grade.ts:2206:      gradedBy: opts.gradedBy,
+src/grade.ts:2222:    if (graded.detail && detailPath) {
+src/grade.ts:2223:      const rendered = renderDoneCriteriaDetail(graded.detail, detailPath);
+src/grade.ts:2233:    if (graded.content !== current) {
+src/grade.ts:2235:      if (!opts.dryRun) writeFileSync(absolute, graded.content, "utf8");
+src/grade.ts:2255:// score と done_criteria の充足は別の軸として扱う。verdict は score と finding だけで決め、
+src/grade.ts:2284:  gradedBy: string;
+src/grade.ts:2290:export function gradeMarkdownDocument(opts: GradeMarkdownOptions): {
+src/grade.ts:2304:  const gradedAt = (opts.now ?? new Date()).toISOString();
+src/grade.ts:2310:  specdojo.grade = {
+src/grade.ts:2316:    graded_at: gradedAt,
+src/grade.ts:2317:    graded_by: opts.gradedBy,
+src/grade.ts:2321:    findings: summary.findings,
+src/grade.ts:2351:      graded_at: gradedAt,
+src/grade.ts:2352:      graded_by: opts.gradedBy,
+src/grade.ts:2360:export function gradeMarkdownContent(opts: GradeMarkdownOptions): string {
+src/grade.ts:2361:  return gradeMarkdownDocument(opts).content;
+src/grade.ts:2373:  const grade = isRecord(specdojo.grade) ? specdojo.grade : null;
+src/grade.ts:2374:  if (!grade) return [`${path}: specdojo.grade is missing`];
+src/grade.ts:2375:  const findings = isRecord(grade.findings) ? grade.findings : {};
+src/grade.ts:2380:    if (findings[severity] !== actual[severity])
+src/grade.ts:2382:        `${path}: findings.${severity}=${String(findings[severity])}, comments=${actual[severity]}`,
+src/grade.ts:2385:  if (grade.content_hash !== stableContentHash(document))
+src/grade.ts:2386:    errors.push(`${path}: content changed after the last grade`);
+src/grade.ts:2410:    throw new Error("--max-findings must be a non-negative integer");
+src/grade.ts:2444:  const grade = program
+src/grade.ts:2445:    .command("grade")
+src/grade.ts:2457:      .option("--changed-only", "Select documents changed since their latest grade", false)
+src/grade.ts:2465:        "Select graded documents with at least this score (0-100)",
+src/grade.ts:2469:        "--max-findings <count>",
+src/grade.ts:2470:        "Select graded documents with at most this many findings",
+src/grade.ts:2473:      .option("--ungraded", "Select documents without a stored grade", false)
+src/grade.ts:2477:    grade.command("list").description("Print selected document paths without writing grade plans"),
+src/grade.ts:2488:        ungraded: options.ungraded,
+src/grade.ts:2498:    grade
+src/grade.ts:2522:          ungraded: options.ungraded,
+src/grade.ts:2535:          join(getProjectExecutionPath(project), "grade", "generated", "plans", target);
+src/grade.ts:2570:    grade
+src/grade.ts:2590:        const gradedBy = resolveGradeActor(
+src/grade.ts:2606:            ungraded: options.ungraded,
+src/grade.ts:2638:            throw new Error(`${document.path}: not selected by the current grade filters`);
+src/grade.ts:2643:          gradedBy,
+src/grade.ts:2647:          criteriaDirectory: join(getProjectExecutionPath(project), "grade", "criteria"),
+src/grade.ts:2660:    grade.command("validate").description("Validate stored grade hashes and finding counts"),
+src/grade.ts:2672:        ungraded: options.ungraded,
+src/grade.ts:2684:  grade
+src/grade.ts:2686:    .description("Read or update persistent per-document grade pipeline state")
+docs/ja/specdojo/standards/template-authoring-standard.md:100:- `grade apply` がテンプレートへ付与する `specdojo:finding` コメントは評価注釈として扱い、テンプレートから生成する成果物へ複製しない。生成処理はコメントを除去してから Frontmatter の展開とプレースホルダ置換を行う。
+docs/ja/specdojo/standards/template-authoring-standard.md:101:- npm 公開前は、同梱するテンプレートに `specdojo:finding` コメントが残っていないことを確認する。
+src/deliverable-trash.ts:114:      break; // left this entry's block without finding an own path: field
+src/template-frontmatter.ts:5:// grade が Markdown 本文へ付与する finding は評価対象への注釈であり、テンプレートから
+src/template-frontmatter.ts:8:  /^[ \t]*<!--[ \t]*specdojo:finding(?:[ \t]+[^\r\n]*?)?[ \t]*-->[ \t]*$/;
+src/template-frontmatter.ts:19:  if (!raw.includes("specdojo:finding")) return raw;
+src/template-frontmatter.ts:37:      const finding = FINDING_COMMENT_LINE_RE.test(lineBody(candidate));
+src/template-frontmatter.ts:38:      if (!isBlankLine(candidate) && !finding) break;
+src/template-frontmatter.ts:40:      hasFinding ||= finding;
+src/template-frontmatter.ts:49:    // finding の前後にあった空行は、コメント除去後には同じ空白ブロックになる。
+src/template-frontmatter.ts:50:    // そのブロックだけを1空行へ畳み、finding と無関係な空白は変更しない。
+src/template-frontmatter.ts:60:// 自身のメタ情報（`id: *-template` など）と finding コメントを取り除いた文字列を返す。
+src/template-frontmatter.ts:63:// `frontmatter_template` を持たないテンプレートや Frontmatter を持たない入力は、finding
+tests/src/grade.test.ts:11:  gradeMarkdownContent,
+tests/src/grade.test.ts:12:  gradeMarkdownDocument,
+tests/src/grade.test.ts:30:} from "../../src/grade.js";
+tests/src/grade.test.ts:38:  grade_rubric: {
+tests/src/grade.test.ts:39:    id: "grade-rubric-v1",
+tests/src/grade.test.ts:74:      grade_targets: ["kata"],
+tests/src/grade.test.ts:91:  rubric: "grade-rubric-v1",
+tests/src/grade.test.ts:92:  graded_by: "test-agent",
+tests/src/grade.test.ts:97:        { id: "vp-qe-kata-conformance", level: 4, findings: [] },
+tests/src/grade.test.ts:101:          findings: [{ severity: "minor", message: "前置きが重複している。", line: 3 }],
+tests/src/grade.test.ts:120:describe("grade target filters", () => {
+tests/src/grade.test.ts:122:    rubric: "grade-rubric-v1",
+tests/src/grade.test.ts:127:          { id: "vp-qe-kata-conformance", level: 4, findings: [] },
+tests/src/grade.test.ts:128:          { id: "vp-arc-conciseness", level: 4, findings: [] },
+tests/src/grade.test.ts:142:    const directory = mkdtempSync(join(tmpdir(), "specdojo-grade-target-"));
+tests/src/grade.test.ts:158:        "docs/ja/specdojo/samples/generated/example.md: generated documents cannot be graded",
+tests/src/grade.test.ts:166:    const directory = mkdtempSync(join(tmpdir(), "specdojo-grade-target-"));
+tests/src/grade.test.ts:210:      for (const filters of [{}, { changedOnly: true }, { ungraded: true }]) {
+tests/src/grade.test.ts:220:      ).toThrow("docs/ja/product/trash/retired.md: trashed documents cannot be graded");
+tests/src/grade.test.ts:226:  it("combines verdict, score, finding-count, and changed-only filters", () => {
+tests/src/grade.test.ts:227:    const graded = gradeMarkdownContent({
+tests/src/grade.test.ts:233:      gradedBy: "test-agent",
+tests/src/grade.test.ts:238:      matchesGradeTargetFilters(graded, "example.md", {
+tests/src/grade.test.ts:245:      matchesGradeTargetFilters(graded, "example.md", {
+tests/src/grade.test.ts:252:      matchesGradeTargetFilters(graded, "example.md", {
+tests/src/grade.test.ts:261:        graded.replace("本文です。", "本文を変更しました。"),
+tests/src/grade.test.ts:272:    const lowerScore = gradeMarkdownContent({
+tests/src/grade.test.ts:278:      gradedBy: "test-agent",
+tests/src/grade.test.ts:290:  it("counts all stored finding severities against the maximum", () => {
+tests/src/grade.test.ts:295:      findings: [{ severity: "major", message: "必須事項が欠落している。", line: 1 }],
+tests/src/grade.test.ts:297:    const graded = gradeMarkdownContent({
+tests/src/grade.test.ts:303:      gradedBy: "test-agent",
+tests/src/grade.test.ts:308:      matchesGradeTargetFilters(graded, "example.md", {
+tests/src/grade.test.ts:313:    expect(matchesGradeTargetFilters(graded, "example.md", { maxFindings: 0 })).toBe(false);
+tests/src/grade.test.ts:316:  it("defines ungraded as the absence of specdojo.grade", () => {
+tests/src/grade.test.ts:317:    expect(matchesGradeTargetFilters(markdown, "example.md", { ungraded: true })).toBe(true);
+tests/src/grade.test.ts:320:        ungraded: true,
+tests/src/grade.test.ts:326:        ungraded: true,
+tests/src/grade.test.ts:329:    ).toThrow("--ungraded cannot be combined");
+tests/src/grade.test.ts:332:        ungraded: true,
+tests/src/grade.test.ts:335:    ).toThrow("--ungraded cannot be combined");
+tests/src/grade.test.ts:339:    const graded = gradeMarkdownContent({
+tests/src/grade.test.ts:345:      gradedBy: "test-agent",
+tests/src/grade.test.ts:348:    const parts = graded.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
+tests/src/grade.test.ts:365:    expect(matchesGradeTargetFilters(graded, "example.md", { incomplete: true }, state)).toBe(true);
+tests/src/grade.test.ts:368:        graded,
+tests/src/grade.test.ts:376:        graded,
+tests/src/grade.test.ts:384:  it("rejects invalid score and finding thresholds", () => {
+tests/src/grade.test.ts:392:      "--max-findings must be a non-negative integer",
+tests/src/grade.test.ts:397:describe("grade submission", () => {
+tests/src/grade.test.ts:406:      message: "finding severity caps level at 3",
+tests/src/grade.test.ts:410:  it("accepts submissions without the legacy agent-supplied graded_by", () => {
+tests/src/grade.test.ts:412:    delete withoutActor.graded_by;
+tests/src/grade.test.ts:435:      "members_path is required for grade apply --by",
+tests/src/grade.test.ts:449:describe("grade markdown update", () => {
+tests/src/grade.test.ts:450:  it("writes an idempotent compact grade snapshot that Prettier preserves", async () => {
+tests/src/grade.test.ts:452:    const first = gradeMarkdownContent({
+tests/src/grade.test.ts:458:      gradedBy: "codex-executor",
+tests/src/grade.test.ts:461:    const second = gradeMarkdownContent({
+tests/src/grade.test.ts:467:      gradedBy: "codex-executor",
+tests/src/grade.test.ts:474:    expect(first).toContain("graded_by: codex-executor");
+tests/src/grade.test.ts:475:    expect(first).not.toContain("graded_by: test-agent");
+tests/src/grade.test.ts:478:    expect(first).toContain("findings: { blocker: 0, major: 0, minor: 1, note: 0 }");
+tests/src/grade.test.ts:479:    expect(first.match(/specdojo:finding/g)).toHaveLength(1);
+tests/src/grade.test.ts:485:    expect(formatted).toContain("findings: { blocker: 0, major: 0, minor: 1, note: 0 }");
+tests/src/grade.test.ts:498:    withoutFindings.viewpoints[1].findings = [];
+tests/src/grade.test.ts:499:    const graded = gradeMarkdownContent({
+tests/src/grade.test.ts:505:      gradedBy: "codex-executor",
+tests/src/grade.test.ts:508:    const formattingOnlyChange = graded.replace(
+tests/src/grade.test.ts:530:    const first = gradeMarkdownContent({
+tests/src/grade.test.ts:536:      gradedBy: "codex-executor",
+tests/src/grade.test.ts:539:    const second = gradeMarkdownContent({
+tests/src/grade.test.ts:545:      gradedBy: "codex-executor",
+tests/src/grade.test.ts:554:  it("keeps mappings outside grade in block style", () => {
+tests/src/grade.test.ts:567:    const graded = gradeMarkdownContent({
+tests/src/grade.test.ts:573:      gradedBy: "codex-executor",
+tests/src/grade.test.ts:577:    expect(graded).toContain(`external:
+tests/src/grade.test.ts:583:    expect(graded).not.toContain("remains: { first: one, second: two }");
+tests/src/grade.test.ts:605:  ])("places a finding before the containing $name block", ({ body, line, blockStart }) => {
+tests/src/grade.test.ts:608:    input.viewpoints[1].findings![0].line = line;
+tests/src/grade.test.ts:610:    const graded = gradeMarkdownContent({
+tests/src/grade.test.ts:616:      gradedBy: "codex-executor",
+tests/src/grade.test.ts:619:    const repeated = gradeMarkdownContent({
+tests/src/grade.test.ts:620:      content: graded,
+tests/src/grade.test.ts:625:      gradedBy: "codex-executor",
+tests/src/grade.test.ts:629:    expect(graded).toContain(
+tests/src/grade.test.ts:632:    expect(graded).not.toMatch(/\n{3,}/);
+tests/src/grade.test.ts:633:    expect(repeated).toBe(graded);
+tests/src/grade.test.ts:636:  it("places a finding before a directive comment attached to its block", async () => {
+tests/src/grade.test.ts:643:    input.viewpoints[1].findings![0].line = 6;
+tests/src/grade.test.ts:644:    const finding =
+tests/src/grade.test.ts:645:      "<!-- specdojo:finding id=F001 severity=minor rule=vp-arc-conciseness line=6 前置きが重複している。 -->";
+tests/src/grade.test.ts:647:    const graded = gradeMarkdownContent({
+tests/src/grade.test.ts:653:      gradedBy: "codex-executor",
+tests/src/grade.test.ts:656:    const legacyOrder = graded.replace(
+tests/src/grade.test.ts:657:      `${finding}\n<!-- prettier-ignore -->`,
+tests/src/grade.test.ts:658:      `<!-- prettier-ignore -->\n${finding}`,
+tests/src/grade.test.ts:660:    const repaired = gradeMarkdownContent({
+tests/src/grade.test.ts:666:      gradedBy: "codex-executor",
+tests/src/grade.test.ts:670:    expect(graded).toContain(`${finding}\n<!-- prettier-ignore -->\n| key | value |`);
+tests/src/grade.test.ts:671:    expect(await format(graded, { parser: "markdown" })).toBe(graded);
+tests/src/grade.test.ts:672:    expect(validateGradedMarkdown(graded, input.path)).toEqual([]);
+tests/src/grade.test.ts:673:    expect(matchesGradeTargetFilters(graded, input.path, { changedOnly: true })).toBe(false);
+tests/src/grade.test.ts:674:    expect(repaired).toBe(graded);
+tests/src/grade.test.ts:678:    const graded = gradeMarkdownContent({
+tests/src/grade.test.ts:684:      gradedBy: "codex-executor",
+tests/src/grade.test.ts:688:      validateGradedMarkdown(graded.replace("severity=minor", "severity=note"), "test.md"),
+tests/src/grade.test.ts:691:        expect.stringContaining("findings.minor"),
+tests/src/grade.test.ts:692:        expect.stringContaining("findings.note"),
+tests/src/grade.test.ts:695:    expect(validateGradedMarkdown(`${graded}\n追記`, "test.md")).toContain(
+tests/src/grade.test.ts:696:      "test.md: content changed after the last grade",
+tests/src/grade.test.ts:703:      "<!-- specdojo:finding id=F042 severity=major rule=vp-qe-kata-conformance 必須の禁止事項が欠落している。 -->\n本文です。",
+tests/src/grade.test.ts:707:      { id: "vp-qe-kata-conformance", level: 4, findings: [] },
+tests/src/grade.test.ts:711:        findings: [{ severity: "minor", message: "必須の禁止事項が欠落している。", line: 1 }],
+tests/src/grade.test.ts:715:    const graded = gradeMarkdownContent({
+tests/src/grade.test.ts:721:      gradedBy: "codex-executor",
+tests/src/grade.test.ts:725:    expect(graded).toContain(
+tests/src/grade.test.ts:728:    expect(graded).toContain("vp-arc-conciseness: { level: 2, score: 50 }");
+tests/src/grade.test.ts:729:    expect(graded).toContain("major: 1");
+tests/src/grade.test.ts:730:    expect(graded).toContain("verdict: needs-work");
+tests/src/grade.test.ts:734:    repeatedInput.viewpoints[1].findings![0].severity = "note";
+tests/src/grade.test.ts:735:    const repeated = gradeMarkdownContent({
+tests/src/grade.test.ts:736:      content: graded,
+tests/src/grade.test.ts:741:      gradedBy: "codex-executor",
+tests/src/grade.test.ts:753:  it("allows a lower severity for a different residual finding with rationale", () => {
+tests/src/grade.test.ts:756:      "<!-- specdojo:finding id=F042 severity=major rule=vp-qe-kata-conformance 必須の禁止事項が欠落している。 -->\n本文です。",
+tests/src/grade.test.ts:759:    input.viewpoints[1].findings = [
+tests/src/grade.test.ts:767:    const graded = gradeMarkdownContent({
+tests/src/grade.test.ts:773:      gradedBy: "codex-executor",
+tests/src/grade.test.ts:777:    expect(graded).toContain(
+tests/src/grade.test.ts:780:    expect(graded).toContain("minor: 1");
+tests/src/grade.test.ts:784:describe("grade plan", () => {
+tests/src/grade.test.ts:806:    expect(plan).not.toContain('"graded_by"');
+tests/src/grade.test.ts:823:    expect(plan).toContain("grade pipeline の reporter stage");
+tests/src/grade.test.ts:827:    expect(plan).toContain('"rubric": "grade-rubric-v1"');
+tests/src/grade.test.ts:845:      rubric: "grade-rubric-v1",
+tests/src/grade.test.ts:853:              findings: [{ severity: "major", line: 7, message: "必須の禁止事項が欠落している。" }],
+tests/src/grade.test.ts:855:            { id: "vp-arc-conciseness", level: 4, findings: [] },
+tests/src/grade.test.ts:875:    changed.documents[0].viewpoints[0].findings![0].severity = "blocker";
+tests/src/grade.test.ts:896:    omitted.documents[0].viewpoints[0].findings = [];
+tests/src/grade.test.ts:907:        message: expect.stringContaining("reporter omitted executor finding"),
+tests/src/grade.test.ts:912:    added.documents[0].viewpoints[0].findings!.push({
+tests/src/grade.test.ts:926:        message: expect.stringContaining("reporter added finding not declared by executor"),
+tests/src/grade.test.ts:931:  it("accepts presentation-only punctuation and whitespace differences in finding messages", () => {
+tests/src/grade.test.ts:942:      rubric: "grade-rubric-v1",
+tests/src/grade.test.ts:950:              findings: [
+tests/src/grade.test.ts:958:            { id: "vp-arc-conciseness", level: 4, findings: [] },
+tests/src/grade.test.ts:975:  it("rejects semantic finding changes and reports the changed fields", () => {
+tests/src/grade.test.ts:986:      rubric: "grade-rubric-v1",
+tests/src/grade.test.ts:994:              findings: [
+tests/src/grade.test.ts:1002:            { id: "vp-arc-conciseness", level: 4, findings: [] },
+tests/src/grade.test.ts:1048:    expect(plan).not.toContain("本文（finding.line");
+tests/src/grade.test.ts:1094:  it("writes the reference id into the grade and omits the key when unused", () => {
+tests/src/grade.test.ts:1095:    const graded = gradeMarkdownContent({
+tests/src/grade.test.ts:1101:      gradedBy: "gemma-expert-executor",
+tests/src/grade.test.ts:1105:    const without = gradeMarkdownContent({
+tests/src/grade.test.ts:1111:      gradedBy: "gemma-expert-executor",
+tests/src/grade.test.ts:1115:    expect(graded).toContain("reference: specdojo:prj-overview-rulebook");
+tests/src/grade.test.ts:1135:    const directory = mkdtempSync(join(tmpdir(), "specdojo-grade-plan-"));
+tests/src/grade.test.ts:1145:        outputDirectory: "logs/grade-plan-test",
+tests/src/grade.test.ts:1153:      rmSync("logs/grade-plan-test", { recursive: true, force: true });
+tests/src/grade.test.ts:1166:        outputDirectory: "logs/grade-plan-empty",
+tests/src/grade.test.ts:1173:      rmSync("logs/grade-plan-empty", { recursive: true, force: true });
+tests/src/grade.test.ts:1214:  it("carries previous finding facts into the next plan without previous scores", () => {
+tests/src/grade.test.ts:1215:    const path = "tests/fixtures/grade/previous-findings.md";
+tests/src/grade.test.ts:1233:    expect(plan).toContain("未解消なら前回の message を変更せず今回の finding に含め");
+tests/src/grade.test.ts:1236:      "severity を引き下げる場合は、その根拠を新しい finding の message に含める",
+tests/src/grade.test.ts:1243:describe("grade done_criteria for deliverables", () => {
+tests/src/grade.test.ts:1262:    viewpoints: [{ id: "vp-arc-conciseness", level: 4, findings: [] }],
+tests/src/grade.test.ts:1348:    const valid: GradeSubmission = { rubric: "grade-rubric-v1", documents: [deliverableInput] };
+tests/src/grade.test.ts:1407:    const faithful: GradeSubmission = { rubric: "grade-rubric-v1", documents: [deliverableInput] };
+tests/src/grade.test.ts:1459:    const graded = gradeMarkdownDocument({
+tests/src/grade.test.ts:1465:      gradedBy: "codex-executor",
+tests/src/grade.test.ts:1467:      doneCriteria: { definitions: doneCriteria, detailRef: "prj-0001:example-doc-grade-criteria" },
+tests/src/grade.test.ts:1470:    // score と verdict は viewpoint と finding だけで決まり、未充足条件では下がらない。
+tests/src/grade.test.ts:1471:    expect(graded.content).toContain("verdict: pass");
+tests/src/grade.test.ts:1472:    expect(graded.content).toContain("score: 100");
+tests/src/grade.test.ts:1473:    expect(graded.content).toContain(
+tests/src/grade.test.ts:1474:      "    done_criteria:\n      satisfied: 1\n      total: 2\n      unsatisfied:\n        DC-002: [PO, PM]\n      detail_ref: prj-0001:example-doc-grade-criteria\n",
+tests/src/grade.test.ts:1476:    expect(graded.content).not.toContain("承認時点の記載がない。");
+tests/src/grade.test.ts:1477:    expect(graded.content).not.toContain("品質目標が数値で定義されていること");
+tests/src/grade.test.ts:1478:    expect(validateGradedMarkdown(graded.content, deliverableInput.path)).toEqual([]);
+tests/src/grade.test.ts:1480:    const formatted = await format(graded.content, { parser: "markdown" });
+tests/src/grade.test.ts:1486:    const grade = (
+tests/src/grade.test.ts:1487:      yaml.load(graded.content.match(/^---\n([\s\S]*?)\n---/)![1]) as {
+tests/src/grade.test.ts:1488:        specdojo: { grade: { content_hash: string } };
+tests/src/grade.test.ts:1490:    ).specdojo.grade;
+tests/src/grade.test.ts:1491:    expect(graded.detail).toEqual({
+tests/src/grade.test.ts:1492:      id: "prj-0001:example-doc-grade-criteria",
+tests/src/grade.test.ts:1495:      graded_at: "2026-09-11T00:00:00.000Z",
+tests/src/grade.test.ts:1496:      graded_by: "codex-executor",
+tests/src/grade.test.ts:1497:      content_hash: grade.content_hash,
+tests/src/grade.test.ts:1510:    const regraded = gradeMarkdownDocument({
+tests/src/grade.test.ts:1511:      content: graded.content,
+tests/src/grade.test.ts:1516:      gradedBy: "codex-executor",
+tests/src/grade.test.ts:1518:      doneCriteria: { definitions: doneCriteria, detailRef: "prj-0001:example-doc-grade-criteria" },
+tests/src/grade.test.ts:1520:    expect(regraded.content).toContain("      satisfied: 2\n      total: 2\n      detail_ref:");
+tests/src/grade.test.ts:1521:    expect(regraded.content).not.toContain("unsatisfied:");
+tests/src/grade.test.ts:1525:    const withoutDefinitions = gradeMarkdownContent({
+tests/src/grade.test.ts:1531:      gradedBy: "codex-executor",
+tests/src/grade.test.ts:1538:  it("writes one overwritten detail file per deliverable next to the grade", () => {
+tests/src/grade.test.ts:1539:    const directory = "logs/grade-apply-criteria-test";
+tests/src/grade.test.ts:1546:        rubric: "grade-rubric-v1",
+tests/src/grade.test.ts:1553:        gradedBy: "codex-executor",
+tests/src/grade.test.ts:1566:        /^# yaml-language-server: \$schema=(?:\.\.\/)+docs\/specdojo\/schemas\/v1\/grade-done-criteria\.schema\.yaml\n/,
+tests/src/grade.test.ts:1569:        id: "prj-0001:example-doc-grade-criteria",
+tests/src/grade.test.ts:1573:        "detail_ref: prj-0001:example-doc-grade-criteria",
+tests/src/grade.test.ts:1588:  it("ignores blank lines and finding comments introduced by grade apply between stages", () => {
+tests/src/grade.test.ts:1592:      body: "# T\n\n<!-- specdojo:finding id=F001 severity=minor rule=vp-ux-readability line=3 x -->\n\n<!-- prettier-ignore -->\n\n| a | b |\n| --- | --- |\n",
+tests/tools/docs/src/history-links.test.ts:6:    const findings = findForbiddenLinks("See [ルール](../instructions/markdown.instructions.md).");
+tests/tools/docs/src/history-links.test.ts:8:    expect(findings).toHaveLength(1);
+tests/tools/docs/src/history-links.test.ts:9:    expect(findings[0]).toMatchObject({
+tests/tools/docs/src/history-links.test.ts:16:    const findings = findForbiddenLinks("See [Anthropic](https://www.anthropic.com).");
+tests/tools/docs/src/history-links.test.ts:18:    expect(findings).toHaveLength(1);
+tests/tools/docs/src/history-links.test.ts:19:    expect(findings[0].kind).toBe("link");
+tests/to

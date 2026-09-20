@@ -22,6 +22,19 @@ import {
   type SpecDojoProjectConfig,
 } from "./specdojo-config.js";
 import { listFilesRecursive } from "./exec-shared.js";
+import {
+  gradeContentHash,
+  gradeFindingCount,
+  gradeResultPath,
+  markdownDocumentId,
+  readGradeResult,
+  readGradeResultForDocument,
+  resolveGradeResultsDirectory,
+  validateGradeResult,
+  writeGradeResult,
+  type GradeResult,
+  type StoredGradeFinding,
+} from "./grade-result.js";
 
 export type GradeTarget = "kata" | "deliverable";
 export type GradeSeverity = "blocker" | "major" | "minor" | "note";
@@ -176,6 +189,34 @@ function preservePreviousFindingSeverities(
   });
 }
 
+function preserveStoredFindingSeverities(
+  previous: GradeResult | undefined,
+  viewpoints: readonly GradeViewpointInput[],
+): GradeViewpointInput[] {
+  const previousByMessage = new Map<string, GradeSeverity>();
+  for (const finding of previous?.findings ?? []) {
+    const message = sanitizeCommentText(finding.message);
+    const stored = previousByMessage.get(message);
+    if (stored === undefined || SEVERITY_LEVEL_CAP[finding.severity] < SEVERITY_LEVEL_CAP[stored]) {
+      previousByMessage.set(message, finding.severity);
+    }
+  }
+  return viewpoints.map((viewpoint) => {
+    const findings = (viewpoint.findings ?? []).map((finding) => {
+      const stored = previousByMessage.get(sanitizeCommentText(finding.message));
+      return stored !== undefined &&
+        SEVERITY_LEVEL_CAP[stored] < SEVERITY_LEVEL_CAP[finding.severity]
+        ? { ...finding, severity: stored }
+        : { ...finding };
+    });
+    return {
+      ...viewpoint,
+      findings,
+      level: Math.min(viewpoint.level, levelCapForFindings(findings)),
+    };
+  });
+}
+
 function levelCapForFindings(findings: readonly GradeFindingInput[]): number {
   const majorCount = findings.filter((finding) => finding.severity === "major").length;
   const severityCap = findings.reduce(
@@ -283,7 +324,8 @@ function previousGradeFindings(body: string): PreviousGradeFinding[] {
   }));
 }
 
-function stableContentHash(document: MarkdownDocument): string {
+// 移行前のインライン grade を読み取る互換 API だけが使用する旧ハッシュ。
+function legacyInlineContentHash(document: MarkdownDocument): string {
   const cloned = structuredClone(document.data);
   const specdojo = isRecord(cloned.specdojo) ? cloned.specdojo : {};
   delete specdojo.grade;
@@ -294,23 +336,14 @@ function stableContentHash(document: MarkdownDocument): string {
     .digest("hex");
 }
 
-// pipeline 状態の同一性判定に使うハッシュ。stableContentHash と異なり空行を無視する。
-// grade apply は段ごとに finding コメントを除去して挿入し直し、ブロック直前に空行を
-// 補うため、finding を除いた本文でも空行の位置と数が段の間で変わる。空行だけの差で
-// 前段の状態を「古い」と判定すると、次段の apply が stage の連続性検査に失敗する。
+function stableContentHash(document: MarkdownDocument): string {
+  return gradeContentHash(serializeMarkdown(document));
+}
+
+// pipeline 状態は成果物そのもののハッシュで識別する。grade apply は成果物を変更しないため、
+// grade / finding や空行を除外する正規化は不要である。
 export function pipelineContentHash(document: MarkdownDocument): string {
-  const cloned = structuredClone(document.data);
-  const specdojo = isRecord(cloned.specdojo) ? cloned.specdojo : {};
-  delete specdojo.grade;
-  const body = normalizeContentForHash(withoutFindingComments(document.body))
-    .split("\n")
-    .filter((line) => line.trim() !== "")
-    .join("\n");
-  return createHash("sha256")
-    .update(yaml.dump(cloned, { sortKeys: true, noRefs: true, lineWidth: -1 }))
-    .update("\n")
-    .update(body)
-    .digest("hex");
+  return stableContentHash(document);
 }
 
 function sanitizeCommentText(value: string): string {
@@ -1021,19 +1054,32 @@ export function discoverGradeTargets(
     : new Map<string, GradePipelineState>();
   return unique.filter((path) => {
     const rel = relativePathFromRoot(path, rootDir);
-    const document = parseMarkdown(readFileSync(path, "utf8"), rel);
+    const content = readFileSync(path, "utf8");
+    const document = parseMarkdown(content, rel);
     const pipelineState = currentGradePipelineState(
       document,
       rel,
       pipelineStates.get(rel),
       opts.target,
     );
-    return matchesParsedGradeTargetFilters(
-      document,
-      rel,
-      opts,
-      isIncompleteGradePipelineState(pipelineState),
-    );
+    const result = readGradeResultForDocument({
+      documentPath: rel,
+      project: opts.project,
+      rootDir,
+    });
+    if (opts.incomplete && !isIncompleteGradePipelineState(pipelineState)) return false;
+    if (opts.ungraded && result !== undefined) return false;
+    if (opts.verdict !== undefined && result?.verdict !== opts.verdict) return false;
+    if (opts.minScore !== undefined && (result === undefined || result.score < opts.minScore)) {
+      return false;
+    }
+    if (
+      opts.maxFindings !== undefined &&
+      (result === undefined || gradeFindingCount(result) > opts.maxFindings)
+    ) {
+      return false;
+    }
+    return !opts.changedOnly || result?.content_hash !== gradeContentHash(content);
   });
 }
 
@@ -1113,7 +1159,7 @@ function matchesParsedGradeTargetFilters(
   ) {
     return false;
   }
-  return !filters.changedOnly || grade?.content_hash !== stableContentHash(document);
+  return !filters.changedOnly || grade?.content_hash !== legacyInlineContentHash(document);
 }
 
 export function matchesGradeTargetFilters(
@@ -1218,6 +1264,8 @@ export function renderGradePlan(opts: {
   viewpoints: ReviewViewpointsDoc;
   projectId: string;
   doneCriteria?: GradeDoneCriterion[];
+  /** 前回結果の読み取り元。省略時は project の execution/grade/results を使う。 */
+  resultsDirectory?: string;
 }): string {
   const rubric = assertRubric(opts.viewpoints);
   const viewpoints = agentViewpoints(opts.viewpoints, opts.target);
@@ -1226,7 +1274,11 @@ export function renderGradePlan(opts: {
   const document = parseMarkdown(readFileSync(absolute, "utf8"), rel);
   const metadata = document.data.specdojo as Record<string, unknown>;
   const documentId = typeof metadata.id === "string" ? metadata.id : rel;
-  const priorFindings = previousGradeFindings(document.body);
+  const priorFindings =
+    (opts.resultsDirectory
+      ? readGradeResult(gradeResultPath(opts.resultsDirectory, documentId))
+      : readGradeResultForDocument({ documentPath: rel, project: opts.projectId })
+    )?.findings ?? [];
   const taskHash = createHash("sha256").update(rel).digest("hex").slice(0, 12).toUpperCase();
   const taskId = `GRADE-${opts.target.toUpperCase()}-${taskHash}`;
   const references = (opts.references ?? []).map((reference) =>
@@ -1308,10 +1360,25 @@ export function renderGradePlan(opts: {
     "",
     "### 3.1. 前回の指摘",
     "",
-    "対象文書に現在記録されている finding の事実情報を示す。",
+    "grade result サイドカーに記録された前回の finding を示す。対象本文には評価コメントを書き込まない。",
     "",
+    // 前回の id は今回の採番と混同させないため渡さない。事実（severity / rule / 位置 / message）だけを示す。
     ...(priorFindings.length > 0
-      ? ["```json", JSON.stringify(priorFindings, null, 2), "```"]
+      ? [
+          "```json",
+          JSON.stringify(
+            priorFindings.map(({ severity, rule, line, anchor, message }) => ({
+              severity,
+              rule,
+              line,
+              anchor,
+              message,
+            })),
+            null,
+            2,
+          ),
+          "```",
+        ]
       : ["- なし"]),
     "",
     "### 3.2. Rubric",
@@ -2128,7 +2195,7 @@ function scoreDocument(
     totalWeight += weight;
   }
   const score = totalWeight > 0 ? Math.round(weighted / totalWeight) : 0;
-  const verdict =
+  const verdict: GradeVerdict =
     counts.blocker > 0
       ? "fail"
       : counts.major > 0 || score < rubric.pass_score
@@ -2177,6 +2244,7 @@ export function applyGradeSubmission(opts: {
   now?: Date;
   doneCriteriaByPath?: ReadonlyMap<string, GradeDoneCriterion[]>;
   criteriaDirectory?: string;
+  resultsDirectory?: string;
 }): string[] {
   const issues = validateGradeSubmission(opts.submission, opts.viewpoints, opts.target, {
     doneCriteriaByPath: opts.doneCriteriaByPath,
@@ -2195,6 +2263,106 @@ export function applyGradeSubmission(opts: {
         : undefined;
     if (definitions && input.done_criteria && !detailPath) {
       throw new Error(`${rel}: criteriaDirectory is required to record done_criteria`);
+    }
+    if (opts.resultsDirectory) {
+      const documentId = markdownDocumentId(current, rel);
+      const resultPath = gradeResultPath(opts.resultsDirectory, documentId);
+      const previous = readGradeResult(resultPath);
+      const document = parseMarkdown(current, rel);
+      const agentResults = preserveStoredFindingSeverities(previous, input.viewpoints);
+      const evaluated = {
+        ...input,
+        viewpoints: [
+          ...agentResults,
+          ...deterministicResults(document, opts.viewpoints, opts.target),
+        ],
+      };
+      const rubric = assertRubric(opts.viewpoints);
+      const summary = scoreDocument(evaluated, rubric, opts.viewpoints, opts.target);
+      const gradedAt = (opts.now ?? new Date()).toISOString();
+      const usedIds = new Set<string>();
+      let sequence = 0;
+      const bodyLines = document.body.split(/\r?\n/);
+      const findings: StoredGradeFinding[] = evaluated.viewpoints.flatMap((viewpoint) =>
+        (viewpoint.findings ?? []).map((finding) => {
+          let id = finding.id?.trim();
+          if (!id || usedIds.has(id)) {
+            do {
+              sequence += 1;
+              id = `F${String(sequence).padStart(3, "0")}`;
+            } while (usedIds.has(id));
+          }
+          usedIds.add(id);
+          const line = Math.max(1, finding.line ?? 1);
+          return {
+            id,
+            severity: finding.severity,
+            rule: viewpoint.id,
+            line,
+            anchor: bodyLines[Math.min(bodyLines.length, line) - 1]?.trim() ?? "",
+            message: sanitizeCommentText(finding.message),
+          };
+        }),
+      );
+      const criteriaResults =
+        opts.target === "deliverable" && definitions && input.done_criteria && detailPath
+          ? input.done_criteria
+          : undefined;
+      const detailRef = criteriaResults ? doneCriteriaDetailId(documentId, absolute) : undefined;
+      const result: GradeResult = {
+        version: 1,
+        document: documentId,
+        path: rel,
+        target: opts.target,
+        rubric: rubric.id,
+        ...(opts.reference ? { reference: resolveGradeReferenceId(opts.reference) } : {}),
+        verdict: summary.verdict,
+        score: summary.score,
+        graded_at: gradedAt,
+        graded_by: opts.gradedBy,
+        content_hash: gradeContentHash(current),
+        categories: summary.categories,
+        viewpoints: summary.viewpoints,
+        finding_counts: summary.findings,
+        findings,
+        ...(criteriaResults && definitions && detailRef
+          ? { done_criteria: summarizeDoneCriteria(definitions, criteriaResults, detailRef) }
+          : {}),
+      };
+      if (criteriaResults && definitions && detailPath && detailRef) {
+        const resultById = new Map(criteriaResults.map((criterion) => [criterion.id, criterion]));
+        const criteria = definitions.map((definition) => {
+          const criterion = resultById.get(definition.id);
+          return {
+            ...definition,
+            status: criterion?.status ?? ("unsatisfied" as const),
+            ...(criterion?.reason ? { reason: criterion.reason } : {}),
+          };
+        });
+        const satisfied = criteria.filter((criterion) => criterion.status === "satisfied").length;
+        const detail: GradeDoneCriteriaDetail = {
+          id: detailRef,
+          document: documentId,
+          path: rel,
+          graded_at: gradedAt,
+          graded_by: opts.gradedBy,
+          content_hash: result.content_hash,
+          summary: { satisfied, unsatisfied: criteria.length - satisfied, total: criteria.length },
+          criteria,
+        };
+        const rendered = renderDoneCriteriaDetail(detail, detailPath);
+        if (!existsSync(detailPath) || readFileSync(detailPath, "utf8") !== rendered) {
+          changed.push(repoRelativePath(detailPath));
+          if (!opts.dryRun) {
+            mkdirSync(dirname(detailPath), { recursive: true });
+            writeFileSync(detailPath, rendered, "utf8");
+          }
+        }
+      }
+      if (writeGradeResult(resultPath, result, opts.dryRun)) {
+        changed.push(repoRelativePath(resultPath));
+      }
+      continue;
     }
     const documentId = parseMarkdown(current, rel).data.specdojo as Record<string, unknown>;
     const graded = gradeMarkdownDocument({
@@ -2302,7 +2470,7 @@ export function gradeMarkdownDocument(opts: GradeMarkdownOptions): {
   const summary = scoreDocument(evaluated, rubric, opts.viewpoints, opts.target);
   const body = insertFindings(document.body, evaluated.viewpoints);
   const gradedAt = (opts.now ?? new Date()).toISOString();
-  const contentHash = stableContentHash({ data: document.data, body });
+  const contentHash = legacyInlineContentHash({ data: document.data, body });
   const criteriaResults =
     opts.target === "deliverable" && opts.doneCriteria && opts.input.done_criteria
       ? opts.input.done_criteria
@@ -2367,6 +2535,19 @@ export function validateGradedDocument(path: string): string[] {
   return validateGradedMarkdown(readFileSync(absolute, "utf8"), rel);
 }
 
+export function validateGradeResultForDocument(opts: {
+  path: string;
+  target: GradeTarget;
+  project?: string;
+}): string[] {
+  const absolute = resolveSafeMarkdownPath(opts.path);
+  const rel = repoRelativePath(absolute);
+  const content = readFileSync(absolute, "utf8");
+  const result = readGradeResultForDocument({ documentPath: rel, project: opts.project });
+  if (!result) return [];
+  return validateGradeResult(result, content, rel, opts.target);
+}
+
 export function validateGradedMarkdown(content: string, path: string): string[] {
   const document = parseMarkdown(content, path);
   const specdojo = document.data.specdojo as Record<string, unknown>;
@@ -2382,9 +2563,115 @@ export function validateGradedMarkdown(content: string, path: string): string[] 
         `${path}: findings.${severity}=${String(findings[severity])}, comments=${actual[severity]}`,
       );
   }
-  if (grade.content_hash !== stableContentHash(document))
+  if (grade.content_hash !== legacyInlineContentHash(document))
     errors.push(`${path}: content changed after the last grade`);
   return errors;
+}
+
+export function migrateInlineGrades(opts: {
+  project?: string;
+  target?: GradeTarget;
+  paths?: string[];
+  dryRun?: boolean;
+}): string[] {
+  const rootDir = specdojoRootDir();
+  const candidates =
+    opts.paths && opts.paths.length > 0
+      ? opts.paths.map((path) => resolveSafeMarkdownPath(path, rootDir))
+      : [
+          ...(opts.target !== "deliverable"
+            ? discoverGradeTargets({ target: "kata", project: opts.project }, rootDir)
+            : []),
+          ...(opts.target !== "kata"
+            ? discoverGradeTargets({ target: "deliverable", project: opts.project }, rootDir)
+            : []),
+        ];
+  const resultsDirectory = resolveGradeResultsDirectory(opts.project, rootDir);
+  const changed: string[] = [];
+  for (const absolute of candidates) {
+    const rel = relativePathFromRoot(absolute, rootDir);
+    const current = readFileSync(absolute, "utf8");
+    if (!current.includes("specdojo:finding") && !/^  grade:\s*$/m.test(current)) continue;
+    let document: MarkdownDocument;
+    try {
+      document = parseMarkdown(current, rel);
+    } catch {
+      continue;
+    }
+    const specdojo = document.data.specdojo as Record<string, unknown>;
+    const legacyGrade = isRecord(specdojo.grade) ? structuredClone(specdojo.grade) : undefined;
+    const legacyTarget = legacyGrade?.target;
+    const target: GradeTarget =
+      legacyTarget === "kata" || legacyTarget === "deliverable"
+        ? legacyTarget
+        : rel.startsWith("docs/ja/specdojo/")
+          ? "kata"
+          : "deliverable";
+    if (opts.target && target !== opts.target) continue;
+
+    const legacyFindings = [...document.body.matchAll(FINDING_RE)].map((match) => ({
+      id: match[1],
+      severity: match[2] as GradeSeverity,
+      rule: match[3],
+      line: match[4] ? Number(match[4]) : 1,
+      message: match[5].trim(),
+    }));
+    delete specdojo.grade;
+    document.body = withoutFindingComments(document.body)
+      .replace(/\n{3,}/g, "\n\n")
+      .replace(/(?:\n[ \t]*)*$/, "\n");
+    const cleaned = serializeMarkdown(document);
+    if (cleaned !== current) {
+      changed.push(rel);
+      if (!opts.dryRun) writeFileSync(absolute, cleaned, "utf8");
+    }
+    if (!legacyGrade) continue;
+
+    const documentId = markdownDocumentId(cleaned, rel);
+    const bodyLines = document.body.split(/\r?\n/);
+    const findings: StoredGradeFinding[] = legacyFindings.map((finding) => ({
+      ...finding,
+      anchor: bodyLines[Math.min(bodyLines.length, finding.line) - 1]?.trim() ?? "",
+    }));
+    const counts: Record<GradeSeverity, number> = { blocker: 0, major: 0, minor: 0, note: 0 };
+    for (const finding of findings) counts[finding.severity] += 1;
+    if (
+      typeof legacyGrade.rubric !== "string" ||
+      (legacyGrade.verdict !== "pass" &&
+        legacyGrade.verdict !== "needs-work" &&
+        legacyGrade.verdict !== "fail") ||
+      !Number.isSafeInteger(legacyGrade.score) ||
+      typeof legacyGrade.graded_at !== "string" ||
+      typeof legacyGrade.graded_by !== "string" ||
+      !isRecord(legacyGrade.categories) ||
+      !isRecord(legacyGrade.viewpoints)
+    ) {
+      throw new Error(`${rel}: legacy specdojo.grade is invalid`);
+    }
+    const result: GradeResult = {
+      version: 1,
+      document: documentId,
+      path: rel,
+      target,
+      rubric: legacyGrade.rubric,
+      ...(typeof legacyGrade.reference === "string" ? { reference: legacyGrade.reference } : {}),
+      verdict: legacyGrade.verdict,
+      score: legacyGrade.score as number,
+      graded_at: legacyGrade.graded_at,
+      graded_by: legacyGrade.graded_by,
+      content_hash: gradeContentHash(cleaned),
+      categories: legacyGrade.categories as GradeResult["categories"],
+      viewpoints: legacyGrade.viewpoints as GradeResult["viewpoints"],
+      finding_counts: counts,
+      findings,
+      ...(isRecord(legacyGrade.done_criteria) ? { done_criteria: legacyGrade.done_criteria } : {}),
+    };
+    const resultPath = gradeResultPath(resultsDirectory, documentId);
+    if (writeGradeResult(resultPath, result, opts.dryRun)) {
+      changed.push(repoRelativePath(resultPath));
+    }
+  }
+  return changed;
 }
 
 function collectPathOption(value: string, previous: string[]): string[] {
@@ -2645,6 +2932,7 @@ export function registerGradeCommand(program: Command): void {
           dryRun: options.dryRun,
           doneCriteriaByPath,
           criteriaDirectory: join(getProjectExecutionPath(project), "grade", "criteria"),
+          resultsDirectory: join(getProjectExecutionPath(project), "grade", "results"),
         });
         for (const path of changed)
           process.stdout.write(`${options.dryRun ? "would update" : "updated"}: ${path}\n`);
@@ -2672,7 +2960,9 @@ export function registerGradeCommand(program: Command): void {
         ungraded: options.ungraded,
         incomplete: options.incomplete,
       });
-      const errors = paths.flatMap(validateGradedDocument);
+      const errors = paths.flatMap((path) =>
+        validateGradeResultForDocument({ path, target, project: options.project }),
+      );
       for (const error of errors) process.stderr.write(`ERROR: ${error}\n`);
       process.stdout.write(`Validated: ${paths.length} document(s), ${errors.length} error(s)\n`);
       if (errors.length > 0) process.exitCode = 1;
@@ -2680,6 +2970,22 @@ export function registerGradeCommand(program: Command): void {
       commandError(error);
     }
   });
+
+  grade
+    .command("result")
+    .description("Print the stored grade result sidecar for one document as JSON")
+    .requiredOption("--path <path>", "Markdown document whose grade result is read")
+    .option("--project <projectId>", "Project id in specdojo.config.json")
+    .action((options) => {
+      try {
+        const absolute = resolveSafeMarkdownPath(options.path);
+        const rel = repoRelativePath(absolute);
+        const result = readGradeResultForDocument({ documentPath: rel, project: options.project });
+        if (result) process.stdout.write(`${JSON.stringify(result)}\n`);
+      } catch (error) {
+        commandError(error);
+      }
+    });
 
   grade
     .command("state")
@@ -2736,6 +3042,35 @@ export function registerGradeCommand(program: Command): void {
           path: options.path,
         });
         if (state) process.stdout.write(`${JSON.stringify(state)}\n`);
+      } catch (error) {
+        commandError(error);
+      }
+    });
+
+  grade
+    .command("migrate")
+    .description("Move legacy inline grade snapshots and findings to result sidecars")
+    .option("--target <target>", "Restrict migration to kata or deliverable", requireTarget)
+    .option("--project <projectId>", "Project id in specdojo.config.json")
+    .option(
+      "--path <path>",
+      "Migrate only this Markdown document (repeatable)",
+      collectPathOption,
+      [],
+    )
+    .option("--dry-run", "List updates without writing", false)
+    .action((options) => {
+      try {
+        const changed = migrateInlineGrades({
+          project: options.project,
+          target: options.target,
+          paths: options.path,
+          dryRun: options.dryRun,
+        });
+        for (const path of changed) {
+          process.stdout.write(`${options.dryRun ? "would update" : "updated"}: ${path}\n`);
+        }
+        process.stdout.write(`Migrated updates: ${changed.length}\n`);
       } catch (error) {
         commandError(error);
       }

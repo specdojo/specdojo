@@ -1,0 +1,146 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:pm-communication-plan-sample
+path: docs/ja/specdojo/samples/pm-communication-plan-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 66
+graded_at: "2026-09-05T19:09:52.471Z"
+graded_by: codex-expert-executor
+content_hash: 6b5aebb91785cb946e4685c8bc62f4f9c47de415efb8180df8fafa2c40f2cee3
+categories:
+  consistency:
+    score: 38
+  usability:
+    score: 83
+  architecture:
+    score: 100
+  quality:
+    score: 50
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 1
+    score: 25
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 5
+  minor: 9
+  note: 0
+findings:
+  - id: F006
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 5
+    message: 必須の「方針と適用範囲」に、人間と AI Agent の責任境界が記載されていないため、Agent は整理・草案を支援しても合意・承認・公開判断を行わないことを明記してほしい。
+    anchor: 店主、家族利用者、開発担当が、営業を妨げずに初期リリースと店頭試用を判断できるようにする。非同期の記録を基本とし、会議は利用者確認または意思決定が必要な場合だけ行う。役割や連絡先の一覧は各正本へ委譲する。
+  - id: F009
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 5
+    message: 完成 sample でありながらテンプレートが方針章に求める人間と AI Agent の境界と、ルールブックが求める秘密・個人情報の Agent 入力禁止が具体化されていないため、実運用可能な方針として補完してほしい。
+    anchor: 店主、家族利用者、開発担当が、営業を妨げずに初期リリースと店頭試用を判断できるようにする。非同期の記録を基本とし、会議は利用者確認または意思決定が必要な場合だけ行う。役割や連絡先の一覧は各正本へ委譲する。
+  - id: F012
+    severity: minor
+    rule: vp-ux-readability
+    line: 5
+    message: 「各正本」がどの文書を指すか本文から解決できず、Schedule・課題・決定記録などの参照先も示されていないため、関連文書の ID または参照先を簡潔に列挙してほしい。
+    anchor: 店主、家族利用者、開発担当が、営業を妨げずに初期リリースと店頭試用を判断できるようにする。非同期の記録を基本とし、会議は利用者確認または意思決定が必要な場合だけ行う。役割や連絡先の一覧は各正本へ委譲する。
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 9
+    message: "`prj-stakeholder-register-sample` がコミュニケーション計画への反映を求める開発担当のイテレーション末確認と技術メンターの週次相談について、対象・契機・証跡を識別できる行がないため追加してほしい。"
+    anchor: >-
+      | 対象・機会             | 伝える・確認する内容                 | タイミング           | 手段                    | 責任 | 証跡              
+      |
+  - id: F003
+    severity: major
+    rule: vp-qe-verifiability
+    line: 11
+    message: 「重大変更時」「重大な懸念」「重大な影響」の判定基準がなく通知・エスカレーション要否を再現可能に判定できないため、正本の数値・状態条件への参照または具体的な閾値を記載してほしい。
+    anchor: "| 店主への計画確認       | 対象範囲、試用日、費用・時間上限     | 着手前、重大変更時   | 対面または記録コメント  | PM   | 承認記録           |"
+  - id: F004
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 9
+    message: ステークホルダー登録簿で後続計画への反映が明記された開発担当と技術メンターのコミュニケーション要件が機会表から欠落しているため、対応する対象・内容・時期・手段・責任・証跡を追加してほしい。
+    anchor: >-
+      | 対象・機会             | 伝える・確認する内容                 | タイミング           | 手段                    | 責任 | 証跡              
+      |
+  - id: F010
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 9
+    message: ルールブックは関係者をステークホルダー ID または Role code で記述するよう求めているが、機会表が「店主」「家族利用者」などの名称だけを使用しているため、登録簿の ID に対応させてほしい。
+    anchor: >-
+      | 対象・機会             | 伝える・確認する内容                 | タイミング           | 手段                    | 責任 | 証跡              
+      |
+  - id: F013
+    severity: minor
+    rule: vp-ux-readability
+    line: 13
+    message: 「進捗共有」と「受入確認」は「対象・機会」列に受信者がなく、誰への共有・確認か初見で判断できないため、対象となるステークホルダー ID または Role code を明記してほしい。
+    anchor: "| 進捗共有               | 完了、次の作業、ブロック、必要な判断 | 節目または状態変化時 | Schedule と記録コメント | PM   | Schedule、課題     |"
+  - id: F014
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 11
+    message: 登録簿の正式な「店主代表」および `STH-SHOP-OWNER` に対して「店主」を使用し、家族利用者も ID を省略しているため、関係者ラベルを登録簿の名称と ID に統一してほしい。
+    anchor: "| 店主への計画確認       | 対象範囲、試用日、費用・時間上限     | 着手前、重大変更時   | 対面または記録コメント  | PM   | 承認記録           |"
+  - id: F002
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 23
+    message: >-
+      `pm-plan-sample` は品質・個人情報の重大懸念時の PO 判断材料整理を PM に割り当て, `pm-raci-sample` は変更要求・リリース判断を PM=R、QE=C とするため,
+      品質・個人情報・公開適性を QE の一次対応一行に統合せず PM/QE の分担を明記してほしい。
+    anchor: "| 品質、個人情報、公開適性に重大な懸念 | QE が対象を隔離し影響を整理する | PO       | レビュー、決定記録 |"
+  - id: F005
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 29
+    message: 顧客情報、つけ残高、連絡先、認証情報について公開資料と一般共有チャネルだけを禁止しており、ルールブックが禁止する AI Agent 入力が対象外になっているため、Agent 入力にも含めないことを明記してほしい。
+    anchor: "- 顧客の氏名、つけ残高、連絡先、認証情報は公開資料や一般共有チャネルへ記載しない。"
+  - id: F007
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 28
+    message: 「正本」という総称だけでは情報区分ごとの取扱いと記録先を確認できないため、必要な情報区分と具体的な正本または参照 ID の対応を示してほしい。
+    anchor: "- 判断、課題、リスク、変更は、後から理由と次の行動を追える形で正本へ記録する。"
+  - id: F008
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 35
+    message: 未決事項にルールブック所定の `_UNDECIDED_:` ラベルがなく機械的・視覚的に識別できないため、決定時期と判断者を保持したまま所定の形式へ直してほしい。
+    anchor: 参加者、試用方法、公開範囲、主な連絡手段が変わった場合に本計画を見直す。営業時間外の緊急連絡手段は、店頭試用の開始前に PO が決定する。
+  - id: F011
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 35
+    message: rulebook の未決事項形式である `_UNDECIDED_:` を使用していないため、template に沿った完成例へ修正してほしい。
+    anchor: 参加者、試用方法、公開範囲、主な連絡手段が変わった場合に本計画を見直す。営業時間外の緊急連絡手段は、店頭試用の開始前に PO が決定する。

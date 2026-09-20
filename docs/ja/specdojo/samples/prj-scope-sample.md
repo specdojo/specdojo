@@ -7,30 +7,6 @@ specdojo:
   based_on:
     - specdojo:prj-overview-sample
   supersedes: []
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: pass
-    score: 96
-    graded_at: "2026-09-05T23:44:58.132Z"
-    graded_by: gemma-expert-executor
-    content_hash: 44eb35fcbac9576b05c18ff27576f3ea9bc8784715fd469e762b01a7c4bd448e
-    categories:
-      consistency: { score: 100 }
-      usability: { score: 83 }
-      architecture: { score: 100 }
-      quality: { score: 100 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 4, score: 100 }
-      vp-ux-readability: { level: 3, score: 75 }
-      vp-ux-language-consistency: { level: 3, score: 75 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 2, note: 0 }
 ---
 
 # プロジェクトスコープ: 駄菓子屋きぬや 販売管理システム
@@ -84,9 +60,6 @@ specdojo:
 4. 外部連携や高度な分析は、記録が安定した後の次フェーズで扱う。
 
 ## 6. スコープ変更方針
-
-<!-- specdojo:finding id=F001 severity=minor rule=vp-ux-readability line=57 第6章で突然登場する「PO」「BA」という役割が第1章の定義（店主代表等）と対応付けられておらず、読者が役割を識別できない。 -->
-<!-- specdojo:finding id=F002 severity=minor rule=vp-ux-language-consistency line=57 役割の呼称が第1章では「店主代表」等、第6章（承認者）では「PO」「BA」と表記ゆれしており、統一されていない。 -->
 
 | 項目     | 内容                                                                       |
 | -------- | -------------------------------------------------------------------------- |

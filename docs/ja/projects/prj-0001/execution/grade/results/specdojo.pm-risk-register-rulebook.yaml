@@ -1,0 +1,78 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:pm-risk-register-rulebook
+path: docs/ja/specdojo/rulebooks/pm-risk-register-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: fail
+score: 71
+graded_at: "2026-09-03T05:09:17.412Z"
+graded_by: gemma-expert-executor
+content_hash: 6c572d542e866302e7b625e42859c5e0086613493f36a57987d8c39b2fa95827
+categories:
+  consistency:
+    score: 50
+  usability:
+    score: 92
+  architecture:
+    score: 100
+  quality:
+    score: 50
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-qe-kata-conformance:
+    level: 0
+    score: 0
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 1
+  major: 2
+  minor: 1
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 1
+    message: テンプレート側で参照される rulebook が `specdojo:pjr-rulebook` となっており、本ルールブックと矛盾している。
+    anchor: "# リスク登録簿 作成ルール"
+  - id: F004
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 1
+    message: 見出しでは「推奨 Frontmatter 項目」としているが、表内では「必須：○」と定義されており、表記が矛盾している。
+    anchor: "# リスク登録簿 作成ルール"
+  - id: F002
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: テンプレートに、本節で定義されている必須本文構成（概要〜関連ドキュメント）が含まれておらず、整合性が取れていない。
+    anchor: "# リスク登録簿 作成ルール"
+  - id: F003
+    severity: blocker
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: 手動作成を前提とした本文構成ルールを定義しているが、対応するテンプレートは自動生成ビューの定義となっており、成果物の種別と責務が根本的に矛盾している。
+    anchor: "# リスク登録簿 作成ルール"

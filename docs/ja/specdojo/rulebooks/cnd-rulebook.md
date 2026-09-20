@@ -6,30 +6,6 @@ specdojo:
   recipe: undecided
   sample: specdojo:cnd-sample
   template: undecided
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: pass
-    score: 91
-    graded_at: "2026-09-02T02:37:17.001Z"
-    graded_by: gemma-expert-executor
-    content_hash: 11b48e14100399d99995ca5b7f2aac4bf1d6d5fd661ee6910bd4b15a807922ff
-    categories:
-      consistency: { score: 75 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 88 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 3, score: 75 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 3, score: 75 }
-      vp-qe-kata-conformance: { level: 3, score: 75 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 3, note: 0 }
 ---
 
 # C4コンテナ図 ドキュメント作成ルール
@@ -37,8 +13,6 @@ specdojo:
 C4 Container Diagram (CND) Documentation Rules
 
 本ドキュメントは、アーキテクチャ設計のために **C4コンテナ図と、その図を説明する文章**を、統一した粒度・表現で作成するためのルールです。
-
-<!-- specdojo:finding id=F001 severity=minor rule=vp-arc-cross-document-consistency 指定されているサンプル `specdojo:cnd-sample` の Frontmatter で、準拠ルールが `specdojo:cnd-rulebook` ではなく `specdojo:cnd-mermaid-rulebook` になっている。 -->
 
 この章の成果物は、次の2つをセットで扱います。
 
@@ -111,8 +85,6 @@ Personは、対象システムに対して目的をもって関わる主体（�
 - 書くこと（推奨）:
   - ロール名（例: 店員、店主、経理担当）
   - どのコンテナを、何のために利用するか（例: Webアプリで売上登録を行う）
-
-<!-- specdojo:finding id=F002 severity=minor rule=vp-qe-omissions-consistency Frontmatter の必須項目一覧に `rulebook` が含まれていない。 -->
 
 - 書かないこと:
   - 個人名、UI操作手順の逐語列挙
@@ -214,8 +186,6 @@ Database は、対象システム内の主要な永続データストアです�
 - コンテナは「責務が読める短い名前」を優先し、実装都合の命名（内部モジュール名など）に寄せすぎない。
 
 ## 9. 禁止事項
-
-<!-- specdojo:finding id=F003 severity=minor rule=vp-qe-kata-conformance 指定されているサンプル `specdojo:cnd-sample` が第6章の標準構成に従っておらず、適用例として不十分である。 -->
 
 次の記述は、CNDの粒度を超えるため避けます。
 

@@ -45,6 +45,7 @@ import {
   type RoutineExecutionResult,
   type RoutineRunHistoryEntry,
 } from "./routine.js";
+import { gradeFindingCount, parseGradeResult, type GradeResult } from "./grade-result.js";
 
 // ================================
 // Types
@@ -61,6 +62,7 @@ export type DashboardPaths = {
   timelinePath: string;
   executionGeneratedPath: string;
   routinesPath?: string;
+  gradeResultsPath?: string;
 };
 
 // ================================
@@ -106,6 +108,7 @@ export function resolveDashboardPaths(opts: { project?: string }): DashboardPath
       const p = getProjectRoutinesPath(project);
       return p ? join(baseDir, p) : undefined;
     })(),
+    gradeResultsPath: join(baseDir, getProjectExecutionPath(project), "grade", "results"),
   };
 }
 
@@ -1095,6 +1098,38 @@ function renderDailyRoutineSection(paths: DashboardPaths): string[] {
   return lines;
 }
 
+export function readDashboardGradeResults(resultsPath: string): GradeResult[] {
+  if (!existsSync(resultsPath)) return [];
+  return readdirSync(resultsPath)
+    .filter((name) => name.endsWith(".yaml") || name.endsWith(".yml"))
+    .sort()
+    .flatMap((name) => {
+      const path = join(resultsPath, name);
+      try {
+        return [parseGradeResult(readFileSync(path, "utf8"), path)];
+      } catch {
+        return [];
+      }
+    });
+}
+
+function renderGradeSection(paths: DashboardPaths): string[] {
+  const lines = ["## 8. Grade", ""];
+  const results = paths.gradeResultsPath ? readDashboardGradeResults(paths.gradeResultsPath) : [];
+  if (results.length === 0) {
+    lines.push("- grade result はまだありません。", "");
+    return lines;
+  }
+  lines.push("| 成果物 | 対象 | verdict | score | findings |", "| --- | --- | --- | ---: | ---: |");
+  for (const result of results) {
+    lines.push(
+      `| \`${escapeCell(result.document)}\` | \`${result.target}\` | \`${result.verdict}\` | ${result.score} | ${gradeFindingCount(result)} |`,
+    );
+  }
+  lines.push("");
+  return lines;
+}
+
 function renderRecommendedRegisterSection(projectId: string): string[] {
   const lines = ["## 6. 着手可能な登録項目（おすすめ順）", ""];
   let rows: DashboardRegisterCandidate[];
@@ -1188,6 +1223,7 @@ export function buildDashboardMarkdown(paths: DashboardPaths): string {
   lines.push(...renderDailyRoutineSection(paths));
   lines.push(...renderRecommendedRegisterSection(paths.projectId));
   lines.push(...renderAttentionSection(paths));
+  lines.push(...renderGradeSection(paths));
 
   // 各セクションは次のセクションとの区切りとして空行で終わる。最後のセクションの空行を
   // そのまま残すと、書き出し時に付ける改行と合わさって末尾が空行2行になり markdownlint の

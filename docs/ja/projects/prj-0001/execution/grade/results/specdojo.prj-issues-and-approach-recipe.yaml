@@ -1,0 +1,98 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:prj-issues-and-approach-recipe
+path: docs/ja/specdojo/recipes/prj-issues-and-approach-recipe.md
+target: kata
+rubric: grade-rubric-v1
+verdict: pass
+score: 84
+graded_at: "2026-09-04T18:08:29.988Z"
+graded_by: codex-expert-executor
+content_hash: 4e13628a06df26296b8bc0a22ef20454c9bef867c929416362571e4e5db84fde
+categories:
+  consistency:
+    score: 75
+  usability:
+    score: 92
+  architecture:
+    score: 100
+  quality:
+    score: 75
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 3
+    score: 75
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 7
+  note: 0
+findings:
+  - id: F004
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 95
+    message: 存在する関連成果物「代替案比較」をリンクまたは仮置き識別子で示しておらず Recipe 記述標準のリンク規約を満たさないため, 参照先リンクまたは `prj-comparison-of-alternatives` を明示する。
+    anchor: ""
+  - id: F005
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 136
+    message: >-
+      _TODO_ と _UNDECIDED_ を同列の選択肢にし, 意思決定未了の「GitHub を採用するか決定する」を _TODO_ の例にしているため, 「要確認・追記は _TODO_, 意思決定未了は
+      _UNDECIDED_」という共通定義に合わせて用途と例を分ける。
+    anchor: "- 責任ロールは、体制定義で採用済みのロールまたは担当単位で書く。"
+  - id: F007
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 136
+    message: 意思決定待ちにも _TODO_ を使用できる説明は _UNDECIDED_ との意味境界を曖昧にするため, 要確認・追記と意思決定未了を区別し, それぞれ対応するラベルを一意に示す。
+    anchor: "- 責任ロールは、体制定義で採用済みのロールまたは担当単位で書く。"
+  - id: F001
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 192
+    message: 仕上げチェックは「必須表」が揃うことを要求しているが, rulebook の各表は推奨扱いで recipe 内にも必須表の定義がないため, 表の必須性を rulebook と統一する。
+    anchor: "- 課題一覧、原因、解決策候補、採用アプローチと理由がすべて記述されている。"
+  - id: F002
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 192
+    message: 「必須表」が本文中で定義されておらず, 対応 rulebook の表も推奨扱いであるため, 仕上げ時にどの表の有無を pass / fail 判定するのか列挙するか, 「必須章・必須項目」に改める。
+    anchor: "- 課題一覧、原因、解決策候補、採用アプローチと理由がすべて記述されている。"
+  - id: F003
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 197
+    message: 「仕上げチェック」に Recipe 記述標準が求める公開適性の最終確認がなく, 業務課題・リスク・根拠に非公開情報を含めてよいか判定できないため, 機密情報や公開可否を確認する項目を追加する。
+    anchor: ""
+  - id: F006
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 197
+    message: Recipe 記述標準が「仕上げチェック」に求める公開適性の最終確認がないため, 対象成果物に機密情報・個人情報など公開不適切な内容が含まれないことを確認する項目を追加する。
+    anchor: ""

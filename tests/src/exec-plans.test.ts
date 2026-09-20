@@ -661,13 +661,16 @@ describe("finding correction instructions in edit plan templates", () => {
     "xep-template-maintenance-template.md",
   ];
 
-  it.each(templates)("%s requires correcting findings before removing comments", (template) => {
+  it.each(templates)("%s expands sidecar findings and requires correcting them", (template) => {
     const source = readFileSync(join("docs/ja/specdojo/exec-templates", template), "utf8");
 
+    // finding は本文コメントではなく grade result サイドカーから plan へ展開される。
+    expect(source).toContain("_GRADE_FINDINGS_");
     expect(source).toContain("判定根拠を修正要件として読み");
-    expect(source).toContain("finding コメントの削除だけを修正として扱わ");
-    expect(source).toContain("「修正 → 確認 → 削除」の順序を変えない");
-    expect(source).toContain("未解消、根拠不足、または判断不能の finding コメントは残し");
+    expect(source).toContain("未解消、根拠不足、または判断不能の finding");
+    expect(source).toContain(
+      "grade result サイドカーは再評価時に更新されるため、本タスクでは直接編集しない",
+    );
   });
 });
 

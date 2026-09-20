@@ -50,7 +50,9 @@ describe("CLI generation verb taxonomy", () => {
       "plan",
       "apply",
       "validate",
+      "result",
       "state",
+      "migrate",
     ]);
     const apply = program.commands
       .find((command) => command.name() === "grade")
@@ -91,7 +93,9 @@ describe("CLI generation verb taxonomy", () => {
     registerGradeCommand(program);
     const grade = program.commands.find((command) => command.name() === "grade");
 
-    for (const command of (grade?.commands ?? []).filter((command) => command.name() !== "state")) {
+    for (const command of (grade?.commands ?? []).filter((command) =>
+      ["list", "plan", "apply", "validate"].includes(command.name()),
+    )) {
       const longs = command.options.map((option) => option.long);
       expect(longs).toEqual(
         expect.arrayContaining([

@@ -1,0 +1,74 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:cpd-mermaid-rulebook
+path: docs/ja/specdojo/rulebooks/cpd-mermaid-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 87
+graded_at: "2026-09-02T03:34:07.545Z"
+graded_by: codex-expert-executor
+content_hash: a662ed2d55e9cc1d9a836b6f9760a6ff515ce60c1352d22c16d160bd4caa847f
+categories:
+  consistency:
+    score: 88
+  usability:
+    score: 92
+  architecture:
+    score: 100
+  quality:
+    score: 75
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 3
+    score: 75
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 1
+  minor: 2
+  note: 0
+findings:
+  - id: F002
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: >-
+      Frontmatter で対応 sample として宣言した docs/ja/specdojo/samples/cpd-sample.md に Mermaid
+      図の完成例がなく、本ルールのノード、境界、関係、スタイルを適用した成果物を確認できない。
+    anchor: ""
+  - id: F001
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 1
+    message: 参照サンプル (docs/ja/specdojo/samples/cpd-sample.md) 内のリンク先が本ルールのファイル名と不整合である。
+    anchor: ""
+  - id: F003
+    severity: minor
+    rule: vp-ux-readability
+    line: 1
+    message: 「2.1. 標準の色分け」を章「2. C4要素と Mermaid 記号の対応」と同じ H2 にしているため、H3 の「2.1.1」「2.1.2」を含む階層が番号体系と一致するよう見出しレベルを修正する必要がある。
+    anchor: ""

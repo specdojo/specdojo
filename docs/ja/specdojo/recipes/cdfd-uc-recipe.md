@@ -5,30 +5,6 @@ specdojo:
   status: draft
   rulebook: specdojo:cdfd-uc-rulebook
   sample: specdojo:cdfd-uc-sample
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: pass
-    score: 98
-    graded_at: "2026-09-17T08:20:23.259Z"
-    graded_by: codex-expert-executor
-    content_hash: 4779960d6f3769b0f8db88f167172aff85432e1ca98e4d2e8bb8b1bdf3067586
-    categories:
-      consistency: { score: 88 }
-      usability: { score: 100 }
-      architecture: { score: 100 }
-      quality: { score: 100 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 3, score: 75 }
-      vp-qe-kata-conformance: { level: 4, score: 100 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 4, score: 100 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 1, note: 0 }
 ---
 
 # 概念データフロー図（ユースケース別）作成レシピ
@@ -112,8 +88,6 @@ Conceptual Data Flow Diagram Use Case Writing Recipe
 - 各グループの名称と領域 ID は全体概要と同じですか。
 - 主要入力・主要出力と横断上の役割は、前段から受け取るものと次段へ渡すものに限定されていますか。
 - 各グループの内部を確認できる `cdfd-<group>` を一意に示せますか。
-
-<!-- specdojo:finding id=F001 severity=minor rule=vp-qe-omissions-consistency line=83 「4. 各章の書き方」において、rulebook で必須とされている「導入文」に関する問いや具体的な記述ガイドが欠落している。 -->
 
 各節の表の一行を一つの代表ノードへ対応させます。同じグループが正常系で再登場する場合は節を分け、前回と異なる引き渡し目的を説明します。内部の処理順や担当は書き写しません。
 

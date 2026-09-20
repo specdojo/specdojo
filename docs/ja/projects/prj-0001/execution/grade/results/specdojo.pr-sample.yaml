@@ -1,0 +1,66 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:pr-sample
+path: docs/ja/specdojo/samples/pr-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: pass
+score: 94
+graded_at: "2026-09-05T21:23:35.916Z"
+graded_by: gemma-expert-executor
+content_hash: 55c48e778b2c02c7358fd49e0c2ef6c86f9f1a67fc9fd17d861d15f8b16687e1
+categories:
+  consistency:
+    score: 100
+  usability:
+    score: 92
+  architecture:
+    score: 100
+  quality:
+    score: 88
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
+    level: 4
+    score: 100
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 2
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 17
+    message: 「進捗60%」という表記は判定基準が曖昧であり、具体的にどの状態をもって 60% としたかの根拠または定義が必要である。
+    anchor: "- 日次報告テンプレートの項目統合を検討中。"
+  - id: F002
+    severity: minor
+    rule: vp-ux-readability
+    line: 18
+    message: 「項目統合を検討中」という記述は抽象的であり、何を統合しようとしているか、またはどのような判断を検討しているかの具体性が不足している。
+    anchor: ""

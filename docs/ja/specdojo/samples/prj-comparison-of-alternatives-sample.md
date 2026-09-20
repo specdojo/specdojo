@@ -9,30 +9,6 @@ specdojo:
     - specdojo:prj-issues-and-approach-sample
     - specdojo:prj-assumptions-constraints-dependencies-sample
   supersedes: []
-  grade:
-    rubric: grade-rubric-v1
-    target: kata
-    verdict: needs-work
-    score: 84
-    graded_at: "2026-09-05T22:41:20.408Z"
-    graded_by: gemma-expert-executor
-    content_hash: 565c8b0a119b6e2a6a6f90813ab3f0e70d8421db42c99d86e6d6e0d142fc5f3d
-    categories:
-      consistency: { score: 75 }
-      usability: { score: 92 }
-      architecture: { score: 100 }
-      quality: { score: 75 }
-    viewpoints:
-      vp-arc-cross-document-consistency: { level: 4, score: 100 }
-      vp-arc-conciseness: { level: 4, score: 100 }
-      vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 2, score: 50 }
-      vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 4, score: 100 }
-      vp-ux-language-consistency: { level: 3, score: 75 }
-      vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 2, minor: 1, note: 0 }
 ---
 
 # 代替案比較: 駄菓子屋きぬや 販売管理システム
@@ -112,11 +88,6 @@ ALT-02 はセル操作と数式保守が店主代表の負担になり、誤入�
 | ALT-04 | タブレット向け最小機能を段階的に構築できる | 受入確認、データ移行、障害時の紙運用を整備する必要がある |
 
 ## 5. リスクとトレードオフ
-
-<!-- specdojo:finding id=F001 severity=major rule=vp-qe-omissions-consistency line=80 評価軸の最低ラインである「リスク」と「技術実現性」が表から欠落しており、かつ省略理由の記載もないため、rulebook の必須要件を満たしていない。 -->
-<!-- specdojo:finding id=F002 severity=major rule=vp-qe-kata-conformance line=80 完成例である sample が rulebook/recipe で定める最低評価軸を省略し、かつその正当な理由を明示していないため、標準的な書き方の正解例として機能していない。 -->
-
-<!-- specdojo:finding id=F003 severity=minor rule=vp-ux-language-consistency line=85 最低ラインの評価軸名称が rulebook では「運用適合」となっているが、本 sample では「業務適合」となっており、用語が不統一である。 -->
 
 | 区分         | 内容                                                       | 軽減策                                                      |
 | ------------ | ---------------------------------------------------------- | ----------------------------------------------------------- |
