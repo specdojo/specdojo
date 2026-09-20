@@ -29,6 +29,8 @@ Attached Unit（同一リポジトリ）は、SpecDojo 自身の開発のよう�
 - 利用プロジェクトの既定構成は Detached Unit とする（決定者 ARC、2026-09-20）。Attached は「成果物と実装が同じ変更で動く」場合の例外とする。
 - 「既定」は guide の推奨と `config init` の雛形で表し、CLI が構成を強制しない。
 - 実装を伴う登録簿項目（1 つの項目で文書とプロダクト実装の両方を変更する）の扱いは PJR-P7HY（複数リポジトリ統合）の完了までの制約として guide に明記する。PJR-P7HY の優先度を low から medium に上げる。
+- プロダクト文書（`docs/ja/product`）の配置は、PJR-QHKA 2.4.3 の再検討（src と同期が必要な対）に従い**プロダクト実装のリポジトリ側**（`app1/docs/ja/product`）とする。現行 guide 10.3 の「`app1-specdojo/docs/ja/product/`」は旧判断であり、本 todo で改める。境界は「`app1/` = src + `docs/ja/product`、`app1-specdojo/` = `docs/ja/projects` + `docs/ja/specdojo`（運用記録と Kata）」とする。
+- この配置では grade が成果物へ書き込む限り routine の commit がプロダクト実装の履歴へ流れ込むため、PJR-XKKS（grade のサイドカー化）を本 todo の前提とする。catalog の `base_path` がリポジトリをまたぐ解決と `exec run --worktree` の二重 worktree は PJR-P7HY の範囲とし、guide には前提条件として明記する。
 
 ## 2. 完了条件
 
@@ -61,3 +63,4 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 - [[prj-0001:pjr-qhka-docs-structure-detached-unit]]
 - [[prj-0001:pjr-p7hy-multi-repo-single-item]]
 - [[prj-0001:pjr-y013-exec-commit-folding]]
+- [[prj-0001:pjr-xkks-grade-sidecar]]

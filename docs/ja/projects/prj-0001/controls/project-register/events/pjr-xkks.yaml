@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_74518223b63848f69d7535668fbee2dd
+  ts: "2026-09-20T05:08:04Z"
+  action: add
+  actor: specdojo-orchestrator (claude)
+  from_status: null
+  to_status: open
+  reason: Detached Unit の既定化（PJR-TBHH）に先立って必要と利用者が判断
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: grade の結果と finding を成果物から切り離しサイドカーへ移す
+    - field: description
+      from: ""
+      to: grade が成果物の frontmatter と本文コメントに評価を書き込むため、成果物の履歴が評価だけの commit で汚れ、Detached Unit ではプロダクト実装リポジトリへ routine の commit が流れ込む。verdict / score / viewpoints / finding を execution/grade/results/`<doc-id>.yaml` へ移し、成果物は内容だけにする
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-20"
+    - field: due
+      from: ""
+      to: "2026-09-30"
