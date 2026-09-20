@@ -2,12 +2,12 @@
 id: cdfd-orchestrator-grade-criteria
 document: cdfd-orchestrator
 path: docs/ja/product/010-business-specs/010-data-flow/cdfd-orchestrator.md
-graded_at: "2026-09-18T11:51:53.476Z"
-graded_by: gemma-expert-executor
+graded_at: "2026-09-20T04:54:14.700Z"
+graded_by: codex-expert-executor
 content_hash: 54b40f0e657dd761016966db1775ec307b353d67e1f55353c2f76e8262b758bc
 summary:
-  satisfied: 2
-  unsatisfied: 1
+  satisfied: 3
+  unsatisfied: 0
   total: 3
 criteria:
   - id: DC-001
@@ -15,8 +15,7 @@ criteria:
     roles:
       - BA
     viewpoint: vp-ba-requirements-completeness
-    status: unsatisfied
-    reason: P-14 の主要出力における「生成した実行計画」が欠落し、入力として定義されており、全体概要と矛盾している。
+    status: satisfied
   - id: DC-002
     text: 稼働構成、成果物カタログ、スケジュール戦略、定期実行定義、実行計画、実行記録への読み書きと、Plan・Do・Check・Action への要求がグループ外委譲として識別できること
     roles:

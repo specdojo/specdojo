@@ -10,20 +10,20 @@ specdojo:
     rubric: grade-rubric-v1
     target: deliverable
     verdict: needs-work
-    score: 82
-    graded_at: "2026-09-18T12:25:04.250Z"
-    graded_by: gemma-expert-executor
+    score: 77
+    graded_at: "2026-09-20T05:01:28.643Z"
+    graded_by: codex-expert-executor
     content_hash: a22d5ecff5bee64e24a5f0de93c039d37846cb8a172d0f2ee81b14bb155429cf
     categories:
-      consistency: { score: 50 }
+      consistency: { score: 38 }
       usability: { score: 100 }
       architecture: { score: 100 }
-      quality: { score: 83 }
+      quality: { score: 75 }
     viewpoints:
-      vp-arc-cross-document-consistency: { level: 2, score: 50 }
+      vp-arc-cross-document-consistency: { level: 1, score: 25 }
       vp-arc-conciseness: { level: 4, score: 100 }
       vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-done-criteria: { level: 2, score: 50 }
+      vp-qe-done-criteria: { level: 1, score: 25 }
       vp-qe-verifiability: { level: 4, score: 100 }
       vp-qe-omissions-consistency: { level: 2, score: 50 }
       vp-ux-readability: { level: 4, score: 100 }
@@ -31,12 +31,13 @@ specdojo:
       vp-ux-language-consistency: { level: 4, score: 100 }
       vp-arc-document-structure: { level: 4, score: 100 }
       vp-qe-config-validity: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 3, minor: 2, note: 0 }
+    findings: { blocker: 0, major: 5, minor: 2, note: 0 }
     done_criteria:
-      satisfied: 3
+      satisfied: 2
       total: 4
       unsatisfied:
         DC-002: [PO]
+        DC-003: [ARC]
       detail_ref: cdfd-overview-grade-criteria
 ---
 
@@ -74,6 +75,7 @@ SpecDojo を導入して Kata を配置し、その雛形から稼働構成の�
 - **主要出力**: 配置した Kata、稼働構成の初期状態
 - **データストア**: Kata、稼働構成
 
+<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=38 成果物カタログの `cdfd-onboarding` は repository からの導入、既存プロジェクトへの導入、Detached Unit を対象に含めるが、本書の P-01 は起点を「PO が新しいプロジェクトを立ち上げた」に限定しており、詳細化範囲と起動条件を統一する必要がある。 -->
 <!-- prettier-ignore -->
 | 領域 ID | プロセス領域 | 業務目的 | 主な担当 | 起点イベント |
 | --- | --- | --- | --- | --- |
@@ -105,7 +107,7 @@ Plan の実行指示に基づき、人または AI Agent が Kata を参照し�
 - **データストア**: Kata、稼働構成、実行計画、ジョブ定義、登録簿、実行記録、成果物
 
 <!-- specdojo:finding id=F004 severity=major rule=vp-qe-done-criteria line=65 DC-002（PO による対象範囲と領域分割の承認）を満たす承認記録が特定できず、未充足である。 -->
-<!-- specdojo:finding id=F005 severity=major rule=vp-qe-omissions-consistency line=65 現行の 14 領域・六グループへの改訂を PO が承認した記録を特定できず、現在の境界に対する承認記録を追加する必要がある。 -->
+<!-- specdojo:finding id=F006 severity=major rule=vp-qe-omissions-consistency line=65 現行の 14 領域・六グループへの改訂を PO が承認した記録を特定できず、現在の境界に対する承認記録を追加する必要がある。 -->
 <!-- prettier-ignore -->
 | 領域 ID | プロセス領域 | 業務目的 | 主な担当 | 起点イベント |
 | --- | --- | --- | --- | --- |
@@ -130,11 +132,11 @@ Plan の実行指示に基づき、人または AI Agent が Kata を参照し�
 
 Check の結果と人間の判断に基づき、タスクの完了確定、稼働構成の変更反映、役割を終えた文書の退避を行い、必要に応じて Plan へ再計画を要求する。
 
+<!-- specdojo:finding id=F002 severity=major rule=vp-arc-cross-document-consistency line=91 本書は Action の主要入力を「参加者からの構成変更要求と承認結果」「参加者からの非推奨化の判断」とする一方、`cdfd-action` は承認結果と非推奨化判断を Action 内部で生成しており、人間の判断境界を統一する必要がある。 -->
 - **主要入力**: Orchestrator からの完了・改善要求、評価結果、進捗報告の判断事項、完了条件、参加者からの構成変更要求と承認結果、参加者からの非推奨化の判断
 - **主要出力**: 完了・決定の記録、完了記録、更新した稼働構成（Kata のバージョン更新を含む）、更新した成果物カタログ、非推奨化した文書、保管した文書、再計画要求
 - **データストア**: 稼働構成、Kata、成果物カタログ、登録簿、実行記録、成果物、保管庫（trash）、評価結果、進捗報告
 
-<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=94 P-03「成果物カタログ定義」の主な担当を BA としているが、RACI では成果物カタログの A/R が ARC であり、責任割当を統一する必要がある。 -->
 <!-- prettier-ignore -->
 | 領域 ID | プロセス領域 | 業務目的 | 主な担当 | 起点イベント |
 | --- | --- | --- | --- | --- |
@@ -149,6 +151,10 @@ Plan・Do・Check・Action へ要求を発行して PDCA を回す。参加者�
 - **主要入力**: 稼働構成の agent 定義・実行既定値、参加者からの意図、成果物カタログの完了条件、スケジュール戦略の作業要件、定期実行定義、実行状態
 - **主要出力**: Plan・Do・Check・Action への要求、サイクルの実行記録
 - **データストア**: 稼働構成、成果物カタログ、スケジュール戦略、定期実行定義、実行計画、実行記録
+
+<!-- specdojo:finding id=F003 severity=minor rule=vp-arc-cross-document-consistency line=107 `cdfd-orchestrator` は実行計画を主要入力として扱い、本書の図にも `実行計画 → Orchestrator` があるが, Orchestrator の「主要入力」に実行計画がなく、入出力契約を統一する必要がある。 -->
+<!-- specdojo:finding id=F005 severity=major rule=vp-qe-done-criteria line=107 DC-003 が要求する主要入力と概念データフローの相互対応について、Orchestrator の図にある実行計画入力が「主要入力」から欠落している。 -->
+<!-- specdojo:finding id=F007 severity=minor rule=vp-qe-omissions-consistency line=107 Orchestrator のデータストアと図には実行計画があるが「主要入力」には記載されていないため、図の `実行計画 → Orchestrator` エッジに対応する入力を追加する必要がある。 -->
 
 <!-- prettier-ignore -->
 | 領域 ID | プロセス領域 | 業務目的 | 主な担当 | 起点イベント |
@@ -373,7 +379,6 @@ flowchart LR
   class 外部主体 actor
 ```
 
-<!-- specdojo:finding id=F002 severity=minor rule=vp-arc-cross-document-consistency line=332 詳細化先 `cdfd-orchestrator` の Frontmatter に `based_on: cdfd-overview` がなく、生成元の追跡情報を追加する必要がある。 -->
 <!-- prettier-ignore -->
 | 概念 | 形状 | 色 | 絵文字例 |
 | --- | --- | --- | --- |
@@ -385,8 +390,6 @@ flowchart LR
 | 外部主体 | 四角 | グレー（`#f5f7fa` / `#607d8b`） | 主体が伝わる絵文字（例: 👤） |
 | 情報の流れ | ラベル付き `-->` | — | — |
 | 物の流れ | ラベル付き `==>` | — | — |
-
-<!-- specdojo:finding id=F003 severity=minor rule=vp-arc-cross-document-consistency line=342 本書は `C-02` を `cdfd-uc-deliverable` に割り当てているが、同文書側でケース ID が確定していないため、正本関係を統一する必要がある。 -->
 
 データストアの色分けは、大分類「データストア」の中の業務上のサブ分類を表す。マスタ・構成データは、他のプロセスから参照される比較的安定した基準情報（稼働構成、Kata、成果物カタログ、スケジュール戦略、定期実行定義、ジョブ定義など）を指す。トランザクションデータは、業務活動に伴い都度更新される記録（登録簿、実行記録、成果物、進捗報告など）を指す。物理保管は現物の保管先であり、マスタ・構成データとトランザクションデータのいずれの区分にも属さないため、便宜上トランザクションデータと同じ色を用いる。
 

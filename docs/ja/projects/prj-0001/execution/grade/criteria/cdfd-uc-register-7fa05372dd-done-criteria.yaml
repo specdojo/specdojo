@@ -2,9 +2,9 @@
 id: cdfd-uc-register-grade-criteria
 document: cdfd-uc-register
 path: docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md
-graded_at: "2026-09-18T13:52:35.051Z"
-graded_by: gemma-expert-executor
-content_hash: 971e61404f30fe9bb731c0150997c582418fd9c7a6fd9d91270339ead5e226e0
+graded_at: "2026-09-20T05:11:28.995Z"
+graded_by: codex-expert-executor
+content_hash: ee4d8d400a71463971e672a79571c4b7f216d780f737081785ab232ce1735cee
 summary:
   satisfied: 3
   unsatisfied: 0
