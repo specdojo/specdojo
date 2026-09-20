@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: sysd-job-execution-grade-criteria
+document: sysd-job-execution
+path: docs/ja/product/040-system-design/sysd-job-execution.md
+graded_at: "2026-09-19T16:51:39.478Z"
+graded_by: codex-expert-executor
+content_hash: ee72a005022dd3e9f5ca0f8ef94195d207b44b9008cf8a81fd5611a6dbf50901
+summary:
+  satisfied: 4
+  unsatisfied: 1
+  total: 5
+criteria:
+  - id: DC-001
+    text: 設計トピックの採用理由・制約が業務要件と整合していること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: satisfied
+  - id: DC-002
+    text: 設計方針を承認できること
+    roles:
+      - PO
+    viewpoint: vp-po-decision-readiness
+    status: satisfied
+  - id: DC-003
+    text: 技術的制約・依存関係が識別できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: satisfied
+  - id: DC-004
+    text: テスト設計・検証観点の参照として使えること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: unsatisfied
+    reason: 設計制約ごとの検証方法、期待結果、またはテスト設計への参照が示されていない。
+  - id: DC-005
+    text: 実装の基礎として参照できること
+    roles:
+      - DEV
+    viewpoint: vp-dev-implementation-readiness
+    status: satisfied

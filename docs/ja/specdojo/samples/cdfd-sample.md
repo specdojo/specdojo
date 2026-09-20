@@ -10,27 +10,27 @@ specdojo:
   grade:
     rubric: grade-rubric-v1
     target: kata
-    verdict: pass
-    score: 96
-    graded_at: "2026-09-18T07:53:17.480Z"
-    graded_by: gemma-expert-executor
-    content_hash: de1c73c30992ab7dece8b08e1c3a5bf5eb88f3d2eb4c1f187938007334da1be0
+    verdict: needs-work
+    score: 77
+    graded_at: "2026-09-19T21:30:17.209Z"
+    graded_by: codex-expert-executor
+    content_hash: 86e40fbe8c3ea47303d8d385933f60e11df59b2a609e82b954da544276c52cbf
     categories:
-      consistency: { score: 88 }
-      usability: { score: 92 }
+      consistency: { score: 50 }
+      usability: { score: 83 }
       architecture: { score: 100 }
-      quality: { score: 100 }
+      quality: { score: 75 }
     viewpoints:
-      vp-arc-cross-document-consistency: { level: 3, score: 75 }
+      vp-arc-cross-document-consistency: { level: 2, score: 50 }
       vp-arc-conciseness: { level: 4, score: 100 }
       vp-arc-single-responsibility: { level: 4, score: 100 }
-      vp-qe-verifiability: { level: 4, score: 100 }
-      vp-qe-omissions-consistency: { level: 4, score: 100 }
-      vp-qe-kata-conformance: { level: 4, score: 100 }
-      vp-ux-readability: { level: 4, score: 100 }
+      vp-qe-verifiability: { level: 3, score: 75 }
+      vp-qe-omissions-consistency: { level: 2, score: 50 }
+      vp-qe-kata-conformance: { level: 3, score: 75 }
+      vp-ux-readability: { level: 3, score: 75 }
       vp-ux-language-consistency: { level: 3, score: 75 }
       vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 0, minor: 2, note: 0 }
+    findings: { blocker: 0, major: 2, minor: 11, note: 0 }
 ---
 
 # 概念データフロー図（プロセスグループ別）: 仕入
@@ -45,6 +45,15 @@ specdojo:
 
 ## 2. 適用範囲
 
+<!-- specdojo:finding id=F002 severity=minor rule=vp-arc-cross-document-consistency line=13 rulebook と recipe は適用範囲への期間の明記を要求していますが、本書には対象期間がないため、適用期間または期間を限定しない旨を追記してください。 -->
+<!-- specdojo:finding id=F003 severity=minor rule=vp-arc-cross-document-consistency line=17 責任分担を `prj-overview-sample` に従うとしながら、参照先の正式ロール「家族利用者代表」に対応しない「店番担当」を使用しているため, 正式名へ統一するか両者の対応を明記してください。 -->
+<!-- specdojo:finding id=F006 severity=minor rule=vp-qe-omissions-consistency line=13 必須の適用範囲に対象期間または期間を限定しない旨がなく、rulebook の本文要件を満たしていないため追記してください。 -->
+<!-- specdojo:finding id=F007 severity=minor rule=vp-qe-omissions-consistency line=16 適用範囲では状態参照先を `stsd-product` のみに限定していますが、状態遷移表では発注に `stsd-purchase` を使用しているため、適用範囲にも同参照を追加してください。 -->
+<!-- specdojo:finding id=F008 severity=minor rule=vp-qe-kata-conformance line=13 完成 sample が rulebook と recipe で要求される適用期間を例示していないため、対象期間または期間を限定しない記載を追加してください。 -->
+<!-- specdojo:finding id=F009 severity=minor rule=vp-qe-kata-conformance line=16 適用範囲の STSD 参照が後続の状態遷移表にある `stsd-purchase` を含まず、完成例として参照方法が一貫しないため、両参照先を対応させてください。 -->
+<!-- specdojo:finding id=F010 severity=minor rule=vp-ux-readability line=16 状態の参照先を `stsd-product` のみと案内した後で `stsd-purchase` が現れるため、初見の読者が次に参照すべき文書を一意に判断できるよう両方を適用範囲で示してください。 -->
+<!-- specdojo:finding id=F012 severity=minor rule=vp-ux-language-consistency line=17 共通 sample と責任分担参照先の正式ロールは「家族利用者代表」ですが、本書では「店番担当」を併用しているため、正式名へ統一するか用語の対応を定義してください。 -->
+<!-- specdojo:finding id=F013 severity=minor rule=vp-ux-language-consistency line=16 適用範囲では状態参照先を `stsd-product` と表現する一方、状態遷移表では発注に `stsd-purchase` を使用しているため、参照先ラベルを一貫させてください。 -->
 - 対象グループは仕入であり、単一店舗の仕入計画（`P-01`）と入荷検品（`P-02`）を扱う。在庫グループから補充依頼を受けてから、発注し、納品された商品を検品して仕入記録・在庫記録を更新し、受入品を売場棚へ出すまでを対象とする。
 - 対象組織は店主代表と店番担当、外部主体は仕入先である。システム境界は商品台帳の参照、仕入記録と在庫記録の更新までとし、画面操作、物理項目、保存方式は対象外とする。
 - 在庫数の算出と補充判断は `cdfd-inventory`、売場棚に出した後の店頭販売は `cdfd-sales`、在庫から仕入を経て販売へ至るグループ横断の順序は `cdfd-uc-replenishment` を参照する。
@@ -76,6 +85,8 @@ specdojo:
 - **主要出力**: 売場棚へ出す商品、仕入記録、入荷数量、返品情報
 - **データストア**: 仕入記録、在庫記録、売場棚
 
+<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=48 上位の `cdfd-overview-sample` では `P-05` も入荷数量を在庫記録へ反映すると定義している一方、本書は `P-02-03` を更新主体としているため、在庫記録の更新責務を一方に確定し、他方を受け渡しまたは参照へ修正してください。 -->
+<!-- specdojo:finding id=F005 severity=major rule=vp-qe-omissions-consistency line=48 上位概要の `P-05` と本書の `P-02-03` の双方が入荷数量の在庫記録反映を担っているため、更新責務を一方へ集約し、もう一方の入力・出力・委譲を整合させてください。 -->
 | プロセス ID | プロセス       | 業務目的                                                           | 主な担当                       | 起動条件                               | 必須性                                             |
 | ----------- | -------------- | ------------------------------------------------------------------ | ------------------------------ | -------------------------------------- | -------------------------------------------------- |
 | `P-02-01`   | 入荷受入       | 納品と発注内容を対応付け、検品対象として受け付ける。               | 店番担当（管理責任: 店主代表） | 仕入先から商品と納品情報を受け取った   | 必須                                               |
@@ -237,6 +248,8 @@ flowchart LR
 
 ### 8.1. 主要例外
 
+<!-- specdojo:finding id=F004 severity=minor rule=vp-qe-verifiability line=209 両記録の更新と読み返しが成功した後に `P-02-03` から再開すると、成功済みの更新を再実行する解釈になるため、成功まで `P-02-03` を再試行するのか、成功後に条件付き後続へ進むのかを明記してください。 -->
+<!-- specdojo:finding id=F011 severity=minor rule=vp-ux-readability line=209 更新成功後に同じプロセスから再開する記述では再試行と後続継続の区別がつかないため、成功前の再試行手順と成功後の進行先を分けて記述してください。 -->
 | 例外 ID   | 対象プロセス | 検出条件                                                 | 停止範囲                                       | 本グループでの扱い                                                               | 継続・再開条件                                                     |
 | --------- | ------------ | -------------------------------------------------------- | ---------------------------------------------- | -------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
 | `E-01-01` | `P-01-02`    | 発注送付後に仕入先から受注不可の回答を受けた             | 当該発注の入荷受入と、確定数量の仕入先への再送 | 発注内容を未確定として店主代表へ戻し、在庫グループへ再検討が必要な数量を引き渡す | 店主代表が代替仕入先または数量を承認した後、`P-01-01` から再開する |

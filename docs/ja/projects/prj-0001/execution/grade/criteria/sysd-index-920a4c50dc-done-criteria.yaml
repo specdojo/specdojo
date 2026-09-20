@@ -1,0 +1,38 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: sysd-index-grade-criteria
+document: sysd-index
+path: docs/ja/product/040-system-design/sysd-index.md
+graded_at: "2026-09-19T16:45:51.883Z"
+graded_by: codex-expert-executor
+content_hash: a9a332d23bd2a0d607f7074b65bcff508c883a7ab696d992fdb57d3791fe10d7
+summary:
+  satisfied: 2
+  unsatisfied: 2
+  total: 4
+criteria:
+  - id: DC-001
+    text: 設計情報の参照先（API定義・DBスキーマ・設定スキーマ）へのリンクが揃っていること
+    roles:
+      - ARC
+    viewpoint: vp-arc-document-structure
+    status: unsatisfied
+    reason: 設定スキーマは示されているが、API 定義と DB スキーマの参照先または非該当宣言がない。
+  - id: DC-002
+    text: 設計のSSOT所在が確認できること
+    roles:
+      - DEV
+    viewpoint: vp-dev-implementation-readiness
+    status: satisfied
+  - id: DC-003
+    text: テスト設計に必要な設計SSOTへのリンクが確認できること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: satisfied
+  - id: DC-004
+    text: 運用・監視設定の参照先が確認できること
+    roles:
+      - OPS
+    viewpoint: vp-ops-operability
+    status: unsatisfied
+    reason: 運用文書のディレクトリは示されているが、運用・監視設定の SSOT を特定できない。

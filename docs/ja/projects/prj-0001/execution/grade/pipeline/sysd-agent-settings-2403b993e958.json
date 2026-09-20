@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "project_id": "prj-0001",
+  "target": "deliverable",
+  "document": "docs/ja/product/040-system-design/sysd-agent-settings.md",
+  "content_hash": "393a2a338926fa3714918b954a72f0d7f6b65d299b21a88e94a19678e5667fdd",
+  "stage_completed": 0,
+  "stage_failed": 1,
+  "stage_total": 1,
+  "consecutive_failures": 1,
+  "max_failures": 3,
+  "last_run_id": "JBR-grade-deliverable-c452fc601959",
+  "updated_at": "2026-09-19T16:11:13.717Z"
+}

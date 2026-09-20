@@ -6,6 +6,40 @@ specdojo:
   rulebook: specdojo:sysd-rulebook
   part_of:
     - sysd-agent-settings
+  grade:
+    rubric: grade-rubric-v1
+    target: deliverable
+    verdict: needs-work
+    score: 64
+    graded_at: "2026-09-19T16:18:04.280Z"
+    graded_by: codex-expert-executor
+    content_hash: f2b60a0bd3c67d31f01e34dfaf1db295c11228cdad2e955f29bcd8e78c2b665c
+    categories:
+      consistency: { score: 38 }
+      usability: { score: 69 }
+      architecture: { score: 100 }
+      quality: { score: 58 }
+    viewpoints:
+      vp-arc-cross-document-consistency: { level: 2, score: 50 }
+      vp-arc-conciseness: { level: 3, score: 75 }
+      vp-arc-single-responsibility: { level: 4, score: 100 }
+      vp-qe-done-criteria: { level: 1, score: 25 }
+      vp-qe-verifiability: { level: 2, score: 50 }
+      vp-qe-omissions-consistency: { level: 1, score: 25 }
+      vp-ux-readability: { level: 2, score: 50 }
+      vp-ux-user-flow: { level: 3, score: 75 }
+      vp-ux-language-consistency: { level: 3, score: 75 }
+      vp-arc-document-structure: { level: 4, score: 100 }
+      vp-qe-config-validity: { level: 4, score: 100 }
+    findings: { blocker: 0, major: 8, minor: 6, note: 0 }
+    done_criteria:
+      satisfied: 2
+      total: 5
+      unsatisfied:
+        DC-001: [BA]
+        DC-002: [PO]
+        DC-004: [QE]
+      detail_ref: sysd-claude-agent-settings-grade-criteria
 ---
 
 # Claude Code エージェント設定
@@ -16,6 +50,7 @@ SpecDojo CLI と Claude Code を組み合わせてマルチエージェント実
 
 共通の責務分担、実行フロー、割り当て、失敗処理、worktree は [エージェント共通設定](sysd-agent-settings.md) に従う。本書では Claude Code 固有の設定だけを定義する。
 
+<!-- specdojo:finding id=F005 severity=major rule=vp-qe-done-criteria line=9 ローカルLLM不要・Web検索利用という一般的な適性だけで、どの業務要件を根拠に Claude Code を採用するか、代替 provider との選択条件や制約が追跡できない。 -->
 Claude Code は Anthropic API 経由でクラウドモデルを使用する。ローカルLLMが不要な環境や Web 検索能力が必要なタスクに適する。
 
 - **Anthropic API 使用**: `ANTHROPIC_API_KEY` または `claude auth login` で認証する。
@@ -31,6 +66,7 @@ Claude Code は Anthropic API 経由でクラウドモデルを使用する。�
 
 ## 3. 全体フロー
 
+<!-- specdojo:finding id=F002 severity=minor rule=vp-arc-cross-document-consistency line=28 全体フローは Claude Code agent が result を編集すると記すが、agent 定義・`pm-members.yaml`・後続節では reporter は構造化結果を返し runner が result へ反映する責務であるため, runner の反映工程に修正する必要がある。 -->
 ```text
 specdojo exec run
    → providers.claude の command template から解決した claude -p --agent <name> を起動
@@ -70,6 +106,8 @@ SpecDojo の project management 配下と worktree の共通構成は親設計�
 
 ### 5.1. 認証方法
 
+<!-- specdojo:finding id=F012 severity=minor rule=vp-ux-readability line=63 「2種類の認証方式」と説明している直後の表に3方式を列挙しており、長期 OAuth Token を独立方式と数えるか派生方式と扱うかを統一する必要がある。 -->
+<!-- specdojo:finding id=F014 severity=minor rule=vp-ux-language-consistency line=63 認証方式を「2種類」と呼びながら表では Claude サブスク、Anthropic API Key、長期 OAuth Token の3行を並列に扱っているため、分類とラベルを一致させる必要がある。 -->
 Claude Code は2種類の認証方式を持つ。
 
 | 方式              | 用途                                     | 設定方法                     |
@@ -122,6 +160,10 @@ export ANTHROPIC_API_KEY=sk-ant-...
 
 ### 8.1. frontmatter フィールド一覧
 
+<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=121 `permissionMode` の説明は「自動実行では `bypassPermissions` を使用」と定める一方、176行目と `.claude/settings.json` は同モードを禁止しており、無人実行の安全境界を一意に実装できないため、採用モードと権限制御を実設定に合わせて統一する必要がある。 -->
+<!-- specdojo:finding id=F006 severity=major rule=vp-qe-done-criteria line=121 無人実行で `bypassPermissions` を使用する記述と禁止する記述が両立しておらず、安全方針を承認できる一意な設計になっていない。 -->
+<!-- specdojo:finding id=F009 severity=major rule=vp-qe-omissions-consistency line=121 `bypassPermissions` を自動実行で使用するとする記述が, 同文書176行目の禁止方針および実設定の `disableBypassPermissionsMode: "disable"` と矛盾している。 -->
+<!-- specdojo:finding id=F011 severity=major rule=vp-ux-readability line=121 自動実行では `bypassPermissions` を使用すると説明した後、176行目で同モードを禁止し、292行目では別の `auto` を使用しているため、標準の権限モードが判別できない。 -->
 | フィールド       | 必須 | 説明                                                                                                                                                   |
 | ---------------- | ---- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `name`           | ○    | 一意の識別子（英小文字・ハイフンのみ）。`--agent` フラグで参照する                                                                                     |
@@ -187,6 +229,7 @@ providers:
 
 `pm-members.yaml` の member は選択属性だけを持つ。全員 `stage_role`（`executor` / `reporter`）を持つ pipeline member とし、単体で edit/review を完結する legacy member は使わない。
 
+<!-- specdojo:finding id=F004 severity=minor rule=vp-arc-conciseness line=180 5人分の `pm-members.yaml` 例は8.2〜8.5節とエージェント一覧のモデル・tools・用途・責務を再掲しているため、選択規則に必要な最小例へ縮約し、完全な定義は実ファイル参照へ委ねるべきである。 -->
 ```yaml
 members:
   - nickname: claude-executor
@@ -275,6 +318,7 @@ providers:
 
 `try_next` でフォールバックメンバー（`claude-expert-executor` など）に切り替えることで継続実行できる。
 
+<!-- specdojo:finding id=F003 severity=minor rule=vp-arc-cross-document-consistency line=268 参照先の親設計 `sysd-agent-settings.md` に limit の共通モデル表が存在せず、`provider_signal.kind` の写像先を追跡できないため、実在する正本への参照に修正する必要がある。 -->
 Claude Code の limit は次の種類があり、reset horizon が異なるため正規化と回復戦略を変える。共通モデルへの写像は親設計の limit 表に従う。
 
 | limit               | 概要                                                                                                            | reset horizon          | `provider_signal.kind` | 扱い                                                                                            |
@@ -308,4 +352,8 @@ claude -p \
 
 ## 11. worktree 分離セットアップ
 
+<!-- specdojo:finding id=F007 severity=major rule=vp-qe-done-criteria line=301 文書末尾までに設計制約ごとのテスト、設定検証、レビュー方法および対応するテスト資産への参照がなく、テスト設計・検証観点の参照として利用できない。 -->
+<!-- specdojo:finding id=F008 severity=major rule=vp-qe-verifiability line=301 agent 選定、mode 別 settings、権限境界、command template 展開、limit 正規化について、期待状態・失敗条件・確認手順・対応テストを示す検証表がなく、設計どおりかを pass / fail 判定できない。 -->
+<!-- specdojo:finding id=F010 severity=major rule=vp-qe-omissions-consistency line=301 rulebook が子設計に求める「検証観点・関連文書」がなく、設定制約ごとの検証方法、テスト設計、横断ルール、運用文書への導線が欠落している。 -->
+<!-- specdojo:finding id=F013 severity=minor rule=vp-ux-user-flow line=301 文書末尾に検証観点・関連文書の集約がなく、将来の貢献者が設定変更後に参照すべきテスト、横断ルール、運用手順へ迷わず到達できない。 -->
 worktree のライフサイクル、配置、ブランチ名、イベントファイル名は親設計に従う。`claude-executor` と `claude-expert-executor`（stage_role: executor、mode: edit）の並列実行では worktree を使用し、成果物を変更しない review executor / reporter では不要とする。

@@ -1,0 +1,45 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: sysd-claude-agent-settings-grade-criteria
+document: sysd-claude-agent-settings
+path: docs/ja/product/040-system-design/sysd-claude-agent-settings.md
+graded_at: "2026-09-19T16:18:04.280Z"
+graded_by: codex-expert-executor
+content_hash: f2b60a0bd3c67d31f01e34dfaf1db295c11228cdad2e955f29bcd8e78c2b665c
+summary:
+  satisfied: 2
+  unsatisfied: 3
+  total: 5
+criteria:
+  - id: DC-001
+    text: 設計トピックの採用理由・制約が業務要件と整合していること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: unsatisfied
+    reason: Claude Code の一般的な適性は示されるが、採用理由と制約が具体的な業務要件へ追跡されていない。
+  - id: DC-002
+    text: 設計方針を承認できること
+    roles:
+      - PO
+    viewpoint: vp-po-decision-readiness
+    status: unsatisfied
+    reason: 無人実行の権限モードに相反する方針があり、安全性を含めた設計承認ができない。
+  - id: DC-003
+    text: 技術的制約・依存関係が識別できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: satisfied
+  - id: DC-004
+    text: テスト設計・検証観点の参照として使えること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: unsatisfied
+    reason: 設計制約とテスト・設定検証・レビュー方法を対応付けた検証観点および参照先がない。
+  - id: DC-005
+    text: 実装の基礎として参照できること
+    roles:
+      - DEV
+    viewpoint: vp-dev-implementation-readiness
+    status: satisfied

@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: sysd-opencode-agent-settings-grade-criteria
+document: sysd-opencode-agent-settings
+path: docs/ja/product/040-system-design/sysd-opencode-agent-settings.md
+graded_at: "2026-09-19T16:57:37.778Z"
+graded_by: codex-expert-executor
+content_hash: 9573566fdf1285ef385384dad171d2ceb67117e9e8786f52577fee72fa11b6e0
+summary:
+  satisfied: 1
+  unsatisfied: 4
+  total: 5
+criteria:
+  - id: DC-001
+    text: 設計トピックの採用理由・制約が業務要件と整合していること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: unsatisfied
+    reason: 採用理由と制約は説明されているが、対応する業務要件または上位要求への参照がなく、業務要件との整合を確認できない。
+  - id: DC-002
+    text: 設計方針を承認できること
+    roles:
+      - PO
+    viewpoint: vp-po-decision-readiness
+    status: unsatisfied
+    reason: provider制限、review権限、member名、モデル割り当て、導入状況に矛盾があり、設計方針を一意に承認できない。
+  - id: DC-003
+    text: 技術的制約・依存関係が識別できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: satisfied
+  - id: DC-004
+    text: テスト設計・検証観点の参照として使えること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: unsatisfied
+    reason: 制約ごとのテスト方法、期待結果、合否条件およびテスト設計への参照がない。
+  - id: DC-005
+    text: 実装の基礎として参照できること
+    roles:
+      - DEV
+    viewpoint: vp-dev-implementation-readiness
+    status: unsatisfied
+    reason: 実在しないagent名を使う割り当て例と古い現状差分により、そのまま実装・設定作業の基礎として使用できない。

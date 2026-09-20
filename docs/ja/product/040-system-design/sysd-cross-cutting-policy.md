@@ -6,10 +6,44 @@ specdojo:
   rulebook: specdojo:sysd-cross-cutting-policy-rulebook
   part_of:
     - sysd-index
+  grade:
+    rubric: grade-rubric-v1
+    target: deliverable
+    verdict: needs-work
+    score: 70
+    graded_at: "2026-09-19T16:35:31.850Z"
+    graded_by: codex-expert-executor
+    content_hash: 8c23094ec79fde23f02092ae04549d185fd85f2435bdd349af7fa46b6a4a3389
+    categories:
+      consistency: { score: 50 }
+      usability: { score: 81 }
+      architecture: { score: 100 }
+      quality: { score: 58 }
+    viewpoints:
+      vp-arc-cross-document-consistency: { level: 2, score: 50 }
+      vp-arc-conciseness: { level: 4, score: 100 }
+      vp-arc-single-responsibility: { level: 4, score: 100 }
+      vp-qe-done-criteria: { level: 1, score: 25 }
+      vp-qe-verifiability: { level: 2, score: 50 }
+      vp-qe-omissions-consistency: { level: 2, score: 50 }
+      vp-ux-readability: { level: 3, score: 75 }
+      vp-ux-user-flow: { level: 3, score: 75 }
+      vp-ux-language-consistency: { level: 3, score: 75 }
+      vp-arc-document-structure: { level: 4, score: 100 }
+      vp-qe-config-validity: { level: 4, score: 100 }
+    findings: { blocker: 0, major: 5, minor: 4, note: 0 }
+    done_criteria:
+      satisfied: 2
+      total: 4
+      unsatisfied:
+        DC-002: [DEV]
+        DC-004: [OPS]
+      detail_ref: sysd-cross-cutting-policy-grade-criteria
 ---
 
 # SpecDojo システム設計横断ルール
 
+<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=3 成果物カタログはエラー・タイムアウト・冪等・トレーシング・設定上書き階層・モジュール境界を対象として宣言しているが、本文はSpecDojoのagent実行規範に限定されているため、カタログまたは本文の適用範囲を一致させる必要がある。 -->
 SpecDojo CLI、agent、実行runner、Git worktreeへ横断的に適用する責務、設定解決、状態遷移、失敗処理、権限のルールを定義する。実装・設定を一次情報とし、本書は設計意図と検証可能な制約のSSOTである。
 
 ## 1. 概要（適用範囲・優先順位）
@@ -18,8 +52,11 @@ SpecDojo CLI、agent、実行runner、Git worktreeへ横断的に適用する責
 
 競合時の優先順位は`SEC > STA > GIT > RET > CFG > SEL > EXE`とする。上位カテゴリに反するretry、fallback、設定上書き、agent出力は採用しない。
 
+<!-- specdojo:finding id=F003 severity=major rule=vp-qe-done-criteria line=11 DC-002が要求する冪等方針、タイムアウトの設定・打切り方針、ログ方針がルール一覧および詳細に存在せず、provider障害の判定・retry規則だけでは条件を満たさない。 -->
+<!-- specdojo:finding id=F006 severity=major rule=vp-qe-omissions-consistency line=11 rulebookと成果物カタログが要求する共通エラー、冪等、タイムアウト、ログ・監査ログ、トレーシング、設定上書き階層、モジュール境界のルールが欠落しているため、必須領域を追加するか適用範囲の正式な変更が必要である。 -->
 ## 2. ルール一覧（ID/カテゴリ/要約/必須度）
 
+<!-- specdojo:finding id=F009 severity=minor rule=vp-ux-language-consistency line=20 `scp-CFG-002`の要約「設定と秘密情報の責務を分離する」に`MUST NOT`を組み合わせると責務分離を禁止する意味になるため、詳細規則に合わせて要約を「秘密情報を設定・文書へ保存しない」等へ修正する必要がある。 -->
 <!-- prettier-ignore -->
 | Rule ID | Category | Summary | Level | Owner |
 | --- | --- | --- | --- | --- |
@@ -98,6 +135,7 @@ SpecDojo CLI、agent、実行runner、Git worktreeへ横断的に適用する責
 
 ### scp-STA-002: reopen
 
+<!-- specdojo:finding id=F008 severity=minor rule=vp-ux-user-flow line=96 `登録簿運用ガイド`および複数箇所の`provider別子設計`が文書ID・相対パス・リンクを持たず参照先を一意に特定できないため、正式なIDまたはリポジトリ相対パスへ置き換える必要がある。 -->
 - **Rule（MUST）**: `reopen`は人間memberだけが理由付きで`done`から`todo`へ訂正する。活動中または完了済みの下流taskがある場合は拒否し、下流から整合させる。
 - **Rationale（意図）**: 確定済み依存関係を無言で無効化しない。
 - **Scope（適用範囲）**: 完了判定の訂正。
@@ -116,6 +154,7 @@ SpecDojo CLI、agent、実行runner、Git worktreeへ横断的に適用する責
 
 ### scp-RET-002: retry / fallback / block
 
+<!-- specdojo:finding id=F005 severity=major rule=vp-qe-verifiability line=109 `scp-RET-002`はcriticalityと正規化signalに応じてretry・fallback・blockを選ぶとしているが, criticality区分、signalとの対応表、attempt・backoff上限の値または設定キーがなく、実装・テストのpass/failを一意に判定できない。 -->
 - **Rule（MUST）**: policyはtaskのcriticalityと正規化signalに従い、上限付きretry、適合memberへのfallback、またはblockを選ぶ。独立したReady taskと別providerは継続できる。
 - **Rationale（意図）**: 一つのprovider障害による全体停止と無限再試行を防ぐ。
 - **Scope（適用範囲）**: provider利用制限・一時障害。
@@ -161,6 +200,7 @@ SpecDojo CLI、agent、実行runner、Git worktreeへ横断的に適用する責
 
 ### scp-GIT-004: agent・テストのGit環境隔離と状態ガード
 
+<!-- specdojo:finding id=F007 severity=minor rule=vp-ux-readability line=154 `scp-GIT-004`のRuleが環境変数除去、Vitest setup、Git起動環境、executor権限、HEAD・config比較、除外条件、fixture identityを一段落に集約しているため、同一Rule内の条件別箇条書きへ分けて判断点を追いやすくする必要がある。 -->
 - **Rule（MUST）**: agent、agent配下の子プロセス、親検証、Vitest workerへ`GIT_DIR`、`GIT_WORK_TREE`その他のrepository固有環境変数を継承しない。Vitestは全設定の共通setupでtest module読込前にこれらを除去し、個々のTypeScriptテストからGitを起動する場合も`gitEnvironment()`から作った環境を明示する。executorにはcommitとGit設定を親runnerへ委ねるよう明示し、agent起動前後でagent worktreeのHEADと共有local configを比較して、差分があれば親検証・reporter・統合へ進めずblockする。runnerが作成したbranchの表示用metadataは比較から除外するが、`core.bare`を含むrepository動作に関わる設定は除外しない。テストfixtureのidentityはプロセス環境だけに注入し、local configへ書き込まない。
 - **Rationale（意図）**: Git hookから継承した`GIT_DIR`が一時fixture向けの`git init`や`git commit`を実repositoryへ向け、`core.bare`やidentity設定の変更、履歴混入を起こすことを防ぐ。
 - **Scope（適用範囲）**: executor / reporter、in-place / worktree / trial / 分割worktree command、親runner検証、および3つのVitest実行設定。shell scriptとnpm scriptの直接Git起動はVitestの静的検査対象外とし、hookからテストを起動する境界ではVitest setupを防御点とする。
@@ -192,6 +232,8 @@ SpecDojo CLI、agent、実行runner、Git worktreeへ横断的に適用する責
 
 ## 5. 関連ドキュメント導線（SYSD/SYSD-CF/NFR/OPD/OPR/DEC）
 
+<!-- specdojo:finding id=F002 severity=minor rule=vp-arc-cross-document-consistency line=190 関連文書表がstatus=deprecatedかつtrash配下へ移動済みの`cdfd-task-execution`、`cdfd-register-lifecycle`、`cdfd-multi-project`を現行参照としているため、後継SSOTへの更新または履歴参照である旨の明示が必要である。 -->
+<!-- specdojo:finding id=F004 severity=major rule=vp-qe-done-criteria line=194 DC-004が要求する監視およびトレーシングの運用観点がなく、関連文書表でもOPDを「なし」としているため、セキュリティ規則だけでは条件を満たさない。 -->
 | 種別            | ドキュメントID            | 目的                    | 備考   |
 | --------------- | ------------------------- | ----------------------- | ------ |
 | SYSD            | `sysd-index`              | 設定・実装SSOTの入口    | 必須   |

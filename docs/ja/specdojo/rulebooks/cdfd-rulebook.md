@@ -15,13 +15,13 @@ specdojo:
     rubric: grade-rubric-v1
     target: kata
     verdict: needs-work
-    score: 75
-    graded_at: "2026-09-17T09:39:08.533Z"
+    score: 71
+    graded_at: "2026-09-19T21:14:35.930Z"
     graded_by: codex-expert-executor
-    content_hash: 3b604f47c7d6a7e6a9bc2b831477688e0b6d95f2f92b474e5bd1b2794363a961
+    content_hash: 83b8428804d6239da88eb0605cc10dbc6f896d9908c2418719f8fec109b3964d
     categories:
-      consistency: { score: 63 }
-      usability: { score: 83 }
+      consistency: { score: 50 }
+      usability: { score: 75 }
       architecture: { score: 100 }
       quality: { score: 63 }
     viewpoints:
@@ -29,12 +29,12 @@ specdojo:
       vp-arc-conciseness: { level: 4, score: 100 }
       vp-arc-single-responsibility: { level: 4, score: 100 }
       vp-qe-verifiability: { level: 3, score: 75 }
-      vp-qe-omissions-consistency: { level: 3, score: 75 }
+      vp-qe-omissions-consistency: { level: 2, score: 50 }
       vp-qe-kata-conformance: { level: 2, score: 50 }
-      vp-ux-readability: { level: 4, score: 100 }
+      vp-ux-readability: { level: 3, score: 75 }
       vp-ux-language-consistency: { level: 2, score: 50 }
       vp-arc-document-structure: { level: 4, score: 100 }
-    findings: { blocker: 0, major: 3, minor: 8, note: 0 }
+    findings: { blocker: 0, major: 4, minor: 7, note: 0 }
 ---
 
 # 概念データフロー図（プロセスグループ別）作成ルール
@@ -45,6 +45,8 @@ Conceptual Data Flow Diagram Process Group Documentation Rulebook
 
 ## 1. 全体方針
 
+<!-- specdojo:finding id=F003 severity=minor rule=vp-qe-verifiability line=11 一プロセス一完了条件を要求していますが、プロセス領域表または個別入出力表のどの項目で完了条件を記録し、どうpass/fail判定するかが定義されていないため, 記載先と判定条件を明示してください。 -->
+<!-- specdojo:finding id=F011 severity=major rule=vp-ux-language-consistency line=9 `プロセスグループ` を本書では複数領域で構成されるものに固定していますが、上位rulebookは1領域グループも同じ用語で認めているため、包含数を「一つ以上のプロセス領域」に統一してください。 -->
 - 一文書は、全体概要で定めた一つのプロセスグループと、そのグループに属する複数のプロセス領域を詳細化します。各領域はちょうど一つのプロセスグループ別 CDFD に属します。
 - 「プロセス領域」を領域単位の主要入力・主要出力・データストアとプロセスの業務目的・起動条件・必須性の正本、「データストア」を本グループが読み書きする上位一覧の部分集合、「個別プロセス主要入出力」をプロセス単位の入出力の正本、図を順序と分岐の正本として併用します。
 - 一つのプロセスノードは、一つの業務目的と完了条件を持つ処理だけを表します。コマンドや画面の一操作を無条件に一プロセスへ分割せず、複数の判断・更新・生成を一ノードに詰め込みません。
@@ -91,6 +93,7 @@ Conceptual Data Flow Diagram Process Group Documentation Rulebook
 | based_on   | 全体概要など、依存関係上許可された直接の内容根拠の ID | 任意 |
 | supersedes | 置き換える旧 CDFD の ID                               | 任意 |
 
+<!-- specdojo:finding id=F004 severity=minor rule=vp-qe-verifiability line=58 `status` の昇格条件を「定められた承認者」とする一方、承認者の参照先と承認記録の必須形を定義していないため、readyの判定を追跡できる文書IDまたは記録種別を明記してください。 -->
 - product 成果物の `id` はプロジェクト修飾なしとし、`based_on` に全体概要を記載する場合も product 成果物 ID を使用します。
 - `based_on` は成果物カタログの `depends_on` の推移閉包に含まれる直接の内容根拠だけを列挙します。
 - 文書のタイトルと利用目的は本文 H1 と「目的」で示し、未定義の Frontmatter 項目を追加しません。
@@ -114,6 +117,8 @@ Conceptual Data Flow Diagram Process Group Documentation Rulebook
 
 ### 6.1. 目的と適用範囲
 
+<!-- specdojo:finding id=F002 severity=minor rule=vp-arc-cross-document-consistency line=79 適用範囲で期間を必須としている一方、対応templateに期間の記入欄がなくsampleにも期間の記載がないため、期間を必須とするなら両成果物へ反映し、不要なら本規則とrecipeの問いから削除してください。 -->
+<!-- specdojo:finding id=F009 severity=minor rule=vp-qe-kata-conformance line=79 rulebookとrecipeが適用期間の明記を求めていますが、templateの適用範囲に記入欄がなくsampleも完成例を示していないため、骨組みと完成例へ期間を反映してください。 -->
 - 誰が、グループ内部のフロー、領域間の受け渡し、主要例外、グループ外への委譲のどれを合意または後続利用するかを示します。
 - 対象グループと含む領域の範囲は全体概要から引き継ぎます。期間、組織、システム境界と、どのイベントからどの出力までを扱うかを明記します。
 - 対象外は、補助操作、実装詳細、他グループの責務、ユースケース別 CDFD が扱う横断順序に分けます。委譲内容の詳細は「主要例外とグループ外への委譲」にだけ記載します。
@@ -178,6 +183,8 @@ Conceptual Data Flow Diagram Process Group Documentation Rulebook
 - 主要例外が 0 件の場合も「主要例外」の節を残し、正常系・条件付きプロセス・更新失敗を確認した範囲と、業務結果または後続起動を変える例外がないという結論を一文で記載して表を省略します。
 - グループ外委譲が 0 件の場合も「グループ外への委譲」の節を残し、対象外とした他グループの責務と横断ユースケースを確認した範囲、および委譲がないという結論を一文で記載して表を省略します。
 
+<!-- specdojo:finding id=F005 severity=minor rule=vp-qe-verifiability line=142 完成判定が必須のFrontmatter・目的・適用範囲やプロセス表の業務目的・担当・起動条件・必須性を確認対象に含めず、同節だけでは必須要件が欠けた文書も完成扱いにできるため、全必須条件を列挙するか本文要件との併用を明記してください。 -->
+<!-- specdojo:finding id=F007 severity=minor rule=vp-qe-omissions-consistency line=142 完成判定に必須Frontmatter、目的、適用範囲、およびプロセス表の必須列内容の確認が欠けているため、本文要件で必須とした項目を完成チェックへ過不足なく反映してください。 -->
 ### 6.8. 完成判定
 
 - 全体概要で対象グループに属する全領域が「プロセス領域」にちょうど一つの節として登場し、各領域の表に内部プロセスが一つ以上あります。
@@ -191,6 +198,10 @@ Conceptual Data Flow Diagram Process Group Documentation Rulebook
 
 ## 7. 禁止事項
 
+<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=155 `cdfd-overview-rulebook` は1領域だけのプロセスグループを認める一方、本書はその一領域を一文書にすることを禁止しており、上位で有効なグループの詳細CDFDを作成できないため、上位で定めた一グループを領域数にかかわらず一文書へ引き継ぐ規則に修正してください。 -->
+<!-- specdojo:finding id=F006 severity=major rule=vp-qe-omissions-consistency line=155 上位rulebookが許可する1領域グループの扱いが欠落したまま禁止事項で排除されているため、単一領域でもグループ全体を一文書として成立させる本文要件・template操作・完成条件を追加してください。 -->
+<!-- specdojo:finding id=F008 severity=major rule=vp-qe-kata-conformance line=155 recipeは上位グループの全領域を引き継ぐ手順で領域数を限定しておらず、上位rulebookも1領域グループを認める一方、本書は一領域の文書化を禁止しているため、rulebook・recipe・templateが同じ有効入力を扱えるよう統一してください。 -->
+<!-- specdojo:finding id=F010 severity=minor rule=vp-ux-readability line=155 「全体概要の一領域だけを一文書にしない」という記述は、複数領域グループの部分切り出しと正規の1領域グループを区別できないため、禁止対象を「複数領域を持つグループの一部だけを切り出すこと」と明確化してください。 -->
 - 全体概要の一領域だけを一文書にしたり、一つの領域を複数のプロセスグループ別 CDFD に重複配置したりしません。
 - product 成果物の ID を `<project-id>:cdfd-<group>` にしたり、領域名を使った `cdfd-<domain>` を新規採用したりしません。
 - 文書内一意の `P-01` 形式を内部プロセス ID に使ったり、領域 ID と対応しないプロセス ID を付けたりしません。

@@ -6,6 +6,38 @@ specdojo:
   rulebook: specdojo:sysd-rulebook
   part_of:
     - sysd-index
+  grade:
+    rubric: grade-rubric-v1
+    target: deliverable
+    verdict: needs-work
+    score: 68
+    graded_at: "2026-09-19T16:51:39.478Z"
+    graded_by: codex-expert-executor
+    content_hash: ee72a005022dd3e9f5ca0f8ef94195d207b44b9008cf8a81fd5611a6dbf50901
+    categories:
+      consistency: { score: 50 }
+      usability: { score: 63 }
+      architecture: { score: 100 }
+      quality: { score: 67 }
+    viewpoints:
+      vp-arc-cross-document-consistency: { level: 2, score: 50 }
+      vp-arc-conciseness: { level: 3, score: 75 }
+      vp-arc-single-responsibility: { level: 4, score: 100 }
+      vp-qe-done-criteria: { level: 2, score: 50 }
+      vp-qe-verifiability: { level: 2, score: 50 }
+      vp-qe-omissions-consistency: { level: 2, score: 50 }
+      vp-ux-readability: { level: 3, score: 75 }
+      vp-ux-user-flow: { level: 2, score: 50 }
+      vp-ux-language-consistency: { level: 2, score: 50 }
+      vp-arc-document-structure: { level: 4, score: 100 }
+      vp-qe-config-validity: { level: 4, score: 100 }
+    findings: { blocker: 0, major: 6, minor: 4, note: 0 }
+    done_criteria:
+      satisfied: 4
+      total: 5
+      unsatisfied:
+        DC-004: [QE]
+      detail_ref: sysd-job-execution-grade-criteria
 ---
 
 # Job実行設計
@@ -38,6 +70,8 @@ Jobは新しいagent実行エンジンを持たない。`edit` / `review` Jobと
 ### 1.1. 責務境界
 
 Jobは「runnerが直接実行するコマンド」と「agentへ委譲する判断」を分離する。`task.description`へ決定論的な手順を自然言語で書くと、agentが手順を解釈し、実行の有無や引数の正しさがagent依存になる。手順はscriptまたはCLIへ実装して`task.command`から入口を1つ呼び、結果の判断が必要な場合だけ`task.analysis`を指定する。判定可能な規約は`job-definition-standard`をSSOTとする。
+
+<!-- specdojo:finding id=F008 severity=major rule=vp-ux-user-flow line=31 `job-definition-standard`をSSOTとして示しているがリンクがなく、関連文書一覧も存在しないため、実装者・検証者・運用者が必要な正本へ到達できるリンク付き導線を追加する必要がある。 -->
 
 | 関心事                    | 担当                               |
 | ------------------------- | ---------------------------------- |
@@ -82,6 +116,9 @@ Job Definitionは「毎回何をするか」を表す再利用可能なテンプ
 | `checkpoint`           | 前回成功時点を次回入力へ渡す規則。必要なJobだけが持つ |
 
 Job Definitionはプロジェクトの`jobs_path`配下へ`job-<slug>.yaml`として配置し、ファイル名と`id`を一致させる案を基本とする。
+
+<!-- specdojo:finding id=F002 severity=minor rule=vp-arc-cross-document-consistency line=75 ファイル名とJob IDの一致は`job-definition-standard`で必須の判定基準だが、「案を基本とする」と任意に読めるため、必須規則として表現を統一する必要がある。 -->
+<!-- specdojo:finding id=F010 severity=minor rule=vp-ux-language-consistency line=75 冒頭では実装済みと宣言している一方で「案を基本とする」「追加し」「既定案」と未確定に見える表現が残るため、現行仕様と将来案を明示的に区別する必要がある。 -->
 
 ### 2.2. Job Run
 
@@ -132,6 +169,8 @@ run:
 `task.agent`はJobが委譲するagentを`pm-members.yaml`のnicknameで直接指名する。`capabilities`による間接指定は、要求を満たすmemberが複数あると選択が実行時の優先度に依存し、Jobの定義から委譲先を読み取れない。さらにroster全体がstage_roleを持つpipeline memberである場合、stage_roleなしのmemberだけを対象とする自動選択では候補が0件になる。`reporter`を併記したRunはexecutor→reporterの2段で実行し、resultはreporterが書く。`reporter`を省略した場合は単一agent実行となり、そのagentがresultまで記入する。`exec run --by`は単一agent実行としての差し替え、`--executor-by` / `--reporter-by`は段ごとの差し替えとして、いずれも指名より優先する。
 
 決定論的な処理は`task.mode: command`とし、入力を展開する`task.command`を必須にする。対象選択を伴う処理では任意の`task.precondition`をRun保存前に実行し、空出力または指定終了コードならJob Runと付随成果物を作らずskipする。runnerはmaterialize済みコマンドをPOSIX環境では`/bin/sh -eu`で直接実行し、コマンド、終了コード、標準出力、標準エラーをevidenceへ記録する。stdout / stderr はredact・上限付きログへの参照と、その参照先と同じbounded内容をevidence本体へ保持する。終了コードが0以外なら、その値からRunを直接`failed`と判定しagentは起動しない。結果の解釈が必要な場合だけ`task.analysis.agent`と`task.analysis.description`を指定し、成功時のcommand evidence本体をreporterへ渡す。これによりreporterは作業ツリーや参照先ログを追加で読むことなく出力を解釈できる。analysisを省略した場合はrunnerがresultを確定する。同じprojectの`specdojo exec`を子プロセスで呼ぶcommandでは、親runnerのproject実行lock tokenとowner tokenの一致を検証してlockを継承し、自己デッドロックを避けながら排他範囲を維持する。
+
+<!-- specdojo:finding id=F007 severity=minor rule=vp-ux-readability line=125 precondition、shell実行、evidence、失敗判定、analysis、lock継承という複数論点が一段落に集中しているため、小見出しまたは表へ分割して条件と結果を対応付ける必要がある。 -->
 
 テンプレート式で参照できる値は、`job_id`、`project_id`、現在のrunnerと同じCLI entryを表す`specdojo`、検証済み`inputs`、トリガーが渡した`scheduled_at`、読み取り専用の前回成功checkpointに限定する。Job Run IDの確定後に解決するtaskとcheckpointでは、これらに加えて`job_run_id`を参照できる。`run.idempotency_key`から`job_run_id`を参照すると循環するため許可しない。任意コード実行や環境変数の無制限な展開は許可しない。入力の`enum`はscalar値またはlistの各要素へ、integerの`minimum` / `maximum`は値域へ適用し、既定値と実行時入力を同じ規則で検証する。入れ子条件は検証可能なflat入力へ分解する。
 
@@ -224,6 +263,8 @@ checkpointはRun開始時ではなく成功確定時に更新する。失敗時�
 
 翻訳Jobは、前回成功時点から現在までの原文差分を入力へ解決する。
 
+<!-- specdojo:finding id=F001 severity=major rule=vp-arc-cross-document-consistency line=238 `owner: TR` は `pm-roles.yaml` に存在しないため、Schedule taskと共通のRole codeを使うという方針に従い、登録済みRole codeへ置換する必要がある。 -->
+<!-- specdojo:finding id=F009 severity=major rule=vp-ux-language-consistency line=238 翻訳Job例の`TR`はプロジェクトで定義されたRole codeではなく、ownerの語彙を混乱させるため登録済みRole codeへ統一する必要がある。 -->
 ```yaml
 id: job-translate-updated-docs
 name: 更新文書の翻訳
@@ -294,6 +335,11 @@ Runの状態変更とattemptは上書きだけで失われない履歴として�
 
 ## 8. 現在の実装境界
 
+<!-- specdojo:finding id=F004 severity=major rule=vp-qe-done-criteria line=286 設計制約ごとの検査方法、対象テスト、期待結果、またはテスト設計への参照がないため、DC-004「テスト設計・検証観点の参照として使えること」を確認できない。 -->
+<!-- specdojo:finding id=F005 severity=major rule=vp-qe-verifiability line=286 Job生成、重複排除、precondition、retry、checkpoint、権限・秘密情報の各制約について検証手段と期待結果を対応付けた検証観点を追加する必要がある。 -->
+<!-- specdojo:finding id=F006 severity=major rule=vp-qe-omissions-consistency line=286 `sysd-rulebook`で必須の検証観点・関連文書がなく、`sysd-index`、横断ルール、テスト設計、運用ガイド、`job-definition-standard`への解決可能な導線を追加する必要がある。 -->
+
+<!-- specdojo:finding id=F003 severity=minor rule=vp-arc-conciseness line=290 command実行・analysis起動・失敗判定の説明が第3節と第4節を反復しているため、この節では現在未対応の差分と実装上の制約だけを残して前節を参照する形へ整理する必要がある。 -->
 - Job Runはin-place実行に対応する。`exec run --job --worktree`は未対応で、指定時にエラーとする。
 - `task.agent`でexecutorとreporterを指名したJob Runは、register項目と同じexecutor/reporter pipelineで実行し、evidenceとpipeline stateを`exec/evidence/<taskId>/<runId>/`へ記録する。reporterだけが失敗したRunの`--resume`はregister経路のみが対応し、Jobでは次のattemptとして再実行する。
 - `task.mode: command`はrunnerがin-placeで直接実行する。`task.analysis`を持つ場合だけ成功後にreporterを起動し、redact・上限付きstdout/stderrを含むevidence本体を渡す。commandまたはanalysisの失敗はRun全体をfailedにする。

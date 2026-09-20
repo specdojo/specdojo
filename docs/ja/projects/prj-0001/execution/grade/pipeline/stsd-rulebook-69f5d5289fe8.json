@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "project_id": "prj-0001",
+  "target": "kata",
+  "document": "docs/ja/specdojo/rulebooks/stsd-rulebook.md",
+  "content_hash": "2c3d0df7ff6b396ca77b17e3eaa9abea20b06660b100030c8573e7b9295aec29",
+  "stage_completed": 0,
+  "stage_failed": 1,
+  "stage_total": 1,
+  "consecutive_failures": 1,
+  "max_failures": 3,
+  "last_run_id": "JBR-grade-kata-d06a398bece6",
+  "updated_at": "2026-09-19T21:24:38.958Z"
+}
