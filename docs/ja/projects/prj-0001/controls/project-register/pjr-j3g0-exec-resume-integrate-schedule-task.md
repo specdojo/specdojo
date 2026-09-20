@@ -2,16 +2,17 @@
 specdojo:
   id: prj-0001:pjr-j3g0-exec-resume-integrate-schedule-task
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-09-15T14:15:36Z"
   due_on: "2026-09-30"
+  completed_at: "2026-09-20T04:46:57Z"
   block_reason: "agent exited with non-zero code: runner による検証 `test-integration` が failed となっているため。プランの完了条件である静的検査およびテストの成功を満たしていない。"
 ---
 

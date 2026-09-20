@@ -74,3 +74,19 @@
       from: waiting
       to: review
   previous_event_id: reg_bd9e804e86f347fca5c32034d72c5d16
+- v: 1
+  id: reg_3b01f3c0bb1746d8aa6eddfc3725840b
+  ts: "2026-09-20T04:46:57Z"
+  action: close
+  actor: specdojo-orchestrator (claude)
+  from_status: review
+  to_status: done
+  reason: codex-expert-executor が worktree で実装。E2E fixture と merge 済み判定の不具合をオーケストレーターが修正して develop へ統合し、利用者が確認して close
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-20"
+  previous_event_id: reg_b099837de7964db2b0abc6e2159e9c74
