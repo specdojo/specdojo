@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_cf3d6c7d633d4687ad75f11a18a20736
+  ts: "2026-09-20T04:55:18Z"
+  action: add
+  actor: specdojo-orchestrator (claude)
+  from_status: null
+  to_status: open
+  reason: 9/13 以降の 253 commit のうち exec の記帳が 182 件（72%）を占めており、利用者が案 A（merge commit への同梱）を選択
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: exec の記帳 commit を merge commit に畳み develop の本線を 1 タスク 1 commit にする
+    - field: description
+      from: ""
+      to: register / Schedule の worktree 実行が develop の第一親線に start・prepare・apply・merge・review の 5〜6 commit を並べ履歴が読みづらい。prepare / apply は exec ブランチに置き、register の遷移は merge commit（失敗時は wait commit）に同梱して、本線を 1 タスク 1 commit にする
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-20"
+    - field: due
+      from: ""
+      to: "2026-09-30"
