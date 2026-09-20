@@ -8,7 +8,7 @@ specdojo:
     - prj-0001:pjr-index
   item_type: todo
   item_status: open
-  priority: low
+  priority: medium
   owner: ARC
   registered_at: "2026-09-06T13:40:45Z"
   due_on: "2026-09-30"

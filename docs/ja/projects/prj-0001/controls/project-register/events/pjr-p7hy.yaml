@@ -32,3 +32,16 @@
     - field: due
       from: ""
       to: "2026-09-30"
+- v: 1
+  id: reg_98dfa914a9354d7d8c3e5543d2815bc6
+  ts: "2026-09-20T05:01:07Z"
+  action: update
+  actor: specdojo-orchestrator (claude)
+  from_status: open
+  to_status: open
+  reason: Detached Unit を既定にする決定（PJR-TBHH）により、実装を伴う項目の複数リポジトリ統合が次の制約になるため優先度を上げる
+  changes:
+    - field: priority
+      from: low
+      to: medium
+  previous_event_id: reg_fe376fd8c10a4e3484e5e74afa043b99
