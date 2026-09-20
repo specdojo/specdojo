@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: high
   owner: ARC
   registered_at: "2026-09-20T05:08:04Z"
   due_on: "2026-09-30"
+  block_reason: rate limit reached
 ---
 
 # PJR-XKKS grade の結果と finding を成果物から切り離しサイドカーへ移す
