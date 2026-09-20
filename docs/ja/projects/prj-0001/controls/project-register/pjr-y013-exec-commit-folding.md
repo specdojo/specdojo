@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   owner: ARC
   registered_at: "2026-09-20T04:55:16Z"
