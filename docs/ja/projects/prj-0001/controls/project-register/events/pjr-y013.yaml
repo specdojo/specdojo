@@ -61,3 +61,16 @@
       from: "-"
       to: rate limit reached
   previous_event_id: reg_282b65e0e4984b3289dfbd3c6a2390b7
+- v: 1
+  id: reg_9d4cc2116cc94ec9a552a285ee9f0828
+  ts: "2026-09-20T12:34:57Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_cdb7520462f941769c2f9d30b065c4c9
