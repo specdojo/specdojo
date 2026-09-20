@@ -46,7 +46,7 @@ Attached Unit（同一リポジトリ）は、SpecDojo 自身の開発のよう�
 | 2   | `quick-start-guide` を Detached Unit の手順に組み替え、同一リポジトリを注記に降格する | ARC  | open | 作業 1 と同一タスク                               |
 | 3   | `config init` の雛形とコメントを Detached Unit のパス構成に改める                     | DEV  | open | 同上                                              |
 | 4   | `directory-layout-reference` / `specdojo-overview-guide` を揃える                     | ARC  | open | 同上                                              |
-| 5   | PJR-P7HY の優先度を medium に上げる                                                   | ARC  | open | オーケストレーターが直接対応                      |
+| 5   | PJR-P7HY の優先度を medium に上げる                                                   | ARC  | done | オーケストレーターが直接対応（2026-09-20）        |
 
 ## 4. 対応結果
 
