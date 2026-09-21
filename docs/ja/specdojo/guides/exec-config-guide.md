@@ -477,16 +477,16 @@ providers:
   antigravity:
     command_template: >-
       agy --sandbox --add-dir "$(pwd)" --dangerously-skip-permissions
-      --model {model} --effort {effort} -p "$(cat)"
+      --model {model} -p "$(cat)"
     command_params:
       by_proficiency:
-        normal: { model: gemini-3.8-flash-high, effort: medium }
-        expert: { model: gemini-3.1-pro-high, effort: high }
+        normal: { model: gemini-3.8-flash-medium }
+        expert: { model: gemini-3.1-pro-high }
 ```
 
 - `--sandbox` は書き込み先を `~/.gemini/antigravity-cli/scratch/` へ逃がすため、`--add-dir "$(pwd)"` で作業ディレクトリ（worktree）を明示して成果物へ書けるようにします。`--add-dir` なしでは成果物が更新されません。
 - `--dangerously-skip-permissions` は非対話実行に必須です。境界は worktree、保護設定（`agent-config-write`）、commit 許可リストで作ります。
-- モデルは `agy models` で確認します。`--effort` は `low` / `medium` / `high` です。
+- モデルは `agy models` で確認します。モデル ID は推論強度を含む（`gemini-3.8-flash-medium` など）ため `--effort` は併用しません。ID と `--effort` が食い違うと `invalid model selection` で起動に失敗します。
 - 資格情報はコンテナ内では `~/.gemini/antigravity-cli/antigravity-oauth-token` に保存されます。devcontainer では `~/.gemini` を名前付きボリュームにして永続化します。
 - `--output-format json --json-schema <file>` は `structured_output` を含む JSON エンベロープを返します。runner の reporter は stdout の本文から JSON を読むため、現時点では既定のテキスト出力を使います。
 

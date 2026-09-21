@@ -164,11 +164,14 @@ providers:
     # ディレクトリ（worktree）を明示して成果物へ書けるようにする（2026-09-21 実測）。
     # --dangerously-skip-permissions は非対話実行に必須。境界は worktree・保護設定・
     # commit 許可リストで作る。
-    command_template: 'agy --sandbox --add-dir "$(pwd)" --dangerously-skip-permissions --model {model} --effort {effort} -p "$(cat)"'
+    # agy のモデル ID は推論強度を含む（gemini-3.8-flash-{high,medium,low} など）。--effort を
+    # 併用すると ID と食い違ったときに "invalid model selection" で起動に失敗するため、
+    # 強度はモデル ID だけで指定する（2026-09-21 実測: flash-high + --effort medium で失敗）。
+    command_template: 'agy --sandbox --add-dir "$(pwd)" --dangerously-skip-permissions --model {model} -p "$(cat)"'
     command_params:
       by_proficiency:
-        normal: { model: gemini-3.8-flash-high, effort: medium }
-        expert: { model: gemini-3.1-pro-high, effort: high }
+        normal: { model: gemini-3.8-flash-medium }
+        expert: { model: gemini-3.1-pro-high }
     # Gemini API の制限文言は未観測。429 / quota / RESOURCE_EXHAUSTED を初期値とし、
     # 実観測した文言で更新する（observed-agent-limit-stderr と同じ扱い）。
     rate_limit_detection:
