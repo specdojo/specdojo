@@ -2,16 +2,17 @@
 specdojo:
   id: prj-0001:pjr-dpvv-docs-lint-package
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-09-21T06:27:03Z"
   due_on: "2026-10-10"
+  completed_at: "2026-09-21T09:26:33Z"
   block_reason: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=lefthook.yml, package.json; agent must record the required change …"
 ---
 
@@ -62,6 +63,10 @@ PJR-9S8F で文書サイトを `@specdojo/docs-site`（`packages/docs-site`）�
 - ルートの `.remarkrc.yaml`、npm scripts、ESLint、lefthook、TypeScript project references を `packages/docs-lint` へ移行し、旧 `tools/docs` を削除した。`specdojo` 本体の `files` は PJR-7VKR で既に `tools/docs` を除外済みだったため、その状態を維持した。
 - `npm pack --dry-run` で lint パッケージが 15 ファイルだけを同梱することを確認した。`specdojo` と `@specdojo/docs-lint` の tarball を別ディレクトリへ導入し、3 export の解決、`.remarkrc.yaml` からのプラグイン読込、`specdojo-docs-lint history-links` の実行を確認した。
 - [[specdojo:quick-start-guide]] と [[specdojo:docs-editing-guide]] に導入手順、`.remarkrc.yaml` の設定例、検証コマンドを追記した。残課題はない。
+
+### 4.1. レビュー結果（2026-09-21）
+
+develop で `lint:md` / `lint:fm` / `validate:history-links` が `packages/docs-lint/bin` 経由で動作し、`npm run check`（テスト 1611 件）が通過することを確認した。本リポジトリでは `packages/docs-lint/node_modules` を持たず root の devDependencies で解決している。root から `remark` / `markdownlint-cli` 等を外す場合は `post-create.sh` に `npm --prefix packages/docs-lint ci` を加える。`@specdojo/docs-lint` の npm 公開は PJR-7VKR の trusted publisher と同じ枠組みで別途行う。
 
 ## 5. 関連ドキュメント
 

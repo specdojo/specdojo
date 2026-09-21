@@ -87,3 +87,19 @@
       from: in-progress
       to: review
   previous_event_id: reg_7085b50948e94efca3d656da8a120891
+- v: 1
+  id: reg_2d08671b2bb848368ae1c57c6f7478eb
+  ts: "2026-09-21T09:26:33Z"
+  action: close
+  actor: specdojo-orchestrator (claude)
+  from_status: review
+  to_status: done
+  reason: codex-expert-executor が worktree で実装。保護設定の scripts / hook はオーケストレーターが適用し、develop で check 通過を確認して利用者が close
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-21"
+  previous_event_id: reg_111db42a102c4427a82b4aa2af87716d
