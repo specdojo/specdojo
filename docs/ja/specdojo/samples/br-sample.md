@@ -2,7 +2,6 @@
 specdojo:
   id: specdojo:br-sample
   type: rule
-  title: 在庫不足判定
   status: draft
   rulebook: specdojo:br-rulebook
 ---
