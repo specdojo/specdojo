@@ -12,7 +12,7 @@ specdojo:
   owner: ARC
   registered_at: "2026-09-17T13:17:10Z"
   due_on: "2026-09-30"
-  block_reason: "agent exited with non-zero code: 親検証 (`source=\"runner\"`) の `test-unit` が `failed` となっているため、完了条件を満たしていない。"
+  block_reason: 'agent exited with non-zero code: 親検証 (`source="runner"`) の `test-unit` が `failed` となっているため、完了条件を満たしていない。'
 ---
 
 # PJR-EQDB cdfd-rulebook と stsd 系 rulebook の grade 指摘を解消する
@@ -32,6 +32,21 @@ PJR-ZA91（STSD/CSTD 統合）で変更した Kata を 16 時の定期評価 `rt
 ### 1.1. 決定事項
 
 - `＜＜choice＞＞` 疑似状態は許さない（決定者 ARC、2026-09-17）。状態遷移図の遷移元・遷移先は状態一覧に載る状態に限り、分岐は同じ遷移元から出る複数の出力遷移にそれぞれ `イベント / 条件` を付けて表現する。`stsd-mermaid-rulebook` の分岐例と許容記法、`stsd-rulebook` の本文要件をこの決定に合わせる。
+
+### 1.2. 再周回（2026-09-21）
+
+初回の改訂後の Kata 評価（9/20 6:00、codex 単段）で needs-work が残った。PJR-XKKS により評価と finding は本文コメントではなく `docs/ja/projects/prj-0001/execution/grade/results/specdojo.<id>.yaml` のサイドカー（`findings[]` に `severity` / `rule` / `line` / `anchor` / `message`）にある。本周回では次の 6 件のサイドカーを読み、finding を解消する。サイドカー自体は編集しない（再評価で更新される）。
+
+| Kata                    | score | findings                                                                                                                 |
+| ----------------------- | ----- | ------------------------------------------------------------------------------------------------------------------------ |
+| `cdfd-rulebook`         | 71    | 11                                                                                                                       |
+| `cdfd-sample`           | 77    | 13                                                                                                                       |
+| `stsd-sample`           | 68    | 7                                                                                                                        |
+| `cdfd-mermaid-rulebook` | 78    | 5                                                                                                                        |
+| `stsd-mermaid-rulebook` | 84    | 4                                                                                                                        |
+| `stsd-rulebook`         | 73    | 0（前回の評価が失敗し finding 未記録。rulebook 本文と `cdfd-rulebook` / `stsd-mermaid-rulebook` との整合を直接確認する） |
+
+決定事項（`＜＜choice＞＞` を許さない、分岐は `イベント / 条件` を持つ複数矢印）は維持する。
 
 ## 2. 完了条件
 
