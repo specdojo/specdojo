@@ -1,0 +1,15 @@
+4件の指摘に対応し、関連する rulebook・sample・個票の計9ファイルを更新しました。
+
+- 複合状態禁止、表示名と `state_id` の規則を統一
+- STSD に「検品済み」と共通イベント分岐を追加
+- CDFD の凡例省略時ルールを包含元3種で統一
+- 在庫記録の更新主体、`P-02-05` の起動条件、用語を統一
+- 個票の作業1・2を完了として記録
+- 再gradeによるpass確認は未実施
+- VitePress buildのみChromiumのsandbox制約で実行不能
+
+executor段階の指示に従い、resultファイルは更新していません。
+
+<specdojo_executor_evidence>
+{"final_message":"grade指摘4件に対応するrulebook・sample・個票を更新した。再gradeは未実施で、VitePress buildのみChromiumのsandbox制約で失敗した。","validations":[{"command":"npx markdownlint docs/ja/specdojo/rulebooks/stsd-mermaid-rulebook.md docs/ja/specdojo/rulebooks/stsd-rulebook.md docs/ja/specdojo/rulebooks/cdfd-mermaid-rulebook.md docs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md docs/ja/specdojo/rulebooks/cdfd-rulebook.md docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md docs/ja/specdojo/samples/stsd-sample.md docs/ja/specdojo/samples/cdfd-sample.md","status":"passed","summary":"対象Markdownに違反なし"},{"command":"npm run -s lint:md","status":"passed","summary":"リポジトリ全体のMarkdownlintが通過"},{"command":"node dist/specdojo.js build","status":"passed","summary":"派生成果物の全6生成工程が完了"},{"command":"node dist/specdojo.js catalog validate","status":"passed","summary":"検証成功。既存の未作成文書警告のみ"},{"command":"node dist/specdojo.js register build","status":"passed","summary":"登録簿派生ビューを生成"},{"command":"node dist/specdojo.js index build","status":"passed","summary":"1854件の索引を生成"},{"command":"git diff --check","status":"passed","summary":"差分の空白エラーなし"},{"command":"npm --prefix packages/docs-site run docs:build","status":"failed","summary":"Chromium起動がsandboxのOperation not permittedで停止。文書内容由来のエラーではない"}]}
+</specdojo_executor_evidence>
