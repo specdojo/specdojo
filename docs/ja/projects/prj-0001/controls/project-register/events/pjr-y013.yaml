@@ -87,3 +87,16 @@
       from: in-progress
       to: waiting
   previous_event_id: reg_9d4cc2116cc94ec9a552a285ee9f0828
+- v: 1
+  id: reg_5faf4920dd91463a994b155987c0a9a6
+  ts: "2026-09-21T00:49:53Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_938c52ed7052488a839e468839310909
