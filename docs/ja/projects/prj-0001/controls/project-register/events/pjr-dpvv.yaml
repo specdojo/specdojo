@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_5100b991163b41acbd0955655c605c5e
+  ts: "2026-09-21T06:27:04Z"
+  action: add
+  actor: specdojo-orchestrator (claude)
+  from_status: null
+  to_status: open
+  reason: PJR-7VKR の同梱範囲の見直しで利用者が分離を指示
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 文書 lint を @specdojo/docs-lint として分離する
+    - field: description
+      from: ""
+      to: tools/docs/src の remark プラグインと検証スクリプトは CLI から参照されず、依存も devDependencies のため npm 同梱しても利用者側で動かない。@specdojo/docs-site と同じ形で packages/docs-lint に分離し、remark プラグインの export と bin を提供する。specdojo の files から tools/docs を除く
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-21"
+    - field: due
+      from: ""
+      to: "2026-10-10"

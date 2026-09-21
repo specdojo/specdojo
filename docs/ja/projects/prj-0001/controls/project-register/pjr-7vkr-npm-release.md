@@ -88,15 +88,15 @@ PJR-KK07 により kata を配置しない最小構成でも `register add` と 
 
 #### 2.2.3. 各対象の判断
 
-| 対象                 | 判断     | 理由                                                     |
-| -------------------- | -------- | -------------------------------------------------------- |
-| `dist`               | 同梱     | `bin` が参照する実行本体。`src` は不要                   |
-| `docs/specdojo`      | 同梱     | schema。検証に必要                                       |
-| `docs/ja/specdojo`   | 同梱     | kata・templates・exec-templates・defaults                |
-| `docs/en/specdojo`   | **除外** | `.gitkeep` のみで実質空。整備後に追加する                |
-| `templates`          | 同梱     | `exec scaffold --provider` が `packageRoot` から解決する |
-| `tools/docs/src`     | **一部** | 検証系のみ。文書サイト系は分離する                       |
-| `README` / `LICENSE` | 同梱     |                                                          |
+| 対象                 | 判断     | 理由                                                                                                              |
+| -------------------- | -------- | ----------------------------------------------------------------------------------------------------------------- |
+| `dist`               | 同梱     | `bin` が参照する実行本体。`src` は不要                                                                            |
+| `docs/specdojo`      | 同梱     | schema。検証に必要                                                                                                |
+| `docs/ja/specdojo`   | 同梱     | kata・templates・exec-templates・defaults                                                                         |
+| `docs/en/specdojo`   | **除外** | `.gitkeep` のみで実質空。整備後に追加する                                                                         |
+| `templates`          | 同梱     | `exec scaffold --provider` が `packageRoot` から解決する                                                          |
+| `tools/docs/src`     | **除外** | CLI から参照されず、依存も devDependencies のため同梱しても動かない。`@specdojo/docs-lint` へ分離する（PJR-DPVV） |
+| `README` / `LICENSE` | 同梱     |                                                                                                                   |
 
 実行時に必要な範囲は次のとおりである。`src` が参照するパスから確認した。
 
@@ -312,17 +312,17 @@ npm のパッケージ設定ページで次を登録する必要がある。
 
 ## 6. 作業内容
 
-| No  | 作業                                      | メモ                                     |
-| --- | ----------------------------------------- | ---------------------------------------- |
-| 1   | `files` を確定する                        | `docs/en/specdojo` と `generated` を除外 |
-| 2   | 同梱ファイル一覧を確認する                | `npm pack --dry-run` の全件を見る        |
-| 3   | 同梱物を別環境で実地検証する              | tarball を展開して最小構成で動かす       |
-| 4   | `package.json` のメタ情報を補う           | `repository` / `license`                 |
-| 5   | README の導線を確認する                   | PJR-9M5N は完了済み                      |
-| 6   | npm 側の trusted publisher 設定を確認する | ファイル名は `publish-specdojo.yml`      |
-| 7   | workflow の実行実績を確認する             | 過去に成功したことがあるか               |
-| 8   | version を上げて `main` へ push する      | publish は Actions が実行する            |
-| 9   | 導入して動作を確認する                    |                                          |
+| No  | 作業                                      | メモ                                                                                                                                      |
+| --- | ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | `files` を確定する                        | `docs/en/specdojo` と `generated` に加え `tools/docs/src` / `tools/docs/tsconfig.json` を除外（PJR-DPVV で `@specdojo/docs-lint` へ分離） |
+| 2   | 同梱ファイル一覧を確認する                | `npm pack --dry-run` の全件を見る                                                                                                         |
+| 3   | 同梱物を別環境で実地検証する              | tarball を展開して最小構成で動かす                                                                                                        |
+| 4   | `package.json` のメタ情報を補う           | `repository` / `license`                                                                                                                  |
+| 5   | README の導線を確認する                   | PJR-9M5N は完了済み                                                                                                                       |
+| 6   | npm 側の trusted publisher 設定を確認する | ファイル名は `publish-specdojo.yml`                                                                                                       |
+| 7   | workflow の実行実績を確認する             | 過去に成功したことがあるか                                                                                                                |
+| 8   | version を上げて `main` へ push する      | publish は Actions が実行する                                                                                                             |
+| 9   | 導入して動作を確認する                    |                                                                                                                                           |
 
 No 6 は npmjs.com のパッケージ設定ページでの操作となるため、人が行う。
 
