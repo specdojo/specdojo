@@ -90,3 +90,32 @@
       from: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=package.json; agent must record the required change in the result …"
       to: "agent exited with non-zero code: runner による `test-unit` 検証が失敗（exit 1）したため。`tests/src/register.test.ts` において「plan がインデックス行・個票リネーム・参照 targets の更新を含む」ケースで失敗している。"
   previous_event_id: reg_6687a2f430f8412f82ea300a0f849c69
+- v: 1
+  id: reg_7349567fe760412b87d220294fa7a955
+  ts: "2026-09-21T07:46:14Z"
+  action: start
+  actor: gemma-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_f98332f965764140a06e00c1b2cfe1eb
+- v: 1
+  id: reg_ebc964d6d3b946269ad54072f92b8696
+  ts: "2026-09-21T07:50:24Z"
+  action: wait
+  actor: gemma-reporter
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: git ls-files failed: fatal: detected dubious ownership in repository at '/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-7VKR' To add an exception for this directory, call:  \tg…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "agent exited with non-zero code: runner による `test-unit` 検証が失敗（exit 1）したため。`tests/src/register.test.ts` において「plan がインデックス行・個票リネーム・参照 targets の更新を含む」ケースで失敗している。"
+      to: "integrate failed: git ls-files failed: fatal: detected dubious ownership in repository at '/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-7VKR' To add an exception for this directory, call:  \tg…"
+  previous_event_id: reg_7349567fe760412b87d220294fa7a955
