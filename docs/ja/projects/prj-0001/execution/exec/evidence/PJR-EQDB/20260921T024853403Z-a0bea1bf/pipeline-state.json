@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-EQDB",
   "run_id": "20260921T024853403Z-a0bea1bf",
-  "updated_at": "2026-09-21T03:03:44.568Z",
+  "updated_at": "2026-09-21T03:04:16.945Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-eqdb-20260921T024810Z-4602-result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "codex-expert-executor",
       "attempts": 1,
       "started_at": "2026-09-21T03:03:44.568Z",
-      "completed_at": null,
+      "completed_at": "2026-09-21T03:04:16.945Z",
       "artifact_ref": null
     }
   },
