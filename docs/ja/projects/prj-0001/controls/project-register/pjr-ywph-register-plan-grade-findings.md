@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: low
   owner: DEV
   registered_at: "2026-09-21T03:59:49Z"
   due_on: "2026-10-15"
+  block_reason: 'agent exited with non-zero code: error: invalid model selection (--model "gemini-3.8-flash-high" --effort "medium"): --model gemini-3.8-flash-high conflicts with --effort=medium'
 ---
 
 # PJR-YWPH register の todo 用 plan に関連文書の grade finding を展開する
@@ -39,12 +40,12 @@ PJR-EQDB（Kata の finding 解消）の再周回では、オーケストレー�
 
 | No  | 作業                                                                                                      | 担当 | 状態 | メモ                                              |
 | --- | --------------------------------------------------------------------------------------------------------- | ---- | ---- | ------------------------------------------------- |
-| 1   | 個票の関連ドキュメントからサイドカーを解決し、上限付きで finding を展開する処理を `exec-plans` に追加する | DEV  | open | codex-expert-executor / gemma-reporter / worktree |
-| 2   | `xep-register-template` に展開位置と扱いの指示を追加し、テストと guide を更新する                         | DEV  | open | 作業 1 と同一タスク                               |
+| 1   | 個票の関連ドキュメントからサイドカーを解決し、上限付きで finding を展開する処理を `exec-plans` に追加する | DEV  | done | codex-expert-executor / gemma-reporter / worktree |
+| 2   | `xep-register-template` に展開位置と扱いの指示を追加し、テストと guide を更新する                         | DEV  | done | 作業 1 と同一タスク                               |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+`src/exec-plans.ts` に `registerGradeFindingsText` 関数を追加し、個票の関連ドキュメントに記述された文書のサイドカーから grade finding を展開する処理を実装しました。`src/exec-register.ts` からこの関数を呼び出し、`docs/ja/specdojo/exec-templates/xep-register-template.md` に展開結果が差し込まれるようにしました。テストは `tests/src/exec-plans-grade-findings.test.ts` で検証し、`docs/ja/specdojo/guides/register-operation-guide.md` にも展開の仕様を記載しました。
 
 ## 5. 関連ドキュメント
 
