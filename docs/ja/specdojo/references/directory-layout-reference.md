@@ -11,7 +11,7 @@ specdojo:
 
 Directory Layout Reference
 
-SpecDojo Unit（1つの `docs/` ルート）配下の、プロジェクトドキュメントとプロダクトドキュメントの標準ディレクトリ構成を、ファイル単位で一覧します。
+SpecDojo Unit のプロジェクトドキュメントとプロダクトドキュメントの標準ディレクトリ構成を、ファイル単位で一覧します。
 
 **対象範囲**
 
@@ -30,7 +30,27 @@ SpecDojo Unit（1つの `docs/` ルート）配下の、プロジェクトドキ
 
 本リファレンスのツリーは代表例です。ディレクトリ名のプレフィックス番号や横断ディレクトリの扱いなどの方針は [ドキュメント構成ガイド](../guides/docs-structure-guide.md) の `ディレクトリ・ファイルの命名ルール` と `プロジェクトドキュメントの構成` を参照してください。実際のパスは `.specdojo/specdojo.config.json` の project 設定で変更できます。
 
-## 1. プロジェクトドキュメントの構成
+## 1. 既定のリポジトリ構成
+
+利用プロジェクトでは Detached Unit を既定とし、プロダクトの内容と同じ revision が必要な文書と、SpecDojo の運用記録を別リポジトリに置きます。
+
+```text
+workspace/
+├── app1/                            # プロダクトリポジトリ
+│   ├── src/
+│   └── docs/ja/product/             # プロダクトドキュメント
+├── app1-specdojo/                   # SpecDojo 運用リポジトリ
+│   ├── .specdojo/
+│   │   └── specdojo.config.json
+│   └── docs/ja/
+│       ├── specdojo/                # 実践体系
+│       └── projects/<project-id>/   # プロジェクト文書と実行記録
+└── app1-worktrees/                  # task 単位の worktree 置き場
+```
+
+以下のツリーは各リポジトリ内の配置を個別に示します。成果物と実装が常に同じ変更として動く Attached Unit を選ぶ場合は、両方のツリーを1つのリポジトリの `docs/ja/` 配下へ置けます。
+
+## 2. プロジェクトドキュメントの構成
 
 ```text
 docs/
@@ -159,33 +179,15 @@ docs/
 │   │   │           └── mm-2026-03-08-01.md       # 議事録
 │   │   │
 │   │   └── prj-0002/ ...                         # 他プロジェクト
-│   │
-│   └── product/
 │
 └── en/                                           # 将来の英語ドキュメント用ディレクトリ
 ```
 
-## 2. プロダクトドキュメントの構成
+## 3. プロダクトドキュメントの構成
 
 ```text
 docs/
 ├── ja/                                           # 多言語化対応（将来: en/ など）
-│   ├── specdojo/
-│   │   ├── philosophy/                       # 規約の前提となる方針・概念
-│   │   ├── guides/                           # ドキュメント作成ガイド
-│   │   ├── references/                       # 一覧・比較のためのリファレンス
-│   │   ├── standards/                            # 共通標準・メタ規約
-│   │   ├── rulebooks/                            # ドキュメント記述規約
-│   │   ├── recipes/                              # 成果物ごとの作成手順
-│   │   ├── samples/                              # 成果物の完成例
-│   │   ├── templates/                            # rulebook が宣言する成果物テンプレート
-│   │   ├── exec-templates/                       # plan/result 生成用の内部テンプレート
-│   │   ├── schemas/                              # 言語固有の文書構造スキーマ
-│   │
-│   ├── projects/
-│   │   ├── prj-0001/                             # プロジェクト（ID）
-│   │   └── prj-0002/ ...                         # 他プロジェクト
-│   │
 │   └── product/
 │       ├── 010-business-specs/                   # 業務仕様
 │       │   ├── 010-data-flow/                    # データフロー

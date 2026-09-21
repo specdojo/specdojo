@@ -42,17 +42,21 @@ Attached Unit（同一リポジトリ）は、SpecDojo 自身の開発のよう�
 
 ## 3. 作業内容
 
-| No  | 作業                                                                                  | 担当 | 状態 | メモ                                              |
-| --- | ------------------------------------------------------------------------------------- | ---- | ---- | ------------------------------------------------- |
-| 1   | `docs-structure-guide` の構成の選び方と「別リポジトリ構成」章を既定前提に改める       | ARC  | open | codex-expert-executor / gemma-reporter / worktree |
-| 2   | `quick-start-guide` を Detached Unit の手順に組み替え、同一リポジトリを注記に降格する | ARC  | open | 作業 1 と同一タスク                               |
-| 3   | `config init` の雛形とコメントを Detached Unit のパス構成に改める                     | DEV  | open | 同上                                              |
-| 4   | `directory-layout-reference` / `specdojo-overview-guide` を揃える                     | ARC  | open | 同上                                              |
-| 5   | PJR-P7HY の優先度を medium に上げる                                                   | ARC  | done | オーケストレーターが直接対応（2026-09-20）        |
+| No  | 作業                                                                                  | 担当 | 状態 | メモ                                             |
+| --- | ------------------------------------------------------------------------------------- | ---- | ---- | ------------------------------------------------ |
+| 1   | `docs-structure-guide` の構成の選び方と「別リポジトリ構成」章を既定前提に改める       | ARC  | done | Detached を既定、Attached を例外として明記       |
+| 2   | `quick-start-guide` を Detached Unit の手順に組み替え、同一リポジトリを注記に降格する | ARC  | done | `app1-specdojo/` から始める手順へ変更            |
+| 3   | `config init` の雛形とコメントを Detached Unit のパス構成に改める                     | DEV  | done | `../app1-worktrees` と兄弟配置を雛形・案内へ反映 |
+| 4   | `directory-layout-reference` / `specdojo-overview-guide` を揃える                     | ARC  | done | 既定のリポジトリ境界を反映                       |
+| 5   | PJR-P7HY の優先度を medium に上げる                                                   | ARC  | done | オーケストレーターが直接対応（2026-09-20）       |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- [[specdojo:docs-structure-guide]] で Detached Unit を利用プロジェクトの既定、Attached Unit を成果物と実装が同じ変更・履歴として動く場合の例外とした。プロダクト文書は `app1/docs/ja/product/`、プロジェクト文書と実践体系は `app1-specdojo/` に置く境界へ改めた。
+- [[specdojo:quick-start-guide]] の初期設定を `app1-specdojo/` と `app1-worktrees/` の作成から始める手順へ変更し、Attached Unit は注記へ移した。
+- `config init` の雛形へ `run.worktree_base: "../app1-worktrees"` を追加し、生成後の案内にも `app1-specdojo/` の兄弟配置と worktree パスを表示するようにした。雛形と案内を確認する単体テストも更新した。
+- [[specdojo:directory-layout-reference]] と [[specdojo:specdojo-overview-guide]] を同じリポジトリ境界へ揃えた。
+- 残課題は [[prj-0001:pjr-p7hy-multi-repo-single-item]] の複数リポジトリ統合である。完了までは、プロダクト文書または実装を伴う項目を分けるか、人が統合を管理する制約をガイドに明記した。
 
 ## 5. 関連ドキュメント
 

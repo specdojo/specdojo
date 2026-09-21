@@ -42,9 +42,14 @@ describe("config onboarding commands", () => {
             base_path: "docs/ja/projects/prj-0001",
             project_register_path: "controls/project-register",
             project_context: ["prj-overview"],
+            run: {
+              worktree_base: "../app1-worktrees",
+            },
           },
         },
       });
+      expect(output.join("")).toContain("app1-specdojo/");
+      expect(output.join("")).toContain("../app1-worktrees");
       expect(output.join("")).toContain("npx specdojo config scaffold --provider <name>");
       expect(output.join("")).toContain("npx specdojo register scaffold --project prj-0001");
     } finally {

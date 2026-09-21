@@ -313,6 +313,9 @@ export function registerConfigCommands(program: Command): void {
             base_path: "docs/ja/projects/prj-0001",
             project_register_path: "controls/project-register",
             project_context: ["prj-overview"],
+            run: {
+              worktree_base: "../app1-worktrees",
+            },
           },
         },
       };
@@ -320,9 +323,10 @@ export function registerConfigCommands(program: Command): void {
       process.stdout.write(`Created: ${configPath}\n`);
       process.stdout.write(
         "Next steps:\n" +
-          "  1. Review the project ID and paths in .specdojo/specdojo.config.json.\n" +
-          "  2. Optional agent setup: npx specdojo config scaffold --provider <name>\n" +
-          "  3. Create a register: npx specdojo register scaffold --project prj-0001\n",
+          "  1. Keep this repository beside the product repository as app1-specdojo/.\n" +
+          "  2. Review the project ID and paths; worktrees default to ../app1-worktrees.\n" +
+          "  3. Optional agent setup: npx specdojo config scaffold --provider <name>\n" +
+          "  4. Create a register: npx specdojo register scaffold --project prj-0001\n",
       );
     });
 
