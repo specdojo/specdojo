@@ -326,6 +326,10 @@ npm のパッケージ設定ページで次を登録する必要がある。
 
 No 6 は npmjs.com のパッケージ設定ページでの操作となるため、人が行う。
 
+### 6.1. 実行の区切り（2026-09-21）
+
+作業 1〜4 を codex-expert-executor（worktree）で実施する。作業 5〜9（README 導線の最終確認、npm 側の trusted publisher、workflow 実績、version を上げた `main` への push、導入確認）は人の作業であり、本実行の範囲外とする。agent は `package.json` の `version` を変更せず、`git push` と `npm publish` を行わない。作業 3 の実地検証は `npm pack` の tarball を一時ディレクトリへ展開し、`npx specdojo config init` → `register add` → `catalog scaffold` が最小構成で動くことを確認して result に記録する。
+
 ## 7. 対応結果
 
 _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
