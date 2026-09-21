@@ -4,24 +4,24 @@ document: specdojo:cdfd-mermaid-rulebook
 path: docs/ja/specdojo/rulebooks/cdfd-mermaid-rulebook.md
 target: kata
 rubric: grade-rubric-v1
-verdict: needs-work
-score: 81
-graded_at: "2026-09-21T05:03:19.964Z"
+verdict: pass
+score: 100
+graded_at: "2026-09-21T10:04:07.424Z"
 graded_by: codex-expert-executor
-content_hash: bd287b1917558a93012da9db39ecf03617bbd808e00b8611746818200c588a87
+content_hash: 6be94a1e7aa525c319b3428bf2249297ee1cb0383efc11719ea56ca884b52ce6
 categories:
   consistency:
-    score: 50
+    score: 100
   usability:
     score: 100
   architecture:
     score: 100
   quality:
-    score: 75
+    score: 100
 viewpoints:
   vp-arc-cross-document-consistency:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -32,11 +32,11 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -48,34 +48,7 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 3
+  major: 0
   minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 5
-    anchor: >-
-      Mermaid の `flowchart` 構文で CDFD
-      のプロセス、イベント、データストア、外部主体、情報・物の流れを一貫して表すための記法ルールです。`specdojo:cdfd-overview-rulebook`、`specdojo:cdfd-rulebook`、`specdojo:cdfd-uc-rulebook`
-      の `includes` から適用される共通部品で、凡例は対象プロダクトの `cdfd-overview` にある「凡例（本プロダクト共通）」を正本とします。
-    message: >-
-      `specdojo:cdfd-overview-rulebook` は CDFD が一つだけなら「凡例（本プロダクト共通）」を省略可とし、記法の正本を本 rulebook
-      としていますが、本書は同凡例を形状・色・絵文字の正本として全図からの参照を必須化しているため、凡例を省略した適合成果物でも記法正本と参照先が成立するよう必須条件と正本関係を統一してください。
-  - id: F002
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 143
-    anchor: "- 各図の直後に、対象プロダクトの `cdfd-overview` にある「凡例（本プロダクト共通）」を参照し、図で使用した線種、図から省略した入出力と理由、別図と共有するノードを記述します。"
-    message: >-
-      `cdfd-overview` に共通凡例が存在しない場合の参照省略条件または本 rulebook へのフォールバックが定義されていないため、単一 CDFD
-      で凡例を省略できるケースでも図直後の必須注記を一意に作成・確認できる規則を追加してください。
-  - id: F003
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 52
-    anchor: >-
-      - 本 rulebook は `specdojo:cdfd-overview-rulebook`、`specdojo:cdfd-rulebook`、`specdojo:cdfd-uc-rulebook` の `includes`
-      から適用されるため、成果物 Frontmatter に記法 rulebook を重複記載しません。
-    message: "`includes` による適用経路自体は特定されていますが、包含元が許可する共通凡例省略時には本書の必須参照を満たせないため、包含元三種と共有 rulebook の適用条件を同じ判定規則へ揃えてください。"
+findings: []
