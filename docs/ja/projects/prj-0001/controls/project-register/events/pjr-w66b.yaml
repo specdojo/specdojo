@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_d1011ae548e84568933ddaa5400129f6
+  ts: "2026-09-21T11:31:18Z"
+  action: add
+  actor: specdojo-orchestrator (claude)
+  from_status: null
+  to_status: open
+  reason: PJR-YWPH の新規テストの型エラーが親検証を通過し hook で失敗した
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 親検証に typecheck を加え、型エラーを commit hook まで持ち越さない
+    - field: description
+      from: ""
+      to: pipeline.parent_validations は test-integration / validate-schema / test-unit で、typecheck を含まない。Vitest は型検査をしないため、executor が残した型エラーが親検証を通過し、統合時の pre-commit hook（typecheck）で初めて失敗する（PJR-YWPH で発生）。typecheck を親検証として追加する
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-21"
+    - field: due
+      from: ""
+      to: "2026-10-05"
