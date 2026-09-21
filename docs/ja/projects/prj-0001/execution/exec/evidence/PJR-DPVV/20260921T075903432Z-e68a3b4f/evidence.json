@@ -1,0 +1,315 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-DPVV",
+  "run_id": "20260921T075903432Z-e68a3b4f",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "failed",
+    "started_at": "2026-09-21T07:59:03.432Z",
+    "completed_at": "2026-09-21T08:20:24.744Z",
+    "exit_code": 1,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": ".github/instructions/markdown.instructions.md",
+      "status": "M"
+    },
+    {
+      "path": ".github/instructions/vitest.instructions.md",
+      "status": "M"
+    },
+    {
+      "path": ".gitignore",
+      "status": "M"
+    },
+    {
+      "path": ".remarkrc.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-dpvv-docs-lint-package.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/docs-editing-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/quick-start-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "eslint.config.js",
+      "status": "M"
+    },
+    {
+      "path": "lefthook.yml",
+      "status": "M"
+    },
+    {
+      "path": "package.json",
+      "status": "M"
+    },
+    {
+      "path": "tests/docs/specdojo/schemas/pm-members-schema.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/tools/docs/src/history-links.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/tools/docs/src/remark-frontmatter-ajv2020.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/tools/docs/src/remark-md-content.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/tools/docs/src/remark-no-unescaped-angle-placeholder.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/tools/docs/src/rulebook-schema-enums.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tools/docs/src/history-links.ts",
+      "status": "D"
+    },
+    {
+      "path": "tools/docs/src/remark-frontmatter-ajv2020.cjs",
+      "status": "D"
+    },
+    {
+      "path": "tools/docs/src/remark-md-content.cjs",
+      "status": "D"
+    },
+    {
+      "path": "tools/docs/src/remark-md-content.ts",
+      "status": "D"
+    },
+    {
+      "path": "tools/docs/src/remark-no-unescaped-angle-placeholder.cjs",
+      "status": "D"
+    },
+    {
+      "path": "tools/docs/src/remark-no-unescaped-angle-placeholder.ts",
+      "status": "D"
+    },
+    {
+      "path": "tools/docs/src/validate-history-links.ts",
+      "status": "D"
+    },
+    {
+      "path": "tools/docs/src/validate-md-content.ts",
+      "status": "D"
+    },
+    {
+      "path": "tools/docs/src/validate-rulebook-schema-enums.ts",
+      "status": "D"
+    },
+    {
+      "path": "tools/docs/src/validate-yaml-schema.ts",
+      "status": "D"
+    },
+    {
+      "path": "tools/docs/tsconfig.json",
+      "status": "D"
+    },
+    {
+      "path": "tsconfig.json",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-lint/LICENSE",
+      "status": "??"
+    },
+    {
+      "path": "packages/docs-lint/README.md",
+      "status": "??"
+    },
+    {
+      "path": "packages/docs-lint/bin/specdojo-docs-lint.js",
+      "status": "??"
+    },
+    {
+      "path": "packages/docs-lint/package-lock.json",
+      "status": "??"
+    },
+    {
+      "path": "packages/docs-lint/package.json",
+      "status": "??"
+    },
+    {
+      "path": "packages/docs-lint/src/history-links.ts",
+      "status": "??"
+    },
+    {
+      "path": "packages/docs-lint/src/remark-frontmatter-ajv2020.cjs",
+      "status": "??"
+    },
+    {
+      "path": "packages/docs-lint/src/remark-md-content.cjs",
+      "status": "??"
+    },
+    {
+      "path": "packages/docs-lint/src/remark-md-content.ts",
+      "status": "??"
+    },
+    {
+      "path": "packages/docs-lint/src/remark-no-unescaped-angle-placeholder.cjs",
+      "status": "??"
+    },
+    {
+      "path": "packages/docs-lint/src/remark-no-unescaped-angle-placeholder.ts",
+      "status": "??"
+    },
+    {
+      "path": "packages/docs-lint/src/specdojo-package.ts",
+      "status": "??"
+    },
+    {
+      "path": "packages/docs-lint/src/validate-history-links.ts",
+      "status": "??"
+    },
+    {
+      "path": "packages/docs-lint/src/validate-md-content.ts",
+      "status": "??"
+    },
+    {
+      "path": "packages/docs-lint/src/validate-rulebook-schema-enums.ts",
+      "status": "??"
+    },
+    {
+      "path": "packages/docs-lint/src/validate-yaml-schema.ts",
+      "status": "??"
+    },
+    {
+      "path": "packages/docs-lint/tsconfig.json",
+      "status": "??"
+    },
+    {
+      "path": "tests/packages/docs-lint/history-links.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/packages/docs-lint/remark-frontmatter-ajv2020.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/packages/docs-lint/remark-md-content.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/packages/docs-lint/remark-no-unescaped-angle-placeholder.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/packages/docs-lint/rulebook-schema-enums.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 50,
+    "summary": ".github/instructions/markdown.instructions.md      |   2 +-\n .github/instructions/vitest.instructions.md        |   4 +-\n .gitignore                                         |   2 +\n .remarkrc.yaml                                     |   6 +-\n .../project-register/pjr-dpvv-docs-lint-package.md |  18 +-\n .../pjr-dpvv-20260921T075815Z-e297-result.md       |  86 +++-\n docs/ja/specdojo/guides/docs-editing-guide.md      |  43 ++\n docs/ja/specdojo/guides/quick-start-guide.md       |  13 +-\n eslint.config.js                                   |   6 +-\n lefthook.yml                                       |   4 +-\n package.json                                       |  22 +-\n .../specdojo/schemas/pm-members-schema.test.ts     |   2 +-\n tests/tools/docs/src/history-links.test.ts         |  79 ----\n .../docs/src/remark-frontmatter-ajv2020.test.ts    |  86 ----\n tests/tools/docs/src/remark-md-content.test.ts     | 382 -----------------\n .../remark-no-unescaped-angle-placeholder.test.ts  | 165 --------\n tests/tools/docs/src/rulebook-schema-enums.test.ts | 110 -----\n tools/docs/src/history-links.ts                    | 108 -----\n tools/docs/src/remark-frontmatter-ajv2020.cjs      | 257 ------------\n tools/docs/src/remark-md-content.cjs               |   5 -\n tools/docs/src/remark-md-content.ts                | 463 ---------------------\n .../src/remark-no-unescaped-angle-placeholder.cjs  |   5 -\n .../src/remark-no-unescaped-angle-placeholder.ts   | 257 ------------\n tools/docs/src/validate-history-links.ts           |  73 ----\n tools/docs/src/validate-md-content.ts              |  83 ----\n tools/docs/src/validate-rulebook-schema-enums.ts   | 170 --------\n tools/docs/src/validate-yaml-schema.ts             | 260 ------------\n tools/docs/tsconfig.json                           |  16 -\n tsconfig.json                                      |   2 +-\n 29 files changed, 177 insertions(+), 2552 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "TypeScript project referencesを含む型検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "移設後のTypeScriptに対するESLint成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "新しいdocs-lint経由のMarkdown検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "新しいremarkプラグイン経路で全文書検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "新CLI経由の履歴リンク検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "env npm_config_cache=/tmp/specdojo-dpvv-npm-cache npm pack --dry-run --json --ignore-scripts ./packages/docs-lint",
+      "status": "passed",
+      "summary": "15ファイルのみを同梱することを確認"
+    },
+    {
+      "source": "executor",
+      "command": "npm install --save-dev --ignore-scripts --no-audit --no-fund --offline /tmp/specdojo-dpvv-pack-DgMVRp/specdojo-0.1.0.tgz /tmp/specdojo-dpvv-pack-DgMVRp/specdojo-docs-lint-0.1.0.tgz",
+      "status": "passed",
+      "summary": "別ディレクトリへtarball 2本を導入し、3 export、remark設定、history-linksを確認"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿派生ビュー生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "カタログ検証成功。既存の未作成成果物warningのみ"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "1852件の文書索引を生成"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:unit",
+      "status": "not_run",
+      "summary": "親runnerのallowlisted validationへ委譲"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:integration",
+      "status": "not_run",
+      "summary": "親runnerのallowlisted validationへ委譲"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema",
+      "status": "not_run",
+      "summary": "親runnerのallowlisted validationへ委譲"
+    }
+  ],
+  "final_message": "@specdojo/docs-lintへの分離、設定・テスト・ガイド移行、tarball実地検証を完了",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-DPVV/20260921T075903432Z-e68a3b4f/executor.log",
+      "bytes": 2780,
+      "truncated": false
+    }
+  ]
+}

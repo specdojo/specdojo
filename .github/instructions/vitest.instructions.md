@@ -27,8 +27,8 @@ src/exec-shared.ts
 tests/src/exec-shared.test.ts
 src/exec-worktree.ts
 tests/src/exec-worktree.integration.test.ts
-tools/docs/src/validate-md-content.ts
-tests/tools/docs/src/validate-md-content.test.ts
+packages/docs-lint/src/validate-md-content.ts
+tests/packages/docs-lint/validate-md-content.test.ts
 scripts/validate-templates.ts
 tests/scripts/validate-templates.test.ts
 ```

@@ -29,7 +29,7 @@ const rosterPath = join(
 
 type JsonObject = Record<string, unknown>;
 
-// Compile pm-members.schema.yaml the same way tools/docs/src/validate-yaml-schema.ts does:
+// Compile pm-members.schema.yaml the same way @specdojo/docs-lint does:
 // register every sibling *.schema.yaml under its filename so that relative $ref targets
 // (e.g. ./exec-common.schema.yaml#/$defs/Capability) resolve.
 function compileRosterSchema(): ValidateFunction {

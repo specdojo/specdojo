@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { findForbiddenLinks } from "../../../../tools/docs/src/history-links.js";
+import { findForbiddenLinks } from "../../../packages/docs-lint/src/history-links.js";
 
 describe("findForbiddenLinks", () => {
   it("flags an inline markdown link to a local path", () => {

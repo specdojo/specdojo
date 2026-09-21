@@ -7,7 +7,7 @@ import {
   findReadyRulebookSchemaPairs,
   lintRulebookSchemaEnums,
   normativeRulebookBody,
-} from "../../../../tools/docs/src/validate-rulebook-schema-enums.js";
+} from "../../../packages/docs-lint/src/validate-rulebook-schema-enums.js";
 
 const paths = {
   rulebook: "docs/ja/specdojo/rulebooks/example-rulebook.md",

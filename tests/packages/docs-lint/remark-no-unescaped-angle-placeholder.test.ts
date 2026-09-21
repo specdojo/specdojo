@@ -6,9 +6,9 @@ import fastGlob from "fast-glob";
 import { remark } from "remark";
 import remarkFrontmatter from "remark-frontmatter";
 import remarkGfm from "remark-gfm";
-import remarkNoUnescapedAnglePlaceholder from "../../../../tools/docs/src/remark-no-unescaped-angle-placeholder.js";
+import remarkNoUnescapedAnglePlaceholder from "../../../packages/docs-lint/src/remark-no-unescaped-angle-placeholder.js";
 
-const repoRoot = path.resolve(fileURLToPath(new URL(".", import.meta.url)), "../../../..");
+const repoRoot = path.resolve(fileURLToPath(new URL(".", import.meta.url)), "../../..");
 
 function createProcessor() {
   return remark()

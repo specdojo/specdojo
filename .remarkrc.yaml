@@ -15,8 +15,8 @@ plugins:
   - - remark-gfm
     - tablePipeAlign: false
   - remark-lint
-  - ./tools/docs/src/remark-no-unescaped-angle-placeholder.cjs
-  - - ./tools/docs/src/remark-md-content.cjs
+  - ./packages/docs-lint/src/remark-no-unescaped-angle-placeholder.cjs
+  - - ./packages/docs-lint/src/remark-md-content.cjs
     - schemas:
         docs/ja/specdojo/schemas/v1/guide-content.schema.yaml:
           - docs/ja/specdojo/guides/*-guide.md
@@ -24,7 +24,7 @@ plugins:
           - docs/ja/specdojo/references/*-reference.md
         docs/ja/specdojo/schemas/v1/philosophy-content.schema.yaml:
           - docs/ja/specdojo/philosophy/*-philosophy.md
-  - - ./tools/docs/src/remark-frontmatter-ajv2020.cjs
+  - - ./packages/docs-lint/src/remark-frontmatter-ajv2020.cjs
     - strict: true
       schemaRules: # 配列なので上から順に評価し、最初にマッチしたスキーマを適用します。
         - glob: docs/ja/projects/**/exec/plans/**/*.md

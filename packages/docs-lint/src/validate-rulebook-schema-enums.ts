@@ -5,6 +5,7 @@ import { basename, join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import fg from "fast-glob";
 import { load } from "js-yaml";
+import { resolveSpecdojoAssetPath } from "./specdojo-package.js";
 
 type JsonObject = Record<string, unknown>;
 
@@ -110,8 +111,11 @@ export function findReadyRulebookSchemaPairs(
   schemaDir = "docs/specdojo/schemas/v1",
   rulebookDir = "docs/ja/specdojo/rulebooks",
 ): Array<{ rulebookPath: string; schemaPath: string }> {
+  const effectiveSchemaDir = existsSync(resolve(schemaDir))
+    ? schemaDir
+    : resolveSpecdojoAssetPath(schemaDir);
   return fg
-    .sync(join(schemaDir, `*${SCHEMA_SUFFIX}`).replaceAll("\\", "/"), {
+    .sync(join(effectiveSchemaDir, `*${SCHEMA_SUFFIX}`).replaceAll("\\", "/"), {
       absolute: false,
       onlyFiles: true,
     })

@@ -4,6 +4,7 @@ import { load } from "js-yaml";
 import type { Plugin } from "unified";
 import type { Root, Table, TableRow } from "mdast";
 import type { VFile } from "vfile";
+import { resolveSpecdojoAssetPath } from "./specdojo-package.js";
 
 // ── Schema types ─────────────────────────────────────────────────────────────
 
@@ -299,7 +300,7 @@ function findLinkUrl(node: unknown): string | undefined {
 
 // PJR-ID の書式。曖昧文字（`I` / `L` / `O` / `U`）を除いた英大文字+数字の 32 文字セットで
 // 4 桁。旧来の数字4桁 ID（例: `PJR-0163`）も 0-9 が含まれるため引き続き一致する。
-// 正本は src/register.ts の PJR_ID_RE。tools/docs は別パッケージのため同一パターンを複製する。
+// 正本は src/register.ts の PJR_ID_RE。docs-lint は別パッケージのため同一パターンを複製する。
 const PJR_ID_PATTERN = /^PJR-[0-9ABCDEFGHJKMNPQRSTVWXYZ]{4}$/;
 
 // 表の PJR-ID と個票ファイル名 `pjr-XXXX-<topic>.md` の対応を検証する。
@@ -447,7 +448,7 @@ const remarkMdContent: Plugin<[MdContentOptions], Root> = function (options) {
 
     for (const [schemaRelPath, globs] of Object.entries(schemas)) {
       if (!matchesAnyGlob(relativePath, globs)) continue;
-      const absSchemaPath = resolve(workspaceRoot, schemaRelPath);
+      const absSchemaPath = resolveSpecdojoAssetPath(schemaRelPath, workspaceRoot);
       let schema: MdContentSchema;
       try {
         schema = loadSchema(absSchemaPath);

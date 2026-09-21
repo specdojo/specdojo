@@ -3,6 +3,8 @@
 # dependencies
 /node_modules
 /packages/docs-site/node_modules/
+/packages/docs-lint/node_modules/
+/packages/docs-lint/.tsbuild/
 /.pnp
 .pnp.js
 .yarn/install-state.gz

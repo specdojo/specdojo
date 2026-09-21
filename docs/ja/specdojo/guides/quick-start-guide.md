@@ -45,10 +45,21 @@ mkdir app1-specdojo app1-worktrees
 git -C app1-specdojo init
 cd app1-specdojo
 npm init -y
-npm install --save-dev specdojo
+npm install --save-dev specdojo @specdojo/docs-lint
 # チャット:「<project-id> の SpecDojo 設定を初期化して」
 npx specdojo config init
 ```
+
+`@specdojo/docs-lint` は SpecDojo 文書向けの remark プラグインと検証コマンドを提供します。
+最小構成では、リポジトリルートの `.remarkrc.yaml` から次のように公開 export を参照できます。
+
+```yaml
+plugins:
+  - remark-parse
+  - "@specdojo/docs-lint/remark/no-unescaped-angle-placeholder"
+```
+
+文書 lint の全設定例と検証コマンドは [[specdojo:docs-editing-guide|ドキュメント編集ガイド]] を参照してください。
 
 `specdojo config init` は `.specdojo/specdojo.config.json` が存在しない場合に雛形を作成し、既存ファイルは上書きしません。雛形の project パスは `app1-specdojo/` のリポジトリルートを基準とし、`run.worktree_base` は兄弟ディレクトリの `../app1-worktrees` を指します。作成された設定を開き、対象プロジェクトの ID と各パスを実際の名前に合わせてください。
 

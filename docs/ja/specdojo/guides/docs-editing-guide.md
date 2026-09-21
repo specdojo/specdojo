@@ -282,3 +282,46 @@ SpecDojo: Format Markdown Table
 - 標準的な GitHub Flavored Markdown の表に対応しています
 - Prettier と競合するため、この機能を使う場合は、表の直前に `<!-- prettier-ignore -->` のコメントを挿入して Prettier の整形を無効化してください
 - 表以外の文章には影響しません
+
+## 5. 文書 lint を導入する
+
+SpecDojo の schema と文書 lint を利用するリポジトリでは、CLI 本体と lint パッケージを開発依存へ追加します。
+
+```bash
+npm install --save-dev specdojo @specdojo/docs-lint
+```
+
+リポジトリルートの `.remarkrc.yaml` では、remark プラグインを公開 export から参照します。次の例は、山括弧プレースホルダ、文書構成 schema、frontmatter schema を検査する構成です。
+
+```yaml
+plugins:
+  - remark-parse
+  - - remark-frontmatter
+    - type: yaml
+      marker: "-"
+  - remark-gfm
+  - remark-lint
+  - "@specdojo/docs-lint/remark/no-unescaped-angle-placeholder"
+  - - "@specdojo/docs-lint/remark/md-content"
+    - schemas:
+        docs/ja/specdojo/schemas/v1/guide-content.schema.yaml:
+          - docs/ja/specdojo/guides/*-guide.md
+  - - "@specdojo/docs-lint/remark/frontmatter-ajv2020"
+    - strict: true
+      schemaRules:
+        - glob: docs/ja/specdojo/guides/**/*.md
+          schema: docs/specdojo/schemas/v1/guide-frontmatter.schema.yaml
+          require_frontmatter: true
+```
+
+設定内の `docs/specdojo/` または `docs/ja/specdojo/` 配下の schema がリポジトリ内にない場合、プラグインと CLI は `specdojo` パッケージに同梱された schema を解決します。検証コマンドは次のように実行します。
+
+```bash
+npx remark "docs/**/*.{md,mdx}" --quiet --frail
+npx specdojo-docs-lint yaml-schema --modeline
+npx specdojo-docs-lint rulebook-schema-enums
+npx specdojo-docs-lint history-links
+npx specdojo-docs-lint md-content \
+  --schema docs/ja/specdojo/schemas/v1/guide-content.schema.yaml \
+  --data "docs/ja/specdojo/guides/*-guide.md"
+```
