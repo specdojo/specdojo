@@ -52,14 +52,14 @@
   actor: antigravity-expert-executor
   from_status: in-progress
   to_status: waiting
-  reason: 'agent exited with non-zero code: error: invalid model selection (--model "gemini-3.8-flash-high" --effort "medium"): --model gemini-3.8-flash-high conflicts with --effort=medium'
+  reason: "agent exited with non-zero code: error: invalid model selection (--model \"gemini-3.8-flash-high\" --effort \"medium\"): --model gemini-3.8-flash-high conflicts with --effort=medium"
   changes:
     - field: status
       from: in-progress
       to: waiting
     - field: block_reason
       from: "-"
-      to: 'agent exited with non-zero code: error: invalid model selection (--model "gemini-3.8-flash-high" --effort "medium"): --model gemini-3.8-flash-high conflicts with --effort=medium'
+      to: "agent exited with non-zero code: error: invalid model selection (--model \"gemini-3.8-flash-high\" --effort \"medium\"): --model gemini-3.8-flash-high conflicts with --effort=medium"
   previous_event_id: reg_f096b74850084e95af036447cbdc256b
 - v: 1
   id: reg_7966a463d9de4361ab87e667f42e1ce1
@@ -87,7 +87,7 @@
       from: in-progress
       to: waiting
     - field: block_reason
-      from: 'agent exited with non-zero code: error: invalid model selection (--model "gemini-3.8-flash-high" --effort "medium"): --model gemini-3.8-flash-high conflicts with --effort=medium'
+      from: "agent exited with non-zero code: error: invalid model selection (--model \"gemini-3.8-flash-high\" --effort \"medium\"): --model gemini-3.8-flash-high conflicts with --effort=medium"
       to: "integrate failed: git commit failed: ╭─────────────────────────────────────────╮ │ 🥊 lefthook  v2.1.9   hook:  pre-commit │ ╰─────────────────────────────────────────╯ │  catalog-build (skip) no matc…"
   previous_event_id: reg_7966a463d9de4361ab87e667f42e1ce1
 - v: 1
@@ -132,3 +132,16 @@
       from: "integrate failed: git commit failed: ╭─────────────────────────────────────────╮ │ 🥊 lefthook  v2.1.9   hook:  pre-commit │ ╰─────────────────────────────────────────╯ │  catalog-build (skip) no matc…"
       to: "integrate failed: git merge failed (args: --no-ff -m exec(register PJR-YWPH): register の tod… exec/prj-0001-PJR-YWPH)"
   previous_event_id: reg_61ab385c4bfe404f930024ef3d6271eb
+- v: 1
+  id: reg_6e468118a6074fc3a2994941d355aa84
+  ts: "2026-09-21T11:28:15Z"
+  action: review
+  actor: specdojo-orchestrator (claude)
+  from_status: waiting
+  to_status: review
+  reason: "統合の merge commit が hook で一度失敗し wait に戻ったため、オーケストレーターが merge を完了して review へ戻す（executor: antigravity-expert-executor、reporter: antigravity-reporter、親検証 passed）"
+  changes:
+    - field: status
+      from: waiting
+      to: review
+  previous_event_id: reg_4faee7a492634c83971e04b87c80c9eb
