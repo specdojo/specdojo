@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_b8fb42f8678e4aa0b8d07ccf06b61aec
+  ts: "2026-09-21T06:49:03Z"
+  action: add
+  actor: specdojo-orchestrator (claude)
+  from_status: null
+  to_status: open
+  reason: codex / claude の利用制限で実行が止まる頻度を下げるため、第 3 の frontier 経路を追加する判断
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: Antigravity CLI（agy）を executor / reporter の provider として使えるようにする
+    - field: description
+      from: ""
+      to: devcontainer に導入した agy を SpecDojo の agent として使うため、provider antigravity の定義（exec-defaults の command_template、rate limit 検出）、pm-members の member 追加、schema の provider enum、設計文書、trial による評価を行う
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-21"
+    - field: due
+      from: ""
+      to: "2026-10-05"
