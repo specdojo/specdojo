@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: high
   owner: ARC
   registered_at: "2026-09-09T15:38:56Z"
   due_on: "2026-09-30"
+  block_reason: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=package.json; agent must record the required change in the result …"
 ---
 
 # PJR-7VKR specdojo を npm へ公開する
@@ -43,8 +44,8 @@ specdojo:
 `package.json` の `files` は次を含む。
 
 ```text
-dist / docs/ja/specdojo / docs/specdojo / tools/docs/src / tools/docs/tsconfig.json
-templates / README.md / LICENSE
+dist / docs/ja/specdojo / docs/specdojo / templates / README.md / LICENSE
+!docs/ja/specdojo/**/generated/** / !docs/specdojo/**/generated/**
 ```
 
 #### 2.2.1. サイズは制約にならない
@@ -114,9 +115,9 @@ PJR-KK07 により kata を配置しない最小構成でも `register add` と 
 [[prj-0001:pjr-a12b-remove-dead-lefthook-docs-build]] で扱う。Mermaid 生成は Chromium を要する
 ため分離し、呼び出し元のないスクリプトは削除する。
 
-#### 2.2.4. generated を除外する
+#### 2.2.4. generated を除外した
 
-同梱物に `generated` 配下が 52 件含まれている。除外する。
+変更前の同梱物には `generated` 配下が 52 件含まれていたため、除外した。
 
 | 場所                                   | 件数 |
 | -------------------------------------- | ---: |
@@ -154,16 +155,27 @@ schemas/v1/generated/pjr-index-content.schema.md
 schemas/v1/generated/reference-content.schema.md
 ```
 
-除外は `files` へ否定パターンを加えて行う。除外後に tarball を展開し、最小構成で動作することを
-確かめる。`公開前に残る確認` に挙げた実地検証と同時に行える。
+除外は `files` へ否定パターンを加えて行った。除外後の tarball に `generated` 配下が含まれない
+ことは、`同梱物の実地検証` で確認した。
 
-#### 2.2.5. 公開前に残る確認
+#### 2.2.5. 同梱物の実地検証
 
-- 同梱物の実地検証。`npm pack` した tarball を別環境へ展開し、最小構成で `register` /
-  `catalog` / `exec scaffold` が動作することを確かめる。
-- 注意書き付きの規範文書を同梱する判断。`docs-structure-guide.md` の
-  `result によるトレーサビリティ` は見直し中である。
-- kata の品質。`specdojo.grade` に記録済みで、評価済み・改善中として示せる。
+`npm pack --dry-run --json` で全件を検査した。結果は 528 ファイル、package size 1,186,068 bytes、
+unpacked size 4,812,525 bytes であった。`generated`、`tools/docs`、`docs/en/specdojo` は 0 件で、
+`dist`、日本語 kata、schema、provider template、README、LICENSE が含まれることを確認した。
+
+さらに tarball を一時ディレクトリへ展開し、展開物の CLI と同梱データだけを対象に次を確認した。
+
+- `specdojo --help`
+- `config init`
+- `register add` と `register build`
+- `catalog scaffold --size small --domain data-flow`
+- `exec scaffold --provider codex`
+
+`catalog scaffold` だけが利用者リポジトリ内のテンプレートを必須としていたため、`register add` と
+同じく npm package の同梱テンプレートへフォールバックするよう修正した。ネットワーク制限により
+依存 package の再取得は行わず、依存解決には作業ツリーの `node_modules` を使用した。CLI 本体、
+テンプレート、schema、provider template はすべて展開した tarball 内のものを使用した。
 
 ### 2.3. 手順
 
@@ -220,13 +232,12 @@ kata の品質は公開の阻害要因にしない。`grade` の結果が frontm
 
 同梱範囲は `同梱範囲` で確定した。配信量は 1.3 MB で、サイズは阻害要因にならない。
 
-publish の前に残るのは次の 2 点である。
+導入後の導線は [[prj-0001:pjr-9m5n-npm-onboarding-path]] で整備済みであり、README から
+`npm install specdojo`、`config init`、最初の register 作成へ進める。同梱物の実地検証も
+`同梱物の実地検証` のとおり完了した。
 
-- **導入後の導線**。README が npm 経由の利用を想定しておらず、`npm install` した利用者が次に
-  何をすればよいか分からない。[[prj-0001:pjr-9m5n-npm-onboarding-path]] で扱う。導線がないまま
-  公開すると、インストールした利用者が何もできない。
-- **同梱物の実地検証**。`npm pack` した tarball を別環境で展開し、最小構成で動作することを
-  確かめる。
+publish の前に残るのは、npm 側の trusted publisher 設定と workflow 実績の確認、version 更新、
+`main` への push、公開後の導入確認である。これらは人が行う。
 
 文書サイト機能の分離（[[prj-0001:pjr-9s8f-split-docs-site-package]]）は publish の前提とはしない。
 現状のまま公開しても動作する。ただし利用者が Mermaid 生成で Chromium の取得に直面するため、
@@ -332,7 +343,17 @@ No 6 は npmjs.com のパッケージ設定ページでの操作となるため�
 
 ## 7. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `package.json` の `files` から `tools/docs/src` と `tools/docs/tsconfig.json` を除外し、
+  `docs/ja/specdojo` と `docs/specdojo` の `generated` 配下を否定パターンで除外した。
+- `repository` と `license` は既に記載済みであることを確認した。指示どおり `version` は 0.1.0 の
+  まま変更していない。
+- `catalog scaffold` が利用側に kata をコピーしていない構成でも動くよう、同梱テンプレートへの
+  フォールバックを追加し、探索順の回帰テストを追加した。
+- `npm pack --dry-run --json` の全 528 ファイルを検査し、除外対象が 0 件、必須対象が欠落 0 件で
+  あることを確認した。tarball の一時環境への展開後、`config init`、`register add`、
+  `register build`、`catalog scaffold`、`exec scaffold --provider codex`、`--help` が成功した。
+- npm 側の trusted publisher 設定、workflow 実績、version 更新、`main` への push、0.2.0 の公開と
+  公開後の導入確認は、`実行の区切り` のとおり人の作業として残る。
 
 ## 8. 関連ドキュメント
 
