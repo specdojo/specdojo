@@ -12,7 +12,12 @@ import {
   type PjrItem,
   type RegisterPaths,
 } from "./register.js";
-import { execTemplatesDir, injectCommonConventions, MISSING } from "./exec-plans.js";
+import {
+  execTemplatesDir,
+  injectCommonConventions,
+  MISSING,
+  registerGradeFindingsText,
+} from "./exec-plans.js";
 import { buildSpecdojoFrontmatter } from "./frontmatter-namespace.js";
 import {
   escapeMarkdownInline,
@@ -395,6 +400,7 @@ export async function generateRegisterPlan(opts: {
     _PJR_INDEX_PATH_: repoRelativePath(opts.registerPaths.pjrIndexPath),
     _PJR_TICKET_REF_: ticketPath ? `\`${repoRelativePath(ticketPath)}\`` : "-",
     _RESULT_REF_: resultRef,
+    _GRADE_FINDINGS_: ticketPath ? registerGradeFindingsText(opts.projectId, ticketPath) : "- なし",
   };
 
   const body = expandTemplate(template, values);

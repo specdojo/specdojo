@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-YWPH",
+  "run_id": "20260921T110848085Z-e3dd906f",
+  "updated_at": "2026-09-21T11:24:43.434Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "antigravity-expert-executor",
+      "attempts": 1,
+      "started_at": "2026-09-21T11:08:48.085Z",
+      "completed_at": "2026-09-21T11:16:44.112Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-YWPH/20260921T110848085Z-e3dd906f/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "antigravity-reporter",
+      "attempts": 2,
+      "started_at": "2026-09-21T11:22:15.223Z",
+      "completed_at": "2026-09-21T11:22:30.094Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-ywph-20260921T110800Z-275a-result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "antigravity-reporter",
+      "attempts": 2,
+      "started_at": "2026-09-21T11:24:43.434Z",
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/exec/plans/pjr-ywph-20260921T110800Z-275a-plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-ywph-20260921T110800Z-275a-result.md"
+  }
+}
