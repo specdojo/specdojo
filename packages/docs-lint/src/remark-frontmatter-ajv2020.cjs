@@ -1,5 +1,6 @@
 const fs = require("node:fs");
 const path = require("node:path");
+const { createRequire } = require("node:module");
 const { pathToFileURL } = require("node:url");
 const { load } = require("js-yaml");
 const Ajv2020 = require("ajv/dist/2020").default;
@@ -8,6 +9,24 @@ const addFormats = require("ajv-formats");
 // Markdown の frontmatter を、設定で指定したスキーマへマッピングして検証する Remark プラグイン。
 // `yaml.schemas` 形式（schemaPath: [glob...]）または `schemaRules` 形式を受け取り、先勝ちで適用する。
 const validatorCache = new Map();
+const assetMarkers = ["docs/specdojo/", "docs/ja/specdojo/"];
+
+function resolveSpecdojoAssetPath(workspaceRoot, pathRef) {
+  const localPath = path.isAbsolute(pathRef) ? pathRef : path.resolve(workspaceRoot, pathRef);
+  if (fs.existsSync(localPath)) return localPath;
+
+  const posixPath = toPosix(pathRef);
+  const marker = assetMarkers.find((candidate) => posixPath.includes(candidate));
+  if (!marker) return localPath;
+
+  try {
+    const workspaceRequire = createRequire(path.join(path.resolve(workspaceRoot), "package.json"));
+    const specdojoRoot = path.dirname(workspaceRequire.resolve("specdojo/package.json"));
+    return path.join(specdojoRoot, posixPath.slice(posixPath.indexOf(marker)));
+  } catch {
+    return localPath;
+  }
+}
 
 function toPosix(p) {
   return p.split(path.sep).join("/");
@@ -131,7 +150,7 @@ function selectRule(relativePath, schemas, schemaRules) {
 }
 
 function getValidator(workspaceRoot, schemaPath, strictMode) {
-  const absoluteSchemaPath = path.resolve(workspaceRoot, schemaPath);
+  const absoluteSchemaPath = resolveSpecdojoAssetPath(workspaceRoot, schemaPath);
   const cacheKey = `${absoluteSchemaPath}::${strictMode}`;
   const cached = validatorCache.get(cacheKey);
   if (cached) return cached;

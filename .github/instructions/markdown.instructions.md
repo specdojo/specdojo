@@ -129,7 +129,7 @@ plan / result / 個票（`pjr-<NNNN>-<topic>`）など、履歴として蓄積�
 - `docs/` 外のファイル（`.github/instructions/` など）を参照する場合は、リポジトリルートからの相対パスをインラインコードまたはプレーンテキストで書く。
 - 外部URLは Markdown リンクにせず、URL そのまま（bare URL または autolink）で書く。
 - 既存の履歴ファイルは、Markdown リンクを含むものが見つかった時点で上記記法へ置き換える。一括の遡及移行は必須としない。
-- 違反検知は `npx tsx tools/docs/src/validate-history-links.ts` で行う。検出時は exit 1 で失敗する。
+- 違反検知は `npm run validate:history-links` で行う。検出時は exit 1 で失敗する。
 
 ## 11. 禁止事項
 

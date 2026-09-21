@@ -6,7 +6,7 @@ import { createRequire } from "node:module";
 import { remark } from "remark";
 
 const require = createRequire(import.meta.url);
-const remarkFrontmatterAjv2020 = require("../../../../tools/docs/src/remark-frontmatter-ajv2020.cjs");
+const remarkFrontmatterAjv2020 = require("../../../packages/docs-lint/src/remark-frontmatter-ajv2020.cjs");
 
 const SCHEMA_YAML = `
 $schema: "https://json-schema.org/draft/2020-12/schema"

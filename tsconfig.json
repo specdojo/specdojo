@@ -3,7 +3,7 @@
   "references": [
     { "path": "./tsconfig.build.json" },
     { "path": "./tsconfig.test.json" },
-    { "path": "./tools/docs/tsconfig.json" },
+    { "path": "./packages/docs-lint/tsconfig.json" },
     { "path": "./tools/e2e/tsconfig.json" },
     { "path": "./packages/vscode-specdojo/tsconfig.json" }
   ]

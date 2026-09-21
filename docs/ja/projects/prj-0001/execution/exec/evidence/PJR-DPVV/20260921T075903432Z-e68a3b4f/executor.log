@@ -1,0 +1,15 @@
+`@specdojo/docs-lint` への分離を完了しました。
+
+- remark プラグイン3種と検証CLI 4種を公開
+- 独立した `package.json` / lockfileを追加
+- 旧 `tools/docs` を削除し、設定・テストを移行
+- tarball導入、package export、remark、history-linksを実地確認
+- Quick Start／文書編集ガイドと個票を更新
+- executor担当の全検査が成功
+- result更新と親検証3種はrunnerへ委譲
+
+<specdojo_executor_evidence>
+{"final_message":"@specdojo/docs-lintへの分離、設定・テスト・ガイド移行、tarball実地検証を完了","validations":[{"command":"npm run typecheck","status":"passed","summary":"TypeScript project referencesを含む型検査成功"},{"command":"npm run lint:ts","status":"passed","summary":"移設後のTypeScriptに対するESLint成功"},{"command":"npm run lint:md","status":"passed","summary":"新しいdocs-lint経由のMarkdown検査成功"},{"command":"npm run lint:fm","status":"passed","summary":"新しいremarkプラグイン経路で全文書検査成功"},{"command":"npm run validate:history-links","status":"passed","summary":"新CLI経由の履歴リンク検査成功"},{"command":"env npm_config_cache=/tmp/specdojo-dpvv-npm-cache npm pack --dry-run --json --ignore-scripts ./packages/docs-lint","status":"passed","summary":"15ファイルのみを同梱することを確認"},{"command":"npm install --save-dev --ignore-scripts --no-audit --no-fund --offline /tmp/specdojo-dpvv-pack-DgMVRp/specdojo-0.1.0.tgz /tmp/specdojo-dpvv-pack-DgMVRp/specdojo-docs-lint-0.1.0.tgz","status":"passed","summary":"別ディレクトリへtarball 2本を導入し、3 export、remark設定、history-linksを確認"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿派生ビュー生成成功"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"カタログ検証成功。既存の未作成成果物warningのみ"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1852件の文書索引を生成"},{"command":"git diff --check","status":"passed","summary":"差分の空白エラーなし"},{"command":"npm run test:unit","status":"not_run","summary":"親runnerのallowlisted validationへ委譲"},{"command":"npm run test:integration","status":"not_run","summary":"親runnerのallowlisted validationへ委譲"},{"command":"npm run validate:schema","status":"not_run","summary":"親runnerのallowlisted validationへ委譲"}]}
+</specdojo_executor_evidence>
+
+agent-config-write: protected configuration changes detected; paths=lefthook.yml, package.json; agent must record the required change in the result handoff for human or orchestrator application

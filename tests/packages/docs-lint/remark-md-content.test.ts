@@ -5,7 +5,7 @@ import path from "node:path";
 import { remark } from "remark";
 import remarkFrontmatter from "remark-frontmatter";
 import remarkGfm from "remark-gfm";
-import remarkMdContent from "../../../../tools/docs/src/remark-md-content.js";
+import remarkMdContent from "../../../packages/docs-lint/src/remark-md-content.js";
 
 const SCHEMA_YAML = `
 id: test-content

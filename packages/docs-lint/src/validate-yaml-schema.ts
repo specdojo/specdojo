@@ -7,6 +7,7 @@ import fg from "fast-glob";
 import Ajv from "ajv";
 import addFormats from "ajv-formats";
 import Ajv2020 from "ajv/dist/2020";
+import { resolveSpecdojoAssetPath } from "./specdojo-package.js";
 
 type JsonObject = Record<string, unknown>;
 
@@ -65,8 +66,7 @@ function parseYamlSchemaModeline(content: string): YamlSchemaModelineInfo {
 
 function resolveModelineSchemaPath(yamlRepoPath: string, schemaRef: string): string {
   const yamlDir = dirname(resolve(yamlRepoPath));
-  const absSchemaPath = resolve(yamlDir, schemaRef);
-  return absSchemaPath.replace(`${process.cwd()}/`, "");
+  return resolveSpecdojoAssetPath(resolve(yamlDir, schemaRef));
 }
 
 function parseArgs(argv: string[]): CliArgs {
@@ -103,8 +103,8 @@ function parseArgs(argv: string[]): CliArgs {
 
   if (!schemaPath) {
     throw new Error(
-      "Usage: tsx tools/docs/src/validate-yaml-schema.ts --schema <schema.yaml> --data <yaml/glob> [--data <yaml/glob> ...]\n" +
-        "   or: tsx tools/docs/src/validate-yaml-schema.ts --modeline [<yaml/glob> ...]",
+      "Usage: specdojo-docs-lint yaml-schema --schema <schema.yaml> --data <yaml/glob> [--data <yaml/glob> ...]\n" +
+        "   or: specdojo-docs-lint yaml-schema --modeline [<yaml/glob> ...]",
     );
   }
   if (dataPatterns.length === 0) {
@@ -137,7 +137,7 @@ function addSiblingSchemas(ajv: Ajv | Ajv2020, schemaPath: string): void {
 }
 
 function validateFiles(schemaPath: string, files: string[]): boolean {
-  const absSchemaPath = resolve(schemaPath);
+  const absSchemaPath = resolveSpecdojoAssetPath(schemaPath);
 
   const schema = load(readFileSync(absSchemaPath, "utf8")) as JsonObject;
   const ajv = selectAjv(schema);
@@ -215,7 +215,7 @@ function validateByModeline(patterns: string[]): boolean {
     }
 
     const schemaPath = resolveModelineSchemaPath(filePath, info.schemaRef);
-    if (!existsSync(resolve(schemaPath))) {
+    if (!existsSync(schemaPath)) {
       console.error(`${filePath}: schema not found: ${schemaPath}`);
       hasError = true;
       continue;

@@ -37,13 +37,13 @@ export default tseslint.config(
     },
   },
 
-  // tools/docs
+  // packages/docs-lint
   {
-    files: ["tools/docs/src/**/*.ts"],
+    files: ["packages/docs-lint/src/**/*.ts"],
     extends: tseslint.configs.recommended,
     languageOptions: {
       parserOptions: {
-        project: "./tools/docs/tsconfig.json",
+        project: "./packages/docs-lint/tsconfig.json",
         tsconfigRootDir: import.meta.dirname,
       },
     },
