@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   owner: DEV
   registered_at: "2026-09-21T06:27:03Z"
   due_on: "2026-10-10"
+  block_reason: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=lefthook.yml, package.json; agent must record the required change …"
 ---
 
 # PJR-DPVV 文書 lint を @specdojo/docs-lint として分離する
@@ -47,16 +48,20 @@ PJR-9S8F で文書サイトを `@specdojo/docs-site`（`packages/docs-site`）�
 
 ## 3. 作業内容
 
-| No  | 作業                                                                                                           | 担当 | 状態 | メモ                                              |
-| --- | -------------------------------------------------------------------------------------------------------------- | ---- | ---- | ------------------------------------------------- |
-| 1   | `packages/docs-lint` を作成し、remark プラグインの export と検証コマンドの `bin` を実装する                    | DEV  | open | codex-expert-executor / gemma-reporter / worktree |
-| 2   | 本リポジトリの `.remarkrc.yaml` / scripts / lefthook / tsconfig references を書き換え、`tools/docs` を削除する | DEV  | open | 作業 1 と同一タスク                               |
-| 3   | `specdojo` の `files` から `tools/docs` を除く（PJR-7VKR 作業 1 と整合）                                       | DEV  | open | 同上                                              |
-| 4   | tarball を別ディレクトリで導入して実地検証し、guide を更新する                                                 | DEV  | open | 同上                                              |
+| No  | 作業                                                                                                           | 担当 | 状態 | メモ                                               |
+| --- | -------------------------------------------------------------------------------------------------------------- | ---- | ---- | -------------------------------------------------- |
+| 1   | `packages/docs-lint` を作成し、remark プラグインの export と検証コマンドの `bin` を実装する                    | DEV  | done | 3 export と 4 検証コマンドを公開                   |
+| 2   | 本リポジトリの `.remarkrc.yaml` / scripts / lefthook / tsconfig references を書き換え、`tools/docs` を削除する | DEV  | done | ソースとテストを新パッケージ構成へ移行             |
+| 3   | `specdojo` の `files` から `tools/docs` を除く（PJR-7VKR 作業 1 と整合）                                       | DEV  | done | PJR-7VKR の先行対応を確認                          |
+| 4   | tarball を別ディレクトリで導入して実地検証し、guide を更新する                                                 | DEV  | done | tarball 2 本を別ディレクトリへ導入して動作確認済み |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `packages/docs-lint` に独立した `package.json` / lockfile、CLI、remark プラグインを配置した。CLI は `yaml-schema`、`rulebook-schema-enums`、`history-links`、`md-content` を提供し、remark プラグインは package export から参照できる。
+- schema の参照先が利用者リポジトリにない場合、同時導入された `specdojo` パッケージの `docs/specdojo/` または `docs/ja/specdojo/` 配下へフォールバックするようにした。
+- ルートの `.remarkrc.yaml`、npm scripts、ESLint、lefthook、TypeScript project references を `packages/docs-lint` へ移行し、旧 `tools/docs` を削除した。`specdojo` 本体の `files` は PJR-7VKR で既に `tools/docs` を除外済みだったため、その状態を維持した。
+- `npm pack --dry-run` で lint パッケージが 15 ファイルだけを同梱することを確認した。`specdojo` と `@specdojo/docs-lint` の tarball を別ディレクトリへ導入し、3 export の解決、`.remarkrc.yaml` からのプラグイン読込、`specdojo-docs-lint history-links` の実行を確認した。
+- [[specdojo:quick-start-guide]] と [[specdojo:docs-editing-guide]] に導入手順、`.remarkrc.yaml` の設定例、検証コマンドを追記した。残課題はない。
 
 ## 5. 関連ドキュメント
 
