@@ -12,9 +12,9 @@
   "files": [
     "dist",
     "docs/ja/specdojo",
+    "!docs/ja/specdojo/**/generated/**",
     "docs/specdojo",
-    "tools/docs/src",
-    "tools/docs/tsconfig.json",
+    "!docs/specdojo/**/generated/**",
     "templates",
     "README.md",
     "LICENSE"
