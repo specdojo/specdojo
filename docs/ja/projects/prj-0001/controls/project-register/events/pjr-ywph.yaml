@@ -32,3 +32,16 @@
     - field: due
       from: ""
       to: "2026-10-15"
+- v: 1
+  id: reg_f096b74850084e95af036447cbdc256b
+  ts: "2026-09-21T11:08:01Z"
+  action: start
+  actor: antigravity-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_de02b6ebff2a42eab78cd735cd7e1b85
