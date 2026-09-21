@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-EQDB",
+  "run_id": "20260921T024853403Z-a0bea1bf",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-21T02:48:53.403Z",
+    "completed_at": "2026-09-21T02:59:49.562Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-eqdb.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-eqdb-kata-cdfd-stsd-rulebook-findings.md",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cdfd-mermaid-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cdfd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/stsd-mermaid-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/stsd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/cdfd-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/stsd-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/cdfd-template.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 9,
+    "summary": ".../ja/specdojo/rulebooks/cdfd-mermaid-rulebook.md |  37 ++++---\n docs/ja/specdojo/rulebooks/cdfd-rulebook.md        |  32 +++---\n .../ja/specdojo/rulebooks/stsd-mermaid-rulebook.md |  21 ++--\n docs/ja/specdojo/rulebooks/stsd-rulebook.md        |  41 ++++----\n docs/ja/specdojo/samples/cdfd-sample.md            | 109 +++++++++++----------\n docs/ja/specdojo/samples/stsd-sample.md            |  39 ++++----\n docs/ja/specdojo/templates/cdfd-template.md        |  15 +--\n 7 files changed, 158 insertions(+), 136 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/specdojo/rulebooks/cdfd-rulebook.md docs/ja/specdojo/rulebooks/cdfd-mermaid-rulebook.md docs/ja/specdojo/rulebooks/stsd-rulebook.md docs/ja/specdojo/rulebooks/stsd-mermaid-rulebook.md docs/ja/specdojo/samples/cdfd-sample.md docs/ja/specdojo/samples/stsd-sample.md docs/ja/specdojo/templates/cdfd-template.md",
+      "status": "passed",
+      "summary": "対象7ファイルはPrettier形式に適合"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/specdojo/rulebooks/cdfd-rulebook.md docs/ja/specdojo/rulebooks/cdfd-mermaid-rulebook.md docs/ja/specdojo/rulebooks/stsd-rulebook.md docs/ja/specdojo/rulebooks/stsd-mermaid-rulebook.md docs/ja/specdojo/samples/cdfd-sample.md docs/ja/specdojo/samples/stsd-sample.md docs/ja/specdojo/templates/cdfd-template.md",
+      "status": "passed",
+      "summary": "対象7ファイルにMarkdown lintエラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run -s lint:md",
+      "status": "failed",
+      "summary": "今回未変更のJBR-grade-kata-3d46d90b108c-result.mdに既存のMD047末尾改行エラー"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint '**/*.md' --ignore docs/ja/projects/prj-0001/execution/exec/results/JBR-grade-kata-3d46d90b108c-result.md",
+      "status": "passed",
+      "summary": "既存エラー1件を除く全Markdownが通過"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "文書索引1844件を生成"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "全カタログOK。既存の未作成成果物に関する警告のみ"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check -- docs/ja/specdojo/rulebooks/cdfd-rulebook.md docs/ja/specdojo/rulebooks/cdfd-mermaid-rulebook.md docs/ja/specdojo/rulebooks/stsd-rulebook.md docs/ja/specdojo/rulebooks/stsd-mermaid-rulebook.md docs/ja/specdojo/samples/cdfd-sample.md docs/ja/specdojo/samples/stsd-sample.md docs/ja/specdojo/templates/cdfd-template.md",
+      "status": "passed",
+      "summary": "差分の空白エラーなし"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EQDB\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\n[dry-run] git merge --no-ff --no-edit exec/T-T-doc-010\nInstalling worktree dependencies: .\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nUpdated: /tmp/specdojo-register-pipeline-e2e-3hEXmR/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)\nUpdated: /tmp/specdojo-register-pipeline-e2e-3hEXmR/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml\nGenerated: /tmp/specdojo-register-pipeline-e2e-3hEXmR/docs/ja/projects/test/controls/project-register/generated/pjr-index.md\nGenerated: /tmp/specdojo-register-pipeline-e2e-3hEXmR/docs/ja/projects/test/controls/project-register/gen…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.1.0 validate:schema:yaml\n> tsx tools/docs/src/validate-yaml-schema.ts --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-…"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EQDB\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-rKPe4Y/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-L0tvB6/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-mdlmod/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-HBY4eb/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-zoAfbg/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-QM9lnz/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\nWrote agent stdout: /tmp/specdojo-agent-command-X8BF4r/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-Xw8xFB/outputs/partial.txt\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\n\n Test Files  104 passed (104)\n      Tes…"
+    }
+  ],
+  "final_message": "grade findingに対応してCDFD/STSDのrulebook・sample・template計7件を更新した。対象検査は通過し、全体lintのみ既存resultの末尾改行不足で失敗した。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-EQDB/20260921T024853403Z-a0bea1bf/executor.log",
+      "bytes": 2939,
+      "truncated": false
+    }
+  ]
+}
