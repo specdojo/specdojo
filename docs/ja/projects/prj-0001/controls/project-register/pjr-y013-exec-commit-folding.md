@@ -50,24 +50,33 @@ specdojo:
 
 ## 3. 作業内容
 
-| No  | 作業                                                                                               | 担当 | 状態 | メモ                                              |
-| --- | -------------------------------------------------------------------------------------------------- | ---- | ---- | ------------------------------------------------- |
-| 1   | register worktree 実行の `start` / `review` 遷移 commit を merge commit / `wait` commit へ同梱する | DEV  | open | codex-expert-executor / gemma-reporter / worktree |
-| 2   | Schedule タスクの worktree 統合を同じ規則にし、merge commit のメッセージを整える                   | DEV  | open | 作業 1 と同一タスク                               |
-| 3   | `exec resume` の各経路（reporter 再開、統合再開）を同じ規則に揃える                                | DEV  | open | 同上                                              |
-| 4   | 統合テストを更新し、guide 3 本を改める                                                             | DEV  | open | 同上                                              |
-| 5   | 実運用で 1 件実行し、`git log --first-parent` を確認する                                           | ARC  | open | オーケストレーターが直接対応                      |
+| No  | 作業                                                                                               | 担当 | 状態 | メモ                                                             |
+| --- | -------------------------------------------------------------------------------------------------- | ---- | ---- | ---------------------------------------------------------------- |
+| 1   | register worktree 実行の `start` / `review` 遷移 commit を merge commit / `wait` commit へ同梱する | DEV  | done | checkpoint を exec branch に置き、review も worktree 側で記録    |
+| 2   | Schedule タスクの worktree 統合を同じ規則にし、merge commit のメッセージを整える                   | DEV  | done | `exec(<task-id>): <task name>` を subject にした merge 1件       |
+| 3   | `exec resume` の各経路（reporter 再開、統合再開）を同じ規則に揃える                                | DEV  | done | 再開時の `start` も exec branch 側。wait 後は develop を取り込む |
+| 4   | 統合テストを更新し、guide 3 本を改める                                                             | DEV  | done | 成功・失敗・再開の first-parent 件数と merge 本文を検証          |
+| 5   | 実運用で 1 件実行し、`git log --first-parent` を確認する                                           | ARC  | open | オーケストレーターが直接対応                                     |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `checkpointAndEnsureWorktree` は統合先 HEAD から exec branch と worktree を作り、plan / result / claim event（register は個票・イベントも）を worktree へ複製して exec branch にだけ checkpoint commit する。root 側の複製は未 commit のまま残し、claim（`doing`）や `in-progress` が root からも見える状態を保つ。
+- `mergeWorktreeIntoCurrent` に `releaseRootPaths` を追加し、統合の直前に root 側の複製を HEAD の状態へ戻してから `--no-ff` で merge する。merge が失敗した場合は複製を元に戻す。`exec worktree merge` も同じ解放を行う。
+- root 側の複製解放は途中で失敗しても解放済みファイルを復元する。`--dry-run` は実ファイルを解放せず、解放予定パスだけを重複判定から除外して merge 可否を確認する。
+- register 成功時は worktree で `register review` を記録して exec branch に commit し、`exec(register <PJR-ID>): <title>` を subject、`Transition: start → review` / `Executor` / `Reporter` / `Refs` を本文とする merge commit 1件で統合する。root の派生ビューは merge 後に `register build` で作り直す。
+- register 失敗時は worktree の個票・イベント・plan・result を root へ写して `register wait` し、`exec(register <PJR-ID>): wait` commit 1件にまとめる（`start` の遷移事象を含む）。同じ内容を exec branch にも commit したうえで統合ブランチを exec branch へ取り込み、再開後の merge が記帳ファイルで三方向差分にならないようにする。再開時の `start` は worktree 側で記録し、root には未 commit の複製だけを置く。
+- merge 成功後に worktree 撤去だけが失敗した場合は root の `review` と merge commit を維持し、統合再開では状態遷移・commit・merge を再実行せず cleanup だけを行う。これにより撤去失敗からの再開でも first-parent の commit は増えない。
+- Schedule 成功時の merge commit subject を `exec(<task-id>): <task name>` にした（commitlint の 100 文字上限で切り詰める）。`prepare execution` / `apply task changes` は exec branch 側に残る。
+- 統合テスト（`exec-pipeline-e2e` / `exec-register-pipeline-e2e` / `exec-worktree-command` / `exec-worktree-ops`）で first-parent の増分、merge commit の親数・件名・遷移本文、失敗時の `wait` 1件を検証する形に更新し、`branch-workflow-guide` / `exec-worktree-guide` / `register-operation-guide` に加えて `schedule-operation-guide` の実行フローも改めた。
+- 残課題は No. 5 の実運用確認のみであり、本変更の統合後に runner / オーケストレーターが `git log --first-parent` で確認する。
 
 ## 5. 関連ドキュメント
 
 - [[specdojo:branch-workflow-guide]]
 - [[specdojo:exec-worktree-guide]]
 - [[specdojo:register-operation-guide]]
+- [[specdojo:schedule-operation-guide]]
 - [[prj-0001:pjr-j3g0-exec-resume-integrate-schedule-task]]
 - `src/exec-run.ts`
-- `src/exec-register.ts`
 - `src/exec-worktree-ops.ts`
+- `src/exec-worktree-command.ts`

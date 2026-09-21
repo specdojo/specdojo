@@ -1,5 +1,13 @@
 import { spawnSync } from "node:child_process";
-import { existsSync, lstatSync, readFileSync, writeFileSync } from "node:fs";
+import {
+  copyFileSync,
+  existsSync,
+  lstatSync,
+  mkdirSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { join, relative, resolve, sep } from "node:path";
 import { load } from "js-yaml";
 import { acquireSchedulerLock, releaseSchedulerLock } from "./exec-events.js";
@@ -565,12 +573,56 @@ export function commitWorktreeChanges(params: {
   return { targets: paths, committed: true };
 }
 
+// A root working copy of an execution bookkeeping file (plan / result / claim or register event)
+// captured before the merge releases it. `content` is null when the path did not exist.
+type RootWorkingCopy = { rel: string; content: Buffer | null };
+
+// The checkpoint commit lives on the exec branch only, so the root keeps its own uncommitted copy
+// of the bookkeeping files while the task runs (the schedule/register state must stay visible at
+// root). Before the exec branch is merged those copies must yield to the committed versions,
+// otherwise the overlap guard below rejects the merge. Capture them so a failed merge can put the
+// root back exactly as it was.
+export function releaseRootWorkingCopies(repoRoot: string, relPaths: string[]): RootWorkingCopy[] {
+  const snapshot: RootWorkingCopy[] = [];
+  try {
+    for (const rel of new Set(relPaths)) {
+      const absolute = resolve(repoRoot, rel);
+      const exists = lstatSync(absolute, { throwIfNoEntry: false }) !== undefined;
+      snapshot.push({ rel, content: exists ? readFileSync(absolute) : null });
+      restoreToHead(repoRoot, rel);
+    }
+  } catch (error) {
+    // Releasing is itself allowed to fail (for example because a path unexpectedly became a
+    // directory). Put back every copy already touched before propagating the failure; otherwise a
+    // merge that never started could still discard root-side execution state.
+    restoreRootWorkingCopies(repoRoot, snapshot);
+    throw error;
+  }
+  return snapshot;
+}
+
+export function restoreRootWorkingCopies(repoRoot: string, snapshot: RootWorkingCopy[]): void {
+  for (const { rel, content } of snapshot) {
+    const absolute = resolve(repoRoot, rel);
+    if (content === null) {
+      rmSync(absolute, { recursive: true, force: true });
+      continue;
+    }
+    mkdirSync(resolve(absolute, ".."), { recursive: true });
+    writeFileSync(absolute, content);
+  }
+}
+
 // Merge the task exec branch into the branch currently checked out at repoRoot.
 // Serializes with the scheduler lock so parallel merges do not race on root HEAD.
+// `releaseRootPaths` are root-side working copies of bookkeeping files that the exec branch also
+// carries (see releaseRootWorkingCopies); they are restored when the merge does not complete.
 export function mergeWorktreeIntoCurrent(params: {
   context: WorktreeOpsContext;
   worktree: ExecWorktree;
   taskId: string;
+  message?: string;
+  releaseRootPaths?: string[];
   ffOnly?: boolean;
   dryRun?: boolean;
 }): void {
@@ -580,6 +632,12 @@ export function mergeWorktreeIntoCurrent(params: {
     throw new Error(`Merge must run from a branch other than ${worktree.branch}.`);
   }
   let lockDir = "";
+  let released: RootWorkingCopy[] = [];
+  let merged = false;
+  const releasePaths = (params.releaseRootPaths ?? []).map((path) =>
+    repoRelative(context.repoRoot, path),
+  );
+  const releasePathSet = new Set(releasePaths);
   try {
     if (!params.dryRun) {
       lockDir = acquireSchedulerLock(context.schedulePath, {
@@ -587,6 +645,7 @@ export function mergeWorktreeIntoCurrent(params: {
         lockTimeoutMs: DEFAULT_LOCK_TIMEOUT_MS,
         lockStaleMs: DEFAULT_LOCK_STALE_MS,
       });
+      released = releaseRootWorkingCopies(context.repoRoot, releasePaths);
     }
     const dirty = commitTargetPaths(context, worktree, taskId);
     if (dirty.length > 0) {
@@ -613,13 +672,15 @@ export function mergeWorktreeIntoCurrent(params: {
         `${compareBase}..${worktree.branch}`,
       ]),
     );
-    const overlap = [...rootDirtyPaths(context.repoRoot)].filter((path) => mergePaths.has(path));
+    const overlap = [...rootDirtyPaths(context.repoRoot)].filter(
+      (path) => mergePaths.has(path) && !(params.dryRun && releasePathSet.has(path)),
+    );
     if (overlap.length > 0) {
       throw new Error(`Current worktree changes overlap merge paths: ${overlap.join(", ")}`);
     }
     if (params.dryRun) {
       process.stdout.write(
-        `[dry-run] git merge ${params.ffOnly ? "--ff-only" : "--no-ff --no-edit"} ${worktree.branch}\n`,
+        `[dry-run] git merge ${params.ffOnly ? "--ff-only" : params.message ? `--no-ff -m ${JSON.stringify(params.message)}` : "--no-ff --no-edit"} ${worktree.branch}\n`,
       );
       return;
     }
@@ -628,10 +689,13 @@ export function mergeWorktreeIntoCurrent(params: {
         context.repoRoot,
         params.ffOnly
           ? ["merge", "--ff-only", worktree.branch]
-          : ["merge", "--no-ff", "--no-edit", worktree.branch],
+          : params.message
+            ? ["merge", "--no-ff", "-m", params.message, worktree.branch]
+            : ["merge", "--no-ff", "--no-edit", worktree.branch],
       );
+      merged = true;
     } catch (error) {
-      // A failed merge (content conflict, or a pre-commit hook that aborts the merge commit) leaves
+      // A failed merge (content conflict, or a commit hook that aborts the merge commit) leaves
       // the repository mid-merge: MERGE_HEAD set and conflict markers staged in the working tree.
       // Roll back so the tree returns to a clean state instead of staying stuck, then rethrow.
       // `git merge --abort` is a no-op error when no merge is in progress, so swallow its status.
@@ -639,6 +703,7 @@ export function mergeWorktreeIntoCurrent(params: {
       throw error;
     }
   } finally {
+    if (!merged && released.length > 0) restoreRootWorkingCopies(context.repoRoot, released);
     if (lockDir) releaseSchedulerLock(lockDir);
   }
 }
@@ -647,10 +712,10 @@ export function mergeWorktreeIntoCurrent(params: {
 // stage retry uses this to stay idempotent: when a previous attempt merged but failed afterwards
 // (for example while removing the worktree), re-running the merge would fail with "No commits to
 // merge", so the retry skips the merge and continues with the remaining integration steps.
-// exec ブランチが統合ブランチへ merge 済みかを判定する。ancestor 判定だけでは、統合 commit が
-// 失敗して exec ブランチの先端が checkpoint（統合ブランチ上の commit）のままの場合も true に
-// なる。runner の統合は --no-ff で merge するため、merge 済みなら先端は HEAD の first-parent
-// 連鎖には含まれない。先端が first-parent 連鎖上にあるなら、task の commit がまだ無い状態とみなす。
+// exec ブランチが統合ブランチへ merge 済みかを判定する。ancestor 判定だけでは、exec ブランチが
+// 作成直後（先端が統合ブランチ上の commit のまま）の場合も true になる。runner の統合は
+// --no-ff で merge するため、merge 済みなら先端は HEAD の first-parent 連鎖には含まれない。
+// 先端が first-parent 連鎖上にあるなら、task の commit がまだ無い状態とみなす。
 export function isExecBranchMergedIntoCurrent(params: {
   context: WorktreeOpsContext;
   worktree: ExecWorktree;
@@ -812,8 +877,8 @@ export function pruneOrphanedExecBranches(params: {
 // (e.g. blocked or cancelled, then reset to todo) left residue behind. The scheduler has abandoned
 // that branch, so discard it before re-preparing: otherwise checkpointAndEnsureWorktree reuses the
 // stale worktree, skips the checkpoint commit, and the freshly-scaffolded root plan/result/claim
-// files stay untracked until the merge-back guard rejects them as overlapping changes. Returns the
-// discarded branch name for logging, or null when no residue existed.
+// files never reach the exec branch (the merge would land the stale branch's versions instead).
+// Returns the discarded branch name for logging, or null when no residue existed.
 export function discardStaleExecWorktree(params: {
   context: WorktreeOpsContext;
   worktreeTaskId: string;
@@ -838,11 +903,39 @@ export function discardStaleExecWorktree(params: {
   return branch;
 }
 
-// Commit the execution checkpoint onto root HEAD, then create the task worktree from that
-// commit. Reuses an existing worktree or exec branch when present. `checkpointPaths` are the
-// absolute paths to commit before branching: for scheduled tasks that is plan/result/claim event;
-// for register-item runs it is plan/result/pjr-index and the regenerated derived views (so the
-// worktree branches from a HEAD that already reflects the `register start` transition).
+function copyCheckpointPath(sourceRoot: string, targetRoot: string, relPath: string): void {
+  const source = resolve(sourceRoot, relPath);
+  const target = resolve(targetRoot, relPath);
+  if (!existsSync(source)) {
+    rmSync(target, { recursive: true, force: true });
+    return;
+  }
+  const stat = lstatSync(source);
+  if (!stat.isFile()) {
+    throw new Error(`Execution checkpoint path must be a file: ${relPath}`);
+  }
+  mkdirSync(resolve(target, ".."), { recursive: true });
+  copyFileSync(source, target);
+}
+
+// Put a root path back to its HEAD state: tracked files are restored, paths absent from HEAD are
+// removed (and unstaged if a hook or caller had staged them).
+function restoreToHead(repoRoot: string, relPath: string): void {
+  const tracked = gitResult(repoRoot, ["ls-files", "--error-unmatch", "--", relPath]).status === 0;
+  if (tracked) {
+    gitOutput(repoRoot, ["restore", "--source=HEAD", "--staged", "--worktree", "--", relPath]);
+  } else {
+    gitResult(repoRoot, ["reset", "--quiet", "--", relPath]);
+    rmSync(resolve(repoRoot, relPath), { recursive: true, force: true });
+  }
+}
+
+// Create the task worktree from the current integration HEAD, then commit the execution
+// checkpoint (plan / result / claim or register-start bookkeeping) on the exec branch only. The
+// root keeps its uncommitted copies so the task state stays visible there while the agent runs;
+// the merge releases them (releaseRootWorkingCopies) right before the exec branch lands.
+// Consequently the prepare/start bookkeeping is reachable through the merge DAG without adding a
+// first-parent commit to the integration branch.
 export function checkpointAndEnsureWorktree(params: {
   context: WorktreeOpsContext;
   worktreeTaskId: string;
@@ -875,10 +968,16 @@ export function checkpointAndEnsureWorktree(params: {
     if (staged.status !== 0) throw new Error("Failed to inspect staged changes in root worktree.");
 
     const paths = params.checkpointPaths.map((path) => repoRelative(context.repoRoot, path));
-    stageCommitTargets(context.repoRoot, paths);
-    const checkpoint = gitResult(context.repoRoot, ["diff", "--cached", "--quiet", "--", ...paths]);
+    const worktree = ensureExecWorktree({
+      repoRoot: context.repoRoot,
+      worktreeBase: base,
+      taskId: worktreeTaskId,
+    });
+    for (const path of paths) copyCheckpointPath(context.repoRoot, worktree.path, path);
+    stageCommitTargets(worktree.path, paths);
+    const checkpoint = gitResult(worktree.path, ["diff", "--cached", "--quiet", "--", ...paths]);
     if (checkpoint.status === 1) {
-      const committed = gitResult(context.repoRoot, [
+      const committed = gitResult(worktree.path, [
         "commit",
         "-m",
         params.commitMessage,
@@ -890,7 +989,7 @@ export function checkpointAndEnsureWorktree(params: {
         // paths in the index. Unstage everything so the residue does not trip the staged-changes
         // guard for every subsequent task and abort the whole loop. The index was verified clean
         // above, so a full reset only drops what this checkpoint (and its hooks) staged.
-        gitResult(context.repoRoot, ["reset", "--quiet"]);
+        gitResult(worktree.path, ["reset", "--quiet"]);
         // hook（lefthook 等）の生出力には ANSI エスケープや制御文字が含まれうる。この detail は
         // register 経路で pjr-index の結論列・result の理由欄へ伝播するため、ここで除去して
         // 表示崩れを防ぐ（register 側の sanitize と二重だが、非 register の呼び出し元も守る）。
@@ -907,6 +1006,7 @@ export function checkpointAndEnsureWorktree(params: {
     } else if (checkpoint.status !== 0) {
       throw new Error("Failed to inspect execution checkpoint changes.");
     }
+    return worktree;
   }
 
   return ensureExecWorktree({

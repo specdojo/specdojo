@@ -902,6 +902,9 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
       ],
     ]);
     process.chdir(fixture.repo);
+    const firstParentBefore = Number(
+      git(fixture.repo, "rev-list", "--first-parent", "--count", "HEAD"),
+    );
 
     // 1回目: reporter がプロセス失敗し、executor evidence を残したまま blocked になる。
     setBehavior(fixture.behaviorPath, {
@@ -919,6 +922,9 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
     ]);
 
     expect(process.exitCode).toBe(1);
+    expect(Number(git(fixture.repo, "rev-list", "--first-parent", "--count", "HEAD"))).toBe(
+      firstParentBefore,
+    );
     const blockEvent = readTaskEvents(fixture, "T-TEST-doc-010").find(
       (event) => event.type === "block",
     );
@@ -942,6 +948,11 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
     expect(invocations.filter((item) => item.role === "executor")).toHaveLength(1);
     expect(invocations.filter((item) => item.role === "reporter")).toHaveLength(2);
     expect(readFileSync(fixture.parentValidationLogPath, "utf8")).toBe("run\n");
+    expect(Number(git(fixture.repo, "rev-list", "--first-parent", "--count", "HEAD"))).toBe(
+      firstParentBefore + 1,
+    );
+    expect(git(fixture.repo, "log", "-1", "--pretty=%s")).toMatch(/^exec\(T-TEST-doc-010\): /);
+    expect(git(fixture.repo, "rev-list", "--parents", "-1", "HEAD").split(" ")).toHaveLength(3);
 
     const result = readResult(fixture, "T-TEST-doc-010");
     expect(result).toContain("status: complete");

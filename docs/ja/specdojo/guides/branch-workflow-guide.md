@@ -131,6 +131,8 @@ git status --short
 
 自動実行では、SpecDojo が worktree の準備、agent 実行、commit、現在ブランチへの統合、状態更新を行います。
 
+worktree 実行の `prepare execution` / `apply task changes` と実行管理の記帳は exec ブランチに保持されます。成功時に project `develop` の first-parent へ追加されるのは `--no-ff` の merge commit 1件だけで、subject は Schedule タスクなら `exec(<task-id>): <task name>`、register 項目なら `exec(register <PJR-ID>): <title>` です。register 実行では `start → review` の遷移をこの merge commit に同梱し、失敗時は `start → waiting` の遷移、plan、result を `wait` commit 1件にまとめます（worktree は再開のため保持します）。再開後に成功した場合も merge commit 1件です。squash / rebase は使わず、既存履歴は書き換えません。
+
 ```bash
 specdojo exec run \
   --project prj-0001 \
@@ -190,7 +192,7 @@ git diff --stat main...project/prj-0001/develop
 git branch --no-merged project/prj-0001/develop
 ```
 
-Pull Request の head は project `develop`、base は `main` とします。一時ブランチで commit を並べ替えたり、register 遷移 commit だけを除外したりしません。統合後は `main` を取得し、昇格した `develop` の先端が祖先になったことと、first-parent 上で昇格が1件の merge commit として見えることを確認します。
+Pull Request の head は project `develop`、base は `main` とします。一時ブランチで commit を並べ替えたり、squash や rebase で履歴を作り直したりしません。exec の記帳（register の `start` / `review` 遷移、plan、result）は task ごとの merge commit または `wait` commit に同梱されているため、昇格時に除外する commit はありません。統合後は `main` を取得し、昇格した `develop` の先端が祖先になったことと、first-parent 上で昇格が1件の merge commit として見えることを確認します。
 
 ```bash
 git fetch origin

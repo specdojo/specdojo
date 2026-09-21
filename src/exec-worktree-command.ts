@@ -418,10 +418,19 @@ function commit(opts: CommitOpts): void {
 function merge(opts: MergeOpts): void {
   const context = resolveContext(opts);
   const worktree = requireWorktree(context.repoRoot, qualifyTaskId(context.projectId, opts.task));
+  // prepare left the root's own copies of the checkpoint files uncommitted (the exec branch
+  // carries the commit). Release them so the merge can bring the committed versions in.
+  const { claimEventPath } = taskExecutionState(context.schedulePath, opts.task);
+  const releaseRootPaths = [
+    join(context.executionPath, "exec", "plans", `${opts.task}-plan.md`),
+    join(context.executionPath, "exec", "results", `${opts.task}-result.md`),
+    ...(claimEventPath ? [claimEventPath] : []),
+  ];
   mergeWorktreeIntoCurrent({
     context,
     worktree,
     taskId: opts.task,
+    releaseRootPaths,
     ffOnly: opts.ffOnly,
     dryRun: opts.dryRun,
   });

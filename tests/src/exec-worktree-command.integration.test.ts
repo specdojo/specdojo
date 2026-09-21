@@ -171,7 +171,10 @@ describe("exec worktree commands", () => {
       // Branch is project-qualified; the bare task id no longer resolves a worktree.
       expect(worktree!.branch).toBe("exec/test-T-TEST-doc-010");
       expect(findExecWorktree(repo, taskId)).toBeNull();
-      expect(git(repo, "log", "-1", "--pretty=%s")).toBe(`exec(${taskId}): prepare execution`);
+      expect(git(repo, "log", "-1", "--pretty=%s")).toBe("initial");
+      expect(git(worktree!.path, "log", "-1", "--pretty=%s")).toBe(
+        `exec(${taskId}): prepare execution`,
+      );
 
       process.chdir(worktree!.path);
       await runExecWorktree(["status", "--project", "test", "--task", taskId]);

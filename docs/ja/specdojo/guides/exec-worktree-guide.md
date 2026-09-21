@@ -31,15 +31,15 @@ Exec Worktree Guide
 
 `exec run --worktree` と `exec run --auto` は、worktree 準備、agent 起動、commit、merge、状態更新を一括で行います。各段階を人が確認しながら進める場合は `exec worktree` 配下の分割コマンドを使います。
 
-| コマンド           | 責務                                                              | Git変更   | イベント変更 |
-| ------------------ | ----------------------------------------------------------------- | --------- | ------------ |
-| `worktree prepare` | 実行管理ファイルを checkpoint commit し、task worktree を準備する | あり      | なし         |
-| `worktree status`  | worktree、result、Git差分の状態を確認する                         | なし      | なし         |
-| `worktree agent`   | worktree内で agent command を1回実行する                          | agent次第 | なし         |
-| `worktree commit`  | result と成果物変更を exec ブランチへ commit する                 | あり      | なし         |
-| `worktree merge`   | exec ブランチを現在のブランチへ merge する                        | あり      | なし         |
-| `worktree remove`  | 統合済み worktree を削除する                                      | あり      | なし         |
-| `worktree prune`   | worktree のない project 配下の exec ブランチを監査・整理する      | 条件付き  | なし         |
+| コマンド           | 責務                                                                             | Git変更   | イベント変更 |
+| ------------------ | -------------------------------------------------------------------------------- | --------- | ------------ |
+| `worktree prepare` | task worktree を準備し、実行管理ファイルを exec branch へ checkpoint commit する | あり      | なし         |
+| `worktree status`  | worktree、result、Git差分の状態を確認する                                        | なし      | なし         |
+| `worktree agent`   | worktree内で agent command を1回実行する                                         | agent次第 | なし         |
+| `worktree commit`  | result と成果物変更を exec ブランチへ commit する                                | あり      | なし         |
+| `worktree merge`   | exec ブランチを現在のブランチへ merge する                                       | あり      | なし         |
+| `worktree remove`  | 統合済み worktree を削除する                                                     | あり      | なし         |
+| `worktree prune`   | worktree のない project 配下の exec ブランチを監査・整理する                     | 条件付き  | なし         |
 
 分割コマンドは `claim`、`complete`、`block` を暗黙には実行しません。対象タスクは事前に `doing` である必要があります。
 
@@ -110,12 +110,12 @@ specdojo exec worktree prepare \
 3. plan、result、claim event を確認します。
 4. plan がなければ `exec plan` 相当で生成します。
 5. root index に stage 済み変更がないことを確認します。
-6. plan、result、claim event を checkpoint commit します。
-7. checkpoint commit から exec branch と worktree を作成します。
-8. root と、tracked `package-lock.json` を持つ独立 package で `npm ci` を実行します。
-9. worktree 内で `specdojo build` を実行し、生成物を用意します。
+6. 現在の統合先 HEAD から exec branch と worktree を作成します。
+7. root と、tracked `package-lock.json` を持つ独立 package で `npm ci` を実行します。
+8. worktree 内で `specdojo build` を実行し、生成物を用意します。
+9. plan、result、claim event を worktree へ複製し、exec branch へ checkpoint commit します。
 
-root にある無関係な未commit変更は checkpoint commit に含めません。ただし、stage 済み変更がある場合は停止します。
+root にある無関係な未commit変更は checkpoint commit に含めません。ただし、stage 済み変更がある場合は停止します。checkpoint は exec branch だけに置かれるため、統合先の first-parent に `prepare execution` commit は増えません。root 側の plan、result、claim event は未commitのまま残り、task が `doing` であることは統合先からも見えます。これらの root 側の複製は `worktree merge` が統合の直前に解放し（HEAD の状態へ戻し）、merge が exec branch の commit 済み内容を持ち込みます。merge が失敗した場合は複製を元に戻します。
 
 作成または再利用した task worktree では、tracked `package-lock.json` ごとに `npm ci --include=dev` を実行し、root と独立 package の `node_modules` を worktree 内へ実体として配置します。依存関係を元 worktree と共有しないため、agent の sandbox は task worktree 内だけへの書き込みで build、typecheck、依存更新を実行できます。
 
@@ -213,7 +213,9 @@ specdojo exec worktree merge \
 | 現在ブランチが exec branch ではない              | 自分自身へ merge しない         |
 | 現在の未commit変更と merge 対象パスが重複しない  | 手作業の変更を壊さない          |
 
-通常は `git merge --no-ff --no-edit` 相当で統合します。`--ff-only` 指定時は fast-forward 可能な場合だけ統合します。競合した場合は Git の競合状態を保持し、自動 abort しません。
+`prepare` が root に残した plan、result、claim event の複製は、重複判定の前に解放します（exec branch の commit 済み内容が merge で入るため）。それ以外の未commit変更が merge 対象パスと重複する場合は停止します。
+
+通常は `git merge --no-ff` 相当で統合します。自動実行では `exec(<task-id>): <task name>` を merge commit の subject に使い、統合先の first-parent を1タスク1commitにします（`prepare execution` / `apply task changes` は exec branch 側に残ります）。`--ff-only` 指定時は fast-forward 可能な場合だけ統合します。競合した場合は merge を abort して統合先を開始前の状態へ戻し、exec branch と worktree を保持します。
 
 ### 2.6. remove
 

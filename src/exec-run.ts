@@ -1,6 +1,6 @@
 import { spawn, spawnSync } from "node:child_process";
-import { existsSync, readFileSync } from "node:fs";
-import { basename, join, relative, resolve, sep } from "node:path";
+import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync } from "node:fs";
+import { basename, dirname, join, relative, resolve, sep } from "node:path";
 import { type Command } from "commander";
 import { selfRunArgs } from "./spawn-self.js";
 import {
@@ -138,9 +138,12 @@ import {
   checkpointAndEnsureWorktree,
   commitTargetPaths,
   commitWorktreeChanges,
+  currentBranch,
   discardStaleExecWorktree,
   isExecBranchMergedIntoCurrent,
   mergeWorktreeIntoCurrent,
+  normalizeResultWhitespace,
+  releaseRootWorkingCopies,
   removeWorktree,
   stabilizeCommitTargets,
   stageCommitTargets,
@@ -371,6 +374,9 @@ type PreparedTask = {
   worktree: ExecWorktree;
   resultPath?: string;
   resultScaffold?: Record<string, unknown>;
+  // Root-side copies of the execution checkpoint (plan / result / claim event). The exec branch
+  // holds the commit; the root keeps these uncommitted until the merge releases them.
+  checkpointPaths?: string[];
   priorLimitAttempts?: number;
   pipelineRunId?: string;
   pipelineResumeStage?: PipelineStageRole;
@@ -1510,9 +1516,9 @@ async function prepareSingleTask(
     ...(finalizeSections ? { finalizeSections } : {}),
   });
 
-  // Commit the execution checkpoint (plan/result/claim event) to root HEAD, then create the
-  // worktree from that commit. This lets the agent's deliverable changes be committed and merged
-  // back (see runPreparedTask), so later tasks branch from a HEAD that includes prior results.
+  // Keep the execution checkpoint visible at root, but commit it only on the exec branch. The
+  // successful merge later brings plan/result/claim and deliverables to root in one first-parent
+  // commit (see runPreparedTask).
   const claimEventPath = findClaimEventPath(schedulePath, task.id);
   if (!claimEventPath) {
     process.stdout.write(`  Claim event not found for ${task.id}\n`);
@@ -1532,17 +1538,18 @@ async function prepareSingleTask(
     }
   }
 
+  const checkpointPaths = [
+    join(executionPath, "exec", "plans", `${task.id}-plan.md`),
+    resultPath,
+    claimEventPath,
+  ];
   let worktree: ExecWorktree;
   try {
     worktree = checkpointAndEnsureWorktree({
       context: { repoRoot, schedulePath, executionPath },
       worktreeTaskId,
       base: worktreeBase,
-      checkpointPaths: [
-        join(executionPath, "exec", "plans", `${task.id}-plan.md`),
-        resultPath,
-        claimEventPath,
-      ],
+      checkpointPaths,
       commitMessage: `exec(${task.id}): prepare execution`,
     });
   } catch (error) {
@@ -1567,6 +1574,7 @@ async function prepareSingleTask(
     worktree,
     resultPath,
     resultScaffold: readResultFrontmatterSnapshot(resultPath),
+    checkpointPaths,
     pipelineRunId,
     pipelineResumeStage: pipelineResume?.stage,
     pipelineStateRef: pipelineResume?.stateRef,
@@ -2045,6 +2053,12 @@ async function runPreparedTask(
               ...dirtyTargets,
             ]);
           }
+          // The merged versions are already at root HEAD; drop the root's stale working copies
+          // of the checkpoint files so they do not linger as reverse diffs.
+          releaseRootWorkingCopies(
+            repoRoot,
+            (prepared.checkpointPaths ?? []).map((path) => repoRelativePath(repoRoot, path)),
+          );
           process.stdout.write(
             `  [integrate] already merged: ${prepared.worktree.branch} (skipping commit and merge)\n`,
           );
@@ -2080,10 +2094,17 @@ async function runPreparedTask(
               taskId: prepared.task.id,
             });
           }
+          // One merge commit per task on the integration branch's first-parent line. Its subject
+          // names the task; the prepare/apply commits stay on the exec branch.
           mergeWorktreeIntoCurrent({
             context,
             worktree: prepared.worktree,
             taskId: prepared.task.id,
+            message: commitSubject(
+              `exec(${prepared.task.id}): `,
+              prepared.task.name?.trim() || "apply task changes",
+            ),
+            releaseRootPaths: prepared.checkpointPaths,
           });
         }
 
@@ -2249,9 +2270,9 @@ async function runPreparedTaskSafely(
   }
 }
 
-function spawnSelf(args: string[]): boolean {
+function spawnSelf(args: string[], cwd = specdojoRootDir()): boolean {
   const [exe, fullArgs] = selfRunArgs(args);
-  const result = spawnSync(exe, fullArgs, { stdio: "inherit", cwd: specdojoRootDir() });
+  const result = spawnSync(exe, fullArgs, { stdio: "inherit", cwd });
   return result.status === 0;
 }
 
@@ -4156,10 +4177,14 @@ async function runAgentPipeline(params: {
 
 // register の状態遷移を CLI 経由で実行する。register 側のガード（終端状態の拒否）と
 // 派生ビュー再生成を一元的に通すため、直接ファイルを書き換えず自プロセスを spawn する。
-function spawnRegisterTransition(projectId: string | undefined, args: string[]): boolean {
+function spawnRegisterTransition(
+  projectId: string | undefined,
+  args: string[],
+  cwd?: string,
+): boolean {
   const fullArgs = ["register", ...args];
   if (projectId) fullArgs.push("--project", projectId);
-  return spawnSelf(fullArgs);
+  return spawnSelf(fullArgs, cwd);
 }
 
 // 複数IDの直列実行で共有する、ID間で不変なセットアップ。paths/roster/execDefaults の
@@ -4205,6 +4230,17 @@ export function commitRegisterItemChanges(
 
 function repoRelativePath(repoRoot: string, path: string): string {
   return relative(repoRoot, path).split(sep).join("/");
+}
+
+// commitlint (config-conventional) rejects headers longer than 100 characters. Task names and
+// register titles are free text, so clip the subject instead of failing the commit or merge.
+const COMMIT_SUBJECT_MAX_LENGTH = 100;
+
+export function commitSubject(prefix: string, title: string): string {
+  const flat = title.replace(/\s+/g, " ").trim();
+  const subject = `${prefix}${flat}`;
+  if (subject.length <= COMMIT_SUBJECT_MAX_LENGTH) return subject;
+  return `${subject.slice(0, COMMIT_SUBJECT_MAX_LENGTH - 1)}…`;
 }
 
 function registerEventPathForTicket(
@@ -4457,9 +4493,8 @@ async function runSingleRegisterItem(
 }
 
 // register の状態遷移（start/review/wait）が変更した調整状態（pjr-index と派生ビュー）だけを
-// 抽出する。worktree モードでは各遷移を root（統合ブランチ）へ commit して作業ツリーを清潔に
-// 保ち、後続 ID・並列実行の checkpoint / merge と干渉させない。plan/result は checkpoint と
-// worktree merge が扱うため、ここでは含めない。
+// 抽出する。worktree モードでは成功時の遷移を exec branch、失敗時の wait を root で commit
+// する。plan/result は checkpoint と worktree merge が扱うため、ここでは含めない。
 export function registerStatePaths(
   repoRoot: string,
   registerPaths: RegisterPaths,
@@ -4490,8 +4525,14 @@ function commitRegisterState(
   registerPaths: RegisterPaths,
   message: string,
   ticketPath?: string | null,
+  additionalPaths: readonly string[] = [],
 ): void {
-  const paths = registerStatePaths(repoRoot, registerPaths, ticketPath);
+  const paths = [
+    ...new Set([
+      ...registerStatePaths(repoRoot, registerPaths, ticketPath),
+      ...additionalPaths.map((path) => repoRelativePath(repoRoot, path)),
+    ]),
+  ];
   if (paths.length === 0) return;
   stageCommitTargets(repoRoot, paths);
   const staged = gitResult(repoRoot, ["diff", "--cached", "--quiet", "--", ...paths]);
@@ -4501,8 +4542,85 @@ function commitRegisterState(
   stabilizeCommitTargets(repoRoot, () => registerStatePaths(repoRoot, registerPaths, ticketPath));
 }
 
-// register worktree 実行の失敗確定。waiting へ遷移し、その状態変更（個票・登録簿・派生ビュー）を
-// root へ commit して作業ツリーを清潔に保つ。通常実行と reporter 再開で共有する。
+function registerPathsInsideWorktree(
+  repoRoot: string,
+  worktreePath: string,
+  paths: RegisterPaths,
+): RegisterPaths {
+  return {
+    ...paths,
+    projectRegisterPath: pathInsideWorktree(repoRoot, worktreePath, paths.projectRegisterPath),
+    pjrIndexPath: pathInsideWorktree(repoRoot, worktreePath, paths.pjrIndexPath),
+    generatedPath: pathInsideWorktree(repoRoot, worktreePath, paths.generatedPath),
+    controlsGeneratedPath: pathInsideWorktree(repoRoot, worktreePath, paths.controlsGeneratedPath),
+  };
+}
+
+// root と task worktree の間で、同じ repo 相対パスのファイルを複製する。複製元に無いパスは
+// 複製先からも消す（superseded result のような削除も追従させる）。
+function copyRepoPaths(
+  sourceRoot: string,
+  targetRoot: string,
+  repoRoot: string,
+  paths: readonly string[],
+): void {
+  for (const path of paths) {
+    const rel = repoRelativePath(repoRoot, path);
+    const source = resolve(sourceRoot, rel);
+    const target = resolve(targetRoot, rel);
+    if (!existsSync(source)) {
+      rmSync(target, { recursive: true, force: true });
+      continue;
+    }
+    mkdirSync(dirname(target), { recursive: true });
+    copyFileSync(source, target);
+  }
+}
+
+// register の状態遷移（start / wait / review）が書き換える追跡ファイル（root 側の絶対パス）:
+// 個票、append-only のイベント、存在する場合は登録簿本体（移行前のレイアウト）。gitignore 済みの
+// 派生ビューは含めない。
+function registerTransitionPaths(
+  registerPaths: RegisterPaths,
+  ticketPath: string | null,
+): string[] {
+  const paths: string[] = [];
+  if (ticketPath) paths.push(ticketPath);
+  const eventPath = registerEventPathForTicket(registerPaths, ticketPath);
+  if (eventPath) paths.push(eventPath);
+  if (existsSync(registerPaths.pjrIndexPath)) paths.push(registerPaths.pjrIndexPath);
+  return paths;
+}
+
+// register 項目の実行管理ファイル（root 側の絶対パス）: 遷移ファイルに plan / result を加えた
+// もの。exec branch の checkpoint、失敗時の wait commit、merge 前の root 解放で同じ集合を使う。
+function registerBookkeepingPaths(params: {
+  registerPaths: RegisterPaths;
+  planPath: string;
+  resultPath: string;
+  ticketPath: string | null;
+}): string[] {
+  const { registerPaths, planPath, resultPath, ticketPath } = params;
+  return [
+    ...new Set([planPath, resultPath, ...registerTransitionPaths(registerPaths, ticketPath)]),
+  ];
+}
+
+// root の登録簿派生ビュー（pjr-index / generated）は非追跡の生成物で、merge や複製では更新され
+// ない。個票の状態を root 側へ反映したあとに再生成して、root の表示を個票と揃える。失敗しても
+// 実行結果には影響しないため警告に留める。
+function rebuildRootRegisterViews(projectId: string, itemId: string): void {
+  if (!spawnRegisterTransition(projectId, ["build"])) {
+    process.stderr.write(`warning: could not rebuild register views at root for ${itemId}\n`);
+  }
+}
+
+// register worktree 実行の失敗確定。worktree 側の実行管理ファイル（start 済みの個票・イベント、
+// blocked の result、plan）を root へ写してから waiting へ遷移し、統合ブランチには
+// `exec(register X): wait` commit 1件だけを作る（start の遷移事象も同じ commit に入る）。
+// exec branch には同じ内容を commit したうえで統合ブランチを取り込み、再開後の merge が
+// 記帳ファイルで競合しないようにする。worktree が無い（checkpoint 前の失敗）場合は root の
+// 実行管理ファイルをそのまま commit する。
 function registerWaitSummary(params: {
   repoRoot: string;
   projectId: string;
@@ -4511,9 +4629,14 @@ function registerWaitSummary(params: {
   ticketPath: string | null;
   reason: string;
   actor: string;
+  // root 側の絶対パス。worktree がある場合は worktree → root へ写してから遷移する。
+  bookkeepingPaths: readonly string[];
+  worktree?: ExecWorktree;
 }): RegisterItemSummary {
-  const { repoRoot, projectId, registerPaths, item, ticketPath, actor } = params;
+  const { repoRoot, projectId, registerPaths, item, ticketPath, actor, worktree } = params;
   const blockReason = sanitizeRegisterConclusion(params.reason);
+  const bookkeepingPaths = [...params.bookkeepingPaths];
+  if (worktree) copyRepoPaths(worktree.path, repoRoot, repoRoot, bookkeepingPaths);
   let transition: RegisterItemTransition = "waiting";
   if (
     !spawnRegisterTransition(projectId, [
@@ -4529,7 +4652,25 @@ function registerWaitSummary(params: {
     process.stderr.write(`register wait transition failed: ${item.id}\n`);
     transition = "none";
   } else {
-    commitRegisterState(repoRoot, registerPaths, `exec(register ${item.id}): wait`, ticketPath);
+    const message = `exec(register ${item.id}): wait`;
+    const committedPaths = commitRegisterWaitState({
+      repoRoot,
+      registerPaths,
+      item,
+      ticketPath,
+      bookkeepingPaths,
+      message,
+    });
+    if (worktree)
+      syncExecBranchAfterWait({
+        repoRoot,
+        worktree,
+        registerPaths,
+        item,
+        ticketPath,
+        bookkeepingPaths: committedPaths,
+        message,
+      });
   }
   return {
     id: item.id,
@@ -4539,6 +4680,94 @@ function registerWaitSummary(params: {
     commit: "off",
     reason: blockReason,
   };
+}
+
+// waiting 遷移と実行管理ファイルを root へ 1 commit する。result は commit hook の markdownlint
+// 対象で、失敗した run の result（scaffold のまま、または reporter の出力）が記法違反を含むと
+// commit ごと失敗する。その場合は result を外して遷移だけを commit し（result は root に未 commit
+// のまま残り、merge 前の解放で退避される）、実際に commit した集合を返す。
+function commitRegisterWaitState(params: {
+  repoRoot: string;
+  registerPaths: RegisterPaths;
+  item: PjrItem;
+  ticketPath: string | null;
+  bookkeepingPaths: readonly string[];
+  message: string;
+}): string[] {
+  const { repoRoot, registerPaths, item, ticketPath, message } = params;
+  const paths = [...params.bookkeepingPaths];
+  const resultPaths = paths.filter((path) => isRegisterResultPath(repoRoot, path));
+  for (const path of resultPaths) {
+    if (existsSync(path)) normalizeResultWhitespace(path);
+  }
+  try {
+    commitRegisterState(repoRoot, registerPaths, message, ticketPath, paths);
+    return paths;
+  } catch (error) {
+    if (resultPaths.length === 0) throw error;
+    const withoutResult = paths.filter((path) => !resultPaths.includes(path));
+    process.stderr.write(
+      `warning: wait commit of ${item.id} failed with the result included; retrying without it: ` +
+        `${error instanceof Error ? error.message : String(error)}\n`,
+    );
+    gitResult(repoRoot, [
+      "reset",
+      "--quiet",
+      "--",
+      ...resultPaths.map((path) => repoRelativePath(repoRoot, path)),
+    ]);
+    commitRegisterState(repoRoot, registerPaths, message, ticketPath, withoutResult);
+    return withoutResult;
+  }
+}
+
+function isRegisterResultPath(repoRoot: string, path: string): boolean {
+  return /\/exec\/results\/[^/]+-result\.md$/.test(repoRelativePath(repoRoot, path));
+}
+
+// wait commit の内容を exec branch にも commit し、統合ブランチを exec branch へ取り込む。
+// 両側の記帳ファイルは同じ内容なので merge は競合せず、以後の merge-base が wait commit に
+// 進む。再開後に個票やイベントが review へ進んでも、統合ブランチ側（waiting）との三方向
+// 差分にならない。取り込みに失敗した場合（統合ブランチ側の別変更と競合など）は abort して
+// 警告し、worktree は保持する（再開時の merge で改めて競合として扱う）。
+function syncExecBranchAfterWait(params: {
+  repoRoot: string;
+  worktree: ExecWorktree;
+  registerPaths: RegisterPaths;
+  item: PjrItem;
+  ticketPath: string | null;
+  bookkeepingPaths: readonly string[];
+  message: string;
+}): void {
+  const { repoRoot, worktree, item } = params;
+  const worktreePaths = params.bookkeepingPaths.map((path) =>
+    pathInsideWorktree(repoRoot, worktree.path, path),
+  );
+  try {
+    copyRepoPaths(repoRoot, worktree.path, repoRoot, params.bookkeepingPaths);
+    commitRegisterState(
+      worktree.path,
+      registerPathsInsideWorktree(repoRoot, worktree.path, params.registerPaths),
+      params.message,
+      params.ticketPath ? pathInsideWorktree(repoRoot, worktree.path, params.ticketPath) : null,
+      worktreePaths,
+    );
+    const targetBranch = currentBranch(repoRoot);
+    gitOutput(worktree.path, [
+      "merge",
+      "--no-edit",
+      "-m",
+      `exec(register ${item.id}): merge ${targetBranch} after wait`,
+      targetBranch,
+    ]);
+  } catch (error) {
+    gitResult(worktree.path, ["merge", "--abort"]);
+    process.stderr.write(
+      `warning: could not sync the exec branch of ${item.id} with the wait commit; ` +
+        `the resumed merge may conflict on register bookkeeping: ` +
+        `${error instanceof Error ? error.message : String(error)}\n`,
+    );
+  }
 }
 
 // 統合段（commit → merge → worktree 撤去）の進捗を pipeline-state へ記録する。Schedule は
@@ -4563,8 +4792,10 @@ function recordIntegrateStage(
 }
 
 // register worktree 実行の Phase 3（成果物統合と状態遷移）。成功なら worktree の成果物を
-// commit → 統合ブランチへ merge → worktree 撤去 → register review、失敗なら worktree を
-// 保持したまま waiting へ戻す。通常実行・reporter 再開・統合再開で同じ後処理を通す。
+// commit → worktree 側で register review → 統合ブランチへ merge commit 1件 → worktree 撤去、
+// 失敗なら worktree を保持したまま waiting へ戻す（wait commit 1件）。通常実行・reporter 再開・
+// 統合再開で同じ後処理を通す。統合ブランチの first-parent に増えるのは、成功時の merge commit
+// （start → review の遷移事象、plan / result、成果物を含む）か失敗時の wait commit だけになる。
 async function finalizeRegisterWorktreeRun(params: {
   context: RegisterRunContext;
   registerPaths: RegisterPaths;
@@ -4577,6 +4808,9 @@ async function finalizeRegisterWorktreeRun(params: {
   agentResult: RunResult;
   stderr: string;
   actor: string;
+  // root 側の実行管理ファイル（plan / result / 個票 / イベント）。merge 前に解放し、失敗時は
+  // wait commit にまとめる。
+  bookkeepingPaths: readonly string[];
   // pipeline 実行の run state（統合段の記録先）。単一 agent 実行では未指定。
   pipelineStatePath?: string;
   // 統合段の再試行。前回の attempt が merge 済みで後段だけ失敗した場合に備え、
@@ -4586,8 +4820,22 @@ async function finalizeRegisterWorktreeRun(params: {
   const { context, registerPaths, item, ticketPath, worktree, stem, agentResult, actor } = params;
   const { projectId, schedulePath, executionPath, repoRoot } = context;
   const wtContext = { repoRoot, schedulePath, executionPath };
+  const worktreeRegisterPaths = registerPathsInsideWorktree(repoRoot, worktree.path, registerPaths);
+  const worktreeTicketPath = ticketPath
+    ? pathInsideWorktree(repoRoot, worktree.path, ticketPath)
+    : null;
   const waitSummary = (reason: string): RegisterItemSummary =>
-    registerWaitSummary({ repoRoot, projectId, registerPaths, item, ticketPath, reason, actor });
+    registerWaitSummary({
+      repoRoot,
+      projectId,
+      registerPaths,
+      item,
+      ticketPath,
+      reason,
+      actor,
+      worktree,
+      bookkeepingPaths: params.bookkeepingPaths,
+    });
 
   const completedAt = new Date().toISOString();
   const worktreeResultPath = params.worktreeResultPath;
@@ -4599,8 +4847,79 @@ async function finalizeRegisterWorktreeRun(params: {
   );
 
   if (effectiveResult === "success") {
+    // A prior integration attempt may have completed the merge and failed only while removing the
+    // worktree. The register item and result at root are already in their final review/complete
+    // state, so an integration resume must only clean up. Replaying start/review or advancing the
+    // exec branch here would force a second merge commit for the same task.
+    if (
+      params.resumedIntegration &&
+      isExecBranchMergedIntoCurrent({ context: wtContext, worktree })
+    ) {
+      try {
+        const lifecyclePaths = new Set(
+          [worktreeResultPath, params.pipelineStatePath]
+            .filter((path): path is string => !!path)
+            .map((path) => repoRelativePath(worktree.path, path)),
+        );
+        const dirtyTargets = commitTargetPaths(wtContext, worktree, stem);
+        const unexpected = dirtyTargets.filter((path) => !lifecyclePaths.has(path));
+        if (unexpected.length > 0) {
+          throw new Error(`already-merged worktree has new task changes: ${unexpected.join(", ")}`);
+        }
+        if (dirtyTargets.length > 0) {
+          gitOutput(worktree.path, [
+            "restore",
+            "--source=HEAD",
+            "--staged",
+            "--worktree",
+            "--",
+            ...dirtyTargets,
+          ]);
+        }
+        process.stdout.write(
+          `  [integrate] already merged: ${worktree.branch} (skipping transitions, commit, and merge)\n`,
+        );
+        removeWorktree({ context: wtContext, worktree, taskId: stem, deleteBranch: true });
+      } catch (error) {
+        if (error instanceof WorktreeRemovedBranchDeletionError) {
+          process.stderr.write(`Warning: ${error.message}; run exec worktree prune.\n`);
+        } else {
+          const reason = sanitizeRegisterConclusion(
+            `integrate cleanup failed: ${error instanceof Error ? error.message : String(error)}`,
+          );
+          const integrateFailedAt = new Date().toISOString();
+          recordIntegrateStage(params.pipelineStatePath, integrateFailedAt, () => ({
+            status: "failed",
+            completed_at: integrateFailedAt,
+          }));
+          process.stdout.write(`  Blocked: ${item.id} (worktree kept: ${worktree.path})\n`);
+          return {
+            id: item.id,
+            title: item.title,
+            outcome: "failure",
+            transition: "review",
+            commit: "incomplete",
+            reason,
+          };
+        }
+      }
+
+      rebuildRootRegisterViews(projectId, item.id);
+      const sha = gitOutput(repoRoot, ["rev-parse", "--short", "HEAD"]).trim();
+      process.stdout.write(
+        `run done: ${item.id} (status: review — confirm and close with "register close")\n`,
+      );
+      return {
+        id: item.id,
+        title: item.title,
+        outcome: "success",
+        transition: "review",
+        commit: `committed ${sha}`,
+      };
+    }
+
     await updateResultStatus(worktreeResultPath, "complete", completedAt);
-    const title = item.title.replace(/\r?\n/g, " ").trim();
+    const subject = commitSubject(`exec(register ${item.id}): `, item.title);
     const integrateStartedAt = new Date().toISOString();
     recordIntegrateStage(params.pipelineStatePath, integrateStartedAt, (current) => ({
       status: "running",
@@ -4614,19 +4933,57 @@ async function finalizeRegisterWorktreeRun(params: {
         context: wtContext,
         worktree,
         taskId: stem,
-        message: `exec(register ${item.id}): ${title}`,
+        message: subject,
       });
+      // review は exec branch 側（worktree）で記録し、merge commit に同梱する。統合ブランチで
+      // 遷移すると first-parent に独立した commit が増えるため、root では遷移しない。
+      if (
+        !spawnRegisterTransition(
+          projectId,
+          ["review", "--id", item.id, "--by", actor],
+          worktree.path,
+        )
+      ) {
+        throw new Error(`register review transition failed: ${item.id}`);
+      }
+      const integrateCompletedAt = new Date().toISOString();
+      recordIntegrateStage(params.pipelineStatePath, integrateCompletedAt, () => ({
+        status: "succeeded",
+        completed_at: integrateCompletedAt,
+      }));
+      commitRegisterState(
+        worktree.path,
+        worktreeRegisterPaths,
+        `exec(register ${item.id}): review`,
+        worktreeTicketPath,
+        params.pipelineStatePath ? [params.pipelineStatePath] : [],
+      );
       if (
         params.resumedIntegration &&
         isExecBranchMergedIntoCurrent({ context: wtContext, worktree })
       ) {
         process.stdout.write(`  [integrate] already merged: ${worktree.branch} (skipping merge)\n`);
       } else {
-        mergeWorktreeIntoCurrent({ context: wtContext, worktree, taskId: stem });
+        let executor = actor;
+        let reporter = "-";
+        if (params.pipelineStatePath && existsSync(params.pipelineStatePath)) {
+          const state = readPipelineState(params.pipelineStatePath);
+          executor = state.stages.executor.actor ?? executor;
+          reporter = state.stages.reporter.actor ?? reporter;
+        }
+        mergeWorktreeIntoCurrent({
+          context: wtContext,
+          worktree,
+          taskId: stem,
+          message:
+            `${subject}\n\n` +
+            `Transition: start → review\nExecutor: ${executor}\nReporter: ${reporter}\nRefs: ${item.id}`,
+          releaseRootPaths: [...params.bookkeepingPaths],
+        });
       }
-      // 撤去も統合の一部として扱う。worktree の撤去自体が失敗した場合は waiting へ戻し、
-      // `--resume` で統合段からやり直す。撤去後の branch 削除だけが失敗した場合は、成果の
-      // 統合を取り消さず cleanup 警告として扱う。
+      // 撤去も統合の一部として扱う。merge 前に失敗した場合は waiting へ戻し、merge 後の撤去
+      // だけが失敗した場合は review を維持して `--resume` で cleanup だけをやり直す。撤去後の
+      // branch 削除だけが失敗した場合は、成果の統合を取り消さず cleanup 警告として扱う。
       removeWorktree({ context: wtContext, worktree, taskId: stem, deleteBranch: true });
     } catch (error) {
       if (error instanceof WorktreeRemovedBranchDeletionError) {
@@ -4642,6 +4999,22 @@ async function finalizeRegisterWorktreeRun(params: {
           status: "failed",
           completed_at: integrateFailedAt,
         }));
+        // The merge may already have succeeded and only worktree removal failed. Root now contains
+        // the complete result and review transition; adding a wait commit would create a second
+        // first-parent entry and a resume would create a third. Keep review intact and let
+        // integration resume perform cleanup only.
+        if (isExecBranchMergedIntoCurrent({ context: wtContext, worktree })) {
+          rebuildRootRegisterViews(projectId, item.id);
+          process.stdout.write(`  Blocked: ${item.id} (worktree kept: ${worktree.path})\n`);
+          return {
+            id: item.id,
+            title: item.title,
+            outcome: "failure",
+            transition: "review",
+            commit: "incomplete",
+            reason,
+          };
+        }
         await updateResultStatus(worktreeResultPath, "blocked", completedAt, reason);
         process.stdout.write(`  Blocked: ${item.id} (worktree kept: ${worktree.path})\n`);
         const summary = waitSummary(reason);
@@ -4649,15 +5022,8 @@ async function finalizeRegisterWorktreeRun(params: {
       }
     }
 
-    let transition: RegisterItemTransition = "review";
-    let reason: string | undefined;
-    if (!spawnRegisterTransition(projectId, ["review", "--id", item.id, "--by", actor])) {
-      process.stderr.write(`register review transition failed: ${item.id}\n`);
-      transition = "none";
-      reason = "register review transition failed";
-    } else {
-      commitRegisterState(repoRoot, registerPaths, `exec(register ${item.id}): review`, ticketPath);
-    }
+    // review は merge で root の個票に入る。非追跡の派生ビューだけ root で作り直す。
+    rebuildRootRegisterViews(projectId, item.id);
     const sha = gitOutput(repoRoot, ["rev-parse", "--short", "HEAD"]).trim();
     process.stdout.write(
       `run done: ${item.id} (status: review — confirm and close with "register close")\n`,
@@ -4666,9 +5032,8 @@ async function finalizeRegisterWorktreeRun(params: {
       id: item.id,
       title: item.title,
       outcome: "success",
-      transition,
+      transition: "review",
       commit: `committed ${sha}`,
-      reason,
     };
   }
 
@@ -4690,11 +5055,10 @@ async function finalizeRegisterWorktreeRun(params: {
   return waitSummary(reason);
 }
 
-// register 項目1件の worktree 実行。成果物は worktree に隔離し、状態遷移（start/review/wait）は
-// root（統合ブランチ）で lifecycleLock 直列化して pjr-index の競合を避ける。フローは
-// Phase1: plan/result 生成 → register start → checkpoint（plan/result/pjr-index/views を root
-// HEAD へ commit）→ worktree 作成、Phase2: worktree で agent 実行、Phase3: 成功なら成果物を
-// commit → merge back → worktree 撤去 → register review、失敗/rate limit なら register wait。
+// register 項目1件の worktree 実行。成果物は worktree に隔離し、短い setup/finalize だけを
+// lifecycleLock で直列化する。start の checkpoint と成功時の review は exec branch に置き、
+// project develop の first-parent には task 単位の merge commit だけを追加する。失敗時は
+// start を含む管理成果物を root へ戻し、wait 遷移と同じ commit にまとめる。
 async function runSingleRegisterItemWorktree(
   context: RegisterRunContext,
   opts: RunOpts,
@@ -4730,9 +5094,6 @@ async function runSingleRegisterItemWorktree(
   const stem = buildInPlaceStem(pjrId.toLowerCase());
   const worktreeTaskId = qualifyTaskId(projectId, item.id);
 
-  const waitSummary = (reason: string): RegisterItemSummary =>
-    registerWaitSummary({ repoRoot, projectId, registerPaths, item, ticketPath, reason, actor });
-
   // Phase 1: plan/result 生成 → register start → checkpoint → worktree 作成（root で直列化）。
   const setup = async (): Promise<
     | {
@@ -4741,6 +5102,7 @@ async function runSingleRegisterItemWorktree(
         resultPath: string;
         resultScaffold: Record<string, unknown>;
         prompt: string;
+        bookkeepingPaths: string[];
       }
     | RegisterItemSummary
   > => {
@@ -4812,18 +5174,34 @@ async function runSingleRegisterItemWorktree(
       process.stdout.write(
         `  [run] ${setupAction}: worktree ${worktree.path} (${worktree.branch})\n`,
       );
-      return { worktree, planPath, resultPath, resultScaffold, prompt };
+      return {
+        worktree,
+        planPath,
+        resultPath,
+        resultScaffold,
+        prompt,
+        bookkeepingPaths: checkpointPaths,
+      };
     } catch (error) {
-      // checkpoint 失敗時は start を巻き戻して waiting にする（worktree は未作成）。
-      return waitSummary(
-        `checkpoint failed: ${error instanceof Error ? error.message : String(error)}`,
-      );
+      // checkpoint 失敗時は exec branch に commit が無く、root の実行管理ファイルが正本のまま。
+      // start を巻き戻して waiting にし、その状態を root の wait commit 1件にまとめる
+      // （作りかけの worktree は次回実行の discardStaleExecWorktree が片付ける）。
+      return registerWaitSummary({
+        repoRoot,
+        projectId,
+        registerPaths,
+        item,
+        ticketPath,
+        reason: `checkpoint failed: ${error instanceof Error ? error.message : String(error)}`,
+        actor,
+        bookkeepingPaths: checkpointPaths,
+      });
     }
   };
 
   const prepared = lifecycleLock ? await lifecycleLock.runExclusive(setup) : await setup();
   if ("outcome" in prepared) return prepared;
-  const { worktree, planPath, resultPath, resultScaffold, prompt } = prepared;
+  const { worktree, planPath, resultPath, resultScaffold, prompt, bookkeepingPaths } = prepared;
 
   // Phase 2: agent を worktree 内で実行（ロック外・並列可能な長時間部分）。
   const env = agentEnvironment(repoRoot, worktree.path, schedulePath, executionPath);
@@ -4880,6 +5258,7 @@ async function runSingleRegisterItemWorktree(
       agentResult,
       stderr,
       actor,
+      bookkeepingPaths,
       pipelineStatePath,
     });
 
@@ -4989,7 +5368,8 @@ export function resolveRegisterResumeExecutor(
 
 // 統合段だけの再開。executor と reporter が成功済みで、commit → merge → worktree 撤去のいずれかが
 // 失敗した run を、agent を1つも起動せずに統合からやり直す。worktree の成果物と evidence をそのまま
-// 使い、成功なら通常実行と同じ review 遷移、失敗なら waiting へ戻す（worktree は保持する）。
+// 使い、成功なら通常実行と同じ review 遷移、merge 前の失敗なら waiting へ戻す。すでに merge
+// 済みなら review を維持して cleanup だけを再試行する（失敗時も worktree は保持する）。
 async function resumeRegisterIntegration(params: {
   context: RegisterRunContext;
   registerPaths: RegisterPaths;
@@ -5000,6 +5380,7 @@ async function resumeRegisterIntegration(params: {
   stem: string;
   worktreeResultPath: string;
   actor: string;
+  bookkeepingPaths: readonly string[];
   begin: (actor: string, transitionReason: string) => Promise<RegisterItemSummary | null>;
   lifecycleLock?: AsyncLock;
 }): Promise<RegisterItemSummary> {
@@ -5011,9 +5392,22 @@ async function resumeRegisterIntegration(params: {
       `  CWD: ${worktree.path}\n  Actor: ${actor} (runner-owned integration)\n`,
   );
 
-  // waiting のまま統合しないよう、通常実行と同じく in-progress へ戻してから統合する。
-  const beginFailure = await params.begin(actor, "integration resumed");
-  if (beginFailure) return beginFailure;
+  // waiting のまま統合しないよう、通常実行と同じく in-progress へ戻してから統合する。ただし
+  // merge 済みで worktree 撤去だけを再試行する場合は、root はすでに review なので遷移を
+  // 再記録しない（finalize は cleanup だけを行う）。
+  if (
+    !isExecBranchMergedIntoCurrent({
+      context: {
+        repoRoot: params.context.repoRoot,
+        schedulePath: params.context.schedulePath,
+        executionPath: params.context.executionPath,
+      },
+      worktree,
+    })
+  ) {
+    const beginFailure = await params.begin(actor, "integration resumed");
+    if (beginFailure) return beginFailure;
+  }
 
   // reporter が記入済みの result をそのまま使う。agent は起動しないため、成果は success 扱いで
   // 統合だけを実行する（result が未記入なら finalize 側の downgrade が blocked に落とす）。
@@ -5031,6 +5425,7 @@ async function resumeRegisterIntegration(params: {
       agentResult: "success",
       stderr: "",
       actor,
+      bookkeepingPaths: params.bookkeepingPaths,
       pipelineStatePath: target.statePath,
       resumedIntegration: true,
     });
@@ -5098,27 +5493,40 @@ async function resumeSingleRegisterItemWorktree(
     return refuse(`result not found in the worktree: ${artifacts.resultRef}`);
   }
 
-  // waiting のまま再開しないよう、通常実行と同じく in-progress へ戻す。状態変更は root で
-  // 直列化し、merge 前に作業ツリーを清潔にするため即時 commit する。
+  // root 側の実行管理ファイル。plan / result は前回の wait commit で統合ブランチに入っている。
+  const bookkeepingPaths = registerBookkeepingPaths({
+    registerPaths,
+    planPath: resolve(repoRoot, artifacts.planRef),
+    resultPath: resolve(repoRoot, artifacts.resultRef),
+    ticketPath,
+  });
+
+  // waiting のまま再開しないよう、通常実行と同じく in-progress へ戻す。遷移は exec branch
+  // 側の worktree で記録し（統合ブランチに独立した resume commit を作らない）、成功時は
+  // review とともに merge commit へ畳み込む。再び失敗した場合は finalize が start / wait を
+  // root の wait commit 1件へまとめる。root には個票・イベントを未 commit のまま写し、
+  // 実行中の状態が root からも見えるようにする（merge 前に解放する）。
   const begin = async (
     actor: string,
     transitionReason: string,
   ): Promise<RegisterItemSummary | null> => {
     const start = (): RegisterItemSummary | null => {
       if (
-        !spawnRegisterTransition(projectId, [
-          "start",
-          "--id",
-          item.id,
-          "--by",
-          actor,
-          "--reason",
-          transitionReason,
-        ])
+        !spawnRegisterTransition(
+          projectId,
+          ["start", "--id", item.id, "--by", actor, "--reason", transitionReason],
+          worktree.path,
+        )
       ) {
         return refuse(`register start failed: ${item.id}`);
       }
-      commitRegisterState(repoRoot, registerPaths, `exec(register ${item.id}): resume`, ticketPath);
+      copyRepoPaths(
+        worktree.path,
+        repoRoot,
+        repoRoot,
+        registerTransitionPaths(registerPaths, ticketPath),
+      );
+      rebuildRootRegisterViews(projectId, item.id);
       return null;
     };
     return lifecycleLock ? lifecycleLock.runExclusive(start) : start();
@@ -5148,6 +5556,7 @@ async function resumeSingleRegisterItemWorktree(
       stem: artifacts.stem,
       worktreeResultPath,
       actor,
+      bookkeepingPaths,
       begin,
       lifecycleLock,
     });
@@ -5213,6 +5622,7 @@ async function resumeSingleRegisterItemWorktree(
         agentResult: outcome.runResult,
         stderr: outcome.blockReason ?? "",
         actor: executor.candidate.actor,
+        bookkeepingPaths,
         pipelineStatePath: resolve(worktree.path, outcome.stateRef),
       });
     return lifecycleLock ? lifecycleLock.runExclusive(finalize) : finalize();
@@ -5271,6 +5681,7 @@ async function resumeSingleRegisterItemWorktree(
       agentResult: outcome.runResult,
       stderr: outcome.blockReason ?? "",
       actor: reporter.candidate.actor,
+      bookkeepingPaths,
       pipelineStatePath: target.statePath,
     });
 
@@ -6024,8 +6435,9 @@ function prepareScheduleIntegrationResume(params: {
   projectId: string | undefined;
   repoRoot: string;
   executionPath: string;
+  schedulePath: string;
 }): PreparedTask {
-  const { task, taskState, actor, projectId, repoRoot, executionPath } = params;
+  const { task, taskState, actor, projectId, repoRoot, executionPath, schedulePath } = params;
   const stateRef =
     typeof taskState?.meta?.pipeline_state_ref === "string"
       ? taskState.meta.pipeline_state_ref
@@ -6057,6 +6469,14 @@ function prepareScheduleIntegrationResume(params: {
   if (!existsSync(resultPath) || !existsSync(worktreeResultPath)) {
     throw new Error(`result is missing for integration resume: ${task.id}-result.md`);
   }
+  // 統合再開でも、root に未 commit のまま残る claim / plan / result の作業コピーを merge 前に
+  // 解放できるよう、通常実行と同じ checkpoint パスを持たせる。
+  const claimEventPath = findClaimEventPath(schedulePath, task.id);
+  const checkpointPaths = [
+    join(executionPath, "exec", "plans", `${task.id}-plan.md`),
+    resultPath,
+    ...(claimEventPath ? [claimEventPath] : []),
+  ];
 
   return {
     task,
@@ -6067,6 +6487,7 @@ function prepareScheduleIntegrationResume(params: {
     worktree,
     resultPath,
     resultScaffold: readResultFrontmatterSnapshot(resultPath),
+    checkpointPaths,
     pipelineRunId: checkpoint.state.run_id,
     pipelineResumeStage: "integrate",
     pipelineStateRef: stateRef,
@@ -6234,6 +6655,7 @@ async function runResumeMode(opts: RunOpts): Promise<void> {
                 projectId,
                 repoRoot,
                 executionPath,
+                schedulePath,
               })
             : await prepareSingleTask(
                 task,

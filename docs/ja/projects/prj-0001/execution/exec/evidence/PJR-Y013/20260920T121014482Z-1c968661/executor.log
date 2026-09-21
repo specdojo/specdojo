@@ -1,0 +1,446 @@
+Reading prompt from stdin...
+OpenAI Codex v0.155.1
+--------
+workdir: /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Y013
+model: gpt-5.6-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: high
+reasoning summaries: none
+session id: 01a0beb9-6205-7210-aed3-df2ff7c47ee0
+--------
+user
+---
+specdojo:
+  id: prj-0001:xep-pjr-y013-20260920t120927z-fe85
+  type: exec-plan
+  rulebook: none
+  task_id: PJR-Y013
+  name: "exec の記帳 commit を merge commit に畳み develop の本線を 1 タスク 1 commit にする"
+  mode: edit
+  status: ready
+  project_id: prj-0001
+  origin: register
+  owner: ARC
+---
+
+# Edit Plan: PJR-Y013 exec の記帳 commit を merge commit に畳み develop の本線を 1 タスク 1 commit にする
+
+## 1. このタスクで行うこと
+
+プロジェクト登録簿の項目 PJR-Y013「exec の記帳 commit を merge commit に畳み develop の本線を 1 タスク 1 commit にする」に対応する。
+
+2026-09-13 以降の develop の 253 commit のうち、exec の記帳が 182 件（72%）を占める。register 1 件の worktree 実行で、develop の第一親線に次の 5〜6 commit が並ぶ。
+
+## 2. 対象項目
+
+- `id`: PJR-Y013
+- `type`: todo
+- `priority`: medium
+- `owner`: ARC
+- `due`: 2026-09-30
+- `登録簿`: `docs/ja/projects/prj-0001/controls/project-register/pjr-index.md`
+- `個票`: `docs/ja/projects/prj-0001/controls/project-register/pjr-y013-exec-commit-folding.md`
+- `result`: `docs/ja/projects/prj-0001/execution/exec/results/pjr-y013-20260920T120927Z-fe85-result.md`
+
+## 3. 進め方
+
+1. 登録簿の該当行と個票（存在する場合）を読み、目的・完了条件・制約を把握する。
+2. 個票に完了条件がある場合はそれを作業の基準にする。無い場合はタイトルと説明から完了条件の仮説を立て、その仮説を result に明記する。
+3. 関連する成果物・設計書・実装を確認し、対象ファイルを特定して変更する。
+4. 個票が存在する場合は、個票の作業内容・対応結果セクションを実施内容で更新する。
+5. 判断に迷う箇所は _TODO_ / _ASSUMPTION_ で残し、根拠と次のアクションを result に書く。
+
+## 4. 完了手順
+
+1. 「進め方」に従って対応を完了する。
+2. 共通規約に従って、必要な整形・静的検査を実行する。
+3. result に実施内容・変更ファイル・申し送りを記入する。これはタスク完了に必須であり、_TODO_ を残したまま終了しない（詳細は共通規約を参照）。
+4. 登録簿（`pjr-index.md`）の行と個票のステータス項目は変更しない。状態遷移（review / close など）は runner と人間が行う。
+
+## 5. 異常終了の条件
+
+- 前提不足・対象ファイル不明・静的検査未解消の場合は異常終了する（終了コード 1）。
+- 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
+- agent 自身は登録簿の状態を変更せず、終了コードと標準エラー出力で runner に結果を返す。
+
+## 共通: 記法・成果物規約
+
+この規約は、生成される全 exec plan に共通で適用される。result の完了条件、他文書を参照する際のリンク記法、成果物の状態（status）の扱いを統一する。
+
+- result（review plan の場合は review result）への記入は、タスク完了に必須の作業である。成果物の編集とは別に、最後に必ず実施する。
+- 終了コード 0 で完了する前に、result の必須セクションをすべて実際の内容で埋め、プレースホルダ（_TODO_ など）や未記入のセクションを残さない。
+- 成果物に変更が不要と判断した場合でも、result の記入は省略しない。変更不要と判断した理由と根拠を result に記入してから完了する。
+- result が未記入・プレースホルダのまま終了コード 0 で終了すると、runner は成果物未完了（block）として扱い、タスクはやり直しになる。完了前に result の記入漏れがないことを必ず確認する。
+- result の frontmatter は scaffold 済みの構造を正本とする。`id` / `task_id` / `mode` / `project_id` / `plan_ref` / `agent` / `execution` / `approach` / `targets` はキーの追加・削除・改名をせず、scaffold された値のまま維持する。見出し構成（`# Edit Result` などの H1、`## 1.` 以降の章立て）も独自の構成に置き換えない。埋めるのは本文セクションの `_TODO_` プレースホルダの中身だけである。`status` と `completed_at` は完了処理（runner 側）が更新するため、自分で書き換えない。
+- 文書へのリンクは、対象文書が既に存在する場合は `[[id|title]]` 形式で記載する（`id` は project 修飾 doc id）。
+- リンクを表（テーブル）のセル内に置く場合は、区切りの `|` を `[[id\|title]]` のようにエスケープする。エスケープしないと列がずれて表が壊れ、prettier 整形でセルが分割されて固定化される。
+- まだ存在しない文書を参照する場合は、`[[...]]` ではなく `` `id` `` または `` `filename` `` のようにバッククォートで仮置きする。
+- Markdown の自由記述では、`_` を含む識別子・フィールド名（例: `depends_on`）を必ずインラインコードで囲む。result に描画される executor evidence や reporter の自由記述も同じ記法にする。
+- 成果物 frontmatter の `status` を `ready` に変更しない。`ready` への昇格は人間のみが行うため、`draft` のまま据え置く（exec のコミット時ガードでも昇格はブロックされる）。
+- plan に「プロジェクトコンテキスト」章がある場合、そこに挙がる文書はプロジェクト共通の前提を読むための参照であり、成果物 frontmatter の `based_on` へ転記しない。参照して得た前提は本文の記述内容へ反映する。
+- 成果物 frontmatter の `based_on` に書けるのは、その成果物の `depends_on` の推移閉包に含まれる先行成果物だけである。閉包外の ID を書くと `catalog validate` が「`based_on` が `depends_on` の推移閉包に含まれていません」としてエラーになり、コミットがブロックされる。`based_on` を増やす必要が生じた場合は、自分で転記せず、根拠不足として result に記録する。
+- ファイルの読み取り・書き込み・編集は、作業ディレクトリ（カレントディレクトリ）からの相対パスで指定する。絶対パスを自分で組み立てたり、作業ディレクトリ名を推測して指定したりしない（作業ディレクトリ名の取り違えは外部パス扱いになり拒否される）。
+- 編集・書き込みが作業ディレクトリ外（`external_directory`）として拒否された場合、原因はパス指定の誤り（誤った絶対パス・ディレクトリ名の取り違え）である。bash の heredoc などへ回避的に切り替えず、相対パスに直したうえで同じ編集ツールで再実行する。
+- 整形・静的検査は、この plan の完了手順または本共通規約で明示されたコマンドを実行する。変更対象に必要な test、build、schema 検証は、plan に個別記載がなくても実行してよい。同じ test script では対象限定と全件を同一 executor run 内で連続実行せず、どちらか一方に絞る。下表、plan、またはプロジェクト標準が全件 test を求める場合は、全件を1回だけ実行して対象限定の実行を省く。この制約は executor が sandbox 内で実行する test script の回数に対するものであり、親検証に設定された ID のコマンドは対象外である（親 runner が別途実行する）。実行したコマンド・対象・結果は result に記録する。
+- executor / reporter pipeline で親 runner の検証が設定されている場合、executor は設定済み ID に対応するコマンドを sandbox 内で実行せず、executor 終了後に親 runner が固定許可リストから実行して evidence へ追記する。`validate-schema` は `npm run validate:schema`、`test-unit` は `npm run test:unit`、`test-integration` は `npm run test:integration` に対応する。executor は親検証と同じコマンドの対象限定版も追加せず、二重実行しない。
+- Markdown 成果物を編集した後は、`npx prettier --write <対象ファイル>` で整形し、`npx markdownlint <対象ファイル>` で静的検査を実施する。検査でエラーが出た場合は修正してから完了とする。
+- 終了する前に、コミット時に実行される検査（pre-commit 相当）を先回りで実行し、失敗をすべて修正してから完了する。コミット時に初めて失敗が判明すると commit がブロックされ、成果物の内容が完成していてもタスクは block になる。
+- 実行対象は、変更したファイルの種別で判断する。下表のうち、変更したファイルが該当する行の検査をすべて実行する。該当行がない場合は追加の検査は不要である。ただし親検証に設定された ID のコマンドは下表よりも優先し、executor は実行しない。下表に同じコマンドが挙がっていても、親 runner の実行に委ねる。
+- 検査コマンドの正本はリポジトリの hook 設定（`lefthook.yml` など）である。下表と設定が食い違う場合は設定側に合わせ、実行したコマンドと結果を result に記録する。`specdojo` コマンドは、リポジトリで定められた起動方法（`npx tsx src/specdojo.ts <subcommand>` など）で実行する。
+
+| 変更したファイル                                                                                       | 実行する検査                                                                                                                          |
+| ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `*.md`                                                                                                 | `npx prettier --write <対象ファイル>`、`npx markdownlint <対象ファイル>`                                                              |
+| `*.ts` / `*.js` / `*.json` / `*.yaml` / `*.yml`                                                        | `npx prettier --write <対象ファイル>`                                                                                                 |
+| `src/`、`tests/`、`scripts/`、`tools/`、`tsconfig*.json`                                               | `npm run typecheck`                                                                                                                   |
+| `src/`、`tests/`、`docs/ja/specdojo/templates/`、`docs/ja/specdojo/exec-templates/`、`vitest.config.*` | pipeline executor は `npm run test:unit`、それ以外は `npm test`（`test-unit` が親検証に設定されている場合は executor では実行しない） |
+| `docs/ja/projects/` 配下                                                                               | `specdojo catalog validate`                                                                                                           |
+| `dct-*.yaml`                                                                                           | `specdojo catalog build`                                                                                                              |
+| `pjr-index.md`                                                                                         | `specdojo register build`                                                                                                             |
+| `sch-*.yaml`                                                                                           | `specdojo exec refresh`                                                                                                               |
+| `docs/` 配下                                                                                           | `specdojo index build`                                                                                                                |
+
+---
+
+# Pipeline executor stage instructions
+
+This invocation is the executor stage of an executor/reporter pipeline. Edit and validate the
+artifacts required by the plan, but do not create or update the result file. Any plan instruction
+that assigns result writing or lifecycle transitions to the agent belongs to the later reporter or
+runner stage and does not apply here.
+
+The parent runner owns Git commits and repository configuration. Do not run git commit or change
+local, global, or system Git configuration, including user.name and user.email. A Git state change
+will stop the pipeline before validation, reporting, commit, or merge.
+
+When writing Markdown in the final evidence, wrap identifiers or field names containing an
+underscore in inline code (for example, `depends_on`).
+
+The SpecDojo parent runner will execute these allowlisted validations after you exit: test-integration, validate-schema, test-unit (npm run test:integration, npm run validate:schema, npm run test:unit). Do not run those commands inside the agent sandbox or report duplicate executor results for them. Run only the remaining sandbox-safe validations required by the plan. Parent-run results will be appended to evidence with source=runner and are authoritative.
+
+
+End the final response with exactly one machine-readable report using this envelope. Do not place
+Markdown fences around the JSON.
+
+<specdojo_executor_evidence>
+{"final_message":"concise outcome","validations":[{"command":"exact command","status":"passed|failed|not_run","summary":"concise result"}]}
+</specdojo_executor_evidence>
+
+codex
+まず登録簿・個票と関連設計を確認し、現在の exec／merge 処理とテスト構成を特定します。result は後段 reporter の担当なので、この stage では編集しません。親 runner が実行する 3 種の検証も重複実行せず、残りの必要な検査だけ行います。
+exec
+/bin/bash -lc "pwd && rg --files -g 'AGENTS.md' -g 'pjr-y013*' -g 'pjr-index.md' -g 'lefthook.yml' -g 'package.json' -g 'src/**' -g 'tests/**' -g 'docs/ja/specdojo/**' | sed -n '1,240p'" in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Y013
+ succeeded in 0ms:
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Y013
+src/catalog.ts
+src/register-history.ts
+src/deliverable.ts
+src/catalog-plan-prompt.ts
+src/exec-format.ts
+src/exec-agent-git-state.ts
+src/schedule-build.ts
+src/schedule-strategy-generate.ts
+src/exec-register-resume.ts
+src/grade-result.ts
+src/practice-id.ts
+src/timeline.ts
+src/template-resolution.ts
+src/exec-events.ts
+src/yaml-schema-modeline.ts
+src/exec-schedule-gantt-chart-render.ts
+src/exec-run.ts
+src/register.ts
+src/exec-worktree.ts
+src/exec-worktree-ops.ts
+src/yaml-pages-command.ts
+src/exec-types.ts
+src/exec-limit.ts
+src/kata.ts
+src/schedule-approach.ts
+src/job.ts
+src/exec-schedule.ts
+src/exec.ts
+src/exec-schedule-hash.ts
+src/register-events.ts
+src/exec-schedule-index.ts
+src/exec-agent-config.ts
+src/spawn-self.ts
+src/exec-results.ts
+src/index-command.ts
+src/build-command.ts
+src/exec-worktree-command.ts
+src/exec-evidence.ts
+src/exec-schedule-gantt-chart-scope.ts
+src/catalog-scaffold.ts
+src/exec-trial.ts
+src/catalog-plan.ts
+src/routine.ts
+src/exec-agent-protected-config.ts
+src/exec-pipeline-state.ts
+src/template-frontmatter.ts
+src/specdojo.ts
+src/register-date.ts
+src/exec-run-lock.ts
+src/doc-index.ts
+src/package-paths.ts
+src/dashboard.ts
+src/register-item.ts
+src/register-migrate-timestamps.ts
+src/schedule-phase-sets.ts
+src/catalog-types.ts
+src/exec-provider-scaffold.ts
+src/catalog-plan-generate.ts
+src/agent.ts
+src/exec-project.ts
+src/exec-task-view.ts
+src/exec-schedule-progress.ts
+src/git-environment.ts
+src/exec-register.ts
+src/watch.ts
+src/schedule.ts
+src/schedule-strategy-profiles.ts
+src/deliverable-trash.ts
+src/role-types.ts
+src/timeline-build.ts
+src/exec-parent-validation.ts
+src/exec-reporter.ts
+src/build-if-stale.ts
+src/specdojo-config.ts
+src/exec-schedule-initial.ts
+src/exec-schedule-gantt-chart.ts
+src/agent-response.ts
+src/frontmatter-namespace.ts
+src/dist-freshness.ts
+src/catalog-paths.ts
+src/exec-shared.ts
+src/exec-strategy.ts
+src/review-plan.ts
+src/exec-schedule-ready.ts
+src/catalog-generate.ts
+src/catalog-build.ts
+src/yaml-pages.ts
+src/exec-schedule-cpm.ts
+src/exec-schedule-calendar.ts
+src/review-types.ts
+src/grade.ts
+src/exec-protection-handoff.ts
+src/exec-plans.ts
+AGENTS.md
+lefthook.yml
+package.json
+packages/vscode-specdojo/package.json
+tests/src/exec-project.test.ts
+tests/src/catalog-plan-command.test.ts
+tests/src/exec-register-plan-escape.test.ts
+tests/src/exec-events.test.ts
+tests/src/spawn-self.test.ts
+tests/src/exec-register-pipeline-e2e.integration.test.ts
+tests/src/specdojo-config-env.test.ts
+tests/src/exec-schedule-gantt-chart-render.test.ts
+tests/src/schedule-build.test.ts
+tests/src/exec-run-worker-pool.test.ts
+tests/src/exec-schedule-cpm.test.ts
+tests/src/exec-schedule-progress.test.ts
+tests/src/practice-id.test.ts
+tests/src/agent-command.test.ts
+tests/src/exec-schedule-gantt-chart-scope.test.ts
+tests/src/exec-agent-config-command.test.ts
+tests/src/exec-pipeline-state.test.ts
+tests/src/exec-reporter.test.ts
+tests/src/schedule-strategy-generate.test.ts
+tests/src/exec-reopen-command.test.ts
+tests/src/exec-agent-config.test.ts
+tests/src/register-view-order.test.ts
+tests/src/exec-results.test.ts
+tests/src/catalog-paths.test.ts
+tests/src/timeline-build.test.ts
+tests/src/exec-run-resolve-command.test.ts
+tests/src/specdojo-config-command.test.ts
+tests/src/git-environment-isolation.test.ts
+tests/src/dashboard.test.ts
+tests/src/exec-trial.test.ts
+tests/src/exec-agent-protected-config.test.ts
+tests/src/exec-register.test.ts
+tests/src/exec-limit.test.ts
+tests/src/template-frontmatter.test.ts
+tests/src/specdojo-config.test.ts
+tests/src/exec-register-resume.integration.test.ts
+tests/src/catalog-based-on.test.ts
+tests/src/job.test.ts
+tests/src/catalog-plan-generate.test.ts
+tests/src/exec-release-reset-worktree.integration.test.ts
+tests/src/exec-schedule-validation.test.ts
+tests/src/exec-protection-handoff.test.ts
+tests/src/exec-worktree-command.integration.test.ts
+tests/src/exec-worktree-ops.test.ts
+tests/src/exec-schedule-calendar.test.ts
+tests/src/exec-format.test.ts
+tests/src/register-date.test.ts
+tests/src/exec-run-inplace.test.ts
+tests/src/exec-cycle.integration.test.ts
+tests/src/yaml-pages.test.ts
+tests/src/register-migration.test.ts
+tests/src/exec-schedule-hash.test.ts
+tests/src/exec-register-multiple-ids.integration.test.ts
+tests/src/register-migrate-timestamps.test.ts
+tests/src/catalog-build.test.ts
+tests/src/schedule-command.test.ts
+tests/src/exec-parent-validation.test.ts
+tests/src/exec-register-resume.test.ts
+tests/src/register-history.test.ts
+tests/src/exec-agent-git-state.integration.test.ts
+tests/src/grade-result.test.ts
+tests/src/exec-register-multiple-ids.test.ts
+tests/src/exec-run-lock.test.ts
+tests/src/exec-run-lock-command.test.ts
+tests/src/exec-run-resolve-claiming-actor.test.ts
+tests/src/doc-index.test.ts
+tests/src/template-resolution.test.ts
+tests/src/agent-response.test.ts
+tests/src/exec-scheduler-command.test.ts
+tests/src/exec-strategy.test.ts
+tests/src/exec-pipeline-e2e.integration.test.ts
+tests/src/exec-shared.test.ts
+tests/src/catalog-generate.test.ts
+tests/src/exec-schedule-ready.test.ts
+tests/src/grade.test.ts
+tests/src/register-item.test.ts
+tests/src/exec-run-downgrade-unfilled.test.ts
+tests/src/exec-evidence.test.ts
+tests/src/exec-plans.test.ts
+tests/src/register.test.ts
+tests/src/catalog-plan.test.ts
+tests/src/register-commands.test.ts
+tests/src/dist-freshness.test.ts
+tests/src/catalog-scaffold.test.ts
+tests/src/exec-worktree.integration.test.ts
+tests/src/exec-shared-display-width.test.ts
+tests/src/catalog-index.test.ts
+tests/src/exec-worktree.test.ts
+tests/src/deliverable-trash.integration.test.ts
+tests/src/cli-verb-taxonomy.test.ts
+tests/src/register-migrate-events.test.ts
+tests/src/exec.test.ts
+tests/src/catalog-merge.test.ts
+tests/src/exec-register-worktree.integration.test.ts
+tests/src/kata.test.ts
+tests/src/routine.test.ts
+tests/src/exec-provider-scaffold.test.ts
+tests/src/exec-deliverable.test.ts
+tests/src/exec-release-all-blocked.test.ts
+tests/src/review-plan.test.ts
+tests/src/exec-run.test.ts
+tests/src/exec-worktree-ops.integration.test.ts
+tests/src/exec-event-msg-default.test.ts
+packages/docs-site/package.json
+tests/helpers/git-environment.ts
+tests/helpers/schema.ts
+tests/setup/git-environment.ts
+tests/fixtures/grade/previous-findings.md
+tests/tools/validate-orchestrator-sync.test.ts
+tests/tools/build-if-stale.test.ts
+tests/tools/protect-main-push.test.ts
+tests/tools/open-agent-worktree.integration.test.ts
+tests/vscode-markdown-table.test.ts
+tests/tools/grade-per-document.test.ts
+docs/ja/specdojo/standards/id-and-file-naming-standard.md
+docs/ja/specdojo/standards/template-authoring-standard.md
+docs/ja/specdojo/standards/people-and-organization-definition-standard.md
+docs/ja/specdojo/standards/sample-authoring-standard.md
+docs/ja/specdojo/standards/test-document-scope-standard.md
+docs/ja/specdojo/standards/exec-human-finalize-standard.md
+docs/ja/specdojo/standards/document-metadata-standard.md
+docs/ja/specdojo/standards/git-branching-standard.md
+docs/ja/specdojo/standards/recipe-authoring-standard.md
+docs/ja/specdojo/standards/job-definition-standard.md
+docs/ja/specdojo/standards/guide-authoring-standard.md
+docs/ja/specdojo/standards/rulebook-authoring-standard.md
+docs/ja/specdojo/standards/standard-authoring-standard.md
+docs/ja/specdojo/standards/philosophy-authoring-standard.md
+docs/ja/specdojo/standards/reference-authoring-standard.md
+tests/packages/docs-site/gen-mermaid-svg.test.ts
+tests/tools/docs/src/remark-frontmatter-ajv2020.test.ts
+tests/tools/docs/src/remark-no-unescaped-angle-placeholder.test.ts
+tests/tools/docs/src/history-links.test.ts
+tests/tools/docs/src/remark-md-content.test.ts
+tests/tools/docs/src/rulebook-schema-enums.test.ts
+tests/docs/specdojo/schemas/pm-members-schema.test.ts
+tests/docs/specdojo/schemas/sch-strategy-schema.test.ts
+docs/ja/specdojo/exec-templates/xep-template-maintenance-template.md
+docs/ja/specdojo/exec-templates/xep-register-template.md
+docs/ja/specdojo/exec-templates/xep-fully-guided-template.md
+docs/ja/specdojo/exec-templates/xrp-rulebook-maintenance-template.md
+docs/ja/specdojo/exec-templates/xer-human-bootstrap-finalize-template.md
+docs/ja/specdojo/exec-templates/xrr-template.md
+
+exec
+/bin/bash -lc "rg -n \"PJR-Y013|exec の記帳|記帳 commit|merge commit|first-parent|第一親|exec:\" docs src tests README.md package.json lefthook.yml --glob '"'!docs/ja/projects/prj-0001/execution/exec/results/**'"' | sed -n '1,260p'" in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Y013
+ succeeded in 1147ms:
+��決事項、承認結果 | `main` への merge commit・PR 証跡、他 project への同期要求 | project `develop`、`main`、Git / PR 履歴、実行記録 |
+docs/ja/product/trash/cdfd-multi-project.md:356:| `E-04` | `P-06-08` | feature / exec と project `develop` が同じ箇所を変更する、統合先が対象 project `develop` でない、統合元の作業ツリーの未commit変更と統合対象パスが重複する、または task worktree に commit 対象の未commit変更が残る | merge を完了扱いにせず停止する。Git が保持した競合状態、未統合 commit、worktree、task result を残し、統合先と統合順序を再確認する。競合解消または merge 中止は人間が差分を確認して選ぶ | 正しい project `develop` 上で競合と重複変更が解消され、task の成果物・result に取りこぼしがなく、必要な検証後に merge commit を確定できる |
+docs/ja/specdojo/guides/docs-structure-guide.md:425:  します。merge commit が作られた場合はその merge commit、fast-forward または squash merge の
+docs/ja/projects/prj-0001/execution/exec/trials/PJR-0FCT-2026-08-26T12_25_51.047Z-3e9a0dd3/trials/qwen-expert-executor-qwen-reporter/executor.log:281:    "exec:watch-claude-log": "tools/exec/watch-claude-log.sh",
+docs/ja/projects/prj-0001/execution/exec/trials/PJR-0FCT-2026-08-26T12_25_51.047Z-3e9a0dd3/trials/qwen-expert-executor-qwen-reporter/executor.log:336:    "specdojo:exec:opencode": "specdojo exec run --auto --loop --parallel 1 --edit-by opencode-edit-agent --review-by opencode-review-agent > logs/exec-opencode.stdout.log 2> logs/exec-opencode.stderr.log",
+docs/ja/projects/prj-0001/execution/exec/trials/PJR-0FCT-2026-08-26T12_25_51.047Z-3e9a0dd3/trials/qwen-expert-executor-qwen-reporter/executor.log:337:    "specdojo:exec:auto": "specdojo exec run --auto --loop --parallel 1 > logs/exec-auto.stdout.log 2> logs/exec-auto.stderr.log",
+docs/ja/projects/prj-0001/execution/exec/trials/PJR-0FCT-2026-08-26T12_25_51.047Z-3e9a0dd3/trials/qwen-expert-executor-qwen-reporter/executor.log:338:    "specdojo:exec:auto2": "specdojo exec run --auto --loop --parallel 2 > logs/exec-auto.stdout.log 2> logs/exec-auto.stderr.log",
+docs/ja/projects/prj-0001/execution/exec/trials/PJR-0FCT-2026-08-26T12_25_51.047Z-3e9a0dd3/trials/qwen-expert-executor-qwen-reporter/executor.log:339:    "specdojo:exec:auto3": "specdojo exec run --auto --loop --parallel 3 > logs/exec-auto.stdout.log 2> logs/exec-auto.stderr.log"
+docs/ja/projects/prj-0001/controls/project-register/pjr-tbhh-detached-unit-default.md:21:prj-0001 の実測では、2026-09-13 以降の 253 commit のうち exec の記帳（register の遷移、prepare / apply、merge）が 182 件（72%）を占めた。これは SpecDojo の仕組み上の性質であり、利用プロジェクトでも同じ比率になる。プロダクトの Git 履歴が記帳で埋まるのは、SpecDojo を導入する代償として大きすぎる。
+docs/ja/projects/prj-0001/controls/project-register/pjr-tbhh-detached-unit-default.md:25:Attached Unit（同一リポジトリ）は、SpecDojo 自身の開発のように成果物と実装が同じ変更で動く場合に限る。prj-0001 は dogfooding のため Attached のまま維持し、本線の可読性は PJR-Y013（記帳 commit の merge commit への同梱）で改善する。
+docs/ja/projects/prj-0001/controls/project-register/pjr-qw5t-protect-main-push-and-merge-method.md:17:  conclusion: GitHub 設定で squash merge と rebase merge を無効化し（PO が 2026-08-28 に実施、mergeCommitAllowed のみ true）、規約が禁止した方式を PR 画面から選べない状態にした。あわせて Lefthook の pre-push に protect-main を追加し、Git が標準入力へ渡す各更新の remote ref を検査してリモート名にかかわらず refs/heads/main への更新を拒否する。develop・feature・exec への push は妨げない。拒否メッセージは base を main、head を project develop とする PR を作り merge commit で昇格するよう案内する。実 push の --dry-run で main が拒否され develop が通ることを確認した。main の削除と push --all 相当も拒否する。これは防護柵でありアクセス制御の境界ではなく、--no-verify で迂回でき Lefthook 未導入環境では動かないこと、実際の境界は branch protection であることを Gitブランチ標準へ明記した。lefthook.yml は保護対象のため agent の commit では適用されず、内容を確認したうえでオーケストレーターが適用した。
+docs/ja/projects/prj-0001/controls/project-register/pjr-qw5t-protect-main-push-and-merge-method.md:24:規約は develop から main への昇格で merge commit を必須とし squash / rebase merge を禁止したが、GitHub のリポジトリ設定は squash と rebase を許可したままであり PR 画面から選べる。選ばれた時点で祖先関係が失われ、規約が警告するとおり次回の昇格で競合が繰り返される。またローカルの pre-push フックは lefthook のスタブが置かれているだけで定義がなく実質無効であり、main への直接 push を止める手段がローカルに存在しない。CLI 自体は push を一切実行せず、agent も provider ごとに deny されているが、provider 設定に依存しない一律の防護柵がない。
+docs/ja/projects/prj-0001/controls/project-register/pjr-qw5t-protect-main-push-and-merge-method.md:32:- **拒否メッセージが次の行動を示す**。単に失敗させるのではなく、PR 経由で昇格すること、base を `main`・head を `develop` にすること、merge 方式は merge commit であることを示す。
+docs/ja/projects/prj-0001/controls/project-register/pjr-qw5t-protect-main-push-and-merge-method.md:45:- PR で base を `main`、head を `develop` にすると、merge commit の第1 parent が `main`、第2 parent が `develop` となり、**マージの向きは構造的に正しくなる**。向きの誤りを防ぐための昇格コマンドは必要ない。残る危険は merge 方式の選択だけである。
+docs/ja/projects/prj-0001/controls/project-register/pjr-qw5t-protect-main-push-and-merge-method.md:61:- `lefthook.yml` に `pre-push` を定義し、標準入力を判定スクリプトへ引き継ぐようにした。拒否メッセージは base `main`、head `project/<project-id>/develop` の Pull Request と merge commit 方式を案内する。
+docs/ja/projects/prj-0001/controls/project-register/pjr-qw5t-protect-main-push-and-merge-method.md:62:- [[specdojo:git-branching-standard|Gitブランチ標準]] に、GitHub 側で merge commit だけを許可すること、ローカルフックの判定範囲、実 push を伴わない確認手順、`--no-verify` とフック未導入環境では迂回できる限界、実際の境界が branch protection であることを追記した。
+docs/ja/projects/prj-0001/controls/project-register/pjr-199g-promotion-commit-consolidation.md:16:  conclusion: develop から main への昇格は develop の先端を第2 parent とする merge commit を必ず作り、squash merge と rebase merge は使用しない方式に確定した。物理的なコミット数を減らすのではなく、git log --first-parent main を正規の履歴として読む軸を変える方式である。これにより祖先関係が保たれ、次回の昇格で過去コミットが未マージ扱いにならず、main から develop への逆マージも成立し、push 済み履歴も書き換えない。使い捨て clone で2回の昇格と逆マージを再現し、対照実験で squash merge が完了条件を満たさないことも確認した。レビューで適用範囲の制約が判明した。実リポジトリの main 先端 b4203fc0 は第1 parent が develop 側であり、過去の昇格は develop 上で merge して main を fast-forward した形のため、現在の first-parent 系列は2,675件中2,289件が表示され集約されていない。既存部分の集約には push 済み履歴の書き換えが必要で本規約が禁止するため、そのまま残す。本方式は次回の昇格から有効になる。この制約と、merge の向きを逆にしない注意を Gitブランチ標準とブランチワークフローガイドへ追記した。
+docs/ja/projects/prj-0001/controls/project-register/pjr-199g-promotion-commit-consolidation.md:57:| `--no-ff` merge と first-parent 表示      | first-parent では昇格 merge commit 1件 | `develop` の全 commit が `main` の祖先になり、逆マージと次回昇格を通常の merge で扱える | Git fallback を含む全履歴を復元できる    | 採用 |
+docs/ja/projects/prj-0001/controls/project-register/pjr-199g-promotion-commit-consolidation.md:62:採用方式では commit を物理的に削除しない。`develop → main` の昇格を必ず `--no-ff` の merge commit で記録し、プロダクト変更を追うときは `main` の first-parent 履歴を正規の表示とする。これにより、細かな commit は監査可能な DAG に保持しながら、昇格単位を1行で追える。通常の `git log` には `develop` の詳細 commit も表示されるため、「まとめる」とは first-parent 上での論理的な集約を意味する。
+docs/ja/projects/prj-0001/controls/project-register/pjr-199g-promotion-commit-consolidation.md:70:| 1回目の `--no-ff` 昇格         | tree は `develop` と一致した。`main` から増えた278 commitのうち first-parent は昇格 merge commit 1件だった                              |
+docs/ja/projects/prj-0001/controls/project-register/pjr-199g-promotion-commit-consolidation.md:81:| 1   | まとめ方の候補を比較し、方式を決めて理由を記録する    | ARC  | done | `--no-ff` merge と first-parent 表示を採用   |
+docs/ja/projects/prj-0001/controls/project-register/pjr-199g-promotion-commit-consolidation.md:87:- `develop → main` は squash / rebase で commit を作り直さず、merge commit を必ず作る方式に確定した。昇格単位の履歴は `git log --first-parent` で参照する。
+docs/ja/projects/prj-0001/controls/project-register/pjr-199g-promotion-commit-consolidation.md:88:- [[specdojo:git-branching-standard|Gitブランチ標準]]へ、昇格方式、祖先関係の完了確認、first-parent の位置付け、squash / rebase merge の禁止を反映した。
+docs/ja/projects/prj-0001/controls/project-register/pjr-199g-promotion-commit-consolidation.md:90:- 使い捨て clone で2回の昇格と逆マージを再現し、意図した first-parent 粒度、tree の一致、祖先関係、`register history` 770件の完全一致を確認した。対照実験により squash merge では完了条件を満たさないことも確認した。
+docs/ja/projects/prj-0001/controls/project-register/pjr-199g-promotion-commit-consolidation.md:95:- **本方式は次回の昇格から有効になる**。実リポジトリの現在の `main` に対して `git log --first-parent main` を実行すると2,675件中2,289件が表示され、`exec(register ...)` の遷移 commit がそのまま並ぶ。集約は効いていない。
+docs/ja/projects/prj-0001/controls/project-register/pjr-199g-promotion-commit-consolidation.md:96:- 原因は `main` の現在の先端 `b4203fc0` にある。この merge は第1 parent が `develop` 側の `ce4132f4`、第2 parent が `main` 側の `5ccd851b` であり、`develop` 上で実行して `main` を fast-forward した形である。**確定した方式とは親子関係が逆向き**のため、`main` の first-parent 系列が `develop` の詳細履歴へ潜り込んでいる。
+docs/ja/projects/prj-0001/controls/project-register/pjr-199g-promotion-commit-consolidation.md:97:- 既存の first-parent 系列を集約するには push 済み履歴の書き換えが必要であり、本規約が禁止する。過去区間はそのまま残す。
+docs/ja/projects/prj-0001/controls/project-register/pjr-199g-promotion-commit-consolidation.md:98:- 検証は使い捨て clone 上の合成シナリオで行っており、実リポジトリの first-parent 系列がすでに汚れている事実は確認されていなかった。この制約を [[specdojo:git-branching-standard|Gitブランチ標準]] の「適用範囲」と [[specdojo:branch-workflow-guide|ブランチワークフローガイド]] の確認手順へ追記した。
+docs/ja/projects/prj-0001/controls/project-register/pjr-5hhs-exec-branch-not-deleted.md:77:8 本はすべて後から merge commit が作られていたが、通常の成功経路だけを通ったものではなかった。
+docs/ja/projects/prj-0001/controls/project-register/pjr-y013-exec-commit-folding.md:17:# PJR-Y013 exec の記帳 commit を merge commit に畳み develop の本線を 1 タスク 1 commit にする
+docs/ja/projects/prj-0001/controls/project-register/pjr-y013-exec-commit-folding.md:21:2026-09-13 以降の develop の 253 commit のうち、exec の記帳が 182 件（72%）を占める。register 1 件の worktree 実行で、develop の第一親線に次の 5〜6 commit が並ぶ。
+docs/ja/projects/prj-0001/controls/project-register/pjr-y013-exec-commit-folding.md:30:`git log --first-parent` で本線を追っても実質的な変更が埋もれるため、記帳を merge commit に畳む（案 A）。記帳を別ブランチへ分離する案 B は、成果物と実行記録が同じ commit にある対応関係を壊し、`exec validate` / grade / dashboard が 2 ブランチを読む設計変更になるため採らない。
+docs/ja/projects/prj-0001/controls/project-register/pjr-y013-exec-commit-folding.md:34:- worktree 実行（register / Schedule タスクとも）では、`prepare execution` と `apply task changes` は exec ブランチにだけ置き、develop には `--no-ff` の merge commit を 1 つ作る。squash / rebase は使わない（`branch-workflow-guide` の方針を維持）。
+docs/ja/projects/prj-0001/controls/project-register/pjr-y013-exec-commit-folding.md:35:- register の `start` 遷移は独立した commit にせず、成功時は merge commit に、失敗時は `exec(register PJR-XXXX): wait` commit に同梱する。`review` 遷移も merge commit に同梱する。
+docs/ja/projects/prj-0001/controls/project-register/pjr-y013-exec-commit-folding.md:36:- merge commit のメッセージは `exec(register PJR-XXXX): <title>` を subject とし、本文に遷移（`start → review`）、executor / reporter、`Refs: PJR-XXXX` を書く。Schedule タスクは `exec(T-…): <task name>` を subject にする。
+docs/ja/projects/prj-0001/controls/project-register/pjr-y013-exec-commit-folding.md:37:- 失敗時は現行どおり worktree を保持し、develop には `wait` commit 1 つ（遷移事象と plan / result を含む）を作る。再開後の成功は merge commit 1 つになる。
+docs/ja/projects/prj-0001/controls/project-register/pjr-y013-exec-commit-folding.md:43:- register の worktree 実行が成功したとき、develop の第一親線に増える commit が merge commit 1 つだけで、その commit に `start` / `review` の遷移事象、plan / result、成果物の変更が含まれている。
+docs/ja/projects/prj-0001/controls/project-register/pjr-y013-exec-commit-folding.md:44:- 失敗したとき、develop の第一親線に増える commit が `wait` commit 1 つだけで、`start` の遷移事象を含む。
+docs/ja/projects/prj-0001/controls/project-register/pjr-y013-exec-commit-folding.md:45:- Schedule タスクの worktree 実行も同様に merge commit 1 つになり、`prepare` / `apply` は exec ブランチ側に残る。
+docs/ja/projects/prj-0001/controls/project-register/pjr-y013-exec-commit-folding.md:47:- 統合テストで、成功・失敗・再開の各経路で develop の第一親線の commit 数とメッセージが検証されている。
+docs/ja/projects/prj-0001/controls/project-register/pjr-y013-exec-commit-folding.md:48:- `branch-workflow-guide` の「register 遷移 commit だけを除外しない」を「遷移は merge commit に同梱する」に改め、`exec-worktree-guide` / `register-operation-guide` の commit 説明が更新されている。
+docs/ja/projects/prj-0001/controls/project-register/pjr-y013-exec-commit-folding.md:55:| 1   | register worktree 実行の `start` / `review` 遷移 commit を merge commit / `wait` commit へ同梱する | DEV  | open | codex-expert-executor / gemma-reporter / worktree |
+docs/ja/projects/prj-0001/controls/project-register/pjr-y013-exec-commit-folding.md:56:| 2   | Schedule タスクの worktree 統合を同じ規則にし、merge commit のメッセージを整える                   | DEV  | open | 作業 1 と同一タスク                               |
+docs/ja/projects/prj-0001/controls/project-register/pjr-y013-exec-commit-folding.md:59:| 5   | 実運用で 1 件実行し、`git log --first-parent` を確認する                                           | ARC  | open | オーケストレーターが直接対応                      |
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-qw5t.yaml:19:      to: 規約は develop から main への昇格で merge commit を必須とし squash / rebase merge を禁止したが、GitHub のリポジトリ設定は squash と rebase を許可したままであり PR 画面から選べる。選ばれた時点で祖先関係が失われ、規約が警告するとおり次回の昇格で競合が繰り返される。またローカルの pre-push フックは lefthook のスタブが置かれているだけで定義がなく実質無効であり、main への直接 push を止める手段がローカルに存在しない。CLI 自体は push を一切実行せず、agent も provider ごとに deny されているが、provider 設定に依存しない一律の防護柵がない。
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-qw5t.yaml:84:  reason: GitHub 設定で squash merge と rebase merge を無効化し（PO が 2026-08-28 に実施、mergeCommitAllowed のみ true）、規約が禁止した方式を PR 画面から選べない状態にした。あわせて Lefthook の pre-push に protect-main を追加し、Git が標準入力へ渡す各更新の remote ref を検査してリモート名にかかわらず refs/heads/main への更新を拒否する。develop・feature・exec への push は妨げない。拒否メッセージは base を main、head を project develop とする PR を作り merge commit で昇格するよう案内する。実 push の --dry-run で main が拒否され develop が通ることを確認した。main の削除と push --all 相当も拒否する。これは防護柵でありアクセス制御の境界ではなく、--no-verify で迂回でき Lefthook 未導入環境では動かないこと、実際の境界は branch protection であることを Gitブランチ標準へ明記した。lefthook.yml は保護対象のため agent の commit では適用されず、内容を確認したうえでオーケストレーターが適用した。
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-qw5t.yaml:94:      to: GitHub 設定で squash merge と rebase merge を無効化し（PO が 2026-08-28 に実施、mergeCommitAllowed のみ true）、規約が禁止した方式を PR 画面から選べない状態にした。あわせて Lefthook の pre-push に protect-main を追加し、Git が標準入力へ渡す各更新の remote ref を検査してリモート名にかかわらず refs/heads/main への更新を拒否する。develop・feature・exec への push は妨げない。拒否メッセージは base を main、head を project develop とする PR を作り merge commit で昇格するよう案内する。実 push の --dry-run で main が拒否され develop が通ることを確認した。main の削除と push --all 相当も拒否する。これは防護柵でありアクセス制御の境界ではなく、--no-verify で迂回でき Lefthook 未導入環境では動かないこと、実際の境界は branch protection であることを Gitブランチ標準へ明記した。lefthook.yml は保護対象のため agent の commit では適用されず、内容を確認したうえでオーケストレーターが適用した。
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-tbhh.yaml:9:  reason: prj-0001 の実測（直近 1 週間の commit の 72% が exec の記帳）を踏まえ、利用者が Detached Unit を既定にすると判断
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-tbhh.yaml:19:      to: SpecDojo の記帳 commit は履歴の大半を占めるため、利用プロジェクトでは SpecDojo Unit をプロダクトと別リポジトリに置く Detached Unit を既定とし、guide・quick-start・config init の雛形・directory-layout-reference をその前提に改める。Attached は成果物と実装が同じ変更で動く場合に限る
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-y013.yaml:9:  reason: 9/13 以降の 253 commit のうち exec の記帳が 182 件（72%）を占めており、利用者が案 A（merge commit への同梱）を選択
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-y013.yaml:16:      to: exec の記帳 commit を merge commit に畳み develop の本線を 1 タスク 1 commit にする
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-y013.yaml:19:      to: register / Schedule の worktree 実行が develop の第一親線に start・prepare・apply・merge・review の 5〜6 commit を並べ履歴が読みづらい。prepare / apply は exec ブランチに置き、register の遷移は merge commit（失敗時は wait commit）に同梱して、本線を 1 タスク 1 commit にする
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-199g.yaml:78:  reason: develop から main への昇格は develop の先端を第2 parent とする merge commit を必ず作り、squash merge と rebase merge は使用しない方式に確定した。物理的なコミット数を減らすのではなく、git log --first-parent main を正規の履歴として読む軸を変える方式である。これにより祖先関係が保たれ、次回の昇格で過去コミットが未マージ扱いにならず、main から develop への逆マージも成立し、push 済み履歴も書き換えない。使い捨て clone で2回の昇格と逆マージを再現し、対照実験で squash merge が完了条件を満たさないことも確認した。レビューで適用範囲の制約が判明した。実リポジトリの main 先端 b4203fc0 は第1 parent が develop 側であり、過去の昇格は develop 上で merge して main を fast-forward した形のため、現在の first-parent 系列は2,675件中2,289件が表示され集約されていない。既存部分の集約には push 済み履歴の書き換えが必要で本規約が禁止するため、そのまま残す。本方式は次回の昇格から有効になる。この制約と、merge の向きを逆にしない注意を Gitブランチ標準とブランチワークフローガイドへ追記した。
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-199g.yaml:88:      to: develop から main への昇格は develop の先端を第2 parent とする merge commit を必ず作り、squash merge と rebase merge は使用しない方式に確定した。物理的なコミット数を減らすのではなく、git log --first-parent main を正規の履歴として読む軸を変える方式である。これにより祖先関係が保たれ、次回の昇格で過去コミットが未マージ扱いにならず、main から develop への逆マージも成立し、push 済み履歴も書き換えない。使い捨て clone で2回の昇格と逆マージを再現し、対照実験で squash merge が完了条件を満たさないことも確認した。レビューで適用範囲の制約が判明した。実リポジトリの main 先端 b4203fc0 は第1 parent が develop 側であり、過去の昇格は develop 上で merge して main を fast-forward した形のため、現在の first-parent 系列は2,675件中2,289件が表示され集約されていない。既存部分の集約には push 済み履歴の書き換えが必要で本規約が禁止するため、そのまま残す。本方式は次回の昇格から有効になる。この制約と、merge の向きを逆にしない注意を Gitブランチ標準とブランチワークフローガイドへ追記した。
+docs/ja/projects/prj-0001/execution/exec/plans/pjr-qw5t-20260828T132347Z-5e85-plan.md:21:規約は develop から main への昇格で merge commit を必須とし squash / rebase merge を禁止したが、GitHub のリポジトリ設定は squash と rebase を許可したままであり PR 画面から選べる。選ばれた時点で祖先関係が失われ、規約が警告するとおり次回の昇格で競合が繰り返される。またローカルの pre-push フックは lefthook のスタブが置かれているだけで定義がなく実質無効であり、main への直接 push を止める手段がローカルに存在しない。CLI 自体は push を一切実行せず、agent も provider ごとに deny されているが、provider 設定に依存しない一律の防護柵がない。
+docs/ja/projects/prj-0001/execution/exec/evidence/PJR-199G/20260828T104950780Z-1696c59f/executor.log:1:`develop → main` は「`--no-ff` merge + first-parent 表示」に確定しました。squash/rebase merge は禁止し、詳細コミットと祖先関係を保持します。
+docs/ja/projects/prj-0001/execution/exec/evidence/PJR-199G/20260828T104950780Z-1696c59f/executor.log:12:{"final_message":"--no-ff mergeで祖先関係を保持し、first-parent上で昇格を1件に集約する方式を確定した","validations":[{"command":"git -c core.hooksPath=/dev/null merge --quiet --no-ff validation-develop -m 'validation: first develop promotion'","status":"passed","summary":"使い捨てcloneでtree一致、278件中first-parentは1件、未マージ0件"},{"command":"git -c core.hooksPath=/dev/null merge --quiet --no-ff validation-main -m 'validation: reverse merge main into develop'","status":"passed","summary":"mainからdevelopへの逆マージが競合なく成立"},{"command":"git -c core.hooksPath=/dev/null merge --quiet --no-ff validation-develop -m 'validation: second develop promotion'","status":"passed","summary":"2回目の昇格も競合なく成功しmerge-baseとdevelop先端が一致"},{"command":"cmp -s \"$validation_dir/history-before.json\" \"$validation_dir/history-after.json\"","status":"passed","summary":"昇格前後で770 event・261項目・Git fallback 4件が完全一致"},{"command":"git -c core.hooksPath=/dev/null merge --quiet --squash \"$old_develop\"","status":"passed","summary":"対照実験として277件の未マージとGit fallback 4件の欠落を確認"},{"command":"npx prettier --write docs/ja/specdojo/standards/git-branching-standard.md docs/ja/specdojo/guides/branch-workflow-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-199g-promotion-commit-consolidation.md","status":"passed","summary":"対象Markdown 3件を整形"},{"command":"npx markdownlint docs/ja/specdojo/standards/git-branching-standard.md docs/ja/specdojo/guides/branch-workflow-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-199g-promotion-commit-consolidation.md","status":"passed","summary":"Markdown静的検査成功"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"project register生成成功"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"exit 0、既存の未作成成果物に関する警告のみ"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1395件の文書index生成成功"},{"command":"git diff --check","status":"passed","summary":"差分の空白エラーなし"}]}
+docs/ja/projects/prj-0001/execution/exec/evidence/PJR-199G/20260828T104950780Z-1696c59f/evidence.json:37:      "summary": "使い捨てcloneでtree一致、278件中first-parentは1件、未マージ0件"
+docs/ja/projects/prj-0001/execution/exec/evidence/PJR-199G/20260828T104950780Z-1696c59f/evidence.json:121:  "final_message": "--no-ff mergeで祖先関係を保持し、first-parent上で昇格を1件に集約する方式を確定した",
+docs/ja/projects/prj-0001/execution/exec/plans/pjr-y013-20260920T120927Z-fe85-plan.md:6:  task_id: PJR-Y013
+docs/ja/projects/prj-0001/execution/exec/plans/pjr-y013-20260920T120927Z-fe85-plan.md:7:  name: "exec の記帳 commit を merge commit に畳み develop の本線を 1 タスク 1 commit にする"
+docs/ja/projects/prj-0001/execution/exec/plans/pjr-y013-20260920T120927Z-fe85-plan.md:15:# Edit Plan: PJR-Y013 exec の記帳 commit を merge commit に畳み develop の本線を 1 タスク 1 commit にする
+docs/ja/projects/prj-0001/execution/exec/plans/pjr-y013-20260920T120927Z-fe85-plan.md:19:プロジェクト登録簿の項目 PJR-Y013「exec の記帳 commit を merge commit に畳み develop の本線を 1 タスク 1 commit にする」に対応する。
+docs/ja/projects/prj-0001/execution/exec/plans/pjr-y013-20260920T120927Z-fe85-plan.md:21:2026-09-13 以降の develop の 253 commit のうち、exec の記帳が 182 件（72%）を占める。register 1 件の worktree 実行で、develop の第一親線に次の 5〜6 commit が並ぶ。
+docs/ja/projects/prj-0001/execution/exec/plans/pjr-y013-20260920T120927Z-fe85-plan.md:25:- `id`: PJR-Y013
+docs/ja/projects/prj-0001/execution/exec/events/20260915T132054Z_codex-expert-executor_T-DATA-FLOW-PDCA-cdfd-check-010_block_f3a4.json:7:  "msg": "git commit failed: \u001b[38;2;0;0;0m╭\u001b[38;2;5;5;5m─\u001b[38;2;11;11;11m─\u001b[38;2;16;16;16m─\u001b[38;2;19;19;19m─\u001b[38;2;23;23;23m─\u001b[38;2;26;26;26m─\u001b[38;2;29;29;29m─\u001b[38;2;32;32;32m─\u001b[38;2;35;35;35m─\u001b[38;2;39;39;39m─\u001b[38;2;42;42;42m─\u001b[38;2;45;45;45m─\u001b[38;2;49;49;49m─\u001b[38;2;52;52;52m─\u001b[38;2;56;56;56m─\u001b[38;2;56;56;56m─\u001b[38;2;52;52;52m─\u001b[38;2;49;49;49m─\u001b[38;2;45;45;45m─\u001b[38;2;42;42;42m─\u001b[38;2;39;39;39m─\u001b[38;2;35;35;35m─\u001b[38;2;32;32;32m─\u001b[38;2;29;29;29m─\u001b[38;2;26;26;26m─\u001b[38;2;23;23;23m─\u001b[38;2;19;19;19m─\u001b[38;2;16;16;16m─\u001b[38;2;11;11;11m─\u001b[38;2;5;5;5m─\u001b[38;2;0;0;0m─\u001b[38;2;0;0;0m─\u001b[38;2;6;6;6m─\u001b[38;2;12;12;12m─\u001b[38;2;17;17;17m─\u001b[38;2;20;20;20m─\u001b[38;2;24;24;24m─\u001b[38;2;27;27;27m─\u001b[38;2;31;31;31m─\u001b[38;2;34;34;34m─\u001b[38;2;38;38;38m─\u001b[38;2;41;41;41m╮\u001b[m\n\u001b[38;2;0;0;0m│\u001b[m 🥊 lefthook  v2.1.9   hook:  \u001b[1mpre-commit\u001b[m \u001b[38;2;52;52;52m│\u001b[m\n\u001b[38;2;6;6;6m╰\u001b[38;2;12;12;12m─\u001b[38;2;17;17;17m─\u001b[38;2;20;20;20m─\u001b[38;2;24;24;24m─\u001b[38;2;27;27;27m─\u001b[38;2;31;31;31m─\u001b[38;2;34;34;34m─\u001b[38;2;38;38;38m─\u001b[38;2;41;41;41m─\u001b[38;2;45;45;45m─\u001b[38;2;48;48;48m─\u001b[38;2;52;52;52m─\u001b[38;2;56;56;56m─\u001b[38;2;56;56;56m─\u001b[38;2;52;52;52m─\u001b[38;2;48;48;48m─\u001b[38;2;45;45;45m─\u001b[38;2;41;41;41m─\u001b[38;2;38;38;38m─\u001b[38;2;34;34;34m─\u001b[38;2;31;31;31m─\u001b[38;2;27;27;27m─\u001b[38;2;24;24;24m─\u001b[38;2;20;20;20m─\u001b[38;2;17;17;17m─\u001b[38;2;12;12;12m─\u001b[38;2;6;6;6m─\u001b[38;2;0;0;0m─\u001b[38;2;0;0;0m─\u001b[38;2;6;6;6m─\u001b[38;2;12;12;12m─\u001b[38;2;17;17;17m─\u001b[38;2;20;20;20m─\u001b[38;2;24;24;24m─\u001b[38;2;27;27;27m─\u001b[38;2;31;31;31m─\u001b[38;2;34;34;34m─\u001b[38;2;38;38;38m─\u001b[38;2;41;41;41m─\u001b[38;2;45;45;45m─\u001b[38;2;48;48;48m─\u001b[38;2;52;52;52m╯\u001b[m\n│  typecheck (skip) no matching staged files\n│  orchestrator-sync (skip) no matching staged files\n│  test (skip) no matching staged files\n│  exec-refresh (skip) no matching staged files\n│  catalog-build (skip) no matching staged files\n│  register-build (skip) no matching staged files\n┃  format ❯ \ndocs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-PDCA-cdfd-check-010/20260915T130821875Z-a3ee3cbc/evidence.json 35ms (unchanged)\ndocs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-PDCA-cdfd-check-010/20260915T130821875Z-a3ee3cbc/pipeline-state.json 2ms (unchanged)\n\n┃  markdown ❯ \ndocs/ja/product/010-business-specs/010-data-flow/cdfd-check.md 87ms (unchanged)\ndocs/ja/projects/prj-0001/execution/exec/results/T-DATA-FLOW-PDCA-cdfd-check-010-result.md 12ms (unchanged)\ndocs/ja/projects/prj-0001/execution/exec/results/T-DATA-FLOW-PDCA-cdfd-check-010-result.md:37:140 error MD049/emphasis-style Emphasis style [Expected: asterisk; Actual: underscore]\ndocs/ja/projects/prj-0001/execution/exec/results/T-DATA-FLOW-PDCA-cdfd-check-010-result.md:37:151 error MD049/emphasis-style Emphasis style [Expected: asterisk; Actual: underscore]\n\nexit status 1\n┃  index-build ❯ \nBuilt index: 1700 entries → .specdojo/doc-index.json\n\n┃  catalog-validate ❯ \nOK: dct-architecture.yaml\nOK: dct-business-acceptance-criteria.yaml\nOK: dct-business-model-bes.yaml\nOK: dct-business-model-bps.yaml\nOK: dct-business-model-br.yaml\nOK: dct-current-state.yaml\nOK: dct-data-flow.yaml\nOK: dct-data-model-bdd.yaml\nOK: dct-data-model-ccd.yaml\nOK: dct-data-model-cdsd.yaml\nOK: dct-data-model-cld.yaml\nOK: dct-data-model-cstd.yaml\nOK: dct-data-model-stsd.yaml\nOK: dct-external-interface-specs.yaml\nOK: dct-glossary.yaml\nOK: dct-impact-analysis.yaml\nOK: dct-migration-planning.yaml\nOK: dct-non-functional-requirements.yaml\nOK: dct-operations.yaml\nOK: dct-planning.yaml\nOK: dct-project-definition.yaml\nOK: dct-project-management.yaml\nOK: dct-system-acceptance-criteria.yaml\nOK: dct-system-design.yaml\nOK: dct-system-functions.yaml\nOK: dct-test-specs.yaml\nOK: dct-user-interface-model.yaml\nWARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-check-010/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-architecture.yaml: cxd-specdojo: based_on を検証する文書が見つかりません (docs/ja/product/030-architecture/010-c4/cxd-specdojo.md)\nWARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-check-010/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-architecture.yaml: cnd-specdojo: based_on を検証する文書が見つかりません (docs/ja/product/030-architecture/010-c4/cnd-specdojo.md)\nWARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-check-010/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-architecture.yaml: cpd-specdojo-cli: based_on を検証する文書が見つかりません (docs/ja/product/030-architecture/010-c4/cpd-specdojo-cli.md)\nWARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-check-010/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-architecture.yaml: ifd-specdojo: based_on を検証する文書が見つかりません (docs/ja/product/030-architecture/020-infrastructure/ifd-specdojo.md)\nWARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-check-010/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-architecture.yaml: tsd-specdojo-cli: based_on を検証する文書が見つかりません (docs/ja/product/030-architecture/020-infrastructure/tsd-specdojo-cli.md)\nWARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-check-010/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-architecture.yaml: tsd-docs-site: based_on を検証する文書が見つかりません (docs/ja/product/030-architecture/020-infrastructure/tsd-docs-site.md)\nWARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-check-010/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-acceptance-criteria.yaml: bac-init: based_on を検証する文書が見つかりません (docs/ja/product/050-business-acceptance-criteria/bac-init.md)\nWARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-check-010/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-acceptance-criteria.yaml: bac-register-lifecycle: based_on を検証する文書が見つかりません (docs/ja/product/050-business-acceptance-criteria/bac-register-lifecycle.md)\nWARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-check-010/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-acceptance-criteria.yaml: bac-catalog-planning: based_on を検証する文書が見つかりません (docs/ja/product/050-business-acceptance-criteria/bac-catalog-planning.md)\nWARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-check-010/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-acceptance-criteria.yaml: bac-task-execution: based_on を検証する文書が見つかりません (docs/ja/product/050-business-acceptance-criteria/bac-task-execution.md)\nWARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-check-010/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-acceptance-criteria.yaml: bac-routine: based_on を検証する文書が見つかりません (docs/ja/product/050-business-acceptance-criteria/bac-routine.md)\nWARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-check-010/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-acceptance-criteria.yaml: bac-multi-project: based_on を検証する文書が見つかりません (docs/ja/product/050-business-acceptance-criteria/bac-multi-project.md)\nWARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-check-010/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-acceptance-criteria.yaml: bac-agent-config-operation: based_on を検証する文書が見つかりません (docs/ja/product/050-business-acceptance-criteria/bac-agent-config-operation.md)\nWARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-check-010/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-acceptance-criteria.yaml: bac-derived-content: based_on を検証する文書が見つかりません (docs/ja/product/050-business-acceptance-criteria/bac-derived-content.md)\nWARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-check-010/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-acceptance-criteria.yaml: bac-reporting: based_on を検証する文書が見つかりません (docs/ja/product/050-business-acceptance-criteria/bac-reporting.md)\nWARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-check-010/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-acceptance-criteria.yaml: bac-deprecation: based_on を検証する文書が見つかりません (docs/ja/product/050-business-acceptance-criteria/bac-deprecation.md)\nWARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-check-010/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bes.yaml: bes-index: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/030-business-model/bes-index.md)\nWARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-check-010/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bes.yaml: bes-routine-due: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/030-business-model/bes-routine-due.md)\nWARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-check-010/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bes.yaml: bes-task-ready-selected: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/030-business-model/bes-task-ready-selected.md)\nWARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-check-010/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bes.yaml: bes-derived-content-requested: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/030-business-model/bes-derived-content-requested.md)\nWARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-check-010/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bps.yaml: bps-init-required: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/030-business-model/bps-init-required.md)\nWARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-check-010/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bps.yaml: bps-init-optional: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/030-business-model/bps-init-optional.md)\nWARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-check-010/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bps.yaml: bps-register-required: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/030-business-model/bps-register-required.md)\nWARN:
