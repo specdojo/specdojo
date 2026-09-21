@@ -2,16 +2,17 @@
 specdojo:
   id: prj-0001:pjr-xkks-grade-sidecar
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: ARC
   registered_at: "2026-09-20T05:08:04Z"
   due_on: "2026-09-30"
+  completed_at: "2026-09-21T04:00:21Z"
   block_reason: rate limit reached
 ---
 
@@ -64,6 +65,14 @@ grade は成果物の frontmatter（`specdojo.grade`: verdict / score / viewpoin
 - grade の結果と finding を `execution/grade/results/<doc-id>.yaml` のサイドカーへ移し、成果物・Kata から `specdojo.grade` と `specdojo:finding` を除去した（`grade migrate` で 288 件を移行、`grade validate` 0 件）。ファイル名は `:` を `.` に置き換える。
 - `src/grade-result.ts` と schema を新設し、`grade apply` / `list` / `validate` / `state` / `plan` / `result` / `migrate`、`schedule-approach`、dashboard、`run-per-document.sh`、docs-site（`GradeSummary.vue`）、exec テンプレート 6 本、guide / standard / command-reference を更新した。`content_hash` は成果物の内容全体から計算し、特別扱いをなくした。
 - executor（codex-expert）は利用制限で中断し、テスト更新・ファイル名規則・standards の残存記述・記録はオーケストレーターが直接対応した。作業 5（routine の commit 範囲の確認）は次回の夜間 grade で確認する。
+
+### 4.1. レビュー結果（2026-09-21）
+
+完了条件 8 項目を develop で確認した。`npm run check` は既存の 2 件（result の末尾改行、`br-sample` の frontmatter `title`）で失敗していたため直接修正して通した。残る事項は次のとおり。
+
+- 作業 5（夜間 routine の commit 範囲）は 9/21 深夜〜9/22 朝の routine で確認する。
+- `sch-strategy-data-flow-pdca.yaml` の refine-2 description は「本文の finding コメント」と旧前提のままだが、fully-guided の plan 展開で代替されるため実害はない。次回の track 再生成時に文言を改める。
+- register の todo 用 plan には finding の展開がない。関連ドキュメントにサイドカーを持つ文書があれば展開する改善は別 todo（PJR-YWPH）で扱う。
 
 ## 5. 関連ドキュメント
 

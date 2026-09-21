@@ -74,3 +74,19 @@
       from: waiting
       to: review
   previous_event_id: reg_6a402c1cfff748c4b9dc0522752c2a8e
+- v: 1
+  id: reg_951d3fef1276435b95cc21d573f5d6d9
+  ts: "2026-09-21T04:00:21Z"
+  action: close
+  actor: specdojo-orchestrator (claude)
+  from_status: review
+  to_status: done
+  reason: codex-expert の実装を利用制限後にオーケストレーターが仕上げて統合。完了条件 8 項目を develop で確認し、残課題（夜間 routine の commit 範囲確認、strategy 文言、register plan の展開 PJR-YWPH）を記録して利用者が close
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-21"
+  previous_event_id: reg_c7f013fbdba7471eb70d1ea60d8f69c3

@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_de02b6ebff2a42eab78cd735cd7e1b85
+  ts: "2026-09-21T03:59:49Z"
+  action: add
+  actor: specdojo-orchestrator (claude)
+  from_status: null
+  to_status: open
+  reason: PJR-XKKS のレビューで残課題として整理し、利用者が起票を指示
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: register の todo 用 plan に関連文書の grade finding を展開する
+    - field: description
+      from: ""
+      to: grade の finding がサイドカーへ移った後、register の todo 用 plan（xep-register-template）には展開がなく、Kata や成果物の finding 解消を扱う項目では個票へ転記して補っている。個票の関連ドキュメントにサイドカーを持つ文書があれば、その finding を plan 本文へ展開する
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-21"
+    - field: due
+      from: ""
+      to: "2026-10-15"
