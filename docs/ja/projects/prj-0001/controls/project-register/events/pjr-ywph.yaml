@@ -103,3 +103,16 @@
       from: waiting
       to: in-progress
   previous_event_id: reg_f772927b873844a18d5c3dc7f99a5cd3
+- v: 1
+  id: reg_61ab385c4bfe404f930024ef3d6271eb
+  ts: "2026-09-21T11:25:21Z"
+  action: review
+  actor: antigravity-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_6f6480d3470047618aefcc93ee2823c7

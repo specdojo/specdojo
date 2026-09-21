@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-YWPH",
   "run_id": "20260921T110848085Z-e3dd906f",
-  "updated_at": "2026-09-21T11:24:43.434Z",
+  "updated_at": "2026-09-21T11:25:21.476Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-ywph-20260921T110800Z-275a-result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "antigravity-reporter",
       "attempts": 2,
       "started_at": "2026-09-21T11:24:43.434Z",
-      "completed_at": null,
+      "completed_at": "2026-09-21T11:25:21.476Z",
       "artifact_ref": null
     }
   },
