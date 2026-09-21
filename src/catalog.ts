@@ -37,6 +37,7 @@ import {
 } from "./catalog-plan.js";
 import { renderPlanPrompt } from "./catalog-plan-prompt.js";
 import { generateCatalogsFromPlan, writeGeneratedCatalogs } from "./catalog-plan-generate.js";
+import { resolveSpecdojoTemplatesDir } from "./template-resolution.js";
 
 function readSizeFromDeclaration(catalogPath: string): ProjectSize | null {
   const size = loadDctIndex(catalogPath)?.size;
@@ -102,11 +103,7 @@ function collectRepeatable(value: string, previous: string[]): string[] {
 }
 
 function resolveTemplatesPath(): string {
-  const templatesPath = resolve(specdojoRootDir(), "docs/ja/specdojo/templates");
-  if (!existsSync(templatesPath)) {
-    throw new Error(`Templates directory not found: ${templatesPath}`);
-  }
-  return templatesPath;
+  return resolveSpecdojoTemplatesDir();
 }
 
 function repoRelative(absolutePath: string): string {
