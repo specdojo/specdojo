@@ -58,3 +58,19 @@
       from: in-progress
       to: review
   previous_event_id: reg_b3baa541fcc74fee9c903be174b6d8ba
+- v: 1
+  id: reg_69bc230610db47ecb74942985facc824
+  ts: "2026-09-21T04:52:42Z"
+  action: close
+  actor: specdojo-orchestrator (claude)
+  from_status: review
+  to_status: done
+  reason: codex-expert-executor が worktree で実施し新規則の merge commit 1 つで統合。完了条件 5 項目（lint:md / docs:build 含む）を確認して利用者が close
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-21"
+  previous_event_id: reg_2edc7658355743c98f27f4795af69fbd

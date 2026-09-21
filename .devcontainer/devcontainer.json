@@ -77,7 +77,7 @@
 
   "postCreateCommand": "bash .devcontainer/post-create.sh",
   "postStartCommand": "bash .devcontainer/post-start.sh",
-  "postAttachCommand": "bash .devcontainer/kill-stale-vscode.sh",
+  "postAttachCommand": "bash .devcontainer/kill-stale-vscode.sh; bash .devcontainer/ensure-cron.sh",
 
   "customizations": {
     "vscode": {

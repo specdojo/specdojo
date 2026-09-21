@@ -2,16 +2,17 @@
 specdojo:
   id: prj-0001:pjr-tbhh-detached-unit-default
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-09-20T05:00:24Z"
   due_on: "2026-09-30"
+  completed_at: "2026-09-21T04:52:42Z"
 ---
 
 # PJR-TBHH 利用プロジェクトの既定構成を Detached Unit にする
@@ -57,6 +58,10 @@ Attached Unit（同一リポジトリ）は、SpecDojo 自身の開発のよう�
 - `config init` の雛形へ `run.worktree_base: "../app1-worktrees"` を追加し、生成後の案内にも `app1-specdojo/` の兄弟配置と worktree パスを表示するようにした。雛形と案内を確認する単体テストも更新した。
 - [[specdojo:directory-layout-reference]] と [[specdojo:specdojo-overview-guide]] を同じリポジトリ境界へ揃えた。
 - 残課題は [[prj-0001:pjr-p7hy-multi-repo-single-item]] の複数リポジトリ統合である。完了までは、プロダクト文書または実装を伴う項目を分けるか、人が統合を管理する制約をガイドに明記した。
+
+### 4.1. レビュー結果（2026-09-21）
+
+完了条件 5 項目を develop で確認した。docs-structure-guide は Detached Unit を既定とし、採用条件表・10.3（`docs/ja/product` はプロダクト実装側）・10.4（現行実装の境界、PJR-P7HY 参照）が決定事項どおりになっている。quick-start は `app1-specdojo/` + `app1-worktrees/` の手順が第一、`config init` は `run.worktree_base: ../app1-worktrees` を既定にした。`npm run lint:md` 通過。`docs:build` は VitePress の dev サーバー稼働中に heap OOM で 1 回失敗したが、`--max-old-space-size=6144` で通過した（内容起因ではない）。本項目は PJR-Y013 の新規則で実行した最初の register で、develop の first-parent に merge commit 1 つだけが増えることを確認した。
 
 ## 5. 関連ドキュメント
 

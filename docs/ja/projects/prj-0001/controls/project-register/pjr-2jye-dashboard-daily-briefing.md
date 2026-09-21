@@ -2,16 +2,17 @@
 specdojo:
   id: prj-0001:pjr-2jye-dashboard-daily-briefing
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: PM
   registered_at: "2026-09-17T23:01:42Z"
   due_on: "2026-09-30"
+  completed_at: "2026-09-21T04:52:43Z"
   block_reason: "agent exited with non-zero code: runner による検証 `test-unit` が失敗（exit 1）したため。具体的に `tests/src/dashboard.test.ts` においてフォーマット不備またはアサーションエラー（末尾を空行で終えない）が発生している。"
 ---
 
@@ -69,6 +70,10 @@ specdojo:
 dashboard build は agent を呼ばずトークンも消費しないため、利用者の判断で毎時更新に変更した。ただし routine の `job` action は `exec run --job --if-busy skip` を経由し、grade や register の実行中は skip されるため、実行ロックを取らずに specdojo サブコマンドを直接起動する `action.kind: specdojo` を routine に追加し、`rtn-dashboard-refresh` を `cron: "0 * * * *"`・`args: [dashboard, build]` に置き換えた（`job-dashboard-build` は廃止）。devcontainer の cron は毎時 `routine run --due` を呼ぶ形にし、各 routine の発火時刻は routine 側の cron で決まる。
 
 作業 6 の調整として、routine 実行状況の表を Asia/Tokyo の月日・時分で表示し、予定時刻を過ぎて履歴がない行を「未実行」と区別し、1 日に 3 回以上動く routine（毎時の dashboard 更新）は最新の実行 1 行に実行回数をまとめるようにした。
+
+### 4.2. レビュー結果（2026-09-21）
+
+完了条件を develop で確認した。`routine-runs.jsonl`（schema 付き）、dashboard の 3 節、毎時の `rtn-dashboard-refresh`（specdojo action）、テスト、guide / command-reference、`npm run check` はいずれも満たしている。cron の時刻は PJR-W5JT と毎時化で「毎時 `routine run --due`」に置き換わった。レビュー時点で dashboard の「routine 実行状況」が 9/21 1:00 / 6:00 の夜間 grade を「未実行」と示し、9/20 12:00〜9/21 10:00 JST に cron が動いていなかった（コンテナが VS Code 外で再起動され postStartCommand が走らず cron デーモンが起動していなかった）ことを検知できた。対策として postAttachCommand で cron の起動を確認する。
 
 ## 5. 関連ドキュメント
 
