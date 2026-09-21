@@ -2,16 +2,17 @@
 specdojo:
   id: prj-0001:pjr-y013-exec-commit-folding
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-09-20T04:55:16Z"
   due_on: "2026-09-30"
+  completed_at: "2026-09-21T02:45:48Z"
   block_reason: "agent exited with non-zero code: Error: Cannot connect to API: Unable to connect. Is the computer able to access the url?"
 ---
 
@@ -57,7 +58,7 @@ specdojo:
 | 2   | Schedule タスクの worktree 統合を同じ規則にし、merge commit のメッセージを整える                   | DEV  | done | `exec(<task-id>): <task name>` を subject にした merge 1件       |
 | 3   | `exec resume` の各経路（reporter 再開、統合再開）を同じ規則に揃える                                | DEV  | done | 再開時の `start` も exec branch 側。wait 後は develop を取り込む |
 | 4   | 統合テストを更新し、guide 3 本を改める                                                             | DEV  | done | 成功・失敗・再開の first-parent 件数と merge 本文を検証          |
-| 5   | 実運用で 1 件実行し、`git log --first-parent` を確認する                                           | ARC  | open | オーケストレーターが直接対応                                     |
+| 5   | 実運用で 1 件実行し、`git log --first-parent` を確認する                                           | ARC  | done | オーケストレーターが直接対応                                     |
 
 ## 4. 対応結果
 
@@ -70,6 +71,10 @@ specdojo:
 - Schedule 成功時の merge commit subject を `exec(<task-id>): <task name>` にした（commitlint の 100 文字上限で切り詰める）。`prepare execution` / `apply task changes` は exec branch 側に残る。
 - 統合テスト（`exec-pipeline-e2e` / `exec-register-pipeline-e2e` / `exec-worktree-command` / `exec-worktree-ops`）で first-parent の増分、merge commit の親数・件名・遷移本文、失敗時の `wait` 1件を検証する形に更新し、`branch-workflow-guide` / `exec-worktree-guide` / `register-operation-guide` に加えて `schedule-operation-guide` の実行フローも改めた。
 - 残課題は No. 5 の実運用確認のみであり、本変更の統合後に runner / オーケストレーターが `git log --first-parent` で確認する。
+
+### 4.1. 追記（2026-09-21）
+
+作業 5 として PJR-TBHH を worktree で実行し、develop の first-parent に merge commit `5f7a776b`（subject `exec(register PJR-TBHH): <title>`、本文に `Transition: start → review` / Executor / Reporter / Refs）だけが増え、`start` / apply / `review` の 3 commit は exec ブランチ側（第二親）に残ることを確認した。
 
 ## 5. 関連ドキュメント
 

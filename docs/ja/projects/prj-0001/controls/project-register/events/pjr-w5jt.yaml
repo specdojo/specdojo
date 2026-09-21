@@ -58,3 +58,19 @@
       from: in-progress
       to: review
   previous_event_id: reg_1561d60ff4dc4662a4efb6c878e9069e
+- v: 1
+  id: reg_9b73a2249c214c04a12c60c3977edfe5
+  ts: "2026-09-21T02:45:48Z"
+  action: close
+  actor: specdojo-orchestrator (claude)
+  from_status: review
+  to_status: done
+  reason: codex-expert-executor が worktree で実装。作業 3 の routine 変更と作業 4 の単段再評価はオーケストレーターが直接対応し、夜間 2 回の実運用を確認して利用者が close
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-21"
+  previous_event_id: reg_0c14561b12b04102a860d136d49b7c1a

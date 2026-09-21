@@ -2,16 +2,17 @@
 specdojo:
   id: prj-0001:pjr-w5jt-grade-single-stage-nightly
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: ARC
   registered_at: "2026-09-18T13:12:31Z"
   due_on: "2026-09-25"
+  completed_at: "2026-09-21T02:45:48Z"
 ---
 
 # PJR-W5JT grade を codex 単段にし定期実行を夜間へ寄せる
@@ -53,7 +54,7 @@ grade は gemma（1・2 段）→ codex-expert（3 段、1・2 段が pass か�
 | 1   | `run-per-document.sh` に `--stages` を追加し、単段の分岐と既存 state の互換を実装・テストする              | DEV  | done | codex-expert-executor / gemma-reporter / worktree              |
 | 2   | job 定義 2 件を `--stages 1` に変更し、guide / command-reference を更新する                                | DEV  | done | 作業 1 と同一タスク                                            |
 | 3   | routine 2 件の cron・limit・`missed_run` と cron.d を変更する                                              | OPS  | done | オーケストレーターが直接対応。PJR-2JYE の 5 時追加と整合させる |
-| 4   | 単段で `cdfd-orchestrator` / `cdfd-overview` を評価し直し、gemma の再掲 finding が解消されることを確認する | ARC  | open | 作業 1 の後                                                    |
+| 4   | 単段で `cdfd-orchestrator` / `cdfd-overview` を評価し直し、gemma の再掲 finding が解消されることを確認する | ARC  | done | 作業 1 の後                                                    |
 
 ## 4. 対応結果
 
@@ -67,6 +68,10 @@ grade は gemma（1・2 段）→ codex-expert（3 段、1・2 段が pass か�
 ### 4.1. 追記（2026-09-19）
 
 初回の 0:00 実行が、直前まで動いていた register の実行（PJR-7WFE）と重なり `exec busy` で skip された。0:00 は日中から続く実行と重なりやすいため、利用者の判断で `rtn-grade-deliverable-recheck` を 1:00、`rtn-grade-recheck` を 6:00 へ移し、cron の `routine run --due` を 1 / 5 / 6 時に変更した（オーケストレーターが直接対応）。5:00 の dashboard 更新（PJR-2JYE）は Kata grade の前になるため、朝の dashboard には前夜の成果物 grade までが反映される。
+
+### 4.2. 追記（2026-09-20）
+
+作業 4 として、gemma の 1・2 段で 96 未満となり codex に届かなかった orchestrator / overview / plan / uc-register を `run-per-document.sh --stages 1 --path` で評価した（`MANUAL-cdfd4-20260920`）。orchestrator 81 → 94、plan 94 → 97、uc-register 95、overview 82 → 77 で、gemma が前回 finding を再掲していた orchestrator の指摘は単段で消えた。夜間の定期実行は 9/20 1:00（成果物 10 件）と 6:00（Kata 8 件）で単段構成のまま完走した。
 
 ## 5. 関連ドキュメント
 

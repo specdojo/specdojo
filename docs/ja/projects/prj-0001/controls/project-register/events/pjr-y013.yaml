@@ -129,3 +129,19 @@
       from: waiting
       to: review
   previous_event_id: reg_f93f783c03704773ada6fdd95def890f
+- v: 1
+  id: reg_f2f37d5d33fd4f938c807816c9e2a319
+  ts: "2026-09-21T02:45:48Z"
+  action: close
+  actor: specdojo-orchestrator (claude)
+  from_status: review
+  to_status: done
+  reason: codex-expert / claude-expert の実装を引き継ぎ、統合テストと統合再開の不具合をオーケストレーターが修正。PJR-TBHH の実行で first-parent に merge commit 1 つだけが増えることを確認して利用者が close
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-21"
+  previous_event_id: reg_c6b36edd336c4f4fbb6e532500b6c3d0
