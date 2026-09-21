@@ -44,15 +44,20 @@ PJR-EQDB の再周回後の評価（`MANUAL-eqdb6-20260921b`、codex 単段）�
 
 ## 3. 作業内容
 
-| No  | 作業                                                                                                                                        | 担当 | 状態 | メモ                                              |
-| --- | ------------------------------------------------------------------------------------------------------------------------------------------- | ---- | ---- | ------------------------------------------------- |
-| 1   | `stsd-mermaid-rulebook` と `stsd-rulebook` を複合状態禁止・別名の定義に合わせて改訂し、`stsd-sample` を共通イベント分岐と中間状態の例に直す | ARC  | open | codex-expert-executor / gemma-reporter / worktree |
-| 2   | `cdfd-mermaid-rulebook` の凡例参照を `cdfd-overview-rulebook` の省略条件に揃え、`cdfd-sample` の在庫記録更新主体・起動条件・用語を統一する  | ARC  | open | 作業 1 と同一タスク                               |
-| 3   | 再評価で 4 件の解消を確認する                                                                                                               | ARC  | open | 夜間 routine または手動 `--stages 1 --path`       |
+| No  | 作業                                                                                                                                        | 担当 | 状態 | メモ                                                                                        |
+| --- | ------------------------------------------------------------------------------------------------------------------------------------------- | ---- | ---- | ------------------------------------------------------------------------------------------- |
+| 1   | `stsd-mermaid-rulebook` と `stsd-rulebook` を複合状態禁止・別名の定義に合わせて改訂し、`stsd-sample` を共通イベント分岐と中間状態の例に直す | ARC  | done | 複合状態を禁止し、表示名と `state_id` を区別。`検品済み` と「検品完了」の相互排他分岐を追加 |
+| 2   | `cdfd-mermaid-rulebook` の凡例参照を `cdfd-overview-rulebook` の省略条件に揃え、`cdfd-sample` の在庫記録更新主体・起動条件・用語を統一する  | ARC  | done | 包含元 3 種の凡例判定を統一し、仕入グループによる在庫記録の直接更新へ統一                   |
+| 3   | 再評価で 4 件の解消を確認する                                                                                                               | ARC  | open | 夜間 routine または手動 `--stages 1 --path`                                                 |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- [[specdojo:stsd-mermaid-rulebook]] と [[specdojo:stsd-rulebook]] は複合状態を禁止し、階層化が必要な対象は別 STSD に分ける規則へ統一した。分割図では同じ表示名と同じ `state_id` を維持し、「別名」は状態一覧と異なる表示名であると定義した。
+- [[specdojo:stsd-sample]] と rulebook 内の埋め込みサンプルへ中間状態「検品済み」を追加した。「検品完了」から販売可能・返品待ちへ分岐する 2 遷移は、合格と数量違い・品質不良の相互排他条件に揃えた。
+- [[specdojo:cdfd-mermaid-rulebook]]、[[specdojo:cdfd-overview-rulebook]]、[[specdojo:cdfd-rulebook]]、[[specdojo:cdfd-uc-rulebook]] は、共通凡例がある場合はその章を参照し、ない場合は Mermaid rulebook の既定凡例に従う旨を図直後へ注記する規則に統一した。
+- [[specdojo:cdfd-sample]] は、仕入グループが入荷数量を在庫記録へ直接反映する構成へ変更した。`P-02-05` の起動条件を仕入記録確定後へ揃え、「検品結果」へ用語を統一し、商品台帳の利用内容から補充基準を除外した。条件付き経路が複数該当する場合は、すべての完了を正常完了条件とした。
+- 対象 Markdown の Prettier、個別 Markdownlint、リポジトリ全体の `npm run -s lint:md`、`node dist/specdojo.js build`、`node dist/specdojo.js catalog validate`、登録簿・索引生成は通過した。VitePress build は Chromium 起動が sandbox の `Operation not permitted` で停止したため、サイト生成の再確認は親環境へ申し送る。
+- 残課題は、次回の codex 単段 grade で 4 件の verdict が pass になることの確認である。grade result サイドカーは本タスクでは直接編集せず、再評価で更新する。
 
 ## 5. 関連ドキュメント
 
