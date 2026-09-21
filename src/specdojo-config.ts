@@ -53,7 +53,7 @@ export const DEFAULT_PROJECT_CONTEXT = ["prj-overview"] as const;
 
 // Agent runtime provider family. Selects which providers.<name> override in
 // exec-defaults.yaml applies to a member's failure handling.
-export type AgentProvider = "opencode" | "claude" | "codex" | "copilot" | "custom";
+export type AgentProvider = "opencode" | "claude" | "codex" | "copilot" | "antigravity" | "custom";
 
 // Member launch profiles include the task-facing executor modes plus the reporter-only
 // profile. `report` never becomes a TaskMode: reporter eligibility is resolved by stage_role.

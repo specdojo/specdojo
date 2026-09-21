@@ -370,12 +370,13 @@ agent が exec 実行時に読み込む provider 固有の設定（agent 定義�
 
 配置規則は provider 名から機械的に決まります（`agents/` 配下 → `.<provider>/agents/`、それ以外のファイル → `.specdojo/<provider>/`、`README.md` はコピーしません）。provider ごとの配布内容は次のとおりです。
 
-| provider | 配布内容                                                                                                                                            | 配置先                                 |
-| -------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
-| claude   | `agents/*.md`、`settings.edit.json` / `settings.review.json` / `settings.report.json`                                                               | `.claude/agents/`、`.specdojo/claude/` |
-| codex    | `agents/*.toml`（親 Codex が spawn する subagent 定義）                                                                                             | `.codex/agents/`                       |
-| opencode | `agents/*.md`（permission frontmatter 込みの agent 定義）                                                                                           | `.opencode/agents/`                    |
-| copilot  | `pm-members-snippet.yaml`（member 定義）と `exec-defaults-snippet.yaml`（`providers.copilot` の command template・rate limit 検出）の参照スニペット | `.specdojo/copilot/`                   |
+| provider    | 配布内容                                                                                                                                            | 配置先                                 |
+| ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
+| claude      | `agents/*.md`、`settings.edit.json` / `settings.review.json` / `settings.report.json`                                                               | `.claude/agents/`、`.specdojo/claude/` |
+| codex       | `agents/*.toml`（親 Codex が spawn する subagent 定義）                                                                                             | `.codex/agents/`                       |
+| opencode    | `agents/*.md`（permission frontmatter 込みの agent 定義）                                                                                           | `.opencode/agents/`                    |
+| copilot     | `pm-members-snippet.yaml`（member 定義）と `exec-defaults-snippet.yaml`（`providers.copilot` の command template・rate limit 検出）の参照スニペット | `.specdojo/copilot/`                   |
+| antigravity | なし（`agy` は定義ファイルを持たず、member と `providers.antigravity` の設定だけで動く）                                                            | —                                      |
 
 導入手順とテンプレートに含めない手動設定（`opencode.json`、`.codex/config.toml` など）は各 `templates/<provider>/README.md` を参照します。
 
@@ -468,6 +469,26 @@ providers:
       --deny-tool 'shell(git add)' --deny-tool 'shell(git commit)'
       --deny-tool 'shell(git push)' --deny-tool 'shell(git reset)'
 ```
+
+**antigravity**（Antigravity CLI `agy`）は codex と同じく `--agent` による定義ファイルの選択を持たないため、役割は plan の共通規約で与えます。非対話実行は `-p` ですが、プロンプトを引数に取り stdin を読まないので、runner が stdin へ書く plan を `"$(cat)"` で引数に渡します（command は `shell: true` で実行されます）。
+
+```yaml
+providers:
+  antigravity:
+    command_template: >-
+      agy --sandbox --add-dir "$(pwd)" --dangerously-skip-permissions
+      --model {model} --effort {effort} -p "$(cat)"
+    command_params:
+      by_proficiency:
+        normal: { model: gemini-3.8-flash-high, effort: medium }
+        expert: { model: gemini-3.1-pro-high, effort: high }
+```
+
+- `--sandbox` は書き込み先を `~/.gemini/antigravity-cli/scratch/` へ逃がすため、`--add-dir "$(pwd)"` で作業ディレクトリ（worktree）を明示して成果物へ書けるようにします。`--add-dir` なしでは成果物が更新されません。
+- `--dangerously-skip-permissions` は非対話実行に必須です。境界は worktree、保護設定（`agent-config-write`）、commit 許可リストで作ります。
+- モデルは `agy models` で確認します。`--effort` は `low` / `medium` / `high` です。
+- 資格情報はコンテナ内では `~/.gemini/antigravity-cli/antigravity-oauth-token` に保存されます。devcontainer では `~/.gemini` を名前付きボリュームにして永続化します。
+- `--output-format json --json-schema <file>` は `structured_output` を含む JSON エンベロープを返します。runner の reporter は stdout の本文から JSON を読むため、現時点では既定のテキスト出力を使います。
 
 - `--allow-all` / `--yolo` / `--allow-all-tools` / `--allow-all-paths` / 環境変数 `COPILOT_ALLOW_ALL` は使いません（claude の bypassPermissions 相当）。
 - ファイルアクセスはデフォルトで cwd（= worktree）配下 + 一時ディレクトリに制限されます。`--allow-all-paths` を使わないことで codex の `workspace-write` 相当の境界になります。

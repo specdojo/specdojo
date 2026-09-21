@@ -40,7 +40,7 @@ properties:
       signals (e.g. opencode load wait / timeout, claude overloaded, copilot quota) from
       leaking across providers.
     propertyNames:
-      enum: ["opencode", "claude", "codex", "copilot", "custom"]
+      enum: ["opencode", "claude", "codex", "copilot", "antigravity", "custom"]
     additionalProperties:
       $ref: "#/$defs/ProviderOverride"
 

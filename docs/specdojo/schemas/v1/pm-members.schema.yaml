@@ -142,7 +142,7 @@ $defs:
         description: >
           Agent runtime provider family. Use this to identify which external CLI
           executes the member command.
-        enum: ["opencode", "claude", "codex", "copilot", "custom"]
+        enum: ["opencode", "claude", "codex", "copilot", "antigravity", "custom"]
 
       persona:
         type: string

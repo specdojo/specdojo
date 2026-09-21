@@ -149,7 +149,7 @@ YAML 成果物のため、Markdown Frontmatter ではなく YAML 先頭のメタ
 ### 6.4. `members[].type` と agent 用フィールド
 
 - 人間の実行主体は `human`、自動化または生成 AI 支援主体は `agent` とする。
-- `type: agent` の member には `provider` を必ず記載する。値は `opencode`、`claude`、`codex`、`copilot`、`custom` から選ぶ。
+- `type: agent` の member には `provider` を必ず記載する。値は `opencode`、`claude`、`codex`、`copilot`、`antigravity`、`custom` から選ぶ。
 - `exec run --auto` の候補にする agent には、`priority`、`mode`、`proficiency`、`capabilities` を記載する。`mode` は executor に `edit` / `review`、reporter に `report` を指定する。
 - `capabilities` はツールアクセスの能力だけを表し、成果物の責務や承認権限を表さない。
 - `stage_role` は pipeline 専用 agent にだけ指定し、`executor` または `reporter` とする。人間 member には指定しない。

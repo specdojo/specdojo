@@ -155,3 +155,25 @@ providers:
           backoff_multiplier: 2 # 120s -> 240s -> 480s
           max_wait_seconds: 600
         on_exhausted: block
+
+  antigravity:
+    # Antigravity CLI（agy）は --agent による定義ファイルの選択を持たず、codex と同じく
+    # プロンプト（plan）だけで役割を与える。-p はプロンプトを引数に取り stdin を読まないため、
+    # runner が stdin へ書く plan を "$(cat)" で引数に渡す（shell: true で実行される）。
+    # --sandbox は書き込み先を ~/.gemini 配下の scratch へ逃がすため、--add-dir で作業
+    # ディレクトリ（worktree）を明示して成果物へ書けるようにする（2026-09-21 実測）。
+    # --dangerously-skip-permissions は非対話実行に必須。境界は worktree・保護設定・
+    # commit 許可リストで作る。
+    command_template: 'agy --sandbox --add-dir "$(pwd)" --dangerously-skip-permissions --model {model} --effort {effort} -p "$(cat)"'
+    command_params:
+      by_proficiency:
+        normal: { model: gemini-3.8-flash-high, effort: medium }
+        expert: { model: gemini-3.1-pro-high, effort: high }
+    # Gemini API の制限文言は未観測。429 / quota / RESOURCE_EXHAUSTED を初期値とし、
+    # 実観測した文言で更新する（observed-agent-limit-stderr と同じ扱い）。
+    rate_limit_detection:
+      stderr_patterns:
+        - "rate limit"
+        - "429"
+        - "quota"
+        - "RESOURCE_EXHAUSTED"

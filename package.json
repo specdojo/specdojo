@@ -66,6 +66,8 @@
     "orch:sol:work": "tools/worktree/open-agent-worktree.sh codex-work codex -m gpt-5.6-sol \"$(cat .agents/specdojo-orchestrator.agent.md)\"",
     "orch:copilot": "copilot --agent specdojo-orchestrator",
     "orch:copilot:work": "tools/worktree/open-agent-worktree.sh copilot-work copilot --agent specdojo-orchestrator",
+    "orch:agy": "agy --add-dir \"$(pwd)\" --model gemini-3.1-pro-high --effort high -i \"$(cat .agents/specdojo-orchestrator.agent.md)\"",
+    "orch:agy:work": "tools/worktree/open-agent-worktree.sh agy-work agy --add-dir \"$(pwd)\" --model gemini-3.1-pro-high --effort high -i \"$(cat .agents/specdojo-orchestrator.agent.md)\"",
     "orch:qwen": "opencode --agent qwen-orchestrator",
     "orch:qwen:work": "tools/worktree/open-agent-worktree.sh qwen-work opencode --agent qwen-orchestrator",
     "orch:gemma": "opencode --agent gemma-orchestrator",
