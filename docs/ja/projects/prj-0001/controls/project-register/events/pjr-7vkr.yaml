@@ -119,3 +119,29 @@
       from: "agent exited with non-zero code: runner による `test-unit` 検証が失敗（exit 1）したため。`tests/src/register.test.ts` において「plan がインデックス行・個票リネーム・参照 targets の更新を含む」ケースで失敗している。"
       to: "integrate failed: git ls-files failed: fatal: detected dubious ownership in repository at '/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-7VKR' To add an exception for this directory, call:  \tg…"
   previous_event_id: reg_7349567fe760412b87d220294fa7a955
+- v: 1
+  id: reg_d93f67bbc8544942b6c6688188a6d093
+  ts: "2026-09-21T07:52:42Z"
+  action: start
+  actor: gemma-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_ebc964d6d3b946269ad54072f92b8696
+- v: 1
+  id: reg_a19ea27c780a41f79a717c0a244c6ab0
+  ts: "2026-09-21T07:53:21Z"
+  action: review
+  actor: gemma-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_d93f67bbc8544942b6c6688188a6d093

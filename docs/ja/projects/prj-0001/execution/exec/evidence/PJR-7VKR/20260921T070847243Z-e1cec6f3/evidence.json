@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-7VKR",
+  "run_id": "20260921T070847243Z-e1cec6f3",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-21T07:08:47.243Z",
+    "completed_at": "2026-09-21T07:15:01.639Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-7vkr.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-7vkr-npm-release.md",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/template-resolution.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/template-resolution.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 5,
+    "summary": ".../controls/project-register/events/pjr-7vkr.yaml | 13 +++++++\n .../project-register/pjr-7vkr-npm-release.md       |  2 +-\n src/catalog.ts                                     |  7 ++--\n src/template-resolution.ts                         | 42 ++++++++++++++++------\n tests/src/template-resolution.test.ts              | 22 +++++++++++-\n 5 files changed, 69 insertions(+), 17 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write src/catalog.ts src/template-resolution.ts tests/src/template-resolution.test.ts",
+      "status": "passed",
+      "summary": "変更したTypeScriptファイルは整形済み。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "TypeScript型検査に合格した。"
+    },
+    {
+      "source": "executor",
+      "command": "npx eslint src/catalog.ts src/template-resolution.ts tests/src/template-resolution.test.ts",
+      "status": "passed",
+      "summary": "変更したTypeScriptファイルのlintに合格した。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run build",
+      "status": "passed",
+      "summary": "配布用distを正常に生成した。"
+    },
+    {
+      "source": "executor",
+      "command": "npm_config_cache=/tmp/specdojo-npm-cache-pjr-7vkr npm pack --dry-run --json --ignore-scripts",
+      "status": "passed",
+      "summary": "528ファイル、1,186,068 bytes、展開後4,812,525 bytes。generated、tools/docs、docs/enの混入0件、必須対象の欠落0件。"
+    },
+    {
+      "source": "executor",
+      "command": "node \"$cli_path\" --help; node \"$cli_path\" config init; node \"$cli_path\" register add; node \"$cli_path\" register build; node \"$cli_path\" catalog scaffold --project prj-0001 --size small --domain data-flow --project-id prj-0001; node \"$cli_path\" exec scaffold --provider codex",
+      "status": "passed",
+      "summary": "隔離した一時環境で展開済みtarballのCLIと同梱データだけを使い、主要操作に合格した。"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-7vkr-npm-release.md",
+      "status": "passed",
+      "summary": "個票は整形済み。"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-7vkr-npm-release.md",
+      "status": "passed",
+      "summary": "個票のMarkdown検査に合格した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿の派生ビューを正常に生成した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "カタログ検証は終了コード0。既存の参照先未作成warningのみ。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "1850件の文書インデックスを生成した。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:unit",
+      "status": "not_run",
+      "summary": "親runnerのallowlisted validationに委譲した。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:integration",
+      "status": "not_run",
+      "summary": "親runnerのallowlisted validationに委譲した。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema",
+      "status": "not_run",
+      "summary": "親runnerのallowlisted validationに委譲した。"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-7VKR\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\n[dry-run] git merge --no-ff --no-edit exec/T-T-doc-010\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nUpdated: /tmp/specdojo-register-pipeline-e2e-ULawEH/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)\nUpdated: /tmp/specdojo-register-pipeline-e2e-ULawEH/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml\nGenerated: /tmp/specdojo-register-pipeline-e2e-ULawEH/docs/ja/projects/test/controls/project-register/generated/pjr-index.md\nGenerated: /tmp/specdojo-register-pipeline-e2e-ULawEH/docs/ja/projects/test/controls/project-register/gen…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.1.0 validate:schema:yaml\n> tsx tools/docs/src/validate-yaml-schema.ts --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-…"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-7VKR\n\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\nUpdated ticket status → ready: /tmp/specdojo-ticket-BL61L9/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-DHzKpK/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-Zd52Ih/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-d98UwS/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-nIg4LC/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-FGBNwz/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\nWrote agent stdout: /tmp/specdojo-agent-command-t0chF2/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-0DOcnt/outputs/partial.txt\n\n Test Files  104 passed (104)\n      Tes…"
+    }
+  ],
+  "final_message": "npm公開準備として同梱範囲とメタ情報を確認し、catalog scaffoldの同梱テンプレートフォールバック実装およびtarball実地検証を完了した。version、登録簿ステータス、resultは変更していない。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-7VKR/20260921T070847243Z-e1cec6f3/executor.log",
+      "bytes": 3224,
+      "truncated": false
+    }
+  ]
+}

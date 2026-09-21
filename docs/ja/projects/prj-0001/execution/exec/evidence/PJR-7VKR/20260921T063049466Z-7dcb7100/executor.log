@@ -1,0 +1,16 @@
+executor 範囲の作業1〜4を完了しました。
+
+- npm 同梱対象から `tools/docs` と全 `generated` を除外
+- tarball 528ファイル、除外漏れ・必須ファイル欠落ともに0件
+- 展開した tarball で主要 CLI 操作を確認
+- `catalog scaffold` の同梱テンプレートへのフォールバックと回帰テストを追加
+- 個票の対応結果を更新
+- `version`、登録簿ステータス、result は未変更
+
+npm 設定、workflow 実行、0.2.0への更新・公開は計画どおり人の作業として残しています。
+
+<specdojo_executor_evidence>
+{"final_message":"npm 0.2.0公開に向けた同梱範囲の確定、tarball実地検証、同梱テンプレートのフォールバック実装を完了した。versionとステータスは変更していない。","validations":[{"command":"npm run build","status":"passed","summary":"TypeScriptをビルドし、実行可能なdist/specdojo.jsを生成した。"},{"command":"npx prettier --write package.json src/catalog.ts src/template-resolution.ts tests/src/template-resolution.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-7vkr-npm-release.md","status":"passed","summary":"変更した全ファイルを整形した。"},{"command":"npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-7vkr-npm-release.md","status":"passed","summary":"個票のMarkdown検査に合格した。"},{"command":"npm run typecheck","status":"passed","summary":"TypeScript型検査に合格した。"},{"command":"npm_config_cache=/tmp/specdojo-npm-cache-pjr-7vkr npm pack --dry-run --json --ignore-scripts","status":"passed","summary":"528ファイル、1,186,068 bytes、展開後4,812,525 bytes。除外対象0件、必須対象の欠落0件を確認した。"},{"command":"node \"$cli_path\" --help; node \"$cli_path\" config init; node \"$cli_path\" register add --project prj-0001 --type todo --title \"Tarball verification\" --id PJR-0001 --owner ARC --due 2026-09-30; node \"$cli_path\" register build --project prj-0001; node \"$cli_path\" catalog scaffold --project prj-0001 --size small --domain data-flow --project-id prj-0001; node \"$cli_path\" exec scaffold --provider codex","status":"passed","summary":"一時環境へ展開したtarballのCLI、kata、schema、provider templateを使ったスモークテストに合格した。"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"register派生ビューを正常に生成した。"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"全catalogを検証した。既存の参照先未作成warningのみで終了コード0。"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1849件の文書indexを生成した。"},{"command":"git diff --check","status":"passed","summary":"空白エラーはなく、変更範囲は意図した5ファイルのみ。"},{"command":"npm run test:unit","status":"not_run","summary":"親runnerのallowlisted validationに委譲した。"},{"command":"npm run test:integration","status":"not_run","summary":"親runnerのallowlisted validationに委譲した。"},{"command":"npm run validate:schema","status":"not_run","summary":"親runnerのallowlisted validationに委譲した。"}]}
+</specdojo_executor_evidence>
+
+agent-config-write: protected configuration changes detected; paths=package.json; agent must record the required change in the result handoff for human or orchestrator application

@@ -10,22 +10,44 @@ export type TemplateResolutionRoots = {
   packageRoot?: string;
 };
 
+function templateDirectories(roots: TemplateResolutionRoots): {
+  repositoryPath: string;
+  bundledPath: string;
+} {
+  return {
+    repositoryPath: join(
+      roots.repositoryRoot ?? specdojoRootDir(),
+      SPECDOJO_TEMPLATES_RELATIVE_DIR,
+    ),
+    bundledPath: join(
+      roots.packageRoot ?? specdojoPackageRootDir(),
+      SPECDOJO_TEMPLATES_RELATIVE_DIR,
+    ),
+  };
+}
+
+export function resolveSpecdojoTemplatesDir(roots: TemplateResolutionRoots = {}): string {
+  const { repositoryPath, bundledPath } = templateDirectories(roots);
+
+  if (existsSync(repositoryPath)) return repositoryPath;
+  if (existsSync(bundledPath)) return bundledPath;
+
+  throw new Error(
+    `Templates directory not found.\n` +
+      `Searched repository templates: ${repositoryPath}\n` +
+      `Searched bundled package templates: ${bundledPath}`,
+  );
+}
+
 // 利用者リポジトリの template を上書きとして優先し、無い場合だけ npm package に
 // 同梱した原本へフォールバックする。両方に無い場合は調査できるよう探索元をすべて示す。
 export function resolveSpecdojoTemplatePath(
   templateFileName: string,
   roots: TemplateResolutionRoots = {},
 ): string {
-  const repositoryPath = join(
-    roots.repositoryRoot ?? specdojoRootDir(),
-    SPECDOJO_TEMPLATES_RELATIVE_DIR,
-    templateFileName,
-  );
-  const bundledPath = join(
-    roots.packageRoot ?? specdojoPackageRootDir(),
-    SPECDOJO_TEMPLATES_RELATIVE_DIR,
-    templateFileName,
-  );
+  const directories = templateDirectories(roots);
+  const repositoryPath = join(directories.repositoryPath, templateFileName);
+  const bundledPath = join(directories.bundledPath, templateFileName);
 
   if (existsSync(repositoryPath)) return repositoryPath;
   if (existsSync(bundledPath)) return bundledPath;

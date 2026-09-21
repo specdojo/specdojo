@@ -2,7 +2,10 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { resolveSpecdojoTemplatePath } from "../../src/template-resolution.js";
+import {
+  resolveSpecdojoTemplatePath,
+  resolveSpecdojoTemplatesDir,
+} from "../../src/template-resolution.js";
 
 const TEMPLATE_DIR = "docs/ja/specdojo/templates";
 
@@ -60,6 +63,23 @@ describe("resolveSpecdojoTemplatePath", () => {
           `Searched repository template: ${repositoryPath}\\n` +
             `Searched bundled package template: ${bundledPath}`,
         ),
+      );
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+});
+
+describe("resolveSpecdojoTemplatesDir", () => {
+  it("利用者リポジトリに無ければ同梱テンプレートディレクトリへフォールバックする", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-template-resolution-"));
+    try {
+      const repositoryRoot = join(root, "repository");
+      const packageRoot = join(root, "package");
+      writeTemplate(packageRoot, "dct-data-flow-template.yaml");
+
+      expect(resolveSpecdojoTemplatesDir({ repositoryRoot, packageRoot })).toBe(
+        join(packageRoot, TEMPLATE_DIR),
       );
     } finally {
       rmSync(root, { recursive: true, force: true });

@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-7VKR",
+  "run_id": "20260921T063049466Z-7dcb7100",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "failed",
+    "started_at": "2026-09-21T06:30:49.466Z",
+    "completed_at": "2026-09-21T06:41:42.948Z",
+    "exit_code": 1,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-7vkr-npm-release.md",
+      "status": "M"
+    },
+    {
+      "path": "package.json",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/template-resolution.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/template-resolution.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 5,
+    "summary": ".../project-register/pjr-7vkr-npm-release.md       | 58 +++++++++++++++-------\n .../pjr-7vkr-20260921T063002Z-8cf5-result.md       | 30 ++++++++++-\n package.json                                       |  4 +-\n src/catalog.ts                                     |  7 +--\n src/template-resolution.ts                         | 42 ++++++++++++----\n tests/src/template-resolution.test.ts              | 22 +++++++-\n 6 files changed, 125 insertions(+), 38 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run build",
+      "status": "passed",
+      "summary": "TypeScriptをビルドし、実行可能なdist/specdojo.jsを生成した。"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write package.json src/catalog.ts src/template-resolution.ts tests/src/template-resolution.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-7vkr-npm-release.md",
+      "status": "passed",
+      "summary": "変更した全ファイルを整形した。"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-7vkr-npm-release.md",
+      "status": "passed",
+      "summary": "個票のMarkdown検査に合格した。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "TypeScript型検査に合格した。"
+    },
+    {
+      "source": "executor",
+      "command": "npm_config_cache=/tmp/specdojo-npm-cache-pjr-7vkr npm pack --dry-run --json --ignore-scripts",
+      "status": "passed",
+      "summary": "528ファイル、1,186,068 bytes、展開後4,812,525 bytes。除外対象0件、必須対象の欠落0件を確認した。"
+    },
+    {
+      "source": "executor",
+      "command": "node \"$cli_path\" --help; node \"$cli_path\" config init; node \"$cli_path\" register add --project prj-0001 --type todo --title \"Tarball verification\" --id PJR-0001 --owner ARC --due 2026-09-30; node \"$cli_path\" register build --project prj-0001; node \"$cli_path\" catalog scaffold --project prj-0001 --size small --domain data-flow --project-id prj-0001; node \"$cli_path\" exec scaffold --provider codex",
+      "status": "passed",
+      "summary": "一時環境へ展開したtarballのCLI、kata、schema、provider templateを使ったスモークテストに合格した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "register派生ビューを正常に生成した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "全catalogを検証した。既存の参照先未作成warningのみで終了コード0。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "1849件の文書indexを生成した。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーはなく、変更範囲は意図した5ファイルのみ。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:unit",
+      "status": "not_run",
+      "summary": "親runnerのallowlisted validationに委譲した。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:integration",
+      "status": "not_run",
+      "summary": "親runnerのallowlisted validationに委譲した。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema",
+      "status": "not_run",
+      "summary": "親runnerのallowlisted validationに委譲した。"
+    }
+  ],
+  "final_message": "npm 0.2.0公開に向けた同梱範囲の確定、tarball実地検証、同梱テンプレートのフォールバック実装を完了した。versionとステータスは変更していない。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-7VKR/20260921T063049466Z-7dcb7100/executor.log",
+      "bytes": 3548,
+      "truncated": false
+    }
+  ]
+}
