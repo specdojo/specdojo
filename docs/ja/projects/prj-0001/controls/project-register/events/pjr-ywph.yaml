@@ -61,3 +61,32 @@
       from: "-"
       to: 'agent exited with non-zero code: error: invalid model selection (--model "gemini-3.8-flash-high" --effort "medium"): --model gemini-3.8-flash-high conflicts with --effort=medium'
   previous_event_id: reg_f096b74850084e95af036447cbdc256b
+- v: 1
+  id: reg_7966a463d9de4361ab87e667f42e1ce1
+  ts: "2026-09-21T11:22:13Z"
+  action: start
+  actor: antigravity-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_b18c01fdf8e1424fbfbdaad37dae78ba
+- v: 1
+  id: reg_f772927b873844a18d5c3dc7f99a5cd3
+  ts: "2026-09-21T11:23:04Z"
+  action: wait
+  actor: antigravity-reporter
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: git commit failed: ╭─────────────────────────────────────────╮ │ 🥊 lefthook  v2.1.9   hook:  pre-commit │ ╰─────────────────────────────────────────╯ │  catalog-build (skip) no matc…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: 'agent exited with non-zero code: error: invalid model selection (--model "gemini-3.8-flash-high" --effort "medium"): --model gemini-3.8-flash-high conflicts with --effort=medium'
+      to: "integrate failed: git commit failed: ╭─────────────────────────────────────────╮ │ 🥊 lefthook  v2.1.9   hook:  pre-commit │ ╰─────────────────────────────────────────╯ │  catalog-build (skip) no matc…"
+  previous_event_id: reg_7966a463d9de4361ab87e667f42e1ce1
