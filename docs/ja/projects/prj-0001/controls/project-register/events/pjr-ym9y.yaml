@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_de7d22ea99014e179507e50ea21fc707
+  ts: "2026-09-21T05:47:33Z"
+  action: add
+  actor: specdojo-orchestrator (claude)
+  from_status: null
+  to_status: open
+  reason: PJR-EQDB の判定用 grade で残った 4 件を、当初スコープを超える設計論点として分離
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: mermaid rulebook 2 本と cdfd / stsd sample の grade 指摘を解消する
+    - field: description
+      from: ""
+      to: PJR-EQDB で rulebook 本体 2 本は pass になったが、改訂で派生した指摘が残る。stsd-mermaid-rulebook の複合状態と分割図の別名の規則、cdfd-mermaid-rulebook と cdfd-overview-rulebook の凡例省略条件の矛盾、stsd-sample の分岐イベント不統一と中間状態の欠落、cdfd-sample の在庫記録更新主体と P-02-05 起動条件の不整合を解消する
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-21"
+    - field: due
+      from: ""
+      to: "2026-10-10"

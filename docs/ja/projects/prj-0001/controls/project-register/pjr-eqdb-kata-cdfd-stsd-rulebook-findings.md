@@ -2,17 +2,18 @@
 specdojo:
   id: prj-0001:pjr-eqdb-kata-cdfd-stsd-rulebook-findings
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-09-17T13:17:10Z"
   due_on: "2026-09-30"
-  block_reason: 'agent exited with non-zero code: 親検証 (`source="runner"`) の `test-unit` が `failed` となっているため、完了条件を満たしていない。'
+  completed_at: "2026-09-21T05:48:19Z"
+  block_reason: "agent exited with non-zero code: 親検証 (`source=\"runner\"`) の `test-unit` が `failed` となっているため、完了条件を満たしていない。"
 ---
 
 # PJR-EQDB cdfd-rulebook と stsd 系 rulebook の grade 指摘を解消する
@@ -64,7 +65,7 @@ PJR-ZA91（STSD/CSTD 統合）で変更した Kata を 16 時の定期評価 `rt
 | 1   | `＜＜choice＞＞` の可否と、許す場合の記法（イベントの扱い・状態一覧との関係）を決める                                                                                | ARC  | done | 2026-09-17 決定: 許さない。分岐は各出力遷移の `イベント / 条件` で表現し、状態一覧に載らない疑似状態を図に置かない |
 | 2   | `stsd-mermaid-rulebook` と `stsd-rulebook` を決定に沿って改訂し、rulebook 内サンプルと `stsd-sample` を整合させる                                                    | ARC  | done | 疑似状態禁止、分岐・分割・到達性・値一意性を規定し、sample と template を追従                                      |
 | 3   | `cdfd-mermaid-rulebook` の例を `cdfd-rulebook` の ID 形式・凡例方針に合わせ、`cdfd-rulebook` に 0 件時の扱いと停止範囲の記載先を追加し、`cdfd-sample` の用語を揃える | ARC  | done | `P-<nn>-<nn>`、共通凡例参照、0 件時の確認根拠、停止範囲列、売場商品の用語へ統一                                    |
-| 4   | 再 grade で 3 件の解消を確認する                                                                                                                                     | ARC  | open | `rtn-grade-recheck` または手動 `--changed-only`                                                                    |
+| 4   | 再 grade で 3 件の解消を確認する                                                                                                                                     | ARC  | done | `rtn-grade-recheck` または手動 `--changed-only`                                                                    |
 
 ## 4. 対応結果
 
