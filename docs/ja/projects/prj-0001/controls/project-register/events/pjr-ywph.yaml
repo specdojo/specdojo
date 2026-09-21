@@ -45,3 +45,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_de02b6ebff2a42eab78cd735cd7e1b85
+- v: 1
+  id: reg_b18c01fdf8e1424fbfbdaad37dae78ba
+  ts: "2026-09-21T11:17:47Z"
+  action: wait
+  actor: antigravity-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: 'agent exited with non-zero code: error: invalid model selection (--model "gemini-3.8-flash-high" --effort "medium"): --model gemini-3.8-flash-high conflicts with --effort=medium'
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: 'agent exited with non-zero code: error: invalid model selection (--model "gemini-3.8-flash-high" --effort "medium"): --model gemini-3.8-flash-high conflicts with --effort=medium'
+  previous_event_id: reg_f096b74850084e95af036447cbdc256b
