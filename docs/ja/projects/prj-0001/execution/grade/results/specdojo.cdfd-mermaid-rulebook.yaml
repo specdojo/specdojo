@@ -5,15 +5,15 @@ path: docs/ja/specdojo/rulebooks/cdfd-mermaid-rulebook.md
 target: kata
 rubric: grade-rubric-v1
 verdict: needs-work
-score: 78
-graded_at: "2026-09-19T21:04:45.681Z"
+score: 81
+graded_at: "2026-09-21T05:03:19.964Z"
 graded_by: codex-expert-executor
-content_hash: 25f3f1d11fc46a9b77851c5555b86c5c36e5fb83761004cbb4cb99a8d7a8cf9f
+content_hash: bd287b1917558a93012da9db39ecf03617bbd808e00b8611746818200c588a87
 categories:
   consistency:
-    score: 63
+    score: 50
   usability:
-    score: 75
+    score: 100
   architecture:
     score: 100
   quality:
@@ -32,61 +32,50 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 2
+    score: 50
   vp-qe-kata-conformance:
     level: 2
     score: 50
   vp-ux-readability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-language-consistency:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 0
   major: 3
-  minor: 2
+  minor: 0
   note: 0
 findings:
   - id: F001
     severity: major
     rule: vp-arc-cross-document-consistency
     line: 5
-    message: 「主 CDFD rulebook」と「本プロダクト共通の凡例」が document_id またはパスで特定されておらず、`includes` 関係、分割基準、形状・色の正本との整合を照合できません。
     anchor: >-
-      Mermaid の `flowchart` 構文で CDFD のプロセス、イベント、データストア、外部主体、情報・物の流れを一貫して表すための記法ルールです。主 CDFD rulebook から `includes`
-      される共通部品として適用します。
-  - id: F004
-    severity: minor
-    rule: vp-ux-readability
-    line: 9
-    message: 「詳細 CDFD」が後続の「プロセスグループ別 CDFD」と「ユースケース別 CDFD」のどちらを含む名称か定義されていないため、三つの図種別との対応を明記してください。
-    anchor: >-
-      - Mermaid の `flowchart` を使用し、方向は全体概要・詳細 CDFD を問わず `LR` を基本とします。CDFD
-      の矢印は情報・物・実行要求の受け渡しを表し、ユースケース別など包含元が明示した場合だけ業務上の順序も表します。`TB` は、対象が階層構造（組織・分類など）を表す場合にだけ使用します。
-  - id: F005
+      Mermaid の `flowchart` 構文で CDFD
+      のプロセス、イベント、データストア、外部主体、情報・物の流れを一貫して表すための記法ルールです。`specdojo:cdfd-overview-rulebook`、`specdojo:cdfd-rulebook`、`specdojo:cdfd-uc-rulebook`
+      の `includes` から適用される共通部品で、凡例は対象プロダクトの `cdfd-overview` にある「凡例（本プロダクト共通）」を正本とします。
+    message: >-
+      `specdojo:cdfd-overview-rulebook` は CDFD が一つだけなら「凡例（本プロダクト共通）」を省略可とし、記法の正本を本 rulebook
+      としていますが、本書は同凡例を形状・色・絵文字の正本として全図からの参照を必須化しているため、凡例を省略した適合成果物でも記法正本と参照先が成立するよう必須条件と正本関係を統一してください。
+  - id: F002
     severity: major
-    rule: vp-ux-language-consistency
-    line: 41
-    message: イベント名を「〜された」「〜が到来した」「〜を要求した」という発生済み表現にする規則に対し、各実例は「顧客が商品を購入する」という非過去形を使用しているため、正しいラベル形式を一方へ統一してください。
-    anchor: "- イベントは「〜された」「〜が到来した」「〜を要求した」など、発生を判断できる短い文にします。"
+    rule: vp-qe-omissions-consistency
+    line: 143
+    anchor: "- 各図の直後に、対象プロダクトの `cdfd-overview` にある「凡例（本プロダクト共通）」を参照し、図で使用した線種、図から省略した入出力と理由、別図と共有するノードを記述します。"
+    message: >-
+      `cdfd-overview` に共通凡例が存在しない場合の参照省略条件または本 rulebook へのフォールバックが定義されていないため、単一 CDFD
+      で凡例を省略できるケースでも図直後の必須注記を一意に作成・確認できる規則を追加してください。
   - id: F003
     severity: major
     rule: vp-qe-kata-conformance
     line: 52
-    message: >-
-      `includes` を持つ主 CDFD rulebook の document_id または参照先と Frontmatter の具体例が示されておらず、利用者がこの rulebook
-      を対象成果物へ適用する経路を一意に実装できません。
-    anchor: "- 本 rulebook は主 CDFD rulebook の `includes` から適用されるため、成果物 Frontmatter に記法 rulebook を重複記載しません。"
-  - id: F002
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 60
-    message: 物理保管は概念一覧と本文で条件付き要素として導入されている一方、標準テンプレ表に行がなく、6.1 のノード規則にも記載されていないため、配置順と必須条件を一貫して確認できるよう両方へ反映してください。
     anchor: >-
-      | 順序 | 区分           | 必須     |
-      内容                                                                                             |
+      - 本 rulebook は `specdojo:cdfd-overview-rulebook`、`specdojo:cdfd-rulebook`、`specdojo:cdfd-uc-rulebook` の `includes`
+      から適用されるため、成果物 Frontmatter に記法 rulebook を重複記載しません。
+    message: "`includes` による適用経路自体は特定されていますが、包含元が許可する共通凡例省略時には本書の必須参照を満たせないため、包含元三種と共有 rulebook の適用条件を同じ判定規則へ揃えてください。"

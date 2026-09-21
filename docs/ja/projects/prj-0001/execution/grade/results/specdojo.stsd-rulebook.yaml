@@ -4,24 +4,24 @@ document: specdojo:stsd-rulebook
 path: docs/ja/specdojo/rulebooks/stsd-rulebook.md
 target: kata
 rubric: grade-rubric-v1
-verdict: needs-work
-score: 73
-graded_at: "2026-09-17T10:57:06.680Z"
+verdict: pass
+score: 86
+graded_at: "2026-09-21T05:19:50.478Z"
 graded_by: codex-expert-executor
-content_hash: f3cc4383a112bedc064abcc004625af7bef7d5015ef936415605781269995a86
+content_hash: e2f94a1a520197539ad2da1fe966539195b32bfdaff45cded39acbf1ad1f3eaf
 categories:
   consistency:
-    score: 50
+    score: 75
   usability:
-    score: 83
+    score: 100
   architecture:
     score: 100
   quality:
-    score: 63
+    score: 75
 viewpoints:
   vp-arc-cross-document-consistency:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -32,23 +32,49 @@ viewpoints:
     level: 3
     score: 75
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ux-readability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 4
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 177
+    anchor: "販売可能 --> 販売済み : 商品引渡し / 会計・在庫減算・顧客受領が完了した"
+    message: >-
+      `stsd-sample.md` の T-04 は「販売記録」を条件に含む一方、埋め込みサンプルの T-04
+      は図・表ともこれを欠き、同じ「販売済み」への遷移条件が成果物間で不一致なので、埋め込み例にも販売記録の確定を追加してください。
+  - id: F002
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 190
+    anchor: "| `T-04`  | 販売可能 | 販売済み | 商品引渡し   | 会計・在庫減算・顧客受領が完了した               | 販売記録を正本とする     |"
+    message: T-04 の条件には「販売記録の確定」がなく、遷移後も line 166 の「販売済み」成立条件を満たさない場合があるため、図と遷移表の条件へ販売記録の確定を追加してください。
+  - id: F003
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 34
+    anchor: "- 遷移 ID は文書内で一意な `T-<nn>` 形式とし、遷移の説明とレビュー指摘で同じ ID を使います。"
+    message: 遷移 ID をレビュー指摘の参照キーに使う一方、遷移追加・削除時の既存 ID の保持と廃止 ID の再利用可否が未定義で指摘が別遷移へ結び付く恐れがあるため、採番の不変性と欠番・再利用ルールを明記してください。
+  - id: F004
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 190
+    anchor: "| `T-04`  | 販売可能 | 販売済み | 商品引渡し   | 会計・在庫減算・顧客受領が完了した               | 販売記録を正本とする     |"
+    message: 埋め込みサンプルの T-04 は遷移先「販売済み」の成立条件に必要な販売記録の確定を含まず、自身の完成判定を満たす完成例になっていないため、外部 sample と同じ条件へ修正してください。

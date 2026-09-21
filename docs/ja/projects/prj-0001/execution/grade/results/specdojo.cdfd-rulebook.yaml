@@ -4,24 +4,24 @@ document: specdojo:cdfd-rulebook
 path: docs/ja/specdojo/rulebooks/cdfd-rulebook.md
 target: kata
 rubric: grade-rubric-v1
-verdict: needs-work
-score: 71
-graded_at: "2026-09-19T21:14:35.930Z"
+verdict: pass
+score: 89
+graded_at: "2026-09-21T05:09:21.252Z"
 graded_by: codex-expert-executor
-content_hash: 064bd7a2db18136416cbab3a19c4392a90d7d1be41662139136e5f92bd4a2511
+content_hash: 9b0302bad28cba5314630e7a06417f4e49b3835d0158c9e5f3b677838f9d8059
 categories:
   consistency:
-    score: 50
+    score: 88
   usability:
-    score: 75
+    score: 100
   architecture:
     score: 100
   quality:
-    score: 63
+    score: 75
 viewpoints:
   vp-arc-cross-document-consistency:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -32,93 +32,45 @@ viewpoints:
     level: 3
     score: 75
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
-  vp-qe-kata-conformance:
-    level: 2
-    score: 50
-  vp-ux-readability:
     level: 3
     score: 75
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
   vp-ux-language-consistency:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 0
-  major: 4
-  minor: 7
+  major: 0
+  minor: 3
   note: 0
 findings:
-  - id: F003
+  - id: F001
     severity: minor
     rule: vp-qe-verifiability
-    line: 11
-    message: 一プロセス一完了条件を要求していますが、プロセス領域表または個別入出力表のどの項目で完了条件を記録し、どうpass/fail判定するかが定義されていないため, 記載先と判定条件を明示してください。
-    anchor: "- 一つのプロセスノードは、一つの業務目的と完了条件を持つ処理だけを表します。コマンドや画面の一操作を無条件に一プロセスへ分割せず、複数の判断・更新・生成を一ノードに詰め込みません。"
-  - id: F011
-    severity: major
-    rule: vp-ux-language-consistency
-    line: 9
-    message: "`プロセスグループ` を本書では複数領域で構成されるものに固定していますが、上位rulebookは1領域グループも同じ用語で認めているため、包含数を「一つ以上のプロセス領域」に統一してください。"
-    anchor: "- 一文書は、全体概要で定めた一つのプロセスグループと、そのグループに属する複数のプロセス領域を詳細化します。各領域はちょうど一つのプロセスグループ別 CDFD に属します。"
-  - id: F004
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 58
-    message: "`status` の昇格条件を「定められた承認者」とする一方、承認者の参照先と承認記録の必須形を定義していないため、readyの判定を追跡できる文書IDまたは記録種別を明記してください。"
-    anchor: "- `status` の昇格は定められた承認者が行い、作成途中は `draft` とします。"
+    line: 143
+    anchor: "### 6.8. 完成判定"
+    message: >-
+      前回指摘されたFrontmatter・目的・適用範囲・プロセス表の確認は追加済みですが、完成判定には条件付き／選択プロセスの非起動時の扱い、図直後注記の凡例・線種・省略理由・共有ノード、主要例外の「本グループでの扱い」、委譲表の各列が反映されておらず、これらを欠く文書も完成扱いにできるため、全必須条件を列挙するか本文要件との併用を明記してください。
   - id: F002
     severity: minor
-    rule: vp-arc-cross-document-consistency
-    line: 79
-    message: 適用範囲で期間を必須としている一方、対応templateに期間の記入欄がなくsampleにも期間の記載がないため、期間を必須とするなら両成果物へ反映し、不要なら本規則とrecipeの問いから削除してください。
-    anchor: "- 対象グループと含む領域の範囲は全体概要から引き継ぎます。期間、組織、システム境界と、どのイベントからどの出力までを扱うかを明記します。"
-  - id: F009
+    rule: vp-qe-omissions-consistency
+    line: 143
+    anchor: "### 6.8. 完成判定"
+    message: >-
+      完成判定が、本文で必須とした条件付き／選択プロセスの非起動時の正常な扱い、全プロセスの個別入出力表への一度だけの掲載、図直後の必須注記、主要例外の扱い、グループ外委譲の委譲先・委譲事項・戻す条件を確認対象に含めていないため,
+      本文要件との併用を明記するか確認項目を過不足なく追加してください。
+  - id: F003
     severity: minor
     rule: vp-qe-kata-conformance
-    line: 79
-    message: rulebookとrecipeが適用期間の明記を求めていますが、templateの適用範囲に記入欄がなくsampleも完成例を示していないため、骨組みと完成例へ期間を反映してください。
-    anchor: "- 対象グループと含む領域の範囲は全体概要から引き継ぎます。期間、組織、システム境界と、どのイベントからどの出力までを扱うかを明記します。"
-  - id: F005
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 142
-    message: >-
-      完成判定が必須のFrontmatter・目的・適用範囲やプロセス表の業務目的・担当・起動条件・必須性を確認対象に含めず、同節だけでは必須要件が欠けた文書も完成扱いにできるため、全必須条件を列挙するか本文要件との併用を明記してください。
+    line: 143
     anchor: "### 6.8. 完成判定"
-  - id: F007
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 142
-    message: 完成判定に必須Frontmatter、目的、適用範囲、およびプロセス表の必須列内容の確認が欠けているため、本文要件で必須とした項目を完成チェックへ過不足なく反映してください。
-    anchor: "### 6.8. 完成判定"
-  - id: F001
-    severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 155
     message: >-
-      `cdfd-overview-rulebook`
-      は1領域だけのプロセスグループを認める一方、本書はその一領域を一文書にすることを禁止しており、上位で有効なグループの詳細CDFDを作成できないため、上位で定めた一グループを領域数にかかわらず一文書へ引き継ぐ規則に修正してください。
-    anchor: "- 全体概要の一領域だけを一文書にしたり、一つの領域を複数のプロセスグループ別 CDFD に重複配置したりしません。"
-  - id: F006
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 155
-    message: 上位rulebookが許可する1領域グループの扱いが欠落したまま禁止事項で排除されているため、単一領域でもグループ全体を一文書として成立させる本文要件・template操作・完成条件を追加してください。
-    anchor: "- 全体概要の一領域だけを一文書にしたり、一つの領域を複数のプロセスグループ別 CDFD に重複配置したりしません。"
-  - id: F008
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 155
-    message: >-
-      recipeは上位グループの全領域を引き継ぐ手順で領域数を限定しておらず、上位rulebookも1領域グループを認める一方、本書は一領域の文書化を禁止しているため、rulebook・recipe・templateが同じ有効入力を扱えるよう統一してください。
-    anchor: "- 全体概要の一領域だけを一文書にしたり、一つの領域を複数のプロセスグループ別 CDFD に重複配置したりしません。"
-  - id: F010
-    severity: minor
-    rule: vp-ux-readability
-    line: 155
-    message: 「全体概要の一領域だけを一文書にしない」という記述は、複数領域グループの部分切り出しと正規の1領域グループを区別できないため、禁止対象を「複数領域を持つグループの一部だけを切り出すこと」と明確化してください。
-    anchor: "- 全体概要の一領域だけを一文書にしたり、一つの領域を複数のプロセスグループ別 CDFD に重複配置したりしません。"
+      rulebookとtemplate・sampleは必須Frontmatter、対象期間、完了条件、停止範囲を扱いますが、recipeはFrontmatterとready承認記録を確認せず、全体手順5から完了条件、仕上げチェックから対象期間と停止範囲が欠けているため、recipeの主要手順と最終チェックを本節の完成条件へ揃えてください。
