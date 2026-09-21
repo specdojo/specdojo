@@ -31,6 +31,7 @@ echo "Checking tools..."
 command -v claude >/dev/null 2>&1 && claude --version || true
 command -v codex >/dev/null 2>&1 && codex --version || true
 command -v opencode >/dev/null 2>&1 && opencode --version || true
+command -v agy >/dev/null 2>&1 && agy --version || true
 command -v gh >/dev/null 2>&1 && gh --version | head -n 1 || true
 
 echo "Checking Git config..."

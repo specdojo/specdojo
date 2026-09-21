@@ -17,6 +17,8 @@ DIRS=(
   /home/node/.copilot
   /home/node/.config/gh
   /home/node/.config/opencode
+  /home/node/.config/antigravity
+  /home/node/.gemini
 )
 
 for dir in "${DIRS[@]}"; do

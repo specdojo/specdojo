@@ -14,6 +14,11 @@ if ! curl -fsSL https://chatgpt.com/codex/install.sh | CODEX_NON_INTERACTIVE=1 s
   sudo npm install -g @openai/codex@latest
 fi
 
+# Install Antigravity CLI (agy) into ~/.local/bin. Failure must not abort container creation.
+if ! curl -fsSL https://antigravity.google/cli/install.sh | bash; then
+  echo "Warning: Antigravity CLI installer failed. Install it later with: curl -fsSL https://antigravity.google/cli/install.sh | bash"
+fi
+
 # Some installers place binaries under ~/.local/bin.
 if [ -d "${HOME}/.local/bin" ]; then
   export PATH="${HOME}/.local/bin:${PATH}"

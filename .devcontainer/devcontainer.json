@@ -53,6 +53,8 @@
     "source=specdojo-codex,target=/home/node/.codex,type=volume",
     "source=specdojo-copilot,target=/home/node/.copilot,type=volume",
     "source=specdojo-opencode,target=/home/node/.config/opencode,type=volume",
+    "source=specdojo-antigravity,target=/home/node/.config/antigravity,type=volume",
+    "source=specdojo-gemini,target=/home/node/.gemini,type=volume",
     "source=specdojo-gh,target=/home/node/.config/gh,type=volume",
     "source=${localEnv:HOME}/dotfiles/.emacs.d,target=/home/node/.emacs.d,type=bind"
   ],
