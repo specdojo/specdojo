@@ -105,7 +105,7 @@ npm run vscode:kill-stale  # 最新 commit 以外の server と孤児プロセ�
 
 Claude Code の設定ファイルは `CLAUDE_CONFIG_DIR=/home/node/.claude` により、名前付きボリューム `specdojo-claude` に置かれます（`~/.claude/.claude.json`）。以前は `~/.claude.json` を別ボリューム `specdojo-claude-state` への symlink にしていましたが、`.devcontainer/prepare-agent-dirs.sh` が起動時に旧ファイルの内容を一度だけ写して symlink を外すため、rebuild 後も手作業は不要です。rebuild 後に `docker volume rm specdojo-claude-state` で旧ボリュームを削除できます。cron から起動する routine には `.devcontainer/specdojo-routine.cron` で同じ `CLAUDE_CONFIG_DIR` を渡しています。
 
-Antigravity CLI（`agy`）は `post-create.sh` が `~/.local/bin` に導入し、設定 `~/.config/antigravity` と skills 用の `~/.gemini` を名前付きボリューム（`specdojo-antigravity` / `specdojo-gemini`）で永続化します。既定の認証は OS のキーリング（Linux では libsecret）に資格情報を保存するため、キーリングのないコンテナでログイン状態が保持されるかは初回起動で確認してください。保持されない場合は `ANTIGRAVITY_API_KEY` をホストから `remoteEnv` で渡す方法があります（値は commit しない）。
+Antigravity CLI（`agy`）は `post-create.sh` が `~/.local/bin` に導入し、`~/.config/antigravity`（`config.toml`）と `~/.gemini`（OAuth トークン `antigravity-cli/antigravity-oauth-token`、会話履歴、`mcp_config.json`、skills 用の `config/`）を名前付きボリューム（`specdojo-antigravity` / `specdojo-gemini`）で永続化します。コンテナ内では資格情報はキーリングではなく `~/.gemini` 配下のファイルに保存されるため（2026-09-21 に確認）、`ANTIGRAVITY_API_KEY` を渡す必要はありません。
 
 ## 7. 推奨しない使い方
 
