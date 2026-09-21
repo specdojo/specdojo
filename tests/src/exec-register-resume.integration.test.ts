@@ -199,6 +199,9 @@ function withRepo(fn: (fixture: Fixture) => Promise<void> | void): Promise<void>
         `${JSON.stringify(CONFIG, null, 2)}\n`,
         "utf8",
       );
+      // 登録簿の派生ビュー（generated/）は実リポジトリと同じく非追跡の生成物として扱う。
+      // 追跡すると root の再生成と exec branch の merge 経路が重なり、統合が拒否される。
+      writeFileSync(join(root, ".gitignore"), "docs/**/generated/*\n", "utf8");
       mkdirSync(join(root, REGISTER_REL, "generated"), { recursive: true });
       mkdirSync(join(root, `${PROJECT_BASE}/controls/generated`), { recursive: true });
       mkdirSync(join(root, SCHEDULE_REL), { recursive: true });

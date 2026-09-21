@@ -12,6 +12,7 @@ import {
   mergeWorktreeIntoCurrent,
   listOrphanedExecBranches,
   pruneOrphanedExecBranches,
+  releaseRootWorkingCopies,
   removeWorktree,
   selectStageablePaths,
   WorktreeRemovedBranchDeletionError,
@@ -181,6 +182,21 @@ function prepare(
   });
 }
 
+// The checkpoint commit lives on the exec branch; the root keeps its own uncommitted copies of the
+// scaffolded files until the merge releases them, exactly as the runner does.
+function mergeIntoRoot(fixture: Fixture, worktree: ExecWorktree, taskId: string): void {
+  mergeWorktreeIntoCurrent({
+    context: fixture.context,
+    worktree,
+    taskId,
+    releaseRootPaths: [
+      join(fixture.executionPath, "exec", "plans", `${taskId}-plan.md`),
+      join(fixture.executionPath, "exec", "results", `${taskId}-result.md`),
+      join(fixture.executionPath, "exec", "events", `20260613T000000Z_agent_${taskId}_claim.json`),
+    ],
+  });
+}
+
 afterEach(() => {
   while (fixtures.length > 0) {
     const fixture = fixtures.pop()!;
@@ -211,7 +227,8 @@ describe("exec worktree ops", () => {
     const taskId = "T-T-doc-010";
 
     const worktree = prepare(fixture, taskId);
-    expect(git(fixture.repo, "log", "-1", "--pretty=%s")).toBe(
+    expect(git(fixture.repo, "log", "-1", "--pretty=%s")).toBe("initial");
+    expect(git(worktree.path, "log", "-1", "--pretty=%s")).toBe(
       `exec(${taskId}): prepare execution`,
     );
 
@@ -227,7 +244,7 @@ describe("exec worktree ops", () => {
     expect(committed.targets).toContain("docs/a.md");
     expect(committed.targets).toContain(`execution/exec/results/${taskId}-result.md`);
 
-    mergeWorktreeIntoCurrent({ context: fixture.context, worktree, taskId });
+    mergeIntoRoot(fixture, worktree, taskId);
     expect(readFileSync(join(fixture.repo, "docs", "a.md"), "utf8")).toBe("v1 from task 010\n");
     expect(
       readFileSync(
@@ -237,16 +254,54 @@ describe("exec worktree ops", () => {
     ).toContain("status: complete");
   });
 
+  it("previews a merge without treating releasable checkpoint copies as overlap", () => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-010";
+    const worktree = prepare(fixture, taskId);
+    const releaseRootPaths = [
+      join(fixture.executionPath, "exec", "plans", `${taskId}-plan.md`),
+      join(fixture.executionPath, "exec", "results", `${taskId}-result.md`),
+      join(fixture.executionPath, "exec", "events", `20260613T000000Z_agent_${taskId}_claim.json`),
+    ];
+
+    expect(() =>
+      mergeWorktreeIntoCurrent({
+        context: fixture.context,
+        worktree,
+        taskId,
+        releaseRootPaths,
+        dryRun: true,
+      }),
+    ).not.toThrow();
+    expect(git(fixture.repo, "log", "-1", "--pretty=%s")).toBe("initial");
+    for (const path of releaseRootPaths) expect(existsSync(path)).toBe(true);
+  });
+
+  it("restores files already released when releasing a later path fails", () => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-010";
+    prepare(fixture, taskId);
+    const planPath = join(fixture.executionPath, "exec", "plans", `${taskId}-plan.md`);
+    const invalidDirectory = join(fixture.executionPath, "exec", "results");
+    const planBefore = readFileSync(planPath, "utf8");
+
+    expect(() =>
+      releaseRootWorkingCopies(fixture.repo, [
+        `execution/exec/plans/${taskId}-plan.md`,
+        "execution/exec/results",
+      ]),
+    ).toThrow();
+    expect(readFileSync(planPath, "utf8")).toBe(planBefore);
+    expect(existsSync(invalidDirectory)).toBe(true);
+  });
+
   it("discards a stale worktree/branch left by a prior lifecycle so a fresh claim checkpoints cleanly", () => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-010";
 
-    // Prior lifecycle: the task was prepared (worktree + exec branch) but ended blocked and was
-    // never merged. Rewind root HEAD so the checkpoint commit is gone but the exec branch remains,
-    // exactly the residue a re-claim faces.
+    // Prior lifecycle: the task was prepared on its exec branch but never merged.
     const stale = prepare(fixture, taskId);
     expect(findExecWorktree(fixture.repo, taskId)).not.toBeNull();
-    git(fixture.repo, "reset", "--hard", "HEAD~1");
 
     // Fresh claim rewrites the root scaffold as untracked files.
     scaffoldTask(fixture, taskId);
@@ -262,10 +317,11 @@ describe("exec worktree ops", () => {
       git(fixture.repo, "rev-parse", "--verify", `refs/heads/${stale.branch}`),
     ).toThrow();
 
-    // Re-preparing now creates a fresh worktree and commits the root scaffold as a new checkpoint.
+    // Re-preparing creates a fresh worktree and commits the scaffold only on its exec branch.
     const worktree = prepare(fixture, taskId);
     expect(worktree.created).toBe(true);
-    expect(git(fixture.repo, "log", "-1", "--pretty=%s")).toBe(
+    expect(git(fixture.repo, "log", "-1", "--pretty=%s")).toBe("initial");
+    expect(git(worktree.path, "log", "-1", "--pretty=%s")).toBe(
       `exec(${taskId}): prepare execution`,
     );
   });
@@ -285,7 +341,7 @@ describe("exec worktree ops", () => {
     const wt1 = prepare(fixture, "T-T-doc-010");
     writeFile(join(wt1.path, "docs", "shared.md"), "produced by task 010\n");
     commitWorktreeChanges({ context: fixture.context, worktree: wt1, taskId: "T-T-doc-010" });
-    mergeWorktreeIntoCurrent({ context: fixture.context, worktree: wt1, taskId: "T-T-doc-010" });
+    mergeIntoRoot(fixture, wt1, "T-T-doc-010");
     removeWorktree({
       context: fixture.context,
       worktree: wt1,
@@ -314,13 +370,16 @@ describe("exec worktree ops", () => {
     writeFile(join(worktree.path, "docs", "conflict.md"), "branch version\n");
     commitWorktreeChanges({ context: fixture.context, worktree, taskId });
 
-    expect(() =>
-      mergeWorktreeIntoCurrent({ context: fixture.context, worktree, taskId }),
-    ).toThrow();
+    expect(() => mergeIntoRoot(fixture, worktree, taskId)).toThrow();
 
-    // The failed merge must be rolled back: no merge in progress and the working tree is clean.
+    // The failed merge must be rolled back: no merge in progress, the deliverable untouched, and
+    // the root's own uncommitted copies of the checkpoint files put back (nothing else dirty).
     expect(() => git(fixture.repo, "rev-parse", "--verify", "MERGE_HEAD")).toThrow();
-    expect(git(fixture.repo, "status", "--porcelain")).toBe("");
+    expect(git(fixture.repo, "status", "--porcelain", "-uall").split("\n").sort()).toEqual([
+      `?? execution/exec/events/20260613T000000Z_agent_${taskId}_claim.json`,
+      `?? execution/exec/plans/${taskId}-plan.md`,
+      `?? execution/exec/results/${taskId}-result.md`,
+    ]);
     expect(readFileSync(join(fixture.repo, "docs", "conflict.md"), "utf8")).toBe("root version\n");
   });
 
@@ -366,7 +425,7 @@ describe("exec worktree ops", () => {
     expect(worktree.name).toBe("prj-0001-T-T-doc-010");
 
     // The checkpoint commit and lookup keep the bare task id.
-    expect(git(fixture.repo, "log", "-1", "--pretty=%s")).toBe(
+    expect(git(worktree.path, "log", "-1", "--pretty=%s")).toBe(
       `exec(${taskId}): prepare execution`,
     );
     expect(findExecWorktree(fixture.repo, worktreeTaskId)).toEqual({ ...worktree, created: false });
@@ -379,7 +438,7 @@ describe("exec worktree ops", () => {
     const worktree = prepare(fixture, taskId);
     writeFile(join(worktree.path, "docs", "a.md"), "deliverable\n");
     commitWorktreeChanges({ context: fixture.context, worktree, taskId });
-    mergeWorktreeIntoCurrent({ context: fixture.context, worktree, taskId });
+    mergeIntoRoot(fixture, worktree, taskId);
 
     removeWorktree({ context: fixture.context, worktree, taskId, deleteBranch: true });
 
@@ -580,7 +639,7 @@ describe("exec worktree ops", () => {
     expect(committed.targets).not.toContain("src/sneaky.ts");
 
     // The out-of-scope file stays in the worktree and must not block the merge.
-    mergeWorktreeIntoCurrent({ context: fixture.context, worktree, taskId });
+    mergeIntoRoot(fixture, worktree, taskId);
     expect(readFileSync(join(fixture.repo, "docs", "a.md"), "utf8")).toBe("target deliverable\n");
     expect(existsSync(join(fixture.repo, "src", "sneaky.ts"))).toBe(false);
     expect(git(worktree.path, "status", "--porcelain", "-uall")).toContain("src/sneaky.ts");
@@ -833,7 +892,7 @@ describe("exec worktree ops", () => {
     const worktree = prepare(fixture, taskId);
     writeFile(join(worktree.path, "docs", "a.md"), "deliverable\n");
     commitWorktreeChanges({ context: fixture.context, worktree, taskId });
-    mergeWorktreeIntoCurrent({ context: fixture.context, worktree, taskId });
+    mergeIntoRoot(fixture, worktree, taskId);
 
     // A regenerated, non-commit-target file (e.g. doc-index) left dirty in the worktree must not
     // block removal: git would refuse without --force, but the tool forces past it automatically.
@@ -902,7 +961,7 @@ describe("exec worktree ops", () => {
     expect(git(worktree.path, "status", "--porcelain")).toBe("");
     expect(() => git(worktree.path, "cat-file", "-e", "HEAD:docs/removed.yaml")).toThrow();
 
-    mergeWorktreeIntoCurrent({ context: fixture.context, worktree, taskId });
+    mergeIntoRoot(fixture, worktree, taskId);
     expect(existsSync(join(fixture.repo, "docs", "removed.yaml"))).toBe(false);
   });
 });

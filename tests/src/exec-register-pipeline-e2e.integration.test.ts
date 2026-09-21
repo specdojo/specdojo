@@ -149,6 +149,7 @@ function buildTicket(id: string): string {
 }
 
 const FAKE_PIPELINE_AGENT_SCRIPT = `
+import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 
 function arg(name) {
@@ -185,6 +186,7 @@ if (role === "reporter") {
     process.stderr.write("reporter settings profile is missing: " + settings + "\\n");
     process.exit(1);
   }
+  if (nickname === "report-lock") execFileSync("git", ["worktree", "lock", "."]);
   process.stdout.write(
     JSON.stringify({
       schema_version: 1,
@@ -307,6 +309,17 @@ function withRepo(fn: (fixture: Fixture) => Promise<void> | void): Promise<void>
           "    capabilities: []",
           "    proficiency: normal",
           "    priority: 3",
+          "  - nickname: report-lock",
+          "    display_name: report-lock",
+          "    email: null",
+          "    roles: []",
+          "    type: agent",
+          "    provider: claude",
+          "    mode: report",
+          "    stage_role: reporter",
+          "    capabilities: []",
+          "    proficiency: normal",
+          "    priority: 4",
           "",
         ].join("\n"),
         "utf8",
@@ -425,6 +438,9 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
       await withRepo(async ({ root, worktreeBase }) => {
         vi.spyOn(process.stdout, "write").mockImplementation(() => true);
         vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+        const firstParentBefore = Number(
+          git(root, "rev-list", "--first-parent", "--count", "HEAD"),
+        );
 
         await runExec([
           "run",
@@ -461,6 +477,14 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
         // worktree は成功時に merge back 後、撤去される。
         const worktrees = git(root, "worktree", "list", "--porcelain");
         expect(worktrees).not.toContain("PJR-AB12");
+        expect(Number(git(root, "rev-list", "--first-parent", "--count", "HEAD"))).toBe(
+          firstParentBefore + 1,
+        );
+        expect(git(root, "log", "-1", "--pretty=%s")).toBe(
+          "exec(register PJR-AB12): pipeline test item",
+        );
+        expect(git(root, "log", "-1", "--pretty=%B")).toContain("Transition: start → review");
+        expect(git(root, "rev-list", "--parents", "-1", "HEAD").split(" ")).toHaveLength(3);
 
         expect(process.exitCode ?? 0).toBe(0);
       });
@@ -499,6 +523,68 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
     },
   );
 
+  it(
+    "resumes cleanup without a second merge when removal fails after integration",
+    { timeout: 120_000 },
+    async () => {
+      await withRepo(async ({ root, worktreeBase }) => {
+        vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+        vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+        const firstParentBefore = Number(
+          git(root, "rev-list", "--first-parent", "--count", "HEAD"),
+        );
+
+        await runExec([
+          "run",
+          "--project",
+          "test",
+          "--register",
+          "PJR-AB12",
+          "--executor-by",
+          "exec-1",
+          "--reporter-by",
+          "report-lock",
+          "--worktree",
+          "--worktree-base",
+          worktreeBase,
+        ]);
+
+        expect(process.exitCode).toBe(1);
+        expect(Number(git(root, "rev-list", "--first-parent", "--count", "HEAD"))).toBe(
+          firstParentBefore + 1,
+        );
+        expect(
+          readFileSync(join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md"), "utf8"),
+        ).toContain("item_status: review");
+        const worktreePath = execWorktreePath(root);
+        expect(worktreePath).not.toBeNull();
+        git(root, "worktree", "unlock", worktreePath ?? "");
+
+        process.exitCode = undefined;
+        await runExec([
+          "run",
+          "--project",
+          "test",
+          "--register",
+          "PJR-AB12",
+          "--worktree",
+          "--worktree-base",
+          worktreeBase,
+          "--resume",
+        ]);
+
+        expect(process.exitCode ?? 0).toBe(0);
+        expect(execWorktreePath(root)).toBeNull();
+        expect(Number(git(root, "rev-list", "--first-parent", "--count", "HEAD"))).toBe(
+          firstParentBefore + 1,
+        );
+        expect(git(root, "log", "-1", "--pretty=%s")).toBe(
+          "exec(register PJR-AB12): pipeline test item",
+        );
+      });
+    },
+  );
+
   it.each(["exec-codex-protected-write", "exec-claude-protected-write"])(
     "blocks %s distinctly and resumes the executor after the handoff is applied",
     async (executor) => {
@@ -509,6 +595,9 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
           stderr.push(String(chunk));
           return true;
         });
+        const firstParentBefore = Number(
+          git(root, "rev-list", "--first-parent", "--count", "HEAD"),
+        );
 
         await runExec([
           "run",
@@ -537,6 +626,10 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
           "blocked: agent-config-write: protected configuration changes detected; paths=package.json",
         );
         expect(process.exitCode).toBe(1);
+        expect(Number(git(root, "rev-list", "--first-parent", "--count", "HEAD"))).toBe(
+          firstParentBefore + 1,
+        );
+        expect(git(root, "log", "-1", "--pretty=%s")).toBe("exec(register PJR-AB12): wait");
 
         const worktreePath = execWorktreePath(root);
         expect(worktreePath).not.toBeNull();
@@ -552,6 +645,7 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
         writeFileSync(join(worktreePath ?? "", "package.json"), ORIGINAL_PACKAGE, "utf8");
         writeFileSync(join(worktreePath ?? "", "protection-applied"), "applied\n", "utf8");
 
+        const beforeResume = Number(git(root, "rev-list", "--first-parent", "--count", "HEAD"));
         process.exitCode = undefined;
         await runExec([
           "run",
@@ -571,6 +665,10 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
         ).toContain("item_status: review");
         expect(existsSync(join(root, "protection-applied"))).toBe(true);
         expect(execWorktreePath(root)).toBeNull();
+        expect(Number(git(root, "rev-list", "--first-parent", "--count", "HEAD"))).toBe(
+          beforeResume + 1,
+        );
+        expect(git(root, "log", "-1", "--pretty=%B")).toContain("Transition: start → review");
       });
     },
     120_000,
