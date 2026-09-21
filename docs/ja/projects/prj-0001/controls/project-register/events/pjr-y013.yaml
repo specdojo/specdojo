@@ -100,3 +100,19 @@
       from: waiting
       to: in-progress
   previous_event_id: reg_938c52ed7052488a839e468839310909
+- v: 1
+  id: reg_f93f783c03704773ada6fdd95def890f
+  ts: "2026-09-21T01:03:09Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: Error: Cannot connect to API: Unable to connect. Is the computer able to access the url?"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: rate limit reached
+      to: "agent exited with non-zero code: Error: Cannot connect to API: Unable to connect. Is the computer able to access the url?"
+  previous_event_id: reg_5faf4920dd91463a994b155987c0a9a6

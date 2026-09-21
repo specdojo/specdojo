@@ -7,12 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   owner: ARC
   registered_at: "2026-09-20T04:55:16Z"
   due_on: "2026-09-30"
-  block_reason: rate limit reached
+  block_reason: "agent exited with non-zero code: Error: Cannot connect to API: Unable to connect. Is the computer able to access the url?"
 ---
 
 # PJR-Y013 exec の記帳 commit を merge commit に畳み develop の本線を 1 タスク 1 commit にする
