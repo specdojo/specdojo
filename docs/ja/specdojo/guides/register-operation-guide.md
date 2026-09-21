@@ -347,6 +347,7 @@ specdojo exec run --project <project-id> --register PJR-0012 PJR-0013 --worktree
 
 - type が `todo` / `issue` / `change-request` の項目は成果物・実装を変更する対応、`question` / `risk` の項目は調査して結論案を result に記録する対応になります。`decision` / `note` は実行対象外です。
 - 状態は register の遷移（`in-progress` / `review` / `waiting`）で追跡され、agent は項目を終端化しません。成功後は人が内容を確認して `register close` します。
+- 個票の「関連ドキュメント」に `[[文書ID]]` 形式で記載された対象成果物は、plan 生成時に直近の自動評価（grade）結果があれば `_GRADE_FINDINGS_` として plan に展開されます。表示は最大10文書・各20件までに制限され、超過分はサイドカーを参照するよう促します。サイドカーがない場合は「finding なし」と表示されます。
 - `--register` には複数の PJR-ID を空白区切り・カンマ区切り（またはその混在）で渡せます。指定順に1件ずつ実行し、各IDが plan/result 生成・開始・agent実行・状態遷移まで完結してから次へ進みます。重複したIDは最初の1件だけを実行します。
 - 全ID処理後にID別の成否・状態遷移・commit 結果を一覧表示します。いずれかが失敗した場合は終了コード 1 で終了します。
 - `--register-commit` を付けると成功IDごとに、その実行で生じた変更だけをcommitします（実行前から作業ツリーにある利用者の変更は含めません）。`--on-failure`（`stop` 既定 / `continue`）で途中失敗時に停止するか継続するかを選びます。`stop` では失敗以降のIDが skipped として記録されます。

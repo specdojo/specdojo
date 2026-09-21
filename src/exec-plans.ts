@@ -26,7 +26,8 @@ import type { Approach, ExecPlanMeta, ReadyTaskView, TaskMode, TaskOrigin } from
 import type { CriteriaItem, DctDeliverableItem, DctDoc, DctSection } from "./catalog-types.js";
 import type { CoverageType, ReviewViewpoint } from "./review-types.js";
 import type { RoleDefinition, RolesDoc } from "./role-types.js";
-import { readGradeResultForDocument } from "./grade-result.js";
+import { readGradeResultForDocument, gradeResultPathForDocument } from "./grade-result.js";
+import { lookupDocIndex } from "./doc-index.js";
 
 // ---------------------------------------------------------------------------
 // Internal types
@@ -1290,4 +1291,68 @@ export function parsePlanTaskIdentity(planContent: string): PlanTaskIdentity | n
     ...(origin ? { origin } : {}),
     ...(targets.length > 0 ? { targets } : {}),
   };
+}
+
+export function registerGradeFindingsText(projectId: string, ticketPath: string): string {
+  if (!existsSync(ticketPath)) return "- なし";
+  const content = readFileSync(ticketPath, "utf8");
+  const match =
+    content.match(/##\s+5\.\s+関連ドキュメント\s+([\s\S]*?)(?:##|$)/i) ||
+    content.match(/##\s+関連ドキュメント\s+([\s\S]*?)(?:##|$)/i);
+  if (!match) return "- なし";
+
+  const docsText = match[1];
+  const links = [...docsText.matchAll(/\[\[([a-zA-Z0-9:-]+)(?:\|[^\]]+)?\]\]/g)].map((m) => m[1]);
+
+  if (links.length === 0) return "- なし";
+
+  const docIndexPath = join(specdojoRootDir(), ".specdojo", "doc-index.json");
+  const MAX_DOCS = 10;
+  const MAX_FINDINGS = 20;
+
+  const lines: string[] = [];
+
+  let docCount = 0;
+  for (const id of links) {
+    if (docCount >= MAX_DOCS) {
+      lines.push(`- その他 ${links.length - MAX_DOCS} 件の文書は省略されました`);
+      break;
+    }
+
+    const targetPath = lookupDocIndex(id, docIndexPath);
+    if (!targetPath) continue;
+
+    const result = readGradeResultForDocument({ documentPath: targetPath, project: projectId });
+    if (!result || result.findings.length === 0) {
+      lines.push(`- [[${id}]]: finding なし`);
+      docCount++;
+      continue;
+    }
+
+    const sidecarPath = gradeResultPathForDocument({
+      documentPath: targetPath,
+      project: projectId,
+    });
+    // Use posix separators
+    const sidecarRel = relative(specdojoRootDir(), sidecarPath).replace(/\\/g, "/");
+    lines.push(`- [[${id}]] (サイドカー: \`${sidecarRel}\`):`);
+
+    let findingCount = 0;
+    for (const finding of result.findings) {
+      if (findingCount >= MAX_FINDINGS) {
+        lines.push(
+          `  - 他 ${result.findings.length - MAX_FINDINGS} 件の finding があります。詳細はサイドカーを参照してください。`,
+        );
+        break;
+      }
+      lines.push(
+        `  - [${finding.severity}/${finding.rule}; line=${finding.line}; anchor=${JSON.stringify(finding.anchor)}]: ${finding.message}`,
+      );
+      findingCount++;
+    }
+    docCount++;
+  }
+
+  if (lines.length === 0) return "- なし";
+  return lines.join("\n");
 }

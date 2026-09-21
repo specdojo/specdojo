@@ -27,6 +27,12 @@ _PJR_DESCRIPTION_
 4. 個票が存在する場合は、個票の作業内容・対応結果セクションを実施内容で更新する。
 5. 判断に迷う箇所は _TODO_ / _ASSUMPTION_ で残し、根拠と次のアクションを result に書く。
 
+### grade result から展開された finding
+
+_GRADE_FINDINGS_
+
+plan に展開された finding は、message と同じ viewpoint ID の判定根拠に照らして解消する。未解消、根拠不足、または判断不能の場合は、理由と次のアクションを result に記録する。grade result サイドカーは再評価時に更新されるため、本タスクでは直接編集しない。
+
 ## 4. 完了手順
 
 1. 「進め方」に従って対応を完了する。

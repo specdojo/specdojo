@@ -12,7 +12,7 @@ specdojo:
   owner: DEV
   registered_at: "2026-09-21T03:59:49Z"
   due_on: "2026-10-15"
-  block_reason: "integrate failed: git commit failed: ╭─────────────────────────────────────────╮ │ 🥊 lefthook  v2.1.9   hook:  pre-commit │ ╰─────────────────────────────────────────╯ │  catalog-build (skip) no matc…"
+  block_reason: "integrate failed: git merge failed (args: --no-ff -m exec(register PJR-YWPH): register の tod… exec/prj-0001-PJR-YWPH)"
 ---
 
 # PJR-YWPH register の todo 用 plan に関連文書の grade finding を展開する
