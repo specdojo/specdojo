@@ -101,6 +101,10 @@ npm run vscode:kill-stale  # 最新 commit 以外の server と孤児プロセ�
 
 `init` の変更はコンテナの rebuild（`Dev Containers: Rebuild Container`）後に有効になります。
 
+### 4.5. AI CLI の設定の永続化
+
+Claude Code の設定ファイルは `CLAUDE_CONFIG_DIR=/home/node/.claude` により、名前付きボリューム `specdojo-claude` に置かれます（`~/.claude/.claude.json`）。以前は `~/.claude.json` を別ボリューム `specdojo-claude-state` への symlink にしていましたが、`.devcontainer/prepare-agent-dirs.sh` が起動時に旧ファイルの内容を一度だけ写して symlink を外すため、rebuild 後も手作業は不要です。rebuild 後に `docker volume rm specdojo-claude-state` で旧ボリュームを削除できます。cron から起動する routine には `.devcontainer/specdojo-routine.cron` で同じ `CLAUDE_CONFIG_DIR` を渡しています。
+
 ## 7. 推奨しない使い方
 
 ### 7.1. 実行中のコンテナに VS Code で直接アタッチする

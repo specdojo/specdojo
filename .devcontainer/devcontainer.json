@@ -50,7 +50,6 @@
   "mounts": [
     "source=specdojo-git,target=/home/node/.config/git,type=volume",
     "source=specdojo-claude,target=/home/node/.claude,type=volume",
-    "source=specdojo-claude-state,target=/home/node/.claude-state,type=volume",
     "source=specdojo-codex,target=/home/node/.codex,type=volume",
     "source=specdojo-copilot,target=/home/node/.copilot,type=volume",
     "source=specdojo-opencode,target=/home/node/.config/opencode,type=volume",
@@ -60,6 +59,7 @@
 
   "containerEnv": {
     "GIT_CONFIG_GLOBAL": "/home/node/.config/git/config",
+    "CLAUDE_CONFIG_DIR": "/home/node/.claude",
     "COPILOT_HOME": "/home/node/.copilot",
     "OLLAMA_BASE_URL": "http://host.docker.internal:11434",
     "LOCAL_OPENAI_BASE_URL": "http://host.docker.internal:11434/v1",

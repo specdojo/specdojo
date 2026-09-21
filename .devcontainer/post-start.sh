@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-CLAUDE_JSON="/home/node/.claude.json"
-CLAUDE_STATE_JSON="/home/node/.claude-state/.claude.json"
-GIT_CONFIG_DIR="/home/node/.config/git"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 GIT_CONFIG_FILE="${GIT_CONFIG_GLOBAL:-/home/node/.config/git/config}"
 WORKSPACE_DIR="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 TMUX_CONF_SOURCE="${WORKSPACE_DIR}/.devcontainer/tmux.conf"
@@ -11,49 +9,7 @@ TMUX_CONF_TARGET="${HOME}/.tmux.conf"
 CRON_SOURCE="${WORKSPACE_DIR}/.devcontainer/specdojo-routine.cron"
 CRON_TARGET="/etc/cron.d/specdojo-routine"
 
-sudo mkdir -p \
-  /home/node/.config \
-  "$GIT_CONFIG_DIR" \
-  /home/node/.claude \
-  /home/node/.claude-state \
-  /home/node/.codex \
-  /home/node/.copilot \
-  /home/node/.config/gh \
-  /home/node/.config/opencode
-
-sudo touch "$CLAUDE_STATE_JSON"
-sudo touch "$GIT_CONFIG_FILE"
-
-sudo chown node:node /home/node/.config
-
-sudo chown -R node:node \
-  "$GIT_CONFIG_DIR" \
-  /home/node/.claude \
-  /home/node/.claude-state \
-  /home/node/.codex \
-  /home/node/.copilot \
-  /home/node/.config/gh \
-  /home/node/.config/opencode
-
-chmod 755 /home/node/.config
-
-chmod 700 \
-  "$GIT_CONFIG_DIR" \
-  /home/node/.claude \
-  /home/node/.claude-state \
-  /home/node/.codex \
-  /home/node/.copilot \
-  /home/node/.config/gh \
-  /home/node/.config/opencode
-
-chmod 600 "$CLAUDE_STATE_JSON"
-chmod 600 "$GIT_CONFIG_FILE"
-
-if [ -e "$CLAUDE_JSON" ] && [ ! -L "$CLAUDE_JSON" ]; then
-  mv "$CLAUDE_JSON" "${CLAUDE_JSON}.bak.$(date +%Y%m%d%H%M%S)"
-fi
-
-ln -sfn "$CLAUDE_STATE_JSON" "$CLAUDE_JSON"
+bash "${SCRIPT_DIR}/prepare-agent-dirs.sh"
 
 if [ -f "$TMUX_CONF_SOURCE" ]; then
   ln -sfn "$TMUX_CONF_SOURCE" "$TMUX_CONF_TARGET"
@@ -79,7 +35,7 @@ command -v gh >/dev/null 2>&1 && gh --version | head -n 1 || true
 
 echo "Checking Git config..."
 echo "GIT_CONFIG_GLOBAL=${GIT_CONFIG_FILE}"
-ls -ld /home/node/.config "$GIT_CONFIG_DIR" || true
+ls -ld /home/node/.config /home/node/.config/git || true
 ls -l "$GIT_CONFIG_FILE" || true
 git config --global --list || true
 

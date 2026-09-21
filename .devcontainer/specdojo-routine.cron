@@ -5,6 +5,7 @@ SHELL=/bin/bash
 HOME=/home/node
 PATH=/home/node/.local/bin:/usr/local/share/npm-global/bin:/usr/local/bin:/usr/bin:/bin
 GIT_CONFIG_GLOBAL=/home/node/.config/git/config
+CLAUDE_CONFIG_DIR=/home/node/.claude
 TZ=Asia/Tokyo
 CRON_TZ=Asia/Tokyo
 
