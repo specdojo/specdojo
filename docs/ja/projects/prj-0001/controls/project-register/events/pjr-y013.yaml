@@ -116,3 +116,16 @@
       from: rate limit reached
       to: "agent exited with non-zero code: Error: Cannot connect to API: Unable to connect. Is the computer able to access the url?"
   previous_event_id: reg_5faf4920dd91463a994b155987c0a9a6
+- v: 1
+  id: reg_c6b36edd336c4f4fbb6e532500b6c3d0
+  ts: "2026-09-21T01:22:16Z"
+  action: review
+  actor: specdojo-orchestrator (claude)
+  from_status: waiting
+  to_status: review
+  reason: codex / claude の実装を引き継ぎ、親検証 test-integration の失敗 5 件と統合再開の不具合をオーケストレーターが修正して develop へ統合。reporter は Ollama 停止のため未実行
+  changes:
+    - field: status
+      from: waiting
+      to: review
+  previous_event_id: reg_f93f783c03704773ada6fdd95def890f
