@@ -29,15 +29,32 @@ SpecDojo CLI の初期設定から始め、register で課題と判断を整理�
 
 ## 1. CLIを初期設定する
 
-リポジトリのルートで依存パッケージを導入し、SpecDojo の設定ファイルを作成します。
+既定では、プロダクトリポジトリ `app1/` の隣に SpecDojo 専用リポジトリ `app1-specdojo/` と worktree 用ディレクトリ `app1-worktrees/` を置く Detached Unit で始めます。
 
-```bash
-npm install
-# チャット:「<project-id> の SpecDojo 設定を初期化して」
-specdojo config init
+```text
+workspace/
+├── app1/             # 既存または新規のプロダクトリポジトリ
+├── app1-specdojo/    # SpecDojo のプロジェクト文書と運用記録
+└── app1-worktrees/   # task 単位の worktree 置き場
 ```
 
-`specdojo config init` は `.specdojo/specdojo.config.json` が存在しない場合に雛形を作成し、既存ファイルは上書きしません。作成された設定を開き、対象プロジェクトの ID と各パスを実際のディレクトリ構成に合わせてください。
+workspace 直下で専用リポジトリと worktree 用ディレクトリを作成し、`app1-specdojo/` に依存パッケージと SpecDojo の設定ファイルを用意します。
+
+```bash
+mkdir app1-specdojo app1-worktrees
+git -C app1-specdojo init
+cd app1-specdojo
+npm init -y
+npm install --save-dev specdojo
+# チャット:「<project-id> の SpecDojo 設定を初期化して」
+npx specdojo config init
+```
+
+`specdojo config init` は `.specdojo/specdojo.config.json` が存在しない場合に雛形を作成し、既存ファイルは上書きしません。雛形の project パスは `app1-specdojo/` のリポジトリルートを基準とし、`run.worktree_base` は兄弟ディレクトリの `../app1-worktrees` を指します。作成された設定を開き、対象プロジェクトの ID と各パスを実際の名前に合わせてください。
+
+プロダクト文書は `app1/docs/ja/product/`、プロジェクト文書と SpecDojo の実践体系は `app1-specdojo/docs/ja/projects/` と `app1-specdojo/docs/ja/specdojo/` に置きます。現行実装では1つの項目で両リポジトリを自動統合できないため、プロダクト文書や実装も変更する項目は分けるか、人が統合を管理します。詳細は [ドキュメント構成ガイド](docs-structure-guide.md) の `別リポジトリ構成（Detached Unit）` を参照してください。
+
+成果物と実装を常に同じ変更・履歴として扱う場合に限り、Attached Unit としてプロダクトリポジトリのルートで同じ初期化手順を実行できます。CLI は構成を強制しません。
 
 agent を使う場合は、設定ファイルを確認した後で利用する provider の設定を配置します。register
 だけを使う最小構成では、この手順を省略できます。
