@@ -355,6 +355,10 @@ No 6 は npmjs.com のパッケージ設定ページでの操作となるため�
 - npm 側の trusted publisher 設定、workflow 実績、version 更新、`main` への push、0.2.0 の公開と
   公開後の導入確認は、`実行の区切り` のとおり人の作業として残る。
 
+### 7.1. 作業 1〜4 の実行記録（2026-09-21）
+
+codex-expert-executor が worktree で実施し、保護設定（`package.json` の `files`）はオーケストレーターが develop へ適用して再開した。親検証 `test-unit` の失敗は、executor が tarball の実地検証を `/tmp` 直下で行い `/tmp/.specdojo/specdojo.config.json` を残したため、temp dir から上位探索するテストがルートを誤認したもの（削除後に通過）。統合段の `dubious ownership` は再現せず、統合段だけの再開（PJR-J3G0）で完了した。実地検証を指示する plan には「`mktemp -d` で作り終了時に削除する」と明記する必要がある。作業 5〜9 は人の作業として残る。
+
 ## 8. 関連ドキュメント
 
 - [[prj-0001:pjr-36qg-competitive-landscape-and-release]]: 競合状況の観測。
