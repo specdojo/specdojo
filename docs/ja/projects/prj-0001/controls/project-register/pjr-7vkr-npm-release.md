@@ -12,7 +12,7 @@ specdojo:
   owner: ARC
   registered_at: "2026-09-09T15:38:56Z"
   due_on: "2026-09-30"
-  block_reason: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=package.json; agent must record the required change in the result …"
+  block_reason: "agent exited with non-zero code: runner による `test-unit` 検証が失敗（exit 1）したため。`tests/src/register.test.ts` において「plan がインデックス行・個票リネーム・参照 targets の更新を含む」ケースで失敗している。"
 ---
 
 # PJR-7VKR specdojo を npm へ公開する
