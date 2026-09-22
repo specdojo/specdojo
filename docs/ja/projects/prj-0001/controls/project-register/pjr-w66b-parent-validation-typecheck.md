@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: waiting
   priority: medium
   owner: DEV
   registered_at: "2026-09-21T11:31:18Z"
   due_on: "2026-10-05"
+  block_reason: "integrate failed: git merge failed: CONFLICT (content): Merge conflict in docs/ja/projects/prj-0001/controls/project-register/events/pjr-w66b.yaml"
 ---
 
 # PJR-W66B 親検証に typecheck を加え、型エラーを commit hook まで持ち越さない
