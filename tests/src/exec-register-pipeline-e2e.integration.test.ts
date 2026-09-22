@@ -1,5 +1,6 @@
 import { execFileSync } from "node:child_process";
 import {
+  chmodSync,
   cpSync,
   existsSync,
   mkdirSync,
@@ -519,6 +520,127 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
           "--register pipeline execution requires both --executor-by and --reporter-by.",
         );
         expect(process.exitCode).toBe(1);
+      });
+    },
+  );
+
+  it(
+    "aborts a hook-rejected merge, records a clean wait reason, and resumes integration",
+    { timeout: 120_000 },
+    async () => {
+      await withRepo(async ({ root, worktreeBase }) => {
+        vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+        vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+        const firstParentBefore = Number(
+          git(root, "rev-list", "--first-parent", "--count", "HEAD"),
+        );
+        const rejectMarker = join(root, ".git", "reject-merge-commit");
+        const hookPath = join(root, ".git", "hooks", "pre-commit");
+        writeFileSync(rejectMarker, "reject\n", "utf8");
+        writeFileSync(
+          hookPath,
+          [
+            "#!/bin/sh",
+            // 自動 merge の pre-merge-commit 時点では MERGE_HEAD が未作成のため、pre-merge-commit
+            // から環境変数付きで exec された場合だけ統合 commit を落とす（task commit は通す）。
+            `if [ -f '${rejectMarker}' ] && [ "$SPECDOJO_TEST_MERGE_COMMIT" = "1" ]; then`,
+            "  printf '\\033[31m╭── hook output ──╮\\033[0m\\n' >&2",
+            "  printf '┃ typecheck ❯\\n' >&2",
+            "  printf '┃ src/demo.ts(1,1): error TS2322: merge hook rejected\\n' >&2",
+            "  printf '╰─────────────────╯\\n' >&2",
+            "  exit 1",
+            "fi",
+            "exit 0",
+            "",
+          ].join("\n"),
+          "utf8",
+        );
+        chmodSync(hookPath, 0o755);
+        const preMergeHookPath = join(root, ".git", "hooks", "pre-merge-commit");
+        writeFileSync(
+          preMergeHookPath,
+          '#!/bin/sh\nSPECDOJO_TEST_MERGE_COMMIT=1 exec "$(git rev-parse --git-path hooks/pre-commit)"\n',
+          "utf8",
+        );
+        chmodSync(preMergeHookPath, 0o755);
+
+        await runExec([
+          "run",
+          "--project",
+          "test",
+          "--register",
+          "PJR-AB12",
+          "--executor-by",
+          "exec-1",
+          "--reporter-by",
+          "report-1",
+          "--worktree",
+          "--worktree-base",
+          worktreeBase,
+        ]);
+
+        expect(process.exitCode).toBe(1);
+        expect(() => git(root, "rev-parse", "--verify", "MERGE_HEAD")).toThrow();
+        expect(Number(git(root, "rev-list", "--first-parent", "--count", "HEAD"))).toBe(
+          firstParentBefore + 1,
+        );
+        const worktreePath = execWorktreePath(root);
+        expect(worktreePath).not.toBeNull();
+        expect(git(root, "branch", "--list", "exec/test-PJR-AB12")).toContain("exec/test-PJR-AB12");
+        const waitingTicket = readFileSync(
+          join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md"),
+          "utf8",
+        );
+        expect(waitingTicket).toContain("item_status: waiting");
+        expect(waitingTicket).toContain("typecheck: src/demo.ts(1,1): error TS2322");
+        expect(waitingTicket).not.toContain("\u001b[31m");
+        expect(waitingTicket).not.toContain("╭── hook output");
+
+        const evidenceRoot = join(
+          worktreePath ?? "",
+          EXECUTION_REL,
+          "exec",
+          "evidence",
+          "PJR-AB12",
+        );
+        const runIds = readdirSync(evidenceRoot);
+        expect(runIds).toHaveLength(1);
+        const integrateLog = readFileSync(join(evidenceRoot, runIds[0]!, "integrate.log"), "utf8");
+        expect(integrateLog).toContain("\u001b[31m╭── hook output ──╮\u001b[0m");
+        expect(integrateLog).toContain("--- merge --abort ---\nexit: 0");
+
+        rmSync(rejectMarker);
+        await runExec([
+          "run",
+          "--project",
+          "test",
+          "--register",
+          "PJR-AB12",
+          "--worktree",
+          "--worktree-base",
+          worktreeBase,
+          "--resume",
+        ]);
+
+        expect(process.exitCode ?? 0).toBe(0);
+        expect(execWorktreePath(root)).toBeNull();
+        expect(Number(git(root, "rev-list", "--first-parent", "--count", "HEAD"))).toBe(
+          firstParentBefore + 2,
+        );
+        expect(
+          readFileSync(join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md"), "utf8"),
+        ).toContain("item_status: review");
+        const mergedEvidenceRoot = join(root, EXECUTION_REL, "exec", "evidence", "PJR-AB12");
+        const mergedRunIds = readdirSync(mergedEvidenceRoot);
+        expect(mergedRunIds).toEqual(runIds);
+        const mergedState = JSON.parse(
+          readFileSync(join(mergedEvidenceRoot, mergedRunIds[0]!, "pipeline-state.json"), "utf8"),
+        ) as {
+          stages: Record<string, { status: string; attempts: number }>;
+        };
+        expect(mergedState.stages.integrate).toMatchObject({ status: "succeeded", attempts: 2 });
+        expect(mergedState.stages.executor).toMatchObject({ status: "succeeded", attempts: 1 });
+        expect(mergedState.stages.reporter).toMatchObject({ status: "succeeded", attempts: 1 });
       });
     },
   );

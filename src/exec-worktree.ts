@@ -1,6 +1,7 @@
 import { spawnSync } from "node:child_process";
 import { existsSync, lstatSync, mkdirSync, unlinkSync } from "node:fs";
 import { isAbsolute, join, relative, resolve, sep } from "node:path";
+import { stripTerminalControlSequences } from "./exec-shared.js";
 import { gitEnvironment } from "./git-environment.js";
 
 export { GIT_LOCAL_ENV_VARS, gitEnvironment } from "./git-environment.js";
@@ -91,6 +92,47 @@ export function formatGitCommandFailure(args: readonly string[], stderr: string)
   const detail = summary ? ` (args: ${summary})` : "";
   const cause = stderr.trim();
   return cause ? `${label} failed: ${cause}${detail}` : `${label} failed${detail}`;
+}
+
+// lefthook などの hook 出力から、block reason に載せる「失敗ステップ名 + 最初のエラー行」
+// を取り出す。罫線や ANSI 制御は監査ログには残す一方、短い理由には混ぜない。
+export function summarizeGitHookFailure(output: string): string {
+  const lines = stripTerminalControlSequences(output)
+    .split(/\r?\n/)
+    .map((line) =>
+      line
+        .trim()
+        .replace(/^[│┃║╎┆┊┋┇┌┐└┘├┤┬┴┼╭╮╰╯┏┓┗┛─━═\s]+/u, "")
+        .replace(/[│┃║╎┆┊┋┇┌┐└┘├┤┬┴┼╭╮╰╯┏┓┗┛─━═\s]+$/u, "")
+        .trim(),
+    )
+    .filter(Boolean);
+  if (lines.length === 0) return "unknown hook failure";
+
+  let step = "";
+  let stepIndex = -1;
+  for (const [index, line] of lines.entries()) {
+    const match = line.match(/^(.+?)\s*[❯▶]\s*$/u);
+    if (!match) continue;
+    step = match[1]!.trim();
+    stepIndex = index;
+    break;
+  }
+
+  const isDecoration = (line: string): boolean =>
+    /^(?:hook output|summary:|exit status\b|failed steps?:|skip(?:ped)?\b)/i.test(line) ||
+    /^[✓✔✗✘✕❯▶]+$/u.test(line);
+  const errorLine = lines
+    .slice(stepIndex >= 0 ? stepIndex + 1 : 0)
+    .find((line) => line !== step && !isDecoration(line) && !/[❯▶]\s*$/u.test(line));
+
+  if (step && errorLine) return `${step}: ${errorLine}`;
+  if (step) return step;
+  return (
+    lines.find((line) => /(?:\bCONFLICT\b|\bfatal:|\berror:|\bfailed\b)/i.test(line)) ??
+    lines.find((line) => !isDecoration(line)) ??
+    lines[0]!
+  );
 }
 
 export function gitOutput(repoRoot: string, args: string[]): string {

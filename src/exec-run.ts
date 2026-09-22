@@ -2105,6 +2105,7 @@ async function runPreparedTask(
               prepared.task.name?.trim() || "apply task changes",
             ),
             releaseRootPaths: prepared.checkpointPaths,
+            failureLogPath: integrateLogPath(pipelineStatePath),
           });
         }
 
@@ -4725,11 +4726,13 @@ function isRegisterResultPath(repoRoot: string, path: string): boolean {
   return /\/exec\/results\/[^/]+-result\.md$/.test(repoRelativePath(repoRoot, path));
 }
 
-// wait commit の内容を exec branch にも commit し、統合ブランチを exec branch へ取り込む。
-// 両側の記帳ファイルは同じ内容なので merge は競合せず、以後の merge-base が wait commit に
-// 進む。再開後に個票やイベントが review へ進んでも、統合ブランチ側（waiting）との三方向
-// 差分にならない。取り込みに失敗した場合（統合ブランチ側の別変更と競合など）は abort して
-// 警告し、worktree は保持する（再開時の merge で改めて競合として扱う）。
+// wait commit を exec branch の祖先にしたあと、その記帳内容を exec branch にも commit する。
+// checkpoint と wait commit は共通祖先に存在しないイベントファイルを双方で追加するため、通常の
+// merge では内容を事前に揃えても add/add 競合になる。ここでは root の tree を取り込む必要はなく、
+// wait commit を merge-base に進めることだけが目的なので ours strategy を使う。その後に root の
+// 記帳内容を複製すれば、再開後の start / review は waiting からの通常差分として統合できる。
+// ancestry-only merge は runner 内部の同期であり、失敗原因となった統合 hook を再実行しないよう
+// --no-verify を指定する。同期に失敗した場合は abort して警告し、worktree を保持する。
 function syncExecBranchAfterWait(params: {
   repoRoot: string;
   worktree: ExecWorktree;
@@ -4744,6 +4747,17 @@ function syncExecBranchAfterWait(params: {
     pathInsideWorktree(repoRoot, worktree.path, path),
   );
   try {
+    const targetBranch = currentBranch(repoRoot);
+    gitOutput(worktree.path, [
+      "merge",
+      "--no-edit",
+      "--no-verify",
+      "-s",
+      "ours",
+      "-m",
+      `exec(register ${item.id}): record ${targetBranch} wait ancestry`,
+      targetBranch,
+    ]);
     copyRepoPaths(repoRoot, worktree.path, repoRoot, params.bookkeepingPaths);
     commitRegisterState(
       worktree.path,
@@ -4752,14 +4766,6 @@ function syncExecBranchAfterWait(params: {
       params.ticketPath ? pathInsideWorktree(repoRoot, worktree.path, params.ticketPath) : null,
       worktreePaths,
     );
-    const targetBranch = currentBranch(repoRoot);
-    gitOutput(worktree.path, [
-      "merge",
-      "--no-edit",
-      "-m",
-      `exec(register ${item.id}): merge ${targetBranch} after wait`,
-      targetBranch,
-    ]);
   } catch (error) {
     gitResult(worktree.path, ["merge", "--abort"]);
     process.stderr.write(
@@ -4789,6 +4795,10 @@ function recordIntegrateStage(
         `${error instanceof Error ? error.message : String(error)}\n`,
     );
   }
+}
+
+function integrateLogPath(statePath: string | undefined): string | undefined {
+  return statePath ? join(dirname(statePath), "integrate.log") : undefined;
 }
 
 // register worktree 実行の Phase 3（成果物統合と状態遷移）。成功なら worktree の成果物を
@@ -4979,6 +4989,7 @@ async function finalizeRegisterWorktreeRun(params: {
             `${subject}\n\n` +
             `Transition: start → review\nExecutor: ${executor}\nReporter: ${reporter}\nRefs: ${item.id}`,
           releaseRootPaths: [...params.bookkeepingPaths],
+          failureLogPath: integrateLogPath(params.pipelineStatePath),
         });
       }
       // 撤去も統合の一部として扱う。merge 前に失敗した場合は waiting へ戻し、merge 後の撤去

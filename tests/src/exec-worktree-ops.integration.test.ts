@@ -1,4 +1,12 @@
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import {
+  chmodSync,
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
@@ -184,11 +192,18 @@ function prepare(
 
 // The checkpoint commit lives on the exec branch; the root keeps its own uncommitted copies of the
 // scaffolded files until the merge releases them, exactly as the runner does.
-function mergeIntoRoot(fixture: Fixture, worktree: ExecWorktree, taskId: string): void {
+function mergeIntoRoot(
+  fixture: Fixture,
+  worktree: ExecWorktree,
+  taskId: string,
+  options: { message?: string; failureLogPath?: string } = {},
+): void {
   mergeWorktreeIntoCurrent({
     context: fixture.context,
     worktree,
     taskId,
+    message: options.message,
+    failureLogPath: options.failureLogPath,
     releaseRootPaths: [
       join(fixture.executionPath, "exec", "plans", `${taskId}-plan.md`),
       join(fixture.executionPath, "exec", "results", `${taskId}-result.md`),
@@ -381,6 +396,61 @@ describe("exec worktree ops", () => {
       `?? execution/exec/results/${taskId}-result.md`,
     ]);
     expect(readFileSync(join(fixture.repo, "docs", "conflict.md"), "utf8")).toBe("root version\n");
+  });
+
+  it("aborts a merge commit rejected by a hook and records the full integration output", () => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-010";
+    const worktree = prepare(fixture, taskId);
+    writeFile(join(worktree.path, "docs", "a.md"), "deliverable\n");
+    commitWorktreeChanges({ context: fixture.context, worktree, taskId });
+
+    const hookPath = join(fixture.repo, ".git", "hooks", "pre-commit");
+    writeFileSync(
+      hookPath,
+      [
+        "#!/bin/sh",
+        // 自動 merge の pre-merge-commit 時点では MERGE_HEAD が未作成のため、merge 直前に置く
+        // マーカーファイルで統合 commit だけを落とす（task commit は通す）。
+        `if [ -f '${join(fixture.repo, ".git", "reject-merge")}' ]; then`,
+        "  printf '\\033[31m╭── hook output ──╮\\033[0m\\n' >&2",
+        "  printf '┃ typecheck ❯\\n' >&2",
+        "  printf '┃ src/a.ts(1,1): error TS2322: intentional merge failure\\n' >&2",
+        "  printf '╰─────────────────╯\\n' >&2",
+        "  exit 1",
+        "fi",
+        "exit 0",
+        "",
+      ].join("\n"),
+      "utf8",
+    );
+    chmodSync(hookPath, 0o755);
+    const preMergeHookPath = join(fixture.repo, ".git", "hooks", "pre-merge-commit");
+    writeFileSync(
+      preMergeHookPath,
+      '#!/bin/sh\nexec "$(git rev-parse --git-path hooks/pre-commit)"\n',
+      "utf8",
+    );
+    chmodSync(preMergeHookPath, 0o755);
+    const failureLogPath = join(worktree.path, "execution", "exec", "evidence", "integrate.log");
+    writeFileSync(join(fixture.repo, ".git", "reject-merge"), "reject\n", "utf8");
+
+    expect(() =>
+      mergeIntoRoot(fixture, worktree, taskId, {
+        message: `exec(${taskId}): merge hook failure`,
+        failureLogPath,
+      }),
+    ).toThrow(
+      "git merge failed: typecheck: src/a.ts(1,1): error TS2322: intentional merge failure",
+    );
+
+    expect(() => git(fixture.repo, "rev-parse", "--verify", "MERGE_HEAD")).toThrow();
+    expect(findExecWorktree(fixture.repo, taskId)).not.toBeNull();
+    expect(git(fixture.repo, "show-ref", "--verify", `refs/heads/${worktree.branch}`)).not.toBe("");
+    const failureLog = readFileSync(failureLogPath, "utf8");
+    expect(failureLog).toContain("\u001b[31m╭── hook output ──╮\u001b[0m");
+    expect(failureLog).toContain("src/a.ts(1,1): error TS2322: intentional merge failure");
+    expect(failureLog).toContain("--- merge --abort ---\nexit: 0");
   });
 
   it("excludes plans, events, and generated files from the task commit", () => {
