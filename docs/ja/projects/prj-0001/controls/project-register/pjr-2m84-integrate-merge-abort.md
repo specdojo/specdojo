@@ -2,16 +2,17 @@
 specdojo:
   id: prj-0001:pjr-2m84-integrate-merge-abort
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-09-21T11:31:17Z"
   due_on: "2026-10-05"
+  completed_at: "2026-09-22T05:28:10Z"
   block_reason: "agent exited with non-zero code: runner による検証 `test-integration` (`npm run test:integration`) が失敗（exit 1）しているため。"
 ---
 
@@ -54,6 +55,10 @@ hook で落ちた実際の原因（typecheck か lint か）は block reason に
 - merge commit を pre-commit hook で失敗させ、`MERGE_HEAD` が残らないこと、`wait` commit が成功すること、worktree と exec branch が保持されること、装飾のない block reason と生ログが残ることを統合テストへ追加した。同じ run を統合段から再開し、agent を再実行せず merge が成功することも検証する。
 - [[specdojo:exec-worktree-guide]] に自動 abort、Schedule / register の統合再開、abort 自体が失敗した場合の手動復旧手順を追記した。
 - 残課題はない。
+
+### 4.1. レビュー結果（2026-09-22）
+
+codex-expert-executor が worktree で実装。初回は新規の統合テスト 2 件が親検証で失敗した。原因の一つはテスト側の hook が `git rev-parse --verify MERGE_HEAD` で統合 commit を判定していたことで、自動 merge の `pre-merge-commit` 時点では `MERGE_HEAD` が未作成のため hook が発火しない（手元で実測）。hook を使うテストではマーカーファイルか、`pre-merge-commit` から環境変数付きで `pre-commit` を exec する形で統合 commit を判定する。もう一つは実装側で、abort 後の `syncExecBranchAfterWait` が記帳ファイルの add/add 競合で失敗していた。切り分け結果を plan に追記して codex を再実行し、wait commit を exec ブランチの祖先にする形で解消した。単体 1507 件・統合 109 件・親検証 3 種を通過して統合した。
 
 ## 5. 関連ドキュメント
 

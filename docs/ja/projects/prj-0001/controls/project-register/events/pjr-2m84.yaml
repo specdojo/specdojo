@@ -87,3 +87,19 @@
       from: in-progress
       to: review
   previous_event_id: reg_50bfad5c701e48a09a6e4b623b8e1afd
+- v: 1
+  id: reg_331eefef829b40b69321f648748e5747
+  ts: "2026-09-22T05:28:10Z"
+  action: close
+  actor: specdojo-orchestrator (claude)
+  from_status: review
+  to_status: done
+  reason: codex-expert-executor が worktree で実装。テスト hook の MERGE_HEAD 判定の誤りと abort 後の記帳競合をオーケストレーターが切り分けて再実行し、親検証を通過して統合。利用者が確認して close
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-22"
+  previous_event_id: reg_1fb2427e009e450e8b3afbc93509135c
