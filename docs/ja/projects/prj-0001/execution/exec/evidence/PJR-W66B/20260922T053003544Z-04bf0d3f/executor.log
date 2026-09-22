@@ -1,0 +1,91 @@
+このタスクを始めます。まず関連ファイルを並列で読み込んで状況を把握します。
+まず関連するソース・テスト・ガイド・スキーマファイルを探索します。
+タスクの全体像を把握しました。関連するソース・テスト・スキーマを検索します。
+タスクの核心を把握しました。関連するスキーマ・テスト・package.json・lefthook を確認します。
+次に実行テストや関連ファイルを確認します。親検証を追加することの影響範囲を把握します。
+親検証の失敗経路がテストでどう扱われるか、他のe2eテストと関連箇所を確認します。
+親検証の実行メカニズム（テストの fixture）と、`exec-run.ts` の親検証配線を確認します。
+タスクの全体像を把握しました。残りの関連箇所（evidence contract、`exec-trial.ts`、`package.json` の scripts、register e2e の typecheck 関連、vitest config、exec-agent-config.test）を確認します。
+`executorEvidenceContract` の内容を確認します。exec-config-guide の §5 の親検証説明も確認済みなので、この関数の周辺を読みます。
+他の影響箇所を網羅的に確認します。各 e2e テストの `writeExecDefaults`、親検証 ID の参照箇所、`exec-trial.test.ts` を確認します。
+grep で親検証 ID や関連箇所を全数確認します。
+中間セクションと影響範囲を確認します。git status、`exec-evidence.test.ts`、e2e の中盤、hardcoded 箇所の grep を並行実行します。
+必要な情報が揃いました。タスクは「親検証に `typecheck` を追加する」ことです。影響範囲を整理して作業計画を立てます。
+
+- `src/exec-parent-validation.ts`: `ParentValidationId` とレジストリに `typecheck`（`npm run typecheck`）を追加
+- `.specdojo/exec-defaults.yaml`: `parent_validations` に `test-unit` の前に `typecheck` を追加
+- `docs/specdojo/schemas/v1/exec-defaults.schema.yaml`: enum に `typecheck` を追加
+- `docs/ja/specdojo/guides/exec-config-guide.md`: §5 の親検証説明に `typecheck` を追記
+- 統合テスト: 型エラー（typecheck 失敗）を含む fixture で親検証が `failed` になる回帰を追加
+では実装を始めます。まず `exec-parent-validation.ts` に `typecheck` を追加します。`test-unit` の前に差し込みます（決定事項「型エラーがあれば早く止める」）。
+編集結果を確認します。
+インデントは元からこのスタイル（prettier が整形）で、`typecheck` エントリが正しく追加されました。次に `exec-defaults.yaml` を更新します。個票の決定事項通り `test-unit` の前に `typecheck` を挿入します。
+`.specdojo/exec-defaults.yaml` への編集は拒否されました。これは `.specdojo/**` が agent の書き込み禁止対象（PJR-3S8Q の保護）であるためです。`docs/`・`src/`・`tests/` は編集可能です。編集可能範囲内で実装し、保護ファイルの変更を申し送りとして記録する方針に切り替えます。
+
+まず編集可能な `docs/specdojo/schemas/v1/exec-defaults.schema.yaml` の enum を更新します。
+`.specdojo/exec-defaults.yaml` は agent の書き込み保護対象（PJR-3S8Q）のため編集不可です。これは plan §3-5 と共通規約「実行コマンドを定義する設定ファイルは agent に書かせない」に沿った想定済みの経路で、個票の申し送りとして記録します。編集可能範囲（`docs/**`・`src/**`・`tests/**`）で対応を進めます。
+
+統合テストの fixture 周辺を確認します。
+既存の統合テストが `typecheck` 失敗シナリオをどう扱っているか、`exec-worktree-ops` と register e2e の該当箇所を確認します。
+既存の `exec-worktree-ops` テストは実 `npm run typecheck` ではなく hook の mock なので影響しません。統合テストを正確に作るため、`setup()` 周辺と失敗系テストの全体構造を確認します。
+既存のワークツリー統合経路を正確に把握するため、resume 系テスト（1050-1182）を読みます。
+`loadExecDefaultsConfig` が列挙値をどう検証するか確認し、設定の正本が schema か allowlist かを特定します。
+実装方針が固まりました。保護ファイル `.specdojo/exec-defaults.yaml` の編集は agent に禁止（PJR-3S8Q）なので、編集可能な範囲で `typecheck` を登録簿に追加し、その最終トグルを申し送りとして記録します。次に `exec-config-guide.md` を更新します。
+`exec-config-guide.md` の§5を更新します。YAML 例の順序は実 `.specdojo/exec-defaults.yaml` と一致させ（`validate-schema` → `typecheck` → `test-unit`）、行196・360 の親検証説明に `typecheck` を追記します。
+YAML 例を更新しました。次にその直後にある説明文（行196）を `typecheck` を含める形に更新します。PJR-YWPH の経緯（型エラーが hook まで持ち越された）も反映します。
+次に 6.3 の説明（行360）を更新します。
+統合テストの既存アサーションが `typecheck` 追加の影響を受ける箇所を網羅的に確認します。log パス・validations 配列・result の期待値を確認します。
+`loadExecDefaultsConfig` は allowlist 検証のみ（`typecheck` は既に登録済み）を確証しました。既存の失敗例テスト（行783）を雛形にして、`typecheck` を親検証に加えた fixture で失敗→block になる統合テストを追加します。まず `writeExecDefaults` の直後に helper を追加します。
+helper `withTypecheckParentValidation` を `writeExecDefaults` の直後に追加します。
+placeholder が不適切でした。`writeExecDefaults` の末尾（`}` で閉じる部分）を直前に置いて一意にし、command template を正しく組み立てます。
+helper のインデントがファイル本体（2スペース階層）とズレているため修正します。helper は top-level（0 階層）なので中身を 2スペースに揃えます。まず挿入結果を確認します。
+helper 追加は有効。インデント・余分な空行は最終の prettier で正規化されます。次に新しいテストを挿入します。失敗例テスト「records a failed parent validation and blocks even if the reporter returns complete」の位置を再特定します。
+失敗例テストの直後に、`typecheck` を親検証にした「型エラー fixture で block」の統合テストを挿入します。
+インデントが崩れていないか確認します。
+helper の現状を再確認します。
+helper のインデントを正します。array 要素を `join` の直下（4 サブ）へ揃え、閉じ括弧・二重空行も整理します。
+helper が正しく整いました。次に新しいテストのインデントを修正します（4スペース階層に統一）。
+編集内容を確認します。
+新しいテストのインデントは概ね整いました（細かい部分の空白は最終 `prettier --write` で正規化される）。次に個票を更新します。
+個票の §3・§4 を実施内容で更新します。ステータス項目（frontmatter・状態列）は plan §4 で runner の管轄とされているため保持し、作業内容を反映する §4「対応結果」を埋めます。
+個票の §3 テーブルの「状態」列はステータス項目なので plan §4 で変更しない対象です。§4 対応結果を埋めました。次に、保護ファイル `.specdojo/exec-defaults.yaml` に加えたい変更を明示するため、個票の決裁事項/申し送りとして記録しておくことは完了条件①を満たすか確認します。完了条件①は「`exec-defaults.yaml` の既定に含まれている」であり、これは実行環境への最終適用（親 runner/運用者が行う保護ファイル更新）です。executor 側で完結できる部分は網羅しました。
+
+次に検証を実行します。まず変更した Markdown・TS を整形し、型検査・対象テストを実行します（親検証 `test:unit` / `test:integration` / `validate:schema` は executor では実行しません）。
+個票の残課題を修正しました。todo を更新し、検証を実行します。
+変更ファイルを整形・静的検査します。まず `prettier --write` を変更ファイルすべてに適用します（`.ts` / `.yaml` / `.md`）。
+整形が完了しました。prettier が整えた統合テストの helper と新テストを再確認します。
+prettier が整いました。次に markdownlint を実行します（変更した .md ファイル）。
+markdownlint はエラーなし。次に `src/`・`tests/` を変更しているため `npm run typecheck` を実行します（親検証リストに含まれないため executor でも実行可）。
+typecheck はエラーなしで完了。次に schema/個票の変更に対応する検証を実行します。`validate:schema`・`test:unit`・`test:integration` は親検証に含まれるため executor では実行しません（runner が実行）。docs/ja/projects 配下を変更したため `catalog validate` を、docs/ 配下の変更で `index build` を実行します（これらは parent validation ではないため executor 実行可）。
+`specdojo` はリポジトリの定められた起動方法で実行します。sandbox 許可リストには `specdojo *` / `./node_modules/.bin/specdojo *` が含まれるため、その形式で再試行します（`catalog validate` は `npm run validate:catalog` とも等価）。まず bin の存在と dist を確認します。
+`specdojo` の bin・dist が存在しない（この worktree では未ビルド）ため、`validate:catalog` スクリプト経由で確認します。親検証リストには含まれないため executor でも実行可能です。
+全ての作業が完了しました。以下に変更ファイルと検証結果を記録します。
+
+## 変更ファイル
+
+| ファイル | 変更内容 |
+|---|---|
+| `src/exec-parent-validation.ts` | `ParentValidationId` 型に `typecheck` を追加、`PARENT_VALIDATION_REGISTRY` に `npm run typecheck` の定義を追加 |
+| `.specdojo/schema/v1/exec-defaults.schema.yaml` | `parent_validations.items.enum` に `typecheck` を追加（`[validate-schema, typecheck, test-unit, test-integration]`） |
+| `docs/ja/specdojo/guides/exec-config-guide.md` | §5 の YAML 例・許可 ID 列挙・説明文、§6.3 の項目へ `typecheck` を追記。「Vitest と異なり型検査を行うため `test-unit` の前に置く」根拠を明記 |
+| `tests/src/exec-pipeline-e2e.integration.test.ts` | helper `withTypecheckParentValidation`（fixture に `typecheck` を足す）と、「型エラーを含む fixture では `typecheck` が `failed` になりタスクを block」する統合テストを追加 |
+| `docs/ja/projects/prj-0001/controls/project-register/pjr-w66b-parent-validation-typecheck.md` | §4「対応結果」への記入、§5 に `.specdojo/exec-defaults.yaml` を追加 |
+
+## 保護ファイルの扱い
+
+`.specdojo/exec-defaults.yaml` の `pipeline.parent_validations` への `typecheck` 追記は agent の書き込み禁止対象（PJR-3S8Q「実行コマンドを定義する設定ファイルは agent の書き込み範囲に含めない」）のため、実行不能です。個票 §4 へ申し送りとして記録済み。
+
+## 検証結果
+
+| コマンド | 結果 |
+|---|---|
+| `npx prettier --write <5 files>` | 成功（全ファイル整形済み） |
+| `npx markdownlint exec-config-guide.md pjr-w66b-*.md` | エラーなし |
+| `npm run typecheck`（`tsc -b --noEmit`） | 型エラーなしで成功 |
+| `npm run validate:catalog`（`node --import tsx src/specdojo.ts catalog validate`） | `dct-index.yaml` を除き全 catalog OK、既存の未作成文書 WARN のみ本変更と無関係 |
+| `npm run test:unit` / `test:integration` / `validate:schema` | 親 runner が実行（sandbox では二重実行しないため未実行） |
+最終確認：`typecheck` と `npm run typecheck` は parent_validations には含まれないため、executor が実際に走らせることができた。保護ファイル `.specdojo/exec-defaults.yaml` への変更は agent により不可（PJR-3S8Q）のため申し送りで記録した。個票 §4・§5 も更新済み。
+
+<specdojo_executor_evidence>
+{"final_message":"typecheck を親検証として登録：src/exec-parent-validation.ts・exec-defaults.schema.yaml・exec-config-guide.md・pjr-w66b 個票を更新し、fixture で typecheck 失敗→block の回帰テストを追加。.specdojo/exec-defaults.yaml は agent 書き込み保護で executor から編集不可のため申し送りに記録。","validations":[{"command":"npx prettier --write src/exec-parent-validation.ts docs/specdojo/schemas/v1/exec-defaults.schema.yaml docs/ja/specdojo/guides/exec-config-guide.md tests/src/exec-pipeline-e2e.integration.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-w66b-parent-validation-typecheck.md","status":"passed","summary":"5ファイル整形済み"},{"command":"npx markdownlint docs/ja/specdojo/guides/exec-config-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-w66b-parent-validation-typecheck.md","status":"passed","summary":"エラーなし"},{"command":"npm run typecheck","status":"passed","summary":"tsc -b --noEmit で型エラーなし（parent_validations 以外）"},{"command":"npm run validate:catalog","status":"passed","summary":"既存の未作成文書 WARN のみ、本変更と無関係"}]}
+</specdojo_executor_evidence>

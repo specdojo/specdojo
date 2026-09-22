@@ -1,0 +1,21 @@
+=== 2026-09-22T23:33:37.997Z git merge --no-ff -m exec(register PJR-W66B): 親検証に typecheck を加え、型エラーを commit hook まで持ち越さない
+
+Transition: start → review
+Executor: qwen-expert-executor
+Reporter: gemma-reporter
+Refs: PJR-W66B exec/prj-0001-PJR-W66B ===
+exit: 1
+--- stdout ---
+Auto-merging docs/ja/projects/prj-0001/controls/project-register/events/pjr-w66b.yaml
+CONFLICT (content): Merge conflict in docs/ja/projects/prj-0001/controls/project-register/events/pjr-w66b.yaml
+Auto-merging docs/ja/projects/prj-0001/controls/project-register/pjr-w66b-parent-validation-typecheck.md
+CONFLICT (content): Merge conflict in docs/ja/projects/prj-0001/controls/project-register/pjr-w66b-parent-validation-typecheck.md
+Auto-merging docs/ja/projects/prj-0001/execution/exec/results/pjr-w66b-20260922T052914Z-6f56-result.md
+CONFLICT (add/add): Merge conflict in docs/ja/projects/prj-0001/execution/exec/results/pjr-w66b-20260922T052914Z-6f56-result.md
+Automatic merge failed; fix conflicts and then commit the result.
+
+--- stderr ---
+
+--- merge --abort ---
+exit: 0
+

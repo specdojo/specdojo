@@ -235,6 +235,42 @@ function writeExecDefaults(repo: string, logPath: string, behaviorPath: string):
   );
 }
 
+// 親検証に加えて typecheck を設定する fixture。PJR-W66B で typecheck を親検証へ追加したことを
+// 回帰として確認する。test:integration と同じ parent-validation.mjs を使い、behavior を fail に
+// すると「型エラーを含む fixture」を sim できる。
+function withTypecheckParentValidation(fixture: PipelineFixture): void {
+  const logPath = fixture.logPath;
+  const behaviorPath = fixture.behaviorPath;
+  const base = `node ${join(fixture.repo, "fake-agent.mjs")} --log ${logPath} --behavior ${behaviorPath} --nickname {nickname} --mode {mode}`;
+  writeFileSync(
+    join(fixture.repo, ".specdojo", "exec-defaults.yaml"),
+    [
+      "pipeline:",
+      "  parent_validations:",
+      "      - typecheck",
+      "      - test-integration",
+      "rate_limit_detection:",
+      "  exit_codes: []",
+      "  stderr_patterns:",
+      '      - "rate limit"',
+      "providers:",
+      "  opencode:",
+      "    max_concurrency: 1",
+      `    command_template: "${base} --model {model}"`,
+      "    command_params:",
+      "      by_proficiency:",
+      "        normal: { model: gemma3-12b }",
+      "",
+    ].join("\n"),
+    "utf8",
+  );
+  writeFileSync(
+    join(fixture.repo, "package.json"),
+    `${JSON.stringify({ scripts: { typecheck: "node parent-validation.mjs", "test:integration": "node parent-validation.mjs" } }, null, 2)}\n`,
+    "utf8",
+  );
+}
+
 function writeSchedule(repo: string): void {
   const pipelinePhase = (executorProficiency: string): string[] => [
     "    - id: draft",
@@ -804,6 +840,40 @@ describe("executor / reporter pipeline E2E", () => {
     );
     expect(readResult(target, "T-TEST-doc-010")).toContain(
       "parent validation failed: test-integration",
+    );
+  });
+
+  it("fails a typecheck parent validation on a type-error fixture and blocks the task", async () => {
+    const target = setup();
+    withTypecheckParentValidation(target);
+    // behavior を fail にすると parent-validation.mjs が exit 1 になり、typecheck と
+    // test:integration の両方が failed になる。
+    writeFileSync(target.parentValidationBehaviorPath, "fail\n", "utf8");
+
+    await runExec(["run", "--project", "test", "--task", "T-TEST-doc-010"]);
+
+    expect(process.exitCode).toBe(1);
+    const runDir = evidenceRunDir(target, "T-TEST-doc-010");
+    const evidence = JSON.parse(readFileSync(join(runDir, "evidence.json"), "utf8")) as {
+      validations: Array<{ id?: string; source?: string; status: string }>;
+    };
+    expect(evidence.validations).toContainEqual(
+      expect.objectContaining({
+        id: "typecheck",
+        source: "runner",
+        status: "failed",
+      }),
+    );
+    // 型エラーを早く止めるため typecheck が test-integration より前に走る。
+    const runnerValidations = evidence.validations.filter(
+      (validation) => validation.source === "runner",
+    );
+    expect(runnerValidations.map((validation) => validation.id)).toEqual([
+      "typecheck",
+      "test-integration",
+    ]);
+    expect(readResult(target, "T-TEST-doc-010")).toContain(
+      "parent validation failed: typecheck, test-integration",
     );
   });
 
