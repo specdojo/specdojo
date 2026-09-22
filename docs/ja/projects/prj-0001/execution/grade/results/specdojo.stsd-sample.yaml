@@ -4,24 +4,24 @@ document: specdojo:stsd-sample
 path: docs/ja/specdojo/samples/stsd-sample.md
 target: kata
 rubric: grade-rubric-v1
-verdict: needs-work
-score: 73
-graded_at: "2026-09-21T05:30:42.618Z"
+verdict: pass
+score: 100
+graded_at: "2026-09-21T11:59:36.206Z"
 graded_by: codex-expert-executor
-content_hash: 4ba0f02e8957d6d5670ea24efff93c14a8859838f534d6556beeb66ee280ba6f
+content_hash: f7e0277a7d5144dd093561174b4fb750e94fc816ce75fef967ee6f6efc59c55b
 categories:
   consistency:
-    score: 50
+    score: 100
   usability:
     score: 100
   architecture:
     score: 100
   quality:
-    score: 50
+    score: 100
 viewpoints:
   vp-arc-cross-document-consistency:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -29,14 +29,14 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -48,40 +48,7 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 4
+  major: 0
   minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 27
-    anchor: "入荷済み --> 販売可能 : 売場補充完了 / 検品合格を在庫へ反映し売場へ配置した"
-    message: >-
-      `入荷済み`からの合格経路は「売場補充完了」、不合格経路は「検品完了」と異なるイベントを使用しており、rulebook と recipe
-      が示す「検品完了」を共通イベントとした相互排他的な分岐に一致しないため、イベントを統一して合格・不合格を条件として表現してください。
-  - id: F002
-    severity: major
-    rule: vp-qe-verifiability
-    line: 16
-    anchor: >-
-      | received       | 入荷済み | 入った品 | 店舗が納品を受け、検品結果が未確定の商品     | 納品情報を発注内容へ照合して受入日時と数量を仕入記録へ記録し、検品結果をまだ記録していない |
-      仕入記録、検品場所   |
-    message: >-
-      「入荷済み」は検品結果を記録した時点で不成立になる一方、合格時の「販売可能」は在庫更新と売場配置、不合格時の「返品待ち」は返品保管箱への分離まで成立しないため、各作業の間は現在状態を判定できません。中間状態を設けるか、検品結果の記録と後続作業を一つの原子的な遷移として定義し、全時点がいずれか一状態になるよう成立条件を揃えてください。
-  - id: F003
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 16
-    anchor: >-
-      | received       | 入荷済み | 入った品 | 店舗が納品を受け、検品結果が未確定の商品     | 納品情報を発注内容へ照合して受入日時と数量を仕入記録へ記録し、検品結果をまだ記録していない |
-      仕入記録、検品場所   |
-    message: 検品結果を記録した後、在庫更新・売場配置または返品保管箱への分離が完了するまでを受け持つ状態がなく、一意判定規則でも未分類期間を解消できないため、中間状態または遷移完了まで遷移元を維持する明示的な規則を追加してください。
-  - id: F004
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 27
-    anchor: "入荷済み --> 販売可能 : 売場補充完了 / 検品合格を在庫へ反映し売場へ配置した"
-    message: >-
-      完成例の合格経路を「売場補充完了」、不合格経路を「検品完了」としているため、同一分岐では共通イベントと相互排他的条件を用いるという rulebook
-      の適用例になっていません。両経路を共通の「検品完了」イベントとし、合格と数量違い・品質不良を条件として区別してください。
+findings: []

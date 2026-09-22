@@ -5,15 +5,15 @@ path: docs/ja/specdojo/rulebooks/stsd-mermaid-rulebook.md
 target: kata
 rubric: grade-rubric-v1
 verdict: needs-work
-score: 82
-graded_at: "2026-09-21T05:13:55.743Z"
+score: 86
+graded_at: "2026-09-21T11:39:36.371Z"
 graded_by: codex-expert-executor
-content_hash: f786391b192c7d8d5673f343890a25df389483d6f55bbe2c02c0a77225983cbc
+content_hash: 3c4322a1634e19212cdea7b2837f5bf7ce2caa194613b184c145ed78ce210ea6
 categories:
   consistency:
     score: 75
   usability:
-    score: 83
+    score: 100
   architecture:
     score: 100
   quality:
@@ -38,50 +38,31 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-readability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 0
   major: 2
-  minor: 3
+  minor: 0
   note: 0
 findings:
   - id: F001
     severity: major
     rule: vp-qe-verifiability
-    line: 80
-    anchor: "- 複合状態は、親状態の内部に独立した下位ライフサイクルがあり、状態一覧でも階層関係を説明できる場合だけ使用します。"
+    line: 93
+    anchor: "- 初期点が一つ以上あり、各初期点から、正常系・例外系を問わず、すべての終了状態および継続状態まで遷移をたどれます。到達不能な終端は残しません。"
     message: >-
-      複合状態の利用を許可していますが、親状態と下位状態を状態一覧へどう登録するか、内部初期点・終了点および親境界をまたぐ遷移をどう扱うかが未定義で、複合状態を含む図を一意に完成判定できません。これらの対応規則と確認手順を追加してください。
+      完成判定は終端の到達性だけを確認しているため、初期点から到達不能な中間状態が既存の終了状態へ接続していても合格になります。状態一覧の各業務状態が少なくとも一つの初期点から到達可能であることを pass / fail
+      条件に追加してください。
   - id: F002
     severity: major
     rule: vp-qe-omissions-consistency
-    line: 80
-    anchor: "- 複合状態は、親状態の内部に独立した下位ライフサイクルがあり、状態一覧でも階層関係を説明できる場合だけ使用します。"
-    message: 複合状態を許可する一方で、親状態・下位状態と状態一覧の対応、内部の開始・終了、境界をまたぐ遷移の必須規則が抜けているため、複合状態を一貫して記述できる要件を追加してください。
-  - id: F003
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 82
-    anchor: "- 分割単位は業務フェーズまたは通常系・例外系とし、各図が扱う遷移 ID の範囲を図直前に記載します。分割した図で共有する状態は同じ名称を使い、別名を付けません。"
-    message: >-
-      第3章は必要時の別名と複数図での同一 `state_id` の維持を認めていますが、ここでは分割図の共有状態に「別名を付けません」として矛盾するため、同一の表示名と `state_id`
-      を維持するなど一つの規則へ統一してください。
-  - id: F004
-    severity: minor
-    rule: vp-ux-readability
-    line: 82
-    anchor: "- 分割単位は業務フェーズまたは通常系・例外系とし、各図が扱う遷移 ID の範囲を図直前に記載します。分割した図で共有する状態は同じ名称を使い、別名を付けません。"
-    message: 第3章では別名の使用と複数図での `state_id` 維持を要求している一方、ここでは別名を禁止しているため、読者が分割図で別名を使えるか判断できません。分割時の表示名と内部 ID の扱いを一続きで明示してください。
-  - id: F005
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 82
-    anchor: "- 分割単位は業務フェーズまたは通常系・例外系とし、各図が扱う遷移 ID の範囲を図直前に記載します。分割した図で共有する状態は同じ名称を使い、別名を付けません。"
-    message: 「別名」が第3章の `state_id` と同じ意味なのか表示名の変更を指すのか不明確なため、「表示名」と「内部 ID」を区別し、分割図では両者をそれぞれどう維持するかを統一した用語で記載してください。
+    line: 93
+    anchor: "- 初期点が一つ以上あり、各初期点から、正常系・例外系を問わず、すべての終了状態および継続状態まで遷移をたどれます。到達不能な終端は残しません。"
+    message: 状態一覧との網羅と終端到達は定義されていますが、各業務状態の初期点からの到達可能性が必須条件から抜けており、到達不能な中間状態を残せます。全業務状態への到達性を完成判定へ追加してください。
