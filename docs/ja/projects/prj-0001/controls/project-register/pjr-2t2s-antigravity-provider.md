@@ -53,7 +53,7 @@ specdojo:
   - `command_template`: `agy -p --sandbox --dangerously-skip-permissions --model {model} --effort {effort}`（プロンプトは runner が stdin で渡す。`{nickname}` は使わない。codex と同じ方式）
   - `command_params.by_proficiency`: normal は `gemini-3.8-flash-high` / `medium`、expert は `gemini-3.1-pro-high` / `high` を初期値とし、trial の結果で見直す
   - `rate_limit_detection.stderr_patterns`: `rate limit`、`429`、`quota`、`RESOURCE_EXHAUSTED` を初期値とし、実観測した文言で更新する（memory の observed-agent-limit-stderr と同じ扱い）
-- member は 4 つ追加する: `antigravity-executor`（normal / edit）、`antigravity-expert-executor`（expert / edit）、`antigravity-expert-review-executor`（expert / review）、`antigravity-reporter`（reporter）。priority は既存 codex / claude より低くし、自動選択では選ばれず by-name と `--executor-by` で使う（評価が済むまで）。
+- member は 4 つ追加する: `agy-executor`（normal / edit）、`agy-expert-executor`（expert / edit）、`agy-expert-review-executor`（expert / review）、`agy-reporter`（reporter）。priority は既存 codex / claude より低くし、自動選択では選ばれず by-name と `--executor-by` で使う（評価が済むまで）。
 - reporter は `--output-format json --json-schema` で runner の reporter schema を直接指定できるか検証し、できれば format attempts を減らす。
 - agent の git 隔離（`gitEnvironment()`）と保護設定（`exec-agent-protected-config`）は provider 非依存のためそのまま適用される。`.gemini` 配下への書き込みは agent の設定領域として扱い、保護対象には含めない。
 - 設計文書 `sysd-antigravity-agent-settings` を `sysd-*-agent-settings` の並びで新設し、`dct-architecture.yaml` に登録する。
@@ -62,8 +62,8 @@ specdojo:
 
 - `pm-members.schema.yaml` の provider enum に `antigravity` があり、`pm-members.yaml` に 4 member が定義され、`schedule build` / `catalog validate` / `validate:schema` が通過する。
 - `exec-defaults.yaml` に `providers.antigravity` があり、`exec run --register <id> --executor-by antigravity-expert-executor --dry-run` が `agy -p …` のコマンドを表示する。
-- 小さな register todo 1 件を `antigravity-expert-executor` / `antigravity-reporter` で実行し、親検証を通過して develop へ統合される。
-- `exec trial` で同一 plan を `antigravity-expert-executor` と `codex-expert-executor` に並走させ、親検証の通過と codex-review の判定を比較して結果を個票に記録する。
+- 小さな register todo 1 件を `agy-expert-executor` / `agy-reporter` で実行し、親検証を通過して develop へ統合される。
+- `exec trial` で同一 plan を `agy-expert-executor` と `codex-expert-executor` に並走させ、親検証の通過と codex-review の判定を比較して結果を個票に記録する。
 - rate limit の実文言を観測して `rate_limit_detection` に反映する（観測できない場合はその旨を記録）。
 - `sysd-antigravity-agent-settings` が作成され、exec-config-guide の provider 一覧に antigravity が載っている。
 - `.agents/rules/` に薄ラッパーがあり、オーケストレーターを agy から起動できる（ラッパーまたは `orch:agy`）。
@@ -92,6 +92,7 @@ specdojo:
 - `pm-members.schema.yaml` / `exec-defaults.schema.yaml` / `AgentProvider` 型 / `pm-members-rulebook` に `antigravity` を追加し、`exec-defaults.yaml` に `providers.antigravity`（normal: `gemini-3.8-flash-high` / medium、expert: `gemini-3.1-pro-high` / high、rate limit 初期パターン）を定義した。member 4 件（executor 4、expert-executor 3、expert-review-executor 3、reporter 4）を追加し、dry-run で `agy … --model gemini-3.1-pro-high --effort high -p "$(cat)"` を確認、`--auto` の選択は codex のまま変わらないことを確認した。
 - 規則: `AGENTS.md` と `.agents/rules/*.md` は `--add-dir "$(pwd)"` を付けた場合に読み込まれることを実測した（付けないと読まれない）。`.agents/rules/` に `.github/instructions/` 6 本の薄いラッパー（`trigger: glob`、`@[label](path)` include）を置き、本リポジトリで `markdown.instructions.md` の内容を答えることを確認した。
 - オーケストレーター: agy はファイル定義の agent を持たない（`--agent` は存在しない名前でも黙って動く）ため、Codex と同じく SSOT 本文を `-i` で渡す `npm run orch:agy` / `orch:agy:work` を追加した。5 つ目のラッパーは作らず、`validate-orchestrator-sync.mjs` の変更も不要。
+- 作業 3: PJR-YWPH を `agy-expert-executor`（当時の nickname は `antigravity-expert-executor`）/ `agy-reporter` で実行し、executor は約 10 分で完走、親検証 3 種 passed、reporter は format attempts 1 で完走した。`--effort` とモデル ID の衝突で reporter が一度起動に失敗したため、command template から `--effort` を外した。nickname は 2026-09-22 に `antigravity-*` から `agy-*` へ改名した（コマンド名に合わせる）。YWPH の実行記録（register event、evidence、result）は改名前の nickname のまま残す。
 - 残り: 作業 3（小さな todo の実行）、4（trial で codex と比較）、5（`sysd-antigravity-agent-settings`）、8（役割指示の確認と `templates/antigravity`）、9（指示ディレクトリの保護）。
 
 ## 5. 関連ドキュメント

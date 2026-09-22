@@ -473,13 +473,13 @@ members:
   #
   # antigravity members
   #
-  # Antigravity CLI（agy）を使う member。プロバイダの利用制限で codex / claude が止まった際の
+  # Antigravity CLI（agy）を使う member（nickname はコマンド名に合わせて agy-*）。プロバイダの利用制限で codex / claude が止まった際の
   # 第 3 経路として PJR-2T2S で追加した。評価（exec trial）が済むまで priority は codex / claude
   # より低くし、自動選択では選ばれず by-name（sch-strategy の agent）や --executor-by で使う。
   # agy は --agent による定義ファイルの選択を持たないため、役割は plan の共通規約で与える。
   #
 
-  - nickname: antigravity-executor
+  - nickname: agy-executor
     disabled: false
     priority: 4
     display_name: Antigravity Executor
@@ -500,7 +500,7 @@ members:
     scheduler_strategy: critical-first
     note: Antigravity CLI（agy）を使用する pipeline executor（edit）。成果物の編集と検証だけを担当し、result は更新しない。最終判断は行わない。モデル・effort は exec-defaults の command template（proficiency normal 相当）で指定し、タスク固有の手順は edit plan を正本とする。
 
-  - nickname: antigravity-expert-executor
+  - nickname: agy-expert-executor
     disabled: false
     priority: 3
     display_name: Antigravity Expert Executor
@@ -523,7 +523,7 @@ members:
     scheduler_strategy: critical-first
     note: Antigravity CLI（agy）を使用する高性能 pipeline executor（edit）。複雑な分析・設計判断を伴う成果物の編集と検証だけを担当し、result は更新しない。最終判断は行わない。モデル・effort は exec-defaults の command template（proficiency expert 相当）で指定する。
 
-  - nickname: antigravity-expert-review-executor
+  - nickname: agy-expert-review-executor
     disabled: false
     priority: 3
     display_name: Antigravity Expert Review Executor
@@ -544,7 +544,7 @@ members:
     scheduler_strategy: fifo
     note: Antigravity CLI（agy）を使用する高性能 pipeline executor（review）。複雑な多観点レビューを支援するが、成果物・result のいずれも変更しない（読み取り専用）。境界は plan の指示と specdojo CLI の commit 許可リストで作る。最終判断は行わない。
 
-  - nickname: antigravity-reporter
+  - nickname: agy-reporter
     disabled: false
     priority: 4
     display_name: Antigravity Reporter
