@@ -100,3 +100,19 @@
       from: in-progress
       to: review
   previous_event_id: reg_95fd21040d5f408c961baa503f6d87c7
+- v: 1
+  id: reg_ff28392a2cbc40aeb0293bfbdacffc4b
+  ts: "2026-09-22T23:43:26Z"
+  action: close
+  actor: specdojo-orchestrator (claude)
+  from_status: review
+  to_status: done
+  reason: qwen-expert-executor が worktree で実装（所要 20.3 時間）。保護設定の既定追加と統合の復旧はオーケストレーターが対応し、利用者が確認して close
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-23"
+  previous_event_id: reg_dd5f8bc135204e819d0527360ec8ef38
