@@ -32,3 +32,32 @@
     - field: due
       from: ""
       to: "2026-10-05"
+- v: 1
+  id: reg_4efc6c9296064f8fa2d6495ce3172076
+  ts: "2026-09-22T05:29:15Z"
+  action: start
+  actor: qwen-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_d1011ae548e84568933ddaa5400129f6
+- v: 1
+  id: reg_5e634753b3044ff0b4d51f465d315af7
+  ts: "2026-09-22T16:58:31Z"
+  action: wait
+  actor: qwen-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: git commit failed: ╭─────────────────────────────────────────╮ │ 🥊 lefthook  v2.1.9   hook:  pre-commit │ ╰─────────────────────────────────────────╯ │  catalog-build (skip) no matc…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: git commit failed: ╭─────────────────────────────────────────╮ │ 🥊 lefthook  v2.1.9   hook:  pre-commit │ ╰─────────────────────────────────────────╯ │  catalog-build (skip) no matc…"
+  previous_event_id: reg_4efc6c9296064f8fa2d6495ce3172076
