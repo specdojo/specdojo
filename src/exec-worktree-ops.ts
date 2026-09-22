@@ -1,5 +1,6 @@
 import { spawnSync } from "node:child_process";
 import {
+  appendFileSync,
   copyFileSync,
   existsSync,
   lstatSync,
@@ -33,6 +34,7 @@ import {
   gitOutput,
   gitResult,
   listRegisteredWorktrees,
+  summarizeGitHookFailure,
   worktreeNameFromTaskId,
   type ExecWorktree,
 } from "./exec-worktree.js";
@@ -625,6 +627,7 @@ export function mergeWorktreeIntoCurrent(params: {
   releaseRootPaths?: string[];
   ffOnly?: boolean;
   dryRun?: boolean;
+  failureLogPath?: string;
 }): void {
   const { context, worktree, taskId } = params;
   const targetBranch = currentBranch(context.repoRoot);
@@ -684,23 +687,63 @@ export function mergeWorktreeIntoCurrent(params: {
       );
       return;
     }
-    try {
-      gitOutput(
-        context.repoRoot,
-        params.ffOnly
-          ? ["merge", "--ff-only", worktree.branch]
-          : params.message
-            ? ["merge", "--no-ff", "-m", params.message, worktree.branch]
-            : ["merge", "--no-ff", "--no-edit", worktree.branch],
-      );
+    const mergeArgs = params.ffOnly
+      ? ["merge", "--ff-only", worktree.branch]
+      : params.message
+        ? ["merge", "--no-ff", "-m", params.message, worktree.branch]
+        : ["merge", "--no-ff", "--no-edit", worktree.branch];
+    const mergeResult = gitResult(context.repoRoot, mergeArgs);
+    if (mergeResult.status === 0) {
       merged = true;
-    } catch (error) {
-      // A failed merge (content conflict, or a commit hook that aborts the merge commit) leaves
-      // the repository mid-merge: MERGE_HEAD set and conflict markers staged in the working tree.
-      // Roll back so the tree returns to a clean state instead of staying stuck, then rethrow.
-      // `git merge --abort` is a no-op error when no merge is in progress, so swallow its status.
-      gitResult(context.repoRoot, ["merge", "--abort"]);
-      throw error;
+    } else {
+      const mergeOutput = [mergeResult.stdout, mergeResult.stderr]
+        .filter((part): part is string => typeof part === "string" && part.length > 0)
+        .join(mergeResult.stdout && mergeResult.stderr ? "\n" : "");
+      const mergeInProgress =
+        gitResult(context.repoRoot, ["rev-parse", "--verify", "--quiet", "MERGE_HEAD"]).status ===
+        0;
+      const abortResult = mergeInProgress
+        ? gitResult(context.repoRoot, ["merge", "--abort"])
+        : undefined;
+
+      if (params.failureLogPath) {
+        mkdirSync(resolve(params.failureLogPath, ".."), { recursive: true });
+        const abortOutput = abortResult
+          ? [abortResult.stdout, abortResult.stderr]
+              .filter((part): part is string => typeof part === "string" && part.length > 0)
+              .join(abortResult.stdout && abortResult.stderr ? "\n" : "")
+          : "";
+        appendFileSync(
+          params.failureLogPath,
+          [
+            `=== ${new Date().toISOString()} git ${mergeArgs.join(" ")} ===`,
+            `exit: ${mergeResult.status ?? "unknown"}`,
+            "--- stdout ---",
+            typeof mergeResult.stdout === "string" ? mergeResult.stdout : "",
+            "--- stderr ---",
+            typeof mergeResult.stderr === "string" ? mergeResult.stderr : "",
+            "--- merge --abort ---",
+            abortResult ? `exit: ${abortResult.status ?? "unknown"}` : "not required",
+            abortOutput,
+            "",
+          ].join("\n"),
+          "utf8",
+        );
+      }
+
+      const summary = summarizeGitHookFailure(mergeOutput);
+      if (abortResult && abortResult.status !== 0) {
+        const abortOutput = [abortResult.stdout, abortResult.stderr]
+          .filter((part): part is string => typeof part === "string" && part.length > 0)
+          .join("\n");
+        const abortSummary = summarizeGitHookFailure(abortOutput);
+        const instruction =
+          `automatic git merge --abort failed; run git merge --abort manually in ` +
+          `${context.repoRoot} before continuing`;
+        process.stderr.write(`error: ${instruction}; ${abortSummary}\n`);
+        throw new Error(`git merge failed: ${summary}; ${instruction}; ${abortSummary}`);
+      }
+      throw new Error(`git merge failed: ${summary}`);
     }
   } finally {
     if (!merged && released.length > 0) restoreRootWorkingCopies(context.repoRoot, released);

@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: high
   owner: DEV
   registered_at: "2026-09-21T11:31:17Z"
@@ -50,6 +50,7 @@ hook で落ちた実際の原因（typecheck か lint か）は block reason に
 
 - `mergeWorktreeIntoCurrent` が merge 失敗時に `MERGE_HEAD` を確認し、merge 途中の場合だけ `git merge --abort` を実行するようにした。abort の失敗は黙殺せず、標準エラーと例外へ手動実行手順を含める。
 - hook の生出力から ANSI 制御と罫線を除き、失敗ステップ名と最初のエラー行を block reason に使うようにした。生の stdout / stderr と abort 結果は pipeline run 配下の `integrate.log` へ保存する。
+- abort 後は root の wait commit を ancestry-only merge で exec ブランチの祖先にしてから記帳内容を同期するようにした。これにより、checkpoint と wait commit がイベントファイルを別々に追加して起きる add/add 競合を避け、統合再開時は waiting から review への差分だけを merge する。
 - merge commit を pre-commit hook で失敗させ、`MERGE_HEAD` が残らないこと、`wait` commit が成功すること、worktree と exec branch が保持されること、装飾のない block reason と生ログが残ることを統合テストへ追加した。同じ run を統合段から再開し、agent を再実行せず merge が成功することも検証する。
 - [[specdojo:exec-worktree-guide]] に自動 abort、Schedule / register の統合再開、abort 自体が失敗した場合の手動復旧手順を追記した。
 - 残課題はない。

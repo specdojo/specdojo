@@ -7,6 +7,7 @@ import {
   formatWorktreeBuildFailure,
   generateWorktreeArtifacts,
   resolveWorktreeBuildCommand,
+  summarizeGitHookFailure,
   summarizeGitArguments,
 } from "../../src/exec-worktree.js";
 import { sanitizeRegisterConclusion } from "../../src/exec-register.js";
@@ -74,6 +75,22 @@ describe("formatGitCommandFailure", () => {
 
     expect(reason).toContain(stderr);
     expect(reason).toContain("-- 40 paths");
+  });
+});
+
+describe("summarizeGitHookFailure", () => {
+  it("keeps the failed step and first error while removing terminal decoration", () => {
+    const output = [
+      "\u001b[31m╭──────── hook output ────────╮\u001b[0m",
+      "┃ typecheck ❯",
+      "┃ src/example.ts(4,2): error TS2322: Type 'number' is not assignable to type 'string'.",
+      "┃ another error that is intentionally omitted",
+      "╰─────────────────────────────╯",
+    ].join("\n");
+
+    expect(summarizeGitHookFailure(output)).toBe(
+      "typecheck: src/example.ts(4,2): error TS2322: Type 'number' is not assignable to type 'string'.",
+    );
   });
 });
 

@@ -215,7 +215,18 @@ specdojo exec worktree merge \
 
 `prepare` が root に残した plan、result、claim event の複製は、重複判定の前に解放します（exec branch の commit 済み内容が merge で入るため）。それ以外の未commit変更が merge 対象パスと重複する場合は停止します。
 
-通常は `git merge --no-ff` 相当で統合します。自動実行では `exec(<task-id>): <task name>` を merge commit の subject に使い、統合先の first-parent を1タスク1commitにします（`prepare execution` / `apply task changes` は exec branch 側に残ります）。`--ff-only` 指定時は fast-forward 可能な場合だけ統合します。競合した場合は merge を abort して統合先を開始前の状態へ戻し、exec branch と worktree を保持します。
+通常は `git merge --no-ff` 相当で統合します。自動実行では `exec(<task-id>): <task name>` を merge commit の subject に使い、統合先の first-parent を1タスク1commitにします（`prepare execution` / `apply task changes` は exec branch 側に残ります）。`--ff-only` 指定時は fast-forward 可能な場合だけ統合します。
+
+競合または commit hook の失敗で merge commit を作れなかった場合は、runner が `git merge --abort` を実行して統合先を開始前の状態へ戻します。Schedule タスクは `blocked`、register 項目は `waiting` へ遷移し、再開に使う exec branch と worktree は保持します。register の `wait` commit は abort 後に作るため、統合先へ `MERGE_HEAD` を残したまま部分 commit を試みません。block reason には hook の罫線や色を除いた失敗ステップ名と最初のエラー行を記録し、executor/reporter pipeline では生の stdout / stderr と abort 結果を同じ run の `integrate.log` に保存します。
+
+hook や検査を直した後は、Schedule タスクでは `specdojo exec resume --project <project-id> --task <task-id>`、register 項目では元の `exec run --register ... --worktree --resume` を実行します。統合段から再開するため agent は再実行せず、保持した exec branch を merge します。
+
+自動の `git merge --abort` 自体が失敗した場合は、runner が標準エラーへ手動復旧を案内します。案内された root worktree で状態と失敗原因を確認し、ロックファイルや Git プロセスなどの原因を解消してから次を実行してください。abort が完了するまでは commit や統合再開を行いません。
+
+```bash
+git status
+git merge --abort
+```
 
 ### 2.6. remove
 

@@ -962,7 +962,7 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
     expect(eventTypes.sort()).toEqual(["block", "claim", "complete", "unblock"]);
   }, 20_000);
 
-  it("resumes only integration after a commit failure", async () => {
+  it("aborts a hook-rejected merge commit and resumes only integration", async () => {
     fixture = setupPipelineRepository();
     worktreeBase = mkdtempSync(join(tmpdir(), "specdojo-pipeline-e2e-wt-"));
     vi.spyOn(process.stdout, "write").mockImplementation(() => true);
@@ -978,16 +978,18 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
     process.chdir(fixture.repo);
 
     const rejectMarker = join(fixture.repo, ".git", "reject-integration-commit");
-    // checkpoint commit（prepare execution）は通し、統合 commit（apply task changes）だけを
-    // 落とすため、commit message を見られる commit-msg hook で判定する。
+    // exec branch 上の commit は通し、root の merge commit だけを落とす。
     const hookPath = join(fixture.repo, ".git", "hooks", "commit-msg");
     writeFileSync(rejectMarker, "reject\n", "utf8");
     writeFileSync(
       hookPath,
       [
         "#!/bin/sh",
-        `if [ -f '${rejectMarker}' ] && grep -q 'apply task changes' "$1"; then`,
-        '  echo "intentional integration commit failure" >&2',
+        `if [ -f '${rejectMarker}' ] && git rev-parse --verify --quiet MERGE_HEAD >/dev/null; then`,
+        "  printf '\\033[31m╭── hook output ──╮\\033[0m\\n' >&2",
+        "  printf '┃ typecheck ❯\\n' >&2",
+        "  printf '┃ src/demo.ts(1,1): error TS2322: schedule merge rejected\\n' >&2",
+        "  printf '╰─────────────────╯\\n' >&2",
         "  exit 1",
         "fi",
         "exit 0",
@@ -1009,12 +1011,32 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
     ]);
 
     expect(process.exitCode).toBe(1);
+    const repo = fixture.repo;
+    expect(() => git(repo, "rev-parse", "--verify", "MERGE_HEAD")).toThrow();
     expect(
       readWorktreePipelineState(worktreeBase, fixture, "T-TEST-doc-010").stages.integrate,
     ).toMatchObject({ status: "failed", attempts: 1 });
     expect(
       readTaskEvents(fixture, "T-TEST-doc-010").find((event) => event.type === "block")?.meta,
     ).toMatchObject({ pipeline_stage: "integrate" });
+    const worktreePath = onlyWorktreePath(worktreeBase);
+    expect(git(fixture.repo, "branch", "--list", "exec/test-T-TEST-doc-010")).toContain(
+      "exec/test-T-TEST-doc-010",
+    );
+    const executionRelativePath = relative(fixture.repo, fixture.executionPath);
+    const worktreeRunDir = join(
+      worktreePath,
+      executionRelativePath,
+      "exec",
+      "evidence",
+      "T-TEST-doc-010",
+      readdirSync(
+        join(worktreePath, executionRelativePath, "exec", "evidence", "T-TEST-doc-010"),
+      )[0]!,
+    );
+    const integrateLog = readFileSync(join(worktreeRunDir, "integrate.log"), "utf8");
+    expect(integrateLog).toContain("\u001b[31m╭── hook output ──╮\u001b[0m");
+    expect(integrateLog).toContain("--- merge --abort ---\nexit: 0");
 
     rmSync(rejectMarker);
     await runExec([
