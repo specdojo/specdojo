@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v1
 verdict: pass
 score: 86
-graded_at: "2026-09-21T05:19:50.478Z"
+graded_at: "2026-09-22T03:37:45.416Z"
 graded_by: codex-expert-executor
-content_hash: e2f94a1a520197539ad2da1fe966539195b32bfdaff45cded39acbf1ad1f3eaf
+content_hash: dc77b7a54c9a58313ed2c202afe751db51aad011a76ab780a187d25342d4e7c9
 categories:
   consistency:
     score: 75
@@ -55,7 +55,7 @@ findings:
   - id: F001
     severity: minor
     rule: vp-arc-cross-document-consistency
-    line: 177
+    line: 182
     anchor: "販売可能 --> 販売済み : 商品引渡し / 会計・在庫減算・顧客受領が完了した"
     message: >-
       `stsd-sample.md` の T-04 は「販売記録」を条件に含む一方、埋め込みサンプルの T-04
@@ -63,8 +63,8 @@ findings:
   - id: F002
     severity: minor
     rule: vp-qe-verifiability
-    line: 190
-    anchor: "| `T-04`  | 販売可能 | 販売済み | 商品引渡し   | 会計・在庫減算・顧客受領が完了した               | 販売記録を正本とする     |"
+    line: 196
+    anchor: "| `T-05`  | 販売可能 | 販売済み | 商品引渡し   | 会計・在庫減算・顧客受領が完了した               | 販売記録を正本とする             |"
     message: T-04 の条件には「販売記録の確定」がなく、遷移後も line 166 の「販売済み」成立条件を満たさない場合があるため、図と遷移表の条件へ販売記録の確定を追加してください。
   - id: F003
     severity: minor
@@ -75,6 +75,6 @@ findings:
   - id: F004
     severity: minor
     rule: vp-qe-kata-conformance
-    line: 190
-    anchor: "| `T-04`  | 販売可能 | 販売済み | 商品引渡し   | 会計・在庫減算・顧客受領が完了した               | 販売記録を正本とする     |"
+    line: 196
+    anchor: "| `T-05`  | 販売可能 | 販売済み | 商品引渡し   | 会計・在庫減算・顧客受領が完了した               | 販売記録を正本とする             |"
     message: 埋め込みサンプルの T-04 は遷移先「販売済み」の成立条件に必要な販売記録の確定を含まず、自身の完成判定を満たす完成例になっていないため、外部 sample と同じ条件へ修正してください。

@@ -4,20 +4,20 @@ document: specdojo:stsd-mermaid-rulebook
 path: docs/ja/specdojo/rulebooks/stsd-mermaid-rulebook.md
 target: kata
 rubric: grade-rubric-v1
-verdict: needs-work
-score: 86
-graded_at: "2026-09-21T11:39:36.371Z"
+verdict: pass
+score: 100
+graded_at: "2026-09-22T03:31:23.507Z"
 graded_by: codex-expert-executor
-content_hash: 3c4322a1634e19212cdea7b2837f5bf7ce2caa194613b184c145ed78ce210ea6
+content_hash: e1edd1a29a48b7a751e6d77e29f2f148e4a42df9894b63cdaf9d73d0f2889805
 categories:
   consistency:
-    score: 75
+    score: 100
   usability:
     score: 100
   architecture:
     score: 100
   quality:
-    score: 75
+    score: 100
 viewpoints:
   vp-arc-cross-document-consistency:
     level: 4
@@ -29,11 +29,11 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-qe-kata-conformance:
     level: 4
     score: 100
@@ -48,21 +48,7 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 2
+  major: 0
   minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: major
-    rule: vp-qe-verifiability
-    line: 93
-    anchor: "- 初期点が一つ以上あり、各初期点から、正常系・例外系を問わず、すべての終了状態および継続状態まで遷移をたどれます。到達不能な終端は残しません。"
-    message: >-
-      完成判定は終端の到達性だけを確認しているため、初期点から到達不能な中間状態が既存の終了状態へ接続していても合格になります。状態一覧の各業務状態が少なくとも一つの初期点から到達可能であることを pass / fail
-      条件に追加してください。
-  - id: F002
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 93
-    anchor: "- 初期点が一つ以上あり、各初期点から、正常系・例外系を問わず、すべての終了状態および継続状態まで遷移をたどれます。到達不能な終端は残しません。"
-    message: 状態一覧との網羅と終端到達は定義されていますが、各業務状態の初期点からの到達可能性が必須条件から抜けており、到達不能な中間状態を残せます。全業務状態への到達性を完成判定へ追加してください。
+findings: []
