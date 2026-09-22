@@ -45,3 +45,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_e4404db720764fd685f521e8ea8d520a
+- v: 1
+  id: reg_8de0f473ec0342618244047a2ba943cc
+  ts: "2026-09-22T04:20:51Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: runner による検証 `test-integration` (`npm run test:integration`) が失敗（exit 1）しているため。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: runner による検証 `test-integration` (`npm run test:integration`) が失敗（exit 1）しているため。"
+  previous_event_id: reg_94ab0a2223cd42f29468a74021d8a098
