@@ -12,7 +12,7 @@ specdojo:
   owner: DEV
   registered_at: "2026-09-21T11:31:18Z"
   due_on: "2026-10-05"
-  block_reason: "integrate failed: git commit failed: ╭─────────────────────────────────────────╮ │ 🥊 lefthook  v2.1.9   hook:  pre-commit │ ╰─────────────────────────────────────────╯ │  catalog-build (skip) no matc…"
+  block_reason: "integrate failed: git merge failed: CONFLICT (content): Merge conflict in docs/ja/projects/prj-0001/controls/project-register/events/pjr-w66b.yaml"
 ---
 
 # PJR-W66B 親検証に typecheck を加え、型エラーを commit hook まで持ち越さない
