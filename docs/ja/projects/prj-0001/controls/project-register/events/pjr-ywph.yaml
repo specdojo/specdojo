@@ -145,3 +145,19 @@
       from: waiting
       to: review
   previous_event_id: reg_4faee7a492634c83971e04b87c80c9eb
+- v: 1
+  id: reg_963cfdf9427743189b33bb636a9f0af2
+  ts: "2026-09-22T03:52:50Z"
+  action: close
+  actor: specdojo-orchestrator (claude)
+  from_status: review
+  to_status: done
+  reason: agy-expert-executor / agy-reporter で実装（Antigravity の初回実運用）。型エラーと merge 中断の不備はオーケストレーターが補修して統合し、展開結果を確認して利用者が close
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-22"
+  previous_event_id: reg_6e468118a6074fc3a2994941d355aa84

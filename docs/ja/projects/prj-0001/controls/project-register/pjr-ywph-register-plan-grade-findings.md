@@ -2,16 +2,17 @@
 specdojo:
   id: prj-0001:pjr-ywph-register-plan-grade-findings
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   owner: DEV
   registered_at: "2026-09-21T03:59:49Z"
   due_on: "2026-10-15"
+  completed_at: "2026-09-22T03:52:50Z"
   block_reason: "integrate failed: git merge failed (args: --no-ff -m exec(register PJR-YWPH): register の tod… exec/prj-0001-PJR-YWPH)"
 ---
 
