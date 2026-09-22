@@ -44,7 +44,11 @@ executor は plan の共通規約で `npm run typecheck` を実行すること�
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `typecheck` を親検証として登録した。`src/exec-parent-validation.ts` の `ParentValidationId` 型と `PARENT_VALIDATION_REGISTRY` に `typecheck`（固定 argv で `npm run typecheck`、`shell: false`、timeout 10 分）を追加し、実体は他検証と同構造で command/args/displayCommand/timeout も揃えている。
+- schema を更新した。`docs/specdojo/schemas/v1/exec-defaults.schema.yaml` の `parent_validations.items.enum` に `typecheck` を加えた（既存 ID と合算して `[validate-schema, typecheck, test-unit, test-integration]`）。`loadExecDefaultsConfig` は allowlist（= registry）で未知 ID を弾くため、設定側は registry への追加だけで有効化される。
+- `exec-config-guide` の親検証説明に `typecheck` を載せた。§5 の YAML 例・許可 ID 列挙（「現時点で許可される ID は … の 4 つ」）と §6.3 の項目に `typecheck` を追加し、Vitest と異なり型検査を行うことから `test-unit` の前に置く根拠（PJR-YWPH の経緯）を記述した。
+- 統合テストを追加した。`tests/src/exec-pipeline-e2e.integration.test.ts` に helper `withTypecheckParentValidation` で `typecheck` を親検証へ足した fixture と、「型エラーを含む fixture では `typecheck` 親検証が `failed` になりタスクを block」する回帰テストを追加。runner 検証の順序（`typecheck` が `test-integration` より前）と block reason（`parent validation failed: typecheck, test-integration`）まで確認している。
+- 残課題: `.specdojo/exec-defaults.yaml` の `pipeline.parent_validations` に `typecheck` を加える最終トグルは、agent の書き込み保護対象（[[prj-0001:pjr-3s8q-agent-writable-config-scope|PJR-3S8Q]]）のため executor からは編集できない。registry・schema・doc・テスト側は完結しているため、実行環境に反映するには運用者または親 runner が `.specdojo/exec-defaults.yaml` を更新し、実 pipeline 実行で `typecheck` の `source: runner` success と executor 側の実行有無を確認する。
 
 ## 5. 関連ドキュメント
 

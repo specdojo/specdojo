@@ -169,6 +169,7 @@ flowchart LR
 pipeline:
   parent_validations:
     - validate-schema
+    - typecheck
     - test-unit
     - test-integration
 
@@ -193,7 +194,9 @@ rate_limit_policy:
     on_exhausted: block
 ```
 
-`test-integration` は組み込み許可リストで `npm run test:integration` へ解決されます。設定や executor evidence に command・引数を書くことはできません。未知 ID、重複 ID は agent 起動前の設定エラーになります。親 runner は `shell: false` の固定 argv で実行し、現時点で許可される ID は `test-integration` だけです。
+`test-integration` は組み込み許可リストで `npm run test:integration` へ解決されます。設定や executor evidence に command・引数を書くことはできません。未知 ID、重複 ID は agent 起動前の設定エラーになります。親 runner は `shell: false` の固定 argv で実行し、現時点で許可される ID は `validate-schema`、`typecheck`、`test-unit`、`test-integration` の 4 つです。
+
+`typecheck`（`npm run typecheck`）は Vitest と異なり型検査を行うため、executor が残した TypeScript の型エラーを検出します。Vitest は型検査を行わないため、`typecheck` を親検証に含めないと型エラーは test-unit を通過して統合時の pre-commit hook で初めて失敗するため、既定では `test-unit` の前に置いて早めに止めます（PJR-W66B）。
 
 provider ごとに挙動が異なる設定は `providers.<provider>` に置きます。各キーは対応するグローバル値を完全に置き換え、未指定のキーはグローバル値にフォールバックします。`<provider>` は `pm-members[].provider` に対応します。指定できるキーは次のとおりです。
 
@@ -357,7 +360,7 @@ executor の出力は、そのまま reporter へ渡さずに run 単位の evid
 - reporter が非ゼロ終了または形式エラーで失敗した場合、同じ reporter stage 内の各形式試行を `reporter-attempt-<n>.stdout.log` と `reporter-attempt-<n>.stderr.log` に保存します。同じ run を resume して再度失敗した場合は、直近の失敗内容でこれらのファイルと `log_refs` を置き換えます。
 - evidence ディレクトリは Git の管理対象です。成功して統合された run のログは履歴に残り、失敗中の worktree では未コミットのまま保持されます。`--force-restart` などで worktree を破棄すると未コミットログも失われるため、必要な調査を先に行います。既知パターンは保存前に秘匿しますが、未知形式の秘密が残る可能性を考慮し、ログを外部共有する前に内容を確認します。
 - executor が構造化した最終報告を返す場合は、標準出力に `<specdojo_executor_evidence>` タグで JSON（`final_message`・`validations`）を出します。タグが無い場合は標準出力の残りを最終メッセージとして扱います。
-- `pipeline.parent_validations` には `validate-schema`（`npm run validate:schema`）、`test-unit`（`npm run test:unit`）、`test-integration`（`npm run test:integration`）を指定できます。親 runner は executor の成功後・reporter の起動前に、指定順で固定 argv の検証を実行します。
+- `pipeline.parent_validations` には `validate-schema`（`npm run validate:schema`）、`typecheck`（`npm run typecheck`）、`test-unit`（`npm run test:unit`）、`test-integration`（`npm run test:integration`）を指定できます。親 runner は executor の成功後・reporter の起動前に、指定順で固定 argv の検証を実行します。
 - executor prompt には設定済み ID と対応コマンドを明示します。executor はそのコマンドや対象限定版を sandbox 内で実行せず、親 runner の結果だけを `source: runner` と許可リスト `id` 付きで同じ `validations` 配列へ保存します。これにより sandbox 内で成立しない検証を親へ移した場合も二重実行しません。
 - 親検証が失敗しても reporter は evidence を受け取り、block 内容を構成できます。ただし reporter が誤って `outcome: complete` を返しても、runner は親検証の失敗を優先してタスクを成功扱いにしません。
 - reporter の出力は JSON Schema で厳格に検証します。形式不正のときは同じ plan と evidence のまま reporter だけを最大 3 回再実行し、executor は再実行しません。
