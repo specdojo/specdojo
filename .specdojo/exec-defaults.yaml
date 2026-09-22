@@ -21,6 +21,9 @@ pipeline:
     # sandbox 内では tsx の IPC ソケット作成、Vitest の終了、git の子プロセス終了が
     # 成立せず、成果物と無関係に failed となるため親プロセスで実行する（PJR-QVGX）。
     - validate-schema # npm run validate:schema
+    # 型エラーは Vitest では検出できず、統合時の pre-commit hook まで持ち越されるため、
+    # test-unit の前に親検証として実行する（PJR-W66B）。
+    - typecheck # npm run typecheck
     - test-unit # npm run test:unit
 
 rate_limit_detection:
