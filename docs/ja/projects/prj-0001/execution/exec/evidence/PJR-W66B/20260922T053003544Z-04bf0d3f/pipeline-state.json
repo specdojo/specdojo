@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-W66B",
   "run_id": "20260922T053003544Z-04bf0d3f",
-  "updated_at": "2026-09-22T23:32:53.112Z",
+  "updated_at": "2026-09-22T23:33:31.003Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-w66b-20260922T052914Z-6f56-result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "gemma-reporter",
       "attempts": 2,
       "started_at": "2026-09-22T23:32:53.112Z",
-      "completed_at": null,
+      "completed_at": "2026-09-22T23:33:31.003Z",
       "artifact_ref": null
     }
   },
