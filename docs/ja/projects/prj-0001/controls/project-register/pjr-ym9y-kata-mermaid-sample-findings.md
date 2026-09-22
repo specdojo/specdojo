@@ -2,16 +2,17 @@
 specdojo:
   id: prj-0001:pjr-ym9y-kata-mermaid-sample-findings
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-09-21T05:47:33Z"
   due_on: "2026-10-10"
+  completed_at: "2026-09-22T03:38:26Z"
 ---
 
 # PJR-YM9Y mermaid rulebook 2 本と cdfd / stsd sample の grade 指摘を解消する
@@ -48,7 +49,7 @@ PJR-EQDB の再周回後の評価（`MANUAL-eqdb6-20260921b`、codex 単段）�
 | --- | ------------------------------------------------------------------------------------------------------------------------------------------- | ---- | ---- | ------------------------------------------------------------------------------------------- |
 | 1   | `stsd-mermaid-rulebook` と `stsd-rulebook` を複合状態禁止・別名の定義に合わせて改訂し、`stsd-sample` を共通イベント分岐と中間状態の例に直す | ARC  | done | 複合状態を禁止し、表示名と `state_id` を区別。`検品済み` と「検品完了」の相互排他分岐を追加 |
 | 2   | `cdfd-mermaid-rulebook` の凡例参照を `cdfd-overview-rulebook` の省略条件に揃え、`cdfd-sample` の在庫記録更新主体・起動条件・用語を統一する  | ARC  | done | 包含元 3 種の凡例判定を統一し、仕入グループによる在庫記録の直接更新へ統一                   |
-| 3   | 再評価で 4 件の解消を確認する                                                                                                               | ARC  | open | 夜間 routine または手動 `--stages 1 --path`                                                 |
+| 3   | 再評価で 4 件の解消を確認する                                                                                                               | ARC  | done | 夜間 routine または手動 `--stages 1 --path`                                                 |
 
 ## 4. 対応結果
 
