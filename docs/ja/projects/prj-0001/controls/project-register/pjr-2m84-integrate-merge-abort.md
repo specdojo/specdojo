@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: high
   owner: DEV
   registered_at: "2026-09-21T11:31:17Z"
   due_on: "2026-10-05"
+  block_reason: "agent exited with non-zero code: runner による検証 `test-integration` (`npm run test:integration`) が失敗（exit 1）しているため。"
 ---
 
 # PJR-2M84 統合の merge commit 失敗時に merge を中断して develop を merge 途中のまま残さない
@@ -39,15 +40,19 @@ hook で落ちた実際の原因（typecheck か lint か）は block reason に
 
 ## 3. 作業内容
 
-| No  | 作業                                                                                                           | 担当 | 状態 | メモ                                              |
-| --- | -------------------------------------------------------------------------------------------------------------- | ---- | ---- | ------------------------------------------------- |
-| 1   | merge commit 失敗時の `git merge --abort` と block reason の整形を `exec-worktree-ops` / `exec-run` に実装する | DEV  | open | codex-expert-executor / gemma-reporter / worktree |
-| 2   | hook で merge commit を落とす統合テストと、統合再開のやり直しテストを追加する                                  | DEV  | open | 作業 1 と同一タスク                               |
-| 3   | `exec-worktree-guide` の復旧手順を更新する                                                                     | DEV  | open | 同上                                              |
+| No  | 作業                                                                                                           | 担当 | 状態 | メモ                                         |
+| --- | -------------------------------------------------------------------------------------------------------------- | ---- | ---- | -------------------------------------------- |
+| 1   | merge commit 失敗時の `git merge --abort` と block reason の整形を `exec-worktree-ops` / `exec-run` に実装する | DEV  | done | hook 出力の要約と `integrate.log` 保存を実装 |
+| 2   | hook で merge commit を落とす統合テストと、統合再開のやり直しテストを追加する                                  | DEV  | done | register pipeline の失敗・再開を E2E 検証    |
+| 3   | `exec-worktree-guide` の復旧手順を更新する                                                                     | DEV  | done | abort、自動再開、手動復旧を追記              |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `mergeWorktreeIntoCurrent` が merge 失敗時に `MERGE_HEAD` を確認し、merge 途中の場合だけ `git merge --abort` を実行するようにした。abort の失敗は黙殺せず、標準エラーと例外へ手動実行手順を含める。
+- hook の生出力から ANSI 制御と罫線を除き、失敗ステップ名と最初のエラー行を block reason に使うようにした。生の stdout / stderr と abort 結果は pipeline run 配下の `integrate.log` へ保存する。
+- merge commit を pre-commit hook で失敗させ、`MERGE_HEAD` が残らないこと、`wait` commit が成功すること、worktree と exec branch が保持されること、装飾のない block reason と生ログが残ることを統合テストへ追加した。同じ run を統合段から再開し、agent を再実行せず merge が成功することも検証する。
+- [[specdojo:exec-worktree-guide]] に自動 abort、Schedule / register の統合再開、abort 自体が失敗した場合の手動復旧手順を追記した。
+- 残課題はない。
 
 ## 5. 関連ドキュメント
 
