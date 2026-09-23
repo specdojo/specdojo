@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_2776a51aa8c14d9390d8a7448c48e5bd
+  ts: "2026-09-23T06:43:51Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-G8M9 の worktree 作成失敗で原因が読めなかった
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: git コマンド失敗の理由から進捗表示を除き、原因行を block reason へ残す
+    - field: description
+      from: ""
+      to: gitOutput の失敗時に stderr 全文を理由へ載せるため、git worktree add や npm ci のような進捗を出すコマンドでは進捗行が文字数を食い潰し、register の block_reason が先頭で切られて原因行が消える。PJR-2M84 で merge 失敗へ入れた整理（進捗と制御文字の除去、要点だけを理由へ、全文はログへ）を gitOutput の汎用経路へ広げる。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-23"
+    - field: due
+      from: ""
+      to: "2026-09-30"
