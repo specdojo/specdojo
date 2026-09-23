@@ -58,6 +58,23 @@ specdojo:
 - agent の git 隔離（`gitEnvironment()`）と保護設定（`exec-agent-protected-config`）は provider 非依存のためそのまま適用される。`.gemini` 配下への書き込みは agent の設定領域として扱い、保護対象には含めない。
 - 設計文書 `sysd-antigravity-agent-settings` を `sysd-*-agent-settings` の並びで新設し、`dct-architecture.yaml` に登録する。
 
+### 1.3. Antigravity 経由の他社モデル（2026-09-23）
+
+`agy models` は Gemini 以外に `claude-sonnet-4-6` / `claude-opus-4-6-thinking` / `gpt-oss-120b-medium` を提供する。これらを executor / reporter として指名できるようにする。
+
+member 単位の `command` 上書きでも実現できるが、`--add-dir` の追加や `--effort` の除去のような provider 共通の修正が member 数だけ分散する（本項目で 2 度発生済み）。`command_params` に nickname 別の層 `by_nickname` を追加し、`command_template` は 1 本のまま member ごとにモデルを差す方式を採る。この層は claude など他 provider のモデル指定にも使える。
+
+```yaml
+command_params:
+  by_proficiency:
+    normal: { model: gemini-3.8-flash-medium }
+    expert: { model: gemini-3.1-pro-high }
+  by_nickname:
+    agy-sonnet-executor: { model: claude-sonnet-4-6 }
+```
+
+解決順序は `by_nickname` > `by_proficiency` > `by_mode` とし、同じ変数名が複数層にある場合は先に挙げた層を優先する（現行の by_mode / by_proficiency 間の重複禁止は、by_nickname による意図的な上書きを許すため、層をまたぐ場合に限り許容する）。
+
 ## 2. 完了条件
 
 - `pm-members.schema.yaml` の provider enum に `antigravity` があり、`pm-members.yaml` に 4 member が定義され、`schedule build` / `catalog validate` / `validate:schema` が通過する。
@@ -72,17 +89,19 @@ specdojo:
 
 ## 3. 作業内容
 
-| No  | 作業                                                                                                                                                                                                                                                                                                                                               | 担当 | 状態 | メモ                                              |
-| --- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- | ---- | ------------------------------------------------- |
-| 1   | schema の provider enum、`exec-defaults.yaml` の provider、`pm-members.yaml` の 4 member を追加し、dry-run でコマンドを確認する                                                                                                                                                                                                                    | DEV  | done | オーケストレーターが直接対応（設定のみ）          |
-| 2   | reporter の `--json-schema` 直接指定を検証し、有効なら command_template に組み込む                                                                                                                                                                                                                                                                 | DEV  | done | 同上                                              |
-| 3   | 小さな register todo を antigravity で実行し、統合まで通す                                                                                                                                                                                                                                                                                         | ARC  | open | 候補: PJR-YWPH                                    |
-| 4   | `exec trial` で codex と比較し、proficiency の初期値と priority を決める                                                                                                                                                                                                                                                                           | ARC  | open | 結果を本個票に記録                                |
-| 5   | `sysd-antigravity-agent-settings` を作成し、exec-config-guide と `dct-architecture.yaml` を更新する                                                                                                                                                                                                                                                | DEV  | open | codex-expert-executor / gemma-reporter / worktree |
-| 6   | `.agents/rules/*.md` に `.github/instructions/*.md` の薄ラッパーを置く（`.claude/rules/` と同じ方式）。`GEMINI.md` は置かず `AGENTS.md` を共用する                                                                                                                                                                                                 | DEV  | done | オーケストレーターが直接対応                      |
-| 7   | agy のファイル定義 agent の可否を検証し、可なら `.agents/` に 5 つ目のオーケストレーターラッパーを追加して `validate-orchestrator-sync.mjs` の照合対象に加える。不可なら `npm run orch:agy`（`agy -i "$(cat .agents/specdojo-orchestrator.agent.md)"`、codex の `orch:sol` と同型）を追加する                                                      | DEV  | done | 同上                                              |
-| 8   | executor / reporter の役割指示は codex worker と同じく plan の共通規約で担う。`xep-common-conventions-template` の役割指示（result を更新しない、claim / complete を行わない）が十分か確認し、不足を補う。ファイル定義 agent が使える場合は `templates/antigravity/agents/**` を `config scaffold --provider antigravity` の配布原本として用意する | DEV  | open | 作業 5 と同一タスク                               |
-| 9   | `exec-agent-protected-config` の保護対象に agent の指示ディレクトリ（`.agents/rules/`、`.agents/skills/`、`.claude/`、`.codex/`、`.opencode/`、`.github/agents/`、`AGENTS.md`、`CLAUDE.md`、`GEMINI.md`）を加え、agent が自分の指示を書き換えられないようにする                                                                                    | DEV  | open | 同上。他 provider にも効く                        |
+| No  | 作業                                                                                                                                                                                                                                                                                                                                               | 担当 | 状態 | メモ                                                                       |
+| --- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- | ---- | -------------------------------------------------------------------------- |
+| 1   | schema の provider enum、`exec-defaults.yaml` の provider、`pm-members.yaml` の 4 member を追加し、dry-run でコマンドを確認する                                                                                                                                                                                                                    | DEV  | done | オーケストレーターが直接対応（設定のみ）                                   |
+| 2   | reporter の `--json-schema` 直接指定を検証し、有効なら command_template に組み込む                                                                                                                                                                                                                                                                 | DEV  | done | 同上                                                                       |
+| 3   | 小さな register todo を antigravity で実行し、統合まで通す                                                                                                                                                                                                                                                                                         | ARC  | open | 候補: PJR-YWPH                                                             |
+| 4   | `exec trial` で codex と比較し、proficiency の初期値と priority を決める                                                                                                                                                                                                                                                                           | ARC  | open | 結果を本個票に記録                                                         |
+| 5   | `sysd-antigravity-agent-settings` を作成し、exec-config-guide と `dct-architecture.yaml` を更新する                                                                                                                                                                                                                                                | DEV  | open | codex-expert-executor / gemma-reporter / worktree                          |
+| 6   | `.agents/rules/*.md` に `.github/instructions/*.md` の薄ラッパーを置く（`.claude/rules/` と同じ方式）。`GEMINI.md` は置かず `AGENTS.md` を共用する                                                                                                                                                                                                 | DEV  | done | オーケストレーターが直接対応                                               |
+| 7   | agy のファイル定義 agent の可否を検証し、可なら `.agents/` に 5 つ目のオーケストレーターラッパーを追加して `validate-orchestrator-sync.mjs` の照合対象に加える。不可なら `npm run orch:agy`（`agy -i "$(cat .agents/specdojo-orchestrator.agent.md)"`、codex の `orch:sol` と同型）を追加する                                                      | DEV  | done | 同上                                                                       |
+| 8   | executor / reporter の役割指示は codex worker と同じく plan の共通規約で担う。`xep-common-conventions-template` の役割指示（result を更新しない、claim / complete を行わない）が十分か確認し、不足を補う。ファイル定義 agent が使える場合は `templates/antigravity/agents/**` を `config scaffold --provider antigravity` の配布原本として用意する | DEV  | open | 作業 5 と同一タスク                                                        |
+| 9   | `exec-agent-protected-config` の保護対象に agent の指示ディレクトリ（`.agents/rules/`、`.agents/skills/`、`.claude/`、`.codex/`、`.opencode/`、`.github/agents/`、`AGENTS.md`、`CLAUDE.md`、`GEMINI.md`）を加え、agent が自分の指示を書き換えられないようにする                                                                                    | DEV  | open | 同上。他 provider にも効く                                                 |
+| 10  | `command_params.by_nickname` を実装し（解決順序 by_nickname > by_proficiency > by_mode）、schema・guide・テストを更新する                                                                                                                                                                                                                          | DEV  | open | codex-expert-executor / gemma-reporter / worktree                          |
+| 11  | Antigravity 経由の claude / GPT を使う member（`agy-sonnet-executor`、`agy-opus-executor`、`agy-opus-review-executor`、`agy-gpt-executor`）を追加し、dry-run で確認する                                                                                                                                                                            | DEV  | open | 作業 10 と同一タスク。priority は既存 agy-\* と同じく低くし by-name で使う |
 
 ## 4. 対応結果
 
