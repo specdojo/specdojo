@@ -1,8 +1,12 @@
 import { existsSync, readFileSync } from "node:fs";
-import { join } from "node:path";
 import { specdojoRootDir } from "./specdojo-config.js";
 import { readSpecdojoNamespace } from "./frontmatter-namespace.js";
 import { practiceLocalId } from "./practice-id.js";
+import {
+  resolveSpecdojoPathIfExists,
+  resolveSpecdojoReferencePathIfExists,
+  specdojoResourceCandidates,
+} from "./template-resolution.js";
 import { readYamlSchemaModelineRef } from "./yaml-schema-modeline.js";
 
 // 実践の型（rulebook / recipe / sample / template）の解決を 1 か所に集約する。
@@ -38,7 +42,11 @@ const KIND_DIR: Record<KataKind, string> = {
 };
 
 function rulebookFsPath(rulebookId: string): string {
-  return join(specdojoRootDir(), DOCS_BASE, "rulebooks", `${practiceLocalId(rulebookId)}.md`);
+  const relativePath = `${DOCS_BASE}/rulebooks/${practiceLocalId(rulebookId)}.md`;
+  return (
+    resolveSpecdojoPathIfExists(relativePath) ??
+    specdojoResourceCandidates(relativePath).repositoryPath
+  );
 }
 
 // 実践の型種別 → repo ルート相対ディレクトリ。commit 許可リスト（maintenance / bootstrap 系
@@ -89,7 +97,7 @@ function repoPath(kind: KataKind, id: string, ext: string): string {
 function declaredRefExt(kind: KataKind, id: string, preferredExt: string): string {
   const candidates = kind === "recipe" ? ["md"] : [preferredExt, "md", "yaml", "json"];
   for (const ext of [...new Set(candidates)]) {
-    if (existsSync(join(specdojoRootDir(), repoPath(kind, id, ext)))) return ext;
+    if (resolveSpecdojoPathIfExists(repoPath(kind, id, ext))) return ext;
   }
   return preferredExt;
 }
@@ -106,7 +114,10 @@ function resolveRef(
   if (primaryId === "none" || primaryId === "undecided" || primaryId === "not-needed") {
     return MISSING;
   }
-  if (primaryId) return repoPath(kind, primaryId, declaredRefExt(kind, primaryId, ext));
+  if (primaryId) {
+    const relativePath = repoPath(kind, primaryId, declaredRefExt(kind, primaryId, ext));
+    return resolveSpecdojoReferencePathIfExists(relativePath) ?? relativePath;
+  }
   return MISSING;
 }
 
@@ -128,7 +139,8 @@ export function resolveKataRefs(
   const fm = usableRulebookId ? loadRulebookRefs(usableRulebookId) : {};
   return {
     rulebook: usableRulebookId
-      ? `${DOCS_BASE}/rulebooks/${practiceLocalId(usableRulebookId)}.md`
+      ? (resolveSpecdojoReferencePathIfExists(rulebookRepoPath(usableRulebookId)) ??
+        rulebookRepoPath(usableRulebookId))
       : MISSING,
     recipe: usableRulebookId ? resolveRef("recipe", fm.recipe, "md") : MISSING,
     sample: usableRulebookId
@@ -173,7 +185,9 @@ export function resolveIncludedRulebooks(rulebookId: string | undefined): string
   }
   return declaredIncludeIds(rulebookId)
     .filter((id) => existsSync(rulebookFsPath(id)))
-    .map((id) => rulebookRepoPath(id));
+    .map(
+      (id) => resolveSpecdojoReferencePathIfExists(rulebookRepoPath(id)) ?? rulebookRepoPath(id),
+    );
 }
 
 export type DeclaredInclude = {
@@ -201,7 +215,9 @@ export function declaredIncludes(rulebookId: string): DeclaredInclude[] {
 // modeline から解決する。schema の正本は rulebook frontmatter や命名規約ではなく
 // YAML ファイル自身の先頭宣言である。
 export function resolveDeliverableSchemaRef(deliverablePath: string | undefined): string {
-  return readYamlSchemaModelineRef(specdojoRootDir(), deliverablePath) ?? MISSING;
+  const relativePath = readYamlSchemaModelineRef(specdojoRootDir(), deliverablePath);
+  if (!relativePath) return MISSING;
+  return resolveSpecdojoReferencePathIfExists(relativePath) ?? relativePath;
 }
 
 export type DeclaredKata = {
@@ -214,16 +230,18 @@ export type DeclaredKata = {
 // not-needed・undecided・旧 none・未宣言は含めない（validate で存在確認するため）。
 export function declaredKata(rulebookId: string): DeclaredKata[] {
   const fm = loadRulebookRefs(rulebookId);
-  const root = specdojoRootDir();
   const out: DeclaredKata[] = [];
   const add = (kind: KataKind, value: string | string[] | undefined, ext: string): void => {
     const ids = Array.isArray(value) ? value : value ? [value] : [];
     for (const id of ids) {
       if (id === "none" || id === "not-needed" || id === "undecided") continue;
+      const relativePath = repoPath(kind, id, declaredRefExt(kind, id, ext));
       out.push({
         kind,
         id,
-        fsPath: join(root, repoPath(kind, id, declaredRefExt(kind, id, ext))),
+        fsPath:
+          resolveSpecdojoPathIfExists(relativePath) ??
+          specdojoResourceCandidates(relativePath).repositoryPath,
       });
     }
   };

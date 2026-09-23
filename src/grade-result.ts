@@ -3,6 +3,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, resolve, sep } from "node:path";
 import yaml from "js-yaml";
 import { getProjectExecutionPath, loadConfig, specdojoRootDir } from "./specdojo-config.js";
+import { resolveSpecdojoPath } from "./template-resolution.js";
 
 export type StoredGradeTarget = "kata" | "deliverable";
 export type StoredGradeSeverity = "blocker" | "major" | "minor" | "note";
@@ -139,7 +140,7 @@ export function readGradeResultForDocument(opts: {
 }
 
 export function renderGradeResult(result: GradeResult, path: string): string {
-  const schemaRef = relative(dirname(path), resolve(specdojoRootDir(), GRADE_RESULT_SCHEMA))
+  const schemaRef = relative(dirname(path), resolveSpecdojoPath(GRADE_RESULT_SCHEMA))
     .split(sep)
     .join("/");
   return `# yaml-language-server: $schema=${schemaRef}\n${yaml.dump(result, {

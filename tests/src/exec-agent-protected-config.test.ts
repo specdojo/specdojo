@@ -50,6 +50,7 @@ describe("agent protected configuration paths", () => {
     "commitlint.config.cjs",
     ".commitlintrc.yaml",
     ".github/workflows/ci.yml",
+    "node_modules/specdojo/docs/ja/specdojo/rulebooks/example-rulebook.md",
     ".gitlab-ci.yml",
     ".circleci/config.yml",
     "azure-pipelines.yml",
@@ -101,6 +102,23 @@ describe("agent protected configuration paths", () => {
       ".agents/rules/existing.md",
       ".codex/agents/new.toml",
       "AGENTS.md",
+    ]);
+  });
+
+  it("detects changes to bundled SpecDojo resources under node_modules", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-protected-config-"));
+    roots.push(root);
+    const bundledRulebook = join(
+      root,
+      "node_modules/specdojo/docs/ja/specdojo/rulebooks/example-rulebook.md",
+    );
+    write(bundledRulebook, "# Before\n");
+
+    const before = captureAgentProtectedConfigSnapshot(root);
+    write(bundledRulebook, "# After\n");
+
+    expect(changedAgentProtectedConfigPaths(root, before)).toEqual([
+      "node_modules/specdojo/docs/ja/specdojo/rulebooks/example-rulebook.md",
     ]);
   });
 

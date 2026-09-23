@@ -22,6 +22,7 @@ import {
   type SpecDojoProjectConfig,
 } from "./specdojo-config.js";
 import { listFilesRecursive } from "./exec-shared.js";
+import { resolveSpecdojoPath } from "./template-resolution.js";
 import {
   gradeContentHash,
   gradeFindingCount,
@@ -552,16 +553,24 @@ function parseKataReference(path: string, kind: KataReference["kind"]): KataRefe
   }
 }
 
+// grade の評価対象は利用リポジトリが所有する kata に限る。package 側の kata は SpecDojo が
+// 管理する成果物であり、利用プロジェクトが評価・改善する対象ではない。フォールバックは
+// 個別ファイルの解決にのみ用い、対象の列挙には用いない（解決と列挙を区別する）。
 function loadKataReferences(): KataReference[] {
+  const references = new Map<string, KataReference>();
   const root = specdojoRootDir();
-  return KATA_DIRS.flatMap((kind) =>
-    listFilesRecursive(join(root, "docs/ja/specdojo", kind))
+  for (const kind of KATA_DIRS) {
+    const paths = listFilesRecursive(join(root, "docs/ja/specdojo", kind))
       .filter((path) => KATA_REFERENCE_EXTENSIONS.has(extname(path).toLowerCase()))
       .flatMap((path) => {
         const reference = parseKataReference(path, kind);
         return reference ? [reference] : [];
-      }),
-  );
+      });
+    for (const reference of paths) {
+      if (!references.has(reference.id)) references.set(reference.id, reference);
+    }
+  }
+  return [...references.values()];
 }
 
 function resolveGradeReferencePathsFromCatalog(path: string, catalog: KataReference[]): string[] {
@@ -602,7 +611,10 @@ function gradeReferenceExampleFamily(
 ): string | null {
   if (target === "kata") {
     const rel = repoRelativePath(path);
-    const kind = KATA_DIRS.find((candidate) => rel.startsWith(`docs/ja/specdojo/${candidate}/`));
+    const kind = KATA_DIRS.find((candidate) => {
+      const marker = `docs/ja/specdojo/${candidate}/`;
+      return rel.startsWith(marker) || rel.includes(`/${marker}`);
+    });
     if (kind) return kind;
   }
   const type = typeof metadata.type === "string" ? metadata.type.trim() : "";
@@ -1027,9 +1039,10 @@ export function discoverGradeTargets(
       );
     }
   } else if (opts.target === "kata") {
+    // 対象の列挙は利用リポジトリ限定。eject されていない kata は評価対象にしない。
     candidates = KATA_DIRS.flatMap((dir) =>
-      listFilesRecursive(join(rootDir, "docs/ja/specdojo", dir)).filter((path) =>
-        path.endsWith(".md"),
+      listFilesRecursive(join(rootDir, "docs/ja/specdojo", dir)).filter((entry) =>
+        entry.endsWith(".md"),
       ),
     );
   } else {
@@ -2228,7 +2241,7 @@ export function renderDoneCriteriaDetail(
   detail: GradeDoneCriteriaDetail,
   detailPath: string,
 ): string {
-  const schemaRef = relative(dirname(detailPath), resolve(specdojoRootDir(), DONE_CRITERIA_SCHEMA))
+  const schemaRef = relative(dirname(detailPath), resolveSpecdojoPath(DONE_CRITERIA_SCHEMA))
     .split(sep)
     .join("/");
   return `# yaml-language-server: $schema=${schemaRef}\n${yaml.dump(detail, { lineWidth: 120, noRefs: true, quotingType: '"' })}`;

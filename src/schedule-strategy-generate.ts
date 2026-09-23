@@ -16,6 +16,7 @@ import {
 import { tmpdir } from "node:os";
 import { basename, join, relative, resolve } from "node:path";
 import yaml from "js-yaml";
+import { resolveSpecdojoPath } from "./template-resolution.js";
 import Ajv2020Module from "ajv/dist/2020.js";
 import type { ValidateFunction } from "ajv";
 import { collectResolvedDeliverables } from "./catalog-build.js";
@@ -684,13 +685,17 @@ const Ajv2020 = Ajv2020Module.default;
 let compiledSchemaCache: { schemaPath: string; validate: ValidateFunction } | null = null;
 
 function compileStrategySchema(repoRoot: string): ValidateFunction {
-  const schemaPath = join(repoRoot, SCH_STRATEGY_SCHEMA_PATH);
+  const schemaPath = resolveSpecdojoPath(SCH_STRATEGY_SCHEMA_PATH, {
+    repositoryRoot: repoRoot,
+  });
   if (compiledSchemaCache && compiledSchemaCache.schemaPath === schemaPath) {
     return compiledSchemaCache.validate;
   }
   const ajv = new Ajv2020({ allErrors: true, strict: false });
   const load = (fileName: string): unknown => {
-    const filePath = join(repoRoot, "docs/specdojo/schemas/v1", fileName);
+    const filePath = resolveSpecdojoPath(`docs/specdojo/schemas/v1/${fileName}`, {
+      repositoryRoot: repoRoot,
+    });
     try {
       return yaml.load(readFileSync(filePath, "utf8"));
     } catch (error) {

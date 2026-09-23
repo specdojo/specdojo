@@ -37,7 +37,10 @@ import {
 } from "./catalog-plan.js";
 import { renderPlanPrompt } from "./catalog-plan-prompt.js";
 import { generateCatalogsFromPlan, writeGeneratedCatalogs } from "./catalog-plan-generate.js";
-import { resolveSpecdojoTemplatesDir } from "./template-resolution.js";
+import {
+  resolveSpecdojoReferencePathIfExists,
+  resolveSpecdojoTemplatesDir,
+} from "./template-resolution.js";
 
 function readSizeFromDeclaration(catalogPath: string): ProjectSize | null {
   const size = loadDctIndex(catalogPath)?.size;
@@ -499,6 +502,7 @@ export function registerCatalogCommands(program: Command): void {
         force: !!opts.force,
         domains: opts.domain as string[],
         variables: parseScaffoldVariables(opts.var as string[]),
+        resourceRoots: { repositoryRoot: specdojoRootDir() },
       });
 
       for (const err of errors) {
@@ -673,7 +677,10 @@ function registerCatalogPlanCommands(cat: Command): void {
         templateId: template.template.id,
         templateRelPath: template.relPath,
         planRelPath: repoRelative(planPath),
-        schemaRelPath: DCT_PLAN_SCHEMA_PATH,
+        schemaRelPath:
+          resolveSpecdojoReferencePathIfExists(DCT_PLAN_SCHEMA_PATH, {
+            repositoryRoot: repoRoot,
+          }) ?? DCT_PLAN_SCHEMA_PATH,
         inputs: resolution.inputs,
         planExists: existsSync(planPath),
       });

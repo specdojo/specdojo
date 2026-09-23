@@ -13,7 +13,7 @@ import {
   type RegisterPaths,
 } from "./register.js";
 import {
-  execTemplatesDir,
+  execTemplatePath,
   injectCommonConventions,
   MISSING,
   registerGradeFindingsText,
@@ -370,7 +370,7 @@ export async function generateRegisterPlan(opts: {
   const { item } = opts;
   const category = requireRunnableRegisterItem(item);
 
-  const templatePath = join(execTemplatesDir(), REGISTER_PLAN_TEMPLATES[category]);
+  const templatePath = execTemplatePath(REGISTER_PLAN_TEMPLATES[category]);
   if (!existsSync(templatePath)) {
     throw new Error(`Template not found: ${templatePath}`);
   }

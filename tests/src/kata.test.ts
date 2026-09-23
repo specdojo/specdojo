@@ -19,10 +19,15 @@ const SPECDOJO = "docs/ja/specdojo";
 describe("kata", () => {
   let root: string;
   let originalCwd: string;
+  let originalPackageRoot: string | undefined;
 
   beforeEach(() => {
     originalCwd = process.cwd();
     root = mkdtempSync(join(tmpdir(), "specdojo-refmat-"));
+    // package へのフォールバックが開発リポジトリの kata を拾わないよう、参照先を temp ルートへ
+    // 固定する。ここを固定しないと、利用リポジトリに無い参照が開発リポジトリ側で解決される。
+    originalPackageRoot = process.env.SPECDOJO_PACKAGE_ROOT;
+    process.env.SPECDOJO_PACKAGE_ROOT = root;
     // specdojoRootDir() が temp ルートで停止するよう config マーカーを置く。
     mkdirSync(join(root, ".specdojo"), { recursive: true });
     writeFileSync(join(root, ".specdojo", "specdojo.config.json"), "{}", "utf8");
@@ -34,6 +39,8 @@ describe("kata", () => {
 
   afterEach(() => {
     process.chdir(originalCwd);
+    if (originalPackageRoot === undefined) delete process.env.SPECDOJO_PACKAGE_ROOT;
+    else process.env.SPECDOJO_PACKAGE_ROOT = originalPackageRoot;
     rmSync(root, { recursive: true, force: true });
   });
 

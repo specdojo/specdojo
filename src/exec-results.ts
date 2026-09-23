@@ -1,12 +1,12 @@
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { isDeepStrictEqual } from "node:util";
-import { specdojoRootDir } from "./specdojo-config.js";
 import { buildSpecdojoFrontmatter, parseSpecdojoDocument } from "./frontmatter-namespace.js";
 import { expandTemplate, stripTerminalControlSequences } from "./exec-shared.js";
 import { formatMarkdownFile } from "./exec-format.js";
 import type { Approach, ExecResultMeta, TaskMode, TaskOrigin } from "./exec-types.js";
 import type { ReporterOutput, ReviewReporterOutput } from "./exec-reporter.js";
+import { resolveSpecdojoPath, resolveSpecdojoPathIfExists } from "./template-resolution.js";
 
 // ---------------------------------------------------------------------------
 // Frontmatter helpers
@@ -101,19 +101,21 @@ function execResultDocId(projectId: string, mode: TaskMode, localBase: string): 
 // approach が finalize 系なら xer-human-<approach>-template.md を優先し、無ければ
 // mode 別の標準テンプレートへフォールバックする（plan 側の human × approach 解決と対称）。
 function loadResultTemplate(mode: TaskMode, approach: Approach | undefined): string {
-  const templatesPath = join(specdojoRootDir(), "docs/ja/specdojo/exec-templates");
   if (mode === "edit" && approach === "cross-deliverable-dedup") {
-    const crossDeliverablePath = join(templatesPath, "xer-cross-deliverable-dedup-template.md");
-    if (existsSync(crossDeliverablePath)) return readFileSync(crossDeliverablePath, "utf8");
+    const crossDeliverablePath = resolveSpecdojoPathIfExists(
+      "docs/ja/specdojo/exec-templates/xer-cross-deliverable-dedup-template.md",
+    );
+    if (crossDeliverablePath) return readFileSync(crossDeliverablePath, "utf8");
   }
   if (mode === "edit" && isFinalizeApproach(approach)) {
-    const finalizePath = join(templatesPath, `xer-human-${approach}-template.md`);
-    if (existsSync(finalizePath)) return readFileSync(finalizePath, "utf8");
+    const finalizePath = resolveSpecdojoPathIfExists(
+      `docs/ja/specdojo/exec-templates/xer-human-${approach}-template.md`,
+    );
+    if (finalizePath) return readFileSync(finalizePath, "utf8");
   }
-  const templatePath = join(templatesPath, templateFileName(mode));
-  if (!existsSync(templatePath)) {
-    throw new Error(`Template not found: ${templatePath}`);
-  }
+  const templatePath = resolveSpecdojoPath(
+    `docs/ja/specdojo/exec-templates/${templateFileName(mode)}`,
+  );
   return readFileSync(templatePath, "utf8");
 }
 
