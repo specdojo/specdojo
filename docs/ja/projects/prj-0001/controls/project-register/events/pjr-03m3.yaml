@@ -32,3 +32,32 @@
     - field: due
       from: ""
       to: "2026-10-10"
+- v: 1
+  id: reg_5b191d73f84c4353bc97d2cb9fcf0f82
+  ts: "2026-09-23T02:50:00Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_4503af091703434d9b5780acd0571ab1
+- v: 1
+  id: reg_94f0a934b05a4a29878cf0de6f1647ff
+  ts: "2026-09-23T03:04:48Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=.opencode/.gitignore, .opencode/node_modules/.bin/download-msgpackr-prebuilds, .opencode/node_modul…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=.opencode/.gitignore, .opencode/node_modules/.bin/download-msgpackr-prebuilds, .opencode/node_modul…"
+  previous_event_id: reg_5b191d73f84c4353bc97d2cb9fcf0f82

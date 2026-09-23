@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   owner: DEV
   registered_at: "2026-09-23T02:37:13Z"
   due_on: "2026-10-10"
+  block_reason: "agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=.opencode/.gitignore, .opencode/node_modules/.bin/download-msgpackr-prebuilds, .opencode/node_modul…"
 ---
 
 # PJR-03M3 git-branching-standard に 3 層の切り分けと運用規模別の条件を明記する
@@ -35,13 +36,15 @@ specdojo:
 
 | No  | 作業                                                                   | 担当 | 状態 | メモ                                 |
 | --- | ---------------------------------------------------------------------- | ---- | ---- | ------------------------------------ |
-| 1   | `git-branching-standard` へ 3 層の切り分けと判断基準を追加する         | DEV  | open | 既存の `分岐・統合の規範` へ接続する |
-| 2   | 運用規模別の必須条件と省略可能範囲を追加する                           | DEV  | open | 猶予期間の扱いを明文化する           |
-| 3   | `branch-workflow-guide` へ PR 表示が再計算されない場合の対処を追加する | DEV  | open | 実地で観測した事象                   |
+| 1   | `git-branching-standard` へ 3 層の切り分けと判断基準を追加する         | DEV  | done | `分岐・統合の規範` へ 4.1 として追加 |
+| 2   | 運用規模別の必須条件と省略可能範囲を追加する                           | DEV  | done | 4.2 で猶予期間を含めて明文化         |
+| 3   | `branch-workflow-guide` へ PR 表示が再計算されない場合の対処を追加する | DEV  | done | compare API と close / reopen を追加 |
 
 ## 4. 対応結果
 
--
+- [[specdojo:git-branching-standard]] に、exec の自動実行、人・対話型 agent が内容を書いた変更、register の記帳という3層と、それぞれのブランチ・統合方法を表で追加した。事前レビューの価値を境界とし、乱数 ID、Git 管理対象外の生成物、項目単位の実体という記帳例外の前提も明記した。
+- 同標準に運用規模別の条件を追加した。3層分類と exec 対象の事前統合は共通とし、単独運用ではリモート PR、branch protection、分離した統合専用 actor、リモートへのベース反映を条件付きで省略できる一方、複数人・複数 actor 運用では必須とした。
+- [[specdojo:branch-workflow-guide]] に、feature 分岐前の base push と SHA 確認、および Pull Request の Files changed が古い場合に compare API で実差分を確認して close / reopen する手順を追加した。
 
 ## 5. 関連ドキュメント
 
