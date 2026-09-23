@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-ewwx-feature-branch-policy
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: medium
   owner: ARC
   registered_at: "2026-09-23T01:58:07Z"
   due_on: "2026-10-31"
+  completed_at: "2026-09-23T02:30:07Z"
+  conclusion: develop へ入る経路を exec ブランチ / feature ブランチ / 記帳の直接 commit の 3 層に分ける。人が内容を書いた変更は feature から PR で統合し、register の記帳は develop 直 commit を許容する。
 ---
 
 # PJR-EWWX 複数人開発に備えて人が書いた変更を feature ブランチ経由に統一する
@@ -28,6 +30,15 @@ specdojo:
 - 各自のクローンから develop を push すると競合のたびに merge commit が増え、exec の「1 task = merge commit 1 件」という first-parent 設計が薄まる。
 
 一方、登録簿は並行運用を前提に設計されている。ID は連番ではなく 32 文字セットの 4 文字乱数で、`pjr-index.md` と各ビューは `generated/` 配下で gitignore 済み、実体は項目ごとに分かれた個票とイベントファイルだけである。`register` コマンドは現在ブランチを参照せず、どのブランチ・どの worktree でも実行できる。
+
+### 1.1. 実地検証で観測した摩擦
+
+本項目自体を `feature/prj-0001/branch-policy` から PR #5 として統合し、決定した経路を検証した。想定していた摩擦のうち 2 つが最初の 1 回で発生した。
+
+- ローカル develop の未 push commit が PR の差分へ混入した。feature を切った時点の develop 先端がリモートへ push されていなかったため、無関係な close 1 件（PJR-1Y0G）が差分に含まれた。develop を push すると解消した。複数人運用では「feature を切る前にベースを push 済みにする」ことが前提になる。
+- base ブランチを進めても PR の表示が再計算されず、Files changed が 4 件のままになった。compare API は正しく 2 件を返しており、リポジトリの実体と表示が乖離した。承認対象を画面で確定させたい場合は、PR を close / reopen して再計算させる必要がある。
+
+統合は merge commit 1 件（`0be840db`）として first-parent に現れ、develop へ入った変更は `cfa495e6` の 1 commit だけだった。exec の統合方式（1 task = merge commit 1 件）と同じ粒度が feature 経路でも成立することを確認した。
 
 ## 2. 検討した選択肢
 
@@ -62,17 +73,17 @@ specdojo:
 
 ## 5. 承認
 
-| 項目     | 内容                                   |
-| -------- | -------------------------------------- |
-| 決定者   | _TODO_                                 |
-| 決定日   | _TODO_                                 |
-| 承認方式 | PR                                     |
-| 証跡     | _TODO_: PR URL と merge SHA を記載する |
+| 項目     | 内容                                                                                                    |
+| -------- | ------------------------------------------------------------------------------------------------------- |
+| 決定者   | naoji3x                                                                                                 |
+| 決定日   | 2026-09-23                                                                                              |
+| 承認方式 | PR                                                                                                      |
+| 証跡     | PR: <https://github.com/specdojo/specdojo/pull/5> / merge SHA: 0be840db281e8356acd46a960f091d28ab2cd30a |
 
 - 承認方式は `commit` または `PR` を記載する。`PR` の場合は証跡に PR URL と merge SHA を本文テキストで記載する。
 - 不可逆・高リスク・framework schema 破壊的変更に該当する決定は `PR` 方式で承認する。
 
-本項目は PR 強制 3 ケースには該当しないが、決定した feature 経路そのものを実地検証するため PR 方式で承認する。
+本項目は PR 強制 3 ケースには該当しないが、決定した feature 経路そのものを実地検証するため PR 方式で承認した。PR の作成者と決定者が同一のため GitHub の Approve は使えず、merge 操作を承認行為として扱った。強制 3 ケースでは作成者自身の承認を数えないため、この扱いは本項目限りとする。
 
 ## 6. 影響範囲とフォローアップ
 
