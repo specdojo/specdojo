@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "task_id": "T-DATA-FLOW-PDCA-cdfd-onboarding-010",
+  "run_id": "20260915T224527989Z-4e543c34",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-15T22:46:10.687Z",
+    "completed_at": "2026-09-15T22:51:04.601Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-onboarding.md",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ""
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-onboarding.md",
+      "status": "passed",
+      "summary": "対象Markdownを整形済み"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-onboarding.md",
+      "status": "passed",
+      "summary": "エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "文書索引1726件を生成"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:integration",
+      "status": "not_run",
+      "summary": "親runner実行対象"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema",
+      "status": "not_run",
+      "summary": "親runner実行対象"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:unit",
+      "status": "not_run",
+      "summary": "親runner実行対象"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-onboarding-010\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nUpdated: /tmp/specdojo-register-resume-e2e-925rNK/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)\nUpdated: /tmp/specdojo-register-resume-e2e-925rNK/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml\nUpdated: /tmp/specdojo-register-pipeline-e2e-5GIV2L/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)\nUpdated: /tmp/specdojo-register-pipeline-e2e-5GIV2L/docs/ja/projects/test/controls/project-register/events/pjr-a…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.1.0 validate:schema:yaml\n> tsx tools/docs/src/validate-yaml-schema.ts --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-…"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-onboarding-010\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-qPyVG1/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-FGSdr6/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-W7uog4/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-JccKEk/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-iK2UC2/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-LYZNEE/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\nWrote agent stdout: /tmp/specdojo-agent-command-1CSWXV/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-83HkMa/outputs/partial.txt\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\n\n Test Files…"
+    }
+  ],
+  "final_message": "Onboarding CDFDを新規作成し、必須構成・主要例外・Planへの委譲を定義した",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-PDCA-cdfd-onboarding-010/20260915T224527989Z-4e543c34/executor.log",
+      "bytes": 1721,
+      "truncated": false
+    },
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-PDCA-cdfd-onboarding-010/20260915T224527989Z-4e543c34/reporter-attempt-1.stdout.log",
+      "bytes": 5875,
+      "truncated": false
+    },
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-PDCA-cdfd-onboarding-010/20260915T224527989Z-4e543c34/reporter-attempt-1.stderr.log",
+      "bytes": 0,
+      "truncated": false
+    },
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-PDCA-cdfd-onboarding-010/20260915T224527989Z-4e543c34/reporter-attempt-2.stdout.log",
+      "bytes": 5897,
+      "truncated": false
+    },
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-PDCA-cdfd-onboarding-010/20260915T224527989Z-4e543c34/reporter-attempt-2.stderr.log",
+      "bytes": 0,
+      "truncated": false
+    },
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-PDCA-cdfd-onboarding-010/20260915T224527989Z-4e543c34/reporter-attempt-3.stdout.log",
+      "bytes": 3805,
+      "truncated": false
+    },
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-PDCA-cdfd-onboarding-010/20260915T224527989Z-4e543c34/reporter-attempt-3.stderr.log",
+      "bytes": 0,
+      "truncated": false
+    }
+  ]
+}

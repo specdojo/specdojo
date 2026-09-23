@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_25776bd820c1415894a85c66678a7a48
+  ts: "2026-09-09T15:18:58Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 呼び出し元のない lefthook-docs-build.ts を削除する
+    - field: description
+      from: ""
+      to: tools/docs/src/lefthook-docs-build.ts はリポジトリ内のどこからも呼ばれていない。lefthook.yml にも .github/workflows/ にも package.json の script にも参照がなく、唯一の一致はファイル自身が持つ環境変数名である。GitHub Actions は npm run docs:build を直接呼び、その定義は vitepress build を実行するもので当該スクリプトを経由しない。lefthook.yml にはメモリ消費を理由とするコメントのみが残っており、hook から外された際にスクリプトが残置されたと推測される。削除前に git 履歴を確認し、復活の予定があれば記録を残す。npm の同梱対象にも含まれているため、利用者へ不要なファイルを配布している。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-10"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_c57bf616d5e44afa9a4ad3563ea7fcfe
+  ts: "2026-09-10T03:31:30Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_25776bd820c1415894a85c66678a7a48
+- v: 1
+  id: reg_f5ac2f6127fa4cf2ae83feaab6496654
+  ts: "2026-09-10T03:43:28Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_c57bf616d5e44afa9a4ad3563ea7fcfe
+- v: 1
+  id: reg_613334c399224023bf5aed1cfe35106d
+  ts: "2026-09-10T11:45:02Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: tools/docs/src/lefthook-docs-build.ts を削除した。npm pack --dry-run の同梱物からも消えている。docs:build と lint:md は従来どおり動作する。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-10"
+  previous_event_id: reg_f5ac2f6127fa4cf2ae83feaab6496654

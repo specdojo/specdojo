@@ -1,0 +1,108 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_a73567f4130f4e1b8afa18c5edf919b6
+  ts: "2026-09-23T03:50:08Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-YPNS の分割（第 3 段階）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: eject されていない kata の wikilink と index build の解決方針を決めて実装する
+    - field: description
+      from: ""
+      to: kata を node_modules から参照する構成では、成果物から [[specdojo:xxx-rulebook]] を辿れなくなる。index build の走査範囲、未解決時の扱い（公開サイト URL への退避、警告、エラー）、docs サイト生成時の扱いを決めて実装する。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-23"
+    - field: due
+      from: ""
+      to: "2026-10-31"
+- v: 1
+  id: reg_29b5a5e193e548bc9f6c4b77ab59c59a
+  ts: "2026-09-23T06:37:55Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_a73567f4130f4e1b8afa18c5edf919b6
+- v: 1
+  id: reg_7e44d092d6a240f89e36b40606047138
+  ts: "2026-09-23T06:37:58Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "checkpoint failed: git worktree failed: Preparing worktree (new branch 'exec/prj-0001-PJR-G8M9') Updating files:  50% (2325/4638)\rUpdating files:  51% (2366/4638)\rUpdating files:  52% (2412/4638)\rUpda…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "checkpoint failed: git worktree failed: Preparing worktree (new branch 'exec/prj-0001-PJR-G8M9') Updating files:  50% (2325/4638)\rUpdating files:  51% (2366/4638)\rUpdating files:  52% (2412/4638)\rUpda…"
+  previous_event_id: reg_29b5a5e193e548bc9f6c4b77ab59c59a
+- v: 1
+  id: reg_9e68a0abcbc14ffc92c3b9f0e2caafb1
+  ts: "2026-09-23T07:06:42Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_7e44d092d6a240f89e36b40606047138
+- v: 1
+  id: reg_8aa655b1fa714762bcdbcb61d99a4124
+  ts: "2026-09-23T07:24:06Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_9e68a0abcbc14ffc92c3b9f0e2caafb1
+- v: 1
+  id: reg_7e184f8065d04675ab839e22b632fbf3
+  ts: "2026-09-23T07:31:06Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: レビュー完了。空リポジトリと node_modules 構成で検証済み
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-23"
+    - field: conclusion
+      from: "-"
+      to: index build が resolver 由来の package kata も走査し、利用リポジトリと package をスコープで分けて重複判定するようにした。eject 後も index build が成功する。
+  previous_event_id: reg_8aa655b1fa714762bcdbcb61d99a4124

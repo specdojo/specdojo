@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/job.schema.yaml
+id: job-register-sweep
+name: 登録簿項目のスイープ実行
+description: 登録簿から条件に合う実行可能項目を選び、ID 昇順で実行する。
+inputs:
+  types:
+    type: list
+    enum: [todo, question, risk, issue, change-request, decision, note]
+  priorities:
+    type: list
+    enum: [high, medium, low]
+  statuses:
+    type: list
+    enum: [open, in-progress, waiting, review, decided, done, deferred, rejected]
+  limit:
+    type: integer
+    minimum: 1
+task:
+  mode: command
+  owner: ARC
+  command: |
+    set -- exec run --register-filter --project "{{project_id}}" --on-failure continue --if-busy skip
+    if [ -n "{{inputs.types}}" ]; then
+      set -- "$@" --register-types "{{inputs.types}}"
+    fi
+    if [ -n "{{inputs.priorities}}" ]; then
+      set -- "$@" --register-priorities "{{inputs.priorities}}"
+    fi
+    if [ -n "{{inputs.statuses}}" ]; then
+      set -- "$@" --register-statuses "{{inputs.statuses}}"
+    fi
+    if [ -n "{{inputs.limit}}" ]; then
+      set -- "$@" --register-limit "{{inputs.limit}}"
+    fi
+    {{specdojo}} "$@"
+run:
+  idempotency_key: "{{job_id}}:{{scheduled_at}}:{{inputs.types}}:{{inputs.priorities}}:{{inputs.statuses}}:{{inputs.limit}}"

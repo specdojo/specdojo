@@ -1,0 +1,82 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f0f6fec7d188464eb643c214deb08267
+  ts: "2026-09-06T00:09:46Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: Marketplace 公開の前に、成果物の混入とビルド経路の欠落を解消する必要があるため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: VS Code 拡張の配置とビルド成果物の扱いを整える
+    - field: description
+      from: ""
+      to: vsix が git 管理下にあり、ルートから拡張をビルドする経路もない。配置とビルドの扱いを一貫させる。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-06"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_156a3850a1a44752afc5406d26ed6a8e
+  ts: "2026-09-06T12:23:39Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_f0f6fec7d188464eb643c214deb08267
+- v: 1
+  id: reg_9b8ffcbd1afc464e900300871e839889
+  ts: "2026-09-06T12:38:17Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=package.json; agent must record the required change in the result …"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=package.json; agent must record the required change in the result …"
+  previous_event_id: reg_156a3850a1a44752afc5406d26ed6a8e
+- v: 1
+  id: reg_17bb4577f028467cb0df565a32e6ae81
+  ts: "2026-09-06T12:43:59Z"
+  action: close
+  actor: orchestrator
+  from_status: waiting
+  to_status: done
+  reason: 拡張を packages/ へ移し、ルートから install / build / package を実行できるようにした。vsix は tracking しない。
+  changes:
+    - field: status
+      from: waiting
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-06"
+    - field: conclusion
+      from: "-"
+      to: 拡張を packages/ へ移し、ルートから install / build / package を実行できるようにした。vsix は tracking しない。
+  previous_event_id: reg_9b8ffcbd1afc464e900300871e839889

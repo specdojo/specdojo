@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-08K1",
+  "run_id": "20260911T124544877Z-ebc5e6c0",
+  "stage": {
+    "role": "executor",
+    "actor": "claude-expert-executor",
+    "status": "rate_limited",
+    "started_at": "2026-09-11T12:45:44.877Z",
+    "completed_at": "2026-09-11T12:58:03.084Z",
+    "exit_code": 1,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/specdojo/schemas/v1/common-frontmatter.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/grade.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/grade.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/grade-done-criteria.schema.yaml",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 4,
+    "summary": ".../schemas/v1/common-frontmatter.schema.yaml      |  28 ++\n src/grade.ts                                       | 540 +++++++++++++++++++--\n tests/src/grade.test.ts                            | 329 ++++++++++++-\n 3 files changed, 864 insertions(+), 33 deletions(-)"
+  },
+  "validations": [],
+  "final_message": "You've hit your session limit · resets 12:50am (Asia/Tokyo)",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-08K1/20260911T124544877Z-ebc5e6c0/executor.log",
+      "bytes": 60,
+      "truncated": false
+    }
+  ]
+}

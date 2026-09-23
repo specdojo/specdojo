@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "run_id": "JBR-grade-kata-48cd668e941c",
+  "job_id": "job-grade-kata",
+  "idempotency_key": "job-grade-kata:command-v1:all:2026-W37:5:true:true",
+  "project_id": "prj-0001",
+  "trigger": "routine",
+  "scheduled_at": "2026-09-08T22:42:11.249Z",
+  "created_at": "2026-09-08T22:42:11.484Z",
+  "updated_at": "2026-09-09T13:16:38.326Z",
+  "state": "succeeded",
+  "inputs": {
+    "period": "2026-W37",
+    "kind": "all",
+    "limit": 5,
+    "changed_only": true,
+    "ungraded": true
+  },
+  "task": {
+    "mode": "command",
+    "command": "npm run build\ntools/grade/run-per-document.sh --run-id job-grade-kata-all-2026-W37 --kind all --limit 5 --changed-only=true --ungraded=true\ncat logs/grade/runs/per-document/job-grade-kata-all-2026-W37/results.tsv",
+    "analysis": {
+      "agent": "gemma-reporter",
+      "description": "runner が記録した command evidence の終了コードと、stdout に出力された\n`results.tsv` から次を判断して報告する。\n\n- 終了コード75（rate limit）または中断で未完了の段が残っているか。残る場合は同じ\n  `--run-id` で再開できる状態かを確認する。\n- `failed` の段があるか。ある場合は rate limit、agent 側の失敗、`grade apply` の\n  忠実性検証による拒否のいずれかへ切り分ける。\n- 3段目が実行されなかった文書について、閾値未満と2段目の失敗のどちらが理由か。\n- verdict と score の分布に、3段目の閾値の見直しを要する偏りがあるか。\n\n選択された文書が0件の場合は no-op と判断する。判断できない事象は推測で埋めず、\n観測した事実と未確認の範囲を分けて報告する。"
+    },
+    "paths": [
+      "docs/ja/specdojo/rulebooks",
+      "docs/ja/specdojo/recipes",
+      "docs/ja/specdojo/samples",
+      "docs/ja/specdojo/templates"
+    ],
+    "owner": "ARC"
+  },
+  "checkpoint_before": {},
+  "plan_ref": "exec/plans/JBR-grade-kata-48cd668e941c-plan.md",
+  "result_ref": "exec/results/JBR-grade-kata-48cd668e941c-result.md",
+  "attempts": [
+    {
+      "attempt": 1,
+      "started_at": "2026-09-08T22:42:11.484Z",
+      "status": "failed",
+      "completed_at": "2026-09-09T00:13:08.601Z",
+      "result_ref": "exec/results/JBR-grade-kata-48cd668e941c-result.md",
+      "evidence_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-48cd668e941c/attempt-1/evidence.json",
+      "exit_code": 0,
+      "reason": "results.tsv の実データが evidence に含まれていないため、計画に定められた品質評価の判断（終了コード75の確認、failed段の分析、スコア分布の検証等）を行うことができない。"
+    },
+    {
+      "attempt": 2,
+      "started_at": "2026-09-09T13:14:25.644Z",
+      "status": "succeeded",
+      "completed_at": "2026-09-09T13:16:38.326Z",
+      "result_ref": "exec/results/JBR-grade-kata-48cd668e941c-result.md",
+      "evidence_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-48cd668e941c/attempt-2/evidence.json",
+      "exit_code": 0
+    }
+  ]
+}

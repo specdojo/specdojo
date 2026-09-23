@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "task_id": "T-DATA-FLOW-PDCA-cdfd-orchestrator-010",
+  "run_id": "20260915T140411026Z-83718677",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-15T14:04:57.820Z",
+    "completed_at": "2026-09-15T14:12:10.180Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-orchestrator.md",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ""
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-orchestrator.md",
+      "status": "passed",
+      "summary": "Markdownを整形"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-orchestrator.md",
+      "status": "passed",
+      "summary": "lintエラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts index build",
+      "status": "failed",
+      "summary": "sandboxでtsx IPCソケット作成がEPERM"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "同一エントリポイントで1711件の索引生成に成功"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:integration",
+      "status": "not_run",
+      "summary": "親runnerの検証対象"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema",
+      "status": "not_run",
+      "summary": "親runnerの検証対象"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:unit",
+      "status": "not_run",
+      "summary": "親runnerの検証対象"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-orchestrator-010\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/unmerged.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-scope: skipped non-target changes (left in worktree):\n  d…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.1.0 validate:schema:yaml\n> tsx tools/docs/src/validate-yaml-schema.ts --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-…"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-orchestrator-010\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-0Bb84q/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-nmuZLR/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-ywoFuA/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-LTXvZY/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-1n6rID/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-AUGVnM/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\nWrote agent stdout: /tmp/specdojo-agent-command-bMNGKF/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-3YHINv/outputs/partial.txt\n\n Test Files  102 passed (102)\n      Tests  1470 passed (1470)\n   Start at  23:12:45\n   Duration  26.11s (trans…"
+    }
+  ],
+  "final_message": "Orchestrator CDFDを新規作成し、必須検査を完了",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-PDCA-cdfd-orchestrator-010/20260915T140411026Z-83718677/executor.log",
+      "bytes": 1643,
+      "truncated": false
+    }
+  ]
+}

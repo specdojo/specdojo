@@ -1,0 +1,7 @@
+PJR-JFTCで対象機能が廃止済みだったため、実装修正は不要と判断しました。[個票](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-6AAX/docs/ja/projects/prj-0001/controls/project-register/pjr-6aax-assessment-validate-false-warning.md)に経緯・対応結果・残課題なしを記録しました。result は指示どおり未編集です。
+
+各種整形・lint・typecheck・SpecDojo検証は成功しました。catalog validate の既存未作成文書警告のみです。
+
+<specdojo_executor_evidence>
+{"final_message":"sch-assessment廃止済みのため実装修正は不要と判断し、PJR-6AAX個票へ適用外となった根拠と対応結果を反映した。","validations":[{"command":"node --import tsx src/specdojo.ts schedule --help","status":"passed","summary":"assessmentサブコマンドが存在しないことを確認。"},{"command":"npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-6aax-assessment-validate-false-warning.md","status":"passed","summary":"個票を整形。"},{"command":"npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-6aax-assessment-validate-false-warning.md","status":"passed","summary":"Markdown検査成功。"},{"command":"npm run typecheck","status":"passed","summary":"型検査成功。"},{"command":"npm run lint:ts","status":"passed","summary":"TypeScript lint成功。"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿生成成功。"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"カタログ検証成功。既存の未作成文書参照警告のみ。"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"文書索引1510件を生成。"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし。"}]}
+</specdojo_executor_evidence>

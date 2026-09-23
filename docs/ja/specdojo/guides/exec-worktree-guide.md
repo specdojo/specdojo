@@ -31,14 +31,15 @@ Exec Worktree Guide
 
 `exec run --worktree` と `exec run --auto` は、worktree 準備、agent 起動、commit、merge、状態更新を一括で行います。各段階を人が確認しながら進める場合は `exec worktree` 配下の分割コマンドを使います。
 
-| コマンド           | 責務                                                              | Git変更   | イベント変更 |
-| ------------------ | ----------------------------------------------------------------- | --------- | ------------ |
-| `worktree prepare` | 実行管理ファイルを checkpoint commit し、task worktree を準備する | あり      | なし         |
-| `worktree status`  | worktree、result、Git差分の状態を確認する                         | なし      | なし         |
-| `worktree agent`   | worktree内で agent command を1回実行する                          | agent次第 | なし         |
-| `worktree commit`  | result と成果物変更を exec ブランチへ commit する                 | あり      | なし         |
-| `worktree merge`   | exec ブランチを現在のブランチへ merge する                        | あり      | なし         |
-| `worktree remove`  | 統合済み worktree を削除する                                      | あり      | なし         |
+| コマンド           | 責務                                                                             | Git変更   | イベント変更 |
+| ------------------ | -------------------------------------------------------------------------------- | --------- | ------------ |
+| `worktree prepare` | task worktree を準備し、実行管理ファイルを exec branch へ checkpoint commit する | あり      | なし         |
+| `worktree status`  | worktree、result、Git差分の状態を確認する                                        | なし      | なし         |
+| `worktree agent`   | worktree内で agent command を1回実行する                                         | agent次第 | なし         |
+| `worktree commit`  | result と成果物変更を exec ブランチへ commit する                                | あり      | なし         |
+| `worktree merge`   | exec ブランチを現在のブランチへ merge する                                       | あり      | なし         |
+| `worktree remove`  | 統合済み worktree を削除する                                                     | あり      | なし         |
+| `worktree prune`   | worktree のない project 配下の exec ブランチを監査・整理する                     | 条件付き  | なし         |
 
 分割コマンドは `claim`、`complete`、`block` を暗黙には実行しません。対象タスクは事前に `doing` である必要があります。
 
@@ -109,15 +110,20 @@ specdojo exec worktree prepare \
 3. plan、result、claim event を確認します。
 4. plan がなければ `exec plan` 相当で生成します。
 5. root index に stage 済み変更がないことを確認します。
-6. plan、result、claim event を checkpoint commit します。
-7. checkpoint commit から exec branch と worktree を作成します。
-8. root と、tracked `package-lock.json` を持つ独立 package で `npm ci` を実行します。
+6. 現在の統合先 HEAD から exec branch と worktree を作成します。
+7. root と、tracked `package-lock.json` を持つ独立 package で `npm ci` を実行します。
+8. worktree 内で `specdojo build` を実行し、生成物を用意します。
+9. plan、result、claim event を worktree へ複製し、exec branch へ checkpoint commit します。
 
-root にある無関係な未commit変更は checkpoint commit に含めません。ただし、stage 済み変更がある場合は停止します。
+root にある無関係な未commit変更は checkpoint commit に含めません。ただし、stage 済み変更がある場合は停止します。checkpoint は exec branch だけに置かれるため、統合先の first-parent に `prepare execution` commit は増えません。root 側の plan、result、claim event は未commitのまま残り、task が `doing` であることは統合先からも見えます。これらの root 側の複製は `worktree merge` が統合の直前に解放し（HEAD の状態へ戻し）、merge が exec branch の commit 済み内容を持ち込みます。merge が失敗した場合は複製を元に戻します。
 
 作成または再利用した task worktree では、tracked `package-lock.json` ごとに `npm ci --include=dev` を実行し、root と独立 package の `node_modules` を worktree 内へ実体として配置します。依存関係を元 worktree と共有しないため、agent の sandbox は task worktree 内だけへの書き込みで build、typecheck、依存更新を実行できます。
 
 過去のバージョンが作成した `node_modules` シンボリックリンクを検出した場合は、リンク先へ変更を加えずリンクだけを削除してから `npm ci` で置き換えます。install に失敗した場合は agent を起動せず、調査できるよう task worktree を保持したままエラー終了します。依存取得に必要な registry と npm cache は、`exec run` を起動する環境から利用できる必要があります。
+
+依存の install に続けて、`docs/**/generated` と `.specdojo/doc-index.json` の生成物を worktree 内で作り直します。これらは `.gitignore` の対象で worktree の checkout に含まれないため、生成物の存在を前提とするテストや検証が、タスクの成果物と無関係に失敗するからです。生成は worktree 内の CLI（SpecDojo 自身のリポジトリでは `src/specdojo.ts`、依存として利用するリポジトリでは `node_modules/.bin/specdojo`）を worktree を作業ディレクトリとして実行し、scope を絞らず全ステップを通します。生成対象が増えても準備処理側の追従は不要です。
+
+既存の task worktree を再利用する場合も生成をやり直します。生成物は依存と違って前回実行時のまま古くなり、生成段階を持たない版が作成した worktree には存在しないためです。`.specdojo/specdojo.config.json` を持たないリポジトリ、または worktree 内に CLI が無い場合は生成をスキップします。生成に失敗した場合は `Worktree preparation failed: specdojo build ...` として、成果物の失敗ではなく準備の失敗と分かる形でエラー終了します。
 
 ### 2.2. status
 
@@ -207,7 +213,20 @@ specdojo exec worktree merge \
 | 現在ブランチが exec branch ではない              | 自分自身へ merge しない         |
 | 現在の未commit変更と merge 対象パスが重複しない  | 手作業の変更を壊さない          |
 
-通常は `git merge --no-ff --no-edit` 相当で統合します。`--ff-only` 指定時は fast-forward 可能な場合だけ統合します。競合した場合は Git の競合状態を保持し、自動 abort しません。
+`prepare` が root に残した plan、result、claim event の複製は、重複判定の前に解放します（exec branch の commit 済み内容が merge で入るため）。それ以外の未commit変更が merge 対象パスと重複する場合は停止します。
+
+通常は `git merge --no-ff` 相当で統合します。自動実行では `exec(<task-id>): <task name>` を merge commit の subject に使い、統合先の first-parent を1タスク1commitにします（`prepare execution` / `apply task changes` は exec branch 側に残ります）。`--ff-only` 指定時は fast-forward 可能な場合だけ統合します。
+
+競合または commit hook の失敗で merge commit を作れなかった場合は、runner が `git merge --abort` を実行して統合先を開始前の状態へ戻します。Schedule タスクは `blocked`、register 項目は `waiting` へ遷移し、再開に使う exec branch と worktree は保持します。register の `wait` commit は abort 後に作るため、統合先へ `MERGE_HEAD` を残したまま部分 commit を試みません。block reason には hook の罫線や色を除いた失敗ステップ名と最初のエラー行を記録し、executor/reporter pipeline では生の stdout / stderr と abort 結果を同じ run の `integrate.log` に保存します。
+
+hook や検査を直した後は、Schedule タスクでは `specdojo exec resume --project <project-id> --task <task-id>`、register 項目では元の `exec run --register ... --worktree --resume` を実行します。統合段から再開するため agent は再実行せず、保持した exec branch を merge します。
+
+自動の `git merge --abort` 自体が失敗した場合は、runner が標準エラーへ手動復旧を案内します。案内された root worktree で状態と失敗原因を確認し、ロックファイルや Git プロセスなどの原因を解消してから次を実行してください。abort が完了するまでは commit や統合再開を行いません。
+
+```bash
+git status
+git merge --abort
+```
 
 ### 2.6. remove
 
@@ -223,6 +242,32 @@ specdojo exec worktree remove \
 既定では exec branch を残します。`--delete-branch` を付けた場合だけ、merge 済み branch を `git branch -d` 相当で削除します。
 
 `--force` は `git worktree remove --force` 相当であり、未commit変更が失われる可能性があります。exec branch の削除には `-D` 相当の強制削除を使いません。
+
+worktree の削除とブランチの削除は Git 上で1つの原子的な操作にはできません。ブランチ削除に失敗した場合は、worktree が削除済みで exec ブランチだけが残ったことと Git の失敗理由をエラーへ出力します。自動実行では成果物の統合と task の完了を取り消さず、警告と後述の復旧コマンドを出力します。
+
+### 2.7. prune
+
+`prune` は、対象 project の exec ブランチのうち、どの登録済み worktree にも使われていないものを監査します。merge 先 worktree で実行してください。
+
+```bash
+# 削除せず、孤立したブランチと統合状態だけを確認する
+specdojo exec worktree prune --project <project-id> --dry-run
+
+# 現在の HEAD に統合済みの孤立ブランチだけを削除する
+specdojo exec worktree prune --project <project-id>
+```
+
+判定と削除の安全条件は次のとおりです。
+
+| 状態                                          | 処理                                        |
+| --------------------------------------------- | ------------------------------------------- |
+| worktree に checkout されている exec ブランチ | 孤立とみなさず、表示・削除の対象外          |
+| worktree がなく、現在の HEAD に統合済み       | `--dry-run` では表示のみ、通常実行では削除  |
+| worktree がなく、現在の HEAD に未統合         | `kept (not merged)` と表示し、常に保持      |
+| `git branch -d` が失敗                        | Git の理由を出力し、終了コード1で停止       |
+| exec ブランチ上から実行                       | merge 先を誤認しないよう、終了コード1で拒否 |
+
+削除には常に `git branch -d` 相当を使い、`-D` 相当の強制削除は行いません。失敗・中断直後の実行は、未統合成果の調査と再開に必要なため worktree とブランチを対で保持します。人が worktree だけを撤去した場合や、撤去とブランチ削除の間でプロセスが中断した場合は `prune --dry-run` で孤立を確認し、統合済みのものだけを整理します。
 
 ## 3. complete / blockの記録
 

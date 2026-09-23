@@ -37,7 +37,7 @@ function setupProject(): { repo: string; taskId: string; resultPath: string } {
   mkdirSync(join(repo, ".specdojo"), { recursive: true });
   mkdirSync(schedulePath, { recursive: true });
   mkdirSync(join(executionPath, "exec", "events"), { recursive: true });
-  mkdirSync(join(repo, "docs", "ja", "specdojo", "templates"), { recursive: true });
+  mkdirSync(join(repo, "docs", "ja", "specdojo", "exec-templates"), { recursive: true });
 
   writeFileSync(
     join(repo, ".specdojo", "specdojo.config.json"),
@@ -79,7 +79,7 @@ function setupProject(): { repo: string; taskId: string; resultPath: string } {
     "utf8",
   );
   writeFileSync(
-    join(repo, "docs", "ja", "specdojo", "templates", "xer-template.md"),
+    join(repo, "docs", "ja", "specdojo", "exec-templates", "xer-template.md"),
     "_FRONTMATTER_\n\n## Result\n",
     "utf8",
   );

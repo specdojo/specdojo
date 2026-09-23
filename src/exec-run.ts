@@ -1,6 +1,6 @@
 import { spawn, spawnSync } from "node:child_process";
-import { existsSync, readFileSync } from "node:fs";
-import { basename, join, relative, resolve, sep } from "node:path";
+import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync } from "node:fs";
+import { basename, dirname, join, relative, resolve, sep } from "node:path";
 import { type Command } from "commander";
 import { selfRunArgs } from "./spawn-self.js";
 import {
@@ -56,6 +56,8 @@ import type {
 } from "./exec-types.js";
 import {
   acquireExecRunLock,
+  EXEC_RUN_LOCK_TOKEN_ENV,
+  inheritsExecRunLock,
   releaseExecRunLock,
   ROUTINE_BUSY_SKIP_EXIT_CODE,
   ROUTINE_EXEC_ENV,
@@ -88,10 +90,12 @@ import {
   generateRegisterPlan,
   isRegisterFailureMode,
   parseRegisterIds,
+  parseRegisterSelectionFilter,
   registerRunExitCode,
   requireRunnableRegisterItem,
   resolveRegisterRunTarget,
   sanitizeRegisterConclusion,
+  selectRegisterItems,
   selectRegisterCommitPaths,
   selectRegisterRunArtifactResidue,
   ticketPathFromItem,
@@ -99,7 +103,14 @@ import {
   type RegisterItemSummary,
   type RegisterItemTransition,
 } from "./exec-register.js";
-import type { PjrItem, RegisterPaths } from "./register.js";
+import {
+  loadRegisterItems,
+  resolveRegisterPaths,
+  type PjrItem,
+  type RegisterPaths,
+} from "./register.js";
+import { registerEventFilePath } from "./register-events.js";
+import { displayIdFromTicketFilename } from "./register-item.js";
 import {
   isResultUnfilled,
   readResultFrontmatterSnapshot,
@@ -107,7 +118,13 @@ import {
   scaffoldResult,
   updateResultStatus,
 } from "./exec-results.js";
-import { completeJobRun, materializeJobRun } from "./job.js";
+import {
+  completeJobRun,
+  executeJobCommand,
+  isJobCommandTask,
+  materializeJobRun,
+  type JobRunRecord,
+} from "./job.js";
 import {
   findExecWorktree,
   gitEnvironment,
@@ -119,11 +136,18 @@ import {
 } from "./exec-worktree.js";
 import {
   checkpointAndEnsureWorktree,
+  commitTargetPaths,
   commitWorktreeChanges,
+  currentBranch,
   discardStaleExecWorktree,
+  isExecBranchMergedIntoCurrent,
   mergeWorktreeIntoCurrent,
+  normalizeResultWhitespace,
+  releaseRootWorkingCopies,
   removeWorktree,
   stabilizeCommitTargets,
+  stageCommitTargets,
+  WorktreeRemovedBranchDeletionError,
   worktreeStatusPaths,
 } from "./exec-worktree-ops.js";
 import {
@@ -136,8 +160,11 @@ import {
   captureAgentGitStateSnapshot,
   changedAgentGitStateFields,
 } from "./exec-agent-git-state.js";
+import { recordGitStateBlock, recordProtectedConfigBlock } from "./exec-protection-handoff.js";
 import {
   buildPhaseModeIndex,
+  resolveAgentAssignment,
+  resolveAgentPipeline,
   resolveApproach,
   resolveTaskCapabilities,
   resolveTaskExecution,
@@ -145,6 +172,7 @@ import {
   resolveTaskProficiency,
 } from "./exec-strategy.js";
 import {
+  recordCommandEvidence,
   recordExecutorEvidence,
   recordReporterFailureOutput,
   writeExecutorEvidence,
@@ -161,13 +189,17 @@ import { runReporterWithFormatRetry } from "./exec-reporter.js";
 import {
   findResumableRegisterRun,
   resolveRegisterResumeArtifacts,
+  type RegisterResumeTarget,
 } from "./exec-register-resume.js";
 import {
   createPipelineState,
   loadPipelineResumeCheckpoint,
   pipelineStateLocation,
+  readPipelineState,
   updatePipelineStage,
   writePipelineState,
+  type PipelineStageState,
+  type PipelineStageRole,
   type PipelineState,
 } from "./exec-pipeline-state.js";
 
@@ -210,6 +242,11 @@ export type RunOpts = {
   deliverable?: string;
   plan?: string;
   register?: string | string[];
+  registerFilter?: boolean;
+  registerTypes?: string;
+  registerPriorities?: string;
+  registerStatuses?: string;
+  registerLimit?: string;
   job?: string;
   input?: string | string[];
   scheduledAt?: string;
@@ -234,7 +271,15 @@ export type RunOpts = {
   cycleRebuildStaleTracks?: boolean;
 };
 
-type RunResult = "success" | "rate_limit" | "failure";
+export type RunResult = "success" | "rate_limit" | "failure";
+
+export type AgentExecution = {
+  result: RunResult;
+  exitCode: number | null;
+  stdout: string;
+  stderr: string;
+  limit?: AgentLimitSignal;
+};
 
 // Mode-specific agent overrides from --edit-by / --review-by. Each value is an agent
 // nickname (not a raw command); the command is resolved from pm-members.yaml. undefined means
@@ -261,6 +306,14 @@ export type AgentOverrideResolution =
 // A runnable agent candidate: the shell command plus the provider it belongs to.
 // The provider selects the per-provider failure-handling override in exec-defaults.yaml.
 type AgentRunCandidate = { command: string; actor?: string; provider?: AgentProvider };
+
+function pinnedExecutor(task: ReadyTaskView | null | undefined): string | undefined {
+  return typeof task?.agent === "string" ? task.agent : task?.agent?.executor;
+}
+
+function pinnedReporter(task: ReadyTaskView | null | undefined): string | undefined {
+  return typeof task?.agent === "object" ? task.agent.reporter : undefined;
+}
 
 // Resolve the agent override for a task's mode. A single explicit --by nickname wins for every
 // mode. Otherwise the mode-specific --edit-by / --review-by nickname applies. Commands are always
@@ -321,9 +374,12 @@ type PreparedTask = {
   worktree: ExecWorktree;
   resultPath?: string;
   resultScaffold?: Record<string, unknown>;
+  // Root-side copies of the execution checkpoint (plan / result / claim event). The exec branch
+  // holds the commit; the root keeps these uncommitted until the merge releases them.
+  checkpointPaths?: string[];
   priorLimitAttempts?: number;
   pipelineRunId?: string;
-  pipelineResumeStage?: AgentStageRole;
+  pipelineResumeStage?: PipelineStageRole;
   pipelineStateRef?: string;
   reporterCandidates?: AgentRunCandidate[];
 };
@@ -667,6 +723,10 @@ async function withProjectExecRunLock(
   action: () => Promise<void>,
 ): Promise<void> {
   const resolvedPaths = resolveProjectPaths({ project: opts.project });
+  if (inheritsExecRunLock(resolvedPaths.executionPath)) {
+    await action();
+    return;
+  }
   const policy = parseExecRunBusyPolicy(opts.ifBusy);
   const handle = await acquireExecRunLock(resolvedPaths.executionPath, {
     actor: opts.by ?? `exec-${commandLabel}`,
@@ -682,9 +742,13 @@ async function withProjectExecRunLock(
     return;
   }
 
+  const previousInheritedToken = process.env[EXEC_RUN_LOCK_TOKEN_ENV];
+  process.env[EXEC_RUN_LOCK_TOKEN_ENV] = handle.token;
   try {
     await action();
   } finally {
+    if (previousInheritedToken === undefined) delete process.env[EXEC_RUN_LOCK_TOKEN_ENV];
+    else process.env[EXEC_RUN_LOCK_TOKEN_ENV] = previousInheritedToken;
     releaseExecRunLock(handle);
   }
 }
@@ -739,6 +803,9 @@ runner stage and does not apply here.
 The parent runner owns Git commits and repository configuration. Do not run git commit or change
 local, global, or system Git configuration, including user.name and user.email. A Git state change
 will stop the pipeline before validation, reporting, commit, or merge.
+
+When writing Markdown in the final evidence, wrap identifiers or field names containing an
+underscore in inline code (for example, \`depends_on\`).
 ${parentValidationInstruction}
 
 End the final response with exactly one machine-readable report using this envelope. Do not place
@@ -773,21 +840,42 @@ export async function runConfiguredParentValidations(
   return validations;
 }
 
-async function revalidateFailedParentValidationsForReporterResume(params: {
+async function refreshParentValidationsForReporterResume(params: {
   execDefaults: ExecDefaultsConfig;
   cwd: string;
   evidence: ExecEvidence;
   evidencePath: string;
 }): Promise<ExecEvidence> {
-  if (!failedParentValidationReason(params.evidence.validations)) return params.evidence;
+  const configuredIds = params.execDefaults.pipeline?.parent_validations;
+  if (
+    hasRecordedParentValidations(params.evidence.validations, configuredIds) &&
+    !failedParentValidationReason(params.evidence.validations)
+  ) {
+    return params.evidence;
+  }
 
-  process.stdout.write("  Re-running failed parent validations before reporter resume.\n");
+  process.stdout.write("  Refreshing parent validations before reporter resume.\n");
   const parentValidations = await runConfiguredParentValidations(params.execDefaults, params.cwd);
   const evidence = replaceParentValidationResults(params.evidence, parentValidations);
   writeExecutorEvidence(params.evidencePath, evidence);
   process.stdout.write(
     `  Refreshed executor evidence: ${relative(params.cwd, params.evidencePath).split(sep).join("/")}\n`,
   );
+  return evidence;
+}
+
+// executor のプロセス結果は親検証より先に checkpoint する。親検証は長時間かかり得るため、
+// その途中で runner が終了しても agent 出力と変更一覧を失わないよう、ここでは保存済み evidence
+// へ runner-owned validation だけを追記する。
+async function appendParentValidationsToExecutorEvidence(params: {
+  execDefaults: ExecDefaultsConfig;
+  cwd: string;
+  evidence: ExecEvidence;
+  evidencePath: string;
+}): Promise<ExecEvidence> {
+  const parentValidations = await runConfiguredParentValidations(params.execDefaults, params.cwd);
+  const evidence = replaceParentValidationResults(params.evidence, parentValidations);
+  writeExecutorEvidence(params.evidencePath, evidence);
   return evidence;
 }
 
@@ -885,7 +973,7 @@ export function loadRosterForExecutionPath(executionPath: string): MemberRoster 
   return null;
 }
 
-async function executeAgent(
+export async function executeAgent(
   agentCommand: string,
   prompt: string,
   detection: RateLimitDetection | undefined,
@@ -893,20 +981,15 @@ async function executeAgent(
   cooldownSeconds: Partial<Record<AgentLimitKind, number>> | undefined,
   cwd: string,
   env: NodeJS.ProcessEnv,
-): Promise<{
-  result: RunResult;
-  exitCode: number | null;
-  stdout: string;
-  stderr: string;
-  limit?: AgentLimitSignal;
-}> {
+  quiet = false,
+): Promise<AgentExecution> {
   if (!agentCommand.trim()) {
     return { result: "failure", exitCode: null, stdout: "", stderr: "Empty agent command" };
   }
 
   // stdout is piped (not inherited) so it can be scanned for rate-limit signals: some CLIs print
-  // the limit notice to stdout, not stderr (e.g. claude's "session limit"). Each chunk is teed to
-  // the parent's stdout so live output/logging is preserved.
+  // the limit notice to stdout, not stderr (e.g. claude's "session limit"). Unless quiet, each
+  // chunk is teed to the parent's stdout so live output/logging is preserved.
   const child = spawn(agentCommand, {
     cwd,
     env,
@@ -922,7 +1005,7 @@ async function executeAgent(
   child.stdout.setEncoding("utf8");
   child.stdout.on("data", (chunk: string) => {
     stdout += chunk;
-    process.stdout.write(chunk);
+    if (!quiet) process.stdout.write(chunk);
   });
   child.stderr.setEncoding("utf8");
   child.stderr.on("data", (chunk: string) => {
@@ -968,12 +1051,26 @@ async function executeAgent(
 // Detection is resolved per candidate from its provider (e.g. claude's "session limit" vs
 // opencode's "timeout"/"out of memory"); the run-level retry/backoff policy is governed by the
 // primary (highest-priority) candidate's provider.
+// 保護機構が block したとき、result へ自動記録できたかを実行ログにも残す。記録できない場合
+// （result 未 scaffold など）は、申し送りが result に無いことが分かるよう理由を出力する。
+function reportProtectionHandoffRecord(recorded: boolean, resultPath?: string): void {
+  process.stdout.write(
+    recorded
+      ? `  Handoff recorded in result: ${resultPath}\n`
+      : "  Handoff not recorded: no writable result for this run\n",
+  );
+}
+
+//
+// resultPath は保護機構が block したときの申し送り記録先（agent が動く cwd 側の result）。
+// 未指定でも block と終了コードの扱いは変わらない。
 async function runWithRetry(
   candidates: AgentRunCandidate[],
   prompt: string,
   execDefaults: ExecDefaultsConfig,
   cwd: string,
   env: NodeJS.ProcessEnv,
+  resultPath?: string,
 ): Promise<{
   result: RunResult;
   exitCode: number | null;
@@ -981,6 +1078,7 @@ async function runWithRetry(
   stderr: string;
   attempts: number;
   limit?: AgentLimitSignal;
+  protectionBlock?: true;
 }> {
   const policy = resolveRateLimitPolicy(execDefaults, candidates[0]?.provider);
   let attempts = 0;
@@ -992,6 +1090,7 @@ async function runWithRetry(
     stdout: string;
     stderr: string;
     limit?: AgentLimitSignal;
+    protectionBlock?: true;
   }> => {
     let lastStderr = "";
     let lastStdout = "";
@@ -1020,22 +1119,43 @@ async function runWithRetry(
       if (protectedConfigChanges.length > 0) {
         const reason = agentProtectedConfigViolation(protectedConfigChanges);
         process.stderr.write(`blocked: ${reason}\n`);
+        reportProtectionHandoffRecord(
+          recordProtectedConfigBlock({
+            resultPath,
+            repoRoot: cwd,
+            paths: protectedConfigChanges,
+            reason,
+          }),
+          resultPath,
+        );
         return {
           result: "failure",
           exitCode: 1,
           stdout: attempt.stdout,
           stderr: `${attempt.stderr}${attempt.stderr.endsWith("\n") || !attempt.stderr ? "" : "\n"}${reason}\n`,
+          protectionBlock: true,
         };
       }
       const gitStateChanges = changedAgentGitStateFields(cwd, gitStateBefore);
       if (gitStateChanges.length > 0) {
         const reason = agentGitStateViolation(gitStateChanges);
         process.stderr.write(`blocked: ${reason}\n`);
+        reportProtectionHandoffRecord(
+          recordGitStateBlock({
+            resultPath,
+            repoRoot: cwd,
+            before: gitStateBefore,
+            fields: gitStateChanges,
+            reason,
+          }),
+          resultPath,
+        );
         return {
           result: "failure",
           exitCode: 1,
           stdout: attempt.stdout,
           stderr: `${attempt.stderr}${attempt.stderr.endsWith("\n") || !attempt.stderr ? "" : "\n"}${reason}\n`,
+          protectionBlock: true,
         };
       }
       lastStderr = attempt.stderr;
@@ -1176,8 +1296,8 @@ async function prepareSingleTask(
   const overrideResolution = resolveAgentOverride(
     mode,
     task.agent_pipeline
-      ? (stageAgentOverrides.executor ?? agentNicknameOverride)
-      : agentNicknameOverride,
+      ? (stageAgentOverrides.executor ?? agentNicknameOverride ?? pinnedExecutor(task))
+      : (agentNicknameOverride ?? pinnedExecutor(task)),
     modeAgentOverrides,
     roster,
     execDefaults,
@@ -1288,7 +1408,7 @@ async function prepareSingleTask(
       roster,
       execDefaults,
       collectBusyActors(schedulePath),
-      stageAgentOverrides.reporter,
+      stageAgentOverrides.reporter ?? pinnedReporter(task),
     );
     if (reporterCandidates.length === 0) {
       process.stdout.write(
@@ -1396,9 +1516,9 @@ async function prepareSingleTask(
     ...(finalizeSections ? { finalizeSections } : {}),
   });
 
-  // Commit the execution checkpoint (plan/result/claim event) to root HEAD, then create the
-  // worktree from that commit. This lets the agent's deliverable changes be committed and merged
-  // back (see runPreparedTask), so later tasks branch from a HEAD that includes prior results.
+  // Keep the execution checkpoint visible at root, but commit it only on the exec branch. The
+  // successful merge later brings plan/result/claim and deliverables to root in one first-parent
+  // commit (see runPreparedTask).
   const claimEventPath = findClaimEventPath(schedulePath, task.id);
   if (!claimEventPath) {
     process.stdout.write(`  Claim event not found for ${task.id}\n`);
@@ -1418,17 +1538,18 @@ async function prepareSingleTask(
     }
   }
 
+  const checkpointPaths = [
+    join(executionPath, "exec", "plans", `${task.id}-plan.md`),
+    resultPath,
+    claimEventPath,
+  ];
   let worktree: ExecWorktree;
   try {
     worktree = checkpointAndEnsureWorktree({
       context: { repoRoot, schedulePath, executionPath },
       worktreeTaskId,
       base: worktreeBase,
-      checkpointPaths: [
-        join(executionPath, "exec", "plans", `${task.id}-plan.md`),
-        resultPath,
-        claimEventPath,
-      ],
+      checkpointPaths,
       commitMessage: `exec(${task.id}): prepare execution`,
     });
   } catch (error) {
@@ -1453,6 +1574,7 @@ async function prepareSingleTask(
     worktree,
     resultPath,
     resultScaffold: readResultFrontmatterSnapshot(resultPath),
+    checkpointPaths,
     pipelineRunId,
     pipelineResumeStage: pipelineResume?.stage,
     pipelineStateRef: pipelineResume?.stateRef,
@@ -1552,6 +1674,7 @@ async function runPreparedTask(
   let pipelineStatePath: string | undefined;
   let pipelineStateRef: string | undefined;
   let resumeReporter = false;
+  let resumeIntegration = false;
 
   if (!prepared.pipelineRunId) {
     process.stdout.write(`  Running: ${prepared.agentCandidates[0]?.command ?? ""}\n`);
@@ -1561,6 +1684,7 @@ async function runPreparedTask(
       execDefaults,
       prepared.worktree.path,
       agentEnvironment(repoRoot, prepared.worktree.path, schedulePath, executionPath),
+      worktreeResultPath,
     );
     result = outcome.result;
     stderr = outcome.stderr;
@@ -1580,31 +1704,38 @@ async function runPreparedTask(
       pipelineState = checkpoint.state;
       pipelineStatePath = checkpoint.statePath;
       pipelineStateRef = prepared.pipelineStateRef;
-      if (
+      if (prepared.pipelineResumeStage === "integrate") {
+        if (
+          checkpoint.state.stages.executor.status !== "succeeded" ||
+          checkpoint.state.stages.reporter.status !== "succeeded"
+        ) {
+          throw new Error(
+            `integration resume requires succeeded executor and reporter stages for ${prepared.task.id}`,
+          );
+        }
+        executorEvidenceRef = checkpoint.state.stages.executor.artifact_ref ?? undefined;
+        resumeIntegration = true;
+        process.stdout.write(
+          `  Resuming runner-owned integration from pipeline state: ${prepared.pipelineStateRef}\n`,
+        );
+      } else if (
         prepared.pipelineResumeStage === "reporter" &&
         checkpoint.evidence &&
-        hasRecordedParentValidations(
-          checkpoint.evidence.validations,
-          execDefaults.pipeline?.parent_validations,
-        )
+        checkpoint.state.stages.executor.artifact_ref
       ) {
         executorEvidence = checkpoint.evidence;
-        executorEvidenceRef = checkpoint.state.stages.executor.artifact_ref ?? undefined;
-        executorEvidencePath = executorEvidenceRef
-          ? resolve(prepared.worktree.path, executorEvidenceRef)
-          : undefined;
+        executorEvidenceRef = checkpoint.state.stages.executor.artifact_ref;
+        executorEvidencePath = resolve(prepared.worktree.path, executorEvidenceRef);
         resumeReporter = true;
         process.stdout.write(
           `  Resuming reporter from persisted executor evidence: ${executorEvidenceRef}\n`,
         );
-        if (failedParentValidationReason(executorEvidence.validations) && executorEvidenceRef) {
-          executorEvidence = await revalidateFailedParentValidationsForReporterResume({
-            execDefaults,
-            cwd: prepared.worktree.path,
-            evidence: executorEvidence,
-            evidencePath: resolve(prepared.worktree.path, executorEvidenceRef),
-          });
-        }
+        executorEvidence = await refreshParentValidationsForReporterResume({
+          execDefaults,
+          cwd: prepared.worktree.path,
+          evidence: executorEvidence,
+          evidencePath: executorEvidencePath,
+        });
       } else if (prepared.pipelineResumeStage === "reporter") {
         process.stdout.write(
           "  Persisted executor evidence is invalid; starting a new executor run.\n",
@@ -1614,6 +1745,12 @@ async function runPreparedTask(
         pipelineStateRef = undefined;
       }
     }
+  }
+
+  if (prepared.pipelineResumeStage === "integrate" && !resumeIntegration) {
+    throw new Error(
+      `pipeline state is missing or invalid for integration resume: ${prepared.task.id}`,
+    );
   }
 
   if (prepared.pipelineRunId && !pipelineState) {
@@ -1637,7 +1774,13 @@ async function runPreparedTask(
     writePipelineState(pipelineStatePath, pipelineState);
   }
 
-  if (prepared.pipelineRunId && !resumeReporter && pipelineState && pipelineStatePath) {
+  if (
+    prepared.pipelineRunId &&
+    !resumeReporter &&
+    !resumeIntegration &&
+    pipelineState &&
+    pipelineStatePath
+  ) {
     const executorStartedAt = new Date().toISOString();
     pipelineState = updatePipelineStage(
       pipelineState,
@@ -1658,6 +1801,7 @@ async function runPreparedTask(
       execDefaults,
       prepared.worktree.path,
       agentEnvironment(repoRoot, prepared.worktree.path, schedulePath, executionPath),
+      worktreeResultPath,
     );
     result = executorOutcome.result;
     stderr = executorOutcome.stderr;
@@ -1665,10 +1809,6 @@ async function runPreparedTask(
     stdout = executorOutcome.stdout;
     attempts = executorOutcome.attempts;
     limit = executorOutcome.limit;
-    const parentValidations =
-      result === "success"
-        ? await runConfiguredParentValidations(execDefaults, prepared.worktree.path)
-        : [];
     const recorded = recordExecutorEvidence({
       repoRoot,
       worktreePath: prepared.worktree.path,
@@ -1684,7 +1824,6 @@ async function runPreparedTask(
       attempts,
       stdout,
       stderr,
-      parentValidations,
     });
     executorEvidenceRef = relative(prepared.worktree.path, recorded.evidencePath)
       .split(sep)
@@ -1697,7 +1836,13 @@ async function runPreparedTask(
       "executor",
       {
         status:
-          result === "success" ? "succeeded" : result === "rate_limit" ? "rate_limited" : "failed",
+          result === "success"
+            ? "succeeded"
+            : executorOutcome.protectionBlock
+              ? "blocked"
+              : result === "rate_limit"
+                ? "rate_limited"
+                : "failed",
         attempts: pipelineState.stages.executor.attempts + attempts,
         completed_at: executorCompletedAt,
         artifact_ref: executorEvidenceRef,
@@ -1706,9 +1851,17 @@ async function runPreparedTask(
     );
     writePipelineState(pipelineStatePath, pipelineState);
     process.stdout.write(`  Executor evidence: ${executorEvidenceRef}\n`);
+    if (result === "success") {
+      executorEvidence = await appendParentValidationsToExecutorEvidence({
+        execDefaults,
+        cwd: prepared.worktree.path,
+        evidence: executorEvidence,
+        evidencePath: executorEvidencePath,
+      });
+    }
   }
 
-  if (prepared.pipelineRunId && result === "success") {
+  if (prepared.pipelineRunId && result === "success" && !resumeIntegration) {
     pipelineFailureStage = "reporter";
     if (
       !executorEvidence ||
@@ -1746,6 +1899,7 @@ async function runPreparedTask(
             execDefaults,
             prepared.worktree.path,
             agentEnvironment(repoRoot, prepared.worktree.path, schedulePath, executionPath),
+            worktreeResultPath,
           );
           reporterAttempts += outcome.attempts;
           if (outcome.limit) reporterLimit = outcome.limit;
@@ -1868,35 +2022,134 @@ async function runPreparedTask(
         return "failure";
       }
 
-      // Record completion in the worktree result, then commit (result + deliverables) onto the
-      // exec branch and merge it into the current root branch so the changes are integrated.
-      // Integration guards (e.g. human-only "ready" promotion) can reject the commit; treat such
-      // a rejection as a block so the agent's run does not silently land or crash the loop.
-      if (worktreeResultPath) await updateResultStatus(worktreeResultPath, "complete", completedAt);
+      // A previous attempt may have merged successfully and failed only while removing the
+      // worktree. In that case the branch is already contained in HEAD: do not create another
+      // commit or merge. Discard only runner-owned lifecycle diffs left by the failure handler,
+      // then continue with removal and completion.
+      const alreadyMerged =
+        resumeIntegration &&
+        isExecBranchMergedIntoCurrent({ context, worktree: prepared.worktree });
       try {
-        commitWorktreeChanges({ context, worktree: prepared.worktree, taskId: prepared.task.id });
-        mergeWorktreeIntoCurrent({
+        if (alreadyMerged) {
+          const lifecyclePaths = new Set(
+            [worktreeResultPath, pipelineStatePath]
+              .filter((path): path is string => !!path)
+              .map((path) => relative(prepared.worktree.path, path).split(sep).join("/")),
+          );
+          const dirtyTargets = commitTargetPaths(context, prepared.worktree, prepared.task.id);
+          const unexpected = dirtyTargets.filter((path) => !lifecyclePaths.has(path));
+          if (unexpected.length > 0) {
+            throw new Error(
+              `already-merged worktree has new task changes: ${unexpected.join(", ")}`,
+            );
+          }
+          if (dirtyTargets.length > 0) {
+            gitOutput(prepared.worktree.path, [
+              "restore",
+              "--source=HEAD",
+              "--staged",
+              "--worktree",
+              "--",
+              ...dirtyTargets,
+            ]);
+          }
+          // The merged versions are already at root HEAD; drop the root's stale working copies
+          // of the checkpoint files so they do not linger as reverse diffs.
+          releaseRootWorkingCopies(
+            repoRoot,
+            (prepared.checkpointPaths ?? []).map((path) => repoRelativePath(repoRoot, path)),
+          );
+          process.stdout.write(
+            `  [integrate] already merged: ${prepared.worktree.branch} (skipping commit and merge)\n`,
+          );
+        } else {
+          // Record completion and integration start before the first commit. The succeeded state
+          // is committed on the exec branch before the single merge, so successful runs retain a
+          // durable integrate checkpoint after the worktree is removed.
+          if (worktreeResultPath)
+            await updateResultStatus(worktreeResultPath, "complete", completedAt);
+          const integrateStartedAt = new Date().toISOString();
+          recordIntegrateStage(pipelineStatePath, integrateStartedAt, (current) => ({
+            status: "running",
+            actor: prepared.actor,
+            attempts: (current?.attempts ?? 0) + 1,
+            started_at: integrateStartedAt,
+            completed_at: null,
+          }));
+          commitWorktreeChanges({
+            context,
+            worktree: prepared.worktree,
+            taskId: prepared.task.id,
+          });
+
+          if (pipelineStatePath) {
+            const integrateCompletedAt = new Date().toISOString();
+            recordIntegrateStage(pipelineStatePath, integrateCompletedAt, () => ({
+              status: "succeeded",
+              completed_at: integrateCompletedAt,
+            }));
+            commitWorktreeChanges({
+              context,
+              worktree: prepared.worktree,
+              taskId: prepared.task.id,
+            });
+          }
+          // One merge commit per task on the integration branch's first-parent line. Its subject
+          // names the task; the prepare/apply commits stay on the exec branch.
+          mergeWorktreeIntoCurrent({
+            context,
+            worktree: prepared.worktree,
+            taskId: prepared.task.id,
+            message: commitSubject(
+              `exec(${prepared.task.id}): `,
+              prepared.task.name?.trim() || "apply task changes",
+            ),
+            releaseRootPaths: prepared.checkpointPaths,
+            failureLogPath: integrateLogPath(pipelineStatePath),
+          });
+        }
+
+        removeWorktree({
           context,
           worktree: prepared.worktree,
           taskId: prepared.task.id,
+          deleteBranch: true,
         });
       } catch (error) {
-        const reason = error instanceof Error ? error.message : String(error);
-        if (worktreeResultPath)
-          await updateResultStatus(worktreeResultPath, "blocked", completedAt, reason);
-        spawnBlock(projectId, prepared.task.id, prepared.actor, reason);
-        process.stderr.write(`${reason}\n`);
-        process.stdout.write(
-          `  Blocked: ${prepared.task.id} (worktree kept: ${prepared.worktree.path})\n`,
-        );
-        return "failure";
+        if (error instanceof WorktreeRemovedBranchDeletionError) {
+          // The task changes are already merged and the worktree is gone. Keep task completion
+          // independent from branch housekeeping, but make the residue and recovery command clear.
+          process.stderr.write(`Warning: ${error.message}; run exec worktree prune.\n`);
+        } else {
+          const reason = error instanceof Error ? error.message : String(error);
+          const integrateFailedAt = new Date().toISOString();
+          recordIntegrateStage(pipelineStatePath, integrateFailedAt, () => ({
+            status: "failed",
+            completed_at: integrateFailedAt,
+          }));
+          if (worktreeResultPath)
+            await updateResultStatus(worktreeResultPath, "blocked", completedAt, reason);
+          spawnBlock(
+            projectId,
+            prepared.task.id,
+            prepared.actor,
+            reason,
+            pipelineStateRef
+              ? pipelineRecoveryMeta({
+                  stage: "integrate",
+                  evidenceRef: executorEvidenceRef,
+                  stateRef: pipelineStateRef,
+                  runId: pipelineState?.run_id ?? prepared.pipelineRunId,
+                })
+              : { limit_deferred: "false" },
+          );
+          process.stderr.write(`${reason}\n`);
+          process.stdout.write(
+            `  Blocked: ${prepared.task.id} (worktree kept: ${prepared.worktree.path})\n`,
+          );
+          return "failure";
+        }
       }
-      removeWorktree({
-        context,
-        worktree: prepared.worktree,
-        taskId: prepared.task.id,
-        deleteBranch: true,
-      });
       spawnComplete(projectId, prepared.task.id, prepared.actor);
       process.stdout.write(`  Done: ${prepared.task.id}\n`);
     } else if (effectiveResult === "rate_limit") {
@@ -2018,9 +2271,9 @@ async function runPreparedTaskSafely(
   }
 }
 
-function spawnSelf(args: string[]): boolean {
+function spawnSelf(args: string[], cwd = specdojoRootDir()): boolean {
   const [exe, fullArgs] = selfRunArgs(args);
-  const result = spawnSync(exe, fullArgs, { stdio: "inherit", cwd: specdojoRootDir() });
+  const result = spawnSync(exe, fullArgs, { stdio: "inherit", cwd });
   return result.status === 0;
 }
 
@@ -2117,7 +2370,7 @@ export function extractBlockReason(stderr: string): string {
 }
 
 export function pipelineRecoveryMeta(input: {
-  stage: AgentStageRole;
+  stage: PipelineStageRole;
   evidenceRef?: string;
   stateRef?: string;
   runId?: string;
@@ -2465,6 +2718,24 @@ async function runManualMode(opts: RunOpts): Promise<void> {
         task.phase_suffix,
         task.phase_set,
       );
+    task.agent_pipeline =
+      task.agent_pipeline ??
+      resolveAgentPipeline(
+        task.local_id,
+        task.id,
+        phaseModeIndex,
+        task.phase_suffix,
+        task.phase_set,
+      );
+    task.agent =
+      task.agent ??
+      resolveAgentAssignment(
+        task.local_id,
+        task.id,
+        phaseModeIndex,
+        task.phase_suffix,
+        task.phase_set,
+      );
   }
 
   // If the task is already in "doing" state and --by is not specified,
@@ -2537,7 +2808,13 @@ export function resolveInPlaceCommand(
   if (!task?.agent_pipeline && (opts.executorBy || opts.reporterBy)) {
     throw new Error("--executor-by / --reporter-by require an agent_pipeline task.");
   }
-  const by = (task?.agent_pipeline ? (opts.executorBy ?? opts.by) : opts.by)?.trim();
+  // A task definition can pin the delegated agent by nickname (Job `task.agent`). An explicit
+  // --by still wins so an operator can redirect a single run without editing the definition.
+  const by = (
+    task?.agent_pipeline
+      ? (opts.executorBy ?? opts.by ?? pinnedExecutor(task))
+      : (opts.by ?? pinnedExecutor(task))
+  )?.trim();
   if (by) {
     const member = roster?.members.find((m) => m.nickname === by && m.type === "agent");
     if (task?.agent_pipeline && member?.stage_role !== "executor") {
@@ -2582,6 +2859,7 @@ async function spawnAgentInPlace(
   cwd: string,
   schedulePath: string,
   executionPath: string,
+  resultPath?: string,
 ): Promise<number> {
   const protectedConfigBefore = captureAgentProtectedConfigSnapshot(cwd);
   const gitStateBefore = captureAgentGitStateSnapshot(cwd);
@@ -2604,12 +2882,33 @@ async function spawnAgentInPlace(
   });
   const protectedConfigChanges = changedAgentProtectedConfigPaths(cwd, protectedConfigBefore);
   if (protectedConfigChanges.length > 0) {
-    process.stderr.write(`blocked: ${agentProtectedConfigViolation(protectedConfigChanges)}\n`);
+    const reason = agentProtectedConfigViolation(protectedConfigChanges);
+    process.stderr.write(`blocked: ${reason}\n`);
+    reportProtectionHandoffRecord(
+      recordProtectedConfigBlock({
+        resultPath,
+        repoRoot: cwd,
+        paths: protectedConfigChanges,
+        reason,
+      }),
+      resultPath,
+    );
     return 1;
   }
   const gitStateChanges = changedAgentGitStateFields(cwd, gitStateBefore);
   if (gitStateChanges.length > 0) {
-    process.stderr.write(`blocked: ${agentGitStateViolation(gitStateChanges)}\n`);
+    const reason = agentGitStateViolation(gitStateChanges);
+    process.stderr.write(`blocked: ${reason}\n`);
+    reportProtectionHandoffRecord(
+      recordGitStateBlock({
+        resultPath,
+        repoRoot: cwd,
+        before: gitStateBefore,
+        fields: gitStateChanges,
+        reason,
+      }),
+      resultPath,
+    );
     return 1;
   }
   return exitCode;
@@ -2700,7 +2999,13 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
   const { command, actor, provider } = resolveInPlaceCommand(task, roster, opts, execDefaults);
   const reporterCandidates =
     task?.agent_pipeline && task
-      ? resolveReporterAgentCandidates(task, roster, execDefaults, undefined, opts.reporterBy)
+      ? resolveReporterAgentCandidates(
+          task,
+          roster,
+          execDefaults,
+          undefined,
+          opts.reporterBy ?? pinnedReporter(task),
+        )
       : undefined;
   if (task?.agent_pipeline && !reporterCandidates?.length) {
     throw new Error("No agent found for reporter pipeline stage.");
@@ -2709,8 +3014,10 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
 
   if (opts.dryRun) {
     process.stdout.write(`[dry-run] target: ${label} (state ignored)\n`);
+    process.stdout.write(`[dry-run] agent: ${actor}\n`);
     process.stdout.write(`[dry-run] command: ${command}\n`);
     if (reporterCandidates?.[0]) {
+      process.stdout.write(`[dry-run] reporter agent: ${reporterCandidates[0].actor ?? "-"}\n`);
       process.stdout.write(`[dry-run] reporter command: ${reporterCandidates[0].command}\n`);
     }
     process.stdout.write(`[dry-run] cwd: ${repoRoot}\n`);
@@ -2836,11 +3143,8 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
         SPECDOJO_SCHEDULE_PATH: schedulePath,
         SPECDOJO_EXECUTION_PATH: executionPath,
       },
+      resultPath,
     );
-    const parentValidations =
-      outcome.result === "success"
-        ? await runConfiguredParentValidations(execDefaults, repoRoot)
-        : [];
     const recorded = recordExecutorEvidence({
       repoRoot,
       worktreePath: repoRoot,
@@ -2860,7 +3164,6 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
       attempts: outcome.attempts,
       stdout: outcome.stdout,
       stderr: outcome.stderr,
-      parentValidations,
     });
     pipelineEvidenceRef = relative(repoRoot, recorded.evidencePath).split(sep).join("/");
     const executorCompletedAt = new Date().toISOString();
@@ -2871,9 +3174,11 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
         status:
           outcome.result === "success"
             ? "succeeded"
-            : outcome.result === "rate_limit"
-              ? "rate_limited"
-              : "failed",
+            : outcome.protectionBlock
+              ? "blocked"
+              : outcome.result === "rate_limit"
+                ? "rate_limited"
+                : "failed",
         attempts: outcome.attempts,
         completed_at: executorCompletedAt,
         artifact_ref: pipelineEvidenceRef,
@@ -2882,6 +3187,14 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
     );
     writePipelineState(stateLocation.path, pipelineState);
     process.stdout.write(`Executor evidence: ${pipelineEvidenceRef}\n`);
+    if (outcome.result === "success") {
+      recorded.evidence = await appendParentValidationsToExecutorEvidence({
+        execDefaults,
+        cwd: repoRoot,
+        evidence: recorded.evidence,
+        evidencePath: recorded.evidencePath,
+      });
+    }
     if (outcome.result === "success") {
       pipelineFailureStage = "reporter";
       const reporterStartedAt = new Date().toISOString();
@@ -2913,6 +3226,7 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
               SPECDOJO_SCHEDULE_PATH: schedulePath,
               SPECDOJO_EXECUTION_PATH: executionPath,
             },
+            resultPath,
           );
           reporterAttempts += reporterOutcome.attempts;
           return {
@@ -2985,7 +3299,14 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
       exitCode = outcome.exitCode && outcome.exitCode !== 0 ? outcome.exitCode : 1;
     }
   } else {
-    exitCode = await spawnAgentInPlace(command, prompt, repoRoot, schedulePath, executionPath);
+    exitCode = await spawnAgentInPlace(
+      command,
+      prompt,
+      repoRoot,
+      schedulePath,
+      executionPath,
+      resultPath,
+    );
   }
 
   // Some agents (notably `claude -p`) exit 0 even when they conclude they are blocked: a
@@ -3054,6 +3375,223 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
   process.stdout.write(`run done: ${label}\n`);
 }
 
+async function runCommandJobMode(params: {
+  opts: RunOpts;
+  record: JobRunRecord;
+  runPath: string;
+  planPath: string;
+  projectId: string;
+  schedulePath: string;
+  executionPath: string;
+}): Promise<void> {
+  const { opts, record, runPath, planPath, projectId, schedulePath, executionPath } = params;
+  if (!isJobCommandTask(record.task)) throw new Error("Expected a command Job task.");
+  if (opts.by || opts.executorBy) {
+    throw new Error(
+      "--by and --executor-by are not available for command Jobs; the runner executes command.",
+    );
+  }
+  if (opts.reporterBy && !record.task.analysis) {
+    throw new Error("--reporter-by requires task.analysis on a command Job.");
+  }
+  const repoRoot = specdojoRootDir();
+  const roster = loadRosterForExecutionPath(executionPath);
+  const execDefaults = loadExecDefaultsConfig(
+    resolveExecDefaultsPath(opts, schedulePath),
+    executionPath,
+  );
+  const analysisNickname = record.task.analysis
+    ? opts.reporterBy?.trim() || record.task.analysis.agent
+    : undefined;
+  const analysisResolution = analysisNickname
+    ? resolveAgentOverride("edit", analysisNickname, {}, roster, execDefaults, "reporter")
+    : undefined;
+  if (analysisResolution?.kind === "error") throw new Error(analysisResolution.message);
+  if (analysisResolution && analysisResolution.kind !== "command") {
+    throw new Error(`Analysis agent not found: ${analysisNickname ?? ""}`);
+  }
+  const analysisCandidate =
+    analysisResolution?.kind === "command"
+      ? {
+          command: analysisResolution.command,
+          actor: analysisResolution.actor ?? analysisNickname,
+          provider: analysisResolution.provider,
+        }
+      : undefined;
+
+  if (opts.dryRun) {
+    process.stdout.write(`[dry-run] execution: runner command\n`);
+    if (record.task.precondition) {
+      process.stdout.write(`[dry-run] precondition:\n${record.task.precondition.command}\n`);
+      process.stdout.write(
+        `[dry-run] precondition skip_when: ${record.task.precondition.skip_when}\n`,
+      );
+    }
+    process.stdout.write(`[dry-run] command:\n${record.task.command}\n`);
+    if (analysisCandidate) {
+      process.stdout.write(
+        `[dry-run] agent: ${analysisCandidate.actor ?? ""} (analysis reporter)\n`,
+      );
+      process.stdout.write(`[dry-run] reporter command: ${analysisCandidate.command}\n`);
+    }
+    process.stdout.write(`[dry-run] plan: ${planPath}\n`);
+    return;
+  }
+
+  const resultActor = analysisCandidate?.actor ?? "specdojo-runner";
+  const { resultPath } = await scaffoldResult({
+    executionPath,
+    taskId: record.run_id,
+    mode: "edit",
+    projectId,
+    origin: "job",
+    jobId: record.job_id,
+    runId: record.run_id,
+    planRef: record.plan_ref,
+    agent: resultActor,
+    startedAt: new Date().toISOString(),
+    ...(record.task.targets ? { targets: record.task.targets } : {}),
+  });
+  const evidenceRunId = `attempt-${record.attempts.length}`;
+  process.stdout.write(`Running Job Run ${record.run_id} command in place.\n`);
+  const commandOutcome = await executeJobCommand(record.task.command, repoRoot);
+  const recorded = recordCommandEvidence({
+    repoRoot,
+    worktreePath: repoRoot,
+    executionPath,
+    taskId: record.run_id,
+    runId: evidenceRunId,
+    actor: "specdojo-runner",
+    command: record.task.command,
+    shell: process.platform === "win32" ? process.env.ComSpec || "cmd.exe" : "/bin/sh -eu",
+    startedAt: commandOutcome.startedAt,
+    completedAt: commandOutcome.completedAt,
+    exitCode: commandOutcome.exitCode,
+    stdout: commandOutcome.stdout,
+    stderr: commandOutcome.stderr,
+    stdoutTruncated: commandOutcome.stdoutTruncated,
+    stderrTruncated: commandOutcome.stderrTruncated,
+    ...(commandOutcome.error ? { error: commandOutcome.error } : {}),
+  });
+  const evidenceRef = relative(repoRoot, recorded.evidencePath).split(sep).join("/");
+  process.stdout.write(`Command evidence: ${evidenceRef}\n`);
+
+  const commandSucceeded = commandOutcome.exitCode === 0 && !commandOutcome.error;
+  if (!commandSucceeded || !analysisCandidate) {
+    const reason = commandSucceeded
+      ? undefined
+      : commandOutcome.error
+        ? `command spawn failed: ${commandOutcome.error}`
+        : `command exited with code ${commandOutcome.exitCode ?? "unknown"}`;
+    await renderReporterResult(resultPath, {
+      schema_version: 1,
+      mode: "edit",
+      outcome: commandSucceeded ? "complete" : "blocked",
+      summary: [
+        commandSucceeded
+          ? "runner が解決済みコマンドを直接実行し、終了コード 0 を確認した。"
+          : `runner が解決済みコマンドを直接実行したが、${reason}。`,
+      ],
+      changed_files: recorded.evidence.changes.map((change) => ({
+        path: change.path,
+        summary: "runner command の実行後に検出した変更",
+      })),
+      handoff: [`command evidence: ${evidenceRef}`],
+      approach:
+        "Job Definition から materialize したコマンドを agent の解釈を介さず実行し、runner evidence を正本とした。",
+      block_reason: reason ?? "",
+    });
+    await updateResultStatus(
+      resultPath,
+      commandSucceeded ? "complete" : "blocked",
+      new Date().toISOString(),
+      reason,
+    );
+    completeJobRun({
+      projectId,
+      runPath,
+      status: commandSucceeded ? "succeeded" : "failed",
+      evidenceRef,
+      exitCode: commandOutcome.exitCode,
+      ...(reason ? { reason } : {}),
+    });
+    if (commandSucceeded) {
+      process.stdout.write(`Job Run complete: ${record.run_id}\n`);
+    } else {
+      process.stdout.write(`Job Run failed: ${record.run_id}\n`);
+      process.exitCode = commandOutcome.exitCode || 1;
+    }
+    return;
+  }
+
+  const stateLocation = pipelineStateLocation({
+    repoRoot,
+    worktreePath: repoRoot,
+    executionPath,
+    taskId: record.run_id,
+    runId: evidenceRunId,
+  });
+  let state = createPipelineState({
+    taskId: record.run_id,
+    runId: evidenceRunId,
+    updatedAt: commandOutcome.completedAt,
+    executorActor: "specdojo-runner",
+    reporterActor: analysisCandidate.actor,
+    artifacts: {
+      plan_ref: relative(repoRoot, planPath).split(sep).join("/"),
+      result_ref: relative(repoRoot, resultPath).split(sep).join("/"),
+    },
+  });
+  state = updatePipelineStage(
+    state,
+    "executor",
+    {
+      status: "succeeded",
+      attempts: 1,
+      started_at: commandOutcome.startedAt,
+      completed_at: commandOutcome.completedAt,
+      artifact_ref: evidenceRef,
+    },
+    commandOutcome.completedAt,
+  );
+  writePipelineState(stateLocation.path, state);
+  const reporterOutcome = await runReporterStage({
+    repoRoot,
+    cwd: repoRoot,
+    schedulePath,
+    executionPath,
+    reporterCandidates: [analysisCandidate],
+    planPrompt: expandPromptRefs(readFileSync(planPath, "utf8")),
+    resultPath,
+    execDefaults,
+    evidence: recorded.evidence,
+    evidencePath: recorded.evidencePath,
+    state,
+    statePath: stateLocation.path,
+  });
+  const reason = reporterOutcome.blockReason;
+  await updateResultStatus(
+    resultPath,
+    reporterOutcome.exitCode === 0 ? "complete" : "blocked",
+    new Date().toISOString(),
+    reason,
+  );
+  completeJobRun({
+    projectId,
+    runPath,
+    status: reporterOutcome.exitCode === 0 ? "succeeded" : "failed",
+    evidenceRef,
+    exitCode: commandOutcome.exitCode,
+    ...(reason ? { reason } : {}),
+  });
+  if (reporterOutcome.exitCode === 0) {
+    process.stdout.write(`Job Run complete: ${record.run_id}\n`);
+  } else {
+    process.stdout.write(`Job Run failed: ${record.run_id}\n`);
+    process.exitCode = 1;
+  }
+}
+
 async function runJobMode(opts: RunOpts): Promise<void> {
   const resolvedPaths = resolveProjectPaths({ project: opts.project });
   activateResolvedProjectPaths(resolvedPaths);
@@ -3076,8 +3614,28 @@ async function runJobMode(opts: RunOpts): Promise<void> {
     dryRun: !!opts.dryRun,
   });
   const { definition, record, runPath, planPath } = materialized;
+  if (materialized.preconditionSkipped) {
+    process.stdout.write(
+      `Job skipped: ${definition.id} (${materialized.preconditionReason ?? "precondition"})\n`,
+    );
+    if (trigger === "routine") process.exitCode = ROUTINE_BUSY_SKIP_EXIT_CODE;
+    return;
+  }
   if (materialized.duplicateComplete) {
     process.stdout.write(`Job Run already complete: ${record.run_id} (${record.state})\n`);
+    return;
+  }
+
+  if (isJobCommandTask(record.task)) {
+    await runCommandJobMode({
+      opts,
+      record,
+      runPath,
+      planPath,
+      projectId,
+      schedulePath,
+      executionPath,
+    });
     return;
   }
 
@@ -3087,6 +3645,7 @@ async function runJobMode(opts: RunOpts): Promise<void> {
     name: definition.name,
     owner: record.task.owner,
     mode: record.task.mode,
+    agent: record.task.agent?.executor,
     capabilities: record.task.capabilities,
     proficiency: record.task.proficiency,
     schedule_file: "",
@@ -3098,13 +3657,36 @@ async function runJobMode(opts: RunOpts): Promise<void> {
     resolveExecDefaultsPath(opts, schedulePath),
     executionPath,
   );
-  const { command, actor } = resolveInPlaceCommand(task, roster, opts, execDefaults);
+  // Job Definition が executor と reporter の双方を指名した場合は、register 項目と同じ
+  // executor/reporter pipeline で実行する（result は reporter が書く）。reporter が無い
+  // 場合は従来どおり単一 agent 実行で、その agent が result まで記入する。
+  // --by は運用者による単発の差し替えとして単一 agent 実行を選ぶ。
+  const executorBy = opts.executorBy?.trim() || record.task.agent?.executor;
+  const reporterBy = opts.reporterBy?.trim() || record.task.agent?.reporter;
+  const pipelineAgents =
+    !opts.by?.trim() && executorBy && reporterBy
+      ? resolveRegisterPipelineCommand(roster, { executorBy, reporterBy }, execDefaults)
+      : undefined;
+  const { command, actor } = pipelineAgents
+    ? { command: pipelineAgents.executor.command, actor: pipelineAgents.executor.actor }
+    : resolveInPlaceCommand(
+        task,
+        roster,
+        { ...opts, executorBy: undefined, reporterBy: undefined },
+        execDefaults,
+      );
 
   if (opts.dryRun) {
     process.stdout.write(`[dry-run] job: ${definition.id}\n`);
     process.stdout.write(`[dry-run] run: ${record.run_id}\n`);
     process.stdout.write(`[dry-run] scheduled_at: ${record.scheduled_at}\n`);
+    process.stdout.write(`[dry-run] agent: ${actor}${pipelineAgents ? " (executor)" : ""}\n`);
     process.stdout.write(`[dry-run] command: ${command}\n`);
+    if (pipelineAgents) {
+      const reporter = pipelineAgents.reporterCandidates[0];
+      process.stdout.write(`[dry-run] agent: ${reporter?.actor ?? ""} (reporter)\n`);
+      process.stdout.write(`[dry-run] reporter command: ${reporter?.command ?? ""}\n`);
+    }
     process.stdout.write(`[dry-run] plan: ${planPath}\n`);
     return;
   }
@@ -3124,16 +3706,33 @@ async function runJobMode(opts: RunOpts): Promise<void> {
   });
   const resultScaffold = readResultFrontmatterSnapshot(resultPath);
   const prompt = expandPromptRefs(readFileSync(planPath, "utf8"));
-  process.stdout.write(`Running Job Run ${record.run_id} in place: ${command}\n`);
-  const exitCode = await spawnAgentInPlace(
-    command,
-    prompt,
-    specdojoRootDir(),
-    schedulePath,
-    executionPath,
-  );
-  let effectiveExit = exitCode;
+  const repoRoot = specdojoRootDir();
+  let exitCode: number;
   let reason: string | undefined;
+  if (pipelineAgents) {
+    process.stdout.write(
+      `Running Job Run ${record.run_id} in place (executor/reporter pipeline): ${command}\n`,
+    );
+    const pipelineOutcome = await runAgentPipeline({
+      repoRoot,
+      cwd: repoRoot,
+      schedulePath,
+      executionPath,
+      taskId: record.run_id,
+      executor: pipelineAgents.executor,
+      reporterCandidates: pipelineAgents.reporterCandidates,
+      planPath,
+      planPrompt: prompt,
+      resultPath,
+      execDefaults,
+    });
+    exitCode = pipelineOutcome.exitCode;
+    reason = pipelineOutcome.blockReason;
+  } else {
+    process.stdout.write(`Running Job Run ${record.run_id} in place: ${command}\n`);
+    exitCode = await spawnAgentInPlace(command, prompt, repoRoot, schedulePath, executionPath);
+  }
+  let effectiveExit = exitCode;
   if (exitCode === 0 && isResultUnfilled(resultPath, record.task.mode, resultScaffold)) {
     effectiveExit = 1;
     reason =
@@ -3296,7 +3895,7 @@ export function resolveRegisterPipelineCommand(
 // register pipeline の reporter 段だけを実行する。executor 直後の通常経路と、executor が
 // 成功したまま reporter だけが失敗した run の再開経路の双方から共有し、reporter 起動・
 // result 描画・pipeline-state 更新のみを担う（register の状態遷移と commit は呼び出し側）。
-async function runRegisterReporterStage(params: {
+async function runReporterStage(params: {
   repoRoot: string;
   cwd: string;
   schedulePath: string;
@@ -3346,6 +3945,7 @@ async function runRegisterReporterStage(params: {
         execDefaults,
         cwd,
         env,
+        params.resultPath,
       );
       reporterAttempts += reporterOutcome.attempts;
       return {
@@ -3410,12 +4010,13 @@ async function runRegisterReporterStage(params: {
   return { exitCode, runResult, blockReason, state };
 }
 
-// register 項目1件を executor→reporter の2段階で実行する。in-place（cwd: repoRoot）・
-// worktree（cwd: worktree.path）の双方から共有する。evidence・pipeline-state の記録先は
+// 1件の plan/result を executor→reporter の2段階で実行する。register 項目と Job Run の
+// 双方が使い、in-place（cwd: repoRoot）・worktree（cwd: worktree.path）から共有する。
+// evidence・pipeline-state の記録先は
 // Schedule タスクの pipeline と同じ形式（exec/evidence/<taskId>/<runId>/）にすることで、
 // 監査証跡のフォーマットを実行経路によらず統一する。state には plan / result の参照も
 // 記録し、reporter だけが失敗した場合に `--resume` が入力を復元できるようにする。
-async function runRegisterAgentPipeline(params: {
+async function runAgentPipeline(params: {
   repoRoot: string;
   cwd: string;
   schedulePath: string;
@@ -3479,10 +4080,14 @@ async function runRegisterAgentPipeline(params: {
 
   const env = agentEnvironment(repoRoot, cwd, schedulePath, executionPath);
   const executorPrompt = buildExecutorPrompt(planPrompt, execDefaults.pipeline?.parent_validations);
-  const outcome = await runWithRetry([executor], executorPrompt, execDefaults, cwd, env);
-  const parentValidations =
-    outcome.result === "success" ? await runConfiguredParentValidations(execDefaults, cwd) : [];
-
+  const outcome = await runWithRetry(
+    [executor],
+    executorPrompt,
+    execDefaults,
+    cwd,
+    env,
+    resultPath,
+  );
   const recorded = recordExecutorEvidence({
     repoRoot,
     worktreePath: cwd,
@@ -3502,7 +4107,6 @@ async function runRegisterAgentPipeline(params: {
     attempts: outcome.attempts,
     stdout: outcome.stdout,
     stderr: outcome.stderr,
-    parentValidations,
   });
   const evidenceRef = relative(cwd, recorded.evidencePath).split(sep).join("/");
   const executorCompletedAt = new Date().toISOString();
@@ -3513,9 +4117,11 @@ async function runRegisterAgentPipeline(params: {
       status:
         outcome.result === "success"
           ? "succeeded"
-          : outcome.result === "rate_limit"
-            ? "rate_limited"
-            : "failed",
+          : outcome.protectionBlock
+            ? "blocked"
+            : outcome.result === "rate_limit"
+              ? "rate_limited"
+              : "failed",
       attempts: outcome.attempts,
       completed_at: executorCompletedAt,
       artifact_ref: evidenceRef,
@@ -3539,7 +4145,14 @@ async function runRegisterAgentPipeline(params: {
     };
   }
 
-  const reporterOutcome = await runRegisterReporterStage({
+  recorded.evidence = await appendParentValidationsToExecutorEvidence({
+    execDefaults,
+    cwd,
+    evidence: recorded.evidence,
+    evidencePath: recorded.evidencePath,
+  });
+
+  const reporterOutcome = await runReporterStage({
     repoRoot,
     cwd,
     schedulePath,
@@ -3565,10 +4178,14 @@ async function runRegisterAgentPipeline(params: {
 
 // register の状態遷移を CLI 経由で実行する。register 側のガード（終端状態の拒否）と
 // 派生ビュー再生成を一元的に通すため、直接ファイルを書き換えず自プロセスを spawn する。
-function spawnRegisterTransition(projectId: string | undefined, args: string[]): boolean {
+function spawnRegisterTransition(
+  projectId: string | undefined,
+  args: string[],
+  cwd?: string,
+): boolean {
   const fullArgs = ["register", ...args];
   if (projectId) fullArgs.push("--project", projectId);
-  return spawnSelf(fullArgs);
+  return spawnSelf(fullArgs, cwd);
 }
 
 // 複数IDの直列実行で共有する、ID間で不変なセットアップ。paths/roster/execDefaults の
@@ -3600,7 +4217,7 @@ export function commitRegisterItemChanges(
   const paths = remainingPaths();
   if (paths.length === 0) return { committed: false };
 
-  gitOutput(repoRoot, ["add", "-A", "--", ...paths]);
+  stageCommitTargets(repoRoot, paths);
   const staged = gitResult(repoRoot, ["diff", "--cached", "--quiet", "--", ...paths]);
   if (staged.status === 0) return { committed: false };
   if (staged.status !== 1) throw new Error("Failed to inspect staged register changes.");
@@ -3614,6 +4231,28 @@ export function commitRegisterItemChanges(
 
 function repoRelativePath(repoRoot: string, path: string): string {
   return relative(repoRoot, path).split(sep).join("/");
+}
+
+// commitlint (config-conventional) rejects headers longer than 100 characters. Task names and
+// register titles are free text, so clip the subject instead of failing the commit or merge.
+const COMMIT_SUBJECT_MAX_LENGTH = 100;
+
+export function commitSubject(prefix: string, title: string): string {
+  const flat = title.replace(/\s+/g, " ").trim();
+  const subject = `${prefix}${flat}`;
+  if (subject.length <= COMMIT_SUBJECT_MAX_LENGTH) return subject;
+  return `${subject.slice(0, COMMIT_SUBJECT_MAX_LENGTH - 1)}…`;
+}
+
+function registerEventPathForTicket(
+  registerPaths: RegisterPaths,
+  ticketPath?: string | null,
+): string | undefined {
+  if (!ticketPath) return undefined;
+  const displayId = displayIdFromTicketFilename(basename(ticketPath));
+  return displayId
+    ? registerEventFilePath(registerPaths.projectRegisterPath, displayId)
+    : undefined;
 }
 
 function registerRunnerManagedPaths(
@@ -3631,6 +4270,8 @@ function registerRunnerManagedPaths(
   const managed = [planPath, resultPath, ...additionalManagedPaths];
   if (existsSync(registerPaths.pjrIndexPath)) managed.push(registerPaths.pjrIndexPath);
   if (ticketPath) managed.push(ticketPath);
+  const eventPath = registerEventPathForTicket(registerPaths, ticketPath);
+  if (eventPath) managed.push(eventPath);
   const exact = new Set(managed.map((path) => repoRelativePath(repoRoot, path)));
   const prefixes = [registerPaths.generatedPath, registerPaths.controlsGeneratedPath].map(
     (path) => `${repoRelativePath(repoRoot, path)}/`,
@@ -3712,7 +4353,7 @@ async function runSingleRegisterItem(
   let pipelineBlockReason: string | undefined;
   if (pipelineAgents) {
     process.stdout.write(`Running ${item.id} in place (executor/reporter pipeline)\n`);
-    const pipelineOutcome = await runRegisterAgentPipeline({
+    const pipelineOutcome = await runAgentPipeline({
       repoRoot,
       cwd: repoRoot,
       schedulePath,
@@ -3734,7 +4375,14 @@ async function runSingleRegisterItem(
     }
   } else {
     process.stdout.write(`Running ${item.id} in place: ${command}\n`);
-    exitCode = await spawnAgentInPlace(command, prompt, repoRoot, schedulePath, executionPath);
+    exitCode = await spawnAgentInPlace(
+      command,
+      prompt,
+      repoRoot,
+      schedulePath,
+      executionPath,
+      resultPath,
+    );
   }
 
   // in-place 実行と同じ補助判定: agent が result 必須節を埋めずに終了コード 0 で
@@ -3846,9 +4494,8 @@ async function runSingleRegisterItem(
 }
 
 // register の状態遷移（start/review/wait）が変更した調整状態（pjr-index と派生ビュー）だけを
-// 抽出する。worktree モードでは各遷移を root（統合ブランチ）へ commit して作業ツリーを清潔に
-// 保ち、後続 ID・並列実行の checkpoint / merge と干渉させない。plan/result は checkpoint と
-// worktree merge が扱うため、ここでは含めない。
+// 抽出する。worktree モードでは成功時の遷移を exec branch、失敗時の wait を root で commit
+// する。plan/result は checkpoint と worktree merge が扱うため、ここでは含めない。
 export function registerStatePaths(
   repoRoot: string,
   registerPaths: RegisterPaths,
@@ -3857,6 +4504,8 @@ export function registerStatePaths(
   const changed = worktreeStatusPaths(repoRoot);
   const exact = new Set([repoRelativePath(repoRoot, registerPaths.pjrIndexPath)]);
   if (ticketPath) exact.add(repoRelativePath(repoRoot, ticketPath));
+  const eventPath = registerEventPathForTicket(registerPaths, ticketPath);
+  if (eventPath) exact.add(repoRelativePath(repoRoot, eventPath));
   const prefixes = [registerPaths.generatedPath, registerPaths.controlsGeneratedPath].map(
     (path) => `${repoRelativePath(repoRoot, path)}/`,
   );
@@ -3877,10 +4526,16 @@ function commitRegisterState(
   registerPaths: RegisterPaths,
   message: string,
   ticketPath?: string | null,
+  additionalPaths: readonly string[] = [],
 ): void {
-  const paths = registerStatePaths(repoRoot, registerPaths, ticketPath);
+  const paths = [
+    ...new Set([
+      ...registerStatePaths(repoRoot, registerPaths, ticketPath),
+      ...additionalPaths.map((path) => repoRelativePath(repoRoot, path)),
+    ]),
+  ];
   if (paths.length === 0) return;
-  gitOutput(repoRoot, ["add", "--", ...paths]);
+  stageCommitTargets(repoRoot, paths);
   const staged = gitResult(repoRoot, ["diff", "--cached", "--quiet", "--", ...paths]);
   if (staged.status === 0) return;
   if (staged.status !== 1) throw new Error("Failed to inspect staged register-state changes.");
@@ -3888,8 +4543,85 @@ function commitRegisterState(
   stabilizeCommitTargets(repoRoot, () => registerStatePaths(repoRoot, registerPaths, ticketPath));
 }
 
-// register worktree 実行の失敗確定。waiting へ遷移し、その状態変更（個票・登録簿・派生ビュー）を
-// root へ commit して作業ツリーを清潔に保つ。通常実行と reporter 再開で共有する。
+function registerPathsInsideWorktree(
+  repoRoot: string,
+  worktreePath: string,
+  paths: RegisterPaths,
+): RegisterPaths {
+  return {
+    ...paths,
+    projectRegisterPath: pathInsideWorktree(repoRoot, worktreePath, paths.projectRegisterPath),
+    pjrIndexPath: pathInsideWorktree(repoRoot, worktreePath, paths.pjrIndexPath),
+    generatedPath: pathInsideWorktree(repoRoot, worktreePath, paths.generatedPath),
+    controlsGeneratedPath: pathInsideWorktree(repoRoot, worktreePath, paths.controlsGeneratedPath),
+  };
+}
+
+// root と task worktree の間で、同じ repo 相対パスのファイルを複製する。複製元に無いパスは
+// 複製先からも消す（superseded result のような削除も追従させる）。
+function copyRepoPaths(
+  sourceRoot: string,
+  targetRoot: string,
+  repoRoot: string,
+  paths: readonly string[],
+): void {
+  for (const path of paths) {
+    const rel = repoRelativePath(repoRoot, path);
+    const source = resolve(sourceRoot, rel);
+    const target = resolve(targetRoot, rel);
+    if (!existsSync(source)) {
+      rmSync(target, { recursive: true, force: true });
+      continue;
+    }
+    mkdirSync(dirname(target), { recursive: true });
+    copyFileSync(source, target);
+  }
+}
+
+// register の状態遷移（start / wait / review）が書き換える追跡ファイル（root 側の絶対パス）:
+// 個票、append-only のイベント、存在する場合は登録簿本体（移行前のレイアウト）。gitignore 済みの
+// 派生ビューは含めない。
+function registerTransitionPaths(
+  registerPaths: RegisterPaths,
+  ticketPath: string | null,
+): string[] {
+  const paths: string[] = [];
+  if (ticketPath) paths.push(ticketPath);
+  const eventPath = registerEventPathForTicket(registerPaths, ticketPath);
+  if (eventPath) paths.push(eventPath);
+  if (existsSync(registerPaths.pjrIndexPath)) paths.push(registerPaths.pjrIndexPath);
+  return paths;
+}
+
+// register 項目の実行管理ファイル（root 側の絶対パス）: 遷移ファイルに plan / result を加えた
+// もの。exec branch の checkpoint、失敗時の wait commit、merge 前の root 解放で同じ集合を使う。
+function registerBookkeepingPaths(params: {
+  registerPaths: RegisterPaths;
+  planPath: string;
+  resultPath: string;
+  ticketPath: string | null;
+}): string[] {
+  const { registerPaths, planPath, resultPath, ticketPath } = params;
+  return [
+    ...new Set([planPath, resultPath, ...registerTransitionPaths(registerPaths, ticketPath)]),
+  ];
+}
+
+// root の登録簿派生ビュー（pjr-index / generated）は非追跡の生成物で、merge や複製では更新され
+// ない。個票の状態を root 側へ反映したあとに再生成して、root の表示を個票と揃える。失敗しても
+// 実行結果には影響しないため警告に留める。
+function rebuildRootRegisterViews(projectId: string, itemId: string): void {
+  if (!spawnRegisterTransition(projectId, ["build"])) {
+    process.stderr.write(`warning: could not rebuild register views at root for ${itemId}\n`);
+  }
+}
+
+// register worktree 実行の失敗確定。worktree 側の実行管理ファイル（start 済みの個票・イベント、
+// blocked の result、plan）を root へ写してから waiting へ遷移し、統合ブランチには
+// `exec(register X): wait` commit 1件だけを作る（start の遷移事象も同じ commit に入る）。
+// exec branch には同じ内容を commit したうえで統合ブランチを取り込み、再開後の merge が
+// 記帳ファイルで競合しないようにする。worktree が無い（checkpoint 前の失敗）場合は root の
+// 実行管理ファイルをそのまま commit する。
 function registerWaitSummary(params: {
   repoRoot: string;
   projectId: string;
@@ -3898,9 +4630,14 @@ function registerWaitSummary(params: {
   ticketPath: string | null;
   reason: string;
   actor: string;
+  // root 側の絶対パス。worktree がある場合は worktree → root へ写してから遷移する。
+  bookkeepingPaths: readonly string[];
+  worktree?: ExecWorktree;
 }): RegisterItemSummary {
-  const { repoRoot, projectId, registerPaths, item, ticketPath, actor } = params;
+  const { repoRoot, projectId, registerPaths, item, ticketPath, actor, worktree } = params;
   const blockReason = sanitizeRegisterConclusion(params.reason);
+  const bookkeepingPaths = [...params.bookkeepingPaths];
+  if (worktree) copyRepoPaths(worktree.path, repoRoot, repoRoot, bookkeepingPaths);
   let transition: RegisterItemTransition = "waiting";
   if (
     !spawnRegisterTransition(projectId, [
@@ -3916,7 +4653,25 @@ function registerWaitSummary(params: {
     process.stderr.write(`register wait transition failed: ${item.id}\n`);
     transition = "none";
   } else {
-    commitRegisterState(repoRoot, registerPaths, `exec(register ${item.id}): wait`, ticketPath);
+    const message = `exec(register ${item.id}): wait`;
+    const committedPaths = commitRegisterWaitState({
+      repoRoot,
+      registerPaths,
+      item,
+      ticketPath,
+      bookkeepingPaths,
+      message,
+    });
+    if (worktree)
+      syncExecBranchAfterWait({
+        repoRoot,
+        worktree,
+        registerPaths,
+        item,
+        ticketPath,
+        bookkeepingPaths: committedPaths,
+        message,
+      });
   }
   return {
     id: item.id,
@@ -3928,9 +4683,129 @@ function registerWaitSummary(params: {
   };
 }
 
+// waiting 遷移と実行管理ファイルを root へ 1 commit する。result は commit hook の markdownlint
+// 対象で、失敗した run の result（scaffold のまま、または reporter の出力）が記法違反を含むと
+// commit ごと失敗する。その場合は result を外して遷移だけを commit し（result は root に未 commit
+// のまま残り、merge 前の解放で退避される）、実際に commit した集合を返す。
+function commitRegisterWaitState(params: {
+  repoRoot: string;
+  registerPaths: RegisterPaths;
+  item: PjrItem;
+  ticketPath: string | null;
+  bookkeepingPaths: readonly string[];
+  message: string;
+}): string[] {
+  const { repoRoot, registerPaths, item, ticketPath, message } = params;
+  const paths = [...params.bookkeepingPaths];
+  const resultPaths = paths.filter((path) => isRegisterResultPath(repoRoot, path));
+  for (const path of resultPaths) {
+    if (existsSync(path)) normalizeResultWhitespace(path);
+  }
+  try {
+    commitRegisterState(repoRoot, registerPaths, message, ticketPath, paths);
+    return paths;
+  } catch (error) {
+    if (resultPaths.length === 0) throw error;
+    const withoutResult = paths.filter((path) => !resultPaths.includes(path));
+    process.stderr.write(
+      `warning: wait commit of ${item.id} failed with the result included; retrying without it: ` +
+        `${error instanceof Error ? error.message : String(error)}\n`,
+    );
+    gitResult(repoRoot, [
+      "reset",
+      "--quiet",
+      "--",
+      ...resultPaths.map((path) => repoRelativePath(repoRoot, path)),
+    ]);
+    commitRegisterState(repoRoot, registerPaths, message, ticketPath, withoutResult);
+    return withoutResult;
+  }
+}
+
+function isRegisterResultPath(repoRoot: string, path: string): boolean {
+  return /\/exec\/results\/[^/]+-result\.md$/.test(repoRelativePath(repoRoot, path));
+}
+
+// wait commit を exec branch の祖先にしたあと、その記帳内容を exec branch にも commit する。
+// checkpoint と wait commit は共通祖先に存在しないイベントファイルを双方で追加するため、通常の
+// merge では内容を事前に揃えても add/add 競合になる。ここでは root の tree を取り込む必要はなく、
+// wait commit を merge-base に進めることだけが目的なので ours strategy を使う。その後に root の
+// 記帳内容を複製すれば、再開後の start / review は waiting からの通常差分として統合できる。
+// ancestry-only merge は runner 内部の同期であり、失敗原因となった統合 hook を再実行しないよう
+// --no-verify を指定する。同期に失敗した場合は abort して警告し、worktree を保持する。
+function syncExecBranchAfterWait(params: {
+  repoRoot: string;
+  worktree: ExecWorktree;
+  registerPaths: RegisterPaths;
+  item: PjrItem;
+  ticketPath: string | null;
+  bookkeepingPaths: readonly string[];
+  message: string;
+}): void {
+  const { repoRoot, worktree, item } = params;
+  const worktreePaths = params.bookkeepingPaths.map((path) =>
+    pathInsideWorktree(repoRoot, worktree.path, path),
+  );
+  try {
+    const targetBranch = currentBranch(repoRoot);
+    gitOutput(worktree.path, [
+      "merge",
+      "--no-edit",
+      "--no-verify",
+      "-s",
+      "ours",
+      "-m",
+      `exec(register ${item.id}): record ${targetBranch} wait ancestry`,
+      targetBranch,
+    ]);
+    copyRepoPaths(repoRoot, worktree.path, repoRoot, params.bookkeepingPaths);
+    commitRegisterState(
+      worktree.path,
+      registerPathsInsideWorktree(repoRoot, worktree.path, params.registerPaths),
+      params.message,
+      params.ticketPath ? pathInsideWorktree(repoRoot, worktree.path, params.ticketPath) : null,
+      worktreePaths,
+    );
+  } catch (error) {
+    gitResult(worktree.path, ["merge", "--abort"]);
+    process.stderr.write(
+      `warning: could not sync the exec branch of ${item.id} with the wait commit; ` +
+        `the resumed merge may conflict on register bookkeeping: ` +
+        `${error instanceof Error ? error.message : String(error)}\n`,
+    );
+  }
+}
+
+// 統合段（commit → merge → worktree 撤去）の進捗を pipeline-state へ記録する。Schedule は
+// succeeded を exec branch へ commit してから merge し、register は開始と失敗を worktree に
+// 記録する。記帳の失敗で統合自体を止めない。
+function recordIntegrateStage(
+  statePath: string | undefined,
+  updatedAt: string,
+  buildPatch: (current: PipelineStageState | undefined) => Partial<PipelineStageState>,
+): void {
+  if (!statePath || !existsSync(statePath)) return;
+  try {
+    const state = readPipelineState(statePath);
+    const patch = buildPatch(state.stages.integrate);
+    writePipelineState(statePath, updatePipelineStage(state, "integrate", patch, updatedAt));
+  } catch (error) {
+    process.stderr.write(
+      `warning: could not record the integrate stage in ${statePath}: ` +
+        `${error instanceof Error ? error.message : String(error)}\n`,
+    );
+  }
+}
+
+function integrateLogPath(statePath: string | undefined): string | undefined {
+  return statePath ? join(dirname(statePath), "integrate.log") : undefined;
+}
+
 // register worktree 実行の Phase 3（成果物統合と状態遷移）。成功なら worktree の成果物を
-// commit → 統合ブランチへ merge → worktree 撤去 → register review、失敗なら worktree を
-// 保持したまま waiting へ戻す。通常実行と reporter 再開で同じ後処理を通す。
+// commit → worktree 側で register review → 統合ブランチへ merge commit 1件 → worktree 撤去、
+// 失敗なら worktree を保持したまま waiting へ戻す（wait commit 1件）。通常実行・reporter 再開・
+// 統合再開で同じ後処理を通す。統合ブランチの first-parent に増えるのは、成功時の merge commit
+// （start → review の遷移事象、plan / result、成果物を含む）か失敗時の wait commit だけになる。
 async function finalizeRegisterWorktreeRun(params: {
   context: RegisterRunContext;
   registerPaths: RegisterPaths;
@@ -3943,12 +4818,34 @@ async function finalizeRegisterWorktreeRun(params: {
   agentResult: RunResult;
   stderr: string;
   actor: string;
+  // root 側の実行管理ファイル（plan / result / 個票 / イベント）。merge 前に解放し、失敗時は
+  // wait commit にまとめる。
+  bookkeepingPaths: readonly string[];
+  // pipeline 実行の run state（統合段の記録先）。単一 agent 実行では未指定。
+  pipelineStatePath?: string;
+  // 統合段の再試行。前回の attempt が merge 済みで後段だけ失敗した場合に備え、
+  // 取り込み済みの exec ブランチを再 merge せず後続の手順を続ける。
+  resumedIntegration?: boolean;
 }): Promise<RegisterItemSummary> {
   const { context, registerPaths, item, ticketPath, worktree, stem, agentResult, actor } = params;
   const { projectId, schedulePath, executionPath, repoRoot } = context;
   const wtContext = { repoRoot, schedulePath, executionPath };
+  const worktreeRegisterPaths = registerPathsInsideWorktree(repoRoot, worktree.path, registerPaths);
+  const worktreeTicketPath = ticketPath
+    ? pathInsideWorktree(repoRoot, worktree.path, ticketPath)
+    : null;
   const waitSummary = (reason: string): RegisterItemSummary =>
-    registerWaitSummary({ repoRoot, projectId, registerPaths, item, ticketPath, reason, actor });
+    registerWaitSummary({
+      repoRoot,
+      projectId,
+      registerPaths,
+      item,
+      ticketPath,
+      reason,
+      actor,
+      worktree,
+      bookkeepingPaths: params.bookkeepingPaths,
+    });
 
   const completedAt = new Date().toISOString();
   const worktreeResultPath = params.worktreeResultPath;
@@ -3960,36 +4857,184 @@ async function finalizeRegisterWorktreeRun(params: {
   );
 
   if (effectiveResult === "success") {
+    // A prior integration attempt may have completed the merge and failed only while removing the
+    // worktree. The register item and result at root are already in their final review/complete
+    // state, so an integration resume must only clean up. Replaying start/review or advancing the
+    // exec branch here would force a second merge commit for the same task.
+    if (
+      params.resumedIntegration &&
+      isExecBranchMergedIntoCurrent({ context: wtContext, worktree })
+    ) {
+      try {
+        const lifecyclePaths = new Set(
+          [worktreeResultPath, params.pipelineStatePath]
+            .filter((path): path is string => !!path)
+            .map((path) => repoRelativePath(worktree.path, path)),
+        );
+        const dirtyTargets = commitTargetPaths(wtContext, worktree, stem);
+        const unexpected = dirtyTargets.filter((path) => !lifecyclePaths.has(path));
+        if (unexpected.length > 0) {
+          throw new Error(`already-merged worktree has new task changes: ${unexpected.join(", ")}`);
+        }
+        if (dirtyTargets.length > 0) {
+          gitOutput(worktree.path, [
+            "restore",
+            "--source=HEAD",
+            "--staged",
+            "--worktree",
+            "--",
+            ...dirtyTargets,
+          ]);
+        }
+        process.stdout.write(
+          `  [integrate] already merged: ${worktree.branch} (skipping transitions, commit, and merge)\n`,
+        );
+        removeWorktree({ context: wtContext, worktree, taskId: stem, deleteBranch: true });
+      } catch (error) {
+        if (error instanceof WorktreeRemovedBranchDeletionError) {
+          process.stderr.write(`Warning: ${error.message}; run exec worktree prune.\n`);
+        } else {
+          const reason = sanitizeRegisterConclusion(
+            `integrate cleanup failed: ${error instanceof Error ? error.message : String(error)}`,
+          );
+          const integrateFailedAt = new Date().toISOString();
+          recordIntegrateStage(params.pipelineStatePath, integrateFailedAt, () => ({
+            status: "failed",
+            completed_at: integrateFailedAt,
+          }));
+          process.stdout.write(`  Blocked: ${item.id} (worktree kept: ${worktree.path})\n`);
+          return {
+            id: item.id,
+            title: item.title,
+            outcome: "failure",
+            transition: "review",
+            commit: "incomplete",
+            reason,
+          };
+        }
+      }
+
+      rebuildRootRegisterViews(projectId, item.id);
+      const sha = gitOutput(repoRoot, ["rev-parse", "--short", "HEAD"]).trim();
+      process.stdout.write(
+        `run done: ${item.id} (status: review — confirm and close with "register close")\n`,
+      );
+      return {
+        id: item.id,
+        title: item.title,
+        outcome: "success",
+        transition: "review",
+        commit: `committed ${sha}`,
+      };
+    }
+
     await updateResultStatus(worktreeResultPath, "complete", completedAt);
-    const title = item.title.replace(/\r?\n/g, " ").trim();
+    const subject = commitSubject(`exec(register ${item.id}): `, item.title);
+    const integrateStartedAt = new Date().toISOString();
+    recordIntegrateStage(params.pipelineStatePath, integrateStartedAt, (current) => ({
+      status: "running",
+      actor,
+      attempts: (current?.attempts ?? 0) + 1,
+      started_at: integrateStartedAt,
+      completed_at: null,
+    }));
     try {
       commitWorktreeChanges({
         context: wtContext,
         worktree,
         taskId: stem,
-        message: `exec(register ${item.id}): ${title}`,
+        message: subject,
       });
-      mergeWorktreeIntoCurrent({ context: wtContext, worktree, taskId: stem });
-    } catch (error) {
-      const reason = sanitizeRegisterConclusion(
-        `integrate failed: ${error instanceof Error ? error.message : String(error)}`,
+      // review は exec branch 側（worktree）で記録し、merge commit に同梱する。統合ブランチで
+      // 遷移すると first-parent に独立した commit が増えるため、root では遷移しない。
+      if (
+        !spawnRegisterTransition(
+          projectId,
+          ["review", "--id", item.id, "--by", actor],
+          worktree.path,
+        )
+      ) {
+        throw new Error(`register review transition failed: ${item.id}`);
+      }
+      const integrateCompletedAt = new Date().toISOString();
+      recordIntegrateStage(params.pipelineStatePath, integrateCompletedAt, () => ({
+        status: "succeeded",
+        completed_at: integrateCompletedAt,
+      }));
+      commitRegisterState(
+        worktree.path,
+        worktreeRegisterPaths,
+        `exec(register ${item.id}): review`,
+        worktreeTicketPath,
+        params.pipelineStatePath ? [params.pipelineStatePath] : [],
       );
-      await updateResultStatus(worktreeResultPath, "blocked", completedAt, reason);
-      process.stdout.write(`  Blocked: ${item.id} (worktree kept: ${worktree.path})\n`);
-      const summary = waitSummary(reason);
-      return { ...summary, commit: "incomplete" };
+      if (
+        params.resumedIntegration &&
+        isExecBranchMergedIntoCurrent({ context: wtContext, worktree })
+      ) {
+        process.stdout.write(`  [integrate] already merged: ${worktree.branch} (skipping merge)\n`);
+      } else {
+        let executor = actor;
+        let reporter = "-";
+        if (params.pipelineStatePath && existsSync(params.pipelineStatePath)) {
+          const state = readPipelineState(params.pipelineStatePath);
+          executor = state.stages.executor.actor ?? executor;
+          reporter = state.stages.reporter.actor ?? reporter;
+        }
+        mergeWorktreeIntoCurrent({
+          context: wtContext,
+          worktree,
+          taskId: stem,
+          message:
+            `${subject}\n\n` +
+            `Transition: start → review\nExecutor: ${executor}\nReporter: ${reporter}\nRefs: ${item.id}`,
+          releaseRootPaths: [...params.bookkeepingPaths],
+          failureLogPath: integrateLogPath(params.pipelineStatePath),
+        });
+      }
+      // 撤去も統合の一部として扱う。merge 前に失敗した場合は waiting へ戻し、merge 後の撤去
+      // だけが失敗した場合は review を維持して `--resume` で cleanup だけをやり直す。撤去後の
+      // branch 削除だけが失敗した場合は、成果の統合を取り消さず cleanup 警告として扱う。
+      removeWorktree({ context: wtContext, worktree, taskId: stem, deleteBranch: true });
+    } catch (error) {
+      if (error instanceof WorktreeRemovedBranchDeletionError) {
+        // The task changes are already merged and the worktree is gone. Treat the integration as
+        // complete while preserving an explicit cleanup warning in the run log.
+        process.stderr.write(`Warning: ${error.message}; run exec worktree prune.\n`);
+      } else {
+        const reason = sanitizeRegisterConclusion(
+          `integrate failed: ${error instanceof Error ? error.message : String(error)}`,
+        );
+        const integrateFailedAt = new Date().toISOString();
+        recordIntegrateStage(params.pipelineStatePath, integrateFailedAt, () => ({
+          status: "failed",
+          completed_at: integrateFailedAt,
+        }));
+        // The merge may already have succeeded and only worktree removal failed. Root now contains
+        // the complete result and review transition; adding a wait commit would create a second
+        // first-parent entry and a resume would create a third. Keep review intact and let
+        // integration resume perform cleanup only.
+        if (isExecBranchMergedIntoCurrent({ context: wtContext, worktree })) {
+          rebuildRootRegisterViews(projectId, item.id);
+          process.stdout.write(`  Blocked: ${item.id} (worktree kept: ${worktree.path})\n`);
+          return {
+            id: item.id,
+            title: item.title,
+            outcome: "failure",
+            transition: "review",
+            commit: "incomplete",
+            reason,
+          };
+        }
+        await updateResultStatus(worktreeResultPath, "blocked", completedAt, reason);
+        process.stdout.write(`  Blocked: ${item.id} (worktree kept: ${worktree.path})\n`);
+        const summary = waitSummary(reason);
+        return { ...summary, commit: "incomplete" };
+      }
     }
-    removeWorktree({ context: wtContext, worktree, taskId: stem, deleteBranch: true });
 
-    let transition: RegisterItemTransition = "review";
-    let reason: string | undefined;
-    if (!spawnRegisterTransition(projectId, ["review", "--id", item.id, "--by", actor])) {
-      process.stderr.write(`register review transition failed: ${item.id}\n`);
-      transition = "none";
-      reason = "register review transition failed";
-    } else {
-      commitRegisterState(repoRoot, registerPaths, `exec(register ${item.id}): review`, ticketPath);
-    }
+    // review は merge で root の個票に入る。非追跡の派生ビューだけ root で作り直す。
+    rebuildRootRegisterViews(projectId, item.id);
     const sha = gitOutput(repoRoot, ["rev-parse", "--short", "HEAD"]).trim();
     process.stdout.write(
       `run done: ${item.id} (status: review — confirm and close with "register close")\n`,
@@ -3998,9 +5043,8 @@ async function finalizeRegisterWorktreeRun(params: {
       id: item.id,
       title: item.title,
       outcome: "success",
-      transition,
+      transition: "review",
       commit: `committed ${sha}`,
-      reason,
     };
   }
 
@@ -4022,11 +5066,10 @@ async function finalizeRegisterWorktreeRun(params: {
   return waitSummary(reason);
 }
 
-// register 項目1件の worktree 実行。成果物は worktree に隔離し、状態遷移（start/review/wait）は
-// root（統合ブランチ）で lifecycleLock 直列化して pjr-index の競合を避ける。フローは
-// Phase1: plan/result 生成 → register start → checkpoint（plan/result/pjr-index/views を root
-// HEAD へ commit）→ worktree 作成、Phase2: worktree で agent 実行、Phase3: 成功なら成果物を
-// commit → merge back → worktree 撤去 → register review、失敗/rate limit なら register wait。
+// register 項目1件の worktree 実行。成果物は worktree に隔離し、短い setup/finalize だけを
+// lifecycleLock で直列化する。start の checkpoint と成功時の review は exec branch に置き、
+// project develop の first-parent には task 単位の merge commit だけを追加する。失敗時は
+// start を含む管理成果物を root へ戻し、wait 遷移と同じ commit にまとめる。
 async function runSingleRegisterItemWorktree(
   context: RegisterRunContext,
   opts: RunOpts,
@@ -4062,9 +5105,6 @@ async function runSingleRegisterItemWorktree(
   const stem = buildInPlaceStem(pjrId.toLowerCase());
   const worktreeTaskId = qualifyTaskId(projectId, item.id);
 
-  const waitSummary = (reason: string): RegisterItemSummary =>
-    registerWaitSummary({ repoRoot, projectId, registerPaths, item, ticketPath, reason, actor });
-
   // Phase 1: plan/result 生成 → register start → checkpoint → worktree 作成（root で直列化）。
   const setup = async (): Promise<
     | {
@@ -4073,6 +5113,7 @@ async function runSingleRegisterItemWorktree(
         resultPath: string;
         resultScaffold: Record<string, unknown>;
         prompt: string;
+        bookkeepingPaths: string[];
       }
     | RegisterItemSummary
   > => {
@@ -4144,29 +5185,47 @@ async function runSingleRegisterItemWorktree(
       process.stdout.write(
         `  [run] ${setupAction}: worktree ${worktree.path} (${worktree.branch})\n`,
       );
-      return { worktree, planPath, resultPath, resultScaffold, prompt };
+      return {
+        worktree,
+        planPath,
+        resultPath,
+        resultScaffold,
+        prompt,
+        bookkeepingPaths: checkpointPaths,
+      };
     } catch (error) {
-      // checkpoint 失敗時は start を巻き戻して waiting にする（worktree は未作成）。
-      return waitSummary(
-        `checkpoint failed: ${error instanceof Error ? error.message : String(error)}`,
-      );
+      // checkpoint 失敗時は exec branch に commit が無く、root の実行管理ファイルが正本のまま。
+      // start を巻き戻して waiting にし、その状態を root の wait commit 1件にまとめる
+      // （作りかけの worktree は次回実行の discardStaleExecWorktree が片付ける）。
+      return registerWaitSummary({
+        repoRoot,
+        projectId,
+        registerPaths,
+        item,
+        ticketPath,
+        reason: `checkpoint failed: ${error instanceof Error ? error.message : String(error)}`,
+        actor,
+        bookkeepingPaths: checkpointPaths,
+      });
     }
   };
 
   const prepared = lifecycleLock ? await lifecycleLock.runExclusive(setup) : await setup();
   if ("outcome" in prepared) return prepared;
-  const { worktree, planPath, resultPath, resultScaffold, prompt } = prepared;
+  const { worktree, planPath, resultPath, resultScaffold, prompt, bookkeepingPaths } = prepared;
 
   // Phase 2: agent を worktree 内で実行（ロック外・並列可能な長時間部分）。
   const env = agentEnvironment(repoRoot, worktree.path, schedulePath, executionPath);
   let agentResult: RunResult;
   let stderr = "";
+  // pipeline 実行のみ run state を持つ。統合段の記録先として Phase 3 へ渡す。
+  let pipelineStatePath: string | undefined;
   if (pipelineAgents) {
     process.stdout.write(
       `Running ${item.id} in worktree (executor/reporter pipeline)\n  CWD: ${worktree.path}\n`,
     );
     const worktreeResultPathForPipeline = pathInsideWorktree(repoRoot, worktree.path, resultPath);
-    const pipelineOutcome = await runRegisterAgentPipeline({
+    const pipelineOutcome = await runAgentPipeline({
       repoRoot,
       cwd: worktree.path,
       schedulePath,
@@ -4181,6 +5240,7 @@ async function runSingleRegisterItemWorktree(
     });
     agentResult = pipelineOutcome.runResult;
     stderr = pipelineOutcome.blockReason ?? "";
+    pipelineStatePath = resolve(worktree.path, pipelineOutcome.stateRef);
   } else {
     process.stdout.write(`Running ${item.id} in worktree: ${command}\n  CWD: ${worktree.path}\n`);
     const outcome = await runWithRetry(
@@ -4189,12 +5249,13 @@ async function runSingleRegisterItemWorktree(
       context.execDefaults,
       worktree.path,
       env,
+      pathInsideWorktree(repoRoot, worktree.path, resultPath),
     );
     agentResult = outcome.result;
     stderr = outcome.stderr;
   }
 
-  // Phase 3: 成果物統合と状態遷移（root で直列化）。通常実行と reporter 再開で共通化する。
+  // Phase 3: 成果物統合と状態遷移（root で直列化）。通常実行と再開経路で共通化する。
   const finalize = async (): Promise<RegisterItemSummary> =>
     finalizeRegisterWorktreeRun({
       context,
@@ -4208,14 +5269,16 @@ async function runSingleRegisterItemWorktree(
       agentResult,
       stderr,
       actor,
+      bookkeepingPaths,
+      pipelineStatePath,
     });
 
   return lifecycleLock ? lifecycleLock.runExclusive(finalize) : finalize();
 }
 
-// 全体再実行が executor の未コミット成果を破棄しないための保護。既存 worktree に executor
-// 成功済み・reporter 未完了の run が残っている場合だけ理由を返し、呼び出し側が破壊的操作
-// （discardStaleExecWorktree）の手前で中断できるようにする。--force-restart で無効化できる。
+// 全体再実行が既存 run の未統合成果を破棄しないための保護。既存 worktree に再開可能な run
+// （executor 成功済みで reporter か統合が未完了）が残っている場合だけ理由を返し、呼び出し側が
+// 破壊的操作（discardStaleExecWorktree）の手前で中断できるようにする。--force-restart で無効化できる。
 function protectResumableRegisterWorktree(
   context: RegisterRunContext,
   opts: RunOpts,
@@ -4232,10 +5295,17 @@ function protectResumableRegisterWorktree(
     taskId,
   });
   if (lookup.kind !== "resumable") return null;
+  const { stage, runId } = lookup.target;
+  const stopped =
+    stage === "integrate"
+      ? `run ${runId} finished the reporter but not the integration`
+      : stage === "reporter"
+        ? `executor already succeeded in run ${runId}`
+        : `executor was interrupted in run ${runId}`;
   return (
-    `refusing to re-run ${taskId}: executor already succeeded in run ${lookup.target.runId} and ` +
-    `its changes are still uncommitted in ${worktree.path}. ` +
-    `Resume the reporter with --resume, or discard the worktree with --force-restart.`
+    `refusing to re-run ${taskId}: ${stopped}; ` +
+    `its changes are still unintegrated in ${worktree.path}. ` +
+    `Resume the ${stage} stage with --resume, or discard the worktree with --force-restart.`
   );
 }
 
@@ -4273,11 +5343,114 @@ export function resolveRegisterResumeReporter(
   };
 }
 
-// register 項目1件の reporter 再開。executor が成功したまま reporter だけが失敗した run を、
-// worktree と executor の未コミット成果を保持したまま reporter 段からやり直す。入力は対象 run の
+// stale な running executor を既存 worktree 上で再実行するときの agent を解決する。
+// --executor-by を優先し、省略時は pipeline-state に記録された actor を引き継ぐ。
+export function resolveRegisterResumeExecutor(
+  roster: MemberRoster | null,
+  opts: Pick<RunOpts, "executorBy">,
+  execDefaults: ExecDefaultsConfig,
+  recordedActor: string | null,
+):
+  | { kind: "command"; candidate: AgentRunCandidate & { actor: string } }
+  | { kind: "error"; message: string } {
+  const nickname = (opts.executorBy ?? recordedActor ?? "").trim();
+  if (!nickname) {
+    return {
+      kind: "error",
+      message: "executor agent is unknown for this run; specify --executor-by <nickname>",
+    };
+  }
+  const resolution = resolveAgentOverride("edit", nickname, {}, roster, execDefaults, "executor");
+  if (resolution.kind === "error") {
+    return { kind: "error", message: resolution.message.replace(/^--by/, "--executor-by") };
+  }
+  if (resolution.kind !== "command") {
+    return { kind: "error", message: `executor agent not found in pm-members.yaml: ${nickname}` };
+  }
+  return {
+    kind: "command",
+    candidate: {
+      command: resolution.command,
+      actor: resolution.actor ?? nickname,
+      provider: resolution.provider,
+    },
+  };
+}
+
+// 統合段だけの再開。executor と reporter が成功済みで、commit → merge → worktree 撤去のいずれかが
+// 失敗した run を、agent を1つも起動せずに統合からやり直す。worktree の成果物と evidence をそのまま
+// 使い、成功なら通常実行と同じ review 遷移、merge 前の失敗なら waiting へ戻す。すでに merge
+// 済みなら review を維持して cleanup だけを再試行する（失敗時も worktree は保持する）。
+async function resumeRegisterIntegration(params: {
+  context: RegisterRunContext;
+  registerPaths: RegisterPaths;
+  item: PjrItem;
+  ticketPath: string | null;
+  worktree: ExecWorktree;
+  target: RegisterResumeTarget;
+  stem: string;
+  worktreeResultPath: string;
+  actor: string;
+  bookkeepingPaths: readonly string[];
+  begin: (actor: string, transitionReason: string) => Promise<RegisterItemSummary | null>;
+  lifecycleLock?: AsyncLock;
+}): Promise<RegisterItemSummary> {
+  const { item, worktree, target, worktreeResultPath, actor } = params;
+
+  process.stdout.write(`Register item: ${item.id} — ${item.title}  [${item.type}]\n`);
+  process.stdout.write(
+    `  Resuming integration from run ${target.runId} (reporter result: ${params.stem}-result.md)\n` +
+      `  CWD: ${worktree.path}\n  Actor: ${actor} (runner-owned integration)\n`,
+  );
+
+  // waiting のまま統合しないよう、通常実行と同じく in-progress へ戻してから統合する。ただし
+  // merge 済みで worktree 撤去だけを再試行する場合は、root はすでに review なので遷移を
+  // 再記録しない（finalize は cleanup だけを行う）。
+  if (
+    !isExecBranchMergedIntoCurrent({
+      context: {
+        repoRoot: params.context.repoRoot,
+        schedulePath: params.context.schedulePath,
+        executionPath: params.context.executionPath,
+      },
+      worktree,
+    })
+  ) {
+    const beginFailure = await params.begin(actor, "integration resumed");
+    if (beginFailure) return beginFailure;
+  }
+
+  // reporter が記入済みの result をそのまま使う。agent は起動しないため、成果は success 扱いで
+  // 統合だけを実行する（result が未記入なら finalize 側の downgrade が blocked に落とす）。
+  const resultScaffold = readResultFrontmatterSnapshot(worktreeResultPath);
+  const finalize = async (): Promise<RegisterItemSummary> =>
+    finalizeRegisterWorktreeRun({
+      context: params.context,
+      registerPaths: params.registerPaths,
+      item,
+      ticketPath: params.ticketPath,
+      worktree,
+      stem: params.stem,
+      worktreeResultPath,
+      resultScaffold,
+      agentResult: "success",
+      stderr: "",
+      actor,
+      bookkeepingPaths: params.bookkeepingPaths,
+      pipelineStatePath: target.statePath,
+      resumedIntegration: true,
+    });
+
+  return params.lifecycleLock ? params.lifecycleLock.runExclusive(finalize) : finalize();
+}
+
+// register 項目1件の再開。途中で止まった run を、既存 worktree と evidence を保持したまま
+// 止まった段からやり直す。running のまま残った executor は同じ plan/result と worktree 上で
+// 再実行し、reporter 段の再開は reporter だけを起動する。統合段は agent を起動せずに
+// commit → merge → worktree 撤去だけをやり直す。入力は対象 run の
 // `pipeline-state.json`（plan / result の参照と stage 状態）と `evidence.json`（executor の記録）で、
 // 成功後の commit → merge → register review は通常実行と同じ finalizeRegisterWorktreeRun を通す。
-// 再開できない場合（worktree 不在、executor 未完了、evidence 欠損）は破壊的操作を行わず理由を返す。
+// 再開できない場合（worktree 不在、入力成果物欠損など）は破壊的操作を行わず理由を返す。
 async function resumeSingleRegisterItemWorktree(
   context: RegisterRunContext,
   opts: RunOpts,
@@ -4317,17 +5490,6 @@ async function resumeSingleRegisterItemWorktree(
   if (lookup.kind !== "resumable") return refuse(lookup.reason);
   const target = lookup.target;
 
-  if (
-    !hasRecordedParentValidations(
-      target.evidence.validations,
-      context.execDefaults.pipeline?.parent_validations,
-    )
-  ) {
-    return refuse(
-      `parent validation configuration changed or its results are missing for run ${target.runId}; restart the executor run`,
-    );
-  }
-
   const artifacts = resolveRegisterResumeArtifacts({
     repoRoot,
     worktreePath: worktree.path,
@@ -4337,16 +5499,145 @@ async function resumeSingleRegisterItemWorktree(
   });
   if (!artifacts) return refuse(`cannot restore the plan/result of run ${target.runId}`);
 
+  const worktreeResultPath = resolve(worktree.path, artifacts.resultRef);
+  if (!existsSync(worktreeResultPath)) {
+    return refuse(`result not found in the worktree: ${artifacts.resultRef}`);
+  }
+
+  // root 側の実行管理ファイル。plan / result は前回の wait commit で統合ブランチに入っている。
+  const bookkeepingPaths = registerBookkeepingPaths({
+    registerPaths,
+    planPath: resolve(repoRoot, artifacts.planRef),
+    resultPath: resolve(repoRoot, artifacts.resultRef),
+    ticketPath,
+  });
+
+  // waiting のまま再開しないよう、通常実行と同じく in-progress へ戻す。遷移は exec branch
+  // 側の worktree で記録し（統合ブランチに独立した resume commit を作らない）、成功時は
+  // review とともに merge commit へ畳み込む。再び失敗した場合は finalize が start / wait を
+  // root の wait commit 1件へまとめる。root には個票・イベントを未 commit のまま写し、
+  // 実行中の状態が root からも見えるようにする（merge 前に解放する）。
+  const begin = async (
+    actor: string,
+    transitionReason: string,
+  ): Promise<RegisterItemSummary | null> => {
+    const start = (): RegisterItemSummary | null => {
+      if (
+        !spawnRegisterTransition(
+          projectId,
+          ["start", "--id", item.id, "--by", actor, "--reason", transitionReason],
+          worktree.path,
+        )
+      ) {
+        return refuse(`register start failed: ${item.id}`);
+      }
+      copyRepoPaths(
+        worktree.path,
+        repoRoot,
+        repoRoot,
+        registerTransitionPaths(registerPaths, ticketPath),
+      );
+      rebuildRootRegisterViews(projectId, item.id);
+      return null;
+    };
+    return lifecycleLock ? lifecycleLock.runExclusive(start) : start();
+  };
+
+  if (target.stage === "integrate") {
+    // 統合は runner の作業だが、register の遷移とイベントには実行者が必要になる。前回 run の
+    // reporter（無ければ executor）を引き継ぎ、--reporter-by で明示指定もできる。
+    const actor = (
+      opts.reporterBy ??
+      target.state.stages.reporter.actor ??
+      target.state.stages.executor.actor ??
+      ""
+    ).trim();
+    if (!actor) {
+      return refuse(
+        `the actor of run ${target.runId} is unknown; specify --reporter-by <nickname>`,
+      );
+    }
+    return resumeRegisterIntegration({
+      context,
+      registerPaths,
+      item,
+      ticketPath,
+      worktree,
+      target,
+      stem: artifacts.stem,
+      worktreeResultPath,
+      actor,
+      bookkeepingPaths,
+      begin,
+      lifecycleLock,
+    });
+  }
+
   // plan は root（統合ブランチ）の checkpoint 済みファイルを正本にする。worktree 側の plan は
   // agent が書き換えられるため、再開のプロンプト入力には使わない。
   const planPath = resolve(repoRoot, artifacts.planRef);
   if (!existsSync(planPath))
     return refuse(`plan not found for the resumed run: ${artifacts.planRef}`);
-  const worktreeResultPath = resolve(worktree.path, artifacts.resultRef);
-  if (!existsSync(worktreeResultPath)) {
-    return refuse(`result not found in the worktree: ${artifacts.resultRef}`);
-  }
   const prompt = expandPromptRefs(readFileSync(planPath, "utf8"));
+
+  if (target.stage === "executor") {
+    const executor = resolveRegisterResumeExecutor(
+      context.roster,
+      opts,
+      context.execDefaults,
+      target.state.stages.executor.actor,
+    );
+    if (executor.kind === "error") return refuse(executor.message);
+    const reporter = resolveRegisterResumeReporter(
+      context.roster,
+      opts,
+      context.execDefaults,
+      target.state.stages.reporter.actor,
+    );
+    if (reporter.kind === "error") return refuse(reporter.message);
+
+    process.stdout.write(`Register item: ${item.id} — ${item.title}  [${item.type}]\n`);
+    process.stdout.write(
+      `  Resuming executor from interrupted run ${target.runId} in a new pipeline checkpoint\n` +
+        `  CWD: ${worktree.path}\n  Agent: ${executor.candidate.actor} (executor)\n`,
+    );
+
+    const beginFailure = await begin(executor.candidate.actor, "executor resumed");
+    if (beginFailure) return beginFailure;
+
+    const resultScaffold = readResultFrontmatterSnapshot(worktreeResultPath);
+    const outcome = await runAgentPipeline({
+      repoRoot,
+      cwd: worktree.path,
+      schedulePath,
+      executionPath,
+      taskId: item.id,
+      executor: executor.candidate,
+      reporterCandidates: [reporter.candidate],
+      planPath,
+      planPrompt: prompt,
+      resultPath: worktreeResultPath,
+      execDefaults: context.execDefaults,
+    });
+
+    const finalize = async (): Promise<RegisterItemSummary> =>
+      finalizeRegisterWorktreeRun({
+        context,
+        registerPaths,
+        item,
+        ticketPath,
+        worktree,
+        stem: artifacts.stem,
+        worktreeResultPath,
+        resultScaffold,
+        agentResult: outcome.runResult,
+        stderr: outcome.blockReason ?? "",
+        actor: executor.candidate.actor,
+        bookkeepingPaths,
+        pipelineStatePath: resolve(worktree.path, outcome.stateRef),
+      });
+    return lifecycleLock ? lifecycleLock.runExclusive(finalize) : finalize();
+  }
 
   const reporter = resolveRegisterResumeReporter(
     context.roster,
@@ -4362,29 +5653,10 @@ async function resumeSingleRegisterItemWorktree(
       `  CWD: ${worktree.path}\n  Agent: ${reporter.candidate.actor} (reporter)\n`,
   );
 
-  // waiting のまま reporter を走らせないよう、通常実行と同じく in-progress へ戻す。状態変更は
-  // root で直列化し、merge 前に作業ツリーを清潔にするため即時 commit する。
-  const begin = (): RegisterItemSummary | null => {
-    if (
-      !spawnRegisterTransition(projectId, [
-        "start",
-        "--id",
-        item.id,
-        "--by",
-        reporter.candidate.actor,
-        "--reason",
-        "reporter resumed",
-      ])
-    ) {
-      return refuse(`register start failed: ${item.id}`);
-    }
-    commitRegisterState(repoRoot, registerPaths, `exec(register ${item.id}): resume`, ticketPath);
-    return null;
-  };
-  const beginFailure = lifecycleLock ? await lifecycleLock.runExclusive(begin) : begin();
+  const beginFailure = await begin(reporter.candidate.actor, "reporter resumed");
   if (beginFailure) return beginFailure;
 
-  const evidence = await revalidateFailedParentValidationsForReporterResume({
+  const evidence = await refreshParentValidationsForReporterResume({
     execDefaults: context.execDefaults,
     cwd: worktree.path,
     evidence: target.evidence,
@@ -4392,7 +5664,7 @@ async function resumeSingleRegisterItemWorktree(
   });
 
   const resultScaffold = readResultFrontmatterSnapshot(worktreeResultPath);
-  const outcome = await runRegisterReporterStage({
+  const outcome = await runReporterStage({
     repoRoot,
     cwd: worktree.path,
     schedulePath,
@@ -4420,6 +5692,8 @@ async function resumeSingleRegisterItemWorktree(
       agentResult: outcome.runResult,
       stderr: outcome.blockReason ?? "",
       actor: reporter.candidate.actor,
+      bookkeepingPaths,
+      pipelineStatePath: target.statePath,
     });
 
   return lifecycleLock ? lifecycleLock.runExclusive(finalize) : finalize();
@@ -4442,7 +5716,27 @@ async function runRegisterMode(opts: RunOpts): Promise<void> {
     );
   }
 
-  const { ids, duplicates } = parseRegisterIds(opts.register);
+  const selectionFilter = opts.registerFilter
+    ? parseRegisterSelectionFilter({
+        types: opts.registerTypes,
+        priorities: opts.registerPriorities,
+        statuses: opts.registerStatuses,
+        limit: opts.registerLimit,
+      })
+    : undefined;
+  const selectedIds = selectionFilter
+    ? selectRegisterItems(
+        loadRegisterItems(resolveRegisterPaths({ project: projectId })).map((view) => view.item),
+        selectionFilter,
+      ).map((item) => item.id)
+    : undefined;
+  if (selectedIds?.length === 0) {
+    process.stdout.write("No matching register items.\n");
+    return;
+  }
+  const { ids, duplicates } = selectedIds
+    ? { ids: selectedIds, duplicates: [] }
+    : parseRegisterIds(opts.register);
   for (const duplicate of duplicates) {
     process.stdout.write(`Skipping duplicate register item id: ${duplicate}\n`);
   }
@@ -4452,7 +5746,8 @@ async function runRegisterMode(opts: RunOpts): Promise<void> {
   // --executor-by / --reporter-by は両方揃って初めて pipeline モードになる。片方だけの指定は
   // 曖昧なため、実行前に明示的なエラーで止める（isRegisterPipelineRequested は片方でも true を
   // 返すため、resolveRegisterPipelineCommand 側の対称チェックとは別に、ここで早期に検知する）。
-  // 再開は reporter 段だけを実行するため、executor の指定は不要（指定されても使わない）。
+  // 再開は state が示す段だけを実行する。stale executor の再実行では各 agent の明示指定を
+  // 個別に許可し、省略時は state に記録された actor を使う。
   if (
     !opts.resume &&
     ((opts.executorBy && !opts.reporterBy) || (!opts.executorBy && opts.reporterBy))
@@ -4474,7 +5769,7 @@ async function runRegisterMode(opts: RunOpts): Promise<void> {
   );
 
   if (opts.dryRun && opts.resume) {
-    process.stdout.write(`[dry-run] resume reporter for register items: ${ids.join(", ")}\n`);
+    process.stdout.write(`[dry-run] resume pipeline for register items: ${ids.join(", ")}\n`);
     for (const pjrId of ids) {
       const { item } = resolveRegisterRunTarget(projectId, pjrId);
       requireRunnableRegisterItem(item);
@@ -4491,7 +5786,7 @@ async function runRegisterMode(opts: RunOpts): Promise<void> {
       });
       process.stdout.write(
         lookup.kind === "resumable"
-          ? `[dry-run]   ${item.id}: resume run ${lookup.target.runId} in ${worktree.path}\n`
+          ? `[dry-run]   ${item.id}: resume the ${lookup.target.stage} stage of run ${lookup.target.runId} in ${worktree.path}\n`
           : `[dry-run]   ${item.id}: not resumable (${lookup.reason})\n`,
       );
     }
@@ -4628,6 +5923,15 @@ export function registerRunCommand(exec: Command): void {
     "--register <pjrIds...>",
     "One or more project register item IDs (PJR-XXXX) to run; tracks state via register transitions. In place and serial by default; add --worktree to isolate deliverables (and --parallel to run concurrently)",
   );
+  rcmd.option(
+    "--register-filter",
+    "Select register items deterministically with --register-types/--register-priorities/--register-statuses/--register-limit",
+    false,
+  );
+  rcmd.option("--register-types <types>", "Comma-separated register item types");
+  rcmd.option("--register-priorities <priorities>", "Comma-separated register priorities");
+  rcmd.option("--register-statuses <statuses>", "Comma-separated register statuses");
+  rcmd.option("--register-limit <n>", "Maximum selected register items");
   rcmd.option("--job <jobId>", "Materialize and run a reusable job definition");
   rcmd.option(
     "--input <key=value...>",
@@ -4646,7 +5950,7 @@ export function registerRunCommand(exec: Command): void {
   );
   rcmd.option(
     "--resume",
-    "With --register --worktree: resume only the reporter stage of a run whose executor succeeded, reusing the existing worktree and evidence",
+    "With --register --worktree: resume the stage where a run stopped (executor, reporter, or integration), reusing the existing worktree and checkpoints",
     false,
   );
   rcmd.option(
@@ -4718,10 +6022,31 @@ export function registerRunCommand(exec: Command): void {
       const hasTask = !!opts.task;
       const hasDeliverable = !!opts.deliverable;
       const hasPlan = !!opts.plan;
-      const hasRegister = !!opts.register;
+      const hasRegisterIds = !!opts.register;
+      const hasRegisterFilter = !!opts.registerFilter;
+      const hasRegister = hasRegisterIds || hasRegisterFilter;
       const hasJob = !!opts.job;
       const isManual = hasTask || hasDeliverable || hasPlan || hasRegister || hasJob;
       const isBatch = isAuto;
+
+      if (hasRegisterIds && hasRegisterFilter) {
+        process.stdout.write("Specify either --register or --register-filter, not both.\n");
+        process.exitCode = 1;
+        return;
+      }
+      if (
+        (opts.registerTypes ||
+          opts.registerPriorities ||
+          opts.registerStatuses ||
+          opts.registerLimit) &&
+        !hasRegisterFilter
+      ) {
+        process.stdout.write(
+          "--register-types, --register-priorities, --register-statuses, and --register-limit require --register-filter.\n",
+        );
+        process.exitCode = 1;
+        return;
+      }
 
       if (!isAuto && !isManual) {
         process.stdout.write(
@@ -5111,6 +6436,75 @@ export function registerCycleCommand(exec: Command): void {
   });
 }
 
+// Restore a Schedule pipeline at its runner-owned integration stage without resolving or starting
+// an agent. The block event supplies the run-scoped state reference; both agent stages must still
+// be succeeded and the original worktree/result must exist before any lifecycle state is changed.
+function prepareScheduleIntegrationResume(params: {
+  task: ReadyTaskView;
+  taskState: CurrentState | undefined;
+  actor: string;
+  projectId: string | undefined;
+  repoRoot: string;
+  executionPath: string;
+  schedulePath: string;
+}): PreparedTask {
+  const { task, taskState, actor, projectId, repoRoot, executionPath, schedulePath } = params;
+  const stateRef =
+    typeof taskState?.meta?.pipeline_state_ref === "string"
+      ? taskState.meta.pipeline_state_ref
+      : undefined;
+  if (!stateRef) {
+    throw new Error(`integration resume has no pipeline_state_ref for ${task.id}`);
+  }
+
+  const worktree = findExecWorktree(repoRoot, qualifyTaskId(projectId, task.id));
+  if (!worktree) throw new Error(`no exec worktree to resume integration for ${task.id}`);
+
+  const checkpoint = loadPipelineResumeCheckpoint({
+    worktreePath: worktree.path,
+    stateRef,
+    taskId: task.id,
+  });
+  if (!checkpoint) throw new Error(`pipeline state is missing or invalid for ${task.id}`);
+  if (
+    checkpoint.state.stages.executor.status !== "succeeded" ||
+    checkpoint.state.stages.reporter.status !== "succeeded"
+  ) {
+    throw new Error(
+      `integration resume requires succeeded executor and reporter stages for ${task.id}`,
+    );
+  }
+
+  const resultPath = join(executionPath, "exec", "results", `${task.id}-result.md`);
+  const worktreeResultPath = pathInsideWorktree(repoRoot, worktree.path, resultPath);
+  if (!existsSync(resultPath) || !existsSync(worktreeResultPath)) {
+    throw new Error(`result is missing for integration resume: ${task.id}-result.md`);
+  }
+  // 統合再開でも、root に未 commit のまま残る claim / plan / result の作業コピーを merge 前に
+  // 解放できるよう、通常実行と同じ checkpoint パスを持たせる。
+  const claimEventPath = findClaimEventPath(schedulePath, task.id);
+  const checkpointPaths = [
+    join(executionPath, "exec", "plans", `${task.id}-plan.md`),
+    resultPath,
+    ...(claimEventPath ? [claimEventPath] : []),
+  ];
+
+  return {
+    task,
+    actor,
+    agentCandidates: [],
+    plan: "",
+    prompt: "",
+    worktree,
+    resultPath,
+    resultScaffold: readResultFrontmatterSnapshot(resultPath),
+    checkpointPaths,
+    pipelineRunId: checkpoint.state.run_id,
+    pipelineResumeStage: "integrate",
+    pipelineStateRef: stateRef,
+  };
+}
+
 // Resume tasks left in "doing" state by an interrupted run. Unlike --auto (which selects from
 // ready.json and provably excludes "doing"/"blocked" tasks), resume folds the event log to find
 // in-flight tasks and re-runs each on its existing worktree, reusing the claiming actor and the
@@ -5199,11 +6593,12 @@ async function runResumeMode(opts: RunOpts): Promise<void> {
 
     if (opts.task) {
       const taskState = snapshot.tasks[opts.task];
-      const canResumeBlockedReporter =
+      const blockedPipelineStage = taskState?.meta?.pipeline_stage;
+      const canResumeBlockedPipeline =
         taskState?.state === "blocked" &&
-        taskState.meta?.pipeline_stage === "reporter" &&
+        (blockedPipelineStage === "reporter" || blockedPipelineStage === "integrate") &&
         typeof taskState.meta?.pipeline_state_ref === "string";
-      if (canResumeBlockedReporter) {
+      if (canResumeBlockedPipeline) {
         const actor = taskState.last_by ?? opts.by ?? "exec-pipeline-resume";
         if (!dryRun) {
           const meta = Object.entries(taskState.meta ?? {}).map(
@@ -5215,7 +6610,10 @@ async function runResumeMode(opts: RunOpts): Promise<void> {
             buildEvent("unblock", {
               task: opts.task,
               by: actor,
-              msg: "resume reporter from persisted pipeline state",
+              msg:
+                blockedPipelineStage === "integrate"
+                  ? "resume integration from persisted pipeline state"
+                  : "resume reporter from persisted pipeline state",
               meta,
             }),
           );
@@ -5259,38 +6657,49 @@ async function runResumeMode(opts: RunOpts): Promise<void> {
       try {
         const task = buildTaskView(schedulePath, executionPath, taskId);
         const resolved = resolveClaimingActor(snapshot.tasks[taskId], opts.by);
-        const prepared = await prepareSingleTask(
-          task,
-          projectId,
-          repoRoot,
-          schedulePath,
-          executionPath,
-          roster,
-          localIdToPhaseSets,
-          phaseSetSuffixToId,
-          resolved.actor,
-          { edit: opts.editBy, review: opts.reviewBy },
-          { executor: opts.executorBy, reporter: opts.reporterBy },
-          resolved.actor,
-          dryRun,
-          true, // skipClaim: the task is already "doing" and remains claimed
-          worktreeBase,
-          planGenPaths,
-          execDefaults,
-          undefined,
-          {
-            stage:
-              snapshot.tasks[taskId]?.meta?.pipeline_stage === "reporter"
-                ? "reporter"
-                : snapshot.tasks[taskId]?.meta?.pipeline_stage === "executor"
-                  ? "executor"
-                  : undefined,
-            stateRef:
-              typeof snapshot.tasks[taskId]?.meta?.pipeline_state_ref === "string"
-                ? snapshot.tasks[taskId]?.meta?.pipeline_state_ref
-                : undefined,
-          },
-        );
+        const prepared =
+          snapshot.tasks[taskId]?.meta?.pipeline_stage === "integrate"
+            ? prepareScheduleIntegrationResume({
+                task,
+                taskState: snapshot.tasks[taskId],
+                actor: resolved.actor ?? snapshot.tasks[taskId]?.last_by ?? "exec-pipeline-resume",
+                projectId,
+                repoRoot,
+                executionPath,
+                schedulePath,
+              })
+            : await prepareSingleTask(
+                task,
+                projectId,
+                repoRoot,
+                schedulePath,
+                executionPath,
+                roster,
+                localIdToPhaseSets,
+                phaseSetSuffixToId,
+                resolved.actor,
+                { edit: opts.editBy, review: opts.reviewBy },
+                { executor: opts.executorBy, reporter: opts.reporterBy },
+                resolved.actor,
+                dryRun,
+                true, // skipClaim: the task is already "doing" and remains claimed
+                worktreeBase,
+                planGenPaths,
+                execDefaults,
+                undefined,
+                {
+                  stage:
+                    snapshot.tasks[taskId]?.meta?.pipeline_stage === "reporter"
+                      ? "reporter"
+                      : snapshot.tasks[taskId]?.meta?.pipeline_stage === "executor"
+                        ? "executor"
+                        : undefined,
+                  stateRef:
+                    typeof snapshot.tasks[taskId]?.meta?.pipeline_state_ref === "string"
+                      ? snapshot.tasks[taskId]?.meta?.pipeline_state_ref
+                      : undefined,
+                },
+              );
         if (typeof prepared !== "string") {
           const attempts = snapshot.tasks[taskId]?.meta?.limit_attempts;
           prepared.priorLimitAttempts =
@@ -5354,11 +6763,14 @@ export function registerResumeCommand(exec: Command): void {
   const cmd = exec
     .command("resume")
     .description(
-      'Resume tasks left in "doing" state, or due deferred-limit tasks, on existing worktrees',
+      "Resume in-flight tasks, blocked reporter/integration stages, or due deferred-limit tasks on existing worktrees",
     );
 
   cmd.option("--project <projectId>", "Project id in .specdojo/specdojo.config.json");
-  cmd.option("--task <taskId>", 'Resume only this task ("doing", or due with --due)');
+  cmd.option(
+    "--task <taskId>",
+    'Resume only this task ("doing", blocked pipeline stage, or due with --due)',
+  );
   cmd.option(
     "--due",
     "Atomically claim and resume only retryable limit blocks whose resume time has arrived",

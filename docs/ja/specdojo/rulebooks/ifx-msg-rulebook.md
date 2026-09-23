@@ -50,6 +50,7 @@ ESIL 側の `spec_ref: ifx-msg-...` は、このEMSのID（およびファイル
 
 - `asyncapi`
 - `info`（`title`, `version` を含む）
+
 - `x-spec-meta`（`id`, `type`, `status` を含む）
 - `channels`（少なくとも1つ）
 - `components/messages`（少なくとも1つ）
@@ -76,4 +77,5 @@ CloudEventsの「属性」は仕様で名前が固定です（snake_caseに変�
 - `time`: 発生時刻（RFC3339）
 - `datacontenttype`: `application/json`
 - `subject`: 任意（推奨。対象を識別できる文字列）
+
 - `data`: 業務ペイロード（この中のプロパティ名は snake_case 推奨）

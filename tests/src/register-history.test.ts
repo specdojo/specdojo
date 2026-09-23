@@ -10,7 +10,11 @@ import {
   parseRegisterLogOutput,
   type RegisterCommitEntry,
 } from "../../src/register-history.js";
-import { appendRegisterEvent, buildRegisterEvent } from "../../src/register-events.js";
+import {
+  appendRegisterEvent,
+  buildRegisterEvent,
+  registerEventFilePath,
+} from "../../src/register-events.js";
 import { gitEnvironment } from "../../src/exec-worktree.js";
 
 // lefthook などの git フック配下でテストを実行すると、親の git が GIT_DIR / GIT_INDEX_FILE を
@@ -448,9 +452,11 @@ describe("collectRegisterHistoryEvents — append-only events", () => {
       const registerDir = join(root, REGISTER_DIR);
       mkdirSync(registerDir, { recursive: true });
       const path = join(registerDir, "pjr-ab12-inventory-seed.md");
+      const eventPath = registerEventFilePath(registerDir, "PJR-AB12");
       const filename = "pjr-ab12-inventory-seed.md";
 
       let content = ticket(OPEN_FIELDS);
+      let eventContent: string | undefined;
       const add = buildRegisterEvent({
         afterContent: content,
         filename,
@@ -462,7 +468,7 @@ describe("collectRegisterHistoryEvents — append-only events", () => {
         id: "reg_00000000000000000000000000000001",
       });
       if (!add) throw new Error("add event not built");
-      content = appendRegisterEvent(content, add);
+      eventContent = appendRegisterEvent(eventContent, add);
 
       let after = content.replace("item_status: open", "item_status: in-progress");
       const start = buildRegisterEvent({
@@ -477,7 +483,8 @@ describe("collectRegisterHistoryEvents — append-only events", () => {
         id: "reg_00000000000000000000000000000002",
       });
       if (!start) throw new Error("start event not built");
-      content = appendRegisterEvent(after, start);
+      eventContent = appendRegisterEvent(eventContent, start);
+      content = after;
 
       after = content.replace("item_status: in-progress", "item_status: review");
       const review = buildRegisterEvent({
@@ -492,8 +499,11 @@ describe("collectRegisterHistoryEvents — append-only events", () => {
         id: "reg_00000000000000000000000000000003",
       });
       if (!review) throw new Error("review event not built");
-      content = appendRegisterEvent(after, review);
+      eventContent = appendRegisterEvent(eventContent, review);
+      content = after;
       writeFileSync(path, content, "utf8");
+      mkdirSync(join(registerDir, "events"), { recursive: true });
+      writeFileSync(eventPath, eventContent, "utf8");
 
       git(["init"], root);
       git(["config", "user.name", "test"], root);
@@ -513,7 +523,8 @@ describe("collectRegisterHistoryEvents — append-only events", () => {
         "2026-08-03T00:00:00Z",
       ]);
       expect(new Set(events.map((event) => event.commit)).size).toBe(3);
-      expect(readFileSync(path, "utf8")).toContain("register_events:");
+      expect(readFileSync(path, "utf8")).not.toContain("register_events:");
+      expect(readFileSync(eventPath, "utf8")).toContain("action: review");
     } finally {
       rmSync(root, { recursive: true, force: true });
     }

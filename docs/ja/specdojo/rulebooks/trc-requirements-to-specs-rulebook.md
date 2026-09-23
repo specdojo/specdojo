@@ -27,12 +27,14 @@ Requirements Traceability (Requirements to Specs) Rulebook
 | ---------- | --------------------------------------------------------------- |
 | 要求ID     | 要求を一意に識別する ID（例: `req-` 系）                        |
 | 対応仕様ID | 要求を実現する仕様を一意に識別する ID（例: `bac-` / `bes-` 系） |
-| 充足状況   | 要求に対する仕様整備の達成状態（未着手 / 一部充足 / 充足）      |
-| ギャップ   | 要求と仕様の間に残る不足・不整合・未確定事項                    |
+
+| 充足状況 | 要求に対する仕様整備の達成状態（未着手 / 一部充足 / 充足） |
+| ギャップ | 要求と仕様の間に残る不足・不整合・未確定事項 |
 
 ## 3. ファイル命名・ID規則
 
 - 対象ドキュメント ID は `trc-requirements-to-specs` とする。
+
 - 推奨ファイル名は `trc-requirements-to-specs.md` とする。
 - 本 rulebook の ID は `specdojo:trc-requirements-to-specs-rulebook` とする。
 - 追加分割が必要な場合は `trc-requirements-to-specs-<term>` 形式を用いる。
@@ -104,6 +106,7 @@ Requirements Traceability (Requirements to Specs) Rulebook
 ## 7. 禁止事項
 
 - 要求本文・仕様本文の全文転記を行わない。
+
 - 要求IDまたは対応仕様IDが空の行を作成しない。
 - 充足状況に曖昧語（例: ほぼ対応、だいたい完了）を使用しない。
 - ギャップを「なし」としながら対応仕様IDが未記載の状態を許容しない。

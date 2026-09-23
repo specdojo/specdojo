@@ -7,8 +7,8 @@ description: >
   phase_sets defines named groups of phases keyed by semantic name (e.g., first-pass, finalize-pass).
   Each owner_rule references a phase_set by name.
   Phase.mode (edit/review) is written into ready.json by exec refresh to drive plan/result generation.
-  Agent execution requirements are declared directly on phases using capabilities and proficiency;
-  exec run --auto resolves matching agents from pm-members.yaml.
+  Agent execution requirements are declared directly on phases using capabilities and proficiency.
+  Optional agent assignments pin executor/reporter nicknames from pm-members.yaml.
 type: object
 additionalProperties: false
 
@@ -80,6 +80,16 @@ properties:
               type: string
               pattern: "^/"
               description: "Absolute path to the catalog YAML file."
+            local_ids:
+              type: array
+              minItems: 1
+              uniqueItems: true
+              description: >
+                Deliverable local_ids selected from this catalog. When omitted, every deliverable
+                matching include_kinds is selected.
+              items:
+                type: string
+                minLength: 1
       include_kinds:
         type: array
         minItems: 1
@@ -87,6 +97,67 @@ properties:
         items:
           type: string
           enum: ["work", "control", "generated"]
+
+  approach_rules:
+    type: array
+    minItems: 1
+    description: >
+      Per-deliverable task intent used to derive approach from current catalog facts and stored
+      grades. Every work deliverable in scope must occur exactly once; semantic validation checks
+      coverage and duplicates. Rules may group local_ids only when all parameters are identical.
+    items:
+      type: object
+      additionalProperties: false
+      required:
+        - local_ids
+        - intent
+      properties:
+        local_ids:
+          type: array
+          minItems: 1
+          uniqueItems: true
+          items:
+            type: string
+            minLength: 1
+        intent:
+          type: string
+          enum:
+            - author-deliverable
+            - bootstrap-kata-set
+            - reflect-implementation
+            - deduplicate-across-deliverables
+            - improve-kata
+            - confirm-deliverable
+            - confirm-with-kata-set
+        kata_target:
+          type: string
+          enum: ["rulebook", "recipe", "sample", "template"]
+        bootstrap_scope:
+          type: array
+          minItems: 1
+          uniqueItems: true
+          items:
+            type: string
+            enum: ["rulebook", "recipe", "sample", "template"]
+      allOf:
+        - if:
+            properties:
+              intent:
+                const: improve-kata
+          then:
+            required: [kata_target]
+          else:
+            not:
+              required: [kata_target]
+        - if:
+            properties:
+              intent:
+                enum: [bootstrap-kata-set, confirm-with-kata-set]
+          then:
+            required: [bootstrap_scope]
+          else:
+            not:
+              required: [bootstrap_scope]
 
   phase_sets:
     type: object
@@ -180,6 +251,8 @@ properties:
                 $ref: "#/$defs/Capabilities"
               proficiency:
                 $ref: "./exec-common.schema.yaml#/$defs/Proficiency"
+              agent:
+                $ref: "./sch-common.schema.yaml#/$defs/AgentAssignment"
 
   cross_deliverable_passes:
     type: array
@@ -239,6 +312,11 @@ properties:
           $ref: "#/$defs/Capabilities"
         proficiency:
           $ref: "./exec-common.schema.yaml#/$defs/Proficiency"
+        agent:
+          $ref: "./sch-common.schema.yaml#/$defs/AgentAssignment"
+          description: >
+            Optional executor/reporter nicknames pinned for this pass. CLI stage overrides
+            take precedence; omitted names continue to use agent_pipeline requirements.
         agent_pipeline:
           $ref: "#/$defs/AgentPipeline"
           description: >
@@ -615,6 +693,11 @@ $defs:
           Required agent proficiency for execution: agent phases.
           Omit to accept agents of any proficiency level.
           Can be overridden per-deliverable via owner_rules[].phase_overrides.
+      agent:
+        $ref: "./sch-common.schema.yaml#/$defs/AgentAssignment"
+        description: >
+          Optional executor/reporter nicknames pinned for this phase. CLI stage overrides
+          take precedence; omitted names continue to use agent_pipeline requirements.
       agent_pipeline:
         $ref: "#/$defs/AgentPipeline"
         description: >
@@ -645,7 +728,7 @@ $defs:
         type: array
         description: >
           Ordered pipeline stages. The executor always runs first and the reporter second.
-          Agent nicknames are resolved from pm-members.yaml and must not be embedded here.
+          Stage requirements drive automatic selection; optional phase.agent pins nicknames.
         minItems: 2
         maxItems: 2
         prefixItems:

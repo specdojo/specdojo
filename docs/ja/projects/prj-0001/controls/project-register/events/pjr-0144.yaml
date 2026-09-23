@@ -1,0 +1,103 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_16ddd74f050a6a3b9b9aa755b081b256
+  ts: "2026-08-09T10:55:22Z"
+  action: add
+  actor: SpecDojo Test
+  from_status: null
+  to_status: open
+  reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: fmt-md-table を VS Code 拡張へ統合
+    - field: description
+      from: ""
+      to: 現在 .vscode/tasks.json のタスク（Format Markdown Table）として提供している fmt-md-table を vscode-specdojo 拡張のコマンドとして統合する
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: _TODO_
+    - field: due
+      from: ""
+      to: "2026-08-31"
+    - field: completed
+      from: ""
+      to: "-"
+    - field: conclusion
+      from: ""
+      to: "-"
+    - field: block_reason
+      from: ""
+      to: "-"
+  legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+- v: 1
+  id: reg_4c97b744ae4f1a17d4ed4e8f3b35d14e
+  ts: "2026-08-26T14:43:32Z"
+  action: update
+  actor: SpecDojo Test
+  from_status: open
+  to_status: open
+  reason: "docs(register): VS Code拡張関連4件の期限を10月末へ変更する"
+  changes:
+    - field: due
+      from: "2026-08-31"
+      to: "2026-10-31"
+  legacy_commit: c7434585ee94e78f867d19b0ccbe52862ca56ca5
+  previous_event_id: reg_16ddd74f050a6a3b9b9aa755b081b256
+- v: 1
+  id: reg_75347df4be8f462ea92487876c92f951
+  ts: "2026-09-06T12:49:15Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_4c97b744ae4f1a17d4ed4e8f3b35d14e
+- v: 1
+  id: reg_b7ae976d860c43ca891a00b9fde366f7
+  ts: "2026-09-06T12:59:58Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_75347df4be8f462ea92487876c92f951
+- v: 1
+  id: reg_7d93231d41934f15b9c929bbc3130d68
+  ts: "2026-09-06T13:03:04Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: 表整形を拡張コマンドへ移し、旧 CLI 実装を削除した。tasks.json は拡張コマンドへ委譲する形で残した。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-06"
+    - field: conclusion
+      from: "-"
+      to: 表整形を拡張コマンドへ移し、旧 CLI 実装を削除した。tasks.json は拡張コマンドへ委譲する形で残した。
+  previous_event_id: reg_b7ae976d860c43ca891a00b9fde366f7

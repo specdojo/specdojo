@@ -1,0 +1,14 @@
+実装完了です。
+
+- `--min-score` と検証・テストを追加
+- ローカル2回＋条件付き expert の3段 Job/routine を構成
+- 閾値 `pass AND score >= 96 AND finding <= 1` と未評価ルートを規範文書・個票へ反映
+- `result`、登録簿ステータス、`enabled: false` は変更なし
+- 型検査・Markdown・catalog・register・index 検証は成功
+- unit/integration/schema は指示どおり親 runner に委譲
+
+`npx tsx` は既知の sandbox IPC 制約で失敗しましたが、IPC 不要の同一エントリポイントでは全検証が通過しています。
+
+<specdojo_executor_evidence>
+{"final_message":"grade の3段階運用、score フィルタ、Job/routine、規範文書を実装した。result とライフサイクル状態は未変更。","validations":[{"command":"npx prettier --write src/grade.ts tests/src/grade.test.ts tests/src/cli-verb-taxonomy.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-25f4-grade-two-stage-filter.md docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml docs/ja/projects/prj-0001/jobs/job-grade-kata-local-confirmation.yaml docs/ja/projects/prj-0001/jobs/job-grade-kata-expert-check.yaml docs/ja/projects/prj-0001/routines/rtn-grade-kata.yaml docs/ja/specdojo/guides/routine-operation-guide.md docs/ja/specdojo/references/command-reference.md","status":"passed","summary":"全対象を整形"},{"command":"npm run typecheck","status":"passed","summary":"TypeScript 型検査成功"},{"command":"npm run -s lint:md","status":"passed","summary":"全 Markdown lint 成功"},{"command":"npx tsx src/specdojo.ts catalog validate","status":"failed","summary":"sandbox の tsx IPC 作成が EPERM。検査処理開始前の既知環境制約"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"同一エントリポイントで検証成功。既存の欠落文書警告のみ"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿生成成功"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1433件の文書索引を生成"},{"command":"node --import tsx src/specdojo.ts grade plan --help","status":"passed","summary":"--min-score の CLI 公開を確認"}]}
+</specdojo_executor_evidence>

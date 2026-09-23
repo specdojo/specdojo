@@ -67,7 +67,8 @@ repo-root/
 │     ├─ specdojo/
 │     │  ├─ guides/
 │     │  ├─ rulebooks/
-│     │  └─ templates/
+│     │  ├─ templates/
+│     │  └─ exec-templates/
 │     └─ projects/
 │        └─ prj-0001/
 │           ├─ 010-deliverables-catalog/
@@ -132,7 +133,6 @@ VS Code 統合ターミナル以外では、必要に応じて次のように実
       "routines_path": "routines",
       "jobs_path": "jobs",
       "members_path": "030-project-management/pm-members.yaml",
-      "reviews_path": "controls/reviews",
       "viewpoints_path": "030-project-management/pm-review-viewpoints.yaml",
       "project_context": ["prj-overview"],
       "run": {

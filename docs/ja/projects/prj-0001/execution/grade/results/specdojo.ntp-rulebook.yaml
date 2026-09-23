@@ -1,0 +1,84 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:ntp-rulebook
+path: docs/ja/specdojo/rulebooks/ntp-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 69
+graded_at: "2026-09-03T00:10:07.747Z"
+graded_by: gemma-expert-executor
+content_hash: 792e97fdd498a4362610f95cef061b5c391565559832f4648f8708927474ce61
+categories:
+  consistency:
+    score: 75
+  usability:
+    score: 67
+  architecture:
+    score: 100
+  quality:
+    score: 50
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 2
+    score: 50
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 2
+    score: 50
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 5
+  minor: 0
+  note: 0
+findings:
+  - id: F002
+    severity: major
+    rule: vp-qe-verifiability
+    line: 1
+    message: 「判定可能な記述にする」という方針はあるが、移行テスト計画における具体的な判定基準や成功条件の例示がなく、検証可能性が担保されていない。
+    anchor: "# 移行テスト計画（リハーサル計画） 作成ルール"
+  - id: F001
+    severity: major
+    rule: vp-arc-conciseness
+    line: 1
+    message: 「責務境界を明確化する」等の記述が、具体的ルールではなくrulebook作成者向けの指示（プレースホルダー）となっている。
+    anchor: "# 移行テスト計画（リハーサル計画） 作成ルール"
+  - id: F003
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: 標準テンプレで定義されている「4. 検証観点」が、対応するサンプル (ntp-sample.md) では「4. 最小記述例」となっており整合していない。
+    anchor: "# 移行テスト計画（リハーサル計画） 作成ルール"
+  - id: F004
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: 推奨される本文構成の「4. 検証観点」が、サンプル (ntp-sample.md) に適用されておらず、相互参照と適用方法に矛盾がある。
+    anchor: "# 移行テスト計画（リハーサル計画） 作成ルール"
+  - id: F005
+    severity: major
+    rule: vp-ux-readability
+    line: 1
+    message: 本文構成の定義に留まり、「移行テスト計画」として何を記述すべきかという具体的なガイドラインが欠落しており、初見の読者が作成内容を判断できない。
+    anchor: "# 移行テスト計画（リハーサル計画） 作成ルール"

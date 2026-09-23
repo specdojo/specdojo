@@ -1,0 +1,11 @@
+[cdfd-orchestrator.md](/workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-orchestrator-075/docs/ja/product/010-business-specs/010-data-flow/cdfd-orchestrator.md) を更新しました。
+
+- 領域名を「オーケストレーター」へ統一。
+- 実行ロック競合と stale 回収後の再開条件を追加。
+- 実行計画生成に関する3件は、依存先 `cdfd-plan` の `P-04-03` が生成責任を持つため不採用。
+- executor 指示どおり result は未更新です。
+- Markdown 検査と索引生成は通過。標準索引コマンドのみ sandbox の IPC 制限で失敗し、同一エントリポイントの代替起動で検証しました。
+
+<specdojo_executor_evidence>
+{"final_message":"領域名と実行ロック競合の7件を修正。実行計画生成の3件は、依存先 cdfd-plan の P-04-03 が生成・更新責任を持つため不採用とした。result は executor 指示に従い未更新。","validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-orchestrator.md","status":"passed","summary":"対象 Markdown を整形"},{"command":"npx prettier --check docs/ja/product/010-business-specs/010-data-flow/cdfd-orchestrator.md","status":"passed","summary":"Prettier 形式適合"},{"command":"npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-orchestrator.md","status":"passed","summary":"Markdown lint エラーなし"},{"command":"npx tsx src/specdojo.ts index build","status":"failed","summary":"sandbox が tsx の IPC ソケットを EPERM で拒否"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"同一 TypeScript エントリポイントで索引1783件を生成"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>

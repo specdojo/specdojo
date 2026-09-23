@@ -1,0 +1,120 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:imp-test-sample
+path: docs/ja/specdojo/samples/imp-test-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 65
+graded_at: "2026-09-09T15:10:05.915Z"
+graded_by: gemma-expert-executor
+content_hash: 1b54b57dfc748f125c29af5c24fdd6e6fdfb2c5ab95f7816d29ddf1cbab9ae19
+categories:
+  consistency:
+    score: 63
+  usability:
+    score: 75
+  architecture:
+    score: 100
+  quality:
+    score: 38
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 1
+    score: 25
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
+    level: 1
+    score: 25
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 2
+    score: 50
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 9
+  minor: 2
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 7
+    message: 対象期間の記載が漏れている。
+    anchor: ""
+  - id: F005
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 7
+    message: 必須要素である対象期間が欠落しており、完成最小例として不十分である。
+    anchor: ""
+  - id: F002
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 15
+    message: 成功条件の記述が漏れている。
+    anchor: ""
+  - id: F004
+    severity: major
+    rule: vp-qe-verifiability
+    line: 15
+    message: 成功条件に指標・状態・閾値などの判定基準がなく、検証不可能な状態である。
+    anchor: ""
+  - id: F006
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 15
+    message: 必須要素である成功条件が欠落しており、完成最小例として不十分である。
+    anchor: ""
+  - id: F003
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 24
+    message: 影響度の判定尺度（高・中・低の定義）を定めずに使用しており、禁止事項に抵触している。
+    anchor: "## 4. 影響詳細一覧"
+  - id: F007
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 24
+    message: 影響度の判定尺度を定義せずに使用しており、rulebook の禁止事項に抵触している。
+    anchor: "## 4. 影響詳細一覧"
+  - id: F009
+    severity: minor
+    rule: vp-ux-readability
+    line: 24
+    message: 影響度の判定基準が不明確であり、判断に曖昧さが残る。
+    anchor: "## 4. 影響詳細一覧"
+  - id: F008
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 48
+    message: 担当者欄に個人名を使用しており、sample 記述標準の禁止事項に抵触している。
+    anchor: "| 連携系テストデータの準備 | 値引き条件の代表データセット     | 2026-05-14 | QE 担当（井上）    | 代表パターンを 6 件作成しレビューで確定する。 |"
+  - id: F010
+    severity: major
+    rule: vp-ux-language-consistency
+    line: 48
+    message: 定義外の役割ラベルおよび個人名が使用されており、識別子として統一されていない。
+    anchor: "| 連携系テストデータの準備 | 値引き条件の代表データセット     | 2026-05-14 | QE 担当（井上）    | 代表パターンを 6 件作成しレビューで確定する。 |"
+  - id: F011
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 46
+    message: 「影響度」と「優先度」という用語が使い分けられており、概念の整合性が不明確である。
+    anchor: "| 重点回帰ケースの確定     | 変更箇所と既存障害履歴の突合結果 | 2026-05-11 | テスト管理（山本） | 障害履歴を参照して対象ケースを確定する。      |"

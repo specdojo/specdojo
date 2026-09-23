@@ -120,8 +120,9 @@ function setupRepository(): { repo: string; executionPath: string } {
   mkdirSync(join(repo, ".specdojo"), { recursive: true });
   mkdirSync(join(repo, "schedule"), { recursive: true });
   mkdirSync(join(repo, "catalog"), { recursive: true });
+  mkdirSync(join(repo, "jobs"), { recursive: true });
   mkdirSync(join(repo, "execution", "exec", "events"), { recursive: true });
-  mkdirSync(join(repo, "docs", "ja", "specdojo", "templates"), { recursive: true });
+  mkdirSync(join(repo, "docs", "ja", "specdojo", "exec-templates"), { recursive: true });
 
   writeFileSync(
     join(repo, ".specdojo", "specdojo.config.json"),
@@ -134,6 +135,7 @@ function setupRepository(): { repo: string; executionPath: string } {
             schedule_path: "schedule",
             execution_path: "execution",
             catalog_path: "catalog",
+            jobs_path: "jobs",
             members_path: "pm-members.yaml",
           },
         },
@@ -208,23 +210,45 @@ function setupRepository(): { repo: string; executionPath: string } {
     "utf8",
   );
   writeFileSync(
-    join(repo, "docs", "ja", "specdojo", "templates", "xep-template.md"),
+    join(repo, "docs", "ja", "specdojo", "exec-templates", "xep-template.md"),
     "_FRONTMATTER_\n\n# Edit Plan: _TASK_ID_\n\n_DONE_CRITERIA_GOALS_\n",
     "utf8",
   );
   writeFileSync(
-    join(repo, "docs", "ja", "specdojo", "templates", "xer-template.md"),
+    join(repo, "docs", "ja", "specdojo", "exec-templates", "xer-template.md"),
     "_FRONTMATTER_\n\n## 1. 実施内容\n",
     "utf8",
   );
   writeFileSync(
-    join(repo, "docs", "ja", "specdojo", "templates", "xrp-viewpoint-detail-template.md"),
+    join(repo, "docs", "ja", "specdojo", "exec-templates", "xrp-viewpoint-detail-template.md"),
     "### _VP_ID_\n\n_VP_CHECK_\n",
     "utf8",
   );
   writeFileSync(
-    join(repo, "docs", "ja", "specdojo", "templates", "xep-common-conventions-template.md"),
+    join(repo, "docs", "ja", "specdojo", "exec-templates", "xep-common-conventions-template.md"),
     "## 記法・リンク規約（共通）\n\n- リンクは `[[id|title]]` 形式。\n",
+    "utf8",
+  );
+  writeFileSync(
+    join(repo, "docs", "ja", "specdojo", "exec-templates", "xep-job-template.md"),
+    [
+      "_FRONTMATTER_",
+      "",
+      "# Job Plan: _JOB_NAME_",
+      "",
+      "_JOB_DESCRIPTION_",
+      "",
+      "_JOB_INPUTS_",
+      "",
+      "_JOB_TARGETS_",
+      "",
+      "_JOB_PATHS_",
+      "",
+      "_JOB_EXECUTION_",
+      "",
+      "_COMMON_CONVENTIONS_",
+      "",
+    ].join("\n"),
     "utf8",
   );
 
@@ -243,6 +267,289 @@ afterEach(() => {
 });
 
 describe("exec run (in-place, default)", () => {
+  it("returns routine skip without creating Job artifacts when the precondition output is empty", async () => {
+    const { repo, executionPath } = setupRepository();
+    writeFileSync(
+      join(repo, "jobs", "job-command-empty.yaml"),
+      [
+        "id: job-command-empty",
+        "name: Empty command selection",
+        "task:",
+        "  mode: command",
+        "  precondition:",
+        "    command: \"printf '  \\\\n'\"",
+        "    skip_when: empty-output",
+        "  command: touch command-ran.txt",
+        "run:",
+        '  idempotency_key: "{{job_id}}"',
+        "",
+      ].join("\n"),
+      "utf8",
+    );
+    vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+    vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+    try {
+      process.chdir(repo);
+      await runExec([
+        "run",
+        "--project",
+        "test",
+        "--job",
+        "job-command-empty",
+        "--job-trigger",
+        "routine",
+      ]);
+
+      expect(process.exitCode).toBe(75);
+      expect(existsSync(join(repo, "command-ran.txt"))).toBe(false);
+      expect(existsSync(join(executionPath, "jobs", "runs"))).toBe(false);
+      expect(existsSync(join(executionPath, "exec", "plans"))).toBe(false);
+      expect(existsSync(join(executionPath, "exec", "results"))).toBe(false);
+      expect(existsSync(join(executionPath, "exec", "evidence", "JBR-command-empty"))).toBe(false);
+    } finally {
+      process.chdir(originalCwd);
+      rmSync(repo, { recursive: true, force: true });
+    }
+  });
+
+  it("executes a command Job in the runner and records separate stream evidence", async () => {
+    const { repo, executionPath } = setupRepository();
+    writeFileSync(
+      join(repo, "jobs", "job-command.yaml"),
+      [
+        "id: job-command",
+        "name: Command",
+        "task:",
+        "  mode: command",
+        "  command: |",
+        "    printf 'command stdout\\n'",
+        "    printf 'api_key=super-secret-value\\n'",
+        "    printf 'command stderr\\n' >&2",
+        "    printf 'done\\n' > command-artifact.txt",
+        "  paths: [command-artifact.txt]",
+        "run:",
+        '  idempotency_key: "{{job_id}}"',
+        "",
+      ].join("\n"),
+      "utf8",
+    );
+    vi.spyOn(execWorktree, "gitOutput").mockImplementation((_repoRoot, args) =>
+      args[0] === "status" ? "?? command-artifact.txt\0" : " command-artifact.txt | 1 +\n",
+    );
+    vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+    vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+    try {
+      process.chdir(repo);
+      await runExec(["run", "--project", "test", "--job", "job-command"]);
+
+      expect(readFileSync(join(repo, "command-artifact.txt"), "utf8")).toBe("done\n");
+      const runs = readdirSync(join(executionPath, "jobs", "runs"));
+      const run = JSON.parse(
+        readFileSync(join(executionPath, "jobs", "runs", runs[0]), "utf8"),
+      ) as {
+        state: string;
+        task: { mode: string; command: string };
+        attempts: Array<{ exit_code: number; evidence_ref: string }>;
+      };
+      expect(run.state).toBe("succeeded");
+      expect(run.task).toMatchObject({ mode: "command" });
+      expect(run.attempts[0].exit_code).toBe(0);
+      const evidence = JSON.parse(
+        readFileSync(join(repo, run.attempts[0].evidence_ref), "utf8"),
+      ) as {
+        command: {
+          value: string;
+          exit_code: number;
+          stdout_ref: string;
+          stderr_ref: string;
+          stdout: string;
+          stderr: string;
+        };
+        log_refs: Array<{ kind: string }>;
+      };
+      expect(evidence.command.value).toContain("command-artifact.txt");
+      expect(evidence.command.exit_code).toBe(0);
+      expect(evidence.command.stdout).toContain("command stdout");
+      expect(evidence.command.stdout).toContain("api_key=[REDACTED]");
+      expect(evidence.command.stdout).not.toContain("super-secret-value");
+      expect(evidence.command.stderr).toContain("command stderr");
+      expect(readFileSync(join(repo, evidence.command.stdout_ref), "utf8")).toContain(
+        "command stdout",
+      );
+      expect(readFileSync(join(repo, evidence.command.stderr_ref), "utf8")).toContain(
+        "command stderr",
+      );
+      expect(evidence.log_refs.map((ref) => ref.kind)).toEqual([
+        "command-stdout",
+        "command-stderr",
+      ]);
+      expect(process.exitCode).toBeUndefined();
+    } finally {
+      process.chdir(originalCwd);
+      rmSync(repo, { recursive: true, force: true });
+    }
+  });
+
+  it("fails directly on a non-zero command without starting the analysis reporter", async () => {
+    const { repo, executionPath } = setupRepository();
+    const reporterOutput = JSON.stringify({
+      schema_version: 1,
+      mode: "edit",
+      outcome: "complete",
+      summary: ["reporter should not run"],
+      changed_files: [],
+      handoff: [],
+      approach: "unexpected reporter invocation",
+      block_reason: "",
+    });
+    const reporterOutputBase64 = Buffer.from(reporterOutput, "utf8").toString("base64");
+    configurePipeline(
+      repo,
+      `node -e "const fs=require('node:fs');fs.writeFileSync('reporter-ran.txt','yes');` +
+        `fs.writeSync(1,Buffer.from('${reporterOutputBase64}','base64'))"`,
+    );
+    writeFileSync(
+      join(repo, "jobs", "job-command-failure.yaml"),
+      [
+        "id: job-command-failure",
+        "name: Command failure",
+        "task:",
+        "  mode: command",
+        "  command: |",
+        "    printf 'before failure\\n'",
+        "    printf 'failure detail\\n' >&2",
+        "    exit 7",
+        "  analysis:",
+        "    agent: pipeline-reporter",
+        "    description: command evidence から実行結果を報告する。",
+        "run:",
+        '  idempotency_key: "{{job_id}}"',
+        "",
+      ].join("\n"),
+      "utf8",
+    );
+    vi.spyOn(execWorktree, "gitOutput").mockReturnValue("");
+    vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+    vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+    try {
+      process.chdir(repo);
+      await runExec(["run", "--project", "test", "--job", "job-command-failure"]);
+
+      expect(existsSync(join(repo, "reporter-ran.txt"))).toBe(false);
+      const runFile = readdirSync(join(executionPath, "jobs", "runs"))[0];
+      const run = JSON.parse(
+        readFileSync(join(executionPath, "jobs", "runs", runFile), "utf8"),
+      ) as {
+        run_id: string;
+        state: string;
+        attempts: Array<{ exit_code: number; evidence_ref: string }>;
+      };
+      expect(run.state).toBe("failed");
+      expect(run.attempts[0].exit_code).toBe(7);
+      const evidence = JSON.parse(
+        readFileSync(join(repo, run.attempts[0].evidence_ref), "utf8"),
+      ) as { command: { stdout_ref: string; stderr_ref: string } };
+      expect(readFileSync(join(repo, evidence.command.stdout_ref), "utf8")).toContain(
+        "before failure",
+      );
+      expect(readFileSync(join(repo, evidence.command.stderr_ref), "utf8")).toContain(
+        "failure detail",
+      );
+      const result = readFileSync(
+        join(executionPath, "exec", "results", `${run.run_id}-result.md`),
+        "utf8",
+      );
+      expect(result).toContain("status: blocked");
+      expect(result).toContain("command exited with code 7");
+      expect(process.exitCode).toBe(7);
+    } finally {
+      process.chdir(originalCwd);
+      rmSync(repo, { recursive: true, force: true });
+    }
+  });
+
+  it("runs only analysis reporter after a successful command that starts a nested process", async () => {
+    const { repo, executionPath } = setupRepository();
+    const reporterOutput = JSON.stringify({
+      schema_version: 1,
+      mode: "edit",
+      outcome: "complete",
+      summary: ["成果物を更新し、検証を完了した。"],
+      changed_files: [],
+      handoff: [],
+      approach: "command evidence の stdout と stderr を確認した。",
+      block_reason: "",
+    });
+    const reporterOutputBase64 = Buffer.from(reporterOutput, "utf8").toString("base64");
+    configurePipeline(
+      repo,
+      `node -e "const fs=require('node:fs');const prompt=fs.readFileSync(0,'utf8');` +
+        `fs.writeFileSync('reporter-prompt.txt',prompt);` +
+        `fs.writeSync(1,Buffer.from('${reporterOutputBase64}','base64'))"`,
+    );
+    writeFileSync(
+      join(repo, "jobs", "job-command-analysis.yaml"),
+      [
+        "id: job-command-analysis",
+        "name: Command analysis",
+        "task:",
+        "  mode: command",
+        "  command: |",
+        "    node -e \"require('node:fs').writeFileSync('nested-agent.txt', 'nested process ran\\\\n')\"",
+        "    printf 'analysis input\\n'",
+        "    printf 'analysis warning\\n' >&2",
+        "  analysis:",
+        "    agent: pipeline-reporter",
+        "    description: command evidence から実行結果を報告する。",
+        "  paths: [nested-agent.txt]",
+        "run:",
+        '  idempotency_key: "{{job_id}}"',
+        "",
+      ].join("\n"),
+      "utf8",
+    );
+    vi.spyOn(execWorktree, "gitOutput").mockImplementation((_repoRoot, args) =>
+      args[0] === "status" ? "?? nested-agent.txt\0" : " nested-agent.txt | 1 +\n",
+    );
+    vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+    vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+    try {
+      process.chdir(repo);
+      await runExec(["run", "--project", "test", "--job", "job-command-analysis"]);
+
+      expect(readFileSync(join(repo, "nested-agent.txt"), "utf8")).toBe("nested process ran\n");
+      expect(existsSync(join(repo, "pipeline-artifact.md"))).toBe(false);
+      const reporterPrompt = readFileSync(join(repo, "reporter-prompt.txt"), "utf8");
+      expect(reporterPrompt).toContain('"stdout_ref"');
+      expect(reporterPrompt).toContain('"stderr_ref"');
+      expect(reporterPrompt).toContain('"stdout": "analysis input\\n"');
+      expect(reporterPrompt).toContain('"stderr": "analysis warning\\n"');
+      const runFile = readdirSync(join(executionPath, "jobs", "runs"))[0];
+      const run = JSON.parse(
+        readFileSync(join(executionPath, "jobs", "runs", runFile), "utf8"),
+      ) as { run_id: string; state: string };
+      expect(run.state).toBe("succeeded");
+      const result = readFileSync(
+        join(executionPath, "exec", "results", `${run.run_id}-result.md`),
+        "utf8",
+      );
+      expect(result).toContain("status: complete");
+      expect(result).toContain("成果物を更新し、検証を完了した。");
+      const state = JSON.parse(
+        readFileSync(
+          join(executionPath, "exec", "evidence", run.run_id, "attempt-1", "pipeline-state.json"),
+          "utf8",
+        ),
+      ) as { stages: { executor: { actor: string }; reporter: { status: string } } };
+      expect(state.stages.executor.actor).toBe("specdojo-runner");
+      expect(state.stages.reporter.status).toBe("succeeded");
+      expect(process.exitCode).toBeUndefined();
+    } finally {
+      process.chdir(originalCwd);
+      rmSync(repo, { recursive: true, force: true });
+    }
+  });
+
   it("runs executor and reporter stages and renders the result from validated JSON", async () => {
     const { repo, executionPath } = setupRepository();
     configurePipeline(repo);
@@ -597,7 +904,7 @@ describe("exec run (in-place, default)", () => {
     // The fake agent never fills the result, mirroring an agent (e.g. claude -p) that
     // concludes "blocked" yet still exits 0.
     writeFileSync(
-      join(repo, "docs", "ja", "specdojo", "templates", "xer-template.md"),
+      join(repo, "docs", "ja", "specdojo", "exec-templates", "xer-template.md"),
       [
         "_FRONTMATTER_",
         "",

@@ -4,7 +4,8 @@ specdojo:
   type: sample
   status: ready
   rulebook: specdojo:prj-stakeholder-register-rulebook
-  based_on: [specdojo:prj-overview-sample]
+  based_on:
+    - specdojo:prj-overview-sample
   supersedes: []
 ---
 

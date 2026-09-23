@@ -1,0 +1,30 @@
+PJR-VH6R の実装を完了しました。
+
+## 実施内容
+
+保護機構（`agent-config-write` / `agent-git-state-write`）が block した時点で、機構側から result の申し送りへ最低限の情報を自動記録するようにしました。
+
+**追加**
+
+- `src/exec-protection-handoff.ts`（新規）: 申し送りの組み立てと result 本文への記録。edit result の `## N. 申し送り` 節へ書き込み、節が無い review result などでは末尾に専用節を追加。agent が書いた申し送りは残し、過去の自動記録は置き換え（マーカー `<!-- specdojo:agent-protection-handoff -->` で識別）。
+- `src/exec-agent-protected-config.ts`: `describeAgentProtectedConfigChanges` を追加（対象パスの `git diff`、未追跡ファイルは現在の内容を追加行として出力）。
+- `src/exec-agent-git-state.ts`: `describeAgentGitStateChanges` を追加（HEAD の before/after、local config は増減キー名のみ。値は資格情報混入を避けて出力しない）。
+
+**記録内容**: 保護機構名 / block メッセージ / 対象パス・フィールド / 提案差分 / 変更理由・必要な検証（agent 記入の有無を明示）。
+
+**適用経路**: `exec run` の worktree・in-place・executor/reporter pipeline・register 実行（`runWithRetry` / `spawnAgentInPlace` に result パスを追加）、`exec worktree agent`、commit 前の再検査（`assertNoAgentProtectedConfigChanges`）。`exec trial` は exec result を持たないため対象外（evidence と stderr に残る）。
+
+**契約の維持**: frontmatter と `実施内容` / `変更ファイル` のプレースホルダは変更しないため、未記入 result の block 判定・終了コードは従来どおり。記録できない場合も例外を投げず false を返して block 経路を通します。
+
+## 変更ファイル
+
+- `src/exec-protection-handoff.ts`（新規）
+- `src/exec-agent-protected-config.ts`, `src/exec-agent-git-state.ts`
+- `src/exec-run.ts`, `src/exec-worktree-command.ts`, `src/exec-worktree-ops.ts`
+- `tests/src/exec-protection-handoff.test.ts`（新規・単体テスト12件）
+- `docs/ja/specdojo/guides/exec-config-guide.md`（保証内容を追記）
+- `docs/ja/projects/prj-0001/controls/project-register/pjr-vh6r-agent-config-write-handoff.md`（作業内容・対応結果を更新。ステータス項目は未変更）
+
+<specdojo_executor_evidence>
+{"final_message":"保護機構(agent-config-write / agent-git-state-write)の block 時に、対象・block メッセージ・提案差分を機構側から result の申し送りへ自動記録する実装を追加し、単体テストと規約(exec-config-guide)・個票を更新した。","validations":[{"command":"npm run typecheck","status":"passed","summary":"tsc -b --noEmit がエラーなしで完了"},{"command":"npm run lint:ts","status":"passed","summary":"ESLint がエラーなしで完了"},{"command":"npx prettier --write src/exec-protection-handoff.ts src/exec-agent-protected-config.ts src/exec-agent-git-state.ts src/exec-run.ts src/exec-worktree-command.ts src/exec-worktree-ops.ts tests/src/exec-protection-handoff.test.ts docs/ja/specdojo/guides/exec-config-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-vh6r-agent-config-write-handoff.md","status":"passed","summary":"変更ファイルを整形（md 2件は変更なし）"},{"command":"npx markdownlint docs/ja/specdojo/guides/exec-config-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-vh6r-agent-config-write-handoff.md","status":"passed","summary":"変更した Markdown に指摘なし"},{"command":"npm run -s lint:md","status":"passed","summary":"リポジトリ全体の Markdown lint で指摘なし"},{"command":"npx tsx tools/docs/src/validate-history-links.ts","status":"passed","summary":"履歴蓄積ファイルのリンク記法検査が exit 0"},{"command":"npx tsx src/specdojo.ts catalog validate","status":"passed","summary":"exit 0（既存の based_on 未作成 WARN のみ）"},{"command":"npx tsx src/specdojo.ts register build","status":"passed","summary":"登録簿の生成物を再生成（gitignore 済み）"},{"command":"npx tsx src/specdojo.ts index build","status":"passed","summary":"doc-index を 1484 entries で再生成"},{"command":"npm run test:unit","status":"not_run","summary":"親 runner の検証対象のため executor では実行していない（新規テスト tests/src/exec-protection-handoff.test.ts を追加済み）"}]}
+</specdojo_executor_evidence>

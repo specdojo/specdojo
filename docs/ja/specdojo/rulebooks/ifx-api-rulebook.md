@@ -57,11 +57,12 @@ ESIL 側の `spec_ref: ifx-api-...` は、このEAPISのID（およびファイ�
 
 仕様のトレーサビリティ管理のため、以下を `x-spec-meta` に含めます。
 
-| キー     | 説明                                                 | 必須 |
-| -------- | ---------------------------------------------------- | ---- |
-| id       | API仕様ID（`ifx-api-...`）、ESILの `spec_ref` と対応 | ○    |
-| type     | `api` 固定                                           | ○    |
-| status   | `draft` / `ready` / `deprecated`                     | ○    |
+| キー | 説明 | 必須 |
+| ---- | ---- | ---- |
+
+| id | API仕様ID（`ifx-api-...`）、ESILの `spec_ref` と対応 | ○ |
+| type | `api` 固定 | ○ |
+| status | `draft` / `ready` / `deprecated` | ○ |
 | based_on | 根拠となる他仕様のIDリスト（例: `["ifx-api-auth"]`） | 任意 |
 
 ## 5. エラー定義（推奨）

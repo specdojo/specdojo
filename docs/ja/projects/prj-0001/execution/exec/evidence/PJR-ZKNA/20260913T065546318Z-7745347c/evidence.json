@@ -1,0 +1,142 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-ZKNA",
+  "run_id": "20260913T065546318Z-7745347c",
+  "stage": {
+    "role": "executor",
+    "actor": "claude-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-13T06:55:46.318Z",
+    "completed_at": "2026-09-13T07:02:45.272Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-zkna-cdfd-uc-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/deliverables-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cdfd-mermaid-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/id-and-file-naming-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/recipes/cdfd-uc-recipe.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/cdfd-uc-sample.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/cdfd-uc-template.md",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 9,
+    "summary": ".../project-register/pjr-zkna-cdfd-uc-rulebook.md  | 19 ++++++++-------\n .../pjr-zkna-20260913T061556Z-485b-result.md       |  4 +++-\n .../specdojo/references/deliverables-reference.md  |  1 +\n .../ja/specdojo/rulebooks/cdfd-mermaid-rulebook.md | 27 +++++++++++-----------\n .../specdojo/rulebooks/cdfd-overview-rulebook.md   |  4 ++--\n .../standards/id-and-file-naming-standard.md       |  1 +\n 6 files changed, 32 insertions(+), 24 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write <changed md files>",
+      "status": "passed",
+      "summary": "9 files unchanged"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint <changed md files>",
+      "status": "passed",
+      "summary": "no errors"
+    },
+    {
+      "source": "executor",
+      "command": "npm run -s lint:md",
+      "status": "passed",
+      "summary": "no errors"
+    },
+    {
+      "source": "executor",
+      "command": "npm run -s lint:fm",
+      "status": "failed",
+      "summary": "1 warning in docs/ja/specdojo/samples/br-sample.md (pre-existing at HEAD, out of scope)"
+    },
+    {
+      "source": "executor",
+      "command": "npm run -s validate:history-links",
+      "status": "passed",
+      "summary": "all history files valid"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "1659 entries"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "exit 0, 0 errors (pre-existing WARN only)"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "generated views regenerated"
+    },
+    {
+      "source": "executor",
+      "command": "npm run -s docs:build",
+      "status": "passed",
+      "summary": "build complete in 218.75s"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-ZKNA\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/unmerged.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/stale.md\n  src/unrelated.t…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.1.0 validate:schema:yaml\n> tsx tools/docs/src/validate-yaml-schema.ts --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bps-template.yaml: schema docs/specdojo/sc…"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-ZKNA\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-KwicZn/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-sG2Lkd/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-zSYBD7/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-NucboY/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-dks4lb/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-qxt5fp/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\nWrote agent stdout: /tmp/specdojo-agent-command-Rx1QcL/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-h9Z51j/outputs/partial.txt\n\n Test Files  102 passed (102)\n      Tests  1454 passed (1454)\n   Start at  16:03:03\n   Duration  22.98s (transform 1.87s, setup 426ms, impor…"
+    }
+  ],
+  "final_message": "前回 run が作成した cdfd-uc-rulebook / recipe / sample / template と関連更新（cdfd-overview-rulebook, cdfd-mermaid-rulebook, deliverables-reference, id-and-file-naming-standard, 個票）を検証し、standards・cdfd-overview-sample との整合を確認。追加編集は不要。prettier/markdownlint/lint:md/history-links/index build/register build/catalog validate/docs:build すべて成功。lint:fm の警告 1 件は既存の br-sample.md 起因で対象外。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-ZKNA/20260913T065546318Z-7745347c/executor.log",
+      "bytes": 3786,
+      "truncated": false
+    }
+  ]
+}

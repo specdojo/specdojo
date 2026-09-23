@@ -44,7 +44,15 @@ tracks:
     order: 3
     parallel_group: business-specs
     depends_on: [launch]
-    note: 業務仕様のうち最初に着手したトラック。実行中。
+    note: 業務仕様のうち最初に着手したトラック。領域別 CDFD の整備は完了（旧 10 件は trash へ退避済み）。
+
+  - track: data-flow-pdca
+    domains: [data-flow]
+    catalog_status: primary
+    order: 3
+    parallel_group: business-specs
+    depends_on: [data-flow]
+    note: cdfd-overview の PDCA 構成に合わせたプロセスグループ別・ユースケース別 CDFD 8 件の新規作成（PJR-6PD7）。dct-data-flow を local_ids で部分 scope にする。
 
   - track: data-model
     domains: [data-model]

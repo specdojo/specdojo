@@ -1,0 +1,13 @@
+指定コマンドを1回だけ実行しましたが、終了コードは `1` でした。
+
+- `grade list --changed-only` 実行時、`tsx` の IPC ソケット作成が sandbox の `EPERM` で失敗。
+- rate limit、中断、agent失敗、`grade apply` 拒否ではありません。
+- `config.tsv` のみ作成され、`selection.txt` と `results.tsv` は未作成です。
+- 文書選択前の失敗のため、no-op判定、各段の成否、3段目の未実行理由、verdict/score分布、閾値の妥当性は確認できません。
+- 設定は保存されており、IPC制約の解消後は同じ `run-id`・同じ引数で再開可能です。
+- 対象成果物に差分はありません。したがって整形・静的検査は不要でした。
+- 親runner担当の検証コマンドは実行していません。
+
+<specdojo_executor_evidence>
+{"final_message":"指定スクリプトは文書選択前にtsx IPCソケットのEPERMで終了コード1となり、成果物は未変更です。同じrun-idの設定は保存されています。","validations":[{"command":"tools/grade/run-per-document.sh --run-id job-grade-kata-all-2026-W37 --kind all --limit 5 --changed-only=true --ungraded=true","status":"failed","summary":"grade list --changed-onlyでtsx IPCソケット作成がEPERMとなり終了コード1"},{"command":"git diff --exit-code -- docs/ja/specdojo/rulebooks docs/ja/specdojo/recipes docs/ja/specdojo/samples docs/ja/specdojo/templates","status":"passed","summary":"対象成果物に差分なし"}]}
+</specdojo_executor_evidence>

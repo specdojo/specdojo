@@ -1,0 +1,16 @@
+`cdfd-check.md` を新規作成しました。
+
+- P-08〜P-10 のプロセス、入出力、データストアを詳細化
+- `done_criteria`・`evidence_refs` に基づく評価フローを定義
+- 評価対象変更、評価不能、進捗情報不一致、派生生成物不整合の検出・再開条件を明記
+- Action・Orchestrator・横断 CDFD との委譲境界を整理
+- status は `draft` のまま維持
+- executor 指示に従い result は未更新
+
+成果物: [cdfd-check.md](/workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-check-010/docs/ja/product/010-business-specs/010-data-flow/cdfd-check.md)
+
+標準の `npx tsx` 索引コマンドは sandbox の IPC 制限で起動できなかったため、同じエントリポイントを Node ローダーで実行し、索引生成を確認しました。
+
+<specdojo_executor_evidence>
+{"final_message":"CheckグループのCDFDを新規作成し、P-08〜P-10、主要例外、Actionへの引き渡し、done_criteria・evidence_refsの参照を定義した","validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-check.md","status":"passed","summary":"Markdown整形完了"},{"command":"npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-check.md","status":"passed","summary":"lintエラーなし"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"文書索引1700件を生成"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"全カタログOK。既存の未作成成果物に関する警告のみ"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>

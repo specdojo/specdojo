@@ -1,0 +1,55 @@
+{
+  "name": "@specdojo/docs-site",
+  "version": "0.1.0",
+  "description": "VitePress documentation site and Mermaid renderer for SpecDojo projects.",
+  "license": "MIT",
+  "author": "naoji3x",
+  "private": false,
+  "type": "module",
+  "bin": {
+    "specdojo-docs-site": "bin/specdojo-docs-site.js"
+  },
+  "files": [
+    ".vitepress",
+    "!.vitepress/.tsbuild",
+    "!.vitepress/cache",
+    "!.vitepress/dist",
+    "bin",
+    "src",
+    "mermaid-config.json",
+    "puppeteer-config.json",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/specdojo/specdojo.git",
+    "directory": "packages/docs-site"
+  },
+  "homepage": "https://github.com/specdojo/specdojo#readme",
+  "bugs": {
+    "url": "https://github.com/specdojo/specdojo/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "docs:dev": "node bin/specdojo-docs-site.js dev ../.. --host 0.0.0.0 --port 5173",
+    "docs:build": "node bin/specdojo-docs-site.js build ../..",
+    "docs:build:mermaid": "node bin/specdojo-docs-site.js mermaid ../..",
+    "typecheck": "tsc -p .vitepress/tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@mermaid-js/mermaid-cli": "^11.15.0",
+    "puppeteer": "^24.43.1",
+    "tsx": "^4.22.4",
+    "vitepress": "^1.6.4",
+    "vitepress-sidebar": "^1.36.1"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.2",
+    "typescript": "^6.0.3"
+  }
+}

@@ -2,9 +2,11 @@ import { describe, expect, it } from "vitest";
 import path from "node:path";
 import {
   normalizePjrId,
+  parseRegisterSelectionFilter,
   registerItemCategory,
   requireRunnableRegisterItem,
   sanitizeRegisterConclusion,
+  selectRegisterItems,
   ticketPathFromItem,
 } from "../../src/exec-register.js";
 import {
@@ -64,6 +66,44 @@ describe("registerItemCategory", () => {
   it("decision / note は実行対象外として null を返す", () => {
     expect(registerItemCategory("decision")).toBeNull();
     expect(registerItemCategory("note")).toBeNull();
+  });
+});
+
+describe("register filter selection", () => {
+  const items: PjrItem[] = [
+    makeItem({ id: "PJR-0003", type: "todo", priority: "low" }),
+    makeItem({ id: "PJR-0001", type: "todo", priority: "high" }),
+    makeItem({ id: "PJR-0002", type: "issue", priority: "high" }),
+    makeItem({ id: "PJR-0004", type: "note", priority: "high" }),
+    makeItem({ id: "PJR-0005", type: "todo", priority: "high", status: "done" }),
+    makeItem({ id: "PJR-0006", type: "todo", priority: "high", status: "waiting" }),
+  ];
+
+  it("flat な list 入力を検証し、条件と上限で ID 昇順に選ぶ", () => {
+    const filter = parseRegisterSelectionFilter({
+      types: "todo,issue",
+      priorities: "high",
+      statuses: "open,waiting",
+      limit: "2",
+    });
+
+    expect(selectRegisterItems(items, filter).map((item) => item.id)).toEqual([
+      "PJR-0001",
+      "PJR-0002",
+    ]);
+  });
+
+  it("既定では open かつ実行可能 type だけを選ぶ", () => {
+    expect(selectRegisterItems(items, {}).map((item) => item.id)).toEqual([
+      "PJR-0001",
+      "PJR-0002",
+      "PJR-0003",
+    ]);
+  });
+
+  it("未知の値と正でない limit を拒否する", () => {
+    expect(() => parseRegisterSelectionFilter({ types: "epic" })).toThrow(/unknown value/);
+    expect(() => parseRegisterSelectionFilter({ limit: "0" })).toThrow(/positive integer/);
   });
 });
 

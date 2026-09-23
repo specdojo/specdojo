@@ -1,0 +1,84 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:opr-change-sample
+path: docs/ja/specdojo/samples/opr-change-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: fail
+score: 57
+graded_at: "2026-09-05T15:30:20.775Z"
+graded_by: gemma-expert-executor
+content_hash: 5b73860cf218b7196df45421107fd1958a5975a929a12647abc732dfb536bf63
+categories:
+  consistency:
+    score: 25
+  usability:
+    score: 75
+  architecture:
+    score: 100
+  quality:
+    score: 38
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 0
+    score: 0
+  vp-qe-kata-conformance:
+    level: 1
+    score: 25
+  vp-ux-readability:
+    level: 1
+    score: 25
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 1
+  major: 4
+  minor: 0
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 6
+    message: Frontmatter の `rulebook` 指定が `specdojo:opd-rulebook` となっており、成果物種別と矛盾している。
+    anchor: ""
+  - id: F002
+    severity: major
+    rule: vp-qe-verifiability
+    line: 51
+    message: 「実施ログ（誰が/いつ/何を）を残す」という表現のみでは, 証跡として十分な内容であるかを判定できず, 再現性を担保できない。
+    anchor: ""
+  - id: F003
+    severity: blocker
+    rule: vp-qe-omissions-consistency
+    line: 41
+    message: "`opr-rulebook` 第5章で定義された必須構成（概要、適用範囲・前提、証跡、関連文書導線等）がほぼすべて欠落しており、文書として不成立である。"
+    anchor: ""
+  - id: F004
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 41
+    message: "`opr-template.md` の構成に従っておらず、サンプルとしてあるべき「rulebook に準拠した具体的な記述例」を提示できていない。"
+    anchor: ""
+  - id: F005
+    severity: major
+    rule: vp-ux-readability
+    line: 41
+    message: 記載内容が極めて不十分であり、初見の読者が OPR の具体的な記述水準や構成を把握し、模倣するためのリファレンスとして機能していない。
+    anchor: ""

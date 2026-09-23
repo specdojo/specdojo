@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_8ecd931442994a9186133758e5a84119
+  ts: "2026-09-09T14:22:03Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 実行の同一性を period から組み立てており日次実行できない
+    - field: description
+      from: ""
+      to: job のコマンドが --run-id を job_id と inputs.period から組み立てているため、実行の同一性がスケジュールの粒度に依存する。run-per-document.sh は run-id 単位で完了段を保存し再開するため、同じ period では 2 回目以降が処理済みとして飛ばされる。週次を日次へ変えると 2 晩目以降が空振りする。Job Run は JBR-... という一意な ID を持つがテンプレートから参照できない。renderJobTemplate が解決するのは job_id / project_id / specdojo / scheduled_at / inputs / checkpoint のみである。フィルタを追加する対症療法では時間毎の実行で同じ問題が再発する。
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-09"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_c53795b1616e40779f670e8e2c86b6cd
+  ts: "2026-09-09T14:33:48Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_8ecd931442994a9186133758e5a84119
+- v: 1
+  id: reg_29779d3604d04fc4bfd5c9f26fb8bac9
+  ts: "2026-09-09T14:51:18Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_c53795b1616e40779f670e8e2c86b6cd
+- v: 1
+  id: reg_c5c7ba61bdf84386ae7e7ece57f47a68
+  ts: "2026-09-09T22:18:09Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: "--run-id を {{job_run_id}} から組み立てるよう変更し、inputs.period への依存を解消した。冪等キーも scheduled_at へ切り替えた。routine を連続2回実行し、run_id が異なり2回目も5文書を選択することを実測で確認した。Run 確定前の参照は例外で拒否し、暗黙に空文字へ落ちない。単体テスト 1422 件が成功する。"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-10"
+  previous_event_id: reg_29779d3604d04fc4bfd5c9f26fb8bac9

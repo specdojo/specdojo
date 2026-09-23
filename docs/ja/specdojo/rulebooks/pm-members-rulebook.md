@@ -57,62 +57,71 @@ agent の起動コマンドは `pm-members.yaml` には置かず、`.specdojo/ex
 - 推奨パス: `docs/ja/projects/<project-id>/030-project-management/pm-members.yaml`
 - `project_id` は配置先プロジェクト ID と一致させる。例: `prj-0001`
 - `id` は `<project-id>:pm-members` 形式を推奨する。例: `prj-0001:pm-members`
+
 - `members[].nickname` は英小文字、数字、ハイフン、アンダースコアで記述する。
+
 - 一度実行ログに記録した `nickname` は変更せず、改名が必要な場合は新しい member を追加する。
 
 ## 4. 推奨メタ項目
 
 YAML 成果物のため、Markdown Frontmatter ではなく YAML 先頭のメタ項目として記載する。
 
-| 項目         | 説明                                      | 必須 |
-| ------------ | ----------------------------------------- | ---- |
-| `id`         | `<project-id>:pm-members` 形式の成果物 ID | ○    |
-| `type`       | `project` 固定                            | ○    |
-| `status`     | `draft` / `ready` / `deprecated`          | ○    |
-| `title`      | ドキュメント名。表示ページの見出しになる  | ○    |
-| `rulebook`   | `specdojo:pm-members-rulebook` 固定       | ○    |
-| `based_on`   | 根拠ドキュメント ID の配列                | 任意 |
-| `version`    | データバージョン。初期値は `1`            | ○    |
-| `project_id` | プロジェクト ID                           | ○    |
+| 項目 | 説明 | 必須 |
+| ---- | ---- | ---- |
+
+| `id` | `<project-id>:pm-members` 形式の成果物 ID | ○ |
+| `type` | `project` 固定 | ○ |
+| `status` | `draft` / `ready` / `deprecated` | ○ |
+| `title` | ドキュメント名。表示ページの見出しになる | ○ |
+| `rulebook` | `specdojo:pm-members-rulebook` 固定 | ○ |
+| `based_on` | 根拠ドキュメント ID の配列 | 任意 |
+| `version` | データバージョン。初期値は `1` | ○ |
+| `project_id` | プロジェクト ID | ○ |
 
 ## 5. 本文構成（標準テンプレ）
 
 `pm-members.yaml` は次のルート構造を標準とする。
 
-| 要素         | 必須 | 内容                                 |
-| ------------ | ---- | ------------------------------------ |
-| `id`         | ○    | 成果物 ID                            |
-| `type`       | ○    | 成果物種別                           |
-| `status`     | ○    | 成果物状態                           |
-| `title`      | ○    | ドキュメント名                       |
-| `rulebook`   | ○    | 参照する rulebook ID                 |
-| `based_on`   | 任意 | 根拠 ID 配列                         |
-| `version`    | ○    | データバージョン                     |
-| `project_id` | ○    | プロジェクト ID                      |
-| `members`    | ○    | Member 定義の配列                    |
-| `rules`      | 任意 | この member 定義を使う際の運用ルール |
+| 要素 | 必須 | 内容 |
+| ---- | ---- | ---- |
+
+| `id` | ○ | 成果物 ID |
+| `type` | ○ | 成果物種別 |
+
+| `status` | ○ | 成果物状態 |
+| `title` | ○ | ドキュメント名 |
+| `rulebook` | ○ | 参照する rulebook ID |
+| `based_on` | 任意 | 根拠 ID 配列 |
+| `version` | ○ | データバージョン |
+| `project_id` | ○ | プロジェクト ID |
+| `members` | ○ | Member 定義の配列 |
+| `rules` | 任意 | この member 定義を使う際の運用ルール |
 
 `members[]` は次のフィールドを標準とする。
 
-| フィールド           | 必須       | 内容                                                |
-| -------------------- | ---------- | --------------------------------------------------- |
-| `nickname`           | ○          | `--by` で指定する安定識別子                         |
-| `display_name`       | ○          | 表示名。公開文書では個人名を避けてよい              |
-| `email`              | 任意       | 公開可能な連絡先。非公開または不要なら `null`       |
-| `roles`              | ○          | 対応する Role code のリスト。汎用 agent は `[]` 可  |
-| `type`               | ○          | `human` または `agent`                              |
-| `provider`           | agent 必須 | agent を実行する CLI 種別（`opencode` など）        |
-| `priority`           | agent 推奨 | 同条件の agent 候補間での優先度。小さい値を優先する |
-| `mode`               | agent 推奨 | `edit` または `review`。担当できる実行モードを表す  |
-| `stage_role`         | 任意       | pipeline 専用 agent の `executor` / `reporter`      |
-| `proficiency`        | agent 推奨 | `normal` / `expert` などの品質 tier                 |
-| `persona`            | 任意       | 実行姿勢やレビュー観点を表す短いラベル              |
-| `focus`              | 任意       | 重視する観点の配列                                  |
-| `capabilities`       | agent 推奨 | `web_search` などのツール能力                       |
-| `command`            | 任意       | provider の command template を使わない場合の上書き |
-| `disabled`           | 任意       | `true` で `exec run --auto` の候補から一時除外する  |
-| `scheduler_strategy` | 任意       | 既定の scheduler 戦略                               |
-| `note`               | 任意       | 補足。責務境界や公開上の注意を簡潔に書く            |
+| フィールド     | 必須 | 内容                                   |
+| -------------- | ---- | -------------------------------------- |
+| `nickname`     | ○    | `--by` で指定する安定識別子            |
+| `display_name` | ○    | 表示名。公開文書では個人名を避けてよい |
+
+| `email` | 任意 | 公開可能な連絡先。非公開または不要なら `null` |
+| `roles` | ○ | 対応する Role code のリスト。汎用 agent は `[]` 可 |
+| `type` | ○ | `human` または `agent` |
+| `provider` | agent 必須 | agent を実行する CLI 種別（`opencode` など） |
+| `priority` | agent 推奨 | 同条件の agent 候補間での優先度。小さい値を優先する |
+
+| `mode` | agent 推奨 | `edit` / `review` / `report`。agent の起動プロファイルを表す |
+
+| `stage_role` | 任意 | pipeline 専用 agent の `executor` / `reporter` |
+| `proficiency` | agent 推奨 | `normal` / `expert` などの品質 tier |
+
+| `persona` | 任意 | 実行姿勢やレビュー観点を表す短いラベル |
+| `focus` | 任意 | 重視する観点の配列 |
+| `capabilities` | agent 推奨 | `web_search` などのツール能力 |
+| `command` | 任意 | provider の command template を使わない場合の上書き |
+| `disabled` | 任意 | `true` で `exec run --auto` の候補から一時除外する |
+| `scheduler_strategy` | 任意 | 既定の scheduler 戦略 |
+| `note` | 任意 | 補足。責務境界や公開上の注意を簡潔に書く |
 
 ## 6. 記述ガイド
 
@@ -140,8 +149,8 @@ YAML 成果物のため、Markdown Frontmatter ではなく YAML 先頭のメタ
 ### 6.4. `members[].type` と agent 用フィールド
 
 - 人間の実行主体は `human`、自動化または生成 AI 支援主体は `agent` とする。
-- `type: agent` の member には `provider` を必ず記載する。値は `opencode`、`claude`、`codex`、`copilot`、`custom` から選ぶ。
-- `exec run --auto` の候補にする agent には、`priority`、`mode`、`proficiency`、`capabilities` を記載する。
+- `type: agent` の member には `provider` を必ず記載する。値は `opencode`、`claude`、`codex`、`copilot`、`antigravity`、`custom` から選ぶ。
+- `exec run --auto` の候補にする agent には、`priority`、`mode`、`proficiency`、`capabilities` を記載する。`mode` は executor に `edit` / `review`、reporter に `report` を指定する。
 - `capabilities` はツールアクセスの能力だけを表し、成果物の責務や承認権限を表さない。
 - `stage_role` は pipeline 専用 agent にだけ指定し、`executor` または `reporter` とする。人間 member には指定しない。
 - `stage_role` を省略した agent は従来の単一 agent フロー専用とする。`stage_role` を持つ agent と持たない agent は、自動選択時に相互の代替候補にしない。

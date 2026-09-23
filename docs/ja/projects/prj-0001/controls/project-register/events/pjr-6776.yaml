@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_c6dc674a05644c57b73807053856f8b0
+  ts: "2026-09-10T13:16:41Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: エージェント作業用 worktree のブランチ命名を統一する
+    - field: description
+      from: ""
+      to: エージェント作業用 worktree のブランチ名が揺れている。worktree-claude-work と worktree-codex-work は接頭辞付き、copilot-work と qwen-work は接頭辞なしである。原因は作成方法が2系統あることで、Claude Code の --worktree は worktree- を自動で付けるが、他は git worktree add でディレクトリ名がそのままブランチ名になる。codex-work は package.json の script が codex-work を指定しているのに実在するブランチが worktree-codex-work で不整合である。リポジトリは exec/ や feature/ や project/ のようにスラッシュ区切りの名前空間を既に使っており、worktree/ へ揃えるのが一貫する。Claude Code の --worktree は接頭辞を強制するため扱いの決定が要る。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-10"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_3190d9a13fb84ed68f62e2dcd48fcc39
+  ts: "2026-09-10T14:32:46Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_c6dc674a05644c57b73807053856f8b0
+- v: 1
+  id: reg_c5c46296e044468897712d477672baf5
+  ts: "2026-09-10T14:46:58Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=package.json; agent must record the required change in the result …"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=package.json; agent must record the required change in the result …"
+  previous_event_id: reg_3190d9a13fb84ed68f62e2dcd48fcc39
+- v: 1
+  id: reg_d62dc4e253de4979985ecc53d0c33cfa
+  ts: "2026-09-10T15:15:32Z"
+  action: close
+  actor: orchestrator
+  from_status: waiting
+  to_status: done
+  reason: tools/worktree/open-agent-worktree.sh へ集約し、4 つの worktree を worktree/<name> へ改名した。配置も ../worktrees/ へ統一し .claude/worktrees を廃した。git branch --list "worktree/*" で一括列挙でき、sync.sh も動作する。改名前に全 worktree が clean で独自コミットを持たないことを確認した。
+  changes:
+    - field: status
+      from: waiting
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-11"
+  previous_event_id: reg_c5c46296e044468897712d477672baf5

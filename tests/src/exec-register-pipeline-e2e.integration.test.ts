@@ -1,5 +1,6 @@
 import { execFileSync } from "node:child_process";
 import {
+  chmodSync,
   cpSync,
   existsSync,
   mkdirSync,
@@ -65,6 +66,11 @@ const PROJECT_BASE = "docs/ja/projects/test";
 const REGISTER_REL = `${PROJECT_BASE}/controls/project-register`;
 const SCHEDULE_REL = `${PROJECT_BASE}/schedule`;
 const EXECUTION_REL = `${PROJECT_BASE}/execution`;
+const ORIGINAL_PACKAGE = `${JSON.stringify(
+  { scripts: { "test:integration": 'node -e "process.exit(0)"' } },
+  null,
+  2,
+)}\n`;
 
 const CONFIG = {
   version: 1,
@@ -144,6 +150,7 @@ function buildTicket(id: string): string {
 }
 
 const FAKE_PIPELINE_AGENT_SCRIPT = `
+import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 
 function arg(name) {
@@ -156,7 +163,7 @@ const role = nickname.startsWith("exec-") ? "executor" : "reporter";
 const prompt = readFileSync(0, "utf8");
 
 if (role === "executor") {
-  if (nickname.includes("protected-write")) {
+  if (nickname.includes("protected-write") && !existsSync("protection-applied")) {
     writeFileSync(
       "package.json",
       '{"scripts":{"test:integration":"echo ran > parent-validation-ran"}}\\n',
@@ -180,6 +187,7 @@ if (role === "reporter") {
     process.stderr.write("reporter settings profile is missing: " + settings + "\\n");
     process.exit(1);
   }
+  if (nickname === "report-lock") execFileSync("git", ["worktree", "lock", "."]);
   process.stdout.write(
     JSON.stringify({
       schema_version: 1,
@@ -216,11 +224,7 @@ function withRepo(fn: (fixture: Fixture) => Promise<void> | void): Promise<void>
         `${JSON.stringify(CONFIG, null, 2)}\n`,
         "utf8",
       );
-      writeFileSync(
-        join(root, "package.json"),
-        `${JSON.stringify({ scripts: { "test:integration": 'node -e "process.exit(0)"' } }, null, 2)}\n`,
-        "utf8",
-      );
+      writeFileSync(join(root, "package.json"), ORIGINAL_PACKAGE, "utf8");
       mkdirSync(join(root, REGISTER_REL, "generated"), { recursive: true });
       mkdirSync(join(root, `${PROJECT_BASE}/controls/generated`), { recursive: true });
       mkdirSync(join(root, SCHEDULE_REL), { recursive: true });
@@ -231,6 +235,15 @@ function withRepo(fn: (fixture: Fixture) => Promise<void> | void): Promise<void>
         buildTicket("PJR-AB12"),
         "utf8",
       );
+      cpSync(
+        join(REAL_REPO_ROOT, "docs/ja/specdojo/exec-templates"),
+        join(root, "docs/ja/specdojo/exec-templates"),
+        {
+          recursive: true,
+        },
+      );
+      // register add は個票の雛形として templates 配下の pjr-*-template.md を読む。
+      // exec-templates とは別ディレクトリのため、両方を用意する必要がある。
       cpSync(
         join(REAL_REPO_ROOT, "docs/ja/specdojo/templates"),
         join(root, "docs/ja/specdojo/templates"),
@@ -297,6 +310,17 @@ function withRepo(fn: (fixture: Fixture) => Promise<void> | void): Promise<void>
           "    capabilities: []",
           "    proficiency: normal",
           "    priority: 3",
+          "  - nickname: report-lock",
+          "    display_name: report-lock",
+          "    email: null",
+          "    roles: []",
+          "    type: agent",
+          "    provider: claude",
+          "    mode: report",
+          "    stage_role: reporter",
+          "    capabilities: []",
+          "    proficiency: normal",
+          "    priority: 4",
           "",
         ].join("\n"),
         "utf8",
@@ -338,6 +362,16 @@ function withRepo(fn: (fixture: Fixture) => Promise<void> | void): Promise<void>
       }
     }
   })();
+}
+
+function execWorktreePath(root: string): string | null {
+  return (
+    git(root, "worktree", "list", "--porcelain")
+      .split("\n")
+      .filter((line) => line.startsWith("worktree "))
+      .map((line) => line.slice("worktree ".length))
+      .find((path) => path !== root) ?? null
+  );
 }
 
 afterEach(() => {
@@ -405,6 +439,9 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
       await withRepo(async ({ root, worktreeBase }) => {
         vi.spyOn(process.stdout, "write").mockImplementation(() => true);
         vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+        const firstParentBefore = Number(
+          git(root, "rev-list", "--first-parent", "--count", "HEAD"),
+        );
 
         await runExec([
           "run",
@@ -441,6 +478,14 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
         // worktree は成功時に merge back 後、撤去される。
         const worktrees = git(root, "worktree", "list", "--porcelain");
         expect(worktrees).not.toContain("PJR-AB12");
+        expect(Number(git(root, "rev-list", "--first-parent", "--count", "HEAD"))).toBe(
+          firstParentBefore + 1,
+        );
+        expect(git(root, "log", "-1", "--pretty=%s")).toBe(
+          "exec(register PJR-AB12): pipeline test item",
+        );
+        expect(git(root, "log", "-1", "--pretty=%B")).toContain("Transition: start → review");
+        expect(git(root, "rev-list", "--parents", "-1", "HEAD").split(" ")).toHaveLength(3);
 
         expect(process.exitCode ?? 0).toBe(0);
       });
@@ -479,8 +524,191 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
     },
   );
 
+  it(
+    "aborts a hook-rejected merge, records a clean wait reason, and resumes integration",
+    { timeout: 120_000 },
+    async () => {
+      await withRepo(async ({ root, worktreeBase }) => {
+        vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+        vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+        const firstParentBefore = Number(
+          git(root, "rev-list", "--first-parent", "--count", "HEAD"),
+        );
+        const rejectMarker = join(root, ".git", "reject-merge-commit");
+        const hookPath = join(root, ".git", "hooks", "pre-commit");
+        writeFileSync(rejectMarker, "reject\n", "utf8");
+        writeFileSync(
+          hookPath,
+          [
+            "#!/bin/sh",
+            // 自動 merge の pre-merge-commit 時点では MERGE_HEAD が未作成のため、pre-merge-commit
+            // から環境変数付きで exec された場合だけ統合 commit を落とす（task commit は通す）。
+            `if [ -f '${rejectMarker}' ] && [ "$SPECDOJO_TEST_MERGE_COMMIT" = "1" ]; then`,
+            "  printf '\\033[31m╭── hook output ──╮\\033[0m\\n' >&2",
+            "  printf '┃ typecheck ❯\\n' >&2",
+            "  printf '┃ src/demo.ts(1,1): error TS2322: merge hook rejected\\n' >&2",
+            "  printf '╰─────────────────╯\\n' >&2",
+            "  exit 1",
+            "fi",
+            "exit 0",
+            "",
+          ].join("\n"),
+          "utf8",
+        );
+        chmodSync(hookPath, 0o755);
+        const preMergeHookPath = join(root, ".git", "hooks", "pre-merge-commit");
+        writeFileSync(
+          preMergeHookPath,
+          '#!/bin/sh\nSPECDOJO_TEST_MERGE_COMMIT=1 exec "$(git rev-parse --git-path hooks/pre-commit)"\n',
+          "utf8",
+        );
+        chmodSync(preMergeHookPath, 0o755);
+
+        await runExec([
+          "run",
+          "--project",
+          "test",
+          "--register",
+          "PJR-AB12",
+          "--executor-by",
+          "exec-1",
+          "--reporter-by",
+          "report-1",
+          "--worktree",
+          "--worktree-base",
+          worktreeBase,
+        ]);
+
+        expect(process.exitCode).toBe(1);
+        expect(() => git(root, "rev-parse", "--verify", "MERGE_HEAD")).toThrow();
+        expect(Number(git(root, "rev-list", "--first-parent", "--count", "HEAD"))).toBe(
+          firstParentBefore + 1,
+        );
+        const worktreePath = execWorktreePath(root);
+        expect(worktreePath).not.toBeNull();
+        expect(git(root, "branch", "--list", "exec/test-PJR-AB12")).toContain("exec/test-PJR-AB12");
+        const waitingTicket = readFileSync(
+          join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md"),
+          "utf8",
+        );
+        expect(waitingTicket).toContain("item_status: waiting");
+        expect(waitingTicket).toContain("typecheck: src/demo.ts(1,1): error TS2322");
+        expect(waitingTicket).not.toContain("\u001b[31m");
+        expect(waitingTicket).not.toContain("╭── hook output");
+
+        const evidenceRoot = join(
+          worktreePath ?? "",
+          EXECUTION_REL,
+          "exec",
+          "evidence",
+          "PJR-AB12",
+        );
+        const runIds = readdirSync(evidenceRoot);
+        expect(runIds).toHaveLength(1);
+        const integrateLog = readFileSync(join(evidenceRoot, runIds[0]!, "integrate.log"), "utf8");
+        expect(integrateLog).toContain("\u001b[31m╭── hook output ──╮\u001b[0m");
+        expect(integrateLog).toContain("--- merge --abort ---\nexit: 0");
+
+        rmSync(rejectMarker);
+        await runExec([
+          "run",
+          "--project",
+          "test",
+          "--register",
+          "PJR-AB12",
+          "--worktree",
+          "--worktree-base",
+          worktreeBase,
+          "--resume",
+        ]);
+
+        expect(process.exitCode ?? 0).toBe(0);
+        expect(execWorktreePath(root)).toBeNull();
+        expect(Number(git(root, "rev-list", "--first-parent", "--count", "HEAD"))).toBe(
+          firstParentBefore + 2,
+        );
+        expect(
+          readFileSync(join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md"), "utf8"),
+        ).toContain("item_status: review");
+        const mergedEvidenceRoot = join(root, EXECUTION_REL, "exec", "evidence", "PJR-AB12");
+        const mergedRunIds = readdirSync(mergedEvidenceRoot);
+        expect(mergedRunIds).toEqual(runIds);
+        const mergedState = JSON.parse(
+          readFileSync(join(mergedEvidenceRoot, mergedRunIds[0]!, "pipeline-state.json"), "utf8"),
+        ) as {
+          stages: Record<string, { status: string; attempts: number }>;
+        };
+        expect(mergedState.stages.integrate).toMatchObject({ status: "succeeded", attempts: 2 });
+        expect(mergedState.stages.executor).toMatchObject({ status: "succeeded", attempts: 1 });
+        expect(mergedState.stages.reporter).toMatchObject({ status: "succeeded", attempts: 1 });
+      });
+    },
+  );
+
+  it(
+    "resumes cleanup without a second merge when removal fails after integration",
+    { timeout: 120_000 },
+    async () => {
+      await withRepo(async ({ root, worktreeBase }) => {
+        vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+        vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+        const firstParentBefore = Number(
+          git(root, "rev-list", "--first-parent", "--count", "HEAD"),
+        );
+
+        await runExec([
+          "run",
+          "--project",
+          "test",
+          "--register",
+          "PJR-AB12",
+          "--executor-by",
+          "exec-1",
+          "--reporter-by",
+          "report-lock",
+          "--worktree",
+          "--worktree-base",
+          worktreeBase,
+        ]);
+
+        expect(process.exitCode).toBe(1);
+        expect(Number(git(root, "rev-list", "--first-parent", "--count", "HEAD"))).toBe(
+          firstParentBefore + 1,
+        );
+        expect(
+          readFileSync(join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md"), "utf8"),
+        ).toContain("item_status: review");
+        const worktreePath = execWorktreePath(root);
+        expect(worktreePath).not.toBeNull();
+        git(root, "worktree", "unlock", worktreePath ?? "");
+
+        process.exitCode = undefined;
+        await runExec([
+          "run",
+          "--project",
+          "test",
+          "--register",
+          "PJR-AB12",
+          "--worktree",
+          "--worktree-base",
+          worktreeBase,
+          "--resume",
+        ]);
+
+        expect(process.exitCode ?? 0).toBe(0);
+        expect(execWorktreePath(root)).toBeNull();
+        expect(Number(git(root, "rev-list", "--first-parent", "--count", "HEAD"))).toBe(
+          firstParentBefore + 1,
+        );
+        expect(git(root, "log", "-1", "--pretty=%s")).toBe(
+          "exec(register PJR-AB12): pipeline test item",
+        );
+      });
+    },
+  );
+
   it.each(["exec-codex-protected-write", "exec-claude-protected-write"])(
-    "blocks %s before commit and keeps the register item out of review",
+    "blocks %s distinctly and resumes the executor after the handoff is applied",
     async (executor) => {
       await withRepo(async ({ root, worktreeBase }) => {
         vi.spyOn(process.stdout, "write").mockImplementation(() => true);
@@ -489,6 +717,9 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
           stderr.push(String(chunk));
           return true;
         });
+        const firstParentBefore = Number(
+          git(root, "rev-list", "--first-parent", "--count", "HEAD"),
+        );
 
         await runExec([
           "run",
@@ -517,9 +748,52 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
           "blocked: agent-config-write: protected configuration changes detected; paths=package.json",
         );
         expect(process.exitCode).toBe(1);
+        expect(Number(git(root, "rev-list", "--first-parent", "--count", "HEAD"))).toBe(
+          firstParentBefore + 1,
+        );
+        expect(git(root, "log", "-1", "--pretty=%s")).toBe("exec(register PJR-AB12): wait");
+
+        const worktreePath = execWorktreePath(root);
+        expect(worktreePath).not.toBeNull();
+        const evidenceDir = join(worktreePath ?? "", EXECUTION_REL, "exec", "evidence", "PJR-AB12");
+        const blockedRunId = readdirSync(evidenceDir)[0];
+        const blockedState = JSON.parse(
+          readFileSync(join(evidenceDir, blockedRunId, "pipeline-state.json"), "utf8"),
+        ) as { stages: { executor: { status: string } } };
+        expect(blockedState.stages.executor.status).toBe("blocked");
+
+        // 人または orchestrator が申し送りを適用し、agent 由来の保護対象差分を worktree から
+        // 取り除いた状態を再現する。再開後の fake executor は marker を見て同じ変更を再提案しない。
+        writeFileSync(join(worktreePath ?? "", "package.json"), ORIGINAL_PACKAGE, "utf8");
+        writeFileSync(join(worktreePath ?? "", "protection-applied"), "applied\n", "utf8");
+
+        const beforeResume = Number(git(root, "rev-list", "--first-parent", "--count", "HEAD"));
+        process.exitCode = undefined;
+        await runExec([
+          "run",
+          "--project",
+          "test",
+          "--register",
+          "PJR-AB12",
+          "--worktree",
+          "--worktree-base",
+          worktreeBase,
+          "--resume",
+        ]);
+
+        expect(process.exitCode ?? 0).toBe(0);
+        expect(
+          readFileSync(join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md"), "utf8"),
+        ).toContain("item_status: review");
+        expect(existsSync(join(root, "protection-applied"))).toBe(true);
+        expect(execWorktreePath(root)).toBeNull();
+        expect(Number(git(root, "rev-list", "--first-parent", "--count", "HEAD"))).toBe(
+          beforeResume + 1,
+        );
+        expect(git(root, "log", "-1", "--pretty=%B")).toContain("Transition: start → review");
       });
     },
-    60_000,
+    120_000,
   );
 });
 

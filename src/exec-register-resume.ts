@@ -1,13 +1,19 @@
 import { existsSync, readdirSync } from "node:fs";
-import { isAbsolute, join, relative, resolve, sep } from "node:path";
+import { dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import type { ExecEvidence } from "./exec-evidence.js";
 import { loadPipelineResumeCheckpoint, type PipelineState } from "./exec-pipeline-state.js";
 import { safeSlug } from "./exec-shared.js";
 
-// register 項目の executor/reporter pipeline を reporter 段から再開するための、
-// run 特定と入力復元。executor が成功したまま reporter だけが失敗した run は、worktree の
-// 未コミット成果と `pipeline-state.json` / `evidence.json` が残っている。ここではその run を
-// 特定し、reporter へ渡す plan / result / evidence を復元する（実行は exec-run 側が行う）。
+// register 項目の executor/reporter pipeline を、途中で止まった段から再開するための run 特定と
+// 入力復元。途中で止まった run は worktree の未コミット成果と `pipeline-state.json` /
+// `evidence.json` が残っている。ここではその run と再開段を特定し、reporter へ渡す
+// plan / result / evidence を復元する（実行は exec-run 側が行う）。
+//
+// 再開段は3つある。executor が running のまま中断した場合は既存 worktree 上で executor を
+// 再実行する。executor が成功済みで reporter が未完了なら reporter 段から、reporter も成功して
+// 統合（commit → merge → worktree 撤去）だけが残っているなら integrate 段から再開する。
+
+export type RegisterResumeStage = "executor" | "reporter" | "integrate";
 
 export type RegisterResumeCandidate = {
   runId: string;
@@ -15,16 +21,25 @@ export type RegisterResumeCandidate = {
   statePath: string;
   state: PipelineState;
   evidence?: ExecEvidence;
+  evidenceRef?: string;
 };
 
-export type RegisterResumeTarget = {
+type RegisterResumeTargetBase = {
   runId: string;
   stateRef: string;
   statePath: string;
   state: PipelineState;
-  evidence: ExecEvidence;
-  evidenceRef: string;
 };
+
+export type RegisterResumeTarget =
+  | (RegisterResumeTargetBase & {
+      stage: "executor";
+    })
+  | (RegisterResumeTargetBase & {
+      stage: "reporter" | "integrate";
+      evidence: ExecEvidence;
+      evidenceRef: string;
+    });
 
 export type RegisterResumeLookup =
   | { kind: "resumable"; target: RegisterResumeTarget }
@@ -73,6 +88,15 @@ export function loadRegisterResumeCandidates(input: {
       statePath: checkpoint.statePath,
       state: checkpoint.state,
       ...(checkpoint.evidence ? { evidence: checkpoint.evidence } : {}),
+      ...(checkpoint.evidence
+        ? {
+            evidenceRef:
+              checkpoint.state.stages.executor.artifact_ref ??
+              relative(input.worktreePath, join(dirname(statePath), "evidence.json"))
+                .split(sep)
+                .join("/"),
+          }
+        : {}),
     });
   }
   return candidates;
@@ -93,10 +117,64 @@ export function selectResumableRegisterRun(
     return a.runId < b.runId ? -1 : a.runId > b.runId ? 1 : 0;
   })[candidates.length - 1];
 
-  if (latest.state.stages.reporter.status === "succeeded") {
+  // rate limit または保護機構の block で打ち切られた executor は、evidence が記録されていても
+  // 作業を完了していない。reporter へ進めず、申し送りを反映できるよう既存 worktree 上で
+  // executor を再開する。通常のプロセス失敗は failed のまま区別し、再開対象にしない。
+  if (
+    latest.state.stages.executor.status === "rate_limited" ||
+    latest.state.stages.executor.status === "blocked"
+  ) {
     return {
-      kind: "not-resumable",
-      reason: `reporter already succeeded for run ${latest.runId}`,
+      kind: "resumable",
+      target: {
+        stage: "executor",
+        runId: latest.runId,
+        stateRef: latest.stateRef,
+        statePath: latest.statePath,
+        state: latest.state,
+      },
+    };
+  }
+
+  if (latest.state.stages.executor.status === "running") {
+    if (latest.evidence && latest.evidenceRef) {
+      const recoveredState: PipelineState = {
+        ...latest.state,
+        updated_at: latest.evidence.stage.completed_at,
+        stages: {
+          ...latest.state.stages,
+          executor: {
+            ...latest.state.stages.executor,
+            status: "succeeded",
+            actor: latest.evidence.stage.actor,
+            attempts: latest.evidence.stage.attempts,
+            completed_at: latest.evidence.stage.completed_at,
+            artifact_ref: latest.evidenceRef,
+          },
+        },
+      };
+      return {
+        kind: "resumable",
+        target: {
+          stage: "reporter",
+          runId: latest.runId,
+          stateRef: latest.stateRef,
+          statePath: latest.statePath,
+          state: recoveredState,
+          evidence: latest.evidence,
+          evidenceRef: latest.evidenceRef,
+        },
+      };
+    }
+    return {
+      kind: "resumable",
+      target: {
+        stage: "executor",
+        runId: latest.runId,
+        stateRef: latest.stateRef,
+        statePath: latest.statePath,
+        state: latest.state,
+      },
     };
   }
   if (latest.state.stages.executor.status !== "succeeded") {
@@ -115,6 +193,8 @@ export function selectResumableRegisterRun(
   return {
     kind: "resumable",
     target: {
+      // reporter が成功済みなら残っているのは統合だけ。executor / reporter は起動しない。
+      stage: latest.state.stages.reporter.status === "succeeded" ? "integrate" : "reporter",
       runId: latest.runId,
       stateRef: latest.stateRef,
       statePath: latest.statePath,

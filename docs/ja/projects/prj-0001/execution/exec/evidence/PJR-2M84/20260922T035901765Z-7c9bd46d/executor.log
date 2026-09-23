@@ -1,0 +1,14 @@
+実装を完了しました。
+
+- merge 失敗時に `MERGE_HEAD` を確認し、`git merge --abort` を実行。
+- abort 失敗時は手動復旧手順を stderr へ出力。
+- hook 出力を「失敗ステップ＋最初のエラー行」に整形し、生ログを `integrate.log` へ保存。
+- Schedule／register 両経路の失敗・保持・再開テストを追加。
+- 個票と worktree 運用ガイドを更新。
+- typecheck、ESLint、Markdown、catalog、register/index build などは成功。
+- unit／integration／schema は指示どおり親 runner の検証に委ねました。
+- 既存の未追跡 evidence ディレクトリは変更していません。
+
+<specdojo_executor_evidence>
+{"final_message":"merge commit 失敗時の自動 abort、簡潔な block reason、生ログ保存、統合再開テストと運用文書更新を完了した。","validations":[{"command":"npm run typecheck","status":"passed","summary":"TypeScript 型検査成功"},{"command":"npm run lint:ts","status":"passed","summary":"ESLint 成功"},{"command":"npx markdownlint docs/ja/specdojo/guides/exec-worktree-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-2m84-integrate-merge-abort.md","status":"passed","summary":"変更した Markdown の検査成功"},{"command":"node --import tsx src/specdojo.ts catalog validate && node --import tsx src/specdojo.ts register build && node --import tsx src/specdojo.ts index build","status":"passed","summary":"catalog 検証と register/index 生成成功。既存の based_on 警告のみ"},{"command":"npm run lint:fm && npm run validate:history-links","status":"passed","summary":"frontmatter/remark と履歴リンク検証成功"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>

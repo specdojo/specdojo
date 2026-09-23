@@ -11,6 +11,7 @@ specdojo:
 System Design Cross-cutting Policy (SYSD-CCP) Documentation Rules
 
 本ドキュメントは、システム設計情報を **コード（定義ファイル）へ寄せる運用（Code as Spec）** を前提に、
+
 実装全体に影響する共通ルールを最小限でSSOT化する **System Design Cross-cutting Policy (SYSD-CCP)** の記述ルールを定義する。
 
 SYSD-CCP は「詳細実装の手順書」ではない。
@@ -144,6 +145,7 @@ Frontmatter は共通スキーマに従います（参照: [docs/specdojo/schema
 ### 6.6. SYSD-CCP が扱う対象（推奨カテゴリ）
 
 - API契約の共通ルール（バージョニング、互換性、エラー形式）
+
 - 例外/エラー処理（分類、再試行可否、ユーザ通知）
 - タイムアウト/リトライ（回数、バックオフ、打ち切り、冪等前提）
 - 冪等（キー、重複排除、整合性）

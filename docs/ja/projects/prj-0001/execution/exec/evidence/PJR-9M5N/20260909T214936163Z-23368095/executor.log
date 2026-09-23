@@ -1,0 +1,16 @@
+実装を完了しました。
+
+- `config scaffold --provider` を追加し、従来の `exec scaffold --provider` も維持。
+- `config init` を空リポジトリ対応・register 最小構成に改善。
+- README と関連ガイドへ npm 導入手順を追加。
+- 不足していた runtime 依存 `fast-glob` を修正。
+- tarball のインストールから `register add/build` まで実地確認済み。
+- 個票を更新。status と result は executor 指示どおり未変更です。
+
+親 runner 担当の unit・integration・schema 検証は実行していません。
+
+<specdojo_executor_evidence>
+{"final_message":"npm導入後のセットアップ導線、互換コマンド、README、最小設定、runtime依存を整備し、空のGitリポジトリでtarball導入からregister buildまで確認した。","validations":[{"command":"npx prettier --write <変更したMarkdown・TypeScript・JSONファイル>","status":"passed","summary":"変更対象を整形"},{"command":"npx markdownlint README.md docs/ja/specdojo/guides/exec-config-guide.md docs/ja/specdojo/guides/quick-start-guide.md docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-9m5n-npm-onboarding-path.md","status":"passed","summary":"Markdown違反なし"},{"command":"npm run typecheck","status":"passed","summary":"TypeScript型検査成功"},{"command":"npm run lint:ts","status":"passed","summary":"ESLint成功"},{"command":"npm run build","status":"passed","summary":"配布用dist生成成功"},{"command":"npm pack; npm install --offline <packed-tarball>; npx --offline --no-install specdojo config init; npx --offline --no-install specdojo config scaffold --provider codex; npx --offline --no-install specdojo register scaffold --project prj-0001; npx --offline --no-install specdojo register add --project prj-0001 --type todo --title \"最初のタスク\"; npx --offline --no-install specdojo register build --project prj-0001","status":"passed","summary":"空のGitリポジトリでnpm導入後の全手順が成功"},{"command":"node dist/specdojo.js catalog validate","status":"passed","summary":"既存の未作成成果物に関する警告のみ"},{"command":"node dist/specdojo.js register build","status":"passed","summary":"登録簿派生ビュー生成成功"},{"command":"node dist/specdojo.js index build","status":"passed","summary":"doc index生成成功"},{"command":"git diff --check","status":"passed","summary":"差分の空白エラーなし"},{"command":"npm run test:unit","status":"not_run","summary":"親runnerの検証対象"},{"command":"npm run test:integration","status":"not_run","summary":"親runnerの検証対象"},{"command":"npm run validate:schema","status":"not_run","summary":"親runnerの検証対象"}]}
+</specdojo_executor_evidence>
+
+agent-config-write: protected configuration changes detected; paths=package.json; agent must record the required change in the result handoff for human or orchestrator application

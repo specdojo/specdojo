@@ -102,7 +102,11 @@ export function expandTemplate(template: string, values: Record<string, string>)
   for (const [placeholder, value] of Object.entries(values)) {
     result = result.split(placeholder).join(value);
   }
-  return result;
+  // 置換値が改行で始まる場合（depends_on の入れ子リストなど）、template 側の
+  // `: _PLACEHOLDER_` の空白が行末に残る。生成 plan は prettier の整形対象外
+  // （.prettierignore）で checkpoint commit 時に markdownlint の MD009 が直接効くため、
+  // ここで行末の空白を取り除く。
+  return result.replace(/[ \t]+$/gm, "");
 }
 
 // 登録簿の自由記述（title / description 列など）を Markdown 本文へ埋め込む際の安全化。

@@ -1,0 +1,148 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-VH6R",
+  "run_id": "20260902T213302026Z-b736f9e4",
+  "stage": {
+    "role": "executor",
+    "actor": "claude-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-02T21:33:02.026Z",
+    "completed_at": "2026-09-02T21:49:33.619Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-vh6r-agent-config-write-handoff.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-config-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-agent-git-state.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-agent-protected-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-worktree-command.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-worktree-ops.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-protection-handoff.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec-protection-handoff.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 9,
+    "summary": ".../pjr-vh6r-agent-config-write-handoff.md         | 29 +++++--\n docs/ja/specdojo/guides/exec-config-guide.md       |  9 +++\n src/exec-agent-git-state.ts                        | 91 +++++++++++++++++++++\n src/exec-agent-protected-config.ts                 | 64 ++++++++++++++-\n src/exec-run.ts                                    | 94 ++++++++++++++++++++--\n src/exec-worktree-command.ts                       | 22 ++++-\n src/exec-worktree-ops.ts                           | 12 ++-\n 7 files changed, 304 insertions(+), 17 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "tsc -b --noEmit がエラーなしで完了"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "ESLint がエラーなしで完了"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write src/exec-protection-handoff.ts src/exec-agent-protected-config.ts src/exec-agent-git-state.ts src/exec-run.ts src/exec-worktree-command.ts src/exec-worktree-ops.ts tests/src/exec-protection-handoff.test.ts docs/ja/specdojo/guides/exec-config-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-vh6r-agent-config-write-handoff.md",
+      "status": "passed",
+      "summary": "変更ファイルを整形（md 2件は変更なし）"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/specdojo/guides/exec-config-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-vh6r-agent-config-write-handoff.md",
+      "status": "passed",
+      "summary": "変更した Markdown に指摘なし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run -s lint:md",
+      "status": "passed",
+      "summary": "リポジトリ全体の Markdown lint で指摘なし"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx tools/docs/src/validate-history-links.ts",
+      "status": "passed",
+      "summary": "履歴蓄積ファイルのリンク記法検査が exit 0"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "exit 0（既存の based_on 未作成 WARN のみ）"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿の生成物を再生成（gitignore 済み）"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "doc-index を 1484 entries で再生成"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:unit",
+      "status": "not_run",
+      "summary": "親 runner の検証対象のため executor では実行していない（新規テスト tests/src/exec-protection-handoff.test.ts を追加済み）"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-VH6R\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: tools/vscode-specdojo\nInstalling worktree dependencies: .\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/stale.md\n  src/unrelated.ts\ncommit-targets:\n  execution/exec/res…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.1.0 validate:schema:yaml\n> tsx tools/docs/src/validate-yaml-schema.ts --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bps-template.yaml: schema docs/specdojo/sc…"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-VH6R\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-itaoST/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-EWGdVF/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-RxJS6d/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-B8TMfI/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-1lRgd7/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-kqcd5a/pjr-0001-topic.md\nWrote agent stdout: /tmp/specdojo-agent-command-3vzmeZ/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-JzuOIE/outputs/partial.txt\n\n Test Files  96 passed (96)\n      Tests  1350 passed (1350)\n   Start at  06:49:05\n   Duration  27.67s (transform 2.06s, setup 523ms, import 17.26s, tests 19.90s, environm…"
+    }
+  ],
+  "final_message": "保護機構(agent-config-write / agent-git-state-write)の block 時に、対象・block メッセージ・提案差分を機構側から result の申し送りへ自動記録する実装を追加し、単体テストと規約(exec-config-guide)・個票を更新した。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-VH6R/20260902T213302026Z-b736f9e4/executor.log",
+      "bytes": 4587,
+      "truncated": false
+    }
+  ]
+}

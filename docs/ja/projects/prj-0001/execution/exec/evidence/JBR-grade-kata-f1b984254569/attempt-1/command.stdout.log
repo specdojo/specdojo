@@ -1,0 +1,35 @@
+
+> specdojo@0.1.0 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-kata-f1b984254569 project=prj-0001 kind=all changed_only=true ungraded=true documents=5 work_dir=logs/grade/runs/per-document/JBR-grade-kata-f1b984254569
+stage=1 executor=gemma-expert-executor reporter=gemma-reporter reference=per-kind
+stage=2 executor=gemma-expert-executor reporter=gemma-reporter reference=none
+stage=3 executor=codex-expert-executor reporter=gemma-reporter reference=none condition="pass, score>=96, findings<=1"
+document start: docs/ja/specdojo/samples/imp-test-sample.md
+document complete: docs/ja/specdojo/samples/imp-test-sample.md
+document start: docs/ja/specdojo/samples/mtp-sample.md
+document complete: docs/ja/specdojo/samples/mtp-sample.md
+document start: docs/ja/specdojo/samples/pm-plan-sample.md
+document complete: docs/ja/specdojo/samples/pm-plan-sample.md
+document start: docs/ja/specdojo/samples/pm-quality-management-plan-sample.md
+document complete: docs/ja/specdojo/samples/pm-quality-management-plan-sample.md
+document start: docs/ja/specdojo/samples/trc-requirements-to-tests-sample.md
+document complete: docs/ja/specdojo/samples/trc-requirements-to-tests-sample.md
+grade pipeline complete: selected=5 processed=5 completed_now=5 results=logs/grade/runs/per-document/JBR-grade-kata-f1b984254569/results.tsv
+recorded_at	document	stage	status	duration_seconds	verdict	score	findings	executor	reporter	reference
+2026-09-09T15:00:40Z	docs/ja/specdojo/samples/imp-test-sample.md	1	passed	534	needs-work	65	11	gemma-expert-executor	gemma-reporter	docs/ja/specdojo/samples/prj-overview-sample.md
+2026-09-09T15:10:05Z	docs/ja/specdojo/samples/imp-test-sample.md	2	passed	565	needs-work	65	11	gemma-expert-executor	gemma-reporter	none
+2026-09-09T15:10:05Z	docs/ja/specdojo/samples/imp-test-sample.md	3	skipped_condition	0				codex-expert-executor	gemma-reporter	none
+2026-09-09T15:24:55Z	docs/ja/specdojo/samples/mtp-sample.md	1	passed	890	fail	58	6	gemma-expert-executor	gemma-reporter	docs/ja/specdojo/samples/prj-overview-sample.md
+2026-09-09T15:33:44Z	docs/ja/specdojo/samples/mtp-sample.md	2	passed	529	fail	58	6	gemma-expert-executor	gemma-reporter	none
+2026-09-09T15:33:44Z	docs/ja/specdojo/samples/mtp-sample.md	3	skipped_condition	0				codex-expert-executor	gemma-reporter	none
+2026-09-09T15:47:40Z	docs/ja/specdojo/samples/pm-plan-sample.md	1	failed	836				gemma-expert-executor	gemma-reporter	docs/ja/specdojo/samples/prj-overview-sample.md
+2026-09-09T15:55:32Z	docs/ja/specdojo/samples/pm-plan-sample.md	2	passed	472	needs-work	68	9	gemma-expert-executor	gemma-reporter	none
+2026-09-09T15:55:32Z	docs/ja/specdojo/samples/pm-plan-sample.md	3	skipped_condition	0				codex-expert-executor	gemma-reporter	none
+2026-09-09T16:04:34Z	docs/ja/specdojo/samples/pm-quality-management-plan-sample.md	1	failed	542				gemma-expert-executor	gemma-reporter	docs/ja/specdojo/samples/prj-overview-sample.md
+2026-09-09T16:13:07Z	docs/ja/specdojo/samples/pm-quality-management-plan-sample.md	2	passed	513	needs-work	89	3	gemma-expert-executor	gemma-reporter	none
+2026-09-09T16:13:07Z	docs/ja/specdojo/samples/pm-quality-management-plan-sample.md	3	skipped_condition	0				codex-expert-executor	gemma-reporter	none
+2026-09-09T16:22:01Z	docs/ja/specdojo/samples/trc-requirements-to-tests-sample.md	1	passed	534	needs-work	75	5	gemma-expert-executor	gemma-reporter	docs/ja/specdojo/samples/prj-overview-sample.md
+2026-09-09T16:28:14Z	docs/ja/specdojo/samples/trc-requirements-to-tests-sample.md	2	passed	373	needs-work	75	5	gemma-expert-executor	gemma-reporter	none
+2026-09-09T16:28:14Z	docs/ja/specdojo/samples/trc-requirements-to-tests-sample.md	3	skipped_condition	0				codex-expert-executor	gemma-reporter	none

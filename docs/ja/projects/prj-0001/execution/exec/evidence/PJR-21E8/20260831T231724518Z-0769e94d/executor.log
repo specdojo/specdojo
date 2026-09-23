@@ -1,0 +1,13 @@
+grade の Frontmatter フロースタイル出力を実装しました。
+
+- `categories` / `viewpoints` は項目単位、`findings` はマッピング全体をフロー化。
+- grade 外の Frontmatter には影響しません。
+- Prettier 互換、再出力の冪等性、非波及のテストを追加。
+- 規範文書と個票の作業内容・対応結果を更新。
+- executor 指示どおり result は未編集です。
+
+親 runner 担当の unit/integration/schema 検証のみ委譲しています。
+
+<specdojo_executor_evidence>
+{"final_message":"grade専用のFrontmatterシリアライズを実装し、categories・viewpoints・findingsをPrettier互換のフロースタイルへ変更した","validations":[{"command":"npx prettier --write src/grade.ts tests/src/grade.test.ts docs/ja/specdojo/standards/document-metadata-standard.md docs/ja/projects/prj-0001/controls/project-register/pjr-21e8-grade-frontmatter-flow-style.md","status":"passed","summary":"変更4ファイルを整形"},{"command":"npx markdownlint docs/ja/specdojo/standards/document-metadata-standard.md docs/ja/projects/prj-0001/controls/project-register/pjr-21e8-grade-frontmatter-flow-style.md","status":"passed","summary":"変更Markdownにエラーなし"},{"command":"npm run typecheck","status":"passed","summary":"TypeScript型検査に成功"},{"command":"npm run lint:ts","status":"passed","summary":"ESLintに成功"},{"command":"npm run lint:fm","status":"passed","summary":"Frontmatter lintに成功"},{"command":"node --import tsx --input-type=module -e '<grade flow style smoke assertions>'","status":"passed","summary":"フロー形式、連続適用の冪等性、grade外への非波及、Prettier後のYAML同値性を確認"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿派生ビューを生成"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"カタログ検証に成功。既存の欠落文書警告のみ"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"文書索引生成に成功"},{"command":"node --import tsx tools/docs/src/validate-history-links.ts","status":"passed","summary":"履歴リンク検証に成功"},{"command":"git diff --check","status":"passed","summary":"差分の空白エラーなし"},{"command":"npm run test:unit","status":"not_run","summary":"親runnerのtest-unit検証に委譲"},{"command":"npm run test:integration","status":"not_run","summary":"親runnerのtest-integration検証に委譲"},{"command":"npm run validate:schema","status":"not_run","summary":"親runnerのvalidate-schema検証に委譲"}]}
+</specdojo_executor_evidence>

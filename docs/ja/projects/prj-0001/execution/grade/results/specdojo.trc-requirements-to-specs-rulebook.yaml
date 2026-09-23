@@ -1,0 +1,72 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:trc-requirements-to-specs-rulebook
+path: docs/ja/specdojo/rulebooks/trc-requirements-to-specs-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: pass
+score: 93
+graded_at: "2026-09-03T13:03:15.710Z"
+graded_by: gemma-expert-executor
+content_hash: 55354ee18f2bdf54503ddbbecd462eec36d8ce34d0a1e6806357642d91d69dfe
+categories:
+  consistency:
+    score: 75
+  usability:
+    score: 92
+  architecture:
+    score: 100
+  quality:
+    score: 100
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 3
+    score: 75
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 4
+    score: 100
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 3
+  note: 0
+findings:
+  - id: F002
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: 成果物間の関係性やプロジェクトフロー上の位置づけを明記する「位置づけ」節が不足しており、作成タイミングや目的の把握が不十分である（prj-overview-rulebook の第 2 章を参照）。
+    anchor: "# トレーサビリティ（要求→仕様）作成ルール"
+  - id: F001
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 1
+    message: 対象ドキュメントIDが`＜project-id＞:ID`形式ではなく固定文字列で定義されており、プロジェクト間でのID一意性の担保という命名規則に反している。
+    anchor: "# トレーサビリティ（要求→仕様）作成ルール"
+  - id: F003
+    severity: minor
+    rule: vp-ux-readability
+    line: 1
+    message: 禁止事項に理由が添えられていないため、著者がルールの意図を理解しにくく、適用判断に迷う可能性がある。理由を添えた表形式への変更を推奨する。
+    anchor: "# トレーサビリティ（要求→仕様）作成ルール"

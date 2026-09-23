@@ -1,0 +1,18 @@
+評価は成立しませんでした。指定コマンド自体は終了コード0ですが、[results.tsv](/workspaces/specdojo-workspace/specdojo/logs/grade/runs/per-document/job-grade-kata-all-2026-W37-verify/results.tsv:1)では以下の結果です。
+
+- 選択文書: 5件
+- 1段目: 全5件 `failed`
+- 2段目: 全5件 `failed`
+- 3段目: 全5件 `skipped_condition`
+- 原因: executor が `opencode.log` を開けない agent 側ファイルシステムエラー
+- rate limit・`grade apply` 忠実性検証拒否: 該当なし（reporter/apply 未到達）
+- 3段目の未実行理由: 全件とも2段目失敗。閾値未満ではない
+- verdict/score: 取得0件のため、閾値の偏りは判断不能
+- 再開状態: 未完了段はありません。失敗stateとcompleteマーカーが保存されているため、同じ run ID では5文書がスキップされ、再評価できません
+- 対象成果物の差分: 0件
+
+`npm run build` は成功しました。executor 指示に従いresultファイルは更新せず、親runner管轄の検証も実行していません。
+
+<specdojo_executor_evidence>
+{"final_message":"ビルドと指定評価コマンドは終了コード0で完了したが、5文書の1・2段目がすべてagent側ファイルシステムエラーで失敗し、評価結果・成果物更新は生成されなかった。","validations":[{"command":"npm run build","status":"passed","summary":"dist/specdojo.jsを正常に再ビルドした。"},{"command":"tools/grade/run-per-document.sh --run-id job-grade-kata-all-2026-W37-verify --kind all --limit 5 --changed-only=true --ungraded=true --specdojo-bin dist/specdojo.js","status":"passed","summary":"終了コード0。内部結果はfailed 10件、skipped_condition 5件で、verdict/scoreは生成されなかった。"},{"command":"git diff --check -- docs/ja/specdojo/rulebooks docs/ja/specdojo/recipes docs/ja/specdojo/samples docs/ja/specdojo/templates","status":"passed","summary":"対象成果物に差分および空白エラーなし。"}]}
+</specdojo_executor_evidence>

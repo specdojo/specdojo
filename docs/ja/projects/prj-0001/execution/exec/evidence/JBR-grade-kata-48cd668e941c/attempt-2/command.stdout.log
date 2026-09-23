@@ -1,0 +1,30 @@
+
+> specdojo@0.1.0 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=job-grade-kata-all-2026-W37 project=prj-0001 kind=all changed_only=true ungraded=true documents=5 work_dir=logs/grade/runs/per-document/job-grade-kata-all-2026-W37
+stage=1 executor=gemma-expert-executor reporter=gemma-reporter reference=per-kind
+stage=2 executor=gemma-expert-executor reporter=gemma-reporter reference=none
+stage=3 executor=codex-expert-executor reporter=gemma-reporter reference=none condition="pass, score>=96, findings<=1"
+resume skip document=docs/ja/specdojo/recipes/pm-roles-recipe.md status=complete
+resume skip document=docs/ja/specdojo/rulebooks/br-rulebook.md status=complete
+resume skip document=docs/ja/specdojo/samples/atc-sample.md status=complete
+resume skip document=docs/ja/specdojo/samples/br-sample.md status=complete
+resume skip document=docs/ja/specdojo/samples/imp-data-sample.md status=complete
+grade pipeline complete: selected=5 processed=0 completed_now=0 results=logs/grade/runs/per-document/job-grade-kata-all-2026-W37/results.tsv
+recorded_at	document	stage	status	duration_seconds	verdict	score	findings	executor	reporter	reference
+2026-09-08T22:51:34Z	docs/ja/specdojo/recipes/pm-roles-recipe.md	1	failed	559				gemma-expert-executor	gemma-reporter	docs/ja/specdojo/recipes/prj-overview-recipe.md
+2026-09-08T22:59:50Z	docs/ja/specdojo/recipes/pm-roles-recipe.md	2	passed	496	needs-work	89	2	gemma-expert-executor	gemma-reporter	none
+2026-09-08T22:59:50Z	docs/ja/specdojo/recipes/pm-roles-recipe.md	3	skipped_condition	0				codex-expert-executor	gemma-reporter	none
+2026-09-08T23:07:45Z	docs/ja/specdojo/rulebooks/br-rulebook.md	1	passed	475	pass	98	1	gemma-expert-executor	gemma-reporter	docs/ja/specdojo/rulebooks/prj-overview-rulebook.md
+2026-09-08T23:13:43Z	docs/ja/specdojo/rulebooks/br-rulebook.md	2	passed	358	pass	98	1	gemma-expert-executor	gemma-reporter	none
+2026-09-08T23:20:58Z	docs/ja/specdojo/rulebooks/br-rulebook.md	3	passed	435	needs-work	79	5	codex-expert-executor	gemma-reporter	none
+2026-09-08T23:29:08Z	docs/ja/specdojo/samples/atc-sample.md	1	passed	490	fail	46	8	gemma-expert-executor	gemma-reporter	docs/ja/specdojo/samples/prj-overview-sample.md
+2026-09-08T23:36:15Z	docs/ja/specdojo/samples/atc-sample.md	2	passed	427	fail	46	8	gemma-expert-executor	gemma-reporter	none
+2026-09-08T23:36:15Z	docs/ja/specdojo/samples/atc-sample.md	3	skipped_condition	0				codex-expert-executor	gemma-reporter	none
+2026-09-08T23:44:49Z	docs/ja/specdojo/samples/br-sample.md	1	passed	514	pass	100	0	gemma-expert-executor	gemma-reporter	docs/ja/specdojo/samples/prj-overview-sample.md
+2026-09-08T23:50:40Z	docs/ja/specdojo/samples/br-sample.md	2	passed	351	pass	100	0	gemma-expert-executor	gemma-reporter	none
+2026-09-08T23:53:57Z	docs/ja/specdojo/samples/br-sample.md	3	passed	197	pass	100	0	codex-expert-executor	gemma-reporter	none
+2026-09-09T00:02:37Z	docs/ja/specdojo/samples/imp-data-sample.md	1	failed	520				gemma-expert-executor	gemma-reporter	docs/ja/specdojo/samples/prj-overview-sample.md
+2026-09-09T00:10:56Z	docs/ja/specdojo/samples/imp-data-sample.md	2	passed	499	needs-work	78	3	gemma-expert-executor	gemma-reporter	none
+2026-09-09T00:10:56Z	docs/ja/specdojo/samples/imp-data-sample.md	3	skipped_condition	0				codex-expert-executor	gemma-reporter	none

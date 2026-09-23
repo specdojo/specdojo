@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_875fd22533c948568c8c44ed37078226
+  ts: "2026-09-03T10:21:23Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-5ERG で agent が着手前に停止し、PJR-VH6R でも同じ問題を手動回避していたため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: worktree 実行で生成物が用意されず親検証が失敗する
+    - field: description
+      from: ""
+      to: gitignore 対象の生成物が worktree へ複製されないため、それを前提とするテストが必ず失敗し agent の実行が空振りする。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-03"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_fb230f6d29b245a7b5df0bf9cebe07e2
+  ts: "2026-09-03T10:24:13Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_875fd22533c948568c8c44ed37078226
+- v: 1
+  id: reg_a96e1d5490a040a7b3a6891c3a17038c
+  ts: "2026-09-03T10:35:51Z"
+  action: review
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_fb230f6d29b245a7b5df0bf9cebe07e2
+- v: 1
+  id: reg_a5f086a7709d409882ce8a18dcbe8e0b
+  ts: "2026-09-03T10:37:47Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: worktree の依存インストール直後に生成物をまとめて作るようにし、生成物を前提とする検証が成果物と無関係に失敗する状態を解消した。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-03"
+    - field: conclusion
+      from: "-"
+      to: worktree の依存インストール直後に生成物をまとめて作るようにし、生成物を前提とする検証が成果物と無関係に失敗する状態を解消した。
+  previous_event_id: reg_a96e1d5490a040a7b3a6891c3a17038c

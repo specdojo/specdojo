@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_8835e06b02554b8b8a1f31627465262f
+  ts: "2026-09-15T11:50:15Z"
+  action: add
+  actor: specdojo-orchestrator (claude)
+  from_status: null
+  to_status: open
+  reason: "docs(register): evidence_refs の陳腐化検知と粒度規約の todo を起票する"
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: evidence_refs の陳腐化を refactor 側の commit で検知し、参照を安定した入口に寄せる
+    - field: description
+      from: ""
+      to: 成果物カタログの evidence_refs は src/ 配下の 69 ファイルを指しており、refactor で rename・削除されると陳腐化する。catalog validate は存在しないパスをエラーにするが、pre-commit hook の catalog-validate は glob が docs/ja/projects/** のため src だけを変える commit では走らず、CI にも含まれていない。hook の glob に src/**、tools/**、packages/** を加え、CI に validate:catalog を入れて refactor 側で検知する。あわせて dct-rulebook の evidence_refs 規約に「コマンドの入口や責務単位のディレクトリを指し、内部ヘルパーは指さない」を追記し、既存参照を見直す。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-15"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_5b6397c024f44ee9b72c555e25b0cbaf
+  ts: "2026-09-15T13:20:57Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_8835e06b02554b8b8a1f31627465262f
+- v: 1
+  id: reg_0a229b373de0474abe42842aa4ea10eb
+  ts: "2026-09-15T13:35:18Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_5b6397c024f44ee9b72c555e25b0cbaf
+- v: 1
+  id: reg_3974fb96dd214fa2ba4a7dd83fca857b
+  ts: "2026-09-15T23:16:19Z"
+  action: close
+  actor: specdojo-orchestrator (claude)
+  from_status: review
+  to_status: done
+  reason: exec run --register（codex-expert-executor / gemma-reporter / worktree）で実施。親検証 3 件 passed。利用者確認のうえ close
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-16"
+    - field: conclusion
+      from: "-"
+      to: lefthook の catalog-validate の glob に src/**・tools/**・packages/** を加え、CI に validate:catalog を入れて evidence_refs の陳腐化を refactor 側の commit で検知するようにした。dct-rulebook の evidence_refs 規約に入口・責務単位を指し内部ヘルパーを指さない指針を追記し、既存カタログの参照を見直した。
+  previous_event_id: reg_0a229b373de0474abe42842aa4ea10eb

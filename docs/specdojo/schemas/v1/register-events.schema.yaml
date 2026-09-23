@@ -1,0 +1,106 @@
+# register-events.schema.yaml
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: "SpecDojo register event log schema"
+description: >
+  Validates one append-only register event log stored as
+  controls/project-register/events/pjr-XXXX.yaml. The filename identifies the
+  register item; the root array keeps the existing register_events representation
+  while separating it from the item frontmatter.
+type: array
+minItems: 1
+items:
+  $ref: "#/$defs/RegisterEvent"
+
+$defs:
+  RegisterEventId:
+    type: string
+    pattern: "^reg_[a-f0-9]{32}$"
+    description: "Globally unique and immutable register event identifier."
+
+  RegisterEventAction:
+    type: string
+    enum:
+      - add
+      - start
+      - wait
+      - review
+      - close
+      - reject
+      - defer
+      - reopen
+      - update
+      - renumber
+      - migrate
+
+  RegisterEventChange:
+    type: object
+    additionalProperties: false
+    required:
+      - field
+      - from
+      - to
+    properties:
+      field:
+        type: string
+        enum:
+          - id
+          - status
+          - title
+          - description
+          - type
+          - priority
+          - owner
+          - registered
+          - due
+          - completed
+          - conclusion
+          - block_reason
+      from:
+        type: string
+      to:
+        type: string
+
+  RegisterEvent:
+    type: object
+    additionalProperties: false
+    required:
+      - v
+      - id
+      - ts
+      - action
+      - actor
+      - from_status
+      - to_status
+      - reason
+      - changes
+    properties:
+      v:
+        const: 1
+      id:
+        $ref: "#/$defs/RegisterEventId"
+      ts:
+        $ref: "./register-item-frontmatter.schema.yaml#/$defs/Timestamp"
+      action:
+        $ref: "#/$defs/RegisterEventAction"
+      actor:
+        type: string
+        minLength: 1
+      from_status:
+        oneOf:
+          - $ref: "./register-item-frontmatter.schema.yaml#/$defs/ItemStatus"
+          - type: "null"
+      to_status:
+        $ref: "./register-item-frontmatter.schema.yaml#/$defs/ItemStatus"
+      reason:
+        type: string
+        minLength: 1
+      changes:
+        type: array
+        minItems: 1
+        items:
+          $ref: "#/$defs/RegisterEventChange"
+      previous_event_id:
+        $ref: "#/$defs/RegisterEventId"
+      legacy_commit:
+        type: string
+        minLength: 1

@@ -1,0 +1,108 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_4120f6e915ae45e48f5bbd03511039b6
+  ts: "2026-09-15T14:15:35Z"
+  action: add
+  actor: specdojo-orchestrator (claude)
+  from_status: null
+  to_status: open
+  reason: "docs(register): result の prettier 破壊による統合段 block の対処を起票する"
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: reporter の result が commit 時の prettier で壊れて統合段で block する問題を防ぐ
+    - field: description
+      from: ""
+      to: data-flow-pdca の cdfd-check-010 で、executor・reporter・親検証がすべて成功したのに統合段の commit が失敗して block した。reporter が result に書いた文に、インラインコードで囲まれていない depends_on（_ を含む識別子）と _TODO_/_ASSUMPTION_ が同居し、commit 時の prettier が _on〜_TODO を強調と解釈して \_TODO*/_ASSUMPTION_ に書き換え、markdownlint の MD049 で pre-commit が失敗した。prettier には強調の正規化を止めるオプションが無い。履歴ファイル（exec の result・plan）を .prettierignore で整形対象から外し、markdownlint は残す。あわせて reporter・executor の指示に「_ を含む識別子はインラインコードで囲む」を加え、runner が commit の前に markdownlint を実行して明確な理由で止めるようにする。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-15"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_c7bc73da00d94af49ddac7af5a727ce4
+  ts: "2026-09-15T14:23:25Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_4120f6e915ae45e48f5bbd03511039b6
+- v: 1
+  id: reg_e69b0709c68749baa5ee8b4f496c519b
+  ts: "2026-09-15T14:38:53Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: rate limit reached
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: rate limit reached
+  previous_event_id: reg_c7bc73da00d94af49ddac7af5a727ce4
+- v: 1
+  id: reg_2be2b2a2b14a4410882079b10d5b14da
+  ts: "2026-09-15T14:52:21Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_e69b0709c68749baa5ee8b4f496c519b
+- v: 1
+  id: reg_ed05bcb578a6471bb21d91e9aa8f018e
+  ts: "2026-09-15T15:07:08Z"
+  action: review
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_2be2b2a2b14a4410882079b10d5b14da
+- v: 1
+  id: reg_fb6d5869742b495abcf7263c34784b66
+  ts: "2026-09-15T23:16:20Z"
+  action: close
+  actor: specdojo-orchestrator (claude)
+  from_status: review
+  to_status: done
+  reason: exec run --register で実施。codex の利用制限で中断後 claude-expert-executor が resume。親検証 3 件 passed。副作用 2 件を orchestrator が修正のうえ、利用者確認で close
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-16"
+    - field: conclusion
+      from: "-"
+      to: .prettierignore で exec の plan・result を整形対象から外し、executor・reporter の指示に識別子のインラインコード化を加え、runner が commit 前に result の markdownlint を実行して記法違反として block するようにした。副作用として露出した生成 plan の行末空白（MD009）と result の末尾改行不足（MD047）は、expandTemplate と事前検査の空白正規化で orchestrator が直接解消した。data-flow-pdca の author 8 件で運用を確認した。
+  previous_event_id: reg_ed05bcb578a6471bb21d91e9aa8f018e

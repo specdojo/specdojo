@@ -1,0 +1,108 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_357baafbb4514f75859484d90005af79
+  ts: "2026-09-13T21:49:34Z"
+  action: add
+  actor: specdojo-orchestrator (claude)
+  from_status: null
+  to_status: open
+  reason: "docs(register): grade の段失敗を次回再試行する todo を起票する"
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: grade の段が失敗した文書を次回の定期再評価で失敗した段から再試行する
+    - field: description
+      from: ""
+      to: run-per-document.sh は同じ --run-id での再実行なら失敗した段から再開できるが、定期再評価は毎回新しい Job Run になるため、失敗した段は引き継がれない。段が失敗すると直前の段の判定が content_hash 付きで残り、内容が変わらない限り --changed-only でも --ungraded でも再選択されないため、codex の 3 段目だけが拒否された文書は gemma の判定のまま確定する。9/14 0 時の run では 10 件中 4 件で段が失敗し、cdfd-uc-rulebook と cdfd-mermaid-rulebook が 3 段目未実施のまま pass 100 で残った。段の失敗を文書の評価状態として記録し、次回の選択で拾って失敗した段から再試行する。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-14"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_195301b5a4484e7db46ae8c94dca6685
+  ts: "2026-09-13T22:21:13Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_357baafbb4514f75859484d90005af79
+- v: 1
+  id: reg_c905b695e5a84f02ba86661de3fcb856
+  ts: "2026-09-13T22:40:09Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=package.json; agent must record the required change in the result …"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=package.json; agent must record the required change in the result …"
+  previous_event_id: reg_195301b5a4484e7db46ae8c94dca6685
+- v: 1
+  id: reg_9d39dd53ed7a4164ac6875cf554f22a5
+  ts: "2026-09-14T11:05:04Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_c905b695e5a84f02ba86661de3fcb856
+- v: 1
+  id: reg_3223a7134447426b9d8c16bcecf4155c
+  ts: "2026-09-14T11:17:48Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_9d39dd53ed7a4164ac6875cf554f22a5
+- v: 1
+  id: reg_d9d8da17f08d41919ff872effde2f549
+  ts: "2026-09-14T11:39:40Z"
+  action: close
+  actor: specdojo-orchestrator (claude)
+  from_status: review
+  to_status: done
+  reason: exec run --register で実施。package.json の申し送りを orchestrator が適用して resume。親検証 3 件 passed。利用者確認のうえ close
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-14"
+    - field: conclusion
+      from: "-"
+      to: 段の到達状況を execution/grade/pipeline/`<doc>.json`（stage_completed / stage_failed / consecutive_failures / max_failures）に記録し、grade list --incomplete と run-per-document.sh --incomplete で失敗した段から再試行するようにした。両 routine の inputs に incomplete を追加し、schema と validate:schema を整備した。実機で昨夜段が失敗した 4 件が --incomplete で選択されることを確認した。
+  previous_event_id: reg_3223a7134447426b9d8c16bcecf4155c

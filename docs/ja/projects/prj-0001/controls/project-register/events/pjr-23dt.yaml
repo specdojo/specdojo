@@ -1,0 +1,66 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_b2f09dd55ac94235b5324e2761b2bd99
+  ts: "2026-08-30T13:07:20Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: grade plan へ良い実例をリファレンスとして渡す
+    - field: description
+      from: ""
+      to: 記載水準の判定には比較対象が要る。現在の plan は対応する実践の型と抽象的な rubric しか含まず、level 4 と level 3 を分ける具体的な基準がない。同系統で status が ready の文書をリファレンスとして渡せば、この水準が ready であるという具体的な基準が得られる。rulebook は 102 件中 19 件が ready であり比較対象は足りている。生成より比較のほうが負荷が小さいため、ローカルモデルほど効果が見込める。リファレンスを実行ごとにランダムへ選べば、特定文書への過適合を防ぎつつ、実行ごとに異なる観点の指摘が得られる。前回 finding の引き継ぎと組み合わせることで、繰り返すほど網羅性が上がる。ready は品質保証ではないため、grade の運用が進んだ後は verdict が pass かつ高性能 agent で確認済みの文書へ切り替える。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-08-30"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_6b2e7af059c3498986927785bf094933
+  ts: "2026-08-30T13:32:04Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_b2f09dd55ac94235b5324e2761b2bd99
+- v: 1
+  id: reg_4cf59fca0d83461ba7e88af27a767435
+  ts: "2026-08-31T11:46:46Z"
+  action: close
+  actor: manual
+  from_status: in-progress
+  to_status: done
+  reason: 完了条件をすべて満たし検証も通過したため
+  changes:
+    - field: status
+      from: in-progress
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-08-31"
+    - field: conclusion
+      from: "-"
+      to: "grade plan へ比較リファレンスを含められるようにした。同種別かつ status: ready の文書から選び、同種別に候補がない場合は種別を跨がずリファレンスなしで評価する。種別が違うと構造も目的も異なり基準として誤りを招くためである。既定では付けず、--reference `<path>` で固定するか --random-reference で無作為に選ぶ。判定に用いたリファレンスは specdojo.grade.reference へ文書 ID で記録する。実測では同じ文書がリファレンスの有無で score が最大 19 ポイント動き、閾値 70 を下回る文書が 2 件現れた。抽象的な rubric だけでは記載水準を判断できていなかったことを確認した。"
+  previous_event_id: reg_6b2e7af059c3498986927785bf094933

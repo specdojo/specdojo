@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_3b63a239d642481f976ce609d9f0bc00
+  ts: "2026-08-30T11:06:46Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: grade を executor と reporter の2段構成へ分ける
+    - field: description
+      from: ""
+      to: grade は1つの agent へ分析と JSON 構造化の両方を求めているため、どちらかが犠牲になる。実測では qwen が分析能力に優れる一方で閉じ括弧の過剰により JSON が破損し、muse は素の JSON を返す一方で判定が横並びになった。分析能力と構造化能力は独立した軸である。exec の pipeline と同じく executor と reporter を分け、executor には JSON 契約を課さず各観点の level と finding を自由形式で述べさせ、reporter が GradeSubmission JSON へ構造化する。reporter には判定内容を変更せず忠実に構造化することだけを求める。gemma は reporter として十分な出力形式の安定性を持つ。初回比較で qwen が散文で終えた分析は claude に匹敵する質であり、この構成であれば救済できる。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-08-30"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_73c320ae6dfc47508d32850ac30a11c2
+  ts: "2026-08-30T11:09:07Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_3b63a239d642481f976ce609d9f0bc00
+- v: 1
+  id: reg_de9368a351f744b48836b441a72228d2
+  ts: "2026-08-30T11:22:37Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_73c320ae6dfc47508d32850ac30a11c2
+- v: 1
+  id: reg_ba388b324131495f936eb9b46e617611
+  ts: "2026-08-30T11:56:35Z"
+  action: close
+  actor: manual
+  from_status: review
+  to_status: done
+  reason: 実装・検証・レビューが完了したため
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-08-30"
+    - field: conclusion
+      from: "-"
+      to: grade plan が1文書ごとに executor plan と reporter plan を生成するようにした。executor plan から JSON 契約を除き、各 viewpoint の LEVEL と FINDING を軽量 marker で申告させる。reporter plan は対象文書を再評価せず、executor の申告を追加・省略・変更せず JSON へ写す責務に限定した。grade apply --analysis-from により reporter の忠実性を機械照合し、level の変更や finding の追加・省略を適用前に拒否する。qwen を executor、gemma を reporter として検証し、所要時間が 1 段構成の 18 分から 27 分に対し 6.5 分へ短縮され、構文破損も解消することを確認した。--analysis-from を省略する 1 段構成も維持している。
+  previous_event_id: reg_de9368a351f744b48836b441a72228d2

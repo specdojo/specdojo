@@ -1,0 +1,108 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_4101c940fb98442e8960e0521814b6f8
+  ts: "2026-09-13T05:07:17Z"
+  action: add
+  actor: specdojo-orchestrator (claude)
+  from_status: null
+  to_status: open
+  reason: "docs(register): ユースケース別 CDFD の rulebook 一式を新設する todo を起票する"
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: ユースケース別 CDFD の cdfd-uc-rulebook と recipe・sample・template を新設する
+    - field: description
+      from: ""
+      to: cdfd-overview が定義するユースケース別 CDFD（`cdfd-uc-<topic>`）は、複数のプロセスグループをまたぐ順序と引き渡し条件だけを定め、グループ内部のプロセスは再掲しない。一ノード一プロセスを契約とする cdfd-rulebook では表現できないため、専用の cdfd-uc-rulebook と recipe・sample・template を新設する。章構成と記述レベルは cdfd-overview に合わせ、ID はプロジェクト修飾なしとする。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-13"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_edf0b18c811e4714b2cab2c6f80f3826
+  ts: "2026-09-13T06:15:58Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_4101c940fb98442e8960e0521814b6f8
+- v: 1
+  id: reg_575d4e495aff494fb5b2c0e76f281abe
+  ts: "2026-09-13T06:27:39Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: rate limit reached
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: rate limit reached
+  previous_event_id: reg_edf0b18c811e4714b2cab2c6f80f3826
+- v: 1
+  id: reg_c6220a6fd9b24416be3975ea42feefcd
+  ts: "2026-09-13T06:55:41Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_575d4e495aff494fb5b2c0e76f281abe
+- v: 1
+  id: reg_cd44727093f5490a8c39b5087e535cc0
+  ts: "2026-09-13T07:06:52Z"
+  action: review
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_c6220a6fd9b24416be3975ea42feefcd
+- v: 1
+  id: reg_7079f17f2c664e36a18b75b177962428
+  ts: "2026-09-13T07:10:40Z"
+  action: close
+  actor: specdojo-orchestrator (claude)
+  from_status: review
+  to_status: done
+  reason: exec run --register で実施。codex-expert-executor が新規 4 文書を作成後に利用制限で中断し、claude-expert-executor が --resume で検証と仕上げを完了。親検証 3 件 passed、lint:md と docs:build を確認。利用者確認のうえ close
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-13"
+    - field: conclusion
+      from: "-"
+      to: ユースケース別 CDFD の cdfd-uc-rulebook を新設し、複数のプロセスグループをまたぐ順序と引き渡し条件だけを定める契約、`cdfd-uc-<topic>` の命名、C-01 形式のケース ID、グループ内部・状態遷移を扱わない境界を規定した。template・sample（欠品から補充まで）・recipe を一式作成し、cdfd-overview-rulebook・cdfd-mermaid-rulebook・deliverables-reference・命名標準へ種別と命名を追記した。
+  previous_event_id: reg_cd44727093f5490a8c39b5087e535cc0

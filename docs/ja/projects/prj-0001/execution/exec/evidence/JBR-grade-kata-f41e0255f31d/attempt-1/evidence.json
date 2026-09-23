@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "task_id": "JBR-grade-kata-f41e0255f31d",
+  "run_id": "attempt-1",
+  "stage": {
+    "role": "executor",
+    "actor": "specdojo-runner",
+    "status": "succeeded",
+    "started_at": "2026-09-13T15:00:03.441Z",
+    "completed_at": "2026-09-13T19:24:25.152Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/recipes/cdfd-overview-recipe.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/recipes/cdfd-recipe.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/recipes/cdfd-uc-recipe.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cdfd-mermaid-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cdfd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/cdfd-overview-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/cdfd-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/cdfd-uc-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-kata-f41e0255f31d.json",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 11,
+    "summary": "docs/ja/specdojo/recipes/cdfd-overview-recipe.md   | 36 +++++++++++++---------\n docs/ja/specdojo/recipes/cdfd-recipe.md            | 27 ++++++++++++++++\n docs/ja/specdojo/recipes/cdfd-uc-recipe.md         | 25 +++++++++++++++\n .../ja/specdojo/rulebooks/cdfd-mermaid-rulebook.md | 30 +++++++++---------\n .../specdojo/rulebooks/cdfd-overview-rulebook.md   | 32 +++++++++++--------\n docs/ja/specdojo/rulebooks/cdfd-rulebook.md        | 27 ++++++++++++++++\n docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md     | 24 +++++++++++++++\n docs/ja/specdojo/samples/cdfd-overview-sample.md   | 26 +++++++++-------\n docs/ja/specdojo/samples/cdfd-sample.md            | 26 ++++++++++++++++\n docs/ja/specdojo/samples/cdfd-uc-sample.md         | 24 +++++++++++++++\n 10 files changed, 224 insertions(+), 53 deletions(-)"
+  },
+  "validations": [
+    {
+      "id": "job-command",
+      "source": "runner",
+      "command": "npm run build\ntools/grade/run-per-document.sh --run-id JBR-grade-kata-f41e0255f31d --kind all --limit 10 --changed-only=true --ungraded=true\ncat logs/grade/runs/per-document/JBR-grade-kata-f41e0255f31d/results.tsv",
+      "status": "passed",
+      "summary": "exit 0"
+    }
+  ],
+  "final_message": "Runner command exit 0.",
+  "command": {
+    "shell": "/bin/sh -eu",
+    "value": "npm run build\ntools/grade/run-per-document.sh --run-id JBR-grade-kata-f41e0255f31d --kind all --limit 10 --changed-only=true --ungraded=true\ncat logs/grade/runs/per-document/JBR-grade-kata-f41e0255f31d/results.tsv",
+    "exit_code": 0,
+    "stdout_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-f41e0255f31d/attempt-1/command.stdout.log",
+    "stderr_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-f41e0255f31d/attempt-1/command.stderr.log",
+    "stdout": "\n> specdojo@0.1.0 build\n> node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.build.json && node -e \"require('node:fs').chmodSync('dist/specdojo.js', 0o755)\"\n\nrun_id=JBR-grade-kata-f41e0255f31d project=prj-0001 target=kata kind=all changed_only=true ungraded=true documents=10 work_dir=logs/grade/runs/per-document/JBR-grade-kata-f41e0255f31d\nstage=1 executor=gemma-expert-executor reporter=gemma-reporter reference=per-kind\nstage=2 executor=gemma-expert-executor reporter=gemma-reporter reference=none\nstage=3 executor=codex-expert-executor reporter=gemma-reporter reference=none condition=\"pass, score>=96, findings<=1\"\ndocument start: docs/ja/specdojo/recipes/cdfd-overview-recipe.md\ndocument complete: docs/ja/specdojo/recipes/cdfd-overview-recipe.md\ndocument start: docs/ja/specdojo/recipes/cdfd-recipe.md\ndocument complete: docs/ja/specdojo/recipes/cdfd-recipe.md\ndocument start: docs/ja/specdojo/recipes/cdfd-uc-recipe.md\ndocument complete: docs/ja/specdojo/recipes/cdfd-uc-recipe.md\ndocument start: docs/ja/specdojo/rulebooks/cdfd-mermaid-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/cdfd-mermaid-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/cdfd-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/cdfd-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md\ndocument start: docs/ja/specdojo/samples/cdfd-overview-sample.md\ndocument complete: docs/ja/specdojo/samples/cdfd-overview-sample.md\ndocument start: docs/ja/specdojo/samples/cdfd-sample.md\ndocument complete: docs/ja/specdojo/samples/cdfd-sample.md\ndocument start: docs/ja/specdojo/samples/cdfd-uc-sample.md\ndocument complete: docs/ja/specdojo/samples/cdfd-uc-sample.md\ngrade pipeline complete: selected=10 processed=10 completed_now=10 results=logs/grade/runs/per-document/JBR-grade-kata-f41e0255f31d/results.tsv\nrecorded_at\tdocument\tstage\tstatus\tduration_seconds\tverdict\tscore\tfindings\texecutor\treporter\treference\n2026-09-13T15:15:12Z\tdocs/ja/specdojo/recipes/cdfd-overview-recipe.md\t1\tpassed\t905\tpass\t98\t3\tgemma-expert-executor\tgemma-reporter\tdocs/ja/specdojo/recipes/prj-overview-recipe.md\n2026-09-13T15:28:26Z\tdocs/ja/specdojo/recipes/cdfd-overview-recipe.md\t2\tfailed\t794\t\t\t\tgemma-expert-executor\tgemma-reporter\tnone\n2026-09-13T15:28:26Z\tdocs/ja/specdojo/recipes/cdfd-overview-recipe.md\t3\tskipped_condition\t0\t\t\t\tcodex-expert-executor\tgemma-reporter\tnone\n2026-09-13T15:40:18Z\tdocs/ja/specdojo/recipes/cdfd-recipe.md\t1\tpassed\t712\tpass\t100\t0\tgemma-expert-executor\tgemma-reporter\tdocs/ja/specdojo/recipes/prj-overview-recipe.md\n2026-09-13T15:50:01Z\tdocs/ja/specdojo/recipes/cdfd-recipe.md\t2\tpassed\t583\tpass\t100\t0\tgemma-expert-executor\tgemma-reporter\tnone\n2026-09-13T15:58:52Z\tdocs/ja/specdojo/recipes/cdfd-recipe.md\t3\tpassed\t531\tneeds-work\t81\t3\tcodex-expert-executor\tgemma-reporter\tnone\n2026-09-13T16:08:59Z\tdocs/ja/specdojo/recipes/cdfd-uc-recipe.md\t1\tpassed\t607\tpass\t100\t0\tgemma-expert-executor\tgemma-reporter\tdocs/ja/specdojo/recipes/prj-overview-recipe.md\n2026-09-13T16:19:05Z\tdocs/ja/specdojo/recipes/cdfd-uc-recipe.md\t2\tfailed\t606\t\t\t\tgemma-expert-executor\tgemma-reporter\tnone\n2026-09-13T16:19:05Z\tdocs/ja/specdojo/recipes/cdfd-uc-recipe.md\t3\tskipped_condition\t0\t\t\t\tcodex-expert-executor\tgemma-reporter\tnone\n2026-09-13T16:28:00Z\tdocs/ja/specdojo/rulebooks/cdfd-mermaid-rulebook.md\t1\tpassed\t535\tpass\t100\t0\tgemma-expert-executor\tgemma-reporter\tdocs/ja/specdojo/rulebooks/prj-overview-rulebook.md\n2026-09-13T16:34:02Z\tdocs/ja/specdojo/rulebooks/cdfd-mermaid-rulebook.md\t2\tpassed\t362\tpass\t100\t0\tgemma-expert-executor\tgemma-reporter\tnone\n2026-09-13T16:40:30Z\tdocs/ja/specdojo/rulebooks/cdfd-mermaid-rulebook.md\t3\tfailed\t388\t\t\t\tcodex-expert-executor\tgemma-reporter\tnone\n2026-09-13T16:53:20Z\tdocs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md\t1\tpassed\t770\tpass\t100\t0\tgemma-expert-executor\tgemma-reporter\tdocs/ja/specdojo/rulebooks/prj-overview-rulebook.md\n2026-09-13T17:03:56Z\tdocs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md\t2\tpassed\t636\tpass\t100\t0\tgemma-expert-executor\tgemma-reporter\tnone\n2026-09-13T17:10:42Z\tdocs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md\t3\tpassed\t406\tneeds-work\t66\t8\tcodex-expert-executor\tgemma-reporter\tnone\n2026-09-13T17:24:19Z\tdocs/ja/specdojo/rulebooks/cdfd-rulebook.md\t1\tpassed\t817\tpass\t93\t2\tgemma-expert-executor\tgemma-reporter\tdocs/ja/specdojo/rulebooks/prj-overview-rulebook.md\n2026-09-13T17:35:43Z\tdocs/ja/specdojo/rulebooks/cdfd-rulebook.md\t2\tpassed\t684\tpass\t93\t2\tgemma-expert-executor\tgemma-reporter\tnone\n2026-09-13T17:35:43Z\tdocs/ja/specdojo/rulebooks/cdfd-rulebook.md\t3\tskipped_condition\t0\t\t\t\tcodex-expert-executor\tgemma-reporter\tnone\n2026-09-13T17:47:06Z\tdocs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md\t1\tpassed\t683\tpass\t100\t0\tgemma-expert-executor\tgemma-reporter\tdocs/ja/specdojo/rulebooks/prj-overview-rulebook.md\n2026-09-13T17:55:50Z\tdocs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md\t2\tpassed\t524\tpass\t100\t0\tgemma-expert-executor\tgemma-reporter\tnone\n2026-09-13T18:02:14Z\tdocs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md\t3\tfailed\t384\t\t\t\tcodex-expert-executor\tgemma-reporter\tnone\n2026-09-13T18:19:38Z\tdocs/ja/specdojo/samples/cdfd-overview-sample.md\t1\tpassed\t1044\tneeds-work\t93\t3\tgemma-expert-executor\tgemma-reporter\tdocs/ja/specdojo/samples/prj-overview-sample.md\n2026-09-13T18:31:49Z\tdocs/ja/specdojo/samples/cdfd-overview-sample.md\t2\tpassed\t731\tneeds-work\t93\t3\tgemma-expert-executor\tgemma-reporter\tnone\n2026-09-13T18:31:49Z\tdocs/ja/specdojo/samples/cdfd-overview-sample.md\t3\tskipped_condition\t0\t\t\t\tcodex-expert-executor\tgemma-reporter\tnone\n2026-09-13T18:43:24Z\tdocs/ja/specdojo/samples/cdfd-sample.md\t1\tpassed\t695\tpass\t100\t0\tgemma-expert-executor\tgemma-reporter\tdocs/ja/specdojo/samples/prj-overview-sample.md\n2026-09-13T18:54:45Z\tdocs/ja/specdojo/samples/cdfd-sample.md\t2\tpassed\t681\tpass\t100\t0\tgemma-expert-executor\tgemma-reporter\tnone\n2026-09-13T19:00:11Z\tdocs/ja/specdojo/samples/cdfd-sample.md\t3\tpassed\t326\tpass\t96\t2\tcodex-expert-executor\tgemma-reporter\tnone\n2026-09-13T19:11:50Z\tdocs/ja/specdojo/samples/cdfd-uc-sample.md\t1\tpassed\t699\tpass\t100\t0\tgemma-expert-executor\tgemma-reporter\tdocs/ja/specdojo/samples/prj-overview-sample.md\n2026-09-13T19:20:44Z\tdocs/ja/specdojo/samples/cdfd-uc-sample.md\t2\tpassed\t534\tpass\t100\t0\tgemma-expert-executor\tgemma-reporter\tnone\n2026-09-13T19:24:25Z\tdocs/ja/specdojo/samples/cdfd-uc-sample.md\t3\tpassed\t221\tpass\t100\t0\tcodex-expert-executor\tgemma-reporter\tnone\n",
+    "stderr": ""
+  },
+  "log_refs": [
+    {
+      "kind": "command-stdout",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-f41e0255f31d/attempt-1/command.stdout.log",
+      "bytes": 6608,
+      "truncated": false
+    },
+    {
+      "kind": "command-stderr",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-f41e0255f31d/attempt-1/command.stderr.log",
+      "bytes": 0,
+      "truncated": false
+    }
+  ]
+}

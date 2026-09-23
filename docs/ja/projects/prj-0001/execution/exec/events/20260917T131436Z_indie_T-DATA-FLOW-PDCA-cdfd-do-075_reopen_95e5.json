@@ -1,0 +1,8 @@
+{
+  "v": 1,
+  "ts": "2026-09-17T13:14:36Z",
+  "type": "reopen",
+  "task_id": "T-DATA-FLOW-PDCA-cdfd-do-075",
+  "by": "indie",
+  "msg": "STSD 統合後の grade（codex-expert）で major finding が残り score 80 未満のため refine-2 を再実行する（利用者の判断でオーケストレーターが記帳）"
+}

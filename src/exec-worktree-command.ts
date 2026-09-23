@@ -24,6 +24,7 @@ import {
   captureAgentProtectedConfigSnapshot,
   changedAgentProtectedConfigPaths,
 } from "./exec-agent-protected-config.js";
+import { recordGitStateBlock, recordProtectedConfigBlock } from "./exec-protection-handoff.js";
 import {
   buildTaskPhaseMap,
   loadPrompt,
@@ -49,6 +50,7 @@ import {
   checkpointAndEnsureWorktree,
   commitWorktreeChanges,
   mergeWorktreeIntoCurrent,
+  pruneOrphanedExecBranches,
   removeWorktree,
   taskPaths,
   worktreeStatusPaths,
@@ -79,6 +81,11 @@ type MergeOpts = CommonOpts & {
 type RemoveOpts = CommonOpts & {
   deleteBranch?: boolean;
   force?: boolean;
+};
+
+type PruneOpts = {
+  project?: string;
+  dryRun?: boolean;
 };
 
 type TaskExecutionState = {
@@ -359,18 +366,35 @@ async function agent(opts: AgentOpts): Promise<void> {
     child.once("error", () => resolveExit(1));
     child.once("close", (code) => resolveExit(code ?? 1));
   });
+  // 保護機構が block した場合も、対象と提案差分を worktree 側 result の申し送りへ残す。
+  const worktreeResultPath = resolve(worktree.path, taskPaths(context, opts.task).resultRel);
   const protectedConfigChanges = changedAgentProtectedConfigPaths(
     worktree.path,
     protectedConfigBefore,
   );
   if (protectedConfigChanges.length > 0) {
-    process.stderr.write(`blocked: ${agentProtectedConfigViolation(protectedConfigChanges)}\n`);
+    const reason = agentProtectedConfigViolation(protectedConfigChanges);
+    process.stderr.write(`blocked: ${reason}\n`);
+    recordProtectedConfigBlock({
+      resultPath: worktreeResultPath,
+      repoRoot: worktree.path,
+      paths: protectedConfigChanges,
+      reason,
+    });
     process.exitCode = 1;
     return;
   }
   const gitStateChanges = changedAgentGitStateFields(worktree.path, gitStateBefore);
   if (gitStateChanges.length > 0) {
-    process.stderr.write(`blocked: ${agentGitStateViolation(gitStateChanges)}\n`);
+    const reason = agentGitStateViolation(gitStateChanges);
+    process.stderr.write(`blocked: ${reason}\n`);
+    recordGitStateBlock({
+      resultPath: worktreeResultPath,
+      repoRoot: worktree.path,
+      before: gitStateBefore,
+      fields: gitStateChanges,
+      reason,
+    });
     process.exitCode = 1;
     return;
   }
@@ -394,10 +418,19 @@ function commit(opts: CommitOpts): void {
 function merge(opts: MergeOpts): void {
   const context = resolveContext(opts);
   const worktree = requireWorktree(context.repoRoot, qualifyTaskId(context.projectId, opts.task));
+  // prepare left the root's own copies of the checkpoint files uncommitted (the exec branch
+  // carries the commit). Release them so the merge can bring the committed versions in.
+  const { claimEventPath } = taskExecutionState(context.schedulePath, opts.task);
+  const releaseRootPaths = [
+    join(context.executionPath, "exec", "plans", `${opts.task}-plan.md`),
+    join(context.executionPath, "exec", "results", `${opts.task}-result.md`),
+    ...(claimEventPath ? [claimEventPath] : []),
+  ];
   mergeWorktreeIntoCurrent({
     context,
     worktree,
     taskId: opts.task,
+    releaseRootPaths,
     ffOnly: opts.ffOnly,
     dryRun: opts.dryRun,
   });
@@ -414,6 +447,31 @@ function remove(opts: RemoveOpts): void {
     deleteBranch: opts.deleteBranch,
     dryRun: opts.dryRun,
   });
+}
+
+function prune(opts: PruneOpts): void {
+  const context = resolveContext(opts);
+  const projectId = context.projectId?.trim();
+  if (!projectId) {
+    throw new Error("Project id is required. Use --project or set current_project.");
+  }
+  const orphaned = pruneOrphanedExecBranches({
+    repoRoot: context.repoRoot,
+    projectId,
+    dryRun: opts.dryRun,
+  });
+  if (orphaned.length === 0) {
+    process.stdout.write(`No orphaned exec branches for project ${projectId}.\n`);
+    return;
+  }
+  for (const item of orphaned) {
+    const action = item.mergedIntoCurrent
+      ? opts.dryRun
+        ? "would delete (merged)"
+        : "deleted (merged)"
+      : "kept (not merged)";
+    process.stdout.write(`${item.branch}: ${action}\n`);
+  }
 }
 
 function addCommonOptions(command: Command): Command {
@@ -502,6 +560,19 @@ export function registerExecWorktreeCommands(exec: Command): void {
   removeCommand.action((opts: RemoveOpts) => {
     try {
       remove(opts);
+    } catch (error) {
+      commandError(error);
+    }
+  });
+
+  const pruneCommand = worktree
+    .command("prune")
+    .description("Inspect and delete merged exec branches that have no worktree")
+    .option("--project <projectId>", "Project id in .specdojo/specdojo.config.json")
+    .option("--dry-run", "Inspect orphaned branches without deleting them", false);
+  pruneCommand.action((opts: PruneOpts) => {
+    try {
+      prune(opts);
     } catch (error) {
       commandError(error);
     }

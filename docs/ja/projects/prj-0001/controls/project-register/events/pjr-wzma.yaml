@@ -1,0 +1,166 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_713eff5c4cc046f087d79d02f2e8bd84
+  ts: "2026-09-01T12:02:28Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: job の description が自然言語の shell script となり非決定的なため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: job の責務を agent への委譲に限定する
+    - field: description
+      from: ""
+      to: 決定論的な CLI 手順を job の description から追い出し、判断のみを agent へ残す。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-01"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_57eeef1e021744b2822e1446024377d0
+  ts: "2026-09-02T21:55:20Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_713eff5c4cc046f087d79d02f2e8bd84
+- v: 1
+  id: reg_fa2f6db8a29848d2a684c1d6f9303b3f
+  ts: "2026-09-02T21:55:27Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "checkpoint failed: git worktree failed: Preparing worktree (new branch 'exec/prj-0001-PJR-WZMA') Updating files:  40% (1320/3222)\rUpdating files:  41% (1322/3222)\rUpdating files:  42% (1354/3222)\rUpda…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "checkpoint failed: git worktree failed: Preparing worktree (new branch 'exec/prj-0001-PJR-WZMA') Updating files:  40% (1320/3222)\rUpdating files:  41% (1322/3222)\rUpdating files:  42% (1354/3222)\rUpda…"
+  previous_event_id: reg_57eeef1e021744b2822e1446024377d0
+- v: 1
+  id: reg_8ac49585bcea4589a9a70b4a6271fda9
+  ts: "2026-09-02T21:57:12Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_fa2f6db8a29848d2a684c1d6f9303b3f
+- v: 1
+  id: reg_ef7cef6bb3ee4adfbc5ef41242990de5
+  ts: "2026-09-02T22:09:03Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: rate limit reached
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "checkpoint failed: git worktree failed: Preparing worktree (new branch 'exec/prj-0001-PJR-WZMA') Updating files:  40% (1320/3222)\rUpdating files:  41% (1322/3222)\rUpdating files:  42% (1354/3222)\rUpda…"
+      to: rate limit reached
+  previous_event_id: reg_8ac49585bcea4589a9a70b4a6271fda9
+- v: 1
+  id: reg_8f17564060554d869e12de92e62056c8
+  ts: "2026-09-03T03:31:42Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_ef7cef6bb3ee4adfbc5ef41242990de5
+- v: 1
+  id: reg_953fbb56befa42d09f88157789aec6d1
+  ts: "2026-09-03T03:51:16Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: git add failed: fatal: pathspec 'docs/ja/projects/prj-0001/jobs/job-grade-kata-expert-check.yaml' did not match any files (args: -A -- 19 paths)"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: rate limit reached
+      to: "integrate failed: git add failed: fatal: pathspec 'docs/ja/projects/prj-0001/jobs/job-grade-kata-expert-check.yaml' did not match any files (args: -A -- 19 paths)"
+  previous_event_id: reg_8f17564060554d869e12de92e62056c8
+- v: 1
+  id: reg_ff52564bb18b481fb38b9bb37b4b8552
+  ts: "2026-09-03T10:04:36Z"
+  action: start
+  actor: claude-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_953fbb56befa42d09f88157789aec6d1
+- v: 1
+  id: reg_016a116808e048f685ffa586ddebc573
+  ts: "2026-09-03T10:05:35Z"
+  action: review
+  actor: claude-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_ff52564bb18b481fb38b9bb37b4b8552
+- v: 1
+  id: reg_9be08a37e4b048fea84d130ec0c87e37
+  ts: "2026-09-03T10:07:15Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: job の責務を判断へ限定し、決定論的な手順を script へ移した。agent は task.agent で構造化して指定する。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-03"
+    - field: conclusion
+      from: "-"
+      to: job の責務を判断へ限定し、決定論的な手順を script へ移した。agent は task.agent で構造化して指定する。
+  previous_event_id: reg_016a116808e048f685ffa586ddebc573

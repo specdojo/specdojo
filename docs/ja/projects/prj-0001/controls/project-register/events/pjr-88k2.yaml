@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_1215c6d8c8514188a078bf5923315ca0
+  ts: "2026-09-05T22:34:28Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: sample 走査で 82 件中 5 件に発生し、走査のたびに手作業の修正が必要になるため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: grade apply が本文末尾に余分な空行を残す
+    - field: description
+      from: ""
+      to: 評価結果の書き込み時に文書末尾へ改行が追加され、MD012 で lint:md が失敗する。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-06"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_7679a4339fa84793a2f6efd420e4da30
+  ts: "2026-09-08T11:35:12Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_1215c6d8c8514188a078bf5923315ca0
+- v: 1
+  id: reg_c3d6739464324df688754479d5fd702e
+  ts: "2026-09-08T11:45:20Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_7679a4339fa84793a2f6efd420e4da30
+- v: 1
+  id: reg_b41a32dbd98d47589c1648b5b83d622b
+  ts: "2026-09-08T12:37:12Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: grade apply の出力で末尾の改行を1つへ正規化する。apply の出力だけで lint 可能になり、走査のたびに手作業で除去する必要がなくなった。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-08"
+  previous_event_id: reg_c3d6739464324df688754479d5fd702e

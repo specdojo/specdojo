@@ -1,0 +1,53 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_6146f755c384464a901dfa3671f5360b
+  ts: "2026-09-23T05:10:57Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: grade と review の重複について検討
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: grade と review の役割分担を evaluation 区分で定義し、評価経路を統合する
+    - field: description
+      from: ""
+      to: grade と review は同じ 28 観点と同じルーブリックを共有しながら、別系統で評価している。観点の evaluation 区分（agent / deterministic / human）を分担の基準とし、変更契機の評価を review、依存先変更による劣化検知を定期 grade に割り当てる。grade のロール認識、verdict の合成、kata 保守タスクへの review フェーズ追加も併せて決める。
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-23"
+    - field: due
+      from: ""
+      to: "2026-10-17"
+- v: 1
+  id: reg_125a725ea2c34270a1fa8d440cd75841
+  ts: "2026-09-23T05:17:27Z"
+  action: close
+  actor: naoji3x
+  from_status: open
+  to_status: decided
+  reason: 案 C を採用し 5 点を決定。commit 方式で承認を残す
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-09-23"
+    - field: conclusion
+      from: "-"
+      to: 観点の evaluation 区分を判定主体の唯一の基準とし、review フェーズ内で runner が grade を実行して verdict の一次入力とする。grade は owner ロールを認識し、定期実行は変化検知に限定する。kata 保守タスクへ review フェーズを追加する。
+  previous_event_id: reg_6146f755c384464a901dfa3671f5360b

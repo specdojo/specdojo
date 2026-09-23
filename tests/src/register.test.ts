@@ -4,13 +4,16 @@ import { join, resolve } from "node:path";
 import { tmpdir } from "node:os";
 import { load } from "js-yaml";
 import fg from "fast-glob";
+import { lint } from "markdownlint/sync";
 import { buildValidator, formatErrors } from "../helpers/schema.js";
+import { specdojoRootDir } from "../../src/specdojo-config.js";
 import { flattenTemplateFrontmatter } from "../../src/template-frontmatter.js";
 import {
   type RegisterAddFields,
   PJR_ID_RE,
   type PjrItem,
   type RegisterPaths,
+  buildRegisterItemContent,
   extractTableHeading,
   generatePjrId,
   generateDerivedViewFiles,
@@ -54,6 +57,17 @@ function extractFrontmatter(content: string, filePath: string): string {
 
 function applySubstitutions(text: string, subs: Array<[string, string]>): string {
   return subs.reduce((acc, [from, to]) => acc.replaceAll(from, to), text);
+}
+
+function markdownlintErrors(content: string): unknown[] {
+  const parsed = load(readFileSync(join(specdojoRootDir(), ".markdownlint.yaml"), "utf8"));
+  const config =
+    typeof parsed === "object" && parsed !== null ? (parsed as Record<string, unknown>) : {};
+  const results = lint({
+    strings: { generated: content },
+    config,
+  });
+  return results.generated ?? [];
 }
 
 // register add が生成するファイルのプレースホルダと同じ置換ルール
@@ -138,6 +152,56 @@ describe("register add — pjr テンプレート frontmatter スキーマ適合
       }
     },
   );
+
+  it("テンプレートに finding コメントがあっても生成した個票へ複製しない", () => {
+    const dir = mkdtempSync(join(tmpdir(), "specdojo-register-finding-"));
+    const templatePath = join(dir, "pjr-todo-template.md");
+    try {
+      writeFileSync(
+        templatePath,
+        [
+          "---",
+          "specdojo:",
+          "  id: specdojo:pjr-todo-template",
+          "  type: template",
+          "  status: draft",
+          "  frontmatter_template:",
+          "    specdojo:",
+          "      id: _PJR_DOCUMENT_ID_",
+          "      type: project",
+          "      status: draft",
+          "      rulebook: specdojo:pjr-rulebook",
+          "      item_type: todo",
+          "---",
+          "",
+          "<!-- specdojo:finding id=F001 severity=major rule=vp-test line=1 複製しない -->",
+          "",
+          "# _PJR-XXXX_ _TODO_TITLE_",
+          "",
+          "## 1. 概要",
+          "",
+          "_TODO_: 概要を記載する。",
+          "",
+        ].join("\n"),
+        "utf8",
+      );
+
+      const content = buildRegisterItemContent({
+        projectId: "prj-test-0001",
+        displayId: "PJR-AB12",
+        topic: "finding-copy",
+        fields: DEFAULT_ADD_FIELDS,
+        templatePath,
+      });
+
+      expect(content).not.toContain("specdojo:finding");
+      expect(content).toContain("# PJR-AB12 登録項目");
+      expect(content).toContain("id: prj-test-0001:pjr-ab12-finding-copy");
+      expect(markdownlintErrors(content)).toEqual([]);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
 });
 
 describe("parsePjrIndex — 章番号アンカーの言語非依存", () => {

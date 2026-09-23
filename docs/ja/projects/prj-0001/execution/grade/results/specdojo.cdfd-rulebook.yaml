@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:cdfd-rulebook
+path: docs/ja/specdojo/rulebooks/cdfd-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: pass
+score: 89
+graded_at: "2026-09-22T21:11:33.934Z"
+graded_by: codex-expert-executor
+content_hash: 5c76e0bf8765672c646921a24efd5e689dae01aca474e3eb6d4cf4e4620a712a
+categories:
+  consistency:
+    score: 88
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 75
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 3
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 143
+    anchor: "### 6.8. 完成判定"
+    message: >-
+      前回指摘されたFrontmatter・目的・適用範囲・プロセス表の確認は追加済みですが、完成判定には条件付き／選択プロセスの非起動時の扱い、図直後注記の凡例・線種・省略理由・共有ノード、主要例外の「本グループでの扱い」、委譲表の各列が反映されておらず、これらを欠く文書も完成扱いにできるため、全必須条件を列挙するか本文要件との併用を明記してください。
+  - id: F002
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 143
+    anchor: "### 6.8. 完成判定"
+    message: >-
+      完成判定が、本文で必須とした条件付き／選択プロセスの非起動時の正常な扱い、全プロセスの個別入出力表への一度だけの掲載、図直後の必須注記、主要例外の扱い, グループ外委譲の委譲先・委譲事項・戻す条件を確認対象に含めていないため,
+      本文要件との併用を明記するか確認項目を過不足なく追加してください。
+  - id: F003
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 143
+    anchor: "### 6.8. 完成判定"
+    message: >-
+      rulebookとtemplate・sampleは必須Frontmatter、対象期間、完了条件、停止範囲を扱いますが、recipeはFrontmatterとready承認記録を確認せず、全体手順5から完了条件、仕上げチェックから対象期間と停止範囲が欠けているため、recipeの主要手順と最終チェックを本節の完成条件へ揃えてください。

@@ -20,6 +20,7 @@ Project Role Definition Documentation Rulebook
 ## 1. 全体方針
 
 - `pm-roles.yaml` には、プロジェクトで使用する全 Role code を記載する。現時点で専任 member が存在しない Role code も、Schedule の `owner` 語彙として必要なら含める。
+
 - 標準 Role code は `PO`, `PM`, `BA`, `ARC`, `DEV`, `QE`, `UX`, `OPS` を基本セットとし、プロジェクト内で採用する責務語彙をこの集合から選ぶ。
 - Role code の共通定義・責務・規模別パターンは上位標準を参照し、本ファイルに再掲しない。
 - 兼務の割り当て、member nickname、agent 名、個人名は `pm-members.yaml` で管理し、本ファイルに記載しない。
@@ -32,12 +33,13 @@ Project Role Definition Documentation Rulebook
 
 `pm-roles.yaml` は、ロール定義の YAML 成果物として次の位置に置かれる。
 
-| 文書                 | 役割                                                            | 正本とする内容                                   |
-| -------------------- | --------------------------------------------------------------- | ------------------------------------------------ |
-| `pm-organization.md` | ロール・メンバー構成の方針と設計根拠を記述する                  | 採用方針、最終判断の集約先、見直し条件           |
-| `pm-roles.yaml`      | 採用した Role code を machine-readable な YAML として一覧化する | `owner` 語彙、Role code 名、プロジェクト固有メモ |
-| `pm-members.yaml`    | 実行主体と対応する Role code の対応を管理する                   | member nickname、agent、人間、兼務割り当て       |
-| `pm-raci.md`         | 必要時の責任分担を記述する                                      | 成果物・プロセスごとの責任分担                   |
+| 文書                 | 役割                                           | 正本とする内容                         |
+| -------------------- | ---------------------------------------------- | -------------------------------------- |
+| `pm-organization.md` | ロール・メンバー構成の方針と設計根拠を記述する | 採用方針、最終判断の集約先、見直し条件 |
+
+| `pm-roles.yaml` | 採用した Role code を machine-readable な YAML として一覧化する | `owner` 語彙、Role code 名、プロジェクト固有メモ |
+| `pm-members.yaml` | 実行主体と対応する Role code の対応を管理する | member nickname、agent、人間、兼務割り当て |
+| `pm-raci.md` | 必要時の責任分担を記述する | 成果物・プロセスごとの責任分担 |
 
 用語は次のように使い分ける。
 
@@ -61,16 +63,17 @@ Project Role Definition Documentation Rulebook
 YAML 成果物のため、Markdown Frontmatter ではなく YAML 先頭のメタ項目として記載する。
 機械検証は `docs/specdojo/schemas/v1/pm-roles.schema.yaml` を正本とする。
 
-| 項目         | 説明                                     | 必須 |
-| ------------ | ---------------------------------------- | ---- |
-| `id`         | `<project-id>:pm-roles` 形式の成果物 ID  | ○    |
-| `type`       | `project` 固定                           | ○    |
-| `status`     | `draft` / `ready` / `deprecated`         | ○    |
-| `title`      | ドキュメント名。表示ページの見出しになる | ○    |
-| `rulebook`   | `specdojo:pm-roles-rulebook` 固定        | ○    |
-| `based_on`   | 根拠ドキュメント ID の配列               | 任意 |
-| `version`    | データバージョン。初期値は `1`           | ○    |
-| `project_id` | プロジェクト ID                          | ○    |
+| 項目     | 説明                                     | 必須 |
+| -------- | ---------------------------------------- | ---- |
+| `id`     | `<project-id>:pm-roles` 形式の成果物 ID  | ○    |
+| `type`   | `project` 固定                           | ○    |
+| `status` | `draft` / `ready` / `deprecated`         | ○    |
+| `title`  | ドキュメント名。表示ページの見出しになる | ○    |
+
+| `rulebook` | `specdojo:pm-roles-rulebook` 固定 | ○ |
+| `based_on` | 根拠ドキュメント ID の配列 | 任意 |
+| `version` | データバージョン。初期値は `1` | ○ |
+| `project_id` | プロジェクト ID | ○ |
 
 schema に定義されていないメタ項目は `pm-roles.yaml` には追加しない。
 

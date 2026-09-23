@@ -31,11 +31,12 @@ Decision Log Documentation Rulebook
 
 ## 4. 推奨 Frontmatter 項目
 
-| 項目   | 説明                             | 必須 |
-| ------ | -------------------------------- | ---- |
-| id     | `dec-<NNNN>-<topic>`             | ○    |
-| type   | `project`                        | ○    |
-| status | `draft` / `ready` / `deprecated` | ○    |
+| 項目 | 説明 | 必須 |
+| ---- | ---- | ---- |
+
+| id | `dec-<NNNN>-<topic>` | ○ |
+| type | `project` | ○ |
+| status | `draft` / `ready` / `deprecated` | ○ |
 
 ## 5. 本文構成（標準テンプレ）
 
@@ -50,6 +51,7 @@ Decision Log Documentation Rulebook
 ## 6. 記述ガイド
 
 - 選択肢は少なくとも2案以上を記載する。
+
 - 採択理由は判断軸とともに記載する。
 - 影響範囲は仕様・実装・運用の観点で示す。
 

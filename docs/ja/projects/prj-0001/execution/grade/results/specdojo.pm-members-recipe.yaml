@@ -1,0 +1,78 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:pm-members-recipe
+path: docs/ja/specdojo/recipes/pm-members-recipe.md
+target: kata
+rubric: grade-rubric-v1
+verdict: pass
+score: 98
+graded_at: "2026-09-04T14:13:41.528Z"
+graded_by: gemma-expert-executor
+content_hash: 65b81361aef92a02ab6d274ff7245450630c939e7de54d8d302cc6dc8b7a039c
+categories:
+  consistency:
+    score: 88
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 100
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 4
+    score: 100
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 4
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 76
+    message: メタ項目の設定手順において、rulebook で必須とされる `title` が漏れている。
+    anchor: "- Role code は大文字の標準表記で記載する。"
+  - id: F002
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 76
+    message: メタ項目の設定手順において、rulebook で必須とされる `status` が漏れている。
+    anchor: "- Role code は大文字の標準表記で記載する。"
+  - id: F003
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 90
+    message: "`members` の問いにおいて、必須項目である `display_name` の確認が漏れている。"
+    anchor: ""
+  - id: F004
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 112
+    message: 書き方において、`stage_role` の設定基準や nickname の許容文字に関する rulebook 記載の具体ルールが記述されていない。
+    anchor: "| 汎用 agent     | `roles: []` とし、実行時の owner で文脈を補う    | `roles` 未記載のまま承認責任を曖昧にする            |"

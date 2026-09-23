@@ -1,0 +1,95 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_4cfad8c46dec4cf789c1dfbaa3f97424
+  ts: "2026-08-30T04:12:52Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 未解消の finding は前回の severity を維持する
+    - field: description
+      from: ""
+      to: grade を累積実行すると severity が格下げされ、繰り返すほど評価が甘くなる。qwen で評価した後に gemma で再評価した実測では、引き継いだ 9 件の指摘がすべて minor へ再分類され、blocker と major が 0 件になった結果 verdict が pass、score 80 となった。gemma は単独評価では同じ文書へ blocker を出しており、必須章の欠落という深刻な問題は解消されていない。plan は前回の rule を前回評価時の分類として扱い各観点を独立に評価するよう指示しており、この指示が severity にも作用している。指摘の数は保たれるが重みが保証されないため、累積するほど深刻度が薄まる。未解消と判定された指摘については前回の severity を維持する。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-08-30"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_aed8a914896442feb68c988396e42dd4
+  ts: "2026-08-30T04:13:51Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_4cfad8c46dec4cf789c1dfbaa3f97424
+- v: 1
+  id: reg_9c8ea6fabbc74eddaea70acc3f76e557
+  ts: "2026-08-30T04:22:34Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: runner による検証 `test-unit` で失敗が発生したため（tests/src/grade.test.ts の 1 テストが失敗）。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: runner による検証 `test-unit` で失敗が発生したため（tests/src/grade.test.ts の 1 テストが失敗）。"
+  previous_event_id: reg_aed8a914896442feb68c988396e42dd4
+- v: 1
+  id: reg_64de76cd1ea54c32a3c69d8a00a0b0f8
+  ts: "2026-08-30T06:33:26Z"
+  action: review
+  actor: manual
+  from_status: waiting
+  to_status: review
+  reason: 実装と累積実行での検証が完了したため
+  changes:
+    - field: status
+      from: waiting
+      to: review
+  previous_event_id: reg_9c8ea6fabbc74eddaea70acc3f76e557
+- v: 1
+  id: reg_96e67d1126024cd2b4317f0254c4bdf2
+  ts: "2026-08-30T06:33:26Z"
+  action: close
+  actor: manual
+  from_status: review
+  to_status: done
+  reason: 実装・検証・レビューが完了したため
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-08-30"
+    - field: conclusion
+      from: "-"
+      to: 前回の finding コメントから severity を message ごとに収集し、前回のほうが重い場合はそれを採用する preservePreviousFindingSeverities を追加した。severity から導かれる level 上限も再適用する。維持は agent の申告に委ねず CLI 側で強制する。codex-expert で評価した後に gemma で再評価する累積実行により、major 8 件が維持され verdict が needs-work、score が 55 のまま変化しないことを確認した。修正前は同じ手順で全件が minor へ落ち pass となっていた。
+  previous_event_id: reg_64de76cd1ea54c32a3c69d8a00a0b0f8

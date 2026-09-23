@@ -1,0 +1,60 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:ifx-file-rulebook
+path: docs/ja/specdojo/rulebooks/ifx-file-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 95
+graded_at: "2026-09-02T18:30:34.690Z"
+graded_by: gemma-expert-executor
+content_hash: f55c978d91c2e3882bd37121cdad68fe1092288e387612471913f995417d074f
+categories:
+  consistency:
+    score: 75
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 100
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-qe-kata-conformance:
+    level: 4
+    score: 100
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 1
+  minor: 0
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: 必須構造および主要項目の定義において、サンプルで使用されている source, target, timing キーが欠落している。
+    anchor: "# 外部ファイル連携仕様（External File Exchange Specification: EFES）作成ルール"

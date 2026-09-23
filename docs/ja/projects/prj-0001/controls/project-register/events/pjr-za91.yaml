@@ -1,0 +1,92 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_76ad27a1367a42b2962b7aa554a61974
+  ts: "2026-09-16T22:29:17Z"
+  action: add
+  actor: specdojo-orchestrator (claude)
+  from_status: null
+  to_status: open
+  reason: STSD/CSTD の分離による重複と参照のばらつきを解消するため、ARC の判断で統合を決定
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: STSD と CSTD を STSD へ統合し状態一覧と状態遷移図を 1 文書で扱う
+    - field: description
+      from: ""
+      to: ステータス定義（STSD）と概念状態遷移図（CSTD）を STSD へ統合し、状態一覧と遷移図を 1 文書で確認できるようにする。Kata・カタログ・CDFD 参照を単一参照へ更新する
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-17"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_0e9982e2b50445dfacd742ec63b25702
+  ts: "2026-09-16T22:52:29Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_76ad27a1367a42b2962b7aa554a61974
+- v: 1
+  id: reg_0cd692f8e4044d2f876f55fc87dc8569
+  ts: "2026-09-16T23:19:49Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: 親 runner による `test-unit` (`npm run test:unit`) が失敗（exit 1）しており、`tests/src/catalog-merge.test.ts` においてテンプレートの章構成に関するテスト失敗が報告されているため"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: 親 runner による `test-unit` (`npm run test:unit`) が失敗（exit 1）しており、`tests/src/catalog-merge.test.ts` においてテンプレートの章構成に関するテスト失敗が報告されているため"
+  previous_event_id: reg_0e9982e2b50445dfacd742ec63b25702
+- v: 1
+  id: reg_47007295c8324461a7b641debd4966b6
+  ts: "2026-09-16T23:24:47Z"
+  action: review
+  actor: specdojo-orchestrator (claude)
+  from_status: waiting
+  to_status: review
+  reason: 親検証 test-unit の失敗はテンプレート削除に伴う期待件数の陳腐化。テストを更新して develop へ統合したため review へ遷移
+  changes:
+    - field: status
+      from: waiting
+      to: review
+  previous_event_id: reg_0cd692f8e4044d2f876f55fc87dc8569
+- v: 1
+  id: reg_47c2f341505442b5b6c333db42c625f2
+  ts: "2026-09-16T23:27:06Z"
+  action: close
+  actor: specdojo-orchestrator (claude)
+  from_status: review
+  to_status: done
+  reason: codex-expert-executor が worktree で統合作業を実施。親検証 test-unit の期待件数をオーケストレーターが更新して develop へ統合し、利用者が内容を確認して close
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-17"
+  previous_event_id: reg_47007295c8324461a7b641debd4966b6

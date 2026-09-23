@@ -1,0 +1,136 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-YM9Y",
+  "run_id": "20260921T092735014Z-8736c6c3",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-21T09:27:35.014Z",
+    "completed_at": "2026-09-21T09:41:03.107Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-ym9y-kata-mermaid-sample-findings.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cdfd-mermaid-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cdfd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/stsd-mermaid-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/stsd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/cdfd-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/stsd-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 9,
+    "summary": ".../pjr-ym9y-kata-mermaid-sample-findings.md       | 17 +++--\n .../ja/specdojo/rulebooks/cdfd-mermaid-rulebook.md | 28 +++----\n .../specdojo/rulebooks/cdfd-overview-rulebook.md   |  5 +-\n docs/ja/specdojo/rulebooks/cdfd-rulebook.md        |  4 +-\n docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md     |  2 +-\n .../ja/specdojo/rulebooks/stsd-mermaid-rulebook.md | 27 ++++---\n docs/ja/specdojo/rulebooks/stsd-rulebook.md        | 41 ++++++-----\n docs/ja/specdojo/samples/cdfd-sample.md            | 86 +++++++++++-----------\n docs/ja/specdojo/samples/stsd-sample.md            | 33 +++++----\n 9 files changed, 130 insertions(+), 113 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/specdojo/rulebooks/stsd-mermaid-rulebook.md docs/ja/specdojo/rulebooks/stsd-rulebook.md docs/ja/specdojo/rulebooks/cdfd-mermaid-rulebook.md docs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md docs/ja/specdojo/rulebooks/cdfd-rulebook.md docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md docs/ja/specdojo/samples/stsd-sample.md docs/ja/specdojo/samples/cdfd-sample.md",
+      "status": "passed",
+      "summary": "対象Markdownに違反なし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run -s lint:md",
+      "status": "passed",
+      "summary": "リポジトリ全体のMarkdownlintが通過"
+    },
+    {
+      "source": "executor",
+      "command": "node dist/specdojo.js build",
+      "status": "passed",
+      "summary": "派生成果物の全6生成工程が完了"
+    },
+    {
+      "source": "executor",
+      "command": "node dist/specdojo.js catalog validate",
+      "status": "passed",
+      "summary": "検証成功。既存の未作成文書警告のみ"
+    },
+    {
+      "source": "executor",
+      "command": "node dist/specdojo.js register build",
+      "status": "passed",
+      "summary": "登録簿派生ビューを生成"
+    },
+    {
+      "source": "executor",
+      "command": "node dist/specdojo.js index build",
+      "status": "passed",
+      "summary": "1854件の索引を生成"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npm --prefix packages/docs-site run docs:build",
+      "status": "failed",
+      "summary": "Chromium起動がsandboxのOperation not permittedで停止。文書内容由来のエラーではない"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-YM9Y\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\n[dry-run] git merge --no-ff --no-edit exec/T-T-doc-010\nInstalling worktree dependencies: .\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nUpdated: /tmp/specdojo-register-resume-e2e-YuZm7J/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)\nUpdated: /tmp/specdojo-register-resume-e2e-YuZm7J/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml\nGenerated: /tmp/specdojo-register-resume-e2e-YuZm7J/docs/ja/projects/test/controls/project-register/generated/pjr-index.md\nGenerated: /tmp/specdojo-register-resume-e2e-YuZm7J/docs/ja/projects/test/controls/project-register/generated/pjr…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.1.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-YM9Y/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-YM9Y/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-tem…"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-YM9Y\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-1vXl18/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-Z1bzqq/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-cCO86O/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-bDg8RH/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-enH0J3/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-L60TJy/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\nWrote agent stdout: /tmp/specdojo-agent-command-QOrdg1/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-DCAaPB/outputs/partial.txt\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\n\n Test Files  104 passed (104)\n      Tes…"
+    }
+  ],
+  "final_message": "grade指摘4件に対応するrulebook・sample・個票を更新した。再gradeは未実施で、VitePress buildのみChromiumのsandbox制約で失敗した。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-YM9Y/20260921T092735014Z-8736c6c3/executor.log",
+      "bytes": 2205,
+      "truncated": false
+    }
+  ]
+}

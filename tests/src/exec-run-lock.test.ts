@@ -4,8 +4,10 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   acquireExecRunLock,
+  EXEC_RUN_LOCK_TOKEN_ENV,
   execRunLockPath,
   ExecRunBusyError,
+  inheritsExecRunLock,
   releaseExecRunLock,
 } from "../../src/exec-run-lock.js";
 
@@ -19,6 +21,27 @@ async function withTempExecution(test: (executionPath: string) => Promise<void>)
 }
 
 describe("exec run project lock", () => {
+  it("親 runner の一致する token だけを継承済み lock として扱う", async () => {
+    await withTempExecution(async (executionPath) => {
+      const handle = await acquireExecRunLock(executionPath, {
+        actor: "parent-job",
+        ifBusy: "fail",
+      });
+      expect(handle).not.toBeNull();
+      const previous = process.env[EXEC_RUN_LOCK_TOKEN_ENV];
+      try {
+        process.env[EXEC_RUN_LOCK_TOKEN_ENV] = "different-token";
+        expect(inheritsExecRunLock(executionPath)).toBe(false);
+        process.env[EXEC_RUN_LOCK_TOKEN_ENV] = handle!.token;
+        expect(inheritsExecRunLock(executionPath)).toBe(true);
+      } finally {
+        if (previous === undefined) delete process.env[EXEC_RUN_LOCK_TOKEN_ENV];
+        else process.env[EXEC_RUN_LOCK_TOKEN_ENV] = previous;
+        releaseExecRunLock(handle!);
+      }
+    });
+  });
+
   it("同じ project の2つ目の fail / skip を busy にする", async () => {
     await withTempExecution(async (executionPath) => {
       const first = await acquireExecRunLock(executionPath, {

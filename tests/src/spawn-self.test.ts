@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { selfRunArgs } from "../../src/spawn-self.js";
+import { selfRunArgs, selfRunCommand } from "../../src/spawn-self.js";
 
 const originalScript = process.argv[1];
 const originalCwd = process.cwd();
@@ -13,6 +13,12 @@ afterEach(() => {
 });
 
 describe("selfRunArgs", () => {
+  it("同じ compiled entry を呼ぶ shell command prefix を返す", () => {
+    process.argv[1] = "/opt/app/dist/spec'dojo.js";
+
+    expect(selfRunCommand()).toBe(`'${process.execPath}' '/opt/app/dist/spec'\\''dojo.js'`);
+  });
+
   it("コンパイル済み .js は node で直接再実行する", () => {
     process.argv[1] = "/opt/app/dist/specdojo.js";
 

@@ -1,0 +1,175 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-YPNS",
+  "run_id": "20260923T040041759Z-b21b01cb",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-23T04:00:41.759Z",
+    "completed_at": "2026-09-23T04:23:03.749Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-ypns-kata-resolution.md",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog-build.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog-generate.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog-plan.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog-scaffold.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/deliverable.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-agent-protected-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-plans.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-register.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-results.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade-result.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/job.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/kata.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/review-plan.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule-strategy-generate.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/template-resolution.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-agent-protected-config.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/template-resolution.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 20,
+    "summary": ".../project-register/pjr-ypns-kata-resolution.md   |  16 +--\n src/catalog-build.ts                               |  86 +++++++++------\n src/catalog-generate.ts                            |  31 +++++-\n src/catalog-plan.ts                                |  21 ++--\n src/catalog-scaffold.ts                            |  19 ++--\n src/catalog.ts                                     |  11 +-\n src/deliverable.ts                                 |   7 +-\n src/exec-agent-protected-config.ts                 |   2 +\n src/exec-plans.ts                                  |  24 +++--\n src/exec-register.ts                               |   4 +-\n src/exec-results.ts                                |  22 ++--\n src/grade-result.ts                                |   3 +-\n src/grade.ts                                       |  50 ++++++---\n src/job.ts                                         |   4 +-\n src/kata.ts                                        |  36 +++++--\n src/review-plan.ts                                 |   5 +-\n src/schedule-strategy-generate.ts                  |   9 +-\n src/template-resolution.ts                         | 119 +++++++++++++++++----\n tests/src/exec-agent-protected-config.test.ts      |  18 ++++\n tests/src/template-resolution.test.ts              |  57 ++++++++++\n 20 files changed, 407 insertions(+), 137 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx eslint src/catalog-build.ts src/catalog-generate.ts src/catalog-plan.ts src/catalog-scaffold.ts src/catalog.ts src/deliverable.ts src/exec-agent-protected-config.ts src/exec-plans.ts src/exec-register.ts src/exec-results.ts src/grade-result.ts src/grade.ts src/job.ts src/kata.ts src/review-plan.ts src/schedule-strategy-generate.ts src/template-resolution.ts tests/src/exec-agent-protected-config.test.ts tests/src/template-resolution.test.ts",
+      "status": "passed",
+      "summary": "変更した TypeScript の lint に成功"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-ypns-kata-resolution.md",
+      "status": "passed",
+      "summary": "更新した個票の Markdown 検査に成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import ./node_modules/tsx/dist/loader.mjs src/specdojo.ts register build && node --import ./node_modules/tsx/dist/loader.mjs src/specdojo.ts catalog validate && node --import ./node_modules/tsx/dist/loader.mjs src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "register・catalog・index 検証に成功。catalog の既存警告のみ"
+    },
+    {
+      "source": "executor",
+      "command": "node --import \"$repo_dir/node_modules/tsx/dist/loader.mjs\" \"$repo_dir/src/specdojo.ts\" config init && register scaffold/add && exec plan --register PJR-A123",
+      "status": "passed",
+      "summary": "kata 未配置の一時リポジトリで plan 生成まで成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:fm -- --quiet --frail docs/ja/projects/prj-0001/controls/project-register/pjr-ypns-kata-resolution.md && npm run validate:history-links",
+      "status": "passed",
+      "summary": "Frontmatter と履歴リンク検査に成功"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-YPNS\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\n[dry-run] git merge --no-ff --no-edit exec/T-T-doc-010\nInstalling worktree dependencies: .\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nUpdated: /tmp/specdojo-register-pipeline-e2e-VjkFwL/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)\nUpdated: /tmp/specdojo-register-pipeline-e2e-VjkFwL/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml\nGenerated: /tmp/specdojo-register-pipeline-e2e-VjkFwL/docs/ja/projects/test/controls/project-register/generated/pjr-index.md\nGenerated: /tmp/specdojo-register-pipeline-e2e-VjkFwL/docs/ja/projects/test/controls/project-register/gen…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.1.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-YPNS/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-YPNS/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-tem…"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-YPNS\n\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\nUpdated ticket status → ready: /tmp/specdojo-ticket-1998Qf/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-CClJBj/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-JgNkye/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-U6HoPf/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-TaCXJQ/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-KrYBhQ/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\nWrote agent stdout: /tmp/specdojo-agent-command-xHamJR/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-ZKnw8A/outputs/partial.txt\n\n Test Files  105 passed (105)\n      Tes…"
+    }
+  ],
+  "final_message": "kata と schema の解決順序を実装し、個票更新と executor 側検証を完了した。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-YPNS/20260923T040041759Z-b21b01cb/executor.log",
+      "bytes": 2253,
+      "truncated": false
+    }
+  ]
+}

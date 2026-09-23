@@ -1,0 +1,108 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_5f19de64af1f4c2a9a1d7fdc3abed578
+  ts: "2026-09-10T11:42:54Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 成果物の評価を grade へ寄せ review result の同期問題を解消する
+    - field: description
+      from: ""
+      to: kata は grade が定期的に変更を検知して次のアクションへ繋がるが、成果物は review が一度きりで同じ循環がない。grade は --target deliverable に対応し catalog から done_criteria を持つ DctDeliverableItem を既に手にしているが、パスだけを使って捨てている。done_criteria の viewpoint は grade の観点 ID と同じ体系であり接続できる。一方 review result には content_hash がなく、対象成果物が後から変更されても検知できない。実例として cdfd-agent-config-operation は review 完了の翌日に成果物が更新されている。また grade の frontmatter は既に 58 行あり本文 65 行とほぼ同量のため、done_criteria の結果を全量書き込むことはできない。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-10"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_624c1f62ae3e4418a62fcd130e3febf7
+  ts: "2026-09-11T12:44:58Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_5f19de64af1f4c2a9a1d7fdc3abed578
+- v: 1
+  id: reg_e3de9ee7b7154b9fb1b11cdec2160050
+  ts: "2026-09-11T12:58:04Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: rate limit reached
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: rate limit reached
+  previous_event_id: reg_624c1f62ae3e4418a62fcd130e3febf7
+- v: 1
+  id: reg_84978d4235a44774a2ea5b532c91025b
+  ts: "2026-09-11T20:40:33Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_e3de9ee7b7154b9fb1b11cdec2160050
+- v: 1
+  id: reg_3ca3f309e5024fe99773441820e44142
+  ts: "2026-09-11T20:56:48Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_84978d4235a44774a2ea5b532c91025b
+- v: 1
+  id: reg_1d0f498195104cb4af4db0b7af59ce1d
+  ts: "2026-09-11T22:37:28Z"
+  action: close
+  actor: specdojo-orchestrator (claude)
+  from_status: review
+  to_status: done
+  reason: exec run --register（claude-expert-executor → session limit で中断後 codex-expert-executor が再開、gemma-reporter）で実施。親検証 test-integration / validate-schema / test-unit passed。利用者確認のうえ close
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-12"
+    - field: conclusion
+      from: "-"
+      to: grade --target deliverable が成果物カタログの done_criteria を条件別に評価し、Frontmatter に要約、grade/criteria/ に成果物別の詳細 YAML を保存するようにした。score/verdict と条件充足は独立した軸として保ち、content_hash で変更検知して rtn-grade-deliverable-recheck から毎日最大 5 件を再評価する。既存の review result は合意形成履歴として維持し、最新状態は grade で判定する。
+  previous_event_id: reg_3ca3f309e5024fe99773441820e44142

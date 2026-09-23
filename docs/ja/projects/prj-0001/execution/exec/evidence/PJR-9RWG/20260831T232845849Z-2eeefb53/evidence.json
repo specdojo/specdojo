@@ -1,0 +1,2450 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-9RWG",
+  "run_id": "20260831T232845849Z-2eeefb53",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-08-31T23:28:45.849Z",
+    "completed_at": "2026-08-31T23:43:16.054Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0001-item.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0002-launch.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0003-item.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0004-pjr-generated.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0005-specdojo-pjr-rulebook-task.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0006-sch-track-domain-artifact.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0007-pjr-index.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0008-sch-config-track-yaml.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0009-wbs.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0010-claude-codex.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0011-stakeholder-id.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0012-claude-skill.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0013-prj-overview.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0014-prj-stakeholder-register.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0015-prj-charter.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0016-prj-scope.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0017-prj-success-criteria-and-acceptance-criteria.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0018-prj-issues-and-approach.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0019-prj-assumptions-constraints-dependencies.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0020-prj-comparison-of-alternatives.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0021-pm-plan.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0022-pm-communication-plan.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0023-pm-quality-management-plan.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0024-pm-roles.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0025-pm-members.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0026-pm-raci.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0027-item.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0028-pm-organization.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0029-devcontainer.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0030-wbs-to-schedule-strategy.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0031-wbs-strategy.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0032-wbs.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0033-yaml-md.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0034-wbs.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0035-dct-domain.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0036-pjr-index.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0037-schedule-strategy.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0038-pjr-domain-md-done-criteria.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0039-frontmatter-type.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0040-pjr.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0041-roles-members.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0042-pm-roles-pm-members-schema.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0043-specdojo-schedule.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0044-specdojo-command.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0045-viewpoint-results.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0046-draft-agent.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0047-guidelines-guides.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0048-pm-review-policy-md.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0049-specdojo-review.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0050-review-viewpoints-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0051-specdojo-review.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0052-id.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0053-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0054-id-markdown-preview.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0055-pjr.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0056-item.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0057-id.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0058-pjr-index.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0059-pjr-scaffold.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0060-pjr-index-vscode.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0061-sch-defaults-start-date-sch-strategy.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0063-sch-strategy.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0064-register-ts-table-header.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0065-src-tools.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0066-item.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0067-validate-templates.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0068-auto-generate.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0069-register-close-reject.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0070-sch-strategy.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0071-specdojo-build.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0072-item.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0073-opencode-agent-member.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0074-claude-agent-member.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0075-worktree-devcontainer.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0076-schedule.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0077-specdojo-exec-run.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0078-schedule-gate.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0079-task-step-by-step.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0080-scaffold.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0081-metadata-json.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0082-pjr-by.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0083-milestone-timeline.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0084-gate-timeline.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0085-specdojo-docs-structure-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0086-catalog-scaffold-test-ts.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0087-dct-template-yaml-markdown.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0088-agent-config-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0089-claude-agent-settings.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0090-agent-brief-review-plan.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0091-task-complete-commit-push.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0092-vitepress-repo.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0093-sch-strategy-execution-auto.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0094-sch-strategy-execution.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0095-specdojo-exec-build.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0096-edit-plan-frontmatter-based-on.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0097-xep-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0098-specdojo-exec-auto-capabilities.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0099-exec-plan-creation-mode.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0100-instruction-md.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0101-xep-freeform-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0102-xep-fully-guided-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0103-xep-recipe-guided-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0104-xep-recipe-maintenance-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0105-xep-rulebook-maintenance-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0106-xep-sample-maintenance-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0107-xep-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0108-xer-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0109-xrp-freeform-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0110-xrp-fully-guided-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0111-xrp-recipe-guided-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0112-xrp-recipe-maintenance-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0113-xrp-rulebook-maintenance-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0114-xrp-sample-maintenance-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0115-xrp-template-maintenance-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0116-xrp-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0117-xrr-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0118-debian-chromium-150.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0119-charter-approval.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0120-item.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0121-item.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0122-review-launch.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0123-register.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0124-human-plan-integrate-result.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0125-specdojo-pjr-todo-template-h1.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0126-pr-based-po-approval.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0127-clarify-project-why.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0128-propagate-project-context.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0129-why-what-how-recipes.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0130-clarify-why-review-viewpoints.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0131-concise-documentation-policy.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0132-detect-document-redundancy.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0133-cross-deliverable-dedup-pass.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0134-exec-auto-worker-pool.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0135-exec-register-multiple-ids.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0136-exec-limit-resume.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0137-register-id-uniqueness.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0138-register-add-on-integration-branch.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0139-register-ticket-status-transition.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0140-register-commit-missed-paths.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0141-guide-reference-content-schema-yaml.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0142-vs-code-specdojo.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0143-vs-code-marketplace.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0144-fmt-md-table-vs-code.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0145-readme-md-docs-index-md-docs-lang-index-md.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0146-forbid-links-in-history-files.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0147-retrofit-design-docs-for-existing-implementation.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0148-extend-wikilink-id-resolution-beyond-docs-scope.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0149-project-dashboard-page.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0150-pm-members-nickname-schema-validation-gap.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0151-index-build-duplicate-id-error-detection.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0152-lint-unescaped-angle-bracket-placeholder.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0153-dct-schema-yaml-done-criteria-group-top.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0154-operations-domain-timing.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0155-dct-domain-multifile.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0156-dct-merge-same-name-group.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0157-cli-verb-taxonomy.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0158-exec-run-project-lock.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0159-exec-agent-flag-by-unification.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0160-register-dependency-type-review.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0161-register-approval-workflow-policy.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0162-exec-agent-flag-removal.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0163-register-add-id-fetch.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-078k-yaml-schema-modeline-ssot.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-07m5-trial-validation-completeness.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0da8-claude-reporter-mode-and-settings.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0fct-test-unit-rerun-after-fix.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0xej-claude-config-dir-isolation.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0xxz-pjr-index.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-17s7-unit-test-double-run-hang.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-199g-promotion-commit-consolidation.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-1d0c-pjr-index-wikilink-broken.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-1f46-kata-sc-01-sc-03.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-1z1h-rulebook-sample-declaration-gap.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-21e8-grade-frontmatter-flow-style.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-23dt-grade-reference-examples.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-25f4-grade-two-stage-filter.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-25sf-register-ai.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-269z-dct-index-generation.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-2kpn-register-update-topic.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-37wn-remove-id-reservation-mechanisms.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-3d7q-grade-target-filter.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-3m8s-exec-result-frontmatter.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-3n21-kata-declaration-ssot-split.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-3s8q-agent-writable-config-scope.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-44cw-git-state-guard-false-positive.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-49d2-quality-assessment.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-4ahz-routine-exec-cycle-sequential-execution.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-4tz7-grade-per-document.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-5n64-template-declaration-resolution.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-5w8c-register-github-integration.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-5yw6-agent-trial-base-and-reporter.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-6aax-assessment-validate-false-warning.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-6hf3-hook-script-dependency-free-entry.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-6vfn-exec-run-register-executor-reporter.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-6xnj-grade-graded-by.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-76ag-test-git-env-leak-repo-corruption.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-7mxj-pipeline-resume-recovery.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-8pj4-catalog-sidebar-and-schema-mapping.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-8qa1-waza-guide-md-cli-overview-guide-md-waza.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-9p5q-migrate-existing-register-items.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-9rwg-register-events-separation.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-9s41-exec-templates-separation.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-9xvg-grade-plan-link-style.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-9y7g-register-item-file-as-ssot.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-a45t-ryu-guide-md-kata-guide-md-approach.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-a99j-agent-git-isolation-breach.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-aar2-milestones-status-follows-last-built-track.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-akj4-agent-json-response.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-ankr-grade-executor-reporter.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-aq9g-exec-plan-angle-placeholder-escape.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-aqmw-fully-guided-refine-pass-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-b1sj-angle-placeholder-escape-scope.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-bj97-codeowners-and-branch-protection.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-c0b7-plan-context-and-precommit-check.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-cmyx-exec-dist-parent-validations.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-dctg-data-flow-dct-instance-analysis.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-e6hg-claude-reporter-json-failure.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-enk0-sch-strategy-planning-regenerate.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-eqaq-register-timestamps.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-es57-register-file-ssot-migration.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-ex5e-git-identity-isolation.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-ez9g-sch-strategy-bootstrap-human-review.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-g2f4-qwen-reporter-structured-output.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-ga2k-routine-sequential-actions.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-gh26-ledger-review-alternative.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-gqfx-todo-marker-false-positive-in-inline-code.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-h95r-exec-complete-worktree-merge.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-hz4c-tmux-terminal-npm-run-docs-dev-port-forwarding.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-jftc-sch-assessment-retirement.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-jfwq-executor-reporter-pipeline-schema.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-jg9q-auto-rebuild-stale-tracks.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-jhsc-exec-events-granularity.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-jt1y-kata-undecided-state.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-jxv7-executor-evidence-collection.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-k4ta-kata-not-needed-declaration.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-k9kg-kata-requirement-existing-deliverables.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-kaqv-agent-raw-stderr-retention.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-kata-artifact-kata-readiness-assessment.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-kce0-review-viewpoints-inheritance.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-mwxs-uis-index-rulebook-bds-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-nsxt-executor-reporter-agent-definitions.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-nw9v-agent-comparison-trial.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-nwpc-register-where-stderr.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-pp0d-exec-plan-todo-markdown.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-q3jg-grade-exclude-exec-templates.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-q828-reporter-revalidation.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-q88a-register-stdout-stderr.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-qesv-kata-creation-criteria.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-qf7t-planning-domain-and-track.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-qvgx-codex-sandbox-tsx-ipc-eperm.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-qw5t-protect-main-push-and-merge-method.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-rdnc-update-docs-for-ticket-ssot.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-rf3b-register-item-frontmatter-schema.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-rg7c-reporter-result-generation.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-rzr3-pjr-index-as-generated-view.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-s5ya-register-item-type-lifecycle.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-sdxb-bootstrap.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-seqc-timeline-gantt-chart-timeline.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-strg-deterministic-dct-strategy-generation.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-t0vq-pjr-id-length-evaluation.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-t1jw-protected-config-gitignore-false-positive.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-t7em-ifx-cmd.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-t7zq-register-commit-policy.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-tc43-executor-reporter-e2e-docs.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-tndh-exec-run-register-executor-reporter.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-tpy9-register-git-github.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-tt4j-register-cli-write-to-tickets.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-vc94-update-validation-and-tests.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-vqb5-agent-grade-comparison.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-vv3m-kata-creation-policy-by-type.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-wvns-planning-artifacts-catalog-scope.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-x2q7-register-conclusion-overwrite.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-x3e8-test-git-env-bare-repository.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-x40m-grade-previous-findings.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-xgjk-kata-declaration-migrate-to-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-xxbc-result-approach-section-rename.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-y3kp-agent-config-write-enforcement.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-z8t1-grade-finding-severity.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-zffz-cdfd-3-stsd-cstd.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-zjzd-dct-index-nested-groups.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-zp0b-system-design-sysd-term-sysd-agent-settings.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-zpjz-exec-result-superseded-status.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-zrxg-register-ansi.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-zwmh-register-index-angle-placeholder-escape.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-zyfz-single-responsibility-viewpoint.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/register-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/directory-layout-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pjr-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register-events.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register-history.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register-item.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register-commands.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register-history.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0001.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0002.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0003.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0004.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0005.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0006.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0007.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0008.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0009.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0010.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0011.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0012.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0013.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0014.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0015.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0016.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0017.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0018.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0019.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0020.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0021.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0022.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0023.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0024.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0025.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0026.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0027.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0028.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0029.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0030.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0031.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0032.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0033.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0034.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0035.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0036.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0037.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0038.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0039.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0040.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0041.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0042.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0043.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0044.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0045.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0046.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0047.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0048.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0049.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0050.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0051.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0052.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0053.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0054.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0055.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0056.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0057.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0058.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0059.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0060.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0061.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0063.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0064.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0065.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0066.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0067.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0068.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0069.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0070.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0071.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0072.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0073.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0074.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0075.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0076.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0077.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0078.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0079.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0080.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0081.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0082.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0083.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0084.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0085.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0086.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0087.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0088.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0089.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0090.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0091.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0092.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0093.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0094.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0095.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0096.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0097.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0098.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0099.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0100.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0101.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0102.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0103.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0104.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0105.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0106.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0107.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0108.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0109.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0110.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0111.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0112.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0113.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0114.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0115.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0116.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0117.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0118.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0119.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0120.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0121.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0122.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0123.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0124.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0125.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0126.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0127.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0128.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0129.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0130.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0131.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0132.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0133.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0134.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0135.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0136.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0137.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0138.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0139.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0140.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0141.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0142.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0143.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0144.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0145.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0146.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0147.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0148.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0149.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0150.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0151.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0152.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0153.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0154.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0155.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0156.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0157.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0158.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0159.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0160.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0161.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0162.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0163.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-078k.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-07m5.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0da8.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0fct.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0xej.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-0xxz.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-17s7.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-199g.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-1d0c.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-1f46.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-1z1h.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-21e8.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-23dt.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-25f4.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-25sf.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-269z.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-2kpn.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-37wn.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-3d7q.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-3m8s.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-3n21.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-3s8q.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-44cw.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-49d2.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-4ahz.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-4tz7.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-5n64.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-5w8c.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-5yw6.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-6aax.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-6hf3.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-6vfn.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-6xnj.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-76ag.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-7mxj.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-8pj4.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-8qa1.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-9p5q.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-9rwg.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-9s41.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-9xvg.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-9y7g.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-a45t.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-a99j.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-aar2.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-akj4.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-ankr.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-aq9g.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-aqmw.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-b1sj.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-bj97.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-c0b7.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-cmyx.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-dctg.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-e6hg.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-enk0.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-eqaq.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-es57.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-ex5e.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-ez9g.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-g2f4.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-ga2k.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-gh26.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-gqfx.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-h95r.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-hz4c.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-jftc.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-jfwq.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-jg9q.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-jhsc.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-jt1y.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-jxv7.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-k4ta.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-k9kg.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-kaqv.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-kata.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-kce0.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-mwxs.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-nsxt.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-nw9v.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-nwpc.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-pp0d.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-q3jg.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-q828.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-q88a.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-qesv.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-qf7t.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-qvgx.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-qw5t.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-rdnc.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-rf3b.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-rg7c.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-rzr3.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-s5ya.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-sdxb.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-seqc.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-strg.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-t0vq.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-t1jw.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-t7em.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-t7zq.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-tc43.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-tndh.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-tpy9.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-tt4j.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-vc94.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-vqb5.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-vv3m.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-wvns.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-x2q7.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-x3e8.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-x40m.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-xgjk.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-xxbc.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-y3kp.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-z8t1.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-zffz.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-zjzd.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-zp0b.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-zpjz.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-zrxg.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-zwmh.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-zyfz.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/register-events.schema.yaml",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 583,
+    "summary": ".../controls/project-register/pjr-0001-item.md     |  58 --------\n .../controls/project-register/pjr-0002-launch.md   |  58 --------\n .../controls/project-register/pjr-0003-item.md     |  58 --------\n .../project-register/pjr-0004-pjr-generated.md     |  58 --------\n .../pjr-0005-specdojo-pjr-rulebook-task.md         |  58 --------\n .../pjr-0006-sch-track-domain-artifact.md          |  58 --------\n .../project-register/pjr-0007-pjr-index.md         |  58 --------\n .../pjr-0008-sch-config-track-yaml.md              |  58 --------\n .../controls/project-register/pjr-0009-wbs.md      |  58 --------\n .../project-register/pjr-0010-claude-codex.md      |  58 --------\n .../project-register/pjr-0011-stakeholder-id.md    |  58 --------\n .../project-register/pjr-0012-claude-skill.md      |  58 --------\n .../project-register/pjr-0013-prj-overview.md      |  58 --------\n .../pjr-0014-prj-stakeholder-register.md           |  58 --------\n .../project-register/pjr-0015-prj-charter.md       |  58 --------\n .../project-register/pjr-0016-prj-scope.md         |  58 --------\n ...prj-success-criteria-and-acceptance-criteria.md |  58 --------\n .../pjr-0018-prj-issues-and-approach.md            |  58 --------\n ...019-prj-assumptions-constraints-dependencies.md |  58 --------\n .../pjr-0020-prj-comparison-of-alternatives.md     |  58 --------\n .../controls/project-register/pjr-0021-pm-plan.md  |  58 --------\n .../pjr-0022-pm-communication-plan.md              |  58 --------\n .../pjr-0023-pm-quality-management-plan.md         |  58 --------\n .../controls/project-register/pjr-0024-pm-roles.md |  58 --------\n .../project-register/pjr-0025-pm-members.md        |  58 --------\n .../controls/project-register/pjr-0026-pm-raci.md  |  58 --------\n .../controls/project-register/pjr-0027-item.md     |  58 --------\n .../project-register/pjr-0028-pm-organization.md   |  58 --------\n .../project-register/pjr-0029-devcontainer.md      |  58 --------\n .../pjr-0030-wbs-to-schedule-strategy.md           |  58 --------\n .../project-register/pjr-0031-wbs-strategy.md      |  58 --------\n .../controls/project-register/pjr-0032-wbs.md      |  58 --------\n .../controls/project-register/pjr-0033-yaml-md.md  |  58 --------\n .../controls/project-register/pjr-0034-wbs.md      |  58 --------\n .../project-register/pjr-0035-dct-domain.md        |  58 --------\n .../project-register/pjr-0036-pjr-index.md         |  58 --------\n .../project-register/pjr-0037-schedule-strategy.md |  58 --------\n .../pjr-0038-pjr-domain-md-done-criteria.md        |  58 --------\n .../project-register/pjr-0039-frontmatter-type.md  |  58 --------\n .../controls/project-register/pjr-0040-pjr.md      |  58 --------\n .../project-register/pjr-0041-roles-members.md     |  58 --------\n .../pjr-0042-pm-roles-pm-members-schema.md         |  58 --------\n .../project-register/pjr-0043-specdojo-schedule.md |  58 --------\n .../project-register/pjr-0044-specdojo-command.md  |  58 --------\n .../project-register/pjr-0045-viewpoint-results.md |  58 --------\n .../project-register/pjr-0046-draft-agent.md       |  58 --------\n .../project-register/pjr-0047-guidelines-guides.md |  58 --------\n .../pjr-0048-pm-review-policy-md.md                |  58 --------\n .../project-register/pjr-0049-specdojo-review.md   |  58 --------\n .../pjr-0050-review-viewpoints-template.md         |  58 --------\n .../project-register/pjr-0051-specdojo-review.md   |  58 --------\n .../controls/project-register/pjr-0052-id.md       |  58 --------\n .../controls/project-register/pjr-0053-template.md |  72 ---------\n .../pjr-0054-id-markdown-preview.md                |  58 --------\n .../controls/project-register/pjr-0055-pjr.md      |  58 --------\n .../controls/project-register/pjr-0056-item.md     |  58 --------\n .../controls/project-register/pjr-0057-id.md       |  58 --------\n .../project-register/pjr-0058-pjr-index.md         |  58 --------\n .../project-register/pjr-0059-pjr-scaffold.md      |  58 --------\n .../project-register/pjr-0060-pjr-index-vscod…"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write src/register-events.ts src/register-history.ts src/register-item.ts src/register.ts src/exec-run.ts tests/src/register-commands.test.ts tests/src/register-history.test.ts docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml docs/specdojo/schemas/v1/register-events.schema.yaml docs/ja/specdojo/rulebooks/pjr-rulebook.md docs/ja/specdojo/guides/register-operation-guide.md docs/ja/specdojo/references/directory-layout-reference.md docs/ja/specdojo/references/command-re…",
+      "status": "passed",
+      "summary": "変更したコード・文書・285イベントファイルを整形"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --name-only -- '*.md' | xargs npx markdownlint",
+      "status": "passed",
+      "summary": "変更Markdownのlint成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "TypeScript型検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "ESLint成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "Frontmatter lint成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/docs/src/validate-history-links.ts",
+      "status": "passed",
+      "summary": "履歴リンク検証成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "285個票と285イベントファイルの対応・連鎖・最新状態を検証"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "catalog検証成功。既存の未作成成果物に関する警告のみ"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "1448件の文書indexを生成"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register history --project prj-0001 --id PJR-9RWG",
+      "status": "passed",
+      "summary": "分離後のイベントファイルから2イベントを復元"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーなし"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-9RWG\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: tools/vscode-specdojo\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nInstalling worktree dependencies: .\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/stale.md\n  src/unrelated.ts\ncommit-targets:\n  execution/exec/res…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run\n\n\n> specdojo@0.1.0 validate:schema:yaml\n> tsx tools/docs/src/validate-yaml-schema.ts --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bps-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipp…"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-9RWG\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-cpboWZ/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-qXTMBR/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-aqyO89/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-3nAwbB/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-CCrDVQ/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-4XXxbN/pjr-0001-topic.md\n\n Test Files  91 passed (91)\n      Tests  1315 passed (1315)\n   Start at  08:42:58\n   Duration  17.35s (transform 1.42s, setup 356ms, import 9.69s, tests 15.02s, environment 4ms)\n\n\nerror: unknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-…"
+    }
+  ],
+  "final_message": "register eventを285個の項目別YAMLへ分離し、実装・移行・文書更新・executor検証を完了",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-9RWG/20260831T232845849Z-2eeefb53/executor.log",
+      "bytes": 2609,
+      "truncated": false
+    }
+  ]
+}

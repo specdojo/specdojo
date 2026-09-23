@@ -1,4 +1,5 @@
 import Ajv2020Module from "ajv/dist/2020.js";
+import { extractJsonText } from "./agent-response.js";
 import type { ExecEvidence } from "./exec-evidence.js";
 import type { TaskMode } from "./exec-types.js";
 
@@ -275,7 +276,7 @@ export function parseReporterOutput(
 ): { output?: ReporterOutput; error?: string } {
   let value: unknown;
   try {
-    value = JSON.parse(raw.trim());
+    value = JSON.parse(extractJsonText(raw));
   } catch (error) {
     return {
       error: `response is not a single JSON value: ${error instanceof Error ? error.message : String(error)}`,
@@ -313,6 +314,10 @@ invent facts that are absent from evidence. Return exactly one JSON object match
 JSON Schema, without Markdown fences or commentary. Use outcome=blocked when the evidence cannot
 support a complete result. The runner owns frontmatter and Markdown rendering: it writes your JSON
 response, verbatim, into the plan's result file.
+
+The runner renders your free-text JSON fields as Markdown. Wrap every identifier or field name
+containing an underscore in inline code (for example, \`depends_on\`) so Markdown parsers do not
+misread it as emphasis.
 
 The plan below was written as generic instructions for a single agent that both edits the
 deliverable and records its own result. In this pipeline, those two responsibilities are split:

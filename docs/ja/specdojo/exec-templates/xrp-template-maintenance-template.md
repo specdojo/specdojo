@@ -1,0 +1,73 @@
+_FRONTMATTER_
+
+# Review Plan: _TASK_ID_
+
+## 1. このフェーズで行うこと
+
+_PHASE_DESCRIPTION_
+
+## 2. 対象成果物
+
+- `name`: _DELIVERABLE_NAME_
+- `depends_on`: _DELIVERABLE_DEPENDS_ON_
+- `overview`: _DELIVERABLE_OVERVIEW_
+- `path`: `_DELIVERABLE_PATH_`
+- `rulebook`: `_RULEBOOK_REF_`
+- `result`: `_RESULT_REF_`
+
+_PROJECT_CONTEXT_
+
+## 3. レビュー観点
+
+<!-- markdownlint-disable MD055 MD056 -->
+
+<!-- prettier-ignore-start -->
+| ID  | ロール | viewpoint_id | 確認基準 |
+| --- | ------ | ------------ | -------- |
+_REVIEW_VIEWPOINT_ROWS_
+<!-- prettier-ignore-end -->
+
+<!-- markdownlint-enable MD055 MD056 -->
+
+_REVIEW_VIEWPOINT_DETAILS_
+
+## 4. 進め方
+
+確認の向きを「成果物 → template」に切り替え、対象成果物に紐づく template の見直し内容が妥当かを確認する。根拠となる成果物・review result・対象領域の慣行に加え、finding が指す規範も実際に読み込んだうえで照合する。読み込まずに記憶や推測で代替しない。レビューでは template を編集するのではなく、見直し内容が妥当かを照合する。
+
+1. 見直し対象の template を読み込み、改訂後の章構成の骨組みとプレースホルダの配置・網羅性を把握する。
+2. finding がある場合は、message と同じ viewpoint ID の判定根拠から指摘の根拠となる規範を特定し、対象 template の frontmatter から辿れる rulebook / recipe / sample、該当する執筆標準のうち必要な文書と照合する。
+3. 複数の成果物・review result・対象領域の慣行と照らし、それらが成果物作成の開始点として適切かを確認する。
+4. 見直し内容が [[specdojo:template-authoring-standard]]（構成・プレースホルダ規約・禁止事項の正本）に従っているか確認する。
+5. rulebook / recipe / sample と記述が矛盾していないか確認する（構造・必須項目・禁止事項は rulebook を正とする）。
+
+approach 全体の定義は [[specdojo:ryu-guide]] の「実践の型メンテナンスの進め方」を参照する。本タスクの実行に必要な template メンテナンス確認の方針は、このセクションで完結する。
+
+### 4.1. 見直しの根拠が不足する場合
+
+- finding の message と判定根拠、対象 template から辿れる rulebook / recipe / sample、該当する執筆標準、利用可能な成果物・review result・対象領域の慣行を確認しても改訂の妥当性を判定できない場合に限り、根拠不足として unclear にする。成果物または review result がないことだけを理由に unclear にしない。
+- 根拠不足の場合は、確認した資料、判断できなかった理由、不足している根拠、次のアクションを review result の `実践の型との整合確認` セクションに記録する。
+- 根拠不足のまま改訂が正当化できない箇所は findings に挙げる。
+
+### 4.2. 判断根拠の記録
+
+確認の根拠とした規範・成果物・review result と判断根拠を review result に残す。記録先は次のとおり。
+
+- レビュー観点ごとの pass / fail / unclear 判定と根拠: review result の `レビュー観点別結果` セクション（各 `RVP-NNN`）。
+- 根拠とした規範・成果物・review result、改訂内容の妥当性判断、矛盾時に rulebook を正とした箇所: review result の `実践の型との整合確認` セクション。
+- 検出した問題点・指摘事項: review result の `findings` セクション。
+
+## 5. 完了手順
+
+1. レビュー観点ごとに pass / fail / unclear を判定し、根拠を記入する。
+2. result の各レビュー観点セクションに記入する。result には各 RVP の `### RVP-NNN（ロール: viewpoint_id）` と `確認基準` が展開済みなので、`result` / `evidence` / `notes` を埋める。レビュー結果の記入はタスク完了に必須であり、未記入のまま終了しない（詳細は共通規約を参照）。
+3. `evidence` の参照は `[[id]]` 形式（Obsidian wikilink）で記載する。行番号アンカー（`#L12-L18` など）や絶対パスは使わない。位置の補足が必要な場合は `evidence` 本文で述べる。
+4. fail / unclear、または recommendation が revise / reject でも、レビュー結果を記録できた場合は正常終了する（終了コード 0）。
+
+## 6. 異常終了の条件
+
+- 対象ファイル不明・依存未解決・result 更新不能など、レビュー自体を完了できない場合は異常終了する（終了コード 1）。
+- 標準エラー出力に理由を出力する（例: `review-blocked: <reason>; criterion=<id>; ref=<path>`）。
+- agent 自身は claim / complete / reopen / block を記録せず、終了コードと標準エラー出力で runner に結果を返す。
+
+_COMMON_CONVENTIONS_

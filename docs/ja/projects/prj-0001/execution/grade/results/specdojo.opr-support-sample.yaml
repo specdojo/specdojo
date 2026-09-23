@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:opr-support-sample
+path: docs/ja/specdojo/samples/opr-support-sample.md
+target: kata
+rubric: grade-rubric-v1
+reference: specdojo:prj-overview-sample
+verdict: fail
+score: 72
+graded_at: "2026-09-05T17:27:20.297Z"
+graded_by: gemma-expert-executor
+content_hash: 48792af58ac26f7b9a186fe89fb482404ce0a4038a729814528192df5bb031fb
+categories:
+  consistency:
+    score: 25
+  usability:
+    score: 83
+  architecture:
+    score: 100
+  quality:
+    score: 75
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 0
+    score: 0
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 2
+    score: 50
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 1
+  major: 3
+  minor: 0
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 6
+    message: Frontmatter の `rulebook` が `specdojo:opd-rulebook` となっており、手順書であるため `specdojo:opr-rulebook` とすべきである。
+    anchor: ""
+  - id: F002
+    severity: blocker
+    rule: vp-qe-omissions-consistency
+    line: 15
+    message: "`opr-rulebook` 第 5 章で定義されている必須章がほぼすべて欠落しており、かつ省略理由の記載もないため、運用手順書の構成として不成立である。"
+    anchor: ""
+  - id: F003
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 15
+    message: 見出し番号が `## 1` となっているが、ルールおよびテンプレートの定義に従い `## 10` とすべきである。
+    anchor: ""
+  - id: F004
+    severity: major
+    rule: vp-ux-readability
+    line: 15
+    message: 必須構成を大幅に省略しているため、`opr-＜term＞` 文書を正しく作成するためのサンプルとしての役割（完成形の提示）を果たせておらず、不十分である。
+    anchor: ""

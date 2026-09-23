@@ -20,6 +20,7 @@ Project Management Plan Documentation Rulebook
 ## 1. 全体方針
 
 - 管理計画は、何を管理し、どの逸脱を、誰が、どの証跡で判断するかを示します。
+
 - プロジェクト概要、スコープ、成功基準を直接の根拠とし、作業完了ではなく期待価値の検証を管理目的にします。
 - 小規模プロジェクトでは一つの統合表を基本とし、規模・契約・監査要件がある場合だけ個別計画へ展開します。
 - 品質、コミュニケーション、組織、RACI、Schedule、登録簿は各正本へ委譲し、本書に一覧や詳細手順を複製しません。
@@ -44,14 +45,15 @@ Project Management Plan Documentation Rulebook
 
 ## 4. 推奨 Frontmatter 項目
 
-| 項目       | 説明                                                    | 必須 |
-| ---------- | ------------------------------------------------------- | ---- |
-| id         | `<project-id>:pm-plan`                                  | ○    |
-| type       | `project`                                               | ○    |
-| status     | `draft` / `ready` / `deprecated`                        | ○    |
-| rulebook   | `specdojo:pm-plan-rulebook`                             | ○    |
-| based_on   | 概要、スコープ、成功基準、組織定義など直接根拠となる ID | 任意 |
-| supersedes | 置き換え対象の旧文書 ID                                 | 任意 |
+| 項目     | 説明                             | 必須 |
+| -------- | -------------------------------- | ---- |
+| id       | `<project-id>:pm-plan`           | ○    |
+| type     | `project`                        | ○    |
+| status   | `draft` / `ready` / `deprecated` | ○    |
+| rulebook | `specdojo:pm-plan-rulebook`      | ○    |
+
+| based_on | 概要、スコープ、成功基準、組織定義など直接根拠となる ID | 任意 |
+| supersedes | 置き換え対象の旧文書 ID | 任意 |
 
 ## 5. 本文構成（標準テンプレ）
 
@@ -79,6 +81,7 @@ Project Management Plan Documentation Rulebook
 | -------- | ---------- | -------- | ---------- | ---- |
 
 - スコープ、Schedule、費用・負荷、品質、課題・リスク・変更のうち、実際に管理する対象だけを行にします。
+
 - 費用を扱う場合は、現金支出、作業時間、継続運用負荷を分けます。
 - 課題・リスク・変更・決定は登録簿へ記録し、本文に個票を持ちません。
 
@@ -88,6 +91,7 @@ Project Management Plan Documentation Rulebook
 | ------ | -------- | -------- | ---------- | -------- | ---- |
 
 - 公開、主要変更、例外、継続・停止など、人間の判断が必要なゲートだけを記載します。
+
 - 成功基準を再掲せず、参照する条件 ID と不足時の扱いを示します。
 - 「必要に応じて」ではなく、エスカレーションする条件を判定可能にします。
 

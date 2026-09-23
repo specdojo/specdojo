@@ -49,16 +49,16 @@ SpecDojo のレビューは次を扱います。
 
 レビューでは次を入力として扱います。
 
-| 入力              | 正本ファイル                | 役割                                                                    |
-| ----------------- | --------------------------- | ----------------------------------------------------------------------- |
-| 対象成果物        | -                           | レビュー対象の Markdown / YAML / JSON など                              |
-| 成果物カタログ    | `dct-*.yaml`                | 成果物、依存関係、`done_criteria`（text / roles / viewpoint）を定義する |
-| rulebook          | `*-rulebook.md`             | 成果物ごとの構造、必須章、必須キー、禁止事項を定義する                  |
-| sample            | `*-sample.*`                | 期待する成果物の具体例                                                  |
-| review viewpoints | `pm-review-viewpoints.yaml` | Role code 別の観点、severity、verdict、coverage_types を定義する        |
-| 関連成果物        | -                           | 上位・下位・隣接成果物、Schedule、RACI、PJR                             |
-| 機械検証結果      | -                           | lint、schema validation、生成確認、リンク確認                           |
-| 登録簿            | `generated/pjr-index.md`    | 未解決事項、課題、リスク、変更要求、決定の転記先                        |
+| 入力              | 正本ファイル                           | 役割                                                                               |
+| ----------------- | -------------------------------------- | ---------------------------------------------------------------------------------- |
+| 対象成果物        | -                                      | レビュー対象の Markdown / YAML / JSON など                                         |
+| 成果物カタログ    | `dct-*.yaml`                           | 成果物、依存関係、`done_criteria`（text / roles / viewpoint）を定義する            |
+| rulebook          | `*-rulebook.md`                        | 成果物ごとの構造、必須章、必須キー、禁止事項を定義する                             |
+| sample            | `*-sample.*`                           | 期待する成果物の具体例                                                             |
+| review viewpoints | 共通正本 + `pm-review-viewpoints.yaml` | Role code 別の観点、severity、verdict、coverage_types とプロジェクト差分を定義する |
+| 関連成果物        | -                                      | 上位・下位・隣接成果物、Schedule、RACI、PJR                                        |
+| 機械検証結果      | -                                      | lint、schema validation、生成確認、リンク確認                                      |
+| 登録簿            | `generated/pjr-index.md`               | 未解決事項、課題、リスク、変更要求、決定の転記先                                   |
 
 ### 1.3. 機械検証とレビューの分担
 
@@ -76,6 +76,17 @@ SpecDojo のレビューは次を扱います。
 | 判断責任               | human approver         |
 
 機械検証で失敗した成果物は、意味レビューの前に修正します。ただし、検証不能な前提や設計判断は review result に残して構いません。
+
+### 1.2.1. 共通観点とプロジェクト差分
+
+レビュー観点の共通正本は [[specdojo:pm-review-viewpoints|共通レビュー観点一覧]] です。プロジェクトの `viewpoints_path` は共通正本の全量コピーではなく、次の差分だけを保持します。
+
+- `extends: specdojo:pm-review-viewpoints` で共通正本を1段だけ継承する。
+- `categories`、`coverage_types`、`severity_levels`、`verdict_definitions`、`viewpoints` は `id`、`role_viewpoint_sets` は `role` が同じ項目を全体上書きし、新しいキーを追加する。
+- `disabled` は共通項目または追加項目を解決結果から除外する。同じキーの upsert と無効化は同時に宣言できない。
+- 解決順序は「共通正本 → プロジェクト upsert → `disabled`」で固定する。多段継承は行わない。
+
+標準ロールは PO、PM、BA、ARC、DEV、QE、UX、OPS です。独自ロールを使うプロジェクトは、その Role code を `pm-roles.yaml` に定義したうえで、同じ role の `viewpoints` と `role_viewpoint_sets` をプロジェクト差分へ追加します。既存の全量形式は互換入力として読み込めますが、`exec scaffold` が新規生成するのは差分形式です。
 
 ## 2. レビューの観点とパス
 
@@ -158,6 +169,26 @@ review result では、`レビュー観点別結果` セクションの各 `RVP-
 | 設計 | 仕様を実現する構造、制約、責務、データ、外部依存、運用方法が明確か               |
 | 運用 | 公開後の変更、問い合わせ、障害対応、監査、保守の扱いが明確か                     |
 
+### 2.1. grade と共有する評価属性・rubric
+
+viewpoint は review 専用ではなく、継続品質評価 `specdojo grade` と共有する正本です。各 viewpoint の `evaluation` は判定層（`deterministic` / `agent` / `human`）、`continuous` は grade 対象かを宣言します。`grade_targets` を省略した観点は kata と成果物の両方、指定した観点は列挙対象だけに適用します。grade 専用の別観点 ID は作りません。
+
+`grade_rubric` の level 0-4 は category を跨いで共有し、viewpoint score を `level × 25` とします。review との対応は level 4 が `pass`、level 3 が `conditional_pass`、level 0-2 が `changes_requested` です。`blocked` は前提不足で判定できない状態なので level へ写像しません。
+
+grade は継続監視の最新スナップショット、review result は完成時の合意形成履歴です。Kata の grade は schedule strategy の approach 導出に使われますが、目的・業務価値など `evaluation: human` の観点や最終承認を代替しません。
+
+#### 成果物 grade と review result の責務境界
+
+成果物の現在品質と変更後の再評価は `grade --target deliverable` を正とします。成果物カタログの `done_criteria` は grade plan に取り込まれ、score とは独立して条件ごとの充足を判定します。充足数・総数・未充足条件の担当 Role code・詳細参照は grade result サイドカーに置き、条件文と不足理由は成果物ごとの grade 詳細ファイルに記録します。
+
+評価が現在内容に対するものかは、保存された `content_hash` と現在の成果物ファイル全体のハッシュが一致するかで判断します。不一致の grade と、実行後に成果物が変更された review result は、どちらも現在品質の根拠には使いません。`grade list --target deliverable --changed-only` と定期 routine は、この不一致を再評価対象として検出します。
+
+review result は特定時点に誰が何を確認し、どの合意を行ったかを残す不変の履歴です。既存 review result は削除・移行せず、最新状態の判定には利用しません。090 の review タスクと `G-*-review-pass` は人の合意形成・最終承認のゲートとして維持し、継続品質の再評価は grade が担います。これにより二つの結果を同じ最新状態として同期させる必要をなくします。
+
+`vp-arc-single-responsibility` は、異なる主題を一つの文書へ同居させている状態を検出します。章を独立して参照・更新できるか、対象読者と利用時点が異なるか、別々の sample・recipe・template に対応するかを組み合わせて判断します。長さや対応する実践の型の数だけでは fail にせず、複数主題の案内自体を責務とする index、catalog、overview は対象外です。同じ主張の反復や正本の過剰な再掲は `vp-arc-conciseness` で扱います。
+
+分割が必要な場合、finding には独立する主題と境界候補、参照・カタログへの影響を記録します。grade はファイル作成や ID 採番を行わず、人が finding を確認して分割の採否と PJR 起票を判断します。起票後は新規ファイル、成果物カタログ、参照元、対応する sample・recipe・template の変更を通常の edit task として扱います。
+
 ## 3. review plan と review result
 
 SpecDojo のレビューは、原則として review plan を作ってから実施し、review result を残します。
@@ -165,8 +196,8 @@ SpecDojo のレビューは、原則として review plan を作ってから実�
 review plan は `specdojo exec plan` または `specdojo exec run` が必要時に生成します。review result は `specdojo exec claim` 時に scaffold され（`specdojo exec run` が claim を兼ねる場合も含む）、`specdojo exec run` または人の作業によって Frontmatter + Markdown 形式で更新します。
 
 ```text
-pm-review-viewpoints.yaml
-  ↓
+共通レビュー観点 + プロジェクト差分（pm-review-viewpoints.yaml）
+  ↓ 解決
 dct-*.yaml
   ↓
 rulebook
@@ -194,7 +225,7 @@ review result を直接作らず、review plan を挟むことで、レビュー
 通常の成果物編集を行う edit plan は、観点別の自己レビューを行いません。代わりに、`done_criteria` を「完了の狙い」として素の箇条書き（観点・coverage なし）で提示し、編集者は rulebook / recipe / sample / template と「進め方」に沿って記述する中で、その狙いを満たすことを目指します。
 
 - 品質の担保は rulebook（必須項目・禁止事項）・recipe（書き方・レビュー観点・仕上げチェック）・sample・template が担います。
-- `done_criteria` を満たしているかの多観点での最終判定は、後続の独立した review plan / review result が行います。
+- `done_criteria` を満たしているかの継続的な一次判定は成果物 grade、完成時の多観点確認と最終合意は後続の独立した review plan / review result が行います。
 - maintenance 系 approach は対象と判定基準が異なるため、完了の狙いの提示は行いません。
 
 edit plan で観点別の自己レビューを行わないのは、各観点を満たそうとして成果物へ過剰な記述を挿入する副作用を避けるためです。多観点での判定と証跡は review task に集約し、review task では成果物を修正せず第三者的な立場で残します。
@@ -206,7 +237,7 @@ review plan は `specdojo exec plan` または `specdojo exec run` によって�
 主な入力
 
 - 成果物カタログの `local_id`、`path`、`depends_on`、`done_criteria`
-- `pm-review-viewpoints.yaml` の `viewpoints`、`coverage_types`
+- 共通正本と `pm-review-viewpoints.yaml` の差分を解決した `viewpoints`、`coverage_types`
 - 対応する rulebook
 - `sch-strategy-<track>.yaml` が宣言する `mode: review` フェーズ
 

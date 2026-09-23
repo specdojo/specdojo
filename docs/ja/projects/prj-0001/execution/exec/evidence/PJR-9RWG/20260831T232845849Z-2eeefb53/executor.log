@@ -1,0 +1,11 @@
+実装完了です。
+
+- 285 個票から 864 イベントを `events/pjr-XXXX.yaml` へ移行
+- CLI・履歴表示・runner・整合検証を新配置へ対応
+- schema、テスト、rulebook、運用ガイドを更新
+- 個票の `status` / `item_status` と result は未変更
+- executor 側検証はすべて通過。unit・integration・schema 検証は親 runner が実行します
+
+<specdojo_executor_evidence>
+{"final_message":"register eventを285個の項目別YAMLへ分離し、実装・移行・文書更新・executor検証を完了","validations":[{"command":"npx prettier --write src/register-events.ts src/register-history.ts src/register-item.ts src/register.ts src/exec-run.ts tests/src/register-commands.test.ts tests/src/register-history.test.ts docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml docs/specdojo/schemas/v1/register-events.schema.yaml docs/ja/specdojo/rulebooks/pjr-rulebook.md docs/ja/specdojo/guides/register-operation-guide.md docs/ja/specdojo/references/directory-layout-reference.md docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-*.md docs/ja/projects/prj-0001/controls/project-register/events/*.yaml","status":"passed","summary":"変更したコード・文書・285イベントファイルを整形"},{"command":"git diff --name-only -- '*.md' | xargs npx markdownlint","status":"passed","summary":"変更Markdownのlint成功"},{"command":"npm run typecheck","status":"passed","summary":"TypeScript型検査成功"},{"command":"npm run lint:ts","status":"passed","summary":"ESLint成功"},{"command":"npm run lint:fm","status":"passed","summary":"Frontmatter lint成功"},{"command":"node --import tsx tools/docs/src/validate-history-links.ts","status":"passed","summary":"履歴リンク検証成功"},{"command":"node --import tsx src/specdojo.ts register build --project prj-0001","status":"passed","summary":"285個票と285イベントファイルの対応・連鎖・最新状態を検証"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"catalog検証成功。既存の未作成成果物に関する警告のみ"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1448件の文書indexを生成"},{"command":"node --import tsx src/specdojo.ts register history --project prj-0001 --id PJR-9RWG","status":"passed","summary":"分離後のイベントファイルから2イベントを復元"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>

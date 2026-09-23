@@ -1,0 +1,72 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:bes-index-sample
+path: docs/ja/specdojo/samples/bes-index-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 75
+graded_at: "2026-09-04T21:10:42.008Z"
+graded_by: gemma-expert-executor
+content_hash: 6bebd6da8e378735fccfd497c30f647e5d2002939dfd133c7cb485d04cd1956a
+categories:
+  consistency:
+    score: 63
+  usability:
+    score: 83
+  architecture:
+    score: 100
+  quality:
+    score: 63
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 1
+    score: 25
+  vp-qe-kata-conformance:
+    level: 1
+    score: 25
+  vp-ux-readability:
+    level: 2
+    score: 50
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 3
+  minor: 0
+  note: 0
+findings:
+  - id: F002
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: 標準テンプレートに準拠しておらず、核心となる業務イベント一覧の具体例が示されていないため、サンプルとしての役割を果たしていない。
+    anchor: ""
+  - id: F003
+    severity: major
+    rule: vp-ux-readability
+    line: 1
+    message: ルールブックが定める主要な記述内容（イベント一覧表）が含まれておらず、初見の読者が正しい記載水準を理解できない。
+    anchor: ""
+  - id: F001
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 4
+    message: 必須章である「業務イベント一覧（表）」およびルールブックで定義された必須項目が欠落しており、構成要件を満たしていない。
+    anchor: "## 1. 目的と適用範囲"

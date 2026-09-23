@@ -1,0 +1,90 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:sld-sample
+path: docs/ja/specdojo/samples/sld-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 46
+graded_at: "2026-09-06T01:34:40.059Z"
+graded_by: gemma-expert-executor
+content_hash: 414d6b2b95a809979d29973fe2f9c75769045bd2b46ab00265f7ad12942a5100
+categories:
+  consistency:
+    score: 25
+  usability:
+    score: 50
+  architecture:
+    score: 100
+  quality:
+    score: 25
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 1
+    score: 25
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 1
+    score: 25
+  vp-qe-omissions-consistency:
+    level: 1
+    score: 25
+  vp-qe-kata-conformance:
+    level: 1
+    score: 25
+  vp-ux-readability:
+    level: 1
+    score: 25
+  vp-ux-language-consistency:
+    level: 1
+    score: 25
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 6
+  minor: 0
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 1
+    message: メタデータの id 形式および type (`project`) がルールブックの規定に準拠していない。
+    anchor: ""
+  - id: F006
+    severity: major
+    rule: vp-ux-language-consistency
+    line: 1
+    message: ルールブックの「保管場所一覧」と名称が不一致であり、読み手を混乱させる。
+    anchor: ""
+  - id: F002
+    severity: major
+    rule: vp-qe-verifiability
+    line: 18
+    message: ルールブックで必須とされる「保管場所一覧」の具体例が欠落しており、正しく記述できているか判定不能である。
+    anchor: ""
+  - id: F003
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 18
+    message: ルールブックに定義された標準列を持つ「保管場所一覧」表が欠落している。
+    anchor: ""
+  - id: F004
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 18
+    message: 成果物の完成例ではなく、構成要素の説明に留まっており、sample としての責務を果たしていない。
+    anchor: ""
+  - id: F005
+    severity: major
+    rule: vp-ux-readability
+    line: 18
+    message: 具体的かつ完全な一覧表の例がないため、読者が作成方法を正しく理解できない。
+    anchor: ""

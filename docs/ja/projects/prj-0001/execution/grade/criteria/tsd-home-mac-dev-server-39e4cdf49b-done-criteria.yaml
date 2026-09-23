@@ -1,0 +1,45 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: tsd-home-mac-dev-server-grade-criteria
+document: tsd-home-mac-dev-server
+path: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md
+graded_at: "2026-09-17T04:49:48.107Z"
+graded_by: gemma-expert-executor
+content_hash: a18be9b453fcd5a90908f3d9c36121ee68687a511d90712b95e433a8511b38ec
+summary:
+  satisfied: 2
+  unsatisfied: 3
+  total: 5
+criteria:
+  - id: DC-001
+    text: 採用技術の選定理由と制約が業務要件と整合していること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: satisfied
+  - id: DC-002
+    text: 技術スタック選定を承認できること
+    roles:
+      - PO
+    viewpoint: vp-po-decision-readiness
+    status: satisfied
+  - id: DC-003
+    text: 技術的制約・ライセンス・バージョン方針が識別できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: unsatisfied
+    reason: 技術的制約・ライセンス・バージョン方針が識別できない。
+  - id: DC-004
+    text: テストフレームワーク・CI/CD環境の参照として使えること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: unsatisfied
+    reason: テストフレームワーク・CI/CD環境の参照先が示されていない。
+  - id: DC-005
+    text: 開発環境構築・ライブラリ選定の参照として使えること
+    roles:
+      - DEV
+    viewpoint: vp-dev-implementation-readiness
+    status: unsatisfied
+    reason: 依存ライブラリの選定基準または正本への参照が欠落している。

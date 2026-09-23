@@ -8,6 +8,7 @@
   "workspaceMount": "source=${localWorkspaceFolder}/..,target=/workspaces/specdojo-workspace,type=bind,consistency=cached",
   "workspaceFolder": "/workspaces/specdojo-workspace/specdojo",
   "shutdownAction": "none",
+  "init": true,
 
   // forwardPorts（VS Code 主導の動的トンネル）ではなく appPort（Docker レベルの固定ポート公開）を使う。
   // Remote SSH 越しに Dev Container を開くネスト構成では、forwardPorts は接続元 VS Code の起動有無に
@@ -49,16 +50,18 @@
   "mounts": [
     "source=specdojo-git,target=/home/node/.config/git,type=volume",
     "source=specdojo-claude,target=/home/node/.claude,type=volume",
-    "source=specdojo-claude-state,target=/home/node/.claude-state,type=volume",
     "source=specdojo-codex,target=/home/node/.codex,type=volume",
     "source=specdojo-copilot,target=/home/node/.copilot,type=volume",
     "source=specdojo-opencode,target=/home/node/.config/opencode,type=volume",
+    "source=specdojo-antigravity,target=/home/node/.config/antigravity,type=volume",
+    "source=specdojo-gemini,target=/home/node/.gemini,type=volume",
     "source=specdojo-gh,target=/home/node/.config/gh,type=volume",
     "source=${localEnv:HOME}/dotfiles/.emacs.d,target=/home/node/.emacs.d,type=bind"
   ],
 
   "containerEnv": {
     "GIT_CONFIG_GLOBAL": "/home/node/.config/git/config",
+    "CLAUDE_CONFIG_DIR": "/home/node/.claude",
     "COPILOT_HOME": "/home/node/.copilot",
     "OLLAMA_BASE_URL": "http://host.docker.internal:11434",
     "LOCAL_OPENAI_BASE_URL": "http://host.docker.internal:11434/v1",
@@ -74,6 +77,7 @@
 
   "postCreateCommand": "bash .devcontainer/post-create.sh",
   "postStartCommand": "bash .devcontainer/post-start.sh",
+  "postAttachCommand": "bash .devcontainer/kill-stale-vscode.sh; bash .devcontainer/ensure-cron.sh",
 
   "customizations": {
     "vscode": {

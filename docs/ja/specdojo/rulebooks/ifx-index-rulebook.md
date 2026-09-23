@@ -79,6 +79,7 @@ interfaces:
     format: CSV
     timing: 発注確定時
     error_handling: 異常時は再送・管理者通知
+
     spec_ref: ifx-file-orders
 
   - name: 決済依頼/結果

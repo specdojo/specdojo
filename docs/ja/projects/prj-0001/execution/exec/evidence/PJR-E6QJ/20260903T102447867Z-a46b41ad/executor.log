@@ -1,0 +1,26 @@
+worktree 準備に生成物のビルド段階を追加しました。
+
+## 変更ファイル
+
+| ファイル | 内容 |
+| --- | --- |
+| `src/exec-worktree.ts` | `generateWorktreeArtifacts` / `resolveWorktreeBuildCommand` / `formatWorktreeBuildFailure` を追加し、`ensureExecWorktree` の新規作成・再利用の両経路で `npm ci` の直後に実行 |
+| `src/exec-worktree-ops.ts` | `checkpointAndEnsureWorktree` の既存 worktree 再利用（早期 return）経路でも生成を実行 |
+| `tests/src/exec-worktree.test.ts` | CLI 解決の優先順位・null 返却、設定なし時の skip、準備失敗メッセージの単体テストを追加 |
+| `tests/src/exec-worktree.integration.test.ts` | install → generate の実行順（新規・再利用）と、生成失敗時に worktree を保持することの統合テストを追加 |
+| `docs/ja/specdojo/guides/exec-worktree-guide.md` | `prepare` の処理へ手順 9（`specdojo build`）と、生成理由・skip 条件・失敗時の見え方を追記 |
+| `docs/ja/projects/.../pjr-e6qj-worktree-generated-artifacts.md` | 個票の「作業内容」を done へ更新し、「対応結果」を記入 |
+
+## 設計判断
+
+- 生成対象は scope を絞らず `specdojo build` を通しで実行。生成対象が増えても準備処理の追従が不要になる。本リポジトリでの実測は全 scope 約 6 秒（`register` 1.2s / `index` 1.3s / 全体 5.8s）で、`npm ci` に対して無視できる。実行前後の `git status` で追跡対象ファイルの変更が出ないことも確認済み。
+- 実行する CLI は worktree 内から解決する（`src/specdojo.ts` + ローカル `tsx` → `node_modules/.bin/specdojo` → `dist/specdojo.js`）。呼び出し元プロセスの entry に依存しないため、テストランナー配下でも意図しない再入が起きない。
+- `.specdojo/specdojo.config.json` が無い、または CLI が無い場合は stdout に理由を出して skip する。失敗時は `Worktree preparation failed: specdojo build ... (not a task deliverable failure)` を投げ、準備の失敗と成果物の失敗を区別できるようにした。
+
+## 実行した検証
+
+`npm run typecheck`、`npm run lint:ts`、変更ファイルの `prettier` / `markdownlint`、`remark`（変更 docs）、`specdojo catalog validate`、`specdojo register build`、`specdojo index build`、`validate-history-links.ts` がいずれも成功しました。`test-unit` / `test-integration` / `validate-schema` は親検証設定のため sandbox では実行していません。
+
+<specdojo_executor_evidence>
+{"final_message":"worktree 準備に生成物ビルド段階を追加（ensureExecWorktree の install 直後と既存 worktree 再利用経路で worktree 内 CLI の specdojo build を実行、設定/CLI 無しは skip、失敗は準備失敗と分かるメッセージ）。単体・統合テストとガイド、個票を更新。","validations":[{"command":"npx prettier --write src/exec-worktree.ts src/exec-worktree-ops.ts tests/src/exec-worktree.test.ts tests/src/exec-worktree.integration.test.ts docs/ja/specdojo/guides/exec-worktree-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-e6qj-worktree-generated-artifacts.md","status":"passed","summary":"整形完了（差分なし・個票のみ整形適用）"},{"command":"npx markdownlint docs/ja/specdojo/guides/exec-worktree-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-e6qj-worktree-generated-artifacts.md","status":"passed","summary":"エラーなし"},{"command":"npx remark docs/ja/specdojo/guides/exec-worktree-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-e6qj-worktree-generated-artifacts.md --quiet --frail","status":"passed","summary":"frontmatter 検査でエラーなし"},{"command":"npm run typecheck","status":"passed","summary":"tsc -b --noEmit がエラーなしで完了"},{"command":"npm run lint:ts","status":"passed","summary":"ESLint エラーなし"},{"command":"npx tsx src/specdojo.ts catalog validate","status":"passed","summary":"全 dct が OK（既存の based_on 未解決 WARN のみ）"},{"command":"npx tsx src/specdojo.ts register build","status":"passed","summary":"pjr-index と各ビューを再生成"},{"command":"npx tsx src/specdojo.ts index build","status":"passed","summary":"1497 entries → .specdojo/doc-index.json"},{"command":"npx tsx tools/docs/src/validate-history-links.ts","status":"passed","summary":"履歴ファイルのリンク記法違反なし（exit 0）"}]}
+</specdojo_executor_evidence>

@@ -1,0 +1,13 @@
+実装を完了しました。
+
+- `grade list` と `--kind all / --changed-only / --ungraded` を追加。
+- 選択結果を固定保存し、中断後も同じ文書を再開可能に変更。
+- 有効な週次再評価 routine `rtn-grade-recheck` を追加（最大5件）。
+- cron heartbeat と起動失敗検知を追加。
+- 個票・運用ガイド・CLIリファレンス・テストを更新。
+- executor 指示どおり result と登録簿ステータスは未変更です。
+- 定刻の実ログは次回火曜日6時以降に確認できます。
+
+<specdojo_executor_evidence>
+{"final_message":"修正済み・未評価文書をroutineから横断再評価できる実装、Job/Routine定義、cron生存監視、文書・テスト更新を完了","validations":[{"command":"npx prettier --write src/grade.ts tests/src/cli-verb-taxonomy.test.ts tests/tools/grade-per-document.test.ts docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml docs/ja/projects/prj-0001/routines/rtn-grade-recheck.yaml docs/ja/projects/prj-0001/controls/project-register/pjr-t2kk-grade-recheck-routine.md docs/ja/specdojo/guides/routine-operation-guide.md docs/ja/specdojo/references/command-reference.md","status":"passed","summary":"全対象ファイルを整形済み"},{"command":"npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-t2kk-grade-recheck-routine.md docs/ja/specdojo/guides/routine-operation-guide.md docs/ja/specdojo/references/command-reference.md","status":"passed","summary":"Markdownエラーなし"},{"command":"npm run typecheck","status":"passed","summary":"TypeScript型エラーなし"},{"command":"bash -n tools/grade/run-per-document.sh .devcontainer/post-start.sh","status":"passed","summary":"Shell構文エラーなし"},{"command":"node --import tsx src/specdojo.ts job validate --project prj-0001","status":"passed","summary":"3 Job、0エラー"},{"command":"node --import tsx src/specdojo.ts routine validate --project prj-0001","status":"passed","summary":"7 routine、0エラー"},{"command":"node --import tsx src/specdojo.ts routine run --project prj-0001 --due --dry-run","status":"passed","summary":"rtn-grade-recheckが火曜6時の枠と4入力を解決"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿生成成功"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"検証成功。既存の欠落文書警告のみ"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1563件の索引生成成功"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"},{"command":"npm run test:unit","status":"not_run","summary":"親runnerのallowlisted validationに委譲"},{"command":"npm run test:integration","status":"not_run","summary":"親runnerのallowlisted validationに委譲"},{"command":"npm run validate:schema","status":"not_run","summary":"親runnerのallowlisted validationに委譲"}]}
+</specdojo_executor_evidence>

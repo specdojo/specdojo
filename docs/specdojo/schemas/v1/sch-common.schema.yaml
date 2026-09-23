@@ -184,6 +184,9 @@ $defs:
         $ref: "#/$defs/DependencyIds"
       owner:
         $ref: "#/$defs/Owner"
+      agent:
+        $ref: "#/$defs/AgentAssignment"
+        description: "Agent nicknames pinned by the strategy phase that generated this task."
       agent_mode:
         $ref: "#/$defs/AgentMode"
       artifact_name:
@@ -206,6 +209,19 @@ $defs:
       description:
         type: string
         description: "Phase-level description carried from sch-strategy. Used as agent/human instructions in exec plans."
+
+  AgentAssignment:
+    type: object
+    additionalProperties: false
+    required:
+      - executor
+    properties:
+      executor:
+        type: string
+        pattern: "^[a-z0-9][a-z0-9_-]{0,62}$"
+      reporter:
+        type: string
+        pattern: "^[a-z0-9][a-z0-9_-]{0,62}$"
 
   Milestone:
     type: object

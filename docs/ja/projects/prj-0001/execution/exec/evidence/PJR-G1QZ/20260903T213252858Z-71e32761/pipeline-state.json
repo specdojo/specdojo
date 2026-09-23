@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-G1QZ",
+  "run_id": "20260903T213252858Z-71e32761",
+  "updated_at": "2026-09-03T21:40:47.123Z",
+  "stages": {
+    "executor": {
+      "status": "failed",
+      "actor": "codex-expert-executor",
+      "attempts": 1,
+      "started_at": "2026-09-03T21:32:52.858Z",
+      "completed_at": "2026-09-03T21:40:47.123Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-G1QZ/20260903T213252858Z-71e32761/evidence.json"
+    },
+    "reporter": {
+      "status": "pending",
+      "actor": "gemma-reporter",
+      "attempts": 0,
+      "started_at": null,
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/exec/plans/pjr-g1qz-20260903T213209Z-0d73-plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-g1qz-20260903T213209Z-0d73-result.md"
+  }
+}

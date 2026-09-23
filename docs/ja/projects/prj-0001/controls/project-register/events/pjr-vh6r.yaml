@@ -1,0 +1,150 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_11e9ac270233442999749d5497552f37
+  ts: "2026-09-02T13:25:25Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-QM88 で agent が申し送りを記入せず block し、orchestrator が worktree の差分を直接読む必要が生じたため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: agent-config-write の block 時に申し送りの記入を強制する
+    - field: description
+      from: ""
+      to: 保護機構が block した際、agent が対象パス・理由・提案差分・必要な検証を result へ記入しないまま終了する問題を解消する。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-02"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_be05ce59c90541a4b049bb450a4fb65e
+  ts: "2026-09-02T14:37:57Z"
+  action: update
+  actor: orchestrator
+  from_status: open
+  to_status: open
+  reason: fields updated
+  changes:
+    - field: title
+      from: agent-config-write の block 時に申し送りの記入を強制する
+      to: 保護機構の block 時に申し送りの記入を強制する
+  previous_event_id: reg_11e9ac270233442999749d5497552f37
+- v: 1
+  id: reg_274d356f5fb84d17939d91622ef9b3b8
+  ts: "2026-09-02T14:59:10Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_be05ce59c90541a4b049bb450a4fb65e
+- v: 1
+  id: reg_7d67cb04de6f4134a68900bf204793bd
+  ts: "2026-09-02T15:10:58Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: rate limit reached
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: rate limit reached
+  previous_event_id: reg_274d356f5fb84d17939d91622ef9b3b8
+- v: 1
+  id: reg_37f204084d86418da89fd8f5147e45b2
+  ts: "2026-09-02T21:32:24Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_7d67cb04de6f4134a68900bf204793bd
+- v: 1
+  id: reg_4814af57e14d44478e1fb402d3e146da
+  ts: "2026-09-02T21:50:26Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: git merge-base failed: fatal: detected dubious ownership in repository at '/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-VH6R' To add an exception for this directory, call:  …"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: rate limit reached
+      to: "integrate failed: git merge-base failed: fatal: detected dubious ownership in repository at '/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-VH6R' To add an exception for this directory, call:  …"
+  previous_event_id: reg_37f204084d86418da89fd8f5147e45b2
+- v: 1
+  id: reg_a77490dd16ef443cbfd8633ea0b5542b
+  ts: "2026-09-02T21:52:27Z"
+  action: start
+  actor: claude-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_4814af57e14d44478e1fb402d3e146da
+- v: 1
+  id: reg_22782cbd1e08467ab64550d3c2d85602
+  ts: "2026-09-02T21:53:22Z"
+  action: review
+  actor: claude-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_a77490dd16ef443cbfd8633ea0b5542b
+- v: 1
+  id: reg_345345b7553a422fa28d22dc632f5776
+  ts: "2026-09-02T21:54:58Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: 保護機構が block した時点で対象と提案差分を result へ自動記録し、agent 由来の理由と検証は未記入であることを明示するようにした。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-03"
+    - field: conclusion
+      from: "-"
+      to: 保護機構が block した時点で対象と提案差分を result へ自動記録し、agent 由来の理由と検証は未記入であることを明示するようにした。
+  previous_event_id: reg_22782cbd1e08467ab64550d3c2d85602

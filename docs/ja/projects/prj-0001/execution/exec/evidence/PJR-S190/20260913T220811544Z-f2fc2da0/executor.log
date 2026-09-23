@@ -1,0 +1,11 @@
+実装完了です。
+
+- catalog ごとの `scope.catalogs[].local_ids` を追加し、省略時の全件選択を維持。
+- build/generator を部分集合対応し、不正ID・rule不足・重複・範囲外参照を検出。
+- 複数trackで同じ成果物を扱うテスト、schemaテスト、関連ガイド・個票を更新。
+- executor 指示に従い result ファイルは未変更です。
+- 型検査、lint、既存strategyのdry-run、各SpecDojo検査は成功。親runner担当のテスト・schema検証は未実行です。
+
+<specdojo_executor_evidence>
+{"final_message":"成果物単位のstrategy scopeを実装し、後方互換性・複数track・不正値検出をテストと文書へ反映した","validations":[{"command":"npm run typecheck","status":"passed","summary":"TypeScript型検査成功"},{"command":"npm run lint:ts","status":"passed","summary":"TypeScript ESLint成功"},{"command":"npx markdownlint docs/ja/specdojo/guides/track-design-guide.md docs/ja/specdojo/guides/schedule-design-guide.md docs/ja/specdojo/rulebooks/sch-rulebook.md docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-s190-strategy-scope-local-ids.md","status":"passed","summary":"変更Markdownのlint成功"},{"command":"node --import tsx src/specdojo.ts schedule build --project prj-0001 --track data-flow --dry-run","status":"passed","summary":"既存strategyを含むdry-run成功"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"catalog検証成功、既存のbased_on警告のみ"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"register生成成功"},{"command":"node --import tsx src/specdojo.ts exec refresh","status":"passed","summary":"検証成功、既存の履歴イベント警告4件のみ"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"文書index生成成功"},{"command":"git diff --check","status":"passed","summary":"差分の空白エラーなし"},{"command":"npm run test:unit","status":"not_run","summary":"親runnerの固定検証に委譲"},{"command":"npm run test:integration","status":"not_run","summary":"親runnerの固定検証に委譲"},{"command":"npm run validate:schema","status":"not_run","summary":"親runnerの固定検証に委譲"}]}
+</specdojo_executor_evidence>

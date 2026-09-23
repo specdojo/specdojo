@@ -1,0 +1,66 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:mm-sample
+path: docs/ja/specdojo/samples/mm-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: pass
+score: 93
+graded_at: "2026-09-05T09:36:57.162Z"
+graded_by: gemma-expert-executor
+content_hash: 0443aec4290f714977287b7bd4a2e34904ce16753ab1a428cb00ae3b3c6fd1b9
+categories:
+  consistency:
+    score: 88
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 88
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 2
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: Frontmatterのidがルールブックで定義された命名規則(mm-＜yyyy-mm-dd＞-＜nn＞)に準拠していない。
+    anchor: ""
+  - id: F002
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: サンプルのidがルールブックの定義する形式に準拠しておらず、正解例としての役割を十分に果たしていない。
+    anchor: ""

@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-Y013",
+  "run_id": "20260920T123504922Z-572f5c9c",
+  "stage": {
+    "role": "executor",
+    "actor": "claude-expert-executor",
+    "status": "rate_limited",
+    "started_at": "2026-09-20T12:35:04.922Z",
+    "completed_at": "2026-09-20T13:04:00.818Z",
+    "exit_code": 1,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-y013-exec-commit-folding.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/branch-workflow-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-worktree-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/register-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/schedule-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-worktree-command.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-worktree-ops.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-pipeline-e2e.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-register-pipeline-e2e.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-worktree-command.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-worktree-ops.integration.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 12,
+    "summary": ".../pjr-y013-exec-commit-folding.md                |  25 +-\n .../pjr-y013-20260920T120927Z-fe85-result.md       |   4 +-\n docs/ja/specdojo/guides/branch-workflow-guide.md   |   4 +-\n docs/ja/specdojo/guides/exec-worktree-guide.md     |  32 +-\n .../ja/specdojo/guides/register-operation-guide.md |   2 +-\n .../ja/specdojo/guides/schedule-operation-guide.md |  18 +-\n src/exec-run.ts                                    | 429 ++++++++++++++++++---\n src/exec-worktree-command.ts                       |   9 +\n src/exec-worktree-ops.ts                           | 127 +++++-\n tests/src/exec-pipeline-e2e.integration.test.ts    |  11 +\n .../exec-register-pipeline-e2e.integration.test.ts |  23 ++\n .../src/exec-worktree-command.integration.test.ts  |   5 +-\n tests/src/exec-worktree-ops.integration.test.ts    |  55 ++-\n 13 files changed, 610 insertions(+), 134 deletions(-)"
+  },
+  "validations": [],
+  "final_message": "You've hit your session limit · resets 1:40am (Asia/Tokyo)",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-Y013/20260920T123504922Z-572f5c9c/executor.log",
+      "bytes": 59,
+      "truncated": false
+    }
+  ]
+}

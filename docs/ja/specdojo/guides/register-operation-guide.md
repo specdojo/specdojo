@@ -32,7 +32,7 @@ Register Operation Guide
 プロジェクト登録簿は、プロジェクト立ち上げ時または進行中に発生する TODO、要確認事項、リスク、課題、変更要求、決定事項、備忘を一元管理する台帳です。
 
 - 正本は各個票（`pjr-XXXX-<topic>.md`）です。登録項目一覧（`generated/pjr-index.md`）は個票から生成される一覧ビューです。
-- 個票の通常フィールドは現在値、同じ個票の `register_events` は変更履歴の正本です。Git は両者の保存・配布・レビューを担いますが、コミット粒度を業務イベントの粒度として扱いません。
+- 個票の Frontmatter は現在値、`events/pjr-XXXX.yaml` は変更履歴の正本です。Git は両者の保存・配布・レビューを担いますが、コミット粒度を業務イベントの粒度として扱いません。
 - 文書 ID `<project-id>:pjr-index` の解決先は `project-register/generated/pjr-index.md` です。`controls/**/generated/` はdoc-indexの限定的な走査対象であり、一覧自身を `[[id]]` で参照できます。
 - 一覧と、状態別・優先度別・担当者別などの派生ビューは `generated/` 配下に生成される派生物であり、直接編集しません。
 - 立ち上げ時は、未整理の問題・判断を `issue` / `question` / `decision` で記録し、合意した成果物カタログの作成を `todo` で追跡できます。
@@ -116,17 +116,17 @@ type は派生ビューの生成と `exec run --register` の挙動（`agent実�
 
 登録項目の状態はコマンドで遷移させます。手で status セルを書き換えるより、遷移ガードの効くコマンドを優先します。
 
-| 場面                     | コマンド          | 遷移後の状態                                   |
-| ------------------------ | ----------------- | ---------------------------------------------- |
-| 登録する                 | `register add`    | `open`                                         |
-| 着手する                 | `register start`  | `in-progress`                                  |
-| 他者・外部の対応を待つ   | `register wait`   | `waiting`                                      |
-| 確認・レビューに回す     | `register review` | `review`                                       |
-| 完了する                 | `register close`  | `done`（`decision` / `question` は `decided`） |
-| 対応しないと判断する     | `register reject` | `rejected`                                     |
-| 延期する                 | `register defer`  | `deferred`                                     |
-| 終了済み項目を再開する   | `register reopen` | `open`                                         |
-| 担当・期限などを変更する | `register update` | （状態は変えずフィールドを更新）               |
+| 場面                     | コマンド          | 遷移後の状態                                                          |
+| ------------------------ | ----------------- | --------------------------------------------------------------------- |
+| 登録する                 | `register add`    | `open`                                                                |
+| 着手する                 | `register start`  | `in-progress`                                                         |
+| 他者・外部の対応を待つ   | `register wait`   | `waiting`                                                             |
+| 確認・レビューに回す     | `register review` | `review`                                                              |
+| 完了する                 | `register close`  | `done`（`decision` / `question` は `decided`。`note` は終端させない） |
+| 対応しないと判断する     | `register reject` | `rejected`                                                            |
+| 延期する                 | `register defer`  | `deferred`                                                            |
+| 終了済み項目を再開する   | `register reopen` | `open`                                                                |
+| 担当・期限などを変更する | `register update` | （状態は変えずフィールドを更新）                                      |
 
 - 担当や期限が未定のまま登録する場合は、空欄ではなく _TODO_ のままにしておき、決まり次第 `register update` で埋めます。
 - 起票と完了は「日付」ではなく「瞬間」として記録します。個票 Frontmatter の `registered_at` / `completed_at` に UTC の RFC 3339・秒精度（例: `2026-08-09T14:08:51Z`）で保存し、`register add` / `register close` / `register reject` が実行時刻を自動記入します。`register reopen` は `completed_at` を削除します。
@@ -144,7 +144,10 @@ type は派生ビューの生成と `exec run --register` の挙動（`agent実�
 }
 ```
 
-- 動いていない `open` や期限切れの項目は放置せず、期限の更新、優先度の見直し、`defer` / `reject` のいずれかへ整理します。
+- 状態遷移は `open` から終端まで順に辿る必要はありません。人が対応した項目や、対話型 orchestrator がその場で処理した項目は、`start` を経ずに `close` / `reject` して構いません。着手を記録していない時点の遷移を後から補うと、実際には起きていない事実がイベントログに残ります。詳しい基準は [プロジェクト登録簿 作成ルール](../rulebooks/pjr-rulebook.md) の `中間状態を経ない終端` を参照します。
+- 直接終端させる場合は、誰がどの経路で対応したかを `register close --by <actor> --reason "<経路と根拠>"` で残します。exec 経由でないため plan / result / evidence が生成されず、実施内容と検証結果は個票の対応結果が唯一の記録になります。
+- agent へ実行させる項目は `exec run --register` を使います。この経路では runner が `start` と `wait` / `review` を記録し、plan / result / evidence も残ります。着手の記録が要る項目は、この経路を選びます。
+- 動いていない `open` や期限切れの項目は放置せず、期限の更新、優先度の見直し、`defer` / `reject` のいずれかへ整理します。ただし `note` の `open` は生きている記録を意味し、終端させません。対応・回答・判断が必要になった場合は、目的に合う別項目を起票します。
 - `waiting` へ移す理由は `register wait --reason "<理由>"` で個票 Frontmatter の `block_reason` に記録します。これは途中経過であり、終端時の結論を表す `conclusion` は変更しません。旧 `--conclusion` も互換性のため受け付けますが、記録先は `block_reason` です。
 
 すべての登録項目は個票（`pjr-XXXX-<topic>.md`）を持ちます。`close` / `reject` は処理状態の遷移とあわせて個票 Frontmatter の `status`（文書成熟度）も更新します。処理状態とは別の状態軸であり、遷移基準は [プロジェクト登録簿 作成ルール](../rulebooks/pjr-rulebook.md) の `個票 status の遷移基準` を正本とします。
@@ -208,6 +211,28 @@ specdojo register update \
   --conclusion "取消処理で在庫数を戻すよう修正"
 ```
 
+項目の主題が変わり、個票名の topic が実態と合わなくなった場合も、個票を直接移動せず `register update --topic` を使います。まず dry-run で、個票の移動先と旧文書 ID を参照している更新対象を確認します。
+
+```bash
+specdojo register update \
+  --project <project-id> \
+  --id PJR-0005 \
+  --topic inventory-cancellation \
+  --reason "取消処理へ主題を変更" \
+  --dry-run
+
+specdojo register update \
+  --project <project-id> \
+  --id PJR-0005 \
+  --topic inventory-cancellation \
+  --reason "取消処理へ主題を変更"
+```
+
+- topic は英小文字・数字を単一ハイフンで区切った slug にします。
+- 個票ファイル名と Frontmatter の文書 ID、`docs/ja` 配下の旧文書 ID 参照を一括更新し、一覧・派生ビューを再生成します。
+- 変更先ファイルが既に存在する場合は、どのファイルも書き換えずに停止します。
+- event は `action: update` とし、`changes` の `id` に変更前後の文書 ID を残します。
+
 ### 2.4. 派生ビューの扱い
 
 登録項目一覧と派生ビューは、個票を入力として `register build` で生成します。
@@ -241,7 +266,7 @@ specdojo register build --project <project-id>
 | 変更の妥当性をレビューする     | pull request の個票 Frontmatter 差分 | PR の Files changed で `project-register/pjr-*.md` の Frontmatter を確認する |
 | 1つの項目の経緯を追う          | `register history` の ID 指定        | `specdojo register history --project <project-id> --id <PJR-ID>`             |
 
-`register history` は個票内の追記型 event から項目単位の変更を古い順に再構成します。event 導入前または event 未移行の個票だけは Git 履歴へフォールバックします。比較する項目は登録項目一覧の列（ステータス・タイトル・説明・分類・優先度・担当・登録日・期限・完了日・結論）と `block_reason` です。登録日・完了日は保存された日時を `run.register_date_timezone` の暦日へ変換した表示値で比較します。
+`register history` は `events/pjr-XXXX.yaml` の追記型 event から項目単位の変更を古い順に再構成します。event 導入前または event 未移行の個票だけは Git 履歴へフォールバックします。比較する項目は登録項目一覧の列（ステータス・タイトル・説明・分類・優先度・担当・登録日・期限・完了日・結論）と `block_reason` です。登録日・完了日は保存された日時を `run.register_date_timezone` の暦日へ変換した表示値で比較します。
 
 ```bash
 # 期間を指定して台帳の変化を一覧する
@@ -264,17 +289,17 @@ specdojo register history --project <project-id> --since 2026-08-01 --json
 2026-08-09T08:20:00Z  reg_cd2  PJR-0012  updated  status: review -> done; completed: - -> 2026-08-09  # close by PO: accepted
 ```
 
-- `register add`、状態遷移、`register update`、`register renumber` は、現在値と event を同じ個票へまとめて書き込みます。`--by` と `--reason` を指定すると actor と理由を明示できます。
+- `register add`、状態遷移、`register update`、`register renumber` は、現在値を個票へ、event を項目別イベントファイルへ書き込みます。`--by` と `--reason` を指定すると actor と理由を明示できます。
 - 一覧の列に現れない変更（対応結果本文の追記、個票 `status` の昇格など）は event になりません。個票の全差分が必要な場合は `git log -p` を使います。
 - `--status-only` は追加・削除・状態遷移だけを残し、変更内容も遷移に関わる項目（`status` / `type` / `completed` / `conclusion`）へ絞ります。
 - `renumber` による ID 付け替えは、`id` の変更を含む `updated` イベントとして現れます。
-- 複数の遷移を1コミットへまとめたり squash したりしても、個票に残る各 event の発生日時・actor・変更内容は失われません。`register start` を含む遷移時の commit policy は別の運用判断であり、event 導入だけでは変更しません。
-- 書き込みは個票単位の一時ファイルを同一ディレクトリで完成させてから置換します。中断しても現在値だけ、または event だけの部分書き込みを残しません。同じ現在値への再実行は event を増やさず、`register build` がイベント ID・直前参照・状態連鎖・最新状態を検証します。
-- 異なる個票の並行実行は別ファイルへ追記するため共有ログ競合を起こしません。同じ個票を複数 worktree で変更した場合は通常の個票競合として統合を止め、片方の event を削除せず再実行または手動統合します。
-- exec event と共通化するのは UTC 秒精度、version、actor、reason、追記・検証の原則です。exec は task state の SSOT で1 event 1 JSON、Register は現在値を個票に維持し同じ個票内の配列を監査履歴とするため、保存形式と fold 処理は共通化しません。
-- 生成物（`generated/` 配下）は追跡対象外のため、PR の差分にも Git 履歴にも現れません。レビューと履歴の対象は常に個票です。
+- 複数の遷移を1コミットへまとめたり squash したりしても、項目別イベントファイルに残る各 event の発生日時・actor・変更内容は失われません。`register start` を含む遷移時の commit policy は別の運用判断です。
+- 個票とイベントログはそれぞれ一時ファイルを同一ディレクトリで完成させてから置換します。同じ現在値への再実行は event を増やさず、`register build` がファイルの 1 対 1 対応、イベント ID・直前参照・状態連鎖・最新状態を検証するため、中断による片側だけの更新も検出できます。
+- 異なる項目の並行実行は別の個票とイベントファイルへ書くため共有ログ競合を起こしません。同じ項目を複数 worktree で変更した場合は項目別イベントファイルの競合として統合を止め、片方の event を削除せず再実行または手動統合します。
+- exec event と共通化するのは UTC 秒精度、version、actor、reason、追記・検証の原則です。exec は task state の SSOT で 1 event 1 JSON、Register は現在値を個票に維持し項目別 YAML 配列を監査履歴とするため、保存形式と fold 処理は共通化しません。
+- 生成物（`generated/` 配下）は追跡対象外のため、PR の差分にも Git 履歴にも現れません。レビュー対象は個票と `events/` 配下の項目別ログです。
 - 既存プロジェクトは移行前でも動作し、event のない個票は Git 履歴から再構成します。`register migrate --dry-run` で件数を確認し、`register migrate` で復元可能な Git 履歴を決定的な event ID へ変換します。浅い clone などで履歴が不足する場合は無理に合成せず Git フォールバックを維持します。
-- ロールバックは event 対応版より前の CLI へ戻すだけで、通常フィールドは従来形式のまま読めます。旧 CLI は未知の `register_events` を schema 検証で拒否する可能性があるため、コードだけを戻して個票の event を削除しません。必要なら event 対応版を再適用します。
+- 分離前の CLI は `events/` を読まないため、ロールバック時も項目別ログを削除せず、分離対応版の CLI を再適用して履歴を維持します。
 - 個票へ移行する前（`pjr-index.md` の表が正本だった期間）の履歴は、削除済みの一覧ファイルの履歴に残ります。`git log -p --follow -- <登録簿ディレクトリ>/pjr-index.md` で参照します。
 
 ### 2.6. 承認フローと承認者
@@ -322,11 +347,12 @@ specdojo exec run --project <project-id> --register PJR-0012 PJR-0013 --worktree
 
 - type が `todo` / `issue` / `change-request` の項目は成果物・実装を変更する対応、`question` / `risk` の項目は調査して結論案を result に記録する対応になります。`decision` / `note` は実行対象外です。
 - 状態は register の遷移（`in-progress` / `review` / `waiting`）で追跡され、agent は項目を終端化しません。成功後は人が内容を確認して `register close` します。
+- 個票の「関連ドキュメント」に `[[文書ID]]` 形式で記載された対象成果物は、plan 生成時に直近の自動評価（grade）結果があれば `_GRADE_FINDINGS_` として plan に展開されます。表示は最大10文書・各20件までに制限され、超過分はサイドカーを参照するよう促します。サイドカーがない場合は「finding なし」と表示されます。
 - `--register` には複数の PJR-ID を空白区切り・カンマ区切り（またはその混在）で渡せます。指定順に1件ずつ実行し、各IDが plan/result 生成・開始・agent実行・状態遷移まで完結してから次へ進みます。重複したIDは最初の1件だけを実行します。
 - 全ID処理後にID別の成否・状態遷移・commit 結果を一覧表示します。いずれかが失敗した場合は終了コード 1 で終了します。
 - `--register-commit` を付けると成功IDごとに、その実行で生じた変更だけをcommitします（実行前から作業ツリーにある利用者の変更は含めません）。`--on-failure`（`stop` 既定 / `continue`）で途中失敗時に停止するか継続するかを選びます。`stop` では失敗以降のIDが skipped として記録されます。
 - 既定は in-place の直列実行で、変更は作業ツリーに残ります（`--register-commit` を付けると commit します）。
-- `--worktree` を付けると、成果物の変更を git worktree に隔離して実行し、成功時に統合ブランチへ merge back します。task worktree では root と package-lock 付き独立 package ごとに `npm ci` を実行し、書き込み可能な独立 `node_modules` を準備してから agent を起動します。状態遷移（`start` / `review` / `waiting`）は統合ブランチ側で直列化されます。worktree モードは常に commit するため `--register-commit` は無視されます（指定すると注記を表示します）。
+- `--worktree` を付けると、成果物の変更を git worktree に隔離して実行し、成功時に統合ブランチへ merge back します。task worktree では root と package-lock 付き独立 package ごとに `npm ci` を実行し、書き込み可能な独立 `node_modules` を準備してから agent を起動します。成功時の `start → review`、plan、result、成果物は `exec(register <PJR-ID>): <title>` の merge commit に同梱され、統合ブランチの first-parent には1項目1commitだけが増えます。失敗時は `start → waiting` と plan / result を `exec(register <PJR-ID>): wait` commit 1件にまとめ、worktree を保持します。`--resume` で再開した場合の `start` 遷移も exec branch 側に記録され、成功時は merge commit 1件、再び失敗した場合は `wait` commit 1件になります。worktree モードは常に commit するため `--register-commit` は無視されます（指定すると注記を表示します）。
 - `--worktree` と併用する場合に限り `--parallel <n>` で複数項目を並列実行できます。状態遷移は直列化され、成果物は項目ごとの worktree に隔離されます。`--parallel` を単独（`--worktree` なし）で指定するとエラーになります。失敗時は当該項目の worktree を保持します（調査・再実行のため）。
 - 実行せずに plan の内容だけ確認したい場合は `exec plan --register <PJR-ID>` を使います。
 - open な項目の定期スイープなど、時刻条件で繰り返す場合は routine（`rtn-*.yaml`）を使います。

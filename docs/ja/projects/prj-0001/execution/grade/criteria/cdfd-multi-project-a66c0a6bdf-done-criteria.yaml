@@ -1,0 +1,30 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: prj-0001:cdfd-multi-project-grade-criteria
+document: prj-0001:cdfd-multi-project
+path: docs/ja/product/010-business-specs/010-data-flow/cdfd-multi-project.md
+graded_at: "2026-09-13T00:42:11.623Z"
+graded_by: codex-expert-executor
+content_hash: 691cd78e6c6c1068e26195063c3951edf12d83a4aacc4bb6e1a503f4c84e3614
+summary:
+  satisfied: 3
+  unsatisfied: 0
+  total: 3
+criteria:
+  - id: DC-001
+    text: project develop・feature・execの作成、作業、同期、統合、後片付けの各プロセスと担当が表と図で確認できること
+    roles:
+      - BA
+    viewpoint: vp-ba-business-value
+    status: satisfied
+  - id: DC-002
+    text: 各ブランチ・worktreeが読み書きするプロジェクト成果物、実行記録、commitと統合方向が識別できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: satisfied
+  - id: DC-003
+    text: ID競合・merge競合・同期失敗・未commit変更がある場合の停止条件と復旧経路が確認できること
+    roles:
+      - QE
+    viewpoint: vp-qe-omissions-consistency
+    status: satisfied

@@ -1,0 +1,83 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: tsd-home-mac-dev-server-usage
+path: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server-usage.md
+target: deliverable
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 89
+graded_at: "2026-09-13T23:53:04.813Z"
+graded_by: gemma-expert-executor
+content_hash: a9e13141cb32fbc617b89a475c0cd042104391a254ba40ec01c346d05b8cf3b8
+categories:
+  consistency:
+    score: 75
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 83
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 2
+    score: 50
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 2
+  minor: 0
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 50
+    message: DC-001, DC-002, DC-003 を満たす記述（選定理由、承認判断情報、技術的制約・ライセンス方針）が不足している。
+    anchor: ""
+  - id: F002
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 50
+    message: TSDルールブックで必須とされる「採用理由」の記述が欠落している。
+    anchor: ""
+done_criteria:
+  satisfied: 2
+  total: 5
+  unsatisfied:
+    DC-001:
+      - BA
+    DC-002:
+      - PO
+    DC-003:
+      - ARC
+  detail_ref: tsd-home-mac-dev-server-usage-grade-criteria

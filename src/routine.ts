@@ -1,5 +1,5 @@
 import { spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, rmSync, statSync } from "node:fs";
+import { appendFileSync, existsSync, mkdirSync, readdirSync, rmSync, statSync } from "node:fs";
 import { basename, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { type Command } from "commander";
@@ -15,43 +15,31 @@ import {
   readYaml,
   writeJson,
 } from "./exec-shared.js";
-import {
-  loadRegisterItems,
-  resolveRegisterPaths,
-  VALID_PRIORITIES,
-  VALID_STATUSES,
-  VALID_TYPES,
-  type PjrItem,
-} from "./register.js";
-import { registerItemCategory } from "./exec-register.js";
 import { ROUTINE_BUSY_SKIP_EXIT_CODE, ROUTINE_EXEC_ENV } from "./exec-run-lock.js";
+import { resolveJobPaths } from "./job.js";
 
 // ================================
 // Types
 // ================================
 
-export type RoutineActionKind = "register" | "exec-auto" | "exec-resume" | "exec-cycle" | "job";
+export type RoutineActionKind = "job" | "specdojo";
 
-export type RoutineRegisterFilter = {
-  types?: string[];
-  priorities?: string[];
-  statuses?: string[];
-};
-
-export type RoutineAction = {
-  kind: RoutineActionKind;
-  // kind: register — 登録簿から実行対象を選ぶフィルタと件数上限
-  filter?: RoutineRegisterFilter;
-  limit?: number;
-  // kind: exec-auto / exec-resume — exec run / resume へ引き渡すオプション
-  strategy?: "critical-first" | "fifo";
-  parallel?: number;
-  loop?: boolean;
-  max_rounds?: number;
-  // kind: job — materialize する Job Definition と入力
-  job?: string;
+export type RoutineJobAction = {
+  kind: "job";
+  job: string;
   inputs?: Record<string, string>;
 };
+
+// exec の実行ロックを取らずに specdojo サブコマンドを直接起動する action。dashboard build のように
+// 読み取りと派生生成だけを行い、agent を呼ばず他の実行と衝突しない処理に限って使う。
+export type RoutineSpecdojoAction = {
+  kind: "specdojo";
+  args: string[];
+};
+
+export type RoutineAction = RoutineJobAction | RoutineSpecdojoAction;
+
+export type RoutineActionList = RoutineAction | RoutineAction[];
 
 export type RoutineDoc = {
   id: string;
@@ -64,10 +52,10 @@ export type RoutineDoc = {
     timezone: string;
   };
   policy?: {
-    missed_run?: "latest" | "all";
+    missed_run?: "skip" | "latest" | "all";
     overlap?: "skip";
   };
-  action: RoutineAction;
+  action: RoutineActionList;
 };
 
 export type LoadedRoutine = {
@@ -80,6 +68,7 @@ export type RoutinePaths = {
   routinesPath: string;
   generatedPath: string;
   statePath: string;
+  runsPath: string;
 };
 
 export type RoutineExecutionResult = "success" | "failure" | "skipped";
@@ -88,7 +77,29 @@ export type RoutineStateEntry = {
   last_run: string;
   last_result?: RoutineExecutionResult;
   last_scheduled_for?: string;
+  last_action_results?: RoutineActionResult[];
 };
+
+export type RoutineActionResult = {
+  index: number;
+  kind: RoutineActionKind;
+  result: RoutineExecutionResult;
+};
+
+export type RoutineRunHistoryEntry = {
+  version: 1;
+  routine_id: string;
+  scheduled_for: string;
+  started_at: string;
+  completed_at: string;
+  result: RoutineExecutionResult;
+  job_run_ids: string[];
+};
+
+export function routineActionKindLabel(action: RoutineActionList): string {
+  const actions = Array.isArray(action) ? action : [action];
+  return actions.length > 0 ? actions.map((item) => item.kind).join(" -> ") : "-";
+}
 
 type RoutineStateFile = {
   routines: Record<string, RoutineStateEntry>;
@@ -213,6 +224,16 @@ export function cronOccurrences(
   const parsedLast = lastScheduledFor ? new Date(lastScheduledFor) : null;
   if (parsedLast && Number.isNaN(parsedLast.getTime())) return cronOccurrences(doc, undefined, now);
 
+  if (doc.policy?.missed_run === "skip") {
+    const lastMinute = parsedLast
+      ? Math.floor(parsedLast.getTime() / 60_000) * 60_000
+      : Number.NEGATIVE_INFINITY;
+    return nowMinute.getTime() > lastMinute &&
+      cronMatches(doc.trigger.cron, doc.trigger.timezone, nowMinute)
+      ? [nowMinute]
+      : [];
+  }
+
   if (!parsedLast) {
     for (let offset = 0; offset <= MAX_CRON_LOOKBACK_MINUTES; offset++) {
       const candidate = new Date(nowMinute.getTime() - offset * 60_000);
@@ -259,29 +280,63 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-function validateStringListField(
-  errors: string[],
+function parseRoutineAction(
   value: unknown,
   fieldName: string,
-  allowed: readonly string[],
-): void {
-  if (value === undefined) return;
-  if (!Array.isArray(value) || value.some((entry) => typeof entry !== "string")) {
-    errors.push(`${fieldName} must be a list of strings`);
-    return;
+  errors: string[],
+): RoutineAction | undefined {
+  if (!isRecord(value)) {
+    errors.push(`${fieldName} must be a mapping with kind`);
+    return undefined;
   }
-  for (const entry of value) {
-    if (!allowed.includes(entry)) {
-      errors.push(`${fieldName} contains unknown value "${entry}". Allowed: ${allowed.join(", ")}`);
-    }
-  }
-}
 
-function validatePositiveIntegerField(errors: string[], value: unknown, fieldName: string): void {
-  if (value === undefined) return;
-  if (typeof value !== "number" || !Number.isSafeInteger(value) || value < 1) {
-    errors.push(`${fieldName} must be a positive integer`);
+  const kind = typeof value.kind === "string" ? value.kind : "";
+  if (kind === "specdojo") {
+    const unknownKeys = Object.keys(value).filter((key) => key !== "kind" && key !== "args");
+    if (unknownKeys.length > 0) {
+      errors.push(`${fieldName} has unknown key(s): ${unknownKeys.sort().join(", ")}`);
+    }
+    const args = value.args;
+    if (
+      !Array.isArray(args) ||
+      args.length === 0 ||
+      args.some((item) => typeof item !== "string" || item.length === 0)
+    ) {
+      errors.push(`${fieldName}.args must be a non-empty list of strings`);
+      return undefined;
+    }
+    if (args.includes("exec") || args.includes("--project")) {
+      errors.push(`${fieldName}.args must not include exec or --project (project is appended)`);
+      return undefined;
+    }
+    return { kind: "specdojo", args: args as string[] };
   }
+
+  const unknownKeys = Object.keys(value).filter(
+    (key) => key !== "kind" && key !== "job" && key !== "inputs",
+  );
+  if (unknownKeys.length > 0) {
+    errors.push(`${fieldName} has unknown key(s): ${unknownKeys.sort().join(", ")}`);
+  }
+  if (kind !== "job") {
+    errors.push(`${fieldName}.kind must be job or specdojo (got "${kind}")`);
+  }
+  if (typeof value.job !== "string" || !/^job-[a-z0-9][a-z0-9-]*$/.test(value.job)) {
+    errors.push(`${fieldName}.job must match job-<slug>`);
+  }
+  if (
+    value.inputs !== undefined &&
+    (!isRecord(value.inputs) ||
+      Object.values(value.inputs).some((item) => typeof item !== "string"))
+  ) {
+    errors.push(`${fieldName}.inputs must be a mapping of string values`);
+  }
+
+  return {
+    kind: "job",
+    job: typeof value.job === "string" ? value.job : "",
+    ...(isRecord(value.inputs) ? { inputs: value.inputs as Record<string, string> } : {}),
+  };
 }
 
 // rtn-*.yaml 1 ファイルぶんを検証し、妥当なら RoutineDoc として返す。
@@ -354,106 +409,33 @@ export function parseRoutineDoc(
     else {
       const missed = value.policy.missed_run;
       const overlap = value.policy.overlap;
-      if (missed !== undefined && missed !== "latest" && missed !== "all") {
-        errors.push("policy.missed_run must be latest or all");
+      if (missed !== undefined && missed !== "skip" && missed !== "latest" && missed !== "all") {
+        errors.push("policy.missed_run must be skip, latest, or all");
       }
       if (overlap !== undefined && overlap !== "skip") errors.push("policy.overlap must be skip");
       policy = {
-        ...(missed === "latest" || missed === "all" ? { missed_run: missed } : {}),
+        ...(missed === "skip" || missed === "latest" || missed === "all"
+          ? { missed_run: missed }
+          : {}),
         ...(overlap === "skip" ? { overlap } : {}),
       };
     }
   }
 
-  if (!isRecord(value.action)) {
-    errors.push("action is required and must be a mapping with kind");
-    return { errors: errors.map((message) => `${fileName}: ${message}`) };
-  }
-
-  const action = value.action;
-  const kind = typeof action.kind === "string" ? action.kind : "";
-  if (
-    kind !== "register" &&
-    kind !== "exec-auto" &&
-    kind !== "exec-resume" &&
-    kind !== "exec-cycle" &&
-    kind !== "job"
-  ) {
-    errors.push(
-      `action.kind must be one of: register, exec-auto, exec-resume, exec-cycle, job (got "${kind}")`,
+  let action: RoutineActionList | undefined;
+  if (Array.isArray(value.action)) {
+    if (value.action.length === 0) errors.push("action must contain at least one action");
+    const parsed = value.action.map((item, index) =>
+      parseRoutineAction(item, `action[${index}]`, errors),
     );
+    if (parsed.every((item): item is RoutineAction => item !== undefined)) action = parsed;
+  } else {
+    action = parseRoutineAction(value.action, "action", errors);
   }
 
-  if (kind === "register") {
-    if (action.filter !== undefined && !isRecord(action.filter)) {
-      errors.push("action.filter must be a mapping");
-    } else if (isRecord(action.filter)) {
-      validateStringListField(errors, action.filter.types, "action.filter.types", VALID_TYPES);
-      validateStringListField(
-        errors,
-        action.filter.priorities,
-        "action.filter.priorities",
-        VALID_PRIORITIES,
-      );
-      validateStringListField(
-        errors,
-        action.filter.statuses,
-        "action.filter.statuses",
-        VALID_STATUSES,
-      );
-    }
-    validatePositiveIntegerField(errors, action.limit, "action.limit");
-  }
-
-  // exec-cycle takes the same auto-step tuning as exec-auto (strategy / parallel / loop /
-  // max_rounds); parallel additionally caps the resume step of the cycle.
-  if (kind === "exec-auto" || kind === "exec-cycle") {
-    if (
-      action.strategy !== undefined &&
-      action.strategy !== "critical-first" &&
-      action.strategy !== "fifo"
-    ) {
-      errors.push('action.strategy must be "critical-first" or "fifo"');
-    }
-    validatePositiveIntegerField(errors, action.parallel, "action.parallel");
-    validatePositiveIntegerField(errors, action.max_rounds, "action.max_rounds");
-    if (action.loop !== undefined && typeof action.loop !== "boolean") {
-      errors.push("action.loop must be a boolean");
-    }
-  }
-
-  if (kind === "exec-resume") {
-    validatePositiveIntegerField(errors, action.parallel, "action.parallel");
-  }
-
-  if (kind === "job") {
-    if (typeof action.job !== "string" || !/^job-[a-z0-9][a-z0-9-]*$/.test(action.job)) {
-      errors.push("action.job must match job-<slug>");
-    }
-    if (
-      action.inputs !== undefined &&
-      (!isRecord(action.inputs) ||
-        Object.values(action.inputs).some((item) => typeof item !== "string"))
-    ) {
-      errors.push("action.inputs must be a mapping of string values");
-    }
-  }
-
-  if (errors.length > 0) {
+  if (errors.length > 0 || action === undefined) {
     return { errors: errors.map((message) => `${fileName}: ${message}`) };
   }
-
-  const filter = isRecord(action.filter)
-    ? {
-        ...(Array.isArray(action.filter.types) ? { types: action.filter.types as string[] } : {}),
-        ...(Array.isArray(action.filter.priorities)
-          ? { priorities: action.filter.priorities as string[] }
-          : {}),
-        ...(Array.isArray(action.filter.statuses)
-          ? { statuses: action.filter.statuses as string[] }
-          : {}),
-      }
-    : undefined;
 
   const doc: RoutineDoc = {
     id,
@@ -463,19 +445,7 @@ export function parseRoutineDoc(
     ...(interval ? { interval } : {}),
     ...(parsedTrigger ? { trigger: parsedTrigger } : {}),
     ...(policy ? { policy } : {}),
-    action: {
-      kind: kind as RoutineActionKind,
-      ...(filter && Object.keys(filter).length > 0 ? { filter } : {}),
-      ...(typeof action.limit === "number" ? { limit: action.limit } : {}),
-      ...(action.strategy === "critical-first" || action.strategy === "fifo"
-        ? { strategy: action.strategy }
-        : {}),
-      ...(typeof action.parallel === "number" ? { parallel: action.parallel } : {}),
-      ...(typeof action.loop === "boolean" ? { loop: action.loop } : {}),
-      ...(typeof action.max_rounds === "number" ? { max_rounds: action.max_rounds } : {}),
-      ...(typeof action.job === "string" ? { job: action.job } : {}),
-      ...(isRecord(action.inputs) ? { inputs: action.inputs as Record<string, string> } : {}),
-    },
+    action,
   };
   return { doc, errors: [] };
 }
@@ -523,6 +493,7 @@ export function resolveRoutinePaths(opts: { project?: string }): RoutinePaths {
     routinesPath: absRoutinesPath,
     generatedPath,
     statePath: join(generatedPath, "routine-state.json"),
+    runsPath: join(generatedPath, "routine-runs.jsonl"),
   };
 }
 
@@ -594,32 +565,9 @@ function writeRoutineState(paths: RoutinePaths, state: RoutineStateFile): void {
   writeJson(paths.statePath, state);
 }
 
-// ================================
-// Register item selection
-// ================================
-
-// 実行可能 type（registerItemCategory が非 null）の既定リスト。
-const DEFAULT_FILTER_TYPES = VALID_TYPES.filter((t) => registerItemCategory(t) !== null);
-const DEFAULT_FILTER_STATUSES = ["open"];
-
-// routine の filter に従って登録簿から実行対象を選ぶ。statuses 既定は open のみ、
-// types 既定は実行可能 type 全部。ID 昇順で安定させ、limit で件数を制限する。
-export function selectRegisterItems(items: PjrItem[], action: RoutineAction): PjrItem[] {
-  const types = action.filter?.types ?? DEFAULT_FILTER_TYPES;
-  const statuses = action.filter?.statuses ?? DEFAULT_FILTER_STATUSES;
-  const priorities = action.filter?.priorities;
-
-  const matched = items
-    .filter(
-      (item) =>
-        registerItemCategory(item.type) !== null &&
-        types.includes(item.type) &&
-        statuses.includes(item.status) &&
-        (priorities === undefined || priorities.includes(item.priority)),
-    )
-    .sort((a, b) => a.id.localeCompare(b.id));
-
-  return action.limit !== undefined ? matched.slice(0, action.limit) : matched;
+export function appendRoutineRunHistory(runsPath: string, entry: RoutineRunHistoryEntry): void {
+  ensureDir(resolve(runsPath, ".."));
+  appendFileSync(runsPath, `${JSON.stringify(entry)}\n`, "utf8");
 }
 
 // ================================
@@ -685,42 +633,6 @@ function spawnSelf(args: string[]): RoutineExecutionResult {
   return result.status === 0 ? "success" : "failure";
 }
 
-// exec-auto action を exec run --auto の引数リストへ変換する（dry-run 表示と実行で共用）。
-export function buildExecAutoArgs(action: RoutineAction, projectId: string): string[] {
-  const args = ["exec", "run", "--auto", "--project", projectId, "--if-busy", "skip"];
-  if (action.strategy) args.push("--strategy", action.strategy);
-  if (action.parallel !== undefined) args.push("--parallel", String(action.parallel));
-  if (action.loop) {
-    args.push("--loop");
-    if (action.max_rounds !== undefined) args.push("--max-rounds", String(action.max_rounds));
-  }
-  return args;
-}
-
-export function buildExecResumeArgs(action: RoutineAction, projectId: string): string[] {
-  const args = ["exec", "resume", "--due", "--project", projectId, "--if-busy", "skip"];
-  if (action.parallel !== undefined) args.push("--parallel", String(action.parallel));
-  return args;
-}
-
-// exec-cycle action → exec cycle の引数リストへ変換する（dry-run 表示と実行で共用）。
-// resume → refresh → auto loop を単一の project lock 内で順次実行する。strategy / loop /
-// max_rounds は auto step、parallel は resume と auto の両 step に適用される。
-export function buildExecCycleArgs(action: RoutineAction, projectId: string): string[] {
-  const args = ["exec", "cycle", "--project", projectId, "--if-busy", "skip"];
-  if (action.strategy) args.push("--strategy", action.strategy);
-  if (action.parallel !== undefined) args.push("--parallel", String(action.parallel));
-  if (action.loop) {
-    args.push("--loop");
-    if (action.max_rounds !== undefined) args.push("--max-rounds", String(action.max_rounds));
-  }
-  return args;
-}
-
-export function buildRegisterRunArgs(pjrId: string, projectId: string): string[] {
-  return ["exec", "run", "--register", pjrId, "--project", projectId, "--if-busy", "skip"];
-}
-
 function renderRoutineInput(value: string, scheduledAt: Date, timezone: string): string {
   return value.replace(/\{\{\s*scheduled_at(?:\s*\|\s*iso_week)?\s*\}\}/g, (match) =>
     match.includes("iso_week") ? isoWeek(scheduledAt, timezone) : scheduledAt.toISOString(),
@@ -728,7 +640,7 @@ function renderRoutineInput(value: string, scheduledAt: Date, timezone: string):
 }
 
 export function buildJobRunArgs(
-  action: RoutineAction,
+  action: RoutineJobAction,
   projectId: string,
   scheduledAt: Date,
   timezone = "UTC",
@@ -756,92 +668,124 @@ export function buildJobRunArgs(
   return args;
 }
 
-// 1 routine を実行する。register kind は対象項目ごとに失敗を記録して継続し、
-// 最後に集約する（1 件の失敗で残りの項目を止めない）。
+export function aggregateRoutineActionResults(
+  results: RoutineExecutionResult[],
+): RoutineExecutionResult {
+  if (results.includes("failure")) return "failure";
+  if (results.includes("skipped")) return "skipped";
+  return "success";
+}
+
+export function executeRoutineActions(
+  actions: RoutineAction[],
+  execute: (action: RoutineAction, index: number) => RoutineExecutionResult,
+): RoutineActionResult[] {
+  return actions.map((action, offset) => {
+    const index = offset + 1;
+    return { index, kind: action.kind, result: execute(action, index) };
+  });
+}
+
+// routine は時刻条件と Job への委譲だけを持つ。実行内容と入力検証は Job Definition が担う。
+function executeRoutineAction(
+  doc: RoutineDoc,
+  action: RoutineAction,
+  projectId: string,
+  dryRun: boolean,
+  scheduledAt = new Date(),
+): RoutineExecutionResult {
+  const args =
+    action.kind === "specdojo"
+      ? buildSpecdojoActionArgs(action, projectId)
+      : buildJobRunArgs(action, projectId, scheduledAt, doc.trigger?.timezone ?? "UTC");
+  if (dryRun) {
+    process.stdout.write(`  [dry-run] specdojo ${args.join(" ")}\n`);
+    return "success";
+  }
+  return spawnSelf(args);
+}
+
+// specdojo action は exec run を経由せず、指定したサブコマンドに --project を付けて起動する。
+export function buildSpecdojoActionArgs(
+  action: RoutineSpecdojoAction,
+  projectId: string,
+): string[] {
+  return [...action.args, "--project", projectId];
+}
+
+type RoutineRunResult = {
+  result: RoutineExecutionResult;
+  actionResults?: RoutineActionResult[];
+  jobRunIds: string[];
+};
+
+function findJobRunId(
+  action: RoutineAction,
+  projectId: string,
+  scheduledAt: Date,
+): string | undefined {
+  if (action.kind !== "job") return undefined;
+  const runsPath = resolveJobPaths(projectId).runsPath;
+  if (!existsSync(runsPath)) return undefined;
+  const scheduledFor = scheduledAt.toISOString();
+  for (const file of readdirSync(runsPath)
+    .filter((name) => name.endsWith(".json"))
+    .sort()) {
+    try {
+      const run = readJson(join(runsPath, file)) as Record<string, unknown>;
+      if (
+        run.job_id === action.job &&
+        run.scheduled_at === scheduledFor &&
+        typeof run.run_id === "string"
+      ) {
+        return run.run_id;
+      }
+    } catch {
+      // Job Run の検証は job 側の責務。履歴追記では壊れた別 Run を無視する。
+    }
+  }
+  return undefined;
+}
+
+// action が配列なら、前段の結果にかかわらず先頭から全段を順次実行する。
+// 段別結果を返し、全体結果は failure > skipped > success の順に集約する。
 function executeRoutine(
   routine: LoadedRoutine,
   projectId: string,
   dryRun: boolean,
   scheduledAt = new Date(),
-): RoutineExecutionResult {
+): RoutineRunResult {
   const { doc } = routine;
-  process.stdout.write(`[routine] ${doc.id}: ${doc.name ?? doc.action.kind}\n`);
+  const actions = Array.isArray(doc.action) ? doc.action : [doc.action];
+  const label = doc.name ?? (actions.length === 1 ? actions[0].kind : `${actions.length} actions`);
+  process.stdout.write(`[routine] ${doc.id}: ${label}\n`);
 
-  if (doc.action.kind === "exec-auto") {
-    const args = buildExecAutoArgs(doc.action, projectId);
-    if (dryRun) {
-      process.stdout.write(`  [dry-run] specdojo ${args.join(" ")}\n`);
-      return "success";
-    }
-    return spawnSelf(args);
-  }
-
-  if (doc.action.kind === "exec-resume") {
-    const args = buildExecResumeArgs(doc.action, projectId);
-    if (dryRun) {
-      process.stdout.write(`  [dry-run] specdojo ${args.join(" ")}\n`);
-      return "success";
-    }
-    return spawnSelf(args);
+  if (!Array.isArray(doc.action)) {
+    const result = executeRoutineAction(doc, doc.action, projectId, dryRun, scheduledAt);
+    const jobRunId = dryRun ? undefined : findJobRunId(doc.action, projectId, scheduledAt);
+    return {
+      result,
+      jobRunIds: jobRunId ? [jobRunId] : [],
+    };
   }
 
-  if (doc.action.kind === "exec-cycle") {
-    const args = buildExecCycleArgs(doc.action, projectId);
-    if (dryRun) {
-      process.stdout.write(`  [dry-run] specdojo ${args.join(" ")}\n`);
-      return "success";
-    }
-    return spawnSelf(args);
-  }
-
-  if (doc.action.kind === "job") {
-    const args = buildJobRunArgs(
-      doc.action,
-      projectId,
-      scheduledAt,
-      doc.trigger?.timezone ?? "UTC",
-    );
-    if (dryRun) {
-      process.stdout.write(`  [dry-run] specdojo ${args.join(" ")}\n`);
-      return "success";
-    }
-    return spawnSelf(args);
-  }
-
-  // kind: register
-  const registerPaths = resolveRegisterPaths({ project: projectId });
-  if (!existsSync(registerPaths.projectRegisterPath)) {
-    process.stderr.write(`  project register not found: ${registerPaths.projectRegisterPath}\n`);
-    return "failure";
-  }
-  // 選択対象は個票 frontmatter（正本）から読む。未移行の項目は pjr-index の行で補う。
-  const items = loadRegisterItems(registerPaths).map((view) => view.item);
-  const selected = selectRegisterItems(items, doc.action);
-  if (selected.length === 0) {
-    process.stdout.write(`  no matching register items\n`);
-    return "success";
-  }
-
-  let allOk = true;
-  const failedIds: string[] = [];
-  for (const item of selected) {
-    const args = buildRegisterRunArgs(item.id, projectId);
-    if (dryRun) {
-      process.stdout.write(`  [dry-run] specdojo ${args.join(" ")}  (${item.title})\n`);
-      continue;
-    }
-    process.stdout.write(`  run: ${item.id} — ${item.title}\n`);
-    const result = spawnSelf(args);
-    if (result === "skipped") return "skipped";
-    if (result === "failure") {
-      allOk = false;
-      failedIds.push(item.id);
-    }
-  }
-  if (failedIds.length > 0) {
-    process.stderr.write(`  failed register item(s): ${failedIds.join(", ")}\n`);
-  }
-  return allOk ? "success" : "failure";
+  const actionResults = executeRoutineActions(actions, (action, index) => {
+    process.stdout.write(`  action ${index}/${actions.length}: ${action.kind}\n`);
+    const result = executeRoutineAction(doc, action, projectId, dryRun, scheduledAt);
+    process.stdout.write(`  action ${index}/${actions.length}: ${result}\n`);
+    return result;
+  });
+  const result = aggregateRoutineActionResults(actionResults.map((item) => item.result));
+  process.stdout.write(
+    `  action summary: ${actionResults.map((item) => `${item.index}:${item.result}`).join(", ")} => ${result}\n`,
+  );
+  const jobRunIds = dryRun
+    ? []
+    : doc.action.flatMap((action) => {
+        const runId = findJobRunId(action, projectId, scheduledAt);
+        return runId ? [runId] : [];
+      });
+  return { result, actionResults, jobRunIds };
 }
 
 // ================================
@@ -877,6 +821,7 @@ export function registerRoutineCommands(program: Command): void {
       process.stdout.write(`project:  ${paths.projectId}\n`);
       process.stdout.write(`routines: ${paths.routinesPath}\n`);
       process.stdout.write(`state:    ${paths.statePath}\n`);
+      process.stdout.write(`runs:     ${paths.runsPath}\n`);
       const files = listFilesRecursive(paths.routinesPath).filter(isRoutineYamlFile).sort();
       for (const filePath of files) {
         process.stdout.write(`  ${filePath}\n`);
@@ -927,7 +872,7 @@ export function registerRoutineCommands(program: Command): void {
         id: doc.id,
         enabled: doc.enabled === false ? "disabled" : "enabled",
         interval: doc.interval ?? doc.trigger?.cron ?? "-",
-        kind: doc.action.kind,
+        kind: routineActionKindLabel(doc.action),
         lastRun: formatRoutineLastRun(state.routines[doc.id]),
         due:
           doc.enabled === false
@@ -1024,30 +969,42 @@ export function registerRoutineCommands(program: Command): void {
       let skipped = 0;
       for (const selectedRun of selected) {
         const { entry, scheduledAt } = selectedRun;
+        const startedAt = nowUtcIsoSeconds();
         // 実行の試行自体を last_run として先に記録する。失敗した routine が次の
         // 発火まで再試行されない代わりに、失敗が高頻度で連続発火することを防ぐ。
         if (!dryRun) {
           state.routines[entry.doc.id] = {
             ...state.routines[entry.doc.id],
-            last_run: nowUtcIsoSeconds(),
+            last_run: startedAt,
             ...(entry.doc.trigger ? { last_scheduled_for: scheduledAt.toISOString() } : {}),
           };
           writeRoutineState(paths, state);
         }
 
-        const result = executeRoutine(entry, paths.projectId, dryRun, scheduledAt);
+        const execution = executeRoutine(entry, paths.projectId, dryRun, scheduledAt);
+        const { result } = execution;
         if (result === "failure") failed++;
         if (result === "skipped") {
           skipped++;
-          process.stdout.write(`[routine] skipped ${entry.doc.id}: exec busy\n`);
+          process.stdout.write(`[routine] skipped ${entry.doc.id}: job action skipped\n`);
         }
 
         if (!dryRun) {
           state.routines[entry.doc.id] = {
             ...state.routines[entry.doc.id],
             last_result: result,
+            last_action_results: execution.actionResults,
           };
           writeRoutineState(paths, state);
+          appendRoutineRunHistory(paths.runsPath, {
+            version: 1,
+            routine_id: entry.doc.id,
+            scheduled_for: scheduledAt.toISOString(),
+            started_at: startedAt,
+            completed_at: nowUtcIsoSeconds(),
+            result,
+            job_run_ids: execution.jobRunIds,
+          });
         }
       }
 

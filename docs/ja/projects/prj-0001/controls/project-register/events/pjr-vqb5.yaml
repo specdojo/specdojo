@@ -1,0 +1,50 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ff0f15ca90c84752bb54c675a9c19ac7
+  ts: "2026-08-29T13:44:26Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: grade 判定の agent 比較結果（gemma / claude / qwen）
+    - field: description
+      from: ""
+      to: 同一の grade plan を gemma-expert-executor、claude-expert-executor、qwen-expert-executor へ渡して判定結果を比較した実測記録。kata 4 件を対象とし、level 分布、finding の件数と質、grade apply の受理可否、指摘の正確性を評価した。claude のみが実用条件を満たし、gemma は finding の message が空で apply に拒否され、qwen は JSON を出力できなかった。バッチと単体の prompt サイズを変えた比較も行い、gemma の問題がコンテキスト量に起因しないことを確認した。
+    - field: type
+      from: ""
+      to: note
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-08-29"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_f730d723f99444e18308158c23b20fe6
+  ts: "2026-08-29T13:56:32Z"
+  action: update
+  actor: manual
+  from_status: open
+  to_status: open
+  reason: 担当と期限を確定
+  changes:
+    - field: owner
+      from: _TODO_
+      to: ARC
+    - field: due
+      from: _TODO_
+      to: "2026-09-30"
+  previous_event_id: reg_ff0f15ca90c84752bb54c675a9c19ac7

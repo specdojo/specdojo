@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_4db8ae233dc640f6a2cdc3bdeeba2194
+  ts: "2026-09-03T09:50:00Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-WZMA が job 統合による削除を含むため統合に失敗し、PJR-TA5C の未解明な失敗も同一原因の可能性が高いため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 統合処理が削除ファイルを含む変更を commit できない
+    - field: description
+      from: ""
+      to: staged 済みの削除パスへ git add -A を再実行すると pathspec 不一致で失敗し、ファイル削除を伴う項目が統合できない。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-03"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_ff63d2170b2b46a48c63af3abb465983
+  ts: "2026-09-03T09:51:15Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_4db8ae233dc640f6a2cdc3bdeeba2194
+- v: 1
+  id: reg_d107ac44aa9040ec98e7d5ee6c9cfe07
+  ts: "2026-09-03T10:03:18Z"
+  action: review
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_ff63d2170b2b46a48c63af3abb465983
+- v: 1
+  id: reg_f43c4053d1ed40f8b69ce164032b3c27
+  ts: "2026-09-03T10:07:14Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: staged 済みの削除を git add の対象から除外し、削除を含む変更を統合できるようにした。commit の pathspec は HEAD も照合するため削除は記録される。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-03"
+    - field: conclusion
+      from: "-"
+      to: staged 済みの削除を git add の対象から除外し、削除を含む変更を統合できるようにした。commit の pathspec は HEAD も照合するため削除は記録される。
+  previous_event_id: reg_d107ac44aa9040ec98e7d5ee6c9cfe07

@@ -72,7 +72,7 @@ const validReviewOutput = {
 } as const;
 
 describe("reporter structured output", () => {
-  it("accepts the strict edit shape and rejects additional properties", () => {
+  it("accepts the strict edit shape, unwraps code fences, and rejects additional properties", () => {
     expect(parseReporterOutput(JSON.stringify(validEditOutput), "edit").output).toEqual(
       validEditOutput,
     );
@@ -80,9 +80,12 @@ describe("reporter structured output", () => {
       parseReporterOutput(JSON.stringify({ ...validEditOutput, commentary: "extra" }), "edit")
         .error,
     ).toMatch(/additional properties/);
+    // agent は provider やモデルによってコードフェンスや前置きを付けるため、
+    // 応答から JSON 本体を取り出したうえで検証する。schema 検証は緩めない。
     expect(
-      parseReporterOutput(`\`\`\`json\n${JSON.stringify(validEditOutput)}\n\`\`\``, "edit").error,
-    ).toMatch(/single JSON value/);
+      parseReporterOutput(`\`\`\`json\n${JSON.stringify(validEditOutput)}\n\`\`\``, "edit").output,
+    ).toEqual(validEditOutput);
+    expect(parseReporterOutput("判定できませんでした", "edit").error).toMatch(/single JSON value/);
   });
 
   it("keeps the published JSON schema aligned with valid reporter output", () => {
@@ -117,6 +120,8 @@ describe("reporter structured output", () => {
     expect(prompt).toContain("<specdojo_reporter_output_schema");
     expect(prompt).toContain('source="runner"');
     expect(prompt).toContain('outcome="blocked"');
+    expect(prompt).toContain("identifier or field name");
+    expect(prompt).toContain("`depends_on`");
     expect(prompt).not.toContain("raw_diff");
     expect(prompt).not.toContain("executor log body");
   });

@@ -76,15 +76,27 @@ flowchart LR
 
 Schedule は用途別に4種類のファイルで管理します。
 
-| ファイル                                  | 役割                                              |
-| ----------------------------------------- | ------------------------------------------------- |
-| `sch-milestones.yaml`                     | プロジェクト全体のマイルストーン計画              |
-| `sch-defaults.yaml`                       | 全 Schedule 共通のカレンダーや開始日のデフォルト  |
-| `sch-strategy-<track>.yaml`               | track schedule の自動生成ルール                   |
-| `sch-track-<track>.yaml`                  | 展開済みの Task / Milestone 定義                  |
-| `assessments/sch-assessment-<track>.yaml` | 成果物と実践の型の整備状況判定（strategy の入力） |
+| ファイル                    | 役割                                             |
+| --------------------------- | ------------------------------------------------ |
+| `sch-milestones.yaml`       | プロジェクト全体のマイルストーン計画             |
+| `sch-defaults.yaml`         | 全 Schedule 共通のカレンダーや開始日のデフォルト |
+| `sch-strategy-<track>.yaml` | track schedule の自動生成ルール                  |
+| `sch-track-<track>.yaml`    | 展開済みの Task / Milestone 定義                 |
 
-`sch-strategy-<track>.yaml` は `schedule build` の生成入力であり、DCT・Timeline・assessment・標準 profile から `schedule strategy generate` で作成できます。`schedule build` 後は `sch-track-<track>.yaml` が実行対象になります。整備状況判定は `assessments/` 配下に置き、`sch-*.yaml` を直接読む build 系の処理が strategy / track と取り違えないようにします。
+`sch-strategy-<track>.yaml` は `schedule build` の生成入力であり、DCT・Timeline・`approach_rules`・Kata grade・標準 profile から `schedule strategy generate` で更新できます。`schedule build` 後は `sch-track-<track>.yaml` が実行対象になります。
+
+strategy の scope は catalog と成果物の二段階で指定します。`scope.catalogs[].local_ids` を省略すると、従来どおりその catalog で `include_kinds` に一致する全成果物が対象です。指定した場合は一致する成果物との積集合だけが対象となり、`approach_rules` と `owner_rules` はその部分集合を重複なく網羅します。カタログに存在しない `local_id`、選択外の rule、rule の欠落・重複はエラーになります。
+
+```yaml
+scope:
+  catalogs:
+    - id: prj-0001:dct-data-flow
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml
+      local_ids: [cdfd-onboarding, cdfd-plan]
+  include_kinds: [work]
+```
+
+同じ成果物を複数 strategy が選択しても構いません。生成 task ID は `T-<TRACK>-<local_id>-<suffix>` なので、各 track の作成・レビュー・完了状態は `exec refresh` と dashboard で別々に扱われます。成果物カタログを定義する track は Timeline の `catalog_status: primary` で示し、別 track による再修正はその定義責任や所属ドメインを変更しません。`schedule strategy generate` は既存 strategy の catalog ごとの `local_ids` を維持し、選択外の成果物には rule やタスクを生成しません。
 
 計画成果物を Schedule に載せるプロジェクトでは、専用の `planning` ドメインと `planning` トラックを用います。人または agent が更新する計画入力は `kind: work`、track と milestones は `kind: generated` としてカタログへ登録します。ただし `sch-strategy-planning` 自身は `kind: control` とするか planning scope 外へ置き、strategy が自身の作成タスクを生成する循環を避けます。`dct-<domain>.yaml` 自身と `generated/` 配下の表示用生成物は Schedule 対象にしません。
 
@@ -97,7 +109,7 @@ strategy から track への生成フロー、展開する情報、反復、タ�
 `sch-track-<track>.yaml` は原則として手書きせず、次の流れで生成します。
 
 ```text
-成果物カタログ（dct-*.yaml）+ Timeline + sch-assessment-<track>.yaml
+成果物カタログ（dct-*.yaml）+ Timeline + strategy の approach_rules + Kata grade
   -> specdojo schedule strategy generate --track <track>
   -> sch-strategy-<track>.yaml
   -> specdojo schedule build --track <track> --force
@@ -264,13 +276,14 @@ phase_sets:
       proficiency: expert
 ```
 
-| フィールド     | 用途                                     |
-| -------------- | ---------------------------------------- |
-| `execution`    | `agent` または `human`。省略時は `agent` |
-| `mode`         | `edit` または `review`。省略時は `edit`  |
-| `approach`     | plan テンプレートの進め方を選ぶ          |
-| `capabilities` | 必要なツールや能力を示す                 |
-| `proficiency`  | 必要な習熟度を示す                       |
+| フィールド     | 用途                                       |
+| -------------- | ------------------------------------------ |
+| `execution`    | `agent` または `human`。省略時は `agent`   |
+| `mode`         | `edit` または `review`。省略時は `edit`    |
+| `approach`     | plan テンプレートの進め方を選ぶ            |
+| `capabilities` | 必要なツールや能力を示す                   |
+| `proficiency`  | 必要な習熟度を示す                         |
+| `agent`        | executor / reporter を nickname で指名する |
 
 `approach` の値ごとの意味と、rulebook / recipe / sample / template の参照方針は [実践の進め方ガイド](ryu-guide.md) を参照します。エージェント選択の詳細は [exec設定ガイド](exec-config-guide.md) を参照します。
 
@@ -286,6 +299,9 @@ phase_sets:
       execution: agent
       task_suffix: "020"
       mode: edit
+      agent:
+        executor: codex-expert-executor
+        reporter: gemma-reporter
       agent_pipeline:
         stages:
           - stage_role: executor
@@ -303,7 +319,9 @@ phase_sets:
 - `agent_pipeline` は phase 単位の任意設定です。省略した phase は従来の単一 agent フローのまま動作します。
 - pipeline を指定した phase は agent 実行専用です。`execution: human` と併用できません。
 - `mode` と `approach` は phase 全体へ適用し、各 stage の agent 選択要件は stage 内の `capabilities` と `proficiency` で定義します。
-- stage には `pm-members.yaml` の nickname を書きません。`stage_role` と実行要件に一致する member を実行時に解決します。
+- 通常は `stage_role` と実行要件に一致する member を実行時に自動選択します。provider の利用枠を phase ごとに計画する場合は、phase の `agent.executor` / `agent.reporter` に `pm-members.yaml` の nickname を指定します。
+- `agent` と `agent_pipeline` は併用できます。`--executor-by` / `--reporter-by`、phase の `agent`、stage の `capabilities` / `proficiency` による自動選択の順で解決します。`owner_rules[].phase_overrides[].agent` では成果物単位に指名を上書きできます。
+- by-name の agent が rate limit になった場合は別 agent へ自動フォールバックせず、タスクを待機状態にします。再開時も同じ agent を使い、緊急の差し替えだけを CLI の stage override で行います。
 - 登録簿の項目（`exec run --register`）は per-item のパイプライン宣言を持たないため、`agent_pipeline` の YAML 定義は使いません。代わりに `--executor-by <nickname>` と `--reporter-by <nickname>` を両方指定すると、同じ executor/reporter 2段階（evidence の受け渡し・result 描画を含む）で実行します。詳細は [CLIコマンドリファレンス](../references/command-reference.md) の `exec run` を参照します。
 
 ### 3.3. `bootstrap` と `retrofit` のフェーズ順序
@@ -334,28 +352,27 @@ sch-track task
 
 `mode`、`approach`、`execution`、`capabilities`、`proficiency` だけを変更した場合は `exec refresh` で反映できます。タスク構造が変わる変更をした場合は `schedule build --force` が必要です。
 
-### 3.5. 実践の型の整備状況判定（`sch-assessment-<track>.yaml`）
+### 3.5. intent 宣言と approach の決定論的導出
 
-phase や owner rule に書く `approach` は、対象成果物と実践の型が実際に使える状態かどうかで変わります。この整備状況判定を `assessments/sch-assessment-<track>.yaml` に残し、strategy を書く前の入力にします。判断は次のとおり分担します。
+phase や owner rule に書く `approach` は、タスクの目的と実践の型が使える状態かどうかで決まります。目的は strategy の `approach_rules`、利用可能性は Kata に保存された grade を正本とし、strategy 生成時に facts を収集して都度導出します。
 
-| 段階     | 担当                                                | 出力                                                                            |
-| -------- | --------------------------------------------------- | ------------------------------------------------------------------------------- |
-| 事実収集 | コード（`schedule assessment scaffold`）            | `facts`（成果物・実践の型の実在、宣言形式、`status`、参照切れ、実装エビデンス） |
-| 意味判断 | エージェント（`schedule assessment prompt` の指示） | `judgment`（4観点の利用可能性とタスク目的 `intent`）                            |
-| 規則適用 | コード（`schedule assessment validate`）            | `recommended_approach`（判定規則の結果と一致することを検証）                    |
-| 構造生成 | コード（`schedule strategy generate`）              | scope・profile・owner・gate・依存・milestone を持つ strategy                    |
-| 承認     | 人間                                                | 判定結果のレビュー、`undecided` の解消、`status` の確定                         |
+| 段階     | 正本・担当                             | 出力                                                         |
+| -------- | -------------------------------------- | ------------------------------------------------------------ |
+| 目的宣言 | strategy の `approach_rules`           | 7 種の `intent` と必要な target / scope                      |
+| 品質評価 | `specdojo grade`                       | grade result サイドカーの保存済み `verdict`                  |
+| 事実収集 | コード                                 | 実在、要否宣言、参照切れ、実装エビデンス                     |
+| 規則適用 | コード（`schedule strategy generate`） | 成果物ごとの approach                                        |
+| 構造生成 | コード（`schedule strategy generate`） | scope・profile・owner・gate・依存・milestone を持つ strategy |
 
-- 実践の型の解決規則（カタログの文書 ID / `undecided` / `not-needed` 宣言・未宣言・参照切れ）はコード側の単一実装を使います。エージェントにファイル探索・ID 導出・存在判定をさせず、`facts` の再編集も禁止します。
-- 利用可能性は、`target-fit`（対象成果物向けか）、`substantive-content`（空・placeholder 中心でないか）、`internal-consistency`（相互に致命的な矛盾がないか）、`standard-alignment`（現行 rulebook・schema と整合するか）の4観点を根拠付きで評価し、すべて `pass` なら `usable`、1件でも `fail` なら `unusable`、`fail` が無く未確認が残れば `unknown` とします。`status: draft` であること自体は利用不能の根拠になりません。
-- `recommended_approach` は `intent` と利用可能性から決まります。`not-needed` は欠落とみなさず、必要と宣言された型がすべて利用可能なら `fully-guided` を選べます。`author-deliverable` だけが整備状況で `fully-guided` / `recipe-guided` / `freeform` に分岐し、`bootstrap` / `retrofit` / `cross-deliverable-dedup` / 各 `*-maintenance` / `finalize` / `bootstrap-finalize` は目的別フェーズとして `intent` から選びます。
+- `TaskIntent` 7 種は `author-deliverable`、`bootstrap-kata-set`、`reflect-implementation`、`deduplicate-across-deliverables`、`improve-kata`、`confirm-deliverable`、`confirm-with-kata-set` です。同じ track や owner rule 内でも成果物ごとに別の rule へ分けられます。
+- `author-deliverable` は grade が `pass` の Kata を利用可能とし、`fully-guided` / `recipe-guided` / `freeform` を導出します。他の intent は目的別の `bootstrap` / `retrofit` / 横断整理 / maintenance / finalize 系へ一意に写像します。
 - `bootstrap` は `bootstrap_scope`（作成条件から必要と判断し、一式で初期整備する実践の型）と理由の記載が必要です。`not-needed` またはすべて利用可能な型を対象にできません。`retrofit` は解決済みの `evidence_refs` が 1 件以上必要です。
-- 判定できない項目が残る場合は `recommended_approach: undecided` とし、対象 `local_id` を `topic` にした blocking な `open_questions` を必ず添えます。`undecided` のまま strategy を生成しません。
+- intent の欠落・重複、必要な grade や追加パラメータの欠落、参照切れがある場合は暫定 approach を使わず生成を停止します。
 - 標準 profile は `bootstrap`、`retrofit`、`fully-guided`、`recipe-guided`、`freeform`、4種の maintenance、横断整理、`finalize` / `bootstrap-finalize` を、固定の phase ID・suffix・duration・execution・mode・agent pipeline へ写像します。`not-needed` の型に対応する maintenance は生成せず、成果物ごとに異なる profile は `owner_rules[].phase_sets` で分けます。
 - owner は明示オプション、既存 strategy、既定 owner の順に解決します。DCT の `done_criteria.roles` はレビュー観点なので、主担当へ流用しません。
 - generator は書き込み前に `schedule build --dry-run` 相当を実行します。全 strategy の project ID、参照、schema、milestone ID に問題があれば既存ファイルを上書きしません。
 
-コマンドの使い方は [CLIコマンドリファレンス](../references/command-reference.md) の `schedule assessment（成果物・実践の型の利用可能性判定）`、`approach` ごとの進め方は [実践の進め方ガイド](ryu-guide.md) の `整備状況に応じた進め方（approach）` を参照します。
+コマンドの使い方は [CLIコマンドリファレンス](../references/command-reference.md) の `schedule strategy（決定論的な strategy 生成）`、`approach` ごとの進め方は [実践の進め方ガイド](ryu-guide.md) を参照します。
 
 ## 4. タスク設計の品質
 

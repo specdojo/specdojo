@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_848415587a2647bf935a687bbea136bf
+  ts: "2026-09-23T05:17:29Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-2ZVS の実装（schedule 経路）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: kata 保守タスクへ review フェーズを追加する
+    - field: description
+      from: ""
+      to: PJR-2ZVS の決定のうち schedule 経路を実装する。sch-strategy-launch.yaml の recipe-consolidate / rulebook-consolidate / sample-consolidate / template-consolidate へ review フェーズを追加し、既存の xrp-*-maintenance テンプレートを使う。owner ロールは各 edit タスクの owner を踏襲し、観点セットに vp-qe-kata-conformance を必ず含める。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-23"
+    - field: due
+      from: ""
+      to: "2026-11-14"

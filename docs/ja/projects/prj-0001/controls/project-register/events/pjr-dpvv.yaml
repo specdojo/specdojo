@@ -1,0 +1,105 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_5100b991163b41acbd0955655c605c5e
+  ts: "2026-09-21T06:27:04Z"
+  action: add
+  actor: specdojo-orchestrator (claude)
+  from_status: null
+  to_status: open
+  reason: PJR-7VKR の同梱範囲の見直しで利用者が分離を指示
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 文書 lint を @specdojo/docs-lint として分離する
+    - field: description
+      from: ""
+      to: tools/docs/src の remark プラグインと検証スクリプトは CLI から参照されず、依存も devDependencies のため npm 同梱しても利用者側で動かない。@specdojo/docs-site と同じ形で packages/docs-lint に分離し、remark プラグインの export と bin を提供する。specdojo の files から tools/docs を除く
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-21"
+    - field: due
+      from: ""
+      to: "2026-10-10"
+- v: 1
+  id: reg_7db1d6ada4ea487d8292d195bab62c59
+  ts: "2026-09-21T07:58:17Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_5100b991163b41acbd0955655c605c5e
+- v: 1
+  id: reg_3890fd26d2ce4ea399ae485574fbc261
+  ts: "2026-09-21T08:20:25Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=lefthook.yml, package.json; agent must record the required change …"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=lefthook.yml, package.json; agent must record the required change …"
+  previous_event_id: reg_7db1d6ada4ea487d8292d195bab62c59
+- v: 1
+  id: reg_7085b50948e94efca3d656da8a120891
+  ts: "2026-09-21T08:57:09Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_3890fd26d2ce4ea399ae485574fbc261
+- v: 1
+  id: reg_111db42a102c4427a82b4aa2af87716d
+  ts: "2026-09-21T09:10:51Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_7085b50948e94efca3d656da8a120891
+- v: 1
+  id: reg_2d08671b2bb848368ae1c57c6f7478eb
+  ts: "2026-09-21T09:26:33Z"
+  action: close
+  actor: specdojo-orchestrator (claude)
+  from_status: review
+  to_status: done
+  reason: codex-expert-executor が worktree で実装。保護設定の scripts / hook はオーケストレーターが適用し、develop で check 通過を確認して利用者が close
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-21"
+  previous_event_id: reg_111db42a102c4427a82b4aa2af87716d

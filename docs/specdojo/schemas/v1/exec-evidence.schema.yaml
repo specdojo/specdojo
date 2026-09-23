@@ -111,6 +111,36 @@ properties:
   final_message:
     type: string
     maxLength: 4000
+  command:
+    description: >
+      Runner-executed deterministic Job command, stream references, and optional redacted,
+      bounded stream content. stdout and stderr are optional for compatibility with evidence
+      recorded before inline command output was introduced.
+    type: object
+    additionalProperties: false
+    required: [shell, value, exit_code, stdout_ref, stderr_ref]
+    properties:
+      shell:
+        type: string
+        minLength: 1
+      value:
+        type: string
+        minLength: 1
+        maxLength: 16000
+      exit_code:
+        type: [integer, "null"]
+      stdout_ref:
+        type: string
+        minLength: 1
+      stderr_ref:
+        type: string
+        minLength: 1
+      stdout:
+        type: string
+        maxLength: 65536
+      stderr:
+        type: string
+        maxLength: 65536
   log_refs:
     type: array
     maxItems: 10
@@ -120,7 +150,7 @@ properties:
       required: [kind, path, bytes, truncated]
       properties:
         kind:
-          const: agent-output-excerpt
+          enum: [agent-output-excerpt, command-stdout, command-stderr]
         path:
           type: string
           minLength: 1

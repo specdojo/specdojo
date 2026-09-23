@@ -1,0 +1,156 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_e5a8e0d95fb24107846317ebd0d8490d
+  ts: "2026-08-29T13:44:26Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: qwen が GradeSubmission JSON を出力できない問題に対処する
+    - field: description
+      from: ""
+      to: qwen-expert-executor は grade の判定そのものは完了しながら、最終ステップの GradeSubmission JSON 出力に到達せず散文で応答を終えた。分析品質は claude に匹敵し、opr-batch-sample の rulebook 宣言と本文参照の不一致という実在の不整合を発見している。出力形式を強制できればローカルモデルでの grade 運用が可能になり、API コストなしで全 kata を評価できる。opencode agent 定義での出力形式指定、JSON スキーマによる制約、plan 側の指示強化のいずれで解決するかを検証する。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-08-29"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_e895465abb1241f486eedc12ddb996d2
+  ts: "2026-08-29T13:56:32Z"
+  action: update
+  actor: manual
+  from_status: open
+  to_status: open
+  reason: 担当と期限を確定
+  changes:
+    - field: owner
+      from: _TODO_
+      to: ARC
+    - field: due
+      from: _TODO_
+      to: "2026-09-30"
+  previous_event_id: reg_e5a8e0d95fb24107846317ebd0d8490d
+- v: 1
+  id: reg_c2d5e37d255b4e4590c3cca3dd0d06f3
+  ts: "2026-08-29T15:25:53Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_e895465abb1241f486eedc12ddb996d2
+- v: 1
+  id: reg_24b620ec3ed74494806026dce594ab0e
+  ts: "2026-08-29T15:38:32Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: 実モデル（Qwen API）への接続ができず、JSON 出力が実際に得られるか、およびそれが `grade apply` で受理されるかの検証が完了していないため。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: 実モデル（Qwen API）への接続ができず、JSON 出力が実際に得られるか、およびそれが `grade apply` で受理されるかの検証が完了していないため。"
+  previous_event_id: reg_c2d5e37d255b4e4590c3cca3dd0d06f3
+- v: 1
+  id: reg_ec416a7badaa4cf29f781bc8865c25af
+  ts: "2026-08-29T16:38:51Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_24b620ec3ed74494806026dce594ab0e
+- v: 1
+  id: reg_dce0a599920444cd925140206d0269a8
+  ts: "2026-08-29T16:48:29Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: JSON出力契約の実装および静的検証は完了したが、Ollama接続不可のため、実モデルを用いた最終的な動作検証が未完了である。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "agent exited with non-zero code: 実モデル（Qwen API）への接続ができず、JSON 出力が実際に得られるか、およびそれが `grade apply` で受理されるかの検証が完了していないため。"
+      to: "agent exited with non-zero code: JSON出力契約の実装および静的検証は完了したが、Ollama接続不可のため、実モデルを用いた最終的な動作検証が未完了である。"
+  previous_event_id: reg_ec416a7badaa4cf29f781bc8865c25af
+- v: 1
+  id: reg_773f7c17016046c4be8d88c997314dba
+  ts: "2026-08-29T23:35:35Z"
+  action: update
+  actor: manual
+  from_status: waiting
+  to_status: waiting
+  reason: reporter でも同じ問題が生じており、qwen 固有ではなく agent 共通の応答解析の課題であるため
+  changes:
+    - field: id
+      from: prj-0001:pjr-akj4-qwen-json-output
+      to: prj-0001:pjr-akj4-agent-json-response
+    - field: title
+      from: qwen が GradeSubmission JSON を出力できない問題に対処する
+      to: agent の JSON 応答を確実に解析できるようにする
+  previous_event_id: reg_dce0a599920444cd925140206d0269a8
+- v: 1
+  id: reg_8f0bffbb95484132818bc07903dc625e
+  ts: "2026-08-29T23:41:32Z"
+  action: review
+  actor: manual
+  from_status: waiting
+  to_status: review
+  reason: 共通の JSON 抽出処理を実装し実モデルで検証したため
+  changes:
+    - field: status
+      from: waiting
+      to: review
+  previous_event_id: reg_773f7c17016046c4be8d88c997314dba
+- v: 1
+  id: reg_ba94b9b395ae406a8c845a7c219a7f9b
+  ts: "2026-08-29T23:41:32Z"
+  action: close
+  actor: manual
+  from_status: review
+  to_status: done
+  reason: 実装・検証・レビューが完了したため
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-08-30"
+    - field: conclusion
+      from: "-"
+      to: plan へ最終応答契約を追加して agent 定義の最終報告指示に優先させ、qwen が GradeSubmission JSON を出力するようにした。あわせて src/agent-response.ts の extractJsonText を追加し、grade と exec-reporter の両方でコードフェンスや前置きを伴う応答から JSON 本体を取り出すようにした。抽出できない応答は従来どおりエラーとし、schema 検証と既存の検証規則は緩めていない。qwen の生出力が手作業なしで grade apply に受理されることを実モデルで確認した。
+  previous_event_id: reg_8f0bffbb95484132818bc07903dc625e

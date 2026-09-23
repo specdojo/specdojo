@@ -1,0 +1,17 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/job.schema.yaml
+id: job-exec-resume
+name: 利用制限 task の再開
+description: 再開可能時刻を迎えた retryable な利用制限 task を再開する。
+inputs:
+  parallel:
+    type: integer
+    default: 1
+    minimum: 1
+task:
+  mode: command
+  owner: ARC
+  command: >-
+    {{specdojo}} exec resume --due --project "{{project_id}}"
+    --parallel "{{inputs.parallel}}" --if-busy skip
+run:
+  idempotency_key: "{{job_id}}:{{scheduled_at}}:{{inputs.parallel}}"

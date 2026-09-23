@@ -26,6 +26,14 @@ properties:
         required:
           type: boolean
         default: true
+        enum:
+          type: array
+          minItems: 1
+          uniqueItems: true
+        minimum:
+          type: integer
+        maximum:
+          type: integer
         from_checkpoint:
           type: string
           minLength: 1
@@ -33,42 +41,43 @@ properties:
           enum: [git_head]
         git_revision:
           type: boolean
+      allOf:
+        - if:
+            properties:
+              type:
+                const: integer
+          then:
+            properties:
+              enum:
+                items:
+                  type: integer
+          else:
+            not:
+              anyOf:
+                - required: [minimum]
+                - required: [maximum]
+        - if:
+            properties:
+              type:
+                const: boolean
+          then:
+            properties:
+              enum:
+                items:
+                  type: boolean
+        - if:
+            properties:
+              type:
+                enum: [string, list]
+          then:
+            properties:
+              enum:
+                items:
+                  type: string
   task:
-    type: object
-    additionalProperties: false
-    required: [mode, description]
-    anyOf:
-      - required: [targets]
-      - required: [paths]
-    properties:
-      mode:
-        enum: [edit, review]
-      owner:
-        type: string
-        minLength: 1
-      description:
-        type: string
-        minLength: 1
-      targets:
-        type: array
-        minItems: 1
-        items:
-          type: string
-          minLength: 1
-      paths:
-        type: array
-        minItems: 1
-        items:
-          type: string
-          minLength: 1
-      capabilities:
-        type: array
-        minItems: 1
-        items:
-          type: string
-          minLength: 1
-      proficiency:
-        enum: [low, normal, high, expert]
+    oneOf:
+      - $ref: "#/$defs/agentTask"
+      - $ref: "#/$defs/commandTask"
   run:
     type: object
     additionalProperties: false
@@ -94,3 +103,96 @@ properties:
         uniqueItems: true
         items:
           enum: [succeeded, noop]
+$defs:
+  pathScope:
+    type: array
+    minItems: 1
+    items:
+      type: string
+      minLength: 1
+  agentTask:
+    type: object
+    additionalProperties: false
+    required: [mode, description]
+    anyOf:
+      - required: [targets]
+      - required: [paths]
+    properties:
+      mode:
+        enum: [edit, review]
+      owner:
+        type: string
+        minLength: 1
+      description:
+        type: string
+        minLength: 1
+      targets:
+        $ref: "#/$defs/pathScope"
+      paths:
+        $ref: "#/$defs/pathScope"
+      agent:
+        description: >
+          Nicknames of the pm-members.yaml agents the Job delegates to. Takes
+          precedence over capabilities/proficiency based auto selection. With
+          reporter the Run executes as an executor/reporter pipeline; without it
+          the executor runs alone and fills the Run result itself.
+        type: object
+        additionalProperties: false
+        required: [executor]
+        properties:
+          executor:
+            type: string
+            pattern: "^[a-z0-9][a-z0-9_-]{0,62}$"
+          reporter:
+            type: string
+            pattern: "^[a-z0-9][a-z0-9_-]{0,62}$"
+      capabilities:
+        type: array
+        minItems: 1
+        items:
+          type: string
+          minLength: 1
+      proficiency:
+        enum: [low, normal, high, expert]
+  commandTask:
+    type: object
+    additionalProperties: false
+    required: [mode, command]
+    properties:
+      mode:
+        const: command
+      owner:
+        type: string
+        minLength: 1
+      command:
+        type: string
+        minLength: 1
+      precondition:
+        type: object
+        additionalProperties: false
+        required: [command, skip_when]
+        properties:
+          command:
+            type: string
+            minLength: 1
+          skip_when:
+            oneOf:
+              - const: empty-output
+              - type: integer
+                minimum: 0
+                maximum: 255
+      analysis:
+        type: object
+        additionalProperties: false
+        required: [agent, description]
+        properties:
+          agent:
+            type: string
+            pattern: "^[a-z0-9][a-z0-9_-]{0,62}$"
+          description:
+            type: string
+            minLength: 1
+      targets:
+        $ref: "#/$defs/pathScope"
+      paths:
+        $ref: "#/$defs/pathScope"

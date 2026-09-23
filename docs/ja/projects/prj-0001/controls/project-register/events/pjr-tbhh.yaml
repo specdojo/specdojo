@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f4eb175e9c2141f4b3d109329ddf1faf
+  ts: "2026-09-20T05:00:24Z"
+  action: add
+  actor: specdojo-orchestrator (claude)
+  from_status: null
+  to_status: open
+  reason: prj-0001 の実測（直近 1 週間の commit の 72% が exec の記帳）を踏まえ、利用者が Detached Unit を既定にすると判断
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 利用プロジェクトの既定構成を Detached Unit にする
+    - field: description
+      from: ""
+      to: SpecDojo の記帳 commit は履歴の大半を占めるため、利用プロジェクトでは SpecDojo Unit をプロダクトと別リポジトリに置く Detached Unit を既定とし、guide・quick-start・config init の雛形・directory-layout-reference をその前提に改める。Attached は成果物と実装が同じ変更で動く場合に限る
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-20"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_b3baa541fcc74fee9c903be174b6d8ba
+  ts: "2026-09-21T01:33:32Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_f4eb175e9c2141f4b3d109329ddf1faf
+- v: 1
+  id: reg_2edc7658355743c98f27f4795af69fbd
+  ts: "2026-09-21T01:47:16Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_b3baa541fcc74fee9c903be174b6d8ba
+- v: 1
+  id: reg_69bc230610db47ecb74942985facc824
+  ts: "2026-09-21T04:52:42Z"
+  action: close
+  actor: specdojo-orchestrator (claude)
+  from_status: review
+  to_status: done
+  reason: codex-expert-executor が worktree で実施し新規則の merge commit 1 つで統合。完了条件 5 項目（lint:md / docs:build 含む）を確認して利用者が close
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-21"
+  previous_event_id: reg_2edc7658355743c98f27f4795af69fbd

@@ -1,0 +1,157 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-9M5N",
+  "run_id": "20260909T214936163Z-23368095",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "failed",
+    "started_at": "2026-09-09T21:49:36.163Z",
+    "completed_at": "2026-09-09T22:16:43.728Z",
+    "exit_code": 1,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "README.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-9m5n-npm-onboarding-path.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-config-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/quick-start-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "package-lock.json",
+      "status": "M"
+    },
+    {
+      "path": "package.json",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-provider-scaffold.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/specdojo-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/cli-verb-taxonomy.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/specdojo-config-command.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 12,
+    "summary": "README.md                                          | 45 +++++++++++++++++++--\n .../pjr-9m5n-npm-onboarding-path.md                | 43 +++++++++++++-------\n .../pjr-9m5n-20260909T213719Z-e97c-result.md       | 34 +++++++++++++++-\n docs/ja/specdojo/guides/exec-config-guide.md       |  9 +++--\n docs/ja/specdojo/guides/quick-start-guide.md       | 10 +++++\n docs/ja/specdojo/references/command-reference.md   | 17 +++++---\n package-lock.json                                  | 20 +---------\n package.json                                       |  2 +-\n src/exec-provider-scaffold.ts                      | 46 +++++++++++++++++++++-\n src/exec.ts                                        | 40 ++-----------------\n src/specdojo-config.ts                             | 41 +++++++++++++++++--\n tests/src/cli-verb-taxonomy.test.ts                | 10 +++++\n 12 files changed, 228 insertions(+), 89 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write <変更したMarkdown・TypeScript・JSONファイル>",
+      "status": "passed",
+      "summary": "変更対象を整形"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint README.md docs/ja/specdojo/guides/exec-config-guide.md docs/ja/specdojo/guides/quick-start-guide.md docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-9m5n-npm-onboarding-path.md",
+      "status": "passed",
+      "summary": "Markdown違反なし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "TypeScript型検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "ESLint成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run build",
+      "status": "passed",
+      "summary": "配布用dist生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm pack; npm install --offline <packed-tarball>; npx --offline --no-install specdojo config init; npx --offline --no-install specdojo config scaffold --provider codex; npx --offline --no-install specdojo register scaffold --project prj-0001; npx --offline --no-install specdojo register add --project prj-0001 --type todo --title \"最初のタスク\"; npx --offline --no-install specdojo register build --project prj-0001",
+      "status": "passed",
+      "summary": "空のGitリポジトリでnpm導入後の全手順が成功"
+    },
+    {
+      "source": "executor",
+      "command": "node dist/specdojo.js catalog validate",
+      "status": "passed",
+      "summary": "既存の未作成成果物に関する警告のみ"
+    },
+    {
+      "source": "executor",
+      "command": "node dist/specdojo.js register build",
+      "status": "passed",
+      "summary": "登録簿派生ビュー生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "node dist/specdojo.js index build",
+      "status": "passed",
+      "summary": "doc index生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:unit",
+      "status": "not_run",
+      "summary": "親runnerの検証対象"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:integration",
+      "status": "not_run",
+      "summary": "親runnerの検証対象"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema",
+      "status": "not_run",
+      "summary": "親runnerの検証対象"
+    }
+  ],
+  "final_message": "npm導入後のセットアップ導線、互換コマンド、README、最小設定、runtime依存を整備し、空のGitリポジトリでtarball導入からregister buildまで確認した。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-9M5N/20260909T214936163Z-23368095/executor.log",
+      "bytes": 3015,
+      "truncated": false
+    }
+  ]
+}

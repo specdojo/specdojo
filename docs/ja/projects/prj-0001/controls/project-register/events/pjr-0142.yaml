@@ -1,0 +1,103 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_464cc047ec713f1540c95557435529cd
+  ts: "2026-08-09T10:55:22Z"
+  action: add
+  actor: SpecDojo Test
+  from_status: null
+  to_status: open
+  reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: ドキュメント編集ガイドにVS Code拡張とSpecDojo拡張の説明を追加
+    - field: description
+      from: ""
+      to: specdojo:docs-editing-guide に、必要な VS Code extension（Markdown All in One 等）と SpecDojo extension（tools/vscode-specdojo）の導入・設定・使い方を追記する
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: _TODO_
+    - field: due
+      from: ""
+      to: "2026-08-31"
+    - field: completed
+      from: ""
+      to: "-"
+    - field: conclusion
+      from: ""
+      to: "-"
+    - field: block_reason
+      from: ""
+      to: "-"
+  legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+- v: 1
+  id: reg_fd2191c52e179f687ce6498e6c676d0b
+  ts: "2026-08-26T14:43:32Z"
+  action: update
+  actor: SpecDojo Test
+  from_status: open
+  to_status: open
+  reason: "docs(register): VS Code拡張関連4件の期限を10月末へ変更する"
+  changes:
+    - field: due
+      from: "2026-08-31"
+      to: "2026-10-31"
+  legacy_commit: c7434585ee94e78f867d19b0ccbe52862ca56ca5
+  previous_event_id: reg_464cc047ec713f1540c95557435529cd
+- v: 1
+  id: reg_ed8c64a7b2ba49b3be957eaebef255bc
+  ts: "2026-09-14T22:54:06Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_fd2191c52e179f687ce6498e6c676d0b
+- v: 1
+  id: reg_7de1dcca52c9480ea23c1da5fe50f68f
+  ts: "2026-09-14T23:05:44Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_ed8c64a7b2ba49b3be957eaebef255bc
+- v: 1
+  id: reg_0986b98706cb469fa3396c43480e00b1
+  ts: "2026-09-14T23:11:41Z"
+  action: close
+  actor: specdojo-orchestrator (claude)
+  from_status: review
+  to_status: done
+  reason: exec run --register（codex-expert-executor / gemma-reporter / worktree）で実施。親検証 3 件 passed。章番号参照をタイトル参照へ orchestrator が補正のうえ、利用者確認で close
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-15"
+    - field: conclusion
+      from: "-"
+      to: docs-editing-guide に「VS Code 拡張を準備する」を新設し、必要な拡張 4 件（remark、markdownlint、Markdown All in One、SpecDojo）の ID・役割・扱い、SpecDojo 拡張の VSIX からの導入手順と公開後の差し替え、提供機能 3 件（リンク表示・遷移、ID で開く、表整形）を記載した。guide-authoring-standard のタスク参照は拡張のコマンドへ追従済み。.vscode/extensions.json への追加は未公開 ID を推奨に入れないため公開後（PJR-0143 作業 6）とする。
+  previous_event_id: reg_7de1dcca52c9480ea23c1da5fe50f68f

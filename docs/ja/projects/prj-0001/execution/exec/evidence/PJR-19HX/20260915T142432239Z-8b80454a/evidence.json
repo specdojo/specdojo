@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-19HX",
+  "run_id": "20260915T142432239Z-8b80454a",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "rate_limited",
+    "started_at": "2026-09-15T14:24:32.239Z",
+    "completed_at": "2026-09-15T14:38:52.075Z",
+    "exit_code": 1,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": ".claude/agents/claude-executor.md",
+      "status": "M"
+    },
+    {
+      "path": ".claude/agents/claude-expert-executor.md",
+      "status": "M"
+    },
+    {
+      "path": ".claude/agents/claude-reporter.md",
+      "status": "M"
+    },
+    {
+      "path": ".opencode/agents/gemma-executor.md",
+      "status": "M"
+    },
+    {
+      "path": ".opencode/agents/gemma-expert-executor.md",
+      "status": "M"
+    },
+    {
+      "path": ".opencode/agents/gemma-reporter.md",
+      "status": "M"
+    },
+    {
+      "path": ".opencode/agents/qwen-executor.md",
+      "status": "M"
+    },
+    {
+      "path": ".opencode/agents/qwen-expert-executor.md",
+      "status": "M"
+    },
+    {
+      "path": ".opencode/agents/qwen-reporter.md",
+      "status": "M"
+    },
+    {
+      "path": ".prettierignore",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-19hx-result-prettier-emphasis-mangling.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xep-common-conventions-template.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-reporter.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-worktree-ops.ts",
+      "status": "M"
+    },
+    {
+      "path": "templates/codex/agents/codex-executor.toml",
+      "status": "M"
+    },
+    {
+      "path": "templates/codex/agents/codex-expert-executor.toml",
+      "status": "M"
+    },
+    {
+      "path": "templates/opencode/agents/opencode-executor.md",
+      "status": "M"
+    },
+    {
+      "path": "templates/opencode/agents/opencode-reporter.md",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-format.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-reporter.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-run.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-worktree-ops.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 23,
+    "summary": ".claude/agents/claude-executor.md                  |  2 +\n .claude/agents/claude-expert-executor.md           |  2 +\n .claude/agents/claude-reporter.md                  |  2 +\n .opencode/agents/gemma-executor.md                 |  2 +\n .opencode/agents/gemma-expert-executor.md          |  2 +\n .opencode/agents/gemma-reporter.md                 |  2 +\n .opencode/agents/qwen-executor.md                  |  2 +\n .opencode/agents/qwen-expert-executor.md           |  2 +\n .opencode/agents/qwen-reporter.md                  |  2 +\n .prettierignore                                    |  4 ++\n .../pjr-19hx-result-prettier-emphasis-mangling.md  | 18 +++++++--\n .../xep-common-conventions-template.md             |  1 +\n src/exec-reporter.ts                               |  4 ++\n src/exec-run.ts                                    |  3 ++\n src/exec-worktree-ops.ts                           | 47 +++++++++++++++++++++-\n templates/codex/agents/codex-executor.toml         |  2 +\n templates/codex/agents/codex-expert-executor.toml  |  2 +\n templates/opencode/agents/opencode-executor.md     |  2 +\n templates/opencode/agents/opencode-reporter.md     |  2 +\n tests/src/exec-format.test.ts                      | 24 +++++++++++\n tests/src/exec-reporter.test.ts                    |  2 +\n tests/src/exec-run.test.ts                         |  7 ++++\n 22 files changed, 131 insertions(+), 5 deletions(-)"
+  },
+  "validations": [],
+  "final_message": "",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-19HX/20260915T142432239Z-8b80454a/executor.log",
+      "bytes": 65536,
+      "truncated": true
+    }
+  ]
+}

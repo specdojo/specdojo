@@ -1,5 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { resolveBasePath, resolveDeliverablePath } from "../../src/catalog-paths.js";
+import { isTrashedPath, resolveBasePath, resolveDeliverablePath } from "../../src/catalog-paths.js";
+
+describe("isTrashedPath", () => {
+  it("matches a trash path segment without matching similarly named segments", () => {
+    expect(isTrashedPath("docs/ja/product/trash/retired.md")).toBe(true);
+    expect(isTrashedPath("docs/ja/projects/prj-0001/trash/retired.md")).toBe(true);
+    expect(isTrashedPath("docs/ja/product/trash-bin/current.md")).toBe(false);
+  });
+});
 
 describe("resolveBasePath", () => {
   it("appends a relative child to the parent base", () => {

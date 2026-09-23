@@ -39,6 +39,7 @@ Communication Plan Documentation Rulebook
 
 - 配置は `docs/ja/projects/<project-id>/030-project-management/pm-communication-plan.md` を推奨します。
 - ID は `<project-id>:pm-communication-plan`、ファイル名は `pm-communication-plan.md` とします。
+
 - 関係者はステークホルダー ID、責任主体は採用済み Role code で記述します。
 
 ## 4. 推奨 Frontmatter 項目

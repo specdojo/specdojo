@@ -1,0 +1,102 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:bes-sample
+path: docs/ja/specdojo/samples/bes-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 39
+graded_at: "2026-09-04T21:30:01.882Z"
+graded_by: gemma-expert-executor
+content_hash: 308606d2e9321e5c043acbaa5c6fa298f59f96615344c443c805fccdfe643053
+categories:
+  consistency:
+    score: 25
+  usability:
+    score: 50
+  architecture:
+    score: 63
+  quality:
+    score: 25
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 1
+    score: 25
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 1
+    score: 25
+  vp-qe-verifiability:
+    level: 1
+    score: 25
+  vp-qe-omissions-consistency:
+    level: 1
+    score: 25
+  vp-qe-kata-conformance:
+    level: 1
+    score: 25
+  vp-ux-readability:
+    level: 1
+    score: 25
+  vp-ux-language-consistency:
+    level: 1
+    score: 25
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 8
+  minor: 0
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 4
+    message: "`bes-rulebook.md` が定義する BES インスタンスとしての形式に従っておらず、参照先として不適切である。"
+    anchor: ""
+  - id: F004
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 4
+    message: Frontmatter の `type` が `domain` ではなく `project` となっており、ルールブックの制約に違反している。
+    anchor: ""
+  - id: F008
+    severity: major
+    rule: vp-ux-language-consistency
+    line: 4
+    message: "`type` の値が `domain` ではなく `project` となっており、用語・ラベルの統一性が欠けている。"
+    anchor: ""
+  - id: F002
+    severity: major
+    rule: vp-arc-single-responsibility
+    line: 9
+    message: BES の具体例を提示するサンプルとしての責務を果たさず、サンプルの解説書となっている。
+    anchor: "- 対象: 駄菓子屋の販売管理システム"
+  - id: F005
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 9
+    message: ルールブックで定義されている必須の構成項目（1. 何が起きたか, 2. いつ, 3. 誰が／何が, 4. 発生条件, 5. 事実データ）がすべて欠落している。
+    anchor: "- 対象: 駄菓子屋の販売管理システム"
+  - id: F006
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 9
+    message: 成果物の完成例（インスタンス）を提示するという `sample` の責務を果たしておらず、ルールブックの形式を模倣して適用するための具体例となっていない。
+    anchor: "- 対象: 駄菓子屋の販売管理システム"
+  - id: F007
+    severity: major
+    rule: vp-ux-readability
+    line: 23
+    message: 記述内容が項目名の列挙に留まっており、具体的にどのような値を書き込むべきかという判断基準が示されていない。
+    anchor: "| 目的         | 業務上で発生する主要なイベントを個別に定義する                  | specdojo:deliverables-reference 準拠 |"
+  - id: F003
+    severity: major
+    rule: vp-qe-verifiability
+    line: 28
+    message: 具体的な業務イベントの定義（判定基準や事実データ）が具体的に記述されておらず、検証不可能な状態である。
+    anchor: "| 論点           | 処理方針                 |"

@@ -1,0 +1,105 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_e4404db720764fd685f521e8ea8d520a
+  ts: "2026-09-21T11:31:17Z"
+  action: add
+  actor: specdojo-orchestrator (claude)
+  from_status: null
+  to_status: open
+  reason: PJR-YWPH の統合で develop が merge 途中のまま残り、手動で完了させた
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 統合の merge commit 失敗時に merge を中断して develop を merge 途中のまま残さない
+    - field: description
+      from: ""
+      to: worktree 統合で merge commit が pre-commit hook で失敗すると、runner が git merge --abort を行わずに wait 遷移へ進み、続く wait commit が「merge 中の部分 commit 不可」で失敗して develop が merge 途中の状態で残る（PJR-YWPH で発生）。失敗時は merge を中断し、hook の出力を block reason に残して worktree を保持する
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-21"
+    - field: due
+      from: ""
+      to: "2026-10-05"
+- v: 1
+  id: reg_94ab0a2223cd42f29468a74021d8a098
+  ts: "2026-09-22T03:58:15Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_e4404db720764fd685f521e8ea8d520a
+- v: 1
+  id: reg_8de0f473ec0342618244047a2ba943cc
+  ts: "2026-09-22T04:20:51Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: runner による検証 `test-integration` (`npm run test:integration`) が失敗（exit 1）しているため。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: runner による検証 `test-integration` (`npm run test:integration`) が失敗（exit 1）しているため。"
+  previous_event_id: reg_94ab0a2223cd42f29468a74021d8a098
+- v: 1
+  id: reg_50bfad5c701e48a09a6e4b623b8e1afd
+  ts: "2026-09-22T05:17:14Z"
+  action: start
+  actor: gemma-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_8de0f473ec0342618244047a2ba943cc
+- v: 1
+  id: reg_1fb2427e009e450e8b3afbc93509135c
+  ts: "2026-09-22T05:23:14Z"
+  action: review
+  actor: gemma-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_50bfad5c701e48a09a6e4b623b8e1afd
+- v: 1
+  id: reg_331eefef829b40b69321f648748e5747
+  ts: "2026-09-22T05:28:10Z"
+  action: close
+  actor: specdojo-orchestrator (claude)
+  from_status: review
+  to_status: done
+  reason: codex-expert-executor が worktree で実装。テスト hook の MERGE_HEAD 判定の誤りと abort 後の記帳競合をオーケストレーターが切り分けて再実行し、親検証を通過して統合。利用者が確認して close
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-22"
+  previous_event_id: reg_1fb2427e009e450e8b3afbc93509135c

@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: sysd-codex-agent-settings-grade-criteria
+document: sysd-codex-agent-settings
+path: docs/ja/product/040-system-design/sysd-codex-agent-settings.md
+graded_at: "2026-09-19T16:24:54.832Z"
+graded_by: codex-expert-executor
+content_hash: 59f6b61ff14943d60c3ca70348d55b9e47a58e1f2f6ae921b5f251993c805122
+summary:
+  satisfied: 1
+  unsatisfied: 4
+  total: 5
+criteria:
+  - id: DC-001
+    text: 設計トピックの採用理由・制約が業務要件と整合していること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: unsatisfied
+    reason: 採用理由と対応する業務要件または要求成果物との追跡関係が示されていない。
+  - id: DC-002
+    text: 設計方針を承認できること
+    roles:
+      - PO
+    viewpoint: vp-po-decision-readiness
+    status: unsatisfied
+    reason: モデル、検証実行主体、review executor の責務に重大な不整合があり、現状の設計方針を承認できない。
+  - id: DC-003
+    text: 技術的制約・依存関係が識別できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: satisfied
+  - id: DC-004
+    text: テスト設計・検証観点の参照として使えること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: unsatisfied
+    reason: Codex 固有の設定・制約に対応するテスト設計、検証条件、関連テストへの参照がない。
+  - id: DC-005
+    text: 実装の基礎として参照できること
+    roles:
+      - DEV
+    viewpoint: vp-dev-implementation-readiness
+    status: unsatisfied
+    reason: 正本と異なるモデル・検証設定および矛盾する書き込み責務があり、安全な実装の基礎として参照できない。

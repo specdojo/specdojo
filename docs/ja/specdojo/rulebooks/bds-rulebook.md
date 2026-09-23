@@ -44,14 +44,16 @@ Business Document Specification (BDS) Documentation Rules
 
 Frontmatter は `docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml` の制約に従います。
 
-| 項目       | 説明                                  | 必須 |
-| ---------- | ------------------------------------- | ---- |
-| id         | 帳票ID（`bds-...`）                   | ○    |
-| type       | `domain` 固定                         | ○    |
-| title      | 帳票名                                | ○    |
-| status     | `draft`/`ready`/`deprecated`          | ○    |
-| based_on   | 根拠となる仕様ID（BPS/UIS/BR/BES 等） | 任意 |
-| supersedes | 置き換え関係（古仕様→新仕様）         | 任意 |
+| 項目 | 説明                | 必須 |
+| ---- | ------------------- | ---- |
+| id   | 帳票ID（`bds-...`） | ○    |
+
+| type | `domain` 固定 | ○ |
+| title | 帳票名 | ○ |
+
+| status | `draft`/`ready`/`deprecated` | ○ |
+| based_on | 根拠となる仕様ID（BPS/UIS/BR/BES 等） | 任意 |
+| supersedes | 置き換え関係（古仕様→新仕様） | 任意 |
 
 ### 4.1 ID規約
 

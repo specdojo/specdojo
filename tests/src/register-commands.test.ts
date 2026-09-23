@@ -5,7 +5,12 @@ import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { registerRegisterCommands } from "../../src/register.js";
-import { readRegisterEventsFromContent } from "../../src/register-events.js";
+import {
+  appendRegisterEvent,
+  buildRegisterEvent,
+  readRegisterEventsFromContent,
+  registerEventFilePath,
+} from "../../src/register-events.js";
 
 // register サブコマンドの読み書き先が個票 frontmatter であることを、CLI 経由で確認する。
 // 一時リポジトリを cwd にして specdojoRootDir() / loadConfig() を temp 内へ閉じ込める。
@@ -23,6 +28,16 @@ const CONFIG = {
       execution_path: "execution",
       project_register_path: "controls/project-register",
       run: { register_date_timezone: "UTC" },
+    },
+  },
+};
+
+const MINIMAL_CONFIG = {
+  version: 1,
+  current_project: "prj-0001",
+  projects: {
+    "prj-0001": {
+      project_register_path: REGISTER_REL,
     },
   },
 };
@@ -77,8 +92,37 @@ function buildTicket(id: string, extraFields: string[], body = "個票本文の�
 
 type Fixture = { root: string; registerDir: string };
 
+function readEvents(registerDir: string, id: string) {
+  const path = registerEventFilePath(registerDir, id);
+  return readRegisterEventsFromContent(readFileSync(path, "utf8"), path);
+}
+
+function writeInitialEvent(
+  registerDir: string,
+  id: string,
+  filename: string,
+  ticket: string,
+): void {
+  const event = buildRegisterEvent({
+    afterContent: ticket,
+    filename,
+    timeZone: "UTC",
+    action: "add",
+    actor: "test",
+    reason: "item added",
+    ts: "2026-08-01T00:00:00Z",
+  });
+  if (!event) throw new Error("initial event not built");
+  const path = registerEventFilePath(registerDir, id);
+  mkdirSync(join(registerDir, "events"), { recursive: true });
+  writeFileSync(path, appendRegisterEvent(undefined, event), "utf8");
+}
+
 // テンプレート（個票・派生ビュー）は実リポジトリのものを temp へ複製し、生成処理を成立させる。
-function withRepo(fn: (fixture: Fixture) => Promise<void> | void): Promise<void> {
+function withRepo(
+  fn: (fixture: Fixture) => Promise<void> | void,
+  opts: { config?: typeof CONFIG | typeof MINIMAL_CONFIG; copyTemplates?: boolean } = {},
+): Promise<void> {
   const originalCwd = process.cwd();
   const root = mkdtempSync(join(tmpdir(), "specdojo-register-cli-"));
   return (async () => {
@@ -86,16 +130,18 @@ function withRepo(fn: (fixture: Fixture) => Promise<void> | void): Promise<void>
       mkdirSync(join(root, ".specdojo"), { recursive: true });
       writeFileSync(
         join(root, ".specdojo/specdojo.config.json"),
-        `${JSON.stringify(CONFIG, null, 2)}\n`,
+        `${JSON.stringify(opts.config ?? CONFIG, null, 2)}\n`,
         "utf8",
       );
       const registerDir = join(root, REGISTER_REL);
       mkdirSync(registerDir, { recursive: true });
-      cpSync(
-        join(originalCwd, "docs/ja/specdojo/templates"),
-        join(root, "docs/ja/specdojo/templates"),
-        { recursive: true },
-      );
+      if (opts.copyTemplates !== false) {
+        cpSync(
+          join(originalCwd, "docs/ja/specdojo/templates"),
+          join(root, "docs/ja/specdojo/templates"),
+          { recursive: true },
+        );
+      }
       process.chdir(root);
       await fn({ root, registerDir });
     } finally {
@@ -169,7 +215,7 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
       expect(ticket).toContain('  due_on: "2026-08-31"');
       expect(ticket).toContain("# PJR-AB12 在庫初期値を決める");
       expect(ticket).toContain("開店時の在庫初期値を決める。");
-      expect(readRegisterEventsFromContent(ticket, "pjr-ab12-inventory-seed.md")[0]).toMatchObject({
+      expect(readEvents(registerDir, "PJR-AB12")[0]).toMatchObject({
         action: "add",
         actor: "manual",
         from_status: null,
@@ -178,6 +224,7 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
       // 未定値（完了日時・結論）はキーを置かない。
       expect(ticket).not.toContain("completed_at");
       expect(ticket).not.toContain("conclusion");
+      expect(ticket).not.toContain("register_events:");
 
       // 一覧本体には行を追記しない（生成ビューとして扱う）。
       expect(readFileSync(join(registerDir, "pjr-index.md"), "utf8")).not.toContain("PJR-AB12");
@@ -295,7 +342,7 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
       await runRegister(["start", "--id", "PJR-AB12", "--by", "codex"]);
       const started = readFileSync(ticketPath, "utf8");
       expect(started).toContain("  item_status: in-progress");
-      expect(readRegisterEventsFromContent(started, ticketPath)[0]).toMatchObject({
+      expect(readEvents(registerDir, "PJR-AB12")[0]).toMatchObject({
         action: "start",
         actor: "codex",
         from_status: "open",
@@ -304,9 +351,7 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
 
       // 同じ遷移の再実行は現在値もイベント列も増やさない。
       await runRegister(["start", "--id", "PJR-AB12", "--by", "codex"]);
-      expect(
-        readRegisterEventsFromContent(readFileSync(ticketPath, "utf8"), ticketPath),
-      ).toHaveLength(1);
+      expect(readEvents(registerDir, "PJR-AB12")).toHaveLength(1);
 
       await runRegister([
         "close",
@@ -326,7 +371,7 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
       expect(closed).toContain("  conclusion: 初期値を決定した");
       // 文書成熟度（status）は登録項目の処理状態とは別軸で昇格する。
       expect(closed).toContain("  status: ready");
-      const events = readRegisterEventsFromContent(closed, ticketPath);
+      const events = readEvents(registerDir, "PJR-AB12");
       expect(events).toHaveLength(2);
       expect(events[1]).toMatchObject({
         action: "close",
@@ -478,6 +523,110 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
     });
   });
 
+  it("update --topic は個票名・文書 ID・参照・event・生成ビューを一括更新する", async () => {
+    await withRepo(async ({ root, registerDir }) => {
+      const oldTicketPath = join(registerDir, "pjr-ab12-topic.md");
+      const newTicketPath = join(registerDir, "pjr-ab12-inventory-policy.md");
+      writeFileSync(
+        join(registerDir, "pjr-index.md"),
+        buildIndex([
+          "| PJR-AB12 | open | 在庫初期値を決める | 個票本文の説明。 | todo | high | - | _TODO_ | - | - | - | [pjr-ab12-topic](./pjr-ab12-topic.md) |",
+        ]),
+        "utf8",
+      );
+      writeFileSync(
+        oldTicketPath,
+        buildTicket("PJR-AB12", ["item_status: open", "priority: high"]),
+        "utf8",
+      );
+      const referencePath = join(root, "docs/ja/topic-reference.md");
+      writeFileSync(
+        referencePath,
+        "詳細は [[prj-0001:pjr-ab12-topic|登録項目]] を参照。\n",
+        "utf8",
+      );
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+
+      await runRegister([
+        "update",
+        "--id",
+        "PJR-AB12",
+        "--topic",
+        "inventory-policy",
+        "--title",
+        "在庫方針を決める",
+        "--by",
+        "ARC",
+        "--reason",
+        "主題変更",
+      ]);
+
+      expect(existsSync(oldTicketPath)).toBe(false);
+      const updated = readFileSync(newTicketPath, "utf8");
+      expect(updated).toContain("id: prj-0001:pjr-ab12-inventory-policy");
+      expect(updated).toContain("# PJR-AB12 在庫方針を決める");
+      expect(readFileSync(referencePath, "utf8")).toContain(
+        "[[prj-0001:pjr-ab12-inventory-policy|登録項目]]",
+      );
+      // 移行前の pjr-index.md は読み取り互換の入力であり正本ではないため、topic 変更では更新しない。
+      expect(readFileSync(join(registerDir, "generated/pjr-index.md"), "utf8")).toContain(
+        "pjr-ab12-inventory-policy.md",
+      );
+
+      const event = readEvents(registerDir, "PJR-AB12")[0];
+      expect(event).toMatchObject({ action: "update", actor: "ARC", reason: "主題変更" });
+      expect(event.changes).toContainEqual({
+        field: "id",
+        from: "prj-0001:pjr-ab12-topic",
+        to: "prj-0001:pjr-ab12-inventory-policy",
+      });
+    });
+  });
+
+  it("update --topic --dry-run は変更対象を表示するだけでファイルを更新しない", async () => {
+    await withRepo(async ({ registerDir }) => {
+      const ticketPath = join(registerDir, "pjr-ab12-topic.md");
+      writeFileSync(join(registerDir, "pjr-index.md"), buildIndex([]), "utf8");
+      const original = buildTicket("PJR-AB12", ["item_status: open", "priority: high"]);
+      writeFileSync(ticketPath, original, "utf8");
+      const stdout = vi.spyOn(process.stdout, "write").mockReturnValue(true);
+
+      await runRegister(["update", "--id", "PJR-AB12", "--topic", "inventory-policy", "--dry-run"]);
+
+      expect(readFileSync(ticketPath, "utf8")).toBe(original);
+      expect(existsSync(join(registerDir, "pjr-ab12-inventory-policy.md"))).toBe(false);
+      const printed = stdout.mock.calls.map((call) => String(call[0])).join("");
+      expect(printed).toContain("Would change topic for PJR-AB12: topic → inventory-policy");
+      expect(printed).toContain("Rename:");
+    });
+  });
+
+  it("update --topic は不正な形式と既存ファイルへの衝突を拒否する", async () => {
+    await withRepo(async ({ registerDir }) => {
+      const ticketPath = join(registerDir, "pjr-ab12-topic.md");
+      writeFileSync(join(registerDir, "pjr-index.md"), buildIndex([]), "utf8");
+      writeFileSync(
+        ticketPath,
+        buildTicket("PJR-AB12", ["item_status: open", "priority: high"]),
+        "utf8",
+      );
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+      const stderr = vi.spyOn(process.stderr, "write").mockReturnValue(true);
+
+      await runRegister(["update", "--id", "PJR-AB12", "--topic", "Bad--Topic"]);
+      expect(process.exitCode).toBe(1);
+      expect(String(stderr.mock.calls.at(-1)?.[0])).toContain("Invalid topic");
+      expect(readFileSync(ticketPath, "utf8")).toContain("pjr-ab12-topic");
+
+      process.exitCode = undefined;
+      writeFileSync(join(registerDir, "pjr-ab12-inventory-policy.md"), "occupied\n", "utf8");
+      await runRegister(["update", "--id", "PJR-AB12", "--topic", "inventory-policy"]);
+      expect(process.exitCode).toBe(1);
+      expect(String(stderr.mock.calls.at(-1)?.[0])).toContain("Target ticket file already exists");
+      expect(existsSync(ticketPath)).toBe(true);
+    });
+  });
+
   it("未移行（pjr-index の行のみ）の項目は、遷移時に行の値を個票 frontmatter へ移す", async () => {
     await withRepo(async ({ registerDir }) => {
       const ticketPath = join(registerDir, "pjr-ab12-topic.md");
@@ -590,6 +739,43 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
     });
   });
 
+  it("migrate は個票内の register_events を項目別 YAML へ分離する", async () => {
+    await withRepo(async ({ registerDir }) => {
+      const ticketPath = join(registerDir, "pjr-ab12-topic.md");
+      const legacy = buildTicket("PJR-AB12", ["item_status: open", "priority: high"]).replace(
+        "  priority: high\n",
+        [
+          "  priority: high",
+          "  register_events:",
+          "    - v: 1",
+          "      id: reg_00000000000000000000000000000001",
+          '      ts: "2026-08-01T00:00:00Z"',
+          "      action: add",
+          "      actor: test",
+          "      from_status: null",
+          "      to_status: open",
+          "      reason: item added",
+          "      changes:",
+          "        - field: status",
+          '          from: ""',
+          "          to: open",
+          "",
+        ].join("\n"),
+      );
+      writeFileSync(ticketPath, legacy, "utf8");
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+
+      await runRegister(["migrate"]);
+
+      expect(readFileSync(ticketPath, "utf8")).not.toContain("register_events:");
+      expect(readEvents(registerDir, "PJR-AB12")).toHaveLength(1);
+      expect(readEvents(registerDir, "PJR-AB12")[0]).toMatchObject({
+        action: "add",
+        to_status: "open",
+      });
+    });
+  });
+
   it("migrate は旧 registered_on / completed_on を UTC の日時へ移し、表示日を変えない", async () => {
     await withRepo(async ({ registerDir }) => {
       // 一覧の個票化はすでに済んでいる旧構成（pjr-index.md は表を持たない案内ページ）を入力にする。
@@ -629,16 +815,14 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
   it("build は個票の走査から派生ビューを生成する", async () => {
     await withRepo(async ({ registerDir }) => {
       writeFileSync(join(registerDir, "pjr-index.md"), buildIndex([]), "utf8");
-      writeFileSync(
-        join(registerDir, "pjr-ab12-topic.md"),
-        buildTicket("PJR-AB12", [
-          "item_status: open",
-          "priority: high",
-          "owner: ARC",
-          'registered_at: "2026-08-01T12:00:00Z"',
-        ]),
-        "utf8",
-      );
+      const ticket = buildTicket("PJR-AB12", [
+        "item_status: open",
+        "priority: high",
+        "owner: ARC",
+        'registered_at: "2026-08-01T12:00:00Z"',
+      ]);
+      writeFileSync(join(registerDir, "pjr-ab12-topic.md"), ticket, "utf8");
+      writeInitialEvent(registerDir, "PJR-AB12", "pjr-ab12-topic.md", ticket);
       vi.spyOn(process.stdout, "write").mockReturnValue(true);
 
       await runRegister(["build", "--scope", "register"]);
@@ -648,5 +832,35 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
       expect(existsSync(join(registerDir, "generated/pjr-views-by-priority.md"))).toBe(true);
       expect(existsSync(join(registerDir, "generated/pjr-views-by-owner.md"))).toBe(true);
     });
+  });
+
+  it("project_register_path だけの構成で同梱テンプレートから add と build が成功する", async () => {
+    await withRepo(
+      async ({ root, registerDir }) => {
+        expect(existsSync(join(root, "docs/ja/specdojo/templates"))).toBe(false);
+        vi.spyOn(process.stdout, "write").mockReturnValue(true);
+
+        await runRegister([
+          "add",
+          "--type",
+          "todo",
+          "--title",
+          "同梱テンプレートを使う",
+          "--topic",
+          "bundled-template",
+          "--id",
+          "PJR-AB12",
+          "--registered",
+          "2026-08-01T00:00:00Z",
+        ]);
+        await runRegister(["build"]);
+
+        expect(existsSync(join(registerDir, "pjr-ab12-bundled-template.md"))).toBe(true);
+        const index = readFileSync(join(registerDir, "generated/pjr-index.md"), "utf8");
+        expect(index).toContain("PJR-AB12");
+        expect(process.exitCode).toBeUndefined();
+      },
+      { config: MINIMAL_CONFIG, copyTemplates: false },
+    );
   });
 });

@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_1c2f2db7a8954250bb9dc288aeedbf9c
+  ts: "2026-09-23T03:50:08Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-YPNS の分割（第 4 段階）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: npm 導入から exec までの導線を README と quick-start へ反映する
+    - field: description
+      from: ""
+      to: kata の解決方式が変わった後の初期化手順を文書へ反映する。npm install から config init、register、catalog、exec plan まで空リポジトリで通しで確認し、README のテンプレートリポジトリ案内と quick-start-guide の Detached Unit 手順を実態に合わせる。config init の雛形に不足するパスキーがあれば併せて扱う。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-23"
+    - field: due
+      from: ""
+      to: "2026-10-31"
+- v: 1
+  id: reg_e366f8f239104b00ac84687683293d08
+  ts: "2026-09-23T07:51:01Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_1c2f2db7a8954250bb9dc288aeedbf9c
+- v: 1
+  id: reg_ccadae0867d0482f95dca5c29641b1c4
+  ts: "2026-09-23T08:15:21Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_e366f8f239104b00ac84687683293d08
+- v: 1
+  id: reg_ec787722f0764b93a770c0c68a505750
+  ts: "2026-09-23T10:28:04Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: レビュー完了。README の手順を空ディレクトリでなぞって確認
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-23"
+    - field: conclusion
+      from: "-"
+      to: README と quick-start-guide を npm 導入で完結する導線へ改め、設定キーの reference を新設した。config init の Next steps と catalog scaffold のエラーから参照先へ辿れる。
+  previous_event_id: reg_ccadae0867d0482f95dca5c29641b1c4

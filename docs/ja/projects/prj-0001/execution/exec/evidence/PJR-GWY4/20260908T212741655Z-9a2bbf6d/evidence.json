@@ -1,0 +1,178 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-GWY4",
+  "run_id": "20260908T212741655Z-9a2bbf6d",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-08T21:27:41.655Z",
+    "completed_at": "2026-09-08T21:33:58.795Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/040-system-design/sysd-job-execution.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-gwy4-job-deterministic-command.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xep-job-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/routine-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/job-definition-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/exec-evidence.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/job-run.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/job.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-evidence.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/job.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-run-inplace.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/job.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 15,
+    "summary": ".../040-system-design/sysd-job-execution.md        |  42 +--\n .../pjr-gwy4-job-deterministic-command.md          |  15 +-\n .../pjr-gwy4-20260908T135021Z-1a9a-result.md       |   4 +-\n docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml |  49 ++--\n .../ja/specdojo/exec-templates/xep-job-template.md |   2 +\n docs/ja/specdojo/guides/routine-operation-guide.md |   4 +-\n docs/ja/specdojo/references/command-reference.md   |   4 +-\n .../specdojo/standards/job-definition-standard.md  |  68 +++--\n docs/specdojo/schemas/v1/exec-evidence.schema.yaml |  23 +-\n docs/specdojo/schemas/v1/job-run.schema.yaml       |   5 +\n docs/specdojo/schemas/v1/job.schema.yaml           |  89 ++++--\n src/exec-evidence.ts                               | 126 ++++++++-\n src/exec-run.ts                                    | 233 ++++++++++++++-\n src/job.ts                                         | 311 ++++++++++++++++++---\n tests/src/exec-run-inplace.test.ts                 | 226 +++++++++++++++\n tests/src/job.test.ts                              |  77 ++++-\n 16 files changed, 1119 insertions(+), 159 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run build",
+      "status": "passed",
+      "summary": "TypeScript ビルド成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "型エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "ESLint エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --name-only --diff-filter=ACMR | rg -v '/execution/exec/results/' | xargs npx prettier --write",
+      "status": "passed",
+      "summary": "対象ファイルの整形完了"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --name-only --diff-filter=ACMR | rg '\\.md$' | rg -v '/execution/exec/results/' | xargs npx markdownlint",
+      "status": "passed",
+      "summary": "Markdown lint エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts job validate --project prj-0001",
+      "status": "passed",
+      "summary": "3 Job、検証エラー0件"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts exec run --project prj-0001 --job job-grade-kata --input period=2099-W01 --dry-run",
+      "status": "passed",
+      "summary": "command と analysis reporter の解決を確認"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "検証成功。既存の未配置文書に関する警告のみ"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿派生ビュー生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "文書インデックス1570件を生成"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーなし"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GWY4\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/stale.md\n  src/unrelated.ts\ncommit-targets:\n  execution/exec/…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.1.0 validate:schema:yaml\n> tsx tools/docs/src/validate-yaml-schema.ts --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bps-template.yaml: schema docs/specdojo/sc…"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GWY4\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-Kp4q8e/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-m1ugVq/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-BUWBbc/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-LJKAr9/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-2qmDzt/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-mTWAlr/pjr-0001-topic.md\nbefore\nWrote agent stdout: /tmp/specdojo-agent-command-In6ppb/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-L9V07z/outputs/partial.txt\n\n Test Files  99 passed (99)\n      Tests  1424 passed (1424)\n   Start at  06:34:19\n   Duration  26.53s (transform 1.95s, setup 508ms, import 14.92s, tests 22.13s, e…"
+    }
+  ],
+  "final_message": "job の決定論的コマンド実行と evidence 記録、任意 analysis 連携を実装し、非0終了の回帰テストを補強した。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-GWY4/20260908T212741655Z-9a2bbf6d/executor.log",
+      "bytes": 2171,
+      "truncated": false
+    }
+  ]
+}

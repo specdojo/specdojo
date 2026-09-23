@@ -1,3 +1,16 @@
+---
+specdojo:
+  id: specdojo:cnd-mermaid-rulebook
+  type: rulebook
+  status: draft
+  target_format: markdown
+  recipe: undecided
+  sample: specdojo:cnd-sample
+  template: undecided
+  based_on:
+    - specdojo:rulebook-authoring-standard
+---
+
 # Mermaid を用いたC4コンテナ図 作成ルール
 
 C4 Container Diagram (CND) Documentation Rules using Mermaid

@@ -1,38 +1,11 @@
 ---
 specdojo:
   id: specdojo:cstd-sample
-  type: project
-  status: draft
-  rulebook: specdojo:cstd-mermaid-rulebook
+  type: sample
+  status: deprecated
+  rulebook: specdojo:cstd-rulebook
 ---
 
-# [概念状態遷移図](../rulebooks/cstd-rulebook.md) サンプル
+# 概念状態遷移図（CSTD）サンプル（非推奨）
 
-## 1. 目的と適用範囲
-
-本書は、業務オブジェクトの状態変化を図で定義するための最小サンプルである。
-
-## 2. 入力情報
-
-- 対象: 駄菓子屋の販売管理システム
-- 前提: プロジェクト文脈は handbook の共通方針に準拠する
-- 参照: `../rulebooks/cstd-mermaid-rulebook.md`
-
-## 3. 記述内容
-
-- 主な内容: 対象、状態、遷移、イベント、条件など
-- 必須観点: 対象、条件、判定基準、責任者
-
-## 4. 最小記述例
-
-| 項目         | 値                                              | 備考                                 |
-| ------------ | ----------------------------------------------- | ------------------------------------ |
-| ドキュメント | [概念状態遷移図](../rulebooks/cstd-rulebook.md) | 最小サンプル                         |
-| 目的         | 業務オブジェクトの状態変化を図で定義する        | specdojo:deliverables-reference 準拠 |
-| 主な内容     | 対象、状態、遷移、イベント、条件など            | 要点のみ記載                         |
-
-## 5. 未解決事項
-
-| 論点           | 処理方針                 |
-| -------------- | ------------------------ |
-| 要件詳細の補強 | 実案件適用時に具体化する |
+この sample は非推奨です。状態一覧と状態遷移図を統合した完成例は [[specdojo:stsd-sample|STSD サンプル]] を参照してください。

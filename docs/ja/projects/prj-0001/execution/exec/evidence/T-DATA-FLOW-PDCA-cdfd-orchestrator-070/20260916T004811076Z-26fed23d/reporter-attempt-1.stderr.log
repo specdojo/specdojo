@@ -1,0 +1,1 @@
+agent-git-state-write: Git state changes detected; fields=HEAD, local-config; agent must leave commits and repository configuration changes to the parent runner

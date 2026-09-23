@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-9QZ2",
+  "run_id": "20260907T231556575Z-07430779",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-07T23:15:56.575Z",
+    "completed_at": "2026-09-07T23:34:22.609Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-9qz2-exec-stale-running-stage.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-pipeline-state.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-register-resume.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-register-resume.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-register-resume.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 8,
+    "summary": ".../pjr-9qz2-exec-stale-running-stage.md           |  20 +-\n docs/ja/specdojo/guides/exec-operation-guide.md    |  31 +--\n docs/ja/specdojo/references/command-reference.md   |   6 +-\n src/exec-pipeline-state.ts                         |  14 +-\n src/exec-register-resume.ts                        |  77 +++++++-\n src/exec-run.ts                                    | 215 +++++++++++++++------\n tests/src/exec-register-resume.integration.test.ts |  88 +++++++++\n tests/src/exec-register-resume.test.ts             |  77 +++++++-\n 8 files changed, 436 insertions(+), 92 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "TypeScript 型検査成功。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "ESLint 検査成功。"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/specdojo/guides/exec-operation-guide.md docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-9qz2-exec-stale-running-stage.md",
+      "status": "passed",
+      "summary": "Markdown 静的検査成功。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "既存の欠損文書警告はあるが検証は終了コード0。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "1552件の文書索引を生成。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿派生ビューを正常生成。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーなし。"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-9QZ2\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/stale.md\n  src/unrelated.ts\ncommit-targets:\n  execution/exec/…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.1.0 validate:schema:yaml\n> tsx tools/docs/src/validate-yaml-schema.ts --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bps-template.yaml: schema docs/specdojo/sc…"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-9QZ2\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-Tm3NLf/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-sVbawe/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-LHMECb/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-EoBq0t/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-smcZBP/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-DUR5bM/pjr-0001-topic.md\nWrote agent stdout: /tmp/specdojo-agent-command-U54kcM/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-eqhZzH/outputs/partial.txt\n\n Test Files  98 passed (98)\n      Tests  1399 passed (1399)\n   Start at  08:34:02\n   Duration  20.04s (transform 1.53s, setup 387ms, import 11.31s, tests 17.67s, environm…"
+    }
+  ],
+  "final_message": "executor evidence を親検証前に永続化し、running のまま中断した register pipeline を既存 worktree から再開できるよう修正した。復旧テスト、コマンドリファレンス、運用ガイド、個票も更新済み。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-9QZ2/20260907T231556575Z-07430779/executor.log",
+      "bytes": 1563,
+      "truncated": false
+    }
+  ]
+}

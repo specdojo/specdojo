@@ -1,0 +1,28 @@
+統合段のみを再試行できる再開経路を実装しました。
+
+## 実施内容
+
+**再開段の自動判定**: `exec run --register --worktree --resume` を、止まった段（`reporter` / `integrate`）から再開するよう拡張。reporter が成功済みの run はこれまで `reporter already succeeded` で拒否していたが、統合段の再開対象として扱う。worktree は統合完了時にのみ撤去されるため「reporter 成功済みの worktree が残る＝統合未完了」を判定根拠にした。
+
+**統合段の実行**: agent を1つも起動せず、既存 worktree の成果物と記入済み result をそのまま commit → merge → worktree 撤去する。開始時に `register start`（reason: `integration resumed`）で `in-progress` へ戻し、成功なら `review`、失敗なら `waiting` へ遷移するため、再試行の成否は登録簿の状態とイベントに残る。前回試行が merge 済みだった場合は再 merge せず残り手順のみ進める。worktree 撤去も統合の一部として try 内に取り込み、失敗しても例外で run を落とさず再開可能な状態で止める。
+
+## 変更ファイル
+
+| ファイル | 変更 |
+| --- | --- |
+| `src/exec-pipeline-state.ts` | `PipelineStageRole` / `stages.integrate`（任意項目）を追加、`updatePipelineStage` を未記録段に対応 |
+| `docs/specdojo/schemas/v1/pipeline-state.schema.yaml` | `integrate` を任意プロパティとして追加 |
+| `src/exec-register-resume.ts` | 再開対象へ `stage` を追加、reporter 成功時の拒否を撤去 |
+| `src/exec-run.ts` | 統合段の記録・統合再開経路・保護メッセージ・help / dry-run 出力を更新 |
+| `src/exec-worktree-ops.ts` | `isExecBranchMergedIntoCurrent` を追加 |
+| `tests/src/exec-register-resume.test.ts` | 再開段選択（reporter / integrate、統合失敗・成功記録済み）のテストを追加 |
+| `tests/src/exec-pipeline-state.test.ts` | 統合段の追記と schema 適合のテストを追加 |
+| `docs/ja/specdojo/guides/exec-operation-guide.md` | `2.7. register実行の再開` へ改題し、再開段の表・統合段の挙動・拒否条件を更新 |
+| `docs/ja/specdojo/references/command-reference.md` | `--resume` の説明と実行例を更新 |
+| `docs/ja/projects/prj-0001/controls/project-register/pjr-y0ah-integrate-only-resume.md` | 作業内容を done へ更新し、対応結果（設計判断・制約・残課題）を記入 |
+
+制約: 統合成功時の `integrate: succeeded` は永続化しない（merge 後に state を書くと commit 対象が未コミットで残り worktree を撤去できなくなるため、記録は `running` / `failed` のみ）。残課題として統合段再開の E2E テストは未追加（sandbox で統合テストを起動できないため）。
+
+<specdojo_executor_evidence>
+{"final_message":"exec run --register --worktree --resume を統合段からの再開に対応させた。pipeline-state に integrate 段を追加し、reporter 成功済み run を統合段の再開対象へ変更、統合は agent 非起動で commit→merge→worktree 撤去を冪等に再試行する。単体テストとドキュメント（運用ガイド・コマンドリファレンス・個票）を更新。","validations":[{"command":"npm run typecheck","status":"passed","summary":"tsc -b --noEmit が型エラーなしで完了"},{"command":"npx eslint src/exec-run.ts src/exec-pipeline-state.ts src/exec-register-resume.ts src/exec-worktree-ops.ts tests/src/exec-pipeline-state.test.ts tests/src/exec-register-resume.test.ts","status":"passed","summary":"変更した TypeScript に ESLint エラーなし"},{"command":"npx prettier --write <変更した ts/yaml/md ファイル>","status":"passed","summary":"整形完了（exec-operation-guide.md の表のみ再整形）"},{"command":"npx markdownlint docs/ja/specdojo/guides/exec-operation-guide.md docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-y0ah-integrate-only-resume.md","status":"passed","summary":"Markdown lint エラーなし"},{"command":"npx tsx src/specdojo.ts register build","status":"passed","summary":"登録簿と派生ビューを再生成（差分は generated 配下のみ）"},{"command":"npx tsx src/specdojo.ts catalog validate","status":"passed","summary":"終了コード 0。WARN は既存の未作成成果物に関するもので本変更とは無関係"},{"command":"npx tsx src/specdojo.ts index build","status":"passed","summary":"doc-index を 1479 entries で再生成"},{"command":"npx tsx tools/docs/src/validate-history-links.ts","status":"passed","summary":"履歴蓄積ファイルのリンク記法違反なし"},{"command":"npm run -s lint:fm","status":"passed","summary":"frontmatter 検査エラーなし"},{"command":"npm run test:unit","status":"not_run","summary":"親検証として runner が実行するため sandbox では未実行"},{"command":"npm run test:integration","status":"not_run","summary":"親検証として runner が実行するため sandbox では未実行"},{"command":"npm run validate:schema","status":"not_run","summary":"親検証として runner が実行するため sandbox では未実行"}]}
+</specdojo_executor_evidence>

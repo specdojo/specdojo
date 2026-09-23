@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-VFD0",
+  "run_id": "20260910T034422759Z-f344c340",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-10T03:44:22.759Z",
+    "completed_at": "2026-09-10T03:53:10.149Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-vfd0-exec-resume-protection-blocked.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/pipeline-state.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-pipeline-state.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-register-resume.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-pipeline-state.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-register-pipeline-e2e.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-register-resume.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 9,
+    "summary": ".../pjr-vfd0-exec-resume-protection-blocked.md     | 22 +++++---\n docs/ja/specdojo/guides/exec-operation-guide.md    | 29 +++++-----\n .../specdojo/schemas/v1/pipeline-state.schema.yaml |  2 +-\n src/exec-pipeline-state.ts                         | 11 +++-\n src/exec-register-resume.ts                        | 12 +++--\n src/exec-run.ts                                    | 28 +++++++---\n tests/src/exec-pipeline-state.test.ts              | 31 +++++++++++\n .../exec-register-pipeline-e2e.integration.test.ts | 61 +++++++++++++++++++---\n tests/src/exec-register-resume.test.ts             | 16 ++++++\n 9 files changed, 169 insertions(+), 43 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write src/exec-pipeline-state.ts src/exec-register-resume.ts src/exec-run.ts tests/src/exec-register-resume.test.ts tests/src/exec-pipeline-state.test.ts tests/src/exec-register-pipeline-e2e.integration.test.ts docs/specdojo/schemas/v1/pipeline-state.schema.yaml docs/ja/specdojo/guides/exec-operation-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-vfd0-exec-resume-protection-blocked.md && npx markdownlint docs/ja/specdojo/guides/exec-operation-guide.md docs/ja/pr…",
+      "status": "passed",
+      "summary": "対象ファイルの整形とMarkdown検査が成功。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "TypeScript型検査が成功。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "ESLint検査が成功。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build && node --import tsx src/specdojo.ts catalog validate && node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "登録簿生成、catalog検証、文書index生成が終了コード0で成功。catalogには既存文書欠損の警告あり。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーなし。"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-VFD0\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/stale.md\n  src/unrelated.ts\ncommit-targets:\n  execution/exec/…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.1.0 validate:schema:yaml\n> tsx tools/docs/src/validate-yaml-schema.ts --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bps-template.yaml: schema docs/specdojo/sc…"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-VFD0\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-qrPYaY/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-yjfWYw/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-petTmy/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-4dKPtJ/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-afBniS/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-TkN2p7/pjr-0001-topic.md\nbefore\nWrote agent stdout: /tmp/specdojo-agent-command-PllBXG/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-Q9MM8s/outputs/partial.txt\n\n Test Files  100 passed (100)\n      Tests  1427 passed (1427)\n   Start at  12:53:27\n   Duration  20.93s (transform 1.66s, setup 403ms, import 10.91s, tests 19.27s,…"
+    }
+  ],
+  "final_message": "保護機構で blocked になった executor を既存 worktree 上で再開できるようにし、schema・テスト・運用文書・個票を更新した。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-VFD0/20260910T034422759Z-f344c340/executor.log",
+      "bytes": 2033,
+      "truncated": false
+    }
+  ]
+}

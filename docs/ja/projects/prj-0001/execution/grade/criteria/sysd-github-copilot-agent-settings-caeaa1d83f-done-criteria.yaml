@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: sysd-github-copilot-agent-settings-grade-criteria
+document: sysd-github-copilot-agent-settings
+path: docs/ja/product/040-system-design/sysd-github-copilot-agent-settings.md
+graded_at: "2026-09-19T16:40:32.193Z"
+graded_by: codex-expert-executor
+content_hash: 3673aa9228f471b201b56d456068deb6aa112af4ad4f2e62ad3808224a75ce6c
+summary:
+  satisfied: 1
+  unsatisfied: 4
+  total: 5
+criteria:
+  - id: DC-001
+    text: 設計トピックの採用理由・制約が業務要件と整合していること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: unsatisfied
+    reason: 業務要件への参照、GitHub Copilot の採用理由、代替 provider との選択条件が示されていない。
+  - id: DC-002
+    text: 設計方針を承認できること
+    roles:
+      - PO
+    viewpoint: vp-po-decision-readiness
+    status: unsatisfied
+    reason: 運用検証未完了事項の合格条件と解消基準がなく、現行設定との不整合も残っている。
+  - id: DC-003
+    text: 技術的制約・依存関係が識別できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: satisfied
+  - id: DC-004
+    text: テスト設計・検証観点の参照として使えること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: unsatisfied
+    reason: 設計制約ごとの検証手順、期待結果、テストまたは証跡への参照がない。
+  - id: DC-005
+    text: 実装の基礎として参照できること
+    roles:
+      - DEV
+    viewpoint: vp-dev-implementation-readiness
+    status: unsatisfied
+    reason: member 名、stage_role、reporter、モデル指定、実行例が現行構成と一致していない。

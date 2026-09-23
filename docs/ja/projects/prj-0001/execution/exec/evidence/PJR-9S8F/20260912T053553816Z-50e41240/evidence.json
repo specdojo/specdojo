@@ -1,0 +1,274 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-9S8F",
+  "run_id": "20260912T053553816Z-50e41240",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-12T05:35:53.816Z",
+    "completed_at": "2026-09-12T05:47:32.600Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": ".devcontainer/post-create.sh",
+      "status": "M"
+    },
+    {
+      "path": ".gitignore",
+      "status": "M"
+    },
+    {
+      "path": ".vitepress/config.mts",
+      "status": "D"
+    },
+    {
+      "path": ".vitepress/sidebar-config.ts",
+      "status": "D"
+    },
+    {
+      "path": ".vitepress/theme/FrontmatterTable.vue",
+      "status": "D"
+    },
+    {
+      "path": ".vitepress/theme/SidebarToggle.vue",
+      "status": "D"
+    },
+    {
+      "path": ".vitepress/theme/custom.css",
+      "status": "D"
+    },
+    {
+      "path": ".vitepress/theme/index.ts",
+      "status": "D"
+    },
+    {
+      "path": ".vitepress/tsconfig.json",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/product/030-architecture/020-infrastructure/tsd-index.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/040-system-design/sysd-index.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-architecture.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-9s8f-split-docs-site-package.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/id-and-file-naming-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "mermaid-config.json",
+      "status": "D"
+    },
+    {
+      "path": "puppeteer-config.json",
+      "status": "D"
+    },
+    {
+      "path": "tools/docs/src/gen-mermaid-svg.ts",
+      "status": "D"
+    },
+    {
+      "path": "packages/docs-site/.vitepress/config.mts",
+      "status": "??"
+    },
+    {
+      "path": "packages/docs-site/.vitepress/env.d.ts",
+      "status": "??"
+    },
+    {
+      "path": "packages/docs-site/.vitepress/sidebar-config.ts",
+      "status": "??"
+    },
+    {
+      "path": "packages/docs-site/.vitepress/theme/FrontmatterTable.vue",
+      "status": "??"
+    },
+    {
+      "path": "packages/docs-site/.vitepress/theme/SidebarToggle.vue",
+      "status": "??"
+    },
+    {
+      "path": "packages/docs-site/.vitepress/theme/custom.css",
+      "status": "??"
+    },
+    {
+      "path": "packages/docs-site/.vitepress/theme/index.ts",
+      "status": "??"
+    },
+    {
+      "path": "packages/docs-site/.vitepress/tsconfig.json",
+      "status": "??"
+    },
+    {
+      "path": "packages/docs-site/LICENSE",
+      "status": "??"
+    },
+    {
+      "path": "packages/docs-site/README.md",
+      "status": "??"
+    },
+    {
+      "path": "packages/docs-site/bin/specdojo-docs-site.js",
+      "status": "??"
+    },
+    {
+      "path": "packages/docs-site/mermaid-config.json",
+      "status": "??"
+    },
+    {
+      "path": "packages/docs-site/package-lock.json",
+      "status": "??"
+    },
+    {
+      "path": "packages/docs-site/package.json",
+      "status": "??"
+    },
+    {
+      "path": "packages/docs-site/puppeteer-config.json",
+      "status": "??"
+    },
+    {
+      "path": "packages/docs-site/src/gen-mermaid-svg.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 33,
+    "summary": ".devcontainer/post-create.sh                       |   6 +\n .gitignore                                         |   7 +-\n .vitepress/config.mts                              | 971 ---------------------\n .vitepress/sidebar-config.ts                       | 480 ----------\n .vitepress/theme/FrontmatterTable.vue              | 148 ----\n .vitepress/theme/SidebarToggle.vue                 |  76 --\n .vitepress/theme/custom.css                        | 116 ---\n .vitepress/theme/index.ts                          |  60 --\n .vitepress/tsconfig.json                           |  16 -\n .../020-infrastructure/tsd-index.md                |   4 +-\n docs/ja/product/040-system-design/sysd-index.md    |  14 +-\n .../010-deliverables-catalog/dct-architecture.yaml |   6 +-\n .../pjr-9s8f-split-docs-site-package.md            |  64 +-\n .../pjr-9s8f-20260912T044541Z-7b2c-result.md       |  78 +-\n .../standards/id-and-file-naming-standard.md       |   2 +-\n mermaid-config.json                                |  14 -\n puppeteer-config.json                              |   3 -\n tools/docs/src/gen-mermaid-svg.ts                  | 296 -------\n 18 files changed, 138 insertions(+), 2223 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write <変更対象ファイル>",
+      "status": "passed",
+      "summary": "TypeScript、JavaScript、JSON、YAML、Vue、CSS、Markdownを整形済み"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint packages/docs-site/README.md docs/ja/product/030-architecture/020-infrastructure/tsd-index.md docs/ja/product/040-system-design/sysd-index.md docs/ja/projects/prj-0001/controls/project-register/pjr-9s8f-split-docs-site-package.md docs/ja/specdojo/standards/id-and-file-naming-standard.md",
+      "status": "passed",
+      "summary": "指摘なし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "本体TypeScript型検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm --prefix packages/docs-site run typecheck",
+      "status": "passed",
+      "summary": "分離パッケージ型検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "PUPPETEER_SKIP_DOWNLOAD=true npm ci --package-lock-only --ignore-scripts --cache /tmp/specdojo-docs-site-npm-cache",
+      "status": "passed",
+      "summary": "独立package-lock.jsonの整合性を確認"
+    },
+    {
+      "source": "executor",
+      "command": "npm pack --dry-run --json --ignore-scripts --cache /tmp/specdojo-npm-cache",
+      "status": "passed",
+      "summary": "本体packにVitePress、Mermaid設定、生成器が含まれないことを確認。分離パッケージpackには必要15ファイルとLICENSEが含まれる"
+    },
+    {
+      "source": "executor",
+      "command": "node dist/specdojo.js catalog build && node dist/specdojo.js register build && node dist/specdojo.js index build && node dist/specdojo.js catalog validate",
+      "status": "passed",
+      "summary": "生成処理とカタログ検証成功。既存の未作成成果物警告のみ"
+    },
+    {
+      "source": "executor",
+      "command": "node packages/docs-site/bin/specdojo-docs-site.js build /tmp/tmp.NF4H3q1ndH",
+      "status": "passed",
+      "summary": "日本語・英語の最小fixtureをVitePress buildできた"
+    },
+    {
+      "source": "executor",
+      "command": "node packages/docs-site/bin/specdojo-docs-site.js mermaid /tmp/tmp.NF4H3q1ndH",
+      "status": "passed",
+      "summary": "Mermaid専用CLI入口が正常終了"
+    },
+    {
+      "source": "executor",
+      "command": "npm run docs:build",
+      "status": "failed",
+      "summary": "sandbox固有のtsx IPC listen EPERMにより生成開始前に停止"
+    },
+    {
+      "source": "executor",
+      "command": "npm --prefix packages/docs-site run docs:build",
+      "status": "failed",
+      "summary": "全量Mermaid生成時のChromium起動がsandboxで拒否。最小fixture buildで構成を代替検証済み"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:unit",
+      "status": "not_run",
+      "summary": "親runnerのallowlisted validationへ委譲"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:integration",
+      "status": "not_run",
+      "summary": "親runnerのallowlisted validationへ委譲"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema",
+      "status": "not_run",
+      "summary": "親runnerのallowlisted validationへ委譲"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-9S8F\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/unmerged.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/stale.md\n  src/unrelated.t…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.1.0 validate:schema:yaml\n> tsx tools/docs/src/validate-yaml-schema.ts --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bps-template.yaml: schema docs/specdojo/sc…"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-9S8F\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-IaVyqL/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-YssfPX/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-h3EsEK/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-UOQupd/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-TOmcIt/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-OoegIs/pjr-0001-topic.md\nbefore\nWrote agent stdout: /tmp/specdojo-agent-command-7zfbV6/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-qVRhlR/outputs/partial.txt\n\n Test Files  101 passed (101)\n      Tests  1443 passed (1443)\n   Start at  14:47:50\n   Duration  21.95s (transform 2.15s, setup 403ms, import 12.10s, tests 20.12s,…"
+    }
+  ],
+  "final_message": "文書サイト一式を@specdojo/docs-siteへ分離し、設計文書・配布境界・独立lockfile・専用CLIを整備した。最小VitePress buildは成功。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-9S8F/20260912T053553816Z-50e41240/executor.log",
+      "bytes": 3357,
+      "truncated": false
+    }
+  ]
+}

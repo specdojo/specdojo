@@ -1,0 +1,84 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/job.schema.yaml
+id: job-grade-kata
+name: 実践の型の品質評価
+description: 文書単位の codex 単段評価を起動し、その実行結果に異常がないかを判断する。
+inputs:
+  period:
+    type: string
+    required: true
+  kind:
+    type: string
+    default: rulebook
+    enum: [rulebook, recipe, sample, template, all]
+  limit:
+    type: integer
+    default: 0
+    minimum: 0
+  changed_only:
+    type: boolean
+    default: false
+  ungraded:
+    type: boolean
+    default: false
+  incomplete:
+    type: boolean
+    default: false
+task:
+  mode: command
+  owner: ARC
+  precondition:
+    command: |
+      selection=$(
+        if [ "{{inputs.changed_only}}" = "false" ] && [ "{{inputs.ungraded}}" = "false" ] && [ "{{inputs.incomplete}}" = "false" ]; then
+          {{specdojo}} grade list --target kata --project {{project_id}}
+        else
+          if [ "{{inputs.changed_only}}" = "true" ]; then
+            {{specdojo}} grade list --target kata --project {{project_id}} --changed-only || exit $?
+          fi
+          if [ "{{inputs.ungraded}}" = "true" ]; then
+            {{specdojo}} grade list --target kata --project {{project_id}} --ungraded || exit $?
+          fi
+          if [ "{{inputs.incomplete}}" = "true" ]; then
+            {{specdojo}} grade list --target kata --project {{project_id}} --incomplete || exit $?
+            # 上限到達文書は処理対象外だが、report-only Job を起動するため precondition に含める。
+            {{specdojo}} grade state --target kata --project {{project_id}} --exhausted || exit $?
+          fi
+        fi
+      )
+      printf '%s\n' "$selection" | LC_ALL=C sort -u | awk -v kind="{{inputs.kind}}" -v limit="{{inputs.limit}}" '
+        NF && (kind == "all" || index($0, "docs/ja/specdojo/" kind "s/") == 1) {
+          if (limit == 0 || selected < limit) {
+            print
+            selected++
+          }
+        }
+      '
+    skip_when: empty-output
+  command: |
+    npm run build
+    tools/grade/run-per-document.sh --run-id {{job_run_id}} --stages 1 --kind {{inputs.kind}} --limit {{inputs.limit}} --changed-only={{inputs.changed_only}} --ungraded={{inputs.ungraded}} --incomplete={{inputs.incomplete}}
+    cat logs/grade/runs/per-document/{{job_run_id}}/results.tsv
+  analysis:
+    agent: gemma-reporter
+    description: |
+      runner が記録した command evidence の終了コードと、stdout に出力された
+      `results.tsv` から次を判断して報告する。
+
+      - 終了コード75（rate limit）または中断で未完了の段が残っているか。残る場合は同じ
+        `--run-id` で再開できる状態かを確認する。
+      - `failed` の段があるか。ある場合は rate limit、agent 側の失敗、`grade apply` の
+        忠実性検証による拒否のいずれかへ切り分ける。
+      - `retry_exhausted` の文書があるか。ある場合は失敗段と連続失敗回数を示し、人手での
+        原因解消または state の再開判断を促す。
+      - codex 単段の verdict と score の分布に、評価設定の見直しを要する偏りがあるか。
+
+      選択された文書が0件の場合は no-op と判断する。判断できない事象は推測で埋めず、
+      観測した事実と未確認の範囲を分けて報告する。
+  paths:
+    - docs/ja/specdojo/rulebooks
+    - docs/ja/specdojo/recipes
+    - docs/ja/specdojo/samples
+    - docs/ja/specdojo/templates
+run:
+  # scheduled_at は routine の論理実行枠を表す。同じ枠の再試行は同じ Run、次の枠は別 Run にする。
+  idempotency_key: "{{job_id}}:command-v5:{{scheduled_at}}:{{inputs.kind}}:{{inputs.limit}}:{{inputs.changed_only}}:{{inputs.ungraded}}:{{inputs.incomplete}}"

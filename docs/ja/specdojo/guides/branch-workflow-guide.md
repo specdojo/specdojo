@@ -78,13 +78,20 @@ git merge origin/main
 
 ### 3.1. 通常の作業ツリーで開始する
 
-対象 project の `develop` を起点に、project ID を含む feature を作成します。
+対象 project の `develop` を起点に、project ID を含む feature を作成します。複数人・複数 actor 運用では、先にリモートの更新を取り込み、ローカルの `develop` を push します。push 後の先端がリモートと一致することを確認してから feature を切ります。これにより、ローカルの `develop` にだけ存在する無関係な commit が Pull Request の差分へ混入することを防ぎます。
 
 ```bash
 git switch project/prj-0001/develop
 git status --short
+git fetch origin
+git merge --ff-only origin/project/prj-0001/develop
+git push origin project/prj-0001/develop
+git rev-parse HEAD
+git rev-parse origin/project/prj-0001/develop
 git switch -c feature/prj-0001/branch-policy
 ```
+
+2つの `git rev-parse` が同じ SHA を返さない場合は feature を切らず、未 push commit、リモートの更新、誤った分岐を確認します。リモートや Pull Request を使わない単独運用では fetch、push、リモートとの SHA 比較を省略できます。
 
 作業・検証・commitを終えたら、project `develop` へ統合します。共有リポジトリでは Pull Request を使い、ローカル統合する場合も統合前に差分と検証結果を確認します。
 
@@ -119,6 +126,26 @@ git worktree remove ../worktrees/prj-0001-branch-policy
 git branch -d feature/prj-0001/branch-policy
 ```
 
+### 3.3. Pull Requestの差分表示が更新されない場合
+
+Pull Request の作成後に base の project `develop` を push しても、画面の Files changed がすぐに再計算されない場合があります。画面だけで判断せず、GitHub の compare API で base と head の実差分を確認します。次の `<owner>`、`<repo>`、branch 名、`<pr-number>` は対象に置き換えます。branch 名に含まれる `/` は compare API のパスでは `%2F` として指定します。
+
+```bash
+gh api \
+  "/repos/<owner>/<repo>/compare/project%2Fprj-0001%2Fdevelop...feature%2Fprj-0001%2Fbranch-policy" \
+  --jq '{status, ahead_by, files: [.files[].filename]}'
+gh pr view <pr-number> --json files --jq '.files[].path'
+```
+
+compare API のファイル一覧が期待どおりで、Pull Request の Files changed だけが古い場合は、レビュー中の操作がないことを確認してから Pull Request を close / reopen し、表示の再計算を促します。
+
+```bash
+gh pr close <pr-number>
+gh pr reopen <pr-number>
+```
+
+再度 Files changed を確認し、compare API の一覧と一致するまで merge しません。close / reopen 後は、必須 CI、review、conversation の状態も再確認します。compare API にも無関係な差分がある場合は表示の問題ではないため、base の push 状態と feature の分岐元を修正します。
+
 ## 4. SpecDojo execを実行する
 
 SpecDojo exec は task ID から `exec/<project-id>-<task-id>` を作成します。作成元と統合先を一致させるため、実行前に main worktree を対象 project の `develop` に切り替えます。
@@ -130,6 +157,8 @@ git status --short
 ```
 
 自動実行では、SpecDojo が worktree の準備、agent 実行、commit、現在ブランチへの統合、状態更新を行います。
+
+worktree 実行の `prepare execution` / `apply task changes` と実行管理の記帳は exec ブランチに保持されます。成功時に project `develop` の first-parent へ追加されるのは `--no-ff` の merge commit 1件だけで、subject は Schedule タスクなら `exec(<task-id>): <task name>`、register 項目なら `exec(register <PJR-ID>): <title>` です。register 実行では `start → review` の遷移をこの merge commit に同梱し、失敗時は `start → waiting` の遷移、plan、result を `wait` commit 1件にまとめます（worktree は再開のため保持します）。再開後に成功した場合も merge commit 1件です。squash / rebase は使わず、既存履歴は書き換えません。
 
 ```bash
 specdojo exec run \
@@ -190,7 +219,7 @@ git diff --stat main...project/prj-0001/develop
 git branch --no-merged project/prj-0001/develop
 ```
 
-Pull Request の head は project `develop`、base は `main` とします。一時ブランチで commit を並べ替えたり、register 遷移 commit だけを除外したりしません。統合後は `main` を取得し、昇格した `develop` の先端が祖先になったことと、first-parent 上で昇格が1件の merge commit として見えることを確認します。
+Pull Request の head は project `develop`、base は `main` とします。一時ブランチで commit を並べ替えたり、squash や rebase で履歴を作り直したりしません。exec の記帳（register の `start` / `review` 遷移、plan、result）は task ごとの merge commit または `wait` commit に同梱されているため、昇格時に除外する commit はありません。統合後は `main` を取得し、昇格した `develop` の先端が祖先になったことと、first-parent 上で昇格が1件の merge commit として見えることを確認します。
 
 ```bash
 git fetch origin
@@ -215,6 +244,8 @@ git log --oneline origin/main..project/prj-0001/develop
 ## 7. 承認方式を使い分ける
 
 登録項目の承認は、既定で commit（register の状態遷移とチケット個票の承認節）で残し、PR 承認は強制する 3 ケースに限定します。判定条件は [Git ブランチ運用標準](../standards/git-branching-standard.md) の `承認ゲートと PR 強制条件`、type 別の承認フローは [登録簿運用ガイド](register-operation-guide.md) の `承認フローと承認者` を参照します。
+
+この承認方式は register 項目の正式な承認証跡を選ぶものです。人または対話型 agent が内容を書いた変更を feature Pull Request で事前レビューする経路とは別に判定します。PR 強制3ケース以外でも内容変更は feature Pull Request で統合し、register 項目の正式承認は commit とチケット個票へ残します。
 
 commit ベースで承認する場合（`decision` / `risk` / `question` / `issue` / `todo` の通常運用）は、チケット個票の承認節と register の状態遷移で承認事実を残します。
 

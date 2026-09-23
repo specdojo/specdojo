@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:prj-comparison-of-alternatives-sample
+path: docs/ja/specdojo/samples/prj-comparison-of-alternatives-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 84
+graded_at: "2026-09-05T22:41:20.408Z"
+graded_by: gemma-expert-executor
+content_hash: 3a1a84372cc984b43b503c0da653d1f7e8a0a5e4a7542efc1d22e47ff785c2c5
+categories:
+  consistency:
+    score: 75
+  usability:
+    score: 92
+  architecture:
+    score: 100
+  quality:
+    score: 75
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 2
+  minor: 1
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 80
+    message: 評価軸の最低ラインである「リスク」と「技術実現性」が表から欠落しており、かつ省略理由の記載もないため、rulebook の必須要件を満たしていない。
+    anchor: >-
+      | ------------ | ---------------------------------------------------------- |
+      ----------------------------------------------------------- |
+  - id: F002
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 80
+    message: 完成例である sample が rulebook/recipe で定める最低評価軸を省略し、かつその正当な理由を明示していないため、標準的な書き方の正解例として機能していない。
+    anchor: >-
+      | ------------ | ---------------------------------------------------------- |
+      ----------------------------------------------------------- |
+  - id: F003
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 85
+    message: 最低ラインの評価軸名称が rulebook では「運用適合」となっているが、本 sample では「業務適合」となっており、用語が不統一である。
+    anchor: ""

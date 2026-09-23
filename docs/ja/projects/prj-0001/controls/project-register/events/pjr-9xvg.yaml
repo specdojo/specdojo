@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_d6fd27ccfd7741778008543b3af97b0d
+  ts: "2026-08-29T14:58:09Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: grade plan を全文埋め込みからパス参照へ変更し exec plan と構造を揃える
+    - field: description
+      from: ""
+      to: grade plan は評価対象と参考資料の全文を埋め込むため、サイズが対象の分量に依存する。opr-batch-sample を対象にした場合 63,631 文字となり、旧バッチ方式の 46,673 文字を上回った。exec plan は対象をパスで示し agent が読む方式であり、grade plan だけが異なる構造を持つ理由がない。パス参照へ変更すれば plan はほぼ静的になり、対象文書を更新しても再生成が不要になる。本文の重複も解消する。frontmatter と章構成も exec plan へ揃える。agent がファイルを読むことが前提となるため、参考資料を必ず読む旨を plan へ明記し、実行ログで読み込みを確認する。読まない agent は grade に使えないと判断する。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-08-29"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_b403ddd990de41b4ad195c0fcf77b382
+  ts: "2026-08-29T15:07:17Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_d6fd27ccfd7741778008543b3af97b0d
+- v: 1
+  id: reg_d473ee85ff4d45d18df1366202e8bf5a
+  ts: "2026-08-29T15:19:06Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_b403ddd990de41b4ad195c0fcf77b382
+- v: 1
+  id: reg_10d39ac0b2af479db6e0c08b2180d549
+  ts: "2026-08-29T23:18:29Z"
+  action: close
+  actor: manual
+  from_status: review
+  to_status: done
+  reason: 実装・検証・レビューが完了したため
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-08-30"
+    - field: conclusion
+      from: "-"
+      to: grade plan を全文埋め込みからパス参照へ変更し、frontmatter と章構成を exec plan へ揃えた。参考資料はパスで列挙し、全文を読んで実行ログに読み取り操作を残すよう plan へ明記した。opr-batch-sample を対象とした plan は 63,631 文字から 8,798 文字へ縮小し、対象の分量に依存しなくなった。
+  previous_event_id: reg_d473ee85ff4d45d18df1366202e8bf5a

@@ -40,15 +40,16 @@ Business Rule (BR) Documentation Rules
 
 ## 4. 推奨 Frontmatter 項目
 
-| 項目       | 説明                                   | 必須 |
-| ---------- | -------------------------------------- | ---- |
-| id         | ルールID (br-xxx-xxxx)                 | ○    |
-| type       | `rule` 固定                            | ○    |
-| title      | ルール名                               | ○    |
-| status     | `draft`/`ready`/`deprecated`           | ○    |
-| part_of    | 親ルールID（サブルールの場合）         | 任意 |
-| based_on   | 根拠となる仕様ID（BPS/UIS/BEL/BES 等） | 任意 |
-| supersedes | 置き換え関係（古仕様→新仕様）          | 任意 |
+| 項目 | 説明 | 必須 |
+| ---- | ---- | ---- |
+
+| id | ルールID (br-xxx-xxxx) | ○ |
+| type | `rule` 固定 | ○ |
+| title | ルール名 | ○ |
+| status | `draft`/`ready`/`deprecated` | ○ |
+| part_of | 親ルールID（サブルールの場合） | 任意 |
+| based_on | 根拠となる仕様ID（BPS/UIS/BEL/BES 等） | 任意 |
+| supersedes | 置き換え関係（古仕様→新仕様） | 任意 |
 
 ### NG/OK例（抜粋）
 
@@ -77,6 +78,7 @@ Business Rule (BR) Documentation Rules
 - 業務データ辞書のエンティティ・論理名を列挙し、利用目的を簡潔に付記。
   - 例: エンティティ:在庫、項目:在庫数・予約数、目的:不足判定の基準
 - 必要に応じて用語集の用語ID（tm-xxx-xxx）や外部 IF 仕様の ID を併記。
+
 - 入力は概念レベルで記述する（詳細は「9. 禁止事項」参照）。
 
 ### 6.3 ルール（判定/計算）

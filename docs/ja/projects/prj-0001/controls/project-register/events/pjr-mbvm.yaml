@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_b7262aaa6d0247bf9fa8329a89956402
+  ts: "2026-09-07T13:45:36Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: grade の対象選択から generated 配下を除外する
+    - field: description
+      from: ""
+      to: grade validate / plan の文書選択が docs/ja/specdojo/*/generated 配下を対象に含めており、--changed-only の走査で 47 件が specdojo.grade is missing として報告される。generated は生成物であり評価対象ではない。tools/grade/run-per-document.sh は find で -not -path '*/generated/*' を指定して除外済みだが、grade 側の選択には反映されていない。CLI の選択ロジックで除外する。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-07"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_5ca70ed845094e23b46904be2edbaa66
+  ts: "2026-09-07T13:51:50Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_b7262aaa6d0247bf9fa8329a89956402
+- v: 1
+  id: reg_ceb6e5e9bf264df6a944616e32199a89
+  ts: "2026-09-07T22:47:06Z"
+  action: review
+  actor: orchestrator
+  from_status: in-progress
+  to_status: review
+  reason: executor の実装を検証した。typecheck / lint:ts / test:unit 1394 件が成功し、generated 配下の報告が 47 件から 0 件へ、--path 明示指定の拒否も確認した。reporter 段の中断により orchestrator が検証を代行した。
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_5ca70ed845094e23b46904be2edbaa66
+- v: 1
+  id: reg_cff2b41ea89642178049285a2bc18017
+  ts: "2026-09-07T22:47:12Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件をすべて満たした。generated 配下は自動探索から除外され、--path 明示指定は入力エラーとして拒否される。grade plan / apply / validate に共通で効くことを実機で確認した。テストの書き方に関する所見は result の所見章へ記録した。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-08"
+  previous_event_id: reg_ceb6e5e9bf264df6a944616e32199a89

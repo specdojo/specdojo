@@ -31,8 +31,11 @@ Mermaid 記法そのもののルールは [cxd-mermaid-rulebook.md](cxd-mermaid-
 ## 2. ファイル命名・ID規則
 
 - ファイル名: `cxd-<番号>-<短い日本語名>.md`
+
   - 例: `cxd-010-駄菓子屋きぬや販売管理システム-コンテキスト.md`
+
 - Frontmatter:
+
   - `id`: 小文字ハイフン形式（例: `cxd-candy-shop-sales-context`）
   - `title`: 「〇〇のC4コンテキスト図」のように対象が分かる表現
 
@@ -261,6 +264,7 @@ flowchart LR
   %% Target System Boundary
   subgraph 境界["対象システム"]
     販売管理システム("駄菓子屋きぬや<br>販売管理システム")
+
   end
 
   %% Relationships

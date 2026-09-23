@@ -1,0 +1,78 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:utc-index-sample
+path: docs/ja/specdojo/samples/utc-index-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: fail
+score: 63
+graded_at: "2026-09-06T05:04:17.291Z"
+graded_by: gemma-expert-executor
+content_hash: 6ee60a091cc6f8b7e943ae14f496d7ec013c5d0506fd1a78bfbde10bb4d442d7
+categories:
+  consistency:
+    score: 25
+  usability:
+    score: 83
+  architecture:
+    score: 100
+  quality:
+    score: 50
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 0
+    score: 0
+  vp-qe-kata-conformance:
+    level: 0
+    score: 0
+  vp-ux-readability:
+    level: 2
+    score: 50
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 2
+  major: 2
+  minor: 0
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 1
+    message: Frontmatter の id と type が、ルールブックで定義された固定値 (utc-index, test) と不整合である。
+    anchor: ""
+  - id: F003
+    severity: blocker
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: ルールブックで定義された必須の Frontmatter 設定および本文構成を遵守しておらず、種別としての責務を果たしていない。
+    anchor: ""
+  - id: F004
+    severity: major
+    rule: vp-ux-readability
+    line: 3
+    message: 見出し名がルールブックで指定された標準名称（例：本ドキュメントの目的と適用対象）から逸脱している。
+    anchor: ""
+  - id: F002
+    severity: blocker
+    rule: vp-qe-omissions-consistency
+    line: 7
+    message: ルールブックで定義された必須構成（第 2 章〜第 8 章）がすべて欠落している。
+    anchor: ""

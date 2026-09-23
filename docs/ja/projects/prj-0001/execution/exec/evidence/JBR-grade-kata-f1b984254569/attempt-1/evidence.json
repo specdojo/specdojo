@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "task_id": "JBR-grade-kata-f1b984254569",
+  "run_id": "attempt-1",
+  "stage": {
+    "role": "executor",
+    "actor": "specdojo-runner",
+    "status": "succeeded",
+    "started_at": "2026-09-09T14:51:42.548Z",
+    "completed_at": "2026-09-09T16:28:14.683Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/imp-test-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/mtp-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/pm-plan-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/pm-quality-management-plan-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/trc-requirements-to-tests-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-kata-f1b984254569.json",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 6,
+    "summary": "docs/ja/specdojo/samples/imp-test-sample.md        | 37 ++++++++++++++++++++++\n docs/ja/specdojo/samples/mtp-sample.md             | 32 +++++++++++++++++++\n docs/ja/specdojo/samples/pm-plan-sample.md         | 35 ++++++++++++++++++++\n .../samples/pm-quality-management-plan-sample.md   | 27 ++++++++++++++++\n .../samples/trc-requirements-to-tests-sample.md    | 30 ++++++++++++++++++\n 5 files changed, 161 insertions(+)"
+  },
+  "validations": [
+    {
+      "id": "job-command",
+      "source": "runner",
+      "command": "npm run build\ntools/grade/run-per-document.sh --run-id JBR-grade-kata-f1b984254569 --kind all --limit 5 --changed-only=true --ungraded=true\ncat logs/grade/runs/per-document/JBR-grade-kata-f1b984254569/results.tsv",
+      "status": "passed",
+      "summary": "exit 0"
+    }
+  ],
+  "final_message": "Runner command exit 0.",
+  "command": {
+    "shell": "/bin/sh -eu",
+    "value": "npm run build\ntools/grade/run-per-document.sh --run-id JBR-grade-kata-f1b984254569 --kind all --limit 5 --changed-only=true --ungraded=true\ncat logs/grade/runs/per-document/JBR-grade-kata-f1b984254569/results.tsv",
+    "exit_code": 0,
+    "stdout_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-f1b984254569/attempt-1/command.stdout.log",
+    "stderr_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-f1b984254569/attempt-1/command.stderr.log",
+    "stdout": "\n> specdojo@0.1.0 build\n> node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.build.json && node -e \"require('node:fs').chmodSync('dist/specdojo.js', 0o755)\"\n\nrun_id=JBR-grade-kata-f1b984254569 project=prj-0001 kind=all changed_only=true ungraded=true documents=5 work_dir=logs/grade/runs/per-document/JBR-grade-kata-f1b984254569\nstage=1 executor=gemma-expert-executor reporter=gemma-reporter reference=per-kind\nstage=2 executor=gemma-expert-executor reporter=gemma-reporter reference=none\nstage=3 executor=codex-expert-executor reporter=gemma-reporter reference=none condition=\"pass, score>=96, findings<=1\"\ndocument start: docs/ja/specdojo/samples/imp-test-sample.md\ndocument complete: docs/ja/specdojo/samples/imp-test-sample.md\ndocument start: docs/ja/specdojo/samples/mtp-sample.md\ndocument complete: docs/ja/specdojo/samples/mtp-sample.md\ndocument start: docs/ja/specdojo/samples/pm-plan-sample.md\ndocument complete: docs/ja/specdojo/samples/pm-plan-sample.md\ndocument start: docs/ja/specdojo/samples/pm-quality-management-plan-sample.md\ndocument complete: docs/ja/specdojo/samples/pm-quality-management-plan-sample.md\ndocument start: docs/ja/specdojo/samples/trc-requirements-to-tests-sample.md\ndocument complete: docs/ja/specdojo/samples/trc-requirements-to-tests-sample.md\ngrade pipeline complete: selected=5 processed=5 completed_now=5 results=logs/grade/runs/per-document/JBR-grade-kata-f1b984254569/results.tsv\nrecorded_at\tdocument\tstage\tstatus\tduration_seconds\tverdict\tscore\tfindings\texecutor\treporter\treference\n2026-09-09T15:00:40Z\tdocs/ja/specdojo/samples/imp-test-sample.md\t1\tpassed\t534\tneeds-work\t65\t11\tgemma-expert-executor\tgemma-reporter\tdocs/ja/specdojo/samples/prj-overview-sample.md\n2026-09-09T15:10:05Z\tdocs/ja/specdojo/samples/imp-test-sample.md\t2\tpassed\t565\tneeds-work\t65\t11\tgemma-expert-executor\tgemma-reporter\tnone\n2026-09-09T15:10:05Z\tdocs/ja/specdojo/samples/imp-test-sample.md\t3\tskipped_condition\t0\t\t\t\tcodex-expert-executor\tgemma-reporter\tnone\n2026-09-09T15:24:55Z\tdocs/ja/specdojo/samples/mtp-sample.md\t1\tpassed\t890\tfail\t58\t6\tgemma-expert-executor\tgemma-reporter\tdocs/ja/specdojo/samples/prj-overview-sample.md\n2026-09-09T15:33:44Z\tdocs/ja/specdojo/samples/mtp-sample.md\t2\tpassed\t529\tfail\t58\t6\tgemma-expert-executor\tgemma-reporter\tnone\n2026-09-09T15:33:44Z\tdocs/ja/specdojo/samples/mtp-sample.md\t3\tskipped_condition\t0\t\t\t\tcodex-expert-executor\tgemma-reporter\tnone\n2026-09-09T15:47:40Z\tdocs/ja/specdojo/samples/pm-plan-sample.md\t1\tfailed\t836\t\t\t\tgemma-expert-executor\tgemma-reporter\tdocs/ja/specdojo/samples/prj-overview-sample.md\n2026-09-09T15:55:32Z\tdocs/ja/specdojo/samples/pm-plan-sample.md\t2\tpassed\t472\tneeds-work\t68\t9\tgemma-expert-executor\tgemma-reporter\tnone\n2026-09-09T15:55:32Z\tdocs/ja/specdojo/samples/pm-plan-sample.md\t3\tskipped_condition\t0\t\t\t\tcodex-expert-executor\tgemma-reporter\tnone\n2026-09-09T16:04:34Z\tdocs/ja/specdojo/samples/pm-quality-management-plan-sample.md\t1\tfailed\t542\t\t\t\tgemma-expert-executor\tgemma-reporter\tdocs/ja/specdojo/samples/prj-overview-sample.md\n2026-09-09T16:13:07Z\tdocs/ja/specdojo/samples/pm-quality-management-plan-sample.md\t2\tpassed\t513\tneeds-work\t89\t3\tgemma-expert-executor\tgemma-reporter\tnone\n2026-09-09T16:13:07Z\tdocs/ja/specdojo/samples/pm-quality-management-plan-sample.md\t3\tskipped_condition\t0\t\t\t\tcodex-expert-executor\tgemma-reporter\tnone\n2026-09-09T16:22:01Z\tdocs/ja/specdojo/samples/trc-requirements-to-tests-sample.md\t1\tpassed\t534\tneeds-work\t75\t5\tgemma-expert-executor\tgemma-reporter\tdocs/ja/specdojo/samples/prj-overview-sample.md\n2026-09-09T16:28:14Z\tdocs/ja/specdojo/samples/trc-requirements-to-tests-sample.md\t2\tpassed\t373\tneeds-work\t75\t5\tgemma-expert-executor\tgemma-reporter\tnone\n2026-09-09T16:28:14Z\tdocs/ja/specdojo/samples/trc-requirements-to-tests-sample.md\t3\tskipped_condition\t0\t\t\t\tcodex-expert-executor\tgemma-reporter\tnone\n",
+    "stderr": ""
+  },
+  "log_refs": [
+    {
+      "kind": "command-stdout",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-f1b984254569/attempt-1/command.stdout.log",
+      "bytes": 3856,
+      "truncated": false
+    },
+    {
+      "kind": "command-stderr",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-f1b984254569/attempt-1/command.stderr.log",
+      "bytes": 0,
+      "truncated": false
+    }
+  ]
+}

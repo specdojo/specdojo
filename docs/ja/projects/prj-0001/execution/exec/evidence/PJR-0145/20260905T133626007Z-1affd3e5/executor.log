@@ -1,0 +1,13 @@
+入口文書の責務整理を完了しました。
+
+- [README.md](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0145/README.md)：リポジトリ概要・導入経路
+- [docs/index.md](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0145/docs/index.md)：言語選択
+- [docs/ja/index.md](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0145/docs/ja/index.md)：日本語文書の目的別入口
+- [docs/en/index.md](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0145/docs/en/index.md)：英語版の未整備状態を明示
+- [PJR-0145個票](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0145/docs/ja/projects/prj-0001/controls/project-register/pjr-0145-readme-md-docs-index-md-docs-lang-index-md.md)：作業内容・対応結果を更新
+
+全件 Markdown lint、カタログ検証、生成処理、実サイト設定の VitePress ビルドは成功しました。`npm run docs:build` は既知の sandbox IPC 制約で起動できなかったため、compiled CLI による同等生成と VitePress ビルドへ分けて検証しています。result と登録簿ステータスは executor 指示どおり変更していません。
+
+<specdojo_executor_evidence>
+{"final_message":"入口文書4件の責務を再整理し、個票へ対応結果を反映。全件lint、SpecDojo生成・検証、実サイトVitePressビルドに成功","validations":[{"command":"npx prettier --check README.md docs/index.md docs/ja/index.md docs/en/index.md docs/ja/projects/prj-0001/controls/project-register/pjr-0145-readme-md-docs-index-md-docs-lang-index-md.md","status":"passed","summary":"対象5ファイルはPrettier形式に適合"},{"command":"npx markdownlint README.md docs/index.md docs/ja/index.md docs/en/index.md docs/ja/projects/prj-0001/controls/project-register/pjr-0145-readme-md-docs-index-md-docs-lang-index-md.md","status":"passed","summary":"対象Markdownのlint成功"},{"command":"npm run -s lint:md","status":"passed","summary":"全件Markdown lint成功"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"全カタログ検証成功。既存未作成成果物の警告のみ"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿派生ビュー生成成功"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"文書IDインデックス1517件を生成"},{"command":"npm run docs:build","status":"failed","summary":"既知のsandbox制約によりtsx IPCソケット作成がEPERM。成果物解析前の環境エラー"},{"command":"npm run build","status":"passed","summary":"compiled CLI生成成功"},{"command":"node dist/specdojo.js build","status":"passed","summary":"docs:generate相当の全6段階が成功"},{"command":"npx vitepress build .","status":"passed","summary":"実サイト設定でバンドルと全ページレンダリング成功"},{"command":"git diff --check","status":"passed","summary":"差分の空白・形式エラーなし"}]}
+</specdojo_executor_evidence>

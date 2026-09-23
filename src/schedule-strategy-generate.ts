@@ -1,8 +1,7 @@
 // Deterministic strategy generator: turns the deliverable catalogs (DCT), the track plan
-// (Timeline), the agent readiness assessment (sch-assessment-<track>.yaml) and the standard
-// strategy profiles into sch-strategy-<track>.yaml. The agent decides the approach per
-// deliverable; scope, owner rules, phase sets, gates, cross-deliverable passes, milestones and
-// schema conformance are decided here so `schedule build` and `exec refresh` stay unchanged.
+// (Timeline), intent declarations, current facts/grades and the standard strategy profiles into
+// sch-strategy-<track>.yaml. Approach selection and all generated schedule structures are decided
+// by code so `schedule build` and `exec refresh` stay deterministic.
 
 import {
   existsSync,
@@ -17,6 +16,7 @@ import {
 import { tmpdir } from "node:os";
 import { basename, join, relative, resolve } from "node:path";
 import yaml from "js-yaml";
+import { resolveSpecdojoPath } from "./template-resolution.js";
 import Ajv2020Module from "ajv/dist/2020.js";
 import type { ValidateFunction } from "ajv";
 import { collectResolvedDeliverables } from "./catalog-build.js";
@@ -28,14 +28,11 @@ import type { Approach } from "./exec-types.js";
 import { buildScheduleTrack } from "./schedule-build.js";
 import { collectCatalogFilesByDomain, loadTimelineIndex } from "./timeline-build.js";
 import {
-  assessmentFileName,
-  collectAssessmentFacts,
-  validateAssessment,
-  validateAssessmentSchema,
-  type AssessmentFacts,
-  type SchAssessment,
+  collectApproachFacts,
+  deriveApproaches,
+  type ApproachRule,
   type StrategyScope,
-} from "./schedule-assessment.js";
+} from "./schedule-approach.js";
 import {
   AUTHOR_PHASE_SETS,
   PHASE_SET_ORDER,
@@ -50,6 +47,8 @@ export type StrategyCatalogRef = {
   id: string;
   /** Repository-root absolute path as required by sch-strategy.schema.yaml (leading slash). */
   path: string;
+  /** Optional per-catalog deliverable selection. Omission keeps the legacy all-items behavior. */
+  local_ids?: string[];
   domain: string;
   title?: string;
 };
@@ -71,6 +70,7 @@ export type PreservedStrategyFields = {
   milestoneOwner?: string;
   passOwner?: string;
   ownerByLocalId: Map<string, string>;
+  approachRules: ApproachRule[];
 };
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -112,7 +112,7 @@ export function resolveTrackScopeCatalogs(opts: {
   const errors: string[] = [];
 
   const byDomain = collectCatalogFilesByDomain(catalogPath);
-  const refFor = (filePath: string): StrategyCatalogRef | null => {
+  const refFor = (filePath: string, localIds?: string[]): StrategyCatalogRef | null => {
     const doc = readYaml(filePath) as DctDoc | null;
     if (!doc?.id || !doc.domain) {
       errors.push(`${filePath}: id / domain が読み取れないため scope に含められない。`);
@@ -121,6 +121,7 @@ export function resolveTrackScopeCatalogs(opts: {
     return {
       id: doc.id,
       path: toRepoAbsolute(filePath, repoRoot),
+      ...(localIds ? { local_ids: localIds } : {}),
       domain: doc.domain,
       ...(doc.title ? { title: doc.title } : {}),
     };
@@ -167,12 +168,24 @@ export function resolveTrackScopeCatalogs(opts: {
     const catalogs: StrategyCatalogRef[] = [];
     for (const entry of existingCatalogs) {
       if (!isRecord(entry) || typeof entry.path !== "string") continue;
+      let localIds: string[] | undefined;
+      if (entry.local_ids !== undefined) {
+        if (
+          !Array.isArray(entry.local_ids) ||
+          entry.local_ids.length === 0 ||
+          entry.local_ids.some((localId) => typeof localId !== "string" || localId.length === 0)
+        ) {
+          errors.push(`scope.catalogs: ${entry.path} の local_ids は空でない文字列配列にする。`);
+        } else {
+          localIds = entry.local_ids as string[];
+        }
+      }
       const filePath = resolve(repoRoot, entry.path.replace(/^\//, ""));
       if (!existsSync(filePath)) {
         errors.push(`scope.catalogs: カタログが見つからない: ${entry.path}`);
         continue;
       }
-      const ref = refFor(filePath);
+      const ref = refFor(filePath, localIds);
       if (ref) catalogs.push(ref);
     }
     const known = new Set(catalogs.map((catalog) => catalog.id));
@@ -220,8 +233,16 @@ export function collectScopeDeliverables(opts: {
     const collected: Array<{ item: { local_id: string; kind: string; depends_on?: string[] } }> =
       [];
     collectResolvedDeliverables(doc.groups, resolveBasePath("", doc.base_path), collected as never);
+    const catalogLocalIds = new Set(collected.map(({ item }) => item.local_id));
+    for (const localId of catalog.local_ids ?? []) {
+      if (!catalogLocalIds.has(localId)) {
+        errors.push(`${catalog.id}: scope.local_ids の '${localId}' がカタログに存在しない。`);
+      }
+    }
+    const selectedLocalIds = catalog.local_ids ? new Set(catalog.local_ids) : null;
     for (const { item } of collected) {
       if (!opts.includeKinds.includes(item.kind)) continue;
+      if (selectedLocalIds && !selectedLocalIds.has(item.local_id)) continue;
       deliverables.push({
         local_id: item.local_id,
         catalog_id: catalog.id,
@@ -621,9 +642,14 @@ export function buildStrategyDocument(input: BuildStrategyInput): BuildStrategyR
       ? { settings: input.preserved.settings }
       : {}),
     scope: {
-      catalogs: input.catalogs.map((catalog) => ({ id: catalog.id, path: catalog.path })),
+      catalogs: input.catalogs.map((catalog) => ({
+        id: catalog.id,
+        path: catalog.path,
+        ...(catalog.local_ids ? { local_ids: catalog.local_ids } : {}),
+      })),
       include_kinds: input.includeKinds,
     },
+    approach_rules: input.preserved.approachRules,
     phase_sets: phaseSets,
     ...(defaultSequence.length > 0
       ? { default_phase_sets: defaultSequence.map((name) => ({ phase_set: name })) }
@@ -643,56 +669,6 @@ export function buildStrategyDocument(input: BuildStrategyInput): BuildStrategyR
   return { doc, warnings, errors };
 }
 
-// ---- assessment -> deliverables ------------------------------------------------
-
-export type AssessmentReadResult = {
-  deliverables: StrategyDeliverable[];
-  errors: string[];
-  warnings: string[];
-};
-
-// Reads the approach decisions out of an assessment. Unjudged or undecided entries stop
-// generation: the strategy must never encode a guess where the agent recorded a question.
-export function readAssessmentApproaches(assessment: SchAssessment): AssessmentReadResult {
-  const deliverables: StrategyDeliverable[] = [];
-  const errors: string[] = [];
-  const warnings: string[] = [];
-
-  for (const entry of assessment.deliverables) {
-    const judgment = entry.judgment;
-    if (!judgment) {
-      errors.push(`${entry.local_id}: 判定 (judgment) が無い。assessment を先に完了する。`);
-      continue;
-    }
-    if (judgment.recommended_approach === "undecided") {
-      errors.push(
-        `${entry.local_id}: recommended_approach が undecided。blocking な open_questions を解消する。`,
-      );
-      continue;
-    }
-    if (judgment.confidence === "low") {
-      warnings.push(`${entry.local_id}: 判定の confidence が low。生成結果を人間が確認する。`);
-    }
-    deliverables.push({
-      local_id: entry.local_id,
-      catalog_id: entry.catalog_id,
-      approach: judgment.recommended_approach,
-      not_needed_kata: (["rulebook", "recipe", "sample", "template"] as const).filter(
-        (kind) => entry.facts.kata[kind].declaration === "not-needed",
-      ),
-    });
-  }
-
-  for (const question of assessment.open_questions) {
-    if (!question.blocking) continue;
-    errors.push(
-      `blocking な open_questions が残っている (${question.topic}): ${question.question}`,
-    );
-  }
-
-  return { deliverables, errors, warnings };
-}
-
 // ---- serialization & validation ------------------------------------------------
 
 export function dumpStrategy(doc: Record<string, unknown>): string {
@@ -709,13 +685,17 @@ const Ajv2020 = Ajv2020Module.default;
 let compiledSchemaCache: { schemaPath: string; validate: ValidateFunction } | null = null;
 
 function compileStrategySchema(repoRoot: string): ValidateFunction {
-  const schemaPath = join(repoRoot, SCH_STRATEGY_SCHEMA_PATH);
+  const schemaPath = resolveSpecdojoPath(SCH_STRATEGY_SCHEMA_PATH, {
+    repositoryRoot: repoRoot,
+  });
   if (compiledSchemaCache && compiledSchemaCache.schemaPath === schemaPath) {
     return compiledSchemaCache.validate;
   }
   const ajv = new Ajv2020({ allErrors: true, strict: false });
   const load = (fileName: string): unknown => {
-    const filePath = join(repoRoot, "docs/specdojo/schemas/v1", fileName);
+    const filePath = resolveSpecdojoPath(`docs/specdojo/schemas/v1/${fileName}`, {
+      repositoryRoot: repoRoot,
+    });
     try {
       return yaml.load(readFileSync(filePath, "utf8"));
     } catch (error) {
@@ -870,13 +850,18 @@ export function writeStrategyFile(opts: {
 }
 
 // Fields a regenerated strategy keeps from the existing file. They record human decisions
-// (start date, completed deliverables, extra ordering, owner assignments) that cannot be
-// derived from the catalogs, the timeline or the assessment.
+// (intent, start date, completed deliverables, extra ordering, owner assignments) that cannot be
+// derived from the catalogs or the timeline.
 export function readPreservedFields(strategyPath: string): PreservedStrategyFields {
   const ownerByLocalId = new Map<string, string>();
-  if (!existsSync(strategyPath)) return { ownerByLocalId };
+  if (!existsSync(strategyPath)) return { ownerByLocalId, approachRules: [] };
   const doc = readYaml(strategyPath);
-  if (!isRecord(doc)) return { ownerByLocalId };
+  if (!isRecord(doc)) return { ownerByLocalId, approachRules: [] };
+
+  const approachRules = (Array.isArray(doc.approach_rules) ? doc.approach_rules : []).filter(
+    (rule): rule is ApproachRule =>
+      isRecord(rule) && Array.isArray(rule.local_ids) && typeof rule.intent === "string",
+  );
 
   for (const rule of Array.isArray(doc.owner_rules) ? doc.owner_rules : []) {
     if (!isRecord(rule) || typeof rule.owner !== "string") continue;
@@ -920,6 +905,7 @@ export function readPreservedFields(strategyPath: string): PreservedStrategyFiel
     ...(milestoneOwner ? { milestoneOwner } : {}),
     ...(passOwner ? { passOwner } : {}),
     ownerByLocalId,
+    approachRules,
   };
 }
 
@@ -929,7 +915,7 @@ export function loadStrategyDocument(strategyPath: string): Record<string, unkno
   return isRecord(doc) ? doc : null;
 }
 
-export type GenerateStrategyFromAssessmentResult = {
+export type GenerateStrategyResult = {
   doc: Record<string, unknown> | null;
   content: string;
   taskCount: number;
@@ -939,9 +925,9 @@ export type GenerateStrategyFromAssessmentResult = {
 };
 
 // Complete generation pipeline used by the CLI and tests. Every input is re-read and validated
-// before a candidate is returned: an assessment cannot silently keep stale facts, omit a work
-// deliverable, change its catalog id, or point at another project/track.
-export function generateStrategyFromAssessment(opts: {
+// before a candidate is returned; missing intent, grade, scope coverage, owners or references stop
+// generation instead of producing a guessed strategy.
+export function generateStrategy(opts: {
   repoRoot: string;
   schedulePath: string;
   catalogPath: string;
@@ -949,14 +935,13 @@ export function generateStrategyFromAssessment(opts: {
   rolesPath?: string;
   projectId: string;
   track: string;
-  assessment: SchAssessment;
   ownerOverrides?: Map<string, string>;
   defaultOwner?: string;
   gateOwner?: string;
   milestoneOwner?: string;
   passOwnerOverride?: string;
   bootstrapOrdering?: boolean;
-}): GenerateStrategyFromAssessmentResult {
+}): GenerateStrategyResult {
   const errors: string[] = [];
   const warnings: string[] = [];
   const targetPath = strategyPathFor(opts.schedulePath, opts.track);
@@ -973,56 +958,20 @@ export function generateStrategyFromAssessment(opts: {
   errors.push(...scope.errors);
   warnings.push(...scope.warnings);
 
-  const expectedStrategyId = `${opts.projectId}:sch-strategy-${opts.track}`;
-  const expectedStrategyPath = relative(opts.repoRoot, targetPath).replace(/\\/g, "/");
-  if (opts.assessment.project_id !== opts.projectId) {
-    errors.push(
-      `${assessmentFileName(opts.track)}: project_id '${opts.assessment.project_id}' は '${opts.projectId}' と一致しない。`,
-    );
-  }
-  if (opts.assessment.track !== opts.track) {
-    errors.push(
-      `${assessmentFileName(opts.track)}: track '${opts.assessment.track}' は '${opts.track}' と一致しない。`,
-    );
-  }
-  if (opts.assessment.strategy.id !== expectedStrategyId) {
-    errors.push(
-      `${assessmentFileName(opts.track)}: strategy.id は '${expectedStrategyId}' でなければならない。`,
-    );
-  }
-  if (opts.assessment.strategy.path !== expectedStrategyPath) {
-    errors.push(
-      `${assessmentFileName(opts.track)}: strategy.path は '${expectedStrategyPath}' でなければならない。`,
-    );
-  }
-  if (opts.assessment.include_kinds.length !== 1 || opts.assessment.include_kinds[0] !== "work") {
-    errors.push(`${assessmentFileName(opts.track)}: include_kinds は [work] でなければならない。`);
-  }
-
-  const schemaErrors = validateAssessmentSchema(opts.assessment, opts.repoRoot);
-  errors.push(...schemaErrors.map((error) => `${assessmentFileName(opts.track)}${error}`));
-
   const strategyScope: StrategyScope = {
-    strategyId: expectedStrategyId,
+    strategyId: `${opts.projectId}:sch-strategy-${opts.track}`,
     track: opts.track,
     projectId: opts.projectId,
-    catalogs: scope.catalogs.map((catalog) => ({ id: catalog.id, path: catalog.path })),
+    catalogs: scope.catalogs.map((catalog) => ({
+      id: catalog.id,
+      path: catalog.path,
+      ...(catalog.local_ids ? { local_ids: catalog.local_ids } : {}),
+    })),
     includeKinds: ["work"] as DctKind[],
   };
-  const current = collectAssessmentFacts({ repoRoot: opts.repoRoot, scope: strategyScope });
+  const current = collectApproachFacts({ repoRoot: opts.repoRoot, scope: strategyScope });
   errors.push(...current.errors);
   warnings.push(...current.warnings);
-  const currentFacts = new Map<string, AssessmentFacts>(
-    current.deliverables.map((deliverable) => [deliverable.local_id, deliverable.facts]),
-  );
-  if (schemaErrors.length === 0) {
-    const validation = validateAssessment(opts.assessment, {
-      fileName: assessmentFileName(opts.track),
-      currentFacts,
-    });
-    errors.push(...validation.errors);
-    warnings.push(...validation.warnings);
-  }
 
   const catalogDeliverables = collectScopeDeliverables({
     repoRoot: opts.repoRoot,
@@ -1041,17 +990,10 @@ export function generateStrategyFromAssessment(opts: {
     }
     catalogByLocalId.set(deliverable.local_id, deliverable);
   }
-  for (const assessed of opts.assessment.deliverables) {
-    const currentDeliverable = catalogByLocalId.get(assessed.local_id);
-    if (currentDeliverable && currentDeliverable.catalog_id !== assessed.catalog_id) {
-      errors.push(
-        `${assessed.local_id}: assessment の catalog_id '${assessed.catalog_id}' は現在の ` +
-          `'${currentDeliverable.catalog_id}' と一致しない。`,
-      );
-    }
-  }
-
-  const approaches = readAssessmentApproaches(opts.assessment);
+  const approaches = deriveApproaches({
+    facts: current.deliverables,
+    rules: preserved.approachRules,
+  });
   errors.push(...approaches.errors);
   warnings.push(...approaches.warnings);
   const approachIds = new Set(approaches.deliverables.map((deliverable) => deliverable.local_id));

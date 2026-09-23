@@ -18,17 +18,22 @@ pre-commit:
     # 競合が起きるため、整形→検査を 1 コマンドに連結して順序を保証する。
     markdown:
       glob: "*.md"
-      run: npx prettier --write {staged_files} && npx markdownlint {staged_files}
+      run: npx prettier --write {staged_files} && node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint {staged_files}
       stage_fixed: true
+
+    # SSOT または環境別ラッパーの変更時に本文の同期漏れを検出する。
+    orchestrator-sync:
+      glob: "{.agents/specdojo-orchestrator.agent.md,.claude/agents/specdojo-orchestrator.md,.github/agents/specdojo-orchestrator.md,.codex/agents/specdojo-orchestrator.toml,.opencode/agents/gemma-orchestrator.md,.opencode/agents/qwen-orchestrator.md}"
+      run: npm run lint:orchestrator-sync
 
     # tsc -b は staged 単位で実行できないため、プロジェクト全体を型チェックする。
     # tsconfig.build.json（src）だけでなく tests / tools も参照経由で対象になる。
     typecheck:
-      glob: "{src/**,tests/**,scripts/**,tools/**,tsconfig*.json}"
+      glob: "{src/**,tests/**,scripts/**,tools/**,packages/docs-lint/**,tsconfig*.json}"
       run: npm run typecheck
 
     test:
-      glob: "{src/**,tests/**,docs/ja/specdojo/templates/**,vitest.config.*}"
+      glob: "{src/**,tests/**,docs/ja/specdojo/templates/**,docs/ja/specdojo/exec-templates/**,vitest.config.*}"
       run: npm test
 
     # *-build 系は generated/ 配下を出力するが、generated/ は gitignore 済みの生成物

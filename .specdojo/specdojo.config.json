@@ -8,7 +8,6 @@
       "schedule_path": "schedule",
       "execution_path": "execution",
       "members_path": "030-project-management/pm-members.yaml",
-      "reviews_path": "controls/reviews",
       "roles_path": "030-project-management/pm-roles.yaml",
       "viewpoints_path": "030-project-management/pm-review-viewpoints.yaml",
       "project_register_path": "controls/project-register",

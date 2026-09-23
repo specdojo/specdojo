@@ -1,0 +1,74 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:prj-overview-rulebook
+path: docs/ja/specdojo/rulebooks/prj-overview-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: pass
+score: 92
+graded_at: "2026-09-03T07:54:12.599Z"
+graded_by: codex-expert-executor
+content_hash: 375ea094d9f3495cd8a7a9e91806c29b8dfc98b8b1da07e8489bb51449627d52
+categories:
+  consistency:
+    score: 100
+  usability:
+    score: 83
+  architecture:
+    score: 100
+  quality:
+    score: 88
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 3
+    score: 75
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 3
+  note: 0
+findings:
+  - id: F002
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: >-
+      対応 template を宣言済みなのに「本文構成（標準テンプレ）」として見出し順を rulebook 側でも正本化しているため、この章を「本文要件」として各章の目的・必須性・記述規約に限定し、骨組みの正本は template
+      に統一する必要がある。
+    anchor: "# プロジェクト概要 作成ルール"
+  - id: F001
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 1
+    message: 憲章と成功基準への委譲方針が全体方針および禁止事項と重複しているため、本節を責務境界の正本として他箇所を短い参照へ統合すると、判断情報を失わず簡潔にできる。
+    anchor: "# プロジェクト概要 作成ルール"
+  - id: F003
+    severity: minor
+    rule: vp-ux-readability
+    line: 1
+    message: 憲章・成功基準との分担が全体方針と禁止事項でも繰り返されているため、本節に詳細を集約し、他箇所は要約または参照にすると主要な判断点をより追いやすくできる。
+    anchor: "# プロジェクト概要 作成ルール"

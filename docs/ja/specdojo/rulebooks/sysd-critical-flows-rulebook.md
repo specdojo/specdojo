@@ -11,6 +11,7 @@ specdojo:
 System Design Critical Flows (SYSD-CF) Documentation Rules
 
 本ドキュメントは、システム設計情報を **コード（定義ファイル）へ寄せる運用（Code as Spec）** を前提に、
+
 「読まないと事故る」重要フローだけを最小限で記述する **System Design Critical Flows (SYSD-CF)** の記述ルールを定義する。
 
 SYSD Critical Flows は詳細設計書ではない。**実装・テスト・運用の共通理解が必要な“難所”** に限定して可視化する。
@@ -21,6 +22,7 @@ SYSD-CF は、以下を目的とする。
 
 - **誤解や事故が起きやすい処理**（冪等・非同期・補償・整合性・外部障害など）を最小限で共有する
 - 実装が拡張されても崩れにくい **境界・永続化点・失敗時挙動** をSSOTとして残す
+
 - テスト（ITS/ETS/STC）および運用（OPD/OPR）へ **観点と導線** を提供する
 
 基本方針:
@@ -41,11 +43,12 @@ SYSD-CF は、以下を目的とする。
 
 ### 2.2. 用語定義
 
-| 用語       | 定義                                                         |
-| ---------- | ------------------------------------------------------------ |
-| 重要フロー | 実装・運用事故に直結しやすく、共通理解が必須な処理フロー     |
-| 永続化点   | commit / outbox / enqueue など、状態確定や配送起点となる地点 |
-| 補償       | 一部成功後の不整合を是正するための戻し・取り消し・代替処理   |
+| 用語       | 定義                                                     |
+| ---------- | -------------------------------------------------------- |
+| 重要フロー | 実装・運用事故に直結しやすく、共通理解が必須な処理フロー |
+
+| 永続化点 | commit / outbox / enqueue など、状態確定や配送起点となる地点 |
+| 補償 | 一部成功後の不整合を是正するための戻し・取り消し・代替処理 |
 
 ## 3. ファイル命名・ID規則
 
@@ -59,14 +62,15 @@ SYSD-CF は、以下を目的とする。
 
 Frontmatter は共通スキーマに従います（参照: [docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml](../../../specdojo/schemas/v1/deliverable-frontmatter.schema.yaml) / [document-metadata-standard.md](../standards/document-metadata-standard.md)）。
 
-| 項目       | 説明                                            | 必須 |
+| 項目 | 説明 | 必須 |
+
 | ---------- | ----------------------------------------------- | ---- |
-| id         | SYSD-CF ID（推奨: `sysd-critical-flows`）       | ○    |
-| type       | `architecture` など共通スキーマで許容される種別 | ○    |
-| title      | システム設計: 重要フロー                        | ○    |
-| status     | `draft` / `ready` / `deprecated`                | ○    |
-| based_on   | 根拠となる仕様ID（ID配列。未指定は `[]` 可）    | 任意 |
-| supersedes | 置き換え関係（ID配列。未指定は `[]` 可）        | 任意 |
+| id | SYSD-CF ID（推奨: `sysd-critical-flows`） | ○ |
+| type | `architecture` など共通スキーマで許容される種別 | ○ |
+| title | システム設計: 重要フロー | ○ |
+| status | `draft` / `ready` / `deprecated` | ○ |
+| based_on | 根拠となる仕様ID（ID配列。未指定は `[]` 可） | 任意 |
+| supersedes | 置き換え関係（ID配列。未指定は `[]` 可） | 任意 |
 
 ### 4.2. 推奨ルール
 
@@ -114,6 +118,7 @@ Frontmatter は共通スキーマに従います（参照: [docs/specdojo/schema
 
 - フローID、フロー名、事故論点、優先度、備考を表形式で記載する。
 - 一覧は最大5件までとし、6件目以降は統合・削減の検討結果を反映してから追加する。
+
 - 事故論点は「冪等」「非同期整合性」「補償」「外部I/F障害」「再実行性」などで明示する。
 
 重要フロー選定の判断基準（いずれか該当）:
@@ -147,6 +152,7 @@ Frontmatter は共通スキーマに従います（参照: [docs/specdojo/schema
 - 概要図の粒度は **C4コンポーネント図レベル相当** とし、実装クラス/メソッド詳細には踏み込まない
 
 ```mermaid
+
 flowchart LR
   UI[UI] -->|POST /sales| API[Sales API]
   API --> SVC[Sales Service]
@@ -169,6 +175,7 @@ flowchart LR
 生成する本文の見出しは **## 4. 観測性と運用連携**
 
 - 各フローで trace_id 伝搬範囲を明記する。
+
 - 必須ログ項目（`flow_id`, `request_id`, `entity_id`, `result` 等）を最低限定義する。
 - 監視条件（アラート閾値）、手動介入条件、OPR手順への導線を明記する。
 - 業務影響の大きい失敗は OPD の停止判断基準に接続する。
@@ -197,6 +204,7 @@ flowchart LR
 注：以下はルール文書内の例示です。生成する `sysd-critical-flows` では `## 1...` から始まります。
 
 ```yaml
+
 ---
 id: sysd-critical-flows
 type: architecture

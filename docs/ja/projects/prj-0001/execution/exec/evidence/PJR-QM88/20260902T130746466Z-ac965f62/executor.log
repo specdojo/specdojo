@@ -1,0 +1,14 @@
+schema enum 網羅 lint を実装しました。
+
+- ready の YAML/JSON rulebook と schema を prefix で対応付け、欠落値と両ファイルのパスを報告。
+- Frontmatter、`specdojo:finding`、部分文字列、scaffold placeholder を誤認しない判定を追加。
+- `validate:schema` に統合し、単体テストを追加。
+- `pm-members` と `pjr` の既知乖離を修正し、個票の対応結果を更新。
+- result ファイルと既存 evidence は変更していません。
+- executor 側検査は通過。親担当の3検証は未実行です。
+
+<specdojo_executor_evidence>
+{"final_message":"schema enum 網羅 lint の実装、既存乖離の修正、個票更新を完了","validations":[{"command":"npx prettier --write tools/docs/src/validate-rulebook-schema-enums.ts tests/tools/docs/src/rulebook-schema-enums.test.ts package.json docs/ja/specdojo/standards/rulebook-authoring-standard.md docs/ja/specdojo/rulebooks/pm-members-rulebook.md docs/ja/specdojo/rulebooks/pjr-rulebook.md docs/ja/projects/prj-0001/controls/project-register/pjr-qm88-rulebook-schema-enum-lint.md","status":"passed","summary":"対象ファイルを整形"},{"command":"npm run typecheck","status":"passed","summary":"TypeScript 型検査成功"},{"command":"npm run lint:ts","status":"passed","summary":"ESLint 成功"},{"command":"npx markdownlint docs/ja/specdojo/standards/rulebook-authoring-standard.md docs/ja/specdojo/rulebooks/pm-members-rulebook.md docs/ja/specdojo/rulebooks/pjr-rulebook.md docs/ja/projects/prj-0001/controls/project-register/pjr-qm88-rulebook-schema-enum-lint.md","status":"passed","summary":"Markdown lint 成功"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿生成成功"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"catalog 検証成功。既存の未作成成果物に関する警告のみ"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1474件の索引生成成功"},{"command":"git diff --check","status":"passed","summary":"差分の空白エラーなし"},{"command":"npm run test:unit","status":"not_run","summary":"親 runner の allowlisted validation に委譲"},{"command":"npm run test:integration","status":"not_run","summary":"親 runner の allowlisted validation に委譲"},{"command":"npm run validate:schema","status":"not_run","summary":"親 runner の allowlisted validation に委譲"}]}
+</specdojo_executor_evidence>
+
+agent-config-write: protected configuration changes detected; paths=package.json; agent must record the required change in the result handoff for human or orchestrator application

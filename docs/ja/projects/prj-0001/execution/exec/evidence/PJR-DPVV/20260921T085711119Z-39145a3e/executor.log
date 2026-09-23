@@ -1,0 +1,13 @@
+`@specdojo/docs-lint` への分離を完了しました。
+
+- remark プラグイン3種と検証CLIを独立パッケージ化
+- 旧 `tools/docs` とテストを新構成へ移行
+- schema の `specdojo` パッケージフォールバックを実装
+- 設定、ガイド、lint参照を更新
+- tarball は15ファイル。隔離環境でexport、remark、`history-links`、schema検証が成功
+- resultはexecutor指示に従い未更新
+- 親runner担当の3検証は未実行
+
+<specdojo_executor_evidence>
+{"final_message":"@specdojo/docs-lintへの分離、設定・テスト・ガイド移行、tarball実動確認を完了した。","validations":[{"command":"npm run typecheck && npm run lint:ts","status":"passed","summary":"TypeScript型検査とESLintが成功"},{"command":"npx prettier --write <変更対象ファイル>","status":"passed","summary":"全対象が整形済み"},{"command":"npx markdownlint <変更対象Markdown>","status":"passed","summary":"変更対象Markdownに違反なし"},{"command":"npm run lint:md && npm run lint:fm && npm run validate:history-links","status":"passed","summary":"全Markdown、remark、履歴リンク検査が成功"},{"command":"node --import tsx src/specdojo.ts register build && node --import tsx src/specdojo.ts catalog validate && node --import tsx src/specdojo.ts index build","status":"passed","summary":"登録簿生成、catalog検証、1852件の索引生成が成功。既存のdetached文書警告のみ"},{"command":"npm_config_cache=/tmp/specdojo-npm-cache-pjr-dpvv npm pack --dry-run --json","status":"passed","summary":"packages/docs-lintから15ファイルのtarball構成を確認"},{"command":"tarball isolated runtime smoke test","status":"passed","summary":"3 export、.remarkrc経由のremark、history-links、本体tarball内schemaフォールバックが成功"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"},{"command":"npm run test:unit","status":"not_run","summary":"親runnerのallowlisted validationに委譲"},{"command":"npm run test:integration","status":"not_run","summary":"親runnerのallowlisted validationに委譲"},{"command":"npm run validate:schema","status":"not_run","summary":"親runnerのallowlisted validationに委譲"}]}
+</specdojo_executor_evidence>

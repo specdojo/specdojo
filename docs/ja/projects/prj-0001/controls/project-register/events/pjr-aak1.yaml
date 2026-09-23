@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_e3ce90083db44b2796febac0d9daa6b4
+  ts: "2026-09-23T03:50:08Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-YPNS の分割（第 2 段階）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: kata サブコマンド（list / show / status / eject / install）を追加する
+    - field: description
+      from: ""
+      to: 参照中と eject 済みの kata を確認・取得できるコマンドを追加する。list は解決元つきの一覧、show は内容表示、status は eject 済みと参照中の差分、eject は指定 ID の利用リポジトリへのコピー、install --all は全量コピーとする。exec-templates と schemas は eject 対象外にする。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-23"
+    - field: due
+      from: ""
+      to: "2026-10-24"
+- v: 1
+  id: reg_13e8b2282bbd4f5c8f243e28b8e095b7
+  ts: "2026-09-23T05:24:51Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_e3ce90083db44b2796febac0d9daa6b4
+- v: 1
+  id: reg_0527aba40d0b4c7f9d908ec218ae1222
+  ts: "2026-09-23T05:47:19Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_13e8b2282bbd4f5c8f243e28b8e095b7
+- v: 1
+  id: reg_3567e940eb05464ab52eac6e00203238
+  ts: "2026-09-23T06:16:02Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: レビュー完了。発見可能性の不足をオーケストレーターが補修
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-23"
+    - field: conclusion
+      from: "-"
+      to: kata list / show / status / eject / install を追加した。参照固定の exec-template と schema は eject を拒否して理由を表示し、--all で一覧から辿れるようにした。
+  previous_event_id: reg_0527aba40d0b4c7f9d908ec218ae1222

@@ -8,5 +8,7 @@ description: 再開可能時刻を迎えた retryable な利用制限 task だ�
 enabled: false
 interval: 15m
 action:
-  kind: exec-resume
-  parallel: 2
+  kind: job
+  job: job-exec-resume
+  inputs:
+    parallel: "2"

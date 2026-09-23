@@ -1,0 +1,7 @@
+[cdfd-orchestrator.md](/workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-orchestrator-010/docs/ja/product/010-business-specs/010-data-flow/cdfd-orchestrator.md) を新規作成しました。
+
+対話型・自動運転の共通要求フロー、PDCA 各グループへの委譲、主要データストア、競合・取りこぼし・要求失敗時の復旧条件を定義しています。未提示の STSD／CSTD ID は未決事項として残しました。result は pipeline 指示どおり編集していません。
+
+<specdojo_executor_evidence>
+{"final_message":"Orchestrator CDFDを新規作成し、必須検査を完了","validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-orchestrator.md","status":"passed","summary":"Markdownを整形"},{"command":"npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-orchestrator.md","status":"passed","summary":"lintエラーなし"},{"command":"npx tsx src/specdojo.ts index build","status":"failed","summary":"sandboxでtsx IPCソケット作成がEPERM"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"同一エントリポイントで1711件の索引生成に成功"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"},{"command":"npm run test:integration","status":"not_run","summary":"親runnerの検証対象"},{"command":"npm run validate:schema","status":"not_run","summary":"親runnerの検証対象"},{"command":"npm run test:unit","status":"not_run","summary":"親runnerの検証対象"}]}
+</specdojo_executor_evidence>

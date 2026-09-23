@@ -1,0 +1,140 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_255d64770f194d3e8987f69712c9dac9
+  ts: "2026-09-02T22:48:28Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 別リポジトリ構成（Detached Unit）のドキュメント化
+    - field: description
+      from: ""
+      to: アプリのcommit履歴を汚さずにSpecdojoで管理する別リポジトリ構成（app1-specdojo/）のガイド・事例をdocs-structure-guide.mdに追記する。resultにapp commit hashを記録するトレーサビリティ方式も合わせて規定する。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-03"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_66d9c0dd906d49c595526bd746c13a49
+  ts: "2026-09-04T13:22:48Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_255d64770f194d3e8987f69712c9dac9
+- v: 1
+  id: reg_230ea5238c68416292507faddbfe37be
+  ts: "2026-09-04T13:32:11Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_66d9c0dd906d49c595526bd746c13a49
+- v: 1
+  id: reg_ef819ee7cae6418f895796464f953684
+  ts: "2026-09-04T13:36:48Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: docs-structure-guide へ別リポジトリ構成の章を追記した。採用条件、プロダクト文書の配置、統合順序、現行実装の境界を記載している。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-04"
+    - field: conclusion
+      from: "-"
+      to: docs-structure-guide へ別リポジトリ構成の章を追記した。採用条件、プロダクト文書の配置、統合順序、現行実装の境界を記載している。
+  previous_event_id: reg_230ea5238c68416292507faddbfe37be
+- v: 1
+  id: reg_5a34007bf8384467b35e2f0f98c3170b
+  ts: "2026-09-08T12:10:43Z"
+  action: reopen
+  actor: orchestrator
+  from_status: done
+  to_status: open
+  reason: 規定した commit hash によるトレーサビリティが、squash merge や rebase を含む標準的な運用で参照を失う。記録時点の設計も PR ベースの squash と噛み合わない。方式の改訂が要る。
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-09-04"
+      to: "-"
+  previous_event_id: reg_ef819ee7cae6418f895796464f953684
+- v: 1
+  id: reg_1141a240ad1346dbada9301eb44f22e9
+  ts: "2026-09-12T04:35:32Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_5a34007bf8384467b35e2f0f98c3170b
+- v: 1
+  id: reg_79e28753100e49d5916f5c256bf3a27d
+  ts: "2026-09-12T04:45:34Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_1141a240ad1346dbada9301eb44f22e9
+- v: 1
+  id: reg_6e19670557e645589ef11f3ff0752555
+  ts: "2026-09-12T06:00:02Z"
+  action: close
+  actor: specdojo-orchestrator (claude)
+  from_status: review
+  to_status: done
+  reason: exec run --register（codex-expert-executor / gemma-reporter / worktree）で実施。親検証 3 件 passed。利用者確認のうえ close
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-12"
+    - field: conclusion
+      from: docs-structure-guide の Detached Unit 章を更新した。登録簿 item ID の Refs trailer を主参照とし、PR と commit hash を補助参照にするトレーサビリティ方式を規定している。
+      to: docs-structure-guide に別リポジトリ構成（Detached Unit）の章を追記し、採用条件、ディレクトリレイアウト、result への app commit hash 記録によるトレーサビリティ方式を規定した。
+  previous_event_id: reg_79e28753100e49d5916f5c256bf3a27d

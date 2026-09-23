@@ -16,6 +16,9 @@ import { registerWatchCommand } from "./watch.js";
 import { registerBuildCommand } from "./build-command.js";
 import { registerYamlPagesCommands } from "./yaml-pages-command.js";
 import { registerDashboardCommands } from "./dashboard.js";
+import { registerGradeCommand } from "./grade.js";
+import { registerAgentCommands } from "./agent.js";
+import { registerKataCommands } from "./kata-command.js";
 
 /**
  * bin は dist/specdojo.js を指すため、開発チェックアウトで `npm run build` を忘れると
@@ -58,6 +61,9 @@ async function main(): Promise<void> {
   registerBuildCommand(program);
   registerYamlPagesCommands(program);
   registerDashboardCommands(program);
+  registerGradeCommand(program);
+  registerAgentCommands(program);
+  registerKataCommands(program);
 
   await program.parseAsync(process.argv);
 }

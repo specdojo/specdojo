@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_2823f624dc1f42709a9b689ad46d9e5d
+  ts: "2026-09-01T14:58:31Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-EXCV の実 agent 検証で3段目が句読点1文字の差により失敗したため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: grade の忠実性検証で表記の揺れと内容の改変を区別する
+    - field: description
+      from: ""
+      to: reporter が句読点を書き換えるだけで finding が別物と判定され、評価が反映できなくなる問題を解消する。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-01"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_8818ff1f154548318ab54420856b7081
+  ts: "2026-09-01T21:22:22Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_2823f624dc1f42709a9b689ad46d9e5d
+- v: 1
+  id: reg_abd597efb39e4b20ae30c90973bab2ce
+  ts: "2026-09-01T21:31:16Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_8818ff1f154548318ab54420856b7081
+- v: 1
+  id: reg_36d1ea2a06f642b4af90d78ed9c34980
+  ts: "2026-09-01T21:42:04Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: finding message の忠実性照合に句読点・空白・NFC の正規化を追加し、表記の揺れと内容の改変を区別できるようにした。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-02"
+    - field: conclusion
+      from: "-"
+      to: finding message の忠実性照合に句読点・空白・NFC の正規化を追加し、表記の揺れと内容の改変を区別できるようにした。
+  previous_event_id: reg_abd597efb39e4b20ae30c90973bab2ce

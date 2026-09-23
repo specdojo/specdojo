@@ -1,0 +1,98 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:etc-sample
+path: docs/ja/specdojo/samples/etc-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: fail
+score: 48
+graded_at: "2026-09-05T03:32:48.942Z"
+graded_by: gemma-expert-executor
+content_hash: 65b7d38ea38a40bba894698b9ff5ad0bedc8627077a7ab658a95485785f39574
+categories:
+  consistency:
+    score: 25
+  usability:
+    score: 75
+  architecture:
+    score: 75
+  quality:
+    score: 25
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 2
+    score: 50
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 0
+    score: 0
+  vp-qe-kata-conformance:
+    level: 0
+    score: 0
+  vp-ux-readability:
+    level: 2
+    score: 50
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 2
+  major: 4
+  minor: 1
+  note: 0
+findings:
+  - id: F002
+    severity: major
+    rule: vp-arc-single-responsibility
+    line: 1
+    message: 「完成例（sample）」としての責務ではなく「記述ガイド」として振る舞っており、成果物の正本としての形式をなしていない。
+    anchor: ""
+  - id: F004
+    severity: blocker
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: rulebook で定義された必須の章構成（1〜6章）を完全に無視し、独自の章構成となっている。
+    anchor: ""
+  - id: F005
+    severity: blocker
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: ETC の完成例ではなく「記述のためのサンプル（ガイド）」となっており, rulebook で定義された成果物形式に準拠していない。
+    anchor: ""
+  - id: F006
+    severity: major
+    rule: vp-ux-readability
+    line: 5
+    message: 具現化された例ではなく「〜するための最小サンプルである」という説明に留まっており、参照先としての価値を欠いている。
+    anchor: ""
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 11
+    message: rulebook への参照はあるが、必須とされる etc-index や tsp-index への参照が不足している。
+    anchor: "- 前提: プロジェクト文脈は handbook の共通方針に準拠する"
+  - id: F007
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 16
+    message: rulebook に定義のない「責任者」を必須観点として列挙している。
+    anchor: "- 主な内容: I/Fごとのテスト条件一覧（入力/期待/エラー）、前提（接続先・認証・テストデータ）、合格基準、関連する外部I/F仕様ID"
+  - id: F003
+    severity: major
+    rule: vp-qe-verifiability
+    line: 24
+    message: 具体的な値ではなく「要点のみ記載」という記述上の指示になっており、完成例としての役割を果たしていない。
+    anchor: >-
+      | 目的         | 外部結合テスト仕様を連携単位で分割して定義する（仕様）                                                           |
+      specdojo:deliverables-reference 準拠 |

@@ -1,0 +1,35 @@
+
+> specdojo@0.1.0 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-kata-e70a4c501f50 project=prj-0001 kind=all changed_only=true ungraded=true documents=5 work_dir=logs/grade/runs/per-document/JBR-grade-kata-e70a4c501f50
+stage=1 executor=gemma-expert-executor reporter=gemma-reporter reference=per-kind
+stage=2 executor=gemma-expert-executor reporter=gemma-reporter reference=none
+stage=3 executor=codex-expert-executor reporter=gemma-reporter reference=none condition="pass, score>=96, findings<=1"
+document start: docs/ja/specdojo/templates/pjr-views-by-priority-template.md
+document complete: docs/ja/specdojo/templates/pjr-views-by-priority-template.md
+document start: docs/ja/specdojo/templates/pjr-views-by-status-template.md
+document complete: docs/ja/specdojo/templates/pjr-views-by-status-template.md
+document start: docs/ja/specdojo/templates/pm-change-request-log-template.md
+document complete: docs/ja/specdojo/templates/pm-change-request-log-template.md
+document start: docs/ja/specdojo/templates/pm-decision-log-template.md
+document complete: docs/ja/specdojo/templates/pm-decision-log-template.md
+document start: docs/ja/specdojo/templates/pm-issue-log-template.md
+document complete: docs/ja/specdojo/templates/pm-issue-log-template.md
+grade pipeline complete: selected=5 processed=5 completed_now=5 results=logs/grade/runs/per-document/JBR-grade-kata-e70a4c501f50/results.tsv
+recorded_at	document	stage	status	duration_seconds	verdict	score	findings	executor	reporter	reference
+2026-09-10T07:05:36Z	docs/ja/specdojo/templates/pjr-views-by-priority-template.md	1	passed	329	pass	100	0	gemma-expert-executor	gemma-reporter	docs/ja/specdojo/templates/prj-overview-template.md
+2026-09-10T07:09:47Z	docs/ja/specdojo/templates/pjr-views-by-priority-template.md	2	passed	251	pass	100	0	gemma-expert-executor	gemma-reporter	none
+2026-09-10T07:16:21Z	docs/ja/specdojo/templates/pjr-views-by-priority-template.md	3	failed	394				codex-expert-executor	gemma-reporter	none
+2026-09-10T07:22:27Z	docs/ja/specdojo/templates/pjr-views-by-status-template.md	1	passed	366	pass	100	0	gemma-expert-executor	gemma-reporter	docs/ja/specdojo/templates/prj-overview-template.md
+2026-09-10T07:26:35Z	docs/ja/specdojo/templates/pjr-views-by-status-template.md	2	passed	248	pass	100	0	gemma-expert-executor	gemma-reporter	none
+2026-09-10T07:31:28Z	docs/ja/specdojo/templates/pjr-views-by-status-template.md	3	passed	293	needs-work	86	5	codex-expert-executor	gemma-reporter	none
+2026-09-10T07:37:55Z	docs/ja/specdojo/templates/pm-change-request-log-template.md	1	failed	386				gemma-expert-executor	gemma-reporter	docs/ja/specdojo/templates/prj-overview-template.md
+2026-09-10T07:44:05Z	docs/ja/specdojo/templates/pm-change-request-log-template.md	2	passed	370	needs-work	81	3	gemma-expert-executor	gemma-reporter	none
+2026-09-10T07:44:05Z	docs/ja/specdojo/templates/pm-change-request-log-template.md	3	skipped_condition	0				codex-expert-executor	gemma-reporter	none
+2026-09-10T07:49:35Z	docs/ja/specdojo/templates/pm-decision-log-template.md	1	passed	330	pass	100	0	gemma-expert-executor	gemma-reporter	docs/ja/specdojo/templates/prj-overview-template.md
+2026-09-10T07:53:46Z	docs/ja/specdojo/templates/pm-decision-log-template.md	2	passed	251	pass	100	0	gemma-expert-executor	gemma-reporter	none
+2026-09-10T08:02:49Z	docs/ja/specdojo/templates/pm-decision-log-template.md	3	passed	543	needs-work	79	4	codex-expert-executor	gemma-reporter	none
+2026-09-10T08:10:39Z	docs/ja/specdojo/templates/pm-issue-log-template.md	1	passed	470	fail	59	5	gemma-expert-executor	gemma-reporter	docs/ja/specdojo/templates/prj-overview-template.md
+2026-09-10T08:18:01Z	docs/ja/specdojo/templates/pm-issue-log-template.md	2	passed	442	fail	59	5	gemma-expert-executor	gemma-reporter	none
+2026-09-10T08:18:01Z	docs/ja/specdojo/templates/pm-issue-log-template.md	3	skipped_condition	0				codex-expert-executor	gemma-reporter	none

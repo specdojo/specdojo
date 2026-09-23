@@ -1,0 +1,73 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:imp-operations-rulebook
+path: docs/ja/specdojo/rulebooks/imp-operations-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+reference: specdojo:prj-overview-rulebook
+verdict: pass
+score: 94
+graded_at: "2026-09-02T19:58:19.714Z"
+graded_by: gemma-expert-executor
+content_hash: 506adb0ec95a6b4646f60705a2f6d2a46da785336c1610c891ec71b5fa7eed40
+categories:
+  consistency:
+    score: 100
+  usability:
+    score: 92
+  architecture:
+    score: 100
+  quality:
+    score: 88
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 3
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: Frontmatter の recipe が undecided となっており、対応する recipe への参照が定義されていない。
+    anchor: "# 影響調査（運用）作成ルール"
+  - id: F002
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: Frontmatter の template が undecided となっており、対応する template への参照が定義されていない。
+    anchor: "# 影響調査（運用）作成ルール"
+  - id: F003
+    severity: minor
+    rule: vp-ux-readability
+    line: 1
+    message: 委譲先として「各ドキュメント」と記載されているが、具体的にどの成果物種別に委譲すべきかの例示がなく、境界が曖昧である。
+    anchor: "# 影響調査（運用）作成ルール"

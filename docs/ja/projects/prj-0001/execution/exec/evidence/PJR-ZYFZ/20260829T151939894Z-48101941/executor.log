@@ -1,0 +1,13 @@
+`vp-arc-single-responsibility` を追加しました。
+
+- 共通正本と ARC 観点集合へ登録
+- `vp-arc-conciseness` との境界、除外対象、分割時の PJR 運用を定義
+- 個票の作業内容・対応結果を更新
+- 個票ステータスと result ファイルは未変更
+- 整形、lint、catalog、register、index、履歴リンク検証はすべて通過
+
+`test-unit`・`test-integration`・`validate:schema` は指示どおり親 runner に委ねています。
+
+<specdojo_executor_evidence>
+{"final_message":"文書責務の単一性を評価する共通 viewpoint を追加し、運用規則と個票を更新した","validations":[{"command":"npx prettier --write docs/ja/specdojo/defaults/pm-review-viewpoints.yaml docs/ja/specdojo/guides/review-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-zyfz-single-responsibility-viewpoint.md","status":"passed","summary":"3ファイルを整形"},{"command":"npx markdownlint docs/ja/specdojo/guides/review-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-zyfz-single-responsibility-viewpoint.md","status":"passed","summary":"Markdown lint エラーなし"},{"command":"npx remark docs/ja/specdojo/guides/review-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-zyfz-single-responsibility-viewpoint.md --quiet --frail","status":"passed","summary":"Markdown frontmatter・構文検査成功"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"終了コード0。既存の未生成成果物に関する warning のみ"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿生成成功"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1395件の文書索引生成成功"},{"command":"node --import tsx tools/docs/src/validate-history-links.ts","status":"passed","summary":"履歴リンク検証成功"},{"command":"git diff --check","status":"passed","summary":"差分の空白エラーなし"}]}
+</specdojo_executor_evidence>

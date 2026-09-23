@@ -18,6 +18,12 @@ import { resolveBasePath, resolveDeliverablePath } from "./catalog-paths.js";
 import { buildSpecdojoFrontmatter, readSpecdojoNamespace } from "./frontmatter-namespace.js";
 import { flattenTemplateFrontmatter } from "./template-frontmatter.js";
 import { specdojoRootDir } from "./specdojo-config.js";
+import {
+  resolveSpecdojoPath,
+  resolveSpecdojoPathIfExists,
+  specdojoDirectoryPaths,
+  specdojoResourceCandidates,
+} from "./template-resolution.js";
 
 type CatalogKataKind = "rulebook" | "recipe" | "sample" | "template";
 
@@ -33,9 +39,13 @@ const CATALOG_KATA_DIRS: Record<CatalogKataKind, string> = {
 function declaredKataCandidates(repoRoot: string, kind: CatalogKataKind, id: string): string[] {
   const localId = id.includes(":") ? id.split(":").slice(1).join(":") : id;
   const extensions = kind === "rulebook" || kind === "recipe" ? ["md"] : ["md", "yaml", "json"];
-  return extensions.map((extension) =>
-    join(repoRoot, "docs/ja/specdojo", CATALOG_KATA_DIRS[kind], `${localId}.${extension}`),
-  );
+  return extensions.map((extension) => {
+    const relativePath = `docs/ja/specdojo/${CATALOG_KATA_DIRS[kind]}/${localId}.${extension}`;
+    return (
+      resolveSpecdojoPathIfExists(relativePath, { repositoryRoot: repoRoot }) ??
+      specdojoResourceCandidates(relativePath, { repositoryRoot: repoRoot }).repositoryPath
+    );
+  });
 }
 
 function readPracticeDocumentId(filePath: string): string | undefined {
@@ -522,15 +532,21 @@ export function validateRulebookKata(catalogPath: string): DctValidationResult {
   }
 
   const repoRoot = specdojoRootDir();
-  const practiceRoot = join(repoRoot, "docs/ja/specdojo");
-  const rulebooksDir = join(practiceRoot, "rulebooks");
+  const rulebooksDirs = specdojoDirectoryPaths("docs/ja/specdojo/rulebooks", {
+    repositoryRoot: repoRoot,
+  });
   // 実践の型のディレクトリを持たないリポジトリ（テスト用の最小構成など）では、
   // 突き合わせる対象がないため検証を行わない。
-  if (!existsSync(rulebooksDir)) return { ok: true, errors: [], warnings };
-  for (const file of readdirSync(rulebooksDir).filter((name) => name.endsWith("-rulebook.md"))) {
-    const fsPath = join(rulebooksDir, file);
-    const id = readSpecdojoNamespace(readFileSync(fsPath, "utf8")).id;
-    rulebookIds.add(typeof id === "string" ? id : file.replace(/\.md$/, ""));
+  if (rulebooksDirs.length === 0) return { ok: true, errors: [], warnings };
+  const seenRulebookFiles = new Set<string>();
+  for (const rulebooksDir of rulebooksDirs) {
+    for (const file of readdirSync(rulebooksDir).filter((name) => name.endsWith("-rulebook.md"))) {
+      if (seenRulebookFiles.has(file)) continue;
+      seenRulebookFiles.add(file);
+      const fsPath = join(rulebooksDir, file);
+      const id = readSpecdojoNamespace(readFileSync(fsPath, "utf8")).id;
+      rulebookIds.add(typeof id === "string" ? id : file.replace(/\.md$/, ""));
+    }
   }
 
   const declaredSampleLocalIds = new Set<string>();
@@ -557,12 +573,11 @@ export function validateRulebookKata(catalogPath: string): DctValidationResult {
     for (const kind of ["recipe", "template"] as const) {
       const extensions = kind === "recipe" ? ["md"] : ["md", "yaml", "json"];
       for (const extension of extensions) {
-        const fsPath = join(
-          practiceRoot,
-          CATALOG_KATA_DIRS[kind],
-          `${prefix}-${kind}.${extension}`,
+        const fsPath = resolveSpecdojoPathIfExists(
+          `docs/ja/specdojo/${CATALOG_KATA_DIRS[kind]}/${prefix}-${kind}.${extension}`,
+          { repositoryRoot: repoRoot },
         );
-        if (existsSync(fsPath) && !declaredPaths.has(fsPath)) {
+        if (fsPath && !declaredPaths.has(fsPath)) {
           warnings.push(`rulebook '${rulebookId}' does not declare existing ${kind}: ${fsPath}`);
         }
       }
@@ -588,20 +603,27 @@ export function validateRulebookKata(catalogPath: string): DctValidationResult {
     }
   }
 
-  const samplesDir = join(practiceRoot, "samples");
-  const sampleFiles = existsSync(samplesDir)
-    ? readdirSync(samplesDir).filter((name) => /-sample\.(?:md|yaml|json)$/.test(name))
-    : [];
-  for (const file of sampleFiles) {
-    const fsPath = join(samplesDir, file);
-    const declaredId = readPracticeDocumentId(fsPath);
-    const localId = declaredId
-      ? declaredId.includes(":")
-        ? declaredId.split(":").slice(1).join(":")
-        : declaredId
-      : file.replace(/\.(?:md|yaml|json)$/, "");
-    if (!declaredSampleLocalIds.has(localId)) {
-      warnings.push(`sample '${localId}' exists but no rulebook declares it: ${fsPath}`);
+  const samplesDirs = specdojoDirectoryPaths("docs/ja/specdojo/samples", {
+    repositoryRoot: repoRoot,
+  });
+  const seenSampleFiles = new Set<string>();
+  for (const samplesDir of samplesDirs) {
+    const sampleFiles = readdirSync(samplesDir).filter((name) =>
+      /-sample\.(?:md|yaml|json)$/.test(name),
+    );
+    for (const file of sampleFiles) {
+      if (seenSampleFiles.has(file)) continue;
+      seenSampleFiles.add(file);
+      const fsPath = join(samplesDir, file);
+      const declaredId = readPracticeDocumentId(fsPath);
+      const localId = declaredId
+        ? declaredId.includes(":")
+          ? declaredId.split(":").slice(1).join(":")
+          : declaredId
+        : file.replace(/\.(?:md|yaml|json)$/, "");
+      if (!declaredSampleLocalIds.has(localId)) {
+        warnings.push(`sample '${localId}' exists but no rulebook declares it: ${fsPath}`);
+      }
     }
   }
   return { ok: true, errors: [], warnings };
@@ -1228,10 +1250,8 @@ export function buildCatalog(catalogPath: string): { generated: string[]; errors
     } else {
       try {
         const index = loadDctIndex(catalogPath) as DctIndexDoc;
-        const templatePath = join(
-          specdojoRootDir(),
-          "docs/ja/specdojo/templates",
-          DCT_INDEX_TEMPLATE,
+        const templatePath = resolveSpecdojoPath(
+          `docs/ja/specdojo/templates/${DCT_INDEX_TEMPLATE}`,
         );
         if (!existsSync(templatePath)) throw new Error(`Template not found: ${templatePath}`);
         const outputPath = join(outputDir, "dct-index.md");

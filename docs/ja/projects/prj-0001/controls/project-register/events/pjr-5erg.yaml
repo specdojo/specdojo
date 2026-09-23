@@ -1,0 +1,140 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_23e4e45b2def4e91b90df8ad948a972e
+  ts: "2026-09-01T14:04:03Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: codex 版の本文が SSOT から乖離しており、検証手段がないため再発する
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: orchestrator 本文の環境間同期を検証可能にする
+    - field: description
+      from: ""
+      to: SSOT と各環境ラッパーの本文一致を機械検証し、codex 版の乖離を解消する。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-01"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_b49de42a398a4f1eac1159d9c27b995c
+  ts: "2026-09-03T10:07:38Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_23e4e45b2def4e91b90df8ad948a972e
+- v: 1
+  id: reg_bfaec1d6803d42869d47c53ac203c367
+  ts: "2026-09-03T10:15:07Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: 親 runner 検証 test-unit（npm run test:unit）が status=failed（tests/src/doc-index.test.ts の1テストが失敗）であるため、この結果を上書きせず outcome=blocked とする。加えて executor 自身も、本タスクに必要な変更対象（.codex/…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: 親 runner 検証 test-unit（npm run test:unit）が status=failed（tests/src/doc-index.test.ts の1テストが失敗）であるため、この結果を上書きせず outcome=blocked とする。加えて executor 自身も、本タスクに必要な変更対象（.codex/…"
+  previous_event_id: reg_b49de42a398a4f1eac1159d9c27b995c
+- v: 1
+  id: reg_7c6bce3867d0496b953cd0788ec130dc
+  ts: "2026-09-03T10:37:57Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_bfaec1d6803d42869d47c53ac203c367
+- v: 1
+  id: reg_18f0ee390bda4265a6ba9fc8806b9c6f
+  ts: "2026-09-03T10:39:03Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: rate limit reached
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "agent exited with non-zero code: 親 runner 検証 test-unit（npm run test:unit）が status=failed（tests/src/doc-index.test.ts の1テストが失敗）であるため、この結果を上書きせず outcome=blocked とする。加えて executor 自身も、本タスクに必要な変更対象（.codex/…"
+      to: rate limit reached
+  previous_event_id: reg_7c6bce3867d0496b953cd0788ec130dc
+- v: 1
+  id: reg_5200da216850471183a81cdf6f7438d4
+  ts: "2026-09-03T22:36:57Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_18f0ee390bda4265a6ba9fc8806b9c6f
+- v: 1
+  id: reg_e0d8810c8d4249d4840eed5185462d58
+  ts: "2026-09-03T22:49:33Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=lefthook.yml, package.json; agent must record the required change …"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: rate limit reached
+      to: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=lefthook.yml, package.json; agent must record the required change …"
+  previous_event_id: reg_5200da216850471183a81cdf6f7438d4
+- v: 1
+  id: reg_3cd4785c22ec406aa17c7555fbf841b0
+  ts: "2026-09-03T22:55:54Z"
+  action: close
+  actor: orchestrator
+  from_status: waiting
+  to_status: done
+  reason: SSOT と5ラッパーの本文一致を機械検証する lint を追加し、乖離していた codex 版を同期した。
+  changes:
+    - field: status
+      from: waiting
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-04"
+    - field: conclusion
+      from: "-"
+      to: SSOT と5ラッパーの本文一致を機械検証する lint を追加し、乖離していた codex 版を同期した。
+  previous_event_id: reg_e0d8810c8d4249d4840eed5185462d58

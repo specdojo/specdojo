@@ -1,0 +1,14 @@
+テンプレートのフォールバック解決を実装しました。
+
+- 利用者リポジトリを優先し、欠落時は npm パッケージ内へフォールバック。
+- `register add`、旧一覧移行、`register build` の3経路を共通化。
+- 両方に存在しない場合は、探索した2パスをエラー表示。
+- 解決順序の単体テストと最小構成の回帰テストを追加。
+- [個票](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-KK07/docs/ja/projects/prj-0001/controls/project-register/pjr-kk07-template-resolution-fallback.md)の対応結果を更新。ステータスと result は変更していません。
+- 親 runner 担当の単体・統合・schema 検証は指示どおり未実行です。
+
+標準の `npx tsx` は sandbox の IPC 制限で起動できませんでしたが、IPC 不要の同等起動方法では各検証に成功しています。
+
+<specdojo_executor_evidence>
+{"final_message":"利用者リポジトリ優先・同梱パッケージフォールバックのテンプレート解決と回帰テストを実装した。","validations":[{"command":"npm run typecheck","status":"passed","summary":"TypeScript型検査に成功"},{"command":"npx eslint src/package-paths.ts src/template-resolution.ts src/exec-provider-scaffold.ts src/register.ts tests/src/template-resolution.test.ts tests/src/register-commands.test.ts","status":"passed","summary":"対象TypeScriptの静的検査に成功"},{"command":"npx prettier --check src/package-paths.ts src/template-resolution.ts src/exec-provider-scaffold.ts src/register.ts tests/src/template-resolution.test.ts tests/src/register-commands.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-kk07-template-resolution-fallback.md","status":"passed","summary":"対象ファイルの整形確認に成功"},{"command":"npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-kk07-template-resolution-fallback.md","status":"passed","summary":"個票のMarkdown検査に成功"},{"command":"npx tsx src/specdojo.ts catalog validate","status":"failed","summary":"sandboxのtsx IPCソケット作成がEPERMで起動前に停止"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"同等のIPC不要起動で検証成功。既存の未作成成果物警告のみ"},{"command":"npx tsx src/specdojo.ts register build","status":"failed","summary":"sandboxのtsx IPCソケット作成がEPERMで起動前に停止"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"同等のIPC不要起動で派生ビュー生成に成功"},{"command":"npx tsx src/specdojo.ts index build","status":"failed","summary":"sandboxのtsx IPCソケット作成がEPERMで起動前に停止"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"同等のIPC不要起動で1556件の索引生成に成功"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"},{"command":"npm run test:unit","status":"not_run","summary":"親runnerのallowlisted validationに委譲"},{"command":"npm run test:integration","status":"not_run","summary":"親runnerのallowlisted validationに委譲"},{"command":"npm run validate:schema","status":"not_run","summary":"親runnerのallowlisted validationに委譲"}]}
+</specdojo_executor_evidence>

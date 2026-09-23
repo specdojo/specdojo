@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_b658ec796fbf4c90953e633edae057ed
+  ts: "2026-08-31T11:26:50Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: grade の Frontmatter をフロースタイルで出力する
+    - field: description
+      from: ""
+      to: grade を記録すると Frontmatter が 51 行になり、本文より長くなる文書が生じる。categories と viewpoints は各項目が level と score だけを持つため、1 項目あたり 2 行を占める。viewpoints は観点数だけ繰り返され 18 行、categories が 8 行、findings が 5 行である。これらをフロースタイルへ変更すれば 51 行から 24 行程度へ縮む。js-yaml の flowLevel 4 で categories と viewpoints の中身がフロー化されること、prettier がフロースタイルを保持することを実測で確認した。ただし frontmatter の書き戻しは grade 以外でも使う共通処理であり、無条件に適用すると他の成果物へ波及する。grade 配下だけを対象とする。findings は深さが浅く flowLevel では対象にならないため個別に扱う。lint と schema 検証への影響も確認する。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-08-31"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_3148223ab2144cfcbeb282371001d0b0
+  ts: "2026-08-31T23:16:55Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_b658ec796fbf4c90953e633edae057ed
+- v: 1
+  id: reg_20a273c043d141ef8cfcee8c34a3b759
+  ts: "2026-08-31T23:28:08Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_3148223ab2144cfcbeb282371001d0b0
+- v: 1
+  id: reg_6604bc5f47cb4e5d83b7de006b914a63
+  ts: "2026-09-01T00:10:52Z"
+  action: close
+  actor: manual
+  from_status: review
+  to_status: done
+  reason: 実装・検証・レビューが完了したため
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-01"
+    - field: conclusion
+      from: "-"
+      to: grade の Frontmatter をフロースタイルで出力するようにした。categories と viewpoints は各項目の score や level をフローにし、findings は深さが異なるため個別に dump して差し込む。grade 以外の Frontmatter には影響しない。実測では 51 行から 26 行へ半減した。Prettier 適用後もフロースタイルが維持されること、連続適用がバイト単位で冪等であることをテストで固定している。
+  previous_event_id: reg_20a273c043d141ef8cfcee8c34a3b759

@@ -1,0 +1,435 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-9S41",
+  "run_id": "20260831T225759946Z-55f459dd",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "failed",
+    "started_at": "2026-08-31T22:57:59.946Z",
+    "completed_at": "2026-08-31T23:09:35.574Z",
+    "exit_code": 1,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-9s41-exec-templates-separation.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/plan-result-lifecycle-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/ryu-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/waza-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/index.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/directory-layout-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/document-metadata-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/template-authoring-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/xep-bootstrap-template.md",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/xep-common-conventions-template.md",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/xep-cross-deliverable-dedup-template.md",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/xep-freeform-template.md",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/xep-fully-guided-template.md",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/xep-job-template.md",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/xep-recipe-guided-template.md",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/xep-recipe-maintenance-template.md",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/xep-register-investigate-template.md",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/xep-register-template.md",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/xep-retrofit-template.md",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/xep-rulebook-maintenance-template.md",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/xep-sample-maintenance-template.md",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/xep-template-maintenance-template.md",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/xep-template.md",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/xer-cross-deliverable-dedup-template.md",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/xer-human-bootstrap-finalize-template.md",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/xer-human-finalize-template.md",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/xer-template.md",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/xrp-freeform-template.md",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/xrp-fully-guided-template.md",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/xrp-recipe-guided-template.md",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/xrp-recipe-maintenance-template.md",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/xrp-retrofit-template.md",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/xrp-rulebook-maintenance-template.md",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/xrp-sample-maintenance-template.md",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/xrp-template-maintenance-template.md",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/xrp-template.md",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/xrp-viewpoint-detail-template.md",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/xrr-template.md",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/xrr-viewpoint-detail-template.md",
+      "status": "D"
+    },
+    {
+      "path": "lefthook.yml",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-plans.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-register.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-results.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/job.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-pipeline-e2e.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-plans.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-register-pipeline-e2e.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-register-resume.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-run-inplace.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-scheduler-command.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/grade.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/job.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xep-bootstrap-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xep-common-conventions-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xep-cross-deliverable-dedup-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xep-freeform-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xep-fully-guided-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xep-job-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xep-recipe-guided-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xep-recipe-maintenance-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xep-register-investigate-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xep-register-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xep-retrofit-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xep-rulebook-maintenance-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xep-sample-maintenance-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xep-template-maintenance-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xep-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xer-cross-deliverable-dedup-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xer-human-bootstrap-finalize-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xer-human-finalize-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xer-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-freeform-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-fully-guided-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-recipe-guided-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-recipe-maintenance-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-retrofit-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-rulebook-maintenance-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-sample-maintenance-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-template-maintenance-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-viewpoint-detail-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrr-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrr-viewpoint-detail-template.md",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 83,
+    "summary": ".../pjr-9s41-exec-templates-separation.md          |  29 +++---\n .../specdojo/guides/plan-result-lifecycle-guide.md |   2 +\n docs/ja/specdojo/guides/ryu-guide.md               |  40 +++----\n docs/ja/specdojo/guides/waza-guide.md              |   3 +-\n docs/ja/specdojo/index.md                          |  21 ++--\n .../references/directory-layout-reference.md       |   6 +-\n .../standards/document-metadata-standard.md        |   6 +-\n .../standards/template-authoring-standard.md       |  10 +-\n .../specdojo/templates/xep-bootstrap-template.md   | 115 ---------------------\n .../templates/xep-common-conventions-template.md   |  36 -------\n .../xep-cross-deliverable-dedup-template.md        |  51 ---------\n .../ja/specdojo/templates/xep-freeform-template.md |  74 -------------\n .../templates/xep-fully-guided-template.md         | 103 ------------------\n docs/ja/specdojo/templates/xep-job-template.md     |  41 --------\n .../templates/xep-recipe-guided-template.md        |  82 ---------------\n .../templates/xep-recipe-maintenance-template.md   |  69 -------------\n .../templates/xep-register-investigate-template.md |  42 --------\n .../ja/specdojo/templates/xep-register-template.md |  43 --------\n .../ja/specdojo/templates/xep-retrofit-template.md |  98 ------------------\n .../templates/xep-rulebook-maintenance-template.md |  69 -------------\n .../templates/xep-sample-maintenance-template.md   |  69 -------------\n .../templates/xep-template-maintenance-template.md |  69 -------------\n docs/ja/specdojo/templates/xep-template.md         |  66 ------------\n .../xer-cross-deliverable-dedup-template.md        |  31 ------\n .../xer-human-bootstrap-finalize-template.md       |  40 -------\n .../templates/xer-human-finalize-template.md       |  30 ------\n docs/ja/specdojo/templates/xer-template.md         |  19 ----\n .../ja/specdojo/templates/xrp-freeform-template.md |  70 -------------\n .../templates/xrp-fully-guided-template.md         |  97 -----------------\n .../templates/xrp-recipe-guided-template.md        |  76 --------------\n .../templates/xrp-recipe-maintenance-template.md   |  71 -------------\n .../ja/specdojo/templates/xrp-retrofit-template.md |  74 -------------\n .../templates/xrp-rulebook-maintenance-template.md |  72 -------------\n .../templates/xrp-sample-maintenance-template.md   |  71 -------------\n .../templates/xrp-template-maintenance-template.md |  71 -------------\n docs/ja/specdojo/templates/xrp-template.md         |  67 ------------\n .../templates/xrp-viewpoint-detail-template.md     |   7 --\n docs/ja/specdojo/templates/xrr-template.md         |  21 ----\n .../templates/xrr-viewpoint-detail-template.md     |   7 --\n lefthook.yml                                       |   2 +-\n src/exec-plans.ts                                  |  20 ++--\n src/exec-register.ts                               |   4 +-\n src/exec-results.ts                                |   2 +-\n src/job.ts                                         |   4 +-\n tests/src/exec-pipeline-e2e.integration.test.ts    |   4 +-\n tests/src/exec-plans.test.ts                       |   2 +-\n .../exec-register-pipeline-e2e.integration.test.ts |   4 +-\n tests/src/exec-register-resume.integration.test.ts |   4 +-\n tests/src/exec-run-inplace.test.ts                 |  12 +--\n tests/src/exec-scheduler-command.test.ts           |   4 +-\n tests/src/grade.test.ts                            |   8 ++\n tests/src/job.test.ts                              |  12 ++-\n 52 files changed, 111 insertions(+), 1939 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "{ git diff --name-only --diff-filter=ACMR -z; find docs/ja/specdojo/exec-templates -maxdepth 1 -type f -print0; } | sort -zu | xargs -0 npx prettier --write",
+      "status": "passed",
+      "summary": "変更ファイルと移動した31テンプレートを整形"
+    },
+    {
+      "source": "executor",
+      "command": "{ git diff --name-only --diff-filter=ACMR -z -- '*.md'; find docs/ja/specdojo/exec-templates -maxdepth 1 -type f -name '*.md' -print0; } | sort -zu | xargs -0 npx markdownlint",
+      "status": "passed",
+      "summary": "変更Markdownのlint通過"
+    },
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "TypeScript型検査通過"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "TypeScript ESLint通過"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "Frontmatter lint通過"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿派生ビュー生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "全カタログOK、既存の欠落成果物警告のみ"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "1444件の文書索引を生成"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/docs/src/validate-history-links.ts",
+      "status": "passed",
+      "summary": "履歴リンク検証通過"
+    },
+    {
+      "source": "executor",
+      "command": "test \"$(find docs/ja/specdojo/exec-templates -maxdepth 1 -type f | wc -l)\" -eq 31 && test -z \"$(find docs/ja/specdojo/templates -maxdepth 1 -type f \\( -name 'xep-*.md' -o -name 'xer-*.md' -o -name 'xrp-*.md' -o -name 'xrr-*.md' \\) -print -quit)\"",
+      "status": "passed",
+      "summary": "新配置31件、旧配置0件を確認"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx -e 'import { discoverGradeTargets as d } from \"./src/grade.ts\"; const t=d({target:\"kata\"}); if(t.some(p=>p.includes(\"/exec-templates/\"))||!t.some(p=>p.includes(\"/templates/prj-overview-template.md\"))) process.exit(1)'",
+      "status": "passed",
+      "summary": "gradeのkata探索が成果物templateを含みexec-templatesを除外"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし"
+    }
+  ],
+  "final_message": "exec/resultテンプレート31件をexec-templatesへ分離し、生成処理・テスト・規範文書・grade対象・hookを追随更新した",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-9S41/20260831T225759946Z-55f459dd/executor.log",
+      "bytes": 3119,
+      "truncated": false
+    }
+  ]
+}

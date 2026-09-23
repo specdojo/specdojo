@@ -6,7 +6,7 @@ import { redactSensitiveText } from "./exec-evidence.js";
 const MAX_CAPTURE_BYTES = 64 * 1024;
 const MAX_SUMMARY_LENGTH = 1_000;
 
-export type ParentValidationId = "validate-schema" | "test-unit" | "test-integration";
+export type ParentValidationId = "validate-schema" | "typecheck" | "test-unit" | "test-integration";
 
 export type ParentValidationDefinition = {
   id: ParentValidationId;
@@ -35,6 +35,13 @@ const PARENT_VALIDATION_REGISTRY: Record<ParentValidationId, ParentValidationDef
     command: process.platform === "win32" ? "npm.cmd" : "npm",
     args: ["run", "validate:schema"],
     displayCommand: "npm run validate:schema",
+    timeoutMs: 10 * 60 * 1_000,
+  },
+  typecheck: {
+    id: "typecheck",
+    command: process.platform === "win32" ? "npm.cmd" : "npm",
+    args: ["run", "typecheck"],
+    displayCommand: "npm run typecheck",
     timeoutMs: 10 * 60 * 1_000,
   },
   "test-unit": {

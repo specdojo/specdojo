@@ -1,0 +1,95 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_d456456e8e514734bf5fdae2b5de387a
+  ts: "2026-08-29T00:39:35Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: sch-assessment を sch-readiness へ改名する
+    - field: description
+      from: ""
+      to: sch-assessment は track 単位の成果物と kata の整備状況（readiness）を評価するものだが、名前が汎用語のため PJR-49D2 の品質評価と紛らわしい。評価対象が名前から分かるよう sch-readiness へ改名する。schema、実データ 3 track、src 5 ファイル、tests 4 ファイル、規範文書が対象。execution 配下の plan / result 42 件は当時の実行記録のため書き換えず、旧名が履歴に残ることを許容する。PJR-49D2 の設計と facts 連携が固まってから着手し、データ移行を 1 回で済ませる。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-08-29"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_c4a2eafa366542a8aea76417691db51c
+  ts: "2026-08-29T06:49:05Z"
+  action: update
+  actor: manual
+  from_status: open
+  to_status: open
+  reason: PJR-49D2 の品質評価により judgment の大部分が決定論化できるため、改名ではなく廃止可否の判断に組み替える
+  changes:
+    - field: title
+      from: sch-assessment を sch-readiness へ改名する
+      to: sch-assessment の廃止可否を判断し approach の決定論的導出へ移行する
+    - field: description
+      from: "`sch-assessment` は track 単位で成果物と kata（rulebook / recipe / sample / template）の整備状況を評価し、`recommended_approach` を導くものである。schema の description 自身が readiness と説明しているにもかかわらず、名前が `assessment` という汎用語のため、何を評価するのかが名前から読み取れない。"
+      to: specdojo grade が kata usability の judgment を代替できるため、sch-assessment の agent 判定は intent の決定を残すのみとなる。intent を strategy 側の宣言で表現できれば recommended_approach は決定論的に導出でき、agent 再実行を避けるための保存という sch-assessment の存在理由が消える。判断の履歴は exec plan が持つため、成果物としてのファイルは不要になる見込み。intent 宣言化の可否を検証し、可能なら sch-assessment を廃止して schedule 生成時の都度導出へ移行する。廃止しない場合に限り sch-readiness などへの改名を検討する。
+  previous_event_id: reg_d456456e8e514734bf5fdae2b5de387a
+- v: 1
+  id: reg_8e73b42c62564da6b03f1a8437b41160
+  ts: "2026-08-29T10:27:56Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_c4a2eafa366542a8aea76417691db51c
+- v: 1
+  id: reg_b05d8fb7d1cd4c1cb1f832bb836ad0e6
+  ts: "2026-08-29T10:48:18Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_8e73b42c62564da6b03f1a8437b41160
+- v: 1
+  id: reg_dbb530a026564faca304f051de4142f3
+  ts: "2026-08-29T10:56:46Z"
+  action: close
+  actor: manual
+  from_status: review
+  to_status: done
+  reason: 実装・検証・レビューが完了したため
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-08-29"
+    - field: conclusion
+      from: "-"
+      to: sch-assessment を廃止し、strategy の approach_rules による intent 宣言、都度収集する成果物・Kata facts、保存済み grade から approach を決定論的に導出する構造へ移行した。7 種の intent はすべて approach_rules[].intent で表現でき、local_ids により同一 phase set 内で intent が分かれる場合も宣言できる。専用 schema、CLI の schedule assessment、agent prompt、実データ 3 件、専用テストを削除し、approach 決定から agent 起動を排除した。入力が欠ける場合は undecided を保存せずエラー停止する。
+  previous_event_id: reg_b05d8fb7d1cd4c1cb1f832bb836ad0e6

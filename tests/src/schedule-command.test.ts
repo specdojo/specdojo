@@ -45,6 +45,7 @@ function writeMilestoneStrategy(
         catalogs: [{ id: `${projectId}:catalog-${track}`, path: `/${catalogFile}` }],
         include_kinds: ["work"],
       },
+      approach_rules: [{ local_ids: [localId], intent: "author-deliverable" }],
       phase_sets: {
         first: [{ id: "draft", name: "Draft", task_suffix: "010", duration_days: 1 }],
       },
@@ -74,22 +75,8 @@ describe("schedule command registration", () => {
     const commandNames = schedule?.commands.map((command) => command.name());
     const help = schedule?.helpInformation();
 
-    expect(commandNames).toEqual(["where", "build", "assessment", "strategy"]);
+    expect(commandNames).toEqual(["where", "build", "strategy"]);
     expect(help).toContain("build");
-  });
-
-  it("assessment サブコマンドを登録する", () => {
-    const program = new Command();
-    registerScheduleCommands(program);
-
-    const schedule = program.commands.find((command) => command.name() === "schedule");
-    const assessment = schedule?.commands.find((command) => command.name() === "assessment");
-
-    expect(assessment?.commands.map((command) => command.name())).toEqual([
-      "scaffold",
-      "prompt",
-      "validate",
-    ]);
   });
 });
 

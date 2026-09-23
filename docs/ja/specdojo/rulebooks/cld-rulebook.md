@@ -46,13 +46,14 @@ specdojo:
 
 分類一覧を1つの YAML ドキュメントとして管理する場合、以下のメタデータを用いる。
 
-| 項目       | 説明                             | 必須 |
-| ---------- | -------------------------------- | ---- |
-| id         | 分類一覧ID（例：cll-xxx-xxxx）   | ○    |
-| type       | `domain` 固定                    | ○    |
-| title      | 分類一覧名                       | ○    |
-| status     | `draft` / `ready` / `deprecated` | ○    |
-| supersedes | 置き換え関係（旧仕様→新仕様）    | 任意 |
+| 項目 | 説明                           | 必須 |
+| ---- | ------------------------------ | ---- |
+| id   | 分類一覧ID（例：cll-xxx-xxxx） | ○    |
+
+| type | `domain` 固定 | ○ |
+| title | 分類一覧名 | ○ |
+| status | `draft` / `ready` / `deprecated` | ○ |
+| supersedes | 置き換え関係（旧仕様→新仕様） | 任意 |
 
 ### 1.1 ID規約
 

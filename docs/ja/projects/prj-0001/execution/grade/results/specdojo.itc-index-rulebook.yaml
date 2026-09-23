@@ -1,0 +1,66 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:itc-index-rulebook
+path: docs/ja/specdojo/rulebooks/itc-index-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 82
+graded_at: "2026-09-02T20:44:19.739Z"
+graded_by: gemma-expert-executor
+content_hash: 89514ca95dec9d54be3a4a240634d2c2a05c51aebc95b3714792e04178666d0c
+categories:
+  consistency:
+    score: 75
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 63
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
+    level: 1
+    score: 25
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 2
+  minor: 0
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 1
+    message: IDを `itc-index` 固定とする指定は、プロジェクト一意性を担保する `＜project-id＞:id` 形式の命名慣習と矛盾している。
+    anchor: "# 内部結合テストカタログ概要 作成ルール"
+  - id: F002
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: 参照サンプル `specdojo:itc-index-sample` が、本文第5章で定義した必須構成（固定見出し順）に従っておらず、完成例として不整合である。
+    anchor: "# 内部結合テストカタログ概要 作成ルール"

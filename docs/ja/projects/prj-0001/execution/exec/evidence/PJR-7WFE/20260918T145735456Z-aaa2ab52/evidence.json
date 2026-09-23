@@ -1,0 +1,238 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-7WFE",
+  "run_id": "20260918T145735456Z-aaa2ab52",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-18T14:57:35.456Z",
+    "completed_at": "2026-09-18T15:13:56.749Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-7wfe-schedule-agent-by-name.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/schedule/sch-strategy-data-flow-pdca.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/schedule/sch-track-data-flow-pdca.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-config-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/schedule-design-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/sch-common.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/sch-strategy.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-schedule-index.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-schedule-ready.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-schedule.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-strategy.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-task-view.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-types.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule-build.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/docs/specdojo/schemas/sch-strategy-schema.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-run-resolve-command.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-strategy.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/schedule-build.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 21,
+    "summary": ".../pjr-7wfe-schedule-agent-by-name.md             |  21 ++-\n .../schedule/sch-strategy-data-flow-pdca.yaml      |   3 +\n .../schedule/sch-track-data-flow-pdca.yaml         |  24 +++\n docs/ja/specdojo/guides/exec-config-guide.md       |  22 ++-\n docs/ja/specdojo/guides/schedule-design-guide.md   |  22 ++-\n docs/specdojo/schemas/v1/sch-common.schema.yaml    |  16 ++\n docs/specdojo/schemas/v1/sch-strategy.schema.yaml  |  18 ++-\n src/exec-run.ts                                    |  48 +++++-\n src/exec-schedule-index.ts                         |  13 ++\n src/exec-schedule-ready.ts                         |   1 +\n src/exec-schedule.ts                               |   9 ++\n src/exec-strategy.ts                               | 178 +++++++++++++++++----\n src/exec-task-view.ts                              |   5 +\n src/exec-types.ts                                  |  12 +-\n src/schedule-build.ts                              |  82 +++++++++-\n src/schedule.ts                                    |  27 +++-\n .../specdojo/schemas/sch-strategy-schema.test.ts   |  31 ++++\n tests/src/exec-run-resolve-command.test.ts         |  31 ++++\n tests/src/exec-strategy.test.ts                    |  92 +++++++++++\n tests/src/exec.test.ts                             |   2 +\n tests/src/schedule-build.test.ts                   |  96 +++++++++++\n 21 files changed, 676 insertions(+), 77 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/specdojo/schemas/v1/{sch-common,sch-strategy}.schema.yaml docs/ja/projects/prj-0001/{controls/project-register/pjr-7wfe-schedule-agent-by-name.md,schedule/sch-strategy-data-flow-pdca.yaml,schedule/sch-track-data-flow-pdca.yaml} docs/ja/specdojo/guides/{schedule-design-guide,exec-config-guide}.md src/{exec-run,exec-schedule-index,exec-schedule-ready,exec-schedule,exec-strategy,exec-task-view,exec-types,schedule-build,schedule}.ts tests/docs/specdojo/schemas/sch-strategy…",
+      "status": "passed",
+      "summary": "全変更ファイルを整形済み"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/specdojo/guides/schedule-design-guide.md docs/ja/specdojo/guides/exec-config-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-7wfe-schedule-agent-by-name.md",
+      "status": "passed",
+      "summary": "Markdown 違反なし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "TypeScript 型検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "ESLint 成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "既存ファイルの frontmatter warning 1件のみ"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts schedule build --project prj-0001 --track data-flow-pdca --force",
+      "status": "passed",
+      "summary": "40タスクを再生成し、by-name を track へ反映"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts exec refresh --project prj-0001",
+      "status": "passed",
+      "summary": "検証成功。既存の過去イベント warning 4件のみ"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts exec run --project prj-0001 --task T-DATA-FLOW-PDCA-cdfd-onboarding-090 --dry-run",
+      "status": "passed",
+      "summary": "codex-expert-review-executor / gemma-reporter を解決"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts exec run --project prj-0001 --task T-LAUNCH-pm-plan-090 --dry-run",
+      "status": "passed",
+      "summary": "別trackはqwen-review-executorを解決し、track間分離を確認"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "全カタログOK。既存の未作成文書 warning のみ"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "登録簿生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "1812件の文書インデックスを生成"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/docs/src/validate-history-links.ts",
+      "status": "passed",
+      "summary": "履歴リンク検証成功"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分形式・空白エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:unit",
+      "status": "not_run",
+      "summary": "親 runner の allowlist 検証に委任"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:integration",
+      "status": "not_run",
+      "summary": "親 runner の allowlist 検証に委任"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema",
+      "status": "not_run",
+      "summary": "親 runner の allowlist 検証に委任"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-7WFE\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nUpdated: /tmp/specdojo-register-pipeline-e2e-UFKUVZ/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)\nUpdated: /tmp/specdojo-register-pipeline-e2e-UFKUVZ/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml\nGenerated: /tmp/specdojo-register-pipeline-e2e-UFKUVZ/docs/ja/projects/test/controls/project-register/generated/pjr-index.md\nGenerated: /tmp/specdojo-register-pipeline-e2e-UFKUVZ/docs/ja/projects/test/controls/…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.1.0 validate:schema:yaml\n> tsx tools/docs/src/validate-yaml-schema.ts --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-…"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.1.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-7WFE\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-EYAoiB/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-CCIrho/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-gphdgd/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-D3BFIn/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-iPflpk/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-QYWjBc/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\n ❯ tests/src/exec-strategy.test.ts (8 tests | 1 failed) 11ms\n     × resolves a phase assignment and a per-deliverable override without dropping proficiency 4ms\nWrote agent stdout: /tmp/specdojo-agent-command-Sy2hoI/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-7gmL7w/o…"
+    }
+  ],
+  "final_message": "Schedule phase の agent by-name 指定、名簿検証、track/Ready 伝播、CLI優先順位、rate-limit時の固定、track間メタデータ分離を実装し、対象戦略・ガイド・個票を更新した。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-7WFE/20260918T145735456Z-aaa2ab52/executor.log",
+      "bytes": 3573,
+      "truncated": false
+    }
+  ]
+}

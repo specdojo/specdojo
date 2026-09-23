@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: prj-0001:cdfd-agent-config-operation-grade-criteria
+document: prj-0001:cdfd-agent-config-operation
+path: docs/ja/product/010-business-specs/010-data-flow/cdfd-agent-config-operation.md
+graded_at: "2026-09-12T23:36:16.658Z"
+graded_by: gemma-expert-executor
+content_hash: 60caa131ba15be2ac330b49322b03e11fe74fa422adf7bc26dab90fa75f9e64b
+summary:
+  satisfied: 3
+  unsatisfied: 1
+  total: 4
+criteria:
+  - id: DC-001
+    text: 作業要件または実行上の問題を起点として、構成案作成・権限確認・承認・設定変更・検証へ進む流れが表と図で確認できること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: satisfied
+  - id: DC-002
+    text: pm-members.yaml・exec-defaults.yaml・provider設定・sch-strategyの変更責務と相互参照が識別できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-cross-document-consistency
+    status: unsatisfied
+    reason: exec-defaults.yaml が実際に管理するモデル・sandbox・tool 権限が責務表から欠落し provider 固有設定へ誤配分されている。
+  - id: DC-003
+    text: agent・providerの権限範囲、認証情報を設定文書から分離する境界、プロンプトインジェクション対策を承認できること
+    roles:
+      - PO
+    viewpoint: vp-po-decision-readiness
+    status: satisfied
+  - id: DC-004
+    text: capability不足・provider利用不能・設定不整合・権限超過を検知した場合の差し戻し経路が確認できること
+    roles:
+      - QE
+    viewpoint: vp-qe-omissions-consistency
+    status: satisfied

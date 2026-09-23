@@ -1,0 +1,82 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ff39e91d31a14053bcbf146d7094c4f4
+  ts: "2026-09-01T13:48:32Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-TA5C の統合失敗で原因を特定できず再現も取れなかったため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 統合失敗時のエラーに git stderr を残す
+    - field: description
+      from: ""
+      to: コマンド行で切り詰められて git の失敗理由が失われるため、原因を事後に追跡できるようにする。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-01"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_cfdce64439ba4e81a9c63dbce9a7470b
+  ts: "2026-09-02T13:48:05Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_ff39e91d31a14053bcbf146d7094c4f4
+- v: 1
+  id: reg_5a3fa45c514140d5abe6bc03104a72f0
+  ts: "2026-09-02T13:54:01Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: agent exited with non-zero code: agent-git-state-write: Git state changes detected; fields=HEAD, local-config; agent must leave commits and repository configuration ch…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: agent exited with non-zero code: agent-git-state-write: Git state changes detected; fields=HEAD, local-config; agent must leave commits and repository configuration ch…"
+  previous_event_id: reg_cfdce64439ba4e81a9c63dbce9a7470b
+- v: 1
+  id: reg_3aa7d600ebd346b59bf4e055b930c6a1
+  ts: "2026-09-02T14:37:56Z"
+  action: close
+  actor: orchestrator
+  from_status: waiting
+  to_status: done
+  reason: git 失敗メッセージで stderr を先頭付近へ置き、pathspec を件数へ要約した。切り詰めが起きても失敗原因が残る。
+  changes:
+    - field: status
+      from: waiting
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-02"
+    - field: conclusion
+      from: "-"
+      to: git 失敗メッセージで stderr を先頭付近へ置き、pathspec を件数へ要約した。切り詰めが起きても失敗原因が残る。
+  previous_event_id: reg_5a3fa45c514140d5abe6bc03104a72f0

@@ -1,0 +1,80 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:cdfd-template
+path: docs/ja/specdojo/templates/cdfd-template.md
+target: kata
+rubric: grade-rubric-v1
+verdict: pass
+score: 91
+graded_at: "2026-09-22T21:33:20.221Z"
+graded_by: codex-expert-executor
+content_hash: ad63e3d3c3b43a7169287519d11519da189aaca7b3f13910dabbe0f4ef47c954
+categories:
+  consistency:
+    score: 75
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 88
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 3
+    score: 75
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 3
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 106
+    anchor: >-
+      _TODO_: 全体概要の「凡例（本プロダクト共通）」への参照、`-->` / `==>`
+      のうち使用した線種、省略した入出力と理由、別図と共有するノード、他グループの内部処理を省略したことを記述する。状態名をノードとして並べず、状態間の遷移を描かない。
+    message: rulebook 6.4 は全体概要に共通凡例がない場合に `specdojo:cdfd-mermaid-rulebook` の既定凡例へ従うよう求めているため、その場合の代替参照を図直後の注記用 TODO に追加してください。
+  - id: F002
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 106
+    anchor: >-
+      _TODO_: 全体概要の「凡例（本プロダクト共通）」への参照、`-->` / `==>`
+      のうち使用した線種、省略した入出力と理由、別図と共有するノード、他グループの内部処理を省略したことを記述する。状態名をノードとして並べず、状態間の遷移を描かない。
+    message: 全体概要に「凡例（本プロダクト共通）」がない場合の記入方法がないため、`specdojo:cdfd-mermaid-rulebook` の既定凡例へ従う旨を選択できる指示を追加してください。
+  - id: F003
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 106
+    anchor: >-
+      _TODO_: 全体概要の「凡例（本プロダクト共通）」への参照、`-->` / `==>`
+      のうち使用した線種、省略した入出力と理由、別図と共有するノード、他グループの内部処理を省略したことを記述する。状態名をノードとして並べず、状態間の遷移を描かない。
+    message: >-
+      rulebook 6.4 の凡例適用規則を生成物へ反映できるよう、全体概要に共通凡例がある場合の参照と、ない場合の `specdojo:cdfd-mermaid-rulebook` 適用を分岐して記入できる TODO
+      にしてください。

@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ead7b1fbbf1641a1b5c4b322b379954a
+  ts: "2026-09-08T13:57:47Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: routine の action.kind を job へ統合する
+    - field: description
+      from: ""
+      to: routine の action.kind は register / exec-auto / exec-resume / exec-cycle / job の5種あるが、実装はいずれも引数を組み立てて自分自身を spawn するだけで構造が同じである。kind ごとに専用の引数組み立て関数と検証ロジックが存在し重複している。job がコマンドを決定論的に実行できれば、すべてを job として定義でき、冪等キー・型付き入力・手動実行・複数 routine からの再利用がすべての種別で使えるようになる。PJR-GWY4 の実装が前提となる。register は filter.types など入れ子の入力を持ち、job の inputs では表現できないため追加設計が要る。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-08"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_bb74934aeeb14ad38134f916dd819ffc
+  ts: "2026-09-08T21:38:39Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_ead7b1fbbf1641a1b5c4b322b379954a
+- v: 1
+  id: reg_6d9cca70ccf0498dba15164995ace05e
+  ts: "2026-09-08T22:19:45Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_bb74934aeeb14ad38134f916dd819ffc
+- v: 1
+  id: reg_5e95cab7ec004b949da17cc6de5bd7e9
+  ts: "2026-09-09T12:52:34Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: RoutineActionKind が job のみとなり、既存 7 routine すべてが job へ移行した。src/routine.ts が 295 行減り重複した引数組み立てと検証が削除された。exec-cycle / register / exec-resume が job として定義できることを確認した。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-09"
+  previous_event_id: reg_6d9cca70ccf0498dba15164995ace05e

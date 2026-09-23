@@ -1,9 +1,10 @@
 import { type Command } from "commander";
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import dotenv from "dotenv";
 import yaml from "js-yaml";
 import type { AgentStageRole, SchedulerStrategy, TaskMode } from "./exec-types.js";
+import { runProviderScaffold, specdojoPackageRootDir } from "./exec-provider-scaffold.js";
 
 export type SpecDojoRunConfig = {
   exec_defaults?: string;
@@ -21,6 +22,9 @@ export type SpecDojoRunConfig = {
 /** Default IANA time zone for register date derivation when run.register_date_timezone is unset. */
 export const DEFAULT_REGISTER_DATE_TIMEZONE = "UTC";
 
+export const SPECDOJO_CONFIG_REFERENCE_URL =
+  "https://specdojo.github.io/specdojo/ja/specdojo/references/specdojo-config-reference.html";
+
 export type SpecDojoProjectConfig = {
   /**
    * Optional repo-root-relative prefix shared by every project document path below
@@ -31,11 +35,10 @@ export type SpecDojoProjectConfig = {
    */
   base_path?: string;
   catalog_path?: string;
-  schedule_path: string;
-  execution_path: string;
+  schedule_path?: string;
+  execution_path?: string;
   timeline_path?: string;
   members_path?: string;
-  reviews_path?: string;
   roles_path?: string;
   viewpoints_path?: string;
   project_register_path?: string;
@@ -53,7 +56,7 @@ export const DEFAULT_PROJECT_CONTEXT = ["prj-overview"] as const;
 
 // Agent runtime provider family. Selects which providers.<name> override in
 // exec-defaults.yaml applies to a member's failure handling.
-export type AgentProvider = "opencode" | "claude" | "codex" | "copilot" | "custom";
+export type AgentProvider = "opencode" | "claude" | "codex" | "copilot" | "antigravity" | "custom";
 
 // Member launch profiles include the task-facing executor modes plus the reporter-only
 // profile. `report` never becomes a TaskMode: reporter eligibility is resolved by stage_role.
@@ -145,12 +148,15 @@ function withOptionalBasePath(
   return withBasePath(project, relPath);
 }
 
+// schedule と execution は project 直下の固定ディレクトリに置く。設定を省いても既定値へ
+// 解決することで、登録簿だけを使う構成でも path 設定を書かずに始められる。戻り値は
+// string のままなので、呼び出し側の扱いは変わらない。
 export function getProjectSchedulePath(project: SpecDojoProjectConfig): string {
-  return withBasePath(project, project.schedule_path);
+  return withBasePath(project, project.schedule_path?.trim() || "schedule");
 }
 
 export function getProjectExecutionPath(project: SpecDojoProjectConfig): string {
-  return withBasePath(project, project.execution_path);
+  return withBasePath(project, project.execution_path?.trim() || "execution");
 }
 
 // Timeline lives in a fixed cross-cutting directory under the project root, so an
@@ -165,10 +171,6 @@ export function getProjectMembersPath(project: SpecDojoProjectConfig): string | 
 
 export function getProjectCatalogPath(project: SpecDojoProjectConfig): string | undefined {
   return withOptionalBasePath(project, project.catalog_path);
-}
-
-export function getProjectReviewsPath(project: SpecDojoProjectConfig): string | undefined {
-  return withOptionalBasePath(project, project.reviews_path);
 }
 
 export function getProjectRolesPath(project: SpecDojoProjectConfig): string | undefined {
@@ -229,6 +231,11 @@ export function assertValidActor(actor: string, roster: MemberRoster | null): vo
   }
 }
 
+function isOmittedOrNonEmptyString(value: unknown): boolean {
+  if (value === undefined) return true;
+  return typeof value === "string" && value.trim().length > 0;
+}
+
 function isValidProjectConfig(project: unknown): project is SpecDojoProjectConfig {
   if (!project || typeof project !== "object" || Array.isArray(project)) return false;
 
@@ -237,15 +244,10 @@ function isValidProjectConfig(project: unknown): project is SpecDojoProjectConfi
     execution_path?: unknown;
     project_context?: unknown;
   };
-  if (typeof candidate.schedule_path !== "string" || candidate.schedule_path.trim().length === 0) {
-    return false;
-  }
-  if (
-    typeof candidate.execution_path !== "string" ||
-    candidate.execution_path.trim().length === 0
-  ) {
-    return false;
-  }
+  // 省略は既定値へ解決するため許容する。ただし指定したうえでの空文字は、設定漏れと
+  // 意図的な省略を区別できないため引き続き不正として扱う。
+  if (!isOmittedOrNonEmptyString(candidate.schedule_path)) return false;
+  if (!isOmittedOrNonEmptyString(candidate.execution_path)) return false;
   if (
     candidate.project_context !== undefined &&
     (!Array.isArray(candidate.project_context) ||
@@ -276,8 +278,9 @@ export function loadConfig(): ConfigLoadResult {
   for (const [projectId, project] of Object.entries(parsed.projects)) {
     if (!isValidProjectConfig(project)) {
       throw new Error(
-        `Invalid .specdojo/specdojo.config.json: projects.${projectId} must contain non-empty ` +
-          `schedule_path/execution_path strings and optional project_context string[]`,
+        `Invalid .specdojo/specdojo.config.json: projects.${projectId} must omit ` +
+          `schedule_path/execution_path or set them to non-empty strings, ` +
+          `and project_context must be a string[] when present`,
       );
     }
   }
@@ -287,6 +290,7 @@ export function loadConfig(): ConfigLoadResult {
 
 export function writeConfig(config: SpecDojoConfig): void {
   const configPath = defaultConfigPath();
+  mkdirSync(dirname(configPath), { recursive: true });
   writeFileSync(configPath, JSON.stringify(config, null, 2) + "\n", "utf8");
 }
 
@@ -306,16 +310,52 @@ export function registerConfigCommands(program: Command): void {
       }
       const template: SpecDojoConfig = {
         version: 1,
+        current_project: "prj-0001",
         projects: {
-          "shj-0001": {
-            schedule_path: "docs/ja/projects/prj-0001/060-schedule",
-            execution_path: "docs/ja/projects/prj-0001/070-execution",
+          "prj-0001": {
+            base_path: "docs/ja/projects/prj-0001",
+            project_register_path: "controls/project-register",
             project_context: ["prj-overview"],
+            run: {
+              worktree_base: "../app1-worktrees",
+            },
           },
         },
       };
       writeConfig(template);
       process.stdout.write(`Created: ${configPath}\n`);
+      process.stdout.write(
+        "Next steps:\n" +
+          "  1. Keep this repository beside the product repository as app1-specdojo/.\n" +
+          "  2. Review the project ID and paths; worktrees default to ../app1-worktrees.\n" +
+          "  3. Optional agent setup: npx specdojo config scaffold --provider <name>\n" +
+          "  4. Create a register: npx specdojo register scaffold --project prj-0001\n" +
+          `  5. Before using catalog or schedule, add the required paths: ${SPECDOJO_CONFIG_REFERENCE_URL}\n`,
+      );
+    });
+
+  cfg
+    .command("scaffold")
+    .description("Scaffold agent/settings templates for a provider")
+    .requiredOption(
+      "--provider <name>",
+      "Provider template to copy (claude|codex|copilot|opencode)",
+    )
+    .option("--force", "Overwrite existing files", false)
+    .option("--dry-run", "Show planned files without writing", false)
+    .action(async (opts) => {
+      try {
+        await runProviderScaffold(String(opts.provider), {
+          packageRoot: specdojoPackageRootDir(),
+          repoRoot: specdojoRootDir(),
+          force: !!opts.force,
+          dryRun: !!opts.dryRun,
+        });
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        process.stderr.write(`${message}\n`);
+        process.exitCode = 1;
+      }
     });
 }
 

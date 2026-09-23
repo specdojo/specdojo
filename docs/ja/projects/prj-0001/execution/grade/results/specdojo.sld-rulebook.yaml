@@ -1,0 +1,90 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:sld-rulebook
+path: docs/ja/specdojo/rulebooks/sld-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 51
+graded_at: "2026-09-03T10:09:34.385Z"
+graded_by: gemma-expert-executor
+content_hash: 50aa5e9b93a71eaab3cbea103f1adf9e723584d791b1f2cef93394196d9da1ad
+categories:
+  consistency:
+    score: 50
+  usability:
+    score: 50
+  architecture:
+    score: 100
+  quality:
+    score: 25
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 1
+    score: 25
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 1
+    score: 25
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 1
+    score: 25
+  vp-ux-readability:
+    level: 1
+    score: 25
+  vp-ux-language-consistency:
+    level: 1
+    score: 25
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 5
+  minor: 1
+  note: 0
+findings:
+  - id: F005
+    severity: major
+    rule: vp-ux-readability
+    line: 1
+    message: サンプルでの名称不一致およびメタデータ定義の矛盾により、成果物の正体と分類が判別しにくい。
+    anchor: "# 保管場所一覧 （Storage Locations List）作成ルール"
+  - id: F006
+    severity: major
+    rule: vp-ux-language-consistency
+    line: 1
+    message: ルールブックの「保管場所一覧」とサンプルの「保管場所定義 / 業務データ辞書」の間で名称が統一されていない。
+    anchor: "# 保管場所一覧 （Storage Locations List）作成ルール"
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 1
+    message: "`sld-sample.md` の `type: project` がルールブックの規定（`domain` または `data`）と矛盾している。"
+    anchor: "# 保管場所一覧 （Storage Locations List）作成ルール"
+  - id: F002
+    severity: major
+    rule: vp-qe-verifiability
+    line: 1
+    message: "20行目の「`domain` 固定」という記述と 28行目の 「`type: data`」 という記述が矛盾しており、正しい設定値が判定不能である。"
+    anchor: "# 保管場所一覧 （Storage Locations List）作成ルール"
+  - id: F004
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: サンプル `sld-sample.md` のメタデータがルールブックの規定に従っていない。
+    anchor: "# 保管場所一覧 （Storage Locations List）作成ルール"
+  - id: F003
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: 他成果物との関係性を定義する「位置づけ」節が欠落しており、文書の役割が不明確である。
+    anchor: "# 保管場所一覧 （Storage Locations List）作成ルール"

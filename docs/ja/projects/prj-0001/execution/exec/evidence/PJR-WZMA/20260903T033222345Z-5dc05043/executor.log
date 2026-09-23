@@ -1,0 +1,27 @@
+実装と検証が完了しました。
+
+## 変更内容
+
+**責務境界の規範（新設）**
+
+- `docs/ja/specdojo/standards/job-definition-standard.md`: 判断と手順の切り分け基準、`task.description` 規約、agent 指名規約、粒度・禁止事項を定義
+
+**schema / 実装（agent の直接指定）**
+
+- `docs/specdojo/schemas/v1/job.schema.yaml`: `task.agent`（`executor` 必須 / `reporter` 任意、nickname 書式）を追加
+- `src/job.ts`: `JobAgentDefinition` と検証を追加（未知キーは reporter の typo 欠落防止のため拒否）
+- `src/exec-types.ts` / `src/exec-run.ts`: `ReadyTaskView.agent` の指名を `--by` 未指定時に採用。executor と reporter の双方を指名した Job Run は register と同じ executor/reporter pipeline で実行（helper を `runAgentPipeline` / `runReporterStage` へ改称して共有）
+- `tests/src/job.test.ts` / `tests/src/exec-run-resolve-command.test.ts`: 指名の保持・不正値の拒否・`--by` 優先・pipeline 解決を追加
+
+**grade 系 job の整理**
+
+- `job-grade-kata.yaml`: 3段の手順を `tools/grade/run-per-document.sh` へ寄せ、入口の1回起動と結果判断のみを委譲する定義へ変更（`period` / `kind` / `limit` 入力）
+- `job-grade-kata-local-confirmation.yaml`、`job-grade-kata-expert-check.yaml`: 削除
+- `rtn-grade-kata.yaml`: 単一 action 化。script の `--run-id` 書式制約に合わせ `{{scheduled_at | iso_week}}` を使用
+- `routine-operation-guide.md` / `sysd-job-execution.md` / `command-reference.md` / 個票 `pjr-wzma-...md` を追従更新
+
+**申し送り**: `.vitepress/sidebar-config.ts` への新標準の項目追加は、実行環境の書き込み範囲外のため未反映です（人手での追加が必要）。個票の対応結果にも記載しました。
+
+<specdojo_executor_evidence>
+{"final_message":"job の責務境界を job-definition-standard として新設し、job schema/CLI へ agent nickname 指名（executor/reporter pipeline 実行を含む）を追加。grade 系 3 job を script の入口を呼ぶ 1 job へ統合し、rtn-grade-kata を単一 action へ追従。sidebar-config.ts への標準追加のみサンドボックス書込範囲外で未反映。","validations":[{"command":"npm run typecheck","status":"passed","summary":"tsc -b --noEmit がエラーなしで完了"},{"command":"npx eslint 'src/**/*.ts' 'tests/**/*.ts'","status":"passed","summary":"ESLint 違反なし"},{"command":"npx prettier --write <変更ファイル一式>","status":"passed","summary":"md/yaml/ts を整形（3 md を再整形）"},{"command":"npx markdownlint docs/ja/specdojo/standards/job-definition-standard.md docs/ja/specdojo/guides/routine-operation-guide.md docs/ja/product/040-system-design/sysd-job-execution.md docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-wzma-job-responsibility-boundary.md","status":"passed","summary":"エラーなし"},{"command":"npx remark <変更 md 一式> --quiet --frail","status":"passed","summary":"frontmatter lint 指摘なし"},{"command":"npx tsx tools/docs/src/validate-history-links.ts","status":"passed","summary":"履歴蓄積ファイルのリンク記法 valid"},{"command":"npx tsx src/specdojo.ts job validate --project prj-0001","status":"passed","summary":"Validated: 3 job(s), 0 error(s)"},{"command":"npx tsx src/specdojo.ts routine validate --project prj-0001","status":"passed","summary":"Validated: 6 routine(s), 0 error(s)"},{"command":"npx tsx src/specdojo.ts exec run --job job-grade-kata --project prj-0001 --input period=2026-W37 --dry-run","status":"passed","summary":"executor=claude-expert-executor / reporter=claude-reporter を解決し、テンプレートも展開"},{"command":"npx tsx src/specdojo.ts routine run --project prj-0001 --id rtn-grade-kata --dry-run","status":"passed","summary":"exec run --job job-grade-kata --input kind=rulebook --input period=2026-W36 を解決"},{"command":"npx tsx src/specdojo.ts catalog validate","status":"passed","summary":"OK: dct-index.yaml（既存の based_on 未存在 WARN のみ）"},{"command":"npx tsx src/specdojo.ts register build --project prj-0001 && npx tsx src/specdojo.ts index build","status":"passed","summary":"生成物を再生成し、index 1489 entries を構築"},{"command":"npm run test:unit","status":"not_run","summary":"親 runner の allowlist 検証のため sandbox では未実行"},{"command":"npm run test:integration","status":"not_run","summary":"親 runner の allowlist 検証のため sandbox では未実行"},{"command":"npm run validate:schema","status":"not_run","summary":"親 runner の allowlist 検証のため sandbox では未実行"}]}
+</specdojo_executor_evidence>

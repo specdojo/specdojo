@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "run_id": "JBR-grade-kata-af81b6da6930",
+  "job_id": "job-grade-kata",
+  "idempotency_key": "job-grade-kata:all:2026-W37:5:true:true",
+  "project_id": "prj-0001",
+  "trigger": "routine",
+  "scheduled_at": "2026-09-08T13:20:15.207Z",
+  "created_at": "2026-09-08T13:20:15.452Z",
+  "updated_at": "2026-09-08T13:32:56.167Z",
+  "state": "failed",
+  "inputs": {
+    "period": "2026-W37",
+    "kind": "all",
+    "limit": 5,
+    "changed_only": true,
+    "ungraded": true
+  },
+  "task": {
+    "mode": "edit",
+    "description": "次のコマンドをリポジトリルートで1回だけ実行する。対象文書の選択、段の順序、\n各段の agent 呼び出し、`grade apply` の実行はこのスクリプトの責務であるため、\n手順を分解して個別のコマンドへ置き換えない。\n\ntools/grade/run-per-document.sh --run-id job-grade-kata-all-2026-W37 --kind all --limit 5 --changed-only=true --ungraded=true\n\n実行後に `logs/grade/runs/per-document/job-grade-kata-all-2026-W37/results.tsv`\nと終了コードを読み、次を判断して報告する。\n\n- 終了コード75（rate limit）または中断で未完了の段が残っているか。残る場合は同じ\n  `--run-id` で再開できる状態かを確認する。\n- `failed` の段があるか。ある場合は rate limit、agent 側の失敗、`grade apply` の\n  忠実性検証による拒否のいずれかへ切り分ける。\n- 3段目が実行されなかった文書について、閾値未満と2段目の失敗のどちらが理由か。\n- verdict と score の分布に、3段目の閾値の見直しを要する偏りがあるか。\n\n選択された文書が0件の場合は no-op と判断する。判断できない事象は推測で埋めず、\n観測した事実と未確認の範囲を分けて報告する。",
+    "paths": [
+      "docs/ja/specdojo/rulebooks",
+      "docs/ja/specdojo/recipes",
+      "docs/ja/specdojo/samples",
+      "docs/ja/specdojo/templates"
+    ],
+    "owner": "ARC",
+    "agent": {
+      "executor": "codex-expert-executor",
+      "reporter": "gemma-reporter"
+    }
+  },
+  "checkpoint_before": {},
+  "plan_ref": "exec/plans/JBR-grade-kata-af81b6da6930-plan.md",
+  "result_ref": "exec/results/JBR-grade-kata-af81b6da6930-result.md",
+  "attempts": [
+    {
+      "attempt": 1,
+      "started_at": "2026-09-08T13:20:15.452Z",
+      "status": "failed",
+      "completed_at": "2026-09-08T13:24:56.992Z",
+      "result_ref": "exec/results/JBR-grade-kata-af81b6da6930-result.md",
+      "reason": "品質評価スクリプト `tools/grade/run-per-document.sh` が EPERM エラーにより失敗し、評価処理が完遂されなかったため。"
+    },
+    {
+      "attempt": 2,
+      "started_at": "2026-09-08T13:28:17.907Z",
+      "status": "failed",
+      "completed_at": "2026-09-08T13:32:56.167Z",
+      "result_ref": "exec/results/JBR-grade-kata-af81b6da6930-result.md",
+      "reason": "メインタスクである `tools/grade/run-per-document.sh` が EPERM エラーで失敗し、評価結果（results.tsv）が得られなかったため、プランに定義された判断および報告を行うことが不可能である。"
+    }
+  ]
+}

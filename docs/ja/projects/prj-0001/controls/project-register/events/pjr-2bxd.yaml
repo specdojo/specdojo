@@ -1,0 +1,53 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_c7125d77b1b541bd8945dcd375ecc8a0
+  ts: "2026-09-11T22:51:33Z"
+  action: add
+  actor: specdojo-orchestrator (claude)
+  from_status: null
+  to_status: open
+  reason: "docs(register): grade plan の既定保存先を generated 配下へ変更する todo を起票する"
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: grade plan の既定保存先を execution/grade/generated/ 配下へ変更する
+    - field: description
+      from: ""
+      to: grade plan の既定保存先 execution/grade/plans/`<target>`/ は generated/ の規約（gitignore・索引除外）の外にあり、手動実行の出力が commit され陳腐化した。plan は対象文書から決定的に再生成できる派生生成物のため、既定を execution/grade/generated/plans/`<target>`/ へ変更して規約に揃える。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-12"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_825048a607b94c1f8dd641f8c5909dae
+  ts: "2026-09-11T22:53:13Z"
+  action: close
+  actor: specdojo-orchestrator (claude)
+  from_status: open
+  to_status: done
+  reason: 利用者の指定によりオーケストレーターが直接対応。start を経ず close
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-12"
+    - field: conclusion
+      from: "-"
+      to: grade plan の既定保存先を execution/grade/generated/plans/`<target>`/ へ変更し、generated/ の規約（git 管理外・索引除外）に揃えた。command-reference と directory-layout-reference を更新し、実行して保存先・gitignore・索引除外を確認した。run-per-document.sh の経路は --out 指定のため影響なし。
+  previous_event_id: reg_c7125d77b1b541bd8945dcd375ecc8a0

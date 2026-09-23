@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-RP1K",
+  "run_id": "20260907T100618302Z-9e016217",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-07T10:06:18.302Z",
+    "completed_at": "2026-09-07T10:16:55.757Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-rp1k-maintenance-finding-instruction.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xep-bootstrap-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xep-recipe-maintenance-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xep-rulebook-maintenance-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xep-sample-maintenance-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xep-template-maintenance-template.md",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-plans.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 7,
+    "summary": ".../pjr-rp1k-maintenance-finding-instruction.md    | 35 +++++++++++++++++-----\n .../exec-templates/xep-bootstrap-template.md       | 13 ++++----\n .../xep-recipe-maintenance-template.md             | 10 ++++---\n .../xep-rulebook-maintenance-template.md           | 10 ++++---\n .../xep-sample-maintenance-template.md             | 10 ++++---\n .../xep-template-maintenance-template.md           | 10 ++++---\n tests/src/exec-plans.test.ts                       | 19 ++++++++++++\n 7 files changed, 76 insertions(+), 31 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/exec-templates/xep-bootstrap-template.md docs/ja/specdojo/exec-templates/xep-recipe-maintenance-template.md docs/ja/specdojo/exec-templates/xep-rulebook-maintenance-template.md docs/ja/specdojo/exec-templates/xep-sample-maintenance-template.md docs/ja/specdojo/exec-templates/xep-template-maintenance-template.md docs/ja/projects/prj-0001/controls/project-register/pjr-rp1k-maintenance-finding-instruction.md tests/src/exec-plans.test.ts && npx markdownlint doc…",
+      "status": "passed",
+      "summary": "対象7ファイルの整形とMarkdown静的検査に成功。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "TypeScript型検査に成功。"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts catalog validate",
+      "status": "not_run",
+      "summary": "tsx CLIのsandbox IPC制限で検査開始前に停止したため、IPC不要の同等コマンドで代替。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "カタログ検証に成功。既存の欠落文書警告のみ。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿の生成処理に成功。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "1529件の文書インデックス生成に成功。"
+    },
+    {
+      "source": "executor",
+      "command": "for f in docs/ja/specdojo/exec-templates/xep-bootstrap-template.md docs/ja/specdojo/exec-templates/xep-rulebook-maintenance-template.md docs/ja/specdojo/exec-templates/xep-recipe-maintenance-template.md docs/ja/specdojo/exec-templates/xep-sample-maintenance-template.md docs/ja/specdojo/exec-templates/xep-template-maintenance-template.md; do rg -q \"判定根拠を修正要件として読み\" \"$f\" || exit 1; rg -q \"finding コメントの削除だけを修正として扱わ\" \"$f\" || exit 1; rg -q \"修正 → 確認 → 削除\" \"$f\" || exit 1; rg -q \"未解消、根拠不足、または判断不能の findi…",
+      "status": "passed",
+      "summary": "5テンプレートすべてに必須のfinding修正指示が存在することを確認。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-RP1K\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nInstalling worktree dependencies: .\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/stale.md\n  src/unrelated.ts\ncommit-targets:\n  execution/exec/…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.1.0 validate:schema:yaml\n> tsx tools/docs/src/validate-yaml-schema.ts --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bps-template.yaml: schema docs/specdojo/sc…"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-RP1K\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-rmGDFo/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-3kr2zG/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-WttfDn/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-0XzQeB/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-NxqL9C/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-32WpWr/pjr-0001-topic.md\nWrote agent stdout: /tmp/specdojo-agent-command-1zmWGh/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-LEyL8X/outputs/partial.txt\n\n Test Files  98 passed (98)\n      Tests  1378 passed (1378)\n   Start at  19:16:35\n   Duration  20.65s (transform 1.61s, setup 397ms, import 11.51s, tests 17.95s, environm…"
+    }
+  ],
+  "final_message": "maintenance 4件と bootstrap の finding 対応を、本文修正を必須とする番号付き手順へ統一し、回帰テストと個票を更新した。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-RP1K/20260907T100618302Z-9e016217/executor.log",
+      "bytes": 3421,
+      "truncated": false
+    }
+  ]
+}

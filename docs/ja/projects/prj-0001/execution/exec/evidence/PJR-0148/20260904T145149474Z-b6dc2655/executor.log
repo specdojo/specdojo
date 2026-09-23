@@ -1,0 +1,12 @@
+個票を更新し、「拡張しない」判断を実測ベースで再整理しました。
+
+- 生パス参照55箇所の内訳と改名実績を評価
+- 全面拡張・限定拡張・拡張なしを比較
+- 現時点では拡張せず、再評価時は明示的な限定マッピングを優先
+- executor 指示どおり result・登録状態は未変更
+
+対象: [PJR-0148 個票](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0148/docs/ja/projects/prj-0001/controls/project-register/pjr-0148-extend-wikilink-id-resolution-beyond-docs-scope.md)
+
+<specdojo_executor_evidence>
+{"final_message":"PJR-0148個票を実測と改名履歴に基づく費用比較へ更新し、現時点ではdocs外へ拡張しない方針と再評価条件を確定した。","validations":[{"command":"npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-0148-extend-wikilink-id-resolution-beyond-docs-scope.md","status":"passed","summary":"整形済み"},{"command":"npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-0148-extend-wikilink-id-resolution-beyond-docs-scope.md","status":"passed","summary":"エラーなし"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"全カタログOK。既存の未作成成果物に関する警告のみ"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿派生ビューを正常生成"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1514件のdoc-indexを正常生成"},{"command":"git diff --check","status":"passed","summary":"差分の空白エラーなし"}]}
+</specdojo_executor_evidence>

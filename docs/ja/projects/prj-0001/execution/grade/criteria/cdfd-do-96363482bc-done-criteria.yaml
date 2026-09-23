@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: cdfd-do-grade-criteria
+document: cdfd-do
+path: docs/ja/product/010-business-specs/010-data-flow/cdfd-do.md
+graded_at: "2026-09-18T11:22:12.840Z"
+graded_by: codex-expert-executor
+content_hash: 0626b4ea6f7bc2d113f28f78d3d950cdd1a7e55eeb250b375d6664c6a2b86915
+summary:
+  satisfied: 3
+  unsatisfied: 1
+  total: 4
+criteria:
+  - id: DC-001
+    text: 全体概要の P-07 の主要入力・主要出力・データストアが「プロセス領域」章で矛盾なく詳細化され、Schedule task・登録項目・Job のいずれを対象にしても同じプロセスで説明できること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: satisfied
+  - id: DC-002
+    text: 実行計画、Kata、稼働構成、成果物、登録簿、実行記録への読み書きがプロセス単位で識別でき、worktree 隔離と統合ブランチへの merge が並行実行の形態として示されていること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: unsatisfied
+    reason: 登録簿を P-07-03 が参照するかについてデータストア表と個別プロセス主要入出力表が一致せず、読み書きをプロセス単位で一意に識別できない。
+  - id: DC-003
+    text: 利用制限、保護対象の変更、検証失敗、統合失敗など、成果の採否と再開位置を変える主要例外の検出条件と再開条件が判定できること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: satisfied
+  - id: DC-004
+    text: 人間が担う判断（承認、完了確定）を AI Agent の自動処理として表していないこと
+    roles:
+      - PO
+    viewpoint: vp-po-decision-readiness
+    status: satisfied

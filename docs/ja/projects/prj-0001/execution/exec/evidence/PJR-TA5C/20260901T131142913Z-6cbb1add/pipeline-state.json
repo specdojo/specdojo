@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-TA5C",
+  "run_id": "20260901T131142913Z-6cbb1add",
+  "updated_at": "2026-09-01T13:22:29.673Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "codex-expert-executor",
+      "attempts": 1,
+      "started_at": "2026-09-01T13:11:42.913Z",
+      "completed_at": "2026-09-01T13:20:11.354Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-TA5C/20260901T131142913Z-6cbb1add/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma-reporter",
+      "attempts": 1,
+      "started_at": "2026-09-01T13:20:11.355Z",
+      "completed_at": "2026-09-01T13:22:29.673Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-ta5c-20260901T131103Z-46fa-result.md"
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/exec/plans/pjr-ta5c-20260901T131103Z-46fa-plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-ta5c-20260901T131103Z-46fa-result.md"
+  }
+}

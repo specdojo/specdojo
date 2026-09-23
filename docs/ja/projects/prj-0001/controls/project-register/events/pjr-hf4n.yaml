@@ -1,0 +1,82 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_55943c458eb24376b9011afe51e48369
+  ts: "2026-09-07T11:42:57Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-T3VQ の実行検証で、agent が根拠不足を理由に修正を見送ったため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: maintenance の根拠が finding の性質と噛み合わない
+    - field: description
+      from: ""
+      to: kata の構成不備を指摘する finding に対し、成果物と review result だけを根拠とする設計では修正が進まない。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-07"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_9215353a43ed4654b7c537911357f13e
+  ts: "2026-09-07T12:20:44Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_55943c458eb24376b9011afe51e48369
+- v: 1
+  id: reg_d3ad7f1ca0fb4441b89e7e30269942a2
+  ts: "2026-09-07T12:38:00Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: runner validation「test-unit」が failed（exec-plans.test.ts の4件の maintenance テンプレートテスト失敗）。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: runner validation「test-unit」が failed（exec-plans.test.ts の4件の maintenance テンプレートテスト失敗）。"
+  previous_event_id: reg_9215353a43ed4654b7c537911357f13e
+- v: 1
+  id: reg_b0e247340a504770b918b2f299ca8d8f
+  ts: "2026-09-07T12:51:47Z"
+  action: close
+  actor: orchestrator
+  from_status: waiting
+  to_status: done
+  reason: finding が指す規範を根拠に含め、成果物の欠落だけでは見送らないようにした。br-sample.md の章構成が rulebook と一致することを確認した。
+  changes:
+    - field: status
+      from: waiting
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-07"
+    - field: conclusion
+      from: "-"
+      to: finding が指す規範を根拠に含め、成果物の欠落だけでは見送らないようにした。br-sample.md の章構成が rulebook と一致することを確認した。
+  previous_event_id: reg_d3ad7f1ca0fb4441b89e7e30269942a2

@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f01ba9027f8f484fa1dfb6bc214c9497
+  ts: "2026-09-15T12:42:16Z"
+  action: add
+  actor: specdojo-orchestrator (claude)
+  from_status: null
+  to_status: open
+  reason: "docs(register): exec plan の doc id 修飾の不整合を起票する"
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: exec plan の depends_on / targets の doc id を成果物の配置に応じて解決する
+    - field: description
+      from: ""
+      to: src/exec-plans.ts は depends_on と targets の doc id を常に `<project-id>`:`<local_id>` で組み立てるが、id-and-file-naming-standard ではプロダクト文書（docs/ja/product/）はローカル ID、プロジェクト文書は `<project-id>`:`<local-id>` である。product 配下の 17 文書はすべて修飾なしのため、cdfd-action など product 成果物の plan では depends_on の [[prj-0001:cdfd-overview]] が索引で解決できず executor にパスが渡らない。plan frontmatter の targets も作成される文書の ID と食い違う。旧 cdfd 10 件だけが標準に反して修飾付きだったため表面化していなかった。カタログの解決済みパスから frontmatter の id を読むか、配置で修飾の有無を決めて解決する。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-15"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_11ef3061720f4714ab932c11e696abce
+  ts: "2026-09-15T12:43:07Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_f01ba9027f8f484fa1dfb6bc214c9497
+- v: 1
+  id: reg_222cfdc048ce4130997179d55ab40033
+  ts: "2026-09-15T12:55:28Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_11ef3061720f4714ab932c11e696abce
+- v: 1
+  id: reg_b19808751bda417591f55e067b765f3c
+  ts: "2026-09-15T23:16:19Z"
+  action: close
+  actor: specdojo-orchestrator (claude)
+  from_status: review
+  to_status: done
+  reason: exec run --register（codex-expert-executor / gemma-reporter / worktree）で実施。親検証 3 件 passed、dry-run で確認。利用者確認のうえ close
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-16"
+    - field: conclusion
+      from: "-"
+      to: exec plan の depends_on と targets の doc id を、カタログの解決済みパスと配置（product はローカル ID、project は project 修飾）から解決するようにした。data-flow-pdca の author タスクで Unresolved ID reference が消え、targets が cdfd-action、project 文書の plan では prj-0001:dct-index になることを確認した。
+  previous_event_id: reg_222cfdc048ce4130997179d55ab40033

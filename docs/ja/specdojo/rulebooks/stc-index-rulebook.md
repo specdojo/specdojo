@@ -13,6 +13,7 @@ specdojo:
 System Test Catalog (STC) Index Documentation Rules
 
 本ドキュメントは、総合テストカタログ（STC）の全体概要 `stc-index` を統一形式で記述するためのルールです。
+
 TSPに基づき、総合テストに共通するルールや方針（対象分割・観点/条件・環境/証跡）を定義します。
 
 個別総合テストカタログ（`stc-<term>`）の記述ルールは [stc-rulebook.md](stc-rulebook.md) を参照してください。
@@ -48,7 +49,6 @@ flowchart BT
   TC -->|based_on| TSP
   Code -->|based_on| TC
 
-
   classDef target stroke-width:4px
   class TCIndex target
 ```
@@ -78,6 +78,7 @@ Frontmatter は共通スキーマに従います（参照: [docs/specdojo/schema
 
 - `based_on` には最低限 `tsp-index` を含めます。
 - BAC/NFR/BR 等は、`stc-index` の方針判断（対象分割・環境前提・共通合格基準）に **直接利用したものだけ** を `based_on` に列挙します。
+
 - `based_on` / `supersedes` は ID 配列（未指定は `[]` 可）。
 
 ## 5. 本文構成（標準テンプレ）
@@ -92,9 +93,11 @@ Frontmatter は共通スキーマに従います（参照: [docs/specdojo/schema
 | 4    | 観点の立て方（共通）                            | ○    |
 | 5    | 条件の立て方（共通）                            | ○    |
 | 6    | 観点/条件の採用基準と対象別への分配方針（共通） | ○    |
-| 7    | 総合テスト共通の境界/環境の扱い                 | ○    |
-| 8    | ケース表の共通カラム                            | ○    |
-| 9    | メモ / 将来課題                                 | 任意 |
+
+| 7 | 総合テスト共通の境界/環境の扱い | ○ |
+| 8 | ケース表の共通カラム | ○ |
+
+| 9 | メモ / 将来課題 | 任意 |
 
 注意：次章の記述ガイドのMarkdown見出しはルール文章内の参照用であり、
 生成する `stc-index` 本文の見出しは各章で指定された **番号付き** の形式に置き換えてください。

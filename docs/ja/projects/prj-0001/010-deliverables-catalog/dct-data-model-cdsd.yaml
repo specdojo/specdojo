@@ -39,8 +39,8 @@ groups:
             path: src/catalog.ts
             purpose: 成果物カタログストアの読込・検証
           - kind: implementation
-            path: src/exec-strategy.ts
-            purpose: Schedule戦略ストアの型・解決規則
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達するSchedule戦略ストアの型・解決規則
           - kind: implementation
             path: src/schedule.ts
             purpose: Scheduleトラックストアの読込・タスクID導出
@@ -70,17 +70,8 @@ groups:
         rulebook: specdojo:cdsd-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/exec-events.ts
-            purpose: 実行イベントストアのスキーマ・追記規則
-          - kind: implementation
-            path: src/exec-schedule-ready.ts
-            purpose: 実行状態（Ready）ストアの算出
-          - kind: implementation
-            path: src/exec-plans.ts
-            purpose: plan/resultストアのscaffold規則
-          - kind: implementation
-            path: src/exec-worktree.ts
-            purpose: worktreeストアの命名・配置
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達する実行イベントストアのスキーマ・追記規則、実行状態（Ready）ストアの算出、plan/resultストアのscaffold規則、worktreeストアの命名・配置
           - kind: implementation
             path: src/routine.ts
             purpose: 定期処理ストアのスキーマ
@@ -112,8 +103,8 @@ groups:
             path: src/deliverable.ts
             purpose: 成果物本体ストアの読込・雛形生成
           - kind: implementation
-            path: src/catalog-generate.ts
-            purpose: 派生ビューストアの生成規則
+            path: src/catalog.ts
+            purpose: catalog コマンド入口から到達する派生ビューストアの生成規則
         note: 報告記録ストア（pr-*/mm-*）はCLI側の専用生成コードを持たないため、evidence_refsに含めない
         done_criteria:
           - text: データストアの業務的役割・内容・粒度が記述されていること

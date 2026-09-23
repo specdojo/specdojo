@@ -1,0 +1,50 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_4bb26b1263f74ee195138141d3807655
+  ts: "2026-09-08T21:32:21Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: review
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: review
+    - field: title
+      from: ""
+      to: rate limit で中断した executor を再開できない
+    - field: description
+      from: ""
+      to: executor が rate_limited のまま残った run は --resume が拒否し、--force-restart で worktree ごと破棄するしか手段がなかった。PJR-GWY4 の実行では実装・スキーマ・テスト・文書の 17 ファイルが worktree に残っていたが再開できなかった。再開判定は running と succeeded のみを扱っており、PJR-6VFN は reporter が rate_limited になる場合を対象として executor 側は範囲外であった。rate limit は codex 運用で繰り返し起こるため、そのつど成果を捨てることになる。
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-09"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_43ed30a4a9c9477dbfe41f5581099318
+  ts: "2026-09-08T21:35:46Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: rate_limited を再開対象へ追加した。evidence があっても executor は未完了のため、常に executor 段を既存 worktree 上で再開する。PJR-GWY4 で実地に再開できることを確認した。commit a850952c。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-09"
+  previous_event_id: reg_4bb26b1263f74ee195138141d3807655

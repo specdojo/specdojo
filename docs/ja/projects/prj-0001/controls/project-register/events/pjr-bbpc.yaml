@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_cb338d3d8a74481397478a486a3810df
+  ts: "2026-09-04T11:51:15Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: recipe / sample / template の走査時に指定を忘れると誤った基準で評価されるため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 3段評価の既定リファレンスが対象種別に追従しない
+    - field: description
+      from: ""
+      to: "--kind を変えても stage1 の既定リファレンスが prj-overview-rulebook のままで、種別を跨いだ比較になる。"
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-04"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_0a9be32545454171a660b553ff841665
+  ts: "2026-09-08T11:45:29Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_cb338d3d8a74481397478a486a3810df
+- v: 1
+  id: reg_e4206ef5649c455191f22144463b2f57
+  ts: "2026-09-08T12:00:22Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_0a9be32545454171a660b553ff841665
+- v: 1
+  id: reg_a340c670d068486b9b05d89e76eb9472
+  ts: "2026-09-08T12:37:12Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: 1段目の既定リファレンスが --kind に追従する。rulebook / recipe / sample / template のそれぞれで prj-overview の同種別が選ばれることを実地で確認した。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-08"
+  previous_event_id: reg_e4206ef5649c455191f22144463b2f57

@@ -227,6 +227,7 @@ based_on:
   - mip-index
 supersedes: []
 ---
+
 ```
 
 #### 1. 概要（order-data）

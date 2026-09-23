@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: tsd-ollama-opencode-grade-criteria
+document: tsd-ollama-opencode
+path: docs/ja/product/030-architecture/020-infrastructure/tsd-ollama-opencode.md
+graded_at: "2026-09-14T00:52:34.197Z"
+graded_by: gemma-expert-executor
+content_hash: 6a2e8a914c823d523d7a196b491bdce4f73bed40bda70d055f7f15823711f4cd
+summary:
+  satisfied: 4
+  unsatisfied: 1
+  total: 5
+criteria:
+  - id: DC-001
+    text: 採用技術の選定理由と制約が業務要件と整合していること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: satisfied
+  - id: DC-002
+    text: 技術スタック選定を承認できること
+    roles:
+      - PO
+    viewpoint: vp-po-decision-readiness
+    status: satisfied
+  - id: DC-003
+    text: 技術的制約・ライセンス・バージョン方針が識別できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: satisfied
+  - id: DC-004
+    text: テストフレームワーク・CI/CD環境の参照として使えること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: unsatisfied
+    reason: 検証用コマンドのモデル名に誤記があり、そのままでは利用できない。
+  - id: DC-005
+    text: 開発環境構築・ライブラリ選定の参照として使えること
+    roles:
+      - DEV
+    viewpoint: vp-dev-implementation-readiness
+    status: satisfied

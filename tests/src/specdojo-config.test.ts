@@ -4,6 +4,7 @@ import {
   getProjectCatalogPath,
   getProjectContext,
   getProjectMembersPath,
+  getProjectExecutionPath,
   getProjectSchedulePath,
 } from "../../src/specdojo-config.js";
 import type { MemberRoster, SpecDojoProjectConfig } from "../../src/specdojo-config.js";
@@ -46,6 +47,37 @@ describe("assertValidActor", () => {
   it("roster が空の場合は全てのニックネームでエラーを投げる", () => {
     const roster = makeRoster([]);
     expect(() => assertValidActor("alice", roster)).toThrow();
+  });
+});
+
+describe("schedule and execution path defaults", () => {
+  it("falls back to the conventional directory when the path is omitted", () => {
+    const config = { base_path: "docs/ja/projects/prj-x" } as SpecDojoProjectConfig;
+
+    expect(getProjectSchedulePath(config)).toBe("docs/ja/projects/prj-x/schedule");
+    expect(getProjectExecutionPath(config)).toBe("docs/ja/projects/prj-x/execution");
+  });
+
+  it("keeps an explicit path so existing projects are unaffected", () => {
+    const config = {
+      base_path: "docs/ja/projects/prj-y",
+      schedule_path: "sch",
+      execution_path: "exe",
+    } as SpecDojoProjectConfig;
+
+    expect(getProjectSchedulePath(config)).toBe("docs/ja/projects/prj-y/sch");
+    expect(getProjectExecutionPath(config)).toBe("docs/ja/projects/prj-y/exe");
+  });
+
+  it("treats a blank path as omitted", () => {
+    const config = {
+      base_path: "docs/ja/projects/prj-z",
+      schedule_path: "   ",
+      execution_path: "",
+    } as SpecDojoProjectConfig;
+
+    expect(getProjectSchedulePath(config)).toBe("docs/ja/projects/prj-z/schedule");
+    expect(getProjectExecutionPath(config)).toBe("docs/ja/projects/prj-z/execution");
   });
 });
 

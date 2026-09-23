@@ -1,0 +1,78 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:cxd-rulebook
+path: docs/ja/specdojo/rulebooks/cxd-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: pass
+score: 91
+graded_at: "2026-09-02T14:55:02.448Z"
+graded_by: gemma-expert-executor
+content_hash: f797ec82e42da08e5310b72841b95b39c12d04ab00b09372b87c646c189280ce
+categories:
+  consistency:
+    score: 88
+  usability:
+    score: 92
+  architecture:
+    score: 100
+  quality:
+    score: 88
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 4
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: "Frontmatter に `target_format: markdown` が不足している。"
+    anchor: "# C4コンテキスト図 ドキュメント作成ルール"
+  - id: F003
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: 参照しているサンプル `specdojo:cxd-sample` が具体的な成果物の例ではなくメタ記述となっており、実装リファレンスとして不十分である。
+    anchor: "# C4コンテキスト図 ドキュメント作成ルール"
+  - id: F002
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: 他の rulebook と同様に、設計フローにおける本書の位置づけを定義する「位置づけ」節を設けるべきである。
+    anchor: "# C4コンテキスト図 ドキュメント作成ルール"
+  - id: F004
+    severity: minor
+    rule: vp-ux-readability
+    line: 1
+    message: サンプル節において Mermaid コードブロックの直後に同一内容の plaintext ブロックが重複して記載されており冗長である。
+    anchor: "# C4コンテキスト図 ドキュメント作成ルール"

@@ -175,7 +175,9 @@ export function renderYamlPage(yamlRelPath: string, content: string): string {
 // doc-index を走査して表示ページを生成する。マーカーのない既存ファイルは
 // 他ステップの生成物とみなして上書きせず、内容が同一なら書き込みを省略する。
 export function buildYamlPages(rootDir: string, repoRoot: string): YamlPagesResult {
-  const entries = collectDocIndexEntries(rootDir, repoRoot);
+  const entries = collectDocIndexEntries(rootDir, repoRoot, undefined, {
+    includeBundledKata: false,
+  });
   const result: YamlPagesResult = { written: [], unchanged: [], skippedForeign: [] };
 
   for (const yamlRelPath of collectYamlSourcePaths(entries)) {

@@ -1,0 +1,16 @@
+
+> specdojo@0.1.0 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-kata-bcc3cc25e679 project=prj-0001 target=kata kind=all changed_only=true ungraded=true incomplete=true max_stage_failures=3 documents=1 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-kata-bcc3cc25e679
+stage=1 executor=gemma-expert-executor reporter=gemma-reporter reference=per-kind
+stage=2 executor=gemma-expert-executor reporter=gemma-reporter reference=none
+stage=3 executor=codex-expert-executor reporter=gemma-reporter reference=none condition="pass, score>=96, findings<=1"
+document start: docs/ja/specdojo/rulebooks/dct-rulebook.md
+resume stage=3 document=docs/ja/specdojo/rulebooks/dct-rulebook.md status=skipped_condition
+document complete: docs/ja/specdojo/rulebooks/dct-rulebook.md
+grade pipeline complete: selected=1 processed=1 completed_now=1 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-kata-bcc3cc25e679/results.tsv
+recorded_at	document	stage	status	duration_seconds	verdict	score	findings	executor	reporter	reference	consecutive_failures	max_failures
+2026-09-16T07:12:55Z	docs/ja/specdojo/rulebooks/dct-rulebook.md	1	passed	766	needs-work	77	7	gemma-expert-executor	gemma-reporter	docs/ja/specdojo/rulebooks/prj-overview-rulebook.md		
+2026-09-16T07:25:35Z	docs/ja/specdojo/rulebooks/dct-rulebook.md	2	passed	759	needs-work	77	7	gemma-expert-executor	gemma-reporter	none		
+2026-09-16T07:25:36Z	docs/ja/specdojo/rulebooks/dct-rulebook.md	3	skipped_condition	0				codex-expert-executor	gemma-reporter	none		

@@ -39,45 +39,49 @@ properties:
     additionalProperties: false
     properties:
       missed_run:
-        enum: [latest, all]
+        enum: [skip, latest, all]
       overlap:
         const: skip
   action:
     oneOf:
-      - type: object
-        additionalProperties: true
-        required: [kind]
-        properties:
-          kind:
-            const: register
-      - type: object
-        additionalProperties: true
-        required: [kind]
-        properties:
-          kind:
-            const: exec-auto
-      - type: object
-        additionalProperties: true
-        required: [kind]
-        properties:
-          kind:
-            const: exec-resume
-      - type: object
-        additionalProperties: true
-        required: [kind]
-        properties:
-          kind:
-            const: exec-cycle
-      - type: object
-        additionalProperties: false
-        required: [kind, job]
-        properties:
-          kind:
-            const: job
-          job:
-            type: string
-            pattern: "^job-[a-z0-9][a-z0-9-]*$"
-          inputs:
-            type: object
-            additionalProperties:
-              type: string
+      - $ref: "#/$defs/action"
+      - type: array
+        minItems: 1
+        items:
+          $ref: "#/$defs/action"
+$defs:
+  action:
+    oneOf:
+      - $ref: "#/$defs/jobAction"
+      - $ref: "#/$defs/specdojoAction"
+  jobAction:
+    type: object
+    additionalProperties: false
+    required: [kind, job]
+    properties:
+      kind:
+        const: job
+      job:
+        type: string
+        pattern: "^job-[a-z0-9][a-z0-9-]*$"
+      inputs:
+        type: object
+        additionalProperties:
+          type: string
+  specdojoAction:
+    description: >
+      Runs a specdojo subcommand directly with --project appended, without taking the exec run
+      lock. Use only for read-and-generate commands (e.g. dashboard build) that call no agent
+      and do not conflict with a running exec.
+    type: object
+    additionalProperties: false
+    required: [kind, args]
+    properties:
+      kind:
+        const: specdojo
+      args:
+        type: array
+        minItems: 1
+        items:
+          type: string
+          minLength: 1

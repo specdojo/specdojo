@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_de7d22ea99014e179507e50ea21fc707
+  ts: "2026-09-21T05:47:33Z"
+  action: add
+  actor: specdojo-orchestrator (claude)
+  from_status: null
+  to_status: open
+  reason: PJR-EQDB の判定用 grade で残った 4 件を、当初スコープを超える設計論点として分離
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: mermaid rulebook 2 本と cdfd / stsd sample の grade 指摘を解消する
+    - field: description
+      from: ""
+      to: PJR-EQDB で rulebook 本体 2 本は pass になったが、改訂で派生した指摘が残る。stsd-mermaid-rulebook の複合状態と分割図の別名の規則、cdfd-mermaid-rulebook と cdfd-overview-rulebook の凡例省略条件の矛盾、stsd-sample の分岐イベント不統一と中間状態の欠落、cdfd-sample の在庫記録更新主体と P-02-05 起動条件の不整合を解消する
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-21"
+    - field: due
+      from: ""
+      to: "2026-10-10"
+- v: 1
+  id: reg_febd1902138746f2b7c2a80b3d042e79
+  ts: "2026-09-21T09:26:49Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_de7d22ea99014e179507e50ea21fc707
+- v: 1
+  id: reg_48c773ee6abd4d54a6248e7f03f5ada5
+  ts: "2026-09-21T09:45:17Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_febd1902138746f2b7c2a80b3d042e79
+- v: 1
+  id: reg_2cfb1d22bfa14a3d95d5a3ada2ef2642
+  ts: "2026-09-22T03:38:26Z"
+  action: close
+  actor: specdojo-orchestrator (claude)
+  from_status: review
+  to_status: done
+  reason: codex-expert-executor が worktree で改訂し、残った到達可能性の完成判定はオーケストレーターが直接追加。codex 単段の再評価で 4 件すべて pass
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-22"
+  previous_event_id: reg_48c773ee6abd4d54a6248e7f03f5ada5

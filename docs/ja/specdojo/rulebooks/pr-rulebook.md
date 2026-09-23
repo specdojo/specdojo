@@ -32,11 +32,13 @@ Progress Report Documentation Rulebook
 
 ## 4. 推奨 Frontmatter 項目
 
-| 項目   | 説明                             | 必須 |
+| 項目 | 説明 | 必須 |
+
 | ------ | -------------------------------- | ---- |
-| id     | `pr-<yyyy-mm-dd>-<nn>`           | ○    |
-| type   | `project`                        | ○    |
-| status | `draft` / `ready` / `deprecated` | ○    |
+| id | `pr-<yyyy-mm-dd>-<nn>` | ○ |
+
+| type | `project` | ○ |
+| status | `draft` / `ready` / `deprecated` | ○ |
 
 ## 5. 本文構成（標準テンプレ）
 
@@ -51,6 +53,7 @@ Progress Report Documentation Rulebook
 ## 6. 記述ガイド
 
 - 完了事項は成果物IDまたはタスクIDと紐づける。
+
 - リスク・課題は影響度と対応方針を明記する。
 - 次期予定は担当者と期日を設定する。
 
@@ -58,4 +61,5 @@ Progress Report Documentation Rulebook
 
 - 進捗率のみで根拠なく報告しない。
 - リスクを抽象語のみで記載しない。
+
 - 予定に期限や責任者を欠いたまま確定しない。

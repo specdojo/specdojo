@@ -2,15 +2,15 @@
 id: prj-0001:dct-data-model-stsd
 type: project
 status: draft
-title: 成果物カタログ（データモデル／ステータス定義）
+title: 成果物カタログ（データモデル／ステータス定義・状態遷移）
 rulebook: specdojo:dct-rulebook
 project_id: prj-0001
 domain: data-model
 base_path: /docs/ja/product/010-business-specs/020-data-model
 
 # data-model ドメインの物理分割ファイル（stsd 部分）。domain キーは分割前と同じ data-model を保つ。
-# stsd-rulebook.md は「1対象エンティティ = 1ファイル」を想定するため、状態を持つ対象エンティティ
-# ごとに local_id を列挙する。
+# stsd-rulebook.md は「1対象エンティティ = 1ファイル」で状態一覧と状態遷移図を扱うため、
+# 状態を持つ対象エンティティごとに local_id を列挙する。
 
 groups:
   - name: ステータス定義
@@ -20,7 +20,7 @@ groups:
         kind: work
         depends_on:
           - bdd-register-entry
-        overview: 登録項目個票が取り得る状態（open / in-progress / waiting / review / done / decided / rejected / deferred 等）を一覧で定義する
+        overview: 登録項目個票が取り得る状態（open / in-progress / waiting / review / done / decided / rejected / deferred 等）と状態遷移を一覧・図で定義する
         path: stsd-register-entry.md
         rulebook: specdojo:stsd-rulebook
         evidence_refs:
@@ -28,9 +28,12 @@ groups:
             path: src/register.ts
             purpose: 登録項目個票のstatusフィールドの許容値・状態遷移規則
         done_criteria:
-          - text: ステータス名・説明が業務観点で正確に定義されていること
+          - text: ステータス名・意味・成立条件と、遷移・イベント・条件が業務観点で正確に定義されていること
             roles: [BA]
             viewpoint: vp-ba-requirements-completeness
+          - text: 状態遷移の業務的妥当性を承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
           - text: 状態遷移実装の基礎として参照できること
             roles: [ARC]
             viewpoint: vp-arc-technical-constraints
@@ -45,17 +48,21 @@ groups:
         kind: work
         depends_on:
           - bdd-exec-state
-        overview: タスク実行が取り得る状態（ready / doing / blocked / done 等）を一覧で定義する
+          - bdd-exec-event
+        overview: タスク実行が取り得る状態（ready / doing / blocked / done 等）と状態遷移を一覧・図で定義する
         path: stsd-task-execution.md
         rulebook: specdojo:stsd-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/exec-schedule-index.ts
-            purpose: タスク状態（ready/doing/blocked/done等）をevent列から再構成する規則
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達するタスク状態（ready/doing/blocked/done等）をevent列から再構成する規則
         done_criteria:
-          - text: ステータス名・説明が業務観点で正確に定義されていること
+          - text: ステータス名・意味・成立条件と、遷移・イベント・条件が業務観点で正確に定義されていること
             roles: [BA]
             viewpoint: vp-ba-requirements-completeness
+          - text: 状態遷移の業務的妥当性を承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
           - text: 状態遷移実装の基礎として参照できること
             roles: [ARC]
             viewpoint: vp-arc-technical-constraints
@@ -70,17 +77,20 @@ groups:
         kind: work
         depends_on:
           - bdd-deliverable
-        overview: 成果物が取り得る状態（draft / ready / deprecated）を一覧で定義する
+        overview: 成果物が取り得る状態（draft / ready / deprecated）と状態遷移を一覧・図で定義する
         path: stsd-deliverable.md
         rulebook: specdojo:stsd-rulebook
         evidence_refs:
           - kind: implementation
             path: src/deliverable.ts
-            purpose: 成果物のspecdojo.status（draft/ready/deprecated）の扱い
+            purpose: 成果物のspecdojo.status（draft/ready/deprecated）の許容値・状態遷移規則
         done_criteria:
-          - text: ステータス名・説明が業務観点で正確に定義されていること
+          - text: ステータス名・意味・成立条件と、遷移・イベント・条件が業務観点で正確に定義されていること
             roles: [BA]
             viewpoint: vp-ba-requirements-completeness
+          - text: 状態遷移の業務的妥当性を承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
           - text: 状態遷移実装の基礎として参照できること
             roles: [ARC]
             viewpoint: vp-arc-technical-constraints
@@ -95,17 +105,20 @@ groups:
         kind: work
         depends_on:
           - bdd-routine-definition
-        overview: 定期処理の実行結果（success / failure / skipped）が取り得る状態を一覧で定義する
+        overview: 定期処理の実行結果（success / failure / skipped）が取り得る状態と実行開始から結果確定までの遷移を一覧・図で定義する
         path: stsd-routine-run.md
         rulebook: specdojo:stsd-rulebook
         evidence_refs:
           - kind: implementation
             path: src/routine.ts
-            purpose: routine実行結果（last_result＝success/failure/skipped）の判定・更新規則
+            purpose: routine実行結果（last_result＝success/failure/skipped）の許容値・判定・更新規則
         done_criteria:
-          - text: ステータス名・説明が業務観点で正確に定義されていること
+          - text: ステータス名・意味・成立条件と、遷移・イベント・条件が業務観点で正確に定義されていること
             roles: [BA]
             viewpoint: vp-ba-requirements-completeness
+          - text: 状態遷移の業務的妥当性を承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
           - text: 状態遷移実装の基礎として参照できること
             roles: [ARC]
             viewpoint: vp-arc-technical-constraints
@@ -120,17 +133,20 @@ groups:
         kind: work
         depends_on:
           - bdd-job-run
-        overview: Job Run が取り得る状態（pending / succeeded / failed 等、attempt を含む）を一覧で定義する
+        overview: Job Run が取り得る状態（pending / succeeded / failed 等、attempt を含む）と状態遷移を一覧・図で定義する
         path: stsd-job-run.md
         rulebook: specdojo:stsd-rulebook
         evidence_refs:
           - kind: implementation
             path: src/job.ts
-            purpose: Job Runのattempt状態（pending/succeeded/failed等）の判定・更新規則
+            purpose: Job Runのattempt状態（pending/succeeded/failed等）の許容値・判定・状態遷移規則
         done_criteria:
-          - text: ステータス名・説明が業務観点で正確に定義されていること
+          - text: ステータス名・意味・成立条件と、遷移・イベント・条件が業務観点で正確に定義されていること
             roles: [BA]
             viewpoint: vp-ba-requirements-completeness
+          - text: 状態遷移の業務的妥当性を承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
           - text: 状態遷移実装の基礎として参照できること
             roles: [ARC]
             viewpoint: vp-arc-technical-constraints

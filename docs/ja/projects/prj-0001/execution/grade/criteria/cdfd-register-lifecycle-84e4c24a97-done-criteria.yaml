@@ -1,0 +1,39 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: prj-0001:cdfd-register-lifecycle-grade-criteria
+document: prj-0001:cdfd-register-lifecycle
+path: docs/ja/product/010-business-specs/010-data-flow/cdfd-register-lifecycle.md
+graded_at: "2026-09-13T02:01:55.073Z"
+graded_by: codex-expert-executor
+content_hash: 3d31b48c2993b52355cebd1ac50abc0d5da560bd0c66c2e1c1870c0742db123a
+summary:
+  satisfied: 3
+  unsatisfied: 1
+  total: 4
+criteria:
+  - id: DC-001
+    text: todo・question・risk・issue・change-request・decision・noteの登録判断と、scheduleで管理する計画済み作業との境界が表と図で確認できること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: satisfied
+  - id: DC-002
+    text: >-
+      個票Frontmatterを正本としてopen・in-progress・waiting・review・done/decided・rejected・deferredを遷移し、登録日・完了日・結論、生成一覧・派生ビューおよびregister
+      historyへ反映する流れが識別できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: satisfied
+  - id: DC-003
+    text: agent実行の成功時・失敗時の遷移、個票の重複IDまたはファイル名と文書IDの不整合の検出、renumberによる個票・参照・実行記録の復旧、およびworktreeの同期・統合失敗時の例外経路が確認できること
+    roles:
+      - QE
+    viewpoint: vp-qe-omissions-consistency
+    status: satisfied
+  - id: DC-004
+    text: type別の承認者とreviewからclose・reject・defer・waitへの遷移、commit承認とPR承認の適用境界、および留保・却下・延期・再開の判断に必要な情報が識別できること
+    roles:
+      - PO
+    viewpoint: vp-po-decision-readiness
+    status: unsatisfied
+    reason: "`note` に項目 owner の承認と `done` 遷移を割り当てており、正本規則上の非終端境界を含む正しい type 別承認・遷移を確認できない。"

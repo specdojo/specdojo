@@ -1,0 +1,47 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_7f4f5f1a20ca45d9aeb045480206609a
+  ts: "2026-09-13T01:30:32Z"
+  action: add
+  actor: naoji3x
+  from_status: null
+  to_status: open
+  reason: プロセスグループ別 CDFD への統合完了後に不要になる列のため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: cdfd-overview の「統合元」列を削除する
+    - field: description
+      from: ""
+      to: 現行の領域別 CDFD をプロセスグループ別 CDFD へ統合した後、cdfd-overview の「詳細 CDFD 一覧」から「統合元」列と関連する説明文を削除する。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-09-13"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_b6c5b5aa65524d3895c9e97b62519f80
+  ts: "2026-09-13T02:11:37Z"
+  action: start
+  actor: naoji3x
+  from_status: open
+  to_status: in-progress
+  reason: cdfd-overview-rulebook の改訂（作業 2）に着手
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_7f4f5f1a20ca45d9aeb045480206609a

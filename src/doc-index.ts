@@ -1,7 +1,12 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
-import { dirname, join, relative } from "node:path";
+import { dirname, join, relative, resolve } from "node:path";
 import yaml from "js-yaml";
 import { readSpecdojoNamespace } from "./frontmatter-namespace.js";
+import {
+  specdojoDirectoryPaths,
+  specdojoReferencePath,
+  type SpecdojoResolutionRoots,
+} from "./template-resolution.js";
 
 export interface DocIndex {
   version: number;
@@ -51,9 +56,22 @@ export interface IndexConfig {
   locales?: string[];
 }
 
+export interface DocIndexCollectionOptions {
+  resourceRoots?: SpecdojoResolutionRoots;
+  // docs site の package 文書ステージングは別責務のため、呼び出し側が明示的に除外できる。
+  includeBundledKata?: boolean;
+}
+
 const SKIP_DIRS = new Set(["node_modules", "dist", ".vitepress", "out"]);
 const FILE_RE = /\.(md|yaml|yml)$/;
 const DOC_ID_RE = /^[a-z][a-z0-9:_-]+$/;
+const KATA_RELATIVE_DIRS = [
+  "docs/ja/specdojo/rulebooks",
+  "docs/ja/specdojo/standards",
+  "docs/ja/specdojo/recipes",
+  "docs/ja/specdojo/samples",
+  "docs/ja/specdojo/templates",
+] as const;
 
 class DuplicateDocIdError extends Error {}
 
@@ -63,8 +81,8 @@ interface IdSource {
   path: string;
 }
 interface IdRecord {
-  neutral?: IdSource;
-  byLocale: Map<string, IdSource>;
+  neutral: IdSource[];
+  byLocale: Map<string, IdSource[]>;
 }
 type IdCollector = Map<string, IdRecord>;
 
@@ -79,38 +97,52 @@ function localeOfScanPath(scanRelPath: string, locales: Set<string>): string | n
 function addId(collector: IdCollector, id: string, path: string, locale: string | null): void {
   let record = collector.get(id);
   if (!record) {
-    record = { byLocale: new Map() };
+    record = { neutral: [], byLocale: new Map() };
     collector.set(id, record);
   }
 
   if (locale === null) {
-    if (record.neutral && record.neutral.path !== path) {
-      throw new DuplicateDocIdError(
-        `Duplicate document ID "${id}": ${record.neutral.path}, ${path}`,
-      );
-    }
-    if (record.byLocale.size > 0) {
-      const other = [...record.byLocale.values()][0];
-      throw new DuplicateDocIdError(
-        `Duplicate document ID "${id}": ${other.path}, ${path} (mixed language-neutral and localized)`,
-      );
-    }
-    record.neutral = { path };
+    if (!record.neutral.some((source) => source.path === path)) record.neutral.push({ path });
     return;
   }
 
-  if (record.neutral) {
-    throw new DuplicateDocIdError(
-      `Duplicate document ID "${id}": ${record.neutral.path}, ${path} (mixed language-neutral and localized)`,
-    );
+  const sources = record.byLocale.get(locale) ?? [];
+  if (!sources.some((source) => source.path === path)) sources.push({ path });
+  record.byLocale.set(locale, sources);
+}
+
+function sourcePaths(record: IdRecord): string[] {
+  return [
+    ...record.neutral.map((source) => source.path),
+    ...[...record.byLocale.values()].flatMap((sources) => sources.map((source) => source.path)),
+  ].sort();
+}
+
+// 重複は走査中に即時エラーにせず、スコープ全体を収集してから判定する。
+// これにより 3 件以上衝突した場合もエラーへ全ファイルパスを表示できる。
+function assertNoDuplicateIds(collector: IdCollector): void {
+  for (const [id, record] of collector) {
+    if (record.neutral.length > 0 && record.byLocale.size > 0) {
+      throw new DuplicateDocIdError(
+        `Duplicate document ID "${id}": ${sourcePaths(record).join(", ")} (mixed language-neutral and localized)`,
+      );
+    }
+    if (record.neutral.length > 1) {
+      throw new DuplicateDocIdError(
+        `Duplicate document ID "${id}": ${sourcePaths(record).join(", ")}`,
+      );
+    }
+    for (const [locale, sources] of record.byLocale) {
+      if (sources.length > 1) {
+        throw new DuplicateDocIdError(
+          `Duplicate document ID "${id}" in locale "${locale}": ${sources
+            .map((source) => source.path)
+            .sort()
+            .join(", ")}`,
+        );
+      }
+    }
   }
-  const existing = record.byLocale.get(locale);
-  if (existing && existing.path !== path) {
-    throw new DuplicateDocIdError(
-      `Duplicate document ID "${id}" in locale "${locale}": ${existing.path}, ${path}`,
-    );
-  }
-  record.byLocale.set(locale, { path });
 }
 
 // 収集器から出力用の { entries（既定言語のフラット map）, localized } を構築する。
@@ -123,13 +155,13 @@ function buildIndexMaps(
 
   for (const id of [...collector.keys()].sort()) {
     const record = collector.get(id)!;
-    if (record.neutral) {
-      entries[id] = record.neutral.path;
+    if (record.neutral.length > 0) {
+      entries[id] = record.neutral[0].path;
       continue;
     }
     const localeMap: Record<string, string> = {};
     for (const locale of [...record.byLocale.keys()].sort()) {
-      localeMap[locale] = record.byLocale.get(locale)!.path;
+      localeMap[locale] = record.byLocale.get(locale)![0].path;
     }
     localized[id] = localeMap;
     const defaultLocale =
@@ -241,11 +273,12 @@ function scanFile(
   collector: IdCollector,
   nestedMap: Map<string, CollectFromSpec[]>,
   locales: Set<string>,
+  localeOverride?: string,
 ): void {
   // nestedMap keys are rootDir-relative; entry values are repoRoot-relative
   const scanRelPath = relative(rootDir, fullPath).replace(/\\/g, "/");
-  const entryPath = relative(repoRoot, fullPath).replace(/\\/g, "/");
-  const locale = localeOfScanPath(scanRelPath, locales);
+  const entryPath = specdojoReferencePath(fullPath, { repositoryRoot: repoRoot });
+  const locale = localeOverride ?? localeOfScanPath(scanRelPath, locales);
   const isYaml = !fullPath.endsWith(".md");
   try {
     const content = readFileSync(fullPath, "utf8");
@@ -274,6 +307,7 @@ function walkDir(
   collector: IdCollector,
   nestedMap: Map<string, CollectFromSpec[]>,
   locales: Set<string>,
+  localeOverride?: string,
 ): void {
   let items: string[];
   try {
@@ -293,9 +327,9 @@ function walkDir(
       continue;
     }
     if (st.isDirectory()) {
-      walkDir(full, rootDir, repoRoot, collector, nestedMap, locales);
+      walkDir(full, rootDir, repoRoot, collector, nestedMap, locales, localeOverride);
     } else if (FILE_RE.test(item)) {
-      scanFile(full, rootDir, repoRoot, collector, nestedMap, locales);
+      scanFile(full, rootDir, repoRoot, collector, nestedMap, locales, localeOverride);
     }
   }
 }
@@ -384,6 +418,7 @@ export function collectDocIndex(
   rootDir: string,
   repoRoot: string,
   configPath?: string,
+  options: DocIndexCollectionOptions = {},
 ): { entries: Record<string, string>; localized: Record<string, Record<string, string>> } {
   const config = loadIndexConfig(repoRoot, configPath);
 
@@ -403,9 +438,41 @@ export function collectDocIndex(
   );
   const locales = new Set(localeOrder);
 
-  const collector: IdCollector = new Map();
-  walkDir(rootDir, rootDir, repoRoot, collector, nestedMap, locales);
-  return buildIndexMaps(collector, localeOrder);
+  const repositoryCollector: IdCollector = new Map();
+  walkDir(rootDir, rootDir, repoRoot, repositoryCollector, nestedMap, locales);
+  assertNoDuplicateIds(repositoryCollector);
+
+  // resolver が返す package 側の ejectable kata ディレクトリだけを走査する。
+  // 利用リポジトリ側は rootDir の走査に含まれるため除外し、node_modules 全体は辿らない。
+  const resourceRoots = options.resourceRoots ?? {};
+  const roots = { ...resourceRoots, repositoryRoot: resourceRoots.repositoryRoot ?? repoRoot };
+  const packageCollector: IdCollector = new Map();
+  if (options.includeBundledKata !== false) {
+    for (const relativeDir of KATA_RELATIVE_DIRS) {
+      const repositoryDir = resolve(roots.repositoryRoot, relativeDir);
+      const packageDirs = specdojoDirectoryPaths(relativeDir, roots).filter(
+        (directory) => resolve(directory) !== repositoryDir,
+      );
+      for (const packageDir of packageDirs) {
+        walkDir(
+          packageDir,
+          packageDir,
+          repoRoot,
+          packageCollector,
+          new Map(),
+          locales,
+          locales.has("ja") ? "ja" : undefined,
+        );
+      }
+    }
+  }
+  assertNoDuplicateIds(packageCollector);
+
+  // 同一 ID が両スコープにある場合は eject 済みの利用リポジトリ側を採用する。
+  // 走査順ではなくスコープで優先順位を決めるため、結果は決定的になる。
+  const mergedCollector: IdCollector = new Map(packageCollector);
+  for (const [id, record] of repositoryCollector) mergedCollector.set(id, record);
+  return buildIndexMaps(mergedCollector, localeOrder);
 }
 
 // Scans docs and returns the flat id → path entries (default locale per id).
@@ -413,8 +480,9 @@ export function collectDocIndexEntries(
   rootDir: string,
   repoRoot: string,
   configPath?: string,
+  options: DocIndexCollectionOptions = {},
 ): Record<string, string> {
-  return collectDocIndex(rootDir, repoRoot, configPath).entries;
+  return collectDocIndex(rootDir, repoRoot, configPath, options).entries;
 }
 
 export function buildDocIndex(
@@ -422,8 +490,9 @@ export function buildDocIndex(
   outputPath: string,
   repoRoot: string,
   configPath?: string,
+  options: DocIndexCollectionOptions = {},
 ): { count: number } {
-  const { entries, localized } = collectDocIndex(rootDir, repoRoot, configPath);
+  const { entries, localized } = collectDocIndex(rootDir, repoRoot, configPath, options);
 
   const index: DocIndex = {
     version: 1,

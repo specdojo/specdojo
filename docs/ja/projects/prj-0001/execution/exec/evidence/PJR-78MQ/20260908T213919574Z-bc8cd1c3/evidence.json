@@ -1,0 +1,228 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-78MQ",
+  "run_id": "20260908T213919574Z-bc8cd1c3",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-08T21:39:19.574Z",
+    "completed_at": "2026-09-08T22:15:28.279Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/040-system-design/sysd-job-execution.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-78mq-routine-action-kind-unification.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/routines/rtn-daily-register-sweep.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/routines/rtn-exec-cycle.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/routines/rtn-exec-limit-resume.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/quick-start-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/routine-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/use-case-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/job-definition-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/job.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/routine.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-register.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run-lock.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/job.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/routine.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/spawn-self.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/dashboard.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-register.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-run-lock.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/job.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/routine.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/spawn-self.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/jobs/job-exec-auto.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/jobs/job-exec-cycle.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/jobs/job-exec-resume.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/jobs/job-register-sweep.yaml",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 29,
+    "summary": ".../040-system-design/sysd-job-execution.md        |   8 +-\n .../pjr-78mq-routine-action-kind-unification.md    |  23 +-\n .../routines/rtn-daily-register-sweep.yaml         |  16 +-\n .../projects/prj-0001/routines/rtn-exec-cycle.yaml |  12 +-\n .../prj-0001/routines/rtn-exec-limit-resume.yaml   |   6 +-\n docs/ja/specdojo/guides/exec-operation-guide.md    |  12 +-\n docs/ja/specdojo/guides/quick-start-guide.md       |  20 +-\n docs/ja/specdojo/guides/routine-operation-guide.md |  81 +++---\n docs/ja/specdojo/guides/use-case-guide.md          |   2 +-\n docs/ja/specdojo/references/command-reference.md   |  10 +-\n .../specdojo/standards/job-definition-standard.md  |   6 +\n docs/specdojo/schemas/v1/job.schema.yaml           |  41 +++\n docs/specdojo/schemas/v1/routine.schema.yaml       |  51 +---\n src/exec-register.ts                               |  80 ++++++\n src/exec-run-lock.ts                               |   7 +\n src/exec-run.ts                                    |  78 +++++-\n src/job.ts                                         | 112 +++++++-\n src/routine.ts                                     | 295 ++-------------------\n src/spawn-self.ts                                  |   6 +\n tests/src/dashboard.test.ts                        |   2 +-\n tests/src/exec-register.test.ts                    |  40 +++\n tests/src/exec-run-lock.test.ts                    |  23 ++\n tests/src/job.test.ts                              |  89 +++++++\n tests/src/routine.test.ts                          | 291 +++-----------------\n tests/src/spawn-self.test.ts                       |   8 +-\n 25 files changed, 672 insertions(+), 647 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "TypeScript型検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "TypeScript ESLint成功"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/product/040-system-design/sysd-job-execution.md docs/ja/projects/prj-0001/controls/project-register/pjr-78mq-routine-action-kind-unification.md docs/ja/specdojo/guides/exec-operation-guide.md docs/ja/specdojo/guides/quick-start-guide.md docs/ja/specdojo/guides/routine-operation-guide.md docs/ja/specdojo/guides/use-case-guide.md docs/ja/specdojo/references/command-reference.md docs/ja/specdojo/standards/job-definition-standard.md",
+      "status": "passed",
+      "summary": "変更Markdownの静的検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts job validate --project prj-0001",
+      "status": "passed",
+      "summary": "7 Job、エラー0件"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts routine validate --project prj-0001",
+      "status": "passed",
+      "summary": "7 routine、エラー0件"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts routine run --project prj-0001 --id rtn-exec-cycle --dry-run",
+      "status": "passed",
+      "summary": "job-exec-cycleへの委譲を確認"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿派生ビュー生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "検証成功。既存の欠落文書警告のみ"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "1578件の文書索引生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-78MQ\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nInstalling worktree dependencies: .\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/stale.md\n  src/unrelated.ts\ncommit-targets:\n  execution/exec/…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.1.0 validate:schema:yaml\n> tsx tools/docs/src/validate-yaml-schema.ts --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bps-template.yaml: schema docs/specdojo/sc…"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-78MQ\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-aJypGL/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-U9H8Bm/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-AOnxKN/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-tzvaAk/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-27s3rn/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-zAbZD8/pjr-0001-topic.md\nbefore\nWrote agent stdout: /tmp/specdojo-agent-command-JdV8bH/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-PFPqjS/outputs/partial.txt\n\n Test Files  99 passed (99)\n      Tests  1420 passed (1420)\n   Start at  07:15:44\n   Duration  20.52s (transform 1.60s, setup 392ms, import 10.94s, tests 18.82s, e…"
+    }
+  ],
+  "final_message": "routine の action.kind を job へ統合し、既存7 routine、入力検証、register filter、実行ロック継承、関連文書を更新した。result とライフサイクル状態は未変更。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-78MQ/20260908T213919574Z-bc8cd1c3/executor.log",
+      "bytes": 2503,
+      "truncated": false
+    }
+  ]
+}

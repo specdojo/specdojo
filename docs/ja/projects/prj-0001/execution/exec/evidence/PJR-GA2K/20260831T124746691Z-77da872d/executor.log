@@ -1,0 +1,12 @@
+実装を完了しました。
+
+- `action` を単一オブジェクト／配列の両形式に対応。
+- 配列は失敗・skip 後も定義順に実行し、`failure > skipped > success` で集約。
+- 段別結果を `last_action_results` に記録。
+- schema、テスト、dashboard、運用ガイド、概念データフロー、個票を更新。
+- executor 指示どおり result は未編集です。
+- schema・unit・integration 検証は親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"final_message":"routine action の複数段順次実行、段別結果記録、単一形式との後方互換性を実装した","validations":[{"command":"npm run typecheck","status":"passed","summary":"TypeScript 型検査成功"},{"command":"npm run lint:ts","status":"passed","summary":"TypeScript ESLint 成功"},{"command":"npx markdownlint docs/ja/specdojo/guides/routine-operation-guide.md docs/ja/specdojo/references/command-reference.md docs/ja/product/010-business-specs/010-data-flow/cdfd-routine.md docs/ja/projects/prj-0001/controls/project-register/pjr-ga2k-routine-sequential-actions.md","status":"passed","summary":"変更 Markdown の lint 成功"},{"command":"npm run lint:fm","status":"passed","summary":"Frontmatter/remark 検査成功"},{"command":"node --import tsx src/specdojo.ts routine validate --project prj-0001","status":"passed","summary":"6 routine、エラー0件"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"catalog 検証成功。既存の文書未作成警告のみ"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿生成成功"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1427件の索引生成成功"},{"command":"node --import tsx tools/docs/src/validate-history-links.ts","status":"passed","summary":"履歴リンク検証成功"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"},{"command":"npm run check","status":"not_run","summary":"親 runner 所有の schema・unit・integration 検証を含むため executor では未実行"}]}
+</specdojo_executor_evidence>

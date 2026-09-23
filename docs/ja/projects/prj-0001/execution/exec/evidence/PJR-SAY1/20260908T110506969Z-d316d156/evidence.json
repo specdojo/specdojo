@@ -1,0 +1,234 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-SAY1",
+  "run_id": "20260908T110506969Z-d316d156",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-08T11:05:06.969Z",
+    "completed_at": "2026-09-08T11:16:53.263Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-say1-template-finding-comments.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/template-authoring-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/cdfd-overview-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/cdfd-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/dct-index-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/opr-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/pjr-change-request-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/pjr-issue-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/pjr-note-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/pjr-question-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/pjr-todo-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/pjr-views-by-priority-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/pjr-views-by-status-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/pm-change-request-log-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/pm-decision-log-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/pm-issue-log-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/pm-organization-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/pm-plan-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/pm-quality-management-plan-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/pm-raci-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/pm-risk-register-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/prj-assumptions-constraints-dependencies-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/prj-charter-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/prj-comparison-of-alternatives-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/prj-issues-and-approach-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/prj-overview-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/prj-scope-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/prj-stakeholder-register-template.md",
+      "status": "M"
+    },
+    {
+      "path": "src/template-frontmatter.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/catalog-generate.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/template-frontmatter.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 32,
+    "summary": ".../pjr-say1-template-finding-comments.md          |  7 +++-\n .../standards/template-authoring-standard.md       |  2 +\n .../specdojo/templates/cdfd-overview-template.md   | 25 -----------\n docs/ja/specdojo/templates/cdfd-template.md        | 15 -------\n docs/ja/specdojo/templates/dct-index-template.md   |  8 ----\n docs/ja/specdojo/templates/opr-template.md         |  2 -\n .../templates/pjr-change-request-template.md       |  5 ---\n docs/ja/specdojo/templates/pjr-issue-template.md   |  3 --\n docs/ja/specdojo/templates/pjr-note-template.md    |  5 ---\n .../ja/specdojo/templates/pjr-question-template.md |  2 -\n docs/ja/specdojo/templates/pjr-todo-template.md    | 11 -----\n .../templates/pjr-views-by-priority-template.md    |  7 ----\n .../templates/pjr-views-by-status-template.md      |  7 ----\n .../templates/pm-change-request-log-template.md    |  5 ---\n .../specdojo/templates/pm-decision-log-template.md |  2 -\n .../ja/specdojo/templates/pm-issue-log-template.md |  7 ----\n .../specdojo/templates/pm-organization-template.md |  8 ----\n docs/ja/specdojo/templates/pm-plan-template.md     |  3 --\n .../pm-quality-management-plan-template.md         |  6 ---\n docs/ja/specdojo/templates/pm-raci-template.md     |  5 ---\n .../templates/pm-risk-register-template.md         |  5 ---\n ...ssumptions-constraints-dependencies-template.md |  4 --\n docs/ja/specdojo/templates/prj-charter-template.md |  4 --\n .../prj-comparison-of-alternatives-template.md     |  4 --\n .../templates/prj-issues-and-approach-template.md  |  9 ----\n .../ja/specdojo/templates/prj-overview-template.md |  3 --\n docs/ja/specdojo/templates/prj-scope-template.md   |  9 ----\n .../templates/prj-stakeholder-register-template.md |  2 -\n src/template-frontmatter.ts                        | 26 ++++++++----\n tests/src/catalog-generate.test.ts                 |  2 +\n tests/src/register.test.ts                         | 49 ++++++++++++++++++++++\n tests/src/template-frontmatter.test.ts             | 31 ++++++++++++++\n 32 files changed, 108 insertions(+), 175 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "git diff --name-only -z -- '*.md' '*.ts' | xargs -0 npx prettier --write",
+      "status": "passed",
+      "summary": "変更対象を整形"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --name-only -z -- '*.md' | xargs -0 npx markdownlint",
+      "status": "passed",
+      "summary": "変更Markdownのlint成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "TypeScript型検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "登録簿と派生ビュー8件を再生成"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "既知の未作成成果物警告のみで成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "1554件の索引を生成"
+    },
+    {
+      "source": "executor",
+      "command": "npm_config_cache=/tmp/specdojo-pjr-say1-npm-cache npm pack --dry-run --json",
+      "status": "passed",
+      "summary": "npmパッケージ571ファイルの同梱内容を確認"
+    },
+    {
+      "source": "executor",
+      "command": "if rg -n '<!--[[:space:]]*specdojo:finding' docs/ja/specdojo/templates docs/ja/projects/prj-0001/controls/project-register/generated docs/ja/projects/prj-0001/controls/generated --glob '*.md'; then exit 1; fi",
+      "status": "passed",
+      "summary": "テンプレートと再生成物にfindingコメントなし"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーなし"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-SAY1\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nInstalling worktree dependencies: .\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/stale.md\n  src/unrelated.ts\ncommit-targets:\n  execution/exec/…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.1.0 validate:schema:yaml\n> tsx tools/docs/src/validate-yaml-schema.ts --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bps-template.yaml: schema docs/specdojo/sc…"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-SAY1\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-gDhuuV/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-0U2GLc/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-bfjGBS/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-c69k43/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-5siVqc/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-Q06KWi/pjr-0001-topic.md\nWrote agent stdout: /tmp/specdojo-agent-command-BGXier/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-LjDNoC/outputs/partial.txt\n\n Test Files  98 passed (98)\n      Tests  1403 passed (1403)\n   Start at  20:17:09\n   Duration  20.00s (transform 1.54s, setup 377ms, import 11.12s, tests 18.08s, environm…"
+    }
+  ],
+  "final_message": "テンプレート26件からfindingコメント118件を除去し、生成時の再混入防止と回帰テストを追加した",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-SAY1/20260908T110506969Z-d316d156/executor.log",
+      "bytes": 1997,
+      "truncated": false
+    }
+  ]
+}

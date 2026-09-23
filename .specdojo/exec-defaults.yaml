@@ -21,6 +21,9 @@ pipeline:
     # sandbox 内では tsx の IPC ソケット作成、Vitest の終了、git の子プロセス終了が
     # 成立せず、成果物と無関係に failed となるため親プロセスで実行する（PJR-QVGX）。
     - validate-schema # npm run validate:schema
+    # 型エラーは Vitest では検出できず、統合時の pre-commit hook まで持ち越されるため、
+    # test-unit の前に親検証として実行する（PJR-W66B）。
+    - typecheck # npm run typecheck
     - test-unit # npm run test:unit
 
 rate_limit_detection:
@@ -155,3 +158,35 @@ providers:
           backoff_multiplier: 2 # 120s -> 240s -> 480s
           max_wait_seconds: 600
         on_exhausted: block
+
+  antigravity:
+    # Antigravity CLI（agy）は --agent による定義ファイルの選択を持たず、codex と同じく
+    # プロンプト（plan）だけで役割を与える。-p はプロンプトを引数に取り stdin を読まないため、
+    # runner が stdin へ書く plan を "$(cat)" で引数に渡す（shell: true で実行される）。
+    # --sandbox は書き込み先を ~/.gemini 配下の scratch へ逃がすため、--add-dir で作業
+    # ディレクトリ（worktree）を明示して成果物へ書けるようにする（2026-09-21 実測）。
+    # --dangerously-skip-permissions は非対話実行に必須。境界は worktree・保護設定・
+    # commit 許可リストで作る。
+    # agy のモデル ID は推論強度を含む（gemini-3.8-flash-{high,medium,low} など）。--effort を
+    # 併用すると ID と食い違ったときに "invalid model selection" で起動に失敗するため、
+    # 強度はモデル ID だけで指定する（2026-09-21 実測: flash-high + --effort medium で失敗）。
+    command_template: 'agy --sandbox --add-dir "$(pwd)" --dangerously-skip-permissions --model {model} -p "$(cat)"'
+    command_params:
+      by_proficiency:
+        normal: { model: gemini-3.8-flash-medium }
+        expert: { model: gemini-3.1-pro-high }
+      # Gemini 以外の Antigravity 提供モデルは member nickname で明示的に選ぶ。
+      # by_nickname は proficiency / mode の既定値より優先される。
+      by_nickname:
+        agy-sonnet-executor: { model: claude-sonnet-4-6 }
+        agy-opus-executor: { model: claude-opus-4-6-thinking }
+        agy-opus-review-executor: { model: claude-opus-4-6-thinking }
+        agy-gpt-executor: { model: gpt-oss-120b-medium }
+    # Gemini API の制限文言は未観測。429 / quota / RESOURCE_EXHAUSTED を初期値とし、
+    # 実観測した文言で更新する（observed-agent-limit-stderr と同じ扱い）。
+    rate_limit_detection:
+      stderr_patterns:
+        - "rate limit"
+        - "429"
+        - "quota"
+        - "RESOURCE_EXHAUSTED"

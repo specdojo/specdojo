@@ -25,6 +25,7 @@ specdojo:
 ### 1.1 ID規約
 
 - 機能一覧IDは正規表現 `^sf-[a-z0-9-]+$` に合致する一意IDを使用する。
+
 - `type: data` は業務ドメイン仕様であることを示す。
 
 ドキュメントID・機能IDともに `sf-` プレフィックスの `lower-kebab` 形式（正規表現: `^sf-[a-z0-9-]+$`）を使用します。
@@ -60,7 +61,9 @@ id: sf-index
 type: data
 title: システム化機能一覧(main)
 status: draft
+
 supersedes: []
+
 ---
 ```
 

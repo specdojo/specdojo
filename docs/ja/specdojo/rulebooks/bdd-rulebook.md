@@ -40,6 +40,7 @@ Business Data Dictionary (BDD) Documentation Rules
 ### 3.2. ファイル命名規約
 
 - ファイルは YAML 形式（`.yaml`）で管理する。
+
 - ファイル名は、idと同じ名称 `bdd-<term>.yaml` を推奨。日本語の場合は、`業務データ辞書-<用語>.yaml` のように、一貫性を持たせて命名する。
 
 ## 4. 推奨 Frontmatter 項目
@@ -57,34 +58,39 @@ Frontmatter と同等の以下の項目をYAMLドキュメントの先頭に必�
 
 ## 5. 本文構成（標準テンプレ）
 
-| キー     | 説明                         | 必須 |
-| -------- | ---------------------------- | ---- |
-| entities | 業務データエンティティの一覧 | ○    |
+| キー | 説明 | 必須 |
+| ---- | ---- | ---- |
+
+| entities | 業務データエンティティの一覧 | ○ |
 
 ### 5.1. entities の標準構成
 
-| サブ項目         | 説明                                 | 必須 |
-| ---------------- | ------------------------------------ | ---- |
-| logical_name     | 業務上の論理名（日本語単数形）       | ○    |
-| physical_name    | DB互換の物理名（lower_snake_case）   | ○    |
-| description      | 業務データの説明                     | 任意 |
-| glossary_term_id | 用語集の用語ID                       | 任意 |
-| related_terms    | 関連用語IDリスト                     | 任意 |
-| key_fields       | キー項目（`physical_name` のリスト） | ○    |
-| fields           | 業務データフィールドの一覧           | ○    |
+| サブ項目      | 説明                               | 必須 |
+| ------------- | ---------------------------------- | ---- |
+| logical_name  | 業務上の論理名（日本語単数形）     | ○    |
+| physical_name | DB互換の物理名（lower_snake_case） | ○    |
+
+| description | 業務データの説明 | 任意 |
+
+| glossary_term_id | 用語集の用語ID | 任意 |
+| related_terms | 関連用語IDリスト | 任意 |
+| key_fields | キー項目（`physical_name` のリスト） | ○ |
+
+| fields | 業務データフィールドの一覧 | ○ |
 
 ### 5.2. fields の標準構成
 
-| サブ項目         | 説明                                                                    | 必須 |
-| ---------------- | ----------------------------------------------------------------------- | ---- |
-| logical_name     | 業務上の論理名（日本語単数形）                                          | ○    |
-| physical_name    | DB互換の物理名（lower_snake_case）                                      | ○    |
-| glossary_term_id | 用語集の用語ID                                                          | 任意 |
-| type             | データ型（integer / string / boolean / date / datetime / enum / money） | ○    |
-| description      | フィールドの説明                                                        | 任意 |
-| unit             | 単位（該当時）                                                          | 任意 |
-| constraints      | フィールドの制約条件                                                    | 任意 |
-| example          | フィールドの例値                                                        | 任意 |
+| サブ項目      | 説明                               | 必須 |
+| ------------- | ---------------------------------- | ---- |
+| logical_name  | 業務上の論理名（日本語単数形）     | ○    |
+| physical_name | DB互換の物理名（lower_snake_case） | ○    |
+
+| glossary_term_id | 用語集の用語ID | 任意 |
+| type | データ型（integer / string / boolean / date / datetime / enum / money） | ○ |
+| description | フィールドの説明 | 任意 |
+| unit | 単位（該当時） | 任意 |
+| constraints | フィールドの制約条件 | 任意 |
+| example | フィールドの例値 | 任意 |
 
 ### 5.3. constraints の標準構成
 

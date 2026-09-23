@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_c90cfb1140324b1d8758fb87723f5357
+  ts: "2026-09-01T13:48:31Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-TA5C で成果物が揃っているのに runner で回復できず手動統合が必要になったため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 統合段のみを再試行できる再開経路を設ける
+    - field: description
+      from: ""
+      to: executor と reporter が成功済みで統合だけ失敗した場合に、全面再実行せず統合を再試行できるようにする。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-01"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_223d39ede1cf41e7846d94d861ef20ae
+  ts: "2026-09-02T14:38:35Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_c90cfb1140324b1d8758fb87723f5357
+- v: 1
+  id: reg_dfd4c1d9881149eea5d1259c298b5608
+  ts: "2026-09-02T14:56:06Z"
+  action: review
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_223d39ede1cf41e7846d94d861ef20ae
+- v: 1
+  id: reg_3834f1edb9324100bcb14959da132b4a
+  ts: "2026-09-02T14:58:18Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: executor と reporter が成功済みで統合だけ失敗した run を、agent を起動せず統合段から再試行できるようにした。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-02"
+    - field: conclusion
+      from: "-"
+      to: executor と reporter が成功済みで統合だけ失敗した run を、agent を起動せず統合段から再試行できるようにした。
+  previous_event_id: reg_dfd4c1d9881149eea5d1259c298b5608

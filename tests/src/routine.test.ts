@@ -1,48 +1,65 @@
 import { describe, expect, it } from "vitest";
-import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import {
-  buildExecAutoArgs,
-  buildExecCycleArgs,
-  buildExecResumeArgs,
+  aggregateRoutineActionResults,
+  appendRoutineRunHistory,
   buildJobRunArgs,
-  buildRegisterRunArgs,
+  buildSpecdojoActionArgs,
   cronOccurrences,
+  executeRoutineActions,
   formatRoutineLastRun,
   isRoutineDue,
   isoWeek,
   loadRoutines,
   parseIntervalMs,
   parseRoutineDoc,
-  selectRegisterItems,
+  routineActionKindLabel,
   type RoutineDoc,
 } from "../../src/routine.js";
-import type { PjrItem } from "../../src/register.js";
+
+describe("appendRoutineRunHistory", () => {
+  it("1 実行を JSON Lines の1行として追記する", async () => {
+    const dir = await mkdtemp(path.join(tmpdir(), "specdojo-routine-history-"));
+    const runsPath = path.join(dir, "generated", "routine-runs.jsonl");
+    try {
+      appendRoutineRunHistory(runsPath, {
+        version: 1,
+        routine_id: "rtn-dashboard-refresh",
+        scheduled_for: "2026-09-19T20:00:00.000Z",
+        started_at: "2026-09-19T20:00:01Z",
+        completed_at: "2026-09-19T20:00:03Z",
+        result: "success",
+        job_run_ids: ["JBR-dashboard-abc123"],
+      });
+      appendRoutineRunHistory(runsPath, {
+        version: 1,
+        routine_id: "rtn-dashboard-refresh",
+        scheduled_for: "2026-09-20T20:00:00.000Z",
+        started_at: "2026-09-20T20:00:01Z",
+        completed_at: "2026-09-20T20:00:03Z",
+        result: "skipped",
+        job_run_ids: [],
+      });
+
+      const lines = (await readFile(runsPath, "utf8")).trim().split("\n");
+      expect(lines).toHaveLength(2);
+      expect(JSON.parse(lines[0])).toMatchObject({
+        routine_id: "rtn-dashboard-refresh",
+        result: "success",
+      });
+    } finally {
+      await rm(dir, { recursive: true, force: true });
+    }
+  });
+});
 
 function makeRoutine(overrides: Partial<RoutineDoc> = {}): RoutineDoc {
   return {
     id: "rtn-sample",
     interval: "1d",
-    action: { kind: "exec-auto" },
-    ...overrides,
-  };
-}
-
-function makeItem(overrides: Partial<PjrItem> = {}): PjrItem {
-  return {
-    id: "PJR-0001",
-    status: "open",
-    title: "サンプル項目",
-    description: "説明",
-    type: "todo",
-    priority: "high",
-    owner: "ARC",
-    registeredAt: "_TODO_",
-    due: "-",
-    completedAt: "-",
-    conclusion: "-",
-    ticket: "-",
+    action: { kind: "job", job: "job-sample" },
     ...overrides,
   };
 }
@@ -83,7 +100,39 @@ describe("isRoutineDue", () => {
 });
 
 describe("parseRoutineDoc", () => {
-  it("register kind の妥当な定義を受け入れる", () => {
+  it("specdojo kind は args を受け入れ、--project を付けて起動引数を組み立てる", () => {
+    const { doc, errors } = parseRoutineDoc(
+      {
+        id: "rtn-dashboard-refresh",
+        trigger: { cron: "0 * * * *", timezone: "Asia/Tokyo" },
+        action: { kind: "specdojo", args: ["dashboard", "build"] },
+      },
+      "rtn-dashboard-refresh.yaml",
+    );
+
+    expect(errors).toEqual([]);
+    expect(doc?.action).toEqual({ kind: "specdojo", args: ["dashboard", "build"] });
+    expect(
+      buildSpecdojoActionArgs({ kind: "specdojo", args: ["dashboard", "build"] }, "prj-0001"),
+    ).toEqual(["dashboard", "build", "--project", "prj-0001"]);
+  });
+
+  it("specdojo kind は exec や --project を含む args を拒否する", () => {
+    const { errors } = parseRoutineDoc(
+      {
+        id: "rtn-bad",
+        interval: "1h",
+        action: { kind: "specdojo", args: ["exec", "run", "--auto"] },
+      },
+      "rtn-bad.yaml",
+    );
+
+    expect(errors).toEqual([
+      "rtn-bad.yaml: action.args must not include exec or --project (project is appended)",
+    ]);
+  });
+
+  it("job kind の妥当な定義を受け入れる", () => {
     const { doc, errors } = parseRoutineDoc(
       {
         id: "rtn-daily-sweep",
@@ -91,9 +140,9 @@ describe("parseRoutineDoc", () => {
         enabled: true,
         interval: "1d",
         action: {
-          kind: "register",
-          filter: { types: ["todo"], priorities: ["high"], statuses: ["open"] },
-          limit: 3,
+          kind: "job",
+          job: "job-register-sweep",
+          inputs: { types: "todo", priorities: "high", statuses: "open", limit: "3" },
         },
       },
       "rtn-daily-sweep.yaml",
@@ -106,16 +155,16 @@ describe("parseRoutineDoc", () => {
       enabled: true,
       interval: "1d",
       action: {
-        kind: "register",
-        filter: { types: ["todo"], priorities: ["high"], statuses: ["open"] },
-        limit: 3,
+        kind: "job",
+        job: "job-register-sweep",
+        inputs: { types: "todo", priorities: "high", statuses: "open", limit: "3" },
       },
     });
   });
 
   it("id とファイル名の不一致を検出する", () => {
     const { doc, errors } = parseRoutineDoc(
-      { id: "rtn-other", interval: "1d", action: { kind: "exec-auto" } },
+      { id: "rtn-other", interval: "1d", action: { kind: "job", job: "job-auto" } },
       "rtn-daily.yaml",
     );
 
@@ -136,213 +185,120 @@ describe("parseRoutineDoc", () => {
     expect(errors.every((e) => e.startsWith("rtn-bad.yaml: "))).toBe(true);
   });
 
-  it("filter の未知の値を報告する", () => {
+  it("旧 action kind を拒否して Job への移行を要求する", () => {
     const { errors } = parseRoutineDoc(
       {
-        id: "rtn-bad-filter",
+        id: "rtn-legacy",
         interval: "1d",
-        action: { kind: "register", filter: { types: ["epic"] } },
+        action: { kind: "exec-auto" },
       },
-      "rtn-bad-filter.yaml",
+      "rtn-legacy.yaml",
     );
 
     expect(errors).toEqual([
-      'rtn-bad-filter.yaml: action.filter.types contains unknown value "epic". Allowed: todo, question, risk, issue, change-request, decision, note',
-    ]);
-  });
-});
-
-describe("selectRegisterItems", () => {
-  const items: PjrItem[] = [
-    makeItem({ id: "PJR-0003", type: "todo", priority: "low" }),
-    makeItem({ id: "PJR-0001", type: "todo", priority: "high" }),
-    makeItem({ id: "PJR-0002", type: "issue", priority: "high" }),
-    makeItem({ id: "PJR-0004", type: "note", priority: "high" }),
-    makeItem({ id: "PJR-0005", type: "todo", priority: "high", status: "done" }),
-    makeItem({ id: "PJR-0006", type: "todo", priority: "high", status: "waiting" }),
-  ];
-
-  it("既定では open かつ実行可能 type の項目を ID 昇順で返す", () => {
-    const actual = selectRegisterItems(items, { kind: "register" });
-
-    expect(actual.map((item) => item.id)).toEqual(["PJR-0001", "PJR-0002", "PJR-0003"]);
-  });
-
-  it("types / priorities / statuses / limit で絞り込む", () => {
-    const actual = selectRegisterItems(items, {
-      kind: "register",
-      filter: { types: ["todo"], priorities: ["high"], statuses: ["open", "waiting"] },
-      limit: 1,
-    });
-
-    expect(actual.map((item) => item.id)).toEqual(["PJR-0001"]);
-  });
-
-  it("実行対象外 type は filter に含まれていても選ばない", () => {
-    const actual = selectRegisterItems(items, {
-      kind: "register",
-      filter: { types: ["note"] },
-    });
-
-    expect(actual).toEqual([]);
-  });
-});
-
-describe("buildExecAutoArgs", () => {
-  it("最小構成で --if-busy skip を渡す", () => {
-    expect(buildExecAutoArgs({ kind: "exec-auto" }, "prj-test")).toEqual([
-      "exec",
-      "run",
-      "--auto",
-      "--project",
-      "prj-test",
-      "--if-busy",
-      "skip",
+      'rtn-legacy.yaml: action.kind must be job or specdojo (got "exec-auto")',
+      "rtn-legacy.yaml: action.job must match job-<slug>",
     ]);
   });
 
-  it("strategy / parallel / loop / max_rounds をオプションへ変換する", () => {
-    const actual = buildExecAutoArgs(
-      { kind: "exec-auto", strategy: "fifo", parallel: 2, loop: true, max_rounds: 3 },
-      "prj-test",
-    );
-
-    expect(actual).toEqual([
-      "exec",
-      "run",
-      "--auto",
-      "--project",
-      "prj-test",
-      "--if-busy",
-      "skip",
-      "--strategy",
-      "fifo",
-      "--parallel",
-      "2",
-      "--loop",
-      "--max-rounds",
-      "3",
-    ]);
-  });
-
-  it("loop なしの max_rounds は引数に含めない", () => {
-    const actual = buildExecAutoArgs({ kind: "exec-auto", max_rounds: 3 }, "prj-test");
-
-    expect(actual).toEqual(["exec", "run", "--auto", "--project", "prj-test", "--if-busy", "skip"]);
-  });
-});
-
-describe("buildExecResumeArgs", () => {
-  it("due な延期 task の再開コマンドへ変換する", () => {
-    expect(buildExecResumeArgs({ kind: "exec-resume", parallel: 2 }, "prj-test")).toEqual([
-      "exec",
-      "resume",
-      "--due",
-      "--project",
-      "prj-test",
-      "--if-busy",
-      "skip",
-      "--parallel",
-      "2",
-    ]);
-  });
-});
-
-describe("buildExecCycleArgs", () => {
-  it("最小構成で exec cycle へ --if-busy skip を渡す", () => {
-    expect(buildExecCycleArgs({ kind: "exec-cycle" }, "prj-test")).toEqual([
-      "exec",
-      "cycle",
-      "--project",
-      "prj-test",
-      "--if-busy",
-      "skip",
-    ]);
-  });
-
-  it("strategy / parallel / loop / max_rounds を auto step 用オプションへ変換する", () => {
-    const actual = buildExecCycleArgs(
-      { kind: "exec-cycle", strategy: "fifo", parallel: 2, loop: true, max_rounds: 5 },
-      "prj-test",
-    );
-
-    expect(actual).toEqual([
-      "exec",
-      "cycle",
-      "--project",
-      "prj-test",
-      "--if-busy",
-      "skip",
-      "--strategy",
-      "fifo",
-      "--parallel",
-      "2",
-      "--loop",
-      "--max-rounds",
-      "5",
-    ]);
-  });
-
-  it("loop なしの max_rounds は引数に含めない", () => {
-    const actual = buildExecCycleArgs({ kind: "exec-cycle", max_rounds: 5 }, "prj-test");
-
-    expect(actual).toEqual(["exec", "cycle", "--project", "prj-test", "--if-busy", "skip"]);
-  });
-});
-
-describe("parseRoutineDoc exec-cycle", () => {
-  it("strategy / parallel / loop / max_rounds を保持する", () => {
+  it("action の配列を受け入れ、段ごとの引数を保持する", () => {
     const { doc, errors } = parseRoutineDoc(
       {
-        id: "rtn-cycle",
-        interval: "30m",
-        action: {
-          kind: "exec-cycle",
-          strategy: "critical-first",
-          parallel: 2,
-          loop: true,
-          max_rounds: 5,
-        },
+        id: "rtn-sequential",
+        interval: "1d",
+        action: [
+          { kind: "job", job: "job-first", inputs: { mode: "fifo" } },
+          { kind: "job", job: "job-second", inputs: { mode: "critical-first" } },
+          { kind: "job", job: "job-final-check", inputs: { mode: "strict" } },
+        ],
       },
-      "rtn-cycle.yaml",
+      "rtn-sequential.yaml",
     );
 
     expect(errors).toEqual([]);
-    expect(doc?.action).toEqual({
-      kind: "exec-cycle",
-      strategy: "critical-first",
-      parallel: 2,
-      loop: true,
-      max_rounds: 5,
-    });
+    expect(doc?.action).toEqual([
+      { kind: "job", job: "job-first", inputs: { mode: "fifo" } },
+      { kind: "job", job: "job-second", inputs: { mode: "critical-first" } },
+      { kind: "job", job: "job-final-check", inputs: { mode: "strict" } },
+    ]);
   });
 
-  it("不正な strategy / parallel を検証する", () => {
-    const { errors } = parseRoutineDoc(
+  it("空の action 配列と不正な段を段番号つきで報告する", () => {
+    const empty = parseRoutineDoc(
+      { id: "rtn-empty", interval: "1d", action: [] },
+      "rtn-empty.yaml",
+    );
+    const invalid = parseRoutineDoc(
       {
-        id: "rtn-cycle",
-        interval: "30m",
-        action: { kind: "exec-cycle", strategy: "newest", parallel: 0 },
+        id: "rtn-invalid-step",
+        interval: "1d",
+        action: [{ kind: "job", job: "job-first" }, { kind: "unknown" }],
       },
-      "rtn-cycle.yaml",
+      "rtn-invalid-step.yaml",
     );
 
-    expect(errors).toContain('rtn-cycle.yaml: action.strategy must be "critical-first" or "fifo"');
-    expect(errors).toContain("rtn-cycle.yaml: action.parallel must be a positive integer");
+    expect(empty.errors).toContain("rtn-empty.yaml: action must contain at least one action");
+    expect(invalid.errors).toContain(
+      'rtn-invalid-step.yaml: action[1].kind must be job or specdojo (got "unknown")',
+    );
+  });
+
+  it("取りこぼした cron 枠を実行しない policy を受け入れる", () => {
+    const { doc, errors } = parseRoutineDoc(
+      {
+        id: "rtn-nightly",
+        trigger: { cron: "0 2 * * *", timezone: "Asia/Tokyo" },
+        policy: { missed_run: "skip", overlap: "skip" },
+        action: { kind: "job", job: "job-nightly" },
+      },
+      "rtn-nightly.yaml",
+    );
+
+    expect(errors).toEqual([]);
+    expect(doc?.policy).toEqual({ missed_run: "skip", overlap: "skip" });
   });
 });
 
-describe("buildRegisterRunArgs", () => {
-  it("register 実行へ --if-busy skip を渡す", () => {
-    expect(buildRegisterRunArgs("PJR-0001", "prj-test")).toEqual([
-      "exec",
-      "run",
-      "--register",
-      "PJR-0001",
-      "--project",
-      "prj-test",
-      "--if-busy",
-      "skip",
+describe("aggregateRoutineActionResults", () => {
+  it("failure、skipped、success の優先順で全体結果を返す", () => {
+    expect(aggregateRoutineActionResults(["success", "success"])).toBe("success");
+    expect(aggregateRoutineActionResults(["success", "skipped"])).toBe("skipped");
+    expect(aggregateRoutineActionResults(["skipped", "failure", "success"])).toBe("failure");
+  });
+});
+
+describe("routineActionKindLabel", () => {
+  it("単一 kind と配列の実行順を表示する", () => {
+    expect(routineActionKindLabel({ kind: "job", job: "job-first" })).toBe("job");
+    expect(
+      routineActionKindLabel([
+        { kind: "job", job: "job-first" },
+        { kind: "job", job: "job-second" },
+      ]),
+    ).toBe("job -> job");
+  });
+});
+
+describe("executeRoutineActions", () => {
+  it("失敗後も action を定義順に実行して段別結果を返す", () => {
+    const executed: string[] = [];
+    const results = executeRoutineActions(
+      [
+        { kind: "job", job: "job-first" },
+        { kind: "job", job: "job-second" },
+        { kind: "job", job: "job-check" },
+      ],
+      (action, index) => {
+        executed.push(`${index}:${action.kind}`);
+        return index === 1 ? "failure" : "success";
+      },
+    );
+
+    expect(executed).toEqual(["1:job", "2:job", "3:job"]);
+    expect(results).toEqual([
+      { index: 1, kind: "job", result: "failure" },
+      { index: 2, kind: "job", result: "success" },
+      { index: 3, kind: "job", result: "success" },
     ]);
   });
 });
@@ -361,6 +317,23 @@ describe("cron Job routine", () => {
     );
     expect(occurrences.map((date) => date.toISOString())).toEqual(["2026-08-07T08:00:00.000Z"]);
     expect(isoWeek(occurrences[0], "Asia/Tokyo")).toBe("2026-W32");
+  });
+
+  it("skips missed occurrences and selects only the current matching minute", () => {
+    const doc = makeRoutine({
+      interval: undefined,
+      trigger: { cron: "0 2 * * *", timezone: "Asia/Tokyo" },
+      policy: { missed_run: "skip" },
+    });
+
+    expect(cronOccurrences(doc, "2026-08-06T17:00:00Z", new Date("2026-08-08T03:00:00Z"))).toEqual(
+      [],
+    );
+    expect(
+      cronOccurrences(doc, "2026-08-06T17:00:00Z", new Date("2026-08-08T17:00:30Z")).map((date) =>
+        date.toISOString(),
+      ),
+    ).toEqual(["2026-08-08T17:00:00.000Z"]);
   });
 
   it("builds exec run --job arguments with occurrence inputs", () => {
@@ -409,22 +382,22 @@ describe("loadRoutines", () => {
     try {
       await writeFile(
         path.join(dir, "rtn-b-auto.yaml"),
-        "id: rtn-b-auto\ninterval: 6h\naction:\n  kind: exec-auto\n",
+        "id: rtn-b-auto\ninterval: 6h\naction:\n  kind: job\n  job: job-auto\n",
         "utf8",
       );
       await writeFile(
         path.join(dir, "rtn-a-sweep.yaml"),
-        "id: rtn-a-sweep\ninterval: 1d\naction:\n  kind: register\n",
+        "id: rtn-a-sweep\ninterval: 1d\naction:\n  kind: job\n  job: job-sweep\n",
         "utf8",
       );
       await writeFile(
         path.join(dir, "rtn-broken.yaml"),
-        "id: rtn-broken\naction:\n  kind: exec-auto\n",
+        "id: rtn-broken\naction:\n  kind: job\n  job: job-broken\n",
         "utf8",
       );
       await writeFile(
         path.join(dir, "rtn-a-sweep.yml"),
-        "id: rtn-a-sweep\ninterval: 1d\naction:\n  kind: register\n",
+        "id: rtn-a-sweep\ninterval: 1d\naction:\n  kind: job\n  job: job-sweep\n",
         "utf8",
       );
       await writeFile(path.join(dir, "notes.md"), "# not a routine\n", "utf8");

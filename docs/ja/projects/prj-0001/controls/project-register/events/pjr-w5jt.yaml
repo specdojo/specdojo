@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_6e1ceecbbc7b41c4a524adcb7d41f151
+  ts: "2026-09-18T13:12:32Z"
+  action: add
+  actor: specdojo-orchestrator (claude)
+  from_status: null
+  to_status: open
+  reason: 利用者の判断。3 段構成の実測（gemma 2 段で 23 分、codex 6 分、gemma の誤判定）に基づく
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: grade を codex 単段にし定期実行を夜間へ寄せる
+    - field: description
+      from: ""
+      to: gemma の 1・2 段目が前回 finding の再掲と major の見落としで門番として機能せず、3 段目の codex に届かない文書が出ているため、grade を codex 単段に変更する。あわせて定期実行を 0:00 / 2:00 の夜間に寄せ、日中の exec run と衝突しないようにする
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-18"
+    - field: due
+      from: ""
+      to: "2026-09-25"
+- v: 1
+  id: reg_1561d60ff4dc4662a4efb6c878e9069e
+  ts: "2026-09-18T14:00:01Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_6e1ceecbbc7b41c4a524adcb7d41f151
+- v: 1
+  id: reg_0c14561b12b04102a860d136d49b7c1a
+  ts: "2026-09-18T14:19:16Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_1561d60ff4dc4662a4efb6c878e9069e
+- v: 1
+  id: reg_9b73a2249c214c04a12c60c3977edfe5
+  ts: "2026-09-21T02:45:48Z"
+  action: close
+  actor: specdojo-orchestrator (claude)
+  from_status: review
+  to_status: done
+  reason: codex-expert-executor が worktree で実装。作業 3 の routine 変更と作業 4 の単段再評価はオーケストレーターが直接対応し、夜間 2 回の実運用を確認して利用者が close
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-21"
+  previous_event_id: reg_0c14561b12b04102a860d136d49b7c1a

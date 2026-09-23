@@ -105,4 +105,4 @@ specdojo:
 
 - 章構成や規範を変更する際は、依存する rulebook / guide / schema との整合を確認する。
 - 機械検証の根拠となる schema を変更する場合は、本文の参照と齟齬がないか確認する。
-- 表は必要に応じて整形スクリプト（`Format Markdown Table` タスク）で揃える。
+- 表は必要に応じて `SpecDojo: Format Markdown Table` コマンドで揃える。

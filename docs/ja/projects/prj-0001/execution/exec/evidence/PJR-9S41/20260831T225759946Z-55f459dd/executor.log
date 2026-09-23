@@ -1,0 +1,13 @@
+実装完了しました。
+
+- exec/result テンプレート31件を [exec-templates](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-9S41/docs/ja/specdojo/exec-templates/xep-template.md) へ移動。
+- plan/result/register/job の生成処理、テスト、ガイド、標準、hook を新配置へ追随。
+- grade が `exec-templates/` を対象外にする検証を追加。
+- 個票の作業内容・対応結果を更新。ステータスと result は変更していません。
+- executor 側検証はすべて通過。unit/integration/schema は指示どおり親 runner に委ねます。
+
+<specdojo_executor_evidence>
+{"final_message":"exec/resultテンプレート31件をexec-templatesへ分離し、生成処理・テスト・規範文書・grade対象・hookを追随更新した","validations":[{"command":"{ git diff --name-only --diff-filter=ACMR -z; find docs/ja/specdojo/exec-templates -maxdepth 1 -type f -print0; } | sort -zu | xargs -0 npx prettier --write","status":"passed","summary":"変更ファイルと移動した31テンプレートを整形"},{"command":"{ git diff --name-only --diff-filter=ACMR -z -- '*.md'; find docs/ja/specdojo/exec-templates -maxdepth 1 -type f -name '*.md' -print0; } | sort -zu | xargs -0 npx markdownlint","status":"passed","summary":"変更Markdownのlint通過"},{"command":"npm run typecheck","status":"passed","summary":"TypeScript型検査通過"},{"command":"npm run lint:ts","status":"passed","summary":"TypeScript ESLint通過"},{"command":"npm run lint:fm","status":"passed","summary":"Frontmatter lint通過"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿派生ビュー生成成功"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"全カタログOK、既存の欠落成果物警告のみ"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1444件の文書索引を生成"},{"command":"node --import tsx tools/docs/src/validate-history-links.ts","status":"passed","summary":"履歴リンク検証通過"},{"command":"test \"$(find docs/ja/specdojo/exec-templates -maxdepth 1 -type f | wc -l)\" -eq 31 && test -z \"$(find docs/ja/specdojo/templates -maxdepth 1 -type f \\( -name 'xep-*.md' -o -name 'xer-*.md' -o -name 'xrp-*.md' -o -name 'xrr-*.md' \\) -print -quit)\"","status":"passed","summary":"新配置31件、旧配置0件を確認"},{"command":"node --import tsx -e 'import { discoverGradeTargets as d } from \"./src/grade.ts\"; const t=d({target:\"kata\"}); if(t.some(p=>p.includes(\"/exec-templates/\"))||!t.some(p=>p.includes(\"/templates/prj-overview-template.md\"))) process.exit(1)'","status":"passed","summary":"gradeのkata探索が成果物templateを含みexec-templatesを除外"},{"command":"git diff --check","status":"passed","summary":"差分の空白エラーなし"}]}
+</specdojo_executor_evidence>
+
+agent-config-write: protected configuration changes detected; paths=lefthook.yml; agent must record the required change in the result handoff for human or orchestrator application

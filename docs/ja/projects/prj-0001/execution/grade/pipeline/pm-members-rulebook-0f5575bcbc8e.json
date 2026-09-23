@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "project_id": "prj-0001",
+  "target": "kata",
+  "document": "docs/ja/specdojo/rulebooks/pm-members-rulebook.md",
+  "content_hash": "4226599c8333049c170a5ea38209e05d8c7bce511f7ac462e062fe966e2a4e0c",
+  "stage_completed": 0,
+  "stage_failed": 1,
+  "stage_total": 1,
+  "consecutive_failures": 1,
+  "max_failures": 3,
+  "last_run_id": "JBR-grade-kata-5650f4b652b7",
+  "updated_at": "2026-09-22T21:25:14.520Z"
+}

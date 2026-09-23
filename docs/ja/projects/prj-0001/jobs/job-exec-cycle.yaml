@@ -1,0 +1,33 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/job.schema.yaml
+id: job-exec-cycle
+name: 延期 task 再開と Ready task 自動実行
+description: 延期 task の再開から状態再計算と Ready task の自動実行までを単一ロック内で順次実行する。
+inputs:
+  strategy:
+    type: string
+    default: critical-first
+    enum: [critical-first, fifo]
+  parallel:
+    type: integer
+    default: 1
+    minimum: 1
+  loop:
+    type: boolean
+    default: false
+  max_rounds:
+    type: integer
+    minimum: 1
+task:
+  mode: command
+  owner: ARC
+  command: |
+    set -- exec cycle --project "{{project_id}}" --strategy "{{inputs.strategy}}" --parallel "{{inputs.parallel}}" --if-busy skip
+    if [ "{{inputs.loop}}" = "true" ]; then
+      set -- "$@" --loop
+      if [ -n "{{inputs.max_rounds}}" ]; then
+        set -- "$@" --max-rounds "{{inputs.max_rounds}}"
+      fi
+    fi
+    {{specdojo}} "$@"
+run:
+  idempotency_key: "{{job_id}}:{{scheduled_at}}:{{inputs.strategy}}:{{inputs.parallel}}:{{inputs.loop}}:{{inputs.max_rounds}}"

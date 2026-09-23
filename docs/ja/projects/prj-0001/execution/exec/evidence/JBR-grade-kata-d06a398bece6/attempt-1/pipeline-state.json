@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "task_id": "JBR-grade-kata-d06a398bece6",
+  "run_id": "attempt-1",
+  "updated_at": "2026-09-19T21:46:07.537Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "specdojo-runner",
+      "attempts": 1,
+      "started_at": "2026-09-19T21:00:05.181Z",
+      "completed_at": "2026-09-19T21:43:13.886Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-d06a398bece6/attempt-1/evidence.json"
+    },
+    "reporter": {
+      "status": "failed",
+      "actor": "gemma-reporter",
+      "attempts": 1,
+      "started_at": "2026-09-19T21:43:14.186Z",
+      "completed_at": "2026-09-19T21:46:07.537Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/JBR-grade-kata-d06a398bece6-result.md"
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/exec/plans/JBR-grade-kata-d06a398bece6-plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/exec/results/JBR-grade-kata-d06a398bece6-result.md"
+  }
+}

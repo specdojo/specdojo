@@ -11,7 +11,7 @@ specdojo:
 
 Directory Layout Reference
 
-SpecDojo Unit（1つの `docs/` ルート）配下の、プロジェクトドキュメントとプロダクトドキュメントの標準ディレクトリ構成を、ファイル単位で一覧します。
+SpecDojo Unit のプロジェクトドキュメントとプロダクトドキュメントの標準ディレクトリ構成を、ファイル単位で一覧します。
 
 **対象範囲**
 
@@ -30,7 +30,27 @@ SpecDojo Unit（1つの `docs/` ルート）配下の、プロジェクトドキ
 
 本リファレンスのツリーは代表例です。ディレクトリ名のプレフィックス番号や横断ディレクトリの扱いなどの方針は [ドキュメント構成ガイド](../guides/docs-structure-guide.md) の `ディレクトリ・ファイルの命名ルール` と `プロジェクトドキュメントの構成` を参照してください。実際のパスは `.specdojo/specdojo.config.json` の project 設定で変更できます。
 
-## 1. プロジェクトドキュメントの構成
+## 1. 既定のリポジトリ構成
+
+利用プロジェクトでは Detached Unit を既定とし、プロダクトの内容と同じ revision が必要な文書と、SpecDojo の運用記録を別リポジトリに置きます。
+
+```text
+workspace/
+├── app1/                            # プロダクトリポジトリ
+│   ├── src/
+│   └── docs/ja/product/             # プロダクトドキュメント
+├── app1-specdojo/                   # SpecDojo 運用リポジトリ
+│   ├── .specdojo/
+│   │   └── specdojo.config.json
+│   └── docs/ja/
+│       ├── specdojo/                # 実践体系
+│       └── projects/<project-id>/   # プロジェクト文書と実行記録
+└── app1-worktrees/                  # task 単位の worktree 置き場
+```
+
+以下のツリーは各リポジトリ内の配置を個別に示します。成果物と実装が常に同じ変更として動く Attached Unit を選ぶ場合は、両方のツリーを1つのリポジトリの `docs/ja/` 配下へ置けます。
+
+## 2. プロジェクトドキュメントの構成
 
 ```text
 docs/
@@ -43,7 +63,8 @@ docs/
 │   │   ├── rulebooks/                            # ドキュメント記述規約
 │   │   ├── recipes/                              # 成果物ごとの作成手順
 │   │   ├── samples/                              # 成果物の完成例
-│   │   ├── templates/                            # 成果物・plan/result の雛形
+│   │   ├── templates/                            # rulebook が宣言する成果物テンプレート
+│   │   ├── exec-templates/                       # plan/result 生成用の内部テンプレート
 │   │   ├── schemas/                              # 言語固有の文書構造スキーマ
 │   │
 │   ├── projects/
@@ -102,6 +123,9 @@ docs/
 │   │   │   │   ├── project-register/             # 統合管理台帳（正本）
 │   │   │   │   │   ├── pjr-0001-auth.md          # 登録項目（認証）
 │   │   │   │   │   ├── pjr-0002-payment.md       # 登録項目（決済）
+│   │   │   │   │   ├── events/                   # 項目別の監査イベントログ
+│   │   │   │   │   │   ├── pjr-0001.yaml         # PJR-0001 のイベント配列
+│   │   │   │   │   │   └── pjr-0002.yaml         # PJR-0002 のイベント配列
 │   │   │   │   │   └── generated/                # 正本から生成される補助一覧
 │   │   │   │   │       ├── pjr-index.md              # プロジェクト登録台帳・文書IDの解決先
 │   │   │   │   │       ├── pjr-views-by-status.md    # 台帳ビュー（状態別）
@@ -121,9 +145,7 @@ docs/
 │   │   │   │   ├── sch-milestones.yaml           # マイルストーン定義
 │   │   │   │   ├── sch-defaults.yaml             # 共通デフォルト設定
 │   │   │   │   ├── sch-track-<track>.yaml        # トラックごとのSchedule定義
-│   │   │   │   ├── sch-strategy-<track>.yaml     # トラックごとのタスク生成戦略
-│   │   │   │   └── assessments/                  # agent判定結果（正本・approach選択の入力）
-│   │   │   │       └── sch-assessment-<track>.yaml
+│   │   │   │   └── sch-strategy-<track>.yaml     # intent とトラックごとのタスク生成戦略
 │   │   │   │
 │   │   │   ├── routines/                         # 定期実行ルーチン ※成果物カタログ管理対象外
 │   │   │   │   └── rtn-<name>.yaml               # ルーチン定義
@@ -140,6 +162,12 @@ docs/
 │   │   │   │   ├── jobs/                         # Job Run履歴と派生state
 │   │   │   │   │   ├── runs/                    # 入力・task・attempt・結果
 │   │   │   │   │   └── generated/               # checkpoint派生ビュー
+│   │   │   │   ├── grade/                        # 継続品質評価（最新状態）
+│   │   │   │   │   ├── criteria/                 # 成果物別のdone_criteria判定詳細
+│   │   │   │   │   └── generated/                # 再生成可能な派生物（git管理外）
+│   │   │   │   │       └── plans/                # 1文書単位の評価plan
+│   │   │   │   │           ├── kata/             # Kata評価plan
+│   │   │   │   │           └── deliverable/      # 成果物評価plan
 │   │   │   │   └── generated/                    # 自動生成成果物
 │   │   │   │
 │   │   │   └── reporting/                        # レポート
@@ -151,44 +179,26 @@ docs/
 │   │   │           └── mm-2026-03-08-01.md       # 議事録
 │   │   │
 │   │   └── prj-0002/ ...                         # 他プロジェクト
-│   │
-│   └── product/
 │
 └── en/                                           # 将来の英語ドキュメント用ディレクトリ
 ```
 
-## 2. プロダクトドキュメントの構成
+## 3. プロダクトドキュメントの構成
 
 ```text
 docs/
 ├── ja/                                           # 多言語化対応（将来: en/ など）
-│   ├── specdojo/
-│   │   ├── philosophy/                       # 規約の前提となる方針・概念
-│   │   ├── guides/                           # ドキュメント作成ガイド
-│   │   ├── references/                       # 一覧・比較のためのリファレンス
-│   │   ├── standards/                            # 共通標準・メタ規約
-│   │   ├── rulebooks/                            # ドキュメント記述規約
-│   │   ├── recipes/                              # 成果物ごとの作成手順
-│   │   ├── samples/                              # 成果物の完成例
-│   │   ├── templates/                            # 成果物・plan/result の雛形
-│   │   ├── schemas/                              # 言語固有の文書構造スキーマ
-│   │
-│   ├── projects/
-│   │   ├── prj-0001/                             # プロジェクト（ID）
-│   │   └── prj-0002/ ...                         # 他プロジェクト
-│   │
 │   └── product/
 │       ├── 010-business-specs/                   # 業務仕様
 │       │   ├── 010-data-flow/                    # データフロー
-│       │   │   └── cdfd-sales-management.md      # 概念データフロー図（例：販売管理）
+│       │   │   └── cdfd-sales.md                 # 概念データフロー図（プロセスグループ別の例：販売）
 │       │   ├── 020-data-model/                   # データモデル
 │       │   │   ├── bdd-sales-management.md       # 業務データ辞書（例：販売管理）
 │       │   │   ├── cdsd-sales-management.md      # 概念データストア定義（例：販売管理）
 │       │   │   ├── sld-sales-management.md       # 保管場所定義（例：倉庫・店舗）
-│       │   │   ├── stsd-product-lifecycle.md     # ステータス定義（例：商品ライフサイクル）
+│       │   │   ├── stsd-product-lifecycle.md     # ステータス定義（状態一覧・状態遷移図の例：商品ライフサイクル）
 │       │   │   ├── cld-product-category.md       # 分類定義（例：商品カテゴリ）
-│       │   │   ├── ccd-sales-management.md       # 概念クラス図（例：販売管理）
-│       │   │   └── cstd-product-lifecycle.md     # 概念状態遷移図（例：商品ライフサイクル）
+│       │   │   └── ccd-sales-management.md       # 概念クラス図（例：販売管理）
 │       │   ├── 030-business-model/               # 業務モデル
 │       │   │   ├── bps-sales-order-flow.md       # 業務プロセス仕様（例：受注フロー）
 │       │   │   ├── br-reorder-point.md           # ビジネスルール（例：発注点判定）

@@ -1,0 +1,89 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_e4a296b529504b16840e4a7f3b62b5bc
+  ts: "2026-09-07T13:14:06Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 同梱テンプレートから finding コメントを除去する
+    - field: description
+      from: ""
+      to: docs/ja/specdojo/templates 配下の 26 件に specdojo:finding コメントが残っている。register 単体構成の実測で、finding コメントが生成された登録簿の要約欄へ流入することを確認した。テンプレート本体から除去するか、生成時に除去する。npm 公開の前提条件である。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-07"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_1ede21a87ef24ea994f2e1eb873a829e
+  ts: "2026-09-07T13:14:12Z"
+  action: update
+  actor: orchestrator
+  from_status: open
+  to_status: open
+  reason: 件名が分かる topic slug へ整える
+  changes:
+    - field: id
+      from: prj-0001:pjr-say1-finding
+      to: prj-0001:pjr-say1-template-finding-comments
+  previous_event_id: reg_e4a296b529504b16840e4a7f3b62b5bc
+- v: 1
+  id: reg_050c71c963204507ab6afe6f02dea2ab
+  ts: "2026-09-08T11:04:30Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_1ede21a87ef24ea994f2e1eb873a829e
+- v: 1
+  id: reg_9407fae6f74d42a09cf44fe40d4a5029
+  ts: "2026-09-08T11:21:40Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_050c71c963204507ab6afe6f02dea2ab
+- v: 1
+  id: reg_6614edc16f6849778350111cd9b134c8
+  ts: "2026-09-08T12:37:11Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: テンプレートから生成する経路で finding コメントを複製しなくなった。生成物 8 件の混入がすべて解消し、最小構成での起票でも混入しないことを実地で確認した。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-08"
+  previous_event_id: reg_9407fae6f74d42a09cf44fe40d4a5029

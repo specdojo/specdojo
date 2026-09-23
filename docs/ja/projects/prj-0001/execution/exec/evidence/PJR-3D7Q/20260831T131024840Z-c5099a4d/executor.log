@@ -1,0 +1,11 @@
+判定結果による grade 対象絞り込みを実装しました。
+
+- `--verdict`、`--max-findings`、`--ungraded` を追加し、既存条件と AND 結合。
+- 未評価は `specdojo.grade` が存在しない状態と定義。
+- 実装・テスト・規範文書・[個票](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-3D7Q/docs/ja/projects/prj-0001/controls/project-register/pjr-3d7q-grade-target-filter.md:120)を更新。
+- executor 指示どおり result と登録状態は未変更。
+- unit／integration／schema 検証は親 runner に委譲。
+
+<specdojo_executor_evidence>
+{"final_message":"gradeのverdict・finding上限・未評価フィルターを実装し、文書とテストを更新した","validations":[{"command":"npx prettier --write src/grade.ts tests/src/grade.test.ts tests/src/cli-verb-taxonomy.test.ts docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-3d7q-grade-target-filter.md","status":"passed","summary":"変更5ファイルを整形"},{"command":"npx markdownlint docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-3d7q-grade-target-filter.md","status":"passed","summary":"変更Markdownにエラーなし"},{"command":"npm run typecheck","status":"passed","summary":"TypeScript型検査に成功"},{"command":"npm run lint:ts","status":"passed","summary":"ESLintに成功"},{"command":"npm run lint:fm","status":"passed","summary":"Frontmatter lintに成功"},{"command":"node --import tsx src/specdojo.ts register build && node --import tsx src/specdojo.ts catalog validate && node --import tsx src/specdojo.ts index build","status":"passed","summary":"登録簿生成、カタログ検証、索引生成に成功。既存の欠落文書警告のみ"},{"command":"node --import tsx tools/docs/src/validate-history-links.ts","status":"passed","summary":"履歴リンク検証に成功"},{"command":"node --import tsx --input-type=module -e '<discoverGradeTargets filter assertions>'","status":"passed","summary":"実データでpassかつ0件、needs-workかつ5件以下、未評価の選択結果を確認"},{"command":"git diff --check","status":"passed","summary":"差分の空白エラーなし"},{"command":"npm run test:unit","status":"not_run","summary":"親runnerのtest-unit検証に委譲"},{"command":"npm run test:integration","status":"not_run","summary":"親runnerのtest-integration検証に委譲"},{"command":"npm run validate:schema","status":"not_run","summary":"親runnerのvalidate-schema検証に委譲"}]}
+</specdojo_executor_evidence>

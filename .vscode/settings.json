@@ -36,6 +36,7 @@
     "esil",
     "EXECGEN",
     "fdfind",
+    "frontmatter",
     "FSCH",
     "fullpath",
     "FWBS",
@@ -73,6 +74,7 @@
     "OPSD",
     "passwordauthentication",
     "pathspec",
+    "PDCA",
     "pipefail",
     "PMBOK",
     "pmset",
@@ -203,6 +205,7 @@
   "yaml.format.enable": true,
 
   "files.associations": {
+    ".remarkrc.yaml": "plaintext",
     "*.schema.yaml": "yaml",
     "*.instructions.md": "markdown",
     "*.plist": "xml"

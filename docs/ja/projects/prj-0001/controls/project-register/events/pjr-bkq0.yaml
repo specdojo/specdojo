@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ab91dfa8f28c41cc9039a8deed2854b8
+  ts: "2026-09-10T12:50:48Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: finding 除去後の空行が畳まれず生成物が lint に失敗する
+    - field: description
+      from: ""
+      to: PJR-SAY1 で生成時に specdojo:finding コメントを除去したが、除去後の空行が畳まれないため生成物に連続空行が残り lint:md が MD012 で失敗する。pm-decision-log.md、pm-change-request-log.md、pjr-views-by-status.md の3件で発生している。いずれも gitignore 対象のため commit は妨げないが、lint:md を通らない状態が常態化する。除去と同時に空行を正規化する。PJR-20DV で stableContentHash へ導入した正規化と同じ処理が使える。
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-10"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_77fe085c8a4f477d95956c8d03160f3c
+  ts: "2026-09-10T12:59:30Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_ab91dfa8f28c41cc9039a8deed2854b8
+- v: 1
+  id: reg_e2d514b841504b938ed54955be356e3d
+  ts: "2026-09-10T13:14:17Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_77fe085c8a4f477d95956c8d03160f3c
+- v: 1
+  id: reg_6ee19c32d63f498a9ae91b16485cab59
+  ts: "2026-09-10T13:18:34Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: finding コメントの除去と同時に空行を正規化した。生成をやり直して MD012 が 3 件から 0 件になることを確認し、lint:md 全体も通過する。単体テスト 1429 件が成功する。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-10"
+  previous_event_id: reg_e2d514b841504b938ed54955be356e3d

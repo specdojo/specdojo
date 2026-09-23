@@ -17,13 +17,13 @@ specdojo:
 
 Project Register Documentation Rules
 
-本ドキュメントは、プロジェクト登録簿の個別登録項目（`pjr-XXXX-<topic>.md`）と、そこから生成する一覧・派生ビューの記述ルールです。構造化フィールドの正本は必ず個票の Frontmatter とし、一覧は表示専用の生成物として扱います。
+本ドキュメントは、プロジェクト登録簿の個別登録項目（`pjr-XXXX-<topic>.md`）、項目別イベントログ、そこから生成する一覧・派生ビューの記述ルールです。現在値の正本は個票の Frontmatter、監査履歴の正本は項目別イベントログとし、一覧は表示専用の生成物として扱います。
 
 ## 1. 全体方針
 
 - TODO、要確認事項、リスク、課題、変更要求、決定事項、備忘の全登録項目は、それぞれ 1 件の個票を持つ。
 - 個票 Frontmatter の現在値は、分類、処理状態、優先度、担当、日付、結論の唯一の正本である。
-- 同じ個票 Frontmatter の `register_events` は、起票・状態遷移・更新を追う監査履歴の正本である。現在値の再計算には使わず、現在値との整合を検証する。
+- `events/pjr-XXXX.yaml` は、起票・状態遷移・更新を追う監査履歴の正本である。現在値の再計算には使わず、個票の現在値との整合を検証する。
 - 個票の H1 と本文は、それぞれタイトルと説明・根拠・経緯・対応内容の正本である。
 - `generated/pjr-index.md` とすべての派生ビューは個票から `register build` で生成し、直接編集しない。
 - `<project-id>:pjr-index` は `generated/pjr-index.md` の文書 ID とする。`controls/**/generated/` はdoc-indexの限定走査対象とし、`register build` の後に `index build` を実行する。
@@ -34,14 +34,19 @@ Project Register Documentation Rules
 
 ### 2.1. ID規約
 
-- 個別登録項目の表示 ID は `PJR-XXXX` 形式とする。例: `PJR-AB12`。
+- 個別登録項目の表示 ID は `PJR-XXXX` 形式とする。`XXXX` には数字と英字から
+  `I` / `L` / `O` / `U` を除いた4文字を使う。例: `PJR-AB12`。
 - 個別登録項目の文書 ID は `<project-id>:pjr-XXXX-<topic>` 形式とする。例: `prj-0001:pjr-ab12-auth-boundary`。
 - 個別登録項目のファイル名は `pjr-XXXX-<topic>.md` 形式とし、文書 ID のローカル部分と拡張子を除くファイル名を一致させる。
-- `<topic>` は英小文字・数字・ハイフンのみとし、対象領域や論点が分かる短い名称にする。
+- 文書 ID とファイル名では `XXXX` を小文字にする。
+- `<topic>` は英小文字または数字で始まり、英小文字・数字・単一ハイフンだけで構成し、
+  ハイフンで終えたり連続ハイフンを含めたりしない。対象領域や論点が分かる短い名称にする。
+- イベントファイル名は `pjr-XXXX.yaml` とし、topic を含めない。ID の小文字表記を用いる。
 
 ### 2.2. 配置規約
 
 - 個票は `docs/ja/projects/<project-id>/controls/project-register/` 直下に置く。
+- 項目別イベントログは同ディレクトリの `events/` 配下に置き、個票 1 件につき 1 ファイルとする。
 - 登録項目一覧は `docs/ja/projects/<project-id>/controls/project-register/generated/pjr-index.md` に生成する。
 - 状態別・優先度別・担当者別の補助一覧は同じ `generated/` 配下に生成する。
 - controls 全体の type 別管理ビューは `controls/generated/` に生成する。生成物の別名コピーは作らない。
@@ -50,23 +55,22 @@ Project Register Documentation Rules
 
 個票には `register-item-frontmatter.schema.yaml` が定義する次の項目を置く。未定の担当、期限、完了日時、結論は表用のプレースホルダを保存せず、該当キーを省略する（期限なしだけは `due_on: null`）。
 
-| 項目              | 説明                                         | 必須 |
-| ----------------- | -------------------------------------------- | ---- |
-| `id`              | `<project-id>:pjr-XXXX-<topic>`              | ○    |
-| `type`            | `project`                                    | ○    |
-| `status`          | 文書成熟度。`draft` / `ready` / `deprecated` | ○    |
-| `rulebook`        | `specdojo:pjr-rulebook`                      | ○    |
-| `part_of`         | `<project-id>:pjr-index` を要素に持つ配列    | ○    |
-| `item_type`       | 登録項目の分類                               | ○    |
-| `item_status`     | 登録項目の処理状態                           | ○    |
-| `priority`        | 対応優先度                                   | ○    |
-| `owner`           | 主担当者または役割                           | 任意 |
-| `registered_at`   | 起票日時                                     | 任意 |
-| `due_on`          | 対応期限または判断期限                       | 任意 |
-| `completed_at`    | 完了・却下・決定日時                         | 条件 |
-| `block_reason`    | `waiting` へ遷移した直近の理由               | 任意 |
-| `conclusion`      | 終端時の結論要約                             | 任意 |
-| `register_events` | 起票・状態遷移・更新の追記型イベント配列     | 任意 |
+| 項目            | 説明                                         | 必須 |
+| --------------- | -------------------------------------------- | ---- |
+| `id`            | `<project-id>:pjr-XXXX-<topic>`              | ○    |
+| `type`          | `project`                                    | ○    |
+| `status`        | 文書成熟度。`draft` / `ready` / `deprecated` | ○    |
+| `rulebook`      | `specdojo:pjr-rulebook`                      | ○    |
+| `part_of`       | `<project-id>:pjr-index` を要素に持つ配列    | ○    |
+| `item_type`     | 登録項目の分類                               | ○    |
+| `item_status`   | 登録項目の処理状態                           | ○    |
+| `priority`      | 対応優先度                                   | ○    |
+| `owner`         | 主担当者または役割                           | 任意 |
+| `registered_at` | 起票日時                                     | 任意 |
+| `due_on`        | 対応期限または判断期限                       | 任意 |
+| `completed_at`  | 完了・却下・決定日時                         | 条件 |
+| `block_reason`  | `waiting` へ遷移した直近の理由               | 任意 |
+| `conclusion`    | 終端時の結論要約                             | 任意 |
 
 - `status` は文書成熟度、`item_status` は処理状態であり、同じ状態軸として扱わない。
 - `item_type`、`item_status`、`priority` の値は schema の enum だけを使用する。
@@ -82,11 +86,11 @@ Project Register Documentation Rules
 
 ### 3.2. Register event と責務境界
 
-- 個票の現在値は `item_status` などの通常フィールド、変更履歴は `register_events`、保存・配布・差分レビューは Git が担う。Git コミットはイベントの発生単位ではなく、履歴再構成の正本にしない。
-- イベントは個票ごとの配列へ古い順に追記する。項目ごとの配置により、イベントごとの追加ファイルを作らず、異なる項目を並行更新したときの共有ログ競合を避ける。
+- 個票の現在値は `item_status` などの Frontmatter フィールド、変更履歴は `events/pjr-XXXX.yaml`、保存・配布・差分レビューは Git が担う。Git コミットはイベントの発生単位ではなく、履歴再構成の正本にしない。
+- イベントファイルのルートは YAML 配列とし、イベントを古い順に追記する。項目ごとの配置により、イベントごとの追加ファイルを作らず、異なる項目を並行更新したときの共有ログ競合を避ける。
 - 各イベントは version、イベント ID、UTC 発生日時、action、actor、遷移前後の `item_status`、reason、変更フィールド、直前イベント ID を保持する。Git から移行したイベントだけは移行元 commit も保持できる。
-- action は `add` / `start` / `wait` / `review` / `close` / `reject` / `defer` / `reopen` / `update` / `renumber` / `migrate` のいずれかとする。詳細な型と enum は `register-item-frontmatter.schema.yaml` を正本とする。
-- `register build` はイベント ID の一意性、時刻順、直前イベント参照、遷移前後状態の連鎖、最新イベントと現在値の一致を検証する。不正なイベントを無視して一覧を生成しない。
+- action は `add` / `start` / `wait` / `review` / `close` / `reject` / `defer` / `reopen` / `update` / `renumber` / `migrate` のいずれかとする。詳細な型と enum は `register-events.schema.yaml` を正本とする。
+- `register build` は個票とイベントファイルの 1 対 1 対応、イベント ID の一意性、時刻順、直前イベント参照、遷移前後状態の連鎖、最新イベントの状態と個票の `item_status` の一致を検証する。不正なイベントを無視して一覧を生成しない。
 
 ## 4. 本文構成（標準テンプレ）
 
@@ -130,13 +134,59 @@ Project Register Documentation Rules
 ### 5.2. 構造化フィールドと生成
 
 - 新しい項目は `register add` で作成し、個票の Frontmatter に初期値を書き込む。全 type で個票を省略しない。
-- 担当・期限・結論などを変更するときは `register update`、処理状態を変えるときは状態遷移コマンドを使用する。待機理由は `register wait --reason` で記録する。
+- 担当・期限・結論・topic などを変更するときは `register update`、処理状態を変えるときは状態遷移コマンドを使用する。待機理由は `register wait --reason` で記録する。
 - `register build` は個票を読み取り、一覧・派生ビューを再生成する。一覧を編集して個票へ反映する経路はない。
-- `register add`、状態遷移、`register update`、`register renumber` は現在値とイベントを同じ個票更新で記録する。`--by` で actor、`--reason` で理由を明示でき、省略時もコマンドが既定値を記録する。
+- `register add`、状態遷移、`register update`、`register renumber` は現在値を個票へ、イベントを対応する項目別ログへ記録する。`--by` で actor、`--reason` で理由を明示でき、省略時もコマンドが既定値を記録する。
 - 同じ現在値へ同じ操作を再実行した場合は、新しいイベントを追加しない。イベント ID と直前イベント参照を保ったまま再実行し、既存イベントの置換や削除で重複を解消しない。
 - ID の変更は `register renumber` で行い、個票のファイル名・Frontmatter・参照と生成ビューを整合させる。
+- 主題の変化に伴う `<topic>` の変更は `register update --topic` で行う。個票のファイル名と Frontmatter の文書 ID、他文書中の旧文書 ID 参照を同時に更新し、生成ビューを再生成する。
 
-### 5.3. 個票 status の遷移基準
+### 5.3. 登録項目の item_status 遷移基準
+
+#### 5.3.1. item_type 別の item_status 終端基準
+
+`item_status` の通常終端は、登録した目的を達成したときに使用する。type ごとの通常終端と判定基準は次のとおりとする。
+
+| `item_type`      | 通常終端  | 遷移条件                                                               | `conclusion` に残す内容      |
+| ---------------- | --------- | ---------------------------------------------------------------------- | ---------------------------- |
+| `todo`           | `done`    | 個票に記載した完了条件をすべて満たした                                 | 実施内容と完了を確認した根拠 |
+| `question`       | `decided` | 問いへの回答を確認し、後続作業の要否を判断できる                       | 確定した回答                 |
+| `decision`       | `decided` | 選択肢、採択理由、影響を記録し、必要な承認を得た                       | 決定内容                     |
+| `note`           | なし      | 終端させず、`open` のまま新しい事実・知見を追記する                    | 終端しないため使用しない     |
+| `risk`           | `done`    | リスクが顕在化しないまま消滅した、または対応を終えて追跡が不要になった | 消滅・対応完了の根拠         |
+| `issue`          | `done`    | 問題を解消し、必要な確認を終えた                                       | 解決内容と確認結果           |
+| `change-request` | `done`    | 採択した変更を対象へ反映し、必要な確認を終えた                         | 反映内容と確認結果           |
+
+- `question` / `decision` の通常終端に `done` を使わず、回答・決定が確定したことを示す `decided` を使う。
+- `todo` / `risk` / `issue` / `change-request` の通常終端に `decided` を使わず、対応または追跡が完了したことを示す `done` を使う。
+- `note` の `open` は未対応を意味しない。内容を継続して更新できる、生きている記録であることを示す。
+- `note` から対応・回答・判断が必要になった場合は、`todo` / `question` / `decision` など目的に合う別項目を起票し、note 自体は `open` のまま参照元として保持する。
+- `note` の内容が陳腐化または置換された場合は、その事実と参照先を本文へ追記する。`done` / `decided` / `rejected` / `deferred` へ遷移させて閉じない。
+
+#### 5.3.2. 例外的な追跡終了
+
+`note` 以外では、通常終端に達していなくても、次の条件で追跡を終了できる。
+
+| `item_status` | 使用条件                                                                   | 記録要件                                         |
+| ------------- | -------------------------------------------------------------------------- | ------------------------------------------------ |
+| `rejected`    | 対応・回答・判断の対象外、前提不成立、または変更を採択しないことが確定した | 採択しない理由と、必要なら代替の追跡先を記録する |
+| `deferred`    | 現時点の追跡を停止し、再開条件または再評価時期を定めた                     | 再開条件または再評価時期を記録する               |
+
+- `rejected` は完了・決定の代用にせず、実施または採択しない判断が確定した場合だけ使う。
+- `deferred` は状態遷移上の終端だが、完了を意味せず `completed_at` を持たない。再開するときは `register reopen` を使う。
+- `question` / `decision` で回答または決定を得た場合は `rejected` ではなく `decided` を使う。問い・判断自体が不要になった場合だけ `rejected` を使う。
+- `risk` を受容して監視を終える場合は、受容判断と残存影響を `conclusion` に記録したうえで `done` とする。リスクの前提が誤りだった場合は `rejected` とする。
+
+#### 5.3.3. 中間状態を経ない終端
+
+終端への遷移は、`in-progress` / `waiting` / `review` を経ていることを前提としない。`open` から直接終端させてよい。
+
+- 人または対話型 orchestrator が対応した項目では、着手を記録する前に完了することがある。形式を揃えるために `start` を遡って記録すると、実際には行われていない時点の遷移がイベントログに残る。事実と異なる記録を避けるため、直接の終端を許す。
+- agent が `exec run` で実行する項目は runner が `start` を記録するため、この経路では中間状態が必ず残る。
+- 中間状態を経ない場合は、誰がどの経路で対応したかを終端イベントの `reason` へ記録する。exec の plan / result / evidence が存在しないため、実施内容と検証結果は個票の対応結果へ残す。
+- 実行していない主体を actor とする遷移を、記録の体裁を整える目的で追加しない。
+
+### 5.4. 個票 status の遷移基準
 
 | `status`     | 意味                                              | 遷移させる時点                                    |
 | ------------ | ------------------------------------------------- | ------------------------------------------------- |
@@ -157,4 +207,5 @@ Project Register Documentation Rules
 - `registered_at` / `completed_at` に、UTC 以外のオフセットやタイムゾーンを伴わない値、暦日だけの値を保存しない。
 - 個票の文書 ID から `<topic>` を省略したり、ファイル名と異なるローカル ID を使用したりしない。
 - type 固有の必須内容を、見出しだけ残した空欄のまま終端状態にしない。
-- `register_events` を手書きで追加・修正・並べ替え・削除しない。履歴補正が必要な場合も register コマンドを使い、監査イベントを破壊しない。
+- 実行していない主体を actor とする状態遷移を、記録の体裁を揃える目的で追加しない。
+- `events/pjr-XXXX.yaml` を手書きで追加・修正・並べ替え・削除しない。履歴補正が必要な場合も register コマンドを使い、監査イベントを破壊しない。

@@ -47,9 +47,9 @@ flowchart BT
   TC -->|based_on| TSP
   Code -->|based_on| TC
 
-
   classDef target stroke-width:4px
   class TCDetail target
+
 ```
 
 ## 3. ファイル命名・ID規則

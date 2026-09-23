@@ -1,3 +1,16 @@
+---
+specdojo:
+  id: specdojo:cxd-mermaid-rulebook
+  type: rulebook
+  status: draft
+  target_format: markdown
+  recipe: undecided
+  sample: specdojo:cxd-sample
+  template: undecided
+  based_on:
+    - specdojo:rulebook-authoring-standard
+---
+
 # Mermaid を用いたC4コンテキスト図 作成ルール
 
 C4 Context Diagram (CXD) Documentation Rules using Mermaid
@@ -11,6 +24,7 @@ C4 コンテキスト図は「対象システム」と、その周辺の **利�
 ## 1. 全体方針
 
 - Mermaid の **`flowchart` を C4 コンテキスト図風に利用**する。
+
 - 対象は「システム境界の外側との関係」であり、内部構造（コンテナ/コンポーネント）や実装詳細は含めない。
 - 図は「正確さ（過剰な詳細）」よりも「解釈が割れないこと（合意）」を優先する。
 - 1つの図には **対象システムを1つ**だけ置く（複数対象は図を分ける）。
@@ -43,6 +57,7 @@ Mermaid `flowchart` では `classDef` + `class`、境界は `style` を使用し
 ```mermaid
 flowchart LR
   %% --- Standard styles (recommended) ---
+
   classDef person fill:#fff3bf,stroke:#f08c00,color:#000;
   classDef system fill:#d0ebff,stroke:#1c7ed6,color:#000;
   classDef external fill:#e9ecef,stroke:#495057,color:#000;
@@ -50,6 +65,7 @@ flowchart LR
   %% System boundary style (subgraph)
   %% NOTE: '境界' は subgraph のID（名前）に合わせる
   style 境界 fill:#ffffff,fill-opacity:0,stroke:#868e96,stroke-width:1px,stroke-dasharray: 5 5;
+
 ```
 
 ```plainText

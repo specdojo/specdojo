@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_c25d2bccfe694b209d00620a267f78f8
+  ts: "2026-09-09T22:38:32Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 保護機構でブロックされた executor を再開できない
+    - field: description
+      from: ""
+      to: agent-config-write が保護対象の設定変更を検知すると executor 段が failed となり --resume が拒否される。ブロックは失敗とは性質が異なり、executor は作業を完了したうえでゲートで止められている。PJR-9M5N では 12 ファイル 231 行の成果物が worktree に揃い typecheck と test:unit 1425 件も成功していたが再開できず、orchestrator が reporter 相当を代行した。--force-restart しか正規の経路がなく、成果と codex 呼び出し 1 回分を捨てることになる。申し送りを人が適用した後に再開できる経路が要る。
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-10"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_6019fc4ccae84d89a6b37004d1024d02
+  ts: "2026-09-10T03:43:42Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_c25d2bccfe694b209d00620a267f78f8
+- v: 1
+  id: reg_8f3956c8969b44588de69ec6e3058678
+  ts: "2026-09-10T03:57:05Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_6019fc4ccae84d89a6b37004d1024d02
+- v: 1
+  id: reg_6a8704680f2a4abe9f46091559bf18d6
+  ts: "2026-09-10T11:45:03Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: pipeline stage に blocked を独立した状態として追加し、failed と区別したうえで再開対象とした。実装の誤りによる failed は従来どおり再開できない。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-10"
+  previous_event_id: reg_8f3956c8969b44588de69ec6e3058678

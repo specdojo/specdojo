@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-FMZ2",
+  "run_id": "20260902T134842357Z-d916232c",
+  "stage": {
+    "role": "executor",
+    "actor": "claude-expert-executor",
+    "status": "failed",
+    "started_at": "2026-09-02T13:48:42.357Z",
+    "completed_at": "2026-09-02T13:53:59.978Z",
+    "exit_code": 1,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-fmz2-integrate-error-stderr.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-worktree.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-worktree.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 3,
+    "summary": ".../pjr-fmz2-integrate-error-stderr.md             | 35 +++++++++++++++----\n src/exec-worktree.ts                               | 40 ++++++++++++++++++++--\n 2 files changed, 67 insertions(+), 8 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write src/exec-worktree.ts tests/src/exec-worktree.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-fmz2-integrate-error-stderr.md",
+      "status": "passed",
+      "summary": "整形完了（差分適用済み）"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-fmz2-integrate-error-stderr.md",
+      "status": "passed",
+      "summary": "MD038 を修正後、エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "tsc -b --noEmit で型エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "ESLint エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "exit 0。WARN は既存の未作成 product 文書に対する based_on 警告のみ"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "generated/ 配下の登録簿ビューを再生成"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "1477 entries を .specdojo/doc-index.json へ再生成"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:unit",
+      "status": "not_run",
+      "summary": "親 runner の allowlisted validation のため executor では実行しない"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:integration",
+      "status": "not_run",
+      "summary": "親 runner の allowlisted validation のため executor では実行しない"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema",
+      "status": "not_run",
+      "summary": "親 runner の allowlisted validation のため executor では実行しない"
+    }
+  ],
+  "final_message": "gitOutput の失敗メッセージを summarizeGitArguments/formatGitCommandFailure で再構成し、pathspec を件数へ要約して stderr を先頭側へ移動。単体テスト tests/src/exec-worktree.test.ts を追加し、個票 pjr-fmz2 の作業内容・対応結果を更新した。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-FMZ2/20260902T134842357Z-d916232c/executor.log",
+      "bytes": 4535,
+      "truncated": false
+    }
+  ]
+}

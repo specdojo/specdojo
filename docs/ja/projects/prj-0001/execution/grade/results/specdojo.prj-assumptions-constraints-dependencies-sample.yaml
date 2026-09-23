@@ -1,0 +1,66 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:prj-assumptions-constraints-dependencies-sample
+path: docs/ja/specdojo/samples/prj-assumptions-constraints-dependencies-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: pass
+score: 94
+graded_at: "2026-09-05T21:48:25.978Z"
+graded_by: gemma-expert-executor
+content_hash: 60e8c87ca729f0894aabfcf60f0d1b58db28001c4fb0c097afbd49abf5554879
+categories:
+  consistency:
+    score: 100
+  usability:
+    score: 92
+  architecture:
+    score: 100
+  quality:
+    score: 88
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 2
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 63
+    message: 依存関係表の列名（「依存先・条件」「必要となる理由」等）が、rulebook 6.3 節の推奨表（「内容または依存先」「影響・必要な理由」等）と一致していない。
+    anchor: ""
+  - id: F002
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 63
+    message: 依存関係表の列名に使用されている用語が, rulebook の推奨表記（「内容または依存先」等）と統一されていない。
+    anchor: ""

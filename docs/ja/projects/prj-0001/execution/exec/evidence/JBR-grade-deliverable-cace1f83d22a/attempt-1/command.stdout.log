@@ -1,0 +1,35 @@
+
+> specdojo@0.1.0 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-deliverable-cace1f83d22a project=prj-0001 target=deliverable kind=none changed_only=true ungraded=true documents=5 work_dir=logs/grade/runs/per-document/JBR-grade-deliverable-cace1f83d22a
+stage=1 executor=gemma-expert-executor reporter=gemma-reporter reference=none
+stage=2 executor=gemma-expert-executor reporter=gemma-reporter reference=none
+stage=3 executor=codex-expert-executor reporter=gemma-reporter reference=none condition="pass, score>=96, findings<=1"
+document start: docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md
+document complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md
+document start: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server-usage.md
+document complete: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server-usage.md
+document start: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md
+document complete: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md
+document start: docs/ja/product/030-architecture/020-infrastructure/tsd-index.md
+document complete: docs/ja/product/030-architecture/020-infrastructure/tsd-index.md
+document start: docs/ja/product/030-architecture/020-infrastructure/tsd-ollama-opencode.md
+document complete: docs/ja/product/030-architecture/020-infrastructure/tsd-ollama-opencode.md
+grade pipeline complete: selected=5 processed=5 completed_now=5 results=logs/grade/runs/per-document/JBR-grade-deliverable-cace1f83d22a/results.tsv
+recorded_at	document	stage	status	duration_seconds	verdict	score	findings	executor	reporter	reference
+2026-09-13T23:12:32Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md	1	passed	745	pass	100	0	gemma-expert-executor	gemma-reporter	none
+2026-09-13T23:27:03Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md	2	passed	871	pass	100	0	gemma-expert-executor	gemma-reporter	none
+2026-09-13T23:34:22Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md	3	passed	439	needs-work	72	7	codex-expert-executor	gemma-reporter	none
+2026-09-13T23:43:54Z	docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server-usage.md	1	passed	572	pass	100	0	gemma-expert-executor	gemma-reporter	none
+2026-09-13T23:53:04Z	docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server-usage.md	2	passed	550	needs-work	89	2	gemma-expert-executor	gemma-reporter	none
+2026-09-13T23:53:04Z	docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server-usage.md	3	skipped_condition	0				codex-expert-executor	gemma-reporter	none
+2026-09-14T00:02:43Z	docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md	1	passed	579	pass	100	0	gemma-expert-executor	gemma-reporter	none
+2026-09-14T00:12:07Z	docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md	2	passed	564	pass	100	0	gemma-expert-executor	gemma-reporter	none
+2026-09-14T00:18:49Z	docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md	3	passed	402	needs-work	79	6	codex-expert-executor	gemma-reporter	none
+2026-09-14T00:23:23Z	docs/ja/product/030-architecture/020-infrastructure/tsd-index.md	1	passed	273	pass	100	0	gemma-expert-executor	gemma-reporter	none
+2026-09-14T00:32:17Z	docs/ja/product/030-architecture/020-infrastructure/tsd-index.md	2	passed	534	needs-work	95	1	gemma-expert-executor	gemma-reporter	none
+2026-09-14T00:32:17Z	docs/ja/product/030-architecture/020-infrastructure/tsd-index.md	3	skipped_condition	0				codex-expert-executor	gemma-reporter	none
+2026-09-14T00:42:42Z	docs/ja/product/030-architecture/020-infrastructure/tsd-ollama-opencode.md	1	passed	625	needs-work	84	4	gemma-expert-executor	gemma-reporter	none
+2026-09-14T00:52:34Z	docs/ja/product/030-architecture/020-infrastructure/tsd-ollama-opencode.md	2	passed	592	needs-work	84	4	gemma-expert-executor	gemma-reporter	none
+2026-09-14T00:52:34Z	docs/ja/product/030-architecture/020-infrastructure/tsd-ollama-opencode.md	3	skipped_condition	0				codex-expert-executor	gemma-reporter	none

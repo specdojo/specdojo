@@ -1,0 +1,78 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:cdsd-sample
+path: docs/ja/specdojo/samples/cdsd-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: fail
+score: 53
+graded_at: "2026-09-04T23:33:13.373Z"
+graded_by: gemma-expert-executor
+content_hash: 52b962ba44374970e1b92e3f62bf481499647f9448480be8e0779d1a2e864cfd
+categories:
+  consistency:
+    score: 50
+  usability:
+    score: 75
+  architecture:
+    score: 100
+  quality:
+    score: 13
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 1
+    score: 25
+  vp-qe-omissions-consistency:
+    level: 0
+    score: 0
+  vp-qe-kata-conformance:
+    level: 0
+    score: 0
+  vp-ux-readability:
+    level: 1
+    score: 25
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 2
+  major: 2
+  minor: 0
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-qe-verifiability
+    line: 57
+    message: ルールブックで定義された標準列や語彙に基づく具体的な記述がなく、検証不可能な状態である。
+    anchor: ""
+  - id: F002
+    severity: blocker
+    rule: vp-qe-omissions-consistency
+    line: 57
+    message: ルールブックで必須とされている「標準列（データストア名、対応プロセス等）」を含むデータストア一覧表が欠落している。
+    anchor: ""
+  - id: F003
+    severity: blocker
+    rule: vp-qe-kata-conformance
+    line: 57
+    message: サンプルとして成果物の具体的な記述例を示す責務を果たしておらず、ルールブックの標準定義を全く適用していない。
+    anchor: ""
+  - id: F004
+    severity: major
+    rule: vp-ux-readability
+    line: 52
+    message: 成果物の具体的な記述例が欠落しており、初見の読者がどのように具体的に記述すべきかを理解できない。
+    anchor: ""

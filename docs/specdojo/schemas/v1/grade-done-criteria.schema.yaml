@@ -1,0 +1,79 @@
+# grade-done-criteria.schema.yaml
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: "SpecDojo grade done_criteria detail schema"
+description: >
+  Validates the per-deliverable detail file that `specdojo grade apply --target deliverable`
+  writes below <execution_path>/grade/criteria/. The deliverable frontmatter keeps only the
+  summary (specdojo.grade.done_criteria); this file records the judgement and reason for
+  every catalog done_criteria item. One file per deliverable is overwritten on every grade,
+  so git history is the record of earlier judgements. content_hash mirrors the value stored
+  in the deliverable and shows whether this detail still describes the current content.
+type: object
+additionalProperties: false
+required:
+  - id
+  - document
+  - path
+  - graded_at
+  - graded_by
+  - content_hash
+  - summary
+  - criteria
+properties:
+  id:
+    type: string
+    pattern: "^[a-z0-9][a-z0-9-:]*$"
+    description: "Document id of this detail file. Referenced from specdojo.grade.done_criteria.detail_ref."
+  document:
+    type: string
+    minLength: 1
+    description: "Document id of the graded deliverable (or its path when the id is missing)."
+  path:
+    type: string
+    minLength: 1
+    description: "Repository-relative path of the graded deliverable."
+  graded_at:
+    type: string
+    format: date-time
+  graded_by:
+    type: string
+    minLength: 1
+  content_hash:
+    type: string
+    pattern: "^[a-f0-9]{64}$"
+  summary:
+    type: object
+    additionalProperties: false
+    required: [satisfied, unsatisfied, total]
+    properties:
+      satisfied: { type: integer, minimum: 0 }
+      unsatisfied: { type: integer, minimum: 0 }
+      total: { type: integer, minimum: 0 }
+  criteria:
+    type: array
+    items:
+      type: object
+      additionalProperties: false
+      required: [id, text, roles, viewpoint, status]
+      properties:
+        id:
+          type: string
+          pattern: "^DC-[0-9]{3,}$"
+        text:
+          type: string
+          minLength: 1
+        roles:
+          type: array
+          items:
+            type: string
+            minLength: 1
+          minItems: 1
+          uniqueItems: true
+        viewpoint:
+          type: string
+          pattern: "^vp-[a-z][a-z0-9-]*$"
+        status:
+          enum: [satisfied, unsatisfied]
+        reason:
+          type: string
+          minLength: 1

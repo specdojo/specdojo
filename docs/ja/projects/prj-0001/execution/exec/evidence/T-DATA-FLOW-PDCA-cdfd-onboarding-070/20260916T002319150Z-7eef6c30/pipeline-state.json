@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "task_id": "T-DATA-FLOW-PDCA-cdfd-onboarding-070",
+  "run_id": "20260916T002319150Z-7eef6c30",
+  "updated_at": "2026-09-16T00:47:32.496Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "qwen-executor",
+      "attempts": 1,
+      "started_at": "2026-09-16T00:24:07.321Z",
+      "completed_at": "2026-09-16T00:34:09.595Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-PDCA-cdfd-onboarding-070/20260916T002319150Z-7eef6c30/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "qwen-reporter",
+      "attempts": 3,
+      "started_at": "2026-09-16T00:34:53.292Z",
+      "completed_at": "2026-09-16T00:47:32.496Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/T-DATA-FLOW-PDCA-cdfd-onboarding-070-result.md"
+    }
+  }
+}

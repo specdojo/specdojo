@@ -1,0 +1,50 @@
+
+> specdojo@0.1.0 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-kata-941d96b2e3ed project=prj-0001 kind=all changed_only=true ungraded=true documents=8 work_dir=logs/grade/runs/per-document/JBR-grade-kata-941d96b2e3ed
+stage=1 executor=gemma-expert-executor reporter=gemma-reporter reference=per-kind
+stage=2 executor=gemma-expert-executor reporter=gemma-reporter reference=none
+stage=3 executor=codex-expert-executor reporter=gemma-reporter reference=none condition="pass, score>=96, findings<=1"
+document start: docs/ja/specdojo/templates/pjr-views-by-status-template.md
+document complete: docs/ja/specdojo/templates/pjr-views-by-status-template.md
+document start: docs/ja/specdojo/templates/pm-issue-log-template.md
+document complete: docs/ja/specdojo/templates/pm-issue-log-template.md
+document start: docs/ja/specdojo/templates/pm-plan-template.md
+document complete: docs/ja/specdojo/templates/pm-plan-template.md
+document start: docs/ja/specdojo/templates/pm-risk-register-template.md
+document complete: docs/ja/specdojo/templates/pm-risk-register-template.md
+document start: docs/ja/specdojo/templates/prj-assumptions-constraints-dependencies-template.md
+document complete: docs/ja/specdojo/templates/prj-assumptions-constraints-dependencies-template.md
+document start: docs/ja/specdojo/templates/prj-issues-and-approach-template.md
+document complete: docs/ja/specdojo/templates/prj-issues-and-approach-template.md
+document start: docs/ja/specdojo/templates/prj-overview-template.md
+document complete: docs/ja/specdojo/templates/prj-overview-template.md
+document start: docs/ja/specdojo/templates/prj-stakeholder-register-template.md
+document complete: docs/ja/specdojo/templates/prj-stakeholder-register-template.md
+grade pipeline complete: selected=8 processed=8 completed_now=8 results=logs/grade/runs/per-document/JBR-grade-kata-941d96b2e3ed/results.tsv
+recorded_at	document	stage	status	duration_seconds	verdict	score	findings	executor	reporter	reference
+2026-09-10T15:07:47Z	docs/ja/specdojo/templates/pjr-views-by-status-template.md	1	passed	459	needs-work	86	5	gemma-expert-executor	gemma-reporter	docs/ja/specdojo/templates/prj-overview-template.md
+2026-09-10T15:16:01Z	docs/ja/specdojo/templates/pjr-views-by-status-template.md	2	passed	494	needs-work	86	5	gemma-expert-executor	gemma-reporter	none
+2026-09-10T15:16:01Z	docs/ja/specdojo/templates/pjr-views-by-status-template.md	3	skipped_condition	0				codex-expert-executor	gemma-reporter	none
+2026-09-10T15:25:09Z	docs/ja/specdojo/templates/pm-issue-log-template.md	1	passed	548	fail	59	5	gemma-expert-executor	gemma-reporter	docs/ja/specdojo/templates/prj-overview-template.md
+2026-09-10T15:32:17Z	docs/ja/specdojo/templates/pm-issue-log-template.md	2	passed	428	fail	59	5	gemma-expert-executor	gemma-reporter	none
+2026-09-10T15:32:17Z	docs/ja/specdojo/templates/pm-issue-log-template.md	3	skipped_condition	0				codex-expert-executor	gemma-reporter	none
+2026-09-10T15:39:47Z	docs/ja/specdojo/templates/pm-plan-template.md	1	passed	450	pass	100	0	gemma-expert-executor	gemma-reporter	docs/ja/specdojo/templates/prj-overview-template.md
+2026-09-10T15:47:07Z	docs/ja/specdojo/templates/pm-plan-template.md	2	passed	440	pass	100	0	gemma-expert-executor	gemma-reporter	none
+2026-09-10T15:53:46Z	docs/ja/specdojo/templates/pm-plan-template.md	3	passed	399	needs-work	73	8	codex-expert-executor	gemma-reporter	none
+2026-09-10T16:03:05Z	docs/ja/specdojo/templates/pm-risk-register-template.md	1	failed	559				gemma-expert-executor	gemma-reporter	docs/ja/specdojo/templates/prj-overview-template.md
+2026-09-10T16:11:37Z	docs/ja/specdojo/templates/pm-risk-register-template.md	2	passed	512	fail	66	4	gemma-expert-executor	gemma-reporter	none
+2026-09-10T16:11:37Z	docs/ja/specdojo/templates/pm-risk-register-template.md	3	skipped_condition	0				codex-expert-executor	gemma-reporter	none
+2026-09-10T16:21:14Z	docs/ja/specdojo/templates/prj-assumptions-constraints-dependencies-template.md	1	passed	577	pass	94	2	gemma-expert-executor	gemma-reporter	docs/ja/specdojo/templates/prj-overview-template.md
+2026-09-10T16:31:59Z	docs/ja/specdojo/templates/prj-assumptions-constraints-dependencies-template.md	2	passed	645	pass	94	2	gemma-expert-executor	gemma-reporter	none
+2026-09-10T16:31:59Z	docs/ja/specdojo/templates/prj-assumptions-constraints-dependencies-template.md	3	skipped_condition	0				codex-expert-executor	gemma-reporter	none
+2026-09-10T16:41:42Z	docs/ja/specdojo/templates/prj-issues-and-approach-template.md	1	passed	583	pass	100	0	gemma-expert-executor	gemma-reporter	docs/ja/specdojo/templates/prj-overview-template.md
+2026-09-10T16:52:41Z	docs/ja/specdojo/templates/prj-issues-and-approach-template.md	2	passed	659	pass	96	1	gemma-expert-executor	gemma-reporter	none
+2026-09-10T16:57:03Z	docs/ja/specdojo/templates/prj-issues-and-approach-template.md	3	passed	262	pass	96	1	codex-expert-executor	gemma-reporter	none
+2026-09-10T17:05:39Z	docs/ja/specdojo/templates/prj-overview-template.md	1	passed	516	pass	100	0	gemma-expert-executor	gemma-reporter	docs/ja/specdojo/templates/prj-overview-template.md
+2026-09-10T17:13:48Z	docs/ja/specdojo/templates/prj-overview-template.md	2	passed	489	pass	100	0	gemma-expert-executor	gemma-reporter	none
+2026-09-10T17:16:59Z	docs/ja/specdojo/templates/prj-overview-template.md	3	passed	191	pass	100	0	codex-expert-executor	gemma-reporter	none
+2026-09-10T17:27:26Z	docs/ja/specdojo/templates/prj-stakeholder-register-template.md	1	passed	627	pass	100	0	gemma-expert-executor	gemma-reporter	docs/ja/specdojo/templates/prj-overview-template.md
+2026-09-10T17:35:48Z	docs/ja/specdojo/templates/prj-stakeholder-register-template.md	2	passed	502	pass	100	0	gemma-expert-executor	gemma-reporter	none
+2026-09-10T17:42:02Z	docs/ja/specdojo/templates/prj-stakeholder-register-template.md	3	passed	374	pass	100	0	codex-expert-executor	gemma-reporter	none

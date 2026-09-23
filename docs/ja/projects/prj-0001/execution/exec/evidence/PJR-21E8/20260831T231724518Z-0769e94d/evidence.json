@@ -1,0 +1,152 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-21E8",
+  "run_id": "20260831T231724518Z-0769e94d",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-08-31T23:17:24.518Z",
+    "completed_at": "2026-08-31T23:25:08.627Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-21e8-grade-frontmatter-flow-style.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/document-metadata-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "src/grade.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/grade.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 4,
+    "summary": ".../pjr-21e8-grade-frontmatter-flow-style.md       | 19 +++++----\n .../standards/document-metadata-standard.md        |  2 +\n src/grade.ts                                       | 44 ++++++++++++++++++-\n tests/src/grade.test.ts                            | 49 ++++++++++++++++++++--\n 4 files changed, 103 insertions(+), 11 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write src/grade.ts tests/src/grade.test.ts docs/ja/specdojo/standards/document-metadata-standard.md docs/ja/projects/prj-0001/controls/project-register/pjr-21e8-grade-frontmatter-flow-style.md",
+      "status": "passed",
+      "summary": "変更4ファイルを整形"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/specdojo/standards/document-metadata-standard.md docs/ja/projects/prj-0001/controls/project-register/pjr-21e8-grade-frontmatter-flow-style.md",
+      "status": "passed",
+      "summary": "変更Markdownにエラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "TypeScript型検査に成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "ESLintに成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "Frontmatter lintに成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx --input-type=module -e '<grade flow style smoke assertions>'",
+      "status": "passed",
+      "summary": "フロー形式、連続適用の冪等性、grade外への非波及、Prettier後のYAML同値性を確認"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿派生ビューを生成"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "カタログ検証に成功。既存の欠落文書警告のみ"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "文書索引生成に成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/docs/src/validate-history-links.ts",
+      "status": "passed",
+      "summary": "履歴リンク検証に成功"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:unit",
+      "status": "not_run",
+      "summary": "親runnerのtest-unit検証に委譲"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:integration",
+      "status": "not_run",
+      "summary": "親runnerのtest-integration検証に委譲"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema",
+      "status": "not_run",
+      "summary": "親runnerのvalidate-schema検証に委譲"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-21E8\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: tools/vscode-specdojo\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nInstalling worktree dependencies: .\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/stale.md\n  src/unrelated.ts\ncommit-targets:\n  execution/exec/res…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run\n\n\n> specdojo@0.1.0 validate:schema:yaml\n> tsx tools/docs/src/validate-yaml-schema.ts --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bps-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipp…"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-21E8\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-jKUU3Q/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-SWXRSY/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-MJQ4uD/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-R54mP3/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-iZqkyF/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-TZz6qC/pjr-0001-topic.md\n\n Test Files  91 passed (91)\n      Tests  1314 passed (1314)\n   Start at  08:24:51\n   Duration  17.46s (transform 1.41s, setup 354ms, import 9.72s, tests 15.15s, environment 5ms)\n\n\nerror: unknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-…"
+    }
+  ],
+  "final_message": "grade専用のFrontmatterシリアライズを実装し、categories・viewpoints・findingsをPrettier互換のフロースタイルへ変更した",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-21E8/20260831T231724518Z-0769e94d/executor.log",
+      "bytes": 2724,
+      "truncated": false
+    }
+  ]
+}

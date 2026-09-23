@@ -1,0 +1,7 @@
+finding 除去後に生じる空行だけを正規化し、無関係な空行は維持するよう修正しました。文末の余分な空行にも対応し、回帰テストと個票を更新しています。
+
+`lint:md`、型検査、再生成、カタログ検証、索引生成はいずれも成功しました。test-unit／integration／schema は指示どおり親 runner に委ねています。result ファイルは変更していません。
+
+<specdojo_executor_evidence>
+{"final_message":"finding除去後の空行を局所的に正規化し、生成物のMD012違反を解消した","validations":[{"command":"npx prettier --write src/template-frontmatter.ts tests/src/template-frontmatter.test.ts tests/src/register.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-bkq0-generated-blank-after-finding-removal.md","status":"passed","summary":"変更対象を整形"},{"command":"node --import tsx src/specdojo.ts register build --project prj-0001","status":"passed","summary":"登録簿と派生ビュー8件を再生成"},{"command":"npm run typecheck","status":"passed","summary":"TypeScript型検査に成功"},{"command":"npm run lint:md","status":"passed","summary":"全Markdownのlintに成功しMD012違反なし"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"既知の未作成成果物警告のみで検証成功"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1610件の索引を生成"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>

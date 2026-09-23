@@ -1,0 +1,12 @@
+同梱テンプレート26件から finding コメント118件を除去しました。
+
+- 生成時にも共通処理で finding コメントを除去
+- `register add` / `catalog generate` の回帰テストを追加
+- 既存の派生ビュー8件を再生成
+- Template 記述標準と PJR-SAY1 個票を更新
+- result は executor 指示に従い未更新
+- unit / integration / schema 検証は親 runner に委譲
+
+<specdojo_executor_evidence>
+{"final_message":"テンプレート26件からfindingコメント118件を除去し、生成時の再混入防止と回帰テストを追加した","validations":[{"command":"git diff --name-only -z -- '*.md' '*.ts' | xargs -0 npx prettier --write","status":"passed","summary":"変更対象を整形"},{"command":"git diff --name-only -z -- '*.md' | xargs -0 npx markdownlint","status":"passed","summary":"変更Markdownのlint成功"},{"command":"npm run typecheck","status":"passed","summary":"TypeScript型検査成功"},{"command":"node --import tsx src/specdojo.ts register build --project prj-0001","status":"passed","summary":"登録簿と派生ビュー8件を再生成"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"既知の未作成成果物警告のみで成功"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1554件の索引を生成"},{"command":"npm_config_cache=/tmp/specdojo-pjr-say1-npm-cache npm pack --dry-run --json","status":"passed","summary":"npmパッケージ571ファイルの同梱内容を確認"},{"command":"if rg -n '<!--[[:space:]]*specdojo:finding' docs/ja/specdojo/templates docs/ja/projects/prj-0001/controls/project-register/generated docs/ja/projects/prj-0001/controls/generated --glob '*.md'; then exit 1; fi","status":"passed","summary":"テンプレートと再生成物にfindingコメントなし"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>

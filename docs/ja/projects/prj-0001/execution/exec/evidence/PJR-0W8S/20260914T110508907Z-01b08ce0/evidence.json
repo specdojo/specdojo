@@ -1,0 +1,192 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-0W8S",
+  "run_id": "20260914T110508907Z-01b08ce0",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-14T11:05:08.907Z",
+    "completed_at": "2026-09-14T11:13:30.292Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0w8s-grade-retry-failed-stage.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/routines/rtn-grade-deliverable-recheck.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/routines/rtn-grade-recheck.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/routine-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "src/grade.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/cli-verb-taxonomy.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/grade.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/tools/grade-per-document.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tools/grade/run-per-document.sh",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/pipeline/cdfd-mermaid-rulebook-030c7311d187.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/pipeline/cdfd-overview-recipe-64f5d1f88327.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/pipeline/cdfd-uc-recipe-9edf172ca392.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/pipeline/cdfd-uc-rulebook-c03ac3f5bb5d.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/grade-pipeline-state.schema.yaml",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 17,
+    "summary": ".../pjr-0w8s-grade-retry-failed-stage.md           |  17 +-\n .../pjr-0w8s-20260913T222112Z-5a72-result.md       |  33 +-\n .../prj-0001/jobs/job-grade-deliverable.yaml       |  16 +-\n docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml |  16 +-\n .../routines/rtn-grade-deliverable-recheck.yaml    |   5 +-\n .../prj-0001/routines/rtn-grade-recheck.yaml       |   5 +-\n docs/ja/specdojo/guides/routine-operation-guide.md |   8 +-\n docs/ja/specdojo/references/command-reference.md   |  18 +-\n src/grade.ts                                       | 355 ++++++++++++++++++++-\n tests/src/cli-verb-taxonomy.test.ts                |  18 +-\n tests/src/grade.test.ts                            |  48 +++\n tests/tools/grade-per-document.test.ts             | 145 ++++++++-\n tools/grade/run-per-document.sh                    | 255 ++++++++++++---\n 13 files changed, 856 insertions(+), 83 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "TypeScript型検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "ESLint成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run build && tools/grade/run-per-document.sh --run-id pjr-0w8s-verification --kind all --incomplete --limit 10 --specdojo-bin dist/specdojo.js --dry-run && node dist/specdojo.js routine validate --project prj-0001",
+      "status": "passed",
+      "summary": "ビルド成功、移行対象4文書を選択、routine 8件を検証"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --check src/grade.ts tests/src/grade.test.ts tests/src/cli-verb-taxonomy.test.ts tests/tools/grade-per-document.test.ts docs/specdojo/schemas/v1/grade-pipeline-state.schema.yaml docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml docs/ja/projects/prj-0001/routines/rtn-grade-recheck.yaml docs/ja/projects/prj-0001/routines/rtn-grade-deliverable-recheck.yaml docs/ja/specdojo/guides/routine-operation-guide.md docs/ja/specdojo/ref…",
+      "status": "passed",
+      "summary": "変更対象の整形確認成功"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/specdojo/guides/routine-operation-guide.md docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-0w8s-grade-retry-failed-stage.md docs/ja/projects/prj-0001/execution/exec/results/pjr-0w8s-20260913T222112Z-5a72-result.md",
+      "status": "passed",
+      "summary": "Markdownlint成功"
+    },
+    {
+      "source": "executor",
+      "command": "bash -n tools/grade/run-per-document.sh && git diff --check",
+      "status": "passed",
+      "summary": "シェル構文と差分空白検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿派生ビュー生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "カタログ検証成功。既存の未作成成果物警告のみ"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "文書索引1680件を生成"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:unit",
+      "status": "not_run",
+      "summary": "親runner実行対象のため未実行"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:integration",
+      "status": "not_run",
+      "summary": "親runner実行対象のため未実行"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema",
+      "status": "not_run",
+      "summary": "親runner実行対象のため未実行"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0W8S\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nInstalling worktree dependencies: .\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/unmerged.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/stale.md\n  src/unrelated.t…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.1.0 validate:schema:yaml\n> tsx tools/docs/src/validate-yaml-schema.ts --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-…"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0W8S\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-sPstiZ/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-rxfSno/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-2KFoXD/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-wIBbFV/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-kd5rR2/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-UqFVg3/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\nWrote agent stdout: /tmp/specdojo-agent-command-SiyIFf/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-UC46lo/outputs/partial.txt\n\n Test Files  102 passed (102)\n      Tests  1466 passed (1466)\n   Start at  20:13:47\n   Duration  22.41s (transform 1.79s, setup 395ms, impor…"
+    }
+  ],
+  "final_message": "grade失敗状態のRun間永続化、未完了文書の再選択、失敗段からの再開、連続失敗上限とreport-only報告を実装した",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-0W8S/20260914T110508907Z-01b08ce0/executor.log",
+      "bytes": 3468,
+      "truncated": false
+    }
+  ]
+}

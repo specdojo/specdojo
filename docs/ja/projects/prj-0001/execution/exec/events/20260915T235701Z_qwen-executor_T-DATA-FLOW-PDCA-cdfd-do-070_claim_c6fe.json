@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-09-15T23:57:01Z",
+  "type": "claim",
+  "task_id": "T-DATA-FLOW-PDCA-cdfd-do-070",
+  "by": "qwen-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "BA"
+  }
+}

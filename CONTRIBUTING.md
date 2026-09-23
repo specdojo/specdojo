@@ -86,6 +86,27 @@ docker exec -it <container_name> bash
 docker exec -it awesome_app_devcontainer bash
 ```
 
+### 4.4. 残った VS Code Server のプロセスを掃除する
+
+`devcontainer.json` は `"shutdownAction": "none"` でコンテナを生かし続けるため、VS Code の再接続や更新のたびに旧 server や親を失った extension host がコンテナ内に残り、メモリを圧迫することがあります。`"init": true` で PID 1 を init にして孤児プロセスを回収し、接続時（`postAttachCommand`）に残骸を自動で停止します。
+
+手動で確認・停止する場合は次を使います。
+
+```bash
+npm run vscode:ps          # vscode-server 系プロセスをメモリ順に表示する
+npm run vscode:kill-stale  # 最新 commit 以外の server と孤児プロセスを停止する
+```
+
+停止対象は「最新 commit 以外の `server-main.js` とその子孫」と「PID 1 の子になった vscode-server 系プロセス」だけで、稼働中の接続は対象にしません。 あわせて `.devcontainer/ensure-cron.sh` が cron デーモンの起動を確認します（コンテナを VS Code の外で再起動すると `postStartCommand` が走らず cron が止まったままになり、routine が動かなくなるため）。`bash .devcontainer/kill-stale-vscode.sh --dry-run` で対象を表示だけできます。
+
+`init` の変更はコンテナの rebuild（`Dev Containers: Rebuild Container`）後に有効になります。
+
+### 4.5. AI CLI の設定の永続化
+
+Claude Code の設定ファイルは `CLAUDE_CONFIG_DIR=/home/node/.claude` により、名前付きボリューム `specdojo-claude` に置かれます（`~/.claude/.claude.json`）。以前は `~/.claude.json` を別ボリューム `specdojo-claude-state` への symlink にしていましたが、`.devcontainer/prepare-agent-dirs.sh` が起動時に旧ファイルの内容を一度だけ写して symlink を外すため、rebuild 後も手作業は不要です。rebuild 後に `docker volume rm specdojo-claude-state` で旧ボリュームを削除できます。cron から起動する routine には `.devcontainer/specdojo-routine.cron` で同じ `CLAUDE_CONFIG_DIR` を渡しています。
+
+Antigravity CLI（`agy`）は `post-create.sh` が `~/.local/bin` に導入し、`~/.config/antigravity`（`config.toml`）と `~/.gemini`（OAuth トークン `antigravity-cli/antigravity-oauth-token`、会話履歴、`mcp_config.json`、skills 用の `config/`）を名前付きボリューム（`specdojo-antigravity` / `specdojo-gemini`）で永続化します。コンテナ内では資格情報はキーリングではなく `~/.gemini` 配下のファイルに保存されるため（2026-09-21 に確認）、`ANTIGRAVITY_API_KEY` を渡す必要はありません。
+
 ## 7. 推奨しない使い方
 
 ### 7.1. 実行中のコンテナに VS Code で直接アタッチする

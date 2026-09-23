@@ -1,0 +1,136 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-S5YA",
+  "run_id": "20260901T001201703Z-eac48ad9",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-01T00:12:01.703Z",
+    "completed_at": "2026-09-01T00:18:45.402Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0122-review-launch.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-1f46-kata-sc-01-sc-03.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-s5ya-register-item-type-lifecycle.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-t0vq-pjr-id-length-evaluation.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/register-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pjr-rulebook.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 6,
+    "summary": ".../project-register/pjr-0122-review-launch.md     |  2 +-\n .../project-register/pjr-1f46-kata-sc-01-sc-03.md  |  2 +-\n .../pjr-s5ya-register-item-type-lifecycle.md       | 46 ++++++++++++----------\n .../pjr-t0vq-pjr-id-length-evaluation.md           |  2 +-\n .../ja/specdojo/guides/register-operation-guide.md | 24 +++++------\n docs/ja/specdojo/rulebooks/pjr-rulebook.md         | 38 +++++++++++++++++-\n 6 files changed, 78 insertions(+), 36 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/rulebooks/pjr-rulebook.md docs/ja/specdojo/guides/register-operation-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-0122-review-launch.md docs/ja/projects/prj-0001/controls/project-register/pjr-1f46-kata-sc-01-sc-03.md docs/ja/projects/prj-0001/controls/project-register/pjr-t0vq-pjr-id-length-evaluation.md docs/ja/projects/prj-0001/controls/project-register/pjr-s5ya-register-item-type-lifecycle.md",
+      "status": "passed",
+      "summary": "変更したMarkdown 6件を整形"
+    },
+    {
+      "source": "executor",
+      "command": "npm run -s lint:md",
+      "status": "passed",
+      "summary": "Markdown lint合格"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "Frontmatter・本文検査合格"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "登録簿とeventの整合性を確認し派生ビューを生成"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate --project prj-0001",
+      "status": "passed",
+      "summary": "終了コード0。既存の未作成成果物warningのみ"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "文書index 1452件を生成"
+    },
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "TypeScript型検査合格"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "TypeScript lint合格"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/docs/src/validate-history-links.ts",
+      "status": "passed",
+      "summary": "履歴リンク検査合格"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白・差分形式エラーなし"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-S5YA\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: tools/vscode-specdojo\nInstalling worktree dependencies: .\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/stale.md\n  src/unrelated.ts\ncommit-targets:\n  execution/exec/res…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run\n\n\n> specdojo@0.1.0 validate:schema:yaml\n> tsx tools/docs/src/validate-yaml-schema.ts --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bps-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipp…"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-S5YA\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-rRpyPo/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-biYIoJ/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-xWcgpj/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-3hL2HA/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-lv2fvS/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-4R7Z91/pjr-0001-topic.md\n\n Test Files  91 passed (91)\n      Tests  1315 passed (1315)\n   Start at  09:18:27\n   Duration  17.85s (transform 1.46s, setup 381ms, import 10.03s, tests 15.04s, environment 5ms)\n\n\nerror: unknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration…"
+    }
+  ],
+  "final_message": "type別の終端基準を規約化し、既存個票の分類矛盾を解消。全検証に合格",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-S5YA/20260901T001201703Z-eac48ad9/executor.log",
+      "bytes": 2270,
+      "truncated": false
+    }
+  ]
+}

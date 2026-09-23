@@ -1,0 +1,186 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-KCE0",
+  "run_id": "20260829T081737104Z-72e468ab",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-08-29T08:17:37.104Z",
+    "completed_at": "2026-08-29T08:28:46.869Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-init.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/030-project-management/pm-review-viewpoints.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-kce0-review-viewpoints-inheritance.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/review-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/pm-review-viewpoints-template.yaml",
+      "status": "D"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/pm-review-viewpoints.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-plans.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/review-plan.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/review-types.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-plans.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/review-plan.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/pm-review-viewpoints.yaml",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 14,
+    "summary": ".../010-business-specs/010-data-flow/cdfd-init.md  |   4 +-\n .../pm-review-viewpoints.yaml                      | 469 +-------------------\n .../pjr-kce0-review-viewpoints-inheritance.md      |  42 +-\n docs/ja/specdojo/guides/review-guide.md            |  37 +-\n docs/ja/specdojo/references/command-reference.md   |   6 +-\n .../templates/pm-review-viewpoints-template.yaml   | 481 ---------------------\n .../schemas/v1/pm-review-viewpoints.schema.yaml    | 115 ++++-\n src/exec-plans.ts                                  |  19 +-\n src/exec.ts                                        |   8 +-\n src/review-plan.ts                                 | 266 ++++++++++--\n src/review-types.ts                                |  21 +-\n tests/src/exec-plans.test.ts                       |  50 +++\n tests/src/review-plan.test.ts                      | 234 ++++++----\n 13 files changed, 628 insertions(+), 1124 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "TypeScript型検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "ESLint成功"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/specdojo/guides/review-guide.md docs/ja/specdojo/references/command-reference.md docs/ja/product/010-business-specs/010-data-flow/cdfd-init.md docs/ja/projects/prj-0001/controls/project-register/pjr-kce0-review-viewpoints-inheritance.md",
+      "status": "passed",
+      "summary": "変更Markdownのlint成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "frontmatterを含むremark検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx --input-type=module -e \"import { resolveViewpointsDoc } from './src/review-plan.ts'; const doc = resolveViewpointsDoc('docs/ja/projects/prj-0001/030-project-management/pm-review-viewpoints.yaml'); console.log(JSON.stringify({viewpoints: doc.viewpoints?.length, coverage_types: doc.coverage_types?.length, kata: doc.viewpoints?.some((v) => v.id === 'vp-qe-kata-conformance')}));\"",
+      "status": "passed",
+      "summary": "26観点・15 coverage typeを解決しkata観点を確認"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿派生ビュー生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "全カタログOK、既存の未作成成果物warningのみ"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "1379件の文書索引を生成"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/docs/src/validate-history-links.ts",
+      "status": "passed",
+      "summary": "履歴リンク検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:unit",
+      "status": "not_run",
+      "summary": "親runnerのallowlist検証に委譲"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:integration",
+      "status": "not_run",
+      "summary": "親runnerのallowlist検証に委譲"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema",
+      "status": "not_run",
+      "summary": "親runnerのallowlist検証に委譲"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/specdojo\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: tools/vscode-specdojo\nInstalling worktree dependencies: .\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/stale.md\n  src/unrelated.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-140-re…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run\n\n\n> specdojo@0.1.0 validate:schema:yaml\n> tsx tools/docs/src/validate-yaml-schema.ts --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bps-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipp…"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/specdojo\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-enYWqs/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-b3s3Q6/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-iHJXLk/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-A44Eju/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-nbJPhP/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-a7Q59A/pjr-0001-topic.md\n\n Test Files  91 passed (91)\n      Tests  1313 passed (1313)\n   Start at  17:28:28\n   Duration  18.47s (transform 1.41s, setup 389ms, import 10.62s, tests 15.03s, environment 4ms)\n\n\nreporter failederror: unknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-bra…"
+    }
+  ],
+  "final_message": "共通レビュー観点の正本化、プロジェクト差分継承、scaffold・review plan移行を完了",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-KCE0/20260829T081737104Z-72e468ab/executor.log",
+      "bytes": 2761,
+      "truncated": false
+    }
+  ]
+}

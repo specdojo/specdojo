@@ -1,4 +1,4 @@
-// 登録項目（PJR-XXXX）の変更履歴を個票内の追記型 event から再構成する。event 導入前または
+// 登録項目（PJR-XXXX）の変更履歴を項目別の event ファイルから再構成する。event 導入前または
 // 未移行の期間だけ Git 差分を読み、event の開始時刻より前の legacy 履歴として統合する。
 //
 // 比較対象は生成される登録項目一覧の列（ステータス・タイトル・説明・分類・優先度・担当・
@@ -12,6 +12,8 @@ import { gitOutput, gitResult } from "./exec-worktree.js";
 import { DEFAULT_REGISTER_DATE_TIMEZONE } from "./specdojo-config.js";
 import {
   REGISTER_EVENT_FIELDS,
+  REGISTER_EVENTS_DIRNAME,
+  displayIdFromRegisterEventFilename,
   readRegisterEventsFromContent,
   registerEventFieldValues,
   type RegisterEventV1,
@@ -365,14 +367,16 @@ function collectStoredRegisterHistoryEvents(query: RegisterHistoryQuery): {
   const idFilter = query.ids && query.ids.length > 0 ? new Set(query.ids) : undefined;
   const events: RegisterHistoryEvent[] = [];
   const firstEventById = new Map<string, string>();
-  const entries = readdirSync(registerDir, { withFileTypes: true }).sort((a, b) =>
+  const eventsDir = join(registerDir, REGISTER_EVENTS_DIRNAME);
+  if (!existsSync(eventsDir)) return { events: [], firstEventById: new Map() };
+  const entries = readdirSync(eventsDir, { withFileTypes: true }).sort((a, b) =>
     a.name.localeCompare(b.name),
   );
   for (const entry of entries) {
     if (!entry.isFile()) continue;
-    const id = displayIdFromTicketFilename(entry.name);
+    const id = displayIdFromRegisterEventFilename(entry.name);
     if (!id || (idFilter && !idFilter.has(id))) continue;
-    const content = readFileSync(join(registerDir, entry.name), "utf8");
+    const content = readFileSync(join(eventsDir, entry.name), "utf8");
     const stored = readRegisterEventsFromContent(content, entry.name);
     if (stored.length === 0) continue;
     firstEventById.set(id, stored[0].ts);
@@ -382,7 +386,7 @@ function collectStoredRegisterHistoryEvents(query: RegisterHistoryQuery): {
       if (query.until && date > query.until) continue;
       const history = storedEventToHistory(
         id,
-        `${query.registerPathspec}/${entry.name}`,
+        `${query.registerPathspec}/${REGISTER_EVENTS_DIRNAME}/${entry.name}`,
         event,
         sequence,
         { statusOnly: query.statusOnly },

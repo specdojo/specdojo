@@ -1,0 +1,35 @@
+
+> specdojo@0.1.0 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-deliverable-9eff580278d3 project=prj-0001 target=deliverable kind=none changed_only=true ungraded=true documents=5 work_dir=logs/grade/runs/per-document/JBR-grade-deliverable-9eff580278d3
+stage=1 executor=gemma-expert-executor reporter=gemma-reporter reference=none
+stage=2 executor=gemma-expert-executor reporter=gemma-reporter reference=none
+stage=3 executor=codex-expert-executor reporter=gemma-reporter reference=none condition="pass, score>=96, findings<=1"
+document start: docs/ja/product/010-business-specs/010-data-flow/cdfd-agent-config-operation.md
+document complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-agent-config-operation.md
+document start: docs/ja/product/010-business-specs/010-data-flow/cdfd-catalog-planning.md
+document complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-catalog-planning.md
+document start: docs/ja/product/010-business-specs/010-data-flow/cdfd-deprecation.md
+document complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-deprecation.md
+document start: docs/ja/product/010-business-specs/010-data-flow/cdfd-derived-content.md
+document complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-derived-content.md
+document start: docs/ja/product/010-business-specs/010-data-flow/cdfd-init.md
+document complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-init.md
+grade pipeline complete: selected=5 processed=5 completed_now=5 results=logs/grade/runs/per-document/JBR-grade-deliverable-9eff580278d3/results.tsv
+recorded_at	document	stage	status	duration_seconds	verdict	score	findings	executor	reporter	reference
+2026-09-11T23:13:43Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-agent-config-operation.md	1	passed	818	pass	100	0	gemma-expert-executor	gemma-reporter	none
+2026-09-11T23:27:08Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-agent-config-operation.md	2	passed	805	pass	100	0	gemma-expert-executor	gemma-reporter	none
+2026-09-11T23:34:59Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-agent-config-operation.md	3	passed	471	needs-work	75	10	codex-expert-executor	gemma-reporter	none
+2026-09-11T23:46:53Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-catalog-planning.md	1	passed	714	pass	100	0	gemma-expert-executor	gemma-reporter	none
+2026-09-11T23:59:00Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-catalog-planning.md	2	passed	727	pass	100	0	gemma-expert-executor	gemma-reporter	none
+2026-09-12T00:05:52Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-catalog-planning.md	3	passed	412	needs-work	78	9	codex-expert-executor	gemma-reporter	none
+2026-09-12T00:18:17Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-deprecation.md	1	passed	745	pass	100	0	gemma-expert-executor	gemma-reporter	none
+2026-09-12T00:29:55Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-deprecation.md	2	passed	698	pass	100	0	gemma-expert-executor	gemma-reporter	none
+2026-09-12T00:34:56Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-deprecation.md	3	passed	301	pass	97	2	codex-expert-executor	gemma-reporter	none
+2026-09-12T00:46:52Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-derived-content.md	1	passed	716	pass	100	0	gemma-expert-executor	gemma-reporter	none
+2026-09-12T01:00:24Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-derived-content.md	2	passed	812	pass	100	0	gemma-expert-executor	gemma-reporter	none
+2026-09-12T01:08:20Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-derived-content.md	3	passed	476	needs-work	72	6	codex-expert-executor	gemma-reporter	none
+2026-09-12T01:20:02Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-init.md	1	passed	702	pass	100	0	gemma-expert-executor	gemma-reporter	none
+2026-09-12T01:32:43Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-init.md	2	passed	761	pass	100	0	gemma-expert-executor	gemma-reporter	none
+2026-09-12T01:40:35Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-init.md	3	passed	472	pass	92	5	codex-expert-executor	gemma-reporter	none

@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_9701569a36c148d1937dae27d0df590e
+  ts: "2026-08-30T02:27:43Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: grade plan へ前回の finding を引き継ぎ解消を確認させる
+    - field: description
+      from: ""
+      to: 再評価時に前回の判定結果を完全に上書きしているため、前回どの問題を指摘したかが agent に伝わらない。6 agent の比較では finding 件数が 1 件から 19 件まで分かれており、単独実行では agent ごとに網羅性が大きく異なる。前回の finding を plan へ含め、解消されているかを確認させたうえで上書きすれば、異なる agent を順に回すことで指摘を積み上げられる。maintenance が修正した後に解消を検証する経路にもなる。前回の level と score は渡さない。判定への引きずりを招き、前回が誤判定だった場合に固定化されるためである。指摘内容は事実として引き継ぎ、評価は独立して行わせる。plan には前回の指摘にない問題も検出するよう明示する。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-08-30"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_a1b9ee36ed794bfdababe31fc2ff42cf
+  ts: "2026-08-30T02:45:18Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_9701569a36c148d1937dae27d0df590e
+- v: 1
+  id: reg_23941e3656314ad89695b1add942e613
+  ts: "2026-08-30T02:54:07Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_a1b9ee36ed794bfdababe31fc2ff42cf
+- v: 1
+  id: reg_b68d0f0f644b4881af2a4d2409dffa08
+  ts: "2026-08-30T02:55:39Z"
+  action: close
+  actor: manual
+  from_status: review
+  to_status: done
+  reason: 実装・検証・レビューが完了したため
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-08-30"
+    - field: conclusion
+      from: "-"
+      to: grade plan の生成時に対象文書の既存 specdojo:finding コメントを解析し、rule / severity / message を前回の指摘として plan へ含めるようにした。level、score、verdict、finding ID、解消履歴は引き継がない。plan には前回指摘の解消確認、未解消 finding の再掲、前回指摘にない問題の検出、各 viewpoint の独立評価を明記した。評価結果を最新状態へ上書きする既存方針は維持している。
+  previous_event_id: reg_23941e3656314ad89695b1add942e613

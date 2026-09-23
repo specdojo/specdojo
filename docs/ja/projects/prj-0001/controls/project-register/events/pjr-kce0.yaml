@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_343dd24b21b544e7b3ba1135865d6584
+  ts: "2026-08-29T08:08:05Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: レビュー観点を共通集合として定義しプロジェクトが継承する仕組みへ移行する
+    - field: description
+      from: ""
+      to: レビュー観点は本来プロジェクト横断で共通だが、exec scaffold が pm-review-viewpoints-template.yaml をプロジェクトへコピーする方式のため、コピー後に両者が独立して分岐する。実際に prj-0001 は 25 観点、template は 24 観点で本文差分は 97 行あり、prj-0001 が独自追加した vp-qe-config-validity は汎用的な観点でありながら共通へ還元される経路がない。共通の観点集合を正本とし、プロジェクトは差分（追加・上書き・無効化）だけを宣言して継承する仕組みへ移行する。kata 用の観点は特定プロジェクトに属さないため共通側へ置く。既存の差分は共通へ昇格するものとプロジェクト固有として残すものへ仕分ける。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-08-29"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_7ad1d485a6534651add67964649d74dc
+  ts: "2026-08-29T08:17:36Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_343dd24b21b544e7b3ba1135865d6584
+- v: 1
+  id: reg_4c9d3d27176f46fe8be63318597dcc86
+  ts: "2026-08-29T08:31:43Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_7ad1d485a6534651add67964649d74dc
+- v: 1
+  id: reg_102d513953b24950a3ce5f4173f90b3e
+  ts: "2026-08-29T09:04:05Z"
+  action: close
+  actor: manual
+  from_status: review
+  to_status: done
+  reason: 実装とレビューが完了し、配置の見直しと決定事項の記録を反映したため
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-08-29"
+    - field: conclusion
+      from: "-"
+      to: 共通レビュー観点を specdojo:pm-review-viewpoints として docs/ja/specdojo/defaults/ に正本化し、プロジェクトは extends による1段継承と差分宣言のみを保持する構成へ移行した。kata 用観点 vp-qe-kata-conformance を共通側へ新設し、prj-0001 の固有差分はすべて共通へ昇格した。共通正本の更新は再生成なしで次回の plan 生成へ反映される。
+  previous_event_id: reg_4c9d3d27176f46fe8be63318597dcc86

@@ -1,0 +1,37 @@
+
+> specdojo@0.1.0 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-deliverable-5f596938a6de project=prj-0001 target=deliverable kind=none changed_only=true ungraded=true incomplete=true max_stage_failures=3 documents=5 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-deliverable-5f596938a6de
+stage=1 executor=gemma-expert-executor reporter=gemma-reporter reference=none
+stage=2 executor=gemma-expert-executor reporter=gemma-reporter reference=none
+stage=3 executor=codex-expert-executor reporter=gemma-reporter reference=none condition="pass, score>=96, findings<=1"
+document start: docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md
+resume stage=3 document=docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md status=skipped_condition
+document complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md
+document start: docs/ja/product/010-business-specs/010-data-flow/cdfd-plan.md
+document complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-plan.md
+document start: docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-deliverable.md
+document complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-deliverable.md
+document start: docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md
+document complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md
+document start: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md
+resume stage=3 document=docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md status=skipped_condition
+document complete: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md
+grade pipeline complete: selected=5 processed=5 completed_now=5 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-deliverable-5f596938a6de/results.tsv
+recorded_at	document	stage	status	duration_seconds	verdict	score	findings	executor	reporter	reference	consecutive_failures	max_failures
+2026-09-17T02:31:45Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md	1	passed	999	needs-work	82	5	gemma-expert-executor	gemma-reporter	none		
+2026-09-17T02:48:29Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md	2	passed	1003	needs-work	82	5	gemma-expert-executor	gemma-reporter	none		
+2026-09-17T02:48:30Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md	3	skipped_condition	0				codex-expert-executor	gemma-reporter	none		
+2026-09-17T03:02:13Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-plan.md	1	passed	820	pass	100	0	gemma-expert-executor	gemma-reporter	none		
+2026-09-17T03:16:14Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-plan.md	2	passed	840	pass	100	0	gemma-expert-executor	gemma-reporter	none		
+2026-09-17T03:24:20Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-plan.md	3	passed	485	needs-work	70	9	codex-expert-executor	gemma-reporter	none		
+2026-09-17T03:35:02Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-deliverable.md	1	passed	640	pass	100	0	gemma-expert-executor	gemma-reporter	none		
+2026-09-17T03:46:44Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-deliverable.md	2	passed	702	pass	100	0	gemma-expert-executor	gemma-reporter	none		
+2026-09-17T03:51:45Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-deliverable.md	3	passed	300	needs-work	86	3	codex-expert-executor	gemma-reporter	none		
+2026-09-17T04:03:07Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md	1	passed	681	pass	100	0	gemma-expert-executor	gemma-reporter	none		
+2026-09-17T04:15:57Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md	2	passed	770	pass	100	0	gemma-expert-executor	gemma-reporter	none		
+2026-09-17T04:21:54Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md	3	passed	356	needs-work	78	5	codex-expert-executor	gemma-reporter	none		
+2026-09-17T04:36:24Z	docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md	1	passed	868	needs-work	77	6	gemma-expert-executor	gemma-reporter	none		
+2026-09-17T04:49:48Z	docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md	2	passed	803	needs-work	77	6	gemma-expert-executor	gemma-reporter	none		
+2026-09-17T04:49:48Z	docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md	3	skipped_condition	0				codex-expert-executor	gemma-reporter	none		

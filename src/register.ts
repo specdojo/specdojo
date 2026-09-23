@@ -26,12 +26,17 @@ import {
 } from "./register-migrate-timestamps.js";
 import { flattenTemplateFrontmatter } from "./template-frontmatter.js";
 import { parseSpecdojoDocument } from "./frontmatter-namespace.js";
+import { resolveSpecdojoTemplatePath } from "./template-resolution.js";
 import { collectRegisterHistoryEvents, formatRegisterHistoryEvents } from "./register-history.js";
 import {
   appendRegisterEvent,
   buildRegisterEvent,
   deterministicRegisterEventId,
+  readEmbeddedRegisterEvents,
   readRegisterEventsFromContent,
+  registerEventFilePath,
+  removeEmbeddedRegisterEvents,
+  serializeRegisterEvents,
   validateRegisterEventDocs,
   type RegisterEventAction,
   type RegisterEventV1,
@@ -106,6 +111,7 @@ function registerEventActor(opts: { by?: string }): string {
 }
 
 function atomicWriteFile(path: string, content: string): void {
+  mkdirSync(dirname(path), { recursive: true });
   const temporary = join(dirname(path), `.${basename(path)}.${randomUUID()}.tmp`);
   try {
     writeFileSync(temporary, content, { encoding: "utf8", flag: "wx" });
@@ -115,12 +121,25 @@ function atomicWriteFile(path: string, content: string): void {
   }
 }
 
+function prepareRegisterEventFile(
+  projectRegisterPath: string,
+  displayId: string,
+  event: RegisterEventV1,
+): { path: string; content: string } {
+  const eventPath = registerEventFilePath(projectRegisterPath, displayId);
+  const content = existsSync(eventPath) ? readFileSync(eventPath, "utf8") : undefined;
+  return { path: eventPath, content: appendRegisterEvent(content, event) };
+}
+
 // ================================
 // Constants
 // ================================
 
 // PJR-ID の乱数部分の桁数。
 const PJR_ID_LENGTH = 4;
+
+// 個票ファイル名・文書 ID の論点部分。先頭・末尾や連続ハイフンを許さない。
+export const REGISTER_TOPIC_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 // 生成した ID が偶然含みうる不適切語の簡易ブロックリスト（4 文字, 大文字, 曖昧文字除外後）。
 // 一致した候補は採用せず再抽選する。曖昧文字（I/L/O/U）を含む語は生成されえないため載せない。
@@ -666,10 +685,7 @@ export function planRegisterMigration(paths: RegisterPaths): RegisterMigrationPl
       if (existsSync(path)) {
         throw new Error(`Migration target already exists: ${path}`);
       }
-      const templatePath = join(
-        specdojoRootDir(),
-        `docs/ja/specdojo/templates/pjr-${source.item.type}-template.md`,
-      );
+      const templatePath = resolveSpecdojoTemplatePath(`pjr-${source.item.type}-template.md`);
       content = buildRegisterItemContent({
         projectId: paths.projectId,
         displayId: source.item.id,
@@ -836,10 +852,7 @@ type ViewGroup = { label: string; items: PjrDisplayItem[] };
 // 派生ビューの外枠（H1・note・章見出し・frontmatter）は template が所有する。
 // template をロードして生成物形へ平坦化し、`_PROJECT_ID_` を実プロジェクト ID へ置換する。
 function loadViewTemplate(templateFileName: string, projectId: string): string {
-  const templatePath = join(specdojoRootDir(), "docs/ja/specdojo/templates", templateFileName);
-  if (!existsSync(templatePath)) {
-    throw new Error(`View template not found: ${templatePath}`);
-  }
+  const templatePath = resolveSpecdojoTemplatePath(templateFileName);
   const raw = readFileSync(templatePath, "utf8");
   return flattenTemplateFrontmatter(raw).replace(/_PROJECT_ID_/g, projectId);
 }
@@ -878,6 +891,51 @@ function renderGroupedTables(groups: ViewGroup[], chapter: number, heading: Tabl
       ].join("\n"),
     )
     .join("\n\n");
+}
+
+// ビューの行順に使う起票時刻を解決する。`registered` は移行前の項目で `_TODO_` になるため、
+// 追記型イベントの `add` の `ts` で補う。表示 ID はランダムな 4 文字で、ID 順には時系列の意味が
+// ないため、並びの根拠は時刻に置く。
+function resolveRegisteredOrder(
+  item: PjrDisplayItem,
+  paths: RegisterPaths,
+  cache: Map<string, string>,
+): string {
+  const cached = cache.get(item.id);
+  if (cached !== undefined) return cached;
+
+  let value = "";
+  if (item.registered && item.registered !== "_TODO_" && item.registered !== "-") {
+    value = item.registered;
+  } else {
+    const eventPath = registerEventFilePath(paths.projectRegisterPath, item.id);
+    if (existsSync(eventPath)) {
+      const events = readRegisterEventsFromContent(readFileSync(eventPath, "utf8"), eventPath);
+      const added = events.find((event) => event.action === "add");
+      if (added?.ts) value = added.ts;
+    }
+  }
+  cache.set(item.id, value);
+  return value;
+}
+
+// 新しい起票を先頭へ置く。時刻が並ぶ場合と時刻を解決できない場合は ID で安定させる。
+// 時刻を解決できない項目は末尾へ送り、解決できた項目の並びを乱さない。
+export function sortByRegisteredDesc(
+  items: PjrDisplayItem[],
+  paths: RegisterPaths,
+): PjrDisplayItem[] {
+  const cache = new Map<string, string>();
+  return [...items].sort((a, b) => {
+    const left = resolveRegisteredOrder(a, paths, cache);
+    const right = resolveRegisteredOrder(b, paths, cache);
+    if (left !== right) {
+      if (!left) return 1;
+      if (!right) return -1;
+      return left < right ? 1 : -1;
+    }
+    return compareRegisterItemIds(a.id, b.id);
+  });
 }
 
 function groupByOwner(items: PjrDisplayItem[]): ViewGroup[] {
@@ -979,6 +1037,9 @@ export function generateDerivedViewFiles(paths: RegisterPaths, scope: BuildScope
   const controlsViews: ViewFile[] = [];
 
   if (scope === "register" || scope === "all") {
+    // 本体（pjr-index）は ID で引く用途があるため ID 昇順を保つ。軸別ビューは状況の把握が目的で、
+    // 新しい起票を先頭へ置く。
+    const viewItems = sortByRegisteredDesc(regItems, paths);
     registerViews.push(
       {
         path: join(paths.generatedPath, "pjr-index.md"),
@@ -986,15 +1047,15 @@ export function generateDerivedViewFiles(paths: RegisterPaths, scope: BuildScope
       },
       {
         path: join(paths.generatedPath, "pjr-views-by-status.md"),
-        content: generateViewsByStatusFile(regItems, paths.projectId, heading),
+        content: generateViewsByStatusFile(viewItems, paths.projectId, heading),
       },
       {
         path: join(paths.generatedPath, "pjr-views-by-priority.md"),
-        content: generateViewsByPriorityFile(regItems, paths.projectId, heading),
+        content: generateViewsByPriorityFile(viewItems, paths.projectId, heading),
       },
       {
         path: join(paths.generatedPath, "pjr-views-by-owner.md"),
-        content: generateViewsByOwnerFile(regItems, paths.projectId, heading),
+        content: generateViewsByOwnerFile(viewItems, paths.projectId, heading),
       },
     );
   }
@@ -1208,9 +1269,15 @@ function applyItemUpdate(opts: {
     process.stdout.write(`Unchanged: ${ticketPath} (${opts.updated.id})\n`);
     return;
   }
-  content = appendRegisterEvent(content, event);
+  const eventWrite = prepareRegisterEventFile(
+    opts.paths.projectRegisterPath,
+    opts.updated.id,
+    event,
+  );
   atomicWriteFile(ticketPath, content);
+  atomicWriteFile(eventWrite.path, eventWrite.content);
   process.stdout.write(`Updated: ${ticketPath} (${opts.updated.id} ${label})\n`);
+  process.stdout.write(`Updated: ${eventWrite.path}\n`);
 
   for (const view of writeDerivedViews(opts.paths, "all")) {
     process.stdout.write(`Generated: ${view.path}\n`);
@@ -1468,6 +1535,147 @@ export type RenumberPlan = {
   ticketRename?: { from: string; to: string };
 };
 
+export type RetopicPlan = {
+  writes: { path: string; content: string }[];
+  ticketRename: { from: string; to: string };
+  fromTopic: string;
+  fromDocId: string;
+  toDocId: string;
+};
+
+// topic 変更で書き換える全ファイルを事前に算出する。参照の更新範囲は renumber と
+// 同じく docs/ja 配下（生成物を除く）とし、文書 ID を含む wikilink / targets を
+// 付け替える。衝突や個票 ID の不整合は、書き込み前に検出する。
+export function planRetopic(paths: RegisterPaths, id: string, topic: string): RetopicPlan {
+  if (!PJR_ID_RE.test(id)) {
+    throw new Error(`Invalid ID: "${id}". Must match PJR-XXXX (e.g., PJR-0001)`);
+  }
+  if (!REGISTER_TOPIC_RE.test(topic)) {
+    throw new Error(
+      `Invalid topic: "${topic}". Must use lowercase letters, numbers, and single hyphens`,
+    );
+  }
+
+  const view = loadItemForUpdate(paths, id);
+  const oldFilename = view.ticketFilename;
+  if (!oldFilename || !view.ticketPath) {
+    throw new Error(`Item ${id} has no ticket file to change topic`);
+  }
+  const fromTopic = ticketTopicFromFilename(id, oldFilename);
+  if (!fromTopic) {
+    throw new Error(
+      `Ticket filename "${oldFilename}" does not match ID "${id}"; fix it before changing topic.`,
+    );
+  }
+
+  const fromDocId = `${paths.projectId}:${oldFilename.replace(/\.md$/, "")}`;
+  const newFilename = `${id.toLowerCase()}-${topic}.md`;
+  const toDocId = `${paths.projectId}:${newFilename.replace(/\.md$/, "")}`;
+  const newTicketPath = join(paths.projectRegisterPath, newFilename);
+  const ticketContent = readFileSync(view.ticketPath, "utf8");
+  const currentDocId = parseSpecdojoDocument(ticketContent).data.id;
+  if (currentDocId !== fromDocId) {
+    throw new Error(
+      `Ticket ${oldFilename} must have frontmatter id "${fromDocId}" before changing topic`,
+    );
+  }
+  if (existsSync(newTicketPath)) {
+    throw new Error(`Target ticket file already exists: ${newTicketPath}`);
+  }
+
+  const writes: RetopicPlan["writes"] = [
+    {
+      path: newTicketPath,
+      content: renumberReferences(ticketContent, fromDocId, toDocId).content,
+    },
+  ];
+  const root = specdojoRootDir();
+  const referenceFiles = fg
+    .sync("docs/ja/**/*.md", { cwd: root, absolute: true, ignore: ["**/generated/**"] })
+    .sort((a, b) => a.localeCompare(b));
+
+  for (const absPath of referenceFiles) {
+    if (absPath === view.ticketPath) continue;
+    const content = readFileSync(absPath, "utf8");
+    const referenceUpdate = renumberReferences(content, fromDocId, toDocId);
+    // 旧構成の pjr-index に登録項目行が残っている場合は、文書 ID だけでなく個票リンクの
+    // ファイル名も追随させる。現行の generated ビューは適用後に再生成する。
+    const replaced =
+      absPath === paths.pjrIndexPath
+        ? referenceUpdate.content.split(oldFilename).join(newFilename)
+        : referenceUpdate.content;
+    if (referenceUpdate.changed || replaced !== content) {
+      writes.push({ path: absPath, content: replaced });
+    }
+  }
+
+  return {
+    writes,
+    ticketRename: { from: view.ticketPath, to: newTicketPath },
+    fromTopic,
+    fromDocId,
+    toDocId,
+  };
+}
+
+export function retopicPjrItem(opts: {
+  paths: RegisterPaths;
+  id: string;
+  topic: string;
+  updated: PjrItem;
+  dryRun: boolean;
+  title?: string;
+  description?: string;
+  actor?: string;
+  reason?: string;
+}): void {
+  const plan = planRetopic(opts.paths, opts.id, opts.topic);
+  const ticketWrite = plan.writes.find((write) => write.path === plan.ticketRename.to);
+  if (!ticketWrite) throw new Error(`Retopiced ticket content not found: ${plan.ticketRename.to}`);
+
+  if (opts.title !== undefined)
+    ticketWrite.content = setRegisterItemTitle(ticketWrite.content, opts.title);
+  if (opts.description !== undefined) {
+    ticketWrite.content = setRegisterItemDescription(ticketWrite.content, opts.description);
+  }
+  ticketWrite.content = applyRegisterItemFields(
+    ticketWrite.content,
+    registerItemFieldsFromItem(opts.updated),
+  );
+
+  if (opts.dryRun) {
+    process.stdout.write(`Would change topic for ${opts.id}: ${plan.fromTopic} → ${opts.topic}\n`);
+    process.stdout.write(`  Rename: ${plan.ticketRename.from} → ${plan.ticketRename.to}\n`);
+    for (const write of plan.writes) process.stdout.write(`  Update: ${write.path}\n`);
+    return;
+  }
+
+  const beforeContent = readFileSync(plan.ticketRename.from, "utf8");
+  const event = buildRegisterEvent({
+    beforeContent,
+    afterContent: ticketWrite.content,
+    filename: basename(plan.ticketRename.to),
+    timeZone: opts.paths.registerDateTimeZone,
+    action: "update",
+    actor: opts.actor?.trim() || "manual",
+    reason: opts.reason?.trim() || `topic changed from ${plan.fromTopic} to ${opts.topic}`,
+    extraChanges: [{ field: "id", from: plan.fromDocId, to: plan.toDocId }],
+  });
+  if (!event) throw new Error(`Failed to build topic update event for ${opts.id}`);
+  const eventWrite = prepareRegisterEventFile(opts.paths.projectRegisterPath, opts.id, event);
+  for (const write of plan.writes) {
+    atomicWriteFile(write.path, write.content);
+    process.stdout.write(`Updated: ${write.path}\n`);
+  }
+  unlinkSync(plan.ticketRename.from);
+  process.stdout.write(`Renamed: ${plan.ticketRename.from} → ${plan.ticketRename.to}\n`);
+  atomicWriteFile(eventWrite.path, eventWrite.content);
+  process.stdout.write(`Updated: ${eventWrite.path}\n`);
+  for (const view of writeDerivedViews(opts.paths, "all")) {
+    process.stdout.write(`Generated: ${view.path}\n`);
+  }
+}
+
 // 再採番で書き換える全ファイルを事前に算出する。
 // 途中で衝突・不整合を検出したら例外を投げ、部分適用が起きないようにする。
 export function planRenumber(paths: RegisterPaths, fromId: string, toId: string): RenumberPlan {
@@ -1601,7 +1809,16 @@ export function renumberPjrItem(opts: {
       extraChanges: [{ field: "id", from: fromId, to: toId }],
     });
     if (!event) throw new Error(`Failed to build renumber event for ${fromId}`);
-    ticketWrite.content = appendRegisterEvent(ticketWrite.content, event);
+    const oldEventPath = registerEventFilePath(paths.projectRegisterPath, fromId);
+    const newEventPath = registerEventFilePath(paths.projectRegisterPath, toId);
+    if (!existsSync(oldEventPath)) {
+      throw new Error(`Register event file not found: ${oldEventPath}`);
+    }
+    if (existsSync(newEventPath)) {
+      throw new Error(`Target register event file already exists: ${newEventPath}`);
+    }
+    const eventContent = appendRegisterEvent(readFileSync(oldEventPath, "utf8"), event);
+    plan.writes.push({ path: newEventPath, content: eventContent });
   }
 
   if (dryRun) {
@@ -1622,6 +1839,11 @@ export function renumberPjrItem(opts: {
   if (plan.ticketRename) {
     unlinkSync(plan.ticketRename.from);
     process.stdout.write(`Renamed: ${plan.ticketRename.from} → ${plan.ticketRename.to}\n`);
+    const oldEventPath = registerEventFilePath(paths.projectRegisterPath, fromId);
+    unlinkSync(oldEventPath);
+    process.stdout.write(
+      `Renamed: ${oldEventPath} → ${registerEventFilePath(paths.projectRegisterPath, toId)}\n`,
+    );
   }
   for (const view of writeDerivedViews(paths, "all")) {
     process.stdout.write(`Generated: ${view.path}\n`);
@@ -1813,6 +2035,33 @@ export function legacyHistoryEventToRegisterEvent(
   };
 }
 
+function migrateEmbeddedRegisterEvents(
+  paths: RegisterPaths,
+  dryRun: boolean,
+): { items: number; events: number } {
+  let itemCount = 0;
+  let eventCount = 0;
+  for (const doc of loadRegisterItemDocs(paths.projectRegisterPath)) {
+    const ticketContent = readFileSync(doc.path, "utf8");
+    const embedded = readEmbeddedRegisterEvents(ticketContent, doc.filename);
+    if (embedded.length === 0) continue;
+    const eventPath = registerEventFilePath(paths.projectRegisterPath, doc.id);
+    if (existsSync(eventPath)) {
+      const existing = readRegisterEventsFromContent(readFileSync(eventPath, "utf8"), eventPath);
+      if (JSON.stringify(existing) !== JSON.stringify(embedded)) {
+        throw new Error(`${doc.filename}: embedded and external register events differ`);
+      }
+    }
+    if (!dryRun) {
+      atomicWriteFile(eventPath, serializeRegisterEvents(embedded));
+      atomicWriteFile(doc.path, removeEmbeddedRegisterEvents(ticketContent));
+    }
+    itemCount++;
+    eventCount += embedded.length;
+  }
+  return { items: itemCount, events: eventCount };
+}
+
 function migrateRegisterEventsFromGit(
   paths: RegisterPaths,
   dryRun: boolean,
@@ -1840,8 +2089,12 @@ function migrateRegisterEventsFromGit(
   let eventCount = 0;
   let skipped = 0;
   for (const doc of loadRegisterItemDocs(paths.projectRegisterPath)) {
-    let content = readFileSync(doc.path, "utf8");
-    if (readRegisterEventsFromContent(content, doc.filename).length > 0) {
+    const eventPath = registerEventFilePath(paths.projectRegisterPath, doc.id);
+    const ticketContent = readFileSync(doc.path, "utf8");
+    if (
+      existsSync(eventPath) ||
+      (dryRun && readEmbeddedRegisterEvents(ticketContent, doc.filename).length > 0)
+    ) {
       skipped++;
       continue;
     }
@@ -1850,18 +2103,19 @@ function migrateRegisterEventsFromGit(
 
     let currentStatus: string | null = null;
     let appended = 0;
+    let eventContent: string | undefined;
     for (const historyEvent of legacyEvents) {
       const event = legacyHistoryEventToRegisterEvent(historyEvent, {
         isFirst: appended === 0,
         currentStatus,
         fallbackStatus: doc.item.status,
       });
-      content = appendRegisterEvent(content, event);
+      eventContent = appendRegisterEvent(eventContent, event);
       currentStatus = event.to_status;
       appended++;
     }
     if (appended === 0) continue;
-    if (!dryRun) atomicWriteFile(doc.path, content);
+    if (!dryRun && eventContent) atomicWriteFile(eventPath, eventContent);
     itemCount++;
     eventCount += appended;
   }
@@ -1939,7 +2193,7 @@ export function registerRegisterCommands(program: Command): void {
       const paths = resolveRegisterPaths(opts);
 
       const topic = opts.topic?.trim() || slugify(opts.title);
-      if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(topic)) {
+      if (!REGISTER_TOPIC_RE.test(topic)) {
         throw new Error(
           `Invalid topic: "${topic}". Must use lowercase letters, numbers, and single hyphens`,
         );
@@ -1962,10 +2216,7 @@ export function registerRegisterCommands(program: Command): void {
         completedAt: completedAt ?? CELL_NONE,
         conclusion: opts.conclusion,
       };
-      const templatePath = join(
-        specdojoRootDir(),
-        `docs/ja/specdojo/templates/pjr-${opts.type}-template.md`,
-      );
+      const templatePath = resolveSpecdojoTemplatePath(`pjr-${opts.type}-template.md`);
 
       const { assignedId: displayId, ticketFilename } = planRegisterItem({
         existingIds: loadRegisterItems(paths).map((view) => view.id),
@@ -1975,7 +2226,7 @@ export function registerRegisterCommands(program: Command): void {
       });
 
       const ticketPath = join(paths.projectRegisterPath, ticketFilename);
-      let content = buildRegisterItemContent({
+      const content = buildRegisterItemContent({
         projectId: paths.projectId,
         displayId,
         topic,
@@ -1991,20 +2242,30 @@ export function registerRegisterCommands(program: Command): void {
         reason: opts.reason?.trim() || "item added",
       });
       if (!addEvent) throw new Error(`Failed to build add event for ${displayId}`);
-      content = appendRegisterEvent(content, addEvent);
-
       if (opts.dryRun) {
         process.stdout.write(`Would create ${ticketPath}:\n${content}\n`);
+        process.stdout.write(
+          `Would create ${registerEventFilePath(paths.projectRegisterPath, displayId)}:\n` +
+            `${appendRegisterEvent(undefined, addEvent)}\n`,
+        );
         return;
       }
 
       if (!opts.force && existsSync(ticketPath)) {
         throw new Error(`Item file already exists (use --force to overwrite): ${ticketPath}`);
       }
+      const eventPath = registerEventFilePath(paths.projectRegisterPath, displayId);
+      if (!opts.force && existsSync(eventPath)) {
+        throw new Error(
+          `Register event file already exists (use --force to overwrite): ${eventPath}`,
+        );
+      }
 
       mkdirSync(paths.projectRegisterPath, { recursive: true });
       atomicWriteFile(ticketPath, content);
+      atomicWriteFile(eventPath, appendRegisterEvent(undefined, addEvent));
       process.stdout.write(`Created: ${ticketPath} (added ${displayId})\n`);
+      process.stdout.write(`Created: ${eventPath}\n`);
 
       if (existsSync(paths.pjrIndexPath)) {
         for (const view of writeDerivedViews(paths, "all")) {
@@ -2294,6 +2555,10 @@ export function registerRegisterCommands(program: Command): void {
   updateCmd.option("--owner <owner>", "Update owner or role");
   updateCmd.option("--due <date>", "Update due date (YYYY-MM-DD, -, or _TODO_)");
   updateCmd.option("--conclusion <text>", "Update conclusion or use - to remove it");
+  updateCmd.option(
+    "--topic <topic>",
+    "Update the topic slug in the ticket filename and document ID",
+  );
   updateCmd.option("--by <actor>", "Actor recorded in the append-only register event");
   updateCmd.option("--reason <text>", "Reason recorded in the append-only register event");
   updateCmd.option("--dry-run", "Print change without writing", false);
@@ -2303,12 +2568,18 @@ export function registerRegisterCommands(program: Command): void {
       const view = loadItemForUpdate(paths, opts.id);
       const item = view.item;
 
-      const hasUpdates = ["title", "description", "priority", "owner", "due", "conclusion"].some(
-        (k) => opts[k] !== undefined,
-      );
+      const hasUpdates = [
+        "title",
+        "description",
+        "priority",
+        "owner",
+        "due",
+        "conclusion",
+        "topic",
+      ].some((k) => opts[k] !== undefined);
       if (!hasUpdates) {
         throw new Error(
-          "At least one field option must be specified (--title, --description, --priority, --owner, --due, --conclusion)",
+          "At least one field option must be specified (--title, --description, --priority, --owner, --due, --conclusion, --topic)",
         );
       }
 
@@ -2323,6 +2594,12 @@ export function registerRegisterCommands(program: Command): void {
       if (opts.due !== undefined && !/^(\d{4}-\d{2}-\d{2}|-|_TODO_)$/.test(opts.due)) {
         throw new Error(`Invalid due: "${opts.due}". Must be YYYY-MM-DD, -, or _TODO_`);
       }
+      const topic = opts.topic?.trim();
+      if (topic !== undefined && !REGISTER_TOPIC_RE.test(topic)) {
+        throw new Error(
+          `Invalid topic: "${topic}". Must use lowercase letters, numbers, and single hyphens`,
+        );
+      }
 
       const updated: PjrItem = {
         ...item,
@@ -2333,6 +2610,23 @@ export function registerRegisterCommands(program: Command): void {
         ...(opts.due !== undefined ? { due: opts.due } : {}),
         ...(opts.conclusion !== undefined ? { conclusion: opts.conclusion } : {}),
       };
+      const currentTopic = view.ticketFilename
+        ? ticketTopicFromFilename(opts.id, view.ticketFilename)
+        : undefined;
+      if (topic !== undefined && topic !== currentTopic) {
+        retopicPjrItem({
+          paths,
+          id: opts.id,
+          topic,
+          updated,
+          dryRun: opts.dryRun,
+          ...(opts.title !== undefined ? { title: opts.title } : {}),
+          ...(opts.description !== undefined ? { description: opts.description } : {}),
+          actor: registerEventActor(opts),
+          reason: opts.reason?.trim() || "",
+        });
+        return;
+      }
       applyItemUpdate({
         paths,
         view,
@@ -2353,9 +2647,7 @@ export function registerRegisterCommands(program: Command): void {
   // --- migrate ---
   const migrateCmd = reg
     .command("migrate")
-    .description(
-      "Migrate legacy register data (pjr-index rows and registered_on / completed_on dates)",
-    );
+    .description("Migrate legacy register data (index rows, dates, and embedded register events)");
   addProjectOption(migrateCmd);
   migrateCmd.option("--dry-run", "Validate and print the migration summary without writing", false);
   migrateCmd.action((opts) => {
@@ -2388,11 +2680,15 @@ export function registerRegisterCommands(program: Command): void {
       const timestampSummary = summarizeTimestampMigration(timestampPlan);
 
       if (opts.dryRun) {
+        const embeddedMigration = migrateEmbeddedRegisterEvents(paths, true);
         const eventMigration = migrateRegisterEventsFromGit(paths, true);
         const eventSummary = eventMigration.available
           ? `items=${eventMigration.items}, events=${eventMigration.events}, skipped=${eventMigration.skipped}`
           : "unavailable (Git history not found; legacy fallback remains active)";
         process.stdout.write(`Would migrate register timestamps: ${timestampSummary}\n`);
+        process.stdout.write(
+          `Would separate embedded register events: items=${embeddedMigration.items}, events=${embeddedMigration.events}\n`,
+        );
         process.stdout.write(`Would migrate register events: ${eventSummary}\n`);
         return;
       }
@@ -2401,6 +2697,10 @@ export function registerRegisterCommands(program: Command): void {
         writeFileSync(file.path, file.content, "utf8");
       }
       process.stdout.write(`Migrated register timestamps: ${timestampSummary}\n`);
+      const embeddedMigration = migrateEmbeddedRegisterEvents(paths, false);
+      process.stdout.write(
+        `Separated embedded register events: items=${embeddedMigration.items}, events=${embeddedMigration.events}\n`,
+      );
       const eventMigration = migrateRegisterEventsFromGit(paths, false);
       const eventSummary = eventMigration.available
         ? `items=${eventMigration.items}, events=${eventMigration.events}, skipped=${eventMigration.skipped}`
@@ -2469,7 +2769,7 @@ export function registerRegisterCommands(program: Command): void {
   });
 
   // --- history ---
-  // 新しい変更は個票内の追記型 event、event 導入前の変更は Git 履歴から再構成する。
+  // 新しい変更は項目別の追記型 event、event 導入前の変更は Git 履歴から再構成する。
   const historyCmd = reg
     .command("history")
     .description("Show register item changes from append-only events and legacy Git history");

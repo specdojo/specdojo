@@ -1,0 +1,10 @@
+
+> specdojo@0.1.0 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-kata-7a191fc49921 project=prj-0001 kind=all changed_only=true ungraded=true documents=0 work_dir=logs/grade/runs/per-document/JBR-grade-kata-7a191fc49921
+stage=1 executor=gemma-expert-executor reporter=gemma-reporter reference=per-kind
+stage=2 executor=gemma-expert-executor reporter=gemma-reporter reference=none
+stage=3 executor=codex-expert-executor reporter=gemma-reporter reference=none condition="pass, score>=96, findings<=1"
+grade pipeline complete: selected=0 processed=0 completed_now=0 results=logs/grade/runs/per-document/JBR-grade-kata-7a191fc49921/results.tsv
+recorded_at	document	stage	status	duration_seconds	verdict	score	findings	executor	reporter	reference

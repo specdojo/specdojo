@@ -1,0 +1,147 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_2acc2ad3c1c64bd49a3e78f343e1cb0b
+  ts: "2026-09-08T13:38:47Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: job のコマンド実行を決定論的にする
+    - field: description
+      from: ""
+      to: job の実行は agent が description を解釈してシェルコマンドを組み立て実行する形になっている。task.mode は edit / review のみで、コマンドを直接実行する経路がない。コマンドの実行は決定論的で、判断が要るのは結果の解釈だけである。agent の sandbox 内で実行されるため tsx の IPC ソケット作成が EPERM で失敗する事象も、この設計の帰結である。runner がコマンドを実行して evidence へ記録し、判断が要る場合だけ agent へ渡す形へ分離する。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-08"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_b3a6162e0903440bb53f3219afa8047a
+  ts: "2026-09-08T13:50:22Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_2acc2ad3c1c64bd49a3e78f343e1cb0b
+- v: 1
+  id: reg_21487526cbc04a8c8c8512fbfefca29e
+  ts: "2026-09-08T14:16:44Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: rate limit reached
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: rate limit reached
+  previous_event_id: reg_b3a6162e0903440bb53f3219afa8047a
+- v: 1
+  id: reg_cd6318fdf232498a8891c205126151c5
+  ts: "2026-09-08T21:27:37Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_21487526cbc04a8c8c8512fbfefca29e
+- v: 1
+  id: reg_62b3e20416054630a583d0fd82ed111e
+  ts: "2026-09-08T21:38:28Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_cd6318fdf232498a8891c205126151c5
+- v: 1
+  id: reg_2731afbf964b4210a86c48f8fa1fe6a0
+  ts: "2026-09-09T12:52:33Z"
+  action: wait
+  actor: orchestrator
+  from_status: review
+  to_status: waiting
+  reason: "mode: command によるコマンド実行は成立し、5文書15段のうち13段で評価が完走した。ただし analysis 段へ結果が届かない。plan は stdout に出力された results.tsv から判断すると指示するが、その stdout の場所を伝えていない。command.stdout.log と stdout_ref は記録されているが plan での言及が 0 件である。完了条件のコマンドの実行と結果の解釈が分離されているを満たさない。"
+  changes:
+    - field: status
+      from: review
+      to: waiting
+    - field: block_reason
+      from: rate limit reached
+      to: "mode: command によるコマンド実行は成立し、5文書15段のうち13段で評価が完走した。ただし analysis 段へ結果が届かない。plan は stdout に出力された results.tsv から判断すると指示するが、その stdout の場所を伝えていない。command.stdout.log と stdout_ref は記録されているが plan での言及が 0 件である。完了条件のコマンドの実行と結果の解釈が分離されているを満たさない。"
+  previous_event_id: reg_62b3e20416054630a583d0fd82ed111e
+- v: 1
+  id: reg_cffff6ae37f845ee80fce797a8528a87
+  ts: "2026-09-09T13:02:07Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_2731afbf964b4210a86c48f8fa1fe6a0
+- v: 1
+  id: reg_ae079bfdf2c64312aad8d8bb22cb604c
+  ts: "2026-09-09T13:13:57Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_cffff6ae37f845ee80fce797a8528a87
+- v: 1
+  id: reg_41d8185883434c089fde826a80721860
+  ts: "2026-09-09T13:20:30Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: command evidence へ stdout / stderr を上限付きで埋め込み、analysis 段が結果を読めるようにした。redactSensitiveText で秘匿情報を除去し、MAX_LOG_BYTES を超える場合は切り詰める。routine run --id rtn-grade-recheck を実地で実行し Job Run complete と block_reason が空であることを確認した。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-09"
+  previous_event_id: reg_ae079bfdf2c64312aad8d8bb22cb604c

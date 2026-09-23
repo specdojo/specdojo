@@ -1,0 +1,92 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_4891ce6233f644ff97656899c32b89bc
+  ts: "2026-09-18T13:16:03Z"
+  action: add
+  actor: specdojo-orchestrator (claude)
+  from_status: null
+  to_status: open
+  reason: 利用者の提案。codex / claude の利用制限を track 単位で割り当てて運用するため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: Schedule の phase に agent の by-name 指定を追加する
+    - field: description
+      from: ""
+      to: proficiency による自動選択は rate limit の枠を計画できないため、strategy の phase に job と同じ agent.executor / agent.reporter の by-name 指定を追加する。指定時は自動選択より優先し、制限中でも他の agent へフォールバックせず待つ
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-18"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_f0fe2b0e85b3489099819ad82fd61055
+  ts: "2026-09-18T14:56:31Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_4891ce6233f644ff97656899c32b89bc
+- v: 1
+  id: reg_18d826e28e944e91a876deb825a08487
+  ts: "2026-09-18T15:18:15Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: runner による検証 `test-unit` が失敗したため。具体的に `tests/src/exec-strategy.test.ts` 内のproficiency を維持したまま phase assignment と per-deliverable override を解決するテストケースで失敗が発生している。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: runner による検証 `test-unit` が失敗したため。具体的に `tests/src/exec-strategy.test.ts` 内のproficiency を維持したまま phase assignment と per-deliverable override を解決するテストケースで失敗が発生している。"
+  previous_event_id: reg_f0fe2b0e85b3489099819ad82fd61055
+- v: 1
+  id: reg_d3ea74d65e8a4ff085e060669491b34f
+  ts: "2026-09-18T23:08:13Z"
+  action: review
+  actor: specdojo-orchestrator (claude)
+  from_status: waiting
+  to_status: review
+  reason: 親検証 test-unit の失敗は fixture の誤り（override 対象と非対象を同じ owner_rule に置いていた）。修正して develop へ統合し、--auto の dry-run で review-pass が codex-expert-review-executor を選ぶことを確認
+  changes:
+    - field: status
+      from: waiting
+      to: review
+  previous_event_id: reg_18d826e28e944e91a876deb825a08487
+- v: 1
+  id: reg_66dbd5379bdb46b6bc9ac940ce277173
+  ts: "2026-09-18T23:16:01Z"
+  action: close
+  actor: specdojo-orchestrator (claude)
+  from_status: review
+  to_status: done
+  reason: codex-expert-executor が worktree で実装。親検証 test-unit の fixture 誤りをオーケストレーターが修正して develop へ統合し、利用者が確認して close
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-19"
+  previous_event_id: reg_d3ea74d65e8a4ff085e060669491b34f

@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "project_id": "prj-0001",
+  "target": "deliverable",
+  "document": "docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md",
+  "content_hash": "1bf9e2d6d260baf7a5d9121f988b2141752bc7642427ff70c3015d325094f085",
+  "stage_completed": 0,
+  "stage_failed": 1,
+  "stage_total": 1,
+  "consecutive_failures": 1,
+  "max_failures": 3,
+  "last_run_id": "JBR-grade-deliverable-c452fc601959",
+  "updated_at": "2026-09-19T16:06:26.443Z"
+}

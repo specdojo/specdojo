@@ -1,0 +1,621 @@
+Reading prompt from stdin...
+[2m2026-09-08T13:51:01.767814Z[0m [31mERROR[0m [2mcodex_models_manager::manager[0m[2m:[0m failed to load models cache: missing field `supports_parallel_tool_calls` at line 132 column 5
+OpenAI Codex v0.147.0
+--------
+[1mworkdir:[0m /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GWY4
+[1mmodel:[0m gpt-5.6-sol
+[1mprovider:[0m openai
+[1mapproval:[0m never
+[1msandbox:[0m workspace-write [workdir, /tmp, $TMPDIR]
+[1mreasoning effort:[0m high
+[1mreasoning summaries:[0m none
+[1msession id:[0m 01a08149-5678-7a30-9046-d8e82484b93b
+--------
+[36muser[0m
+---
+specdojo:
+  id: prj-0001:xep-pjr-gwy4-20260908t135021z-1a9a
+  type: exec-plan
+  rulebook: none
+  task_id: PJR-GWY4
+  name: "job のコマンド実行を決定論的にする"
+  mode: edit
+  status: ready
+  project_id: prj-0001
+  origin: register
+  owner: ARC
+---
+
+# Edit Plan: PJR-GWY4 job のコマンド実行を決定論的にする
+
+## 1. このタスクで行うこと
+
+プロジェクト登録簿の項目 PJR-GWY4「job のコマンド実行を決定論的にする」に対応する。
+
+job の実行は、agent が `description` を解釈してシェルコマンドを組み立て、実行する形になって いる。コマンドの実行自体は決定論的であり、agent の判断を要しない。
+
+## 2. 対象項目
+
+- `id`: PJR-GWY4
+- `type`: todo
+- `priority`: high
+- `owner`: ARC
+- `due`: 2026-09-30
+- `登録簿`: `docs/ja/projects/prj-0001/controls/project-register/pjr-index.md`
+- `個票`: `docs/ja/projects/prj-0001/controls/project-register/pjr-gwy4-job-deterministic-command.md`
+- `result`: `docs/ja/projects/prj-0001/execution/exec/results/pjr-gwy4-20260908T135021Z-1a9a-result.md`
+
+## 3. 進め方
+
+1. 登録簿の該当行と個票（存在する場合）を読み、目的・完了条件・制約を把握する。
+2. 個票に完了条件がある場合はそれを作業の基準にする。無い場合はタイトルと説明から完了条件の仮説を立て、その仮説を result に明記する。
+3. 関連する成果物・設計書・実装を確認し、対象ファイルを特定して変更する。
+4. 個票が存在する場合は、個票の作業内容・対応結果セクションを実施内容で更新する。
+5. 判断に迷う箇所は _TODO_ / _ASSUMPTION_ で残し、根拠と次のアクションを result に書く。
+
+## 4. 完了手順
+
+1. 「進め方」に従って対応を完了する。
+2. 共通規約に従って、必要な整形・静的検査を実行する。
+3. result に実施内容・変更ファイル・申し送りを記入する。これはタスク完了に必須であり、_TODO_ を残したまま終了しない（詳細は共通規約を参照）。
+4. 登録簿（`pjr-index.md`）の行と個票のステータス項目は変更しない。状態遷移（review / close など）は runner と人間が行う。
+
+## 5. 異常終了の条件
+
+- 前提不足・対象ファイル不明・静的検査未解消の場合は異常終了する（終了コード 1）。
+- 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
+- agent 自身は登録簿の状態を変更せず、終了コードと標準エラー出力で runner に結果を返す。
+
+## 共通: 記法・成果物規約
+
+この規約は、生成される全 exec plan に共通で適用される。result の完了条件、他文書を参照する際のリンク記法、成果物の状態（status）の扱いを統一する。
+
+- result（review plan の場合は review result）への記入は、タスク完了に必須の作業である。成果物の編集とは別に、最後に必ず実施する。
+- 終了コード 0 で完了する前に、result の必須セクションをすべて実際の内容で埋め、プレースホルダ（_TODO_ など）や未記入のセクションを残さない。
+- 成果物に変更が不要と判断した場合でも、result の記入は省略しない。変更不要と判断した理由と根拠を result に記入してから完了する。
+- result が未記入・プレースホルダのまま終了コード 0 で終了すると、runner は成果物未完了（block）として扱い、タスクはやり直しになる。完了前に result の記入漏れがないことを必ず確認する。
+- result の frontmatter は scaffold 済みの構造を正本とする。`id` / `task_id` / `mode` / `project_id` / `plan_ref` / `agent` / `execution` / `approach` / `targets` はキーの追加・削除・改名をせず、scaffold された値のまま維持する。見出し構成（`# Edit Result` などの H1、`## 1.` 以降の章立て）も独自の構成に置き換えない。埋めるのは本文セクションの `_TODO_` プレースホルダの中身だけである。`status` と `completed_at` は完了処理（runner 側）が更新するため、自分で書き換えない。
+- 文書へのリンクは、対象文書が既に存在する場合は `[[id|title]]` 形式で記載する（`id` は project 修飾 doc id）。
+- リンクを表（テーブル）のセル内に置く場合は、区切りの `|` を `[[id\|title]]` のようにエスケープする。エスケープしないと列がずれて表が壊れ、prettier 整形でセルが分割されて固定化される。
+- まだ存在しない文書を参照する場合は、`[[...]]` ではなく `` `id` `` または `` `filename` `` のようにバッククォートで仮置きする。
+- 成果物 frontmatter の `status` を `ready` に変更しない。`ready` への昇格は人間のみが行うため、`draft` のまま据え置く（exec のコミット時ガードでも昇格はブロックされる）。
+- plan に「プロジェクトコンテキスト」章がある場合、そこに挙がる文書はプロジェクト共通の前提を読むための参照であり、成果物 frontmatter の `based_on` へ転記しない。参照して得た前提は本文の記述内容へ反映する。
+- 成果物 frontmatter の `based_on` に書けるのは、その成果物の `depends_on` の推移閉包に含まれる先行成果物だけである。閉包外の ID を書くと `catalog validate` が「`based_on` が `depends_on` の推移閉包に含まれていません」としてエラーになり、コミットがブロックされる。`based_on` を増やす必要が生じた場合は、自分で転記せず、根拠不足として result に記録する。
+- ファイルの読み取り・書き込み・編集は、作業ディレクトリ（カレントディレクトリ）からの相対パスで指定する。絶対パスを自分で組み立てたり、作業ディレクトリ名を推測して指定したりしない（作業ディレクトリ名の取り違えは外部パス扱いになり拒否される）。
+- 編集・書き込みが作業ディレクトリ外（`external_directory`）として拒否された場合、原因はパス指定の誤り（誤った絶対パス・ディレクトリ名の取り違え）である。bash の heredoc などへ回避的に切り替えず、相対パスに直したうえで同じ編集ツールで再実行する。
+- 整形・静的検査は、この plan の完了手順または本共通規約で明示されたコマンドを実行する。変更対象に必要な test、build、schema 検証は、plan に個別記載がなくても実行してよい。同じ test script では対象限定と全件を同一 executor run 内で連続実行せず、どちらか一方に絞る。下表、plan、またはプロジェクト標準が全件 test を求める場合は、全件を1回だけ実行して対象限定の実行を省く。この制約は executor が sandbox 内で実行する test script の回数に対するものであり、親検証に設定された ID のコマンドは対象外である（親 runner が別途実行する）。実行したコマンド・対象・結果は result に記録する。
+- executor / reporter pipeline で親 runner の検証が設定されている場合、executor は設定済み ID に対応するコマンドを sandbox 内で実行せず、executor 終了後に親 runner が固定許可リストから実行して evidence へ追記する。`validate-schema` は `npm run validate:schema`、`test-unit` は `npm run test:unit`、`test-integration` は `npm run test:integration` に対応する。executor は親検証と同じコマンドの対象限定版も追加せず、二重実行しない。
+- Markdown 成果物を編集した後は、`npx prettier --write <対象ファイル>` で整形し、`npx markdownlint <対象ファイル>` で静的検査を実施する。検査でエラーが出た場合は修正してから完了とする。
+- 終了する前に、コミット時に実行される検査（pre-commit 相当）を先回りで実行し、失敗をすべて修正してから完了する。コミット時に初めて失敗が判明すると commit がブロックされ、成果物の内容が完成していてもタスクは block になる。
+- 実行対象は、変更したファイルの種別で判断する。下表のうち、変更したファイルが該当する行の検査をすべて実行する。該当行がない場合は追加の検査は不要である。ただし親検証に設定された ID のコマンドは下表よりも優先し、executor は実行しない。下表に同じコマンドが挙がっていても、親 runner の実行に委ねる。
+- 検査コマンドの正本はリポジトリの hook 設定（`lefthook.yml` など）である。下表と設定が食い違う場合は設定側に合わせ、実行したコマンドと結果を result に記録する。`specdojo` コマンドは、リポジトリで定められた起動方法（`npx tsx src/specdojo.ts <subcommand>` など）で実行する。
+
+| 変更したファイル                                                                                       | 実行する検査                                                                                                                          |
+| ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `*.md`                                                                                                 | `npx prettier --write <対象ファイル>`、`npx markdownlint <対象ファイル>`                                                              |
+| `*.ts` / `*.js` / `*.json` / `*.yaml` / `*.yml`                                                        | `npx prettier --write <対象ファイル>`                                                                                                 |
+| `src/`、`tests/`、`scripts/`、`tools/`、`tsconfig*.json`                                               | `npm run typecheck`                                                                                                                   |
+| `src/`、`tests/`、`docs/ja/specdojo/templates/`、`docs/ja/specdojo/exec-templates/`、`vitest.config.*` | pipeline executor は `npm run test:unit`、それ以外は `npm test`（`test-unit` が親検証に設定されている場合は executor では実行しない） |
+| `docs/ja/projects/` 配下                                                                               | `specdojo catalog validate`                                                                                                           |
+| `dct-*.yaml`                                                                                           | `specdojo catalog build`                                                                                                              |
+| `pjr-index.md`                                                                                         | `specdojo register build`                                                                                                             |
+| `sch-*.yaml`                                                                                           | `specdojo exec refresh`                                                                                                               |
+| `docs/` 配下                                                                                           | `specdojo index build`                                                                                                                |
+
+---
+
+# Pipeline executor stage instructions
+
+This invocation is the executor stage of an executor/reporter pipeline. Edit and validate the
+artifacts required by the plan, but do not create or update the result file. Any plan instruction
+that assigns result writing or lifecycle transitions to the agent belongs to the later reporter or
+runner stage and does not apply here.
+
+The parent runner owns Git commits and repository configuration. Do not run git commit or change
+local, global, or system Git configuration, including user.name and user.email. A Git state change
+will stop the pipeline before validation, reporting, commit, or merge.
+
+The SpecDojo parent runner will execute these allowlisted validations after you exit: test-integration, validate-schema, test-unit (npm run test:integration, npm run validate:schema, npm run test:unit). Do not run those commands inside the agent sandbox or report duplicate executor results for them. Run only the remaining sandbox-safe validations required by the plan. Parent-run results will be appended to evidence with source=runner and are authoritative.
+
+
+End the final response with exactly one machine-readable report using this envelope. Do not place
+Markdown fences around the JSON.
+
+<specdojo_executor_evidence>
+{"final_message":"concise outcome","validations":[{"command":"exact command","status":"passed|failed|not_run","summary":"concise result"}]}
+</specdojo_executor_evidence>
+
+[35m[3mcodex[0m[0m
+まず登録簿・個票と、job 実行まわりの設計書・実装・既存テストを確認します。executor 指示に従い result は編集せず、親 runner が担当する3つの検証もこちらでは実行しません。
+[35m[3mexec[0m[0m
+[1m/bin/bash -lc 'pwd && rg -n "PJR-GWY4|deterministic|job|description" docs/ja/projects/prj-0001/controls/project-register/pjr-index.md docs/ja/projects/prj-0001/controls/project-register/pjr-gwy4-job-deterministic-command.md docs/ja/specdojo src tests package.json lefthook.yml 2>/dev/null'[0m in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GWY4
+[31m exited 2 in 0ms:[0m
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GWY4
+package.json:4:  "description": "SpecDojo CLI, schemas, and documentation for specification-driven execution workflows.",
+package.json:92:    "validate:schema:job-run": "tsx tools/docs/src/validate-yaml-schema.ts --schema docs/specdojo/schemas/v1/job-run.schema.yaml --data \"docs/ja/**/execution/jobs/runs/*.json\" --allow-empty",
+package.json:94:    "validate:schema": "npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:rulebook-enums",
+docs/ja/projects/prj-0001/controls/project-register/pjr-gwy4-job-deterministic-command.md:3:  id: prj-0001:pjr-gwy4-job-deterministic-command
+docs/ja/projects/prj-0001/controls/project-register/pjr-gwy4-job-deterministic-command.md:17:# PJR-GWY4 job のコマンド実行を決定論的にする
+docs/ja/projects/prj-0001/controls/project-register/pjr-gwy4-job-deterministic-command.md:21:job の実行は、agent が `description` を解釈してシェルコマンドを組み立て、実行する形になって
+docs/ja/projects/prj-0001/controls/project-register/pjr-gwy4-job-deterministic-command.md:31:| routine `action.kind` | `register` / `exec-auto` / `exec-resume` / `exec-cycle` / `job` |
+docs/ja/projects/prj-0001/controls/project-register/pjr-gwy4-job-deterministic-command.md:36:routine → job → plan 生成 → agent が plan を読む
+docs/ja/projects/prj-0001/controls/project-register/pjr-gwy4-job-deterministic-command.md:37:                          → description を解釈
+docs/ja/projects/prj-0001/controls/project-register/pjr-gwy4-job-deterministic-command.md:44:`job-grade-kata.yaml` の `description` には、agent の逸脱を防ぐ指示が必要になっている。
+docs/ja/projects/prj-0001/controls/project-register/pjr-gwy4-job-deterministic-command.md:79:回避のため `--specdojo-bin dist/specdojo.js` を指定し、あわせてビルド手順を description へ
+docs/ja/projects/prj-0001/controls/project-register/pjr-gwy4-job-deterministic-command.md:84:上記の回避策を job 定義へ入れたが、次の実行にも反映されなかった。冪等キーが同一のため既存の
+docs/ja/projects/prj-0001/controls/project-register/pjr-gwy4-job-deterministic-command.md:88:idempotency_key: "{{job_id}}:{{inputs.kind}}:{{inputs.period}}:{{inputs.limit}}:{{inputs.changed_only}}:{{inputs.ungraded}}"
+docs/ja/projects/prj-0001/controls/project-register/pjr-gwy4-job-deterministic-command.md:140:    tools/grade/run-per-document.sh --run-id {{job_id}} --kind {{inputs.kind}} ...
+docs/ja/projects/prj-0001/controls/project-register/pjr-gwy4-job-deterministic-command.md:143:    description: |
+docs/ja/projects/prj-0001/controls/project-register/pjr-gwy4-job-deterministic-command.md:151:- job がシェルコマンドを決定論的に実行できる。agent の解釈を経ない。
+docs/ja/projects/prj-0001/controls/project-register/pjr-gwy4-job-deterministic-command.md:155:- `job-grade-kata.yaml` から逸脱防止の指示（手順を分解しない、`--specdojo-bin` を省略しない）
+docs/ja/projects/prj-0001/controls/project-register/pjr-gwy4-job-deterministic-command.md:160:- 既存の `edit` / `review` の job が従来どおり動作する。
+docs/ja/projects/prj-0001/controls/project-register/pjr-gwy4-job-deterministic-command.md:166:| 1   | job schema へ決定論的な実行方式を追加       | 既存 mode との互換を保つ         |
+docs/ja/projects/prj-0001/controls/project-register/pjr-gwy4-job-deterministic-command.md:169:| 4   | `job-grade-kata.yaml` を新方式へ移行        | 逸脱防止の指示と回避策を削除する |
+src/specdojo.ts:14:import { registerJobCommands } from "./job.js";
+src/specdojo.ts:46:  program.name("specdojo").description("SpecDojo helper CLI").version("0.4.0");
+src/catalog.ts:298:  const cat = program.command("catalog").description("Deliverables catalog (dct-*.yaml) commands");
+src/catalog.ts:300:  const wcmd = cat.command("where").description("Print resolved catalog paths");
+src/catalog.ts:313:  const vcmd = cat.command("validate").description("Validate dct-*.yaml files");
+src/catalog.ts:405:  const bcmd = cat.command("build").description("Generate dct-*.md from dct-*.yaml");
+src/catalog.ts:429:    .description("Create dct-*.yaml from templates (small|medium|large)");
+src/catalog.ts:530:// between the DCT template and the deterministic catalog generator.
+src/catalog.ts:534:    .description("DCT plan (dct-plan-<domain>.yaml) commands for agent judgment");
+src/catalog.ts:538:    .description("Create dct-plan-<domain>.yaml (skeleton, or ingest agent output with --from)");
+src/catalog.ts:637:    .description("Print the agent instruction for judging deliverable instances");
+src/catalog.ts:697:  const pValidate = plan.command("validate").description("Validate dct-plan-*.yaml files");
+src/exec-register.ts:303:    // title / description は登録簿の自由記述列に由来し、山括弧プレースホルダや
+src/exec-register.ts:308:      item.description && item.description !== "_TODO_"
+src/exec-register.ts:309:        ? escapeMarkdownInline(item.description)
+src/exec-results.ts:18:  return value === "register" || value === "schedule" || value === "job" ? value : undefined;
+src/exec-results.ts:31:  if (meta.job_id) inner.push(`job_id: ${meta.job_id}`);
+src/exec-results.ts:174:  // 登録簿項目は "register"、Job Runは "job"。省略時はschedule由来として扱う。
+src/exec-results.ts:176:  jobId?: string;
+src/exec-results.ts:211:    ...(opts.jobId ? { job_id: opts.jobId } : {}),
+src/exec-results.ts:290:  const optionalScalars = ["origin", "job_id", "run_id", "plan_ref", "execution", "approach"];
+src/exec-results.ts:519:    ...(existingMeta.job_id ? { job_id: existingMeta.job_id } : {}),
+src/exec-results.ts:562:    ...(existingMeta.job_id ? { job_id: existingMeta.job_id } : {}),
+src/agent.ts:124:  const agent = program.command("agent").description("Run a plan with a specific agent");
+src/agent.ts:128:    .description("Feed a plan to one agent and capture its stdout")
+tests/src/exec-register-plan-escape.test.ts:100:      description: PROBLEMATIC_DESCRIPTION,
+tests/src/exec-register-plan-escape.test.ts:142:  it("title と description の山括弧プレースホルダをコード化し、再生成しても二重化しない", async () => {
+tests/src/exec-register-plan-escape.test.ts:150:        description: "`dct-<domain>.yaml` と sch-track-<track>.yaml を確認し、末尾は <phase>.",
+src/watch.ts:342:    .description("Watch project files and run builds automatically on change")
+src/index-command.ts:21:  const idx = program.command("index").description("Document ID index commands");
+src/index-command.ts:25:    .description("Scan docs and build .specdojo/doc-index.json")
+src/index-command.ts:44:    .description("Look up a document path by ID")
+src/index-command.ts:64:    .description("Replace [[id]] references using .specdojo/doc-index.json")
+src/deliverable.ts:22:    .description("Project deliverable file commands");
+src/deliverable.ts:26:    .description("Create deliverable files the catalog points to (from template or catalog info)");
+src/deliverable.ts:78:    .description(
+src/build-command.ts:117:    .description(
+src/schedule.ts:184:  // deterministic all-strategy order so adding a track does not move existing track sections.
+src/schedule.ts:292:    .description("Deterministic sch-strategy-<track>.yaml generation commands");
+src/schedule.ts:295:    .description("Generate sch-strategy-<track>.yaml from DCT, Timeline, intents and grades");
+src/schedule.ts:387:  const sch = program.command("schedule").description("Schedule build commands");
+src/schedule.ts:390:  const wcmd = sch.command("where").description("Print resolved schedule paths and file list");
+src/schedule.ts:428:    .description("Build sch-track-<track>.yaml from sch-strategy-<track>.yaml and catalogs");
+src/exec-task-view.ts:43:    description: node.description,
+tests/src/grade.test.ts:38:      description: `level ${level}`,
+tests/src/grade.test.ts:55:      evaluation: "deterministic",
+tests/src/grade.test.ts:321:  it("requires every continuous agent viewpoint and excludes deterministic viewpoints", () => {
+src/dashboard.ts:827:  const dash = program.command("dashboard").description("Per-project dashboard build commands");
+src/dashboard.ts:831:    .description("Generate per-project dashboard.md and timeline Gantt chart SVG")
+src/register-item.ts:24:  description: string;
+src/register-item.ts:187:export function descriptionFromBody(body: string): string {
+src/register-item.ts:242:    description: descriptionFromBody(body),
+src/register-item.ts:515:export function setRegisterItemDescription(content: string, description: string): string {
+src/register-item.ts:516:  const safeDescription = inlineCodeAnglePlaceholders(description);
+src/register-item.ts:540:export function prependRegisterItemDescription(content: string, description: string): string {
+src/register-item.ts:541:  const safeDescription = inlineCodeAnglePlaceholders(description);
+src/exec-worktree-command.ts:444:  const worktree = exec.command("worktree").description("Manually manage task execution worktrees");
+src/exec-worktree-command.ts:447:    worktree.command("prepare").description("Commit execution checkpoint and prepare worktree"),
+src/exec-worktree-command.ts:460:    worktree.command("status").description("Show task worktree and Git status"),
+src/exec-worktree-command.ts:472:    worktree.command("agent").description("Run the task agent once inside its worktree"),
+src/exec-worktree-command.ts:485:    worktree.command("commit").description("Commit task result and deliverable changes"),
+src/exec-worktree-command.ts:498:    worktree.command("merge").description("Merge the task exec branch into the current branch"),
+src/exec-worktree-command.ts:511:    worktree.command("remove").description("Remove a merged task worktree"),
+src/schedule-strategy-profiles.ts:1:// Standard strategy profiles: the single place that maps a deterministically derived approach
+src/schedule-strategy-profiles.ts:21:  description: string;
+src/schedule-strategy-profiles.ts:48:    description:
+src/schedule-strategy-profiles.ts:66:      description:
+src/schedule-strategy-profiles.ts:82:      description:
+src/schedule-strategy-profiles.ts:98:      description:
+src/schedule-strategy-profiles.ts:113:      description:
+src/schedule-strategy-profiles.ts:128:      description:
+src/schedule-strategy-profiles.ts:147:      description:
+src/schedule-strategy-profiles.ts:162:      description:
+src/schedule-strategy-profiles.ts:177:      description:
+src/schedule-strategy-profiles.ts:191:      description:
+src/schedule-strategy-profiles.ts:321:    description: `${phase.description}\n`,
+tests/src/register-item.test.ts:8:  descriptionFromBody,
+tests/src/register-item.test.ts:75:describe("titleFromBody / descriptionFromBody — 一覧列の導出", () => {
+tests/src/register-item.test.ts:85:    expect(descriptionFromBody(body)).toBe("A\\|B を決める。");
+tests/src/register-item.test.ts:93:    expect(descriptionFromBody(body)).toBe("_TODO_");
+tests/src/register-item.test.ts:109:      description: "開店時の在庫初期値を決める。仕入れ先の最小ロットに合わせる。",
+tests/src/register-item.test.ts:151:    description: "説明",
+tests/src/register-item.test.ts:406:      description: "説明",
+tests/src/register-item.test.ts:434:      description: "説明",
+tests/src/register-item.test.ts:461:      description: "説明",
+src/exec-trial.ts:1200:  const trial = exec.command("trial").description("Compare multiple agents on one immutable plan");
+src/routine.ts:33:export type RoutineActionKind = "register" | "exec-auto" | "exec-resume" | "exec-cycle" | "job";
+src/routine.ts:51:  // kind: job — materialize する Job Definition と入力
+src/routine.ts:52:  job?: string;
+src/routine.ts:61:  description?: string;
+src/routine.ts:317:    kind !== "job"
+src/routine.ts:320:      `${fieldName}.kind must be one of: register, exec-auto, exec-resume, exec-cycle, job (got "${kind}")`,
+src/routine.ts:366:  if (kind === "job") {
+src/routine.ts:367:    if (typeof value.job !== "string" || !/^job-[a-z0-9][a-z0-9-]*$/.test(value.job)) {
+src/routine.ts:368:      errors.push(`${fieldName}.job must match job-<slug>`);
+src/routine.ts:401:    ...(typeof value.job === "string" ? { job: value.job } : {}),
+src/routine.ts:505:    ...(typeof value.description === "string" ? { description: value.description } : {}),
+src/routine.ts:768:  if (!action.job) throw new Error("job action requires action.job");
+src/routine.ts:772:    "--job",
+src/routine.ts:773:    action.job,
+src/routine.ts:778:    "--job-trigger",
+src/routine.ts:845:  if (action.kind === "job") {
+src/routine.ts:949:    .description("Periodic task execution from rtn-*.yaml definitions");
+src/routine.ts:952:  const whereCmd = routine.command("where").description("Print resolved routine paths and files");
+src/routine.ts:970:  const validateCmd = routine.command("validate").description("Validate rtn-*.yaml definitions");
+src/routine.ts:989:    .description("List routines with due status and last run time");
+src/routine.ts:1041:    .description("Run due routines (--due) or a specific routine (--id)");
+src/schedule-build.ts:24:  description?: string;
+src/schedule-build.ts:69:  description?: string;
+src/schedule-build.ts:138:  description?: string;
+src/schedule-build.ts:488:        ...(phase.description ? { description: phase.description } : {}),
+src/schedule-build.ts:628:      ...(pass.description ? { description: pass.description } : {}),
+tests/src/routine.test.ts:40:    description: "説明",
+tests/src/routine.test.ts:165:          { kind: "job", job: "job-final-check", inputs: { mode: "strict" } },
+tests/src/routine.test.ts:175:      { kind: "job", job: "job-final-check", inputs: { mode: "strict" } },
+tests/src/routine.test.ts:195:      'rtn-invalid-step.yaml: action[1].kind must be one of: register, exec-auto, exec-resume, exec-cycle, job (got "unknown")',
+tests/src/routine.test.ts:211:    expect(routineActionKindLabel([{ kind: "exec-auto" }, { kind: "job" }])).toBe(
+tests/src/routine.test.ts:212:      "exec-auto -> job",
+tests/src/routine.test.ts:221:      [{ kind: "exec-auto" }, { kind: "exec-resume" }, { kind: "job", job: "job-check" }],
+tests/src/routine.test.ts:228:    expect(executed).toEqual(["1:exec-auto", "2:exec-resume", "3:job"]);
+tests/src/routine.test.ts:232:      { index: 3, kind: "job", result: "success" },
+tests/src/routine.test.ts:437:      action: { kind: "job", job: "job-weekly-report" },
+tests/src/routine.test.ts:448:  it("builds exec run --job arguments with occurrence inputs", () => {
+tests/src/routine.test.ts:452:          kind: "job",
+tests/src/routine.test.ts:453:          job: "job-weekly-report",
+tests/src/routine.test.ts:463:      "--job",
+tests/src/routine.test.ts:464:      "job-weekly-report",
+tests/src/routine.test.ts:469:      "--job-trigger",
+tests/src/catalog-index.test.ts:135:  it("builds one index row for a domain split across physical files deterministically", () => {
+src/schedule-strategy-generate.ts:4:// by code so `schedule build` and `exec refresh` stay deterministic.
+src/schedule-strategy-generate.ts:537:        description:
+tests/src/register.test.ts:73:  description: "_TODO_",
+tests/src/register.test.ts:220:    expect(item.description).toBe("`dct-<domain>`.yaml");
+tests/src/register.test.ts:360:    description: "d",
+tests/src/exec-schedule-validation.test.ts:44:  it("returns missing and outdated tracks in deterministic track order", () => {
+tests/src/register-commands.test.ts:192:        "--description",
+tests/src/register-commands.test.ts:268:  it("add は description の山括弧プレースホルダを個票本文で code span 化する", async () => {
+tests/src/register-commands.test.ts:279:        "--description",
+tests/src/register-commands.test.ts:513:        "--description",
+tests/src/exec-plans.test.ts:164:  it("coverageMap がある場合は coverage_required を id: description に展開する", () => {
+tests/src/exec-plans.test.ts:169:      ["business_goal", { id: "business_goal", description: "業務目的との対応が説明できるか。" }],
+src/exec-reporter.ts:321:untouched (its evidence may say so explicitly) because writing the result is your job, not its.
+docs/ja/specdojo/standards/job-definition-standard.md:3:  id: specdojo:job-definition-standard
+docs/ja/specdojo/standards/job-definition-standard.md:12:`job-*.yaml` が担う責務の境界と、`task` の記述・agent 指名・検証の規約を定義します。Job は agent へ委譲する判断を定義するものとし、決定論的な手順は script または CLI へ置きます。
+docs/ja/specdojo/standards/job-definition-standard.md:16:- 対象: プロジェクトの `jobs_path` 配下に置くすべての `job-*.yaml`。
+docs/ja/specdojo/standards/job-definition-standard.md:18:- 位置づけ: 本標準は Job Definition の規範を定める。実行モデル（Job Run、冪等性、checkpoint）の設計は `sysd-job-execution`、運用手順は `routine-operation-guide` と `command-reference` に委譲する。
+docs/ja/specdojo/standards/job-definition-standard.md:19:- 機械検証: `docs/specdojo/schemas/v1/job.schema.yaml` を SSOT とし、本文では制約を二重定義しない。
+docs/ja/specdojo/standards/job-definition-standard.md:25:- 判断（観測した結果の解釈、失敗の切り分け、次の行動の提案）は agent へ委譲し、`task.description` にはその判断内容を書く。
+docs/ja/specdojo/standards/job-definition-standard.md:27:- 同じ入力に対して同じ Run を作れるよう、Job が使う値は `inputs`、`job_id`、`scheduled_at`、前回成功 checkpoint に限定する。
+docs/ja/specdojo/standards/job-definition-standard.md:31:次の表で「手順」に該当する記述は `task.description` へ書かず、script または CLI へ移す。
+docs/ja/specdojo/standards/job-definition-standard.md:37:| 判断 | 観測した結果を解釈し、複数の説明のどれが妥当かを選ぶ       | `task.description` | 失敗が rate limit か agent の失敗かの切り分け    |
+docs/ja/specdojo/standards/job-definition-standard.md:38:| 判断 | 事実から次の行動（再開・見直し・エスカレーション）を決める | `task.description` | 閾値の見直し要否、再開可否の判断                 |
+docs/ja/specdojo/standards/job-definition-standard.md:43:### 3.1. task.description の規約
+docs/ja/specdojo/standards/job-definition-standard.md:45:- `task.description` には、agent が下すべき判断と、判断の根拠にする入力（コマンドの出力、生成ファイル）を書く。
+docs/ja/specdojo/standards/job-definition-standard.md:56:- nickname は `pm-members.yaml` に登録済みの `type: agent` のメンバーと完全一致させる。`job validate` は書式のみを検査するため、実在確認は `exec run --job --dry-run` で行う。
+docs/ja/specdojo/standards/job-definition-standard.md:76:| `id`                   | ○    | `job-<slug>` 形式で、ファイル名の拡張子を除いた部分と一致する      |
+docs/ja/specdojo/standards/job-definition-standard.md:78:| `task.description`     | ○    | 判断内容を含み、決定論的手順の列挙を含まない                       |
+docs/ja/specdojo/standards/job-definition-standard.md:93:  description: |
+docs/ja/specdojo/standards/job-definition-standard.md:97:    tools/grade/run-per-document.sh --run-id {{job_id}}-{{inputs.period}}
+docs/ja/specdojo/standards/job-definition-standard.md:107:- 対象文書の列挙、段の順序制御、1件ごとの CLI 実行を `task.description` へ書かない。自然言語で書かれた script は Job の責務ではない。
+docs/ja/specdojo/standards/job-definition-standard.md:111:- `task.description` へ認証情報、秘密鍵、token を書かない。
+docs/ja/specdojo/standards/job-definition-standard.md:116:- `job-*.yaml` を変更した場合は `specdojo job validate --project <project-id>` を実行する。
+docs/ja/specdojo/standards/job-definition-standard.md:117:- agent の指名を変更した場合は `specdojo exec run --job <job-id> --dry-run` で、解決された nickname とコマンドを確認する。
+tests/src/job.test.ts:8:  jobCheckpoint,
+tests/src/job.test.ts:13:} from "../../src/job.js";
+tests/src/job.test.ts:18:  const repo = mkdtempSync(join(tmpdir(), "specdojo-job-"));
+tests/src/job.test.ts:21:    "jobs",
+tests/src/job.test.ts:33:        test: { schedule_path: "schedule", execution_path: "execution", jobs_path: "jobs" },
+tests/src/job.test.ts:38:    join(repo, "docs/ja/specdojo/exec-templates/xep-job-template.md"),
+tests/src/job.test.ts:46:    join(repo, "jobs/job-translate.yaml"),
+tests/src/job.test.ts:48:      "id: job-translate",
+tests/src/job.test.ts:60:      "  description: translate {{inputs.from_revision}}..{{inputs.to_revision}}",
+tests/src/job.test.ts:66:      '  idempotency_key: "{{job_id}}:{{inputs.from_revision}}:{{inputs.to_revision}}"',
+tests/src/job.test.ts:86:        id: "job-report",
+tests/src/job.test.ts:89:        task: { mode: "edit", description: "write", targets: ["report"] },
+tests/src/job.test.ts:90:        run: { idempotency_key: "{{job_id}}:{{inputs.period}}" },
+tests/src/job.test.ts:92:      "job-report.yaml",
+tests/src/job.test.ts:95:    expect(parsed.job?.id).toBe("job-report");
+tests/src/job.test.ts:101:        id: "job-report",
+tests/src/job.test.ts:105:          description: "write",
+tests/src/job.test.ts:109:        run: { idempotency_key: "{{job_id}}" },
+tests/src/job.test.ts:111:      "job-report.yaml",
+tests/src/job.test.ts:114:    expect(parsed.job?.task.agent).toEqual({
+tests/src/job.test.ts:123:        id: "job-report",
+tests/src/job.test.ts:127:          description: "write",
+tests/src/job.test.ts:131:        run: { idempotency_key: "{{job_id}}" },
+tests/src/job.test.ts:133:      "job-report.yaml",
+tests/src/job.test.ts:135:    expect(parsed.job).toBeUndefined();
+tests/src/job.test.ts:137:      "job-report.yaml: task.agent.executor must be an agent nickname from pm-members.yaml",
+tests/src/job.test.ts:144:        id: "job-report",
+tests/src/job.test.ts:148:          description: "write",
+tests/src/job.test.ts:152:        run: { idempotency_key: "{{job_id}}" },
+tests/src/job.test.ts:154:      "job-report.yaml",
+tests/src/job.test.ts:156:    expect(parsed.job).toBeUndefined();
+tests/src/job.test.ts:157:    expect(parsed.errors).toContain("job-report.yaml: task.agent has unknown key(s): reporters");
+tests/src/job.test.ts:175:        jobId: "job-translate",
+tests/src/job.test.ts:190:      expect(jobCheckpoint(resolveJobPaths("test"), "job-translate")).toEqual({
+tests/src/job.test.ts:196:        jobId: "job-translate",
+tests/src/job.test.ts:213:        jobId: "job-translate",
+tests/src/job.test.ts:217:      expect(jobCheckpoint(resolveJobPaths("test"), "job-translate")).toEqual({});
+tests/src/job.test.ts:221:        jobId: "job-translate",
+tests/src/job.test.ts:240:        jobId: "job-translate",
+tests/src/job.test.ts:251:      expect(Object.keys(state.jobs)).toEqual(["job-translate"]);
+tests/src/job.test.ts:252:      expect(state.jobs["job-translate"]?.checkpoint).toEqual({ revision: "abc123" });
+src/timeline.ts:83:  const tml = program.command("timeline").description("Timeline build commands");
+src/timeline.ts:85:  const wcmd = tml.command("where").description("Print resolved timeline paths");
+src/timeline.ts:104:    .description("Derive track start order and catalog scaffold targets from tml-index.yaml");
+tests/src/register-migration.test.ts:139:      description: "一覧の短い要約。",
+tests/src/register-migration.test.ts:147:      description: "A\\|B を移行する。",
+src/specdojo-config.ts:27:   * (catalog/schedule/execution/members/reviews/roles/viewpoints/project_register/routines/jobs). When set, those
+src/specdojo-config.ts:42:  jobs_path?: string;
+src/specdojo-config.ts:189:  return withOptionalBasePath(project, project.jobs_path);
+src/specdojo-config.ts:295:    .description("Config helpers (.specdojo/specdojo.config.json)");
+src/specdojo-config.ts:299:    .description("Create .specdojo/specdojo.config.json template (does not overwrite existing)")
+src/specdojo-config.ts:322:  const pj = program.command("project").description("Project registry commands");
+src/specdojo-config.ts:325:    .description("List projects from .specdojo/specdojo.config.json")
+tests/src/exec-register-multiple-ids.integration.test.ts:42:    description: "test",
+tests/src/exec-register.test.ts:23:    description: "説明",
+tests/src/exec-agent-protected-config.test.ts:69:    write(join(root, ".github", "workflows", "ci.yml"), "jobs: {}\n");
+tests/src/exec-agent-protected-config.test.ts:146:    const description = describeAgentProtectedConfigChanges(root, ["package.json"]);
+tests/src/exec-agent-protected-config.test.ts:148:    expect(description).toContain("差分を取得できませんでした（git status:");
+tests/src/exec-agent-protected-config.test.ts:149:    expect(description).toContain("not a git repository");
+tests/src/exec-agent-protected-config.test.ts:150:    expect(description).not.toContain("full-content-must-not-be-copied");
+tests/src/exec-results.test.ts:542:  it("deterministically renders a validated edit reporter result without changing frontmatter", async () => {
+tests/src/exec-reporter.test.ts:130:    // leaves the result file untouched (writing it is the reporter's job, not the executor's)
+src/register.ts:34:  deterministicRegisterEventId,
+src/register.ts:309:      description: cells[3],
+src/register.ts:359:    item.description,
+src/register.ts:494:  if (!isPlaceholderCell(opts.fields.description)) {
+src/register.ts:495:    content = setRegisterItemDescription(content, opts.fields.description);
+src/register.ts:504:      description: opts.fields.description,
+src/register.ts:541:  "description",
+src/register.ts:673:        if (existing.item.description !== source.item.description) {
+src/register.ts:676:            tableCellToBody(source.item.description),
+src/register.ts:696:          description: tableCellToBody(source.item.description),
+src/register.ts:709:      if (/_[A-Z][A-Z0-9_]*_/.test(`${source.item.title}\n${source.item.description}`)) {
+src/register.ts:1178:  description?: string;
+src/register.ts:1198:    if (opts.description !== undefined) lines.push(`  description: ${opts.description}`);
+src/register.ts:1207:  if (opts.description !== undefined) {
+src/register.ts:1208:    content = setRegisterItemDescription(content, opts.description);
+src/register.ts:1580:  description?: string;
+src/register.ts:1590:  if (opts.description !== undefined) {
+src/register.ts:1591:    ticketWrite.content = setRegisterItemDescription(ticketWrite.content, opts.description);
+src/register.ts:1814:  description: string;
+src/register.ts:1963:    id: deterministicRegisterEventId(
+src/register.ts:2082:  const reg = program.command("register").description("Project register (pjr-index.md) commands");
+src/register.ts:2089:    .description("Initialize the register directory and generate its views");
+src/register.ts:2115:  const addCmd = reg.command("add").description("Add a new item to pjr-index.md");
+src/register.ts:2119:  addCmd.option("--description <text>", "Description shown in the list", "_TODO_");
+src/register.ts:2162:        description: opts.description,
+src/register.ts:2233:  const closeCmd = reg.command("close").description("Set item status to done or decided");
+src/register.ts:2287:  const rejectCmd = reg.command("reject").description("Set item status to rejected");
+src/register.ts:2334:  const deferCmd = reg.command("defer").description("Set item status to deferred");
+src/register.ts:2367:  const reopenCmd = reg.command("reopen").description("Reopen a terminal-status item");
+src/register.ts:2406:  const startCmd = reg.command("start").description("Set item status to in-progress");
+src/register.ts:2433:  const waitCmd = reg.command("wait").description("Set item status to waiting");
+src/register.ts:2474:  const reviewCmd = reg.command("review").description("Set item status to review");
+src/register.ts:2501:  const updateCmd = reg.command("update").description("Update fields of a register item");
+src/register.ts:2505:  updateCmd.option("--description <text>", "Update description");
+src/register.ts:2525:        "description",
+src/register.ts:2534:          "At least one field option must be specified (--title, --description, --priority, --owner, --due, --conclusion, --topic)",
+src/register.ts:2559:        ...(opts.description !== undefined ? { description: opts.description } : {}),
+src/register.ts:2576:          ...(opts.description !== undefined ? { description: opts.description } : {}),
+src/register.ts:2589:        ...(opts.description !== undefined ? { description: opts.description } : {}),
+src/register.ts:2602:    .description("Migrate legacy register data (index rows, dates, and embedded register events)");
+src/register.ts:2673:    .description("Generate the register list and derived views from register item files");
+src/register.ts:2727:    .description("Show register item changes from append-only events and legacy Git history");
+src/register.ts:2785:    .description("Resolve a random PJR-ID collision by moving one item to an unused ID");
+src/exec.ts:751:  const exec = program.command("exec").description("Execution helpers");
+src/exec.ts:816:    const cmd = exec.command(t).description(`Write ${t} event JSON into exec/events/ (UTC)`);
+src/exec.ts:852:  const vcmd = exec.command("validate").description("Validate schedule + events");
+src/exec.ts:879:    .description("Refresh derived execution state under generated/");
+src/exec.ts:909:    .description(
+src/exec.ts:1010:    .description("Archive a completed plan to exec/plans/done/ (or delete it)");
+src/exec.ts:1048:    .description("Auto-claim next task safely (with project-level lock).");
+src/exec.ts:1233:    .description(
+src/exec.ts:1301:  const statusCmd = exec.command("status").description("Show tasks filtered by state and actor");
+src/exec.ts:1369:  const wcmd = exec.command("where").description("Print resolved paths");
+src/job.ts:44:  description: string;
+src/job.ts:55:  description?: string;
+src/job.ts:79:  job_id: string;
+src/job.ts:98:  jobsPath: string;
+src/job.ts:114:  jobs: Record<
+src/job.ts:178:  if (typeof value.description !== "string") return false;
+src/job.ts:199:    "job_id",
+src/job.ts:231:): { job?: JobDefinition; errors: string[] } {
+src/job.ts:233:  if (!isRecord(value)) return { errors: [`${fileName}: job file must be a YAML mapping`] };
+src/job.ts:237:  if (!/^job-[a-z0-9][a-z0-9-]*$/.test(id)) errors.push("id must match job-<slug>");
+src/job.ts:292:    const description =
+src/job.ts:293:      typeof value.task.description === "string" ? value.task.description.trim() : "";
+src/job.ts:294:    if (!description) errors.push("task.description is required");
+src/job.ts:321:    if ((mode === "edit" || mode === "review") && description && (targets || paths)) {
+src/job.ts:324:        description,
+src/job.ts:370:    job: {
+src/job.ts:373:      ...(typeof value.description === "string" ? { description: value.description } : {}),
+src/job.ts:386:  if (!config) throw new Error(`job commands require specdojo.config.json: ${configPath}`);
+src/job.ts:396:  const jobsPath = getProjectJobsPath(project);
+src/job.ts:397:  if (!jobsPath) throw new Error(`jobs_path not set for project '${id}' in specdojo.config.json`);
+src/job.ts:400:  const absoluteJobsPath = resolve(root, jobsPath);
+src/job.ts:403:    jobsPath: absoluteJobsPath,
+src/job.ts:405:    runsPath: join(executionPath, "jobs", "runs"),
+src/job.ts:406:    statePath: join(executionPath, "jobs", "generated", "job-state.json"),
+src/job.ts:410:export function loadJobDefinition(paths: JobPaths, jobId: string): JobDefinition {
+src/job.ts:411:  const normalized = jobId.trim();
+src/job.ts:412:  if (!/^job-[a-z0-9][a-z0-9-]*$/.test(normalized)) throw new Error(`Invalid job id: ${jobId}`);
+src/job.ts:414:    join(paths.jobsPath, `${normalized}.yaml`),
+src/job.ts:415:    join(paths.jobsPath, `${normalized}.yml`),
+src/job.ts:418:  if (!filePath) throw new Error(`Job not found: ${normalized} (in ${paths.jobsPath})`);
+src/job.ts:420:  if (!parsed.job) throw new Error(parsed.errors.join("\n"));
+src/job.ts:421:  return parsed.job;
+src/job.ts:424:export function loadAllJobs(jobsPath: string): { jobs: JobDefinition[]; errors: string[] } {
+src/job.ts:425:  if (!existsSync(jobsPath)) return { jobs: [], errors: [] };
+src/job.ts:426:  const jobs: JobDefinition[] = [];
+src/job.ts:428:  for (const filePath of listFilesRecursive(jobsPath)
+src/job.ts:429:    .filter((path) => /(?:^|\/)job-[^/]+\.ya?ml$/.test(path))
+src/job.ts:437:      if (parsed.job) jobs.push(parsed.job);
+src/job.ts:444:  return { jobs, errors };
+src/job.ts:495:    job_id: string;
+src/job.ts:502:    if (path === "job_id") return context.job_id;
+src/job.ts:507:    throw new Error(`Unknown job template value: ${path}`);
+src/job.ts:511:export function jobCheckpoint(paths: JobPaths, jobId: string): Record<string, unknown> {
+src/job.ts:512:  return deriveJobState(paths).jobs[jobId]?.checkpoint ?? {};
+src/job.ts:516:  const state: JobStateFile = { version: 1, jobs: {} };
+src/job.ts:524:      const current = state.jobs[run.job_id];
+src/job.ts:526:        state.jobs[run.job_id] = {
+src/job.ts:601:function jobPlanFrontmatter(
+src/job.ts:616:    "origin: job",
+src/job.ts:617:    `job_id: ${definition.id}`,
+src/job.ts:637:  const templatePath = join(execTemplatesDir(), "xep-job-template.md");
+src/job.ts:642:    _FRONTMATTER_: jobPlanFrontmatter(paths.projectId, definition, record),
+src/job.ts:647:    _JOB_DESCRIPTION_: record.task.description,
+src/job.ts:664:  jobId: string;
+src/job.ts:671:  const definition = loadJobDefinition(paths, opts.jobId);
+src/job.ts:672:  const checkpoint = jobCheckpoint(paths, definition.id);
+src/job.ts:677:  const context = { job_id: definition.id, scheduled_at: scheduledAt, inputs, checkpoint };
+src/job.ts:688:    description: renderJobTemplate(definition.task.description, context),
+src/job.ts:695:    if (record.idempotency_key !== idempotencyKey || record.job_id !== definition.id) {
+src/job.ts:711:      job_id: definition.id,
+src/job.ts:756:  const definition = loadJobDefinition(paths, record.job_id);
+src/job.ts:772:      job_id: definition.id,
+src/job.ts:794:    state.jobs[record.job_id] = {
+src/job.ts:805:export function jobRunRelativePath(runPath: string): string {
+src/job.ts:810:  const command = program.command("job").description("Reusable Job Definition and Run helpers");
+src/job.ts:814:    .description("Print resolved Job paths")
+src/job.ts:820:        process.stdout.write(`jobs:    ${paths.jobsPath}\n`);
+src/job.ts:831:    .description("Validate job-*.yaml definitions")
+src/job.ts:836:        const { jobs, errors } = loadAllJobs(paths.jobsPath);
+src/job.ts:838:        process.stdout.write(`Validated: ${jobs.length} job(s), ${errors.length} error(s)\n`);
+src/job.ts:848:    .description("List Job Definitions and latest checkpoint")
+src/job.ts:853:        const { jobs, errors } = loadAllJobs(paths.jobsPath);
+src/job.ts:855:        for (const job of jobs) {
+src/job.ts:856:          const latest = state.jobs[job.id];
+src/job.ts:857:          process.stdout.write(`${job.id}\t${latest?.last_run_id ?? "-"}\t${job.name}\n`);
+src/exec-types.ts:112:  description?: string;
+src/exec-types.ts:207:  description?: string;
+src/exec-types.ts:252:// 特定できないため targets を持たない。job はJob DefinitionからmaterializeしたRunで、
+src/exec-types.ts:254:export type TaskOrigin = "schedule" | "register" | "job";
+src/exec-types.ts:266:  job_id?: string;
+src/exec-types.ts:285:  job_id?: string;
+src/yaml-pages-command.ts:13:  const cmd = program.command("yaml-pages").description("YAML display page commands");
+src/yaml-pages-command.ts:17:    .description("Generate generated/<name>.md display pages for indexed YAML files")
+src/register-events.ts:26:  "description",
+src/register-events.ts:109:    description: item.description,
+src/register-events.ts:143:export function deterministicRegisterEventId(seed: string): string {
+src/exec-run.ts:112:import { completeJobRun, materializeJobRun } from "./job.js";
+src/exec-run.ts:221:  job?: string;
+src/exec-run.ts:224:  jobTrigger?: string;
+src/exec-run.ts:3164:  if (!projectId) throw new Error("--job requires a project id.");
+src/exec-run.ts:3167:    opts.jobTrigger === "ci"
+src/exec-run.ts:3169:      : process.env[ROUTINE_EXEC_ENV] === "1" || opts.jobTrigger === "routine"
+src/exec-run.ts:3174:    jobId: (opts.job as string).trim(),
+src/exec-run.ts:3224:    process.stdout.write(`[dry-run] job: ${definition.id}\n`);
+src/exec-run.ts:3243:    origin: "job",
+src/exec-run.ts:3244:    jobId: definition.id,
+src/exec-run.ts:5027:    .description("Run AI agent for a ready task (--auto selects next by strategy)");
+src/exec-run.ts:5042:  rcmd.option("--job <jobId>", "Materialize and run a reusable job definition");
+src/exec-run.ts:5048:  rcmd.option("--job-trigger <source>", "Job trigger source: manual|routine|ci", "manual");
+src/exec-run.ts:5133:      const hasJob = !!opts.job;
+src/exec-run.ts:5139:          "Specify --auto, --by (with a manual target), --task, --deliverable, --plan, --register, or --job.\n",
+src/exec-run.ts:5146:          "Specify at most one of --task, --deliverable, --plan, --register, --job.\n",
+src/exec-run.ts:5193:        process.stdout.write("--input and --scheduled-at require --job.\n");
+src/exec-run.ts:5197:      if (opts.jobTrigger && !["manual", "routine", "ci"].includes(opts.jobTrigger)) {
+src/exec-run.ts:5198:        process.stdout.write("--job-trigger must be manual, routine, or ci.\n");
+src/exec-run.ts:5203:        process.stdout.write("--worktree is not yet supported with --job.\n");
+src/exec-run.ts:5474:    .description(
+src/exec-run.ts:5767:    .description(
+src/exec-shared.ts:108:// 登録簿の自由記述（title / description 列など）を Markdown 本文へ埋め込む際の安全化。
+src/exec-schedule-index.ts:294:      const taskDescription = typeof tv["description"] === "string" ? tv["description"] : undefined;
+src/exec-schedule-index.ts:314:        ...(taskDescription ? { description: taskDescription } : {}),
+docs/ja/specdojo/exec-templates/xep-job-template.md:11:- `job_id`: _JOB_ID_
+docs/ja/specdojo/defaults/pm-review-viewpoints.yaml:37:    description: 利用者、意思決定者、確認者、運用者、影響を受ける関係者が識別されているか。
+docs/ja/specdojo/defaults/pm-review-viewpoints.yaml:45:    description: 業務目的、課題、期待効果、成功条件との対応が説明できるか。
+docs/ja/specdojo/defaults/pm-review-viewpoints.yaml:51:    description: 対象範囲、対象外、前提、制約、依存関係が判断できるか。
+docs/ja/specdojo/defaults/pm-review-viewpoints.yaml:58:    description: 主要な利用シーン、利用者行動、期待結果が具体化されているか。
+docs/ja/specdojo/defaults/pm-review-viewpoints.yaml:64:    description: 業務上の開始条件、完了条件、発生イベント、トリガーが識別されているか。
+docs/ja/specdojo/defaults/pm-review-viewpoints.yaml:70:    description: 例外ケース、異常系、境界条件、失敗時の扱いが確認できるか。
+docs/ja/specdojo/defaults/pm-review-viewpoints.yaml:78:    description: 実行者、承認者、責任分界、権限チェック、agent と人間の境界が明確か。
+docs/ja/specdojo/defaults/pm-review-viewpoints.yaml:86:    description: 状態、遷移条件、禁止遷移、終了状態が矛盾なく定義されているか。
+docs/ja/specdojo/defaults/pm-review-viewpoints.yaml:93:    description: 入力、出力、データ項目、保持、更新、削除、整合性の扱いが確認できるか。
+docs/ja/specdojo/defaults/pm-review-viewpoints.yaml:101:    description: 外部システム、API、ファイル、通知、手動連携などの依存が識別されているか。
+docs/ja/specdojo/defaults/pm-review-viewpoints.yaml:109:    description: 性能、可用性、セキュリティ、保守性、拡張性、互換性などの品質要求が確認できるか。
+docs/ja/specdojo/defaults/pm-review-viewpoints.yaml:117:    description: 継続運用、変更管理、問い合わせ、障害時対応、再生成、公開後の保守が考慮されているか。
+docs/ja/specdojo/defaults/pm-review-viewpoints.yaml:124:    description: 判断、承認、変更、実行結果を追跡できる証跡が残るか。
+docs/ja/specdojo/defaults/pm-review-viewpoints.yaml:132:    description: pass / fail を判断できる受入条件、完了条件、検証手順があるか。
+docs/ja/specdojo/defaults/pm-review-viewpoints.yaml:139:    description: 上位目的から要求、要件、仕様、設計、テスト、運用までの対応を追跡できるか。
+docs/ja/specdojo/defaults/pm-review-viewpoints.yaml:149:    description: 完了判断、公開判断、後続作業を止める不備。
+docs/ja/specdojo/defaults/pm-review-viewpoints.yaml:151:    description: done_criteria 未充足、文書間矛盾、責任分担の不整合など重要な不備。
+docs/ja/specdojo/defaults/pm-review-viewpoints.yaml:153:    description: 意味や判断を大きく変えない補足不足、表記ゆれ、軽微な修正。
+docs/ja/specdojo/defaults/pm-review-viewpoints.yaml:155:    description: 改善提案、将来検討、補足コメント。
+docs/ja/specdojo/defaults/pm-review-viewpoints.yaml:159:    description: 対象 Role code の観点では修正不要。次の Role code または PO 判断へ進める。
+docs/ja/specdojo/defaults/pm-review-viewpoints.yaml:161:    description: 軽微な修正または PO 判断待ちを条件に進めてよい。条件を明記し、必要に応じて minor 指摘を残す。
+docs/ja/specdojo/defaults/pm-review-viewpoints.yaml:163:    description: 修正後の再レビューが必要。修正担当 Role code と再レビュー観点を明記する。
+docs/ja/specdojo/defaults/pm-review-viewpoints.yaml:165:    description: 前提不足、依存成果物未整備、重大矛盾によりレビュー継続不可。PJR 登録または PO 判断を依頼する。
+docs/ja/specdojo/defaults/pm-review-viewpoints.yaml:175:      description: blocker があり、その観点で文書が機能していない。
+docs/ja/specdojo/defaults/pm-review-viewpoints.yaml:179:      description: major が複数、または観点の目的をほぼ果たしていない。
+docs/ja/specdojo/defaults/pm-review-viewpoints.yaml:183:      description: major があり、誤用・誤読を招く箇所がある。
+docs/ja/specdojo/defaults/pm-review-viewpoints.yaml:187:      description: minor のみで、実務上はそのまま利用できる。
+docs/ja/specdojo/defaults/pm-review-viewpoints.yaml:191:      description: 指摘なし、または note のみである。
+docs/ja/specdojo/defaults/pm-review-viewpoints.yaml:331:    evaluation: deterministic
+docs/ja/specdojo/defaults/pm-review-viewpoints.yaml:467:    evaluation: deterministic
+docs/ja/specdojo/references/deliverables-reference.md:301:- **System Design Index**：設計のSSOT（OpenAPI / AsyncAPI / migration / job定義 / config schema 等）への導線
+docs/ja/specdojo/schemas/v1/reference-content.schema.yaml:7:description: "*-reference.md が H1 直後に英語名・必須の導入ブロックを持ち、本文で水平線を section 区切りに使っていないことを検証するスキーマ"
+docs/ja/specdojo/schemas/v1/philosophy-content.schema.yaml:7:description: "*-philosophy.md が H1 直後に英語名・必須の導入ブロックを持ち、本文で水平線を section 区切りに使っていないことを検証するスキーマ"
+src/exec-schedule-ready.ts:134:      ...(node?.description ? { description: node.description } : {}),
+docs/ja/specdojo/references/directory-layout-reference.md:133:│   │   │   ├── jobs/                             # 再利用可能なJob Definition ※成果物カタログ管理対象外
+docs/ja/specdojo/references/directory-layout-reference.md:134:│   │   │   │   └── job-<name>.yaml               # Job定義
+docs/ja/specdojo/references/directory-layout-reference.md:142:│   │   │   │   ├── jobs/                         # Job Run履歴と派生state
+docs/ja/specdojo/schemas/v1/guide-content.schema.yaml:7:description: "*-guide.md が H1 直後に英語名・必須の導入ブロックを持ち、本文で水平線を section 区切りに使っていないことを検証するスキーマ"
+src/grade.ts:713:function deterministicResults(
+src/grade.ts:720:    (item) => item.evaluation === "deterministic",
+src/grade.ts:808:    `評価対象 \`${rel}\` を共通 viewpoint と category rubric で 0-4 判定する。deterministic viewpoint は CLI が判定するため、agent の出力には含めない。`,
+src/grade.ts:857:        `- ${level.level} (${level.name}, review=${level.review_verdict}): ${level.description}`,
+src/grade.ts:1525:    viewpoints: [...agentResults, ...deterministicResults(document, opts.viewpoints, opts.target)],
+src/grade.ts:1613:    .description("Continuously assess Kata and deliverable content quality");
+src/grade.ts:1643:    grade.command("list").description("Print selected document paths without writing grade plans"),
+src/grade.ts:1665:      .description("Write reusable executor and reporter plans per selected document"),
+src/grade.ts:1731:      .description("Validate reporter fidelity and JSON, calculate scores, and update documents"),
+src/grade.ts:1811:    grade.command("validate").description("Validate stored grade hashes and finding counts"),
+src/review-types.ts:10:  evaluation?: "deterministic" | "agent" | "human";
+src/review-types.ts:18:  description: string;
+src/review-types.ts:32:  description?: string;
+docs/ja/specdojo/samples/ifx-msg-sample.yaml:5:  description: |
+docs/ja/specdojo/samples/ifx-msg-sample.yaml:20:    description: メッセージブローカー
+docs/ja/specdojo/samples/ifx-msg-sample.yaml:24:    description: 在庫が変更された通知
+docs/ja/specdojo/samples/ifx-msg-sample.yaml:62:          description: イベントID
+docs/ja/specdojo/samples/ifx-msg-sample.yaml:71:          description: 対象識別子（任意）
+docs/ja/specdojo/samples/ifx-msg-sample.yaml:83:          description: 商品ID
+docs/ja/specdojo/samples/ifx-msg-sample.yaml:86:          description: 増減量（減少は負の値）
+docs/ja/specdojo/samples/ifx-msg-sample.yaml:89:          description: 現在在庫数
+src/exec-plans.ts:292:// filling the result), so the generator resolves it deterministically and bakes it in here.
+src/exec-plans.ts:324:  if (task.description) return task.description.trimEnd();
+src/exec-plans.ts:707:// と段落を分離する。各項目は `id: description` 形式で展開し、id 単独では意味が読み取れない
+src/exec-plans.ts:716:      const description = coverageMap.get(ct)?.description;
+src/exec-plans.ts:717:      return description ? `- ${ct}: ${description}` : `- ${ct}`;
+docs/ja/specdojo/references/command-reference.md:402:specdojo exec run --project prj-0001 --job job-weekly-report --input period=2026-W32
+docs/ja/specdojo/references/command-reference.md:570:## 12. job
+docs/ja/specdojo/references/command-reference.md:572:`job`は再利用可能な`job-*.yaml`と、その定義からmaterializeされたJob Runを扱います。実行自体は`exec run --job`を使います。
+docs/ja/specdojo/references/command-reference.md:576:| `job list`     | Job Definitionと最終Runを表示する          | `specdojo job list --project prj-0001`     |
+docs/ja/specdojo/references/command-reference.md:577:| `job validate` | `job-*.yaml`を検証する                     | `specdojo job validate --project prj-0001` |
+docs/ja/specdojo/references/command-reference.md:578:| `job where`    | Job Definition・Run・stateのパスを表示する | `specdojo job where --project prj-0001`    |
+docs/ja/specdojo/references/command-reference.md:580:`exec run --job`の`--input <key=value...>`はJob入力を指定し、`--scheduled-at`はroutineやCIが論理実行枠を渡す場合に使います。同じidempotency keyの完了済みRunは再実行せず、失敗済みRunは同じRun IDの次attemptとして実行します。Job Runは現在in-place実行に対応し、`--worktree`との併用は未対応です。
+docs/ja/specdojo/references/command-reference.md:582:委譲先のagentは`task.agent.executor`（および必要なら`task.agent.reporter`）にnicknameで指名します。両方を指名したRunはexecutor→reporterの2段で実行し、resultはreporterが書きます。`--by`は単一agent実行としての差し替え、`--executor-by` / `--reporter-by`は段ごとの差し替えとして、いずれも指名より優先します。`job validate`はnicknameの書式だけを検査するため、実在確認は`--dry-run`で行います。責務境界と記述規約は [Job定義標準](../standards/job-definition-standard.md) を参照します。
+docs/ja/specdojo/references/command-reference.md:586:specdojo exec run --job job-grade-kata --project prj-0001 --input period=2026-W37 --dry-run
+docs/ja/specdojo/references/command-reference.md:608:`action` は単一オブジェクト、または先頭から順に実行する1件以上の配列を受け付けます。単一オブジェクトの `action.kind` または配列の各要素の `kind` は、`register` / `exec-auto` / `exec-resume` / `exec-cycle` / `job` の5種類です。`exec-cycle` は延期 task の再開・doc-index 再構築・古い track の再生成・状態再計算・`--auto` loop を単一ロック内で順次実行します。定義ファイルの配置、`interval`または`trigger.cron`の書式、複数 action の失敗方針、due判定、kindごとの動作は [routine運用ガイド](../guides/routine-operation-guide.md) を参照します。
+docs/ja/specdojo/references/command-reference.md:621:schedule / register / job / routine の使い分けの基準は [exec運用ガイド](../guides/exec-operation-guide.md) の `実行経路の使い分け` を参照します。
+src/catalog-build.ts:372:// loadCatalogDocs, so the result is deterministic and file-listing-order agnostic.
+docs/ja/specdojo/samples/ifx-api-sample.yaml:5:  description: |
+docs/

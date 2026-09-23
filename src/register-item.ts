@@ -136,7 +136,6 @@ const SPECDOJO_KEY_ORDER = [
   "completed_at",
   "block_reason",
   "conclusion",
-  "register_events",
 ];
 
 // ================================

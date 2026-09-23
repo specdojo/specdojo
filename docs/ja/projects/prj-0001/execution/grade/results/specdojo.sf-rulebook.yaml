@@ -1,0 +1,90 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:sf-rulebook
+path: docs/ja/specdojo/rulebooks/sf-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 71
+graded_at: "2026-09-03T09:54:00.148Z"
+graded_by: gemma-expert-executor
+content_hash: c3a3891186dd9c2df7048e93ce0b03099a8c8fc9d385b14161f0f5b71b857045
+categories:
+  consistency:
+    score: 50
+  usability:
+    score: 58
+  architecture:
+    score: 100
+  quality:
+    score: 75
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 3
+    score: 75
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 2
+    score: 50
+  vp-ux-language-consistency:
+    level: 2
+    score: 50
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 5
+  minor: 1
+  note: 0
+findings:
+  - id: F003
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: メタデータ定義（10行目）の domain 固定という指定と、本行およびサンプルでの data という記述が矛盾している。
+    anchor: "# システム化機能一覧（System Function List, SFL）作成ルール"
+  - id: F005
+    severity: major
+    rule: vp-ux-readability
+    line: 1
+    message: type 値の矛盾および指定サンプルの不整合により、正しくどのような成果物を作成すべきか判断できず、読者を混乱させる。
+    anchor: "# システム化機能一覧（System Function List, SFL）作成ルール"
+  - id: F006
+    severity: major
+    rule: vp-ux-language-consistency
+    line: 1
+    message: メタデータの type フィールドにおいて, 定義値 (domain) と解説・サンプル値 (data) が統一されていない。
+    anchor: "# システム化機能一覧（System Function List, SFL）作成ルール"
+  - id: F002
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 1
+    message: IDの正規表現定義が 17 行目と重複しているため、統合して簡潔に記述すべきである。
+    anchor: "# システム化機能一覧（System Function List, SFL）作成ルール"
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 1
+    message: 指定サンプル sf-sample.md が, 本ルールで定義されている「1行1機能の表形式」に従わず, 個別機能の詳細定義文書となっており矛盾している。
+    anchor: "# システム化機能一覧（System Function List, SFL）作成ルール"
+  - id: F004
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: 指定サンプル sf-sample.md の構成が本ルールの定義（機能一覧表の作成）と完全に乖離しており、適用方法が不明確である。
+    anchor: "# システム化機能一覧（System Function List, SFL）作成ルール"

@@ -36,7 +36,7 @@ specdojo:
 | 品質管理計画                                                  | A   | C   | C   | C   | I   | R   | C   | I   |
 | Schedule defaults                                             | A   | C   | I   | R   | I   | C   | I   | I   |
 | 登録簿の管理ビュー、Schedule                                  | C   | A/R | C   | C   | C   | C   | C   | C   |
-| 成果物カタログ                                                | C   | C   | C   | A/R | I   | C   | I   | I   |
+| 成果物カタログ                                                | C   | C   | A/R | R   | I   | C   | I   | I   |
 
 ## 3. 判断・プロセス別 RACI
 

@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-A12B",
+  "run_id": "20260910T033211226Z-f777aa99",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-10T03:32:11.226Z",
+    "completed_at": "2026-09-10T03:40:04.366Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-a12b-remove-dead-lefthook-docs-build.md",
+      "status": "M"
+    },
+    {
+      "path": "tools/docs/src/lefthook-docs-build.ts",
+      "status": "D"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 2,
+    "summary": ".../pjr-a12b-remove-dead-lefthook-docs-build.md    | 25 +++++--\n tools/docs/src/lefthook-docs-build.ts              | 77 ----------------------\n 2 files changed, 18 insertions(+), 84 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "TypeScript 型検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "Markdown 全体検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-a12b-remove-dead-lefthook-docs-build.md",
+      "status": "passed",
+      "summary": "個票を整形"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-a12b-remove-dead-lefthook-docs-build.md",
+      "status": "passed",
+      "summary": "個票の静的検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "node dist/specdojo.js register build",
+      "status": "passed",
+      "summary": "登録簿生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "node dist/specdojo.js catalog validate",
+      "status": "passed",
+      "summary": "検証成功。既存の欠落文書警告のみ"
+    },
+    {
+      "source": "executor",
+      "command": "node dist/specdojo.js index build",
+      "status": "passed",
+      "summary": "1596件の索引生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm_config_cache=/tmp/pjr-a12b-npm-cache npm pack --dry-run --json",
+      "status": "passed",
+      "summary": "削除ファイルが同梱物に含まれないことを確認"
+    },
+    {
+      "source": "executor",
+      "command": "npm run docs:build",
+      "status": "failed",
+      "summary": "sandbox が tsx の IPC ソケット作成を拒否（EPERM）"
+    },
+    {
+      "source": "executor",
+      "command": "node dist/specdojo.js build && npx vitepress build .",
+      "status": "failed",
+      "summary": "文書生成6工程は成功。VitePress は sandbox が Mermaid 用 Chromium 起動を拒否して停止"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-A12B\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/stale.md\n  src/unrelated.ts\ncommit-targets:\n  execution/exec/…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.1.0 validate:schema:yaml\n> tsx tools/docs/src/validate-yaml-schema.ts --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bps-template.yaml: schema docs/specdojo/sc…"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-A12B\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-pnyJU8/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-BE6jI5/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-gvYR5Z/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-2gFyPM/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-5RbXzb/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-sjixZP/pjr-0001-topic.md\nbefore\nWrote agent stdout: /tmp/specdojo-agent-command-KwwQxC/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-TJ8xu7/outputs/partial.txt\n\n Test Files  100 passed (100)\n      Tests  1425 passed (1425)\n   Start at  12:40:20\n   Duration  20.83s (transform 1.69s, setup 390ms, import 10.91s, tests 19.17s,…"
+    }
+  ],
+  "final_message": "未参照の lefthook-docs-build.ts を削除し個票を更新。主要検査は成功したが docs:build は sandbox 制約で完走不可。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-A12B/20260910T033211226Z-f777aa99/executor.log",
+      "bytes": 2257,
+      "truncated": false
+    }
+  ]
+}

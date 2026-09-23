@@ -1,0 +1,72 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:pm-quality-management-plan-sample
+path: docs/ja/specdojo/samples/pm-quality-management-plan-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 89
+graded_at: "2026-09-09T16:13:07.473Z"
+graded_by: gemma-expert-executor
+content_hash: 5695a324894abd8b0c95fb6531010b1c2027b4e819a934174c178456ebdc2c0d
+categories:
+  consistency:
+    score: 75
+  usability:
+    score: 92
+  architecture:
+    score: 100
+  quality:
+    score: 88
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-qe-kata-conformance:
+    level: 4
+    score: 100
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 1
+  minor: 2
+  note: 0
+findings:
+  - id: F002
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 16
+    message: 「品質方針と適用範囲」において, rulebook で必須とされている「対象期間」および「人と AI の境界」の記述が欠落している。
+    anchor: 中期価値ゲートは初期リリースの合否条件には含めず、継続判断に用いる。
+  - id: F001
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 31
+    message: レビュー表に「出口条件」が含まれておらず、pass / fail の判定基準が不明確である。
+    anchor: "| -------------------------------------- | ------------------------------------ | ------ | ------------------ |"
+  - id: F003
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 31
+    message: レビュー表の列名（レビュー、実施者、証跡）が、rulebook の定義（対象、実施責任、出口条件・証跡）と不整合である。
+    anchor: "| -------------------------------------- | ------------------------------------ | ------ | ------------------ |"

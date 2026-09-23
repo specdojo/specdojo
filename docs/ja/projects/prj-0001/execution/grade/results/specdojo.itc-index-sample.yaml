@@ -1,0 +1,84 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:itc-index-sample
+path: docs/ja/specdojo/samples/itc-index-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: fail
+score: 57
+graded_at: "2026-09-05T08:51:30.730Z"
+graded_by: gemma-expert-executor
+content_hash: 030c4ec6dcd89e35137158a0b7ce46e88be6d8095433a460f8cbe0aa09dd840c
+categories:
+  consistency:
+    score: 25
+  usability:
+    score: 75
+  architecture:
+    score: 100
+  quality:
+    score: 38
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
+    level: 0
+    score: 0
+  vp-qe-kata-conformance:
+    level: 0
+    score: 0
+  vp-ux-readability:
+    level: 1
+    score: 25
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 2
+  major: 2
+  minor: 1
+  note: 0
+findings:
+  - id: F004
+    severity: blocker
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: rulebook で指定された構造および Frontmatter 定義に準拠しておらず、itc-index のサンプルとして不適切である。
+    anchor: ""
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 4
+    message: type は rulebook の定義に従い test とする必要がある。
+    anchor: "## 1. 目的と適用範囲"
+  - id: F003
+    severity: blocker
+    rule: vp-qe-omissions-consistency
+    line: 11
+    message: "rulebook で定義された必須構成（## 1 〜 ## 9 の固定見出し）が欠落している。"
+    anchor: "- 前提: プロジェクト文脈は handbook の共通方針に準拠する"
+  - id: F005
+    severity: major
+    rule: vp-ux-readability
+    line: 9
+    message: 必須構成に従っていないため、itc-index 作成時の参照サンプルとして機能していない。
+    anchor: ""
+  - id: F002
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 28
+    message: 最小記述例の具体性が不十分であり、判定可能な合格基準や設定値の記述例を示す必要がある。
+    anchor: ""

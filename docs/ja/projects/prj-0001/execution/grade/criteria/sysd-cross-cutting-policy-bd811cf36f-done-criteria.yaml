@@ -1,0 +1,38 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: sysd-cross-cutting-policy-grade-criteria
+document: sysd-cross-cutting-policy
+path: docs/ja/product/040-system-design/sysd-cross-cutting-policy.md
+graded_at: "2026-09-19T16:35:31.850Z"
+graded_by: codex-expert-executor
+content_hash: 8c23094ec79fde23f02092ae04549d185fd85f2435bdd349af7fa46b6a4a3389
+summary:
+  satisfied: 2
+  unsatisfied: 2
+  total: 4
+criteria:
+  - id: DC-001
+    text: 横断ルールが実装上の制約として確認できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: satisfied
+  - id: DC-002
+    text: エラー処理・冪等・タイムアウト・ログ方針が記述されていること
+    roles:
+      - DEV
+    viewpoint: vp-dev-implementation-readiness
+    status: unsatisfied
+    reason: provider障害の判定・retry規則はあるが、冪等、タイムアウトの設定・打切り、ログ方針が記述されていない。
+  - id: DC-003
+    text: 横断ルールのテスト・検証方針が確認できること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: satisfied
+  - id: DC-004
+    text: 監視・トレーシング・セキュリティの運用観点が確認できること
+    roles:
+      - OPS
+    viewpoint: vp-ops-operability
+    status: unsatisfied
+    reason: セキュリティ規則はあるが、監視およびトレーシングの運用観点が記述されていない。

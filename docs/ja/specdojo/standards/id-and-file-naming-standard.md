@@ -737,7 +737,7 @@ supersedes:
 3. 成果物カタログ（`dct-*.yaml`）の該当エントリは `path` だけを新しいファイル名に更新し、`local_id` は変更しない。
 4. Schedule（`sch-strategy-<track>.yaml` / `sch-track-<track>.yaml`）は変更不要（`local_id` が不変のため、タスクIDも変わらない）。
 5. wikilink は `[[id|新しい表示名]]` の表示名部分だけを更新する（id 自体は変わらないためリンク解決は保たれる）。
-6. sidebar 設定（`.vitepress/sidebar-config.ts` の `PRODUCT_FILE_MENU` / `PROJECTS_FILE_MENU`）のキーを新しいファイル名（拡張子なし）に更新し、表示名も合わせる。
+6. sidebar 設定（`packages/docs-site/.vitepress/sidebar-config.ts` の `PRODUCT_FILE_MENU` / `PROJECTS_FILE_MENU`）のキーを新しいファイル名（拡張子なし）に更新し、表示名も合わせる。
 7. `specdojo index build` → `specdojo catalog validate` → `npm run lint:md` → `npm run docs:build` の順で解決を確認する。
 
 ### 9.2. 経路B: 新IDへの切替（文書の再定義・分割・統合）
@@ -847,7 +847,7 @@ specdojo deliverable trash --project prj-0001 --local-id cdfd-register-operation
 | プロジェクト課題と解決アプローチ | Project Issues and Approach | prj- | prj-issues-and-approach | prj-0001:prj-issues-and-approach |
 | 前提・制約・依存 | Assumptions, Constraints, and Dependencies | prj- | prj-assumptions-constraints-dependencies | prj-0001:prj-assumptions-constraints-dependencies |
 | 代替案の比較 | Comparison of Alternatives | prj- | prj-comparison-of-alternatives | prj-0001:prj-comparison-of-alternatives |
-| 現状定義 | Current State Definition | - | cdfd-sales-management | prj-0001:cdfd-sales-management |
+| 現状定義 | Current State Definition | - | cdfd-sales | prj-0001:cdfd-sales |
 | 影響調査 | Impact Analysis | imp- | imp-business | prj-0001:imp-business |
 | プロジェクトマネジメント計画 | Project Management Plan | pm- | pm-plan | prj-0001:pm-plan |
 | スケジュール | Schedule | sch- | sch-milestones, sch-defaults, sch-track-project-definition, sch-strategy-project-definition | prj-0001:sch-track-project-definition |
@@ -871,14 +871,14 @@ specdojo deliverable trash --project prj-0001 --local-id cdfd-register-operation
 <!-- prettier-ignore -->
 | 種別 | English | prefix | 例 |
 | --- | --- | --- | --- |
-| 概念データフロー図 | Conceptual Data Flow Diagram | cdfd- | cdfd-index |
+| 概念データフロー図 | Conceptual Data Flow Diagram | cdfd- | cdfd-overview, cdfd-sales |
+| 概念データフロー図（ユースケース別） | Conceptual Data Flow Diagram (Use Case) | cdfd-uc- | cdfd-uc-credit-sales, cdfd-uc-replenishment |
 | 概念クラス図 | Conceptual Class Diagram | ccd- | ccd-customer |
 | 業務データ辞書 | Business Data Dictionary | bdd- | bdd-common, bdd-sales |
 | 概念データストア定義 | Conceptual Data Store Definition | cdsd- | cdsd-common, cdsd-sales |
 | 保管場所定義 | Storage Location Definition | sld- | sld-common, sld-sales |
-| ステータス定義 | Status Definition | stsd- | stsd-product |
+| ステータス定義（状態一覧・状態遷移図） | Status Definition | stsd- | stsd-product |
 | 分類定義 | Classification Definition | cld- | cld-product |
-| 概念状態遷移図 | Conceptual State Transition Diagram | cstd- | cstd-product |
 | 業務プロセス仕様 | Business Process Specification | bps- | bps-order-flow |
 | ビジネスルール | Business Rule | br- | br-discount |
 | 画面仕様 | UI Specification | uis- | uis-order-edit |

@@ -148,4 +148,4 @@ sample は実在プロジェクトの記録ではありません。記載値は�
 
 - 対応 rulebook の本文構成が変わった場合は、sample の章構成と必須表を追従させる。
 - `共通サンプル文脈` が更新された場合は、関連する既存 sample、`.github/instructions/sample.instructions.md`、`upsert-sample` Skill との整合を確認する。
-- 表は必要に応じて整形スクリプト（`Format Markdown Table` タスク）で揃える。
+- 表は必要に応じて `SpecDojo: Format Markdown Table` コマンドで揃える。

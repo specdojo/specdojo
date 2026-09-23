@@ -2,6 +2,8 @@ import { existsSync } from "node:fs";
 import { resolve } from "node:path";
 import { readYaml } from "./exec-shared.js";
 import type { DctDoc, DctSection } from "./catalog-types.js";
+import type { AgentAssignment } from "./exec-types.js";
+import type { MemberRoster } from "./specdojo-config.js";
 import {
   expandPhaseSetSelection,
   normalizePhaseSetSelection,
@@ -12,7 +14,7 @@ import {
 // --- Strategy file types ---
 
 type StrategyScope = {
-  catalogs: Array<{ id: string; path: string }>;
+  catalogs: Array<{ id: string; path: string; local_ids?: string[] }>;
   include_kinds: string[];
 };
 
@@ -22,6 +24,7 @@ type StrategyPhase = {
   task_suffix: string;
   duration_days: number;
   description?: string;
+  agent?: AgentAssignment;
 };
 
 type OwnerRule = {
@@ -29,6 +32,7 @@ type OwnerRule = {
   owner: string;
   phase_sets?: PhaseSetSelection;
   phase_set?: string;
+  phase_overrides?: Array<{ phase: string; agent?: AgentAssignment }>;
 };
 
 type CrossDomainDep = {
@@ -66,6 +70,7 @@ type CrossDeliverablePass = {
   approach?: string;
   capabilities?: string[];
   proficiency?: string;
+  agent?: AgentAssignment;
   description?: string;
   scope: PhaseGateScope;
 };
@@ -95,6 +100,7 @@ type StrategyDoc = {
   phase_sets: Record<string, StrategyPhase[]>;
   default_phase_sets?: PhaseSetSelection;
   default_phase_set?: string;
+  approach_rules?: Array<{ local_ids: string[] }>;
   owner_rules: OwnerRule[];
   cross_domain_dependencies?: CrossDomainDep[];
   phase_gates?: PhaseGate[];
@@ -136,6 +142,7 @@ export type GeneratedTask = {
   owner: string;
   tags?: string[];
   description?: string;
+  agent?: AgentAssignment;
 };
 
 export type GeneratedMilestone = {
@@ -165,6 +172,8 @@ function collectDeliverables(
   sections: DctSection[],
   includeKinds: string[],
   catalogId: string,
+  selectedLocalIds: Set<string> | null,
+  catalogLocalIds: Set<string>,
   topLevelGroup: string | null,
   out: DeliverableInfo[],
 ): void {
@@ -172,11 +181,21 @@ function collectDeliverables(
     // Lock the top-level group name on the first call; preserve it for nested calls.
     const effectiveGroup = topLevelGroup ?? section.name ?? null;
     if (section.groups) {
-      collectDeliverables(section.groups, includeKinds, catalogId, effectiveGroup, out);
+      collectDeliverables(
+        section.groups,
+        includeKinds,
+        catalogId,
+        selectedLocalIds,
+        catalogLocalIds,
+        effectiveGroup,
+        out,
+      );
     }
     if (!section.deliverables) continue;
     for (const item of section.deliverables) {
+      catalogLocalIds.add(item.local_id);
       if (!includeKinds.includes(item.kind)) continue;
+      if (selectedLocalIds && !selectedLocalIds.has(item.local_id)) continue;
       if (!item.path) continue;
       out.push({
         local_id: item.local_id,
@@ -186,6 +205,35 @@ function collectDeliverables(
         groupName: effectiveGroup,
       });
     }
+  }
+}
+
+function validateRuleCoverage(
+  label: "approach_rules" | "owner_rules",
+  rules: Array<{ local_ids: string[] }>,
+  deliverables: DeliverableInfo[],
+  errors: string[],
+): void {
+  const scopedLocalIds = new Set(deliverables.map((deliverable) => deliverable.local_id));
+  const coveredLocalIds = new Set<string>();
+  for (const rule of rules) {
+    for (const localId of rule.local_ids) {
+      if (!scopedLocalIds.has(localId)) {
+        errors.push(`${label}: local_id '${localId}' is not in the selected scope`);
+      }
+      if (coveredLocalIds.has(localId)) {
+        errors.push(`${label}: local_id '${localId}' is covered more than once`);
+      }
+      coveredLocalIds.add(localId);
+    }
+  }
+  for (const localId of scopedLocalIds) {
+    if (coveredLocalIds.has(localId)) continue;
+    errors.push(
+      label === "owner_rules"
+        ? `No owner_rule found for local_id: ${localId}`
+        : `No approach_rule found for local_id: ${localId}`,
+    );
   }
 }
 
@@ -264,7 +312,43 @@ function topoSort(deliverables: DeliverableInfo[], crossDeps: CrossDomainDep[]):
 
 // --- Main export ---
 
-export function buildScheduleTrack(strategyPath: string, baseDir: string): BuildResult {
+function validateAgentAssignment(
+  label: string,
+  assignment: AgentAssignment,
+  roster: MemberRoster | null,
+  errors: string[],
+): void {
+  if (!roster) {
+    errors.push(`${label}: agent assignment requires a configured pm-members.yaml`);
+    return;
+  }
+  for (const [stageRole, nickname] of [
+    ["executor", assignment.executor],
+    ["reporter", assignment.reporter],
+  ] as const) {
+    if (!nickname) continue;
+    const members = roster.members.filter(
+      (member) => member.type === "agent" && member.nickname === nickname,
+    );
+    if (members.length !== 1) {
+      errors.push(
+        `${label}.agent.${stageRole}: nickname '${nickname}' was not found uniquely in pm-members.yaml`,
+      );
+      continue;
+    }
+    if (members[0].stage_role !== stageRole) {
+      errors.push(
+        `${label}.agent.${stageRole}: nickname '${nickname}' must have stage_role: ${stageRole}`,
+      );
+    }
+  }
+}
+
+export function buildScheduleTrack(
+  strategyPath: string,
+  baseDir: string,
+  roster?: MemberRoster | null,
+): BuildResult {
   const errors: string[] = [];
   const warnings: string[] = [];
 
@@ -280,6 +364,38 @@ export function buildScheduleTrack(strategyPath: string, baseDir: string): Build
   const projectId = String(strategy.id ?? "").split(":")[0] ?? "unknown";
   const startDate = strategy.settings?.start_date ?? null;
 
+  if (roster !== undefined) {
+    for (const [phaseSet, phases] of Object.entries(strategy.phase_sets)) {
+      for (const phase of phases) {
+        if (phase.agent) {
+          validateAgentAssignment(
+            `phase_sets.${phaseSet}.${phase.id}`,
+            phase.agent,
+            roster,
+            errors,
+          );
+        }
+      }
+    }
+    for (const [ruleIndex, rule] of strategy.owner_rules.entries()) {
+      for (const override of rule.phase_overrides ?? []) {
+        if (override.agent) {
+          validateAgentAssignment(
+            `owner_rules.${ruleIndex}.phase_overrides.${override.phase}`,
+            override.agent,
+            roster,
+            errors,
+          );
+        }
+      }
+    }
+    for (const pass of strategy.cross_deliverable_passes ?? []) {
+      if (pass.agent) {
+        validateAgentAssignment(`cross_deliverable_passes.${pass.id}`, pass.agent, roster, errors);
+      }
+    }
+  }
+
   // Load deliverables from catalogs
   const allDeliverables: DeliverableInfo[] = [];
   for (const ref of strategy.scope.catalogs) {
@@ -294,7 +410,41 @@ export function buildScheduleTrack(strategyPath: string, baseDir: string): Build
       errors.push(`${catalogPath}: missing groups field`);
       continue;
     }
-    collectDeliverables(doc.groups, strategy.scope.include_kinds, ref.id, null, allDeliverables);
+    if (ref.local_ids && ref.local_ids.length === 0) {
+      errors.push(`scope.catalogs '${ref.id}': local_ids must contain at least one local_id`);
+      continue;
+    }
+    const selectedLocalIds = ref.local_ids ? new Set(ref.local_ids) : null;
+    if (selectedLocalIds && selectedLocalIds.size !== ref.local_ids!.length) {
+      errors.push(`scope.catalogs '${ref.id}': local_ids must not contain duplicates`);
+    }
+    const catalogLocalIds = new Set<string>();
+    collectDeliverables(
+      doc.groups,
+      strategy.scope.include_kinds,
+      ref.id,
+      selectedLocalIds,
+      catalogLocalIds,
+      null,
+      allDeliverables,
+    );
+    for (const localId of selectedLocalIds ?? []) {
+      if (!catalogLocalIds.has(localId)) {
+        errors.push(
+          `scope.catalogs '${ref.id}': local_id '${localId}' was not found in the catalog`,
+        );
+      }
+    }
+  }
+
+  const hasDeliverableSelection = strategy.scope.catalogs.some(
+    (catalog) => catalog.local_ids !== undefined,
+  );
+  if (hasDeliverableSelection) {
+    validateRuleCoverage("owner_rules", strategy.owner_rules, allDeliverables, errors);
+    if (strategy.approach_rules) {
+      validateRuleCoverage("approach_rules", strategy.approach_rules, allDeliverables, errors);
+    }
   }
 
   if (errors.length > 0)
@@ -474,6 +624,10 @@ export function buildScheduleTrack(strategyPath: string, baseDir: string): Build
         );
         continue;
       }
+      const overrideAgent = (ownerRule?.phase_overrides ?? []).find(
+        (override) => override.phase === phase.id && override.agent !== undefined,
+      )?.agent;
+      const effectiveAgent = overrideAgent ?? phase.agent;
       taskMap.set(taskId, {
         local_id: d.local_id,
         phase_suffix: phase.task_suffix,
@@ -485,6 +639,7 @@ export function buildScheduleTrack(strategyPath: string, baseDir: string): Build
         duration_days: phase.duration_days,
         depends_on: i === 0 ? [...firstDeps] : [prevId!],
         owner,
+        ...(effectiveAgent ? { agent: effectiveAgent } : {}),
         ...(phase.description ? { description: phase.description } : {}),
       });
       const boundary = byCycle.get(expanded.cycleNumber) ?? {
@@ -623,6 +778,7 @@ export function buildScheduleTrack(strategyPath: string, baseDir: string): Build
       duration_days: pass.duration_days,
       depends_on: [pass.after_gate],
       owner: pass.owner,
+      ...(pass.agent ? { agent: pass.agent } : {}),
       tags: ["cross-deliverable"],
       ...(pass.artifact_name !== undefined ? { artifact_name: pass.artifact_name } : {}),
       ...(pass.description ? { description: pass.description } : {}),

@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_0ac3a44eb593407dbba96162e851ce70
+  ts: "2026-09-07T22:40:49Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 中断した exec の executor 段が running のまま残り resume できない
+    - field: description
+      from: ""
+      to: "exec run のプロセスが異常終了すると pipeline-state.json の executor 段が status: running / attempts: 0 のまま残り、evidence.json と executor.log も永続化されない。--resume は executor stage is running を理由に拒否し、--force-restart で worktree ごと破棄して全体を再実行するしかない。完了済みの executor 出力（PJR-MBVM では src/grade.ts とテストの変更が worktree に存在した）を捨てることになる。状態のリセット手段も存在しない。長時間実行では損失が大きい。"
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-08"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_79324609443241f080a6c00710f846fa
+  ts: "2026-09-07T23:15:17Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_0ac3a44eb593407dbba96162e851ce70
+- v: 1
+  id: reg_48aed40b89674ffa89493273dae09101
+  ts: "2026-09-07T23:37:30Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_79324609443241f080a6c00710f846fa
+- v: 1
+  id: reg_dae5871986324a8aaa6fff53ed5eae37
+  ts: "2026-09-08T03:40:51Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: "--resume が executor / reporter / 統合の3段へ対応し、executor が running のまま中断した場合も既存 worktree 上で再開できるようになった。PJR-M35P の再開で実地に確認し、reporter 段から再開して executor の再実行と codex 呼び出しを回避できた。"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-08"
+  previous_event_id: reg_48aed40b89674ffa89493273dae09101

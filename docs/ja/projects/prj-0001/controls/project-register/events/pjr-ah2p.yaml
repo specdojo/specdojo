@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_2da73bc15428496aa4b5c3312162e242
+  ts: "2026-09-13T21:55:54Z"
+  action: add
+  actor: specdojo-orchestrator (claude)
+  from_status: null
+  to_status: open
+  reason: "docs(register): cdfd-overview-rulebook の finding 8 件を解消する todo を起票する"
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: cdfd-overview-rulebook の grade finding 8 件（sample との保管先重複・完成判定の網羅性・用語）を解消する
+    - field: description
+      from: ""
+      to: 9/14 0 時の定期再評価で cdfd-overview-rulebook が needs-work 66 点となった。codex の 3 段目の finding 8 件はいずれも実在する不整合で、(a) rulebook の「保管先は別のデータストアと重ならない」という判定基準を cdfd-overview-sample の「顧客台帳」「つけ台帳」（どちらも常連客ノート）が満たしていない、(b) 完成判定が「他節の条件をここに集約」と宣言しながら Frontmatter 必須キー・導入文・対象者・領域表の必須列・データストアの区分・詳細 CDFD 一覧の列・PO 承認記録を欠く、(c) ノード総数の数え方が rulebook（代表ノード＋データストア）と sample（外部主体を含め 16）で一致しない、(d) STSD / CSTD / PO / retrofit / Orchestrator が定義なしで使われている。rulebook と sample を局所修正して解消する。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-14"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_cb61b044258245d9b9f01b7d4cd85859
+  ts: "2026-09-14T12:54:15Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_2da73bc15428496aa4b5c3312162e242
+- v: 1
+  id: reg_835ddc36677742dc8ca710995905dd5d
+  ts: "2026-09-14T13:11:21Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_cb61b044258245d9b9f01b7d4cd85859
+- v: 1
+  id: reg_79e8b96f05564488bda1f9b9089246cd
+  ts: "2026-09-14T13:54:16Z"
+  action: close
+  actor: specdojo-orchestrator (claude)
+  from_status: review
+  to_status: done
+  reason: exec run --register（codex-expert-executor / gemma-reporter / worktree）で実施。親検証 3 件 passed。担当列の併記を orchestrator が補正のうえ、利用者確認で close
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-14"
+    - field: conclusion
+      from: "-"
+      to: cdfd-overview-rulebook の finding 8 件と cdfd-overview 本体の finding 4 件を解消した。保管先は物理媒体の共有を注記付きで許す条件を加えて sample を顧客欄・つけ欄に分離、完成判定を 16 項目へ拡充、ノード総数は外部主体を含めないと明記、用語表に STSD / CSTD / retrofit / Orchestrator を追加、参加者由来の入力はエッジ対応の対象外と規定、overview の担当列を Role code 主体で実担当を併記する形に統一した。
+  previous_event_id: reg_835ddc36677742dc8ca710995905dd5d

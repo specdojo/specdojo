@@ -1,0 +1,130 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ccca6bed7836406d84d12b1f3a7a0dc6
+  ts: "2026-09-23T03:10:29Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: kata 配布方式の決定を実装へ落とす
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: kata の解決順序を実装し kata サブコマンドを追加する
+    - field: description
+      from: ""
+      to: 利用プロジェクトのリポジトリに kata が無くても exec まで動くよう、docs/ja/specdojo と docs/specdojo/schemas の解決を「利用リポジトリ優先、無ければ node_modules/specdojo」の順に変える。13 ファイル 22 箇所の参照を resolver へ集約し、kata list / show / status / eject / install --all を追加する。wikilink と index build の解決、worktree での解決、node_modules の書き込み保護も扱う。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-23"
+    - field: due
+      from: ""
+      to: "2026-10-17"
+- v: 1
+  id: reg_13499e2712364103a686ba1cb90d52db
+  ts: "2026-09-23T03:49:55Z"
+  action: update
+  actor: orchestrator
+  from_status: open
+  to_status: open
+  reason: PJR-FKN1 の実装を段階分割し、第 1 段階へ絞る
+  changes:
+    - field: id
+      from: prj-0001:pjr-ypns-kata-resolution-and-commands
+      to: prj-0001:pjr-ypns-kata-resolution
+    - field: title
+      from: kata の解決順序を実装し kata サブコマンドを追加する
+      to: kata と schema の解決順序を実装する
+    - field: description
+      from: "[[prj-0001:pjr-fkn1-kata-distribution-method]] で決めた「参照を既定、上書きしたいものだけ eject」を実装する。現在 CLI は `specdojoRootDir()` 直下の固定パスで kata と schema を探すため、利用リポジトリに kata が無いと `exec plan` が `Template not found` で止まる。"
+      to: 利用プロジェクトのリポジトリに kata が無くても exec plan まで動くよう、docs/ja/specdojo と docs/specdojo/schemas の解決を「利用リポジトリ優先、無ければ node_modules/specdojo」の順に変える。13 ファイル 22 箇所の直接参照を単一の resolver へ集約し、worktree 内での解決と node_modules の書き込み保護も扱う。kata サブコマンド、wikilink 解決、導線更新は別項目へ分割した。
+    - field: due
+      from: "2026-10-17"
+      to: "2026-10-10"
+  previous_event_id: reg_ccca6bed7836406d84d12b1f3a7a0dc6
+- v: 1
+  id: reg_455a7e246a6147ddb023905e70abd287
+  ts: "2026-09-23T03:59:52Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_13499e2712364103a686ba1cb90d52db
+- v: 1
+  id: reg_7a20bbd294e342ae94465215224a6db4
+  ts: "2026-09-23T04:27:47Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: runner による検証で `typecheck` (exit 2) および `test-unit` (exit 1) が失敗しているため。具体的には `src/catalog-plan.ts` での参照エラーおよび、カタログプランとグレードに関する単体テストの失敗が確認されている。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: runner による検証で `typecheck` (exit 2) および `test-unit` (exit 1) が失敗しているため。具体的には `src/catalog-plan.ts` での参照エラーおよび、カタログプランとグレードに関する単体テストの失敗が確認されている。"
+  previous_event_id: reg_455a7e246a6147ddb023905e70abd287
+- v: 1
+  id: reg_7396d740e2824f3ba51b3f277e87bbf6
+  ts: "2026-09-23T04:45:16Z"
+  action: start
+  actor: gemma-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_7a20bbd294e342ae94465215224a6db4
+- v: 1
+  id: reg_07c77eee43364834a9f532bfc79202d4
+  ts: "2026-09-23T04:50:50Z"
+  action: review
+  actor: gemma-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_7396d740e2824f3ba51b3f277e87bbf6
+- v: 1
+  id: reg_14a079438a784648b4081c1d4da5806b
+  ts: "2026-09-23T04:53:59Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: レビュー完了。初回失敗分をオーケストレーターが補修し resume で統合
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-23"
+    - field: conclusion
+      from: "-"
+      to: kata と schema の解決を利用リポジトリ優先・package フォールバックへ集約し、kata を持たないリポジトリで exec plan まで到達できるようにした。解決と列挙を区別し、grade の対象列挙は利用リポジトリ限定とした。
+  previous_event_id: reg_07c77eee43364834a9f532bfc79202d4

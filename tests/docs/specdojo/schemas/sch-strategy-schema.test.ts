@@ -71,6 +71,37 @@ describe("sch-strategy.schema.yaml agent_pipeline", () => {
     expect(valid).toBe(true);
   });
 
+  it("accepts by-name agent assignments on phases, overrides, and cross-deliverable passes", () => {
+    const strategy = loadStrategyFixture();
+    firstPhase(strategy).agent = { executor: "codex-executor", reporter: "gemma-reporter" };
+    const ownerRules = strategy.owner_rules as Array<Record<string, unknown>>;
+    ownerRules[0].phase_overrides = [
+      { phase: firstPhase(strategy).id, agent: { executor: "claude-executor" } },
+    ];
+    strategy.cross_deliverable_passes = [
+      {
+        id: "dedup",
+        name: "Deduplicate",
+        task_suffix: "060",
+        duration_days: 1,
+        owner: "ARC",
+        after_gate: "G-TEST",
+        before_phase_set: Object.keys(strategy.phase_sets)[0],
+        scope: { local_ids: ["a", "b"] },
+        agent: { executor: "codex-executor", reporter: "gemma-reporter" },
+      },
+    ];
+
+    expect(validate(strategy), JSON.stringify(validate.errors)).toBe(true);
+  });
+
+  it("rejects malformed agent assignments", () => {
+    const strategy = loadStrategyFixture();
+    firstPhase(strategy).agent = { reporter: "gemma-reporter" };
+
+    expect(validate(strategy)).toBe(false);
+  });
+
   it("rejects reversed pipeline stages", () => {
     const strategy = loadStrategyFixture();
     firstPhase(strategy).agent_pipeline = {
@@ -88,6 +119,28 @@ describe("sch-strategy.schema.yaml agent_pipeline", () => {
       stages: [{ stage_role: "executor" }, { stage_role: "reporter" }],
     };
 
+    expect(validate(strategy)).toBe(false);
+  });
+});
+
+describe("sch-strategy.schema.yaml catalog local_ids", () => {
+  const validate = compileStrategySchema();
+
+  it("catalog ごとの成果物選択を受け入れる", () => {
+    const strategy = loadStrategyFixture();
+    const scope = strategy.scope as { catalogs: Array<Record<string, unknown>> };
+    scope.catalogs[0].local_ids = ["prj-charter"];
+
+    expect(validate(strategy), JSON.stringify(validate.errors)).toBe(true);
+  });
+
+  it("空または重複した local_ids を拒否する", () => {
+    const strategy = loadStrategyFixture();
+    const scope = strategy.scope as { catalogs: Array<Record<string, unknown>> };
+    scope.catalogs[0].local_ids = ["prj-charter", "prj-charter"];
+
+    expect(validate(strategy)).toBe(false);
+    scope.catalogs[0].local_ids = [];
     expect(validate(strategy)).toBe(false);
   });
 });

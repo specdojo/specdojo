@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "task_id": "JBR-grade-kata-3af1683afadd",
+  "run_id": "20260908T133429540Z-4fd46972",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-08T13:34:29.540Z",
+    "completed_at": "2026-09-08T13:38:27.502Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/routines/rtn-grade-recheck.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-kata-3af1683afadd.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-kata-af81b6da6930.json",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 4,
+    "summary": "docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml     | 18 ++++++++++++++----\n .../projects/prj-0001/routines/rtn-grade-recheck.yaml  |  3 ++-\n 2 files changed, 16 insertions(+), 5 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run build",
+      "status": "passed",
+      "summary": "dist/specdojo.jsを正常に再ビルドした。"
+    },
+    {
+      "source": "executor",
+      "command": "tools/grade/run-per-document.sh --run-id job-grade-kata-all-2026-W37-verify --kind all --limit 5 --changed-only=true --ungraded=true --specdojo-bin dist/specdojo.js",
+      "status": "passed",
+      "summary": "終了コード0。内部結果はfailed 10件、skipped_condition 5件で、verdict/scoreは生成されなかった。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check -- docs/ja/specdojo/rulebooks docs/ja/specdojo/recipes docs/ja/specdojo/samples docs/ja/specdojo/templates",
+      "status": "passed",
+      "summary": "対象成果物に差分および空白エラーなし。"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/specdojo\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nInstalling worktree dependencies: .\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/stale.md\n  src/unrelated.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-140…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.1.0 validate:schema:yaml\n> tsx tools/docs/src/validate-yaml-schema.ts --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bps-template.yaml: schema docs/specdojo/sc…"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/specdojo\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-IP32Yh/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-OghZzo/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-gGM6aL/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-pozZ6C/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-RAu1cJ/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-IcuIK2/pjr-0001-topic.md\nWrote agent stdout: /tmp/specdojo-agent-command-ycSe11/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-jmFNFS/outputs/partial.txt\n\n Test Files  99 passed (99)\n      Tests  1418 passed (1418)\n   Start at  22:38:44\n   Duration  22.52s (transform 1.69s, setup 451ms, import 12.49s, tests 19.19s, environment 6ms)\n\n\nerror: u…"
+    }
+  ],
+  "final_message": "ビルドと指定評価コマンドは終了コード0で完了したが、5文書の1・2段目がすべてagent側ファイルシステムエラーで失敗し、評価結果・成果物更新は生成されなかった。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-3af1683afadd/20260908T133429540Z-4fd46972/executor.log",
+      "bytes": 2084,
+      "truncated": false
+    }
+  ]
+}

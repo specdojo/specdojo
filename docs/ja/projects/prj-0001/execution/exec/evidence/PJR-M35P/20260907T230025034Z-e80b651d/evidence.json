@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-M35P",
+  "run_id": "20260907T230025034Z-e80b651d",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-07T23:00:25.034Z",
+    "completed_at": "2026-09-07T23:12:41.711Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-m35p-protection-false-positive-generated.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-config-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-agent-protected-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-worktree-ops.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-agent-protected-config.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-worktree-ops.integration.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 6,
+    "summary": "...pjr-m35p-protection-false-positive-generated.md |  18 ++--\n docs/ja/specdojo/guides/exec-config-guide.md       |   6 +-\n src/exec-agent-protected-config.ts                 | 111 +++++++++++++++++----\n src/exec-worktree-ops.ts                           |   9 +-\n tests/src/exec-agent-protected-config.test.ts      |  36 +++++++\n tests/src/exec-worktree-ops.integration.test.ts    |  25 +++++\n 6 files changed, 170 insertions(+), 35 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write src/exec-agent-protected-config.ts src/exec-worktree-ops.ts tests/src/exec-agent-protected-config.test.ts tests/src/exec-worktree-ops.integration.test.ts docs/ja/specdojo/guides/exec-config-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-m35p-protection-false-positive-generated.md && npx markdownlint docs/ja/specdojo/guides/exec-config-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-m35p-protection-false-positive-generated.md",
+      "status": "passed",
+      "summary": "変更対象の整形と Markdown lint が成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "TypeScript 型検査がエラーなしで完了"
+    },
+    {
+      "source": "executor",
+      "command": "npx eslint src/exec-agent-protected-config.ts src/exec-worktree-ops.ts tests/src/exec-agent-protected-config.test.ts tests/src/exec-worktree-ops.integration.test.ts",
+      "status": "passed",
+      "summary": "変更した TypeScript の ESLint が成功"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts catalog validate && npx tsx src/specdojo.ts register build && npx tsx src/specdojo.ts index build",
+      "status": "failed",
+      "summary": "tsx の IPC ソケット作成が sandbox の EPERM で失敗。成果物起因ではないため同等の node --import tsx で再実行"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate && node --import tsx src/specdojo.ts register build && node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "catalog 検証、登録簿生成、1549件の文書 index 生成が成功。既存の未作成文書警告のみ"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/docs/src/validate-history-links.ts",
+      "status": "passed",
+      "summary": "履歴文書のリンク記法検査が成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:unit",
+      "status": "not_run",
+      "summary": "親 runner の allowlisted validation のため未実行"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:integration",
+      "status": "not_run",
+      "summary": "親 runner の allowlisted validation のため未実行"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema",
+      "status": "not_run",
+      "summary": "親 runner の allowlisted validation のため未実行"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-M35P\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/stale.md\n  src/unrelated.ts\ncommit-targets:\n  execution/exec/…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.1.0 validate:schema:yaml\n> tsx tools/docs/src/validate-yaml-schema.ts --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bps-template.yaml: schema docs/specdojo/sc…"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-M35P\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-HUBuHi/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-ofMwsN/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-iRX6Hf/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-ZP5ks9/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-NZjV3e/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-f8RkwE/pjr-0001-topic.md\nWrote agent stdout: /tmp/specdojo-agent-command-eEvpRf/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-HqI8RJ/outputs/partial.txt\n\n Test Files  98 passed (98)\n      Tests  1397 passed (1397)\n   Start at  12:35:45\n   Duration  24.10s (transform 1.69s, setup 432ms, import 14.64s, tests 19.58s, environm…"
+    }
+  ],
+  "final_message": "gitignore 済みの既知生成物を snapshot・統合前検査の双方から安全に除外し、Git 差分取得失敗時の全文出力を廃止した。回帰テスト、実行設定ガイド、PJR-M35P 個票も更新済み。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-M35P/20260907T230025034Z-e80b651d/executor.log",
+      "bytes": 2961,
+      "truncated": false
+    }
+  ]
+}

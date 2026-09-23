@@ -1,0 +1,66 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:imp-interface-rulebook
+path: docs/ja/specdojo/rulebooks/imp-interface-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: pass
+score: 96
+graded_at: "2026-09-02T19:48:47.613Z"
+graded_by: gemma-expert-executor
+content_hash: 9981804dade6635c23dd6aa4f55e2d21259ea92a41b219b77f15694df912695d
+categories:
+  consistency:
+    score: 88
+  usability:
+    score: 92
+  architecture:
+    score: 100
+  quality:
+    score: 100
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 3
+    score: 75
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
+    level: 4
+    score: 100
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 2
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 1
+    message: ドキュメントIDを固定値 `imp-interface` としているが、プロジェクト固有のIDとなるよう `＜project-id＞:imp-interface` 形式で定義すべきである。
+    anchor: "# 影響調査（I/F）作成ルール"
+  - id: F002
+    severity: minor
+    rule: vp-ux-readability
+    line: 1
+    message: "推奨ファイル名の記述はあるが、作成者が適切に配置できるよう、推奨されるディレクトリパス（例: `docs/ja/projects/＜project-id＞/` 配下など）を明記すべきである。"
+    anchor: "# 影響調査（I/F）作成ルール"

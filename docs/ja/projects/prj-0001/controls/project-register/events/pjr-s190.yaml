@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_1de2a8934c2349588045c6429f8a264b
+  ts: "2026-09-13T22:02:55Z"
+  action: add
+  actor: specdojo-orchestrator (claude)
+  from_status: null
+  to_status: open
+  reason: "docs(register): strategy の scope を成果物単位にする todo を起票する"
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: strategy の scope を成果物単位にし、1 ドメインを複数トラックで分担・再修正できるようにする
+    - field: description
+      from: ""
+      to: sch-strategy の scope はカタログファイル単位（catalogs と include_kinds）しかなく、approach_rules と owner_rules は scope 内の全 work 成果物を網羅する必要がある。このため同じカタログを 2 つ目の track に入れると全成果物のタスクが再生成され、事実上 1 ドメイン 1 トラックの運用になる。track-design-guide はドメインとトラックが 1 対 1 でないことを明記しており、実装後に業務仕様を直す・横断パスで複数ドメインを直すといった現実の修正に合わない。scope に成果物（local_id）単位の選択を追加し、rules の網羅要件を選択した部分集合に限定する。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-14"
+    - field: due
+      from: ""
+      to: "2026-10-31"
+- v: 1
+  id: reg_caa8d5033a4e4b8fba28e741adb4bf63
+  ts: "2026-09-13T22:07:28Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_1de2a8934c2349588045c6429f8a264b
+- v: 1
+  id: reg_68de975a6474454bb8bb84f70c986b3c
+  ts: "2026-09-13T22:21:04Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_caa8d5033a4e4b8fba28e741adb4bf63
+- v: 1
+  id: reg_d776548e5c75452497cf28462e89456b
+  ts: "2026-09-14T11:39:39Z"
+  action: close
+  actor: specdojo-orchestrator (claude)
+  from_status: review
+  to_status: done
+  reason: exec run --register（codex-expert-executor / gemma-reporter / worktree）で実施。親検証 3 件 passed。利用者確認のうえ close
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-14"
+    - field: conclusion
+      from: "-"
+      to: sch-strategy の scope.catalogs[] に任意の local_ids を追加し、指定時はその成果物だけを scope として approach_rules / owner_rules の網羅検査とタスク生成を行うようにした。省略時は従来どおり全件。同じ成果物を複数 track が選択でき、track ごとに独立した task ID を持つ。schedule strategy generate も同じ選択に従い、track-design-guide・schedule-design-guide・sch-rulebook に分担・再修正の意味を記述した。
+  previous_event_id: reg_68de975a6474454bb8bb84f70c986b3c

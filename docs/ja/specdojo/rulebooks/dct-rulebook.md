@@ -90,18 +90,20 @@ YAML 成果物のため、Markdown Frontmatter ではなくファイル先頭の
 
 `dct-<domain>.yaml` は次のルート構造を標準とする。
 
-| キー         | 必須           | 内容                        |
-| ------------ | -------------- | --------------------------- |
-| `id`         | ○              | 成果物 ID                   |
-| `type`       | ○              | `project` / `template`      |
-| `status`     | ○              | 状態                        |
-| `title`      | ○              | ドキュメント名              |
-| `rulebook`   | ○              | 参照する rulebook ID        |
-| `part_of`    | 任意           | 親 `dct-index` の `id` 配列 |
-| `project_id` | ○（`project`） | プロジェクト ID             |
-| `domain`     | ○              | ドメイン識別子              |
-| `base_path`  | 任意           | ドメインの既定ディレクトリ  |
-| `groups`     | ○              | グループ（章）の配列        |
+| キー       | 必須 | 内容                        |
+| ---------- | ---- | --------------------------- |
+| `id`       | ○    | 成果物 ID                   |
+| `type`     | ○    | `project` / `template`      |
+| `status`   | ○    | 状態                        |
+| `title`    | ○    | ドキュメント名              |
+| `rulebook` | ○    | 参照する rulebook ID        |
+| `part_of`  | 任意 | 親 `dct-index` の `id` 配列 |
+
+| `project_id` | ○（`project`） | プロジェクト ID |
+
+| `domain` | ○ | ドメイン識別子 |
+| `base_path` | 任意 | ドメインの既定ディレクトリ |
+| `groups` | ○ | グループ（章）の配列 |
 
 ### 5.2. `groups[]`（グループ）
 
@@ -117,19 +119,20 @@ YAML 成果物のため、Markdown Frontmatter ではなくファイル先頭の
 
 ### 5.3. `deliverables[]`（成果物エントリ）
 
-| フィールド            | 必須        | 内容                                                              |
-| --------------------- | ----------- | ----------------------------------------------------------------- |
-| `local_id`            | ○           | 成果物の論理名（例: `prj-overview`）                              |
-| `instance_id_pattern` | 任意        | 反復成果物の実体ID規則（例: `pjr-{sequence}-{term}`）             |
-| `name`                | ○           | 業務ユーザーが理解可能な日本語名                                  |
-| `kind`                | ○           | `work` / `control` / `generated`                                  |
-| `depends_on`          | 任意        | 依存する成果物の `local_id` 配列。なければ空配列 `[]`             |
-| `overview`            | ○           | 成果物の目的を1文で記述                                           |
-| `path`                | ○（`work`） | 成果物のファイルパス                                              |
-| `rulebook`            | 任意        | rulebook の文書 ID、未判断なら `undecided`、不要なら `not-needed` |
-| `evidence_refs`       | 任意        | `retrofit` で読む非成果物エビデンス                               |
-| `done_criteria`       | ○（`work`） | 完了条件の配列                                                    |
-| `note`                | 任意        | 構造化フィールドで表せない補足                                    |
+| フィールド            | 必須 | 内容                                                  |
+| --------------------- | ---- | ----------------------------------------------------- |
+| `local_id`            | ○    | 成果物の論理名（例: `prj-overview`）                  |
+| `instance_id_pattern` | 任意 | 反復成果物の実体ID規則（例: `pjr-{sequence}-{term}`） |
+| `name`                | ○    | 業務ユーザーが理解可能な日本語名                      |
+| `kind`                | ○    | `work` / `control` / `generated`                      |
+
+| `depends_on` | 任意 | 依存する成果物の `local_id` 配列。なければ空配列 `[]` |
+| `overview` | ○ | 成果物の目的を1文で記述 |
+| `path` | ○（`work`） | 成果物のファイルパス |
+| `rulebook` | 任意 | rulebook の文書 ID、未判断なら `undecided`、不要なら `not-needed` |
+| `evidence_refs` | 任意 | `retrofit` で読む非成果物エビデンス |
+| `done_criteria` | ○（`work`） | 完了条件の配列 |
+| `note` | 任意 | 構造化フィールドで表せない補足 |
 
 ### 5.4. `evidence_refs[]`（非成果物エビデンス）
 
@@ -165,11 +168,12 @@ YAML 成果物のため、Markdown Frontmatter ではなくファイル先頭の
 
 計画成果物をカタログへ登録する場合も、生成方法ではなくライフサイクルで区別する。
 
-- 人または agent が判断して更新する `tml-index`、`dct-index`、`dct-plan-<domain>`、`sch-assessment-<track>`、`sch-strategy-<track>`、`sch-defaults` は `work` とする。
+- 人または agent が判断して更新する `tml-index`、`dct-index`、`dct-plan-<domain>`、`sch-strategy-<track>`、`sch-defaults` は `work` とする。
 - `sch-track-<track>` と `sch-milestones` は strategy から再生成できるため `generated` とし、対応する `sch-strategy-<track>` を `depends_on` に宣言する。
+
 - 計画成果物を所有するトラック自身の `sch-strategy` は、自己生成の循環を避けるため `control` とするか、そのトラックの scope 外へ置く。
 - `dct-<domain>.yaml` 自身と `generated/` 配下の表示用生成物は、カタログ定義との二重管理を避けるため登録しない。
-- トラック別の assessment、strategy、track は、Timeline で当該トラックが `catalog_status: primary` になった時点で具体的な `local_id` を追加し、未着手トラックの分を先行登録しない。
+- トラック別の strategy、track は、Timeline で当該トラックが `catalog_status: primary` になった時点で具体的な `local_id` を追加し、未着手トラックの分を先行登録しない。
 
 ### 6.3. `depends_on`
 
@@ -180,6 +184,7 @@ YAML 成果物のため、Markdown Frontmatter ではなくファイル先頭の
 ### 6.4. 実践の型の要否宣言
 
 - 成果物カタログは成果物と rulebook の対応だけを `rulebook` に宣言する。recipe / sample / template の要否と所在は、参照先 rulebook の frontmatter を正本とする。
+
 - `rulebook` には、必要と判断して実在する rulebook の完全 ID を記載する。要否未判断は `undecided`、不要は `not-needed`、項目省略は必要だが未整備を表す。`catalog validate` は完全 ID に対応する文書の実在を検証する。
 - `rulebook: none` は成果物本体のメタ情報で「準拠 rulebook なし」を表す値であり、カタログの要否宣言には使わない。カタログで不要と判断した場合は `rulebook: not-needed` を使う。
 - `kind: generated` では `rulebook` 宣言の有無にかかわらず4種すべてを適用しない。成果物ごとの型宣言を追加せず、`kind` から導出する。
@@ -190,7 +195,8 @@ YAML 成果物のため、Markdown Frontmatter ではなくファイル先頭の
 - `evidence_refs` は成果物ごとの安定した調査入力であり、`approach: retrofit` の edit / review plan に「実装エビデンス」として展開される。
 - `depends_on` のような成果物間の根拠・実行順序を作らず、`based_on` のような文書 ID 参照にも使わない。
 - `path` は先頭スラッシュなしのリポジトリルート相対パスとし、絶対パス、`..`、`.`、バックスラッシュ、重複区切りを含めない。宣言先の存在と同一成果物内の重複を `catalog validate` で検証する。
-- 原則として関係するファイルを指定する。ディレクトリを指定する場合も責務単位に限定し、`src`、`tools`、`docs`、リポジトリルートのような過度に広い範囲を指定しない。
+- `path` はコマンドの入口（例: `src/<command>.ts`）または責務単位のディレクトリを調査の起点として指定し、入口から到達する内部実装は import などをたどって確認する。rename・分割されやすい内部ヘルパーファイルを直接指定すると refactor のたびに参照が陳腐化するため、指定しない。
+- ディレクトリを指定する場合は責務単位に限定し、`src`、`tools`、`docs`、リポジトリルートのような過度に広い範囲を指定しない。
 - `purpose` はファイル名の言い換えではなく、入出力、状態遷移、例外など、その参照から何を確認するかを記載する。
 - 実装エビデンスは読み取り専用であり、plan frontmatter の `targets`、worktree の変更許可範囲、commit 許可リストへ追加しない。
 
@@ -217,6 +223,7 @@ YAML 成果物のため、Markdown Frontmatter ではなくファイル先頭の
 ### 6.9. テンプレート固有項目
 
 - `type: template` のファイルでのみ `min_size`（`small` / `medium` / `large`）を使用できる。
+
 - `min_size` は規模に応じた取捨選択のための項目であり、scaffold 時に除去される。
 - テンプレートでは `local_id` や `part_of` にアンダースコアで囲んだプレースホルダ（例: `_PROJECT_ID_:dct-index`）を使用できる。
 
@@ -271,6 +278,7 @@ YAML 成果物のため、Markdown Frontmatter ではなくファイル先頭の
 | `depends_on` に `local_id` 以外（ファイルパス・URL）を混在させる  | 依存解決が機械的に行えなくなるため                       |
 | `evidence_refs.path` に絶対パス・親参照・存在しないパスを記載する | 再現可能で安全な調査範囲を確定できないため               |
 | `evidence_refs.path` にリポジトリ全体など広すぎる範囲を指定する   | 調査範囲と判断根拠を限定できないため                     |
+| `evidence_refs.path` に入口から到達できる内部ヘルパーを指定する   | refactor 時の rename・分割で参照が陳腐化しやすいため     |
 | `work` 成果物で `path` または `done_criteria` を省略する          | スケジュール展開とレビュー計画生成に必須のため           |
 | 実在しない実践の型 ID、またはカタログで `rulebook: none` を使う   | 未判断・未整備・不要・参照切れを機械的に区別できないため |
 | `dct-plan-<domain>.yaml` にカタログ構造や自由文の判断メモを書く   | ジェネレーターが機械的に扱えず責務境界が崩れるため       |

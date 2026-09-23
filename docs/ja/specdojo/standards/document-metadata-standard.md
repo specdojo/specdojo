@@ -53,12 +53,12 @@ specdojo:
 
 ### 2.1. テンプレート自身のメタ情報と生成物 Frontmatter の分離
 
-テンプレートファイル自身のメタ情報と、テンプレートから生成される成果物の Frontmatter は明確に分離する。
+成果物テンプレート自身のメタ情報と、テンプレートから生成される成果物の Frontmatter は明確に分離する。
 
-- テンプレートファイル自身のメタ情報も `specdojo:` 配下に置き、`id` / `type` / `status` は実値で記述して通常のメタ情報制約に従う。例: `specdojo.id: specdojo:dct-project-management-template`、`specdojo.type: template`、`specdojo.status: draft`。
+- `docs/ja/specdojo/templates/` 配下の成果物テンプレートは実践の型であり、ファイル自身のメタ情報も `specdojo:` 配下に置く。`id` / `type` / `status` は実値で記述して通常のメタ情報制約に従う。例: `specdojo.id: specdojo:dct-project-management-template`、`specdojo.type: template`、`specdojo.status: draft`。
+- `docs/ja/specdojo/exec-templates/` 配下の exec / result テンプレートは、plan / result 生成処理が消費する内部テンプレートである。実践の型の `type: template` 文書ではないため、ファイル自身の Frontmatter は持たない。本文先頭に `_FRONTMATTER_` を置き、生成処理が `specdojo:` 名前空間形の Frontmatter を注入する。
 - 生成される成果物の Frontmatter は、テンプレート自身の Frontmatter とは別に、生成物側の雛形として表現する。表現方法はテンプレート種別ごとに次のいずれかとする。
   - Markdown 成果物テンプレートは、自身 Frontmatter の `specdojo:` 配下に置いた `frontmatter_template` フィールドに、生成物 Frontmatter の雛形（`specdojo:` ラッパー込み）を記述する（本標準 `生成物 Frontmatter 雛形`）。
-  - Markdown の exec / result テンプレートは、本文先頭に `_FRONTMATTER_` を置き、生成処理が `specdojo:` 名前空間形の Frontmatter を注入する。
   - YAML catalog テンプレート（`dct-*`）は独立 YAML データファイルであり名前空間化しない。生成物側フィールドを平坦に記述し、生成処理（`specdojo scaffold`）が `id` / `type` などを変換する。
   - YAML catalog 以外の独立 YAML データファイルのテンプレート（`pm-members-template.yaml` 等）は、自身のメタ情報をトップレベルに実値で記述し、生成物のメタ情報はトップレベルの `metadata_template` フィールドに雛形として記述する（本標準 `生成物メタ情報雛形（metadata_template）`）。
 - 生成時に置換する値は `_UPPER_SNAKE_` 形式のプレースホルダで表す。ただし `type: template` を理由に、すべての Frontmatter 項目や ID で大文字・アンダースコアを使用できるわけではない。
@@ -248,6 +248,34 @@ specdojo:
 ```
 
 参照の正本は各成果物の `relations` とします。要求から仕様・テストへの対応表、カバレッジ、未充足項目はこれらの参照から導出する派生ビューであり、独立した手編集のSSOTを作りません。成果物本文に項目単位のトレース列を持つ場合も、安定したIDを記載し、同じ関係を別の状態情報として重複管理しないようにします。
+
+### 6.2. 継続品質評価（`grade`）
+
+Markdown 文書の最新の継続品質評価は、プロジェクトの `<execution_path>/grade/results/<doc-id>.yaml` にサイドカーとして記録します。成果物の Frontmatter と本文には grade や finding を書き込みません。サイドカーは最新状態のスナップショットであり、`specdojo grade apply` は文書 ID ごとの同じファイルを冪等に上書きします。履歴は Job Run と evidence、合意形成は review result が担います。成果物の現在品質を参照するときは、サイドカーの `content_hash` が現在のファイル全体と一致することを確認します。
+
+| 項目             | 意味                                                                         |
+| ---------------- | ---------------------------------------------------------------------------- |
+| `rubric`         | 判定に使った共通 rubric の版                                                 |
+| `target`         | `kata` または `deliverable`                                                  |
+| `verdict`        | `pass` / `needs-work` / `fail`                                               |
+| `score`          | category の重み付き総合点（0-100）                                           |
+| `graded_at/by`   | 評価日時と `pm-members.yaml` の判定主体 nickname                             |
+| `content_hash`   | 成果物ファイル全体の SHA-256                                                 |
+| `categories`     | category 別 score                                                            |
+| `viewpoints`     | viewpoint 別 level / score                                                   |
+| `finding_counts` | `blocker` / `major` / `minor` / `note` の件数                                |
+| `findings`       | `id` / `severity` / `rule` / `line` / `anchor` / `message` の指摘一覧        |
+| `done_criteria`  | 成果物カタログの完了条件の充足数・総数、未充足条件の担当 Role code、詳細参照 |
+
+`target: deliverable` で成果物カタログに `done_criteria` がある場合、サイドカーに要約を記録します。条件文、条件ごとの判定、不足理由は `<execution_path>/grade/criteria/` 配下の成果物ごとの YAML に記録し、`detail_ref` から参照します。同じ成果物の詳細ファイルは再評価ごとに上書きします。`satisfied` / `total` と総合 `score` / `verdict` は独立した評価軸であり、一方の値から他方を補完・上書きしません。
+
+未充足条件がある場合だけ `done_criteria.unsatisfied` を置き、条件 ID をキー、その条件の `roles` を値として記録します。これにより詳細を grade result へ複製せず、次の確認担当を特定できます。詳細 YAML は `grade-done-criteria.schema.yaml` に従い、成果物と同じ `content_hash` を持ちます。
+
+`findings[].line` は Frontmatter を除く本文での指摘行（1始まり）、`anchor` は評価時点の該当行の引用です。本文編集で行番号がずれた場合は `anchor` を照合に使います。`grade validate` はサイドカーの文書 ID・対象・件数・内容ハッシュを成果物と突き合わせます。
+
+再評価で同じ message の finding が残る場合は未解消として扱い、severity を前回より引き下げません。前回の問題が解消され、別の軽微な問題だけが残る場合は、新しい finding の message に severity を引き下げる根拠を含めます。
+
+サイドカーは `grade-result.schema.yaml` に従います。現在の評価対象は Markdown 文書であり、YAML / JSON を対象へ指定した場合はエラーとします。
 
 ## 7. 成果物の値制約
 

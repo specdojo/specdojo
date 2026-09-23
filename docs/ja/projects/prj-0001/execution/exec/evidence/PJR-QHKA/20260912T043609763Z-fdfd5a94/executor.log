@@ -1,0 +1,13 @@
+Detached Unit のトレーサビリティ規定を更新しました。
+
+- [docs-structure-guide.md](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-QHKA/docs/ja/specdojo/guides/docs-structure-guide.md:390)
+  - `Refs: PJR-XXXX` を主参照化
+  - PR・最終 commit hash を補助参照化
+  - rebase／squash 後の確認手順と既存 hash の移行方針を追加
+- [PJR-QHKA 個票](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-QHKA/docs/ja/projects/prj-0001/controls/project-register/pjr-qhka-docs-structure-detached-unit.md:467) の作業内容・対応結果を更新
+- ステータスと result ファイルは変更していません。
+- 全検査通過。catalog の既存未作成文書警告のみ発生しました。
+
+<specdojo_executor_evidence>
+{"final_message":"Detached Unitのトレーサビリティをitem IDのRefs trailer中心へ改訂し、個票へ対応結果を反映した。","validations":[{"command":"npx prettier --write docs/ja/specdojo/guides/docs-structure-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-qhka-docs-structure-detached-unit.md","status":"passed","summary":"対象Markdown 2件を整形した。"},{"command":"npx markdownlint docs/ja/specdojo/guides/docs-structure-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-qhka-docs-structure-detached-unit.md","status":"passed","summary":"対象Markdown 2件にエラーなし。"},{"command":"npm run -s lint:md","status":"passed","summary":"リポジトリ全体のMarkdown lintが通過した。"},{"command":"npx tsx src/specdojo.ts register build && npx tsx src/specdojo.ts catalog validate && npx tsx src/specdojo.ts index build","status":"not_run","summary":"sandboxでtsxのIPCソケット作成がEPERMとなり、検査本体は開始されなかった。"},{"command":"node --import tsx src/specdojo.ts register build && node --import tsx src/specdojo.ts catalog validate && node --import tsx src/specdojo.ts index build","status":"passed","summary":"IPC不要の同等起動でregister build、catalog validate、index buildが通過。catalogの既存未作成文書警告のみ。"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし。"}]}
+</specdojo_executor_evidence>

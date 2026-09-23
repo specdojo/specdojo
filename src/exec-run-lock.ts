@@ -37,6 +37,7 @@ type ExecRunLockOwner = {
 
 export const EXEC_RUN_LOCK_HEARTBEAT_MS = 5_000;
 export const EXEC_RUN_LOCK_STALE_MS = 30_000;
+export const EXEC_RUN_LOCK_TOKEN_ENV = "SPECDOJO_EXEC_RUN_LOCK_TOKEN";
 export const ROUTINE_EXEC_ENV = "SPECDOJO_ROUTINE_EXEC";
 export const ROUTINE_BUSY_SKIP_EXIT_CODE = 75;
 const EXEC_RUN_LOCK_POLL_MS = 200;
@@ -61,6 +62,12 @@ function readOwner(lockDir: string): ExecRunLockOwner | null {
   } catch {
     return null;
   }
+}
+
+export function inheritsExecRunLock(executionPath: string): boolean {
+  const inheritedToken = process.env[EXEC_RUN_LOCK_TOKEN_ENV];
+  if (!inheritedToken) return false;
+  return readOwner(execRunLockPath(executionPath))?.token === inheritedToken;
 }
 
 function formatOwner(lockDir: string): string {

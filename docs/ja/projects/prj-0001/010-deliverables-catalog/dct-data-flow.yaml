@@ -13,7 +13,7 @@ groups:
       - local_id: cdfd-overview
         name: 概念データフロー図（全体概要）
         kind: work
-        overview: SpecDojoを用いたプロジェクト推進とオペレーション推進について、主要プロセス領域の関係と情報・イベントの流れを可視化し定義する
+        overview: SpecDojo を活用したプロジェクト運営について、PDCA サイクルに沿った 14 のプロセス領域と六つのプロセスグループ、データストア、グループとデータストアの間の情報・実行要求の流れを可視化し定義する
         path: cdfd-overview.md
         rulebook: specdojo:cdfd-overview-rulebook
         evidence_refs:
@@ -22,16 +22,16 @@ groups:
             purpose: CLI全体のコマンド領域と起動関係
         note: list・where・status・validate・dry-runなど、状態や成果物を変更しない補助操作は独立した業務フローとして分割しない
         done_criteria:
-          - text: 初期セットアップ・登録簿ライフサイクル・計画展開・タスク実行・定期処理・並行処理・構成変更・派生生成・報告の各プロセス領域と相互の情報の流れが表と図で確認できること
+          - text: Onboarding・Plan・Do・Check・Action・Orchestrator の六つのプロセスグループに属する 14 のプロセス領域と、グループとデータストアの間の情報・実行要求の流れが表と図で確認できること
             roles: [BA]
             viewpoint: vp-ba-business-value
           - text: 対象とするプロセス領域、および独立した業務フローに含めない補助操作の境界を承認できること
             roles: [PO]
             viewpoint: vp-po-purpose-alignment
-          - text: 各領域の起点イベント・主要入力・主要出力・データストアが識別でき、領域別CDFDの構成方針として参照できること
+          - text: 各領域の起点イベントと、プロセスグループ単位の主要入力・主要出力・データストアが識別でき、概念データフローのエッジと相互に対応し、プロセスグループ別 CDFD の構成方針として参照できること
             roles: [ARC]
             viewpoint: vp-arc-technical-constraints
-          - text: 領域別CDFDへの分割に重複または欠落がないことを、全体図との対応で確認できること
+          - text: プロセスグループ別 CDFD とユースケース別 CDFD への分割に重複または欠落がないことを、詳細 CDFD 一覧と各領域の対応で確認できること
             roles: [QE]
             viewpoint: vp-qe-omissions-consistency
   - name: プロジェクト推進
@@ -40,21 +40,18 @@ groups:
         name: 概念データフロー図（初期セットアップ）
         kind: work
         overview: config・register・catalog・実行補助設定を初期化し、プロジェクトの計画と実行を開始できる状態にする流れを可視化し定義する
-        path: cdfd-init.md
+        path: /docs/ja/product/trash/cdfd-init.md
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
           - kind: implementation
             path: src/specdojo-config.ts
             purpose: プロジェクト設定の読込・初期化経路
           - kind: implementation
-            path: src/catalog-scaffold.ts
-            purpose: 成果物カタログの初期生成処理
+            path: src/catalog.ts
+            purpose: catalog コマンド入口から到達する成果物カタログの初期生成処理
           - kind: implementation
-            path: src/exec-provider-scaffold.ts
-            purpose: 実行provider設定の初期生成処理
-          - kind: implementation
-            path: src/review-plan.ts
-            purpose: レビュー観点ファイル（pm-review-viewpoints.yaml）の初期生成処理
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達する実行provider設定の初期生成処理、レビュー観点ファイル（pm-review-viewpoints.yaml）の初期生成処理
         depends_on:
           - cdfd-overview
         done_criteria:
@@ -79,19 +76,10 @@ groups:
         evidence_refs:
           - kind: implementation
             path: src/register.ts
-            purpose: 登録簿項目の生成・状態遷移・派生ビュー更新・ID競合復旧
+            purpose: register コマンド入口から到達する登録簿項目の生成・状態遷移・派生ビュー更新・ID競合復旧、個票Frontmatter正本の読込・更新・検証と一覧値の導出、個票のGit履歴から登録項目単位の変更履歴を再構成する処理、登録日・完了日のタイムゾーン解決と検証
           - kind: implementation
-            path: src/register-item.ts
-            purpose: 個票Frontmatter正本の読込・更新・検証と一覧値の導出
-          - kind: implementation
-            path: src/register-history.ts
-            purpose: 個票のGit履歴から登録項目単位の変更履歴を再構成する処理
-          - kind: implementation
-            path: src/exec-register.ts
-            purpose: 登録簿項目を実行タスクとして扱う経路
-          - kind: implementation
-            path: src/register-date.ts
-            purpose: 登録日・完了日のタイムゾーン解決と検証
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達する登録簿項目を実行タスクとして扱う経路
         depends_on:
           - cdfd-init
         note: 廃止済み。新規参照は cdfd-register-lifecycle を使用する。
@@ -112,24 +100,15 @@ groups:
         name: 概念データフロー図（登録簿ライフサイクル）
         kind: work
         overview: 立ち上げ時の未整理事項と運用中の計画外事項を個票へ登録し、判断・実行・待機・レビュー・承認・終了・再開、派生ビュー生成・履歴確認と例外復旧まで継続管理する流れを可視化し定義する
-        path: cdfd-register-lifecycle.md
+        path: /docs/ja/product/trash/cdfd-register-lifecycle.md
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
           - kind: implementation
             path: src/register.ts
-            purpose: 登録簿項目の生成・状態遷移・派生ビュー更新・ID競合復旧
+            purpose: register コマンド入口から到達する登録簿項目の生成・状態遷移・派生ビュー更新・ID競合復旧、個票Frontmatter正本の読込・更新・検証と一覧値の導出、個票のGit履歴から登録項目単位の変更履歴を再構成する処理、登録日・完了日のタイムゾーン解決と検証
           - kind: implementation
-            path: src/register-item.ts
-            purpose: 個票Frontmatter正本の読込・更新・検証と一覧値の導出
-          - kind: implementation
-            path: src/register-history.ts
-            purpose: 個票のGit履歴から登録項目単位の変更履歴を再構成する処理
-          - kind: implementation
-            path: src/exec-register.ts
-            purpose: 登録簿項目を実行タスクとして扱う経路
-          - kind: implementation
-            path: src/register-date.ts
-            purpose: 登録日・完了日のタイムゾーン解決と検証
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達する登録簿項目を実行タスクとして扱う経路
         depends_on:
           - cdfd-init
         note: cdfd-register-operation（廃止済み）の後継。id-and-file-naming-standard.md 9.2 経路B に従い、実績は initial_state.completed_deliverables で引き継ぐ。
@@ -150,18 +129,18 @@ groups:
         name: 概念データフロー図（カタログ〜計画展開）
         kind: work
         overview: 成果物カタログとスケジュール戦略を検証し、Scheduleと実行状態・Ready・CPM・timelineへ展開する流れを可視化し定義する
-        path: cdfd-catalog-planning.md
+        path: /docs/ja/product/trash/cdfd-catalog-planning.md
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/catalog-build.ts
-            purpose: 成果物カタログの検証・表示ビュー生成
+            path: src/catalog.ts
+            purpose: catalog コマンド入口から到達する成果物カタログの検証・表示ビュー生成
           - kind: implementation
-            path: src/schedule-build.ts
-            purpose: カタログと戦略からScheduleへ展開する処理
+            path: src/schedule.ts
+            purpose: schedule コマンド入口から到達するカタログと戦略からScheduleへ展開する処理
           - kind: implementation
-            path: src/exec-schedule.ts
-            purpose: Scheduleから実行状態・CPM・timelineへ展開する処理
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達するScheduleから実行状態・CPM・timelineへ展開する処理
         depends_on:
           - cdfd-init
         done_criteria:
@@ -178,24 +157,12 @@ groups:
         name: 概念データフロー図（タスク実行ライフサイクル）
         kind: work
         overview: Readyタスクの選択・claimからhuman/agentによる実行、レビュー・ready確定、完了記録、中断・訂正・再実行までの流れを可視化し定義する
-        path: cdfd-task-execution.md
+        path: /docs/ja/product/trash/cdfd-task-execution.md
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/exec-run.ts
-            purpose: agent・humanタスクの実行制御と結果処理
-          - kind: implementation
-            path: src/exec-run-lock.ts
-            purpose: project単位の実行排他とbusy時の方針
-          - kind: implementation
-            path: src/exec-events.ts
-            purpose: claim・complete・block等の状態イベント処理
-          - kind: implementation
-            path: src/exec-worktree.ts
-            purpose: task worktreeの作成・依存導入・統合制御
-          - kind: implementation
-            path: src/exec-worktree-ops.ts
-            purpose: worktreeでの変更許可・commit・統合境界
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達するagent・humanタスクの実行制御と結果処理、project単位の実行排他とbusy時の方針、claim・complete・block等の状態イベント処理、task worktreeの作成・依存導入・統合制御、worktreeでの変更許可・commit・統合境界
         depends_on:
           - cdfd-catalog-planning
         done_criteria:
@@ -217,15 +184,15 @@ groups:
         name: 概念データフロー図（定期処理）
         kind: work
         overview: routine定義とdue判定に基づき、既存の登録項目・Scheduleタスク、順次実行cycle、またはJobから生成した実行単位を起動し結果を反映する流れを可視化し定義する
-        path: cdfd-routine.md
+        path: /docs/ja/product/trash/cdfd-routine.md
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
           - kind: implementation
             path: src/routine.ts
             purpose: routineのdue判定・委譲・実行結果更新
           - kind: implementation
-            path: src/exec-run.ts
-            purpose: resume・状態再計算・autoを単一ロック内で順次実行するcycle制御
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達するresume・状態再計算・autoを単一ロック内で順次実行するcycle制御
           - kind: implementation
             path: src/job.ts
             purpose: Job Definition検証・Job Run生成・checkpoint更新
@@ -246,15 +213,12 @@ groups:
         name: 概念データフロー図（複数プロジェクト・ブランチ並行処理）
         kind: work
         overview: project develop・feature・execの各ブランチとworktreeを用いて複数プロジェクト・タスクを分離し、同期・統合する流れを可視化し定義する
-        path: cdfd-multi-project.md
+        path: /docs/ja/product/trash/cdfd-multi-project.md
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/exec-project.ts
-            purpose: プロジェクト単位の実行ブランチ・worktree制御
-          - kind: implementation
-            path: src/exec-worktree.ts
-            purpose: タスクworktreeの作成・同期・後片付け
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達するプロジェクト単位の実行ブランチ・worktree制御、タスクworktreeの作成・同期・後片付け
         depends_on:
           - cdfd-init
         done_criteria:
@@ -271,15 +235,12 @@ groups:
         name: 概念データフロー図（agent・provider構成の運用変更）
         kind: work
         overview: 作業要件と実行結果に応じてagent・provider・phaseの構成を評価し、承認・変更・検証する流れを可視化し定義する
-        path: cdfd-agent-config-operation.md
+        path: /docs/ja/product/trash/cdfd-agent-config-operation.md
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/exec-agent-config.ts
-            purpose: agent・provider設定の解決とコマンド生成
-          - kind: implementation
-            path: src/exec-strategy.ts
-            purpose: phaseの実行要件とapproachの解決
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達するagent・provider設定の解決とコマンド生成、phaseの実行要件とapproachの解決
         depends_on:
           - cdfd-task-execution
         done_criteria:
@@ -299,21 +260,21 @@ groups:
         name: 概念データフロー図（成果物・派生ビュー・索引生成）
         kind: work
         overview: カタログ・登録簿・実行状態などの正本から、成果物本体・表示ビュー・YAML表示ページ・文書索引を生成し同期する流れを可視化し定義する
-        path: cdfd-derived-content.md
+        path: /docs/ja/product/trash/cdfd-derived-content.md
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
           - kind: implementation
             path: src/build-command.ts
             purpose: 派生生成コマンド全体の起動順序
           - kind: implementation
-            path: src/catalog-generate.ts
-            purpose: カタログから成果物雛形を生成する処理
+            path: src/catalog.ts
+            purpose: catalog コマンド入口から到達するカタログから成果物雛形を生成する処理
           - kind: implementation
-            path: src/doc-index.ts
-            purpose: 文書索引の収集・生成処理
+            path: src/index-command.ts
+            purpose: index コマンド入口から到達する文書索引の収集・生成処理
           - kind: implementation
-            path: src/yaml-pages.ts
-            purpose: YAML正本から表示ページを生成する処理
+            path: src/yaml-pages-command.ts
+            purpose: yaml-pages コマンド入口から到達するYAML正本から表示ページを生成する処理
         depends_on:
           - cdfd-register-lifecycle
           - cdfd-catalog-planning
@@ -332,21 +293,15 @@ groups:
         name: 概念データフロー図（進捗監視・報告・ログ管理）
         kind: work
         overview: 実行状態・CPM・マイルストーン・登録簿を監視し、遅延や滞留を検知して進捗報告・議事録・管理ログへ反映する流れを可視化し定義する
-        path: cdfd-reporting.md
+        path: /docs/ja/product/trash/cdfd-reporting.md
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/exec-task-view.ts
-            purpose: Ready・doing等の実行状態ビュー生成
-          - kind: implementation
-            path: src/exec-schedule-cpm.ts
-            purpose: CPM・余裕時間・クリティカルパスの計算
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達するReady・doing等の実行状態ビュー生成、CPM・余裕時間・クリティカルパスの計算
           - kind: implementation
             path: src/register.ts
-            purpose: 登録簿から課題・リスク・決定等の管理ビューを生成する処理
-          - kind: implementation
-            path: src/register-history.ts
-            purpose: 登録項目の追加・変更・削除と状態遷移の監査履歴を再構成する処理
+            purpose: register コマンド入口から到達する登録簿から課題・リスク・決定等の管理ビューを生成する処理、登録項目の追加・変更・削除と状態遷移の監査履歴を再構成する処理
         depends_on:
           - cdfd-register-lifecycle
           - cdfd-task-execution
@@ -368,18 +323,15 @@ groups:
         name: 概念データフロー図（非推奨化・保管）
         kind: work
         overview: 役割を終えた、または新IDへ引き継がれた文書を非推奨化し、id・Schedule taskIDを維持したまま誤参照を防ぐ保管場所へ移す流れを可視化し定義する
-        path: cdfd-deprecation.md
+        path: /docs/ja/product/trash/cdfd-deprecation.md
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/deliverable-trash.ts
-            purpose: 非推奨化した成果物ファイルのtrashディレクトリへの移動とカタログpath書き換え
+            path: src/deliverable.ts
+            purpose: deliverable コマンド入口から到達する非推奨化した成果物ファイルのtrashディレクトリへの移動とカタログpath書き換え、frontmatterのspecdojo名前空間・status読込
           - kind: implementation
-            path: src/catalog-paths.ts
-            purpose: base_path・pathの解決規則
-          - kind: implementation
-            path: src/frontmatter-namespace.ts
-            purpose: frontmatterのspecdojo名前空間・status読込
+            path: src/catalog.ts
+            purpose: catalog コマンド入口から到達するbase_path・pathの解決規則
         depends_on:
           - cdfd-init
         done_criteria:
@@ -395,3 +347,248 @@ groups:
           - text: 非推奨化の承認境界と、恒久的な削除・復元の方針が本領域の対象外として未定義のままであることを承認できること
             roles: [PO]
             viewpoint: vp-po-decision-readiness
+  - name: プロセスグループ別 CDFD
+    deliverables:
+      - local_id: cdfd-onboarding
+        name: 概念データフロー図（Onboarding）
+        kind: work
+        overview: SpecDojo を導入して Kata を配置し、その雛形から稼働構成の初期状態を整える Onboarding グループ（P-01）の領域内プロセス、起点イベント、例外・復旧、データストアの読み書きを定義する
+        path: cdfd-onboarding.md
+        rulebook: specdojo:cdfd-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/specdojo-config.ts
+            purpose: specdojo.config.json の読込と初期化
+          - kind: implementation
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達するprovider 別の agent 定義・設定の雛形配置
+          - kind: implementation
+            path: src/catalog.ts
+            purpose: catalog コマンド入口から到達する成果物カタログの雛形生成
+          - kind: implementation
+            path: src/register.ts
+            purpose: 登録簿の初期化（scaffold）
+        depends_on:
+          - cdfd-overview
+        note: 全体概要の Onboarding（P-01）を詳細化する。repository からの導入、既存プロジェクトへの導入、Detached Unit の複数ケースを扱う。旧 cdfd-init は参照しない
+        done_criteria:
+          - text: 全体概要の P-01 の主要入力・主要出力・データストアが「プロセス領域」章で矛盾なく詳細化され、Kata の配置と稼働構成の初期化がプロセス単位で確認できること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 各プロセスの起動条件、読み書きするデータストア（Kata、稼働構成）、生成先が識別でき、後続の Plan への引き渡しがグループ外委譲として示されていること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 既存設定の検出、雛形の不足、権限不足など、成果の採否を変える主要例外の検出条件と再開条件が判定できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+      - local_id: cdfd-plan
+        name: 概念データフロー図（Plan）
+        kind: work
+        overview: 登録簿定義、成果物カタログ定義、スケジュール計画展開、定期実行定義、ジョブ定義からなる Plan グループ（P-02〜P-06）の領域内プロセス、起点イベント、例外・復旧、データストアの読み書きを定義する
+        path: cdfd-plan.md
+        rulebook: specdojo:cdfd-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/register.ts
+            purpose: 登録項目の起票・更新・状態遷移
+          - kind: implementation
+            path: src/catalog.ts
+            purpose: catalog コマンド入口から到達する成果物カタログの検証と派生生成
+          - kind: implementation
+            path: src/schedule.ts
+            purpose: schedule コマンド入口から到達する成果物カタログとスケジュール戦略からの track 生成、intent と Kata grade からの approach 導出
+          - kind: implementation
+            path: src/routine.ts
+            purpose: 定期実行定義の検証と due 判定
+          - kind: implementation
+            path: src/job.ts
+            purpose: ジョブ定義の検証と Job Run の生成
+        depends_on:
+          - cdfd-overview
+        note: 5 領域を含むため、概念データフローは領域ごとに分ける。定期実行の起動は Orchestrator の責務であり本書では扱わない。旧 cdfd-register-lifecycle・cdfd-catalog-planning・cdfd-routine は参照しない
+        done_criteria:
+          - text: 全体概要の P-02〜P-06 の主要入力・主要出力・データストアが「プロセス領域」章で領域ごとに矛盾なく詳細化されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 登録簿、成果物カタログ、スケジュール戦略、Schedule（track）、実行計画、定期実行定義、ジョブ定義への読み書きがプロセス単位で識別でき、名称が全体概要の「データストア」と一致していること
+            roles: [ARC]
+            viewpoint: vp-arc-cross-document-consistency
+          - text: 登録項目の状態の定義と遷移を本書で再定義せず、STSD への参照に留めていること
+            roles: [ARC]
+            viewpoint: vp-arc-document-structure
+          - text: カタログ検証の失敗、依存の循環、strategy と Kata grade の不整合など、後続起動を変える主要例外の検出条件と再開条件が判定できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+      - local_id: cdfd-do
+        name: 概念データフロー図（Do）
+        kind: work
+        overview: 実行計画に基づいて人または AI Agent が Kata を参照してタスクを実行し、成果物と実行記録を残す Do グループ（P-07）の領域内プロセス、起点イベント、例外・復旧、データストアの読み書きを定義する。定期実行・ジョブ・並行実行はタスク実行の実行形態として扱う
+        path: cdfd-do.md
+        rulebook: specdojo:cdfd-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達するplan の生成、agent の起動、result の記録、状態遷移、worktree による並行実行と統合、agent が変更できない設定の保護、保護対象の変更を申し送りへ記録
+        depends_on:
+          - cdfd-overview
+        note: 全体概要の Do（P-07）を詳細化する。executor / reporter pipeline、worktree 隔離、保護機構による block と申し送りを主要例外として扱う。旧 cdfd-task-execution・cdfd-multi-project は参照しない
+        done_criteria:
+          - text: 全体概要の P-07 の主要入力・主要出力・データストアが「プロセス領域」章で矛盾なく詳細化され、Schedule task・登録項目・Job のいずれを対象にしても同じプロセスで説明できること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 実行計画、Kata、稼働構成、成果物、登録簿、実行記録への読み書きがプロセス単位で識別でき、worktree 隔離と統合ブランチへの merge が並行実行の形態として示されていること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 利用制限、保護対象の変更、検証失敗、統合失敗など、成果の採否と再開位置を変える主要例外の検出条件と再開条件が判定できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+          - text: 人間が担う判断（承認、完了確定）を AI Agent の自動処理として表していないこと
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+      - local_id: cdfd-check
+        name: 概念データフロー図（Check）
+        kind: work
+        overview: 成果物評価、進捗可視化報告、派生生成閲覧提供からなる Check グループ（P-08〜P-10）の領域内プロセス、起点イベント、例外・復旧、データストアの読み書きを定義する
+        path: cdfd-check.md
+        rulebook: specdojo:cdfd-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/grade.ts
+            purpose: Kata と成果物の評価、done_criteria の判定、content_hash による変更検知
+          - kind: implementation
+            path: src/dashboard.ts
+            purpose: 進捗ダッシュボードの生成
+          - kind: implementation
+            path: src/build-command.ts
+            purpose: 派生生成の一括実行
+          - kind: implementation
+            path: src/index-command.ts
+            purpose: index コマンド入口から到達する文書索引の生成
+        depends_on:
+          - cdfd-overview
+        note: 全体概要の Check（P-08〜P-10）を詳細化する。成果物評価（grade）と review の責務分担を明示する。旧 cdfd-reporting・cdfd-derived-content は参照しない
+        done_criteria:
+          - text: 全体概要の P-08〜P-10 の主要入力・主要出力・データストアが「プロセス領域」章で領域ごとに矛盾なく詳細化されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 評価結果、進捗報告、派生ビュー・索引の生成先と、成果物・実行記録・登録簿・Schedule（track）からの参照がプロセス単位で識別できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 評価対象の変更検知、評価の失敗、生成物の不整合など、Action への引き渡しを変える主要例外の検出条件と再開条件が判定できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+      - local_id: cdfd-action
+        name: 概念データフロー図（Action）
+        kind: work
+        overview: タスク完了、稼働構成管理、非推奨化保管からなる Action グループ（P-11〜P-13）の領域内プロセス、起点イベント、例外・復旧、データストアの読み書きを定義する
+        path: cdfd-action.md
+        rulebook: specdojo:cdfd-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達する登録項目の review と close の遷移、agent・provider・実行既定値の稼働構成
+          - kind: implementation
+            path: src/deliverable.ts
+            purpose: deliverable コマンド入口から到達する非推奨化した成果物の trash への退避
+        depends_on:
+          - cdfd-overview
+        note: 全体概要の Action（P-11〜P-13）を詳細化する。完了確定、構成変更の承認、非推奨化の判断は人間が担う。旧 cdfd-agent-config-operation・cdfd-deprecation は参照しない
+        done_criteria:
+          - text: 全体概要の P-11〜P-13 の主要入力・主要出力・データストアが「プロセス領域」章で領域ごとに矛盾なく詳細化されていること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 完了記録、稼働構成、Kata のバージョン、成果物カタログ、保管庫への更新がプロセス単位で識別でき、Plan への再計画要求がグループ外委譲として示されていること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 完了確定、構成変更の承認、非推奨化の判断が人間の判断として表され、承認境界が承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+      - local_id: cdfd-orchestrator
+        name: 概念データフロー図（Orchestrator）
+        kind: work
+        overview: Plan・Do・Check・Action へ要求を発行して PDCA を回す Orchestrator グループ（P-14）の領域内プロセス、起点イベント、例外・復旧、データストアの読み書きを定義する。参加者の意図に基づく対話型の運転と、定期実行定義に基づく自動運転を含む
+        path: cdfd-orchestrator.md
+        rulebook: specdojo:cdfd-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/routine.ts
+            purpose: 定期実行の due 判定と起動、routine-state の記録
+          - kind: implementation
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達するauto 実行と Ready task の選択
+          - kind: implementation
+            path: .claude/agents/specdojo-orchestrator.md
+            purpose: 対話型オーケストレーターの入口指示
+        depends_on:
+          - cdfd-plan
+          - cdfd-do
+          - cdfd-check
+          - cdfd-action
+        note: 全体概要の Orchestrator（P-14）を詳細化する。各グループの内部処理は担当せず、要求の発行と実行状態の受け取りに限る。旧 cdfd-routine は参照しない
+        done_criteria:
+          - text: 全体概要の P-14 の主要入力・主要出力・データストアが「プロセス領域」章で矛盾なく詳細化され、対話型運転と自動運転が同じ要求発行のプロセスで説明できること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 稼働構成、成果物カタログ、スケジュール戦略、定期実行定義、実行計画、実行記録への読み書きと、Plan・Do・Check・Action への要求がグループ外委譲として識別できること
+            roles: [ARC]
+            viewpoint: vp-arc-technical-constraints
+          - text: 実行ロックの競合、定期実行の取りこぼし、要求先の失敗など、サイクルの継続を変える主要例外の検出条件と再開条件が判定できること
+            roles: [QE]
+            viewpoint: vp-qe-verifiability
+  - name: ユースケース別 CDFD
+    deliverables:
+      - local_id: cdfd-uc-register
+        name: 概念データフロー図（登録簿起票から完了まで）
+        kind: work
+        overview: 登録項目の起票から、対応、評価、完了記録までの Plan → Do → Check → Action の順序と引き渡し条件を定義する。グループ内部のプロセスは再掲しない
+        path: cdfd-uc-register.md
+        rulebook: specdojo:cdfd-uc-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達する登録項目を対象とする exec run の遷移
+        depends_on:
+          - cdfd-plan
+          - cdfd-do
+          - cdfd-check
+          - cdfd-action
+        note: 全体概要のケース C-01 を詳細化する
+        done_criteria:
+          - text: 起票から完了記録までの各引き渡しについて、送り元グループ、受け側グループ、引き渡す情報、引き渡し条件、戻す条件が表で確認できること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 引き渡し条件を満たさない場合の戻り先がグループ単位で示され、グループ内部の例外を扱っていないこと
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: 完了記録を人間が確定する境界が承認できること
+            roles: [PO]
+            viewpoint: vp-po-decision-readiness
+      - local_id: cdfd-uc-deliverable
+        name: 概念データフロー図（成果物の作成から完了まで）
+        kind: work
+        overview: 成果物カタログの定義からタスク展開、実行、評価、完了記録までの Plan → Do → Check → Action の順序と引き渡し条件を定義する。グループ内部のプロセスは再掲しない
+        path: cdfd-uc-deliverable.md
+        rulebook: specdojo:cdfd-uc-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/schedule.ts
+            purpose: schedule コマンド入口から到達する成果物カタログから Schedule task への展開
+          - kind: implementation
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達するSchedule task を対象とする実行と完了
+        depends_on:
+          - cdfd-plan
+          - cdfd-do
+          - cdfd-check
+          - cdfd-action
+        note: 全体概要のケース C-02 を詳細化する
+        done_criteria:
+          - text: カタログ定義から完了記録までの各引き渡しについて、送り元グループ、受け側グループ、引き渡す情報、引き渡し条件、戻す条件が表で確認できること
+            roles: [BA]
+            viewpoint: vp-ba-requirements-completeness
+          - text: 引き渡し条件を満たさない場合の戻り先がグループ単位で示され、グループ内部の例外を扱っていないこと
+            roles: [QE]
+            viewpoint: vp-qe-omissions-consistency
+          - text: レビューによる確定と grade による評価の責務分担が引き渡し条件として区別できること
+            roles: [ARC]
+            viewpoint: vp-arc-cross-document-consistency

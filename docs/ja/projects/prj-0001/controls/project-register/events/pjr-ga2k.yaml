@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_7430da9a2dd047ddb990cdc01967402f
+  ts: "2026-08-31T12:41:15Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: routine の action で複数段の順次実行を可能にする
+    - field: description
+      from: ""
+      to: routine の action は単一オブジェクトのみを受け付けるため、複数の処理を順に実行できない。grade を段階的に回す運用では、リファレンスありで評価し、続いてリファレンスなしで失敗分を拾い、最後に条件を満たしたものだけを高性能 agent で確認する流れが要る。cron の時刻をずらす方法では実行時間が読めず順序を保証できない。実測では1件あたり 5 分から 11 分かかり、失敗時の再試行でさらに延びる。action を oneOf で配列も受け付ける形へ拡張し、配列の場合は先頭から順に実行する。既存の 6 件はすべて単一であり、rulebook frontmatter の sample と同じく単一を基本として配列も許容する形とすることで移行を不要にする。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-08-31"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_d107df2705f1478ebbae89c96a934a5a
+  ts: "2026-08-31T12:47:16Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_7430da9a2dd047ddb990cdc01967402f
+- v: 1
+  id: reg_8efc4ba544e743cd952e68ab903fd249
+  ts: "2026-08-31T13:09:47Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_d107df2705f1478ebbae89c96a934a5a
+- v: 1
+  id: reg_64d52886a5424d1a850d27b943a473eb
+  ts: "2026-08-31T13:45:20Z"
+  action: close
+  actor: manual
+  from_status: review
+  to_status: done
+  reason: 実装・検証・レビューが完了したため
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-08-31"
+    - field: conclusion
+      from: "-"
+      to: routine の action を oneOf で単一オブジェクトと配列の双方を受け付ける形へ拡張した。配列の場合は先頭から順に全段を実行し、段ごとに異なる kind と引数をそのまま委譲する。途中で失敗や skip が生じても後続を続行し、全体結果と段別結果を記録する。単一 action の実行経路と state 形式は維持したため、既存 routine 6 件の移行は不要である。キー名は単数形のままとし、単一を基本として配列も許容する rulebook frontmatter の sample と同じ形に揃えた。
+  previous_event_id: reg_8efc4ba544e743cd952e68ab903fd249

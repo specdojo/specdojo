@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_45018bd5475a494eb8afb0078fbf808a
+  ts: "2026-09-23T10:57:26Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-7VKR の棚卸しで未公開が判明
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: "@specdojo/docs-lint を npm へ公開できるようにする"
+    - field: description
+      from: ""
+      to: README と quick-start-guide が npm install --save-dev @specdojo/docs-lint を案内しているが、パッケージは未公開で .github/workflows には packages 配下を publish する経路が無い。publish-specdojo.yml と同型の workflow を追加し、npm 側の trusted publisher 設定を登録して 0.1.0 を公開する。scoped package のため --access public が要る。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: OPS
+    - field: registered
+      from: ""
+      to: "2026-09-23"
+    - field: due
+      from: ""
+      to: "2026-10-03"

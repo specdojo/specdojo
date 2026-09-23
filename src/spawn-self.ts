@@ -22,3 +22,9 @@ export function selfRunArgs(subArgs: string[]): [string, string[]] {
   // npx tsx as last resort (slower first-run)
   return ["npx", ["tsx", script, ...subArgs]];
 }
+
+/** POSIX shell command prefix that re-invokes the exact CLI entry used by this process. */
+export function selfRunCommand(): string {
+  const [executable, args] = selfRunArgs([]);
+  return [executable, ...args].map((value) => `'${value.replaceAll("'", `'\\''`)}'`).join(" ");
+}

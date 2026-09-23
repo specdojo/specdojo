@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-09-15T22:30:33Z",
+  "type": "claim",
+  "task_id": "T-DATA-FLOW-PDCA-cdfd-uc-register-010",
+  "by": "codex-expert-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "BA"
+  }
+}

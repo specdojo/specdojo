@@ -32,17 +32,17 @@ SpecDojo のシステム設計情報と、コード・設定ファイルを正�
 | Register State | Register item files | `docs/ja/projects/prj-0001/controls/project-register/` | PM | 個票が正本、一覧は派生ビュー |
 | Execution State | Plan / result / event | `docs/ja/projects/prj-0001/execution/` | PM / ARC | eventはappend-only |
 | Job / Routine | TypeScript source and definitions | `src/job.ts`、`src/routine.ts` | DEV / OPS | Job Run生成と定期起動 |
-| Documentation Site | VitePress configuration | `.vitepress/` | DEV | 文書索引・表示・build |
+| Documentation Site | VitePress configuration | `packages/docs-site/` | DEV | CLIとは独立した文書索引・表示・build package |
 | Git Integration | Git source and repository policy | `src/exec-worktree.ts`、`src/exec-worktree-ops.ts`、`.github/` | DEV / ARC | branch / worktree / PR境界 |
 
 ## 3. 自動生成物
 
-| 生成物             | 入力SSOT               | 生成コマンド              | 生成先                          | 更新方式          |
-| ------------------ | ---------------------- | ------------------------- | ------------------------------- | ----------------- |
-| 文書索引           | Markdown Frontmatter   | `npm run docs:index`      | VitePress参照用索引             | コマンド生成      |
-| ドキュメントサイト | `docs/`、`.vitepress/` | `npm run docs:build`      | VitePress build出力             | CI / ローカル検証 |
-| Ready / CPM        | Schedule、event        | `specdojo exec refresh`   | projectの`execution/generated/` | 実行前再生成      |
-| 登録簿ビュー       | 登録項目個票           | `specdojo register build` | projectの`generated/`           | 必要時再生成      |
+| 生成物             | 入力SSOT                       | 生成コマンド              | 生成先                               | 更新方式          |
+| ------------------ | ------------------------------ | ------------------------- | ------------------------------------ | ----------------- |
+| 文書索引           | Markdown Frontmatter           | `npm run docs:index`      | VitePress参照用索引                  | コマンド生成      |
+| ドキュメントサイト | `docs/`、`packages/docs-site/` | `npm run docs:build`      | `packages/docs-site/.vitepress/dist` | CI / ローカル検証 |
+| Ready / CPM        | Schedule、event                | `specdojo exec refresh`   | projectの`execution/generated/`      | 実行前再生成      |
+| 登録簿ビュー       | 登録項目個票                   | `specdojo register build` | projectの`generated/`                | 必要時再生成      |
 
 ## 4. 変更の入口
 

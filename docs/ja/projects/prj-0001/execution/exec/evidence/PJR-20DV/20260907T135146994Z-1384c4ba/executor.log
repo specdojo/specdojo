@@ -1,0 +1,14 @@
+実装を完了しました。
+
+- `stableContentHash` に改行、行末空白、連続空行の正規化を追加。
+- Prettier 整形後も `--changed-only` が誤検出しない回帰テストを追加。
+- メタデータ標準、コマンドリファレンス、PJR-20DV 個票を更新。
+- result ファイルと登録簿ステータスは未変更です。
+- 全件再評価と件数再集計は、新方式での再評価時に実施する運用作業として記録しました。
+- 親 runner 担当の unit・integration・schema 検証は実行していません。
+
+`npx tsx` は sandbox の IPC 制約で失敗しましたが、同じ処理を `node --import tsx` で実行し、登録簿生成・索引生成・カタログ検証はいずれも成功しています。
+
+<specdojo_executor_evidence>
+{"final_message":"content_hashの空白正規化、回帰テスト、仕様文書と個票の更新を完了","validations":[{"command":"npx prettier --write src/grade.ts tests/src/grade.test.ts docs/ja/specdojo/standards/document-metadata-standard.md docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-20dv-grade-content-hash-normalization.md","status":"passed","summary":"対象5ファイルを整形"},{"command":"npx markdownlint docs/ja/specdojo/standards/document-metadata-standard.md docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-20dv-grade-content-hash-normalization.md","status":"passed","summary":"Markdownエラーなし"},{"command":"npm run typecheck","status":"passed","summary":"TypeScript型検査成功"},{"command":"npx tsx src/specdojo.ts register build","status":"failed","summary":"sandboxのIPCソケット作成制約によりlisten EPERM"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"代替起動で登録簿生成成功"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1542件の文書索引を生成"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"検証成功。既存のbased_on欠落警告のみ"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>

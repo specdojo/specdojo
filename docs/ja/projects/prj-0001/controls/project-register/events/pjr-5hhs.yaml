@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ec1f448ba8bc4ce5a8d0747dbaa5a128
+  ts: "2026-09-07T22:56:34Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 統合後に exec ブランチが削除されず蓄積する
+    - field: description
+      from: ""
+      to: "exec run --worktree の統合後に exec/prj-0001-PJR-XXXX ブランチが残る。worktree は削除されているがブランチだけが残存し、8 本が蓄積していた。removeWorktree は deleteBranch パラメータを持ち exec-run.ts の 2 箇所で true を設定しているが、実際には削除されていない。deleteBranch: true は 2026-08-01 に導入済みで、残存ブランチはすべて 2026-09-01 以降のものである。git branch -d が統合前に実行されて未統合として失敗している可能性がある。どれが未統合か判別しにくくなり、残骸の確認に手間がかかる。"
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-08"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_6ebde19efbac49a88fe033ceff5619f2
+  ts: "2026-09-10T03:57:20Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_ec1f448ba8bc4ce5a8d0747dbaa5a128
+- v: 1
+  id: reg_d2aa960ac9404af2b65c5e90f2d80d8f
+  ts: "2026-09-10T04:16:20Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_6ebde19efbac49a88fe033ceff5619f2
+- v: 1
+  id: reg_7eaedf9b857e41eaa164dce86537377e
+  ts: "2026-09-10T11:45:03Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: exec worktree prune を新設し、worktree を持たない統合済み exec ブランチを検査・削除できるようにした。--dry-run で確認もできる。削除失敗時のログ出力と復旧案内も追加した。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-10"
+  previous_event_id: reg_d2aa960ac9404af2b65c5e90f2d80d8f

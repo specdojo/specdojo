@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-33SB",
+  "run_id": "20260912T072409205Z-578fa461",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "rate_limited",
+    "started_at": "2026-09-12T07:24:09.205Z",
+    "completed_at": "2026-09-12T07:31:57.592Z",
+    "exit_code": 1,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/040-system-design/sysd-job-execution.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-33sb-grade-recheck-skip-empty-selection.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/routine-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/job-definition-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/job.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/job.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/routine.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-run-inplace.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/job.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 12,
+    "summary": ".../040-system-design/sysd-job-execution.md        |  33 ++---\n .../pjr-33sb-grade-recheck-skip-empty-selection.md |  11 +-\n .../prj-0001/jobs/job-grade-deliverable.yaml       |  24 +++-\n docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml |  27 +++-\n docs/ja/specdojo/guides/routine-operation-guide.md |   6 +-\n .../specdojo/standards/job-definition-standard.md  |  10 ++\n docs/specdojo/schemas/v1/job.schema.yaml           |  14 +++\n src/exec-run.ts                                    |  13 ++\n src/job.ts                                         | 118 +++++++++++++++++-\n src/routine.ts                                     |   2 +-\n tests/src/exec-run-inplace.test.ts                 |  45 +++++++\n tests/src/job.test.ts                              | 137 ++++++++++++++++++++-\n 12 files changed, 413 insertions(+), 27 deletions(-)"
+  },
+  "validations": [],
+  "final_message": "",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-33SB/20260912T072409205Z-578fa461/executor.log",
+      "bytes": 65536,
+      "truncated": true
+    }
+  ]
+}

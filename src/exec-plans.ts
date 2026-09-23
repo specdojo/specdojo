@@ -1,5 +1,5 @@
 import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
-import { basename, join, relative } from "node:path";
+import { basename, join, relative, resolve } from "node:path";
 import { load } from "js-yaml";
 import { DEFAULT_PROJECT_CONTEXT, specdojoRootDir } from "./specdojo-config.js";
 import {
@@ -14,6 +14,7 @@ import { isDctPlanFileName } from "./catalog-plan.js";
 import { buildSpecdojoFrontmatter, readSpecdojoNamespace } from "./frontmatter-namespace.js";
 import { formatMarkdownFile } from "./exec-format.js";
 import { qualifyPracticeId, SPECDOJO_PRACTICE_AUTHORITY } from "./practice-id.js";
+import { resolveViewpointsDoc } from "./review-plan.js";
 import {
   expandTemplate,
   listFilesRecursive,
@@ -23,8 +24,11 @@ import {
 } from "./exec-shared.js";
 import type { Approach, ExecPlanMeta, ReadyTaskView, TaskMode, TaskOrigin } from "./exec-types.js";
 import type { CriteriaItem, DctDeliverableItem, DctDoc, DctSection } from "./catalog-types.js";
-import type { CoverageType, ReviewViewpoint, ReviewViewpointsDoc } from "./review-types.js";
+import type { CoverageType, ReviewViewpoint } from "./review-types.js";
 import type { RoleDefinition, RolesDoc } from "./role-types.js";
+import { readGradeResultForDocument, gradeResultPathForDocument } from "./grade-result.js";
+import { lookupDocIndex } from "./doc-index.js";
+import { resolveSpecdojoPath, resolveSpecdojoPathIfExists } from "./template-resolution.js";
 
 // ---------------------------------------------------------------------------
 // Internal types
@@ -163,22 +167,14 @@ export function resolveDeliverableTarget(catalogPath: string, value: string): Re
 
 function loadViewpoints(viewpointsPath: string): Map<string, ReviewViewpoint> {
   if (!viewpointsPath || !existsSync(viewpointsPath)) return new Map();
-  try {
-    const doc = load(readFileSync(viewpointsPath, "utf8")) as ReviewViewpointsDoc;
-    return new Map((doc.viewpoints ?? []).map((vp) => [vp.id, vp]));
-  } catch {
-    return new Map();
-  }
+  const doc = resolveViewpointsDoc(viewpointsPath);
+  return new Map((doc.viewpoints ?? []).map((vp) => [vp.id, vp]));
 }
 
 function loadCoverageTypes(viewpointsPath: string): Map<string, CoverageType> {
   if (!viewpointsPath || !existsSync(viewpointsPath)) return new Map();
-  try {
-    const doc = load(readFileSync(viewpointsPath, "utf8")) as ReviewViewpointsDoc;
-    return new Map((doc.coverage_types ?? []).map((ct) => [ct.id, ct]));
-  } catch {
-    return new Map();
-  }
+  const doc = resolveViewpointsDoc(viewpointsPath);
+  return new Map((doc.coverage_types ?? []).map((ct) => [ct.id, ct]));
 }
 
 function loadRoles(rolesPath: string | undefined): Map<string, RoleDefinition> {
@@ -229,7 +225,7 @@ function frontmatter(meta: ExecPlanMeta): string {
 // ---------------------------------------------------------------------------
 
 // レビュー観点 1 件ぶんの記述ブロック断片。prose ラベル（確認基準・チェック観点など）は
-// 言語別 docs/<lang>/.../templates のこの断片に置き、コードは値のみを供給する。
+// 言語別 docs/<lang>/.../exec-templates のこの断片に置き、コードは値のみを供給する。
 const REVIEW_VIEWPOINT_DETAIL_TEMPLATE = "xrp-viewpoint-detail-template.md";
 
 // Per-RVP fragment for a review *result* (section 1). Prose labels for result/evidence/notes
@@ -242,8 +238,12 @@ const REVIEW_RESULT_VIEWPOINT_DETAIL_TEMPLATE = "xrr-viewpoint-detail-template.m
 // files. Kept as a single fragment to avoid duplicating the rule across every plan template.
 const COMMON_CONVENTIONS_TEMPLATE = "xep-common-conventions-template.md";
 
-export function templatesDir(): string {
-  return join(specdojoRootDir(), "docs/ja/specdojo/templates");
+export function execTemplatesDir(): string {
+  return resolveSpecdojoPath("docs/ja/specdojo/exec-templates");
+}
+
+export function execTemplatePath(fileName: string): string {
+  return resolveSpecdojoPath(`docs/ja/specdojo/exec-templates/${fileName}`);
 }
 
 function templatePrefix(mode: TaskMode): string {
@@ -263,10 +263,12 @@ function approachTemplateFileName(mode: TaskMode, approach: Approach): string {
 // next candidate so a plan is always produced.
 function resolvePlanTemplatePath(mode: TaskMode, approach: Approach | undefined): string {
   if (approach) {
-    const candidatePath = join(templatesDir(), approachTemplateFileName(mode, approach));
-    if (existsSync(candidatePath)) return candidatePath;
+    const candidatePath = resolveSpecdojoPathIfExists(
+      `docs/ja/specdojo/exec-templates/${approachTemplateFileName(mode, approach)}`,
+    );
+    if (candidatePath) return candidatePath;
   }
-  return join(templatesDir(), standardTemplateFileName(mode));
+  return execTemplatePath(standardTemplateFileName(mode));
 }
 
 function readTemplate(templatePath: string, cache: Map<string, string>): string {
@@ -289,7 +291,7 @@ function loadPlanTemplate(
 }
 
 function loadViewpointDetailTemplate(cache: Map<string, string>): string {
-  return readTemplate(join(templatesDir(), REVIEW_VIEWPOINT_DETAIL_TEMPLATE), cache);
+  return readTemplate(execTemplatePath(REVIEW_VIEWPOINT_DETAIL_TEMPLATE), cache);
 }
 
 // Marker a plan template places to control where the shared conventions fragment lands.
@@ -310,10 +312,7 @@ export function injectCommonConventions(
   schemaRef: string,
   cache: Map<string, string>,
 ): string {
-  let conventions = readTemplate(
-    join(templatesDir(), COMMON_CONVENTIONS_TEMPLATE),
-    cache,
-  ).trimEnd();
+  let conventions = readTemplate(execTemplatePath(COMMON_CONVENTIONS_TEMPLATE), cache).trimEnd();
   conventions =
     schemaRef === MISSING
       ? conventions
@@ -340,17 +339,62 @@ function deliverableName(deliverable: DeliverableInfo | null): string {
   return deliverable?.deliverable.name ?? MISSING;
 }
 
+function gradeFindingsText(projectId: string, targetPath: string): string {
+  if (!targetPath || targetPath === MISSING || !existsSync(join(specdojoRootDir(), targetPath))) {
+    return "- なし";
+  }
+  try {
+    const result = readGradeResultForDocument({ documentPath: targetPath, project: projectId });
+    if (!result || result.findings.length === 0) return "- なし";
+    return result.findings
+      .map(
+        (finding) =>
+          `- ${finding.id} [${finding.severity}/${finding.rule}; line=${finding.line}; anchor=${JSON.stringify(finding.anchor)}]: ${finding.message}`,
+      )
+      .join("\n");
+  } catch {
+    return "- なし";
+  }
+}
+
+function gradeFindingTargetPath(
+  approach: Approach | undefined,
+  deliverable: DeliverableInfo | null,
+  refs: KataRefs,
+): string {
+  if (approach === "rulebook-maintenance") return refs.rulebook;
+  if (approach === "recipe-maintenance") return refs.recipe;
+  if (approach === "sample-maintenance") return refs.sample;
+  if (approach === "template-maintenance") return refs.template;
+  return deliverablePath(deliverable);
+}
+
+// plan に表示する実践の型の状態。宣言からパスを解決できたがファイルが無い場合と、
+// 宣言不足・対象外などでパス自体を解決できない場合を分ける。これにより executor は
+// 既存文書の編集、宣言済みパスへの新規作成、前提確認が必要な状態を推測せず判別できる。
+function kataRefState(refPath: string): "existing" | "missing" | "unresolved" {
+  if (refPath === MISSING) return "unresolved";
+  return existsSync(join(specdojoRootDir(), refPath)) ? "existing" : "missing";
+}
+
 // 対象成果物の depends_on を、依存先 doc の [[id]] 参照の入れ子リストで提示する。
-// id は project 修飾 doc id（<projectId>:<local_id>）にする。素の local_id は doc-index で
-// 解決しないため。agent へ plan を渡すときに expandPromptRefs（src/exec-run.ts, format:'path'）が
+// id は依存先の frontmatter、未作成なら配置規約から解決する。agent へ plan を渡すときに
+// expandPromptRefs（src/exec-run.ts, format:'path'）が
 // この [[id]] を doc-index 経由でリポジトリ相対パスへ展開し、agent が先行成果物を直接開ける。
 // テンプレート側はラベル直後にこの値を差し込むため、件数 0・成果物未解決時は先頭スペース付きの
 // インライン値、依存ありの場合は改行始まりの入れ子リストを返す。
-function deliverableDependsOn(deliverable: DeliverableInfo | null, projectId: string): string {
+function deliverableDependsOn(
+  deliverable: DeliverableInfo | null,
+  projectId: string,
+  catalogPath: string,
+): string {
   if (!deliverable) return ` ${MISSING}`;
   const deps = deliverable.deliverable.depends_on ?? [];
   if (deps.length === 0) return " -";
-  const lines = deps.map((dep) => `  - [[${projectId ? `${projectId}:${dep}` : dep}]]`);
+  const lines = deps.map((dep) => {
+    const info = findDeliverableInfo(catalogPath, dep);
+    return `  - [[${deliverableDocId(projectId, dep, info?.resolvedPath)}]]`;
+  });
   return `\n${lines.join("\n")}`;
 }
 
@@ -375,7 +419,11 @@ function projectContextSection(
 ): string {
   if (!deliverable || (approach && PROJECT_CONTEXT_EXCLUDED_APPROACHES.has(approach))) return "";
 
-  const targetId = qualifiedDocId(projectId, deliverable.deliverable.local_id);
+  const targetId = deliverableDocId(
+    projectId,
+    deliverable.deliverable.local_id,
+    deliverable.resolvedPath,
+  );
   const qualifiedRefs = [
     ...new Set(
       refs
@@ -487,7 +535,32 @@ function qualifiedDocId(projectId: string, localId: string): string {
   return projectId ? `${projectId}:${localId}` : localId;
 }
 
-// タスクが対象とする文書の doc id リスト。先頭は対象成果物（project 修飾 doc id）、
+// 成果物の doc id は、既存文書では frontmatter を正本とする。author 前など文書が
+// 未作成の場合は配置規約に従い、product 配下だけをローカル ID、projects 配下を含む
+// その他の配置を従来どおり project 修飾 ID とする。
+export function deliverableDocId(
+  projectId: string,
+  localId: string,
+  resolvedPath: string | undefined,
+): string {
+  if (resolvedPath) {
+    const absolutePath = resolve(specdojoRootDir(), resolvedPath);
+    if (existsSync(absolutePath)) {
+      try {
+        const id = readSpecdojoNamespace(readFileSync(absolutePath, "utf8")).id;
+        if (typeof id === "string" && id.trim()) return id.trim();
+      } catch {
+        // 読み取り不能・不正 frontmatter は配置によるフォールバックへ進む。
+      }
+    }
+
+    const normalizedPath = resolvedPath.replaceAll("\\", "/").replace(/^\/+/, "");
+    if (/^docs\/[a-z]{2}\/product(?:\/|$)/.test(normalizedPath)) return localId;
+  }
+  return qualifiedDocId(projectId, localId);
+}
+
+// タスクが対象とする文書の doc id リスト。先頭は対象成果物（配置に対応する doc id）、
 // 以降は approach に応じて変更・確定しうる実践の型の doc id。いずれも doc-index で
 // パスへ解決できる id にし、schedule やファイル名の命名規約に依存せず対象を機械的に
 // 取得できるようにする。解決できない実践の型（_MISSING_）は含めない。
@@ -502,7 +575,9 @@ function targetDocIds(
   if (!deliverable) {
     return fallbackLocalId ? [qualifiedDocId(projectId, fallbackLocalId)] : [];
   }
-  const ids = [qualifiedDocId(projectId, deliverable.deliverable.local_id)];
+  const ids = [
+    deliverableDocId(projectId, deliverable.deliverable.local_id, deliverable.resolvedPath),
+  ];
   const kinds = approach ? (TARGET_REF_KINDS[approach] ?? []) : [];
   if (kinds.length === 0) return ids;
   const refs = resolveKataRefs(deliverable.deliverable.rulebook, deliverable.deliverable.kind);
@@ -517,9 +592,13 @@ function targetDocIdsForTask(
   projectId: string,
   task: Pick<ReadyTaskView, "local_id" | "target_local_ids" | "approach">,
   deliverable: DeliverableInfo | null,
+  crossDeliverables: ReadonlyMap<string, DeliverableInfo>,
 ): string[] {
   if (task.target_local_ids && task.target_local_ids.length > 0) {
-    return [...new Set(task.target_local_ids)].map((localId) => qualifiedDocId(projectId, localId));
+    return [...new Set(task.target_local_ids)].map((localId) => {
+      const info = crossDeliverables.get(localId);
+      return deliverableDocId(projectId, localId, info?.resolvedPath);
+    });
   }
   return targetDocIds(projectId, deliverable, task.approach, task.local_id);
 }
@@ -561,9 +640,10 @@ export function targetDocIdsForScheduledTask(
   projectId: string,
 ): string[] | undefined {
   if (task.target_local_ids && task.target_local_ids.length > 0) {
-    const ids = [...new Set(task.target_local_ids)].map((localId) =>
-      qualifiedDocId(projectId, localId),
-    );
+    const ids = [...new Set(task.target_local_ids)].map((localId) => {
+      const info = findDeliverableInfo(catalogPath, localId);
+      return deliverableDocId(projectId, localId, info?.resolvedPath);
+    });
     return ids.length > 0 ? ids : undefined;
   }
   return targetDocIdsForDeliverable(catalogPath, task.local_id, projectId, task.approach);
@@ -573,17 +653,19 @@ function crossDeliverableTargetDetails(
   projectId: string,
   localIds: readonly string[],
   deliverables: Map<string, DeliverableInfo>,
+  catalogPath: string,
 ): string {
   const lines: string[] = [];
   for (const localId of localIds) {
     const info = deliverables.get(localId);
-    lines.push(`### ${qualifiedDocId(projectId, localId)}`);
+    const docId = deliverableDocId(projectId, localId, info?.resolvedPath);
+    lines.push(`### ${docId}`);
     lines.push("");
-    lines.push(`- document: [[${qualifiedDocId(projectId, localId)}]]`);
+    lines.push(`- document: [[${docId}]]`);
     lines.push(`- name: ${deliverableName(info ?? null)}`);
     lines.push(`- path: \`${deliverablePath(info ?? null)}\``);
     lines.push(`- overview: ${deliverableOverview(info ?? null)}`);
-    lines.push(`- depends_on:${deliverableDependsOn(info ?? null, projectId)}`);
+    lines.push(`- depends_on:${deliverableDependsOn(info ?? null, projectId, catalogPath)}`);
     lines.push("- done_criteria:");
     const criteria = info?.deliverable.done_criteria ?? [];
     if (criteria.length === 0) lines.push(`  - ${MISSING}`);
@@ -612,7 +694,7 @@ function reviewViewpointRows(criteria: CriteriaItem[]): string {
 // Per-RVP skeleton for a review result's section 1. Each block carries the role,
 // viewpoint_id and criterion as context so the result is self-contained, and leaves
 // result / evidence / notes as _TODO_ for the agent to fill. Prose labels live in the
-// detailTemplate (language-specific docs/<lang>/.../templates); code supplies only values.
+// detailTemplate (language-specific docs/<lang>/.../exec-templates); code supplies only values.
 export function reviewResultSections(criteria: CriteriaItem[], detailTemplate: string): string {
   if (criteria.length === 0) return MISSING;
   return criteria
@@ -640,7 +722,7 @@ export function reviewResultSectionsForDeliverable(
   const criteria = info?.deliverable.done_criteria ?? [];
   if (criteria.length === 0) return undefined;
   const detailTemplate = readTemplate(
-    join(templatesDir(), REVIEW_RESULT_VIEWPOINT_DETAIL_TEMPLATE),
+    execTemplatePath(REVIEW_RESULT_VIEWPOINT_DETAIL_TEMPLATE),
     new Map<string, string>(),
   );
   return reviewResultSections(criteria, detailTemplate);
@@ -747,7 +829,7 @@ export function reviewViewpointDetails(
 }
 
 // owner ロール視点の記述ガイドを構成するデータ値。prose ラベルや見出しは
-// テンプレート側（言語別 docs/<lang>/.../templates）に置き、ここでは値のみを供給する。
+// テンプレート側（言語別 docs/<lang>/.../exec-templates）に置き、ここでは値のみを供給する。
 type OwnerRoleFields = {
   // owner の Role code（role 名が pm-roles.yaml にあれば `code（name）` 形式）。
   label: string;
@@ -791,6 +873,7 @@ function buildEditPlanMarkdown(
   roleMap: Map<string, RoleDefinition>,
   vpMap: Map<string, ReviewViewpoint>,
   projectId: string,
+  catalogPath: string,
   projectContext: readonly string[],
   resultRef: string,
   stem: string,
@@ -798,7 +881,7 @@ function buildEditPlanMarkdown(
 ): string {
   const cpm = task.cpm;
   const onCriticalPath = cpm !== undefined && cpm.slack === 0;
-  const targets = targetDocIdsForTask(projectId, task, deliverable);
+  const targets = targetDocIdsForTask(projectId, task, deliverable, crossDeliverables);
 
   const meta: ExecPlanMeta = {
     id: execDocId(projectId, "xep", stem),
@@ -823,30 +906,39 @@ function buildEditPlanMarkdown(
     _TASK_ID_: task.id,
     _PHASE_DESCRIPTION_: phaseDescriptionText(task),
     _DELIVERABLE_NAME_: deliverableName(deliverable),
-    _DELIVERABLE_DEPENDS_ON_: deliverableDependsOn(deliverable, projectId),
+    _DELIVERABLE_DEPENDS_ON_: deliverableDependsOn(deliverable, projectId, catalogPath),
     _PROJECT_CONTEXT_: projectContextSection(projectContext, deliverable, task.approach, projectId),
     _DELIVERABLE_OVERVIEW_: deliverableOverview(deliverable),
     _IMPLEMENTATION_EVIDENCE_: implementationEvidence(deliverable),
     _DELIVERABLE_PATH_: deliverablePath(deliverable),
     _RESULT_REF_: resultRef,
     _RULEBOOK_REF_: refs.rulebook,
+    _RULEBOOK_STATE_: kataRefState(refs.rulebook),
     _RULEBOOK_INCLUDES_: rulebookIncludesText(
       deliverable?.deliverable.rulebook,
       deliverable?.deliverable.kind,
     ),
     _RECIPE_REF_: refs.recipe,
+    _RECIPE_STATE_: kataRefState(refs.recipe),
     _SAMPLE_REF_: refs.sample,
+    _SAMPLE_STATE_: kataRefState(refs.sample),
     _TEMPLATE_REF_: refs.template,
+    _TEMPLATE_STATE_: kataRefState(refs.template),
     _OWNER_ROLE_LABEL_: ownerRole.label,
     _OWNER_ROLE_NOTE_: ownerRole.note,
     _OWNER_ROLE_VIEWPOINTS_: ownerRole.viewpoints,
     _DONE_CRITERIA_GOALS_: doneCriteriaGoals(criteria, task.owner),
     _DONE_CRITERIA_CHECKLIST_: doneCriteriaChecklist(criteria),
     _DONE_CRITERIA_ITEMS_: doneCriteriaItems(criteria),
+    _GRADE_FINDINGS_: gradeFindingsText(
+      projectId,
+      gradeFindingTargetPath(task.approach, deliverable, refs),
+    ),
     _TARGET_DELIVERABLES_: crossDeliverableTargetDetails(
       projectId,
       task.target_local_ids ?? [],
       crossDeliverables,
+      catalogPath,
     ),
   };
   return expandTemplate(template, values);
@@ -861,6 +953,7 @@ function buildReviewPlanMarkdown(
   vpMap: Map<string, ReviewViewpoint>,
   coverageMap: Map<string, CoverageType>,
   projectId: string,
+  catalogPath: string,
   projectContext: readonly string[],
   resultRef: string,
   stem: string,
@@ -891,7 +984,7 @@ function buildReviewPlanMarkdown(
     _TASK_ID_: task.id,
     _PHASE_DESCRIPTION_: phaseDescriptionText(task),
     _DELIVERABLE_NAME_: deliverableName(deliverable),
-    _DELIVERABLE_DEPENDS_ON_: deliverableDependsOn(deliverable, projectId),
+    _DELIVERABLE_DEPENDS_ON_: deliverableDependsOn(deliverable, projectId, catalogPath),
     _PROJECT_CONTEXT_: projectContextSection(projectContext, deliverable, task.approach, projectId),
     _DELIVERABLE_OVERVIEW_: deliverableOverview(deliverable),
     _IMPLEMENTATION_EVIDENCE_: implementationEvidence(deliverable),
@@ -983,6 +1076,7 @@ async function writeTaskPlan(
           ctx.vpMap,
           ctx.coverageMap,
           ctx.projectId,
+          ctx.catalogPath,
           ctx.projectContext,
           resultRef,
           stem,
@@ -994,6 +1088,7 @@ async function writeTaskPlan(
           ctx.roleMap,
           ctx.vpMap,
           ctx.projectId,
+          ctx.catalogPath,
           ctx.projectContext,
           resultRef,
           stem,
@@ -1200,4 +1295,68 @@ export function parsePlanTaskIdentity(planContent: string): PlanTaskIdentity | n
     ...(origin ? { origin } : {}),
     ...(targets.length > 0 ? { targets } : {}),
   };
+}
+
+export function registerGradeFindingsText(projectId: string, ticketPath: string): string {
+  if (!existsSync(ticketPath)) return "- なし";
+  const content = readFileSync(ticketPath, "utf8");
+  const match =
+    content.match(/##\s+5\.\s+関連ドキュメント\s+([\s\S]*?)(?:##|$)/i) ||
+    content.match(/##\s+関連ドキュメント\s+([\s\S]*?)(?:##|$)/i);
+  if (!match) return "- なし";
+
+  const docsText = match[1];
+  const links = [...docsText.matchAll(/\[\[([a-zA-Z0-9:-]+)(?:\|[^\]]+)?\]\]/g)].map((m) => m[1]);
+
+  if (links.length === 0) return "- なし";
+
+  const docIndexPath = join(specdojoRootDir(), ".specdojo", "doc-index.json");
+  const MAX_DOCS = 10;
+  const MAX_FINDINGS = 20;
+
+  const lines: string[] = [];
+
+  let docCount = 0;
+  for (const id of links) {
+    if (docCount >= MAX_DOCS) {
+      lines.push(`- その他 ${links.length - MAX_DOCS} 件の文書は省略されました`);
+      break;
+    }
+
+    const targetPath = lookupDocIndex(id, docIndexPath);
+    if (!targetPath) continue;
+
+    const result = readGradeResultForDocument({ documentPath: targetPath, project: projectId });
+    if (!result || result.findings.length === 0) {
+      lines.push(`- [[${id}]]: finding なし`);
+      docCount++;
+      continue;
+    }
+
+    const sidecarPath = gradeResultPathForDocument({
+      documentPath: targetPath,
+      project: projectId,
+    });
+    // Use posix separators
+    const sidecarRel = relative(specdojoRootDir(), sidecarPath).replace(/\\/g, "/");
+    lines.push(`- [[${id}]] (サイドカー: \`${sidecarRel}\`):`);
+
+    let findingCount = 0;
+    for (const finding of result.findings) {
+      if (findingCount >= MAX_FINDINGS) {
+        lines.push(
+          `  - 他 ${result.findings.length - MAX_FINDINGS} 件の finding があります。詳細はサイドカーを参照してください。`,
+        );
+        break;
+      }
+      lines.push(
+        `  - [${finding.severity}/${finding.rule}; line=${finding.line}; anchor=${JSON.stringify(finding.anchor)}]: ${finding.message}`,
+      );
+      findingCount++;
+    }
+    docCount++;
+  }
+
+  if (lines.length === 0) return "- なし";
+  return lines.join("\n");
 }

@@ -1,0 +1,192 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/sch-strategy.schema.yaml
+kind: strategy
+id: prj-0001:sch-strategy-data-flow-pdca
+type: project
+status: ready
+title: スケジュール戦略（data-flow-pdca）
+rulebook: specdojo:sch-rulebook
+track: data-flow-pdca
+
+# sch-track-data-flow-pdca.yaml を生成するための戦略定義（PJR-6PD7）。
+# cdfd-overview の PDCA 構成に合わせたプロセスグループ別 CDFD 6 件とユースケース別 CDFD 2 件を、
+# 旧領域別 CDFD を参照せず cdfd-overview と現行実装（evidence_refs）から新規に作成する。
+# dct-data-flow.yaml のうち 8 件だけを local_ids で scope にする（PJR-S190）。
+# owner はロールのみを持ち、実際の実行者は pm-members.yaml と実行要件から解決する。
+
+settings:
+  start_date: "2026-09-16"
+
+scope:
+  catalogs:
+    - id: prj-0001:dct-data-flow
+      path: /docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml
+      local_ids:
+        - cdfd-onboarding
+        - cdfd-plan
+        - cdfd-do
+        - cdfd-check
+        - cdfd-action
+        - cdfd-orchestrator
+        - cdfd-uc-register
+        - cdfd-uc-deliverable
+  include_kinds:
+    - work
+
+approach_rules:
+  - local_ids:
+      - cdfd-onboarding
+      - cdfd-plan
+      - cdfd-do
+      - cdfd-check
+      - cdfd-action
+      - cdfd-orchestrator
+      - cdfd-uc-register
+      - cdfd-uc-deliverable
+    intent: author-deliverable
+
+phase_sets:
+  author-pass:
+    - id: author
+      name: cdfd-overview と Kata に基づく新規作成
+      execution: agent
+      mode: edit
+      approach: fully-guided
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: expert
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "010"
+      duration_days: 0.5
+      description: |
+        cdfd-overview の該当プロセスグループ（またはユースケース）の定義と、成果物カタログの
+        done_criteria・evidence_refs の現行実装を根拠に、rulebook / recipe / sample / template に
+        従って新規に作成する。trash へ退避した旧領域別 CDFD は参照しない。データストア名は
+        cdfd-overview の「データストア」と一致させ、凡例は「凡例（本プロダクト共通）」を参照する。
+        状態の定義と遷移は STSD を正本として参照に留める。
+
+  refine-pass:
+    - id: refine
+      name: 磨き込み・整合性確認
+      execution: agent
+      mode: edit
+      approach: fully-guided
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: normal
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "070"
+      duration_days: 0.25
+      description: |
+        整備済みの Kata と cdfd-overview、先行して作成した他のプロセスグループ別 CDFD を参照し、
+        草案を保守的に磨き込む。プロセス領域章の領域単位の入出力が cdfd-overview のグループ単位の
+        箇条書きと矛盾しないこと、表と図のプロセス ID・名称・データストアが一致すること、
+        グループ外委譲の参照先が実在することを確認し、不足や不整合だけを最小限修正して、
+        成果物カタログの done_criteria を満たす状態へ整える。
+
+  refine-2-pass:
+    - id: refine-2
+      name: grade の指摘を解消する磨き込み
+      execution: agent
+      mode: edit
+      approach: fully-guided
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: expert
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "075"
+      duration_days: 0.5
+      description: |
+        1 回目の磨き込みは normal 帯の agent が担い、rulebook・done_criteria との照合で不足を検出
+        できず成果物をほぼ変更しなかった。本パスは expert 帯の agent が、成果物評価（grade）が本文へ
+        残した `specdojo:finding` コメントの指摘を一つずつ確認し、妥当な指摘は本文を修正して解消し、
+        妥当でない指摘はその理由を result に記録する。あわせて rulebook の完成判定と cdfd-overview の
+        プロセス領域・データストアとの対応を照合し、不足だけを最小限修正する。finding コメント自体は
+        削除せず残す（次回の grade が解消を判定する）。trash へ退避した旧領域別 CDFD は参照しない。
+
+  review-pass:
+    - id: review
+      name: 完成版レビュー
+      execution: agent
+      mode: review
+      approach: fully-guided
+      agent:
+        executor: codex-expert-review-executor
+        reporter: gemma-reporter
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: expert
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "090"
+      duration_days: 0.25
+      description: |
+        完成版の CDFD を変更せず、rulebook の完成判定、cdfd-overview との対応、DCT の
+        evidence_refs が示す現在動作、および done_criteria を照合する。プロセスグループ別 CDFD は
+        領域ごとのプロセス粒度、正常系・主要例外、グループ外委譲の追跡性を、ユースケース別 CDFD は
+        グループ間の順序と引き渡し条件だけを扱っていることを確認し、判定と修正対象候補を
+        review result に記録する。
+
+  finalize-pass:
+    - id: finalize
+      name: 完成版確定
+      execution: human
+      mode: edit
+      approach: finalize
+      task_suffix: "140"
+      duration_days: 0.125
+      description: |
+        担当ロールがレビュー結果と done_criteria を最終確認し、成果物を完成版として確定して
+        status を ready に更新する。
+
+default_phase_sets:
+  - phase_set: author-pass
+  - phase_set: refine-pass
+  - phase_set: refine-2-pass
+  - phase_set: review-pass
+  - phase_set: finalize-pass
+
+owner_rules:
+  - local_ids:
+      - cdfd-onboarding
+      - cdfd-plan
+      - cdfd-do
+      - cdfd-check
+      - cdfd-action
+      - cdfd-orchestrator
+      - cdfd-uc-register
+      - cdfd-uc-deliverable
+    owner: BA
+
+phase_gates:
+  - id: G-DATA-FLOW-PDCA-author-pass
+    name: author-pass 完了
+    artifact_name: データフロー（PDCA）
+    after_phase_sets: [author-pass]
+    owner: PM
+    scope:
+      catalogs:
+        - prj-0001:dct-data-flow
+
+  - id: G-DATA-FLOW-PDCA-review-pass
+    name: review-pass 完了
+    artifact_name: データフロー（PDCA）
+    after_phase_sets: [review-pass]
+    owner: PM
+    scope:
+      catalogs:
+        - prj-0001:dct-data-flow
+
+group_milestones:
+  - catalog_id: prj-0001:dct-data-flow
+    milestone:
+      id: M-DATA-FLOW-PDCA-data-flow
+      name: PDCA 構成の CDFD 完了
+      artifact_name: データフロー（PDCA）
+      owner: PM

@@ -1,0 +1,72 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:br-sample
+path: docs/ja/specdojo/samples/br-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: pass
+score: 92
+graded_at: "2026-09-22T21:29:25.621Z"
+graded_by: codex-expert-executor
+content_hash: 6246af0aae384875db28479a52603dfdb726613079070601990a655e52c7c275
+categories:
+  consistency:
+    score: 100
+  usability:
+    score: 83
+  architecture:
+    score: 100
+  quality:
+    score: 88
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 3
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 10
+    anchor: ""
+    message: 概要の「販売可能な在庫」は後続で定義する「有効在庫」と同じ概念か判別しにくいため、「有効在庫」に統一するか両者の関係を明記してください。
+  - id: F002
+    severity: minor
+    rule: vp-ux-readability
+    line: 10
+    anchor: ""
+    message: 概要の「販売可能な在庫」と規則の「有効在庫」の表記を統一し、読者が同一の判定対象として直ちに追跡できるようにしてください。
+  - id: F003
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 10
+    anchor: ""
+    message: 同一の算出対象を指す「販売可能な在庫」と「有効在庫」の表記を一つに統一してください。

@@ -79,10 +79,7 @@ groups:
         evidence_refs:
           - kind: implementation
             path: src/catalog.ts
-            purpose: 成果物カタログの読込・検証の中核処理
-          - kind: implementation
-            path: src/catalog-build.ts
-            purpose: カタログ検証・表示ビュー生成
+            purpose: catalog コマンド入口から到達する成果物カタログの読込・検証の中核処理、カタログ検証・表示ビュー生成
           - kind: implementation
             path: src/deliverable.ts
             purpose: 成果物本体の読込・雛形生成
@@ -104,10 +101,7 @@ groups:
         evidence_refs:
           - kind: implementation
             path: src/schedule.ts
-            purpose: sch-track読込・タスクID導出
-          - kind: implementation
-            path: src/schedule-build.ts
-            purpose: sch-strategyからのsch-track生成
+            purpose: schedule コマンド入口から到達するsch-track読込・タスクID導出、sch-strategyからのsch-track生成
         done_criteria: *utc-target-done-criteria
       - local_id: utc-exec-core
         name: 単体テスト（exec中核）
@@ -119,14 +113,8 @@ groups:
         rulebook: specdojo:utc-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/exec-run.ts
-            purpose: タスク選択・claim・agent起動・完了処理の中核
-          - kind: implementation
-            path: src/exec-plans.ts
-            purpose: plan frontmatterの生成・scaffold規則
-          - kind: implementation
-            path: src/exec-results.ts
-            purpose: result frontmatter・必須節のscaffold・記入検証
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達するタスク選択・claim・agent起動・完了処理の中核、plan frontmatterの生成・scaffold規則、result frontmatter・必須節のscaffold・記入検証
         done_criteria: *utc-target-done-criteria
       - local_id: utc-exec-schedule
         name: 単体テスト（exec-schedule）
@@ -138,11 +126,8 @@ groups:
         rulebook: specdojo:utc-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/exec-schedule-cpm.ts
-            purpose: CPM・クリティカルパス・slackの算出
-          - kind: implementation
-            path: src/exec-schedule-ready.ts
-            purpose: Ready task算出
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達するCPM・クリティカルパス・slackの算出、Ready task算出
         done_criteria: *utc-target-done-criteria
       - local_id: utc-exec-worktree
         name: 単体テスト（exec-worktree）
@@ -154,11 +139,8 @@ groups:
         rulebook: specdojo:utc-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/exec-worktree.ts
-            purpose: worktree・branchの命名規則・配置
-          - kind: implementation
-            path: src/exec-worktree-ops.ts
-            purpose: worktreeの作成・削除・同期操作
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達するworktree・branchの命名規則・配置、worktreeの作成・削除・同期操作
         done_criteria: *utc-target-done-criteria
       - local_id: utc-register
         name: 単体テスト（登録簿）
@@ -171,10 +153,7 @@ groups:
         evidence_refs:
           - kind: implementation
             path: src/register.ts
-            purpose: 登録項目の状態遷移・派生ビュー更新
-          - kind: implementation
-            path: src/register-item.ts
-            purpose: 登録項目個票のフィールド定義・生成
+            purpose: register コマンド入口から到達する登録項目の状態遷移・派生ビュー更新、登録項目個票のフィールド定義・生成
         done_criteria: *utc-target-done-criteria
       - local_id: utc-routine-job
         name: 単体テスト（定期処理・Job）
@@ -202,8 +181,8 @@ groups:
         rulebook: specdojo:utc-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/doc-index.ts
-            purpose: 文書ID索引の構造・生成規則
+            path: src/index-command.ts
+            purpose: index コマンド入口から到達する文書ID索引の構造・生成規則
           - kind: implementation
             path: src/build-command.ts
             purpose: 一括再生成（exec→catalog→register→yaml-pages→index）の順序制御
@@ -259,11 +238,11 @@ groups:
         rulebook: specdojo:itc-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/catalog-build.ts
-            purpose: 成果物カタログの検証・確定
+            path: src/catalog.ts
+            purpose: catalog コマンド入口から到達する成果物カタログの検証・確定
           - kind: implementation
-            path: src/schedule-build.ts
-            purpose: 検証済みカタログからのsch-track生成
+            path: src/schedule.ts
+            purpose: schedule コマンド入口から到達する検証済みカタログからのsch-track生成
         done_criteria: &itc-target-done-criteria
           - text: 個別結合範囲・テスト条件・合格基準が記述されていること
             roles: [QE]
@@ -281,11 +260,8 @@ groups:
         rulebook: specdojo:itc-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/exec-schedule.ts
-            purpose: Schedule検証・状態再計算のexec側処理
-          - kind: implementation
-            path: src/exec-schedule-ready.ts
-            purpose: Ready task算出
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達するSchedule検証・状態再計算のexec側処理、Ready task算出
         done_criteria: *itc-target-done-criteria
       - local_id: itc-exec-register
         name: 内部結合テスト（exec↔登録簿）
@@ -297,8 +273,8 @@ groups:
         rulebook: specdojo:itc-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/exec-register.ts
-            purpose: 登録項目に紐づくexecタスクの実行連携
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達する登録項目に紐づくexecタスクの実行連携
           - kind: implementation
             path: src/register.ts
             purpose: 登録項目の状態遷移
@@ -313,11 +289,8 @@ groups:
         rulebook: specdojo:itc-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/exec-run.ts
-            purpose: claim時のworktree割当・完了時の統合制御
-          - kind: implementation
-            path: src/exec-worktree-ops.ts
-            purpose: worktreeの作成・削除操作
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達するclaim時のworktree割当・完了時の統合制御、worktreeの作成・削除操作
         done_criteria: *itc-target-done-criteria
       - local_id: itc-routine-exec
         name: 内部結合テスト（routine→exec自動実行）
@@ -332,8 +305,8 @@ groups:
             path: src/routine.ts
             purpose: action.kind別（exec-auto/exec-resume/exec-cycle）の委譲規則
           - kind: implementation
-            path: src/exec-run.ts
-            purpose: routineから委譲された実行の処理
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達するroutineから委譲された実行の処理
         done_criteria: *itc-target-done-criteria
       - local_id: itc-build-index
         name: 内部結合テスト（build→索引・派生生成）
@@ -348,8 +321,8 @@ groups:
             path: src/build-command.ts
             purpose: 一括再生成（exec→catalog→register→yaml-pages→index）の順序制御
           - kind: implementation
-            path: src/doc-index.ts
-            purpose: 文書索引の再構築
+            path: src/index-command.ts
+            purpose: index コマンド入口から到達する文書索引の再構築
         done_criteria: *itc-target-done-criteria
 
   - name: 外部結合テストカタログ
@@ -386,8 +359,8 @@ groups:
         rulebook: specdojo:etc-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/exec-agent-config.ts
-            purpose: AI provider CLIの起動コマンド解決・非対話実行
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達するAI provider CLIの起動コマンド解決・非対話実行
         done_criteria: &etc-target-done-criteria
           - text: I/Fごとのテスト条件・前提・合格基準が記述されていること
             roles: [QE]
@@ -405,8 +378,8 @@ groups:
         rulebook: specdojo:etc-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/exec-worktree.ts
-            purpose: Git操作（worktree作成・commit・push等）の実行箇所
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達するGit操作（worktree作成・commit・push等）の実行箇所
         done_criteria: *etc-target-done-criteria
 
   - name: 総合テストカタログ
@@ -445,11 +418,11 @@ groups:
             path: src/specdojo-config.ts
             purpose: プロジェクト構成の初期化
           - kind: implementation
-            path: src/catalog-scaffold.ts
-            purpose: 成果物カタログの初期生成
+            path: src/catalog.ts
+            purpose: catalog コマンド入口から到達する成果物カタログの初期生成
           - kind: implementation
-            path: src/exec-provider-scaffold.ts
-            purpose: provider実行構成の初期生成
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達するprovider実行構成の初期生成
         done_criteria: &stc-target-done-criteria
           - text: 個別シナリオの前提・データ準備・テスト条件・期待結果が記述されていること
             roles: [QE]
@@ -467,13 +440,10 @@ groups:
         evidence_refs: &evidence-register-lifecycle
           - kind: implementation
             path: src/register.ts
-            purpose: 登録項目の状態遷移・派生ビュー更新
+            purpose: register コマンド入口から到達する登録項目の状態遷移・派生ビュー更新、登録項目個票のフィールド定義
           - kind: implementation
-            path: src/register-item.ts
-            purpose: 登録項目個票のフィールド定義
-          - kind: implementation
-            path: src/exec-register.ts
-            purpose: 登録項目に紐づくexecタスクの実行連携
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達する登録項目に紐づくexecタスクの実行連携
         done_criteria: *stc-target-done-criteria
       - local_id: stc-catalog-planning
         name: 総合テスト（計画展開）
@@ -484,14 +454,14 @@ groups:
         rulebook: specdojo:stc-rulebook
         evidence_refs: &evidence-catalog-planning
           - kind: implementation
-            path: src/catalog-build.ts
-            purpose: 成果物カタログの検証
+            path: src/catalog.ts
+            purpose: catalog コマンド入口から到達する成果物カタログの検証
           - kind: implementation
-            path: src/schedule-build.ts
-            purpose: Schedule展開
+            path: src/schedule.ts
+            purpose: schedule コマンド入口から到達するSchedule展開
           - kind: implementation
-            path: src/exec-schedule.ts
-            purpose: 実行入力検証・状態再構成
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達する実行入力検証・状態再構成
         done_criteria: *stc-target-done-criteria
       - local_id: stc-task-execution
         name: 総合テスト（タスク実行）
@@ -502,17 +472,8 @@ groups:
         rulebook: specdojo:stc-rulebook
         evidence_refs: &evidence-task-execution
           - kind: implementation
-            path: src/exec-run.ts
-            purpose: タスク選択・claim・agent起動・完了処理
-          - kind: implementation
-            path: src/exec-run-lock.ts
-            purpose: 実行ロックの排他制御
-          - kind: implementation
-            path: src/exec-events.ts
-            purpose: 実行イベントの記録
-          - kind: implementation
-            path: src/exec-worktree.ts
-            purpose: worktree分離
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達するタスク選択・claim・agent起動・完了処理、実行ロックの排他制御、実行イベントの記録、worktree分離
         done_criteria: *stc-target-done-criteria
       - local_id: stc-routine
         name: 総合テスト（定期処理）
@@ -526,8 +487,8 @@ groups:
             path: src/routine.ts
             purpose: 定期実行対象選択・実行試行記録・結果反映
           - kind: implementation
-            path: src/exec-run.ts
-            purpose: routineから委譲された実行
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達するroutineから委譲された実行
           - kind: implementation
             path: src/job.ts
             purpose: Job Run生成・実行
@@ -541,11 +502,8 @@ groups:
         rulebook: specdojo:stc-rulebook
         evidence_refs: &evidence-multi-project
           - kind: implementation
-            path: src/exec-project.ts
-            purpose: project develop作成・並行実行割当
-          - kind: implementation
-            path: src/exec-worktree.ts
-            purpose: feature/exec worktree分離
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達するproject develop作成・並行実行割当、feature/exec worktree分離
         done_criteria: *stc-target-done-criteria
       - local_id: stc-agent-config-operation
         name: 総合テスト（構成変更）
@@ -556,11 +514,8 @@ groups:
         rulebook: specdojo:stc-rulebook
         evidence_refs: &evidence-agent-config-operation
           - kind: implementation
-            path: src/exec-agent-config.ts
-            purpose: agent・provider設定の解決とコマンド生成
-          - kind: implementation
-            path: src/exec-strategy.ts
-            purpose: phaseの実行要件とapproachの解決
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達するagent・provider設定の解決とコマンド生成、phaseの実行要件とapproachの解決
         done_criteria: *stc-target-done-criteria
       - local_id: stc-derived-content
         name: 総合テスト（派生生成）
@@ -574,14 +529,14 @@ groups:
             path: src/build-command.ts
             purpose: 一括再生成の順序制御
           - kind: implementation
-            path: src/catalog-generate.ts
-            purpose: カタログ表示ビュー生成
+            path: src/catalog.ts
+            purpose: catalog コマンド入口から到達するカタログ表示ビュー生成
           - kind: implementation
-            path: src/doc-index.ts
-            purpose: 文書索引生成
+            path: src/index-command.ts
+            purpose: index コマンド入口から到達する文書索引生成
           - kind: implementation
-            path: src/yaml-pages.ts
-            purpose: YAML表示ページ生成
+            path: src/yaml-pages-command.ts
+            purpose: yaml-pages コマンド入口から到達するYAML表示ページ生成
         done_criteria: *stc-target-done-criteria
       - local_id: stc-reporting
         name: 総合テスト（報告）
@@ -592,11 +547,8 @@ groups:
         rulebook: specdojo:stc-rulebook
         evidence_refs: &evidence-reporting
           - kind: implementation
-            path: src/exec-task-view.ts
-            purpose: 進捗・タスク状態の集約表示
-          - kind: implementation
-            path: src/exec-schedule-cpm.ts
-            purpose: CPM・クリティカルパスの算出
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達する進捗・タスク状態の集約表示、CPM・クリティカルパスの算出
           - kind: implementation
             path: src/register.ts
             purpose: 登録簿の状態集計
@@ -610,11 +562,11 @@ groups:
         rulebook: specdojo:stc-rulebook
         evidence_refs: &evidence-deprecation
           - kind: implementation
-            path: src/deliverable-trash.ts
-            purpose: 文書のtrash移動・カタログ更新
+            path: src/deliverable.ts
+            purpose: deliverable コマンド入口から到達する文書のtrash移動・カタログ更新
           - kind: implementation
-            path: src/catalog-paths.ts
-            purpose: 保管先パスの解決
+            path: src/catalog.ts
+            purpose: catalog コマンド入口から到達する保管先パスの解決
         done_criteria: *stc-target-done-criteria
 
   - name: 受入テストカタログ

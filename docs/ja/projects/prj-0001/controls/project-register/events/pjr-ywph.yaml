@@ -1,0 +1,163 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_de02b6ebff2a42eab78cd735cd7e1b85
+  ts: "2026-09-21T03:59:49Z"
+  action: add
+  actor: specdojo-orchestrator (claude)
+  from_status: null
+  to_status: open
+  reason: PJR-XKKS のレビューで残課題として整理し、利用者が起票を指示
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: register の todo 用 plan に関連文書の grade finding を展開する
+    - field: description
+      from: ""
+      to: grade の finding がサイドカーへ移った後、register の todo 用 plan（xep-register-template）には展開がなく、Kata や成果物の finding 解消を扱う項目では個票へ転記して補っている。個票の関連ドキュメントにサイドカーを持つ文書があれば、その finding を plan 本文へ展開する
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-21"
+    - field: due
+      from: ""
+      to: "2026-10-15"
+- v: 1
+  id: reg_f096b74850084e95af036447cbdc256b
+  ts: "2026-09-21T11:08:01Z"
+  action: start
+  actor: antigravity-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_de02b6ebff2a42eab78cd735cd7e1b85
+- v: 1
+  id: reg_b18c01fdf8e1424fbfbdaad37dae78ba
+  ts: "2026-09-21T11:17:47Z"
+  action: wait
+  actor: antigravity-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: error: invalid model selection (--model \"gemini-3.8-flash-high\" --effort \"medium\"): --model gemini-3.8-flash-high conflicts with --effort=medium"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: error: invalid model selection (--model \"gemini-3.8-flash-high\" --effort \"medium\"): --model gemini-3.8-flash-high conflicts with --effort=medium"
+  previous_event_id: reg_f096b74850084e95af036447cbdc256b
+- v: 1
+  id: reg_7966a463d9de4361ab87e667f42e1ce1
+  ts: "2026-09-21T11:22:13Z"
+  action: start
+  actor: antigravity-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_b18c01fdf8e1424fbfbdaad37dae78ba
+- v: 1
+  id: reg_f772927b873844a18d5c3dc7f99a5cd3
+  ts: "2026-09-21T11:23:04Z"
+  action: wait
+  actor: antigravity-reporter
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: git commit failed: ╭─────────────────────────────────────────╮ │ 🥊 lefthook  v2.1.9   hook:  pre-commit │ ╰─────────────────────────────────────────╯ │  catalog-build (skip) no matc…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "agent exited with non-zero code: error: invalid model selection (--model \"gemini-3.8-flash-high\" --effort \"medium\"): --model gemini-3.8-flash-high conflicts with --effort=medium"
+      to: "integrate failed: git commit failed: ╭─────────────────────────────────────────╮ │ 🥊 lefthook  v2.1.9   hook:  pre-commit │ ╰─────────────────────────────────────────╯ │  catalog-build (skip) no matc…"
+  previous_event_id: reg_7966a463d9de4361ab87e667f42e1ce1
+- v: 1
+  id: reg_6f6480d3470047618aefcc93ee2823c7
+  ts: "2026-09-21T11:24:41Z"
+  action: start
+  actor: antigravity-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_f772927b873844a18d5c3dc7f99a5cd3
+- v: 1
+  id: reg_61ab385c4bfe404f930024ef3d6271eb
+  ts: "2026-09-21T11:25:21Z"
+  action: review
+  actor: antigravity-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_6f6480d3470047618aefcc93ee2823c7
+- v: 1
+  id: reg_4faee7a492634c83971e04b87c80c9eb
+  ts: "2026-09-21T11:25:29Z"
+  action: wait
+  actor: antigravity-reporter
+  from_status: review
+  to_status: waiting
+  reason: "integrate failed: git merge failed (args: --no-ff -m exec(register PJR-YWPH): register の tod… exec/prj-0001-PJR-YWPH)"
+  changes:
+    - field: status
+      from: review
+      to: waiting
+    - field: block_reason
+      from: "integrate failed: git commit failed: ╭─────────────────────────────────────────╮ │ 🥊 lefthook  v2.1.9   hook:  pre-commit │ ╰─────────────────────────────────────────╯ │  catalog-build (skip) no matc…"
+      to: "integrate failed: git merge failed (args: --no-ff -m exec(register PJR-YWPH): register の tod… exec/prj-0001-PJR-YWPH)"
+  previous_event_id: reg_61ab385c4bfe404f930024ef3d6271eb
+- v: 1
+  id: reg_6e468118a6074fc3a2994941d355aa84
+  ts: "2026-09-21T11:28:15Z"
+  action: review
+  actor: specdojo-orchestrator (claude)
+  from_status: waiting
+  to_status: review
+  reason: "統合の merge commit が hook で一度失敗し wait に戻ったため、オーケストレーターが merge を完了して review へ戻す（executor: antigravity-expert-executor、reporter: antigravity-reporter、親検証 passed）"
+  changes:
+    - field: status
+      from: waiting
+      to: review
+  previous_event_id: reg_4faee7a492634c83971e04b87c80c9eb
+- v: 1
+  id: reg_963cfdf9427743189b33bb636a9f0af2
+  ts: "2026-09-22T03:52:50Z"
+  action: close
+  actor: specdojo-orchestrator (claude)
+  from_status: review
+  to_status: done
+  reason: agy-expert-executor / agy-reporter で実装（Antigravity の初回実運用）。型エラーと merge 中断の不備はオーケストレーターが補修して統合し、展開結果を確認して利用者が close
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-22"
+  previous_event_id: reg_6e468118a6074fc3a2994941d355aa84

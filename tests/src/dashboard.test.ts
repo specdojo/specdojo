@@ -4,10 +4,17 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import {
   buildDashboardMarkdown,
+  buildDailyRoutineRows,
+  collapseFrequentRoutineRows,
+  formatZonedDateTime,
   buildTimelineGanttSvg,
   computeRoutineDue,
   computeTimelineTrackSchedules,
   dashboardOutputFiles,
+  latestExecBlockReasons,
+  latestRegisterWaitReason,
+  rankRegisterCandidates,
+  type DashboardRegisterCandidate,
   type DashboardPaths,
   type TimelineTrackSchedule,
 } from "../../src/dashboard.js";
@@ -275,6 +282,173 @@ describe("buildDashboardMarkdown", () => {
   });
 });
 
+describe("daily briefing", () => {
+  it("Asia/Tokyo の日付境界で昨日の実績と本日の予定を分ける", () => {
+    const rows = buildDailyRoutineRows(
+      [
+        {
+          id: "rtn-dashboard-refresh",
+          enabled: true,
+          trigger: { cron: "0 5 * * *", timezone: "Asia/Tokyo" },
+          action: { kind: "job", job: "job-dashboard-build" },
+        },
+      ],
+      [
+        {
+          version: 1,
+          routine_id: "rtn-dashboard-refresh",
+          scheduled_for: "2026-09-18T20:00:00.000Z",
+          started_at: "2026-09-18T20:00:01Z",
+          completed_at: "2026-09-18T20:00:02Z",
+          result: "success",
+          job_run_ids: ["JBR-dashboard-yesterday"],
+        },
+      ],
+      new Date("2026-09-20T00:30:00Z"),
+    );
+
+    expect(rows.map((row) => [row.day, row.scheduledFor, row.result])).toEqual([
+      ["昨日", "2026-09-18T20:00:00.000Z", "success"],
+      ["本日", "2026-09-19T20:00:00.000Z", "未実行"],
+    ]);
+  });
+
+  it("予定時刻が未到来なら予定、過ぎていて履歴がなければ未実行にする", () => {
+    const rows = buildDailyRoutineRows(
+      [
+        {
+          id: "rtn-grade-recheck",
+          enabled: true,
+          trigger: { cron: "0 6,18 * * *", timezone: "Asia/Tokyo" },
+          action: { kind: "job", job: "job-grade-kata" },
+        },
+      ],
+      [],
+      new Date("2026-09-20T00:30:00Z"),
+    );
+
+    expect(rows.map((row) => [row.scheduledFor, row.result])).toEqual([
+      ["2026-09-19T21:00:00.000Z", "未実行"],
+      ["2026-09-20T09:00:00.000Z", "予定"],
+    ]);
+  });
+
+  it("1 日に 3 回以上動く routine は最新の実行 1 行に実行回数をまとめる", () => {
+    const history = ["05:00", "06:00", "07:00"].map((time, index) => ({
+      version: 1 as const,
+      routine_id: "rtn-dashboard-refresh",
+      scheduled_for: `2026-09-19T${time}:00.000Z`,
+      started_at: `2026-09-19T${time}:01Z`,
+      completed_at: `2026-09-19T${time}:02Z`,
+      result: index === 1 ? ("failure" as const) : ("success" as const),
+      job_run_ids: [],
+    }));
+    const rows = collapseFrequentRoutineRows(
+      buildDailyRoutineRows([], history, new Date("2026-09-19T08:30:00Z")),
+    );
+
+    expect(rows).toHaveLength(1);
+    expect(rows[0]).toMatchObject({
+      routineId: "rtn-dashboard-refresh",
+      scheduledFor: "2026-09-19T07:00:00.000Z",
+      runCount: 3,
+      result: "failure",
+    });
+  });
+
+  it("formatZonedDateTime は指定タイムゾーンの月日と時分だけを返す", () => {
+    expect(formatZonedDateTime("2026-09-18T20:00:00.000Z", "Asia/Tokyo")).toBe("09-19 05:00");
+    expect(formatZonedDateTime("not-a-date", "Asia/Tokyo")).toBe("not-a-date");
+  });
+
+  it("期日、優先度、関連 open PJR、登録日時の順で候補を並べる", () => {
+    const candidate = (
+      id: string,
+      overrides: Partial<DashboardRegisterCandidate>,
+    ): DashboardRegisterCandidate => ({
+      id,
+      title: id,
+      type: "todo",
+      priority: "medium",
+      due: "2026-09-25",
+      registeredAt: "2026-09-10T00:00:00Z",
+      relatedOpenPjrCount: 0,
+      ...overrides,
+    });
+    const ranked = rankRegisterCandidates(
+      [
+        candidate("PJR-0006", { registeredAt: "2026-09-09T00:00:00Z" }),
+        candidate("PJR-0005", { registeredAt: "2026-09-08T00:00:00Z" }),
+        candidate("PJR-0004", { relatedOpenPjrCount: 1 }),
+        candidate("PJR-0003", { priority: "low" }),
+        candidate("PJR-0002", { due: "2026-09-21", priority: "low" }),
+        candidate("PJR-0001", { due: "2026-09-19", priority: "low" }),
+      ],
+      "2026-09-20",
+    );
+
+    expect(ranked.map((row) => row.id)).toEqual([
+      "PJR-0001",
+      "PJR-0002",
+      "PJR-0005",
+      "PJR-0006",
+      "PJR-0004",
+      "PJR-0003",
+    ]);
+  });
+
+  it("waiting と blocked の最新理由を event から抽出する", () => {
+    const waitReason = latestRegisterWaitReason([
+      {
+        v: 1,
+        id: "reg_11111111111111111111111111111111",
+        ts: "2026-09-18T00:00:00Z",
+        action: "wait",
+        actor: "agent",
+        from_status: "open",
+        to_status: "waiting",
+        reason: "最初の待機理由",
+        changes: [{ field: "status", from: "open", to: "waiting" }],
+      },
+      {
+        v: 1,
+        id: "reg_22222222222222222222222222222222",
+        ts: "2026-09-19T00:00:00Z",
+        action: "wait",
+        actor: "agent",
+        from_status: "in-progress",
+        to_status: "waiting",
+        reason: "最新の待機理由",
+        changes: [{ field: "status", from: "in-progress", to: "waiting" }],
+      },
+    ]);
+    const blockReasons = latestExecBlockReasons(
+      ["T-BLOCKED"],
+      [
+        {
+          v: 1,
+          ts: "2026-09-18T00:00:00Z",
+          type: "block",
+          task_id: "T-BLOCKED",
+          by: "agent",
+          msg: "old",
+        },
+        {
+          v: 1,
+          ts: "2026-09-19T00:00:00Z",
+          type: "block",
+          task_id: "T-BLOCKED",
+          by: "agent",
+          msg: "latest",
+        },
+      ],
+    );
+
+    expect(waitReason).toBe("最新の待機理由");
+    expect(blockReasons.get("T-BLOCKED")).toBe("latest");
+  });
+});
+
 // ---- dashboardOutputFiles ----------------------------------------------------
 
 describe("dashboardOutputFiles", () => {
@@ -296,7 +470,7 @@ describe("computeRoutineDue", () => {
   const cronRoutine: RoutineDoc = {
     id: "rtn-dashboard-test",
     trigger: { cron: "* * * * *", timezone: "UTC" },
-    action: { kind: "exec-auto" },
+    action: { kind: "job", job: "job-dashboard-test" },
   };
 
   it("cron routine は last_scheduled_for より後の発火予定からdueを判定する", () => {

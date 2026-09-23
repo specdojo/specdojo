@@ -1,0 +1,108 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_306d7c368c7e43ebaa1a2701e268f542
+  ts: "2026-08-31T22:45:16Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 登録簿の type 別に状態遷移の指針を定める
+    - field: description
+      from: ""
+      to: pjr-rulebook は item_status の遷移基準を文書成熟度の status については記載しているが、item_type ごとに終端をどう扱うかを定めていない。note は記録であり事実を蓄積し続けるため終端しない。PJR-VQB5 は 10 回以上追記しており、done にすると追記しにくくなる。一方 question は問いであり答えが出たら decided で閉じ、conclusion へ結論を残す。schema の ClosedItemStatus に decided があるのはこの用途と読めるが明文化されていない。運用として合意していても規約に無ければ人や agent によって解釈が分かれる。agent が register を操作する場面では判断基準が要る。type ごとの終端の有無と、note の open が未対応ではなく生きている記録を意味することを明記する。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-01"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_5f8eaf1f7f2d4cb39393bfb9f7803522
+  ts: "2026-08-31T23:56:36Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_306d7c368c7e43ebaa1a2701e268f542
+- v: 1
+  id: reg_9e06d5f708694e80803bf05fe17aa26b
+  ts: "2026-09-01T00:08:26Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: executorによる `node --import tsx src/specdojo.ts register build` の実行結果が `failed` となっており、「既存不整合: PJR-9RWGはevent=in-progress/item=review、PJR-S5YAはevent=open/item=in-progre…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: executorによる `node --import tsx src/specdojo.ts register build` の実行結果が `failed` となっており、「既存不整合: PJR-9RWGはevent=in-progress/item=review、PJR-S5YAはevent=open/item=in-progre…"
+  previous_event_id: reg_5f8eaf1f7f2d4cb39393bfb9f7803522
+- v: 1
+  id: reg_8b5e053b099944069aec2d8e74555449
+  ts: "2026-09-01T00:11:30Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_9e06d5f708694e80803bf05fe17aa26b
+- v: 1
+  id: reg_9d5052b3abe9474691a0a73ccac7a12c
+  ts: "2026-09-01T00:21:53Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_8b5e053b099944069aec2d8e74555449
+- v: 1
+  id: reg_b05139569ab649e9b206cceb03193bb0
+  ts: "2026-09-01T00:25:14Z"
+  action: close
+  actor: manual
+  from_status: review
+  to_status: done
+  reason: 実装・検証・レビューが完了したため
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-01"
+    - field: conclusion
+      from: "-"
+      to: pjr-rulebook へ type 別の通常終端と判定基準、例外的な rejected と deferred の使用条件を追加した。note は終端せず open が生きている記録を意味すること、対応や回答や判断が必要になった場合は別項目を起票して note 自体は参照元として保持することを明記した。question と decision は decided、todo と risk と issue と change-request は done を通常終端とする。register-operation-guide の状態遷移表にも note の例外を反映した。既存個票のうち終端済みだった note 3 件を内容に応じて todo または decision へ分類訂正している。
+  previous_event_id: reg_9d5052b3abe9474691a0a73ccac7a12c

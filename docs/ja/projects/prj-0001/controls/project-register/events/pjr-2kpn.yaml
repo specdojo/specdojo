@@ -1,0 +1,82 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_220c4eda72ff46a29ed52c3a2ceba550
+  ts: "2026-08-29T06:54:31Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: register update に個票の topic 変更手段を追加する
+    - field: description
+      from: ""
+      to: 個票の内容が変わって topic が実態と合わなくなっても、CLI に変更手段がない。register renumber は ID 衝突解消専用で topic を扱えないため、git mv と Frontmatter の id 書き換えを手作業で行うことになり、register event に記録が残らない。他文書からの wikilink 参照も手作業で追随させる必要がある。register update へ --topic を追加し、ファイル名・文書 ID・参照・生成ビューの整合と event 記録をコマンドで完結させる。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-08-29"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_a82bd40af09346d9a8e9939307e695c8
+  ts: "2026-08-29T11:02:14Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_220c4eda72ff46a29ed52c3a2ceba550
+- v: 1
+  id: reg_af7998bbbeef4227b1ae1a8d323947c1
+  ts: "2026-08-29T11:08:34Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: rate limit reached
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: rate limit reached
+  previous_event_id: reg_a82bd40af09346d9a8e9939307e695c8
+- v: 1
+  id: reg_1dea7669f5dd46319b6a518cfa23f055
+  ts: "2026-08-29T11:32:30Z"
+  action: close
+  actor: manual
+  from_status: waiting
+  to_status: done
+  reason: 実装・検証・レビューが完了したため
+  changes:
+    - field: status
+      from: waiting
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-08-29"
+    - field: conclusion
+      from: "-"
+      to: register update --topic を追加し、個票ファイル名と文書 ID の変更、参照の更新、event 記録、生成ビューの再生成を一度のコマンドで完結させた。topic は英小文字・数字を単一ハイフンで区切る形式に限定し、変更先ファイルが存在する場合は計画段階で停止する。参照の更新範囲は既存の register renumber と揃え、生成物を除く docs/ja 配下の旧文書 ID を自動更新する。event の action は新設せず update を用い、changes の id へ変更前後の完全な文書 ID を保存する。
+  previous_event_id: reg_af7998bbbeef4227b1ae1a8d323947c1

@@ -25,6 +25,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Install documentation site dependencies
+        env:
+          PUPPETEER_SKIP_DOWNLOAD: "true"
+        run: npm --prefix packages/docs-site ci
+
       - name: Resolve system Chrome for puppeteer (mermaid)
         run: |
           chrome_path="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium-browser || command -v chromium || true)"
@@ -42,7 +47,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v5
         with:
-          path: .vitepress/dist
+          path: packages/docs-site/.vitepress/dist
 
   deploy:
     needs: build

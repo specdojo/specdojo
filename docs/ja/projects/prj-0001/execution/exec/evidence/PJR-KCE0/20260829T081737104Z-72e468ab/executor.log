@@ -1,0 +1,15 @@
+共通レビュー観点の継承方式へ移行しました。
+
+- 共通正本を `standards/pm-review-viewpoints.yaml` へ移設
+- 追加・上書き・無効化と独自ロールを実装
+- prj-0001 を空の差分宣言へ移行
+- review plan と scaffold を新経路へ対応
+- kata 用観点を共通側へ追加
+- schema、設計文書、個票、テストを更新
+- result と登録簿ステータスは未変更
+
+親 runner 管轄の unit・integration・schema 検証は指示どおり未実行です。
+
+<specdojo_executor_evidence>
+{"final_message":"共通レビュー観点の正本化、プロジェクト差分継承、scaffold・review plan移行を完了","validations":[{"command":"npm run typecheck","status":"passed","summary":"TypeScript型検査成功"},{"command":"npm run lint:ts","status":"passed","summary":"ESLint成功"},{"command":"npx markdownlint docs/ja/specdojo/guides/review-guide.md docs/ja/specdojo/references/command-reference.md docs/ja/product/010-business-specs/010-data-flow/cdfd-init.md docs/ja/projects/prj-0001/controls/project-register/pjr-kce0-review-viewpoints-inheritance.md","status":"passed","summary":"変更Markdownのlint成功"},{"command":"npm run lint:fm","status":"passed","summary":"frontmatterを含むremark検査成功"},{"command":"node --import tsx --input-type=module -e \"import { resolveViewpointsDoc } from './src/review-plan.ts'; const doc = resolveViewpointsDoc('docs/ja/projects/prj-0001/030-project-management/pm-review-viewpoints.yaml'); console.log(JSON.stringify({viewpoints: doc.viewpoints?.length, coverage_types: doc.coverage_types?.length, kata: doc.viewpoints?.some((v) => v.id === 'vp-qe-kata-conformance')}));\"","status":"passed","summary":"26観点・15 coverage typeを解決しkata観点を確認"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿派生ビュー生成成功"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"全カタログOK、既存の未作成成果物warningのみ"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1379件の文書索引を生成"},{"command":"node --import tsx tools/docs/src/validate-history-links.ts","status":"passed","summary":"履歴リンク検査成功"},{"command":"git diff --check","status":"passed","summary":"差分の空白エラーなし"},{"command":"npm run test:unit","status":"not_run","summary":"親runnerのallowlist検証に委譲"},{"command":"npm run test:integration","status":"not_run","summary":"親runnerのallowlist検証に委譲"},{"command":"npm run validate:schema","status":"not_run","summary":"親runnerのallowlist検証に委譲"}]}
+</specdojo_executor_evidence>

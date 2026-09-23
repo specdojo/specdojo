@@ -1,0 +1,38 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: cdfd-overview-grade-criteria
+document: cdfd-overview
+path: docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md
+graded_at: "2026-09-20T05:01:28.643Z"
+graded_by: codex-expert-executor
+content_hash: a22d5ecff5bee64e24a5f0de93c039d37846cb8a172d0f2ee81b14bb155429cf
+summary:
+  satisfied: 2
+  unsatisfied: 2
+  total: 4
+criteria:
+  - id: DC-001
+    text: Onboarding・Plan・Do・Check・Action・Orchestrator の六つのプロセスグループに属する 14 のプロセス領域と、グループとデータストアの間の情報・実行要求の流れが表と図で確認できること
+    roles:
+      - BA
+    viewpoint: vp-ba-business-value
+    status: satisfied
+  - id: DC-002
+    text: 対象とするプロセス領域、および独立した業務フローに含めない補助操作の境界を承認できること
+    roles:
+      - PO
+    viewpoint: vp-po-purpose-alignment
+    status: unsatisfied
+    reason: 現行の対象範囲、14 のプロセス領域、六グループおよび補助操作の境界に対する PO の承認記録がない。
+  - id: DC-003
+    text: 各領域の起点イベントと、プロセスグループ単位の主要入力・主要出力・データストアが識別でき、概念データフローのエッジと相互に対応し、プロセスグループ別 CDFD の構成方針として参照できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: unsatisfied
+    reason: Orchestrator の主要入力に実行計画がなく、図の「実行計画 → Orchestrator」エッジとの相互対応を確認できない。
+  - id: DC-004
+    text: プロセスグループ別 CDFD とユースケース別 CDFD への分割に重複または欠落がないことを、詳細 CDFD 一覧と各領域の対応で確認できること
+    roles:
+      - QE
+    viewpoint: vp-qe-omissions-consistency
+    status: satisfied

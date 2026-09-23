@@ -40,12 +40,42 @@ export type ExecEvidence = {
   };
   validations: EvidenceValidation[];
   final_message: string;
+  command?: {
+    shell: string;
+    value: string;
+    exit_code: number | null;
+    stdout_ref: string;
+    stderr_ref: string;
+    /** Redacted, bounded content stored at stdout_ref. Optional for legacy evidence. */
+    stdout?: string;
+    /** Redacted, bounded content stored at stderr_ref. Optional for legacy evidence. */
+    stderr?: string;
+  };
   log_refs: Array<{
-    kind: "agent-output-excerpt";
+    kind: "agent-output-excerpt" | "command-stdout" | "command-stderr";
     path: string;
     bytes: number;
     truncated: boolean;
   }>;
+};
+
+export type RecordCommandEvidenceInput = {
+  repoRoot: string;
+  worktreePath: string;
+  executionPath: string;
+  taskId: string;
+  runId: string;
+  actor: string;
+  command: string;
+  shell: string;
+  startedAt: string;
+  completedAt: string;
+  exitCode: number | null;
+  stdout: string;
+  stderr: string;
+  stdoutTruncated?: boolean;
+  stderrTruncated?: boolean;
+  error?: string;
 };
 
 export type RecordExecutorEvidenceInput = {
@@ -290,6 +320,106 @@ export function recordExecutorEvidence(input: RecordExecutorEvidenceInput): {
     parentValidations: input.parentValidations,
   });
   writeFileSync(logPath, logExcerpt, "utf8");
+  writeFileSync(evidencePath, `${JSON.stringify(evidence, null, 2)}\n`, "utf8");
+  return { evidence, evidencePath };
+}
+
+/** Records a runner-executed Job command with distinct, bounded stdout and stderr logs. */
+export function recordCommandEvidence(input: RecordCommandEvidenceInput): {
+  evidence: ExecEvidence;
+  evidencePath: string;
+} {
+  const executionRel = repoRelative(input.repoRoot, input.executionPath);
+  const runnerManagedPrefixes = [
+    `${executionRel}/exec/plans/`,
+    `${executionRel}/exec/results/`,
+    `${executionRel}/exec/events/`,
+    `${executionRel}/exec/evidence/`,
+    `${executionRel}/generated/`,
+  ];
+  const changes = parseStatusPaths(input.worktreePath)
+    .filter((change) => runnerManagedPrefixes.every((prefix) => !change.path.startsWith(prefix)))
+    .slice(0, MAX_CHANGE_FILES)
+    .map((change) => ({
+      path: boundedText(change.path, 1_000),
+      status: boundedText(change.status, 40),
+    }));
+  const diffStat = gitOutput(input.worktreePath, ["diff", "--stat", "HEAD", "--"]);
+  const evidenceDir = join(
+    input.worktreePath,
+    executionRel,
+    "exec",
+    "evidence",
+    safeSlug(input.taskId),
+    safeSlug(input.runId),
+  );
+  ensureDir(evidenceDir);
+  const stdoutPath = join(evidenceDir, "command.stdout.log");
+  const stderrPath = join(evidenceDir, "command.stderr.log");
+  const evidencePath = join(evidenceDir, "evidence.json");
+  const boundedStdout = boundedLog(input.stdout);
+  const boundedStderr = boundedLog(input.stderr);
+  writeFileSync(stdoutPath, boundedStdout.content, "utf8");
+  writeFileSync(stderrPath, boundedStderr.content, "utf8");
+  const stdoutRef = repoRelative(input.worktreePath, stdoutPath);
+  const stderrRef = repoRelative(input.worktreePath, stderrPath);
+  const succeeded = input.exitCode === 0 && !input.error;
+  const safeCommand = boundedText(input.command, 16_000);
+  const summary = input.error
+    ? `spawn failed: ${boundedText(input.error, MAX_VALIDATION_SUMMARY_LENGTH)}`
+    : `exit ${input.exitCode ?? "unknown"}`;
+  const evidence: ExecEvidence = {
+    schema_version: 1,
+    task_id: input.taskId,
+    run_id: input.runId,
+    stage: {
+      role: "executor",
+      actor: input.actor,
+      status: succeeded ? "succeeded" : "failed",
+      started_at: input.startedAt,
+      completed_at: input.completedAt,
+      exit_code: input.exitCode,
+      attempts: 1,
+    },
+    changes,
+    diff_summary: {
+      files_changed: changes.length,
+      summary: truncate(redactSensitiveText(diffStat.trim()), MAX_DIFF_SUMMARY_LENGTH),
+    },
+    validations: [
+      {
+        id: "job-command",
+        source: "runner",
+        command: boundedText(input.command, MAX_VALIDATION_COMMAND_LENGTH),
+        status: succeeded ? "passed" : "failed",
+        summary,
+      },
+    ],
+    final_message: `Runner command ${summary}.`,
+    command: {
+      shell: input.shell,
+      value: safeCommand,
+      exit_code: input.exitCode,
+      stdout_ref: stdoutRef,
+      stderr_ref: stderrRef,
+      stdout: boundedStdout.content,
+      stderr: boundedStderr.content,
+    },
+    log_refs: [
+      {
+        kind: "command-stdout",
+        path: stdoutRef,
+        bytes: Buffer.byteLength(boundedStdout.content, "utf8"),
+        truncated: !!input.stdoutTruncated || boundedStdout.truncated,
+      },
+      {
+        kind: "command-stderr",
+        path: stderrRef,
+        bytes: Buffer.byteLength(boundedStderr.content, "utf8"),
+        truncated: !!input.stderrTruncated || boundedStderr.truncated,
+      },
+    ],
+  };
   writeFileSync(evidencePath, `${JSON.stringify(evidence, null, 2)}\n`, "utf8");
   return { evidence, evidencePath };
 }

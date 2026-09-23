@@ -9,12 +9,10 @@ description: 登録簿の open な高優先度 todo を 1 日 1 回 agent に実
 enabled: false
 interval: 1d
 action:
-  kind: register
-  filter:
-    types:
-      - todo
-    priorities:
-      - high
-    statuses:
-      - open
-  limit: 3
+  kind: job
+  job: job-register-sweep
+  inputs:
+    types: todo
+    priorities: high
+    statuses: open
+    limit: "3"

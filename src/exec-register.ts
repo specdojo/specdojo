@@ -6,10 +6,18 @@ import {
   PJR_ID_RE,
   resolveRegisterPaths,
   TERMINAL_STATUSES_SET,
+  VALID_PRIORITIES,
+  VALID_STATUSES,
+  VALID_TYPES,
   type PjrItem,
   type RegisterPaths,
 } from "./register.js";
-import { injectCommonConventions, MISSING, templatesDir } from "./exec-plans.js";
+import {
+  execTemplatePath,
+  injectCommonConventions,
+  MISSING,
+  registerGradeFindingsText,
+} from "./exec-plans.js";
 import { buildSpecdojoFrontmatter } from "./frontmatter-namespace.js";
 import {
   escapeMarkdownInline,
@@ -35,6 +43,83 @@ export function registerItemCategory(itemType: string): RegisterTaskCategory | n
   if (EDIT_TYPES.has(itemType)) return "edit";
   if (INVESTIGATE_TYPES.has(itemType)) return "investigate";
   return null;
+}
+
+export type RegisterSelectionFilter = {
+  types?: string[];
+  priorities?: string[];
+  statuses?: string[];
+  limit?: number;
+};
+
+const DEFAULT_SELECTION_TYPES = VALID_TYPES.filter((type) => registerItemCategory(type) !== null);
+
+function parseRegisterFilterList(
+  value: string | undefined,
+  name: string,
+  allowed: readonly string[],
+): string[] | undefined {
+  if (value === undefined) return undefined;
+  const values = value
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean);
+  if (values.length === 0) throw new Error(`${name} must contain at least one value`);
+  for (const item of values) {
+    if (!allowed.includes(item)) {
+      throw new Error(`${name} contains unknown value "${item}". Allowed: ${allowed.join(", ")}`);
+    }
+  }
+  return [...new Set(values)];
+}
+
+export function parseRegisterSelectionFilter(opts: {
+  types?: string;
+  priorities?: string;
+  statuses?: string;
+  limit?: string;
+}): RegisterSelectionFilter {
+  const types = parseRegisterFilterList(opts.types, "--register-types", VALID_TYPES);
+  const priorities = parseRegisterFilterList(
+    opts.priorities,
+    "--register-priorities",
+    VALID_PRIORITIES,
+  );
+  const statuses = parseRegisterFilterList(opts.statuses, "--register-statuses", VALID_STATUSES);
+  let limit: number | undefined;
+  if (opts.limit !== undefined) {
+    if (!/^[1-9]\d*$/.test(opts.limit)) {
+      throw new Error(`--register-limit must be a positive integer: ${opts.limit}`);
+    }
+    limit = Number.parseInt(opts.limit, 10);
+    if (!Number.isSafeInteger(limit)) {
+      throw new Error(`--register-limit must be a positive integer: ${opts.limit}`);
+    }
+  }
+  return {
+    ...(types ? { types } : {}),
+    ...(priorities ? { priorities } : {}),
+    ...(statuses ? { statuses } : {}),
+    ...(limit !== undefined ? { limit } : {}),
+  };
+}
+
+export function selectRegisterItems(
+  items: readonly PjrItem[],
+  filter: RegisterSelectionFilter,
+): PjrItem[] {
+  const types = filter.types ?? DEFAULT_SELECTION_TYPES;
+  const statuses = filter.statuses ?? ["open"];
+  const selected = items
+    .filter(
+      (item) =>
+        registerItemCategory(item.type) !== null &&
+        types.includes(item.type) &&
+        statuses.includes(item.status) &&
+        (!filter.priorities || filter.priorities.includes(item.priority)),
+    )
+    .sort((a, b) => a.id.localeCompare(b.id));
+  return filter.limit === undefined ? selected : selected.slice(0, filter.limit);
 }
 
 // 実行可能な登録項目かを検証し、実行区分を返す。実行対象外の type と終端状態は
@@ -285,7 +370,7 @@ export async function generateRegisterPlan(opts: {
   const { item } = opts;
   const category = requireRunnableRegisterItem(item);
 
-  const templatePath = join(templatesDir(), REGISTER_PLAN_TEMPLATES[category]);
+  const templatePath = execTemplatePath(REGISTER_PLAN_TEMPLATES[category]);
   if (!existsSync(templatePath)) {
     throw new Error(`Template not found: ${templatePath}`);
   }
@@ -315,6 +400,7 @@ export async function generateRegisterPlan(opts: {
     _PJR_INDEX_PATH_: repoRelativePath(opts.registerPaths.pjrIndexPath),
     _PJR_TICKET_REF_: ticketPath ? `\`${repoRelativePath(ticketPath)}\`` : "-",
     _RESULT_REF_: resultRef,
+    _GRADE_FINDINGS_: ticketPath ? registerGradeFindingsText(opts.projectId, ticketPath) : "- なし",
   };
 
   const body = expandTemplate(template, values);

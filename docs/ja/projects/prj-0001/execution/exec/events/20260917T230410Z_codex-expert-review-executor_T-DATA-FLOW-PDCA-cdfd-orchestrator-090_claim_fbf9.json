@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-09-17T23:04:10Z",
+  "type": "claim",
+  "task_id": "T-DATA-FLOW-PDCA-cdfd-orchestrator-090",
+  "by": "codex-expert-review-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "BA"
+  }
+}

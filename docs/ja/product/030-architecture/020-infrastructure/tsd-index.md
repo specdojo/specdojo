@@ -31,10 +31,12 @@ SpecDojo が採用する技術の一覧。各技術の担当責務を明示し�
 | 自宅開発サーバ      | MacBook Pro + Tailscale + Amphetamine   | ローカル LLM とリモート開発の常時起動ホスト        |
 | ローカル LLM        | Ollama                                  | Host Mac 上でのローカル LLM 実行                   |
 | ソースコード管理    | GitHub                                  | リポジトリ管理・GitHub Actions による CI/CD        |
-| パッケージ配信      | npm (npmjs.com)                         | `specdojo` CLI のパッケージ公開・配布              |
+| パッケージ配信      | npm (npmjs.com)                         | CLI と文書サイトの独立パッケージ公開・配布         |
 
 ## 2. 補足
 
 - Ollama の詳細（モデル定義・チューニング）は [[tsd-ollama]] を参照。
 - 自宅 MacBook Pro を常時起動の開発サーバとして使う初期設定は [[tsd-home-mac-dev-server]]、tmux と SpecDojo の日常運用は [[tsd-home-mac-dev-server-usage]] を参照。
 - opencode の設定は [[tsd-ollama-opencode]] を参照。
+- VitePress と Mermaid CLI は `@specdojo/docs-site` が所有する。`specdojo` CLI はこのパッケージを
+  optional dependency にせず、文書サイトを構築する環境だけが明示導入する。

@@ -1,0 +1,118 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_aa16a5b591fe404e9a4c342dea8c3ebe
+  ts: "2026-09-17T13:17:10Z"
+  action: add
+  actor: specdojo-orchestrator (claude)
+  from_status: null
+  to_status: open
+  reason: rtn-grade-recheck（JBR-grade-kata-8a8333596f2e）で needs-work となった rulebook 3 件の是正を追跡するため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: cdfd-rulebook と stsd 系 rulebook の grade 指摘を解消する
+    - field: description
+      from: ""
+      to: STSD/CSTD 統合後の Kata 評価で cdfd-rulebook（75、11 件）、stsd-rulebook（73、8 件）、stsd-mermaid-rulebook（71、7 件）に残った finding を解消し、includes 先の mermaid rulebook との整合を取る
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-17"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_03e719303e7d4ca6b5f4f4e68945b693
+  ts: "2026-09-18T23:15:10Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_aa16a5b591fe404e9a4c342dea8c3ebe
+- v: 1
+  id: reg_f19928ffbee4405584870aa1df269fb3
+  ts: "2026-09-18T23:36:11Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: 親検証 (`source=\"runner\"`) の `test-unit` が `failed` となっているため、完了条件を満たしていない。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: 親検証 (`source=\"runner\"`) の `test-unit` が `failed` となっているため、完了条件を満たしていない。"
+  previous_event_id: reg_03e719303e7d4ca6b5f4f4e68945b693
+- v: 1
+  id: reg_3e32376a7a284faf8249ad111a4dfefb
+  ts: "2026-09-19T00:08:08Z"
+  action: review
+  actor: specdojo-orchestrator (claude)
+  from_status: waiting
+  to_status: review
+  reason: 親検証 test-unit の失敗は stsd-template の HTML コメント内 <<choice>> が山括弧プレースホルダ検査に掛かったもの。全角表記に直して develop へ統合。作業 4（再 grade）は夜間 routine で確認
+  changes:
+    - field: status
+      from: waiting
+      to: review
+  previous_event_id: reg_f19928ffbee4405584870aa1df269fb3
+- v: 1
+  id: reg_3511c4b502a84ffabb502196dd25c1a6
+  ts: "2026-09-21T02:48:11Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_3e32376a7a284faf8249ad111a4dfefb
+- v: 1
+  id: reg_891361360f004ec79d8ad44de4c340a5
+  ts: "2026-09-21T03:04:16Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_3511c4b502a84ffabb502196dd25c1a6
+- v: 1
+  id: reg_90d329032a2f4e43b5cd6e3cd076d03a
+  ts: "2026-09-21T05:48:19Z"
+  action: close
+  actor: specdojo-orchestrator (claude)
+  from_status: review
+  to_status: done
+  reason: codex-expert-executor が worktree で 2 周回実施。rulebook 本体 2 本が pass になり、派生した指摘 4 件は PJR-YM9Y へ分離して利用者が close
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-21"
+  previous_event_id: reg_891361360f004ec79d8ad44de4c340a5

@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_93129a444d8c4a718d93aad8b61fec19
+  ts: "2026-09-07T11:07:50Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-RP1K の検証時に、agent が編集対象の sample へ到達できないことが判明したため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: maintenance の plan が編集対象の kata パスを示さない
+    - field: description
+      from: ""
+      to: sample-maintenance などの plan が成果物のパスだけを示し、編集対象である kata のパスを含まない。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-07"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_96d928a8dfc6405687dec0de287e9a71
+  ts: "2026-09-07T11:13:41Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_93129a444d8c4a718d93aad8b61fec19
+- v: 1
+  id: reg_182f08c8c2de4057855acf35eeed0f70
+  ts: "2026-09-07T11:25:06Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_96d928a8dfc6405687dec0de287e9a71
+- v: 1
+  id: reg_a8ce4ebf4553404da5d2357012caafd4
+  ts: "2026-09-07T11:44:06Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: plan へ編集対象の kata パスと state を追加した。節名も実態へ合わせた。修正が進まない件は approach の設計問題として分離した。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-07"
+    - field: conclusion
+      from: "-"
+      to: plan へ編集対象の kata パスと state を追加した。節名も実態へ合わせた。修正が進まない件は approach の設計問題として分離した。
+  previous_event_id: reg_182f08c8c2de4057855acf35eeed0f70

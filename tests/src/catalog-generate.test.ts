@@ -219,6 +219,7 @@ specdojo:
 
 # プロジェクト憲章: _PROJECT_NAME_
 
+<!-- specdojo:finding id=F001 severity=major rule=vp-test line=1 複製しない -->
 _TODO_: 本文を記述する。
 `,
       "utf8",
@@ -237,6 +238,7 @@ _TODO_: 本文を記述する。
     expect(content).not.toContain("_PROJECT_ID_");
     expect(content).toContain("_PROJECT_NAME_");
     expect(content).toContain("_TODO_: 本文を記述する。");
+    expect(content).not.toContain("specdojo:finding");
   });
 
   it("YAML テンプレートの metadata_template を展開し _PROJECT_ID_ を置換する", () => {

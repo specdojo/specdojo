@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-5ERG",
+  "run_id": "20260903T224414679Z-f509725e",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "failed",
+    "started_at": "2026-09-03T22:44:14.679Z",
+    "completed_at": "2026-09-03T22:49:32.062Z",
+    "exit_code": 1,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/040-system-design/sysd-orchestrator-agent-settings.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-5erg-orchestrator-body-sync.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/orchestrator-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "lefthook.yml",
+      "status": "M"
+    },
+    {
+      "path": "package.json",
+      "status": "M"
+    },
+    {
+      "path": "tests/tools/validate-orchestrator-sync.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tools/validate-orchestrator-sync.mjs",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 7,
+    "summary": ".../sysd-orchestrator-agent-settings.md            |  3 +-\n .../pjr-5erg-orchestrator-body-sync.md             | 20 ++++++-----\n .../pjr-5erg-20260903T223640Z-9015-result.md       | 42 +++++++++++++++++++++-\n .../guides/orchestrator-operation-guide.md         |  8 ++++-\n lefthook.yml                                       |  5 +++\n package.json                                       |  1 +\n 6 files changed, 68 insertions(+), 11 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write tools/validate-orchestrator-sync.mjs tests/tools/validate-orchestrator-sync.test.ts package.json lefthook.yml docs/ja/specdojo/guides/orchestrator-operation-guide.md docs/ja/product/040-system-design/sysd-orchestrator-agent-settings.md docs/ja/projects/prj-0001/controls/project-register/pjr-5erg-orchestrator-body-sync.md",
+      "status": "passed",
+      "summary": "全対象を整形済み"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/specdojo/guides/orchestrator-operation-guide.md docs/ja/product/040-system-design/sysd-orchestrator-agent-settings.md docs/ja/projects/prj-0001/controls/project-register/pjr-5erg-orchestrator-body-sync.md",
+      "status": "passed",
+      "summary": "Markdown lint 成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "型検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "npx eslint tests/tools/validate-orchestrator-sync.test.ts",
+      "status": "passed",
+      "summary": "追加テストの ESLint 成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:orchestrator-sync",
+      "status": "failed",
+      "summary": "Codex TOML の本文不一致を検出。Markdown 4ラッパーは一致"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "既存警告のみで検証成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "文書インデックス生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:unit",
+      "status": "not_run",
+      "summary": "親 runner の検証対象のため未実行"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:integration",
+      "status": "not_run",
+      "summary": "親 runner の検証対象のため未実行"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema",
+      "status": "not_run",
+      "summary": "親 runner の検証対象のため未実行"
+    }
+  ],
+  "final_message": "検証機構・hook・テスト・文書は実装済み。Codex TOML が読み取り専用で同期できないため未完了。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-5ERG/20260903T224414679Z-f509725e/executor.log",
+      "bytes": 2607,
+      "truncated": false
+    }
+  ]
+}

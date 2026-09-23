@@ -199,12 +199,21 @@ function withRepo(fn: (fixture: Fixture) => Promise<void> | void): Promise<void>
         `${JSON.stringify(CONFIG, null, 2)}\n`,
         "utf8",
       );
+      // 登録簿の派生ビュー（generated/）は実リポジトリと同じく非追跡の生成物として扱う。
+      // 追跡すると root の再生成と exec branch の merge 経路が重なり、統合が拒否される。
+      writeFileSync(join(root, ".gitignore"), "docs/**/generated/*\n", "utf8");
       mkdirSync(join(root, REGISTER_REL, "generated"), { recursive: true });
       mkdirSync(join(root, `${PROJECT_BASE}/controls/generated`), { recursive: true });
       mkdirSync(join(root, SCHEDULE_REL), { recursive: true });
       mkdirSync(join(root, EXECUTION_REL, "exec", "events"), { recursive: true });
       writeFileSync(join(root, REGISTER_REL, "pjr-index.md"), buildIndex(), "utf8");
       writeFileSync(join(root, TICKET_REL), buildTicket(), "utf8");
+      cpSync(
+        join(REAL_REPO_ROOT, "docs/ja/specdojo/exec-templates"),
+        join(root, "docs/ja/specdojo/exec-templates"),
+        { recursive: true },
+      );
+      // register add は個票の雛形として templates 配下の pjr-*-template.md を読む。
       cpSync(
         join(REAL_REPO_ROOT, "docs/ja/specdojo/templates"),
         join(root, "docs/ja/specdojo/templates"),
@@ -413,6 +422,94 @@ describe("exec run --register --worktree --resume", () => {
         expect(worktreePathFor(root)).toBe(worktreePath);
         expect(existsSync(join(worktreePath ?? "", ARTIFACT_NAME))).toBe(true);
         expect(readFileSync(join(root, TICKET_REL), "utf8")).toContain("item_status: waiting");
+      });
+    },
+  );
+
+  it(
+    "restarts a stale running executor in the existing worktree and completes the pipeline",
+    { timeout: 120_000 },
+    async () => {
+      await withRepo(async ({ root, markerPath, worktreeBase }) => {
+        vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+        vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+
+        await runWithFailingReporter(markerPath, worktreeBase);
+        const worktreePath = worktreePathFor(root);
+        expect(worktreePath).not.toBeNull();
+
+        const taskEvidenceDir = join(
+          worktreePath ?? "",
+          EXECUTION_REL,
+          "exec",
+          "evidence",
+          "PJR-CD34",
+        );
+        const interruptedRunId = readdirSync(taskEvidenceDir)[0];
+        const interruptedRunDir = join(taskEvidenceDir, interruptedRunId);
+        const statePath = join(interruptedRunDir, "pipeline-state.json");
+        const state = JSON.parse(readFileSync(statePath, "utf8")) as {
+          updated_at: string;
+          stages: {
+            executor: Record<string, unknown>;
+            reporter: Record<string, unknown>;
+          };
+        };
+        state.updated_at = new Date().toISOString();
+        state.stages.executor = {
+          ...state.stages.executor,
+          status: "running",
+          attempts: 0,
+          completed_at: null,
+          artifact_ref: null,
+        };
+        state.stages.reporter = {
+          ...state.stages.reporter,
+          status: "pending",
+          attempts: 0,
+          started_at: null,
+          completed_at: null,
+          artifact_ref: null,
+        };
+        writeFileSync(statePath, `${JSON.stringify(state, null, 2)}\n`, "utf8");
+        rmSync(join(interruptedRunDir, "evidence.json"), { force: true });
+        rmSync(join(interruptedRunDir, "executor.log"), { force: true });
+
+        rmSync(markerPath, { force: true });
+        process.exitCode = undefined;
+        await runExec([
+          "run",
+          "--project",
+          "test",
+          "--register",
+          "PJR-CD34",
+          "--worktree",
+          "--worktree-base",
+          worktreeBase,
+          "--resume",
+        ]);
+
+        expect(process.exitCode ?? 0).toBe(0);
+        expect(readFileSync(join(root, TICKET_REL), "utf8")).toContain("item_status: review");
+        expect(existsSync(join(root, ARTIFACT_NAME))).toBe(true);
+        const mergedRuns = readdirSync(join(root, EXECUTION_REL, "exec", "evidence", "PJR-CD34"));
+        expect(mergedRuns).toHaveLength(2);
+        const resumedRunId = mergedRuns.find((runId) => runId !== interruptedRunId);
+        expect(resumedRunId).toBeDefined();
+        expect(
+          existsSync(
+            join(
+              root,
+              EXECUTION_REL,
+              "exec",
+              "evidence",
+              "PJR-CD34",
+              resumedRunId ?? "",
+              "evidence.json",
+            ),
+          ),
+        ).toBe(true);
+        expect(worktreePathFor(root)).toBeNull();
       });
     },
   );

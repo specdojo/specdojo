@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_fd510476614241c9b4579e1a7b91ce1e
+  ts: "2026-08-29T12:49:26Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: grade を1文書単位の評価へ変更し plan として保存する
+    - field: description
+      from: ""
+      to: grade prompt は指定された全対象を1つの prompt にまとめるため、対象数に比例してコンテキストが膨張し、kata 285 件では破綻する。分割の仕組みもない。評価単位を1文書へ変更し、対応する rulebook / recipe / sample / template を参考資料として添付することで、コンテキストを一定に保ちつつ成果物間整合の判定材料を確保する。あわせて prompt を plan へ改称し、ファイルとして保存・再利用できるようにする。exec trial による複数 agent の比較や、同一 plan の再実行による再現性検証に利用できる。ただし plan を履歴として蓄積すると冪等性が失われるため、対象ごとに上書きする設計とする。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-08-29"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_f5c1da9b62d145ac868d6710048de0d6
+  ts: "2026-08-29T14:10:16Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_fd510476614241c9b4579e1a7b91ce1e
+- v: 1
+  id: reg_ec4a1100b92a4ddaaef68ad400ce65bc
+  ts: "2026-08-29T14:24:35Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_f5c1da9b62d145ac868d6710048de0d6
+- v: 1
+  id: reg_6f546c5a4c0f4aab8b3e9b409996a79c
+  ts: "2026-08-29T14:53:21Z"
+  action: close
+  actor: manual
+  from_status: review
+  to_status: done
+  reason: 実装・検証・レビューが完了したため
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-08-29"
+    - field: conclusion
+      from: "-"
+      to: grade prompt を grade plan へ改称し、対象1件ごとに exec 互換の plan を生成・保存する構成へ変更した。kata のメタデータを索引化し、参照と逆参照から対応する rulebook / recipe / sample / template を解決して参考資料として plan へ含める。参考資料は評価対象には含めない旨を plan へ明記する。plan は execution/grade/plans/`<target>`/ へ対象由来の固定ファイル名で冪等に保存する。Job は1件の判定ごとに apply を実行するため、後続の失敗時も既存の grade と finding は失われない。
+  previous_event_id: reg_ec4a1100b92a4ddaaef68ad400ce65bc

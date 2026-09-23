@@ -1,0 +1,90 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:otp-index-sample
+path: docs/ja/specdojo/samples/otp-index-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 86
+graded_at: "2026-09-05T18:04:46.586Z"
+graded_by: gemma-expert-executor
+content_hash: bfd9a8ab7c0feafc1874886d34e823da3a7c43329ebd6c617adce192644a61b0
+categories:
+  consistency:
+    score: 75
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 75
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 2
+  minor: 4
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: Frontmatter に必須項目である `title` が定義されていない。
+    anchor: ""
+  - id: F006
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: Frontmatter の `type` が `project` となっており、ルールブックで指定された `migration` と矛盾している。
+    anchor: ""
+  - id: F002
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 15
+    message: 「3. バックアップ/リストア」において、記述ガイド 6.3 で求められている「保管先」の明記が不足している。
+    anchor: ""
+  - id: F003
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 20
+    message: 「4. 権限/アカウント移行」において、記述ガイド 6.4 で求められている「旧/新の拳限差分」の明記が不足している。
+    anchor: ""
+  - id: F004
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 31
+    message: 「6. 問合せ窓口/一次対応」において、記述ガイド 6.6 で求められている「エスカレーション条件」の明記が不足している。
+    anchor: ""
+  - id: F005
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 51
+    message: 「10. 移行完了後のクローズ条件」において、記述ガイド 6.10 で求められている「クローズ判断者」および「最終報告物」の明記が不足している。
+    anchor: ""

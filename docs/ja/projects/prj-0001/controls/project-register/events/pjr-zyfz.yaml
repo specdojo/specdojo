@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_6f581f0538d14825901d8b38c9fe35e0
+  ts: "2026-08-29T14:52:37Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 文書責務の単一性を見る viewpoint を追加する
+    - field: description
+      from: ""
+      to: 1つの文書が複数の独立した主題を同居させている状態を検出する観点が既存の viewpoint に存在しない。opr-rulebook は 6 章に障害対応、バックアップ、バッチ再実行、運用変更、アカウント付与など 9 種類の運用手順を並べ、対応する sample が 9 件存在する。483 行という分量と 22 行の sample との乖離はこの構造に起因する。vp-arc-conciseness は同一主張の反復を見る観点であり、主題の多さは判定できない。vp-arc-single-responsibility を追加し、章立ての独立性、対応する sample や template の数、対象読者と参照文脈の違いから分割の要否を判定する。分割が必要と判定された場合の対処は既存の maintenance approach の範囲を超えるため、扱いを別途決める。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-08-29"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_171dd02bea534d5abcca2a23ec695f4e
+  ts: "2026-08-29T15:19:12Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_6f581f0538d14825901d8b38c9fe35e0
+- v: 1
+  id: reg_40e61fd4f7024f3a913a4a13d6e4264e
+  ts: "2026-08-29T15:25:46Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_171dd02bea534d5abcca2a23ec695f4e
+- v: 1
+  id: reg_41f78448982447808ad69624162bc211
+  ts: "2026-08-29T23:18:29Z"
+  action: close
+  actor: manual
+  from_status: review
+  to_status: done
+  reason: 実装・検証・レビューが完了したため
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-08-30"
+    - field: conclusion
+      from: "-"
+      to: 共通正本へ vp-arc-single-responsibility を追加し、ARC の role_viewpoint_sets へ組み込んだ。分量や対応する実践の型の数だけでは不備とせず、複数主題の案内自体を責務とする index・catalog・overview は分割対象から除外する。同一主張の反復は vp-arc-conciseness で扱い、本観点とは境界を分ける。分割が必要と判定された場合は人が確認して PJR 起票を判断する運用とし、判断手順をレビューガイドへ記載した。opr-rulebook を level 2 / major と判定できることを確認した。
+  previous_event_id: reg_40e61fd4f7024f3a913a4a13d6e4264e

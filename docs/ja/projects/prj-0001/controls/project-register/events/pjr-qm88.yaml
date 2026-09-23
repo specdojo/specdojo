@@ -1,0 +1,82 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_66c9386aef084f90b4d41ddb98d5415c
+  ts: "2026-09-02T12:16:43Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: ready の rulebook 2 件で schema との矛盾が見つかり、うち enum 欠落は機械検査で誤検出なく捕捉できたため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: schema の enum 網羅を rulebook に対して検査する
+    - field: description
+      from: ""
+      to: schema が定義する enum 値が対応 rulebook 本文に列挙されているかを lint で検査し、実装変更への追従漏れを機械的に検出する。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-02"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_ae3097d339fa460fa5fd16de0eb06cd8
+  ts: "2026-09-02T13:07:14Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_66c9386aef084f90b4d41ddb98d5415c
+- v: 1
+  id: reg_1b43e18710244c1a99d5c1e4f87b3a3f
+  ts: "2026-09-02T13:18:54Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=package.json; agent must record the required change in the result …"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=package.json; agent must record the required change in the result …"
+  previous_event_id: reg_ae3097d339fa460fa5fd16de0eb06cd8
+- v: 1
+  id: reg_b3fbf6656fe34233a15bca3d5fc0a394
+  ts: "2026-09-02T13:25:58Z"
+  action: close
+  actor: orchestrator
+  from_status: waiting
+  to_status: done
+  reason: schema の enum 網羅を rulebook に対して検査する lint を追加し、validate:schema へ統合した。検出された既存の乖離2件も修正した。
+  changes:
+    - field: status
+      from: waiting
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-02"
+    - field: conclusion
+      from: "-"
+      to: schema の enum 網羅を rulebook に対して検査する lint を追加し、validate:schema へ統合した。検出された既存の乖離2件も修正した。
+  previous_event_id: reg_1b43e18710244c1a99d5c1e4f87b3a3f

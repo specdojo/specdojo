@@ -1,0 +1,12 @@
+対応を完了しました。
+
+- `exec worktree prune` を追加。project 単位で孤立ブランチを検出し、統合済みだけを `git branch -d` で削除します。
+- 未統合・使用中ブランチは保持し、`--dry-run` で事前確認できます。
+- worktree 撤去後のブランチ削除失敗を、原因と復旧方法付きで記録します。
+- 8件の履歴調査結果、運用ガイド、コマンドリファレンス、統合テストを更新しました。
+- 個票のステータスと result ファイルは変更していません。
+- 型検査、lint、Markdown・カタログ・索引検査は通過。親 runner 所管のテストと schema 検証は未実行です。
+
+<specdojo_executor_evidence>
+{"final_message":"孤立したexecブランチを安全に検出・整理するworktree pruneと、削除失敗時の明示的なログ・復旧案内を実装した。","validations":[{"command":"npx prettier --write src/exec-worktree-ops.ts src/exec-worktree-command.ts src/exec-run.ts tests/src/exec-worktree-ops.integration.test.ts tests/src/exec-worktree-command.integration.test.ts docs/ja/specdojo/guides/exec-worktree-guide.md docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-5hhs-exec-branch-not-deleted.md","status":"passed","summary":"変更したTypeScript・Markdownを整形済み"},{"command":"npm run typecheck","status":"passed","summary":"TypeScript型検査成功"},{"command":"npx eslint src/exec-worktree-ops.ts src/exec-worktree-command.ts src/exec-run.ts tests/src/exec-worktree-ops.integration.test.ts tests/src/exec-worktree-command.integration.test.ts","status":"passed","summary":"変更したTypeScriptのlint成功"},{"command":"npx markdownlint docs/ja/specdojo/guides/exec-worktree-guide.md docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-5hhs-exec-branch-not-deleted.md","status":"passed","summary":"Markdown静的検査成功"},{"command":"npx tsx src/specdojo.ts register build","status":"not_run","summary":"sandboxがtsx IPCソケットをEPERMで拒否したため起動前に停止。IPC不要の代替起動で同じ検査を実施"},{"command":"node --import tsx src/specdojo.ts register build && node --import tsx src/specdojo.ts catalog validate && node --import tsx src/specdojo.ts index build","status":"passed","summary":"register生成、catalog検証、index生成成功。既存のbased_on警告のみ"},{"command":"node --import tsx src/specdojo.ts exec worktree --help","status":"passed","summary":"pruneサブコマンドの登録を確認"},{"command":"git diff --check","status":"passed","summary":"差分の空白エラーなし"},{"command":"npm run test:unit","status":"not_run","summary":"親runnerのallowlisted validationに委譲"},{"command":"npm run test:integration","status":"not_run","summary":"親runnerのallowlisted validationに委譲"},{"command":"npm run validate:schema","status":"not_run","summary":"親runnerのallowlisted validationに委譲"}]}
+</specdojo_executor_evidence>

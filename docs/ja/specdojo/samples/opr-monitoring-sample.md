@@ -4,7 +4,8 @@ specdojo:
   type: operations
   status: draft
   rulebook: specdojo:opd-rulebook
-  based_on: [opd-monitoring]
+  based_on:
+    - opd-monitoring
   supersedes: []
 ---
 

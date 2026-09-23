@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-E6QJ",
+  "run_id": "20260903T102447867Z-a46b41ad",
+  "stage": {
+    "role": "executor",
+    "actor": "claude-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-03T10:24:47.867Z",
+    "completed_at": "2026-09-03T10:34:40.185Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-e6qj-worktree-generated-artifacts.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-worktree-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-worktree-ops.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-worktree.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-worktree.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-worktree.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 6,
+    "summary": ".../pjr-e6qj-worktree-generated-artifacts.md       |  33 ++++--\n docs/ja/specdojo/guides/exec-worktree-guide.md     |   5 +\n src/exec-worktree-ops.ts                           |   8 +-\n src/exec-worktree.ts                               |  84 ++++++++++++++\n tests/src/exec-worktree.integration.test.ts        |  52 +++++++++\n tests/src/exec-worktree.test.ts                    | 124 ++++++++++++++++++++-\n 6 files changed, 296 insertions(+), 10 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write src/exec-worktree.ts src/exec-worktree-ops.ts tests/src/exec-worktree.test.ts tests/src/exec-worktree.integration.test.ts docs/ja/specdojo/guides/exec-worktree-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-e6qj-worktree-generated-artifacts.md",
+      "status": "passed",
+      "summary": "整形完了（差分なし・個票のみ整形適用）"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/specdojo/guides/exec-worktree-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-e6qj-worktree-generated-artifacts.md",
+      "status": "passed",
+      "summary": "エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npx remark docs/ja/specdojo/guides/exec-worktree-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-e6qj-worktree-generated-artifacts.md --quiet --frail",
+      "status": "passed",
+      "summary": "frontmatter 検査でエラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "tsc -b --noEmit がエラーなしで完了"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "ESLint エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "全 dct が OK（既存の based_on 未解決 WARN のみ）"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "pjr-index と各ビューを再生成"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "1497 entries → .specdojo/doc-index.json"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx tools/docs/src/validate-history-links.ts",
+      "status": "passed",
+      "summary": "履歴ファイルのリンク記法違反なし（exit 0）"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-E6QJ\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: tools/vscode-specdojo\nInstalling worktree dependencies: .\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/stale.md\n  src/unrelated.ts\ncommit-targets:\n  execution/exec/res…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.1.0 validate:schema:yaml\n> tsx tools/docs/src/validate-yaml-schema.ts --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bps-template.yaml: schema docs/specdojo/sc…"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-E6QJ\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-eQSOdN/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-IOOsyg/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-jtpEE4/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-FhWNkp/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-uPfZWf/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-u9FvYL/pjr-0001-topic.md\nWrote agent stdout: /tmp/specdojo-agent-command-a8CB5z/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-OUQNSg/outputs/partial.txt\n\n Test Files  96 passed (96)\n      Tests  1362 passed (1362)\n   Start at  19:34:18\n   Duration  22.12s (transform 1.72s, setup 441ms, import 11.84s, tests 19.28s, environm…"
+    }
+  ],
+  "final_message": "worktree 準備に生成物ビルド段階を追加（ensureExecWorktree の install 直後と既存 worktree 再利用経路で worktree 内 CLI の specdojo build を実行、設定/CLI 無しは skip、失敗は準備失敗と分かるメッセージ）。単体・統合テストとガイド、個票を更新。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-E6QJ/20260903T102447867Z-a46b41ad/executor.log",
+      "bytes": 4594,
+      "truncated": false
+    }
+  ]
+}

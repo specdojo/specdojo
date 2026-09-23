@@ -1,0 +1,114 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_35a90a4f6ebc4d49b8193f943dc77086
+  ts: "2026-09-01T12:02:27Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: 段が外側だと codex 呼び出しが burst し中断で全進捗を失うため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: grade の3段評価を文書単位で回す実行経路を作る
+    - field: description
+      from: ""
+      to: 段を外側から文書を外側へ入れ替え、rate limit を分散し中断からの再開を可能にする。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-01"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_3bab1d96af2d4023ab4393669978753a
+  ts: "2026-09-01T14:07:12Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_35a90a4f6ebc4d49b8193f943dc77086
+- v: 1
+  id: reg_1e4e9f3fc4c44c62a37167554400d6b3
+  ts: "2026-09-01T14:24:19Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_3bab1d96af2d4023ab4393669978753a
+- v: 1
+  id: reg_b02076e1cd5b42c1931ef4421746dcb6
+  ts: "2026-09-01T14:59:13Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: 文書単位で3段を回す run-per-document.sh を追加し、rate limit の分散と段単位の再開を可能にした。実 agent で1件通し、ローカル1段あたり約7.4分を確認した。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-01"
+    - field: conclusion
+      from: "-"
+      to: 文書単位で3段を回す run-per-document.sh を追加し、rate limit の分散と段単位の再開を可能にした。実 agent で1件通し、ローカル1段あたり約7.4分を確認した。
+  previous_event_id: reg_1e4e9f3fc4c44c62a37167554400d6b3
+- v: 1
+  id: reg_4f6c9069913d4a6cb4e639783e106eed
+  ts: "2026-09-01T15:04:27Z"
+  action: reopen
+  actor: orchestrator
+  from_status: done
+  to_status: in-progress
+  reason: 既定の作業ディレクトリが docs 配下のため、生成した plan が段をまたいで同一 ID となり index build が失敗する。orchestrator が修正する。
+  changes:
+    - field: status
+      from: done
+      to: in-progress
+    - field: completed
+      from: "2026-09-01"
+      to: "-"
+  previous_event_id: reg_b02076e1cd5b42c1931ef4421746dcb6
+- v: 1
+  id: reg_cdabf88de02a486da79ee6302950474d
+  ts: "2026-09-01T15:26:53Z"
+  action: close
+  actor: orchestrator
+  from_status: in-progress
+  to_status: done
+  reason: 文書単位で3段を回す run-per-document.sh を追加した。受け入れ時に検出した作業ディレクトリ起因の重複ID不具合は orchestrator が修正し、実 agent で1件通して確認した。
+  changes:
+    - field: status
+      from: in-progress
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-02"
+    - field: conclusion
+      from: 文書単位で3段を回す run-per-document.sh を追加し、rate limit の分散と段単位の再開を可能にした。実 agent で1件通し、ローカル1段あたり約7.4分を確認した。
+      to: 文書単位で3段を回す run-per-document.sh を追加した。受け入れ時に検出した作業ディレクトリ起因の重複ID不具合は orchestrator が修正し、実 agent で1件通して確認した。
+  previous_event_id: reg_4f6c9069913d4a6cb4e639783e106eed

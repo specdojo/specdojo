@@ -94,7 +94,7 @@ OK 例:
 ## 7. 表
 
 - 列ヘッダーと区切り行（`| --- |`）を必ず含める。
-- 列幅の揃えは任意だが、`Format Markdown Table` タスクで整形することを推奨する。
+- 列幅の揃えは任意だが、`SpecDojo: Format Markdown Table` コマンドで整形することを推奨する。
 - セル内改行は使わない。セルが長くなる場合は別リストへ分割する。
 - セル内に `|` を含める場合は `\|` でエスケープする。とくに wikilink の表示名区切り（`[[id|表示名]]`）はセル内では `[[id\|表示名]]` と書く。エスケープしないと列がずれて表全体が壊れ、`prettier` 整形でセルが分割されて固定化される。
 
@@ -129,7 +129,7 @@ plan / result / 個票（`pjr-<NNNN>-<topic>`）など、履歴として蓄積�
 - `docs/` 外のファイル（`.github/instructions/` など）を参照する場合は、リポジトリルートからの相対パスをインラインコードまたはプレーンテキストで書く。
 - 外部URLは Markdown リンクにせず、URL そのまま（bare URL または autolink）で書く。
 - 既存の履歴ファイルは、Markdown リンクを含むものが見つかった時点で上記記法へ置き換える。一括の遡及移行は必須としない。
-- 違反検知は `npx tsx tools/docs/src/validate-history-links.ts` で行う。検出時は exit 1 で失敗する。
+- 違反検知は `npm run validate:history-links` で行う。検出時は exit 1 で失敗する。
 
 ## 11. 禁止事項
 

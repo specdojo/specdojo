@@ -82,6 +82,7 @@ ESIL 側の `spec_ref: ifx-file-...` は、このEFESのID（およびファイ�
 
 - `method`: `SFTP` / `HTTPS` / `共有ストレージ` / `その他` / `TBD`
 - `endpoint`: 接続先の説明（URL/ホスト名/共有パス等。機密値は書かない）
+
 - `frequency`: 連携頻度（例: 日次 02:00、都度、手動）
 
 ## 5. schema（フォーマット別の構造定義）

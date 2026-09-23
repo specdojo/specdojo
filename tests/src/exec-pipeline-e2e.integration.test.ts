@@ -1,5 +1,6 @@
 import { execFileSync } from "node:child_process";
 import {
+  chmodSync,
   existsSync,
   mkdirSync,
   mkdtempSync,
@@ -33,6 +34,7 @@ type AgentBehavior = {
   role: "executor" | "reporter" | "legacy";
   kind?: "ok" | "fail" | "invalid" | "blocked";
   task?: string;
+  lockWorktree?: boolean;
 };
 
 type AgentInvocation = {
@@ -47,6 +49,7 @@ type AgentInvocation = {
 // テスト用の agent 実装。provider の command_template から nickname / model / effort を
 // 受け取り、behavior ファイルの指定に従って executor / reporter / 従来 agent として振る舞う。
 const FAKE_AGENT_SCRIPT = `
+import { execFileSync } from "node:child_process";
 import { appendFileSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -74,6 +77,9 @@ if (behavior.role === "executor") {
   if (behavior.kind === "fail") {
     process.stderr.write("blocked: validation command failed; need=fix the failing test\\n");
     process.exit(1);
+  }
+  if (behavior.lockWorktree) {
+    execFileSync("git", ["worktree", "lock", "--reason", "integration-test", "."]);
   }
   writeFileSync("pipeline-artifact.md", "# " + nickname + " / " + model + "\\n", "utf8");
   process.stdout.write("${RAW_LOG_MARKER} api_key: sk-proj-abcdefgh12345678\\n");
@@ -229,6 +235,42 @@ function writeExecDefaults(repo: string, logPath: string, behaviorPath: string):
   );
 }
 
+// 親検証に加えて typecheck を設定する fixture。PJR-W66B で typecheck を親検証へ追加したことを
+// 回帰として確認する。test:integration と同じ parent-validation.mjs を使い、behavior を fail に
+// すると「型エラーを含む fixture」を sim できる。
+function withTypecheckParentValidation(fixture: PipelineFixture): void {
+  const logPath = fixture.logPath;
+  const behaviorPath = fixture.behaviorPath;
+  const base = `node ${join(fixture.repo, "fake-agent.mjs")} --log ${logPath} --behavior ${behaviorPath} --nickname {nickname} --mode {mode}`;
+  writeFileSync(
+    join(fixture.repo, ".specdojo", "exec-defaults.yaml"),
+    [
+      "pipeline:",
+      "  parent_validations:",
+      "      - typecheck",
+      "      - test-integration",
+      "rate_limit_detection:",
+      "  exit_codes: []",
+      "  stderr_patterns:",
+      '      - "rate limit"',
+      "providers:",
+      "  opencode:",
+      "    max_concurrency: 1",
+      `    command_template: "${base} --model {model}"`,
+      "    command_params:",
+      "      by_proficiency:",
+      "        normal: { model: gemma3-12b }",
+      "",
+    ].join("\n"),
+    "utf8",
+  );
+  writeFileSync(
+    join(fixture.repo, "package.json"),
+    `${JSON.stringify({ scripts: { typecheck: "node parent-validation.mjs", "test:integration": "node parent-validation.mjs" } }, null, 2)}\n`,
+    "utf8",
+  );
+}
+
 function writeSchedule(repo: string): void {
   const pipelinePhase = (executorProficiency: string): string[] => [
     "    - id: draft",
@@ -335,7 +377,7 @@ function writeCatalog(repo: string): void {
 }
 
 function writeTemplates(repo: string): void {
-  const templates = join(repo, "docs", "ja", "specdojo", "templates");
+  const templates = join(repo, "docs", "ja", "specdojo", "exec-templates");
   writeFileSync(
     join(templates, "xep-template.md"),
     "_FRONTMATTER_\n\n# Edit Plan: _TASK_ID_\n\n_DONE_CRITERIA_GOALS_\n",
@@ -381,7 +423,7 @@ function setupPipelineRepository(): PipelineFixture {
     join(repo, "schedule"),
     join(repo, "catalog"),
     join(repo, "execution", "exec", "events"),
-    join(repo, "docs", "ja", "specdojo", "templates"),
+    join(repo, "docs", "ja", "specdojo", "exec-templates"),
   ]) {
     mkdirSync(dir, { recursive: true });
   }
@@ -533,6 +575,31 @@ function readWorktreeResult(
   );
 }
 
+function onlyWorktreePath(worktreeBase: string): string {
+  const entries = readdirSync(worktreeBase, { withFileTypes: true }).filter((entry) =>
+    entry.isDirectory(),
+  );
+  if (entries.length !== 1) {
+    throw new Error(`expected exactly one worktree under ${worktreeBase}, found ${entries.length}`);
+  }
+  return join(worktreeBase, entries[0]!.name);
+}
+
+function readWorktreePipelineState(
+  worktreeBase: string,
+  fixture: PipelineFixture,
+  taskId: string,
+): { stages: Record<string, { status: string; attempts: number }> } {
+  const worktreePath = onlyWorktreePath(worktreeBase);
+  const executionRelativePath = relative(fixture.repo, fixture.executionPath);
+  const taskDir = join(worktreePath, executionRelativePath, "exec", "evidence", taskId);
+  const runs = readdirSync(taskDir).sort();
+  expect(runs).toHaveLength(1);
+  return JSON.parse(readFileSync(join(taskDir, runs[0]!, "pipeline-state.json"), "utf8")) as {
+    stages: Record<string, { status: string; attempts: number }>;
+  };
+}
+
 afterEach(() => {
   process.chdir(originalCwd);
   clearProjectEnv();
@@ -659,6 +726,8 @@ describe("executor / reporter pipeline E2E", () => {
       status: "succeeded",
       actor: "local-gemma-reporter",
     });
+    // in-place 実行は worktree の統合段を持たないため integrate は記録されない。
+    expect(state.stages.integrate).toBeUndefined();
   });
 
   it("hands the reporter bounded evidence only, keeping raw log text and secrets out of the prompt", async () => {
@@ -774,6 +843,40 @@ describe("executor / reporter pipeline E2E", () => {
     );
   });
 
+  it("fails a typecheck parent validation on a type-error fixture and blocks the task", async () => {
+    const target = setup();
+    withTypecheckParentValidation(target);
+    // behavior を fail にすると parent-validation.mjs が exit 1 になり、typecheck と
+    // test:integration の両方が failed になる。
+    writeFileSync(target.parentValidationBehaviorPath, "fail\n", "utf8");
+
+    await runExec(["run", "--project", "test", "--task", "T-TEST-doc-010"]);
+
+    expect(process.exitCode).toBe(1);
+    const runDir = evidenceRunDir(target, "T-TEST-doc-010");
+    const evidence = JSON.parse(readFileSync(join(runDir, "evidence.json"), "utf8")) as {
+      validations: Array<{ id?: string; source?: string; status: string }>;
+    };
+    expect(evidence.validations).toContainEqual(
+      expect.objectContaining({
+        id: "typecheck",
+        source: "runner",
+        status: "failed",
+      }),
+    );
+    // 型エラーを早く止めるため typecheck が test-integration より前に走る。
+    const runnerValidations = evidence.validations.filter(
+      (validation) => validation.source === "runner",
+    );
+    expect(runnerValidations.map((validation) => validation.id)).toEqual([
+      "typecheck",
+      "test-integration",
+    ]);
+    expect(readResult(target, "T-TEST-doc-010")).toContain(
+      "parent validation failed: typecheck, test-integration",
+    );
+  });
+
   it("blocks on reporter output that never validates, keeping the executor evidence for resume", async () => {
     const target = setup();
     setBehavior(target.behaviorPath, {
@@ -869,6 +972,9 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
       ],
     ]);
     process.chdir(fixture.repo);
+    const firstParentBefore = Number(
+      git(fixture.repo, "rev-list", "--first-parent", "--count", "HEAD"),
+    );
 
     // 1回目: reporter がプロセス失敗し、executor evidence を残したまま blocked になる。
     setBehavior(fixture.behaviorPath, {
@@ -886,6 +992,9 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
     ]);
 
     expect(process.exitCode).toBe(1);
+    expect(Number(git(fixture.repo, "rev-list", "--first-parent", "--count", "HEAD"))).toBe(
+      firstParentBefore,
+    );
     const blockEvent = readTaskEvents(fixture, "T-TEST-doc-010").find(
       (event) => event.type === "block",
     );
@@ -909,6 +1018,11 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
     expect(invocations.filter((item) => item.role === "executor")).toHaveLength(1);
     expect(invocations.filter((item) => item.role === "reporter")).toHaveLength(2);
     expect(readFileSync(fixture.parentValidationLogPath, "utf8")).toBe("run\n");
+    expect(Number(git(fixture.repo, "rev-list", "--first-parent", "--count", "HEAD"))).toBe(
+      firstParentBefore + 1,
+    );
+    expect(git(fixture.repo, "log", "-1", "--pretty=%s")).toMatch(/^exec\(T-TEST-doc-010\): /);
+    expect(git(fixture.repo, "rev-list", "--parents", "-1", "HEAD").split(" ")).toHaveLength(3);
 
     const result = readResult(fixture, "T-TEST-doc-010");
     expect(result).toContain("status: complete");
@@ -917,6 +1031,167 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
     const eventTypes = readTaskEvents(fixture, "T-TEST-doc-010").map((event) => event.type);
     expect(eventTypes.sort()).toEqual(["block", "claim", "complete", "unblock"]);
   }, 20_000);
+
+  it("aborts a hook-rejected merge commit and resumes only integration", async () => {
+    fixture = setupPipelineRepository();
+    worktreeBase = mkdtempSync(join(tmpdir(), "specdojo-pipeline-e2e-wt-"));
+    vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+    vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+    vi.spyOn(spawnSelfModule, "selfRunArgs").mockImplementation((subArgs: string[]) => [
+      process.execPath,
+      [
+        join(specdojoRoot, "node_modules", ".bin", "tsx"),
+        join(specdojoRoot, "src", "specdojo.ts"),
+        ...subArgs,
+      ],
+    ]);
+    process.chdir(fixture.repo);
+
+    const rejectMarker = join(fixture.repo, ".git", "reject-integration-commit");
+    // exec branch 上の commit は通し、root の merge commit だけを落とす。
+    const hookPath = join(fixture.repo, ".git", "hooks", "commit-msg");
+    writeFileSync(rejectMarker, "reject\n", "utf8");
+    writeFileSync(
+      hookPath,
+      [
+        "#!/bin/sh",
+        `if [ -f '${rejectMarker}' ] && git rev-parse --verify --quiet MERGE_HEAD >/dev/null; then`,
+        "  printf '\\033[31m╭── hook output ──╮\\033[0m\\n' >&2",
+        "  printf '┃ typecheck ❯\\n' >&2",
+        "  printf '┃ src/demo.ts(1,1): error TS2322: schedule merge rejected\\n' >&2",
+        "  printf '╰─────────────────╯\\n' >&2",
+        "  exit 1",
+        "fi",
+        "exit 0",
+        "",
+      ].join("\n"),
+      "utf8",
+    );
+    chmodSync(hookPath, 0o755);
+
+    await runExec([
+      "run",
+      "--project",
+      "test",
+      "--task",
+      "T-TEST-doc-010",
+      "--worktree",
+      "--worktree-base",
+      worktreeBase,
+    ]);
+
+    expect(process.exitCode).toBe(1);
+    const repo = fixture.repo;
+    expect(() => git(repo, "rev-parse", "--verify", "MERGE_HEAD")).toThrow();
+    expect(
+      readWorktreePipelineState(worktreeBase, fixture, "T-TEST-doc-010").stages.integrate,
+    ).toMatchObject({ status: "failed", attempts: 1 });
+    expect(
+      readTaskEvents(fixture, "T-TEST-doc-010").find((event) => event.type === "block")?.meta,
+    ).toMatchObject({ pipeline_stage: "integrate" });
+    const worktreePath = onlyWorktreePath(worktreeBase);
+    expect(git(fixture.repo, "branch", "--list", "exec/test-T-TEST-doc-010")).toContain(
+      "exec/test-T-TEST-doc-010",
+    );
+    const executionRelativePath = relative(fixture.repo, fixture.executionPath);
+    const worktreeRunDir = join(
+      worktreePath,
+      executionRelativePath,
+      "exec",
+      "evidence",
+      "T-TEST-doc-010",
+      readdirSync(
+        join(worktreePath, executionRelativePath, "exec", "evidence", "T-TEST-doc-010"),
+      )[0]!,
+    );
+    const integrateLog = readFileSync(join(worktreeRunDir, "integrate.log"), "utf8");
+    expect(integrateLog).toContain("\u001b[31m╭── hook output ──╮\u001b[0m");
+    expect(integrateLog).toContain("--- merge --abort ---\nexit: 0");
+
+    rmSync(rejectMarker);
+    await runExec([
+      "resume",
+      "--project",
+      "test",
+      "--task",
+      "T-TEST-doc-010",
+      "--worktree-base",
+      worktreeBase,
+    ]);
+
+    expect(process.exitCode ?? 0).toBe(0);
+    const invocations = readInvocations(fixture.logPath);
+    expect(invocations.filter((item) => item.role === "executor")).toHaveLength(1);
+    expect(invocations.filter((item) => item.role === "reporter")).toHaveLength(1);
+    expect(readResult(fixture, "T-TEST-doc-010")).toContain("status: complete");
+    const mergedState = JSON.parse(
+      readFileSync(join(evidenceRunDir(fixture, "T-TEST-doc-010"), "pipeline-state.json"), "utf8"),
+    ) as { stages: Record<string, { status: string; attempts: number }> };
+    expect(mergedState.stages.integrate).toMatchObject({ status: "succeeded", attempts: 2 });
+  }, 30_000);
+
+  it("skips commit and merge when resuming after the branch was already merged", async () => {
+    fixture = setupPipelineRepository();
+    worktreeBase = mkdtempSync(join(tmpdir(), "specdojo-pipeline-e2e-wt-"));
+    vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+    vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+    vi.spyOn(spawnSelfModule, "selfRunArgs").mockImplementation((subArgs: string[]) => [
+      process.execPath,
+      [
+        join(specdojoRoot, "node_modules", ".bin", "tsx"),
+        join(specdojoRoot, "src", "specdojo.ts"),
+        ...subArgs,
+      ],
+    ]);
+    process.chdir(fixture.repo);
+    setBehavior(fixture.behaviorPath, {
+      "local-gemma-executor": { role: "executor", kind: "ok", lockWorktree: true },
+    });
+
+    await runExec([
+      "run",
+      "--project",
+      "test",
+      "--task",
+      "T-TEST-doc-010",
+      "--worktree",
+      "--worktree-base",
+      worktreeBase,
+    ]);
+
+    expect(process.exitCode).toBe(1);
+    const worktreePath = onlyWorktreePath(worktreeBase);
+    expect(
+      readTaskEvents(fixture, "T-TEST-doc-010").find((event) => event.type === "block")?.meta,
+    ).toMatchObject({ pipeline_stage: "integrate" });
+    expect(
+      readWorktreePipelineState(worktreeBase, fixture, "T-TEST-doc-010").stages.integrate,
+    ).toMatchObject({ status: "failed", attempts: 1 });
+    const mergedHead = git(fixture.repo, "rev-parse", "HEAD");
+    git(fixture.repo, "worktree", "unlock", worktreePath);
+
+    await runExec([
+      "resume",
+      "--project",
+      "test",
+      "--task",
+      "T-TEST-doc-010",
+      "--worktree-base",
+      worktreeBase,
+    ]);
+
+    expect(process.exitCode ?? 0).toBe(0);
+    expect(git(fixture.repo, "rev-parse", "HEAD")).toBe(mergedHead);
+    expect(existsSync(worktreePath)).toBe(false);
+    const invocations = readInvocations(fixture.logPath);
+    expect(invocations.filter((item) => item.role === "executor")).toHaveLength(1);
+    expect(invocations.filter((item) => item.role === "reporter")).toHaveLength(1);
+    expect(
+      readTaskEvents(fixture, "T-TEST-doc-010")
+        .map((event) => event.type)
+        .sort(),
+    ).toEqual(["block", "claim", "complete", "unblock"]);
+  }, 30_000);
 
   it("revalidates a resolved parent-validation failure before resuming the reporter", async () => {
     fixture = setupPipelineRepository();

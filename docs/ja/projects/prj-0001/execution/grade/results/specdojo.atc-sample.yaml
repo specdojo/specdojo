@@ -1,0 +1,102 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:atc-sample
+path: docs/ja/specdojo/samples/atc-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: fail
+score: 46
+graded_at: "2026-09-08T23:36:15.813Z"
+graded_by: gemma-expert-executor
+content_hash: bb2f6e0c8c7c5eff9472bb592cb47cbea78c30dceaccc2275144118a50adefc4
+categories:
+  consistency:
+    score: 25
+  usability:
+    score: 67
+  architecture:
+    score: 100
+  quality:
+    score: 13
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 1
+    score: 25
+  vp-qe-omissions-consistency:
+    level: 0
+    score: 0
+  vp-qe-kata-conformance:
+    level: 0
+    score: 0
+  vp-ux-readability:
+    level: 1
+    score: 25
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 4
+  major: 3
+  minor: 1
+  note: 0
+findings:
+  - id: F003
+    severity: blocker
+    rule: vp-qe-omissions-consistency
+    line: 2
+    message: Frontmatter に必須項目である `title` および `based_on` が欠落している。
+    anchor: ""
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 3
+    message: id が rulebook で定義された `atc-＜term＞` 形式に従っていない。
+    anchor: "## 1. 目的と適用範囲"
+  - id: F005
+    severity: blocker
+    rule: vp-qe-kata-conformance
+    line: 4
+    message: Frontmatter の `type` が `test` ではなく `project` となっている。
+    anchor: ""
+  - id: F002
+    severity: major
+    rule: vp-qe-verifiability
+    line: 57
+    message: 受入カタログのサンプルでありながら、判定基準やテストケースの具体的記述例が全く含まれていない。
+    anchor: ""
+  - id: F004
+    severity: blocker
+    rule: vp-qe-omissions-consistency
+    line: 42
+    message: rulebook で定義された必須構成（見出し 1〜6）がすべて欠落している。
+    anchor: ""
+  - id: F006
+    severity: blocker
+    rule: vp-qe-kata-conformance
+    line: 42
+    message: "本文構成が rulebook の標準テンプレ（## 1. 概要 〜 ## 6. 受入観点とケース）に準拠していない。"
+    anchor: ""
+  - id: F007
+    severity: major
+    rule: vp-ux-readability
+    line: 37
+    message: ATCの具体的な書き方を示すサンプルとして機能しておらず, 初見の読者が作成方法を理解できない。
+    anchor: ""
+  - id: F008
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 37
+    message: 成果物名（タイトル）が rulebook で定義された形式に準拠していない。
+    anchor: ""

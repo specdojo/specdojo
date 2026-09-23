@@ -1,0 +1,41 @@
+I'll start by reading the target artifact and its dependencies to understand the current state.
+Now let me read the rulebooks, recipe, project context, and check for other process-group CDFDs.
+I have read the target artifact, its dependency `cdfd-overview`, both rulebooks, the recipe, and the project context. Now let me verify which sibling process-group CDFDs exist, check the result scaffold, and examine lint/pre-commit configuration.
+Let me read lefthook config to understand pre-commit checks, and check the sibling CDFDs to verify cross-references like `cdfd-plan`.
+Now let me check the markdownlint config and any lint configuration for `.md` files, since I'll need to validate.
+I now have a complete picture. Let me analyze consistency between the draft and `cdfd-overview`, plus rulebook conformance, before editing.
+
+Key findings from my cross-check:
+- **§3 領域単位の入出力 vs overview §3.1 グループ単位**: 主要入力 / 主要出力 / データストアは文字通りに一致。不調なし。
+- **表/図/入出力表のプロセス ID・名称**: `P-01-01`〜`P-01-03` と名称はいずれでも一致 (rulebook §6.8 完成判定)。
+- **データストア**: `Kata` / `稼働構成` は overview と同名・同区分。各章で一致。
+- **グループ外委譲の参照先**: `cdfd-plan` は実在確認済み (glob で存在)。リンクは存在文書のため `[[...]]` を使用すべきだが、現状バッククォート。これは rulebook §6.7「未作成の委譲先だけをバッククォート」に抵触する不調。
+- **状態遷移の参照 (§7)**: 表に括弧 `STSD（Kata、文書 ID 未特定）` を含む。rulebook §6.6・禁止事項は「未作成なら文書 ID をバッククォートで仮置き」を想定。括弧内の状態名を「定義」と誤読されないように、参照先が未作成の事実を明記する最小修正が望ましい。
+- **凡例参照 (§5)**: 現状「cdfd-overview の凡例に従う」。rulebook §6.4 は「全 CDFD が共通して参照する凡例への参照」を求める → `cdfd-overview` 経由の参照で妥当（既存記述は rulebook 許容範囲内）。
+
+最小限の修正を2点実施します。
+Let me verify that edit didn't change column count — I need to check the result.
+Both edits preserve table structure. Now let me run prettier + markdownlint on the modified file.
+Pre-commit also runs `catalog validate` for `docs/ja/projects/**`. The result file is in that tree, so I must verify the whole catalog validates (and that I don't break it). Let me also confirm prettier didn't alter the artifact meaningfully, then run catalog validate as a pre-commit pre-check.
+The `npx tsx` form was denied by the allow-list. The plan states `specdojo catalog validate` is a parent-runner validation, but it's also a pre-commit hook for the `docs/ja/projects/**` tree (where the result lives). I'll try the allowed `specdojo`/bin form to ensure the commit isn't blocked.
+The `specdojo`/`npx tsx` commands are blocked by the sandbox allow-list (they trigger parent-runner validations). I'll rely on a static check instead. Let me confirm whether the result file currently passes catalog validation, since it's in the pre-commit tree.
+The `&&` chaining with a failing command broke it. Let me run the allowed subcommands separately.
+The current task's plan file isn't in the glob list, and `specdojo catalog validate` is blocked by the sandbox allow-list (it's a parent-runner validation). I've confirmed I cannot run it in-sandbox; the parent runner will execute it. Let me review the git diff of my edits to make sure they're clean and minimal.
+The diff is clean and minimal (1 column of §8.2, reformatted by prettier). I'm reconsidering whether a second edit to §7 is truly justified — my analysis shows the §7 table already satisfies rulebook §6.6/§7 (the parentheticals are "未特定"-marked placeholder IDs, not state definitions), so editing it would be a cosmetic change not driven by a real defect. Per §4.2 ("完成度を上げる目的だけで書き換えない"), I'll leave §7 as-is. 
+
+Let me re-run markdownlint on the final file to confirm it passes after prettier's reformatting of the table block.
+The exit-code echo triggered a re-check that denied the call. Let me rerun markdownlint alone (a previously-passing form).
+markdownlint passes (no output = no violations). The table was reformatted by prettier, and markdownlint confirms it conforms. 
+
+I've completed my analysis. Summary of decisions:
+- **§3 領域単位 vs overview グループ単位**: 主要入力/主要出力/データストアは文字通り一致 → 不調なし、変更不要。
+- **表/図/入出力表のプロセス ID・名称・データストア**: `P-01-01`〜`P-01-03`、`Kata`/`稼働構成` はいずれで一致 (rulebook §6.8)。
+- **グループ外委譲**: `cdfd-plan` は実在確認済み。rulebook §6.7 は「未作成の委譲先だけバッククォート」→ 実在する委譲先は `[[...]]`。§8.2 を最小修正して `[(cdfd-plan|...)]`。
+- **凡例参照 (§5)**: 概要以降で `cdfd-overview` 経由参照 → rulebook §6.4「共通凡例への参照」に妥当。既存記述は許容範囲内 → 変更不要。
+- **§7 状態遷移の参照**: 括弧つき ID は「文書 ID 未特定」と明示された仮置きで、状態定義を複製していない → rulebook §7 に抵触せず、`_TODO_` 残置。完成度上げのため変更不要と判断。
+
+I made exactly one minimal fix (§8.2) and intentionally left §7 unchanged with justification. The result file is a reporter/runner responsibility, so I'm leaving it untouched per the executor-stage instructions.
+
+<specdojo_executor_evidence>
+{"final_message":"cdfd-onboarding.md の磨き込み完成。cdfd-overview との整合・rulebook 適合を確認し、唯一の不調(§8.2 委譲先の cdfd-plan が実在文書なのにバッククォート=未作成扱いで rulebook §6.7/禁止事項に抵触)を最小修正。§3領域単位入出力は overview グループ単位と文字通り一致、表/図/入出力表のプロセスID・名称・データストアは全体一致、§5凡例参照は cdfd-overview 経由で妥当、§7状態遷移の参照の括弧付き'文書ID未特定'は未作成仮置きのままで rulebook §7 に抵触せず _TODO_ 残置と判断。result は reporter 責務のため executor では編集していない。","validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-onboarding.md","status":"passed","summary":"整形適用。§8.2の委譲表を4列で再整形し、変更は該表1行に閉じている(git diffで確認)"},{"command":"npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-onboarding.md","status":"passed","summary":"違反なし(出力空)。.markdownlint.yamlの無効化設定下でも通過"},{"command":"specdojo catalog validate","status":"not_run","summary":"sandbox の allow-list で specdojo/npx tsx が拒否され実行不可。parent runner が固定許可リストから実行する想定のため executor では未実施。変更は .md 本文のみで frontmatter・based_on・catalog yaml には触れておらず、catalog validate は通ると判断"},{"command":"npm run test:integration","status":"not_run","summary":"親 runner の検証対象のため executor では実行しない"},{"command":"npm run validate:schema","status":"not_run","summary":"親 runner の検証対象のため executor では実行しない"},{"command":"npm run test:unit","status":"not_run","summary":"親 runner の検証対象のため executor では実行しない"}]}
+</specdojo_executor_evidence>

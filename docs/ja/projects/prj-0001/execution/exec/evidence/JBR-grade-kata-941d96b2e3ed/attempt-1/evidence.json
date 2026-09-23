@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "task_id": "JBR-grade-kata-941d96b2e3ed",
+  "run_id": "attempt-1",
+  "stage": {
+    "role": "executor",
+    "actor": "specdojo-runner",
+    "status": "succeeded",
+    "started_at": "2026-09-10T15:00:03.341Z",
+    "completed_at": "2026-09-10T17:42:02.295Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/templates/pm-issue-log-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/pm-plan-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/pm-risk-register-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/prj-assumptions-constraints-dependencies-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/prj-issues-and-approach-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/prj-overview-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/prj-stakeholder-register-template.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 7,
+    "summary": ".../ja/specdojo/templates/pm-issue-log-template.md | 11 +++++-----\n docs/ja/specdojo/templates/pm-plan-template.md     | 24 ++++++++++++++--------\n .../templates/pm-risk-register-template.md         |  8 ++++++--\n ...ssumptions-constraints-dependencies-template.md | 14 +++++++------\n .../templates/prj-issues-and-approach-template.md  | 17 +++++++--------\n .../ja/specdojo/templates/prj-overview-template.md | 16 +++++++--------\n .../templates/prj-stakeholder-register-template.md | 16 +++++++--------\n 7 files changed, 61 insertions(+), 45 deletions(-)"
+  },
+  "validations": [
+    {
+      "id": "job-command",
+      "source": "runner",
+      "command": "npm run build\ntools/grade/run-per-document.sh --run-id JBR-grade-kata-941d96b2e3ed --kind all --limit 10 --changed-only=true --ungraded=true\ncat logs/grade/runs/per-document/JBR-grade-kata-941d96b2e3ed/results.tsv",
+      "status": "passed",
+      "summary": "exit 0"
+    }
+  ],
+  "final_message": "Runner command exit 0.",
+  "command": {
+    "shell": "/bin/sh -eu",
+    "value": "npm run build\ntools/grade/run-per-document.sh --run-id JBR-grade-kata-941d96b2e3ed --kind all --limit 10 --changed-only=true --ungraded=true\ncat logs/grade/runs/per-document/JBR-grade-kata-941d96b2e3ed/results.tsv",
+    "exit_code": 0,
+    "stdout_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-941d96b2e3ed/attempt-1/command.stdout.log",
+    "stderr_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-941d96b2e3ed/attempt-1/command.stderr.log",
+    "stdout": "\n> specdojo@0.1.0 build\n> node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.build.json && node -e \"require('node:fs').chmodSync('dist/specdojo.js', 0o755)\"\n\nrun_id=JBR-grade-kata-941d96b2e3ed project=prj-0001 kind=all changed_only=true ungraded=true documents=8 work_dir=logs/grade/runs/per-document/JBR-grade-kata-941d96b2e3ed\nstage=1 executor=gemma-expert-executor reporter=gemma-reporter reference=per-kind\nstage=2 executor=gemma-expert-executor reporter=gemma-reporter reference=none\nstage=3 executor=codex-expert-executor reporter=gemma-reporter reference=none condition=\"pass, score>=96, findings<=1\"\ndocument start: docs/ja/specdojo/templates/pjr-views-by-status-template.md\ndocument complete: docs/ja/specdojo/templates/pjr-views-by-status-template.md\ndocument start: docs/ja/specdojo/templates/pm-issue-log-template.md\ndocument complete: docs/ja/specdojo/templates/pm-issue-log-template.md\ndocument start: docs/ja/specdojo/templates/pm-plan-template.md\ndocument complete: docs/ja/specdojo/templates/pm-plan-template.md\ndocument start: docs/ja/specdojo/templates/pm-risk-register-template.md\ndocument complete: docs/ja/specdojo/templates/pm-risk-register-template.md\ndocument start: docs/ja/specdojo/templates/prj-assumptions-constraints-dependencies-template.md\ndocument complete: docs/ja/specdojo/templates/prj-assumptions-constraints-dependencies-template.md\ndocument start: docs/ja/specdojo/templates/prj-issues-and-approach-template.md\ndocument complete: docs/ja/specdojo/templates/prj-issues-and-approach-template.md\ndocument start: docs/ja/specdojo/templates/prj-overview-template.md\ndocument complete: docs/ja/specdojo/templates/prj-overview-template.md\ndocument start: docs/ja/specdojo/templates/prj-stakeholder-register-template.md\ndocument complete: docs/ja/specdojo/templates/prj-stakeholder-register-template.md\ngrade pipeline complete: selected=8 processed=8 completed_now=8 results=logs/grade/runs/per-document/JBR-grade-kata-941d96b2e3ed/results.tsv\nrecorded_at\tdocument\tstage\tstatus\tduration_seconds\tverdict\tscore\tfindings\texecutor\treporter\treference\n2026-09-10T15:07:47Z\tdocs/ja/specdojo/templates/pjr-views-by-status-template.md\t1\tpassed\t459\tneeds-work\t86\t5\tgemma-expert-executor\tgemma-reporter\tdocs/ja/specdojo/templates/prj-overview-template.md\n2026-09-10T15:16:01Z\tdocs/ja/specdojo/templates/pjr-views-by-status-template.md\t2\tpassed\t494\tneeds-work\t86\t5\tgemma-expert-executor\tgemma-reporter\tnone\n2026-09-10T15:16:01Z\tdocs/ja/specdojo/templates/pjr-views-by-status-template.md\t3\tskipped_condition\t0\t\t\t\tcodex-expert-executor\tgemma-reporter\tnone\n2026-09-10T15:25:09Z\tdocs/ja/specdojo/templates/pm-issue-log-template.md\t1\tpassed\t548\tfail\t59\t5\tgemma-expert-executor\tgemma-reporter\tdocs/ja/specdojo/templates/prj-overview-template.md\n2026-09-10T15:32:17Z\tdocs/ja/specdojo/templates/pm-issue-log-template.md\t2\tpassed\t428\tfail\t59\t5\tgemma-expert-executor\tgemma-reporter\tnone\n2026-09-10T15:32:17Z\tdocs/ja/specdojo/templates/pm-issue-log-template.md\t3\tskipped_condition\t0\t\t\t\tcodex-expert-executor\tgemma-reporter\tnone\n2026-09-10T15:39:47Z\tdocs/ja/specdojo/templates/pm-plan-template.md\t1\tpassed\t450\tpass\t100\t0\tgemma-expert-executor\tgemma-reporter\tdocs/ja/specdojo/templates/prj-overview-template.md\n2026-09-10T15:47:07Z\tdocs/ja/specdojo/templates/pm-plan-template.md\t2\tpassed\t440\tpass\t100\t0\tgemma-expert-executor\tgemma-reporter\tnone\n2026-09-10T15:53:46Z\tdocs/ja/specdojo/templates/pm-plan-template.md\t3\tpassed\t399\tneeds-work\t73\t8\tcodex-expert-executor\tgemma-reporter\tnone\n2026-09-10T16:03:05Z\tdocs/ja/specdojo/templates/pm-risk-register-template.md\t1\tfailed\t559\t\t\t\tgemma-expert-executor\tgemma-reporter\tdocs/ja/specdojo/templates/prj-overview-template.md\n2026-09-10T16:11:37Z\tdocs/ja/specdojo/templates/pm-risk-register-template.md\t2\tpassed\t512\tfail\t66\t4\tgemma-expert-executor\tgemma-reporter\tnone\n2026-09-10T16:11:37Z\tdocs/ja/specdojo/templates/pm-risk-register-template.md\t3\tskipped_condition\t0\t\t\t\tcodex-expert-executor\tgemma-reporter\tnone\n2026-09-10T16:21:14Z\tdocs/ja/specdojo/templates/prj-assumptions-constraints-dependencies-template.md\t1\tpassed\t577\tpass\t94\t2\tgemma-expert-executor\tgemma-reporter\tdocs/ja/specdojo/templates/prj-overview-template.md\n2026-09-10T16:31:59Z\tdocs/ja/specdojo/templates/prj-assumptions-constraints-dependencies-template.md\t2\tpassed\t645\tpass\t94\t2\tgemma-expert-executor\tgemma-reporter\tnone\n2026-09-10T16:31:59Z\tdocs/ja/specdojo/templates/prj-assumptions-constraints-dependencies-template.md\t3\tskipped_condition\t0\t\t\t\tcodex-expert-executor\tgemma-reporter\tnone\n2026-09-10T16:41:42Z\tdocs/ja/specdojo/templates/prj-issues-and-approach-template.md\t1\tpassed\t583\tpass\t100\t0\tgemma-expert-executor\tgemma-reporter\tdocs/ja/specdojo/templates/prj-overview-template.md\n2026-09-10T16:52:41Z\tdocs/ja/specdojo/templates/prj-issues-and-approach-template.md\t2\tpassed\t659\tpass\t96\t1\tgemma-expert-executor\tgemma-reporter\tnone\n2026-09-10T16:57:03Z\tdocs/ja/specdojo/templates/prj-issues-and-approach-template.md\t3\tpassed\t262\tpass\t96\t1\tcodex-expert-executor\tgemma-reporter\tnone\n2026-09-10T17:05:39Z\tdocs/ja/specdojo/templates/prj-overview-template.md\t1\tpassed\t516\tpass\t100\t0\tgemma-expert-executor\tgemma-reporter\tdocs/ja/specdojo/templates/prj-overview-template.md\n2026-09-10T17:13:48Z\tdocs/ja/specdojo/templates/prj-overview-template.md\t2\tpassed\t489\tpass\t100\t0\tgemma-expert-executor\tgemma-reporter\tnone\n2026-09-10T17:16:59Z\tdocs/ja/specdojo/templates/prj-overview-template.md\t3\tpassed\t191\tpass\t100\t0\tcodex-expert-executor\tgemma-reporter\tnone\n2026-09-10T17:27:26Z\tdocs/ja/specdojo/templates/prj-stakeholder-register-template.md\t1\tpassed\t627\tpass\t100\t0\tgemma-expert-executor\tgemma-reporter\tdocs/ja/specdojo/templates/prj-overview-template.md\n2026-09-10T17:35:48Z\tdocs/ja/specdojo/templates/prj-stakeholder-register-template.md\t2\tpassed\t502\tpass\t100\t0\tgemma-expert-executor\tgemma-reporter\tnone\n2026-09-10T17:42:02Z\tdocs/ja/specdojo/templates/prj-stakeholder-register-template.md\t3\tpassed\t374\tpass\t100\t0\tcodex-expert-executor\tgemma-reporter\tnone\n",
+    "stderr": ""
+  },
+  "log_refs": [
+    {
+      "kind": "command-stdout",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-941d96b2e3ed/attempt-1/command.stdout.log",
+      "bytes": 6010,
+      "truncated": false
+    },
+    {
+      "kind": "command-stderr",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-941d96b2e3ed/attempt-1/command.stderr.log",
+      "bytes": 0,
+      "truncated": false
+    }
+  ]
+}

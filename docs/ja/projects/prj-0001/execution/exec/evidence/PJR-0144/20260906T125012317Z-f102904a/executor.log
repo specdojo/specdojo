@@ -1,0 +1,14 @@
+`fmt-md-table` の VS Code 拡張統合を完了しました。
+
+- `specdojo.formatMarkdownTable` コマンドを追加。
+- 旧 CLI を削除し、整形ロジックを[markdown-table.ts](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0144/packages/vscode-specdojo/src/markdown-table.ts)へ移動。
+- 既存 task は command variable 経由で拡張へ委譲。
+- 出力互換性の単体テストを追加。
+- 個票と関連する編集ガイド・authoring standard を更新。
+- 型検査、Markdown 検査、catalog 検証、vsix 生成に成功。
+
+unit / integration / schema 検証は指示どおり親 runner に委ねています。result は更新していません。
+
+<specdojo_executor_evidence>
+{"final_message":"fmt-md-tableをspecdojo.formatMarkdownTableとしてVS Code拡張へ統合し、旧CLI削除、互換テスト・関連文書更新、vsix生成まで完了","validations":[{"command":"npx prettier --write packages/vscode-specdojo/src/extension.ts packages/vscode-specdojo/src/markdown-table.ts packages/vscode-specdojo/package.json tests/vscode-markdown-table.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-0144-fmt-md-table-vs-code.md docs/ja/specdojo/guides/docs-editing-guide.md docs/ja/specdojo/standards/rulebook-authoring-standard.md docs/ja/specdojo/standards/recipe-authoring-standard.md docs/ja/specdojo/standards/sample-authoring-standard.md docs/ja/specdojo/standards/guide-authoring-standard.md docs/ja/specdojo/standards/template-authoring-standard.md docs/ja/specdojo/standards/standard-authoring-standard.md .github/instructions/markdown.instructions.md","status":"passed","summary":"変更対象を整形"},{"command":"npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-0144-fmt-md-table-vs-code.md docs/ja/specdojo/guides/docs-editing-guide.md docs/ja/specdojo/standards/rulebook-authoring-standard.md docs/ja/specdojo/standards/recipe-authoring-standard.md docs/ja/specdojo/standards/sample-authoring-standard.md docs/ja/specdojo/standards/guide-authoring-standard.md docs/ja/specdojo/standards/template-authoring-standard.md docs/ja/specdojo/standards/standard-authoring-standard.md .github/instructions/markdown.instructions.md","status":"passed","summary":"Markdown違反なし"},{"command":"npm run typecheck","status":"passed","summary":"TypeScript型検査成功"},{"command":"npm run vscode:package","status":"passed","summary":"コンパイルとvscode-specdojo-0.1.0.vsix生成に成功"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿生成成功"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"catalog検証成功。既存の欠落文書警告のみ"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1524件の文書index生成成功"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>

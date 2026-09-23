@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_8abc0c0bc27e42d99d8927842fbcfea9
+  ts: "2026-09-07T09:59:12Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: 章構成の書き直しを要する blocker に対し、コメント削除だけで終わる余地があるため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: maintenance と bootstrap の plan で finding を修正の根拠に据える
+    - field: description
+      from: ""
+      to: finding の指示が手順外にあり主動詞が削除のため、コメント除去だけで完了と解釈されうる。手順へ組み込み修正を主目的として示す。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-07"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_a16c366f691a41759c7104a868957039
+  ts: "2026-09-07T10:05:40Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_8abc0c0bc27e42d99d8927842fbcfea9
+- v: 1
+  id: reg_7ac16ee032274442826dc4c3087c4151
+  ts: "2026-09-07T10:17:45Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_a16c366f691a41759c7104a868957039
+- v: 1
+  id: reg_c4ee11a0ddb74c2ca6107e09fb42d23d
+  ts: "2026-09-07T11:08:37Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: 5テンプレートで finding を手順へ組み込み、修正を主目的とする記述へ改めた。実行による検証は PJR-T3VQ の解決後に行う。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-07"
+    - field: conclusion
+      from: "-"
+      to: 5テンプレートで finding を手順へ組み込み、修正を主目的とする記述へ改めた。実行による検証は PJR-T3VQ の解決後に行う。
+  previous_event_id: reg_7ac16ee032274442826dc4c3087c4151

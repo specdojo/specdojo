@@ -4,7 +4,17 @@ import type { ExecEvidence } from "./exec-evidence.js";
 import { ensureDir, safeSlug } from "./exec-shared.js";
 import type { AgentStageRole } from "./exec-types.js";
 
-export type PipelineStageStatus = "pending" | "running" | "succeeded" | "failed" | "rate_limited";
+export type PipelineStageStatus =
+  | "pending"
+  | "running"
+  | "succeeded"
+  | "failed"
+  | "rate_limited"
+  | "blocked";
+
+// 統合段（commit → merge → worktree 撤去）は agent ではなく runner が実行する段。executor /
+// reporter と同じ粒度で記録し、agent 段が成功したまま統合だけ失敗した run を特定できるようにする。
+export type PipelineStageRole = AgentStageRole | "integrate";
 
 export type PipelineStageState = {
   status: PipelineStageStatus;
@@ -13,6 +23,11 @@ export type PipelineStageState = {
   started_at: string | null;
   completed_at: string | null;
   artifact_ref: string | null;
+};
+
+// integrate は統合段を持たない旧 run の state に存在しないため任意項目とする。
+export type PipelineStages = Record<AgentStageRole, PipelineStageState> & {
+  integrate?: PipelineStageState;
 };
 
 // run の入力成果物への参照（worktree 相対・POSIX 区切り）。reporter だけを再開するとき、
@@ -28,7 +43,7 @@ export type PipelineState = {
   task_id: string;
   run_id: string;
   updated_at: string;
-  stages: Record<AgentStageRole, PipelineStageState>;
+  stages: PipelineStages;
   artifacts?: PipelineArtifactRefs;
 };
 
@@ -104,7 +119,8 @@ function isStageState(value: unknown): value is PipelineStageState {
       stage.status === "running" ||
       stage.status === "succeeded" ||
       stage.status === "failed" ||
-      stage.status === "rate_limited") &&
+      stage.status === "rate_limited" ||
+      stage.status === "blocked") &&
     (typeof stage.actor === "string" || stage.actor === null) &&
     Number.isSafeInteger(stage.attempts) &&
     (stage.attempts as number) >= 0 &&
@@ -143,6 +159,7 @@ export function isPipelineState(value: unknown): value is PipelineState {
   }
   if (state.artifacts !== undefined && !isArtifactRefs(state.artifacts)) return false;
   const stages = state.stages as Record<string, unknown>;
+  if (stages.integrate !== undefined && !isStageState(stages.integrate)) return false;
   return isStageState(stages.executor) && isStageState(stages.reporter);
 }
 
@@ -161,18 +178,14 @@ export function writePipelineState(path: string, state: PipelineState): void {
 
 export function updatePipelineStage(
   state: PipelineState,
-  role: AgentStageRole,
+  role: PipelineStageRole,
   patch: Partial<PipelineStageState>,
   updatedAt: string,
 ): PipelineState {
-  return {
-    ...state,
-    updated_at: updatedAt,
-    stages: {
-      ...state.stages,
-      [role]: { ...state.stages[role], ...patch },
-    },
-  };
+  // integrate は旧 run の state に無いため、未記録なら空の段から作り始める。
+  const stages: PipelineStages = { ...state.stages };
+  stages[role] = { ...(stages[role] ?? emptyStage()), ...patch };
+  return { ...state, updated_at: updatedAt, stages };
 }
 
 function resolveArtifactRef(worktreePath: string, ref: string): string | null {
@@ -221,8 +234,18 @@ export function loadPipelineResumeCheckpoint(input: {
   }
   if (state.task_id !== input.taskId) return null;
 
-  const evidenceRef = state.stages.executor.artifact_ref;
-  if (state.stages.executor.status !== "succeeded" || !evidenceRef) {
+  const recordedEvidenceRef = state.stages.executor.artifact_ref;
+  const evidenceRef =
+    recordedEvidenceRef ??
+    (state.stages.executor.status === "running"
+      ? relative(input.worktreePath, join(dirname(statePath), "evidence.json"))
+          .split(sep)
+          .join("/")
+      : null);
+  if (
+    (state.stages.executor.status !== "succeeded" && state.stages.executor.status !== "running") ||
+    !evidenceRef
+  ) {
     return { state, statePath };
   }
   const evidencePath = resolveArtifactRef(input.worktreePath, evidenceRef);

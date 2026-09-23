@@ -1,0 +1,84 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:sac-sample
+path: docs/ja/specdojo/samples/sac-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 57
+graded_at: "2026-09-06T00:49:53.215Z"
+graded_by: gemma-expert-executor
+content_hash: 2c624d11fed83bfb342f69e815913cb4a41ed355d2c64632c9231613bfc71c6b
+categories:
+  consistency:
+    score: 38
+  usability:
+    score: 83
+  architecture:
+    score: 100
+  quality:
+    score: 25
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 1
+    score: 25
+  vp-qe-omissions-consistency:
+    level: 1
+    score: 25
+  vp-qe-kata-conformance:
+    level: 1
+    score: 25
+  vp-ux-readability:
+    level: 2
+    score: 50
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 5
+  minor: 0
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 4
+    message: type は specdojo:sac-rulebook の定義に従い test とすべきである。
+    anchor: ""
+  - id: F002
+    severity: major
+    rule: vp-qe-verifiability
+    line: 57
+    message: 受入条件の具体例として、数値や単位を含む検証可能な判定基準（例：「3秒以内」など）を提示すべきである。
+    anchor: ""
+  - id: F003
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 36
+    message: rulebook の 5 節で定義された標準構成（概要、受入条件、メモ/将来課題）に従って記述すべきである。
+    anchor: ""
+  - id: F004
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 34
+    message: SAC の具体例ではなく解説書となっているため、実際に運用可能な SAC 文書の形式で完成例を提示すべきである。
+    anchor: ""
+  - id: F005
+    severity: major
+    rule: vp-ux-readability
+    line: 57
+    message: 最小記述例として表形式ではなく, rulebook で推奨されるシナリオ形式（前提・操作・期待結果）を用いた具体例を記載すべきである。
+    anchor: ""

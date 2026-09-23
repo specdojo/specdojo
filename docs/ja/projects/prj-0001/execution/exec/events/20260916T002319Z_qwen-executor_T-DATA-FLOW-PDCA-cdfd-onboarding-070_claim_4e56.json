@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "ts": "2026-09-16T00:23:19Z",
+  "type": "claim",
+  "task_id": "T-DATA-FLOW-PDCA-cdfd-onboarding-070",
+  "by": "qwen-executor",
+  "msg": "auto-run",
+  "meta": {
+    "claim_owner": "",
+    "planned_owner": "BA"
+  }
+}

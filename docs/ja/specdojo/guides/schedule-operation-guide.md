@@ -40,10 +40,10 @@ exec run --auto [--loop]
   -> phase 要件と pm-members.yaml から agent を解決
   -> plan / result を生成
   -> claim
-  -> root に checkpoint commit
   -> task worktree を作成
+  -> exec branch に checkpoint commit
   -> agent command を実行
-  -> 成功: result と成果物を commit / merge / complete
+  -> 成功: result と成果物を commit / merge commit 1件で統合 / complete
   -> 失敗: result を blocked に更新 / block / worktree を保持
 exec refresh
   -> 次の Ready タスクを更新
@@ -66,14 +66,14 @@ specdojo exec run --project <project-id> --auto --strategy fifo
 
 ### 1.2. auto実行中の注意点
 
-`--auto` と `--loop` は root の現在ブランチへ checkpoint commit と merge を繰り返します。同じ作業ツリーで並行して手作業を行う場合は、次の安全ガードに注意します。
+`--auto` と `--loop` は root の現在ブランチへ task ごとの merge commit を繰り返します（checkpoint commit は exec branch 側に置き、root には plan / result / claim event の複製が未commitのまま残ります）。同じ作業ツリーで並行して手作業を行う場合は、次の安全ガードに注意します。
 
-| 状況                                           | 挙動                                              |
-| ---------------------------------------------- | ------------------------------------------------- |
-| root index に stage 済み変更がある             | checkpoint 前に停止する                           |
-| root の未commit変更と merge 対象パスが重複する | merge 前に停止する                                |
-| agent が失敗して `blocked` になる              | worktree を保持し、auto の Ready 選択から除外する |
-| プロセス中断で `doing` が残る                  | `exec resume` で再開する                          |
+| 状況                                                                        | 挙動                                              |
+| --------------------------------------------------------------------------- | ------------------------------------------------- |
+| root index に stage 済み変更がある                                          | checkpoint 前に停止する                           |
+| root の未commit変更（runner が置いた複製を除く）と merge 対象パスが重複する | merge 前に停止する                                |
+| agent が失敗して `blocked` になる                                           | worktree を保持し、auto の Ready 選択から除外する |
+| プロセス中断で `doing` が残る                                               | `exec resume` で再開する                          |
 
 parallel 実行中でも、claim、checkpoint、merge、complete、`exec refresh` は runner が直列化します。agent プロセスだけを並列に走らせ、root 側の状態更新や Ready 再計算は1件ずつ処理します。
 

@@ -1,0 +1,92 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:pm-raci-recipe
+path: docs/ja/specdojo/recipes/pm-raci-recipe.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 75
+graded_at: "2026-09-04T16:01:16.899Z"
+graded_by: codex-expert-executor
+content_hash: d46cfa81055b14c35bc9bb9d3d9592f055251944a6d21873f856aa9463bf9b9e
+categories:
+  consistency:
+    score: 63
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 50
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 3
+  minor: 3
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 30
+    message: >-
+      Schedule ownerを常に主たる`R`と一致させる手順は、上位の人と組織の定義標準がWBS
+      ownerを優先し、承認・レビューを独立Task/Milestoneにした場合は`A`または`C`をownerにできるとする規則と矛盾するため、タスク種別と正本の優先順を含む対応手順へ修正してください。
+    anchor: 5. Schedule ownerと主たる`R`を一致させます。
+  - id: F002
+    severity: major
+    rule: vp-qe-verifiability
+    line: 28
+    message: "`R`を一つ以上許容しながら、複数`R`から「主たる`R`」を識別する表記またはタスクactionに基づく選定手順がないため, Schedule ownerとの一致をpass/fail判定できる方法を定義してください。"
+    anchor: 3. 各行へ一つの`A`と一つ以上の`R`を置きます。
+  - id: F005
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 33
+    message: "`各章の書き方`が指示文だけで、Recipe記述標準が必須とする「書き手が答えるべき問い」を一つも示していないため、各必須章に成果物固有の問いを追加してください。"
+    anchor: "## 4. 各章の書き方"
+  - id: F004
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 67
+    message: rulebook で必須とされている「見直し条件」章の書き方ガイドが、「4. 各章の書き方」から漏れているため追加してください。
+    anchor: ""
+  - id: F006
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 76
+    message: "`レビュー観点`が箇条書きであり、Recipe記述標準が必須とする表形式になっていないため、各観点と確認内容を列にした表へ変更してください。"
+    anchor: "- 一行に`A`が一つ、`R`が一つ以上あるか。"
+  - id: F003
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 89
+    message: 仕上げチェックが各行の採用理由と判断記録先の追跡を求める一方、本文に記録先・識別子・照合手順がなくsample/templateにも対応欄がないため、追跡方法と確認手順を定義してください。
+    anchor: ""

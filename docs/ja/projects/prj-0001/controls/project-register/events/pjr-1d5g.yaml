@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_440e1498d54d421cb1d63314b0e96f27
+  ts: "2026-09-13T21:39:54Z"
+  action: add
+  actor: specdojo-orchestrator (claude)
+  from_status: null
+  to_status: open
+  reason: "docs(register): grade の成果物選択から trash 配下を除外する todo を起票する"
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: grade の成果物選択から trash 配下の非推奨文書を除外する
+    - field: description
+      from: ""
+      to: grade list / grade plan の --target deliverable は成果物カタログの全エントリを対象にするため、deliverable trash で docs/ja/product/trash/ へ退避した非推奨文書も評価対象に含まれる。旧領域別 CDFD 10 件を退避して status を deprecated にした際に content_hash がずれ、rtn-grade-deliverable-recheck が退避済み 11 件を再評価対象に選ぶ。catalog-plan.ts の isTrashedPath と同じ判定で trash 配下を選択から除外し、明示的な --path 指定も拒否する。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-14"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_d7df57af55a34519a16a2b7080965b1a
+  ts: "2026-09-14T11:17:56Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_440e1498d54d421cb1d63314b0e96f27
+- v: 1
+  id: reg_cbf39e9e80c2414a825fe5fcc894c479
+  ts: "2026-09-14T11:33:55Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_d7df57af55a34519a16a2b7080965b1a
+- v: 1
+  id: reg_6bc185c401c74abaa0fef225fbdf6b4b
+  ts: "2026-09-14T11:39:40Z"
+  action: close
+  actor: specdojo-orchestrator (claude)
+  from_status: review
+  to_status: done
+  reason: exec run --register（codex-expert-executor / gemma-reporter / worktree）で実施。親検証 3 件 passed、実機確認済み。利用者確認のうえ close
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-14"
+    - field: conclusion
+      from: "-"
+      to: isTrashedPath を catalog-paths.ts に共通化し、grade の成果物候補生成から trash 配下を除外、--path での明示指定を拒否するようにした。実機で grade list --target deliverable の trash 件数が 11 から 0 になり、明示指定が trashed documents cannot be graded で拒否されることを確認した。
+  previous_event_id: reg_cbf39e9e80c2414a825fe5fcc894c479

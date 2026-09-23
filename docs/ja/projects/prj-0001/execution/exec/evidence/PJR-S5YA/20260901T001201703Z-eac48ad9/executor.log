@@ -1,0 +1,14 @@
+対応完了しました。
+
+- `pjr-rulebook` に type 別の通常終端と例外終端を定義
+- `note` は `open` のまま継続する記録と明記
+- 終端済み note 3件を `todo` 2件・`decision` 1件へ分類訂正
+- 運用ガイドと PJR-S5YA 個票を更新
+- `item_status`、result、登録簿ステータスは未変更
+- 全個票の type×終端矛盾は0件
+
+`npx tsx` は sandbox の IPC 制限を受けたため、同等の `node --import tsx` で検証しています。
+
+<specdojo_executor_evidence>
+{"final_message":"type別の終端基準を規約化し、既存個票の分類矛盾を解消。全検証に合格","validations":[{"command":"npx prettier --write docs/ja/specdojo/rulebooks/pjr-rulebook.md docs/ja/specdojo/guides/register-operation-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-0122-review-launch.md docs/ja/projects/prj-0001/controls/project-register/pjr-1f46-kata-sc-01-sc-03.md docs/ja/projects/prj-0001/controls/project-register/pjr-t0vq-pjr-id-length-evaluation.md docs/ja/projects/prj-0001/controls/project-register/pjr-s5ya-register-item-type-lifecycle.md","status":"passed","summary":"変更したMarkdown 6件を整形"},{"command":"npm run -s lint:md","status":"passed","summary":"Markdown lint合格"},{"command":"npm run lint:fm","status":"passed","summary":"Frontmatter・本文検査合格"},{"command":"node --import tsx src/specdojo.ts register build --project prj-0001","status":"passed","summary":"登録簿とeventの整合性を確認し派生ビューを生成"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"終了コード0。既存の未作成成果物warningのみ"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"文書index 1452件を生成"},{"command":"npm run typecheck","status":"passed","summary":"TypeScript型検査合格"},{"command":"npm run lint:ts","status":"passed","summary":"TypeScript lint合格"},{"command":"node --import tsx tools/docs/src/validate-history-links.ts","status":"passed","summary":"履歴リンク検査合格"},{"command":"git diff --check","status":"passed","summary":"空白・差分形式エラーなし"}]}
+</specdojo_executor_evidence>

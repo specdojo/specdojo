@@ -1,0 +1,14 @@
+PJR-0148 の個票を更新しました。
+
+- 方針: 現時点では `docs/` 外へ wikilink 解決範囲を拡張しない
+- 参照頻度、全面・限定・非拡張の比較、技術的リスク、再評価条件を記録
+- 実装 todo は起票不要と判断
+- 個票・登録簿のライフサイクル状態と result は未変更
+
+対象: [pjr-0148-extend-wikilink-id-resolution-beyond-docs-scope.md](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0148/docs/ja/projects/prj-0001/controls/project-register/pjr-0148-extend-wikilink-id-resolution-beyond-docs-scope.md)
+
+`npx tsx` は sandbox の IPC 制限で失敗しましたが、IPC を使わない同等の起動方法ですべての検証が通過しました。
+
+<specdojo_executor_evidence>
+{"final_message":"PJR-0148の調査を完了し、docs外へのwikilink解決は現時点で拡張しない方針、技術的論点、再評価条件を個票へ記録した。","validations":[{"command":"npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-0148-extend-wikilink-id-resolution-beyond-docs-scope.md && npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-0148-extend-wikilink-id-resolution-beyond-docs-scope.md","status":"passed","summary":"Prettier整形とMarkdown lintが成功"},{"command":"npx tsx src/specdojo.ts register build && npx tsx src/specdojo.ts catalog validate && npx tsx src/specdojo.ts index build","status":"failed","summary":"sandboxがtsxのIPCソケット作成をEPERMで拒否"},{"command":"node --import tsx src/specdojo.ts register build && node --import tsx src/specdojo.ts catalog validate && node --import tsx src/specdojo.ts index build","status":"passed","summary":"IPC不要の同等起動で3検証が成功。catalogの既存未作成成果物に関する警告のみ"},{"command":"git diff --check && ! rg -n '_TODO_|_ASSUMPTION_' docs/ja/projects/prj-0001/controls/project-register/pjr-0148-extend-wikilink-id-resolution-beyond-docs-scope.md","status":"passed","summary":"差分エラーと未解決プレースホルダなし"}]}
+</specdojo_executor_evidence>

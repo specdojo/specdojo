@@ -1,0 +1,27 @@
+実装と検証を完了しました。
+
+## 原因
+
+`git add` の pathspec は作業ツリーと index だけを照合します。削除が既に index に入っているパス（前回の統合が commit 前に中断した状態）はどちらにも存在せず、`-A` を付けても `fatal: pathspec ... did not match any files` になります。一方 `git commit` / `git commit --amend` の pathspec は HEAD も照合するため、削除パスを対象に含めたままで削除を記録できます（git 本体の `t/t7501-commit-basic-functionality.sh` の `partial commit that involves removal (2)` が同条件を検証）。そこで **commit 対象の集合は変えず、`git add` へ渡すパスだけを絞る** 方針にしました。
+
+## 変更ファイル
+
+| ファイル                                                                             | 変更内容                                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/exec-worktree-ops.ts`                                                           | `selectStageablePaths` / `stageCommitTargets` を追加（`git ls-files` + `lstat` で stage 可能なパスのみ選別、該当なしなら `git add` を実行しない）。`stabilizeCommitTargets`・`commitWorktreeChanges`・`checkpointAndEnsureWorktree` の add を置換 |
+| `src/exec-run.ts`                                                                    | `commitRegisterItemChanges` / `commitRegisterState` の pathspec 付き add を `stageCommitTargets` へ置換                                                                                      |
+| `tests/src/exec-worktree-ops.integration.test.ts`                                    | 回帰テスト追加: 削除/変更/追加の混在 commit、staged 済み削除からの再試行 commit と merge、`selectStageablePaths` の選別（空入力含む）                                                        |
+| `docs/ja/projects/prj-0001/controls/project-register/pjr-reds-integrate-staged-deletion.md` | 作業内容 No.1〜4 を done、対応結果を記入（No.5 の PJR-WZMA 再開のみ残課題として open のまま）                                                                                                |
+
+対象限定（許可リスト・除外リスト）は維持しており、全件 `git add -A` へは戻していません。未 staged の削除・変更・新規追加・リネーム、hook 再整形後の再 stage の挙動も変わりません。個票・登録簿のステータス項目は変更していません。
+
+なお sandbox では `git` の実行が拒否されるため、追加した回帰テストの実行は親 runner の `npm run test:integration` に委ねています。
+
+Sources:
+
+- [git/t/t7501-commit-basic-functionality.sh](https://raw.githubusercontent.com/git/git/master/t/t7501-commit-basic-functionality.sh)
+- [git/builtin/commit.c](https://raw.githubusercontent.com/git/git/master/builtin/commit.c)
+
+<specdojo_executor_evidence>
+{"final_message":"統合経路の pathspec 付き git add を stageCommitTargets へ集約し、staged 済み削除を add 対象から除外して統合失敗を解消。commit 対象の限定範囲は不変。回帰テスト3件と個票の作業内容・対応結果を更新。","validations":[{"command":"npx prettier --write src/exec-worktree-ops.ts src/exec-run.ts tests/src/exec-worktree-ops.integration.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-reds-integrate-staged-deletion.md","status":"passed","summary":"全ファイル整形済み（差分なし）"},{"command":"npm run typecheck","status":"passed","summary":"tsc -b --noEmit エラーなし"},{"command":"npm run lint:ts","status":"passed","summary":"ESLint エラーなし"},{"command":"npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-reds-integrate-staged-deletion.md","status":"passed","summary":"個票の markdownlint エラーなし"},{"command":"npm run -s lint:md","status":"passed","summary":"docs 全体の markdownlint エラーなし"},{"command":"npx tsx src/specdojo.ts catalog validate","status":"passed","summary":"ERROR なし（未作成成果物に対する既存 WARN のみ）"},{"command":"npx tsx src/specdojo.ts register build","status":"passed","summary":"登録簿の派生ビューを再生成（生成物は gitignore 済み）"},{"command":"npx tsx src/specdojo.ts index build","status":"passed","summary":"doc-index 1493 entries を再生成"},{"command":"npx tsx tools/docs/src/validate-history-links.ts","status":"passed","summary":"履歴蓄積ファイルのリンク記法違反なし"},{"command":"npm run test:unit","status":"not_run","summary":"親 runner の検証に設定されているため executor では実行しない"},{"command":"npm run test:integration","status":"not_run","summary":"親 runner の検証に設定されているため executor では実行しない（追加した回帰テストの実行はここに委ねる）"}]}
+</specdojo_executor_evidence>

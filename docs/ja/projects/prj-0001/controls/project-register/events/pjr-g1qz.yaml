@@ -1,0 +1,82 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_888bdb586fcd47af9f16af988e590c2d
+  ts: "2026-09-02T21:30:13Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: rulebook 走査中に cxd-rulebook.md で MD007 違反が発生し、全件走査で拡大するため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: grade の finding コメントが Markdown lint を壊さないようにする
+    - field: description
+      from: ""
+      to: 本文へ挿入する specdojo:finding コメントが後続リストのインデント判定を狂わせ、lint:md が失敗する問題を解消する。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-03"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_c14e4de824574e10ba54c07046f7e56e
+  ts: "2026-09-03T21:32:10Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_888bdb586fcd47af9f16af988e590c2d
+- v: 1
+  id: reg_373baa8396c348809b8484fbdc496875
+  ts: "2026-09-03T21:40:48Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=package.json; agent must record the required change in the result …"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=package.json; agent must record the required change in the result …"
+  previous_event_id: reg_c14e4de824574e10ba54c07046f7e56e
+- v: 1
+  id: reg_dd18660671c3413b984cc32e1bccb63c
+  ts: "2026-09-03T22:35:51Z"
+  action: close
+  actor: orchestrator
+  from_status: waiting
+  to_status: done
+  reason: finding コメントの挿入位置を Markdown AST のブロック境界へ変更し、構造を分断しないようにした。既存7文書の違反は orchestrator が修正した。
+  changes:
+    - field: status
+      from: waiting
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-04"
+    - field: conclusion
+      from: "-"
+      to: finding コメントの挿入位置を Markdown AST のブロック境界へ変更し、構造を分断しないようにした。既存7文書の違反は orchestrator が修正した。
+  previous_event_id: reg_373baa8396c348809b8484fbdc496875

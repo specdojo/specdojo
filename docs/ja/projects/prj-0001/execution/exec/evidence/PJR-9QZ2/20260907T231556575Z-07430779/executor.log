@@ -1,0 +1,5 @@
+対応完了しました。executor 終了直後の evidence 永続化、stale `running` からの `--resume` 復旧、テスト・運用文書・個票を更新済みです。result ファイルは reporter 管轄のため変更していません。
+
+<specdojo_executor_evidence>
+{"final_message":"executor evidence を親検証前に永続化し、running のまま中断した register pipeline を既存 worktree から再開できるよう修正した。復旧テスト、コマンドリファレンス、運用ガイド、個票も更新済み。","validations":[{"command":"npm run typecheck","status":"passed","summary":"TypeScript 型検査成功。"},{"command":"npm run lint:ts","status":"passed","summary":"ESLint 検査成功。"},{"command":"npx markdownlint docs/ja/specdojo/guides/exec-operation-guide.md docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-9qz2-exec-stale-running-stage.md","status":"passed","summary":"Markdown 静的検査成功。"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"既存の欠損文書警告はあるが検証は終了コード0。"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1552件の文書索引を生成。"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿派生ビューを正常生成。"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし。"}]}
+</specdojo_executor_evidence>

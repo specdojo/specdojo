@@ -1,0 +1,108 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_d0c178350b6a423db414b3cce3fcfac8
+  ts: "2026-09-12T07:14:30Z"
+  action: add
+  actor: specdojo-orchestrator (claude)
+  from_status: null
+  to_status: open
+  reason: "docs(register): 選択 0 件の grade 再評価で記録を残さない todo を起票する"
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: grade の定期再評価で選択 0 件のときは Job Run の記録を残さない
+    - field: description
+      from: ""
+      to: rtn-grade-recheck（1 日 3 回）と rtn-grade-deliverable-recheck（1 日 1 回）は、変更済み・未評価の文書が無くても Job Run を生成し、plan / result / evidence / run の 4 ファイルと analysis reporter の起動（約 2 分）が発生する。kata 254 件の評価が完了した現在は no-op が常態で、9/12 だけで 3 回の no-op 記録が積み上がった。選択が 0 件のときは Job Run を作らず、routine-state.json の last_run だけを更新する方式に変える。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-12"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_629bc7c7cd8a4b599beadcd9e23ae41f
+  ts: "2026-09-12T07:23:24Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_d0c178350b6a423db414b3cce3fcfac8
+- v: 1
+  id: reg_60680bba096e45009d54e1bf31ecc763
+  ts: "2026-09-12T07:31:59Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: rate limit reached
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: rate limit reached
+  previous_event_id: reg_629bc7c7cd8a4b599beadcd9e23ae41f
+- v: 1
+  id: reg_5b4d4d0cdde74482a411e975931e6dae
+  ts: "2026-09-12T08:18:54Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_60680bba096e45009d54e1bf31ecc763
+- v: 1
+  id: reg_531c323a3f4741c389726c030cf3c167
+  ts: "2026-09-12T08:36:16Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_5b4d4d0cdde74482a411e975931e6dae
+- v: 1
+  id: reg_5bf3d587156f43c4b20e59f143b06099
+  ts: "2026-09-12T10:11:50Z"
+  action: close
+  actor: specdojo-orchestrator (claude)
+  from_status: review
+  to_status: done
+  reason: exec run --register（codex-expert-executor / gemma-reporter / worktree）で実施。codex の利用制限で中断後に同 agent で resume。親検証 3 件 passed、実機で skip を確認。利用者確認のうえ close
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-12"
+    - field: conclusion
+      from: "-"
+      to: Job Definition に task.precondition（command と skip_when）を追加し、Job Run 作成前に grade list で選択を判定して 0 件なら Job Run・plan・result・evidence を作らず skipped を返すようにした。routine は skipped を routine-state.json に記録する。job-grade-kata と job-grade-deliverable に適用し、実機で選択 0 件の Job 起動が 1 秒で記録なしに終了することを確認した。
+  previous_event_id: reg_531c323a3f4741c389726c030cf3c167

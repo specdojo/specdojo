@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_b85b0998a43c4611911b0fbed2b21304
+  ts: "2026-08-30T12:22:15Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: grade の二段階フィルタ運用を設計する
+    - field: description
+      from: ""
+      to: ローカルモデルは判定が甘く、単独では見落としが生じる。dec-rulebook.md はローカル構成（qwen executor と gemma reporter）で verdict pass、score 96 と判定されたが、codex-expert は単独で 12 件、claude-expert は 23 件の指摘を出している。一方で needs-work や fail と判定されたものは既に修正対象が確定しており、高性能 agent による再評価の価値は低い。定期評価をローカルで全件回し、pass と判定されたものだけを codex-expert で再確認する二段階フィルタとすることで、API コストを抑えつつ見落としを拾える。score による絞り込みも併用し、高得点ほど見落としの疑いが強いという性質を利用する。フィルタの閾値と codex の対象範囲は、サンプル評価で得た pass 率と score 分布から決める。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-08-30"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_11eccd091ef64da7806e232e004600cb
+  ts: "2026-08-31T13:24:33Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_b85b0998a43c4611911b0fbed2b21304
+- v: 1
+  id: reg_d1cb22635ae14dd496f83af0a1bafa1f
+  ts: "2026-08-31T13:51:02Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_11eccd091ef64da7806e232e004600cb
+- v: 1
+  id: reg_bd17190b0fd148679709bec48c43ec3e
+  ts: "2026-08-31T13:52:30Z"
+  action: close
+  actor: manual
+  from_status: review
+  to_status: done
+  reason: 実装・検証・レビューが完了したため
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-08-31"
+    - field: conclusion
+      from: "-"
+      to: "grade を3段で回す運用を設計し実装した。1段目はリファレンスありで全件をローカル評価し、2段目はリファレンスなしで1段目の失敗を拾いつつ指摘を確認する。3段目は pass かつ score 96 以上で finding 1 件以下のものと、未評価のものだけを codex-expert-executor が確認する。rtn-grade-kata を3つの Job の配列 action へ変更し、前段の成否にかかわらず後段を実行する。あわせて grade へ --min-score を追加し、verdict と finding 件数と AND で組み合わせられるようにした。--ungraded とは保存済み grade の有無が矛盾するため併用を拒否する。routine の有効化は人が判断するため enabled: false を維持している。"
+  previous_event_id: reg_d1cb22635ae14dd496f83af0a1bafa1f

@@ -1,0 +1,14 @@
+`specdojo agent run` を実装しました。
+
+- plan を指定 agent の stdin へ渡し、stdout を `--out` へ保存
+- nickname の一意解決、`--dry-run`、rate limit 時の終了コード `75`
+- 既存 `exec run` の agent 実行処理を共有
+- 環境変数をテスト間で復元する単体テストを追加
+- [CLI リファレンス](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-TA5C/docs/ja/specdojo/references/command-reference.md:590)と個票を更新
+- result・登録簿ステータスは未変更
+
+親 runner が unit・integration・schema 検証を続行します。
+
+<specdojo_executor_evidence>
+{"final_message":"agent run CLI、単体テスト、CLIリファレンス、個票本文を更新し、executor側検証を完了した。","validations":[{"command":"npx prettier --write src/agent.ts src/exec-run.ts src/specdojo.ts tests/src/agent-command.test.ts docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-ta5c-agent-run-primitive.md","status":"passed","summary":"対象6ファイルを整形した。"},{"command":"npm run typecheck","status":"passed","summary":"TypeScript型検査が成功した。"},{"command":"npx markdownlint docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-ta5c-agent-run-primitive.md","status":"passed","summary":"Markdown静的検査が成功した。"},{"command":"node --import tsx src/specdojo.ts agent run --help","status":"passed","summary":"agent runのCLI登録とオプション表示を確認した。"},{"command":"node --import tsx src/specdojo.ts register build --project prj-0001","status":"passed","summary":"register派生ビューを正常に生成した。"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1463件のdoc indexを正常に生成した。"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"全catalogがOK。既存の未作成成果物に関する警告のみ。"},{"command":"npm run test:unit","status":"not_run","summary":"親runnerの固定検証に委任。"},{"command":"npm run test:integration","status":"not_run","summary":"親runnerの固定検証に委任。"},{"command":"npm run validate:schema","status":"not_run","summary":"親runnerの固定検証に委任。"}]}
+</specdojo_executor_evidence>

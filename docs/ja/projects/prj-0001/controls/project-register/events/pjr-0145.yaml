@@ -1,0 +1,103 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_516fc5fdc686320142d540b4a5bdd90f
+  ts: "2026-08-09T10:55:22Z"
+  action: add
+  actor: SpecDojo Test
+  from_status: null
+  to_status: open
+  reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: README.md / docs/index.md / docs/`<lang>`/index.md の責務再整理と記述見直し
+    - field: description
+      from: ""
+      to: READMEおよびdocs配下のindex.mdの役割分担を再整理し、記述内容を見直す
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: PO
+    - field: registered
+      from: ""
+      to: _TODO_
+    - field: due
+      from: ""
+      to: "2026-08-31"
+    - field: completed
+      from: ""
+      to: "-"
+    - field: conclusion
+      from: ""
+      to: "-"
+    - field: block_reason
+      from: ""
+      to: "-"
+  legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+- v: 1
+  id: reg_c59b6621e24be1e26266a12caa6ccff9
+  ts: "2026-08-26T14:43:32Z"
+  action: update
+  actor: SpecDojo Test
+  from_status: open
+  to_status: open
+  reason: "docs(register): VS Code拡張関連4件の期限を10月末へ変更する"
+  changes:
+    - field: due
+      from: "2026-08-31"
+      to: "2026-10-31"
+  legacy_commit: c7434585ee94e78f867d19b0ccbe52862ca56ca5
+  previous_event_id: reg_516fc5fdc686320142d540b4a5bdd90f
+- v: 1
+  id: reg_6b0c17aab7b94c4aba535fb920091133
+  ts: "2026-09-05T13:35:36Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_c59b6621e24be1e26266a12caa6ccff9
+- v: 1
+  id: reg_a690720aa227448c87f81b47405fd85d
+  ts: "2026-09-05T13:49:04Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_6b0c17aab7b94c4aba535fb920091133
+- v: 1
+  id: reg_85ac9460451a41b082b1aaa1103bc6b8
+  ts: "2026-09-05T13:53:27Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: README と docs 配下 index の責務を分離し、重複4節を参照で解消した。英語版は未翻訳であることと日本語版への導線を明示する構成にした。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-05"
+    - field: conclusion
+      from: "-"
+      to: README と docs 配下 index の責務を分離し、重複4節を参照で解消した。英語版は未翻訳であることと日本語版への導線を明示する構成にした。
+  previous_event_id: reg_a690720aa227448c87f81b47405fd85d

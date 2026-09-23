@@ -1,0 +1,22 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/routine.schema.yaml
+id: rtn-grade-recheck
+name: 修正済み・未評価・段未完了の実践の型の定期再評価
+description: 毎日6時（Asia/Tokyo）に、変更済み、未評価、または段未完了の実践の型を最大15件再評価する。
+enabled: true
+trigger:
+  cron: "0 6 * * *"
+  timezone: Asia/Tokyo
+action:
+  kind: job
+  job: job-grade-kata
+  inputs:
+    # period は対象期間の表示用であり、Job Run や script の再開キーには使わない。
+    period: "{{scheduled_at | iso_week}}"
+    kind: all
+    limit: "15"
+    changed_only: "true"
+    ungraded: "true"
+    incomplete: "true"
+policy:
+  missed_run: skip
+  overlap: skip

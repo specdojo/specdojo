@@ -1,0 +1,13 @@
+[cdfd-action.md](/workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-action-075/docs/ja/product/010-business-specs/010-data-flow/cdfd-action.md) を更新しました。
+
+- `_TODO_` を暫定 STSD/CSTD 文書 ID に置換
+- 解消済みの未決事項章を削除
+- finding コメントは維持
+- result ファイルは未更新
+- 整形・Markdown 検査・索引生成・差分検査は通過
+
+標準の索引コマンドは sandbox の IPC 制限で失敗したため、同じエントリポイントを `node --import tsx` で実行して通過しています。
+
+<specdojo_executor_evidence>
+{"final_message":"cdfd-action の3件の finding を最小修正で解消し、finding コメントを維持した。","validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-action.md","status":"passed","summary":"対象 Markdown を整形"},{"command":"npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-action.md","status":"passed","summary":"警告・エラーなし"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1756件の文書索引を生成。標準の npx tsx は sandbox の IPC 制限で EPERM となったため同等の起動方法を使用"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>

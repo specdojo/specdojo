@@ -1,0 +1,30 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: cdfd-uc-deliverable-grade-criteria
+document: cdfd-uc-deliverable
+path: docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-deliverable.md
+graded_at: "2026-09-18T13:24:01.471Z"
+graded_by: codex-expert-executor
+content_hash: 2074ddb1ab747d93ee121fb18839da58d941a8cb7a99a2d35ef710644b9395aa
+summary:
+  satisfied: 3
+  unsatisfied: 0
+  total: 3
+criteria:
+  - id: DC-001
+    text: カタログ定義から完了記録までの各引き渡しについて、送り元グループ、受け側グループ、引き渡す情報、引き渡し条件、戻す条件が表で確認できること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: satisfied
+  - id: DC-002
+    text: 引き渡し条件を満たさない場合の戻り先がグループ単位で示され、グループ内部の例外を扱っていないこと
+    roles:
+      - QE
+    viewpoint: vp-qe-omissions-consistency
+    status: satisfied
+  - id: DC-003
+    text: レビューによる確定と grade による評価の責務分担が引き渡し条件として区別できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-cross-document-consistency
+    status: satisfied

@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "task_id": "JBR-grade-kata-e70a4c501f50",
+  "run_id": "attempt-1",
+  "stage": {
+    "role": "executor",
+    "actor": "specdojo-runner",
+    "status": "succeeded",
+    "started_at": "2026-09-10T07:00:02.708Z",
+    "completed_at": "2026-09-10T08:18:01.270Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/templates/pjr-views-by-priority-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/pjr-views-by-status-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/pm-change-request-log-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/pm-decision-log-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/pm-issue-log-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-kata-79ff74669fbf.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-kata-e70a4c501f50.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-kata-f1b984254569.json",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 8,
+    "summary": ".../templates/pjr-views-by-priority-template.md    | 26 ++++++++++----------\n .../templates/pjr-views-by-status-template.md      | 19 +++++++++------\n .../templates/pm-change-request-log-template.md    |  6 ++++-\n .../specdojo/templates/pm-decision-log-template.md | 28 ++++++++++++----------\n .../ja/specdojo/templates/pm-issue-log-template.md | 17 ++++++++-----\n 5 files changed, 57 insertions(+), 39 deletions(-)"
+  },
+  "validations": [
+    {
+      "id": "job-command",
+      "source": "runner",
+      "command": "npm run build\ntools/grade/run-per-document.sh --run-id JBR-grade-kata-e70a4c501f50 --kind all --limit 5 --changed-only=true --ungraded=true\ncat logs/grade/runs/per-document/JBR-grade-kata-e70a4c501f50/results.tsv",
+      "status": "passed",
+      "summary": "exit 0"
+    }
+  ],
+  "final_message": "Runner command exit 0.",
+  "command": {
+    "shell": "/bin/sh -eu",
+    "value": "npm run build\ntools/grade/run-per-document.sh --run-id JBR-grade-kata-e70a4c501f50 --kind all --limit 5 --changed-only=true --ungraded=true\ncat logs/grade/runs/per-document/JBR-grade-kata-e70a4c501f50/results.tsv",
+    "exit_code": 0,
+    "stdout_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-e70a4c501f50/attempt-1/command.stdout.log",
+    "stderr_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-e70a4c501f50/attempt-1/command.stderr.log",
+    "stdout": "\n> specdojo@0.1.0 build\n> node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.build.json && node -e \"require('node:fs').chmodSync('dist/specdojo.js', 0o755)\"\n\nrun_id=JBR-grade-kata-e70a4c501f50 project=prj-0001 kind=all changed_only=true ungraded=true documents=5 work_dir=logs/grade/runs/per-document/JBR-grade-kata-e70a4c501f50\nstage=1 executor=gemma-expert-executor reporter=gemma-reporter reference=per-kind\nstage=2 executor=gemma-expert-executor reporter=gemma-reporter reference=none\nstage=3 executor=codex-expert-executor reporter=gemma-reporter reference=none condition=\"pass, score>=96, findings<=1\"\ndocument start: docs/ja/specdojo/templates/pjr-views-by-priority-template.md\ndocument complete: docs/ja/specdojo/templates/pjr-views-by-priority-template.md\ndocument start: docs/ja/specdojo/templates/pjr-views-by-status-template.md\ndocument complete: docs/ja/specdojo/templates/pjr-views-by-status-template.md\ndocument start: docs/ja/specdojo/templates/pm-change-request-log-template.md\ndocument complete: docs/ja/specdojo/templates/pm-change-request-log-template.md\ndocument start: docs/ja/specdojo/templates/pm-decision-log-template.md\ndocument complete: docs/ja/specdojo/templates/pm-decision-log-template.md\ndocument start: docs/ja/specdojo/templates/pm-issue-log-template.md\ndocument complete: docs/ja/specdojo/templates/pm-issue-log-template.md\ngrade pipeline complete: selected=5 processed=5 completed_now=5 results=logs/grade/runs/per-document/JBR-grade-kata-e70a4c501f50/results.tsv\nrecorded_at\tdocument\tstage\tstatus\tduration_seconds\tverdict\tscore\tfindings\texecutor\treporter\treference\n2026-09-10T07:05:36Z\tdocs/ja/specdojo/templates/pjr-views-by-priority-template.md\t1\tpassed\t329\tpass\t100\t0\tgemma-expert-executor\tgemma-reporter\tdocs/ja/specdojo/templates/prj-overview-template.md\n2026-09-10T07:09:47Z\tdocs/ja/specdojo/templates/pjr-views-by-priority-template.md\t2\tpassed\t251\tpass\t100\t0\tgemma-expert-executor\tgemma-reporter\tnone\n2026-09-10T07:16:21Z\tdocs/ja/specdojo/templates/pjr-views-by-priority-template.md\t3\tfailed\t394\t\t\t\tcodex-expert-executor\tgemma-reporter\tnone\n2026-09-10T07:22:27Z\tdocs/ja/specdojo/templates/pjr-views-by-status-template.md\t1\tpassed\t366\tpass\t100\t0\tgemma-expert-executor\tgemma-reporter\tdocs/ja/specdojo/templates/prj-overview-template.md\n2026-09-10T07:26:35Z\tdocs/ja/specdojo/templates/pjr-views-by-status-template.md\t2\tpassed\t248\tpass\t100\t0\tgemma-expert-executor\tgemma-reporter\tnone\n2026-09-10T07:31:28Z\tdocs/ja/specdojo/templates/pjr-views-by-status-template.md\t3\tpassed\t293\tneeds-work\t86\t5\tcodex-expert-executor\tgemma-reporter\tnone\n2026-09-10T07:37:55Z\tdocs/ja/specdojo/templates/pm-change-request-log-template.md\t1\tfailed\t386\t\t\t\tgemma-expert-executor\tgemma-reporter\tdocs/ja/specdojo/templates/prj-overview-template.md\n2026-09-10T07:44:05Z\tdocs/ja/specdojo/templates/pm-change-request-log-template.md\t2\tpassed\t370\tneeds-work\t81\t3\tgemma-expert-executor\tgemma-reporter\tnone\n2026-09-10T07:44:05Z\tdocs/ja/specdojo/templates/pm-change-request-log-template.md\t3\tskipped_condition\t0\t\t\t\tcodex-expert-executor\tgemma-reporter\tnone\n2026-09-10T07:49:35Z\tdocs/ja/specdojo/templates/pm-decision-log-template.md\t1\tpassed\t330\tpass\t100\t0\tgemma-expert-executor\tgemma-reporter\tdocs/ja/specdojo/templates/prj-overview-template.md\n2026-09-10T07:53:46Z\tdocs/ja/specdojo/templates/pm-decision-log-template.md\t2\tpassed\t251\tpass\t100\t0\tgemma-expert-executor\tgemma-reporter\tnone\n2026-09-10T08:02:49Z\tdocs/ja/specdojo/templates/pm-decision-log-template.md\t3\tpassed\t543\tneeds-work\t79\t4\tcodex-expert-executor\tgemma-reporter\tnone\n2026-09-10T08:10:39Z\tdocs/ja/specdojo/templates/pm-issue-log-template.md\t1\tpassed\t470\tfail\t59\t5\tgemma-expert-executor\tgemma-reporter\tdocs/ja/specdojo/templates/prj-overview-template.md\n2026-09-10T08:18:01Z\tdocs/ja/specdojo/templates/pm-issue-log-template.md\t2\tpassed\t442\tfail\t59\t5\tgemma-expert-executor\tgemma-reporter\tnone\n2026-09-10T08:18:01Z\tdocs/ja/specdojo/templates/pm-issue-log-template.md\t3\tskipped_condition\t0\t\t\t\tcodex-expert-executor\tgemma-reporter\tnone\n",
+    "stderr": ""
+  },
+  "log_refs": [
+    {
+      "kind": "command-stdout",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-e70a4c501f50/attempt-1/command.stdout.log",
+      "bytes": 4051,
+      "truncated": false
+    },
+    {
+      "kind": "command-stderr",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-e70a4c501f50/attempt-1/command.stderr.log",
+      "bytes": 0,
+      "truncated": false
+    }
+  ]
+}

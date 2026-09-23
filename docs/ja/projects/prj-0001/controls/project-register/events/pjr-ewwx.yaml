@@ -1,0 +1,53 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ee8d0c2a852943adb9d076d6f7ab468c
+  ts: "2026-09-23T01:58:07Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: 複数人開発時の develop 直接 commit の是非を決める
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 複数人開発に備えて人が書いた変更を feature ブランチ経由に統一する
+    - field: description
+      from: ""
+      to: develop への直接 commit を、exec の記帳（register の起票・遷移）に限定する。人とオーケストレーターが内容を書いた変更は feature/`<project-id>`/`<topic>` を切って PR で develop へ統合する。exec の自動実行は従来どおり exec ブランチから統合し、統合専用 actor を branch protection の bypass 対象にする。
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-23"
+    - field: due
+      from: ""
+      to: "2026-10-31"
+- v: 1
+  id: reg_73ba1fb8fe614f88b5af6acd142dd101
+  ts: "2026-09-23T02:30:07Z"
+  action: close
+  actor: naoji3x
+  from_status: open
+  to_status: decided
+  reason: "PR #5 の merge をもって承認"
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-09-23"
+    - field: conclusion
+      from: "-"
+      to: develop へ入る経路を exec ブランチ / feature ブランチ / 記帳の直接 commit の 3 層に分ける。人が内容を書いた変更は feature から PR で統合し、register の記帳は develop 直 commit を許容する。
+  previous_event_id: reg_ee8d0c2a852943adb9d076d6f7ab468c

@@ -1,0 +1,15 @@
+
+> specdojo@0.1.0 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-kata-d46823544f0f project=prj-0001 kind=all changed_only=true ungraded=true documents=1 work_dir=logs/grade/runs/per-document/JBR-grade-kata-d46823544f0f
+stage=1 executor=gemma-expert-executor reporter=gemma-reporter reference=per-kind
+stage=2 executor=gemma-expert-executor reporter=gemma-reporter reference=none
+stage=3 executor=codex-expert-executor reporter=gemma-reporter reference=none condition="pass, score>=96, findings<=1"
+document start: docs/ja/specdojo/templates/pm-risk-register-template.md
+document complete: docs/ja/specdojo/templates/pm-risk-register-template.md
+grade pipeline complete: selected=1 processed=1 completed_now=1 results=logs/grade/runs/per-document/JBR-grade-kata-d46823544f0f/results.tsv
+recorded_at	document	stage	status	duration_seconds	verdict	score	findings	executor	reporter	reference
+2026-09-11T15:07:04Z	docs/ja/specdojo/templates/pm-risk-register-template.md	1	passed	416	fail	68	4	gemma-expert-executor	gemma-reporter	docs/ja/specdojo/templates/prj-overview-template.md
+2026-09-11T15:14:28Z	docs/ja/specdojo/templates/pm-risk-register-template.md	2	passed	444	fail	64	4	gemma-expert-executor	gemma-reporter	none
+2026-09-11T15:14:28Z	docs/ja/specdojo/templates/pm-risk-register-template.md	3	skipped_condition	0				codex-expert-executor	gemma-reporter	none

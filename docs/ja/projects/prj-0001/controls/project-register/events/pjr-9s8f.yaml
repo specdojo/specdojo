@@ -1,0 +1,108 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ab884d3426fb4f9faf33db4f994ff76c
+  ts: "2026-09-09T15:19:06Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 文書サイト機能を別パッケージへ分離する
+    - field: description
+      from: ""
+      to: gen-mermaid-svg.ts は npx mmdc を経由して Chromium を必要とする。CLI 本体の register や exec には不要な依存であり、同梱すると利用者が Mermaid 生成時に Chromium 取得へ直面する。.vitepress/config.mts は gen-mermaid-svg を直接 import しており両者は不可分である。文書サイト構築に必要な一式を別パッケージへ分離する。一方 remark-frontmatter-ajv2020.cjs と remark-md-content.cjs と history-links.ts は ajv と Node 標準のみに依存し、docs/specdojo/schemas と Markdown 規約に密結合するため specdojo 本体へ同梱する。規約と検証器を分けると版がずれる。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-10"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_6cfafdeef7ca4a43972f69dce4bb52c5
+  ts: "2026-09-12T04:45:42Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_ab884d3426fb4f9faf33db4f994ff76c
+- v: 1
+  id: reg_bdad3255c1c34d61a326bc5fe9820ebc
+  ts: "2026-09-12T05:07:07Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=.github/workflows/deploy.yml, package.json; agent must record the …"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=.github/workflows/deploy.yml, package.json; agent must record the …"
+  previous_event_id: reg_6cfafdeef7ca4a43972f69dce4bb52c5
+- v: 1
+  id: reg_f891b7d3b57c4a538cce5a6dab7089ff
+  ts: "2026-09-12T05:35:49Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_bdad3255c1c34d61a326bc5fe9820ebc
+- v: 1
+  id: reg_788a8abb05e7416fae64c0cb857a920c
+  ts: "2026-09-12T05:52:46Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_f891b7d3b57c4a538cce5a6dab7089ff
+- v: 1
+  id: reg_1bfc96a297cb4e75a2b86c561387a22d
+  ts: "2026-09-12T06:00:02Z"
+  action: close
+  actor: specdojo-orchestrator (claude)
+  from_status: review
+  to_status: done
+  reason: exec run --register（codex-expert-executor / gemma-reporter / worktree）で実施。agent-config-write の申し送りを orchestrator が適用して resume。親検証 3 件 passed、実機 docs:build 成功。利用者確認のうえ close
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-12"
+    - field: conclusion
+      from: "-"
+      to: VitePress と Mermaid 生成器を packages/docs-site（@specdojo/docs-site）へ分離し、CLI 本体の package.json から vitepress / vitepress-sidebar / @mermaid-js/mermaid-cli を除去した。docs:dev / docs:build は分離パッケージへ委譲し、deploy.yml と post-create.sh を追随させた。保護対象の設定は orchestrator が申し送りを確認して develop へ適用し、実機で npm run docs:build の全量ビルドが成功することを確認した。
+  previous_event_id: reg_788a8abb05e7416fae64c0cb857a920c

@@ -1,0 +1,60 @@
+# grade-pipeline-state.schema.yaml
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: "SpecDojo grade pipeline state schema"
+description: >
+  Validates retry state written below <execution_path>/grade/pipeline/. A file exists only while
+  a document has an unfinished configured grade pipeline or has reached its consecutive failure
+  limit. Completed pipelines remove their state file. content_hash prevents stages completed for
+  older document content from being reused after the document changes.
+type: object
+additionalProperties: false
+required:
+  - version
+  - project_id
+  - target
+  - document
+  - content_hash
+  - stage_completed
+  - stage_failed
+  - stage_total
+  - consecutive_failures
+  - max_failures
+  - last_run_id
+  - updated_at
+properties:
+  version:
+    const: 1
+  project_id:
+    type: string
+    pattern: "^[a-z0-9][a-z0-9-]*$"
+  target:
+    enum: [kata, deliverable]
+  document:
+    type: string
+    pattern: "^docs/.+\\.md$"
+  content_hash:
+    type: string
+    pattern: "^[a-f0-9]{64}$"
+  stage_completed:
+    type: integer
+    minimum: 0
+  stage_failed:
+    oneOf:
+      - type: integer
+        minimum: 1
+      - type: "null"
+  stage_total:
+    type: integer
+    minimum: 1
+  consecutive_failures:
+    type: integer
+    minimum: 0
+  max_failures:
+    type: integer
+    minimum: 1
+  last_run_id:
+    type: string
+    minLength: 1
+  updated_at:
+    type: string
+    format: date-time

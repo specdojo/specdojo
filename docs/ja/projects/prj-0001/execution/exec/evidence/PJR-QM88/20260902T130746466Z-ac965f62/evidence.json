@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-QM88",
+  "run_id": "20260902T130746466Z-ac965f62",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "failed",
+    "started_at": "2026-09-02T13:07:46.466Z",
+    "completed_at": "2026-09-02T13:18:53.142Z",
+    "exit_code": 1,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-qm88-rulebook-schema-enum-lint.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pjr-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pm-members-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/rulebook-authoring-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "package.json",
+      "status": "M"
+    },
+    {
+      "path": "tests/tools/docs/src/rulebook-schema-enums.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tools/docs/src/validate-rulebook-schema-enums.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 7,
+    "summary": ".../pjr-qm88-rulebook-schema-enum-lint.md          | 23 +++++++++++++++-------\n docs/ja/specdojo/rulebooks/pjr-rulebook.md         |  7 +++++--\n docs/ja/specdojo/rulebooks/pm-members-rulebook.md  |  4 ++--\n .../standards/rulebook-authoring-standard.md       |  8 ++++++++\n package.json                                       |  3 ++-\n 5 files changed, 33 insertions(+), 12 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write tools/docs/src/validate-rulebook-schema-enums.ts tests/tools/docs/src/rulebook-schema-enums.test.ts package.json docs/ja/specdojo/standards/rulebook-authoring-standard.md docs/ja/specdojo/rulebooks/pm-members-rulebook.md docs/ja/specdojo/rulebooks/pjr-rulebook.md docs/ja/projects/prj-0001/controls/project-register/pjr-qm88-rulebook-schema-enum-lint.md",
+      "status": "passed",
+      "summary": "対象ファイルを整形"
+    },
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "TypeScript 型検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "ESLint 成功"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/specdojo/standards/rulebook-authoring-standard.md docs/ja/specdojo/rulebooks/pm-members-rulebook.md docs/ja/specdojo/rulebooks/pjr-rulebook.md docs/ja/projects/prj-0001/controls/project-register/pjr-qm88-rulebook-schema-enum-lint.md",
+      "status": "passed",
+      "summary": "Markdown lint 成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "catalog 検証成功。既存の未作成成果物に関する警告のみ"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "1474件の索引生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:unit",
+      "status": "not_run",
+      "summary": "親 runner の allowlisted validation に委譲"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:integration",
+      "status": "not_run",
+      "summary": "親 runner の allowlisted validation に委譲"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema",
+      "status": "not_run",
+      "summary": "親 runner の allowlisted validation に委譲"
+    }
+  ],
+  "final_message": "schema enum 網羅 lint の実装、既存乖離の修正、個票更新を完了",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-QM88/20260902T130746466Z-ac965f62/executor.log",
+      "bytes": 2712,
+      "truncated": false
+    }
+  ]
+}

@@ -1,0 +1,142 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:sysd-critical-flows-rulebook
+path: docs/ja/specdojo/rulebooks/sysd-critical-flows-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 71
+graded_at: "2026-09-03T11:27:21.981Z"
+graded_by: codex-expert-executor
+content_hash: 3451e14f76be74a1b18dec0f71523a606003bf3a60cd39125d9016a73b58e554
+categories:
+  consistency:
+    score: 50
+  usability:
+    score: 75
+  architecture:
+    score: 100
+  quality:
+    score: 63
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 3
+    score: 75
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 3
+  minor: 11
+  note: 0
+findings:
+  - id: F002
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 1
+    message: >-
+      テスト導線を `ITS/ETS` および `its-index/ets-index` と記載しているが、成果物体系の正本は `ITC/ETC` および `itc-index/etc-index`
+      であり、参照先を一意に解決できない。
+    anchor: "# システム設計 重要フロー 作成ルール"
+  - id: F014
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 1
+    message: >-
+      内部・外部結合テストを `ITS/ETS`、`ITC/ETC`、`its-index/ets-index`、`itc-*/etc-*` と混在させているため、正本に合わせて `ITC/ETC` と `itc-/etc-`
+      系へ統一する必要がある。
+    anchor: "# システム設計 重要フロー 作成ルール"
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 1
+    message: 共通スキーマへの準拠を宣言しているが、必須の `specdojo:` 名前空間と `rulebook` を定義せず、スキーマで許可されない `title` を必須としているため、記載どおりの成果物はスキーマ不適合になる。
+    anchor: "# システム設計 重要フロー 作成ルール"
+  - id: F006
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: Frontmatter 必須項目から成果物スキーマ必須の `rulebook` と `specdojo:` 名前空間が欠落し、反対に未定義の `title` を必須としているため, 項目表を正本の必須キーへ合わせる必要がある。
+    anchor: "# システム設計 重要フロー 作成ルール"
+  - id: F003
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 1
+    message: 対応 sample は、本行で順序固定としている5章構成ではなく独自の「目的と適用範囲」「入力情報」「最小記述例」構成になっており、rulebook と整合していない。
+    anchor: "# システム設計 重要フロー 作成ルール"
+  - id: F012
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: 指定されたサンプルファイルが rulebook の定義する構成に従っておらず、具体的な完成例として機能していない。
+    anchor: "# システム設計 重要フロー 作成ルール"
+  - id: F004
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 1
+    message: フロー詳細の必須項目一覧が「本文構成」と「記述ガイド」でほぼ同文のまま反復されているため、前者を要件一覧、後者を判断基準と例に分担して重複を削減する必要がある。
+    anchor: "# システム設計 重要フロー 作成ルール"
+  - id: F013
+    severity: minor
+    rule: vp-ux-readability
+    line: 1
+    message: フロー詳細の同一項目一覧が「本文構成」と「記述ガイド」に重複し、どちらが必須要件でどちらが補足説明か判別しにくいため、要件と具体化ガイドの役割を分ける必要がある。
+    anchor: "# システム設計 重要フロー 作成ルール"
+  - id: F005
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 1
+    message: 「一覧は最大5件まで」としながら「6件目以降は検討結果を反映してから追加する」としているため、整理後も6件以上を許容するのか、総数5件を厳守するのかを pass / fail 判定できる形で明確化する必要がある。
+    anchor: "# システム設計 重要フロー 作成ルール"
+  - id: F007
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: 最大5件という上限と6件目以降を追加できるように読める手順が併存しているため、例外の有無と整理後の許容件数を統一する必要がある。
+    anchor: "# システム設計 重要フロー 作成ルール"
+  - id: F011
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: 記法例および埋め込み完成例の図が、必須としたシステム内外・サービス境界と主要識別子を示しておらず、図の適用例が自身の規約を満たしていない。
+    anchor: "# システム設計 重要フロー 作成ルール"
+  - id: F010
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: 埋め込み完成例の Frontmatter が `specdojo:` 名前空間と必須 `rulebook` を欠き、許可されない `title` を含むため、rulebook を適用した正しい成果物例として機能しない。
+    anchor: "# システム設計 重要フロー 作成ルール"
+  - id: F009
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: 各フローで `trace_id` 伝搬範囲を必須としているが、埋め込み例の scf-002 と scf-003 には伝搬範囲がなく、必須事項を満たす例になっていない。
+    anchor: "# システム設計 重要フロー 作成ルール"
+  - id: F008
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: 順序固定の構成では第5章を「関連ドキュメント導線（SDI/テスト/運用/DEC）」としている一方、生成見出しは「関連ドキュメント導線」とされているため、固定対象となる見出し名を統一する必要がある。
+    anchor: "# システム設計 重要フロー 作成ルール"

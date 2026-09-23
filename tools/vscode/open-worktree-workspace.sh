@@ -69,9 +69,42 @@ const safeWorktreeName =
 const hash = crypto.createHash('sha1').update(absoluteWorktreePath).digest('hex').slice(0, 8)
 const workspaceFile = path.join(localDir, `${color}-${safeWorktreeName}-${hash}.code-workspace`)
 
-if (fs.existsSync(workspaceFile)) {
-  process.stdout.write(workspaceFile)
-  process.exit(0)
+function isPlainObject(value) {
+  return Boolean(value) && typeof value === 'object' && !Array.isArray(value)
+}
+
+function deepMerge(base, override) {
+  const result = { ...base }
+  for (const [key, value] of Object.entries(override)) {
+    if (isPlainObject(result[key]) && isPlainObject(value)) {
+      result[key] = deepMerge(result[key], value)
+    } else {
+      result[key] = value
+    }
+  }
+  return result
+}
+
+function parseJsoncObject(text, filePath) {
+  try {
+    return JSON.parse(text)
+  } catch {
+    try {
+      const value = Function(`"use strict"; return (${text});`)()
+      return isPlainObject(value) ? value : {}
+    } catch (error) {
+      throw new Error(
+        `workspace settings parse failed: ${filePath}: ${error instanceof Error ? error.message : String(error)}`,
+      )
+    }
+  }
+}
+
+const worktreeSettingsPath = path.join(absoluteWorktreePath, '.vscode', 'settings.json')
+let worktreeSettings = {}
+if (fs.existsSync(worktreeSettingsPath)) {
+  const parsed = parseJsoncObject(fs.readFileSync(worktreeSettingsPath, 'utf8'), worktreeSettingsPath)
+  if (isPlainObject(parsed)) worktreeSettings = parsed
 }
 
 workspace.folders = [
@@ -80,6 +113,9 @@ workspace.folders = [
     path: path.relative(path.dirname(workspaceFile), absoluteWorktreePath) || '.',
   },
 ]
+
+const templateSettings = isPlainObject(workspace.settings) ? workspace.settings : {}
+workspace.settings = deepMerge(worktreeSettings, templateSettings)
 
 fs.writeFileSync(workspaceFile, `${JSON.stringify(workspace, null, 2)}\n`)
 process.stdout.write(workspaceFile)

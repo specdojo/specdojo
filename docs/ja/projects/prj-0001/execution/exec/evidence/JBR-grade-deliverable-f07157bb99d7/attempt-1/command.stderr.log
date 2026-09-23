@@ -1,0 +1,2 @@
+grade pipeline stage 2 must immediately follow completed stage 0
+grade pipeline: could not persist pipeline state for document=docs/ja/product/010-business-specs/010-data-flow/cdfd-action.md stage=2 status=passed

@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "task_id": "JBR-grade-kata-48cd668e941c",
+  "run_id": "attempt-2",
+  "stage": {
+    "role": "executor",
+    "actor": "specdojo-runner",
+    "status": "succeeded",
+    "started_at": "2026-09-09T13:14:25.756Z",
+    "completed_at": "2026-09-09T13:14:27.789Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-kata-48cd668e941c.json",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../execution/jobs/runs/JBR-grade-kata-48cd668e941c.json         | 9 +++++++--\n 1 file changed, 7 insertions(+), 2 deletions(-)"
+  },
+  "validations": [
+    {
+      "id": "job-command",
+      "source": "runner",
+      "command": "npm run build\ntools/grade/run-per-document.sh --run-id job-grade-kata-all-2026-W37 --kind all --limit 5 --changed-only=true --ungraded=true\ncat logs/grade/runs/per-document/job-grade-kata-all-2026-W37/results.tsv",
+      "status": "passed",
+      "summary": "exit 0"
+    }
+  ],
+  "final_message": "Runner command exit 0.",
+  "command": {
+    "shell": "/bin/sh -eu",
+    "value": "npm run build\ntools/grade/run-per-document.sh --run-id job-grade-kata-all-2026-W37 --kind all --limit 5 --changed-only=true --ungraded=true\ncat logs/grade/runs/per-document/job-grade-kata-all-2026-W37/results.tsv",
+    "exit_code": 0,
+    "stdout_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-48cd668e941c/attempt-2/command.stdout.log",
+    "stderr_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-48cd668e941c/attempt-2/command.stderr.log",
+    "stdout": "\n> specdojo@0.1.0 build\n> node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.build.json && node -e \"require('node:fs').chmodSync('dist/specdojo.js', 0o755)\"\n\nrun_id=job-grade-kata-all-2026-W37 project=prj-0001 kind=all changed_only=true ungraded=true documents=5 work_dir=logs/grade/runs/per-document/job-grade-kata-all-2026-W37\nstage=1 executor=gemma-expert-executor reporter=gemma-reporter reference=per-kind\nstage=2 executor=gemma-expert-executor reporter=gemma-reporter reference=none\nstage=3 executor=codex-expert-executor reporter=gemma-reporter reference=none condition=\"pass, score>=96, findings<=1\"\nresume skip document=docs/ja/specdojo/recipes/pm-roles-recipe.md status=complete\nresume skip document=docs/ja/specdojo/rulebooks/br-rulebook.md status=complete\nresume skip document=docs/ja/specdojo/samples/atc-sample.md status=complete\nresume skip document=docs/ja/specdojo/samples/br-sample.md status=complete\nresume skip document=docs/ja/specdojo/samples/imp-data-sample.md status=complete\ngrade pipeline complete: selected=5 processed=0 completed_now=0 results=logs/grade/runs/per-document/job-grade-kata-all-2026-W37/results.tsv\nrecorded_at\tdocument\tstage\tstatus\tduration_seconds\tverdict\tscore\tfindings\texecutor\treporter\treference\n2026-09-08T22:51:34Z\tdocs/ja/specdojo/recipes/pm-roles-recipe.md\t1\tfailed\t559\t\t\t\tgemma-expert-executor\tgemma-reporter\tdocs/ja/specdojo/recipes/prj-overview-recipe.md\n2026-09-08T22:59:50Z\tdocs/ja/specdojo/recipes/pm-roles-recipe.md\t2\tpassed\t496\tneeds-work\t89\t2\tgemma-expert-executor\tgemma-reporter\tnone\n2026-09-08T22:59:50Z\tdocs/ja/specdojo/recipes/pm-roles-recipe.md\t3\tskipped_condition\t0\t\t\t\tcodex-expert-executor\tgemma-reporter\tnone\n2026-09-08T23:07:45Z\tdocs/ja/specdojo/rulebooks/br-rulebook.md\t1\tpassed\t475\tpass\t98\t1\tgemma-expert-executor\tgemma-reporter\tdocs/ja/specdojo/rulebooks/prj-overview-rulebook.md\n2026-09-08T23:13:43Z\tdocs/ja/specdojo/rulebooks/br-rulebook.md\t2\tpassed\t358\tpass\t98\t1\tgemma-expert-executor\tgemma-reporter\tnone\n2026-09-08T23:20:58Z\tdocs/ja/specdojo/rulebooks/br-rulebook.md\t3\tpassed\t435\tneeds-work\t79\t5\tcodex-expert-executor\tgemma-reporter\tnone\n2026-09-08T23:29:08Z\tdocs/ja/specdojo/samples/atc-sample.md\t1\tpassed\t490\tfail\t46\t8\tgemma-expert-executor\tgemma-reporter\tdocs/ja/specdojo/samples/prj-overview-sample.md\n2026-09-08T23:36:15Z\tdocs/ja/specdojo/samples/atc-sample.md\t2\tpassed\t427\tfail\t46\t8\tgemma-expert-executor\tgemma-reporter\tnone\n2026-09-08T23:36:15Z\tdocs/ja/specdojo/samples/atc-sample.md\t3\tskipped_condition\t0\t\t\t\tcodex-expert-executor\tgemma-reporter\tnone\n2026-09-08T23:44:49Z\tdocs/ja/specdojo/samples/br-sample.md\t1\tpassed\t514\tpass\t100\t0\tgemma-expert-executor\tgemma-reporter\tdocs/ja/specdojo/samples/prj-overview-sample.md\n2026-09-08T23:50:40Z\tdocs/ja/specdojo/samples/br-sample.md\t2\tpassed\t351\tpass\t100\t0\tgemma-expert-executor\tgemma-reporter\tnone\n2026-09-08T23:53:57Z\tdocs/ja/specdojo/samples/br-sample.md\t3\tpassed\t197\tpass\t100\t0\tcodex-expert-executor\tgemma-reporter\tnone\n2026-09-09T00:02:37Z\tdocs/ja/specdojo/samples/imp-data-sample.md\t1\tfailed\t520\t\t\t\tgemma-expert-executor\tgemma-reporter\tdocs/ja/specdojo/samples/prj-overview-sample.md\n2026-09-09T00:10:56Z\tdocs/ja/specdojo/samples/imp-data-sample.md\t2\tpassed\t499\tneeds-work\t78\t3\tgemma-expert-executor\tgemma-reporter\tnone\n2026-09-09T00:10:56Z\tdocs/ja/specdojo/samples/imp-data-sample.md\t3\tskipped_condition\t0\t\t\t\tcodex-expert-executor\tgemma-reporter\tnone\n",
+    "stderr": ""
+  },
+  "log_refs": [
+    {
+      "kind": "command-stdout",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-48cd668e941c/attempt-2/command.stdout.log",
+      "bytes": 3432,
+      "truncated": false
+    },
+    {
+      "kind": "command-stderr",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-48cd668e941c/attempt-2/command.stderr.log",
+      "bytes": 0,
+      "truncated": false
+    }
+  ]
+}

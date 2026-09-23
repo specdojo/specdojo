@@ -164,7 +164,7 @@ describe("exec worktree", () => {
     const base = mkdtempSync(join(tmpdir(), "specdojo-worktree-base-"));
     try {
       addNpmPackage(repo);
-      addNpmPackage(repo, "tools/vscode-specdojo");
+      addNpmPackage(repo, "packages/vscode-specdojo");
       git(repo, "commit", "-m", "add packages");
       const installed: string[] = [];
 
@@ -180,7 +180,7 @@ describe("exec worktree", () => {
           }),
       });
 
-      expect(installed).toEqual([".", "tools/vscode-specdojo"]);
+      expect(installed).toEqual([".", "packages/vscode-specdojo"]);
       for (const packagePath of installed) {
         const nodeModules = resolve(created.path, packagePath, "node_modules");
         expect(lstatSync(nodeModules).isDirectory()).toBe(true);
@@ -246,6 +246,58 @@ describe("exec worktree", () => {
       });
 
       expect(existsSync(join(created.path, "node_modules"))).toBe(false);
+    } finally {
+      rmSync(repo, { recursive: true, force: true });
+      rmSync(base, { recursive: true, force: true });
+    }
+  });
+
+  it("generates worktree artifacts after installing dependencies, for new and reused worktrees", () => {
+    const repo = createGitRepository();
+    const base = mkdtempSync(join(tmpdir(), "specdojo-worktree-base-"));
+    const taskId = "prj-0001:T-LAUNCH-pm-plan-010";
+    try {
+      const steps: string[] = [];
+      const options = {
+        repoRoot: repo,
+        worktreeBase: base,
+        taskId,
+        installDependencies: () => steps.push("install"),
+        generateArtifacts: () => steps.push("generate"),
+      };
+
+      const created = ensureExecWorktree(options);
+      const reused = ensureExecWorktree(options);
+
+      expect(created.created).toBe(true);
+      expect(reused.created).toBe(false);
+      expect(steps).toEqual(["install", "generate", "install", "generate"]);
+    } finally {
+      rmSync(repo, { recursive: true, force: true });
+      rmSync(base, { recursive: true, force: true });
+    }
+  });
+
+  it("keeps a newly created worktree when artifact generation fails", () => {
+    const repo = createGitRepository();
+    const base = mkdtempSync(join(tmpdir(), "specdojo-worktree-base-"));
+    const taskId = "prj-0001:T-LAUNCH-pm-plan-010";
+    try {
+      expect(() =>
+        ensureExecWorktree({
+          repoRoot: repo,
+          worktreeBase: base,
+          taskId,
+          installDependencies: () => undefined,
+          generateArtifacts: () => {
+            throw new Error("Worktree preparation failed: specdojo build exited with 1");
+          },
+        }),
+      ).toThrow("Worktree preparation failed");
+
+      const worktree = findExecWorktree(repo, taskId);
+      expect(worktree).not.toBeNull();
+      expect(existsSync(worktree?.path ?? "")).toBe(true);
     } finally {
       rmSync(repo, { recursive: true, force: true });
       rmSync(base, { recursive: true, force: true });

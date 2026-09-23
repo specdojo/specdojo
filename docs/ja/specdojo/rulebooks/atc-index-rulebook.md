@@ -48,7 +48,6 @@ flowchart BT
   TC -->|based_on| TSP
   Code -->|based_on| TC
 
-
   classDef target stroke-width:4px
   class TCIndex target
 ```

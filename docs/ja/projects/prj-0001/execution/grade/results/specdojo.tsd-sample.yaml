@@ -1,0 +1,90 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:tsd-sample
+path: docs/ja/specdojo/samples/tsd-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: fail
+score: 27
+graded_at: "2026-09-06T04:16:51.347Z"
+graded_by: gemma-expert-executor
+content_hash: 57b9a706aa1f50e5a32d5f27aaf75a6412d842d4a31700b058e32796c006f777
+categories:
+  consistency:
+    score: 0
+  usability:
+    score: 67
+  architecture:
+    score: 50
+  quality:
+    score: 0
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 0
+    score: 0
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 0
+    score: 0
+  vp-qe-verifiability:
+    level: 0
+    score: 0
+  vp-qe-omissions-consistency:
+    level: 0
+    score: 0
+  vp-qe-kata-conformance:
+    level: 0
+    score: 0
+  vp-ux-readability:
+    level: 0
+    score: 0
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 6
+  major: 0
+  minor: 0
+  note: 0
+findings:
+  - id: F002
+    severity: blocker
+    rule: vp-arc-single-responsibility
+    line: 1
+    message: 特定領域詳細定義のサンプルとしての責務を放棄し、インデックス形式のメタ記述となっており、主題と責務が乖離している。
+    anchor: ""
+  - id: F005
+    severity: blocker
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: rulebook が定義する「特定領域詳細定義」の構成を無視し、「技術スタック一覧（インデックス）」の構成となっており、種別としての責務を守っていない。
+    anchor: ""
+  - id: F006
+    severity: blocker
+    rule: vp-ux-readability
+    line: 1
+    message: 詳細定義のサンプルとして機能しておらず, 読者が正解となる記述形式を理解できないため、実用上の blocker となる。
+    anchor: ""
+  - id: F001
+    severity: blocker
+    rule: vp-arc-cross-document-consistency
+    line: 3
+    message: "ID `specdojo:tsd-sample` は rulebook で規定された `tsd-＜term＞` パターン（例: `tsd-ollama`）に準拠していない。"
+    anchor: ""
+  - id: F004
+    severity: blocker
+    rule: vp-qe-omissions-consistency
+    line: 4
+    message: Frontmatter の `type` が `architecture` ではなく `project` となっており、かつ必須項目 `part_of` が欠落している。
+    anchor: "## 1. 目的と適用範囲"
+  - id: F003
+    severity: blocker
+    rule: vp-qe-verifiability
+    line: 26
+    message: TSD詳細定義に必須となる具体的な設定値や動作確認手順などの検証可能な基準が全く記載されていない。
+    anchor: ""

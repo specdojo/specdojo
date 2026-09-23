@@ -1,0 +1,72 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:sac-rulebook
+path: docs/ja/specdojo/rulebooks/sac-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 87
+graded_at: "2026-09-03T09:13:28.609Z"
+graded_by: gemma-expert-executor
+content_hash: 9f86beb1c8c49dcd31f60d53c3c77a8b60d70c048b3816dd5efb7e4fcb2c4318
+categories:
+  consistency:
+    score: 100
+  usability:
+    score: 83
+  architecture:
+    score: 100
+  quality:
+    score: 75
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 3
+    score: 75
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 1
+  minor: 2
+  note: 0
+findings:
+  - id: F002
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: 参照している `specdojo:sac-sample` が SAC の具体例ではなくサンプルの解説書となっており、定義した構成に従っていない。
+    anchor: "# システム受入条件仕様（SAC）作成ルール"
+  - id: F001
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 1
+    message: 全体方針の内容が「7. 禁止事項」の表とほぼ同一であり、冗長である。
+    anchor: "# システム受入条件仕様（SAC）作成ルール"
+  - id: F003
+    severity: minor
+    rule: vp-ux-readability
+    line: 1
+    message: 全体方針と禁止事項の間で同様の制約が繰り返されており、読者が情報を整理する際のノイズとなる。
+    anchor: "# システム受入条件仕様（SAC）作成ルール"

@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_4de0b8b1d1d9ecee6dd204904525fae2
+  ts: "2026-08-25T22:49:27Z"
+  action: add
+  actor: SpecDojo Test
+  from_status: null
+  to_status: open
+  reason: "docs(register): PJR-0XEJ claude系agentの設定ディレクトリ分離を起票する"
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: claude系agentの設定ディレクトリを分離して並行実行できるようにする
+    - field: description
+      from: ""
+      to: PJR-E6HG で特定したとおり、Claude Code は起動のたびに共有の設定ファイルを書き換えるため、複数の claude プロセスが並行すると競合して JSON パースに失敗する。Claude Code 側に修正の予定はない。CLAUDE_CONFIG_DIR で設定ディレクトリを分離すると、実測では設定ファイル・セッション・バックアップまで含めて分離されることを確認した。ただし分離先は未認証状態であるため、専用プロファイルの認証をどう扱うかが課題となる。分離により claude 系 agent をオーケストレーターの待機なしで実行できるようにする。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-08-26"
+    - field: due
+      from: ""
+      to: "2026-10-31"
+    - field: completed
+      from: ""
+      to: "-"
+    - field: conclusion
+      from: ""
+      to: "-"
+    - field: block_reason
+      from: ""
+      to: "-"
+  legacy_commit: 791c6e157b8b2fd6f29f9a6bcd88d5958868b76e
+- v: 1
+  id: reg_c839ef869fd94c0fb1fe3e504bec7d0e
+  ts: "2026-09-11T11:26:16Z"
+  action: close
+  actor: specdojo-orchestrator (claude)
+  from_status: open
+  to_status: done
+  reason: オーケストレーターが直接対応。start を経ず close。人工再現による検証は完了、実務形式の確認は別途
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-11"
+    - field: conclusion
+      from: "-"
+      to: 並行実行時の ~/.claude.json 競合は Claude Code 2.1.259 で上流修正されており、2.1.268 へ更新して TUI 稼働中に claude -p を 14 回並行起動しても JSON 破損・workspace trust のリセット・MCP/project 設定の消失は発生しなかった。CLAUDE_CONFIG_DIR による設定ディレクトリの分離は不要と判断し実装しない。claude 系 executor/reporter との並行作業の実務確認は別途行い、再発時は再起票する。
+  previous_event_id: reg_4de0b8b1d1d9ecee6dd204904525fae2
+- v: 1
+  id: reg_71428ebd4f274094a551966a520a1d33
+  ts: "2026-09-11T22:37:52Z"
+  action: update
+  actor: specdojo-orchestrator (claude)
+  from_status: done
+  to_status: done
+  reason: 段階 B（実務形式）の検証結果を conclusion へ反映
+  changes:
+    - field: conclusion
+      from: 並行実行時の ~/.claude.json 競合は Claude Code 2.1.259 で上流修正されており、2.1.268 へ更新して TUI 稼働中に claude -p を 14 回並行起動しても JSON 破損・workspace trust のリセット・MCP/project 設定の消失は発生しなかった。CLAUDE_CONFIG_DIR による設定ディレクトリの分離は不要と判断し実装しない。claude 系 executor/reporter との並行作業の実務確認は別途行い、再発時は再起票する。
+      to: 並行実行時の ~/.claude.json 競合は Claude Code 2.1.259 で上流修正されており、2.1.268 へ更新して TUI 稼働中に claude -p を 14 回並行起動しても、また PJR-08K1 を claude-expert-executor で 12 分実行しながら並行作業しても、JSON 破損・workspace trust のリセット・MCP/project 設定の消失は発生しなかった。CLAUDE_CONFIG_DIR による設定ディレクトリの分離は不要と判断し実装しない。再発時は再起票する。
+  previous_event_id: reg_c839ef869fd94c0fb1fe3e504bec7d0e

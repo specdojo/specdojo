@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "task_id": "T-DATA-FLOW-PDCA-cdfd-uc-register-075",
+  "run_id": "20260917T134533726Z-548629a7",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-17T13:46:21.053Z",
+    "completed_at": "2026-09-17T13:51:01.029Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../010-data-flow/cdfd-uc-register.md              | 43 ++++++++++++++--------\n 1 file changed, 27 insertions(+), 16 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md",
+      "status": "passed",
+      "summary": "対象 Markdown を整形"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md",
+      "status": "passed",
+      "summary": "lint エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "文書索引1784件を生成"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白・差分形式エラーなし"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-uc-register-075\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nUpdated: /tmp/specdojo-register-resume-e2e-3SzPD3/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)\nUpdated: /tmp/specdojo-register-resume-e2e-3SzPD3/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml\nUpdated: /tmp/specdojo-register-pipeline-e2e-wOsm1s/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)\nGenerated: /tmp/specdojo-register-resume-e2e-3SzPD3/docs/ja/projects/test/controls/project-register/generated/p…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.1.0 validate:schema:yaml\n> tsx tools/docs/src/validate-yaml-schema.ts --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-…"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-uc-register-075\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-pFSB8j/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-oqW8GA/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-hohlQI/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-68b7Md/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-mhmw4l/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-n1QK0L/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\nWrote agent stdout: /tmp/specdojo-agent-command-Qds6NA/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-LJAZZ0/outputs/partial.txt\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\n\n Test File…"
+    }
+  ],
+  "final_message": "cdfd-uc-register の finding 5件を最小差分で解消し、result は変更していません。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-PDCA-cdfd-uc-register-075/20260917T134533726Z-548629a7/executor.log",
+      "bytes": 1453,
+      "truncated": false
+    }
+  ]
+}

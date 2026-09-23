@@ -138,7 +138,7 @@ describe("generateDeliverablePlan", () => {
     expect(plan).toContain("criterion for only-a");
   });
 
-  it("renders depends_on as project-qualified [[id]] refs for path expansion", async () => {
+  it("product 配下の未作成成果物では depends_on と targets をローカル ID にする", async () => {
     root = mkdtempSync(join(tmpdir(), "specdojo-deliverable-deps-"));
     const catalogPath = join(root, "catalog");
     mkdirSync(catalogPath, { recursive: true });
@@ -148,7 +148,7 @@ describe("generateDeliverablePlan", () => {
       "status: draft",
       "project_id: prj-test",
       "domain: gamma",
-      "base_path: /docs/gamma",
+      "base_path: /docs/ja/product/gamma",
       "groups:",
       "  - deliverables:",
       "      - local_id: base-doc",
@@ -181,13 +181,13 @@ describe("generateDeliverablePlan", () => {
     });
 
     const plan = readFileSync(outPath, "utf8");
-    expect(plan).toContain("- `depends_on`:\n  - [[prj-test:base-doc]]");
+    expect(plan).toContain("- `depends_on`:\n  - [[base-doc]]");
     expect(plan).toContain("### プロジェクトコンテキスト");
     expect(plan).toContain("- [[prj-test:prj-overview]]");
     // Project context is plan guidance only: it does not become a dependency or a commit target.
-    expect(plan).not.toContain("  - [[prj-test:base-doc]]\n  - [[prj-test:prj-overview]]");
+    expect(plan).not.toContain("  - [[base-doc]]\n  - [[prj-test:prj-overview]]");
     const metadata = plan.split("---")[1] ?? "";
-    expect(metadata).toContain("    - prj-test:dependent");
+    expect(metadata).toContain("    - dependent");
     expect(metadata).not.toContain("prj-test:prj-overview");
   });
 });

@@ -140,4 +140,4 @@ Why は What の必要性を説明し、What は How が満たすべき境界を
 
 - 対応 rulebook の本文構成が変わった場合は、recipe の各章の書き方を追従させる。
 - 大量のケース列挙や実データは recipe ではなく対象成果物側に置く。recipe では「作り方」を定義する。
-- 表は必要に応じて整形スクリプト（`Format Markdown Table` タスク）で揃える。
+- 表は必要に応じて `SpecDojo: Format Markdown Table` コマンドで揃える。

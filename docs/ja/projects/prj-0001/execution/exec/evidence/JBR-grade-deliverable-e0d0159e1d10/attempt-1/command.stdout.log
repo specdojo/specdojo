@@ -1,0 +1,35 @@
+
+> specdojo@0.1.0 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-deliverable-e0d0159e1d10 project=prj-0001 target=deliverable kind=none changed_only=true ungraded=true documents=5 work_dir=logs/grade/runs/per-document/JBR-grade-deliverable-e0d0159e1d10
+stage=1 executor=gemma-expert-executor reporter=gemma-reporter reference=none
+stage=2 executor=gemma-expert-executor reporter=gemma-reporter reference=none
+stage=3 executor=codex-expert-executor reporter=gemma-reporter reference=none condition="pass, score>=96, findings<=1"
+document start: docs/ja/product/010-business-specs/010-data-flow/cdfd-agent-config-operation.md
+document complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-agent-config-operation.md
+document start: docs/ja/product/010-business-specs/010-data-flow/cdfd-catalog-planning.md
+document complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-catalog-planning.md
+document start: docs/ja/product/010-business-specs/010-data-flow/cdfd-multi-project.md
+document complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-multi-project.md
+document start: docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md
+document complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md
+document start: docs/ja/product/010-business-specs/010-data-flow/cdfd-register-lifecycle.md
+document complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-register-lifecycle.md
+grade pipeline complete: selected=5 processed=5 completed_now=5 results=logs/grade/runs/per-document/JBR-grade-deliverable-e0d0159e1d10/results.tsv
+recorded_at	document	stage	status	duration_seconds	verdict	score	findings	executor	reporter	reference
+2026-09-12T23:17:45Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-agent-config-operation.md	1	passed	1058	needs-work	75	10	gemma-expert-executor	gemma-reporter	none
+2026-09-12T23:36:16Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-agent-config-operation.md	2	passed	1111	needs-work	75	9	gemma-expert-executor	gemma-reporter	none
+2026-09-12T23:36:16Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-agent-config-operation.md	3	skipped_condition	0				codex-expert-executor	gemma-reporter	none
+2026-09-12T23:53:09Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-catalog-planning.md	1	passed	1013	needs-work	78	9	gemma-expert-executor	gemma-reporter	none
+2026-09-13T00:09:15Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-catalog-planning.md	2	passed	966	needs-work	78	12	gemma-expert-executor	gemma-reporter	none
+2026-09-13T00:09:15Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-catalog-planning.md	3	skipped_condition	0				codex-expert-executor	gemma-reporter	none
+2026-09-13T00:21:24Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-multi-project.md	1	passed	729	pass	100	0	gemma-expert-executor	gemma-reporter	none
+2026-09-13T00:35:02Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-multi-project.md	2	passed	818	pass	100	0	gemma-expert-executor	gemma-reporter	none
+2026-09-13T00:42:11Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-multi-project.md	3	passed	429	pass	96	2	codex-expert-executor	gemma-reporter	none
+2026-09-13T00:54:28Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md	1	passed	737	pass	100	0	gemma-expert-executor	gemma-reporter	none
+2026-09-13T01:08:48Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md	2	passed	860	pass	100	0	gemma-expert-executor	gemma-reporter	none
+2026-09-13T01:19:41Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md	3	passed	653	needs-work	67	11	codex-expert-executor	gemma-reporter	none
+2026-09-13T01:34:30Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-register-lifecycle.md	1	passed	889	pass	100	0	gemma-expert-executor	gemma-reporter	none
+2026-09-13T01:48:13Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-register-lifecycle.md	2	passed	823	pass	100	0	gemma-expert-executor	gemma-reporter	none
+2026-09-13T02:01:55Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-register-lifecycle.md	3	passed	822	needs-work	79	5	codex-expert-executor	gemma-reporter	none

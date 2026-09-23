@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "task_id": "JBR-grade-deliverable-9eff580278d3",
+  "run_id": "attempt-1",
+  "updated_at": "2026-09-12T01:43:34.460Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "specdojo-runner",
+      "attempts": 1,
+      "started_at": "2026-09-11T23:00:01.827Z",
+      "completed_at": "2026-09-12T01:40:35.599Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-deliverable-9eff580278d3/attempt-1/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma-reporter",
+      "attempts": 1,
+      "started_at": "2026-09-12T01:40:35.893Z",
+      "completed_at": "2026-09-12T01:43:34.460Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/JBR-grade-deliverable-9eff580278d3-result.md"
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/exec/plans/JBR-grade-deliverable-9eff580278d3-plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/exec/results/JBR-grade-deliverable-9eff580278d3-result.md"
+  }
+}

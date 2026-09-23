@@ -43,15 +43,16 @@ Impact Analysis (Interface) Rulebook
 
 影響調査（I/F）ドキュメントでは、[document-metadata-standard.md](../standards/document-metadata-standard.md) に準拠し、以下を推奨する。
 
-| 項目       | 説明                                   | 必須 |
+| 項目 | 説明 | 必須 |
+
 | ---------- | -------------------------------------- | ---- |
-| id         | ドキュメント ID（例: `imp-interface`） | ○    |
-| type       | `project`                              | ○    |
-| status     | `draft` / `ready` / `deprecated`       | ○    |
-| rulebook   | `specdojo:imp-interface-rulebook` 固定 | ○    |
-| part_of    | 一覧/親ドキュメントへの所属 ID 配列    | 任意 |
-| based_on   | 変更要求や根拠資料の ID 配列           | 任意 |
-| supersedes | 置き換え対象ドキュメント ID 配列       | 任意 |
+| id | ドキュメント ID（例: `imp-interface`） | ○ |
+| type | `project` | ○ |
+| status | `draft` / `ready` / `deprecated` | ○ |
+| rulebook | `specdojo:imp-interface-rulebook` 固定 | ○ |
+| part_of | 一覧/親ドキュメントへの所属 ID 配列 | 任意 |
+| based_on | 変更要求や根拠資料の ID 配列 | 任意 |
+| supersedes | 置き換え対象ドキュメント ID 配列 | 任意 |
 
 ## 5. 本文構成（標準テンプレ）
 

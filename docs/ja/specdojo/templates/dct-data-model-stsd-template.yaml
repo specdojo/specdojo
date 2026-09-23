@@ -12,7 +12,7 @@
 id: specdojo:dct-data-model-stsd-template
 type: template
 status: draft
-title: 成果物カタログ（データモデル／ステータス定義）
+title: 成果物カタログ（データモデル／ステータス定義・状態遷移）
 rulebook: specdojo:dct-rulebook
 domain: data-model
 base_path: /docs/ja/product/010-business-specs/020-data-model
@@ -24,20 +24,23 @@ groups:
         name: ステータス定義
         kind: work
         depends_on: []
-        overview: 業務上のエンティティが取り得る状態（ステータス）を一覧で定義する
+        overview: 業務上のエンティティが取り得る状態（ステータス）と状態遷移を一覧・図で定義する
         path: stsd-_TERM_.md
         rulebook: specdojo:stsd-rulebook
         note: "_TERM_ は対象エンティティ・ライフサイクルの略称（kebab-case）"
         done_criteria:
-          - text: ステータス名・説明が業務観点で正確に定義されていること
+          - text: ステータス名・意味・成立条件と、遷移・イベント・条件が業務観点で正確に定義されていること
             roles: [BA]
             viewpoint: vp-ba-requirements-completeness
+          - text: 状態遷移の業務的妥当性を承認できること
+            roles: [PO]
+            viewpoint: vp-po-purpose-alignment
           - text: 状態遷移実装の基礎として参照できること
             roles: [ARC]
             viewpoint: vp-arc-technical-constraints
-          - text: 状態ベースのテスト設計に活用できること
+          - text: 状態・遷移ベースのテスト設計に活用できること
             roles: [QE]
             viewpoint: vp-qe-verifiability
-          - text: 状態管理実装の参照として使えること
+          - text: 状態管理・遷移ロジック実装の参照として使えること
             roles: [DEV]
             viewpoint: vp-dev-implementation-readiness

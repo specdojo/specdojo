@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-0148",
+  "run_id": "20260904T143542606Z-026fd8e1",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-04T14:35:42.606Z",
+    "completed_at": "2026-09-04T14:40:19.371Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0148-extend-wikilink-id-resolution-beyond-docs-scope.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "...end-wikilink-id-resolution-beyond-docs-scope.md | 53 +++++++++++++++++++---\n 1 file changed, 46 insertions(+), 7 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-0148-extend-wikilink-id-resolution-beyond-docs-scope.md && npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-0148-extend-wikilink-id-resolution-beyond-docs-scope.md",
+      "status": "passed",
+      "summary": "Prettier整形とMarkdown lintが成功"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts register build && npx tsx src/specdojo.ts catalog validate && npx tsx src/specdojo.ts index build",
+      "status": "failed",
+      "summary": "sandboxがtsxのIPCソケット作成をEPERMで拒否"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build && node --import tsx src/specdojo.ts catalog validate && node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "IPC不要の同等起動で3検証が成功。catalogの既存未作成成果物に関する警告のみ"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check && ! rg -n '_TODO_|_ASSUMPTION_' docs/ja/projects/prj-0001/controls/project-register/pjr-0148-extend-wikilink-id-resolution-beyond-docs-scope.md",
+      "status": "passed",
+      "summary": "差分エラーと未解決プレースホルダなし"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0148\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: tools/vscode-specdojo\nInstalling worktree dependencies: .\ncommit-targets:\n  docs/conflict.md\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/stale.md\n  src/unrelated.ts\ncommit-targets:\n  execution/exec/res…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.1.0 validate:schema:yaml\n> tsx tools/docs/src/validate-yaml-schema.ts --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bps-template.yaml: schema docs/specdojo/sc…"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0148\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-52PcBp/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-WhcmNF/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-JjQpc8/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-9QX5I6/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-YE4PaF/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-QweacP/pjr-0001-topic.md\nWrote agent stdout: /tmp/specdojo-agent-command-egkkok/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-ZBiiay/outputs/partial.txt\n\n Test Files  97 passed (97)\n      Tests  1368 passed (1368)\n   Start at  23:39:51\n   Duration  27.42s (transform 2.01s, setup 586ms, import 16.19s, tests 22.35s, environm…"
+    }
+  ],
+  "final_message": "PJR-0148の調査を完了し、docs外へのwikilink解決は現時点で拡張しない方針、技術的論点、再評価条件を個票へ記録した。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-0148/20260904T143542606Z-026fd8e1/executor.log",
+      "bytes": 2119,
+      "truncated": false
+    }
+  ]
+}

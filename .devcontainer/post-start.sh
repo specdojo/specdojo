@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-CLAUDE_JSON="/home/node/.claude.json"
-CLAUDE_STATE_JSON="/home/node/.claude-state/.claude.json"
-GIT_CONFIG_DIR="/home/node/.config/git"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 GIT_CONFIG_FILE="${GIT_CONFIG_GLOBAL:-/home/node/.config/git/config}"
 WORKSPACE_DIR="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 TMUX_CONF_SOURCE="${WORKSPACE_DIR}/.devcontainer/tmux.conf"
@@ -11,49 +9,7 @@ TMUX_CONF_TARGET="${HOME}/.tmux.conf"
 CRON_SOURCE="${WORKSPACE_DIR}/.devcontainer/specdojo-routine.cron"
 CRON_TARGET="/etc/cron.d/specdojo-routine"
 
-sudo mkdir -p \
-  /home/node/.config \
-  "$GIT_CONFIG_DIR" \
-  /home/node/.claude \
-  /home/node/.claude-state \
-  /home/node/.codex \
-  /home/node/.copilot \
-  /home/node/.config/gh \
-  /home/node/.config/opencode
-
-sudo touch "$CLAUDE_STATE_JSON"
-sudo touch "$GIT_CONFIG_FILE"
-
-sudo chown node:node /home/node/.config
-
-sudo chown -R node:node \
-  "$GIT_CONFIG_DIR" \
-  /home/node/.claude \
-  /home/node/.claude-state \
-  /home/node/.codex \
-  /home/node/.copilot \
-  /home/node/.config/gh \
-  /home/node/.config/opencode
-
-chmod 755 /home/node/.config
-
-chmod 700 \
-  "$GIT_CONFIG_DIR" \
-  /home/node/.claude \
-  /home/node/.claude-state \
-  /home/node/.codex \
-  /home/node/.copilot \
-  /home/node/.config/gh \
-  /home/node/.config/opencode
-
-chmod 600 "$CLAUDE_STATE_JSON"
-chmod 600 "$GIT_CONFIG_FILE"
-
-if [ -e "$CLAUDE_JSON" ] && [ ! -L "$CLAUDE_JSON" ]; then
-  mv "$CLAUDE_JSON" "${CLAUDE_JSON}.bak.$(date +%Y%m%d%H%M%S)"
-fi
-
-ln -sfn "$CLAUDE_STATE_JSON" "$CLAUDE_JSON"
+bash "${SCRIPT_DIR}/prepare-agent-dirs.sh"
 
 if [ -f "$TMUX_CONF_SOURCE" ]; then
   ln -sfn "$TMUX_CONF_SOURCE" "$TMUX_CONF_TARGET"
@@ -66,7 +22,7 @@ if command -v cron >/dev/null 2>&1; then
   sudo chmod 0644 "$CRON_TARGET"
   mkdir -p "${WORKSPACE_DIR}/logs"
   sudo service cron start
-  sudo service cron status || true
+  sudo service cron status
 else
   echo "Cron is not installed. Rebuild the devcontainer to apply .devcontainer/Dockerfile."
 fi
@@ -75,16 +31,17 @@ echo "Checking tools..."
 command -v claude >/dev/null 2>&1 && claude --version || true
 command -v codex >/dev/null 2>&1 && codex --version || true
 command -v opencode >/dev/null 2>&1 && opencode --version || true
+command -v agy >/dev/null 2>&1 && agy --version || true
 command -v gh >/dev/null 2>&1 && gh --version | head -n 1 || true
 
 echo "Checking Git config..."
 echo "GIT_CONFIG_GLOBAL=${GIT_CONFIG_FILE}"
-ls -ld /home/node/.config "$GIT_CONFIG_DIR" || true
+ls -ld /home/node/.config /home/node/.config/git || true
 ls -l "$GIT_CONFIG_FILE" || true
 git config --global --list || true
 
 echo "Installing SpecDojo VSCode extension..."
-VSIX=$(ls -t "${WORKSPACE_DIR}/tools/vscode-specdojo/"*.vsix 2>/dev/null | head -n 1)
+VSIX=$(ls -t "${WORKSPACE_DIR}/packages/vscode-specdojo/"*.vsix 2>/dev/null | head -n 1 || true)
 CODE_SERVER_BIN="$(ls -t /vscode/vscode-server/bin/*/*/bin/code-server 2>/dev/null | head -n 1 || true)"
 if [ -n "$VSIX" ]; then
   if [ -n "$CODE_SERVER_BIN" ]; then
@@ -94,7 +51,7 @@ if [ -n "$VSIX" ]; then
     echo "Skipping VSIX install: code-server CLI is not available in this startup context."
   fi
 else
-  echo "SpecDojo VSIX not found. Run 'npm run package' in tools/vscode-specdojo/."
+  echo "SpecDojo VSIX not found. Run 'npm run vscode:package' at the repository root."
 fi
 
 echo "Checking Local LLM API..."

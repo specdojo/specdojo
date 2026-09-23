@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-Y013",
+  "run_id": "20260920T121014482Z-1c968661",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "rate_limited",
+    "started_at": "2026-09-20T12:10:14.482Z",
+    "completed_at": "2026-09-20T12:21:06.471Z",
+    "exit_code": 1,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-y013-exec-commit-folding.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/branch-workflow-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-worktree-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/register-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-worktree-ops.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-pipeline-e2e.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-register-pipeline-e2e.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-worktree-command.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-worktree-ops.integration.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 10,
+    "summary": ".../pjr-y013-exec-commit-folding.md                |  20 +-\n docs/ja/specdojo/guides/branch-workflow-guide.md   |   2 +\n docs/ja/specdojo/guides/exec-worktree-guide.md     |  26 +--\n .../ja/specdojo/guides/register-operation-guide.md |   2 +-\n src/exec-run.ts                                    | 229 +++++++++++++++++----\n src/exec-worktree-ops.ts                           |  68 ++++--\n tests/src/exec-pipeline-e2e.integration.test.ts    |  11 +\n .../exec-register-pipeline-e2e.integration.test.ts |  23 +++\n .../src/exec-worktree-command.integration.test.ts  |   5 +-\n tests/src/exec-worktree-ops.integration.test.ts    |  15 +-\n 10 files changed, 313 insertions(+), 88 deletions(-)"
+  },
+  "validations": [],
+  "final_message": "",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-Y013/20260920T121014482Z-1c968661/executor.log",
+      "bytes": 65536,
+      "truncated": true
+    }
+  ]
+}

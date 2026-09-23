@@ -2,6 +2,9 @@
 
 # dependencies
 /node_modules
+/packages/docs-site/node_modules/
+/packages/docs-lint/node_modules/
+/packages/docs-lint/.tsbuild/
 /.pnp
 .pnp.js
 .yarn/install-state.gz
@@ -58,9 +61,9 @@ config/credentials.json
 *.key
 
 # vitepress build output
-/.vitepress/dist
-/.vitepress/cache
-/.vitepress/.temp
+/packages/docs-site/.vitepress/dist
+/packages/docs-site/.vitepress/cache
+/packages/docs-site/.vitepress/.temp
 /public/mermaid
 /local
 
@@ -81,8 +84,11 @@ CLAUDE.local.md
 .opencode/sessions/
 
 # specdojo VSCode extension
-tools/vscode-specdojo/node_modules/
-tools/vscode-specdojo/out/
+# vsix は vsce が生成する配布物。バージョンごとにファイル名が変わるため、
+# tracking すると公開のたびに古い成果物が積み上がる。バイナリで差分も取れない。
+packages/vscode-specdojo/node_modules/
+packages/vscode-specdojo/out/
+*.vsix
 
 # specdojo doc-index は root/worktree で都度再生成される生成物。
 # commit すると exec の merge で衝突するため tracking しない。
@@ -100,4 +106,4 @@ docs/**/generated/*
 docs/**/execution/exec/.locks/
 
 /*.log
-/logs/*.log
+/logs/**

@@ -1,0 +1,16 @@
+文書サイト機能を独立パッケージ `@specdojo/docs-site` へ分離しました。
+
+- VitePress、Mermaid、Puppeteer依存をCLI本体から除去
+- 検証系ツールは本体に維持
+- ルートnpm scripts、devcontainer、GitHub Pagesを新パッケージへ接続
+- npm tarballの同梱境界と最小サイトbuildを確認
+- 個票を更新し、ステータスとresultファイルは未変更
+- 親runner担当のunit／integration／schema検証は実行していません
+
+`npx tsx` はsandboxのIPC制約で使用できなかったため、カタログ検証は同等の `node --import tsx` で成功しています。
+
+<specdojo_executor_evidence>
+{"final_message":"文書サイト一式を@specdojo/docs-siteへ分離し、CLI本体からChromium関連依存を除去した。","validations":[{"command":"npm run typecheck","status":"passed","summary":"CLI本体のTypeScript型検査に成功"},{"command":"npm --prefix packages/docs-site run typecheck","status":"passed","summary":"分離パッケージのVitePress設定とMermaid生成器の型検査に成功"},{"command":"npm run lint:ts","status":"passed","summary":"既存TypeScript lintに成功"},{"command":"npm run build","status":"passed","summary":"CLI本体のbuildに成功"},{"command":"node packages/docs-site/bin/specdojo-docs-site.js build local/pjr-9s8f-docs-build-fixture","status":"passed","summary":"最小日英サイトでVitePress、theme、Mermaidプラグインを含むbuildに成功"},{"command":"node --import tsx src/specdojo.ts catalog build && node --import tsx src/specdojo.ts register build && node --import tsx src/specdojo.ts catalog validate && node --import tsx src/specdojo.ts index build","status":"passed","summary":"カタログ・登録簿・索引の生成と検証に成功。既存の未作成成果物warningのみ"},{"command":"npx markdownlint packages/docs-site/README.md docs/ja/product/030-architecture/020-infrastructure/tsd-index.md docs/ja/product/040-system-design/sysd-index.md docs/ja/specdojo/standards/id-and-file-naming-standard.md docs/ja/projects/prj-0001/controls/project-register/pjr-9s8f-split-docs-site-package.md","status":"passed","summary":"変更Markdownの静的検査に成功"},{"command":"shellcheck .devcontainer/post-create.sh","status":"passed","summary":"devcontainer初期化スクリプトの検査に成功"},{"command":"npm_config_cache=/tmp/pjr-9s8f-npm-cache npm pack --dry-run --json --ignore-scripts","status":"passed","summary":"CLI tarballに文書サイト実装やChromium依存が含まれないことを確認"},{"command":"npm_config_cache=/tmp/pjr-9s8f-npm-cache npm pack ./packages/docs-site --dry-run --json --ignore-scripts","status":"passed","summary":"分離パッケージに設定・theme・生成器・CLIが含まれ、build/cache生成物が除外されることを確認"}]}
+</specdojo_executor_evidence>
+
+agent-config-write: protected configuration changes detected; paths=.github/workflows/deploy.yml, package.json; agent must record the required change in the result handoff for human or orchestrator application

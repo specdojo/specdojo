@@ -1,0 +1,102 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:uis-sample
+path: docs/ja/specdojo/samples/uis-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: fail
+score: 56
+graded_at: "2026-09-09T16:47:56.552Z"
+graded_by: gemma-expert-executor
+content_hash: 66bf1ffd140f13122a4b219ec36099cdb9574bf03efdbb7d6134b68333386388
+categories:
+  consistency:
+    score: 50
+  usability:
+    score: 67
+  architecture:
+    score: 100
+  quality:
+    score: 25
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 3
+    score: 75
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 1
+    score: 25
+  vp-qe-kata-conformance:
+    level: 0
+    score: 0
+  vp-ux-readability:
+    level: 2
+    score: 50
+  vp-ux-language-consistency:
+    level: 2
+    score: 50
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 1
+  major: 6
+  minor: 1
+  note: 0
+findings:
+  - id: F005
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 3
+    message: ルールブック第 5 章で定義された標準構成（概要、対象ユーザー/利用目的等）に従っておらず、構成が完全に異なる。
+    anchor: "## 1. 目的と適用範囲"
+  - id: F003
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 4
+    message: Frontmatter の type が `project` となっており、ルールブックで指定された `screen` と矛盾している。
+    anchor: ""
+  - id: F008
+    severity: major
+    rule: vp-ux-language-consistency
+    line: 4
+    message: Frontmatter の type 指定値がルールブックの定義（screen）と不整合である。
+    anchor: ""
+  - id: F004
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 7
+    message: Frontmatter に必須項目である `title` が欠落している。
+    anchor: "## 2. 入力情報"
+  - id: F001
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 8
+    message: サンプルとしての具体性を欠いており、特定の画面を対象とした仕様として記述すべきである。
+    anchor: ""
+  - id: F006
+    severity: blocker
+    rule: vp-qe-kata-conformance
+    line: 8
+    message: 本文書は「画面仕様の書き方」を記述した解説書になっており、ルールブックが定義する「完成例（sample）」としての責務を果たしていない。
+    anchor: ""
+  - id: F002
+    severity: major
+    rule: vp-qe-verifiability
+    line: 29
+    message: 期待される成果物である「画面仕様」における判定基準や検証方法の記述例が示されておらず、完成例として機能していない。
+    anchor: "| -------------- | ------------------------ |"
+  - id: F007
+    severity: major
+    rule: vp-ux-readability
+    line: 29
+    message: 「最小記述例」として要点を列挙しているが、実際のドキュメント構造を用いた具体例ではないため、読者が適用方法を理解しにくい。
+    anchor: "| -------------- | ------------------------ |"

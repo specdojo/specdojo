@@ -1,0 +1,12 @@
+実装を完了しました。
+
+- command Job に `task.precondition` を追加し、空選択時は Run・plan・result・evidence・reporter を生成しません。
+- grade 2種の Job に selection-v2 と同条件の事前判定を設定しました。
+- routine は skip を受け取り、`last_run` / `last_result: skipped` を更新します。
+- schema、設計書、運用ガイド、個票、単体テストを更新しました。
+- 型検査、lint、ビルド、Job/Routine検証、カタログ検証、索引生成は成功しています。
+- executor 指示に従い result は更新せず、unit/integration/schema 検証は親 runner に委ねました。
+
+<specdojo_executor_evidence>
+{"final_message":"空選択時にJob成果物を作らずroutine状態だけを更新するprecondition経路を実装した。","validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-routine.md docs/ja/product/040-system-design/sysd-job-execution.md docs/ja/projects/prj-0001/controls/project-register/pjr-33sb-grade-recheck-skip-empty-selection.md docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml docs/ja/specdojo/guides/routine-operation-guide.md docs/ja/specdojo/standards/job-definition-standard.md docs/specdojo/schemas/v1/job.schema.yaml src/exec-run.ts src/job.ts src/routine.ts tests/src/exec-run-inplace.test.ts tests/src/job.test.ts","status":"passed","summary":"変更対象を整形"},{"command":"npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-routine.md docs/ja/product/040-system-design/sysd-job-execution.md docs/ja/projects/prj-0001/controls/project-register/pjr-33sb-grade-recheck-skip-empty-selection.md docs/ja/specdojo/guides/routine-operation-guide.md docs/ja/specdojo/standards/job-definition-standard.md","status":"passed","summary":"Markdownエラーなし"},{"command":"npm run typecheck","status":"passed","summary":"TypeScript型エラーなし"},{"command":"npm run lint:ts","status":"passed","summary":"ESLintエラーなし"},{"command":"npm run build","status":"passed","summary":"CLIビルド成功"},{"command":"node dist/specdojo.js job validate --project prj-0001","status":"passed","summary":"8 Job、0エラー"},{"command":"node dist/specdojo.js routine validate --project prj-0001","status":"passed","summary":"8 Routine、0エラー"},{"command":"node dist/specdojo.js register build --project prj-0001","status":"passed","summary":"登録簿派生ビュー生成成功"},{"command":"node dist/specdojo.js catalog validate --project prj-0001","status":"passed","summary":"全カタログOK、既存の文書未作成警告のみ"},{"command":"node dist/specdojo.js index build","status":"passed","summary":"1637件の文書索引を生成"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>

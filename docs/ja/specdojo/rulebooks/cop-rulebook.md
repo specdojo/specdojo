@@ -11,6 +11,7 @@ specdojo:
 Cutover Plan (COP) Documentation Rules
 
 本ドキュメントは、カットオーバー計画（本番切替手順）の対象別ドキュメント `cop-<term>` を統一形式で記述するためのルールです。
+
 全体方針と判断体系は `cop-index` を正とし、本書では対象固有の実行手順を定義します。
 
 ## 1. 全体方針

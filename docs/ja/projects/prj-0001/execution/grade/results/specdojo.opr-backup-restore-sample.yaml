@@ -1,0 +1,90 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:opr-backup-restore-sample
+path: docs/ja/specdojo/samples/opr-backup-restore-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: fail
+score: 57
+graded_at: "2026-09-05T14:44:24.554Z"
+graded_by: gemma-expert-executor
+content_hash: b78af64578475fe1346283855de2fe324628f7a83cc5d434b08e4fd8254b98dc
+categories:
+  consistency:
+    score: 25
+  usability:
+    score: 75
+  architecture:
+    score: 100
+  quality:
+    score: 38
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
+    level: 0
+    score: 0
+  vp-qe-kata-conformance:
+    level: 0
+    score: 0
+  vp-ux-readability:
+    level: 1
+    score: 25
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 3
+  major: 2
+  minor: 1
+  note: 0
+findings:
+  - id: F003
+    severity: blocker
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: Frontmatter の必須項目 `title` が不足している。
+    anchor: ""
+  - id: F004
+    severity: blocker
+    rule: vp-qe-omissions-consistency
+    line: 5
+    message: "`opr-rulebook` で定義されている必須章（概要、適用範囲・前提、定期点検、障害対応、アラート対応、バッチ再実行、運用変更、アカウント付与・剥奪、問い合わせ一次対応、証跡、関連文書導線）がすべて欠落している。"
+    anchor: ""
+  - id: F005
+    severity: blocker
+    rule: vp-qe-kata-conformance
+    line: 5
+    message: 見出し番号が `## 1` となっているが、ルール規定およびテンプレートの順序に従い `## 6` とすべきである。
+    anchor: ""
+  - id: F006
+    severity: major
+    rule: vp-ux-readability
+    line: 5
+    message: 必須構成を大幅に省略しているため、`opr-＜term＞` 文書を正しく作成するためのサンプルとして不十分である。
+    anchor: ""
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 6
+    message: Frontmatter の `rulebook` が `specdojo:opd-rulebook` となっており、手順書であるため `specdojo:opr-rulebook` とすべきである。
+    anchor: "## 1. バックアップ確認・リストア手順（演習含む）"
+  - id: F002
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 14
+    message: 「主要テーブルの件数/参照整合を確認」などの判定基準が具体的に記述されておらず、検証不能である。
+    anchor: ""

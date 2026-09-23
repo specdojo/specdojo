@@ -1,81 +1,37 @@
-# SpecDojo
+# SpecDojo 日本語ドキュメント
 
-SpecDojo は、**仕様駆動開発のためのドキュメントフレームワーク**です。
-プロダクトの構築・改修に必要な情報を体系化し、記述規約、サンプル、テンプレート、CLI を通じて、プロジェクトの定義から実行・レビューまでを支援します。
+SpecDojo は、仕様駆動開発のためのドキュメントフレームワークです。
+プロダクトの構築・改修に必要な情報を体系化し、人が判断理由を理解でき、生成 AI とツールが成果物を安定して作成・検証・更新できる状態を目指します。
 
-人が内容と判断理由を理解でき、生成 AI とツールが成果物を安定して作成・検証・更新できるドキュメント体系を目指しています。
+## このページの役割
+
+このページは、日本語ドキュメントサイトの入口です。
+SpecDojo の概要と、目的に合うガイドやリファレンスへの導線を提供します。
+
+リポジトリの概要と入手方法は `README.md`、具体的な導入手順は [Quick Start ガイド](./specdojo/guides/quick-start-guide.md)、文書の配置は [ドキュメント構成ガイド](./specdojo/guides/docs-structure-guide.md) をそれぞれ正本とし、このページには詳細を重複して掲載しません。
 
 ## はじめに
 
-初めて SpecDojo に触れる場合は、次の順に読むと全体像をつかめます。
+目的に合わせて、次の文書から始めてください。
 
-1. [全体概要ガイド](./specdojo/guides/specdojo-overview-guide.md)：SpecDojo の目的、文書体系、成果物から実行管理までの流れを説明します。
-2. [ドキュメント構成ガイド](./specdojo/guides/docs-structure-guide.md)：プロダクト文書とプロジェクト文書の分類、配置を説明します。
-3. [トラック設計ガイド](./specdojo/guides/track-design-guide.md)：プロジェクトの作業系列であるトラックの構成と実行順序を説明します。
+| 目的                                     | 読む文書                                                                                  |
+| ---------------------------------------- | ----------------------------------------------------------------------------------------- |
+| SpecDojo の全体像を理解する              | [全体概要ガイド](./specdojo/guides/specdojo-overview-guide.md)                            |
+| CLI を初期設定し、基本フローを試す       | [Quick Start ガイド](./specdojo/guides/quick-start-guide.md)                              |
+| 設定キーと必要なコマンドを調べる         | [SpecDojo設定リファレンス](./specdojo/references/specdojo-config-reference.md)            |
+| 文書の分類、ライフサイクル、配置を決める | [ドキュメント構成ガイド](./specdojo/guides/docs-structure-guide.md)                       |
+| CLI の役割と代表的な操作を確認する       | [遂行の技活用ガイド](./specdojo/guides/waza-guide.md)                                     |
+| 成果物の種類と目的を調べる               | [成果物リファレンス](./specdojo/references/deliverables-reference.md)                     |
+| ファイル単位の配置を調べる               | [ディレクトリレイアウトリファレンス](./specdojo/references/directory-layout-reference.md) |
 
-CLI による実行管理から確認したい場合は、[遂行の技活用ガイド](./specdojo/guides/waza-guide.md)から始めてください。
+やりたいことから文書を探す場合は、[全体概要ガイド](./specdojo/guides/specdojo-overview-guide.md)の「目的別の次の読み物」を参照してください。
 
-やりたいことから文書を探す場合は、[全体概要ガイド](./specdojo/guides/specdojo-overview-guide.md)の`目的別の次の読み物`を参照してください。guide と reference を目的別にまとめた唯一の一覧です。
+## ドキュメントの主な領域
 
-## Quick Start
-
-SpecDojo を利用するリポジトリは、次のいずれかの方法で準備できます。
-
-- [specdojoリポジトリ](https://github.com/specdojo/specdojo)の`Use this template`から、新しいリポジトリを作成する
-- リポジトリをダウンロードし、`docs/ja/specdojo/`以下の文書体系を既存プロジェクトへ取り込む
-
-導入後は、次の小さな単位から始めます。
-
-1. プロジェクトの目的とスコープを整理します。
-2. 必要な成果物を選び、成果物カタログへ登録します。
-3. 小さな Schedule に展開して、成果物を一つ作成・レビューします。
-4. 必要に応じて登録簿、自動実行、branch / worktree運用を追加します。
-
-具体的な CLI 操作は[遂行の技活用ガイド](./specdojo/guides/waza-guide.md)を参照してください。
-
-## 提供する資料
-
-| ディレクトリ           | 内容                                                   |
-| ---------------------- | ------------------------------------------------------ |
-| `specdojo/guides/`     | 全体像、判断方法、操作手順                             |
-| `specdojo/references/` | 成果物、コマンド、設定などを一覧・比較して参照する資料 |
-| `specdojo/standards/`  | 文書種別を横断する共通規約                             |
-| `specdojo/rulebooks/`  | 成果物ごとの記述規則                                   |
-| `specdojo/recipes/`    | 成果物を作成・更新する手順                             |
-| `specdojo/templates/`  | 成果物の雛形                                           |
-| `specdojo/samples/`    | 成果物の記述例                                         |
-| `sample-gcs-projects/` | おばあちゃんの駄菓子屋を題材にしたプロジェクト文書例   |
-| `sample-gcs-product/`  | おばあちゃんの駄菓子屋を題材にしたプロダクト文書例     |
-
-## 基本ディレクトリ構成
-
-```text
-docs/
-├── ja/
-│   ├── specdojo/
-│   │   ├── guides/
-│   │   ├── references/
-│   │   ├── standards/
-│   │   ├── rulebooks/
-│   │   ├── recipes/
-│   │   ├── templates/
-│   │   └── samples/
-│   ├── projects/
-│   │   └── <project-id>/
-│   ├── product/
-│   ├── sample-gcs-projects/
-│   └── sample-gcs-product/
-└── en/
-```
-
-プロジェクト内部の詳しい構成は[ドキュメント構成ガイド](./specdojo/guides/docs-structure-guide.md)を参照してください。
-
-## ライセンス
-
-本リポジトリは MIT ライセンスです。
-
-## 著者・問い合わせ
-
-Author: @naoji3x
-
-Issue または Pull Request によるフィードバックを歓迎します。
+| 領域                     | 内容                                                                     |
+| ------------------------ | ------------------------------------------------------------------------ |
+| `specdojo/`              | 方針、共通規約、成果物別ルール、作成手順、テンプレート、サンプル、ガイド |
+| `projects/<project-id>/` | 個別プロジェクトの目的、計画、判断、実行記録                             |
+| `product/`               | プロダクトの現在の要件、仕様、設計、品質保証、運用                       |
+| `sample-gcs-projects/`   | おばあちゃんの駄菓子屋を題材にしたプロジェクト文書例                     |
+| `sample-gcs-product/`    | おばあちゃんの駄菓子屋を題材にしたプロダクト文書例                       |

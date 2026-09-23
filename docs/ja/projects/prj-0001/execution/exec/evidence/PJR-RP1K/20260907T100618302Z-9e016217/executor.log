@@ -1,0 +1,15 @@
+5つの exec テンプレートを更新しました。
+
+- finding を番号付き手順へ統合
+- 「修正 → 確認 → 削除」を明示
+- コメント削除だけの対応を禁止
+- 未解消時のコメント保持・result 記録を規定
+- 5テンプレート共通の回帰テストを追加
+- 個票の作業内容・対応結果を更新
+- result ファイルと登録項目の `item_status` は未変更
+
+親 runner 担当の unit/integration/schema 検査は実行していません。
+
+<specdojo_executor_evidence>
+{"final_message":"maintenance 4件と bootstrap の finding 対応を、本文修正を必須とする番号付き手順へ統一し、回帰テストと個票を更新した。","validations":[{"command":"npx prettier --write docs/ja/specdojo/exec-templates/xep-bootstrap-template.md docs/ja/specdojo/exec-templates/xep-recipe-maintenance-template.md docs/ja/specdojo/exec-templates/xep-rulebook-maintenance-template.md docs/ja/specdojo/exec-templates/xep-sample-maintenance-template.md docs/ja/specdojo/exec-templates/xep-template-maintenance-template.md docs/ja/projects/prj-0001/controls/project-register/pjr-rp1k-maintenance-finding-instruction.md tests/src/exec-plans.test.ts && npx markdownlint docs/ja/specdojo/exec-templates/xep-bootstrap-template.md docs/ja/specdojo/exec-templates/xep-recipe-maintenance-template.md docs/ja/specdojo/exec-templates/xep-rulebook-maintenance-template.md docs/ja/specdojo/exec-templates/xep-sample-maintenance-template.md docs/ja/specdojo/exec-templates/xep-template-maintenance-template.md docs/ja/projects/prj-0001/controls/project-register/pjr-rp1k-maintenance-finding-instruction.md","status":"passed","summary":"対象7ファイルの整形とMarkdown静的検査に成功。"},{"command":"npm run typecheck","status":"passed","summary":"TypeScript型検査に成功。"},{"command":"npx tsx src/specdojo.ts catalog validate","status":"not_run","summary":"tsx CLIのsandbox IPC制限で検査開始前に停止したため、IPC不要の同等コマンドで代替。"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"カタログ検証に成功。既存の欠落文書警告のみ。"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿の生成処理に成功。"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1529件の文書インデックス生成に成功。"},{"command":"for f in docs/ja/specdojo/exec-templates/xep-bootstrap-template.md docs/ja/specdojo/exec-templates/xep-rulebook-maintenance-template.md docs/ja/specdojo/exec-templates/xep-recipe-maintenance-template.md docs/ja/specdojo/exec-templates/xep-sample-maintenance-template.md docs/ja/specdojo/exec-templates/xep-template-maintenance-template.md; do rg -q \"判定根拠を修正要件として読み\" \"$f\" || exit 1; rg -q \"finding コメントの削除だけを修正として扱わ\" \"$f\" || exit 1; rg -q \"修正 → 確認 → 削除\" \"$f\" || exit 1; rg -q \"未解消、根拠不足、または判断不能の finding コメントは残し\" \"$f\" || exit 1; done","status":"passed","summary":"5テンプレートすべてに必須のfinding修正指示が存在することを確認。"},{"command":"git diff --check","status":"passed","summary":"差分の空白エラーなし。"}]}
+</specdojo_executor_evidence>

@@ -1,0 +1,13 @@
+実装完了です。
+
+- 保護機構による停止を `blocked` として通常の `failed` から分離。
+- `--resume` で既存 worktree の executor 段から再開可能に変更。
+- 未適用の保護対象差分は統合前に再度 block。
+- schema、単体テスト、E2E、運用ガイド、個票を更新。
+- result ファイルは executor 指示に従い未更新です。
+
+親 runner 管理の `test-unit`、`test-integration`、`validate-schema` は実行していません。
+
+<specdojo_executor_evidence>
+{"final_message":"保護機構で blocked になった executor を既存 worktree 上で再開できるようにし、schema・テスト・運用文書・個票を更新した。","validations":[{"command":"npx prettier --write src/exec-pipeline-state.ts src/exec-register-resume.ts src/exec-run.ts tests/src/exec-register-resume.test.ts tests/src/exec-pipeline-state.test.ts tests/src/exec-register-pipeline-e2e.integration.test.ts docs/specdojo/schemas/v1/pipeline-state.schema.yaml docs/ja/specdojo/guides/exec-operation-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-vfd0-exec-resume-protection-blocked.md && npx markdownlint docs/ja/specdojo/guides/exec-operation-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-vfd0-exec-resume-protection-blocked.md","status":"passed","summary":"対象ファイルの整形とMarkdown検査が成功。"},{"command":"npm run typecheck","status":"passed","summary":"TypeScript型検査が成功。"},{"command":"npm run lint:ts","status":"passed","summary":"ESLint検査が成功。"},{"command":"node --import tsx src/specdojo.ts register build && node --import tsx src/specdojo.ts catalog validate && node --import tsx src/specdojo.ts index build","status":"passed","summary":"登録簿生成、catalog検証、文書index生成が終了コード0で成功。catalogには既存文書欠損の警告あり。"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし。"}]}
+</specdojo_executor_evidence>

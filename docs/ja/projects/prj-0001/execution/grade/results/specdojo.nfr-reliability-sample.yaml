@@ -1,0 +1,78 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:nfr-reliability-sample
+path: docs/ja/specdojo/samples/nfr-reliability-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: fail
+score: 55
+graded_at: "2026-09-05T11:35:47.352Z"
+graded_by: gemma-expert-executor
+content_hash: 834b93f194f52191ee27e1e27144ae55d88dbeda50c22f91851968153699e106
+categories:
+  consistency:
+    score: 50
+  usability:
+    score: 83
+  architecture:
+    score: 100
+  quality:
+    score: 13
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 1
+    score: 25
+  vp-qe-omissions-consistency:
+    level: 0
+    score: 0
+  vp-qe-kata-conformance:
+    level: 0
+    score: 0
+  vp-ux-readability:
+    level: 2
+    score: 50
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 2
+  major: 2
+  minor: 0
+  note: 0
+findings:
+  - id: F002
+    severity: blocker
+    rule: vp-qe-omissions-consistency
+    line: 6
+    message: ルールブック第5章で定義された必須構成（概要、適用範囲、要件一覧、検証方法、導線）に準拠していない。
+    anchor: ""
+  - id: F003
+    severity: blocker
+    rule: vp-qe-kata-conformance
+    line: 6
+    message: 信頼性要件の具体例を示すべきサンプルでありながら、形式的な要約に留まっており、ルールブックを適用した成果物の正解例となっていない。
+    anchor: ""
+  - id: F004
+    severity: major
+    rule: vp-ux-readability
+    line: 6
+    message: 具体的かつ実用的な記述パターンが示されていないため、作成者が参照して模倣できるサンプルとして機能していない。
+    anchor: ""
+  - id: F001
+    severity: major
+    rule: vp-qe-verifiability
+    line: 16
+    message: 信頼性要件に必須とされる測定可能な指標（数値基準など）や検証方法が具体的に記述されておらず、合否判定不可能な状態である。
+    anchor: "- 必須観点: 対象、条件、判定基準、責任者"

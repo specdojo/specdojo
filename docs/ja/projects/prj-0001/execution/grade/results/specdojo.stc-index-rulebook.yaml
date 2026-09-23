@@ -1,0 +1,72 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:stc-index-rulebook
+path: docs/ja/specdojo/rulebooks/stc-index-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 85
+graded_at: "2026-09-03T10:28:39.135Z"
+graded_by: gemma-expert-executor
+content_hash: 6e7ab7e323583067eeeb4564431e90762e3e1ee3cdef31845c30f9d8b97b56b9
+categories:
+  consistency:
+    score: 88
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 63
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 1
+    score: 25
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 2
+  minor: 1
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: Frontmatter の `recipe` および `template` が `undecided` となっており、 rulebook としての定義が不十分である。
+    anchor: "# 総合テストカタログ 概要 作成ルール"
+  - id: F002
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: サンプル `stc-index-sample.md` の `type` が `project` となっており、本節で定義された `test` 固定のルールと矛盾している。
+    anchor: "# 総合テストカタログ 概要 作成ルール"
+  - id: F003
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: "サンプル `stc-index-sample.md` の見出し構成が、本節で定義された「順序固定」の必須構成（## 1... ## 9）と完全に乖離しており、ルールの適用例となっていない。"
+    anchor: "# 総合テストカタログ 概要 作成ルール"

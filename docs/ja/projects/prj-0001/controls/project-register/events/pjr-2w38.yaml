@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_67f570f1bb6545869f7d31683a3425a1
+  ts: "2026-09-05T04:15:15Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: 走査完了まで数十時間かかるため、判断材料を失わないよう途中観測を記録する
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: sample の品質が他種別より著しく低い
+    - field: description
+      from: ""
+      to: 走査途中の観測。sample は fail が多数を占め、多くが完成例ではなく書き方を説明するメタ文書になっている。
+    - field: type
+      from: ""
+      to: note
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-05"
+    - field: due
+      from: ""
+      to: _TODO_

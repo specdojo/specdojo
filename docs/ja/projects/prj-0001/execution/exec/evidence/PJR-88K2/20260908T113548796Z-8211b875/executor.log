@@ -1,0 +1,11 @@
+`grade apply` の末尾改行を厳密に1つへ正規化しました。
+
+- 実装修正: [src/grade.ts](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-88K2/src/grade.ts:304)
+- 回帰テスト追加: [grade.test.ts](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-88K2/tests/src/grade.test.ts:410)
+- 個票の作業内容・対応結果更新: [pjr-88k2-grade-apply-trailing-blank.md](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-88K2/docs/ja/projects/prj-0001/controls/project-register/pjr-88k2-grade-apply-trailing-blank.md:64)
+
+result と登録簿ステータスは変更していません。unit・integration・schema 検証は親 runner に委ねています。
+
+<specdojo_executor_evidence>
+{"final_message":"grade apply の本文末尾を1改行へ正規化し、本文保持と再適用の冪等性を検証する回帰テストおよび個票の対応結果を更新した","validations":[{"command":"npx prettier --write src/grade.ts tests/src/grade.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-88k2-grade-apply-trailing-blank.md","status":"passed","summary":"対象3ファイルを整形"},{"command":"npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-88k2-grade-apply-trailing-blank.md","status":"passed","summary":"Markdown lint違反なし"},{"command":"npm run typecheck","status":"passed","summary":"TypeScript型チェック通過"},{"command":"npx eslint src/grade.ts tests/src/grade.test.ts","status":"passed","summary":"変更したTypeScriptのlint通過"},{"command":"npx tsx src/specdojo.ts catalog validate","status":"failed","summary":"sandboxがtsxのIPCソケット作成をEPERMで拒否"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"IPC不要の同一エントリポイントで検証通過。既存の参照警告のみ"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿派生ビューを正常に再生成"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"文書インデックス1558件を正常に再生成"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>

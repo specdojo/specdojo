@@ -121,4 +121,4 @@ specdojo:
 
 - 参照先の standard / rulebook / ツール仕様が変わった場合は、guide の手順・記述を追従させる。
 - 操作手順や画面が変わった場合は、具体物（コマンド・設定例・画面名）の整合を確認する。
-- 表は必要に応じて整形スクリプト（`Format Markdown Table` タスク）で揃える。
+- 表は必要に応じて SpecDojo VS Code 拡張の `SpecDojo: Format Markdown Table` コマンドで揃える。

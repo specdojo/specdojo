@@ -25,8 +25,8 @@ groups:
         rulebook: specdojo:cld-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/register-item.ts
-            purpose: 登録項目のtype（risk/issue/change-request/decision等）の許容値定義
+            path: src/register.ts
+            purpose: register コマンド入口から到達する登録項目のtype（risk/issue/change-request/decision等）の許容値定義
         done_criteria:
           - text: 分類名・説明が業務観点で正確に定義されていること
             roles: [BA]
@@ -45,8 +45,8 @@ groups:
         rulebook: specdojo:cld-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/catalog-types.ts
-            purpose: 成果物kind（work/control/generated）の型定義
+            path: src/catalog.ts
+            purpose: catalog コマンド入口から到達する成果物kind（work/control/generated）の型定義
         done_criteria:
           - text: 分類名・説明が業務観点で正確に定義されていること
             roles: [BA]
@@ -64,8 +64,8 @@ groups:
         rulebook: specdojo:cld-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/exec-types.ts
-            purpose: mode（edit/review）・execution（agent/human）の型定義
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達するmode（edit/review）・execution（agent/human）の型定義
         done_criteria:
           - text: 分類名・説明が業務観点で正確に定義されていること
             roles: [BA]
@@ -102,8 +102,8 @@ groups:
         rulebook: specdojo:cld-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/role-types.ts
-            purpose: ロールコード（PO/PM/BA/ARC/DEV/QE/UX/OPS）の型定義
+            path: src/exec.ts
+            purpose: exec コマンド入口から到達するロールコード（PO/PM/BA/ARC/DEV/QE/UX/OPS）の型定義
         done_criteria:
           - text: 分類名・説明が業務観点で正確に定義されていること
             roles: [BA]

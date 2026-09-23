@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "run_id": "JBR-grade-deliverable-0f3d658814b3",
+  "job_id": "job-grade-deliverable",
+  "idempotency_key": "job-grade-deliverable:command-v3:2026-09-18T10:50:12.615Z:6:true:false:false",
+  "project_id": "prj-0001",
+  "trigger": "manual",
+  "scheduled_at": "2026-09-18T10:50:12.615Z",
+  "created_at": "2026-09-18T10:50:12.616Z",
+  "updated_at": "2026-09-18T13:56:47.927Z",
+  "state": "succeeded",
+  "inputs": {
+    "period": "2026-W38",
+    "limit": 6,
+    "changed_only": true,
+    "ungraded": false,
+    "incomplete": false
+  },
+  "task": {
+    "mode": "command",
+    "precondition": {
+      "command": "selection=$(\n  if [ \"true\" = \"false\" ] && [ \"false\" = \"false\" ] && [ \"false\" = \"false\" ]; then\n    '/usr/local/bin/node' '/usr/local/share/npm-global/bin/specdojo' grade list --target deliverable --project prj-0001\n  else\n    if [ \"true\" = \"true\" ]; then\n      '/usr/local/bin/node' '/usr/local/share/npm-global/bin/specdojo' grade list --target deliverable --project prj-0001 --changed-only || exit $?\n    fi\n    if [ \"false\" = \"true\" ]; then\n      '/usr/local/bin/node' '/usr/local/share/npm-global/bin/specdojo' grade list --target deliverable --project prj-0001 --ungraded || exit $?\n    fi\n    if [ \"false\" = \"true\" ]; then\n      '/usr/local/bin/node' '/usr/local/share/npm-global/bin/specdojo' grade list --target deliverable --project prj-0001 --incomplete || exit $?\n      # 上限到達成果物は処理対象外だが、report-only Job を起動するため precondition に含める。\n      '/usr/local/bin/node' '/usr/local/share/npm-global/bin/specdojo' grade state --target deliverable --project prj-0001 --exhausted || exit $?\n    fi\n  fi\n)\nprintf '%s\\n' \"$selection\" | LC_ALL=C sort -u | awk -v limit=\"6\" '\n  NF && (limit == 0 || selected < limit) {\n    print\n    selected++\n  }\n'",
+      "skip_when": "empty-output"
+    },
+    "command": "npm run build\ntools/grade/run-per-document.sh --run-id JBR-grade-deliverable-0f3d658814b3 --target deliverable --limit 6 --changed-only=true --ungraded=false --incomplete=false\ncat logs/grade/runs/per-document/JBR-grade-deliverable-0f3d658814b3/results.tsv",
+    "analysis": {
+      "agent": "gemma-reporter",
+      "description": "runner が記録した command evidence の終了コードと、stdout に出力された\n`results.tsv` から次を判断して報告する。\n\n- 終了コード75（rate limit）または中断で未完了の段が残っているか。残る場合は同じ\n  `--run-id` で再開できる状態かを確認する。\n- `failed` の段があるか。ある場合は agent 側の失敗、`grade apply` の忠実性検証、\n  done_criteria の過不足のいずれかへ切り分ける。\n- `retry_exhausted` の成果物があるか。ある場合は失敗段と連続失敗回数を示し、人手での\n  原因解消または state の再開判断を促す。\n- 3段目が実行されなかった成果物について、閾値未満と2段目の失敗のどちらが理由か。\n- 未充足の done_criteria がある成果物と、その確認担当ロールを特定する。\n\n選択された成果物が0件の場合は no-op と判断する。判断できない事象は推測で埋めず、\n観測した事実と未確認の範囲を分けて報告する。"
+    },
+    "paths": [
+      "docs/ja/projects/prj-0001"
+    ],
+    "owner": "ARC"
+  },
+  "checkpoint_before": {},
+  "plan_ref": "exec/plans/JBR-grade-deliverable-0f3d658814b3-plan.md",
+  "result_ref": "exec/results/JBR-grade-deliverable-0f3d658814b3-result.md",
+  "attempts": [
+    {
+      "attempt": 1,
+      "started_at": "2026-09-18T10:50:12.616Z",
+      "status": "succeeded",
+      "completed_at": "2026-09-18T13:56:47.927Z",
+      "result_ref": "exec/results/JBR-grade-deliverable-0f3d658814b3-result.md",
+      "evidence_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-deliverable-0f3d658814b3/attempt-1/evidence.json",
+      "exit_code": 0
+    }
+  ]
+}

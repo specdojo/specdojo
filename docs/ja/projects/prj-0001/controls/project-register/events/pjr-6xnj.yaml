@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_bf061ef2082c4715b3575858b7c3d8a0
+  ts: "2026-08-30T01:11:23Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: grade の graded_by を CLI 側で確定させる
+    - field: description
+      from: ""
+      to: GradeSubmission の graded_by は agent が自己申告するため値が安定しない。実測では codex が /root、qwen が executor-agent と specdojo-grade/qwen-expert-executor で揺れ、claude は claude と claude-sonnet-4-5 で異なった。同一 agent の連続実行でも値が変わるため、どの agent がどう判定したかを追跡できず、agent 別の傾向分析と再現性の検証が成立しない。plan で値を指定するか grade apply の実行時に CLI が確定させる方式へ変更する。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-08-30"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_bac79f76a0564a9e99928c62f9a4c5ff
+  ts: "2026-08-30T02:35:46Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_bf061ef2082c4715b3575858b7c3d8a0
+- v: 1
+  id: reg_11ecc74c6dd04b31b2247924bf54455b
+  ts: "2026-08-30T02:45:00Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_bac79f76a0564a9e99928c62f9a4c5ff
+- v: 1
+  id: reg_cd7d8a3beff24b71957f40a06d0fec64
+  ts: "2026-08-30T02:55:39Z"
+  action: close
+  actor: manual
+  from_status: review
+  to_status: done
+  reason: 実装・検証・レビューが完了したため
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-08-30"
+    - field: conclusion
+      from: "-"
+      to: grade apply --by `<nickname>` を追加し、指定値を pm-members.yaml と照合してから specdojo.grade.graded_by へ記録するようにした。agent が GradeSubmission で自己申告した値は保存に使わず、新規 plan から自己申告欄を削除した。既存の GradeSubmission にある graded_by は引き続き解析でき、保存済み grade の schema も変更していない。
+  previous_event_id: reg_11ecc74c6dd04b31b2247924bf54455b

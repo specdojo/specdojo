@@ -1,0 +1,36 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: prj-0001:cdfd-init-grade-criteria
+document: prj-0001:cdfd-init
+path: docs/ja/product/010-business-specs/010-data-flow/cdfd-init.md
+graded_at: "2026-09-12T01:40:35.527Z"
+graded_by: codex-expert-executor
+content_hash: 7a904a2e3a19490759d869e39da48686c089e037a97d605d7ebbc6d1c89fa55f
+summary:
+  satisfied: 4
+  unsatisfied: 0
+  total: 4
+criteria:
+  - id: DC-001
+    text: config init・register scaffold・catalog scaffoldと、必要に応じたexec scaffoldの起動条件・入力・生成物が表と図で確認できること
+    roles:
+      - BA
+    viewpoint: vp-ba-business-value
+    status: satisfied
+  - id: DC-002
+    text: 必須の初期化と任意のprovider・実行補助設定の境界を承認できること
+    roles:
+      - PO
+    viewpoint: vp-po-purpose-alignment
+    status: satisfied
+  - id: DC-003
+    text: 初期化対象ごとの正本ファイル、生成先、後続プロセスへの引き渡しが識別できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: satisfied
+  - id: DC-004
+    text: 既存ファイルがある場合、設定が不足する場合、生成に失敗した場合の分岐が確認できること
+    roles:
+      - QE
+    viewpoint: vp-qe-omissions-consistency
+    status: satisfied

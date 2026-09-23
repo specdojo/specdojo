@@ -6,6 +6,7 @@ import { describe, expect, it } from "vitest";
 import { existsSync } from "node:fs";
 import {
   buildInPlaceStem,
+  deliverableDocId,
   finalizeResultSectionsForDeliverable,
   generateSinglePlan,
   ownerRoleFields,
@@ -89,6 +90,45 @@ describe("ownerRoleFields", () => {
     const actual = ownerRoleFields("DEV", roles, vpMapOf(PO_VIEWPOINTS));
 
     expect(actual.viewpoints).toBe("_MISSING_");
+  });
+});
+
+describe("deliverableDocId", () => {
+  it("既存文書では配置にかかわらず frontmatter の id を返す", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-deliverable-doc-id-"));
+    const productPath = join(root, "product.md");
+    const projectPath = join(root, "project.md");
+
+    try {
+      writeFileSync(
+        productPath,
+        "---\nspecdojo:\n  id: cdfd-existing\n  type: flow\n  status: draft\n---\n",
+      );
+      writeFileSync(
+        projectPath,
+        '---\nspecdojo:\n  id: "prj-test:prj-existing"\n  type: project\n  status: draft\n---\n',
+      );
+
+      expect(deliverableDocId("prj-test", "catalog-product", productPath)).toBe("cdfd-existing");
+      expect(deliverableDocId("prj-test", "catalog-project", projectPath)).toBe(
+        "prj-test:prj-existing",
+      );
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("未作成文書では product 配下をローカル ID、projects 配下を project 修飾 ID にする", () => {
+    expect(
+      deliverableDocId("prj-test", "cdfd-new", "docs/ja/product/010-business-specs/cdfd-new.md"),
+    ).toBe("cdfd-new");
+    expect(
+      deliverableDocId(
+        "prj-test",
+        "prj-new",
+        "docs/ja/projects/prj-test/020-project-definition/prj-new.md",
+      ),
+    ).toBe("prj-test:prj-new");
   });
 });
 
@@ -598,7 +638,7 @@ describe("review plan templates", () => {
 
   it("Prettier 保存後もレビュー観点テーブルと行プレースホルダの間に空行を入れない", async () => {
     for (const template of reviewTemplates) {
-      const path = join("docs/ja/specdojo/templates", template);
+      const path = join("docs/ja/specdojo/exec-templates", template);
       const source = readFileSync(path, "utf8");
       const formatted = await format(source, { parser: "markdown" });
 
@@ -612,8 +652,70 @@ describe("review plan templates", () => {
   });
 });
 
+describe("finding correction instructions in edit plan templates", () => {
+  const templates = [
+    "xep-bootstrap-template.md",
+    "xep-rulebook-maintenance-template.md",
+    "xep-recipe-maintenance-template.md",
+    "xep-sample-maintenance-template.md",
+    "xep-template-maintenance-template.md",
+  ];
+
+  it.each(templates)("%s expands sidecar findings and requires correcting them", (template) => {
+    const source = readFileSync(join("docs/ja/specdojo/exec-templates", template), "utf8");
+
+    // finding は本文コメントではなく grade result サイドカーから plan へ展開される。
+    expect(source).toContain("_GRADE_FINDINGS_");
+    expect(source).toContain("判定根拠を修正要件として読み");
+    expect(source).toContain("未解消、根拠不足、または判断不能の finding");
+    expect(source).toContain(
+      "grade result サイドカーは再評価時に更新されるため、本タスクでは直接編集しない",
+    );
+  });
+});
+
+describe("finding evidence instructions in maintenance plan templates", () => {
+  const templates = [
+    "xep-rulebook-maintenance-template.md",
+    "xep-recipe-maintenance-template.md",
+    "xep-sample-maintenance-template.md",
+    "xep-template-maintenance-template.md",
+    "xrp-rulebook-maintenance-template.md",
+    "xrp-recipe-maintenance-template.md",
+    "xrp-sample-maintenance-template.md",
+    "xrp-template-maintenance-template.md",
+  ];
+
+  it.each(templates)("%s selects evidence from each finding", (template) => {
+    const source = readFileSync(join("docs/ja/specdojo/exec-templates", template), "utf8");
+
+    expect(source).toContain("finding が指す規範");
+    expect(source).toContain("message と同じ viewpoint ID の判定根拠");
+    expect(source).toContain("成果物または review result がないことだけを理由に");
+    expect(source).toContain(
+      "確認した資料、判断できなかった理由、不足している根拠、次のアクション",
+    );
+    // edit は kata を見直し、review は見直し内容を確認する。責務が違うため記録を求める
+    // 動詞も異なる。同じ文言を両方へ要求すると、review 側の語彙を edit 側へ寄せてしまう。
+    const evidenceRecord = template.startsWith("xep-")
+      ? "見直しの根拠とした規範・成果物・review result"
+      : "確認の根拠とした規範・成果物・review result";
+    expect(source).toContain(evidenceRecord);
+  });
+
+  it.each(["xep-sample-maintenance-template.md", "xrp-sample-maintenance-template.md"])(
+    "%s treats the rulebook as evidence for structural findings",
+    (template) => {
+      const source = readFileSync(join("docs/ja/specdojo/exec-templates", template), "utf8");
+
+      expect(source).toContain("rulebook との構成不整合を指摘する finding");
+      expect(source).toContain("成果物の有無にかかわらず rulebook を正として");
+    },
+  );
+});
+
 describe("generateSinglePlan", () => {
-  function writeCatalog(catalogPath: string, withEvidence = true): void {
+  function writeCatalog(catalogPath: string, withEvidence = true, rulebook?: string): void {
     mkdirSync(catalogPath, { recursive: true });
     writeFileSync(
       join(catalogPath, "dct-test.yaml"),
@@ -631,6 +733,7 @@ describe("generateSinglePlan", () => {
         "        kind: work",
         "        overview: Test overview",
         "        path: overview.md",
+        ...(rulebook ? [`        rulebook: ${rulebook}`] : []),
         ...(withEvidence
           ? [
               "        evidence_refs:",
@@ -695,6 +798,122 @@ describe("generateSinglePlan", () => {
       // Sibling plan and index are untouched (single-task generation must not wipe them).
       expect(readFileSync(join(plansDir, "T-TEST-overview-099-plan.md"), "utf8")).toBe("keep me\n");
       expect(readFileSync(join(plansDir, "index.md"), "utf8")).toBe("# existing index\n");
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("maintenance 4種と bootstrap の plan に編集対象 kata のパスと existing 状態を示す", async () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-kata-targets-"));
+    const executionPath = join(root, "execution");
+    const catalogPath = join(root, "catalog");
+    const cases = [
+      ["rulebook-maintenance", "rulebook", "rulebooks/prj-overview-rulebook.md"],
+      ["recipe-maintenance", "recipe", "recipes/prj-overview-recipe.md"],
+      ["sample-maintenance", "sample", "samples/prj-overview-sample.md"],
+      ["template-maintenance", "template", "templates/prj-overview-template.md"],
+    ] as const;
+
+    try {
+      writeCatalog(catalogPath, true, "specdojo:prj-overview-rulebook");
+
+      for (const [approach, kind, suffix] of cases) {
+        const id = `T-TEST-${kind}-maintenance`;
+        const outPath = await generateSinglePlan({
+          executionPath,
+          projectId: "test",
+          catalogPath,
+          task: {
+            id,
+            local_id: "overview",
+            mode: "edit",
+            approach,
+            schedule_file: "sch-track-test.yaml",
+            fifo_rank: 0,
+            critical_first_rank: 0,
+          },
+        });
+        const plan = readFileSync(outPath, "utf8");
+
+        expect(plan).toContain(`- \`kind\`: ${kind}`);
+        expect(plan).toContain(`- \`path\`: \`docs/ja/specdojo/${suffix}\``);
+        expect(plan).toContain("- `state`: `existing`");
+        expect(plan).toContain("- `path`: `docs/test/overview.md`");
+      }
+
+      const bootstrapPath = await generateSinglePlan({
+        executionPath,
+        projectId: "test",
+        catalogPath,
+        task: {
+          id: "T-TEST-bootstrap",
+          local_id: "overview",
+          mode: "edit",
+          approach: "bootstrap",
+          schedule_file: "sch-track-test.yaml",
+          fifo_rank: 0,
+          critical_first_rank: 0,
+        },
+      });
+      const bootstrapPlan = readFileSync(bootstrapPath, "utf8");
+
+      for (const [, kind, suffix] of cases) {
+        expect(bootstrapPlan).toContain(
+          `- ${kind}: \`docs/ja/specdojo/${suffix}\`（state: \`existing\`）`,
+        );
+      }
+      expect(bootstrapPlan).toContain("- `path`: `docs/test/overview.md`");
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("kata の未作成とパス未解決を plan 上で区別する", async () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-kata-state-"));
+    const executionPath = join(root, "execution");
+    const catalogPath = join(root, "catalog");
+
+    try {
+      writeCatalog(catalogPath, true, "specdojo:not-created-rulebook");
+
+      const missingPath = await generateSinglePlan({
+        executionPath,
+        projectId: "test",
+        catalogPath,
+        task: {
+          id: "T-TEST-missing-rulebook",
+          local_id: "overview",
+          mode: "edit",
+          approach: "rulebook-maintenance",
+          schedule_file: "sch-track-test.yaml",
+          fifo_rank: 0,
+          critical_first_rank: 0,
+        },
+      });
+      const missingPlan = readFileSync(missingPath, "utf8");
+      expect(missingPlan).toContain(
+        "- `path`: `docs/ja/specdojo/rulebooks/not-created-rulebook.md`",
+      );
+      expect(missingPlan).toContain("- `state`: `missing`");
+
+      const unresolvedPath = await generateSinglePlan({
+        executionPath,
+        projectId: "test",
+        catalogPath,
+        task: {
+          id: "T-TEST-unresolved-sample",
+          local_id: "overview",
+          mode: "edit",
+          approach: "sample-maintenance",
+          schedule_file: "sch-track-test.yaml",
+          fifo_rank: 0,
+          critical_first_rank: 0,
+        },
+      });
+      const unresolvedPlan = readFileSync(unresolvedPath, "utf8");
+      expect(unresolvedPlan).toContain("- `path`: `_MISSING_`");
+      expect(unresolvedPlan).toContain("- `state`: `unresolved`");
+      expect(unresolvedPlan).toContain("命名規則から推測して作成せず異常終了する");
     } finally {
       rmSync(root, { recursive: true, force: true });
     }
@@ -898,6 +1117,56 @@ describe("generateSinglePlan", () => {
       expect(plan).not.toContain("| --- | ------ | ------------ | -------- |\n\n| RVP-001 |");
       expect(plan).toContain("### プロジェクトコンテキスト");
       expect(plan).toContain("- [[test:prj-overview]]");
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("review plan はプロジェクト差分から共通レビュー観点を解決して展開する", async () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-single-plan-"));
+    const executionPath = join(root, "execution");
+    const catalogPath = join(root, "catalog");
+    const viewpointsPath = join(root, "pm-review-viewpoints.yaml");
+
+    try {
+      writeCatalog(catalogPath);
+      writeFileSync(
+        viewpointsPath,
+        [
+          "id: prj-9999:pm-review-viewpoints",
+          "type: project",
+          "status: draft",
+          "title: レビュー観点一覧",
+          "rulebook: none",
+          "project_id: prj-9999",
+          "extends: specdojo:pm-review-viewpoints",
+          "viewpoints: []",
+          "role_viewpoint_sets: []",
+          "disabled:",
+          "  viewpoints: []",
+          "  role_viewpoint_sets: []",
+        ].join("\n"),
+        "utf8",
+      );
+
+      const outPath = await generateSinglePlan({
+        executionPath,
+        projectId: "test",
+        catalogPath,
+        viewpointsPath,
+        task: {
+          id: "T-TEST-overview-091",
+          local_id: "overview",
+          mode: "review",
+          schedule_file: "sch-track-test.yaml",
+          fifo_rank: 0,
+          critical_first_rank: 0,
+        },
+      });
+
+      const plan = readFileSync(outPath, "utf8");
+      expect(plan).toContain("業務価値を定義・展開する成果物で");
+      expect(plan).toContain("vp-ba-business-value");
     } finally {
       rmSync(root, { recursive: true, force: true });
     }

@@ -1,0 +1,92 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_5a881cb5bbee432595c0422517620d85
+  ts: "2026-09-17T23:01:43Z"
+  action: add
+  actor: specdojo-orchestrator (claude)
+  from_status: null
+  to_status: open
+  reason: 利用者が朝一で今日の行動を dashboard から判断できるようにするため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: dashboard に routine の実行状況・着手可能な登録項目のおすすめ順・要対応一覧を追加し毎朝 5 時に更新する
+    - field: description
+      from: ""
+      to: dashboard に、昨日実行した routine と本日予定の routine、着手可能な open 項目のおすすめ順、waiting / blocked の要対応一覧を追加し、routine 実行履歴を新設して毎朝 5:00 に routine で再生成する
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: PM
+    - field: registered
+      from: ""
+      to: "2026-09-18"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_e3b7849fbc7f4ef8a124d14d52effed0
+  ts: "2026-09-19T00:15:04Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_5a881cb5bbee432595c0422517620d85
+- v: 1
+  id: reg_74d4d5bf59e4442885c8024a5dd7539b
+  ts: "2026-09-19T00:33:42Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: runner による検証 `test-unit` が失敗（exit 1）したため。具体的に `tests/src/dashboard.test.ts` においてフォーマット不備またはアサーションエラー（末尾を空行で終えない）が発生している。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: runner による検証 `test-unit` が失敗（exit 1）したため。具体的に `tests/src/dashboard.test.ts` においてフォーマット不備またはアサーションエラー（末尾を空行で終えない）が発生している。"
+  previous_event_id: reg_e3b7849fbc7f4ef8a124d14d52effed0
+- v: 1
+  id: reg_0f49633584cd4677bafc4131cbfcf5be
+  ts: "2026-09-19T04:31:34Z"
+  action: review
+  actor: specdojo-orchestrator (claude)
+  from_status: waiting
+  to_status: review
+  reason: codex-expert の実装に未知 project のガードを加えて統合。利用者の判断で dashboard を毎時更新にするため specdojo action と毎時 cron をオーケストレーターが直接対応し、作業 6 の表示調整も実施
+  changes:
+    - field: status
+      from: waiting
+      to: review
+  previous_event_id: reg_74d4d5bf59e4442885c8024a5dd7539b
+- v: 1
+  id: reg_c0931e3f87b04f84b9e641fc00025921
+  ts: "2026-09-21T04:52:43Z"
+  action: close
+  actor: specdojo-orchestrator (claude)
+  from_status: review
+  to_status: done
+  reason: codex-expert の実装に specdojo action と毎時更新、表示調整をオーケストレーターが加えて統合。完了条件を確認し、夜間 grade の未実行を dashboard で検知できたことを確認して利用者が close
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-21"
+  previous_event_id: reg_0f49633584cd4677bafc4131cbfcf5be

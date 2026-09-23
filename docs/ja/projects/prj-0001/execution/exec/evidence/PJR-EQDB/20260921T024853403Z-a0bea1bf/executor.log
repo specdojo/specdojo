@@ -1,0 +1,14 @@
+grade 指摘へ対応し、rulebook・sample・template の計7ファイルを更新しました。
+
+主な対応:
+
+- CDFD の単一領域グループ、完了条件、承認記録、対象期間を明確化
+- 在庫記録の更新責務を在庫グループへ集約
+- STSD の状態成立条件を排他的にし、遷移条件と統一
+- Mermaid の参照元、イベント表現、初期点、`state_id` 規則を明確化
+
+対象ファイルの整形・lint、索引生成、カタログ検証は通過しています。全体 Markdown lint のみ、今回未変更かつ executor が編集できない既存 result の末尾改行不足で失敗しました。result ファイルは指示どおり更新していません。
+
+<specdojo_executor_evidence>
+{"final_message":"grade findingに対応してCDFD/STSDのrulebook・sample・template計7件を更新した。対象検査は通過し、全体lintのみ既存resultの末尾改行不足で失敗した。","validations":[{"command":"npx prettier --check docs/ja/specdojo/rulebooks/cdfd-rulebook.md docs/ja/specdojo/rulebooks/cdfd-mermaid-rulebook.md docs/ja/specdojo/rulebooks/stsd-rulebook.md docs/ja/specdojo/rulebooks/stsd-mermaid-rulebook.md docs/ja/specdojo/samples/cdfd-sample.md docs/ja/specdojo/samples/stsd-sample.md docs/ja/specdojo/templates/cdfd-template.md","status":"passed","summary":"対象7ファイルはPrettier形式に適合"},{"command":"npx markdownlint docs/ja/specdojo/rulebooks/cdfd-rulebook.md docs/ja/specdojo/rulebooks/cdfd-mermaid-rulebook.md docs/ja/specdojo/rulebooks/stsd-rulebook.md docs/ja/specdojo/rulebooks/stsd-mermaid-rulebook.md docs/ja/specdojo/samples/cdfd-sample.md docs/ja/specdojo/samples/stsd-sample.md docs/ja/specdojo/templates/cdfd-template.md","status":"passed","summary":"対象7ファイルにMarkdown lintエラーなし"},{"command":"npm run -s lint:md","status":"failed","summary":"今回未変更のJBR-grade-kata-3d46d90b108c-result.mdに既存のMD047末尾改行エラー"},{"command":"npx markdownlint '**/*.md' --ignore docs/ja/projects/prj-0001/execution/exec/results/JBR-grade-kata-3d46d90b108c-result.md","status":"passed","summary":"既存エラー1件を除く全Markdownが通過"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"文書索引1844件を生成"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"全カタログOK。既存の未作成成果物に関する警告のみ"},{"command":"git diff --check -- docs/ja/specdojo/rulebooks/cdfd-rulebook.md docs/ja/specdojo/rulebooks/cdfd-mermaid-rulebook.md docs/ja/specdojo/rulebooks/stsd-rulebook.md docs/ja/specdojo/rulebooks/stsd-mermaid-rulebook.md docs/ja/specdojo/samples/cdfd-sample.md docs/ja/specdojo/samples/stsd-sample.md docs/ja/specdojo/templates/cdfd-template.md","status":"passed","summary":"差分の空白エラーなし"}]}
+</specdojo_executor_evidence>

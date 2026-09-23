@@ -2,8 +2,8 @@
 $schema: "https://json-schema.org/draft/2020-12/schema"
 title: "SpecDojo executor/reporter pipeline state schema"
 description: >
-  Run-scoped recovery checkpoint persisted by the runner at executor and reporter stage
-  boundaries.
+  Run-scoped recovery checkpoint persisted by the runner at executor, reporter, and integrate
+  stage boundaries.
 type: object
 additionalProperties: false
 required: [schema_version, task_id, run_id, updated_at, stages]
@@ -28,6 +28,10 @@ properties:
         $ref: "#/$defs/stage"
       reporter:
         $ref: "#/$defs/stage"
+      # Runner-owned integration stage (commit -> merge -> worktree removal). Absent in runs
+      # recorded before the stage existed, so it is optional.
+      integrate:
+        $ref: "#/$defs/stage"
 $defs:
   stage:
     type: object
@@ -36,7 +40,7 @@ $defs:
     properties:
       status:
         type: string
-        enum: [pending, running, succeeded, failed, rate_limited]
+        enum: [pending, running, succeeded, failed, rate_limited, blocked]
       actor:
         type: [string, "null"]
       attempts:

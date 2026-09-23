@@ -1,0 +1,13 @@
+指定コマンドを1回実行しましたが、終了コード `1` で失敗しました。
+
+- 原因: `tsx` の IPC ソケット作成が `EPERM`。
+- `results.tsv`: 未生成。
+- `selection.txt`: 未生成。選択0件の no-op とは判断できません。
+- 段 state: なし。agent 実行・`grade apply`・rate limit のいずれにも未到達です。
+- 3段目のスキップ理由、verdict/score 分布、閾値の妥当性: 判定不能。
+- 再開: 設定が `config.tsv` に保存され、段 state はないため、実行環境の制約解消後に同じ引数・同じ `--run-id` で再開可能です。
+- 対象成果物および result ファイルは、この executor では更新していません。
+
+<specdojo_executor_evidence>
+{"final_message":"指定スクリプトはtsx IPCソケット作成時のEPERMにより終了コード1で失敗し、文書選択・各評価段・grade applyには未到達。環境制約解消後は同じrun-idで再開可能","validations":[{"command":"tools/grade/run-per-document.sh --run-id job-grade-kata-all-2026-W37 --kind all --limit 5 --changed-only=true --ungraded=true","status":"failed","summary":"終了コード1。listen EPERM /tmp/tsx-1000/28.pipe により grade list --changed-only が失敗し、results.tsvは未生成"}]}
+</specdojo_executor_evidence>

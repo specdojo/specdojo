@@ -4,7 +4,8 @@ specdojo:
   type: operations
   status: draft
   rulebook: specdojo:opd-rulebook
-  based_on: [opd-access-control]
+  based_on:
+    - opd-access-control
   supersedes: []
 ---
 

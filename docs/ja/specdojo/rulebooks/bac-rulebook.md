@@ -13,6 +13,7 @@ specdojo:
 Business Acceptance Criteria (BAC) Documentation Rules
 
 本ドキュメントは、業務分析・要求定義のために **業務受入条件を統一形式で記述する標準ルール**です。
+
 BAC は「業務側から見て、このシステムで業務が回せる」ことを確認するための受入条件を定義します。
 
 ## 1. 全体方針
@@ -44,15 +45,16 @@ BAC は「業務側から見て、このシステムで業務が回せる」こ�
 
 Frontmatter は `docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml` の制約に従います。
 
-| 項目       | 説明                                      | 必須 |
-| ---------- | ----------------------------------------- | ---- |
-| id         | 受入条件ID（`bac-...`）                   | ○    |
-| type       | `test` 固定                               | ○    |
-| title      | 受入条件名（例: 業務受入条件: 商品販売）  | ○    |
-| status     | `draft`/`ready`/`deprecated`              | ○    |
-| part_of    | 上位BAC ID（分割している場合）            | 任意 |
-| based_on   | 根拠となる仕様ID（BPS/BR/UIS/BES/BEL 等） | 任意 |
-| supersedes | 置き換え関係（古仕様→新仕様）             | 任意 |
+| 項目 | 説明 | 必須 |
+| ---- | ---- | ---- |
+
+| id | 受入条件ID（`bac-...`） | ○ |
+| type | `test` 固定 | ○ |
+| title | 受入条件名（例: 業務受入条件: 商品販売） | ○ |
+| status | `draft`/`ready`/`deprecated` | ○ |
+| part_of | 上位BAC ID（分割している場合） | 任意 |
+| based_on | 根拠となる仕様ID（BPS/BR/UIS/BES/BEL 等） | 任意 |
+| supersedes | 置き換え関係（古仕様→新仕様） | 任意 |
 
 推奨:
 

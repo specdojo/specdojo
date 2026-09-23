@@ -33,6 +33,19 @@ function buildRoster(): MemberRoster {
         proficiency: "expert",
       },
       {
+        nickname: "backup-executor",
+        display_name: "Backup Executor",
+        email: null,
+        roles: [],
+        type: "agent",
+        capabilities: [],
+        priority: 2,
+        command: "run backup-executor",
+        mode: "edit",
+        stage_role: "executor",
+        proficiency: "expert",
+      },
+      {
         nickname: "opencode-edit-agent",
         display_name: "OpenCode Edit",
         email: null,
@@ -76,6 +89,32 @@ describe("resolveInPlaceCommand actor derivation", () => {
 
     expect(result.command).toBe("opencode run --agent opencode-edit-agent");
     expect(result.actor).toBe("opencode-edit-agent");
+  });
+
+  it("uses the nickname pinned by the task when --by is omitted", () => {
+    const result = resolveInPlaceCommand(
+      buildTask({ agent: "executor", capabilities: [] }),
+      buildRoster(),
+      {} as RunOpts,
+    );
+
+    // The pinned nickname wins over capability-based auto selection, so a Job definition
+    // decides its own delegation target.
+    expect(result).toEqual({ command: "run executor", actor: "executor" });
+  });
+
+  it("lets --by override the nickname pinned by the task", () => {
+    const result = resolveInPlaceCommand(buildTask({ agent: "executor" }), buildRoster(), {
+      by: "opencode-edit-agent",
+    } as RunOpts);
+
+    expect(result.actor).toBe("opencode-edit-agent");
+  });
+
+  it("rejects a pinned nickname that is not a registered agent", () => {
+    expect(() =>
+      resolveInPlaceCommand(buildTask({ agent: "missing-agent" }), buildRoster(), {} as RunOpts),
+    ).toThrow(/Agent command not found for actor: missing-agent/);
   });
 
   it("rejects an unknown --by nickname instead of accepting a raw command", () => {
@@ -151,5 +190,23 @@ describe("resolveInPlaceCommand actor derivation", () => {
         executorBy: "executor",
       } as RunOpts),
     ).toThrow(/require an agent_pipeline task/);
+  });
+
+  it("uses a schedule-pinned executor before auto selection and lets --executor-by override it", () => {
+    const pipelineTask = buildTask({
+      agent: { executor: "executor" },
+      agent_pipeline: {
+        stages: [{ stage_role: "executor" }, { stage_role: "reporter" }],
+      },
+    });
+
+    expect(resolveInPlaceCommand(pipelineTask, buildRoster(), {} as RunOpts).actor).toBe(
+      "executor",
+    );
+    expect(
+      resolveInPlaceCommand(pipelineTask, buildRoster(), {
+        executorBy: "backup-executor",
+      } as RunOpts).actor,
+    ).toBe("backup-executor");
   });
 });

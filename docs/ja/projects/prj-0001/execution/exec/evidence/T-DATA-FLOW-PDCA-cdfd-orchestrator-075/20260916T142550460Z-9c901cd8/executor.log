@@ -1,0 +1,13 @@
+[cdfd-orchestrator.md](/workspaces/specdojo-workspace/worktrees/prj-0001-T-DATA-FLOW-PDCA-cdfd-orchestrator-075/docs/ja/product/010-business-specs/010-data-flow/cdfd-orchestrator.md) を更新しました。
+
+- `cdfd-overview` を `based_on` に追加
+- STSD/CSTD の仮置き ID を依存文書と統一し、未解決 `_TODO_` を解消
+- P-14 の主要入力と参加者の図示を全体概要へ整合
+- finding コメントは保持
+- executor 指示に従い result は未更新
+
+整形、Markdown lint、索引生成、カタログ検証、差分検査は通過しています。親 runner 管轄のテストは実行していません。
+
+<specdojo_executor_evidence>
+{"final_message":"cdfd-orchestrator の2件の finding と全体概要との差分を最小修正し、result を除く対象成果物のみ更新しました。","validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/010-data-flow/cdfd-orchestrator.md","status":"passed","summary":"整形済み。追加変更なし"},{"command":"npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-orchestrator.md","status":"passed","summary":"Markdown lint エラーなし"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1764件の文書索引を生成"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"全カタログ検証成功。既存の未作成成果物に関する警告のみ"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし。finding 2件の保持と本文中の未解決マーカー不在も確認"}]}
+</specdojo_executor_evidence>

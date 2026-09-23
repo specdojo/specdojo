@@ -1,0 +1,124 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_d06b801cdaa6455b869f321f082df067
+  ts: "2026-09-01T12:02:19Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: grade 全件走査の前提となる primitive が CLI 未公開のため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: plan を agent へ渡し stdout を得る agent run を公開する
+    - field: description
+      from: ""
+      to: 決定論的な手順を script 化するために欠けている primitive を CLI として公開する。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-01"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_8b7943f28b2e4b74b574f32dfd94f5e4
+  ts: "2026-09-01T12:48:55Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_d06b801cdaa6455b869f321f082df067
+- v: 1
+  id: reg_1f4de3e4bb154262844093e801ac9e93
+  ts: "2026-09-01T13:01:11Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: runner による検証 `test-unit` (npm run test:unit) が失敗しており、`tests/src/agent-command.test.ts` の3つのテストケースが fail しているため。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: runner による検証 `test-unit` (npm run test:unit) が失敗しており、`tests/src/agent-command.test.ts` の3つのテストケースが fail しているため。"
+  previous_event_id: reg_8b7943f28b2e4b74b574f32dfd94f5e4
+- v: 1
+  id: reg_84eb499838cb419dadac314afbd277c9
+  ts: "2026-09-01T13:11:15Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_1f4de3e4bb154262844093e801ac9e93
+- v: 1
+  id: reg_0a375712a9094c929472a394b52d7a6e
+  ts: "2026-09-01T13:22:46Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: git commit -m exec(register PJR-TA5C): plan を agent へ渡し stdout を得る agent run を公開する -- docs/ja/projects/prj-0001/controls/project-register/pjr-ta5c-agent-run-primitive.md docs/ja/proj…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "agent exited with non-zero code: runner による検証 `test-unit` (npm run test:unit) が失敗しており、`tests/src/agent-command.test.ts` の3つのテストケースが fail しているため。"
+      to: "integrate failed: git commit -m exec(register PJR-TA5C): plan を agent へ渡し stdout を得る agent run を公開する -- docs/ja/projects/prj-0001/controls/project-register/pjr-ta5c-agent-run-primitive.md docs/ja/proj…"
+  previous_event_id: reg_84eb499838cb419dadac314afbd277c9
+- v: 1
+  id: reg_a1b28b275165449d96cdb226498121ba
+  ts: "2026-09-01T13:46:50Z"
+  action: review
+  actor: orchestrator
+  from_status: waiting
+  to_status: review
+  reason: runner の統合 commit が incomplete で失敗したため、orchestrator が内容を確認して手動で統合した。executor / reporter は成功済みで、テスト 1318 件・typecheck・lint:ts の通過と実 agent での動作を確認した。
+  changes:
+    - field: status
+      from: waiting
+      to: review
+  previous_event_id: reg_0a375712a9094c929472a394b52d7a6e
+- v: 1
+  id: reg_b5d556e69e30421f9629da7ba8c1c6dd
+  ts: "2026-09-01T13:46:54Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: specdojo agent run を追加し、plan を指定 agent へ渡して stdout を得る primitive を公開した。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-01"
+    - field: conclusion
+      from: "-"
+      to: specdojo agent run を追加し、plan を指定 agent へ渡して stdout を得る primitive を公開した。
+  previous_event_id: reg_a1b28b275165449d96cdb226498121ba

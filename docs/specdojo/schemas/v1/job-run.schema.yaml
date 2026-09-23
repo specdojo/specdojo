@@ -81,5 +81,10 @@ properties:
           enum: [running, succeeded, failed, noop]
         result_ref:
           type: string
+        evidence_ref:
+          type: string
+          minLength: 1
+        exit_code:
+          type: [integer, "null"]
         reason:
           type: string

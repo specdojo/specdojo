@@ -1,0 +1,205 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_201b406d80c93adca3ac4bfad8f4eb05
+  ts: "2026-08-02T02:22:59Z"
+  action: add
+  actor: SpecDojo Test
+  from_status: null
+  to_status: open
+  reason: "docs: PJR-0146をwikilink併用ルールに修正しPJR-0148を起票"
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: docs/外への[[id]]（wikilink）解決範囲拡張の要否検討
+    - field: description
+      from: ""
+      to: PJR-0146の検討過程で、`specdojo index build` の既定走査対象が `docs/` 配下に限定されているため、`.github/instructions/`、`README.md`、`CLAUDE.md` 等 `docs/` 外のファイルは `[[id]]`（wikilink）で参照できないことが判明した。`docs/` 外への `[[id]]` 解決範囲拡張が必要かどうかを、実装上の制約と費用対効果を踏まえて検討する。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: _TODO_
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: completed
+      from: ""
+      to: "-"
+    - field: conclusion
+      from: ""
+      to: "-"
+    - field: block_reason
+      from: ""
+      to: "-"
+  legacy_commit: d4c2113e9fc24d7e0c7f64806d60054bfd6e2e67
+- v: 1
+  id: reg_a1c8370246873c3cc7554c9523e6e23b
+  ts: "2026-08-09T10:55:22Z"
+  action: update
+  actor: SpecDojo Test
+  from_status: open
+  to_status: open
+  reason: "exec(register PJR-9P5Q): 既存登録項目を個票 frontmatter へ一括移行する"
+  changes:
+    - field: description
+      from: PJR-0146の検討過程で、`specdojo index build` の既定走査対象が `docs/` 配下に限定されているため、`.github/instructions/`、`README.md`、`CLAUDE.md` 等 `docs/` 外のファイルは `[[id]]`（wikilink）で参照できないことが判明した。`docs/` 外への `[[id]]` 解決範囲拡張が必要かどうかを、実装上の制約と費用対効果を踏まえて検討する。
+      to: 現状specdojo index buildの走査対象はdocs/配下のみで、.github/instructions/やREADME.md等docs/外のファイルは[[id]]で参照できない。docs/外への[[id]]解決範囲拡張が必要かどうかを、走査対象拡大に伴う除外ロジック変更・frontmatter契約の非互換・ID衝突リスク等を踏まえて検討する
+    - field: priority
+      from: medium
+      to: low
+    - field: owner
+      from: _TODO_
+      to: ARC
+    - field: due
+      from: _TODO_
+      to: "2026-09-30"
+  legacy_commit: dbac152079df02ec9bbad154a3253c043e10655a
+  previous_event_id: reg_201b406d80c93adca3ac4bfad8f4eb05
+- v: 1
+  id: reg_3e1dc8d8826a4b31a049ca337f9f3dbb
+  ts: "2026-09-04T14:34:38Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_a1c8370246873c3cc7554c9523e6e23b
+- v: 1
+  id: reg_37b28cddbcd448d1a8a36f51ecc5558e
+  ts: "2026-09-04T14:41:41Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_3e1dc8d8826a4b31a049ca337f9f3dbb
+- v: 1
+  id: reg_ef26244819ee41518a7e77ee016f343d
+  ts: "2026-09-04T14:43:41Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: docs/ 外への wikilink 拡張は行わない。実文書中の該当参照が 0 件であり必要性が観測されないため。再評価の条件を個票へ記録した。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-04"
+    - field: conclusion
+      from: "-"
+      to: docs/ 外への wikilink 拡張は行わない。実文書中の該当参照が 0 件であり必要性が観測されないため。再評価の条件を個票へ記録した。
+  previous_event_id: reg_37b28cddbcd448d1a8a36f51ecc5558e
+- v: 1
+  id: reg_683335a8466147209828e86c04cfaee2
+  ts: "2026-09-04T14:49:43Z"
+  action: reopen
+  actor: orchestrator
+  from_status: done
+  to_status: open
+  reason: 結論の根拠が循環している。docs/ 外の wikilink が 0 件なのは機能が無く規約も禁じているためで、需要の不在を示さない。同じ調査が 55 箇所の生パス参照を記録しており、逆の解釈が可能である。
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-09-04"
+      to: "-"
+  previous_event_id: reg_ef26244819ee41518a7e77ee016f343d
+- v: 1
+  id: reg_401d165cd86648169089df313d2a38ee
+  ts: "2026-09-04T14:50:47Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_683335a8466147209828e86c04cfaee2
+- v: 1
+  id: reg_cabfdce1b6da47e3abc4cb76c63c8d2d
+  ts: "2026-09-04T15:01:32Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: runner検証「npm run test:unit」が失敗したため。tests/src/exec-run-lock.test.tsの「heartbeat で lock の更新時刻を進める」が失敗しており、runner validationのfailed状態は完了結果を支持できない。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: runner検証「npm run test:unit」が失敗したため。tests/src/exec-run-lock.test.tsの「heartbeat で lock の更新時刻を進める」が失敗しており、runner validationのfailed状態は完了結果を支持できない。"
+  previous_event_id: reg_401d165cd86648169089df313d2a38ee
+- v: 1
+  id: reg_98ffc416c97041b58a72779ff7864913
+  ts: "2026-09-04T15:04:01Z"
+  action: start
+  actor: codex-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_cabfdce1b6da47e3abc4cb76c63c8d2d
+- v: 1
+  id: reg_35c8468aaad24290a01bceb6c68e98d3
+  ts: "2026-09-04T15:05:17Z"
+  action: wait
+  actor: codex-reporter
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: git merge failed (args: --no-ff --no-edit exec/prj-0001-PJR-0148)"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "agent exited with non-zero code: runner検証「npm run test:unit」が失敗したため。tests/src/exec-run-lock.test.tsの「heartbeat で lock の更新時刻を進める」が失敗しており、runner validationのfailed状態は完了結果を支持できない。"
+      to: "integrate failed: git merge failed (args: --no-ff --no-edit exec/prj-0001-PJR-0148)"
+  previous_event_id: reg_98ffc416c97041b58a72779ff7864913
+- v: 1
+  id: reg_5f8772c135e9434bbd21bb1415662f83
+  ts: "2026-09-04T15:07:30Z"
+  action: close
+  actor: orchestrator
+  from_status: waiting
+  to_status: done
+  reason: docs/ 外への wikilink 拡張は現時点では行わない。参照需要は実在するが、改名実績が 6 ファイル中 1 件と少なく、追従は一括置換で対処できるため。
+  changes:
+    - field: status
+      from: waiting
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-05"
+    - field: conclusion
+      from: docs/ 外への wikilink 拡張は現時点では行わない。生パス参照の需要は確認できるが、改名時の機械的な追従費用は、外部 ID の所有・重複検査・表示互換性を恒久的に維持する費用を下回るため。再評価条件と限定拡張案を記録した。
+      to: docs/ 外への wikilink 拡張は現時点では行わない。参照需要は実在するが、改名実績が 6 ファイル中 1 件と少なく、追従は一括置換で対処できるため。
+  previous_event_id: reg_35c8468aaad24290a01bceb6c68e98d3

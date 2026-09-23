@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "task_id": "JBR-grade-deliverable-0dc34560cbfd",
+  "run_id": "attempt-2",
+  "stage": {
+    "role": "executor",
+    "actor": "specdojo-runner",
+    "status": "succeeded",
+    "started_at": "2026-09-17T01:03:20.050Z",
+    "completed_at": "2026-09-17T02:11:49.215Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-action.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-check.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-do.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-onboarding.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-orchestrator.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-action-96f0bab377-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-check-de77e19930-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-do-96363482bc-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-onboarding-61a4d6c9ef-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-orchestrator-0888f9bb68-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/pipeline/cdfd-action-96f0bab37783.json",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/pipeline/cdfd-orchestrator-0888f9bb685a.json",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-deliverable-0dc34560cbfd.json",
+      "status": "??"
+    },
+    {
+      "path": "scratchpad/exec-za91.log",
+      "status": "??"
+    },
+    {
+      "path": "scratchpad/grade-resume.log",
+      "status": "??"
+    },
+    {
+      "path": "scratchpad/grade-resume.sh",
+      "status": "??"
+    },
+    {
+      "path": "scratchpad/grade-run-1.log",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 17,
+    "summary": ".../010-data-flow/cdfd-action.md                   | 31 +++++++++------\n .../010-business-specs/010-data-flow/cdfd-check.md | 34 +++++++---------\n .../010-business-specs/010-data-flow/cdfd-do.md    | 41 ++++++++++++--------\n .../010-data-flow/cdfd-onboarding.md               | 18 +++++----\n .../010-data-flow/cdfd-orchestrator.md             | 45 ++++++++++++++--------\n .../cdfd-action-96f0bab377-done-criteria.yaml      | 13 ++++---\n .../cdfd-check-de77e19930-done-criteria.yaml       |  4 +-\n .../criteria/cdfd-do-96363482bc-done-criteria.yaml | 13 ++++---\n .../cdfd-onboarding-61a4d6c9ef-done-criteria.yaml  |  6 +--\n ...cdfd-orchestrator-0888f9bb68-done-criteria.yaml | 16 ++++----\n .../grade/pipeline/cdfd-action-96f0bab37783.json   | 14 -------\n .../pipeline/cdfd-orchestrator-0888f9bb685a.json   | 14 -------\n 12 files changed, 124 insertions(+), 125 deletions(-)"
+  },
+  "validations": [
+    {
+      "id": "job-command",
+      "source": "runner",
+      "command": "npm run build\ntools/grade/run-per-document.sh --run-id JBR-grade-deliverable-0dc34560cbfd --target deliverable --limit 5 --changed-only=true --ungraded=true --incomplete=true\ncat logs/grade/runs/per-document/JBR-grade-deliverable-0dc34560cbfd/results.tsv",
+      "status": "passed",
+      "summary": "exit 0"
+    }
+  ],
+  "final_message": "Runner command exit 0.",
+  "command": {
+    "shell": "/bin/sh -eu",
+    "value": "npm run build\ntools/grade/run-per-document.sh --run-id JBR-grade-deliverable-0dc34560cbfd --target deliverable --limit 5 --changed-only=true --ungraded=true --incomplete=true\ncat logs/grade/runs/per-document/JBR-grade-deliverable-0dc34560cbfd/results.tsv",
+    "exit_code": 0,
+    "stdout_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-deliverable-0dc34560cbfd/attempt-2/command.stdout.log",
+    "stderr_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-deliverable-0dc34560cbfd/attempt-2/command.stderr.log",
+    "stdout": "\n> specdojo@0.1.0 build\n> node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.build.json && node -e \"require('node:fs').chmodSync('dist/specdojo.js', 0o755)\"\n\nrun_id=JBR-grade-deliverable-0dc34560cbfd project=prj-0001 target=deliverable kind=none changed_only=true ungraded=true incomplete=true max_stage_failures=3 documents=5 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-deliverable-0dc34560cbfd\nstage=1 executor=gemma-expert-executor reporter=gemma-reporter reference=none\nstage=2 executor=gemma-expert-executor reporter=gemma-reporter reference=none\nstage=3 executor=codex-expert-executor reporter=gemma-reporter reference=none condition=\"pass, score>=96, findings<=1\"\nresume skip document=docs/ja/product/010-business-specs/010-data-flow/cdfd-action.md status=complete\nresume skip document=docs/ja/product/010-business-specs/010-data-flow/cdfd-check.md status=complete\ndocument start: docs/ja/product/010-business-specs/010-data-flow/cdfd-do.md\ndocument resume: docs/ja/product/010-business-specs/010-data-flow/cdfd-do.md start_stage=3\ndocument complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-do.md\ndocument start: docs/ja/product/010-business-specs/010-data-flow/cdfd-onboarding.md\ndocument complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-onboarding.md\ndocument start: docs/ja/product/010-business-specs/010-data-flow/cdfd-orchestrator.md\ndocument complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-orchestrator.md\ngrade pipeline complete: selected=5 processed=3 completed_now=3 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-deliverable-0dc34560cbfd/results.tsv\nrecorded_at\tdocument\tstage\tstatus\tduration_seconds\tverdict\tscore\tfindings\texecutor\treporter\treference\tconsecutive_failures\tmax_failures\n2026-09-16T23:43:27Z\tdocs/ja/product/010-business-specs/010-data-flow/cdfd-action.md\t1\tpassed\t866\tpass\t100\t0\tgemma-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-16T23:55:27Z\tdocs/ja/product/010-business-specs/010-data-flow/cdfd-action.md\t2\tpassed\t719\tpass\t100\t0\tgemma-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-17T00:02:38Z\tdocs/ja/product/010-business-specs/010-data-flow/cdfd-action.md\t3\tpassed\t430\tneeds-work\t81\t5\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-17T00:15:02Z\tdocs/ja/product/010-business-specs/010-data-flow/cdfd-check.md\t1\tpassed\t742\tpass\t100\t0\tgemma-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-17T00:29:43Z\tdocs/ja/product/010-business-specs/010-data-flow/cdfd-check.md\t2\tpassed\t880\tpass\t100\t0\tgemma-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-17T00:35:16Z\tdocs/ja/product/010-business-specs/010-data-flow/cdfd-check.md\t3\tpassed\t333\tpass\t91\t4\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-17T00:49:01Z\tdocs/ja/product/010-business-specs/010-data-flow/cdfd-do.md\t1\tpassed\t823\tpass\t100\t0\tgemma-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-17T01:01:26Z\tdocs/ja/product/010-business-specs/010-data-flow/cdfd-do.md\t2\tpassed\t745\tpass\t100\t0\tgemma-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-17T01:11:21Z\tdocs/ja/product/010-business-specs/010-data-flow/cdfd-do.md\t3\tpassed\t479\tneeds-work\t75\t7\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-17T01:23:24Z\tdocs/ja/product/010-business-specs/010-data-flow/cdfd-onboarding.md\t1\tpassed\t721\tpass\t100\t0\tgemma-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-17T01:35:35Z\tdocs/ja/product/010-business-specs/010-data-flow/cdfd-onboarding.md\t2\tpassed\t731\tpass\t100\t0\tgemma-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-17T01:40:30Z\tdocs/ja/product/010-business-specs/010-data-flow/cdfd-onboarding.md\t3\tpassed\t294\tneeds-work\t88\t2\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-17T01:52:48Z\tdocs/ja/product/010-business-specs/010-data-flow/cdfd-orchestrator.md\t1\tpassed\t737\tpass\t100\t0\tgemma-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-17T02:04:20Z\tdocs/ja/product/010-business-specs/010-data-flow/cdfd-orchestrator.md\t2\tpassed\t691\tpass\t100\t0\tgemma-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-17T02:11:47Z\tdocs/ja/product/010-business-specs/010-data-flow/cdfd-orchestrator.md\t3\tpassed\t447\tneeds-work\t67\t10\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n",
+    "stderr": ""
+  },
+  "log_refs": [
+    {
+      "kind": "command-stdout",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-deliverable-0dc34560cbfd/attempt-2/command.stdout.log",
+      "bytes": 4165,
+      "truncated": false
+    },
+    {
+      "kind": "command-stderr",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-deliverable-0dc34560cbfd/attempt-2/command.stderr.log",
+      "bytes": 0,
+      "truncated": false
+    }
+  ]
+}

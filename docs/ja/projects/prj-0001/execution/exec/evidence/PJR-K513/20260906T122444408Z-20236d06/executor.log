@@ -1,0 +1,15 @@
+対応完了しました。
+
+- 拡張を `packages/vscode-specdojo` へ移動
+- ルートに `vscode:install`、`vscode:build`、`vscode:package` を追加
+- `.vscodeignore` を追加し、VSIX生成とGit除外を確認
+- devcontainer、TypeScript参照、テスト、関連文書を新パスへ更新
+- 個票の作業内容・対応結果を更新（ステータスは維持）
+- executor 指示に従い result は未編集
+- 親 runner 担当の3検証は未実行
+
+<specdojo_executor_evidence>
+{"final_message":"VS Code拡張をpackages配下へ移し、ルートからの依存導入・ビルド・VSIX生成経路と成果物除外を整備した。","validations":[{"command":"npm run vscode:install -- --offline --ignore-scripts","status":"passed","summary":"依存301 packageを導入、脆弱性0件"},{"command":"npm run vscode:build","status":"passed","summary":"拡張のTypeScriptコンパイル成功"},{"command":"npm run vscode:package","status":"passed","summary":"4ファイル、5.09 KBのVSIX生成成功"},{"command":"npm run typecheck","status":"passed","summary":"プロジェクト全体の型検査成功"},{"command":"npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-k513-vscode-extension-layout.md docs/ja/projects/prj-0001/controls/project-register/pjr-gx9d-vscode-extension-consolidation.md docs/ja/projects/prj-0001/controls/project-register/pjr-0144-fmt-md-table-vs-code.md docs/ja/projects/prj-0001/controls/project-register/pjr-0143-vs-code-marketplace.md","status":"passed","summary":"変更したMarkdown文書の検査成功"},{"command":"npx prettier --check package.json tsconfig.json packages/vscode-specdojo/package.json packages/vscode-specdojo/package-lock.json packages/vscode-specdojo/tsconfig.json tests/src/exec-worktree.integration.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-k513-vscode-extension-layout.md docs/ja/projects/prj-0001/controls/project-register/pjr-gx9d-vscode-extension-consolidation.md docs/ja/projects/prj-0001/controls/project-register/pjr-0144-fmt-md-table-vs-code.md docs/ja/projects/prj-0001/controls/project-register/pjr-0143-vs-code-marketplace.md","status":"passed","summary":"全対象ファイルがPrettier準拠"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿生成成功"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"カタログ検証成功。既存の文書未作成警告のみ"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1522件の索引生成成功"},{"command":"bash -n .devcontainer/post-start.sh","status":"passed","summary":"シェル構文検査成功"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"},{"command":"npm run test:unit","status":"not_run","summary":"親runnerの許可済み検証へ委譲"},{"command":"npm run test:integration","status":"not_run","summary":"親runnerの許可済み検証へ委譲"},{"command":"npm run validate:schema","status":"not_run","summary":"親runnerの許可済み検証へ委譲"}]}
+</specdojo_executor_evidence>
+
+agent-config-write: protected configuration changes detected; paths=package.json; agent must record the required change in the result handoff for human or orchestrator application

@@ -73,11 +73,7 @@ import {
   stemFromPlanPath,
 } from "./exec-plans.js";
 import { resetResultForClaim, scaffoldResult } from "./exec-results.js";
-import {
-  applyProviderScaffoldPlan,
-  buildProviderScaffoldPlan,
-  specdojoPackageRootDir,
-} from "./exec-provider-scaffold.js";
+import { runProviderScaffold, specdojoPackageRootDir } from "./exec-provider-scaffold.js";
 import { generateRegisterPlan, normalizePjrId, resolveRegisterRunTarget } from "./exec-register.js";
 import { scaffoldViewpoints } from "./review-plan.js";
 import { registerCycleCommand, registerResumeCommand, registerRunCommand } from "./exec-run.js";
@@ -352,38 +348,6 @@ function printCommandError(error: unknown, fail = true): void {
   process.stdout.write(message + "\n");
   if (fail) exitWithCode(false);
   else process.exitCode = 1;
-}
-
-async function runProviderScaffold(
-  provider: string,
-  opts: { force: boolean; dryRun: boolean },
-): Promise<void> {
-  const plan = await buildProviderScaffoldPlan({
-    packageRoot: specdojoPackageRootDir(),
-    repoRoot: specdojoRootDir(),
-    provider,
-  });
-
-  if (opts.dryRun) {
-    for (const entry of plan.entries) {
-      process.stdout.write(`[dry-run] would write: ${entry.destinationRelPath}\n`);
-    }
-    return;
-  }
-
-  const outcomes = await applyProviderScaffoldPlan(plan, { force: opts.force });
-  for (const { entry, written } of outcomes) {
-    if (written) {
-      process.stdout.write(`Written: ${entry.destinationRelPath}\n`);
-    } else {
-      process.stdout.write(`Skipped (already exists): ${entry.destinationRelPath}\n`);
-    }
-  }
-  process.stdout.write(
-    "Next steps:\n" +
-      "  1. Commit the scaffolded files (worktree runs read committed content).\n" +
-      `  2. Define providers.${provider}.command_template in .specdojo/exec-defaults.yaml (see templates/${provider}/README.md).\n`,
-  );
 }
 
 function loadValidatedExecState(projectPath: string): LoadedExecState | null {
@@ -1244,6 +1208,8 @@ export function registerExecCommands(program: Command): void {
     try {
       if (opts.provider) {
         await runProviderScaffold(String(opts.provider), {
+          packageRoot: specdojoPackageRootDir(),
+          repoRoot: specdojoRootDir(),
           force: !!opts.force,
           dryRun: !!opts.dryRun,
         });
@@ -1265,20 +1231,20 @@ export function registerExecCommands(program: Command): void {
       if (!project) throw new Error(`Unknown project: ${projectId}`);
 
       const baseDir = specdojoRootDir();
-      const templatePath = join(
+      const commonPath = join(
         baseDir,
         "docs",
         "ja",
         "specdojo",
-        "templates",
-        "pm-review-viewpoints-template.yaml",
+        "standards",
+        "pm-review-viewpoints.yaml",
       );
 
       const viewpointsRel = getProjectViewpointsPath(project);
       if (viewpointsRel) {
         const outputPath = pathResolve(baseDir, viewpointsRel);
         const result = scaffoldViewpoints({
-          templatePath,
+          commonPath,
           projectId,
           outputPath,
           force: !!opts.force,

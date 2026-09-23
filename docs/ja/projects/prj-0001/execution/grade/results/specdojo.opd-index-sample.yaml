@@ -1,0 +1,102 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:opd-index-sample
+path: docs/ja/specdojo/samples/opd-index-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 73
+graded_at: "2026-09-05T13:12:05.422Z"
+graded_by: gemma-expert-executor
+content_hash: cb0b59b311dd675ef75953c1a4627c2cbf82ff333b37c67a02ddcbcc0108643f
+categories:
+  consistency:
+    score: 50
+  usability:
+    score: 83
+  architecture:
+    score: 100
+  quality:
+    score: 63
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 3
+    score: 75
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 1
+    score: 25
+  vp-qe-kata-conformance:
+    level: 1
+    score: 25
+  vp-ux-readability:
+    level: 2
+    score: 50
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 6
+  minor: 2
+  note: 0
+findings:
+  - id: F003
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 5
+    message: 必須章（2, 5, 6, 7, 8, 9, 10, 11）が大幅に欠落している。
+    anchor: "## 1. 概要（index）"
+  - id: F007
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 5
+    message: ルールブックで定義された必須構成に従っておらず、サンプルとしての整合性が欠如している。
+    anchor: "## 1. 概要（index）"
+  - id: F008
+    severity: major
+    rule: vp-ux-readability
+    line: 5
+    message: 必須構成の大幅な省略により、運用方針の SSOT としての十分な情報を備えておらず、可読性と完結性に欠ける。
+    anchor: "## 1. 概要（index）"
+  - id: F001
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 6
+    message: Frontmatter の rulebook 参照 ID が specdojo:opd-index-rulebook と不整合である。
+    anchor: ""
+  - id: F002
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 6
+    message: Frontmatter の必須項目 title が不足している。
+    anchor: ""
+  - id: F004
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 9
+    message: "章番号が不整合であり、SLO・SLA・KPI は ## 3 であるべきだが ## 2 となっている。"
+    anchor: "## 2. SLO・SLA・KPI"
+  - id: F005
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 17
+    message: "章番号が不整合であり、体制・責任分界 は ## 4 であるべきだが ## 3 となっている。"
+    anchor: "## 3. 体制・責任分界（RACI・当番・エスカレーション）"
+  - id: F006
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 25
+    message: "章番号が不整合であり、関連ドキュメント導線 は ## 12 であるべきだが ## 4 となっている。"
+    anchor: "## 4. 関連ドキュメント導線（`opr` 等）"

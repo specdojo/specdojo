@@ -1,0 +1,24 @@
+## 実施内容の要約
+
+前回 run（codex executor）が rate limit で中断していましたが、成果物一式は作成済みでした。本 run では内容の整合確認と検証を行い、追加の編集は不要と判断しました。
+
+### 確認した成果物（前回 run が作成・更新、本 run で検証）
+
+| 区分 | ファイル | 確認結果 |
+| --- | --- | --- |
+| 新規 | `docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md` | 標準章構成（全体方針〜禁止事項）、`cdfd-uc-<topic>` 命名・プロジェクト修飾なし、`C-<nn>` ケース ID 引き継ぎ、`H-<nn>` 引き渡し ID、グループ内部・状態遷移を扱わない境界、`cdfd-<group>` 参照を規定 |
+| 新規 | `docs/ja/specdojo/templates/cdfd-uc-template.md` | `frontmatter_template` 方式、`_UPPER_SNAKE_` / `_TODO_` 規約、rulebook 本文要件と同じ 7 章構成 |
+| 新規 | `docs/ja/specdojo/samples/cdfd-uc-sample.md` | `cdfd-overview-sample` の `C-02`「欠品から補充まで」（在庫 → 仕入 → 販売、ID `cdfd-uc-replenishment`）と一致。領域 ID・データストア名・凡例参照も overview-sample と整合 |
+| 新規 | `docs/ja/specdojo/recipes/cdfd-uc-recipe.md` | recipe 標準の章構成（使い方〜仕上げチェック）に準拠 |
+| 更新 | `cdfd-overview-rulebook.md` / `cdfd-mermaid-rulebook.md` / `deliverables-reference.md` / `id-and-file-naming-standard.md` | 新 rulebook 参照、代表ノード扱いの整理、成果物種別行、`cdfd-uc-` prefix 行を追加 |
+| 更新 | 個票 `pjr-zkna-cdfd-uc-rulebook.md` | 作業内容・対応結果を記入済み（ステータス項目は未変更） |
+
+### 申し送り（変更していない事項）
+
+- `npm run lint:fm` の警告 1 件（`docs/ja/specdojo/samples/br-sample.md` の frontmatter `title:`）は HEAD 時点から存在する既存事象で、本タスクの対象外のため未修正。
+- `cdfd-mermaid-rulebook.md` の「概念 / Mermaid 表現」表が空行で分断されているのも既存事象（HEAD と同一）で、本タスクでは触れていない。
+- `docs/ja/projects/**/execution/exec/results/**` は変更していない（result の `status: blocked` は前回 runner による更新）。
+
+<specdojo_executor_evidence>
+{"final_message":"前回 run が作成した cdfd-uc-rulebook / recipe / sample / template と関連更新（cdfd-overview-rulebook, cdfd-mermaid-rulebook, deliverables-reference, id-and-file-naming-standard, 個票）を検証し、standards・cdfd-overview-sample との整合を確認。追加編集は不要。prettier/markdownlint/lint:md/history-links/index build/register build/catalog validate/docs:build すべて成功。lint:fm の警告 1 件は既存の br-sample.md 起因で対象外。","validations":[{"command":"npx prettier --write <changed md files>","status":"passed","summary":"9 files unchanged"},{"command":"npx markdownlint <changed md files>","status":"passed","summary":"no errors"},{"command":"npm run -s lint:md","status":"passed","summary":"no errors"},{"command":"npm run -s lint:fm","status":"failed","summary":"1 warning in docs/ja/specdojo/samples/br-sample.md (pre-existing at HEAD, out of scope)"},{"command":"npm run -s validate:history-links","status":"passed","summary":"all history files valid"},{"command":"npx tsx src/specdojo.ts index build","status":"passed","summary":"1659 entries"},{"command":"npx tsx src/specdojo.ts catalog validate","status":"passed","summary":"exit 0, 0 errors (pre-existing WARN only)"},{"command":"npx tsx src/specdojo.ts register build","status":"passed","summary":"generated views regenerated"},{"command":"npm run -s docs:build","status":"passed","summary":"build complete in 218.75s"}]}
+</specdojo_executor_evidence>

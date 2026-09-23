@@ -179,7 +179,7 @@ flowchart
   subgraph データモデル
     業務データ辞書[業務データ辞書]
     概念クラス図[概念クラス図]
-    概念状態遷移図[概念状態遷移図]
+    ステータス定義[ステータス定義<br>状態一覧・状態遷移図]
   end
 
   subgraph 業務モデル
@@ -213,7 +213,8 @@ flowchart
 <!-- prettier-ignore -->
 | ドキュメント | 英語名称 | 推奨ファイル名 | 目的 | 主な内容 |
 | --- | --- | --- | --- | --- |
-| [概念データフロー図](../rulebooks/cdfd-rulebook.md) | Concept Data Flow Diagram | `cdfd-<term>` | 対象となる業務の全体構成・流れを可視化し、定義する | 業務（プロセス）とその間の情報の流れ・物の流れ、業務のきっかけとなるイベント、業務主体 など |
+| [概念データフロー図](../rulebooks/cdfd-rulebook.md) | Conceptual Data Flow Diagram | `cdfd-<group>` | 一つのプロセスグループに属する領域内部と領域間の流れを可視化し、グループ外との責任境界を定義する | 対象プロセス領域、内部プロセス、情報・物の流れ、起点イベント、データストア、主要例外、STSD 参照、グループ外委譲 |
+| [概念データフロー図（ユースケース別）](../rulebooks/cdfd-uc-rulebook.md) | Conceptual Data Flow Diagram (Use Case) | `cdfd-uc-<topic>` | 複数のプロセスグループをまたぐ一つの業務について、グループ間の順序と引き渡し条件を定義する | ケース ID、開始・終了条件、参加グループ、引き渡す情報と条件、関連データストア、例外時の戻り先、プロセスグループ別 CDFD 参照 |
 
 #### 2.1.2. データモデル
 
@@ -223,10 +224,9 @@ flowchart
 | [業務データ辞書 / 業務データ辞書](../rulebooks/bdd-rulebook.md) | Business Data Dictionary | `bdd-<term>` | データの意味や構造に関する共通理解を作る | 業務上の管理単位（エンティティ）とその属性（項目）の論理名・物理名・説明・制約 など |
 | [業務データ辞書 / 概念データストア定義](../rulebooks/cdsd-rulebook.md) | Conceptual Data Store Definition | `cdsd-<term>` | 概念データストア（情報の保管場所）を一覧で定義する | データストア名、対応プロセス、内容、更新タイミング、粒度、主な用途 など |
 | [業務データ辞書 / 保管場所定義](../rulebooks/sld-rulebook.md) | Storage Location Definition | `sld-<term>` | 業務対象となる物の物理的な保管場所を一覧で定義する | 保管場所名、保管対象、内容・目的、関連プロセス、管理頻度 など |
-| [業務データ辞書 / ステータス定義](../rulebooks/stsd-rulebook.md) | Status Definition | `stsd-<term>` | 業務上のエンティティが取り得る状態（ステータス）を一覧で定義する | 対象、ステータス名、呼称、説明 など |
+| [業務データ辞書 / ステータス定義](../rulebooks/stsd-rulebook.md) | Status Definition | `stsd-<term>` | 業務上のエンティティが取り得る状態と状態間の遷移を一文書で定義する | 対象、状態名、通称、意味、成立条件、管理場所、状態遷移図、イベント、遷移条件など |
 | [業務データ辞書 / 分類定義](../rulebooks/cld-rulebook.md) | Classification Definition | `cld-<term>` | 業務上の分類（カテゴリ、種別、区分など）を一覧で定義する | 分類定義名、種別、分類名、説明など |
 | [概念クラス図](../rulebooks/ccd-mermaid-rulebook.md) | Conceptual Class Diagram | `ccd-<term>` | 業務上のエンティティ関係を図で定義する | 商品・在庫・発注・店舗などの概念と属性、関連（継承/親子/参照） など |
-| [概念状態遷移図](../rulebooks/cstd-rulebook.md) | Conceptual State Transition Diagram | `cstd-<term>` | 業務オブジェクトの状態変化を図で定義する | 対象、状態、遷移、イベント、条件など |
 
 #### 2.1.3. 業務モデル
 

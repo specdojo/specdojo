@@ -1,0 +1,108 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_4503af091703434d9b5780acd0571ab1
+  ts: "2026-09-23T02:37:13Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-EWWX の対応 2
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: git-branching-standard に 3 層の切り分けと運用規模別の条件を明記する
+    - field: description
+      from: ""
+      to: PJR-EWWX の決定を git-branching-standard と branch-workflow-guide へ反映する。exec / feature / 記帳の 3 層と統合方法、単独運用で省略できる範囲、複数人運用で必須になる条件（develop の保護、統合専用 actor、feature を切る前のベース push）を記述する。PR 表示が base 更新後に再計算されない場合の対処も運用ガイドへ加える。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-23"
+    - field: due
+      from: ""
+      to: "2026-10-10"
+- v: 1
+  id: reg_5b191d73f84c4353bc97d2cb9fcf0f82
+  ts: "2026-09-23T02:50:00Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_4503af091703434d9b5780acd0571ab1
+- v: 1
+  id: reg_94f0a934b05a4a29878cf0de6f1647ff
+  ts: "2026-09-23T03:04:48Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=.opencode/.gitignore, .opencode/node_modules/.bin/download-msgpackr-prebuilds, .opencode/node_modul…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=.opencode/.gitignore, .opencode/node_modules/.bin/download-msgpackr-prebuilds, .opencode/node_modul…"
+  previous_event_id: reg_5b191d73f84c4353bc97d2cb9fcf0f82
+- v: 1
+  id: reg_0e32555b3aa64a3d88d8516a90089e70
+  ts: "2026-09-23T03:21:57Z"
+  action: start
+  actor: gemma-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_94f0a934b05a4a29878cf0de6f1647ff
+- v: 1
+  id: reg_a1f8fcc480c94c119b93b6feadde6ade
+  ts: "2026-09-23T03:25:03Z"
+  action: review
+  actor: gemma-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_0e32555b3aa64a3d88d8516a90089e70
+- v: 1
+  id: reg_a59d1ecc1cb14f9b9e462f5d2a7ddd35
+  ts: "2026-09-23T03:43:14Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: レビュー完了。単独運用の判断基準を 1 行修正のうえ close
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-23"
+    - field: conclusion
+      from: "-"
+      to: git-branching-standard へ 3 層の変更経路と運用規模ごとの必須条件を新設し、branch-workflow-guide へ feature 分岐前の base push と PR 表示再計算の対処を追加した。
+  previous_event_id: reg_a1f8fcc480c94c119b93b6feadde6ade

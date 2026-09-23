@@ -1,0 +1,89 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_7632207864a673c19afb7509958a372f
+  ts: "2026-08-27T13:23:32Z"
+  action: add
+  actor: naoji3x
+  from_status: null
+  to_status: open
+  reason: "docs(register): PJR-ENK0 をクローズし PJR-6AAX を起票する"
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: assessment validateが正しい判定に対して誤警告を出す
+    - field: description
+      from: ""
+      to: schedule assessment validate が、判定の根拠として status draft を挙げていない箇所に対して「status draft であること自体は利用不能の根拠にならない」という警告を出す。PJR-ENK0 で生成した sch-assessment-planning.yaml の dct-index / kata.template が該当したが、実際の根拠は target-fit と internal-consistency の失敗であり、draft には言及していない。判定の checks に draft という語が含まれるかどうかなど、機械的な条件で誤検知していると見られる。正しい判定に警告が出るとレビューのたびに確認の手間がかかる。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-08-27"
+    - field: due
+      from: ""
+      to: "2026-10-31"
+    - field: completed
+      from: ""
+      to: "-"
+    - field: conclusion
+      from: ""
+      to: "-"
+    - field: block_reason
+      from: ""
+      to: "-"
+  legacy_commit: 6ba4158b1f9a5372bca146832c79c724b376708d
+- v: 1
+  id: reg_b525375b59344237bbbc3f75b696064c
+  ts: "2026-09-04T14:19:12Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_7632207864a673c19afb7509958a372f
+- v: 1
+  id: reg_e56d831fe3a04292a2b8c5a93ccc8a85
+  ts: "2026-09-04T14:26:00Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_b525375b59344237bbbc3f75b696064c
+- v: 1
+  id: reg_4653624e21824d3383cd0c20f72e44d8
+  ts: "2026-09-04T14:28:54Z"
+  action: reject
+  actor: orchestrator
+  from_status: review
+  to_status: rejected
+  reason: PJR-JFTC で sch-assessment が廃止され、誤警告を出す判定処理そのものが失われたため前提不成立。修正対象がない。
+  changes:
+    - field: status
+      from: review
+      to: rejected
+    - field: completed
+      from: "-"
+      to: "2026-09-04"
+    - field: conclusion
+      from: "-"
+      to: PJR-JFTC で sch-assessment が廃止され、誤警告を出す判定処理そのものが失われたため前提不成立。修正対象がない。
+  previous_event_id: reg_e56d831fe3a04292a2b8c5a93ccc8a85

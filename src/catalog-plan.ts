@@ -6,12 +6,13 @@
 // base_path, done_criteria) stays in the DCT template and is never copied into a plan.
 
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
-import { basename, join } from "node:path";
+import { basename, join, resolve } from "node:path";
 import yaml from "js-yaml";
+import { resolveSpecdojoPath, specdojoDirectoryPaths } from "./template-resolution.js";
 import Ajv2020Module from "ajv/dist/2020.js";
 import type { ValidateFunction } from "ajv";
 import { collectResolvedDeliverables, loadCatalogDocs } from "./catalog-build.js";
-import { resolveBasePath } from "./catalog-paths.js";
+import { isTrashedPath, resolveBasePath } from "./catalog-paths.js";
 import type {
   DctDeliverableItem,
   DctSection,
@@ -139,7 +140,7 @@ const Ajv2020 = Ajv2020Module.default;
 let compiledSchemaCache: { schemaPath: string; validate: ValidateFunction } | null = null;
 
 function compilePlanSchema(repoRoot: string): ValidateFunction {
-  const schemaPath = join(repoRoot, DCT_PLAN_SCHEMA_PATH);
+  const schemaPath = resolveSpecdojoPath(DCT_PLAN_SCHEMA_PATH, { repositoryRoot: repoRoot });
   if (compiledSchemaCache && compiledSchemaCache.schemaPath === schemaPath) {
     return compiledSchemaCache.validate;
   }
@@ -188,12 +189,20 @@ export function loadTemplatesForDomain(
   domain: string,
   repoRoot: string,
 ): LoadedTemplateForDomain[] {
-  const files = readdirSync(templatesPath)
-    .filter((file) => /^dct-.+\.yaml$/.test(file))
-    .sort();
+  const resolvedDirectories = specdojoDirectoryPaths("docs/ja/specdojo/templates", {
+    repositoryRoot: repoRoot,
+  });
+  const directories = resolvedDirectories.includes(resolve(templatesPath))
+    ? resolvedDirectories
+    : [templatesPath];
+  const files = new Map<string, string>();
+  for (const directory of directories) {
+    for (const file of readdirSync(directory).filter((entry) => /^dct-.+\.yaml$/.test(entry))) {
+      if (!files.has(file)) files.set(file, join(directory, file));
+    }
+  }
   const loaded: LoadedTemplateForDomain[] = [];
-  for (const file of files) {
-    const filePath = join(templatesPath, file);
+  for (const [file, filePath] of [...files].sort(([a], [b]) => a.localeCompare(b))) {
     let template: DctTemplateDoc;
     try {
       template = yaml.load(readFileSync(filePath, "utf8")) as DctTemplateDoc;
@@ -245,10 +254,6 @@ function toRepoRelative(absolutePath: string, repoRoot: string): string {
 }
 
 // ---- input resolution --------------------------------------------------------
-
-function isTrashedPath(repoRelativePath: string): boolean {
-  return repoRelativePath.split("/").includes("trash");
-}
 
 export type PlanInputResolution = {
   inputs: DctPlanInput[];

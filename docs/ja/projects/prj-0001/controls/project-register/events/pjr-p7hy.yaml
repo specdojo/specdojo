@@ -1,0 +1,47 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_fe376fd8c10a4e3484e5e74afa043b99
+  ts: "2026-09-06T13:40:45Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-QHKA の別リポジトリ構成で、複数プロダクトを1つの SpecDojo が管理する場合に未対応の範囲が残るため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 1つの項目が複数リポジトリを変更する場合の統合を扱う
+    - field: description
+      from: ""
+      to: 別リポジトリ構成で複数のプロダクトを管理する際、単一項目が複数リポジトリを変更する場合の統合順序と回復手順を定める。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-06"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_98dfa914a9354d7d8c3e5543d2815bc6
+  ts: "2026-09-20T05:01:07Z"
+  action: update
+  actor: specdojo-orchestrator (claude)
+  from_status: open
+  to_status: open
+  reason: Detached Unit を既定にする決定（PJR-TBHH）により、実装を伴う項目の複数リポジトリ統合が次の制約になるため優先度を上げる
+  changes:
+    - field: priority
+      from: low
+      to: medium
+  previous_event_id: reg_fe376fd8c10a4e3484e5e74afa043b99

@@ -1,3 +1,16 @@
+---
+specdojo:
+  id: specdojo:cpd-mermaid-rulebook
+  type: rulebook
+  status: draft
+  target_format: markdown
+  recipe: undecided
+  sample: specdojo:cpd-sample
+  template: undecided
+  based_on:
+    - specdojo:rulebook-authoring-standard
+---
+
 # Mermaid を用いたC4コンポーネント図 作成ルール
 
 C4 Component Diagram (CPD) Documentation Rules using Mermaid

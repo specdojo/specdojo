@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "task_id": "JBR-grade-deliverable-f07157bb99d7",
+  "run_id": "attempt-1",
+  "stage": {
+    "role": "executor",
+    "actor": "specdojo-runner",
+    "status": "failed",
+    "started_at": "2026-09-16T01:19:10.863Z",
+    "completed_at": "2026-09-16T01:50:30.429Z",
+    "exit_code": 1,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-action.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-action-96f0bab377-done-criteria.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/pipeline/cdfd-action-96f0bab37783.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-deliverable-f07157bb99d7.json",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 4,
+    "summary": ".../010-data-flow/cdfd-action.md                   | 34 ++++++++++++++++++++++\n 1 file changed, 34 insertions(+)"
+  },
+  "validations": [
+    {
+      "id": "job-command",
+      "source": "runner",
+      "command": "npm run build\ntools/grade/run-per-document.sh --run-id JBR-grade-deliverable-f07157bb99d7 --target deliverable --limit 5 --changed-only=true --ungraded=true --incomplete=true\ncat logs/grade/runs/per-document/JBR-grade-deliverable-f07157bb99d7/results.tsv",
+      "status": "failed",
+      "summary": "exit 1"
+    }
+  ],
+  "final_message": "Runner command exit 1.",
+  "command": {
+    "shell": "/bin/sh -eu",
+    "value": "npm run build\ntools/grade/run-per-document.sh --run-id JBR-grade-deliverable-f07157bb99d7 --target deliverable --limit 5 --changed-only=true --ungraded=true --incomplete=true\ncat logs/grade/runs/per-document/JBR-grade-deliverable-f07157bb99d7/results.tsv",
+    "exit_code": 1,
+    "stdout_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-deliverable-f07157bb99d7/attempt-1/command.stdout.log",
+    "stderr_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-deliverable-f07157bb99d7/attempt-1/command.stderr.log",
+    "stdout": "\n> specdojo@0.1.0 build\n> node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.build.json && node -e \"require('node:fs').chmodSync('dist/specdojo.js', 0o755)\"\n\nrun_id=JBR-grade-deliverable-f07157bb99d7 project=prj-0001 target=deliverable kind=none changed_only=true ungraded=true incomplete=true max_stage_failures=3 documents=5 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-deliverable-f07157bb99d7\nstage=1 executor=gemma-expert-executor reporter=gemma-reporter reference=none\nstage=2 executor=gemma-expert-executor reporter=gemma-reporter reference=none\nstage=3 executor=codex-expert-executor reporter=gemma-reporter reference=none condition=\"pass, score>=96, findings<=1\"\ndocument start: docs/ja/product/010-business-specs/010-data-flow/cdfd-action.md\n",
+    "stderr": "grade pipeline stage 2 must immediately follow completed stage 0\ngrade pipeline: could not persist pipeline state for document=docs/ja/product/010-business-specs/010-data-flow/cdfd-action.md stage=2 status=passed\n"
+  },
+  "log_refs": [
+    {
+      "kind": "command-stdout",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-deliverable-f07157bb99d7/attempt-1/command.stdout.log",
+      "bytes": 813,
+      "truncated": false
+    },
+    {
+      "kind": "command-stderr",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-deliverable-f07157bb99d7/attempt-1/command.stderr.log",
+      "bytes": 213,
+      "truncated": false
+    }
+  ]
+}

@@ -1,0 +1,92 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_7ac3b748522a43188db1aaf00888a5ee
+  ts: "2026-09-09T15:30:18Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: npm 導入後のセットアップ導線を整備する
+    - field: description
+      from: ""
+      to: agent 設定を配置する機能が exec scaffold --provider の下にあり、初期セットアップの導線として発見しにくい。config init の隣か init 相当の入口が自然である。さらに README の使い始めるは Use this template とリポジトリ取得による取り込みのみを案内しており、npm install specdojo で導入した利用者向けの手順が存在しない。npm ページに表示される README がこの内容では、インストール後に何をすればよいか分からない。config init から provider 設定の配置、最初の register add までを一連の導線として示す必要がある。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-10"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_8387c449e5924f80900f9d3f33e874ae
+  ts: "2026-09-09T21:37:23Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_7ac3b748522a43188db1aaf00888a5ee
+- v: 1
+  id: reg_71a8962cb7e04ff9b860e56670651bdd
+  ts: "2026-09-09T22:16:46Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=package.json; agent must record the required change in the result …"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=package.json; agent must record the required change in the result …"
+  previous_event_id: reg_8387c449e5924f80900f9d3f33e874ae
+- v: 1
+  id: reg_485938b533554a36960ea660000d8e01
+  ts: "2026-09-09T22:36:33Z"
+  action: review
+  actor: orchestrator
+  from_status: waiting
+  to_status: review
+  reason: config scaffold を config init の隣へ追加し、README へ npm 経由の導入手順を加えた。fast-glob の宣言漏れも修正した。保護機構のブロックで --resume が使えないため orchestrator が reporter 相当の検証を代行した。typecheck と test:unit 1425 件が成功する。
+  changes:
+    - field: status
+      from: waiting
+      to: review
+  previous_event_id: reg_71a8962cb7e04ff9b860e56670651bdd
+- v: 1
+  id: reg_45ab1468af0c46b3aee0ebab9a511f33
+  ts: "2026-09-09T22:36:58Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: 空のリポジトリで config init から config scaffold --provider、register add、register build まで通ることを実地で確認した。config init と config scaffold が次の手順を出力し、導線が辿れる。.claude と .specdojo/claude が配置され、登録簿本体と3ビューが生成された。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-10"
+  previous_event_id: reg_485938b533554a36960ea660000d8e01

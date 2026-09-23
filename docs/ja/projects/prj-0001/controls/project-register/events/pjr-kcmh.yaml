@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_6b430d37260a4c7a8037dd55f708dc8b
+  ts: "2026-09-23T05:17:28Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-2ZVS の実装（review 経路）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: review フェーズで grade を実行し verdict を合成する
+    - field: description
+      from: ""
+      to: PJR-2ZVS の決定のうち review 経路を実装する。review フェーズの前段で runner が対象文書へ grade を実行し（content_hash が一致する場合は既存 sidecar を再利用）、level を review_verdict へ写像して初期値とする。human 観点の判定と合成し最も厳しい判定を採る。レビュアが grade 由来の判定を覆す場合は viewpoint ID と理由を review result へ記録させる。xrp-* テンプレートを更新する。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-23"
+    - field: due
+      from: ""
+      to: "2026-11-07"

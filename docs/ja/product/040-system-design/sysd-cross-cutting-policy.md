@@ -71,10 +71,10 @@ SpecDojo CLI、agent、実行runner、Git worktreeへ横断的に適用する責
 
 ### scp-CFG-001: 起動コマンド解決
 
-- **Rule（MUST）**: 起動コマンドは`providers.<provider>.command_template`と`command_params`から解決し、memberの`command`は特殊構成だけに使う。plan本文は標準入力で渡す。
+- **Rule（MUST）**: 起動コマンドは`providers.<provider>.command_template`と`command_params`から解決する。追加変数は`by_nickname`、`by_proficiency`、`by_mode`の順で優先し、memberの`command`は特殊構成だけに使う。plan本文は標準入力で渡す。
 - **Rationale（意図）**: provider設定の重複とshell解釈による事故を防ぐ。
 - **Scope（適用範囲）**: 全providerの非対話起動。
-- **Enforcement（検証）**: 未解決placeholder、重複変数、template欠落を起動前にエラーとする。
+- **Enforcement（検証）**: 未解決placeholder、組み込み変数の再定義、template欠落を起動前にエラーとする。
 - **Exception（例外）**: `provider: custom`はmember commandで上書きできる。
 - **References（参照）**: `sysd-agent-settings`、provider別子設計。
 
@@ -89,12 +89,12 @@ SpecDojo CLI、agent、実行runner、Git worktreeへ横断的に適用する責
 
 ### scp-STA-001: append-only event
 
-- **Rule（MUST）**: task状態の変更はeventを追記して表し、既存eventを削除・変更しない。result、plan履歴、Git履歴を状態訂正のために消去しない。
-- **Rationale（意図）**: 並列処理と再開を監査可能にし、過去の判断を保持する。
-- **Scope（適用範囲）**: claim、complete、block、release、reopen、unblock。
-- **Enforcement（検証）**: event schema、状態遷移検証、project lock。
+- **Rule（MUST）**: task状態の変更は1 eventを1 JSONファイルとして追加して表し、既存eventを削除・変更しない。result、plan履歴、Git履歴を状態訂正のために消去しない。
+- **Rationale（意図）**: eventを過去のファイルへ追記せず、Git上でも1回の状態遷移を1ファイルの追加として識別できる境界にすることで、状態の再構成、破損箇所の特定、過去の判断の監査を単純に保つ。task単位のファイルでも排他は成立するが、既存ファイルのread-modify-writeと形式移行を導入するだけの運用上の問題が確認されていないため、ファイル数だけを理由に集約しない。
+- **Scope（適用範囲）**: claim、note、block、unblock、complete、reopen、release、cancel、link、estimate。
+- **Enforcement（検証）**: eventごとのschema検証、全eventの時系列fold、状態遷移検証、project lock。
 - **Exception（例外）**: 破損ファイルの復旧は人間判断と別の監査記録を要求する。
-- **References（参照）**: `cdfd-task-execution`。
+- **References（参照）**: `cdfd-task-execution`、[[specdojo:exec-operation-guide|exec運用ガイド]]の「実行eventの保存粒度」。
 
 ### scp-STA-002: reopen
 

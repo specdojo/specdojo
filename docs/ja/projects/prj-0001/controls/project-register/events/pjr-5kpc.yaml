@@ -1,0 +1,50 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_853cd1a85819401cb8874df02383cc0c
+  ts: "2026-09-16T09:31:33Z"
+  action: add
+  actor: specdojo-orchestrator (claude)
+  from_status: null
+  to_status: open
+  reason: "docs(register): grade pipeline 状態のハッシュ判定の不具合を起票する"
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: grade pipeline 状態の同一性判定が grade 自身の finding 挿入で崩れる
+    - field: description
+      from: ""
+      to: PJR-0W8S の pipeline 状態は content_hash（stableContentHash）の一致で有効性を判定するが、grade apply は段ごとに finding コメントを除去して挿入し直し、ブロック直前に空行を補うため、finding を除いた本文でも空行の位置と数が段の間で変わる。手動起動した成果物評価で cdfd-action の 2 段目が「stage 2 must immediately follow completed stage 0」で失敗し Job Run 全体が失敗した。pipeline 状態のハッシュを空行を無視する正規化に変えて解消する。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-16"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_896e8f9e9bdf418e81bb2ed454cf28b6
+  ts: "2026-09-19T05:36:20Z"
+  action: close
+  actor: specdojo-orchestrator (claude)
+  from_status: open
+  to_status: done
+  reason: オーケストレーターが直接対応した pipelineContentHash を、9/17〜18 の成果物評価 3 run で確認して close
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-19"
+  previous_event_id: reg_853cd1a85819401cb8874df02383cc0c

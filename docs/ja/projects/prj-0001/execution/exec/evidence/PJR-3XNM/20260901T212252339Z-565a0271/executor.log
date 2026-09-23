@@ -1,0 +1,13 @@
+実装完了しました。
+
+- finding message の句読点・空白差を限定的に正規化
+- severity・line・意味の変更は引き続き拒否
+- 拒否時に変更フィールドと双方の原文を表示
+- 表記差、内容改変、追加、欠落のテストを追加
+- [個票](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-3XNM/docs/ja/projects/prj-0001/controls/project-register/pjr-3xnm-grade-fidelity-normalization.md)とコマンドリファレンスを更新
+
+型検査、lint、catalog/register/index 検証は成功しました。result と runner 所有の evidence は編集していません。
+
+<specdojo_executor_evidence>
+{"final_message":"grade忠実性検証に限定的な表記正規化と具体的な改変診断を実装し、テスト・文書・個票を更新した。","validations":[{"command":"npx prettier --write src/grade.ts tests/src/grade.test.ts docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-3xnm-grade-fidelity-normalization.md","status":"passed","summary":"変更4ファイルを整形"},{"command":"npm run typecheck","status":"passed","summary":"TypeScript型検査成功"},{"command":"npm run lint:ts","status":"passed","summary":"ESLint成功"},{"command":"npx markdownlint docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-3xnm-grade-fidelity-normalization.md","status":"passed","summary":"変更Markdownの静的検査成功"},{"command":"node --import tsx src/specdojo.ts register build && node --import tsx src/specdojo.ts catalog validate && node --import tsx src/specdojo.ts index build","status":"passed","summary":"登録簿生成、カタログ検証、索引生成に成功。既存の欠落文書警告のみ"},{"command":"git diff --check","status":"passed","summary":"差分の空白エラーなし"},{"command":"npm run test:unit","status":"not_run","summary":"親runnerのallowlisted validationに委譲"},{"command":"npm run test:integration","status":"not_run","summary":"親runnerのallowlisted validationに委譲"},{"command":"npm run validate:schema","status":"not_run","summary":"親runnerのallowlisted validationに委譲"}]}
+</specdojo_executor_evidence>

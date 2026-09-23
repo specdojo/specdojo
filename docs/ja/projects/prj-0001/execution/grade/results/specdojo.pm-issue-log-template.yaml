@@ -1,0 +1,84 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:pm-issue-log-template
+path: docs/ja/specdojo/templates/pm-issue-log-template.md
+target: kata
+rubric: grade-rubric-v1
+verdict: fail
+score: 59
+graded_at: "2026-09-10T15:32:17.642Z"
+graded_by: gemma-expert-executor
+content_hash: a4bcfc2b5eaca28b2e580996cd317272ecb2f549df3642c99665fd90d661710a
+categories:
+  consistency:
+    score: 13
+  usability:
+    score: 75
+  architecture:
+    score: 100
+  quality:
+    score: 50
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 1
+    score: 25
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 0
+    score: 0
+  vp-qe-kata-conformance:
+    level: 0
+    score: 0
+  vp-ux-readability:
+    level: 1
+    score: 25
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 2
+  major: 3
+  minor: 0
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 1
+    message: Frontmatter の rulebook ID が `specdojo:pjr-rulebook` となっており, 正しくは `specdojo:pm-issue-log-rulebook` である。
+    anchor: ""
+  - id: F003
+    severity: blocker
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: rulebook で必須とされている 6 つの構成章（概要、課題ログ一覧、優先度と期限、対応計画、進捗レビュー、関連ドキュメント）がすべて欠落している。
+    anchor: ""
+  - id: F005
+    severity: major
+    rule: vp-ux-readability
+    line: 1
+    message: べきある構成要素や入力ガイド（_TODO_ 等）が一切なく, 初見の読者が rulebook に沿って内容を記述するための手段が提供されていない。
+    anchor: ""
+  - id: F002
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 11
+    message: 本文中で文書を「派生ビュー」と定義しているが, 対応する rulebook および sample では手動作成の構造化文書として定義されており, 成果物間の整合性が取れていない。
+    anchor: ""
+  - id: F004
+    severity: blocker
+    rule: vp-qe-kata-conformance
+    line: 11
+    message: rulebook で定義された構成を無視し, 自動生成ビューとしての定義となっているため, 作成用テンプレートとしての責務を果たしていない。
+    anchor: ""

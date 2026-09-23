@@ -1,0 +1,60 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:stc-rulebook
+path: docs/ja/specdojo/rulebooks/stc-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 91
+graded_at: "2026-09-03T10:51:03.286Z"
+graded_by: gemma-expert-executor
+content_hash: 66e067389baa045b987c208820c8bc781831efef8288aad41543c66c089f5291
+categories:
+  consistency:
+    score: 100
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 75
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 1
+  minor: 0
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: 参照されるサンプル `specdojo:stc-sample` が rulebook で定義された必須構成（章番号および項目）に従っておらず, 実例としての役割を果たしていない。
+    anchor: "# 総合テストカタログ 対象別 作成ルール"

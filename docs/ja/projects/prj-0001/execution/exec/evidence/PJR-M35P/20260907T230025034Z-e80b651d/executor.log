@@ -1,0 +1,14 @@
+実装を完了しました。
+
+- snapshot と統合前検査で生成物除外判定を共通化
+- `.specdojo/doc-index.json` の再生成による誤ブロックを防止
+- Git 差分取得失敗時のファイル全文出力を廃止
+- 単体・統合回帰テストを追加
+- 実行設定ガイドと PJR-M35P 個票を更新
+- result は executor 指示どおり未編集
+
+型検査、ESLint、Markdown lint、catalog／register／index、リンク検査は成功しています。親 runner 所有のテストと schema 検証は未実行です。
+
+<specdojo_executor_evidence>
+{"final_message":"gitignore 済みの既知生成物を snapshot・統合前検査の双方から安全に除外し、Git 差分取得失敗時の全文出力を廃止した。回帰テスト、実行設定ガイド、PJR-M35P 個票も更新済み。","validations":[{"command":"npx prettier --write src/exec-agent-protected-config.ts src/exec-worktree-ops.ts tests/src/exec-agent-protected-config.test.ts tests/src/exec-worktree-ops.integration.test.ts docs/ja/specdojo/guides/exec-config-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-m35p-protection-false-positive-generated.md && npx markdownlint docs/ja/specdojo/guides/exec-config-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-m35p-protection-false-positive-generated.md","status":"passed","summary":"変更対象の整形と Markdown lint が成功"},{"command":"npm run typecheck","status":"passed","summary":"TypeScript 型検査がエラーなしで完了"},{"command":"npx eslint src/exec-agent-protected-config.ts src/exec-worktree-ops.ts tests/src/exec-agent-protected-config.test.ts tests/src/exec-worktree-ops.integration.test.ts","status":"passed","summary":"変更した TypeScript の ESLint が成功"},{"command":"npx tsx src/specdojo.ts catalog validate && npx tsx src/specdojo.ts register build && npx tsx src/specdojo.ts index build","status":"failed","summary":"tsx の IPC ソケット作成が sandbox の EPERM で失敗。成果物起因ではないため同等の node --import tsx で再実行"},{"command":"node --import tsx src/specdojo.ts catalog validate && node --import tsx src/specdojo.ts register build && node --import tsx src/specdojo.ts index build","status":"passed","summary":"catalog 検証、登録簿生成、1549件の文書 index 生成が成功。既存の未作成文書警告のみ"},{"command":"node --import tsx tools/docs/src/validate-history-links.ts","status":"passed","summary":"履歴文書のリンク記法検査が成功"},{"command":"npm run test:unit","status":"not_run","summary":"親 runner の allowlisted validation のため未実行"},{"command":"npm run test:integration","status":"not_run","summary":"親 runner の allowlisted validation のため未実行"},{"command":"npm run validate:schema","status":"not_run","summary":"親 runner の allowlisted validation のため未実行"}]}
+</specdojo_executor_evidence>

@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "task_id": "JBR-grade-kata-48cd668e941c",
+  "run_id": "attempt-1",
+  "stage": {
+    "role": "executor",
+    "actor": "specdojo-runner",
+    "status": "succeeded",
+    "started_at": "2026-09-08T22:42:11.678Z",
+    "completed_at": "2026-09-09T00:10:56.350Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/routines/rtn-grade-recheck.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/recipes/pm-roles-recipe.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/br-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/atc-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/br-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/imp-data-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-kata-48cd668e941c.json",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 7,
+    "summary": ".../prj-0001/routines/rtn-grade-recheck.yaml       |  4 ++-\n docs/ja/specdojo/recipes/pm-roles-recipe.md        | 27 +++++++++++++++++\n docs/ja/specdojo/rulebooks/br-rulebook.md          | 27 +++++++++--------\n docs/ja/specdojo/samples/atc-sample.md             | 35 ++++++++++++++++++++++\n docs/ja/specdojo/samples/br-sample.md              | 32 ++++++++++----------\n docs/ja/specdojo/samples/imp-data-sample.md        | 27 +++++++++++++++++\n 6 files changed, 123 insertions(+), 29 deletions(-)"
+  },
+  "validations": [
+    {
+      "id": "job-command",
+      "source": "runner",
+      "command": "npm run build\ntools/grade/run-per-document.sh --run-id job-grade-kata-all-2026-W37 --kind all --limit 5 --changed-only=true --ungraded=true\ncat logs/grade/runs/per-document/job-grade-kata-all-2026-W37/results.tsv",
+      "status": "passed",
+      "summary": "exit 0"
+    }
+  ],
+  "final_message": "Runner command exit 0.",
+  "command": {
+    "shell": "/bin/sh -eu",
+    "value": "npm run build\ntools/grade/run-per-document.sh --run-id job-grade-kata-all-2026-W37 --kind all --limit 5 --changed-only=true --ungraded=true\ncat logs/grade/runs/per-document/job-grade-kata-all-2026-W37/results.tsv",
+    "exit_code": 0,
+    "stdout_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-48cd668e941c/attempt-1/command.stdout.log",
+    "stderr_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-48cd668e941c/attempt-1/command.stderr.log"
+  },
+  "log_refs": [
+    {
+      "kind": "command-stdout",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-48cd668e941c/attempt-1/command.stdout.log",
+      "bytes": 3629,
+      "truncated": false
+    },
+    {
+      "kind": "command-stderr",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-48cd668e941c/attempt-1/command.stderr.log",
+      "bytes": 0,
+      "truncated": false
+    }
+  ]
+}

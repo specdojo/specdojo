@@ -1,0 +1,89 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_0865d79150ce496ca8c7e3e1914d226b
+  ts: "2026-09-07T13:14:00Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: テンプレートを同梱パッケージ側へフォールバックさせる
+    - field: description
+      from: ""
+      to: specdojoRootDir() は利用者リポジトリのルートを返すため、npm でインストールした利用者のリポジトリに docs/ja/specdojo/templates が存在せず Template not found で失敗する。利用者リポジトリに無い場合は同梱パッケージ側のテンプレートを解決する経路を設ける。npm 公開の前提条件である。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-07"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_75680d02d0e24f90bd382625cf1994ab
+  ts: "2026-09-07T13:14:07Z"
+  action: update
+  actor: orchestrator
+  from_status: open
+  to_status: open
+  reason: 件名が分かる topic slug へ整える
+  changes:
+    - field: id
+      from: prj-0001:pjr-kk07-item
+      to: prj-0001:pjr-kk07-template-resolution-fallback
+  previous_event_id: reg_0865d79150ce496ca8c7e3e1914d226b
+- v: 1
+  id: reg_f37de3ad6728462f99d5700bf4538214
+  ts: "2026-09-08T11:21:46Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_75680d02d0e24f90bd382625cf1994ab
+- v: 1
+  id: reg_5489ca6c59604ed29ef1b0d67abfd254
+  ts: "2026-09-08T11:34:49Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_f37de3ad6728462f99d5700bf4538214
+- v: 1
+  id: reg_1c28f9764eb6402b9719767b987c8516
+  ts: "2026-09-08T12:37:11Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: テンプレート解決を template-resolution.ts へ集約し、利用者リポジトリに無い場合は同梱側へフォールバックする。kata を配置しない最小構成で register add と build が成功することを実地で確認した。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-08"
+  previous_event_id: reg_5489ca6c59604ed29ef1b0d67abfd254

@@ -1,0 +1,105 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_d2216eb1502e46569996a4e64e9e575a
+  ts: "2026-09-07T22:29:11Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 保護機構が gitignore 済みの生成物を設定変更として検知する
+    - field: description
+      from: ""
+      to: "agent-config-write が .specdojo/doc-index.json の変更を保護対象の設定改変として検知し、PJR-MBVM の統合をブロックした。同ファイルは .gitignore 済みの生成物で index build が再生成するキャッシュであり、commit されることもない。plan が index build を指示すれば必然的に変更されるため、同じブロックが繰り返し発生する。あわせて、保護機構が差分取得に失敗して git diff failed: Not a git repository を出力し、差分の代わりに全内容を申し送りへ書き出す問題も解消する。"
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-08"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_2b7c8dc828f9458292c85f44799b5c4e
+  ts: "2026-09-07T22:59:48Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_d2216eb1502e46569996a4e64e9e575a
+- v: 1
+  id: reg_7b7ed61f70cb4a2abd0aba9a4ab162a9
+  ts: "2026-09-07T23:15:13Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: runner validation 'test-unit' failed: tests/src/exec-agent-protected-config.test.ts (21 tests / 1 failed) - records a git failure reason without copying the whole file"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: runner validation 'test-unit' failed: tests/src/exec-agent-protected-config.test.ts (21 tests / 1 failed) - records a git failure reason without copying the whole file"
+  previous_event_id: reg_2b7c8dc828f9458292c85f44799b5c4e
+- v: 1
+  id: reg_4e971d793267411c81a9948dcf267d8e
+  ts: "2026-09-08T03:35:25Z"
+  action: start
+  actor: gemma-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_7b7ed61f70cb4a2abd0aba9a4ab162a9
+- v: 1
+  id: reg_c75726d7efe040aea947667c3ebdb468
+  ts: "2026-09-08T03:39:20Z"
+  action: review
+  actor: gemma-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_4e971d793267411c81a9948dcf267d8e
+- v: 1
+  id: reg_86b2db371ac0474588738e74f04b78e6
+  ts: "2026-09-08T03:40:51Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: 既知の生成物パスとして .specdojo/doc-index.json を保護対象から除外した。gitignore 該当を一律除外すると agent が .gitignore と設定を同時に作ってすり抜けられるため、用途が確定したパスだけを列挙する設計とした。差分取得失敗時は全内容ではなく失敗理由を記録する。実地で exec-defaults.yaml と package.json が保護対象に残ることを確認した。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-08"
+  previous_event_id: reg_c75726d7efe040aea947667c3ebdb468

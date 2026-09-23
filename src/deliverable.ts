@@ -1,9 +1,9 @@
 import { existsSync } from "node:fs";
-import { resolve } from "node:path";
 import { type Command } from "commander";
 import { addProjectOption, printCommandError, resolveCatalogPath } from "./catalog.js";
 import { runGenerate } from "./catalog-generate.js";
 import { specdojoRootDir } from "./specdojo-config.js";
+import { resolveSpecdojoPath } from "./template-resolution.js";
 import { applyTrash, planTrash } from "./deliverable-trash.js";
 
 function collectCommaSeparated(value: string, previous: string[]): string[] {
@@ -40,8 +40,8 @@ export function registerDeliverableCommands(program: Command): void {
   scaffold.action((opts) => {
     try {
       const catalogPath = resolveCatalogPath(opts);
-      const templatesPath = resolve(specdojoRootDir(), "docs/ja/specdojo/templates");
-      const rulebooksPath = resolve(specdojoRootDir(), "docs/ja/specdojo/rulebooks");
+      const templatesPath = resolveSpecdojoPath("docs/ja/specdojo/templates");
+      const rulebooksPath = resolveSpecdojoPath("docs/ja/specdojo/rulebooks");
       if (!existsSync(templatesPath)) {
         throw new Error(`Templates directory not found: ${templatesPath}`);
       }
@@ -58,6 +58,7 @@ export function registerDeliverableCommands(program: Command): void {
         force: !!opts.force,
         dryRun: !!opts.dryRun,
         dctNames: (opts.dct as string[]) ?? [],
+        resourceRoots: { repositoryRoot: specdojoRootDir() },
       });
 
       const createdLabel = opts.dryRun ? "Would create" : "Created";

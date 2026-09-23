@@ -1,0 +1,160 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-0144",
+  "run_id": "20260906T125012317Z-f102904a",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-06T12:50:12.317Z",
+    "completed_at": "2026-09-06T12:58:45.779Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": ".github/instructions/markdown.instructions.md",
+      "status": "M"
+    },
+    {
+      "path": ".vscode/tasks.json",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0144-fmt-md-table-vs-code.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/docs-editing-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/guide-authoring-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/recipe-authoring-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/rulebook-authoring-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/sample-authoring-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/standard-authoring-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/template-authoring-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "packages/vscode-specdojo/package.json",
+      "status": "M"
+    },
+    {
+      "path": "packages/vscode-specdojo/src/extension.ts",
+      "status": "M"
+    },
+    {
+      "path": "tools/docs/src/fmt-md-table.ts",
+      "status": "D"
+    },
+    {
+      "path": "packages/vscode-specdojo/src/markdown-table.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/vscode-markdown-table.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 15,
+    "summary": ".github/instructions/markdown.instructions.md      |  2 +-\n .vscode/tasks.json                                 |  2 +-\n .../pjr-0144-fmt-md-table-vs-code.md               | 30 +++++---\n docs/ja/specdojo/guides/docs-editing-guide.md      | 20 +----\n .../specdojo/standards/guide-authoring-standard.md |  2 +-\n .../standards/recipe-authoring-standard.md         |  2 +-\n .../standards/rulebook-authoring-standard.md       |  2 +-\n .../standards/sample-authoring-standard.md         |  2 +-\n .../standards/standard-authoring-standard.md       |  2 +-\n .../standards/template-authoring-standard.md       |  2 +-\n packages/vscode-specdojo/package.json              |  6 +-\n packages/vscode-specdojo/src/extension.ts          | 31 ++++++++\n tools/docs/src/fmt-md-table.ts                     | 88 ----------------------\n 13 files changed, 67 insertions(+), 124 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write packages/vscode-specdojo/src/extension.ts packages/vscode-specdojo/src/markdown-table.ts packages/vscode-specdojo/package.json tests/vscode-markdown-table.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-0144-fmt-md-table-vs-code.md docs/ja/specdojo/guides/docs-editing-guide.md docs/ja/specdojo/standards/rulebook-authoring-standard.md docs/ja/specdojo/standards/recipe-authoring-standard.md docs/ja/specdojo/standards/sample-authoring-standard.md docs/ja/specdo…",
+      "status": "passed",
+      "summary": "変更対象を整形"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-0144-fmt-md-table-vs-code.md docs/ja/specdojo/guides/docs-editing-guide.md docs/ja/specdojo/standards/rulebook-authoring-standard.md docs/ja/specdojo/standards/recipe-authoring-standard.md docs/ja/specdojo/standards/sample-authoring-standard.md docs/ja/specdojo/standards/guide-authoring-standard.md docs/ja/specdojo/standards/template-authoring-standard.md docs/ja/specdojo/standards/standard-authoring-standard.md .github/in…",
+      "status": "passed",
+      "summary": "Markdown違反なし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "TypeScript型検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run vscode:package",
+      "status": "passed",
+      "summary": "コンパイルとvscode-specdojo-0.1.0.vsix生成に成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "catalog検証成功。既存の欠落文書警告のみ"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "1524件の文書index生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーなし"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0144\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/stale.md\n  src/unrelated.ts\ncommit-targets:\n  execution/exec/…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.1.0 validate:schema:yaml\n> tsx tools/docs/src/validate-yaml-schema.ts --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bps-template.yaml: schema docs/specdojo/sc…"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0144\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-ZxuKuY/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-pZnV4z/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-5r4ufL/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-z9LMtq/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-0kL7Ji/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-CN49DU/pjr-0001-topic.md\nWrote agent stdout: /tmp/specdojo-agent-command-pJzszy/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-OyePlc/outputs/partial.txt\n\n Test Files  98 passed (98)\n      Tests  1373 passed (1373)\n   Start at  21:58:12\n   Duration  33.40s (transform 2.34s, setup 591ms, import 21.09s, tests 24.70s, environm…"
+    }
+  ],
+  "final_message": "fmt-md-tableをspecdojo.formatMarkdownTableとしてVS Code拡張へ統合し、旧CLI削除、互換テスト・関連文書更新、vsix生成まで完了",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-0144/20260906T125012317Z-f102904a/executor.log",
+      "bytes": 2999,
+      "truncated": false
+    }
+  ]
+}

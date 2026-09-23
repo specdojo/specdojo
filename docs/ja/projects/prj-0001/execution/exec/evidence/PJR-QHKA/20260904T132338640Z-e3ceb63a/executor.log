@@ -1,0 +1,10 @@
+Detached Unit の運用規約を追加し、個票の作業内容・対応結果も更新しました。
+
+- [docs-structure-guide.md](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-QHKA/docs/ja/specdojo/guides/docs-structure-guide.md:338)
+- [pjr-qhka-docs-structure-detached-unit.md](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-QHKA/docs/ja/projects/prj-0001/controls/project-register/pjr-qhka-docs-structure-detached-unit.md:229)
+
+result ファイルと登録簿ステータスは pipeline 指示どおり変更していません。
+
+<specdojo_executor_evidence>
+{"final_message":"Detached Unit の採用条件、配置、片方向トレーサビリティ、二重 worktree 案と実装要件を文書化し、個票を更新した。","validations":[{"command":"npx prettier --write docs/ja/specdojo/guides/docs-structure-guide.md && npx markdownlint docs/ja/specdojo/guides/docs-structure-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-qhka-docs-structure-detached-unit.md && npm run -s lint:md","status":"passed","summary":"整形、対象 lint、Markdown 全件 lint が成功"},{"command":"npx tsx src/specdojo.ts register build","status":"not_run","summary":"sandbox の IPC ソケット制約で CLI 本体の起動前に停止。IPC 不要の同等コマンドで代替検証"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿派生文書の生成に成功"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"全カタログが OK。未作成成果物に関する既存 warning のみ"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"doc index 1508件の生成に成功"},{"command":"git diff --check","status":"passed","summary":"差分の空白・形式エラーなし"}]}
+</specdojo_executor_evidence>

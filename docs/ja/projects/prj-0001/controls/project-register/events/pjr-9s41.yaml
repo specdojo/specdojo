@@ -1,0 +1,120 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ced76bdd8e324812a974133aa518f5c0
+  ts: "2026-08-31T21:38:15Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: exec 系テンプレートを frontmatter_template 形式へ統一する
+    - field: description
+      from: ""
+      to: Markdown テンプレートに2つの形式が併存している。成果物テンプレートは自身の Frontmatter に frontmatter_template を持ち、exec と result のテンプレートは本文先頭の _FRONTMATTER_ を生成処理が置換する。後者は Frontmatter を持たないため、grade をはじめとする Frontmatter 前提のツールが扱えない。document-metadata-standard は両形式を併記するのみで、なぜ分けるかの理由を記していない。exec plan の Frontmatter は origin や owner や approach や on_critical_path が条件で増減するため、単純な雛形では表現できない。全項目を雛形へ並べて空値の行を除去する後処理を加えれば統一できる。ただし値が固定で存在自体が条件となる項目には別の工夫が要る。対象は 31 ファイル、生成処理は exec-plans と exec-results と exec-register と job に分散する。exec は中核機能であり慎重に進める。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-01"
+    - field: due
+      from: ""
+      to: "2026-10-31"
+- v: 1
+  id: reg_af8fd462f0264d1c9b1952c86919a419
+  ts: "2026-08-31T22:51:32Z"
+  action: update
+  actor: manual
+  from_status: open
+  to_status: open
+  reason: 役割の違いを構造へ反映する方針へ転換したため
+  changes:
+    - field: id
+      from: prj-0001:pjr-9s41-template-frontmatter-unification
+      to: prj-0001:pjr-9s41-exec-templates-separation
+    - field: title
+      from: exec 系テンプレートを frontmatter_template 形式へ統一する
+      to: exec 系テンプレートを成果物テンプレートから分離する
+    - field: description
+      from: Markdown テンプレートに2つの形式が併存している。成果物テンプレートは自身の Frontmatter に `frontmatter_template` を持ち、exec と result のテンプレートは本文先頭の `_FRONTMATTER_` を生成処理が置換する。
+      to: exec と result のテンプレート 31 件は、成果物テンプレートと役割が異なるにもかかわらず同じ docs/ja/specdojo/templates/ に置かれている。成果物テンプレートは rulebook から template として宣言され kata の一部を成すが、exec 系を宣言する rulebook は 0 件である。exec 系は plan と result を生成するための実行基盤の内部テンプレートであり、対応する成果物を持たない。grade が kata として評価しようとすること自体が誤りである。docs/ja/specdojo/exec-templates/ へ移し、template-authoring-standard の適用範囲を成果物テンプレートに限定する。ディレクトリで分かれるため grade の除外も単純になる。当初は frontmatter_template 形式への統一を検討したが、役割が違うものを同じ形式にする理由がないため方針を転換した。_FRONTMATTER_ 方式は維持する。
+    - field: priority
+      from: low
+      to: medium
+    - field: due
+      from: "2026-10-31"
+      to: "2026-09-30"
+  previous_event_id: reg_ced76bdd8e324812a974133aa518f5c0
+- v: 1
+  id: reg_bb57ccc07d7d4da9b9de986f139f398a
+  ts: "2026-08-31T22:57:32Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_af8fd462f0264d1c9b1952c86919a419
+- v: 1
+  id: reg_46649e0dc50b44f6bdfb2685dee7195b
+  ts: "2026-08-31T23:09:36Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=lefthook.yml; agent must record the required change in the result …"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=lefthook.yml; agent must record the required change in the result …"
+  previous_event_id: reg_bb57ccc07d7d4da9b9de986f139f398a
+- v: 1
+  id: reg_3ba05d27746e42a5a773921626094af8
+  ts: "2026-08-31T23:16:12Z"
+  action: review
+  actor: manual
+  from_status: waiting
+  to_status: review
+  reason: 実装と検証が完了し申し送りも適用したため
+  changes:
+    - field: status
+      from: waiting
+      to: review
+  previous_event_id: reg_46649e0dc50b44f6bdfb2685dee7195b
+- v: 1
+  id: reg_2cec1780807b47fea7d7f8d715f5b3ef
+  ts: "2026-08-31T23:16:13Z"
+  action: close
+  actor: manual
+  from_status: review
+  to_status: done
+  reason: 実装・検証・レビューが完了したため
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-01"
+    - field: conclusion
+      from: "-"
+      to: exec と result のテンプレート 31 件を docs/ja/specdojo/exec-templates/ へ分離した。template-authoring-standard の適用範囲を成果物テンプレートに限定し、exec 系は plan/result ライフサイクルガイドに従う旨を明記した。grade はこれまで Frontmatter を持たない exec 系まで対象に含めて全件走査が停止していたが、分離により 248 文書の走査が通るようになった。統合テストの fixture は exec-templates だけを複製していたため register add が読む pjr-*-template.md が欠けて 7 件が失敗した。2 つのディレクトリが必要になったため templates も複製するよう修正した。lefthook.yml の glob 追加は保護された設定のため result の申し送りへ記録し、オーケストレーターが適用した。
+  previous_event_id: reg_3ba05d27746e42a5a773921626094af8

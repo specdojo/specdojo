@@ -42,22 +42,26 @@ CLI を直接操作する場合の代表フローは [遂行の技活用ガイ�
 
 `package.json` に、対話起動用の npm スクリプトを `orch:` 接頭辞で用意しています。Claude Code / Codex はモデル別に用意し、`:work` 付きは固定 worktree で起動します。
 
-| スクリプト          | CLI・モデル             | worktree                                        |
-| ------------------- | ----------------------- | ----------------------------------------------- |
-| `orch:sonnet`       | Claude Code / `sonnet`  | なし                                            |
-| `orch:sonnet:work`  | Claude Code / `sonnet`  | `.claude/worktrees/claude-work`（自動作成）     |
-| `orch:opus`         | Claude Code / `opus`    | なし                                            |
-| `orch:opus:work`    | Claude Code / `opus`    | `.claude/worktrees/claude-work`（自動作成）     |
-| `orch:terra`        | Codex / `gpt-5.6-terra` | なし                                            |
-| `orch:terra:work`   | Codex / `gpt-5.6-terra` | `../worktrees/codex-work`（無ければ自動作成）   |
-| `orch:sol`          | Codex / `gpt-5.6-sol`   | なし                                            |
-| `orch:sol:work`     | Codex / `gpt-5.6-sol`   | `../worktrees/codex-work`（無ければ自動作成）   |
-| `orch:copilot`      | GitHub Copilot          | なし                                            |
-| `orch:copilot:work` | GitHub Copilot          | `../worktrees/copilot-work`（無ければ自動作成） |
-| `orch:qwen`         | OpenCode / Qwen 3.8     | なし                                            |
-| `orch:qwen:work`    | OpenCode / Qwen 3.8     | `../worktrees/qwen-work`（無ければ自動作成）    |
-| `orch:gemma`        | OpenCode / Gemma 4      | なし                                            |
-| `orch:gemma:work`   | OpenCode / Gemma 4      | `../worktrees/gemma-work`（無ければ自動作成）   |
+| スクリプト          | CLI・モデル                         | worktree                                        |
+| ------------------- | ----------------------------------- | ----------------------------------------------- |
+| `orch:sonnet`       | Claude Code / `sonnet`              | なし                                            |
+| `orch:sonnet:work`  | Claude Code / `sonnet`              | `../worktrees/claude-work`（無ければ自動作成）  |
+| `orch:opus`         | Claude Code / `opus`                | なし                                            |
+| `orch:opus:work`    | Claude Code / `opus`                | `../worktrees/claude-work`（無ければ自動作成）  |
+| `orch:terra`        | Codex / `gpt-5.6-terra`             | なし                                            |
+| `orch:terra:work`   | Codex / `gpt-5.6-terra`             | `../worktrees/codex-work`（無ければ自動作成）   |
+| `orch:sol`          | Codex / `gpt-5.6-sol`               | なし                                            |
+| `orch:sol:work`     | Codex / `gpt-5.6-sol`               | `../worktrees/codex-work`（無ければ自動作成）   |
+| `orch:copilot`      | GitHub Copilot                      | なし                                            |
+| `orch:copilot:work` | GitHub Copilot                      | `../worktrees/copilot-work`（無ければ自動作成） |
+| `orch:qwen`         | OpenCode / Qwen 3.8                 | なし                                            |
+| `orch:qwen:work`    | OpenCode / Qwen 3.8                 | `../worktrees/qwen-work`（無ければ自動作成）    |
+| `orch:gemma`        | OpenCode / Gemma 4                  | なし                                            |
+| `orch:gemma:work`   | OpenCode / Gemma 4                  | `../worktrees/gemma-work`（無ければ自動作成）   |
+| `orch:agy`          | Antigravity / `gemini-3.1-pro-high` | なし                                            |
+| `orch:agy:work`     | Antigravity / `gemini-3.1-pro-high` | `../worktrees/agy-work`（無ければ自動作成）     |
+
+Antigravity CLI（`agy`）はファイル定義の agent を持たないため、Codex と同じく SSOT `.agents/specdojo-orchestrator.agent.md` の本文を `-i`（初期プロンプトを与えて対話を続ける）で渡します。ラッパーは不要で、`.agents/rules/*.md` の薄いラッパー経由で `.github/instructions/` の規則も読み込まれます。
 
 用途に応じて使い分けます。
 
@@ -74,7 +78,7 @@ npm run orch:sonnet:work
 
 frontier モデルは Claude Code が `opus`、Codex が `gpt-5.6-sol` に対応します。通常運用はそれぞれ既定の `sonnet` / `gpt-5.6-terra` を使います。
 
-worktree 付きは、固定名の worktree を使い、無ければ起動時に作成します。Claude Code は `--worktree` で `.claude/worktrees/claude-work` を自動作成します。Codex / GitHub Copilot / OpenCode は worktree を作成できないため、`git worktree add ../worktrees/<cli>-work` を先行させてから作業ディレクトリ指定で入ります（Codex / Copilot は `-C`、OpenCode は起動ディレクトリの位置引数）。
+worktree 付きは、全 CLI で `tools/worktree/open-agent-worktree.sh` を通して固定名の worktree を使い、無ければ起動時に作成します。ブランチは `worktree/<name>`、配置は `../worktrees/<name>` です。既存 worktree のブランチが一致しない場合は agent を起動しません。Claude Code の `--worktree` はブランチ名と配置を他の CLI に揃えられないため使用しません。
 
 ## 3. 対話の進め方
 
@@ -114,4 +118,10 @@ worktree 付きは、固定名の worktree を使い、無ければ起動時に�
 | OpenCode / Qwen    | `.opencode/agents/qwen-orchestrator.md`    |
 | OpenCode / Gemma   | `.opencode/agents/gemma-orchestrator.md`   |
 
-本文を変更する場合は SSOT を編集し、各ラッパーの本文を同期します。モデル・権限・provider の変更は本文ではなく、各ラッパーの frontmatter / TOML 側で行います。
+本文を変更する場合は、次の手順で全環境を同期します。
+
+1. SSOT の `.agents/specdojo-orchestrator.agent.md` を編集します。
+2. Markdown ラッパー4ファイルでは frontmatter より後を、Codex ラッパーでは `developer_instructions` の複数行文字列を、SSOT と同じ本文に更新します。
+3. `npm run lint:orchestrator-sync` を実行し、5つのラッパーが SSOT とバイト単位で一致することを確認します。
+
+この検証は対象ファイルの変更時に pre-commit hook からも自動実行され、不一致があれば commit を停止します。モデル・権限・provider の変更は本文ではなく、各ラッパーの frontmatter / TOML 側で行います。

@@ -1,0 +1,84 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:cdfd-sample
+path: docs/ja/specdojo/samples/cdfd-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: pass
+score: 91
+graded_at: "2026-09-21T11:57:07.575Z"
+graded_by: codex-expert-executor
+content_hash: bccef843a4e229a3b3c26d94e7bfdc22d113ead5157cc0bcdd3f381bcc08e4b3
+categories:
+  consistency:
+    score: 75
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 88
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 3
+    score: 75
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 3
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 25
+    anchor: 在庫グループからの補充依頼を商品台帳の発注条件へ合わせ、店主代表が承認した発注内容を仕入先と後続の入荷検品へ引き渡す。
+    message: >-
+      本書の `P-01-01` は補充数量を発注単位に合わせる責務を仕入グループに置く一方, 横断の `cdfd-uc-sample` は `H-01` 成立前に在庫グループが発注単位に合う数量を確定すると定めているため,
+      発注単位への数量調整・検証の担当を一方へ統一してください。
+  - id: F002
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 210
+    anchor: >-
+      | `E-02-02` | `P-02-03`    | 仕入記録の更新結果を読み返して検品結果との一致を確認できない | 当該商品の在庫記録更新、売場補充、返品引渡し   |
+      未確定の仕入記録と検品済み商品を分けて保持し、一致を確認できるまで `P-02-03` の更新と読み返しを再試行する | 一致確認後は `P-02-03` で在庫記録を更新し、受入品は `P-02-04`、返品対象は
+      `P-02-05` へ進む |
+    message: >-
+      `P-02-03` の完了条件は仕入記録と在庫記録の双方の確認を要求する一方, `E-02-02` は仕入記録の不一致しか扱わないため, 在庫記録の更新または読戻しを確認できない場合の停止範囲, 扱い,
+      再開条件を追加してください。
+  - id: F003
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 210
+    anchor: >-
+      | `E-02-02` | `P-02-03`    | 仕入記録の更新結果を読み返して検品結果との一致を確認できない | 当該商品の在庫記録更新、売場補充、返品引渡し   |
+      未確定の仕入記録と検品済み商品を分けて保持し、一致を確認できるまで `P-02-03` の更新と読み返しを再試行する | 一致確認後は `P-02-03` で在庫記録を更新し、受入品は `P-02-04`、返品対象は
+      `P-02-05` へ進む |
+    message: >-
+      完成 sample の `P-02-03` は仕入記録と在庫記録を更新しますが, 更新失敗の例である `E-02-02` は仕入記録だけを対象としているため, 在庫記録を確認できない場合も同じ例外へ含めるか,
+      別の主要例外として例示してください。

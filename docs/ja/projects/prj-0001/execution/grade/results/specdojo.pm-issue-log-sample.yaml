@@ -1,0 +1,66 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:pm-issue-log-sample
+path: docs/ja/specdojo/samples/pm-issue-log-sample.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 95
+graded_at: "2026-09-05T19:25:34.522Z"
+graded_by: gemma-expert-executor
+content_hash: 011399b7a58b370c5fb3badd887695824a576613077c037a5c0cb9ef1f5f49fb
+categories:
+  consistency:
+    score: 75
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 100
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-qe-kata-conformance:
+    level: 4
+    score: 100
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 1
+  minor: 1
+  note: 0
+findings:
+  - id: F002
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 11
+    message: 更新責任者が未記載である（rulebook 6.1 違反）。
+    anchor: "| IS-001 | 2026-04-02 | テストデータ不足     | 高     | データ生成スクリプト追加 | QA担当   | 2026-04-08 | 対応中     |"
+  - id: F001
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 22
+    message: 優先度基準および期限設定ルールが未記載である（rulebook 6.3 違反）。
+    anchor: ""

@@ -1,0 +1,147 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_cf3d6c7d633d4687ad75f11a18a20736
+  ts: "2026-09-20T04:55:18Z"
+  action: add
+  actor: specdojo-orchestrator (claude)
+  from_status: null
+  to_status: open
+  reason: 9/13 以降の 253 commit のうち exec の記帳が 182 件（72%）を占めており、利用者が案 A（merge commit への同梱）を選択
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: exec の記帳 commit を merge commit に畳み develop の本線を 1 タスク 1 commit にする
+    - field: description
+      from: ""
+      to: register / Schedule の worktree 実行が develop の第一親線に start・prepare・apply・merge・review の 5〜6 commit を並べ履歴が読みづらい。prepare / apply は exec ブランチに置き、register の遷移は merge commit（失敗時は wait commit）に同梱して、本線を 1 タスク 1 commit にする
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-20"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_282b65e0e4984b3289dfbd3c6a2390b7
+  ts: "2026-09-20T12:09:28Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_cf3d6c7d633d4687ad75f11a18a20736
+- v: 1
+  id: reg_cdb7520462f941769c2f9d30b065c4c9
+  ts: "2026-09-20T12:21:08Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: rate limit reached
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: rate limit reached
+  previous_event_id: reg_282b65e0e4984b3289dfbd3c6a2390b7
+- v: 1
+  id: reg_9d4cc2116cc94ec9a552a285ee9f0828
+  ts: "2026-09-20T12:34:57Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_cdb7520462f941769c2f9d30b065c4c9
+- v: 1
+  id: reg_938c52ed7052488a839e468839310909
+  ts: "2026-09-20T13:04:02Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: rate limit reached
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+  previous_event_id: reg_9d4cc2116cc94ec9a552a285ee9f0828
+- v: 1
+  id: reg_5faf4920dd91463a994b155987c0a9a6
+  ts: "2026-09-21T00:49:53Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_938c52ed7052488a839e468839310909
+- v: 1
+  id: reg_f93f783c03704773ada6fdd95def890f
+  ts: "2026-09-21T01:03:09Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: Error: Cannot connect to API: Unable to connect. Is the computer able to access the url?"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: rate limit reached
+      to: "agent exited with non-zero code: Error: Cannot connect to API: Unable to connect. Is the computer able to access the url?"
+  previous_event_id: reg_5faf4920dd91463a994b155987c0a9a6
+- v: 1
+  id: reg_c6b36edd336c4f4fbb6e532500b6c3d0
+  ts: "2026-09-21T01:22:16Z"
+  action: review
+  actor: specdojo-orchestrator (claude)
+  from_status: waiting
+  to_status: review
+  reason: codex / claude の実装を引き継ぎ、親検証 test-integration の失敗 5 件と統合再開の不具合をオーケストレーターが修正して develop へ統合。reporter は Ollama 停止のため未実行
+  changes:
+    - field: status
+      from: waiting
+      to: review
+  previous_event_id: reg_f93f783c03704773ada6fdd95def890f
+- v: 1
+  id: reg_f2f37d5d33fd4f938c807816c9e2a319
+  ts: "2026-09-21T02:45:48Z"
+  action: close
+  actor: specdojo-orchestrator (claude)
+  from_status: review
+  to_status: done
+  reason: codex-expert / claude-expert の実装を引き継ぎ、統合テストと統合再開の不具合をオーケストレーターが修正。PJR-TBHH の実行で first-parent に merge commit 1 つだけが増えることを確認して利用者が close
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-21"
+  previous_event_id: reg_c6b36edd336c4f4fbb6e532500b6c3d0

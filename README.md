@@ -1,64 +1,103 @@
 # SpecDojo
 
-SpecDojoは、**仕様駆動開発のためのドキュメントフレームワーク** です。
-プロダクトの構築・改修に必要なドキュメントを体系化し、
-記述規約、サンプル、ツールを通じて、
-プロダクトのライフサイクル全体を一貫して支援します。
+SpecDojo は、仕様駆動開発のためのドキュメントフレームワークです。
+プロダクトの構築・改修に必要な情報を体系化し、人と生成 AI が同じ成果物を作成・検証・更新できるようにします。
 
-仕様駆動開発に適した、**生成AIが扱い易く、人も理解できて、記述も負担にならない**、
-そんなドキュメントのフレームワークを目指しています。
+SpecDojo は、次のものを npm package とオープンソースのテンプレートリポジトリとして提供します。
 
-**SpecDojo** では、仕様駆動開発のためのドキュメントの、
+- 成果物の記述規則、作成手順、テンプレート、サンプル
+- プロジェクトとプロダクトの文書体系
+- register、Schedule、実行、レビューを支援する CLI
 
-- **作成ルール**と**ガイドライン**
-- **サンプルドキュメント** (おばあちゃんの駄菓子屋)
-- **作成支援ツール**
+日本語ドキュメントは [SpecDojo ドキュメントサイト](https://specdojo.github.io/specdojo/ja/) で公開しています。
 
-を、オープンソース・テンプレートリポジトリとして公開しています。
+## この README の役割
 
-ホームページはこちら [SpecDojo](https://specdojo.github.io/specdojo/ja/)
+この README は、GitHub やパッケージページでリポジトリを訪れた人に、SpecDojo の概要、入手方法、詳しい文書への入口を示します。
+文書体系や CLI 操作の詳細はここへ複製せず、ドキュメントサイトを正本とします。
 
-## Quick Start
+## 使い始める
 
-- GitHubのテンプレートプロジェクトとして公開していますので、[specdojoリポジトリ](https://github.com/specdojo/specdojo)の右上の`Use this template`ボタンから`Create a new repository`クリックして新規リポジトリを作成してください。
+### npm で導入する
 
-- [specdojoリポジトリ](https://github.com/specdojo/specdojo)の右上の`Code`ボタンから`Download ZIP`をクリックして、ファイルをダウンロードし、`docs/ja/specdojo`以下をプロジェクトに取り込んでください。
+既定では、プロダクトリポジトリ `app1/` の隣に SpecDojo 専用リポジトリ
+`app1-specdojo/` と worktree 用ディレクトリ `app1-worktrees/` を置く Detached Unit で始めます。
+workspace 直下で次を実行します。
 
-## ディレクトリ構成
-
-```plaintext
-docs/
-├── ja/                   # 多言語化対応（将来: en/ etc.）
-│   ├── specdojo/
-│   │   ├── guidelines/   # ドキュメント作成ガイド
-│   │   ├── rules/        # ドキュメント記述規約
-│   ├── sample-gcs-project-docs/ # おばあちゃんの駄菓子屋サンプルドキュメント
-│   │   ├── prj-0001/ # プロジェクトの構築や改修時に追加されるドキュメント群
-│   │   │   ├── 010-プロジェクト概要/
-│   │   │   ├── 020-プロジェクトスコープ/
-│   │   │   ├── 030-プロジェクト課題と解決アプローチ/
-│   │   │   ├── 040-プロジェクトマネジメント/
-│   │   │   └── 090-決定記録/
-│   │   └── prj-0002/ ...
-│   └── sample-gcs-product-docs/ # おばあちゃんの駄菓子屋サンプルドキュメント
-│       ├── 010-業務仕様/
-│       ├── 020-外部IF仕様/
-│       ├── 030-アーキテクチャ/
-│       ├── 040-システム設計/
-│       ├── 050-業務受入条件/
-│       ├── 060-非機能要件/
-│       ├── 070-システム受入条件/
-│       ├── 080-テスト/
-│       ├── 090-移行設計/
-│       └── 100-運用設計/
-└── en/                   # 将来の英語ドキュメント用ディレクトリ
+```sh
+mkdir app1-specdojo app1-worktrees
+git -C app1-specdojo init
+cd app1-specdojo
+npm init -y
+npm install specdojo
+npm install --save-dev @specdojo/docs-lint
+npx specdojo config init
 ```
+
+`config init` は `.specdojo/specdojo.config.json` とその親ディレクトリを作成します。既定では
+`prj-0001` と `docs/ja/projects/prj-0001/controls/project-register` を使う最小構成です。別の
+project ID や配置を使う場合は、生成された設定の `current_project`、`projects` のキー、
+`base_path` を次へ進む前に変更してください。catalog や schedule へ進むときに追加するキーは
+[SpecDojo設定リファレンス](https://specdojo.github.io/specdojo/ja/specdojo/references/specdojo-config-reference.html)で確認できます。
+
+agent にタスクを実行させる場合は、利用する provider の設定を配置します。この手順は register
+だけを使う最小構成では省略できます。
+
+```sh
+npx specdojo config scaffold --provider codex
+```
+
+`--provider` には `claude`、`codex`、`copilot`、`opencode` を指定できます。従来の
+`npx specdojo exec scaffold --provider <name>` も互換入口として引き続き利用できます。
+
+最初の登録簿と todo を作り、一覧を生成します。
+
+```sh
+npx specdojo register scaffold --project prj-0001
+npx specdojo register add \
+  --project prj-0001 \
+  --type todo \
+  --title "最初のタスク"
+npx specdojo register build --project prj-0001
+```
+
+ここまでの手順は、利用側へ kata をコピーせずに実行できます。生成された todo の個票が編集対象、
+`generated/pjr-index.md` が個票から作る一覧です。`register add` が表示した ID を使い、agent を
+起動せずに exec plan の内容まで確認できます。
+
+```sh
+npx specdojo exec plan --project prj-0001 --register PJR-XXXX
+```
+
+kata は既定で npm package 内のものを参照します。適用中の rulebook を確認し、プロジェクトで
+上書きする場合だけ eject します。
+
+```sh
+npx specdojo kata list --kind rulebook
+npx specdojo kata show specdojo:pjr-rulebook
+npx specdojo kata eject --id specdojo:pjr-rulebook
+```
+
+provider と agent の設定を終えた後は、同じ登録項目を実行できます。成功後は人が result と成果物を
+確認し、登録項目を close します。
+
+```sh
+npx specdojo exec run --project prj-0001 --register PJR-XXXX
+```
+
+### テンプレートリポジトリとして導入する
+
+npm package の参照方式ではなく、SpecDojo のソースと文書体系一式を最初から配置して
+カスタマイズする場合は、このリポジトリの **Use this template** から新しいリポジトリを作成します。
+通常の利用開始には、更新差分を小さく保てる npm 導入を推奨します。
+
+導入後の初期設定と、最初のタスクを完了するまでの手順は [Quick Start ガイド](https://specdojo.github.io/specdojo/ja/specdojo/guides/quick-start-guide.html) を参照してください。
+全体像から確認する場合は [全体概要ガイド](https://specdojo.github.io/specdojo/ja/specdojo/guides/specdojo-overview-guide.html) を参照してください。
 
 ## ライセンス
 
-本リポジトリは MIT ライセンスです（[LICENSE](LICENSE) 参照）。
+本リポジトリは MIT ライセンスです。詳細は [LICENSE](LICENSE) を参照してください。
 
-## 著者 / 問い合わせ
+## フィードバック
 
-Author: @naoji3x<br>
-Issue もしくは Pull Request にてフィードバックを歓迎します。
+Issue または Pull Request を歓迎します。

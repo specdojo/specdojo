@@ -1,0 +1,72 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:pm-plan-recipe
+path: docs/ja/specdojo/recipes/pm-plan-recipe.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 89
+graded_at: "2026-09-04T15:10:44.945Z"
+graded_by: gemma-expert-executor
+content_hash: 73817c5d19f3eacb53b5b47b836a0334f9505f1428a7207e10e7d9bef6b9aa6e
+categories:
+  consistency:
+    score: 88
+  usability:
+    score: 83
+  architecture:
+    score: 100
+  quality:
+    score: 88
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 2
+    score: 50
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 1
+  minor: 2
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 69
+    message: 第4章「各章の書き方」において、rulebook の標準構成に含まれる「未決事項」の記述ガイドが欠落している。
+    anchor: ""
+  - id: F002
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 71
+    message: 成果物の具体化を支援するという recipe の種別責務に対し、第4章の内容が不十分であり、rulebook の要約に近い形式になっている。
+    anchor: "| -------- | -------------------------------- | ---------------------------- |"
+  - id: F003
+    severity: major
+    rule: vp-ux-readability
+    line: 71
+    message: 第4章「各章の書き方」に、読者の思考を促す問いや具体化のための詳細なガイドがなく、構成案の提示に留まっているため、実用的レシピとしての記述水準が不足している。
+    anchor: "| -------- | -------------------------------- | ---------------------------- |"

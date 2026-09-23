@@ -60,6 +60,97 @@ export function changedAgentGitStateFields(
   return changed;
 }
 
+function commandStdout(snapshot: string): string {
+  try {
+    const parsed: unknown = JSON.parse(snapshot);
+    if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+      const stdout = (parsed as { stdout?: unknown }).stdout;
+      if (typeof stdout === "string") return stdout.trim();
+    }
+  } catch {
+    // 解析できないスナップショットは「値なし」として扱い、申し送りの記録自体は続ける。
+  }
+  return "";
+}
+
+function describeHead(snapshot: string): string {
+  const [revParse = "", symbolicRef = ""] = snapshot.split("\n");
+  const commit = commandStdout(revParse) || "(none)";
+  const ref = commandStdout(symbolicRef) || "(detached)";
+  return `${ref} @ ${commit}`;
+}
+
+function localConfigEntries(snapshot: string): string[] {
+  try {
+    const parsed: unknown = JSON.parse(snapshot);
+    if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
+      const entries = (parsed as { entries?: unknown }).entries;
+      if (Array.isArray(entries)) {
+        return entries.filter((entry): entry is string => typeof entry === "string");
+      }
+    }
+  } catch {
+    // 同上。キー差分を出せない場合は、フィールド名だけの記録に留める。
+  }
+  return [];
+}
+
+function localConfigKeys(entries: readonly string[]): string[] {
+  return entries.map((entry) => {
+    const separator = entry.indexOf("\n");
+    return separator === -1 ? entry : entry.slice(0, separator);
+  });
+}
+
+function describeKeyDifference(before: readonly string[], after: readonly string[]): string[] {
+  const removed = [...before];
+  const added: string[] = [];
+  for (const key of after) {
+    const index = removed.indexOf(key);
+    if (index === -1) added.push(key);
+    else removed.splice(index, 1);
+  }
+  const lines: string[] = [];
+  if (added.length > 0) lines.push(`+ ${[...new Set(added)].sort().join(", ")}`);
+  if (removed.length > 0) lines.push(`- ${[...new Set(removed)].sort().join(", ")}`);
+  return lines;
+}
+
+// block した Git 状態変更を、人が判断できる形へ要約する。local config は値に資格情報を
+// 含みうるためキー名だけを出力し、値は適用者が repository 側で確認する前提にする。
+export function describeAgentGitStateChanges(
+  repoRoot: string,
+  before: AgentGitStateSnapshot,
+  fields: readonly string[],
+): string {
+  const after = captureAgentGitStateSnapshot(repoRoot);
+  const sections: string[] = [];
+  if (fields.includes("HEAD")) {
+    sections.push(
+      [
+        "HEAD:",
+        `  before: ${describeHead(before.head)}`,
+        `  after:  ${describeHead(after.head)}`,
+      ].join("\n"),
+    );
+  }
+  if (fields.includes("local-config")) {
+    const difference = describeKeyDifference(
+      localConfigKeys(localConfigEntries(before.localConfig)),
+      localConfigKeys(localConfigEntries(after.localConfig)),
+    );
+    sections.push(
+      [
+        "local-config（値は資格情報を含みうるため出力しない。キー名のみ）:",
+        ...(difference.length > 0
+          ? difference.map((line) => `  ${line}`)
+          : ["  キー構成は同じで値だけが変わりました。"]),
+      ].join("\n"),
+    );
+  }
+  return sections.join("\n");
+}
+
 export function agentGitStateViolation(fields: readonly string[]): string {
   return (
     "agent-git-state-write: Git state changes detected; " +

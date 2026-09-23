@@ -1,0 +1,150 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:pm-plan-rulebook
+path: docs/ja/specdojo/rulebooks/pm-plan-rulebook.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 62
+graded_at: "2026-09-03T04:06:27.979Z"
+graded_by: codex-expert-executor
+content_hash: b9d6d1c7d1b127fca2be97dd1f3f7b086a6cf91371a56e9fe0b8eea26ea4f937
+categories:
+  consistency:
+    score: 38
+  usability:
+    score: 83
+  architecture:
+    score: 100
+  quality:
+    score: 38
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 1
+    score: 25
+  vp-arc-conciseness:
+    level: 3
+    score: 75
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-qe-kata-conformance:
+    level: 1
+    score: 25
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 10
+  minor: 4
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 1
+    message: >-
+      プロジェクト概要・スコープ・成功基準を直接の根拠と定めている一方、`dct-project-management-template.yaml` の `pm-plan.depends_on` は空配列であり、前提成果物への依存が
+      Schedule・scaffold に展開されないため、カタログまたは本書の依存方針を統一する必要がある。
+    anchor: "# プロジェクト管理計画 作成ルール"
+  - id: F007
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 1
+    message: >-
+      全体方針では概要・スコープ・成功基準を直接の根拠と必須化し、template もそれらを `based_on` に生成する一方、本表では `based_on` を任意としているため、rulebook
+      単体利用時にも根拠参照が欠落しない必須条件へ統一する必要がある。
+    anchor: "# プロジェクト管理計画 作成ルール"
+  - id: F005
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 1
+    message: >-
+      Frontmatter で `pm-plan-template` を宣言しているにもかかわらず、同じ見出し順と必須区分を「本文構成（標準テンプレ）」として再掲しており、template を骨組みの正本とする Rulebook
+      記述標準に従って章固有の意味要件だけへ整理する必要がある。
+    anchor: "# プロジェクト管理計画 作成ルール"
+  - id: F008
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: template 宣言済みの系統で見出し・表の骨組みを rulebook に再掲しており、rulebook は意味要件、template は骨組みという種別責務を明確に分離する必要がある。
+    anchor: "# プロジェクト管理計画 作成ルール"
+  - id: F014
+    severity: minor
+    rule: vp-ux-readability
+    line: 1
+    message: 「本文構成（標準テンプレ）」が宣言済み template の見出し一覧を重複して示すため、読者がどちらを骨組みの正本として参照すべきか迷わないよう、章を意味要件中心へ改める必要がある。
+    anchor: "# プロジェクト管理計画 作成ルール"
+  - id: F006
+    severity: major
+    rule: vp-qe-verifiability
+    line: 1
+    message: >-
+      統合管理表に価値・リスクまたは根拠 ID と証跡・正本を結ぶ列や結合 ID がなく、冒頭で要求する「どの証跡で判断するか」と recipe の管理対象単位の Trace を pass / fail
+      判定できないため、各行から根拠と証跡を追跡できる構造を定義する必要がある。
+    anchor: "# プロジェクト管理計画 作成ルール"
+  - id: F009
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: recipe の仕上げチェックは管理対象ごとに価値またはリスクから証跡まで一続きで追跡することを要求するが、rulebook と template の統合管理表にはその対応を保持する欄がなく、適用方法が一致していない。
+    anchor: "# プロジェクト管理計画 作成ルール"
+  - id: F002
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 1
+    message: 成果物カタログの `pm-plan` 完了条件は構成管理・技術管理の観点を要求しているが、統合管理方針の管理対象にその観点も委譲先もなく、rulebook に従った成果物がカタログの完了条件を満たせないため整合させる必要がある。
+    anchor: "# プロジェクト管理計画 作成ルール"
+  - id: F010
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: 現金支出・作業時間・継続運用負荷を分ける規則に対し、sample は「参加者の時間」一行へ試用準備時間と日常操作負荷を混在させているため、完成例でも三者を区別する必要がある。
+    anchor: "# プロジェクト管理計画 作成ルール"
+  - id: F003
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 1
+    message: >-
+      `pm-plan-sample.md` の判断ゲートは実在する `SC-01` と `AC-01`〜`AC-04` を条件 ID
+      で参照せず、条件不足時の扱いも示していないため、本書が要求する成功基準との追跡方法を完成例へ適用する必要がある。
+    anchor: "# プロジェクト管理計画 作成ルール"
+  - id: F011
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: 条件 ID と不足時の扱いを要求しているのに、sample の判断ゲートは「初期成功基準と受入条件」などの総称だけを記載しており、rulebook の適用例として成立していない。
+    anchor: "# プロジェクト管理計画 作成ルール"
+  - id: F004
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 1
+    message: >-
+      本書と組織定義 sample は成果物責任の正本を RACI としているが、`pm-plan-sample.md` は「作業順序・担当」の正本を Schedule のみとし RACI を示していないため, Task owner
+      と成果物責任の正本が混同されないよう統一する必要がある。
+    anchor: "# プロジェクト管理計画 作成ルール"
+  - id: F012
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: RACI を正本として示す要件に対し、sample の正本表は担当情報を Schedule のみに割り当てて RACI を欠いており、組織定義 sample とも適用結果が矛盾している。
+    anchor: "# プロジェクト管理計画 作成ルール"
+  - id: F013
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 1
+    message: 未決事項に `_UNDECIDED_:` を付ける規則と template の「現状」欄に対し、sample は未決論点をラベルなしで記載しているため、完成例へ共通ラベルを適用する必要がある。
+    anchor: "# プロジェクト管理計画 作成ルール"

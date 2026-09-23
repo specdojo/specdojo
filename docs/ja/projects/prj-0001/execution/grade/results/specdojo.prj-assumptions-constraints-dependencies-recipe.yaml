@@ -1,0 +1,60 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:prj-assumptions-constraints-dependencies-recipe
+path: docs/ja/specdojo/recipes/prj-assumptions-constraints-dependencies-recipe.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 91
+graded_at: "2026-09-04T16:44:19.668Z"
+graded_by: gemma-expert-executor
+content_hash: 003b26577dd58b97934fe75aeb8d4775c35bdf120d384c9503595780756a616c
+categories:
+  consistency:
+    score: 100
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 75
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 1
+  minor: 0
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 86
+    message: 前提条件の例として「店頭で使う端末を利用できる」を挙げているが, 直前の記述（line 85）および rulebook の規定に反しており, 依存関係（4.3.）の例とするべきである。
+    anchor: "問い:"

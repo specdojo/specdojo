@@ -1,0 +1,200 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-MRJT",
+  "run_id": "20260909T143435409Z-ef7df5d2",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-09T14:34:35.409Z",
+    "completed_at": "2026-09-09T14:46:44.957Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/040-system-design/sysd-job-execution.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-mrjt-job-run-identity-from-period.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-t2kk-grade-recheck-routine.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/routines/rtn-grade-recheck.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/routine-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/job-definition-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "src/job.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/job.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 10,
+    "summary": ".../040-system-design/sysd-job-execution.md        | 10 +--\n .../pjr-mrjt-job-run-identity-from-period.md       | 24 ++++---\n .../pjr-t2kk-grade-recheck-routine.md              |  6 +-\n docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml |  8 +--\n .../prj-0001/routines/rtn-grade-recheck.yaml       |  7 +-\n docs/ja/specdojo/guides/routine-operation-guide.md |  2 +-\n docs/ja/specdojo/references/command-reference.md   |  2 +-\n .../specdojo/standards/job-definition-standard.md  | 19 +++--\n src/job.ts                                         | 13 +++-\n tests/src/job.test.ts                              | 81 ++++++++++++++++++++++\n 10 files changed, 137 insertions(+), 35 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write src/job.ts tests/src/job.test.ts docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml docs/ja/projects/prj-0001/routines/rtn-grade-recheck.yaml docs/ja/product/040-system-design/sysd-job-execution.md docs/ja/specdojo/standards/job-definition-standard.md docs/ja/specdojo/references/command-reference.md docs/ja/specdojo/guides/routine-operation-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-t2kk-grade-recheck-routine.md docs/ja/projects/prj-0001/controls/proje…",
+      "status": "passed",
+      "summary": "変更10ファイルを整形"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/product/040-system-design/sysd-job-execution.md docs/ja/specdojo/standards/job-definition-standard.md docs/ja/specdojo/references/command-reference.md docs/ja/specdojo/guides/routine-operation-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-t2kk-grade-recheck-routine.md docs/ja/projects/prj-0001/controls/project-register/pjr-mrjt-job-run-identity-from-period.md",
+      "status": "passed",
+      "summary": "変更Markdownにエラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "TypeScript型検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "ESLint成功"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts job validate --project prj-0001",
+      "status": "failed",
+      "summary": "sandboxのtsx IPCソケット作成がEPERM。同等コマンドで再検証済み"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts routine validate --project prj-0001",
+      "status": "failed",
+      "summary": "sandboxのtsx IPCソケット作成がEPERM。同等コマンドで再検証済み"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts job validate --project prj-0001",
+      "status": "passed",
+      "summary": "7 Job、0エラー"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts routine validate --project prj-0001",
+      "status": "passed",
+      "summary": "7 Routine、0エラー"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts exec run --job job-grade-kata --project prj-0001 --input period=2026-W38 --input kind=all --input limit=5 --input changed_only=true --input ungraded=true --scheduled-at 2026-09-14T01:00:00+09:00 --dry-run",
+      "status": "passed",
+      "summary": "初日Run ID JBR-grade-kata-f0f448d1ae21を解決"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts exec run --job job-grade-kata --project prj-0001 --input period=2026-W38 --input kind=all --input limit=5 --input changed_only=true --input ungraded=true --scheduled-at 2026-09-15T01:00:00+09:00 --dry-run",
+      "status": "passed",
+      "summary": "翌日は別Run ID JBR-grade-kata-54034b38a840を解決"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts exec run --job job-grade-kata --project prj-0001 --input period=display-only-change --input kind=all --input limit=5 --input changed_only=true --input ungraded=true --scheduled-at 2026-09-14T01:00:00+09:00 --dry-run",
+      "status": "passed",
+      "summary": "period変更後も同じ実行枠は同じRun IDを解決"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿派生ビュー生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "カタログ検証成功。既存の文書未作成警告のみ"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "文書索引1587件を生成"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:unit",
+      "status": "not_run",
+      "summary": "親runnerの設定済み検証に委任"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:integration",
+      "status": "not_run",
+      "summary": "親runnerの設定済み検証に委任"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema",
+      "status": "not_run",
+      "summary": "親runnerの設定済み検証に委任"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MRJT\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nInstalling worktree dependencies: .\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/d.yaml\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/tampered.md\ncommit-targets:\n  execution/exec/results/T-T-doc-030-result.md\ncommit-scope: skipped non-target changes (left in worktree):\n  src/sneaky.ts\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\ncommit-scope: skipped non-target changes (left in worktree):\n  docs/stale.md\n  src/unrelated.ts\ncommit-targets:\n  execution/exec/…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.1.0 validate:schema:yaml\n> tsx tools/docs/src/validate-yaml-schema.ts --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-template.yaml: schema docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bps-template.yaml: schema docs/specdojo/sc…"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MRJT\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-BSHQOR/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-zeHLHk/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-ak9BqC/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-ty7AlR/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-GVJffS/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-kXXEE9/pjr-0001-topic.md\nbefore\nWrote agent stdout: /tmp/specdojo-agent-command-GKBxkL/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-DEp4H4/outputs/partial.txt\n\n Test Files  99 passed (99)\n      Tests  1422 passed (1422)\n   Start at  23:47:01\n   Duration  20.88s (transform 1.60s, setup 393ms, import 11.15s, tests 19.15s, e…"
+    }
+  ],
+  "final_message": "Job Run IDをscript再開キーへ使用し、scheduled_at単位の日次実行と同一Run retryを両立した",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-MRJT/20260909T143435409Z-ef7df5d2/executor.log",
+      "bytes": 4739,
+      "truncated": false
+    }
+  ]
+}

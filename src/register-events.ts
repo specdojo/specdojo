@@ -1,10 +1,10 @@
-// Register の現在値は個票 frontmatter、変更履歴は同じ個票の register_events が正本である。
-// イベントを個票内の追記配列にすることで、遷移ごとのファイル増加と項目間の共有ログ競合を
-// 避ける。ファイル更新は呼び出し側が state と event をまとめて原子的に置換する。
+// Register の現在値は個票 frontmatter、変更履歴は events/pjr-XXXX.yaml が正本である。
+// イベントは項目ごとの YAML 配列へ古い順に追記し、個票本文の変更と監査履歴の差分を分離する。
 
 import { createHash, randomUUID } from "node:crypto";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
+import yaml from "js-yaml";
 import {
   CELL_NONE,
   displayIdFromTicketFilename,
@@ -15,6 +15,10 @@ import {
   VALID_STATUSES,
 } from "./register-item.js";
 import { isUtcIsoSeconds, nowUtcIsoSeconds } from "./exec-shared.js";
+
+export const REGISTER_EVENTS_DIRNAME = "events";
+export const REGISTER_EVENTS_SCHEMA_MODELINE =
+  "# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml";
 
 export const REGISTER_EVENT_FIELDS = [
   "status",
@@ -69,11 +73,25 @@ export type RegisterEventV1 = {
 };
 
 export const REGISTER_EVENT_ID_RE = /^reg_[a-f0-9]{32}$/;
+const REGISTER_EVENT_FILENAME_RE = /^pjr-([0-9abcdefghjkmnpqrstvwxyz]{4})\.yaml$/;
 
 type RegisterFieldValues = Record<RegisterEventField, string>;
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+export function registerEventFilename(displayId: string): string {
+  return `${displayId.toLowerCase()}.yaml`;
+}
+
+export function displayIdFromRegisterEventFilename(filename: string): string | undefined {
+  const match = REGISTER_EVENT_FILENAME_RE.exec(filename);
+  return match ? `PJR-${match[1].toUpperCase()}` : undefined;
+}
+
+export function registerEventFilePath(projectRegisterPath: string, displayId: string): string {
+  return join(projectRegisterPath, REGISTER_EVENTS_DIRNAME, registerEventFilename(displayId));
 }
 
 export function registerEventFieldValues(
@@ -112,9 +130,6 @@ export function diffRegisterEventFields(
   for (const field of REGISTER_EVENT_FIELDS) {
     const from = before?.[field] ?? "";
     const to = after?.[field] ?? "";
-    // 未設定は、frontmatter にキーが無い状態（""）と表示用の未設定セル（"-"）の2通りの
-    // 表現を取る。両者は同じ意味のため変更として扱わない。起票直後の個票で completed /
-    // conclusion / block_reason が「"" から "-" へ変わった」と記録されるのを防ぐ。
     if (isUnsetFieldValue(from) && isUnsetFieldValue(to)) continue;
     if (from !== to) changes.push({ field, from, to });
   }
@@ -241,6 +256,43 @@ export function validateRegisterEventShape(value: unknown, source: string): stri
 }
 
 export function readRegisterEventsFromContent(content: string, source: string): RegisterEventV1[] {
+  let parsed: unknown;
+  try {
+    parsed = yaml.load(content);
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : String(error);
+    throw new Error(`${source}: invalid register event YAML: ${detail}`);
+  }
+  if (!Array.isArray(parsed)) throw new Error(`${source}: register event file must be an array`);
+  const events: RegisterEventV1[] = [];
+  parsed.forEach((event, index) => {
+    const errors = validateRegisterEventShape(event, `${source}[${index}]`);
+    if (errors.length > 0) throw new Error(errors.join("; "));
+    events.push(event as RegisterEventV1);
+  });
+  return events;
+}
+
+export function serializeRegisterEvents(events: readonly RegisterEventV1[]): string {
+  return `${REGISTER_EVENTS_SCHEMA_MODELINE}\n${yaml.dump([...events], {
+    lineWidth: -1,
+    noRefs: true,
+    quotingType: '"',
+  })}`;
+}
+
+export function appendRegisterEvent(content: string | undefined, event: RegisterEventV1): string {
+  const events = content ? readRegisterEventsFromContent(content, "register event file") : [];
+  if (events.some((existing) => existing.id === event.id))
+    return content ?? serializeRegisterEvents(events);
+  const previous = events.at(-1);
+  const next: RegisterEventV1 = previous
+    ? { ...event, previous_event_id: previous.id }
+    : { ...event };
+  return serializeRegisterEvents([...events, next]);
+}
+
+export function readEmbeddedRegisterEvents(content: string, source: string): RegisterEventV1[] {
   const fields = readSpecdojoFields(content);
   if (fields.register_events === undefined) return [];
   if (!Array.isArray(fields.register_events)) {
@@ -255,73 +307,71 @@ export function readRegisterEventsFromContent(content: string, source: string): 
   return events;
 }
 
-export function appendRegisterEvent(content: string, event: RegisterEventV1): string {
-  const events = readRegisterEventsFromContent(content, "register item");
-  if (events.some((existing) => existing.id === event.id)) return content;
-  const previous = events.at(-1);
-  const next: RegisterEventV1 = previous
-    ? { ...event, previous_event_id: previous.id }
-    : { ...event };
+export function removeEmbeddedRegisterEvents(content: string): string {
   return updateSpecdojoFields(content, (fields) => {
-    fields.register_events = [...events, next];
+    delete fields.register_events;
   });
 }
 
 export function validateRegisterEventLog(
-  content: string,
-  filename: string,
+  ticketContent: string,
+  eventContent: string,
+  ticketFilename: string,
+  eventFilename: string,
   timeZone: string,
 ): string[] {
   let events: RegisterEventV1[];
   try {
-    events = readRegisterEventsFromContent(content, filename);
+    events = readRegisterEventsFromContent(eventContent, eventFilename);
   } catch (error) {
     return [error instanceof Error ? error.message : String(error)];
   }
-  if (events.length === 0) return [];
+  if (events.length === 0) return [`${eventFilename}: event log must not be empty`];
 
   const errors: string[] = [];
   const ids = new Set<string>();
   let previous: RegisterEventV1 | undefined;
   for (const event of events) {
-    if (ids.has(event.id)) errors.push(`${filename}: duplicate register event id ${event.id}`);
+    if (ids.has(event.id)) errors.push(`${eventFilename}: duplicate register event id ${event.id}`);
     ids.add(event.id);
     if (previous) {
       if (event.previous_event_id !== previous.id) {
         errors.push(
-          `${filename}: event ${event.id} does not reference previous event ${previous.id}`,
+          `${eventFilename}: event ${event.id} does not reference previous event ${previous.id}`,
         );
       }
       if (event.ts < previous.ts) {
-        errors.push(`${filename}: event ${event.id} timestamp precedes the previous event`);
+        errors.push(`${eventFilename}: event ${event.id} timestamp precedes the previous event`);
       }
       if (event.from_status !== previous.to_status) {
         errors.push(
-          `${filename}: event ${event.id} starts at ${event.from_status ?? "null"}, expected ${previous.to_status}`,
+          `${eventFilename}: event ${event.id} starts at ${event.from_status ?? "null"}, expected ${previous.to_status}`,
         );
       }
     } else if (event.previous_event_id !== undefined) {
-      errors.push(`${filename}: first event must not have previous_event_id`);
+      errors.push(`${eventFilename}: first event must not have previous_event_id`);
     }
     const statusChange = event.changes.find((change) => change.field === "status");
     if (statusChange) {
       const expectedFrom = event.from_status ?? "";
       if (statusChange.from !== expectedFrom || statusChange.to !== event.to_status) {
         errors.push(
-          `${filename}: event ${event.id} status change disagrees with transition fields`,
+          `${eventFilename}: event ${event.id} status change disagrees with transition fields`,
         );
       }
     } else if (event.from_status !== event.to_status) {
-      errors.push(`${filename}: event ${event.id} changes status without a status change entry`);
+      errors.push(
+        `${eventFilename}: event ${event.id} changes status without a status change entry`,
+      );
     }
     previous = event;
   }
 
-  const current = registerEventFieldValues(content, filename, timeZone);
-  if (!current) return [...errors, `${filename}: cannot read current register item state`];
+  const current = registerEventFieldValues(ticketContent, ticketFilename, timeZone);
+  if (!current) return [...errors, `${ticketFilename}: cannot read current register item state`];
   if (previous?.to_status !== current.status) {
     errors.push(
-      `${filename}: latest event status ${previous?.to_status ?? CELL_NONE} does not match item_status ${current.status}`,
+      `${eventFilename}: latest event status ${previous?.to_status ?? CELL_NONE} does not match ${ticketFilename} item_status ${current.status}`,
     );
   }
   return errors;
@@ -331,13 +381,54 @@ export function validateRegisterEventDocs(projectRegisterPath: string, timeZone:
   if (!existsSync(projectRegisterPath)) return [];
   const errors: string[] = [];
   const eventIds = new Map<string, string>();
-  const entries = readdirSync(projectRegisterPath, { withFileTypes: true }).sort((a, b) =>
+  const tickets = new Map<string, { filename: string; content: string }>();
+  for (const entry of readdirSync(projectRegisterPath, { withFileTypes: true })) {
+    if (!entry.isFile()) continue;
+    const id = displayIdFromTicketFilename(entry.name);
+    if (!id) continue;
+    const content = readFileSync(join(projectRegisterPath, entry.name), "utf8");
+    if (readSpecdojoFields(content).register_events !== undefined) {
+      errors.push(
+        `${entry.name}: register_events must be stored in events/${registerEventFilename(id)}`,
+      );
+    }
+    tickets.set(id, { filename: entry.name, content });
+  }
+
+  const eventsPath = join(projectRegisterPath, REGISTER_EVENTS_DIRNAME);
+  if (!existsSync(eventsPath)) {
+    return tickets.size > 0
+      ? [...errors, `${REGISTER_EVENTS_DIRNAME}/: register event directory not found`]
+      : errors;
+  }
+  const seenItems = new Set<string>();
+  const entries = readdirSync(eventsPath, { withFileTypes: true }).sort((a, b) =>
     a.name.localeCompare(b.name),
   );
   for (const entry of entries) {
-    if (!entry.isFile() || !displayIdFromTicketFilename(entry.name)) continue;
-    const content = readFileSync(join(projectRegisterPath, entry.name), "utf8");
-    errors.push(...validateRegisterEventLog(content, entry.name, timeZone));
+    if (!entry.isFile()) continue;
+    const id = displayIdFromRegisterEventFilename(entry.name);
+    if (!id) {
+      if (entry.name.endsWith(".yaml"))
+        errors.push(`${entry.name}: invalid register event filename`);
+      continue;
+    }
+    seenItems.add(id);
+    const ticket = tickets.get(id);
+    if (!ticket) {
+      errors.push(`${entry.name}: no matching register item for ${id}`);
+      continue;
+    }
+    const content = readFileSync(join(eventsPath, entry.name), "utf8");
+    errors.push(
+      ...validateRegisterEventLog(
+        ticket.content,
+        content,
+        ticket.filename,
+        `${REGISTER_EVENTS_DIRNAME}/${entry.name}`,
+        timeZone,
+      ),
+    );
     let events: RegisterEventV1[];
     try {
       events = readRegisterEventsFromContent(content, entry.name);
@@ -351,6 +442,13 @@ export function validateRegisterEventDocs(projectRegisterPath: string, timeZone:
       } else {
         eventIds.set(event.id, entry.name);
       }
+    }
+  }
+  for (const [id, ticket] of tickets) {
+    if (!seenItems.has(id)) {
+      errors.push(
+        `${ticket.filename}: missing register event file events/${registerEventFilename(id)}`,
+      );
     }
   }
   return errors;

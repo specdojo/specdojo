@@ -1,0 +1,33 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: prj-0001:cdfd-derived-content-grade-criteria
+document: prj-0001:cdfd-derived-content
+path: docs/ja/product/010-business-specs/010-data-flow/cdfd-derived-content.md
+graded_at: "2026-09-12T01:08:20.793Z"
+graded_by: codex-expert-executor
+content_hash: 9a8ad943c25b8b62f500a9f60198d226a5b3b0784d4b3c65843372fab8fae86f
+summary:
+  satisfied: 2
+  unsatisfied: 1
+  total: 3
+criteria:
+  - id: DC-001
+    text: >-
+      deliverable scaffold・catalog build・register build・exec refresh・yaml-pages build・index
+      buildと一括build/watchの役割および起動関係が表と図で確認できること
+    roles:
+      - BA
+    viewpoint: vp-ba-business-value
+    status: unsatisfied
+    reason: 一括buildに含まれるdashboard buildが欠落し、watchの実際の個別scope起動および条件付き工程の非起動経路も表と図へ反映されていない。
+  - id: DC-002
+    text: 個票Frontmatterから生成する登録項目一覧・状態別・優先度別・担当者別ビューを含め、各正本と生成先の対応、直接編集してはならない派生成果物、再生成時の上書き境界が識別できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: satisfied
+  - id: DC-003
+    text: 正本不足・検証失敗・部分生成失敗・生成物の陳腐化を検知した場合の停止条件と再実行経路が確認できること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: satisfied

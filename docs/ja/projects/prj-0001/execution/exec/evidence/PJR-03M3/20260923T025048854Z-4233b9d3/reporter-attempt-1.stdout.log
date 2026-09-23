@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "mode": "edit",
+  "outcome": "complete",
+  "summary": [
+    "git-branching-standard に 3 層の切り分け（develop への経路）と運用規模別の条件を明記した。",
+    "あわせて `docs/ja/specdojo/guides/branch-workflow-guide.md` を更新し、具体的なフローや PR 差分表示の復旧手順などの詳細を文書化した。",
+    "PJR-03M3 の個票に実施内容を反映した。"
+  ],
+  "changed_files": [
+    {
+      "path": "docs/ja/specdojo/standards/git-branching-standard.md",
+      "summary": "ブランチ定義への 3 層の切り分けおよび運用規模別条件の追記。"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/branch-workflow-guide.md",
+      "summary": "ブランチワークフローの詳細、PR 差分表示の復旧手順などの追記。"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-03m3-branch-standard-three-layers.md",
+      "summary": "対応結果の記録。"
+    }
+  ],
+  "handoff": [],
+  "approach": "標準文書 `git-branching-standard.md` に原則的な切り分け基準を明記し、運用上の詳細なガイドラインを `branch-workflow-guide.md` に集約することで、標準の簡潔さと運用の具体性を両立させた。その後、個票を更新し、静的検査（`prettier`, `markdownlint`）およびカタログ検証（`catalog validate`, `register build`, `index build`）、親 runner による統合検証（`test-integration`, `validate-schema`, `typecheck`, `test-unit`）を通じて整合性を確認した。",
+  "block_reason": ""
+}

@@ -226,6 +226,7 @@ based_on:
   - mip-index
 supersedes: []
 ---
+
 ```
 
 #### 8.1.1. 概要（hypercare）

@@ -1,0 +1,53 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_355015e616244b0aa6a33967e8a90d1b
+  ts: "2026-09-17T22:14:56Z"
+  action: add
+  actor: specdojo-orchestrator (claude)
+  from_status: null
+  to_status: open
+  reason: grade の background job がメモリ不足で停止した原因の一つとして利用者が対策を要求
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: devcontainer に残る vscode-server の残骸プロセスを抑止・掃除する
+    - field: description
+      from: ""
+      to: VS Code の再接続・更新のたびに旧 server と孤児 extension host が container 内に残りメモリを圧迫するため、init を有効化し、接続時に残骸を掃除するスクリプトと npm script を用意する
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: OPS
+    - field: registered
+      from: ""
+      to: "2026-09-18"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_ee209b56c2cd4599a8b02ce87c957d56
+  ts: "2026-09-23T01:41:14Z"
+  action: close
+  actor: orchestrator
+  from_status: open
+  to_status: done
+  reason: rebuild 後の動作確認完了
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-23"
+    - field: conclusion
+      from: "-"
+      to: "init: true と kill-stale-vscode.sh により残骸プロセスの蓄積を解消。rebuild 後に PID 1 が docker-init になり、接続時の自動掃除も動作することを確認した。"
+  previous_event_id: reg_355015e616244b0aa6a33967e8a90d1b

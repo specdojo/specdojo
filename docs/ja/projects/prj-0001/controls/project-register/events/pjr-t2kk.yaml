@@ -1,0 +1,134 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_c2817101640c47bf99d7a21d37e5d108
+  ts: "2026-09-07T23:00:00Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 修正済み文書の再評価を routine で実行できるようにする
+    - field: description
+      from: ""
+      to: grade の再評価を routine から起動できるようにする。grade 側には --changed-only / --ungraded の選択機能があるが、tools/grade/run-per-document.sh は find で kind ディレクトリを独自に走査しており両者が接続されていない。選択結果を取り出す手段、スクリプトへのフィルタ受け渡し、複数種別を一度に扱う --kind all、job への入力追加、routine 定義の新設が要る。PJR-20DV と PJR-MBVM により --changed-only は信頼できる状態になった。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-08"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_ff16645eed134a238ced7d74599a40f3
+  ts: "2026-09-08T12:45:19Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_c2817101640c47bf99d7a21d37e5d108
+- v: 1
+  id: reg_85643daed69a4ec6a20bd6cc4d55ad27
+  ts: "2026-09-08T13:11:06Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_ff16645eed134a238ced7d74599a40f3
+- v: 1
+  id: reg_3169b32d8d0e4149a3bf91a5fe244cfa
+  ts: "2026-09-08T13:48:25Z"
+  action: wait
+  actor: orchestrator
+  from_status: review
+  to_status: waiting
+  reason: grade list / --changed-only / --kind all と routine 定義は完成したが、routine 経由の実行が成立しない。job のコマンドが agent の sandbox 内で走るため、スクリプトが起動する内側の opencode がホームディレクトリへ書けず全段が失敗する。完了条件の routine run --id で再評価できることを満たさない。PJR-GWY4 の実装を待つ。
+  changes:
+    - field: status
+      from: review
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: grade list / --changed-only / --kind all と routine 定義は完成したが、routine 経由の実行が成立しない。job のコマンドが agent の sandbox 内で走るため、スクリプトが起動する内側の opencode がホームディレクトリへ書けず全段が失敗する。完了条件の routine run --id で再評価できることを満たさない。PJR-GWY4 の実装を待つ。
+  previous_event_id: reg_85643daed69a4ec6a20bd6cc4d55ad27
+- v: 1
+  id: reg_cdddf46cd1854f7fb7194070c9904e0a
+  ts: "2026-09-08T22:19:58Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_3169b32d8d0e4149a3bf91a5fe244cfa
+- v: 1
+  id: reg_d9bbd67b42c04a4ab2ad5afa5c4fa67d
+  ts: "2026-09-08T22:36:34Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_cdddf46cd1854f7fb7194070c9904e0a
+- v: 1
+  id: reg_ca15ae992aac4d358f087ccf26568acb
+  ts: "2026-09-09T12:52:41Z"
+  action: wait
+  actor: orchestrator
+  from_status: review
+  to_status: waiting
+  reason: 3段評価は完走し 5 文書 15 段のうち 13 段が成功したが、Job Run は analysis 段の失敗により failed となる。完了条件の routine run --id で再評価できるを満たすには PJR-GWY4 の結果受け渡しの修正が要る。
+  changes:
+    - field: status
+      from: review
+      to: waiting
+    - field: block_reason
+      from: grade list / --changed-only / --kind all と routine 定義は完成したが、routine 経由の実行が成立しない。job のコマンドが agent の sandbox 内で走るため、スクリプトが起動する内側の opencode がホームディレクトリへ書けず全段が失敗する。完了条件の routine run --id で再評価できることを満たさない。PJR-GWY4 の実装を待つ。
+      to: 3段評価は完走し 5 文書 15 段のうち 13 段が成功したが、Job Run は analysis 段の失敗により failed となる。完了条件の routine run --id で再評価できるを満たすには PJR-GWY4 の結果受け渡しの修正が要る。
+  previous_event_id: reg_d9bbd67b42c04a4ab2ad5afa5c4fa67d
+- v: 1
+  id: reg_77d13d3ecdb2414a800416f67eb4dbdd
+  ts: "2026-09-09T13:20:31Z"
+  action: close
+  actor: orchestrator
+  from_status: waiting
+  to_status: done
+  reason: routine run --id rtn-grade-recheck が Job Run complete で完了する。5 文書を選択し 3 段評価が完走した。grade list / --kind all / --changed-only と routine 定義が接続され、完了条件を満たした。
+  changes:
+    - field: status
+      from: waiting
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-09"
+  previous_event_id: reg_ca15ae992aac4d358f087ccf26568acb
