@@ -81,6 +81,38 @@ export function summarizeGitArguments(args: readonly string[]): string {
   return abbreviate(parts.join(" "), MAX_GIT_ARGUMENT_SUMMARY_LENGTH);
 }
 
+// git は進捗を `\r` で上書きしながら stderr へ書く（`Updating files: 52% (2412/4638)` など）。
+// 失敗理由へ stderr 全文を載せると進捗が文字数を占有し、register の block_reason が
+// 切り詰められた際に、進捗の後ろへ出る原因行が失われる。行ごとに `\r` の最終表示だけを
+// 残し、進捗だけの行を落としたうえで、原因が書かれる側から行を採る。
+const GIT_PROGRESS_LINE =
+  /^(?:remote: )?(?:Updating files|Receiving objects|Resolving deltas|Counting objects|Compressing objects|Writing objects|Enumerating objects|Checking out files|Unpacking objects|Filtering content)\b.*?\d+%/u;
+
+const GIT_CAUSE_LINE =
+  /(?:\bfatal\b|\berror\b|\bwarning\b|\bCONFLICT\b|\bdenied\b|\bNo space left\b)/i;
+
+const GIT_FAILURE_REASON_MAX_LENGTH = 400;
+
+export function summarizeGitStderr(
+  stderr: string,
+  maxLength: number = GIT_FAILURE_REASON_MAX_LENGTH,
+): string {
+  const lines = stripTerminalControlSequences(stderr)
+    .split("\n")
+    // `\r` は同じ行の上書きを表すため、最後に表示された内容だけを残す。
+    .map((line) => line.split("\r").at(-1) ?? "")
+    .map((line) => line.trim())
+    .filter((line) => line !== "" && !GIT_PROGRESS_LINE.test(line));
+  if (lines.length === 0) return "";
+
+  const causes = lines.filter((line) => GIT_CAUSE_LINE.test(line));
+  // 原因を示す行が無い場合は、進捗の後ろに残った末尾側の行を採る。先頭は
+  // `Preparing worktree ...` のような手順の告知で、失敗の原因を含まない。
+  const selected = causes.length > 0 ? causes : lines.slice(-2);
+  const joined = selected.join(" / ");
+  return joined.length <= maxLength ? joined : `${joined.slice(0, maxLength - 1)}…`;
+}
+
 export function formatGitCommandFailure(args: readonly string[], stderr: string): string {
   const subcommandIndex = args.findIndex((arg) => !arg.startsWith("-"));
   const label = subcommandIndex === -1 ? "git" : `git ${args[subcommandIndex]}`;
@@ -90,7 +122,7 @@ export function formatGitCommandFailure(args: readonly string[], stderr: string)
       : [...args.slice(0, subcommandIndex), ...args.slice(subcommandIndex + 1)],
   );
   const detail = summary ? ` (args: ${summary})` : "";
-  const cause = stderr.trim();
+  const cause = summarizeGitStderr(stderr);
   return cause ? `${label} failed: ${cause}${detail}` : `${label} failed${detail}`;
 }
 
@@ -135,11 +167,23 @@ export function summarizeGitHookFailure(output: string): string {
   );
 }
 
+// message は block reason 向けに要約する一方、調査に必要な stderr 全文は失わない。
+export class GitCommandError extends Error {
+  constructor(
+    message: string,
+    readonly args: readonly string[],
+    readonly stderr: string,
+  ) {
+    super(message);
+    this.name = "GitCommandError";
+  }
+}
+
 export function gitOutput(repoRoot: string, args: string[]): string {
   const result = gitResult(repoRoot, args);
   if (result.status !== 0) {
     const stderr = typeof result.stderr === "string" ? result.stderr : "";
-    throw new Error(formatGitCommandFailure(args, stderr));
+    throw new GitCommandError(formatGitCommandFailure(args, stderr), args, stderr);
   }
   return typeof result.stdout === "string" ? result.stdout : "";
 }

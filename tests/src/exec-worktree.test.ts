@@ -4,6 +4,7 @@ import { dirname, join, resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   formatGitCommandFailure,
+  summarizeGitStderr,
   formatWorktreeBuildFailure,
   generateWorktreeArtifacts,
   resolveWorktreeBuildCommand,
@@ -43,6 +44,45 @@ describe("summarizeGitArguments", () => {
   });
 });
 
+describe("summarizeGitStderr", () => {
+  it("drops carriage-return progress and keeps the cause line that follows it", () => {
+    const stderr =
+      "Preparing worktree (new branch 'exec/prj-0001-PJR-G8M9')\n" +
+      "Updating files:  50% (2325/4638)\rUpdating files:  99% (4591/4638)\r" +
+      "Updating files: 100% (4638/4638), done.\n" +
+      "fatal: could not create work tree dir: No space left on device\n";
+
+    expect(summarizeGitStderr(stderr)).toBe(
+      "fatal: could not create work tree dir: No space left on device",
+    );
+  });
+
+  it("keeps the trailing lines when no line names a cause", () => {
+    const stderr =
+      "Preparing worktree (new branch 'exec/prj-0001-PJR-G8M9')\n" +
+      "Updating files:  52% (2412/4638)\rUpdating files: 100% (4638/4638), done.\n" +
+      "HEAD is now at 9d44d2c\n";
+
+    expect(summarizeGitStderr(stderr)).toBe(
+      "Preparing worktree (new branch 'exec/prj-0001-PJR-G8M9') / HEAD is now at 9d44d2c",
+    );
+  });
+
+  it("returns an empty string when git wrote only progress", () => {
+    expect(summarizeGitStderr("Receiving objects:  73% (100/137)\r")).toBe("");
+  });
+
+  it("truncates a long cause so that the reason keeps the beginning of the message", () => {
+    const stderr = `fatal: ${"x".repeat(500)}\n`;
+
+    const actual = summarizeGitStderr(stderr, 40);
+
+    expect(actual).toHaveLength(40);
+    expect(actual.startsWith("fatal: xxx")).toBe(true);
+    expect(actual.endsWith("…")).toBe(true);
+  });
+});
+
 describe("formatGitCommandFailure", () => {
   it("puts the git stderr before the argument summary", () => {
     const actual = formatGitCommandFailure(
@@ -54,6 +94,21 @@ describe("formatGitCommandFailure", () => {
       "git commit failed: error: cannot commit " +
         "(args: -m exec(register PJR-TA5C): title -- 2 paths)",
     );
+  });
+
+  it("summarizes progress-heavy stderr so that the cause survives truncation", () => {
+    const stderr =
+      "Preparing worktree (new branch 'exec/prj-0001-PJR-G8M9')\n" +
+      "Updating files:  50% (2325/4638)\rUpdating files: 100% (4638/4638), done.\n" +
+      "fatal: unable to write file docs/ja/index.md\n";
+
+    const actual = formatGitCommandFailure(
+      ["worktree", "add", "../worktrees/prj-0001-PJR-G8M9", "-b", "exec/prj-0001-PJR-G8M9"],
+      stderr,
+    );
+
+    expect(actual).toContain("git worktree failed: fatal: unable to write file docs/ja/index.md");
+    expect(actual).not.toContain("Updating files");
   });
 
   it("omits the stderr section when git wrote nothing to stderr", () => {
