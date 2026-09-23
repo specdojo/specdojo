@@ -13,14 +13,20 @@ export const KATA_RESOURCE_KINDS = [
   "template",
 ] as const;
 
+// eject できない参照固定の種別。CLI のバージョンと対応するため利用リポジトリへ複製しない。
+export const KATA_REFERENCED_KINDS = ["exec-template", "schema"] as const;
+
 export type KataResourceKind = (typeof KATA_RESOURCE_KINDS)[number];
+export type KataReferencedKind = (typeof KATA_REFERENCED_KINDS)[number];
+export type KataListKind = KataResourceKind | KataReferencedKind;
 export type KataResourceSource = "repository" | "node_modules";
 export type KataResourceState = "ejected" | "referenced";
 export type KataResourceDifference = "same" | "modified" | "package-missing" | "-";
 
 export type KataResource = {
   id: string;
-  kind: KataResourceKind;
+  kind: KataListKind;
+  ejectable: boolean;
   relativePath: string;
   repositoryPath?: string;
   bundledPath?: string;
@@ -57,6 +63,10 @@ const RESOURCE_KINDS: readonly ResourceKindConfig[] = [
   { kind: "schema", relativeDir: "docs/ja/specdojo/schemas", ejectable: false },
   { kind: "schema", relativeDir: "docs/specdojo/schemas", ejectable: false },
 ];
+
+function isEjectableKind(kind: KataListKind): kind is KataResourceKind {
+  return (KATA_RESOURCE_KINDS as readonly string[]).includes(kind);
+}
 
 const EJECTABLE_KINDS = RESOURCE_KINDS.filter(
   (config): config is EjectableResourceKindConfig => config.ejectable,
@@ -123,7 +133,7 @@ function relativeFiles(root: string): string[] {
 }
 
 function enumerateConfig(
-  config: EjectableResourceKindConfig,
+  config: ResourceKindConfig,
   roots: SpecdojoResolutionRoots,
 ): KataResource[] {
   const { repositoryDir, bundledDir } = pathsForConfig(config, roots);
@@ -140,6 +150,7 @@ function enumerateConfig(
     return {
       id: resourceId(resolvedPath),
       kind: config.kind,
+      ejectable: config.ejectable,
       relativePath: normalizeRelativePath(join(config.relativeDir, filePath)),
       repositoryPath: hasRepositoryFile ? repositoryPath : undefined,
       bundledPath: hasBundledFile ? bundledPath : undefined,
@@ -157,19 +168,26 @@ function enumerateConfig(
   });
 }
 
-function assertKind(kind: string | undefined): KataResourceKind | undefined {
+const ALL_LIST_KINDS: readonly string[] = [...KATA_RESOURCE_KINDS, ...KATA_REFERENCED_KINDS];
+
+function assertKind(kind: string | undefined): KataListKind | undefined {
   if (kind === undefined) return undefined;
-  if ((KATA_RESOURCE_KINDS as readonly string[]).includes(kind)) {
-    return kind as KataResourceKind;
-  }
-  throw new Error(`Unknown kata kind: ${kind}. Expected ${KATA_RESOURCE_KINDS.join(" | ")}.`);
+  if (ALL_LIST_KINDS.includes(kind)) return kind as KataListKind;
+  throw new Error(`Unknown kata kind: ${kind}. Expected ${ALL_LIST_KINDS.join(" | ")}.`);
 }
 
+// 既定は eject できる種別だけを返す。`all` は参照固定の exec-template / schema も含める。
+// 参照固定の種別は ID を知る手段が他に無いため、一覧から辿れるようにしておく。
 export function listKataResources(
-  options: { kind?: string; roots?: SpecdojoResolutionRoots } = {},
+  options: { kind?: string; all?: boolean; roots?: SpecdojoResolutionRoots } = {},
 ): KataResource[] {
   const kind = assertKind(options.kind);
-  return EJECTABLE_KINDS.filter((config) => kind === undefined || config.kind === kind)
+  const configs =
+    options.all || (kind !== undefined && !isEjectableKind(kind))
+      ? RESOURCE_KINDS
+      : EJECTABLE_KINDS;
+  return configs
+    .filter((config) => kind === undefined || config.kind === kind)
     .flatMap((config) => enumerateConfig(config, options.roots ?? {}))
     .sort(
       (first, second) =>
@@ -195,11 +213,12 @@ function selectById(resources: KataResource[], id: string): KataResource {
   return matches[0];
 }
 
+// show は読み取りのみのため、参照固定の種別も対象にする。
 export function findKataResource(
   id: string,
   options: { kind?: string; roots?: SpecdojoResolutionRoots } = {},
 ): KataResource {
-  return selectById(listKataResources(options), id);
+  return selectById(listKataResources({ ...options, all: true }), id);
 }
 
 type BundledResource = {
@@ -304,14 +323,15 @@ export function registerKataCommands(program: Command): void {
   kata
     .command("list")
     .description("List resolved kata resources and their source")
-    .option("--kind <kind>", `Filter by kind (${KATA_RESOURCE_KINDS.join(" | ")})`)
+    .option("--kind <kind>", `Filter by kind (${ALL_LIST_KINDS.join(" | ")})`)
+    .option("--all", "Include exec-template and schema, which cannot be ejected", false)
     .option("--dry-run", "Read-only compatibility option", false)
     .action((opts) => {
       try {
-        process.stdout.write("KIND\tSOURCE\tID\tPATH\n");
-        for (const resource of listKataResources({ kind: opts.kind })) {
+        process.stdout.write("KIND\tSOURCE\tEJECTABLE\tID\tPATH\n");
+        for (const resource of listKataResources({ kind: opts.kind, all: opts.all })) {
           process.stdout.write(
-            `${resource.kind}\t${resource.source}\t${resource.id}\t${resource.relativePath}\n`,
+            `${resource.kind}\t${resource.source}\t${resource.ejectable ? "yes" : "no"}\t${resource.id}\t${resource.relativePath}\n`,
           );
         }
       } catch (error) {
