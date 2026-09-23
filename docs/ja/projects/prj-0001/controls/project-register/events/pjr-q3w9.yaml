@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_1333cf172e414712a8b7b42ead7babae
+  ts: "2026-09-23T22:45:39Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: 競合の思想と自らの二面性を整理する
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: Gas Town との設計思想の対比と理解の負債
+    - field: description
+      from: ""
+      to: Gas Town / Gas City は Dark Factory を掲げ、Wanted Board へ agent が仕事を投稿し数十〜数百で並列実行する。人は台帳を監査する。SpecDojo も schedule 経路では exec run --auto --parallel --loop で無人の並列実行ができるため、差は並列性ではなく仕事の発生源と人の関与点にある。理解の負債は両者にあり、SpecDojo は成果物文書と grade で可視化するが消えてはいない。
+    - field: type
+      from: ""
+      to: note
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-24"
+    - field: due
+      from: ""
+      to: _TODO_
