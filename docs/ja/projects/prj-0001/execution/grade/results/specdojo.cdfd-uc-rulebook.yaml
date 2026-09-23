@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v1
 verdict: needs-work
 score: 84
-graded_at: "2026-09-17T10:03:35.776Z"
-graded_by: gemma-expert-executor
-content_hash: 24833090cefa52ecf6a07500cf10426efd1d18181fdb76cc086426781c16d36a
+graded_at: "2026-09-22T21:17:07.516Z"
+graded_by: codex-expert-executor
+content_hash: 63677a3b394e4b85bef8cb2655c5890f3dd7ba7744288a1b16e7f2d127bd8247
 categories:
   consistency:
     score: 63
@@ -52,35 +52,35 @@ finding_counts:
   minor: 4
   note: 0
 findings:
-  - id: F003
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 50
-    message: 「プロセス領域」と図の双方を横断順序の正本としており、不一致時にどちらを修正すべきか決定できないため、正本を一方に限定し、他方を正本に一致させる対応表現として定義してください。
-    anchor: "| supersedes | 置き換える旧ユースケース別 CDFD の ID                 | 任意 |"
-  - id: F002
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 95
-    message: "`ready` 昇格条件が「所定の承認」「定められた承認者」に留まり、承認者の参照元と承認証跡を確認する場所が定義されていないため, 責任分担文書の参照方法と登録簿・レビュー結果などの確認可能な証跡を指定してください。"
-    anchor: "- 内部プロセス、内部例外、担当は書き写しません。未作成の参照先も安定した ID をバッククォートで示し、作成状況は登録簿で追跡します。"
-  - id: F005
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 103
-    message: rulebook で必須としている「導入文」の定義があるが、対応する recipe の記述ガイドに導入文に関する項目が欠落しており、作成者が迷うため recipe 側への反映または rulebook 側での補足が必要である。
-    anchor: ""
   - id: F001
     severity: minor
     rule: vp-arc-cross-document-consistency
-    line: 154
+    line: 111
+    anchor: "- 一図で順序を追えない場合は連続する引き渡し単位で分割し、前図の終了側と後図の開始側へ同じ引き渡し ID を記載します。"
     message: >-
-      `specdojo:cdfd-mermaid-rulebook`
-      は各図直後に各ノード形状の意味を直接記述するよう求める一方、本行は全体概要の共通凡例への参照だけを求めているため、包含規則に対する優先関係を明示するか凡例の記載要件を統一してください。
-    anchor: "- 物理テーブル、カラム、SQL、実装クラス、詳細 API、画面操作を概念フローへ記載しません。"
+      `specdojo:cdfd-mermaid-rulebook` は図を分割するノード数の目安を包含元 rulebook
+      が定めるとしているが、本書は「一図で順序を追えない場合」という主観的条件しか示していないため、ノード数の目安または第三者が同じ判断を再現できる分割条件を定義してください。
+  - id: F002
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 54
+    anchor: "- 作成途中の `status` は `draft` とし、完成判定と所定の承認を満たした後の昇格は定められた承認者が行います。"
+    message: "`ready` 昇格条件が「所定の承認」「定められた承認者」に留まり、承認者の参照元と承認証跡を確認する場所が定義されていないため, 責任分担文書の参照方法と登録簿・レビュー結果などの確認可能な証跡を指定してください。"
+  - id: F003
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 10
+    anchor: "- 「プロセス領域」を順序とグループ別責務の正本、「データストア」を引き渡しで使う上位一覧の部分集合、「引き渡し」を情報・条件・戻す条件の正本、図を開始から終了までの横断順序の正本として併用します。"
+    message: 「プロセス領域」と図の双方を横断順序の正本としており、不一致時にどちらを修正すべきか決定できないため、正本を一方に限定し、他方を正本に一致させる対応表現として定義してください。
   - id: F004
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 166
+    line: 122
+    anchor: "- 表は「対象引き渡し」「条件不成立」「戻り先グループ」「戻す情報」「再開条件」の 5 列とし、すべての引き渡し ID を一度以上確認します。"
     message: 戻しが発生しない引き渡しを許容する一方、「例外時の戻り先」では全引き渡し ID の行と戻り先を求めており記入方法が定義されていないため、該当なしを表す値と理由の記載方法、または戻り先表から除外できる条件を定めてください。
-    anchor: ""
+  - id: F005
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 76
+    anchor: "### 6.1. 導入文と目的"
+    message: rulebook で必須としている「導入文」の定義があるが、対応する recipe の記述ガイドに導入文に関する項目が欠落しており、作成者が迷うため recipe 側への反映または rulebook 側での補足が必要である。

@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v1
 verdict: pass
 score: 89
-graded_at: "2026-09-21T05:09:21.252Z"
+graded_at: "2026-09-22T21:11:33.934Z"
 graded_by: codex-expert-executor
-content_hash: 9b0302bad28cba5314630e7a06417f4e49b3835d0158c9e5f3b677838f9d8059
+content_hash: 5c76e0bf8765672c646921a24efd5e689dae01aca474e3eb6d4cf4e4620a712a
 categories:
   consistency:
     score: 88
@@ -65,7 +65,7 @@ findings:
     line: 143
     anchor: "### 6.8. 完成判定"
     message: >-
-      完成判定が、本文で必須とした条件付き／選択プロセスの非起動時の正常な扱い、全プロセスの個別入出力表への一度だけの掲載、図直後の必須注記、主要例外の扱い、グループ外委譲の委譲先・委譲事項・戻す条件を確認対象に含めていないため,
+      完成判定が、本文で必須とした条件付き／選択プロセスの非起動時の正常な扱い、全プロセスの個別入出力表への一度だけの掲載、図直後の必須注記、主要例外の扱い, グループ外委譲の委譲先・委譲事項・戻す条件を確認対象に含めていないため,
       本文要件との併用を明記するか確認項目を過不足なく追加してください。
   - id: F003
     severity: minor

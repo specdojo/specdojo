@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "run_id": "JBR-grade-kata-5650f4b652b7",
+  "job_id": "job-grade-kata",
+  "idempotency_key": "job-grade-kata:command-v5:2026-09-22T21:00:00.000Z:all:15:true:true:true",
+  "project_id": "prj-0001",
+  "trigger": "routine",
+  "scheduled_at": "2026-09-22T21:00:00.000Z",
+  "created_at": "2026-09-22T21:00:03.833Z",
+  "updated_at": "2026-09-22T21:35:44.688Z",
+  "state": "failed",
+  "inputs": {
+    "period": "2026-W39",
+    "kind": "all",
+    "limit": 15,
+    "changed_only": true,
+    "ungraded": true,
+    "incomplete": true
+  },
+  "task": {
+    "mode": "command",
+    "precondition": {
+      "command": "selection=$(\n  if [ \"true\" = \"false\" ] && [ \"true\" = \"false\" ] && [ \"true\" = \"false\" ]; then\n    '/usr/local/bin/node' '/workspaces/specdojo-workspace/specdojo/dist/specdojo.js' grade list --target kata --project prj-0001\n  else\n    if [ \"true\" = \"true\" ]; then\n      '/usr/local/bin/node' '/workspaces/specdojo-workspace/specdojo/dist/specdojo.js' grade list --target kata --project prj-0001 --changed-only || exit $?\n    fi\n    if [ \"true\" = \"true\" ]; then\n      '/usr/local/bin/node' '/workspaces/specdojo-workspace/specdojo/dist/specdojo.js' grade list --target kata --project prj-0001 --ungraded || exit $?\n    fi\n    if [ \"true\" = \"true\" ]; then\n      '/usr/local/bin/node' '/workspaces/specdojo-workspace/specdojo/dist/specdojo.js' grade list --target kata --project prj-0001 --incomplete || exit $?\n      # 上限到達文書は処理対象外だが、report-only Job を起動するため precondition に含める。\n      '/usr/local/bin/node' '/workspaces/specdojo-workspace/specdojo/dist/specdojo.js' grade state --target kata --project prj-0001 --exhausted || exit $?\n    fi\n  fi\n)\nprintf '%s\\n' \"$selection\" | LC_ALL=C sort -u | awk -v kind=\"all\" -v limit=\"15\" '\n  NF && (kind == \"all\" || index($0, \"docs/ja/specdojo/\" kind \"s/\") == 1) {\n    if (limit == 0 || selected < limit) {\n      print\n      selected++\n    }\n  }\n'",
+      "skip_when": "empty-output"
+    },
+    "command": "npm run build\ntools/grade/run-per-document.sh --run-id JBR-grade-kata-5650f4b652b7 --stages 1 --kind all --limit 15 --changed-only=true --ungraded=true --incomplete=true\ncat logs/grade/runs/per-document/JBR-grade-kata-5650f4b652b7/results.tsv",
+    "analysis": {
+      "agent": "gemma-reporter",
+      "description": "runner が記録した command evidence の終了コードと、stdout に出力された\n`results.tsv` から次を判断して報告する。\n\n- 終了コード75（rate limit）または中断で未完了の段が残っているか。残る場合は同じ\n  `--run-id` で再開できる状態かを確認する。\n- `failed` の段があるか。ある場合は rate limit、agent 側の失敗、`grade apply` の\n  忠実性検証による拒否のいずれかへ切り分ける。\n- `retry_exhausted` の文書があるか。ある場合は失敗段と連続失敗回数を示し、人手での\n  原因解消または state の再開判断を促す。\n- codex 単段の verdict と score の分布に、評価設定の見直しを要する偏りがあるか。\n\n選択された文書が0件の場合は no-op と判断する。判断できない事象は推測で埋めず、\n観測した事実と未確認の範囲を分けて報告する。"
+    },
+    "paths": [
+      "docs/ja/specdojo/rulebooks",
+      "docs/ja/specdojo/recipes",
+      "docs/ja/specdojo/samples",
+      "docs/ja/specdojo/templates"
+    ],
+    "owner": "ARC"
+  },
+  "checkpoint_before": {},
+  "plan_ref": "exec/plans/JBR-grade-kata-5650f4b652b7-plan.md",
+  "result_ref": "exec/results/JBR-grade-kata-5650f4b652b7-result.md",
+  "attempts": [
+    {
+      "attempt": 1,
+      "started_at": "2026-09-22T21:00:03.833Z",
+      "status": "failed",
+      "completed_at": "2026-09-22T21:35:44.688Z",
+      "result_ref": "exec/results/JBR-grade-kata-5650f4b652b7-result.md",
+      "evidence_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-5650f4b652b7/attempt-1/evidence.json",
+      "exit_code": 0,
+      "reason": "`docs/ja/specdojo/rulebooks/pm-members-rulebook.md` の処理が `failed` となり、すべての対象成果物の品質評価を完了できなかったため。"
+    }
+  ]
+}

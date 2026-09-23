@@ -5,10 +5,10 @@ path: docs/ja/specdojo/templates/cdfd-template.md
 target: kata
 rubric: grade-rubric-v1
 verdict: pass
-score: 86
-graded_at: "2026-09-19T21:39:33.737Z"
+score: 91
+graded_at: "2026-09-22T21:33:20.221Z"
 graded_by: codex-expert-executor
-content_hash: ecc665f11fad4a263608f351b6c63af5ab77f9ca753fb958f26a6ca4b43fb7a5
+content_hash: ad63e3d3c3b43a7169287519d11519da189aaca7b3f13910dabbe0f4ef47c954
 categories:
   consistency:
     score: 75
@@ -17,7 +17,7 @@ categories:
   architecture:
     score: 100
   quality:
-    score: 75
+    score: 88
 viewpoints:
   vp-arc-cross-document-consistency:
     level: 3
@@ -29,8 +29,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
     level: 3
     score: 75
@@ -49,48 +49,32 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 7
+  minor: 3
   note: 0
 findings:
   - id: F001
     severity: minor
     rule: vp-arc-cross-document-consistency
-    line: 15
-    message: rulebook と recipe は適用範囲に期間の明記を求めているため、「対象期間」または期間を限定しない旨の記入欄を追加してください。
-    anchor: "- 対象グループ: _GROUP_NAME_（_AREA_ID_RANGE_）。_TODO_: 全体概要と同じグループ名と含む領域を書く。"
-  - id: F004
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 15
-    message: 必須の適用範囲に対象期間または期間を限定しない旨の記入欄がないため、組織境界・システム境界と並ぶ項目として追加してください。
-    anchor: "- 対象グループ: _GROUP_NAME_（_AREA_ID_RANGE_）。_TODO_: 全体概要と同じグループ名と含む領域を書く。"
-  - id: F006
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 15
-    message: rulebook 6.1 と recipe 4.2 が要求する適用期間を生成物へ反映できるよう、「対象期間」のプレースホルダーを追加してください。
-    anchor: "- 対象グループ: _GROUP_NAME_（_AREA_ID_RANGE_）。_TODO_: 全体概要と同じグループ名と含む領域を書く。"
+    line: 106
+    anchor: >-
+      _TODO_: 全体概要の「凡例（本プロダクト共通）」への参照、`-->` / `==>`
+      のうち使用した線種、省略した入出力と理由、別図と共有するノード、他グループの内部処理を省略したことを記述する。状態名をノードとして並べず、状態間の遷移を描かない。
+    message: rulebook 6.4 は全体概要に共通凡例がない場合に `specdojo:cdfd-mermaid-rulebook` の既定凡例へ従うよう求めているため、その場合の代替参照を図直後の注記用 TODO に追加してください。
   - id: F002
     severity: minor
-    rule: vp-arc-cross-document-consistency
-    line: 37
-    message: rulebook と recipe は各プロセスに一つの完了条件を求めているため、プロセス表または対応する別表に完了条件の記入先を設けてください。
-    anchor: "| プロセス ID    | プロセス       | 業務目的           | 主な担当     | 起動条件          | 必須性        |"
+    rule: vp-qe-omissions-consistency
+    line: 106
+    anchor: >-
+      _TODO_: 全体概要の「凡例（本プロダクト共通）」への参照、`-->` / `==>`
+      のうち使用した線種、省略した入出力と理由、別図と共有するノード、他グループの内部処理を省略したことを記述する。状態名をノードとして並べず、状態間の遷移を描かない。
+    message: 全体概要に「凡例（本プロダクト共通）」がない場合の記入方法がないため、`specdojo:cdfd-mermaid-rulebook` の既定凡例へ従う旨を選択できる指示を追加してください。
   - id: F003
     severity: minor
-    rule: vp-qe-verifiability
-    line: 37
-    message: 各プロセスが完了したと判定する条件の記入欄がなく、一プロセス一完了条件を検証できないため、完了条件とその判定可能な状態または出力を記録する列か対応表を追加してください。
-    anchor: "| プロセス ID    | プロセス       | 業務目的           | 主な担当     | 起動条件          | 必須性        |"
-  - id: F005
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 37
-    message: プロセスを分割・完成判定するための完了条件が表の必須項目から漏れているため、全プロセスについて記録できる欄を追加してください。
-    anchor: "| プロセス ID    | プロセス       | 業務目的           | 主な担当     | 起動条件          | 必須性        |"
-  - id: F007
-    severity: minor
     rule: vp-qe-kata-conformance
-    line: 37
-    message: rulebook の一プロセス一完了条件と recipe のプロセス分割・確認手順を生成物へ反映できるよう、完了条件のプレースホルダーを追加してください。
-    anchor: "| プロセス ID    | プロセス       | 業務目的           | 主な担当     | 起動条件          | 必須性        |"
+    line: 106
+    anchor: >-
+      _TODO_: 全体概要の「凡例（本プロダクト共通）」への参照、`-->` / `==>`
+      のうち使用した線種、省略した入出力と理由、別図と共有するノード、他グループの内部処理を省略したことを記述する。状態名をノードとして並べず、状態間の遷移を描かない。
+    message: >-
+      rulebook 6.4 の凡例適用規則を生成物へ反映できるよう、全体概要に共通凡例がある場合の参照と、ない場合の `specdojo:cdfd-mermaid-rulebook` 適用を分岐して記入できる TODO
+      にしてください。
