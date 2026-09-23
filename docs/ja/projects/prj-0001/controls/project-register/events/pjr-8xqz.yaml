@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_e5962edf33e74d7891113238762902dc
+  ts: "2026-09-23T12:58:16Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: npm 公開後の onboarding 見直し
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: orchestrator を config scaffold で配布し SSOT の記述を実態へ合わせる
+    - field: description
+      from: ""
+      to: npm 導入した利用者が orchestrator を入手できない。.agents/ は files に無く、templates/`<provider>`/agents/ にも orchestrator が無いため、config scaffold --provider が配るのは executor / reporter だけになっている。templates へ orchestrator を追加して配布経路を作り、あわせて SSOT の記述を npx specdojo 前提へ改め、register の節を新規利用者がすぐ使える内容にし、kata の参照既定と eject を追記する。SSOT と 5 環境のラッパーはバイト一致を保つ。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-23"
+    - field: due
+      from: ""
+      to: "2026-10-10"
