@@ -44,6 +44,55 @@ describe("kata commands", () => {
     packageRoot,
   });
 
+  it("hides referenced-only kinds from the default listing and reveals them with all", () => {
+    writeAt(
+      packageRoot,
+      "docs/ja/specdojo/rulebooks/example-rulebook.md",
+      markdown("specdojo:example-rulebook"),
+    );
+    writeAt(
+      packageRoot,
+      "docs/ja/specdojo/exec-templates/xep-example-template.md",
+      "_FRONTMATTER_\n",
+    );
+    writeAt(packageRoot, "docs/specdojo/schemas/v1/example.schema.yaml", "title: example\n");
+
+    const listed = listKataResources({ roots: roots() }).map((resource) => resource.id);
+    const all = listKataResources({ all: true, roots: roots() });
+
+    expect(listed).toEqual(["specdojo:example-rulebook"]);
+    expect(all.map((resource) => [resource.id, resource.kind, resource.ejectable])).toEqual([
+      ["xep-example-template", "exec-template", false],
+      ["specdojo:example-rulebook", "rulebook", true],
+      ["example.schema", "schema", false],
+    ]);
+  });
+
+  it("lists a referenced-only kind when the kind filter selects it", () => {
+    writeAt(
+      packageRoot,
+      "docs/ja/specdojo/exec-templates/xep-example-template.md",
+      "_FRONTMATTER_\n",
+    );
+
+    const resources = listKataResources({ kind: "exec-template", roots: roots() });
+
+    expect(resources.map((resource) => resource.id)).toEqual(["xep-example-template"]);
+    expect(resources[0].ejectable).toBe(false);
+  });
+
+  it("finds a referenced-only resource by id so that show can read it", () => {
+    const sourcePath = writeAt(
+      packageRoot,
+      "docs/ja/specdojo/exec-templates/xep-example-template.md",
+      "_FRONTMATTER_\n",
+    );
+
+    expect(findKataResource("xep-example-template", { roots: roots() }).resolvedPath).toBe(
+      sourcePath,
+    );
+  });
+
   it("lists repository overrides before package resources and filters by kind", () => {
     writeAt(
       packageRoot,
