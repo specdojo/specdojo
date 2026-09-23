@@ -18,6 +18,7 @@ SpecDojo の概要と、目的に合うガイドやリファレンスへの導�
 | ---------------------------------------- | ----------------------------------------------------------------------------------------- |
 | SpecDojo の全体像を理解する              | [全体概要ガイド](./specdojo/guides/specdojo-overview-guide.md)                            |
 | CLI を初期設定し、基本フローを試す       | [Quick Start ガイド](./specdojo/guides/quick-start-guide.md)                              |
+| 設定キーと必要なコマンドを調べる         | [SpecDojo設定リファレンス](./specdojo/references/specdojo-config-reference.md)            |
 | 文書の分類、ライフサイクル、配置を決める | [ドキュメント構成ガイド](./specdojo/guides/docs-structure-guide.md)                       |
 | CLI の役割と代表的な操作を確認する       | [遂行の技活用ガイド](./specdojo/guides/waza-guide.md)                                     |
 | 成果物の種類と目的を調べる               | [成果物リファレンス](./specdojo/references/deliverables-reference.md)                     |

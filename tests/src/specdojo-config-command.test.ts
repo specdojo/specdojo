@@ -3,7 +3,11 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync } from "node:f
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { registerConfigCommands } from "../../src/specdojo-config.js";
+import { resolveCatalogPath } from "../../src/catalog.js";
+import {
+  registerConfigCommands,
+  SPECDOJO_CONFIG_REFERENCE_URL,
+} from "../../src/specdojo-config.js";
 
 const originalCwd = process.cwd();
 
@@ -52,6 +56,11 @@ describe("config onboarding commands", () => {
       expect(output.join("")).toContain("../app1-worktrees");
       expect(output.join("")).toContain("npx specdojo config scaffold --provider <name>");
       expect(output.join("")).toContain("npx specdojo register scaffold --project prj-0001");
+      expect(output.join("")).toContain(SPECDOJO_CONFIG_REFERENCE_URL);
+
+      expect(() => resolveCatalogPath({ project: "prj-0001" })).toThrow(
+        SPECDOJO_CONFIG_REFERENCE_URL,
+      );
     } finally {
       rmSync(repo, { recursive: true, force: true });
     }

@@ -3,7 +3,13 @@ import { join, relative, resolve } from "node:path";
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
 import yaml from "js-yaml";
-import { getProjectCatalogPath, loadConfig, loadEnv, specdojoRootDir } from "./specdojo-config.js";
+import {
+  getProjectCatalogPath,
+  loadConfig,
+  loadEnv,
+  SPECDOJO_CONFIG_REFERENCE_URL,
+  specdojoRootDir,
+} from "./specdojo-config.js";
 import {
   buildCatalog,
   collectCatalogLocalIds,
@@ -74,7 +80,8 @@ export function resolveCatalogPath(opts: { project?: string }): string {
   if (!catalogPath) {
     throw new Error(
       `catalog_path not set for project '${projectId}' in ${configPath}.\n` +
-        `Add "catalog_path": "<path>" to the project config.`,
+        `Add "catalog_path": "<path>" to the project config.\n` +
+        `Configuration keys: ${SPECDOJO_CONFIG_REFERENCE_URL}`,
     );
   }
 

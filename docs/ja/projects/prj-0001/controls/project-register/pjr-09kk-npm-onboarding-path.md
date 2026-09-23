@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: high
   owner: DEV
   registered_at: "2026-09-23T03:50:08Z"
@@ -76,17 +76,21 @@ kata を持たない空ディレクトリでの動作は次のとおり。
 
 ## 3. 作業内容
 
-| No  | 作業                                                              | 担当 | 状態 | メモ                                    |
-| --- | ----------------------------------------------------------------- | ---- | ---- | --------------------------------------- |
-| 1   | 記載内容が `1.1. 観測済みの事実` と一致しているかを確認する       | DEV  | open | 再実測は不要                            |
-| 2   | 設定キー一覧の reference を新設し、案内から辿れるようにする       | DEV  | open | 雛形へ全キーを足さない（`1.2.` の方針） |
-| 3   | README の導入手順を npm 経由で完結させる                          | DEV  | open | テンプレートは選択肢へ降格              |
-| 4   | `quick-start-guide` の Detached Unit 手順へ kata の扱いを反映する | DEV  | open | eject の案内を含める                    |
-| 5   | 文書 lint 設定の導入手順を案内する                                | DEV  | open | `docs-editing-guide` との重複を避ける   |
+| No  | 作業                                                              | 担当 | 状態 | メモ                                        |
+| --- | ----------------------------------------------------------------- | ---- | ---- | ------------------------------------------- |
+| 1   | 記載内容が `1.1. 観測済みの事実` と一致しているかを確認する       | DEV  | done | 観測済み事実と resolver 実装を照合          |
+| 2   | 設定キー一覧の reference を新設し、案内から辿れるようにする       | DEV  | done | 雛形は register 最小構成のまま維持          |
+| 3   | README の導入手順を npm 経由で完結させる                          | DEV  | done | テンプレートは選択肢へ降格                  |
+| 4   | `quick-start-guide` の Detached Unit 手順へ kata の扱いを反映する | DEV  | done | 参照確認と選択的 eject を追加               |
+| 5   | 文書 lint 設定の導入手順を案内する                                | DEV  | done | `docs-editing-guide` を詳細の正本として参照 |
 
 ## 4. 対応結果
 
--
+- `README.md` の第一導線を Detached Unit への npm 導入とし、register の作成、`exec plan --register`、agent 設定後の `exec run --register` までを `npx specdojo` で実行できる形にした。テンプレートリポジトリは全文書をカスタマイズする場合の選択肢へ位置づけた。
+- [[specdojo:quick-start-guide]] の後続コマンドを npm のローカル CLI で実行できる表記へ統一し、kata の package 参照、`kata list` / `show`、選択的な `kata eject`、参照固定の `exec-template` / `schema` を案内した。
+- [[specdojo:specdojo-config-reference]] を新設し、設定キーの役割、既定値、パスの基準、必要とする主なコマンドを一覧化した。`config init` の雛形には全キーを追加せず、register 最小構成を維持した。
+- `config init` の Next steps と `catalog_path not set` のエラーから設定リファレンスへ到達できる URL を追加し、単体テストで固定した。
+- [[specdojo:quick-start-guide]] では `@specdojo/docs-lint` と最小 `.remarkrc.yaml` の例を維持し、詳細な設定と検証コマンドは [[specdojo:docs-editing-guide|ドキュメント編集ガイド]] を正本として参照した。
 
 ## 5. 関連ドキュメント
 
