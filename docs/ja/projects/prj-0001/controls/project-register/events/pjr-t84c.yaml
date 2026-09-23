@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f4bd82d0ac28403e8fe80ffe8c3d3929
+  ts: "2026-09-23T03:10:28Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-03M3 の実行が誤検知で block された
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 保護対象のうち agent 実行時に生成されるディレクトリを除外する
+    - field: description
+      from: ""
+      to: .opencode/ をディレクトリごと保護対象にしたため、opencode が実行時に install する .opencode/node_modules/ と .opencode/.gitignore が agent-config-write の誤検知を起こし、gemma-reporter を使う実行が必ず block される。保護対象を指示ファイル（.opencode/AGENTS.md、.opencode/agents/**）へ絞り、他 provider にも同種の実行時生成物がないか点検する。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-23"
+    - field: due
+      from: ""
+      to: "2026-09-26"

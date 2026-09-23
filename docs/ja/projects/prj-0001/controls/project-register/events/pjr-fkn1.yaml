@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_4647e5bdf0a042dbb7285eb6f622d37e
+  ts: "2026-09-23T03:10:29Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: npm 公開に向けた onboarding の不足確認から
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: kata の配布方式を node_modules 参照を既定とし eject で上書きする方式に決める
+    - field: description
+      from: ""
+      to: npm 公開後の利用プロジェクトが Detached Unit で exec まで到達できるようにするため、実践体系（kata）と schema の配布方式を決める。機械入力（exec-templates、schemas）は参照固定、規範文書と成果物テンプレートは参照を既定として必要なものだけ eject する。全量コピーは docs サイト配信向けの選択肢として残す。
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-23"
+    - field: due
+      from: ""
+      to: "2026-10-03"
