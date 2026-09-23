@@ -15,7 +15,7 @@ CLI Command Reference
 
 **対象範囲**
 
-- `specdojo` CLI の主要コマンド（config / catalog / deliverable / schedule / register / exec / agent / grade / index / watch / build / routine）
+- `specdojo` CLI の主要コマンド（config / kata / catalog / deliverable / schedule / register / exec / agent / grade / index / watch / build / routine）
 
 **ここで引けるもの**
 
@@ -27,12 +27,12 @@ CLI Command Reference
 
 ## 1. 共通オプション
 
-| オプション        | 用途                                               | 主な対象                            |
-| ----------------- | -------------------------------------------------- | ----------------------------------- |
-| `--project <id>`  | 対象 project を明示する                            | project に紐づくコマンド            |
-| `--dry-run`       | 書き込みや実行を行わず予定内容を表示する           | scaffold / build / run / worktree   |
-| `--force`         | 既存ファイルの上書きや通常拒否される操作を明示する | scaffold / schedule build / release |
-| `--scope <scope>` | build / watch の対象範囲を絞る                     | `build` / `watch`                   |
+| オプション        | 用途                                               | 主な対象                                   |
+| ----------------- | -------------------------------------------------- | ------------------------------------------ |
+| `--project <id>`  | 対象 project を明示する                            | project に紐づくコマンド                   |
+| `--dry-run`       | 書き込みや実行を行わず予定内容を表示する           | scaffold / build / run / worktree / kata   |
+| `--force`         | 既存ファイルの上書きや通常拒否される操作を明示する | scaffold / schedule build / release / kata |
+| `--scope <scope>` | build / watch の対象範囲を絞る                     | `build` / `watch`                          |
 
 project の解決順序と設定は [遂行の技活用ガイド](../guides/waza-guide.md) を参照します。
 
@@ -49,6 +49,31 @@ provider 設定、登録簿作成の順に次のコマンドを案内します�
 `claude`、`codex`、`copilot`、`opencode` を指定でき、`--dry-run` と `--force` も利用できます。
 
 `current_project` を設定しておくと、多くのコマンドで `--project` を省略できます。
+
+### 2.1. kata
+
+`kata` は、利用リポジトリで上書きした実践体系と npm package から参照中の実践体系を確認・取得します。対象種別は rulebook / standard / recipe / sample / template です。同じ正準パスにファイルがある場合は利用リポジトリ側を優先します。
+
+| コマンド         | 用途                                                     | 例                                               |
+| ---------------- | -------------------------------------------------------- | ------------------------------------------------ |
+| `kata list`      | kata を解決元（repository / node_modules）つきで一覧表示 | `specdojo kata list --kind rulebook`             |
+| `kata show <id>` | 解決順序に従って kata の内容を表示                       | `specdojo kata show specdojo:pjr-rulebook`       |
+| `kata status`    | 参照中 / eject 済みと package 原本との差分を表示         | `specdojo kata status --kind template`           |
+| `kata eject`     | package の 1 ファイルを利用リポジトリの正準パスへコピー  | `specdojo kata eject --id specdojo:pjr-rulebook` |
+| `kata install`   | eject 可能な全種別を利用リポジトリへコピー               | `specdojo kata install --all --dry-run`          |
+
+主要オプション:
+
+| オプション      | 用途                                                                                   |
+| --------------- | -------------------------------------------------------------------------------------- |
+| `--kind <kind>` | `list` / `show` / `status` を対象種別で絞る                                            |
+| `--dry-run`     | コピー系では予定だけを表示する。閲覧系でも共通指定として受理する                       |
+| `--force`       | `eject` / `install --all` で既存ファイルを上書きする                                   |
+| `--all`         | `install` で rulebook / standard / recipe / sample / template の全ファイルを対象にする |
+
+`status` の `ejected` は利用リポジトリ側を参照している状態、`referenced` は package 側を参照している状態です。eject 済みのファイルは package 原本と比較し、`same` / `modified` / `package-missing` を表示します。
+
+`eject` と `install --all` は既存ファイルを `--force` なしで上書きせず、`skip` として表示します。CLI と同じバージョンで使う必要がある `exec-templates` と `schemas` は個別 eject の対象外です。`install --all` は docs サイト配信やオフライン運用向けの明示的な全量取得であり、通常のセットアップ導線では使用しません。
 
 ## 3. catalog / deliverable
 
