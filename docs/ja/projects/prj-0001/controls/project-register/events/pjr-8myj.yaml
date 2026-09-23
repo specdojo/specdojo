@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_82c0ccd557ae4c47bc7a0f8c17a52ba5
+  ts: "2026-09-23T22:30:57Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: 長時間実行を止めない環境の案内が無い
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 常時稼働の母艦へリモート接続して agent を動かす構成例のガイドを書く
+    - field: description
+      from: ""
+      to: routine の cron と 20〜30 分かかる exec のため、SpecDojo は常時稼働する実行環境を前提とする。Tailscale + SSH + tmux + devcontainer で個人の母艦へ接続する構成を docs/ja/specdojo/guides/ へ一般化して書く。元になる知見は docs/ja/product の tsd-home-mac-dev-server-usage（265 行）にあるが product 側の文書で npm package に含まれない。サポートされた手順ではなく構成例として書き、PJR-HZ4C で判明した VS Code Remote SSH と Dev Containers の入れ子構成の制限も併記する。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-24"
+    - field: due
+      from: ""
+      to: "2026-10-24"

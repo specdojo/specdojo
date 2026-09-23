@@ -151,6 +151,25 @@ SpecDojo の orchestrator が異なるのは、**何を勝手にやらせない�
 
 2026-09-24 時点で `config scaffold --provider` により 4 provider へ配布できる。
 
+### 2.3. 常時稼働の実行環境
+
+SpecDojo は routine の cron と 10〜30 分かかる `exec run` を持つため、常時稼働する実行環境を前提とする。ノート PC を閉じると止まる。
+
+| ツール              | 常時稼働の必要性                  |
+| ------------------- | --------------------------------- |
+| Spec Kit / OpenSpec | 低い。人が起動したときだけ動く    |
+| Kiro                | 低い。IDE を開いている間          |
+| Gas Town / Gas City | 高い。cloud / Kubernetes へ向かう |
+| SpecDojo            | 高い。個人規模で完結させたい      |
+
+Gas Town / Gas City は cloud で答える。**個人が手元の常時稼働マシンで完結させる構成**の案内は空白になっている。prj-0001 は Tailscale + SSH + tmux + devcontainer で母艦へ接続しており、運用知見が product 側の文書に 265 行ある。
+
+これは主たる差別化ではなく**補強材料**として扱う。第三者ツールの組み合わせ方であり SpecDojo の機能ではなく、競合が真似るのも容易で防御力がない。また「簡単に実行できる」と書くと支援範囲が広がり、こちらの責任外で壊れる箇所を抱える。
+
+一方で「自律実行を前提とする」という SpecDojo の性格を具体化し、Spec Kit / OpenSpec との違いを示す材料になる。`構成例` として [[prj-0001:pjr-8myj-remote-host-development-guide]] で扱う。
+
+なお tmux の用法を区別する。`Gas Town / Gas City` の節で採らないと判断したのは「agent を tmux で回す」runtime provider としての用法であり、ここで扱うのは「人の作業セッションを切断後も保つ」用法である。両者は競合しない。
+
 ## 3. 決定内容
 
 _UNDECIDED_: 次の案を提案する。
@@ -165,7 +184,7 @@ _UNDECIDED_: 次の案を提案する。
 
 exec 層は機能比較に持ち込まない。「成果物体系を維持するための実行手段」として説明し、Gas City と並べた機能表を作らない。
 
-tmux は採らない。devcontainer は初期リリースに含めず、`routine` の自動実行を要する段階で別途扱う。
+tmux を agent の runtime provider として採ることはしない。人のセッション永続化としての tmux と devcontainer は、常時稼働環境の構成例として補強材料に位置づけ、`構成例` のガイドで扱う。README へ手順を複製せず 1 行リンクに留める。
 
 ## 4. 採択理由
 
