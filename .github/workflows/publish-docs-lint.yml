@@ -1,0 +1,77 @@
+name: Publish @specdojo/docs-lint to npm
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "packages/docs-lint/**"
+      - ".github/workflows/publish-docs-lint.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: publish-docs-lint
+  cancel-in-progress: false
+
+defaults:
+  run:
+    working-directory: packages/docs-lint
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+          cache: npm
+          cache-dependency-path: packages/docs-lint/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Read package metadata
+        id: pkg
+        shell: bash
+        run: |
+          echo "name=$(node -p "require('./package.json').name")" >> "$GITHUB_OUTPUT"
+          echo "version=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - name: Check published version
+        id: version_check
+        shell: bash
+        run: |
+          set -euo pipefail
+          package_name='${{ steps.pkg.outputs.name }}'
+          package_version='${{ steps.pkg.outputs.version }}'
+          published_version="$(npm view "$package_name" version 2>/dev/null || true)"
+
+          echo "published=$published_version" >> "$GITHUB_OUTPUT"
+
+          if [ "$published_version" = "$package_version" ]; then
+            echo "should_publish=false" >> "$GITHUB_OUTPUT"
+            echo "$package_name@$package_version is already published. Skipping publish."
+          else
+            echo "should_publish=true" >> "$GITHUB_OUTPUT"
+            echo "Will publish $package_name@$package_version (current npm version: ${published_version:-<none>})."
+          fi
+
+      # このパッケージは src をそのまま配布し、bin は tsx 経由で実行する。
+      # build 成果物が無いため publish-specdojo.yml のビルド段は置かない。
+      - name: Verify package contents
+        if: steps.version_check.outputs.should_publish == 'true'
+        run: npm pack --dry-run
+
+      - name: Publish to npm via Trusted Publishing
+        if: steps.version_check.outputs.should_publish == 'true'
+        run: npm publish --access public
