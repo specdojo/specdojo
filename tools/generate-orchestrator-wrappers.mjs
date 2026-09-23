@@ -42,9 +42,11 @@ export function generateOrchestratorWrappers(rootDir = process.cwd()) {
     const wrapperPath = resolve(rootDir, wrapper.path);
     const source = readFileSync(wrapperPath, "utf8");
     const next =
-      wrapper.format === "markdown"
-        ? applyMarkdownBody(source, canonical, wrapper.path)
-        : applyTomlBody(source, canonical, wrapper.path);
+      wrapper.format === "raw"
+        ? canonical
+        : wrapper.format === "markdown"
+          ? applyMarkdownBody(source, canonical, wrapper.path)
+          : applyTomlBody(source, canonical, wrapper.path);
     if (next === source) continue;
     writeFileSync(wrapperPath, next, "utf8");
     updated.push(wrapper.path);
