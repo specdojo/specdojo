@@ -7,6 +7,7 @@ import { gitEnvironment, gitResult } from "./exec-worktree.js";
 // PJR-3S8Q で agent の書き込み対象外とした、親 runner / hook / CI の実行内容を
 // 変えられる設定パス。provider 設定から注入できない固定定義として CLI 側に持つ。
 const PROTECTED_DIRECTORY_PREFIXES = [
+  "node_modules/",
   ".specdojo/",
   ".agents/rules/",
   ".agents/skills/",
@@ -36,6 +37,7 @@ const PROTECTED_EXACT_PATHS = new Set([
 ]);
 
 const SNAPSHOT_DIRECTORY_ROOTS = [
+  "node_modules/specdojo",
   ".specdojo",
   ".agents/rules",
   ".agents/skills",

@@ -7,6 +7,10 @@ import { buildSpecdojoFrontmatter, readSpecdojoNamespace } from "./frontmatter-n
 import { practiceLocalId } from "./practice-id.js";
 import { flattenTemplateFrontmatter } from "./template-frontmatter.js";
 import { isDctCatalogFileName, type DctDeliverableItem, type DctDoc } from "./catalog-types.js";
+import {
+  resolveSpecdojoPathIfExists,
+  type SpecdojoResolutionRoots,
+} from "./template-resolution.js";
 
 const PROJECT_ID_PLACEHOLDER = "_PROJECT_ID_";
 const LOCAL_ID_PLACEHOLDER = "_LOCAL_ID_";
@@ -80,6 +84,7 @@ function findTemplate(
   rulebooksPath: string,
   rulebookId: string | undefined,
   ext: ".md" | ".yaml",
+  resourceRoots?: SpecdojoResolutionRoots,
 ): string | null {
   if (
     !rulebookId ||
@@ -90,7 +95,11 @@ function findTemplate(
     return null;
   }
 
-  const rulebookPath = join(rulebooksPath, `${practiceLocalId(rulebookId)}.md`);
+  const rulebookFileName = `${practiceLocalId(rulebookId)}.md`;
+  const rulebookPath = resourceRoots
+    ? resolveSpecdojoPathIfExists(`docs/ja/specdojo/rulebooks/${rulebookFileName}`, resourceRoots)
+    : join(rulebooksPath, rulebookFileName);
+  if (!rulebookPath) return null;
   if (!existsSync(rulebookPath)) return null;
 
   const templateId = readSpecdojoNamespace(readFileSync(rulebookPath, "utf8")).template;
@@ -103,7 +112,11 @@ function findTemplate(
     return null;
   }
 
-  const candidate = join(templatesPath, `${practiceLocalId(templateId)}${ext}`);
+  const templateFileName = `${practiceLocalId(templateId)}${ext}`;
+  const candidate = resourceRoots
+    ? resolveSpecdojoPathIfExists(`docs/ja/specdojo/templates/${templateFileName}`, resourceRoots)
+    : join(templatesPath, templateFileName);
+  if (!candidate) return null;
   return existsSync(candidate) ? candidate : null;
 }
 
@@ -170,12 +183,19 @@ function generateContent(
   projectId: string,
   templatesPath: string,
   rulebooksPath: string,
+  resourceRoots?: SpecdojoResolutionRoots,
 ): string {
   if (isYamlPath(resolvedPath)) {
-    const template = findTemplate(templatesPath, rulebooksPath, item.rulebook, ".yaml");
+    const template = findTemplate(
+      templatesPath,
+      rulebooksPath,
+      item.rulebook,
+      ".yaml",
+      resourceRoots,
+    );
     return template ? expandYamlTemplate(template, item, projectId) : fallbackYaml(item, projectId);
   }
-  const template = findTemplate(templatesPath, rulebooksPath, item.rulebook, ".md");
+  const template = findTemplate(templatesPath, rulebooksPath, item.rulebook, ".md", resourceRoots);
   if (template) {
     const raw = readFileSync(template, "utf8");
     return replaceGeneratedPlaceholders(flattenTemplateFrontmatter(raw), item, projectId) as string;
@@ -195,6 +215,7 @@ export function runGenerate(opts: {
   force: boolean;
   dryRun?: boolean;
   dctNames?: string[];
+  resourceRoots?: SpecdojoResolutionRoots;
 }): { written: string[]; skipped: string[]; errors: string[] } {
   const {
     catalogPath,
@@ -204,6 +225,7 @@ export function runGenerate(opts: {
     force,
     dryRun = false,
     dctNames = [],
+    resourceRoots,
   } = opts;
   const written: string[] = [];
   const skipped: string[] = [];
@@ -270,6 +292,7 @@ export function runGenerate(opts: {
           projectId,
           templatesPath,
           rulebooksPath,
+          resourceRoots,
         );
         if (!dryRun) {
           mkdirSync(dirname(outputPath), { recursive: true });

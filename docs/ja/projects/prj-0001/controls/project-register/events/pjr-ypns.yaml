@@ -83,3 +83,29 @@
       from: "-"
       to: "agent exited with non-zero code: runner による検証で `typecheck` (exit 2) および `test-unit` (exit 1) が失敗しているため。具体的には `src/catalog-plan.ts` での参照エラーおよび、カタログプランとグレードに関する単体テストの失敗が確認されている。"
   previous_event_id: reg_455a7e246a6147ddb023905e70abd287
+- v: 1
+  id: reg_7396d740e2824f3ba51b3f277e87bbf6
+  ts: "2026-09-23T04:45:16Z"
+  action: start
+  actor: gemma-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_7a20bbd294e342ae94465215224a6db4
+- v: 1
+  id: reg_07c77eee43364834a9f532bfc79202d4
+  ts: "2026-09-23T04:50:50Z"
+  action: review
+  actor: gemma-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_7396d740e2824f3ba51b3f277e87bbf6

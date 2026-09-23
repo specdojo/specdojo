@@ -9,6 +9,7 @@ import type {
   DctTemplateDoc,
 } from "./catalog-types.js";
 import { practiceLocalId } from "./practice-id.js";
+import { specdojoDirectoryPaths, type SpecdojoResolutionRoots } from "./template-resolution.js";
 
 export type ProjectSize = "small" | "medium" | "large";
 export type ScaffoldVariables = Record<string, string>;
@@ -265,6 +266,7 @@ export function runScaffold(opts: {
   force: boolean;
   domains?: string[];
   variables?: ScaffoldVariables;
+  resourceRoots?: SpecdojoResolutionRoots;
 }): { written: string[]; skipped: string[]; warnings: string[]; errors: string[] } {
   const { catalogPath, templatesPath, size, force } = opts;
   const written: string[] = [];
@@ -281,18 +283,23 @@ export function runScaffold(opts: {
     return { written, skipped, warnings, errors };
   }
 
-  const templateFiles = readdirSync(templatesPath)
-    .filter((f) => /^dct-.+\.yaml$/.test(f))
-    .sort();
+  const templateDirectories = opts.resourceRoots
+    ? specdojoDirectoryPaths("docs/ja/specdojo/templates", opts.resourceRoots)
+    : [templatesPath];
+  const templateFiles = new Map<string, string>();
+  for (const directory of templateDirectories) {
+    for (const file of readdirSync(directory).filter((entry) => /^dct-.+\.yaml$/.test(entry))) {
+      if (!templateFiles.has(file)) templateFiles.set(file, join(directory, file));
+    }
+  }
 
-  if (templateFiles.length === 0) {
+  if (templateFiles.size === 0) {
     errors.push(`No dct-*.yaml template files found in: ${templatesPath}`);
     return { written, skipped, warnings, errors };
   }
 
   const loaded: LoadedTemplate[] = [];
-  for (const f of templateFiles) {
-    const templatePath = join(templatesPath, f);
+  for (const [f, templatePath] of [...templateFiles].sort(([a], [b]) => a.localeCompare(b))) {
     try {
       const raw = readFileSync(templatePath, "utf8");
       loaded.push({ filename: f, path: templatePath, template: yaml.load(raw) as DctTemplateDoc });

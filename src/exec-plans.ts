@@ -28,6 +28,7 @@ import type { CoverageType, ReviewViewpoint } from "./review-types.js";
 import type { RoleDefinition, RolesDoc } from "./role-types.js";
 import { readGradeResultForDocument, gradeResultPathForDocument } from "./grade-result.js";
 import { lookupDocIndex } from "./doc-index.js";
+import { resolveSpecdojoPath, resolveSpecdojoPathIfExists } from "./template-resolution.js";
 
 // ---------------------------------------------------------------------------
 // Internal types
@@ -238,7 +239,11 @@ const REVIEW_RESULT_VIEWPOINT_DETAIL_TEMPLATE = "xrr-viewpoint-detail-template.m
 const COMMON_CONVENTIONS_TEMPLATE = "xep-common-conventions-template.md";
 
 export function execTemplatesDir(): string {
-  return join(specdojoRootDir(), "docs/ja/specdojo/exec-templates");
+  return resolveSpecdojoPath("docs/ja/specdojo/exec-templates");
+}
+
+export function execTemplatePath(fileName: string): string {
+  return resolveSpecdojoPath(`docs/ja/specdojo/exec-templates/${fileName}`);
 }
 
 function templatePrefix(mode: TaskMode): string {
@@ -258,10 +263,12 @@ function approachTemplateFileName(mode: TaskMode, approach: Approach): string {
 // next candidate so a plan is always produced.
 function resolvePlanTemplatePath(mode: TaskMode, approach: Approach | undefined): string {
   if (approach) {
-    const candidatePath = join(execTemplatesDir(), approachTemplateFileName(mode, approach));
-    if (existsSync(candidatePath)) return candidatePath;
+    const candidatePath = resolveSpecdojoPathIfExists(
+      `docs/ja/specdojo/exec-templates/${approachTemplateFileName(mode, approach)}`,
+    );
+    if (candidatePath) return candidatePath;
   }
-  return join(execTemplatesDir(), standardTemplateFileName(mode));
+  return execTemplatePath(standardTemplateFileName(mode));
 }
 
 function readTemplate(templatePath: string, cache: Map<string, string>): string {
@@ -284,7 +291,7 @@ function loadPlanTemplate(
 }
 
 function loadViewpointDetailTemplate(cache: Map<string, string>): string {
-  return readTemplate(join(execTemplatesDir(), REVIEW_VIEWPOINT_DETAIL_TEMPLATE), cache);
+  return readTemplate(execTemplatePath(REVIEW_VIEWPOINT_DETAIL_TEMPLATE), cache);
 }
 
 // Marker a plan template places to control where the shared conventions fragment lands.
@@ -305,10 +312,7 @@ export function injectCommonConventions(
   schemaRef: string,
   cache: Map<string, string>,
 ): string {
-  let conventions = readTemplate(
-    join(execTemplatesDir(), COMMON_CONVENTIONS_TEMPLATE),
-    cache,
-  ).trimEnd();
+  let conventions = readTemplate(execTemplatePath(COMMON_CONVENTIONS_TEMPLATE), cache).trimEnd();
   conventions =
     schemaRef === MISSING
       ? conventions
@@ -718,7 +722,7 @@ export function reviewResultSectionsForDeliverable(
   const criteria = info?.deliverable.done_criteria ?? [];
   if (criteria.length === 0) return undefined;
   const detailTemplate = readTemplate(
-    join(execTemplatesDir(), REVIEW_RESULT_VIEWPOINT_DETAIL_TEMPLATE),
+    execTemplatePath(REVIEW_RESULT_VIEWPOINT_DETAIL_TEMPLATE),
     new Map<string, string>(),
   );
   return reviewResultSections(criteria, detailTemplate);

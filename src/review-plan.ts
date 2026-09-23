@@ -1,7 +1,6 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
 import yaml from "js-yaml";
-import { specdojoRootDir } from "./specdojo-config.js";
+import { resolveSpecdojoPath } from "./template-resolution.js";
 import type { ReviewViewpointsDoc } from "./review-types.js";
 
 export const COMMON_VIEWPOINTS_ID = "specdojo:pm-review-viewpoints";
@@ -174,7 +173,7 @@ function validateResolvedInheritance(doc: Record<string, unknown>, projectPath: 
 }
 
 export function commonViewpointsPath(): string {
-  return join(specdojoRootDir(), "docs/ja/specdojo/defaults/pm-review-viewpoints.yaml");
+  return resolveSpecdojoPath("docs/ja/specdojo/defaults/pm-review-viewpoints.yaml");
 }
 
 /**
