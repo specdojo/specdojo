@@ -58,3 +58,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_e366f8f239104b00ac84687683293d08
+- v: 1
+  id: reg_ec787722f0764b93a770c0c68a505750
+  ts: "2026-09-23T10:28:04Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: レビュー完了。README の手順を空ディレクトリでなぞって確認
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-23"
+    - field: conclusion
+      from: "-"
+      to: README と quick-start-guide を npm 導入で完結する導線へ改め、設定キーの reference を新設した。config init の Next steps と catalog scaffold のエラーから参照先へ辿れる。
+  previous_event_id: reg_ccadae0867d0482f95dca5c29641b1c4

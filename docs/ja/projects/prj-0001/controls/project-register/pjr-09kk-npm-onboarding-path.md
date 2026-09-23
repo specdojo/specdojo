@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-09kk-npm-onboarding-path
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-09-23T03:50:08Z"
   due_on: "2026-10-31"
+  completed_at: "2026-09-23T10:28:04Z"
+  conclusion: README と quick-start-guide を npm 導入で完結する導線へ改め、設定キーの reference を新設した。config init の Next steps と catalog scaffold のエラーから参照先へ辿れる。
 ---
 
 # PJR-09KK npm 導入から exec までの導線を README と quick-start へ反映する
@@ -91,6 +93,32 @@ kata を持たない空ディレクトリでの動作は次のとおり。
 - [[specdojo:specdojo-config-reference]] を新設し、設定キーの役割、既定値、パスの基準、必要とする主なコマンドを一覧化した。`config init` の雛形には全キーを追加せず、register 最小構成を維持した。
 - `config init` の Next steps と `catalog_path not set` のエラーから設定リファレンスへ到達できる URL を追加し、単体テストで固定した。
 - [[specdojo:quick-start-guide]] では `@specdojo/docs-lint` と最小 `.remarkrc.yaml` の例を維持し、詳細な設定と検証コマンドは [[specdojo:docs-editing-guide|ドキュメント編集ガイド]] を正本として参照した。
+
+### 4.1. 文書どおりになぞった確認
+
+README に記載された手順を、kata を持たない一時ディレクトリでそのまま実行した。全て記載どおりに動作した。
+
+| 手順                        | 結果                                                   |
+| --------------------------- | ------------------------------------------------------ |
+| `config init`               | 成功。Next steps に設定リファレンスの URL が表示される |
+| `register scaffold`         | 成功                                                   |
+| `register add`              | 成功（`PJR-8CH0`）                                     |
+| `register build`            | 成功                                                   |
+| `exec plan --register`      | 成功。plan を生成                                      |
+| `kata list --kind rulebook` | `SOURCE=node_modules` / `EJECTABLE=yes` で表示         |
+| `kata show`                 | 内容を表示                                             |
+| `kata eject`                | `COPY` で正準パスへ配置                                |
+| `catalog scaffold`          | 設定不足で失敗するが、不足キーと参照先 URL を案内      |
+
+`catalog scaffold` のエラーは「何が足りないか」「どう直すか」「どこを見るか」が 3 行で揃う形になった。
+
+```text
+catalog_path not set for project 'prj-0001' in .../.specdojo/specdojo.config.json.
+Add "catalog_path": "<path>" to the project config.
+Configuration keys: https://specdojo.github.io/specdojo/ja/specdojo/references/specdojo-config-reference.html
+```
+
+これにより [[prj-0001:pjr-fkn1-kata-distribution-method]] から派生した 4 段階（[[prj-0001:pjr-ypns-kata-resolution]]、[[prj-0001:pjr-aak1-kata-subcommands]]、[[prj-0001:pjr-g8m9-kata-wikilink-resolution]]、本項目）がすべて完了し、npm 導入だけで Detached Unit を立ち上げて exec plan と kata の参照・eject まで到達できる状態になった。
 
 ## 5. 関連ドキュメント
 
