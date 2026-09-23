@@ -32,3 +32,25 @@
     - field: due
       from: ""
       to: "2026-10-17"
+- v: 1
+  id: reg_13499e2712364103a686ba1cb90d52db
+  ts: "2026-09-23T03:49:55Z"
+  action: update
+  actor: orchestrator
+  from_status: open
+  to_status: open
+  reason: PJR-FKN1 の実装を段階分割し、第 1 段階へ絞る
+  changes:
+    - field: id
+      from: prj-0001:pjr-ypns-kata-resolution-and-commands
+      to: prj-0001:pjr-ypns-kata-resolution
+    - field: title
+      from: kata の解決順序を実装し kata サブコマンドを追加する
+      to: kata と schema の解決順序を実装する
+    - field: description
+      from: "[[prj-0001:pjr-fkn1-kata-distribution-method]] で決めた「参照を既定、上書きしたいものだけ eject」を実装する。現在 CLI は `specdojoRootDir()` 直下の固定パスで kata と schema を探すため、利用リポジトリに kata が無いと `exec plan` が `Template not found` で止まる。"
+      to: 利用プロジェクトのリポジトリに kata が無くても exec plan まで動くよう、docs/ja/specdojo と docs/specdojo/schemas の解決を「利用リポジトリ優先、無ければ node_modules/specdojo」の順に変える。13 ファイル 22 箇所の直接参照を単一の resolver へ集約し、worktree 内での解決と node_modules の書き込み保護も扱う。kata サブコマンド、wikilink 解決、導線更新は別項目へ分割した。
+    - field: due
+      from: "2026-10-17"
+      to: "2026-10-10"
+  previous_event_id: reg_ccca6bed7836406d84d12b1f3a7a0dc6

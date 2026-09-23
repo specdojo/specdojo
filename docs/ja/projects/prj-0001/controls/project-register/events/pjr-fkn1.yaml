@@ -32,3 +32,22 @@
     - field: due
       from: ""
       to: "2026-10-03"
+- v: 1
+  id: reg_9ff1a3a25b6a4ed7ab57c3592c467676
+  ts: "2026-09-23T03:49:48Z"
+  action: close
+  actor: naoji3x
+  from_status: open
+  to_status: decided
+  reason: 方針を承認。commit 方式で承認を残す
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-09-23"
+    - field: conclusion
+      from: "-"
+      to: kata と schema は node_modules 参照を既定とし、上書きしたいものだけ eject する。exec-templates と schemas は参照固定、規範文書と成果物テンプレートは eject 可、全量コピーは docs サイト配信向けの選択肢として残す。
+  previous_event_id: reg_4647e5bdf0a042dbb7285eb6f622d37e

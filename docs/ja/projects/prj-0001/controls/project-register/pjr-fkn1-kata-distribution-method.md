@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-fkn1-kata-distribution-method
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: high
   owner: ARC
   registered_at: "2026-09-23T03:10:29Z"
   due_on: "2026-10-03"
+  completed_at: "2026-09-23T03:49:48Z"
+  conclusion: kata と schema は node_modules 参照を既定とし、上書きしたいものだけ eject する。exec-templates と schemas は参照固定、規範文書と成果物テンプレートは eject 可、全量コピーは docs サイト配信向けの選択肢として残す。
 ---
 
 # PJR-FKN1 kata の配布方式を node_modules 参照を既定とし eject で上書きする方式に決める
@@ -72,29 +74,32 @@ CLI は `specdojoRootDir()`（利用者のリポジトリルート）を基準�
 
 ## 5. 承認
 
-| 項目     | 内容                                     |
-| -------- | ---------------------------------------- |
-| 決定者   | _TODO_                                   |
-| 決定日   | _TODO_                                   |
-| 承認方式 | commit                                   |
-| 証跡     | _TODO_: close 時の遷移 commit を記載する |
+| 項目     | 内容                                                                  |
+| -------- | --------------------------------------------------------------------- |
+| 決定者   | naoji3x                                                               |
+| 決定日   | 2026-09-23                                                            |
+| 承認方式 | commit                                                                |
+| 証跡     | register event `close`（`events/pjr-fkn1.yaml`）と本個票の遷移 commit |
 
 - 承認方式は `commit` または `PR` を記載する。`PR` の場合は証跡に PR URL と merge SHA を本文テキストで記載する。
 - 不可逆・高リスク・framework schema 破壊的変更に該当する決定は `PR` 方式で承認する。
 
 ## 6. 影響範囲とフォローアップ
 
-| 項目       | 内容                                                                                                                                     |
-| ---------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| 影響範囲   | kata と schema を参照する 13 ファイル 22 箇所、wikilink 解決、`index build`、worktree 実行、docs サイト生成、README と quick-start-guide |
-| 必要な対応 | 実装は [[prj-0001:pjr-ypns-kata-resolution-and-commands]]、文書は同項目の作業として扱う                                                  |
-| 追跡先     | [[prj-0001:pjr-ypns-kata-resolution-and-commands]]                                                                                       |
+| 項目       | 内容                                                                                                                                                                        |
+| ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 影響範囲   | kata と schema を参照する 13 ファイル 22 箇所、wikilink 解決、`index build`、worktree 実行、docs サイト生成、README と quick-start-guide                                    |
+| 必要な対応 | 実装を 4 段階へ分割した。解決順序、サブコマンド、wikilink 解決、導線の文書更新                                                                                              |
+| 追跡先     | [[prj-0001:pjr-ypns-kata-resolution]] / [[prj-0001:pjr-aak1-kata-subcommands]] / [[prj-0001:pjr-g8m9-kata-wikilink-resolution]] / [[prj-0001:pjr-09kk-npm-onboarding-path]] |
 
 参照方式の弱点は、利用リポジトリだけを見ても適用中の規範が分からないことである。`package-lock.json` でバージョンは固定されるため再現できるが、レビュー時には参照が要る。`kata show <id>` のような閲覧コマンドと公開サイトへのリンクで補う。
 
 ## 7. 関連ドキュメント
 
-- [[prj-0001:pjr-ypns-kata-resolution-and-commands]]
+- [[prj-0001:pjr-ypns-kata-resolution]]
+- [[prj-0001:pjr-aak1-kata-subcommands]]
+- [[prj-0001:pjr-g8m9-kata-wikilink-resolution]]
+- [[prj-0001:pjr-09kk-npm-onboarding-path]]
 - [[prj-0001:pjr-tbhh-detached-unit-default]]
 - [[specdojo:practice-system-composition-guide]]
 - [[specdojo:quick-start-guide]]
