@@ -23,6 +23,20 @@ function writeIndex(
   return indexPath;
 }
 
+function buildRepositoryOnlyDocIndex(
+  rootDir: string,
+  outputPath: string,
+  repoRoot: string,
+  configPath?: string,
+): { count: number } {
+  return buildDocIndex(rootDir, outputPath, repoRoot, configPath, {
+    resourceRoots: {
+      repositoryRoot: repoRoot,
+      packageRoot: repoRoot,
+    },
+  });
+}
+
 describe("lookupDocIndex", () => {
   it("インデックスファイルが存在しない場合は undefined を返す", () => {
     const result = lookupDocIndex("some-id", "/nonexistent/path/doc-index.json");
@@ -271,7 +285,11 @@ describe("buildDocIndex", () => {
       writeFileSync(join(docsRoot, "ja", "project", "guides", "shared-guide.md"), frontmatter);
 
       expect(() =>
-        buildDocIndex(docsRoot, join(docsRoot, ".specdojo", "doc-index.json"), repoRoot),
+        buildRepositoryOnlyDocIndex(
+          docsRoot,
+          join(docsRoot, ".specdojo", "doc-index.json"),
+          repoRoot,
+        ),
       ).toThrow(/Duplicate document ID "specdojo:shared-guide"/);
     } finally {
       rmSync(repoRoot, { recursive: true, force: true });
@@ -295,7 +313,7 @@ describe("buildDocIndex", () => {
       );
 
       const outputPath = join(docsRoot, ".specdojo", "doc-index.json");
-      const result = buildDocIndex(docsRoot, outputPath, repoRoot);
+      const result = buildRepositoryOnlyDocIndex(docsRoot, outputPath, repoRoot);
       const index = JSON.parse(readFileSync(outputPath, "utf8")) as DocIndex;
 
       expect(result.count).toBe(2);
@@ -327,7 +345,7 @@ describe("buildDocIndex", () => {
       );
 
       const outputPath = join(docsRoot, ".specdojo", "doc-index.json");
-      buildDocIndex(docsRoot, outputPath, repoRoot);
+      buildRepositoryOnlyDocIndex(docsRoot, outputPath, repoRoot);
       const index = JSON.parse(readFileSync(outputPath, "utf8")) as DocIndex;
 
       expect(index.entries["specdojo:ifx-api-sample"]).toBe("docs/ja/ifx-api-sample.yaml");
@@ -354,7 +372,7 @@ describe("buildDocIndex", () => {
       );
 
       const outputPath = join(docsRoot, ".specdojo", "doc-index.json");
-      buildDocIndex(docsRoot, outputPath, repoRoot);
+      buildRepositoryOnlyDocIndex(docsRoot, outputPath, repoRoot);
       const index = JSON.parse(readFileSync(outputPath, "utf8")) as DocIndex;
 
       // entries は既定言語（config 先頭の ja）を指す。
@@ -385,7 +403,11 @@ describe("buildDocIndex", () => {
       );
 
       expect(() =>
-        buildDocIndex(docsRoot, join(docsRoot, ".specdojo", "doc-index.json"), repoRoot),
+        buildRepositoryOnlyDocIndex(
+          docsRoot,
+          join(docsRoot, ".specdojo", "doc-index.json"),
+          repoRoot,
+        ),
       ).toThrow(/Duplicate document ID "dup-guide" in locale "ja"/);
     } finally {
       rmSync(repoRoot, { recursive: true, force: true });
@@ -410,7 +432,11 @@ describe("buildDocIndex", () => {
       );
 
       expect(() =>
-        buildDocIndex(docsRoot, join(docsRoot, ".specdojo", "doc-index.json"), repoRoot),
+        buildRepositoryOnlyDocIndex(
+          docsRoot,
+          join(docsRoot, ".specdojo", "doc-index.json"),
+          repoRoot,
+        ),
       ).toThrow(/mixed language-neutral and localized/);
     } finally {
       rmSync(repoRoot, { recursive: true, force: true });
@@ -464,7 +490,7 @@ describe("buildDocIndex", () => {
       );
 
       const outputPath = join(docsRoot, ".specdojo", "doc-index.json");
-      buildDocIndex(docsRoot, outputPath, repoRoot);
+      buildRepositoryOnlyDocIndex(docsRoot, outputPath, repoRoot);
       const index = JSON.parse(readFileSync(outputPath, "utf8")) as DocIndex;
 
       expect(index.entries["ignored-doc"]).toBeUndefined();
@@ -508,6 +534,119 @@ describe("buildDocIndex", () => {
       rmSync(repoRoot, { recursive: true, force: true });
     }
   });
+
+  it("resolver 由来の package kata をインデックス化し、kata 外は走査しない", () => {
+    const repoRoot = mkdtempSync(join(tmpdir(), "specdojo-test-"));
+    try {
+      const docsRoot = join(repoRoot, "docs");
+      const packageRoot = join(repoRoot, "node_modules", "specdojo");
+      const rulebookPath = join(
+        packageRoot,
+        "docs",
+        "ja",
+        "specdojo",
+        "rulebooks",
+        "package-rulebook.md",
+      );
+      const guidePath = join(packageRoot, "docs", "ja", "specdojo", "guides", "package-guide.md");
+      mkdirSync(docsRoot, { recursive: true });
+      mkdirSync(join(rulebookPath, ".."), { recursive: true });
+      mkdirSync(join(guidePath, ".."), { recursive: true });
+      writeFileSync(
+        rulebookPath,
+        "---\nspecdojo:\n  id: specdojo:package-rulebook\n  type: rulebook\n  status: ready\n---\n",
+        "utf8",
+      );
+      writeFileSync(
+        guidePath,
+        "---\nspecdojo:\n  id: specdojo:package-guide\n  type: guide\n  status: ready\n---\n",
+        "utf8",
+      );
+
+      const outputPath = join(repoRoot, ".specdojo", "doc-index.json");
+      buildDocIndex(docsRoot, outputPath, repoRoot, undefined, {
+        resourceRoots: { repositoryRoot: repoRoot, packageRoot },
+      });
+
+      expect(lookupDocIndex("specdojo:package-rulebook", outputPath)).toBe(
+        "node_modules/specdojo/docs/ja/specdojo/rulebooks/package-rulebook.md",
+      );
+      expect(lookupDocIndex("specdojo:package-guide", outputPath)).toBeUndefined();
+      expect(lookupDocIndex("specdojo:missing-rulebook", outputPath)).toBeUndefined();
+    } finally {
+      rmSync(repoRoot, { recursive: true, force: true });
+    }
+  });
+
+  it("同じ ID の kata が両スコープにある場合は利用リポジトリ側を採用する", () => {
+    const repoRoot = mkdtempSync(join(tmpdir(), "specdojo-test-"));
+    try {
+      const docsRoot = join(repoRoot, "docs");
+      const packageRoot = join(repoRoot, "node_modules", "specdojo");
+      const relativePath = join("docs", "ja", "specdojo", "rulebooks", "shared-rulebook.md");
+      const frontmatter =
+        "---\nspecdojo:\n  id: specdojo:shared-rulebook\n  type: rulebook\n  status: ready\n---\n";
+      mkdirSync(join(repoRoot, relativePath, ".."), { recursive: true });
+      mkdirSync(join(packageRoot, relativePath, ".."), { recursive: true });
+      writeFileSync(join(repoRoot, relativePath), frontmatter, "utf8");
+      writeFileSync(join(packageRoot, relativePath), frontmatter, "utf8");
+
+      const outputPath = join(repoRoot, ".specdojo", "doc-index.json");
+      expect(() =>
+        buildDocIndex(docsRoot, outputPath, repoRoot, undefined, {
+          resourceRoots: { repositoryRoot: repoRoot, packageRoot },
+        }),
+      ).not.toThrow();
+      expect(lookupDocIndex("specdojo:shared-rulebook", outputPath)).toBe(
+        "docs/ja/specdojo/rulebooks/shared-rulebook.md",
+      );
+    } finally {
+      rmSync(repoRoot, { recursive: true, force: true });
+    }
+  });
+
+  it("package スコープ内の ID 重複は衝突した全ファイルパスを表示する", () => {
+    const repoRoot = mkdtempSync(join(tmpdir(), "specdojo-test-"));
+    try {
+      const docsRoot = join(repoRoot, "docs");
+      const packageRoot = join(repoRoot, "node_modules", "specdojo");
+      mkdirSync(docsRoot, { recursive: true });
+      const relativePaths = [
+        "docs/ja/specdojo/rulebooks/duplicate-rulebook.md",
+        "docs/ja/specdojo/standards/duplicate-standard.md",
+        "docs/ja/specdojo/recipes/duplicate-recipe.md",
+      ];
+      const frontmatter =
+        "---\nspecdojo:\n  id: specdojo:duplicate-kata\n  type: rulebook\n  status: ready\n---\n";
+      for (const relativePath of relativePaths) {
+        const filePath = join(packageRoot, relativePath);
+        mkdirSync(join(filePath, ".."), { recursive: true });
+        writeFileSync(filePath, frontmatter, "utf8");
+      }
+
+      let message = "";
+      try {
+        buildDocIndex(
+          docsRoot,
+          join(repoRoot, ".specdojo", "doc-index.json"),
+          repoRoot,
+          undefined,
+          {
+            resourceRoots: { repositoryRoot: repoRoot, packageRoot },
+          },
+        );
+      } catch (error) {
+        message = error instanceof Error ? error.message : String(error);
+      }
+
+      expect(message).toContain('Duplicate document ID "specdojo:duplicate-kata"');
+      for (const relativePath of relativePaths) {
+        expect(message).toContain(`node_modules/specdojo/${relativePath}`);
+      }
+    } finally {
+      rmSync(repoRoot, { recursive: true, force: true });
+    }
+  });
 });
 
 describe("prj-0001 project register references", () => {
@@ -518,7 +657,7 @@ describe("prj-0001 project register references", () => {
     const registerId = "prj-0001:pjr-index";
 
     try {
-      buildDocIndex(join(repoRoot, "docs"), indexPath, repoRoot);
+      buildRepositoryOnlyDocIndex(join(repoRoot, "docs"), indexPath, repoRoot);
 
       const expectedPath =
         "docs/ja/projects/prj-0001/controls/project-register/generated/pjr-index.md";
