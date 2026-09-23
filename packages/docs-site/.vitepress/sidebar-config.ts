@@ -282,6 +282,7 @@ export const specdojoSidebarItems = [
     items: [
       reference("成果物リファレンス", "deliverables-reference"),
       reference("ディレクトリレイアウトリファレンス", "directory-layout-reference"),
+      reference("SpecDojo設定リファレンス", "specdojo-config-reference"),
       reference("CLIコマンドリファレンス", "command-reference"),
     ],
   },

@@ -22,6 +22,9 @@ export type SpecDojoRunConfig = {
 /** Default IANA time zone for register date derivation when run.register_date_timezone is unset. */
 export const DEFAULT_REGISTER_DATE_TIMEZONE = "UTC";
 
+export const SPECDOJO_CONFIG_REFERENCE_URL =
+  "https://specdojo.github.io/specdojo/ja/specdojo/references/specdojo-config-reference.html";
+
 export type SpecDojoProjectConfig = {
   /**
    * Optional repo-root-relative prefix shared by every project document path below
@@ -326,7 +329,8 @@ export function registerConfigCommands(program: Command): void {
           "  1. Keep this repository beside the product repository as app1-specdojo/.\n" +
           "  2. Review the project ID and paths; worktrees default to ../app1-worktrees.\n" +
           "  3. Optional agent setup: npx specdojo config scaffold --provider <name>\n" +
-          "  4. Create a register: npx specdojo register scaffold --project prj-0001\n",
+          "  4. Create a register: npx specdojo register scaffold --project prj-0001\n" +
+          `  5. Before using catalog or schedule, add the required paths: ${SPECDOJO_CONFIG_REFERENCE_URL}\n`,
       );
     });
 
