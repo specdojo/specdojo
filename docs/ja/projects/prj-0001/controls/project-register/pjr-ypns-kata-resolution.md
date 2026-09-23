@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-ypns-kata-resolution
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-09-23T03:10:29Z"
   due_on: "2026-10-10"
+  completed_at: "2026-09-23T04:53:59Z"
   block_reason: "agent exited with non-zero code: runner による検証で `typecheck` (exit 2) および `test-unit` (exit 1) が失敗しているため。具体的には `src/catalog-plan.ts` での参照エラーおよび、カタログプランとグレードに関する単体テストの失敗が確認されている。"
+  conclusion: kata と schema の解決を利用リポジトリ優先・package フォールバックへ集約し、kata を持たないリポジトリで exec plan まで到達できるようにした。解決と列挙を区別し、grade の対象列挙は利用リポジトリ限定とした。
 ---
 
 # PJR-YPNS kata と schema の解決順序を実装する
@@ -44,6 +46,7 @@ const packageRoot = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 - exec worktree 内でも resolver が機能し、plan に記載されるパスが resolver 由来になっている。
 - `node_modules` 配下が agent の書き込み保護対象に含まれている。
 - 利用リポジトリ側に同名ファイルがある場合はそちらが優先されることを確認する単体テストがある。
+- kata の「解決」と「列挙」が区別されている。個別ファイルの解決だけがフォールバックし、評価対象や成果物の列挙は利用リポジトリに限定される。
 - `npm run check` が通過している。
 
 ## 3. 作業内容
@@ -63,6 +66,25 @@ const packageRoot = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 - `node_modules/` を agent の保護対象に加え、同梱資産がある `node_modules/specdojo` は実行前後の snapshot でも変更を検知するようにした。
 - kata を置かない一時リポジトリで `config init`、`register scaffold`、`register add`、`exec plan --register` を順に実行し、plan 生成まで完了することを確認した。
 - resolver の利用者側優先、package fallback、plan 用相対パス、および同梱資産の変更検知をテストへ追加した。型検査・unit / integration test・schema 検証は executor / reporter pipeline の親 runner が実行する。
+
+### 4.1. オーケストレーターが補った修正
+
+初回実行は親検証の `typecheck`（exit 2）と `test-unit`（exit 1）で `waiting` になった。原因を調査し、reporter ステージの再開前に次の 3 点を修正した。
+
+- `src/catalog-plan.ts` の `resolve` の import 漏れ。これが型エラーの直接原因だった。
+- grade の対象列挙が package 側まで拾っていた。`loadKataReferences()` と `grade list --target kata` の候補列挙を利用リポジトリ限定へ戻した。[[prj-0001:pjr-fkn1-kata-distribution-method]] の「grade の対象は eject 済み kata のみ」に反していた。templates / rulebooks / samples の列挙は利用者が package の雛形を使うためフォールバックのままとした。
+- `specdojoReferencePath` が利用リポジトリ外へ解決された場合に `../../` で遡る相対パスを返していた。agent の作業ディレクトリ基準で不安定なため、リポジトリ外なら絶対パスを返すよう変更した。`node_modules` 配下はリポジトリ内のため従来どおり相対パスになる。
+
+あわせて `SPECDOJO_PACKAGE_ROOT` を追加した。一時ディレクトリを使う単体テストでは package ルートが開発リポジトリを指すため、フォールバックが開発リポジトリの kata を拾って結果が非決定になる。参照先 package を明示的に固定できるようにし、`kata.test.ts` で一時ルートへ固定した。
+
+失敗の原因は個票の完了条件が「22 箇所の直接参照を resolver へ集約する」とだけ書かれ、列挙と解決の区別を示していなかったことにある。executor は指示どおりに全件を置き換えた。完了条件へ区別を追記し、[[prj-0001:pjr-aak1-kata-subcommands]] にも前提として記載した。
+
+### 4.2. 検証
+
+- 型検査、ESLint、`npm run check`（118 files / 1637 tests）が通過した。
+- 空ディレクトリで `dist/specdojo.js` を実行し、`config init` → `register scaffold` → `register add` → `exec plan --register` まで到達することを確認した。従来は `Template not found` で停止していた。
+- 同じ空ディレクトリで `grade list --target kata` が 0 件を返し、package 側の kata 250 件を拾わないことを確認した。
+- 生成された plan に、リポジトリ外へ遡る参照パスが含まれないことを確認した。
 
 ## 5. 関連ドキュメント
 

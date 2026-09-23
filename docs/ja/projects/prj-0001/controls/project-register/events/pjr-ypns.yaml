@@ -109,3 +109,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_7396d740e2824f3ba51b3f277e87bbf6
+- v: 1
+  id: reg_14a079438a784648b4081c1d4da5806b
+  ts: "2026-09-23T04:53:59Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: レビュー完了。初回失敗分をオーケストレーターが補修し resume で統合
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-23"
+    - field: conclusion
+      from: "-"
+      to: kata と schema の解決を利用リポジトリ優先・package フォールバックへ集約し、kata を持たないリポジトリで exec plan まで到達できるようにした。解決と列挙を区別し、grade の対象列挙は利用リポジトリ限定とした。
+  previous_event_id: reg_07c77eee43364834a9f532bfc79202d4
