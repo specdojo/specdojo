@@ -32,3 +32,22 @@
     - field: due
       from: ""
       to: "2026-09-30"
+- v: 1
+  id: reg_007f5e0412294ea3b1bfec546f5b06a1
+  ts: "2026-09-23T07:03:49Z"
+  action: close
+  actor: orchestrator
+  from_status: open
+  to_status: done
+  reason: オーケストレーターが直接対応し、ローカル feature から --no-ff merge で統合
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-23"
+    - field: conclusion
+      from: "-"
+      to: git の失敗理由から進捗表示を除き、原因を示す行を優先して残すようにした。全文は GitCommandError が保持する。ログへの書き出しは必要が生じた時点で別途扱う。
+  previous_event_id: reg_2776a51aa8c14d9390d8a7448c48e5bd
