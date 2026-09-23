@@ -69,7 +69,36 @@ main
 - feature または exec の統合後も project の完了判断までは `develop` を保持します。
 - project `develop` から `main` への統合は Pull Request または同等のレビュー可能な変更単位で行います。
 
-### 4.1. developからmainへの昇格方式
+### 4.1. developへ入る3層の変更経路
+
+project `develop` へ入る変更は、変更の作成主体と事前レビューの要否により次の3層へ分けます。
+
+| 層  | 変更の種類                                                    | 作業ブランチ                   | `develop` への統合方法                                      |
+| --- | ------------------------------------------------------------- | ------------------------------ | ----------------------------------------------------------- |
+| 1   | SpecDojo exec が task 単位で自動実行する変更                  | `exec/<project-id>-<task-id>`  | 統合専用 actor が `--no-ff` で merge し、保護を bypass する |
+| 2   | 人または対話型 agent が内容を書いた実装、設定、規範・設計文書 | `feature/<project-id>/<topic>` | Pull Request で差分の承認を得てから merge する              |
+| 3   | register の起票・close・状態遷移と、それに伴う生成物の再構築  | project `develop`              | 統合専用 actor による直接 commit を許容する                 |
+
+層2と層3の境界は、変更内容に事前レビューの価値があるかで判断します。実装、設定、本文、判断内容のようにレビューで誤りを発見できる変更は、コマンドで生成・記録した場合でも層2です。層3は、既に決まった実行事実を register へ記帳するだけで、内容の判断を伴わない変更に限定します。記帳と内容変更が同じ作業に含まれる場合は、全体を層2として扱います。
+
+層3を例外にできるのは、register ID が連番ではなく乱数で採番され、index と view の生成物が `.gitignore` で Git 管理対象外になっており、Git 管理する実体が項目単位の個票と event に分かれているためです。これらの前提が成立しない register や、同じ正本ファイルを複数人が更新する記帳には例外を適用せず、層2として扱います。
+
+exec に流す `todo` の個票と実行に必要な記帳は、実行前に project `develop` へ統合済みでなければなりません。`exec run --worktree` は project `develop` の commit を起点に worktree を作るため、feature にだけ存在する `todo` は実行対象にしません。
+
+### 4.2. 運用規模ごとの必須条件
+
+3層の分類、feature と exec の分岐元・統合先、および exec 対象を事前に `develop` へ入れる制約は、運用規模にかかわらず適用します。運用基盤に関する条件は次のように区別します。
+
+| 条件                                                | 単独運用                                                                                        | 複数人・複数 actor 運用                                                                        |
+| --------------------------------------------------- | ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| 層2の統合レビュー                                   | リモートを共有しない場合は、ローカルの差分確認と `--no-ff` merge を Pull Request の代替にできる | Pull Request を必須とし、作成者以外が参加できるレビュー単位を `develop` へ入る前に作る         |
+| project `develop` の branch protection              | 省略できる                                                                                      | 必須。人の直接 push、force-push、削除を禁止する                                                |
+| 統合専用 actor                                      | 作業者と分離できない場合は省略できる                                                            | 必須。exec の merge と層3の直接 commit だけに bypass を許可し、人の層2変更には使わない         |
+| feature を切る前の project `develop` のリモート反映 | リモートや Pull Request を使わない場合は省略できる                                              | 必須。ローカル先端を push し、リモートの `develop` と一致することを確認してから feature を切る |
+
+単独運用から複数人・複数 actor 運用へ移る前に、統合専用 actor と branch protection を準備します。準備できない猶予期間は単独運用の条件を複数人運用へ流用せず、対象、理由、期間、復帰条件を project register に記録します。
+
+### 4.3. developからmainへの昇格方式
 
 project `develop` から `main` への昇格は、`develop` の先端を第2 parent とする merge commit を必ず作ります。ローカルで再現する場合は `git merge --no-ff`、Pull Request では merge commit を作る方式を選びます。squash merge と rebase merge は使用しません。
 
@@ -106,7 +135,7 @@ git log --first-parent --oneline main
 - 複数プロジェクトを並行する場合、main worktree の現在ブランチによるベース自動判定だけに依存せず、対象 project の `develop` を指定します。
 - `main` には branch protection を設定し、直接 push を禁止し、Pull Request と最低 1 名の承認、必須 CI の成功を merge 条件にします。
 - GitHub のリポジトリ設定では merge commit だけを許可し、squash merge と rebase merge を無効にします。これは Pull Request 画面で誤った昇格方式を選べないようにするサーバ側の設定です。
-- `project/<project-id>/develop` には branch protection を設定し、`develop → main` 昇格 PR の承認を強制します。exec の自動 commit を受け入れるため、`develop` への feature / exec 統合そのものは PR 承認を必須にしません（承認ゲートの適用範囲は `承認ゲートと PR 強制条件` を参照）。
+- 複数人・複数 actor 運用の `project/<project-id>/develop` には branch protection を設定します。人または対話型 agent が内容を書いた feature は Pull Request を必須とし、exec の merge と register の記帳だけは統合専用 actor による bypass を許可します（承認ゲートの適用範囲は `承認ゲートと PR 強制条件` を参照）。
 - 承認者は `CODEOWNERS` で宣言し、branch protection の "Require review from Code Owners" で強制します。`main` はリポジトリ管理者、各 project の承認対象は当該 project の承認権限者（PO / CCB）を owner に割り当てます。
 
 ### 5.1. mainへの直接pushを防ぐ防護柵
@@ -147,13 +176,15 @@ printf '%s\n' 'refs/heads/local LOCAL refs/heads/project/prj-0001/develop REMOTE
 
 変更の承認は既定で commit（register 状態遷移＋チケットの承認節）で残し、人による強制ゲート（PR 承認）は次の 3 ケースに限定します。type 別の承認フローと承認者ロールは [register-operation-guide.md](../guides/register-operation-guide.md) を正本とします。
 
+ここでいう承認ゲートは、register 項目を承認済みとする正式な証跡です。4.1 の層2で常に行う feature Pull Request の事前レビューとは区別します。3ケース以外でも層2の変更は Pull Request でレビューしてから統合しますが、その review を register 項目の正式承認へ読み替えず、正式承認は commit とチケットの承認節に残します。
+
 | ケース                                        | 境界                             | 承認者                   | 強制手段                                  |
 | --------------------------------------------- | -------------------------------- | ------------------------ | ----------------------------------------- |
 | `develop → main` 昇格                         | 変更が `main` に載る境界         | リポジトリ管理者         | `main` の branch protection ＋ CODEOWNERS |
 | `change-request` の承認                       | 変更要求の実施承認               | 変更承認権限者（PO/CCB） | 承認対象差分の PR approve                 |
 | 不可逆・高リスク・framework schema 破壊的変更 | `todo`/`issue`/`decision` の一部 | 当該 type の承認権限者   | 承認対象差分の PR approve                 |
 
-- 上記以外の承認（`decision` / `risk` / `question` / `issue` / `todo` の通常運用）は commit ベースで残し、PR 承認を必須にしません。schedule 上の計画済みタスクによる成果物更新や日常の agent commit も PR 承認の対象外です。
+- 上記以外の承認（`decision` / `risk` / `question` / `issue` / `todo` の通常運用）は commit ベースで残し、Pull Request を正式承認の証跡にすることを必須にしません。schedule 上の計画済みタスクによる成果物更新や日常の agent commit も、正式承認ゲートの対象外です。ただし、人または対話型 agent が内容を書いた層2の変更であれば、統合経路として feature Pull Request は使用します。
 - PR 承認を強制しない理由は、可逆性（記録のみか実装を伴うか）、職務分離（自己承認の回避が platform 強制でなくても成立するか）、自動化整合（PR ゲートを自動 `exec → develop` の内側に置かない）の 3 点で判断します。
 - 3 ケースに該当する承認は自己承認をカウントせず、作成者と承認者を分離します。承認事実（承認者・承認日・対象差分）は PR で担保し、決定内容の SSOT はチケット個票に恒久保持します。
 

@@ -61,3 +61,16 @@
       from: "-"
       to: "agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=.opencode/.gitignore, .opencode/node_modules/.bin/download-msgpackr-prebuilds, .opencode/node_modul…"
   previous_event_id: reg_5b191d73f84c4353bc97d2cb9fcf0f82
+- v: 1
+  id: reg_0e32555b3aa64a3d88d8516a90089e70
+  ts: "2026-09-23T03:21:57Z"
+  action: start
+  actor: gemma-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_94f0a934b05a4a29878cf0de6f1647ff

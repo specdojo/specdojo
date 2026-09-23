@@ -1,0 +1,11 @@
+対応を完了しました。
+
+- Git 標準に3層の変更経路、判断基準、運用規模別条件を追加
+- ブランチガイドに分岐前 push と PR 差分表示の復旧手順を追加
+- PJR 個票の作業内容・対応結果を更新
+- result は executor 指示に従い未編集
+- catalog の既存欠落文書警告を除き、実施した検査は通過
+
+<specdojo_executor_evidence>
+{"final_message":"3層の変更経路、運用規模別条件、PR差分表示の復旧手順を文書化し、PJR個票へ対応結果を反映した。","validations":[{"command":"npx prettier --write docs/ja/specdojo/standards/git-branching-standard.md docs/ja/specdojo/guides/branch-workflow-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-03m3-branch-standard-three-layers.md","status":"passed","summary":"対象3ファイルを整形した。"},{"command":"npx markdownlint docs/ja/specdojo/standards/git-branching-standard.md docs/ja/specdojo/guides/branch-workflow-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-03m3-branch-standard-three-layers.md","status":"passed","summary":"対象Markdownに違反なし。"},{"command":"npm run lint:md","status":"passed","summary":"全Markdownのlintが通過した。"},{"command":"npm run lint:fm","status":"passed","summary":"frontmatterとremark検査が通過した。"},{"command":"npm run lint:ts","status":"passed","summary":"ESLintが通過した。"},{"command":"npm run validate:history-links","status":"passed","summary":"履歴リンク検証が通過した。"},{"command":"npx tsx src/specdojo.ts register build","status":"failed","summary":"sandboxがtsxのIPC socket作成をEPERMで拒否したため、代替起動へ切り替えた。"},{"command":"npx tsx src/specdojo.ts catalog validate","status":"failed","summary":"sandboxがtsxのIPC socket作成をEPERMで拒否したため、代替起動へ切り替えた。"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿と派生ビューを正常に再生成した。"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"終了コード0。対象外の未作成成果物に関する警告のみ。"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1874件の文書indexを再生成した。"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし。"},{"command":"npm run check","status":"not_run","summary":"typecheck、schema、unit/integration testとの重複を避け、親runnerの検証へ委ねた。"}]}
+</specdojo_executor_evidence>
