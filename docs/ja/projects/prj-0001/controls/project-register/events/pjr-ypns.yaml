@@ -54,3 +54,32 @@
       from: "2026-10-17"
       to: "2026-10-10"
   previous_event_id: reg_ccca6bed7836406d84d12b1f3a7a0dc6
+- v: 1
+  id: reg_455a7e246a6147ddb023905e70abd287
+  ts: "2026-09-23T03:59:52Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_13499e2712364103a686ba1cb90d52db
+- v: 1
+  id: reg_7a20bbd294e342ae94465215224a6db4
+  ts: "2026-09-23T04:27:47Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: runner による検証で `typecheck` (exit 2) および `test-unit` (exit 1) が失敗しているため。具体的には `src/catalog-plan.ts` での参照エラーおよび、カタログプランとグレードに関する単体テストの失敗が確認されている。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: runner による検証で `typecheck` (exit 2) および `test-unit` (exit 1) が失敗しているため。具体的には `src/catalog-plan.ts` での参照エラーおよび、カタログプランとグレードに関する単体テストの失敗が確認されている。"
+  previous_event_id: reg_455a7e246a6147ddb023905e70abd287

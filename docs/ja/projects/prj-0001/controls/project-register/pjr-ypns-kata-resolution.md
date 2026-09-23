@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: high
   owner: DEV
   registered_at: "2026-09-23T03:10:29Z"
   due_on: "2026-10-10"
+  block_reason: "agent exited with non-zero code: runner による検証で `typecheck` (exit 2) および `test-unit` (exit 1) が失敗しているため。具体的には `src/catalog-plan.ts` での参照エラーおよび、カタログプランとグレードに関する単体テストの失敗が確認されている。"
 ---
 
 # PJR-YPNS kata と schema の解決順序を実装する
@@ -49,15 +50,19 @@ const packageRoot = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 
 | No  | 作業                                                         | 担当 | 状態 | メモ                                                                     |
 | --- | ------------------------------------------------------------ | ---- | ---- | ------------------------------------------------------------------------ |
-| 1   | kata / schema の resolver を作る                             | DEV  | open | package ルートは `import.meta.url` の 1 つ上。`build-if-stale.ts` と同型 |
-| 2   | 13 ファイル 22 箇所の直接参照を resolver へ置き換える        | DEV  | open | 固定パス文字列を残さない                                                 |
-| 3   | worktree 内の解決と plan のパス記載を resolver 由来にする    | DEV  | open | worktree では `npm ci` が走る前提                                        |
-| 4   | `node_modules` を agent の書き込み保護へ加える               | DEV  | open | PJR-T84C の生成物除外と衝突させない                                      |
-| 5   | 空リポジトリで `config init` から `exec plan` までを確認する | DEV  | open | 一時ディレクトリで通し確認する                                           |
+| 1   | kata / schema の resolver を作る                             | DEV  | done | package ルートは `import.meta.url` の 1 つ上。`build-if-stale.ts` と同型 |
+| 2   | 13 ファイル 22 箇所の直接参照を resolver へ置き換える        | DEV  | done | ファイル単位の優先解決へ集約                                             |
+| 3   | worktree 内の解決と plan のパス記載を resolver 由来にする    | DEV  | done | package 側はリポジトリ相対パスで plan へ記載                             |
+| 4   | `node_modules` を agent の書き込み保護へ加える               | DEV  | done | `node_modules/specdojo` を snapshot 対象へ追加                           |
+| 5   | 空リポジトリで `config init` から `exec plan` までを確認する | DEV  | done | kata 未配置の一時リポジトリで通し確認済み                                |
 
 ## 4. 対応結果
 
--
+- kata / schema / exec template / review defaults の参照を共通 resolver へ集約し、利用者リポジトリに同名ファイルがあれば優先し、無ければ package 同梱物へフォールバックするようにした。
+- resolver が選んだ package 側の kata / schema は、`node_modules/specdojo/...` を含む利用者リポジトリ相対パスとして plan と生成物へ記載するようにした。
+- `node_modules/` を agent の保護対象に加え、同梱資産がある `node_modules/specdojo` は実行前後の snapshot でも変更を検知するようにした。
+- kata を置かない一時リポジトリで `config init`、`register scaffold`、`register add`、`exec plan --register` を順に実行し、plan 生成まで完了することを確認した。
+- resolver の利用者側優先、package fallback、plan 用相対パス、および同梱資産の変更検知をテストへ追加した。型検査・unit / integration test・schema 検証は executor / reporter pipeline の親 runner が実行する。
 
 ## 5. 関連ドキュメント
 
