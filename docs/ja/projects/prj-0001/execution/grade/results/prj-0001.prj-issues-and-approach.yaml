@@ -1,0 +1,89 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: prj-0001:prj-issues-and-approach
+path: docs/ja/projects/prj-0001/020-project-definition/prj-issues-and-approach.md
+target: deliverable
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 84
+graded_at: "2026-09-23T17:17:47.535Z"
+graded_by: codex-expert-executor
+content_hash: ae90307d8224fab79e09ae1f1947389032e361f513b8ba0364776cf340937706
+categories:
+  consistency:
+    score: 50
+  usability:
+    score: 94
+  architecture:
+    score: 100
+  quality:
+    score: 92
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 2
+  minor: 2
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 66
+    anchor: "| 公開範囲とライセンスを決める         | 再利用できる情報、権利、改善提案の入口が確定する           | `PO`, `BA`  |"
+    message: 「公開範囲とライセンスを決める」が未決のままですが、PJR-0120 と PJR-0121 ではライセンス、公開先、公開範囲、貢献導線が決定済みのため、解消済みとして削除するか、残る未決事項だけに更新してください。
+  - id: F002
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 21
+    anchor: これらは仮説であり、代表試行と公開後の実利用で検証する。
+    message: >-
+      仮説を代表試行と公開後の実利用で検証するとだけ記され、P-01〜P-03およびA-01〜A-03の合否条件・判定時期・証跡がSC-01〜SC-06へ対応付けられていないため、成功基準と受入条件への参照および対応関係を追記してください。
+  - id: F003
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 66
+    anchor: "| 公開範囲とライセンスを決める         | 再利用できる情報、権利、改善提案の入口が確定する           | `PO`, `BA`  |"
+    message: 公開範囲とライセンスを未決事項として残す記述は、PJR-0120およびPJR-0121の決定内容と矛盾するため、決定内容を反映して未決事項から除外するか、未解決部分を具体的に限定してください。
+  - id: F004
+    severity: minor
+    rule: vp-ux-user-flow
+    line: 3
+    anchor: 本書は、シビックテックの三つの主要課題と、SpecDojo が採用する解決アプローチを定める。
+    message: 導入部にプロジェクト概要、プロジェクトスコープ、前提・制約・依存関係、成功基準と受入条件へのリンクがなく、初見の読者が判断前提とSC-01〜SC-03の定義へ辿りにくいため、各正本への参照を追加してください。
+done_criteria:
+  satisfied: 4
+  total: 4
+  detail_ref: prj-0001:prj-issues-and-approach-grade-criteria

@@ -5,15 +5,15 @@ path: docs/ja/product/040-system-design/sysd-cross-cutting-policy.md
 target: deliverable
 rubric: grade-rubric-v1
 verdict: needs-work
-score: 70
-graded_at: "2026-09-19T16:35:31.850Z"
+score: 69
+graded_at: "2026-09-23T16:33:34.422Z"
 graded_by: codex-expert-executor
-content_hash: 64ccc08ec576a98fbc6d53bb1f292b740cc51b6b751c4c630775b084aefcf8b6
+content_hash: d9215630b5b9505eb05ae82225d1c3578d06e11d724852874456a5826b9e9010
 categories:
   consistency:
     score: 50
   usability:
-    score: 81
+    score: 75
   architecture:
     score: 100
   quality:
@@ -23,8 +23,8 @@ viewpoints:
     level: 2
     score: 50
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -55,59 +55,29 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 5
-  minor: 4
+  minor: 5
   note: 0
 findings:
   - id: F001
     severity: major
     rule: vp-arc-cross-document-consistency
     line: 3
-    message: >-
-      成果物カタログはエラー・タイムアウト・冪等・トレーシング・設定上書き階層・モジュール境界を対象として宣言しているが、本文はSpecDojoのagent実行規範に限定されているため、カタログまたは本文の適用範囲を一致させる必要がある。
     anchor: >-
       SpecDojo CLI、agent、実行runner、Git
       worktreeへ横断的に適用する責務、設定解決、状態遷移、失敗処理、権限のルールを定義する。実装・設定を一次情報とし、本書は設計意図と検証可能な制約のSSOTである。
+    message: >-
+      成果物カタログはエラー・タイムアウト・冪等・トレーシング・設定上書き階層・モジュール境界を対象として宣言しているが、本文はSpecDojoのagent実行規範に限定されているため、カタログまたは本文の適用範囲を一致させる必要がある。
+  - id: F002
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 190
+    anchor: "| CDFD            | `cdfd-task-execution`     | task状態の概念フロー    | 参照   |"
+    message: >-
+      関連文書表がstatus=deprecatedかつtrash配下へ移動済みの`cdfd-task-execution`、`cdfd-register-lifecycle`、`cdfd-multi-project`を現行参照としているため、後継SSOTへの更新または履歴参照である旨の明示が必要である。
   - id: F003
-    severity: major
-    rule: vp-qe-done-criteria
-    line: 11
-    message: DC-002が要求する冪等方針、タイムアウトの設定・打切り方針、ログ方針がルール一覧および詳細に存在せず、provider障害の判定・retry規則だけでは条件を満たさない。
-    anchor: "## 2. ルール一覧（ID/カテゴリ/要約/必須度）"
-  - id: F006
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 11
-    message: rulebookと成果物カタログが要求する共通エラー、冪等、タイムアウト、ログ・監査ログ、トレーシング、設定上書き階層、モジュール境界のルールが欠落しているため、必須領域を追加するか適用範囲の正式な変更が必要である。
-    anchor: "## 2. ルール一覧（ID/カテゴリ/要約/必須度）"
-  - id: F009
     severity: minor
-    rule: vp-ux-language-consistency
-    line: 20
-    message: "`scp-CFG-002`の要約「設定と秘密情報の責務を分離する」に`MUST NOT`を組み合わせると責務分離を禁止する意味になるため、詳細規則に合わせて要約を「秘密情報を設定・文書へ保存しない」等へ修正する必要がある。"
-    anchor: "| scp-CFG-002 | Configuration | 設定と秘密情報の責務を分離する | MUST NOT | ARC / OPS |"
-  - id: F008
-    severity: minor
-    rule: vp-ux-user-flow
-    line: 96
-    message: "`登録簿運用ガイド`および複数箇所の`provider別子設計`が文書ID・相対パス・リンクを持たず参照先を一意に特定できないため、正式なIDまたはリポジトリ相対パスへ置き換える必要がある。"
-    anchor: "- **References（参照）**: `cdfd-task-execution`、登録簿運用ガイド。"
-  - id: F005
-    severity: major
-    rule: vp-qe-verifiability
-    line: 109
-    message: >-
-      `scp-RET-002`はcriticalityと正規化signalに応じてretry・fallback・blockを選ぶとしているが,
-      criticality区分、signalとの対応表、attempt・backoff上限の値または設定キーがなく、実装・テストのpass/failを一意に判定できない。
-    anchor: >-
-      - **Rule（MUST）**: policyはtaskのcriticalityと正規化signalに従い、上限付きretry、適合memberへのfallback、またはblockを選ぶ。独立したReady
-      taskと別providerは継続できる。
-  - id: F007
-    severity: minor
-    rule: vp-ux-readability
+    rule: vp-arc-conciseness
     line: 154
-    message: >-
-      `scp-GIT-004`のRuleが環境変数除去、Vitest setup、Git起動環境、executor権限、HEAD・config比較、除外条件、fixture
-      identityを一段落に集約しているため、同一Rule内の条件別箇条書きへ分けて判断点を追いやすくする必要がある。
     anchor: >-
       - **Rule（MUST）**: agent、agent配下の子プロセス、親検証、Vitest
       workerへ`GIT_DIR`、`GIT_WORK_TREE`その他のrepository固有環境変数を継承しない。Vitestは全設定の共通setupでtest
@@ -115,19 +85,63 @@ findings:
       worktreeのHEADと共有local
       configを比較して、差分があれば親検証・reporter・統合へ進めずblockする。runnerが作成したbranchの表示用metadataは比較から除外するが、`core.bare`を含むrepository動作に関わる設定は除外しない。テストfixtureのidentityはプロセス環境だけに注入し、local
       configへ書き込まない。
-  - id: F002
-    severity: minor
-    rule: vp-arc-cross-document-consistency
-    line: 190
     message: >-
-      関連文書表がstatus=deprecatedかつtrash配下へ移動済みの`cdfd-task-execution`、`cdfd-register-lifecycle`、`cdfd-multi-project`を現行参照としているため、後継SSOTへの更新または履歴参照である旨の明示が必要である。
-    anchor: "| CDFD            | `cdfd-task-execution`     | task状態の概念フロー    | 参照   |"
+      `scp-GIT-004`はRule・Scope・EnforcementでVitest setup、`gitEnvironment()`、HEAD・local
+      config比較などを反復し、実装ファイルで管理できる低レベル手順まで再掲しているため、Ruleを不変条件に絞り検証詳細をEnforcementと参照先へ集約する必要がある。
   - id: F004
     severity: major
     rule: vp-qe-done-criteria
+    line: 11
+    anchor: "## 2. ルール一覧（ID/カテゴリ/要約/必須度）"
+    message: DC-002が要求する冪等方針、タイムアウトの設定・打切り方針、ログ方針がルール一覧および詳細に存在せず、provider障害の判定・retry規則だけでは条件を満たさない。
+  - id: F005
+    severity: major
+    rule: vp-qe-done-criteria
     line: 194
-    message: DC-004が要求する監視およびトレーシングの運用観点がなく、関連文書表でもOPDを「なし」としているため、セキュリティ規則だけでは条件を満たさない。
     anchor: "| OPD / NFR / DEC | （なし）                  | 後続成果物で接続        | 現時点 |"
+    message: DC-004が要求する監視およびトレーシングの運用観点がなく、関連文書表でもOPDを「なし」としているため、セキュリティ規則だけでは条件を満たさない。
+  - id: F006
+    severity: major
+    rule: vp-qe-verifiability
+    line: 109
+    anchor: >-
+      - **Rule（MUST）**: policyはtaskのcriticalityと正規化signalに従い、上限付きretry、適合memberへのfallback、またはblockを選ぶ。独立したReady
+      taskと別providerは継続できる。
+    message: >-
+      `scp-RET-002`はcriticalityと正規化signalに応じてretry・fallback・blockを選ぶとしているが,
+      criticality区分、signalとの対応表、attempt・backoff上限の値または設定キーがなく、実装・テストのpass/failを一意に判定できない。
+  - id: F007
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 11
+    anchor: "## 2. ルール一覧（ID/カテゴリ/要約/必須度）"
+    message: rulebookと成果物カタログが要求する共通エラー、冪等、タイムアウト、ログ・監査ログ、トレーシング、設定上書き階層、モジュール境界のルールが欠落しているため、必須領域を追加するか適用範囲の正式な変更が必要である。
+  - id: F008
+    severity: minor
+    rule: vp-ux-readability
+    line: 154
+    anchor: >-
+      - **Rule（MUST）**: agent、agent配下の子プロセス、親検証、Vitest
+      workerへ`GIT_DIR`、`GIT_WORK_TREE`その他のrepository固有環境変数を継承しない。Vitestは全設定の共通setupでtest
+      module読込前にこれらを除去し、個々のTypeScriptテストからGitを起動する場合も`gitEnvironment()`から作った環境を明示する。executorにはcommitとGit設定を親runnerへ委ねるよう明示し、agent起動前後でagent
+      worktreeのHEADと共有local
+      configを比較して、差分があれば親検証・reporter・統合へ進めずblockする。runnerが作成したbranchの表示用metadataは比較から除外するが、`core.bare`を含むrepository動作に関わる設定は除外しない。テストfixtureのidentityはプロセス環境だけに注入し、local
+      configへ書き込まない。
+    message: >-
+      `scp-GIT-004`のRuleが環境変数除去、Vitest setup、Git起動環境、executor権限、HEAD・config比較、除外条件、fixture
+      identityを一段落に集約しているため、同一Rule内の条件別箇条書きへ分けて判断点を追いやすくする必要がある。
+  - id: F009
+    severity: minor
+    rule: vp-ux-user-flow
+    line: 96
+    anchor: "- **References（参照）**: `cdfd-task-execution`、登録簿運用ガイド。"
+    message: "`登録簿運用ガイド`および複数箇所の`provider別子設計`が文書ID・相対パス・リンクを持たず参照先を一意に特定できないため、正式なIDまたはリポジトリ相対パスへ置き換える必要がある。"
+  - id: F010
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 20
+    anchor: "| scp-CFG-002 | Configuration | 設定と秘密情報の責務を分離する | MUST NOT | ARC / OPS |"
+    message: "`scp-CFG-002`の要約「設定と秘密情報の責務を分離する」に`MUST NOT`を組み合わせると責務分離を禁止する意味になるため、詳細規則に合わせて要約を「秘密情報を設定・文書へ保存しない」等へ修正する必要がある。"
 done_criteria:
   satisfied: 2
   total: 4

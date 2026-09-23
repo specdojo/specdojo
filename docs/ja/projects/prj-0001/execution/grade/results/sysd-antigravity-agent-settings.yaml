@@ -1,0 +1,145 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: sysd-antigravity-agent-settings
+path: docs/ja/product/040-system-design/sysd-antigravity-agent-settings.md
+target: deliverable
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 71
+graded_at: "2026-09-23T16:22:37.334Z"
+graded_by: codex-expert-executor
+content_hash: d22c2414f6a7a74fcb5a90abd83efd5e6c0eeb9b80f7eab86bac17d5f43ded3d
+categories:
+  consistency:
+    score: 50
+  usability:
+    score: 75
+  architecture:
+    score: 100
+  quality:
+    score: 67
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 3
+    score: 75
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 2
+    score: 50
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-user-flow:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 4
+  minor: 7
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 9
+    anchor: "- `agy` はファイル定義 agent を選択する仕組みを持たないため、executor / reporter の役割は runner が plan へ付加する stage 指示を正本とする。"
+    message: >-
+      現行 `agy` は `.agents/agents/` の custom agent を `—agent` で選択できるため、非対応という前提を修正し、stage agent
+      定義・command_template・保護対象への採否を再設計する必要がある。
+  - id: F002
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 64
+    anchor: >-
+      `--dangerously-skip-permissions` は無人実行に必要だが、書き込み範囲は worktree、commit 許可リスト、Git 状態ガード、固定保護パスで制限する。全 provider
+      共通の固定保護パスには
+      `.agents/rules/**`、`.agents/skills/**`、`.claude/**`、`.codex/**`、`.opencode/**`、`.github/agents/**`、`AGENTS.md`、`CLAUDE.md`、`GEMINI.md`
+      を含め、agent が自身や別 provider の指示を書き換えた場合は親検証前に block する。
+    message: 全 provider 共通の固定保護パス一覧は親設計または横断ルールへの参照に置き換え、本書には `—dangerously-skip-permissions` に対する Antigravity 固有の境界だけを残す必要がある。
+  - id: F003
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 9
+    anchor: "- `agy` はファイル定義 agent を選択する仕組みを持たないため、executor / reporter の役割は runner が plan へ付加する stage 指示を正本とする。"
+    message: custom agent 非対応という設計前提が現行 CLI と一致せず、その採否と安全境界が未決定なため、設計承認およびテスト設計の完了条件を満たせない。
+  - id: F004
+    severity: minor
+    rule: vp-qe-done-criteria
+    line: 3
+    anchor: SpecDojo CLI と Antigravity CLI（`agy`）を組み合わせ、executor / reporter pipeline を非対話実行するための provider 固有設定を定義する。
+    message: 非対話 pipeline という目的は示されているが、Antigravity を採用する業務要件、その出典、設計方針との対応が記載されていない。
+  - id: F005
+    severity: major
+    rule: vp-qe-verifiability
+    line: 70
+    anchor: 設定変更時は次を確認する。
+    message: 検証項目に `agy —agent` と `.agents/agents/` の対応可否、対応 CLI バージョン, stage agent 採否の確認がなく、誤った能力前提でも検証を通過してしまう。
+  - id: F006
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 76
+    anchor: 5. 実タスクでは executor evidence、親 runner 検証、reporter、統合までを確認する。
+    message: 「統合までを確認する」だけでは期待する状態や必要証跡が定まらないため、各 stage の成功状態、evidence、統合結果の判定条件を明示する必要がある。
+  - id: F007
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 52
+    anchor: >-
+      `agy` は repository root まで探索し、`AGENTS.md`、`.agents/rules/*.md`、`.agents/skills/<name>/SKILL.md`
+      を読む。プロジェクト共通の言語・安全規則は `AGENTS.md`、環境別の薄い規則ラッパーは `.agents/rules/`、再利用手順は `.agents/skills/` を正本とする。
+    message: 指示読込元から `.agents/agents/` が欠落し、custom agent の `—agent` 選択、executor / reporter への対応付け、定義ファイルの書き込み保護と検証方針が設計されていない。
+  - id: F008
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 66
+    anchor: "## 7. 利用制限と検証"
+    message: "`sysd-index`、`sysd-cross-cutting-policy`、`sysd-critical-flows`、テスト、OPR への関連文書導線がなく、rulebook の必須参照観点を満たしていない。"
+  - id: F009
+    severity: minor
+    rule: vp-ux-readability
+    line: 66
+    anchor: "## 7. 利用制限と検証"
+    message: 関連文書節を追加し、全体入口、横断ルール、重要フロー、テスト、CLI 更新手順を目的付きで示す必要がある。
+  - id: F010
+    severity: minor
+    rule: vp-ux-user-flow
+    line: 66
+    anchor: "## 7. 利用制限と検証"
+    message: 検証手順の後に関連リンクを設け、横断ルール、一次設定、テストファイル、CLI 更新手順へ直接到達できるようにする必要がある。
+  - id: F011
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 9
+    anchor: "- `agy` はファイル定義 agent を選択する仕組みを持たないため、executor / reporter の役割は runner が plan へ付加する stage 指示を正本とする。"
+    message: 「ファイル定義 agent」を公式用語の custom agent に改め、SpecDojo member、primary agent、subagent の違いと対応関係を定義する必要がある。
+done_criteria:
+  satisfied: 2
+  total: 5
+  unsatisfied:
+    DC-001:
+      - BA
+    DC-002:
+      - PO
+    DC-004:
+      - QE
+  detail_ref: sysd-antigravity-agent-settings-grade-criteria

@@ -1,0 +1,111 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: prj-0001:prj-charter
+path: docs/ja/projects/prj-0001/020-project-definition/prj-charter.md
+target: deliverable
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 75
+graded_at: "2026-09-23T17:04:19.887Z"
+graded_by: codex-expert-executor
+content_hash: 3d9ec2f69a1c89de4118a701d1f8bbec47b9789c143071aa3267a3f9a45a2444
+categories:
+  consistency:
+    score: 50
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 58
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 1
+    score: 25
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 2
+    score: 50
+  vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 2
+    score: 50
+finding_counts:
+  blocker: 0
+  major: 4
+  minor: 2
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 106
+    anchor: "| 2026-07-17 | `PO`   | 立ち上げ認可、詳細計画策定と初期準備の権限委譲 | [[prj-0001:pjr-0119-charter-approval\\|PJR-0119 プロジェクト憲章の承認]] |"
+    message: 承認証跡 PJR-0119 はコミット ce44286c 時点を承認対象としているが、その後に目的・期待効果・スコープなど承認対象となる内容が変更されており、現行版を認可した証跡がない。
+  - id: F002
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 113
+    anchor: >-
+      | OSS ライセンス方針       | _UNDECIDED_ | `PO` |
+      初回公開前に候補を比較し、公開方針と合わせて決定する                                                 |
+    message: PJR-0120 と前提・制約・依存関係の ACD-D02 は採用ライセンスを MIT として決定済みだが、本書は OSS ライセンス方針を未決事項としており状態が矛盾している。
+  - id: F003
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 106
+    anchor: "| 2026-07-17 | `PO`   | 立ち上げ認可、詳細計画策定と初期準備の権限委譲 | [[prj-0001:pjr-0119-charter-approval\\|PJR-0119 プロジェクト憲章の承認]] |"
+    message: 記載された承認証跡は現行版より前のコミットだけを承認しているため、現行の目的・スコープを含む正式認可を確認できず DC-002 を満たさない。
+  - id: F004
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 96
+    anchor: >-
+      | 目的整合 | 成果物体系、公開対象、優先順位が SpecDojo の目的と矛盾していない                   | [[prj-0001:pm-plan\|プロジェクト管理計画]] /
+      決定記録               |
+    message: 「目的と矛盾していない」「検証方針が整っている」の合否条件がなく、成功基準の SC/AC ID または品質ゲートへ対応付けないと判定者によって結果が変わり得る。
+  - id: F005
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 64
+    anchor: >-
+      | 成果物体系の整理                    | `PO`   | `PM`       | `BA` / _TODO_: レビュー担当                  | 成果物カタログ、Pull
+      Request                                    |
+    message: "成果物体系の整理と GO / Not GO 判断準備の協議先に `_TODO_: レビュー担当` が残っており、組織定義・RACIにある Role codeでレビュー責任を確定する必要がある。"
+  - id: F006
+    severity: major
+    rule: vp-qe-config-validity
+    line: 64
+    anchor: >-
+      | 成果物体系の整理                    | `PO`   | `PM`       | `BA` / _TODO_: レビュー担当                  | 成果物カタログ、Pull
+      Request                                    |
+    message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+done_criteria:
+  satisfied: 2
+  total: 3
+  unsatisfied:
+    DC-002:
+      - PO
+  detail_ref: prj-0001:prj-charter-grade-criteria

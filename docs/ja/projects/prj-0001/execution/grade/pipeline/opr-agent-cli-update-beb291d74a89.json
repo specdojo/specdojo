@@ -2,13 +2,13 @@
   "version": 1,
   "project_id": "prj-0001",
   "target": "deliverable",
-  "document": "docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md",
-  "content_hash": "0f2d1a2ce67a38a25d81011175b36fc1f035be0eee507df5db08a586c1afe69d",
+  "document": "docs/ja/product/090-operations/opr-agent-cli-update.md",
+  "content_hash": "8592810431b49b5e57545a3d404fe96690adfe293bb54b99715190b2a462b67c",
   "stage_completed": 0,
   "stage_failed": 1,
   "stage_total": 1,
   "consecutive_failures": 1,
   "max_failures": 3,
   "last_run_id": "JBR-grade-deliverable-ceb925289809",
-  "updated_at": "2026-09-23T16:07:54.553Z"
+  "updated_at": "2026-09-23T16:48:26.803Z"
 }

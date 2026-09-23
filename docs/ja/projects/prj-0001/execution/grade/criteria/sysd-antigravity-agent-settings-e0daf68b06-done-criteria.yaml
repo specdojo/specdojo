@@ -1,0 +1,45 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: sysd-antigravity-agent-settings-grade-criteria
+document: sysd-antigravity-agent-settings
+path: docs/ja/product/040-system-design/sysd-antigravity-agent-settings.md
+graded_at: "2026-09-23T16:22:37.334Z"
+graded_by: codex-expert-executor
+content_hash: d22c2414f6a7a74fcb5a90abd83efd5e6c0eeb9b80f7eab86bac17d5f43ded3d
+summary:
+  satisfied: 2
+  unsatisfied: 3
+  total: 5
+criteria:
+  - id: DC-001
+    text: 設計トピックの採用理由・制約が業務要件と整合していること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: unsatisfied
+    reason: Antigravity 採用の根拠となる業務要件、その出典、設計方針との対応が本文にない。
+  - id: DC-002
+    text: 設計方針を承認できること
+    roles:
+      - PO
+    viewpoint: vp-po-decision-readiness
+    status: unsatisfied
+    reason: custom agent 非対応という前提が現行 `agy` と矛盾し、その採否と安全境界を決定できない。
+  - id: DC-003
+    text: 技術的制約・依存関係が識別できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: satisfied
+  - id: DC-004
+    text: テスト設計・検証観点の参照として使えること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: unsatisfied
+    reason: custom agent の検出・選択・保護を検証する観点がなく、現行 CLI との互換性を確認できない。
+  - id: DC-005
+    text: 実装の基礎として参照できること
+    roles:
+      - DEV
+    viewpoint: vp-dev-implementation-readiness
+    status: satisfied

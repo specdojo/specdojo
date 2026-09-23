@@ -1,0 +1,38 @@
+
+> specdojo@0.2.0 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-deliverable-ceb925289809 project=prj-0001 target=deliverable kind=none changed_only=true ungraded=true incomplete=true max_stage_failures=3 stages=1 documents=10 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-deliverable-ceb925289809
+stage=1 executor=codex-expert-executor reporter=gemma-reporter reference=none
+document start: docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md
+document incomplete: docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md failed_stage=1
+document start: docs/ja/product/040-system-design/sysd-agent-settings.md
+document complete: docs/ja/product/040-system-design/sysd-agent-settings.md
+document start: docs/ja/product/040-system-design/sysd-antigravity-agent-settings.md
+document complete: docs/ja/product/040-system-design/sysd-antigravity-agent-settings.md
+document start: docs/ja/product/040-system-design/sysd-cross-cutting-policy.md
+document complete: docs/ja/product/040-system-design/sysd-cross-cutting-policy.md
+document start: docs/ja/product/040-system-design/sysd-orchestrator-agent-settings.md
+document complete: docs/ja/product/040-system-design/sysd-orchestrator-agent-settings.md
+document start: docs/ja/product/090-operations/opr-agent-cli-update.md
+document incomplete: docs/ja/product/090-operations/opr-agent-cli-update.md failed_stage=1
+document start: docs/ja/projects/prj-0001/020-project-definition/prj-assumptions-constraints-dependencies.md
+document complete: docs/ja/projects/prj-0001/020-project-definition/prj-assumptions-constraints-dependencies.md
+document start: docs/ja/projects/prj-0001/020-project-definition/prj-charter.md
+document complete: docs/ja/projects/prj-0001/020-project-definition/prj-charter.md
+document start: docs/ja/projects/prj-0001/020-project-definition/prj-comparison-of-alternatives.md
+document complete: docs/ja/projects/prj-0001/020-project-definition/prj-comparison-of-alternatives.md
+document start: docs/ja/projects/prj-0001/020-project-definition/prj-issues-and-approach.md
+document complete: docs/ja/projects/prj-0001/020-project-definition/prj-issues-and-approach.md
+grade pipeline complete: selected=10 processed=10 completed_now=8 incomplete=2 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-deliverable-ceb925289809/results.tsv
+recorded_at	document	stage	status	duration_seconds	verdict	score	findings	executor	reporter	reference	consecutive_failures	max_failures
+2026-09-23T16:07:54Z	docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md	1	failed	463				codex-expert-executor	gemma-reporter	none	1	3	1
+2026-09-23T16:14:01Z	docs/ja/product/040-system-design/sysd-agent-settings.md	1	passed	366	needs-work	75	8	codex-expert-executor	gemma-reporter	none		
+2026-09-23T16:22:38Z	docs/ja/product/040-system-design/sysd-antigravity-agent-settings.md	1	passed	515	needs-work	71	11	codex-expert-executor	gemma-reporter	none		
+2026-09-23T16:33:35Z	docs/ja/product/040-system-design/sysd-cross-cutting-policy.md	1	passed	655	needs-work	69	10	codex-expert-executor	gemma-reporter	none		
+2026-09-23T16:39:47Z	docs/ja/product/040-system-design/sysd-orchestrator-agent-settings.md	1	passed	370	needs-work	72	7	codex-expert-executor	gemma-reporter	none		
+2026-09-23T16:48:26Z	docs/ja/product/090-operations/opr-agent-cli-update.md	1	failed	517				codex-expert-executor	gemma-reporter	none	1	3	1
+2026-09-23T16:56:52Z	docs/ja/projects/prj-0001/020-project-definition/prj-assumptions-constraints-dependencies.md	1	passed	505	needs-work	73	8	codex-expert-executor	gemma-reporter	none		
+2026-09-23T17:04:20Z	docs/ja/projects/prj-0001/020-project-definition/prj-charter.md	1	passed	446	needs-work	75	6	codex-expert-executor	gemma-reporter	none		
+2026-09-23T17:11:27Z	docs/ja/projects/prj-0001/020-project-definition/prj-comparison-of-alternatives.md	1	passed	425	needs-work	84	4	codex-expert-executor	gemma-reporter	none		
+2026-09-23T17:17:48Z	docs/ja/projects/prj-0001/020-project-definition/prj-issues-and-approach.md	1	passed	379	needs-work	84	4	codex-expert-executor	gemma-reporter	none		

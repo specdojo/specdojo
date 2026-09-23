@@ -1,0 +1,143 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: sysd-agent-settings
+path: docs/ja/product/040-system-design/sysd-agent-settings.md
+target: deliverable
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 75
+graded_at: "2026-09-23T16:14:00.986Z"
+graded_by: codex-expert-executor
+content_hash: 438490f057d962ee7b6eee44dc4d8d218c14578a592e4d15b4d7f6bf2bcbe2f3
+categories:
+  consistency:
+    score: 63
+  usability:
+    score: 88
+  architecture:
+    score: 100
+  quality:
+    score: 58
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 3
+    score: 75
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 1
+    score: 25
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 4
+  minor: 4
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 34
+    anchor: >-
+      agent が親 runner・Git hook・CI・agent 指示の内容を変更できないよう、`package.json`、lefthook 設定、`.specdojo/**`、commitlint 設定、CI
+      設定、agent 指示ディレクトリ、root の指示ファイルは provider 共通の固定保護パスとする。runner は agent 終了直後かつ親検証前に起動前との差分を検査し、worktree の commit 前には未
+      commit 差分と branch 上の commit 済み差分を再検査する。違反時は対象パスを標準エラーへ出力して block し、branch / worktree を保持する。provider 固有の permission
+      / sandbox は第一層として維持するが、この判定の入力には使わない。
+    message: >-
+      固定保護パスに agent 指示ディレクトリと root 指示ファイルを含めているが、正本 `sysd-cross-cutting-policy` の `scp-SEC-002`
+      にはこれらがなく保護範囲が一致しないため、正本側へ統合して本書は Rule ID 参照にしてください。
+  - id: F002
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 34
+    anchor: >-
+      agent が親 runner・Git hook・CI・agent 指示の内容を変更できないよう、`package.json`、lefthook 設定、`.specdojo/**`、commitlint 設定、CI
+      設定、agent 指示ディレクトリ、root の指示ファイルは provider 共通の固定保護パスとする。runner は agent 終了直後かつ親検証前に起動前との差分を検査し、worktree の commit 前には未
+      commit 差分と branch 上の commit 済み差分を再検査する。違反時は対象パスを標準エラーへ出力して block し、branch / worktree を保持する。provider 固有の permission
+      / sandbox は第一層として維持するが、この判定の入力には使わない。
+    message: 固定保護パスと検査手順、および続く Git 環境・状態ガードの段落は `scp-SEC-002` と `scp-GIT-004` の詳細再掲なので, hub では共通設計上の要点と Rule ID への参照に縮約してください。
+  - id: F003
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 7
+    anchor: >-
+      対象は`specdojo exec
+      run`による非対話実行と、対話型オーケストレーターからSpecDojoを操作する構成である。provider固有の認証・モデル・権限・agent定義は子設計、CLI更新操作は`opr-agent-cli-update`へ委ねる。
+    message: 対象範囲と委譲先だけで、対応する業務要件、実行モデルの採用理由、代替案との比較や承認上の判断材料がなく、DC-001 と DC-002 を確認できません。
+  - id: F004
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 60
+    anchor: >-
+      | 検証       | `tests/src/exec-*.test.ts`                                           |
+      member選択、worktree、retry、resume  |
+    message: 検証先が `tests/src/exec-*.test.ts` という広い glob と論点名だけで、設計制約ごとのテストおよび期待結果を追跡できず、DC-004 を確認できません。
+  - id: F005
+    severity: major
+    rule: vp-qe-verifiability
+    line: 60
+    anchor: >-
+      | 検証       | `tests/src/exec-*.test.ts`                                           |
+      member選択、worktree、retry、resume  |
+    message: >-
+      `tests/src/exec-*.test.ts` だけでは member 選択、worktree、retry、resume の各制約を検証する test
+      file・case・期待状態を特定できないため、制約ごとの検証先と合否条件を対応付けてください。
+  - id: F006
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 18
+    anchor: >-
+      責務分離、member選択、設定解決、利用制限、イベント、worktreeの規範は`sysd-cross-cutting-policy`のRule
+      IDを参照する。事故予防が必要な順序と失敗経路は`sysd-critical-flows`を参照する。
+    message: 横断規範は「Rule IDを参照する」と記載されているものの、責務分離・member選択・設定解決・利用制限・イベント・worktree に対応する具体的な Rule ID が列挙されていません。
+  - id: F007
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 40
+    anchor: >-
+      | 子設計                                                                    | 対象               |
+      固有責務                                |
+    message: 子設計一覧に rulebook 必須の選択条件列がなく、対象 provider 名以外に各子設計を選ぶ条件を hub 上で比較できません。
+  - id: F008
+    severity: minor
+    rule: vp-ux-user-flow
+    line: 18
+    anchor: >-
+      責務分離、member選択、設定解決、利用制限、イベント、worktreeの規範は`sysd-cross-cutting-policy`のRule
+      IDを参照する。事故予防が必要な順序と失敗経路は`sysd-critical-flows`を参照する。
+    message: 横断ルールへの文書単位の案内しかなく具体的な Rule ID やアンカーがないため、利用者が各責務・制約の規範へ直接到達できるリンクを追加してください。
+done_criteria:
+  satisfied: 2
+  total: 5
+  unsatisfied:
+    DC-001:
+      - BA
+    DC-002:
+      - PO
+    DC-004:
+      - QE
+  detail_ref: sysd-agent-settings-grade-criteria

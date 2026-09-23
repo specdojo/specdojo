@@ -1,0 +1,36 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: prj-0001:prj-issues-and-approach-grade-criteria
+document: prj-0001:prj-issues-and-approach
+path: docs/ja/projects/prj-0001/020-project-definition/prj-issues-and-approach.md
+graded_at: "2026-09-23T17:17:47.535Z"
+graded_by: codex-expert-executor
+content_hash: ae90307d8224fab79e09ae1f1947389032e361f513b8ba0364776cf340937706
+summary:
+  satisfied: 4
+  unsatisfied: 0
+  total: 4
+criteria:
+  - id: DC-001
+    text: 業務課題と解決アプローチが業務観点で対応していること
+    roles:
+      - BA
+    viewpoint: vp-ba-business-value
+    status: satisfied
+  - id: DC-002
+    text: 主要課題と解決方針を承認できること
+    roles:
+      - PO
+    viewpoint: vp-po-decision-readiness
+    status: satisfied
+  - id: DC-003
+    text: 技術的課題と実現方式の方向性が識別できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: satisfied
+  - id: DC-004
+    text: 課題が後続作業・リスクに与える影響が識別できること
+    roles:
+      - PM
+    viewpoint: vp-pm-dependency-risk
+    status: satisfied

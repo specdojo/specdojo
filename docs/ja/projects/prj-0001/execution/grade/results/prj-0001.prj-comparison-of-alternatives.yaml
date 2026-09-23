@@ -1,0 +1,95 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: prj-0001:prj-comparison-of-alternatives
+path: docs/ja/projects/prj-0001/020-project-definition/prj-comparison-of-alternatives.md
+target: deliverable
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 84
+graded_at: "2026-09-23T17:11:26.441Z"
+graded_by: codex-expert-executor
+content_hash: 266402ac08a10581bb2882e9794b3aa0708aaf46b04ec78032b646673915e355
+categories:
+  consistency:
+    score: 75
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 67
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 2
+    score: 50
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 3
+  minor: 1
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 198
+    anchor: >-
+      | 区分         | 内容                                                                           |
+      軽減策                                                               |
+    message: リスクとトレードオフ表に案IDがなく、D-02・D-03を含む各候補のリスクとトレードオフを比較できないため、各記述を案IDへ対応付けてください。
+  - id: F002
+    severity: major
+    rule: vp-qe-verifiability
+    line: 132
+    anchor: >-
+      評価は `High` / `Middle` / `Low` とし、採択に有利なほど高くする。重みは D-01 の優先順位を示すが、機械的な合計だけで決定しない。D-02 と D-03
+      は、追跡可能な正本、人間の判断責任、可逆性を必須条件とする。
+    message: High・Middle・Lowの判定境界、各セルの根拠、D-01の重みを総合評価と採否へ反映する規則がなく比較結果を再現できないため、尺度・証拠・集約規則を明記してください。
+  - id: F003
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 167
+    anchor: 試行では同じ小規模な変更要求を処理し、成果物の重複と反映手順、要求から検証までの追跡漏れ、人間のレビューによる意図保持、ツールや Agent / IDE を外した場合の再開可能性を測定する。
+    message: OpenSpecとSpec Kitの試行は測定項目だけで完了条件と採用・撤退の閾値がないため、合否を判定できる数値または状態条件を追加してください。
+  - id: F004
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 107
+    anchor: "### 3.2. D-02 の評価軸"
+    message: D-02とD-03は最低ラインである効果・コスト・期間・リスク・運用適合・技術実現性の一部を省略しているのに省略理由がないため、必要な軸を追加するか各省略理由を明記してください。
+done_criteria:
+  satisfied: 3
+  total: 4
+  unsatisfied:
+    DC-004:
+      - PM
+  detail_ref: prj-0001:prj-comparison-of-alternatives-grade-criteria
