@@ -79,6 +79,7 @@
     "lint:ts": "eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'",
     "lint:ts:fix": "eslint --fix 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'",
     "lint:orchestrator-sync": "node tools/validate-orchestrator-sync.mjs",
+    "orchestrator:sync": "node tools/generate-orchestrator-wrappers.mjs",
     "lint:md": "node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'",
     "lint:md:fix": "node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint --fix '**/*.md'",
     "format": "prettier --write '**/*.{ts,js,mjs,cjs,json,yaml,yml,md}'",
