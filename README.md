@@ -41,17 +41,59 @@ project ID や配置を使う場合は、生成された設定の `current_proje
 `base_path` を次へ進む前に変更してください。catalog や schedule へ進むときに追加するキーは
 [SpecDojo設定リファレンス](https://specdojo.github.io/specdojo/ja/specdojo/references/specdojo-config-reference.html)で確認できます。
 
-agent にタスクを実行させる場合は、利用する provider の設定を配置します。この手順は register
-だけを使う最小構成では省略できます。
+### オーケストレーターを配置する
+
+SpecDojo は対話型オーケストレーターを同梱しています。CLI を直接叩く代わりに、会話で意図を伝えると、
+対応するコマンドを提案し、承認を得てから実行します。利用する provider の設定を配置します。
 
 ```sh
-npx specdojo config scaffold --provider codex
+npx specdojo config scaffold --provider claude
 ```
 
-`--provider` には `claude`、`codex`、`copilot`、`opencode` を指定できます。従来の
-`npx specdojo exec scaffold --provider <name>` も互換入口として引き続き利用できます。
+`--provider` には `antigravity`、`claude`、`codex`、`copilot`、`opencode` を指定できます。
+オーケストレーターの配置先と起動方法は provider ごとに異なります。
 
-最初の登録簿と todo を作り、一覧を生成します。
+| provider      | 配置先                                      | 起動                                                                       |
+| ------------- | ------------------------------------------- | -------------------------------------------------------------------------- |
+| `claude`      | `.claude/agents/specdojo-orchestrator.md`   | `claude --agent specdojo-orchestrator`                                     |
+| `opencode`    | `.opencode/agents/specdojo-orchestrator.md` | `opencode --agent specdojo-orchestrator`                                   |
+| `codex`       | `.specdojo/codex/orchestrator.md`           | `codex "$(cat .specdojo/codex/orchestrator.md)"`                           |
+| `antigravity` | `.specdojo/antigravity/orchestrator.md`     | `agy --add-dir "$(pwd)" -i "$(cat .specdojo/antigravity/orchestrator.md)"` |
+
+`claude` と `opencode` は agent の定義ファイルを名前で選べるため、`--agent` で起動します。`codex` と
+`antigravity` は定義ファイルから agent を選ぶ仕組みを持たないため、規範の本文を起動時の指示として
+渡します。antigravity の `.agents/` は rules と skills のためのディレクトリで、agent の定義は扱いません。
+rules へ置くと全セッションへ読み込まれ、executor として起動したときにも役割が混入します。
+
+配置されるファイルにはモデル名が書かれています。手元で使えるモデルに合わせて編集してください。
+executor / reporter の設定も同時に配置されるので、agent にタスクを実行させる段階で使います。
+
+### 会話で操作する
+
+起動したら、やりたいことをそのまま伝えます。オーケストレーターがコマンドへ翻訳し、実行前に内容を提示します。
+
+```text
+あなた : このプロジェクトを始めたい。まず登録簿を用意して、最初の作業を起票して。
+agent  : 次を実行します。よろしいですか。
+           npx specdojo register scaffold --project prj-0001
+           npx specdojo register add --project prj-0001 --type todo --title "..."
+あなた : お願いします。
+```
+
+状態を変える操作は承認を得てから実行し、`git push` や破壊的操作は行いません。起票した項目の
+実行、状況の確認、成果物の生成も同じ流れで進みます。
+
+```text
+PJR-XXXX を実行して
+今の状況は？
+kata の rulebook を確認したい
+```
+
+詳しい進め方は [オーケストレーター運用ガイド](https://specdojo.github.io/specdojo/ja/specdojo/guides/orchestrator-operation-guide.html) を参照してください。
+
+### CLI を直接使う
+
+agent を使わずに操作することもできます。最初の登録簿と todo を作り、一覧を生成します。
 
 ```sh
 npx specdojo register scaffold --project prj-0001

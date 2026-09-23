@@ -22,6 +22,7 @@ export const ORCHESTRATOR_WRAPPERS = [
   { path: "templates/claude/agents/specdojo-orchestrator.md", format: "markdown" },
   { path: "templates/opencode/agents/specdojo-orchestrator.md", format: "markdown" },
   { path: "templates/codex/agents/specdojo-orchestrator.toml", format: "toml" },
+  { path: "templates/codex/orchestrator.md", format: "raw" },
   { path: "templates/antigravity/orchestrator.md", format: "raw" },
 ];
 
