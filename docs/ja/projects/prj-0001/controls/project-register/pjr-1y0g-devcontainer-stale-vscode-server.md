@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-1y0g-devcontainer-stale-vscode-server
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: medium
   owner: OPS
   registered_at: "2026-09-17T22:14:56Z"
   due_on: "2026-09-30"
+  completed_at: "2026-09-23T01:41:14Z"
+  conclusion: "init: true と kill-stale-vscode.sh により残骸プロセスの蓄積を解消。rebuild 後に PID 1 が docker-init になり、接続時の自動掃除も動作することを確認した。"
 ---
 
 # PJR-1Y0G devcontainer に残る vscode-server の残骸プロセスを抑止・掃除する
@@ -34,12 +36,12 @@ devcontainer は `"shutdownAction": "none"` でコンテナを生かし続ける
 
 ## 3. 作業内容
 
-| No  | 作業                                                                                         | 担当 | 状態 | メモ                                                          |
-| --- | -------------------------------------------------------------------------------------------- | ---- | ---- | ------------------------------------------------------------- |
-| 1   | `devcontainer.json` に `init: true` と `postAttachCommand` を追加する                        | OPS  | done | オーケストレーターが直接対応                                  |
-| 2   | `.devcontainer/kill-stale-vscode.sh` を作成し、`vscode:ps` / `vscode:kill-stale` を追加 | OPS  | done | 孤児の疑似プロセスで検出・停止を確認                          |
-| 3   | CONTRIBUTING に掃除の手順と `init` 反映に rebuild が必要な旨を記載する                       | OPS  | done | -                                                             |
-| 4   | コンテナを rebuild して PID 1 が init になることと、接続時の自動掃除を確認する               | OPS  | open | 利用者が rebuild 後に `ps -p 1` と `npm run vscode:ps` で確認 |
+| No  | 作業                                                                                    | 担当 | 状態 | メモ                                 |
+| --- | --------------------------------------------------------------------------------------- | ---- | ---- | ------------------------------------ |
+| 1   | `devcontainer.json` に `init: true` と `postAttachCommand` を追加する                   | OPS  | done | オーケストレーターが直接対応         |
+| 2   | `.devcontainer/kill-stale-vscode.sh` を作成し、`vscode:ps` / `vscode:kill-stale` を追加 | OPS  | done | 孤児の疑似プロセスで検出・停止を確認 |
+| 3   | CONTRIBUTING に掃除の手順と `init` 反映に rebuild が必要な旨を記載する                  | OPS  | done | -                                    |
+| 4   | コンテナを rebuild して PID 1 が init になることと、接続時の自動掃除を確認する          | OPS  | done | 2026-09-23 に確認（下記）            |
 
 ## 4. 対応結果
 
@@ -48,6 +50,7 @@ devcontainer は `"shutdownAction": "none"` でコンテナを生かし続ける
 - `package.json`: `vscode:ps`、`vscode:kill-stale` を追加。
 - `CONTRIBUTING.md`: 「残った VS Code Server のプロセスを掃除する」を追加。
 - 検証: `shellcheck` / `shfmt -i 2` 通過。`/home/node/.vscode-server/fake/orphan-test` を名乗る孤児プロセスを起動し、`--dry-run` で `[orphan]` として検出、実行で停止することを確認。現行の稼働中プロセスは対象外（`no stale processes`）。
+- rebuild 後の確認（2026-09-23）: PID 1 が `/sbin/docker-init` になり `init: true` が有効（コンテナ起動は 2026-09-22 20:38）。`postAttachCommand` は `kill-stale-vscode.sh` と `ensure-cron.sh` を実行する。`kill-stale-vscode.sh --dry-run` は `no stale processes (latest server: 7debcd0e)` を返し、`~/.vscode-server/bin/` の commit ディレクトリも 1 つだけで旧 commit の蓄積はない。vscode-server 系は 18 プロセス・合計 2.7 GB で、いずれも稼働中の 1 セッション分（extension host 573 MB、codex デーモン 439 MB、copilot 265 MB など）。全体は 11 GB 中 4 GB 使用で 7 GB 利用可能。
 - 残課題: `init` は rebuild 後に有効。`openai.chatgpt` 拡張の `codex` デーモン（約 390 MB）はユーザー設定 `remote.extensionKind` でホスト側実行にすると更に軽くなるが、個人設定のため本 todo では扱わない。
 
 ## 5. 関連ドキュメント
