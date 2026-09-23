@@ -38,6 +38,15 @@ describe("agent protected configuration paths", () => {
     "lefthook.yml",
     ".specdojo/exec-defaults.yaml",
     ".specdojo/claude/settings.edit.json",
+    ".agents/rules/markdown.md",
+    ".agents/skills/example/SKILL.md",
+    ".claude/agents/executor.md",
+    ".codex/agents/executor.toml",
+    ".opencode/agents/executor.md",
+    ".github/agents/executor.md",
+    "AGENTS.md",
+    "CLAUDE.md",
+    "GEMINI.md",
     "commitlint.config.cjs",
     ".commitlintrc.yaml",
     ".github/workflows/ci.yml",
@@ -49,12 +58,15 @@ describe("agent protected configuration paths", () => {
     expect(isAgentProtectedConfigPath(path)).toBe(true);
   });
 
-  it.each(["package-lock.json", "docs/package.json", ".github/CODEOWNERS", "src/config.ts"])(
-    "does not overmatch %s",
-    (path) => {
-      expect(isAgentProtectedConfigPath(path)).toBe(false);
-    },
-  );
+  it.each([
+    "package-lock.json",
+    "docs/package.json",
+    ".agents/specdojo-orchestrator.agent.md",
+    ".github/CODEOWNERS",
+    "src/config.ts",
+  ])("does not overmatch %s", (path) => {
+    expect(isAgentProtectedConfigPath(path)).toBe(false);
+  });
 
   it("reports only changes made after the agent baseline", () => {
     const root = mkdtempSync(join(tmpdir(), "specdojo-protected-config-"));
@@ -71,6 +83,24 @@ describe("agent protected configuration paths", () => {
     expect(changedAgentProtectedConfigPaths(root, before)).toEqual([
       ".github/workflows/ci.yml",
       "package.json",
+    ]);
+  });
+
+  it("detects changes and additions under agent instruction directories", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-protected-config-"));
+    roots.push(root);
+    write(join(root, "AGENTS.md"), "# Before\n");
+    write(join(root, ".agents", "rules", "existing.md"), "before\n");
+
+    const before = captureAgentProtectedConfigSnapshot(root);
+    write(join(root, "AGENTS.md"), "# After\n");
+    write(join(root, ".agents", "rules", "existing.md"), "after\n");
+    write(join(root, ".codex", "agents", "new.toml"), 'name = "new"\n');
+
+    expect(changedAgentProtectedConfigPaths(root, before)).toEqual([
+      ".agents/rules/existing.md",
+      ".codex/agents/new.toml",
+      "AGENTS.md",
     ]);
   });
 

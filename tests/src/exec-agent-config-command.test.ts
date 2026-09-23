@@ -166,21 +166,25 @@ describe("resolveMemberCommand", () => {
     );
   });
 
-  it("throws when a variable is defined in both by_mode and by_proficiency", () => {
+  it("resolves command variables by nickname, proficiency, then mode", () => {
     const config: ExecDefaultsConfig = {
       providers: {
         codex: {
-          command_template: "codex exec --model {model}",
+          command_template: "codex exec --model {model} --effort {effort}",
           command_params: {
-            by_mode: { edit: { model: "from-mode" } },
-            by_proficiency: { normal: { model: "from-proficiency" } },
+            by_mode: { edit: { model: "from-mode", effort: "low" } },
+            by_proficiency: { normal: { model: "from-proficiency", effort: "medium" } },
+            by_nickname: { "codex-special": { model: "from-nickname" } },
           },
         },
       },
     };
 
-    expect(() => resolveMemberCommand(config, buildMember({ provider: "codex" }))).toThrow(
-      /\{model\}.*both by_mode and by_proficiency/,
+    expect(
+      resolveMemberCommand(config, buildMember({ nickname: "codex-special", provider: "codex" })),
+    ).toBe("codex exec --model from-nickname --effort medium");
+    expect(resolveMemberCommand(config, buildMember({ provider: "codex" }))).toBe(
+      "codex exec --model from-proficiency --effort medium",
     );
   });
 
@@ -207,6 +211,23 @@ describe("resolveMemberCommand", () => {
           command_template: "claude -p --agent {nickname}",
           command_params: {
             by_mode: { edit: { nickname: "hijacked" } },
+          },
+        },
+      },
+    };
+
+    expect(() => resolveMemberCommand(config, buildMember())).toThrow(
+      /must not redefine built-in variable \{nickname\}/,
+    );
+  });
+
+  it("throws when by_nickname redefines a built-in variable", () => {
+    const config: ExecDefaultsConfig = {
+      providers: {
+        claude: {
+          command_template: "claude -p --agent {nickname}",
+          command_params: {
+            by_nickname: { "claude-edit-agent": { nickname: "hijacked" } },
           },
         },
       },

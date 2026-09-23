@@ -102,11 +102,11 @@ groups:
         overview: SpecDojo CLIと外部エージェントCLIを組み合わせたマルチエージェント実行の全体像と、provider別詳細設計への導線を示す
         path: sysd-agent-settings.md
         rulebook: specdojo:sysd-rulebook
-        note: 既存文書のretrofit。横断ルールと運用手順を移設し、4providerとorchestrator設計へのhubへ縮小済み
+        note: 既存文書のretrofit。横断ルールと運用手順を移設し、5providerとorchestrator設計へのhubへ縮小済み
         evidence_refs:
           - kind: implementation
             path: src/specdojo-config.ts
-            purpose: AgentProvider（opencode/claude/codex/copilot/custom）の型定義
+            purpose: AgentProvider（opencode/claude/codex/copilot/antigravity/custom）の型定義
           - kind: implementation
             path: src/exec.ts
             purpose: exec コマンド入口から到達するmember選択・起動コマンド解決（command_template/command_params）の共通規則、3層（SpecDojo CLI／agent／exec run）の責務分担、非対話実行・worktree割当の制御
@@ -186,6 +186,23 @@ groups:
           - kind: implementation
             path: src/exec.ts
             purpose: exec コマンド入口から到達するproviders.copilotのcommand_template解決規則
+        done_criteria: *sysd-term-done-criteria
+
+      - local_id: sysd-antigravity-agent-settings
+        name: システム設計（Antigravity CLIエージェント設定）
+        kind: work
+        depends_on:
+          - sysd-agent-settings
+        overview: Antigravity CLI固有の認証・モデル選択・指示読込・起動コマンド解決を定義する
+        path: sysd-antigravity-agent-settings.md
+        rulebook: specdojo:sysd-rulebook
+        evidence_refs:
+          - kind: implementation
+            path: src/exec-agent-config.ts
+            purpose: providers.antigravityのcommand_templateとcommand_params解決規則
+          - kind: implementation
+            path: src/exec-agent-protected-config.ts
+            purpose: agent指示ディレクトリとroot指示ファイルの固定保護規則
         done_criteria: *sysd-term-done-criteria
 
       - local_id: sysd-orchestrator-agent-settings

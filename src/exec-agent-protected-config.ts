@@ -8,6 +8,12 @@ import { gitEnvironment, gitResult } from "./exec-worktree.js";
 // 変えられる設定パス。provider 設定から注入できない固定定義として CLI 側に持つ。
 const PROTECTED_DIRECTORY_PREFIXES = [
   ".specdojo/",
+  ".agents/rules/",
+  ".agents/skills/",
+  ".claude/",
+  ".codex/",
+  ".opencode/",
+  ".github/agents/",
   ".github/workflows/",
   ".gitlab/ci/",
   ".circleci/",
@@ -17,6 +23,9 @@ const PROTECTED_DIRECTORY_PREFIXES = [
 
 const PROTECTED_EXACT_PATHS = new Set([
   "package.json",
+  "AGENTS.md",
+  "CLAUDE.md",
+  "GEMINI.md",
   "lefthook.yml",
   ".lefthook.yml",
   ".gitlab-ci.yml",
@@ -28,6 +37,12 @@ const PROTECTED_EXACT_PATHS = new Set([
 
 const SNAPSHOT_DIRECTORY_ROOTS = [
   ".specdojo",
+  ".agents/rules",
+  ".agents/skills",
+  ".claude",
+  ".codex",
+  ".opencode",
+  ".github/agents",
   ".github/workflows",
   ".gitlab/ci",
   ".circleci",

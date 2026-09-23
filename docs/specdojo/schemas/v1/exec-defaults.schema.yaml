@@ -84,8 +84,8 @@ $defs:
       command_params:
         $ref: "#/$defs/CommandParams"
         description: >
-          Extra template variables resolved by member attributes. Keys appearing in both
-          by_mode and by_proficiency are a validation error.
+          Extra template variables resolved by member attributes. Resolution precedence is
+          by_nickname, then by_proficiency, then by_mode.
       rate_limit_detection:
         $ref: "#/$defs/RateLimitDetection"
         description: "Provider-specific failure signals. Prefer stderr_patterns over generic exit_codes."
@@ -108,8 +108,9 @@ $defs:
     minProperties: 1
     description: >
       Template variable tables resolved by member attributes. Each table maps an
-      attribute value (member mode or proficiency) to a set of placeholder name /
-      value pairs used to expand command_template.
+      attribute value (member mode, proficiency, or nickname) to a set of placeholder
+      name / value pairs used to expand command_template. Higher-priority layers override
+      lower-priority layers in the order by_nickname, by_proficiency, by_mode.
     properties:
       by_mode:
         type: object
@@ -125,6 +126,14 @@ $defs:
         description: "Variables selected by the member's proficiency."
         propertyNames:
           enum: ["low", "normal", "high", "expert"]
+        additionalProperties:
+          $ref: "#/$defs/CommandVariableSet"
+      by_nickname:
+        type: object
+        minProperties: 1
+        description: "Variables selected by the member's exact nickname."
+        propertyNames:
+          pattern: "^[a-z0-9][a-z0-9_-]{0,62}$"
         additionalProperties:
           $ref: "#/$defs/CommandVariableSet"
 

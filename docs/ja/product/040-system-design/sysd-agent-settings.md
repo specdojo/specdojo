@@ -41,7 +41,7 @@ schedule / register item
 
 設定の一次情報は`.specdojo/exec-defaults.yaml`と`pm-members.yaml`、実行状態の一次情報はproject配下のplan・result・append-only eventである。
 
-agent が親 runner・Git hook・CI の実行内容を変更できないよう、`package.json`、lefthook 設定、`.specdojo/**`、commitlint 設定、CI 設定は provider 共通の固定保護パスとする。runner は agent 終了直後かつ親検証前に起動前との差分を検査し、worktree の commit 前には未 commit 差分と branch 上の commit 済み差分を再検査する。違反時は対象パスを標準エラーへ出力して block し、branch / worktree を保持する。provider 固有の permission / sandbox は第一層として維持するが、この判定の入力には使わない。
+agent が親 runner・Git hook・CI・agent 指示の内容を変更できないよう、`package.json`、lefthook 設定、`.specdojo/**`、commitlint 設定、CI 設定、agent 指示ディレクトリ、root の指示ファイルは provider 共通の固定保護パスとする。runner は agent 終了直後かつ親検証前に起動前との差分を検査し、worktree の commit 前には未 commit 差分と branch 上の commit 済み差分を再検査する。違反時は対象パスを標準エラーへ出力して block し、branch / worktree を保持する。provider 固有の permission / sandbox は第一層として維持するが、この判定の入力には使わない。
 
 agent起動時は親プロセスの`GIT_DIR`、`GIT_WORK_TREE`その他のrepository固有環境変数を除去し、cwdから対象worktreeを再解決させる。runnerは各agent試行の前後でHEADとlocal configも比較し、agent自身のcommitまたは`core.bare`を含む設定変更を検知した場合は親検証・reporter・統合を行わずblockする。この境界は通常実行、in-place、trial、分割worktree commandのすべてへ適用する。
 
@@ -53,6 +53,7 @@ agent起動時は親プロセスの`GIT_DIR`、`GIT_WORK_TREE`その他のreposi
 | [Codexエージェント設定](sysd-codex-agent-settings.md)                     | Codex              | sandbox、モデル、custom agent、起動設定 |
 | [OpenCodeエージェント設定](sysd-opencode-agent-settings.md)               | OpenCode / Ollama  | ローカルLLM、agent定義、起動設定        |
 | [GitHub Copilotエージェント設定](sysd-github-copilot-agent-settings.md)   | GitHub Copilot CLI | 認証、agent定義、非対話実行             |
+| [Antigravity CLIエージェント設定](sysd-antigravity-agent-settings.md)     | Antigravity CLI    | 認証、モデル、指示読込、起動設定        |
 | [オーケストレーターエージェント設定](sysd-orchestrator-agent-settings.md) | 対話型orchestrator | 提案・承認・実行境界、固定worktree起動  |
 
 `provider: custom`は共通の上書き拡張点であり、固有の標準provider設計は持たない。採用する場合は独立した子設計を追加する。
