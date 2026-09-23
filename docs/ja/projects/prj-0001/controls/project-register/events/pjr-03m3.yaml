@@ -87,3 +87,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_0e32555b3aa64a3d88d8516a90089e70
+- v: 1
+  id: reg_a59d1ecc1cb14f9b9e462f5d2a7ddd35
+  ts: "2026-09-23T03:43:14Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: レビュー完了。単独運用の判断基準を 1 行修正のうえ close
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-23"
+    - field: conclusion
+      from: "-"
+      to: git-branching-standard へ 3 層の変更経路と運用規模ごとの必須条件を新設し、branch-workflow-guide へ feature 分岐前の base push と PR 表示再計算の対処を追加した。
+  previous_event_id: reg_a1f8fcc480c94c119b93b6feadde6ade

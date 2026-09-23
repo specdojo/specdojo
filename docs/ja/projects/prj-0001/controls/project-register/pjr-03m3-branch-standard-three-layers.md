@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-03m3-branch-standard-three-layers
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-09-23T02:37:13Z"
   due_on: "2026-10-10"
+  completed_at: "2026-09-23T03:43:14Z"
   block_reason: "agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=.opencode/.gitignore, .opencode/node_modules/.bin/download-msgpackr-prebuilds, .opencode/node_modul…"
+  conclusion: git-branching-standard へ 3 層の変更経路と運用規模ごとの必須条件を新設し、branch-workflow-guide へ feature 分岐前の base push と PR 表示再計算の対処を追加した。
 ---
 
 # PJR-03M3 git-branching-standard に 3 層の切り分けと運用規模別の条件を明記する
@@ -45,6 +47,8 @@ specdojo:
 - [[specdojo:git-branching-standard]] に、exec の自動実行、人・対話型 agent が内容を書いた変更、register の記帳という3層と、それぞれのブランチ・統合方法を表で追加した。事前レビューの価値を境界とし、乱数 ID、Git 管理対象外の生成物、項目単位の実体という記帳例外の前提も明記した。
 - 同標準に運用規模別の条件を追加した。3層分類と exec 対象の事前統合は共通とし、単独運用ではリモート PR、branch protection、分離した統合専用 actor、リモートへのベース反映を条件付きで省略できる一方、複数人・複数 actor 運用では必須とした。
 - [[specdojo:branch-workflow-guide]] に、feature 分岐前の base push と SHA 確認、および Pull Request の Files changed が古い場合に compare API で実差分を確認して close / reopen する手順を追加した。
+- レビューで 1 点修正した。運用規模別の表の層2の行が「リモートを共有しない場合は」を単独運用の条件にしていたが、判断基準はリモートの有無ではなく独立した承認者の有無であるため、「作成者と独立した承認者が参加していない期間は」へ改め、リモートの有無では判断しないことを明記した。
+- 実行は codex-expert-executor / gemma-reporter / worktree で行った。初回は保護設定の誤検知（[[prj-0001:pjr-t84c-protected-config-runtime-artifacts]]）で `waiting` になり、修正後に reporter ステージから `--resume` して完走した。executor は再実行していない。
 
 ## 5. 関連ドキュメント
 

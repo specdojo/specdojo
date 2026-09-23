@@ -32,3 +32,22 @@
     - field: due
       from: ""
       to: "2026-09-26"
+- v: 1
+  id: reg_c8db32c1b79d4ce1ba0ad4016ee150a1
+  ts: "2026-09-23T03:43:14Z"
+  action: close
+  actor: orchestrator
+  from_status: open
+  to_status: done
+  reason: オーケストレーターが直接対応し、ローカル feature から --no-ff merge で統合
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-23"
+    - field: conclusion
+      from: "-"
+      to: agent の実行時生成物を、既知の生成物かつ ignore 済みという二条件で保護検知から除外した。指示ファイルの保護は維持し、PJR-03M3 の再開で reporter の完走を確認した。
+  previous_event_id: reg_f4bd82d0ac28403e8fe80ffe8c3d3929
