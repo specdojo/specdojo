@@ -32,3 +32,32 @@
     - field: due
       from: ""
       to: "2026-10-05"
+- v: 1
+  id: reg_324fd75b68444fd1a677d01e2177adad
+  ts: "2026-09-23T00:24:29Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_b8fb42f8678e4aa0b8d07ccf06b61aec
+- v: 1
+  id: reg_7dea0b916eff41a699ffcfccd87165ce
+  ts: "2026-09-23T00:40:47Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=.specdojo/exec-defaults.yaml; agent must record the required chang…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=.specdojo/exec-defaults.yaml; agent must record the required chang…"
+  previous_event_id: reg_324fd75b68444fd1a677d01e2177adad
