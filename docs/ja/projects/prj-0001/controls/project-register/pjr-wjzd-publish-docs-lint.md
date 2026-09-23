@@ -53,14 +53,18 @@ npm install --save-dev @specdojo/docs-lint
 
 | No  | 作業                                              | 担当 | 状態 | メモ                          |
 | --- | ------------------------------------------------- | ---- | ---- | ----------------------------- |
-| 1   | `publish-docs-lint.yml` を追加する                | DEV  | open | `publish-specdojo.yml` と同型 |
-| 2   | `npm pack --dry-run` で同梱範囲を確認する         | DEV  | open | 不要ファイルの除外            |
+| 1   | `publish-docs-lint.yml` を追加する                | DEV  | done | `publish-specdojo.yml` と同型 |
+| 2   | `npm pack --dry-run` で同梱範囲を確認する         | DEV  | done | 不要ファイルの除外            |
 | 3   | npm 側の trusted publisher 設定を登録する         | OPS  | open | ブラウザ操作。人が行う        |
 | 4   | `main` への push で公開し、導入して動作を確認する | OPS  | open | 人が行う                      |
 
 ## 4. 対応結果
 
--
+- `.github/workflows/publish-docs-lint.yml` を追加した。`publish-specdojo.yml` と同型で、Trusted Publishing（OIDC）を使い `NODE_AUTH_TOKEN` を持たない。起動条件は `packages/docs-lint/**` と workflow 自身の変更に限定し、ルート package の変更では起動しない。`defaults.run.working-directory` を `packages/docs-lint` とし、setup-node の `cache-dependency-path` も同 package の `package-lock.json` を指す。公開済み version と一致する場合は skip する判定は同一ロジックである。scoped package のため `npm publish --access public` を指定した。
+- `publish-specdojo.yml` との差分はビルド段の有無である。このパッケージは `src` をそのまま配布し `bin` が tsx 経由で実行するため `build` script を持たない。省略した理由は workflow 内のコメントに残した。
+- `npm pack --dry-run` で同梱範囲を確認した。15 ファイル、package size 19.9 kB、unpacked 64.3 kB。内訳は `LICENSE` / `README.md` / `package.json` / `bin/specdojo-docs-lint.js` / `src` 配下の `.ts` 9 件と `.cjs` 3 件で、remark プラグインの公開 export が参照するファイルが揃っている。`node_modules`、`tsconfig.json`、`package-lock.json` は含まれない。
+- `.github/workflows/` は agent の書き込み保護対象であるため、exec へ流さずオーケストレーターが直接対応した。ローカル feature ブランチ `feature/prj-0001/publish-docs-lint` で実装し、`--no-ff` merge（`7469ca28`）で develop へ統合した。
+- 作業 3（npm 側の trusted publisher 設定）と作業 4（公開と導入確認）は人の作業として残る。`@specdojo/docs-lint` は未公開のため、scoped package の初回公開を Trusted Publishing で行えるかが未検証である。行えない場合は初回のみ手動 publish（`npm login` と 2FA）が必要になる。
 
 ## 5. 関連ドキュメント
 
