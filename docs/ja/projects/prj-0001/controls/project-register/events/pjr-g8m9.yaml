@@ -61,3 +61,16 @@
       from: "-"
       to: "checkpoint failed: git worktree failed: Preparing worktree (new branch 'exec/prj-0001-PJR-G8M9') Updating files:  50% (2325/4638)\rUpdating files:  51% (2366/4638)\rUpdating files:  52% (2412/4638)\rUpda…"
   previous_event_id: reg_29b5a5e193e548bc9f6c4b77ab59c59a
+- v: 1
+  id: reg_9e68a0abcbc14ffc92c3b9f0e2caafb1
+  ts: "2026-09-23T07:06:42Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_7e44d092d6a240f89e36b40606047138
