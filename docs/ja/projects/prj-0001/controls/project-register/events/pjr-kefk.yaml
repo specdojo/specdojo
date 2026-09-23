@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_e2b71a3b16d54f7c94e460e8e3744c35
+  ts: "2026-09-23T02:37:13Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-EWWX の対応 1
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: オーケストレーター規範に feature ブランチ経由の commit 方針を反映する
+    - field: description
+      from: ""
+      to: PJR-EWWX で決めた 3 層の切り分けを .agents/specdojo-orchestrator.agent.md へ反映する。自分が内容を書いた変更は feature/`<project-id>`/`<topic>` を切って commit し、push と PR は利用者へ引き渡す。register の記帳は develop へ直接 commit してよい。SSOT 本文と 4 環境のラッパーはバイト一致を保ち、validate-orchestrator-sync で検証する。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-23"
+    - field: due
+      from: ""
+      to: "2026-09-30"
