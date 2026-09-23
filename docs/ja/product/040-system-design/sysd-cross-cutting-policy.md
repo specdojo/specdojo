@@ -71,10 +71,10 @@ SpecDojo CLI、agent、実行runner、Git worktreeへ横断的に適用する責
 
 ### scp-CFG-001: 起動コマンド解決
 
-- **Rule（MUST）**: 起動コマンドは`providers.<provider>.command_template`と`command_params`から解決し、memberの`command`は特殊構成だけに使う。plan本文は標準入力で渡す。
+- **Rule（MUST）**: 起動コマンドは`providers.<provider>.command_template`と`command_params`から解決する。追加変数は`by_nickname`、`by_proficiency`、`by_mode`の順で優先し、memberの`command`は特殊構成だけに使う。plan本文は標準入力で渡す。
 - **Rationale（意図）**: provider設定の重複とshell解釈による事故を防ぐ。
 - **Scope（適用範囲）**: 全providerの非対話起動。
-- **Enforcement（検証）**: 未解決placeholder、重複変数、template欠落を起動前にエラーとする。
+- **Enforcement（検証）**: 未解決placeholder、組み込み変数の再定義、template欠落を起動前にエラーとする。
 - **Exception（例外）**: `provider: custom`はmember commandで上書きできる。
 - **References（参照）**: `sysd-agent-settings`、provider別子設計。
 

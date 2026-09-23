@@ -1,0 +1,205 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-2T2S",
+  "run_id": "20260923T004737732Z-d4fc1102",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-23T00:47:37.732Z",
+    "completed_at": "2026-09-23T00:53:23.232Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/040-system-design/sysd-agent-settings.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/040-system-design/sysd-cross-cutting-policy.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-architecture.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-system-design.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/030-project-management/pm-members.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-2t2s.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-2t2s-antigravity-provider.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-config-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/exec-defaults.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-agent-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-agent-protected-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-agent-config-command.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-agent-protected-config.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/040-system-design/sysd-antigravity-agent-settings.md",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 14,
+    "summary": ".../040-system-design/sysd-agent-settings.md       |  3 +-\n .../040-system-design/sysd-cross-cutting-policy.md |  4 +-\n .../010-deliverables-catalog/dct-architecture.yaml |  2 +\n .../dct-system-design.yaml                         | 21 +++++-\n .../030-project-management/pm-members.yaml         | 86 ++++++++++++++++++++++\n .../controls/project-register/events/pjr-2t2s.yaml | 13 ++++\n .../pjr-2t2s-antigravity-provider.md               |  2 +-\n docs/ja/specdojo/guides/exec-config-guide.md       | 23 +++++-\n docs/specdojo/schemas/v1/exec-defaults.schema.yaml | 17 ++++-\n src/exec-agent-config.ts                           | 24 +++---\n src/exec-agent-protected-config.ts                 | 15 ++++\n tests/src/exec-agent-config-command.test.ts        | 33 +++++++--\n tests/src/exec-agent-protected-config.test.ts      | 42 +++++++++--\n 13 files changed, 249 insertions(+), 36 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/product/040-system-design/sysd-agent-settings.md docs/ja/product/040-system-design/sysd-cross-cutting-policy.md docs/ja/product/040-system-design/sysd-antigravity-agent-settings.md docs/ja/projects/prj-0001/010-deliverables-catalog/dct-architecture.yaml docs/ja/projects/prj-0001/010-deliverables-catalog/dct-system-design.yaml docs/ja/projects/prj-0001/030-project-management/pm-members.yaml docs/ja/specdojo/guides/exec-config-guide.md docs/specdojo/schemas/v1/exec-de…",
+      "status": "passed",
+      "summary": "対象成果物はすべて整形済み"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "全 Markdown の lint が成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "ESLint が成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "frontmatter・remark 検査が成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "履歴リンク検査が成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog build",
+      "status": "passed",
+      "summary": "成果物カタログを再生成"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "全カタログが OK。既存の未作成成果物に関する警告のみ"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "文書インデックス 1867 件を生成"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts schedule build --project prj-0001 --track planning --dry-run",
+      "status": "passed",
+      "summary": "Schedule と member roster の読み込み・展開が成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿生成ビューを再生成"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts exec run --project prj-0001 --register PJR-2T2S --executor-by agy-sonnet-executor --reporter-by agy-reporter --dry-run",
+      "status": "passed",
+      "summary": "claude-sonnet-4-6 へ解決"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts exec run --project prj-0001 --register PJR-2T2S --executor-by agy-opus-executor --reporter-by agy-reporter --dry-run",
+      "status": "passed",
+      "summary": "claude-opus-4-6-thinking へ解決"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts exec run --project prj-0001 --register PJR-2T2S --executor-by agy-opus-review-executor --reporter-by agy-reporter --dry-run",
+      "status": "passed",
+      "summary": "review member が claude-opus-4-6-thinking へ解決"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts exec run --project prj-0001 --register PJR-2T2S --executor-by agy-gpt-executor --reporter-by agy-reporter --dry-run",
+      "status": "passed",
+      "summary": "gpt-oss-120b-medium へ解決"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2T2S\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\n[dry-run] git merge --no-ff --no-edit exec/T-T-doc-010\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nUpdated: /tmp/specdojo-register-pipeline-e2e-gDl0d2/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)\nUpdated: /tmp/specdojo-register-pipeline-e2e-gDl0d2/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml\nGenerated: /tmp/specdojo-register-pipeline-e2e-gDl0d2/docs/ja/projects/test/controls/project-register/generated/pjr-index.md\nGenerated: /tmp/specdojo-register-pipeline-e2e-gDl0d2/docs/ja/projects/test/controls/project-register/gen…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.1.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2T2S/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2T2S/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-tem…"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.1.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2T2S\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-BsCZE3/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-lqj5bH/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-uiRaKJ/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-TSj0qh/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-mDb0Gz/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-dshLuj/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\nWrote agent stdout: /tmp/specdojo-agent-command-uNOw5o/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-FSZ9gv/outputs/partial.txt\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\n\n Test Files  105 passed (105)\n      Tes…"
+    }
+  ],
+  "final_message": "Antigravity provider の `by_nickname` モデル解決、追加 member 4件、agent 指示保護、設計文書とガイドを実装・検証した。比較 trial は統合後の ARC 作業として個票に残る。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-2T2S/20260923T004737732Z-d4fc1102/executor.log",
+      "bytes": 3707,
+      "truncated": false
+    }
+  ]
+}

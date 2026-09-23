@@ -201,7 +201,7 @@ rate_limit_policy:
 provider ごとに挙動が異なる設定は `providers.<provider>` に置きます。各キーは対応するグローバル値を完全に置き換え、未指定のキーはグローバル値にフォールバックします。`<provider>` は `pm-members[].provider` に対応します。指定できるキーは次のとおりです。
 
 - `command_template`: その provider の agent を起動するコマンドテンプレート。`{nickname}`・`{mode}`・`{proficiency}` と `command_params` の変数を member 属性で展開します。グローバル既定は持ちません。
-- `command_params`: テンプレートの追加変数表。`by_mode.<mode>` と `by_proficiency.<proficiency>` に変数名と値の組を置きます。
+- `command_params`: テンプレートの追加変数表。`by_mode.<mode>`、`by_proficiency.<proficiency>`、`by_nickname.<nickname>` に変数名と値の組を置きます。同じ変数は `by_nickname`、`by_proficiency`、`by_mode` の順で優先します。
 - `rate_limit_detection`: provider 固有の検出シグナル（`stderr_patterns` を優先します）。
 - `rate_limit_policy`: provider 固有のリトライ／フォールバック／block ポリシー。
 - `rate_limit_policy.cooldown_seconds`: reset / retry-after が無い retryable signal にだけ使う明示的な延期秒数。未指定の kind は再開時刻を推定しません。
@@ -220,7 +220,18 @@ providers:
       by_proficiency:
         normal: { model: gpt-5.4-mini, effort: medium }
         expert: { model: gpt-5.5, effort: high }
+
+  antigravity:
+    command_template: 'agy --sandbox --add-dir "$(pwd)" --dangerously-skip-permissions --model {model} -p "$(cat)"'
+    command_params:
+      by_proficiency:
+        normal: { model: gemini-3.8-flash-medium }
+        expert: { model: gemini-3.1-pro-high }
+      by_nickname:
+        agy-opus-executor: { model: claude-opus-4-6-thinking }
 ```
+
+`by_nickname` は、同じ provider の一部 member だけモデルなどを差し替える用途です。層をまたぐ同名変数は意図的な上書きとして許可されます。一方、`nickname`、`mode`、`proficiency` は組み込み変数なので、どの `command_params` 層でも再定義できません。
 
 `max_concurrency` は、同一ホストの単一モデルを共有する provider（例: ローカル Ollama の `opencode`）が複数同時起動でメモリ競合・モデルロード待ちにより不安定になるのを防ぐために使います。グローバルな `--parallel` を下げずに、その provider だけを直列化できます。
 
@@ -485,11 +496,16 @@ providers:
       by_proficiency:
         normal: { model: gemini-3.8-flash-medium }
         expert: { model: gemini-3.1-pro-high }
+      by_nickname:
+        agy-sonnet-executor: { model: claude-sonnet-4-6 }
+        agy-opus-executor: { model: claude-opus-4-6-thinking }
+        agy-opus-review-executor: { model: claude-opus-4-6-thinking }
+        agy-gpt-executor: { model: gpt-oss-120b-medium }
 ```
 
 - `--sandbox` は書き込み先を `~/.gemini/antigravity-cli/scratch/` へ逃がすため、`--add-dir "$(pwd)"` で作業ディレクトリ（worktree）を明示して成果物へ書けるようにします。`--add-dir` なしでは成果物が更新されません。
 - `--dangerously-skip-permissions` は非対話実行に必須です。境界は worktree、保護設定（`agent-config-write`）、commit 許可リストで作ります。
-- モデルは `agy models` で確認します。モデル ID は推論強度を含む（`gemini-3.8-flash-medium` など）ため `--effort` は併用しません。ID と `--effort` が食い違うと `invalid model selection` で起動に失敗します。
+- モデルは `agy models` で確認します。標準モデルは `by_proficiency`、Antigravity 経由の Claude / GPT は `by_nickname` で選びます。モデル ID は推論強度を含む（`gemini-3.8-flash-medium` など）ため `--effort` は併用しません。ID と `--effort` が食い違うと `invalid model selection` で起動に失敗します。
 - 資格情報はコンテナ内では `~/.gemini/antigravity-cli/antigravity-oauth-token` に保存されます。devcontainer では `~/.gemini` を名前付きボリュームにして永続化します。
 - `--output-format json --json-schema <file>` は `structured_output` を含む JSON エンベロープを返します。runner の reporter は stdout の本文から JSON を読むため、現時点では既定のテキスト出力を使います。
 
@@ -528,6 +544,9 @@ commit 許可リストだけでは、register 由来の除外リスト方式や�
 
 - `package.json`、`lefthook.yml` / `.lefthook.yml`
 - `.specdojo/**`（ただし既知の生成物 `.specdojo/doc-index.json` は除く）
+- `.agents/rules/**`、`.agents/skills/**`
+- `.claude/**`、`.codex/**`、`.opencode/**`、`.github/agents/**`
+- `AGENTS.md`、`CLAUDE.md`、`GEMINI.md`
 - `commitlint.config.*`、`.commitlintrc*`
 - `.github/workflows/**`、`.gitlab-ci.*`、`.gitlab/ci/**`、`.circleci/**`、Azure Pipelines / Jenkins の設定
 

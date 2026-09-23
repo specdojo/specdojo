@@ -562,6 +562,92 @@ members:
     scheduler_strategy: fifo
     note: Antigravity CLI（agy）を使用する pipeline reporter。ファイルや外部情報へアクセスせず、渡された evidence から指定スキーマの構造化結果だけを返す（result への反映は runner が行う）。edit / review どちらの executor の後段にも使う。
 
+  - nickname: agy-sonnet-executor
+    disabled: false
+    priority: 4
+    display_name: Antigravity Sonnet Executor
+    email: null
+    roles: []
+    type: agent
+    provider: antigravity
+    mode: edit
+    stage_role: executor
+    proficiency: normal
+    persona: task-executor
+    focus:
+      - task-execution
+      - document-creation
+      - implementation
+      - verification
+    capabilities: [web_search]
+    scheduler_strategy: critical-first
+    note: Antigravity CLI 経由の Claude Sonnet を使用する pipeline executor（edit）。`command_params.by_nickname` でモデルを選び、by-name 指定で利用する。成果物の編集と検証だけを担当し、result は更新しない。
+
+  - nickname: agy-opus-executor
+    disabled: false
+    priority: 4
+    display_name: Antigravity Opus Executor
+    email: null
+    roles: []
+    type: agent
+    provider: antigravity
+    mode: edit
+    stage_role: executor
+    proficiency: expert
+    persona: task-executor
+    focus:
+      - task-execution
+      - document-creation
+      - implementation
+      - verification
+      - complex-analysis
+      - architecture-judgment
+    capabilities: [web_search]
+    scheduler_strategy: critical-first
+    note: Antigravity CLI 経由の Claude Opus Thinking を使用する expert pipeline executor（edit）。`command_params.by_nickname` でモデルを選び、by-name 指定で利用する。成果物の編集と検証だけを担当し、result は更新しない。
+
+  - nickname: agy-opus-review-executor
+    disabled: false
+    priority: 4
+    display_name: Antigravity Opus Review Executor
+    email: null
+    roles: []
+    type: agent
+    provider: antigravity
+    mode: review
+    stage_role: executor
+    proficiency: expert
+    persona: multi-viewpoint-reviewer
+    focus:
+      - done-criteria-verification
+      - cross-viewpoint-consistency
+      - quality-assurance
+      - complex-analysis
+    capabilities: [web_search]
+    scheduler_strategy: fifo
+    note: Antigravity CLI 経由の Claude Opus Thinking を使用する expert pipeline executor（review）。`command_params.by_nickname` でモデルを選び、by-name 指定で利用する。成果物・result のいずれも変更しない。
+
+  - nickname: agy-gpt-executor
+    disabled: false
+    priority: 4
+    display_name: Antigravity GPT Executor
+    email: null
+    roles: []
+    type: agent
+    provider: antigravity
+    mode: edit
+    stage_role: executor
+    proficiency: normal
+    persona: task-executor
+    focus:
+      - task-execution
+      - document-creation
+      - implementation
+      - verification
+    capabilities: [web_search]
+    scheduler_strategy: critical-first
+    note: Antigravity CLI 経由の GPT OSS 120B を使用する pipeline executor（edit）。`command_params.by_nickname` でモデルを選び、by-name 指定で利用する。成果物の編集と検証だけを担当し、result は更新しない。
+
   #
   # copilot members
   #

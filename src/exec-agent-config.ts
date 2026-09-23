@@ -47,12 +47,13 @@ export type RateLimitPolicy = {
 // Placeholder name -> value pairs inserted into command_template as-is.
 export type CommandVariableSet = Record<string, string>;
 
-// Extra command_template variables resolved by member attributes. by_mode is keyed by the
-// member's mode, by_proficiency by the member's proficiency. A variable name appearing in
-// both tables is a definition error (resolution would be ambiguous).
+// Extra command_template variables resolved by member attributes. Lower-priority layers are
+// applied first, so a nickname-specific value can intentionally override a proficiency- or
+// mode-specific default.
 export type CommandParams = {
   by_mode?: Partial<Record<AgentMode, CommandVariableSet>>;
   by_proficiency?: Partial<Record<Proficiency, CommandVariableSet>>;
+  by_nickname?: Record<string, CommandVariableSet>;
 };
 
 // Per-provider override. Each present key fully replaces the matching global
@@ -137,28 +138,27 @@ function buildCommandVariables(
   const byProficiency = member.proficiency
     ? params?.by_proficiency?.[member.proficiency]
     : undefined;
-  // Collision checks look at the full tables (not just the member's rows) so a broken
-  // definition fails for every member of the provider, not only for some modes.
+  const byNickname = params?.by_nickname?.[member.nickname];
+  // Built-in collision checks look at the full tables (not just the member's rows) so a
+  // broken definition fails for every member of the provider, not only for some attributes.
   const modeKeys = Object.values(params?.by_mode ?? {}).flatMap((set) => Object.keys(set ?? {}));
   const proficiencyKeys = Object.values(params?.by_proficiency ?? {}).flatMap((set) =>
     Object.keys(set ?? {}),
   );
-  for (const key of [...modeKeys, ...proficiencyKeys]) {
+  const nicknameKeys = Object.values(params?.by_nickname ?? {}).flatMap((set) =>
+    Object.keys(set ?? {}),
+  );
+  for (const key of [...modeKeys, ...proficiencyKeys, ...nicknameKeys]) {
     if (BUILTIN_VARIABLE_NAMES.has(key)) {
       throw new Error(
         `exec-defaults providers.${provider}.command_params must not redefine built-in variable {${key}}`,
       );
     }
   }
-  const duplicated = modeKeys.filter((key) => proficiencyKeys.includes(key));
-  if (duplicated.length > 0) {
-    throw new Error(
-      `exec-defaults providers.${provider}.command_params defines ${[...new Set(duplicated)].map((k) => `{${k}}`).join(", ")} in both by_mode and by_proficiency`,
-    );
-  }
 
   for (const [key, value] of Object.entries(byMode ?? {})) variables.set(key, value);
   for (const [key, value] of Object.entries(byProficiency ?? {})) variables.set(key, value);
+  for (const [key, value] of Object.entries(byNickname ?? {})) variables.set(key, value);
   return variables;
 }
 
