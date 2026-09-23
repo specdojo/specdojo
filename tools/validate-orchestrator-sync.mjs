@@ -4,12 +4,25 @@ import { pathToFileURL } from "node:url";
 
 export const ORCHESTRATOR_SOURCE = ".agents/specdojo-orchestrator.agent.md";
 
+// 本文を SSOT と一致させる対象。このリポジトリで使う環境別ラッパーと、利用者へ配る
+// provider テンプレートの両方を含む。テンプレートが古いまま配られる経路を残さないため、
+// 同じ一覧で検証と生成を行う。
+//
+// format は本文の埋め込み方を表す。
+//   markdown: frontmatter の後ろが本文
+//   toml:     developer_instructions の複数行文字列が本文
+//   raw:      ファイル全体が本文。agy のようにファイル定義 agent を持たず、本文をそのまま
+//             起動時の指示として渡す provider 向け
 export const ORCHESTRATOR_WRAPPERS = [
   { path: ".claude/agents/specdojo-orchestrator.md", format: "markdown" },
   { path: ".github/agents/specdojo-orchestrator.md", format: "markdown" },
   { path: ".opencode/agents/gemma-orchestrator.md", format: "markdown" },
   { path: ".opencode/agents/qwen-orchestrator.md", format: "markdown" },
   { path: ".codex/agents/specdojo-orchestrator.toml", format: "toml" },
+  { path: "templates/claude/agents/specdojo-orchestrator.md", format: "markdown" },
+  { path: "templates/opencode/agents/specdojo-orchestrator.md", format: "markdown" },
+  { path: "templates/codex/agents/specdojo-orchestrator.toml", format: "toml" },
+  { path: "templates/antigravity/orchestrator.md", format: "raw" },
 ];
 
 export function extractMarkdownBody(source, filePath = "Markdown wrapper") {
@@ -38,16 +51,19 @@ function firstDifference(expected, actual) {
   return { line, offset };
 }
 
+function extractBody(source, wrapper) {
+  if (wrapper.format === "raw") return source;
+  if (wrapper.format === "markdown") return extractMarkdownBody(source, wrapper.path);
+  return extractTomlBody(source, wrapper.path);
+}
+
 export function validateOrchestratorSync(rootDir = process.cwd()) {
   const canonical = readFileSync(resolve(rootDir, ORCHESTRATOR_SOURCE), "utf8");
   const mismatches = [];
 
   for (const wrapper of ORCHESTRATOR_WRAPPERS) {
     const wrapperSource = readFileSync(resolve(rootDir, wrapper.path), "utf8");
-    const body =
-      wrapper.format === "markdown"
-        ? extractMarkdownBody(wrapperSource, wrapper.path)
-        : extractTomlBody(wrapperSource, wrapper.path);
+    const body = extractBody(wrapperSource, wrapper);
 
     if (body !== canonical) {
       mismatches.push({ path: wrapper.path, ...firstDifference(canonical, body) });
@@ -65,7 +81,7 @@ export function runValidateOrchestratorSync({
   try {
     const mismatches = validateOrchestratorSync(rootDir);
     if (mismatches.length === 0) {
-      confirm(`orchestrator body sync: OK (${ORCHESTRATOR_WRAPPERS.length} wrappers)\n`);
+      confirm(`orchestrator body sync: OK (${ORCHESTRATOR_WRAPPERS.length} targets)\n`);
       return 0;
     }
 
