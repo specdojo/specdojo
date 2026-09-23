@@ -87,3 +87,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_9e68a0abcbc14ffc92c3b9f0e2caafb1
+- v: 1
+  id: reg_7e184f8065d04675ab839e22b632fbf3
+  ts: "2026-09-23T07:31:06Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: レビュー完了。空リポジトリと node_modules 構成で検証済み
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-23"
+    - field: conclusion
+      from: "-"
+      to: index build が resolver 由来の package kata も走査し、利用リポジトリと package をスコープで分けて重複判定するようにした。eject 後も index build が成功する。
+  previous_event_id: reg_8aa655b1fa714762bcdbcb61d99a4124

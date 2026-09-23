@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-g8m9-kata-wikilink-resolution
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-09-23T03:50:08Z"
   due_on: "2026-10-31"
+  completed_at: "2026-09-23T07:31:06Z"
   block_reason: "checkpoint failed: git worktree failed: Preparing worktree (new branch 'exec/prj-0001-PJR-G8M9') Updating files:  50% (2325/4638)\rUpdating files:  51% (2366/4638)\rUpdating files:  52% (2412/4638)\rUpda…"
+  conclusion: index build が resolver 由来の package kata も走査し、利用リポジトリと package をスコープで分けて重複判定するようにした。eject 後も index build が成功する。
 ---
 
 # PJR-G8M9 eject されていない kata の wikilink と index build の解決方針を決めて実装する
@@ -66,6 +68,33 @@ specdojo:
 - 利用リポジトリと package を別スコープで収集し、各スコープ内の ID 重複を全衝突パス付きでエラーにした。両スコープ間の同一 ID は利用リポジトリ側を採用するため、eject 後もエラーにならない。
 - package 側だけにある ID の解決、kata 対象外ディレクトリの除外、未解決 ID、eject による上書き、package 内 3 ファイルの重複を単体テストで確認した。
 - [[specdojo:practice-system-composition-guide]] に npm package 参照、eject、ID インデックスのスコープと優先規則、docs サイトを別責務とする境界を追記した。
+
+### 4.1. オーケストレーターによる検証
+
+kata を持たない一時リポジトリで通し確認した。
+
+| 操作                                    | 結果                                  |
+| --------------------------------------- | ------------------------------------- |
+| `index build`（eject 前）               | 312 entries。package 側の kata を解決 |
+| `kata eject --id specdojo:pjr-rulebook` | 成功                                  |
+| `index build`（eject 後）               | 312 entries、重複エラーなし           |
+
+`DuplicateDocIdError` との衝突が起きないことを確認した。これが本項目の核心だった。
+
+`node_modules/specdojo` を実際に配置した構成でも確認し、解決結果が次のとおりリポジトリ相対になることを確認した。
+
+```text
+eject 済み : docs/ja/specdojo/rulebooks/pjr-rulebook.md
+参照中     : node_modules/specdojo/docs/ja/specdojo/rulebooks/dct-rulebook.md
+```
+
+`src/doc-index.ts` の差分に `node_modules` のハードコードが無いことを確認した（決定 1）。
+
+補足として、開発リポジトリの CLI を外部ディレクトリから実行し `SPECDOJO_PACKAGE_ROOT` を指定しない場合は、参照中の ID が絶対パスになる。[[prj-0001:pjr-ypns-kata-resolution]] で決めた「リポジトリ外へ解決された場合は絶対パス」の規則どおりであり、npm 導入時は `node_modules` がリポジトリ内にあるため発生しない。
+
+### 4.2. 実行経路
+
+初回実行は worktree 作成の checkpoint で失敗した。理由に `git worktree add` の進捗表示が入り、`block_reason` の切り詰めで原因行が失われたため、[[prj-0001:pjr-tr8g-git-failure-reason-progress]] で失敗理由の整形を先に行った。手動では worktree 作成が 4 秒で成功し再現しなかったため一過性と判断し、worktree を撤去して再実行したところ完走した。
 
 ## 5. 関連ドキュメント
 
