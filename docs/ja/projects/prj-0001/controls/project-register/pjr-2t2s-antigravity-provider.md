@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-2t2s-antigravity-provider
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: ARC
   registered_at: "2026-09-21T06:49:03Z"
   due_on: "2026-10-05"
+  completed_at: "2026-09-23T01:18:44Z"
   block_reason: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=.specdojo/exec-defaults.yaml; agent must record the required chang…"
+  conclusion: Antigravity CLI（agy）を provider として追加し、Gemini に加え claude / GPT モデルも by_nickname で指名できるようにした。作業 4（codex との trial 比較）は別途実施する。
 ---
 
 # PJR-2T2S Antigravity CLI（agy）を executor / reporter の provider として使えるようにする
@@ -95,7 +97,7 @@ command_params:
 | 1   | schema の provider enum、`exec-defaults.yaml` の provider、`pm-members.yaml` の 4 member を追加し、dry-run でコマンドを確認する                                                                                                                                                                                                                    | DEV  | done | オーケストレーターが直接対応（設定のみ）                                   |
 | 2   | reporter の `--json-schema` 直接指定を検証し、有効なら command_template に組み込む                                                                                                                                                                                                                                                                 | DEV  | done | 同上                                                                       |
 | 3   | 小さな register todo を antigravity で実行し、統合まで通す                                                                                                                                                                                                                                                                                         | ARC  | done | PJR-YWPH で確認                                                            |
-| 4   | `exec trial` で codex と比較し、proficiency の初期値と priority を決める                                                                                                                                                                                                                                                                           | ARC  | open | 結果を本個票に記録                                                         |
+| 4   | `exec trial` で codex と比較し、proficiency の初期値と priority を決める                                                                                                                                                                                                                                                                           | ARC  | 別途 | 本項目では実施しない。別の登録簿項目で実施する                             |
 | 5   | `sysd-antigravity-agent-settings` を作成し、exec-config-guide と `dct-architecture.yaml` を更新する                                                                                                                                                                                                                                                | DEV  | done | codex-expert-executor / gemma-reporter / worktree                          |
 | 6   | `.agents/rules/*.md` に `.github/instructions/*.md` の薄ラッパーを置く（`.claude/rules/` と同じ方式）。`GEMINI.md` は置かず `AGENTS.md` を共用する                                                                                                                                                                                                 | DEV  | done | オーケストレーターが直接対応                                               |
 | 7   | agy のファイル定義 agent の可否を検証し、可なら `.agents/` に 5 つ目のオーケストレーターラッパーを追加して `validate-orchestrator-sync.mjs` の照合対象に加える。不可なら `npm run orch:agy`（`agy -i "$(cat .agents/specdojo-orchestrator.agent.md)"`、codex の `orch:sol` と同型）を追加する                                                      | DEV  | done | 同上                                                                       |
@@ -124,6 +126,11 @@ command_params:
 - `agy-sonnet-executor`、`agy-opus-executor`、`agy-opus-review-executor`、`agy-gpt-executor` を追加した。4 member の dry-run で、それぞれ `claude-sonnet-4-6`、`claude-opus-4-6-thinking`、`claude-opus-4-6-thinking`、`gpt-oss-120b-medium` を含む起動コマンドへ解決されることを確認した。
 - rate limit の実文言は今回も観測していない。初期パターン（`rate limit`、`429`、`quota`、`RESOURCE_EXHAUSTED`）を維持し、実観測時に追加・修正する。
 - sandbox 内の非親検証として Markdown lint、TypeScript lint、frontmatter lint、history link 検証、catalog build / validate、index build、dry-run が成功した。`typecheck`、schema、unit、integration は親 runner の固定検証へ委ねる。
+
+### 4.3. 作業 4 の扱い（2026-09-23）
+
+- 作業 4（`exec trial` による codex との比較）は本項目では実施しない。provider として使える状態にする目的は作業 1〜3・5〜11 で満たしており、比較評価は実行枠と時間を要する独立した作業のため、別の登録簿項目で実施する。
+- したがって `pm-members.yaml` の antigravity member の `priority`（3〜4）と `proficiency` の初期値は暫定のままとする。自動選択では選ばれず、`--executor-by` / `--reporter-by` による指名でのみ使う運用を継続する。
 
 ## 5. 関連ドキュメント
 
