@@ -48,14 +48,17 @@ kata の「解決」（個別ファイルを読む）と「列挙」（対象の
 
 | No  | 作業                                        | 担当 | 状態 | メモ                         |
 | --- | ------------------------------------------- | ---- | ---- | ---------------------------- |
-| 1   | `kata list` / `show` / `status` を実装する  | DEV  | open | 解決元を明示する             |
-| 2   | `kata eject` を実装し、対象外種別を拒否する | DEV  | open | 拒否理由を表示する           |
-| 3   | `kata install --all` を実装する             | DEV  | open | 既定の導線には載せない       |
-| 4   | `command-reference.md` へ追記する           | DEV  | open | 既存コマンドの記法に合わせる |
+| 1   | `kata list` / `show` / `status` を実装する  | DEV  | done | 解決元を明示する             |
+| 2   | `kata eject` を実装し、対象外種別を拒否する | DEV  | done | 拒否理由を表示する           |
+| 3   | `kata install --all` を実装する             | DEV  | done | 既定の導線には載せない       |
+| 4   | `command-reference.md` へ追記する           | DEV  | done | 既存コマンドの記法に合わせる |
 
 ## 4. 対応結果
 
--
+- `kata list` / `show` / `status` を追加し、利用リポジトリ優先・package フォールバックの解決結果を ID、種別、解決元、正準パスとともに確認できるようにした。`status` は eject 済みのファイルを package 原本と比較し、同一・変更あり・package 原本なしを区別する。
+- `kata eject --id <id>` を追加し、rulebook / standard / recipe / sample / template を正準パスへコピーできるようにした。CLI と密結合する `exec-templates` と `schemas` は package 参照固定として、理由つきで拒否する。
+- `kata install --all` を追加し、eject 可能な 5 種別を全量コピーできるようにした。既存ファイルは `--force` なしでは上書きせず、全コマンドで `--dry-run` を受理する。
+- 一覧・解決順序・差分判定・個別コピー・対象外拒否・全量コピー・上書き保護を単体テストで固定し、[[specdojo:command-reference]] にコマンドと運用上の位置づけを記載した。
 
 ## 5. 関連ドキュメント
 

@@ -1,0 +1,14 @@
+kata サブコマンド一式を実装しました。
+
+- `list / show / status / eject / install --all` を追加
+- 解決元表示、package 差分判定、上書き保護、`--dry-run` に対応
+- `exec-templates` / `schemas` の eject を拒否
+- 単体テスト、コマンドリファレンス、個票を更新
+- result ファイルは executor 指示に従い未更新
+- 型検査・unit／integration・schema 検証は親 runner が実行します
+
+主な変更: [kata-command.ts](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-AAK1/src/kata-command.ts)、[kata-command.test.ts](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-AAK1/tests/src/kata-command.test.ts)、[command-reference.md](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-AAK1/docs/ja/specdojo/references/command-reference.md)
+
+<specdojo_executor_evidence>
+{"final_message":"kata list/show/status/eject/install を実装し、テスト・文書・個票を更新した。executor 側検証はすべて成功。","validations":[{"command":"npx eslint src/kata-command.ts src/specdojo.ts tests/src/kata-command.test.ts","status":"passed","summary":"変更した TypeScript の lint 成功"},{"command":"npx prettier --check src/kata-command.ts src/specdojo.ts tests/src/kata-command.test.ts docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-aak1-kata-subcommands.md","status":"passed","summary":"全変更ファイルの整形確認成功"},{"command":"node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-aak1-kata-subcommands.md","status":"passed","summary":"変更 Markdown の lint 成功"},{"command":"npm run lint:fm","status":"passed","summary":"Frontmatter・remark 検査成功"},{"command":"npm run validate:history-links","status":"passed","summary":"履歴リンク検査成功"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿生成成功"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"カタログ検証成功。既存の成果物未配置警告のみ"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1888 件の文書索引を生成"},{"command":"node --import tsx src/specdojo.ts kata list --kind rulebook --dry-run","status":"passed","summary":"種別絞り込みと解決元表示を確認"},{"command":"node --import tsx src/specdojo.ts kata show specdojo:pjr-rulebook --dry-run","status":"passed","summary":"解決順序に従う内容表示を確認"},{"command":"node --import tsx src/specdojo.ts kata status --kind template --dry-run","status":"passed","summary":"eject 状態と package 差分表示を確認"},{"command":"node --import tsx src/specdojo.ts kata eject --id specdojo:pjr-rulebook --dry-run","status":"passed","summary":"個別 eject の dry-run と既存ファイル保護を確認"},{"command":"node --import tsx src/specdojo.ts kata install --all --dry-run","status":"passed","summary":"eject 可能な全312ファイルの全量コピー計画を確認"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>
