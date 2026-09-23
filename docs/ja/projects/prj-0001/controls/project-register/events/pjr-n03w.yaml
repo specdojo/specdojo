@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_20358008708d4d4bbfcc7d534f022dbe
+  ts: "2026-09-23T05:17:28Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-2ZVS の実装（grade / routine 経路）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: grade に owner ロール認識を加え、定期実行を変化検知に限定する
+    - field: description
+      from: ""
+      to: PJR-2ZVS の決定のうち grade 本体と routine を実装する。対象文書の owner ロールの観点を主の判定軸とし、他ロールの agent 観点は入力適合性の確認に限定して blocker / major を出す条件を絞る。定期実行は依存先の content_hash 変化、kata 更新後の遡及確認、review 経路を持たない文書の 3 契機に限定し、全件の時間契機実行をやめる。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-23"
+    - field: due
+      from: ""
+      to: "2026-11-14"
