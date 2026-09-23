@@ -359,9 +359,50 @@ No 6 は npmjs.com のパッケージ設定ページでの操作となるため�
 
 codex-expert-executor が worktree で実施し、保護設定（`package.json` の `files`）はオーケストレーターが develop へ適用して再開した。親検証 `test-unit` の失敗は、executor が tarball の実地検証を `/tmp` 直下で行い `/tmp/.specdojo/specdojo.config.json` を残したため、temp dir から上位探索するテストがルートを誤認したもの（削除後に通過）。統合段の `dubious ownership` は再現せず、統合段だけの再開（PJR-J3G0）で完了した。実地検証を指示する plan には「`mktemp -d` で作り終了時に削除する」と明記する必要がある。作業 5〜9 は人の作業として残る。
 
+### 7.2. 棚卸し（2026-09-23）
+
+kata 配布の 4 段階（[[prj-0001:pjr-fkn1-kata-distribution-method]] から派生）が完了したため、残作業を確認した。
+
+**作業 7（workflow の実行実績）は確認できた。** `publish-specdojo.yml` は直近 5 回すべて成功している。
+
+```text
+2026-08-28  success   Merge pull request #4
+2026-08-22  success
+2026-08-09  success
+2026-08-08  success   × 2
+```
+
+いずれも `package.json` の version が 0.1.0 のままであるため、publish ではなく skip を通っている。完了条件の「version を上げずに `main` へ push した場合に publish が skip される」は実地で成立している。
+
+**作業 5（README の導線）も完了した。** [[prj-0001:pjr-09kk-npm-onboarding-path]] で README と quick-start-guide を npm 導入で完結する形へ改め、記載手順を kata の無い一時ディレクトリでそのままなぞって動作を確認した。個票が前提として挙げる [[prj-0001:pjr-9m5n-npm-onboarding-path]] の内容は、PJR-09KK が kata の参照方式を含めて更新している。
+
+**新たな阻害要因が判明した。** README と quick-start-guide は `npm install --save-dev @specdojo/docs-lint` を案内するが、npm レジストリの状態は次のとおりである。
+
+| パッケージ            | npm            |
+| --------------------- | -------------- |
+| `specdojo`            | 0.1.0 公開済み |
+| `@specdojo/docs-lint` | 未公開         |
+| `@specdojo/docs-site` | 未公開         |
+
+`.github/workflows/` には `publish-specdojo.yml` しかなく、`packages/**` を publish する経路が無い。案内どおりに実行すると失敗するため、`specdojo` の公開前に解消する。[[prj-0001:pjr-wjzd-publish-docs-lint]] として切り出した。
+
+`@specdojo/docs-site` は README の必須手順ではないため、公開の前提としない。
+
+**残る人手の作業**は次のとおりである。
+
+| No  | 作業                                     | 備考                                                           |
+| --- | ---------------------------------------- | -------------------------------------------------------------- |
+| 6   | npm 側の trusted publisher 設定          | `specdojo` について未確認。ファイル名は `publish-specdojo.yml` |
+| 8   | version を 0.2.0 へ上げて `main` へ push | publish は Actions が実行する                                  |
+| 9   | 導入して動作を確認する                   |                                                                |
+
+作業 6 は `@specdojo/docs-lint` にも必要になる（PJR-WJZD の作業 3）。
+
 ## 8. 関連ドキュメント
 
 - [[prj-0001:pjr-36qg-competitive-landscape-and-release]]: 競合状況の観測。
 - [[prj-0001:pjr-9m5n-npm-onboarding-path]]: 導入後の導線。公開の前提。
 - [[prj-0001:pjr-9s8f-split-docs-site-package]]: 文書サイト機能の分離。公開の前提としない。
 - [[prj-0001:pjr-0143-vs-code-marketplace]]: VS Code 拡張の公開。
+- [[prj-0001:pjr-wjzd-publish-docs-lint]]: `@specdojo/docs-lint` の公開。本項目の前提。
+- [[prj-0001:pjr-09kk-npm-onboarding-path]]: npm 導入の導線。作業 5 の実体。
