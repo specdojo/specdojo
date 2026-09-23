@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_c2533ae908104b7dac59a664d15c4159
+  ts: "2026-09-23T01:29:28Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-2T2S の作業 4 を切り出し
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: Antigravity と codex を trial で比較し agy member の priority / proficiency を確定する
+    - field: description
+      from: ""
+      to: 同一 plan を agy-expert-executor と codex-expert-executor に並走させ、親検証通過・codex-review 判定・所要時間を比較する。結果をもとに pm-members.yaml の agy-* member の priority と proficiency を暫定値から確定させる。あわせて Antigravity 経由の claude / GPT が各社直の利用枠と別勘定かを実測し、rate limit の実文言を観測できれば rate_limit_detection へ反映する。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-23"
+    - field: due
+      from: ""
+      to: "2026-10-17"
