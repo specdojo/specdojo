@@ -55,14 +55,17 @@ specdojo:
 
 | No  | 作業                                                      | 担当 | 状態 | メモ                             |
 | --- | --------------------------------------------------------- | ---- | ---- | -------------------------------- |
-| 1   | `index build` の走査範囲を resolver 由来へ広げる          | DEV  | open | `node_modules` を直接指定しない  |
-| 2   | 重複判定へスコープの概念を導入する                        | DEV  | open | 同一スコープ内は従来どおりエラー |
-| 3   | eject 後も `index build` が成功することをテストで確認する | DEV  | open | 回帰しやすい箇所                 |
-| 4   | `catalog validate` の整合を取る                           | DEV  | open | 参照中 ID を不正としない         |
+| 1   | `index build` の走査範囲を resolver 由来へ広げる          | DEV  | done | `node_modules` を直接指定しない  |
+| 2   | 重複判定へスコープの概念を導入する                        | DEV  | done | 同一スコープ内は従来どおりエラー |
+| 3   | eject 後も `index build` が成功することをテストで確認する | DEV  | done | 回帰しやすい箇所                 |
+| 4   | `catalog validate` の整合を取る                           | DEV  | done | 参照中 ID を不正としない         |
 
 ## 4. 対応結果
 
--
+- `index build` と fresh index を使う検証処理が、利用リポジトリの `docs/` に加えて resolver 由来の package 内 rulebook / standard / recipe / sample / template を走査するようにした。`node_modules` 全体は走査しない。
+- 利用リポジトリと package を別スコープで収集し、各スコープ内の ID 重複を全衝突パス付きでエラーにした。両スコープ間の同一 ID は利用リポジトリ側を採用するため、eject 後もエラーにならない。
+- package 側だけにある ID の解決、kata 対象外ディレクトリの除外、未解決 ID、eject による上書き、package 内 3 ファイルの重複を単体テストで確認した。
+- [[specdojo:practice-system-composition-guide]] に npm package 参照、eject、ID インデックスのスコープと優先規則、docs サイトを別責務とする境界を追記した。
 
 ## 5. 関連ドキュメント
 

@@ -1,0 +1,14 @@
+package kata の ID 解決を実装しました。
+
+- package と利用リポジトリを別スコープで検査し、eject 済み ID は利用リポジトリを優先
+- 同一スコープの重複では全パスを表示
+- docs サイト生成は package 走査対象外を維持
+- テスト、ガイド、個票を更新
+- index build は 1,895 件、catalog validate は既存警告のみで成功
+- result は pipeline 指示どおり未編集
+
+`npx tsx` は sandbox の IPC 制限で実行できなかったため、同じエントリを `node --import tsx` で検証しました。
+
+<specdojo_executor_evidence>
+{"final_message":"未 eject の package kata を index と catalog から解決し、eject 時は利用リポジトリを優先する実装・テスト・文書更新を完了した。","validations":[{"command":"npx prettier --write src/doc-index.ts src/yaml-pages.ts tests/src/doc-index.test.ts docs/ja/specdojo/guides/practice-system-composition-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-g8m9-kata-wikilink-resolution.md","status":"passed","summary":"変更した TypeScript と Markdown を整形"},{"command":"npx eslint src/doc-index.ts src/yaml-pages.ts tests/src/doc-index.test.ts","status":"passed","summary":"変更した TypeScript にエラーなし"},{"command":"npx markdownlint docs/ja/specdojo/guides/practice-system-composition-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-g8m9-kata-wikilink-resolution.md","status":"passed","summary":"変更した Markdown にエラーなし"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿生成に成功"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"既存の未作成成果物に関する警告のみで終了コード 0"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1895 件の ID インデックスを生成"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>
