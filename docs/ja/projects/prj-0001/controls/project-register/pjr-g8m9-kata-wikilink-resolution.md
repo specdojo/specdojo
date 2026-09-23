@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   owner: DEV
   registered_at: "2026-09-23T03:50:08Z"
   due_on: "2026-10-31"
+  block_reason: "checkpoint failed: git worktree failed: Preparing worktree (new branch 'exec/prj-0001-PJR-G8M9') Updating files:  50% (2325/4638)\rUpdating files:  51% (2366/4638)\rUpdating files:  52% (2412/4638)\rUpda…"
 ---
 
 # PJR-G8M9 eject されていない kata の wikilink と index build の解決方針を決めて実装する
