@@ -29,10 +29,11 @@ mkdir app1-specdojo app1-worktrees
 git -C app1-specdojo init
 cd app1-specdojo
 npm init -y
-npm install specdojo
-npm install --save-dev @specdojo/docs-lint
+npm install --save-dev specdojo @specdojo/docs-lint
 npx specdojo config init
 ```
+
+SpecDojo は文書と実行管理のためのツールで、成果物へ同梱されるものではないため `--save-dev` で導入します。あわせて、kata は `node_modules/specdojo` から参照されるため、`package-lock.json` が kata の版も固定します。グローバル導入（`npm install -g`）では版がプロジェクトに記録されず再現できません。
 
 `config init` は `.specdojo/specdojo.config.json` とその親ディレクトリを作成します。既定では
 `prj-0001` と `docs/ja/projects/prj-0001/controls/project-register` を使う最小構成です。別の

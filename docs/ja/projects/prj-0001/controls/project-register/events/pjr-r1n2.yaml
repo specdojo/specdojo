@@ -1,0 +1,53 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_fa5e022e03454060a0163caecd65ffad
+  ts: "2026-09-23T12:22:04Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: 0.2.0 の導入確認で発見
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: CLI の --version を package.json から読み、ハードコードをやめる
+    - field: description
+      from: ""
+      to: src/specdojo.ts が program.version("0.4.0") と文字列を直書きしており、package.json の version（0.2.0）と一致しない。npm 経由で導入した利用者が specdojo --version で確認した値と実際の版が食い違い、不具合報告時に版を特定できない。package.json を実行時に読んで渡す方式へ変更し、version bump で自動的に追従するようにする。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-23"
+    - field: due
+      from: ""
+      to: "2026-09-30"
+- v: 1
+  id: reg_11abe048dac740058ecba78044c6b845
+  ts: "2026-09-23T12:35:09Z"
+  action: close
+  actor: orchestrator
+  from_status: open
+  to_status: done
+  reason: オーケストレーターが直接対応し、ローカル feature から --no-ff merge で統合
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-23"
+    - field: conclusion
+      from: "-"
+      to: CLI の version を package.json から読むようにし、直書きを廃止した。npm version の更新へ自動で追従する。
+  previous_event_id: reg_fa5e022e03454060a0163caecd65ffad
