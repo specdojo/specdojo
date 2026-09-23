@@ -119,6 +119,51 @@ describe("agent protected configuration paths", () => {
     expect(changedAgentProtectedConfigPaths(root, before)).toEqual([]);
   });
 
+  it("ignores opencode runtime artifacts created while an agent runs", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-protected-config-"));
+    roots.push(root);
+    initRepository(root);
+    write(join(root, ".opencode", "agents", "reporter.md"), "# reporter\n");
+    write(join(root, ".opencode", ".gitignore"), "node_modules\npackage.json\n.gitignore\n");
+
+    const before = captureAgentProtectedConfigSnapshot(root);
+    // opencode は起動時に plugin を install し、自分用の package.json を書き出す。
+    write(join(root, ".opencode", "package.json"), '{"dependencies":{}}\n');
+    write(join(root, ".opencode", "node_modules", "yaml", "package.json"), '{"name":"yaml"}\n');
+
+    expect(changedAgentProtectedConfigPaths(root, before)).toEqual([]);
+  });
+
+  it("still protects opencode instruction files while ignoring its runtime artifacts", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-protected-config-"));
+    roots.push(root);
+    initRepository(root);
+    write(join(root, ".opencode", "agents", "reporter.md"), "# reporter\n");
+    write(join(root, ".opencode", ".gitignore"), "node_modules\n.gitignore\n");
+
+    const before = captureAgentProtectedConfigSnapshot(root);
+    write(join(root, ".opencode", "node_modules", "yaml", "package.json"), '{"name":"yaml"}\n');
+    write(join(root, ".opencode", "agents", "reporter.md"), "# reporter (edited)\n");
+    write(join(root, ".opencode", "AGENTS.md"), "# rules\n");
+
+    expect(changedAgentProtectedConfigPaths(root, before)).toEqual([
+      ".opencode/AGENTS.md",
+      ".opencode/agents/reporter.md",
+    ]);
+  });
+
+  it("keeps runtime artifact paths protected when git does not ignore them", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-protected-config-"));
+    roots.push(root);
+    initRepository(root);
+    write(join(root, ".opencode", "agents", "reporter.md"), "# reporter\n");
+
+    // ignore 規則がない場合は生成物と判定できないため、保護対象のまま残す。
+    expect(
+      agentProtectedConfigPaths(root, [".opencode/package.json", ".opencode/agents/reporter.md"]),
+    ).toEqual([".opencode/agents/reporter.md", ".opencode/package.json"]);
+  });
+
   it("excludes a known generated path even when it is already tracked", () => {
     const root = mkdtempSync(join(tmpdir(), "specdojo-protected-config-"));
     roots.push(root);

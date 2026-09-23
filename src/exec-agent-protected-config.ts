@@ -53,7 +53,26 @@ const SNAPSHOT_DIRECTORY_ROOTS = [
 // 保護対象ディレクトリの配下にあるが、設定ではなく再生成可能な既知の生成物。
 // 任意の gitignore 対象を除外すると、agent が .gitignore と新規設定を同時に作ることで
 // ガードをすり抜けられるため、生成物として用途が確定しているパスだけを列挙する。
-const GENERATED_PATHS = new Set([".specdojo/doc-index.json"]);
+// `.opencode/` の 4 件は opencode が起動時に作る実行時生成物で、親 runner / hook / CI の
+// 実行内容を変えない。指示ファイル（`.opencode/AGENTS.md`、`.opencode/agents/**`）は
+// ここに含めず、保護対象のままにする。
+const GENERATED_PATHS = new Set([
+  ".specdojo/doc-index.json",
+  ".opencode/.gitignore",
+  ".opencode/package.json",
+  ".opencode/package-lock.json",
+  ".opencode/bun.lock",
+  ".claude/settings.local.json",
+]);
+
+// provider が agent 実行時に作る作業ディレクトリ。配下のファイル数が多く個別に列挙できないため
+// prefix で判定する。GENERATED_PATHS と同じく、ignore 済みであることを併せて条件にする。
+const GENERATED_DIRECTORY_PREFIXES = [".opencode/node_modules/", ".claude/worktrees/"] as const;
+
+function isGeneratedCandidate(path: string): boolean {
+  if (GENERATED_PATHS.has(path)) return true;
+  return GENERATED_DIRECTORY_PREFIXES.some((prefix) => path.startsWith(prefix));
+}
 
 export type AgentProtectedConfigSnapshot = ReadonlyMap<string, string>;
 
@@ -72,7 +91,7 @@ function ignoredGeneratedPaths(
 ): ReadonlySet<string> {
   const generatedCandidates = candidates
     .map((path) => normalizeRepoPath(path))
-    .filter((path) => GENERATED_PATHS.has(path));
+    .filter(isGeneratedCandidate);
   if (generatedCandidates.length === 0) return new Set();
   const result = spawnSync("git", ["check-ignore", "--no-index", "-z", "--stdin"], {
     cwd: repoRoot,
@@ -136,11 +155,16 @@ function addTreeFiles(repoRoot: string, rootPath: string, out: Map<string, strin
   }
   for (const entry of readdirSync(rootPath, { withFileTypes: true })) {
     const entryPath = join(rootPath, entry.name);
-    if (entry.isDirectory()) addTreeFiles(repoRoot, entryPath, out);
-    else {
-      const relPath = normalizeRepoPath(relative(repoRoot, entryPath).split(sep).join("/"));
-      if (isAgentProtectedConfigPath(relPath)) out.set(relPath, fingerprint(entryPath));
+    if (entry.isDirectory()) {
+      // `.opencode/node_modules` のような実行時生成ディレクトリは数百〜数千ファイルになる。
+      // 走査して fingerprint を取っても結果は除外されるため、入口で辿らない。
+      const relDir = normalizeRepoPath(relative(repoRoot, entryPath).split(sep).join("/"));
+      if (GENERATED_DIRECTORY_PREFIXES.some((prefix) => `${relDir}/` === prefix)) continue;
+      addTreeFiles(repoRoot, entryPath, out);
+      continue;
     }
+    const relPath = normalizeRepoPath(relative(repoRoot, entryPath).split(sep).join("/"));
+    if (isAgentProtectedConfigPath(relPath)) out.set(relPath, fingerprint(entryPath));
   }
 }
 
