@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-aak1-kata-subcommands
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-09-23T03:50:07Z"
   due_on: "2026-10-24"
+  completed_at: "2026-09-23T06:16:02Z"
+  conclusion: kata list / show / status / eject / install を追加した。参照固定の exec-template と schema は eject を拒否して理由を表示し、--all で一覧から辿れるようにした。
 ---
 
 # PJR-AAK1 kata サブコマンド（list / show / status / eject / install）を追加する
@@ -59,6 +61,22 @@ kata の「解決」（個別ファイルを読む）と「列挙」（対象の
 - `kata eject --id <id>` を追加し、rulebook / standard / recipe / sample / template を正準パスへコピーできるようにした。CLI と密結合する `exec-templates` と `schemas` は package 参照固定として、理由つきで拒否する。
 - `kata install --all` を追加し、eject 可能な 5 種別を全量コピーできるようにした。既存ファイルは `--force` なしでは上書きせず、全コマンドで `--dry-run` を受理する。
 - 一覧・解決順序・差分判定・個別コピー・対象外拒否・全量コピー・上書き保護を単体テストで固定し、[[specdojo:command-reference]] にコマンドと運用上の位置づけを記載した。
+
+### 4.1. レビューで補った点
+
+統合後の検証で、`kata eject` に参照固定の種別を指定したときの案内が不十分だった。拒否メッセージ自体は実装されていたが、`kata list` が eject できる種別しか表示しないため、`exec-template` と `schema` の ID を知る手段が無かった。これらの ID は frontmatter を持たずファイル名由来になり（`xep-template`、`dct-plan.schema`）、`specdojo:` の接頭辞も付かないため、利用者は正しい ID に辿り着けないまま「存在しない」と誤解する。
+
+`kata list --all` と `--kind exec-template` のような種別指定で参照固定の種別も表示できるようにし、`EJECTABLE` 列で可否を示した。`kata show` は読み取りのみのため種別を問わず参照できるようにした。`command-reference.md` へ ID 形式の違いと終了コードを追記した。
+
+この修正はローカル feature ブランチ `feature/prj-0001/kata-list-all` で行い、`--no-ff` merge（`ba9ce2c0`）で develop へ統合した。
+
+### 4.2. 検証
+
+- 空リポジトリで `kata list` が 312 件を `SOURCE=node_modules` で表示し、`kata eject --id specdojo:pjr-rulebook` で正準パスへ配置され、同 ID の `SOURCE` が `repository` へ変わることを確認した。
+- 再 eject が `--force` なしで `SKIP` となり上書きしないことを確認した。
+- `kata eject --id xep-template` と `--id dct-plan.schema` が、参照固定である理由を表示して終了コード 1 で終わることを確認した。
+- `kata list --all` が 385 件（`exec-template` 31、`schema` 42 を追加）を表示することを確認した。
+- `npm run check` が通過した（119 files / 1647 tests）。
 
 ## 5. 関連ドキュメント
 
