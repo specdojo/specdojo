@@ -14,6 +14,7 @@ import {
   latestExecBlockReasons,
   latestRegisterWaitReason,
   rankRegisterCandidates,
+  sanitizeDashboardCell,
   type DashboardRegisterCandidate,
   type DashboardPaths,
   type TimelineTrackSchedule,
@@ -279,6 +280,28 @@ describe("buildDashboardMarkdown", () => {
     } finally {
       rmSync(root, { recursive: true, force: true });
     }
+  });
+});
+
+describe("sanitizeDashboardCell", () => {
+  it("制御文字と ANSI を除去し、パイプをエスケープして長文を省略する", () => {
+    const esc = String.fromCharCode(0x1b);
+    const nul = String.fromCharCode(0);
+    const reason = `${esc}[31mcheckpoint failed${esc}[0m: Preparing worktree\rUpdating files: 50%\n${nul}detail | ${"x".repeat(300)}`;
+
+    const actual = sanitizeDashboardCell(reason);
+
+    expect(actual).toContain(
+      "checkpoint failed: Preparing worktree Updating files: 50% detail \\|",
+    );
+    expect(actual.endsWith("…")).toBe(true);
+    expect(actual).not.toContain(esc);
+    expect(actual).not.toMatch(/[\u0000-\u001f\u007f-\u009f]/u);
+    expect(actual.replace(/\\\|/g, "")).not.toContain("|");
+    expect(sanitizeDashboardCell("x".repeat(201))).toBe(`${"x".repeat(200)}…`);
+
+    const tableRow = `| register | \`PJR-TEST\` | ${actual} | 再実行 |`;
+    expect(tableRow.match(/(?<!\\)\|/gu)).toHaveLength(5);
   });
 });
 

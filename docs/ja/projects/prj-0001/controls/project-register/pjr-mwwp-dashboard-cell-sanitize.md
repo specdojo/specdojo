@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-09-23T07:06:08Z"
@@ -43,13 +43,15 @@ PJR-G8M9 の worktree 作成失敗では、復帰文字（`\r`）と `Updating f
 
 | No  | 作業                                                     | 担当 | 状態 | メモ                                     |
 | --- | -------------------------------------------------------- | ---- | ---- | ---------------------------------------- |
-| 1   | セル整形の共通関数を作る                                 | DEV  | open | `stripTerminalControlSequences` を再利用 |
-| 2   | dashboard の理由を埋める箇所をすべて通す                 | DEV  | open | block 理由と wait 理由の両方             |
-| 3   | 制御文字・パイプ・長文の入力に対する単体テストを追加する | DEV  | open | 実際に壊れた入力を fixture にする        |
+| 1   | セル整形の共通関数を作る                                 | DEV  | done | `stripTerminalControlSequences` を再利用 |
+| 2   | dashboard の理由を埋める箇所をすべて通す                 | DEV  | done | block 理由と wait 理由の両方             |
+| 3   | 制御文字・パイプ・長文の入力に対する単体テストを追加する | DEV  | done | 実際に壊れた入力を fixture にする        |
 
 ## 4. 対応結果
 
--
+- `sanitizeDashboardCell` を追加し、ANSI と制御文字を除去して改行類を空白へ正規化し、パイプをエスケープするようにした。
+- セルの値は 200 文字を上限にし、超過時は末尾へ省略記号を付ける。register の wait 理由と exec の block 理由を含む dashboard の動的な表セルは、同じ関数で整形する。
+- worktree 作成失敗を模した復帰文字、改行、ANSI、パイプ、長文を含む入力について単体テストを追加した。
 
 ## 5. 関連ドキュメント
 

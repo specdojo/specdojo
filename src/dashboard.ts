@@ -5,7 +5,7 @@ import type { Command } from "commander";
 import { defaultScheduleCalendar, buildScheduleIndex } from "./exec-schedule-index.js";
 import { addWorkingDaysToDate } from "./exec-schedule-calendar.js";
 import type { ExecEventV1, ScheduleCalendar, StateSnapshot } from "./exec-types.js";
-import { readJson, toArtifactPath } from "./exec-shared.js";
+import { readJson, stripTerminalControlSequences, toArtifactPath } from "./exec-shared.js";
 import { readAllEventFiles } from "./exec-events.js";
 import {
   getProjectExecutionPath,
@@ -847,8 +847,20 @@ function routineScheduleLabel(doc: RoutineDoc): string {
 // Markdown rendering
 // ================================
 
-function escapeCell(text: string): string {
-  return text.replace(/\|/g, "\\|").replace(/\n/g, " ").trim();
+const MAX_DASHBOARD_CELL_LENGTH = 200;
+
+// dashboard の表へは event や subprocess 由来の文字列も入る。表へ埋める直前に
+// ターミナル制御シーケンスと改行類を除き、列区切りをエスケープして長さを制限する。
+export function sanitizeDashboardCell(text: string): string {
+  const singleLine = stripTerminalControlSequences(text)
+    .replace(/[\t\r\n]+/g, " ")
+    .replace(/ +/g, " ")
+    .trim();
+  const truncated =
+    singleLine.length <= MAX_DASHBOARD_CELL_LENGTH
+      ? singleLine
+      : `${singleLine.slice(0, MAX_DASHBOARD_CELL_LENGTH)}…`;
+  return truncated.replace(/\|/g, "\\|");
 }
 
 const STATUS_ORDER = [
@@ -999,7 +1011,7 @@ function renderTimelineSection(paths: DashboardPaths): string[] {
         const row = schedule.find((s) => s.track === tk.track);
         if (!row) continue;
         lines.push(
-          `| ${wave.wave} | \`${tk.track}\` | \`${tk.catalog_status}\` | ${formatEstimate(tk)} | ${row.startDate ?? "-"} | ${row.endDate ?? "-"} | ${escapeCell(row.parallel_group ?? "-")} | ${escapeCell(row.depends_on.join(", ") || "-")} |`,
+          `| ${wave.wave} | \`${tk.track}\` | \`${tk.catalog_status}\` | ${formatEstimate(tk)} | ${row.startDate ?? "-"} | ${row.endDate ?? "-"} | ${sanitizeDashboardCell(row.parallel_group ?? "-")} | ${sanitizeDashboardCell(row.depends_on.join(", ") || "-")} |`,
         );
       }
     }
@@ -1064,7 +1076,7 @@ function renderRoutineSection(paths: DashboardPaths): string[] {
   lines.push("| --- | --- | --- | --- | --- | --- | :---: |");
   for (const row of agg.rows) {
     lines.push(
-      `| \`${row.id}\` | ${escapeCell(row.name ?? "-")} | ${row.enabled ? "enabled" : "disabled"} | \`${escapeCell(row.schedule)}\` | \`${row.kind}\` | ${escapeCell(row.lastRun)} | ${row.due} |`,
+      `| \`${row.id}\` | ${sanitizeDashboardCell(row.name ?? "-")} | ${row.enabled ? "enabled" : "disabled"} | \`${sanitizeDashboardCell(row.schedule)}\` | \`${row.kind}\` | ${sanitizeDashboardCell(row.lastRun)} | ${row.due} |`,
     );
   }
 
@@ -1123,7 +1135,7 @@ function renderGradeSection(paths: DashboardPaths): string[] {
   lines.push("| 成果物 | 対象 | verdict | score | findings |", "| --- | --- | --- | ---: | ---: |");
   for (const result of results) {
     lines.push(
-      `| \`${escapeCell(result.document)}\` | \`${result.target}\` | \`${result.verdict}\` | ${result.score} | ${gradeFindingCount(result)} |`,
+      `| \`${sanitizeDashboardCell(result.document)}\` | \`${result.target}\` | \`${result.verdict}\` | ${result.score} | ${gradeFindingCount(result)} |`,
     );
   }
   lines.push("");
@@ -1161,7 +1173,7 @@ function renderRecommendedRegisterSection(projectId: string): string[] {
           ? `期日超過 ${Math.ceil((todayMs - dueMs) / 86_400_000)}日`
           : `期日まで ${Math.ceil((dueMs - todayMs) / 86_400_000)}日`;
     lines.push(
-      `| ${index + 1} | \`${row.id}\` | \`${row.type}\` | ${escapeCell(row.title)} | ${row.due} | \`${row.priority}\` | ${row.relatedOpenPjrCount} | ${row.registeredAt} | ${dueReason}、優先度 ${row.priority}、関連 open PJR ${row.relatedOpenPjrCount}件 |`,
+      `| ${index + 1} | \`${row.id}\` | \`${row.type}\` | ${sanitizeDashboardCell(row.title)} | ${row.due} | \`${row.priority}\` | ${row.relatedOpenPjrCount} | ${row.registeredAt} | ${dueReason}、優先度 ${row.priority}、関連 open PJR ${row.relatedOpenPjrCount}件 |`,
     );
   });
   lines.push("");
@@ -1180,7 +1192,7 @@ function renderAttentionSection(paths: DashboardPaths): string[] {
     lines.push("| --- | --- | --- | --- |");
     for (const row of rows) {
       lines.push(
-        `| ${row.source} | \`${row.id}\` | ${escapeCell(row.reason)} | ${escapeCell(row.nextAction)} |`,
+        `| ${row.source} | \`${row.id}\` | ${sanitizeDashboardCell(row.reason)} | ${sanitizeDashboardCell(row.nextAction)} |`,
       );
     }
   } catch (error) {
