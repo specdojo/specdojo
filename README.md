@@ -144,6 +144,10 @@ provider と agent の設定を終えた後は、同じ登録項目を実行で�
 npx specdojo exec run --project prj-0001 --register PJR-XXXX
 ```
 
+agent の実行は数分から数十分かかり、`routine` は定期実行されます。作業端末の状態に依存せず
+実行を続けたい場合は、常時稼働するホストへリモート接続する構成例を
+[常時稼働ホスト運用ガイド](https://specdojo.github.io/specdojo/ja/specdojo/guides/remote-host-development-guide.html) に示しています。
+
 ### テンプレートリポジトリとして導入する
 
 npm package の参照方式ではなく、SpecDojo のソースと文書体系一式を最初から配置して
