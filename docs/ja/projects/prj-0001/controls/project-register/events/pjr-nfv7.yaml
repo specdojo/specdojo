@@ -100,3 +100,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_c75a8fe193614a408ff41a7ba63a22aa
+- v: 1
+  id: reg_9f55a6a52da74fbc8fa261c7bed099a5
+  ts: "2026-09-24T12:41:02Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: レビュー完了。統合段の一過性失敗は --resume で回復
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-24"
+    - field: conclusion
+      from: "-"
+      to: plan と result の書き出し共通経路へ末尾改行の正規化を入れた。冪等で、Prettier 対象外のファイルも通る。
+  previous_event_id: reg_2aa8773731a14b08b960ded9c156962b

@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-nfv7-result-trailing-newline
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   owner: DEV
   registered_at: "2026-09-23T21:26:24Z"
   due_on: "2026-10-24"
+  completed_at: "2026-09-24T12:41:02Z"
   block_reason: "integrate failed: git status failed: fatal: detected dubious ownership in repository at '/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-NFV7' (args: --porcelain=v1 -z --untracked-files=all)"
+  conclusion: plan と result の書き出し共通経路へ末尾改行の正規化を入れた。冪等で、Prettier 対象外のファイルも通る。
 ---
 
 # PJR-NFV7 result の末尾改行を runner 側で正規化する
@@ -52,6 +54,29 @@ docs/ja/projects/prj-0001/execution/exec/results/JBR-grade-kata-f8b11861e500-res
 - `formatMarkdownFile` で Markdown の末尾を 1 改行へ正規化するようにした。
 - Prettier 対象外の exec plan / result も本文は整形せず、末尾改行だけを正規化する。
 - plan / result の両方について、末尾改行なし・1つ・複数の入力が同一出力になる単体テストを追加した。
+
+### 4.1. オーケストレーターによる確認
+
+`normalizeTrailingNewline` は末尾の改行類をすべて落としてから 1 つ付けるため冪等である。改行なし・1 つ・複数のいずれを入力しても同じ結果になる。
+
+適用位置が適切である。`src/exec-format.ts` という書き出しの共通経路にあり、plan と result の両方を通る。Prettier 対象外のファイルも取りこぼしていない。
+
+```typescript
+// exec の plan / result は本文保護のため Prettier 対象外だが、runner が生成する
+// Markdown として末尾改行だけは同じ書き出し経路で必ず正規化する。
+if (await isPrettierIgnored(filePath)) {
+  if (normalized !== source) await writeFile(filePath, normalized, "utf8");
+  return;
+}
+```
+
+Prettier を通す経路でも整形後に再度正規化している。
+
+### 4.2. 実行経路
+
+統合段で `fatal: detected dubious ownership` により一度失敗し、`--resume` で統合段だけを再開して完了した。所有者は一致しており再現しないため一過性と判断し、再試行の実装を [[prj-0001:pjr-bx79-integrate-dubious-ownership-retry]] として切り出した。
+
+この失敗理由が読めたのは [[prj-0001:pjr-tr8g-git-failure-reason-progress]] の整形が入っていたためである。
 
 ## 5. 関連ドキュメント
 
