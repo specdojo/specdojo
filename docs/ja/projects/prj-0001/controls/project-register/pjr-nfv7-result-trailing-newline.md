@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: low
   owner: DEV
   registered_at: "2026-09-23T21:26:24Z"
   due_on: "2026-10-24"
+  block_reason: "integrate failed: git status failed: fatal: detected dubious ownership in repository at '/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-NFV7' (args: --porcelain=v1 -z --untracked-files=all)"
 ---
 
 # PJR-NFV7 result の末尾改行を runner 側で正規化する
@@ -39,16 +40,18 @@ docs/ja/projects/prj-0001/execution/exec/results/JBR-grade-kata-f8b11861e500-res
 
 ## 3. 作業内容
 
-| No  | 作業                                       | 担当 | 状態 | メモ                            |
-| --- | ------------------------------------------ | ---- | ---- | ------------------------------- |
-| 1   | result の書き出し経路を特定する            | DEV  | open | reporter 応答の格納箇所         |
-| 2   | 末尾改行の正規化を入れる                   | DEV  | open | 冪等にする                      |
-| 3   | plan など同じ経路の成果物へも適用する      | DEV  | open | 書き出しが共通なら 1 箇所で済む |
-| 4   | 入力のばらつきに対する単体テストを追加する | DEV  | open | 改行あり／なし／複数            |
+| No  | 作業                                       | 担当 | 状態 | メモ                           |
+| --- | ------------------------------------------ | ---- | ---- | ------------------------------ |
+| 1   | result の書き出し経路を特定する            | DEV  | done | `formatMarkdownFile` に集約    |
+| 2   | 末尾改行の正規化を入れる                   | DEV  | done | 冪等に 1 改行へ正規化          |
+| 3   | plan など同じ経路の成果物へも適用する      | DEV  | done | plan / result の共通経路へ適用 |
+| 4   | 入力のばらつきに対する単体テストを追加する | DEV  | done | 改行あり／なし／複数を検証     |
 
 ## 4. 対応結果
 
--
+- `formatMarkdownFile` で Markdown の末尾を 1 改行へ正規化するようにした。
+- Prettier 対象外の exec plan / result も本文は整形せず、末尾改行だけを正規化する。
+- plan / result の両方について、末尾改行なし・1つ・複数の入力が同一出力になる単体テストを追加した。
 
 ## 5. 関連ドキュメント
 
