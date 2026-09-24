@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: prj-0001:prj-comparison-of-alternatives-grade-criteria
+document: prj-0001:prj-comparison-of-alternatives
+path: docs/ja/projects/prj-0001/020-project-definition/prj-comparison-of-alternatives.md
+graded_at: "2026-09-23T17:11:26.441Z"
+graded_by: codex-expert-executor
+content_hash: 266402ac08a10581bb2882e9794b3aa0708aaf46b04ec78032b646673915e355
+summary:
+  satisfied: 3
+  unsatisfied: 1
+  total: 4
+criteria:
+  - id: DC-001
+    text: 比較軸・評価根拠が業務価値と対応していること
+    roles:
+      - BA
+    viewpoint: vp-ba-business-value
+    status: satisfied
+  - id: DC-002
+    text: 推奨案を判断できる情報が含まれていること
+    roles:
+      - PO
+    viewpoint: vp-po-decision-readiness
+    status: satisfied
+  - id: DC-003
+    text: 技術的実現可能性・影響が評価されていること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: satisfied
+  - id: DC-004
+    text: 案ごとのリスク・トレードオフが比較されていること
+    roles:
+      - PM
+    viewpoint: vp-pm-dependency-risk
+    status: unsatisfied
+    reason: リスクとトレードオフが案IDへ対応付いておらず、各候補について比較されたことを確認できない。

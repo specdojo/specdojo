@@ -1,0 +1,128 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: sysd-orchestrator-agent-settings
+path: docs/ja/product/040-system-design/sysd-orchestrator-agent-settings.md
+target: deliverable
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 72
+graded_at: "2026-09-23T16:39:46.698Z"
+graded_by: codex-expert-executor
+content_hash: 99abd435119d358d0f41efbca1f4655cdb62e7ef20c49595a8a192030f1d72e1
+categories:
+  consistency:
+    score: 38
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 58
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 1
+    score: 25
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 1
+    score: 25
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 6
+  minor: 1
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 16
+    anchor: >-
+      対象とする agent CLI は共通設定と同じ4系統（Claude Code / Codex / GitHub Copilot / OpenCode）である。個別 CLI
+      の認証・provider・非対話起動の詳細は共通設定の各子設計に従う。
+    message: >-
+      共通設計と `package.json` は Antigravity CLI および `orch:agy` を現行構成に含めているが、本書は「同じ4系統」として対象範囲・設定ファイル・起動方法から Antigravity
+      を欠落させている。
+  - id: F002
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 75
+    anchor: >-
+      - **OpenCode**: `permission.bash` を許可リスト方式とし、読み取り系 `specdojo`（`--help` / `project list` / `exec status` / `exec
+      where` / `exec validate` / `* --help` / `* --dry-run`）は `allow`、その他の `specdojo *` は `ask` とする。`.env` / `secrets/`
+      の読み取りは `deny` する。
+    message: >-
+      同期対象の SSOT は提示コマンドを `npx specdojo` に統一している一方、OpenCode の `permission.bash` は裸の `specdojo` だけを allow/ask
+      対象としており、設計どおりのコマンドが権限規則に一致しない。
+  - id: F003
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 16
+    anchor: >-
+      対象とする agent CLI は共通設定と同じ4系統（Claude Code / Codex / GitHub Copilot / OpenCode）である。個別 CLI
+      の認証・provider・非対話起動の詳細は共通設定の各子設計に従う。
+    message: 現行の支援対象である Antigravity と `orch:agy` が対象範囲・依存関係・起動構成から欠落しており、DC-002・DC-003・DC-005を充足する承認可能で実装接続可能な設計になっていない。
+  - id: F004
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 118
+    anchor: "## 7. 保守"
+    message: 保守章の同期検証は本文のバイト一致しか保証せず、承認フロー・権限・project解決・起動・worktree動作の検証根拠がないためDC-004を充足していない。
+  - id: F005
+    severity: major
+    rule: vp-qe-verifiability
+    line: 118
+    anchor: "## 7. 保守"
+    message: >-
+      `npm run lint:orchestrator-sync`
+      は本文一致のみを検査しており、承認前の状態変更禁止、OpenCode権限、project解決順序、npm起動、worktree作成・再利用をpass/fail判定する検証項目またはテスト参照がない。
+  - id: F006
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 36
+    anchor: "## 3. 実行フロー"
+    message: 実行フローが正常系だけで、コマンド失敗、部分更新、権限拒否、承認取消し、再実行可否、復旧条件を識別できず、rulebookが禁止する失敗・再実行観点の省略に該当する。
+  - id: F007
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 118
+    anchor: "## 7. 保守"
+    message: 検証観点・関連文書の節がなく、`sysd-index`、横断ルール、必要な重要フロー、テスト設計、OPD・OPRへの導線が明示されていない。
+done_criteria:
+  satisfied: 1
+  total: 5
+  unsatisfied:
+    DC-002:
+      - PO
+    DC-003:
+      - ARC
+    DC-004:
+      - QE
+    DC-005:
+      - DEV
+  detail_ref: sysd-orchestrator-agent-settings-grade-criteria

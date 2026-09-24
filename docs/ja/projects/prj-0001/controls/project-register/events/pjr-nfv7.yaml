@@ -1,0 +1,121 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_bc67c66029744a078226157210d10b77
+  ts: "2026-09-23T21:26:24Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: 夜間 grade の result で lint が失敗した
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: result の末尾改行を runner 側で正規化する
+    - field: description
+      from: ""
+      to: reporter が書いた result に末尾改行が無いと lint:md が MD047 で失敗し、commit が止まる。夜間 grade の 32 件中 2 件で発生した。agent 出力のばらつきに由来するため、runner が result を書き出す際に末尾改行を保証する。routine の自動実行が人手を呼ぶ形を避ける。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-24"
+    - field: due
+      from: ""
+      to: "2026-10-24"
+- v: 1
+  id: reg_c023dc886f36463d99bb331854c6f20b
+  ts: "2026-09-24T12:25:05Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_bc67c66029744a078226157210d10b77
+- v: 1
+  id: reg_c7e8c77deeb549789b12809ca711ba49
+  ts: "2026-09-24T12:35:23Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_c023dc886f36463d99bb331854c6f20b
+- v: 1
+  id: reg_b65efd6339f346d080b795af4a7acbd8
+  ts: "2026-09-24T12:35:30Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: review
+  to_status: waiting
+  reason: "integrate failed: git status failed: fatal: detected dubious ownership in repository at '/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-NFV7' (args: --porcelain=v1 -z --untracked-files=all)"
+  changes:
+    - field: status
+      from: review
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: git status failed: fatal: detected dubious ownership in repository at '/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-NFV7' (args: --porcelain=v1 -z --untracked-files=all)"
+  previous_event_id: reg_c7e8c77deeb549789b12809ca711ba49
+- v: 1
+  id: reg_c75a8fe193614a408ff41a7ba63a22aa
+  ts: "2026-09-24T12:37:34Z"
+  action: start
+  actor: gemma-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_b65efd6339f346d080b795af4a7acbd8
+- v: 1
+  id: reg_2aa8773731a14b08b960ded9c156962b
+  ts: "2026-09-24T12:37:42Z"
+  action: review
+  actor: gemma-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_c75a8fe193614a408ff41a7ba63a22aa
+- v: 1
+  id: reg_9f55a6a52da74fbc8fa261c7bed099a5
+  ts: "2026-09-24T12:41:02Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: レビュー完了。統合段の一過性失敗は --resume で回復
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-24"
+    - field: conclusion
+      from: "-"
+      to: plan と result の書き出し共通経路へ末尾改行の正規化を入れた。冪等で、Prettier 対象外のファイルも通る。
+  previous_event_id: reg_2aa8773731a14b08b960ded9c156962b

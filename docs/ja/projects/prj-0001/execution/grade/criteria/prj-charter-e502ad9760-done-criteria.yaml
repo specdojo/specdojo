@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: prj-0001:prj-charter-grade-criteria
+document: prj-0001:prj-charter
+path: docs/ja/projects/prj-0001/020-project-definition/prj-charter.md
+graded_at: "2026-09-23T17:04:19.887Z"
+graded_by: codex-expert-executor
+content_hash: 3d9ec2f69a1c89de4118a701d1f8bbec47b9789c143071aa3267a3f9a45a2444
+summary:
+  satisfied: 2
+  unsatisfied: 1
+  total: 3
+criteria:
+  - id: DC-001
+    text: 業務上の目的・認可条件・期待効果が明確であること
+    roles:
+      - BA
+    viewpoint: vp-ba-business-value
+    status: satisfied
+  - id: DC-002
+    text: 正式認可・権限委譲・予算枠を承認できる情報が含まれていること
+    roles:
+      - PO
+    viewpoint: vp-po-decision-readiness
+    status: unsatisfied
+    reason: 承認証跡がコミット ce44286c 時点だけを対象としており、その後に目的・スコープ等が変更された現行版の正式認可を確認できない。
+  - id: DC-003
+    text: 委譲された権限範囲が詳細計画策定の前提として確認できること
+    roles:
+      - PM
+    viewpoint: vp-pm-plan-feasibility
+    status: satisfied

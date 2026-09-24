@@ -264,6 +264,7 @@ export const specdojoSidebarItems = [
             guide("Schedule実行運用", "schedule-operation-guide"),
           ]),
           guide("routine運用", "routine-operation-guide"),
+          guide("常時稼働ホスト運用", "remote-host-development-guide"),
           group("exec共通", [
             guide("exec設定", "exec-config-guide"),
             guide("plan/resultライフサイクル", "plan-result-lifecycle-guide"),

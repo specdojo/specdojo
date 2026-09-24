@@ -22,7 +22,7 @@ Spec-Driven Development（SDD）領域の競合状況を記録する。位置づ
 公開作業は [[prj-0001:pjr-7vkr-npm-release]] と [[prj-0001:pjr-0143-vs-code-marketplace]] で扱う。
 本 note は競合の観測に絞る。
 
-本 note は状況の変化に応じて更新する。終端させない。調査は 2026-09-06 時点である。
+本 note は状況の変化に応じて更新する。終端させない。初回調査は 2026-09-06 時点で、`Gas Town / Gas City` は 2026-09-24 に追加した。
 
 ## 2. 競合の状況
 
@@ -100,6 +100,57 @@ brownfield（1→n）に最適化されている。既存コードベースの�
 
 Markdown に対する立場を明示的に取る。公式の説明は「plans/ ディレクトリの食べかけの markdown の
 山を置き換える」と述べており、SpecDojo とは正反対の前提に立つ。
+
+### 2.6. Gas Town / Gas City
+
+2026-09-24 の追加調査で、beads がより大きなエコシステムの一部であることが分かった。当初は beads 単体を登録簿の競合として扱っていたが、**実行基盤の競合を見落としていた**。
+
+| リポジトリ            | star   | 作成    | 実装 | 内容                           |
+| --------------------- | ------ | ------- | ---- | ------------------------------ |
+| `steveyegge/beads`    | 27,391 | 2025-10 | Go   | 課題追跡。agent の記憶の外部化 |
+| `gastownhall/gastown` | 18,167 | 2025-12 | Go   | multi-agent workspace manager  |
+| `gastownhall/gascity` | 1,293  | 2026-02 | Go   | orchestration-builder SDK      |
+
+star 数は 2026-09-24 時点。いずれも直近まで活発に更新されている。Steve Yegge が Gas Town を始め、Gas City は community（Julian Knutsen、Chris Sells）が Gas Town を部品へ分解して作った SDK で、エコシステムの新しい方向とされる。
+
+Gas City は「CLI coding agent を束ね、durable な beads の work、再利用可能な workflow、テスト、レビュー、ゲートで回す software factory platform」と自称する。
+
+#### 2.6.1. SpecDojo の exec 層との対応
+
+| Gas City                                                                 | SpecDojo                                          | 一致度 |
+| ------------------------------------------------------------------------ | ------------------------------------------------- | ------ |
+| runtime providers（tmux / subprocess / exec / ACP / Kubernetes / herdr） | `command_template` による provider 抽象           | 高     |
+| beads（work store）                                                      | register                                          | 高     |
+| orders（定期ディスパッチ）                                               | routine（`routine run --due`）                    | 高     |
+| formulas（再利用可能な workflow）                                        | exec plan テンプレート（`xep-*`）                 | 中     |
+| gates / tests / reviews                                                  | 親検証と review フェーズ                          | 高     |
+| health patrol（desired state と actual state の突き合わせ）              | 該当なし                                          | -      |
+| `city.toml`（宣言的設定）                                                | `exec-defaults.yaml` + `pm-members.yaml`          | 高     |
+| 対応 CLI: Claude / Codex / Gemini                                        | claude / codex / opencode / antigravity / copilot | 同等   |
+
+**tmux が Gas City の既定 runtime provider である。** agent を tmux セッションで回す方式は、この領域では既に標準的な実装手段であり、後発が同じことをしても差別化にならない。
+
+#### 2.6.2. 対話型オーケストレーターとの関係
+
+Gas City は人と会話する司令塔ではなく、**多数の自律 agent を回すための SDK** である。数百の並行 agent と enterprise 規模を掲げる。SpecDojo の対話型オーケストレーター（提案 → 承認 → 実行、commit 先の 3 層分離、保護設定）とは目的が異なり、直接の競合は薄い。
+
+競合するのは SpecDojo の exec 層である。executor / reporter pipeline、worktree 隔離、親検証、routine、rate limit 検出は、Gas City の解く問題とほぼ重なる。
+
+#### 2.6.3. 設計思想の違い
+
+| 観点       | Gas Town / Gas City     | SpecDojo                           |
+| ---------- | ----------------------- | ---------------------------------- |
+| 正本       | データベース（beads）   | Markdown                           |
+| 目的       | agent を多数動かす基盤  | 成果物体系を人と agent で維持する  |
+| 成果物の型 | 持たない                | kata 106 種                        |
+| 想定規模   | 数百 agent、enterprise  | 単独〜小規模                       |
+| 品質       | tests / reviews / gates | grade による継続評価 + review 観点 |
+
+#### 2.6.4. 判定
+
+「agent を多数回す」競争には参加しない。規模と成熟度で勝てず、tmux による実行や work routing はこのエコシステムが既に押さえている。
+
+SpecDojo の exec 層は、成果物体系を維持するための手段として位置づける。差別化として前面に出すのは成果物 kata の網羅範囲と品質の継続評価であり、実行基盤はそれを支える構成要素とする。beads に対する register の判定（Markdown が正本、kata と実行に接続）と同じ論理である。
 
 ## 3. SpecDojo との比較
 
@@ -436,11 +487,11 @@ beads との差というより登録簿自体の弱点として [[prj-0001:pjr-s
 
 ### 3.7. 総合
 
-| 区分         | 内容                                                                            |
-| ------------ | ------------------------------------------------------------------------------- |
-| 独自性が高い | 実行の記帳、品質の継続評価、local LLM の段構成、保護機構、**kata の網羅範囲**   |
-| 類似         | 仕様を正本とする思想、型による文脈供給、状態遷移による追跡                      |
-| 劣位         | 学習コスト、体系の維持負担、対応 agent 数、機能量に対する成熟度、**開始の導線** |
+| 区分         | 内容                                                                                                                               |
+| ------------ | ---------------------------------------------------------------------------------------------------------------------------------- |
+| 独自性が高い | 実行の記帳、品質の継続評価、local LLM の段構成、保護機構、**kata の網羅範囲**                                                      |
+| 類似         | 仕様を正本とする思想、型による文脈供給、状態遷移による追跡                                                                         |
+| 劣位         | 学習コスト、体系の維持負担、対応 agent 数、機能量に対する成熟度、**開始の導線**、**実行基盤の規模と成熟度（Gas Town / Gas City）** |
 
 SDD の入口機能では既存ツールに対抗しにくい。差別化の軸は次の3つと考えられる。
 
@@ -455,6 +506,8 @@ SDD の入口機能では既存ツールに対抗しにくい。差別化の軸�
 開始の容易さを両立できる。
 
 この位置づけが妥当かは実際の利用者の反応を見ないと判断できない。
+
+2026-09-24 の追加調査（`Gas Town / Gas City`）を踏まえると、差別化の軸 2「実行の記帳」は慎重に扱う必要がある。実行基盤としては Gas City が同じ問題を解いており、規模で先行している。記帳が意味を持つのは、それが成果物体系と登録簿へ接続されている場合に限る。実行基盤そのものの機能比較へ持ち込まない。
 
 ## 4. 関連ドキュメント
 

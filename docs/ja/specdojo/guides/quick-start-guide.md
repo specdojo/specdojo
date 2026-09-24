@@ -46,8 +46,7 @@ mkdir app1-specdojo app1-worktrees
 git -C app1-specdojo init
 cd app1-specdojo
 npm init -y
-npm install specdojo
-npm install --save-dev @specdojo/docs-lint
+npm install --save-dev specdojo @specdojo/docs-lint
 # チャット:「<project-id> の SpecDojo 設定を初期化して」
 npx specdojo config init
 ```

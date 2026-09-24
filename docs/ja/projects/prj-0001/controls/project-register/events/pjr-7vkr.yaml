@@ -145,3 +145,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_d93f67bbc8544942b6c6688188a6d093
+- v: 1
+  id: reg_90cf2ad2662c4b22adeb0ad73cf67c0c
+  ts: "2026-09-23T12:45:33Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: 公開完了。導入確認まで実施
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-23"
+    - field: conclusion
+      from: "-"
+      to: specdojo 0.2.0 を Trusted Publishing（provenance 付き）で npm へ公開し、@specdojo/docs-lint 0.1.0 も公開した。空ディレクトリで npm 導入から exec plan まで到達することを確認した。
+  previous_event_id: reg_a19ea27c780a41f79a717c0a244c6ab0

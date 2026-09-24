@@ -2,6 +2,7 @@
 import { fileURLToPath } from "node:url";
 import { Command } from "commander";
 import { evaluateDistFreshness, inspectDistEntryFreshness } from "./dist-freshness.js";
+import { specdojoPackageVersion } from "./package-paths.js";
 import { registerConfigCommands, registerProjectCommands } from "./specdojo-config.js";
 import { registerExecCommands } from "./exec.js";
 import { registerCatalogCommands } from "./catalog.js";
@@ -44,7 +45,7 @@ async function main(): Promise<void> {
 
   const program = new Command();
 
-  program.name("specdojo").description("SpecDojo helper CLI").version("0.4.0");
+  program.name("specdojo").description("SpecDojo helper CLI").version(specdojoPackageVersion());
 
   registerConfigCommands(program);
   registerProjectCommands(program);

@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_53c9d341eadc4753b441714091a36544
+  ts: "2026-09-23T12:18:08Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: 0.2.0 公開時の設定判断を保留として記録
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: npm の公開を staged publishing へ戻すかを決める
+    - field: description
+      from: ""
+      to: 0.2.0 の公開時に trusted publisher の Allowed actions で直接 publish を許可したが、npm は stage-only を推奨している。staged publishing では CI が npm stage publish で保留状態に登録し、maintainer が 2FA 付きで承認して初めて公開される。agent が src を書く本プロジェクトでは公開直前の確認段が有効に働く可能性がある一方、リリースごとに承認操作が増える。次のリリース前に判断する。
+    - field: type
+      from: ""
+      to: question
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-23"
+    - field: due
+      from: ""
+      to: "2026-10-24"

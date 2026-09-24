@@ -5,7 +5,7 @@ import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { afterEach, beforeAll, describe, expect, it } from "vitest";
 
-type Wrapper = { path: string; format: "markdown" | "toml" };
+type Wrapper = { path: string; format: "markdown" | "toml" | "raw" };
 type ValidateOrchestratorSync = (rootDir: string) => Array<{
   path: string;
   line: number;
@@ -43,6 +43,13 @@ afterEach(async () => {
   );
 });
 
+// raw は本文をそのまま持つ形式で、agy のようにファイル定義 agent を持たない provider 向け。
+function wrapperFixtureContent(wrapper: Wrapper, body: string): string {
+  if (wrapper.format === "raw") return body;
+  if (wrapper.format === "markdown") return `---\nname: fixture\n---\n\n${body}`;
+  return `name = "fixture"\ndeveloper_instructions = """\n${body}"""\n`;
+}
+
 async function createFixture(body = "# Shared body\n\nSame instructions.\n") {
   const rootDir = await mkdtemp(path.join(tmpdir(), "orchestrator-sync-"));
   temporaryDirectories.push(rootDir);
@@ -55,12 +62,7 @@ async function createFixture(body = "# Shared body\n\nSame instructions.\n") {
 
   write(orchestratorSource, body);
   for (const wrapper of orchestratorWrappers) {
-    write(
-      wrapper.path,
-      wrapper.format === "markdown"
-        ? `---\nname: fixture\n---\n\n${body}`
-        : `name = "fixture"\ndeveloper_instructions = """\n${body}"""\n`,
-    );
+    write(wrapper.path, wrapperFixtureContent(wrapper, body));
   }
 
   return { rootDir, write };
@@ -81,6 +83,17 @@ describe("tools/validate-orchestrator-sync.mjs", () => {
 
     expect(validateOrchestratorSync(fixture.rootDir)).toEqual([
       expect.objectContaining({ path: target!.path, line: 1 }),
+    ]);
+  });
+
+  it("raw 形式はファイル全体が本文として比較される", async () => {
+    const fixture = await createFixture();
+    const target = orchestratorWrappers.find((wrapper) => wrapper.format === "raw");
+    expect(target).toBeDefined();
+    fixture.write(target!.path, "# Stale body\n");
+
+    expect(validateOrchestratorSync(fixture.rootDir)).toEqual([
+      expect.objectContaining({ path: target!.path }),
     ]);
   });
 

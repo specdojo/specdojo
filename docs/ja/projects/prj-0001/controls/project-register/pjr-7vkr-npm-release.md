@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-7vkr-npm-release
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: ARC
   registered_at: "2026-09-09T15:38:56Z"
   due_on: "2026-09-30"
+  completed_at: "2026-09-23T12:45:33Z"
   block_reason: "integrate failed: git ls-files failed: fatal: detected dubious ownership in repository at '/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-7VKR' To add an exception for this directory, call:  \tg…"
+  conclusion: specdojo 0.2.0 を Trusted Publishing（provenance 付き）で npm へ公開し、@specdojo/docs-lint 0.1.0 も公開した。空ディレクトリで npm 導入から exec plan まで到達することを確認した。
 ---
 
 # PJR-7VKR specdojo を npm へ公開する
@@ -398,6 +400,62 @@ kata 配布の 4 段階（[[prj-0001:pjr-fkn1-kata-distribution-method]] から�
 
 作業 6 は `@specdojo/docs-lint` にも必要になる（PJR-WJZD の作業 3）。
 
+### 7.3. 0.2.0 の公開（2026-09-23）
+
+**公開は完了した。** `specdojo@0.2.0` と `@specdojo/docs-lint@0.1.0` が npm で利用できる。
+
+#### 7.3.1. trusted publisher の設定
+
+`specdojo` の登録は旧リポジトリ名 `specdojo/specdojo-handbook` のままだった。リポジトリ名の変更に GitHub のリダイレクトは効くが、OIDC の claim には現在名が入るため一致せず、初回は `403 OIDC permission denied` で失敗した。`specdojo/specdojo` + `publish-specdojo.yml` へ更新した。
+
+さらに `Allowed actions` の設定が必要だった。npm の既定は staged publishing で、trusted publisher は `npm stage publish` のみ許可される。直接 publish を許可するチェックを入れて解消した。npm はこの設定を推奨していないため、staged publishing へ戻すかを [[prj-0001:pjr-f4c9-npm-staged-publishing]] で判断する。
+
+#### 7.3.2. 公開の記録
+
+```text
+npm notice Publishing to https://registry.npmjs.org/ with tag latest and public access
+npm notice publish Signed provenance statement with source and build information from GitHub Actions
+npm notice publish Provenance statement published to transparency log: logIndex=2919359591
++ specdojo@0.2.0
+```
+
+Trusted Publishing 経由のため provenance（来歴証明）が付き、どの repository のどの workflow でビルドされたかが Sigstore の透明性ログに記録された。token 経由の publish では得られない。
+
+同梱物は 530 ファイル、package size 1.15 MB。`generated` / `tools` / `docs/en` / `packages` / `src` は 0 件で、`dist` 94・rulebooks 107・exec-templates 31・templates 62・schemas 39・provider template 18 を含む。
+
+#### 7.3.3. 昇格の経路
+
+`main` への直接 push は `protect-main` hook が禁止するため、version bump を develop 上で行い Pull Request で昇格した。個票の `手順` にある「手元で version を上げて `git push`」は直接 push を前提とした記述であり、実際の経路は次のとおりである。
+
+```sh
+git switch project/prj-0001/develop
+git merge origin/main      # 前回昇格分の取り込み（省くと分岐する）
+npm version minor
+git push origin project/prj-0001/develop --follow-tags
+gh pr create --base main --head project/prj-0001/develop
+```
+
+前回昇格時に `main` を develop へ戻していなかったため、ローカル `main` が古いまま develop を merge して履歴が分岐した。[[specdojo:branch-workflow-guide]] にある昇格後の取り込みを省かないこと。
+
+#### 7.3.4. 導入確認
+
+空ディレクトリで npm 経由の導入から `exec plan` まで到達した。
+
+```text
+npm install --save-dev specdojo @specdojo/docs-lint   成功
+npx specdojo config init                               成功
+npx specdojo register scaffold / add                   成功
+npx specdojo exec plan --register                      成功
+```
+
+kata は `node_modules/specdojo` から参照された。
+
+#### 7.3.5. 派生した項目
+
+- [[prj-0001:pjr-r1n2-cli-version-from-package-json]]: `--version` が `0.4.0` を直書きしており実際の版と食い違っていた。修正済みで、次の公開で反映される。
+- [[prj-0001:pjr-f4c9-npm-staged-publishing]]: staged publishing へ戻すかの判断。
+- [[prj-0001:pjr-frzb-cli-entrypoint-shortcut]]: `npx specdojo` の打鍵を短くする方法の判断。
+
 ## 8. 関連ドキュメント
 
 - [[prj-0001:pjr-36qg-competitive-landscape-and-release]]: 競合状況の観測。
@@ -406,3 +464,5 @@ kata 配布の 4 段階（[[prj-0001:pjr-fkn1-kata-distribution-method]] から�
 - [[prj-0001:pjr-0143-vs-code-marketplace]]: VS Code 拡張の公開。
 - [[prj-0001:pjr-wjzd-publish-docs-lint]]: `@specdojo/docs-lint` の公開。本項目の前提。
 - [[prj-0001:pjr-09kk-npm-onboarding-path]]: npm 導入の導線。作業 5 の実体。
+- [[prj-0001:pjr-f4c9-npm-staged-publishing]]: 公開方式の再検討。
+- [[prj-0001:pjr-r1n2-cli-version-from-package-json]]: 導入確認で見つかった版表示の不整合。

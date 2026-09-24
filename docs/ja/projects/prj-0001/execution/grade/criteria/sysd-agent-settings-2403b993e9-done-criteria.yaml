@@ -1,0 +1,45 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: sysd-agent-settings-grade-criteria
+document: sysd-agent-settings
+path: docs/ja/product/040-system-design/sysd-agent-settings.md
+graded_at: "2026-09-23T16:14:00.986Z"
+graded_by: codex-expert-executor
+content_hash: 438490f057d962ee7b6eee44dc4d8d218c14578a592e4d15b4d7f6bf2bcbe2f3
+summary:
+  satisfied: 2
+  unsatisfied: 3
+  total: 5
+criteria:
+  - id: DC-001
+    text: 設計トピックの採用理由・制約が業務要件と整合していること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: unsatisfied
+    reason: 設計トピックに対応する業務要件と、共通実行モデルを採用した理由が本文に示されていない。
+  - id: DC-002
+    text: 設計方針を承認できること
+    roles:
+      - PO
+    viewpoint: vp-po-decision-readiness
+    status: unsatisfied
+    reason: 設計方針の選択理由、代替案との境界、承認時に確認すべき判断材料が不足している。
+  - id: DC-003
+    text: 技術的制約・依存関係が識別できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: satisfied
+  - id: DC-004
+    text: テスト設計・検証観点の参照として使えること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: unsatisfied
+    reason: 設計制約と具体的なテストケース・期待結果の対応がなく、広いテスト glob だけでは検証参照として使えない。
+  - id: DC-005
+    text: 実装の基礎として参照できること
+    roles:
+      - DEV
+    viewpoint: vp-dev-implementation-readiness
+    status: satisfied

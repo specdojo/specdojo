@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: prj-0001:prj-assumptions-constraints-dependencies-grade-criteria
+document: prj-0001:prj-assumptions-constraints-dependencies
+path: docs/ja/projects/prj-0001/020-project-definition/prj-assumptions-constraints-dependencies.md
+graded_at: "2026-09-23T16:56:51.612Z"
+graded_by: codex-expert-executor
+content_hash: 0955f4b530ac5676defacfcfed9eec94f04a2e13b294154bb940de1b371a87eb
+summary:
+  satisfied: 3
+  unsatisfied: 1
+  total: 4
+criteria:
+  - id: DC-001
+    text: 業務上の前提・制約が業務観点で識別できること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: satisfied
+  - id: DC-002
+    text: 重要な前提・制約を受け入れられる情報が含まれていること
+    roles:
+      - PO
+    viewpoint: vp-po-decision-readiness
+    status: unsatisfied
+    reason: 公開情報に関する重要制約の監視・逸脱対応と、公開範囲を確定した完全な決定証跡が不足している。
+  - id: DC-003
+    text: 技術的制約・外部依存が識別できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: satisfied
+  - id: DC-004
+    text: 依存関係・リスクが計画・統制の観点で識別できること
+    roles:
+      - PM
+    viewpoint: vp-pm-dependency-risk
+    status: satisfied

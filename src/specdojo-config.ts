@@ -339,7 +339,7 @@ export function registerConfigCommands(program: Command): void {
     .description("Scaffold agent/settings templates for a provider")
     .requiredOption(
       "--provider <name>",
-      "Provider template to copy (claude|codex|copilot|opencode)",
+      "Provider template to copy (antigravity|claude|codex|copilot|opencode)",
     )
     .option("--force", "Overwrite existing files", false)
     .option("--dry-run", "Show planned files without writing", false)

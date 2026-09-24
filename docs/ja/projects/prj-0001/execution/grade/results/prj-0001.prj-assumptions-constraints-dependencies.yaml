@@ -1,0 +1,153 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: prj-0001:prj-assumptions-constraints-dependencies
+path: docs/ja/projects/prj-0001/020-project-definition/prj-assumptions-constraints-dependencies.md
+target: deliverable
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 73
+graded_at: "2026-09-23T16:56:51.612Z"
+graded_by: codex-expert-executor
+content_hash: 0955f4b530ac5676defacfcfed9eec94f04a2e13b294154bb940de1b371a87eb
+categories:
+  consistency:
+    score: 50
+  usability:
+    score: 81
+  architecture:
+    score: 100
+  quality:
+    score: 67
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 3
+    score: 75
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 2
+    score: 50
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 4
+  minor: 4
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 31
+    anchor: >-
+      | ACD-D02 | `PO` による初期公開範囲、ライセンス、貢献導線の決定（[[prj-0001:pjr-index\|プロジェクト登録簿]] `PJR-0120`。採用ライセンスは MIT、貢献導線は GitHub
+      issue / pull request として決定済み）                     | 初期公開の対象と、第三者が利用・改善・再利用できる条件を確定するため。             | `PO`
+      が初期公開範囲、採用ライセンス（MIT）、貢献導線（GitHub issue / pull request）を決定し、決定記録が参照できる。                                       |
+      採用ライセンス、貢献導線、または初期公開対象が変更された。                               | `PO`   | 決定は `PJR-0120`
+      に記録済み。前提が変わる場合は再決定まで外部公開を保留し、候補・影響・未解決事項を `PJR-0120` で更新する。       |
+    message: >-
+      ACD-D02/D03 は初期公開範囲・公開範囲の決定を記録済みとしているが、PJR-0120/0121 の conclusion
+      はライセンス・導線・公開先だけを確定し、憲章9章と成功基準5章も公開範囲を未決としているため、決定状態と根拠文書を整合させる必要がある。
+  - id: F002
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 31
+    anchor: >-
+      | ACD-D02 | `PO` による初期公開範囲、ライセンス、貢献導線の決定（[[prj-0001:pjr-index\|プロジェクト登録簿]] `PJR-0120`。採用ライセンスは MIT、貢献導線は GitHub
+      issue / pull request として決定済み）                     | 初期公開の対象と、第三者が利用・改善・再利用できる条件を確定するため。             | `PO`
+      が初期公開範囲、採用ライセンス（MIT）、貢献導線（GitHub issue / pull request）を決定し、決定記録が参照できる。                                       |
+      採用ライセンス、貢献導線、または初期公開対象が変更された。                               | `PO`   | 決定は `PJR-0120`
+      に記録済み。前提が変わる場合は再決定まで外部公開を保留し、候補・影響・未解決事項を `PJR-0120` で更新する。       |
+    message: ACD-D02とACD-D03は公開範囲およびGitHub issue / pull requestによる導線を重複して扱っているため、各決定の固有境界を明示するか一方を正本参照へ置き換える必要がある。
+  - id: F003
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 16
+    anchor: >-
+      公開情報、技術的中立性、人間の判断責任など、対象範囲に関する限界は [[prj-0001:prj-scope|プロジェクトスコープ]]
+      の対象システム、スコープ外、境界の判断基準を正とする。本章では、スコープの実行に対して追加で課される予算・支出・権限上の限界を扱う。予算・権限に関する制約は、[[prj-0001:prj-charter|プロジェクト憲章]]
+      の主要前提・制約が認可判断に必要な範囲で示した内容を、監視方法・逸脱時対応まで含めて運用可能な形に展開したものである。
+    message: 公開情報に個人情報・機密情報・非公開情報を含めない重要制約の監視・逸脱対応がなく、公開範囲の決定証跡も未完了であるため、DC-002を充足できない。
+  - id: F004
+    severity: major
+    rule: vp-qe-verifiability
+    line: 30
+    anchor: >-
+      | ACD-D01 |
+      初期公開の対象となる成果物群の作成、レビュー、受入判定                                                                                                                                                       
+      | 初期公開の対象が利用者に提供できる品質と公開適性を満たしていることを確認するため。 |
+      選定された成果物が作成され、担当ロールによるレビューと受入判定の証跡がそろっている。                                                                      |
+      初期公開の対象、成功基準、受入条件、またはレビュー結果が変更された。                     | `PM`   |
+      未完了・不合格の成果物と影響を特定し、是正担当と再判定時期を設定する。成立までは公開を保留する。                                   |
+    message: >-
+      ACD-D01の「選定された成果物」と「担当ロールによるレビューと受入判定」は対象ID・適用するSC/AC・証跡の正本が示されずpass /
+      failを一意に判定できないため、成果物カタログ、成功基準・受入条件、品質ゲートへの参照を明示する必要がある。
+  - id: F005
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 16
+    anchor: >-
+      公開情報、技術的中立性、人間の判断責任など、対象範囲に関する限界は [[prj-0001:prj-scope|プロジェクトスコープ]]
+      の対象システム、スコープ外、境界の判断基準を正とする。本章では、スコープの実行に対して追加で課される予算・支出・権限上の限界を扱う。予算・権限に関する制約は、[[prj-0001:prj-charter|プロジェクト憲章]]
+      の主要前提・制約が認可判断に必要な範囲で示した内容を、監視方法・逸脱時対応まで含めて運用可能な形に展開したものである。
+    message: >-
+      公開情報の限界をスコープへ委譲しているが、スコープには個人情報・機密情報・非公開情報の除外条件がなく、rulebookが求める検知時の除去または判断手順も欠けているため、憲章・AC-03を根拠に運用可能な制約を追加する必要がある。
+  - id: F006
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 47
+    anchor: "- 各項目の所有者は成立状況と変化を確認し、`PM` はプロジェクト全体への影響を取りまとめる。スコープ、予算、公開、ライセンス、GO / Not GO の最終判断は `PO` が行う。"
+    message: 監視・変更管理に文書構造・配置・命名・技術制約・参照資料の整合確認を担うロールが明示されていないため、rulebookに従いARC等の確認責任を追記する必要がある。
+  - id: F007
+    severity: minor
+    rule: vp-ux-user-flow
+    line: 30
+    anchor: >-
+      | ACD-D01 |
+      初期公開の対象となる成果物群の作成、レビュー、受入判定                                                                                                                                                       
+      | 初期公開の対象が利用者に提供できる品質と公開適性を満たしていることを確認するため。 |
+      選定された成果物が作成され、担当ロールによるレビューと受入判定の証跡がそろっている。                                                                      |
+      初期公開の対象、成功基準、受入条件、またはレビュー結果が変更された。                     | `PM`   |
+      未完了・不合格の成果物と影響を特定し、是正担当と再判定時期を設定する。成立までは公開を保留する。                                   |
+    message: ACD-D01から初期公開対象の成果物カタログ、成功基準・受入条件、品質管理計画へのリンクがなく、利用者が対象一覧と合格証跡へ迷わず到達できないため参照先を追加する必要がある。
+  - id: F008
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 31
+    anchor: >-
+      | ACD-D02 | `PO` による初期公開範囲、ライセンス、貢献導線の決定（[[prj-0001:pjr-index\|プロジェクト登録簿]] `PJR-0120`。採用ライセンスは MIT、貢献導線は GitHub
+      issue / pull request として決定済み）                     | 初期公開の対象と、第三者が利用・改善・再利用できる条件を確定するため。             | `PO`
+      が初期公開範囲、採用ライセンス（MIT）、貢献導線（GitHub issue / pull request）を決定し、決定記録が参照できる。                                       |
+      採用ライセンス、貢献導線、または初期公開対象が変更された。                               | `PO`   | 決定は `PJR-0120`
+      に記録済み。前提が変わる場合は再決定まで外部公開を保留し、候補・影響・未解決事項を `PJR-0120` で更新する。       |
+    message: 「初期公開範囲」と「公開範囲」、「貢献導線」と「変更提案受付方法」がACD-D02/D03で同義に見えるまま別のPJRへ割り当てられているため、用語の差異と各決定の正本を明示する必要がある。
+done_criteria:
+  satisfied: 3
+  total: 4
+  unsatisfied:
+    DC-002:
+      - PO
+  detail_ref: prj-0001:prj-assumptions-constraints-dependencies-grade-criteria

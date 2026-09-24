@@ -1,0 +1,53 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_e5962edf33e74d7891113238762902dc
+  ts: "2026-09-23T12:58:16Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: npm 公開後の onboarding 見直し
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: orchestrator を config scaffold で配布し SSOT の記述を実態へ合わせる
+    - field: description
+      from: ""
+      to: npm 導入した利用者が orchestrator を入手できない。.agents/ は files に無く、templates/`<provider>`/agents/ にも orchestrator が無いため、config scaffold --provider が配るのは executor / reporter だけになっている。templates へ orchestrator を追加して配布経路を作り、あわせて SSOT の記述を npx specdojo 前提へ改め、register の節を新規利用者がすぐ使える内容にし、kata の参照既定と eject を追記する。SSOT と 5 環境のラッパーはバイト一致を保つ。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-23"
+    - field: due
+      from: ""
+      to: "2026-10-10"
+- v: 1
+  id: reg_084a1224161a447e9f96c13f08bed76e
+  ts: "2026-09-23T13:25:41Z"
+  action: close
+  actor: orchestrator
+  from_status: open
+  to_status: done
+  reason: 保護対象のためオーケストレーターが直接対応し、--no-ff merge で統合
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-23"
+    - field: conclusion
+      from: "-"
+      to: SSOT から生成する方式へ変え、claude / codex / opencode / antigravity へ配布原本を追加した。規範の記述を npx specdojo 前提へ改め、導入直後の進め方・登録簿の使い方・kata の扱いを追加した。
+  previous_event_id: reg_e5962edf33e74d7891113238762902dc

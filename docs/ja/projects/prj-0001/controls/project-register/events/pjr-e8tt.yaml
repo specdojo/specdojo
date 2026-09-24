@@ -1,0 +1,53 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ba9fb1b428974ef0b3b070abf4a59120
+  ts: "2026-09-23T21:51:01Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: 競合調査の更新を受けた位置づけの整理
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 初期リリースの差別化軸を定める
+    - field: description
+      from: ""
+      to: Gas Town / Gas City の調査を踏まえ、初期リリースで前面に出すものを決める。exec 層は実行基盤として規模で先行されているため機能比較に持ち込まない。register は task tracker ではなく、判断・観測・保留を含めて記録する場である点を差別化として扱う。orchestrator の規律、成果物 kata の網羅範囲と合わせて位置づけを定める。devcontainer と tmux の扱いも併せて決める。
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-24"
+    - field: due
+      from: ""
+      to: "2026-10-10"
+- v: 1
+  id: reg_daf6b4b538304a45a49c6113106ff566
+  ts: "2026-09-24T10:30:57Z"
+  action: close
+  actor: naoji3x
+  from_status: open
+  to_status: decided
+  reason: 競合調査の結果を踏まえて確定。利用者の反応で見直す契機を個票へ記載
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-09-24"
+    - field: conclusion
+      from: "-"
+      to: 初期リリースで前面に出すのは register の記録範囲、対話型 orchestrator、成果物 kata の網羅範囲の 3 つとする。exec 層は機能比較に持ち込まず成果物体系を維持する手段として説明する。tmux を agent runtime として採らず、devcontainer は常時稼働環境の構成例として補強材料に位置づける。
+  previous_event_id: reg_ba9fb1b428974ef0b3b070abf4a59120

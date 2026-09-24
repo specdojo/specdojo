@@ -1,0 +1,53 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_9b8303ca566049a1852929000d51904b
+  ts: "2026-09-23T12:58:16Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: npm 公開後の onboarding 見直し
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: README の onboarding を orchestrator 経由の導線へ書き換える
+    - field: description
+      from: ""
+      to: README は npx specdojo を直接叩く手順を案内しているが、対話型 orchestrator を導入して会話で操作する導線を主にしたい。orchestrator の配置方法、起動方法、最初の register 操作までを README から辿れるようにする。CLI を直接使う手順は選択肢として残す。orchestrator の配布経路が整ってから着手する。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-23"
+    - field: due
+      from: ""
+      to: "2026-10-17"
+- v: 1
+  id: reg_78cb31aec33d4dad87927feebf886cb9
+  ts: "2026-09-23T21:23:53Z"
+  action: close
+  actor: orchestrator
+  from_status: open
+  to_status: done
+  reason: オーケストレーターが直接対応し、--no-ff merge で統合
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-24"
+    - field: conclusion
+      from: "-"
+      to: README の onboarding を orchestrator 経由の導線へ改め、provider ごとの配置と起動、会話での操作例を示した。CLI の直接利用は選択肢として残した。
+  previous_event_id: reg_9b8303ca566049a1852929000d51904b
