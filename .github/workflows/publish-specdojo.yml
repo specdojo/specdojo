@@ -36,6 +36,11 @@ jobs:
           registry-url: https://registry.npmjs.org
           cache: npm
 
+      # staged publishing は npm CLI 11.15.0 以上を要求する。Node に同梱される npm が
+      # 条件を満たすとは限らないため、publish 前に明示的に更新する。
+      - name: Ensure npm supports staged publishing
+        run: npm install -g npm@^11.15.0
+
       - name: Install dependencies
         run: npm ci
 
@@ -73,6 +78,19 @@ jobs:
         if: steps.version_check.outputs.should_publish == 'true'
         run: npm pack --dry-run
 
-      - name: Publish to npm via Trusted Publishing
+      # 直接 publish せず staged publishing を使う。CI は公開候補を登録するだけで、
+      # 実際の公開は maintainer が npm stage approve（2FA 必須）で承認したときに行う。
+      # agent が編集した成果物を、公開前に tarball として検査する機会を残すためである。
+      - name: Stage the release via Trusted Publishing
         if: steps.version_check.outputs.should_publish == 'true'
-        run: npm publish --access public
+        run: npm stage publish --access public
+
+      - name: Show how to approve
+        if: steps.version_check.outputs.should_publish == 'true'
+        run: |
+          package_name='${{ steps.pkg.outputs.name }}'
+          echo "Staged $package_name@${{ steps.pkg.outputs.version }}."
+          echo "This version is NOT published yet. Approve it with 2FA:"
+          echo "  npm stage list $package_name"
+          echo "  npm stage download <stage-id>   # inspect the tarball"
+          echo "  npm stage approve <stage-id>"
