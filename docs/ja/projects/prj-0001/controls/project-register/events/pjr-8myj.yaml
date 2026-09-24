@@ -32,3 +32,22 @@
     - field: due
       from: ""
       to: "2026-10-24"
+- v: 1
+  id: reg_392fc242fd07476f9966d347eba22d69
+  ts: "2026-09-24T12:48:57Z"
+  action: close
+  actor: orchestrator
+  from_status: open
+  to_status: done
+  reason: オーケストレーターが直接対応し、--no-ff merge で統合
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-24"
+    - field: conclusion
+      from: "-"
+      to: 常時稼働ホストへリモート接続する構成例のガイドを新設した。役割と代替手段で一般化し、構成例として位置づけ、採らない選択も明示した。
+  previous_event_id: reg_82c0ccd557ae4c47bc7a0f8c17a52ba5

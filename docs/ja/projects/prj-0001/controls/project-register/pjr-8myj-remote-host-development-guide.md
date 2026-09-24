@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-8myj-remote-host-development-guide
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-09-23T22:30:57Z"
   due_on: "2026-10-24"
+  completed_at: "2026-09-24T12:48:57Z"
+  conclusion: 常時稼働ホストへリモート接続する構成例のガイドを新設した。役割と代替手段で一般化し、構成例として位置づけ、採らない選択も明示した。
 ---
 
 # PJR-8MYJ 常時稼働の母艦へリモート接続して agent を動かす構成例のガイドを書く
@@ -60,14 +62,20 @@ prj-0001 では Tailscale + SSH + tmux + devcontainer で母艦へ接続して�
 
 | No  | 作業                                                 | 担当 | 状態 | メモ                           |
 | --- | ---------------------------------------------------- | ---- | ---- | ------------------------------ |
-| 1   | product 側の運用ガイドから一般化できる内容を抽出する | DEV  | open | 265 行。個人環境の記述を落とす |
-| 2   | `docs/ja/specdojo/guides/` へガイドを新設する        | DEV  | open | 構成例として書く               |
-| 3   | 既知の制限を併記する                                 | DEV  | open | PJR-HZ4C の内容                |
-| 4   | README から 1 行リンクする                           | DEV  | open | 手順は複製しない               |
+| 1   | product 側の運用ガイドから一般化できる内容を抽出する | DEV  | done | 265 行。個人環境の記述を落とす |
+| 2   | `docs/ja/specdojo/guides/` へガイドを新設する        | DEV  | done | 構成例として書く               |
+| 3   | 既知の制限を併記する                                 | DEV  | done | PJR-HZ4C の内容                |
+| 4   | README から 1 行リンクする                           | DEV  | done | 手順は複製しない               |
 
 ## 4. 対応結果
 
--
+- [[specdojo:remote-host-development-guide|常時稼働ホスト運用ガイド]] を新設した（163 行、8 章）。
+- 一般化は「役割と代替手段の表」で行った。常時稼働ホスト、ネットワーク到達手段、端末多重化、実行環境の 4 つの役割を示し、それぞれに代替を並べた。Tailscale + SSH + tmux + devcontainer は例として挙げるに留め、特定の機種名・ホスト名・アカウント設定は含めていない。
+- 冒頭で「特定の製品構成を推奨するものではなく、構成例です」と明示した。さらに `この構成を採らない選択` を設け、`routine` を使わない場合・都度実行できる場合・`register` だけを使う場合は不要であることを書いた。常時稼働環境が入口の条件に見えると [[prj-0001:pjr-e8tt-initial-release-positioning]] の「段階的に使える」という主張と矛盾するためである。
+- 既知の制限として、入れ子のリモート接続でエディタのポート転送が届かない問題と `LocalForward` による回避を記載した（[[prj-0001:pjr-hz4c-tmux-terminal-npm-run-docs-dev-port-forwarding]] の一般化）。どの接続用エントリへ設定するかという、実際に間違えた点も含めている。
+- 切断後の再開方法を対象ごとに表で示した。`exec run --worktree` は `--resume`、agent CLI は各 CLI の再開機能、`routine` は次の起動時刻か `routine run --id`。
+- README の `使い始める` 末尾から 1 行でリンクした。手順は複製していない。docs-site の sidebar では `routine運用` の直後へ配置した。
+- ローカル feature ブランチ `feature/prj-0001/remote-host-guide` で実施し、`--no-ff` merge で develop へ統合した。
 
 ## 5. 関連ドキュメント
 
