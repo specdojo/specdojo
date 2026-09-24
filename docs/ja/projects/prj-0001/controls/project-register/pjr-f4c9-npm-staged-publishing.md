@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-f4c9-npm-staged-publishing
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: question
-  item_status: open
+  item_status: decided
   priority: medium
   owner: ARC
   registered_at: "2026-09-23T12:18:08Z"
   due_on: "2026-10-24"
+  completed_at: "2026-09-24T13:06:44Z"
+  conclusion: 候補 B を採り stage-only へ戻した。workflow を npm stage publish へ変更し、npm CLI 11.15.0 以上の確保と承認手順の表示を加えた。npm 側の Allowed actions の変更は人が行う。
 ---
 
 # PJR-F4C9 npm の公開を staged publishing へ戻すかを決める
@@ -63,16 +65,52 @@ agent が `src/` を編集し、その成果が develop → main → publish と
 
 ## 4. 回答・結論
 
--
+候補 B を採る。stage-only へ戻し、workflow を `npm stage publish` へ変更した。
+
+### 4.1. 採った理由
+
+npm が既定としている方式であり、推奨から外れる設定を恒久化する根拠がない。加えて本プロジェクトは agent が `src` を編集し、その成果が develop → main → publish と流れる。人の関与は Pull Request の merge と `npm version` の実行であり、**公開物そのものを検査する機会が無い**。`npm stage download` で tarball を取得して中身を確認できることが、この経路に対する最後の防御になる。
+
+リリース頻度は 0.1.0 から 0.2.1 まで約半年で 3 回であり、承認操作の負担は小さい。
+
+### 4.2. 実施内容
+
+- `publish-specdojo.yml` と `publish-docs-lint.yml` の publish step を `npm publish --access public` から `npm stage publish --access public` へ変更した。
+- staged publishing は npm CLI 11.15.0 以上を要求する。手元は 11.12.1 で、Node に同梱される npm が条件を満たす保証がないため、`npm install -g npm@^11.15.0` を publish 前へ追加した。
+- **workflow の success が公開を意味しなくなる**ため、承認手順を実行ログへ出す step を追加した。これが無いと「成功したのに公開されていない」という混乱を招く。
+- `CONTRIBUTING.md` へ `npm への公開` を新設し、昇格手順・承認手順・注意点を記載した。あわせて元から飛んでいた章番号（4 → 7）を直した。
+
+### 4.3. 承認手順
+
+```sh
+npm stage list specdojo         # 保留中の一覧と stage-id
+npm stage view <stage-id>       # 詳細
+npm stage download <stage-id>   # tarball を取得して中身を検査
+npm stage approve <stage-id>    # 承認して公開。2FA のワンタイムパスワードが要る
+npm stage reject <stage-id>     # 取りやめる
+```
+
+### 4.4. 残る作業
+
+npm 側の `Allowed actions` で「Allow npm publish」のチェックを外す。ブラウザ操作のため人が行う。**workflow を先に入れてから npm 側を変更する**。逆にすると、その時点から CI の直接 publish が拒否される。
+
+`@specdojo/docs-lint` は trusted publisher が未設定のため、登録時に最初からチェックを外した状態にすればよい。
+
+経路の検証は次の版（0.3.0）で行う。
+
+### 4.5. 注意点
+
+- staged 版も公開版と同じ版番号空間を使う。`0.3.0` を staged にしたら同じ版で publish し直せない。修正が要る場合は `npm stage reject` してから版を上げ直す。
+- 未承認のまま放置した場合の期限や自動削除は、npm の文書に明記がない。版番号を占有し続ける可能性がある。
 
 ## 5. 承認
 
-| 項目     | 内容   |
-| -------- | ------ |
-| 回答者   | _TODO_ |
-| 回答日   | _TODO_ |
-| 承認方式 | _TODO_ |
-| 証跡     | _TODO_ |
+| 項目     | 内容                                                                  |
+| -------- | --------------------------------------------------------------------- |
+| 回答者   | naoji3x                                                               |
+| 回答日   | 2026-09-24                                                            |
+| 承認方式 | commit                                                                |
+| 証跡     | register event `close`（`events/pjr-f4c9.yaml`）と本個票の遷移 commit |
 
 - 承認方式は既定で `commit`（`register close` により `decided` へ遷移）を用いる。
 - 回答が不可逆・高リスク・framework schema 破壊的変更を伴う場合は `PR` 方式で承認し、証跡に PR URL と merge SHA を記載する。

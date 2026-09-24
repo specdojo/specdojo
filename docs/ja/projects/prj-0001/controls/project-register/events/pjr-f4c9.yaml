@@ -32,3 +32,22 @@
     - field: due
       from: ""
       to: "2026-10-24"
+- v: 1
+  id: reg_fe2f42110bef43f7a6cb902330b01a38
+  ts: "2026-09-24T13:06:44Z"
+  action: close
+  actor: naoji3x
+  from_status: open
+  to_status: decided
+  reason: npm の推奨に沿い、公開前に tarball を検査する機会を残す
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-09-24"
+    - field: conclusion
+      from: "-"
+      to: 候補 B を採り stage-only へ戻した。workflow を npm stage publish へ変更し、npm CLI 11.15.0 以上の確保と承認手順の表示を加えた。npm 側の Allowed actions の変更は人が行う。
+  previous_event_id: reg_53c9d341eadc4753b441714091a36544
