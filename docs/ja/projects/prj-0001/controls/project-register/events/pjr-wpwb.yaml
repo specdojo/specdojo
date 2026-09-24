@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_3360d013f2ec453bb0ce3128ce0394af
+  ts: "2026-09-24T22:41:24Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: 同じ語が 2 箇所で別の意味を持ち、実際に誤読が起きた
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: "観点の evaluation: human を誤解のない名前へ改める"
+    - field: description
+      from: ""
+      to: "viewpoint の evaluation: human は「人だけが判定する」と読めるが、実際は review フェーズも agent が実行しており、意味は「継続的な自動評価に向かず、文書外の文脈を要する」である。task.execution の human は実際に人が実行することを意味し、同じ語が 2 箇所で別の意味を持つ。pm-review-viewpoints.yaml は npm package に同梱され利用者が override するため、採用が広がる前に改名する。0.3.0 の破壊的変更として PJR-XTAN の語彙統一と同時に行う。"
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-25"
+    - field: due
+      from: ""
+      to: "2026-10-31"

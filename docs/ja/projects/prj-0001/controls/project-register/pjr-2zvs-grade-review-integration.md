@@ -76,15 +76,41 @@ level 0〜4 には `review_verdict` が対応づけられており、grade の�
 
 選択肢 C を採る。review フェーズの中で対象文書へ grade を実行し、その結果を verdict の一次入力とする。5 点を次のとおり定める。
 
-### 3.1. 観点の分担は evaluation を唯一の基準とする
+### 3.1. 観点の分担は continuous と evaluation で決める
 
-| `evaluation`    | 判定主体          | 扱い                           |
-| --------------- | ----------------- | ------------------------------ |
-| `agent`         | grade             | level と findings を算出する   |
-| `deterministic` | grade             | 検証コマンドの結果から判定する |
-| `human`         | review のレビュア | grade は判定しない             |
+**2026-09-24 に表現を修正した。** 当初は「`evaluation` を唯一の基準とし、`human` 観点は review のレビュアが判定する」と書いたが、2 点誤っていた。
 
-観点ごとに判定主体を二重化しない。`agent` 観点をレビュアが再評価することも、`human` 観点を grade が評価することもしない。観点を追加・変更するときは `evaluation` を必ず指定し、それが実行経路の割り当てになる。
+| 観点の属性                                          | 役割                                                                         |
+| --------------------------------------------------- | ---------------------------------------------------------------------------- |
+| `continuous`（boolean）                             | **grade の評価対象に含めるか**。grade の選択基準はこちらである               |
+| `evaluation`（`deterministic` / `agent` / `human`） | **判定の方法**。検証コマンドか、本文から推論できるか、文書外の文脈を要するか |
+
+`src/grade.ts` の `continuousViewpoints()` は `continuous === true` で対象を絞り、`agentViewpoints()` が `evaluation === "agent"` でさらに分ける。grade の対象選択は `continuous`、判定手段は `evaluation` である。
+
+現在の 28 観点では両者が 1 対 1 に対応する（`agent` 10 件と `deterministic` 2 件が `continuous: true`、`human` 16 件が `continuous: false`）。ただしこれは現在のデータの一致であり、構造上の同一ではない。`evaluation: agent` でありながら費用の都合で `continuous: false` とする観点は定義できる。
+
+#### 3.1.1. `human` は「人だけが判定する」ではない
+
+review フェーズは agent が実行する。`pm-members.yaml` には `claude-review-executor`、`codex-review-executor`、`agy-expert-review-executor`、`opencode-review-executor` があり、`xrp-*` は agent へ渡す review plan である。つまり `evaluation: human` の観点も、実際には agent が判定している。
+
+`continuous: false` との対応から読み取れる `human` の意味は次である。
+
+> 継続的な自動評価に向かない。判断の前提となる文脈（承認の意図、事業価値、実装の見通し）が文書外にあり、機械的な繰り返し評価では意味のある判定ができない。
+
+分けているのは「誰が」ではなく「**いつ・どの文脈で**」判定するかである。実行主体は `pm-members.yaml` が決める。
+
+なお `task.execution` の `human` は別の概念で、そちらは実際に人が実行することを意味する（`src/exec-plans.ts`）。**同じ語が 2 箇所で別の意味を持つ**ため、観点側の改名を [[prj-0001:pjr-wpwb-rename-evaluation-human]] で扱う。
+
+#### 3.1.2. 分担
+
+| 判定の場           | 対象観点            | 実行主体                                                          |
+| ------------------ | ------------------- | ----------------------------------------------------------------- |
+| grade（継続評価）  | `continuous: true`  | agent（`evaluation: agent`）または検証コマンド（`deterministic`） |
+| review（都度判断） | `continuous: false` | agent または人。`pm-members.yaml` が決める                        |
+
+観点ごとに判定の場を二重化しない。`continuous: true` の観点を review で再評価せず、`continuous: false` の観点を grade が採点しない。
+
+ただし `done_criteria` の充足判定は例外である。grade は `evaluation` を問わず全条件を本文の根拠だけで一次判定する。`human` 観点に紐づく条件も対象で、「PO の承認記録がない」のように**記述の有無**を検出する。観点としての良否を判断するわけではない。
 
 ### 3.2. grade の agent 観点は責務で重み付けしない
 
