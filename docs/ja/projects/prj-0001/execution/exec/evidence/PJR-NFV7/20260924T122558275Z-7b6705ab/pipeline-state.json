@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-NFV7",
   "run_id": "20260924T122558275Z-7b6705ab",
-  "updated_at": "2026-09-24T12:37:36.414Z",
+  "updated_at": "2026-09-24T12:37:42.892Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-nfv7-20260924T122504Z-a54e-result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "gemma-reporter",
       "attempts": 2,
       "started_at": "2026-09-24T12:37:36.414Z",
-      "completed_at": null,
+      "completed_at": "2026-09-24T12:37:42.892Z",
       "artifact_ref": null
     }
   },
