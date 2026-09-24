@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-e8tt-initial-release-positioning
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: high
   owner: ARC
   registered_at: "2026-09-23T21:51:01Z"
   due_on: "2026-10-10"
+  completed_at: "2026-09-24T10:30:57Z"
+  conclusion: 初期リリースで前面に出すのは register の記録範囲、対話型 orchestrator、成果物 kata の網羅範囲の 3 つとする。exec 層は機能比較に持ち込まず成果物体系を維持する手段として説明する。tmux を agent runtime として採らず、devcontainer は常時稼働環境の構成例として補強材料に位置づける。
 ---
 
 # PJR-E8TT 初期リリースの差別化軸を定める
@@ -172,8 +174,6 @@ Gas Town / Gas City は cloud で答える。**個人が手元の常時稼働マ
 
 ## 3. 決定内容
 
-_UNDECIDED_: 次の案を提案する。
-
 初期リリースで前面に出すのは **register の記録範囲**、**対話型 orchestrator**、**成果物 kata の網羅範囲**の 3 つとする。
 
 | 主張                           | 内容                                                                                                                                |
@@ -187,8 +187,6 @@ exec 層は機能比較に持ち込まない。「成果物体系を維持する
 tmux を agent の runtime provider として採ることはしない。人のセッション永続化としての tmux と devcontainer は、常時稼働環境の構成例として補強材料に位置づけ、`構成例` のガイドで扱う。README へ手順を複製せず 1 行リンクに留める。
 
 ## 4. 採択理由
-
-_UNDECIDED_: 決定内容の確定後に記載する。検討時点での根拠は次のとおり。
 
 - 実行基盤で競うと規模と成熟度で勝てない。Gas Town 18,167 star、beads 27,391 star に対し SpecDojo は実質未公開である。同じ土俵へ上がらない判断は、beads に対する register の判定（単独製品として売り込まない）と同じ論理である。
 - register の記録範囲は、競合が構造的に持たないものである。beads は「plans/ の食べかけの markdown の山を置き換える」と明示しており、Markdown を正本としない。判断や観測を人が読める形で残す思想とは前提が異なる。
@@ -217,12 +215,12 @@ _UNDECIDED_: 決定内容の確定後に記載する。検討時点での根拠�
 
 ## 5. 承認
 
-| 項目     | 内容   |
-| -------- | ------ |
-| 決定者   | _TODO_ |
-| 決定日   | _TODO_ |
-| 承認方式 | _TODO_ |
-| 証跡     | _TODO_ |
+| 項目     | 内容                                                                  |
+| -------- | --------------------------------------------------------------------- |
+| 決定者   | naoji3x                                                               |
+| 決定日   | 2026-09-24                                                            |
+| 承認方式 | commit                                                                |
+| 証跡     | register event `close`（`events/pjr-e8tt.yaml`）と本個票の遷移 commit |
 
 - 承認方式は `commit` または `PR` を記載する。`PR` の場合は証跡に PR URL と merge SHA を本文テキストで記載する。
 - 不可逆・高リスク・framework schema 破壊的変更に該当する決定は `PR` 方式で承認する。
@@ -234,6 +232,17 @@ _UNDECIDED_: 決定内容の確定後に記載する。検討時点での根拠�
 | 影響範囲   | README、ドキュメントサイトの入口、npm のパッケージ説明、公開時の告知            |
 | 必要な対応 | 決定後に README とドキュメントサイトの表現を揃える。devcontainer の配布は別項目 |
 | 追跡先     | 本項目および派生する todo                                                       |
+
+### 6.1. 見直しの契機
+
+本決定は利用者の反応を観測していない段階で下す。[[prj-0001:pjr-36qg-competitive-landscape-and-release]] も「この位置づけが妥当かは実際の利用者の反応を見ないと判断できない」としている。
+
+次のいずれかが観測されたら `reopen` して見直す。
+
+- 導入した利用者が register ではなく成果物カタログから入ろうとする。入口の想定が誤っていたことを示す。
+- orchestrator を使わず CLI を直接叩く利用が大半を占める。会話による操作の価値が想定より低いことを示す。
+- 「重い」という評価が、段階的採用を説明した後にも続く。構造による防御が効いていないことを示す。
+- モデルの能力向上により、型と完了条件を与えなくても意図どおりの成果物が得られるようになる。[[prj-0001:pjr-q3w9-gastown-design-philosophy]] の `リスクの性質の違い` で挙げた賭けが外れたことを示す。
 
 ## 7. 関連ドキュメント
 
