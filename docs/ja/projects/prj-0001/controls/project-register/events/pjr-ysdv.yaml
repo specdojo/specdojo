@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_c77688e5019040fe8cfaeafdbc4077f5
+  ts: "2026-09-24T11:09:47Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-E8TT の決定を README へ反映する
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: README 冒頭を PJR-E8TT の差別化軸へ揃える
+    - field: description
+      from: ""
+      to: README 冒頭の説明が旧来のままで、PJR-E8TT で決めた 3 つの主張（型に沿って残せる / 会話で進められる / 成果物の型が揃っている）と接続していない。成果物の体系から説明を始めており、段階的に使える構造が伝わらない。register から始められること、orchestrator で会話できること、必要になったら成果物体系へ広げられることを冒頭で示す。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-24"
+    - field: due
+      from: ""
+      to: "2026-10-03"
