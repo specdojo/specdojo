@@ -26,16 +26,26 @@ export async function isPrettierIgnored(filePath: string): Promise<boolean> {
   return info.ignored;
 }
 
+function normalizeTrailingNewline(source: string): string {
+  return `${source.replace(/[\r\n]+$/u, "")}\n`;
+}
+
 export async function formatMarkdownFile(filePath: string): Promise<void> {
   try {
-    if (await isPrettierIgnored(filePath)) return;
     const source = await readFile(filePath, "utf8");
+    const normalized = normalizeTrailingNewline(source);
+    // exec の plan / result は本文保護のため Prettier 対象外だが、runner が生成する
+    // Markdown として末尾改行だけは同じ書き出し経路で必ず正規化する。
+    if (await isPrettierIgnored(filePath)) {
+      if (normalized !== source) await writeFile(filePath, normalized, "utf8");
+      return;
+    }
     const config = await resolveConfig(filePath);
-    const formatted = await format(source, {
+    const formatted = await format(normalized, {
       ...(config ?? {}),
       filepath: filePath,
     });
-    await writeFile(filePath, formatted, "utf8");
+    await writeFile(filePath, normalizeTrailingNewline(formatted), "utf8");
   } catch (error) {
     const cause = error instanceof Error ? `: ${error.message}` : "";
     throw new Error(`Failed to format Markdown with Prettier: ${filePath}${cause}`);
