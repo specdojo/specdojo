@@ -32,3 +32,32 @@
     - field: due
       from: ""
       to: "2026-10-31"
+- v: 1
+  id: reg_dd07cf1fab70415b81b24a18c67d5347
+  ts: "2026-09-24T22:57:19Z"
+  action: update
+  actor: orchestrator
+  from_status: open
+  to_status: open
+  reason: 命名だけ変えても基準が曖昧なら次に迷うため一体で扱う
+  changes:
+    - field: title
+      from: "観点の evaluation: human を誤解のない名前へ改める"
+      to: 観点の evaluation の区分基準を定義し、名前と割り当てを揃える
+    - field: description
+      from: "viewpoint の `evaluation: human` は「人だけが判定する」と読めるが、実態と違う。"
+      to: evaluation の 3 値は軸が混在し、agent / human は実行主体の名前になっているが実行主体を区別していない。review は agent が実行するため human 観点も agent が判定している。さらに agent は member.type / task.execution と、human は task.execution と値が衝突する。調査の結果 human 観点の evidence もすべて文書内を指しており、当初案の contextual（文書外の文脈）は実態と合わない。区分の基準そのものが定義されていないため、基準の定義・命名・現在の割り当ての再確認を一体で行う。
+  previous_event_id: reg_3360d013f2ec453bb0ce3128ce0394af
+- v: 1
+  id: reg_4b1eb058bf9444eda6d2697c0dc94245
+  ts: "2026-09-24T22:57:37Z"
+  action: update
+  actor: orchestrator
+  from_status: open
+  to_status: open
+  reason: 範囲が改名から基準定義へ広がったため
+  changes:
+    - field: id
+      from: prj-0001:pjr-wpwb-rename-evaluation-human
+      to: prj-0001:pjr-wpwb-viewpoint-evaluation-criteria
+  previous_event_id: reg_dd07cf1fab70415b81b24a18c67d5347

@@ -99,7 +99,7 @@ review フェーズは agent が実行する。`pm-members.yaml` には `claude-
 
 分けているのは「誰が」ではなく「**いつ・どの文脈で**」判定するかである。実行主体は `pm-members.yaml` が決める。
 
-なお `task.execution` の `human` は別の概念で、そちらは実際に人が実行することを意味する（`src/exec-plans.ts`）。**同じ語が 2 箇所で別の意味を持つ**ため、観点側の改名を [[prj-0001:pjr-wpwb-rename-evaluation-human]] で扱う。
+なお `task.execution` の `human` は別の概念で、そちらは実際に人が実行することを意味する（`src/exec-plans.ts`）。**同じ語が 2 箇所で別の意味を持つ**ため、観点側の改名を [[prj-0001:pjr-wpwb-viewpoint-evaluation-criteria]] で扱う。
 
 #### 3.1.2. 分担
 
