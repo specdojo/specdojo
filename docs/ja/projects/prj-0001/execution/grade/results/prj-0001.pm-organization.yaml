@@ -1,0 +1,94 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: prj-0001:pm-organization
+path: docs/ja/projects/prj-0001/030-project-management/pm-organization.md
+target: deliverable
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 87
+graded_at: "2026-09-24T16:43:03.955Z"
+graded_by: codex-expert-executor
+content_hash: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+categories:
+  consistency:
+    score: 63
+  usability:
+    score: 94
+  architecture:
+    score: 100
+  quality:
+    score: 92
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 3
+    score: 75
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 1
+  minor: 3
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 9
+    anchor: "| 社会課題・価値 | 当事者、期待価値、優先順位、主要な合意を先に確認する        | `PO`           | `BA`、代表利用者  |"
+    message: >-
+      「社会課題・価値」の実行・確認を `BA` と代表利用者に割り当てているが、pm-raci.md の「社会課題、期待価値、優先順位の判断」は `PM` を `R`、`BA` を `C`
+      としており、実作業責任を誤読するため両文書の割当を整合させる必要がある。
+  - id: F002
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 28
+    anchor: "| Role code と責務             | [[prj-0001:pm-roles\\|ロール定義]]                             |"
+    message: 第2節の Role code・実行主体・RACI に関する正本指定が第3節の表で重複しているため、第2節を運用方針に限定するか第3節へ参照を集約すると判断情報を失わず簡潔にできる。
+  - id: F003
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 37
+    anchor: >-
+      当事者・協働組織・貢献者の参加、兼務による滞留、新しい実装・運用責任、公開範囲、AI Agent の権限が変わった場合に見直す。見直し時は、特定個人の無理な負担を前提にせず、必要な責任から分離し、人間の `PO`
+      に主要な最終判断を残す。
+    message: 「兼務による滞留」がどの状態で見直しを開始するか判定できないため、期限超過、未処理件数、引継ぎ不能など確認可能な条件を定める必要がある。
+  - id: F004
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 37
+    anchor: >-
+      当事者・協働組織・貢献者の参加、兼務による滞留、新しい実装・運用責任、公開範囲、AI Agent の権限が変わった場合に見直す。見直し時は、特定個人の無理な負担を前提にせず、必要な責任から分離し、人間の `PO`
+      に主要な最終判断を残す。
+    message: 見直しトリガーごとの確認事項と更新先が示されていないため、変更時に pm-organization・pm-roles・pm-members・RACI・Schedule のどれを更新するかを明記する必要がある。
+done_criteria:
+  satisfied: 3
+  total: 3
+  detail_ref: prj-0001:pm-organization-grade-criteria

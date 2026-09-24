@@ -1,0 +1,86 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: prj-0001:prj-stakeholder-register
+path: docs/ja/projects/prj-0001/020-project-definition/prj-stakeholder-register.md
+target: deliverable
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 91
+graded_at: "2026-09-24T16:28:30.084Z"
+graded_by: codex-expert-executor
+content_hash: 758466442987c415d7dd5c238527079d85299cf5c566a8ad86eba504d849de13
+categories:
+  consistency:
+    score: 100
+  usability:
+    score: 94
+  architecture:
+    score: 100
+  quality:
+    score: 75
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
+    level: 4
+    score: 100
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 2
+    score: 50
+finding_counts:
+  blocker: 0
+  major: 1
+  minor: 2
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 60
+    anchor: >-
+      | 定期確認                                                                               | _TODO_:
+      初期公開計画で周期を設定。全関係者の情報要求、未解決の合意、公開後の利用者影響を確認する | `BA`         | `PO`   | 確認記録、決定記録                  |
+    message: 定期確認の周期が未確定で「初期公開計画」も文書IDや決定時点を特定できないため、周期または周期を決定する正本と期限を明示して実施可否を判定可能にする。
+  - id: F002
+    severity: minor
+    rule: vp-ux-user-flow
+    line: 41
+    anchor: "## 4. コミュニケーション要件"
+    message: 「コミュニケーション計画への反映」列はあるが後続の正本 `prj-0001:pm-communication-plan` への参照がないため、詳細な配信・判断手順へ移動できる文書リンクを追加する。
+  - id: F003
+    severity: major
+    rule: vp-qe-config-validity
+    line: 39
+    anchor: >-
+      | `STH-COLLABORATING-ORGANIZATION` | 協働組織・地域コミュニティ | 個別関与なし       | 代表課題と継続条件を共有       |
+      協働開始時に当事者、試行成果、費用・負荷、運用責任を確認する     | `PM`   | _TODO_: 協働開始時に設定 | 相談記録、試行記録、決定記録      |
+    message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+done_criteria:
+  satisfied: 3
+  total: 3
+  detail_ref: prj-0001:prj-stakeholder-register-grade-criteria

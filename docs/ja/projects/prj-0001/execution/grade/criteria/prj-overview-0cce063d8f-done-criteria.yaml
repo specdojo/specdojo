@@ -1,0 +1,30 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: prj-0001:prj-overview-grade-criteria
+document: prj-0001:prj-overview
+path: docs/ja/projects/prj-0001/020-project-definition/prj-overview.md
+graded_at: "2026-09-24T16:19:13.321Z"
+graded_by: codex-expert-executor
+content_hash: a88ff7cd0188a42619a304502c5fb5dd2ac200a6222763d09e437f5d3cf80691
+summary:
+  satisfied: 3
+  unsatisfied: 0
+  total: 3
+criteria:
+  - id: DC-001
+    text: プロジェクトの目的・背景・ゴールが業務観点で確認できる粒度で記述されていること
+    roles:
+      - BA
+    viewpoint: vp-ba-business-value
+    status: satisfied
+  - id: DC-002
+    text: プロジェクトの目的・スコープを承認できる情報が含まれていること
+    roles:
+      - PO
+    viewpoint: vp-po-purpose-alignment
+    status: satisfied
+  - id: DC-003
+    text: プロジェクトの目的・スコープを計画立案の基礎として確認できること
+    roles:
+      - PM
+    viewpoint: vp-pm-plan-feasibility
+    status: satisfied

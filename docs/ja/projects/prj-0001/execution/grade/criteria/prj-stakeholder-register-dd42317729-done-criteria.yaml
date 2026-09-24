@@ -1,0 +1,30 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: prj-0001:prj-stakeholder-register-grade-criteria
+document: prj-0001:prj-stakeholder-register
+path: docs/ja/projects/prj-0001/020-project-definition/prj-stakeholder-register.md
+graded_at: "2026-09-24T16:28:30.084Z"
+graded_by: codex-expert-executor
+content_hash: 758466442987c415d7dd5c238527079d85299cf5c566a8ad86eba504d849de13
+summary:
+  satisfied: 3
+  unsatisfied: 0
+  total: 3
+criteria:
+  - id: DC-001
+    text: 関係者の役割・関心・影響度が業務観点で確認できる形で一覧化されていること
+    roles:
+      - BA
+    viewpoint: vp-ba-stakeholder-clarity
+    status: satisfied
+  - id: DC-002
+    text: 合意対象と意思決定者が識別できること
+    roles:
+      - PO
+    viewpoint: vp-po-decision-readiness
+    status: satisfied
+  - id: DC-003
+    text: 関与方針・合意事項がコミュニケーション統制の入力として確認できること
+    roles:
+      - PM
+    viewpoint: vp-pm-control-reporting
+    status: satisfied

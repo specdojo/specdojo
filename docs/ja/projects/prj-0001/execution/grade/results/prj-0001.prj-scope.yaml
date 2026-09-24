@@ -1,0 +1,155 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: prj-0001:prj-scope
+path: docs/ja/projects/prj-0001/020-project-definition/prj-scope.md
+target: deliverable
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 65
+graded_at: "2026-09-24T16:24:45.064Z"
+graded_by: codex-expert-executor
+content_hash: e631f8a78068b515871352df3a7547fdd32eef4c91fb923f944e19605c3b5564
+categories:
+  consistency:
+    score: 50
+  usability:
+    score: 69
+  architecture:
+    score: 100
+  quality:
+    score: 50
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 3
+    score: 75
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 2
+    score: 50
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-user-flow:
+    level: 2
+    score: 50
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 2
+    score: 50
+finding_counts:
+  blocker: 0
+  major: 6
+  minor: 6
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 45
+    anchor: "- 公開後: 実利用3件を目安に、価値、費用・負荷、継続状況を確認するまで。"
+    message: 「公開後は実利用3件を目安に確認するまで」という終了境界は、成功基準文書が SC-04 を公開後6か月、SC-05を9か月、SC-06を24か月で判定すると定める期間と対応せず、公開後スコープを3件到達時に終了すると誤読できる。
+  - id: F002
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 71
+    anchor: >-
+      変更提案には、対応する P-ID / SC-ID、利用者価値、現金支出、作業負荷、追加・削除する成果物、公開時期への影響を記録する。`BA` と `ARC` が影響を確認し、`PO`
+      が承認する。初期公開前に追加する場合は、同時に削除または延期する項目を示す。
+    message: pm-raci.md と pm-plan.md は重大なスコープ変更の実行責任・起案整理を `PM` としているが、本節には `PM` の役割または管理計画への委譲がなく、変更運用の責任分担を本文から復元できない。
+  - id: F003
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 52
+    anchor: >-
+      | 全ライフサイクル・全文書種別の完成   |
+      三つの価値仮説に必要な最小セットを優先する（kata＝rulebook/recipe/sample/templateと成果物カタログへの宣言は例外とし、テーラリングの土台として広く整備してよい。成果物本体の完成はSC-01〜SC-03に必要な範囲に留める）
+      |
+    message: Kata を広く整備する例外と成果物本体を SC-01〜SC-03 の範囲に留める説明が line 25 と重複しているため, 本行は例外への参照と対象外にした理由だけに短縮すると判断情報を失わず簡潔になる。
+  - id: F004
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 45
+    anchor: "- 公開後: 実利用3件を目安に、価値、費用・負荷、継続状況を確認するまで。"
+    message: 公開後期間を「実利用3件を目安」としているため終了イベントを一意に決められず、SC-04〜SC-06 の6・9・24か月の判定時期も反映されていないので、DC-004を満たす確定的な期間境界を記述する必要がある。
+  - id: F005
+    severity: major
+    rule: vp-qe-verifiability
+    line: 45
+    anchor: "- 公開後: 実利用3件を目安に、価値、費用・負荷、継続状況を確認するまで。"
+    message: 「実利用3件を目安」では2件または3件のどちらで期間を終了するか判定できないため、確定件数と期限を明示するか、SC-04〜SC-06 を期間境界の正本として参照する必要がある。
+  - id: F006
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 50
+    anchor: >-
+      | 対象（Out）                          |
+      理由                                                                                                                                                                                                               
+      |
+    message: スコープ外表に後続で扱う条件または再検討時期がなく、初期検証後に再評価すべき項目を識別できないため、該当項目ごとの補足条件を追加する必要がある。
+  - id: F007
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 46
+    anchor: "- 具体的な公開日は _TODO_: 初期公開計画で決定する。"
+    message: 日付が未決定で決定先だけが定まっている事項には rulebook が `_UNDECIDED_:` を求めているため、作業待ちを表す `_TODO_:` から置き換える必要がある。
+  - id: F008
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 71
+    anchor: >-
+      変更提案には、対応する P-ID / SC-ID、利用者価値、現金支出、作業負荷、追加・削除する成果物、公開時期への影響を記録する。`BA` と `ARC` が影響を確認し、`PO`
+      が承認する。初期公開前に追加する場合は、同時に削除または延期する項目を示す。
+    message: スコープ変更方針に、rulebook が必須としている変更の提案入口と判断理由の記録先がないため、誰がどこへ起票し証跡を残すかを定義する必要がある。
+  - id: F009
+    severity: minor
+    rule: vp-ux-readability
+    line: 25
+    anchor: >-
+      2. rulebook、recipe、sample、template
+      一式と選択案内。kata（実践の型）自体は将来のテーラリングに備えて広めに整備してよく、これは1の最小成果物セットの原則の例外とする。個別プロジェクトでの実装・運用は SC-01〜SC-03 に必要な範囲へ絞る。
+    message: "`SC-01〜SC-03` が名称や参照先なしで使用されているため、各基準の短い意味を添えるか成功基準文書へのリンクを付けないと、初見の読者が「必要な範囲」を判断できない。"
+  - id: F010
+    severity: major
+    rule: vp-ux-user-flow
+    line: 25
+    anchor: >-
+      2. rulebook、recipe、sample、template
+      一式と選択案内。kata（実践の型）自体は将来のテーラリングに備えて広めに整備してよく、これは1の最小成果物セットの原則の例外とする。個別プロジェクトでの実装・運用は SC-01〜SC-03 に必要な範囲へ絞る。
+    message: >-
+      `SC-01〜SC-03`、line 71 の `P-ID / SC-ID`、line 46
+      の「初期公開計画」に対応する文書リンクがなく、利用者が成功基準・課題定義・計画へ迷わず到達できないため、関連文書への明示的な導線を追加する必要がある。
+  - id: F011
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 46
+    anchor: "- 具体的な公開日は _TODO_: 初期公開計画で決定する。"
+    message: 公開日は未決定事項であり、同プロジェクトの憲章と rulebook はこの状態を `_UNDECIDED_:` と表記しているため、`_TODO_:` ではなく `_UNDECIDED_:` に統一する必要がある。
+  - id: F012
+    severity: major
+    rule: vp-qe-config-validity
+    line: 46
+    anchor: "- 具体的な公開日は _TODO_: 初期公開計画で決定する。"
+    message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+done_criteria:
+  satisfied: 3
+  total: 4
+  unsatisfied:
+    DC-004:
+      - PM
+  detail_ref: prj-0001:prj-scope-grade-criteria

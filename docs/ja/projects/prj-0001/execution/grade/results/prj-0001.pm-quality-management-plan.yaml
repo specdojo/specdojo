@@ -1,0 +1,111 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: prj-0001:pm-quality-management-plan
+path: docs/ja/projects/prj-0001/030-project-management/pm-quality-management-plan.md
+target: deliverable
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 79
+graded_at: "2026-09-24T16:51:27.756Z"
+graded_by: codex-expert-executor
+content_hash: 15c713519458f8ca00478dcf66254e5b45f84074c4c66f3397a40f5459671d01
+categories:
+  consistency:
+    score: 63
+  usability:
+    score: 94
+  architecture:
+    score: 100
+  quality:
+    score: 67
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 2
+    score: 50
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 3
+  minor: 3
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 17
+    anchor: >-
+      | 代表試行   | 課題と技術の接続、低コスト、継承     | SC-01〜SC-03 と AC-01 を満たす                                        |
+      当事者評価、試行成果、支出・作業時間、引き継ぎ結果 | 初期公開前             | `BA`, `PM`, `QE` / `PO` |
+    message: 品質ゲート各行は `PO` を承認者としているが、RACI は「成果物・品質ゲートの確認」の最終責任を `QE=A/R` としているため、ゲート承認責任をどちらかへ統一する必要がある。
+  - id: F002
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 20
+    anchor: >-
+      | 公開後価値 | 実利用と社会活動への寄与を確認できる | SC-04〜SC-06 の時期・件数・評価基準を満たす                           |
+      活用事例、利用者評価、費用・負荷、運用状況         | 公開後6〜24か月        | `BA` / `PO`             |
+    message: 品質メトリクスについて時期の範囲と参照IDはあるが，指標ごとの算出方法・閾値・計測頻度が本文に定義されておらず、DC-003を充足できない。
+  - id: F003
+    severity: major
+    rule: vp-qe-verifiability
+    line: 48
+    anchor: >-
+      価値仮説、成功基準、初期範囲、代表試行、検証コマンド、公開範囲が変わった場合に見直す。代表課題と費用・時間上限が決まるまで、具体的な試行証跡の形式と公開後価値の確認手順は未決とし、試行開始前に `QE` が提案し `PO`
+      が決定する。
+    message: 具体的な試行証跡の形式と公開後価値の確認手順が未決であり、誰が何をどの順序で確認すればレビューを通過できるかを再現可能に判定できない。
+  - id: F004
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 5
+    anchor: 品質は、文書量や機械検証の成功ではなく、次の価値を安全かつ再現可能に実現できるかで判定する。
+    message: 品質方針に人間とAI Agentの確認・判断境界がなく、価値・例外・公開可否の最終判断をAgentへ委ねないという必須方針を本文から確認できない。
+  - id: F005
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 48
+    anchor: >-
+      価値仮説、成功基準、初期範囲、代表試行、検証コマンド、公開範囲が変わった場合に見直す。代表課題と費用・時間上限が決まるまで、具体的な試行証跡の形式と公開後価値の確認手順は未決とし、試行開始前に `QE` が提案し `PO`
+      が決定する。
+    message: 未決事項が rulebook 指定の `_UNDECIDED_:` 形式で識別されていないため、未決論点を機械的・視覚的に追跡できる表記へ統一する必要がある。
+  - id: F006
+    severity: minor
+    rule: vp-ux-user-flow
+    line: 44
+    anchor: 重大な不適合はプロジェクト登録簿へ課題または変更要求として登録し、是正完了または期限付き例外の承認まで該当ゲートを通過させない。
+    message: 「プロジェクト登録簿」や各種レビュー・検証結果の記録先が文書IDまたはパスで示されておらず、利用者が是正記録の格納先へ直接到達できない。
+done_criteria:
+  satisfied: 2
+  total: 3
+  unsatisfied:
+    DC-003:
+      - QE
+  detail_ref: prj-0001:pm-quality-management-plan-grade-criteria

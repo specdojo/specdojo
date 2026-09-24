@@ -1,0 +1,30 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: prj-0001:pm-organization-grade-criteria
+document: prj-0001:pm-organization
+path: docs/ja/projects/prj-0001/030-project-management/pm-organization.md
+graded_at: "2026-09-24T16:43:03.955Z"
+graded_by: codex-expert-executor
+content_hash: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+summary:
+  satisfied: 3
+  unsatisfied: 0
+  total: 3
+criteria:
+  - id: DC-001
+    text: 兼務構成を含む組織設計の根拠と最終判断の集約先を承認できること
+    roles:
+      - PO
+    viewpoint: vp-po-decision-readiness
+    status: satisfied
+  - id: DC-002
+    text: pm-roles.yaml と pm-members.yaml への導線が整備されていること
+    roles:
+      - BA
+    viewpoint: vp-ba-stakeholder-clarity
+    status: satisfied
+  - id: DC-003
+    text: pm-roles.yaml と pm-members.yaml との構造整合が取れていること
+    roles:
+      - ARC
+    viewpoint: vp-arc-cross-document-consistency
+    status: satisfied

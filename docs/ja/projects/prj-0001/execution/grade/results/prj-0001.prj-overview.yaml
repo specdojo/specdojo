@@ -1,0 +1,96 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: prj-0001:prj-overview
+path: docs/ja/projects/prj-0001/020-project-definition/prj-overview.md
+target: deliverable
+rubric: grade-rubric-v1
+verdict: pass
+score: 92
+graded_at: "2026-09-24T16:19:13.321Z"
+graded_by: codex-expert-executor
+content_hash: a88ff7cd0188a42619a304502c5fb5dd2ac200a6222763d09e437f5d3cf80691
+categories:
+  consistency:
+    score: 88
+  usability:
+    score: 81
+  architecture:
+    score: 100
+  quality:
+    score: 100
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 3
+    score: 75
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-user-flow:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 5
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 82
+    anchor: "| 観点             | 確認する変化                                           |"
+    message: 80行目で列挙した社会課題への寄与、利用可能性、継続可能性を表がほぼそのまま反復しているため、表を本文へ統合するか、表に固有の指標・判定時期・確認方法を加えて役割を分けてください。
+  - id: F002
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 9
+    anchor: この協働には、相互に切り離せない三つの課題がある。
+    message: 三つの課題を現状として提示している一方で、続く記述は可能性表現のみで観察事実か仮説かを判別できないため、代表事例・頻度・影響などの根拠を補うか、検証対象の仮説として明示してください。
+  - id: F003
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 90
+    anchor: "- 代表利用者と技術協力者が、課題、期待価値、試行結果を確認できる。"
+    message: 前提条件で依存前提である代表利用者・技術協力者の参加と、費用の扱い、形式、技術非依存、公開方針などの制約を同列に列挙しているため、種別を明示して未充足時の影響を判断できるようにしてください。
+  - id: F004
+    severity: minor
+    rule: vp-ux-readability
+    line: 82
+    anchor: "| 観点             | 確認する変化                                           |"
+    message: 80行目の説明と表が同じ三つの中長期効果を重ねて示しているため、どちらかへ統合するか、表には本文にない測定上の情報だけを記載してください。
+  - id: F005
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 7
+    anchor: >-
+      本プロジェクトの直接の対象者は、資金と専門人材が限られる中で社会課題に取り組むシビックテックの参加者である。当事者、市民、地域団体、行政・公共領域の担当者は解くべき課題と期待価値を判断し、専門家、開発者、AI Agent
+      活用担当、将来の貢献者はそれを実現・改善するために協働する。
+    message: 技術側の参加者を「専門家」「開発者」「技術者」「技術協力者」「技術参加者」「AI Agent 活用担当」と呼び分けており同一群か別の役割か判断しにくいため、代表となる区分名を定義して用語を統一してください。
+done_criteria:
+  satisfied: 3
+  total: 3
+  detail_ref: prj-0001:prj-overview-grade-criteria

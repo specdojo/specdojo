@@ -1,0 +1,30 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: prj-0001:pm-plan-grade-criteria
+document: prj-0001:pm-plan
+path: docs/ja/projects/prj-0001/030-project-management/pm-plan.md
+graded_at: "2026-09-24T16:47:06.097Z"
+graded_by: codex-expert-executor
+content_hash: e260af762e401c50f009dba6629220aba1eb742df249e35cd2a6ed1691dab5aa
+summary:
+  satisfied: 3
+  unsatisfied: 0
+  total: 3
+criteria:
+  - id: DC-001
+    text: プロジェクト全体の管理方針・プロセスを承認できる粒度で記述されていること
+    roles:
+      - PO
+    viewpoint: vp-po-decision-readiness
+    status: satisfied
+  - id: DC-002
+    text: 計画・進捗・リスク・変更管理の方針が計画運用に使える粒度で記述されていること
+    roles:
+      - PM
+    viewpoint: vp-pm-plan-feasibility
+    status: satisfied
+  - id: DC-003
+    text: 憲章・組織定義・RACI と整合していること
+    roles:
+      - ARC
+    viewpoint: vp-arc-cross-document-consistency
+    status: satisfied

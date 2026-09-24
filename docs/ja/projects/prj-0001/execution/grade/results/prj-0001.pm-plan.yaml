@@ -1,0 +1,72 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: prj-0001:pm-plan
+path: docs/ja/projects/prj-0001/030-project-management/pm-plan.md
+target: deliverable
+rubric: grade-rubric-v1
+verdict: pass
+score: 97
+graded_at: "2026-09-24T16:47:06.097Z"
+graded_by: codex-expert-executor
+content_hash: e260af762e401c50f009dba6629220aba1eb742df249e35cd2a6ed1691dab5aa
+categories:
+  consistency:
+    score: 88
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 100
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 1
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 53
+    anchor: >-
+      代表課題、試行成果、追加現金支出上限、参加者別作業時間上限、公開範囲は、[[prj-0001:prj-success-criteria-and-acceptance-criteria|成功基準と受入条件]]
+      の未解決事項を正本とし、本書へ重複記載しない。
+    message: 未決事項がルールブック所定の `_UNDECIDED_:` として明示されていないため、各論点が未決状態であることを所定形式で示し, 決定時期と判断者は参照先を正本とする旨を明記する必要がある。
+done_criteria:
+  satisfied: 3
+  total: 3
+  detail_ref: prj-0001:pm-plan-grade-criteria

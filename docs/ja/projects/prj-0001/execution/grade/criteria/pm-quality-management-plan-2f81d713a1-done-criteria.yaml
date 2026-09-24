@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: prj-0001:pm-quality-management-plan-grade-criteria
+document: prj-0001:pm-quality-management-plan
+path: docs/ja/projects/prj-0001/030-project-management/pm-quality-management-plan.md
+graded_at: "2026-09-24T16:51:27.756Z"
+graded_by: codex-expert-executor
+content_hash: 15c713519458f8ca00478dcf66254e5b45f84074c4c66f3397a40f5459671d01
+summary:
+  satisfied: 2
+  unsatisfied: 1
+  total: 3
+criteria:
+  - id: DC-001
+    text: 品質目標・レビュー方針・品質基準を承認できる粒度で記述されていること
+    roles:
+      - PO
+    viewpoint: vp-po-decision-readiness
+    status: satisfied
+  - id: DC-002
+    text: 品質管理プロセスが全体計画と整合していること
+    roles:
+      - PM
+    viewpoint: vp-pm-plan-feasibility
+    status: satisfied
+  - id: DC-003
+    text: 品質メトリクス（算出方法・閾値・計測頻度）と検証・レビュー手順が判定可能な形で記述されていること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: unsatisfied
+    reason: 品質メトリクスごとの算出方法・閾値・計測頻度と、出口条件を含む検証・レビュー手順を本文から確認できない。

@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: prj-0001:prj-scope-grade-criteria
+document: prj-0001:prj-scope
+path: docs/ja/projects/prj-0001/020-project-definition/prj-scope.md
+graded_at: "2026-09-24T16:24:45.064Z"
+graded_by: codex-expert-executor
+content_hash: e631f8a78068b515871352df3a7547fdd32eef4c91fb923f944e19605c3b5564
+summary:
+  satisfied: 3
+  unsatisfied: 1
+  total: 4
+criteria:
+  - id: DC-001
+    text: 業務スコープ・除外範囲・利用者影響が業務観点で確認できること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: satisfied
+  - id: DC-002
+    text: 対象範囲・対象外を承認できること
+    roles:
+      - PO
+    viewpoint: vp-po-purpose-alignment
+    status: satisfied
+  - id: DC-003
+    text: 技術的スコープ境界（外部連携の有無など）が識別できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: satisfied
+  - id: DC-004
+    text: スコープ境界をスケジュール計画の前提として確認できること
+    roles:
+      - PM
+    viewpoint: vp-pm-plan-feasibility
+    status: unsatisfied
+    reason: 公開後の終了境界が「実利用3件を目安」という非確定表現で、SC-04〜SC-06 の判定時期とも対応せず、スケジュール計画の確定前提にできない。
