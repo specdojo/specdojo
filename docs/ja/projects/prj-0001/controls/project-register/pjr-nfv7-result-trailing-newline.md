@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: waiting
   priority: low
   owner: DEV
   registered_at: "2026-09-23T21:26:24Z"
   due_on: "2026-10-24"
+  block_reason: "integrate failed: git status failed: fatal: detected dubious ownership in repository at '/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-NFV7' (args: --porcelain=v1 -z --untracked-files=all)"
 ---
 
 # PJR-NFV7 result の末尾改行を runner 側で正規化する
