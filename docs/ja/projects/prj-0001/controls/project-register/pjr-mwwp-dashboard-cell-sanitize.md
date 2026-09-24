@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-mwwp-dashboard-cell-sanitize
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-09-23T07:06:08Z"
   due_on: "2026-10-10"
+  completed_at: "2026-09-24T12:24:09Z"
+  conclusion: dashboard の表セルへ埋める値を sanitizeDashboardCell で整形するようにした。制御文字の除去、パイプのエスケープ、200 文字での打ち切りを行い、event 由来の値が入る全セルへ適用した。
 ---
 
 # PJR-MWWP dashboard の表セルへ埋める理由を整形し、表が壊れないようにする
@@ -52,6 +54,14 @@ PJR-G8M9 の worktree 作成失敗では、復帰文字（`\r`）と `Updating f
 - `sanitizeDashboardCell` を追加し、ANSI と制御文字を除去して改行類を空白へ正規化し、パイプをエスケープするようにした。
 - セルの値は 200 文字を上限にし、超過時は末尾へ省略記号を付ける。register の wait 理由と exec の block 理由を含む dashboard の動的な表セルは、同じ関数で整形する。
 - worktree 作成失敗を模した復帰文字、改行、ANSI、パイプ、長文を含む入力について単体テストを追加した。
+
+### 4.1. オーケストレーターによる確認
+
+`sanitizeDashboardCell` が完了条件の 3 点（制御文字の除去、パイプのエスケープ、長さの打ち切り）を満たしていることを確認した。既存の `stripTerminalControlSequences` を再利用しており、新しい実装を増やしていない。
+
+適用範囲は完了条件より広い。理由欄（`reason` / `nextAction`）だけでなく、routine の `name` / `schedule` / `lastRun`、grade の `document`、おすすめ register の `title`、wave / track の `parallel_group` / `depends_on` にも通している。event 由来の値が入る全セルを対象にした判断は妥当である。
+
+実際、本項目の起票時点で登録簿には `` `[[id|alt]]` と別名を併記できるようにする `` というタイトルの項目があり、パイプを含むため一覧の解析で列がずれていた。理由欄だけを直していたら残っていた。
 
 ## 5. 関連ドキュメント
 

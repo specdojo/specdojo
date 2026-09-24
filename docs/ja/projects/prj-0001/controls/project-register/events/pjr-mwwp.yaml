@@ -58,3 +58,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_235c871aeceb4b2f97489307f96482e8
+- v: 1
+  id: reg_95af1246dcb1493e99d783d7e2336706
+  ts: "2026-09-24T12:24:09Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: レビュー完了。適用範囲が理由欄より広いことを確認
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-24"
+    - field: conclusion
+      from: "-"
+      to: dashboard の表セルへ埋める値を sanitizeDashboardCell で整形するようにした。制御文字の除去、パイプのエスケープ、200 文字での打ち切りを行い、event 由来の値が入る全セルへ適用した。
+  previous_event_id: reg_7aa086199717498c8221bd2684bd06e3
