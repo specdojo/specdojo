@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: decided
+  item_status: open
   priority: high
   owner: ARC
   registered_at: "2026-09-23T05:10:56Z"
   due_on: "2026-10-17"
-  completed_at: "2026-09-23T05:17:27Z"
   conclusion: 観点の evaluation 区分を判定主体の唯一の基準とし、review フェーズ内で runner が grade を実行して verdict の一次入力とする。grade は owner ロールを認識し、定期実行は変化検知に限定する。kata 保守タスクへ review フェーズを追加する。
 ---
 
@@ -87,11 +86,52 @@ level 0〜4 には `review_verdict` が対応づけられており、grade の�
 
 観点ごとに判定主体を二重化しない。`agent` 観点をレビュアが再評価することも、`human` 観点を grade が評価することもしない。観点を追加・変更するときは `evaluation` を必ず指定し、それが実行経路の割り当てになる。
 
-### 3.2. grade は対象文書の owner ロールを認識する
+### 3.2. grade の agent 観点は責務で重み付けしない
 
-対象文書の owner ロールの観点を主の判定軸とする。owner 以外のロールの `agent` 観点は入力適合性の確認に限定し、`blocker` / `major` を出せるのは「そのロールが自分の責務の成果物を作成できない」場合だけとする。それ以外の指摘は `note` とし、level を下げない。
+**2026-09-24 に見直した。** 当初は「対象文書の owner ロールの観点を主の判定軸とし、owner 以外のロールの `agent` 観点は入力適合性の確認に限定して severity を抑える」と決めたが、実データと食い違うため撤回する。
 
-これは review plan が定める一文書一責務の制御を grade へ移したものである。現在の grade は全文書へ同じ観点を一律に当てているため、責務範囲外の指摘で level が下がる。
+grade が扱う `agent` / `deterministic` 観点は、**どの文書にも共通して適用される品質の下限**とする。責務による重み付けを行わない。`done_criteria` が宣言する観点は review（人）が判定する軸であり、両者は補完関係にある。重み付けの関係ではない。
+
+#### 3.2.1. 撤回の根拠
+
+prj-0001 の実データを集計した（246 deliverable、`done_criteria` 508 件、grade 結果 35 件）。
+
+**`done_criteria` の viewpoint は 75% が `human` である。**
+
+| evaluation      | 件数 | 割合 |
+| --------------- | ---- | ---- |
+| `human`         | 383  | 75%  |
+| `agent`         | 117  | 23%  |
+| `deterministic` | 8    | 1%   |
+
+grade が判定できるのは 24% だけで、catalog が宣言する観点の大半は grade の守備範囲外である。
+
+**grade の findings の 93% は「宣言外」に分類される。**
+
+```text
+宣言内  15 件（7%）
+宣言外 207 件（93%）   うち major 126 / minor 81
+```
+
+宣言外の上位はすべて `agent` 観点である。
+
+```text
+vp-arc-cross-document-consistency  42
+vp-qe-omissions-consistency        42
+vp-qe-done-criteria                37
+vp-ux-readability                  19
+vp-arc-conciseness                 17
+```
+
+当初の方式を採ると、**findings の 93% が格下げされ grade がほぼ機能しなくなる**。owner による切り分けでも同じ結果になる。owner ロールは `done_criteria` の roles と対応し、そちらも `human` 偏重（BA 111 / ARC 110 / QE 110 / PO 97）であるため、owner の観点は grade が判定できない。
+
+**「宣言外＝責務範囲外＝軽く扱うべき」という前提が誤りだった。** 宣言外の findings の中身は成果物間の矛盾や抜け漏れであり、どの文書にとっても妥当な指摘である。
+
+#### 3.2.2. 決定 3.1 との整合
+
+本見直しにより、判定主体の基準は `evaluation` だけになる。当初の 3.2 は責務という別の軸を持ち込んでおり、決定 3.1（`evaluation` を唯一の基準とする）と矛盾していた。
+
+owner を文書の frontmatter や RACI として持たせる案は、grade の判定軸としては不要である。ただし「schedule を持たない最小構成で review の観点を選ぶ」「文書の責任者を人が知る」という別の用途では価値があるため、[[prj-0001:pjr-d4kg-document-owner-declaration]] として切り出した。
 
 ### 3.3. verdict は grade の level と human 観点の判定を合成する
 

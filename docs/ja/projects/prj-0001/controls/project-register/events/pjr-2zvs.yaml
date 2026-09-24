@@ -51,3 +51,19 @@
       from: "-"
       to: 観点の evaluation 区分を判定主体の唯一の基準とし、review フェーズ内で runner が grade を実行して verdict の一次入力とする。grade は owner ロールを認識し、定期実行は変化検知に限定する。kata 保守タスクへ review フェーズを追加する。
   previous_event_id: reg_6146f755c384464a901dfa3671f5360b
+- v: 1
+  id: reg_e8079f5332f74e04b2ef337e34215d62
+  ts: "2026-09-24T13:42:17Z"
+  action: reopen
+  actor: orchestrator
+  from_status: decided
+  to_status: open
+  reason: 決定 3.2 の前提が実データと食い違うため見直す
+  changes:
+    - field: status
+      from: decided
+      to: open
+    - field: completed
+      from: "2026-09-23"
+      to: "-"
+  previous_event_id: reg_125a725ea2c34270a1fa8d440cd75841

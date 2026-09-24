@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_12092955a9254228b2a865c86b715989
+  ts: "2026-09-24T13:42:55Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-2ZVS の見直しで grade 以外の用途が残った
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 文書へ owner または RACI を宣言させるかを決める
+    - field: description
+      from: ""
+      to: schedule を持たない最小構成では review の観点セットを選ぶ根拠が無く、文書の責任者も schedule の owner_rules を辿らないと分からない。frontmatter へ owner を持たせる案と RACI を持たせる案があるが、pm-raci.yaml との二重管理をどう避けるかという論点が生じる。grade の判定軸としては不要であることが PJR-2ZVS の見直しで判明しているため、review と可読性の観点だけで判断する。
+    - field: type
+      from: ""
+      to: question
+    - field: priority
+      from: ""
+      to: low
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-24"
+    - field: due
+      from: ""
+      to: "2026-11-14"

@@ -32,3 +32,16 @@
     - field: due
       from: ""
       to: "2026-11-14"
+- v: 1
+  id: reg_58d130db87c146f39862c188d1f6b3ab
+  ts: "2026-09-24T13:43:54Z"
+  action: update
+  actor: orchestrator
+  from_status: open
+  to_status: open
+  reason: owner ロール認識を範囲から外したため
+  changes:
+    - field: title
+      from: grade に owner ロール認識を加え、定期実行を変化検知に限定する
+      to: grade の定期実行を変化検知に限定する
+  previous_event_id: reg_20358008708d4d4bbfcc7d534f022dbe
