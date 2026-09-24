@@ -621,7 +621,7 @@ specdojo exec worktree prune --project prj-0001
 | `watch`  | ファイル変更を監視して対象 build を実行する | `specdojo watch --project prj-0001 --scope exec` |
 | `build`  | 全生成物または指定 scope を一括再生成する   | `specdojo build --project prj-0001 --scope all`  |
 
-`dashboard build --project <id>` は `execution/generated/dashboard.md` を再生成します。通常の進捗集計に加え、`routines/generated/routine-runs.jsonl` から昨日の実行と本日の予定を、登録簿個票から着手候補のおすすめ順を、register / exec の event から解除待ちの理由と次の行動を表示します。
+`dashboard build --project <id>` は `execution/generated/dashboard.md` を再生成します。通常の進捗集計に加え、`routines/generated/routine-runs.jsonl` から昨日の実行と本日の予定を、登録簿個票から着手候補のおすすめ順を、register / exec の event から解除待ちの理由と次の行動を表示します。解除待ちの理由は、制御文字を除いた 1 行へ整形し、表の区切り文字をエスケープしたうえで、長い値を省略記号付きで打ち切ります。
 
 `--scope` は `exec`、`catalog`、`register`、`index`、`all` を指定します。
 

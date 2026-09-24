@@ -1,0 +1,14 @@
+dashboard の表セル整形を実装しました。
+
+- ANSI・制御文字・改行を除去／正規化
+- パイプを `\|` にエスケープ
+- 200文字超を `…` 付きで省略
+- wait／block 理由を共通関数へ統一
+- 実際の破損入力を模した単体テストを追加
+- 個票とコマンドリファレンスを更新
+
+変更箇所: [dashboard.ts](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MWWP/src/dashboard.ts:850)、[dashboard.test.ts](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MWWP/tests/src/dashboard.test.ts:286)、[個票](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MWWP/docs/ja/projects/prj-0001/controls/project-register/pjr-mwwp-dashboard-cell-sanitize.md:43)。
+
+<specdojo_executor_evidence>
+{"final_message":"dashboard の表セルを制御文字・パイプ・長文から保護する共通整形処理と単体テストを追加し、関連文書を更新した。","validations":[{"command":"npx prettier --write src/dashboard.ts tests/src/dashboard.test.ts docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-mwwp-dashboard-cell-sanitize.md","status":"passed","summary":"変更ファイルを整形"},{"command":"npm run lint:ts","status":"passed","summary":"TypeScript ESLint 成功"},{"command":"npm run lint:md","status":"passed","summary":"生成済み dashboard.md を含む全 Markdown 検査に成功"},{"command":"npm run lint:fm","status":"passed","summary":"frontmatter・remark 検査に成功"},{"command":"node --import tsx src/specdojo.ts dashboard build --project prj-0001","status":"passed","summary":"dashboard Markdown と Gantt SVG を再生成"},{"command":"node --import tsx src/specdojo.ts register build --project prj-0001","status":"passed","summary":"登録簿派生ビューを再生成"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"検証成功。既存の未生成成果物に関する警告のみ"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"文書索引 1922 件を再生成"},{"command":"npm run validate:history-links","status":"passed","summary":"履歴リンク検証に成功"},{"command":"git diff --check","status":"passed","summary":"差分の空白エラーなし"},{"command":"npm run typecheck","status":"not_run","summary":"親 runner の allowlisted validation に委任"},{"command":"npm run test:unit","status":"not_run","summary":"親 runner の allowlisted validation に委任"},{"command":"npm run test:integration","status":"not_run","summary":"親 runner の allowlisted validation に委任"},{"command":"npm run validate:schema","status":"not_run","summary":"親 runner の allowlisted validation に委任"}]}
+</specdojo_executor_evidence>

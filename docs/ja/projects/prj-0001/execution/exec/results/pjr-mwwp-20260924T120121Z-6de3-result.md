@@ -4,11 +4,12 @@ specdojo:
   type: exec-result
   task_id: PJR-MWWP
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: exec/plans/pjr-mwwp-20260924T120121Z-6de3-plan.md
   started_at: "2026-09-24T12:01:21.226Z"
+  completed_at: "2026-09-24T12:14:28.092Z"
   agent: codex-expert-executor
 ---
 
@@ -16,16 +17,20 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- dashboard の表セルに埋め込まれる理由（`block_reason` 等）を整形し、制御文字・パイプ・長文によって表が崩れる問題を解消するための共通処理を実装した。
+- 実装に伴い、単体テストの追加および関連する個票とコマンドリファレンスの更新を行った。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `src/dashboard.ts`: 表セル向けの共通整形処理を実装
+- `tests/src/dashboard.test.ts`: 整形処理の単体テストを追加
+- `docs/ja/projects/prj-0001/controls/project-register/pjr-mwwp-dashboard-cell-sanitize.md`: 対応内容を個票に記録
+- `docs/ja/specdojo/references/command-reference.md`: 関連するコマンドリファレンスを更新
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- なし
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`fully-guided` で rulebook / recipe / sample / template をどう使い分けたか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+`src/dashboard.ts` に表セル用のサニタイズ処理を導入し、パイプ文字のエスケープや制御文字の除去、長文の適正な処理を行うように変更した。その後、`tests/src/dashboard.test.ts` で正常に動作することを検証し、`node --import tsx src/specdojo.ts dashboard build --project prj-0001` 等を実行して成果物の整合性を確認した。
