@@ -133,11 +133,65 @@ vp-arc-conciseness                 17
 
 owner を文書の frontmatter や RACI として持たせる案は、grade の判定軸としては不要である。ただし「schedule を持たない最小構成で review の観点を選ぶ」「文書の責任者を人が知る」という別の用途では価値があるため、[[prj-0001:pjr-d4kg-document-owner-declaration]] として切り出した。
 
-### 3.3. verdict は grade の level と human 観点の判定を合成する
+### 3.3. 判定語彙を verdict_definitions へ統一する
 
-grade の level を `grade_rubric` の `review_verdict` で verdict へ写像し、初期値とする。`human` 観点の判定と合成し、最も厳しい判定を採る（`changes_requested` > `conditional_pass` > `pass`）。`blocked` は判定不能を表すため level へ写像せず、レビュアの判断だけで付与する。
+**2026-09-24 に見直した。** 当初は「grade の level を `review_verdict` で写像して verdict の初期値とし、`human` 観点の判定と合成する」と決めたが、合成規則が未定義であり、素朴な集約（最小 level）では実データの 77% が `changes_requested` になって初期値として機能しないことが分かった。写像で繋ぐのではなく、**語彙そのものを統一する**。
 
-レビュアが grade 由来の判定を覆す場合は、対象の viewpoint ID と理由を review result へ記録する。記録のない上書きは行わない。
+#### 3.3.1. 判定語彙が 4 系統ある
+
+| 使用箇所                                             | 語彙                                                          |
+| ---------------------------------------------------- | ------------------------------------------------------------- |
+| `pm-review-viewpoints.yaml` の `verdict_definitions` | `pass` / `conditional_pass` / `changes_requested` / `blocked` |
+| grade の文書 verdict                                 | `pass` / `needs-work` / `fail`                                |
+| `xrr-template.md` の `decision.recommendation`       | `approve` / `revise` / `reject`                               |
+| `xrr-viewpoint-detail-template.md` の `result`       | `pass` / `fail` / `unclear`                                   |
+
+同じ「判定」を 4 通りの語で表している。`verdict_definitions` という正本が存在するにもかかわらず、result テンプレート 2 種はどちらも従っていない。`revise` が `conditional_pass` と `changes_requested` のどちらか、`unclear` が `blocked` かは、どこにも書かれていない。
+
+一方 `severity_levels`（`blocker` / `major` / `minor` / `note`）は正本が 1 つで、grade の findings も従っている。verdict も同じ形にする。
+
+#### 3.3.2. 統一の内容
+
+`verdict_definitions` を唯一の正本とし、4 箇所すべてを揃える。
+
+| 対象                                           | 変更                                                                               |
+| ---------------------------------------------- | ---------------------------------------------------------------------------------- |
+| grade の文書 verdict                           | `fail` → `changes_requested`、`needs-work` → `conditional_pass`、`pass` は据え置き |
+| `xrr-template.md` の `recommendation`          | verdict 4 値へ                                                                     |
+| `xrr-viewpoint-detail-template.md` の `result` | verdict 4 値へ                                                                     |
+| 観点ごとの level から verdict                  | `grade_rubric` の `review_verdict` 写像（既存）をそのまま使う                      |
+
+grade の判定条件自体は変えない。現行の集約はそのまま使える。
+
+```typescript
+const verdict =
+  counts.blocker > 0
+    ? "changes_requested"
+    : counts.major > 0 || score < rubric.pass_score
+      ? "conditional_pass"
+      : "pass";
+```
+
+`blocked` は grade が付けない。判定不能は人の領域であり、`grade_rubric` のコメントも「review の blocked は判定不能を表すため level へ写像しない」としている。
+
+#### 3.3.3. 実データによる妥当性
+
+現行の grade verdict をこの対応で読み替えると、使える分布になる。
+
+| 対象        | `pass` | `conditional_pass` | `changes_requested` |
+| ----------- | ------ | ------------------ | ------------------- |
+| deliverable | 8      | 27                 | 0                   |
+| kata        | 78     | 142                | 40                  |
+
+素朴な最小 level 集約では deliverable の 77%、kata の 70% が `changes_requested` になり初期値として機能しなかった。grade の既存集約（blocker の有無、major の有無、加重スコア）は、それより妥当な分布を与える。
+
+#### 3.3.4. 効果
+
+- 写像規則と合成規則の実装が不要になる。[[prj-0001:pjr-kcmh-review-grade-verdict]] の作業が 2 件減る。
+- grade の文書判定、review の観点別判定、review の総合判定が同じ語彙になり、比較できる。
+- 「`needs-work` は `conditional_pass` か」という解釈の余地が消える。
+
+代償は既存 grade 結果 260 件の移行と、`grade list --verdict` の引数値の変更である。破壊的変更として 0.3.0 で扱う。
 
 ### 3.4. 定期実行は変化検知に限定する
 

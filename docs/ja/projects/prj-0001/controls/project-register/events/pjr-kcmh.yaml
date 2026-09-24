@@ -32,3 +32,16 @@
     - field: due
       from: ""
       to: "2026-11-07"
+- v: 1
+  id: reg_4bf2f3083f22455ba7d078f9ef937e5e
+  ts: "2026-09-24T14:02:46Z"
+  action: update
+  actor: orchestrator
+  from_status: open
+  to_status: open
+  reason: 写像と合成を PJR-XTAN へ切り出したため
+  changes:
+    - field: title
+      from: review フェーズで grade を実行し verdict を合成する
+      to: review フェーズで grade を実行し結果を plan へ提示する
+  previous_event_id: reg_6b430d37260a4c7a8037dd55f708dc8b

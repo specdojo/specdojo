@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_763c15f291cc4782bffa66296e7c5bc6
+  ts: "2026-09-24T14:01:36Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-2ZVS の決定 3.3 の見直しで判明
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 判定語彙を verdict_definitions へ統一する
+    - field: description
+      from: ""
+      to: 同じ判定を 4 つの語彙で表している。pm-review-viewpoints.yaml の verdict_definitions を唯一の正本とし、grade の文書 verdict（pass / needs-work / fail）、xrr-template の recommendation（approve / revise / reject）、xrr-viewpoint-detail-template の result（pass / fail / unclear）をすべて pass / conditional_pass / changes_requested / blocked へ揃える。grade の判定条件は変えない。既存の grade 結果 260 件の移行を伴う破壊的変更のため 0.3.0 で扱う。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-24"
+    - field: due
+      from: ""
+      to: "2026-10-31"
