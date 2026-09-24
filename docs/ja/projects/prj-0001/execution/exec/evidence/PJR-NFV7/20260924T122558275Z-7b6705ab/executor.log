@@ -1,0 +1,11 @@
+runner の Markdown 書き出しを修正しました。
+
+- [exec-format.ts](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-NFV7/src/exec-format.ts): plan/result を含め、末尾を常に1改行へ正規化
+- [exec-format.test.ts](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-NFV7/tests/src/exec-format.test.ts): 改行なし・1つ・複数を plan/result 双方で検証
+- [個票](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-NFV7/docs/ja/projects/prj-0001/controls/project-register/pjr-nfv7-result-trailing-newline.md): 作業内容と対応結果を更新
+
+result は pipeline 指示に従い編集していません。単体テスト等は親 runner の検証に委ねています。
+
+<specdojo_executor_evidence>
+{"final_message":"runner の共通 Markdown 整形経路で末尾を1改行へ正規化し、plan/result の入力差を検証する単体テストと個票を更新した。親検証対象の test・typecheck・schema は未実行。","validations":[{"command":"npx prettier --write src/exec-format.ts tests/src/exec-format.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-nfv7-result-trailing-newline.md","status":"passed","summary":"変更3ファイルを整形"},{"command":"npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-nfv7-result-trailing-newline.md","status":"passed","summary":"個票のMarkdown検査成功"},{"command":"npm run lint:ts","status":"passed","summary":"TypeScript ESLint成功"},{"command":"npm run lint:md","status":"passed","summary":"全Markdown検査成功"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿派生文書を生成"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"catalog検証成功。既存の参照欠落警告のみ"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"文書indexを生成"},{"command":"npm run lint:fm","status":"passed","summary":"frontmatter・remark検査成功"},{"command":"npm run validate:history-links","status":"passed","summary":"履歴リンク検査成功"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>

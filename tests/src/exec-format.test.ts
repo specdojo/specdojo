@@ -50,6 +50,36 @@ describe("formatMarkdownFile", () => {
       await rm(dir, { recursive: true, force: true });
     }
   });
+
+  it.each([
+    ["末尾改行なし", "# Result"],
+    ["末尾改行1つ", "# Result\n"],
+    ["末尾改行複数", "# Result\n\n\n"],
+  ])("Prettier 対象外でも%sを1つへ正規化する", async (_label, source) => {
+    const dir = await mkdtemp(path.join(tmpdir(), "specdojo-test-"));
+
+    try {
+      await writeFile(
+        path.join(dir, ".prettierignore"),
+        "exec/plans/**\nexec/results/**\n",
+        "utf8",
+      );
+      const targets = [
+        path.join(dir, "exec", "plans", "task-plan.md"),
+        path.join(dir, "exec", "results", "task-result.md"),
+      ];
+      for (const target of targets) {
+        await mkdir(path.dirname(target), { recursive: true });
+        await writeFile(target, source, "utf8");
+
+        await formatMarkdownFile(target);
+
+        expect(await readFile(target, "utf8")).toBe("# Result\n");
+      }
+    } finally {
+      await rm(dir, { recursive: true, force: true });
+    }
+  });
 });
 
 describe("findPrettierIgnorePath", () => {
