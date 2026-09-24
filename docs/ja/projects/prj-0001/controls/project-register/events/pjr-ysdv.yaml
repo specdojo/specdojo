@@ -32,3 +32,22 @@
     - field: due
       from: ""
       to: "2026-10-03"
+- v: 1
+  id: reg_3bc5da616c9c4b7d9b4e3956ecf9c7ea
+  ts: "2026-09-24T12:00:43Z"
+  action: close
+  actor: orchestrator
+  from_status: open
+  to_status: done
+  reason: オーケストレーターが直接対応し、--no-ff merge で統合
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-24"
+    - field: conclusion
+      from: "-"
+      to: README 冒頭を PJR-E8TT の 3 つの主張へ揃え、register から始めて必要な分だけ広げる順序へ組み替えた。
+  previous_event_id: reg_c77688e5019040fe8cfaeafdbc4077f5

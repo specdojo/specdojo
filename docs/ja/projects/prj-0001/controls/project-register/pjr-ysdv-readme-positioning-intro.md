@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-ysdv-readme-positioning-intro
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-09-24T11:09:46Z"
   due_on: "2026-10-03"
+  completed_at: "2026-09-24T12:00:43Z"
+  conclusion: README 冒頭を PJR-E8TT の 3 つの主張へ揃え、register から始めて必要な分だけ広げる順序へ組み替えた。
 ---
 
 # PJR-YSDV README 冒頭を PJR-E8TT の差別化軸へ揃える
@@ -47,13 +49,20 @@ SpecDojo は、仕様駆動開発のためのドキュメントフレームワ�
 
 | No  | 作業                                | 担当 | 状態 | メモ                           |
 | --- | ----------------------------------- | ---- | ---- | ------------------------------ |
-| 1   | 冒頭の説明を 3 つの主張へ組み替える | DEV  | open | 段階的に使えることを示す       |
-| 2   | 提供物の箇条書きを見直す            | DEV  | open | 体系の列挙から、使い方の順序へ |
-| 3   | 「使い始める」との接続を確認する    | DEV  | open | 重複と矛盾を避ける             |
+| 1   | 冒頭の説明を 3 つの主張へ組み替える | DEV  | done | 段階的に使えることを示す       |
+| 2   | 提供物の箇条書きを見直す            | DEV  | done | 体系の列挙から、使い方の順序へ |
+| 3   | 「使い始める」との接続を確認する    | DEV  | done | 重複と矛盾を避ける             |
 
 ## 4. 対応結果
 
--
+- README 冒頭へ `**登録簿ひとつから始められます。** 設定 2 行で使い始め、必要になった分だけ広げられます。` を置き、`できること` として 3 つの見出しを立てた。[[prj-0001:pjr-e8tt-initial-release-positioning]] の 3 つの主張がそのまま見出しになっている。
+  - 気づいたことを、型に沿って残せる
+  - 会話で進められる
+  - 必要になったら、成果物の型へ広げられる
+- 順序は register → orchestrator → 成果物体系とした。決定の前提「106 種の型を先に見せると重さで脱落する」に沿い、成果物体系を最後に置いて「最初から全部を用意する必要はありません」で締めている。
+- 記述は検証済みの事実に絞った。設定 2 行（[[prj-0001:pjr-36qg-competitive-landscape-and-release]] の最小構成実測）、7 type のテンプレート、`controls/generated/` の 4 文書、kata 106 種。
+- 冒頭で主張しなかったものがある。並列実行、grade による品質評価、schedule の CPM。決定で「機能比較に持ち込まない」としたものと、裏づけが弱いものを外した。
+- ローカル feature ブランチ `feature/prj-0001/readme-intro` で実施し、`--no-ff` merge で develop へ統合した。
 
 ## 5. 関連ドキュメント
 
