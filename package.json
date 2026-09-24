@@ -1,6 +1,6 @@
 {
   "name": "specdojo",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "SpecDojo CLI, schemas, and documentation for specification-driven execution workflows.",
   "license": "MIT",
   "author": "naoji3x",
