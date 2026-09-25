@@ -250,7 +250,27 @@ A' を採る。`referential` と `discretionary` が規準の所在を正確に�
 
 **裁量の観点は、`check` に規準を書き込めば照合型へ移せる。** 区分は観点の性質ではなく `check` の書き方で決まる。これは `vp-arc-conciseness` と `vp-ux-user-flow` にも適用できる改善方針である。
 
-### 6.3. continuous は変更しない
+### 6.3. 適用できない突き合わせ先を宣言すると agent が差し替える
+
+`check` が規準を供給すれば照合型になる（`check が規準を供給する場合は照合型になる` を参照）ことの裏返しとして、**適用できない突き合わせ先を宣言した場合、agent は判定を放棄せず自分で別の対象に差し替える**。
+
+`vp-arc-cross-document-consistency` が実例である。成果物カタログ、Schedule、RACI、組織定義、メンバー定義、生成物の 6 つを突き合わせ先として宣言しているが、grade 対象 303 件のうち 260 件は kata であり、kata はカタログに 1 件も登録されていない。結果として 198 件の finding のうち 153 件（77%）は宣言したどの突き合わせ先にも言及せず、kata 内部の整合を判定している。
+
+| 観測                                                   | 値         |
+| ------------------------------------------------------ | ---------- |
+| 宣言した突き合わせ先に言及した finding                 | 45         |
+| いずれにも言及しない finding                           | 153（77%） |
+| `vp-qe-kata-conformance` と同時に finding が出た成果物 | 98         |
+
+**基準の運用上の含意は 2 つある。**
+
+第 1 に、`evaluation` の区分は `check` の宣言に基づくが、宣言が適用できなければ区分は実態を表さない。照合型と分類した観点が、実際には別の対象を裁量で判定している場合がある。
+
+第 2 に、宣言と実際の判定が一致しているかを確認する手段が必要である。finding の内容が宣言した突き合わせ先に対応しているかは、現在どこでも検査されていない。
+
+詳細は [[prj-0001:pjr-ebtz-vp-arc-cross-document-consistency-target-kata-conformance]] で扱う。
+
+### 6.4. continuous は変更しない
 
 再分類 9 件に対し、`continuous` は 28 件すべて現状を維持する。理由は条件 3（繰り返し評価に値する finding が出るか）の実測データがないためである。
 
@@ -275,6 +295,7 @@ A' を採る。`referential` と `discretionary` が規準の所在を正確に�
 
 - [[prj-0001:pjr-2zvs-grade-review-integration]]
 - [[prj-0001:pjr-xtan-unify-verdict-vocabulary]]
+- [[prj-0001:pjr-ebtz-vp-arc-cross-document-consistency-target-kata-conformance]]
 - `docs/ja/specdojo/defaults/pm-review-viewpoints.yaml`
 - `docs/specdojo/schemas/v1/pm-review-viewpoints.schema.yaml`
 - `docs/ja/specdojo/guides/review-guide.md`

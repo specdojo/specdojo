@@ -8,7 +8,7 @@ specdojo:
     - prj-0001:pjr-index
   item_type: todo
   item_status: open
-  priority: high
+  priority: medium
   owner: QE
   registered_at: "2026-09-25T12:45:05Z"
 ---
@@ -41,7 +41,7 @@ return !opts.changedOnly || result?.content_hash !== gradeContentHash(content);
 
 `rtn-grade-recheck`（毎日 6 時、`enabled: true`）は `changed_only: "true"` を渡す。全件再評価を行う `rtn-grade-kata` は `enabled: false` である。**現在、全件再評価は動いていない。**
 
-### 2.3. 実測: 94% の評価結果が最新のカタログを見ていない
+### 2.3. 実測: カタログに依存する finding は 53 件
 
 | 項目                               | 値                  |
 | ---------------------------------- | ------------------- |
@@ -50,21 +50,26 @@ return !opts.changedOnly || result?.content_hash !== gradeContentHash(content);
 | カタログ変更より前に評価された結果 | 286（94%）          |
 | `graded_at` の範囲                 | 2026-09-01 〜 09-24 |
 
-カタログを突き合わせ先とする観点は次の 2 つで、合計 240 件の finding を出している。
+カタログに依存する finding を数えた。
 
-| 観点                                | finding | 突き合わせ先                       |
-| ----------------------------------- | ------- | ---------------------------------- |
-| `vp-arc-cross-document-consistency` | 198     | カタログ、Schedule、RACI、組織定義 |
-| `vp-qe-done-criteria`               | 42      | カタログの `done_criteria`         |
+| 内訳                                               | 件数   |
+| -------------------------------------------------- | ------ |
+| `vp-qe-done-criteria`（定義上カタログ依存）        | 42     |
+| `vp-arc-cross-document-consistency` のカタログ言及 | 11     |
+| 合計                                               | **53** |
 
-これらの finding は、286 件の成果物については**変更前のカタログに対する判定**である。カタログ側の変更で解消した finding も、新たに発生した finding も反映されない。
+当初は「カタログを突き合わせ先とする観点の finding 総数」240 件と見積もったが、これは過大だった。`vp-arc-cross-document-consistency` は 6 つの突き合わせ先を宣言しながら、198 件の finding のうち 45 件しかそれらに言及していない。**宣言と実際の判定が乖離しているため、宣言から影響範囲を数えられない。** 乖離そのものは [[prj-0001:pjr-ebtz-vp-arc-cross-document-consistency-target-kata-conformance]] で扱う。
+
+### 2.4. 対象範囲が縮めば問題も縮む
+
+grade 対象 303 件のうち 260 件は kata である。`vp-arc-cross-document-consistency` を成果物のみへ絞ると、カタログと結合する対象は 43 件になる。**本項目の対象範囲は先行して縮む可能性がある。**
 
 ## 3. 完了条件
 
 - 照合型の観点について、突き合わせ先の変更が再評価の契機になる。
 - `changed_only` の意味が文書化され、何を検出し何を検出しないかが読み取れる。
 - 全件再評価の経路が運用されている。`rtn-grade-kata` を有効化するか、代替の経路を用意する。
-- 再評価の増加によるコストが見積もられている。全件再評価は 303 件を対象とする。
+- 再評価の増加によるコストが見積もられている。全件再評価は 303 件を対象とし、鮮度改善の対象は 53 件である。
 - `--changed-only` の既存の利用者（`rtn-grade-recheck`）の挙動変更が明示されている。
 
 ## 4. 対応の候補
@@ -76,16 +81,18 @@ return !opts.changedOnly || result?.content_hash !== gradeContentHash(content);
 | 3   | `rtn-grade-kata` を有効化し、週次で全件再評価する                    | 最小変更。日次の鮮度は改善しない         |
 | 4   | 突き合わせ先の変更を検出したら該当する評価結果を無効化する           | 契機が明確。無効化の判定ロジックが必要   |
 
-案 3 は即座に効果があり変更が小さい。案 1 は正確だが `grade-result.schema.yaml` の変更を伴う。**まず案 3 で鮮度を確保し、案 1 を別途検討する**のが妥当と考える。
+**案 1 を主案とする。** 案 3 は 303 件の再評価コストに対して 53 件の鮮度改善にとどまり、費用対効果が合わない。案 1 は突き合わせ先を宣言するため、[[prj-0001:pjr-ebtz-vp-arc-cross-document-consistency-target-kata-conformance]] の案 3（突き合わせ先の構造化）と同じ宣言を共有できる。
+
+着手順序は [[prj-0001:pjr-ebtz-vp-arc-cross-document-consistency-target-kata-conformance]] を先とする。対象範囲が縮んでから本項目の方針を確定する。
 
 ## 5. 作業内容
 
-| No  | 作業                                  | 担当 | 状態 | メモ                      |
-| --- | ------------------------------------- | ---- | ---- | ------------------------- |
-| 1   | 対応の候補から方針を決定する          | QE   | open | 案 3 を起点に検討         |
-| 2   | `changed_only` の検出範囲を文書化する | QE   | open | `grade-guide` を想定      |
-| 3   | 全件再評価の経路を運用に乗せる        | OPS  | open | `rtn-grade-kata` の有効化 |
-| 4   | 照合型観点の再評価契機を実装する      | DEV  | open | 方針決定後                |
+| No  | 作業                                  | 担当 | 状態 | メモ                       |
+| --- | ------------------------------------- | ---- | ---- | -------------------------- |
+| 1   | 対応の候補から方針を決定する          | QE   | open | 案 1 を起点に検討。EBTZ 後 |
+| 2   | `changed_only` の検出範囲を文書化する | QE   | open | `grade-guide` を想定       |
+| 3   | 全件再評価の経路を運用に乗せる        | OPS  | open | `rtn-grade-kata` の有効化  |
+| 4   | 照合型観点の再評価契機を実装する      | DEV  | open | 方針決定後                 |
 
 ## 6. 対応結果
 
@@ -94,6 +101,7 @@ return !opts.changedOnly || result?.content_hash !== gradeContentHash(content);
 ## 7. 関連ドキュメント
 
 - [[prj-0001:pjr-wpwb-viewpoint-evaluation-criteria]]
+- [[prj-0001:pjr-ebtz-vp-arc-cross-document-consistency-target-kata-conformance]]
 - `docs/ja/projects/prj-0001/routines/rtn-grade-recheck.yaml`
 - `docs/ja/projects/prj-0001/routines/rtn-grade-kata.yaml`
 - `docs/specdojo/schemas/v1/grade-result.schema.yaml`
