@@ -7,11 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: high
   owner: DEV
   registered_at: "2026-09-26T10:28:16Z"
-  block_reason: "checkpoint failed: git ls-files failed: fatal: detected dubious ownership in repository at '/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-9PZ7' (args: --full-name -z -- 4 paths)"
+  block_reason: "agent exited with non-zero code: runner による検証 `test-unit` が失敗しているため（`tests/tools/grade-per-document.test.ts` において 1 件の失敗が検出された）。"
 ---
 
 # PJR-9PZ7 grade の打ち切りが検出されず終了コード 0 で完了扱いになる
@@ -95,21 +95,26 @@ script 冒頭は `set -euo pipefail` である。ループ内でコマンドが�
 
 ### 5.1. 前回状態の引き継ぎ
 
-`migrated_stage_total` の移行は、段構成を変えた再実行を容易にする意図と見られる。ただし**評価の実体がないまま完了扱いにする**のは誤りである。移行時に `graded_at` と現在の `content_hash` を照合し、古ければ未評価として扱う。
+`migrated_stage_total` の移行は、段構成を変えた再実行を容易にする意図と見られる。ただし**評価の実体がないまま完了扱いにする**のは誤りである。保存済み state の `stage_total` が現在の構成と異なる場合は、`graded_at` の鮮度を推測せず state を破棄し、現在の構成で再評価する。
 
 ## 6. 作業内容
 
-| No  | 作業                                         | 担当 | 状態 | メモ                          |
-| --- | -------------------------------------------- | ---- | ---- | ----------------------------- |
-| 1   | 対応の候補から方針を決める                   | ARC  | open | 案 2 + 案 1                   |
-| 2   | 打ち切りの検出と終了コードを実装する         | DEV  | open |                               |
-| 3   | 前回状態の移行へ鮮度の確認を加える           | DEV  | open | `graded_at` と `content_hash` |
-| 4   | job 定義が打ち切りを失敗として扱うか確認する | OPS  | open | `job-grade-*`                 |
-| 5   | 運用ガイドへ手動実行時の注意を記載する       | OPS  | open | パイプと終了コード            |
+| No  | 作業                                         | 担当 | 状態 | メモ                                                    |
+| --- | -------------------------------------------- | ---- | ---- | ------------------------------------------------------- |
+| 1   | 対応の候補から方針を決める                   | ARC  | done | 件数照合と `EXIT` / signal trap を併用                  |
+| 2   | 打ち切りの検出と終了コードを実装する         | DEV  | done | 現在文書と未着手文書を標準エラーへ出力                  |
+| 3   | 前回状態の移行へ鮮度の確認を加える           | DEV  | done | 異なる `stage_total` は移行せず、state を破棄して再評価 |
+| 4   | job 定義が打ち切りを失敗として扱うか確認する | OPS  | done | script の終了コードを保存してそのまま返す               |
+| 5   | 運用ガイドへ手動実行時の注意を記載する       | OPS  | done | `pipefail` と `PIPESTATUS` を記載                       |
 
 ## 7. 対応結果
 
--
+- `run-per-document.sh` に終了監視を追加し、集計行へ到達しない終了は原因、終了コード、処理中の文書、未着手件数とパスを標準エラーへ記録する。元の終了コードが0でも完走マーカーがなければ1へ変換する。
+- 正常終了直前に選択件数と訪問件数を照合し、不一致を終了コード1にした。正常系だけが `grade pipeline complete:` を出力する。
+- rate limit は終了コード75、`INT` は130、`TERM` は143を維持し、同じ `--run-id` で再開できる情報を残す。
+- `stage_total` が異なる古い pipeline state は完了へ移行せず削除し、単段の1段目から再評価する。上限到達 state も同じ規則で処理対象へ戻す。
+- `job-grade-kata` と `job-grade-deliverable` は script の非0終了を明示的に保存して返し、後続の `cat` で成功へ上書きしない。
+- CLI コマンドリファレンスと routine 運用ガイドへ、完走判定、state リセット、パイプ時の `pipefail` / `PIPESTATUS` を追記した。
 
 ## 8. 関連ドキュメント
 
