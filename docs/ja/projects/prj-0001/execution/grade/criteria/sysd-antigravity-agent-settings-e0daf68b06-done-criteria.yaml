@@ -2,9 +2,9 @@
 id: sysd-antigravity-agent-settings-grade-criteria
 document: sysd-antigravity-agent-settings
 path: docs/ja/product/040-system-design/sysd-antigravity-agent-settings.md
-graded_at: "2026-09-23T16:22:37.334Z"
+graded_at: "2026-09-26T16:24:03.864Z"
 graded_by: codex-expert-executor
-content_hash: d22c2414f6a7a74fcb5a90abd83efd5e6c0eeb9b80f7eab86bac17d5f43ded3d
+content_hash: 1b16c0e9eee40c4bc0bab086a919b47326877b376ff7906566053a193fa33198
 summary:
   satisfied: 2
   unsatisfied: 3
@@ -16,14 +16,14 @@ criteria:
       - BA
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
-    reason: Antigravity 採用の根拠となる業務要件、その出典、設計方針との対応が本文にない。
+    reason: Antigravity を採用する業務要件、その出典、設計方針との対応が記載されていない。
   - id: DC-002
     text: 設計方針を承認できること
     roles:
       - PO
     viewpoint: vp-po-decision-readiness
     status: unsatisfied
-    reason: custom agent 非対応という前提が現行 `agy` と矛盾し、その採否と安全境界を決定できない。
+    reason: 現行 CLI の custom agent を採用するか、および採用時の stage 対応と安全境界が未決定で、設計方針を承認できない。
   - id: DC-003
     text: 技術的制約・依存関係が識別できること
     roles:
@@ -36,7 +36,7 @@ criteria:
       - QE
     viewpoint: vp-qe-verifiability
     status: unsatisfied
-    reason: custom agent の検出・選択・保護を検証する観点がなく、現行 CLI との互換性を確認できない。
+    reason: custom agent 対応と CLI バージョンの検証がなく、各 pipeline stage の成功状態・証跡・統合結果も判定可能に定義されていない。
   - id: DC-005
     text: 実装の基礎として参照できること
     roles:

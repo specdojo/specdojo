@@ -1,0 +1,25 @@
+
+> specdojo@0.2.1 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-deliverable-431e19911a85 project=prj-0001 target=deliverable kind=none changed_only=true ungraded=true incomplete=true max_stage_failures=3 stages=1 documents=5 exhausted=1 work_dir=logs/grade/runs/per-document/JBR-grade-deliverable-431e19911a85
+stage=1 executor=codex-expert-executor reporter=gemma-reporter reference=none
+document retry exhausted: docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md failed_stage=1 consecutive_failures=3 max_failures=3
+document start: docs/ja/product/010-business-specs/010-data-flow/cdfd-onboarding.md
+document incomplete: docs/ja/product/010-business-specs/010-data-flow/cdfd-onboarding.md failed_stage=1
+document start: docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md
+document complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md
+document start: docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-deliverable.md
+document complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-deliverable.md
+document start: docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md
+document complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md
+document start: docs/ja/product/040-system-design/sysd-antigravity-agent-settings.md
+document complete: docs/ja/product/040-system-design/sysd-antigravity-agent-settings.md
+grade pipeline complete: selected=5 processed=5 completed_now=4 incomplete=1 exhausted=1 results=logs/grade/runs/per-document/JBR-grade-deliverable-431e19911a85/results.tsv
+recorded_at	document	stage	status	duration_seconds	verdict	score	findings	executor	reporter	reference	consecutive_failures	max_failures
+2026-09-26T16:00:12Z	docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md	1	retry_exhausted	0						none	3	3
+2026-09-26T16:04:36Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-onboarding.md	1	failed	263				codex-expert-executor	gemma-reporter	none	1	3
+2026-09-26T16:09:24Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md	1	passed	288	needs-work	79	11	codex-expert-executor	gemma-reporter	none		
+2026-09-26T16:14:30Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-deliverable.md	1	passed	304	pass	100	0	codex-expert-executor	gemma-reporter	none		
+2026-09-26T16:19:10Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md	1	passed	278	needs-work	95	1	codex-expert-executor	gemma-reporter	none		
+2026-09-26T16:24:04Z	docs/ja/product/040-system-design/sysd-antigravity-agent-settings.md	1	passed	292	needs-work	71	11	codex-expert-executor	gemma-reporter	none		

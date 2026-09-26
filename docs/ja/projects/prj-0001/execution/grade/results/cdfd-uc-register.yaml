@@ -6,9 +6,9 @@ target: deliverable
 rubric: grade-rubric-v1
 verdict: needs-work
 score: 95
-graded_at: "2026-09-20T05:11:28.995Z"
+graded_at: "2026-09-26T16:19:10.050Z"
 graded_by: codex-expert-executor
-content_hash: 7d688ba3fe34dfe1f0921ef2d9e8b75179c31a9fd0acd24137af851d370f1bce
+content_hash: c1df04d5b03e29e8e669e24f2e41371c2f57585b0519274761981abccffcc3e9
 categories:
   consistency:
     score: 100
@@ -61,16 +61,14 @@ findings:
   - id: F001
     severity: major
     rule: vp-qe-verifiability
-    line: 193
-    message: H-01 の「権限を持つ人間の承認」は、具体的な責任ロールまたは権限の参照先が明示されておらず, また「実行計画と対応付いている」という証跡の確認方法が不明確なため, 受理可否を一意に判定できない。
+    line: 192
     anchor: >-
-      | H-02        | Do             | Check          |
-      対応済み登録項目、対応内容、検証結果、result、evidence、実行状態                                     |
-      登録項目への対応が完了し、対象と対応内容が登録簿で対応付き、`done_criteria` ごとの評価に使う result・evidence・実行状態を Check
-      が特定できる。                                                                                                |
-      評価対象が対応後に変更された、対応内容と実行記録を対応付けられない、必要な evidence
-      を取得できない、または実行状態から対応完了を確認できない。                                                                                         
-      |
+      | H-01        | Plan           | Do             |
+      対象登録項目、登録項目・決定記録、実行計画、対応開始を判断できる情報                                 | 登録項目を一意に特定でき、実行計画に対象・手順・完了条件があり、適用する
+      Kata、実行主体、利用可能な権限を Do が確認できる。実行計画が保護設定以外の保護対象の変更または統合を含む場合は、権限を持つ人間の承認結果が実行計画と対応付いている。 |
+      登録項目または実行計画を特定できない、対象・手順・完了条件が不足する、適用する
+      Kata・実行主体・利用可能な権限を確認できない、または承認が必要な変更・統合について権限を持つ人間の承認結果を実行計画と対応付けられず遂行を開始できない。 |
+    message: H-01 の「権限を持つ人間の承認」は、具体的な責任ロールまたは権限の参照先が明示されておらず, また「実行計画と対応付いている」という証跡の確認方法が不明確なため, 受理可否を一意に判定できない。
 done_criteria:
   satisfied: 3
   total: 3

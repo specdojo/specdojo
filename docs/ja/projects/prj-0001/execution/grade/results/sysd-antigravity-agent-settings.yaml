@@ -6,9 +6,9 @@ target: deliverable
 rubric: grade-rubric-v1
 verdict: needs-work
 score: 71
-graded_at: "2026-09-23T16:22:37.334Z"
+graded_at: "2026-09-26T16:24:03.864Z"
 graded_by: codex-expert-executor
-content_hash: d22c2414f6a7a74fcb5a90abd83efd5e6c0eeb9b80f7eab86bac17d5f43ded3d
+content_hash: 1b16c0e9eee40c4bc0bab086a919b47326877b376ff7906566053a193fa33198
 categories:
   consistency:
     score: 50
@@ -64,7 +64,7 @@ findings:
     line: 9
     anchor: "- `agy` はファイル定義 agent を選択する仕組みを持たないため、executor / reporter の役割は runner が plan へ付加する stage 指示を正本とする。"
     message: >-
-      現行 `agy` は `.agents/agents/` の custom agent を `—agent` で選択できるため、非対応という前提を修正し、stage agent
+      現行 `agy` は `.agents/agents/` の custom agent を `—agent` で選択できるため、非対応という前提を修正し, stage agent
       定義・command_template・保護対象への採否を再設計する必要がある。
   - id: F002
     severity: minor
