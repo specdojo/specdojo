@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: review
   priority: low
   owner: QE
   registered_at: "2026-09-26T10:47:19Z"
