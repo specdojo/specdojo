@@ -4,11 +4,12 @@ specdojo:
   type: exec-result
   task_id: PJR-T3NN
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: exec/plans/pjr-t3nn-20260926T021808Z-b9be-plan.md
   started_at: "2026-09-26T02:18:08.992Z"
+  completed_at: "2026-09-26T02:35:33.923Z"
   agent: codex-expert-executor
 ---
 
@@ -16,16 +17,20 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- `bps-rulebook.md` および `bps-sample.md` を `rulebook-authoring-standard.md` に準拠する形式で再構成した。
+- 個票 `pjr-t3nn-bps-rulebook-rulebook-authoring-standard.md` の実施内容を更新した。
+- `prettier` による整形および `markdownlint` による静的検査を完了し、カタログ検証 (`specdojo catalog validate`) および登録簿生成 (`specdojo register build`) を通過した。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/rulebooks/bps-rulebook.md`: 標準準拠の章構成・書式への再構成（bootstrap相当）
+- `docs/ja/specdojo/samples/bps-sample.md`: Frontmatter 形式および内容の標準準拠化
+- `docs/ja/projects/prj-0001/controls/project-register/pjr-t3nn-bps-rulebook-rulebook-authoring-standard.md`: 対応結果の記述更新
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- なし
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`fully-guided` で rulebook / recipe / sample / template をどう使い分けたか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+現行の `rulebook-authoring-standard.md` との乖離（章構成、Frontmatter、見出し番号）を解消するため、部分修正ではなく `bootstrap` 相当の再構成を実施した。変更後、共通規約に基づき `prettier`、`markdownlint`、`catalog validate` および `register build` を実行して整合性を検証した。

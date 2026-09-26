@@ -1,0 +1,13 @@
+BPS rulebook を標準8章構成へ全面再構成し、外部 sample も具体的な「補充依頼確定」の完成例へ更新しました。
+
+変更ファイル:
+
+- [bps-rulebook.md](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-T3NN/docs/ja/specdojo/rulebooks/bps-rulebook.md)
+- [bps-sample.md](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-T3NN/docs/ja/specdojo/samples/bps-sample.md)
+- [PJR-T3NN 個票](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-T3NN/docs/ja/projects/prj-0001/controls/project-register/pjr-t3nn-bps-rulebook-rulebook-authoring-standard.md)
+
+Markdown lint、登録簿生成、カタログ検証、索引生成は通過しました。grade 再評価は後続段階へ委ねています。ドキュメントサイトビルドは、tsx IPC と Chromium 起動がサンドボックスに拒否され未完了です。
+
+<specdojo_executor_evidence>
+{"final_message":"BPS rulebookとsampleを標準準拠で再構成。文書検査は通過し、docs buildのみsandbox制約で未完了","validations":[{"command":"npx prettier --write docs/ja/specdojo/rulebooks/bps-rulebook.md docs/ja/specdojo/samples/bps-sample.md docs/ja/projects/prj-0001/controls/project-register/pjr-t3nn-bps-rulebook-rulebook-authoring-standard.md && npx markdownlint docs/ja/specdojo/rulebooks/bps-rulebook.md docs/ja/specdojo/samples/bps-sample.md docs/ja/projects/prj-0001/controls/project-register/pjr-t3nn-bps-rulebook-rulebook-authoring-standard.md","status":"passed","summary":"3ファイルの整形とMarkdown静的検査が通過"},{"command":"npm run -s lint:md","status":"passed","summary":"リポジトリ全体のMarkdown lintが通過"},{"command":"npx tsx src/specdojo.ts register build","status":"failed","summary":"tsxの一時IPCソケット作成がsandboxでEPERM"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"IPCを使わない同一エントリポイントで登録簿生成が通過"},{"command":"set -o pipefail; node --import tsx src/specdojo.ts catalog validate 2>&1 | awk '/^OK: dct-index.yaml/ || /bps-sample/ || /^ERROR:/ || /^FAIL:/'","status":"passed","summary":"カタログ検証が通過し、bps-sampleの未宣言warningも解消"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1953件の文書索引を生成"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"},{"command":"npm run docs:build","status":"failed","summary":"docs生成前段のtsx IPCソケット作成がsandboxでEPERM"},{"command":"npm --prefix packages/docs-site run docs:build","status":"failed","summary":"Chromiumプロセス起動がsandboxで拒否されMermaid生成前段で停止"}]}
+</specdojo_executor_evidence>

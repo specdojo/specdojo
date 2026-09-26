@@ -87,17 +87,24 @@ template: undecided
 
 ## 4. 作業内容
 
-| No  | 作業                                        | 担当 | 状態 | メモ                             |
-| --- | ------------------------------------------- | ---- | ---- | -------------------------------- |
-| 1   | standard との差分を洗い出す                 | ARC  | open | 章構成、Frontmatter、記述規約    |
-| 2   | `recipe` / `template` の要否を決める        | ARC  | open | 作る、または `not-needed` を宣言 |
-| 3   | 章構成を standard 準拠へ作り直す            | ARC  | open | bootstrap 相当                   |
-| 4   | 埋め込みサンプルを現行 Frontmatter 形式へ   | ARC  | open | `type` の矛盾を解消              |
-| 5   | grade を再実行して finding の解消を確認する | QE   | open | 変更前 88 点との比較             |
+| No  | 作業                                        | 担当 | 状態    | メモ                                        |
+| --- | ------------------------------------------- | ---- | ------- | ------------------------------------------- |
+| 1   | standard との差分を洗い出す                 | ARC  | done    | 章構成、Frontmatter、記述規約を確認済み     |
+| 2   | `recipe` / `template` の要否を決める        | ARC  | done    | 本文要件と埋め込み例を正本とし `not-needed` |
+| 3   | 章構成を standard 準拠へ作り直す            | ARC  | done    | 標準 8 章構成で全面再構成                   |
+| 4   | 埋め込みサンプルを現行 Frontmatter 形式へ   | ARC  | done    | `specdojo:` 名前空間と `type: flow` に統一  |
+| 5   | grade を再実行して finding の解消を確認する | QE   | waiting | executor 後の再評価で確認                   |
 
 ## 5. 対応結果
 
--
+- `bps-rulebook.md` を `rulebook-authoring-standard.md` の標準章構成へ全面再構成し、外側の見出しを `## 1.` から `## 8.`、記述ガイドの見出しを `### 6.1.` から `### 6.9.` の連番に統一した。
+- BPS の対象を「概念データフローの一つのプロセス領域に属し、共通の起点と業務成果を持つ一連の流れ」と定義した。CDFD の個別プロセスを BPS の処理ステップとして対応付ける粒度を明記した。
+- 成果物 Frontmatter の `type` を共通スキーマに合わせて `flow` とし、必須・任意項目、`based_on` の制約、`status` の扱いを明記した。
+- 本文要件に各章の目的、必須性、記述規約を定義し、トリガー、処理、例外、検証・受入観点の推奨表と完成判定を追加した。
+- 埋め込みサンプルを `specdojo:` 名前空間の Frontmatter と `type: flow` へ更新し、BPS の全必須章を備えた自己完結例へ置き換えた。
+- 外部 `bps-sample.md` を駄菓子屋きぬやの「補充依頼確定」の完成例へ作り直し、rulebook の必須章、`type: flow`、CDFD のプロセス領域・引き渡しとの対応を反映した。
+- `recipe` と `template` は、rulebook の本文要件と埋め込み例だけで作成を開始できるため `not-needed` とした。外部 sample は実例として整備したため、Frontmatter の `sample` に `specdojo:bps-sample` を宣言した。
+- grade result サイドカーは直接編集していない。grade の再実行と finding の最終判定は executor 後の再評価で行う。
 
 ## 6. 関連ドキュメント
 
