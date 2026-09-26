@@ -4,14 +4,79 @@ import { dirname, join, resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   formatGitCommandFailure,
-  summarizeGitStderr,
   formatWorktreeBuildFailure,
   generateWorktreeArtifacts,
+  isGitDubiousOwnership,
   resolveWorktreeBuildCommand,
+  runGitWithTransientRetry,
+  summarizeGitStderr,
   summarizeGitHookFailure,
   summarizeGitArguments,
 } from "../../src/exec-worktree.js";
 import { sanitizeRegisterConclusion } from "../../src/exec-register.js";
+
+describe("dubious ownership retry", () => {
+  const dubiousOwnership =
+    "fatal: detected dubious ownership in repository at '/workspaces/example'";
+
+  it("detects only the dubious ownership fatal message", () => {
+    expect(isGitDubiousOwnership(dubiousOwnership)).toBe(true);
+    expect(isGitDubiousOwnership("fatal: not a git repository")).toBe(false);
+    expect(isGitDubiousOwnership("")).toBe(false);
+  });
+
+  it("retries a dubious ownership failure once and reports the retry", () => {
+    const results = [
+      { status: 128, stderr: dubiousOwnership },
+      { status: 0, stderr: "" },
+    ];
+    let calls = 0;
+    let retryReports = 0;
+
+    const actual = runGitWithTransientRetry(
+      () => results[calls++]!,
+      () => {
+        retryReports += 1;
+      },
+    );
+
+    expect(actual.status).toBe(0);
+    expect(calls).toBe(2);
+    expect(retryReports).toBe(1);
+  });
+
+  it("returns the second dubious ownership failure without a third attempt", () => {
+    const results = [
+      { status: 128, stderr: dubiousOwnership },
+      { status: 128, stderr: dubiousOwnership },
+    ];
+    let calls = 0;
+
+    const actual = runGitWithTransientRetry(() => results[calls++]!);
+
+    expect(actual.status).toBe(128);
+    expect(calls).toBe(2);
+  });
+
+  it("does not retry a different git failure", () => {
+    let calls = 0;
+    let retryReports = 0;
+
+    const actual = runGitWithTransientRetry(
+      () => {
+        calls += 1;
+        return { status: 128, stderr: "fatal: not a git repository" };
+      },
+      () => {
+        retryReports += 1;
+      },
+    );
+
+    expect(actual.status).toBe(128);
+    expect(calls).toBe(1);
+    expect(retryReports).toBe(0);
+  });
+});
 
 describe("summarizeGitArguments", () => {
   it("keeps arguments as-is when there is no pathspec separator", () => {

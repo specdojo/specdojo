@@ -33,10 +33,46 @@ export function isGitIndexLockContention(stderr: string): boolean {
   );
 }
 
+export function isGitDubiousOwnership(stderr: string): boolean {
+  return /fatal:\s+detected dubious ownership in repository\b/i.test(stderr);
+}
+
 // Synchronously block the thread. gitResult is intentionally spawnSync-based (blocking), and we
 // want to wait for a contended index.lock to be released before retrying rather than busy-loop.
 function sleepSync(milliseconds: number): void {
   Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, milliseconds);
+}
+
+type RetryableGitResult = {
+  status: number | null;
+  stderr: unknown;
+};
+
+export function runGitWithTransientRetry<T extends RetryableGitResult>(
+  run: () => T,
+  onDubiousOwnershipRetry: () => void = () => undefined,
+): T {
+  let indexLockRetries = 0;
+  let canRetryDubiousOwnership = true;
+  let result = run();
+
+  while (result.status !== 0) {
+    const stderr = typeof result.stderr === "string" ? result.stderr : "";
+    if (canRetryDubiousOwnership && isGitDubiousOwnership(stderr)) {
+      canRetryDubiousOwnership = false;
+      onDubiousOwnershipRetry();
+      result = run();
+      continue;
+    }
+    if (indexLockRetries < INDEX_LOCK_RETRY_ATTEMPTS && isGitIndexLockContention(stderr)) {
+      indexLockRetries += 1;
+      sleepSync(INDEX_LOCK_RETRY_BASE_MS * indexLockRetries); // 50, 100, 150, 200, 250 ms
+      result = run();
+      continue;
+    }
+    break;
+  }
+  return result;
 }
 
 export function gitResult(repoRoot: string, args: string[]): ReturnType<typeof spawnSync> {
@@ -47,15 +83,13 @@ export function gitResult(repoRoot: string, args: string[]): ReturnType<typeof s
       stdio: ["ignore", "pipe", "pipe"],
     });
 
-  let result = run();
-  for (let attempt = 1; attempt <= INDEX_LOCK_RETRY_ATTEMPTS; attempt++) {
-    if (result.status === 0) break;
-    const stderr = typeof result.stderr === "string" ? result.stderr : "";
-    if (!isGitIndexLockContention(stderr)) break;
-    sleepSync(INDEX_LOCK_RETRY_BASE_MS * attempt); // 50, 100, 150, 200, 250 ms
-    result = run();
-  }
-  return result;
+  return runGitWithTransientRetry(run, () => {
+    const summary = summarizeGitArguments(args);
+    process.stderr.write(
+      `warning: git command failed with dubious ownership; retrying once` +
+        ` (cwd: ${repoRoot}${summary ? `, args: ${summary}` : ""})\n`,
+    );
+  });
 }
 
 // git 失敗メッセージは register イベントの reason、result の block_reason、実行ログの一覧行の
