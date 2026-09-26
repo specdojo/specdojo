@@ -125,7 +125,9 @@ Kata と成果物の定期評価は、`codex-expert-executor` と `gemma-reporte
 
 Job runnerは、この入口をmaterialize済みの引数で1回起動し、コマンド、終了コード、stdout/stderrをevidenceへ記録します。コマンドが成功した場合だけanalysis reporterが、未完了の段、失敗の切り分け、verdict と score の偏りを判断します。executor、reporter、対象種別、件数上限はscriptの引数またはJobの`inputs`から解決します。
 
-scriptの`--run-id`にはJob Run IDを渡すため、rate limitや中断後に同じJob Runをretryすると完了済みの処理を飛ばして再開します。通常の agent / apply 失敗は `<execution_path>/grade/pipeline/` に完了段、失敗段、本文ハッシュ、連続失敗回数を保存します。次の日次実行枠でも本文ハッシュが同じなら失敗段から再開し、本文が変われば古い到達状況を使わず1段目から評価します。3段構成から単段へ切り替えた時点で、現在本文に対して有効な `stage_total: 3` の state が残っている場合は、既存評価を完了済みとみなして state を削除します。rate limit は失敗回数に数えません。既定で同じ段が3回連続失敗すると再試行から外し、結果の `retry_exhausted` 行で人手対応を報告します。`period`は対象期間の表示だけに使い、実行や再開の同一性には使いません。
+scriptの`--run-id`にはJob Run IDを渡すため、rate limitや中断後に同じJob Runをretryすると完了済みの処理を飛ばして再開します。通常の agent / apply 失敗は `<execution_path>/grade/pipeline/` に完了段、失敗段、本文ハッシュ、連続失敗回数を保存します。次の日次実行枠でも本文ハッシュが同じなら失敗段から再開し、本文が変われば古い到達状況を使わず1段目から評価します。保存済み state の `stage_total` が現在の構成と異なる場合は、古い grade の日時にかかわらず完了扱いへ移行せず、state を削除して1段目から再評価します。rate limit は失敗回数に数えません。既定で同じ段が3回連続失敗すると再試行から外し、結果の `retry_exhausted` 行で人手対応を報告します。`period`は対象期間の表示だけに使い、実行や再開の同一性には使いません。
+
+Job Definition は script を `if` の条件として起動し、非0の終了コードを保存してそのまま Job runner へ返します。これにより、後続の `results.tsv` 表示が rate limit や中断の終了コードを0へ上書きしません。script が正常終了した場合だけ `grade pipeline complete:` と `results.tsv` が command evidence に揃い、analysis reporter が起動します。
 
 ## 2. due判定と実行
 

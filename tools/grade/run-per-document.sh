@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
+set -Eeuo pipefail
 
 usage() {
   cat <<'USAGE'
@@ -525,12 +525,65 @@ fi
 
 current_document=
 current_stage=
-on_interrupt() {
-  printf 'grade pipeline: interrupted document=%s stage=%s; rerun with --run-id %s to resume\n' \
-    "${current_document:-none}" "${current_stage:-none}" "$run_id" >&2
-  exit 130
+visited_documents=0
+processed=0
+completed=0
+incomplete_documents=0
+pipeline_finished=false
+failure_reason=
+
+on_error() {
+  local status=$?
+  local line=$1
+  local command=$2
+  failure_reason="command_failed line=$line command=$command"
+  return "$status"
 }
-trap on_interrupt INT TERM
+
+on_interrupt() {
+  local signal=$1
+  local status=$2
+  failure_reason="signal_$signal"
+  exit "$status"
+}
+
+on_exit() {
+  local status=$?
+  local reason=$failure_reason
+  local remaining=$(( ${#selected_paths[@]} - visited_documents ))
+  local index
+  trap - ERR INT TERM EXIT
+
+  if $pipeline_finished; then
+    exit "$status"
+  fi
+
+  if [[ -z "$reason" ]]; then
+    case "$status" in
+      75) reason=rate_limit ;;
+      130) reason=signal_INT ;;
+      143) reason=signal_TERM ;;
+      0) reason=completion_marker_missing ;;
+      *) reason=unexpected_exit ;;
+    esac
+  fi
+  ((remaining >= 0)) || remaining=0
+  printf 'grade pipeline aborted: reason=%s exit_code=%s selected=%s visited=%s completed_now=%s incomplete=%s current_document=%s current_stage=%s unstarted=%s; rerun with --run-id %s to resume\n' \
+    "$reason" "$status" "${#selected_paths[@]}" "$visited_documents" \
+    "$completed" "$incomplete_documents" "${current_document:-none}" \
+    "${current_stage:-none}" "$remaining" "$run_id" >&2
+  for ((index = visited_documents; index < ${#selected_paths[@]}; index += 1)); do
+    printf 'grade pipeline unstarted: %s\n' "${selected_paths[$index]}" >&2
+  done
+  if [[ $status -eq 0 ]]; then
+    status=1
+  fi
+  exit "$status"
+}
+trap 'on_error "$LINENO" "$BASH_COMMAND"' ERR
+trap 'on_interrupt INT 130' INT
+trap 'on_interrupt TERM 143' TERM
+trap on_exit EXIT
 
 document_key() {
   local path=$1
@@ -611,26 +664,37 @@ record_pipeline_stage() {
     --max-failures "$max_stage_failures" --run-id "$run_id") ||
     fail "could not persist pipeline state for document=$document stage=$stage status=$status"
   if [[ "$status" == failed ]]; then
-    IFS=$'\t' read -r _ _ pipeline_consecutive_failures pipeline_max_failures < <(
+    IFS=$'\t' read -r _ _ pipeline_consecutive_failures pipeline_max_failures _ < <(
       printf '%s' "$state_output" | pipeline_state_fields
     )
   fi
 }
 
+declare -a retained_exhausted_paths=()
+selection_changed=false
 for document in "${exhausted_paths[@]}"; do
   pipeline_state=$(read_pipeline_state "$document") || fail "grade state read failed: $document"
   IFS=$'\t' read -r _ exhausted_stage exhausted_failures exhausted_max exhausted_stage_total < <(
     printf '%s' "$pipeline_state" | pipeline_state_fields
   )
   if [[ "$stages" == 1 && "$exhausted_stage_total" != "$stages" ]]; then
-    record_result "$document" 1 resumed_completed 0 "" "" "" "$stage_1_executor" "$stage_1_reporter" "$stage_1_reference"
     record_pipeline_stage "$document" 1 complete
-    printf 'document complete: %s migrated_stage_total=%s\n' "$document" "$exhausted_stage_total"
+    selected_paths+=("$document")
+    selection_changed=true
+    printf 'grade pipeline: reset incompatible state document=%s persisted_stage_total=%s requested_stage_total=%s; re-evaluating\n' \
+      "$document" "$exhausted_stage_total" "$stages" >&2
     continue
   fi
   record_result "$document" "$exhausted_stage" retry_exhausted 0 "" "" "" "" "" none \
     "$exhausted_failures" "$exhausted_max"
+  printf 'document retry exhausted: %s failed_stage=%s consecutive_failures=%s max_failures=%s\n' \
+    "$document" "$exhausted_stage" "$exhausted_failures" "$exhausted_max"
+  retained_exhausted_paths+=("$document")
 done
+exhausted_paths=("${retained_exhausted_paths[@]}")
+if $selection_changed; then
+  printf '%s\n' "${selected_paths[@]}" >"$selection_file"
+fi
 
 save_stage_state() {
   local state_file=$1
@@ -830,10 +894,8 @@ stage_1_reference_for_document() {
   printf '%s' "$reference"
 }
 
-processed=0
-completed=0
-incomplete_documents=0
 for document in "${selected_paths[@]}"; do
+  visited_documents=$((visited_documents + 1))
   current_document=$document
   current_stage=
   key=$(document_key "$document")
@@ -855,19 +917,19 @@ for document in "${selected_paths[@]}"; do
       printf '%s' "$pipeline_state" | pipeline_state_fields
     )
     if [[ "$stages" == 1 && "$persisted_stage_total" != "$stages" ]]; then
-      mark_stage_skipped "$document" "$document_dir" 1 "$stage_1_executor" "$stage_1_reporter" "$document_stage_1_reference" resumed_completed
       record_pipeline_stage "$document" 1 complete
-      printf '%s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" >"$complete_file"
-      completed=$((completed + 1))
-      printf 'document complete: %s migrated_stage_total=%s\n' "$document" "$persisted_stage_total"
-      continue
+      pipeline_state=
+      printf 'grade pipeline: reset incompatible state document=%s persisted_stage_total=%s requested_stage_total=%s; re-evaluating\n' \
+        "$document" "$persisted_stage_total" "$stages" >&2
     fi
-    if [[ "$failed_stage" != none ]]; then
-      start_stage=$failed_stage
-    else
-      start_stage=$((completed_stage + 1))
+    if [[ -n "$pipeline_state" ]]; then
+      if [[ "$failed_stage" != none ]]; then
+        start_stage=$failed_stage
+      else
+        start_stage=$((completed_stage + 1))
+      fi
+      printf 'document resume: %s start_stage=%s\n' "$document" "$start_stage"
     fi
-    printf 'document resume: %s start_stage=%s\n' "$document" "$start_stage"
   fi
 
   if ((start_stage <= 1)); then
@@ -875,12 +937,20 @@ for document in "${selected_paths[@]}"; do
       :
     else
       exit_code=$?
-      [[ $exit_code -eq 75 ]] && exit 75
+      if [[ $exit_code -eq 75 ]]; then
+        failure_reason=rate_limit
+        exit 75
+      fi
       exit "$exit_code"
     fi
     if [[ "$stage_status" == failed ]]; then
       incomplete_documents=$((incomplete_documents + 1))
-      printf 'document incomplete: %s failed_stage=1\n' "$document"
+      if [[ "$pipeline_consecutive_failures" -ge "$pipeline_max_failures" ]]; then
+        printf 'document incomplete: %s failed_stage=1 reason=failure_limit consecutive_failures=%s max_failures=%s\n' \
+          "$document" "$pipeline_consecutive_failures" "$pipeline_max_failures"
+      else
+        printf 'document incomplete: %s failed_stage=1\n' "$document"
+      fi
       continue
     fi
   else
@@ -903,12 +973,20 @@ for document in "${selected_paths[@]}"; do
       stage_2_findings=$stage_findings
     else
       exit_code=$?
-      [[ $exit_code -eq 75 ]] && exit 75
+      if [[ $exit_code -eq 75 ]]; then
+        failure_reason=rate_limit
+        exit 75
+      fi
       exit "$exit_code"
     fi
     if [[ "$stage_2_status" == failed ]]; then
       incomplete_documents=$((incomplete_documents + 1))
-      printf 'document incomplete: %s failed_stage=2\n' "$document"
+      if [[ "$pipeline_consecutive_failures" -ge "$pipeline_max_failures" ]]; then
+        printf 'document incomplete: %s failed_stage=2 reason=failure_limit consecutive_failures=%s max_failures=%s\n' \
+          "$document" "$pipeline_consecutive_failures" "$pipeline_max_failures"
+      else
+        printf 'document incomplete: %s failed_stage=2\n' "$document"
+      fi
       continue
     fi
   else
@@ -925,12 +1003,20 @@ for document in "${selected_paths[@]}"; do
       :
     else
       exit_code=$?
-      [[ $exit_code -eq 75 ]] && exit 75
+      if [[ $exit_code -eq 75 ]]; then
+        failure_reason=rate_limit
+        exit 75
+      fi
       exit "$exit_code"
     fi
     if [[ "$stage_status" == failed ]]; then
       incomplete_documents=$((incomplete_documents + 1))
-      printf 'document incomplete: %s failed_stage=3\n' "$document"
+      if [[ "$pipeline_consecutive_failures" -ge "$pipeline_max_failures" ]]; then
+        printf 'document incomplete: %s failed_stage=3 reason=failure_limit consecutive_failures=%s max_failures=%s\n' \
+          "$document" "$pipeline_consecutive_failures" "$pipeline_max_failures"
+      else
+        printf 'document incomplete: %s failed_stage=3\n' "$document"
+      fi
       continue
     fi
   else
@@ -945,6 +1031,11 @@ done
 
 current_document=
 current_stage=
+if ((visited_documents != ${#selected_paths[@]})); then
+  failure_reason="document_count_mismatch selected=${#selected_paths[@]} visited=$visited_documents"
+  exit 1
+fi
 printf 'grade pipeline complete: selected=%s processed=%s completed_now=%s incomplete=%s exhausted=%s results=%s\n' \
   "${#selected_paths[@]}" "$processed" "$completed" "$incomplete_documents" \
   "${#exhausted_paths[@]}" "$results_file"
+pipeline_finished=true

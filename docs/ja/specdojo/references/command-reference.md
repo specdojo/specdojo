@@ -538,7 +538,7 @@ finding の忠実性照合では、message に限り、Unicode の正準等価�
 
 ### 8.1. 文書単位の grade pipeline
 
-文書ごとに grade pipeline を実行する場合は、リポジトリルートから `tools/grade/run-per-document.sh` を実行します。`--stages 1` は codex 単段、既定の `--stages 3` は従来の3段構成です。`--target kata` では `--kind` に `rulebook` / `recipe` / `sample` / `template` のいずれか、または `all` を指定します。`--target deliverable` では成果物カタログの Markdown 成果物を対象にし、`--kind` は使いません。`--path` を繰り返すと明示した文書だけを処理できます。`--changed-only`、`--ungraded`、`--incomplete` は `grade list` の選択結果を利用し、複数指定時は各結果の和集合を処理します。既定 target は `kata`、既定 kind は `rulebook` です。
+文書ごとに grade pipeline を実行する場合は、リポジトリルートから `tools/grade/run-per-document.sh` を実行します。既定の `--stages 1` は codex 単段、`--stages 3` は互換用の従来構成です。`--target kata` では `--kind` に `rulebook` / `recipe` / `sample` / `template` のいずれか、または `all` を指定します。`--target deliverable` では成果物カタログの Markdown 成果物を対象にし、`--kind` は使いません。`--path` を繰り返すと明示した文書だけを処理できます。`--changed-only`、`--ungraded`、`--incomplete` は `grade list` の選択結果を利用し、複数指定時は各結果の和集合を処理します。既定 target は `kata`、既定 kind は `rulebook` です。
 
 ```bash
 # 対象と agent / reference の確認だけを行う
@@ -560,7 +560,16 @@ tools/grade/run-per-document.sh --run-id 20260912-deliverables --target delivera
 
 互換用の `--stages 3` では、各段の executor と reporter を個別に指定できます。1段目の比較リファレンスは `--kind` に応じて `docs/ja/specdojo/<種別ディレクトリ>/prj-overview-<kind>.md` を既定とします。たとえば `--kind recipe` では `docs/ja/specdojo/recipes/prj-overview-recipe.md` です。対応する既定文書が存在しない場合は警告し、1段目もリファレンスなしで続行します。`--stage-1-reference` の明示指定は既定値より優先しますが、選択した種別のディレクトリにある `prj-overview` 系 Markdown だけを受理し、異なる種別や `none` は入力エラーとします。2段目はリファレンスなし、3段目は `codex-expert-executor` によるリファレンスなしの確認が既定です。2段目が `pass`、score 96以上、finding 1件以下の3条件をすべて満たす場合だけ3段目を実行します。解決した構成は `--dry-run` の `stage=<n>` 行で確認できます。
 
-Run 内の実行 state は既定で `logs/grade/runs/per-document/<run-id>/documents/` に文書・段ごとに保存し、保存先を変える場合は `--work-dir` で指定します。初回に選択した文書は同じ Run の `selection.txt` へ固定し、再開時に grade の更新で選択結果が変わっても、未完了の段を同じ対象で継続します。Run をまたぐ到達状況は前述の文書別 JSON に保存し、新しい Run は `stage_failed`、または `stage_completed + 1` から再開します。単段への切り替え時に、`grade state` が現在本文に有効な `stage_total: 3` の state を返した場合は既存評価を完了済みとみなし、単段の incomplete として再開せず state を削除します。`content_hash` が現在本文と異なる state は `grade state` が返さないため、この移行処理の対象になりません。`logs/` へ plan を置くのは、段ごとの plan が同じ文書 ID を持ち、`docs/` 配下では `index build` が重複 ID で失敗するためです。agent が rate limit を返した場合は終了コード75で中断し、その段を失敗回数には数えません。同じ引数と `--run-id` で再実行すると、完了済みの段を再適用せず未完了の段から続行します。設定が保存済み Run state と異なる場合は、別条件の結果を混在させず、新しい `--run-id` を要求します。
+Run 内の実行 state は既定で `logs/grade/runs/per-document/<run-id>/documents/` に文書・段ごとに保存し、保存先を変える場合は `--work-dir` で指定します。初回に選択した文書は同じ Run の `selection.txt` へ固定し、再開時に grade の更新で選択結果が変わっても、未完了の段を同じ対象で継続します。Run をまたぐ到達状況は前述の文書別 JSON に保存し、新しい Run は `stage_failed`、または `stage_completed + 1` から再開します。保存済み state の `stage_total` が今回の段数と異なる場合は、古い評価を完了済みへ移行せず state を削除し、現在の構成で1段目から再評価します。`content_hash` が現在本文と異なる state は `grade state` が返さないため、このリセット処理の対象になりません。`logs/` へ plan を置くのは、段ごとの plan が同じ文書 ID を持ち、`docs/` 配下では `index build` が重複 ID で失敗するためです。agent が rate limit を返した場合は終了コード75で中断し、その段を失敗回数には数えません。同じ引数と `--run-id` で再実行すると、完了済みの段を再適用せず未完了の段から続行します。設定が保存済み Run state と異なる場合は、別条件の結果を混在させず、新しい `--run-id` を要求します。
+
+正常終了では、選択件数と訪問件数を照合した後に `grade pipeline complete:` の集計行を出します。集計行へ到達しない終了は、rate limit、signal、失敗したコマンド、処理中の文書、未着手文書を標準エラーへ出し、0以外で終了します。出力を `tail` などへパイプする場合、パイプの既定終了コードは末尾コマンドのものになるため、Bash の `pipefail` と `PIPESTATUS` で grade 側の終了コードを保存してください。
+
+```bash
+set -o pipefail
+tools/grade/run-per-document.sh --run-id 20260901-rulebooks --kind rulebook | tail -20
+grade_status=${PIPESTATUS[0]}
+exit "$grade_status"
+```
 
 各段の status、所要秒数、verdict、score、finding 件数、executor、reporter、reference、連続失敗回数は同ディレクトリの `results.tsv` で確認できます。通常の agent / apply 失敗はその段で文書処理を止め、成功済みの前段を残して次回同じ段から再試行します。既定の連続失敗上限は3回で、`--max-stage-failures` で変更できます。上限到達文書は処理対象から外れますが、`retry_exhausted` 行として `results.tsv` に含め、reporter が人手対応を促せるようにします。
 
