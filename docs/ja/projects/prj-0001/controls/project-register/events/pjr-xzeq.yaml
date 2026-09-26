@@ -61,3 +61,16 @@
       from: "-"
       to: rate limit reached
   previous_event_id: reg_5247deff1ef845acb17ef6fa03df5a08
+- v: 1
+  id: reg_204bdc58163b433da531b7d68be3d780
+  ts: "2026-09-26T06:41:38Z"
+  action: start
+  actor: agy-opus-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_9e83454b65cb4c4e8be2db9dd0b19083

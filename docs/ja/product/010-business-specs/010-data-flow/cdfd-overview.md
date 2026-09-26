@@ -66,7 +66,7 @@ SpecDojo を導入して Kata を配置し、その雛形から稼働構成の�
 
 ### 3.3. Do（P-07）
 
-Plan の実行指示に基づき、人または AI Agent が Kata を参照してタスクを実行し、成果物と検証可能な実行記録を残す。定期実行・ジョブ・並行実行はタスク実行の実行形態であり、独立した領域にしない。
+Plan の実行指示に基づく edit phase として、人または AI Agent が Kata を参照してタスクを実行し、成果物と検証可能な実行記録を残す。定期実行・ジョブ・並行実行はタスク実行の実行形態であり、独立した領域にしない。grade は Check、grade を事実として完了可否を判断する review phase は Action が担い、Do の出力には評価結果と完了判断を含めない。
 
 - **主要入力**: Orchestrator からの実行要求、実行計画、Schedule（track）、ジョブ定義、対象成果物、対象登録項目、Kata の rulebook・recipe・template、稼働構成の agent 定義・権限
 - **主要出力**: 作成・更新した成果物、登録項目の状態遷移、実行記録（result）、実行状態（ブロック・判断依頼を含む）
@@ -79,7 +79,7 @@ Plan の実行指示に基づき、人または AI Agent が Kata を参照し�
 
 ### 3.4. Check（P-08〜P-10）
 
-成果物と実行記録を評価・可視化し、判断に使える形へ変換する。評価結果と進捗報告は Action の判断材料になり、派生ビュー・索引は参加者の閲覧に供する。
+成果物と実行記録を評価・可視化し、判断に使える形へ変換する。P-08 の grade は editor から独立した runner が成果物の品質を一度だけ評価して grade・finding を確定する。評価結果と進捗報告は Action の判断材料になり、派生ビュー・索引は参加者の閲覧に供する。
 
 - **主要入力**: Orchestrator からの評価・報告要求、作成・更新された成果物、成果物カタログ、Schedule（track）、登録簿、実行記録・実行状態、Kata の rubric・評価観点
 - **主要出力**: 評価結果（grade、finding）、進捗報告、派生ビュー・索引
@@ -88,13 +88,13 @@ Plan の実行指示に基づき、人または AI Agent が Kata を参照し�
 <!-- prettier-ignore -->
 | 領域 ID | プロセス領域 | 業務目的 | 主な担当 | 起点イベント |
 | --- | --- | --- | --- | --- |
-| `P-08` | 成果物評価 | 成果物や登録項目の対応結果を確認し、品質や適合性を評価する。 | QE | 成果物が作成された、または登録項目の対応が完了した |
+| `P-08` | 成果物評価 | editor から独立した runner が成果物や登録項目の対応結果を一度だけ確認し、品質や適合性を評価する。 | QE | 成果物の内容または評価コンテキストの変化に対する評価要求が発行された |
 | `P-09` | 進捗可視化報告 | プロジェクトの進捗状況を可視化し、関係者に報告する。 | PM | 定期的な報告時期が到来した |
 | `P-10` | 派生生成閲覧提供 | 派生成果物の生成および閲覧を提供する。 | ARC | 派生成果物の生成が要求された |
 
 ### 3.5. Action（P-11〜P-13）
 
-Check の結果と人間の判断に基づき、タスクの完了確定、稼働構成の変更反映、役割を終えた文書の退避を行い、必要に応じて Plan へ再計画を要求する。
+Check の結果と人間の判断に基づき、タスクの完了確定、稼働構成の変更反映、役割を終えた文書の退避を行い、必要に応じて Plan へ再計画を要求する。review phase は P-11 に属し、最新の grade・finding を確定済みの事実として受け取り、成果物を再評価せずにタスクの完了可否を判断する。
 
 - **主要入力**: Orchestrator からの完了・改善要求、評価結果、進捗報告の判断事項、完了条件、参加者からの構成変更要求と承認結果、参加者からの非推奨化の判断
 - **主要出力**: 完了・決定の記録、完了記録、更新した稼働構成（Kata のバージョン更新を含む）、更新した成果物カタログ、非推奨化した文書、保管した文書、再計画要求
@@ -103,7 +103,7 @@ Check の結果と人間の判断に基づき、タスクの完了確定、稼�
 <!-- prettier-ignore -->
 | 領域 ID | プロセス領域 | 業務目的 | 主な担当 | 起点イベント |
 | --- | --- | --- | --- | --- |
-| `P-11` | タスク完了 | 評価済みのタスクの完了を確定して記録し、後続タスクへ引き渡す。 | PO、PM | タスクの評価が完了した |
+| `P-11` | タスク完了 | review phase で最新の grade・finding と完了条件を照合し、タスクの完了可否を確定して記録する。 | PO、PM | 最新の grade・finding と完了要求がそろった |
 | `P-12` | 稼働構成管理 | SpecDojo の稼働構成を変更管理する。 | ARC | 稼働構成の変更要求が発生した |
 | `P-13` | 非推奨化保管 | 役割を終えた、または新 ID へ引き継がれた文書を非推奨化し、誤参照を防ぐ保管場所へ移す。 | PM、ARC | 文書が新 ID へ引き継がれた、または継続利用しないと判断された |
 
@@ -171,14 +171,14 @@ flowchart LR
   Register[("📒 登録簿 / register")]
   Schedule[("📅 Schedule（track）")]
   ExecPlan[("📋 実行計画 / plan")]
-  Do("⚙️ Do<br>P-07")
+  Do("⚙️ Do<br>P-07<br>edit phase")
   Deliverables[("📄 成果物 / deliverable")]
   ExecLog[("🧾 実行記録")]
-  Check("🔍 Check<br>P-08〜P-10")
+  Check("🔍 Check<br>P-08〜P-10<br>grade")
   Grade[("🧪 評価結果")]
   Report[("📊 進捗報告")]
   Derived[("🗂️ 派生ビュー・索引")]
-  Action("✅ Action<br>P-11〜P-13")
+  Action("✅ Action<br>P-11〜P-13<br>review phase")
   Trash[("🗃️ 保管庫（trash） / trash")]
 
   Orchestrator ~~~ Plan ~~~ Do ~~~ Check ~~~ Action
@@ -211,7 +211,7 @@ flowchart LR
   Check -->|"進捗報告"| Report
   Check -->|"派生ビュー・索引"| Derived
 
-  Grade -->|"評価結果"| Action
+  Grade -->|"最新の grade・finding（確定済みの事実）"| Action
   Report -->|"判断事項"| Action
   Action -->|"完了・決定の記録"| Register
   Action -->|"完了記録"| ExecLog
@@ -243,9 +243,9 @@ flowchart LR
   Job[("🧰 ジョブ定義 / job")]
   Orchestrator("🎛️ Orchestrator<br>P-14")
   Plan("📝 Plan<br>P-02〜P-06")
-  Do("⚙️ Do<br>P-07")
-  Check("🔍 Check<br>P-08〜P-10")
-  Action("✅ Action<br>P-11〜P-13")
+  Do("⚙️ Do<br>P-07<br>edit phase")
+  Check("🔍 Check<br>P-08〜P-10<br>grade")
+  Action("✅ Action<br>P-11〜P-13<br>review phase")
 
   Kata -->|"provider 別雛形"| Onboarding
   Onboarding -->|"配置した Kata"| Kata
@@ -288,14 +288,14 @@ flowchart LR
 ### 6.1. プロセスグループ別 CDFD
 
 <!-- prettier-ignore -->
-| プロセスグループ | 含む領域 | プロセスグループ別 CDFD |
-| --- | --- | --- |
-| Onboarding | `P-01` | `cdfd-onboarding` |
-| Plan | `P-02`〜`P-06` | `cdfd-plan` |
-| Do | `P-07` | `cdfd-do` |
-| Check | `P-08`〜`P-10` | `cdfd-check` |
-| Action | `P-11`〜`P-13` | `cdfd-action` |
-| Orchestrator | `P-14` | `cdfd-orchestrator` |
+| プロセスグループ | 含む領域 | phase / 判定との対応 | プロセスグループ別 CDFD |
+| --- | --- | --- | --- |
+| Onboarding | `P-01` | - | `cdfd-onboarding` |
+| Plan | `P-02`〜`P-06` | - | `cdfd-plan` |
+| Do | `P-07` | edit phase | `cdfd-do` |
+| Check | `P-08`〜`P-10` | grade による成果物品質の評価 | `cdfd-check` |
+| Action | `P-11`〜`P-13` | review phase によるタスク完了可否の判断 | `cdfd-action` |
+| Orchestrator | `P-14` | - | `cdfd-orchestrator` |
 
 ### 6.2. ユースケース別 CDFD
 

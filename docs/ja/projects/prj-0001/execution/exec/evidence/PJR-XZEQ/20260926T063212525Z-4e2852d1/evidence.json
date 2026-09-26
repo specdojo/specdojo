@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-XZEQ",
+  "run_id": "20260926T063212525Z-4e2852d1",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "rate_limited",
+    "started_at": "2026-09-26T06:32:12.525Z",
+    "completed_at": "2026-09-26T06:38:08.819Z",
+    "exit_code": 1,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": ".../010-data-flow/cdfd-overview.md                 | 40 +++++++++++-----------\n 1 file changed, 20 insertions(+), 20 deletions(-)"
+  },
+  "validations": [],
+  "final_message": "",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-XZEQ/20260926T063212525Z-4e2852d1/executor.log",
+      "bytes": 65536,
+      "truncated": true
+    }
+  ]
+}
