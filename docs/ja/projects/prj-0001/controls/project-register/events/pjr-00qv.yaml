@@ -61,3 +61,16 @@
       from: "-"
       to: "checkpoint failed: Root index has staged changes; commit or unstage them first: docs/ja/projects/prj-0001/controls/project-register/events/pjr-t3nn.yaml docs/ja/projects/prj-0001/controls/project-regi…"
   previous_event_id: reg_d72c9a286d8b4302835dd269cc420ed4
+- v: 1
+  id: reg_f308b8d5852b40ecb2224887b0059bcb
+  ts: "2026-09-26T03:47:18Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_2f68bc21e2484257a9ed0ff6a3a1566a
