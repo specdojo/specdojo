@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: DEV
   registered_at: "2026-09-26T11:21:58Z"
-  block_reason: rate limit reached
+  block_reason: "agent exited with non-zero code: agent exited with non-zero code: error: interrupted"
 ---
 
 # PJR-K332 register の並行実行で項目ごとに executor を指定できるようにする
@@ -61,17 +61,19 @@ register の実行では `--executor-by` を全項目で共有する。項目ご
 
 ## 5. 作業内容
 
-| No  | 作業                                | 担当 | 状態 | メモ                    |
-| --- | ----------------------------------- | ---- | ---- | ----------------------- |
-| 1   | 指定方法を決める                    | ARC  | open | 案 1 を起点             |
-| 2   | `pinnedExecutor` との関係を確認する | DEV  | open | schedule の既存の仕組み |
-| 3   | 実装する                            | DEV  | open |                         |
-| 4   | テストを追加する                    | DEV  | open |                         |
-| 5   | ガイドへ記載する                    | OPS  | open |                         |
+| No  | 作業                                | 担当 | 状態 | メモ                                                          |
+| --- | ----------------------------------- | ---- | ---- | ------------------------------------------------------------- |
+| 1   | 指定方法を決める                    | ARC  | done | 案 1 (`--executor-by PJR-X=...`) を採用                       |
+| 2   | `pinnedExecutor` との関係を確認する | DEV  | done | 本件の完了要件には含まれないため、 CLI 指定（案 1）のみ実装。 |
+| 3   | 実装する                            | DEV  | done | `parseRegisterExecutorSelection` 等を追加                     |
+| 4   | テストを追加する                    | DEV  | done | 単体・統合テストを追加                                        |
+| 5   | ガイドへ記載する                    | OPS  | done | `exec-operation-guide.md` 更新                                |
 
 ## 6. 対応結果
 
--
+案 1 の `--executor-by PJR-A=codex,PJR-B=agy` 形式での個別指定を実装しました。指定した項目のうち起動対象に含まれないものがある場合はエラーで失敗し、全項目で共通指定する従来の挙動とも互換性を保っています。
+
+また、`ProviderConcurrencyGate` を導入して、provider ごとの `max_concurrency` が守られるように実装しました。
 
 ## 7. 関連ドキュメント
 

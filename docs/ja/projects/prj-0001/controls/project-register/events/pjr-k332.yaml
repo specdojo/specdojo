@@ -61,3 +61,16 @@
       from: "-"
       to: rate limit reached
   previous_event_id: reg_3e8f6d8ff1e8488ca239fcd21569d43c
+- v: 1
+  id: reg_45e45cca52f541d3b4acdee4bbad259e
+  ts: "2026-09-26T15:22:04Z"
+  action: wait
+  actor: agy-expert-executor
+  from_status: waiting
+  to_status: waiting
+  reason: "agent exited with non-zero code: agent exited with non-zero code: error: interrupted"
+  changes:
+    - field: block_reason
+      from: rate limit reached
+      to: "agent exited with non-zero code: agent exited with non-zero code: error: interrupted"
+  previous_event_id: reg_63b280a4d34043f49ba78c19e1587606
