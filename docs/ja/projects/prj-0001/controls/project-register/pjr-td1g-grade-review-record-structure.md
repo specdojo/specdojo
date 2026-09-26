@@ -7,11 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: question
-  item_status: open
+  item_status: decided
   priority: medium
   owner: ARC
   registered_at: "2026-09-24T14:01:36Z"
   due_on: "2026-11-21"
+  completed_at: "2026-09-26T11:05:49Z"
+  conclusion: 統合しない。grade は成果物の品質、review はタスクの完了可否という別の対象を判定し、review は観点ごとの記録を持たなくなるため、記録構造を揃える必要がない。
 ---
 
 # PJR-TD1G grade と review の記録構造を統合するかを決める
@@ -47,16 +49,31 @@ specdojo:
 
 ## 4. 回答・結論
 
-_TODO_: 回答または採択した方針を記載する。未回答の場合は `-` とする。
+**統合しない（候補 A）。** ただし理由は「変更がない」ではなく、**grade と review は判定の対象が違う**ためである。
+
+[[prj-0001:pjr-2zvs-grade-review-integration]] の最終結論で、grade は成果物の品質を、review はタスクの完了可否を判定する別の経路と定めた。review は成果物を再評価せず、grade の結果を確定済みの事実として受け取る。
+
+| 経路   | 記録するもの                             | 形式               |
+| ------ | ---------------------------------------- | ------------------ |
+| grade  | 観点ごとの判定（level、score、findings） | sidecar の YAML    |
+| review | 完了の判断とその根拠、改善指示           | result の Markdown |
+
+**review は観点ごとに評価しなくなるので、review 側から観点ごとの記録がなくなる。** 観点ごとの判定は grade の sidecar にしか存在しない。確認事項に挙げた「集計できるのは grade 側だけで、review の結果は件数も傾向も追えない」という問題は、review が観点を持たなくなることで生じなくなる。
+
+記録の形式が違うのは判定の対象が違うためであり、揃える必要はない。候補 B・C（review を YAML 化する）は、観点ごとの記録が review からなくなるので不要になる。候補 D（grade を Markdown 化する）は集計できなくなるので採らない。
+
+`done_criteria` の二重判定も同じ理由で解消する。`done_criteria` の充足は grade が判定し、review はその結果を完了判断の材料として使う。
+
+review の観点ごとの記録をなくす作業は [[prj-0001:pjr-n22n-xrp-xrr-review]] で行う。
 
 ## 5. 承認
 
-| 項目     | 内容   |
-| -------- | ------ |
-| 回答者   | _TODO_ |
-| 回答日   | _TODO_ |
-| 承認方式 | _TODO_ |
-| 証跡     | _TODO_ |
+| 項目     | 内容                                                                  |
+| -------- | --------------------------------------------------------------------- |
+| 回答者   | naoji3x                                                               |
+| 回答日   | 2026-09-26                                                            |
+| 承認方式 | commit                                                                |
+| 証跡     | register event `close`（`events/pjr-td1g.yaml`）と本個票の遷移 commit |
 
 - 承認方式は既定で `commit`（`register close` により `decided` へ遷移）を用いる。
 - 回答が不可逆・高リスク・framework schema 破壊的変更を伴う場合は `PR` 方式で承認し、証跡に PR URL と merge SHA を記載する。

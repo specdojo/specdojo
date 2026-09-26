@@ -28,13 +28,26 @@ specdojo:
 
 本項目は **review 前段での grade 実行と、判定主体の分担の明記**だけを扱う。
 
+### 1.2. 最終結論との関係（2026-09-26）
+
+[[prj-0001:pjr-2zvs-grade-review-integration]] の最終結論「review の時点で grade が最新でなければ実行し、最新ならそのまま使う」を runner 側で実装するのが本項目である。一時は [[prj-0001:pjr-n22n-xrp-xrr-review]] と重なるとして close を検討したが、扱う範囲が違うため残す。
+
+| 項目     | 範囲                                                                      |
+| -------- | ------------------------------------------------------------------------- |
+| 本項目   | runner の処理。review の前に grade を実行・再利用し、結果を plan に載せる |
+| PJR-N22N | テンプレートの文面。`xrp` / `xrr` を「review は評価しない」前提へ改める   |
+
+以前は `cdfd-check` の「review から独立して」と矛盾するとしていたが、[[prj-0001:pjr-xzeq-cdfd-overview-cdfd-check-cdfd-action-grade-review]] で「editor から独立」へ改めたため、矛盾は解消した。
+
+テンプレートへ「再評価しない」旨を書く作業は N22N の範囲なので、本項目の完了条件から外した。
+
 ## 2. 完了条件
 
 - review フェーズの前段で runner が対象文書へ grade を実行する。executor には実行させない。
 - 対象文書の `content_hash` が既存 sidecar と一致する場合は grade を再実行せず、既存の結果を使う。
 - review plan に、対象文書の grade 結果（verdict と findings）が提示される。レビュアが判断材料として使える。
-- `xrp-*` テンプレートに、`agent` / `deterministic` 観点は grade が判定済みであり再評価しない旨が記載されている。
-- grade 結果の提示は「確認対象外」の向きで行う。再指摘を促す書き方にしない。
+- grade 結果の提示は「確定済みの事実」の向きで行う。review が観点を再評価したり、再指摘を促したりする書き方にしない。
+- 提示の対象は grade が判定した全観点とする。観点の区分（`evaluation`）で提示を絞らない。
 - 対象文書の `content_hash` と grade 結果が一致しない場合、その旨が plan に示される。
 - grade 実行のスキップ判定と plan への提示を検証する単体テストがある。
 - `npm run check` が通過している。

@@ -32,3 +32,22 @@
     - field: due
       from: ""
       to: "2026-11-21"
+- v: 1
+  id: reg_b3d25426ff1343229916fd36519ef2c3
+  ts: "2026-09-26T11:05:49Z"
+  action: close
+  actor: manual
+  from_status: open
+  to_status: decided
+  reason: PJR-2ZVS の最終結論により問いが解消した。
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-09-26"
+    - field: conclusion
+      from: "-"
+      to: 統合しない。grade は成果物の品質、review はタスクの完了可否という別の対象を判定し、review は観点ごとの記録を持たなくなるため、記録構造を揃える必要がない。
+  previous_event_id: reg_1ec9081a39264215a696edab3a05624e
