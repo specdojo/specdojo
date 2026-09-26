@@ -21,13 +21,13 @@ Options:
   --changed-only[=true|false]   Select documents changed since the latest grade
   --ungraded[=true|false]       Select documents without a stored grade
   --incomplete[=true|false]     Select retryable incomplete pipelines
-  --stages <1|3>                Number of stages to run (default: 3)
+  --stages <1|3>                Number of stages to run (default: 1)
   --max-stage-failures <count>  Stop retrying a stage after this many failures
                                 (default: 3)
   --limit <count>               Process at most this many selected documents
   --work-dir <directory>        State and result directory
-  --stage-1-executor <nickname> (default: gemma-expert-executor for 3 stages,
-                                codex-expert-executor for 1 stage)
+  --stage-1-executor <nickname> (default: codex-expert-executor for 1 stage,
+                                gemma-expert-executor for 3 stages)
   --stage-1-reporter <nickname> (default: gemma-reporter)
   --stage-1-reference <path>    Comparison document. Kata defaults to the
                                 same-kind prj-overview; deliverable defaults to none
@@ -71,7 +71,10 @@ changed_only=false
 ungraded=false
 incomplete=false
 max_stage_failures=3
-stages=3
+# PJR-W5JT で 3 段構成を廃止し codex 単段へ移したため、既定は 1 とする。gemma の 1・2 段は
+# 門番として機能せず、本質的な major を見落として満点を付ける一方で前回 finding を現在内容と
+# 照合せず再掲していた。3 は当時の構成を再現する検証用に残す。
+stages=1
 declare -a selected_paths=()
 declare -a requested_paths=()
 declare -a exhausted_paths=()
