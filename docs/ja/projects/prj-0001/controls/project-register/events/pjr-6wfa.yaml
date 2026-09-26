@@ -32,3 +32,32 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_c52d098e318947aeaa55867137c39a5e
+  ts: "2026-09-26T12:12:43Z"
+  action: start
+  actor: agy-claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_533b2515253b41ccb74f87d8fea9767f
+- v: 1
+  id: reg_a7a603c7901d4343b75e14132e591fc5
+  ts: "2026-09-26T12:36:51Z"
+  action: wait
+  actor: agy-claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: rate limit reached
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: rate limit reached
+  previous_event_id: reg_c52d098e318947aeaa55867137c39a5e
