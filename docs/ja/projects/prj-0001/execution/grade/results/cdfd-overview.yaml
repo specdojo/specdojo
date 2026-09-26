@@ -6,9 +6,9 @@ target: deliverable
 rubric: grade-rubric-v1
 verdict: needs-work
 score: 79
-graded_at: "2026-09-26T10:36:06.060Z"
-graded_by: agy-expert-executor
-content_hash: 7ba72dd25e99e28712fdf18cf8046d04105ea84b1db9d8c5653d1afb4d97b3d1
+graded_at: "2026-09-26T11:06:03.390Z"
+graded_by: codex-expert-executor
+content_hash: 6a94820eb865b7f4ca2bb616bcc24144c69b2ed1695c77aff3677be706eba0e3
 categories:
   consistency:
     score: 38
@@ -54,14 +54,14 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 4
+  major: 7
   minor: 3
   note: 0
 findings:
   - id: F001
     severity: major
     rule: vp-arc-cross-document-consistency
-    line: 48
+    line: 35
     anchor: <!-- prettier-ignore -->
     message: >-
       成果物カタログの `cdfd-onboarding` は repository からの導入、既存プロジェクトへの導入、Detached Unit を対象に含めるが、本書の P-01 は起点を「PO
@@ -69,12 +69,46 @@ findings:
   - id: F002
     severity: major
     rule: vp-arc-cross-document-consistency
-    line: 99
-    anchor: ""
+    line: 89
+    anchor: "- **主要入力**: Orchestrator からの完了・改善要求、評価結果、進捗報告の判断事項、完了条件、参加者からの構成変更要求と承認結果、参加者からの非推奨化の判断"
     message: >-
       本書は Action の主要入力を「参加者からの構成変更要求と承認結果」「参加者からの非推奨化の判断」とする一方、`cdfd-action` は承認結果と非推奨化判断を Action
       内部で生成しており、人間の判断境界を統一する必要がある。
   - id: F003
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 61
+    anchor: >-
+      - **主要入力**: Orchestrator からの実行要求、実行計画、Schedule（track）、ジョブ定義、対象成果物、対象登録項目、Kata の rulebook・recipe・template、稼働構成の
+      agent 定義・権限
+    message: >-
+      本書は Do の主要入力・データストアに `Schedule（track）` を含め、図でも Schedule から Do
+      への入力を定義するが、`docs/ja/product/010-business-specs/010-data-flow/cdfd-do.md` は主要入力・データストア・個別プロセス入出力のいずれにも Schedule
+      を含めていないため、P-07 の詳細化範囲を統一する必要がある。
+  - id: F004
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 124
+    anchor: >-
+      | 成果物カタログ / catalog | 成果物 ID、種別、依存、完了条件、根拠参照。担当は持たず、スケジュール戦略の `owner_rules` から Schedule（track）へ展開する |
+      `<project-id>/010-deliverables-catalog/dct-*.yaml` |
+    message: >-
+      本書は成果物カタログが担当を持たずスケジュール戦略の `owner_rules`
+      から担当を展開すると定義する一方、`docs/ja/product/010-business-specs/010-data-flow/cdfd-orchestrator.md` の 4.1 は成果物カタログから `owner`
+      を参照するとしており, 担当情報の正本を統一する必要がある。
+  - id: F005
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 135
+    anchor: >-
+      | Schedule（track） | トラックごとのタスク、担当、期間、依存と、タスクに依存するマイルストーン。スケジュール戦略と成果物カタログから `schedule build`
+      で生成する計画の正本であり、タスクの状態は持たない。状態は実行記録を正本とする |
+      `<project-id>/schedule/sch-track-<track>.yaml`、<br>`<project-id>/schedule/sch-milestones.yaml`、<br>`<project-id>/timeline/`
+      |
+    message: >-
+      本書は Schedule（track）がタスクの状態を持たず実行記録を状態の正本とすると定義する一方、`docs/ja/product/010-business-specs/010-data-flow/cdfd-plan.md`
+      と `cdfd-check.md` の 4.2 は Schedule（track）がタスク状態を保持・参照するとしており、状態の正本を統一する必要がある。
+  - id: F006
     severity: major
     rule: vp-qe-done-criteria
     line: 19
@@ -82,13 +116,13 @@ findings:
       - 人間と AI Agent の責任分担は、承認、完了判断、構成変更の承認、非推奨化の判断を人間が担い、成果物の作成・評価・派生生成は人が担うほか AI Agent
       へ委譲できる、という原則に従う。本書の各領域はこの原則を前提とし、人間の判断を自動処理に置き換えない。
     message: DC-002（PO による対象範囲と領域分割の承認）を満たす承認記録が特定できず、未充足である。
-  - id: F004
+  - id: F007
     severity: minor
     rule: vp-qe-done-criteria
-    line: 114
-    anchor: ""
+    line: 104
+    anchor: "- **主要入力**: 稼働構成の agent 定義・実行既定値、参加者からの意図、成果物カタログの完了条件、スケジュール戦略の作業要件、実行計画（対象・手順・完了条件）、定期実行定義、実行状態"
     message: DC-003 が要求する主要入力と概念データフローの相互対応について、図 5.2 のエッジにある「rulebook 参照」が Orchestrator の「主要入力」から欠落している。
-  - id: F005
+  - id: F008
     severity: major
     rule: vp-qe-omissions-consistency
     line: 19
@@ -96,17 +130,17 @@ findings:
       - 人間と AI Agent の責任分担は、承認、完了判断、構成変更の承認、非推奨化の判断を人間が担い、成果物の作成・評価・派生生成は人が担うほか AI Agent
       へ委譲できる、という原則に従う。本書の各領域はこの原則を前提とし、人間の判断を自動処理に置き換えない。
     message: 現行の 14 領域・六グループへの改訂を PO が承認した記録を特定できず、現在の境界に対する承認記録を追加する必要がある。
-  - id: F006
+  - id: F009
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 114
-    anchor: ""
+    line: 104
+    anchor: "- **主要入力**: 稼働構成の agent 定義・実行既定値、参加者からの意図、成果物カタログの完了条件、スケジュール戦略の作業要件、実行計画（対象・手順・完了条件）、定期実行定義、実行状態"
     message: Orchestrator の図 5.2 には「完了条件・rulebook 参照」のエッジがあるが「主要入力」には rulebook 参照が記載されていないため、図のエッジに対応する入力を追加する必要がある。
-  - id: F007
+  - id: F010
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 290
-    anchor: "### 6.2. ユースケース別 CDFD"
+    line: 281
+    anchor: "| プロセスグループ | 含む領域 | phase / 判定との対応 | プロセスグループ別 CDFD |"
     message: プロセスグループ別 CDFD の表が「phase / 判定との対応」列を含む 4 列構成になっており, rulebook が規定する 3 列構成と矛盾するため、余分な列を削除する必要がある。
 done_criteria:
   satisfied: 2

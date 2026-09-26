@@ -2,15 +2,16 @@
 specdojo:
   id: prj-0001:pjr-f1jg-cdfd-overview-runner-qe
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: done
   priority: high
   owner: ARC
   registered_at: "2026-09-26T10:47:18Z"
+  completed_at: "2026-09-26T11:07:16Z"
 ---
 
 # PJR-F1JG cdfd-overview の評価結果の確定者を runner から QE へ戻す
@@ -75,7 +76,34 @@ specdojo:
 
 ## 6. 対応結果
 
--
+`cdfd-overview.md` の Check 概要を「runner が…一度だけ照合し、QE が grade・finding を確定する」へ改めた（`772dece3`）。P-08 行の担当（QE）と、97 行目の Action の記述（確定済みの事実として受け取る）は整合していたため変更していない。
+
+### 6.1. grade の結果
+
+`--stages 1`、`codex-expert-executor` / `gemma-reporter` で 2 文書を評価した。終了コードを保つためパイプを通さずに実行し、`grade pipeline complete` の行で完走を確かめた。
+
+| 文書            | 前回（09-26 午前） | 今回   | major     |
+| --------------- | ------------------ | ------ | --------- |
+| `cdfd-check`    | 79                 | **83** | 3 → **2** |
+| `cdfd-overview` | 79                 | 79     | 4 → **7** |
+
+**`cdfd-check` の確定者に関する finding は消えた。** 完了条件の「該当 finding が解消している」を満たす。
+
+### 6.2. cdfd-overview の major が増えた理由
+
+増えた 3 件のうち **2 件は、私が以前 `cdfd-overview` に加えた変更を下位の CDFD へ反映していなかったこと**による。
+
+| finding                                                                                        | 原因                                         |
+| ---------------------------------------------------------------------------------------------- | -------------------------------------------- |
+| Do の入力に `Schedule（track）` があるが、`cdfd-do` にない                                     | `1d735942` で `cdfd-overview` だけに追加した |
+| track は状態を持たないとしたが、`cdfd-plan` と `cdfd-check` 4.2 は状態を持つとしている         | `1d735942` で `cdfd-overview` だけを訂正した |
+| 担当を `owner_rules` から展開するが、`cdfd-orchestrator` 4.1 はカタログから `owner` を参照する | 以前からの不整合                             |
+
+変更内容自体は実装と一致しており正しい。`cdfd-rulebook` は「名称と区分は全体概要から変更しません」と定めており、全体概要を変えたら下位を追従させる必要があった。**その作業が漏れていた。**
+
+前回は `agy-expert-executor`、今回は `codex-expert-executor` で評価したため、検出力の違いが混じっている可能性がある。ただし 2 件は事実として確認できた（`cdfd-do` に Schedule の入力がない、`cdfd-check` 4.2 と `cdfd-plan` の Schedule 行に「状態」がある）。
+
+追従させる作業は別項目で扱う。
 
 ## 7. 関連ドキュメント
 

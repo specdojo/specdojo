@@ -45,3 +45,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_63e81195b7574d6986b832fe05ec9a19
+- v: 1
+  id: reg_1e1c21314698449cac638ed306dab934
+  ts: "2026-09-26T11:07:16Z"
+  action: close
+  actor: manual
+  from_status: in-progress
+  to_status: done
+  reason: cdfd-check の確定者に関する finding が解消した。cdfd-overview の過去の変更を下位 CDFD へ追従させる作業は別項目で扱う。
+  changes:
+    - field: status
+      from: in-progress
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-26"
+  previous_event_id: reg_ea04fbca93e442ef8792faeea050449b
