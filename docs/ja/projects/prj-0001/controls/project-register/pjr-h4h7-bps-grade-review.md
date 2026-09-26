@@ -36,14 +36,42 @@ specdojo:
 
 ## 3. 対象の成果物
 
-カタログ `dct-business-model-bps.yaml` に BPS が 29 件定義されており、いずれも未作成である。本項目に該当するのは次の 2 件。
+**根拠は成果物カタログではなく現行の CDFD とする。** カタログの BPS 29 件は旧 10 領域体系の P 番号を記載しており、同じ番号が現行では別の領域を指す。カタログの追従は [[prj-0001:pjr-mh9e-bps-29-cdfd-14]] で後追いする。
 
-| local_id                             | 該当範囲                   |
-| ------------------------------------ | -------------------------- |
-| `bps-task-review-finalize`           | review と完了処理          |
-| `bps-reporting-monitoring-detection` | 監視・検出（grade の評価） |
+現行 CDFD の 14 領域のうち、本項目が対象とするのは次の 2 つである。
 
-**カタログの分割が今回の結論と整合するかを確認する。** review が Action へ移るため、`bps-task-review-finalize` の範囲と、grade を `bps-reporting-*` 側に置く妥当性を見直す。分割の変更が必要な場合はカタログを更新する。
+| 領域   | 名称       | 正本             | 作成する BPS                 |
+| ------ | ---------- | ---------------- | ---------------------------- |
+| `P-08` | 成果物評価 | `cdfd-check.md`  | `bps-deliverable-evaluation` |
+| `P-11` | タスク完了 | `cdfd-action.md` | `bps-task-completion`        |
+
+`bps-rulebook.md` は「一文書は、概念データフローの一つのプロセス領域に属し」と定めるため、**2 文書に分ける。** 両者の関係は各文書の入口と出口に記載する。グループを横断する順序はユースケース別 CDFD の責務であり、BPS で定義しない。
+
+### 3.1. P-11 は既に結論と一致している
+
+`cdfd-action.md` の記述である。
+
+```text
+3.1. タスク完了（P-11）
+  評価結果、進捗報告の判断事項、完了条件を照合し、人間が完了可否を判断する。
+```
+
+| プロセス  | 業務目的                                                   | 担当   |
+| --------- | ---------------------------------------------------------- | ------ |
+| `P-11-01` | 完了条件と評価・報告結果を人間が照合し、完了可否を確定する | PO、PM |
+| `P-11-02` | 完了の決定と完了記録を正本へ残す                           | PM     |
+
+[[prj-0001:pjr-2zvs-grade-review-integration]] で確定した「review は文書を再評価せず、grade を事実として受け取って完了可否を判断する」は `P-11-01` そのものである。review phase を Action へ移す結論は、CDFD の既存の構造と整合する。
+
+### 3.2. カタログ未登録の影響
+
+| 影響                   | 内容                                             |
+| ---------------------- | ------------------------------------------------ |
+| `done_criteria` がない | grade の `vp-qe-done-criteria` が評価できない    |
+| カタログに未登録       | `vp-arc-cross-document-consistency` が検出しうる |
+| Schedule に載らない    | タスクとして追跡されない                         |
+
+いずれも [[prj-0001:pjr-mh9e-bps-29-cdfd-14]] のカタログ追従で解消する。先行作成を妨げる理由にはしない。
 
 ## 4. 完了条件
 
@@ -53,7 +81,8 @@ specdojo:
 - review が文書を再評価しないことと、grade を事実として受け取ることが記述されている。
 - editor と評価実行者の独立が記述されている。
 - 例外（grade が最新でない、評価不能、対象が評価中に変更された）の扱いが記述されている。
-- カタログの分割が結論と整合している。不整合があれば更新されている。
+- 処理ステップが現行 CDFD の P 番号（`P-08-01`〜`03`、`P-11-01`〜`02`）と対応している。カタログの旧 P 番号を根拠にしていない。
+- 2 文書の入口と出口が対応しており、grade の確定結果が完了判断の入力になることが読み取れる。
 - `done_criteria` を満たしている。
 - `npm run -s lint:md` と `npm run docs:build` が通過している。
 
@@ -79,13 +108,13 @@ specdojo:
 
 ## 7. 作業内容
 
-| No  | 作業                                     | 担当 | 状態 | メモ                        |
-| --- | ---------------------------------------- | ---- | ---- | --------------------------- |
-| 1   | 前提 2 項目の完了を待つ                  | QE   | open | T3NN、8TEN                  |
-| 2   | カタログの分割が結論と整合するか確認する | BA   | open | 2 件の範囲と配置            |
-| 3   | BPS を作成する                           | QE   | open | rulebook と template に従う |
-| 4   | `done_criteria` の充足を確認する         | QE   | open | grade で判定                |
-| 5   | 展開する項目を起票する                   | QE   | open | `cdfd-*`、`xrp-*`、`xrr-*`  |
+| No  | 作業                                | 担当 | 状態 | メモ                         |
+| --- | ----------------------------------- | ---- | ---- | ---------------------------- |
+| 1   | 前提 2 項目の完了を待つ             | QE   | open | T3NN、8TEN                   |
+| 2   | 現行 CDFD の P-08 / P-11 を読み込む | QE   | open | `cdfd-check` / `cdfd-action` |
+| 3   | BPS を 2 件作成する                 | QE   | open | 評価と完了で分ける           |
+| 4   | grade を実行し finding を確認する   | QE   | open | `done_criteria` は未登録     |
+| 5   | 展開する項目を起票する              | QE   | open | `cdfd-*`、`xrp-*`、`xrr-*`   |
 
 ## 8. 対応結果
 
@@ -97,5 +126,7 @@ specdojo:
 - [[prj-0001:pjr-t3nn-bps-rulebook-rulebook-authoring-standard]]
 - [[prj-0001:pjr-8ten-bps-sample-bps-template-bps-recipe]]
 - [[prj-0001:pjr-wpwb-viewpoint-evaluation-criteria]]
-- `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bps.yaml`
+- [[prj-0001:pjr-mh9e-bps-29-cdfd-14]]
+- `docs/ja/product/010-business-specs/010-data-flow/cdfd-check.md`
+- `docs/ja/product/010-business-specs/010-data-flow/cdfd-action.md`
 - `docs/ja/specdojo/rulebooks/bps-rulebook.md`
