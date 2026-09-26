@@ -1,0 +1,7 @@
+成果物編集は完了しました。8件の概念英語名を9本のCDFDで統一し、rulebookと個票を更新しました。resultファイルと登録状態は未変更です。
+
+Markdown・カタログ・索引検証は通過しました。`docs:build`のみ、sandbox内でChromiumを起動できず未完了です。grade再評価はQE作業として残しています。
+
+<specdojo_executor_evidence>
+{"final_message":"CDFDの英語名併記とrulebook注記を反映済み。docs:buildのみChromiumのsandbox制約で未完了。","validations":[{"command":"npm run -s lint:md","status":"passed","summary":"全Markdownのlintが通過"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"検証通過。既存の未作成文書に関する警告のみ"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1960件の文書索引を生成"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"},{"command":"npm run docs:build","status":"failed","summary":"tsx IPCソケットおよびMermaid用Chromiumの起動がsandboxでEPERMとなり未完了"}]}
+</specdojo_executor_evidence>
