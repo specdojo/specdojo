@@ -61,3 +61,16 @@
       from: "-"
       to: "checkpoint failed: git ls-files failed: fatal: detected dubious ownership in repository at '/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-9PZ7' (args: --full-name -z -- 4 paths)"
   previous_event_id: reg_3e3cc9d532f54f2a94bbe6f256e1c8bb
+- v: 1
+  id: reg_046b807fa7de45d5982d659f72d613d9
+  ts: "2026-09-26T11:44:30Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_1762cad06bca4ae993a3edf84b03f78e
