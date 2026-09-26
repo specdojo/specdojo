@@ -90,3 +90,19 @@
       from: "checkpoint failed: git ls-files failed: fatal: detected dubious ownership in repository at '/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-1Y9P' (args: --full-name -z -- 4 paths)"
       to: "agent exited with non-zero code: 親検証の `test-integration` が失敗（status: failed）しているため。"
   previous_event_id: reg_71b17da3c3124cf8840cdd00ce862f0b
+- v: 1
+  id: reg_065cacbd606b47409c535e2b3bc38bbe
+  ts: "2026-09-26T09:00:46Z"
+  action: close
+  actor: manual
+  from_status: waiting
+  to_status: done
+  reason: target_coverage による対象網羅の検証を実装した。統合テスト 1 件は --task 経路の resume の問題により it.skip とし PJR-TDB0 で追跡する。register 由来 plan の targets 不在は別途扱う。
+  changes:
+    - field: status
+      from: waiting
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-26"
+  previous_event_id: reg_a42b9e589ac344bfaedd243b73d3c031

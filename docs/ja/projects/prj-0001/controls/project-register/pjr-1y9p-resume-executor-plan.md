@@ -2,15 +2,16 @@
 specdojo:
   id: prj-0001:pjr-1y9p-resume-executor-plan
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-09-26T07:46:13Z"
+  completed_at: "2026-09-26T09:00:46Z"
   block_reason: "agent exited with non-zero code: 親検証の `test-integration` が失敗（status: failed）しているため。"
 ---
 
@@ -103,6 +104,69 @@ rate limit で中断した executor 段を `--resume` で再開したとき、�
 - rate limit、crash、手動停止はいずれも executor 段の再開経路で同じ検査を通る。plan に `targets` がない register 由来タスクは、機械照合を行わず plan 全体の再確認指示を適用する。
 - 通常の新規 run では `target_coverage` を必須にせず、既存の正常系を追加ガードによる失敗対象にしない。
 - rate limit で中断した executor を worktree 上で再開し、全 target の coverage と累積差分を確認してから reporter・統合へ進む統合テストを追加した。
+
+### 7.1. 評価（2026-09-26）
+
+案 1（宣言と実変更の照合）と案 4（再開時の全対象確認の指示）を組み合わせた実装が完成した。統合テスト 1 件を `it.skip` とし、[[prj-0001:pjr-tdb0-task-resume-rate-limit-executor]] で追跡する。
+
+| 完了条件                                                 | 判定                              |
+| -------------------------------------------------------- | --------------------------------- |
+| resume 後の executor が plan の対象を扱ったか検証できる  | 満たす（`targets` がある場合）    |
+| 未変更の対象がある場合、成功として記録されない           | 満たす                            |
+| 変更が不要だった対象は理由の記録で成功扱いにできる       | 満たす（`unchanged` + `reason`）  |
+| 再開時に渡す情報が着手範囲を含む、または全対象確認を促す | 満たす                            |
+| rate limit 以外の中断でも同じ検証が働く                  | 満たす（`blocked` も対象）        |
+| 既存の正常な run が失敗扱いにならない                    | 満たす（`targets` が空なら skip） |
+| 統合テストで再開経路の検証がある                         | **部分的**（1 件 `it.skip`）      |
+
+### 7.2. 実装の要点
+
+`target_coverage` を evidence へ追加した。resume 時の executor は plan frontmatter の `targets` ごとに申告する。
+
+| 状態        | 必須項目                               |
+| ----------- | -------------------------------------- |
+| `changed`   | `path`（worktree diff に実在すること） |
+| `unchanged` | `reason`（具体的な理由）               |
+
+runner が不足と重複を検出して失敗させる。`unchanged` の `reason` は result へ保存される。
+
+案 2（段内の進捗を pipeline-state へ記録）を採らなかった理由は、executor が進捗を報告する仕組みが provider ごとに異なり実装できないためである。
+
+### 7.3. register 由来の plan には targets がない
+
+調査で判明した。
+
+| plan の種別                      | `targets` |
+| -------------------------------- | --------- |
+| `T-*-plan.md`（Schedule 由来）   | あり      |
+| `pjr-*-plan.md`（register 由来） | **なし**  |
+
+**本件の発端となった [[prj-0001:pjr-xzeq-cdfd-overview-cdfd-check-cdfd-action-grade-review]] は register 由来であり、今回の検証では検出できない。** `targets` が空のときは検証を skip して成功扱いとする既定を維持し、プロンプトでは `final_message` に検証済みと未検証を述べるよう指示した。
+
+register 由来への `targets` 付与は対象の導出方法自体が設計判断であるため、別項目として扱う。個票へ人が書く運用にするか、変更されたファイルから事後的に記録するかで方式が変わる。
+
+### 7.4. 検証結果
+
+| 検証               | 結果                  |
+| ------------------ | --------------------- |
+| `typecheck`        | 通過                  |
+| `lint:ts`          | 通過                  |
+| `test:unit`        | 1556 件すべて通過     |
+| `test:integration` | 13 ファイルすべて通過 |
+| `validate:schema`  | 通過                  |
+| `lint:md`          | 通過                  |
+
+### 7.5. 実行の経緯
+
+3 回の試行を要した。
+
+| 回  | 失敗理由                             | 成果                   |
+| --- | ------------------------------------ | ---------------------- |
+| 1   | `dubious ownership`（checkpoint 段） | なし                   |
+| 2   | `test-integration` の失敗            | 9 ファイルの実装       |
+| 3   | —（人が修正して統合）                | テスト修正と skip 判断 |
+
+`dubious ownership` は 2 回目で再現しなかった。`safe.directory` に `worktrees` 配下が登録されていないが、断続的にしか発生しない。[[prj-0001:pjr-bx79-integrate-dubious-ownership-retry]] の内容を uid 一致でも発生する事実で更新する必要がある。
 
 ## 8. 関連ドキュメント
 
