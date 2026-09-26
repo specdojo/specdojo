@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_bc4e3046d6124b1fbad90090695f0926
+  ts: "2026-09-26T02:31:04Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 実行中の exec run へ後から項目を追加して並行実行できるようにする
+    - field: description
+      from: ""
+      to: _TODO_
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-26"
+    - field: due
+      from: ""
+      to: _TODO_
