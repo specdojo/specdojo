@@ -101,18 +101,23 @@ recipe は fully-guided 実行で rulebook と共に読み込まれる。29 件�
 
 ## 5. 作業内容
 
-| No  | 作業                                        | 担当 | 状態 | メモ                         |
-| --- | ------------------------------------------- | ---- | ---- | ---------------------------- |
-| 1   | rulebook の確定を待つ                       | ARC  | open | PJR-T3NN の完了が前提        |
-| 2   | template の要否を決める                     | ARC  | open | 案 A を起点に検討            |
-| 3   | recipe の要否を決める                       | ARC  | open | 作成の実行主体と合わせて判断 |
-| 4   | `bps-sample.md` を実例として作り直す        | ARC  | open | 共通サンプル文脈へ統一       |
-| 5   | template / recipe を作成する                | ARC  | open | 2 と 3 の決定に従う          |
-| 6   | grade を再実行して blocker の解消を確認する | QE   | open | 変更前 61 点との比較         |
+| No  | 作業                                        | 担当 | 状態    | メモ                                                     |
+| --- | ------------------------------------------- | ---- | ------- | -------------------------------------------------------- |
+| 1   | rulebook の確定を待つ                       | ARC  | done    | PJR-T3NN の変更内容を確認した                            |
+| 2   | template の要否を決める                     | ARC  | done    | 反復作成する29件の骨組みを統一するため作成と判断         |
+| 3   | recipe の要否を決める                       | ARC  | done    | agent / 人が同じ品質で作成する手順が必要なため作成と判断 |
+| 4   | `bps-sample.md` を実例として作り直す        | ARC  | done    | PJR-T3NN で作成済みの実例を確認して採用                  |
+| 5   | template / recipe を作成する                | ARC  | done    | 構造と作り方の責務を分離して新規作成                     |
+| 6   | grade を再実行して blocker の解消を確認する | QE   | blocked | sandbox の読み取り専用制約で評価 agent の初期化に失敗    |
 
 ## 6. 対応結果
 
--
+- `bps-sample.md` は、駄菓子屋きぬやの補充依頼確定を扱う実例として、必須8章、`type: flow`、判定可能な処理・例外・受入観点を備えていることを確認し、PJR-T3NN の変更を採用した。
+- BPS は成果物カタログ上で同じ構造を反復作成するため、見出し順、表の列、記入欄の正本として `bps-template.md` を新規作成した。
+- BPS は CDFD、BR、BES、STSD との境界判断と、正常系・条件付き処理・主要例外の深掘りを要するため、agent / 人が再現可能に作成する手順として `bps-recipe.md` を新規作成した。
+- `bps-rulebook.md` の `template` と `recipe` を各文書 ID へ更新し、本文要件を template の骨組みと重複しない意味要件へ整理した。
+- Markdown 整形、Markdown lint、Frontmatter lint、カタログ検証、SpecDojo の全6生成工程は成功した。VitePress build は既存 Mermaid の Chromium 起動が sandbox で拒否され、本文検証後の描画工程で停止した。
+- `bps-sample.md` の grade 再評価を対象限定で起動したが、内部 Codex クライアントが sandbox の読み取り専用領域で初期化できず、評価段が未完了となった。旧 grade の `content_hash` は現在の sample と不一致であり、blocker 解消の正式確認には sandbox 外で同じ対象の grade pipeline を再実行する必要がある。
 
 ## 7. 関連ドキュメント
 
