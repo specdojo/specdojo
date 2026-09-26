@@ -11,6 +11,7 @@ import {
   parseExecutorReport,
   recordReporterFailureOutput,
   redactSensitiveText,
+  validateResumedTargetCoverage,
 } from "../../src/exec-evidence.js";
 
 const Ajv2020 = Ajv2020Module.default;
@@ -38,8 +39,93 @@ describe("executor evidence", () => {
           summary: "42 tests passed",
         },
       ],
+      targetCoverage: [],
     });
     expect(redactSensitiveText("Authorization: Bearer abc.def.ghi")).not.toContain("abc.def.ghi");
+  });
+
+  it("validates every resumed plan target against cumulative changes or an unchanged reason", () => {
+    const { evidence } = buildExecutorEvidence({
+      taskId: "T-TEST-doc-010",
+      runId: "run-resumed",
+      actor: "executor",
+      status: "succeeded",
+      startedAt: "2026-08-10T07:03:34Z",
+      completedAt: "2026-08-10T07:04:34Z",
+      exitCode: 0,
+      attempts: 1,
+      stdout: [
+        "<specdojo_executor_evidence>",
+        JSON.stringify({
+          final_message: "all targets checked",
+          validations: [],
+          target_coverage: [
+            {
+              target: "test:doc-a",
+              status: "changed",
+              path: "docs/a.md",
+              reason: "",
+            },
+            {
+              target: "test:doc-b",
+              status: "unchanged",
+              reason: "現行内容が完了条件を満たしていた。",
+            },
+          ],
+        }),
+        "</specdojo_executor_evidence>",
+      ].join("\n"),
+      stderr: "",
+      changes: [{ path: "docs/a.md", status: "M" }],
+      diffStat: "docs/a.md | 1 +",
+      logRefPath: "execution/exec/evidence/T-TEST-doc-010/run-resumed/executor.log",
+    });
+
+    expect(validateResumedTargetCoverage(["test:doc-a", "test:doc-b"], evidence)).toEqual({
+      ok: true,
+    });
+  });
+
+  it("rejects missing targets and changed paths absent from the cumulative diff", () => {
+    const base = buildExecutorEvidence({
+      taskId: "T-TEST-doc-010",
+      runId: "run-resumed",
+      actor: "executor",
+      status: "succeeded",
+      startedAt: "2026-08-10T07:03:34Z",
+      completedAt: "2026-08-10T07:04:34Z",
+      exitCode: 0,
+      attempts: 1,
+      stdout:
+        "<specdojo_executor_evidence>" +
+        JSON.stringify({
+          final_message: "partial",
+          validations: [],
+          target_coverage: [
+            {
+              target: "test:doc-a",
+              status: "changed",
+              path: "docs/not-changed.md",
+              reason: "",
+            },
+          ],
+        }) +
+        "</specdojo_executor_evidence>",
+      stderr: "",
+      changes: [{ path: "docs/a.md", status: "M" }],
+      diffStat: "docs/a.md | 1 +",
+      logRefPath: "execution/exec/evidence/T-TEST-doc-010/run-resumed/executor.log",
+    }).evidence;
+
+    expect(validateResumedTargetCoverage(["test:doc-a", "test:doc-b"], base)).toEqual({
+      ok: false,
+      reason: "resumed executor did not account for every plan target: test:doc-b",
+    });
+    expect(validateResumedTargetCoverage(["test:doc-a"], base)).toEqual({
+      ok: false,
+      reason:
+        "resumed executor target path is absent from the cumulative worktree diff: test:doc-a (docs/not-changed.md)",
+    });
   });
 
   it("builds schema-valid run-scoped evidence without raw diffs or secrets", () => {

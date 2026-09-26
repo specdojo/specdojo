@@ -6,6 +6,7 @@ import { expandTemplate, stripTerminalControlSequences } from "./exec-shared.js"
 import { formatMarkdownFile } from "./exec-format.js";
 import type { Approach, ExecResultMeta, TaskMode, TaskOrigin } from "./exec-types.js";
 import type { ReporterOutput, ReviewReporterOutput } from "./exec-reporter.js";
+import type { ExecEvidence } from "./exec-evidence.js";
 import { resolveSpecdojoPath, resolveSpecdojoPathIfExists } from "./template-resolution.js";
 
 // ---------------------------------------------------------------------------
@@ -376,7 +377,10 @@ function reporterBulletList(values: string[], empty: string): string {
   return values.map((value) => `- ${reporterInlineText(value)}`).join("\n");
 }
 
-function renderEditReporterBody(output: Extract<ReporterOutput, { mode: "edit" }>): string {
+function renderEditReporterBody(
+  output: Extract<ReporterOutput, { mode: "edit" }>,
+  evidence?: ExecEvidence,
+): string {
   const changedFiles =
     output.changed_files.length === 0
       ? "- なし"
@@ -386,6 +390,12 @@ function renderEditReporterBody(output: Extract<ReporterOutput, { mode: "edit" }
               `- \`${reporterInlineText(file.path).replace(/`/g, "'")}\`: ${reporterInlineText(file.summary)}`,
           )
           .join("\n");
+  const unchangedTargetNotes = (evidence?.target_coverage ?? [])
+    .filter((entry) => entry.status === "unchanged")
+    .map((entry) => {
+      const target = reporterInlineText(entry.target).replace(/`/g, "'");
+      return `対象 \`${target}\` は未変更: ${reporterInlineText(entry.reason)}`;
+    });
   return [
     "# Edit Result",
     "",
@@ -399,7 +409,7 @@ function renderEditReporterBody(output: Extract<ReporterOutput, { mode: "edit" }
     "",
     "## 3. 申し送り",
     "",
-    reporterBulletList(output.handoff, "なし"),
+    reporterBulletList([...output.handoff, ...unchangedTargetNotes], "なし"),
     "",
     "## 4. 進め方と実践の型の適用",
     "",
@@ -474,6 +484,7 @@ function renderReviewReporterBody(output: ReviewReporterOutput, scaffoldBody: st
 export async function renderReporterResult(
   resultPath: string,
   output: ReporterOutput,
+  evidence?: ExecEvidence,
 ): Promise<void> {
   if (!existsSync(resultPath)) throw new Error(`Result not found: ${resultPath}`);
   const content = readFileSync(resultPath, "utf8");
@@ -485,7 +496,7 @@ export async function renderReporterResult(
   if (!frontmatter) throw new Error(`Result frontmatter not found: ${resultPath}`);
   const body =
     output.mode === "edit"
-      ? renderEditReporterBody(output)
+      ? renderEditReporterBody(output, evidence)
       : renderReviewReporterBody(output, parsed.body);
   writeFileSync(resultPath, frontmatterWithBody(frontmatter, body), "utf8");
   await formatMarkdownFile(resultPath);
