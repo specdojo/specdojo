@@ -1,0 +1,10 @@
+タスク PJR-6WFA の実装要件に従い、以下の対応を実施しました。
+
+- `pjr-rulebook.md` の「3. 推奨 Frontmatter 項目」および「5.1. 個票の記述」に `targets` の定義と宣言方法を追記しました。
+- `pjr-6wfa-register-plan-targets.md` の「作業内容」テーブルを更新し、「対応結果」セクションに実装内容を記載しました。
+- 事前に作業ツリーへ反映されていた TS コード（`exec-register.ts` 等）および Schema の実装とテストをそのまま活用し、要件を満たしていることを確認しました。
+- `prettier` による整形、`markdownlint`、`catalog validate`、`index build` を実行し、変更対象のドキュメントに問題がないことを確認しています（親 runner が後続の typecheck および test を実行します）。
+
+<specdojo_executor_evidence>
+{"final_message":"Updated pjr-6wfa-register-plan-targets.md and pjr-rulebook.md to define and apply the rule for targets in register-origin plans. The core implementation in TS code and schemas was already completed in the worktree. Verified modified artifacts.","validations":[{"command":"npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-6wfa-register-plan-targets.md docs/ja/specdojo/rulebooks/pjr-rulebook.md","status":"passed","summary":"Formatted markdown files"},{"command":"npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-6wfa-register-plan-targets.md docs/ja/specdojo/rulebooks/pjr-rulebook.md","status":"passed","summary":"Passed without errors"},{"command":"npx tsx src/specdojo.ts catalog validate && npx tsx src/specdojo.ts index build","status":"passed","summary":"Catalog and index built successfully"}]}
+</specdojo_executor_evidence>

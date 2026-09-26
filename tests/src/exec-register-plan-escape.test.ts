@@ -174,4 +174,42 @@ describe("generateRegisterPlan の Markdown 安全性", () => {
 
     expect(emphasisViolations(rawBody).length).toBeGreaterThan(0);
   });
+
+  it("個票が targets を宣言していれば plan frontmatter に targets が含まれる", async () => {
+    const outPath = path.join(dir, "plan-with-targets.md");
+    await generateRegisterPlan({
+      executionPath: path.join(dir, "execution"),
+      projectId: "prj-test",
+      registerPaths: makeRegisterPaths(),
+      item: makeItem({
+        targets: ["prj-test:cdfd-overview", "prj-test:cdfd-check"],
+      }),
+      stem: "xep-pjr-test",
+      outPath,
+    });
+
+    const content = await readFile(outPath, "utf8");
+
+    expect(content).toContain("targets:");
+    expect(content).toContain("  - prj-test:cdfd-overview");
+    expect(content).toContain("  - prj-test:cdfd-check");
+    expect(content).toContain("origin: register");
+  });
+
+  it("個票が targets を宣言していなければ plan frontmatter に targets が含まれない", async () => {
+    const outPath = path.join(dir, "plan-without-targets.md");
+    await generateRegisterPlan({
+      executionPath: path.join(dir, "execution"),
+      projectId: "prj-test",
+      registerPaths: makeRegisterPaths(),
+      item: makeItem(),
+      stem: "xep-pjr-test",
+      outPath,
+    });
+
+    const content = await readFile(outPath, "utf8");
+
+    expect(content).not.toContain("targets:");
+    expect(content).toContain("origin: register");
+  });
 });

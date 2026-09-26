@@ -297,9 +297,9 @@ export function resolveCommitScope(
     };
   }
 
-  // register 由来のタスクは対象成果物を特定できず targets を持たない。許可リストを
-  // 導出する根拠が無いため、従来どおり除外リスト方式へフォールバックする（register の
-  // 通常経路である作業ツリー差分による commit と同じ範囲になる）。
+  // register 由来のタスクは許可リスト方式ではなく、作業ツリー差分による commit を使う。
+  // 個票が targets を宣言している場合でも、commit scope は従来どおり除外リスト方式へ
+  // フォールバックする（target coverage 検証は evidence 側で行い、ここでは使わない）。
   if (identity.origin === "register") return { scope: null, unresolvedTargets: [] };
 
   // schedule 由来の edit タスクは targets から commit 許可リストを導出する。targets が

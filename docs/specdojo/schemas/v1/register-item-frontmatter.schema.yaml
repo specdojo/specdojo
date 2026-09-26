@@ -143,6 +143,19 @@ properties:
               rejection. Omit the key while it is undetermined; the details stay in
               the body (list column: 結論).
 
+          targets:
+            type: array
+            items:
+              type: string
+              minLength: 1
+            minItems: 1
+            description: >
+              Doc ids of documents this register item targets, each resolvable
+              via the doc index. When present, exec plan generation copies these
+              into the plan frontmatter so that target coverage validation works
+              for register-originated plans. Omit the key when the target
+              documents are unknown or not applicable.
+
 $defs:
   ItemType:
     type: string

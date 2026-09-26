@@ -61,3 +61,29 @@
       from: "-"
       to: rate limit reached
   previous_event_id: reg_c52d098e318947aeaa55867137c39a5e
+- v: 1
+  id: reg_ba51f20967e34ca9a94446cbac0fcb37
+  ts: "2026-09-26T12:37:35Z"
+  action: start
+  actor: agy-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_a7a603c7901d4343b75e14132e591fc5
+- v: 1
+  id: reg_d978ae2a8a0a4d238cc86f58805dac01
+  ts: "2026-09-26T12:44:49Z"
+  action: review
+  actor: agy-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_ba51f20967e34ca9a94446cbac0fcb37

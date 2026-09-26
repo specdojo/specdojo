@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: medium
   owner: ARC
   registered_at: "2026-09-26T09:01:00Z"
@@ -59,17 +59,21 @@ Schedule 由来の plan は成果物カタログの `local_id` から対象が�
 
 ## 5. 作業内容
 
-| No  | 作業                                       | 担当 | 状態 | メモ                           |
-| --- | ------------------------------------------ | ---- | ---- | ------------------------------ |
-| 1   | 対象の導出方法を決める                     | ARC  | open | 案 3 と案 1 の組み合わせを起点 |
-| 2   | 個票の記述規約を決める                     | ARC  | open | `pjr-rulebook` への追加        |
-| 3   | plan 生成へ `targets` を反映する           | DEV  | open |                                |
-| 4   | 検証が効くことを PJR-XZEQ の状況で確かめる | QE   | open | 3 文書のうち 1 文書だけ変更    |
-| 5   | テストを追加する                           | DEV  | open |                                |
+| No  | 作業                                       | 担当 | 状態 | メモ                                                                                                         |
+| --- | ------------------------------------------ | ---- | ---- | ------------------------------------------------------------------------------------------------------------ |
+| 1   | 対象の導出方法を決める                     | ARC  | done | 個票への任意での `targets` 宣言（案1）を採用。案3は executor evidence の設計変更を要するため本件では見送る。 |
+| 2   | 個票の記述規約を決める                     | ARC  | done | `pjr-rulebook` へ追加。変更対象文書が分かっている場合は `targets` へ宣言する。                               |
+| 3   | plan 生成へ `targets` を反映する           | DEV  | done | `exec-register.ts` で `targets` を plan に転記するよう実装した。                                             |
+| 4   | 検証が効くことを PJR-XZEQ の状況で確かめる | QE   | done | 実装と単体テスト（`exec-register-plan-escape.test.ts`）で検証済み。                                          |
+| 5   | テストを追加する                           | DEV  | done | `register-item.test.ts`、`exec-register-plan-escape.test.ts` へ追加。                                        |
 
 ## 6. 対応結果
 
--
+- 案1（個票の `targets` 宣言）を採用し、実装した。案3（1回目実行の差分）は evidence 構造の変更と再設計を要するため、本項目では見送り、必要に応じて別項目で対応する。
+- 宣言された `targets` は、`register-item.ts` で読み取られ、`exec-register.ts` の `registerPlanFrontmatter` によって plan frontmatter に転記される。
+- `exec-run.ts` の `runSingleRegisterItem` で `targets` を引き継ぎ、executor の `final_message` への検証指示に反映した。
+- `docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml` と `docs/ja/specdojo/rulebooks/pjr-rulebook.md` を更新し、`targets` の記述規約を定めた。
+- `tests/src/register-item.test.ts` および `tests/src/exec-register-plan-escape.test.ts` にテストを追加し、検証が機能することを確認した。
 
 ## 7. 関連ドキュメント
 

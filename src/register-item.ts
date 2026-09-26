@@ -30,6 +30,9 @@ export type PjrItem = {
   completedAt: string;
   conclusion: string;
   ticket: string;
+  // 個票が宣言する対象文書の doc id リスト。plan frontmatter の targets へ転記され、
+  // target coverage 検証に使われる。宣言がない項目は undefined（検証 skip）。
+  targets?: string[];
 };
 
 // 一覧ビュー1行分の表示値。日時は暦日へ変換済みで、テーブル生成と履歴の比較に使う。
@@ -136,6 +139,7 @@ const SPECDOJO_KEY_ORDER = [
   "completed_at",
   "block_reason",
   "conclusion",
+  "targets",
 ];
 
 // ================================
@@ -235,6 +239,12 @@ export function readRegisterItemContent(
     if (isRecord(parsed) && isRecord(parsed.specdojo)) fields = parsed.specdojo;
   }
 
+  const targets = Array.isArray(fields.targets)
+    ? fields.targets.filter(
+        (entry): entry is string => typeof entry === "string" && entry.trim() !== "",
+      )
+    : undefined;
+
   const item: PjrItem = {
     id,
     status: asString(fields.item_status) ?? "open",
@@ -252,6 +262,7 @@ export function readRegisterItemContent(
     completedAt: asString(fields.completed_at) ?? CELL_NONE,
     conclusion: asString(fields.conclusion) ?? CELL_NONE,
     ticket: ticketRefCell(filename),
+    ...(targets && targets.length > 0 ? { targets } : {}),
   };
 
   return {

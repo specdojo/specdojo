@@ -808,8 +808,8 @@ target ID exactly as written in the plan. A changed target must use status \`cha
 repository-relative \`path\`, and actually be present in the cumulative worktree diff. A target
 that legitimately needs no change must use status \`unchanged\` and provide a concrete \`reason\`;
 the runner will preserve that reason in the result. If you cannot account for every target, exit
-non-zero instead of claiming completion. When the plan frontmatter declares no \`targets\` (as
-register-origin plans currently do), omit \`target_coverage\` and instead state in
+non-zero instead of claiming completion. When the plan frontmatter declares no \`targets\`, omit
+\`target_coverage\` and instead state in
 \`final_message\` which artifacts you verified and which remain unverified.${
         options.existingChanges?.length
           ? `\n\nChanges already present when this resumed invocation started:\n${options.existingChanges.map((path) => `- \`${path}\``).join("\n")}`
@@ -4426,6 +4426,7 @@ async function runSingleRegisterItem(
     agent: actor,
     startedAt: new Date().toISOString(),
     stem,
+    ...(item.targets && item.targets.length > 0 ? { targets: item.targets } : {}),
   });
   const resultScaffold = readResultFrontmatterSnapshot(resultPath);
 
