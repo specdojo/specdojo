@@ -2,15 +2,16 @@
 specdojo:
   id: prj-0001:pjr-xzeq-cdfd-overview-cdfd-check-cdfd-action-grade-review
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: ARC
   registered_at: "2026-09-26T06:13:31Z"
+  completed_at: "2026-09-26T07:49:10Z"
   block_reason: rate limit reached
 ---
 
@@ -118,6 +119,56 @@ CDFD は BPS より上位の正本である。通常は CDFD を先に変え BPS
 - 中断前に反映済みの `cdfd-overview.md` と併せ、Do は edit phase、Check は grade、Action は review phase とする所属とデータの受け渡しが BPS 2 件と一致することを確認した。
 - 対象 Markdown の Prettier と Markdownlint、全 Markdown の lint、登録簿ビュー再生成、カタログ検証、文書索引生成が成功した。カタログ検証は既存の未作成成果物に関する warning のみで、エラーはなかった。
 - grade の再実行と finding の確認は、executor 完了後の独立した runner に委ねる。
+
+### 6.1. 評価（2026-09-26）
+
+完了条件をすべて満たす。3 本が [[bps-deliverable-evaluation]] と [[bps-task-completion]] と整合した。
+
+### 6.2. cdfd-check の核心が修正された
+
+```text
+変更前: P-08 は、その成果物と実行記録を review から独立して根拠と照合し…
+変更後: Do の edit phase は成果物の改善と検証可能な実行記録を残すまでを担い、
+        grade・finding は確定しない。P-08 は、editor から独立した runner が
+        その成果物と実行記録を根拠と一度だけ照合し…
+```
+
+| 変更                                                | 効果                          |
+| --------------------------------------------------- | ----------------------------- |
+| 「review から独立」→「editor から独立した runner」  | 評価が 2 回にならない         |
+| 「Do で完了する review・検証」→「Do の edit phase」 | review が Do にないことが明確 |
+| 「一度だけ照合し」を追加                            | 評価が 1 回であることを明示   |
+
+### 6.3. cdfd-action はデータストアの利用方法まで規定した
+
+`P-11` の説明と `P-11-01` の業務目的に加え、データストア表も更新された。
+
+```text
+評価結果 | 参照 | P-11 で最新の grade・finding を確定済みの事実として参照し、
+                成果物の品質を再評価しない
+```
+
+**参照の仕方として「再評価しない」を書いている。** 原則が構造的に守られる形になった。
+
+### 6.4. 指示を守っている
+
+| 指示                              | 結果                                      |
+| --------------------------------- | ----------------------------------------- |
+| `cdfd-overview.md` を再編集しない | 守った。差分 0                            |
+| `cdfd-check` は `P-08` に限定     | 守った。18 行。`P-09` / `P-10` に波及なし |
+| 実装詳細を持ち込まない            | 守った。`content_hash` の記述なし         |
+
+個票へ「この文書は再度編集しない」と明記した効果が出た。
+
+### 6.5. 中断と再開で発生した問題
+
+初回実行が rate limit で中断し、`agy-opus-executor` で `--resume` した際に `cdfd-overview.md` のみ変更された状態で `succeeded` を返した。2 回目は 11 分実行して追加の変更がなかった。pipeline-state は段の状態しか持たず、段の中の残作業を追跡しない。
+
+[[prj-0001:pjr-1y9p-resume-executor-plan]] として起票した。
+
+### 6.6. grade は未実施
+
+3 文書の変更後に grade を実行していない。[[prj-0001:pjr-h5z7-cdfd-3-bps-2-grade-finding]] で BPS 2 件と合わせて確認する。
 
 ## 7. 関連ドキュメント
 
