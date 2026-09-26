@@ -260,6 +260,57 @@ export function createProviderCapacityTracker(config: ExecDefaultsConfig): Provi
   };
 }
 
+// Waits for provider capacity instead of dropping work. Register worktree runs already have a
+// fixed item-to-agent assignment, so unlike auto selection they cannot switch to another provider
+// when a cap is full; each pipeline stage queues until that provider has room.
+export class ProviderConcurrencyGate {
+  private readonly active = new Map<AgentProvider, number>();
+  private readonly waiters = new Map<AgentProvider, Array<() => void>>();
+
+  constructor(private readonly config: ExecDefaultsConfig) {}
+
+  async run<T>(provider: AgentProvider | undefined, task: () => Promise<T>): Promise<T> {
+    const release = await this.acquire(provider);
+    try {
+      return await task();
+    } finally {
+      release();
+    }
+  }
+
+  private async acquire(provider: AgentProvider | undefined): Promise<() => void> {
+    const cap = resolveMaxConcurrency(this.config, provider);
+    if (!provider || cap === undefined) return () => undefined;
+
+    if ((this.active.get(provider) ?? 0) < cap) {
+      this.active.set(provider, (this.active.get(provider) ?? 0) + 1);
+      return () => this.release(provider);
+    }
+
+    await new Promise<void>((resolve) => {
+      const queue = this.waiters.get(provider) ?? [];
+      queue.push(resolve);
+      this.waiters.set(provider, queue);
+    });
+    return () => this.release(provider);
+  }
+
+  private release(provider: AgentProvider): void {
+    const queue = this.waiters.get(provider);
+    const next = queue?.shift();
+    if (queue?.length === 0) this.waiters.delete(provider);
+    if (next) {
+      // Transfer the existing slot directly so a newly arriving task cannot overtake the queue.
+      next();
+      return;
+    }
+
+    const nextActive = (this.active.get(provider) ?? 1) - 1;
+    if (nextActive > 0) this.active.set(provider, nextActive);
+    else this.active.delete(provider);
+  }
+}
+
 // ── Loaders ───────────────────────────────────────────────────────────────────
 
 export function defaultExecDefaultsPath(): string {
