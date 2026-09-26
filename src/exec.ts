@@ -385,6 +385,7 @@ async function scaffoldClaimResult(opts: {
   schedulePath: string;
   executionPath: string;
   catalogPath?: string;
+  viewpointsPath?: string;
   state: LoadedExecState;
   taskId: string;
   projectId: string;
@@ -417,7 +418,7 @@ async function scaffoldClaimResult(opts: {
   );
   const reviewSections =
     mode === "review"
-      ? reviewResultSectionsForDeliverable(opts.catalogPath ?? "", localId)
+      ? reviewResultSectionsForDeliverable(opts.catalogPath ?? "", localId, opts.viewpointsPath)
       : undefined;
   const finalizeSections =
     approach === "finalize" || approach === "bootstrap-finalize"
@@ -478,7 +479,8 @@ async function runLockedEventCommand(
   let lockDir = "";
 
   try {
-    const { schedulePath, executionPath, catalogPath } = resolveProjectContext(opts);
+    const { schedulePath, executionPath, catalogPath, viewpointsPath } =
+      resolveProjectContext(opts);
     const actor = requireNonEmpty("by", opts.by);
     const roster = loadRosterForOpts(opts);
     assertValidActor(actor, roster);
@@ -559,6 +561,7 @@ async function runLockedEventCommand(
         schedulePath,
         executionPath,
         catalogPath,
+        viewpointsPath,
         taskId,
         state,
         projectId: resolveProjectId(opts),
@@ -1025,7 +1028,8 @@ export function registerExecCommands(program: Command): void {
     let lockDir = "";
 
     try {
-      const { schedulePath, executionPath, catalogPath } = resolveProjectContext(opts);
+      const { schedulePath, executionPath, catalogPath, viewpointsPath } =
+        resolveProjectContext(opts);
       const actor = requireNonEmpty("by", opts.by);
       const roster = loadRosterForOpts(opts);
       assertValidActor(actor, roster);
@@ -1164,6 +1168,7 @@ export function registerExecCommands(program: Command): void {
         schedulePath,
         executionPath,
         catalogPath,
+        viewpointsPath,
         state,
         taskId: next,
         projectId: resolveProjectId(opts),

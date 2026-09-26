@@ -14,7 +14,7 @@ import { isDctPlanFileName } from "./catalog-plan.js";
 import { buildSpecdojoFrontmatter, readSpecdojoNamespace } from "./frontmatter-namespace.js";
 import { formatMarkdownFile } from "./exec-format.js";
 import { qualifyPracticeId, SPECDOJO_PRACTICE_AUTHORITY } from "./practice-id.js";
-import { resolveViewpointsDoc } from "./review-plan.js";
+import { resolveViewpointsDoc, viewpointAppliesToDocument } from "./review-plan.js";
 import {
   expandTemplate,
   listFilesRecursive,
@@ -691,6 +691,18 @@ function reviewViewpointRows(criteria: CriteriaItem[]): string {
   return lines.join("\n");
 }
 
+export function applicableReviewCriteria(
+  criteria: CriteriaItem[],
+  vpMap: Map<string, ReviewViewpoint>,
+  rulebook: string | undefined,
+): CriteriaItem[] {
+  const metadata = rulebook ? { rulebook } : {};
+  return criteria.filter((criterion) => {
+    const viewpoint = vpMap.get(criterion.viewpoint);
+    return viewpoint === undefined || viewpointAppliesToDocument(viewpoint, metadata);
+  });
+}
+
 // Per-RVP skeleton for a review result's section 1. Each block carries the role,
 // viewpoint_id and criterion as context so the result is self-contained, and leaves
 // result / evidence / notes as _TODO_ for the agent to fill. Prose labels live in the
@@ -716,10 +728,18 @@ export function reviewResultSections(criteria: CriteriaItem[], detailTemplate: s
 export function reviewResultSectionsForDeliverable(
   catalogPath: string,
   localId: string | undefined,
+  viewpointsPath?: string,
 ): string | undefined {
   if (!catalogPath || !localId) return undefined;
   const info = findDeliverableInfo(catalogPath, localId);
-  const criteria = info?.deliverable.done_criteria ?? [];
+  const vpMap = viewpointsPath
+    ? loadViewpoints(viewpointsPath)
+    : new Map<string, ReviewViewpoint>();
+  const criteria = applicableReviewCriteria(
+    info?.deliverable.done_criteria ?? [],
+    vpMap,
+    info?.deliverable.rulebook,
+  );
   if (criteria.length === 0) return undefined;
   const detailTemplate = readTemplate(
     execTemplatePath(REVIEW_RESULT_VIEWPOINT_DETAIL_TEMPLATE),
@@ -846,6 +866,7 @@ export function ownerRoleFields(
   owner: string | undefined,
   roleMap: Map<string, RoleDefinition>,
   vpMap: Map<string, ReviewViewpoint>,
+  rulebook?: string,
 ): OwnerRoleFields {
   if (!owner) {
     return { label: MISSING, note: MISSING, viewpoints: MISSING };
@@ -855,7 +876,10 @@ export function ownerRoleFields(
   const label = role?.name ? `${owner}（${role.name}）` : owner;
   const note = role?.project_note ?? MISSING;
 
-  const roleViewpoints = [...vpMap.values()].filter((vp) => vp.role === owner);
+  const metadata = rulebook ? { rulebook } : {};
+  const roleViewpoints = [...vpMap.values()].filter(
+    (vp) => vp.role === owner && viewpointAppliesToDocument(vp, metadata),
+  );
   const viewpoints =
     roleViewpoints.length > 0
       ? roleViewpoints.map((vp) => `- ${vp.title}: ${vp.check}`).join("\n")
@@ -899,7 +923,7 @@ function buildEditPlanMarkdown(
   };
 
   const criteria: CriteriaItem[] = deliverable?.deliverable.done_criteria ?? [];
-  const ownerRole = ownerRoleFields(task.owner, roleMap, vpMap);
+  const ownerRole = ownerRoleFields(task.owner, roleMap, vpMap, deliverable?.deliverable.rulebook);
   const refs = resolveKataRefs(deliverable?.deliverable.rulebook, deliverable?.deliverable.kind);
   const values: Record<string, string> = {
     _FRONTMATTER_: frontmatter(meta),
@@ -979,6 +1003,11 @@ function buildReviewPlanMarkdown(
   };
 
   const refs = resolveKataRefs(deliverable?.deliverable.rulebook, deliverable?.deliverable.kind);
+  const applicableCriteria = applicableReviewCriteria(
+    criteria,
+    vpMap,
+    deliverable?.deliverable.rulebook,
+  );
   const values: Record<string, string> = {
     _FRONTMATTER_: frontmatter(meta),
     _TASK_ID_: task.id,
@@ -998,9 +1027,9 @@ function buildReviewPlanMarkdown(
     _RECIPE_REF_: refs.recipe,
     _SAMPLE_REF_: refs.sample,
     _TEMPLATE_REF_: refs.template,
-    _REVIEW_VIEWPOINT_ROWS_: reviewViewpointRows(criteria),
+    _REVIEW_VIEWPOINT_ROWS_: reviewViewpointRows(applicableCriteria),
     _REVIEW_VIEWPOINT_DETAILS_: reviewViewpointDetails(
-      criteria,
+      applicableCriteria,
       vpMap,
       detailTemplate,
       coverageMap,

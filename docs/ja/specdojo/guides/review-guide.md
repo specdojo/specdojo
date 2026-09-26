@@ -171,7 +171,11 @@ review result では、`レビュー観点別結果` セクションの各 `RVP-
 
 ### 2.1. grade と共有する評価属性・rubric
 
-viewpoint は review 専用ではなく、継続品質評価 `specdojo grade` と共有する正本です。各 viewpoint の `evaluation` は判定層（`deterministic` / `agent` / `human`）、`continuous` は grade 対象かを宣言します。`grade_targets` を省略した観点は kata と成果物の両方、指定した観点は列挙対象だけに適用します。grade 専用の別観点 ID は作りません。
+viewpoint は review 専用ではなく、継続品質評価 `specdojo grade` と共有する正本です。各 viewpoint の `evaluation` は判定層（`deterministic` / `agent` / `human`）、`continuous` は grade 対象かを宣言します。`grade_targets` を省略した観点は kata と成果物の両方、指定した観点は列挙対象だけに適用します。`document_kinds` は rulebook ID 単位でさらに適用先を絞り、grade plan と review plan の両方が同じ宣言を使います。grade 専用の別観点 ID は作りません。
+
+文書の種類は Frontmatter の `specdojo.rulebook` を正本とします。rulebook 文書は自身の `specdojo.id`、template 文書は `frontmatter_template.specdojo.rulebook` から種類を解決するため、同じ実践の型に属する rulebook / recipe / sample / template / 成果物は同じ rulebook ID で判定されます。`rulebook: none`、未設定、`undecided`、`not-needed` は未分類です。未分類文書は既定で観点を適用し、`document_kinds.unclassified: exclude` を明示した観点だけ除外します。
+
+`document_kinds.include` は列挙した種類だけへ適用し、`document_kinds.exclude` は列挙した種類を除外します。二つは同時に指定できません。宣言を省略した観点は全種類へ適用します。`grade_targets` は kata / deliverable という評価経路の大分類、`document_kinds` は rulebook ID による文書種類の細分類であり、両方を指定した場合は双方を満たす文書だけを対象にします。
 
 `grade_rubric` の level 0-4 は category を跨いで共有し、viewpoint score を `level × 25` とします。review との対応は level 4 が `pass`、level 3 が `conditional_pass`、level 0-2 が `changes_requested` です。`blocked` は前提不足で判定できない状態なので level へ写像しません。
 
@@ -185,7 +189,7 @@ grade は継続監視の最新スナップショット、review result は完成
 
 review result は特定時点に誰が何を確認し、どの合意を行ったかを残す不変の履歴です。既存 review result は削除・移行せず、最新状態の判定には利用しません。090 の review タスクと `G-*-review-pass` は人の合意形成・最終承認のゲートとして維持し、継続品質の再評価は grade が担います。これにより二つの結果を同じ最新状態として同期させる必要をなくします。
 
-`vp-arc-single-responsibility` は、異なる主題を一つの文書へ同居させている状態を検出します。章を独立して参照・更新できるか、対象読者と利用時点が異なるか、別々の sample・recipe・template に対応するかを組み合わせて判断します。長さや対応する実践の型の数だけでは fail にせず、複数主題の案内自体を責務とする index、catalog、overview は対象外です。同じ主張の反復や正本の過剰な再掲は `vp-arc-conciseness` で扱います。
+`vp-arc-single-responsibility` は、異なる主題を一つの文書へ同居させている状態を検出します。章を独立して参照・更新できるか、対象読者と利用時点が異なるか、別々の sample・recipe・template に対応するかを組み合わせて判断します。長さや対応する実践の型の数だけでは fail にしません。複数主題の案内自体を責務とする index、catalog、overview は `document_kinds.exclude` で対象外にし、判定文へ例外を混在させません。同じ主張の反復や正本の過剰な再掲は `vp-arc-conciseness` で扱います。
 
 分割が必要な場合、finding には独立する主題と境界候補、参照・カタログへの影響を記録します。grade はファイル作成や ID 採番を行わず、人が finding を確認して分割の採否と PJR 起票を判断します。起票後は新規ファイル、成果物カタログ、参照元、対応する sample・recipe・template の変更を通常の edit task として扱います。
 

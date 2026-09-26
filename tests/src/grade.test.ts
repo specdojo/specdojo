@@ -812,6 +812,62 @@ describe("grade plan", () => {
     expect(plan).not.toContain("Frontmatter（CLI の決定的判定対象）");
   });
 
+  it("document_kinds で対象外の viewpoint を prompt へ含めない", () => {
+    const path = "docs/ja/specdojo/rulebooks/pm-quality-management-plan-rulebook.md";
+    const definitions = structuredClone(viewpoints);
+    const conciseness = definitions.viewpoints?.find(
+      (viewpoint) => viewpoint.id === "vp-arc-conciseness",
+    );
+    if (!conciseness) throw new Error("test viewpoint is missing");
+    conciseness.document_kinds = { include: ["specdojo:bps-rulebook"] };
+
+    const plan = renderGradePlan({
+      target: "kata",
+      path,
+      references: [],
+      viewpoints: definitions,
+      projectId: "prj-0001",
+    });
+
+    expect(plan).not.toContain("[VIEWPOINT vp-arc-conciseness]");
+    expect(plan).toContain("[VIEWPOINT vp-qe-kata-conformance]");
+  });
+
+  it("document_kinds で対象外の done_criteria を prompt へ含めない", () => {
+    const path = "docs/ja/specdojo/rulebooks/pm-quality-management-plan-rulebook.md";
+    const definitions = structuredClone(viewpoints);
+    const conciseness = definitions.viewpoints?.find(
+      (viewpoint) => viewpoint.id === "vp-arc-conciseness",
+    );
+    if (!conciseness) throw new Error("test viewpoint is missing");
+    conciseness.document_kinds = { include: ["specdojo:bps-rulebook"] };
+
+    const plan = renderGradePlan({
+      target: "deliverable",
+      path,
+      references: [],
+      viewpoints: definitions,
+      projectId: "prj-0001",
+      doneCriteria: [
+        {
+          id: "DC-001",
+          text: "簡潔であること。",
+          roles: ["ARC"],
+          viewpoint: "vp-arc-conciseness",
+        },
+        {
+          id: "DC-002",
+          text: "文書構造を持つこと。",
+          roles: ["ARC"],
+          viewpoint: "vp-arc-document-structure",
+        },
+      ],
+    });
+
+    expect(plan).not.toContain("DC-001");
+    expect(plan).toContain("DC-002");
+  });
+
   it("renders a reporter plan that only structures the executor declaration", () => {
     const path = "docs/ja/specdojo/rulebooks/pm-quality-management-plan-rulebook.md";
     const plan = renderGradeReporterPlan({
