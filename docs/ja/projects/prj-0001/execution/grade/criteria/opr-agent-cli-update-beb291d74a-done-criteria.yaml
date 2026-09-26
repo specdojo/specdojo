@@ -1,0 +1,32 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: opr-agent-cli-update-grade-criteria
+document: opr-agent-cli-update
+path: docs/ja/product/090-operations/opr-agent-cli-update.md
+graded_at: "2026-09-25T16:12:37.771Z"
+graded_by: codex-expert-executor
+content_hash: 8592810431b49b5e57545a3d404fe96690adfe293bb54b99715190b2a462b67c
+summary:
+  satisfied: 1
+  unsatisfied: 2
+  total: 3
+criteria:
+  - id: DC-001
+    text: 個別手順が実施可能な粒度で記述されていること
+    roles:
+      - OPS
+    viewpoint: vp-ops-operability
+    status: satisfied
+  - id: DC-002
+    text: 手順の技術的正確性が確認できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: unsatisfied
+    reason: Codexの更新方法が現行の公式インストーラー構成と一致せず、一時更新のコンテナ再作成もCodex・OpenCodeを既知の旧versionへ確実に戻せない。
+  - id: DC-003
+    text: 手順の完了条件・証跡要件が確認できること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: unsatisfied
+    reason: 更新前後の比較値、期待version、全CLIの起動成功条件、証跡の識別子・保存方法が定義されていない。

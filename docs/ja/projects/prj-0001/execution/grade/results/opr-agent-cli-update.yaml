@@ -1,0 +1,168 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: opr-agent-cli-update
+path: docs/ja/product/090-operations/opr-agent-cli-update.md
+target: deliverable
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 66
+graded_at: "2026-09-25T16:12:37.771Z"
+graded_by: codex-expert-executor
+content_hash: 8592810431b49b5e57545a3d404fe96690adfe293bb54b99715190b2a462b67c
+categories:
+  consistency:
+    score: 25
+  usability:
+    score: 88
+  architecture:
+    score: 100
+  quality:
+    score: 58
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 1
+    score: 25
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 1
+    score: 25
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 1
+    score: 25
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-user-flow:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 11
+  minor: 4
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 3
+    anchor: >-
+      Claude Code、Codex、OpenCode、GitHub Copilot CLIをdevcontainer内で更新し、バージョンと永続化範囲を検証する手順である。`opr-index`
+      の個別手順として、更新作業と証跡を具体化する。
+    message: >-
+      `opr-index` の個別手順と宣言する一方、カタログの `depends_on` にある `opr-index` を
+      `based_on`・関連文書導線に記載せず正本文書も存在しないため、依存関係を解消して共通規約へ到達できる導線を示す必要がある。
+  - id: F002
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 66
+    anchor: CodexとOpenCodeは`.devcontainer/post-create.sh`のnpm global installに合わせてnpmで更新する。この更新は実行中コンテナだけに反映される。
+    message: >-
+      現在の `.devcontainer/post-create.sh` は Codex を公式インストーラーで導入し npm は失敗時のfallbackに限るため、npm global
+      installに合わせるという説明と更新方法を現行構成へ整合させる必要がある。
+  - id: F003
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 49
+    anchor: 2. 対象CLIだけを更新する。
+    message: 公式インストーラー由来のCodexが `~/.local/bin` で優先される現行構成では npm global installが実行中の `codex` を更新しないため、DC-002を満たす更新手順になっていない。
+  - id: F004
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 57
+    anchor: 3. 同じdevcontainer内でバージョンを確認する。
+    message: 更新前version、期待version、4 CLIすべての起動成功、再作成後の一致条件が定義されておらず、DC-003が要求する完了条件を判定できない。
+  - id: F005
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 105
+    anchor: "| 証跡     | 保存先                         | 最低限残す内容                      |"
+    message: 証跡の具体的なURL・チケットID・保存期間・参照権限・コマンド出力の保存方法がなく, DC-003が要求する追跡可能な証跡要件を確認できない。
+  - id: F006
+    severity: major
+    rule: vp-qe-verifiability
+    line: 57
+    anchor: 3. 同じdevcontainer内でバージョンを確認する。
+    message: 更新後versionを表示するだけで更新前値・期待値・全CLIの起動確認・再作成前後の比較条件がないため、更新成功と永続化をpass/fail判定できない。
+  - id: F007
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 105
+    anchor: "| 証跡     | 保存先                         | 最低限残す内容                      |"
+    message: 証跡表にコマンド出力の取得方法と実施記録へ対応付ける識別子がなく、検証結果を第三者が再確認できない。
+  - id: F008
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 15
+    anchor: "| 必要権限 | devcontainer内の`sudo`、永続更新時はHost Mac上のdevcontainer操作権限 |"
+    message: 実施可能時間帯、実施者、使用手段、連絡先がなく、誰がいつ更新を開始できるかを判断できない。
+  - id: F009
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 25
+    anchor: >-
+      更新後に起動できない場合は、新規agent実行を停止し、更新方法と導入元を確認する。一時更新ではコンテナ再作成、永続更新ではlockfile差分の取り消しまたは既知バージョンへの固定を復旧候補とし、実行中の会話やtaskを更新途中から再開しない。
+    message: 更新失敗時の優先度、エスカレーション先、ロールバック開始条件、判断者が定義されておらず、障害対応と復旧判断を再現できない。
+  - id: F010
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 33
+    anchor: 認証、設定、会話履歴はnamed volumeに保持する。更新前にvolumeを削除しないことを確認し、復旧時もvolumeの削除を通常手段にしない。
+    message: named volumeを削除しないという注意だけで、更新前の確認方法、リストア手順、演習条件、完了条件、証跡が定義されていない。
+  - id: F011
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 37
+    anchor: （本書の範囲外）
+    message: バッチ再実行を本書の範囲外とする理由または参照先がなく、rulebookの範囲外記載要件を満たしていない。
+  - id: F012
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 39
+    anchor: "## 8. 運用変更作業（設定変更・デプロイ・ロールバック）"
+    message: 変更作業の承認者、変更チケット、実施時間・凍結条件、ロールバック条件、事前周知の要否が定義されていない。
+  - id: F013
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 105
+    anchor: "| 証跡     | 保存先                         | 最低限残す内容                      |"
+    message: 必須証跡の保管期間、参照権限、URL・チケットID等の識別子が欠けている。
+  - id: F014
+    severity: minor
+    rule: vp-ux-readability
+    line: 49
+    anchor: 2. 対象CLIだけを更新する。
+    message: 「対象CLIだけ」とある一方でCodexとOpenCodeを同一コマンドで更新し四CLIのコマンドをまとめているため、CLI別に実行対象と更新方法を分けて示す必要がある。
+  - id: F015
+    severity: minor
+    rule: vp-ux-user-flow
+    line: 101
+    anchor: 更新失敗時は、対象CLI、更新前後version、実行した更新方式、一時更新か永続更新か、エラー概要を記録し、provider別システム設計の公式仕様参照から切り分ける。
+    message: >-
+      切り分け先を「provider別システム設計の公式仕様参照」とだけ記し、関連文書も `sysd-claude-agent-settings`
+      等という省略表記であるため、各CLIの具体的な参照先へ直接到達できるリンクを示す必要がある。
+done_criteria:
+  satisfied: 1
+  total: 3
+  unsatisfied:
+    DC-002:
+      - ARC
+    DC-003:
+      - QE
+  detail_ref: opr-agent-cli-update-grade-criteria

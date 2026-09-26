@@ -1,0 +1,19 @@
+
+> specdojo@0.2.1 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-deliverable-ebff8716818a project=prj-0001 target=deliverable kind=none changed_only=true ungraded=true incomplete=true max_stage_failures=3 stages=1 documents=3 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-deliverable-ebff8716818a
+stage=1 executor=codex-expert-executor reporter=gemma-reporter reference=none
+document start: docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md
+document resume: docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md start_stage=1
+document incomplete: docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md failed_stage=1
+document start: docs/ja/product/090-operations/opr-agent-cli-update.md
+document resume: docs/ja/product/090-operations/opr-agent-cli-update.md start_stage=1
+document complete: docs/ja/product/090-operations/opr-agent-cli-update.md
+document start: docs/ja/projects/prj-0001/030-project-management/pm-raci.md
+document complete: docs/ja/projects/prj-0001/030-project-management/pm-raci.md
+grade pipeline complete: selected=3 processed=3 completed_now=2 incomplete=1 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-deliverable-ebff8716818a/results.tsv
+recorded_at	document	stage	status	duration_seconds	verdict	score	findings	executor	reporter	reference	consecutive_failures	max_failures
+2026-09-25T16:06:18Z	docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md	1	failed	367				codex-expert-executor	gemma-reporter	none	3	3	1
+2026-09-25T16:12:38Z	docs/ja/product/090-operations/opr-agent-cli-update.md	1	passed	379	needs-work	66	15	codex-expert-executor	gemma-reporter	none		
+2026-09-25T16:18:22Z	docs/ja/projects/prj-0001/030-project-management/pm-raci.md	1	passed	342	needs-work	73	7	codex-expert-executor	gemma-reporter	none		

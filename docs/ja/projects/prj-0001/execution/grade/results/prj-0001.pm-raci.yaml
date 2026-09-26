@@ -1,0 +1,119 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: prj-0001:pm-raci
+path: docs/ja/projects/prj-0001/030-project-management/pm-raci.md
+target: deliverable
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 73
+graded_at: "2026-09-25T16:18:21.733Z"
+graded_by: codex-expert-executor
+content_hash: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+categories:
+  consistency:
+    score: 50
+  usability:
+    score: 81
+  architecture:
+    score: 100
+  quality:
+    score: 67
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 2
+    score: 50
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-user-flow:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 4
+  minor: 3
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 24
+    anchor: "| RACI、管理計画、コミュニケーション計画、Launch Track Strategy | C   | A/R | C   | C   | I   | C   | I   | C   |"
+    message: >-
+      「Launch Track Strategy」を `PM=A/R`、`ARC=C` としているが、Schedule の `sch-strategy-launch` は `owner=ARC` であり、44行目の「owner
+      は主たる R と一致」方針に反するため、RACI または Schedule の正本を整合させる必要がある。
+  - id: F002
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 24
+    anchor: "| RACI、管理計画、コミュニケーション計画、Launch Track Strategy | C   | A/R | C   | C   | I   | C   | I   | C   |"
+    message: >-
+      Schedule owner と異なる責任配置を含むため、成果物・プロセス別マトリクスを承認可能にするには `sch-strategy-launch` の `ARC` owner と本行の `PM=A/R`
+      のどちらを正とするか確定して整合させる必要がある。
+  - id: F003
+    severity: major
+    rule: vp-qe-verifiability
+    line: 38
+    anchor: "| 成果物作成                         | C   | A   | R   | R   | R   | C   | R   | C   |"
+    message: >-
+      「成果物作成」の `PM=A` が各成果物行の Accountable とどう異なるか、また `BA`・`ARC`・`DEV`・`UX` のどれが主たる R
+      か判定できないため、作成プロセスの対象範囲と内容の最終判断との差、主担当の決定方法を明記する必要がある。
+  - id: F004
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 24
+    anchor: "| RACI、管理計画、コミュニケーション計画、Launch Track Strategy | C   | A/R | C   | C   | I   | C   | I   | C   |"
+    message: >-
+      `sch-track-planning.yaml` の `sch-strategy-launch` は `owner=ARC` だが本行では `ARC=C` であり、Schedule owner と主たる R
+      を矛盾させないという rulebook の必須制約を満たしていない。
+  - id: F005
+    severity: minor
+    rule: vp-ux-readability
+    line: 38
+    anchor: "| 成果物作成                         | C   | A   | R   | R   | R   | C   | R   | C   |"
+    message: 「成果物作成」が各成果物別行と重複して見え、`PM=A` と成果物ごとの A の関係を読み分けにくいため、「作成フローの運営」など対象を限定する説明を加える必要がある。
+  - id: F006
+    severity: minor
+    rule: vp-ux-user-flow
+    line: 44
+    anchor: "- Schedule の `owner` は、成果物または作業を主導する `R` の Role code と一致させる。"
+    message: Schedule owner との照合を要求しているが参照対象の Schedule／strategy が特定されていないため、対応する正本の文書IDまたはリンクを示す必要がある。
+  - id: F007
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 24
+    anchor: "| RACI、管理計画、コミュニケーション計画、Launch Track Strategy | C   | A/R | C   | C   | I   | C   | I   | C   |"
+    message: >-
+      「Launch Track Strategy」は成果物カタログの「Launch スケジュール戦略定義」と表記が異なり対象の照合を曖昧にするため、正式名称または `sch-strategy-launch` local_id
+      に統一する必要がある。
+done_criteria:
+  satisfied: 3
+  total: 4
+  unsatisfied:
+    DC-001:
+      - PO
+  detail_ref: prj-0001:pm-raci-grade-criteria

@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "task_id": "JBR-grade-deliverable-ebff8716818a",
+  "run_id": "attempt-1",
+  "stage": {
+    "role": "executor",
+    "actor": "specdojo-runner",
+    "status": "succeeded",
+    "started_at": "2026-09-25T16:00:05.587Z",
+    "completed_at": "2026-09-25T16:18:23.694Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/pipeline/opr-agent-cli-update-beb291d74a89.json",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/pipeline/tsd-ollama-1333c3ab83bb.json",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/opr-agent-cli-update-beb291d74a-done-criteria.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/pm-raci-16266dee97-done-criteria.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/opr-agent-cli-update.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/prj-0001.pm-raci.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-deliverable-ebff8716818a.json",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 7,
+    "summary": ".../grade/pipeline/opr-agent-cli-update-beb291d74a89.json  | 14 --------------\n .../execution/grade/pipeline/tsd-ollama-1333c3ab83bb.json  |  6 +++---\n 2 files changed, 3 insertions(+), 17 deletions(-)"
+  },
+  "validations": [
+    {
+      "id": "job-command",
+      "source": "runner",
+      "command": "npm run build\ntools/grade/run-per-document.sh --run-id JBR-grade-deliverable-ebff8716818a --stages 1 --target deliverable --limit 10 --changed-only=true --ungraded=true --incomplete=true\ncat logs/grade/runs/per-document/JBR-grade-deliverable-ebff8716818a/results.tsv",
+      "status": "passed",
+      "summary": "exit 0"
+    }
+  ],
+  "final_message": "Runner command exit 0.",
+  "command": {
+    "shell": "/bin/sh -eu",
+    "value": "npm run build\ntools/grade/run-per-document.sh --run-id JBR-grade-deliverable-ebff8716818a --stages 1 --target deliverable --limit 10 --changed-only=true --ungraded=true --incomplete=true\ncat logs/grade/runs/per-document/JBR-grade-deliverable-ebff8716818a/results.tsv",
+    "exit_code": 0,
+    "stdout_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-deliverable-ebff8716818a/attempt-1/command.stdout.log",
+    "stderr_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-deliverable-ebff8716818a/attempt-1/command.stderr.log",
+    "stdout": "\n> specdojo@0.2.1 build\n> node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.build.json && node -e \"require('node:fs').chmodSync('dist/specdojo.js', 0o755)\"\n\nrun_id=JBR-grade-deliverable-ebff8716818a project=prj-0001 target=deliverable kind=none changed_only=true ungraded=true incomplete=true max_stage_failures=3 stages=1 documents=3 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-deliverable-ebff8716818a\nstage=1 executor=codex-expert-executor reporter=gemma-reporter reference=none\ndocument start: docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md\ndocument resume: docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md start_stage=1\ndocument incomplete: docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md failed_stage=1\ndocument start: docs/ja/product/090-operations/opr-agent-cli-update.md\ndocument resume: docs/ja/product/090-operations/opr-agent-cli-update.md start_stage=1\ndocument complete: docs/ja/product/090-operations/opr-agent-cli-update.md\ndocument start: docs/ja/projects/prj-0001/030-project-management/pm-raci.md\ndocument complete: docs/ja/projects/prj-0001/030-project-management/pm-raci.md\ngrade pipeline complete: selected=3 processed=3 completed_now=2 incomplete=1 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-deliverable-ebff8716818a/results.tsv\nrecorded_at\tdocument\tstage\tstatus\tduration_seconds\tverdict\tscore\tfindings\texecutor\treporter\treference\tconsecutive_failures\tmax_failures\n2026-09-25T16:06:18Z\tdocs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md\t1\tfailed\t367\t\t\t\tcodex-expert-executor\tgemma-reporter\tnone\t3\t3\t1\n2026-09-25T16:12:38Z\tdocs/ja/product/090-operations/opr-agent-cli-update.md\t1\tpassed\t379\tneeds-work\t66\t15\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-25T16:18:22Z\tdocs/ja/projects/prj-0001/030-project-management/pm-raci.md\t1\tpassed\t342\tneeds-work\t73\t7\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n",
+    "stderr": ""
+  },
+  "log_refs": [
+    {
+      "kind": "command-stdout",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-deliverable-ebff8716818a/attempt-1/command.stdout.log",
+      "bytes": 1976,
+      "truncated": false
+    },
+    {
+      "kind": "command-stderr",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-deliverable-ebff8716818a/attempt-1/command.stderr.log",
+      "bytes": 0,
+      "truncated": false
+    }
+  ]
+}

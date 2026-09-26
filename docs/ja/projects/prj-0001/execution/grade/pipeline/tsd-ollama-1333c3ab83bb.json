@@ -7,8 +7,8 @@
   "stage_completed": 0,
   "stage_failed": 1,
   "stage_total": 1,
-  "consecutive_failures": 2,
+  "consecutive_failures": 3,
   "max_failures": 3,
-  "last_run_id": "JBR-grade-deliverable-4f4a3ade62f7",
-  "updated_at": "2026-09-24T16:06:02.765Z"
+  "last_run_id": "JBR-grade-deliverable-ebff8716818a",
+  "updated_at": "2026-09-25T16:06:18.572Z"
 }
