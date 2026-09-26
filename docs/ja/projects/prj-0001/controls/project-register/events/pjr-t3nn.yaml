@@ -74,3 +74,19 @@
       from: "-"
       to: "integrate failed: git merge failed: CONFLICT (content): Merge conflict in docs/ja/projects/prj-0001/controls/project-register/events/pjr-t3nn.yaml; automatic git merge --abort failed; run git merge --…"
   previous_event_id: reg_982451d9eff241c68f97e25ec0bd30ef
+- v: 1
+  id: reg_5b06f81a5c484772b1e87254d62e3db9
+  ts: "2026-09-26T02:42:51Z"
+  action: close
+  actor: manual
+  from_status: waiting
+  to_status: done
+  reason: 完了条件 8/9 を満たす。grade 再実行は定期実行で確認する。スコープ外の変更 2 件のうち recipe/template は undecided へ戻し、bps-sample の書き換えは採用して PJR-8TEN へ反映する。
+  changes:
+    - field: status
+      from: waiting
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-26"
+  previous_event_id: reg_a4348366104f4a56ad49316ec90a7f47

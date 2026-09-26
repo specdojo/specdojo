@@ -55,9 +55,27 @@ specdojo:
 
 `bps-rulebook.md` の Frontmatter は `recipe: undecided` / `template: undecided` である。BPS はカタログで 29 件が定義されており、**同じ構造の文書を繰り返し作る**系統に当たる。template を持つか否かで、rulebook の `本文要件` の書き方が変わる。
 
+## 2.5. 進捗（2026-09-26）
+
+[[prj-0001:pjr-t3nn-bps-rulebook-rulebook-authoring-standard]] の実行で、**`bps-sample.md` は既に作り直された**。本項目の対象だがスコープ外の変更として行われたもので、内容は妥当なため採用する。
+
+現在の `bps-sample.md` は駄菓子屋きぬやの「補充依頼確定」を題材とし、次を満たす。
+
+| 項目                        | 状態                                                   |
+| --------------------------- | ------------------------------------------------------ |
+| `type`                      | `flow`（旧 `project` から修正）                        |
+| 必須 8 章                   | 概要・トリガー・前提条件・入力・処理・出力・例外・検証 |
+| H1 の Markdown リンク       | 解消                                                   |
+| 共通サンプル文脈            | 駄菓子屋きぬやへ統一                                   |
+| CDFD のプロセス領域との対応 | 記載あり                                               |
+
+**本項目に残るのは template と recipe の判断である。** `bps-rulebook.md` の Frontmatter は executor が `not-needed` と宣言したが、根拠の提示がなく本項目の判断を先取りするため `undecided` へ戻した。
+
+grade の再実行で `bps-sample` の verdict が `fail`（61 点、blocker 1 件）から改善しているかを確認する。
+
 ## 3. 完了条件
 
-- `bps-sample.md` が具体的な業務プロセスの実例であり、rulebook が定義する本文構成をすべて満たしている。
+- `bps-sample.md` が具体的な業務プロセスの実例であり、rulebook が定義する本文構成をすべて満たしている。**PJR-T3NN の実行で達成済み。**
 - 業務文脈が `sample-authoring-standard.md` の共通サンプル文脈に統一されている。
 - Frontmatter が `id` / `type` / `status` / `rulebook` を含み、`type` が rulebook の定義と一致している。
 - H1 に Markdown リンクがない。本文に rulebook / template / recipe へのリンクがない。

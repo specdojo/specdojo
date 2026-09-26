@@ -2,15 +2,16 @@
 specdojo:
   id: prj-0001:pjr-t3nn-bps-rulebook-rulebook-authoring-standard
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: done
   priority: high
   owner: ARC
   registered_at: "2026-09-26T02:13:22Z"
+  completed_at: "2026-09-26T02:42:51Z"
   block_reason: "integrate failed: git merge failed: CONFLICT (content): Merge conflict in docs/ja/projects/prj-0001/controls/project-register/events/pjr-t3nn.yaml; automatic git merge --abort failed; run git merge --…"
 ---
 
@@ -106,6 +107,34 @@ template: undecided
 - 外部 `bps-sample.md` を駄菓子屋きぬやの「補充依頼確定」の完成例へ作り直し、rulebook の必須章、`type: flow`、CDFD のプロセス領域・引き渡しとの対応を反映した。
 - `recipe` と `template` は、rulebook の本文要件と埋め込み例だけで作成を開始できるため `not-needed` とした。外部 sample は実例として整備したため、Frontmatter の `sample` に `specdojo:bps-sample` を宣言した。
 - grade result サイドカーは直接編集していない。grade の再実行と finding の最終判定は executor 後の再評価で行う。
+
+### 5.1. 評価（2026-09-26）
+
+完了条件 9 件のうち 8 件を満たす。grade の再実行（条件 9）は未実施で、close 後に定期実行で確認する。
+
+| #   | 完了条件                                           | 判定     |
+| --- | -------------------------------------------------- | -------- |
+| 1   | 章構成が standard 準拠、必須章が欠落していない     | 満たす   |
+| 2   | 見出し番号が `n.` / `n.m.` 形式                    | 満たす   |
+| 3   | 埋め込みサンプルが名前空間形式、本文定義と一致     | 満たす   |
+| 4   | `本文要件` が目的・必須任意・記述規約を示す        | 満たす   |
+| 5   | `recipe` / `template` が `undecided` でない        | **差戻** |
+| 6   | 本文に sample / recipe / template へのリンクがない | 満たす   |
+| 7   | BPS の対象と粒度の方針が読み取れる                 | 満たす   |
+| 8   | `lint:md` が通過                                   | 満たす   |
+| 9   | grade 再実行で finding が解消                      | 未実施   |
+
+条件 2 と 6 は機械的に確認し、違反 0 件である。条件 4 は懸念した「見出しの羅列」を回避し、9 章それぞれに目的と記載要件を記述している。
+
+### 5.2. スコープ外の変更が 2 件あった
+
+`bps-sample.md` の全面書き換え（+69 / −21）は [[prj-0001:pjr-8ten-bps-sample-bps-template-bps-recipe]] の対象であり、本項目の完了条件にも作業内容にも含まれない。内容は共通サンプル文脈に沿い rulebook の必須章を満たすため**差し戻さず採用する**が、result の申し送りに記載がなく、スコープ外である旨が申告されていない。
+
+`recipe` / `template` の `not-needed` 宣言は [[prj-0001:pjr-8ten-bps-sample-bps-template-bps-recipe]] で判断する事項として起票済みであり、根拠の提示もなかった。**`undecided` へ戻した。** カタログが BPS を 29 件定義しており繰り返しが多いため、template を持つ方が一貫性を保てる可能性がある。
+
+### 5.3. 統合の失敗は本項目の責によらない
+
+`block_reason` は `integrate failed: git merge failed: CONFLICT in events/pjr-t3nn.yaml` である。原因は executor の実行中に main worktree で別項目の起票 commit を 3 回行ったことであり、成果物の問題ではない。merge は内容を確認のうえ手動で完了した。再発防止は [[prj-0001:pjr-4hbg-exec-run]] で扱う。
 
 ## 6. 関連ドキュメント
 
