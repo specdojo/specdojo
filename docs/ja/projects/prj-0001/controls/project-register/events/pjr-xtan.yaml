@@ -32,3 +32,16 @@
     - field: due
       from: ""
       to: "2026-10-31"
+- v: 1
+  id: reg_26a08df691cb4b1da5d3ba2e7cd008c1
+  ts: "2026-09-26T11:00:45Z"
+  action: update
+  actor: manual
+  from_status: open
+  to_status: open
+  reason: PJR-2ZVS の最終結論で grade と review が違う対象を判定すると分かったため、4 語彙の一括統一から、統一するかどうかの判断を含む形へ改める。
+  changes:
+    - field: title
+      from: 判定語彙を verdict_definitions へ統一する
+      to: 判定語彙を判定対象ごとに整理し 同じ対象の語彙だけを統一する
+  previous_event_id: reg_763c15f291cc4782bffa66296e7c5bc6

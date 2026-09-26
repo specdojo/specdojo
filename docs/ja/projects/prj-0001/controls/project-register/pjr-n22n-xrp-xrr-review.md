@@ -82,7 +82,7 @@ owner ロールの観点は、成果物がその責務を果たしているか�
 
 **review の実務が変わる変更である。** 現在 review を通す運用があるため、改訂と同時に既存の review plan が無効にならないかを確認する。`sch-strategy-*.yaml` の `review` phase の位置づけ変更も連動するが、そちらは別途扱う。
 
-grade が 28 観点すべてを見る前提（[[prj-0001:pjr-wpwb-viewpoint-evaluation-criteria]] と [[prj-0001:pjr-k351-vp-ops-agent-boundary-continuous-true]]）が未実装の段階では、grade は 12 観点しか見ない。**改訂の適用時期を、観点範囲の拡大と合わせるかを判断する。** 先に改訂すると、review が見なくなった 16 観点を誰も見ない期間が生じる。
+grade が 28 観点すべてを見る前提（[[prj-0001:pjr-wpwb-viewpoint-evaluation-criteria]] と [[prj-0001:pjr-k351-continuous-abolition-all-viewpoints]]）が未実装の段階では、grade は 12 観点しか見ない。**改訂の適用時期を、観点範囲の拡大と合わせるかを判断する。** 先に改訂すると、review が見なくなった 16 観点を誰も見ない期間が生じる。
 
 ## 6. 作業内容
 

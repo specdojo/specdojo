@@ -69,9 +69,8 @@ role と category の分布には規則性がある。
 - 現在の 28 観点の割り当てを基準に照らして確認し、変更が必要な 9 件を再分類している。変更する場合は理由を記録する。
 - `evaluation` と `continuous` の役割が分離され、grade の対象範囲は `continuous` だけで決まる。
 - `src/grade.ts` の `continuousViewpoints()` から `evaluation !== "human"` の条件が外れている。
-- 矛盾する組み合わせ（grade で実行経路がない `evaluation` と `continuous: true`）を schema または検証で弾く。
-- `continuous` の基準が文書化され、`evaluation` から独立して判定できる。
-- `continuous` は本項目では変更しない。変更は実測を経て別項目で決める。
+- grade の実行経路が `deterministic` はコード、`referential` と `discretionary` は agent で判定する形になっている。改名後に `evaluation === "agent"` だけを agent へ渡す判定が残っていない。
+- `continuous` の値は本項目では変更しない。`continuous` の廃止は [[prj-0001:pjr-k351-continuous-abolition-all-viewpoints]] で行う。
 - `pm-review-viewpoints.schema.yaml` の enum と description が更新されている。
 - `docs/ja/specdojo/defaults/pm-review-viewpoints.yaml` の 28 観点が追従している。
 - `src/grade.ts` の `continuousViewpoints()` / `agentViewpoints()` / `deterministicResults()` が追従している。
@@ -154,6 +153,8 @@ grade 対象は `continuous` のみで決める。`evaluation` は実行経路�
 
 ### 4.3. continuous の基準は 3 条件
 
+**2026-09-26 に撤回した。** 条件 1 と条件 3 はどちらも成り立たなかった（`continuous は廃止する` を参照）。以下は検討の経緯として残す。
+
 grade は「成果物の現在の状態」を「人の介在なしに」「繰り返し」評価する。3 条件すべてを満たす観点だけを `continuous: true` にする。
 
 | 条件 | 内容                                                     | 判定方法                                 |
@@ -165,6 +166,8 @@ grade は「成果物の現在の状態」を「人の介在なしに」「繰�
 条件 1 と 2 は `check` の文言から机上で判定できる。**条件 3 は実測が必要**であり、現在 `continuous: false` の 16 観点には実測データがない。したがって**対象範囲の拡大は試行を経て決める**。
 
 ### 4.4. 条件 1 に反する観点が 1 件ある
+
+**2026-09-26 に撤回した。** `vp-dev-change-impact` の `evidence` は「影響範囲、関連コード、schema、生成物、コマンド、互換性」であり、問うているのは**影響の記述が文書にあるか**である。差分を知る必要はなく、スナップショットで判定できる。以下は検討の経緯として残す。
 
 `vp-dev-change-impact` の `check` は「**変更が**既存成果物、schema、生成処理、コマンド、運用手順へ与える影響が識別されているか」である。grade は成果物のスナップショットを評価するため、何が変更されたかを知らない。**この観点は恒久的に `continuous: false` とする。**
 
@@ -270,31 +273,41 @@ A' を採る。`referential` と `discretionary` が規準の所在を正確に�
 
 詳細は [[prj-0001:pjr-ebtz-vp-arc-cross-document-consistency-target-kata-conformance]] で扱う。
 
-### 6.4. continuous は変更しない
+### 6.4. continuous は廃止する
 
-再分類 9 件に対し、`continuous` は 28 件すべて現状を維持する。理由は条件 3（繰り返し評価に値する finding が出るか）の実測データがないためである。
+**2026-09-26 に結論を改めた。** 当初は「条件 3 の実測データがないため 28 件すべて据え置く」としたが、除外する根拠そのものが成り立たなかった。
 
-`evaluation` と `continuous` を分離したため、**再分類しても grade の対象範囲は変わらない**。`vp-arc-conciseness`（46 件）と `vp-ux-user-flow`（22 件）は `discretionary` になっても `continuous: true` を保つ。
+| 当初の除外理由                                | 検証の結果                                                                           |
+| --------------------------------------------- | ------------------------------------------------------------------------------------ |
+| 主観的な判断を毎回繰り返しても意味がない      | grade は `changed_only` で変化したときだけ動く。無変化での再評価は 19 回中 0 回      |
+| 主観的な判断は繰り返すと不安定になる          | 逆だった。裁量型の `vp-arc-conciseness` の level 変動は 19 回中 1 回（5%）で最も安定 |
+| `vp-dev-change-impact` は変更を対象にしている | 対象は影響の記述の有無であり、スナップショットで判定できる                           |
 
-対象拡大の最優先候補は `vp-ops-agent-boundary` である。「agent に最終承認、公開可否判断、説明責任を委ねる記述になっていないか」は記述の有無の照合であり、条件 1 と 2 を満たし、**agent の境界違反の継続検出は SpecDojo の設計方針に直結する**。試行して finding の質を確認してから `continuous: true` にする。
+**28 観点すべてが grade の対象になる。** `continuous` は全件 `true` となり、情報を持たなくなるため削除する。これは [[prj-0001:pjr-49d2-quality-assessment]] の概要に書かれた当初の意図（「grade と review は同じ観点集合を、違う時間軸と深さで評価する」）へ戻す変更でもある。
+
+`continuous` の廃止は rubric の重みを 9 category へ広げる必要があり、既存 303 件の score がすべて変わる。**本項目（0.3.0）とは切り分け、[[prj-0001:pjr-k351-continuous-abolition-all-viewpoints]] で扱う。** 本項目では `continuous` の値を変えない。
 
 ## 7. 進め方
 
-| 段  | 内容                                                                                 | 版     |
-| --- | ------------------------------------------------------------------------------------ | ------ |
-| 1   | `evaluation` の改名と再分類 9 件。`continuous` は据え置き                            | 0.3.0  |
-| 2   | `evaluation` と `continuous` の分離。`grade.ts` から `evaluation !== "human"` を外す | 0.3.0  |
-| 3   | `vp-arc-conciseness` / `vp-ux-user-flow` の `check` へ規準を書き込む                 | 別項目 |
-| 4   | `vp-ops-agent-boundary` を試行し、`continuous: true` の可否を決める                  | 別項目 |
+| 段  | 内容                                                                     | 項目     | 版    |
+| --- | ------------------------------------------------------------------------ | -------- | ----- |
+| 1   | 観点の適用範囲を文書の種類で宣言する                                     | PJR-AG7B | —     |
+| 2   | `vp-arc-conciseness` / `vp-ux-user-flow` の `check` へ判定規準を書き込む | PJR-DKX8 | —     |
+| 3   | `evaluation` の改名と再分類、grade の実行経路の変更                      | 本項目   | 0.3.0 |
+| 4   | `continuous` の廃止、28 観点化、rubric の 9 category 化、閾値の再設定    | PJR-K351 | 0.4.0 |
 
-段 1 と段 2 は同時に行う。分離しないまま再分類すると、`discretionary` にした 2 観点が grade から落ちて 68 件の finding を失う。
+段 2 を段 3 の前に置くのは、`check` に規準を書き込むと 2 観点が `discretionary` から `referential` へ移り、**再分類が 9 件から 7 件に変わる**ためである。順序を逆にすると移行が 2 回になる。
 
-[[prj-0001:pjr-xtan-unify-verdict-vocabulary]] と同じファイルと schema の enum を変えるため、**0.3.0 にまとめて移行を 1 回で済ませる**。
+段 3 では `continuous` の値を変えないが、`evaluation !== "human"` の拒否権は外す。改名後は `human` という値がなくなり、この条件は意味を失うためである。`continuous: false` の 16 観点はそのまま grade の対象外に残る。
+
+[[prj-0001:pjr-xtan-unify-verdict-vocabulary]] は、判定語彙を統一するかどうかから問い直すことになった。統一する結論になった場合だけ、本項目と同じ 0.3.0 にまとめる。
 
 ## 8. 関連ドキュメント
 
 - [[prj-0001:pjr-2zvs-grade-review-integration]]
 - [[prj-0001:pjr-xtan-unify-verdict-vocabulary]]
+- [[prj-0001:pjr-k351-continuous-abolition-all-viewpoints]]
+- [[prj-0001:pjr-dkx8-vp-arc-conciseness-vp-ux-user-flow-check]]
 - [[prj-0001:pjr-ebtz-vp-arc-cross-document-consistency-target-kata-conformance]]
 - `docs/ja/specdojo/defaults/pm-review-viewpoints.yaml`
 - `docs/specdojo/schemas/v1/pm-review-viewpoints.schema.yaml`
