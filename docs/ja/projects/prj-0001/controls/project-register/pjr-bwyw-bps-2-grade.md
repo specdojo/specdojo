@@ -2,15 +2,16 @@
 specdojo:
   id: prj-0001:pjr-bwyw-bps-2-grade
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   owner: QE
   registered_at: "2026-09-26T10:47:19Z"
+  completed_at: "2026-09-26T15:56:50Z"
 ---
 
 # PJR-BWYW BPS 2 件の grade 指摘を解消する
@@ -51,6 +52,24 @@ specdojo:
 ## 5. 対応結果
 
 -
+
+### 5.1. 評価（2026-09-27 夜間）
+
+完了条件をすべて満たす。
+
+| 完了条件                                         | 判定                                                       |
+| ------------------------------------------------ | ---------------------------------------------------------- |
+| `T-02` の不成立時の扱い                          | 満たす。「既存の評価結果を利用し、本プロセスを開始しない」 |
+| 再利用の記述の集約                               | 満たす                                                     |
+| 「再評価しない」を前提条件から移し、失っていない | 満たす。概要の段落に、`P-08` へ戻す経路とあわせて残った    |
+| grade で major が解消                            | 満たす                                                     |
+
+| 文書                         | 前回     | 今回               |
+| ---------------------------- | -------- | ------------------ |
+| `bps-deliverable-evaluation` | 92（M1） | **97、pass（M0）** |
+| `bps-task-completion`        | 96、pass | **99、pass**       |
+
+今回の grade で `vp-arc-conciseness` が `bps-task-completion` の「再評価しない」の繰り返しを 2 件指摘した。原則 1 を要所で念押しするための繰り返しであり、削らない。
 
 ## 6. 関連ドキュメント
 

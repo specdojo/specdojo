@@ -2,15 +2,16 @@
 specdojo:
   id: prj-0001:pjr-dkx8-vp-arc-conciseness-vp-ux-user-flow-check
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-09-25T12:45:12Z"
+  completed_at: "2026-09-26T15:56:47Z"
 ---
 
 # PJR-DKX8 vp-arc-conciseness と vp-ux-user-flow の check へ判定規準を書き込む
@@ -73,6 +74,25 @@ specdojo:
 - `vp-ux-user-flow` の `check` に、目次、参照位置、説明順序を判定規準として書き込んだ。
 - 両観点とも `check` が規準を供給するようになったため、`evaluation` は `referential` へ移行可能である。実際の値変更は PJR-WPWB（0.3.0）で行う。
 - pipeline executor での agent 評価試行は構成上困難であるため、grade による finding 比較は open とし、後続の runner または PJR-WPWB での確認に委ねる。
+
+### 5.1. 評価（2026-09-27 夜間）
+
+完了条件をすべて満たす。grade の試行は executor の環境では動かせなかったため、夜間の 9 番目の grade（agy、6 文書）で確かめた。
+
+| 完了条件                                        | 判定                                         |
+| ----------------------------------------------- | -------------------------------------------- |
+| `vp-arc-conciseness` に下限と fail としない条件 | 満たす                                       |
+| `vp-ux-user-flow` に判定方法                    | 満たす。目次、参照の位置、説明の順序         |
+| 両観点を照合型と判定できる                      | 満たす                                       |
+| `vp-ux-readability` との境界を明示              | 満たす。readability から冗長さの判定を外した |
+| grade で試行して finding を確かめた             | 満たす（下記）                               |
+| `evaluation` の判断を記録                       | 満たす。値は変えず、PJR-WPWB で変える        |
+
+| 試行で確かめたこと                   | 結果                                                   |
+| ------------------------------------ | ------------------------------------------------------ |
+| readability が冗長さを指摘しないか   | 0 件。重複して数える状態が解消した                     |
+| conciseness の指摘が具体的か         | 2 件とも、削れる箇所を特定している                     |
+| user-flow の指摘が規準に沿っているか | 1 件。参照先へ直接たどり着けないことを導線の基準で指摘 |
 
 ## 6. 関連ドキュメント
 

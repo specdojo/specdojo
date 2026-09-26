@@ -58,3 +58,19 @@
       from: in-progress
       to: review
   previous_event_id: reg_72ea4334543147b8b459ae3dc938f332
+- v: 1
+  id: reg_dd043fcc64994a15952a2d5c25a8e5ac
+  ts: "2026-09-26T15:56:50Z"
+  action: close
+  actor: manual
+  from_status: review
+  to_status: done
+  reason: 夜間の grade で完了条件を確かめた。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-27"
+  previous_event_id: reg_e054db99586b42178c23ceae972d8d30
