@@ -2,15 +2,16 @@
 specdojo:
   id: prj-0001:pjr-34mq-plain-repository-naming-readme
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: UX
   registered_at: "2026-09-26T13:33:12Z"
+  completed_at: "2026-09-26T14:09:23Z"
 ---
 
 # PJR-34MQ リポジトリ構成を平易な名前へ改め README を初めての人に分かる形にする
@@ -90,6 +91,29 @@ npm の README は、初めて SpecDojo を使う人に向けた導入の説明�
 - `docs-structure-guide` の章名を `別リポジトリ構成` へ変更し、同章を指す `quick-start-guide` 内の参照も更新した。
 - 対象文書の Markdown lint と全 Markdown lint、SpecDojo の派生文書生成、catalog 検証は通過した。catalog 検証では未作成成果物に関する既存 warning のみ発生した。
 - `npm run docs:build` は、sandbox が `tsx` の IPC ソケット作成を拒否したため文書生成前に停止した。IPC 不要の起動方法では派生文書生成まで通過したが、VitePress build は sandbox が Chromium の起動を拒否したため Mermaid SVG の生成時に停止した。変更内容に起因する build エラーは確認されていないが、制約のない環境での再実行が必要である。
+
+### 7.1. 評価（2026-09-26 夜間）
+
+完了条件をすべて満たす。
+
+| 完了条件                                                                | 判定                                                             |
+| ----------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| 旧名（Detached / Attached Unit、SpecDojo 専用リポジトリ）が残っていない | 満たす。README とガイド・リファレンス 5 本で 0 件                |
+| 「使い始める」が初めての人に意味が通る                                  | 満たす（下記）                                                   |
+| 別リポジトリにする理由が冒頭近くで分かる                                | 満たす。「SpecDojo の記録をプロダクトの Git 履歴に混ぜないため」 |
+| プロジェクトリポジトリの定義と複数プロジェクトの記載                    | 満たす                                                           |
+| 最初の導入に不要な設定を手順から外す                                    | 満たす。「設定を変えたいとき」の節へ移した                       |
+| ガイド・リファレンス 5 本の追従                                         | 満たす                                                           |
+| 章名の参照が切れていない                                                | 満たす。`別リポジトリ構成` の章名と参照が一致                    |
+| `lint:md` / `docs:build`                                                | 満たす（`docs:build` は下記の条件つき）                          |
+
+README は 3 つの置き場所（プロダクトリポジトリ、プロジェクトリポジトリ、worktree 用ディレクトリ）をそれぞれ 1 文で説明し、ディレクトリの図を添えている。kata は初出で「成果物を書くための規則・手順・テンプレート・サンプルの総称」と定義され、provider も「利用する AI ツール」と説明されている。オーケストレーターの節から executor / reporter と rules / skills の説明が外れ、表と起動コマンドだけになった。
+
+旧名が残るのは過去の個票（PJR-QHKA、PJR-TBHH）だけで、当時の記録なので書き換えない。
+
+### 7.2. docs:build のメモリ不足
+
+`npm run docs:build` は既定の Node のヒープ上限でメモリ不足により失敗した。`NODE_OPTIONS=--max-old-space-size=8192` を付けると 193 秒で通った。本項目の変更は文書 6 本の小さな差分であり、サイトの規模が既定の上限を超えたことによる環境の問題と判断した。本項目の不備ではない。
 
 ## 8. 関連ドキュメント
 
