@@ -39,6 +39,22 @@ integrate failed: git status failed: fatal: detected dubious ownership in reposi
 
 所有者は一致しており、事後に実行すると通る。git の所有者チェックは `st_uid` と euid の比較であるため、一致していれば `safe.directory` の設定有無に関わらず成立する。devcontainer の overlay ファイルシステムで所有者情報が一時的に異なって見える事象と考えられる。
 
+### 1.3. 3 回目は checkpoint 段で起きた（2026-09-26）
+
+[[prj-0001:pjr-1y9p-resume-executor-plan]] の実行で 3 回目が発生した。**統合段ではなく、agent を起動する前の checkpoint 段**だった。
+
+```text
+checkpoint failed: git ls-files failed: fatal: detected dubious ownership in repository
+  at '/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-1Y9P'
+  (args: --full-name -z -- 4 paths)
+```
+
+同じ項目をすぐ再実行すると再現しなかった。uid は今回も一致していた（worktree も実行ユーザも 1000）。
+
+`safe.directory` には `/workspaces/specdojo` と `/workspaces/specdojo-workspace/specdojo` だけが登録され、`worktrees/` 配下は登録されていない。ただし所有者が一致していれば git は `safe.directory` を参照しないため、**登録の漏れは原因ではない**。所有者の比較が一時的に食い違う（overlay 上のファイルの見え方など）と考える方が、再実行で通る事実と合う。
+
+**再試行を統合段だけに置くと、checkpoint 段の失敗を救えない。** 個々の git 呼び出しを包む層で、`dubious ownership` を検出したら 1 回だけ再試行する形にする。
+
 ### 1.2. なぜ対処するか
 
 人が見ていれば `--resume` で回復し、agent の枠も消費しない。実害は再開操作だけである。
@@ -49,7 +65,7 @@ integrate failed: git status failed: fatal: detected dubious ownership in reposi
 
 ## 2. 完了条件
 
-- 統合段の git コマンドが `dubious ownership` で失敗した場合に限り、1 回だけ再試行する。
+- worktree に対する git コマンドが `dubious ownership` で失敗した場合に限り、1 回だけ再試行する。**統合段だけでなく checkpoint 段も対象とする**。個々の git 呼び出しを包む層で扱う。
 - 再試行しても失敗した場合は、従来どおり失敗として扱い理由を報告する。握りつぶさない。
 - `dubious ownership` 以外の失敗では再試行しない。
 - 再試行が発生したことがログまたは evidence から分かる。
