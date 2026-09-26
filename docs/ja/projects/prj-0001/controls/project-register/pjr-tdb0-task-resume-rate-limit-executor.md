@@ -2,15 +2,16 @@
 specdojo:
   id: prj-0001:pjr-tdb0-task-resume-rate-limit-executor
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-09-26T08:55:12Z"
+  completed_at: "2026-09-26T13:23:09Z"
 ---
 
 # PJR-TDB0 task 経路の resume で rate limit 後の executor が再起動しない
@@ -101,6 +102,39 @@ snapshot.tasks[taskId]?.meta?.pipeline_stage === "reporter"
 - 実装を修正し、`limitEventMeta` の結果と `pipelineRecoveryMeta` の結果を個別に展開してマージするように変更しました。
 - `tests/src/exec-pipeline-e2e.integration.test.ts` に残されていた rate limit の resume テストの `it.skip` を外してテストが通ることを確認しました。
 - `docs/ja/specdojo/guides/exec-operation-guide.md` の「レートリミット対応」に追記し、定時の自動復旧には `--due`、手動の早期再開・動作確認には `--task` が利用できる旨を明記しました。
+
+### 6.1. 評価（2026-09-26）
+
+原因を特定して直し、仕様も明確にした。完了条件をすべて満たす。
+
+| 完了条件                                        | 判定                                              |
+| ----------------------------------------------- | ------------------------------------------------- |
+| rate limit 後のタスク状態と meta を特定している | 満たす。`pipeline_state_ref` が書かれていなかった |
+| `--task` で再起動しない理由を説明できる         | 満たす（下記）                                    |
+| 正しい挙動を決めている                          | 満たす。`--task` でも再開する                     |
+| `it.skip` を外したテストが通る                  | 満たす。統合テスト 111 件、skip 0 件              |
+| ガイドへ再開手順を記載している                  | 満たす。`--due` と `--task` の使い分けを記載      |
+| register 経路との差異を判断している             | 満たす。同じ条件で再開する形に揃った              |
+
+### 6.2. 原因
+
+rate limit の block イベントを書く処理で、`pipelineRecoveryMeta` の結果が `limitEventMeta` の**引数の中**へ展開されていた。`limitEventMeta` は知らないキーを捨てるため、`pipeline_state_ref` が meta に書かれず、resume の条件（`pipeline_state_ref` が文字列であること）を満たさなかった。
+
+`limitEventMeta` の結果と `pipelineRecoveryMeta` の結果を、それぞれ外側で展開する形に直した。仮説 A（rate limit が別の状態を作る）と仮説 C（`--task` は対象外という仕様）は当たらなかった。
+
+### 6.3. 私が加えた修正
+
+`it.skip` は外されていたが、テストの前に「executor が再起動しない」という古いコメントが残っていた。現在の内容に合わせて書き換えた。
+
+### 6.4. 検証
+
+| 検証                    | 結果                            |
+| ----------------------- | ------------------------------- |
+| `typecheck` / `lint:ts` | 通過                            |
+| `test:unit`             | 1567 件すべて通過               |
+| `test:integration`      | **111 件すべて通過、skip 0 件** |
+
+[[prj-0001:pjr-1y9p-resume-executor-plan]] から持ち越していた統合テストが通った。PJR-1Y9P の網羅の検証が、`--task` 経路の resume でも通しで確かめられた。
 
 ## 7. 関連ドキュメント
 

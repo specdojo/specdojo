@@ -981,12 +981,9 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
 
   // Spawns real git worktree + child-process commands; needs more than the 5s default
   // when the full suite runs in parallel under load.
-  // PJR-TDB0: --task 経路の resume で executor が再起動せず、invocations が 1 件のままになる。
-  // canResumeBlockedPipeline は executor を含むが、rate limit 後のタスク状態または
-  // pipeline_state_ref の meta 書き込みが条件を満たしていない。rate limit の状態遷移
-  // （deferred limit と blocked の違い）の解明が必要なため、本体実装とは分けて追跡する。
-  // 実装側の target_coverage の記録・検証は tests/src/exec-evidence.test.ts と
-  // tests/src/exec-results.test.ts で検証済み。
+  // rate limit で止まった executor を --task 経路で resume し、plan の対象を網羅するかを
+  // 確かめる。rate limit の block イベントへ pipeline_state_ref が書かれないと resume できない
+  // （PJR-TDB0 で修正）。
   it("rechecks every plan target when an executor resumes after a rate limit", async () => {
     fixture = setupPipelineRepository();
     worktreeBase = mkdtempSync(join(tmpdir(), "specdojo-pipeline-e2e-wt-"));
