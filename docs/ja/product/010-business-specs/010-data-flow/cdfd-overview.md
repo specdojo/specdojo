@@ -40,7 +40,7 @@ SpecDojo を導入して Kata を配置し、その雛形から稼働構成の�
 
 - **主要入力**: 参加者からのプロジェクトの目的・文脈、参加者からのメンバー・ロール採用判断、参加者からの利用する agent・provider の選択、Kata の provider 別雛形
 - **主要出力**: 配置した Kata、稼働構成の初期状態
-- **データストア**: Kata、稼働構成
+- **データストア**: Kata / kata、稼働構成
 
 <!-- prettier-ignore -->
 | 領域 ID | プロセス領域 | 業務目的 | 主な担当 | 起点イベント |
@@ -53,7 +53,7 @@ SpecDojo を導入して Kata を配置し、その雛形から稼働構成の�
 
 - **主要入力**: Orchestrator からの計画要求、Action からの再計画要求、参加者からの判明した事項と意思決定、参加者からの管理対象とする成果物の判断、メンバー・ロール、Kata の rulebook・template、参加者からの定型・定期実行の要件
 - **主要出力**: 登録項目・決定記録、成果物カタログ、スケジュール戦略、Schedule（track）とマイルストーン、実行計画、定期実行定義、ジョブ定義
-- **データストア**: 稼働構成、Kata、登録簿、成果物カタログ、スケジュール戦略、Schedule（track）、実行計画、定期実行定義、ジョブ定義
+- **データストア**: 稼働構成、Kata / kata、登録簿 / register、成果物カタログ / catalog、スケジュール戦略、Schedule（track）、実行計画 / plan、定期実行定義 / routine、ジョブ定義 / job
 
 <!-- prettier-ignore -->
 | 領域 ID | プロセス領域 | 業務目的 | 主な担当 | 起点イベント |
@@ -70,7 +70,7 @@ Plan の実行指示に基づき、人または AI Agent が Kata を参照し�
 
 - **主要入力**: Orchestrator からの実行要求、実行計画、Schedule（track）、ジョブ定義、対象成果物、対象登録項目、Kata の rulebook・recipe・template、稼働構成の agent 定義・権限
 - **主要出力**: 作成・更新した成果物、登録項目の状態遷移、実行記録（result）、実行状態（ブロック・判断依頼を含む）
-- **データストア**: Kata、稼働構成、実行計画、Schedule（track）、ジョブ定義、登録簿、実行記録、成果物
+- **データストア**: Kata / kata、稼働構成、実行計画 / plan、Schedule（track）、ジョブ定義 / job、登録簿 / register、実行記録、成果物 / deliverable
 
 <!-- prettier-ignore -->
 | 領域 ID | プロセス領域 | 業務目的 | 主な担当 | 起点イベント |
@@ -83,7 +83,7 @@ Plan の実行指示に基づき、人または AI Agent が Kata を参照し�
 
 - **主要入力**: Orchestrator からの評価・報告要求、作成・更新された成果物、成果物カタログ、Schedule（track）、登録簿、実行記録・実行状態、Kata の rubric・評価観点
 - **主要出力**: 評価結果（grade、finding）、進捗報告、派生ビュー・索引
-- **データストア**: Kata、成果物カタログ、成果物、Schedule（track）、登録簿、実行記録、評価結果、進捗報告、派生ビュー・索引
+- **データストア**: Kata / kata、成果物カタログ / catalog、成果物 / deliverable、Schedule（track）、登録簿 / register、実行記録、評価結果、進捗報告、派生ビュー・索引
 
 <!-- prettier-ignore -->
 | 領域 ID | プロセス領域 | 業務目的 | 主な担当 | 起点イベント |
@@ -98,7 +98,7 @@ Check の結果と人間の判断に基づき、タスクの完了確定、稼�
 
 - **主要入力**: Orchestrator からの完了・改善要求、評価結果、進捗報告の判断事項、完了条件、参加者からの構成変更要求と承認結果、参加者からの非推奨化の判断
 - **主要出力**: 完了・決定の記録、完了記録、更新した稼働構成（Kata のバージョン更新を含む）、更新した成果物カタログ、非推奨化した文書、保管した文書、再計画要求
-- **データストア**: 稼働構成、Kata、成果物カタログ、登録簿、実行記録、成果物、保管庫（trash）、評価結果、進捗報告
+- **データストア**: 稼働構成、Kata / kata、成果物カタログ / catalog、登録簿 / register、実行記録、成果物 / deliverable、保管庫（trash） / trash、評価結果、進捗報告
 
 <!-- prettier-ignore -->
 | 領域 ID | プロセス領域 | 業務目的 | 主な担当 | 起点イベント |
@@ -113,7 +113,7 @@ Plan・Do・Check・Action へ要求を発行して PDCA を回す。参加者�
 
 - **主要入力**: 稼働構成の agent 定義・実行既定値、参加者からの意図、成果物カタログの完了条件、スケジュール戦略の作業要件、実行計画（対象・手順・完了条件）、定期実行定義、実行状態
 - **主要出力**: Plan・Do・Check・Action への要求、サイクルの実行記録
-- **データストア**: 稼働構成、成果物カタログ、スケジュール戦略、定期実行定義、実行計画、実行記録
+- **データストア**: 稼働構成、成果物カタログ / catalog、スケジュール戦略、定期実行定義 / routine、実行計画 / plan、実行記録
 
 <!-- prettier-ignore -->
 | 領域 ID | プロセス領域 | 業務目的 | 主な担当 | 起点イベント |
@@ -130,23 +130,23 @@ SpecDojo のプロジェクト運営で読み書きするデータストアを�
 | データストア | 主な内容 | 主な保管先 |
 | --- | --- | --- |
 | 稼働構成 | SpecDojo を稼働させる最低限の設定。リポジトリ層は SpecDojo の依存とバージョン、プロジェクト登録・パス設定、実行既定値、索引規則、agent 権限、オーケストレーター・executor・reporter の定義と入口指示。プロジェクト層はメンバー、ロール、レビュー観点 | `package.json`、<br>`.specdojo/specdojo.config.json`、<br>`.specdojo/exec-defaults.yaml`、<br>`.specdojo/index-config.yaml`、<br>`.specdojo/<provider>/`、<br>`.claude/agents/`、<br>`.claude/settings.json`、<br>`.codex/`、<br>`.opencode/`、<br>`.agents/*.agent.md`、<br>`.github/agents/`、<br>`CLAUDE.md`、<br>`AGENTS.md`、<br>`<project-id>/030-project-management/pm-members.yaml`、<br>`<project-id>/030-project-management/pm-roles.yaml`、<br>`<project-id>/030-project-management/pm-review-viewpoints.yaml` |
-| Kata | rulebook、recipe、template、sample、standard、schema、plan・result テンプレート、既定レビュー観点、評価 rubric、provider 別の agent 定義・設定の雛形、agent 向けの記述ルールと skill。内容は product 側で保守し、プロジェクトでは配置とバージョン更新だけを行う | `docs/ja/specdojo/`、<br>`docs/specdojo/schemas/`、<br>`templates/<provider>/`、<br>`.github/instructions/`、<br>`.claude/rules/`、<br>`.claude/skills/`、<br>`.agents/skills/` |
-| 成果物カタログ | 成果物 ID、種別、依存、完了条件、根拠参照。担当は持たず、スケジュール戦略の `owner_rules` から Schedule（track）へ展開する | `<project-id>/010-deliverables-catalog/dct-*.yaml` |
+| Kata / kata | rulebook、recipe、template、sample、standard、schema、plan・result テンプレート、既定レビュー観点、評価 rubric、provider 別の agent 定義・設定の雛形、agent 向けの記述ルールと skill。内容は product 側で保守し、プロジェクトでは配置とバージョン更新だけを行う | `docs/ja/specdojo/`、<br>`docs/specdojo/schemas/`、<br>`templates/<provider>/`、<br>`.github/instructions/`、<br>`.claude/rules/`、<br>`.claude/skills/`、<br>`.agents/skills/` |
+| 成果物カタログ / catalog | 成果物 ID、種別、依存、完了条件、根拠参照。担当は持たず、スケジュール戦略の `owner_rules` から Schedule（track）へ展開する | `<project-id>/010-deliverables-catalog/dct-*.yaml` |
 | スケジュール戦略 | 既定値、トラックごとのタスク生成戦略（対象カタログ、approach、phase の作業要件、ゲート・マイルストーンの定義） | `<project-id>/schedule/sch-defaults.yaml`、<br>`<project-id>/schedule/sch-strategy-<track>.yaml` |
-| 定期実行定義 | 周期・条件、対象ジョブ、次回判定に使う状態 | `<project-id>/routines/rtn-*.yaml` |
-| ジョブ定義 | 実行手順、runner 直接実行か agent 委譲か、成功条件 | `<project-id>/jobs/job-*.yaml` |
+| 定期実行定義 / routine | 周期・条件、対象ジョブ、次回判定に使う状態 | `<project-id>/routines/rtn-*.yaml` |
+| ジョブ定義 / job | 実行手順、runner 直接実行か agent 委譲か、成功条件 | `<project-id>/jobs/job-*.yaml` |
 
 ### 4.2. トランザクションデータ
 
 <!-- prettier-ignore -->
 | データストア | 主な内容 | 主な保管先 |
 | --- | --- | --- |
-| 登録簿 | 登録項目の個票、登録簿索引、状態遷移イベント | `<project-id>/controls/project-register/` |
+| 登録簿 / register | 登録項目の個票、登録簿索引、状態遷移イベント | `<project-id>/controls/project-register/` |
 | Schedule（track） | トラックごとのタスク、担当、期間、依存と、タスクに依存するマイルストーン。スケジュール戦略と成果物カタログから `schedule build` で生成する計画の正本であり、タスクの状態は持たない。状態は実行記録を正本とする | `<project-id>/schedule/sch-track-<track>.yaml`、<br>`<project-id>/schedule/sch-milestones.yaml`、<br>`<project-id>/timeline/` |
-| 実行計画 | plan。タスクごとの実施手順、対象文書、完了条件 | `<project-id>/execution/exec/plans/` |
+| 実行計画 / plan | plan。タスクごとの実施手順、対象文書、完了条件 | `<project-id>/execution/exec/plans/` |
 | 実行記録 | result、状態遷移イベント、evidence、trial、ジョブ実行記録、agent 実行ログ | `<project-id>/execution/exec/results/`、<br>`<project-id>/execution/exec/events/`、<br>`<project-id>/execution/exec/evidence/`、<br>`<project-id>/execution/exec/trials/`、<br>`<project-id>/execution/jobs/runs/`、<br>`logs/` |
-| 成果物 | プロジェクトで作成・更新する成果物本体。プロジェクト定義（概要、憲章、スコープ）や計画書も含む | `docs/ja/product/`（`trash/` を除く）、<br>`<project-id>/020-project-definition/`、<br>`<project-id>/030-project-management/`（稼働構成に属する YAML を除く） |
-| 保管庫（trash） | 非推奨化して退避した文書 | `docs/ja/product/trash/`、<br>`<project-id>/trash/` |
+| 成果物 / deliverable | プロジェクトで作成・更新する成果物本体。プロジェクト定義（概要、憲章、スコープ）や計画書も含む | `docs/ja/product/`（`trash/` を除く）、<br>`<project-id>/020-project-definition/`、<br>`<project-id>/030-project-management/`（稼働構成に属する YAML を除く） |
+| 保管庫（trash） / trash | 非推奨化して退避した文書 | `docs/ja/product/trash/`、<br>`<project-id>/trash/` |
 | 評価結果 | 完了条件の判定、grade、finding | `<project-id>/execution/grade/`、<br>成果物 Frontmatter の `grade`（成果物データストアとファイルを共有し、`grade` キーだけを評価結果の正本として埋め込む） |
 | 進捗報告 | ダッシュボード、クリティカルパス、ガントチャート、各種ログの生成ビュー | `<project-id>/execution/generated/`、<br>`<project-id>/controls/generated/` |
 | 派生ビュー・索引 | YAML の閲覧ページ、文書索引、サイトビルド出力（進捗報告に含まれる生成ビューを除く） | 各 `generated/<name>.md`、<br>`.specdojo/doc-index.json` |
@@ -168,18 +168,18 @@ flowchart LR
 
   Orchestrator("🎛️ Orchestrator<br>P-14")
   Plan("📝 Plan<br>P-02〜P-06")
-  Register[("📒 登録簿")]
+  Register[("📒 登録簿 / register")]
   Schedule[("📅 Schedule（track）")]
-  ExecPlan[("📋 実行計画")]
+  ExecPlan[("📋 実行計画 / plan")]
   Do("⚙️ Do<br>P-07")
-  Deliverables[("📄 成果物")]
+  Deliverables[("📄 成果物 / deliverable")]
   ExecLog[("🧾 実行記録")]
   Check("🔍 Check<br>P-08〜P-10")
   Grade[("🧪 評価結果")]
   Report[("📊 進捗報告")]
   Derived[("🗂️ 派生ビュー・索引")]
   Action("✅ Action<br>P-11〜P-13")
-  Trash[("🗃️ 保管庫（trash）")]
+  Trash[("🗃️ 保管庫（trash） / trash")]
 
   Orchestrator ~~~ Plan ~~~ Do ~~~ Check ~~~ Action
 
@@ -235,12 +235,12 @@ flowchart LR
   classDef storeMaster fill:#a5d6a7,stroke:#1b5e20,color:#000
 
   Onboarding("🚀 Onboarding<br>P-01")
-  Kata[("📐 Kata")]
+  Kata[("📐 Kata / kata")]
   Config[("🧩 稼働構成")]
-  Catalog[("📚 成果物カタログ")]
+  Catalog[("📚 成果物カタログ / catalog")]
   Strategy[("🧭 スケジュール戦略")]
-  Routine[("⏰ 定期実行定義")]
-  Job[("🧰 ジョブ定義")]
+  Routine[("⏰ 定期実行定義 / routine")]
+  Job[("🧰 ジョブ定義 / job")]
   Orchestrator("🎛️ Orchestrator<br>P-14")
   Plan("📝 Plan<br>P-02〜P-06")
   Do("⚙️ Do<br>P-07")
