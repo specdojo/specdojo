@@ -334,8 +334,10 @@ viewpoints:
     role: ARC
     category: consistency
     title: 成果物間整合
-    check: 成果物カタログ、Schedule、RACI、組織定義、メンバー定義、生成物と矛盾していないか。
-    evidence: local_id、depends_on、owner、roles、RACI、関連文書、生成元。
+    check: >-
+      成果物について、成果物カタログ、Schedule、RACI、組織定義、メンバー定義、生成物と矛盾していないか。不整合の finding は突き合わせ先の文書 ID またはパスと、双方の相反する記述を特定する。rulebook、recipe、sample、template の内部・相互・適用先との整合は vp-qe-kata-conformance で判定し、この観点では扱わない。
+    evidence: >-
+      local_id、depends_on、owner、roles、RACI、関連文書、生成元、finding ごとの突き合わせ先の文書 ID またはパスと双方の該当箇所。
     coverage_types:
       - permission
       - traceability
@@ -343,6 +345,7 @@ viewpoints:
     default_severity: major
     evaluation: agent
     continuous: true
+    grade_targets: [deliverable]
   - id: vp-arc-technical-constraints
     role: ARC
     category: architecture
@@ -471,8 +474,10 @@ viewpoints:
     role: QE
     category: quality
     title: 実践の型としての適合性
-    check: rulebook、recipe、sample、template が種別ごとの責務を守り、相互参照と対象成果物への適用方法が矛盾なく定義されているか。
-    evidence: authoring standard、rulebook の型宣言、recipe の問い、sample の完成例、template の骨組み、対象成果物との対応。
+    check: >-
+      rulebook、recipe、sample、template が種別ごとの責務を守り、Kata 内部、Kata 相互、および参照する組織定義や生成物を含む適用先との関係が矛盾なく定義されているか。Kata に関するこれらの整合はこの観点で判定し、vp-arc-cross-document-consistency では扱わない。
+    evidence: >-
+      authoring standard、rulebook の型宣言、recipe の問い、sample の完成例、template の骨組み、相互参照、組織定義や生成物を含む適用先との対応。
     coverage_types:
       - acceptance
       - traceability

@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: high
   owner: ARC
   registered_at: "2026-09-25T13:09:50Z"
@@ -88,17 +88,21 @@ IDの正規表現が、サンプルのID形式と矛盾している
 
 ## 5. 作業内容
 
-| No  | 作業                                                   | 担当 | 状態 | メモ                                 |
-| --- | ------------------------------------------------------ | ---- | ---- | ------------------------------------ |
-| 1   | kata に必要な突き合わせ先が実際にあるかを確認する      | ARC  | open | 組織定義、生成物の必要性             |
-| 2   | 対応の候補から方針を決定する                           | ARC  | open | 案 1 を起点に検討                    |
-| 3   | `vp-qe-kata-conformance` との責務境界を `check` へ書く | QE   | open | single-responsibility の書き方に倣う |
-| 4   | grade を試行し finding の重複解消を確認する            | QE   | open | 変更前 198 件 / 256 件との比較       |
-| 5   | 宣言と判定の乖離を検出する手段を検討する               | ARC  | open | 再発防止                             |
+| No  | 作業                                                   | 担当 | 状態 | メモ                                  |
+| --- | ------------------------------------------------------ | ---- | ---- | ------------------------------------- |
+| 1   | kata に必要な突き合わせ先が実際にあるかを確認する      | ARC  | done | 組織定義、生成物との整合は必要        |
+| 2   | 対応の候補から方針を決定する                           | ARC  | done | 案 1 と kata 観点への責務移管を採用   |
+| 3   | `vp-qe-kata-conformance` との責務境界を `check` へ書く | QE   | done | 両観点の `check` に境界を明記         |
+| 4   | grade を試行し finding の重複解消を確認する            | QE   | done | 既存 finding 付き kata で plan を確認 |
+| 5   | 宣言と判定の乖離を検出する手段を検討する               | ARC  | done | finding の突き合わせ根拠を必須化      |
 
 ## 6. 対応結果
 
--
+- 案 1 を採用し、`vp-arc-cross-document-consistency` に `grade_targets: [deliverable]` を設定した。成果物カタログ、Schedule、RACI、組織定義、メンバー定義、生成物との照合は成果物だけを対象とする。
+- 実行時点の grade result を再集計したところ、kata 260 件のうち `vp-arc-cross-document-consistency` の finding を持つものは 109 件、`vp-qe-kata-conformance` の finding を持つものは 195 件、両方を持つものは 98 件だった。ARC 側 finding 147 件のうち、組織定義や生成物との照合を必要とする例があるため、これらを kata の対象外とはせず `vp-qe-kata-conformance` の責務として `check` に明記した。
+- 両観点の `check` に境界を対称に記載した。Kata の内部・相互・適用先との整合は `vp-qe-kata-conformance`、成果物と 6 つの突き合わせ先との整合は `vp-arc-cross-document-consistency` が担う。
+- `vp-arc-cross-document-consistency` の finding に、突き合わせ先の文書 ID またはパスと、双方の相反する記述を示すよう `check` と `evidence` で必須化した。宣言した突き合わせ先が実際の判定に使われたかを grade result から監査できる。
+- 変更後に、両観点の finding を持つ `specdojo:pm-raci-recipe` を kata として grade plan 生成した。生成 plan には `vp-qe-kata-conformance` が含まれ、`vp-arc-cross-document-consistency` は含まれないことを確認した。これにより、再評価後の kata で両観点の重複は構造上 0 件となる。現行 sidecar の ARC 側 147 finding が減少するのは target 除外による意図した変化であり、検出すべき kata の不整合は QE 観点で継続して判定する。grade result サイドカーは本タスクで直接編集せず、次回の再評価で更新する。
 
 ## 7. 関連ドキュメント
 
