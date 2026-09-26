@@ -173,6 +173,14 @@ process.exit(1);
   return { root, fakeSpecdojo, stateFile, pipelineStateFile, argsFile, target, resultFile };
 }
 
+// 既存のテストは 3 段構成（検証用）の挙動を確かめる。PJR-W5JT で既定が単段になったため、
+// --stages を渡さない呼び出しでは 3 段を明示する。既定の単段は専用のテストで確かめる。
+function withStages(extraArguments: string[]): string[] {
+  return extraArguments.includes("--stages")
+    ? extraArguments
+    : ["--stages", "3", ...extraArguments];
+}
+
 function runPipeline(
   fixture: ReturnType<typeof makeFixture>,
   extraEnv: Record<string, string> = {},
@@ -191,7 +199,7 @@ function runPipeline(
       "docs/ja/specdojo/rulebooks/fixture-rulebook.md",
       "--specdojo-bin",
       fixture.fakeSpecdojo,
-      ...extraArguments,
+      ...withStages(extraArguments),
     ],
     {
       cwd: fixture.root,
@@ -216,7 +224,15 @@ function runDryRun(
 ) {
   return spawnSync(
     "bash",
-    [script, "--run-id", "fixture-dry-run", "--kind", kind, "--dry-run", ...extraArguments],
+    [
+      script,
+      "--run-id",
+      "fixture-dry-run",
+      "--kind",
+      kind,
+      "--dry-run",
+      ...withStages(extraArguments),
+    ],
     { cwd: fixture.root, encoding: "utf8", env: { ...process.env, ...extraEnv } },
   );
 }
@@ -242,6 +258,21 @@ describe("grade per-document pipeline", () => {
     expect(result.stdout).toContain(
       `stage=1 executor=gemma-expert-executor reporter=gemma-reporter reference=docs/ja/specdojo/${directory}/prj-overview-${kind}.md`,
     );
+  });
+
+  it("defaults to a single codex stage when --stages is omitted", () => {
+    const fixture = makeFixture();
+
+    const result = spawnSync(
+      "bash",
+      [script, "--run-id", "fixture-default-stages", "--kind", "rulebook", "--dry-run"],
+      { cwd: fixture.root, encoding: "utf8", env: { ...process.env } },
+    );
+
+    expect(result.status, result.stderr).toBe(0);
+    expect(result.stdout).toContain("stages=1");
+    expect(result.stdout).toContain("stage=1 executor=codex-expert-executor");
+    expect(result.stdout).not.toContain("stage=2 ");
   });
 
   it("prefers an explicit same-kind stage 1 reference", () => {
