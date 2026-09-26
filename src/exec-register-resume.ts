@@ -20,6 +20,7 @@ export type RegisterResumeCandidate = {
   stateRef: string;
   statePath: string;
   state: PipelineState;
+  executorEvidence?: ExecEvidence;
   evidence?: ExecEvidence;
   evidenceRef?: string;
 };
@@ -34,6 +35,7 @@ type RegisterResumeTargetBase = {
 export type RegisterResumeTarget =
   | (RegisterResumeTargetBase & {
       stage: "executor";
+      initialChanges: string[];
     })
   | (RegisterResumeTargetBase & {
       stage: "reporter" | "integrate";
@@ -87,6 +89,7 @@ export function loadRegisterResumeCandidates(input: {
       stateRef,
       statePath: checkpoint.statePath,
       state: checkpoint.state,
+      ...(checkpoint.executorEvidence ? { executorEvidence: checkpoint.executorEvidence } : {}),
       ...(checkpoint.evidence ? { evidence: checkpoint.evidence } : {}),
       ...(checkpoint.evidence
         ? {
@@ -110,12 +113,27 @@ export function selectResumableRegisterRun(
   if (candidates.length === 0) {
     return { kind: "not-resumable", reason: "no pipeline run state found in the worktree" };
   }
-  const latest = [...candidates].sort((a, b) => {
+  const ordered = [...candidates].sort((a, b) => {
     if (a.state.updated_at !== b.state.updated_at) {
       return a.state.updated_at < b.state.updated_at ? -1 : 1;
     }
     return a.runId < b.runId ? -1 : a.runId > b.runId ? 1 : 0;
-  })[candidates.length - 1];
+  });
+  const latest = ordered[candidates.length - 1];
+  // The earliest rate-limited executor attempt is the stable lower bound for every later resume.
+  // Rejected protection-block changes are intentionally excluded; the handoff requires removing
+  // them before resume. `attempt_changes` also excludes runner lifecycle changes that predated the
+  // executor invocation.
+  const firstAttemptEvidence = ordered
+    .map((candidate) => candidate.executorEvidence ?? candidate.evidence)
+    .find((evidence) => evidence?.stage.status === "rate_limited");
+  const initialChanges = [
+    ...new Set(
+      (firstAttemptEvidence?.attempt_changes ?? firstAttemptEvidence?.changes ?? [])
+        .map((change) => change.path.trim())
+        .filter(Boolean),
+    ),
+  ];
 
   // rate limit または保護機構の block で打ち切られた executor は、evidence が記録されていても
   // 作業を完了していない。reporter へ進めず、申し送りを反映できるよう既存 worktree 上で
@@ -132,6 +150,7 @@ export function selectResumableRegisterRun(
         stateRef: latest.stateRef,
         statePath: latest.statePath,
         state: latest.state,
+        initialChanges,
       },
     };
   }
@@ -174,6 +193,7 @@ export function selectResumableRegisterRun(
         stateRef: latest.stateRef,
         statePath: latest.statePath,
         state: latest.state,
+        initialChanges,
       },
     };
   }

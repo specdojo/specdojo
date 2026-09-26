@@ -149,12 +149,39 @@ describe("extractBlockReason", () => {
     const prompt = buildExecutorPrompt("# Plan\n", [], {
       resumed: true,
       existingChanges: ["docs/a.md"],
+      initialChangeTargets: ["docs/first-attempt.md"],
     });
 
     expect(prompt).toContain("resumes an interrupted attempt");
     expect(prompt).toContain("`target_coverage`");
-    expect(prompt).toContain("every declared target");
+    expect(prompt).toContain("incomplete lower bound, not an upper bound");
+    expect(prompt).toContain("`docs/first-attempt.md`");
     expect(prompt).toContain("`docs/a.md`");
+  });
+
+  it("plan が targets を宣言した場合は初回変更集合より宣言を優先する", () => {
+    const prompt = buildExecutorPrompt(
+      [
+        "---",
+        "specdojo:",
+        "  task_id: PJR-AB12",
+        "  mode: edit",
+        "  targets:",
+        "    - test:declared-doc",
+        "---",
+        "",
+        "# Plan",
+      ].join("\n"),
+      [],
+      {
+        resumed: true,
+        initialChangeTargets: ["docs/first-attempt.md"],
+      },
+    );
+
+    expect(prompt).toContain("Declared targets take");
+    expect(prompt).not.toContain("incomplete lower bound, not an upper bound");
+    expect(prompt).not.toContain("`docs/first-attempt.md`");
   });
 
   it("truncates an overly long reason to keep the block event log readable", () => {

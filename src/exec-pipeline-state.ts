@@ -196,11 +196,7 @@ function resolveArtifactRef(worktreePath: string, ref: string): string | null {
   return path;
 }
 
-function isSucceededExecutorEvidence(
-  value: unknown,
-  taskId: string,
-  runId: string,
-): value is ExecEvidence {
+function isExecutorEvidence(value: unknown, taskId: string, runId: string): value is ExecEvidence {
   if (!value || typeof value !== "object" || Array.isArray(value)) return false;
   const evidence = value as Partial<ExecEvidence>;
   return (
@@ -208,7 +204,9 @@ function isSucceededExecutorEvidence(
     evidence.task_id === taskId &&
     evidence.run_id === runId &&
     evidence.stage?.role === "executor" &&
-    evidence.stage.status === "succeeded" &&
+    (evidence.stage.status === "succeeded" ||
+      evidence.stage.status === "failed" ||
+      evidence.stage.status === "rate_limited") &&
     Number.isSafeInteger(evidence.stage.attempts) &&
     evidence.stage.attempts >= 1
   );
@@ -221,6 +219,7 @@ export function loadPipelineResumeCheckpoint(input: {
 }): {
   state: PipelineState;
   statePath: string;
+  executorEvidence?: ExecEvidence;
   evidence?: ExecEvidence;
 } | null {
   const statePath = resolveArtifactRef(input.worktreePath, input.stateRef);
@@ -242,19 +241,21 @@ export function loadPipelineResumeCheckpoint(input: {
           .split(sep)
           .join("/")
       : null);
-  if (
-    (state.stages.executor.status !== "succeeded" && state.stages.executor.status !== "running") ||
-    !evidenceRef
-  ) {
-    return { state, statePath };
-  }
+  if (!evidenceRef) return { state, statePath };
   const evidencePath = resolveArtifactRef(input.worktreePath, evidenceRef);
   if (!evidencePath || !existsSync(evidencePath)) return { state, statePath };
   try {
     const evidence: unknown = JSON.parse(readFileSync(evidencePath, "utf8"));
-    return isSucceededExecutorEvidence(evidence, input.taskId, state.run_id)
-      ? { state, statePath, evidence }
-      : { state, statePath };
+    if (!isExecutorEvidence(evidence, input.taskId, state.run_id)) return { state, statePath };
+    return {
+      state,
+      statePath,
+      executorEvidence: evidence,
+      ...(evidence.stage.status === "succeeded" &&
+      (state.stages.executor.status === "succeeded" || state.stages.executor.status === "running")
+        ? { evidence }
+        : {}),
+    };
   } catch {
     return { state, statePath };
   }

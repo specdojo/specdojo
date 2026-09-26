@@ -175,6 +175,7 @@ import {
   recordCommandEvidence,
   recordExecutorEvidence,
   recordReporterFailureOutput,
+  snapshotWorktreeChanges,
   validateResumedTargetCoverage,
   writeExecutorEvidence,
   type ExecEvidence,
@@ -785,7 +786,23 @@ export function loadPrompt(executionPath: string, taskId: string): string | null
 type ExecutorPromptOptions = {
   resumed?: boolean;
   existingChanges?: readonly string[];
+  initialChangeTargets?: readonly string[];
+  coverageSource?: "declared" | "initial-changes" | "none";
 };
+
+export function resolveResumedCoverageTargets(
+  plan: string,
+  initialChangeTargets: readonly string[] = [],
+): { source: "declared" | "initial-changes" | "none"; targets: string[] } {
+  const declared = [
+    ...new Set((parsePlanTaskIdentity(plan)?.targets ?? []).map((target) => target.trim())),
+  ].filter(Boolean);
+  if (declared.length > 0) return { source: "declared", targets: declared };
+  const initial = [...new Set(initialChangeTargets.map((target) => target.trim()))].filter(Boolean);
+  return initial.length > 0
+    ? { source: "initial-changes", targets: initial }
+    : { source: "none", targets: [] };
+}
 
 function executorEvidenceContract(
   parentValidationIds: readonly string[],
@@ -798,19 +815,35 @@ function executorEvidenceContract(
     parentValidationIds.length > 0
       ? `\nThe SpecDojo parent runner will execute these allowlisted validations after you exit: ${parentValidationIds.join(", ")} (${parentValidationCommands.join(", ")}). Do not run those commands inside the agent sandbox or report duplicate executor results for them. Run only the remaining sandbox-safe validations required by the plan. Parent-run results will be appended to evidence with source=runner and are authoritative.\n`
       : "";
+  const coverage = {
+    source: options.coverageSource ?? "none",
+    targets: [...(options.initialChangeTargets ?? [])],
+  };
+  const coverageInstruction =
+    coverage.source === "initial-changes"
+      ? `The plan declares no \`targets\`. The paths below were materially changed by the first
+executor attempt and are an incomplete lower bound, not an upper bound on the work required.
+Inspect the entire plan and any additional artifacts it requires. For each lower-bound path,
+include one \`target_coverage\` entry and use the path exactly as the entry's \`target\` value:
+${coverage.targets.map((target) => `- \`${target}\``).join("\n")}`
+      : coverage.source === "declared"
+        ? `For each entry in plan frontmatter \`targets\`, include one \`target_coverage\` entry in
+the evidence envelope. Use the target ID exactly as written in the plan. Declared targets take
+priority over any files recorded by an earlier attempt.`
+        : `The plan declares no \`targets\` and no first-attempt change lower bound was recorded.
+Omit \`target_coverage\` and state in \`final_message\` which artifacts you verified and which
+remain unverified.`;
   const resumeInstruction = options.resumed
     ? `
 This executor invocation resumes an interrupted attempt. Existing worktree changes may represent
 only a partial implementation; they are not proof that the plan is complete. Re-read the entire
-plan and inspect every declared target before reporting success. For each entry in plan
-frontmatter \`targets\`, include one \`target_coverage\` entry in the evidence envelope. Use the
-target ID exactly as written in the plan. A changed target must use status \`changed\`, provide its
+plan before reporting success. ${coverageInstruction}
+
+A changed target must use status \`changed\`, provide its
 repository-relative \`path\`, and actually be present in the cumulative worktree diff. A target
 that legitimately needs no change must use status \`unchanged\` and provide a concrete \`reason\`;
 the runner will preserve that reason in the result. If you cannot account for every target, exit
-non-zero instead of claiming completion. When the plan frontmatter declares no \`targets\`, omit
-\`target_coverage\` and instead state in
-\`final_message\` which artifacts you verified and which remain unverified.${
+non-zero instead of claiming completion.${
         options.existingChanges?.length
           ? `\n\nChanges already present when this resumed invocation started:\n${options.existingChanges.map((path) => `- \`${path}\``).join("\n")}`
           : ""
@@ -818,7 +851,7 @@ non-zero instead of claiming completion. When the plan frontmatter declares no \
 `
     : "";
   const targetCoverageExample = options.resumed
-    ? ',"target_coverage":[{"target":"exact plan target id","status":"changed|unchanged","path":"repo-relative path for changed targets","reason":"required when unchanged"}]'
+    ? ',"target_coverage":[{"target":"exact declared target id or lower-bound path","status":"changed|unchanged","path":"repo-relative path for changed targets","reason":"required when unchanged"}]'
     : "";
   return `
 
@@ -854,7 +887,12 @@ export function buildExecutorPrompt(
   parentValidationIds: readonly string[] = [],
   options: ExecutorPromptOptions = {},
 ): string {
-  return `${plan.trimEnd()}${executorEvidenceContract(parentValidationIds, options)}`;
+  const coverage = resolveResumedCoverageTargets(plan, options.initialChangeTargets);
+  return `${plan.trimEnd()}${executorEvidenceContract(parentValidationIds, {
+    ...options,
+    initialChangeTargets: coverage.targets,
+    coverageSource: coverage.source,
+  })}`;
 }
 
 function resumedTargetCoverageFailure(params: {
@@ -862,9 +900,10 @@ function resumedTargetCoverageFailure(params: {
   plan: string;
   evidence: ExecEvidence;
   evidencePath: string;
+  initialChangeTargets?: readonly string[];
 }): string | undefined {
   if (!params.resumed) return undefined;
-  const targets = parsePlanTaskIdentity(params.plan)?.targets ?? [];
+  const targets = resolveResumedCoverageTargets(params.plan, params.initialChangeTargets).targets;
   const coverage = validateResumedTargetCoverage(targets, params.evidence);
   if (coverage.ok) return undefined;
 
@@ -4105,6 +4144,7 @@ async function runAgentPipeline(params: {
   resultPath: string;
   execDefaults: ExecDefaultsConfig;
   resumedExecutor?: boolean;
+  initialChangeTargets?: readonly string[];
 }): Promise<{
   exitCode: 0 | 1;
   runResult: RunResult;
@@ -4162,8 +4202,12 @@ async function runAgentPipeline(params: {
     {
       resumed: params.resumedExecutor,
       ...(params.resumedExecutor ? { existingChanges: worktreeStatusPaths(cwd) } : {}),
+      ...(params.resumedExecutor
+        ? { initialChangeTargets: params.initialChangeTargets ?? [] }
+        : {}),
     },
   );
+  const changesBeforeAttempt = snapshotWorktreeChanges(cwd);
   const outcome = await runWithRetry(
     [executor],
     executorPrompt,
@@ -4191,6 +4235,7 @@ async function runAgentPipeline(params: {
     attempts: outcome.attempts,
     stdout: outcome.stdout,
     stderr: outcome.stderr,
+    changesBeforeAttempt,
   });
   const coverageFailure =
     outcome.result === "success"
@@ -4199,6 +4244,7 @@ async function runAgentPipeline(params: {
           plan: planPrompt,
           evidence: recorded.evidence,
           evidencePath: recorded.evidencePath,
+          initialChangeTargets: params.initialChangeTargets,
         })
       : undefined;
   const executorResult: RunResult = coverageFailure ? "failure" : outcome.result;
@@ -5715,6 +5761,7 @@ async function resumeSingleRegisterItemWorktree(
       resultPath: worktreeResultPath,
       execDefaults: context.execDefaults,
       resumedExecutor: true,
+      initialChangeTargets: target.initialChanges,
     });
 
     const finalize = async (): Promise<RegisterItemSummary> =>
