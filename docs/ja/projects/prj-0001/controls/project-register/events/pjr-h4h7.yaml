@@ -58,3 +58,19 @@
       from: in-progress
       to: review
   previous_event_id: reg_4c00a0dbf9064e99a679d2fc41d52bd5
+- v: 1
+  id: reg_6c04eae0da6045e1ab02694873fe52c5
+  ts: "2026-09-26T06:13:29Z"
+  action: close
+  actor: manual
+  from_status: review
+  to_status: done
+  reason: P-08 と P-11 の BPS を 2 文書で作成した。PJR-2ZVS の 4 原則がいずれも判定可能な形で表現されている。展開項目を別途起票する。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-26"
+  previous_event_id: reg_d99144577a834203ac21116ae41580fe
