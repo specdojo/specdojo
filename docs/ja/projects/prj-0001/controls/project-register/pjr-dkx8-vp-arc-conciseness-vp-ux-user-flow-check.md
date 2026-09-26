@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   owner: ARC
   registered_at: "2026-09-25T12:45:12Z"
@@ -58,17 +58,21 @@ specdojo:
 
 ## 4. 作業内容
 
-| No  | 作業                                             | 担当 | 状態 | メモ                               |
-| --- | ------------------------------------------------ | ---- | ---- | ---------------------------------- |
-| 1   | `vp-ux-readability` との責務境界を決める         | UX   | open | 冗長性の判定をどちらが担うか       |
-| 2   | `vp-arc-conciseness` の `check` へ規準を書き込む | ARC  | open | 先例の書き方に合わせる             |
-| 3   | `vp-ux-user-flow` の `check` へ規準を書き込む    | UX   | open | 判定に使う要素を列挙する           |
-| 4   | grade を試行し finding を比較する                | QE   | open | 書き換え前 46 件 / 22 件との比較   |
-| 5   | `evaluation` の値を確定する                      | ARC  | open | 結論の記録のみ。値は WPWB で変える |
+| No  | 作業                                             | 担当 | 状態 | メモ                                                         |
+| --- | ------------------------------------------------ | ---- | ---- | ------------------------------------------------------------ |
+| 1   | `vp-ux-readability` との責務境界を決める         | UX   | done | 冗長性の判定は `vp-arc-conciseness` が担うこととした         |
+| 2   | `vp-arc-conciseness` の `check` へ規準を書き込む | ARC  | done | 先例に合わせ、下限と fail にしない条件を明記した             |
+| 3   | `vp-ux-user-flow` の `check` へ規準を書き込む    | UX   | done | 目次、参照、説明順序のどれを見るかを明記した                 |
+| 4   | grade を試行し finding を比較する                | QE   | open | 規準変更による差分は、本計画完了後の親ランナーの評価に委ねる |
+| 5   | `evaluation` の値を確定する                      | ARC  | done | 両観点とも `referential` へ移行可能と判断した                |
 
 ## 5. 対応結果
 
--
+- `vp-ux-readability` の `check` から冗長性に関する記述を削除し、判定を `vp-arc-conciseness` に委ねる境界を明示した。
+- `vp-arc-conciseness` の `check` に、判断に必要な情報が残されていれば下限を満たすとし、長さだけでは fail にしない条件を書き込んだ。
+- `vp-ux-user-flow` の `check` に、目次、参照位置、説明順序を判定規準として書き込んだ。
+- 両観点とも `check` が規準を供給するようになったため、`evaluation` は `referential` へ移行可能である。実際の値変更は PJR-WPWB（0.3.0）で行う。
+- pipeline executor での agent 評価試行は構成上困難であるため、grade による finding 比較は open とし、後続の runner または PJR-WPWB での確認に委ねる。
 
 ## 6. 関連ドキュメント
 
