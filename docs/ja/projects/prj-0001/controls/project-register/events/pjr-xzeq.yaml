@@ -87,3 +87,29 @@
       from: in-progress
       to: review
   previous_event_id: reg_204bdc58163b433da531b7d68be3d780
+- v: 1
+  id: reg_328c1e1ee0b94bd1b6dbfdf7d51d3bf7
+  ts: "2026-09-26T07:29:02Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_72f9d15ad0384c769b64ca9aed6c7772
+- v: 1
+  id: reg_f5e44751ba2047d5aa7e68cb8eb889f2
+  ts: "2026-09-26T07:41:12Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_328c1e1ee0b94bd1b6dbfdf7d51d3bf7
