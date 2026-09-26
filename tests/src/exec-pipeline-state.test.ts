@@ -148,6 +148,53 @@ describe("pipeline state", () => {
     ).toBeUndefined();
   });
 
+  it("loads interrupted executor evidence as a resume lower-bound source without reusing it as succeeded", () => {
+    const { root, executionPath } = setup();
+    const taskId = "PJR-AB12";
+    const runId = "run-rate-limited";
+    const location = pipelineStateLocation({
+      repoRoot: root,
+      worktreePath: root,
+      executionPath,
+      taskId,
+      runId,
+    });
+    const evidenceRef = `execution/exec/evidence/${taskId}/${runId}/evidence.json`;
+    let state = createPipelineState({
+      taskId,
+      runId,
+      updatedAt: "2026-08-10T07:00:00Z",
+    });
+    state = updatePipelineStage(
+      state,
+      "executor",
+      { status: "rate_limited", attempts: 1, artifact_ref: evidenceRef },
+      "2026-08-10T07:01:00Z",
+    );
+    writePipelineState(location.path, state);
+    const interruptedEvidence: ExecEvidence = {
+      ...evidence(taskId, runId),
+      stage: {
+        ...evidence(taskId, runId).stage,
+        status: "rate_limited",
+        exit_code: 75,
+      },
+      attempt_changes: [{ path: "docs/partial.md", status: "M" }],
+    };
+    const evidencePath = join(root, evidenceRef);
+    mkdirSync(dirname(evidencePath), { recursive: true });
+    writeFileSync(evidencePath, `${JSON.stringify(interruptedEvidence)}\n`, "utf8");
+
+    const checkpoint = loadPipelineResumeCheckpoint({
+      worktreePath: root,
+      stateRef: location.ref,
+      taskId,
+    });
+
+    expect(checkpoint?.executorEvidence).toEqual(interruptedEvidence);
+    expect(checkpoint?.evidence).toBeUndefined();
+  });
+
   it("records the runner-owned integrate stage on a state that has none", () => {
     const { root, executionPath } = setup();
     const location = pipelineStateLocation({

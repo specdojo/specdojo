@@ -201,7 +201,16 @@ describe("selectResumableRegisterRun", () => {
         executorStatus: "rate_limited",
         evidenceRef: null,
       }),
-      evidence: makeEvidence("run-rate-limited"),
+      executorEvidence: {
+        ...makeEvidence("run-rate-limited"),
+        stage: {
+          ...makeEvidence("run-rate-limited").stage,
+          status: "rate_limited",
+          exit_code: 75,
+        },
+        attempt_changes: [{ path: "docs/first-attempt.md", status: "M" }],
+      },
+      evidence: undefined,
       evidenceRef,
     });
 
@@ -213,6 +222,54 @@ describe("selectResumableRegisterRun", () => {
     // reporter へ進めない。
     expect(actual.target.stage).toBe("executor");
     expect(actual.target.runId).toBe("run-rate-limited");
+    if (actual.target.stage !== "executor") return;
+    expect(actual.target.initialChanges).toEqual(["docs/first-attempt.md"]);
+  });
+
+  it("複数回の resume でも最初の executor 変更集合を下限として保持する", () => {
+    const firstEvidence = {
+      ...makeEvidence("run-first"),
+      stage: {
+        ...makeEvidence("run-first").stage,
+        status: "rate_limited" as const,
+        exit_code: 75,
+      },
+      attempt_changes: [{ path: "docs/first-attempt.md", status: "M" }],
+    };
+    const secondEvidence = {
+      ...makeEvidence("run-second"),
+      stage: {
+        ...makeEvidence("run-second").stage,
+        status: "rate_limited" as const,
+        exit_code: 75,
+      },
+      attempt_changes: [{ path: "docs/second-attempt.md", status: "M" }],
+    };
+    const first = makeCandidate({
+      state: makeState({
+        runId: "run-first",
+        updatedAt: "2026-08-20T00:00:00Z",
+        executorStatus: "rate_limited",
+      }),
+      executorEvidence: firstEvidence,
+      evidence: undefined,
+    });
+    const second = makeCandidate({
+      state: makeState({
+        runId: "run-second",
+        updatedAt: "2026-08-21T00:00:00Z",
+        executorStatus: "rate_limited",
+      }),
+      executorEvidence: secondEvidence,
+      evidence: undefined,
+    });
+
+    const actual = selectResumableRegisterRun([second, first]);
+
+    expect(actual.kind).toBe("resumable");
+    if (actual.kind !== "resumable" || actual.target.stage !== "executor") return;
+    expect(actual.target.runId).toBe("run-second");
+    expect(actual.target.initialChanges).toEqual(["docs/first-attempt.md"]);
   });
 
   it("保護機構で blocked になった run は evidence があっても executor 再開対象にする", () => {

@@ -151,6 +151,7 @@ describe("executor evidence", () => {
       stdout,
       stderr: "",
       changes: [{ path: "artifact.md", status: "M" }],
+      attemptChanges: [{ path: "artifact.md", status: "M" }],
       diffStat: " artifact.md | 2 +-",
       logRefPath:
         "docs/execution/exec/evidence/T-TEST-doc-010/20260810T070334Z-aabbccdd/executor.log",
@@ -166,6 +167,7 @@ describe("executor evidence", () => {
     });
 
     expect(evidence.changes).toContainEqual({ path: "artifact.md", status: "M" });
+    expect(evidence.attempt_changes).toEqual([{ path: "artifact.md", status: "M" }]);
     expect(evidence.diff_summary.files_changed).toBe(1);
     expect(evidence.final_message).toBe("artifact updated");
     expect(evidence.validations).toEqual([

@@ -71,6 +71,7 @@ const ORIGINAL_PACKAGE = `${JSON.stringify(
   null,
   2,
 )}\n`;
+const PARTIAL_ARTIFACT = "partial-first-attempt.md";
 
 const CONFIG = {
   version: 1,
@@ -163,6 +164,11 @@ const role = nickname.startsWith("exec-") ? "executor" : "reporter";
 const prompt = readFileSync(0, "utf8");
 
 if (role === "executor") {
+  if (nickname === "exec-rate-limit" && !existsSync(${JSON.stringify(PARTIAL_ARTIFACT)})) {
+    writeFileSync(${JSON.stringify(PARTIAL_ARTIFACT)}, "# partial first attempt\\n", "utf8");
+    process.stderr.write("rate limit reached\\n");
+    process.exit(75);
+  }
   if (nickname.includes("protected-write") && !existsSync("protection-applied")) {
     writeFileSync(
       "package.json",
@@ -299,6 +305,17 @@ function withRepo(fn: (fixture: Fixture) => Promise<void> | void): Promise<void>
           "    capabilities: []",
           "    proficiency: normal",
           "    priority: 2",
+          "  - nickname: exec-rate-limit",
+          "    display_name: exec-rate-limit",
+          "    email: null",
+          "    roles: []",
+          "    type: agent",
+          "    provider: opencode",
+          "    mode: edit",
+          "    stage_role: executor",
+          "    capabilities: []",
+          "    proficiency: normal",
+          "    priority: 2",
           "  - nickname: exec-claude-protected-write",
           "    display_name: exec-claude-protected-write",
           "    email: null",
@@ -338,6 +355,8 @@ function withRepo(fn: (fixture: Fixture) => Promise<void> | void): Promise<void>
           "pipeline:",
           "  parent_validations:",
           "    - test-integration",
+          "rate_limit_detection:",
+          "  exit_codes: [75]",
           "",
         ].join("\n"),
         "utf8",
@@ -426,6 +445,10 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
         const runDirs = readdirSync(evidenceDir);
         expect(runDirs).toHaveLength(1);
         expect(existsSync(join(evidenceDir, runDirs[0], "pipeline-state.json"))).toBe(true);
+        const evidence = JSON.parse(
+          readFileSync(join(evidenceDir, runDirs[0], "evidence.json"), "utf8"),
+        ) as { attempt_changes?: unknown };
+        expect(evidence.attempt_changes).toBeUndefined();
 
         expect(process.exitCode ?? 0).toBe(0);
       });
@@ -794,6 +817,68 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
       });
     },
     120_000,
+  );
+
+  it(
+    "rejects a resumed target-less register executor that omits the first-attempt change lower bound",
+    { timeout: 120_000 },
+    async () => {
+      await withRepo(async ({ root, worktreeBase }) => {
+        vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+        vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+
+        await runExec([
+          "run",
+          "--project",
+          "test",
+          "--register",
+          "PJR-AB12",
+          "--executor-by",
+          "exec-rate-limit",
+          "--reporter-by",
+          "report-1",
+          "--worktree",
+          "--worktree-base",
+          worktreeBase,
+        ]);
+
+        expect(process.exitCode).toBe(1);
+        const worktreePath = execWorktreePath(root);
+        expect(worktreePath).not.toBeNull();
+        const evidenceDir = join(worktreePath ?? "", EXECUTION_REL, "exec", "evidence", "PJR-AB12");
+        const firstRunId = readdirSync(evidenceDir)[0];
+        const firstEvidence = JSON.parse(
+          readFileSync(join(evidenceDir, firstRunId, "evidence.json"), "utf8"),
+        ) as { attempt_changes?: Array<{ path: string }> };
+        expect(firstEvidence.attempt_changes).toEqual([{ path: PARTIAL_ARTIFACT, status: "??" }]);
+
+        process.exitCode = undefined;
+        await runExec([
+          "run",
+          "--project",
+          "test",
+          "--register",
+          "PJR-AB12",
+          "--worktree",
+          "--worktree-base",
+          worktreeBase,
+          "--resume",
+        ]);
+
+        expect(process.exitCode).toBe(1);
+        expect(execWorktreePath(root)).not.toBeNull();
+        const runIds = readdirSync(evidenceDir).sort();
+        expect(runIds).toHaveLength(2);
+        const resumedState = JSON.parse(
+          readFileSync(join(evidenceDir, runIds[1], "pipeline-state.json"), "utf8"),
+        ) as { stages: { executor: { status: string }; reporter: { status: string } } };
+        expect(resumedState.stages.executor.status).toBe("failed");
+        expect(resumedState.stages.reporter.status).toBe("pending");
+        expect(
+          readFileSync(join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md"), "utf8"),
+        ).toContain(`resumed executor did not account for every plan target: ${PARTIAL_ARTIFACT}`);
+      });
+    },
   );
 });
 

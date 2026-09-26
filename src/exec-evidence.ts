@@ -41,6 +41,8 @@ export type ExecEvidence = {
     attempts: number;
   };
   changes: Array<{ path: string; status: string }>;
+  /** Files materially changed during this executor attempt, excluding pre-existing worktree changes. */
+  attempt_changes?: Array<{ path: string; status: string }>;
   diff_summary: {
     files_changed: number;
     summary: string;
@@ -101,14 +103,16 @@ export type RecordExecutorEvidenceInput = {
   attempts: number;
   stdout: string;
   stderr: string;
+  changesBeforeAttempt?: WorktreeChangeSnapshot;
   parentValidations?: EvidenceValidation[];
 };
 
 export type BuildExecutorEvidenceInput = Omit<
   RecordExecutorEvidenceInput,
-  "repoRoot" | "worktreePath" | "executionPath"
+  "repoRoot" | "worktreePath" | "executionPath" | "changesBeforeAttempt"
 > & {
   changes: ExecEvidence["changes"];
+  attemptChanges?: ExecEvidence["changes"];
   diffStat: string;
   logRefPath: string;
   parentValidations?: EvidenceValidation[];
@@ -255,6 +259,28 @@ function changedEvidencePaths(changes: readonly ExecEvidence["changes"][number][
   return paths;
 }
 
+export type WorktreeChangeSnapshot = ReadonlyMap<string, string>;
+
+function changeFingerprint(worktreePath: string, change: ExecEvidence["changes"][number]): string {
+  const hashes = change.path.split(" -> ").map((path) => {
+    try {
+      return gitOutput(worktreePath, ["hash-object", "--", path]).trim();
+    } catch {
+      return "missing";
+    }
+  });
+  return `${change.status}\0${hashes.join("\0")}`;
+}
+
+/** Captures bounded fingerprints of the current cumulative worktree diff without storing content. */
+export function snapshotWorktreeChanges(worktreePath: string): WorktreeChangeSnapshot {
+  return new Map(
+    parseStatusPaths(worktreePath)
+      .slice(0, MAX_CHANGE_FILES)
+      .map((change) => [change.path, changeFingerprint(worktreePath, change)]),
+  );
+}
+
 /**
  * Validates the stricter completion contract used when an interrupted executor is resumed.
  * A changed target must point at a path present in the cumulative worktree diff; an unchanged
@@ -359,6 +385,10 @@ export function buildExecutorEvidence(input: BuildExecutorEvidenceInput): {
     path: boundedText(change.path, 1_000),
     status: boundedText(change.status, 40),
   }));
+  const attemptChanges = (input.attemptChanges ?? []).slice(0, MAX_CHANGE_FILES).map((change) => ({
+    path: boundedText(change.path, 1_000),
+    status: boundedText(change.status, 40),
+  }));
   const output = `${input.stdout}\n${input.stderr}`.trim();
   const boundedOutput = boundedLog(output);
   const logExcerpt = boundedOutput.content;
@@ -378,6 +408,7 @@ export function buildExecutorEvidence(input: BuildExecutorEvidenceInput): {
         attempts: input.attempts,
       },
       changes,
+      ...(input.attemptChanges ? { attempt_changes: attemptChanges } : {}),
       diff_summary: {
         files_changed: changes.length,
         summary: truncate(redactSensitiveText(input.diffStat.trim()), MAX_DIFF_SUMMARY_LENGTH),
@@ -412,6 +443,14 @@ export function recordExecutorEvidence(input: RecordExecutorEvidenceInput): {
   const changesBeforeEvidence = parseStatusPaths(input.worktreePath).filter((change) =>
     runnerManagedPrefixes.every((prefix) => !change.path.startsWith(prefix)),
   );
+  const attemptChanges =
+    input.changesBeforeAttempt && input.status === "rate_limited"
+      ? changesBeforeEvidence.filter(
+          (change) =>
+            input.changesBeforeAttempt?.get(change.path) !==
+            changeFingerprint(input.worktreePath, change),
+        )
+      : undefined;
   const diffStat = gitOutput(input.worktreePath, ["diff", "--stat", "HEAD", "--"]);
 
   const executionInWorktree = join(input.worktreePath, executionRel);
@@ -437,6 +476,7 @@ export function recordExecutorEvidence(input: RecordExecutorEvidenceInput): {
     stdout: input.stdout,
     stderr: input.stderr,
     changes: changesBeforeEvidence,
+    attemptChanges,
     diffStat,
     logRefPath: repoRelative(input.worktreePath, logPath),
     parentValidations: input.parentValidations,

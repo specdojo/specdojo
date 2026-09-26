@@ -1,0 +1,13 @@
+実装を完了しました。
+
+- 初回 rate limit 時の変更を `attempt_changes` として evidence に記録
+- `targets` 未宣言時はその集合を再開時の検証下限に使用
+- 宣言済み `targets` を優先
+- prompt・運用ガイド・個票・schema を更新
+- 単体／統合テストを追加
+- result と登録簿ステータスは未変更
+- 親 runner 管轄の unit・integration・typecheck・schema validation は未実行
+
+<specdojo_executor_evidence>
+{"final_message":"`targets` 未宣言の register 項目について、初回の `attempt_changes` を再開時の不完全な検証下限として扱う実装・文書・テストを追加した。","validations":[{"command":"npm run lint:ts","status":"passed","summary":"ESLint 成功。"},{"command":"npx markdownlint docs/ja/specdojo/guides/exec-operation-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-ppyf-register-targets-from-first-attempt.md","status":"passed","summary":"Markdownlint 成功。"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿ビューを正常に再生成。"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"検証成功。既存の未作成文書に関する warning のみ。"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"文書索引 2025 件を正常に生成。"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし。"}]}
+</specdojo_executor_evidence>

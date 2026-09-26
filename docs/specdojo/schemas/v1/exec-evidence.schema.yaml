@@ -64,6 +64,23 @@ properties:
         status:
           type: string
           minLength: 1
+  attempt_changes:
+    description: >
+      Files materially changed during this executor attempt. Pre-existing worktree changes are
+      excluded so an interrupted first attempt can provide a lower-bound coverage set on resume.
+    type: array
+    maxItems: 1000
+    items:
+      type: object
+      additionalProperties: false
+      required: [path, status]
+      properties:
+        path:
+          type: string
+          minLength: 1
+        status:
+          type: string
+          minLength: 1
   diff_summary:
     type: object
     additionalProperties: false
@@ -110,8 +127,9 @@ properties:
             required: [id]
   target_coverage:
     description: >
-      Per-target disposition reported by an executor. The runner requires complete coverage when
-      an interrupted executor stage is resumed. Changed targets identify a repository-relative
+      Per-target disposition reported by an executor. On resume the runner requires complete
+      coverage of declared plan targets, or of the interrupted first attempt's lower-bound change
+      set when a register plan declares no targets. Changed targets identify a repository-relative
       path; unchanged targets carry the reason preserved in the result.
     type: array
     maxItems: 1000
