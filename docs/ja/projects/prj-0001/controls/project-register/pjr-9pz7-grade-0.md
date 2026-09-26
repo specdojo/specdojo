@@ -2,15 +2,16 @@
 specdojo:
   id: prj-0001:pjr-9pz7-grade-0
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-09-26T10:28:16Z"
+  completed_at: "2026-09-26T12:08:40Z"
   block_reason: "agent exited with non-zero code: runner による検証 `test-unit` が失敗しているため（`tests/tools/grade-per-document.test.ts` において 1 件の失敗が検出された）。"
 ---
 
@@ -109,12 +110,40 @@ script 冒頭は `set -euo pipefail` である。ループ内でコマンドが�
 
 ## 7. 対応結果
 
-- `run-per-document.sh` に終了監視を追加し、集計行へ到達しない終了は原因、終了コード、処理中の文書、未着手件数とパスを標準エラーへ記録する。元の終了コードが0でも完走マーカーがなければ1へ変換する。
-- 正常終了直前に選択件数と訪問件数を照合し、不一致を終了コード1にした。正常系だけが `grade pipeline complete:` を出力する。
-- rate limit は終了コード75、`INT` は130、`TERM` は143を維持し、同じ `--run-id` で再開できる情報を残す。
-- `stage_total` が異なる古い pipeline state は完了へ移行せず削除し、単段の1段目から再評価する。上限到達 state も同じ規則で処理対象へ戻す。
-- `job-grade-kata` と `job-grade-deliverable` は script の非0終了を明示的に保存して返し、後続の `cat` で成功へ上書きしない。
-- CLI コマンドリファレンスと routine 運用ガイドへ、完走判定、state リセット、パイプ時の `pipefail` / `PIPESTATUS` を追記した。
+案 2（処理数の突き合わせ）と案 1（`trap`）を組み合わせて実装し、develop へ統合した（`e8025eaf`）。
+
+| 観点               | 実装                                                                                      |
+| ------------------ | ----------------------------------------------------------------------------------------- |
+| 打ち切りの検出     | EXIT の `trap` で、完走の印が立っていなければ打ち切りとして扱う                           |
+| 終了コード         | 0 のまま抜けた場合は 1 に変える                                                           |
+| 理由の記録         | `rate_limit`、`signal_INT`、`signal_TERM`、`completion_marker_missing`、`unexpected_exit` |
+| 失敗上限           | 上限に達した文書を `reason=failure_limit` で報告する                                      |
+| 未着手の報告       | 処理済みと未着手の件数、未着手の文書の一覧を stderr に出す                                |
+| 前回状態の引き継ぎ | 段構成が違う状態は完了扱いへ移さず、状態を戻して評価し直す                                |
+| job 定義           | スクリプトの失敗を job の失敗として返す。`idempotency_key` の版を上げた                   |
+
+### 7.1. executor の実装に欠陥が 1 件あった
+
+`pipeline_state_fields` に 5 つ目の項目（`stage_total`）を加えた一方で、`record_pipeline_stage` は 4 つの変数で読んでいた。bash の `read` は余った値を最後の変数へまとめるため、`max_failures` に `3\t3` が入り、失敗上限の比較が常に偽になっていた。runner の `test-unit` 検証がこれを検出し、実行は失敗した。読み取りに 5 つ目の変数を足して直した。
+
+一時的にデバッグ出力を入れて値を確かめ、確認後に戻した。
+
+### 7.2. 実行の経緯
+
+| 回  | 結果                                                                                             |
+| --- | ------------------------------------------------------------------------------------------------ |
+| 1   | PJR-BX79 と並行で実行。checkpoint 段の `dubious ownership` で agent 起動前に失敗（4 回目の発生） |
+| 2   | BX79 の修正を入れて再実行。checkpoint 段を通過し実装まで進んだが、上の欠陥で `test-unit` が失敗  |
+| 3   | 私が欠陥を直して統合                                                                             |
+
+### 7.3. 検証
+
+| 検証                          | 結果                                  |
+| ----------------------------- | ------------------------------------- |
+| `grade-per-document.test.ts`  | 20 件通過                             |
+| `test:unit`                   | 1562 件すべて通過（develop へ統合後） |
+| `test:integration`            | 110 件通過、1 件 skip（PJR-TDB0）     |
+| `validate:schema` / `lint:md` | 通過                                  |
 
 ## 8. 関連ドキュメント
 

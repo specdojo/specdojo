@@ -90,3 +90,19 @@
       from: "checkpoint failed: git ls-files failed: fatal: detected dubious ownership in repository at '/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-9PZ7' (args: --full-name -z -- 4 paths)"
       to: "agent exited with non-zero code: runner による検証 `test-unit` が失敗しているため（`tests/tools/grade-per-document.test.ts` において 1 件の失敗が検出された）。"
   previous_event_id: reg_046b807fa7de45d5982d659f72d613d9
+- v: 1
+  id: reg_9136458e78424276a76ef046b2c9f051
+  ts: "2026-09-26T12:08:40Z"
+  action: close
+  actor: manual
+  from_status: waiting
+  to_status: done
+  reason: 打ち切りを trap で検出し、理由と未着手の文書を報告して終了コードを 1 にする形にした。executor の read の欠陥を直して統合した。
+  changes:
+    - field: status
+      from: waiting
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-26"
+  previous_event_id: reg_820f8231dbd24bf785bf70108c4817ed
