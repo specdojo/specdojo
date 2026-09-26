@@ -4,9 +4,9 @@ specdojo:
   type: rulebook
   status: draft
   target_format: markdown
-  recipe: not-needed
+  recipe: undecided
   sample: specdojo:bps-sample
-  template: not-needed
+  template: undecided
 ---
 
 # 業務プロセス仕様 作成ルール
