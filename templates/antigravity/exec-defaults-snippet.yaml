@@ -24,9 +24,9 @@ providers:
       # Gemini 以外の Antigravity 提供モデルは member nickname で明示的に選ぶ。
       # by_nickname は proficiency / mode の既定値より優先される。
       by_nickname:
-        agy-sonnet-executor: { model: claude-sonnet-4-6 }
-        agy-opus-executor: { model: claude-opus-4-6-thinking }
-        agy-opus-review-executor: { model: claude-opus-4-6-thinking }
+        agy-claude-executor: { model: claude-sonnet-4-6 }
+        agy-claude-expert-executor: { model: claude-opus-4-6-thinking }
+        agy-claude-expert-review-executor: { model: claude-opus-4-6-thinking }
         agy-gpt-executor: { model: gpt-oss-120b-medium }
     # Gemini API の制限文言は未観測。429 / quota / RESOURCE_EXHAUSTED を初期値とし、
     # 実観測した文言で更新する（observed-agent-limit-stderr と同じ扱い）。

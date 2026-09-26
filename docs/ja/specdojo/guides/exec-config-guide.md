@@ -228,7 +228,7 @@ providers:
         normal: { model: gemini-3.8-flash-medium }
         expert: { model: gemini-3.1-pro-high }
       by_nickname:
-        agy-opus-executor: { model: claude-opus-4-6-thinking }
+        agy-claude-expert-executor: { model: claude-opus-4-6-thinking }
 ```
 
 `by_nickname` は、同じ provider の一部 member だけモデルなどを差し替える用途です。層をまたぐ同名変数は意図的な上書きとして許可されます。一方、`nickname`、`mode`、`proficiency` は組み込み変数なので、どの `command_params` 層でも再定義できません。
@@ -497,9 +497,9 @@ providers:
         normal: { model: gemini-3.8-flash-medium }
         expert: { model: gemini-3.1-pro-high }
       by_nickname:
-        agy-sonnet-executor: { model: claude-sonnet-4-6 }
-        agy-opus-executor: { model: claude-opus-4-6-thinking }
-        agy-opus-review-executor: { model: claude-opus-4-6-thinking }
+        agy-claude-executor: { model: claude-sonnet-4-6 }
+        agy-claude-expert-executor: { model: claude-opus-4-6-thinking }
+        agy-claude-expert-review-executor: { model: claude-opus-4-6-thinking }
         agy-gpt-executor: { model: gpt-oss-120b-medium }
 ```
 

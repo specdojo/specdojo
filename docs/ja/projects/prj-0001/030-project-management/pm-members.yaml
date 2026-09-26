@@ -562,10 +562,10 @@ members:
     scheduler_strategy: fifo
     note: Antigravity CLI（agy）を使用する pipeline reporter。ファイルや外部情報へアクセスせず、渡された evidence から指定スキーマの構造化結果だけを返す（result への反映は runner が行う）。edit / review どちらの executor の後段にも使う。
 
-  - nickname: agy-sonnet-executor
+  - nickname: agy-claude-executor
     disabled: false
     priority: 4
-    display_name: Antigravity Sonnet Executor
+    display_name: Antigravity Claude Executor
     email: null
     roles: []
     type: agent
@@ -583,10 +583,10 @@ members:
     scheduler_strategy: critical-first
     note: Antigravity CLI 経由の Claude Sonnet を使用する pipeline executor（edit）。`command_params.by_nickname` でモデルを選び、by-name 指定で利用する。成果物の編集と検証だけを担当し、result は更新しない。
 
-  - nickname: agy-opus-executor
+  - nickname: agy-claude-expert-executor
     disabled: false
     priority: 4
-    display_name: Antigravity Opus Executor
+    display_name: Antigravity Claude Expert Executor
     email: null
     roles: []
     type: agent
@@ -606,10 +606,10 @@ members:
     scheduler_strategy: critical-first
     note: Antigravity CLI 経由の Claude Opus Thinking を使用する expert pipeline executor（edit）。`command_params.by_nickname` でモデルを選び、by-name 指定で利用する。成果物の編集と検証だけを担当し、result は更新しない。
 
-  - nickname: agy-opus-review-executor
+  - nickname: agy-claude-expert-review-executor
     disabled: false
     priority: 4
-    display_name: Antigravity Opus Review Executor
+    display_name: Antigravity Claude Expert Review Executor
     email: null
     roles: []
     type: agent
