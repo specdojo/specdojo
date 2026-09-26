@@ -9,9 +9,9 @@ domain: business-model
 base_path: /docs/ja/product/010-business-specs/030-business-model
 
 # business-model ドメインの物理分割ファイル（bps 部分）。domain キーは分割前と同じ business-model を保つ。
-# bps-rulebook.md は「1ファイル=1プロセス」を想定するため、cdfd-overview.md の10プロセス領域
-# それぞれの「4. 概念データフロー」節が示す名前付きフロー単位（ひとまとまりの起動条件を持つ
-# プロセス群）を1 bps として列挙する。個々の P-XX-YY はその bps 内の処理ステップとして記述する。
+# bps-rulebook.md の「一文書は一つのプロセス領域に属する」に従い、cdfd-overview.md の現行14領域で
+# グループを分ける。既存29件の local_id と path は参照の安定性のため維持し、各 overview から
+# 現行の領域内プロセスを特定できるようにする。P-08 と P-11 は先行作成済みの BPS 2件を登録する。
 
 groups:
   - name: 業務プロセス仕様
@@ -22,7 +22,7 @@ groups:
             name: 業務プロセス仕様（初期セットアップ・必須プロセス）
             kind: work
             depends_on: [bes-index]
-            overview: config初期化・register scaffold・catalog scaffoldの必須プロセスのフロー（P-01-01〜03）を定義する
+            overview: 導入条件の確定・Kataの配置・稼働構成の初期化からなる必須フロー（P-01-01〜03）を定義する
             path: bps-init-required.md
             rulebook: specdojo:bps-rulebook
             done_criteria: &bps-done-criteria
@@ -45,17 +45,17 @@ groups:
             name: 業務プロセス仕様（初期セットアップ・条件付きプロセス）
             kind: work
             depends_on: [bes-index]
-            overview: provider設定初期化・exec scaffoldの条件付きプロセスのフロー（P-01-04・05）を定義する
+            overview: provider選択や既存構成の保護などの条件差を含む初期セットアップのフロー（P-01-01〜03）を定義する
             path: bps-init-optional.md
             rulebook: specdojo:bps-rulebook
             done_criteria: *bps-done-criteria
-      - name: 登録簿ライフサイクル（P-02）
+      - name: 登録簿定義（P-02）
         deliverables:
           - local_id: bps-register-required
             name: 業務プロセス仕様（登録簿・必須プロセス）
             kind: work
             depends_on: [bes-index]
-            overview: 登録判断・個票起票から担当設定、審査・終了判断、登録簿ビュー生成までの必須プロセスのフローを定義する
+            overview: 判明事項・判断・計画要求を登録項目または決定記録として残す必須フロー（P-02-01）を定義する
             path: bps-register-required.md
             rulebook: specdojo:bps-rulebook
             done_criteria: *bps-done-criteria
@@ -63,7 +63,7 @@ groups:
             name: 業務プロセス仕様（登録簿・対応・調査）
             kind: work
             depends_on: [bes-index]
-            overview: 人またはAI Agentによる対応・調査プロセスのフロー（P-02-03・04）を定義する
+            overview: 登録項目への対応・調査結果を追跡可能な記録へ反映するフロー（P-02-01）を定義する
             path: bps-register-response.md
             rulebook: specdojo:bps-rulebook
             done_criteria: *bps-done-criteria
@@ -71,155 +71,159 @@ groups:
             name: 業務プロセス仕様（登録簿・再開・監査・ID復旧）
             kind: work
             depends_on: [bes-index]
-            overview: 終了項目の再開、登録項目履歴再構成、ID競合・参照復旧のフロー（P-02-06・08・09）を定義する
+            overview: 登録項目の再開・履歴監査・ID競合や参照の復旧を正本へ記録するフロー（P-02-01）を定義する
             path: bps-register-resume-audit.md
             rulebook: specdojo:bps-rulebook
             done_criteria: *bps-done-criteria
-      - name: 計画展開（P-03）
+      - name: 成果物カタログ定義（P-03）
         deliverables:
           - local_id: bps-planning-catalog-strategy-update
-            name: 業務プロセス仕様（計画基盤更新）
+            name: 業務プロセス仕様（成果物カタログ定義）
             kind: work
             depends_on: [bes-index]
-            overview: 成果物カタログ検証・Schedule展開の条件付きフロー（P-03-01・02）を定義する
+            overview: 成果物ID・依存・完了条件・根拠参照を検証済みの成果物カタログにするフロー（P-03-01）を定義する
             path: bps-planning-catalog-strategy-update.md
             rulebook: specdojo:bps-rulebook
             done_criteria: *bps-done-criteria
+      - name: スケジュール計画展開（P-04）
+        deliverables:
           - local_id: bps-planning-schedule-event-update
-            name: 業務プロセス仕様（計画情報更新）
+            name: 業務プロセス仕様（スケジュール計画展開）
             kind: work
-            depends_on: [bes-index]
-            overview: 実行入力検証・実行状態再構成・計画情報算出の必須フロー（P-03-03〜05）を定義する
+            depends_on: [bes-index, bps-planning-catalog-strategy-update]
+            overview: スケジュール戦略定義・Schedule展開・実行計画生成のフロー（P-04-01〜03）を定義する
             path: bps-planning-schedule-event-update.md
             rulebook: specdojo:bps-rulebook
             done_criteria: *bps-done-criteria
-      - name: タスク実行（P-04）
+      - name: 定期実行定義（P-05）
+        deliverables:
+          - local_id: bps-routine-required
+            name: 業務プロセス仕様（定期実行定義）
+            kind: work
+            depends_on: [bes-index, bps-routine-job-run]
+            overview: 周期・条件・対象ジョブ・次回判定情報を持つ定期実行定義を作るフロー（P-05-01）を定義する
+            path: bps-routine-required.md
+            rulebook: specdojo:bps-rulebook
+            done_criteria: *bps-done-criteria
+      - name: ジョブ定義（P-06）
+        deliverables:
+          - local_id: bps-routine-job-run
+            name: 業務プロセス仕様（ジョブ定義）
+            kind: work
+            depends_on: [bes-index]
+            overview: 定型処理の実行主体・委譲要否・成功条件を再利用可能なジョブ定義にするフロー（P-06-01）を定義する
+            path: bps-routine-job-run.md
+            rulebook: specdojo:bps-rulebook
+            done_criteria: *bps-done-criteria
+      - name: タスク実行（P-07）
         deliverables:
           - local_id: bps-task-selection-preparation
-            name: 業務プロセス仕様（タスク選択・準備）
+            name: 業務プロセス仕様（実行受入）
             kind: work
-            depends_on: [bes-index, bes-task-ready-selected]
-            overview: 実行対象選択・担当確定・claim・実行入力準備のフロー（P-04-01〜03）を定義する
+            depends_on: [bes-index, bps-planning-schedule-event-update]
+            overview: 実行対象・基準・実行主体・権限を対応付けて遂行可否と隔離方法を決めるフロー（P-07-01）を定義する
             path: bps-task-selection-preparation.md
             rulebook: specdojo:bps-rulebook
             done_criteria: *bps-done-criteria
           - local_id: bps-task-edit
-            name: 業務プロセス仕様（Edit実行）
+            name: 業務プロセス仕様（タスク遂行）
             kind: work
-            depends_on: [bes-index]
-            overview: edit planに基づく成果物更新・result記入のフロー（P-04-04）を定義する
+            depends_on: [bes-index, bps-task-selection-preparation]
+            overview: Kata・実行計画・条件付きのジョブ定義に従って成果候補を作るフロー（P-07-02）を定義する
             path: bps-task-edit.md
             rulebook: specdojo:bps-rulebook
             done_criteria: *bps-done-criteria
           - local_id: bps-task-review-finalize
-            name: 業務プロセス仕様（Review・Finalize確定）
+            name: 業務プロセス仕様（成果検証）
             kind: work
-            depends_on: [bes-index]
-            overview: review実行とfinalize・ready確定のフロー（P-04-05・06）を定義する
+            depends_on: [bes-index, bps-task-edit]
+            overview: 成果候補を実行計画の完了条件に照らして検証し、evidenceと統合可否をそろえるフロー（P-07-03）を定義する
             path: bps-task-review-finalize.md
             rulebook: specdojo:bps-rulebook
             done_criteria: *bps-done-criteria
           - local_id: bps-task-judgment-integration
-            name: 業務プロセス仕様（判定・統合）
+            name: 業務プロセス仕様（成果統合・実行結果記録）
             kind: work
-            depends_on: [bes-index]
-            overview: 実行結果判定・結果統合completeのフロー（P-04-07・08）を定義する
+            depends_on: [bes-index, bps-task-review-finalize]
+            overview: 検証済み変更を条件付きで統合し、成果・検証結果・実行状態を記録するフロー（P-07-04・05）を定義する
             path: bps-task-judgment-integration.md
             rulebook: specdojo:bps-rulebook
             done_criteria: *bps-done-criteria
-      - name: 定期処理（P-05）
-        deliverables:
-          - local_id: bps-routine-required
-            name: 業務プロセス仕様（定期処理・必須プロセス）
-            kind: work
-            depends_on: [bes-index, bes-routine-due]
-            overview: 定期実行対象選択・実行試行記録・routine結果反映の必須フロー（P-05-01・02・08）を定義する
-            path: bps-routine-required.md
-            rulebook: specdojo:bps-rulebook
-            done_criteria: *bps-done-criteria
-          - local_id: bps-routine-register-schedule-cycle
-            name: 業務プロセス仕様（登録項目・Schedule・cycle）
-            kind: work
-            depends_on: [bes-index, bes-routine-due]
-            overview: 登録項目実行委譲・Schedule実行委譲・exec-cycle順次制御の条件付きフロー（P-05-03〜05）を定義する
-            path: bps-routine-register-schedule-cycle.md
-            rulebook: specdojo:bps-rulebook
-            done_criteria: *bps-done-criteria
-          - local_id: bps-routine-job-run
-            name: 業務プロセス仕様（Job Run）
-            kind: work
-            depends_on: [bes-index, bes-routine-due]
-            overview: Job Run生成・Job Run結果反映の条件付きフロー（P-05-06・07）を定義する
-            path: bps-routine-job-run.md
-            rulebook: specdojo:bps-rulebook
-            done_criteria: *bps-done-criteria
-      - name: 並行処理（P-06）
-        deliverables:
           - local_id: bps-parallel-required
-            name: 業務プロセス仕様（並行処理・必須プロセス）
+            name: 業務プロセス仕様（並行実行受入）
             kind: work
-            depends_on: [bes-index]
-            overview: project develop作成・並行実行割当の必須フロー（P-06-01・02）を定義する
+            depends_on: [bes-index, bps-planning-schedule-event-update]
+            overview: 複数タスクの実行主体とworktree隔離の要否を確定する並行実行の受入フロー（P-07-01）を定義する
             path: bps-parallel-required.md
             rulebook: specdojo:bps-rulebook
             done_criteria: *bps-done-criteria
           - local_id: bps-parallel-isolation-work
             name: 業務プロセス仕様（分離と作業）
             kind: work
-            depends_on: [bes-index]
-            overview: feature／exec worktree作成・分離作業・分離結果commitの条件付きフロー（P-06-03〜06）を定義する
+            depends_on: [bes-index, bps-parallel-required]
+            overview: 割り当てたworktreeでタスクを遂行し、分離された成果候補を作るフロー（P-07-02）を定義する
             path: bps-parallel-isolation-work.md
             rulebook: specdojo:bps-rulebook
             done_criteria: *bps-done-criteria
           - local_id: bps-parallel-sync-integration
-            name: 業務プロセス仕様（同期・統合）
+            name: 業務プロセス仕様（並行成果の検証・統合）
             kind: work
-            depends_on: [bes-index]
-            overview: worktreeベース同期・feature/exec統合の条件付きフロー（P-06-07・08）を定義する
+            depends_on: [bes-index, bps-parallel-isolation-work]
+            overview: worktreeの成果を検証し、承認済みの変更を統合ブランチへ反映するフロー（P-07-03・04）を定義する
             path: bps-parallel-sync-integration.md
             rulebook: specdojo:bps-rulebook
             done_criteria: *bps-done-criteria
           - local_id: bps-parallel-main-promotion
-            name: 業務プロセス仕様（main同期・昇格・後片付け）
+            name: 業務プロセス仕様（並行成果の記録・後片付け）
             kind: work
-            depends_on: [bes-index]
-            overview: main共有変更同期・project develop昇格・worktree/branch後片付けの条件付きフロー（P-06-09〜11）を定義する
+            depends_on: [bes-index, bps-parallel-sync-integration]
+            overview: 統合結果と実行状態を記録し、不要になったworktreeとbranchを後片付けするフロー（P-07-05）を定義する
             path: bps-parallel-main-promotion.md
             rulebook: specdojo:bps-rulebook
             done_criteria: *bps-done-criteria
-      - name: 構成変更（P-07）
+      - name: 成果物評価（P-08）
         deliverables:
-          - local_id: bps-config-change-evaluation
-            name: 業務プロセス仕様（構成変更・変更要件評価）
+          - local_id: bps-deliverable-evaluation
+            name: 業務プロセス仕様（成果物評価）
             kind: work
-            depends_on: [bes-index]
-            overview: 変更要件・問題評価の必須プロセス（P-07-01）を定義する
-            path: bps-config-change-evaluation.md
+            depends_on: [bes-index, bps-task-judgment-integration]
+            overview: 評価対象・基準確定、独立runnerによる根拠照合、QEによる評価結果確定のフロー（P-08-01〜03）を定義する
+            path: bps-deliverable-evaluation.md
             rulebook: specdojo:bps-rulebook
             done_criteria: *bps-done-criteria
-          - local_id: bps-config-change-proposal-approval
-            name: 業務プロセス仕様（構成案作成・承認）
+      - name: 進捗可視化報告（P-09）
+        deliverables:
+          - local_id: bps-reporting-monitoring-detection
+            name: 業務プロセス仕様（報告対象確定・進捗集計）
             kind: work
             depends_on: [bes-index]
-            overview: 構成案作成・権限安全境界確認・構成変更承認のフロー（P-07-02〜04）を定義する
-            path: bps-config-change-proposal-approval.md
+            overview: 報告時点と対象範囲を固定し、計画・実行・評価の情報から進捗と判断事項を集計するフロー（P-09-01・02）を定義する
+            path: bps-reporting-monitoring-detection.md
             rulebook: specdojo:bps-rulebook
             done_criteria: *bps-done-criteria
-          - local_id: bps-config-change-apply-verify
-            name: 業務プロセス仕様（設定変更・検証）
+          - local_id: bps-reporting-consistency-delegation
+            name: 業務プロセス仕様（進捗報告確定）
             kind: work
-            depends_on: [bes-index]
-            overview: 承認済み設定変更・構成検証・引き渡しのフロー（P-07-05・06）を定義する
-            path: bps-config-change-apply-verify.md
+            depends_on: [bes-index, bps-reporting-monitoring-detection]
+            overview: 正本間の不一致の扱いを決め、PMが進捗報告を確定してActionへ渡すフロー（P-09-03）を定義する
+            path: bps-reporting-consistency-delegation.md
             rulebook: specdojo:bps-rulebook
             done_criteria: *bps-done-criteria
-      - name: 派生生成（P-08）
+          - local_id: bps-reporting-conditional
+            name: 業務プロセス仕様（条件付き報告）
+            kind: work
+            depends_on: [bes-index, bps-reporting-monitoring-detection]
+            overview: 対応・エスカレーション・会議情報を進捗集計へ含め、確認済み報告にする条件付きフロー（P-09-02・03）を定義する
+            path: bps-reporting-conditional.md
+            rulebook: specdojo:bps-rulebook
+            done_criteria: *bps-done-criteria
+      - name: 派生生成閲覧提供（P-10）
         deliverables:
           - local_id: bps-derived-project-scoped
             name: 業務プロセス仕様（project構成依存の派生生成）
             kind: work
             depends_on: [bes-index, bes-derived-content-requested]
-            overview: 実行情報更新・カタログ表示生成・登録簿ビュー生成・一括再生成のフロー（P-08-02〜04・07）を定義する
+            overview: project構成に依存する派生生成の対象確定・生成・閲覧提供フロー（P-10-01〜03）を定義する
             path: bps-derived-project-scoped.md
             rulebook: specdojo:bps-rulebook
             done_criteria: *bps-done-criteria
@@ -227,7 +231,7 @@ groups:
             name: 業務プロセス仕様（文書全体対象の派生生成）
             kind: work
             depends_on: [bes-index, bes-derived-content-requested]
-            overview: YAML表示ページ生成・文書索引生成のフロー（P-08-05・06）を定義する
+            overview: YAML表示ページや文書索引の対象確定・生成・閲覧提供フロー（P-10-01〜03）を定義する
             path: bps-derived-document-wide.md
             rulebook: specdojo:bps-rulebook
             done_criteria: *bps-done-criteria
@@ -235,51 +239,71 @@ groups:
             name: 業務プロセス仕様（一括再生成の外で起動する派生生成）
             kind: work
             depends_on: [bes-index, bes-derived-content-requested]
-            overview: 成果物雛形生成・変更監視/再生成起動のフロー（P-08-01・08）を定義する
+            overview: 個別要求または変更検知で起動する派生生成の対象確定・生成・閲覧提供フロー（P-10-01〜03）を定義する
             path: bps-derived-standalone.md
             rulebook: specdojo:bps-rulebook
             done_criteria: *bps-done-criteria
-      - name: 報告（P-09）
+      - name: タスク完了（P-11）
         deliverables:
-          - local_id: bps-reporting-monitoring-detection
-            name: 業務プロセス仕様（監視入力確認・進捗検知）
+          - local_id: bps-task-completion
+            name: 業務プロセス仕様（タスク完了）
             kind: work
-            depends_on: [bes-index]
-            overview: 監視入力の有効性確認・進捗滞留検知のフロー（P-09-01・02）を定義する
-            path: bps-reporting-monitoring-detection.md
+            depends_on: [bes-index, bps-deliverable-evaluation]
+            overview: 最新のgrade・findingと完了条件を照合して完了可否を判断し、完了を記録するフロー（P-11-01・02）を定義する
+            path: bps-task-completion.md
             rulebook: specdojo:bps-rulebook
             done_criteria: *bps-done-criteria
-          - local_id: bps-reporting-consistency-delegation
-            name: 業務プロセス仕様（整合確認・委譲）
+      - name: 稼働構成管理（P-12）
+        deliverables:
+          - local_id: bps-config-change-evaluation
+            name: 業務プロセス仕様（構成変更・変更要件評価）
             kind: work
             depends_on: [bes-index]
-            overview: 報告・管理記録整合確認のフロー（P-09-06）を定義する
-            path: bps-reporting-consistency-delegation.md
+            overview: 稼働構成の変更必要性・影響・承認範囲を評価するフロー（P-12-01）を定義する
+            path: bps-config-change-evaluation.md
             rulebook: specdojo:bps-rulebook
             done_criteria: *bps-done-criteria
-          - local_id: bps-reporting-conditional
-            name: 業務プロセス仕様（報告・条件付きプロセス）
+          - local_id: bps-config-change-proposal-approval
+            name: 業務プロセス仕様（構成案作成・承認）
             kind: work
-            depends_on: [bes-index]
-            overview: 対応・エスカレーション整理、進捗報告作成、会議・議事録作成の条件付きフロー（P-09-03〜05）を定義する
-            path: bps-reporting-conditional.md
+            depends_on: [bes-index, bps-config-change-evaluation]
+            overview: 構成案と権限安全境界を確認し、人間が構成変更を承認するフロー（P-12-01）を定義する
+            path: bps-config-change-proposal-approval.md
             rulebook: specdojo:bps-rulebook
             done_criteria: *bps-done-criteria
-      - name: 非推奨化・保管（P-10）
+          - local_id: bps-config-change-apply-verify
+            name: 業務プロセス仕様（設定変更・検証）
+            kind: work
+            depends_on: [bes-index, bps-config-change-proposal-approval]
+            overview: 承認済み変更を稼働構成・Kata・成果物カタログへ反映し、利用可能性を検証するフロー（P-12-02）を定義する
+            path: bps-config-change-apply-verify.md
+            rulebook: specdojo:bps-rulebook
+            done_criteria: *bps-done-criteria
+      - name: 非推奨化保管（P-13）
         deliverables:
           - local_id: bps-deprecation-process
             name: 業務プロセス仕様（非推奨化）
             kind: work
             depends_on: [bes-index]
-            overview: 非推奨化承認・移行経路選択、旧文書非推奨化のフロー（P-10-01・02）を定義する
+            overview: 文書の非推奨化を人間が判断し、文書と成果物カタログへ反映するフロー（P-13-01・02）を定義する
             path: bps-deprecation-process.md
             rulebook: specdojo:bps-rulebook
             done_criteria: *bps-done-criteria
           - local_id: bps-deprecation-storage
             name: 業務プロセス仕様（保管）
             kind: work
-            depends_on: [bes-index]
-            overview: 保管計画確認・文書保管・カタログ更新のフロー（P-10-03・04）を定義する
+            depends_on: [bes-index, bps-deprecation-process]
+            overview: 非推奨化を反映した文書を現行文書と区別できる保管庫へ移すフロー（P-13-02・03）を定義する
             path: bps-deprecation-storage.md
+            rulebook: specdojo:bps-rulebook
+            done_criteria: *bps-done-criteria
+      - name: オーケストレーター（P-14）
+        deliverables:
+          - local_id: bps-routine-register-schedule-cycle
+            name: 業務プロセス仕様（定期起点のPDCA運転）
+            kind: work
+            depends_on: [bes-index, bes-routine-due]
+            overview: 定期起点の運転要求確定・競合判定・PDCA要求発行・実行状態追跡のフロー（P-14-01〜04）を定義する
+            path: bps-routine-register-schedule-cycle.md
             rulebook: specdojo:bps-rulebook
             done_criteria: *bps-done-criteria
