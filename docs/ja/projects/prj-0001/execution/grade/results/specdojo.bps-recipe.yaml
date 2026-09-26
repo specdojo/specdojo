@@ -1,0 +1,73 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:bps-recipe
+path: docs/ja/specdojo/recipes/bps-recipe.md
+target: kata
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 73
+graded_at: "2026-09-26T21:04:08.424Z"
+graded_by: codex-expert-executor
+content_hash: 7ed4d1ed408355e8ddc37e849bf46e0005ecffc0b94d8417f9430c8c284bdb05
+categories:
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 50
+  consistency:
+    score: 50
+viewpoints:
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 3
+  minor: 0
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-qe-verifiability
+    line: 135
+    anchor: "- 正常系、条件付き処理、主要例外を少なくとも一つずつ確認できますか。"
+    message: 本文129行では主要例外がない場合を許容しているのに, 主要例外を少なくとも一つ確認することを必須化しており, 例外なしのBPSが受入条件を満たせないため, 「存在する場合」または例外なしの結論を確認する条件へ修正してください。
+  - id: F002
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 135
+    anchor: "- 正常系、条件付き処理、主要例外を少なくとも一つずつ確認できますか。"
+    message: >-
+      本文129行の「業務成果を変える例外がない」という有効な結論と, 「主要例外を少なくとも一つ」という条件が矛盾し, 深掘り手順と仕上げチェックにも同じ前提が残るため,
+      主要例外がない場合の確認方法を各確認箇所で一貫させてください。
+  - id: F003
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 135
+    anchor: "- 正常系、条件付き処理、主要例外を少なくとも一つずつ確認できますか。"
+    message: >-
+      rulebookの「主要例外がない場合も確認範囲と結論を記載する」という規定に対し, recipeは主要例外を少なくとも一つ要求して誤った例外の創作を誘発するため,
+      rulebookに合わせて「主要例外がある場合」と「ない場合」の受入確認を分岐してください。

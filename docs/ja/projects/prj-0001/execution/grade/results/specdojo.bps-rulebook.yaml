@@ -4,27 +4,24 @@ document: specdojo:bps-rulebook
 path: docs/ja/specdojo/rulebooks/bps-rulebook.md
 target: kata
 rubric: grade-rubric-v1
-verdict: needs-work
-score: 88
-graded_at: "2026-09-01T23:44:07.599Z"
-graded_by: gemma-expert-executor
-content_hash: 4d9d3158e071e8cd1b7d8c21e168bbbe11b064c93aa92f337a3792a146f444b5
+verdict: pass
+score: 89
+graded_at: "2026-09-26T21:07:30.554Z"
+graded_by: codex-expert-executor
+content_hash: 6606fbcdeaec9b6b16bea144a80163407812b66e5d6d76d7e9ed9f7c20306e0e
 categories:
-  consistency:
-    score: 63
   usability:
-    score: 100
+    score: 92
   architecture:
     score: 100
   quality:
     score: 88
+  consistency:
+    score: 75
 viewpoints:
-  vp-arc-cross-document-consistency:
-    level: 2
-    score: 50
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -48,25 +45,25 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 2
+  major: 0
+  minor: 3
   note: 0
 findings:
-  - id: F003
+  - id: F001
     severity: minor
-    rule: vp-qe-kata-conformance
-    line: 1
-    message: 指定のサンプルファイル (`specdojo:bps-sample`) が実質的なメタ説明に留まっており、具体的な作成例が不十分である。
-    anchor: "# 業務プロセス仕様書 作成ルール"
+    rule: vp-arc-conciseness
+    line: 172
+    anchor: "## 8. サンプル"
+    message: 第8章は Frontmatter から検証・受入観点まで完成例を再掲しており、独立した sample と二重管理になるため, 形式の輪郭だけを示す最小例へ縮小する必要がある。
   - id: F002
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 1
-    message: Frontmatter の定義に、メタ情報標準や共通スキーマへの参照がなく、具体性が不足している。
-    anchor: "# 業務プロセス仕様書 作成ルール"
-  - id: F001
-    severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 1
-    message: "サンプル内の Frontmatter で `type: data` となっているが、第 4 章の定義では `domain` 固定とされており矛盾している。"
-    anchor: "# 業務プロセス仕様書 作成ルール"
+    line: 187
+    anchor: "## 1. 概要"
+    message: 第8章の埋め込みサンプルの「概要」には、本文要件で必須とした「対象者」がなく、ルール自身が示す完成例として必須項目を満たしていない。
+  - id: F003
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 172
+    anchor: "## 8. サンプル"
+    message: "`specdojo:bps-sample` を完成例の正本として宣言しながら、第8章にも別の完成例を全章構成で保持しており、rulebook と sample の責務分担に反する。"

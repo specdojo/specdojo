@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "task_id": "JBR-grade-kata-c6f3fce805bb",
+  "run_id": "attempt-1",
+  "stage": {
+    "role": "executor",
+    "actor": "specdojo-runner",
+    "status": "succeeded",
+    "started_at": "2026-09-26T21:00:05.635Z",
+    "completed_at": "2026-09-26T21:17:30.191Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.bps-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.cdfd-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.pjr-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.bps-recipe.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.bps-template.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-kata-c6f3fce805bb.json",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 6,
+    "summary": ".../grade/results/specdojo.bps-rulebook.yaml       | 55 ++++++++--------\n .../grade/results/specdojo.cdfd-rulebook.yaml      | 25 ++++---\n .../grade/results/specdojo.pjr-rulebook.yaml       | 77 +++++++++++++++-------\n 3 files changed, 90 insertions(+), 67 deletions(-)"
+  },
+  "validations": [
+    {
+      "id": "job-command",
+      "source": "runner",
+      "command": "npm run build\nif tools/grade/run-per-document.sh --run-id JBR-grade-kata-c6f3fce805bb --stages 1 --kind all --limit 15 --changed-only=true --ungraded=true --incomplete=true; then\n  cat logs/grade/runs/per-document/JBR-grade-kata-c6f3fce805bb/results.tsv\nelse\n  grade_status=$?\n  printf 'grade pipeline failed: run_id=%s exit_code=%s\\n' 'JBR-grade-kata-c6f3fce805bb' \"$grade_status\" >&2\n  exit \"$grade_status\"\nfi",
+      "status": "passed",
+      "summary": "exit 0"
+    }
+  ],
+  "final_message": "Runner command exit 0.",
+  "command": {
+    "shell": "/bin/sh -eu",
+    "value": "npm run build\nif tools/grade/run-per-document.sh --run-id JBR-grade-kata-c6f3fce805bb --stages 1 --kind all --limit 15 --changed-only=true --ungraded=true --incomplete=true; then\n  cat logs/grade/runs/per-document/JBR-grade-kata-c6f3fce805bb/results.tsv\nelse\n  grade_status=$?\n  printf 'grade pipeline failed: run_id=%s exit_code=%s\\n' 'JBR-grade-kata-c6f3fce805bb' \"$grade_status\" >&2\n  exit \"$grade_status\"\nfi",
+    "exit_code": 0,
+    "stdout_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-c6f3fce805bb/attempt-1/command.stdout.log",
+    "stderr_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-c6f3fce805bb/attempt-1/command.stderr.log",
+    "stdout": "\n> specdojo@0.2.1 build\n> node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.build.json && node -e \"require('node:fs').chmodSync('dist/specdojo.js', 0o755)\"\n\nrun_id=JBR-grade-kata-c6f3fce805bb project=prj-0001 target=kata kind=all changed_only=true ungraded=true incomplete=true max_stage_failures=3 stages=1 documents=5 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-kata-c6f3fce805bb\nstage=1 executor=codex-expert-executor reporter=gemma-reporter reference=none\ndocument start: docs/ja/specdojo/recipes/bps-recipe.md\ndocument complete: docs/ja/specdojo/recipes/bps-recipe.md\ndocument start: docs/ja/specdojo/rulebooks/bps-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/bps-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/cdfd-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/cdfd-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/pjr-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/pjr-rulebook.md\ndocument start: docs/ja/specdojo/templates/bps-template.md\ndocument complete: docs/ja/specdojo/templates/bps-template.md\ngrade pipeline complete: selected=5 processed=5 completed_now=5 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-kata-c6f3fce805bb/results.tsv\nrecorded_at\tdocument\tstage\tstatus\tduration_seconds\tverdict\tscore\tfindings\texecutor\treporter\treference\tconsecutive_failures\tmax_failures\n2026-09-26T21:04:09Z\tdocs/ja/specdojo/recipes/bps-recipe.md\t1\tpassed\t238\tneeds-work\t73\t3\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-26T21:07:31Z\tdocs/ja/specdojo/rulebooks/bps-rulebook.md\t1\tpassed\t200\tpass\t89\t3\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-26T21:10:02Z\tdocs/ja/specdojo/rulebooks/cdfd-rulebook.md\t1\tpassed\t149\tpass\t86\t3\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-26T21:14:38Z\tdocs/ja/specdojo/rulebooks/pjr-rulebook.md\t1\tpassed\t274\tneeds-work\t68\t6\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-26T21:17:28Z\tdocs/ja/specdojo/templates/bps-template.md\t1\tpassed\t168\tpass\t91\t2\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n",
+    "stderr": ""
+  },
+  "log_refs": [
+    {
+      "kind": "command-stdout",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-c6f3fce805bb/attempt-1/command.stdout.log",
+      "bytes": 2088,
+      "truncated": false
+    },
+    {
+      "kind": "command-stderr",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-c6f3fce805bb/attempt-1/command.stderr.log",
+      "bytes": 0,
+      "truncated": false
+    }
+  ]
+}
