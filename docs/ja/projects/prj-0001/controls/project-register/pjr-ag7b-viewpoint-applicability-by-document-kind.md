@@ -2,15 +2,16 @@
 specdojo:
   id: prj-0001:pjr-ag7b-viewpoint-applicability-by-document-kind
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: done
   priority: high
   owner: ARC
   registered_at: "2026-09-26T10:59:16Z"
+  completed_at: "2026-09-26T14:54:17Z"
   block_reason: "agent exited with non-zero code: 親 runner による検証 `test-unit` が失敗（exit 1）しており、 `tests/src/exec-plans.test.ts` の「review plan はプロジェクト差分から共通レビュー観点を解決して展開する」テストケースにおいて不整合が発生しているため。"
 ---
 
@@ -92,6 +93,43 @@ frontmatter の `specdojo.rulebook` が文書の種類を表す。実在する r
 - grade の executor plan、reporter plan、submission 検証、deterministic 判定、grade 適用、および `done_criteria` が同じ適用判定を使う。edit plan の owner 観点、review plan、review result scaffold も成果物カタログの rulebook から同じ判定を使うため、対象外の観点は prompt と result に現れない。
 - rulebook・成果物・template の種類解決、未分類の扱い、include / exclude、grade prompt、review criteria の選択集合をテストへ追加した。対象外観点だけが除かれ、無宣言の観点と対象種類の観点は従来どおり残ることを固定した。
 - grade plan の smoke 実行では、`dct-index-rulebook` と `cdfd-overview-rulebook` から `vp-arc-single-responsibility` だけが除かれ、`bps-rulebook` では残り、`vp-ux-readability` は 3 件すべてに残った。既存 grade result では除外した 2 文書の `vp-arc-single-responsibility` はいずれも level 4 で同観点の finding がなかったため、今回の移行で既存 finding は減らない。新しい finding の増加も、判定文を維持した対象観点と選択集合の回帰テストによって防ぐ。
+
+### 6.1. 評価（2026-09-26 夜間）
+
+完了条件をすべて満たす。個票が起点とした分類（案 2）ではなく rulebook ID（案 1）を選んでいるが、理由が示されており妥当である。
+
+| 完了条件                                           | 判定                                                            |
+| -------------------------------------------------- | --------------------------------------------------------------- |
+| 当てはまる文書の種類を宣言でき、粒度が決まっている | 満たす。rulebook ID 単位の `document_kinds.include` / `exclude` |
+| 3 観点の除外条件が `check` から宣言へ移っている    | 満たす                                                          |
+| `rulebook` を持たない文書・`none` の扱い           | 満たす。未分類として扱い、`unclassified` で含めるかを決める     |
+| grade が宣言に従って観点を選ぶ                     | 満たす。executor / reporter plan、検証、適用が同じ判定を使う    |
+| review も同じ宣言を使う                            | 満たす。review plan と result の雛形も同じ判定を使う            |
+| `grade_targets` との関係                           | 満たす。大分類として残し、`document_kinds` を内側で併用する     |
+| 除外条件を移したあとの試行                         | 満たす。grade plan の smoke 実行で意図どおり除かれた            |
+
+### 6.2. 粒度の選択
+
+個票は「除外条件の文面が分類で書かれている」ことから案 2（構造中心 / 説明中心 / 索引の分類）を起点にしていた。executor は「分類表を別に管理せず、文書がすでに持つ rulebook ID で解決する」として案 1 を選んだ。分類を新しく定義すると、rulebook と分類の対応を別に保守することになる。**二重管理を避ける判断として妥当である。**
+
+代わりに、新しい rulebook を加えたときは、除外すべき観点の `exclude` へ ID を足す必要がある。index 系の rulebook は 21 件が `vp-arc-single-responsibility` の `exclude` に並んでいる。
+
+### 6.3. 私が直した点
+
+review plan のテストが、`vp-ba-business-value` の `check` の旧い文面（「業務価値を定義・展開する成果物で」）を期待したままだった。本項目で適用条件を `check` から宣言へ移したので、テストの期待値を新しい文面へ改めた。runner の `test-unit` 検証はこれで失敗していた。
+
+### 6.4. 統合の衝突
+
+PJR-MH9E と並行で実行したため、AG7B の branch には MH9E が `waiting` だった時点の個票と event が含まれていた。develop では MH9E を close 済みだったので、MH9E のファイルは develop 側を採って解決した。
+
+### 6.5. 検証
+
+| 検証                          | 結果              |
+| ----------------------------- | ----------------- |
+| `typecheck` / `lint:ts`       | 通過              |
+| `test:unit`                   | 1577 件すべて通過 |
+| `test:integration`            | 111 件すべて通過  |
+| `validate:schema` / `lint:md` | 通過              |
 
 ## 7. 関連ドキュメント
 
