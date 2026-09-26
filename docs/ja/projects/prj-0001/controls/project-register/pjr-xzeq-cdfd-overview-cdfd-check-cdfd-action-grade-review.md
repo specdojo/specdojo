@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: high
   owner: ARC
   registered_at: "2026-09-26T06:13:31Z"
+  block_reason: rate limit reached
 ---
 
 # PJR-XZEQ cdfd-overview と cdfd-check と cdfd-action へ grade と review の関係を反映する
