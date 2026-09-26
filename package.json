@@ -52,6 +52,7 @@
     "prepack": "npm run build",
     "specdojo:build": "npm run build",
     "vscode:install": "npm --prefix packages/vscode-specdojo ci",
+    "update:agents": "node tools/update-agent-clis.mjs",
     "vscode:build": "npm --prefix packages/vscode-specdojo run compile",
     "vscode:package": "npm --prefix packages/vscode-specdojo run package",
     "exec:watch-claude-log": "tools/exec/watch-claude-log.sh",

@@ -19,6 +19,20 @@ if ! curl -fsSL https://antigravity.google/cli/install.sh | bash; then
   echo "Warning: Antigravity CLI installer failed. Install it later with: curl -fsSL https://antigravity.google/cli/install.sh | bash"
 fi
 
+# Install Claude Code with the official installer so that `claude update` can write to its own
+# install directory. The devcontainer feature installed it as an npm global package under a
+# root-owned @anthropic-ai directory, which made self-update fail with insufficient permissions.
+if ! curl -fsSL https://claude.ai/install.sh | bash; then
+  echo "Warning: Claude Code installer failed. Install it later with: curl -fsSL https://claude.ai/install.sh | bash"
+fi
+
+# Remove a Claude Code left over from the npm global install. ~/.local/bin precedes npm-global on
+# PATH, so a stale copy is not used, but leaving two installations makes `claude --version` and
+# update failures hard to attribute.
+if [ -d /usr/local/share/npm-global/lib/node_modules/@anthropic-ai/claude-code ]; then
+  sudo npm uninstall -g @anthropic-ai/claude-code || echo "Warning: could not remove the npm global Claude Code."
+fi
+
 # Some installers place binaries under ~/.local/bin.
 if [ -d "${HOME}/.local/bin" ]; then
   export PATH="${HOME}/.local/bin:${PATH}"
@@ -60,5 +74,6 @@ fi
 git config --global core.quotepath false
 git config --global core.autocrlf input
 
+claude --version || true
 codex --version || true
 opencode --version || true
