@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-T3NN",
   "run_id": "20260926T021905264Z-31333794",
-  "updated_at": "2026-09-26T02:35:33.926Z",
+  "updated_at": "2026-09-26T02:35:41.084Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-t3nn-20260926T021808Z-b9be-result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "codex-expert-executor",
       "attempts": 1,
       "started_at": "2026-09-26T02:35:33.926Z",
-      "completed_at": null,
+      "completed_at": "2026-09-26T02:35:41.084Z",
       "artifact_ref": null
     }
   },
