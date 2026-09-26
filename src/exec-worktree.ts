@@ -25,6 +25,9 @@ export type RegisteredWorktree = {
 // happens before git mutates anything, so retrying the same command is safe and idempotent.
 const INDEX_LOCK_RETRY_ATTEMPTS = 5;
 const INDEX_LOCK_RETRY_BASE_MS = 50;
+// dubious ownership は所有者が一致していても一時的に起き、すぐの再試行では収まらない
+// ことがある（並行実行中の統合段で確認した）。間隔を広げながら最大 3 回まで待って再試行する。
+const DUBIOUS_OWNERSHIP_RETRY_DELAYS_MS = [2000, 5000, 10000] as const;
 
 export function isGitIndexLockContention(stderr: string): boolean {
   return (
@@ -48,25 +51,41 @@ type RetryableGitResult = {
   stderr: unknown;
 };
 
+export type DubiousOwnershipRetryNotice = {
+  attempt: number;
+  maxAttempts: number;
+  waitMilliseconds: number;
+};
+
 export function runGitWithTransientRetry<T extends RetryableGitResult>(
   run: () => T,
-  onDubiousOwnershipRetry: () => void = () => undefined,
+  onDubiousOwnershipRetry: (notice: DubiousOwnershipRetryNotice) => void = () => undefined,
+  sleep: (milliseconds: number) => void = sleepSync,
 ): T {
   let indexLockRetries = 0;
-  let canRetryDubiousOwnership = true;
+  let dubiousOwnershipRetries = 0;
   let result = run();
 
   while (result.status !== 0) {
     const stderr = typeof result.stderr === "string" ? result.stderr : "";
-    if (canRetryDubiousOwnership && isGitDubiousOwnership(stderr)) {
-      canRetryDubiousOwnership = false;
-      onDubiousOwnershipRetry();
+    if (
+      dubiousOwnershipRetries < DUBIOUS_OWNERSHIP_RETRY_DELAYS_MS.length &&
+      isGitDubiousOwnership(stderr)
+    ) {
+      const waitMilliseconds = DUBIOUS_OWNERSHIP_RETRY_DELAYS_MS[dubiousOwnershipRetries];
+      dubiousOwnershipRetries += 1;
+      onDubiousOwnershipRetry({
+        attempt: dubiousOwnershipRetries,
+        maxAttempts: DUBIOUS_OWNERSHIP_RETRY_DELAYS_MS.length,
+        waitMilliseconds,
+      });
+      sleep(waitMilliseconds);
       result = run();
       continue;
     }
     if (indexLockRetries < INDEX_LOCK_RETRY_ATTEMPTS && isGitIndexLockContention(stderr)) {
       indexLockRetries += 1;
-      sleepSync(INDEX_LOCK_RETRY_BASE_MS * indexLockRetries); // 50, 100, 150, 200, 250 ms
+      sleep(INDEX_LOCK_RETRY_BASE_MS * indexLockRetries); // 50, 100, 150, 200, 250 ms
       result = run();
       continue;
     }
@@ -83,11 +102,11 @@ export function gitResult(repoRoot: string, args: string[]): ReturnType<typeof s
       stdio: ["ignore", "pipe", "pipe"],
     });
 
-  return runGitWithTransientRetry(run, () => {
+  return runGitWithTransientRetry(run, ({ attempt, maxAttempts, waitMilliseconds }) => {
     const summary = summarizeGitArguments(args);
     process.stderr.write(
-      `warning: git command failed with dubious ownership; retrying once` +
-        ` (cwd: ${repoRoot}${summary ? `, args: ${summary}` : ""})\n`,
+      `warning: git command failed with dubious ownership; retrying in ${waitMilliseconds / 1000}s` +
+        ` (attempt ${attempt}/${maxAttempts}, cwd: ${repoRoot}${summary ? `, args: ${summary}` : ""})\n`,
     );
   });
 }

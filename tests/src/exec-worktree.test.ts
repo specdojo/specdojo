@@ -25,43 +25,70 @@ describe("dubious ownership retry", () => {
     expect(isGitDubiousOwnership("")).toBe(false);
   });
 
-  it("retries a dubious ownership failure once and reports the retry", () => {
+  it("waits before retrying a dubious ownership failure and reports the wait", () => {
     const results = [
       { status: 128, stderr: dubiousOwnership },
       { status: 0, stderr: "" },
     ];
     let calls = 0;
-    let retryReports = 0;
+    const notices: Array<{ attempt: number; maxAttempts: number; waitMilliseconds: number }> = [];
+    const waits: number[] = [];
 
     const actual = runGitWithTransientRetry(
       () => results[calls++]!,
-      () => {
-        retryReports += 1;
-      },
+      (notice) => notices.push(notice),
+      (milliseconds) => waits.push(milliseconds),
     );
 
     expect(actual.status).toBe(0);
     expect(calls).toBe(2);
-    expect(retryReports).toBe(1);
+    expect(waits).toEqual([2000]);
+    expect(notices).toEqual([{ attempt: 1, maxAttempts: 3, waitMilliseconds: 2000 }]);
   });
 
-  it("returns the second dubious ownership failure without a third attempt", () => {
+  it("widens the wait on each retry and gives up after three retries", () => {
+    let calls = 0;
+    const waits: number[] = [];
+
+    const actual = runGitWithTransientRetry(
+      () => {
+        calls += 1;
+        return { status: 128, stderr: dubiousOwnership };
+      },
+      () => undefined,
+      (milliseconds) => waits.push(milliseconds),
+    );
+
+    expect(actual.status).toBe(128);
+    expect(calls).toBe(4);
+    expect(waits).toEqual([2000, 5000, 10000]);
+  });
+
+  it("succeeds when the failure clears on a later retry", () => {
     const results = [
       { status: 128, stderr: dubiousOwnership },
       { status: 128, stderr: dubiousOwnership },
+      { status: 0, stderr: "" },
     ];
     let calls = 0;
+    const waits: number[] = [];
 
-    const actual = runGitWithTransientRetry(() => results[calls++]!);
+    const actual = runGitWithTransientRetry(
+      () => results[calls++]!,
+      () => undefined,
+      (milliseconds) => waits.push(milliseconds),
+    );
 
-    expect(actual.status).toBe(128);
-    expect(calls).toBe(2);
+    expect(actual.status).toBe(0);
+    expect(calls).toBe(3);
+    expect(waits).toEqual([2000, 5000]);
   });
 
   it("does not retry a different git failure", () => {
     let calls = 0;
     let retryReports = 0;
 
+    const waits: number[] = [];
     const actual = runGitWithTransientRetry(
       () => {
         calls += 1;
@@ -70,11 +97,13 @@ describe("dubious ownership retry", () => {
       () => {
         retryReports += 1;
       },
+      (milliseconds) => waits.push(milliseconds),
     );
 
     expect(actual.status).toBe(128);
     expect(calls).toBe(1);
     expect(retryReports).toBe(0);
+    expect(waits).toEqual([]);
   });
 });
 
