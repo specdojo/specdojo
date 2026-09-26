@@ -1,0 +1,576 @@
+Reading prompt from stdin...
+OpenAI Codex v0.155.1
+--------
+workdir: /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-XZEQ
+model: gpt-5.6-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: high
+reasoning summaries: none
+session id: 01a0dc6a-0f43-7602-a6e0-b7d029334cdb
+--------
+user
+---
+specdojo:
+  id: prj-0001:xep-pjr-xzeq-20260926t063111z-c1dc
+  type: exec-plan
+  rulebook: none
+  task_id: PJR-XZEQ
+  name: "cdfd-overview と cdfd-check と cdfd-action へ grade と review の関係を反映する"
+  mode: edit
+  status: ready
+  project_id: prj-0001
+  origin: register
+  owner: ARC
+---
+
+# Edit Plan: PJR-XZEQ cdfd-overview と cdfd-check と cdfd-action へ grade と review の関係を反映する
+
+## 1. このタスクで行うこと
+
+プロジェクト登録簿の項目 PJR-XZEQ「cdfd-overview と cdfd-check と cdfd-action へ grade と review の関係を反映する」に対応する。
+
+docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md で作成した BPS 2 件が設計の正本になった。`cdfd-check.md` は「review から独立して」と記述しており、BPS の「grade を事実として受け取る」と矛盾する。`cdfd-overview.md` は review phase の所属を示していない。CDFD 3 本を BPS へ整合させる。
+
+## 2. 対象項目
+
+- `id`: PJR-XZEQ
+- `type`: todo
+- `priority`: high
+- `owner`: ARC
+- `due`: _TODO_
+- `登録簿`: `docs/ja/projects/prj-0001/controls/project-register/pjr-index.md`
+- `個票`: `docs/ja/projects/prj-0001/controls/project-register/pjr-xzeq-cdfd-overview-cdfd-check-cdfd-action-grade-review.md`
+- `result`: `docs/ja/projects/prj-0001/execution/exec/results/pjr-xzeq-20260926T063111Z-c1dc-result.md`
+
+## 3. 進め方
+
+1. 登録簿の該当行と個票（存在する場合）を読み、目的・完了条件・制約を把握する。
+2. 個票に完了条件がある場合はそれを作業の基準にする。無い場合はタイトルと説明から完了条件の仮説を立て、その仮説を result に明記する。
+3. 関連する成果物・設計書・実装を確認し、対象ファイルを特定して変更する。
+4. 個票が存在する場合は、個票の作業内容・対応結果セクションを実施内容で更新する。
+5. 判断に迷う箇所は _TODO_ / _ASSUMPTION_ で残し、根拠と次のアクションを result に書く。
+
+### grade result から展開された finding
+
+- なし
+
+plan に展開された finding は、message と同じ viewpoint ID の判定根拠に照らして解消する。未解消、根拠不足、または判断不能の場合は、理由と次のアクションを result に記録する。grade result サイドカーは再評価時に更新されるため、本タスクでは直接編集しない。
+
+## 4. 完了手順
+
+1. 「進め方」に従って対応を完了する。
+2. 共通規約に従って、必要な整形・静的検査を実行する。
+3. result に実施内容・変更ファイル・申し送りを記入する。これはタスク完了に必須であり、_TODO_ を残したまま終了しない（詳細は共通規約を参照）。
+4. 登録簿（`pjr-index.md`）の行と個票のステータス項目は変更しない。状態遷移（review / close など）は runner と人間が行う。
+
+## 5. 異常終了の条件
+
+- 前提不足・対象ファイル不明・静的検査未解消の場合は異常終了する（終了コード 1）。
+- 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
+- agent 自身は登録簿の状態を変更せず、終了コードと標準エラー出力で runner に結果を返す。
+
+## 共通: 記法・成果物規約
+
+この規約は、生成される全 exec plan に共通で適用される。result の完了条件、他文書を参照する際のリンク記法、成果物の状態（status）の扱いを統一する。
+
+- result（review plan の場合は review result）への記入は、タスク完了に必須の作業である。成果物の編集とは別に、最後に必ず実施する。
+- 終了コード 0 で完了する前に、result の必須セクションをすべて実際の内容で埋め、プレースホルダ（_TODO_ など）や未記入のセクションを残さない。
+- 成果物に変更が不要と判断した場合でも、result の記入は省略しない。変更不要と判断した理由と根拠を result に記入してから完了する。
+- result が未記入・プレースホルダのまま終了コード 0 で終了すると、runner は成果物未完了（block）として扱い、タスクはやり直しになる。完了前に result の記入漏れがないことを必ず確認する。
+- result の frontmatter は scaffold 済みの構造を正本とする。`id` / `task_id` / `mode` / `project_id` / `plan_ref` / `agent` / `execution` / `approach` / `targets` はキーの追加・削除・改名をせず、scaffold された値のまま維持する。見出し構成（`# Edit Result` などの H1、`## 1.` 以降の章立て）も独自の構成に置き換えない。埋めるのは本文セクションの `_TODO_` プレースホルダの中身だけである。`status` と `completed_at` は完了処理（runner 側）が更新するため、自分で書き換えない。
+- 文書へのリンクは、対象文書が既に存在する場合は `[[id|title]]` 形式で記載する（`id` は project 修飾 doc id）。
+- リンクを表（テーブル）のセル内に置く場合は、区切りの `|` を `[[id\|title]]` のようにエスケープする。エスケープしないと列がずれて表が壊れ、prettier 整形でセルが分割されて固定化される。
+- まだ存在しない文書を参照する場合は、`[[...]]` ではなく `` `id` `` または `` `filename` `` のようにバッククォートで仮置きする。
+- Markdown の自由記述では、`_` を含む識別子・フィールド名（例: `depends_on`）を必ずインラインコードで囲む。result に描画される executor evidence や reporter の自由記述も同じ記法にする。
+- 成果物 frontmatter の `status` を `ready` に変更しない。`ready` への昇格は人間のみが行うため、`draft` のまま据え置く（exec のコミット時ガードでも昇格はブロックされる）。
+- plan に「プロジェクトコンテキスト」章がある場合、そこに挙がる文書はプロジェクト共通の前提を読むための参照であり、成果物 frontmatter の `based_on` へ転記しない。参照して得た前提は本文の記述内容へ反映する。
+- 成果物 frontmatter の `based_on` に書けるのは、その成果物の `depends_on` の推移閉包に含まれる先行成果物だけである。閉包外の ID を書くと `catalog validate` が「`based_on` が `depends_on` の推移閉包に含まれていません」としてエラーになり、コミットがブロックされる。`based_on` を増やす必要が生じた場合は、自分で転記せず、根拠不足として result に記録する。
+- ファイルの読み取り・書き込み・編集は、作業ディレクトリ（カレントディレクトリ）からの相対パスで指定する。絶対パスを自分で組み立てたり、作業ディレクトリ名を推測して指定したりしない（作業ディレクトリ名の取り違えは外部パス扱いになり拒否される）。
+- 編集・書き込みが作業ディレクトリ外（`external_directory`）として拒否された場合、原因はパス指定の誤り（誤った絶対パス・ディレクトリ名の取り違え）である。bash の heredoc などへ回避的に切り替えず、相対パスに直したうえで同じ編集ツールで再実行する。
+- 整形・静的検査は、この plan の完了手順または本共通規約で明示されたコマンドを実行する。変更対象に必要な test、build、schema 検証は、plan に個別記載がなくても実行してよい。同じ test script では対象限定と全件を同一 executor run 内で連続実行せず、どちらか一方に絞る。下表、plan、またはプロジェクト標準が全件 test を求める場合は、全件を1回だけ実行して対象限定の実行を省く。この制約は executor が sandbox 内で実行する test script の回数に対するものであり、親検証に設定された ID のコマンドは対象外である（親 runner が別途実行する）。実行したコマンド・対象・結果は result に記録する。
+- executor / reporter pipeline で親 runner の検証が設定されている場合、executor は設定済み ID に対応するコマンドを sandbox 内で実行せず、executor 終了後に親 runner が固定許可リストから実行して evidence へ追記する。`validate-schema` は `npm run validate:schema`、`test-unit` は `npm run test:unit`、`test-integration` は `npm run test:integration` に対応する。executor は親検証と同じコマンドの対象限定版も追加せず、二重実行しない。
+- Markdown 成果物を編集した後は、`npx prettier --write <対象ファイル>` で整形し、`npx markdownlint <対象ファイル>` で静的検査を実施する。検査でエラーが出た場合は修正してから完了とする。
+- 終了する前に、コミット時に実行される検査（pre-commit 相当）を先回りで実行し、失敗をすべて修正してから完了する。コミット時に初めて失敗が判明すると commit がブロックされ、成果物の内容が完成していてもタスクは block になる。
+- 実行対象は、変更したファイルの種別で判断する。下表のうち、変更したファイルが該当する行の検査をすべて実行する。該当行がない場合は追加の検査は不要である。ただし親検証に設定された ID のコマンドは下表よりも優先し、executor は実行しない。下表に同じコマンドが挙がっていても、親 runner の実行に委ねる。
+- 検査コマンドの正本はリポジトリの hook 設定（`lefthook.yml` など）である。下表と設定が食い違う場合は設定側に合わせ、実行したコマンドと結果を result に記録する。`specdojo` コマンドは、リポジトリで定められた起動方法（`npx tsx src/specdojo.ts <subcommand>` など）で実行する。
+
+| 変更したファイル                                                                                       | 実行する検査                                                                                                                          |
+| ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `*.md`                                                                                                 | `npx prettier --write <対象ファイル>`、`npx markdownlint <対象ファイル>`                                                              |
+| `*.ts` / `*.js` / `*.json` / `*.yaml` / `*.yml`                                                        | `npx prettier --write <対象ファイル>`                                                                                                 |
+| `src/`、`tests/`、`scripts/`、`tools/`、`tsconfig*.json`                                               | `npm run typecheck`                                                                                                                   |
+| `src/`、`tests/`、`docs/ja/specdojo/templates/`、`docs/ja/specdojo/exec-templates/`、`vitest.config.*` | pipeline executor は `npm run test:unit`、それ以外は `npm test`（`test-unit` が親検証に設定されている場合は executor では実行しない） |
+| `docs/ja/projects/` 配下                                                                               | `specdojo catalog validate`                                                                                                           |
+| `dct-*.yaml`                                                                                           | `specdojo catalog build`                                                                                                              |
+| `pjr-index.md`                                                                                         | `specdojo register build`                                                                                                             |
+| `sch-*.yaml`                                                                                           | `specdojo exec refresh`                                                                                                               |
+| `docs/` 配下                                                                                           | `specdojo index build`                                                                                                                |
+
+---
+
+# Pipeline executor stage instructions
+
+This invocation is the executor stage of an executor/reporter pipeline. Edit and validate the
+artifacts required by the plan, but do not create or update the result file. Any plan instruction
+that assigns result writing or lifecycle transitions to the agent belongs to the later reporter or
+runner stage and does not apply here.
+
+The parent runner owns Git commits and repository configuration. Do not run git commit or change
+local, global, or system Git configuration, including user.name and user.email. A Git state change
+will stop the pipeline before validation, reporting, commit, or merge.
+
+When writing Markdown in the final evidence, wrap identifiers or field names containing an
+underscore in inline code (for example, `depends_on`).
+
+The SpecDojo parent runner will execute these allowlisted validations after you exit: test-integration, validate-schema, typecheck, test-unit (npm run test:integration, npm run validate:schema, npm run typecheck, npm run test:unit). Do not run those commands inside the agent sandbox or report duplicate executor results for them. Run only the remaining sandbox-safe validations required by the plan. Parent-run results will be appended to evidence with source=runner and are authoritative.
+
+
+End the final response with exactly one machine-readable report using this envelope. Do not place
+Markdown fences around the JSON.
+
+<specdojo_executor_evidence>
+{"final_message":"concise outcome","validations":[{"command":"exact command","status":"passed|failed|not_run","summary":"concise result"}]}
+</specdojo_executor_evidence>
+
+codex
+対象の登録簿・個票・BPS 2件・CDFD 3件を先に確認し、正本との矛盾点と完了条件を特定してから編集します。result はパイプライン指示どおり触れず、Markdown と SpecDojo の必要な検査だけ実行します。
+exec
+/bin/bash -lc "pwd && rg --files docs/ja/projects/prj-0001 | rg '(pjr-(index|xzeq|h4h7)|cdfd-(overview|check|action))' && git status --short" in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-XZEQ
+ succeeded in 190ms:
+?? docs/ja/projects/prj-0001/execution/exec/evidence/PJR-XZEQ/
+
+exec
+/bin/bash -lc "find docs -name 'cdfd-overview.md' -o -name 'cdfd-check.md' -o -name 'cdfd-action.md' -o -name 'pjr-index.md'
+rg -n \"PJR-XZEQ|完了条件|grade|review|独立\" docs/ja/projects/prj-0001/controls/project-register/pjr-0007-pjr-index.md docs/ja/projects/prj-0001/controls/project-register/pjr-xzeq-cdfd-overview-cdfd-check-cdfd-action-grade-review.md docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md" in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-XZEQ
+ succeeded in 45ms:
+docs/ja/projects/prj-0001/controls/project-register/generated/pjr-index.md
+docs/ja/product/010-business-specs/010-data-flow/cdfd-check.md
+docs/ja/product/010-business-specs/010-data-flow/cdfd-action.md
+docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0007-pjr-index.md:24:## 2. 完了条件
+docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md:3:  id: prj-0001:pjr-h4h7-bps-grade-review
+docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md:17:# PJR-H4H7 成果物評価の BPS を作成し grade と review の関係を定義する
+docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md:21:[[prj-0001:pjr-2zvs-grade-review-integration]] で確定した grade と review の関係を、業務プロセス仕様として記述する。個票の決定は経緯を含むため設計の正本にならない。BPS を正本とし、`cdfd-*` の修正とテンプレート改訂はこれを根拠に展開する。
+docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md:25:[[prj-0001:pjr-2zvs-grade-review-integration]] の `最終結論（2026-09-26）` が正であり、本項目はそれを業務プロセスとして展開する。要点は次のとおり。
+docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md:29:| grade  | 成果物       | grade・finding | この文書の品質はどうか   |
+docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md:30:| review | タスクの成果 | verdict        | この作業を完了してよいか |
+docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md:32:- 評価は grade が 1 回だけ行う。review は文書を再評価しない。
+docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md:33:- 評価の実行者は editor から独立する。runner が実行する。
+docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md:35:- 鮮度は `content_hash` で保証する。review 時点で最新でなければ実行する。
+docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md:36:- review phase は評価を持たないため Do から Action へ移す。
+docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md:57:  評価結果、進捗報告の判断事項、完了条件を照合し、人間が完了可否を判断する。
+docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md:62:| `P-11-01` | 完了条件と評価・報告結果を人間が照合し、完了可否を確定する | PO、PM |
+docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md:65:[[prj-0001:pjr-2zvs-grade-review-integration]] で確定した「review は文書を再評価せず、grade を事実として受け取って完了可否を判断する」は `P-11-01` そのものである。review phase を Action へ移す結論は、CDFD の既存の構造と整合する。
+docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md:71:| `done_criteria` がない | grade の `vp-qe-done-criteria` が評価できない    |
+docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md:77:## 4. 完了条件
+docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md:80:- grade と review の判定対象、入力、出力、実行主体、起動条件が読み取れる。
+docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md:82:- review が文書を再評価しないことと、grade を事実として受け取ることが記述されている。
+docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md:83:- editor と評価実行者の独立が記述されている。
+docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md:84:- 例外（grade が最新でない、評価不能、対象が評価中に変更された）の扱いが記述されている。
+docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md:86:- 2 文書の入口と出口が対応しており、grade の確定結果が完了判断の入力になることが読み取れる。
+docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md:105:| `cdfd-overview` / `cdfd-check` / `cdfd-action` | review の所属を Do から Action へ。grade と review の関係 |
+docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md:106:| `xrp-*` テンプレート                           | 観点で評価する指示 → grade を確認して判断する指示         |
+docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md:108:| `sch-strategy-*.yaml`                          | `review` phase の位置づけ                                 |
+docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md:117:| 4   | grade を実行し finding を確認する   | QE   | waiting | editor から独立した runner による評価を executor 後に行う |
+docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md:118:| 5   | 展開する項目を起票する              | QE   | waiting | BPS の review 後に `cdfd-*`、`xrp-*`、`xrr-*` を起票する  |
+docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md:122:- `bps-deliverable-evaluation.md` を新規作成し、`P-08-01`〜`P-08-03` に対応する対象・基準確定、独立 runner による 28 観点の評価、`content_hash` による鮮度確認、grade・finding の確定を定義した。
+docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md:123:- `bps-task-completion.md` を新規作成し、`P-11-01`〜`P-11-02` に対応する review gate での完了可否判断と完了記録を定義した。review は成果物を再評価せず、最新の grade・finding を事実として利用する。
+docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md:124:- 2 文書の入口と出口を grade・finding で接続し、評価結果がない場合または `content_hash` が一致しない場合は runner が成果物評価を実行してから review を再開する関係を明記した。
+docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md:125:- grade と review の判定対象、入力、出力、実行主体、起動条件を分離し、editor と評価 runner の独立、同じ内容版を二重評価しない制御を記述した。
+docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md:126:- 評価不能、評価中の対象変更、review 時点の鮮度不足、完了条件の未充足を主要例外として定義した。
+docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md:127:- 成果物カタログへの登録は [[prj-0001:pjr-mh9e-bps-29-cdfd-14]]、CDFD と review テンプレートへの展開は本 BPS の review 後に起票するため、本実行では変更していない。
+docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md:131:完了条件をすべて満たす。[[prj-0001:pjr-2zvs-grade-review-integration]] の 4 原則がいずれも判定可能な形で表現されている。
+docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md:143:| 作成者から独立     | `S-02` の担当を `runner` とし、QE が判定単位を固定する                       |
+docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md:144:| 評価と承認を分ける | 出力の注記「grade・finding は…タスクの完了可否を直接確定しない」             |
+docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md:147:原則 1 は逃げ道を閉じている点が要点である。review 内で判定を置き換えられると原則が崩れるため、`P-08` へ評価要求を戻す経路を定めた。
+docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md:153:完了条件は満たしている → finding を消去または解消せずに完了できる
+docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md:156:文書の品質とタスクの完了可否が独立していることを、第三者が判定できる条件にしている。
+docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md:160:前提条件に「依存先と Kata を含む評価コンテキストの変化が評価結果へ反映済みである」を置いた。これは [[prj-0001:pjr-z47x-grade-changed-only]] が扱う鮮度問題への対応であり、本項目の個票には記載していない。設計の整合性から導いている。
+docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md:162:`content_hash` は前提条件、`S-01`、`E-01`、受入観点の 4 箇所に現れ、`S-01` 後の成果物変更も受入観点 `review 中の成果物変更` で扱っている。
+docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md:166:新規 2 文書のみを作成し、`cdfd-*`、`xrp-*`、`xrr-*`、カタログを変更していない。`bps-deliverable-evaluation` の対象外に「成果物の品質の再評価、grade・finding の変更、成果物の編集」を明記し、境界を自ら定義している。
+docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md:170:`done_criteria` がないため grade の `vp-qe-done-criteria` は評価できない。カタログ登録は [[prj-0001:pjr-mh9e-bps-29-cdfd-14]] で行う。先行作成の代償として想定済みである。
+docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md:174:- [[prj-0001:pjr-2zvs-grade-review-integration]]
+docs/ja/projects/prj-0001/controls/project-register/pjr-xzeq-cdfd-overview-cdfd-check-cdfd-action-grade-review.md:3:  id: prj-0001:pjr-xzeq-cdfd-overview-cdfd-check-cdfd-action-grade-review
+docs/ja/projects/prj-0001/controls/project-register/pjr-xzeq-cdfd-overview-cdfd-check-cdfd-action-grade-review.md:16:# PJR-XZEQ cdfd-overview と cdfd-check と cdfd-action へ grade と review の関係を反映する
+docs/ja/projects/prj-0001/controls/project-register/pjr-xzeq-cdfd-overview-cdfd-check-cdfd-action-grade-review.md:20:[[prj-0001:pjr-h4h7-bps-grade-review]] で作成した BPS 2 件が設計の正本になった。`cdfd-check.md` は「review から独立して」と記述しており、BPS の「grade を事実として受け取る」と矛盾する。`cdfd-overview.md` は review phase の所属を示していない。CDFD 3 本を BPS へ整合させる。
+docs/ja/projects/prj-0001/controls/project-register/pjr-xzeq-cdfd-overview-cdfd-check-cdfd-action-grade-review.md:24:### 2.1. cdfd-check の独立の対象が誤っている
+docs/ja/projects/prj-0001/controls/project-register/pjr-xzeq-cdfd-overview-cdfd-check-cdfd-action-grade-review.md:29:Do で完了する review・検証は成果物の改善と検証可能な実行記録を残すまでを担い、
+docs/ja/projects/prj-0001/controls/project-register/pjr-xzeq-cdfd-overview-cdfd-check-cdfd-action-grade-review.md:30:grade・finding は確定しない。P-08 は、その成果物と実行記録を review から独立して
+docs/ja/projects/prj-0001/controls/project-register/pjr-xzeq-cdfd-overview-cdfd-check-cdfd-action-grade-review.md:31:根拠と照合し、QE が grade・finding を評価結果として確定する。
+docs/ja/projects/prj-0001/controls/project-register/pjr-xzeq-cdfd-overview-cdfd-check-cdfd-action-grade-review.md:34:[[prj-0001:pjr-2zvs-grade-review-integration]] の結論では、**独立すべきは editor からであり review からではない。** review から独立させると評価が 2 回になる。
+docs/ja/projects/prj-0001/controls/project-register/pjr-xzeq-cdfd-overview-cdfd-check-cdfd-action-grade-review.md:36:`bps-deliverable-evaluation` は `S-02` の担当を `runner` とし、作成者からの独立を表現している。
+docs/ja/projects/prj-0001/controls/project-register/pjr-xzeq-cdfd-overview-cdfd-check-cdfd-action-grade-review.md:38:### 2.2. review phase の所属が示されていない
+docs/ja/projects/prj-0001/controls/project-register/pjr-xzeq-cdfd-overview-cdfd-check-cdfd-action-grade-review.md:40:`cdfd-overview.md` の Do（P-07）は「人または AI Agent が Kata を参照してタスクを実行し、成果物と検証可能な実行記録を残す」と定める。review phase が Do に含まれるのか Action（P-11）に属するのかが読み取れない。
+docs/ja/projects/prj-0001/controls/project-register/pjr-xzeq-cdfd-overview-cdfd-check-cdfd-action-grade-review.md:42:結論では review phase は Action である。評価を持たず、grade を事実として完了可否を判断するためである。
+docs/ja/projects/prj-0001/controls/project-register/pjr-xzeq-cdfd-overview-cdfd-check-cdfd-action-grade-review.md:46:`cdfd-action.md` の `P-11-01` は「完了条件と評価・報告結果を人間が照合し、完了可否を確定できるようにする」であり、結論と同じである。**cdfd-action の修正は小さい見込み**で、BPS への参照と review phase との対応を明示する程度になる。
+docs/ja/projects/prj-0001/controls/project-register/pjr-xzeq-cdfd-overview-cdfd-check-cdfd-action-grade-review.md:48:## 3. 完了条件
+docs/ja/projects/prj-0001/controls/project-register/pjr-xzeq-cdfd-overview-cdfd-check-cdfd-action-grade-review.md:50:- `cdfd-check.md` の独立の対象が editor へ修正されている。review から独立させる記述がない。
+docs/ja/projects/prj-0001/controls/project-register/pjr-xzeq-cdfd-overview-cdfd-check-cdfd-action-grade-review.md:52:- `cdfd-overview.md` で review phase の所属が Action であることが分かる。
+docs/ja/projects/prj-0001/controls/project-register/pjr-xzeq-cdfd-overview-cdfd-check-cdfd-action-grade-review.md:54:- `cdfd-action.md` の `P-11` が review phase と対応していることが分かる。
+docs/ja/projects/prj-0001/controls/project-register/pjr-xzeq-cdfd-overview-cdfd-check-cdfd-action-grade-review.md:59:- grade を再実行し、`vp-arc-cross-document-consistency` の finding が増えていない。
+docs/ja/projects/prj-0001/controls/project-register/pjr-xzeq-cdfd-overview-cdfd-check-cdfd-action-grade-review.md:63:CDFD は BPS より上位の正本である。通常は CDFD を先に変え BPS が従うが、本件は BPS が先に確定した。**BPS の記述を根拠に CDFD を変える形になる**ため、変更内容が [[prj-0001:pjr-2zvs-grade-review-integration]] の結論に沿っていることを確認する。BPS の実装詳細を CDFD へ持ち込まない。
+docs/ja/projects/prj-0001/controls/project-register/pjr-xzeq-cdfd-overview-cdfd-check-cdfd-action-grade-review.md:71:| 1   | `cdfd-check.md` の `P-08` を修正する           | ARC  | open | 独立の対象を editor へ |
+docs/ja/projects/prj-0001/controls/project-register/pjr-xzeq-cdfd-overview-cdfd-check-cdfd-action-grade-review.md:72:| 2   | `cdfd-overview.md` へ review の所属を反映する  | ARC  | open | Do と Action の境界    |
+docs/ja/projects/prj-0001/controls/project-register/pjr-xzeq-cdfd-overview-cdfd-check-cdfd-action-grade-review.md:75:| 5   | grade を再実行し finding を確認する            | QE   | open |                        |
+docs/ja/projects/prj-0001/controls/project-register/pjr-xzeq-cdfd-overview-cdfd-check-cdfd-action-grade-review.md:83:- [[prj-0001:pjr-h4h7-bps-grade-review]]
+docs/ja/projects/prj-0001/controls/project-register/pjr-xzeq-cdfd-overview-cdfd-check-cdfd-action-grade-review.md:84:- [[prj-0001:pjr-2zvs-grade-review-integration]]
+
+exec
+/bin/bash -lc "sed -n '1,220p' docs/ja/projects/prj-0001/controls/project-register/pjr-xzeq-cdfd-overview-cdfd-check-cdfd-action-grade-review.md
+sed -n '1,210p' docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md
+sed -n '1,180p' docs/ja/projects/prj-0001/controls/project-register/generated/pjr-index.md
+sed -n '1,240p' docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md
+sed -n '1,240p' docs/ja/product/010-business-specs/010-data-flow/cdfd-check.md
+sed -n '1,240p' docs/ja/product/010-business-specs/010-data-flow/cdfd-action.md" in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-XZEQ
+ succeeded in 0ms:
+---
+specdojo:
+  id: prj-0001:pjr-xzeq-cdfd-overview-cdfd-check-cdfd-action-grade-review
+  type: project
+  status: draft
+  rulebook: specdojo:pjr-rulebook
+  part_of:
+    - prj-0001:pjr-index
+  item_type: todo
+  item_status: in-progress
+  priority: high
+  owner: ARC
+  registered_at: "2026-09-26T06:13:31Z"
+---
+
+# PJR-XZEQ cdfd-overview と cdfd-check と cdfd-action へ grade と review の関係を反映する
+
+## 1. 概要
+
+[[prj-0001:pjr-h4h7-bps-grade-review]] で作成した BPS 2 件が設計の正本になった。`cdfd-check.md` は「review から独立して」と記述しており、BPS の「grade を事実として受け取る」と矛盾する。`cdfd-overview.md` は review phase の所属を示していない。CDFD 3 本を BPS へ整合させる。
+
+## 2. 事実
+
+### 2.1. cdfd-check の独立の対象が誤っている
+
+現在の記述である。
+
+```text
+Do で完了する review・検証は成果物の改善と検証可能な実行記録を残すまでを担い、
+grade・finding は確定しない。P-08 は、その成果物と実行記録を review から独立して
+根拠と照合し、QE が grade・finding を評価結果として確定する。
+```
+
+[[prj-0001:pjr-2zvs-grade-review-integration]] の結論では、**独立すべきは editor からであり review からではない。** review から独立させると評価が 2 回になる。
+
+`bps-deliverable-evaluation` は `S-02` の担当を `runner` とし、作成者からの独立を表現している。
+
+### 2.2. review phase の所属が示されていない
+
+`cdfd-overview.md` の Do（P-07）は「人または AI Agent が Kata を参照してタスクを実行し、成果物と検証可能な実行記録を残す」と定める。review phase が Do に含まれるのか Action（P-11）に属するのかが読み取れない。
+
+結論では review phase は Action である。評価を持たず、grade を事実として完了可否を判断するためである。
+
+### 2.3. P-11 は既に結論と一致している
+
+`cdfd-action.md` の `P-11-01` は「完了条件と評価・報告結果を人間が照合し、完了可否を確定できるようにする」であり、結論と同じである。**cdfd-action の修正は小さい見込み**で、BPS への参照と review phase との対応を明示する程度になる。
+
+## 3. 完了条件
+
+- `cdfd-check.md` の独立の対象が editor へ修正されている。review から独立させる記述がない。
+- 評価が 1 回であることが `cdfd-check.md` から読み取れる。
+- `cdfd-overview.md` で review phase の所属が Action であることが分かる。
+- Do（P-07）の主要出力から、評価や完了判断に当たるものが除かれている。
+- `cdfd-action.md` の `P-11` が review phase と対応していることが分かる。
+- 3 本が `bps-deliverable-evaluation` と `bps-task-completion` と矛盾しない。
+- グループ間の受け渡しが `cdfd-overview.md` の図と表で整合している。
+- `cdfd-rulebook.md` の禁止事項に抵触していない。
+- `npm run -s lint:md` が通過している。
+- grade を再実行し、`vp-arc-cross-document-consistency` の finding が増えていない。
+
+## 4. 留意点
+
+CDFD は BPS より上位の正本である。通常は CDFD を先に変え BPS が従うが、本件は BPS が先に確定した。**BPS の記述を根拠に CDFD を変える形になる**ため、変更内容が [[prj-0001:pjr-2zvs-grade-review-integration]] の結論に沿っていることを確認する。BPS の実装詳細を CDFD へ持ち込まない。
+
+`cdfd-check.md` の変更は `P-09`・`P-10` に影響しない。`P-08` の記述に限定する。
+
+## 5. 作業内容
+
+| No  | 作業                                           | 担当 | 状態 | メモ                   |
+| --- | ---------------------------------------------- | ---- | ---- | ---------------------- |
+| 1   | `cdfd-check.md` の `P-08` を修正する           | ARC  | open | 独立の対象を editor へ |
+| 2   | `cdfd-overview.md` へ review の所属を反映する  | ARC  | open | Do と Action の境界    |
+| 3   | `cdfd-action.md` の `P-11` を BPS と対応させる | ARC  | open | 修正は小さい見込み     |
+| 4   | 3 本と BPS 2 件の整合を確認する                | QE   | open |                        |
+| 5   | grade を再実行し finding を確認する            | QE   | open |                        |
+
+## 6. 対応結果
+
+-
+
+## 7. 関連ドキュメント
+
+- [[prj-0001:pjr-h4h7-bps-grade-review]]
+- [[prj-0001:pjr-2zvs-grade-review-integration]]
+- [[bps-deliverable-evaluation]]
+- [[bps-task-completion]]
+- `docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md`
+- `docs/ja/product/010-business-specs/010-data-flow/cdfd-check.md`
+- `docs/ja/product/010-business-specs/010-data-flow/cdfd-action.md`
+---
+specdojo:
+  id: prj-0001:pjr-h4h7-bps-grade-review
+  type: project
+  status: ready
+  rulebook: specdojo:pjr-rulebook
+  part_of:
+    - prj-0001:pjr-index
+  item_type: todo
+  item_status: done
+  priority: high
+  owner: QE
+  registered_at: "2026-09-26T02:13:29Z"
+  completed_at: "2026-09-26T06:13:29Z"
+---
+
+# PJR-H4H7 成果物評価の BPS を作成し grade と review の関係を定義する
+
+## 1. 概要
+
+[[prj-0001:pjr-2zvs-grade-review-integration]] で確定した grade と review の関係を、業務プロセス仕様として記述する。個票の決定は経緯を含むため設計の正本にならない。BPS を正本とし、`cdfd-*` の修正とテンプレート改訂はこれを根拠に展開する。
+
+## 2. 記述する設計
+
+[[prj-0001:pjr-2zvs-grade-review-integration]] の `最終結論（2026-09-26）` が正であり、本項目はそれを業務プロセスとして展開する。要点は次のとおり。
+
+| 経路   | 判定対象     | 出力           | 問い                     |
+| ------ | ------------ | -------------- | ------------------------ |
+| grade  | 成果物       | grade・finding | この文書の品質はどうか   |
+| review | タスクの成果 | verdict        | この作業を完了してよいか |
+
+- 評価は grade が 1 回だけ行う。review は文書を再評価しない。
+- 評価の実行者は editor から独立する。runner が実行する。
+- 観点は 28 件を共通とする。`continuous` は廃止する。
+- 鮮度は `content_hash` で保証する。review 時点で最新でなければ実行する。
+- review phase は評価を持たないため Do から Action へ移す。
+
+## 3. 対象の成果物
+
+**根拠は成果物カタログではなく現行の CDFD とする。** カタログの BPS 29 件は旧 10 領域体系の P 番号を記載しており、同じ番号が現行では別の領域を指す。カタログの追従は [[prj-0001:pjr-mh9e-bps-29-cdfd-14]] で後追いする。
+
+現行 CDFD の 14 領域のうち、本項目が対象とするのは次の 2 つである。
+
+| 領域   | 名称       | 正本             | 作成する BPS                 |
+| ------ | ---------- | ---------------- | ---------------------------- |
+| `P-08` | 成果物評価 | `cdfd-check.md`  | `bps-deliverable-evaluation` |
+| `P-11` | タスク完了 | `cdfd-action.md` | `bps-task-completion`        |
+
+`bps-rulebook.md` は「一文書は、概念データフローの一つのプロセス領域に属し」と定めるため、**2 文書に分ける。** 両者の関係は各文書の入口と出口に記載する。グループを横断する順序はユースケース別 CDFD の責務であり、BPS で定義しない。
+
+### 3.1. P-11 は既に結論と一致している
+
+`cdfd-action.md` の記述である。
+
+```text
+3.1. タスク完了（P-11）
+  評価結果、進捗報告の判断事項、完了条件を照合し、人間が完了可否を判断する。
+```
+
+| プロセス  | 業務目的                                                   | 担当   |
+| --------- | ---------------------------------------------------------- | ------ |
+| `P-11-01` | 完了条件と評価・報告結果を人間が照合し、完了可否を確定する | PO、PM |
+| `P-11-02` | 完了の決定と完了記録を正本へ残す                           | PM     |
+
+[[prj-0001:pjr-2zvs-grade-review-integration]] で確定した「review は文書を再評価せず、grade を事実として受け取って完了可否を判断する」は `P-11-01` そのものである。review phase を Action へ移す結論は、CDFD の既存の構造と整合する。
+
+### 3.2. カタログ未登録の影響
+
+| 影響                   | 内容                                             |
+| ---------------------- | ------------------------------------------------ |
+| `done_criteria` がない | grade の `vp-qe-done-criteria` が評価できない    |
+| カタログに未登録       | `vp-arc-cross-document-consistency` が検出しうる |
+| Schedule に載らない    | タスクとして追跡されない                         |
+
+いずれも [[prj-0001:pjr-mh9e-bps-29-cdfd-14]] のカタログ追従で解消する。先行作成を妨げる理由にはしない。
+
+## 4. 完了条件
+
+- 対象の BPS が `bps-rulebook.md` に準拠して作成されている。
+- grade と review の判定対象、入力、出力、実行主体、起動条件が読み取れる。
+- 評価が 1 回であることと、その保証方法（`content_hash`）が記述されている。
+- review が文書を再評価しないことと、grade を事実として受け取ることが記述されている。
+- editor と評価実行者の独立が記述されている。
+- 例外（grade が最新でない、評価不能、対象が評価中に変更された）の扱いが記述されている。
+- 処理ステップが現行 CDFD の P 番号（`P-08-01`〜`03`、`P-11-01`〜`02`）と対応している。カタログの旧 P 番号を根拠にしていない。
+- 2 文書の入口と出口が対応しており、grade の確定結果が完了判断の入力になることが読み取れる。
+- `done_criteria` を満たしている。
+- `npm run -s lint:md` と `npm run docs:build` が通過している。
+
+## 5. 前提
+
+| 前提                                     | 項目                                                           |
+| ---------------------------------------- | -------------------------------------------------------------- |
+| BPS の記述規約が standard 準拠であること | [[prj-0001:pjr-t3nn-bps-rulebook-rulebook-authoring-standard]] |
+| sample / template が実例として使えること | [[prj-0001:pjr-8ten-bps-sample-bps-template-bps-recipe]]       |
+
+**両方の完了を待つ。** 規約が確定しないまま書くと、規約確定後に書き直しになる。
+
+## 6. この BPS を根拠に展開する項目
+
+作成後に起票する。
+
+| 対象                                           | 変更内容                                                  |
+| ---------------------------------------------- | --------------------------------------------------------- |
+| `cdfd-overview` / `cdfd-check` / `cdfd-action` | review の所属を Do から Action へ。grade と review の関係 |
+| `xrp-*` テンプレート                           | 観点で評価する指示 → grade を確認して判断する指示         |
+| `xrr-*` テンプレート                           | 観点別結果の記録 → 判断とその根拠の記録                   |
+| `sch-strategy-*.yaml`                          | `review` phase の位置づけ                                 |
+
+## 7. 作業内容
+
+| No  | 作業                                | 担当 | 状態    | メモ                                                      |
+| --- | ----------------------------------- | ---- | ------- | --------------------------------------------------------- |
+| 1   | 前提 2 項目の完了を待つ             | QE   | done    | T3NN、8TEN の完了を確認                                   |
+| 2   | 現行 CDFD の P-08 / P-11 を読み込む | QE   | done    | `cdfd-check` / `cdfd-action` とプロセス ID を照合         |
+| 3   | BPS を 2 件作成する                 | QE   | done    | 成果物評価とタスク完了を別文書で作成                      |
+| 4   | grade を実行し finding を確認する   | QE   | waiting | editor から独立した runner による評価を executor 後に行う |
+| 5   | 展開する項目を起票する              | QE   | waiting | BPS の review 後に `cdfd-*`、`xrp-*`、`xrr-*` を起票する  |
+
+## 8. 対応結果
+
+- `bps-deliverable-evaluation.md` を新規作成し、`P-08-01`〜`P-08-03` に対応する対象・基準確定、独立 runner による 28 観点の評価、`content_hash` による鮮度確認、grade・finding の確定を定義した。
+- `bps-task-completion.md` を新規作成し、`P-11-01`〜`P-11-02` に対応する review gate での完了可否判断と完了記録を定義した。review は成果物を再評価せず、最新の grade・finding を事実として利用する。
+- 2 文書の入口と出口を grade・finding で接続し、評価結果がない場合または `content_hash` が一致しない場合は runner が成果物評価を実行してから review を再開する関係を明記した。
+- grade と review の判定対象、入力、出力、実行主体、起動条件を分離し、editor と評価 runner の独立、同じ内容版を二重評価しない制御を記述した。
+- 評価不能、評価中の対象変更、review 時点の鮮度不足、完了条件の未充足を主要例外として定義した。
+- 成果物カタログへの登録は [[prj-0001:pjr-mh9e-bps-29-cdfd-14]]、CDFD と review テンプレートへの展開は本 BPS の review 後に起票するため、本実行では変更していない。
+
+### 8.1. 評価（2026-09-26）
+
+完了条件をすべて満たす。[[prj-0001:pjr-2zvs-grade-review-integration]] の 4 原則がいずれも判定可能な形で表現されている。
+
+| 作成文書                     | 領域   | 章        |
+| ---------------------------- | ------ | --------- |
+| `bps-deliverable-evaluation` | `P-08` | 必須 8 章 |
+| `bps-task-completion`        | `P-11` | 必須 8 章 |
+
+### 8.2. 4 原則の表現
+
+| 原則               | 表現された箇所                                                               |
+| ------------------ | ---------------------------------------------------------------------------- |
+| 2 回評価しない     | `bps-task-completion` の前提条件。疑義がある場合も `P-08` へ戻す経路を定めた |
+| 作成者から独立     | `S-02` の担当を `runner` とし、QE が判定単位を固定する                       |
+| 評価と承認を分ける | 出力の注記「grade・finding は…タスクの完了可否を直接確定しない」             |
+| 判定対象が異なる   | 受入観点の `品質 finding を伴う完了`                                         |
+
+原則 1 は逃げ道を閉じている点が要点である。review 内で判定を置き換えられると原則が崩れるため、`P-08` へ評価要求を戻す経路を定めた。
+
+原則 4 は受入観点として表現された。
+
+```text
+品質 finding を伴う完了: 最新の評価結果に finding があるが、今回のタスク範囲と
+完了条件は満たしている → finding を消去または解消せずに完了できる
+```
+
+文書の品質とタスクの完了可否が独立していることを、第三者が判定できる条件にしている。
+
+### 8.3. 個票に書いていない整合を補っている
+
+前提条件に「依存先と Kata を含む評価コンテキストの変化が評価結果へ反映済みである」を置いた。これは [[prj-0001:pjr-z47x-grade-changed-only]] が扱う鮮度問題への対応であり、本項目の個票には記載していない。設計の整合性から導いている。
+
+`content_hash` は前提条件、`S-01`、`E-01`、受入観点の 4 箇所に現れ、`S-01` 後の成果物変更も受入観点 `review 中の成果物変更` で扱っている。
+
+### 8.4. スコープを守っている
+
+新規 2 文書のみを作成し、`cdfd-*`、`xrp-*`、`xrr-*`、カタログを変更していない。`bps-deliverable-evaluation` の対象外に「成果物の品質の再評価、grade・finding の変更、成果物の編集」を明記し、境界を自ら定義している。
+
+### 8.5. カタログ未登録の状態
+
+`done_criteria` がないため grade の `vp-qe-done-criteria` は評価できない。カタログ登録は [[prj-0001:pjr-mh9e-bps-29-cdfd-14]] で行う。先行作成の代償として想定済みである。
+
+## 9. 関連ドキュメント
+
+- [[prj-0001:pjr-2zvs-grade-review-integration]]
+- [[prj-0001:pjr-t3nn-bps-rulebook-rulebook-authoring-standard]]
+- [[prj-0001:pjr-8ten-bps-sample-bps-template-bps-recipe]]
+- [[prj-0001:pjr-wpwb-viewpoint-evaluation-criteria]]
+- [[prj-0001:pjr-mh9e-bps-29-cdfd-14]]
+- `docs/ja/product/010-business-specs/010-data-flow/cdfd-check.md`
+- `docs/ja/product/010-business-specs/010-data-flow/cdfd-action.md`
+- `docs/ja/specdojo/rulebooks/bps-rulebook.md`
+---
+specdojo:
+  id: prj-0001:pjr-index
+  type: project
+  status: ready
+  rulebook: specdojo:pjr-rulebook
+---
+
+# プロジェクト登録簿
+
+Project Register
+
+> このファイルは各 `pjr-XXXX-<topic>.md`（個票）から生成された一覧ビューです。正本は個票の Frontmatter であり、このファイルを手編集しても次回の `specdojo register build` で失われます。
+
+この文書は、prj-0001 プロジェクトのプロジェクト登録簿です。
+
+プロジェクト進行中に発生する TODO、要確認事項、リスク、課題、変更要求、決定事項、備忘などの管理対象を一覧化します。
+
+記載ルール、項目定義、type / status / priority の定義は [[specdojo:pjr-rulebook]] に従います。
+登録の判断、状態遷移、個票の作成などの使い方は [[specdojo:register-operation-guide]] を参照します。
+
+## 1. 登録項目一覧
+
+<!-- prettier-ignore -->
+| ID | ステータス | タイトル | 説明 | 分類 | 優先度 | 担当 | 登録日 | 期限 | 完了日 | 結論 | 個票 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| PJR-0001 | done | スケジュール展開スクリプト | 成果物カタログからスケジュールを展開するスクリプトを開発する | todo | high | ARC | _TODO_ | 2026-05-10 | 2026-05-17 | wbsの削除やrolesの役割変更などを反映 | [pjr-0001-item](../pjr-0001-item.md) |
+| PJR-0002 | done | Launch スケジュール | Track=Launch のスケジュールを作成 | todo | high | PO | _TODO_ | 2026-05-10 | 2026-05-24 | sch-strategy-launchを作成 | [pjr-0002-launch](../pjr-0002-launch.md) |
+| PJR-0003 | done | 役割・担当者の定義方法 | 役割と担当者の定義方法を整理する | todo | high | PO | _TODO_ | 2026-05-10 | 2026-07-22 | pm-roles, pm-membersに設定 | [pjr-0003-item](../pjr-0003-item.md) |
+| PJR-0004 | done | pjr-\*->generated展開スクリプト | pjr-\* を generated に展開するスクリプトを開発する | todo | high | ARC | _TODO_ | 2026-05-10 | 2026-05-23 | PJR-0059で対応 | [pjr-0004-pjr-generated](../pjr-0004-pjr-generated.md) |
+| PJR-0005 | done | specdojo:pjr-rulebook作成のtask化 | specdojo:pjr-rulebookの作成をスケジュールに記述 | todo | high | PO | _TODO_ | 2026-05-10 | 2026-07-23 | specdojo:pjr-rulebookを個別に作成 | [pjr-0005-specdojo-pjr-rulebook-task](../pjr-0005-specdojo-pjr-rulebook-task.md) |
+| PJR-0006 | done | `sch-<TRACK>-<DOMAIN>-<ARTIFACT>`にした影響 | スクリプトへの影響を確認する | todo | high | ARC | _TODO_ | 2026-05-10 | 2026-05-04 | スクリプト影響なし | [pjr-0006-sch-track-domain-artifact](../pjr-0006-sch-track-domain-artifact.md) |
+| PJR-0007 | done | `pjr-index`のスキーマ | `pjr-index`をvalidationできるようスキーマを作成する | todo | high | ARC | _TODO_ | 2026-05-10 | 2026-05-23 | PJR-0058で対応 | [pjr-0007-pjr-index](../pjr-0007-pjr-index.md) |
+| PJR-0008 | done | `sch-config-<track>.yaml`のスキーマ | 完了したtaskやtask分解ルールを設定できるように修正 | todo | high | ARC | _TODO_ | 2026-05-10 | 2026-05-23 | PJR-0037 | [pjr-0008-sch-config-track-yaml](../pjr-0008-sch-config-track-yaml.md) |
+| PJR-0009 | rejected | WBS作成プロンプト | WBS統合により不要 | todo | high | ARC | _TODO_ | 2026-05-10 | 2026-05-17 | WBS統合により却下 | [pjr-0009-wbs](../pjr-0009-wbs.md) |
+| PJR-0010 | done | claude, codex対応 | claude, codexで使えるように.agent/に設定をまとめる | todo | high | ARC | _TODO_ | 2026-05-10 | 2026-05-05 | .agent/設定を整備 | [pjr-0010-claude-codex](../pjr-0010-claude-codex.md) |
+| PJR-0011 | done | StakeholderのID体系 | StakeholderのIDをわかりやすい体系に修正する | todo | high | ARC | _TODO_ | 2026-05-10 | 2026-05-04 | ID体系を修正済み | [pjr-0011-stakeholder-id](../pjr-0011-stakeholder-id.md) |
+| PJR-0012 | done | claudeのSKILL対応 | .agent/skillsにSKILLを格納して.claude/skillsから参照する構成に変更する | todo | high | ARC | _TODO_ | 2026-05-10 | 2026-05-05 | 構成変更済み | [pjr-0012-claude-skill](../pjr-0012-claude-skill.md) |
+| PJR-0013 | done | prj-overview-\*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | ARC | _TODO_ | 2026-05-10 | 2026-05-05 | rulebook/instruction/sample作成済み | [pjr-0013-prj-overview](../pjr-0013-prj-overview.md) |
+| PJR-0014 | done | prj-stakeholder-register-\*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | ARC | _TODO_ | 2026-05-10 | 2026-05-05 | rulebook/instruction/sample作成済み | [pjr-0014-prj-stakeholder-register](../pjr-0014-prj-stakeholder-register.md) |
+| PJR-0015 | done | prj-charter-\*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | ARC | _TODO_ | 2026-05-10 | 2026-05-05 | rulebook/instruction/sample作成済み | [pjr-0015-prj-charter](../pjr-0015-prj-charter.md) |
+| PJR-0016 | done | prj-scope-\*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | PO | _TODO_ | 2026-05-10 | 2026-05-24 | このtodoはschで管理 | [pjr-0016-prj-scope](../pjr-0016-prj-scope.md) |
+| PJR-0017 | done | prj-success-criteria-and-acceptance-criteria-\*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | PO | _TODO_ | 2026-05-10 | 2026-05-24 | このtodoはschで管理 | [pjr-0017-prj-success-criteria-and-acceptance-criteria](../pjr-0017-prj-success-criteria-and-acceptance-criteria.md) |
+| PJR-0018 | done | prj-issues-and-approach-\*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | PO | _TODO_ | 2026-05-10 | 2026-05-24 | このtodoはschで管理 | [pjr-0018-prj-issues-and-approach](../pjr-0018-prj-issues-and-approach.md) |
+| PJR-0019 | done | prj-assumptions-constraints-dependencies-\*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | PO | _TODO_ | 2026-05-10 | 2026-05-24 | このtodoはschで管理 | [pjr-0019-prj-assumptions-constraints-dependencies](../pjr-0019-prj-assumptions-constraints-dependencies.md) |
+| PJR-0020 | done | prj-comparison-of-alternatives-\*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | PO | _TODO_ | 2026-05-10 | 2026-05-24 | このtodoはschで管理 | [pjr-0020-prj-comparison-of-alternatives](../pjr-0020-prj-comparison-of-alternatives.md) |
+| PJR-0021 | done | pm-plan-\*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | PO | _TODO_ | 2026-05-10 | 2026-05-24 | このtodoはschで管理 | [pjr-0021-pm-plan](../pjr-0021-pm-plan.md) |
+| PJR-0022 | done | pm-communication-plan-\*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | PO | _TODO_ | 2026-05-10 | 2026-05-24 | このtodoはschで管理 | [pjr-0022-pm-communication-plan](../pjr-0022-pm-communication-plan.md) |
+| PJR-0023 | done | pm-quality-management-plan-\*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | PO | _TODO_ | 2026-05-10 | 2026-05-24 | このtodoはschで管理 | [pjr-0023-pm-quality-management-plan](../pjr-0023-pm-quality-management-plan.md) |
+| PJR-0024 | done | pm-roles-\*作成 | yamlを作る前提でrulebookを作成して、instruction, sampleへ展開する | todo | high | PO | _TODO_ | 2026-05-10 | 2026-05-05 | rulebook/instruction/sample作成済み | [pjr-0024-pm-roles](../pjr-0024-pm-roles.md) |
+| PJR-0025 | done | pm-members-\*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | PO | _TODO_ | 2026-05-10 | 2026-05-05 | rulebook/instruction/sample作成済み | [pjr-0025-pm-members](../pjr-0025-pm-members.md) |
+| PJR-0026 | done | pm-raci-\*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | PO | _TODO_ | 2026-05-10 | 2026-05-05 | rulebook/instruction/sample作成済み | [pjr-0026-pm-raci](../pjr-0026-pm-raci.md) |
+| PJR-0027 | done | プロジェクト名の見直し | 旧プロジェクト名となっている箇所を SpecDojo へ見直し | todo | high | PO | _TODO_ | 2026-05-10 | 2026-05-05 | 関連ドキュメントを更新済み | [pjr-0027-item](../pjr-0027-item.md) |
+| PJR-0028 | done | pm-organization-\*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | PO | _TODO_ | 2026-05-10 | 2026-05-05 | rulebook/instruction/sample作成済み | [pjr-0028-pm-organization](../pjr-0028-pm-organization.md) |
+| PJR-0029 | done | devcontainerの見直し | claude, codex, copilot用にdevcontainerの設定を見直す | todo | high | ARC | _TODO_ | 2026-05-10 | 2026-05-05 | devcontainer設定更新済み | [pjr-0029-devcontainer](../pjr-0029-devcontainer.md) |
+| PJR-0030 | rejected | wbs to schedule strategyの見直し | WBS統合により不要 | todo | high | ARC | _TODO_ | 2026-05-10 | 2026-05-17 | WBS統合により却下 | [pjr-0030-wbs-to-schedule-strategy](../pjr-0030-wbs-to-schedule-strategy.md) |
+| PJR-0031 | done | wbs strategyの見直し | deliverable wbsへの展開をドメイン別に作成するように見直し | todo | high | ARC | _TODO_ | 2026-05-10 | 2026-05-15 | ドメイン別展開方針を策定済み | [pjr-0031-wbs-strategy](../pjr-0031-wbs-strategy.md) |
+| PJR-0032 | done | wbs を成果物カタログに統合 | 成果物カタログをyaml化して統合 | todo | high | ARC | _TODO_ | 2026-05-17 | 2026-05-17 | dct-*.yaml として統合完了 | [pjr-0032-wbs](../pjr-0032-wbs.md) |
+| PJR-0033 | done | 成果物カタログのyamlからmd生成 | 可読性向上のため、yamlからmdへの変換を自動化 | todo | high | ARC | _TODO_ | 2026-05-17 | 2026-05-17 | `specdojo catalog build` で自動生成 | [pjr-0033-yaml-md](../pjr-0033-yaml-md.md) |
+| PJR-0034 | done | wbsの削除 | 不要になったwbsファイルとその記述を削除 | todo | high | ARC | _TODO_ | 2026-05-17 | 2026-05-16 | wbs関連ファイル・記述をすべて削除済み | [pjr-0034-wbs](../pjr-0034-wbs.md) |
+| PJR-0035 | done | `dct-<domain>`雛形作成 | `dct-<domain>`のプロジェクト横断での雛形を作成 | todo | high | ARC | _TODO_ | 2026-05-17 | 2026-05-16 | `docs/specdojo/templates/` に small/medium/large 対応テンプレートを作成 | [pjr-0035-dct-domain](../pjr-0035-dct-domain.md) |
+| PJR-0036 | done | pjr-indexの一覧見直し | 一覧に完了日や結果を記入する欄の追加検討 | todo | high | ARC | _TODO_ | 2026-05-17 | 2026-05-16 | `完了日` と `結論` 列を追加 | [pjr-0036-pjr-index](../pjr-0036-pjr-index.md) |
+| PJR-0037 | done | schedule strategyの検討 | スケジュール展開戦略の追加の検討 | todo | high | ARC | _TODO_ | 2026-05-17 | 2026-05-17 | strategy yamlを作成 | [pjr-0037-schedule-strategy](../pjr-0037-schedule-strategy.md) |
+| PJR-0038 | done | `pjr-<domain>.md`にdone_criteria追加 | done_criteriaをMarkdownに追加 | todo | high | ARC | _TODO_ | 2026-05-17 | 2026-05-17 | done_criteriaの追加をscriptで自動化 | [pjr-0038-pjr-domain-md-done-criteria](../pjr-0038-pjr-domain-md-done-criteria.md) |
+| PJR-0039 | done | frontmatterのtypeの見直し | deliverables-catalogなどを追加するかを検討 | todo | high | ARC | _TODO_ | 2026-05-17 | 2026-05-18 | productの小分類を見直し | [pjr-0039-frontmatter-type](../pjr-0039-frontmatter-type.md) |
+| PJR-0040 | done | pjrの個票雛形作成 | todoなどのpjrの個票の雛形を作成 | todo | high | ARC | _TODO_ | 2026-05-17 | 2026-05-18 | 種類ごとの個票テンプレートを作成 | [pjr-0040-pjr](../pjr-0040-pjr.md) |
+| PJR-0041 | done | roles, membersの見直し | rolesに全ロールを記述して、membersに兼務を反映するように変更 | todo | high | PO | _TODO_ | 2026-05-17 | 2026-05-17 | rolesとmembers, 関連文書を見直し | [pjr-0041-roles-members](../pjr-0041-roles-members.md) |
+| PJR-0042 | done | pm-roles, pm-membersのschema作成 | schemaを作成して、rolesとmembersの構造を定義 | todo | high | ARC | _TODO_ | 2026-05-17 | 2026-05-17 | schemaを作成し、rolesとmembersの構造を定義 | [pjr-0042-pm-roles-pm-members-schema](../pjr-0042-pm-roles-pm-members-schema.md) |
+| PJR-0043 | done | specdojo scheduleコマンドの作成 | 成果物カタログ、strategyからスケジュールを生成するコマンドを作成 | todo | high | ARC | _TODO_ | 2026-05-17 | 2026-05-17 | scheduleコマンドでスケジュール生成を自動化 | [pjr-0043-specdojo-schedule](../pjr-0043-specdojo-schedule.md) |
+| PJR-0044 | done | specdojo commandの稼働確認 | コマンドが実行できるか一通り確認 | todo | high | ARC | _TODO_ | 2026-05-17 | 2026-05-17 | buildまで確認 | [pjr-0044-specdojo-command](../pjr-0044-specdojo-command.md) |
+| PJR-0045 | done | viewpoint_resultsの追加 | レビュー結果の記録を追加 | todo | high | ARC | _TODO_ | 2026-05-19 | 2026-05-24 | review resultコマンドの追加 | [pjr-0045-viewpoint-results](../pjr-0045-viewpoint-results.md) |
+| PJR-0046 | done | draft agentの作成 | たたき台の内容を作成するAgentのinstructionを作成 | todo | high | ARC | _TODO_ | 2026-05-19 | 2026-06-07 | pm-members.yamlにagentを定義 | [pjr-0046-draft-agent](../pjr-0046-draft-agent.md) |
+| PJR-0047 | done | guidelines/ -> guides/へ変更 | ディレクトリ名とリンクの更新 | todo | high | ARC | _TODO_ | 2026-05-19 | 2026-05-19 | guidelines/ を guides/ にリネームし全参照を更新 | [pjr-0047-guidelines-guides](../pjr-0047-guidelines-guides.md) |
+| PJR-0048 | done | pm-review-policy.mdの要否確認 | pm-review-policy.mdの必要性を確認 | todo | high | ARC | _TODO_ | 2026-05-19 | 2026-05-18 | 不要なため削除 | [pjr-0048-pm-review-policy-md](../pjr-0048-pm-review-policy-md.md) |
+| PJR-0049 | done | specdojo reviewコマンドの作成 | reviewのplan作成などのコマンドを作成 | todo | high | ARC | _TODO_ | 2026-05-19 | 2026-05-21 | specdojo review plan等を作成 | [pjr-0049-specdojo-review](../pjr-0049-specdojo-review.md) |
+| PJR-0050 | done | review-viewpointsのtemplate化 | review-viewpointsをテンプレートに加える | todo | high | ARC | _TODO_ | 2026-05-19 | 2026-05-18 | テンプレートとスキーマを作成 | [pjr-0050-review-viewpoints-template](../pjr-0050-review-viewpoints-template.md) |
+| PJR-0051 | done | specdojo reviewコマンドの仕様作成 | reviewコマンドの仕様を作成 | todo | high | ARC | _TODO_ | 2026-05-20 | 2026-05-19 | command usage guideに仕様を作成 | [pjr-0051-specdojo-review](../pjr-0051-specdojo-review.md) |
+| PJR-0052 | done | idからパスを解決するコマンドの作成 | idからファイルのパスを解決するためのDB構築と検索コマンドを作成 | todo | high | ARC | _TODO_ | 2026-05-20 | 2026-05-21 | specdojo index コマンドを作成 | [pjr-0052-id](../pjr-0052-id.md) |
+| PJR-0053 | done | templateのプレースホルダーの変更 | `*CAPITAL_CASE*`の形式に見直し | todo | high | ARC | _TODO_ | 2026-05-20 | 2026-05-21 | PJR-0055, 005
