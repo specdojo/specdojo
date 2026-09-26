@@ -2,15 +2,16 @@
 specdojo:
   id: prj-0001:pjr-rpsx-scaffold-orchestrator-npm-scripts
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-09-26T13:33:13Z"
+  completed_at: "2026-09-26T14:23:51Z"
 ---
 
 # PJR-RPSX config scaffold で provider に応じたオーケストレーター起動スクリプトを package.json へ加える
@@ -82,6 +83,33 @@ specdojo:
 - `src/exec-provider-scaffold.ts` にて、`package.json` が存在する場合に `config scaffold` 時に provider 別の起動スクリプトを追加する処理を実装した。
 - 既存のスクリプトの上書き防止および `--dry-run` 時の出力の処理も実装し、テストを `tests/src/exec-provider-scaffold.test.ts` に追加した。
 - `README.md` の起動方法の説明を `npm run orch:<name>` による方法に更新した。
+
+### 7.1. 評価（2026-09-26 夜間）
+
+`agy-expert-executor` で実装され、統合まで成功した。個票と規約に合わない点が 3 つあったため、夜間の決まりごとに沿って私が直した。直したあとは完了条件をすべて満たす。
+
+| 完了条件                                           | 判定                                                 |
+| -------------------------------------------------- | ---------------------------------------------------- |
+| scaffold のあと `npm run orch:<name>` で起動できる | 満たす                                               |
+| 既存の同名スクリプトを上書きしない                 | **手直しで満たす**（`--force` でも上書きしない）     |
+| `package.json` がない場合の扱い                    | 満たす。作らずに「not found」と表示して続ける        |
+| `--dry-run` で確認できファイルが変わらない         | 満たす                                               |
+| copilot の扱い                                     | 満たす。定義を配置しないのでスクリプトも加えない     |
+| README に起動方法を記載                            | 満たす                                               |
+| 単体テスト                                         | 満たす（13 件）                                      |
+| `npm run check` 相当                               | 満たす（test:unit 1572 件、test:integration 111 件） |
+
+### 7.2. 私が直した点
+
+| 点                     | 直す前                                       | 直したあと                                         |
+| ---------------------- | -------------------------------------------- | -------------------------------------------------- |
+| `--force` での上書き   | 既存のスクリプトを上書きした                 | `--force` でも上書きしない                         |
+| `JSON.parse` の扱い    | `any` のまま扱った                           | `unknown` で受け、オブジェクトであることを確かめる |
+| 更新の失敗             | 表示だけで終了コード 0                       | 終了コードを 1 にする                              |
+| 字下げ                 | 常に 2 桁へ書き直した                        | 既存の字下げを保つ                                 |
+| テストの出力の差し止め | `process.stdout.write` の差し替えと `as any` | `vi.spyOn`                                         |
+
+`--force` は配置するテンプレートのファイルを上書きするための指定であり、利用者が書き換えた起動スクリプトまで壊す理由にならない。
 
 ## 8. 関連ドキュメント
 
