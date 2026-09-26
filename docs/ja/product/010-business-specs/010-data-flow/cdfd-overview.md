@@ -68,9 +68,9 @@ SpecDojo を導入して Kata を配置し、その雛形から稼働構成の�
 
 Plan の実行指示に基づき、人または AI Agent が Kata を参照してタスクを実行し、成果物と検証可能な実行記録を残す。定期実行・ジョブ・並行実行はタスク実行の実行形態であり、独立した領域にしない。
 
-- **主要入力**: Orchestrator からの実行要求、実行計画、ジョブ定義、対象成果物、対象登録項目、Kata の rulebook・recipe・template、稼働構成の agent 定義・権限
+- **主要入力**: Orchestrator からの実行要求、実行計画、Schedule（track）、ジョブ定義、対象成果物、対象登録項目、Kata の rulebook・recipe・template、稼働構成の agent 定義・権限
 - **主要出力**: 作成・更新した成果物、登録項目の状態遷移、実行記録（result）、実行状態（ブロック・判断依頼を含む）
-- **データストア**: Kata、稼働構成、実行計画、ジョブ定義、登録簿、実行記録、成果物
+- **データストア**: Kata、稼働構成、実行計画、Schedule（track）、ジョブ定義、登録簿、実行記録、成果物
 
 <!-- prettier-ignore -->
 | 領域 ID | プロセス領域 | 業務目的 | 主な担当 | 起点イベント |
@@ -142,7 +142,7 @@ SpecDojo のプロジェクト運営で読み書きするデータストアを�
 | データストア | 主な内容 | 主な保管先 |
 | --- | --- | --- |
 | 登録簿 | 登録項目の個票、登録簿索引、状態遷移イベント | `<project-id>/controls/project-register/` |
-| Schedule（track） | トラックごとのタスク、担当、期間、状態と、タスクに依存するマイルストーン。スケジュール戦略と成果物カタログから `schedule build` で生成 | `<project-id>/schedule/sch-track-<track>.yaml`、<br>`<project-id>/schedule/sch-milestones.yaml`、<br>`<project-id>/timeline/` |
+| Schedule（track） | トラックごとのタスク、担当、期間、依存と、タスクに依存するマイルストーン。スケジュール戦略と成果物カタログから `schedule build` で生成する計画の正本であり、タスクの状態は持たない。状態は実行記録を正本とする | `<project-id>/schedule/sch-track-<track>.yaml`、<br>`<project-id>/schedule/sch-milestones.yaml`、<br>`<project-id>/timeline/` |
 | 実行計画 | plan。タスクごとの実施手順、対象文書、完了条件 | `<project-id>/execution/exec/plans/` |
 | 実行記録 | result、状態遷移イベント、evidence、trial、ジョブ実行記録、agent 実行ログ | `<project-id>/execution/exec/results/`、<br>`<project-id>/execution/exec/events/`、<br>`<project-id>/execution/exec/evidence/`、<br>`<project-id>/execution/exec/trials/`、<br>`<project-id>/execution/jobs/runs/`、<br>`logs/` |
 | 成果物 | プロジェクトで作成・更新する成果物本体。プロジェクト定義（概要、憲章、スコープ）や計画書も含む | `docs/ja/product/`（`trash/` を除く）、<br>`<project-id>/020-project-definition/`、<br>`<project-id>/030-project-management/`（稼働構成に属する YAML を除く） |
@@ -196,6 +196,7 @@ flowchart LR
   Plan -->|"実行計画"| ExecPlan
 
   ExecPlan -->|"実行計画"| Do
+  Schedule -->|"タスク・担当・依存"| Do
   Deliverables -->|"対象成果物"| Do
   Register -->|"対象登録項目"| Do
   Do -->|"登録項目の状態遷移"| Register
