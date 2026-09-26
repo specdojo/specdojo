@@ -2,15 +2,16 @@
 specdojo:
   id: prj-0001:pjr-ppyf-register-targets-from-first-attempt
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-09-26T13:04:17Z"
+  completed_at: "2026-09-26T16:56:03Z"
 ---
 
 # PJR-PPYF targets を宣言しない register 項目でも 1 回目の変更集合を下限として網羅を検証する
@@ -62,6 +63,24 @@ specdojo:
 - plan に `targets` がある場合は宣言を優先し、初回変更集合へ切り替えない。
 - 宣言なしの register executor が 1 ファイルを変更して rate limit で中断し、再開後に `target_coverage` を申告せず成功を返すケースを E2E テストへ追加した。runner が executor を `failed` にして reporter へ進めないことを検証する。
 - evidence 読み込み、初回集合の保持、宣言済み `targets` の優先、schema-valid な `attempt_changes` を単体テストへ追加した。
+
+### 5.1. 評価（2026-09-27 夜間）
+
+完了条件をすべて満たす。手直しは不要だった。
+
+| 完了条件                            | 判定                                                                                               |
+| ----------------------------------- | -------------------------------------------------------------------------------------------------- |
+| 1 回目の変更集合が記録される        | 満たす。executor の前後の差分の fingerprint から `attempt_changes` を記録する                      |
+| resume で下限として扱い、申告させる | 満たす。prompt と runner の検証の両方へ渡す                                                        |
+| 下限が不完全であることの記載        | 満たす。executor への指示と運用ガイド                                                              |
+| `targets` の宣言を優先              | 満たす                                                                                             |
+| 中断しなかった実行は変わらない      | 満たす                                                                                             |
+| PJR-XZEQ と同じ状況の再現テスト     | **満たす**。宣言なしで 1 ファイルだけ変えて中断し、再開後に申告せず成功を返すと、runner が検出する |
+| `test:unit` / `test:integration`    | 満たす（1580 件 / 112 件）                                                                         |
+
+**発端の PJR-XZEQ と同じ事象を、個票に `targets` を宣言していなくても検出できるようになった。** PJR-1Y9P、PJR-6WFA、本項目の 3 件で、resume 後に残作業を置き去りにする問題の対処がそろった。
+
+変更の検出に「差分の有無」ではなく fingerprint の比較を使っている。1 回目の開始時点ですでに差分があったファイルを、その試行で変更したものと誤って数えないためである。
 
 ## 6. 関連ドキュメント
 
