@@ -96,7 +96,7 @@ SpecDojo Configuration Reference
 | `worktree_base`          | `../worktrees` | `exec run --worktree` / `--auto` と `exec trial` が作る worktree の親です。リポジトリ外を指定します。         |
 | `register_date_timezone` | `UTC`          | 登録簿の「登録日」「完了日」を日時から暦日へ変換する IANA タイムゾーン名です。例は `Asia/Tokyo` です。        |
 
-`config init` は Detached Unit の標準配置に合わせ、一般既定の `../worktrees` ではなく `../app1-worktrees` を `worktree_base` へ明示します。
+`config init` は別リポジトリ構成の標準配置に合わせ、一般既定の `../worktrees` ではなく `../app1-worktrees` を `worktree_base` へ明示します。
 
 ## 6. catalog・schedule・execへ進む設定例
 

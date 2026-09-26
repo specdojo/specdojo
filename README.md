@@ -36,8 +36,19 @@ SpecDojo は、仕様駆動開発のためのドキュメントフレームワ�
 
 ### npm で導入する
 
-既定では、プロダクトリポジトリ `app1/` の隣に SpecDojo 専用リポジトリ
-`app1-specdojo/` と worktree 用ディレクトリ `app1-worktrees/` を置く Detached Unit で始めます。
+既定では、SpecDojo の記録をプロダクトの Git 履歴に混ぜないため、次の **別リポジトリ構成**で始めます。
+
+- **プロダクトリポジトリ** `app1/`: ソースコードと、仕様・設計などのプロダクトドキュメントを置きます。
+- **プロジェクトリポジトリ** `app1-specdojo/`: 登録簿・計画・実行記録などのプロジェクトドキュメントと、文書の作り方を定める実践体系を置きます。1つのプロジェクトリポジトリに、複数のプロジェクトを格納できます。
+- **worktree 用ディレクトリ** `app1-worktrees/`: タスクごとの変更を隔離して進めるために、Git worktree を作る場所です。
+
+```text
+workspace/
+├── app1/             # プロダクトリポジトリ
+├── app1-specdojo/    # プロジェクトリポジトリ
+└── app1-worktrees/   # タスクごとの作業場所
+```
+
 workspace 直下で次を実行します。
 
 ```sh
@@ -49,24 +60,18 @@ npm install --save-dev specdojo @specdojo/docs-lint
 npx specdojo config init
 ```
 
-SpecDojo は文書と実行管理のためのツールで、成果物へ同梱されるものではないため `--save-dev` で導入します。あわせて、kata は `node_modules/specdojo` から参照されるため、`package-lock.json` が kata の版も固定します。グローバル導入（`npm install -g`）では版がプロジェクトに記録されず再現できません。
+SpecDojo は開発時に使う文書・実行管理ツールなので、`--save-dev` で導入します。kata は、成果物を書くための規則・手順・テンプレート・サンプルの総称です。kata もインストールした package から参照されるため、`package-lock.json` によって SpecDojo と同じ版へ固定されます。
 
-`config init` は `.specdojo/specdojo.config.json` とその親ディレクトリを作成します。既定では
-`prj-0001` と `docs/ja/projects/prj-0001/controls/project-register` を使う最小構成です。別の
-project ID や配置を使う場合は、生成された設定の `current_project`、`projects` のキー、
-`base_path` を次へ進む前に変更してください。catalog や schedule へ進むときに追加するキーは
-[SpecDojo設定リファレンス](https://specdojo.github.io/specdojo/ja/specdojo/references/specdojo-config-reference.html)で確認できます。
+`config init` は、登録簿を使い始めるための最小設定を `.specdojo/specdojo.config.json` に作成します。設定を変える方法は、後述の「設定を変えたいとき」を参照してください。
 
 ### オーケストレーターを配置する
 
-SpecDojo は対話型オーケストレーターを同梱しています。CLI を直接叩く代わりに、会話で意図を伝えると、
-対応するコマンドを提案し、承認を得てから実行します。利用する provider の設定を配置します。
+SpecDojo は、会話を CLI 操作へ変換する対話型オーケストレーターを同梱しています。利用する AI ツール（provider）の設定を配置します。次は Claude Code を使う例です。
 
 ```sh
 npx specdojo config scaffold --provider claude
 ```
 
-`--provider` には `antigravity`、`claude`、`codex`、`copilot`、`opencode` を指定できます。
 オーケストレーターの配置先と起動方法は provider ごとに異なります。
 
 | provider      | 配置先                                      | 起動                                                                       |
@@ -76,13 +81,7 @@ npx specdojo config scaffold --provider claude
 | `codex`       | `.specdojo/codex/orchestrator.md`           | `codex "$(cat .specdojo/codex/orchestrator.md)"`                           |
 | `antigravity` | `.specdojo/antigravity/orchestrator.md`     | `agy --add-dir "$(pwd)" -i "$(cat .specdojo/antigravity/orchestrator.md)"` |
 
-`claude` と `opencode` は agent の定義ファイルを名前で選べるため、`--agent` で起動します。`codex` と
-`antigravity` は定義ファイルから agent を選ぶ仕組みを持たないため、規範の本文を起動時の指示として
-渡します。antigravity の `.agents/` は rules と skills のためのディレクトリで、agent の定義は扱いません。
-rules へ置くと全セッションへ読み込まれ、executor として起動したときにも役割が混入します。
-
-配置されるファイルにはモデル名が書かれています。手元で使えるモデルに合わせて編集してください。
-executor / reporter の設定も同時に配置されるので、agent にタスクを実行させる段階で使います。
+配置されるファイルのモデル名は、手元で使えるモデルに合わせて編集してください。provider ごとの詳しい設定は [オーケストレーター運用ガイド](https://specdojo.github.io/specdojo/ja/specdojo/guides/orchestrator-operation-guide.html) を参照してください。
 
 ### 会話で操作する
 
@@ -90,7 +89,7 @@ executor / reporter の設定も同時に配置されるので、agent にタス
 
 ```text
 あなた : このプロジェクトを始めたい。まず登録簿を用意して、最初の作業を起票して。
-agent  : 次を実行します。よろしいですか。
+オーケストレーター : 次を実行します。よろしいですか。
            npx specdojo register scaffold --project prj-0001
            npx specdojo register add --project prj-0001 --type todo --title "..."
 あなた : お願いします。
@@ -109,7 +108,7 @@ kata の rulebook を確認したい
 
 ### CLI を直接使う
 
-agent を使わずに操作することもできます。最初の登録簿と todo を作り、一覧を生成します。
+オーケストレーターを使わずに操作することもできます。最初の登録簿と、実施する作業を表す `todo` を作り、一覧を生成します。
 
 ```sh
 npx specdojo register scaffold --project prj-0001
@@ -120,16 +119,15 @@ npx specdojo register add \
 npx specdojo register build --project prj-0001
 ```
 
-ここまでの手順は、利用側へ kata をコピーせずに実行できます。生成された todo の個票が編集対象、
-`generated/pjr-index.md` が個票から作る一覧です。`register add` が表示した ID を使い、agent を
-起動せずに exec plan の内容まで確認できます。
+ここまでの手順は、利用側へ kata をコピーせずに実行できます。生成された `todo` の個票が編集対象、
+`generated/pjr-index.md` が個票から作る一覧です。`register add` が表示した ID を使い、AI に作業を
+依頼する前に実行計画（exec plan）の内容まで確認できます。
 
 ```sh
 npx specdojo exec plan --project prj-0001 --register PJR-XXXX
 ```
 
-kata は既定で npm package 内のものを参照します。適用中の rulebook を確認し、プロジェクトで
-上書きする場合だけ eject します。
+kata は既定で npm package 内のものを参照します。適用中の rulebook（成果物ごとの記述規則）を確認し、プロジェクトで変更する場合だけ `eject` でリポジトリへコピーします。
 
 ```sh
 npx specdojo kata list --kind rulebook
@@ -137,16 +135,25 @@ npx specdojo kata show specdojo:pjr-rulebook
 npx specdojo kata eject --id specdojo:pjr-rulebook
 ```
 
-provider と agent の設定を終えた後は、同じ登録項目を実行できます。成功後は人が result と成果物を
-確認し、登録項目を close します。
+provider の設定を終えた後は、同じ登録項目を AI に実行させられます。成功後は人が実行結果（result）と成果物を確認し、登録項目を完了（close）します。
 
 ```sh
 npx specdojo exec run --project prj-0001 --register PJR-XXXX
 ```
 
-agent の実行は数分から数十分かかり、`routine` は定期実行されます。作業端末の状態に依存せず
+AI による実行は数分から数十分かかり、定期処理として登録した `routine` は決めた時刻に実行されます。作業端末の状態に依存せず
 実行を続けたい場合は、常時稼働するホストへリモート接続する構成例を
 [常時稼働ホスト運用ガイド](https://specdojo.github.io/specdojo/ja/specdojo/guides/remote-host-development-guide.html) に示しています。
+
+### 設定を変えたいとき
+
+`config init` が作る設定は、`prj-0001` の登録簿から始める例です。別のプロジェクト ID や配置を使う場合は、`.specdojo/specdojo.config.json` を変更します。
+
+- `current_project`: `--project` を省略したときに使うプロジェクトです。
+- `projects`: このプロジェクトリポジトリで扱うプロジェクトを定義します。複数登録できます。
+- `base_path`: 各プロジェクトの文書を置く基準パスです。
+
+成果物カタログやスケジュールへ進むときに追加する設定は、[SpecDojo設定リファレンス](https://specdojo.github.io/specdojo/ja/specdojo/references/specdojo-config-reference.html) を参照してください。
 
 ### テンプレートリポジトリとして導入する
 

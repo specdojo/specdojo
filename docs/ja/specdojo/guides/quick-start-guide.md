@@ -30,16 +30,20 @@ SpecDojo CLI の初期設定から始め、register で課題と判断を整理�
 
 ## 1. CLIを初期設定する
 
-既定では、プロダクトリポジトリ `app1/` の隣に SpecDojo 専用リポジトリ `app1-specdojo/` と worktree 用ディレクトリ `app1-worktrees/` を置く Detached Unit で始めます。
+既定では、SpecDojo の成果物更新、登録簿の状態遷移、実行記録をプロダクトの Git 履歴に混ぜないため、次の **別リポジトリ構成**で始めます。
+
+- **プロダクトリポジトリ** `app1/`: ソースコードと、仕様・設計などのプロダクトドキュメントを置きます。
+- **プロジェクトリポジトリ** `app1-specdojo/`: 登録簿・計画・実行記録などのプロジェクトドキュメントと実践体系を置きます。1つのプロジェクトリポジトリに、複数のプロジェクトを格納できます。
+- **worktree 用ディレクトリ** `app1-worktrees/`: タスクごとの変更を隔離して進めるために、Git worktree を作る場所です。
 
 ```text
 workspace/
 ├── app1/             # 既存または新規のプロダクトリポジトリ
-├── app1-specdojo/    # SpecDojo のプロジェクト文書と運用記録
+├── app1-specdojo/    # プロジェクトリポジトリ
 └── app1-worktrees/   # task 単位の worktree 置き場
 ```
 
-workspace 直下で専用リポジトリと worktree 用ディレクトリを作成し、`app1-specdojo/` に依存パッケージと SpecDojo の設定ファイルを用意します。
+workspace 直下でプロジェクトリポジトリと worktree 用ディレクトリを作成し、`app1-specdojo/` に依存パッケージと SpecDojo の設定ファイルを用意します。
 
 ```bash
 mkdir app1-specdojo app1-worktrees
@@ -64,9 +68,9 @@ plugins:
 
 `specdojo config init` は `.specdojo/specdojo.config.json` が存在しない場合に雛形を作成し、既存ファイルは上書きしません。雛形は register だけを使える最小構成であり、project パスは `app1-specdojo/` のリポジトリルートを基準とし、`run.worktree_base` は兄弟ディレクトリの `../app1-worktrees` を指します。作成された設定を開き、対象プロジェクトの ID と各パスを実際の名前に合わせてください。catalog、schedule、exec へ進むときに追加するキーと既定値は [[specdojo:specdojo-config-reference|SpecDojo設定リファレンス]] で確認できます。
 
-プロダクト文書は `app1/docs/ja/product/`、プロジェクト文書と SpecDojo の実践体系は `app1-specdojo/docs/ja/projects/` と `app1-specdojo/docs/ja/specdojo/` に置きます。現行実装では1つの項目で両リポジトリを自動統合できないため、プロダクト文書や実装も変更する項目は分けるか、人が統合を管理します。詳細は [ドキュメント構成ガイド](docs-structure-guide.md) の `別リポジトリ構成（Detached Unit）` を参照してください。
+プロダクト文書は `app1/docs/ja/product/`、プロジェクト文書と SpecDojo の実践体系は `app1-specdojo/docs/ja/projects/` と `app1-specdojo/docs/ja/specdojo/` に置きます。現行実装では1つの項目で両リポジトリを自動統合できないため、プロダクト文書や実装も変更する項目は分けるか、人が統合を管理します。詳細は [ドキュメント構成ガイド](docs-structure-guide.md) の `別リポジトリ構成` を参照してください。
 
-成果物と実装を常に同じ変更・履歴として扱う場合に限り、Attached Unit としてプロダクトリポジトリのルートで同じ初期化手順を実行できます。CLI は構成を強制しません。
+成果物と実装を常に同じ変更・履歴として扱う場合に限り、**同一リポジトリ構成**としてプロダクトリポジトリのルートで同じ初期化手順を実行できます。CLI は構成を強制しません。
 
 agent を使う場合は、設定ファイルを確認した後で利用する provider の設定を配置します。register
 だけを使う最小構成では、この手順を省略できます。
