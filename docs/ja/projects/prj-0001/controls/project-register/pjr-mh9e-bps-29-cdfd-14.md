@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: waiting
   priority: high
   owner: BA
   registered_at: "2026-09-26T05:44:30Z"
+  block_reason: "integrate failed: git status failed: fatal: detected dubious ownership in repository at '/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MH9E' (args: --porcelain=v1 -z --untracked-files=all)"
 ---
 
 # PJR-MH9E 成果物カタログの BPS 29 件を現行 CDFD の 14 領域へ追従させる
