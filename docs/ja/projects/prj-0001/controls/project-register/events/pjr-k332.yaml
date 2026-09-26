@@ -74,3 +74,32 @@
       from: rate limit reached
       to: "agent exited with non-zero code: agent exited with non-zero code: error: interrupted"
   previous_event_id: reg_63b280a4d34043f49ba78c19e1587606
+- v: 1
+  id: reg_82bf7a627ce04b36b31037b60d9f9ec9
+  ts: "2026-09-26T16:57:35Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_45e45cca52f541d3b4acdee4bbad259e
+- v: 1
+  id: reg_f6a9527536714af8ae36d6c75a2902e7
+  ts: "2026-09-26T17:12:16Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: runner による検証 `test-integration` が失敗（exit 1）しているため。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "agent exited with non-zero code: agent exited with non-zero code: error: interrupted"
+      to: "agent exited with non-zero code: runner による検証 `test-integration` が失敗（exit 1）しているため。"
+  previous_event_id: reg_82bf7a627ce04b36b31037b60d9f9ec9

@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: DEV
   registered_at: "2026-09-26T11:21:58Z"
-  block_reason: "agent exited with non-zero code: agent exited with non-zero code: error: interrupted"
+  block_reason: "agent exited with non-zero code: runner による検証 `test-integration` が失敗（exit 1）しているため。"
 ---
 
 # PJR-K332 register の並行実行で項目ごとに executor を指定できるようにする
@@ -71,9 +71,9 @@ register の実行では `--executor-by` を全項目で共有する。項目ご
 
 ## 6. 対応結果
 
-案 1 の `--executor-by PJR-A=codex,PJR-B=agy` 形式での個別指定を実装しました。指定した項目のうち起動対象に含まれないものがある場合はエラーで失敗し、全項目で共通指定する従来の挙動とも互換性を保っています。
+案 1 の `--executor-by PJR-A=codex,PJR-B=agy` 形式での個別指定を実装しました。項目別指定は起動対象の全項目を指定する必要があり、起動対象外の ID、指定漏れ、重複指定がある場合は状態遷移前にエラーで失敗します。全項目で共通指定する従来の `--executor-by <nickname>` とも互換性を保ち、`--dry-run` では項目ごとの解決結果を表示します。
 
-また、`ProviderConcurrencyGate` を導入して、provider ごとの `max_concurrency` が守られるように実装しました。
+また、`ProviderConcurrencyGate` を導入し、並列 register pipeline の executor／reporter が agent プロセスの実行中だけ provider 枠を取得することで、provider ごとの `max_concurrency` が守られるように実装しました。
 
 ## 7. 関連ドキュメント
 
