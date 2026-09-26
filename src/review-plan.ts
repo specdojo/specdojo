@@ -1,9 +1,62 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import yaml from "js-yaml";
 import { resolveSpecdojoPath } from "./template-resolution.js";
-import type { ReviewViewpointsDoc } from "./review-types.js";
+import type { ReviewViewpoint, ReviewViewpointsDoc } from "./review-types.js";
 
 export const COMMON_VIEWPOINTS_ID = "specdojo:pm-review-viewpoints";
+
+type DocumentMetadata = Record<string, unknown>;
+
+function nestedRecord(value: unknown): Record<string, unknown> | undefined {
+  return isRecord(value) ? value : undefined;
+}
+
+/**
+ * Resolve the rulebook ID that represents a document kind. Rulebooks identify themselves,
+ * recipes/samples/deliverables refer to their rulebook directly, and templates carry the
+ * generated document's rulebook in frontmatter_template.
+ */
+export function documentKind(metadata: DocumentMetadata): string | undefined {
+  const direct = metadata["rulebook"];
+  if (
+    typeof direct === "string" &&
+    !["none", "undecided", "not-needed"].includes(direct) &&
+    direct.trim()
+  ) {
+    return direct;
+  }
+
+  const id = metadata["id"];
+  if (metadata["type"] === "rulebook" && typeof id === "string" && id.trim()) return id;
+
+  const frontmatterTemplate = nestedRecord(metadata["frontmatter_template"]);
+  const generatedMetadata = nestedRecord(frontmatterTemplate?.["specdojo"]);
+  const generatedRulebook = generatedMetadata?.["rulebook"];
+  if (
+    typeof generatedRulebook === "string" &&
+    !["none", "undecided", "not-needed"].includes(generatedRulebook) &&
+    generatedRulebook.trim()
+  ) {
+    return generatedRulebook;
+  }
+  return undefined;
+}
+
+/**
+ * Apply a viewpoint's document-kind declaration. Omitted declarations and unclassified
+ * documents remain applicable for backward compatibility unless explicitly excluded.
+ */
+export function viewpointAppliesToDocument(
+  viewpoint: ReviewViewpoint,
+  metadata: DocumentMetadata,
+): boolean {
+  const declaration = viewpoint.document_kinds;
+  if (!declaration) return true;
+  const kind = documentKind(metadata);
+  if (!kind) return declaration.unclassified !== "exclude";
+  if (declaration.exclude?.includes(kind)) return false;
+  return declaration.include === undefined || declaration.include.includes(kind);
+}
 
 const COLLECTIONS = [
   ["categories", "id"],

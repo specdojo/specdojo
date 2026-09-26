@@ -277,7 +277,7 @@ viewpoints:
     role: BA
     category: business
     title: 業務価値との対応
-    check: 業務価値を定義・展開する成果物で、主要な定義・判断がどの対象者のどの業務課題・期待価値に応えるかを説明でき、主要な成果・方針がその目的に対応しているか。構造・設定中心の成果物では、上位目的への参照と下流利用の整合を確認し、業務上の Why の詳細な再掲を要求しない。
+    check: 主要な定義・判断がどの対象者のどの業務課題・期待価値に応えるかを説明でき、主要な成果・方針がその目的に対応しているか。
     evidence: 対象者、業務課題、放置時の影響、期待価値・効果、成功基準、判断理由、主要な成果・方針との対応、上位文書への参照。
     # 業務上の Why の充足と主要な What / How との対応を確認し、対象者・課題・期待価値の不足、
     # 上位目的との矛盾、対応先のない成果・方針を finding として説明できる範囲に絞る。
@@ -289,6 +289,21 @@ viewpoints:
     default_severity: major
     evaluation: human
     continuous: false
+    document_kinds:
+      exclude:
+        - specdojo:bdd-rulebook
+        - specdojo:dct-index-rulebook
+        - specdojo:dct-rulebook
+        - specdojo:gl-rulebook
+        - specdojo:ifx-api-rulebook
+        - specdojo:ifx-cmd-rulebook
+        - specdojo:ifx-index-rulebook
+        - specdojo:ifx-msg-rulebook
+        - specdojo:pm-members-rulebook
+        - specdojo:pm-roles-rulebook
+        - specdojo:sch-rulebook
+        - specdojo:tml-rulebook
+      unclassified: include
   - id: vp-ba-requirements-completeness
     role: BA
     category: business
@@ -374,12 +389,36 @@ viewpoints:
     category: architecture
     title: 文書責務の単一性
     check: >-
-      文書の中心主題と責務境界が一つに定まり、各章がその責務に直接寄与しているか。独立して参照・更新できる主題が複数あり、対象読者・利用時点が異なる、または別々の sample・recipe・template に対応する場合は分割を検討する。分量や対応する実践の型の数だけでは不備とせず、複数主題の案内自体を責務とする index・catalog・overview は分割対象から除外する。同一主張の反復や正本の過剰な再掲は vp-arc-conciseness で判定し、この観点では扱わない。
+      文書の中心主題と責務境界が一つに定まり、各章がその責務に直接寄与しているか。独立して参照・更新できる主題が複数あり、対象読者・利用時点が異なる、または別々の sample・recipe・template に対応する場合は分割を検討する。分量や対応する実践の型の数だけでは不備としない。同一主張の反復や正本の過剰な再掲は vp-arc-conciseness で判定し、この観点では扱わない。
     evidence: >-
-      文書の目的、章ごとの主題と相互依存、章が参照・更新される単位、対象読者、利用時点、対応する sample・recipe・template、index・catalog・overview としての集約責務、分割後も独立して成立する境界候補。分割が必要な finding には境界候補と参照・カタログへの影響を記録する。
+      文書の目的、章ごとの主題と相互依存、章が参照・更新される単位、対象読者、利用時点、対応する sample・recipe・template、分割後も独立して成立する境界候補。分割が必要な finding には境界候補と参照・カタログへの影響を記録する。
     default_severity: major
     evaluation: agent
     continuous: true
+    document_kinds:
+      exclude:
+        - specdojo:atc-index-rulebook
+        - specdojo:bes-index-rulebook
+        - specdojo:cdfd-overview-rulebook
+        - specdojo:cop-index-rulebook
+        - specdojo:dct-index-rulebook
+        - specdojo:dmd-index-rulebook
+        - specdojo:etc-index-rulebook
+        - specdojo:ifx-index-rulebook
+        - specdojo:itc-index-rulebook
+        - specdojo:mip-index-rulebook
+        - specdojo:nfr-index-rulebook
+        - specdojo:opd-index-rulebook
+        - specdojo:opr-index-rulebook
+        - specdojo:otp-index-rulebook
+        - specdojo:prj-overview-rulebook
+        - specdojo:sf-index-rulebook
+        - specdojo:stc-index-rulebook
+        - specdojo:sysd-index-rulebook
+        - specdojo:tsd-index-rulebook
+        - specdojo:tsp-index-rulebook
+        - specdojo:utc-index-rulebook
+      unclassified: include
   - id: vp-dev-implementation-readiness
     role: DEV
     category: implementation
@@ -490,7 +529,7 @@ viewpoints:
     category: usability
     title: 読みやすさ・理解しやすさ
     check: >-
-      説明を持つ成果物では、初見の読者が、成果物固有の目的または上位文書への参照からなぜ扱うかを把握し、目的と手段を区別して、対象、主要な判断、次に見る文書を理解できるか。そのうえで、同じ主張の反復、判断に不要な一般論、表と本文の内容重複、正本からの過剰な再掲がなく、必要な背景、判断理由、例外、制約、done_criteria を保った必要十分な記述になっているか。長さだけでは fail にせず、冗長箇所を特定できる場合は minor、冗長さによって主旨または主要な判断点を読み取れない場合は major とする。構造・設定中心の成果物では、名称、メタデータ、参照から役割と利用先を識別できるか。
+      初見の読者が、成果物固有の目的または上位文書への参照、名称、メタデータから、なぜ扱うか、役割、利用先、対象、主要な判断、次に見る文書を理解できるか。そのうえで、同じ主張の反復、判断に不要な一般論、表と本文の内容重複、正本からの過剰な再掲がなく、必要な背景、判断理由、例外、制約、done_criteria を保った必要十分な記述になっているか。長さだけでは fail にせず、冗長箇所を特定できる場合は minor、冗長さによって主旨または主要な判断点を読み取れない場合は major とする。
     evidence: >-
       導入文、目的・理由、主要な成果・方針との対応、上位文書への参照、見出し、表、用語、関連ドキュメント、補足説明、段落・箇条書きの長さと論点数、反復・重複箇所、表と本文の役割分担、正本への参照と再掲範囲、保持すべき背景・判断理由・例外・制約・done_criteria、削除候補・参照置換候補。
     # Why の内容の妥当性は PO / BA に委ね、ここでは必要性と主要な判断の関係を読み手が
@@ -498,6 +537,8 @@ viewpoints:
     default_severity: minor
     evaluation: agent
     continuous: true
+    document_kinds:
+      unclassified: include
   - id: vp-ux-user-flow
     role: UX
     category: usability

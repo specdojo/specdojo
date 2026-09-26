@@ -5,8 +5,10 @@ import { join, resolve } from "node:path";
 import yaml from "js-yaml";
 import {
   buildViewpointsOverlay,
+  documentKind,
   resolveViewpointsDoc,
   scaffoldViewpoints,
+  viewpointAppliesToDocument,
 } from "../../src/review-plan.js";
 import type { ReviewViewpointsDoc } from "../../src/review-types.js";
 import { buildValidator, formatErrors } from "../helpers/schema.js";
@@ -135,6 +137,52 @@ describe("resolveViewpointsDoc", () => {
 
       expect(resolveViewpointsDoc(path)).toMatchObject({ id: "test:viewpoints", viewpoints: [] });
     });
+  });
+});
+
+describe("viewpoint document-kind applicability", () => {
+  const viewpoint = {
+    id: "vp-arc-example",
+    role: "ARC",
+    category: "architecture",
+    title: "example",
+    check: "check",
+    evidence: "evidence",
+    default_severity: "major",
+    document_kinds: {
+      exclude: ["specdojo:dct-index-rulebook"],
+      unclassified: "exclude" as const,
+    },
+  };
+
+  it("rulebook・成果物・template を同じ rulebook ID へ正規化する", () => {
+    expect(
+      documentKind({
+        id: "specdojo:bps-rulebook",
+        type: "rulebook",
+      }),
+    ).toBe("specdojo:bps-rulebook");
+    expect(documentKind({ rulebook: "specdojo:bps-rulebook" })).toBe("specdojo:bps-rulebook");
+    expect(
+      documentKind({
+        type: "template",
+        frontmatter_template: { specdojo: { rulebook: "specdojo:bps-rulebook" } },
+      }),
+    ).toBe("specdojo:bps-rulebook");
+  });
+
+  it("除外した種類と未分類だけを対象外にする", () => {
+    expect(
+      viewpointAppliesToDocument(viewpoint, {
+        rulebook: "specdojo:dct-index-rulebook",
+      }),
+    ).toBe(false);
+    expect(
+      viewpointAppliesToDocument(viewpoint, {
+        rulebook: "specdojo:bps-rulebook",
+      }),
+    ).toBe(true);
+    expect(viewpointAppliesToDocument(viewpoint, { rulebook: "none" })).toBe(false);
   });
 });
 

@@ -8,7 +8,7 @@ import { unified } from "unified";
 import { extractJsonText } from "./agent-response.js";
 import { collectResolvedDeliverables, loadCatalogDocs } from "./catalog-build.js";
 import { isTrashedPath, resolveBasePath } from "./catalog-paths.js";
-import { resolveViewpointsDoc } from "./review-plan.js";
+import { resolveViewpointsDoc, viewpointAppliesToDocument } from "./review-plan.js";
 import type { GradeRubric, ReviewViewpoint, ReviewViewpointsDoc } from "./review-types.js";
 import {
   assertValidActor,
@@ -1192,17 +1192,28 @@ export function matchesGradeTargetFilters(
   );
 }
 
-function continuousViewpoints(doc: ReviewViewpointsDoc, target: GradeTarget): ReviewViewpoint[] {
+function continuousViewpoints(
+  doc: ReviewViewpointsDoc,
+  target: GradeTarget,
+  metadata: Record<string, unknown>,
+): ReviewViewpoint[] {
   return (doc.viewpoints ?? []).filter(
     (viewpoint) =>
       viewpoint.continuous === true &&
       viewpoint.evaluation !== "human" &&
-      (viewpoint.grade_targets === undefined || viewpoint.grade_targets.includes(target)),
+      (viewpoint.grade_targets === undefined || viewpoint.grade_targets.includes(target)) &&
+      viewpointAppliesToDocument(viewpoint, metadata),
   );
 }
 
-function agentViewpoints(doc: ReviewViewpointsDoc, target: GradeTarget): ReviewViewpoint[] {
-  return continuousViewpoints(doc, target).filter((viewpoint) => viewpoint.evaluation === "agent");
+function agentViewpoints(
+  doc: ReviewViewpointsDoc,
+  target: GradeTarget,
+  metadata: Record<string, unknown>,
+): ReviewViewpoint[] {
+  return continuousViewpoints(doc, target, metadata).filter(
+    (viewpoint) => viewpoint.evaluation === "agent",
+  );
 }
 
 function deterministicResults(
@@ -1211,7 +1222,8 @@ function deterministicResults(
   target: GradeTarget,
 ): GradeViewpointInput[] {
   const results: GradeViewpointInput[] = [];
-  for (const viewpoint of continuousViewpoints(definitions, target).filter(
+  const metadata = document.data.specdojo as Record<string, unknown>;
+  for (const viewpoint of continuousViewpoints(definitions, target, metadata).filter(
     (item) => item.evaluation === "deterministic",
   )) {
     const findings: GradeFindingInput[] = [];
@@ -1269,6 +1281,20 @@ function doneCriteriaPlanLines(
   ];
 }
 
+function applicableDoneCriteria(
+  doneCriteria: readonly GradeDoneCriterion[],
+  definitions: ReviewViewpointsDoc,
+  metadata: Record<string, unknown>,
+): GradeDoneCriterion[] {
+  const viewpoints = new Map(
+    (definitions.viewpoints ?? []).map((viewpoint) => [viewpoint.id, viewpoint]),
+  );
+  return doneCriteria.filter((criterion) => {
+    const viewpoint = viewpoints.get(criterion.viewpoint);
+    return viewpoint === undefined || viewpointAppliesToDocument(viewpoint, metadata);
+  });
+}
+
 export function renderGradePlan(opts: {
   target: GradeTarget;
   path: string;
@@ -1281,11 +1307,11 @@ export function renderGradePlan(opts: {
   resultsDirectory?: string;
 }): string {
   const rubric = assertRubric(opts.viewpoints);
-  const viewpoints = agentViewpoints(opts.viewpoints, opts.target);
   const absolute = resolveSafeMarkdownPath(opts.path);
   const rel = repoRelativePath(absolute);
   const document = parseMarkdown(readFileSync(absolute, "utf8"), rel);
   const metadata = document.data.specdojo as Record<string, unknown>;
+  const viewpoints = agentViewpoints(opts.viewpoints, opts.target, metadata);
   const documentId = typeof metadata.id === "string" ? metadata.id : rel;
   const priorFindings =
     (opts.resultsDirectory
@@ -1300,7 +1326,10 @@ export function renderGradePlan(opts: {
   const referenceExample = opts.referenceExample
     ? repoRelativePath(resolveSafeMarkdownPath(opts.referenceExample))
     : undefined;
-  const doneCriteria = opts.target === "deliverable" ? (opts.doneCriteria ?? []) : [];
+  const doneCriteria =
+    opts.target === "deliverable"
+      ? applicableDoneCriteria(opts.doneCriteria ?? [], opts.viewpoints, metadata)
+      : [];
   const lines = [
     "---",
     yaml
@@ -1462,15 +1491,18 @@ export function renderGradeReporterPlan(opts: {
   doneCriteria?: GradeDoneCriterion[];
 }): string {
   const rubric = assertRubric(opts.viewpoints);
-  const viewpoints = agentViewpoints(opts.viewpoints, opts.target);
   const absolute = resolveSafeMarkdownPath(opts.path);
   const rel = repoRelativePath(absolute);
   const document = parseMarkdown(readFileSync(absolute, "utf8"), rel);
   const metadata = document.data.specdojo as Record<string, unknown>;
+  const viewpoints = agentViewpoints(opts.viewpoints, opts.target, metadata);
   const documentId = typeof metadata.id === "string" ? metadata.id : rel;
   const taskHash = createHash("sha256").update(rel).digest("hex").slice(0, 12).toUpperCase();
   const taskId = `GRADE-${opts.target.toUpperCase()}-${taskHash}-REPORTER`;
-  const doneCriteria = opts.target === "deliverable" ? (opts.doneCriteria ?? []) : [];
+  const doneCriteria =
+    opts.target === "deliverable"
+      ? applicableDoneCriteria(opts.doneCriteria ?? [], opts.viewpoints, metadata)
+      : [];
   const lines = [
     "---",
     yaml
@@ -2084,8 +2116,6 @@ export function validateGradeSubmission(
   const rubric = assertRubric(doc);
   if (submission.rubric !== rubric.id)
     issues.push({ path: "$", message: `rubric must be ${rubric.id}` });
-  const required = agentViewpoints(doc, target);
-  const allowed = new Map(required.map((viewpoint) => [viewpoint.id, viewpoint]));
   const paths = new Set<string>();
   for (const [documentIndex, document] of submission.documents.entries()) {
     const where = `documents[${documentIndex}]`;
@@ -2096,15 +2126,25 @@ export function validateGradeSubmission(
     if (paths.has(document.path))
       issues.push({ path: where, message: `duplicate path: ${document.path}` });
     paths.add(document.path);
-    const normalizedDocumentPath = repoRelativePath(resolve(specdojoRootDir(), document.path));
+    const absoluteDocumentPath = resolve(specdojoRootDir(), document.path);
+    const normalizedDocumentPath = repoRelativePath(absoluteDocumentPath);
+    const metadata = existsSync(absoluteDocumentPath)
+      ? (parseMarkdown(readFileSync(absoluteDocumentPath, "utf8"), normalizedDocumentPath).data
+          .specdojo as Record<string, unknown>)
+      : {};
+    const required = agentViewpoints(doc, target, metadata);
+    const allowed = new Map(required.map((viewpoint) => [viewpoint.id, viewpoint]));
+    const expectedDoneCriteria =
+      options.doneCriteriaByPath?.get(document.path) ??
+      options.doneCriteriaByPath?.get(normalizedDocumentPath);
     issues.push(
       ...validateDoneCriteriaInput({
         where,
         target,
         value: document.done_criteria,
-        expected:
-          options.doneCriteriaByPath?.get(document.path) ??
-          options.doneCriteriaByPath?.get(normalizedDocumentPath),
+        expected: expectedDoneCriteria
+          ? applicableDoneCriteria(expectedDoneCriteria, doc, metadata)
+          : undefined,
       }),
     );
     const ids = new Set<string>();
@@ -2488,6 +2528,9 @@ export function gradeMarkdownDocument(opts: GradeMarkdownOptions): {
     opts.target === "deliverable" && opts.doneCriteria && opts.input.done_criteria
       ? opts.input.done_criteria
       : undefined;
+  const applicableCriteriaDefinitions = opts.doneCriteria
+    ? applicableDoneCriteria(opts.doneCriteria.definitions, opts.viewpoints, specdojo)
+    : undefined;
   specdojo.grade = {
     rubric: rubric.id,
     ...(opts.reference ? { reference: resolveGradeReferenceId(opts.reference) } : {}),
@@ -2500,10 +2543,10 @@ export function gradeMarkdownDocument(opts: GradeMarkdownOptions): {
     categories: summary.categories,
     viewpoints: summary.viewpoints,
     findings: summary.findings,
-    ...(criteriaResults && opts.doneCriteria
+    ...(criteriaResults && opts.doneCriteria && applicableCriteriaDefinitions
       ? {
           done_criteria: summarizeDoneCriteria(
-            opts.doneCriteria.definitions,
+            applicableCriteriaDefinitions,
             criteriaResults,
             opts.doneCriteria.detailRef,
           ),

@@ -5,6 +5,7 @@ import { format } from "prettier";
 import { describe, expect, it } from "vitest";
 import { existsSync } from "node:fs";
 import {
+  applicableReviewCriteria,
   buildInPlaceStem,
   deliverableDocId,
   finalizeResultSectionsForDeliverable,
@@ -90,6 +91,27 @@ describe("ownerRoleFields", () => {
     const actual = ownerRoleFields("DEV", roles, vpMapOf(PO_VIEWPOINTS));
 
     expect(actual.viewpoints).toBe("_MISSING_");
+  });
+});
+
+describe("applicableReviewCriteria", () => {
+  it("grade と同じ document_kinds 宣言で review 観点を選ぶ", () => {
+    const criteria: CriteriaItem[] = [
+      { text: "目的を確認する。", roles: ["PO"], viewpoint: "vp-po-purpose-alignment" },
+      { text: "業務価値を確認する。", roles: ["BA"], viewpoint: "vp-ba-business-value" },
+    ];
+    const vpMap = vpMapOf([
+      PO_VIEWPOINTS[0],
+      {
+        ...PO_VIEWPOINTS[1],
+        document_kinds: { exclude: ["specdojo:dct-rulebook"] },
+      },
+    ]);
+
+    expect(applicableReviewCriteria(criteria, vpMap, "specdojo:dct-rulebook")).toEqual([
+      criteria[0],
+    ]);
+    expect(applicableReviewCriteria(criteria, vpMap, "specdojo:bps-rulebook")).toEqual(criteria);
   });
 });
 
@@ -1165,7 +1187,8 @@ describe("generateSinglePlan", () => {
       });
 
       const plan = readFileSync(outPath, "utf8");
-      expect(plan).toContain("業務価値を定義・展開する成果物で");
+      // 適用条件は check の文面から document_kinds の宣言へ移した（PJR-AG7B）。
+      expect(plan).toContain("主要な定義・判断がどの対象者のどの業務課題・期待価値に応えるか");
       expect(plan).toContain("vp-ba-business-value");
     } finally {
       rmSync(root, { recursive: true, force: true });

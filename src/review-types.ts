@@ -10,6 +10,11 @@ export type ReviewViewpoint = {
   evaluation?: "deterministic" | "agent" | "human";
   continuous?: boolean;
   grade_targets?: ("kata" | "deliverable")[];
+  document_kinds?: {
+    include?: string[];
+    exclude?: string[];
+    unclassified?: "include" | "exclude";
+  };
 };
 
 export type GradeRubricLevel = {

@@ -1536,7 +1536,11 @@ async function prepareSingleTask(
   const startedAt = new Date().toISOString();
   const reviewSections =
     (task.mode ?? "edit") === "review"
-      ? reviewResultSectionsForDeliverable(planGenPaths.catalogPath ?? "", task.local_id)
+      ? reviewResultSectionsForDeliverable(
+          planGenPaths.catalogPath ?? "",
+          task.local_id,
+          planGenPaths.viewpointsPath,
+        )
       : undefined;
   const finalizeSections =
     task.approach === "finalize" || task.approach === "bootstrap-finalize"
@@ -3145,7 +3149,7 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
   if (task && slug) {
     const reviewSections =
       (task.mode ?? "edit") === "review"
-        ? reviewResultSectionsForDeliverable(catalogPath ?? "", task.local_id)
+        ? reviewResultSectionsForDeliverable(catalogPath ?? "", task.local_id, viewpointsPath)
         : undefined;
     const finalizeSections =
       task.approach === "finalize" || task.approach === "bootstrap-finalize"

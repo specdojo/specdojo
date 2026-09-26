@@ -284,6 +284,41 @@ $defs:
         items:
           enum: [kata, deliverable]
         description: "Optional grade target restriction; omitted means both targets."
+      document_kinds:
+        $ref: "#/$defs/DocumentKindApplicability"
+
+  DocumentKindApplicability:
+    type: object
+    additionalProperties: false
+    minProperties: 1
+    description: >
+      Optional rulebook-based applicability shared by grade and review. A document's kind is its
+      rulebook ID. Rulebooks use their own ID and templates use the rulebook in frontmatter_template.
+      Documents with rulebook none or no resolvable rulebook are unclassified.
+    properties:
+      include:
+        type: array
+        minItems: 1
+        uniqueItems: true
+        description: "Rulebook IDs to which this viewpoint applies; omitted means all classified kinds."
+        items:
+          $ref: "#/$defs/RulebookId"
+      exclude:
+        type: array
+        minItems: 1
+        uniqueItems: true
+        description: "Rulebook IDs excluded from this viewpoint."
+        items:
+          $ref: "#/$defs/RulebookId"
+      unclassified:
+        enum: [include, exclude]
+        description: "How to handle rulebook none or missing rulebook; omitted defaults to include."
+    not:
+      required: [include, exclude]
+
+  RulebookId:
+    type: string
+    pattern: "^(?:[a-z][a-z0-9-]*:)?[a-z0-9][a-z0-9-]*-rulebook$"
 
   GradeRubric:
     type: object
