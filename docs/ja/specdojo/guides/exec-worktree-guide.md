@@ -31,6 +31,8 @@ Exec Worktree Guide
 
 `exec run --worktree` と `exec run --auto` は、worktree 準備、agent 起動、commit、merge、状態更新を一括で行います。各段階を人が確認しながら進める場合は `exec worktree` 配下の分割コマンドを使います。
 
+worktree の checkpoint・commit・merge などで実行する Git コマンドが `fatal: detected dubious ownership` で失敗した場合、共通の Git 実行層は同じコマンドを1回だけ再試行し、再試行したことを警告ログへ記録します。2回目も失敗した場合は従来どおり失敗として報告し、それ以外の Git エラーをこの条件では再試行しません。
+
 | コマンド           | 責務                                                                             | Git変更   | イベント変更 |
 | ------------------ | -------------------------------------------------------------------------------- | --------- | ------------ |
 | `worktree prepare` | task worktree を準備し、実行管理ファイルを exec branch へ checkpoint commit する | あり      | なし         |
