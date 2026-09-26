@@ -61,3 +61,19 @@
       from: "-"
       to: "agent exited with non-zero code: runner validation `test-unit` failed (exit 1). The executor evidence shows `tests/tools/grade-per-document.test.ts` has 12 failures."
   previous_event_id: reg_3f4334627c8940c1abee81462a0bdbb3
+- v: 1
+  id: reg_b85a1f850d5746eca4fd9c91e046c509
+  ts: "2026-09-26T11:42:50Z"
+  action: close
+  actor: manual
+  from_status: waiting
+  to_status: done
+  reason: gitResult の層で dubious ownership を 1 回だけ再試行する形にした。checkpoint 段も対象になる。test:unit と test:integration は通過した。
+  changes:
+    - field: status
+      from: waiting
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-26"
+  previous_event_id: reg_186359c611f1477592547ebc04bdb0ed

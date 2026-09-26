@@ -2,16 +2,17 @@
 specdojo:
   id: prj-0001:pjr-bx79-integrate-dubious-ownership-retry
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-09-24T12:38:20Z"
   due_on: "2026-10-17"
+  completed_at: "2026-09-26T11:42:50Z"
   block_reason: "agent exited with non-zero code: runner validation `test-unit` failed (exit 1). The executor evidence shows `tests/tools/grade-per-document.test.ts` has 12 failures."
 ---
 
@@ -83,10 +84,29 @@ checkpoint failed: git ls-files failed: fatal: detected dubious ownership in rep
 
 ## 4. 対応結果
 
-- 共通の Git 実行層で `fatal: detected dubious ownership` を判定し、同じコマンドを1回だけ再試行するようにした。checkpoint 段と統合段のどちらも対象になる。
-- 再試行時は cwd と要約した引数を警告ログへ記録する。再試行後も失敗した場合は2回目の結果を呼び出し元へ返し、従来のエラー処理を継続する。
-- 該当する stderr、該当しない stderr、再試行後も同じエラーになる場合の単体テストを追加した。
-- 詳細な運用仕様を [[specdojo:exec-worktree-guide|exec worktree運用ガイド]] へ追記した。
+`gitResult`（個々の git 呼び出しを包む層）で、stderr に `dubious ownership` を含む場合に限り 1 回だけ再試行する形にした（`be9f0dcd`）。
+
+| 観点         | 実装                                                                                                  |
+| ------------ | ----------------------------------------------------------------------------------------------------- |
+| 対象の段     | 統合段に加え、checkpoint 段の `git ls-files` も `gitOutput` → `gitResult` を通るため対象になる        |
+| 再試行の回数 | 1 回だけ。再試行しても失敗すれば従来どおり失敗として扱う                                              |
+| ほかの失敗   | 再試行しない。既存の index.lock 競合の再試行とは同じ関数で区別する                                    |
+| 記録         | 再試行したときに `warning: git command failed with dubious ownership; retrying once` を stderr に出す |
+
+### 4.1. 実行の経緯
+
+`codex-expert-executor` で PJR-9PZ7 と並行で実行した。実装は正しかったが、runner の `test-unit` 検証が `tests/tools/grade-per-document.test.ts` の 12 件で失敗した。**この失敗は本項目と無関係で、私が `593c36e8` で grade の段数の既定を変えた際にテストを実行しなかったことが原因だった。** `c6d050db` でテストを直したのち、worktree の成果を統合した。
+
+### 4.2. 検証
+
+| 検証                    | 結果                                       |
+| ----------------------- | ------------------------------------------ |
+| `exec-worktree.test.ts` | 23 件通過                                  |
+| `typecheck` / `lint:ts` | 通過                                       |
+| `test:unit`             | 1561 件すべて通過（develop へ統合後）      |
+| `test:integration`      | 110 件通過、1 件 skip（PJR-TDB0 で追跡中） |
+
+同じ並行実行で PJR-9PZ7 が checkpoint 段の `dubious ownership` で失敗しており、**4 回目の発生**だった。本項目の修正が入る前だったため救えていない。
 
 ## 5. 関連ドキュメント
 
