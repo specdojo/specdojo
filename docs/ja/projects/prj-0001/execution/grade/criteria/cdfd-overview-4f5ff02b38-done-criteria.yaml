@@ -2,9 +2,9 @@
 id: cdfd-overview-grade-criteria
 document: cdfd-overview
 path: docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md
-graded_at: "2026-09-20T05:01:28.643Z"
-graded_by: codex-expert-executor
-content_hash: a22d5ecff5bee64e24a5f0de93c039d37846cb8a172d0f2ee81b14bb155429cf
+graded_at: "2026-09-26T10:36:06.060Z"
+graded_by: agy-expert-executor
+content_hash: 7ba72dd25e99e28712fdf18cf8046d04105ea84b1db9d8c5653d1afb4d97b3d1
 summary:
   satisfied: 2
   unsatisfied: 2
@@ -22,14 +22,14 @@ criteria:
       - PO
     viewpoint: vp-po-purpose-alignment
     status: unsatisfied
-    reason: 現行の対象範囲、14 のプロセス領域、六グループおよび補助操作の境界に対する PO の承認記録がない。
+    reason: PO による対象範囲と領域分割の承認記録が特定できないため。
   - id: DC-003
     text: 各領域の起点イベントと、プロセスグループ単位の主要入力・主要出力・データストアが識別でき、概念データフローのエッジと相互に対応し、プロセスグループ別 CDFD の構成方針として参照できること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
-    reason: Orchestrator の主要入力に実行計画がなく、図の「実行計画 → Orchestrator」エッジとの相互対応を確認できない。
+    reason: Orchestrator の主要入力に「rulebook 参照」が欠落しており、図 5.2 のエッジと相互対応していないため。
   - id: DC-004
     text: プロセスグループ別 CDFD とユースケース別 CDFD への分割に重複または欠落がないことを、詳細 CDFD 一覧と各領域の対応で確認できること
     roles:

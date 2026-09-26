@@ -1,0 +1,74 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: bps-deliverable-evaluation
+path: docs/ja/product/010-business-specs/030-business-model/bps-deliverable-evaluation.md
+target: deliverable
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 92
+graded_at: "2026-09-26T10:38:59.535Z"
+graded_by: agy-expert-executor
+content_hash: 84310c4758fd94db7c504449db409e1f0e53462d71b21ed924e91a3cabc4b33e
+categories:
+  consistency:
+    score: 75
+  usability:
+    score: 94
+  architecture:
+    score: 100
+  quality:
+    score: 100
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 3
+    score: 75
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 1
+  minor: 1
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 33
+    anchor: "- 同じ `content_hash` に対応する確定済み評価結果があり、評価コンテキストにも変化がない場合は、新しい評価を開始せず既存結果を利用する。評価コンテキストが変化した場合は `T-03` の新しい評価単位とする。"
+    message: 既存評価結果の再利用に関する記述が2章、3章、5章で反復されているため、1箇所への集約または参照による整理を検討してください。
+  - id: F002
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 22
+    anchor: >-
+      | `T-02`      | review gate で最新の評価結果がないことが検出され、評価要求が発行された                   | Orchestrator | 評価対象、現在の
+      `content_hash`、既存の評価結果    | 評価結果が存在しないか、その `content_hash` が現在の内容と一致していない | runner へ評価要求を渡し、本プロセスを開始する |
+    message: T-02の「不成立時の扱い」が「本プロセスを開始する」となっており、開始条件を満たさない場合の非起動指定として論理的に矛盾しています。
