@@ -284,13 +284,15 @@ specdojo exec run --project <project-id> --task <task-id>
 
 AI モデルの rate limit に達した場合、`exec run` は `.specdojo/exec-defaults.yaml` の `rate_limit_policy` に従います。
 
-| 状況                             | 代表対応                                                                |
-| -------------------------------- | ----------------------------------------------------------------------- |
-| 別 provider / agent の候補がある | 次候補へ切り替え、独立した Ready task は継続する                        |
-| reset / retry-after を取得できる | 再開時刻と worktree を block event に保持し、`exec resume --due` で再開 |
-| 時刻不明で明示 cooldown がある   | 設定済み cooldown から再開時刻を記録する                                |
-| 時刻不明で cooldown もない       | 時刻を推定せず、通常の blocked として人に委ねる                         |
-| `quota_exhausted`                | 自動再開せず、別 provider が無ければ人に委ねる                          |
+| 状況                             | 代表対応                                                                 |
+| -------------------------------- | ------------------------------------------------------------------------ |
+| 別 provider / agent の候補がある | 次候補へ切り替え、独立した Ready task は継続する                         |
+| reset / retry-after を取得できる | 再開時刻と worktree を保持し、`exec resume --due` または `--task` で再開 |
+| 時刻不明で明示 cooldown がある   | 設定済み cooldown から再開時刻を記録する                                 |
+| 時刻不明で cooldown もない       | 時刻を推定せず、通常の blocked として人に委ねる                          |
+| `quota_exhausted`                | 自動再開せず、別 provider が無ければ人に委ねる                           |
+
+再開時刻（due）が記録されたタスクは、一括で再開する `exec resume --due` と、指定したタスクを即時再開する `exec resume --task <task-id>` の両方を利用できます。定時実行による自動復旧には `--due` を使い、個別の動作確認や手動での早期再開には `--task` を選ぶことができます。
 
 定時起動する場合は routine から `job-exec-resume` を参照します。due 判定と `blocked -> doing` の確保は scheduler lock 内で行われるため、多重起動でも同じ task を重複実行しません。詳細は [routine運用ガイド](routine-operation-guide.md) を参照してください。
 

@@ -2238,9 +2238,11 @@ async function runPreparedTask(
         prepared.actor,
         reason,
         activeLimit
-          ? limitEventMeta(activeLimit, {
-              attempts: totalAttempts,
-              worktree: prepared.worktree.path,
+          ? {
+              ...limitEventMeta(activeLimit, {
+                attempts: totalAttempts,
+                worktree: prepared.worktree.path,
+              }),
               ...(prepared.pipelineRunId
                 ? pipelineRecoveryMeta({
                     stage: pipelineFailureStage,
@@ -2249,7 +2251,7 @@ async function runPreparedTask(
                     runId: pipelineState?.run_id ?? prepared.pipelineRunId,
                   })
                 : {}),
-            })
+            }
           : {
               limit_deferred: "false",
               ...(prepared.pipelineRunId

@@ -987,7 +987,7 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
   // （deferred limit と blocked の違い）の解明が必要なため、本体実装とは分けて追跡する。
   // 実装側の target_coverage の記録・検証は tests/src/exec-evidence.test.ts と
   // tests/src/exec-results.test.ts で検証済み。
-  it.skip("rechecks every plan target when an executor resumes after a rate limit", async () => {
+  it("rechecks every plan target when an executor resumes after a rate limit", async () => {
     fixture = setupPipelineRepository();
     worktreeBase = mkdtempSync(join(tmpdir(), "specdojo-pipeline-e2e-wt-"));
     vi.spyOn(process.stdout, "write").mockImplementation(() => true);
