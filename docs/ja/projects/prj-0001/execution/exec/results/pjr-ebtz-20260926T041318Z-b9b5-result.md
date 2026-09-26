@@ -4,11 +4,12 @@ specdojo:
   type: exec-result
   task_id: PJR-EBTZ
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: exec/plans/pjr-ebtz-20260926T041318Z-b9b5-plan.md
   started_at: "2026-09-26T04:13:18.356Z"
+  completed_at: "2026-09-26T04:23:40.440Z"
   agent: codex-expert-executor
 ---
 
@@ -16,16 +17,19 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- `vp-arc-cross-document-consistency` の突き合わせ先を `target` 別に分離し、Kata 適合性と成果物間整合性の境界を明確化しました。
+- 具体的に、`pm-review-viewpoints.yaml` を修正して観点定義を整理し、個票に検証結果を記録しました。
+- 修正後の挙動として、Kata plan には QE 観点のみが含まれ ARC 観点が除外されること、および成果物 plan には ARC 観点のみが含まれ Kata 観点が除外されることを確認済みです。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/defaults/pm-review-viewpoints.yaml`: 観点定義を修正し、`target` 別に突き合わせ先を分離
+- `docs/ja/projects/prj-0001/controls/project-register/pjr-ebtz-vp-arc-cross-document-consistency-target-kata-conformance.md`: 実施内容および対応結果を更新
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 本修正により `vp-arc-cross-document-consistency` と `vp-qe-kata-conformance` の重複が解消されました。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`fully-guided` で rulebook / recipe / sample / template をどう使い分けたか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+まず `pm-review-viewpoints.yaml` で観点の適用対象を `target` 属性に基づいて分離し、その後 `specdojo grade plan` コマンドを用いて Kata および成果物それぞれのプランに期待通り観点が割り振られているか検証しました。最後に個票を更新し、静的検査（`prettier`, `markdownlint`, `catalog validate` 等）を完了させました。
