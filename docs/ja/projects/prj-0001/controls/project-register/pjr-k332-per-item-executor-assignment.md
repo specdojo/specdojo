@@ -2,15 +2,16 @@
 specdojo:
   id: prj-0001:pjr-k332-per-item-executor-assignment
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-09-26T11:21:58Z"
+  completed_at: "2026-09-26T17:19:16Z"
   block_reason: "agent exited with non-zero code: runner による検証 `test-integration` が失敗（exit 1）しているため。"
 ---
 
@@ -74,6 +75,46 @@ register の実行では `--executor-by` を全項目で共有する。項目ご
 案 1 の `--executor-by PJR-A=codex,PJR-B=agy` 形式での個別指定を実装しました。項目別指定は起動対象の全項目を指定する必要があり、起動対象外の ID、指定漏れ、重複指定がある場合は状態遷移前にエラーで失敗します。全項目で共通指定する従来の `--executor-by <nickname>` とも互換性を保ち、`--dry-run` では項目ごとの解決結果を表示します。
 
 また、`ProviderConcurrencyGate` を導入し、並列 register pipeline の executor／reporter が agent プロセスの実行中だけ provider 枠を取得することで、provider ごとの `max_concurrency` が守られるように実装しました。
+
+### 6.1. 評価（2026-09-27 夜間）
+
+完了条件をすべて満たす。
+
+| 完了条件                                       | 判定                                                                     |
+| ---------------------------------------------- | ------------------------------------------------------------------------ |
+| 1 回の起動で項目ごとに別の executor を並行実行 | 満たす。`--executor-by PJR-A=...,PJR-B=...`                              |
+| 従来の `--executor-by <nickname>` が変わらない | 満たす                                                                   |
+| 対象外の ID をエラーにする                     | 満たす。指定漏れもエラーにする                                           |
+| provider ごとの `max_concurrency` を守る       | 満たす。並行する項目の間でも provider ごとに枠を数える                   |
+| `--dry-run` で項目ごとの executor を確認できる | 満たす（下記）                                                           |
+| テスト                                         | 満たす。単体 1585 件、統合 114 件                                        |
+| ガイドへ記載                                   | 満たす。`exec-operation-guide`、`exec-config-guide`、`command-reference` |
+
+```text
+$ npx specdojo exec run --register PJR-WPWB PJR-XTAN --worktree --parallel 2 \
+    --executor-by PJR-WPWB=codex-expert-executor,PJR-XTAN=agy-expert-executor ... --dry-run
+register item: PJR-WPWB  executor: codex-expert-executor
+register item: PJR-XTAN  executor: agy-expert-executor
+```
+
+### 6.2. 実行の経緯
+
+4 回を要した。
+
+| 回  | executor                   | 結果                                                       |
+| --- | -------------------------- | ---------------------------------------------------------- |
+| 1   | codex                      | codex の使用上限（00:53 に回復）                           |
+| 2   | agy（Gemini、resume）      | agy が理由を示さず `error: interrupted` で終了             |
+| 3   | codex（resume）            | executor の段が `failed` のため resume できず              |
+| 4   | codex（`--force-restart`） | 実装は完成したが、runner の `test-integration` で 1 件失敗 |
+
+4 回目は、途中で PJR-PPYF が `src/exec-run.ts` を変えていたため、agy が書いた未検証の変更を捨てて現在の develop から実行し直した。
+
+### 6.3. 私が直した点と、見つけた問題
+
+executor が加えた並行実行の E2E テストは、テスト用リポジトリが登録簿の生成物（`generated/pjr-index.md`）を git で管理していたため、並行する 2 項目の統合で add/add の衝突になって失敗した。このリポジトリは `.gitignore` の `docs/**/generated/*` で生成物を管理外にしているので、このテストでも同じ設定を置いて機能を確かめる形へ直した。
+
+**利用者のリポジトリでは、同じ衝突が実際に起きうる。** `config init` も scaffold も、生成物を管理外にする `.gitignore` を作らない。README の手順どおりに始めると生成物が git で管理され、register を並行実行すると統合で衝突する。直し方（`config init` で `.gitignore` を作るか、案内だけにするか）は判断が要るため、別項目として扱う。
 
 ## 7. 関連ドキュメント
 
