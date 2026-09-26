@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   owner: DEV
   registered_at: "2026-09-24T12:38:20Z"
   due_on: "2026-10-17"
+  block_reason: "agent exited with non-zero code: runner validation `test-unit` failed (exit 1). The executor evidence shows `tests/tools/grade-per-document.test.ts` has 12 failures."
 ---
 
 # PJR-BX79 統合段の dubious ownership を 1 回だけ再試行する
@@ -74,15 +75,18 @@ checkpoint failed: git ls-files failed: fatal: detected dubious ownership in rep
 
 ## 3. 作業内容
 
-| No  | 作業                                    | 担当 | 状態 | メモ                              |
-| --- | --------------------------------------- | ---- | ---- | --------------------------------- |
-| 1   | 統合段の git 実行に再試行の判定を入れる | DEV  | open | `dubious ownership` に限定する    |
-| 2   | 再試行の発生をログへ残す                | DEV  | open | 握りつぶしと区別できるようにする  |
-| 3   | 判定と挙動の単体テストを追加する        | DEV  | open | 該当する stderr と、しない stderr |
+| No  | 作業                                    | 担当 | 状態 | メモ                             |
+| --- | --------------------------------------- | ---- | ---- | -------------------------------- |
+| 1   | 統合段の git 実行に再試行の判定を入れる | DEV  | done | `dubious ownership` に限定した   |
+| 2   | 再試行の発生をログへ残す                | DEV  | done | 警告ログへ対象と引数を記録する   |
+| 3   | 判定と挙動の単体テストを追加する        | DEV  | done | 該当・非該当の stderr を検証した |
 
 ## 4. 対応結果
 
--
+- 共通の Git 実行層で `fatal: detected dubious ownership` を判定し、同じコマンドを1回だけ再試行するようにした。checkpoint 段と統合段のどちらも対象になる。
+- 再試行時は cwd と要約した引数を警告ログへ記録する。再試行後も失敗した場合は2回目の結果を呼び出し元へ返し、従来のエラー処理を継続する。
+- 該当する stderr、該当しない stderr、再試行後も同じエラーになる場合の単体テストを追加した。
+- 詳細な運用仕様を [[specdojo:exec-worktree-guide|exec worktree運用ガイド]] へ追記した。
 
 ## 5. 関連ドキュメント
 
