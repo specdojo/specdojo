@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   owner: DEV
   registered_at: "2026-09-26T11:21:58Z"
+  block_reason: rate limit reached
 ---
 
 # PJR-K332 register の並行実行で項目ごとに executor を指定できるようにする
