@@ -72,14 +72,14 @@ SpecDojo は、会話を CLI 操作へ変換する対話型オーケストレー
 npx specdojo config scaffold --provider claude
 ```
 
-オーケストレーターの配置先と起動方法は provider ごとに異なります。
+このコマンドを実行すると、オーケストレーターの定義ファイルが配置され、`package.json` へ起動用のスクリプトが追加されます（`package.json` が存在する場合）。追加されたスクリプトで起動します。
 
-| provider      | 配置先                                      | 起動                                                                       |
-| ------------- | ------------------------------------------- | -------------------------------------------------------------------------- |
-| `claude`      | `.claude/agents/specdojo-orchestrator.md`   | `claude --agent specdojo-orchestrator`                                     |
-| `opencode`    | `.opencode/agents/specdojo-orchestrator.md` | `opencode --agent specdojo-orchestrator`                                   |
-| `codex`       | `.specdojo/codex/orchestrator.md`           | `codex "$(cat .specdojo/codex/orchestrator.md)"`                           |
-| `antigravity` | `.specdojo/antigravity/orchestrator.md`     | `agy --add-dir "$(pwd)" -i "$(cat .specdojo/antigravity/orchestrator.md)"` |
+| provider      | 配置先                                      | 起動（`package.json` がある場合） |
+| ------------- | ------------------------------------------- | --------------------------------- |
+| `claude`      | `.claude/agents/specdojo-orchestrator.md`   | `npm run orch:opus` ほか          |
+| `opencode`    | `.opencode/agents/specdojo-orchestrator.md` | `npm run orch:opencode`           |
+| `codex`       | `.specdojo/codex/orchestrator.md`           | `npm run orch:codex`              |
+| `antigravity` | `.specdojo/antigravity/orchestrator.md`     | `npm run orch:agy`                |
 
 配置されるファイルのモデル名は、手元で使えるモデルに合わせて編集してください。provider ごとの詳しい設定は [オーケストレーター運用ガイド](https://specdojo.github.io/specdojo/ja/specdojo/guides/orchestrator-operation-guide.html) を参照してください。
 

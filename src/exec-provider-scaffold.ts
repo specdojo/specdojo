@@ -1,8 +1,24 @@
 import { existsSync } from "node:fs";
-import { copyFile, mkdir, readdir } from "node:fs/promises";
+import { copyFile, mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 export { specdojoPackageRootDir } from "./package-paths.js";
+
+const ORCHESTRATOR_NPM_SCRIPTS: Record<string, Record<string, string>> = {
+  claude: {
+    "orch:opus": "claude --agent specdojo-orchestrator --model opus",
+    "orch:sonnet": "claude --agent specdojo-orchestrator --model sonnet",
+  },
+  codex: {
+    "orch:codex": 'codex "$(cat .specdojo/codex/orchestrator.md)"',
+  },
+  antigravity: {
+    "orch:agy": 'agy --add-dir "$(pwd)" -i "$(cat .specdojo/antigravity/orchestrator.md)"',
+  },
+  opencode: {
+    "orch:opencode": "opencode --agent specdojo-orchestrator",
+  },
+};
 
 // config scaffold --provider <name> と互換入口 exec scaffold --provider <name> の実体。
 // npm package 内の templates/<provider>/ を配布原本として、利用リポジトリへコピーする。
@@ -134,17 +150,60 @@ export async function runProviderScaffold(
     for (const entry of plan.entries) {
       process.stdout.write(`[dry-run] would write: ${entry.destinationRelPath}\n`);
     }
+  } else {
+    const outcomes = await applyProviderScaffoldPlan(plan, { force: opts.force });
+    for (const { entry, written } of outcomes) {
+      if (written) {
+        process.stdout.write(`Written: ${entry.destinationRelPath}\n`);
+      } else {
+        process.stdout.write(`Skipped (already exists): ${entry.destinationRelPath}\n`);
+      }
+    }
+  }
+
+  const scriptsToAdd = ORCHESTRATOR_NPM_SCRIPTS[provider];
+  if (scriptsToAdd) {
+    const packageJsonPath = path.join(opts.repoRoot, "package.json");
+    if (existsSync(packageJsonPath)) {
+      try {
+        const pkgContent = await readFile(packageJsonPath, "utf-8");
+        const pkg = JSON.parse(pkgContent);
+        pkg.scripts = pkg.scripts || {};
+        let modified = false;
+
+        for (const [scriptName, scriptCmd] of Object.entries(scriptsToAdd)) {
+          if (pkg.scripts[scriptName] && !opts.force) {
+            process.stdout.write(
+              `Skipped (script already exists): ${scriptName} in package.json\n`,
+            );
+          } else {
+            if (opts.dryRun) {
+              process.stdout.write(
+                `[dry-run] would add script: "${scriptName}": "${scriptCmd}" to package.json\n`,
+              );
+            } else {
+              pkg.scripts[scriptName] = scriptCmd;
+              process.stdout.write(`Added script: ${scriptName} to package.json\n`);
+              modified = true;
+            }
+          }
+        }
+
+        if (modified && !opts.dryRun) {
+          await writeFile(packageJsonPath, JSON.stringify(pkg, null, 2) + "\n");
+        }
+      } catch (e) {
+        process.stderr.write(`Failed to update package.json: ${e}\n`);
+      }
+    } else {
+      process.stdout.write("Skipped (package.json not found)\n");
+    }
+  }
+
+  if (opts.dryRun) {
     return;
   }
 
-  const outcomes = await applyProviderScaffoldPlan(plan, { force: opts.force });
-  for (const { entry, written } of outcomes) {
-    if (written) {
-      process.stdout.write(`Written: ${entry.destinationRelPath}\n`);
-    } else {
-      process.stdout.write(`Skipped (already exists): ${entry.destinationRelPath}\n`);
-    }
-  }
   process.stdout.write(
     "Next steps:\n" +
       "  1. Commit the scaffolded files (worktree runs read committed content).\n" +
