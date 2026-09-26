@@ -574,6 +574,61 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
     expect(markdownlintErrors(first)).toEqual([]);
   });
 
+  it("preserves an unchanged target reason from resumed executor evidence in the result", async () => {
+    const { resultPath } = await scaffoldResult({
+      executionPath,
+      taskId: "prj-overview",
+      mode: "edit",
+      projectId: "prj-0001",
+      planRef: "exec/plans/prj-overview-plan.md",
+      agent: "pipeline-executor",
+      startedAt: "2026-08-10T07:00:00.000Z",
+    });
+    await renderReporterResult(
+      resultPath,
+      {
+        schema_version: 1,
+        mode: "edit",
+        outcome: "complete",
+        summary: ["全対象を確認した。"],
+        changed_files: [{ path: "docs/a.md", summary: "記述を更新した。" }],
+        handoff: [],
+        approach: "再開前後の差分と plan を照合した。",
+        block_reason: "",
+      },
+      {
+        schema_version: 1,
+        task_id: "prj-overview",
+        run_id: "resume-1",
+        stage: {
+          role: "executor",
+          actor: "pipeline-executor",
+          status: "succeeded",
+          started_at: "2026-08-10T07:00:00.000Z",
+          completed_at: "2026-08-10T07:01:00.000Z",
+          exit_code: 0,
+          attempts: 1,
+        },
+        changes: [{ path: "docs/a.md", status: "M" }],
+        diff_summary: { files_changed: 1, summary: "docs/a.md | 1 +" },
+        validations: [],
+        target_coverage: [
+          {
+            target: "test:doc-b",
+            status: "unchanged",
+            reason: "現行内容が完了条件を満たしていた。",
+          },
+        ],
+        final_message: "全対象を確認した。",
+        log_refs: [],
+      },
+    );
+
+    const content = readFileSync(resultPath, "utf8");
+    expect(content).toContain("対象 `test:doc-b` は未変更: 現行内容が完了条件を満たしていた。");
+    expect(markdownlintErrors(content)).toEqual([]);
+  });
+
   it("renders review viewpoints in scaffold order and rejects mismatched ids", async () => {
     const reviewSections = [
       "### RVP-001（DEV: vp-quality）",

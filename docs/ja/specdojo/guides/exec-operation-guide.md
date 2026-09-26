@@ -204,7 +204,7 @@ agent起動時はhook由来の`GIT_DIR`などを継承せず、各trialのcwdか
 
 `release` は `doing` / `blocked` の試行を破棄して `todo` に戻します。`cancel` は `todo` のタスクを終端状態にする操作です。
 
-executor / reporter pipeline では、run ごとの `exec/evidence/<task>/<run>/pipeline-state.json` に各段（executor / reporter と、runner が担う統合段 `integrate`）の状態、agent、試行回数、evidence / result 参照を保存します。reporter 失敗の block event は `pipeline_stage=reporter`、統合失敗の block event は `pipeline_stage=integrate` を持ち、どちらも `pipeline_state_ref` から同じ run を再開します。`exec resume --task <task-id>` は state に応じて reporter または統合段だけを再開し、完了済みの agent 段を重複実行しません。
+executor / reporter pipeline では、run ごとの `exec/evidence/<task>/<run>/pipeline-state.json` に各段（executor / reporter と、runner が担う統合段 `integrate`）の状態、agent、試行回数、evidence / result 参照を保存します。executor 中断の block event は `pipeline_stage=executor`、reporter 失敗は `pipeline_stage=reporter`、統合失敗は `pipeline_stage=integrate` を持ち、いずれも `pipeline_state_ref` から同じ run を再開します。`exec resume --task <task-id>` は state に応じて未完了の段から再開し、完了済みの agent 段を重複実行しません。
 
 stage agent を明示する場合は次のように指定します。片方を省略すると、その stage は要件と優先度から自動選択されます。
 
@@ -332,15 +332,15 @@ agent ログは人が調査するための参照先で、reporter には渡り�
 
 stage 別の失敗と対応は次のとおりです。
 
-| 失敗                          | 状態の見え方                                           | 対応                                                                 |
-| ----------------------------- | ------------------------------------------------------ | -------------------------------------------------------------------- |
-| executor の異常終了           | executor が `failed`、reporter は `pending`            | 原因を解消し `exec unblock` で継続、または `exec release` でやり直す |
-| executor の rate limit        | executor が `rate_limited`、block に再開時刻           | `レートリミット対応` と同じ（`exec resume --due`）                   |
-| reporter のプロセス失敗       | executor が `succeeded`、reporter が `failed`          | `exec resume --task <task-id>` で reporter から再開する              |
-| reporter の出力形式エラー     | reporter を最大3回再実行した後に `failed`              | 同上（executor は再実行されない）                                    |
-| 親 runner の検証失敗          | evidence の `source: runner` が `failed`               | 原因を解消して reporter を再開する（親検証だけ再実行される）         |
-| reporter の `outcome=blocked` | result が `blocked` になり `block_reason` に理由が残る | 理由を読み、成果物側の不足を解消してから再実行する                   |
-| commit / merge / 撤去の失敗   | executor・reporter が `succeeded`、統合が `failed`     | `exec resume --task <task-id>` で統合段だけ再開する                  |
+| 失敗                          | 状態の見え方                                           | 対応                                                                                               |
+| ----------------------------- | ------------------------------------------------------ | -------------------------------------------------------------------------------------------------- |
+| executor の異常終了           | executor が `failed`、reporter は `pending`            | 原因を解消し `exec resume --task <task-id>` で executor から継続、または `exec release` でやり直す |
+| executor の rate limit        | executor が `rate_limited`、block に再開時刻           | `レートリミット対応` と同じ（`exec resume --due`）                                                 |
+| reporter のプロセス失敗       | executor が `succeeded`、reporter が `failed`          | `exec resume --task <task-id>` で reporter から再開する                                            |
+| reporter の出力形式エラー     | reporter を最大3回再実行した後に `failed`              | 同上（executor は再実行されない）                                                                  |
+| 親 runner の検証失敗          | evidence の `source: runner` が `failed`               | 原因を解消して reporter を再開する（親検証だけ再実行される）                                       |
+| reporter の `outcome=blocked` | result が `blocked` になり `block_reason` に理由が残る | 理由を読み、成果物側の不足を解消してから再実行する                                                 |
+| commit / merge / 撤去の失敗   | executor・reporter が `succeeded`、統合が `failed`     | `exec resume --task <task-id>` で統合段だけ再開する                                                |
 
 reporter で止まったタスクは、同じ claim のまま reporter だけを再開できます。再開時は `pipeline-state.json` と executor evidence の task ID / run ID の一致を確認し、一致しない場合や欠損している場合は evidence を再利用せず、新しい run として executor から実行し直します。保存済みの親 runner 検証だけが失敗している場合は、現在の worktree でその固定許可リスト検証を再実行し、結果を evidence へ反映してから reporter を起動します。`source: executor` の検証失敗は成果物側の記録なので、この経路では再評価しません。
 
@@ -374,6 +374,10 @@ specdojo exec run \
 | `integrate` | executor と reporter が `succeeded`、統合が未完了  | agent を起動せず、commit → merge → worktree 撤去だけ行う            |
 
 executor のプロセス結果は、親 runner 検証を始める前に `executor.log` と `evidence.json` へ保存し、`pipeline-state.json` の executor を `succeeded` へ更新します。親検証中にプロセスが中断した場合、`--resume` は保存済みの executor evidence を再利用し、不足している親検証を実行してから reporter へ進みます。agent 実行中の中断で executor が `running` のまま残った場合は、未コミット成果を含む既存 worktree を破棄せず、同じ plan/result を入力に executor から再実行します。`--executor-by` / `--reporter-by` を省略した場合は state に記録された各 agent を引き継ぎます。
+
+中断した executor を再実行するとき、runner は再開前から worktree に存在する変更パスを prompt へ添え、既存差分を完了の証拠とみなさず plan 全体と全 `targets` を確認するよう指示します。再開後の executor evidence は各 target について `target_coverage` を持ち、変更した target は repo 相対 `path` が累積 worktree 差分に実在すること、変更不要の target は具体的な `reason` があることを runner が検査します。target の欠落、差分にない変更申告、理由のない未変更申告が一つでもあれば executor は `failed` となり、reporter と統合へ進みません。この検査は rate limit、crash、手動停止のいずれから executor 段を再開した場合も同じです。plan に `targets` がない register 由来タスクでは機械的な対象照合は行えないため、prompt による plan 全体の再確認を適用します。
+
+変更不要として受理した target の理由は reporter が生成する result の「申し送り」へ runner が転記します。これにより、ファイル差分がないことを黙って成功扱いにせず、変更不要と判断した根拠を完了記録に残します。通常の新規 run は既存 executor との互換性を保つため `target_coverage` を必須とせず、この追加ガードは中断後の executor 再開に限定します。
 
 `agent-config-write` または `agent-git-state-write` が executor を止めた場合は、通常の実装失敗を示す `failed` と区別して executor を `blocked` と記録します。申し送りを人または orchestrator が適用し、agent 由来の保護対象差分や Git 状態変更を worktree から解消した後、`--resume` は既存成果を保持したまま executor から再開します。申し送りを適用せず保護対象差分を残したまま再開した場合、executor が完了しても統合前の保護検査で再び block し、worktree を保持します。
 

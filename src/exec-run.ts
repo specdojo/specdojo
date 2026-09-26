@@ -175,6 +175,7 @@ import {
   recordCommandEvidence,
   recordExecutorEvidence,
   recordReporterFailureOutput,
+  validateResumedTargetCoverage,
   writeExecutorEvidence,
   type ExecEvidence,
 } from "./exec-evidence.js";
@@ -781,7 +782,15 @@ export function loadPrompt(executionPath: string, taskId: string): string | null
   return plan ? expandPromptRefs(plan) : null;
 }
 
-function executorEvidenceContract(parentValidationIds: readonly string[]): string {
+type ExecutorPromptOptions = {
+  resumed?: boolean;
+  existingChanges?: readonly string[];
+};
+
+function executorEvidenceContract(
+  parentValidationIds: readonly string[],
+  options: ExecutorPromptOptions = {},
+): string {
   const parentValidationCommands = resolveParentValidationDefinitions(parentValidationIds).map(
     (definition) => definition.displayCommand,
   );
@@ -789,6 +798,28 @@ function executorEvidenceContract(parentValidationIds: readonly string[]): strin
     parentValidationIds.length > 0
       ? `\nThe SpecDojo parent runner will execute these allowlisted validations after you exit: ${parentValidationIds.join(", ")} (${parentValidationCommands.join(", ")}). Do not run those commands inside the agent sandbox or report duplicate executor results for them. Run only the remaining sandbox-safe validations required by the plan. Parent-run results will be appended to evidence with source=runner and are authoritative.\n`
       : "";
+  const resumeInstruction = options.resumed
+    ? `
+This executor invocation resumes an interrupted attempt. Existing worktree changes may represent
+only a partial implementation; they are not proof that the plan is complete. Re-read the entire
+plan and inspect every declared target before reporting success. For each entry in plan
+frontmatter \`targets\`, include one \`target_coverage\` entry in the evidence envelope. Use the
+target ID exactly as written in the plan. A changed target must use status \`changed\`, provide its
+repository-relative \`path\`, and actually be present in the cumulative worktree diff. A target
+that legitimately needs no change must use status \`unchanged\` and provide a concrete \`reason\`;
+the runner will preserve that reason in the result. If you cannot account for every target, exit
+non-zero instead of claiming completion. When the plan frontmatter declares no \`targets\` (as
+register-origin plans currently do), omit \`target_coverage\` and instead state in
+\`final_message\` which artifacts you verified and which remain unverified.${
+        options.existingChanges?.length
+          ? `\n\nChanges already present when this resumed invocation started:\n${options.existingChanges.map((path) => `- \`${path}\``).join("\n")}`
+          : ""
+      }
+`
+    : "";
+  const targetCoverageExample = options.resumed
+    ? ',"target_coverage":[{"target":"exact plan target id","status":"changed|unchanged","path":"repo-relative path for changed targets","reason":"required when unchanged"}]'
+    : "";
   return `
 
 ---
@@ -807,12 +838,13 @@ will stop the pipeline before validation, reporting, commit, or merge.
 When writing Markdown in the final evidence, wrap identifiers or field names containing an
 underscore in inline code (for example, \`depends_on\`).
 ${parentValidationInstruction}
+${resumeInstruction}
 
 End the final response with exactly one machine-readable report using this envelope. Do not place
 Markdown fences around the JSON.
 
 <specdojo_executor_evidence>
-{"final_message":"concise outcome","validations":[{"command":"exact command","status":"passed|failed|not_run","summary":"concise result"}]}
+{"final_message":"concise outcome","validations":[{"command":"exact command","status":"passed|failed|not_run","summary":"concise result"}]${targetCoverageExample}}
 </specdojo_executor_evidence>
 `;
 }
@@ -820,8 +852,25 @@ Markdown fences around the JSON.
 export function buildExecutorPrompt(
   plan: string,
   parentValidationIds: readonly string[] = [],
+  options: ExecutorPromptOptions = {},
 ): string {
-  return `${plan.trimEnd()}${executorEvidenceContract(parentValidationIds)}`;
+  return `${plan.trimEnd()}${executorEvidenceContract(parentValidationIds, options)}`;
+}
+
+function resumedTargetCoverageFailure(params: {
+  resumed: boolean;
+  plan: string;
+  evidence: ExecEvidence;
+  evidencePath: string;
+}): string | undefined {
+  if (!params.resumed) return undefined;
+  const targets = parsePlanTaskIdentity(params.plan)?.targets ?? [];
+  const coverage = validateResumedTargetCoverage(targets, params.evidence);
+  if (coverage.ok) return undefined;
+
+  params.evidence.stage.status = "failed";
+  writeExecutorEvidence(params.evidencePath, params.evidence);
+  return coverage.reason;
 }
 
 export async function runConfiguredParentValidations(
@@ -1795,9 +1844,16 @@ async function runPreparedTask(
     );
     writePipelineState(pipelineStatePath, pipelineState);
     process.stdout.write(`  Running executor: ${prepared.agentCandidates[0]?.command ?? ""}\n`);
+    const executorPrompt =
+      prepared.pipelineResumeStage === "executor"
+        ? buildExecutorPrompt(prepared.plan, execDefaults.pipeline?.parent_validations, {
+            resumed: true,
+            existingChanges: worktreeStatusPaths(prepared.worktree.path),
+          })
+        : prepared.prompt;
     const executorOutcome = await runWithRetry(
       prepared.agentCandidates,
-      prepared.prompt,
+      executorPrompt,
       execDefaults,
       prepared.worktree.path,
       agentEnvironment(repoRoot, prepared.worktree.path, schedulePath, executionPath),
@@ -1830,6 +1886,20 @@ async function runPreparedTask(
       .join("/");
     executorEvidencePath = recorded.evidencePath;
     executorEvidence = recorded.evidence;
+    const coverageFailure =
+      result === "success"
+        ? resumedTargetCoverageFailure({
+            resumed: prepared.pipelineResumeStage === "executor",
+            plan: prepared.plan,
+            evidence: executorEvidence,
+            evidencePath: executorEvidencePath,
+          })
+        : undefined;
+    if (result === "success" && coverageFailure) {
+      result = "failure";
+      stderr = coverageFailure;
+      pipelineBlockReason = coverageFailure;
+    }
     const executorCompletedAt = new Date().toISOString();
     pipelineState = updatePipelineStage(
       pipelineState,
@@ -1908,7 +1978,7 @@ async function runPreparedTask(
       });
       if (reporter.result === "success") {
         try {
-          await renderReporterResult(worktreeResultPath, reporter.output);
+          await renderReporterResult(worktreeResultPath, reporter.output, executorEvidence);
           const parentValidationFailure = failedParentValidationReason(
             executorEvidence.validations,
           );
@@ -3238,7 +3308,7 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
       });
       if (reporter.result === "success" && resultPath) {
         try {
-          await renderReporterResult(resultPath, reporter.output);
+          await renderReporterResult(resultPath, reporter.output, recorded.evidence);
           const parentValidationFailure = failedParentValidationReason(
             recorded.evidence.validations,
           );
@@ -3960,7 +4030,7 @@ async function runReporterStage(params: {
   let blockReason: string | undefined;
   if (reporter.result === "success") {
     try {
-      await renderReporterResult(params.resultPath, reporter.output);
+      await renderReporterResult(params.resultPath, reporter.output, params.evidence);
       const parentValidationFailure = failedParentValidationReason(params.evidence.validations);
       exitCode = reporter.output.outcome === "complete" && !parentValidationFailure ? 0 : 1;
       blockReason =
@@ -4028,6 +4098,7 @@ async function runAgentPipeline(params: {
   planPrompt: string;
   resultPath: string;
   execDefaults: ExecDefaultsConfig;
+  resumedExecutor?: boolean;
 }): Promise<{
   exitCode: 0 | 1;
   runResult: RunResult;
@@ -4079,7 +4150,14 @@ async function runAgentPipeline(params: {
   writePipelineState(stateLocation.path, state);
 
   const env = agentEnvironment(repoRoot, cwd, schedulePath, executionPath);
-  const executorPrompt = buildExecutorPrompt(planPrompt, execDefaults.pipeline?.parent_validations);
+  const executorPrompt = buildExecutorPrompt(
+    planPrompt,
+    execDefaults.pipeline?.parent_validations,
+    {
+      resumed: params.resumedExecutor,
+      ...(params.resumedExecutor ? { existingChanges: worktreeStatusPaths(cwd) } : {}),
+    },
+  );
   const outcome = await runWithRetry(
     [executor],
     executorPrompt,
@@ -4108,6 +4186,16 @@ async function runAgentPipeline(params: {
     stdout: outcome.stdout,
     stderr: outcome.stderr,
   });
+  const coverageFailure =
+    outcome.result === "success"
+      ? resumedTargetCoverageFailure({
+          resumed: !!params.resumedExecutor,
+          plan: planPrompt,
+          evidence: recorded.evidence,
+          evidencePath: recorded.evidencePath,
+        })
+      : undefined;
+  const executorResult: RunResult = coverageFailure ? "failure" : outcome.result;
   const evidenceRef = relative(cwd, recorded.evidencePath).split(sep).join("/");
   const executorCompletedAt = new Date().toISOString();
   state = updatePipelineStage(
@@ -4115,11 +4203,11 @@ async function runAgentPipeline(params: {
     "executor",
     {
       status:
-        outcome.result === "success"
+        executorResult === "success"
           ? "succeeded"
           : outcome.protectionBlock
             ? "blocked"
-            : outcome.result === "rate_limit"
+            : executorResult === "rate_limit"
               ? "rate_limited"
               : "failed",
       attempts: outcome.attempts,
@@ -4131,14 +4219,15 @@ async function runAgentPipeline(params: {
   writePipelineState(stateLocation.path, state);
   process.stdout.write(`  Executor evidence: ${evidenceRef}\n`);
 
-  if (outcome.result !== "success") {
+  if (executorResult !== "success") {
     const blockReason =
-      outcome.result === "rate_limit"
+      coverageFailure ??
+      (executorResult === "rate_limit"
         ? "executor rate limit reached"
-        : extractBlockReason(outcome.stderr);
+        : extractBlockReason(outcome.stderr));
     return {
       exitCode: 1,
-      runResult: outcome.result,
+      runResult: executorResult,
       blockReason,
       stateRef: stateLocation.ref,
       evidenceRef,
@@ -5618,6 +5707,7 @@ async function resumeSingleRegisterItemWorktree(
       planPrompt: prompt,
       resultPath: worktreeResultPath,
       execDefaults: context.execDefaults,
+      resumedExecutor: true,
     });
 
     const finalize = async (): Promise<RegisterItemSummary> =>
@@ -6596,7 +6686,9 @@ async function runResumeMode(opts: RunOpts): Promise<void> {
       const blockedPipelineStage = taskState?.meta?.pipeline_stage;
       const canResumeBlockedPipeline =
         taskState?.state === "blocked" &&
-        (blockedPipelineStage === "reporter" || blockedPipelineStage === "integrate") &&
+        (blockedPipelineStage === "executor" ||
+          blockedPipelineStage === "reporter" ||
+          blockedPipelineStage === "integrate") &&
         typeof taskState.meta?.pipeline_state_ref === "string";
       if (canResumeBlockedPipeline) {
         const actor = taskState.last_by ?? opts.by ?? "exec-pipeline-resume";
@@ -6613,7 +6705,9 @@ async function runResumeMode(opts: RunOpts): Promise<void> {
               msg:
                 blockedPipelineStage === "integrate"
                   ? "resume integration from persisted pipeline state"
-                  : "resume reporter from persisted pipeline state",
+                  : blockedPipelineStage === "reporter"
+                    ? "resume reporter from persisted pipeline state"
+                    : "resume executor from persisted pipeline state",
               meta,
             }),
           );

@@ -20,6 +20,13 @@ export type EvidenceValidation = {
   summary: string;
 };
 
+export type EvidenceTargetCoverage = {
+  target: string;
+  status: "changed" | "unchanged";
+  path?: string;
+  reason: string;
+};
+
 export type ExecEvidence = {
   schema_version: 1;
   task_id: string;
@@ -39,6 +46,8 @@ export type ExecEvidence = {
     summary: string;
   };
   validations: EvidenceValidation[];
+  /** Executor-reported disposition of plan targets. Required by the runner on executor resume. */
+  target_coverage?: EvidenceTargetCoverage[];
   final_message: string;
   command?: {
     shell: string;
@@ -115,6 +124,7 @@ export type RecordReporterFailureOutputInput = {
 type ExecutorReport = {
   final_message?: unknown;
   validations?: unknown;
+  target_coverage?: unknown;
 };
 
 const REPORT_PATTERN =
@@ -157,6 +167,7 @@ function boundedText(value: unknown, limit: number): string {
 export function parseExecutorReport(stdout: string): {
   finalMessage: string;
   validations: EvidenceValidation[];
+  targetCoverage: EvidenceTargetCoverage[];
 } {
   const matches = [...stdout.matchAll(REPORT_PATTERN)];
   const raw = matches.at(-1)?.[1];
@@ -191,11 +202,121 @@ export function parseExecutorReport(stdout: string): {
     }
   }
 
+  const targetCoverage: EvidenceTargetCoverage[] = [];
+  if (Array.isArray(report.target_coverage)) {
+    for (const item of report.target_coverage.slice(0, MAX_CHANGE_FILES)) {
+      if (!item || typeof item !== "object" || Array.isArray(item)) continue;
+      const candidate = item as Record<string, unknown>;
+      const target = boundedText(candidate.target, 1_000);
+      const status = candidate.status;
+      const path = boundedText(candidate.path, 1_000);
+      const reason = boundedText(candidate.reason, MAX_VALIDATION_SUMMARY_LENGTH);
+      if (!target || (status !== "changed" && status !== "unchanged")) continue;
+      targetCoverage.push({
+        target,
+        status,
+        ...(path ? { path } : {}),
+        reason,
+      });
+    }
+  }
+
   const fallback = stdout.replace(REPORT_PATTERN, "").trim();
   return {
     finalMessage: boundedText(report.final_message ?? fallback, MAX_FINAL_MESSAGE_LENGTH),
     validations,
+    targetCoverage,
   };
+}
+
+function normalizedEvidencePath(value: string): string | null {
+  const normalized = value.replaceAll("\\", "/").replace(/^\.\//u, "");
+  if (
+    !normalized ||
+    normalized.startsWith("/") ||
+    /^[A-Za-z]:\//u.test(normalized) ||
+    normalized.split("/").includes("..")
+  ) {
+    return null;
+  }
+  return normalized;
+}
+
+function changedEvidencePaths(changes: readonly ExecEvidence["changes"][number][]): Set<string> {
+  const paths = new Set<string>();
+  for (const change of changes) {
+    // Rename/copy entries use "old -> new". Either side is sufficient to prove that the target
+    // was handled, and both remain repository-relative paths produced by git status.
+    for (const value of change.path.split(" -> ")) {
+      const normalized = normalizedEvidencePath(value);
+      if (normalized) paths.add(normalized);
+    }
+  }
+  return paths;
+}
+
+/**
+ * Validates the stricter completion contract used when an interrupted executor is resumed.
+ * A changed target must point at a path present in the cumulative worktree diff; an unchanged
+ * target must carry a concrete reason that can be preserved in the result by the reporter path.
+ */
+export function validateResumedTargetCoverage(
+  targets: readonly string[],
+  evidence: ExecEvidence,
+): { ok: true } | { ok: false; reason: string } {
+  const expected = [...new Set(targets.map((target) => target.trim()).filter(Boolean))];
+  if (expected.length === 0) return { ok: true };
+
+  const coverage = evidence.target_coverage ?? [];
+  const byTarget = new Map<string, EvidenceTargetCoverage>();
+  const duplicates = new Set<string>();
+  for (const entry of coverage) {
+    if (byTarget.has(entry.target)) duplicates.add(entry.target);
+    else byTarget.set(entry.target, entry);
+  }
+  if (duplicates.size > 0) {
+    return {
+      ok: false,
+      reason: `resumed executor target coverage has duplicate entries: ${[...duplicates].join(", ")}`,
+    };
+  }
+
+  const missing = expected.filter((target) => !byTarget.has(target));
+  if (missing.length > 0) {
+    return {
+      ok: false,
+      reason: `resumed executor did not account for every plan target: ${missing.join(", ")}`,
+    };
+  }
+
+  const changedPaths = changedEvidencePaths(evidence.changes);
+  for (const target of expected) {
+    const entry = byTarget.get(target)!;
+    if (entry.status === "unchanged") {
+      if (!entry.reason.trim()) {
+        return {
+          ok: false,
+          reason: `resumed executor reported an unchanged target without a reason: ${target}`,
+        };
+      }
+      continue;
+    }
+
+    const path = entry.path ? normalizedEvidencePath(entry.path) : null;
+    if (!path) {
+      return {
+        ok: false,
+        reason: `resumed executor reported a changed target without a valid repository-relative path: ${target}`,
+      };
+    }
+    if (!changedPaths.has(path)) {
+      return {
+        ok: false,
+        reason: `resumed executor target path is absent from the cumulative worktree diff: ${target} (${path})`,
+      };
+    }
+  }
+  return { ok: true };
 }
 
 function parseStatusPaths(worktreePath: string): Array<{ path: string; status: string }> {
@@ -262,6 +383,7 @@ export function buildExecutorEvidence(input: BuildExecutorEvidenceInput): {
         summary: truncate(redactSensitiveText(input.diffStat.trim()), MAX_DIFF_SUMMARY_LENGTH),
       },
       validations,
+      ...(report.targetCoverage.length > 0 ? { target_coverage: report.targetCoverage } : {}),
       final_message: report.finalMessage,
       log_refs: [
         {

@@ -108,6 +108,32 @@ properties:
                 const: runner
           then:
             required: [id]
+  target_coverage:
+    description: >
+      Per-target disposition reported by an executor. The runner requires complete coverage when
+      an interrupted executor stage is resumed. Changed targets identify a repository-relative
+      path; unchanged targets carry the reason preserved in the result.
+    type: array
+    maxItems: 1000
+    items:
+      type: object
+      additionalProperties: false
+      required: [target, status, reason]
+      properties:
+        target:
+          type: string
+          minLength: 1
+          maxLength: 1000
+        status:
+          type: string
+          enum: [changed, unchanged]
+        path:
+          type: string
+          minLength: 1
+          maxLength: 1000
+        reason:
+          type: string
+          maxLength: 1000
   final_message:
     type: string
     maxLength: 4000

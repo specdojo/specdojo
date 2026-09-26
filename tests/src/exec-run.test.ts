@@ -145,6 +145,18 @@ describe("extractBlockReason", () => {
     expect(prompt).toContain("`depends_on`");
   });
 
+  it("再開 executor に既存差分と全 target の構造化確認を要求する", () => {
+    const prompt = buildExecutorPrompt("# Plan\n", [], {
+      resumed: true,
+      existingChanges: ["docs/a.md"],
+    });
+
+    expect(prompt).toContain("resumes an interrupted attempt");
+    expect(prompt).toContain("`target_coverage`");
+    expect(prompt).toContain("every declared target");
+    expect(prompt).toContain("`docs/a.md`");
+  });
+
   it("truncates an overly long reason to keep the block event log readable", () => {
     const longReason = `blocked: ${"x".repeat(600)}`;
     const actual = extractBlockReason(longReason);
