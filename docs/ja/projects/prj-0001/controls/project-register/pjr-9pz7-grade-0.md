@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: high
   owner: DEV
   registered_at: "2026-09-26T10:28:16Z"
+  block_reason: "checkpoint failed: git ls-files failed: fatal: detected dubious ownership in repository at '/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-9PZ7' (args: --full-name -z -- 4 paths)"
 ---
 
 # PJR-9PZ7 grade の打ち切りが検出されず終了コード 0 で完了扱いになる
