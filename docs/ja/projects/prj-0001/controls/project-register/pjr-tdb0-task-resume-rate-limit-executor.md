@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-09-26T08:55:12Z"
@@ -87,17 +87,20 @@ snapshot.tasks[taskId]?.meta?.pipeline_stage === "reporter"
 
 ## 5. 作業内容
 
-| No  | 作業                                        | 担当 | 状態 | メモ                   |
-| --- | ------------------------------------------- | ---- | ---- | ---------------------- |
-| 1   | rate limit 後の状態と meta を実データで確認 | DEV  | open | 仮説 A・B の検証       |
-| 2   | `--due` と `--task` の役割分担を確認する    | DEV  | open | 仮説 C の検証          |
-| 3   | 正しい挙動を決める                          | ARC  | open | 再開経路の仕様         |
-| 4   | 実装またはテストを修正する                  | DEV  | open | `it.skip` を外す       |
-| 5   | 運用ガイドへ再開手順を記載する              | OPS  | open | `exec-operation-guide` |
+| No  | 作業                                        | 担当 | 状態   | メモ                                        |
+| --- | ------------------------------------------- | ---- | ------ | ------------------------------------------- |
+| 1   | rate limit 後の状態と meta を実データで確認 | DEV  | closed | `pipelineRecoveryMeta` がドロップされていた |
+| 2   | `--due` と `--task` の役割分担を確認する    | DEV  | closed | 運用ガイドで明示                            |
+| 3   | 正しい挙動を決める                          | ARC  | closed | どちらでも再開可能とする                    |
+| 4   | 実装またはテストを修正する                  | DEV  | closed | `it.skip` を外し、pass                      |
+| 5   | 運用ガイドへ再開手順を記載する              | OPS  | closed | `--task` と `--due` 併記                    |
 
 ## 6. 対応結果
 
--
+- 仮説Bが正解でした。`src/exec-run.ts` の block イベント書き込み処理において、`limitEventMeta` にスプレッド演算子で `pipelineRecoveryMeta` の結果（`pipeline_state_ref` 等）を渡していましたが、`limitEventMeta` 側が `attempts` と `worktree` 以外をドロップする仕様となっていたため、meta に出力されていませんでした。
+- 実装を修正し、`limitEventMeta` の結果と `pipelineRecoveryMeta` の結果を個別に展開してマージするように変更しました。
+- `tests/src/exec-pipeline-e2e.integration.test.ts` に残されていた rate limit の resume テストの `it.skip` を外してテストが通ることを確認しました。
+- `docs/ja/specdojo/guides/exec-operation-guide.md` の「レートリミット対応」に追記し、定時の自動復旧には `--due`、手動の早期再開・動作確認には `--task` が利用できる旨を明記しました。
 
 ## 7. 関連ドキュメント
 
