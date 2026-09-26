@@ -32,3 +32,32 @@
     - field: due
       from: ""
       to: "2026-10-17"
+- v: 1
+  id: reg_3f4334627c8940c1abee81462a0bdbb3
+  ts: "2026-09-26T11:23:53Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_56b73980bbd94b8a872372aeb1fb8660
+- v: 1
+  id: reg_186359c611f1477592547ebc04bdb0ed
+  ts: "2026-09-26T11:36:09Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: runner validation `test-unit` failed (exit 1). The executor evidence shows `tests/tools/grade-per-document.test.ts` has 12 failures."
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: runner validation `test-unit` failed (exit 1). The executor evidence shows `tests/tools/grade-per-document.test.ts` has 12 failures."
+  previous_event_id: reg_3f4334627c8940c1abee81462a0bdbb3
