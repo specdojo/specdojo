@@ -43,6 +43,10 @@ specdojo:
 
 `vp-ux-readability` の `check` は「同じ主張の反復、判断に不要な一般論、表と本文の内容重複、正本からの過剰な再掲がなく、必要十分な記述になっているか」を含む。これは `vp-arc-conciseness` と**重複している**。`vp-arc-single-responsibility` は「同一主張の反復や正本の過剰な再掲は vp-arc-conciseness で判定し、この観点では扱わない」と明示的に境界を書いているが、`vp-ux-readability` には対応する記述がない。
 
+### 2.4. 本項目の前提の変化（2026-09-26）
+
+[[prj-0001:pjr-ag7b-viewpoint-applicability-by-document-kind]] で、`vp-ux-readability` の `check` から「説明を持つ成果物では…構造・設定中心の成果物では…」という適用条件が外れ、文書の種類の宣言（`document_kinds`）へ移った。`vp-ux-readability` と `vp-arc-conciseness` の責務の重なり（冗長さの判定）は残っている。**現在の `pm-review-viewpoints.yaml` の文面を読んでから作業する。**
+
 ## 3. 完了条件
 
 - `vp-arc-conciseness` の `check` に、何を残すべきかの下限と、fail としない条件が書かれている。
@@ -50,17 +54,17 @@ specdojo:
 - 両観点が [[prj-0001:pjr-wpwb-viewpoint-evaluation-criteria]] の基準で `referential` と判定できる。
 - `vp-ux-readability` と `vp-arc-conciseness` の責務境界が `check` に明示されている。
 - 書き換え後に grade を試行し、finding 数と内容が改善または維持されている。悪化した場合は書き換えを見直す。
-- `evaluation` の値を `referential` へ変更するか、`discretionary` に留めるかを決めている。
+- `evaluation` の値を `referential` へ変更するか、`discretionary` に留めるかを判断し、**結論を個票に記録している。値そのものは変えない。** `referential` / `discretionary` は [[prj-0001:pjr-wpwb-viewpoint-evaluation-criteria]]（0.3.0）で導入する値で、現在の schema には存在しない。本項目で `evaluation` の値や enum を変更しない。
 
 ## 4. 作業内容
 
-| No  | 作業                                             | 担当 | 状態 | メモ                             |
-| --- | ------------------------------------------------ | ---- | ---- | -------------------------------- |
-| 1   | `vp-ux-readability` との責務境界を決める         | UX   | open | 冗長性の判定をどちらが担うか     |
-| 2   | `vp-arc-conciseness` の `check` へ規準を書き込む | ARC  | open | 先例の書き方に合わせる           |
-| 3   | `vp-ux-user-flow` の `check` へ規準を書き込む    | UX   | open | 判定に使う要素を列挙する         |
-| 4   | grade を試行し finding を比較する                | QE   | open | 書き換え前 46 件 / 22 件との比較 |
-| 5   | `evaluation` の値を確定する                      | ARC  | open | 試行結果を見て決める             |
+| No  | 作業                                             | 担当 | 状態 | メモ                               |
+| --- | ------------------------------------------------ | ---- | ---- | ---------------------------------- |
+| 1   | `vp-ux-readability` との責務境界を決める         | UX   | open | 冗長性の判定をどちらが担うか       |
+| 2   | `vp-arc-conciseness` の `check` へ規準を書き込む | ARC  | open | 先例の書き方に合わせる             |
+| 3   | `vp-ux-user-flow` の `check` へ規準を書き込む    | UX   | open | 判定に使う要素を列挙する           |
+| 4   | grade を試行し finding を比較する                | QE   | open | 書き換え前 46 件 / 22 件との比較   |
+| 5   | `evaluation` の値を確定する                      | ARC  | open | 結論の記録のみ。値は WPWB で変える |
 
 ## 5. 対応結果
 
