@@ -108,17 +108,22 @@ specdojo:
 
 ## 7. 作業内容
 
-| No  | 作業                                | 担当 | 状態 | メモ                         |
-| --- | ----------------------------------- | ---- | ---- | ---------------------------- |
-| 1   | 前提 2 項目の完了を待つ             | QE   | open | T3NN、8TEN                   |
-| 2   | 現行 CDFD の P-08 / P-11 を読み込む | QE   | open | `cdfd-check` / `cdfd-action` |
-| 3   | BPS を 2 件作成する                 | QE   | open | 評価と完了で分ける           |
-| 4   | grade を実行し finding を確認する   | QE   | open | `done_criteria` は未登録     |
-| 5   | 展開する項目を起票する              | QE   | open | `cdfd-*`、`xrp-*`、`xrr-*`   |
+| No  | 作業                                | 担当 | 状態    | メモ                                                      |
+| --- | ----------------------------------- | ---- | ------- | --------------------------------------------------------- |
+| 1   | 前提 2 項目の完了を待つ             | QE   | done    | T3NN、8TEN の完了を確認                                   |
+| 2   | 現行 CDFD の P-08 / P-11 を読み込む | QE   | done    | `cdfd-check` / `cdfd-action` とプロセス ID を照合         |
+| 3   | BPS を 2 件作成する                 | QE   | done    | 成果物評価とタスク完了を別文書で作成                      |
+| 4   | grade を実行し finding を確認する   | QE   | waiting | editor から独立した runner による評価を executor 後に行う |
+| 5   | 展開する項目を起票する              | QE   | waiting | BPS の review 後に `cdfd-*`、`xrp-*`、`xrr-*` を起票する  |
 
 ## 8. 対応結果
 
--
+- `bps-deliverable-evaluation.md` を新規作成し、`P-08-01`〜`P-08-03` に対応する対象・基準確定、独立 runner による 28 観点の評価、`content_hash` による鮮度確認、grade・finding の確定を定義した。
+- `bps-task-completion.md` を新規作成し、`P-11-01`〜`P-11-02` に対応する review gate での完了可否判断と完了記録を定義した。review は成果物を再評価せず、最新の grade・finding を事実として利用する。
+- 2 文書の入口と出口を grade・finding で接続し、評価結果がない場合または `content_hash` が一致しない場合は runner が成果物評価を実行してから review を再開する関係を明記した。
+- grade と review の判定対象、入力、出力、実行主体、起動条件を分離し、editor と評価 runner の独立、同じ内容版を二重評価しない制御を記述した。
+- 評価不能、評価中の対象変更、review 時点の鮮度不足、完了条件の未充足を主要例外として定義した。
+- 成果物カタログへの登録は [[prj-0001:pjr-mh9e-bps-29-cdfd-14]]、CDFD と review テンプレートへの展開は本 BPS の review 後に起票するため、本実行では変更していない。
 
 ## 9. 関連ドキュメント
 
