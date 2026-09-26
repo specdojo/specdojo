@@ -67,3 +67,19 @@
       from: "2026-09-23"
       to: "-"
   previous_event_id: reg_125a725ea2c34270a1fa8d440cd75841
+- v: 1
+  id: reg_d596b53cb5b54538839646de8d1b672b
+  ts: "2026-09-26T02:01:10Z"
+  action: close
+  actor: manual
+  from_status: open
+  to_status: decided
+  reason: 最終結論を個票の 3.0 へ記載した。設計の詳細は成果物評価の BPS を正本とする。
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-09-26"
+  previous_event_id: reg_e8079f5332f74e04b2ef337e34215d62
