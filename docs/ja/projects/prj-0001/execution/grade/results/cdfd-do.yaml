@@ -4,20 +4,20 @@ document: cdfd-do
 path: docs/ja/product/010-business-specs/010-data-flow/cdfd-do.md
 target: deliverable
 rubric: grade-rubric-v1
-verdict: pass
-score: 95
-graded_at: "2026-09-18T11:22:12.840Z"
-graded_by: codex-expert-executor
-content_hash: 06e3d1c8645531178c832d211d3fc673ebbb1314bd7b20bf257cd54273298d30
+verdict: needs-work
+score: 83
+graded_at: "2026-09-26T15:38:14.322Z"
+graded_by: agy-expert-executor
+content_hash: 77bdd115c5f0005404837c4d440bc2af468071ee4364c697383e1019a52a0a99
 categories:
   consistency:
-    score: 88
+    score: 63
   usability:
     score: 100
   architecture:
     score: 100
   quality:
-    score: 92
+    score: 75
 viewpoints:
   vp-arc-cross-document-consistency:
     level: 4
@@ -32,11 +32,11 @@ viewpoints:
     level: 3
     score: 75
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 1
+    score: 25
   vp-ux-readability:
     level: 4
     score: 100
@@ -54,26 +54,48 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 0
+  major: 3
   minor: 2
   note: 0
 findings:
   - id: F001
     severity: minor
     rule: vp-qe-done-criteria
-    line: 56
+    line: 67
+    anchor: classDef event fill:#fff3e0,stroke:#fb8c00,color:#000
     message: >-
       DC-002 が求めるプロセス単位の読み書きについて、「データストア」表は登録簿の参照を P-07-01・P-07-02 とする一方、「個別プロセス主要入出力」は P-07-03 にも登録簿を含めており、P-07-03
       の参照有無を一意に識別できるよう統一する必要がある。
-    anchor: "| 実行記録     | 更新       | `P-07-05` で result、evidence、実行状態、ブロック、保護設定の変更差分、判断依頼、Job の実行結果を記録する。          |"
   - id: F002
+    severity: major
+    rule: vp-qe-verifiability
+    line: 43
+    anchor: ""
+    message: プロセスの表にルールブックが必須とする「完了条件」列が存在せず、各プロセスが成功裏に完了したことを yes / no で判定できる検証可能な基準がない。
+  - id: F003
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 43
+    anchor: ""
+    message: ルールブックで必須とされる「完了条件」列がプロセスの表（3.1節）から抜け落ちているため、列を追加し各プロセスの完了条件を明記する必要がある。
+  - id: F004
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 172
+    anchor: >-
+      | --------------------------------------------------------- |
+      -------------------------------------------------------- |
+      ---------------------------------------------------------------------- |
+      ------------------------------------------------------------------------------------------- |
+    message: ルールブックで必須とされる「停止範囲」列が主要例外の表から抜け落ちており、例外発生時に確定または起動してはならない後続プロセスや出力が明記されていない。
+  - id: F005
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 56
+    line: 67
+    anchor: classDef event fill:#fff3e0,stroke:#fb8c00,color:#000
     message: >-
       登録簿の利用を P-07-01・P-07-02・P-07-05 とするデータストア表と、P-07-03 にも登録簿を割り当てる個別プロセス表が矛盾するため、P-07-03
       の登録簿参照を追加するか同プロセスのデータストア欄から削除する必要がある。
-    anchor: "| 実行記録     | 更新       | `P-07-05` で result、evidence、実行状態、ブロック、保護設定の変更差分、判断依頼、Job の実行結果を記録する。          |"
 done_criteria:
   satisfied: 3
   total: 4

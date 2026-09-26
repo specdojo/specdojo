@@ -2,15 +2,16 @@
 specdojo:
   id: prj-0001:pjr-bb92-cdfd-overview-propagation
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: high
   owner: ARC
   registered_at: "2026-09-26T11:11:30Z"
+  completed_at: "2026-09-26T16:03:10Z"
 ---
 
 # PJR-BB92 cdfd-overview の変更を下位 CDFD へ追従させる
@@ -55,7 +56,36 @@ specdojo:
 
 ## 6. 対応結果
 
--
+4 文書を追従させ（`f3d35618`）、夜間の grade で確かめた。完了条件をすべて満たす。
+
+### 6.1. grade の結果
+
+`cdfd-overview` は codex、残りの 4 本は agy で評価した（`cdfd-overview` は agy で失敗したため codex で評価し直した）。
+
+| 文書                | score | major | 本項目で直した不整合 |
+| ------------------- | ----- | ----- | -------------------- |
+| `cdfd-overview`     | 79    | 6     | **3 件とも解消**     |
+| `cdfd-do`           | 83    | 3     | —                    |
+| `cdfd-plan`         | 89    | 2     | —                    |
+| `cdfd-check`        | 83    | 2     | —                    |
+| `cdfd-orchestrator` | 97    | 0     | pass                 |
+
+`cdfd-overview` で本項目が対象にした 3 件（Do の入力に Schedule（track）がない、track が状態を持つとする記述、Orchestrator の担当の出どころ）は、いずれも指摘から消えた。
+
+### 6.2. 新しく見つかった不整合
+
+`cdfd-overview` に、本項目と関係のない既存の不整合が 2 件新しく指摘された。
+
+| 指摘                                                                                                                              |
+| --------------------------------------------------------------------------------------------------------------------------------- |
+| 全体概要は Check への要求を「評価・報告要求」に限るが、`cdfd-check` と `cdfd-orchestrator` は P-10 の起動に「生成要求」を含む     |
+| 全体概要は Orchestrator への応答を実行記録の「実行状態」に集約するが、`cdfd-orchestrator` は Plan・Check・Action からの応答を持つ |
+
+以前から残る 4 件（P-01 の起点、Action の承認の境界、PO の承認記録 2 件）とあわせ、別項目での対応を検討する。
+
+### 6.3. 取りこぼしの修正
+
+成果物カタログ `dct-data-flow.yaml` の `cdfd-onboarding` の note に「Detached Unit」が残っていた。[[prj-0001:pjr-34mq-plain-repository-naming-readme]] の範囲（README とガイド 5 本）の外だったため、「別リポジトリ構成」へ改めた。
 
 ## 7. 関連ドキュメント
 

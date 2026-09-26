@@ -5,13 +5,13 @@ path: docs/ja/product/010-business-specs/030-business-model/bps-task-completion.
 target: deliverable
 rubric: grade-rubric-v1
 verdict: pass
-score: 96
-graded_at: "2026-09-26T10:41:19.424Z"
+score: 99
+graded_at: "2026-09-26T15:53:31.810Z"
 graded_by: agy-expert-executor
-content_hash: fb77f6ee077e35a5eb71551e59e74579f64621d6a31716f2c48d6423a775a095
+content_hash: 23e173cda7e3215665b8ceea5dca4258cc489d5b2f75316f745471b273d2a722
 categories:
   consistency:
-    score: 88
+    score: 100
   usability:
     score: 94
   architecture:
@@ -35,8 +35,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -61,16 +61,18 @@ findings:
   - id: F001
     severity: minor
     rule: vp-arc-conciseness
-    line: 38
+    line: 76
     anchor: >-
-      | 変更内容              | 成果物 / deliverable     | 今回のタスクで実現した成果と対象範囲を確認する         |
-      ○                                            | 成果物 / deliverable     |
-    message: 成果物を再評価しない方針が概要や処理ステップと重複しているため、前提条件からは削除するなどの整理を検討してください。
+      | 完了可能                | 最新の grade・finding があり、変更内容が plan と完了条件を満たし、完了を妨げる未充足事項がない         | 完了可能の verdict
+      と根拠が確定し、登録簿と実行記録に一件ずつ完了の記録が残る                           | 評価結果、review の判断記録、登録簿、実行記録        |
+    message: "`E-01` の処置にある「review 自身は成果物を評価せず、古い結果から verdict を推測しない」は概要で説明済みのため、削除を検討してください。"
   - id: F002
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 38
-    anchor: >-
-      | 変更内容              | 成果物 / deliverable     | 今回のタスクで実現した成果と対象範囲を確認する         |
-      ○                                            | 成果物 / deliverable     |
-    message: ルールブック上「前提条件は yes/no で判定できる文にする」と定められていますが、処理の遵守事項になっているため修正または削除が必要です。
+    rule: vp-arc-conciseness
+    line: 87
+    anchor: ""
+    message: 「評価結果が最新でない」の期待する業務成果にある「review が成果物を再評価せず、」は概要で説明済みのため、削除を検討してください。
+done_criteria:
+  satisfied: 5
+  total: 5
+  detail_ref: bps-task-completion-grade-criteria

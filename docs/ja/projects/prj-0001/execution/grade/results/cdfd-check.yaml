@@ -6,9 +6,9 @@ target: deliverable
 rubric: grade-rubric-v1
 verdict: needs-work
 score: 83
-graded_at: "2026-09-26T10:58:23.676Z"
-graded_by: codex-expert-executor
-content_hash: 59ad00770f6e3de09cf5c865c267bf968a352d0c743eabad135472ef9bdd8eef
+graded_at: "2026-09-26T15:34:36.434Z"
+graded_by: agy-expert-executor
+content_hash: e02cebf2a8ee62470a475fede1fcb6267cfcda9d93d320313a938f12c69ed3a8
 categories:
   consistency:
     score: 63
@@ -66,8 +66,8 @@ findings:
       - **期間・組織境界**: SpecDojo を利用するプロジェクトの実行期間を対象とし、QE、PM、ARC を含む参加者と、支援を委譲された AI Agent または runner の協働を扱う。主担当のロールコードと
       member・agent・runner の責任分担は [[prj-0001:pm-roles|ロール一覧]] を正本とし、本書では各プロセスの最終判断者と委譲可能な支援だけを示す。
     message: >-
-      「member・agent・runner の責任分担」の正本を `pm-roles` としているが、同ファイルは Role code と責務だけを定義し, 兼務・実行主体は `pm-members.yaml`、人間と AI
-      Agent の責任分担原則は `cdfd-overview` に委譲しているため, 参照先を責務ごとに分けてください。
+      「member・agent・runner の責任分担」の正本を pm-roles としているが、同ファイルは Role code と責務だけを定義し, 兼務・実行主体は pm-members.yaml, 人間と AI Agent
+      の責任分担原則は cdfd-overview に委譲しているため, 参照先を責務ごとに分けてください。
   - id: F002
     severity: major
     rule: vp-qe-verifiability
@@ -77,19 +77,9 @@ findings:
       業務目的                                                                                        | 主な担当 |
       起動条件                                                                     | 必須性 |
     message: >-
-      P-08〜P-10 の全プロセス表に rulebook が必須とする「完了条件」列がなく、各プロセスの業務目的を達成したかを yes / no
-      で判定できないため、主要出力または正本の確定と対応する完了条件を各行へ追加してください。
+      P-08〜P-10 の全プロセス表に rulebook が必須とする「完了条件」列がなく, 各プロセスの業務目的を達成したかを yes / no で判定できないため,
+      主要出力または正本の確定と対応する完了条件を各行へ追加してください。
   - id: F003
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 19
-    anchor: >-
-      - **期間・組織境界**: SpecDojo を利用するプロジェクトの実行期間を対象とし、QE、PM、ARC を含む参加者と、支援を委譲された AI Agent または runner の協働を扱う。主担当のロールコードと
-      member・agent・runner の責任分担は [[prj-0001:pm-roles|ロール一覧]] を正本とし、本書では各プロセスの最終判断者と委譲可能な支援だけを示す。
-    message: >-
-      rulebook が求める人間と AI Agent の責任分担の対応文書として `pm-roles` だけを示しているが、同文書は実行主体の割当を `pm-members.yaml` へ委譲しているため、`pm-members`
-      と `cdfd-overview` への参照を補ってください。
-  - id: F004
     severity: major
     rule: vp-qe-omissions-consistency
     line: 52
@@ -98,9 +88,9 @@ findings:
       業務目的                                                                                        | 主な担当 |
       起動条件                                                                     | 必須性 |
     message: >-
-      `cdfd-rulebook` の本文要件と完成判定、および `cdfd-template`・`cdfd-sample` が必須とする「完了条件」列が P-08〜P-10
-      の全プロセス表から欠落しているため、各プロセスへ判定可能な完了条件を追加してください。
-  - id: F005
+      cdfd-rulebook の本文要件と完成判定, および cdfd-template・cdfd-sample が必須とする「完了条件」列が P-08〜P-10 の全プロセス表から欠落しているため,
+      各プロセスへ判定可能な完了条件を追加してください。
+  - id: F004
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 304
@@ -110,18 +100,18 @@ findings:
       |
       本グループでの扱い                                                                                                                     
       | 継続・再開条件                                                                                           |
-    message: 主要例外表に `cdfd-rulebook` が必須とする「停止範囲」列がなく、扱い欄に停止内容が混在しているため、確定または起動してはならない後続プロセス・出力・委譲を例外ごとに独立して示してください。
-  - id: F006
+    message: 主要例外表に cdfd-rulebook が必須とする「停止範囲」列がなく, 扱い欄に停止内容が混在しているため, 確定または起動してはならない後続プロセス・出力・委譲を例外ごとに独立して示してください。
+  - id: F005
     severity: minor
-    rule: vp-ux-readability
+    rule: vp-qe-omissions-consistency
     line: 19
     anchor: >-
       - **期間・組織境界**: SpecDojo を利用するプロジェクトの実行期間を対象とし、QE、PM、ARC を含む参加者と、支援を委譲された AI Agent または runner の協働を扱う。主担当のロールコードと
       member・agent・runner の責任分担は [[prj-0001:pm-roles|ロール一覧]] を正本とし、本書では各プロセスの最終判断者と委譲可能な支援だけを示す。
     message: >-
-      適用範囲で Role code の語彙と member・agent・runner の責任分担を一つの `pm-roles` 正本へまとめて表現しており,
-      初見の読者がロール定義と実行主体割当の違いを読み分けにくいため、正本を分けて記述してください。
-  - id: F007
+      rulebook が求める人間と AI Agent の責任分担の対応文書として pm-roles だけを示しているが, 同文書は実行主体の割当を pm-members.yaml へ委譲しているため, pm-members と
+      cdfd-overview への参照を補ってください。
+  - id: F006
     severity: minor
     rule: vp-ux-readability
     line: 52
@@ -129,7 +119,17 @@ findings:
       | プロセス ID | プロセス           |
       業務目的                                                                                        | 主な担当 |
       起動条件                                                                     | 必須性 |
-    message: P-08〜P-10 のプロセス表に完了条件がないため、読者が「業務目的」と「完了したと判断できる事実」を区別できず、各プロセスの終了点を個別入出力表から推測する必要があるため、完了条件列を追加してください。
+    message: P-08〜P-10 のプロセス表に完了条件がないため, 読者が「業務目的」と「完了したと判断できる事実」を区別できず, 各プロセスの終了点を個別入出力表から推測する必要があるため, 完了条件列を追加してください。
+  - id: F007
+    severity: minor
+    rule: vp-ux-readability
+    line: 19
+    anchor: >-
+      - **期間・組織境界**: SpecDojo を利用するプロジェクトの実行期間を対象とし、QE、PM、ARC を含む参加者と、支援を委譲された AI Agent または runner の協働を扱う。主担当のロールコードと
+      member・agent・runner の責任分担は [[prj-0001:pm-roles|ロール一覧]] を正本とし、本書では各プロセスの最終判断者と委譲可能な支援だけを示す。
+    message: >-
+      適用範囲で Role code の語彙と member・agent・runner の責任分担を一つの pm-roles 正本へまとめて表現しており, 初見の読者がロール定義と実行主体割当の違いを読み分けにくいため,
+      正本を分けて記述してください。
   - id: F008
     severity: minor
     rule: vp-ux-user-flow
@@ -138,8 +138,8 @@ findings:
       - **期間・組織境界**: SpecDojo を利用するプロジェクトの実行期間を対象とし、QE、PM、ARC を含む参加者と、支援を委譲された AI Agent または runner の協働を扱う。主担当のロールコードと
       member・agent・runner の責任分担は [[prj-0001:pm-roles|ロール一覧]] を正本とし、本書では各プロセスの最終判断者と委譲可能な支援だけを示す。
     message: >-
-      member・agent・runner の責任分担を確認する導線が Role code の一覧である `pm-roles` に止まり、実行主体の正本 `pm-members` と人間／AI の原則を示す
-      `cdfd-overview` へ直接到達できないため、参照を分けてください。
+      member・agent・runner の責任分担を確認する導線が Role code の一覧である pm-roles に止まり, 実行主体の正本 pm-members と人間／AI の原則を示す cdfd-overview
+      へ直接到達できないため, 参照を分けてください。
 done_criteria:
   satisfied: 3
   total: 3

@@ -2,7 +2,7 @@
 id: cdfd-overview-grade-criteria
 document: cdfd-overview
 path: docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md
-graded_at: "2026-09-26T11:06:03.390Z"
+graded_at: "2026-09-26T16:01:52.224Z"
 graded_by: codex-expert-executor
 content_hash: 6a94820eb865b7f4ca2bb616bcc24144c69b2ed1695c77aff3677be706eba0e3
 summary:
@@ -29,7 +29,7 @@ criteria:
       - ARC
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
-    reason: 図5.2の「完了条件・rulebook 参照」に対し、Orchestrator の主要入力に rulebook 参照がない。
+    reason: Orchestrator の主要入力に図 5.2 の rulebook 参照がなく、Check の主要入力と図 5.1 に P-10 の生成要求もない。
   - id: DC-004
     text: プロセスグループ別 CDFD とユースケース別 CDFD への分割に重複または欠落がないことを、詳細 CDFD 一覧と各領域の対応で確認できること
     roles:

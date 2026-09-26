@@ -4,20 +4,20 @@ document: cdfd-plan
 path: docs/ja/product/010-business-specs/010-data-flow/cdfd-plan.md
 target: deliverable
 rubric: grade-rubric-v1
-verdict: pass
-score: 97
-graded_at: "2026-09-20T05:07:24.369Z"
-graded_by: codex-expert-executor
-content_hash: 19e15a748c25dd2b3e5dab04727d17dcf40b01f58d9208dd0f9b97cda5e5c032
+verdict: needs-work
+score: 89
+graded_at: "2026-09-26T15:49:10.935Z"
+graded_by: agy-expert-executor
+content_hash: fa438c52a36eaa9e43b88df336f876264351918d14ece7b3bb8f46aaea8a30ba
 categories:
   consistency:
-    score: 88
+    score: 75
   usability:
     score: 100
   architecture:
     score: 100
   quality:
-    score: 100
+    score: 83
 viewpoints:
   vp-arc-cross-document-consistency:
     level: 4
@@ -32,11 +32,11 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 2
+    score: 50
   vp-ux-readability:
     level: 4
     score: 100
@@ -54,27 +54,43 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 0
+  major: 2
   minor: 2
   note: 0
 findings:
   - id: F001
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 9
-    message: rulebook 6.1 が適用範囲に対象期間の明示を求めているが、本書は期間または期間を限定しない旨を示していないため、対象期間の記載を追加してください。
-    anchor: "## 2. 適用範囲"
+    severity: major
+    rule: vp-qe-verifiability
+    line: 30
+    anchor: >-
+      | プロセス ID | プロセス   | 業務目的                                                     | 主な担当             |
+      起動条件                                                               | 必須性 |
+    message: 各プロセスの完了を判定する「完了条件」が記述されておらず、プロセスがいつ完了したか（pass/fail）を検証できないため、検証可能な完了条件を定義してください。
   - id: F002
     severity: minor
     rule: vp-qe-omissions-consistency
+    line: 9
+    anchor: "## 2. 適用範囲"
+    message: 前回の指摘が未解消です。rulebook 6.1 が適用範囲に対象期間の明示を求めているが、本書は期間または期間を限定しない旨を示していないため、対象期間の記載を追加してください。
+  - id: F003
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 30
+    anchor: >-
+      | プロセス ID | プロセス   | 業務目的                                                     | 主な担当             |
+      起動条件                                                               | 必須性 |
+    message: rulebook 6.2 がプロセス領域の表に必須としている「完了条件」列が欠落しているため、列を追加してください。
+  - id: F004
+    severity: minor
+    rule: vp-qe-omissions-consistency
     line: 296
-    message: 主要例外表に rulebook 6.7 と template が必須とする「停止範囲」列がなく、「本グループでの扱い」に停止内容が混在しているため、停止対象と対応を別列で識別できるようにしてください。
     anchor: >-
       | --------- | ------------ |
       -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
       | ------------------------------------------------------------------------- |
       --------------------------------------------------------------------------------------------------------------------------------------------------------
       |
+    message: 前回の指摘が未解消です。主要例外表に rulebook 6.7 と template が必須とする「停止範囲」列がなく、「本グループでの扱い」に停止内容が混在しているため、停止対象と対応を別列で識別できるようにしてください。
 done_criteria:
   satisfied: 4
   total: 4
