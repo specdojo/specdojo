@@ -24,8 +24,10 @@ $defs:
       Where the task came from.
       schedule: a task expanded from the deliverable catalog and schedule. It has a
       target deliverable, runs in a worktree, and derives its commit allowlist from targets.
-      register: a project register item (PJR-XXXX) executed by exec run --register. It has
-      no predetermined target deliverable and scopes its commit by working tree snapshot.
+      register: a project register item (PJR-XXXX) executed by exec run --register. When
+      the ticket declares targets, they are copied into the plan frontmatter and target
+      coverage validation is enabled. It scopes its commit by working tree snapshot
+      regardless of whether targets are present.
       job: a materialized Job Run executed by exec run --job. It carries resolved targets
       and records its lifecycle in execution/jobs/runs.
       Omitted means schedule.

@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-6WFA",
+  "run_id": "20260926T123736486Z-d2aec405",
+  "stage": {
+    "role": "executor",
+    "actor": "agy-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-26T12:37:36.486Z",
+    "completed_at": "2026-09-26T12:39:44.071Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-6wfa.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-6wfa-register-plan-targets.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pjr-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/exec-common.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-register.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-types.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-worktree-ops.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register-item.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-register-plan-escape.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register-item.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 12,
+    "summary": ".../controls/project-register/events/pjr-6wfa.yaml | 13 ++++++++\n .../pjr-6wfa-register-plan-targets.md              | 22 ++++++++-----\n docs/ja/specdojo/rulebooks/pjr-rulebook.md         |  2 ++\n docs/specdojo/schemas/v1/exec-common.schema.yaml   |  6 ++--\n .../v1/register-item-frontmatter.schema.yaml       | 13 ++++++++\n src/exec-register.ts                               |  9 +++--\n src/exec-run.ts                                    |  5 +--\n src/exec-types.ts                                  |  8 +++--\n src/exec-worktree-ops.ts                           |  6 ++--\n src/register-item.ts                               |  9 +++++\n tests/src/exec-register-plan-escape.test.ts        | 38 ++++++++++++++++++++++\n tests/src/register-item.test.ts                    | 32 ++++++++++++++++++\n 12 files changed, 142 insertions(+), 21 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-6wfa-register-plan-targets.md docs/ja/specdojo/rulebooks/pjr-rulebook.md",
+      "status": "passed",
+      "summary": "Formatted markdown files"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-6wfa-register-plan-targets.md docs/ja/specdojo/rulebooks/pjr-rulebook.md",
+      "status": "passed",
+      "summary": "Passed without errors"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts catalog validate && npx tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "Catalog and index built successfully"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-6WFA\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\n[dry-run] git merge --no-ff --no-edit exec/T-T-doc-010\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nUpdated: /tmp/specdojo-register-pipeline-e2e-YCDCmB/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)\nUpdated: /tmp/specdojo-register-pipeline-e2e-YCDCmB/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml\nGenerated: /tmp/specdojo-register-pipeline-e2e-YCDCmB/docs/ja/projects/test/controls/project-register/generated/pjr-index.md\nGenerated: /tmp/specdojo-register-pipeline-e2e-YCDCmB/docs/ja/projects/test/controls/project-register/gen…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.2.1 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-6WFA/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-6WFA/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-tem…"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-6WFA\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-lZiEZO/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-07rfHw/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-2T4LUY/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-pswc3r/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-OtZWru/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-HAOTtK/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\nWrote agent stdout: /tmp/specdojo-agent-command-UwqQ9Q/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-njXRFK/outputs/partial.txt\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\n\n Test Files  107 passed (107)\n      Tes…"
+    }
+  ],
+  "final_message": "Updated pjr-6wfa-register-plan-targets.md and pjr-rulebook.md to define and apply the rule for targets in register-origin plans. The core implementation in TS code and schemas was already completed in the worktree. Verified modified artifacts.",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-6WFA/20260926T123736486Z-d2aec405/executor.log",
+      "bytes": 1802,
+      "truncated": false
+    }
+  ]
+}

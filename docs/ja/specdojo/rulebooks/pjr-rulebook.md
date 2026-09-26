@@ -71,6 +71,7 @@ Project Register Documentation Rules
 | `completed_at`  | 完了・却下・決定日時                         | 条件 |
 | `block_reason`  | `waiting` へ遷移した直近の理由               | 任意 |
 | `conclusion`    | 終端時の結論要約                             | 任意 |
+| `targets`       | 変更対象文書の doc id リスト                 | 任意 |
 
 - `status` は文書成熟度、`item_status` は処理状態であり、同じ状態軸として扱わない。
 - `item_type`、`item_status`、`priority` の値は schema の enum だけを使用する。
@@ -130,6 +131,7 @@ Project Register Documentation Rules
 - 対応・判断内容には、実施または採択した範囲と、明示的に対象外とした範囲を記載する。
 - 結果・結論には、完了を判定した根拠と後続対応を記載する。
 - 関連ドキュメントには、判断根拠、変更対象、影響先、追跡先のうち該当する文書を記載する。
+- 本項目の実施において確実に変更する対象文書が分かっている場合は、その文書 ID を Frontmatter の `targets` 配列へ宣言する。宣言した `targets` は agent 実行時の変更網羅検証（target coverage）に用いられる。未知の場合や対象を固定しない場合は宣言を省略する。
 
 ### 5.2. 構造化フィールドと生成
 
