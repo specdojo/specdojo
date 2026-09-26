@@ -56,8 +56,13 @@ task:
     skip_when: empty-output
   command: |
     npm run build
-    tools/grade/run-per-document.sh --run-id {{job_run_id}} --stages 1 --kind {{inputs.kind}} --limit {{inputs.limit}} --changed-only={{inputs.changed_only}} --ungraded={{inputs.ungraded}} --incomplete={{inputs.incomplete}}
-    cat logs/grade/runs/per-document/{{job_run_id}}/results.tsv
+    if tools/grade/run-per-document.sh --run-id {{job_run_id}} --stages 1 --kind {{inputs.kind}} --limit {{inputs.limit}} --changed-only={{inputs.changed_only}} --ungraded={{inputs.ungraded}} --incomplete={{inputs.incomplete}}; then
+      cat logs/grade/runs/per-document/{{job_run_id}}/results.tsv
+    else
+      grade_status=$?
+      printf 'grade pipeline failed: run_id=%s exit_code=%s\n' '{{job_run_id}}' "$grade_status" >&2
+      exit "$grade_status"
+    fi
   analysis:
     agent: gemma-reporter
     description: |
@@ -81,4 +86,4 @@ task:
     - docs/ja/specdojo/templates
 run:
   # scheduled_at は routine の論理実行枠を表す。同じ枠の再試行は同じ Run、次の枠は別 Run にする。
-  idempotency_key: "{{job_id}}:command-v5:{{scheduled_at}}:{{inputs.kind}}:{{inputs.limit}}:{{inputs.changed_only}}:{{inputs.ungraded}}:{{inputs.incomplete}}"
+  idempotency_key: "{{job_id}}:command-v6:{{scheduled_at}}:{{inputs.kind}}:{{inputs.limit}}:{{inputs.changed_only}}:{{inputs.ungraded}}:{{inputs.incomplete}}"

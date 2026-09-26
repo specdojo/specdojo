@@ -418,7 +418,7 @@ describe("grade per-document pipeline", () => {
     expect(readFileSync(fixture.argsFile, "utf8")).toContain("--by codex-expert-executor");
   });
 
-  it("treats a current three-stage state as complete when switching to one stage", () => {
+  it("re-evaluates a current three-stage state when switching to one stage", () => {
     const fixture = makeFixture();
     writeFileSync(
       fixture.pipelineStateFile,
@@ -435,15 +435,17 @@ describe("grade per-document pipeline", () => {
     const result = runPipeline(fixture, {}, ["--stages", "1"]);
 
     expect(result.status, result.stderr).toBe(0);
-    expect(result.stdout).toContain("migrated_stage_total=3");
-    expect(existsSync(fixture.stateFile)).toBe(false);
+    expect(result.stderr).toContain(
+      "reset incompatible state document=docs/ja/specdojo/rulebooks/fixture-rulebook.md persisted_stage_total=3 requested_stage_total=1; re-evaluating",
+    );
+    expect(readFileSync(fixture.stateFile, "utf8")).toBe("1");
     expect(existsSync(fixture.pipelineStateFile)).toBe(false);
     expect(
       readFileSync(
         join(fixture.root, "logs/grade/runs/per-document/fixture-run/results.tsv"),
         "utf8",
       ),
-    ).toContain("\t1\tresumed_completed\t");
+    ).toContain("\t1\tpassed\t");
   });
 
   it("routes deliverables through deliverable grade plans and apply", () => {
@@ -489,6 +491,10 @@ describe("grade per-document pipeline", () => {
     for (const runId of ["fixture-failure-1", "fixture-failure-2", "fixture-failure-3"]) {
       const result = runPipeline(fixture, { FAKE_APPLY_FAIL_FROM: "3" }, [], runId);
       expect(result.status, result.stderr).toBe(0);
+      if (runId === "fixture-failure-3") {
+        expect(result.stdout).toContain("reason=failure_limit");
+        expect(result.stdout).toContain("consecutive_failures=3 max_failures=3");
+      }
     }
     expect(JSON.parse(readFileSync(fixture.pipelineStateFile, "utf8"))).toMatchObject({
       stage_completed: 2,
@@ -506,6 +512,7 @@ describe("grade per-document pipeline", () => {
     expect(reported.status, reported.stderr).toBe(0);
     expect(reported.stdout).toContain("documents=0 exhausted=1");
     expect(reported.stdout).toContain("selected=0 processed=0");
+    expect(reported.stdout).toContain("document retry exhausted:");
     expect(
       readFileSync(
         join(fixture.root, "logs/grade/runs/per-document/fixture-exhausted-report/results.tsv"),
@@ -552,11 +559,51 @@ describe("grade per-document pipeline", () => {
 
     const limited = runPipeline(fixture, { FAKE_RATE_LIMIT_FILE: limiter });
     expect(limited.status).toBe(75);
+    expect(limited.stderr).toContain("grade pipeline aborted: reason=rate_limit exit_code=75");
+    expect(limited.stderr).toContain(
+      "current_document=docs/ja/specdojo/rulebooks/fixture-rulebook.md",
+    );
+    expect(limited.stdout).not.toContain("grade pipeline complete:");
     expect(existsSync(fixture.stateFile)).toBe(false);
 
     const resumed = runPipeline(fixture, { FAKE_RATE_LIMIT_FILE: limiter });
     expect(resumed.status, resumed.stderr).toBe(0);
     expect(readFileSync(fixture.stateFile, "utf8")).toBe("3");
+  });
+
+  it("preserves the grade exit code when the caller enables pipefail", () => {
+    const fixture = makeFixture();
+    const limiter = join(fixture.root, "rate-limit-piped-once");
+    writeFileSync(limiter, "1");
+
+    const result = spawnSync(
+      "bash",
+      [
+        "-o",
+        "pipefail",
+        "-c",
+        '"$1" --run-id fixture-piped --kind rulebook --path docs/ja/specdojo/rulebooks/fixture-rulebook.md --specdojo-bin "$2" --stages 3 | tail -20',
+        "grade-pipeline-test",
+        script,
+        fixture.fakeSpecdojo,
+      ],
+      {
+        cwd: fixture.root,
+        encoding: "utf8",
+        env: {
+          ...process.env,
+          FAKE_STATE_FILE: fixture.stateFile,
+          FAKE_RESULT_FILE: fixture.resultFile,
+          FAKE_PIPELINE_STATE_FILE: fixture.pipelineStateFile,
+          FAKE_ARGS_FILE: fixture.argsFile,
+          FAKE_RATE_LIMIT_FILE: limiter,
+        },
+      },
+    );
+
+    expect(result.status).toBe(75);
+    expect(result.stderr).toContain("grade pipeline aborted: reason=rate_limit exit_code=75");
+    expect(result.stdout).not.toContain("grade pipeline complete:");
   });
 
   it("reuses the initial filtered selection when resuming", () => {
