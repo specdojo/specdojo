@@ -5,6 +5,7 @@ import { describe, expect, it } from "vitest";
 import {
   createProviderCapacityTracker,
   loadExecDefaultsConfig,
+  ProviderConcurrencyGate,
   resolveMaxConcurrency,
   resolveRateLimitDetection,
   resolveRateLimitPolicy,
@@ -206,5 +207,58 @@ describe("createProviderCapacityTracker", () => {
     const tracker = createProviderCapacityTracker(config);
 
     expect(tracker.hasCapacity(undefined)).toBe(true);
+  });
+});
+
+describe("ProviderConcurrencyGate", () => {
+  it("同じ provider の処理を max_concurrency までに制限する", async () => {
+    const gate = new ProviderConcurrencyGate(config);
+    const events: string[] = [];
+    let releaseFirst!: () => void;
+    let markFirstStarted!: () => void;
+    const firstStarted = new Promise<void>((resolve) => {
+      markFirstStarted = resolve;
+    });
+    const holdFirst = new Promise<void>((resolve) => {
+      releaseFirst = resolve;
+    });
+
+    const first = gate.run("opencode", async () => {
+      events.push("first:start");
+      markFirstStarted();
+      await holdFirst;
+      events.push("first:end");
+    });
+    await firstStarted;
+    const second = gate.run("opencode", async () => {
+      events.push("second:start");
+    });
+    await Promise.resolve();
+
+    expect(events).toEqual(["first:start"]);
+    releaseFirst();
+    await Promise.all([first, second]);
+    expect(events).toEqual(["first:start", "first:end", "second:start"]);
+  });
+
+  it("別 provider の処理は待たせない", async () => {
+    const gate = new ProviderConcurrencyGate(config);
+    let releaseOpencode!: () => void;
+    let markOpencodeStarted!: () => void;
+    const opencodeStarted = new Promise<void>((resolve) => {
+      markOpencodeStarted = resolve;
+    });
+    const holdOpencode = new Promise<void>((resolve) => {
+      releaseOpencode = resolve;
+    });
+
+    const capped = gate.run("opencode", async () => {
+      markOpencodeStarted();
+      await holdOpencode;
+    });
+    await opencodeStarted;
+    await expect(gate.run("claude", async () => "done")).resolves.toBe("done");
+    releaseOpencode();
+    await capped;
   });
 });

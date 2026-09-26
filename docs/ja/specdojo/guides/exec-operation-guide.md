@@ -357,6 +357,21 @@ executor と reporter が成功した後の commit・merge・worktree 撤去で�
 
 ### 2.7. register実行の再開
 
+複数の register 項目を worktree で並列実行するときは、`--executor-by` に `PJR-ID=nickname` をカンマ区切りで渡すと、項目ごとに executor を固定できます。従来の `--executor-by <nickname>` は引き続き全項目への共通指定です。項目別指定は起動対象をすべて指定する必要があり、起動対象外の ID や指定漏れがあると、状態遷移や worktree 作成の前にエラーになります。`--dry-run` では各項目について解決した executor とコマンドを確認できます。
+
+```bash
+specdojo exec run \
+  --project <project-id> \
+  --register PJR-0001 PJR-0002 PJR-0003 \
+  --executor-by PJR-0001=codex-expert-executor,PJR-0002=agy-expert-executor,PJR-0003=agy-claude-expert-executor \
+  --reporter-by gemma-reporter \
+  --worktree \
+  --parallel 3 \
+  --dry-run
+```
+
+並列 pipeline の executor と reporter は、それぞれの provider に設定された `max_concurrency` の枠を agent プロセスの実行中だけ使用します。同じ provider の枠が埋まっている stage は待機し、別 provider に空きがあればそちらは並行して進みます。このため、たとえばローカル provider の reporter を `max_concurrency: 1` にしたまま、複数のクラウド provider に executor を分散できます。
+
 register 実行（`exec run --register --worktree`）を executor/reporter パイプラインで走らせた場合、途中で止まった run は止まった段から再開できます。register 実行は exec events を持たないため、再開は `exec resume` ではなく `exec run --register` の `--resume` で行います。
 
 ```bash

@@ -8,6 +8,7 @@ import {
   createProviderCapacityTracker,
   hasMemberCommandSource,
   loadExecDefaultsConfig,
+  ProviderConcurrencyGate,
   resolveMemberCommand,
   resolveRateLimitDetection,
   resolveRateLimitPolicy,
@@ -89,6 +90,7 @@ import {
   formatRegisterRunSummary,
   generateRegisterPlan,
   isRegisterFailureMode,
+  normalizePjrId,
   parseRegisterIds,
   parseRegisterSelectionFilter,
   registerRunExitCode,
@@ -3949,6 +3951,67 @@ export function isRegisterPipelineRequested(
   return !!(opts.executorBy || opts.reporterBy);
 }
 
+export type RegisterExecutorSelection =
+  | { kind: "none" }
+  | { kind: "shared"; executor: string }
+  | { kind: "per-item"; executors: ReadonlyMap<string, string> };
+
+// `--executor-by` keeps its original single-nickname form and additionally accepts a complete
+// PJR-ID-to-nickname map. Requiring complete coverage makes an omitted item an input error instead
+// of silently falling back to a different executor, while rejecting extra IDs catches typos and
+// stale invocations before any register transition or worktree setup occurs.
+export function parseRegisterExecutorSelection(
+  raw: string | undefined,
+  selectedIds: readonly string[],
+): RegisterExecutorSelection {
+  if (raw === undefined) return { kind: "none" };
+  const value = raw.trim();
+  if (!value) throw new Error("--executor-by must not be empty.");
+  if (!value.includes("=")) return { kind: "shared", executor: value };
+
+  const executors = new Map<string, string>();
+  for (const entry of value.split(",")) {
+    const parts = entry.split("=");
+    if (parts.length !== 2) {
+      throw new Error(
+        `Invalid --executor-by item assignment: ${entry}. Use PJR-ID=nickname separated by commas.`,
+      );
+    }
+    const id = normalizePjrId(parts[0]);
+    const executor = parts[1].trim();
+    if (!executor) {
+      throw new Error(`Invalid --executor-by item assignment for ${id}: nickname is empty.`);
+    }
+    if (executors.has(id)) {
+      throw new Error(`Duplicate --executor-by item assignment: ${id}.`);
+    }
+    executors.set(id, executor);
+  }
+
+  const selected = new Set(selectedIds);
+  const outsideTarget = [...executors.keys()].filter((id) => !selected.has(id));
+  if (outsideTarget.length > 0) {
+    throw new Error(
+      `--executor-by item assignments include IDs outside the register execution target: ${outsideTarget.join(", ")}.`,
+    );
+  }
+  const missing = selectedIds.filter((id) => !executors.has(id));
+  if (missing.length > 0) {
+    throw new Error(
+      `--executor-by item assignments must cover every selected register item; missing: ${missing.join(", ")}.`,
+    );
+  }
+  return { kind: "per-item", executors };
+}
+
+function selectedRegisterExecutor(
+  selection: RegisterExecutorSelection,
+  itemId: string,
+): string | undefined {
+  if (selection.kind === "none") return undefined;
+  return selection.kind === "shared" ? selection.executor : selection.executors.get(itemId);
+}
+
 // --register 向けの executor/reporter 解決。Schedule タスクの agent_pipeline と異なり、
 // register 項目には per-item のパイプライン宣言が無いため、owner/role からの自動選択は行わず
 // --executor-by / --reporter-by の明示指定のみを受け付ける。
@@ -4023,6 +4086,7 @@ async function runReporterStage(params: {
   evidencePath: string;
   state: PipelineState;
   statePath: string;
+  providerConcurrencyGate?: ProviderConcurrencyGate;
 }): Promise<{
   exitCode: 0 | 1;
   runResult: RunResult;
@@ -4049,27 +4113,31 @@ async function runReporterStage(params: {
   process.stdout.write(`  Running reporter: ${reporterCandidates[0]?.command ?? ""}\n`);
 
   let reporterAttempts = 0;
-  const reporter = await runReporterWithFormatRetry({
-    plan: params.planPrompt,
-    evidence: params.evidence,
-    mode: "edit",
-    invoke: async (reporterPrompt) => {
-      const reporterOutcome = await runWithRetry(
-        reporterCandidates,
-        reporterPrompt,
-        execDefaults,
-        cwd,
-        env,
-        params.resultPath,
-      );
-      reporterAttempts += reporterOutcome.attempts;
-      return {
-        result: reporterOutcome.result,
-        stdout: reporterOutcome.stdout,
-        stderr: reporterOutcome.stderr,
-      };
-    },
-  });
+  const runReporter = () =>
+    runReporterWithFormatRetry({
+      plan: params.planPrompt,
+      evidence: params.evidence,
+      mode: "edit",
+      invoke: async (reporterPrompt) => {
+        const reporterOutcome = await runWithRetry(
+          reporterCandidates,
+          reporterPrompt,
+          execDefaults,
+          cwd,
+          env,
+          params.resultPath,
+        );
+        reporterAttempts += reporterOutcome.attempts;
+        return {
+          result: reporterOutcome.result,
+          stdout: reporterOutcome.stdout,
+          stderr: reporterOutcome.stderr,
+        };
+      },
+    });
+  const reporter = params.providerConcurrencyGate
+    ? await params.providerConcurrencyGate.run(reporterCandidates[0]?.provider, runReporter)
+    : await runReporter();
 
   let exitCode: 0 | 1 = 1;
   let blockReason: string | undefined;
@@ -4145,6 +4213,7 @@ async function runAgentPipeline(params: {
   execDefaults: ExecDefaultsConfig;
   resumedExecutor?: boolean;
   initialChangeTargets?: readonly string[];
+  providerConcurrencyGate?: ProviderConcurrencyGate;
 }): Promise<{
   exitCode: 0 | 1;
   runResult: RunResult;
@@ -4208,14 +4277,11 @@ async function runAgentPipeline(params: {
     },
   );
   const changesBeforeAttempt = snapshotWorktreeChanges(cwd);
-  const outcome = await runWithRetry(
-    [executor],
-    executorPrompt,
-    execDefaults,
-    cwd,
-    env,
-    resultPath,
-  );
+  const runExecutor = () =>
+    runWithRetry([executor], executorPrompt, execDefaults, cwd, env, resultPath);
+  const outcome = params.providerConcurrencyGate
+    ? await params.providerConcurrencyGate.run(executor.provider, runExecutor)
+    : await runExecutor();
   const recorded = recordExecutorEvidence({
     repoRoot,
     worktreePath: cwd,
@@ -4306,6 +4372,7 @@ async function runAgentPipeline(params: {
     evidencePath: recorded.evidencePath,
     state,
     statePath: stateLocation.path,
+    providerConcurrencyGate: params.providerConcurrencyGate,
   });
 
   return {
@@ -4338,6 +4405,7 @@ type RegisterRunContext = {
   repoRoot: string;
   roster: MemberRoster | null;
   execDefaults: ExecDefaultsConfig;
+  providerConcurrencyGate: ProviderConcurrencyGate;
   registerCommit: boolean;
   // worktree モードでは成果物を worktree に隔離し、状態遷移は root で直列化する。
   worktree: boolean;
@@ -4507,6 +4575,7 @@ async function runSingleRegisterItem(
       planPrompt: prompt,
       resultPath,
       execDefaults: context.execDefaults,
+      providerConcurrencyGate: context.providerConcurrencyGate,
     });
     exitCode = pipelineOutcome.exitCode;
     pipelineBlockReason = pipelineOutcome.blockReason;
@@ -5379,6 +5448,7 @@ async function runSingleRegisterItemWorktree(
       planPrompt: prompt,
       resultPath: worktreeResultPathForPipeline,
       execDefaults: context.execDefaults,
+      providerConcurrencyGate: context.providerConcurrencyGate,
     });
     agentResult = pipelineOutcome.runResult;
     stderr = pipelineOutcome.blockReason ?? "";
@@ -5762,6 +5832,7 @@ async function resumeSingleRegisterItemWorktree(
       execDefaults: context.execDefaults,
       resumedExecutor: true,
       initialChangeTargets: target.initialChanges,
+      providerConcurrencyGate: context.providerConcurrencyGate,
     });
 
     const finalize = async (): Promise<RegisterItemSummary> =>
@@ -5821,6 +5892,7 @@ async function resumeSingleRegisterItemWorktree(
     evidencePath: resolve(worktree.path, target.evidenceRef),
     state: target.state,
     statePath: target.statePath,
+    providerConcurrencyGate: context.providerConcurrencyGate,
   });
 
   const finalize = async (): Promise<RegisterItemSummary> =>
@@ -5874,13 +5946,19 @@ async function runRegisterMode(opts: RunOpts): Promise<void> {
         selectionFilter,
       ).map((item) => item.id)
     : undefined;
-  if (selectedIds?.length === 0) {
-    process.stdout.write("No matching register items.\n");
-    return;
-  }
   const { ids, duplicates } = selectedIds
     ? { ids: selectedIds, duplicates: [] }
     : parseRegisterIds(opts.register);
+  const executorSelection = parseRegisterExecutorSelection(opts.executorBy, ids);
+  if (ids.length === 0) {
+    process.stdout.write("No matching register items.\n");
+    return;
+  }
+  const hasExecutorSelection = executorSelection.kind !== "none";
+  const optsForItem = (pjrId: string): RunOpts => ({
+    ...opts,
+    executorBy: selectedRegisterExecutor(executorSelection, pjrId),
+  });
   for (const duplicate of duplicates) {
     process.stdout.write(`Skipping duplicate register item id: ${duplicate}\n`);
   }
@@ -5894,7 +5972,7 @@ async function runRegisterMode(opts: RunOpts): Promise<void> {
   // 個別に許可し、省略時は state に記録された actor を使う。
   if (
     !opts.resume &&
-    ((opts.executorBy && !opts.reporterBy) || (!opts.executorBy && opts.reporterBy))
+    ((hasExecutorSelection && !opts.reporterBy) || (!hasExecutorSelection && opts.reporterBy))
   ) {
     throw new Error("--register pipeline execution requires both --executor-by and --reporter-by.");
   }
@@ -5946,6 +6024,7 @@ async function runRegisterMode(opts: RunOpts): Promise<void> {
     );
     const pipelineMode = isRegisterPipelineRequested(opts);
     for (const pjrId of ids) {
+      const itemOpts = optsForItem(pjrId);
       const { item } = resolveRegisterRunTarget(projectId, pjrId);
       const category = requireRunnableRegisterItem(item);
       const stem = buildInPlaceStem(pjrId.toLowerCase());
@@ -5955,7 +6034,7 @@ async function runRegisterMode(opts: RunOpts): Promise<void> {
       if (pipelineMode) {
         const { executor, reporterCandidates } = resolveRegisterPipelineCommand(
           roster,
-          opts,
+          itemOpts,
           execDefaults,
         );
         process.stdout.write(`[dry-run]   executor: ${executor.actor}\n`);
@@ -5963,7 +6042,7 @@ async function runRegisterMode(opts: RunOpts): Promise<void> {
         process.stdout.write(`[dry-run]   reporter: ${reporterCandidates[0]?.actor}\n`);
         process.stdout.write(`[dry-run]   reporter command: ${reporterCandidates[0]?.command}\n`);
       } else {
-        const { command, actor } = resolveRegisterCommand(item, roster, opts, execDefaults);
+        const { command, actor } = resolveRegisterCommand(item, roster, itemOpts, execDefaults);
         process.stdout.write(`[dry-run]   actor: ${actor}\n`);
         process.stdout.write(`[dry-run]   command: ${command}\n`);
       }
@@ -5987,6 +6066,7 @@ async function runRegisterMode(opts: RunOpts): Promise<void> {
     repoRoot,
     roster,
     execDefaults,
+    providerConcurrencyGate: new ProviderConcurrencyGate(execDefaults),
     registerCommit: !!opts.registerCommit,
     worktree: useWorktree,
     worktreeBase,
@@ -6006,8 +6086,8 @@ async function runRegisterMode(opts: RunOpts): Promise<void> {
   // は通らないため、通常実行と同じ並列・直列の枠だけを共有する。
   const runItem = (pjrId: string, lifecycleLock?: AsyncLock): Promise<RegisterItemSummary> =>
     opts.resume
-      ? resumeSingleRegisterItemWorktree(context, opts, pjrId, lifecycleLock)
-      : runSingleRegisterItemWorktree(context, opts, pjrId, lifecycleLock);
+      ? resumeSingleRegisterItemWorktree(context, optsForItem(pjrId), pjrId, lifecycleLock)
+      : runSingleRegisterItemWorktree(context, optsForItem(pjrId), pjrId, lifecycleLock);
 
   if (useWorktree && parallel > 1) {
     // 並列実行: 成果物は worktree ごとに隔離し、状態遷移は lifecycleLock で直列化する。
@@ -6038,7 +6118,7 @@ async function runRegisterMode(opts: RunOpts): Promise<void> {
       }
       const summary = useWorktree
         ? await runItem(pjrId)
-        : await runSingleRegisterItem(context, opts, pjrId);
+        : await runSingleRegisterItem(context, optsForItem(pjrId), pjrId);
       summaries.push(summary);
       if (summary.outcome === "failure" && failureMode === "stop") stopped = true;
     }
@@ -6152,7 +6232,7 @@ export function registerRunCommand(exec: Command): void {
   );
   rcmd.option(
     "--executor-by <nickname>",
-    "pm-members.yaml executor agent nickname for agent_pipeline tasks",
+    "Executor nickname; with --register, also accepts PJR-ID=nickname assignments separated by commas",
   );
   rcmd.option(
     "--reporter-by <nickname>",

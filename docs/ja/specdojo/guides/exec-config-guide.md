@@ -125,7 +125,7 @@ pipeline 専用 agent には `stage_role: executor` または `stage_role: repor
 2. `priority` 昇順（同値なら次へ）。
 3. 余剰 capabilities 数の少ない順。
 
-ソート後、`exec-defaults.yaml` の `providers.<provider>.max_concurrency` が設定された provider について、現在実行中の agent が上限に達していれば、その provider の候補を除外します。別 provider の候補が残ればそれを実行者に繰り上げます。すべての候補の provider が上限に達している場合は、claim も worktree 生成も行わずにそのタスクを繰り延べます（タスクは `todo` のまま保持され、取りこぼしません）。`--loop` 実行では、agent 終了時に provider の枠を解放し、空いた `--parallel` 枠へ次の Ready タスクを投入します。`max_concurrency` はグローバルな `--parallel` を下げないため、他 provider は並列実行を維持します。`max_concurrency` は auto 選択のみに適用し、phase の `agent`、`--by` / `--edit-by` / `--review-by` / `--executor-by` / `--reporter-by` による明示指定や resume 実行には適用しません。
+ソート後、`exec-defaults.yaml` の `providers.<provider>.max_concurrency` が設定された provider について、現在実行中の agent が上限に達していれば、その provider の候補を除外します。別 provider の候補が残ればそれを実行者に繰り上げます。すべての候補の provider が上限に達している場合は、claim も worktree 生成も行わずにそのタスクを繰り延べます（タスクは `todo` のまま保持され、取りこぼしません）。`--loop` 実行では、agent 終了時に provider の枠を解放し、空いた `--parallel` 枠へ次の Ready タスクを投入します。`max_concurrency` はグローバルな `--parallel` を下げないため、他 provider は並列実行を維持します。auto 選択以外では、`exec run --register --worktree --parallel` の executor/reporter pipeline（`--resume` を含む）に適用し、項目ごとの各 stage を provider の空き枠まで待機させます。その他の Schedule phase の `agent`、`--by` / `--edit-by` / `--review-by` / `--executor-by` / `--reporter-by` による明示指定や Schedule task の resume 実行には適用しません。
 
 phase の by-name agent が rate limit になった場合は、別 agent へ自動フォールバックせず待機状態にします。`exec resume` は同じ agent を再開し、運用者が差し替える場合だけ stage override を指定します。
 
@@ -233,7 +233,7 @@ providers:
 
 `by_nickname` は、同じ provider の一部 member だけモデルなどを差し替える用途です。層をまたぐ同名変数は意図的な上書きとして許可されます。一方、`nickname`、`mode`、`proficiency` は組み込み変数なので、どの `command_params` 層でも再定義できません。
 
-`max_concurrency` は、同一ホストの単一モデルを共有する provider（例: ローカル Ollama の `opencode`）が複数同時起動でメモリ競合・モデルロード待ちにより不安定になるのを防ぐために使います。グローバルな `--parallel` を下げずに、その provider だけを直列化できます。
+`max_concurrency` は、同一ホストの単一モデルを共有する provider（例: ローカル Ollama の `opencode`）が複数同時起動でメモリ競合・モデルロード待ちにより不安定になるのを防ぐために使います。グローバルな `--parallel` を下げずに、その provider だけを直列化できます。register の並列 pipeline では executor と reporter の各 stage が個別に枠を取得するため、別 provider の executor を並列化しつつ、同一 provider の reporter だけを直列化できます。
 
 ```yaml
 providers:

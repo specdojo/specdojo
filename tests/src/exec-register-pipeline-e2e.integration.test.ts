@@ -283,6 +283,17 @@ function withRepo(fn: (fixture: Fixture) => Promise<void> | void): Promise<void>
           "    capabilities: []",
           "    proficiency: normal",
           "    priority: 1",
+          "  - nickname: exec-2",
+          "    display_name: exec-2",
+          "    email: null",
+          "    roles: []",
+          "    type: agent",
+          "    provider: codex",
+          "    mode: edit",
+          "    stage_role: executor",
+          "    capabilities: []",
+          "    proficiency: normal",
+          "    priority: 1",
           "  - nickname: report-1",
           "    display_name: report-1",
           "    email: null",
@@ -407,6 +418,69 @@ afterEach(() => {
 
 describe("exec run --register executor/reporter pipeline (E2E)", () => {
   it(
+    "resolves per-item --executor-by assignments in dry-run and rejects assignments outside the target",
+    { timeout: 30_000 },
+    async () => {
+      await withRepo(async ({ root, worktreeBase }) => {
+        writeFileSync(
+          join(root, REGISTER_REL, "pjr-cd34-pipeline-test.md"),
+          buildTicket("PJR-CD34"),
+          "utf8",
+        );
+        const stdout: string[] = [];
+        vi.spyOn(process.stdout, "write").mockImplementation((chunk) => {
+          stdout.push(String(chunk));
+          return true;
+        });
+        vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+
+        await runExec([
+          "run",
+          "--project",
+          "test",
+          "--register",
+          "PJR-AB12",
+          "PJR-CD34",
+          "--executor-by",
+          "PJR-AB12=exec-1,PJR-CD34=exec-claude-protected-write",
+          "--reporter-by",
+          "report-1",
+          "--worktree",
+          "--worktree-base",
+          worktreeBase,
+          "--parallel",
+          "2",
+          "--dry-run",
+        ]);
+
+        const dryRunOutput = stdout.join("");
+        expect(dryRunOutput).toMatch(/PJR-AB12[\s\S]*executor: exec-1/);
+        expect(dryRunOutput).toMatch(/PJR-CD34[\s\S]*executor: exec-claude-protected-write/);
+        expect(process.exitCode ?? 0).toBe(0);
+
+        stdout.length = 0;
+        await runExec([
+          "run",
+          "--project",
+          "test",
+          "--register",
+          "PJR-AB12",
+          "--executor-by",
+          "PJR-AB12=exec-1,PJR-CD34=exec-claude-protected-write",
+          "--reporter-by",
+          "report-1",
+          "--dry-run",
+        ]);
+
+        expect(stdout.join("")).toContain(
+          "--executor-by item assignments include IDs outside the register execution target: PJR-CD34.",
+        );
+        expect(process.exitCode).toBe(1);
+      });
+    },
+  );
+
+  it(
     "resolves --executor-by/--reporter-by, runs both stages, and transitions the item to review",
     { timeout: 60_000 },
     async () => {
@@ -450,6 +524,67 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
         ) as { attempt_changes?: unknown };
         expect(evidence.attempt_changes).toBeUndefined();
 
+        expect(process.exitCode ?? 0).toBe(0);
+      });
+    },
+  );
+
+  it(
+    "runs two register items in parallel with different per-item executors",
+    { timeout: 120_000 },
+    async () => {
+      await withRepo(async ({ root, worktreeBase }) => {
+        writeFileSync(
+          join(root, REGISTER_REL, "pjr-cd34-pipeline-test.md"),
+          buildTicket("PJR-CD34"),
+          "utf8",
+        );
+        // 並行に走る 2 項目がどちらも登録簿の生成物を作り直すため、生成物を git で管理
+        // していると統合で add/add の衝突になる。このリポジトリと同じく generated/ を
+        // 管理外にする。利用者のリポジトリでこの設定が作られない問題は別途扱う。
+        writeFileSync(join(root, ".gitignore"), "docs/**/generated/*\n", "utf8");
+        git(root, "rm", "-r", "--cached", "--quiet", "--ignore-unmatch", "docs");
+        git(root, "add", "-A");
+        git(root, "commit", "-m", "add second register item");
+        vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+        vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+
+        await runExec([
+          "run",
+          "--project",
+          "test",
+          "--register",
+          "PJR-AB12",
+          "PJR-CD34",
+          "--executor-by",
+          "PJR-AB12=exec-1,PJR-CD34=exec-2",
+          "--reporter-by",
+          "report-1",
+          "--worktree",
+          "--worktree-base",
+          worktreeBase,
+          "--parallel",
+          "2",
+        ]);
+
+        for (const [id, expectedExecutor] of [
+          ["PJR-AB12", "exec-1"],
+          ["PJR-CD34", "exec-2"],
+        ] as const) {
+          const ticketName =
+            id === "PJR-AB12" ? "pjr-ab12-pipeline-test.md" : "pjr-cd34-pipeline-test.md";
+          expect(readFileSync(join(root, REGISTER_REL, ticketName), "utf8")).toContain(
+            "item_status: review",
+          );
+          const evidenceDir = join(root, EXECUTION_REL, "exec", "evidence", id);
+          const runDirs = readdirSync(evidenceDir);
+          expect(runDirs).toHaveLength(1);
+          const state = JSON.parse(
+            readFileSync(join(evidenceDir, runDirs[0], "pipeline-state.json"), "utf8"),
+          ) as { stages: { executor: { actor: string }; reporter: { actor: string } } };
+          expect(state.stages.executor.actor).toBe(expectedExecutor);
+          expect(state.stages.reporter.actor).toBe("report-1");
+        }
         expect(process.exitCode ?? 0).toBe(0);
       });
     },

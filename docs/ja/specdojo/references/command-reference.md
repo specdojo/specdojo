@@ -382,13 +382,13 @@ specdojo schedule strategy generate \
 | `--on-failure <stop\|continue>` | 途中失敗時に残りのIDを停止するか継続するか（既定は `stop`）                                            | `run --register`                                 |
 | `--resume`                      | run が止まった段（executor / reporter / 統合）を既存 worktree と checkpoint で再開する                 | `run --register --worktree`                      |
 | `--force-restart`               | 再開可能な run の成果があっても、worktree を破棄して項目全体を再実行する                               | `run --register --worktree`                      |
-| `--executor-by <nickname>`      | executor/reporter パイプラインの executor 段に使う agent nickname                                      | `run --auto` / `resume` / `run --register`       |
+| `--executor-by <nickname>`      | executor 段の agent。register では `PJR-ID=nickname,...` による項目別指定も可能                        | `run --auto` / `resume` / `run --register`       |
 | `--reporter-by <nickname>`      | executor/reporter パイプラインの reporter 段に使う agent nickname                                      | `run --auto` / `resume` / `run --register`       |
 | `--due`                         | 再開時刻を迎えた利用制限延期 task を対象にする                                                         | `resume`                                         |
 
 agent の指定は roster nickname（`pm-members.yaml`）へ一本化します。手動ターゲット（`--task` / `--register` など）では `--by <nickname>`、`--auto` バッチでは mode 別に `--edit-by` / `--review-by` を使い、バッチ起動は `--auto` に一本化します。解決の優先順位は「単体指定（`--by`）＞ mode 別指定（`--edit-by` / `--review-by`）＞ 自動選択」です。
 
-Schedule タスクの `agent_pipeline`（`sch-strategy-<track>.yaml` の phase 設定）と同じ executor/reporter 2段階（`stage_role: executor` が成果物を編集・検証し、`stage_role: reporter` が evidence から result を描画する）は、`--register` でも `--executor-by <nickname>` と `--reporter-by <nickname>` を **両方セットで** 指定すると使えます。register 項目は Schedule のような per-item のパイプライン宣言を持たないため、owner・role からの自動選択は行わず、この2フラグの明示指定のみで切り替わります。片方だけの指定はエラーになります。
+Schedule タスクの `agent_pipeline`（`sch-strategy-<track>.yaml` の phase 設定）と同じ executor/reporter 2段階（`stage_role: executor` が成果物を編集・検証し、`stage_role: reporter` が evidence から result を描画する）は、`--register` でも `--executor-by <nickname>` と `--reporter-by <nickname>` を **両方セットで** 指定すると使えます。register 項目は Schedule のような per-item のパイプライン宣言を持たないため、owner・role からの自動選択は行わず、この2フラグの明示指定のみで切り替わります。複数項目では `--executor-by PJR-0001=exec-a,PJR-0002=exec-b` のような項目別指定も使用できます。項目別指定は選択した全項目を含む必要があり、対象外 ID と指定漏れは実行前にエラーになります。片方だけの指定もエラーになります。
 
 `exec scheduler` の claim 保護と選択戦略、`--auto --loop --parallel` の枠管理は [Schedule実行運用ガイド](../guides/schedule-operation-guide.md)、`exec reopen` の実行条件は [exec運用ガイド](../guides/exec-operation-guide.md) を参照します。
 
@@ -430,6 +430,9 @@ specdojo exec run --project prj-0001 --register PJR-0012 PJR-0013 --worktree --p
 
 # executor/reporter パイプラインで実行する（両フラグ必須）
 specdojo exec run --project prj-0001 --register PJR-0012 --executor-by claude-expert-executor --reporter-by claude-reporter --worktree
+
+# 項目ごとに executor を分け、解決結果を確認してから並列実行する
+specdojo exec run --project prj-0001 --register PJR-0012 PJR-0013 --executor-by PJR-0012=codex-expert-executor,PJR-0013=claude-expert-executor --reporter-by gemma-reporter --worktree --parallel 2 --dry-run
 
 # 途中で止まった項目を、止まった段（executor、reporter、または統合）から再開する
 specdojo exec run --project prj-0001 --register PJR-0012 --worktree --resume

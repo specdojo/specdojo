@@ -11,6 +11,7 @@ import {
 } from "../../src/exec-register.js";
 import {
   isRegisterPipelineRequested,
+  parseRegisterExecutorSelection,
   resolveRegisterCommand,
   resolveRegisterPipelineCommand,
 } from "../../src/exec-run.js";
@@ -264,6 +265,40 @@ describe("isRegisterPipelineRequested", () => {
 
   it("どちらも無指定なら false を返す", () => {
     expect(isRegisterPipelineRequested({})).toBe(false);
+  });
+});
+
+describe("parseRegisterExecutorSelection", () => {
+  it("従来の単一 nickname を全項目共通指定として扱う", () => {
+    expect(parseRegisterExecutorSelection("exec-1", ["PJR-0001", "PJR-0002"])).toEqual({
+      kind: "shared",
+      executor: "exec-1",
+    });
+  });
+
+  it("項目ごとの指定を ID 正規化後の map にする", () => {
+    const selection = parseRegisterExecutorSelection("pjr-0001=exec-codex,PJR-0002=exec-claude", [
+      "PJR-0001",
+      "PJR-0002",
+    ]);
+
+    expect(selection.kind).toBe("per-item");
+    expect(selection.kind === "per-item" ? Object.fromEntries(selection.executors) : {}).toEqual({
+      "PJR-0001": "exec-codex",
+      "PJR-0002": "exec-claude",
+    });
+  });
+
+  it("起動対象外 ID、指定漏れ、重複指定を拒否する", () => {
+    expect(() =>
+      parseRegisterExecutorSelection("PJR-0001=exec-1,PJR-9999=exec-2", ["PJR-0001"]),
+    ).toThrow(/outside the register execution target.*PJR-9999/);
+    expect(() =>
+      parseRegisterExecutorSelection("PJR-0001=exec-1", ["PJR-0001", "PJR-0002"]),
+    ).toThrow(/missing: PJR-0002/);
+    expect(() =>
+      parseRegisterExecutorSelection("PJR-0001=exec-1,PJR-0001=exec-2", ["PJR-0001"]),
+    ).toThrow(/Duplicate.*PJR-0001/);
   });
 });
 
