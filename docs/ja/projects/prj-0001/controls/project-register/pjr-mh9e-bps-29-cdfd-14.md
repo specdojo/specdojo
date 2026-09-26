@@ -2,15 +2,16 @@
 specdojo:
   id: prj-0001:pjr-mh9e-bps-29-cdfd-14
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: BA
   registered_at: "2026-09-26T05:44:30Z"
+  completed_at: "2026-09-26T14:49:52Z"
   block_reason: "integrate failed: git status failed: fatal: detected dubious ownership in repository at '/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MH9E' (args: --porcelain=v1 -z --untracked-files=all)"
 ---
 
@@ -155,6 +156,27 @@ specdojo:
 - `catalog build`、`register build`、`index build` は終了コード 0 で完了した。
 - 14 グループの連番、31 件の一意な `local_id`、既存 29 件の領域内プロセス参照、新規 2 件の登録値、全件の `done_criteria` を機械確認した。
 - BPS 本文 2 件は本項目で変更していないため、`grade list --changed-only` の再評価対象は 0 件だった。保存済み grade の hash と finding 数を `grade validate` で検証し、2 件とも error 0、`vp-arc-cross-document-consistency` は level 4、同観点の finding は 0 件であり、増加していないことを確認した。
+
+### 6.3. 評価（2026-09-26 夜間）
+
+完了条件をすべて満たす。
+
+| 完了条件                                           | 判定                                                                      |
+| -------------------------------------------------- | ------------------------------------------------------------------------- |
+| 29 件の `overview` が現行 CDFD の P 番号を指す     | 満たす                                                                    |
+| 14 領域それぞれに BPS があるか、不要な理由が分かる | 満たす。`P-01`〜`P-14` のすべてに対応する BPS がある                      |
+| `P-08` と `P-11` の BPS がカタログへ登録されている | 満たす。先行作成した 2 件と `local_id` と `path` が一致                   |
+| 各 BPS の `done_criteria`                          | 満たす。31 件すべてにある                                                 |
+| 分割の見直しの理由が記録されている                 | 満たす（`カタログの再編` を参照）                                         |
+| `catalog validate`                                 | 通過。警告 2 件（`uis-index`、`bds-index` の `based_on`）は以前からのもの |
+
+review・finalize の責務を Do から外し、`bps-task-review-finalize` を成果検証（`P-07-03`）へ絞った。review phase を Action（`P-11`）へ移した結論と整合する。
+
+ただし参照の互換のため `local_id` は `bps-task-review-finalize` のまま残された。**名前が中身（成果検証）と合っていない。** 文書を作るときに改名するかを判断する。
+
+### 6.4. 実行の経緯
+
+PJR-AG7B と並行で codex により実行し、成果は commit されたが、統合段の `git status` が `dubious ownership` で失敗した。PJR-BX79 の再試行は働いたが 2 回とも失敗した。直後に統合段だけを resume すると、再試行 0 回で成功した。所有者（uid 1000）と `GIT_CONFIG_GLOBAL` はどちらも正しく、**並行実行の最中にだけ一時的に起きる事象**と見られる。すぐの再試行 1 回では収まらない場合がある。
 
 ## 7. 関連ドキュメント
 

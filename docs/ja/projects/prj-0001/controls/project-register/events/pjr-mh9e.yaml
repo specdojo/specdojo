@@ -100,3 +100,19 @@
       from: in-progress
       to: review
   previous_event_id: reg_1c432ffad05a4a4f85614a781b30e56e
+- v: 1
+  id: reg_35c87345eb7546bcb2d102c47afb85f2
+  ts: "2026-09-26T14:49:52Z"
+  action: close
+  actor: manual
+  from_status: review
+  to_status: done
+  reason: カタログの BPS を現行 CDFD の 14 領域へ再編し、BPS 2 件を登録した。31 件すべてに done_criteria がある。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-26"
+  previous_event_id: reg_608a803ad2e24d0d86a14563983e33e4
