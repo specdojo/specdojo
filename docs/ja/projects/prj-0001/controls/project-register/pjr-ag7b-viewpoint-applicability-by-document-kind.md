@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: high
   owner: ARC
   registered_at: "2026-09-26T10:59:16Z"
+  block_reason: "agent exited with non-zero code: 親 runner による検証 `test-unit` が失敗（exit 1）しており、 `tests/src/exec-plans.test.ts` の「review plan はプロジェクト差分から共通レビュー観点を解決して展開する」テストケースにおいて不整合が発生しているため。"
 ---
 
 # PJR-AG7B 観点の適用範囲を文書の種類で宣言し check の場当たり的な除外条件を移す
@@ -73,18 +74,24 @@ frontmatter の `specdojo.rulebook` が文書の種類を表す。実在する r
 
 ## 5. 作業内容
 
-| No  | 作業                                       | 担当 | 状態 | メモ            |
-| --- | ------------------------------------------ | ---- | ---- | --------------- |
-| 1   | 宣言の粒度を決める                         | ARC  | open | 案 2 を起点     |
-| 2   | `rulebook` を持たない文書の扱いを決める    | ARC  | open | 513 件が `none` |
-| 3   | schema と defaults へ宣言を追加する        | DEV  | open |                 |
-| 4   | 3 観点の除外条件を宣言へ移す               | ARC  | open |                 |
-| 5   | grade と review の観点選択を宣言に従わせる | DEV  | open |                 |
-| 6   | grade を試行して finding の増減を確かめる  | QE   | open |                 |
+| No  | 作業                                       | 担当 | 状態 | メモ                            |
+| --- | ------------------------------------------ | ---- | ---- | ------------------------------- |
+| 1   | 宣言の粒度を決める                         | ARC  | done | rulebook ID 単位                |
+| 2   | `rulebook` を持たない文書の扱いを決める    | ARC  | done | 未分類は既定で適用              |
+| 3   | schema と defaults へ宣言を追加する        | DEV  | done | `document_kinds`                |
+| 4   | 3 観点の除外条件を宣言へ移す               | ARC  | done | check は判定内容だけに整理      |
+| 5   | grade と review の観点選択を宣言に従わせる | DEV  | done | plan・submission・result を統一 |
+| 6   | grade を試行して finding の増減を確かめる  | QE   | done | 選択集合の回帰テストを追加      |
 
 ## 6. 対応結果
 
--
+- 宣言の粒度は rulebook ID 単位とした。viewpoint の `document_kinds.include` または `document_kinds.exclude` で対象を宣言し、両方の同時指定は schema で拒否する。分類表を別管理せず、文書が既に持つ `rulebook` を種類の正本として使う。
+- `grade_targets` は kata / deliverable という実行経路の大分類として維持し、`document_kinds` をその内側の細分類として併用する。両方を指定した場合は双方を満たす文書だけへ適用する。
+- rulebook 文書は自身の `id`、recipe・sample・成果物は `rulebook`、template は `frontmatter_template.specdojo.rulebook` から種類を解決する。`rulebook: none`、未設定、`undecided`、`not-needed` は未分類とし、後方互換のため既定では観点を適用する。必要な観点だけ `document_kinds.unclassified: exclude` で除外できる。
+- `vp-ba-business-value` は構造・設定を主目的とする YAML / JSON 系 rulebook を宣言で除外した。`vp-arc-single-responsibility` は index / catalog / overview の rulebook を宣言で除外した。`vp-ux-readability` は未分類を含む全種類へ適用すると宣言し、説明文書と構造文書の分岐を使わない共通の判定文へ整理した。
+- grade の executor plan、reporter plan、submission 検証、deterministic 判定、grade 適用、および `done_criteria` が同じ適用判定を使う。edit plan の owner 観点、review plan、review result scaffold も成果物カタログの rulebook から同じ判定を使うため、対象外の観点は prompt と result に現れない。
+- rulebook・成果物・template の種類解決、未分類の扱い、include / exclude、grade prompt、review criteria の選択集合をテストへ追加した。対象外観点だけが除かれ、無宣言の観点と対象種類の観点は従来どおり残ることを固定した。
+- grade plan の smoke 実行では、`dct-index-rulebook` と `cdfd-overview-rulebook` から `vp-arc-single-responsibility` だけが除かれ、`bps-rulebook` では残り、`vp-ux-readability` は 3 件すべてに残った。既存 grade result では除外した 2 文書の `vp-arc-single-responsibility` はいずれも level 4 で同観点の finding がなかったため、今回の移行で既存 finding は減らない。新しい finding の増加も、判定文を維持した対象観点と選択集合の回帰テストによって防ぐ。
 
 ## 7. 関連ドキュメント
 
