@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { existsSync } from "node:fs";
 import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -21,6 +21,11 @@ async function makeClaudeTemplateFixture(packageRoot: string): Promise<void> {
   await writeFile(path.join(templateDir, "settings.report.json"), '{"mode":"report"}\n', "utf8");
   await writeFile(path.join(templateDir, "README.md"), "# readme\n", "utf8");
 }
+
+afterEach(() => {
+  vi.restoreAllMocks();
+  process.exitCode = undefined;
+});
 
 describe("specdojoPackageRootDir", () => {
   it("resolves the directory that contains package.json", () => {
@@ -186,13 +191,12 @@ describe("runProviderScaffold", () => {
       );
 
       // stdoutをモックしないとログが出るがとりあえずOKとする
-      const originalStdout = process.stdout.write;
-      process.stdout.write = () => true as any;
+      vi.spyOn(process.stdout, "write").mockImplementation(() => true);
 
       try {
         await runProviderScaffold("claude", { packageRoot, repoRoot, force: false, dryRun: false });
       } finally {
-        process.stdout.write = originalStdout;
+        vi.restoreAllMocks();
       }
 
       const pkg = JSON.parse(await readFile(path.join(repoRoot, "package.json"), "utf8"));
@@ -206,7 +210,7 @@ describe("runProviderScaffold", () => {
     }
   });
 
-  it("does not overwrite existing npm scripts unless force is true", async () => {
+  it("does not overwrite existing npm scripts even with force", async () => {
     const dir = await mkdtemp(path.join(tmpdir(), "specdojo-test-"));
     try {
       const packageRoot = path.join(dir, "pkg");
@@ -219,8 +223,7 @@ describe("runProviderScaffold", () => {
         "utf8",
       );
 
-      const originalStdout = process.stdout.write;
-      process.stdout.write = () => true as any;
+      vi.spyOn(process.stdout, "write").mockImplementation(() => true);
 
       try {
         await runProviderScaffold("claude", { packageRoot, repoRoot, force: false, dryRun: false });
@@ -231,12 +234,63 @@ describe("runProviderScaffold", () => {
         await runProviderScaffold("claude", { packageRoot, repoRoot, force: true, dryRun: false });
 
         const pkgForced = JSON.parse(await readFile(path.join(repoRoot, "package.json"), "utf8"));
-        expect(pkgForced.scripts["orch:opus"]).toBe(
-          "claude --agent specdojo-orchestrator --model opus",
+        // 利用者が書き換えたスクリプトは、テンプレートを配置し直すときも保つ。
+        expect(pkgForced.scripts["orch:opus"]).toBe("custom");
+        expect(pkgForced.scripts["orch:sonnet"]).toBe(
+          "claude --agent specdojo-orchestrator --model sonnet",
         );
       } finally {
-        process.stdout.write = originalStdout;
+        vi.restoreAllMocks();
       }
+    } finally {
+      await rm(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("reports a broken package.json and sets a failing exit code", async () => {
+    const dir = await mkdtemp(path.join(tmpdir(), "specdojo-test-"));
+    try {
+      const packageRoot = path.join(dir, "pkg");
+      const repoRoot = path.join(dir, "repo");
+      await makeClaudeTemplateFixture(packageRoot);
+      await mkdir(repoRoot, { recursive: true });
+      await writeFile(path.join(repoRoot, "package.json"), "{ not json", "utf8");
+      vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+      const stderr = vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+
+      await runProviderScaffold("claude", { packageRoot, repoRoot, force: false, dryRun: false });
+
+      expect(process.exitCode).toBe(1);
+      expect(stderr.mock.calls.map((call) => String(call[0])).join("")).toMatch(
+        /Failed to update package\.json .*package\.json/,
+      );
+      expect(await readFile(path.join(repoRoot, "package.json"), "utf8")).toBe("{ not json");
+    } finally {
+      await rm(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("keeps the indentation of an existing package.json", async () => {
+    const dir = await mkdtemp(path.join(tmpdir(), "specdojo-test-"));
+    try {
+      const packageRoot = path.join(dir, "pkg");
+      const repoRoot = path.join(dir, "repo");
+      await makeClaudeTemplateFixture(packageRoot);
+      await mkdir(repoRoot, { recursive: true });
+      await writeFile(
+        path.join(repoRoot, "package.json"),
+        JSON.stringify({ name: "test" }, null, 4) + "\n",
+        "utf8",
+      );
+      vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+
+      await runProviderScaffold("claude", { packageRoot, repoRoot, force: false, dryRun: false });
+
+      const content = await readFile(path.join(repoRoot, "package.json"), "utf8");
+      expect(content).toMatch(/^\{\n {4}"name"/);
+      expect(JSON.parse(content).scripts["orch:opus"]).toBe(
+        "claude --agent specdojo-orchestrator --model opus",
+      );
     } finally {
       await rm(dir, { recursive: true, force: true });
     }
@@ -255,13 +309,12 @@ describe("runProviderScaffold", () => {
         "utf8",
       );
 
-      const originalStdout = process.stdout.write;
-      process.stdout.write = () => true as any;
+      vi.spyOn(process.stdout, "write").mockImplementation(() => true);
 
       try {
         await runProviderScaffold("claude", { packageRoot, repoRoot, force: false, dryRun: true });
       } finally {
-        process.stdout.write = originalStdout;
+        vi.restoreAllMocks();
       }
 
       const pkg = JSON.parse(await readFile(path.join(repoRoot, "package.json"), "utf8"));

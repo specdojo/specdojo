@@ -1,6 +1,7 @@
 import { existsSync } from "node:fs";
 import { copyFile, mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { isRecord } from "./exec-shared.js";
 
 export { specdojoPackageRootDir } from "./package-paths.js";
 
@@ -163,41 +164,9 @@ export async function runProviderScaffold(
 
   const scriptsToAdd = ORCHESTRATOR_NPM_SCRIPTS[provider];
   if (scriptsToAdd) {
-    const packageJsonPath = path.join(opts.repoRoot, "package.json");
-    if (existsSync(packageJsonPath)) {
-      try {
-        const pkgContent = await readFile(packageJsonPath, "utf-8");
-        const pkg = JSON.parse(pkgContent);
-        pkg.scripts = pkg.scripts || {};
-        let modified = false;
-
-        for (const [scriptName, scriptCmd] of Object.entries(scriptsToAdd)) {
-          if (pkg.scripts[scriptName] && !opts.force) {
-            process.stdout.write(
-              `Skipped (script already exists): ${scriptName} in package.json\n`,
-            );
-          } else {
-            if (opts.dryRun) {
-              process.stdout.write(
-                `[dry-run] would add script: "${scriptName}": "${scriptCmd}" to package.json\n`,
-              );
-            } else {
-              pkg.scripts[scriptName] = scriptCmd;
-              process.stdout.write(`Added script: ${scriptName} to package.json\n`);
-              modified = true;
-            }
-          }
-        }
-
-        if (modified && !opts.dryRun) {
-          await writeFile(packageJsonPath, JSON.stringify(pkg, null, 2) + "\n");
-        }
-      } catch (e) {
-        process.stderr.write(`Failed to update package.json: ${e}\n`);
-      }
-    } else {
-      process.stdout.write("Skipped (package.json not found)\n");
-    }
+    await addOrchestratorNpmScripts(path.join(opts.repoRoot, "package.json"), scriptsToAdd, {
+      dryRun: !!opts.dryRun,
+    });
   }
 
   if (opts.dryRun) {
@@ -209,4 +178,68 @@ export async function runProviderScaffold(
       "  1. Commit the scaffolded files (worktree runs read committed content).\n" +
       `  2. Define providers.${provider}.command_template in .specdojo/exec-defaults.yaml (see templates/${provider}/README.md).\n`,
   );
+}
+
+/**
+ * provider のオーケストレーター起動スクリプトを package.json へ加える。
+ * 利用者が書き換えたスクリプトを壊さないよう、既存のキーは --force でも上書きしない。
+ * package.json の読み書きに失敗した場合は、成功扱いにしないため終了コードを 1 にする。
+ */
+async function addOrchestratorNpmScripts(
+  packageJsonPath: string,
+  scriptsToAdd: Record<string, string>,
+  opts: { dryRun: boolean },
+): Promise<void> {
+  if (!existsSync(packageJsonPath)) {
+    process.stdout.write("Skipped (package.json not found)\n");
+    return;
+  }
+  try {
+    const content = await readFile(packageJsonPath, "utf8");
+    const parsed: unknown = JSON.parse(content);
+    if (!isRecord(parsed)) {
+      throw new Error("top-level value is not an object");
+    }
+    if (parsed.scripts !== undefined && !isRecord(parsed.scripts)) {
+      throw new Error('"scripts" is not an object');
+    }
+    const scripts: Record<string, unknown> = isRecord(parsed.scripts) ? parsed.scripts : {};
+
+    let modified = false;
+    for (const [scriptName, scriptCommand] of Object.entries(scriptsToAdd)) {
+      if (Object.hasOwn(scripts, scriptName)) {
+        process.stdout.write(`Skipped (script already exists): ${scriptName} in package.json\n`);
+        continue;
+      }
+      if (opts.dryRun) {
+        process.stdout.write(
+          `[dry-run] would add script: "${scriptName}": "${scriptCommand}" to package.json\n`,
+        );
+        continue;
+      }
+      scripts[scriptName] = scriptCommand;
+      process.stdout.write(`Added script: ${scriptName} to package.json\n`);
+      modified = true;
+    }
+
+    if (modified) {
+      parsed.scripts = scripts;
+      await writeFile(
+        packageJsonPath,
+        JSON.stringify(parsed, null, detectIndent(content)) + "\n",
+        "utf8",
+      );
+    }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    process.stderr.write(`Failed to update package.json (${packageJsonPath}): ${message}\n`);
+    process.exitCode = 1;
+  }
+}
+
+/** 既存の package.json の字下げ（空白の数またはタブ）を保つ。判別できなければ 2 とする。 */
+function detectIndent(content: string): string | number {
+  const match = content.match(/^[{[]\r?\n([ \t]+)\S/u);
+  if (!match) return 2;
+  return match[1].includes("\t") ? "\t" : match[1].length;
 }
