@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-XZEQ",
   "run_id": "20260926T072953675Z-2f02bb57",
-  "updated_at": "2026-09-26T07:41:05.415Z",
+  "updated_at": "2026-09-26T07:41:12.877Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-xzeq-20260926T072901Z-c3a1-result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "codex-expert-executor",
       "attempts": 1,
       "started_at": "2026-09-26T07:41:05.415Z",
-      "completed_at": null,
+      "completed_at": "2026-09-26T07:41:12.877Z",
       "artifact_ref": null
     }
   },
