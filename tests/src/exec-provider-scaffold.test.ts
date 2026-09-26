@@ -7,6 +7,7 @@ import {
   applyProviderScaffoldPlan,
   buildProviderScaffoldPlan,
   listProviderTemplates,
+  runProviderScaffold,
   specdojoPackageRootDir,
 } from "../../src/exec-provider-scaffold.js";
 
@@ -164,6 +165,107 @@ describe("applyProviderScaffoldPlan", () => {
 
       expect(forcedOutcomes.every((outcome) => outcome.written)).toBe(true);
       expect(await readFile(existingPath, "utf8")).toBe('{"mode":"edit"}\n');
+    } finally {
+      await rm(dir, { recursive: true, force: true });
+    }
+  });
+});
+
+describe("runProviderScaffold", () => {
+  it("adds npm scripts for the provider when package.json exists", async () => {
+    const dir = await mkdtemp(path.join(tmpdir(), "specdojo-test-"));
+    try {
+      const packageRoot = path.join(dir, "pkg");
+      const repoRoot = path.join(dir, "repo");
+      await makeClaudeTemplateFixture(packageRoot);
+      await mkdir(repoRoot, { recursive: true });
+      await writeFile(
+        path.join(repoRoot, "package.json"),
+        JSON.stringify({ name: "test", scripts: { test: "echo test" } }),
+        "utf8",
+      );
+
+      // stdoutをモックしないとログが出るがとりあえずOKとする
+      const originalStdout = process.stdout.write;
+      process.stdout.write = () => true as any;
+
+      try {
+        await runProviderScaffold("claude", { packageRoot, repoRoot, force: false, dryRun: false });
+      } finally {
+        process.stdout.write = originalStdout;
+      }
+
+      const pkg = JSON.parse(await readFile(path.join(repoRoot, "package.json"), "utf8"));
+      expect(pkg.scripts["orch:opus"]).toBe("claude --agent specdojo-orchestrator --model opus");
+      expect(pkg.scripts["orch:sonnet"]).toBe(
+        "claude --agent specdojo-orchestrator --model sonnet",
+      );
+      expect(pkg.scripts.test).toBe("echo test");
+    } finally {
+      await rm(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("does not overwrite existing npm scripts unless force is true", async () => {
+    const dir = await mkdtemp(path.join(tmpdir(), "specdojo-test-"));
+    try {
+      const packageRoot = path.join(dir, "pkg");
+      const repoRoot = path.join(dir, "repo");
+      await makeClaudeTemplateFixture(packageRoot);
+      await mkdir(repoRoot, { recursive: true });
+      await writeFile(
+        path.join(repoRoot, "package.json"),
+        JSON.stringify({ name: "test", scripts: { "orch:opus": "custom" } }),
+        "utf8",
+      );
+
+      const originalStdout = process.stdout.write;
+      process.stdout.write = () => true as any;
+
+      try {
+        await runProviderScaffold("claude", { packageRoot, repoRoot, force: false, dryRun: false });
+
+        const pkg = JSON.parse(await readFile(path.join(repoRoot, "package.json"), "utf8"));
+        expect(pkg.scripts["orch:opus"]).toBe("custom");
+
+        await runProviderScaffold("claude", { packageRoot, repoRoot, force: true, dryRun: false });
+
+        const pkgForced = JSON.parse(await readFile(path.join(repoRoot, "package.json"), "utf8"));
+        expect(pkgForced.scripts["orch:opus"]).toBe(
+          "claude --agent specdojo-orchestrator --model opus",
+        );
+      } finally {
+        process.stdout.write = originalStdout;
+      }
+    } finally {
+      await rm(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("does not write changes on dryRun", async () => {
+    const dir = await mkdtemp(path.join(tmpdir(), "specdojo-test-"));
+    try {
+      const packageRoot = path.join(dir, "pkg");
+      const repoRoot = path.join(dir, "repo");
+      await makeClaudeTemplateFixture(packageRoot);
+      await mkdir(repoRoot, { recursive: true });
+      await writeFile(
+        path.join(repoRoot, "package.json"),
+        JSON.stringify({ name: "test", scripts: {} }),
+        "utf8",
+      );
+
+      const originalStdout = process.stdout.write;
+      process.stdout.write = () => true as any;
+
+      try {
+        await runProviderScaffold("claude", { packageRoot, repoRoot, force: false, dryRun: true });
+      } finally {
+        process.stdout.write = originalStdout;
+      }
+
+      const pkg = JSON.parse(await readFile(path.join(repoRoot, "package.json"), "utf8"));
+      expect(pkg.scripts["orch:opus"]).toBeUndefined();
     } finally {
       await rm(dir, { recursive: true, force: true });
     }

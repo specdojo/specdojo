@@ -71,14 +71,17 @@ specdojo:
 
 | No  | 作業                                             | 担当 | 状態 | メモ                              |
 | --- | ------------------------------------------------ | ---- | ---- | --------------------------------- |
-| 1   | copilot のオーケストレーター配置の有無を確かめる | DEV  | open |                                   |
-| 2   | scaffold へスクリプトの追加を実装する            | DEV  | open | 上書きしない                      |
-| 3   | テストを追加する                                 | DEV  | open |                                   |
-| 4   | README へ起動方法を記載する                      | DEV  | open | PJR-34MQ の README 改訂と調整する |
+| 1   | copilot のオーケストレーター配置の有無を確かめる | DEV  | done |                                   |
+| 2   | scaffold へスクリプトの追加を実装する            | DEV  | done | 上書きしない                      |
+| 3   | テストを追加する                                 | DEV  | done |                                   |
+| 4   | README へ起動方法を記載する                      | DEV  | done | PJR-34MQ の README 改訂と調整する |
 
 ## 7. 対応結果
 
--
+- copilot にはオーケストレーターの配置がないため、スクリプトも加えないこととした。
+- `src/exec-provider-scaffold.ts` にて、`package.json` が存在する場合に `config scaffold` 時に provider 別の起動スクリプトを追加する処理を実装した。
+- 既存のスクリプトの上書き防止および `--dry-run` 時の出力の処理も実装し、テストを `tests/src/exec-provider-scaffold.test.ts` に追加した。
+- `README.md` の起動方法の説明を `npm run orch:<name>` による方法に更新した。
 
 ## 8. 関連ドキュメント
 
