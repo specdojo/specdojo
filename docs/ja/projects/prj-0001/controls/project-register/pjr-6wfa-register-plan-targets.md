@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   owner: ARC
   registered_at: "2026-09-26T09:01:00Z"
+  block_reason: rate limit reached
 ---
 
 # PJR-6WFA register 由来の plan へ targets を持たせて対象網羅の検証を効かせる
