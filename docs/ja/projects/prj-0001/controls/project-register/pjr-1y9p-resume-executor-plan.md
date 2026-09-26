@@ -11,7 +11,7 @@ specdojo:
   priority: high
   owner: DEV
   registered_at: "2026-09-26T07:46:13Z"
-  block_reason: "checkpoint failed: git ls-files failed: fatal: detected dubious ownership in repository at '/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-1Y9P' (args: --full-name -z -- 4 paths)"
+  block_reason: "agent exited with non-zero code: 親検証の `test-integration` が失敗（status: failed）しているため。"
 ---
 
 # PJR-1Y9P resume 後の executor が plan の未完了作業を引き継がず成功扱いになる
@@ -87,17 +87,22 @@ rate limit で中断した executor 段を `--resume` で再開したとき、�
 
 ## 6. 作業内容
 
-| No  | 作業                                         | 担当 | 状態 | メモ                           |
-| --- | -------------------------------------------- | ---- | ---- | ------------------------------ |
-| 1   | 対応の候補から方針を決める                   | ARC  | open | 案 1 と案 4 を起点             |
-| 2   | plan の `targets` と変更ファイルの照合を実装 | DEV  | open | `exec validate` への追加を検討 |
-| 3   | 再開時に渡す情報を見直す                     | DEV  | open | 着手範囲または全対象の確認     |
-| 4   | 誤検出の割合を確認する                       | QE   | open | 既存 run への影響              |
-| 5   | 統合テストを追加する                         | DEV  | open | 中断と再開の経路               |
+| No  | 作業                                         | 担当 | 状態 | メモ                                           |
+| --- | -------------------------------------------- | ---- | ---- | ---------------------------------------------- |
+| 1   | 対応の候補から方針を決める                   | ARC  | done | 案 1 と案 4 を採用                             |
+| 2   | plan の `targets` と変更ファイルの照合を実装 | DEV  | done | resume 後の executor evidence を runner が検査 |
+| 3   | 再開時に渡す情報を見直す                     | DEV  | done | 既存変更パスと全対象の確認指示を追加           |
+| 4   | 誤検出の割合を確認する                       | QE   | done | 通常 run は追加ガード対象外                    |
+| 5   | 統合テストを追加する                         | DEV  | done | rate limit 中断からの再開経路を追加            |
 
 ## 7. 対応結果
 
--
+- 中断後に executor 段を再開する prompt へ、既存変更パスと plan 全体・全 `targets` の再確認指示を追加した。
+- 再開後の executor evidence に `target_coverage` を導入し、変更対象の repo 相対パスが累積 worktree 差分に含まれることを runner が照合するようにした。
+- 未変更対象は具体的な理由がなければ失敗とし、理由がある場合は reporter が生成する result の申し送りへ runner が転記するようにした。
+- rate limit、crash、手動停止はいずれも executor 段の再開経路で同じ検査を通る。plan に `targets` がない register 由来タスクは、機械照合を行わず plan 全体の再確認指示を適用する。
+- 通常の新規 run では `target_coverage` を必須にせず、既存の正常系を追加ガードによる失敗対象にしない。
+- rate limit で中断した executor を worktree 上で再開し、全 target の coverage と累積差分を確認してから reporter・統合へ進む統合テストを追加した。
 
 ## 8. 関連ドキュメント
 

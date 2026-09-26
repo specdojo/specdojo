@@ -61,3 +61,32 @@
       from: "-"
       to: "checkpoint failed: git ls-files failed: fatal: detected dubious ownership in repository at '/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-1Y9P' (args: --full-name -z -- 4 paths)"
   previous_event_id: reg_31df8ff83418466ebf65f9ca8f976671
+- v: 1
+  id: reg_71b17da3c3124cf8840cdd00ce862f0b
+  ts: "2026-09-26T07:59:03Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_3252cb9677c648af8faa0c9cf0a9c2fe
+- v: 1
+  id: reg_a42b9e589ac344bfaedd243b73d3c031
+  ts: "2026-09-26T08:15:55Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: 親検証の `test-integration` が失敗（status: failed）しているため。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "checkpoint failed: git ls-files failed: fatal: detected dubious ownership in repository at '/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-1Y9P' (args: --full-name -z -- 4 paths)"
+      to: "agent exited with non-zero code: 親検証の `test-integration` が失敗（status: failed）しているため。"
+  previous_event_id: reg_71b17da3c3124cf8840cdd00ce862f0b
