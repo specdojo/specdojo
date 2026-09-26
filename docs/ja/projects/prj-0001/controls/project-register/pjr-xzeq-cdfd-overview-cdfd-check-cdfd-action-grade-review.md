@@ -24,7 +24,7 @@ specdojo:
 
 ### 2.1. cdfd-check の独立の対象が誤っている
 
-現在の記述である。
+修正前の記述である。
 
 ```text
 Do で完了する review・検証は成果物の改善と検証可能な実行記録を残すまでを担い、
@@ -48,7 +48,7 @@ grade・finding は確定しない。P-08 は、その成果物と実行記録�
 
 ## 2.4. 進捗（2026-09-26）
 
-**`cdfd-overview.md` は完了している。残りは `cdfd-check.md` と `cdfd-action.md` の 2 文書である。**
+**`cdfd-overview.md`、`cdfd-check.md`、`cdfd-action.md` の 3 文書への反映を完了した。**
 
 初回実行が rate limit で中断し、別 executor で `--resume` した際に `cdfd-overview.md` のみが変更された状態で成功扱いとなった。`cdfd-overview.md` の変更内容は結論と整合するため保持し、差し戻さない。
 
@@ -64,23 +64,23 @@ grade・finding は確定しない。P-08 は、その成果物と実行記録�
 
 **この文書は再度編集しない。**
 
-### 2.4.2. 未着手（本項目で対応する 2 文書）
+### 2.4.2. 今回完了（cdfd-check.md / cdfd-action.md）
 
-| 文書             | 必要な変更                                                          |
-| ---------------- | ------------------------------------------------------------------- |
-| `cdfd-check.md`  | `P-08` の「**review から独立して**」を「**editor から独立して**」へ |
-| `cdfd-action.md` | `P-11` と review phase の対応を明示する                             |
+| 文書             | 変更内容                                                                                                        |
+| ---------------- | --------------------------------------------------------------------------------------------------------------- |
+| `cdfd-check.md`  | `P-08` の独立対象を editor へ修正し、独立した runner が根拠を一度だけ照合する責任分担に統一した                 |
+| `cdfd-action.md` | `P-11` を review phase と明示し、最新の grade・finding を事実として受け取り、成果物を再評価しないことを反映した |
 
-`cdfd-check.md` の 40 行目が現在も次のままである。**これが BPS と矛盾する核心であり、最優先で解消する。**
+`cdfd-check.md` にあった次の記述が BPS と矛盾する核心であった。
 
 ```text
 P-08 は、その成果物と実行記録を review から独立して根拠と照合し、
 QE が grade・finding を評価結果として確定する。
 ```
 
-review から独立させると評価が 2 回になる。独立すべきは editor からである。`cdfd-overview.md` の P-08 は既に「editor から独立した runner」と記述済みであり、`cdfd-check.md` をこれに揃える。
+review から独立させると評価が 2 回になる。独立すべきは editor からであるため、`cdfd-overview.md` と同じ「editor から独立した runner」へ統一した。
 
-`cdfd-action.md` の `P-11-01` は「完了条件と評価・報告結果を人間が照合し、完了可否を確定できるようにする」であり結論と一致している。**修正は小さい。** review phase との対応と、grade を再評価しないことの明示に限る。
+`cdfd-action.md` の `P-11-01` は元の完了可否判定を保ち、review phase との対応、最新の grade・finding を確定済みの事実として使うこと、成果物の品質を再評価しないことの明示に限定して変更した。
 
 ## 3. 完了条件
 
@@ -103,17 +103,21 @@ CDFD は BPS より上位の正本である。通常は CDFD を先に変え BPS
 
 ## 5. 作業内容
 
-| No  | 作業                                           | 担当 | 状態 | メモ                   |
-| --- | ---------------------------------------------- | ---- | ---- | ---------------------- |
-| 1   | `cdfd-check.md` の `P-08` を修正する           | ARC  | open | 独立の対象を editor へ |
-| 2   | `cdfd-overview.md` へ review の所属を反映する  | ARC  | open | Do と Action の境界    |
-| 3   | `cdfd-action.md` の `P-11` を BPS と対応させる | ARC  | open | 修正は小さい見込み     |
-| 4   | 3 本と BPS 2 件の整合を確認する                | QE   | open |                        |
-| 5   | grade を再実行し finding を確認する            | QE   | open |                        |
+| No  | 作業                                           | 担当 | 状態    | メモ                                                                       |
+| --- | ---------------------------------------------- | ---- | ------- | -------------------------------------------------------------------------- |
+| 1   | `cdfd-check.md` の `P-08` を修正する           | ARC  | done    | 独立の対象を editor とし、照合の担当を runner へ統一した                   |
+| 2   | `cdfd-overview.md` へ review の所属を反映する  | ARC  | done    | 中断前に完了済みの Do・Check・Action の境界を保持した                      |
+| 3   | `cdfd-action.md` の `P-11` を BPS と対応させる | ARC  | done    | review phase、事実としての grade、再評価しない責任境界を明示した           |
+| 4   | 3 本と BPS 2 件の整合を確認する                | QE   | done    | プロセス所属、判定対象、評価主体、Check から Action への受け渡しを照合した |
+| 5   | grade を再実行し finding を確認する            | QE   | waiting | executor 完了後に独立した runner が実行する                                |
 
 ## 6. 対応結果
 
--
+- `cdfd-check.md` の `P-08` から review の独立記述を除き、editor から独立した runner が根拠を一度だけ照合する責任境界へ修正した。
+- `cdfd-action.md` の `P-11` を review phase と明示し、最新の grade・finding を確定済みの事実として受け取り、成果物の品質を再評価しないことを文章・プロセス表・データストア表・図で統一した。
+- 中断前に反映済みの `cdfd-overview.md` と併せ、Do は edit phase、Check は grade、Action は review phase とする所属とデータの受け渡しが BPS 2 件と一致することを確認した。
+- 対象 Markdown の Prettier と Markdownlint、全 Markdown の lint、登録簿ビュー再生成、カタログ検証、文書索引生成が成功した。カタログ検証は既存の未作成成果物に関する warning のみで、エラーはなかった。
+- grade の再実行と finding の確認は、executor 完了後の独立した runner に委ねる。
 
 ## 7. 関連ドキュメント
 
