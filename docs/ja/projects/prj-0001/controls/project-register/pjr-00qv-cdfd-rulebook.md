@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   owner: ARC
   registered_at: "2026-09-26T02:25:42Z"
+  block_reason: "checkpoint failed: Root index has staged changes; commit or unstage them first: docs/ja/projects/prj-0001/controls/project-register/events/pjr-t3nn.yaml docs/ja/projects/prj-0001/controls/project-regi…"
 ---
 
 # PJR-00QV データストア名へ概念の英語名を併記し cdfd-rulebook の禁止事項に注記を加える

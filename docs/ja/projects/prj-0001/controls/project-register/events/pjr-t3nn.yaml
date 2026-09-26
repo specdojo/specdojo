@@ -45,3 +45,32 @@
       from: open
       to: in-progress
   previous_event_id: reg_9d46c78eb63441bea78e8d9c22d30698
+- v: 1
+  id: reg_982451d9eff241c68f97e25ec0bd30ef
+  ts: "2026-09-26T02:35:40Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_308d0635fbbf4a9fb3e028f01dac152e
+- v: 1
+  id: reg_a4348366104f4a56ad49316ec90a7f47
+  ts: "2026-09-26T02:35:48Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: review
+  to_status: waiting
+  reason: "integrate failed: git merge failed: CONFLICT (content): Merge conflict in docs/ja/projects/prj-0001/controls/project-register/events/pjr-t3nn.yaml; automatic git merge --abort failed; run git merge --…"
+  changes:
+    - field: status
+      from: review
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: git merge failed: CONFLICT (content): Merge conflict in docs/ja/projects/prj-0001/controls/project-register/events/pjr-t3nn.yaml; automatic git merge --abort failed; run git merge --…"
+  previous_event_id: reg_982451d9eff241c68f97e25ec0bd30ef
