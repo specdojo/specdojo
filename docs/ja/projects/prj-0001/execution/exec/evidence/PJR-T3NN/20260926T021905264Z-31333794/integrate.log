@@ -1,0 +1,21 @@
+=== 2026-09-26T02:35:47.810Z git merge --no-ff -m exec(register PJR-T3NN): bps-rulebook を rulebook-authoring-standard 準拠で作り直す
+
+Transition: start → review
+Executor: codex-expert-executor
+Reporter: gemma-reporter
+Refs: PJR-T3NN exec/prj-0001-PJR-T3NN ===
+exit: 1
+--- stdout ---
+Auto-merging docs/ja/projects/prj-0001/controls/project-register/events/pjr-t3nn.yaml
+CONFLICT (content): Merge conflict in docs/ja/projects/prj-0001/controls/project-register/events/pjr-t3nn.yaml
+Auto-merging docs/ja/projects/prj-0001/controls/project-register/pjr-t3nn-bps-rulebook-rulebook-authoring-standard.md
+CONFLICT (content): Merge conflict in docs/ja/projects/prj-0001/controls/project-register/pjr-t3nn-bps-rulebook-rulebook-authoring-standard.md
+Automatic merge failed; fix conflicts and then commit the result.
+
+--- stderr ---
+
+--- merge --abort ---
+exit: 128
+error: Entry 'docs/ja/specdojo/samples/bps-sample.md' not uptodate. Cannot merge.
+fatal: Could not reset index file to revision 'HEAD'.
+
