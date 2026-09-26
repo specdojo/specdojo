@@ -2,15 +2,16 @@
 specdojo:
   id: prj-0001:pjr-00qv-cdfd-rulebook
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-09-26T02:25:42Z"
+  completed_at: "2026-09-26T04:08:01Z"
   block_reason: "checkpoint failed: Root index has staged changes; commit or unstage them first: docs/ja/projects/prj-0001/controls/project-register/events/pjr-t3nn.yaml docs/ja/projects/prj-0001/controls/project-regi…"
 ---
 
@@ -112,6 +113,46 @@ CDFD のデータストア名が日本語のみのため、実装を知る読み
 - `cdfd-rulebook` の記述ガイドに併記規則を追加し、概念の英語名は物理テーブル名や実装クラスなどの実装名に該当しないことを禁止事項へ注記した。
 - 実行記録、評価結果、稼働構成、進捗報告、派生ビュー・索引は単一の英語名が確定していないため併記せず、用語集での確定を待つ。
 - grade の再実行と finding の比較は QE の確認作業として残している。
+
+### 6.1. 評価（2026-09-26）
+
+完了条件 8 件のうち 7 件を満たす。grade の再実行（条件 8）のみ未実施で、定期実行で確認する。スコープ外の変更はない。
+
+| #   | 完了条件                           | 判定   |
+| --- | ---------------------------------- | ------ |
+| 1   | 1 対 1 の 8 件を表と図の両方で併記 | 満たす |
+| 2   | 他の CDFD が同じ表記に揃っている   | 満たす |
+| 3   | 表の行名と図のノード名が一致       | 満たす |
+| 4   | 禁止事項に注記がある               | 満たす |
+| 5   | 記述ガイドに併記規則がある         | 満たす |
+| 6   | 5 件は併記せず、待機の旨を記録     | 満たす |
+| 7   | `lint:md` / `docs:build` が通過    | 満たす |
+| 8   | grade で finding が増えていない    | 未実施 |
+
+条件 6 は機械的に確認した。`実行記録`、`評価結果`、`稼働構成`、`進捗報告`、`派生ビュー・索引` の 5 件について スラッシュ区切りの併記は全 CDFD で 0 件であり、推測による英語名の補完は行われていない。
+
+条件 3 も機械的に確認した。表は `| 実行計画 / plan |`、図は `ExecPlan[("📋 実行計画 / plan")]` で一致する。片方だけの変更になっていない。
+
+### 6.2. 指示を一段抽象化している
+
+個票は保留 5 件の扱いを「今回は併記しない」という個別の判断として記載したが、executor は `cdfd-rulebook` の記述ガイドへ判断基準そのものを埋め込んだ。
+
+```text
+一対一の対応を確定できない場合は英語名を推測で補わず、
+日本語名だけを使用して用語集での確定を待ちます。
+```
+
+今後データストアを追加する際も同じ判断ができる。個別の対応ではなく規則として残した点を評価する。
+
+### 6.3. 変更範囲
+
+| 対象                                | 件数 |
+| ----------------------------------- | ---- |
+| CDFD（全体概要、グループ別、UC 別） | 9    |
+| `cdfd-rulebook.md`                  | 1    |
+| 個票・plan・result・evidence        | —    |
+
+スコープ外の成果物は変更していない。統合は `2a6cebb7` で成功した。
 
 ## 7. 関連ドキュメント
 
