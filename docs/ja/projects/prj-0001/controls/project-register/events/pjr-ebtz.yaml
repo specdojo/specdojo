@@ -58,3 +58,19 @@
       from: in-progress
       to: review
   previous_event_id: reg_3b27568105fc43f9b30d3556744deb4a
+- v: 1
+  id: reg_a58457cc96004801a6c5673207671d2c
+  ts: "2026-09-26T04:59:09Z"
+  action: close
+  actor: manual
+  from_status: review
+  to_status: done
+  reason: 完了条件 5 件すべてを満たす。突き合わせ先を成果物へ絞り、kata の整合は vp-qe-kata-conformance の責務へ移管した。finding へ突き合わせ先の明示を必須化し、乖離を監査可能にした。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-26"
+  previous_event_id: reg_1d170ff936f840528938130eb7b0eeed

@@ -4,93 +4,102 @@ document: specdojo:bps-sample
 path: docs/ja/specdojo/samples/bps-sample.md
 target: kata
 rubric: grade-rubric-v1
-verdict: fail
-score: 61
-graded_at: "2026-09-04T21:47:44.770Z"
-graded_by: gemma-expert-executor
-content_hash: e4d4200f5c0b569177a4ac43404b99a89cb7b2bb37848ebc73544d2f9ce9a891
+verdict: needs-work
+score: 64
+graded_at: "2026-09-26T05:24:27.827Z"
+graded_by: codex-expert-executor
+content_hash: c43d2bfd58630e338e8a8fbe2598f042cf60058b06b5440da8e197bf481c032e
 categories:
-  consistency:
-    score: 38
   usability:
-    score: 75
+    score: 67
   architecture:
-    score: 88
+    score: 100
   quality:
     score: 50
+  consistency:
+    score: 50
 viewpoints:
-  vp-arc-cross-document-consistency:
-    level: 2
-    score: 50
   vp-arc-conciseness:
-    level: 4
-    score: 100
-  vp-arc-single-responsibility:
     level: 3
     score: 75
-  vp-qe-verifiability:
+  vp-arc-single-responsibility:
     level: 4
     score: 100
-  vp-qe-omissions-consistency:
-    level: 1
-    score: 25
-  vp-qe-kata-conformance:
-    level: 0
-    score: 0
-  vp-ux-readability:
+  vp-qe-verifiability:
     level: 2
     score: 50
-  vp-ux-language-consistency:
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-qe-kata-conformance:
+    level: 2
+    score: 50
+  vp-ux-readability:
     level: 3
     score: 75
+  vp-ux-language-consistency:
+    level: 2
+    score: 50
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
-  blocker: 1
+  blocker: 0
   major: 4
-  minor: 2
+  minor: 4
   note: 0
 findings:
-  - id: F002
+  - id: F001
     severity: minor
-    rule: vp-arc-single-responsibility
-    line: 2
-    message: 成果物のサンプルとしてではなく、サンプルの構成を説明するメタ文書となっており、責務が不明確である。
-    anchor: ""
+    rule: vp-arc-conciseness
+    line: 27
+    anchor: "- 対象商品が販売中であり、継続して取り扱う商品である。販売停止または終売の商品は補充不要として記録する。"
+    message: 販売状態・継続取扱と未完了依頼の確認が前提条件（27、30行）と `S-01`・`S-02`（47、48行）で重複しているため、開始前条件か処理中判断のどちらかへ統合する必要がある。
+  - id: F002
+    severity: major
+    rule: vp-qe-verifiability
+    line: 69
+    anchor: >-
+      | `E-03`  | `S-03`、`S-04` | 判断根拠を記録できない、または仕入グループが受領できない | 補充依頼の確定または引渡し | 店主代表 |
+      補充依頼を未確定のまま保留し、不足情報または未受領の事実を記録する | 根拠と受領先を確認し、`S-03` から再開する                              |
+    message: "`E-03` の判断根拠記録失敗と仕入グループ受領失敗に対応する検証・受入観点がなく、保留記録、非確定・未受領状態、再開後の成果を第三者が判定できない。"
+  - id: F003
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 75
+    anchor: "| 補充が必要     | 販売中の商品で、現在庫が補充基準を下回る         | 店主代表が承認した補充依頼が一件確定し、仕入グループが商品と数量を確認できる | 補充依頼、承認記録、受領記録 |"
+    message: 「補充が必要」の入力条件に未完了依頼がないことが含まれず「既存依頼と重複」の条件と重なるため、どちらの期待成果を適用するか判定できるよう条件または優先関係を明示する必要がある。
   - id: F004
     severity: major
     rule: vp-qe-omissions-consistency
-    line: 2
-    message: rulebook で定義された本文構成（8つの必須見出し）が完全に欠落しており、不十分な構成である。
-    anchor: ""
+    line: 12
+    anchor: "- 終了点: 補充対象、数量、判断根拠を含む補充依頼が確定した時点、または補充不要が記録された時点"
+    message: >-
+      終了点は補充依頼の確定としている一方で `S-04` と受入観点は仕入グループの受領まで要求し、さらに `E-03` は確定済み依頼の受領失敗でも依頼を未確定として `S-03`
+      へ戻すため、確定・引渡し・受領の状態境界を整合させる必要がある。
   - id: F005
-    severity: blocker
+    severity: major
     rule: vp-qe-kata-conformance
-    line: 2
-    message: サンプルでありながら参照先の rulebook の記述形式（構成・項目）を全く遵守しておらず、サンプルとしての機能を果たしていない。
-    anchor: ""
+    line: 61
+    anchor: 補充依頼は `cdfd-uc-replenishment` の引き渡し `H-01` で仕入グループへ渡す情報に対応する。
+    message: >-
+      対応先とする `cdfd-uc-replenishment` の `H-01`
+      は補充数量が発注単位で示されることを要求するが、本書は13行で発注単位の決定を対象外とし、入力・処理・補充依頼の確定条件にも発注単位の取得または適合確認がないため、`H-01` との整合を成立させる必要がある。
   - id: F006
-    severity: major
+    severity: minor
     rule: vp-ux-readability
-    line: 2
-    message: 具体的な業務プロセスの記述例がなく、読者が BPS の書き方を理解するためのリファレンスとして機能していない。
-    anchor: ""
-  - id: F001
-    severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 4
-    message: "Frontmatter の `type: project` は rulebook で指定された `domain` と矛盾している。"
-    anchor: ""
-  - id: F003
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 4
-    message: Frontmatter に必須項目である `title` が欠落している。
-    anchor: ""
+    line: 27
+    anchor: "- 対象商品が販売中であり、継続して取り扱う商品である。販売停止または終売の商品は補充不要として記録する。"
+    message: 販売状態と重複有無が開始前の前提条件なのか `S-01`・`S-02` で行う処理なのか二重に示されているため、確認時点と不成立時の遷移を一か所で読める構成に整理する必要がある。
   - id: F007
+    severity: major
+    rule: vp-ux-language-consistency
+    line: 39
+    anchor: "| 補充判断基準 | `br-reorder-point` | 補充要否と基準数量を同じ規則で判定する | ○    | `br-reorder-point` |"
+    message: 「補充基準」「補充必要数」「基準数量」「数量」の関係が定義されず、`S-02` の基準数量が閾値・算出した補充必要数・依頼数量のどれを指すか区別できないため、用語を定義して入力から補充依頼まで統一する必要がある。
+  - id: F008
     severity: minor
     rule: vp-ux-language-consistency
-    line: 4
-    message: Frontmatter の `type` に `project` が指定されており、BPS としての用語定義に反している。
-    anchor: ""
+    line: 59
+    anchor: "| 補充不要記録 | 在庫担当     | 対象商品、補充不要理由、確認時刻を確認でき、補充依頼が作成されていない | 在庫記録 | 次回の販売または入荷後に再判定 |"
+    message: 補充不要記録の受け手である「在庫担当」は、対象者や前提条件で使う「店主代表」「家族の店番担当」のいずれとも対応付けられていないため、正式な役割名へ統一する必要がある。

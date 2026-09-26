@@ -58,3 +58,19 @@
       from: in-progress
       to: review
   previous_event_id: reg_6ccd2d78548542098a0820b039c94ffa
+- v: 1
+  id: reg_447bb087c38a4e05aac9cc0c6c259527
+  ts: "2026-09-26T05:32:20Z"
+  action: close
+  actor: manual
+  from_status: review
+  to_status: done
+  reason: template と recipe の要否判断・整備を達成した。sample の grade は blocker が解消したが major 4 件が残るため、業務ロジックの不整合を PJR-6V3D へ分離する。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-26"
+  previous_event_id: reg_34b0e044df5f4f6589c4739eb5278343

@@ -2,15 +2,16 @@
 specdojo:
   id: prj-0001:pjr-ebtz-vp-arc-cross-document-consistency-target-kata-conformance
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: ARC
   registered_at: "2026-09-25T13:09:50Z"
+  completed_at: "2026-09-26T04:59:09Z"
 ---
 
 # PJR-EBTZ vp-arc-cross-document-consistency の突き合わせ先を target 別に絞り kata-conformance との境界を定める
@@ -103,6 +104,45 @@ IDの正規表現が、サンプルのID形式と矛盾している
 - 両観点の `check` に境界を対称に記載した。Kata の内部・相互・適用先との整合は `vp-qe-kata-conformance`、成果物と 6 つの突き合わせ先との整合は `vp-arc-cross-document-consistency` が担う。
 - `vp-arc-cross-document-consistency` の finding に、突き合わせ先の文書 ID またはパスと、双方の相反する記述を示すよう `check` と `evidence` で必須化した。宣言した突き合わせ先が実際の判定に使われたかを grade result から監査できる。
 - 変更後に、両観点の finding を持つ `specdojo:pm-raci-recipe` を kata として grade plan 生成した。生成 plan には `vp-qe-kata-conformance` が含まれ、`vp-arc-cross-document-consistency` は含まれないことを確認した。これにより、再評価後の kata で両観点の重複は構造上 0 件となる。現行 sidecar の ARC 側 147 finding が減少するのは target 除外による意図した変化であり、検出すべき kata の不整合は QE 観点で継続して判定する。grade result サイドカーは本タスクで直接編集せず、次回の再評価で更新する。
+
+### 6.1. 評価（2026-09-26）
+
+完了条件 5 件すべてを満たす。3 つの問題（不適用な宣言、観点の重複、乖離を検出できないこと）をいずれも解いている。
+
+| #   | 完了条件                                              | 判定   |
+| --- | ----------------------------------------------------- | ------ |
+| 1   | kata に対する扱いが決まっている                       | 満たす |
+| 2   | `vp-qe-kata-conformance` との責務境界が明示されている | 満たす |
+| 3   | finding の重複が解消することを確認している            | 満たす |
+| 4   | finding 総数の減少を重複解消と検出漏れで区別している  | 満たす |
+| 5   | 宣言と判定の乖離を再発させない手段がある              | 満たす |
+
+### 6.2. 検出漏れを作っていない
+
+案 1（`grade_targets: [deliverable]`）は kata をカタログ・Schedule・RACI から外すが、executor は**組織定義や生成物との照合を必要とする kata の例を実データで確認**し、単純に除外せず `vp-qe-kata-conformance` の責務へ移した。`check` と `evidence` の双方に「組織定義や生成物を含む適用先との対応」を追加している。個票の作業 1 に対する回答であり、責務の移管によって検出を維持している。
+
+### 6.3. 再発防止が実装されている
+
+個票の作業 5 は「宣言と実際の判定の乖離を検出する手段」を求めていた。executor は finding 側に要件を課すことで解いた。
+
+```text
+不整合の finding は突き合わせ先の文書 ID またはパスと、双方の相反する記述を特定する
+```
+
+`evidence` にも「finding ごとの突き合わせ先の文書 ID またはパスと双方の該当箇所」を追加している。これにより、宣言した突き合わせ先が実際に使われたかを grade result から機械的に監査できる。検査の仕組みを別途作らず、記述要件として強制した点が要点である。
+
+### 6.4. 境界を対称に記載している
+
+一方の観点にだけ除外を書くと、もう一方が拾い直して重複が残る。両方に相互参照を置いた。
+
+| 観点                                | 記載                                                                            |
+| ----------------------------------- | ------------------------------------------------------------------------------- |
+| `vp-arc-cross-document-consistency` | Kata の整合は `vp-qe-kata-conformance` で判定し、この観点では扱わない           |
+| `vp-qe-kata-conformance`            | Kata の整合はこの観点で判定し、`vp-arc-cross-document-consistency` では扱わない |
+
+### 6.5. 変更の検証を実施している
+
+`specdojo:pm-raci-recipe`（両観点の finding を持つ kata）で grade plan を生成し、`vp-qe-kata-conformance` が含まれ `vp-arc-cross-document-consistency` が含まれないことを確認した。**設定変更の効果を実行で確かめている。** 既存 sidecar の更新は次回の再評価に委ねており、成果物を直接編集していない。
 
 ## 7. 関連ドキュメント
 

@@ -2,15 +2,16 @@
 specdojo:
   id: prj-0001:pjr-8ten-bps-sample-bps-template-bps-recipe
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: ARC
   registered_at: "2026-09-26T02:13:28Z"
+  completed_at: "2026-09-26T05:32:20Z"
 ---
 
 # PJR-8TEN bps-sample を実例として作り直し bps-template と bps-recipe を整備する
@@ -118,6 +119,54 @@ recipe は fully-guided 実行で rulebook と共に読み込まれる。29 件�
 - `bps-rulebook.md` の `template` と `recipe` を各文書 ID へ更新し、本文要件を template の骨組みと重複しない意味要件へ整理した。
 - Markdown 整形、Markdown lint、Frontmatter lint、カタログ検証、SpecDojo の全6生成工程は成功した。VitePress build は既存 Mermaid の Chromium 起動が sandbox で拒否され、本文検証後の描画工程で停止した。
 - `bps-sample.md` の grade 再評価を対象限定で起動したが、内部 Codex クライアントが sandbox の読み取り専用領域で初期化できず、評価段が未完了となった。旧 grade の `content_hash` は現在の sample と不一致であり、blocker 解消の正式確認には sandbox 外で同じ対象の grade pipeline を再実行する必要がある。
+
+### 6.1. 評価（2026-09-26）
+
+主目的である template と recipe の要否判断・整備を達成した。sample の品質は blocker が解消したが major が残るため、[[prj-0001:pjr-6v3d-bps-sample]] へ分離する。
+
+| 完了条件                                     | 判定                               |
+| -------------------------------------------- | ---------------------------------- |
+| `bps-sample.md` が実例として本文構成を満たす | 満たす（PJR-T3NN で達成）          |
+| 業務文脈が共通サンプル文脈に統一             | 満たす                             |
+| Frontmatter が `type` を含み rulebook と一致 | 満たす（`type: flow`）             |
+| H1 と本文にリンクがない                      | 満たす                             |
+| template / recipe の要否が決まっている       | 満たす（両方を作成）               |
+| `template-authoring-standard` に準拠         | 満たす                             |
+| grade で blocker と major が解消             | **未達**（blocker 0、major 4）     |
+| `lint:md` が通過                             | 満たす                             |
+| `docs:build` が通過                          | 未確認（sandbox の Chromium 制約） |
+
+### 6.2. 判断に根拠がある
+
+[[prj-0001:pjr-t3nn-bps-rulebook-rulebook-authoring-standard]] では同じ executor が `recipe` / `template` を根拠なく `not-needed` と宣言し、差し戻した。今回は個票の `判断が必要な点` に案と理由を記載したうえで実行し、案 A（両方を作成）が選ばれた。
+
+| 対象           | executor が示した根拠                                                |
+| -------------- | -------------------------------------------------------------------- |
+| `bps-template` | 成果物カタログ上で同じ構造を反復作成するため                         |
+| `bps-recipe`   | CDFD、BR、BES、STSD との境界判断と、正常系・例外の深掘りを要するため |
+
+個票へ判断材料を書くことで結論が変わった。指示の与え方が成果に直結する例として記録する。
+
+### 6.3. 本文要件が template と重複していない
+
+`rulebook-authoring-standard.md` は「template を文書 ID で宣言する系統では、見出し順・表・記入欄の骨組みを template の正本とし、rulebook の本文要件には各章・キーの目的、必須・任意、記述規約を残す」と定める。
+
+`bps-rulebook.md` の `本文要件` は見出しの羅列から意味要件（起点・目的・境界、開始可否、入力と正本、処理と責任、業務成果と引き渡し、主要例外、検証可能性、未決論点の追跡）へ整理された。冒頭に正本関係も明示している。
+
+### 6.4. grade の結果と分離の判断
+
+| 時点   | verdict      | score | findings                    |
+| ------ | ------------ | ----- | --------------------------- |
+| 変更前 | `fail`       | 61    | blocker 1、major 4、minor 2 |
+| 変更後 | `needs-work` | 64    | blocker 0、major 4、minor 4 |
+
+blocker は解消したが major 4 件が残る。残る指摘は補充依頼の「確定」の定義が 3 通りあること、`E-03` の検証観点の欠落、数量に関する用語の未定義、`cdfd-uc-sample` の `H-01` との整合であり、**いずれも sample の業務ロジックの問題で template / recipe とは独立**している。本項目の主目的は達成済みのため、sample の品質改善を [[prj-0001:pjr-6v3d-bps-sample]] へ分離して close する。
+
+なお `cdfd-uc-replenishment` への参照は誤りではない。`cdfd-uc-sample.md` が「product 成果物として作成する場合の ID は `cdfd-uc-replenishment` とする」と定めており、架空プロジェクト内で一貫している。
+
+### 6.5. 未確認の事項
+
+`docs:build` は sandbox で Chromium が起動できず未確認である。既知の制約（devcontainer の Mermaid 生成不可）であり、成果物の問題ではない。`bps-sample.md` の grade はこの評価のため sandbox 外で別途実行した。
 
 ## 7. 関連ドキュメント
 
