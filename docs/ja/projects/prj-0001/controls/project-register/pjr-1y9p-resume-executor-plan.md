@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: high
   owner: DEV
   registered_at: "2026-09-26T07:46:13Z"
+  block_reason: "checkpoint failed: git ls-files failed: fatal: detected dubious ownership in repository at '/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-1Y9P' (args: --full-name -z -- 4 paths)"
 ---
 
 # PJR-1Y9P resume 後の executor が plan の未完了作業を引き継がず成功扱いになる

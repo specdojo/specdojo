@@ -32,3 +32,32 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_31df8ff83418466ebf65f9ca8f976671
+  ts: "2026-09-26T07:52:10Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_2322cc803b544fc48fb627ca1eae6cf8
+- v: 1
+  id: reg_3252cb9677c648af8faa0c9cf0a9c2fe
+  ts: "2026-09-26T07:53:04Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "checkpoint failed: git ls-files failed: fatal: detected dubious ownership in repository at '/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-1Y9P' (args: --full-name -z -- 4 paths)"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "checkpoint failed: git ls-files failed: fatal: detected dubious ownership in repository at '/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-1Y9P' (args: --full-name -z -- 4 paths)"
+  previous_event_id: reg_31df8ff83418466ebf65f9ca8f976671
