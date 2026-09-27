@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: waiting
   priority: medium
   owner: BA
   registered_at: "2026-09-26T05:30:46Z"
+  block_reason: "agent exited with non-zero code: runner による検証 `test-integration` (`npm run test:integration`) で失敗が報告されているため、完了条件を満たしていません。"
 ---
 
 # PJR-6V3D bps-sample の業務ロジックの不整合と存在しない参照先を解消する
