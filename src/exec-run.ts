@@ -2213,6 +2213,7 @@ async function runPreparedTask(
             context,
             worktree: prepared.worktree,
             taskId: prepared.task.id,
+            scopeLogPath: integrateLogPath(pipelineStatePath),
           });
 
           if (pipelineStatePath) {
@@ -5194,6 +5195,7 @@ async function finalizeRegisterWorktreeRun(params: {
         worktree,
         taskId: stem,
         message: subject,
+        scopeLogPath: integrateLogPath(params.pipelineStatePath),
       });
       // review は exec branch 側（worktree）で記録し、merge commit に同梱する。統合ブランチで
       // 遷移すると first-parent に独立した commit が増えるため、root では遷移しない。

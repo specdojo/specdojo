@@ -349,6 +349,77 @@ export function resolveCommitScope(
   };
 }
 
+// register 由来のタスクで新規ファイルの作成を許す既知の成果物ディレクトリ。HEAD に追跡
+// ファイルを持つ最上位ディレクトリもこれに加える（利用プロジェクト固有の構成に追従するため）。
+const REGISTER_NEW_FILE_DIR_PREFIXES: readonly string[] = [
+  "docs/",
+  "src/",
+  "tests/",
+  "tools/",
+  "scripts/",
+  "packages/",
+];
+
+// register 由来のタスクは作業ツリー差分を commit するため、agent が作業用に作った一時ファイル
+// （リポジトリ直下の modify.py、patch.js など）まで commit 対象に入る。HEAD に存在しない新規
+// ファイルは、既知の成果物ディレクトリ・HEAD の追跡済み最上位ディレクトリ・result・task の
+// evidence 配下・個票 targets から解決したパスに限り、それ以外を commit 範囲外とする。
+// 既存ファイルの変更と削除は従来どおり除外リスト方式で判定する。
+function registerNewFileIsAllowed(
+  worktree: ExecWorktree,
+  context: WorktreeOpsContext,
+  taskId: string,
+): (path: string) => boolean {
+  const { executionRel, planRel, resultRel } = taskPaths(context, taskId);
+  const topLevelDirs = zeroSeparatedPaths(worktree.path, [
+    "ls-tree",
+    "-d",
+    "--name-only",
+    "-z",
+    "HEAD",
+  ]).map((dir) => `${dir}/`);
+  const allowedDirPrefixes = [
+    ...REGISTER_NEW_FILE_DIR_PREFIXES,
+    ...topLevelDirs,
+    `${executionRel}/exec/evidence/${worktreeNameFromTaskId(taskId)}/`,
+  ];
+  const planContent = readWorktreeHeadFile(worktree.path, planRel);
+  const targets = (planContent ? parsePlanTaskIdentity(planContent) : null)?.targets ?? [];
+  const lookup = headDocIndexLookup(worktree.path);
+  const allowedFiles = new Set<string>([resultRel]);
+  for (const target of targets) {
+    const resolved = lookup(target);
+    if (resolved) allowedFiles.add(resolved);
+  }
+  return (path: string) =>
+    allowedFiles.has(path) || allowedDirPrefixes.some((prefix) => path.startsWith(prefix));
+}
+
+function pathsTrackedAtHead(worktreePath: string, paths: readonly string[]): Set<string> {
+  if (paths.length === 0) return new Set();
+  return new Set(
+    zeroSeparatedPaths(worktreePath, [
+      "ls-tree",
+      "-r",
+      "--name-only",
+      "--full-tree",
+      "-z",
+      "HEAD",
+      "--",
+      ...paths,
+    ]),
+  );
+}
+
+function isRegisterOriginTask(
+  context: WorktreeOpsContext,
+  worktree: ExecWorktree,
+  taskId: string,
+): boolean {
+  const planContent = readWorktreeHeadFile(worktree.path, taskPaths(context, taskId).planRel);
+  return (planContent ? parsePlanTaskIdentity(planContent) : null)?.origin === "register";
+}
+
 // worktree の変更を「commit するパス」「許可リスト外のため commit しないパス」に分ける。
 // 除外リスト（isCommitTargetPath）は許可リストの内側でも引き続き適用する。
 export function partitionCommitTargets(
@@ -361,7 +432,24 @@ export function partitionCommitTargets(
     isCommitTargetPath(path, executionRel, resultRel),
   );
   const { scope, unresolvedTargets } = resolveCommitScope(context, worktree, taskId);
-  if (!scope) return { targets: candidates, outOfScope: [], unresolvedTargets };
+  if (!scope) {
+    // 人間の作業は agent の一時ファイル対策の対象外とし、従来どおり除外リスト方式で commit する。
+    if (
+      !isRegisterOriginTask(context, worktree, taskId) ||
+      isHumanWorktreeExecution(context, worktree, taskId)
+    ) {
+      return { targets: candidates, outOfScope: [], unresolvedTargets };
+    }
+    const tracked = pathsTrackedAtHead(worktree.path, candidates);
+    const isAllowedNewFile = registerNewFileIsAllowed(worktree, context, taskId);
+    const targets: string[] = [];
+    const outOfScope: string[] = [];
+    for (const path of candidates) {
+      const allowed = tracked.has(path) || isAllowedNewFile(path);
+      (allowed ? targets : outOfScope).push(path);
+    }
+    return { targets, outOfScope, unresolvedTargets };
+  }
 
   const targets: string[] = [];
   const outOfScope: string[] = [];
@@ -530,24 +618,33 @@ export function commitWorktreeChanges(params: {
   taskId: string;
   message?: string;
   dryRun?: boolean;
+  // commit-scope の警告を追記する evidence 側のログ（run ディレクトリの integrate.log）。
+  // worktree 内の evidence 配下を指す場合は、同じ commit に含まれる。
+  scopeLogPath?: string;
 }): { targets: string[]; committed: boolean } {
   const { context, worktree, taskId } = params;
   assertNoAgentProtectedConfigChanges(context, worktree, taskId);
-  const {
-    targets: paths,
-    outOfScope,
-    unresolvedTargets,
-  } = partitionCommitTargets(context, worktree, taskId);
-  for (const target of unresolvedTargets) {
-    process.stdout.write(`commit-scope: unresolved target doc id (not committable): ${target}\n`);
+  let partition = partitionCommitTargets(context, worktree, taskId);
+  const scopeWarnings = [
+    ...partition.unresolvedTargets.map(
+      (target) => `commit-scope: unresolved target doc id (not committable): ${target}\n`,
+    ),
+    ...(partition.outOfScope.length > 0
+      ? [
+          `commit-scope: skipped non-target changes (left in worktree):\n${partition.outOfScope
+            .map((path) => `  ${path}`)
+            .join("\n")}\n`,
+        ]
+      : []),
+  ];
+  for (const warning of scopeWarnings) process.stdout.write(warning);
+  if (scopeWarnings.length > 0 && params.scopeLogPath && !params.dryRun) {
+    mkdirSync(resolve(params.scopeLogPath, ".."), { recursive: true });
+    appendFileSync(params.scopeLogPath, scopeWarnings.join(""), "utf8");
+    // 追記したログ自体を commit 対象に含めるため、分類をやり直す。
+    partition = partitionCommitTargets(context, worktree, taskId);
   }
-  if (outOfScope.length > 0) {
-    process.stdout.write(
-      `commit-scope: skipped non-target changes (left in worktree):\n${outOfScope
-        .map((path) => `  ${path}`)
-        .join("\n")}\n`,
-    );
-  }
+  const paths = partition.targets;
   if (paths.length === 0) {
     process.stdout.write("No commit-target changes.\n");
     return { targets: [], committed: false };

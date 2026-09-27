@@ -53,7 +53,9 @@ const REGISTER_REL = `${PROJECT_BASE}/controls/project-register`;
 const SCHEDULE_REL = `${PROJECT_BASE}/schedule`;
 const EXECUTION_REL = `${PROJECT_BASE}/execution`;
 const TICKET_REL = `${REGISTER_REL}/pjr-cd34-resume-test.md`;
-const ARTIFACT_NAME = "pipeline-artifact.md";
+// register 由来のタスクは、既知の成果物ディレクトリ外（リポジトリ直下など）の新規ファイルを
+// agent の一時ファイルとして commit しない（PJR-FFPK）。成果物は docs/ 配下へ置く。
+const ARTIFACT_NAME = "docs/pipeline-artifact.md";
 const REPORTER_FAILURE_MARKER = "fail-reporter";
 
 const CONFIG = {

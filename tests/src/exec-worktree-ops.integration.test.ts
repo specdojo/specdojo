@@ -855,6 +855,114 @@ describe("exec worktree ops", () => {
     expect(committed.targets).toEqual(expect.arrayContaining(["docs/a.md", "src/unrelated.ts"]));
   });
 
+  it("leaves agent scratch files outside known deliverable directories uncommitted for a register task", () => {
+    const fixture = setupRepository();
+    const taskId = "PJR-0142";
+    writeFile(join(fixture.repo, "custom", "kept.md"), "# tracked custom dir\n");
+    git(fixture.repo, "add", "custom/kept.md");
+    git(fixture.repo, "commit", "-m", "add custom dir");
+    const worktree = prepare(
+      fixture,
+      taskId,
+      taskId,
+      planWithIdentity(taskId, { mode: "edit", origin: "register", targets: [] }),
+    );
+
+    writeFile(join(worktree.path, "docs", "a.md"), "# deliverable\n");
+    writeFile(join(worktree.path, "custom", "added.md"), "# new file in tracked dir\n");
+    writeFile(join(worktree.path, "modify.py"), "print('scratch')\n");
+    writeFile(join(worktree.path, "scratch", "patch.js"), "// scratch\n");
+    // 一時ファイルが status: ready を含んでも、commit 対象外なので ready 昇格とはみなさない。
+    writeFile(join(worktree.path, "test-schema.yaml"), "id: tmp\nstatus: ready\n");
+    const scopeLogPath = join(
+      worktree.path,
+      "execution",
+      "exec",
+      "evidence",
+      taskId,
+      "run-1",
+      "integrate.log",
+    );
+
+    const committed = commitWorktreeChanges({
+      context: fixture.context,
+      worktree,
+      taskId,
+      scopeLogPath,
+    });
+
+    expect(committed.committed).toBe(true);
+    expect([...committed.targets].sort()).toEqual([
+      "custom/added.md",
+      "docs/a.md",
+      `execution/exec/evidence/${taskId}/run-1/integrate.log`,
+    ]);
+    const log = readFileSync(scopeLogPath, "utf8");
+    expect(log).toContain("commit-scope: skipped non-target changes (left in worktree):");
+    expect(log).toContain("  modify.py");
+    expect(log).toContain("  scratch/patch.js");
+    expect(log).toContain("  test-schema.yaml");
+    expect(git(worktree.path, "show", "--name-only", "--pretty=format:", "HEAD")).not.toContain(
+      "modify.py",
+    );
+    expect(git(worktree.path, "status", "--porcelain", "-uall").split("\n").sort()).toEqual([
+      "?? modify.py",
+      "?? scratch/patch.js",
+      "?? test-schema.yaml",
+    ]);
+
+    mergeIntoRoot(fixture, worktree, taskId);
+    expect(existsSync(join(fixture.repo, "docs", "a.md"))).toBe(true);
+    expect(existsSync(join(fixture.repo, "modify.py"))).toBe(false);
+  });
+
+  it("commits edits to tracked root files and resolved targets for a register task", () => {
+    const fixture = setupRepository();
+    const taskId = "PJR-0143";
+    writeFile(
+      join(fixture.repo, ".specdojo", "doc-index.json"),
+      JSON.stringify({ entries: { "prj-0001:root-note": "ROOT-NOTE.md:1" } }) + "\n",
+    );
+    git(fixture.repo, "add", ".specdojo/doc-index.json");
+    git(fixture.repo, "commit", "-m", "add doc index");
+    const worktree = prepare(
+      fixture,
+      taskId,
+      taskId,
+      planWithIdentity(taskId, {
+        mode: "edit",
+        origin: "register",
+        targets: ["prj-0001:root-note"],
+      }),
+    );
+
+    writeFile(join(worktree.path, "README.md"), "# edited tracked root file\n");
+    writeFile(join(worktree.path, "ROOT-NOTE.md"), "# declared target\n");
+    writeFile(join(worktree.path, "patch.js"), "// scratch\n");
+
+    const committed = commitWorktreeChanges({ context: fixture.context, worktree, taskId });
+
+    expect([...committed.targets].sort()).toEqual(["README.md", "ROOT-NOTE.md"]);
+  });
+
+  it('still blocks a register task that promotes a committable deliverable to "ready"', () => {
+    const fixture = setupRepository();
+    const taskId = "PJR-0144";
+    const worktree = prepare(
+      fixture,
+      taskId,
+      taskId,
+      planWithIdentity(taskId, { mode: "edit", origin: "register", targets: [] }),
+    );
+
+    writeFile(join(worktree.path, "docs", "d.yaml"), "id: d\nstatus: ready\n");
+    writeFile(join(worktree.path, "test-schema.yaml"), "id: tmp\nstatus: ready\n");
+
+    expect(() => commitWorktreeChanges({ context: fixture.context, worktree, taskId })).toThrow(
+      /promotion to "ready" is human-only.*: docs\/d\.yaml$/,
+    );
+  });
+
   it("blocks protected config changes even for a register-originated exclusion-list task", () => {
     const fixture = setupRepository();
     const taskId = "PJR-0138";
