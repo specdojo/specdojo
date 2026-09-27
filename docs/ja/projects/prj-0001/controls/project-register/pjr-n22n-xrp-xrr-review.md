@@ -11,7 +11,7 @@ specdojo:
   priority: high
   owner: QE
   registered_at: "2026-09-26T06:13:37Z"
-  block_reason: "agent exited with non-zero code: 着手前判断（観点範囲拡大との適用順序、個票の作業 No.1）が未決定であり、`PJR-K351` / `PJR-WPWB` も open のまま。加えて、`xrr-*` の構成と判定（recommendation）は `src/exec-reporter.ts` の出力スキーマと `src/exec-results.ts` の `r…"
+  block_reason: "agent exited with non-zero code: 親 runner の検証 `typecheck`（`npm run typecheck`）が失敗している: `src/exec.ts(1162,9): error TS2353: Object literal may only specify known properties, and 'viewpointsPath' does n…"
 ---
 
 # PJR-N22N xrp と xrr テンプレートを review が評価しない前提へ改訂する
@@ -91,18 +91,25 @@ grade が 28 観点すべてを見る前提（[[prj-0001:pjr-wpwb-viewpoint-eval
 
 ## 6. 作業内容
 
-| No  | 作業                                   | 担当 | 状態 | メモ                               |
-| --- | -------------------------------------- | ---- | ---- | ---------------------------------- |
-| 1   | 観点範囲の拡大との適用順序を決める     | QE   | open | **着手前の判断**。空白期間を避ける |
-| 2   | `*-viewpoint-detail-*` の要否を決める  | QE   | open | 2 本                               |
-| 3   | `xrp-*` 10 本を改訂する                | QE   | open | grade の結果を入力に               |
-| 4   | `xrr-*` 2 本を改訂する                 | QE   | open | 受入観点 6 区分と対応              |
-| 5   | owner 以外のロールを絞る指示を削除する | QE   | open | 決定 3.2 で撤回済み                |
-| 6   | review を 1 件試行して確認する         | QE   | open | plan と result を確認              |
+| No  | 作業                                   | 担当 | 状態 | メモ                                                                  |
+| --- | -------------------------------------- | ---- | ---- | --------------------------------------------------------------------- |
+| 1   | 観点範囲の拡大との適用順序を決める     | QE   | done | 適用順序の決定に従い、`PJR-K351` の完了後に適用した                   |
+| 2   | `*-viewpoint-detail-*` の要否を決める  | QE   | done | 不要と判断して 2 本を削除し、参照元のコードとテストから外した         |
+| 3   | `xrp-*` 10 本を改訂する                | QE   | done | 残る 9 本を改訂した（detail 1 本は削除）                              |
+| 4   | `xrr-*` 2 本を改訂する                 | QE   | done | `xrr-template.md` を改訂し、verdict を受入観点 6 区分と対応させた     |
+| 5   | owner 以外のロールを絞る指示を削除する | QE   | done | 該当段落を持つ 4 本から削除した                                       |
+| 6   | review を 1 件試行して確認する         | QE   | open | plan 生成のみ試行した。agent による review 実行と result 確認は未実施 |
 
 ## 7. 対応結果
 
--
+- 前提確認: `PJR-K351` と `PJR-WPWB` は `done` であり、適用順序の決定（`PJR-K351` の完了後に適用）を満たす。
+- `*-viewpoint-detail-*` の要否: review が観点ごとに評価しないため不要と判断した。`xrp-viewpoint-detail-template.md` と `xrr-viewpoint-detail-template.md` を削除し、`src/exec-plans.ts` の展開処理（`reviewViewpointDetails`・`reviewResultSections`・`reviewResultSectionsForDeliverable`）、`src/exec.ts`・`src/exec-run.ts`・`src/exec-results.ts` の `reviewSections` 受け渡しを外した。
+- `xrp-*`: 観点ごとの pass / fail / unclear 判定と owner 以外のロールを絞る指示を削除した。「評価結果」章を追加し、評価対象、grade の対象種別、評価結果サイドカーのパスを `_GRADE_SUBJECT_PATH_`・`_GRADE_TARGET_`・`_GRADE_RESULT_PATH_` として plan 生成時に展開する。レビュー観点表は `done_criteria` を示す「完了条件」表に改めた。
+- 共通事項: `xep-common-conventions-template.md` に「review の判断手順」を追加した。再評価しない原則、`content_hash` と `grade list --changed-only` による鮮度確認（`E-01` に対応）、review 中の変更検知、verdict 表を 12 本の共通の正本とした。
+- `xrr-template.md`: 評価結果の確認、判断根拠、未充足事項・改善指示、approach に応じた確認、decision（`verdict`）の構成に改めた。`verdict` は `complete` / `complete-with-findings` / `incomplete` / `grade-stale` / `grade-unavailable` / `changed-during-review` の 6 値で、`bps-task-completion` の受入観点 6 区分と一対一に対応する。
+- reporter: `src/exec-reporter.ts` と `exec-reporter-output.schema.yaml` の review 出力を `grade_check`・`rationale`・`improvements`・`approach`・`verdict` に置き換え、`src/exec-results.ts` の描画と未記入検知を新しい構成に合わせた。改訂前に scaffold 済みの review result 用に `recommendation: _TODO_` の未記入検知は残した。
+- 既存 review plan への影響: 改訂前の plan から scaffold した review result は、reporter の新しい出力で本文ごと置き換わるため描画は失敗しない。改訂前の plan 本文は観点別評価を指示したままなので、未着手の review plan は再生成が必要である。
+- 未完了: review を agent で 1 件実行して生成される result を確認する作業（No.6）は、executor の sandbox では実行できないため未実施である。`review-guide.md` は旧来の観点別判定と `recommendation` を説明したままであり、別途改訂が必要である。`sch-strategy-*.yaml` の `review` phase の位置づけ変更も別途扱う。
 
 ## 8. 関連ドキュメント
 
