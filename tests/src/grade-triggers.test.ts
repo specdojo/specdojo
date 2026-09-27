@@ -1,8 +1,12 @@
 import { describe, expect, it, beforeEach, afterEach } from "vitest";
-import { mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { discoverGradeTargets } from "../../src/grade.js";
-import { resolveGradeResultsDirectory, gradeResultPath } from "../../src/grade-result.js";
+import {
+  gradeContentHash,
+  resolveGradeResultsDirectory,
+  gradeResultPath,
+} from "../../src/grade-result.js";
 import { writeGradeResult } from "../../src/grade-result.js";
 import { tmpdir } from "node:os";
 import { randomBytes } from "node:crypto";
@@ -239,6 +243,8 @@ describe("grade triggers", () => {
   });
 
   it("should detect unreviewed documents", () => {
+    const kataPath = join(rootDir, "docs/ja/specdojo/recipes/unreviewed-recipe.md");
+    const deliverablePath = join(rootDir, "docs/ja/projects/prj-0001/controls/doc-c.md");
     const targets = discoverGradeTargets(
       {
         target: "kata",
@@ -248,7 +254,7 @@ describe("grade triggers", () => {
       rootDir,
     );
 
-    expect(targets).toContain(join(rootDir, "docs/ja/specdojo/recipes/unreviewed-recipe.md"));
+    expect(targets).toContain(kataPath);
     expect(targets).not.toContain(join(rootDir, "docs/ja/specdojo/recipes/my-recipe.md"));
 
     const targetsDel = discoverGradeTargets(
@@ -260,7 +266,56 @@ describe("grade triggers", () => {
       rootDir,
     );
 
-    expect(targetsDel).toContain(join(rootDir, "docs/ja/projects/prj-0001/controls/doc-c.md"));
+    expect(targetsDel).toContain(deliverablePath);
     expect(targetsDel).not.toContain(join(rootDir, "docs/ja/projects/prj-0001/controls/doc-a.md"));
+
+    for (const [path, document, target] of [
+      [kataPath, "specdojo:unreviewed-recipe", "kata"],
+      [deliverablePath, "prj-0001:doc-c", "deliverable"],
+    ] as const) {
+      const content = readFileSync(path, "utf8");
+      writeGradeResult(
+        gradeResultPath(resolveGradeResultsDirectory("prj-0001", rootDir), document),
+        {
+          version: 1,
+          document,
+          path: path.slice(rootDir.length + 1),
+          target,
+          rubric: "r1",
+          verdict: "pass",
+          score: 100,
+          graded_at: new Date(1000).toISOString(),
+          graded_by: "executor",
+          content_hash: gradeContentHash(content),
+          categories: {},
+          viewpoints: {},
+          finding_counts: { blocker: 0, major: 0, minor: 0, note: 0 },
+          findings: [],
+        },
+      );
+    }
+
+    expect(
+      discoverGradeTargets({ target: "kata", project: "prj-0001", unreviewed: true }, rootDir),
+    ).not.toContain(kataPath);
+    expect(
+      discoverGradeTargets(
+        { target: "deliverable", project: "prj-0001", unreviewed: true },
+        rootDir,
+      ),
+    ).not.toContain(deliverablePath);
+
+    writeFileSync(kataPath, `${readFileSync(kataPath, "utf8")}changed\n`);
+    writeFileSync(deliverablePath, `${readFileSync(deliverablePath, "utf8")}changed\n`);
+
+    expect(
+      discoverGradeTargets({ target: "kata", project: "prj-0001", unreviewed: true }, rootDir),
+    ).toContain(kataPath);
+    expect(
+      discoverGradeTargets(
+        { target: "deliverable", project: "prj-0001", unreviewed: true },
+        rootDir,
+      ),
+    ).toContain(deliverablePath);
   });
 });

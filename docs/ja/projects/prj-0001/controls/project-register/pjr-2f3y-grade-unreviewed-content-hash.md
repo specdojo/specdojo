@@ -37,13 +37,42 @@ PJR-N03W で追加した `grade list --unreviewed`（`src/grade.ts`）は、sche
 
 | No  | 作業                                                                      | 担当 | 状態 | メモ |
 | --- | ------------------------------------------------------------------------- | ---- | ---- | ---- |
-| 1   | `--unreviewed` の選択に、未評価または `content_hash` 不一致の条件を加える | DEV  | open | -    |
-| 2   | 単体テストを追加する                                                      | DEV  | open | -    |
-| 3   | routine の `unreviewed` を有効に戻す                                      | DEV  | open | -    |
+| 1   | `--unreviewed` の選択に、未評価または `content_hash` 不一致の条件を加える | DEV  | done | -    |
+| 2   | 単体テストを追加する                                                      | DEV  | done | -    |
+| 3   | routine の `unreviewed` を有効に戻す                                      | DEV  | done | -    |
 
 ## 4. 対応結果
 
--
+### 実施内容
+
+- `grade list --unreviewed` の schedule タスク有無判定に、grade result サイドカーが存在しない、またはサイドカーの `content_hash` が現在の文書内容と一致しないという条件を追加した。
+- kata と成果物の両方について、未評価文書を選ぶこと、評価済みで同一内容の文書を選ばないこと、評価後に内容を変更した文書を再び選ぶことを単体テストへ追加した。
+- `rtn-grade-recheck` と `rtn-grade-deliverable-recheck` の `unreviewed` を `"true"` に戻し、暫定無効化のコメントを削除した。
+- コマンドリファレンスへ `--unreviewed` の選択条件を追記した。
+
+### 変更ファイル
+
+- `src/grade.ts`
+- `tests/src/grade-triggers.test.ts`
+- `docs/ja/projects/prj-0001/routines/rtn-grade-recheck.yaml`
+- `docs/ja/projects/prj-0001/routines/rtn-grade-deliverable-recheck.yaml`
+- `docs/ja/specdojo/references/command-reference.md`
+- `docs/ja/projects/prj-0001/controls/project-register/pjr-2f3y-grade-unreviewed-content-hash.md`
+
+### 対象件数
+
+2026-09-27 に `grade list --unreviewed --project prj-0001` で確認した。
+
+| 対象   | 変更前 | 変更後 |
+| ------ | -----: | -----: |
+| kata   |    262 |      0 |
+| 成果物 |     19 |      1 |
+
+変更後に選ばれた成果物は `docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md` である。
+
+### 検証
+
+executor では対象ファイルの Prettier 整形と Markdown 検査、TypeScript lint、frontmatter lint、履歴リンク検証、カタログ検証、登録簿生成、索引生成を実施し、すべて成功した。`npm run typecheck`、`npm run test:unit`、`npm run test:integration`、`npm run validate:schema` は executor/reporter pipeline の親 runner が実行するため、executor 内では重複実行していない。
 
 ## 5. 関連ドキュメント
 

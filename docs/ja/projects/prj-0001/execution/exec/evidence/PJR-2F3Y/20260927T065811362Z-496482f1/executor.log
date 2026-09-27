@@ -1,0 +1,13 @@
+`--unreviewed` を、schedule タスクがなく、かつ未評価または内容変更済みの文書だけに限定しました。
+
+- 同一 `content_hash` の評価済み文書を除外。
+- kata／成果物双方の回帰テストを追加。
+- routine 2件の `unreviewed` を再有効化。
+- 対象件数は kata 262→0件、成果物19→1件。
+- 個票とコマンドリファレンスを更新。
+- result は executor 指示に従い未編集です。
+- typecheck・unit/integration test・schema検証は親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"final_message":"未レビュー選択を未評価または内容変更済みの文書に限定し、routineの再有効化と文書更新を完了","validations":[{"command":"npx prettier --write src/grade.ts tests/src/grade-triggers.test.ts docs/ja/projects/prj-0001/routines/rtn-grade-recheck.yaml docs/ja/projects/prj-0001/routines/rtn-grade-deliverable-recheck.yaml docs/ja/specdojo/references/command-reference.md","status":"passed","summary":"実装、テスト、routine、リファレンスを整形"},{"command":"npx markdownlint docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-2f3y-grade-unreviewed-content-hash.md","status":"passed","summary":"変更Markdownに違反なし"},{"command":"npm run lint:ts","status":"passed","summary":"ESLint成功"},{"command":"node --import tsx src/specdojo.ts grade list --target kata --project prj-0001 --unreviewed | wc -l; node --import tsx src/specdojo.ts grade list --target deliverable --project prj-0001 --unreviewed | wc -l","status":"passed","summary":"変更後の対象はkata 0件、成果物1件"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"カタログ検証成功、既存の欠落文書警告のみ"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿派生ビューを生成"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"2090件の文書索引を生成"},{"command":"npm run lint:fm","status":"passed","summary":"frontmatter lint成功"},{"command":"npm run validate:history-links","status":"passed","summary":"履歴リンク検証成功"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>

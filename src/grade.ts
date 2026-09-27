@@ -1156,6 +1156,7 @@ export function discoverGradeTargets(
       if (!scheduledDocuments) return false;
       const id = (document.data.specdojo as Record<string, unknown>)?.id as string;
       if (!id || scheduledDocuments.has(id.split(":").pop()!)) return false;
+      if (result !== undefined && result.content_hash === gradeContentHash(content)) return false;
     }
 
     if (opts.incomplete && pipelineState) {
@@ -2919,7 +2920,11 @@ export function registerGradeCommand(program: Command): void {
         "Select documents whose declared rulebook has been graded more recently",
         false,
       )
-      .option("--unreviewed", "Select documents that do not have a schedule task", false)
+      .option(
+        "--unreviewed",
+        "Select ungraded or changed documents that do not have a schedule task",
+        false,
+      )
       .option(
         "--verdict <verdict>",
         "Select documents with this latest verdict: pass, needs-work, or fail",

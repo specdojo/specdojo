@@ -16,9 +16,7 @@ action:
     limit: "15"
     dependency_changed: "true"
     rulebook_changed: "true"
-    # --unreviewed は内容の変化を見ずに schedule タスクのない文書を毎回すべて選ぶため、
-    # 内容ハッシュで絞る修正（PJR-2F3Y）が入るまで無効にする。
-    unreviewed: "false"
+    unreviewed: "true"
     changed_only: "true"
     ungraded: "true"
     incomplete: "true"
