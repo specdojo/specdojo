@@ -172,6 +172,7 @@ pipeline:
     - typecheck
     - test-unit
     - test-integration
+  parent_validation_concurrency: 1 # 省略時も 1（run 内の親検証を直列化）
 
 rate_limit_detection:
   exit_codes: []
@@ -197,6 +198,10 @@ rate_limit_policy:
 `test-integration` は組み込み許可リストで `npm run test:integration` へ解決されます。設定や executor evidence に command・引数を書くことはできません。未知 ID、重複 ID は agent 起動前の設定エラーになります。親 runner は `shell: false` の固定 argv で実行し、現時点で許可される ID は `validate-schema`、`typecheck`、`test-unit`、`test-integration` の 4 つです。
 
 `typecheck`（`npm run typecheck`）は Vitest と異なり型検査を行うため、executor が残した TypeScript の型エラーを検出します。Vitest は型検査を行わないため、`typecheck` を親検証に含めないと型エラーは test-unit を通過して統合時の pre-commit hook で初めて失敗するため、既定では `test-unit` の前に置いて早めに止めます（PJR-W66B）。
+
+`pipeline.parent_validation_concurrency` は、1 つの `exec run` プロセスの中で親検証を同時に実行できる項目数の上限です。正の整数だけを指定でき、省略時は `1` です。`--parallel` で複数項目を並行実行しても、親検証は項目単位で 1 本ずつ直列に実行されます。vitest は検証ごとに複数の worker を起動するため、検証が重なるとコンテナの負荷で成果物と無関係なタイムアウトが起きます。これを防ぐための既定値です（PJR-3HHW）。制限の対象は親検証だけで、executor と reporter は `--parallel` のとおり並行に動きます。空きを待つ項目は `Waiting for parent validation slot: <項目> (<検証 ID>); running: <実行中の項目>` をログへ出力し、枠を得たときに `Parent validation slot acquired: <項目>` を出力します。
+
+この直列化は、同じ `exec run` プロセス内の全経路に適用されます。対象は executor 成功後の検証、reporter 再開前の検証の再実行、`exec trial` の検証です。一方、別々の `exec run` プロセスどうしはこの枠を共有せず、直列化の対象外とします。同じ project の `exec run` は `exec-run.lock` によって run 全体で排他されるため、検証が重なることはありません。別 project の run を同時に起動した場合は、互いの検証が重なり得ます。プロセスをまたいだ枠を設けない理由は、異常終了時に枠の解放漏れが起き、無関係な run を止めてしまうおそれがあるためです。複数項目を並行で進める場合は、1 つの `exec run --parallel <n>` にまとめます。executor が sandbox 内で実行する検証は runner の管理外です。このため、vitest を使う `test-unit` / `test-integration` は `parent_validations` へ寄せ、executor には実行させません。
 
 provider ごとに挙動が異なる設定は `providers.<provider>` に置きます。各キーは対応するグローバル値を完全に置き換え、未指定のキーはグローバル値にフォールバックします。`<provider>` は `pm-members[].provider` に対応します。指定できるキーは次のとおりです。
 

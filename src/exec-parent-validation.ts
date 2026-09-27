@@ -178,6 +178,90 @@ export async function runParentValidations(
   return validations;
 }
 
+// 並列の worktree 実行で親検証（vitest など複数 worker を起動するコマンド）が重なると、
+// コンテナの負荷で成果物と無関係なタイムアウトが起きる。既定では 1 つの exec run 内の
+// 親検証を直列化し、executor / reporter の並列性は維持する。
+export const DEFAULT_PARENT_VALIDATION_CONCURRENCY = 1;
+
+export function resolveParentValidationConcurrency(value: unknown): number {
+  if (value === undefined) return DEFAULT_PARENT_VALIDATION_CONCURRENCY;
+  if (typeof value !== "number" || !Number.isInteger(value) || value <= 0) {
+    throw new Error(
+      `pipeline.parent_validation_concurrency in exec-defaults must be a positive integer: ${String(value)}`,
+    );
+  }
+  return value;
+}
+
+type ParentValidationWaiter = { label: string; resolve: () => void };
+
+/**
+ * Limits how many parent-validation batches run at once within one `exec run` process.
+ * Waiters are served in arrival order and each waiting item is logged with the validations it
+ * is waiting to run.
+ */
+export class ParentValidationGate {
+  private readonly active: string[] = [];
+  private readonly waiters: ParentValidationWaiter[] = [];
+
+  constructor(
+    readonly limit: number,
+    private readonly log: (line: string) => void = (line) => {
+      process.stdout.write(line);
+    },
+  ) {}
+
+  async run<T>(label: string, ids: readonly string[], task: () => Promise<T>): Promise<T> {
+    await this.acquire(label, ids);
+    try {
+      return await task();
+    } finally {
+      this.release(label);
+    }
+  }
+
+  private async acquire(label: string, ids: readonly string[]): Promise<void> {
+    if (this.active.length < this.limit) {
+      this.active.push(label);
+      return;
+    }
+    this.log(
+      `  Waiting for parent validation slot: ${label} (${ids.join(", ")}); running: ${this.active.join(", ")}\n`,
+    );
+    await new Promise<void>((resolve) => {
+      this.waiters.push({ label, resolve });
+    });
+    this.log(`  Parent validation slot acquired: ${label}\n`);
+  }
+
+  private release(label: string): void {
+    const index = this.active.indexOf(label);
+    if (index >= 0) this.active.splice(index, 1);
+    const next = this.waiters.shift();
+    if (!next) return;
+    // Hand the freed slot directly to the oldest waiter so later arrivals cannot overtake it.
+    this.active.push(next.label);
+    next.resolve();
+  }
+}
+
+// exec-defaults は 1 回の exec run につき 1 度だけ読み込まれ、その run の全項目・全 stage で
+// 同じオブジェクトが共有される。設定オブジェクトをキーにすることで、呼び出し経路へ gate を
+// 引き回さずに run 全体の排他を得る。別プロセスの exec run は対象外。
+const gatesByConfig = new WeakMap<object, ParentValidationGate>();
+
+export function parentValidationGateFor(execDefaults: {
+  pipeline?: { parent_validation_concurrency?: number };
+}): ParentValidationGate {
+  const existing = gatesByConfig.get(execDefaults);
+  if (existing) return existing;
+  const gate = new ParentValidationGate(
+    resolveParentValidationConcurrency(execDefaults.pipeline?.parent_validation_concurrency),
+  );
+  gatesByConfig.set(execDefaults, gate);
+  return gate;
+}
+
 export function failedParentValidationReason(
   validations: readonly EvidenceValidation[],
 ): string | undefined {

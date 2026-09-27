@@ -9,7 +9,10 @@ import {
 } from "./specdojo-config.js";
 import type { AgentLimitKind } from "./exec-limit.js";
 import type { Proficiency } from "./exec-types.js";
-import { resolveParentValidationDefinitions } from "./exec-parent-validation.js";
+import {
+  resolveParentValidationConcurrency,
+  resolveParentValidationDefinitions,
+} from "./exec-parent-validation.js";
 
 // ── Types for .specdojo/exec-defaults.yaml (global + per-provider) ─────────────
 
@@ -77,6 +80,7 @@ export type ProviderOverride = {
 export type ExecDefaultsConfig = {
   pipeline?: {
     parent_validations?: string[];
+    parent_validation_concurrency?: number;
   };
   rate_limit_detection?: RateLimitDetection;
   rate_limit_policy?: RateLimitPolicy;
@@ -360,6 +364,7 @@ export function loadExecDefaultsConfig(
   }
 
   resolveParentValidationDefinitions(defaults.pipeline?.parent_validations);
+  resolveParentValidationConcurrency(defaults.pipeline?.parent_validation_concurrency);
 
   return defaults;
 }

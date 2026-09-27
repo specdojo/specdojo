@@ -61,6 +61,13 @@ $defs:
         items:
           type: string
           enum: [validate-schema, typecheck, test-unit, test-integration]
+      parent_validation_concurrency:
+        type: integer
+        minimum: 1
+        description: >
+          Maximum number of work items whose parent validations may run at the same time within
+          one `exec run` process (default 1). Executor and reporter stages stay parallel; only
+          parent validations wait for a slot. Separate `exec run` processes are not coordinated.
 
   ProviderOverride:
     type: object

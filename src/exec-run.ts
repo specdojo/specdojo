@@ -185,9 +185,11 @@ import {
 import {
   failedParentValidationReason,
   hasRecordedParentValidations,
+  parentValidationGateFor,
   replaceParentValidationResults,
   resolveParentValidationDefinitions,
   runParentValidations,
+  type ParentValidationInvoker,
 } from "./exec-parent-validation.js";
 import { runReporterWithFormatRetry } from "./exec-reporter.js";
 import {
@@ -914,14 +916,26 @@ function resumedTargetCoverageFailure(params: {
   return coverage.reason;
 }
 
+export type ParentValidationRunOptions = {
+  // Identifies the waiting item in gate logs (task / register ID). Defaults to the cwd name.
+  label?: string;
+  invoke?: ParentValidationInvoker;
+};
+
+// 同じ exec run 内の親検証は run 全体の gate（既定 1 本）で直列化する。executor と reporter は
+// gate の外で並列に動き、検証だけが順番待ちになる。
 export async function runConfiguredParentValidations(
   execDefaults: ExecDefaultsConfig,
   cwd: string,
+  options: ParentValidationRunOptions = {},
 ): Promise<Awaited<ReturnType<typeof runParentValidations>>> {
   const ids = execDefaults.pipeline?.parent_validations;
   if (!ids?.length) return [];
-  process.stdout.write(`  Running parent validations: ${ids.join(", ")}\n`);
-  const validations = await runParentValidations(ids, cwd);
+  const label = options.label ?? basename(cwd);
+  const validations = await parentValidationGateFor(execDefaults).run(label, ids, async () => {
+    process.stdout.write(`  Running parent validations (${label}): ${ids.join(", ")}\n`);
+    return await runParentValidations(ids, cwd, options.invoke);
+  });
   for (const validation of validations) {
     process.stdout.write(
       `  Parent validation ${validation.id ?? validation.command}: ${validation.status}\n`,
@@ -945,7 +959,9 @@ async function refreshParentValidationsForReporterResume(params: {
   }
 
   process.stdout.write("  Refreshing parent validations before reporter resume.\n");
-  const parentValidations = await runConfiguredParentValidations(params.execDefaults, params.cwd);
+  const parentValidations = await runConfiguredParentValidations(params.execDefaults, params.cwd, {
+    label: params.evidence.task_id,
+  });
   const evidence = replaceParentValidationResults(params.evidence, parentValidations);
   writeExecutorEvidence(params.evidencePath, evidence);
   process.stdout.write(
@@ -963,7 +979,9 @@ async function appendParentValidationsToExecutorEvidence(params: {
   evidence: ExecEvidence;
   evidencePath: string;
 }): Promise<ExecEvidence> {
-  const parentValidations = await runConfiguredParentValidations(params.execDefaults, params.cwd);
+  const parentValidations = await runConfiguredParentValidations(params.execDefaults, params.cwd, {
+    label: params.evidence.task_id,
+  });
   const evidence = replaceParentValidationResults(params.evidence, parentValidations);
   writeExecutorEvidence(params.evidencePath, evidence);
   return evidence;
