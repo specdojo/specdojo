@@ -58,3 +58,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_b6b3432583d540fb82257b87f6d4143e
+- v: 1
+  id: reg_d8ac94a2cd624d8698ea86764aa2c8a1
+  ts: "2026-09-27T00:20:17Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: claude-expert-executor の実行結果を orchestrator が評価し完了条件を満たすと判断
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-27"
+    - field: conclusion
+      from: "-"
+      to: local_id を bps-task-verification へ改め参照元3件を追随、cdfd-overview の Check への要求を評価・報告・生成要求にし、Plan/Do/Check/Action から Orchestrator への応答4本を cdfd-orchestrator と一致させた
+  previous_event_id: reg_ed333f0f1eac4f54b9ef74522c5b98be

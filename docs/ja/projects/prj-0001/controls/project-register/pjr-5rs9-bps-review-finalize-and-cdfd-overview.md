@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-5rs9-bps-review-finalize-and-cdfd-overview
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-09-26T23:23:17Z"
+  completed_at: "2026-09-27T00:20:17Z"
+  conclusion: local_id を bps-task-verification へ改め参照元3件を追随、cdfd-overview の Check への要求を評価・報告・生成要求にし、Plan/Do/Check/Action から Orchestrator への応答4本を cdfd-orchestrator と一致させた
 ---
 
 # PJR-5RS9 bps-task-review-finalize の local_id を中身に合わせ cdfd-overview の不整合を直す
