@@ -22,6 +22,7 @@ import {
   type SpecDojoProjectConfig,
 } from "./specdojo-config.js";
 import { listFilesRecursive } from "./exec-shared.js";
+import { buildScheduleIndex } from "./exec-schedule-index.js";
 import { resolveSpecdojoPath } from "./template-resolution.js";
 import {
   gradeContentHash,
@@ -43,6 +44,9 @@ export type GradeVerdict = "pass" | "needs-work" | "fail";
 
 export type GradeTargetFilters = {
   changedOnly?: boolean;
+  dependencyChanged?: boolean;
+  rulebookChanged?: boolean;
+  unreviewed?: boolean;
   verdict?: GradeVerdict;
   minScore?: number;
   maxFindings?: number;
@@ -725,6 +729,7 @@ type DeliverableCatalogEntry = {
   path: string;
   localId: string;
   doneCriteria: GradeDoneCriterion[];
+  dependsOn?: string[];
 };
 
 function criterionId(index: number): string {
@@ -757,6 +762,7 @@ function loadDeliverableCatalog(
       entries.set(path, {
         path,
         localId: item.item.local_id,
+        dependsOn: item.item.depends_on,
         doneCriteria: (item.item.done_criteria ?? []).map((criterion, index) => ({
           id: criterionId(index),
           text: criterion.text,
@@ -1054,6 +1060,9 @@ export function discoverGradeTargets(
     .sort();
   if (
     !opts.changedOnly &&
+    !opts.dependencyChanged &&
+    !opts.rulebookChanged &&
+    !opts.unreviewed &&
     opts.verdict === undefined &&
     opts.minScore === undefined &&
     opts.maxFindings === undefined &&
@@ -1065,6 +1074,55 @@ export function discoverGradeTargets(
   const pipelineStates = opts.incomplete
     ? loadGradePipelineStates(opts.project, rootDir)
     : new Map<string, GradePipelineState>();
+
+  let deliverableCatalog: Map<string, DeliverableCatalogEntry> | undefined;
+  const localIdToPath = new Map<string, string>();
+  if (opts.target === "deliverable" && opts.dependencyChanged) {
+    deliverableCatalog = loadDeliverableCatalog(opts.project, rootDir);
+    for (const [p, entry] of deliverableCatalog.entries()) {
+      localIdToPath.set(entry.localId, p);
+    }
+  }
+
+  let scheduledDocuments: Set<string> | undefined;
+  if (opts.unreviewed) {
+    const { project } = resolveProject(opts.project);
+    const schedulePath = join(rootDir, getProjectExecutionPath(project), "../schedule");
+    try {
+      const index = buildScheduleIndex(schedulePath);
+      scheduledDocuments = new Set();
+      for (const node of index.nodes.values()) {
+        if (node.local_id) scheduledDocuments.add(node.local_id);
+        if (node.target_local_ids) {
+          for (const tid of node.target_local_ids) scheduledDocuments.add(tid);
+        }
+      }
+    } catch {
+      scheduledDocuments = new Set();
+    }
+  }
+
+  const gradeDates = new Map<string, number>();
+  function getMemoizedGradeDate(p: string) {
+    if (!gradeDates.has(p)) {
+      const res = readGradeResultForDocument({
+        documentPath: relativePathFromRoot(p, rootDir),
+        project: opts.project,
+        rootDir,
+      });
+      gradeDates.set(p, res ? new Date(res.graded_at).getTime() : 0);
+    }
+    return gradeDates.get(p)!;
+  }
+
+  function getRulebookPath(rulebookId: string) {
+    if (rulebookId.startsWith("specdojo:")) {
+      const id = rulebookId.slice("specdojo:".length);
+      return join(rootDir, "docs/ja/specdojo/rulebooks", `${id}.md`);
+    }
+    return undefined;
+  }
+
   return unique.filter((path) => {
     const rel = relativePathFromRoot(path, rootDir);
     const content = readFileSync(path, "utf8");
@@ -1080,9 +1138,10 @@ export function discoverGradeTargets(
       project: opts.project,
       rootDir,
     });
-    if (opts.incomplete && !isIncompleteGradePipelineState(pipelineState)) return false;
-    if (opts.ungraded && result !== undefined) return false;
-    if (opts.verdict !== undefined && result?.verdict !== opts.verdict) return false;
+
+    if (opts.verdict !== undefined && (result === undefined || result.verdict !== opts.verdict)) {
+      return false;
+    }
     if (opts.minScore !== undefined && (result === undefined || result.score < opts.minScore)) {
       return false;
     }
@@ -1092,7 +1151,54 @@ export function discoverGradeTargets(
     ) {
       return false;
     }
-    return !opts.changedOnly || result?.content_hash !== gradeContentHash(content);
+
+    if (opts.unreviewed) {
+      if (!scheduledDocuments) return false;
+      const id = (document.data.specdojo as Record<string, unknown>)?.id as string;
+      if (!id || scheduledDocuments.has(id.split(":").pop()!)) return false;
+    }
+
+    if (opts.incomplete && pipelineState) {
+      if (!isIncompleteGradePipelineState(pipelineState)) return false;
+    } else if (opts.incomplete) {
+      return false;
+    }
+
+    if (opts.ungraded && result !== undefined) return false;
+
+    if (result === undefined) {
+      if (opts.dependencyChanged || opts.rulebookChanged) return false;
+      return true;
+    }
+
+    const docDate = new Date(result.graded_at).getTime();
+
+    if (opts.rulebookChanged) {
+      const rb = (document.data.specdojo as Record<string, unknown>)?.rulebook as string;
+      if (!rb) return false;
+      const rbPath = getRulebookPath(rb);
+      if (!rbPath || !existsSync(rbPath)) return false;
+      if (getMemoizedGradeDate(rbPath) <= docDate) return false;
+    }
+
+    if (opts.dependencyChanged) {
+      if (!deliverableCatalog) return false;
+      const entry = deliverableCatalog.get(path);
+      if (!entry || !entry.dependsOn) return false;
+      let changed = false;
+      for (const depId of entry.dependsOn) {
+        const depPath = localIdToPath.get(depId);
+        if (depPath && getMemoizedGradeDate(depPath) > docDate) {
+          changed = true;
+          break;
+        }
+      }
+      if (!changed) return false;
+    }
+
+    if (opts.changedOnly && result.content_hash === gradeContentHash(content)) return false;
+
+    return true;
   });
 }
 
@@ -1155,6 +1261,11 @@ function matchesParsedGradeTargetFilters(
   filters: GradeTargetFilters,
   incomplete = false,
 ): boolean {
+  if (filters.dependencyChanged || filters.rulebookChanged || filters.unreviewed) {
+    throw new Error(
+      "dependencyChanged, rulebookChanged, unreviewed cannot be evaluated individually without context",
+    );
+  }
   const specdojo = document.data.specdojo as Record<string, unknown>;
   const grade = isRecord(specdojo.grade) ? specdojo.grade : undefined;
   if (filters.incomplete && !incomplete) return false;
@@ -2799,6 +2910,17 @@ export function registerGradeCommand(program: Command): void {
       )
       .option("--changed-only", "Select documents changed since their latest grade", false)
       .option(
+        "--dependency-changed",
+        "Select documents whose dependencies have been graded more recently",
+        false,
+      )
+      .option(
+        "--rulebook-changed",
+        "Select documents whose declared rulebook has been graded more recently",
+        false,
+      )
+      .option("--unreviewed", "Select documents that do not have a schedule task", false)
+      .option(
         "--verdict <verdict>",
         "Select documents with this latest verdict: pass, needs-work, or fail",
         requireGradeVerdict,
@@ -2825,6 +2947,9 @@ export function registerGradeCommand(program: Command): void {
         project: options.project,
         paths: options.path,
         changedOnly: options.changedOnly,
+        dependencyChanged: options.dependencyChanged,
+        rulebookChanged: options.rulebookChanged,
+        unreviewed: options.unreviewed,
         verdict: options.verdict,
         minScore: options.minScore,
         maxFindings: options.maxFindings,
@@ -2859,6 +2984,9 @@ export function registerGradeCommand(program: Command): void {
           project: options.project,
           paths: options.path,
           changedOnly: options.changedOnly,
+          dependencyChanged: options.dependencyChanged,
+          rulebookChanged: options.rulebookChanged,
+          unreviewed: options.unreviewed,
           verdict: options.verdict,
           minScore: options.minScore,
           maxFindings: options.maxFindings,
@@ -2943,6 +3071,9 @@ export function registerGradeCommand(program: Command): void {
             project: options.project,
             paths: options.path,
             changedOnly: options.changedOnly,
+            dependencyChanged: options.dependencyChanged,
+            rulebookChanged: options.rulebookChanged,
+            unreviewed: options.unreviewed,
             verdict: options.verdict,
             minScore: options.minScore,
             maxFindings: options.maxFindings,
@@ -3010,6 +3141,9 @@ export function registerGradeCommand(program: Command): void {
         project: options.project,
         paths: options.path,
         changedOnly: options.changedOnly,
+        dependencyChanged: options.dependencyChanged,
+        rulebookChanged: options.rulebookChanged,
+        unreviewed: options.unreviewed,
         verdict: options.verdict,
         minScore: options.minScore,
         maxFindings: options.maxFindings,

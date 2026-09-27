@@ -10,13 +10,13 @@ inputs:
     type: integer
     default: 0
     minimum: 0
-  changed_only:
+  dependency_changed:
     type: boolean
     default: false
-  ungraded:
+  rulebook_changed:
     type: boolean
     default: false
-  incomplete:
+  unreviewed:
     type: boolean
     default: false
 task:
@@ -25,19 +25,17 @@ task:
   precondition:
     command: |
       selection=$(
-        if [ "{{inputs.changed_only}}" = "false" ] && [ "{{inputs.ungraded}}" = "false" ] && [ "{{inputs.incomplete}}" = "false" ]; then
+        if [ "{{inputs.dependency_changed}}" = "false" ] && [ "{{inputs.rulebook_changed}}" = "false" ] && [ "{{inputs.unreviewed}}" = "false" ]; then
           {{specdojo}} grade list --target deliverable --project {{project_id}}
         else
-          if [ "{{inputs.changed_only}}" = "true" ]; then
-            {{specdojo}} grade list --target deliverable --project {{project_id}} --changed-only || exit $?
+          if [ "{{inputs.dependency_changed}}" = "true" ]; then
+            {{specdojo}} grade list --target deliverable --project {{project_id}} --dependency-changed || exit $?
           fi
-          if [ "{{inputs.ungraded}}" = "true" ]; then
-            {{specdojo}} grade list --target deliverable --project {{project_id}} --ungraded || exit $?
+          if [ "{{inputs.rulebook_changed}}" = "true" ]; then
+            {{specdojo}} grade list --target deliverable --project {{project_id}} --rulebook-changed || exit $?
           fi
-          if [ "{{inputs.incomplete}}" = "true" ]; then
-            {{specdojo}} grade list --target deliverable --project {{project_id}} --incomplete || exit $?
-            # 上限到達成果物は処理対象外だが、report-only Job を起動するため precondition に含める。
-            {{specdojo}} grade state --target deliverable --project {{project_id}} --exhausted || exit $?
+          if [ "{{inputs.unreviewed}}" = "true" ]; then
+            {{specdojo}} grade list --target deliverable --project {{project_id}} --unreviewed || exit $?
           fi
         fi
       )
@@ -50,7 +48,7 @@ task:
     skip_when: empty-output
   command: |
     npm run build
-    if tools/grade/run-per-document.sh --run-id {{job_run_id}} --stages 1 --target deliverable --limit {{inputs.limit}} --changed-only={{inputs.changed_only}} --ungraded={{inputs.ungraded}} --incomplete={{inputs.incomplete}}; then
+    if tools/grade/run-per-document.sh --run-id {{job_run_id}} --stages 1 --target deliverable --limit {{inputs.limit}} --dependency-changed={{inputs.dependency_changed}} --rulebook-changed={{inputs.rulebook_changed}} --unreviewed={{inputs.unreviewed}}; then
       cat logs/grade/runs/per-document/{{job_run_id}}/results.tsv
     else
       grade_status=$?
@@ -77,4 +75,4 @@ task:
   paths:
     - docs/ja/projects/prj-0001
 run:
-  idempotency_key: "{{job_id}}:command-v5:{{scheduled_at}}:{{inputs.limit}}:{{inputs.changed_only}}:{{inputs.ungraded}}:{{inputs.incomplete}}"
+  idempotency_key: "{{job_id}}:command-v5:{{scheduled_at}}:{{inputs.limit}}:{{inputs.dependency_changed}}:{{inputs.rulebook_changed}}:{{inputs.unreviewed}}"

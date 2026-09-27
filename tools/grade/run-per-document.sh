@@ -70,6 +70,9 @@ specdojo_bin=
 changed_only=false
 ungraded=false
 incomplete=false
+dependency_changed=false
+rulebook_changed=false
+unreviewed=false
 max_stage_failures=3
 # PJR-W5JT で 3 段構成を廃止し codex 単段へ移したため、既定は 1 とする。gemma の 1・2 段は
 # 門番として機能せず、本質的な major を見落として満点を付ける一方で前回 finding を現在内容と
@@ -124,6 +127,30 @@ while [[ $# -gt 0 ]]; do
       ;;
     --changed-only=*)
       changed_only=${1#*=}
+      shift
+      ;;
+    --dependency-changed)
+      dependency_changed=true
+      shift
+      ;;
+    --dependency-changed=*)
+      dependency_changed=${1#*=}
+      shift
+      ;;
+    --rulebook-changed)
+      rulebook_changed=true
+      shift
+      ;;
+    --rulebook-changed=*)
+      rulebook_changed=${1#*=}
+      shift
+      ;;
+    --unreviewed)
+      unreviewed=true
+      shift
+      ;;
+    --unreviewed=*)
+      unreviewed=${1#*=}
       shift
       ;;
     --ungraded)
@@ -232,8 +259,10 @@ done
 [[ "$run_id" =~ ^[A-Za-z0-9._-]+$ ]] ||
   fail "--run-id must contain only letters, digits, dot, underscore, or hyphen"
 [[ "$limit" =~ ^[0-9]+$ ]] || fail "--limit must be a non-negative integer"
-[[ "$changed_only" == true || "$changed_only" == false ]] ||
-  fail "--changed-only must be true or false"
+[[ "$changed_only" == true || "$changed_only" == false ]] || fail "--changed-only must be true or false"
+[[ "$dependency_changed" == true || "$dependency_changed" == false ]] || fail "--dependency-changed must be true or false"
+[[ "$rulebook_changed" == true || "$rulebook_changed" == false ]] || fail "--rulebook-changed must be true or false"
+[[ "$unreviewed" == true || "$unreviewed" == false ]] || fail "--unreviewed must be true or false"
 [[ "$ungraded" == true || "$ungraded" == false ]] || fail "--ungraded must be true or false"
 [[ "$incomplete" == true || "$incomplete" == false ]] || fail "--incomplete must be true or false"
 [[ "$stages" == 1 || "$stages" == 3 ]] || fail "--stages must be 1 or 3"
@@ -398,6 +427,27 @@ select_documents() {
     if $changed_only; then
       output=$("${specdojo_command[@]}" "${list_command[@]}" --changed-only) ||
         fail "grade list --changed-only failed"
+      while IFS= read -r path; do
+        [[ -n "$path" ]] && candidates+=("$path")
+      done <<<"$output"
+    fi
+    if $dependency_changed; then
+      output=$("${specdojo_command[@]}" "${list_command[@]}" --dependency-changed) ||
+        fail "grade list --dependency-changed failed"
+      while IFS= read -r path; do
+        [[ -n "$path" ]] && candidates+=("$path")
+      done <<<"$output"
+    fi
+    if $rulebook_changed; then
+      output=$("${specdojo_command[@]}" "${list_command[@]}" --rulebook-changed) ||
+        fail "grade list --rulebook-changed failed"
+      while IFS= read -r path; do
+        [[ -n "$path" ]] && candidates+=("$path")
+      done <<<"$output"
+    fi
+    if $unreviewed; then
+      output=$("${specdojo_command[@]}" "${list_command[@]}" --unreviewed) ||
+        fail "grade list --unreviewed failed"
       while IFS= read -r path; do
         [[ -n "$path" ]] && candidates+=("$path")
       done <<<"$output"
