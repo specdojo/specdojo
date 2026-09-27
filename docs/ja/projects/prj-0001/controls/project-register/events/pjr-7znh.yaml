@@ -1,0 +1,53 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f46f1b73f1304b86b6e8487ceb9f418f
+  ts: "2026-09-27T01:18:56Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-06RE の失敗原因の調査結果
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: schedule build が track と milestones の schema modeline を消さないようにする
+    - field: description
+      from: ""
+      to: schedule build は yaml.dump の結果だけを書き出すため、sch-track-*.yaml と sch-milestones.yaml の先頭の yaml-language-server modeline が消え、validate:schema が失敗する。PJR-06RE の実行がこれで止まった
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-27"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_6f365f2129884a01a52b795cbd69e82b
+  ts: "2026-09-27T01:21:35Z"
+  action: close
+  actor: orchestrator
+  from_status: open
+  to_status: done
+  reason: 利用者の承認を受け orchestrator が直接実装し、単体テストと dry-run で確認した
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-27"
+    - field: conclusion
+      from: "-"
+      to: schedule build の track と milestones の書き出しへ schema modeline を付けるようにした
+  previous_event_id: reg_f46f1b73f1304b86b6e8487ceb9f418f
