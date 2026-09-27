@@ -529,6 +529,7 @@ visited_documents=0
 processed=0
 completed=0
 incomplete_documents=0
+incomplete_records=()
 pipeline_finished=false
 failure_reason=
 
@@ -945,6 +946,7 @@ for document in "${selected_paths[@]}"; do
     fi
     if [[ "$stage_status" == failed ]]; then
       incomplete_documents=$((incomplete_documents + 1))
+      incomplete_records+=("$document failed_stage=1")
       if [[ "$pipeline_consecutive_failures" -ge "$pipeline_max_failures" ]]; then
         printf 'document incomplete: %s failed_stage=1 reason=failure_limit consecutive_failures=%s max_failures=%s\n' \
           "$document" "$pipeline_consecutive_failures" "$pipeline_max_failures"
@@ -981,6 +983,7 @@ for document in "${selected_paths[@]}"; do
     fi
     if [[ "$stage_2_status" == failed ]]; then
       incomplete_documents=$((incomplete_documents + 1))
+      incomplete_records+=("$document failed_stage=2")
       if [[ "$pipeline_consecutive_failures" -ge "$pipeline_max_failures" ]]; then
         printf 'document incomplete: %s failed_stage=2 reason=failure_limit consecutive_failures=%s max_failures=%s\n' \
           "$document" "$pipeline_consecutive_failures" "$pipeline_max_failures"
@@ -1011,6 +1014,7 @@ for document in "${selected_paths[@]}"; do
     fi
     if [[ "$stage_status" == failed ]]; then
       incomplete_documents=$((incomplete_documents + 1))
+      incomplete_records+=("$document failed_stage=3")
       if [[ "$pipeline_consecutive_failures" -ge "$pipeline_max_failures" ]]; then
         printf 'document incomplete: %s failed_stage=3 reason=failure_limit consecutive_failures=%s max_failures=%s\n' \
           "$document" "$pipeline_consecutive_failures" "$pipeline_max_failures"
@@ -1039,3 +1043,15 @@ printf 'grade pipeline complete: selected=%s processed=%s completed_now=%s incom
   "${#selected_paths[@]}" "$processed" "$completed" "$incomplete_documents" \
   "${#exhausted_paths[@]}" "$results_file"
 pipeline_finished=true
+
+# 最後まで走りきっても段の失敗で未完了の文書が残った場合は、呼び出し元（routine など）が
+# 検知できるよう終了コード 1 で終える。pipeline_finished=true を立てた後なので、
+# EXIT trap は打ち切り（aborted）として扱わず、この終了コードをそのまま返す。
+if ((incomplete_documents > 0)); then
+  printf 'grade pipeline incomplete: incomplete=%s run_id=%s; rerun with --run-id %s to retry the failed stages, or start a new run with --incomplete\n' \
+    "$incomplete_documents" "$run_id" "$run_id" >&2
+  for record in "${incomplete_records[@]}"; do
+    printf 'grade pipeline incomplete document: %s\n' "$record" >&2
+  done
+  exit 1
+fi
