@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-r0xa-wait-ancestry-ours-merge-reverts
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-09-27T03:07:17Z"
+  completed_at: "2026-09-27T07:46:00Z"
   block_reason: "agent exited with non-zero code: runner validation `test-integration` (`npm run test:integration`) が failed となったため。"
+  conclusion: syncExecBranchAfterWait の -s ours を通常 merge に改め、記帳ファイルの競合だけ統合先側で解決し、それ以外の競合は中断して worktree を保持する。ブランチ作成後に統合先へ入った成果が再開・統合後も残ることを統合テストで確認した
 ---
 
 # PJR-R0XA waiting からの再開前の develop 取り込みが統合時に他項目の成果を消す

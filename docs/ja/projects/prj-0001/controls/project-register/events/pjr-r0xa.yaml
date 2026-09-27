@@ -87,3 +87,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_f99acbe792a444a4b7965ed700fd5137
+- v: 1
+  id: reg_99e52a19fe4444a682eae22bef84dc67
+  ts: "2026-09-27T07:46:00Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: codex-expert-executor の 2 回目の実行結果を orchestrator が評価し、runner の検証の全通過と統合で削除がないことを確認
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-27"
+    - field: conclusion
+      from: "-"
+      to: syncExecBranchAfterWait の -s ours を通常 merge に改め、記帳ファイルの競合だけ統合先側で解決し、それ以外の競合は中断して worktree を保持する。ブランチ作成後に統合先へ入った成果が再開・統合後も残ることを統合テストで確認した
+  previous_event_id: reg_2093da750d1d489eb148ddeb9a2a25fd
