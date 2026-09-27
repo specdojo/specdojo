@@ -5,6 +5,12 @@ import dotenv from "dotenv";
 import yaml from "js-yaml";
 import type { AgentStageRole, SchedulerStrategy, TaskMode } from "./exec-types.js";
 import { runProviderScaffold, specdojoPackageRootDir } from "./exec-provider-scaffold.js";
+import {
+  ensureGitignore,
+  formatGitignoreReport,
+  gitignorePatternsForLayouts,
+  type ProjectGitignoreLayout,
+} from "./specdojo-gitignore.js";
 
 export type SpecDojoRunConfig = {
   exec_defaults?: string;
@@ -294,6 +300,35 @@ export function writeConfig(config: SpecDojoConfig): void {
   writeFileSync(configPath, JSON.stringify(config, null, 2) + "\n", "utf8");
 }
 
+// Resolve the repo-root-relative paths whose generated/ outputs must stay untracked.
+// members/roles/viewpoints are single files, so they never hold a generated/ directory.
+export function projectGitignoreLayout(project: SpecDojoProjectConfig): ProjectGitignoreLayout {
+  const projectPaths = [
+    getProjectCatalogPath(project),
+    getProjectSchedulePath(project),
+    getProjectExecutionPath(project),
+    getProjectTimelinePath(project),
+    getProjectRegisterPath(project),
+    getProjectRoutinesPath(project),
+    getProjectJobsPath(project),
+  ].filter((path): path is string => path !== undefined);
+  return {
+    basePath: project.base_path,
+    projectPaths,
+    executionPath: getProjectExecutionPath(project),
+  };
+}
+
+function writeGitignoreForConfig(config: SpecDojoConfig, dryRun: boolean): void {
+  const layouts = Object.keys(config.projects)
+    .sort()
+    .map((id) => projectGitignoreLayout(config.projects[id]));
+  const result = ensureGitignore(specdojoRootDir(), gitignorePatternsForLayouts(layouts), {
+    dryRun,
+  });
+  process.stdout.write(formatGitignoreReport(result, dryRun));
+}
+
 export function registerConfigCommands(program: Command): void {
   const cfg = program
     .command("config")
@@ -301,11 +336,17 @@ export function registerConfigCommands(program: Command): void {
 
   cfg
     .command("init")
-    .description("Create .specdojo/specdojo.config.json template (does not overwrite existing)")
-    .action(() => {
+    .description(
+      "Create .specdojo/specdojo.config.json template (does not overwrite existing) " +
+        "and add the lines excluding specdojo outputs to .gitignore",
+    )
+    .option("--dry-run", "Show the planned config and .gitignore lines without writing", false)
+    .action((opts: { dryRun?: boolean }) => {
+      const dryRun = !!opts.dryRun;
       const { configPath, config } = loadConfig();
       if (config) {
         process.stdout.write(`Already exists: ${configPath}\n`);
+        writeGitignoreForConfig(config, dryRun);
         return;
       }
       const template: SpecDojoConfig = {
@@ -322,8 +363,14 @@ export function registerConfigCommands(program: Command): void {
           },
         },
       };
-      writeConfig(template);
-      process.stdout.write(`Created: ${configPath}\n`);
+      if (dryRun) {
+        process.stdout.write(`Would create (dry-run): ${configPath}\n`);
+      } else {
+        writeConfig(template);
+        process.stdout.write(`Created: ${configPath}\n`);
+      }
+      writeGitignoreForConfig(template, dryRun);
+      if (dryRun) return;
       process.stdout.write(
         "Next steps:\n" +
           "  1. Keep this repository beside the product repository as app1-specdojo/.\n" +

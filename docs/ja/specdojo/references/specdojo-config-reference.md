@@ -98,6 +98,8 @@ SpecDojo Configuration Reference
 
 `config init` は別リポジトリ構成の標準配置に合わせ、一般既定の `../worktrees` ではなく `../app1-worktrees` を `worktree_base` へ明示します。
 
+`config init` は、設定した配置から生成物を除外する `.gitignore` の行も導きます。既定の行は `.specdojo/doc-index.json`、`docs/**/generated/*`、`!docs/**/generated/.gitkeep`、`docs/**/execution/exec/.locks/` です。`base_path` が `docs/` の外にある場合は `<base_path>/**/generated/*` などを追加し、`base_path` が無い場合は各パス設定から導いた行を追加します。リポジトリ外を指すパスは対象にしません。配置を変えた後は `config init` を再実行すると、足りない行だけが追記されます。
+
 ## 6. catalog・schedule・execへ進む設定例
 
 register の最小構成から成果物カタログと Schedule へ進む場合は、対象 project へ必要なキーを追加します。次は Quick Start の代表例です。

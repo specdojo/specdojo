@@ -56,7 +56,7 @@ docs/**/generated/*
 
 | No  | 作業                                           | 担当 | 状態 | メモ                                                         |
 | --- | ---------------------------------------------- | ---- | ---- | ------------------------------------------------------------ |
-| 1   | 除外するパターンを決める                       | DEV  | done | `docs/` 外の配置は `base_path` か各パスの親から導く          |
+| 1   | 除外するパターンを決める                       | DEV  | done | `docs/` 外の配置は `base_path` か各パス設定から導く          |
 | 2   | `config init` へ `.gitignore` の追記を実装する | DEV  | done | 既存の行は変えず、足りない行だけを末尾へ追記する             |
 | 3   | 統合テストで並行実行の衝突がないことを確かめる | DEV  | done | 並行 E2E テストの手書き `.gitignore` を `config init` に置換 |
 | 4   | README と案内を更新する                        | DEV  | done | README と `command-reference`・`specdojo-config-reference`   |
@@ -64,10 +64,10 @@ docs/**/generated/*
 ## 5. 対応結果
 
 - `src/specdojo-gitignore.ts` を追加し、生成物を除外するパターンの導出（`gitignorePatternsForLayouts`。配置は `specdojo-config.ts` の `projectLayout` で解決して渡す）と、既存の `.gitignore` への追記（`mergeGitignore` / `ensureGitignore`）を実装した。
-- 既定のパターンは `.specdojo/doc-index.json`、`docs/**/generated/*`、`!docs/**/generated/.gitkeep`、`docs/**/execution/exec/.locks/` とした。`base_path` が `docs/` の外にある場合は `<base_path>/**/generated/*` などを、`base_path` が無い場合は各パス設定の親ディレクトリから導いた行を追加する。リポジトリ外を指すパスは除外対象にしない。
+- 既定のパターンは `.specdojo/doc-index.json`、`docs/**/generated/*`、`!docs/**/generated/.gitkeep`、`docs/**/execution/exec/.locks/` とした。`base_path` が `docs/` の外にある場合は `<base_path>/**/generated/*` などを、`base_path` が無い場合は各パス設定（catalog・schedule・execution・timeline・登録簿・routines・jobs）から導いた `<path>/**/generated/*` などを追加する。実行ロックは execution の配置から `<execution_path>/exec/.locks/` を導く。リポジトリ外を指すパスは除外対象にしない。
 - `config init` は、設定を作成したときも、設定がすでにあるときも `.gitignore` を確認し、足りない行だけを末尾へ追記する。既存の行は変えず、CRLF の改行も維持する。追記した行と飛ばした行を表示し、追記があった場合は管理済みの生成物を `git rm -r --cached` で外す手順（`git ls-files -ci --exclude-standard -z | xargs -0 -r git rm -r --cached --quiet`）を案内する。`--dry-run` では設定も `.gitignore` も書き込まない。
 - `tests/src/specdojo-gitignore.test.ts` を追加し、配置からのパターン導出、追記の冪等性、CRLF の維持を確かめた。`tests/src/specdojo-config-command.test.ts` に、新規作成・既存への追記と再実行・`--dry-run` のテストを追加した。
-- `tests/src/exec-register-pipeline-e2e.integration.test.ts` の 2 項目並行実行テストで、手書きしていた `.gitignore` を `config init` の実行に置き換え、案内どおり `git rm -r --cached` で管理済みの生成物（`docs`、`.specdojo/doc-index.json`）を外してから実行するようにした。
+- `tests/src/exec-register-pipeline-e2e.integration.test.ts` の 2 項目並行実行テストで、手書きしていた `.gitignore` を `config init` の実行に置き換え、案内どおり `git ls-files -ci --exclude-standard` で見つかる管理済みの生成物を `git rm -r --cached` で外してから実行するようにした。
 - README の「npm で導入する」、`command-reference.md`、`specdojo-config-reference.md` に `.gitignore` の追記を記載した。
 
 ## 6. 関連ドキュメント

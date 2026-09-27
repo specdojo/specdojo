@@ -64,6 +64,8 @@ SpecDojo は開発時に使う文書・実行管理ツールなので、`--save-
 
 `config init` は、登録簿を使い始めるための最小設定を `.specdojo/specdojo.config.json` に作成します。設定を変える方法は、後述の「設定を変えたいとき」を参照してください。
 
+あわせて、SpecDojo の生成物（`docs/**/generated/*`、`.specdojo/doc-index.json` など）を git の管理から外す行を `.gitignore` に用意します。`.gitignore` が無ければ作成し、既にあれば足りない行だけを末尾へ追記します。生成物を管理外にしておくと、登録簿の項目を並行実行したときに生成物どうしが衝突しません。追記する行は `npx specdojo config init --dry-run` で事前に確認できます。すでに生成物を git で管理している場合は、表示される案内に従って `git rm -r --cached` で管理から外し、コミットします。
+
 ### オーケストレーターを配置する
 
 SpecDojo は、会話を CLI 操作へ変換する対話型オーケストレーターを同梱しています。利用する AI ツール（provider）の設定を配置します。次は Claude Code を使う例です。
