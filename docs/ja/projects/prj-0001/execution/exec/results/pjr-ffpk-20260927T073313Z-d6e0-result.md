@@ -4,14 +4,13 @@ specdojo:
   type: exec-result
   task_id: PJR-FFPK
   mode: edit
-  status: blocked
+  status: superseded
   project_id: prj-0001
   origin: register
   plan_ref: exec/plans/pjr-ffpk-20260927T073313Z-d6e0-plan.md
   started_at: "2026-09-27T07:34:13.508Z"
-  completed_at: "2026-09-27T07:45:15.093Z"
+  completed_at: "2026-09-27T07:47:44.082Z"
   agent: agy-expert-executor
-  block_reason: "agent exited with non-zero code: Runner validation `test-integration` failed (exit 1). The deliverable is unverifiable as the integration tests did not pass."
 ---
 
 # Edit Result
