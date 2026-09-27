@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-qqxp-docs-search-index-scope
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-09-26T23:38:14Z"
+  completed_at: "2026-09-27T05:30:06Z"
+  conclusion: renderSearchHtml へパスパターンの除外を加え、登録簿は pjr-index だけを検索対象に残した。ja 検索インデックスは 9,783,822→5,927,919 byte、9,133→5,621 セクション
 ---
 
 # PJR-QQXP VitePress のローカル検索から不要な文書を外して高速化する

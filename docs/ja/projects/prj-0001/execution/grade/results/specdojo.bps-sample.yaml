@@ -5,19 +5,19 @@ path: docs/ja/specdojo/samples/bps-sample.md
 target: kata
 rubric: grade-rubric-v1
 verdict: needs-work
-score: 75
-graded_at: "2026-09-27T04:08:56.077Z"
+score: 82
+graded_at: "2026-09-27T05:29:43.201Z"
 graded_by: codex-expert-executor
-content_hash: 2a877aadcae57b8eb59468f01af0a56bfe33c7755504b78b3d77a194c5a8cb5f
+content_hash: 334540040e7eeeae98febd862a697473612ddea18a46f61a7abef92bbf75912e
 categories:
   usability:
-    score: 92
+    score: 100
   architecture:
     score: 100
   quality:
     score: 63
   consistency:
-    score: 50
+    score: 75
 viewpoints:
   vp-arc-conciseness:
     level: 4
@@ -29,8 +29,8 @@ viewpoints:
     level: 3
     score: 75
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
     level: 2
     score: 50
@@ -38,65 +38,68 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 0
-  major: 2
-  minor: 5
+  major: 1
+  minor: 6
   note: 0
 findings:
   - id: F001
     severity: minor
     rule: vp-qe-verifiability
-    line: 77
+    line: 78
     anchor: >-
-      | 補充が不要     | 現在庫が補充基準以上、または販売停止・終売である           |
-      補充依頼を作らず、対象商品と補充不要理由が記録される                                                                         |
-      在庫記録の補充不要記録     |
+      | 補充が必要     | 販売中の商品で、現在庫が補充基準を下回る                 |
+      店主代表が承認した補充依頼が一件確定し、仕入グループが商品と依頼数量を確認できる                                     | 補充依頼、承認記録         |
     message: 「補充が必要」の入力条件に未完了依頼がないことが含まれず「既存依頼と重複」の条件と重なるため、どちらの期待成果を適用するか判定できるよう条件または優先関係を明示する必要がある。
   - id: F002
     severity: minor
     rule: vp-qe-verifiability
-    line: 80
+    line: 82
     anchor: >-
-      | 根拠の記録失敗 | 判断根拠が記録できない状態である                           |
-      補充依頼を未確定（仕入グループ未受領）のまま保留し、保留記録から不足情報を確認できる。再開後に承認された補充依頼を確認できる | 保留記録、補充依頼         |
+      | 判断情報が不足 | 商品、現在庫、補充基準、発注単位のいずれかが不明         |
+      補充依頼を確定せず、不足項目、確認担当、再開対象の商品が記録される                                                   | 保留記録                   |
     message: 「判断情報が不足」の期待成果は確認担当の記録を要求する一方、`E-01` の処置は不足項目と対象商品の記録しか定めていないため、保留記録から期待成果を検証できるよう記録項目を一致させる必要がある。
   - id: F003
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 40
-    anchor: "| 補充判断基準 | `br-reorder-point` | 補充要否と補充必要数を同じ規則で判定する         | ○    | `br-reorder-point` |"
-    message: "`未完了依頼` を必須入力としている一方、取得不能時は `E-01` の検出条件にもほかの非起動・例外経路にも含まれず、重複確認なしで処理が進み得るため、欠落時の停止範囲と処置・再開条件を定義する必要がある。"
-  - id: F004
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 28
-    anchor: "- 数量に関する用語の関係は以下の通りとする。"
+    line: 27
+    anchor: "- 店主代表が補充要否と依頼数量を最終判断できる。家族利用者代表が検出した場合も、補充依頼の確定は店主代表が行う。"
     message: 店主代表が最終判断できない場合の非起動、差戻し、または例外が定義されていないため、前提条件不成立時の経路を明示する必要がある。
-  - id: F005
+  - id: F004
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 70
     anchor: >-
-      | `E-03`  | `S-03`       | 判断根拠を記録できない                                     | 補充依頼の確定       | 店主代表 |
-      補充依頼を未確定のまま保留し、不足情報を記録する                       | 判断根拠を確認し、`S-03` から再開する                                  |
+      | `E-02`  | `S-02`         | 同じ商品に未完了の補充依頼がある                             | 新しい補充依頼の確定 | 店主代表 |
+      既存依頼へ依頼数量を反映するか、新規依頼を作らないかを判断して記録する | 既存依頼を更新して再承認するか、重複不要の記録を代替成果として終了する |
     message: "`E-02` の「重複不要の記録」は代替成果として終了するとされる一方、出力表に受け手・確定条件・正本・後続処理が定義されていないため、条件付き終了の業務成果として追跡できるよう出力へ追加する必要がある。"
+  - id: F005
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 79
+    anchor: >-
+      | 補充が不要     | 現在庫が補充基準以上、または販売停止・終売である         |
+      補充依頼を作らず、対象商品と補充不要理由が記録される                                                                 | 在庫記録の補充不要記録     |
+    message: トリガーと開始条件は現在庫が補充基準を下回った場合に限定されている一方、「補充が不要」は現在庫が補充基準以上の場合を含むため、開始後の在庫変動を再確認する経路を定義するか、到達可能な開始条件または受入条件へ揃える必要がある。
   - id: F006
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 71
+    anchor: >-
+      | `E-03`  | `S-03`、`S-04` | 判断根拠を記録できない、または仕入グループへ引き渡しできない | 補充依頼の引き渡し   | 店主代表 |
+      補充依頼を非確定・未受領状態のまま保留し、状況を記録する               | 判断根拠を確認するか引き渡し可能になった後に再開する                   |
+    message: "`S-03` の判断根拠記録失敗では補充依頼が未確定だが、`S-04` の引渡失敗では既に確定済みであるため、両者を一律に「非確定・未受領状態」とする処置を原因ごとの状態、停止範囲、再開位置へ分ける必要がある。"
+  - id: F007
     severity: major
     rule: vp-qe-kata-conformance
-    line: 31
-    anchor: "- 依頼数量: 補充必要数を発注単位に合わせて調整し、仕入グループへ依頼する最終的な数量。"
+    line: 30
+    anchor: "- 補充必要数: 補充基準と現在庫の差分から算出した、純粋に不足している数量。"
     message: >-
       `補充必要数` を「補充基準と現在庫の差分」と BPS 内で計算定義し、`S-02` では `br-reorder-point` が補充必要数まで判定するとしているが、recipe
       は計算式を参照先の正本に委ねるため、数量計算を対応する BR に定義して BPS はその ID と利用結果だけを記載する必要がある。
-  - id: F007
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 28
-    anchor: "- 数量に関する用語の関係は以下の通りとする。"
-    message: 役割名「家族の店番担当」は組織定義の「家族利用者代表」および `cdfd-uc-replenishment` の「店番担当」のどちらにも一致しないため、正本の正式役割名へ統一する必要がある。
