@@ -212,12 +212,25 @@ const isExecRecordPath = (relativePath: string | undefined): boolean =>
   relativePath !== undefined &&
   /(^|\/)execution\/exec\/(events|plans|results)(\/|$)/.test(relativePath.replace(/\\/g, "/"));
 
+const isExcludedSearchPath = (relativePath: string | undefined): boolean => {
+  if (!relativePath) return false;
+  const path = relativePath.replace(/\\/g, "/");
+
+  if (/(^|\/)execution\/exec\/(events|plans|results)(\/|$)/.test(path)) return true;
+  if (/(^|\/)controls\/project-register\/pjr-[^/]+\.md$/.test(path)) return true;
+  if (/(^|\/)controls\/project-register\/generated\/pjr-views-by-[^/]+\.md$/.test(path))
+    return true;
+  if (/(^|\/)controls\/generated\/pm-[^/]+\.md$/.test(path)) return true;
+
+  return false;
+};
+
 function renderSearchHtml(
   src: string,
   env: SearchRenderEnv,
   md: { render: (src: string, env: unknown) => string },
 ): string {
-  if (env.frontmatter?.search === false || isExecRecordPath(env.relativePath)) return "";
+  if (env.frontmatter?.search === false || isExcludedSearchPath(env.relativePath)) return "";
 
   const html = md.render(src, env);
   const docId = getSpecdojoDocId(env.frontmatter);
