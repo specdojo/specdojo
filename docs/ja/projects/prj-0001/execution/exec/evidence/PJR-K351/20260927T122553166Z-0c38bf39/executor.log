@@ -1,0 +1,23 @@
+PJR-K351 の実装はほぼ完了しましたが、完了条件のうち 2 つが残っています。1 つは標本の文書で 12 観点と 28 観点を比べる試行（個票の作業 3）で、agent に grade を実行させる必要があり、この sandbox では行っていません。もう 1 つは `npm run check` の通過で、全件はまだ実行していません。`typecheck`、`test:unit`、`test:integration`、`validate:schema` は親 runner が実行するため、単体テストもまだ走っていない状態です。
+
+**変更内容**
+- **観点定義:** `continuous` を schema と defaults の 28 観点から削除しました。grade の対象は `grade_targets` と文書の種類（`document_kinds`）だけで決まります。`src/grade.ts` からも `continuous` の参照をなくしました。
+- **旧形式の拒否:** `continuous` が残った観点定義を読み込むと、削除済みであることを示すエラーで失敗します。共通正本、project の差分ファイル、`extends` のない全量ファイルのどれでも同じです。
+- **重み:** rubric を `grade-rubric-v2` とし、9 category すべてに重みを置きました（合計はどちらも 100）。v1 の 4 category の比率を保ったまま、kata は 70、成果物は 65 に縮めました。残りを新しい 5 category に配り、成果物には目的・業務価値・実装の観点が固有に問われるため kata より多く配っています。理由は defaults のコメントに書きました。
+- **重みの漏れ:** 観点の category に重みがない rubric は、grade の実行時にエラーにしました。重みが 0 のまま score から黙って落ちるのを防ぐためです。
+- **閾値:** `pass_score` を 70 から 75 に上げました。75 は「軽微な課題のみ」（level 3）の score で、major がない文書は category の数や重みに関係なくこの値を満たします。70 には category の数に依存しない根拠がありませんでした。
+- **ガイド:** `review-guide.md` に次の 3 点を書きました。v2 の score は v1 と比べられないこと、`--changed-only` は rubric の違いを検出しないため旧基準の結果は再評価されないこと、置き換えるには対象を指定して grade を実行することです。
+- **テスト:** fixture から `continuous` を削除し、旧形式の拒否、重みの漏れ、defaults の 9 category と 28 観点を確かめるテストを追加しました。
+- **個票:** 作業内容と対応結果を更新しました。frontmatter の状態は変えていません。
+
+**確認してほしい判断**
+- 重みの配分と閾値 75 は私が決めた値です。個票では担当が QE なので、確認をお願いします。
+- 既存の grade result は 303 件（ticket 記載の値）が v1 のままです。自動では再評価されないので、置き換える時期を決める必要があります。
+
+**手元で実行した検査**
+- prettier、markdownlint、eslint、`catalog validate`、`index build`、観点の適用範囲の検査は、いずれも問題ありませんでした。
+- prj-0001 の観点定義を実際に読み込み、28 観点、`grade-rubric-v2`、閾値 75 で重みの漏れがないことを確かめました。
+
+<specdojo_executor_evidence>
+{"final_message":"Removed `continuous` from schema, defaults (28 viewpoints), `src/grade.ts`, and `src/review-types.ts`. Legacy `continuous` is rejected with a removed-field error in `src/review-plan.ts`. Rubric is now `grade-rubric-v2` with 9-category kata/deliverable weights (sum 100, rationale in YAML comments) and `pass_score` 75. A missing category weight now fails grade. Score incompatibility is documented in `review-guide.md`. Tests were updated and added, and the PJR-K351 ticket work table and results were updated. Open: the sample 12-vs-28 viewpoint trial (ticket work item 3) needs agent grade runs and was not run. Full `npm run check` was not run; parent-run typecheck, unit/integration tests, and schema validation are pending.","validations":[{"command":"npx prettier --write <changed md/yaml/ts files>","status":"passed","summary":"formatted; only the ticket file changed"},{"command":"npx markdownlint docs/ja/specdojo/guides/review-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-k351-continuous-abolition-all-viewpoints.md","status":"passed","summary":"no errors"},{"command":"npx eslint src/grade.ts src/review-plan.ts src/review-types.ts tests/src/grade.test.ts tests/src/review-plan.test.ts tests/src/grade-triggers.test.ts","status":"passed","summary":"no lint errors"},{"command":"npx tsx src/specdojo.ts catalog validate","status":"passed","summary":"OK with only pre-existing `based_on` warnings unrelated to this change"},{"command":"npx tsx src/specdojo.ts index build","status":"passed","summary":"Built index: 2114 entries"},{"command":"npx tsx src/viewpoint-document-kinds-check.ts","status":"passed","summary":"document_kinds decisions cover all 107 rulebooks"},{"command":"npx tsx -e <resolve prj-0001 viewpoints and check weights>","status":"passed","summary":"28 viewpoints, grade-rubric-v2, pass_score 75, no missing category weights"}]}
+</specdojo_executor_evidence>

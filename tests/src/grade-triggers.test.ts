@@ -176,7 +176,6 @@ describe("grade triggers", () => {
           "    evidence: 突き合わせ先",
           "    default_severity: major",
           "    evaluation: referential",
-          "    continuous: true",
           "    grade_targets: [deliverable]",
           "    comparison_sources: [catalog-entry, dependencies, members]",
           "",

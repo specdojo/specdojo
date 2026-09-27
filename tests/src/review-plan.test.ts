@@ -139,7 +139,6 @@ describe("resolveViewpointsDoc", () => {
             evidence: "根拠。",
             default_severity: "major",
             evaluation: "human",
-            continuous: false,
           },
         ],
       });
@@ -147,6 +146,45 @@ describe("resolveViewpointsDoc", () => {
       expect(() => resolveViewpointsDoc(projectPath, resolve(COMMON_PATH))).toThrow(
         /vp-po-purpose-alignment.*removed evaluation 'human'.*referential or discretionary/,
       );
+    });
+  });
+
+  it("プロジェクトの観点が削除済みの continuous を持つ場合は無視せず拒否する", () => {
+    withTempDir((dir) => {
+      const projectPath = writeOverlay(dir, {
+        viewpoints: [
+          {
+            id: "vp-po-purpose-alignment",
+            role: "PO",
+            category: "purpose",
+            title: "目的整合",
+            check: "確認する。",
+            evidence: "根拠。",
+            default_severity: "major",
+            evaluation: "referential",
+            continuous: false,
+          },
+        ],
+      });
+
+      expect(() => resolveViewpointsDoc(projectPath, resolve(COMMON_PATH))).toThrow(
+        /vp-po-purpose-alignment.*removed field 'continuous'.*grade_targets or document_kinds/,
+      );
+    });
+  });
+
+  it("extends のない全量ファイルでも削除済みの continuous を拒否する", () => {
+    withTempDir((dir) => {
+      const path = join(dir, "legacy.yaml");
+      writeFileSync(
+        path,
+        yaml.dump({
+          id: "test:viewpoints",
+          viewpoints: [{ id: "vp-qe-sample", evaluation: "referential", continuous: true }],
+        }),
+      );
+
+      expect(() => resolveViewpointsDoc(path)).toThrow(/vp-qe-sample.*removed field 'continuous'/);
     });
   });
 

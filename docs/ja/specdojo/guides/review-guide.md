@@ -171,7 +171,7 @@ review result では、`レビュー観点別結果` セクションの各 `RVP-
 
 ### 2.1. grade と共有する評価属性・rubric
 
-viewpoint は review 専用ではなく、継続品質評価 `specdojo grade` と共有する正本です。各 viewpoint の `evaluation` は判定の規準がどこにあるか（`deterministic` / `referential` / `discretionary`）、`continuous` は grade 対象かを宣言します。grade の対象範囲は `continuous` だけで決まり、`evaluation` は判定の実行経路を選ぶためにだけ使います。`grade_targets` を省略した観点は kata と成果物の両方、指定した観点は列挙対象だけに適用します。`document_kinds` は rulebook ID 単位でさらに適用先を絞り、grade plan と review plan の両方が同じ宣言を使います。grade 専用の別観点 ID は作りません。
+viewpoint は review 専用ではなく、継続品質評価 `specdojo grade` と共有する正本です。各 viewpoint の `evaluation` は判定の規準がどこにあるか（`deterministic` / `referential` / `discretionary`）を宣言し、判定の実行経路を選ぶためにだけ使います。grade と review は同じ観点集合を見るため、すべての viewpoint が grade の対象です。grade の対象範囲は `grade_targets` と `document_kinds` だけで決まります。旧フィールド `continuous` は削除済みで、観点定義に残っていると削除済みであることを示すエラーで読み込みに失敗します。`grade_targets` を省略した観点は kata と成果物の両方、指定した観点は列挙対象だけに適用します。`document_kinds` は rulebook ID 単位でさらに適用先を絞り、grade plan と review plan の両方が同じ宣言を使います。grade 専用の別観点 ID は作りません。
 
 `evaluation` は「判定に必要な根拠がどこにあるか」ではなく、「何が正しいかを決める規準がどこにあるか」で区分します。観点を追加するときは、`check` の文言に何と比べるかが書かれているかで判定します。
 
@@ -191,7 +191,11 @@ viewpoint は review 専用ではなく、継続品質評価 `specdojo grade` �
 
 `grade_rubric` の level 0-4 は category を跨いで共有し、viewpoint score を `level × 25` とします。review との対応は level 4 が `pass`、level 3 が `conditional_pass`、level 0-2 が `changes_requested` です。`blocked` は前提不足で判定できない状態なので level へ写像しません。
 
-grade は継続監視の最新スナップショット、review result は完成時の合意形成履歴です。Kata の grade は schedule strategy の approach 導出に使われますが、目的・業務価値など `continuous: false` の観点や最終承認を代替しません。
+文書の score は、category ごとの score（観点の level 平均 × 25）を `grade_rubric.weights` の重みで加重平均した値です。重みは kata と成果物で別に持ち、どちらも 9 category すべてに重みを置きます。文書に適用される観点が 1 つもない category は、その文書の加重平均から外します。観点の category に重みがない rubric は、grade の実行時にエラーで失敗します。verdict は blocker があれば `fail`、major があるか score が `pass_score` 未満なら `needs-work`、それ以外は `pass` です。`pass_score` は level 3（軽微な課題）の score に合わせて 75 とし、major のない文書が category の数や重みに関係なく満たす下限にしています。
+
+rubric は `grade-rubric-v2` です。v1 は 4 category（architecture / consistency / quality / usability）だけで score を計算していました。v2 は 28 観点すべてと 9 category で計算するため、v1 の grade result とは score・verdict を比較できません。同じ文書でも、目的・計画・業務価値・実装・運用の観点が加わることで score が変わります。grade result の `rubric` が `grade-rubric-v1` の結果は旧基準の値として扱い、現在品質の根拠や傾向比較に使う前に再評価します。`--changed-only` は rubric の違いを検出しないため、旧基準の結果を置き換えるときは対象を指定して grade を実行します。
+
+grade は継続監視の最新スナップショット、review result は完成時の合意形成履歴です。Kata の grade は schedule strategy の approach 導出に使われますが、完成時の合意形成や最終承認を代替しません。
 
 #### 成果物 grade と review result の責務境界
 

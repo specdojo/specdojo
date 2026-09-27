@@ -166,9 +166,15 @@ verdict_definitions:
 
 # grade と review が共有する離散ルーブリック。review の blocked は判定不能を表すため
 # level へ写像せず、根拠が揃った判定だけを pass / conditional_pass / changes_requested へ対応させる。
+# v2 で全観点を grade の対象にし、weights を 9 category へ広げた（PJR-K351）。
+# v1 の score とは母集団の category が異なるため比較できない。id を改めて区別する。
+# pass_score は level 3（軽微な課題・実務上そのまま利用できる）の score 75 に合わせる。
+# major がない限り各観点の level は 3 以上であるため、75 は「全 category が level 3 以上」の
+# 下限と一致し、category の数や重みを変えても意味が変わらない。v1 の 70 は category 数に
+# 依存しない根拠を持たなかったため改める。
 grade_rubric:
-  id: grade-rubric-v1
-  pass_score: 70
+  id: grade-rubric-v2
+  pass_score: 75
   levels:
     - level: 0
       name: 不成立
@@ -190,17 +196,37 @@ grade_rubric:
       name: 良好
       description: 指摘なし、または note のみである。
       review_verdict: pass
+  # 重みは合計 100。文書に適用される観点がない category は、その文書の加重平均から外す。
+  # v1 の 4 category の相対比を保ったまま縮め、空いた分を新たに加わる 5 category へ配る。
   weights:
+    # kata（rulebook / template など実践の型）は、成果物を作る土台としての構造・検証可能性・
+    # 使いやすさが主である。v1 の 4 category を 70 に縮め、残り 30 を配る。型が何のために
+    # あるか（purpose）と、型どおりに作れるか（implementation）を厚くし、運用上の責任分界
+    # （operations）を続ける。計画（planning）と業務価値（business）は個別の成果物で
+    # 問われるため最も薄くする。
     kata:
-      architecture: 20
-      consistency: 20
-      quality: 35
-      usability: 25
+      quality: 25
+      usability: 18
+      architecture: 14
+      consistency: 13
+      purpose: 8
+      implementation: 6
+      operations: 6
+      planning: 5
+      business: 5
+    # 成果物は、目的・業務価値・実装可能性がプロジェクト固有に問われる。v1 の 4 category を
+    # 65 に縮め、kata より多い 35 を配る。目的（purpose）と業務価値（business）を最も厚く
+    # し、実装可能性（implementation）、計画（planning）、公開・運用（operations）の順に置く。
     deliverable:
-      architecture: 20
-      consistency: 25
-      quality: 30
-      usability: 25
+      quality: 20
+      consistency: 16
+      usability: 16
+      architecture: 13
+      purpose: 8
+      business: 8
+      implementation: 7
+      planning: 6
+      operations: 6
 
 viewpoints:
   - id: vp-po-purpose-alignment
@@ -219,7 +245,6 @@ viewpoints:
       - traceability
     default_severity: major
     evaluation: referential
-    continuous: false
   - id: vp-po-decision-readiness
     role: PO
     category: purpose
@@ -232,7 +257,6 @@ viewpoints:
       - auditability
     default_severity: major
     evaluation: discretionary
-    continuous: false
   - id: vp-po-publication-accountability
     role: PO
     category: operations
@@ -245,7 +269,6 @@ viewpoints:
       - auditability
     default_severity: blocker
     evaluation: referential
-    continuous: false
   - id: vp-pm-plan-feasibility
     role: PM
     category: planning
@@ -254,7 +277,6 @@ viewpoints:
     evidence: 依存関係、作業単位、完了条件、担当 Role code、期限または判断タイミング。
     default_severity: major
     evaluation: discretionary
-    continuous: false
   - id: vp-pm-dependency-risk
     role: PM
     category: planning
@@ -263,7 +285,6 @@ viewpoints:
     evidence: depends_on、関連文書、未決事項、PJR 登録候補、スケジュール影響。
     default_severity: major
     evaluation: referential
-    continuous: false
   - id: vp-pm-control-reporting
     role: PM
     category: planning
@@ -272,7 +293,6 @@ viewpoints:
     evidence: PJR 転記候補、報告先、対応方針、担当 Role code。
     default_severity: minor
     evaluation: referential
-    continuous: false
   - id: vp-ba-business-value
     role: BA
     category: business
@@ -288,7 +308,6 @@ viewpoints:
       - traceability
     default_severity: major
     evaluation: discretionary
-    continuous: false
     document_kinds:
       exclude:
         - specdojo:bdd-rulebook
@@ -420,7 +439,6 @@ viewpoints:
       - traceability
     default_severity: major
     evaluation: discretionary
-    continuous: false
   - id: vp-ba-stakeholder-clarity
     role: BA
     category: business
@@ -433,7 +451,6 @@ viewpoints:
       - permission
     default_severity: minor
     evaluation: discretionary
-    continuous: false
   - id: vp-arc-document-structure
     role: ARC
     category: architecture
@@ -442,7 +459,6 @@ viewpoints:
     evidence: id、path、rulebook、based_on、見出し、相対リンク、成果物カタログ。
     default_severity: major
     evaluation: deterministic
-    continuous: true
   - id: vp-arc-cross-document-consistency
     role: ARC
     category: consistency
@@ -457,7 +473,6 @@ viewpoints:
       - auditability
     default_severity: major
     evaluation: referential
-    continuous: true
     grade_targets: [deliverable]
     # 突き合わせ先の変更を grade list --changed-only の再評価契機にする（PJR-Z47X）。
     # 生成物は生成元（カタログ・メンバー定義など）の変更として検出する。
@@ -482,7 +497,6 @@ viewpoints:
       - non_functional
     default_severity: major
     evaluation: discretionary
-    continuous: false
   - id: vp-arc-conciseness
     role: ARC
     category: usability
@@ -492,7 +506,6 @@ viewpoints:
     evidence: 反復する段落、表と本文の重複、正本への参照で置換できる再掲、削除または統合しても判断情報を失わない箇所。
     default_severity: minor
     evaluation: referential
-    continuous: true
   - id: vp-arc-single-responsibility
     role: ARC
     category: architecture
@@ -503,7 +516,6 @@ viewpoints:
       文書の目的、章ごとの主題と相互依存、章が参照・更新される単位、対象読者、利用時点、対応する sample・recipe・template、分割後も独立して成立する境界候補。分割が必要な finding には境界候補と参照・カタログへの影響を記録する。
     default_severity: major
     evaluation: referential
-    continuous: true
     document_kinds:
       exclude:
         - specdojo:atc-index-rulebook
@@ -630,7 +642,6 @@ viewpoints:
       - acceptance
     default_severity: major
     evaluation: discretionary
-    continuous: false
   - id: vp-dev-change-impact
     role: DEV
     category: implementation
@@ -645,7 +656,6 @@ viewpoints:
       - traceability
     default_severity: major
     evaluation: referential
-    continuous: false
   - id: vp-dev-testability
     role: DEV
     category: quality
@@ -654,7 +664,6 @@ viewpoints:
     evidence: 検証コマンド、期待結果、対象ファイル、エラー時対応。
     default_severity: minor
     evaluation: referential
-    continuous: false
   - id: vp-qe-done-criteria
     role: QE
     category: quality
@@ -666,7 +675,6 @@ viewpoints:
       - traceability
     default_severity: major
     evaluation: referential
-    continuous: true
     grade_targets: [deliverable]
     comparison_sources:
       - catalog-entry
@@ -683,7 +691,6 @@ viewpoints:
       - acceptance
     default_severity: major
     evaluation: referential
-    continuous: true
   - id: vp-qe-omissions-consistency
     role: QE
     category: consistency
@@ -695,7 +702,6 @@ viewpoints:
     # 構造系成果物（pm-roles / pm-members / pm-raci など）への無関係な詳細流入を避ける。
     default_severity: major
     evaluation: referential
-    continuous: true
   - id: vp-qe-config-validity
     role: QE
     category: quality
@@ -707,7 +713,6 @@ viewpoints:
     # 設定値の妥当性と schema 整合に絞る。
     default_severity: major
     evaluation: deterministic
-    continuous: true
     grade_targets: [deliverable]
   - id: vp-qe-kata-conformance
     role: QE
@@ -722,7 +727,6 @@ viewpoints:
       - traceability
     default_severity: major
     evaluation: referential
-    continuous: true
     grade_targets: [kata]
   - id: vp-ux-readability
     role: UX
@@ -736,7 +740,6 @@ viewpoints:
     # 識別できるか、および手段だけが目的に見える表現になっていないかを判定する。
     default_severity: minor
     evaluation: referential
-    continuous: true
     document_kinds:
       unclassified: include
   - id: vp-ux-user-flow
@@ -748,7 +751,6 @@ viewpoints:
     evidence: 目次、関連リンク、手順、参照先、サンプル、説明順序。
     default_severity: minor
     evaluation: referential
-    continuous: true
     grade_targets: [deliverable]
   - id: vp-ux-language-consistency
     role: UX
@@ -758,7 +760,6 @@ viewpoints:
     evidence: 用語定義、表記ゆれ、Role code、local_id、status、ラベル。
     default_severity: minor
     evaluation: referential
-    continuous: true
   - id: vp-ops-release-readiness
     role: OPS
     category: operations
@@ -772,7 +773,6 @@ viewpoints:
       - acceptance
     default_severity: major
     evaluation: discretionary
-    continuous: false
   - id: vp-ops-operability
     role: OPS
     category: operations
@@ -786,7 +786,6 @@ viewpoints:
       - non_functional
     default_severity: minor
     evaluation: discretionary
-    continuous: false
   - id: vp-ops-agent-boundary
     role: OPS
     category: operations
@@ -798,7 +797,6 @@ viewpoints:
       - auditability
     default_severity: blocker
     evaluation: referential
-    continuous: false
 
 role_viewpoint_sets:
   - role: PO
