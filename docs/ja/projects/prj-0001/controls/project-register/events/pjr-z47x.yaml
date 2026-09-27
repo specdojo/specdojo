@@ -32,3 +32,16 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_cdd5d3e396ea419bb01a2b0ff5900977
+  ts: "2026-09-27T12:12:14Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_ecbbc9fcdcd04690a796b9b300125252
