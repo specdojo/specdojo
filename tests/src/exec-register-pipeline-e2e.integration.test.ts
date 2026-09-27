@@ -199,7 +199,7 @@ if (role === "executor") {
     process.stderr.write("rate limit reached\\n");
     process.exit(75);
   }
-  if (nickname.includes("protected-write") && !existsSync("protection-applied")) {
+  if (nickname.includes("protected-write") && !existsSync("docs/protection-applied")) {
     writeFileSync(
       "package.json",
       '{"scripts":{"test:integration":"echo ran > parent-validation-ran"}}\\n',
@@ -977,7 +977,7 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
         // 人または orchestrator が申し送りを適用し、agent 由来の保護対象差分を worktree から
         // 取り除いた状態を再現する。再開後の fake executor は marker を見て同じ変更を再提案しない。
         writeFileSync(join(worktreePath ?? "", "package.json"), ORIGINAL_PACKAGE, "utf8");
-        writeFileSync(join(worktreePath ?? "", "protection-applied"), "applied\n", "utf8");
+        writeFileSync(join(worktreePath ?? "", "docs", "protection-applied"), "applied\n", "utf8");
 
         const beforeResume = Number(git(root, "rev-list", "--first-parent", "--count", "HEAD"));
         process.exitCode = undefined;
@@ -997,7 +997,7 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
         expect(
           readFileSync(join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md"), "utf8"),
         ).toContain("item_status: review");
-        expect(existsSync(join(root, "protection-applied"))).toBe(true);
+        expect(existsSync(join(root, "docs", "protection-applied"))).toBe(true);
         expect(execWorktreePath(root)).toBeNull();
         expect(Number(git(root, "rev-list", "--first-parent", "--count", "HEAD"))).toBe(
           beforeResume + 1,
