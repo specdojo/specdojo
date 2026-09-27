@@ -40,6 +40,16 @@ specdojo:
 - 契機判定を検証する単体テストがある。依存先が変わった場合と変わらない場合、kata 更新後に該当する場合としない場合を含む。
 - 変更前後で、定期実行の対象になる文書の集合がどう変わるかを実例で示している。
 - `npm run check` が通過している。
+- 個票の対応結果に、実施内容・変更ファイル・変更前後の対象集合の実例・残課題が記載されている。
+
+### 2.1. 経過措置（2026-09-27 追記）
+
+初回の実行（eb423175）は、2ZVS の 3.4 節に沿って、定期実行の Job 定義から `changed_only`・`ungraded`・`incomplete` を外した。しかし、2ZVS が前提とする「変更契機は review の中の grade で評価する」は PJR-KCMH の範囲で、まだ実装されていない。このままでは、内容が変わった文書をどこでも評価しない期間が生じる。`ungraded` と `incomplete` の除外は、2ZVS にも根拠がない。利用者は、次の経過措置を含めてやり直す案 A を承認した。
+
+- `job-grade-kata.yaml`・`job-grade-deliverable.yaml` と対応する `rtn-grade-*` で、新しい 3 契機（`dependency_changed`・`rulebook_changed`・`unreviewed`）に加え、`changed_only`・`ungraded`・`incomplete` を引き続き選択できる。既定値は、変更前に有効だったものを有効のまま残す。
+- `incomplete` の再試行と、上限に達した文書の report-only 起動（`grade state --exhausted` を precondition に含める経路）が、変更前と同じ動作をする。
+- 経過措置の 3 入力は、PJR-KCMH の完了後に外す。Job 定義のコメントと個票の残課題に、この条件が明記されている。
+- `tools/grade/run-per-document.sh` の既存オプション（`--changed-only`・`--ungraded`・`--incomplete`）を削除しない。
 
 ## 3. 作業内容
 

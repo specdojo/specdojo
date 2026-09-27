@@ -4,18 +4,18 @@ document: specdojo:bps-sample
 path: docs/ja/specdojo/samples/bps-sample.md
 target: kata
 rubric: grade-rubric-v1
-verdict: needs-work
-score: 82
-graded_at: "2026-09-27T05:29:43.201Z"
+verdict: pass
+score: 91
+graded_at: "2026-09-27T05:46:39.589Z"
 graded_by: codex-expert-executor
-content_hash: 334540040e7eeeae98febd862a697473612ddea18a46f61a7abef92bbf75912e
+content_hash: e7b86725ced613206c890003c0b3b8b44b0647779ead94ae6273d1eeb5346067
 categories:
   usability:
     score: 100
   architecture:
     score: 100
   quality:
-    score: 63
+    score: 88
   consistency:
     score: 75
 viewpoints:
@@ -32,8 +32,8 @@ viewpoints:
     level: 3
     score: 75
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -45,7 +45,7 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
+  major: 0
   minor: 6
   note: 0
 findings:
@@ -95,11 +95,3 @@ findings:
       | `E-03`  | `S-03`、`S-04` | 判断根拠を記録できない、または仕入グループへ引き渡しできない | 補充依頼の引き渡し   | 店主代表 |
       補充依頼を非確定・未受領状態のまま保留し、状況を記録する               | 判断根拠を確認するか引き渡し可能になった後に再開する                   |
     message: "`S-03` の判断根拠記録失敗では補充依頼が未確定だが、`S-04` の引渡失敗では既に確定済みであるため、両者を一律に「非確定・未受領状態」とする処置を原因ごとの状態、停止範囲、再開位置へ分ける必要がある。"
-  - id: F007
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 30
-    anchor: "- 補充必要数: 補充基準と現在庫の差分から算出した、純粋に不足している数量。"
-    message: >-
-      `補充必要数` を「補充基準と現在庫の差分」と BPS 内で計算定義し、`S-02` では `br-reorder-point` が補充必要数まで判定するとしているが、recipe
-      は計算式を参照先の正本に委ねるため、数量計算を対応する BR に定義して BPS はその ID と利用結果だけを記載する必要がある。

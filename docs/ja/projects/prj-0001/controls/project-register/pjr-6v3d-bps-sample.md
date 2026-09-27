@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-6v3d-bps-sample
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: BA
   registered_at: "2026-09-26T05:30:46Z"
+  completed_at: "2026-09-27T05:47:03Z"
   block_reason: "agent exited with non-zero code: runner による検証 `test-integration` (`npm run test:integration`) で失敗が報告されているため、完了条件を満たしていません。"
+  conclusion: 確定の定義を S-03 承認・終了点を S-04 引き渡しに揃え、CDFD 列を P-06 に統一、未完了依頼の欠落時の例外と E-03 の受入観点を加え、補充必要数の算出を br-reorder-point へ委ねた。grade は 64→91（pass、major 0）
 ---
 
 # PJR-6V3D bps-sample の業務ロジックの不整合と存在しない参照先を解消する
