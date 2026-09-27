@@ -32,3 +32,32 @@
     - field: due
       from: ""
       to: "2026-11-14"
+- v: 1
+  id: reg_cba00bf5b932497cb34bbbffcc223f51
+  ts: "2026-09-27T00:59:17Z"
+  action: start
+  actor: agy-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_848415587a2647bf935a687bbea136bf
+- v: 1
+  id: reg_cb8fac78bf4f43ba8d568df98da7903b
+  ts: "2026-09-27T01:11:27Z"
+  action: wait
+  actor: agy-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: runner validation `validate-schema` failed (exit 1). The plan requires all static checks and validations to pass before completion."
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: runner validation `validate-schema` failed (exit 1). The plan requires all static checks and validations to pass before completion."
+  previous_event_id: reg_cba00bf5b932497cb34bbbffcc223f51
