@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-QQXP",
   "run_id": "20260927T044812432Z-098cfb4a",
-  "updated_at": "2026-09-27T04:58:10.495Z",
+  "updated_at": "2026-09-27T04:58:19.481Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-qqxp-20260927T044716Z-af56-result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "agy-expert-executor",
       "attempts": 1,
       "started_at": "2026-09-27T04:58:10.495Z",
-      "completed_at": null,
+      "completed_at": "2026-09-27T04:58:19.481Z",
       "artifact_ref": null
     }
   },
