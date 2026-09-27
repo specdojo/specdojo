@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-3hhw-serialize-parent-validations
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-09-27T02:44:20Z"
+  completed_at: "2026-09-27T07:11:40Z"
+  conclusion: ParentValidationGate で 1 回の exec run 内の親検証を既定 1 本に直列化し、pipeline.parent_validation_concurrency で同時数を設定できるようにした。executor と reporter は並列のまま。別プロセスは exec-run.lock に委ね対象外とし、ガイドへ記載
 ---
 
 # PJR-3HHW 並行実行中の runner 検証を同時に走らせないようにする

@@ -57,6 +57,16 @@ specdojo:
 
 修正までは、`waiting` の項目を `--resume` で再開せず、`--force-restart` でやり直す。
 
+### 3.1. 1 回目の実行で失敗した統合テスト（2026-09-27 追記）
+
+codex-expert-executor による 1 回目の実行は、runner の `test-integration` で失敗した。orchestrator が worktree で `tests/src/exec-register-pipeline-e2e.integration.test.ts` を単独で実行すると、11 件中次の 3 件が失敗した（いずれも `expected 1 to be +0`）。並行実行の負荷によるものではない。
+
+- `resumes a hook-rejected merge without reverting changes added after branch creation`（今回追加されたテスト）
+- `blocks exec-codex-protected-write distinctly and resumes the executor after the handoff is applied`（既存）
+- `blocks exec-claude-protected-write distinctly and resumes the executor after the handoff is applied`（既存）
+
+やり直しでは、上記 3 件を含む `npm run test:integration` が成功することを完了条件に加える。codex の sandbox では統合テストを実行できないため、executor は waiting からの再開経路（`syncExecBranchAfterWait` とその呼び出し元）の変更が既存の再開テストに与える影響を、コードから確認する。
+
 ## 4. 対応結果
 
 - `syncExecBranchAfterWait` の `-s ours` を廃止し、`wait` commit と、その時点までに統合先へ入った変更を exec branch へ通常 merge するよう変更した。個票・イベント・plan・result の競合だけは統合先側の内容で解決し、対象外パスの競合は同期を中断して worktree を保持する。

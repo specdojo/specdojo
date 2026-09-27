@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-2f3y-grade-unreviewed-content-hash
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-09-27T06:22:09Z"
+  completed_at: "2026-09-27T07:11:41Z"
+  conclusion: grade list --unreviewed を未評価または content_hash 不一致の文書に絞り、routine の unreviewed を有効に戻した。対象は kata 262→0 件、成果物 19→1 件
 ---
 
 # PJR-2F3Y grade の unreviewed 契機を内容の変化がある文書に絞る

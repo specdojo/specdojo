@@ -58,3 +58,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_73e16c574e744fc2b0facc5f1577964b
+- v: 1
+  id: reg_ca9ca03c7b224844aeccca1de27b49a5
+  ts: "2026-09-27T07:11:41Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: codex-expert-executor の実行結果を orchestrator が評価し、件数を再確認して完了条件を満たすと判断
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-27"
+    - field: conclusion
+      from: "-"
+      to: grade list --unreviewed を未評価または content_hash 不一致の文書に絞り、routine の unreviewed を有効に戻した。対象は kata 262→0 件、成果物 19→1 件
+  previous_event_id: reg_838f10b39dab4128a81ccdbad3525a6c
