@@ -90,3 +90,32 @@
       from: "agent exited with non-zero code: 着手前判断（観点範囲拡大との適用順序、個票の作業 No.1）が未決定であり、`PJR-K351` / `PJR-WPWB` も open のまま。加えて、`xrr-*` の構成と判定（recommendation）は `src/exec-reporter.ts` の出力スキーマと `src/exec-results.ts` の `r…"
       to: "agent exited with non-zero code: 親 runner の検証 `typecheck`（`npm run typecheck`）が失敗している: `src/exec.ts(1162,9): error TS2353: Object literal may only specify known properties, and 'viewpointsPath' does n…"
   previous_event_id: reg_23a0ad2ce462485a9e4be7a23df77068
+- v: 1
+  id: reg_3d24d2b6fa3a47dab9483d5e44751ea0
+  ts: "2026-09-27T20:30:54Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_19d507c8f2e042e59b3c280962491cf3
+- v: 1
+  id: reg_1a554203eb704f259f54b28069ee096d
+  ts: "2026-09-27T20:47:25Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: runner 検証 `test-unit`（`npm run test:unit`、source=runner）が failed。`tests/src/exec-reporter.test.ts` のテスト `accepts every task-completion verdict and rejects per-viewpoin…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "agent exited with non-zero code: 親 runner の検証 `typecheck`（`npm run typecheck`）が失敗している: `src/exec.ts(1162,9): error TS2353: Object literal may only specify known properties, and 'viewpointsPath' does n…"
+      to: "agent exited with non-zero code: runner 検証 `test-unit`（`npm run test:unit`、source=runner）が failed。`tests/src/exec-reporter.test.ts` のテスト `accepts every task-completion verdict and rejects per-viewpoin…"
+  previous_event_id: reg_3d24d2b6fa3a47dab9483d5e44751ea0

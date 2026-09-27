@@ -11,7 +11,7 @@ specdojo:
   priority: high
   owner: QE
   registered_at: "2026-09-26T06:13:37Z"
-  block_reason: "agent exited with non-zero code: 親 runner の検証 `typecheck`（`npm run typecheck`）が失敗している: `src/exec.ts(1162,9): error TS2353: Object literal may only specify known properties, and 'viewpointsPath' does n…"
+  block_reason: "agent exited with non-zero code: runner 検証 `test-unit`（`npm run test:unit`、source=runner）が failed。`tests/src/exec-reporter.test.ts` のテスト `accepts every task-completion verdict and rejects per-viewpoin…"
 ---
 
 # PJR-N22N xrp と xrr テンプレートを review が評価しない前提へ改訂する
@@ -99,15 +99,25 @@ grade が 28 観点すべてを見る前提（[[prj-0001:pjr-wpwb-viewpoint-eval
 | 4   | `xrr-*` 2 本を改訂する                 | QE   | done | `xrr-template.md` を改訂し、verdict を受入観点 6 区分と対応させた     |
 | 5   | owner 以外のロールを絞る指示を削除する | QE   | done | 該当段落を持つ 4 本から削除した                                       |
 | 6   | review を 1 件試行して確認する         | QE   | open | plan 生成のみ試行した。agent による review 実行と result 確認は未実施 |
+| 7   | 前回実行の変更を作り直す               | QE   | done | 前回実行の変更は作業ツリーに残っていなかったため、全体を再実装した    |
 
 ## 7. 対応結果
 
 - 前提確認: `PJR-K351` と `PJR-WPWB` は `done` であり、適用順序の決定（`PJR-K351` の完了後に適用）を満たす。
-- `*-viewpoint-detail-*` の要否: review が観点ごとに評価しないため不要と判断した。`xrp-viewpoint-detail-template.md` と `xrr-viewpoint-detail-template.md` を削除し、`src/exec-plans.ts` の展開処理（`reviewViewpointDetails`・`reviewResultSections`・`reviewResultSectionsForDeliverable`）、`src/exec.ts`・`src/exec-run.ts`・`src/exec-results.ts` の `reviewSections` 受け渡しを外した。
-- `xrp-*`: 観点ごとの pass / fail / unclear 判定と owner 以外のロールを絞る指示を削除した。「評価結果」章を追加し、評価対象、grade の対象種別、評価結果サイドカーのパスを `_GRADE_SUBJECT_PATH_`・`_GRADE_TARGET_`・`_GRADE_RESULT_PATH_` として plan 生成時に展開する。レビュー観点表は `done_criteria` を示す「完了条件」表に改めた。
-- 共通事項: `xep-common-conventions-template.md` に「review の判断手順」を追加した。再評価しない原則、`content_hash` と `grade list --changed-only` による鮮度確認（`E-01` に対応）、review 中の変更検知、verdict 表を 12 本の共通の正本とした。
-- `xrr-template.md`: 評価結果の確認、判断根拠、未充足事項・改善指示、approach に応じた確認、decision（`verdict`）の構成に改めた。`verdict` は `complete` / `complete-with-findings` / `incomplete` / `grade-stale` / `grade-unavailable` / `changed-during-review` の 6 値で、`bps-task-completion` の受入観点 6 区分と一対一に対応する。
-- reporter: `src/exec-reporter.ts` と `exec-reporter-output.schema.yaml` の review 出力を `grade_check`・`rationale`・`improvements`・`approach`・`verdict` に置き換え、`src/exec-results.ts` の描画と未記入検知を新しい構成に合わせた。改訂前に scaffold 済みの review result 用に `recommendation: _TODO_` の未記入検知は残した。
+- 再実装: 2026-09-27 の前回実行は親 runner の `typecheck` で失敗し、その変更は作業ツリーに残っていなかった。本実行で全体を作り直した。前回の失敗原因は、`scaffoldClaimResult` の引数型から `viewpointsPath` を外したのに、呼び出し側（`src/exec.ts`）が渡し続けていたことである。本実行では引数型と 2 箇所の呼び出し、分割代入をそろえて外した。
+- `*-viewpoint-detail-*` の要否: review が観点ごとに評価しないため不要と判断した。`xrp-viewpoint-detail-template.md` と `xrr-viewpoint-detail-template.md` を削除した。あわせて `src/exec-plans.ts` の展開処理（`reviewViewpointDetails`・`reviewResultSections`・`reviewResultSectionsForDeliverable`、および review plan 専用だった `coverage_types` の読み込み）を外した。`src/exec.ts`・`src/exec-run.ts`・`src/exec-results.ts` の `reviewSections` 受け渡しも外した。
+- `xrp-*`: 観点ごとの pass / fail / unclear 判定と owner 以外のロールを絞る指示を削除した。「評価結果」章を追加し、評価対象、grade の対象種別、評価結果サイドカーのパスを `_GRADE_SUBJECT_PATH_`・`_GRADE_TARGET_`・`_GRADE_RESULT_PATH_` として plan 生成時に展開する。実践の型メンテナンス系では対象種別を `kata`、評価対象を実践の型とする。レビュー観点表は `done_criteria` を示す「完了条件」表（ID は `DC-NNN`）に改めた。
+- 共通事項: `xep-common-conventions-template.md` に「review の判断手順」を追加し、12 本に共通する正本とした。内容は次のとおり。
+  - 再評価しない原則と、`grade list --changed-only`（deliverable は `--dependency-changed` も）による鮮度確認（`E-01` に対応）。
+  - `--incomplete` による評価不能の判定（`E-02`）と、review 中の変更検知。
+  - verdict 表。この節は `<!-- review-only:start -->` と `<!-- review-only:end -->` で囲み、review plan にだけ残す。edit・登録簿・Job の plan からは取り除く。
+- `xrr-template.md`: 評価結果の確認、判断根拠、未充足事項・改善指示、approach に応じた確認、decision（`verdict`）の構成に改めた。`verdict` は `complete` / `complete-with-findings` / `incomplete` / `grade-stale` / `grade-unavailable` / `changed-during-review` の 6 値である。[[bps-task-completion]] の受入観点 6 区分と一対一に対応する。
+- reporter: `src/exec-reporter.ts` と `exec-reporter-output.schema.yaml` の review 出力を `grade_check`・`rationale`・`improvements`・`approach`・`verdict` に置き換えた。`src/exec-results.ts` の描画と未記入検知も新しい構成に合わせた。reporter への指示には「`complete` 以外の verdict も記録済みの結果として `outcome=complete` で返す」旨を加えた。改訂前に scaffold 済みの review result のために、`recommendation: _TODO_` の未記入検知は残した。
+- 試行: `exec plan --deliverable pm-plan --mode review` を `fully-guided` と `rulebook-maintenance` で `/tmp` へ生成し、次を確認した。
+  - 評価対象・対象種別・既存サイドカーのパスが展開されること。
+  - 完了条件表と review の判断手順が出力されること。
+  - 区切りのマーカー行が残らないこと。
+  - 同じ評価対象に `grade list --changed-only` を実行すると評価対象が出力され、この時点の review は `grade-stale` になること。
 - 既存 review plan への影響: 改訂前の plan から scaffold した review result は、reporter の新しい出力で本文ごと置き換わるため描画は失敗しない。改訂前の plan 本文は観点別評価を指示したままなので、未着手の review plan は再生成が必要である。
 - 未完了: review を agent で 1 件実行して生成される result を確認する作業（No.6）は、executor の sandbox では実行できないため未実施である。`review-guide.md` は旧来の観点別判定と `recommendation` を説明したままであり、別途改訂が必要である。`sch-strategy-*.yaml` の `review` phase の位置づけ変更も別途扱う。
 
