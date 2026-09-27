@@ -45,3 +45,16 @@
       from: grade に owner ロール認識を加え、定期実行を変化検知に限定する
       to: grade の定期実行を変化検知に限定する
   previous_event_id: reg_20358008708d4d4bbfcc7d534f022dbe
+- v: 1
+  id: reg_51f73ea51b434e5e9dabe19decd9e735
+  ts: "2026-09-27T04:58:55Z"
+  action: start
+  actor: agy-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_58d130db87c146f39862c188d1f6b3ab
