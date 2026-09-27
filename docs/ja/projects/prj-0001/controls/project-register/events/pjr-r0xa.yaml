@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_c4a9957e4e0244d3a3f54454fcdeaf01
+  ts: "2026-09-27T03:07:17Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: 2026-09-27 の PJR-HG98 再開で develop の成果を消す merge が作られたため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: waiting からの再開前の develop 取り込みが統合時に他項目の成果を消す
+    - field: description
+      from: ""
+      to: syncExecBranchAfterWait は develop を exec branch へ -s ours で merge する。develop が exec branch の作成後に進んでいると、統合 merge がその差分を exec branch 側の削除とみなし、他項目の成果を消す。PJR-HG98 の再開で発生し、競合で停止したため実害はなかった
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-27"
+    - field: due
+      from: ""
+      to: _TODO_
