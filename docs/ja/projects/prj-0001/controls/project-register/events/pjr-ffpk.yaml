@@ -145,3 +145,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_00c9be9b80734c0cb0224dc6e0320ac9
+- v: 1
+  id: reg_1a974b564d2e4c8d8ee04e6f226bb708
+  ts: "2026-09-27T08:28:53Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: claude-expert-executor の 3 回目の実行結果を評価。統合テスト 1 件の正規表現が既存の文言と合っていなかったため orchestrator が worktree で 1 行直し、reporter の段から再開して全検証の通過と統合で削除がないことを確認
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-27"
+    - field: conclusion
+      from: "-"
+      to: register 由来タスクの commit 範囲を、HEAD に無い新規ファイルは成果物ディレクトリと targets に限るよう絞り、除外した変更は commit-scope 警告と integrate.log に残す。ready 昇格検査は commit 対象だけを見る。共通規約に一時ファイルの置き場所と削除を追記した
+  previous_event_id: reg_22803dbe6b8b486387322c8bec9c3b57

@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-ffpk-agent-scratch-files-in-commit
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-09-27T05:23:34Z"
+  completed_at: "2026-09-27T08:28:53Z"
   block_reason: "agent exited with non-zero code: 親 runner の検証 `test-integration`（`id: test-integration`, `command: npm run test:integration`）が `status: failed`（exit 1）で記録されている。executor 自身の検証（`prettier` / `markdownlin…"
+  conclusion: register 由来タスクの commit 範囲を、HEAD に無い新規ファイルは成果物ディレクトリと targets に限るよう絞り、除外した変更は commit-scope 警告と integrate.log に残す。ready 昇格検査は commit 対象だけを見る。共通規約に一時ファイルの置き場所と削除を追記した
 ---
 
 # PJR-FFPK agent の一時ファイルが register 実行の commit に入り統合前の検査も誤って止める
