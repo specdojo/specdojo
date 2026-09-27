@@ -71,3 +71,29 @@
       from: in-progress
       to: review
   previous_event_id: reg_51f73ea51b434e5e9dabe19decd9e735
+- v: 1
+  id: reg_68a192d7fd3340cd880718bf10b6d5e4
+  ts: "2026-09-27T05:47:18Z"
+  action: start
+  actor: agy-expert-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_cbdc4c71957841a5a05080ab37add473
+- v: 1
+  id: reg_46d4a7c700424fb58197360bea0ce90b
+  ts: "2026-09-27T05:56:49Z"
+  action: review
+  actor: agy-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_68a192d7fd3340cd880718bf10b6d5e4

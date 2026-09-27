@@ -17,6 +17,9 @@ action:
     dependency_changed: "true"
     rulebook_changed: "true"
     unreviewed: "true"
+    changed_only: "true"
+    ungraded: "true"
+    incomplete: "true"
 policy:
   missed_run: skip
   overlap: skip
