@@ -1,0 +1,143 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-ZFFZ",
+  "run_id": "20260927T115025963Z-04f63b8f",
+  "stage": {
+    "role": "executor",
+    "actor": "claude-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-27T11:50:25.963Z",
+    "completed_at": "2026-09-27T11:57:51.884Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/trash/cdfd-register-lifecycle.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/trash/cdfd-reporting.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/trash/cdfd-routine.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-zffz-cdfd-3-stsd-cstd.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/cdsd-execution.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/cdsd-planning.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/cdsd-sharing.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/stsd-routine-run.md",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 9,
+    "summary": "docs/ja/product/trash/cdfd-register-lifecycle.md   | 38 +++-------------------\n docs/ja/product/trash/cdfd-reporting.md            | 14 +-------\n docs/ja/product/trash/cdfd-routine.md              | 22 ++-----------\n .../project-register/pjr-zffz-cdfd-3-stsd-cstd.md  | 13 ++++++--\n 4 files changed, 17 insertions(+), 70 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write <9 changed/new md files>",
+      "status": "passed",
+      "summary": "formatted 5 new docs; cdfd files and ticket formatted"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint <9 changed/new md files>",
+      "status": "passed",
+      "summary": "no errors"
+    },
+    {
+      "source": "executor",
+      "command": "node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint <9 files>",
+      "status": "passed",
+      "summary": "pre-commit equivalent markdownlint passed"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "no errors; only pre-existing WARN for documents that do not exist yet"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "Built index: 2106 entries"
+    },
+    {
+      "source": "executor",
+      "command": "npm run -s lint:md",
+      "status": "passed",
+      "summary": "no errors"
+    },
+    {
+      "source": "executor",
+      "command": "npm run -s lint:fm",
+      "status": "passed",
+      "summary": "exit 0"
+    },
+    {
+      "source": "executor",
+      "command": "npm run -s validate:history-links",
+      "status": "passed",
+      "summary": "exit 0"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-ZFFZ\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\n[dry-run] git merge --no-ff --no-edit exec/T-T-doc-010\nInstalling worktree dependencies: .\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nUpdated: /tmp/specdojo-register-resume-e2e-89A6YU/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)\nUpdated: /tmp/specdojo-register-resume-e2e-89A6YU/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml\nGenerated: /tmp/specdojo-register-resume-e2e-89A6YU/docs/ja/projects/test/controls/project-register/generated/pjr-index.md\nGenerated: /tmp/specdojo-register-resume-e2e-89A6YU/docs/ja/projects/test/controls/project-register/generated/pjr…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.2.1 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-ZFFZ/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-ZFFZ/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-tem…"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-ZFFZ\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-NUAXns/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-liIc27/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-HU7xRa/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-AeqtFh/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-6HW5jp/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-SfIZDx/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\nWrote agent stdout: /tmp/specdojo-agent-command-7dZ1Sl/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-XvRnuA/outputs/partial.txt\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\n\n Test Files  111 passed (111)\n      Tes…"
+    }
+  ],
+  "final_message": "Created stsd-register-entry, stsd-routine-run, cdsd-planning, cdsd-execution and cdsd-sharing under docs/ja/product/010-business-specs/020-data-model/ and moved the state, type-classification and data-source details there. Replaced cdfd-register-lifecycle 2.1-2.3, cdfd-routine 2.1-2.2 and cdfd-reporting 2.1 with references. Added prj-0001:cdfd-overview to based_on in cdfd-register-lifecycle. Removed the note-to-done definition behind the four major findings; the new STSD keeps note non-terminal (open). Updated the PJR-ZFFZ ticket work table and results section. Left the based_on of the new docs empty (bdd-* not created) as _TODO_.",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-ZFFZ/20260927T115025963Z-04f63b8f/executor.log",
+      "bytes": 5150,
+      "truncated": false
+    }
+  ]
+}
