@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-n03w-grade-role-and-triggers
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-09-23T05:17:28Z"
   due_on: "2026-11-14"
+  completed_at: "2026-09-27T06:22:33Z"
+  conclusion: grade の定期実行に dependency_changed・rulebook_changed・unreviewed の 3 契機を加え、KCMH 完了まで changed_only・ungraded・incomplete を経過措置として残した。unreviewed は内容の変化を見ないため routine では無効にし、修正を PJR-2F3Y へ分けた
 ---
 
 # PJR-N03W grade の定期実行を変化検知に限定する

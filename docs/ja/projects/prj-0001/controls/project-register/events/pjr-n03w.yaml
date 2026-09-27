@@ -97,3 +97,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_68a192d7fd3340cd880718bf10b6d5e4
+- v: 1
+  id: reg_123d161319f74afa83e4112a8ab9cb22
+  ts: "2026-09-27T06:22:33Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: agy-expert-executor の 2 回の実行と orchestrator の補完の後、利用者の判断（案 A）で unreviewed を無効にして close
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-27"
+    - field: conclusion
+      from: "-"
+      to: grade の定期実行に dependency_changed・rulebook_changed・unreviewed の 3 契機を加え、KCMH 完了まで changed_only・ungraded・incomplete を経過措置として残した。unreviewed は内容の変化を見ないため routine では無効にし、修正を PJR-2F3Y へ分けた
+  previous_event_id: reg_46d4a7c700424fb58197360bea0ce90b
