@@ -12,7 +12,7 @@ specdojo:
   owner: ARC
   registered_at: "2026-09-23T05:17:29Z"
   due_on: "2026-11-14"
-  block_reason: "agent exited with non-zero code: runner validation `test-integration` (npm run test:integration) failed."
+  block_reason: 'integrate failed: Deliverable status promotion to "ready" is human-only and must not be done by an agent run: test-schema.yaml'
 ---
 
 # PJR-06RE kata 保守タスクへ review フェーズを追加する
