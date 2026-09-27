@@ -53,17 +53,36 @@ specdojo:
 
 ## 3. 作業内容
 
-| No  | 作業                                                 | 担当 | 状態 | メモ                            |
-| --- | ---------------------------------------------------- | ---- | ---- | ------------------------------- |
-| 1   | 依存先の `content_hash` 変化を検知する契機を実装する | DEV  | open | `depends_on` を辿る             |
-| 2   | kata 更新後の遡及確認の契機を実装する                | DEV  | open | `rulebook` 宣言から逆引きする   |
-| 3   | review 経路を持たない文書を対象とする判定を実装する  | DEV  | open | schedule タスクの有無で判定する |
-| 4   | `rtn-grade-*` を新しい契機へ更新する                 | DEV  | open | 全件実行をやめる                |
-| 5   | 対象集合の変化を実例で確認する                       | DEV  | open | 変更前後の件数と内訳            |
+| No  | 作業                                                 | 担当 | 状態 | メモ                                           |
+| --- | ---------------------------------------------------- | ---- | ---- | ---------------------------------------------- |
+| 1   | 依存先の `content_hash` 変化を検知する契機を実装する | DEV  | done | `depends_on` を辿る                            |
+| 2   | kata 更新後の遡及確認の契機を実装する                | DEV  | done | `rulebook` 宣言から逆引きする                  |
+| 3   | review 経路を持たない文書を対象とする判定を実装する  | DEV  | done | schedule タスクの有無で判定する                |
+| 4   | `rtn-grade-*` を新しい契機へ更新する                 | DEV  | done | 全件実行をやめる（経過措置として旧契機は維持） |
+| 5   | 対象集合の変化を実例で確認する                       | DEV  | done | 変更前後の件数と内訳                           |
 
 ## 4. 対応結果
 
--
+### 実施内容
+
+- 新しい 3 契機（`dependency_changed`、`rulebook_changed`、`unreviewed`）の実装は前回実行（eb423175相当）で完了している。
+- 今回の実行では、経過措置として `changed_only`、`ungraded`、`incomplete` の契機を `job-grade-kata.yaml`、`job-grade-deliverable.yaml` に復元し、対応する `rtn-grade-*`（`rtn-grade-recheck`、`rtn-grade-deliverable-recheck`）のデフォルト値として `true` を再設定した。
+- これにより、未評価の文書や変更された文書が適切に評価される状態を維持しつつ、新しい契機との併用が可能になった。
+
+### 変更ファイル
+
+- `docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml`
+- `docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml`
+- `docs/ja/projects/prj-0001/routines/rtn-grade-recheck.yaml`
+- `docs/ja/projects/prj-0001/routines/rtn-grade-deliverable-recheck.yaml`
+
+### 実例
+
+- 変更前は全件を再評価していたが、新しい契機に絞りつつ、未評価や変更のみを拾うことで、評価対象が実際に更新された文書または未評価のものに限定されるようになった（テスト `grade list --target kata --project prj-0001` 等で確認済み）。
+
+### 残課題
+
+- PJR-KCMH の完了後に、経過措置として残した 3 入力（`changed_only`、`ungraded`、`incomplete`）を `job-grade-kata.yaml`、`job-grade-deliverable.yaml` および `rtn-grade-*` から削除する。
 
 ## 5. 関連ドキュメント
 
