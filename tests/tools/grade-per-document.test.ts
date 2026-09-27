@@ -463,11 +463,39 @@ describe("grade per-document pipeline", () => {
     expect(invocations).toContain("grade apply --target deliverable");
   });
 
+  it("exits with 1 and reports how to resume when a stage failure leaves a document incomplete", () => {
+    const fixture = makeFixture();
+
+    const result = runPipeline(fixture, { FAKE_APPLY_FAIL_FROM: "2" }, [], "fixture-incomplete");
+
+    expect(result.status, result.stderr).toBe(1);
+    expect(result.stdout).toContain("grade pipeline complete: selected=1 processed=1");
+    expect(result.stdout).toContain("incomplete=1");
+    expect(result.stderr).toContain(
+      "grade pipeline incomplete: incomplete=1 run_id=fixture-incomplete; rerun with --run-id fixture-incomplete",
+    );
+    expect(result.stderr).toContain(
+      "grade pipeline incomplete document: docs/ja/specdojo/rulebooks/fixture-rulebook.md failed_stage=2",
+    );
+    expect(result.stderr).not.toContain("grade pipeline aborted:");
+  });
+
+  it("exits with 0 when no document is left incomplete", () => {
+    const fixture = makeFixture();
+
+    const result = runPipeline(fixture, {}, [], "fixture-complete");
+
+    expect(result.status, result.stderr).toBe(0);
+    expect(result.stdout).toContain("incomplete=0");
+    expect(result.stderr).not.toContain("grade pipeline incomplete");
+    expect(result.stderr).not.toContain("grade pipeline aborted:");
+  });
+
   it("retries a failed stage in a new run without repeating completed stages", () => {
     const fixture = makeFixture();
 
     const failed = runPipeline(fixture, { FAKE_APPLY_FAIL_FROM: "3" }, [], "fixture-failed");
-    expect(failed.status, failed.stderr).toBe(0);
+    expect(failed.status, failed.stderr).toBe(1);
     expect(failed.stdout).toContain("document incomplete:");
     expect(failed.stdout).toContain("failed_stage=3");
     expect(JSON.parse(readFileSync(fixture.pipelineStateFile, "utf8"))).toMatchObject({
@@ -490,7 +518,7 @@ describe("grade per-document pipeline", () => {
 
     for (const runId of ["fixture-failure-1", "fixture-failure-2", "fixture-failure-3"]) {
       const result = runPipeline(fixture, { FAKE_APPLY_FAIL_FROM: "3" }, [], runId);
-      expect(result.status, result.stderr).toBe(0);
+      expect(result.status, result.stderr).toBe(1);
       if (runId === "fixture-failure-3") {
         expect(result.stdout).toContain("reason=failure_limit");
         expect(result.stdout).toContain("consecutive_failures=3 max_failures=3");
@@ -531,7 +559,7 @@ describe("grade per-document pipeline", () => {
       "fixture-stage-1-failure-3",
     ]) {
       const result = runPipeline(fixture, { FAKE_APPLY_FAIL_FROM: "1" }, [], runId);
-      expect(result.status, result.stderr).toBe(0);
+      expect(result.status, result.stderr).toBe(1);
     }
     expect(JSON.parse(readFileSync(fixture.pipelineStateFile, "utf8"))).toMatchObject({
       stage_completed: 0,
