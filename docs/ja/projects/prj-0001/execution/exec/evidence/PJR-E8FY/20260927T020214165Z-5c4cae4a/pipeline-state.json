@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-E8FY",
   "run_id": "20260927T020214165Z-5c4cae4a",
-  "updated_at": "2026-09-27T02:41:58.564Z",
+  "updated_at": "2026-09-27T02:42:51.045Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-e8fy-20260927T015947Z-be8c-result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "claude-expert-executor",
       "attempts": 1,
       "started_at": "2026-09-27T02:41:58.564Z",
-      "completed_at": null,
+      "completed_at": "2026-09-27T02:42:51.045Z",
       "artifact_ref": null
     }
   },
