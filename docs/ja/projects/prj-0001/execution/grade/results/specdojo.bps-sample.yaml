@@ -5,17 +5,17 @@ path: docs/ja/specdojo/samples/bps-sample.md
 target: kata
 rubric: grade-rubric-v1
 verdict: needs-work
-score: 64
-graded_at: "2026-09-26T16:34:09.232Z"
+score: 73
+graded_at: "2026-09-27T01:18:49.557Z"
 graded_by: codex-expert-executor
-content_hash: c43d2bfd58630e338e8a8fbe2598f042cf60058b06b5440da8e197bf481c032e
+content_hash: 1b62029423fa96180ca0b3c150ddadd986d411e99283e817e9792282660b1916
 categories:
   usability:
-    score: 67
+    score: 83
   architecture:
     score: 100
   quality:
-    score: 50
+    score: 63
   consistency:
     score: 50
 viewpoints:
@@ -26,8 +26,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
     level: 2
     score: 50
@@ -35,71 +35,70 @@ viewpoints:
     level: 2
     score: 50
   vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
     level: 3
     score: 75
-  vp-ux-language-consistency:
-    level: 2
-    score: 50
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 0
-  major: 4
-  minor: 4
+  major: 2
+  minor: 5
   note: 0
 findings:
   - id: F001
     severity: minor
     rule: vp-arc-conciseness
     line: 27
-    anchor: "- 対象商品が販売中であり、継続して取り扱う商品である。販売停止または終売の商品は補充不要として記録する。"
-    message: 販売状態・継続取扱と未完了依頼の確認が前提条件（27、30行）と `S-01`・`S-02`（47、48行）で重複しているため、開始前条件か処理中判断のどちらかへ統合する必要がある。
+    anchor: "- 対象商品が販売中であり、継続して取り扱う商品である。"
+    message: 販売状態・継続取扱の確認が前提条件と `S-01` で重複しているため、開始前条件か処理中判断のどちらかへ統合する必要がある。
   - id: F002
-    severity: major
+    severity: minor
     rule: vp-qe-verifiability
-    line: 69
+    line: 74
     anchor: >-
-      | `E-03`  | `S-03`、`S-04` | 判断根拠を記録できない、または仕入グループが受領できない | 補充依頼の確定または引渡し | 店主代表 |
-      補充依頼を未確定のまま保留し、不足情報または未受領の事実を記録する | 根拠と受領先を確認し、`S-03` から再開する                              |
-    message: "`E-03` の判断根拠記録失敗と仕入グループ受領失敗に対応する検証・受入観点がなく、保留記録、非確定・未受領状態、再開後の成果を第三者が判定できない。"
+      | 補充が必要     | 販売中の商品で、現在庫が補充基準を下回る                   | 店主代表が承認した補充依頼が一件確定し、仕入グループが商品と依頼数量を確認できる |
+      補充依頼、承認記録         |
+    message: 「補充が必要」の入力条件に未完了依頼がないことが含まれず「既存依頼と重複」の条件と重なるため、どちらの期待成果を適用するか判定できるよう条件または優先関係を明示する必要がある。
   - id: F003
     severity: minor
     rule: vp-qe-verifiability
-    line: 75
-    anchor: "| 補充が必要     | 販売中の商品で、現在庫が補充基準を下回る         | 店主代表が承認した補充依頼が一件確定し、仕入グループが商品と数量を確認できる | 補充依頼、承認記録、受領記録 |"
-    message: 「補充が必要」の入力条件に未完了依頼がないことが含まれず「既存依頼と重複」の条件と重なるため、どちらの期待成果を適用するか判定できるよう条件または優先関係を明示する必要がある。
+    line: 77
+    anchor: >-
+      | 判断情報が不足 | 商品、現在庫、補充基準、発注単位、数量単位のいずれかが不明 | 補充依頼を確定せず、不足項目、確認担当、再開対象の商品が記録される               |
+      保留記録                   |
+    message: 「判断情報が不足」の期待成果は確認担当の記録を要求する一方、`E-01` の処置は不足項目と対象商品の記録しか定めていないため、保留記録から期待成果を検証できるよう記録項目を一致させる必要がある。
   - id: F004
     severity: major
     rule: vp-qe-omissions-consistency
     line: 12
-    anchor: "- 終了点: 補充対象、数量、判断根拠を含む補充依頼が確定した時点、または補充不要が記録された時点"
+    anchor: "- 終了点: 補充対象、依頼数量、判断根拠を含む補充依頼が店主代表によって承認（確定）された時点、または補充不要が記録された時点"
     message: >-
-      終了点は補充依頼の確定としている一方で `S-04` と受入観点は仕入グループの受領まで要求し、さらに `E-03` は確定済み依頼の受領失敗でも依頼を未確定として `S-03`
-      へ戻すため、確定・引渡し・受領の状態境界を整合させる必要がある。
+      終了点を補充依頼の承認（確定）時点としている一方、正常系にはその後の `S-04`
+      引き渡しがあり、受入観点も仕入グループが確認できることを要求するため、プロセス完了を承認・引き渡し・参照可能のどの時点とするか統一する必要がある。
   - id: F005
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 29
+    anchor: "- 店主代表が補充要否と依頼数量を最終判断できる。家族の店番担当が検出した場合も、補充依頼の確定は店主代表が行う。"
+    message: 店主代表が最終判断できない場合の非起動、差戻し、または例外が定義されていないため、前提条件不成立時の経路を明示する必要がある。
+  - id: F006
     severity: major
     rule: vp-qe-kata-conformance
-    line: 61
-    anchor: 補充依頼は `cdfd-uc-replenishment` の引き渡し `H-01` で仕入グループへ渡す情報に対応する。
+    line: 46
+    anchor: >-
+      | `S-01`      | `P-06-01`     | 店主代表 | 対象商品、現在庫             |
+      販売状態、継続取扱、発注単位、数量単位を確認し、補充判断の対象可否を決める                                                |
+      補充判断の対象または補充不要のいずれかが理由付きで確定している         | `E-01` |
     message: >-
-      対応先とする `cdfd-uc-replenishment` の `H-01`
-      は補充数量が発注単位で示されることを要求するが、本書は13行で発注単位の決定を対象外とし、入力・処理・補充依頼の確定条件にも発注単位の取得または適合確認がないため、`H-01` との整合を成立させる必要がある。
-  - id: F006
-    severity: minor
-    rule: vp-ux-readability
-    line: 27
-    anchor: "- 対象商品が販売中であり、継続して取り扱う商品である。販売停止または終売の商品は補充不要として記録する。"
-    message: 販売状態と重複有無が開始前の前提条件なのか `S-01`・`S-02` で行う処理なのか二重に示されているため、確認時点と不成立時の遷移を一か所で読める構成に整理する必要がある。
+      `S-01`〜`S-04` が対応付ける `P-06-01`〜`P-06-04` は参照先の CDFD 群で定義を確認できず、rulebook が禁じる BPS 単独でのプロセス ID 追加に見えるため、正本となる
+      `cdfd-inventory` の定義へ接続するか既存 ID に合わせる必要がある。
   - id: F007
-    severity: major
-    rule: vp-ux-language-consistency
-    line: 39
-    anchor: "| 補充判断基準 | `br-reorder-point` | 補充要否と基準数量を同じ規則で判定する | ○    | `br-reorder-point` |"
-    message: 「補充基準」「補充必要数」「基準数量」「数量」の関係が定義されず、`S-02` の基準数量が閾値・算出した補充必要数・依頼数量のどれを指すか区別できないため、用語を定義して入力から補充依頼まで統一する必要がある。
-  - id: F008
     severity: minor
     rule: vp-ux-language-consistency
-    line: 59
-    anchor: "| 補充不要記録 | 在庫担当     | 対象商品、補充不要理由、確認時刻を確認でき、補充依頼が作成されていない | 在庫記録 | 次回の販売または入荷後に再判定 |"
-    message: 補充不要記録の受け手である「在庫担当」は、対象者や前提条件で使う「店主代表」「家族の店番担当」のいずれとも対応付けられていないため、正式な役割名へ統一する必要がある。
+    line: 29
+    anchor: "- 店主代表が補充要否と依頼数量を最終判断できる。家族の店番担当が検出した場合も、補充依頼の確定は店主代表が行う。"
+    message: 役割名「家族の店番担当」は組織定義の「家族利用者代表」および `cdfd-uc-replenishment` の「店番担当」のどちらにも一致しないため、正本の正式役割名へ統一する必要がある。
