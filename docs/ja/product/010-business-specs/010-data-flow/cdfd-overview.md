@@ -52,7 +52,7 @@ SpecDojo を導入して Kata を配置し、その雛形から稼働構成の�
 何を成果物として管理し、いつ・誰が・どのような形で実行するかを定義する。登録簿は計画外事項と判断を受け止め、成果物カタログとスケジュール戦略から Schedule（track）と実行計画を作り、定期実行定義とジョブ定義は定型・定期の実行を計画へ組み込む。
 
 - **主要入力**: Orchestrator からの計画要求、Action からの再計画要求、参加者からの判明した事項と意思決定、参加者からの管理対象とする成果物の判断、メンバー・ロール、Kata の rulebook・template、参加者からの定型・定期実行の要件
-- **主要出力**: 登録項目・決定記録、成果物カタログ、スケジュール戦略、Schedule（track）とマイルストーン、実行計画、定期実行定義、ジョブ定義
+- **主要出力**: 登録項目・決定記録、成果物カタログ、スケジュール戦略、Schedule（track）とマイルストーン、実行計画、定期実行定義、ジョブ定義、Orchestrator への計画要求への応答
 - **データストア**: 稼働構成、Kata / kata、登録簿 / register、成果物カタログ / catalog、スケジュール戦略、Schedule（track）、実行計画 / plan、定期実行定義 / routine、ジョブ定義 / job
 
 <!-- prettier-ignore -->
@@ -69,7 +69,7 @@ SpecDojo を導入して Kata を配置し、その雛形から稼働構成の�
 Plan の実行指示に基づく edit phase として、人または AI Agent が Kata を参照してタスクを実行し、成果物と検証可能な実行記録を残す。定期実行・ジョブ・並行実行はタスク実行の実行形態であり、独立した領域にしない。grade は Check、grade を事実として完了可否を判断する review phase は Action が担い、Do の出力には評価結果と完了判断を含めない。
 
 - **主要入力**: Orchestrator からの実行要求、実行計画、Schedule（track）、ジョブ定義、対象成果物、対象登録項目、Kata の rulebook・recipe・template、稼働構成の agent 定義・権限
-- **主要出力**: 作成・更新した成果物、登録項目の状態遷移、実行記録（result）、実行状態（ブロック・判断依頼を含む）
+- **主要出力**: 作成・更新した成果物、登録項目の状態遷移、実行記録（result）、実行状態（ブロック・判断依頼を含む）、Orchestrator への実行状態・判断依頼
 - **データストア**: Kata / kata、稼働構成、実行計画 / plan、Schedule（track）、ジョブ定義 / job、登録簿 / register、実行記録、成果物 / deliverable
 
 <!-- prettier-ignore -->
@@ -81,8 +81,8 @@ Plan の実行指示に基づく edit phase として、人または AI Agent �
 
 成果物と実行記録を評価・可視化し、判断に使える形へ変換する。P-08 の grade は editor から独立した runner が成果物の品質を一度だけ照合し、QE が grade・finding を確定する。評価結果と進捗報告は Action の判断材料になり、派生ビュー・索引は参加者の閲覧に供する。
 
-- **主要入力**: Orchestrator からの評価・報告要求、作成・更新された成果物、成果物カタログ、Schedule（track）、登録簿、実行記録・実行状態、Kata の rubric・評価観点
-- **主要出力**: 評価結果（grade、finding）、進捗報告、派生ビュー・索引
+- **主要入力**: Orchestrator からの評価・報告・生成要求、作成・更新された成果物、成果物カタログ、Schedule（track）、登録簿、実行記録・実行状態、Kata の rubric・評価観点
+- **主要出力**: 評価結果（grade、finding）、進捗報告、派生ビュー・索引、Orchestrator への評価・報告・生成結果
 - **データストア**: Kata / kata、成果物カタログ / catalog、成果物 / deliverable、Schedule（track）、登録簿 / register、実行記録、評価結果、進捗報告、派生ビュー・索引
 
 <!-- prettier-ignore -->
@@ -97,7 +97,7 @@ Plan の実行指示に基づく edit phase として、人または AI Agent �
 Check の結果と人間の判断に基づき、タスクの完了確定、稼働構成の変更反映、役割を終えた文書の退避を行い、必要に応じて Plan へ再計画を要求する。review phase は P-11 に属し、最新の grade・finding を確定済みの事実として受け取り、成果物を再評価せずにタスクの完了可否を判断する。
 
 - **主要入力**: Orchestrator からの完了・改善要求、評価結果、進捗報告の判断事項、完了条件、参加者からの構成変更要求と承認結果、参加者からの非推奨化の判断
-- **主要出力**: 完了・決定の記録、完了記録、更新した稼働構成（Kata のバージョン更新を含む）、更新した成果物カタログ、非推奨化した文書、保管した文書、再計画要求
+- **主要出力**: 完了・決定の記録、完了記録、更新した稼働構成（Kata のバージョン更新を含む）、更新した成果物カタログ、非推奨化した文書、保管した文書、再計画要求、Orchestrator への完了・改善判断
 - **データストア**: 稼働構成、Kata / kata、成果物カタログ / catalog、登録簿 / register、実行記録、成果物 / deliverable、保管庫（trash） / trash、評価結果、進捗報告
 
 <!-- prettier-ignore -->
@@ -109,9 +109,9 @@ Check の結果と人間の判断に基づき、タスクの完了確定、稼�
 
 ### 3.6. Orchestrator（P-14）
 
-Plan・Do・Check・Action へ要求を発行して PDCA を回す。参加者の意図に基づく対話型の運転と、定期実行定義に基づく自動運転を含み、各領域の内部処理は担当しない。
+Plan・Do・Check・Action へ要求を発行して PDCA を回す。参加者の意図に基づく対話型の運転と、定期実行定義に基づく自動運転を含み、各領域の内部処理は担当しない。要求先の各グループは要求への応答を Orchestrator へ直接返し、Orchestrator はその応答を実行記録へ記録したうえで、記録済みの実行状態を次の要求の判断に使う。
 
-- **主要入力**: 稼働構成の agent 定義・実行既定値、参加者からの意図、成果物カタログの完了条件、スケジュール戦略の作業要件、実行計画（対象・手順・完了条件）、定期実行定義、実行状態
+- **主要入力**: 稼働構成の agent 定義・実行既定値、参加者からの意図、成果物カタログの完了条件・rulebook 参照、スケジュール戦略の作業要件、実行計画（対象・手順・完了条件）、定期実行定義、Plan からの計画要求への応答、Do からの実行状態・判断依頼、Check からの評価・報告・生成結果、Action からの完了・改善判断、実行記録に記録済みの実行状態
 - **主要出力**: Plan・Do・Check・Action への要求、サイクルの実行記録
 - **データストア**: 稼働構成、成果物カタログ / catalog、スケジュール戦略、定期実行定義 / routine、実行計画 / plan、実行記録
 
@@ -159,7 +159,7 @@ SpecDojo のプロジェクト運営で読み書きするデータストアを�
 
 ### 5.1. トランザクションデータの流れ
 
-Orchestrator が PDCA を駆動し、Plan が登録簿・Schedule（track）・実行計画を作り、Do が実行計画と対象の成果物・登録項目に基づいて成果物と実行記録を生み、Check がそれらを評価結果・進捗報告・派生ビュー・索引へ変換し、Action が判断結果を記録へ戻す流れを示す。
+Orchestrator が PDCA を駆動し、Plan が登録簿・Schedule（track）・実行計画を作り、Do が実行計画と対象の成果物・登録項目に基づいて成果物と実行記録を生み、Check がそれらを評価結果・進捗報告・派生ビュー・索引へ変換し、Action が判断結果を記録へ戻す流れを示す。Plan・Do・Check・Action はそれぞれ要求への応答を Orchestrator へ直接返し、Orchestrator は受け取った応答をサイクルの実行記録として実行記録へ残し、次の要求の判断では記録済みの実行状態を参照する。
 
 ```mermaid
 flowchart LR
@@ -185,9 +185,13 @@ flowchart LR
 
   Orchestrator -->|"計画要求"| Plan
   Orchestrator -->|"実行要求"| Do
-  Orchestrator -->|"評価・報告要求"| Check
+  Orchestrator -->|"評価・報告・生成要求"| Check
   Orchestrator -->|"完了・改善要求"| Action
-  ExecLog -->|"実行状態"| Orchestrator
+  Plan -->|"計画要求への応答"| Orchestrator
+  Do -->|"実行状態・判断依頼"| Orchestrator
+  Check -->|"評価・報告・生成結果"| Orchestrator
+  Action -->|"完了・改善判断"| Orchestrator
+  ExecLog -->|"記録済みの実行状態"| Orchestrator
   Orchestrator -->|"サイクルの実行記録"| ExecLog
   ExecPlan -->|"対象・手順・完了条件"| Orchestrator
 
@@ -288,14 +292,14 @@ flowchart LR
 ### 6.1. プロセスグループ別 CDFD
 
 <!-- prettier-ignore -->
-| プロセスグループ | 含む領域 | phase / 判定との対応 | プロセスグループ別 CDFD |
-| --- | --- | --- | --- |
-| Onboarding | `P-01` | - | `cdfd-onboarding` |
-| Plan | `P-02`〜`P-06` | - | `cdfd-plan` |
-| Do | `P-07` | edit phase | `cdfd-do` |
-| Check | `P-08`〜`P-10` | grade による成果物品質の評価 | `cdfd-check` |
-| Action | `P-11`〜`P-13` | review phase によるタスク完了可否の判断 | `cdfd-action` |
-| Orchestrator | `P-14` | - | `cdfd-orchestrator` |
+| プロセスグループ | 含む領域 | プロセスグループ別 CDFD |
+| --- | --- | --- |
+| Onboarding | `P-01` | `cdfd-onboarding` |
+| Plan | `P-02`〜`P-06` | `cdfd-plan` |
+| Do | `P-07` | `cdfd-do` |
+| Check | `P-08`〜`P-10` | `cdfd-check` |
+| Action | `P-11`〜`P-13` | `cdfd-action` |
+| Orchestrator | `P-14` | `cdfd-orchestrator` |
 
 ### 6.2. ユースケース別 CDFD
 

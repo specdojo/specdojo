@@ -72,7 +72,7 @@ groups:
         name: ビジネスルール（レビュー判定）
         kind: work
         depends_on:
-          - bps-task-review-finalize
+          - bps-task-verification
         overview: レビュー結果を pass / conditional_pass / changes_requested / blocked のいずれに判定するかの規則を定義する
         path: br-review-verdict.md
         rulebook: specdojo:br-rulebook

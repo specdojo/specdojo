@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-09-26T23:23:17Z"
@@ -37,15 +37,20 @@ specdojo:
 
 ## 3. 作業内容
 
-| No  | 作業                                                                                          | 担当 | 状態 | メモ |
-| --- | --------------------------------------------------------------------------------------------- | ---- | ---- | ---- |
-| 1   | `bps-task-review-finalize` の local_id・path・name を中身に合わせて変更し、参照元を追随させる | DEV  | open | -    |
-| 2   | cdfd-overview の Check への要求ラベルを修正する                                               | DEV  | open | -    |
-| 3   | cdfd-overview の Orchestrator への応答を cdfd-orchestrator と整合させる                       | DEV  | open | -    |
+| No  | 作業                                                                                          | 担当 | 状態 | メモ                           |
+| --- | --------------------------------------------------------------------------------------------- | ---- | ---- | ------------------------------ |
+| 1   | `bps-task-review-finalize` の local_id・path・name を中身に合わせて変更し、参照元を追随させる | DEV  | done | `bps-task-verification` へ改名 |
+| 2   | cdfd-overview の Check への要求ラベルを修正する                                               | DEV  | done | -                              |
+| 3   | cdfd-overview の Orchestrator への応答を cdfd-orchestrator と整合させる                       | DEV  | done | 4 本の応答エッジを追加         |
 
 ## 4. 対応結果
 
--
+- `local_id` を `bps-task-verification`、`path` を `bps-task-verification.md` へ変更した。`name` は既に「業務プロセス仕様（成果検証）」で中身と一致していたため据え置いた。
+  - 改名先は、後続の `bps-task-judgment-integration` が確定・統合を担うため、確定を含まない「検証（verification）」を選んだ。`review` は Action（`P-11`）の review phase と紛れるため避けた。
+  - 参照元の `depends_on`（`dct-business-model-bps.yaml` の `bps-task-judgment-integration`、`dct-business-model-br.yaml` の `br-review-verdict`、`dct-business-acceptance-criteria.yaml` の `bac-task-execution`）を追随させ、カタログ内に旧 `local_id` は残っていない。文書本体は未作成のため、ファイルの移動はない。
+- [[cdfd-overview]] の Check の主要入力と図のエッジを「評価・報告・生成要求」へ改めた。
+- [[cdfd-overview]] に、Plan・Do・Check・Action から Orchestrator への応答エッジ 4 本（計画要求への応答、実行状態・判断依頼、評価・報告・生成結果、完了・改善判断）を追加し、各グループの主要出力と Orchestrator の主要入力へ反映した。実行記録からのエッジは「記録済みの実行状態」とし、応答は Orchestrator が実行記録へ記録してから次の判断に参照するという関係を本文に明記した。
+- あわせて grade finding のうち、Orchestrator の主要入力への rulebook 参照の追加と、詳細 CDFD 一覧の表を rulebook どおり 3 列にする修正を行った。
 
 ## 5. 関連ドキュメント
 

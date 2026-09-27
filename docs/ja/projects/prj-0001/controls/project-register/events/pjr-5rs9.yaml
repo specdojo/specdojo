@@ -32,3 +32,29 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_b6b3432583d540fb82257b87f6d4143e
+  ts: "2026-09-26T23:54:25Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_310b9435f1df42a296418219918d2e81
+- v: 1
+  id: reg_ed333f0f1eac4f54b9ef74522c5b98be
+  ts: "2026-09-27T00:17:01Z"
+  action: review
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_b6b3432583d540fb82257b87f6d4143e
