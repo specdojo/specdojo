@@ -29,29 +29,11 @@ specdojo:
 
 ### 2.1. 定期処理定義と due 判定
 
-| 定義・経路         | 起動条件と選択                                                                                                                                                                                 | 引き渡す主な設定                                  | 実行後の次回判定                                                                                          |
-| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| interval           | `last_run` がないか不正、または現在時刻との差が interval 以上なら一回 due とする。interval は正の整数と分・時・日・週の単位で定義する。                                                        | 単一または配列の action と各 action 設定          | 委譲前に更新した `last_run` から次の interval を判定する。失敗・skip でも同じ実行機会を直ちに再試行しない |
-| cron               | timezone 上の5フィールド cron に一致し、`last_scheduled_for` より後から現在分までの予定時刻を選ぶ。`missed_run: latest` または未指定は最新一件、`all` は取りこぼした各予定時刻を古い順に扱う。 | scheduled time、timezone、単一または配列の action | 委譲前に各 scheduled time を `last_scheduled_for` へ記録する。初回は直近の一致一件だけを選ぶ              |
-| 特定 ID の即時実行 | 指定 ID が存在すれば、enabled と due にかかわらず現在時刻を scheduled time として一回選ぶ。                                                                                                    | 指定 routine の action 設定                       | 通常実行と同じく `last_run` と結果を記録する                                                              |
-| disabled           | due 一括選択から除外する。                                                                                                                                                                     | なし                                              | 状態を更新せず、明示 ID 実行または定義変更を待つ                                                          |
-
-cron の探索範囲は最大366日であり、`all` で1000件を超える取りこぼしは異常終了する。interval と cron は同じ定義へ同時指定できない。
+interval・cron・特定 ID の即時実行・disabled の各経路における実行機会の選択と次回判定は [[prj-0001:stsd-routine-run|ステータス定義（定期処理の実行結果）]] の「due 判定と実行機会の選択」を正とする。本領域は、選択した実行機会の action 設定（interval の場合は各 action 設定、cron の場合は scheduled time と timezone）を委譲先へ引き渡す。
 
 ### 2.2. 結果記録と次回判定
 
-| 結果・状況               | routine 実行状態                                                                                                | 委譲先の記録                                                                                               | 次回判定                                                                   |
-| ------------------------ | --------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| `success`                | `last_run` と `last_result: success`、cron は処理済みの `last_scheduled_for`                                    | 登録項目状態、task event、または Job Run / result                                                          | 次の interval 経過または次の cron occurrence を待つ                        |
-| `failure`                | `last_run` と `last_result: failure`、cron は処理済みの `last_scheduled_for`                                    | 項目別失敗、task block、cycle step 失敗、または Job Run failure                                            | 同じ実行機会は直ちに再試行せず、次の定期機会または明示実行を待つ           |
-| `skipped`                | `last_run` と `last_result: skipped`、cron は処理済みの `last_scheduled_for`                                    | project busy なら委譲先を変更しない。Job precondition skip なら Job Run・plan・result・evidence を作らない | 同じ実行機会は消化済みとし、次の定期機会を待つ                             |
-| 対象なし                 | routine を選択しなければ状態を更新しない。register / task 系 action の委譲対象がなければ `last_result: success` | 登録項目・task を新規更新しない                                                                            | 次の定期機会に再選択する                                                   |
-| 完了済み重複 Job Run     | `last_result: success`                                                                                          | 既存 Job Run・attempt・checkpoint を変更しない                                                             | idempotency key が変わる次の実行機会を待つ                                 |
-| 委譲前記録後の想定外例外 | 新しい `last_run` と必要時の `last_scheduled_for` は残るが、`last_result` は直前値または未記録になり得る        | 例外発生点より後は未更新になり得る                                                                         | 同じ実行機会は直ちに再試行されないため、運用担当が状態と外部記録を確認する |
-
-routine / Job の due、scheduled time、冪等性、`last_run` / `last_result` / `last_scheduled_for`、checkpoint と次回判定は本書を正本とする。委譲後の登録項目状態は [[prj-0001:cdfd-register-lifecycle|概念データフロー図（登録簿ライフサイクル）]]、task 状態・利用制限後の再開は [[prj-0001:cdfd-task-execution|概念データフロー図（タスク実行ライフサイクル）]]、索引の生成順と失敗時の扱いは [[prj-0001:cdfd-derived-content|概念データフロー図（成果物・派生ビュー・索引生成）]] を参照する。
-
-`action` は単一オブジェクト、または1件以上の配列とする。配列は先頭から同期的に実行し、各段は直前段の完了後に起動する。途中の `failure` / `skipped` でも後段を続行し、全体結果は `failure`、`skipped`、`success` の優先順で集約する。配列 action では、各段の1始まりの index、kind、結果を `last_action_results` に記録する。単一オブジェクトの action ではこの項目を記録しない。
+routine 実行状態（`last_run`、`last_result`、`last_scheduled_for`、`last_action_results`）の状態一覧、遷移、action 結果の集約規則は [[prj-0001:stsd-routine-run|ステータス定義（定期処理の実行結果）]]、定期処理定義・routine 実行状態・Job Definition・Job Run 履歴のデータストアは [[prj-0001:cdsd-execution|概念データストア定義（プロジェクト実行）]] を正とする。本書は委譲の順序と返却結果の受け渡しだけを扱う。委譲後の登録項目状態は [[prj-0001:stsd-register-entry|ステータス定義（登録項目個票）]]、task 状態・利用制限後の再開は [[prj-0001:cdfd-task-execution|概念データフロー図（タスク実行ライフサイクル）]]、索引の生成順と失敗時の扱いは [[prj-0001:cdfd-derived-content|概念データフロー図（成果物・派生ビュー・索引生成）]] を参照する。
 
 ## 3. 領域内プロセス一覧
 

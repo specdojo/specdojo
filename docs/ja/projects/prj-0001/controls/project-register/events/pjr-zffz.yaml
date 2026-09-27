@@ -70,3 +70,29 @@
       to: "2026-09-30"
   legacy_commit: 46776088bb4593cdd4b64fa7f72d6f9a27512087
   previous_event_id: reg_f38f7904c746af6d1a5bb9e289934aaa
+- v: 1
+  id: reg_3904c7264c5046078b4bb6f4c180bd5b
+  ts: "2026-09-27T11:49:33Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_cfc09b2eb7e3ae241d369441efaabae5
+- v: 1
+  id: reg_e7142946b7f742409233f20e3d2ff1cb
+  ts: "2026-09-27T12:00:01Z"
+  action: review
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_3904c7264c5046078b4bb6f4c180bd5b
