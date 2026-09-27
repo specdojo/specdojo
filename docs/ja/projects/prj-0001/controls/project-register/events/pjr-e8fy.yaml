@@ -61,3 +61,29 @@
       from: "-"
       to: "agent exited with non-zero code: The sandbox refused edits to `packages/docs-site/.vitepress/config.mts`, preventing the primary sidebar changes required by the plan. Additionally, the runner validati…"
   previous_event_id: reg_3138fea7b84c458d862c4eae455faf13
+- v: 1
+  id: reg_6b60583b65544a488f149c812b1e30fd
+  ts: "2026-09-27T02:00:58Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_ae34afb6792246c2a1fa3ab50aec5952
+- v: 1
+  id: reg_131c75e982214d7ea24f558f77559f61
+  ts: "2026-09-27T02:42:50Z"
+  action: review
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_6b60583b65544a488f149c812b1e30fd

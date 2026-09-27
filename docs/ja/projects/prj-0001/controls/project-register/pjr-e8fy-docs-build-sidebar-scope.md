@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-09-26T23:23:14Z"
@@ -50,14 +50,33 @@ specdojo:
 
 | No  | 作業                                                                                             | 担当 | 状態 | メモ                                      |
 | --- | ------------------------------------------------------------------------------------------------ | ---- | ---- | ----------------------------------------- |
-| 1   | `packages/docs-site/.vitepress/config.mts` のサイドバー生成で、実行記録を除外する                | DEV  | open | `isExecRecordPath` と同じ判定を再利用する |
-| 2   | 実行記録ページを一覧ページから辿れることを確認し、辿れない場合は既存の生成一覧への導線を追加する | DEV  | open | dashboard / execution/generated を確認    |
-| 3   | `sidebar` をパスをキーとする形式へ変更し、specdojo と各 project を分ける                         | DEV  | open | ja / en の両方                            |
-| 4   | 変更前後の dist 容量・代表ページ容量・ビルド時間を計測する                                       | DEV  | open | -                                         |
+| 1   | `packages/docs-site/.vitepress/config.mts` のサイドバー生成で、実行記録を除外する                | DEV  | done | `isExecRecordPath` と同じ判定を再利用する |
+| 2   | 実行記録ページを一覧ページから辿れることを確認し、辿れない場合は既存の生成一覧への導線を追加する | DEV  | done | dashboard / execution/generated を確認    |
+| 3   | `sidebar` をパスをキーとする形式へ変更し、specdojo と各 project を分ける                         | DEV  | done | ja / en の両方                            |
+| 4   | 変更前後の dist 容量・代表ページ容量・ビルド時間を計測する                                       | DEV  | done | -                                         |
 
 ## 4. 対応結果
 
--
+- 実行記録の除外（案 A）: `transformSidebar` で `isExecRecordPath` に当たる項目をサイドバーから除き、子が空になった「実行プラン」「実行結果」グループも表示しないようにした。
+- 実行記録への導線: 既存の一覧ページには plan / result へのリンクがなかった。そこで `specdojo dashboard build` が `execution/generated/exec-records.md`（実行記録一覧。開始日時の新しい順に plan / result へリンク）を生成し、ダッシュボードの「実行記録」節からリンクするようにした。サイドバーでは「実行記録一覧」として実行管理の下に出る。
+- パスごとの分割（案 B）: `sidebar` をパスをキーとする形式に変えた。`/ja/specdojo/` は specdojo の節だけ、`/ja/projects/<id>/` はその project の節だけ、その他のトップレベル（product など）はそのディレクトリの節だけを出す。`/ja/` のトップは各節の入口リンクだけを出す。英語版も同じ関数で分割する。
+- サイト設定のインライン展開の解消: VitePress は既定でサイト設定（サイドバー全体を含む）とページのハッシュ表を全ページの HTML にインラインで埋め込む。パスごとに分けても全キーが各ページへ載るため、`metaChunk: true` で共有の JS チャンク（`metadata.*.js`、約 344KB）へ切り出した。
+- 確認結果（ビルド出力 2,175 ページを走査）:
+  - どのページのサイドバーにも実行記録（plan / result / events）へのリンクはない。サイト設定のチャンクにも含まれない。
+  - `/ja/specdojo/` 配下で project の節を含むページは 0 件だった。`/ja/projects/prj-0001/` 配下で project の節を欠くページも 0 件だった。
+  - 実行記録のページは引き続きビルドされ、実行記録一覧から result 555 件へリンクしている。
+- `.github/workflows/deploy.yml` は `npm run docs:build` を `NODE_OPTIONS` なしで実行しており、変更は不要である。
+
+| 項目                                    | 変更前                                | 変更後                                  |
+| --------------------------------------- | ------------------------------------- | --------------------------------------- |
+| 既定ヒープでの `npm run docs:build`     | メモリ不足で失敗                      | 成功（`NODE_OPTIONS` 未設定）           |
+| dist 容量                               | 2.9GB                                 | 568MB                                   |
+| `specdojo-overview-guide.html`          | 1,405,099 byte                        | 119,895 byte                            |
+| 最大ページ                              | 未計測                                | 775,429 byte（`sch-track-launch.html`） |
+| ビルド時間（`docs:build` 全体、実時間） | 193 秒（`--max-old-space-size=8192`） | 413 秒（user 205 秒、sys 20 秒）        |
+
+- 変更前の値は本個票の概要に記録された計測値である。ビルド時間は計測環境（agent サンドボックス内）が異なり、実時間は CPU 時間を大きく上回っていた。同じ条件で比較できていないため、時間の増減は判断できない。同じ環境で変更前後を計測し直す必要がある。
+- 初回のビルドでは Mermaid SVG の再生成が走ったため 686 秒かかった。2 回目の計測値を上表に記載した。
 
 ## 5. 関連ドキュメント
 
