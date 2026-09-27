@@ -14,6 +14,8 @@ export type ReviewViewpoint = {
     include?: string[];
     exclude?: string[];
     unclassified?: "include" | "exclude";
+    /** Rulebook IDs whose unlisted outcome was reviewed; does not change applicability. */
+    confirmed_default?: string[];
   };
 };
 
