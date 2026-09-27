@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: high
   owner: QE
   registered_at: "2026-09-26T06:13:37Z"
+  block_reason: "agent exited with non-zero code: 着手前判断（観点範囲拡大との適用順序、個票の作業 No.1）が未決定であり、`PJR-K351` / `PJR-WPWB` も open のまま。加えて、`xrr-*` の構成と判定（recommendation）は `src/exec-reporter.ts` の出力スキーマと `src/exec-results.ts` の `r…"
 ---
 
 # PJR-N22N xrp と xrr テンプレートを review が評価しない前提へ改訂する

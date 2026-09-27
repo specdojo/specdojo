@@ -32,3 +32,32 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_c63459e1e7314fa893c142c9d1add9e2
+  ts: "2026-09-27T11:48:40Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_5759184c66bd4f2c95e4be86138a0966
+- v: 1
+  id: reg_e62c90e7a32e4056ba3233a323c7ddeb
+  ts: "2026-09-27T11:53:22Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: 着手前判断（観点範囲拡大との適用順序、個票の作業 No.1）が未決定であり、`PJR-K351` / `PJR-WPWB` も open のまま。加えて、`xrr-*` の構成と判定（recommendation）は `src/exec-reporter.ts` の出力スキーマと `src/exec-results.ts` の `r…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: 着手前判断（観点範囲拡大との適用順序、個票の作業 No.1）が未決定であり、`PJR-K351` / `PJR-WPWB` も open のまま。加えて、`xrr-*` の構成と判定（recommendation）は `src/exec-reporter.ts` の出力スキーマと `src/exec-results.ts` の `r…"
+  previous_event_id: reg_c63459e1e7314fa893c142c9d1add9e2
