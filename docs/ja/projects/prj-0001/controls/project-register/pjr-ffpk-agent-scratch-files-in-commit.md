@@ -11,7 +11,7 @@ specdojo:
   priority: high
   owner: DEV
   registered_at: "2026-09-27T05:23:34Z"
-  block_reason: "agent exited with non-zero code: agent exited with non-zero code: error: interrupted"
+  block_reason: "agent exited with non-zero code: Runner validation `test-integration` failed (exit 1). The deliverable is unverifiable as the integration tests did not pass."
 ---
 
 # PJR-FFPK agent の一時ファイルが register 実行の commit に入り統合前の検査も誤って止める

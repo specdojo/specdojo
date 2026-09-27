@@ -4,14 +4,13 @@ specdojo:
   type: exec-result
   task_id: PJR-FFPK
   mode: edit
-  status: blocked
+  status: superseded
   project_id: prj-0001
   origin: register
   plan_ref: exec/plans/pjr-ffpk-20260927T063800Z-9d5f-plan.md
   started_at: "2026-09-27T06:38:00.629Z"
-  completed_at: "2026-09-27T06:44:36.635Z"
+  completed_at: "2026-09-27T07:34:13.508Z"
   agent: agy-expert-executor
-  block_reason: "agent exited with non-zero code: agent exited with non-zero code: error: interrupted"
 ---
 
 # Edit Result
