@@ -4,11 +4,12 @@ specdojo:
   type: exec-result
   task_id: PJR-QQXP
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: exec/plans/pjr-qqxp-20260927T044716Z-af56-plan.md
   started_at: "2026-09-27T04:47:16.937Z"
+  completed_at: "2026-09-27T04:58:10.492Z"
   agent: agy-expert-executor
 ---
 
@@ -16,16 +17,19 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- VitePress のローカル検索インデックスから、個別のプロジェクト登録簿および管理ログを除外するように設定を更新し、検索インデックスのサイズを約 9.7MB から 約 5.9MB へ削減しました。
+- 個票 `docs/ja/projects/prj-0001/controls/project-register/pjr-qqxp-docs-search-index-scope.md` を更新し、実施内容を記録しました。
+- 静的検査（`prettier`, `markdownlint`）およびカタログ検証（`specdojo catalog validate`）、インデックス構築（`specdojo index build`）を完了し、すべて正常に終了したことを確認済みです。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `packages/docs-site/.vitepress/config.mts`: パスパターンを用いて検索インデックスから除外する文書を指定し、高速化を実現しました。
+- `docs/ja/projects/prj-0001/controls/project-register/pjr-qqxp-docs-search-index-scope.md`: 対応結果および実施内容を追記しました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- なし
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`fully-guided` で rulebook / recipe / sample / template をどう使い分けたか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+VitePress の設定ファイルを編集して検索対象外のパスを指定することでインデックスサイズを削減し、ビルド後のサイズ検証とカタログ整合性チェックを通じて効果と安全性を確認しました。
