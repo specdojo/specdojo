@@ -145,3 +145,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_95050293c57e4b0eb9567dc7dae2598a
+- v: 1
+  id: reg_013a7da20c7e4f3780e374701456b447
+  ts: "2026-09-27T04:37:42Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: agy-expert-executor の実行結果を orchestrator が評価し完了条件を満たすと判断
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-27"
+    - field: conclusion
+      from: "-"
+      to: sch-strategy-launch の recipe/rulebook/sample/template-consolidate へ review フェーズを追加し、schedule build で 14 成果物×4 の review タスク 56 件を生成した。owner は edit タスクを踏襲
+  previous_event_id: reg_2a74faebe11e40c28e1c4c05f69a928f

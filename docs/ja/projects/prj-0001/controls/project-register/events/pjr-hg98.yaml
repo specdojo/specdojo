@@ -187,3 +187,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_168316218aef401dad9784004ae790f3
+- v: 1
+  id: reg_1ab94d4ec962436b9a4c8c2d50c0f923
+  ts: "2026-09-27T04:37:40Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: claude-expert-executor の実行結果を orchestrator が評価し完了条件を満たすと判断
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-27"
+    - field: conclusion
+      from: "-"
+      to: config init が設定から導いた生成物の除外パターンを .gitignore へ冪等に追記し、管理済み生成物を外す手順を案内する。並行実行の統合テストは config init を使う形にした。README と参照文書へ記載
+  previous_event_id: reg_b8c193c66244460aa270e300366d72dc

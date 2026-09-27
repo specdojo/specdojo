@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-hg98-config-init-gitignore-generated
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-09-26T23:06:44Z"
+  completed_at: "2026-09-27T04:37:40Z"
   block_reason: rate limit reached
+  conclusion: config init が設定から導いた生成物の除外パターンを .gitignore へ冪等に追記し、管理済み生成物を外す手順を案内する。並行実行の統合テストは config init を使う形にした。README と参照文書へ記載
 ---
 
 # PJR-HG98 config init で生成物を除外する .gitignore を作り register の並行実行の衝突を防ぐ

@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-06re-kata-maintenance-review-phase
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-09-23T05:17:29Z"
   due_on: "2026-11-14"
+  completed_at: "2026-09-27T04:37:42Z"
   block_reason: 'integrate failed: Deliverable status promotion to "ready" is human-only and must not be done by an agent run: test-schema.yaml'
+  conclusion: sch-strategy-launch の recipe/rulebook/sample/template-consolidate へ review フェーズを追加し、schedule build で 14 成果物×4 の review タスク 56 件を生成した。owner は edit タスクを踏襲
 ---
 
 # PJR-06RE kata 保守タスクへ review フェーズを追加する
