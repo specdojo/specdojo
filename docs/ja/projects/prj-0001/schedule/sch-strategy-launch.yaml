@@ -173,6 +173,22 @@ phase_sets:
         レビュー済みの完成版成果物と review 結果を根拠に recipe を最終調整する。
         完成版の作成に有効だったか、過不足がないかを確認し、必要な箇所のみ修正する。
         成果物固有の事情は一般化し、recipe に持ち込まない。
+    - id: recipe-consolidate-review
+      name: Recipe 最終調整レビュー
+      execution: agent
+      mode: review
+      approach: recipe-maintenance
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: normal
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "105"
+      duration_days: 0.25 # 1〜2h 相当
+      description: |
+        Recipe 最終調整の完了内容をレビューし、承認・修正指示・差し戻しを判断する。
+        観点セットに vp-qe-kata-conformance を必ず含める。
     - id: rulebook-consolidate
       name: Rulebook 最終調整
       execution: agent
@@ -190,6 +206,22 @@ phase_sets:
         レビュー済みの完成版成果物と review 結果を根拠に rulebook を最終調整する。
         章構成・必須項目・禁止事項・判定基準が完成版に対して妥当か確認し、必要な箇所のみ修正する。
         成果物固有の事情は一般化し、rulebook に持ち込まない。
+    - id: rulebook-consolidate-review
+      name: Rulebook 最終調整レビュー
+      execution: agent
+      mode: review
+      approach: rulebook-maintenance
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: normal
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "115"
+      duration_days: 0.25 # 1〜2h 相当
+      description: |
+        Rulebook 最終調整の完了内容をレビューし、承認・修正指示・差し戻しを判断する。
+        観点セットに vp-qe-kata-conformance を必ず含める。
     - id: sample-consolidate
       name: Sample 最終調整
       execution: agent
@@ -207,6 +239,22 @@ phase_sets:
         レビュー済みの完成版成果物と review 結果を根拠に sample を最終調整する。
         粒度・文体・表の書き方と完成例としての妥当性を確認し、必要な箇所のみ修正する。
         プロジェクト固有の値は一般化またはプレースホルダ化し、再利用可能な例にする。
+    - id: sample-consolidate-review
+      name: Sample 最終調整レビュー
+      execution: agent
+      mode: review
+      approach: sample-maintenance
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: normal
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "125"
+      duration_days: 0.25 # 1〜2h 相当
+      description: |
+        Sample 最終調整の完了内容をレビューし、承認・修正指示・差し戻しを判断する。
+        観点セットに vp-qe-kata-conformance を必ず含める。
     - id: template-consolidate
       name: Template 最終調整
       execution: agent
@@ -224,6 +272,22 @@ phase_sets:
         レビュー済みの完成版成果物と review 結果を根拠に template を最終調整する。
         章構成の骨組み・プレースホルダの配置と網羅性・雛形としての妥当性を確認し、必要な箇所のみ修正する。
         成果物固有の内容は template に持ち込まず、同種成果物の開始点として再利用できる形にする。
+    - id: template-consolidate-review
+      name: Template 最終調整レビュー
+      execution: agent
+      mode: review
+      approach: template-maintenance
+      agent_pipeline:
+        stages:
+          - stage_role: executor
+            proficiency: normal
+          - stage_role: reporter
+            proficiency: normal
+      task_suffix: "135"
+      duration_days: 0.25 # 1〜2h 相当
+      description: |
+        Template 最終調整の完了内容をレビューし、承認・修正指示・差し戻しを判断する。
+        観点セットに vp-qe-kata-conformance を必ず含める。
     - id: finalize
       name: 完成版確定
       execution: human
