@@ -58,3 +58,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_bf4cfb69c343495aa36f5cbee001cd52
+- v: 1
+  id: reg_e5ab594d132c486db085d5b20712c978
+  ts: "2026-09-27T06:20:21Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: claude-expert-executor の実行結果を orchestrator が評価し完了条件を満たすと判断。npm run check は統合後に orchestrator が実行し成功。複製範囲と ignoreDeadLinks の 2 つの仮定は個票に記録済み
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-27"
+    - field: conclusion
+      from: "-"
+      to: docs-site の設定読み込み時に package 同梱の docs/ja/specdojo を specdojo-kata-staging/ へ複製し、eject 済みを優先して /ja/specdojo/ で配信する。kata を持たない一時 workspace でビルドと wikilink 解決を確認した
+  previous_event_id: reg_b7e4c6f6b94f4f28bd6ac3b737c5515b

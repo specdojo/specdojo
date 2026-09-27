@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-sj3x-docs-site-kata-staging
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-09-23T06:37:03Z"
   due_on: "2026-11-21"
+  completed_at: "2026-09-27T06:20:21Z"
+  conclusion: docs-site の設定読み込み時に package 同梱の docs/ja/specdojo を specdojo-kata-staging/ へ複製し、eject 済みを優先して /ja/specdojo/ で配信する。kata を持たない一時 workspace でビルドと wikilink 解決を確認した
 ---
 
 # PJR-SJ3X docs-site のビルド前に package の kata をステージングしてサイトへ含める
