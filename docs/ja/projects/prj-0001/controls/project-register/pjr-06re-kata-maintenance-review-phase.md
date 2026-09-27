@@ -12,7 +12,7 @@ specdojo:
   owner: ARC
   registered_at: "2026-09-23T05:17:29Z"
   due_on: "2026-11-14"
-  block_reason: "agent exited with non-zero code: runner validation `validate-schema` failed (exit 1). The plan requires all static checks and validations to pass before completion."
+  block_reason: "agent exited with non-zero code: runner validation `test-integration` (npm run test:integration) failed."
 ---
 
 # PJR-06RE kata 保守タスクへ review フェーズを追加する
