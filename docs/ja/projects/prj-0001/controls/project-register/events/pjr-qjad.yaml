@@ -74,3 +74,19 @@
       from: waiting
       to: in-progress
   previous_event_id: reg_7b8420d42b3742eca8cd520882214a18
+- v: 1
+  id: reg_cbffc7e50add466bab77b8f6782208f6
+  ts: "2026-09-27T02:28:28Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: 親検証の `test-unit` (npm run test:unit) が失敗しています。`tests/src/grade.test.ts` および `tests/src/doc-index.test.ts` でエラーが発生しているため、完了条件を満たしていません。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "agent exited with non-zero code: 親検証 `test-integration` (npm run test:integration) が failed しています。"
+      to: "agent exited with non-zero code: 親検証の `test-unit` (npm run test:unit) が失敗しています。`tests/src/grade.test.ts` および `tests/src/doc-index.test.ts` でエラーが発生しているため、完了条件を満たしていません。"
+  previous_event_id: reg_24085ea9c2214875938316710d2ac66d
