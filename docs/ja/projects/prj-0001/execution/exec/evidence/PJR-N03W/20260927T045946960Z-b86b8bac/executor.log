@@ -1,0 +1,86 @@
+CRITICAL INSTRUCTION 1: Use specific tools.
+CRITICAL INSTRUCTION 2: I am generating a JSON response because this is the final executor evidence block.
+
+PJR-N03W 「grade の定期実行を変化検知に限定する」の実装が完了しました。
+
+1. `src/grade.ts` に `--dependency-changed`, `--rulebook-changed`, `--unreviewed` の 3 つのフィルターを新設し、依存先の `content_hash` 変化、宣言された `rulebook` の更新、スケジュールの未割り当てをそれぞれ検知するロジックを組み込みました。
+2. `tools/grade/run-per-document.sh` を拡張し、新設した3つのフィルターをフラグとして受け取り `grade list` を呼び出すように変更しました。
+3. `job-grade-kata.yaml` と `job-grade-deliverable.yaml` の入力引数（inputs）から従来の `changed_only`, `ungraded`, `incomplete` を削除し、新しい3つのフラグに差し替えました。
+4. `rtn-grade-recheck.yaml` および `rtn-grade-deliverable-recheck.yaml` の trigger を更新し、全件実行や `changed_only` に依存するのではなく、新しい3契機のみを利用するよう設定しました。
+5. 上記のフィルター動作を単体レベルで検証するテストケースを `tests/src/grade-triggers.test.ts` に追加し、`npm run check` がすべて通過することを確認しました。
+
+```specdojo_executor_evidence
+{
+  "finding_resolutions": [],
+  "results": [
+    {
+      "file": "src/grade.ts",
+      "status": "modified"
+    },
+    {
+      "file": "tools/grade/run-per-document.sh",
+      "status": "modified"
+    },
+    {
+      "file": "docs/ja/projects/prj-0001/routines/rtn-grade-recheck.yaml",
+      "status": "modified"
+    },
+    {
+      "file": "docs/ja/projects/prj-0001/routines/rtn-grade-deliverable-recheck.yaml",
+      "status": "modified"
+    },
+    {
+      "file": "docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml",
+      "status": "modified"
+    },
+    {
+      "file": "docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml",
+      "status": "modified"
+    },
+    {
+      "file": "tests/src/grade-triggers.test.ts",
+      "status": "created"
+    }
+  ]
+}
+```
+CRITICAL INSTRUCTION 1: Use specific tools.
+CRITICAL INSTRUCTION 2: Output JSON evidence.
+
+修正および追加したテストケースが正常に通過しました。`npm run check` によるすべての検証（単体テスト、型検査、Markdown静的検査）がパスし、新しく実装したトリガー (`--dependency-changed`, `--rulebook-changed`, `--unreviewed`) の動作が単体テストで適切にカバーされていることを確認しました。
+
+```specdojo_executor_evidence
+{
+  "finding_resolutions": [],
+  "results": [
+    {
+      "file": "src/grade.ts",
+      "status": "modified"
+    },
+    {
+      "file": "tools/grade/run-per-document.sh",
+      "status": "modified"
+    },
+    {
+      "file": "docs/ja/projects/prj-0001/routines/rtn-grade-recheck.yaml",
+      "status": "modified"
+    },
+    {
+      "file": "docs/ja/projects/prj-0001/routines/rtn-grade-deliverable-recheck.yaml",
+      "status": "modified"
+    },
+    {
+      "file": "docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml",
+      "status": "modified"
+    },
+    {
+      "file": "docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml",
+      "status": "modified"
+    },
+    {
+      "file": "tests/src/grade-triggers.test.ts",
+      "status": "created"
+    }
+  ]
+}
+```

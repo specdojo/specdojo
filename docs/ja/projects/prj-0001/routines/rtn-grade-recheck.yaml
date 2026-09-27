@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=../../../../specdojo/schemas/v1/routine.schema.yaml
 id: rtn-grade-recheck
-name: 修正済み・未評価・段未完了の実践の型の定期再評価
-description: 毎日6時（Asia/Tokyo）に、変更済み、未評価、または段未完了の実践の型を最大15件再評価する。
+name: 依存先変更・kata更新・未レビューの実践の型の定期評価
+description: 毎日6時（Asia/Tokyo）に、依存先が変更された、kataが更新された、またはscheduleタスクを持たない実践の型を最大15件評価する。
 enabled: true
 trigger:
   cron: "0 6 * * *"
@@ -14,9 +14,9 @@ action:
     period: "{{scheduled_at | iso_week}}"
     kind: all
     limit: "15"
-    changed_only: "true"
-    ungraded: "true"
-    incomplete: "true"
+    dependency_changed: "true"
+    rulebook_changed: "true"
+    unreviewed: "true"
 policy:
   missed_run: skip
   overlap: skip
