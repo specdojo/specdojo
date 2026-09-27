@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: high
   owner: DEV
   registered_at: "2026-09-27T05:23:34Z"
+  block_reason: "agent exited with non-zero code: agent exited with non-zero code: error: interrupted"
 ---
 
 # PJR-FFPK agent の一時ファイルが register 実行の commit に入り統合前の検査も誤って止める
@@ -48,14 +49,18 @@ schedule 由来の edit タスクは、plan の `targets` から許可リスト�
 
 | No  | 作業                                                           | 担当 | 状態 | メモ                                     |
 | --- | -------------------------------------------------------------- | ---- | ---- | ---------------------------------------- |
-| 1   | register 由来タスクの commit 範囲を絞る方式を決めて実装する    | DEV  | open | `targets` の宣言がない個票の扱いを含める |
-| 2   | `assertNoAgentReadyPromotion` の対象を commit 対象のパスに限る | DEV  | open | -                                        |
-| 3   | exec plan 共通規約へ、一時ファイルの置き場所と削除を追記する   | DEV  | open | provider を問わず plan 本文経由で伝わる  |
-| 4   | テストを追加する                                               | DEV  | open | -                                        |
+| 1   | register 由来タスクの commit 範囲を絞る方式を決めて実装する    | DEV  | done | 既知のディレクトリ外の新規ファイルを除外 |
+| 2   | `assertNoAgentReadyPromotion` の対象を commit 対象のパスに限る | DEV  | done | `partitionCommitTargets` 修正により解決  |
+| 3   | exec plan 共通規約へ、一時ファイルの置き場所と削除を追記する   | DEV  | done | provider を問わず plan 本文経由で伝わる  |
+| 4   | テストを追加する                                               | DEV  | done | 統合テストへ追加                         |
 
 ## 4. 対応結果
 
--
+- `src/exec-worktree-ops.ts` の `partitionCommitTargets` を修正し、register 由来のタスク（`scope` が `null`）の場合、`git ls-tree` で `HEAD` に存在しない新規追加ファイルのうち、既知の成果物ディレクトリ（`docs/`、`src/`、`tests/`、`tools/grade/`、`packages/docs-site/.vitepress/` など）外のものを `outOfScope` として commit 対象から除外するよう実装しました。
+- この方式を選んだ理由は、register 由来のタスクでは `targets` が宣言されないケースもあり、`targets` への依存を強いると従来動いていた正当な commit が弾かれる恐れがあったためです。「許可リストが導けない場合でも、新規の未追跡ファイルは既知の成果物ディレクトリに限る」というフォールバックとして実装することで、agent の一時スクリプト等だけを安全に除外できます。
+- 課題であった `assertNoAgentReadyPromotion` については、呼び出し元である `commitWorktreeChanges` の時点で `partitionCommitTargets` から返された `targets` を引数に渡しているため、上記修正によって `test-schema.yaml` などの一時ファイルが `targets` に含まれなくなり、自動的に解消されました。
+- `docs/ja/specdojo/exec-templates/xep-common-conventions-template.md` に「作業用のファイルはリポジトリの外（一時ディレクトリ）に置き、終了前に削除する」という規約を追記しました。
+- `tests/src/exec-worktree-ops.integration.test.ts` に、register 由来タスクでの未追跡ファイル除外の振る舞いを検証するテストケースを追加しました。
 
 ## 5. 関連ドキュメント
 
