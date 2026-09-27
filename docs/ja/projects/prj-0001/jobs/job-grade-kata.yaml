@@ -23,6 +23,8 @@ inputs:
   unreviewed:
     type: boolean
     default: false
+  # 経過措置（PJR-N03W）: changed_only・ungraded・incomplete は、review の中で grade を実行する
+  # PJR-KCMH の完了まで残す。KCMH の完了後に、この 3 入力と対応する routine の入力を外す。
   changed_only:
     type: boolean
     default: false
@@ -58,6 +60,8 @@ task:
           fi
           if [ "{{inputs.incomplete}}" = "true" ]; then
             {{specdojo}} grade list --target kata --project {{project_id}} --incomplete || exit $?
+            # 上限到達文書は処理対象外だが、report-only Job を起動するため precondition に含める。
+            {{specdojo}} grade state --target kata --project {{project_id}} --exhausted || exit $?
           fi
         fi
       )

@@ -84,6 +84,33 @@ specdojo:
 
 - PJR-KCMH の完了後に、経過措置として残した 3 入力（`changed_only`、`ungraded`、`incomplete`）を `job-grade-kata.yaml`、`job-grade-deliverable.yaml` および `rtn-grade-*` から削除する。
 
+### orchestrator による補完（2026-09-27）
+
+2 回目の実行で満たされなかった完了条件を、利用者の承認のもと orchestrator が補った。
+
+- `job-grade-kata.yaml` と `job-grade-deliverable.yaml` に、`grade state --exhausted` を precondition に含める行を戻した。上限に達した文書を報告だけする Job 起動が、変更前と同じ動作になる。
+- 同じ 2 ファイルの入力定義に、経過措置の 3 入力を PJR-KCMH の完了後に外す旨のコメントを加えた。
+- agent が作業用に作り develop へ入った `patch-deliverable.py`・`patch-kata.py`・`patch-routines.py`・`patch-ticket.py` を削除した（原因への対策は PJR-FFPK）。
+- `npm run check` を実行し、成功した（単体テスト 1,722 件）。
+
+### 実例: 契機ごとの対象件数（2026-09-27 15 時時点、`grade list --project prj-0001`）
+
+| 契機                         | kata（全 262 件） | 成果物（全 41 件） |
+| ---------------------------- | ----------------- | ------------------ |
+| `--changed-only`（経過措置） | 0                 | 3                  |
+| `--ungraded`（経過措置）     | 0                 | 1                  |
+| `--incomplete`（経過措置）   | 0                 | 1                  |
+| `--dependency-changed`       | 0                 | 19                 |
+| `--rulebook-changed`         | 10                | 8                  |
+| `--unreviewed`               | 262               | 19                 |
+
+N03W の前、定期実行が選ぶ kata は `changed_only`・`ungraded`・`incomplete` の和集合で、0 件だった。
+
+### 実装上の問題（close の判断待ち）
+
+- `--unreviewed` は、schedule のタスクが割り当てられていない文書を、評価済みで内容が変わっていなくても毎回すべて選ぶ。kata は 262 件すべてが該当し、routine の `limit`（kata 15 件、成果物 10 件）の分だけ、変更のない文書が毎晩再評価される。2ZVS の 3.6 節は「`content_hash` が一致する場合は再実行しない」と定めている。
+- `--dependency-changed` は、依存先の `content_hash` ではなく評価日時（依存先の `graded_at` が自身より新しいか）で判定している。依存先を再評価しただけで、内容が変わっていなくても該当する。
+
 ## 5. 関連ドキュメント
 
 - [[prj-0001:pjr-2zvs-grade-review-integration]]
