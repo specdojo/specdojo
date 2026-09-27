@@ -2,7 +2,10 @@ import { describe, expect, it, vi } from "vitest";
 import {
   failedParentValidationReason,
   hasRecordedParentValidations,
+  ParentValidationGate,
+  parentValidationGateFor,
   replaceParentValidationResults,
+  resolveParentValidationConcurrency,
   resolveParentValidationDefinitions,
   runParentValidations,
 } from "../../src/exec-parent-validation.js";
@@ -177,5 +180,69 @@ describe("parent validation allowlist", () => {
     expect(failedParentValidationReason(refreshed.validations)).toBe(
       "parent validation failed: test-integration",
     );
+  });
+});
+
+describe("parent validation concurrency", () => {
+  it("defaults to one concurrent parent validation", () => {
+    expect(resolveParentValidationConcurrency(undefined)).toBe(1);
+    expect(resolveParentValidationConcurrency(3)).toBe(3);
+  });
+
+  it.each([0, -1, 1.5, "2"])("rejects a non-positive-integer concurrency %s", (value) => {
+    expect(() => resolveParentValidationConcurrency(value)).toThrow(
+      /parent_validation_concurrency .* positive integer/,
+    );
+  });
+
+  it("serializes overlapping batches and logs which item waits for which validations", async () => {
+    const lines: string[] = [];
+    const gate = new ParentValidationGate(1, (line) => lines.push(line));
+    const events: string[] = [];
+    let releaseFirst!: () => void;
+    const firstBlocked = new Promise<void>((resolve) => {
+      releaseFirst = resolve;
+    });
+
+    const first = gate.run("PJR-AAAA", ["test-integration"], async () => {
+      events.push("start:PJR-AAAA");
+      await firstBlocked;
+      events.push("end:PJR-AAAA");
+    });
+    const second = gate.run("PJR-BBBB", ["test-integration", "test-unit"], async () => {
+      events.push("start:PJR-BBBB");
+      events.push("end:PJR-BBBB");
+    });
+    await Promise.resolve();
+    releaseFirst();
+    await Promise.all([first, second]);
+
+    expect(events).toEqual(["start:PJR-AAAA", "end:PJR-AAAA", "start:PJR-BBBB", "end:PJR-BBBB"]);
+    expect(lines).toEqual([
+      "  Waiting for parent validation slot: PJR-BBBB (test-integration, test-unit); running: PJR-AAAA\n",
+      "  Parent validation slot acquired: PJR-BBBB\n",
+    ]);
+  });
+
+  it("releases the slot when a batch throws", async () => {
+    const gate = new ParentValidationGate(1, () => undefined);
+
+    await expect(
+      gate.run("PJR-AAAA", ["test-unit"], async () => {
+        throw new Error("boom");
+      }),
+    ).rejects.toThrow("boom");
+
+    await expect(gate.run("PJR-BBBB", ["test-unit"], async () => "ran")).resolves.toBe("ran");
+  });
+
+  it("shares one gate per exec-defaults object", () => {
+    const execDefaults = { pipeline: { parent_validation_concurrency: 2 } };
+
+    const gate = parentValidationGateFor(execDefaults);
+
+    expect(parentValidationGateFor(execDefaults)).toBe(gate);
+    expect(gate.limit).toBe(2);
+    expect(parentValidationGateFor({})).not.toBe(gate);
   });
 });

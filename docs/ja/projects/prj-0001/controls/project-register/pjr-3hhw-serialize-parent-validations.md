@@ -42,14 +42,21 @@ specdojo:
 
 | No  | 作業                                                                | 担当 | 状態 | メモ                                                |
 | --- | ------------------------------------------------------------------- | ---- | ---- | --------------------------------------------------- |
-| 1   | `runConfiguredParentValidations` の呼び出しを run 全体の排他で包む  | DEV  | open | reporter の再開時に検証を再実行する経路も対象にする |
-| 2   | executor が行う `test-unit` の扱いを確認する（runner 側へ寄せるか） | DEV  | open | QJAD の失敗は `test-unit` だった                    |
-| 3   | 待機のログとテストを追加する                                        | DEV  | open | -                                                   |
-| 4   | ガイドへ記載する                                                    | DEV  | open | -                                                   |
+| 1   | `runConfiguredParentValidations` の呼び出しを run 全体の排他で包む  | DEV  | done | reporter の再開時に検証を再実行する経路も対象にする |
+| 2   | executor が行う `test-unit` の扱いを確認する（runner 側へ寄せるか） | DEV  | done | QJAD の失敗は `test-unit` だった                    |
+| 3   | 待機のログとテストを追加する                                        | DEV  | done | -                                                   |
+| 4   | ガイドへ記載する                                                    | DEV  | done | -                                                   |
 
 ## 4. 対応結果
 
--
+- `src/exec-parent-validation.ts` に `ParentValidationGate` を追加した。1 つの `exec run` 内で親検証を同時に実行できる項目数を制限し、待機は到着順に処理する。gate は exec-defaults の設定オブジェクト単位で共有する（`parentValidationGateFor`）。1 回の run では設定オブジェクトが 1 つなので、run 全体の排他になる。
+- 同時数は `pipeline.parent_validation_concurrency`（正の整数）で設定できる。省略時は `1` として直列化する。不正値は exec-defaults 読み込み時にエラーになる。schema（`exec-defaults.schema.yaml`）にも項目を追加した。
+- `runConfiguredParentValidations` を gate で包んだ。これにより、executor 成功後の追記、reporter 再開前の再実行（`refreshParentValidationsForReporterResume`）、`exec trial` のすべての経路が直列化の対象になる。executor と reporter は gate の外で並列に動く。
+- 待機時は `Waiting for parent validation slot: <項目> (<検証 ID>); running: <実行中の項目>` を出力し、枠を得たときは `Parent validation slot acquired: <項目>` を出力する。項目名には evidence の `task_id` を使う。
+- executor の `test-unit`: executor が sandbox 内で実行する検証は runner では制御できない。現行の `.specdojo/exec-defaults.yaml` では `test-unit` が `parent_validations` に含まれており、executor には実行させない。この方針をガイドに明記し、設定は変更していない。
+- 別プロセスの扱い: 直列化の対象外とした。同じ project の `exec run` は `exec-run.lock` で排他される。別 project の run どうしは調整しない。この判断をガイドに記載した。
+- テストを追加した。`tests/src/exec-parent-validation.test.ts` では gate、設定値の検証、待機ログを確認する。`tests/src/exec-run-parent-validation-gate.test.ts` では、3 項目の並列 worker pool で executor が並列のまま検証が重ならないこと、同時数 2 の設定が反映されることを確認する。
+- ガイドへの記載: `exec-config-guide.md` の exec-defaults 章と `register-operation-guide.md` の並列実行の説明に追記した。
 
 ## 5. 関連ドキュメント
 

@@ -690,7 +690,9 @@ async function runOneTrial(params: {
     trial.parent_validation.status = "not_run";
   } else {
     const parentValidationStartedAt = Date.now();
-    parentValidations = await runConfiguredParentValidations(params.execDefaults, worktree.path);
+    parentValidations = await runConfiguredParentValidations(params.execDefaults, worktree.path, {
+      label: `${params.record.task_id} (${trial.trial_id})`,
+    });
     trial.parent_validation.duration_ms = Date.now() - parentValidationStartedAt;
     trial.parent_validation.status = parentValidations.some(
       (validation) => validation.status !== "passed",
