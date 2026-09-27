@@ -459,6 +459,16 @@ viewpoints:
     evaluation: referential
     continuous: true
     grade_targets: [deliverable]
+    # 突き合わせ先の変更を grade list --changed-only の再評価契機にする（PJR-Z47X）。
+    # 生成物は生成元（カタログ・メンバー定義など）の変更として検出する。
+    comparison_sources:
+      - catalog-entry
+      - dependencies
+      - schedule
+      - members
+      - roles
+      - deliverable:pm-raci
+      - deliverable:pm-organization
   - id: vp-arc-technical-constraints
     role: ARC
     category: architecture
@@ -658,6 +668,8 @@ viewpoints:
     evaluation: referential
     continuous: true
     grade_targets: [deliverable]
+    comparison_sources:
+      - catalog-entry
   - id: vp-qe-verifiability
     role: QE
     category: quality

@@ -49,6 +49,18 @@ properties:
   content_hash:
     type: string
     pattern: "^[a-f0-9]{64}$"
+  source_hashes:
+    type: object
+    description: >
+      SHA-256 of the documents other than the graded document that the grade depended on, keyed
+      by source (catalog-entry, schedule, members, roles, deliverable:<local_id>,
+      dependency:<local_id>). grade list --changed-only and --dependency-changed compare them with
+      the current sources. Omitted in results recorded before source tracking.
+    propertyNames:
+      pattern: "^(catalog-entry|schedule|members|roles|deliverable:[a-z0-9][a-z0-9-]*|dependency:[a-z0-9][a-z0-9-]*)$"
+    additionalProperties:
+      type: string
+      pattern: "^[a-f0-9]{64}$"
   categories:
     type: object
     propertyNames:

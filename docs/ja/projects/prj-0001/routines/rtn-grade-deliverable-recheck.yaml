@@ -15,6 +15,7 @@ action:
     dependency_changed: "true"
     rulebook_changed: "true"
     unreviewed: "true"
+    # PJR-Z47X 以降、changed_only は観点の comparison_sources で宣言した突き合わせ先の変更も検出する。
     changed_only: "true"
     ungraded: "true"
     incomplete: "true"

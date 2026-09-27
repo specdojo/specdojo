@@ -17,6 +17,8 @@ action:
     dependency_changed: "true"
     rulebook_changed: "true"
     unreviewed: "true"
+    # PJR-Z47X 以降、changed_only は観点の comparison_sources で宣言した突き合わせ先の変更も検出する。
+    # 現在の宣言では kata に適用される観点は突き合わせ先を持たないため、kata の選択は変わらない。
     changed_only: "true"
     ungraded: "true"
     incomplete: "true"

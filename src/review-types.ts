@@ -13,6 +13,8 @@ export type ReviewViewpoint = {
   evaluation?: ViewpointEvaluation;
   continuous?: boolean;
   grade_targets?: ("kata" | "deliverable")[];
+  /** Documents this viewpoint compares against; their hashes decide re-grading under --changed-only. */
+  comparison_sources?: string[];
   document_kinds?: {
     include?: string[];
     exclude?: string[];

@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-Z47X",
+  "run_id": "20260927T121309005Z-f546484b",
+  "stage": {
+    "role": "executor",
+    "actor": "claude-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-27T12:13:09.005Z",
+    "completed_at": "2026-09-27T12:21:24.567Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-z47x-grade-changed-only.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/routines/rtn-grade-deliverable-recheck.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/routines/rtn-grade-recheck.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/defaults/pm-review-viewpoints.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/review-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/routine-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/grade-result.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/pm-review-viewpoints.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/grade-result.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/review-types.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/grade-triggers.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 13,
+    "summary": ".../pjr-z47x-grade-changed-only.md                 |  42 +++-\n .../routines/rtn-grade-deliverable-recheck.yaml    |   1 +\n .../prj-0001/routines/rtn-grade-recheck.yaml       |   2 +\n .../ja/specdojo/defaults/pm-review-viewpoints.yaml |  12 +\n docs/ja/specdojo/guides/review-guide.md            |   2 +-\n docs/ja/specdojo/guides/routine-operation-guide.md |   4 +\n docs/ja/specdojo/references/command-reference.md   |  21 ++\n docs/specdojo/schemas/v1/grade-result.schema.yaml  |  12 +\n .../schemas/v1/pm-review-viewpoints.schema.yaml    |  15 ++\n src/grade-result.ts                                |  11 +\n src/grade.ts                                       | 274 +++++++++++++++++++--\n src/review-types.ts                                |   2 +\n tests/src/grade-triggers.test.ts                   | 231 +++++++++++------\n 13 files changed, 526 insertions(+), 103 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write (changed ts/yaml/md files)",
+      "status": "passed",
+      "summary": "all changed files formatted"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint + node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint (4 changed md files)",
+      "status": "passed",
+      "summary": "no errors"
+    },
+    {
+      "source": "executor",
+      "command": "npx eslint src/grade.ts src/grade-result.ts src/review-types.ts tests/src/grade-triggers.test.ts",
+      "status": "passed",
+      "summary": "no lint errors"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "exit 0; only pre-existing based_on warnings for dct-user-interface-model"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "Built index: 2112 entries"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts grade list --target deliverable/kata --project prj-0001 [--changed-only|--dependency-changed]",
+      "status": "passed",
+      "summary": "deliverable changed-only 46/46 (one-time catch-up), dependency-changed 34, kata changed-only 0, kata total 262"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Z47X\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\n[dry-run] git merge --no-ff --no-edit exec/T-T-doc-010\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nUpdated: /tmp/specdojo-register-resume-e2e-A8A4fU/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)\nUpdated: /tmp/specdojo-register-resume-e2e-A8A4fU/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml\nGenerated: /tmp/specdojo-register-resume-e2e-A8A4fU/docs/ja/projects/test/controls/project-register/generated/pjr-index.md\nGenerated: /tmp/specdojo-register-resume-e2e-A8A4fU/docs/ja/projects/test/controls/project-register/generated/pjr…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.2.1 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Z47X/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Z47X/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-tem…"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Z47X\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-4thBLo/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-kuRtP9/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-WN8X8n/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-MJiX53/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-w3BlpF/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-L7yp1d/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\nWrote agent stdout: /tmp/specdojo-agent-command-KPCjex/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-AVHDna/outputs/partial.txt\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\n\n Test Files  111 passed (111)\n      Tes…"
+    }
+  ],
+  "final_message": "PJR-Z47X（案 1）を実装した。観点に `comparison_sources` を追加し、`grade apply` が突き合わせ先と依存先の hash を `source_hashes` に記録する。`--changed-only` は突き合わせ先の変更でも再評価対象にし、`--dependency-changed` は依存先の内容 hash で判定する。検出範囲・routine への影響・コストを `command-reference` / `review-guide` / `routine-operation-guide` と個票に記載した。全件再評価の定期経路は設けず（`rtn-grade-kata` は無効のまま、手動経路を文書化）、その扱いは OPS/PO の判断待ちとして個票の作業 3 を open で残した。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-Z47X/20260927T121309005Z-f546484b/executor.log",
+      "bytes": 4692,
+      "truncated": false
+    }
+  ]
+}

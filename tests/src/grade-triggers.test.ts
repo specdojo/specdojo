@@ -1,7 +1,7 @@
 import { describe, expect, it, beforeEach, afterEach } from "vitest";
 import { mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { discoverGradeTargets } from "../../src/grade.js";
+import { discoverGradeTargets, resolveGradeSourceHashes } from "../../src/grade.js";
 import {
   gradeContentHash,
   resolveGradeResultsDirectory,
@@ -82,111 +82,190 @@ describe("grade triggers", () => {
     rmSync(rootDir, { recursive: true, force: true });
   });
 
-  it("should detect dependency changed", () => {
+  function writeDeliverableResult(
+    localId: string,
+    fields: { gradedAt?: number; contentHash?: string; sourceHashes?: Record<string, string> },
+  ): void {
     writeGradeResult(
-      gradeResultPath(resolveGradeResultsDirectory("prj-0001", rootDir), "prj-0001:doc-a"),
+      gradeResultPath(resolveGradeResultsDirectory("prj-0001", rootDir), `prj-0001:${localId}`),
       {
         version: 1,
-        document: "prj-0001:doc-a",
-        path: "docs/ja/projects/prj-0001/controls/doc-a.md",
+        document: `prj-0001:${localId}`,
+        path: `docs/ja/projects/prj-0001/controls/${localId}.md`,
         target: "deliverable",
         rubric: "r1",
         verdict: "pass",
         score: 100,
-        graded_at: new Date(1000).toISOString(),
+        graded_at: new Date(fields.gradedAt ?? 1000).toISOString(),
         graded_by: "executor",
-        content_hash: "hash",
+        content_hash: fields.contentHash ?? "hash",
+        ...(fields.sourceHashes ? { source_hashes: fields.sourceHashes } : {}),
         categories: {},
         viewpoints: {},
         finding_counts: { blocker: 0, major: 0, minor: 0, note: 0 },
         findings: [],
       },
     );
+  }
 
-    writeGradeResult(
-      gradeResultPath(resolveGradeResultsDirectory("prj-0001", rootDir), "prj-0001:doc-b"),
-      {
-        version: 1,
-        document: "prj-0001:doc-b",
-        path: "docs/ja/projects/prj-0001/controls/doc-b.md",
-        target: "deliverable",
-        rubric: "r1",
-        verdict: "pass",
-        score: 100,
-        graded_at: new Date(2000).toISOString(),
-        graded_by: "executor",
-        content_hash: "hash",
-        categories: {},
-        viewpoints: {},
-        finding_counts: { blocker: 0, major: 0, minor: 0, note: 0 },
-        findings: [],
-      },
+  function deliverableHash(localId: string): string {
+    return gradeContentHash(
+      readFileSync(join(rootDir, `docs/ja/projects/prj-0001/controls/${localId}.md`), "utf8"),
     );
+  }
+
+  const docAPath = () => join(rootDir, "docs/ja/projects/prj-0001/controls/doc-a.md");
+
+  it("selects a deliverable whose dependency content differs from the recorded hash", () => {
+    writeDeliverableResult("doc-a", { sourceHashes: { "dependency:doc-b": "0".repeat(64) } });
 
     const targets = discoverGradeTargets(
-      {
-        target: "deliverable",
-        project: "prj-0001",
-        dependencyChanged: true,
-      },
+      { target: "deliverable", project: "prj-0001", dependencyChanged: true },
       rootDir,
     );
 
-    expect(targets).toContain(join(rootDir, "docs/ja/projects/prj-0001/controls/doc-a.md"));
-    expect(targets).not.toContain(join(rootDir, "docs/ja/projects/prj-0001/controls/doc-b.md"));
+    expect(targets).toEqual([docAPath()]);
   });
 
-  it("should not detect dependency changed if dependency is older", () => {
-    writeGradeResult(
-      gradeResultPath(resolveGradeResultsDirectory("prj-0001", rootDir), "prj-0001:doc-a"),
-      {
-        version: 1,
-        document: "prj-0001:doc-a",
-        path: "docs/ja/projects/prj-0001/controls/doc-a.md",
-        target: "deliverable",
-        rubric: "r1",
-        verdict: "pass",
-        score: 100,
-        graded_at: new Date(2000).toISOString(),
-        graded_by: "executor",
-        content_hash: "hash",
-        categories: {},
-        viewpoints: {},
-        finding_counts: { blocker: 0, major: 0, minor: 0, note: 0 },
-        findings: [],
-      },
-    );
-
-    writeGradeResult(
-      gradeResultPath(resolveGradeResultsDirectory("prj-0001", rootDir), "prj-0001:doc-b"),
-      {
-        version: 1,
-        document: "prj-0001:doc-b",
-        path: "docs/ja/projects/prj-0001/controls/doc-b.md",
-        target: "deliverable",
-        rubric: "r1",
-        verdict: "pass",
-        score: 100,
-        graded_at: new Date(1000).toISOString(),
-        graded_by: "executor",
-        content_hash: "hash",
-        categories: {},
-        viewpoints: {},
-        finding_counts: { blocker: 0, major: 0, minor: 0, note: 0 },
-        findings: [],
-      },
-    );
+  it("selects a deliverable whose result predates dependency hash tracking", () => {
+    writeDeliverableResult("doc-a", {});
 
     const targets = discoverGradeTargets(
-      {
-        target: "deliverable",
-        project: "prj-0001",
-        dependencyChanged: true,
-      },
+      { target: "deliverable", project: "prj-0001", dependencyChanged: true },
       rootDir,
     );
 
-    expect(targets).not.toContain(join(rootDir, "docs/ja/projects/prj-0001/controls/doc-a.md"));
+    expect(targets).toEqual([docAPath()]);
+  });
+
+  it("does not select a deliverable when only the dependency was re-graded", () => {
+    writeDeliverableResult("doc-a", {
+      gradedAt: 1000,
+      sourceHashes: { "dependency:doc-b": deliverableHash("doc-b") },
+    });
+    writeDeliverableResult("doc-b", { gradedAt: 2000 });
+
+    const targets = discoverGradeTargets(
+      { target: "deliverable", project: "prj-0001", dependencyChanged: true },
+      rootDir,
+    );
+
+    expect(targets).not.toContain(docAPath());
+  });
+
+  describe("changed-only with comparison sources", () => {
+    const viewpointsPath = () =>
+      join(rootDir, "docs/ja/projects/prj-0001/030-project-management/pm-review-viewpoints.yaml");
+    const membersPath = () =>
+      join(rootDir, "docs/ja/projects/prj-0001/030-project-management/pm-members.yaml");
+
+    beforeEach(() => {
+      mkdirSync(join(rootDir, "docs/ja/projects/prj-0001/030-project-management"), {
+        recursive: true,
+      });
+      writeFileSync(
+        viewpointsPath(),
+        [
+          "id: prj-0001:pm-review-viewpoints",
+          "viewpoints:",
+          "  - id: vp-arc-cross-document-consistency",
+          "    role: ARC",
+          "    category: consistency",
+          "    title: 成果物間整合",
+          "    check: 突き合わせる",
+          "    evidence: 突き合わせ先",
+          "    default_severity: major",
+          "    evaluation: referential",
+          "    continuous: true",
+          "    grade_targets: [deliverable]",
+          "    comparison_sources: [catalog-entry, dependencies, members]",
+          "",
+        ].join("\n"),
+      );
+      writeFileSync(membersPath(), "members: []\n");
+    });
+
+    const catalogPath = () =>
+      join(rootDir, "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test.yaml");
+
+    function recordGradeWithCurrentSources(): void {
+      writeDeliverableResult("doc-a", {
+        contentHash: deliverableHash("doc-a"),
+        sourceHashes: resolveGradeSourceHashes(
+          { path: docAPath(), target: "deliverable", project: "prj-0001" },
+          rootDir,
+        ),
+      });
+    }
+
+    function changedOnlyTargets(): string[] {
+      return discoverGradeTargets(
+        { target: "deliverable", project: "prj-0001", changedOnly: true },
+        rootDir,
+      );
+    }
+
+    it("records the declared sources and the resolvable dependencies", () => {
+      const hashes = resolveGradeSourceHashes(
+        { path: docAPath(), target: "deliverable", project: "prj-0001" },
+        rootDir,
+      );
+
+      expect(Object.keys(hashes)).toEqual(["catalog-entry", "dependency:doc-b", "members"]);
+      expect(hashes["dependency:doc-b"]).toBe(deliverableHash("doc-b"));
+      expect(hashes.members).toBe(gradeContentHash(readFileSync(membersPath(), "utf8")));
+    });
+
+    it("does not select a deliverable whose content and sources are unchanged", () => {
+      recordGradeWithCurrentSources();
+
+      expect(changedOnlyTargets()).not.toContain(docAPath());
+    });
+
+    it("selects a graded deliverable whose result has no source hashes", () => {
+      writeDeliverableResult("doc-a", { contentHash: deliverableHash("doc-a") });
+
+      expect(changedOnlyTargets()).toContain(docAPath());
+    });
+
+    it("selects an unchanged deliverable when a member definition changes", () => {
+      recordGradeWithCurrentSources();
+
+      writeFileSync(membersPath(), "members:\n  - nickname: new-member\n");
+
+      expect(changedOnlyTargets()).toContain(docAPath());
+    });
+
+    it("selects an unchanged deliverable when a dependency changes", () => {
+      recordGradeWithCurrentSources();
+
+      const dependency = join(rootDir, "docs/ja/projects/prj-0001/controls/doc-b.md");
+      writeFileSync(dependency, `${readFileSync(dependency, "utf8")}changed\n`);
+
+      expect(changedOnlyTargets()).toContain(docAPath());
+    });
+
+    it("selects a deliverable only when its own catalog entry changes", () => {
+      recordGradeWithCurrentSources();
+
+      writeFileSync(
+        catalogPath(),
+        readFileSync(catalogPath(), "utf8").replace(
+          "      - local_id: doc-c\n        path: doc-c.md\n",
+          "      - local_id: doc-c\n        path: doc-c.md\n        depends_on: [doc-b]\n",
+        ),
+      );
+      expect(changedOnlyTargets()).not.toContain(docAPath());
+
+      writeFileSync(
+        catalogPath(),
+        readFileSync(catalogPath(), "utf8").replace(
+          "        depends_on: [doc-b]\n      - local_id: doc-b",
+          "        depends_on: [doc-b, doc-c]\n      - local_id: doc-b",
+        ),
+      );
+      expect(changedOnlyTargets()).toContain(docAPath());
+    });
   });
 
   it("should detect kata rulebook updated", () => {

@@ -30,6 +30,8 @@ export type GradeResult = {
   graded_at: string;
   graded_by: string;
   content_hash: string;
+  /** Hashes of the comparison sources and dependencies the grade depended on, keyed by source. */
+  source_hashes?: Record<string, string>;
   categories: Record<string, { score: number }>;
   viewpoints: Record<string, { level: number; score: number }>;
   finding_counts: Record<StoredGradeSeverity, number>;
@@ -122,6 +124,15 @@ export function parseGradeResult(content: string, path: string): GradeResult {
     !Array.isArray(result.findings)
   ) {
     throw new Error(`${path}: invalid grade result`);
+  }
+  if (
+    result.source_hashes !== undefined &&
+    (!isRecord(result.source_hashes) ||
+      Object.values(result.source_hashes).some(
+        (hash) => typeof hash !== "string" || !/^[a-f0-9]{64}$/.test(hash),
+      ))
+  ) {
+    throw new Error(`${path}: source_hashes must map sources to SHA-256 hex digests`);
   }
   return result as GradeResult;
 }

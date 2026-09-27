@@ -117,6 +117,10 @@ Kata と成果物の定期評価は、`codex-expert-executor` と `gemma-reporte
 
 `rtn-grade-deliverable-recheck` は毎日1時、`rtn-grade-recheck` は毎日6時に実行し、いずれも `missed_run: skip` とします。`rtn-dashboard-refresh` は `action.kind: specdojo` で毎時 `dashboard build` を直接起動します（exec の実行ロックを取らないため、grade や register の実行中でも並行して動きます）。devcontainer の cron は毎時 `routine run --due` を呼びますが、各 routine の発火時刻は routine 側の cron で決まります。コンテナ停止中の実行枠を日中へ持ち越さず、対話的な register 実行との競合を避けます。
 
+`changed_only: true` は、本文の変更に加えて、観点定義の `comparison_sources` で宣言した突き合わせ先（成果物カタログの自身の項目、依存先、Schedule、メンバー定義、ロール定義、RACI、組織定義）の変更も検出します。検出範囲と検出しない変更は `command-reference.md` の `grade` の説明に従います。突き合わせ先の記録（`source_hashes`）を持たない既存の評価は一度だけ変更扱いになるため、導入直後は `rtn-grade-deliverable-recheck` の選択が上限の10件に張り付きます。2026-09-27 時点の成果物 46 件がすべて該当し、約5日で記録が揃います。その後は突き合わせ先を変更した日だけ、その突き合わせ先を持つ成果物が選ばれます。現在の宣言では Kata に適用される観点は突き合わせ先を持たないため、`rtn-grade-recheck` の選択は変わりません。
+
+全件再評価の定期経路は持ちません。`rtn-grade-kata` は `enabled: false` のままとし、突き合わせ先の変更による評価の陳腐化は上記の `changed_only` で解消します。観点定義やルーブリックの変更など `changed_only` が検出しない変更を反映する場合は、`tools/grade/run-per-document.sh` を選択条件なしで手動実行します。全件は成果物 46 件、Kata 262 件で、Job の件数上限を外すと1回で308文書を評価します。
+
 両 routine では、Job の `task.precondition` が `grade list` を使って script の selection-v4 と同じ変更済み・未評価・再試行可能な段未完了の和集合、辞書順、対象種別、件数上限を先に評価します。連続失敗上限に達した文書は `grade state --exhausted` で同じ和集合に加えてから件数上限を適用し、処理対象からは外して report-only 対象にします。処理対象も report-only 対象も0件なら Job Run、plan、result、evidence を作らず、command と analysis reporter も起動しません。routine はこの結果を `skipped` として受け取り、`routine-state.json` の `last_run` / `last_result` と、cron の場合は `last_scheduled_for` を更新します。
 
 | 段  | executor / reporter                        | 対象と役割                                 |

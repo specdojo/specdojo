@@ -14,6 +14,9 @@ import {
   assertValidActor,
   getProjectCatalogPath,
   getProjectExecutionPath,
+  getProjectMembersPath,
+  getProjectRolesPath,
+  getProjectSchedulePath,
   getProjectViewpointsPath,
   loadConfig,
   loadMemberRoster,
@@ -494,6 +497,16 @@ function loadViewpoints(projectOption?: string): ReviewViewpointsDoc {
   return resolveViewpointsDoc(resolve(specdojoRootDir(), path));
 }
 
+// 対象探索は観点定義が無いプロジェクトでも動かす。その場合は突き合わせ先を持たない扱いにする。
+function loadViewpointsIfConfigured(
+  projectOption: string | undefined,
+  rootDir: string,
+): ReviewViewpointsDoc | undefined {
+  const path = getProjectViewpointsPath(resolveProject(projectOption).project);
+  if (!path || !existsSync(resolve(rootDir, path))) return undefined;
+  return resolveViewpointsDoc(resolve(rootDir, path));
+}
+
 export function resolveGradeActor(actor: string, roster: MemberRoster | null): string {
   const normalized = actor.trim();
   if (!normalized) throw new Error("--by must be a non-empty pm-members.yaml nickname");
@@ -730,6 +743,8 @@ type DeliverableCatalogEntry = {
   localId: string;
   doneCriteria: GradeDoneCriterion[];
   dependsOn?: string[];
+  /** SHA-256 of the catalog entry definition; the catalog-entry comparison source. */
+  entryHash: string;
 };
 
 function criterionId(index: number): string {
@@ -763,6 +778,7 @@ function loadDeliverableCatalog(
         path,
         localId: item.item.local_id,
         dependsOn: item.item.depends_on,
+        entryHash: gradeContentHash(stableJson(item.item)),
         doneCriteria: (item.item.done_criteria ?? []).map((criterion, index) => ({
           id: criterionId(index),
           text: criterion.text,
@@ -791,6 +807,211 @@ export function resolveDeliverableDoneCriteria(
     }
   }
   return result;
+}
+
+// キー順に依存しない直列化。カタログ項目の hash が YAML 上のキー順の入れ替えで変わらないようにする。
+function stableJson(value: unknown): string {
+  if (Array.isArray(value)) return `[${value.map((item) => stableJson(item)).join(",")}]`;
+  if (isRecord(value)) {
+    const keys = Object.keys(value)
+      .filter((key) => value[key] !== undefined)
+      .sort();
+    return `{${keys.map((key) => `${JSON.stringify(key)}:${stableJson(value[key])}`).join(",")}}`;
+  }
+  return JSON.stringify(value) ?? "null";
+}
+
+// 突き合わせ先の変更検出（PJR-Z47X）。観点が comparison_sources で宣言した突き合わせ先と、
+// 成果物の depends_on 先の hash を grade result の source_hashes へ記録し、
+// --changed-only と --dependency-changed が現在の hash と比較する。
+const COMPARISON_SOURCE_RE =
+  /^(catalog-entry|dependencies|schedule|members|roles|deliverable:[a-z0-9][a-z0-9-]*)$/;
+// 突き合わせ先が存在しないことも状態として記録し、後から作られた場合に変更として検出する。
+const ABSENT_SOURCE_HASH = gradeContentHash("specdojo:grade-comparison-source-absent");
+
+type GradeSourceContext = {
+  rootDir: string;
+  project: SpecDojoProjectConfig;
+  projectOption?: string;
+  catalog?: Map<string, DeliverableCatalogEntry>;
+  localIdToPath?: Map<string, string>;
+  hashes: Map<string, string>;
+};
+
+function createGradeSourceContext(
+  projectOption: string | undefined,
+  rootDir: string,
+): GradeSourceContext {
+  return {
+    rootDir,
+    project: resolveProject(projectOption).project,
+    projectOption,
+    hashes: new Map(),
+  };
+}
+
+function sourceCatalog(context: GradeSourceContext): {
+  catalog: Map<string, DeliverableCatalogEntry>;
+  localIdToPath: Map<string, string>;
+} {
+  if (!context.catalog || !context.localIdToPath) {
+    context.catalog = getProjectCatalogPath(context.project)
+      ? loadDeliverableCatalog(context.projectOption, context.rootDir)
+      : new Map<string, DeliverableCatalogEntry>();
+    context.localIdToPath = new Map(
+      [...context.catalog.entries()].map(([path, entry]) => [entry.localId, path]),
+    );
+  }
+  return { catalog: context.catalog, localIdToPath: context.localIdToPath };
+}
+
+function hashSourceFile(path: string | undefined): string {
+  if (!path || !existsSync(path)) return ABSENT_SOURCE_HASH;
+  return gradeContentHash(readFileSync(path, "utf8"));
+}
+
+// ディレクトリはファイルの相対パスと内容の組で hash する。生成物は生成元の変更で検出する。
+function hashSourceDirectory(path: string): string {
+  const files = listFilesRecursive(path)
+    .filter((file) => !relativePathFromRoot(file, path).split("/").includes("generated"))
+    .sort();
+  if (files.length === 0) return ABSENT_SOURCE_HASH;
+  const hash = createHash("sha256");
+  for (const file of files) {
+    hash.update(`${relativePathFromRoot(file, path)}\0${hashSourceFile(file)}\n`);
+  }
+  return hash.digest("hex");
+}
+
+function sharedSourceHash(key: string, context: GradeSourceContext): string {
+  const cached = context.hashes.get(key);
+  if (cached !== undefined) return cached;
+  let hash: string;
+  if (key === "schedule") {
+    hash = hashSourceDirectory(resolve(context.rootDir, getProjectSchedulePath(context.project)));
+  } else if (key === "members" || key === "roles") {
+    const path =
+      key === "members"
+        ? getProjectMembersPath(context.project)
+        : getProjectRolesPath(context.project);
+    hash = hashSourceFile(path ? resolve(context.rootDir, path) : undefined);
+  } else {
+    const localId = key.slice(key.indexOf(":") + 1);
+    hash = hashSourceFile(sourceCatalog(context).localIdToPath.get(localId));
+  }
+  context.hashes.set(key, hash);
+  return hash;
+}
+
+function continuousComparisonSources(
+  viewpoints: ReviewViewpointsDoc | undefined,
+  target: GradeTarget,
+  metadata: Record<string, unknown>,
+): string[] {
+  if (!viewpoints) return [];
+  const sources = new Set<string>();
+  for (const viewpoint of continuousViewpoints(viewpoints, target, metadata)) {
+    for (const source of viewpoint.comparison_sources ?? []) {
+      if (!COMPARISON_SOURCE_RE.test(source)) {
+        throw new Error(`${viewpoint.id}: unknown comparison source ${source}`);
+      }
+      sources.add(source);
+    }
+  }
+  return [...sources].sort();
+}
+
+// depends_on のうちカタログで Markdown 成果物に解決できるものだけを依存先として扱う。
+function dependencySourceKeys(documentPath: string, context: GradeSourceContext): string[] {
+  const { catalog, localIdToPath } = sourceCatalog(context);
+  return (catalog.get(documentPath)?.dependsOn ?? [])
+    .filter((localId) => localIdToPath.has(localId))
+    .map((localId) => `dependency:${localId}`)
+    .sort();
+}
+
+function comparisonSourceKeys(
+  sources: readonly string[],
+  documentPath: string,
+  context: GradeSourceContext,
+): string[] {
+  return sources.flatMap((source) =>
+    source === "dependencies" ? dependencySourceKeys(documentPath, context) : [source],
+  );
+}
+
+function currentSourceHashes(
+  keys: readonly string[],
+  documentPath: string,
+  context: GradeSourceContext,
+): Record<string, string> {
+  const hashes: Record<string, string> = {};
+  for (const key of [...new Set(keys)].sort()) {
+    if (key === "catalog-entry") {
+      hashes[key] =
+        sourceCatalog(context).catalog.get(documentPath)?.entryHash ?? ABSENT_SOURCE_HASH;
+    } else if (key.startsWith("dependency:")) {
+      const localId = key.slice("dependency:".length);
+      hashes[key] = hashSourceFile(sourceCatalog(context).localIdToPath.get(localId));
+    } else {
+      hashes[key] = sharedSourceHash(key, context);
+    }
+  }
+  return hashes;
+}
+
+// grade result へ記録する突き合わせ先の hash。宣言された突き合わせ先に加え、成果物では
+// --dependency-changed が使う depends_on 先を、観点の宣言に関係なく記録する。
+function gradeSourceHashes(
+  documentPath: string,
+  document: MarkdownDocument,
+  viewpoints: ReviewViewpointsDoc | undefined,
+  target: GradeTarget,
+  context: GradeSourceContext,
+): Record<string, string> {
+  const metadata = isRecord(document.data.specdojo) ? document.data.specdojo : {};
+  const keys = [
+    ...comparisonSourceKeys(
+      continuousComparisonSources(viewpoints, target, metadata),
+      documentPath,
+      context,
+    ),
+    ...(target === "deliverable" ? dependencySourceKeys(documentPath, context) : []),
+  ];
+  return currentSourceHashes(keys, documentPath, context);
+}
+
+/** Current hashes of the comparison sources and dependencies that grade apply records for a document. */
+export function resolveGradeSourceHashes(
+  opts: {
+    path: string;
+    target: GradeTarget;
+    project?: string;
+    viewpoints?: ReviewViewpointsDoc;
+  },
+  rootDir = specdojoRootDir(),
+): Record<string, string> {
+  const absolute = resolveSafeMarkdownPath(opts.path, rootDir);
+  const document = parseMarkdown(
+    readFileSync(absolute, "utf8"),
+    relativePathFromRoot(absolute, rootDir),
+  );
+  const viewpoints = opts.viewpoints ?? loadViewpointsIfConfigured(opts.project, rootDir);
+  return gradeSourceHashes(
+    absolute,
+    document,
+    viewpoints,
+    opts.target,
+    createGradeSourceContext(opts.project, rootDir),
+  );
+}
+
+// 記録の無い突き合わせ先（source tracking 導入前の結果を含む）は、鮮度を保証できないため変更として扱う。
+function sourceHashesChanged(
+  stored: Readonly<Record<string, string>> | undefined,
+  current: Readonly<Record<string, string>>,
+): boolean {
+  return Object.entries(current).some(([key, hash]) => stored?.[key] !== hash);
 }
 
 function gradePipelineStateDirectory(projectOption?: string, rootDir = specdojoRootDir()): string {
@@ -1075,14 +1296,10 @@ export function discoverGradeTargets(
     ? loadGradePipelineStates(opts.project, rootDir)
     : new Map<string, GradePipelineState>();
 
-  let deliverableCatalog: Map<string, DeliverableCatalogEntry> | undefined;
-  const localIdToPath = new Map<string, string>();
-  if (opts.target === "deliverable" && opts.dependencyChanged) {
-    deliverableCatalog = loadDeliverableCatalog(opts.project, rootDir);
-    for (const [p, entry] of deliverableCatalog.entries()) {
-      localIdToPath.set(entry.localId, p);
-    }
-  }
+  const sourceContext = createGradeSourceContext(opts.project, rootDir);
+  const viewpoints = opts.changedOnly
+    ? loadViewpointsIfConfigured(opts.project, rootDir)
+    : undefined;
 
   let scheduledDocuments: Set<string> | undefined;
   if (opts.unreviewed) {
@@ -1182,22 +1399,26 @@ export function discoverGradeTargets(
       if (getMemoizedGradeDate(rbPath) <= docDate) return false;
     }
 
+    // 依存先の評価日時ではなく内容の hash で判定する。再評価しただけの依存先は変更扱いにしない。
     if (opts.dependencyChanged) {
-      if (!deliverableCatalog) return false;
-      const entry = deliverableCatalog.get(path);
-      if (!entry || !entry.dependsOn) return false;
-      let changed = false;
-      for (const depId of entry.dependsOn) {
-        const depPath = localIdToPath.get(depId);
-        if (depPath && getMemoizedGradeDate(depPath) > docDate) {
-          changed = true;
-          break;
-        }
-      }
-      if (!changed) return false;
+      if (opts.target !== "deliverable") return false;
+      const keys = dependencySourceKeys(path, sourceContext);
+      if (keys.length === 0) return false;
+      const current = currentSourceHashes(keys, path, sourceContext);
+      if (!sourceHashesChanged(result.source_hashes, current)) return false;
     }
 
-    if (opts.changedOnly && result.content_hash === gradeContentHash(content)) return false;
+    if (opts.changedOnly && result.content_hash === gradeContentHash(content)) {
+      const metadata = isRecord(document.data.specdojo) ? document.data.specdojo : {};
+      const keys = comparisonSourceKeys(
+        continuousComparisonSources(viewpoints, opts.target, metadata),
+        path,
+        sourceContext,
+      );
+      if (keys.length === 0) return false;
+      const current = currentSourceHashes(keys, path, sourceContext);
+      if (!sourceHashesChanged(result.source_hashes, current)) return false;
+    }
 
     return true;
   });
@@ -2410,6 +2631,7 @@ export function applyGradeSubmission(opts: {
   doneCriteriaByPath?: ReadonlyMap<string, GradeDoneCriterion[]>;
   criteriaDirectory?: string;
   resultsDirectory?: string;
+  project?: string;
 }): string[] {
   const issues = validateGradeSubmission(opts.submission, opts.viewpoints, opts.target, {
     doneCriteriaByPath: opts.doneCriteriaByPath,
@@ -2417,6 +2639,9 @@ export function applyGradeSubmission(opts: {
   if (issues.length > 0)
     throw new Error(issues.map((issue) => `${issue.path}: ${issue.message}`).join("\n"));
   const changed: string[] = [];
+  const sourceContext = opts.resultsDirectory
+    ? createGradeSourceContext(opts.project, specdojoRootDir())
+    : undefined;
   for (const input of opts.submission.documents) {
     const absolute = resolveSafeMarkdownPath(input.path);
     const rel = repoRelativePath(absolute);
@@ -2474,6 +2699,9 @@ export function applyGradeSubmission(opts: {
           ? input.done_criteria
           : undefined;
       const detailRef = criteriaResults ? doneCriteriaDetailId(documentId, absolute) : undefined;
+      const sourceHashes = sourceContext
+        ? gradeSourceHashes(absolute, document, opts.viewpoints, opts.target, sourceContext)
+        : undefined;
       const result: GradeResult = {
         version: 1,
         document: documentId,
@@ -2486,6 +2714,9 @@ export function applyGradeSubmission(opts: {
         graded_at: gradedAt,
         graded_by: opts.gradedBy,
         content_hash: gradeContentHash(current),
+        ...(sourceHashes && Object.keys(sourceHashes).length > 0
+          ? { source_hashes: sourceHashes }
+          : {}),
         categories: summary.categories,
         viewpoints: summary.viewpoints,
         finding_counts: summary.findings,
@@ -3125,6 +3356,7 @@ export function registerGradeCommand(program: Command): void {
           doneCriteriaByPath,
           criteriaDirectory: join(getProjectExecutionPath(project), "grade", "criteria"),
           resultsDirectory: join(getProjectExecutionPath(project), "grade", "results"),
+          project: options.project,
         });
         for (const path of changed)
           process.stdout.write(`${options.dryRun ? "would update" : "updated"}: ${path}\n`);
