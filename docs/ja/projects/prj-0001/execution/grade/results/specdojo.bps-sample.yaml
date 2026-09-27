@@ -3,26 +3,75 @@ version: 1
 document: specdojo:bps-sample
 path: docs/ja/specdojo/samples/bps-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: pass
-score: 91
-graded_at: "2026-09-27T05:46:39.589Z"
+score: 95
+graded_at: "2026-09-27T12:41:39.593Z"
 graded_by: codex-expert-executor
 content_hash: e7b86725ced613206c890003c0b3b8b44b0647779ead94ae6273d1eeb5346067
 categories:
-  usability:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
     score: 100
   architecture:
     score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 100
   quality:
-    score: 88
+    score: 92
   consistency:
     score: 75
 viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -38,6 +87,15 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:

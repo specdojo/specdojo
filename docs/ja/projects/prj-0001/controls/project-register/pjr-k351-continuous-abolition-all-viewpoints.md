@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-k351-continuous-abolition-all-viewpoints
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: ARC
   registered_at: "2026-09-25T12:45:13Z"
+  completed_at: "2026-09-27T12:42:30Z"
+  conclusion: continuous を廃止し 28 観点を grade の対象にした。rubric を v2（9 category）とし pass_score を 75 に改めた。旧形式はエラーで拒否する。標本の試行で既存 finding の質の低下はなかった
 ---
 
 # PJR-K351 continuous を廃止し 28 観点すべてを grade の対象にする
@@ -113,6 +115,19 @@ viewpoint.continuous === true && viewpoint.evaluation !== "human";
 - `pass_score` を 70 から 75 へ改めた。75 は level 3（軽微な課題）の score で、major のない文書が category の数や重みに関係なく満たす下限と一致する。
 - `review-guide.md` に、v2 の score が v1 と比較できないこと、`--changed-only` では旧基準の結果が再評価されないことを記載した。
 - 標本の文書での 12 観点と 28 観点の比較試行（作業 3）は未実施である。agent による grade の実行が必要なため、別途 QE が行う。
+
+### 標本での試行（2026-09-27、orchestrator）
+
+executor が未実施とした作業 3 を、orchestrator が `bps-sample.md` で行った（`tools/grade/run-per-document.sh --target kata --kind sample`、codex-expert-executor）。
+
+| 項目            | 変更前（v1、2026-09-27 05:46） | 変更後（v2、2026-09-27 12:41）                 |
+| --------------- | ------------------------------ | ---------------------------------------------- |
+| 評価した観点    | 8                              | 24                                             |
+| score / verdict | 91 / pass                      | 95 / pass                                      |
+| finding         | minor 6                        | minor 6（文面は変更前と同じ）                  |
+| category        | 4                              | 9（追加の 5 category はすべて 100、finding 0） |
+
+既存観点の finding は件数・重さ・内容とも変わらず、prompt が長くなったことによる質の低下は見られなかった。ただし、finding の文面が一字一句同じだったため、前回の結果が評価の入力に使われている可能性がある。また、追加の観点は 1 件の finding も出していない。標本は 1 件だけなので、追加観点の検出力は、成果物（`target: deliverable`）を含む複数の文書で継続して確認する。
 
 ## 9. 関連ドキュメント
 
