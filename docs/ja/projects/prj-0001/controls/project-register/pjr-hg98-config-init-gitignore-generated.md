@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: high
   owner: DEV
   registered_at: "2026-09-26T23:06:44Z"
+  block_reason: "agent exited with non-zero code: runner による検証 `test-integration` が失敗（exit 1）しており、完了条件を満たしていない。"
 ---
 
 # PJR-HG98 config init で生成物を除外する .gitignore を作り register の並行実行の衝突を防ぐ
@@ -53,16 +54,22 @@ docs/**/generated/*
 
 ## 4. 作業内容
 
-| No  | 作業                                           | 担当 | 状態 | メモ                           |
-| --- | ---------------------------------------------- | ---- | ---- | ------------------------------ |
-| 1   | 除外するパターンを決める                       | DEV  | open | 配置に依存するかを確かめる     |
-| 2   | `config init` へ `.gitignore` の追記を実装する | DEV  | open | 既存の行を壊さない             |
-| 3   | 統合テストで並行実行の衝突がないことを確かめる | DEV  | open |                                |
-| 4   | README と案内を更新する                        | DEV  | open | 既存リポジトリへの手順を含める |
+| No  | 作業                                           | 担当 | 状態 | メモ                                                         |
+| --- | ---------------------------------------------- | ---- | ---- | ------------------------------------------------------------ |
+| 1   | 除外するパターンを決める                       | DEV  | done | `docs/` 外の配置は `base_path` か各パスの親から導く          |
+| 2   | `config init` へ `.gitignore` の追記を実装する | DEV  | done | 既存の行は変えず、足りない行だけを末尾へ追記する             |
+| 3   | 統合テストで並行実行の衝突がないことを確かめる | DEV  | done | 並行 E2E テストの手書き `.gitignore` を `config init` に置換 |
+| 4   | README と案内を更新する                        | DEV  | open | reference は更新済み。README は executor の書き込み権限外    |
 
 ## 5. 対応結果
 
--
+- `src/specdojo-gitignore.ts` を追加し、生成物を除外するパターンの導出（`gitignorePatternsForProjects`）と、既存の `.gitignore` への追記（`mergeGitignore` / `ensureGitignore`）を実装した。
+- 既定のパターンは `.specdojo/doc-index.json`、`docs/**/generated/*`、`!docs/**/generated/.gitkeep`、`docs/**/execution/exec/.locks/` とした。`base_path` が `docs/` の外にある場合は `<base_path>/**/generated/*` などを、`base_path` が無い場合は各パス設定の親ディレクトリから導いた行を追加する。
+- `config init` は、設定を作成したときも、設定がすでにあるときも `.gitignore` を確認し、足りない行だけを追記する。追記した行と飛ばした行を表示し、追記があった場合は管理済みの生成物を外す手順（`git ls-files -ci --exclude-standard -z | xargs -0 -r git rm --cached --quiet`）を案内する。`--dry-run` では何も書き込まない。
+- `tests/src/specdojo-config-command.test.ts` に、新規作成・既存への追記と冪等性・`--dry-run`・配置からの導出・CRLF の維持を確かめるテストを追加した。
+- `tests/src/exec-register-pipeline-e2e.integration.test.ts` の 2 項目並行実行テストで、手書きしていた `.gitignore` を `config init` の実行と案内どおりの管理解除に置き換えた。
+- `command-reference.md` と `specdojo-config-reference.md` に `.gitignore` の追記を記載した。
+- _TODO_ README の「npm で導入する」への追記は、executor に README の書き込み権限が無く未実施。追記する文案は executor の evidence（最終報告）に残した。
 
 ## 6. 関連ドキュメント
 
