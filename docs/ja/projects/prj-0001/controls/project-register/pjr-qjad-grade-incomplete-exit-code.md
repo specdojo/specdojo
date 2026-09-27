@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: DEV
   registered_at: "2026-09-26T23:23:18Z"
-  block_reason: "agent exited with non-zero code: 親検証 `test-integration` (npm run test:integration) が failed しています。"
+  block_reason: "agent exited with non-zero code: 親検証の `test-unit` (npm run test:unit) が失敗しています。`tests/src/grade.test.ts` および `tests/src/doc-index.test.ts` でエラーが発生しているため、完了条件を満たしていません。"
 ---
 
 # PJR-QJAD grade が未完了の文書を残して終わった場合に終了コード 1 を返す

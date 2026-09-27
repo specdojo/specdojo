@@ -4,14 +4,13 @@ specdojo:
   type: exec-result
   task_id: PJR-QJAD
   mode: edit
-  status: blocked
+  status: superseded
   project_id: prj-0001
   origin: register
   plan_ref: exec/plans/pjr-qjad-20260926T235053Z-eb26-plan.md
   started_at: "2026-09-26T23:51:49.191Z"
-  completed_at: "2026-09-27T00:02:26.089Z"
+  completed_at: "2026-09-27T02:02:14.828Z"
   agent: claude-expert-executor
-  block_reason: "agent exited with non-zero code: 親検証 `test-integration` (npm run test:integration) が failed しています。"
 ---
 
 # Edit Result
