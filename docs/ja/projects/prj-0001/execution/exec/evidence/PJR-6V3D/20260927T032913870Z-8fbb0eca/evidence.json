@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-6V3D",
+  "run_id": "20260927T032913870Z-8fbb0eca",
+  "stage": {
+    "role": "executor",
+    "actor": "agy-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-27T03:29:13.870Z",
+    "completed_at": "2026-09-27T03:31:56.738Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/samples/bps-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 1,
+    "summary": "docs/ja/specdojo/samples/bps-sample.md | 34 ++++++++++++++++++----------------\n 1 file changed, 18 insertions(+), 16 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/samples/bps-sample.md",
+      "status": "passed",
+      "summary": "Formatted successfully"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/specdojo/samples/bps-sample.md",
+      "status": "passed",
+      "summary": "Lint passed without errors"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "Index rebuilt successfully"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-6V3D\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\n[dry-run] git merge --no-ff --no-edit exec/T-T-doc-010\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nUpdated: /tmp/specdojo-register-resume-e2e-wMFVxQ/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)\nUpdated: /tmp/specdojo-register-resume-e2e-wMFVxQ/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml\nGenerated: /tmp/specdojo-register-resume-e2e-wMFVxQ/docs/ja/projects/test/controls/project-register/generated/pjr-index.md\nGenerated: /tmp/specdojo-register-resume-e2e-wMFVxQ/docs/ja/projects/test/controls/project-register/generated/pjr…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.2.1 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-6V3D/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-6V3D/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-tem…"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-6V3D\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-fPTvhf/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-aNvkw2/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-VkrnAn/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-PpA6E9/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-FZdxGi/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-r1bnGC/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\nWrote agent stdout: /tmp/specdojo-agent-command-k1gNd9/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-DjZfiN/outputs/partial.txt\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\n\n Test Files  107 passed (107)\n      Tes…"
+    }
+  ],
+  "final_message": "bps-sample.md の業務ロジック不整合（確定の定義統一、数量用語の定義、H-01整合、E-03受入観点の追加など）を解消し、静的検査を通過しました。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-6V3D/20260927T032913870Z-8fbb0eca/executor.log",
+      "bytes": 2513,
+      "truncated": false
+    }
+  ]
+}
