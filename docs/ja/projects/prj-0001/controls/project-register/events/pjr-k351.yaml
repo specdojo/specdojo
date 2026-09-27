@@ -54,3 +54,29 @@
       from: OPS
       to: ARC
   previous_event_id: reg_242884d2c73e42478e8cec2067d0ea2e
+- v: 1
+  id: reg_865f12a55621482fbda1609aefa96812
+  ts: "2026-09-27T12:24:58Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_f7b3a919df1146518ffe81913d4d4278
+- v: 1
+  id: reg_de255eaa83f34a5ea968e22cce3383e5
+  ts: "2026-09-27T12:34:45Z"
+  action: review
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_865f12a55621482fbda1609aefa96812

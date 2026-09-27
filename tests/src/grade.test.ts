@@ -60,7 +60,6 @@ const viewpoints: ReviewViewpointsDoc = {
       evidence: "frontmatter and headings",
       default_severity: "major",
       evaluation: "deterministic",
-      continuous: true,
     },
     {
       id: "vp-qe-kata-conformance",
@@ -71,7 +70,6 @@ const viewpoints: ReviewViewpointsDoc = {
       evidence: "authoring standard",
       default_severity: "major",
       evaluation: "referential",
-      continuous: true,
       grade_targets: ["kata"],
     },
     {
@@ -83,7 +81,6 @@ const viewpoints: ReviewViewpointsDoc = {
       evidence: "paragraphs",
       default_severity: "minor",
       evaluation: "discretionary",
-      continuous: true,
     },
   ],
 };
@@ -437,13 +434,55 @@ describe("grade submission", () => {
     );
   });
 
-  it("requires every continuous agent viewpoint and excludes deterministic viewpoints", () => {
+  it("requires every applicable agent viewpoint and excludes deterministic viewpoints", () => {
     const missing = structuredClone(submission);
     missing.documents[0].viewpoints.pop();
     expect(validateGradeSubmission(missing, viewpoints, "kata")).toContainEqual({
       path: "documents[0]",
       message: "missing agent viewpoint: vp-arc-conciseness",
     });
+  });
+
+  it("rejects a rubric that has no weight for a graded viewpoint category", () => {
+    const withoutWeight = structuredClone(viewpoints);
+    withoutWeight.viewpoints!.push({
+      id: "vp-po-purpose-alignment",
+      role: "PO",
+      category: "purpose",
+      title: "purpose",
+      check: "check purpose",
+      evidence: "purpose section",
+      default_severity: "major",
+      evaluation: "referential",
+    });
+
+    expect(() => validateGradeSubmission(submission, withoutWeight, "kata")).toThrow(
+      "grade_rubric grade-rubric-v1 has no kata weight for category 'purpose' used by vp-po-purpose-alignment",
+    );
+  });
+});
+
+describe("common grade rubric", () => {
+  const common = yaml.load(
+    readFileSync("docs/ja/specdojo/defaults/pm-review-viewpoints.yaml", "utf8"),
+  ) as ReviewViewpointsDoc & { categories: { id: string }[] };
+
+  it("weights all nine categories for both targets and sums each target to 100", () => {
+    const categoryIds = common.categories.map((category) => category.id).sort();
+    const weights = common.grade_rubric!.weights;
+
+    expect(categoryIds).toHaveLength(9);
+    for (const target of ["kata", "deliverable"] as const) {
+      expect(Object.keys(weights[target]).sort()).toEqual(categoryIds);
+      expect(Object.values(weights[target]).reduce((sum, weight) => sum + weight, 0)).toBe(100);
+    }
+  });
+
+  it("grades every common viewpoint without a continuous flag", () => {
+    expect(common.viewpoints).toHaveLength(28);
+    for (const viewpoint of common.viewpoints ?? []) {
+      expect(Object.hasOwn(viewpoint, "continuous")).toBe(false);
+    }
   });
 });
 

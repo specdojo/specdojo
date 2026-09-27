@@ -42,6 +42,7 @@ import {
 } from "./grade-result.js";
 
 export type GradeTarget = "kata" | "deliverable";
+const GRADE_TARGETS: readonly GradeTarget[] = ["kata", "deliverable"];
 export type GradeSeverity = "blocker" | "major" | "minor" | "note";
 export type GradeVerdict = "pass" | "needs-work" | "fail";
 
@@ -521,6 +522,17 @@ export function resolveGradeActor(actor: string, roster: MemberRoster | null): s
 function assertRubric(doc: ReviewViewpointsDoc): GradeRubric {
   const rubric = doc.grade_rubric;
   if (!rubric) throw new Error("Resolved viewpoints do not define grade_rubric");
+  // すべての観点が grade の対象なので、重みのない category の観点は score へ黙って入らなくなる。
+  for (const viewpoint of doc.viewpoints ?? []) {
+    for (const target of viewpoint.grade_targets ?? GRADE_TARGETS) {
+      const weight = rubric.weights[target]?.[viewpoint.category];
+      if (typeof weight !== "number" || weight <= 0) {
+        throw new Error(
+          `grade_rubric ${rubric.id} has no ${target} weight for category '${viewpoint.category}' used by ${viewpoint.id}`,
+        );
+      }
+    }
+  }
   return rubric;
 }
 
@@ -903,14 +915,14 @@ function sharedSourceHash(key: string, context: GradeSourceContext): string {
   return hash;
 }
 
-function continuousComparisonSources(
+function gradedComparisonSources(
   viewpoints: ReviewViewpointsDoc | undefined,
   target: GradeTarget,
   metadata: Record<string, unknown>,
 ): string[] {
   if (!viewpoints) return [];
   const sources = new Set<string>();
-  for (const viewpoint of continuousViewpoints(viewpoints, target, metadata)) {
+  for (const viewpoint of gradedViewpoints(viewpoints, target, metadata)) {
     for (const source of viewpoint.comparison_sources ?? []) {
       if (!COMPARISON_SOURCE_RE.test(source)) {
         throw new Error(`${viewpoint.id}: unknown comparison source ${source}`);
@@ -972,7 +984,7 @@ function gradeSourceHashes(
   const metadata = isRecord(document.data.specdojo) ? document.data.specdojo : {};
   const keys = [
     ...comparisonSourceKeys(
-      continuousComparisonSources(viewpoints, target, metadata),
+      gradedComparisonSources(viewpoints, target, metadata),
       documentPath,
       context,
     ),
@@ -1411,7 +1423,7 @@ export function discoverGradeTargets(
     if (opts.changedOnly && result.content_hash === gradeContentHash(content)) {
       const metadata = isRecord(document.data.specdojo) ? document.data.specdojo : {};
       const keys = comparisonSourceKeys(
-        continuousComparisonSources(viewpoints, opts.target, metadata),
+        gradedComparisonSources(viewpoints, opts.target, metadata),
         path,
         sourceContext,
       );
@@ -1525,14 +1537,14 @@ export function matchesGradeTargetFilters(
   );
 }
 
-function continuousViewpoints(
+// grade の対象は grade_targets と文書の種類（document_kinds）だけで決まる。
+function gradedViewpoints(
   doc: ReviewViewpointsDoc,
   target: GradeTarget,
   metadata: Record<string, unknown>,
 ): ReviewViewpoint[] {
   return (doc.viewpoints ?? []).filter(
     (viewpoint) =>
-      viewpoint.continuous === true &&
       (viewpoint.grade_targets === undefined || viewpoint.grade_targets.includes(target)) &&
       viewpointAppliesToDocument(viewpoint, metadata),
   );
@@ -1543,7 +1555,7 @@ function agentViewpoints(
   target: GradeTarget,
   metadata: Record<string, unknown>,
 ): ReviewViewpoint[] {
-  return continuousViewpoints(doc, target, metadata).filter(
+  return gradedViewpoints(doc, target, metadata).filter(
     (viewpoint) =>
       viewpoint.evaluation === "referential" || viewpoint.evaluation === "discretionary",
   );
@@ -1556,7 +1568,7 @@ function deterministicResults(
 ): GradeViewpointInput[] {
   const results: GradeViewpointInput[] = [];
   const metadata = document.data.specdojo as Record<string, unknown>;
-  for (const viewpoint of continuousViewpoints(definitions, target, metadata).filter(
+  for (const viewpoint of gradedViewpoints(definitions, target, metadata).filter(
     (item) => item.evaluation === "deterministic",
   )) {
     const findings: GradeFindingInput[] = [];
@@ -1603,7 +1615,7 @@ function doneCriteriaPlanLines(
   return [
     "### 3.4. 完了条件（done_criteria）",
     "",
-    "成果物カタログが対象へ宣言する完了条件である。viewpoint と rubric による level 判定とは別の軸として、各条件を現在の本文の根拠だけで `satisfied` / `unsatisfied` のどちらかに判定する。score や level の高低から充足を推論せず、条件文が要求する内容を本文で確認できるかだけで判定する。`roles` は条件の確認責任を持つ Role code、`viewpoint` は条件を見る観点であり、`continuous: false` や `evaluation: discretionary` の観点に紐づく条件も本文の根拠で一次判定する。",
+    "成果物カタログが対象へ宣言する完了条件である。viewpoint と rubric による level 判定とは別の軸として、各条件を現在の本文の根拠だけで `satisfied` / `unsatisfied` のどちらかに判定する。score や level の高低から充足を推論せず、条件文が要求する内容を本文で確認できるかだけで判定する。`roles` は条件の確認責任を持つ Role code、`viewpoint` は条件を見る観点であり、`evaluation: discretionary` の観点に紐づく条件も本文の根拠で一次判定する。",
     "",
     ...doneCriteria.map((criterion) => {
       const title = titles.get(criterion.viewpoint);
@@ -2487,7 +2499,7 @@ export function validateGradeSubmission(
       if (!result || !allowed.has(result.id)) {
         issues.push({
           path: resultPath,
-          message: `unknown or non-continuous viewpoint: ${result?.id ?? ""}`,
+          message: `unknown or non-applicable viewpoint: ${result?.id ?? ""}`,
         });
         continue;
       }

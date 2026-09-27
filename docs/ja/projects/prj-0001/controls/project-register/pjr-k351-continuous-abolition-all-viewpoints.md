@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: high
   owner: ARC
   registered_at: "2026-09-25T12:45:13Z"
@@ -93,18 +93,26 @@ viewpoint.continuous === true && viewpoint.evaluation !== "human";
 
 ## 7. 作業内容
 
-| No  | 作業                                                | 担当 | 状態 | メモ                      |
-| --- | --------------------------------------------------- | ---- | ---- | ------------------------- |
-| 1   | 前提 3 件の完了を待つ                               | ARC  | open |                           |
-| 2   | rubric の 9 category の重みを決める                 | QE   | open | kata と成果物で分ける     |
-| 3   | 標本で試行し、finding の質を確かめる                | QE   | open | 12 観点と 28 観点を比べる |
-| 4   | 閾値を決め直す                                      | QE   | open |                           |
-| 5   | schema・defaults・grade.ts から `continuous` を消す | DEV  | open |                           |
-| 6   | ガイドへ score の非互換を記載する                   | OPS  | open |                           |
+| No  | 作業                                                | 担当 | 状態 | メモ                                                           |
+| --- | --------------------------------------------------- | ---- | ---- | -------------------------------------------------------------- |
+| 1   | 前提 3 件の完了を待つ                               | ARC  | done | AG7B・DKX8・WPWB はいずれも done                               |
+| 2   | rubric の 9 category の重みを決める                 | QE   | done | kata と成果物で分け、理由を defaults のコメントに記録          |
+| 3   | 標本で試行し、finding の質を確かめる                | QE   | open | 12 観点と 28 観点を比べる。agent による grade の実行が必要     |
+| 4   | 閾値を決め直す                                      | QE   | done | 70 から 75 へ。level 3 の下限に合わせる                        |
+| 5   | schema・defaults・grade.ts から `continuous` を消す | DEV  | done | 旧形式は削除済みを示すエラーで拒否する                         |
+| 6   | ガイドへ score の非互換を記載する                   | OPS  | done | `review-guide.md` の「grade と共有する評価属性・rubric」へ記載 |
 
 ## 8. 対応結果
 
--
+- `pm-review-viewpoints.schema.yaml` の Viewpoint から `continuous` を削除した。`additionalProperties: false` のため、schema 検証でも旧フィールドは拒否される。
+- `docs/ja/specdojo/defaults/pm-review-viewpoints.yaml` の 28 観点から `continuous` を削除した。
+- `src/grade.ts` は `continuous` を参照しない。grade の対象は `grade_targets` と `document_kinds`（文書の種類）だけで決まる。
+- 観点定義の読み込み（`src/review-plan.ts`）は、`continuous` を持つ観点を削除済みであることを示すエラーで拒否する。共通正本・overlay・`extends` のない全量ファイルのいずれにも適用する。
+- rubric を `grade-rubric-v2` とし、weights を 9 category へ広げた。v1 の 4 category の相対比を保って縮め（kata は 70、成果物は 65）、空いた分を新しい 5 category へ配った。成果物は目的・業務価値・実装可能性が固有に問われるため、kata より多く配った。理由は defaults のコメントに記録した。
+- 観点の category に重みがない rubric は、grade の実行時にエラーで失敗する。重み 0 のまま黙って score から落ちることを防ぐ。
+- `pass_score` を 70 から 75 へ改めた。75 は level 3（軽微な課題）の score で、major のない文書が category の数や重みに関係なく満たす下限と一致する。
+- `review-guide.md` に、v2 の score が v1 と比較できないこと、`--changed-only` では旧基準の結果が再評価されないことを記載した。
+- 標本の文書での 12 観点と 28 観点の比較試行（作業 3）は未実施である。agent による grade の実行が必要なため、別途 QE が行う。
 
 ## 9. 関連ドキュメント
 

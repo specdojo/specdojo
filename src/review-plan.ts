@@ -173,11 +173,19 @@ const LEGACY_VIEWPOINT_EVALUATIONS: Readonly<Record<string, string>> = {
   human: "referential or discretionary",
 };
 
-function validateViewpointEvaluations(doc: Record<string, unknown>, path: string): void {
+function validateViewpointFields(doc: Record<string, unknown>, path: string): void {
   for (const viewpoint of recordArray(doc, "viewpoints", path)) {
+    const id = String(viewpoint["id"] ?? "(unknown)");
+    // continuous was removed when every viewpoint became a grade target (PJR-K351).
+    // Reject it instead of ignoring it so that an overlay cannot silently expect a narrower scope.
+    if (Object.hasOwn(viewpoint, "continuous")) {
+      throw new Error(
+        `Viewpoint '${id}' uses removed field 'continuous'; every viewpoint is graded, ` +
+          `so delete it and narrow scope with grade_targets or document_kinds: ${path}`,
+      );
+    }
     const value = viewpoint["evaluation"];
     if (value === undefined) continue;
-    const id = String(viewpoint["id"] ?? "(unknown)");
     if (typeof value === "string" && value in LEGACY_VIEWPOINT_EVALUATIONS) {
       throw new Error(
         `Viewpoint '${id}' uses removed evaluation '${value}'; use ${LEGACY_VIEWPOINT_EVALUATIONS[value]} ` +
@@ -272,7 +280,7 @@ export function resolveViewpointsDoc(
 ): ReviewViewpointsDoc {
   const project = loadYamlMapping(projectPath);
   if (project["extends"] === undefined) {
-    validateViewpointEvaluations(project, projectPath);
+    validateViewpointFields(project, projectPath);
     return project as ReviewViewpointsDoc;
   }
   if (project["extends"] !== COMMON_VIEWPOINTS_ID) {
@@ -299,8 +307,8 @@ export function resolveViewpointsDoc(
   }
   delete resolved["extends"];
   delete resolved["disabled"];
-  validateViewpointEvaluations(common, commonPath);
-  validateViewpointEvaluations(project, projectPath);
+  validateViewpointFields(common, commonPath);
+  validateViewpointFields(project, projectPath);
   validateResolvedInheritance(resolved, projectPath);
   return resolved as ReviewViewpointsDoc;
 }
