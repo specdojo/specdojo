@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-vjp8-viewpoint-document-kinds-coverage-check
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-09-27T11:30:16Z"
+  completed_at: "2026-09-27T11:44:18Z"
+  conclusion: document_kinds に confirmed_default を追加し、観点ごとに判断漏れ・存在しない ID・重複を error で報告する検証を npm test（npm run check に含まれる）で実行する。既存 107 件の判断を適用結果を変えずに記録し、作成手順とガイドへ記載した
 ---
 
 # PJR-VJP8 観点の document_kinds で判断漏れの rulebook を検出する検証を追加する

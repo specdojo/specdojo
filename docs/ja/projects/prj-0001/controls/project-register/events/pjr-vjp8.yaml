@@ -58,3 +58,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_44b057e1bc984041847244a79a482387
+- v: 1
+  id: reg_c07386f8b04f4740a851b7efbb51468a
+  ts: "2026-09-27T11:44:18Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: claude-expert-executor の実行結果を orchestrator が評価し完了条件を満たすと判断。専用 npm script と pre-commit への組み込みは 3S8Q により agent が編集できず残課題
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-27"
+    - field: conclusion
+      from: "-"
+      to: document_kinds に confirmed_default を追加し、観点ごとに判断漏れ・存在しない ID・重複を error で報告する検証を npm test（npm run check に含まれる）で実行する。既存 107 件の判断を適用結果を変えずに記録し、作成手順とガイドへ記載した
+  previous_event_id: reg_c8d3b743b1504e33b8d5b0b82516ca01
