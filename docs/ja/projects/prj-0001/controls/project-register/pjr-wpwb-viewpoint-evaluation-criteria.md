@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-wpwb-viewpoint-evaluation-criteria
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: ARC
   registered_at: "2026-09-24T22:41:24Z"
   due_on: "2026-10-31"
+  completed_at: "2026-09-27T12:12:04Z"
+  conclusion: evaluation を deterministic / referential / discretionary（判定規準の所在）へ改名し 7 観点を再分類した。grade は referential と discretionary を agent で判定し、continuousViewpoints から human 条件を外した。旧値は新値を示すエラーで失敗する。版は据え置き
 ---
 
 # PJR-WPWB 観点の evaluation の区分基準を定義し、名前と割り当てを揃える
