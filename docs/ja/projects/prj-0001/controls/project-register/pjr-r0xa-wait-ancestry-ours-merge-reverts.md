@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: waiting
   priority: high
   owner: DEV
   registered_at: "2026-09-27T03:07:17Z"
+  block_reason: "agent exited with non-zero code: runner validation `test-integration` (`npm run test:integration`) が failed となったため。"
 ---
 
 # PJR-R0XA waiting からの再開前の develop 取り込みが統合時に他項目の成果を消す
@@ -58,7 +59,9 @@ specdojo:
 
 ## 4. 対応結果
 
--
+- `syncExecBranchAfterWait` の `-s ours` を廃止し、`wait` commit と、その時点までに統合先へ入った変更を exec branch へ通常 merge するよう変更した。個票・イベント・plan・result の競合だけは統合先側の内容で解決し、対象外パスの競合は同期を中断して worktree を保持する。
+- exec branch の作成後に統合先へ別成果を commit し、最初の統合を hook で失敗させて `waiting` にしたあと、`--resume` する統合テストを追加した。再開後も別成果が残り、対象項目の統合 commit の差分にそのパスが含まれないことを確認する。
+- [[specdojo:exec-worktree-guide]] に、`waiting` 遷移後の同期 merge と競合時の扱いを追記した。
 
 ## 5. 関連ドキュメント
 
