@@ -97,14 +97,46 @@ grade 対象 303 件のうち 260 件は kata である。`vp-arc-cross-document
 
 | No  | 作業                                  | 担当 | 状態 | メモ                       |
 | --- | ------------------------------------- | ---- | ---- | -------------------------- |
-| 1   | 対応の候補から方針を決定する          | QE   | open | 案 1 を起点に検討。EBTZ 後 |
-| 2   | `changed_only` の検出範囲を文書化する | QE   | open | `grade-guide` を想定       |
-| 3   | 全件再評価の経路を運用に乗せる        | OPS  | open | `rtn-grade-kata` の有効化  |
-| 4   | 照合型観点の再評価契機を実装する      | DEV  | open | 方針決定後                 |
+| 1   | 対応の候補から方針を決定する          | QE   | done | 案 1（2026-09-27 決定）    |
+| 2   | `changed_only` の検出範囲を文書化する | QE   | done | `command-reference` ほか   |
+| 3   | 全件再評価の経路を運用に乗せる        | OPS  | open | 手動経路を文書化。承認待ち |
+| 4   | 照合型観点の再評価契機を実装する      | DEV  | done | `source_hashes` を記録     |
 
 ## 6. 対応結果
 
--
+- 観点定義に `comparison_sources` を追加した（`pm-review-viewpoints.schema.yaml`）。値は `catalog-entry`、`dependencies`、`schedule`、`members`、`roles`、`deliverable:<local_id>` である。
+- 共通観点に突き合わせ先を宣言した。`vp-arc-cross-document-consistency` は `check` が挙げる 6 つの突き合わせ先に対応させ、自身のカタログ項目、依存先、Schedule、メンバー定義、ロール定義、`pm-raci`、`pm-organization` を宣言した。`vp-qe-done-criteria` は自身のカタログ項目を宣言した。生成物は生成元の変更として検出する。
+- `grade apply` は、評価時点の突き合わせ先と成果物の依存先の SHA-256 を grade result の `source_hashes` へ記録する（`grade-result.schema.yaml` に追加）。カタログ項目は対象文書自身の項目だけを hash するため、他の成果物の項目を変更しても選ばれない。
+- `grade list --changed-only` は、本文の hash が一致しても、適用される観点の突き合わせ先の hash が記録と異なる文書を選ぶ。`source_hashes` を持たない既存の結果は一度だけ変更扱いになる。
+- 個票の方針の決定に従い、`--dependency-changed` を依存先の `graded_at` ではなく、依存先の内容の hash（`source_hashes` の `dependency:<local_id>`）で判定するように改めた。依存先を再評価しただけでは選ばない。
+- `changed_only` の検出範囲と検出しない変更（宣言外の文書、観点定義・ルーブリックの変更、生成物）を `command-reference.md` に、grade の鮮度判断を `review-guide.md` に、routine への影響とコストを `routine-operation-guide.md` に記載した。
+
+### 6.1. 既存の利用者の挙動変更
+
+| 利用者                          | 変更                                                                                                   |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| `rtn-grade-deliverable-recheck` | `changed_only` が突き合わせ先の変更を検出する。`dependency_changed` は依存先の内容の変更だけを検出する |
+| `rtn-grade-recheck`（kata）     | 変更なし。kata に適用される継続評価の観点は突き合わせ先を宣言していない                                |
+| `grade apply`                   | サイドカーに `source_hashes` を追加で書く。既存のキーは変えない                                        |
+
+両 routine の `changed_only` 入力にコメントで挙動変更を記載した。
+
+### 6.2. コストの見積もり
+
+2026-09-27 時点で `grade list --project prj-0001` を実行した結果である。
+
+| 選択条件                           | 成果物 | kata |
+| ---------------------------------- | ------ | ---- |
+| 全件（選択条件なし）               | 46     | 262  |
+| `--changed-only`（導入直後）       | 46     | 0    |
+| `--dependency-changed`（導入直後） | 34     | -    |
+
+導入直後は `source_hashes` を持たない結果がすべて変更扱いになる。`rtn-grade-deliverable-recheck` の上限 10 件で約 5 日かけて記録が揃い、以後は突き合わせ先を変更した日だけ該当する成果物が選ばれる。案 3 の週次全件再評価（308 文書）に比べ、定常時の再評価は突き合わせ先の変更に比例する。鮮度改善の対象として見積もった 53 件の finding はすべて成果物に属し、導入直後の一巡で再評価される。
+
+### 6.3. 残課題
+
+- 全件再評価の定期経路は設けていない。`rtn-grade-kata` は `enabled: false` のままとし、`changed_only` が検出しない変更（観点定義・ルーブリックの変更）は `tools/grade/run-per-document.sh` の手動実行で反映すると `routine-operation-guide.md` に記載した。_ASSUMPTION_: 案 1 の実装で突き合わせ先の陳腐化は定期経路で解消するため、定期の全件再評価は不要と判断した。完了条件の「全件再評価の経路が運用されている」をこの手動経路で満たすかは、OPS と PO の判断を要する（作業 3 を open のまま残した）。
+- `--rulebook-changed` は引き続き rulebook の `graded_at` で判定している。本項目の範囲外である。
 
 ## 7. 関連ドキュメント
 

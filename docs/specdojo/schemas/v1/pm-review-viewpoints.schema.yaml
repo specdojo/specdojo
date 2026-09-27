@@ -292,6 +292,21 @@ $defs:
         items:
           enum: [kata, deliverable]
         description: "Optional grade target restriction; omitted means both targets."
+      comparison_sources:
+        type: array
+        minItems: 1
+        uniqueItems: true
+        items:
+          type: string
+          pattern: "^(catalog-entry|dependencies|schedule|members|roles|deliverable:[a-z0-9][a-z0-9-]*)$"
+        description: >
+          Documents other than the graded document that this viewpoint compares against. grade
+          records their hashes in the grade result (source_hashes) and grade list --changed-only
+          selects the document again when any of them changes. catalog-entry: the document's own
+          deliverable catalog entry. dependencies: the deliverables listed in depends_on.
+          schedule: the project schedule directory. members / roles: the project members_path /
+          roles_path file. deliverable:<local_id>: one catalog deliverable. Omitted means the
+          viewpoint judges the graded document alone.
       document_kinds:
         $ref: "#/$defs/DocumentKindApplicability"
 

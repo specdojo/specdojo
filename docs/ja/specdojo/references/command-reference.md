@@ -522,6 +522,27 @@ specdojo grade validate --target kata --project prj-0001
 
 `--target` は `kata` または `deliverable` です。`--path` は繰り返し指定でき、明示した Markdown 文書だけを対象にします。ただし、パス要素に `generated` を含む生成文書と `trash` を含む退避済み文書は自動探索から除外し、`--path` で明示した場合も入力エラーとして拒否します。`--changed-only` は grade result サイドカーの `content_hash` と現在の成果物ファイル全体の SHA-256 を比較します。`grade apply` はサイドカーだけを更新するため、評価結果の書き込み自体で成果物が変更扱いになることはありません。
 
+`--changed-only` は、対象文書の本文が変わった文書に加えて、突き合わせ先が変わった文書も選びます。突き合わせ先は、対象文書に適用される継続評価の観点が `comparison_sources` で宣言したものです。`grade apply` は評価時点の突き合わせ先の SHA-256 をサイドカーの `source_hashes` へ記録し、`--changed-only` は記録と現在の値が 1 つでも異なる文書を選びます。宣言できる突き合わせ先と、`source_hashes` のキーは次のとおりです。
+
+| `comparison_sources` の値 | `source_hashes` のキー   | hash の対象                                           |
+| ------------------------- | ------------------------ | ----------------------------------------------------- |
+| `catalog-entry`           | `catalog-entry`          | 成果物カタログのうち対象文書自身の項目                |
+| `dependencies`            | `dependency:<local_id>`  | `depends_on` のうちカタログの Markdown 成果物への依存 |
+| `schedule`                | `schedule`               | `schedule_path` 配下のファイル（`generated` を除く）  |
+| `members`                 | `members`                | `members_path` のファイル                             |
+| `roles`                   | `roles`                  | `roles_path` のファイル                               |
+| `deliverable:<local_id>`  | `deliverable:<local_id>` | 指定したカタログ成果物のファイル                      |
+
+`--changed-only` が検出しないものは次のとおりです。これらの変更で評価を更新する場合は、`--path` で対象を明示するか、フィルタなしの全件再評価を実行します。
+
+- 観点の `check` や `comparison_sources` に宣言していない文書の変更。
+- 評価に使うルーブリックや観点定義そのものの変更。rulebook の変更は `--rulebook-changed` が扱います。
+- 生成物（`generated`）の変更。生成物は生成元の変更として検出します。
+
+`source_hashes` を持たないサイドカー（突き合わせ先の記録を導入する前の評価）は、突き合わせ先を宣言した観点が適用される場合に変更扱いとなり、次回の `--changed-only` で一度だけ選ばれます。
+
+`--dependency-changed` は成果物だけを対象に、`depends_on` 先の現在の内容が `source_hashes` の `dependency:<local_id>` と異なる文書を選びます。依存先の評価日時は判定に使わないため、依存先を再評価しただけでは選びません。`grade apply` は突き合わせ先の宣言に関係なく、成果物の依存先の hash を記録します。
+
 保存済みの判定結果では、`--verdict <pass|needs-work|fail>` で最新 verdict、`--min-score <score>` で総合 score が指定値以上、`--max-findings <count>` で全 severity の finding 合計が指定件数以下の文書に絞れます。score は 0 から 100 の整数で指定します。`--ungraded` は grade result サイドカーが存在しない文書だけ、`--incomplete` は同じ本文に対する設定済み段数の評価が未完了で連続失敗上限に達していない文書だけを選びます。`--unreviewed` は schedule タスクが割り当てられていない文書のうち、未評価または grade result サイドカーの `content_hash` が現在の内容と一致しない文書だけを選びます。複数の選択条件は AND で適用され、`--path` や `--changed-only` とも併用できます。保存済み grade を前提とする `--verdict`、`--min-score`、`--max-findings` のいずれかと `--ungraded` の併用は入力エラーです。`grade list` はこの選択規則を plan の生成や文書更新なしで利用するための機械可読な入口で、標準出力にはリポジトリ相対パスだけを辞書順で出力します。定期再評価の呼び出し側は変更済み、未評価、段未完了を別々に列挙して和集合を取ります。
 
 段の到達状況は `<execution_path>/grade/pipeline/` の文書別 JSON に保存します。`stage_completed`、`stage_failed`、`stage_total`、`consecutive_failures`、`max_failures` から再開段と上限到達を判定し、`content_hash` が現在本文と異なる古い state は再開に使いません。`grade state --target <target> --project <id> --path <document>` は現在本文に有効な state を JSON で返し、`--exhausted` は上限到達文書のパスを返します。state の更新は文書単位の実行 script が担い、pipeline 完了時にファイルを削除します。
