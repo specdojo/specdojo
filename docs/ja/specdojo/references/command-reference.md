@@ -38,14 +38,19 @@ project の解決順序と設定は [遂行の技活用ガイド](../guides/waza
 
 ## 2. config / project
 
-| コマンド          | 用途                                       | 例                                          |
-| ----------------- | ------------------------------------------ | ------------------------------------------- |
-| `config init`     | `specdojo.config.json` を作成する          | `specdojo config init`                      |
-| `config scaffold` | provider の agent・settings 設定を配置する | `specdojo config scaffold --provider codex` |
-| `project list`    | 登録済み project を表示する                | `specdojo project list`                     |
+| コマンド          | 用途                                              | 例                                          |
+| ----------------- | ------------------------------------------------- | ------------------------------------------- |
+| `config init`     | `specdojo.config.json` と `.gitignore` を用意する | `specdojo config init`                      |
+| `config scaffold` | provider の agent・settings 設定を配置する        | `specdojo config scaffold --provider codex` |
+| `project list`    | 登録済み project を表示する                       | `specdojo project list`                     |
 
 `config init` は、register 単体で始められる `prj-0001` の最小設定を作成し、設定確認、任意の
-provider 設定、登録簿作成の順に次のコマンドを案内します。`config scaffold` の `--provider` には
+provider 設定、登録簿作成の順に次のコマンドを案内します。あわせて、生成物（`generated/` 配下、
+`.specdojo/doc-index.json`、exec の実行ロック）を除外する行を `.gitignore` へ追記します。既存の行は
+変更せず、足りない行だけを追記するため、何度実行しても結果は変わりません。設定ファイルが既にある
+場合も `.gitignore` の確認だけは行います。追記した行と飛ばした行を表示し、追記があった場合は管理済みの
+生成物を `git rm -r --cached` で外す手順を案内します。`config init --dry-run` は設定と `.gitignore` を
+書き込まず、予定の内容だけを表示します。`config scaffold` の `--provider` には
 `claude`、`codex`、`copilot`、`opencode` を指定でき、`--dry-run` と `--force` も利用できます。
 
 `current_project` を設定しておくと、多くのコマンドで `--project` を省略できます。

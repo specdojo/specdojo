@@ -161,3 +161,29 @@
       from: "integrate failed: Current worktree changes overlap merge paths: docs/ja/projects/prj-0001/controls/project-register/events/pjr-qjad.yaml, docs/ja/projects/prj-0001/controls/project-register/pjr-qjad-g…"
       to: rate limit reached
   previous_event_id: reg_cf754de1fe754dc1a8cd40610290cec8
+- v: 1
+  id: reg_168316218aef401dad9784004ae790f3
+  ts: "2026-09-27T04:10:20Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_49f0da3b811c4cbeb736f4fee164c1c4
+- v: 1
+  id: reg_b8c193c66244460aa270e300366d72dc
+  ts: "2026-09-27T04:20:13Z"
+  action: review
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_168316218aef401dad9784004ae790f3

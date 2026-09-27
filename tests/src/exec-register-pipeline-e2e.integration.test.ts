@@ -17,6 +17,7 @@ import { Command } from "commander";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { registerExecCommands } from "../../src/exec.js";
 import { registerRegisterCommands } from "../../src/register.js";
+import { registerConfigCommands } from "../../src/specdojo-config.js";
 import { gitEnvironment } from "../../src/exec-worktree.js";
 
 // PJR-TNDH: `exec run --register` を executor/reporter パイプラインで実行する E2E 検証。
@@ -56,6 +57,13 @@ async function runRegister(args: string[]): Promise<void> {
   program.exitOverride();
   registerRegisterCommands(program);
   await program.parseAsync(["register", ...args], { from: "user" });
+}
+
+async function runConfig(args: string[]): Promise<void> {
+  const program = new Command();
+  program.exitOverride();
+  registerConfigCommands(program);
+  await program.parseAsync(["config", ...args], { from: "user" });
 }
 
 function git(cwd: string, ...args: string[]): string {
@@ -539,15 +547,19 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
           buildTicket("PJR-CD34"),
           "utf8",
         );
-        // 並行に走る 2 項目がどちらも登録簿の生成物を作り直すため、生成物を git で管理
-        // していると統合で add/add の衝突になる。このリポジトリと同じく generated/ を
-        // 管理外にする。利用者のリポジトリでこの設定が作られない問題は別途扱う。
-        writeFileSync(join(root, ".gitignore"), "docs/**/generated/*\n", "utf8");
-        git(root, "rm", "-r", "--cached", "--quiet", "--ignore-unmatch", "docs");
-        git(root, "add", "-A");
-        git(root, "commit", "-m", "add second register item");
         vi.spyOn(process.stdout, "write").mockImplementation(() => true);
         vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+        // 並行に走る 2 項目がどちらも登録簿の生成物を作り直すため、生成物を git で管理
+        // していると統合で add/add の衝突になる。利用者と同じく config init で .gitignore
+        // を用意し、案内どおり管理済みの生成物を git の管理から外す。
+        await runConfig(["init"]);
+        const trackedIgnored = git(root, "ls-files", "-ci", "--exclude-standard")
+          .split("\n")
+          .filter((line) => line.length > 0);
+        expect(trackedIgnored.length).toBeGreaterThan(0);
+        git(root, "rm", "-r", "--cached", "--quiet", ...trackedIgnored);
+        git(root, "add", "-A");
+        git(root, "commit", "-m", "add second register item");
 
         await runExec([
           "run",
