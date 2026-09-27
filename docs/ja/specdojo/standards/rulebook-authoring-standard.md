@@ -141,3 +141,10 @@ specdojo:
   Frontmatter と scaffold 専用の `_PLACEHOLDER_` 値は網羅判定に使用しない。
 - 対応 schema がない rulebook、`draft` / `deprecated` の rulebook、Markdown を対象とする
   rulebook は enum 網羅検査の対象外とする。
+- rulebook を追加・改名したら、`docs/ja/specdojo/defaults/pm-review-viewpoints.yaml` で
+  `document_kinds` の `include` / `exclude` を列挙している観点ごとに、新しい rulebook の扱いを判断する。
+  観点を当てはめない場合は `exclude`（`include` の観点では当てはめる場合に `include`）へ、
+  既定の結果のままにする場合は `confirmed_default` へ rulebook ID を追加する。
+- 判断の漏れは `src/viewpoint-document-kinds-check.ts` の検証が観点 ID と rulebook ID の組で
+  error として報告する。検証は `npm test`（`npm run check` に含まれる）で実行され、
+  `npx tsx src/viewpoint-document-kinds-check.ts` で単独でも確認できる。

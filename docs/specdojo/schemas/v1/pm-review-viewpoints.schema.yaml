@@ -313,8 +313,23 @@ $defs:
       unclassified:
         enum: [include, exclude]
         description: "How to handle rulebook none or missing rulebook; omitted defaults to include."
+      confirmed_default:
+        type: array
+        minItems: 1
+        uniqueItems: true
+        description: >
+          Rulebook IDs reviewed and left at the unlisted outcome (applied when exclude is used,
+          not applied when include is used). This records the decision for the coverage check
+          and does not change applicability. A rulebook must not also appear in include or exclude.
+        items:
+          $ref: "#/$defs/RulebookId"
     not:
       required: [include, exclude]
+    dependentSchemas:
+      confirmed_default:
+        anyOf:
+          - required: [include]
+          - required: [exclude]
 
   RulebookId:
     type: string

@@ -184,6 +184,31 @@ describe("viewpoint document-kind applicability", () => {
     ).toBe(true);
     expect(viewpointAppliesToDocument(viewpoint, { rulebook: "none" })).toBe(false);
   });
+
+  it("confirmed_default は判断の記録であり、適用判定を変えない", () => {
+    const recorded = {
+      ...viewpoint,
+      document_kinds: {
+        ...viewpoint.document_kinds,
+        confirmed_default: ["specdojo:bps-rulebook"],
+      },
+    };
+    const includeOnly = {
+      ...viewpoint,
+      document_kinds: {
+        include: ["specdojo:bps-rulebook"],
+        confirmed_default: ["specdojo:dct-rulebook"],
+      },
+    };
+
+    expect(viewpointAppliesToDocument(recorded, { rulebook: "specdojo:bps-rulebook" })).toBe(true);
+    expect(viewpointAppliesToDocument(recorded, { rulebook: "specdojo:dct-index-rulebook" })).toBe(
+      false,
+    );
+    expect(viewpointAppliesToDocument(includeOnly, { rulebook: "specdojo:dct-rulebook" })).toBe(
+      false,
+    );
+  });
 });
 
 describe("scaffoldViewpoints", () => {
