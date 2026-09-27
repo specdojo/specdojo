@@ -85,6 +85,14 @@ grade 対象 303 件のうち 260 件は kata である。`vp-arc-cross-document
 
 着手順序は [[prj-0001:pjr-ebtz-vp-arc-cross-document-consistency-target-kata-conformance]] を先とする。対象範囲が縮んでから本項目の方針を確定する。
 
+### 4.1. 方針の決定（2026-09-27）
+
+利用者の承認により、案 1 を採る。観点ごとに突き合わせ先を宣言し、その `content_hash` も再評価の要否の判定に含める。前提としていた PJR-EBTZ は完了している。
+
+あわせて、PJR-N03W で追加した `--dependency-changed` を、依存先の評価日時（`graded_at`）ではなく依存先の `content_hash` の変化で判定するように改める。同じ仕組みで解決できるためである（PJR-N03W と PJR-2F3Y の個票に記録した問題）。
+
+着手は PJR-WPWB の後とする。どちらも `src/grade.ts` と `pm-review-viewpoints.yaml` を変更するためである。
+
 ## 5. 作業内容
 
 | No  | 作業                                  | 担当 | 状態 | メモ                       |

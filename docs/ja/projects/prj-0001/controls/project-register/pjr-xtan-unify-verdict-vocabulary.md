@@ -57,6 +57,12 @@ level 4 → pass、level 3 → conditional_pass、level 0-2 → changes_requeste
 
 **B を推す。** 同じ対象の二重表現だけが本当の問題であり、B はそれだけを解消する。grade の結果 260 件の移行も要らなくなる。
 
+### 3.1. 方針の決定（2026-09-27）
+
+利用者の承認により、案 B を採る。review 側でタスクの完了可否を表す 2 つの語彙（`verdict_definitions` と `xrr-template.md` の `decision.recommendation`）だけを統一し、grade の語彙と、grade の level から review の verdict への写像は残す。grade の結果は移行しない。
+
+着手は PJR-N22N の後とする。N22N で `xrr-*` を改訂し、`*-viewpoint-detail-*` の要否も決まるためである。PJR-WPWB と同じ版にまとめる必要はない。
+
 ## 4. 完了条件
 
 - 案 A・B・C のどれを採るか決まり、理由が記録されている。
