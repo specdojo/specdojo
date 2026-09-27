@@ -103,3 +103,16 @@
       from: waiting
       to: in-progress
   previous_event_id: reg_cbffc7e50add466bab77b8f6782208f6
+- v: 1
+  id: reg_200c1203cf6540b2a1bae468d58a5dd3
+  ts: "2026-09-27T02:54:29Z"
+  action: review
+  actor: gemma-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_a3d3d97633ec4a99a4f9156a17f37d55
