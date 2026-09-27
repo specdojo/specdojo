@@ -4895,11 +4895,8 @@ function registerWaitSummary(params: {
       syncExecBranchAfterWait({
         repoRoot,
         worktree,
-        registerPaths,
         item,
-        ticketPath,
         bookkeepingPaths: committedPaths,
-        message,
       });
   }
   return {
@@ -4955,51 +4952,75 @@ function isRegisterResultPath(repoRoot: string, path: string): boolean {
   return /\/exec\/results\/[^/]+-result\.md$/.test(repoRelativePath(repoRoot, path));
 }
 
-// wait commit を exec branch の祖先にしたあと、その記帳内容を exec branch にも commit する。
-// checkpoint と wait commit は共通祖先に存在しないイベントファイルを双方で追加するため、通常の
-// merge では内容を事前に揃えても add/add 競合になる。ここでは root の tree を取り込む必要はなく、
-// wait commit を merge-base に進めることだけが目的なので ours strategy を使う。その後に root の
-// 記帳内容を複製すれば、再開後の start / review は waiting からの通常差分として統合できる。
-// ancestry-only merge は runner 内部の同期であり、失敗原因となった統合 hook を再実行しないよう
-// --no-verify を指定する。同期に失敗した場合は abort して警告し、worktree を保持する。
+// wait commit と、その時点までに統合先へ入った変更を exec branch へ通常 merge する。
+// worktree の記帳パスには、root へ複製した blocked result などが未 commit のまま残っている。
+// そのままでは root の wait commit に上書きされるとして merge 開始前に拒否されるため、root に
+// commit 済みの記帳パスだけを先に exec branch の HEAD へ戻す。checkpoint と wait commit は
+// 共通祖先に存在しないイベントファイルなどを双方で追加するため、記帳パスの競合だけは root 側の
+// 内容で解決する。それ以外の競合は自動解決せず、merge を abort する。
+// merge commit は runner 内部の同期であり、失敗原因となった統合 hook を再実行しないよう
+// --no-verify を指定する。同期に失敗した場合は root の記帳内容を worktree へ戻して保持する。
 function syncExecBranchAfterWait(params: {
   repoRoot: string;
   worktree: ExecWorktree;
-  registerPaths: RegisterPaths;
   item: PjrItem;
-  ticketPath: string | null;
   bookkeepingPaths: readonly string[];
-  message: string;
 }): void {
   const { repoRoot, worktree, item } = params;
-  const worktreePaths = params.bookkeepingPaths.map((path) =>
-    pathInsideWorktree(repoRoot, worktree.path, path),
-  );
+  const bookkeepingPaths = params.bookkeepingPaths.map((path) => repoRelativePath(repoRoot, path));
   try {
     const targetBranch = currentBranch(repoRoot);
-    gitOutput(worktree.path, [
+    // The same content is already durable in the root wait commit. Releasing these working copies
+    // is what lets a normal merge start; all other dirty paths remain untouched.
+    releaseRootWorkingCopies(worktree.path, bookkeepingPaths);
+    const mergeMessage = `exec(register ${item.id}): merge ${targetBranch} after wait`;
+    const mergeResult = gitResult(worktree.path, [
       "merge",
-      "--no-edit",
+      "--no-commit",
+      "--no-ff",
       "--no-verify",
-      "-s",
-      "ours",
       "-m",
-      `exec(register ${item.id}): record ${targetBranch} wait ancestry`,
+      mergeMessage,
       targetBranch,
     ]);
+    if (mergeResult.status !== 0) {
+      const mergeHead = gitResult(worktree.path, [
+        "rev-parse",
+        "--verify",
+        "--quiet",
+        "MERGE_HEAD",
+      ]);
+      if (mergeHead.status !== 0) {
+        const stderr = typeof mergeResult.stderr === "string" ? mergeResult.stderr.trim() : "";
+        throw new Error(
+          `git merge failed before conflict resolution${stderr ? `: ${stderr}` : ""}`,
+        );
+      }
+      const conflicted = gitOutput(worktree.path, ["diff", "--name-only", "--diff-filter=U", "-z"])
+        .split("\0")
+        .filter((path) => path.length > 0);
+      const allowed = new Set(bookkeepingPaths);
+      const unexpected = conflicted.filter((path) => !allowed.has(path));
+      if (unexpected.length > 0) {
+        throw new Error(
+          `wait sync conflicts outside register bookkeeping: ${unexpected.join(", ")}`,
+        );
+      }
+    }
+
     copyRepoPaths(repoRoot, worktree.path, repoRoot, params.bookkeepingPaths);
-    commitRegisterState(
-      worktree.path,
-      registerPathsInsideWorktree(repoRoot, worktree.path, params.registerPaths),
-      params.message,
-      params.ticketPath ? pathInsideWorktree(repoRoot, worktree.path, params.ticketPath) : null,
-      worktreePaths,
-    );
+    stageCommitTargets(worktree.path, bookkeepingPaths);
+    const unresolved = gitOutput(worktree.path, ["diff", "--name-only", "--diff-filter=U"]).trim();
+    if (unresolved) throw new Error(`wait sync has unresolved conflicts: ${unresolved}`);
+    gitOutput(worktree.path, ["commit", "--no-verify", "-m", mergeMessage]);
   } catch (error) {
     gitResult(worktree.path, ["merge", "--abort"]);
+    // The pre-merge release is safe to repeat from root and restores the visible waiting state even
+    // when the merge was rejected before MERGE_HEAD was created.
+    copyRepoPaths(repoRoot, worktree.path, repoRoot, params.bookkeepingPaths);
     process.stderr.write(
       `warning: could not sync the exec branch of ${item.id} with the wait commit; ` +
-        `the resumed merge may conflict on register bookkeeping: ` +
+        `the resumed merge may still conflict: ` +
         `${error instanceof Error ? error.message : String(error)}\n`,
     );
   }

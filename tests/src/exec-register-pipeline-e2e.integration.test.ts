@@ -80,6 +80,7 @@ const ORIGINAL_PACKAGE = `${JSON.stringify(
   2,
 )}\n`;
 const PARTIAL_ARTIFACT = "partial-first-attempt.md";
+const CONCURRENT_ARTIFACT = "concurrent-artifact.md";
 
 const CONFIG = {
   version: 1,
@@ -172,6 +173,27 @@ const role = nickname.startsWith("exec-") ? "executor" : "reporter";
 const prompt = readFileSync(0, "utf8");
 
 if (role === "executor") {
+  if (nickname === "exec-advance-root") {
+    const root = execFileSync("git", ["worktree", "list", "--porcelain"], {
+      encoding: "utf8",
+    })
+      .split("\\n")
+      .find((line) => line.startsWith("worktree "))
+      ?.slice("worktree ".length);
+    if (!root) throw new Error("root worktree was not found");
+    writeFileSync(root + "/${CONCURRENT_ARTIFACT}", "# concurrent artifact\\n", "utf8");
+    execFileSync("git", ["-C", root, "add", "--", "${CONCURRENT_ARTIFACT}"]);
+    execFileSync("git", [
+      "-C",
+      root,
+      "commit",
+      "--no-verify",
+      "-m",
+      "concurrent artifact",
+      "--",
+      "${CONCURRENT_ARTIFACT}",
+    ]);
+  }
   if (nickname === "exec-rate-limit" && !existsSync(${JSON.stringify(PARTIAL_ARTIFACT)})) {
     writeFileSync(${JSON.stringify(PARTIAL_ARTIFACT)}, "# partial first attempt\\n", "utf8");
     process.stderr.write("rate limit reached\\n");
@@ -297,6 +319,17 @@ function withRepo(fn: (fixture: Fixture) => Promise<void> | void): Promise<void>
           "    roles: []",
           "    type: agent",
           "    provider: codex",
+          "    mode: edit",
+          "    stage_role: executor",
+          "    capabilities: []",
+          "    proficiency: normal",
+          "    priority: 1",
+          "  - nickname: exec-advance-root",
+          "    display_name: exec-advance-root",
+          "    email: null",
+          "    roles: []",
+          "    type: agent",
+          "    provider: opencode",
           "    mode: edit",
           "    stage_role: executor",
           "    capabilities: []",
@@ -695,7 +728,7 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
   );
 
   it(
-    "aborts a hook-rejected merge, records a clean wait reason, and resumes integration",
+    "resumes a hook-rejected merge without reverting changes added after branch creation",
     { timeout: 120_000 },
     async () => {
       await withRepo(async ({ root, worktreeBase }) => {
@@ -741,7 +774,7 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
           "--register",
           "PJR-AB12",
           "--executor-by",
-          "exec-1",
+          "exec-advance-root",
           "--reporter-by",
           "report-1",
           "--worktree",
@@ -752,7 +785,10 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
         expect(process.exitCode).toBe(1);
         expect(() => git(root, "rev-parse", "--verify", "MERGE_HEAD")).toThrow();
         expect(Number(git(root, "rev-list", "--first-parent", "--count", "HEAD"))).toBe(
-          firstParentBefore + 1,
+          firstParentBefore + 2,
+        );
+        expect(readFileSync(join(root, CONCURRENT_ARTIFACT), "utf8")).toBe(
+          "# concurrent artifact\n",
         );
         const worktreePath = execWorktreePath(root);
         expect(worktreePath).not.toBeNull();
@@ -795,7 +831,13 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
         expect(process.exitCode ?? 0).toBe(0);
         expect(execWorktreePath(root)).toBeNull();
         expect(Number(git(root, "rev-list", "--first-parent", "--count", "HEAD"))).toBe(
-          firstParentBefore + 2,
+          firstParentBefore + 3,
+        );
+        expect(readFileSync(join(root, CONCURRENT_ARTIFACT), "utf8")).toBe(
+          "# concurrent artifact\n",
+        );
+        expect(git(root, "diff", "--name-only", "HEAD^1", "HEAD")).not.toContain(
+          CONCURRENT_ARTIFACT,
         );
         expect(
           readFileSync(join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md"), "utf8"),
