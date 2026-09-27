@@ -11,7 +11,7 @@ specdojo:
   priority: high
   owner: DEV
   registered_at: "2026-09-27T05:23:34Z"
-  block_reason: "agent exited with non-zero code: Runner validation `test-integration` failed (exit 1). The deliverable is unverifiable as the integration tests did not pass."
+  block_reason: "agent exited with non-zero code: 親 runner の検証 `test-integration`（`id: test-integration`, `command: npm run test:integration`）が `status: failed`（exit 1）で記録されている。executor 自身の検証（`prettier` / `markdownlin…"
 ---
 
 # PJR-FFPK agent の一時ファイルが register 実行の commit に入り統合前の検査も誤って止める
@@ -56,20 +56,28 @@ agy-expert-executor による 2 回目の実行（`src/exec-worktree-ops.ts`、�
 
 ## 3. 作業内容
 
-| No  | 作業                                                           | 担当 | 状態 | メモ                                     |
-| --- | -------------------------------------------------------------- | ---- | ---- | ---------------------------------------- |
-| 1   | register 由来タスクの commit 範囲を絞る方式を決めて実装する    | DEV  | done | 既知のディレクトリ外の新規ファイルを除外 |
-| 2   | `assertNoAgentReadyPromotion` の対象を commit 対象のパスに限る | DEV  | done | `partitionCommitTargets` 修正により解決  |
-| 3   | exec plan 共通規約へ、一時ファイルの置き場所と削除を追記する   | DEV  | done | provider を問わず plan 本文経由で伝わる  |
-| 4   | テストを追加する                                               | DEV  | done | 統合テストへ追加                         |
+| No  | 作業                                                           | 担当 | 状態 | メモ                                                          |
+| --- | -------------------------------------------------------------- | ---- | ---- | ------------------------------------------------------------- |
+| 1   | register 由来タスクの commit 範囲を絞る方式を決めて実装する    | DEV  | done | 既知のディレクトリ外の新規ファイルを除外（targets は許可）    |
+| 2   | `assertNoAgentReadyPromotion` の対象を commit 対象のパスに限る | DEV  | done | commit 対象を絞った後のパスだけを検査する                     |
+| 3   | exec plan 共通規約へ、一時ファイルの置き場所と削除を追記する   | DEV  | done | provider を問わず plan 本文経由で伝わる                       |
+| 4   | テストを追加する                                               | DEV  | done | 統合テスト 3 件を追加し、再開経路の fixture を `docs/` へ移す |
 
 ## 4. 対応結果
 
-- `src/exec-worktree-ops.ts` の `partitionCommitTargets` を修正し、register 由来のタスク（`scope` が `null`）の場合、`git ls-tree` で `HEAD` に存在しない新規追加ファイルのうち、既知の成果物ディレクトリ（`docs/`、`src/`、`tests/`、`tools/grade/`、`packages/docs-site/.vitepress/` など）外のものを `outOfScope` として commit 対象から除外するよう実装しました。
-- この方式を選んだ理由は、register 由来のタスクでは `targets` が宣言されないケースもあり、`targets` への依存を強いると従来動いていた正当な commit が弾かれる恐れがあったためです。「許可リストが導けない場合でも、新規の未追跡ファイルは既知の成果物ディレクトリに限る」というフォールバックとして実装することで、agent の一時スクリプト等だけを安全に除外できます。
-- 課題であった `assertNoAgentReadyPromotion` については、呼び出し元である `commitWorktreeChanges` の時点で `partitionCommitTargets` から返された `targets` を引数に渡しているため、上記修正によって `test-schema.yaml` などの一時ファイルが `targets` に含まれなくなり、自動的に解消されました。
-- `docs/ja/specdojo/exec-templates/xep-common-conventions-template.md` に「作業用のファイルはリポジトリの外（一時ディレクトリ）に置き、終了前に削除する」という規約を追記しました。
-- `tests/src/exec-worktree-ops.integration.test.ts` に、register 由来タスクでの未追跡ファイル除外の振る舞いを検証するテストケースを追加しました。
+- `src/exec-worktree-ops.ts` の `partitionCommitTargets` で、`origin: register` のタスク（人間の作業を除く）は、HEAD に存在しない新規ファイルを次のいずれかに置かれたものに限って commit する。それ以外は `outOfScope` として worktree に残す。
+  - 既知の成果物ディレクトリ（`docs/`、`src/`、`tests/`、`tools/`、`scripts/`、`packages/`）。
+  - HEAD で追跡済みの最上位ディレクトリ（利用プロジェクト固有の構成に追従するため）。
+  - 対象 task の result と evidence 配下、plan の `targets` から doc-index で解決した成果物。
+- 方式の選定理由: register 由来のタスクは `targets` を宣言しないことが多く、許可リストだけに頼ると正当な成果物の変更が commit されなくなる。既存ファイルの変更と削除は従来どおり commit し、新規ファイルだけを既知のディレクトリへ限れば、観測した一時ファイル（リポジトリ直下の `modify.py`、`patch.js`、`test-schema.yaml` など）を除外できる。`targets` が解決できる場合は、そのパスも許可する。
+- commit しなかった変更は、従来の `commit-scope:` 警告を標準出力へ出すのに加え、`commitWorktreeChanges` の `scopeLogPath` で run の evidence ディレクトリの `integrate.log` へ追記し、同じ commit に含める（`src/exec-run.ts` の schedule と register の両経路で指定）。
+- `assertNoAgentReadyPromotion` は、絞った後の commit 対象だけを受け取る。一時ファイルが `status: ready` を含んでも統合は止まらず、commit 対象の成果物を ready へ上げた場合は従来どおり止まる。
+- `docs/ja/specdojo/exec-templates/xep-common-conventions-template.md` に、作業用のファイルはリポジトリの外（一時ディレクトリ）に置き、終了前に削除するという規約を追記した。`docs/ja/specdojo/guides/exec-worktree-guide.md` にも、register 由来のタスクの commit 範囲を追記した。
+- 2 回目の実行で失敗した統合テスト 2 件の原因: `tests/src/exec-register-resume.integration.test.ts` の fake executor が、成果物をリポジトリ直下（`pipeline-artifact.md`）へ書いていた。新しい規則ではこれが一時ファイルと同じ扱いで除外される。result・evidence・成果物を除外する不具合ではないため、fixture の成果物を `docs/pipeline-artifact.md` へ移した。同じ理由で、`tests/src/exec-register-pipeline-e2e.integration.test.ts` の申し送り適用マーカーも `docs/protection-applied` へ移した。
+- `tests/src/exec-worktree-ops.integration.test.ts` に次の 3 件を追加した。
+  - 一時ファイルが commit されず、`integrate.log` に記録され、merge が止まらないこと。
+  - 追跡済みのルートファイルの変更と、`targets` から解決した成果物は commit されること。
+  - commit 対象の成果物の ready 昇格は、従来どおり止まること。
 
 ## 5. 関連ドキュメント
 
