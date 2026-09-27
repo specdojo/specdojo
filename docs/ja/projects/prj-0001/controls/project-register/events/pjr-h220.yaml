@@ -32,3 +32,22 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_e639fbdcba964985a2fdcdbf87fa5c16
+  ts: "2026-09-27T11:30:58Z"
+  action: close
+  actor: PO
+  from_status: open
+  to_status: decided
+  reason: orchestrator が除外リストの構成を分析して B を推奨し、利用者が承認した
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-09-27"
+    - field: conclusion
+      from: "-"
+      to: 選択肢 B を採択。document_kinds は rulebook ID の列挙を維持し、観点ごとに判断漏れの rulebook を一覧化する検証を追加する。実装は PJR-VJP8
+  previous_event_id: reg_9b1f9f258ba046b8aa264196ee59e014
