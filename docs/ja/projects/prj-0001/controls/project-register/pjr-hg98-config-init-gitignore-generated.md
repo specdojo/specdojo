@@ -11,7 +11,7 @@ specdojo:
   priority: high
   owner: DEV
   registered_at: "2026-09-26T23:06:44Z"
-  block_reason: "agent exited with non-zero code: 親 runner による検証項目 `test-integration` が失敗しているため。"
+  block_reason: "integrate failed: Current worktree changes overlap merge paths: docs/ja/projects/prj-0001/controls/project-register/events/pjr-qjad.yaml, docs/ja/projects/prj-0001/controls/project-register/pjr-qjad-g…"
 ---
 
 # PJR-HG98 config init で生成物を除外する .gitignore を作り register の並行実行の衝突を防ぐ
