@@ -45,6 +45,15 @@ schedule 由来の edit タスクは、plan の `targets` から許可リスト�
 - 上記の commit 範囲と ready 昇格の検査を確かめる単体テスト、または統合テストがある。
 - `npm run test:unit` と `npm run test:integration` が成功する。
 
+### 2.1. 2 回目の実行で失敗した統合テスト（2026-09-27 追記）
+
+agy-expert-executor による 2 回目の実行（`src/exec-worktree-ops.ts`、共通規約テンプレート、統合テスト 2 件を変更）は、runner の `test-integration` で失敗した。orchestrator が worktree で統合テストを実行すると、115 件中次の 2 件が失敗した（いずれも `expected false to be true`）。1 件ずつの実行なので、負荷によるものではない。
+
+- `resumes only the reporter stage and completes the item without re-running the executor`
+- `restarts a stale running executor in the existing worktree and completes the pipeline`
+
+どちらも既存の再開経路のテストである。commit 範囲を絞る変更が、reporter の段からの再開や executor の再起動で commit すべき変更（result・evidence・成果物）を除外していないか確認し、上記 2 件を含む `npm run test:integration` が成功することを完了条件に加える。
+
 ## 3. 作業内容
 
 | No  | 作業                                                           | 担当 | 状態 | メモ                                     |
