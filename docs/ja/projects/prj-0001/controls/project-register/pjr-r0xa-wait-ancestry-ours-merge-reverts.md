@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: waiting
+  item_status: review
   priority: high
   owner: DEV
   registered_at: "2026-09-27T03:07:17Z"
@@ -69,7 +69,7 @@ codex-expert-executor による 1 回目の実行は、runner の `test-integrat
 
 ## 4. 対応結果
 
-- `syncExecBranchAfterWait` の `-s ours` を廃止し、`wait` commit と、その時点までに統合先へ入った変更を exec branch へ通常 merge するよう変更した。個票・イベント・plan・result の競合だけは統合先側の内容で解決し、対象外パスの競合は同期を中断して worktree を保持する。
+- `syncExecBranchAfterWait` の `-s ours` を廃止し、`wait` commit と、その時点までに統合先へ入った変更を exec branch へ通常 merge するよう変更した。root の `wait` commit に保存済みの記帳ファイルは worktree の未 commit 変更を解放してから merge し、個票・イベント・plan・result の競合だけを統合先側の内容で解決する。対象外パスの競合は同期を中断して worktree を保持する。
 - exec branch の作成後に統合先へ別成果を commit し、最初の統合を hook で失敗させて `waiting` にしたあと、`--resume` する統合テストを追加した。再開後も別成果が残り、対象項目の統合 commit の差分にそのパスが含まれないことを確認する。
 - [[specdojo:exec-worktree-guide]] に、`waiting` 遷移後の同期 merge と競合時の扱いを追記した。
 

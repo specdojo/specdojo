@@ -1,0 +1,13 @@
+`waiting` 後の同期処理を修正しました。
+
+- `-s ours` を廃止し、統合先を通常 merge。
+- 記帳ファイルの未コミット差分を安全に解放してから merge。
+- 記帳パスのみ統合先側で競合解決し、その他の競合は中断。
+- 統合先で追加された成果が再開時に消えない回帰テストを追加。
+- ガイドと個票を更新。
+
+Markdown・register build・catalog validate・index build は成功しました。型検査、unit、integration、schema 検証は指示どおり親 runner に委ねています。result ファイルも reporter 管轄のため編集していません。
+
+<specdojo_executor_evidence>
+{"final_message":"waiting 後の同期を通常 merge に変更し、記帳ファイルの未コミット差分を解放してから限定的に競合解決する修正と回帰テストを追加した。","validations":[{"command":"npx prettier --write src/exec-run.ts tests/src/exec-register-pipeline-e2e.integration.test.ts docs/ja/specdojo/guides/exec-worktree-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-r0xa-wait-ancestry-ours-merge-reverts.md","status":"passed","summary":"対象4ファイルを整形した。"},{"command":"npx markdownlint docs/ja/specdojo/guides/exec-worktree-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-r0xa-wait-ancestry-ours-merge-reverts.md","status":"passed","summary":"Markdown違反なし。"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿派生ビューを生成した。tsx CLIはsandboxのIPC制限を受けるため同等のNode起動を使用。"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"検証成功。既存の参照先文書不足に関する警告のみ。"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"2092件の索引を生成した。"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし。"},{"command":"npm run typecheck; npm run test:unit; npm run test:integration; npm run validate:schema","status":"not_run","summary":"親runnerのallowlist検証に委譲。"}]}
+</specdojo_executor_evidence>

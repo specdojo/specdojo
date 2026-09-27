@@ -61,3 +61,29 @@
       from: "-"
       to: "agent exited with non-zero code: runner validation `test-integration` (`npm run test:integration`) が failed となったため。"
   previous_event_id: reg_457f3b2a52cd4b4bb95bf01d113bc7d1
+- v: 1
+  id: reg_f99acbe792a444a4b7965ed700fd5137
+  ts: "2026-09-27T07:12:50Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_fddef991c6184b888f4a8eefcce54c40
+- v: 1
+  id: reg_2093da750d1d489eb148ddeb9a2a25fd
+  ts: "2026-09-27T07:32:39Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_f99acbe792a444a4b7965ed700fd5137
