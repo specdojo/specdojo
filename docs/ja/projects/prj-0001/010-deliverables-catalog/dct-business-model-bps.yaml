@@ -133,18 +133,18 @@ groups:
             path: bps-task-edit.md
             rulebook: specdojo:bps-rulebook
             done_criteria: *bps-done-criteria
-          - local_id: bps-task-review-finalize
+          - local_id: bps-task-verification
             name: 業務プロセス仕様（成果検証）
             kind: work
             depends_on: [bes-index, bps-task-edit]
             overview: 成果候補を実行計画の完了条件に照らして検証し、evidenceと統合可否をそろえるフロー（P-07-03）を定義する
-            path: bps-task-review-finalize.md
+            path: bps-task-verification.md
             rulebook: specdojo:bps-rulebook
             done_criteria: *bps-done-criteria
           - local_id: bps-task-judgment-integration
             name: 業務プロセス仕様（成果統合・実行結果記録）
             kind: work
-            depends_on: [bes-index, bps-task-review-finalize]
+            depends_on: [bes-index, bps-task-verification]
             overview: 検証済み変更を条件付きで統合し、成果・検証結果・実行状態を記録するフロー（P-07-04・05）を定義する
             path: bps-task-judgment-integration.md
             rulebook: specdojo:bps-rulebook
