@@ -1,3 +1,6 @@
+/** Where the criterion that decides correctness lives: machine rules, a referenced definition, or the judge. */
+export type ViewpointEvaluation = "deterministic" | "referential" | "discretionary";
+
 export type ReviewViewpoint = {
   id: string;
   role: string;
@@ -7,7 +10,7 @@ export type ReviewViewpoint = {
   evidence: string;
   coverage_types?: string[];
   default_severity: string;
-  evaluation?: "deterministic" | "agent" | "human";
+  evaluation?: ViewpointEvaluation;
   continuous?: boolean;
   grade_targets?: ("kata" | "deliverable")[];
   document_kinds?: {

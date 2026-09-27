@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: high
   owner: ARC
   registered_at: "2026-09-24T22:41:24Z"
@@ -306,7 +306,23 @@ A' を採る。`referential` と `discretionary` が規準の所在を正確に�
 
 利用者の承認により、本項目を develop で進める。観点の値が変わる破壊的変更だが、`package.json` の版（0.2.1）は本項目では変えない。0.3.0 への更新は、リリースのときに別途判断する。PJR-XTAN は案 B（grade の結果を移行しない）に決まったため、本項目と同じ版にまとめない。
 
-## 8. 関連ドキュメント
+## 8. 対応結果
+
+段 3（`evaluation` の改名と再分類、grade の実行経路の変更）を実施した。段 2 の [[prj-0001:pjr-dkx8-vp-arc-conciseness-vp-ux-user-flow-check]] は完了しており、`vp-arc-conciseness` と `vp-ux-user-flow` の `check` が判定規準を供給している。`進め方` の見込みどおり、2 観点は `28 観点の判定結果` の表の `discretionary` ではなく `referential` とした。旧 `agent` からの改名として扱い、再分類（`human` からの `referential` 化）は 7 件である。
+
+| 対象                                                        | 変更内容                                                                                                                                                               |
+| ----------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `docs/specdojo/schemas/v1/pm-review-viewpoints.schema.yaml` | `evaluation` の enum を `deterministic` / `referential` / `discretionary` へ変更し、規準の所在による定義と、grade の対象範囲を `continuous` だけで決めることを記述した |
+| `docs/ja/specdojo/defaults/pm-review-viewpoints.yaml`       | 28 観点の `evaluation` を新 3 値へ変更した（`deterministic` 2、`referential` 17、`discretionary` 9）。`continuous` は変更していない                                    |
+| `src/review-types.ts`                                       | `ViewpointEvaluation` 型を追加し、`ReviewViewpoint.evaluation` を新 3 値にした                                                                                         |
+| `src/review-plan.ts`                                        | `resolveViewpointsDoc()` が共通・プロジェクト・`extends` なしの全量ファイルの `evaluation` を検証し、旧値 `agent` / `human` は新しい値を示すエラーで失敗するようにした |
+| `src/grade.ts`                                              | `continuousViewpoints()` から `evaluation !== "human"` を外し、`agentViewpoints()` を `referential` / `discretionary` の両方を agent へ渡す形にした                    |
+| `docs/ja/specdojo/guides/review-guide.md`                   | 区分の基準、`check` の文型による判定方法、grade での実行経路を追記し、`evaluation: human` への言及を `continuous: false` に置き換えた                                  |
+| `tests/src/grade.test.ts`、`tests/src/review-plan.test.ts`  | fixture を新値へ追従し、旧値を拒否するテストを追加した                                                                                                                 |
+
+`deterministicResults()` は `evaluation === "deterministic"` の判定を維持しており、`deterministic` の値を変えていないため変更は不要だった。`task.execution` の `human` は変更していない。
+
+## 9. 関連ドキュメント
 
 - [[prj-0001:pjr-2zvs-grade-review-integration]]
 - [[prj-0001:pjr-xtan-unify-verdict-vocabulary]]

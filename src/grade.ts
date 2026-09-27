@@ -1312,7 +1312,6 @@ function continuousViewpoints(
   return (doc.viewpoints ?? []).filter(
     (viewpoint) =>
       viewpoint.continuous === true &&
-      viewpoint.evaluation !== "human" &&
       (viewpoint.grade_targets === undefined || viewpoint.grade_targets.includes(target)) &&
       viewpointAppliesToDocument(viewpoint, metadata),
   );
@@ -1324,7 +1323,8 @@ function agentViewpoints(
   metadata: Record<string, unknown>,
 ): ReviewViewpoint[] {
   return continuousViewpoints(doc, target, metadata).filter(
-    (viewpoint) => viewpoint.evaluation === "agent",
+    (viewpoint) =>
+      viewpoint.evaluation === "referential" || viewpoint.evaluation === "discretionary",
   );
 }
 
@@ -1382,7 +1382,7 @@ function doneCriteriaPlanLines(
   return [
     "### 3.4. 完了条件（done_criteria）",
     "",
-    "成果物カタログが対象へ宣言する完了条件である。viewpoint と rubric による level 判定とは別の軸として、各条件を現在の本文の根拠だけで `satisfied` / `unsatisfied` のどちらかに判定する。score や level の高低から充足を推論せず、条件文が要求する内容を本文で確認できるかだけで判定する。`roles` は条件の確認責任を持つ Role code、`viewpoint` は条件を見る観点であり、`evaluation: human` の観点に紐づく条件も本文の根拠で一次判定する。",
+    "成果物カタログが対象へ宣言する完了条件である。viewpoint と rubric による level 判定とは別の軸として、各条件を現在の本文の根拠だけで `satisfied` / `unsatisfied` のどちらかに判定する。score や level の高低から充足を推論せず、条件文が要求する内容を本文で確認できるかだけで判定する。`roles` は条件の確認責任を持つ Role code、`viewpoint` は条件を見る観点であり、`continuous: false` や `evaluation: discretionary` の観点に紐づく条件も本文の根拠で一次判定する。",
     "",
     ...doneCriteria.map((criterion) => {
       const title = titles.get(criterion.viewpoint);

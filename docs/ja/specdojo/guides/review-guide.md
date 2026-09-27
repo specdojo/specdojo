@@ -171,7 +171,17 @@ review result では、`レビュー観点別結果` セクションの各 `RVP-
 
 ### 2.1. grade と共有する評価属性・rubric
 
-viewpoint は review 専用ではなく、継続品質評価 `specdojo grade` と共有する正本です。各 viewpoint の `evaluation` は判定層（`deterministic` / `agent` / `human`）、`continuous` は grade 対象かを宣言します。`grade_targets` を省略した観点は kata と成果物の両方、指定した観点は列挙対象だけに適用します。`document_kinds` は rulebook ID 単位でさらに適用先を絞り、grade plan と review plan の両方が同じ宣言を使います。grade 専用の別観点 ID は作りません。
+viewpoint は review 専用ではなく、継続品質評価 `specdojo grade` と共有する正本です。各 viewpoint の `evaluation` は判定の規準がどこにあるか（`deterministic` / `referential` / `discretionary`）、`continuous` は grade 対象かを宣言します。grade の対象範囲は `continuous` だけで決まり、`evaluation` は判定の実行経路を選ぶためにだけ使います。`grade_targets` を省略した観点は kata と成果物の両方、指定した観点は列挙対象だけに適用します。`document_kinds` は rulebook ID 単位でさらに適用先を絞り、grade plan と review plan の両方が同じ宣言を使います。grade 専用の別観点 ID は作りません。
+
+`evaluation` は「判定に必要な根拠がどこにあるか」ではなく、「何が正しいかを決める規準がどこにあるか」で区分します。観点を追加するときは、`check` の文言に何と比べるかが書かれているかで判定します。
+
+| `evaluation`    | 規準の所在                                                                      | `check` の文型の例                                    | grade での実行経路                     |
+| --------------- | ------------------------------------------------------------------------------- | ----------------------------------------------------- | -------------------------------------- |
+| `deterministic` | 機械可読な規則（schema、lint）                                                  | schema と整合しているか、文書体系と整合しているか     | コードで判定する                       |
+| `referential`   | 他の文書、宣言された定義（`done_criteria` など）、または `check` 自身が書く規準 | …と矛盾していないか、`done_criteria` を満たしているか | agent へ渡す。突き合わせ先を指示する   |
+| `discretionary` | 判定者が持ち込む。文書に規準がない                                              | 必要な範囲で明示されているか、使える粒度か、分かるか  | agent へ渡す。判定の安定性は保証しない |
+
+「必要十分」「適切な粒度」のような十分性の語を含む観点でも、`check` が判定規準を書き込んでいれば `referential` です。`discretionary` の観点は、`check` に規準を書き込むことで `referential` へ移せます。`evaluation` は実行主体を表しません。review ではすべての区分の観点を agent が判定します。旧値 `agent` / `human` は削除済みで、読み込むと新しい値を示すエラーで失敗します。
 
 文書の種類は Frontmatter の `specdojo.rulebook` を正本とします。rulebook 文書は自身の `specdojo.id`、template 文書は `frontmatter_template.specdojo.rulebook` から種類を解決するため、同じ実践の型に属する rulebook / recipe / sample / template / 成果物は同じ rulebook ID で判定されます。`rulebook: none`、未設定、`undecided`、`not-needed` は未分類です。未分類文書は既定で観点を適用し、`document_kinds.unclassified: exclude` を明示した観点だけ除外します。
 
@@ -181,7 +191,7 @@ viewpoint は review 専用ではなく、継続品質評価 `specdojo grade` �
 
 `grade_rubric` の level 0-4 は category を跨いで共有し、viewpoint score を `level × 25` とします。review との対応は level 4 が `pass`、level 3 が `conditional_pass`、level 0-2 が `changes_requested` です。`blocked` は前提不足で判定できない状態なので level へ写像しません。
 
-grade は継続監視の最新スナップショット、review result は完成時の合意形成履歴です。Kata の grade は schedule strategy の approach 導出に使われますが、目的・業務価値など `evaluation: human` の観点や最終承認を代替しません。
+grade は継続監視の最新スナップショット、review result は完成時の合意形成履歴です。Kata の grade は schedule strategy の approach 導出に使われますが、目的・業務価値など `continuous: false` の観点や最終承認を代替しません。
 
 #### 成果物 grade と review result の責務境界
 

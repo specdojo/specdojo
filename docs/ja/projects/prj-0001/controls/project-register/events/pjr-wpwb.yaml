@@ -61,3 +61,29 @@
       from: prj-0001:pjr-wpwb-rename-evaluation-human
       to: prj-0001:pjr-wpwb-viewpoint-evaluation-criteria
   previous_event_id: reg_dd07cf1fab70415b81b24a18c67d5347
+- v: 1
+  id: reg_6208faabfc6d44b5bf4800968a71b2c0
+  ts: "2026-09-27T12:01:45Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_4b1eb058bf9444eda6d2697c0dc94245
+- v: 1
+  id: reg_f3bdad3a358e4dfeadab136678371890
+  ts: "2026-09-27T12:10:32Z"
+  action: review
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_6208faabfc6d44b5bf4800968a71b2c0
