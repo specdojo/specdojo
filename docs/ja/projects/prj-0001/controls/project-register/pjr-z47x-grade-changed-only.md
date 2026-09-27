@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-z47x-grade-changed-only
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: QE
   registered_at: "2026-09-25T12:45:05Z"
+  completed_at: "2026-09-27T15:12:32Z"
+  conclusion: 観点に comparison_sources を宣言し、grade result の source_hashes で突き合わせ先の変更を changed_only の契機にした。dependency_changed も依存先の内容の hash で判定する。全件の再評価は定期経路にせず手動で行う
 ---
 
 # PJR-Z47X grade の changed_only が照合型観点の突き合わせ先の変更を検出しない

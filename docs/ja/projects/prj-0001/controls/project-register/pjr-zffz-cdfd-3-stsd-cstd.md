@@ -7,11 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-08-12T09:35:22Z"
   due_on: "2026-09-30"
+  completed_at: "2026-09-27T15:12:30Z"
+  conclusion: cdfd 3 ファイルの状態・分類の詳細を stsd-register-entry・stsd-routine-run・cdsd-planning・cdsd-execution・cdsd-sharing へ移設し、移設元は参照だけにした。note の扱いは pjr-rulebook どおり終端しない定義とした
 ---
 
 # PJR-ZFFZ cdfd 3ファイルの状態・分類詳細をstsd/cstd等へ移設

@@ -58,3 +58,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_cdd5d3e396ea419bb01a2b0ff5900977
+- v: 1
+  id: reg_cd340b4c7a784d9db1ab9b993af37929
+  ts: "2026-09-27T15:12:32Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: claude-expert-executor の実行結果を評価し、利用者が全件再評価の経路を手動運用とすることを承認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-28"
+    - field: conclusion
+      from: "-"
+      to: 観点に comparison_sources を宣言し、grade result の source_hashes で突き合わせ先の変更を changed_only の契機にした。dependency_changed も依存先の内容の hash で判定する。全件の再評価は定期経路にせず手動で行う
+  previous_event_id: reg_b9a1d7e1932b4a6aa154fd98ebf237db

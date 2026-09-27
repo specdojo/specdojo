@@ -96,3 +96,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_3904c7264c5046078b4bb6f4c180bd5b
+- v: 1
+  id: reg_6fd1fc12d4194f4687fd1addca634aee
+  ts: "2026-09-27T15:12:30Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: claude-expert-executor の実行結果を評価。note の定義は rulebook に沿っており、orchestrator が当初誤りと判断したのは定義の表の誤り（PJR-XW9M）による。CLI での強制の要否は PJR-GDQC で扱う
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-28"
+    - field: conclusion
+      from: "-"
+      to: cdfd 3 ファイルの状態・分類の詳細を stsd-register-entry・stsd-routine-run・cdsd-planning・cdsd-execution・cdsd-sharing へ移設し、移設元は参照だけにした。note の扱いは pjr-rulebook どおり終端しない定義とした
+  previous_event_id: reg_e7142946b7f742409233f20e3d2ff1cb
