@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-qjad-grade-incomplete-exit-code
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-09-26T23:23:18Z"
+  completed_at: "2026-09-27T04:02:13Z"
   block_reason: "agent exited with non-zero code: 親検証の `test-unit` (npm run test:unit) が失敗しています。`tests/src/grade.test.ts` および `tests/src/doc-index.test.ts` でエラーが発生しているため、完了条件を満たしていません。"
+  conclusion: run-per-document.sh は走りきって incomplete が残ると未完了文書と再開方法を stderr へ出し exit 1 で終わる。routine では Job 失敗として記録される
 ---
 
 # PJR-QJAD grade が未完了の文書を残して終わった場合に終了コード 1 を返す

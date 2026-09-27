@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-e8fy-docs-build-sidebar-scope
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-09-26T23:23:14Z"
+  completed_at: "2026-09-27T04:02:11Z"
   block_reason: "agent exited with non-zero code: The sandbox refused edits to `packages/docs-site/.vitepress/config.mts`, preventing the primary sidebar changes required by the plan. Additionally, the runner validati…"
+  conclusion: サイドバーから実行記録を外しパス別に分割、metaChunk でサイト設定を切り出した。既定ヒープで docs:build が成功し dist は 2.9GB→568MB、代表ページは 1.4MB→120KB。実行記録は exec-records.md から辿れる
 ---
 
 # PJR-E8FY docs:build のサイドバーから実行記録を外しパスごとに分割する

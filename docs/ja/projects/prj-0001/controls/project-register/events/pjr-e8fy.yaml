@@ -87,3 +87,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_6b60583b65544a488f149c812b1e30fd
+- v: 1
+  id: reg_45ad23e40915443e9cea194c84fd6095
+  ts: "2026-09-27T04:02:11Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: claude-expert-executor の実行結果を orchestrator が評価し完了条件を満たすと判断。ビルド時間は同一環境での再計測が残る
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-27"
+    - field: conclusion
+      from: "-"
+      to: サイドバーから実行記録を外しパス別に分割、metaChunk でサイト設定を切り出した。既定ヒープで docs:build が成功し dist は 2.9GB→568MB、代表ページは 1.4MB→120KB。実行記録は exec-records.md から辿れる
+  previous_event_id: reg_131c75e982214d7ea24f558f77559f61
