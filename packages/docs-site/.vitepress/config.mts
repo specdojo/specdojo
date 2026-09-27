@@ -18,6 +18,12 @@ import {
   generateMermaidSvgsForFile,
   shouldGenerateMermaidForFile,
 } from "../src/gen-mermaid-svg";
+import {
+  KATA_STAGING_DIR_NAME,
+  STAGED_PACKAGE_DEAD_LINK_PATTERNS,
+  stageBundledKata,
+  toSiteDocIndexEntry,
+} from "./kata-staging";
 import * as path from "path";
 import { fileURLToPath } from "url";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
@@ -28,12 +34,32 @@ const WORKSPACE_ROOT = path.resolve(process.env.SPECDOJO_DOCS_ROOT ?? process.cw
 const CONTENT_ROOT = path.join(WORKSPACE_ROOT, "docs");
 const MERMAID_OUT_DIR = path.join(WORKSPACE_ROOT, "public", "mermaid");
 
+// package 参照中の kata をページ走査より前にステージングへ複製する。
+// VitePress は設定の読み込み後にページを走査するため、build / dev の両方でここが先に動く。
+const kataStaging = stageBundledKata(WORKSPACE_ROOT);
+if (kataStaging.packageRoot) {
+  console.log(
+    `[kata] staged ${kataStaging.staged} file(s) from ${kataStaging.packageRoot} (ejected: ${kataStaging.ejected})`,
+  );
+}
+const KATA_STAGING_CONTENT_ROOT = kataStaging.stagingRoot
+  ? path.join(kataStaging.stagingRoot, "docs")
+  : undefined;
+
 // [[id]] wikilink index — loaded once at build/dev startup
 function loadDocIndex(workspaceRoot: string): Record<string, string> {
   const p = path.join(workspaceRoot, ".specdojo", "doc-index.json");
   if (!existsSync(p)) return {};
   try {
-    return (JSON.parse(readFileSync(p, "utf8")) as { entries: Record<string, string> }).entries;
+    const entries = (JSON.parse(readFileSync(p, "utf8")) as { entries: Record<string, string> })
+      .entries;
+    // package 側 kata のエントリはステージング経由の公開パスへ付け替える。
+    return Object.fromEntries(
+      Object.entries(entries).map(([id, entry]) => [
+        id,
+        toSiteDocIndexEntry(entry, workspaceRoot, kataStaging.packageRoot),
+      ]),
+    );
   } catch {
     return {};
   }
@@ -283,7 +309,11 @@ const mermaidSvgAutoGenerate = (): Plugin => {
         }
       } else {
         console.log(`[mermaid] generating svgs (${reason})`);
-        generateMermaidSvgs({ rootDir: CONTENT_ROOT, outDir: MERMAID_OUT_DIR });
+        generateMermaidSvgs({
+          rootDir: CONTENT_ROOT,
+          outDir: MERMAID_OUT_DIR,
+          additionalRootDirs: KATA_STAGING_CONTENT_ROOT ? [KATA_STAGING_CONTENT_ROOT] : [],
+        });
       }
     } finally {
       running = false;
@@ -911,11 +941,17 @@ export default defineConfig({
 
   // 物理パスは docs/ja, docs/en のままで、
   // 公開URL（および i18n のロケール判定）は /ja/, /en/ に揃える。
+  // package 参照中の kata はステージングに置き、利用リポジトリの docs/ja と同じ URL へ写像する。
   rewrites: {
     "docs/index.md": "index.md",
     "docs/ja/:rest*": "ja/:rest*",
     "docs/en/:rest*": "en/:rest*",
+    [`${KATA_STAGING_DIR_NAME}/docs/ja/:rest*`]: "ja/:rest*",
   },
+
+  // ステージングした package 文書から SpecDojo 開発リポジトリ固有の文書へのリンクだけを許容する。
+  // ステージングしていない（SpecDojo 自身のリポジトリなど）場合は従来どおり全 dead link を検出する。
+  ...(KATA_STAGING_CONTENT_ROOT ? { ignoreDeadLinks: [...STAGED_PACKAGE_DEAD_LINK_PATTERNS] } : {}),
 
   themeConfig: {
     // ビルド時に生成したインデックスでブラウザ内検索を行う（外部サービス不要）

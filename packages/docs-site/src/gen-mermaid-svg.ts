@@ -263,16 +263,26 @@ function pruneOrphanSvgs(outDir: string, manifest: Manifest): void {
   }
 }
 
-export function generateMermaidSvgs(options?: { rootDir?: string; outDir?: string }): void {
+// additionalRootDirs は docs/ 以外に置かれたページ（docs-site がステージングした package の
+// kata など）を同じ manifest で扱うためのもの。manifest のキーは rootDir 相対のままとし、
+// 追加ルートのファイルも走査に含めることで、orphan 判定で互いの SVG を消し合わないようにする。
+export function generateMermaidSvgs(options?: {
+  rootDir?: string;
+  outDir?: string;
+  additionalRootDirs?: string[];
+}): void {
   const rootDir = options?.rootDir ?? DEFAULT_ROOT;
   const outDir = options?.outDir ?? DEFAULT_OUT_DIR;
+  const markdownFiles = [rootDir, ...(options?.additionalRootDirs ?? [])]
+    .filter((dir) => fs.existsSync(dir))
+    .flatMap((dir) => collectMarkdownFiles(dir));
 
   console.log("🔍 Scanning docs for mermaid code blocks...");
 
   const prevManifest = loadManifest(outDir);
   const nextManifest: Manifest = { version: MANIFEST_VERSION, files: {} };
 
-  for (const mdPath of collectMarkdownFiles(rootDir)) {
+  for (const mdPath of markdownFiles) {
     try {
       const stat = fs.statSync(mdPath);
       const hashes = processMarkdown(mdPath, rootDir, outDir, prevManifest);

@@ -12,3 +12,12 @@ npx specdojo-docs-site build .
 開発サーバは `npx specdojo-docs-site dev .`、Mermaid SVG の生成だけを行う場合は
 `npx specdojo-docs-site mermaid .` を使います。分離パッケージが未導入ならこれらのコマンドは
 利用できませんが、`specdojo` の `register` / `exec` / `catalog` / `grade` には影響しません。
+
+`build` と `dev` は、ページを走査する前に `specdojo` package が同梱する
+`docs/ja/specdojo` 配下（rulebook / standard / recipe / sample / template などの kata と、
+kata からリンクされる guide / reference）のうち、利用リポジトリに無いものを workspace 直下の
+`specdojo-kata-staging/` へ複製し、`/ja/specdojo/...` の URL で配信します。eject 済みの
+ファイルは利用リポジトリ側を採用し、package 側では上書きしません。ステージングは毎回作り直し、
+内部の `.gitignore` で Git 管理対象から外れるため、`kata install --all` を実行する必要は
+ありません。参照元の package は `SPECDOJO_PACKAGE_ROOT`、未指定なら workspace から辿った
+`node_modules/specdojo` です。

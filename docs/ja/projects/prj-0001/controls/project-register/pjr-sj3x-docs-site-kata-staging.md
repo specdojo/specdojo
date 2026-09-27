@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-09-23T06:37:03Z"
@@ -48,16 +48,28 @@ rewrites: { "docs/index.md": "index.md", "docs/ja/:rest*": "ja/:rest*", "docs/en
 
 ## 3. 作業内容
 
-| No  | 作業                                                | 担当 | 状態 | メモ                             |
-| --- | --------------------------------------------------- | ---- | ---- | -------------------------------- |
-| 1   | ビルド前ステージングの複製処理を追加する            | DEV  | open | 解決順序は `kata` コマンドと同じ |
-| 2   | ステージング位置と `rewrites` の整合を取る          | DEV  | open | 公開 URL を変えない              |
-| 3   | ステージング先を gitignore へ加える                 | DEV  | open | 利用者リポジトリを汚さない       |
-| 4   | kata を持たない一時リポジトリでサイト生成を確認する | DEV  | open | rulebook ページの生成を確認      |
+| No  | 作業                                                | 担当 | 状態 | メモ                                                               |
+| --- | --------------------------------------------------- | ---- | ---- | ------------------------------------------------------------------ |
+| 1   | ビルド前ステージングの複製処理を追加する            | DEV  | done | `SPECDOJO_PACKAGE_ROOT` → `node_modules/specdojo` の順に解決する   |
+| 2   | ステージング位置と `rewrites` の整合を取る          | DEV  | done | `specdojo-kata-staging/docs/ja/:rest*` を `ja/:rest*` へ写像する   |
+| 3   | ステージング先を gitignore へ加える                 | DEV  | done | ステージング内の `.gitignore`（`*`）で利用者リポジトリを汚さない   |
+| 4   | kata を持たない一時リポジトリでサイト生成を確認する | DEV  | done | 一時リポジトリで rulebook ページの生成と wikilink の解決を確認した |
 
 ## 4. 対応結果
 
--
+- `packages/docs-site/.vitepress/kata-staging.ts` を追加した。VitePress の設定読み込み時（ページ走査より前）に、package が同梱する `docs/ja/specdojo` 配下を workspace 直下の `specdojo-kata-staging/` へ複製する。設定読み込みで実行するため `docs:build` と `docs:dev` の両方に効く。
+- package ルートは `SPECDOJO_PACKAGE_ROOT`、未指定なら workspace から親方向へ辿った `node_modules/specdojo` の順で解決する。workspace 自身が `specdojo` package の場合（SpecDojo 開発リポジトリ）は複製しない。
+- 利用リポジトリ側に同じ相対パスがある（eject 済みの）ファイルは複製せず、利用リポジトリ側を採用する。ステージングは毎回作り直し、package 更新や eject で不要になったファイルを残さない。
+- ステージングはドット始まりにしない。VitePress のページ走査はドット始まりのディレクトリを辿らないため、`.specdojo/` 配下ではページにならない。
+- ステージング内に `*` の `.gitignore` を置き、利用リポジトリの `.gitignore` を書き換えずに Git 管理対象から外す。
+- `rewrites` に `specdojo-kata-staging/docs/ja/:rest*` → `ja/:rest*` を加え、公開 URL を `/ja/specdojo/...` に揃えた。
+- doc-index の package 側エントリ（`node_modules/specdojo/docs/...` や絶対パス）を `docs/...` へ付け替え、wikilink と frontmatter のリンクを公開 URL へ解決する。symlink 配置でも一致するよう実体パスで比較する。
+- Mermaid SVG 生成（`generateMermaidSvgs`）に `additionalRootDirs` を加え、ステージングした文書の図も同じ manifest で生成する。
+- `packages/docs-site/README.md` に挙動を追記した。`kata install --all` は引き続きオフライン運用や kata を自分の Git で管理する場合の選択肢として残る。
+- _ASSUMPTION_: 複製範囲は eject 可能な kata（rulebook / standard / recipe / sample / template）だけでなく `docs/ja/specdojo` 全体とした。standard などが相対 Markdown リンクで guides / references を参照しており、kata だけでは VitePress の dead link 検査でビルドが失敗したためである。サイドバーの specdojo 節も guides などを前提にしている。
+- _ASSUMPTION_: package 同梱の guides には SpecDojo 開発リポジトリ固有の設計書（`docs/ja/product/...`）への相対リンクがあり、利用リポジトリでは必ず dead link になる。ステージングを行った場合に限り、`../product/` 形式の URL だけを `ignoreDeadLinks` で許容した。VitePress の `ignoreDeadLinks` は URL しか受け取らないため、参照元ページでは絞れない。
+- 確認結果: kata を持たない一時 workspace（`package.json`・`docs/` のみ、`node_modules/specdojo` は本リポジトリへの symlink、rulebook を 1 件 eject）で `index build` と docs サイトのビルドが成功した。`ja/specdojo/rulebooks/pjr-rulebook.html` などが生成され、eject した rulebook は利用リポジトリ側の内容で出力された。成果物の `[[specdojo:pjr-rulebook]]` は `../../specdojo/rulebooks/pjr-rulebook.html` へ解決された。本リポジトリの `npm run docs:build` ではステージングが作られず、従来どおり成功した。
+- 申し送り: `@specdojo/docs-site` は `docs/en` が無い workspace で `vitepress-sidebar` が失敗する（本項目の変更前からの挙動）。一時 workspace の確認では `docs/en/index.md` を置いて回避した。必要なら別項目で扱う。
 
 ## 5. 関連ドキュメント
 
