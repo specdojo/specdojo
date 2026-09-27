@@ -132,3 +132,32 @@
       from: "agent exited with non-zero code: 親 runner による検証項目 `test-integration` が失敗しているため。"
       to: "integrate failed: Current worktree changes overlap merge paths: docs/ja/projects/prj-0001/controls/project-register/events/pjr-qjad.yaml, docs/ja/projects/prj-0001/controls/project-register/pjr-qjad-g…"
   previous_event_id: reg_a8382610dd6246cdbc2ec70328353754
+- v: 1
+  id: reg_cf754de1fe754dc1a8cd40610290cec8
+  ts: "2026-09-27T03:09:09Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_0f3eac5a96d04a99a7ae19a58fb97165
+- v: 1
+  id: reg_49f0da3b811c4cbeb736f4fee164c1c4
+  ts: "2026-09-27T03:13:05Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: rate limit reached
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "integrate failed: Current worktree changes overlap merge paths: docs/ja/projects/prj-0001/controls/project-register/events/pjr-qjad.yaml, docs/ja/projects/prj-0001/controls/project-register/pjr-qjad-g…"
+      to: rate limit reached
+  previous_event_id: reg_cf754de1fe754dc1a8cd40610290cec8

@@ -11,7 +11,7 @@ specdojo:
   priority: high
   owner: DEV
   registered_at: "2026-09-26T23:06:44Z"
-  block_reason: "integrate failed: Current worktree changes overlap merge paths: docs/ja/projects/prj-0001/controls/project-register/events/pjr-qjad.yaml, docs/ja/projects/prj-0001/controls/project-register/pjr-qjad-g…"
+  block_reason: rate limit reached
 ---
 
 # PJR-HG98 config init で生成物を除外する .gitignore を作り register の並行実行の衝突を防ぐ
@@ -63,7 +63,7 @@ docs/**/generated/*
 
 ## 5. 対応結果
 
-- `src/specdojo-gitignore.ts` を追加し、生成物を除外するパターンの導出（`gitignorePatternsForProjects`）と、既存の `.gitignore` への追記（`mergeGitignore` / `ensureGitignore`）を実装した。
+- `src/specdojo-gitignore.ts` を追加し、生成物を除外するパターンの導出（`gitignorePatternsForLayouts`。配置は `specdojo-config.ts` の `projectLayout` で解決して渡す）と、既存の `.gitignore` への追記（`mergeGitignore` / `ensureGitignore`）を実装した。
 - 既定のパターンは `.specdojo/doc-index.json`、`docs/**/generated/*`、`!docs/**/generated/.gitkeep`、`docs/**/execution/exec/.locks/` とした。`base_path` が `docs/` の外にある場合は `<base_path>/**/generated/*` などを、`base_path` が無い場合は各パス設定の親ディレクトリから導いた行を追加する。リポジトリ外を指すパスは除外対象にしない。
 - `config init` は、設定を作成したときも、設定がすでにあるときも `.gitignore` を確認し、足りない行だけを末尾へ追記する。既存の行は変えず、CRLF の改行も維持する。追記した行と飛ばした行を表示し、追記があった場合は管理済みの生成物を `git rm -r --cached` で外す手順（`git ls-files -ci --exclude-standard -z | xargs -0 -r git rm -r --cached --quiet`）を案内する。`--dry-run` では設定も `.gitignore` も書き込まない。
 - `tests/src/specdojo-gitignore.test.ts` を追加し、配置からのパターン導出、追記の冪等性、CRLF の維持を確かめた。`tests/src/specdojo-config-command.test.ts` に、新規作成・既存への追記と再実行・`--dry-run` のテストを追加した。
