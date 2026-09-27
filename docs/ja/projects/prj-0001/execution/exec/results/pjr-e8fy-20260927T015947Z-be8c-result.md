@@ -4,11 +4,12 @@ specdojo:
   type: exec-result
   task_id: PJR-E8FY
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: exec/plans/pjr-e8fy-20260927T015947Z-be8c-plan.md
   started_at: "2026-09-27T02:00:53.928Z"
+  completed_at: "2026-09-27T02:41:58.548Z"
   agent: claude-expert-executor
 ---
 
@@ -16,16 +17,24 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- VitePress サイドバーから実行記録（plan/result/events）を除外し、パス（`ja`/`en`）ごとにサイドバーを分割した。
+- これにより、`/ja/specdojo/` では `specdojo` セクションのみ、`/ja/projects/&lt;id&gt;/` では該当プロジェクトのサイドバーのみが表示されるようになった。
+- `metaChunk` を有効化し、サイトデータが各ページにインライン化されるのを防いだことで、メモリ不足問題を解消し `npm run docs:build` が `NODE_OPTIONS` なしで成功することを確認した。
+- 到達性を維持するため、`specdojo dashboard build` により生成される `exec-records.md` リストページを追加し、ダッシュボードからリンクさせた。
+- ビルド後の全 2,175 ページをスキャンし、意図どおりにサイドバーが構成されていることを検証した。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/projects/prj-0001/controls/project-register/pjr-e8fy-docs-build-sidebar-scope.md`: 個票の作業内容および対応結果を更新。
+- `packages/docs-site/.vitepress/config.mts`: `metaChunk` の有効化およびサイドバー構成の変更。
+- `packages/docs-site/.vitepress/sidebar-config.ts`: サイドバー定義の修正。
+- `src/dashboard.ts`: 実行記録リストページ `exec-records.md` の生成ロジックを追加。
+- `tests/src/dashboard.test.ts`: ダッシュボードの変更に伴うテストケースを追加。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- ビルド時間は環境に依存するため、改めて同一環境での再計測を推奨する。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`fully-guided` で rulebook / recipe / sample / template をどう使い分けたか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+サイドバーから大量の静的リンク（実行記録）を排除し、ページパスに基づいた動的なサイドバー分割を導入することで、メモリ消費量を削減した。また、VitePress の `metaChunk` 機能を活用してデータ転送量を最適化した。

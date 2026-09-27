@@ -712,6 +712,10 @@ const transformSidebar = (
 ): SidebarItem[] => {
   const transformed = items
     .filter((it) => !isHandbookTop(it)) // handbook トップは自動生成側に含めない
+    // 実行記録（plan / result / events）は件数が多く、サイドバーに載せると全ページの HTML が
+    // 肥大化してビルドがメモリ不足になる。ページは公開したまま、生成一覧（exec-records）から辿る。
+    // 表示名の解決（ファイル読み込み）より前に除外し、不要な I/O も避ける。
+    .filter((it) => !isExecRecordPath(it.link))
     .map((it) => {
       const next: SidebarItem = { ...it };
 
@@ -749,7 +753,9 @@ const transformSidebar = (
       return next;
     })
     // link の正規化後に判定する（正規化前の raw link では docs 配下のパスを解決できない）
-    .filter((it) => !isCatalogYamlViewerPage(it.link));
+    .filter((it) => !isCatalogYamlViewerPage(it.link))
+    // 実行記録の除外で子が空になったグループ（実行プラン・実行結果など）は表示しない
+    .filter((it) => it.link || !it.items || it.items.length > 0);
 
   const flattened = transformed.flatMap((it) =>
     !it.link && it.items && FLATTENED_GROUP_TEXTS.has(it.text ?? "") ? it.items : [it],
@@ -781,6 +787,85 @@ const makeSidebar = (locale: Locale): SidebarItem[] =>
 const sidebarJaAuto = makeSidebar("ja");
 const sidebarEnAuto = makeSidebar("en");
 
+type SidebarMulti = Record<string, SidebarItem[]>;
+
+// 子孫を含めて最初に見つかるリンク。リンクを持たないグループの配置先パスを決めるのに使う。
+const firstSidebarLink = (item: SidebarItem): string | undefined => {
+  if (item.link) return item.link;
+  for (const child of item.items ?? []) {
+    const link = firstSidebarLink(child);
+    if (link) return link;
+  }
+  return undefined;
+};
+
+// "/ja/projects/prj-0001/..." から先頭 depth 個のセグメントを取り、"/ja/projects/prj-0001/" を返す。
+const sidebarKeyFromLink = (link: string, depth: number): string | undefined => {
+  const segments = link.split("#")[0].split("/").filter(Boolean);
+  if (segments.length <= depth) return undefined;
+  return `/${segments.slice(0, depth).join("/")}/`;
+};
+
+// サイドバーをパスごとに分割する。1 つの配列にすると、全ページが全節のサイドバーを
+// 描画・保持してビルドが肥大化するため、表示中のページが属する節だけを出す。
+// - /<locale>/specdojo/ 配下: specdojo の節だけ
+// - /<locale>/projects/<id>/ 配下: その project の節だけ
+// - それ以外のトップレベル（product など）: そのディレクトリの節だけ
+// - どれにも当たらないページ（/<locale>/ のトップなど）: 各節の入口リンクだけ
+const makeSidebarMulti = (
+  locale: Locale,
+  autoItems: SidebarItem[],
+  handbookItem?: SidebarItem,
+): SidebarMulti => {
+  const sections: { key: string; items: SidebarItem[]; entry: SidebarItem }[] = [];
+
+  if (handbookItem) {
+    sections.push({
+      key: `/${locale}/specdojo/`,
+      items: [handbookItem],
+      entry: { text: handbookItem.text, link: handbookItem.link },
+    });
+  }
+
+  for (const item of autoItems) {
+    const link = firstSidebarLink(item);
+    const key = link ? sidebarKeyFromLink(link, 2) : undefined;
+    if (!key) continue;
+
+    if (key === `/${locale}/projects/` && item.items) {
+      for (const project of item.items) {
+        const projectLink = firstSidebarLink(project);
+        const projectKey = projectLink ? sidebarKeyFromLink(projectLink, 3) : undefined;
+        if (!projectKey) continue;
+        sections.push({
+          key: projectKey,
+          items: [{ ...project, collapsed: false }],
+          entry: { text: `${item.text ?? ""}: ${project.text ?? ""}`, link: projectLink },
+        });
+      }
+      continue;
+    }
+
+    sections.push({
+      key,
+      items: [{ ...item, collapsed: false }],
+      entry: { text: item.text, link: item.link ?? link },
+    });
+  }
+
+  const multi: SidebarMulti = {};
+  for (const section of sections) {
+    multi[section.key] = [...(multi[section.key] ?? []), ...section.items];
+  }
+  if (sections.length > 0) {
+    multi[`/${locale}/`] = sections.map((section) => section.entry);
+  }
+  return multi;
+};
+
+const sidebarJa = makeSidebarMulti("ja", sidebarJaAuto, specdojoItems.ja);
+const sidebarEn = makeSidebarMulti("en", sidebarEnAuto);
+
 export default defineConfig({
   title: "SpecDojo",
   description: "Documentation for SpecDojo",
@@ -797,6 +882,10 @@ export default defineConfig({
   // logs/ は agent 実行時の plan / 応答を蓄える。VitePress の走査対象にすると、
   // 未知タグを含む agent 出力が Vue のコンパイルを壊す。
   srcExclude: ["*.md", "local/**", "workspaces/**", "templates/**", "logs/**", "packages/**"],
+
+  // サイト設定（サイドバーを含む）とページのハッシュ表は、既定では全ページの HTML へ
+  // インライン展開される。ページ数が多いため、共有の JS チャンクへ切り出して 1 回だけ配信する。
+  metaChunk: true,
 
   // サイドバー折りたたみ状態の復元（初回描画前に同期実行し、ちらつきを防ぐ）
   head: [
@@ -870,7 +959,7 @@ export default defineConfig({
             link: "/ja/projects/prj-0001/020-project-definition/prj-overview",
           },
         ],
-        sidebar: [specdojoItems.ja, ...sidebarJaAuto],
+        sidebar: sidebarJa,
         langMenuLabel: "言語",
       },
     },
@@ -880,7 +969,7 @@ export default defineConfig({
       link: "/en/",
       themeConfig: {
         nav: [{ text: "Home", link: "/en/" }],
-        sidebar: sidebarEnAuto,
+        sidebar: sidebarEn,
         langMenuLabel: "Language",
       },
     },
