@@ -126,6 +126,48 @@ describe("resolveViewpointsDoc", () => {
     });
   });
 
+  it("プロジェクトの観点が削除済みの evaluation を使う場合は新しい値を示して拒否する", () => {
+    withTempDir((dir) => {
+      const projectPath = writeOverlay(dir, {
+        viewpoints: [
+          {
+            id: "vp-po-purpose-alignment",
+            role: "PO",
+            category: "purpose",
+            title: "目的整合",
+            check: "確認する。",
+            evidence: "根拠。",
+            default_severity: "major",
+            evaluation: "human",
+            continuous: false,
+          },
+        ],
+      });
+
+      expect(() => resolveViewpointsDoc(projectPath, resolve(COMMON_PATH))).toThrow(
+        /vp-po-purpose-alignment.*removed evaluation 'human'.*referential or discretionary/,
+      );
+    });
+  });
+
+  it("extends のない全量ファイルでも削除済みの evaluation を拒否する", () => {
+    withTempDir((dir) => {
+      const path = join(dir, "legacy.yaml");
+      writeFileSync(
+        path,
+        yaml.dump({
+          id: "test:viewpoints",
+          viewpoints: [{ id: "vp-qe-sample", evaluation: "agent" }],
+        }),
+        "utf8",
+      );
+
+      expect(() => resolveViewpointsDoc(path)).toThrow(
+        /vp-qe-sample.*removed evaluation 'agent'.*allowed: deterministic, referential, discretionary/,
+      );
+    });
+  });
+
   it("extends のない既存の全量ファイルは互換読み込みする", () => {
     withTempDir((dir) => {
       const path = join(dir, "legacy.yaml");

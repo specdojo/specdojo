@@ -272,11 +272,19 @@ $defs:
         enum: [blocker, major, minor, note]
         description: "Default finding severity when this viewpoint fails."
       evaluation:
-        enum: [deterministic, agent, human]
-        description: "Judgment layer responsible for this viewpoint."
+        enum: [deterministic, referential, discretionary]
+        description: >
+          Where the criterion that decides correctness lives. deterministic: machine-readable rules
+          (schema, lint) decide and grade judges it in code. referential: the check compares the
+          document with other documents or a declared definition (for example done_criteria), or
+          states the criterion itself; grade delegates it to an agent. discretionary: no criterion is
+          written and the judge supplies what is sufficient (necessary range, usable granularity,
+          understandable); grade delegates it to an agent without stability guarantees. This field
+          selects the judgment path only and does not decide grade scope, which continuous decides.
+          The removed values agent and human are rejected.
       continuous:
         type: boolean
-        description: "Whether grade evaluates this viewpoint continuously."
+        description: "Whether grade evaluates this viewpoint continuously. This alone decides grade scope."
       grade_targets:
         type: array
         minItems: 1

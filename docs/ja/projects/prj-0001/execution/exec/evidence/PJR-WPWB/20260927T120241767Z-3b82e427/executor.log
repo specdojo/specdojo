@@ -1,0 +1,33 @@
+PJR-WPWB の対応は終わりました。`evaluation` の値を `deterministic` / `referential` / `discretionary` に改名して 28 観点を再分類し、grade の対象範囲は `continuous` だけで決まるようにしました。ただし再分類は完了条件の「9 件」ではなく 7 件です（理由は後述）。`typecheck`、単体テスト、統合テスト、schema 検証は親 runner の担当なので、私は実行していません。
+
+**変更内容**
+- **観点の定義**（`pm-review-viewpoints.yaml`）：28 観点の内訳は `deterministic` 2 件、`referential` 17 件、`discretionary` 9 件です。`continuous` の値は変えていません。
+- **schema**（`pm-review-viewpoints.schema.yaml`）：enum を新しい 3 値に替え、説明を追記しました。内容は、区分の基準が「判定規準がどこにあるか」であること、各値の grade での判定経路、対象範囲は `continuous` だけで決まること、旧値は拒否されることです。
+- **`src/review-types.ts`**：新しい 3 値を表す `ViewpointEvaluation` 型を追加しました。
+- **`src/review-plan.ts`**：観点を読み込む `resolveViewpointsDoc()` に `evaluation` の値の検査を加えました。旧値 `agent` / `human` を読み込むと、新しい値を示すエラーで止まります。共通ファイル、プロジェクト側ファイル、継承なしの全量ファイルのどれにも効きます。
+- **`src/grade.ts`**：
+  - `continuousViewpoints()` から `evaluation !== "human"` の条件を外しました。
+  - `agentViewpoints()` は `referential` と `discretionary` の両方を agent へ渡すようにしました。
+  - `deterministicResults()` は `deterministic` の値が変わらないため、手を入れていません。
+  - 完了条件の説明文にあった `evaluation: human` への言及も書き換えました。
+- **`review-guide.md`**：区分の基準、`check` の書き方からの判定方法、grade での判定経路の表を追記しました。`evaluation: human` への言及は `continuous: false` に置き換えました。
+- **テスト**：`grade.test.ts` の fixture を新しい値に合わせました。`review-plan.test.ts` には旧値を拒否するテストを 2 件追加しました。
+- **個票**：「対応結果」の章を追加し、「関連ドキュメント」を 9 章へ繰り下げました。
+
+**完了条件の「9 件」と違う点（確認をお願いします）**
+
+先行の PJR-DKX8 は完了済みで、`vp-arc-conciseness` と `vp-ux-user-flow` の `check` にはすでに判定規準が書き込まれています。そのため、個票の判定結果表では `discretionary` だったこの 2 観点を、`referential` にしました。個票の「進め方」に「DKX8 を先に済ませると再分類は 9 件から 7 件になる」と書かれており、DKX8 の対応結果にも本項目で `referential` へ移すとあります。完了条件は 9 件のままなので、この判断でよいか確認してください。個票の判定結果表と完了条件の文言は、分析の記録として元のまま残しています。
+
+**検証**
+- `npx prettier --write`（変更した 9 ファイル）：成功。Markdown 2 ファイルだけ整形されました。
+- `npx markdownlint`（変更した Markdown 2 ファイル）：エラーなし。
+- `npx tsx src/specdojo.ts yaml-pages build`：1 ページ再生成しました。
+- `npm run -s lint:ts`、`lint:md`、`lint:fm`、`validate:catalog`、`validate:history-links`：すべて成功しました。
+- `specdojo catalog validate`、`register build`、`index build`：成功しました。`based_on` の警告が出ますが、以前からあるもので今回の変更とは関係ありません。
+- `npx tsx src/viewpoint-document-kinds-check.ts`：107 の rulebook すべてに判断が記録されていることを確認しました。
+
+result ファイルと登録簿の状態は変更していません。
+
+<specdojo_executor_evidence>
+{"final_message":"Renamed viewpoint evaluation values to deterministic/referential/discretionary and reclassified all 28 viewpoints (2/17/9; 7 reclassifications instead of the 9 in the completion criteria, because PJR-DKX8 is done and moved vp-arc-conciseness and vp-ux-user-flow to referential; needs confirmation). Grade scope now depends only on continuous, and referential and discretionary are both judged by the agent. Old values agent/human now fail with guidance naming the new values. Updated the schema, review-types, review-plan, grade, review-guide, tests, and the ticket's result section.","validations":[{"command":"npx prettier --write <9 changed files>","status":"passed","summary":"formatted; only the 2 Markdown files changed"},{"command":"npx markdownlint docs/ja/specdojo/guides/review-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-wpwb-viewpoint-evaluation-criteria.md","status":"passed","summary":"no errors"},{"command":"npx tsx src/specdojo.ts yaml-pages build","status":"passed","summary":"1 written, 126 unchanged, 19 skipped"},{"command":"npm run -s lint:ts","status":"passed","summary":"no ESLint errors"},{"command":"npm run -s lint:md","status":"passed","summary":"no errors"},{"command":"npm run -s lint:fm","status":"passed","summary":"no errors"},{"command":"npm run -s validate:catalog","status":"passed","summary":"OK; only existing based_on warnings unrelated to this change"},{"command":"npm run -s validate:history-links","status":"passed","summary":"all valid"},{"command":"npx tsx src/specdojo.ts catalog validate","status":"passed","summary":"OK; only existing warnings"},{"command":"npx tsx src/specdojo.ts register build","status":"passed","summary":"generated register views"},{"command":"npx tsx src/specdojo.ts index build","status":"passed","summary":"2110 entries"},{"command":"npx tsx src/viewpoint-document-kinds-check.ts","status":"passed","summary":"document_kinds decisions cover all 107 rulebooks"}]}
+</specdojo_executor_evidence>

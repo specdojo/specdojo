@@ -1,7 +1,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import yaml from "js-yaml";
 import { resolveSpecdojoPath } from "./template-resolution.js";
-import type { ReviewViewpoint, ReviewViewpointsDoc } from "./review-types.js";
+import type { ReviewViewpoint, ReviewViewpointsDoc, ViewpointEvaluation } from "./review-types.js";
 
 export const COMMON_VIEWPOINTS_ID = "specdojo:pm-review-viewpoints";
 
@@ -160,6 +160,38 @@ function mergeCollection(opts: {
     .map((itemKey) => values.get(itemKey)!);
 }
 
+const VIEWPOINT_EVALUATIONS: readonly ViewpointEvaluation[] = [
+  "deterministic",
+  "referential",
+  "discretionary",
+];
+
+// Values removed when evaluation was redefined by where the judging criterion lives (PJR-WPWB).
+// Old values are rejected with guidance instead of being ignored.
+const LEGACY_VIEWPOINT_EVALUATIONS: Readonly<Record<string, string>> = {
+  agent: "referential or discretionary",
+  human: "referential or discretionary",
+};
+
+function validateViewpointEvaluations(doc: Record<string, unknown>, path: string): void {
+  for (const viewpoint of recordArray(doc, "viewpoints", path)) {
+    const value = viewpoint["evaluation"];
+    if (value === undefined) continue;
+    const id = String(viewpoint["id"] ?? "(unknown)");
+    if (typeof value === "string" && value in LEGACY_VIEWPOINT_EVALUATIONS) {
+      throw new Error(
+        `Viewpoint '${id}' uses removed evaluation '${value}'; use ${LEGACY_VIEWPOINT_EVALUATIONS[value]} ` +
+          `(allowed: ${VIEWPOINT_EVALUATIONS.join(", ")}): ${path}`,
+      );
+    }
+    if (!(VIEWPOINT_EVALUATIONS as readonly unknown[]).includes(value)) {
+      throw new Error(
+        `Viewpoint '${id}' has unknown evaluation '${String(value)}'; allowed: ${VIEWPOINT_EVALUATIONS.join(", ")}: ${path}`,
+      );
+    }
+  }
+}
+
 function validateResolvedInheritance(doc: Record<string, unknown>, projectPath: string): void {
   const categories = new Set(
     recordArray(doc, "categories", projectPath).map((item) => String(item.id)),
@@ -239,7 +271,10 @@ export function resolveViewpointsDoc(
   commonPath = commonViewpointsPath(),
 ): ReviewViewpointsDoc {
   const project = loadYamlMapping(projectPath);
-  if (project["extends"] === undefined) return project as ReviewViewpointsDoc;
+  if (project["extends"] === undefined) {
+    validateViewpointEvaluations(project, projectPath);
+    return project as ReviewViewpointsDoc;
+  }
   if (project["extends"] !== COMMON_VIEWPOINTS_ID) {
     throw new Error(
       `Unsupported review viewpoints inheritance '${String(project["extends"])}'; expected '${COMMON_VIEWPOINTS_ID}': ${projectPath}`,
@@ -264,6 +299,8 @@ export function resolveViewpointsDoc(
   }
   delete resolved["extends"];
   delete resolved["disabled"];
+  validateViewpointEvaluations(common, commonPath);
+  validateViewpointEvaluations(project, projectPath);
   validateResolvedInheritance(resolved, projectPath);
   return resolved as ReviewViewpointsDoc;
 }
