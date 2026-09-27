@@ -1,0 +1,13 @@
+bps-sample.md の業務ロジックの不整合および存在しない参照先に関する問題の解消が完了しました。
+
+個票および成果物に対して、以下の変更を行いました。
+- 「確定」の定義を `S-03` の承認に統一し、`E-03` と受入観点に「引き渡し失敗」の考慮を追加しました。
+- 用語の不統一を解消するため、「発注単位」を前提条件および `S-01`・`S-02` へ反映し、「数量単位」という語を削除しました。
+- 必須入力である未完了依頼の取得失敗を扱う例外 `E-04` および関連する受入観点（重複確認不能）を追加しました。
+- 標準の共通登場人物に存在しない「家族の店番担当」を「家族利用者代表」へ修正しました。
+- `T-01` の開始条件を見直し、`E-01` との重複を解消しました。
+- 必要な整形および静的検査を実行し、問題ないことを確認しました。結果ファイルにも実施内容を記載済みです。
+
+<specdojo_executor_evidence>
+{"final_message":"bps-sample.md の業務ロジックの不整合と存在しない参照先の解消、および関連する個票の更新を完了しました。","validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/bps-sample.md docs/ja/projects/prj-0001/controls/project-register/pjr-6v3d-bps-sample.md docs/ja/projects/prj-0001/execution/exec/results/pjr-6v3d-20260927T043802Z-90f8-result.md","status":"passed","summary":"Prettier formatting applied successfully"},{"command":"npx markdownlint docs/ja/specdojo/samples/bps-sample.md docs/ja/projects/prj-0001/controls/project-register/pjr-6v3d-bps-sample.md docs/ja/projects/prj-0001/execution/exec/results/pjr-6v3d-20260927T043802Z-90f8-result.md","status":"passed","summary":"Markdownlint passed with no errors"},{"command":"npx tsx src/specdojo.ts index build","status":"passed","summary":"Index built successfully"},{"command":"npx tsx src/specdojo.ts catalog validate","status":"passed","summary":"Catalog validation passed (with existing warnings)"}]}
+</specdojo_executor_evidence>
