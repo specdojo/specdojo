@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-f346-docs-sync-recent-changes
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-09-28T11:22:25Z"
+  completed_at: "2026-09-28T14:14:57Z"
+  conclusion: 9/26〜28 に完了した変更について guides・references・README を横断確認し、11 文書を更新した（grade と review の役割分担、rubric v2 と --rubric-outdated、docs サイト、orchestrator 同期など）。旧語彙は移行説明と別義の用例だけが残る。4HBG・36CN・E2Q3 は着手時点で未完了のため対象外
 ---
 
 # PJR-F346 2026-09-26〜28 の変更を利用者向けドキュメントへ反映する

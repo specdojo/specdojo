@@ -58,3 +58,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_16a285c94a954c6d90c3fe9c891d9e78
+- v: 1
+  id: reg_d36d1a4a216445db887b1d8cfccc5747
+  ts: "2026-09-28T14:14:57Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: codex-expert-executor の実行結果を評価し、orchestrator が docs:build を既定ヒープで実行して成功（130 秒）を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-28"
+    - field: conclusion
+      from: "-"
+      to: 9/26〜28 に完了した変更について guides・references・README を横断確認し、11 文書を更新した（grade と review の役割分担、rubric v2 と --rubric-outdated、docs サイト、orchestrator 同期など）。旧語彙は移行説明と別義の用例だけが残る。4HBG・36CN・E2Q3 は着手時点で未完了のため対象外
+  previous_event_id: reg_11db5cdc7c6e4ecbad0583fffbfda39b
