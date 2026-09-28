@@ -145,3 +145,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_b3d2fcc52f814e08b3ac22f40d24d72b
+- v: 1
+  id: reg_10452d88d1574e3fa702210ecf3d5d12
+  ts: "2026-09-28T09:14:53Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: claude-expert-executor の実行結果を評価。reporter の schema エラー表示の不具合と統合の記帳競合は orchestrator が対応した。未達の 2 条件は利用者の判断で KCMH の完了条件へ移した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-28"
+    - field: conclusion
+      from: "-"
+      to: xrp 10 本と xrr を、観点ごとに評価せず grade の結果を入力にタスクの完了可否を判断する形へ改訂し、観点別詳細テンプレート 2 本を削除した。review の verdict を bps-task-completion の 6 区分に合わせ、共通規約に判断手順を集めた。review の試行と review-guide の追従は PJR-KCMH へ引き継ぐ
+  previous_event_id: reg_a61f10e08efd409782c867d28e88f80f

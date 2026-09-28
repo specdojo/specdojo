@@ -51,6 +51,9 @@ specdojo:
 - 対象文書の `content_hash` と grade 結果が一致しない場合、その旨が plan に示される。
 - grade 実行のスキップ判定と plan への提示を検証する単体テストがある。
 - `npm run check` が通過している。
+- review を agent で 1 件実行し、生成される plan と result が、PJR-N22N で改訂したテンプレート（grade の結果を入力に、タスクの完了可否を判断する）と本項目の提示どおりであることを確認している（PJR-N22N の作業 No.6 を引き継ぐ）。
+- `docs/ja/specdojo/guides/review-guide.md` が、review は観点ごとに評価せず、grade の結果を確定済みの事実として受け取ってタスクの完了可否を判断する形に改められている。旧来の観点別判定の説明が残っていない（PJR-N22N の残課題を引き継ぐ）。
+- review 完了後に、PJR-N03W で経過措置として残した `changed_only`・`ungraded`・`incomplete` の 3 入力を外せるか判断し、外す場合は Job 定義と routine から外している。外さない場合は理由を対応結果に記録する。
 
 ## 3. 作業内容
 
