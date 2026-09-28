@@ -103,3 +103,16 @@
       from: waiting
       to: in-progress
   previous_event_id: reg_c7bfa750457a4513bf38d590716519c9
+- v: 1
+  id: reg_26f77045b3314335a85aee1c6862080e
+  ts: "2026-09-28T15:12:36Z"
+  action: review
+  actor: claude-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_58c52670c4fc449f8b220503494ecbee
