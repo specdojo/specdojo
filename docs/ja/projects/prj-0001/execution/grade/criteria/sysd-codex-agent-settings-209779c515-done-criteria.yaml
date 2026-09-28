@@ -2,9 +2,9 @@
 id: sysd-codex-agent-settings-grade-criteria
 document: sysd-codex-agent-settings
 path: docs/ja/product/040-system-design/sysd-codex-agent-settings.md
-graded_at: "2026-09-19T16:24:54.832Z"
+graded_at: "2026-09-27T22:02:31.916Z"
 graded_by: codex-expert-executor
-content_hash: 59f6b61ff14943d60c3ca70348d55b9e47a58e1f2f6ae921b5f251993c805122
+content_hash: 2e3269bd969d836047e87a7897916f48182efa75d064163f045bf2d3d9280746
 summary:
   satisfied: 1
   unsatisfied: 4
@@ -16,14 +16,14 @@ criteria:
       - BA
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
-    reason: 採用理由と対応する業務要件または要求成果物との追跡関係が示されていない。
+    reason: Codex の採用理由と対応する業務要件または要求成果物との関係が示されていない。
   - id: DC-002
     text: 設計方針を承認できること
     roles:
       - PO
     viewpoint: vp-po-decision-readiness
     status: unsatisfied
-    reason: モデル、検証実行主体、review executor の責務に重大な不整合があり、現状の設計方針を承認できない。
+    reason: モデル値、検証主体、review executor の書き込み責務が矛盾しており、設計方針を承認できない。
   - id: DC-003
     text: 技術的制約・依存関係が識別できること
     roles:
@@ -36,11 +36,11 @@ criteria:
       - QE
     viewpoint: vp-qe-verifiability
     status: unsatisfied
-    reason: Codex 固有の設定・制約に対応するテスト設計、検証条件、関連テストへの参照がない。
+    reason: Codex 固有制約を確認するテスト、設定検証、レビュー観点と合否条件への参照がない。
   - id: DC-005
     text: 実装の基礎として参照できること
     roles:
       - DEV
     viewpoint: vp-dev-implementation-readiness
     status: unsatisfied
-    reason: 正本と異なるモデル・検証設定および矛盾する書き込み責務があり、安全な実装の基礎として参照できない。
+    reason: 正本と異なるモデル値・検証主体、未確認の設定キー、矛盾する書き込み責務が残り、実装の基礎として利用できない。

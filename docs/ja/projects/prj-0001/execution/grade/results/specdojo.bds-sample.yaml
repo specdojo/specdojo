@@ -3,31 +3,77 @@ version: 1
 document: specdojo:bds-sample
 path: docs/ja/specdojo/samples/bds-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: fail
-score: 48
-graded_at: "2026-09-04T20:55:39.025Z"
-graded_by: gemma-expert-executor
+score: 42
+graded_at: "2026-09-27T21:25:55.169Z"
+graded_by: codex-expert-executor
 content_hash: 404b35d9fd06e8f65b3440209727990730a96bb3ef65cb190470b520fd80efc8
 categories:
-  consistency:
+  purpose:
+    score: 50
+  operations:
+    score: 50
+  planning:
+    score: 42
+  business:
     score: 25
+  architecture:
+    score: 83
   usability:
     score: 58
-  architecture:
-    score: 100
-  quality:
+  implementation:
     score: 25
+  quality:
+    score: 33
+  consistency:
+    score: 0
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 2
+    score: 50
+  vp-po-decision-readiness:
+    level: 2
+    score: 50
+  vp-po-publication-accountability:
+    level: 2
+    score: 50
+  vp-pm-plan-feasibility:
+    level: 1
+    score: 25
+  vp-pm-dependency-risk:
+    level: 2
+    score: 50
+  vp-pm-control-reporting:
+    level: 2
+    score: 50
+  vp-ba-business-value:
+    level: 1
+    score: 25
+  vp-ba-requirements-completeness:
+    level: 0
+    score: 0
+  vp-ba-stakeholder-clarity:
+    level: 2
+    score: 50
+  vp-arc-technical-constraints:
     level: 2
     score: 50
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 0
+    score: 0
+  vp-dev-change-impact:
+    level: 2
+    score: 50
+  vp-dev-testability:
+    level: 2
+    score: 50
   vp-qe-verifiability:
     level: 2
     score: 50
@@ -38,59 +84,170 @@ viewpoints:
     level: 0
     score: 0
   vp-ux-readability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ux-language-consistency:
     level: 2
     score: 50
+  vp-ops-release-readiness:
+    level: 1
+    score: 25
+  vp-ops-operability:
+    level: 1
+    score: 25
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
-  blocker: 3
-  major: 4
-  minor: 0
+  blocker: 5
+  major: 17
+  minor: 2
   note: 0
 findings:
+  - id: F001
+    severity: major
+    rule: vp-po-purpose-alignment
+    line: 5
+    anchor: 本書は、業務ユーザー視点の帳票の利用目的や表示項目を定義するための最小サンプルである。
+    message: 完成例として扱う具体的な帳票、その業務課題、対象範囲、上位成果物との対応を示し、主要な定義を採用する理由を説明する必要がある。
+  - id: F002
+    severity: major
+    rule: vp-po-decision-readiness
+    line: 30
+    anchor: "| 要件詳細の補強 | 実案件適用時に具体化する |"
+    message: 「実案件適用時に具体化する」だけでは判断できないため、未決事項ごとに判断者、選択肢、影響範囲、判断時期、次アクションを明記する必要がある。
+  - id: F003
+    severity: major
+    rule: vp-po-publication-accountability
+    line: 26
+    anchor: "## 5. 未解決事項"
+    message: draft から公開可能な状態へ移す条件として、公開対象、機密・個人情報の有無、確認事項、人間の承認者を明記する必要がある。
+  - id: F004
+    severity: major
+    rule: vp-pm-plan-feasibility
+    line: 15
+    anchor: "- 主な内容: 帳票概要、利用目的、表示項目、出力タイミング など"
+    message: 記載項目の名称だけでなく、仕様確定に必要な作業単位、依存関係、担当 Role code、完了条件、判断タイミングを具体化する必要がある。
   - id: F005
+    severity: major
+    rule: vp-pm-dependency-risk
+    line: 10
+    anchor: "- 前提: プロジェクト文脈は handbook の共通方針に準拠する"
+    message: 参照先が特定できない handbook への依存を解消し、based_on による根拠仕様、後続成果物、未決事項の影響と PJR 登録候補を明記する必要がある。
+  - id: F006
+    severity: major
+    rule: vp-pm-control-reporting
+    line: 30
+    anchor: "| 要件詳細の補強 | 実案件適用時に具体化する |"
+    message: 未解決事項を課題・リスク・変更要求・決定待ちに分類し、PJR 転記要否、報告先、担当 Role code、対応方針を示す必要がある。
+  - id: F007
+    severity: major
+    rule: vp-ba-business-value
+    line: 5
+    anchor: 本書は、業務ユーザー視点の帳票の利用目的や表示項目を定義するための最小サンプルである。
+    message: 具体的な利用者、業務課題、放置時の影響、期待価値、成功基準、および帳票の主要項目との対応を記述する必要がある。
+  - id: F008
+    severity: blocker
+    rule: vp-ba-requirements-completeness
+    line: 18
+    anchor: "## 4. 最小記述例"
+    message: 実在する一つの帳票を題材に、利用者視点の要件、受入条件、対象範囲、除外範囲、用語定義を備えた完成例へ置き換える必要がある。
+  - id: F009
+    severity: major
+    rule: vp-ba-stakeholder-clarity
+    line: 5
+    anchor: 本書は、業務ユーザー視点の帳票の利用目的や表示項目を定義するための最小サンプルである。
+    message: 店主や経理担当などの具体的な利用者、利用場面、運用者、仕様確認者、合意対象を明記する必要がある。
+  - id: F010
+    severity: major
+    rule: vp-arc-technical-constraints
+    line: 15
+    anchor: "- 主な内容: 帳票概要、利用目的、表示項目、出力タイミング など"
+    message: 実装詳細には踏み込まず、出力形式、文字コード等の業務上必要な制約、外部依存、準拠 schema と検証方法を明記する必要がある。
+  - id: F011
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 24
+    anchor: "| 主な内容     | 帳票概要、利用目的、表示項目、出力タイミング など    | 要点のみ記載                         |"
+    message: 「帳票概要、利用目的、表示項目、出力タイミング など」は line 15 の反復で判断情報を追加していないため、一方へ統合する必要がある。
+  - id: F012
+    severity: blocker
+    rule: vp-dev-implementation-readiness
+    line: 18
+    anchor: "## 4. 最小記述例"
+    message: 実装可能な完成例とするため、入力、表示項目、抽出・除外条件、算出規則、出力形式、制約、完了条件を具体値で記述する必要がある。
+  - id: F013
+    severity: major
+    rule: vp-dev-change-impact
+    line: 7
+    anchor: "## 2. 入力情報"
+    message: based_on と関連成果物を特定し、帳票変更が schema、生成処理、出力形式、運用手順、既存利用者へ与える影響を明記する必要がある。
+  - id: F014
+    severity: major
+    rule: vp-dev-testability
+    line: 11
+    anchor: "- 参照: `../rulebooks/bds-rulebook.md`"
+    message: 対象ファイルに対する lint、Frontmatter schema 検証、生成確認のコマンドと期待結果、エラー時の対応を示す必要がある。
+  - id: F015
+    severity: major
+    rule: vp-qe-verifiability
+    line: 30
+    anchor: "| 要件詳細の補強 | 実案件適用時に具体化する |"
+    message: 目的の記述例が抽象的であり、具体的かつ検証可能な判定基準を提示するサンプルとしての機能が不十分である。
+  - id: F016
+    severity: blocker
+    rule: vp-qe-omissions-consistency
+    line: 3
+    anchor: "## 1. 目的と適用範囲"
+    message: "Frontmatter の `type: project` がルールブック指定の `domain` / `data` と矛盾している。"
+  - id: F017
+    severity: blocker
+    rule: vp-qe-omissions-consistency
+    line: 10
+    anchor: "- 前提: プロジェクト文脈は handbook の共通方針に準拠する"
+    message: ルールブックで定義された必須構成（概要、利用者/利用目的、出力タイミング等）がすべて省略されており、BDS としての形式を成していない。
+  - id: F018
     severity: blocker
     rule: vp-qe-kata-conformance
     line: 1
+    anchor: "# [帳票仕様](../rulebooks/bds-rulebook.md) サンプル"
     message: 本文書は BDS のサンプルとして定義されているが、BDS ルールブックの構成案および命名規則に一切準拠していない。
-    anchor: ""
-  - id: F001
+  - id: F019
     severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 3
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# [帳票仕様](../rulebooks/bds-rulebook.md) サンプル"
     message: ID `specdojo:bds-sample` がルールブックで規定された命名形式（bds-xxx）に準拠していない。
-    anchor: ""
-  - id: F003
-    severity: blocker
-    rule: vp-qe-omissions-consistency
-    line: 4
-    message: "Frontmatter の `type: project` がルールブック指定の `domain` / `data` と矛盾している。"
-    anchor: "## 1. 目的と適用範囲"
-  - id: F007
-    severity: major
-    rule: vp-ux-language-consistency
-    line: 4
-    message: Frontmatter の `type` に、ルールブックで定義されていない `project` が使用されており、表記が統一されていない。
-    anchor: "## 1. 目的と適用範囲"
-  - id: F004
-    severity: blocker
-    rule: vp-qe-omissions-consistency
-    line: 11
-    message: ルールブックで定義された必須構成（概要、利用者/利用目的、出力タイミング等）がすべて省略されており、BDS としての形式を成していない。
-    anchor: "- 前提: プロジェクト文脈は handbook の共通方針に準拠する"
-  - id: F006
+  - id: F020
     severity: major
     rule: vp-ux-readability
-    line: 11
-    message: ルールブックの標準構成に従わない独自の見出し構成となっており、正しい BDS の記述方法を理解させるためのガイドとして機能していない。
+    line: 10
     anchor: "- 前提: プロジェクト文脈は handbook の共通方針に準拠する"
-  - id: F002
+    message: ルールブックの標準構成に従わない独自の見出し構成となっており、正しい BDS の記述方法を理解させるためのガイドとして機能していない。
+  - id: F021
     severity: major
-    rule: vp-qe-verifiability
-    line: 31
-    message: 目的の記述例が抽象的であり、具体的かつ検証可能な判定基準を提示するサンプルとしての機能が不十分である。
-    anchor: "| 要件詳細の補強 | 実案件適用時に具体化する |"
+    rule: vp-ux-language-consistency
+    line: 3
+    anchor: "## 1. 目的と適用範囲"
+    message: Frontmatter の `type` に、ルールブックで定義されていない `project` が使用されており、表記が統一されていない。
+  - id: F022
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 10
+    anchor: "- 前提: プロジェクト文脈は handbook の共通方針に準拠する"
+    message: "`handbook` と `specdojo:deliverables-reference` の正式名称やリンクがなく参照先を特定できないため、成果物名と参照形式を統一する必要がある。"
+  - id: F023
+    severity: major
+    rule: vp-ops-release-readiness
+    line: 26
+    anchor: "## 5. 未解決事項"
+    message: ready 化に必要な必須章の充足条件、未解決事項の解消基準、公開対象、人間の承認者、公開前確認を明記する必要がある。
+  - id: F024
+    severity: major
+    rule: vp-ops-operability
+    line: 26
+    anchor: "## 5. 未解決事項"
+    message: 帳票仕様の更新契機、変更管理先、再生成・再検証手順、問い合わせ導線、障害時対応、担当 Role code を記述する必要がある。

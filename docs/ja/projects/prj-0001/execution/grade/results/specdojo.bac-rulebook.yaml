@@ -3,44 +3,99 @@ version: 1
 document: specdojo:bac-rulebook
 path: docs/ja/specdojo/rulebooks/bac-rulebook.md
 target: kata
-rubric: grade-rubric-v1
-verdict: pass
-score: 91
-graded_at: "2026-09-01T22:33:17.915Z"
-graded_by: gemma-expert-executor
+rubric: grade-rubric-v2
+verdict: needs-work
+score: 71
+graded_at: "2026-09-27T20:39:26.643Z"
+graded_by: claude-expert-executor
 content_hash: 1a1db098c7daebe7d4218c433c57194ab7fab1c083c28927648b6806def19515
 categories:
-  consistency:
+  purpose:
+    score: 75
+  operations:
     score: 88
-  usability:
-    score: 92
+  planning:
+    score: 75
+  business:
+    score: 75
   architecture:
-    score: 100
+    score: 83
+  usability:
+    score: 75
+  implementation:
+    score: 63
   quality:
-    score: 88
+    score: 67
+  consistency:
+    score: 50
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 3
+    score: 75
+  vp-po-decision-readiness:
+    level: 3
+    score: 75
+  vp-po-publication-accountability:
     level: 4
     score: 100
+  vp-pm-plan-feasibility:
+    level: 3
+    score: 75
+  vp-pm-dependency-risk:
+    level: 3
+    score: 75
+  vp-pm-control-reporting:
+    level: 3
+    score: 75
+  vp-ba-business-value:
+    level: 3
+    score: 75
+  vp-ba-requirements-completeness:
+    level: 3
+    score: 75
+  vp-ba-stakeholder-clarity:
+    level: 3
+    score: 75
+  vp-arc-technical-constraints:
+    level: 2
+    score: 50
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 2
+    score: 50
+  vp-dev-change-impact:
+    level: 3
+    score: 75
+  vp-dev-testability:
+    level: 3
+    score: 75
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 2
+    score: 50
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
+    level: 2
+    score: 50
   vp-ux-readability:
     level: 3
     score: 75
   vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-ops-release-readiness:
+    level: 3
+    score: 75
+  vp-ops-operability:
+    level: 3
+    score: 75
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -48,31 +103,161 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 0
-  minor: 4
+  major: 4
+  minor: 21
   note: 0
 findings:
+  - id: F001
+    severity: minor
+    rule: vp-po-purpose-alignment
+    line: 9
+    anchor: "## 1. 全体方針"
+    message: 全体方針に、成果物リファレンスや要求定義系成果物（BPS/BR/UIS/BES）の中で BAC が担う目的・必要性を上位根拠への参照付きで追記してください。
   - id: F002
     severity: minor
-    rule: vp-qe-kata-conformance
-    line: 1
-    message: recipe が undecided となっているため、作成手順を定義した recipe ファイルを整備し指定してください。
-    anchor: "# 業務受入条件 作成ルール"
+    rule: vp-po-decision-readiness
+    line: 108
+    anchor: "- その下に `#### ケース一覧`（表）を置き、ケースごとの違いを表にまとめる"
+    message: メモ / 将来課題に、未確定事項を _UNDECIDED_ / _TODO_ ラベルで記録し、判断者と判断タイミングを添える規約を追加してください。
   - id: F003
     severity: minor
-    rule: vp-qe-kata-conformance
-    line: 1
-    message: template が undecided となっているため、標準骨組みを定義した template ファイルを整備し指定してください。
-    anchor: "# 業務受入条件 作成ルール"
-  - id: F001
+    rule: vp-pm-plan-feasibility
+    line: 54
+    anchor: "## 5. 本文構成（標準テンプレ）"
+    message: 本文構成に、BAC を ready とする完了条件（全シナリオに観測可能な期待結果があり based_on が解決できる等）と作成・確認の担当 Role code を追記してください。
+  - id: F004
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 118
+    anchor: "### 6.3 メモ / 将来課題"
+    message: メモ / 将来課題に、上流仕様（based_on 先）変更時の追従手順と、受入に影響する未確定事項を PJR 登録候補として扱う方針を追記してください。
+  - id: F005
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 118
+    anchor: "### 6.3 メモ / 将来課題"
+    message: メモ / 将来課題で、将来追加シナリオ（BAC 内に残す）と課題・リスク・変更要求（PJR へ転記する）を区別する記述規約を追加してください。
+  - id: F006
+    severity: minor
+    rule: vp-ba-business-value
+    line: 64
+    anchor: "### 6.1 概要"
+    message: 概要の記述ガイドで、受入対象が応える業務課題・期待価値（誰の何のためか）を任意ではなく推奨以上とし、シナリオとの対応を確認できるようにしてください。
+  - id: F007
+    severity: minor
+    rule: vp-ba-requirements-completeness
+    line: 64
+    anchor: "### 6.1 概要"
+    message: 概要または受入条件に、受入対象の対象範囲と対象外（別 BAC で扱うもの）を明記する規定を追加してください。
+  - id: F008
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 72
+    anchor: "- 例: 「役割: 発注担当者 / 目的: 在庫補充のために発注〜入荷〜支払を追跡できる」"
+    message: 概要の記述ガイドで、受入判断を行う確認者・合意者（業務側ロール）を明記する項目を追加してください。
+  - id: F009
+    severity: major
+    rule: vp-arc-technical-constraints
+    line: 38
+    anchor: "| 項目 | 説明 | 必須 |"
+    message: >-
+      推奨 Frontmatter 項目を deliverable-frontmatter.schema.yaml に合わせ、specdojo 名前空間配下に置き、title を削除し、必須の rulebook
+      を追加し、関係項目のキー位置を schema と一致させてください。
+  - id: F010
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 180
+    anchor: "### 9.2 サンプル（複合・長め）"
+    message: サンプル章の複合・ケース表サンプルは最小例を超えるため、最小例 1 つに絞り、完成例は bac-sample へ移してください（1ファイル=1受入対象の重複記述も統合してください）。
+  - id: F011
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 40
+    anchor: ""
+    message: 推奨 Frontmatter 項目の表で区切り行直後の空行により表が分断されているため、空行を削除して一つの表として描画されるよう修正してください。
+  - id: F012
+    severity: minor
+    rule: vp-dev-implementation-readiness
+    line: 29
+    anchor: "- ファイル名: `bac-<番号>-<短い日本語名>.md` （例: `bac-0010-商品販売.md`）"
+    message: ファイル名の番号・日本語名と id の対応規則、および id の authority（project 修飾）形式を明記してください。
+  - id: F013
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 52
+    anchor: "- BR や BPS 側の `tests` から BAC を参照できるよう、ID は安定させます（名前を変える場合は `supersedes` を使う）。"
+    message: ID 変更や受入条件変更時に影響する参照元（BR/BPS の tests、テスト仕様等）と更新手順を追記してください。
+  - id: F014
+    severity: minor
+    rule: vp-dev-testability
+    line: 36
+    anchor: Frontmatter は `docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml` の制約に従います。
+    message: 作成した BAC の検証手順として npm run lint:md / lint:fm 等の実行コマンドと期待結果を追記してください。
+  - id: F015
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 90
+    anchor: "- `#### 判定方法`（任意。どこを見て合否判定するか）"
+    message: 判定方法を任意ではなく推奨以上とし、期待結果ごとに合否を判定する観測先（記録・画面・帳票等）を示す規約にしてください。
+  - id: F016
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 1
-    message: 成果物の役割やライフサイクル上の位置づけ（トラック設計ガイドや成果物リファレンスとの関係）を明記する「位置づけ」節を追加してください。
     anchor: "# 業務受入条件 作成ルール"
-  - id: F004
+    message: 成果物の役割やライフサイクル上の位置づけ（トラック設計ガイドや成果物リファレンスとの関係）を明記する「位置づけ」節を追加してください。
+  - id: F017
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 64
+    anchor: "### 6.1 概要"
+    message: 6.1 / 6.2 / 6.2.1 / 6.3 / 9.2 / 9.3 の見出し番号末尾に「.」がなく Markdown 規約の禁止事項に抵触しているため、n.m. 形式に修正してください。
+  - id: F018
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 54
+    anchor: "## 5. 本文構成（標準テンプレ）"
+    message: 標準章構成に合わせ章名を「本文要件」とし、各章の目的と必須・任意を明示してください。
+  - id: F019
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# 業務受入条件 作成ルール"
+    message: recipe が undecided となっているため、作成手順を定義した recipe ファイルを整備し指定してください。
+  - id: F020
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# 業務受入条件 作成ルール"
+    message: template が undecided となっているため、標準骨組みを定義した template ファイルを整備し指定してください。
+  - id: F021
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 137
+    anchor: "## 9. サンプル（簡易）"
+    message: >-
+      bac-sample が rulebook の本文構成（概要/受入条件/メモ、シナリオの前提・操作・期待結果）や type: test に従っておらず、rulebook 内サンプルが完成例を担っているため、完成例を
+      bac-sample へ移し rulebook と整合させてください。
+  - id: F022
     severity: minor
     rule: vp-ux-readability
     line: 1
-    message: 第9章の各サンプルの見出しレベル（H2/H3）と番号付けを統一してください。
     anchor: "# 業務受入条件 作成ルール"
+    message: 第9章の各サンプルの見出しレベル（H2/H3）と番号付けを統一してください。
+  - id: F023
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 120
+    anchor: "- 未確定の運用（例: 締め処理、例外時の扱い）や、将来追加したい Scenario を記録します。"
+    message: 「Scenario」と「シナリオ」の表記ゆれを「シナリオ」に統一し、見出しラベル（判定方法）の表記も統一してください。
+  - id: F024
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 1
+    anchor: "# 業務受入条件 作成ルール"
+    message: rulebook を ready 化する前提として、recipe/template の要否判断と schema 不整合解消を未解決事項として明示してください。
+  - id: F025
+    severity: minor
+    rule: vp-ops-operability
+    line: 52
+    anchor: "- BR や BPS 側の `tests` から BAC を参照できるよう、ID は安定させます（名前を変える場合は `supersedes` を使う）。"
+    message: BAC の改訂・廃止（deprecated 化）手順と上流仕様変更時の見直し契機を追記してください。

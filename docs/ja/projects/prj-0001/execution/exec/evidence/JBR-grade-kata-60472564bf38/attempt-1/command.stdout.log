@@ -1,0 +1,40 @@
+
+> specdojo@0.2.1 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-kata-60472564bf38 project=prj-0001 target=kata kind=all changed_only=true ungraded=true incomplete=true max_stage_failures=3 stages=1 documents=10 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-kata-60472564bf38
+stage=1 executor=codex-expert-executor reporter=gemma-reporter reference=none
+document start: docs/ja/specdojo/recipes/bps-recipe.md
+document complete: docs/ja/specdojo/recipes/bps-recipe.md
+document start: docs/ja/specdojo/recipes/stsd-recipe.md
+document complete: docs/ja/specdojo/recipes/stsd-recipe.md
+document start: docs/ja/specdojo/samples/atc-index-sample.md
+document resume: docs/ja/specdojo/samples/atc-index-sample.md start_stage=1
+document complete: docs/ja/specdojo/samples/atc-index-sample.md
+document start: docs/ja/specdojo/samples/bds-sample.md
+document resume: docs/ja/specdojo/samples/bds-sample.md start_stage=1
+document complete: docs/ja/specdojo/samples/bds-sample.md
+document start: docs/ja/specdojo/samples/bes-index-sample.md
+document complete: docs/ja/specdojo/samples/bes-index-sample.md
+document start: docs/ja/specdojo/samples/bes-sample.md
+document complete: docs/ja/specdojo/samples/bes-sample.md
+document start: docs/ja/specdojo/samples/cdfd-overview-sample.md
+document complete: docs/ja/specdojo/samples/cdfd-overview-sample.md
+document start: docs/ja/specdojo/samples/cdfd-sample.md
+document complete: docs/ja/specdojo/samples/cdfd-sample.md
+document start: docs/ja/specdojo/samples/cdfd-uc-sample.md
+document complete: docs/ja/specdojo/samples/cdfd-uc-sample.md
+document start: docs/ja/specdojo/samples/stsd-sample.md
+document complete: docs/ja/specdojo/samples/stsd-sample.md
+grade pipeline complete: selected=10 processed=10 completed_now=10 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-kata-60472564bf38/results.tsv
+recorded_at	document	stage	status	duration_seconds	verdict	score	findings	executor	reporter	reference	consecutive_failures	max_failures
+2026-09-27T21:05:32Z	docs/ja/specdojo/recipes/bps-recipe.md	1	passed	313	needs-work	85	4	codex-expert-executor	gemma-reporter	none		
+2026-09-27T21:11:24Z	docs/ja/specdojo/recipes/stsd-recipe.md	1	passed	350	pass	97	3	codex-expert-executor	gemma-reporter	none		
+2026-09-27T21:17:47Z	docs/ja/specdojo/samples/atc-index-sample.md	1	passed	381	needs-work	55	21	codex-expert-executor	gemma-reporter	none		
+2026-09-27T21:25:55Z	docs/ja/specdojo/samples/bds-sample.md	1	passed	485	fail	42	24	codex-expert-executor	gemma-reporter	none		
+2026-09-27T21:33:16Z	docs/ja/specdojo/samples/bes-index-sample.md	1	passed	439	fail	55	21	codex-expert-executor	gemma-reporter	none		
+2026-09-27T21:40:41Z	docs/ja/specdojo/samples/bes-sample.md	1	passed	443	fail	49	27	codex-expert-executor	gemma-reporter	none		
+2026-09-27T21:48:29Z	docs/ja/specdojo/samples/cdfd-overview-sample.md	1	passed	466	needs-work	81	11	codex-expert-executor	gemma-reporter	none		
+2026-09-27T21:54:17Z	docs/ja/specdojo/samples/cdfd-sample.md	1	passed	346	pass	95	3	codex-expert-executor	gemma-reporter	none		
+2026-09-27T21:58:26Z	docs/ja/specdojo/samples/cdfd-uc-sample.md	1	passed	247	pass	94	3	codex-expert-executor	gemma-reporter	none		
+2026-09-27T22:05:40Z	docs/ja/specdojo/samples/stsd-sample.md	1	passed	432	pass	95	2	codex-expert-executor	gemma-reporter	none		

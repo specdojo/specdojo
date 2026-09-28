@@ -3,37 +3,83 @@ version: 1
 document: specdojo:bac-sample
 path: docs/ja/specdojo/samples/bac-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 78
-graded_at: "2026-09-04T20:37:45.117Z"
-graded_by: gemma-expert-executor
+score: 61
+graded_at: "2026-09-27T20:39:50.707Z"
+graded_by: agy-claude-expert-executor
 content_hash: de9315263fb68ec5027d51e72973db283e9c493ae3e6111cd2a358a4f149ab41
 categories:
-  consistency:
+  purpose:
     score: 75
-  usability:
-    score: 83
+  operations:
+    score: 88
+  planning:
+    score: 75
+  business:
+    score: 58
   architecture:
-    score: 100
+    score: 83
+  usability:
+    score: 58
+  implementation:
+    score: 88
   quality:
-    score: 63
+    score: 50
+  consistency:
+    score: 25
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 3
+    score: 75
+  vp-po-decision-readiness:
+    level: 3
+    score: 75
+  vp-po-publication-accountability:
     level: 4
     score: 100
-  vp-arc-conciseness:
-    level: 4
-    score: 100
-  vp-arc-single-responsibility:
-    level: 4
-    score: 100
-  vp-qe-verifiability:
-    level: 4
-    score: 100
-  vp-qe-omissions-consistency:
+  vp-pm-plan-feasibility:
+    level: 3
+    score: 75
+  vp-pm-dependency-risk:
+    level: 3
+    score: 75
+  vp-pm-control-reporting:
+    level: 3
+    score: 75
+  vp-ba-business-value:
     level: 2
     score: 50
+  vp-ba-requirements-completeness:
+    level: 2
+    score: 50
+  vp-ba-stakeholder-clarity:
+    level: 3
+    score: 75
+  vp-arc-technical-constraints:
+    level: 3
+    score: 75
+  vp-arc-conciseness:
+    level: 2
+    score: 50
+  vp-arc-single-responsibility:
+    level: 3
+    score: 75
+  vp-dev-implementation-readiness:
+    level: 3
+    score: 75
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 3
+    score: 75
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 1
+    score: 25
   vp-qe-kata-conformance:
     level: 1
     score: 25
@@ -41,6 +87,15 @@ viewpoints:
     level: 2
     score: 50
   vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-ops-release-readiness:
+    level: 3
+    score: 75
+  vp-ops-operability:
+    level: 3
+    score: 75
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -48,25 +103,139 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 3
-  minor: 0
+  major: 9
+  minor: 13
   note: 0
 findings:
   - id: F001
+    severity: minor
+    rule: vp-po-purpose-alignment
+    line: 3
+    anchor: "## 1. 目的と適用範囲"
+    message: "「最小サンプル」の位置づけだけでなく、この sample が kata においてどのような完成例を示す目的なのか（例: rulebook 第5章の構成に従った BAC 完成例の提示）を概要に補足すべき。"
+  - id: F002
+    severity: minor
+    rule: vp-po-decision-readiness
+    line: 27
+    anchor: ""
+    message: 未解決事項の「処理方針」がごく簡素であり、PO が判断するための影響範囲や次アクションの記述があるとよい。
+  - id: F003
+    severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 27
+    anchor: ""
+    message: 未解決事項「要件詳細の補強」の完了条件・担当・タイミングが不明確であり、タスク化しにくい。
+  - id: F004
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 24
+    anchor: "| 主な内容     | 業務シナリオ、受入条件、前提、操作、期待結果 など    | 要点のみ記載                         |"
+    message: §4 表中の「specdojo:deliverables-reference 準拠」が参照先不明であり、依存関係として明示的に識別されていない。
+  - id: F005
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 27
+    anchor: ""
+    message: 未解決事項に対応方針の担当ロールが記載されていない。
+  - id: F006
+    severity: major
+    rule: vp-ba-business-value
+    line: 15
+    anchor: "- 主な内容: 業務シナリオ、受入条件、前提、操作、期待結果 など"
+    message: 「業務シナリオ、受入条件、前提、操作、期待結果 など」が列挙のみで、具体的な業務シナリオ（前提・操作・期待結果のセット）が記述されていないため、BAC sample としての業務価値を果たしていない。
+  - id: F007
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 15
+    anchor: "- 主な内容: 業務シナリオ、受入条件、前提、操作、期待結果 など"
+    message: rulebook §6.2 の標準テンプレに従った具体的な受入条件シナリオ（前提・操作・期待結果）が記述されておらず、要件の完備性が不足している。
+  - id: F008
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 3
+    anchor: "## 1. 目的と適用範囲"
+    message: "対象読者（例: BAC を初めて作成するチームメンバー）や利用場面の明示がない。"
+  - id: F009
+    severity: minor
+    rule: vp-arc-technical-constraints
+    line: 24
+    anchor: "| 主な内容     | 業務シナリオ、受入条件、前提、操作、期待結果 など    | 要点のみ記載                         |"
+    message: 「specdojo:deliverables-reference 準拠」の参照先パスが不明であり、技術制約としての schema 参照が不完全。
+  - id: F010
+    severity: major
+    rule: vp-arc-conciseness
+    line: 15
+    anchor: "- 主な内容: 業務シナリオ、受入条件、前提、操作、期待結果 など"
+    message: §3「記述内容」と §4「最小記述例」の表で「主な内容」が重複しており、統合しても判断情報を失わないため、冗長性を解消すべき。
+  - id: F011
+    severity: minor
+    rule: vp-arc-single-responsibility
+    line: 15
+    anchor: "- 主な内容: 業務シナリオ、受入条件、前提、操作、期待結果 など"
+    message: §3「記述内容」が BAC の記述方法の解説に傾いており、sample の責務（完成例の提示）から逸脱気味であるが、この節を rulebook への参照に置き換えることで責務境界を明確にできる。
+  - id: F012
+    severity: minor
+    rule: vp-dev-implementation-readiness
+    line: 15
+    anchor: "- 主な内容: 業務シナリオ、受入条件、前提、操作、期待結果 など"
+    message: 具体的なシナリオ例がなく、この sample だけでは BAC 作成の入力として不十分であり、rulebook §9 のサンプルを参照する必要がある。
+  - id: F013
+    severity: minor
+    rule: vp-dev-testability
+    line: 1
+    anchor: "# [業務受入条件](../rulebooks/bac-rulebook.md) サンプル"
+    message: Frontmatter を検証するための lint コマンドや schema 検証手順が記載されていない。
+  - id: F014
+    severity: major
+    rule: vp-qe-verifiability
+    line: 3
+    anchor: "## 1. 目的と適用範囲"
+    message: "sample 自体の品質判定基準（例: rulebook §5 の構成に従った完成例であること）が明示されておらず、pass/fail 判定ができない。"
+  - id: F015
     severity: major
     rule: vp-qe-omissions-consistency
     line: 4
-    message: Frontmatter の type は rulebook の定義に従い project ではなく test としてください。
     anchor: ""
-  - id: F002
+    message: Frontmatter の type は rulebook の定義に従い project ではなく test としてください。
+  - id: F016
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 3
+    anchor: "## 1. 目的と適用範囲"
+    message: rulebook §5 で定義された必須構成（概要、受入条件、メモ/将来課題）に従っておらず、§3「記述内容」や §4「最小記述例」は rulebook に定義されていない独自の章立てとなっている。
+  - id: F017
     severity: major
     rule: vp-qe-kata-conformance
-    line: 11
-    message: rulebook 第5章で定義された必須構成（概要、受入条件、メモ/将来課題）に従っておらず、実際の BAC 成果物の完成例として提示されていないため、kata への適合性が低い。
-    anchor: "- 参照: `../rulebooks/bac-rulebook.md`"
-  - id: F003
+    line: 3
+    anchor: "## 1. 目的と適用範囲"
+    message: rulebook §5 で定義された必須構成（概要、受入条件、メモ/将来課題）に従っておらず、実際の BAC 成果物の完成例として提示されていないため、kata への適合性が低い。
+  - id: F018
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 15
+    anchor: "- 主な内容: 業務シナリオ、受入条件、前提、操作、期待結果 など"
+    message: 具体的な受入条件シナリオ（前提・操作・期待結果のセット）がなく、BAC sample として kata の責務（完成例の提示）を果たしていない。
+  - id: F019
     severity: major
     rule: vp-ux-readability
-    line: 13
+    line: 15
+    anchor: "- 主な内容: 業務シナリオ、受入条件、前提、操作、期待結果 など"
     message: BAC の記述方法の解説に留まっており、具体的な受入条件の記述例（シナリオや期待結果）が示されていないため、参照サンプルとしての有用性が低い。
-    anchor: "## 3. 記述内容"
+  - id: F020
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 4
+    anchor: ""
+    message: Frontmatter の type が「project」となっているが、rulebook では「test」固定と定義されており、用語・ラベルの不整合がある。
+  - id: F021
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 5
+    anchor: 本書は、業務として受け入れ可能であることを示す条件を定義するための最小サンプルである。
+    message: draft から ready への遷移条件が明示されていない。
+  - id: F022
+    severity: minor
+    rule: vp-ops-operability
+    line: 11
+    anchor: "- 参照: `../rulebooks/bac-rulebook.md`"
+    message: "sample の更新タイミング（例: rulebook 更新時に追従する）や再生成手順の記載がない。"

@@ -3,40 +3,97 @@ version: 1
 document: cdfd-onboarding
 path: docs/ja/product/010-business-specs/010-data-flow/cdfd-onboarding.md
 target: deliverable
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 88
-graded_at: "2026-09-17T01:40:30.001Z"
+score: 70
+graded_at: "2026-09-27T15:43:50.788Z"
 graded_by: codex-expert-executor
-content_hash: 5fb92a5bd306477a435c70f95f95a2d51cb54b10aa32d685ccbb4234795bdf33
+content_hash: 49e33de5aa2be69433cf813bbcbd95b37a6266c4c857b20a7fb30db27b4f47c1
+source_hashes:
+  catalog-entry: 3947f9651f373eb747ed7a7122361d5ef1083326477eb627765c8d9b6800aec0
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  dependency:cdfd-overview: d21b0a535f2e00298b71f19804552832a8984c57ad7b58a895f7d96e8a3f2bb3
+  members: ec838bbb5673ba76f1a15672e094c00088dcb686a2a67225ca8411c0dc5e90d3
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
 categories:
-  consistency:
+  purpose:
     score: 50
-  usability:
-    score: 100
+  operations:
+    score: 75
+  planning:
+    score: 50
+  business:
+    score: 58
+  consistency:
+    score: 38
   architecture:
     score: 100
-  quality:
+  usability:
     score: 100
+  implementation:
+    score: 50
+  quality:
+    score: 75
 viewpoints:
+  vp-po-purpose-alignment:
+    level: 2
+    score: 50
+  vp-po-decision-readiness:
+    level: 2
+    score: 50
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 2
+    score: 50
+  vp-pm-dependency-risk:
+    level: 2
+    score: 50
+  vp-pm-control-reporting:
+    level: 2
+    score: 50
+  vp-ba-business-value:
+    level: 2
+    score: 50
+  vp-ba-requirements-completeness:
+    level: 1
+    score: 25
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
   vp-arc-cross-document-consistency:
     level: 2
     score: 50
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 2
+    score: 50
+  vp-dev-change-impact:
+    level: 2
+    score: 50
+  vp-dev-testability:
+    level: 2
+    score: 50
   vp-qe-done-criteria:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 4
-    score: 100
-  vp-qe-omissions-consistency:
     level: 2
     score: 50
+  vp-qe-omissions-consistency:
+    level: 1
+    score: 25
   vp-ux-readability:
     level: 4
     score: 100
@@ -44,6 +101,15 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 2
+    score: 50
+  vp-ops-operability:
+    level: 2
+    score: 50
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -54,26 +120,158 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 2
+  major: 18
   minor: 0
   note: 0
 findings:
   - id: F001
     severity: major
+    rule: vp-po-purpose-alignment
+    line: 12
+    anchor: "- **開始と終了**: PO が新しいプロジェクトを立ち上げた時点から、選択した provider の雛形に基づく Kata の配置と稼働構成の初期化が完了し、Plan へ引き渡せる時点までを扱う。"
+    message: 成果物カタログが対象とする repository からの導入、既存プロジェクトへの導入、別リポジトリ構成の必要性と期待成果が説明されておらず、上位目的に対応する対象範囲へ統一する必要がある。
+  - id: F002
+    severity: major
+    rule: vp-po-decision-readiness
+    line: 12
+    anchor: "- **開始と終了**: PO が新しいプロジェクトを立ち上げた時点から、選択した provider の雛形に基づく Kata の配置と稼働構成の初期化が完了し、Plan へ引き渡せる時点までを扱う。"
+    message: 新規、既存、別リポジトリ構成の各導入形態について、採用条件、既存資産への影響、例外時の判断対象を示し、PO が導入境界を承認できるようにする必要がある。
+  - id: F003
+    severity: major
+    rule: vp-pm-plan-feasibility
+    line: 30
+    anchor: >-
+      | プロセス ID | プロセス         | 業務目的                                                                           |
+      主な担当                   |
+      起動条件                                                                                                           |
+      必須性 |
+    message: プロセス表に rulebook と template が必須とする「完了条件」列を追加し、`P-01-01`〜`P-01-03` ごとに主要出力または正本の確定を yes / no で判定できる事実として記載する必要がある。
+  - id: F004
+    severity: major
+    rule: vp-pm-dependency-risk
+    line: 98
+    anchor: >-
+      | 例外 ID   | 対象プロセス         |
+      検出条件                                                                                        |
+      本グループでの扱い                                                                                                   |
+      継続・再開条件                                                                                           |
+    message: 主要例外表に「停止範囲」列を追加し、各例外で停止する後続プロセス、確定してはならない出力、Plan への委譲可否を明示する必要がある。
+  - id: F005
+    severity: major
+    rule: vp-pm-control-reporting
+    line: 12
+    anchor: "- **開始と終了**: PO が新しいプロジェクトを立ち上げた時点から、選択した provider の雛形に基づく Kata の配置と稼働構成の初期化が完了し、Plan へ引き渡せる時点までを扱う。"
+    message: 成果物カタログとの対象範囲差を解消するか、未決事項として影響するプロセス、決定者、決定時期、Schedule または PJR への転記先を明示する必要がある。
+  - id: F006
+    severity: major
+    rule: vp-ba-business-value
+    line: 12
+    anchor: "- **開始と終了**: PO が新しいプロジェクトを立ち上げた時点から、選択した provider の雛形に基づく Kata の配置と稼働構成の初期化が完了し、Plan へ引き渡せる時点までを扱う。"
+    message: 既存プロジェクトおよび別リポジトリ構成で、誰のどの導入課題を解消し、既存設定を保護しながらどの初期状態を成立させるかを主要方針へ対応付ける必要がある。
+  - id: F007
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 12
+    anchor: "- **開始と終了**: PO が新しいプロジェクトを立ち上げた時点から、選択した provider の雛形に基づく Kata の配置と稼働構成の初期化が完了し、Plan へ引き渡せる時点までを扱う。"
+    message: 成果物カタログが要求する repository からの導入、既存プロジェクトへの導入、別リポジトリ構成について、対象範囲、開始条件、正常経路、除外範囲を利用者視点で追加する必要がある。
+  - id: F008
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 30
+    anchor: >-
+      | プロセス ID | プロセス         | 業務目的                                                                           |
+      主な担当                   |
+      起動条件                                                                                                           |
+      必須性 |
+    message: "`P-01-01`〜`P-01-03` の完了条件がなく、各要件の受入可否を判定できないため、主要出力または正本の確定に対応する完了条件を追加する必要がある。"
+  - id: F009
+    severity: major
     rule: vp-arc-cross-document-consistency
     line: 12
+    anchor: "- **開始と終了**: PO が新しいプロジェクトを立ち上げた時点から、選択した provider の雛形に基づく Kata の配置と稼働構成の初期化が完了し、Plan へ引き渡せる時点までを扱う。"
     message: >-
       成果物カタログは repository からの導入、既存プロジェクトへの導入、Detached Unit
       の複数ケースを扱うよう要求しているが、本書は「新しいプロジェクト」の初期セットアップだけに限定しているため、参照文書間で採用する範囲を統一し、各対象ケースの起動条件・差分・例外を追跡可能にする必要がある。
+  - id: F010
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 30
+    anchor: >-
+      | プロセス ID | プロセス         | 業務目的                                                                           |
+      主な担当                   |
+      起動条件                                                                                                           |
+      必須性 |
+    message: 導入条件の確定、Kata の配置、稼働構成の初期化について、実装結果を確認できる完了条件をプロセス表へ追加する必要がある。
+  - id: F011
+    severity: major
+    rule: vp-dev-change-impact
+    line: 12
     anchor: "- **開始と終了**: PO が新しいプロジェクトを立ち上げた時点から、選択した provider の雛形に基づく Kata の配置と稼働構成の初期化が完了し、Plan へ引き渡せる時点までを扱う。"
-  - id: F002
+    message: 既存プロジェクトと別リポジトリ構成について、既存の Kata・稼働構成・生成先に対する参照、追加、競合、非変更の範囲をプロセスと例外へ反映する必要がある。
+  - id: F012
+    severity: major
+    rule: vp-dev-testability
+    line: 30
+    anchor: >-
+      | プロセス ID | プロセス         | 業務目的                                                                           |
+      主な担当                   |
+      起動条件                                                                                                           |
+      必須性 |
+    message: 各プロセスに、必要な出力または正本を確認できる完了条件を追加し、正常系の検証対象と期待結果を一意にする必要がある。
+  - id: F013
+    severity: major
+    rule: vp-qe-verifiability
+    line: 30
+    anchor: >-
+      | プロセス ID | プロセス         | 業務目的                                                                           |
+      主な担当                   |
+      起動条件                                                                                                           |
+      必須性 |
+    message: rulebook の完成判定に従い、各プロセスの主要出力または正本の確定と対応する完了条件を追加し、正常完了の pass / fail を判定可能にする必要がある。
+  - id: F014
     severity: major
     rule: vp-qe-omissions-consistency
     line: 12
+    anchor: "- **開始と終了**: PO が新しいプロジェクトを立ち上げた時点から、選択した provider の雛形に基づく Kata の配置と稼働構成の初期化が完了し、Plan へ引き渡せる時点までを扱う。"
     message: >-
       成果物カタログの note にある repository からの導入、既存プロジェクトへの導入、Detached Unit
       の各ケースが本文に現れず、新規プロジェクト以外の開始条件・正常経路・例外処理を確認できないため、カタログとの範囲差を解消する必要がある。
+  - id: F015
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 30
+    anchor: >-
+      | プロセス ID | プロセス         | 業務目的                                                                           |
+      主な担当                   |
+      起動条件                                                                                                           |
+      必須性 |
+    message: >-
+      `docs/ja/specdojo/rulebooks/cdfd-rulebook.md` の本文要件と `docs/ja/specdojo/templates/cdfd-template.md`
+      に対し、プロセス表の必須列「完了条件」が欠落しているため、全プロセスへ判定可能な完了条件を追加する必要がある。
+  - id: F016
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 98
+    anchor: >-
+      | 例外 ID   | 対象プロセス         |
+      検出条件                                                                                        |
+      本グループでの扱い                                                                                                   |
+      継続・再開条件                                                                                           |
+    message: >-
+      `docs/ja/specdojo/rulebooks/cdfd-rulebook.md`
+      が主要例外表に要求する「停止範囲」が欠落しているため、例外後に確定または起動してはならないプロセス、出力、委譲を各行で明示する必要がある。
+  - id: F017
+    severity: major
+    rule: vp-ops-release-readiness
+    line: 12
     anchor: "- **開始と終了**: PO が新しいプロジェクトを立ち上げた時点から、選択した provider の雛形に基づく Kata の配置と稼働構成の初期化が完了し、Plan へ引き渡せる時点までを扱う。"
+    message: ready 化の前に、成果物カタログとの対象範囲差、プロセス完了条件、例外停止範囲を解消し、PO が業務境界・主要例外・委譲境界を承認できる状態にする必要がある。
+  - id: F018
+    severity: major
+    rule: vp-ops-operability
+    line: 12
+    anchor: "- **開始と終了**: PO が新しいプロジェクトを立ち上げた時点から、選択した provider の雛形に基づく Kata の配置と稼働構成の初期化が完了し、Plan へ引き渡せる時点までを扱う。"
+    message: 既存プロジェクトおよび別リポジトリ構成について、既存設定の検出、変更を許可する範囲、部分生成時の保護、再開位置を運用可能なフローとして追加する必要がある。
 done_criteria:
   satisfied: 3
   total: 3

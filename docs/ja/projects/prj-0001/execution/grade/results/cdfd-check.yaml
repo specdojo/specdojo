@@ -3,34 +3,91 @@ version: 1
 document: cdfd-check
 path: docs/ja/product/010-business-specs/010-data-flow/cdfd-check.md
 target: deliverable
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 83
-graded_at: "2026-09-26T15:34:36.434Z"
-graded_by: agy-expert-executor
+score: 79
+graded_at: "2026-09-27T15:30:22.265Z"
+graded_by: codex-expert-executor
 content_hash: e02cebf2a8ee62470a475fede1fcb6267cfcda9d93d320313a938f12c69ed3a8
+source_hashes:
+  catalog-entry: 10d09cd0a80ab6a29ea297941cf98088673b99b0c6643f82c07835fbe5705653
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  dependency:cdfd-overview: d21b0a535f2e00298b71f19804552832a8984c57ad7b58a895f7d96e8a3f2bb3
+  members: ec838bbb5673ba76f1a15672e094c00088dcb686a2a67225ca8411c0dc5e90d3
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
 categories:
+  purpose:
+    score: 100
+  operations:
+    score: 81
+  planning:
+    score: 75
+  business:
+    score: 83
   consistency:
     score: 63
-  usability:
-    score: 88
   architecture:
     score: 100
+  usability:
+    score: 88
+  implementation:
+    score: 75
   quality:
-    score: 83
+    score: 63
 viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 2
+    score: 50
+  vp-pm-dependency-risk:
+    level: 3
+    score: 75
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 2
+    score: 50
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
   vp-arc-cross-document-consistency:
     level: 3
     score: 75
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
-  vp-qe-done-criteria:
+  vp-dev-implementation-readiness:
+    level: 2
+    score: 50
+  vp-dev-change-impact:
     level: 4
     score: 100
+  vp-dev-testability:
+    level: 2
+    score: 50
+  vp-qe-done-criteria:
+    level: 2
+    score: 50
   vp-qe-verifiability:
     level: 2
     score: 50
@@ -46,6 +103,15 @@ viewpoints:
   vp-ux-language-consistency:
     level: 4
     score: 100
+  vp-ops-release-readiness:
+    level: 2
+    score: 50
+  vp-ops-operability:
+    level: 3
+    score: 75
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
@@ -54,11 +120,39 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 2
-  minor: 6
+  major: 8
+  minor: 10
   note: 0
 findings:
   - id: F001
+    severity: major
+    rule: vp-pm-plan-feasibility
+    line: 52
+    anchor: >-
+      | プロセス ID | プロセス           |
+      業務目的                                                                                        | 主な担当 |
+      起動条件                                                                     | 必須性 |
+    message: P-08〜P-10 のプロセス表に「完了条件」列がなく、各作業単位の終了判定を進捗確認へ使えないため、主要出力または正本の確定に対応する yes / no の完了条件を全行へ追加してください。
+  - id: F002
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 25
+    anchor: >-
+      Check グループは P-08〜P-10 の 3 領域からなる。領域 ID と名称、およびグループ単位の主要入力・主要出力・データストアは [[cdfd-overview|概念データフロー図（全体概要）]]
+      を正本とし、本章では領域内部を詳細化する。
+    message: >-
+      全体概要 cdfd-overview は Check の主要出力に「Orchestrator への評価・報告・生成結果」を定め、cdfd-orchestrator はそれを P-14-04 の入力としているが、本書の
+      P-08〜P-10 の主要出力と図は Orchestrator への応答を示さず、8.2 の包括的な委譲行からも返却元プロセスを識別できないため、各領域の確定プロセスから Orchestrator へ返す結果を明示してください。
+  - id: F003
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 52
+    anchor: >-
+      | プロセス ID | プロセス           |
+      業務目的                                                                                        | 主な担当 |
+      起動条件                                                                     | 必須性 |
+    message: P-08〜P-10 の全プロセスについて、業務目的を達成したと利用者が確認できる完了条件が欠けているため、各行へ主要出力または正本の確定に対応する yes / no の受入条件を追加してください。
+  - id: F004
     severity: minor
     rule: vp-arc-cross-document-consistency
     line: 19
@@ -68,7 +162,46 @@ findings:
     message: >-
       「member・agent・runner の責任分担」の正本を pm-roles としているが、同ファイルは Role code と責務だけを定義し, 兼務・実行主体は pm-members.yaml, 人間と AI Agent
       の責任分担原則は cdfd-overview に委譲しているため, 参照先を責務ごとに分けてください。
-  - id: F002
+  - id: F005
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 25
+    anchor: >-
+      Check グループは P-08〜P-10 の 3 領域からなる。領域 ID と名称、およびグループ単位の主要入力・主要出力・データストアは [[cdfd-overview|概念データフロー図（全体概要）]]
+      を正本とし、本章では領域内部を詳細化する。
+    message: >-
+      cdfd-overview は Check の主要出力に「Orchestrator への評価・報告・生成結果」を定め、cdfd-orchestrator は Check の応答を P-14-04 の入力としているが、本書の
+      P-08〜P-10 の主要出力と図には Orchestrator への応答がなく、8.2 の包括的な委譲行だけではプロセス単位の返却元を特定できないため、各領域の確定プロセスから Orchestrator
+      への応答を示してください。
+  - id: F006
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 52
+    anchor: >-
+      | プロセス ID | プロセス           |
+      業務目的                                                                                        | 主な担当 |
+      起動条件                                                                     | 必須性 |
+    message: 全九プロセスに完了条件がないため、実装時にどの出力・記録状態をもって処理成功とするか確定できず、主要出力または正本の確定に対応する判定可能な完了条件を各行へ追加してください。
+  - id: F007
+    severity: major
+    rule: vp-dev-testability
+    line: 52
+    anchor: >-
+      | プロセス ID | プロセス           |
+      業務目的                                                                                        | 主な担当 |
+      起動条件                                                                     | 必須性 |
+    message: P-08〜P-10 の正常系プロセスに完了条件がなく、実装・設定変更後に主要出力が成立したかを pass / fail で確認できないため、各行へ検証可能な完了条件を追加してください。
+  - id: F008
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 25
+    anchor: >-
+      Check グループは P-08〜P-10 の 3 領域からなる。領域 ID と名称、およびグループ単位の主要入力・主要出力・データストアは [[cdfd-overview|概念データフロー図（全体概要）]]
+      を正本とし、本章では領域内部を詳細化する。
+    message: >-
+      DC-001 が要求する全体概要の主要出力の領域別詳細化について、「Orchestrator への評価・報告・生成結果」が P-08〜P-10 の主要出力へ配分されておらず、各結果を返す確定プロセスも識別できないため,
+      プロセス領域章へ追加してください。
+  - id: F009
     severity: major
     rule: vp-qe-verifiability
     line: 52
@@ -79,7 +212,7 @@ findings:
     message: >-
       P-08〜P-10 の全プロセス表に rulebook が必須とする「完了条件」列がなく, 各プロセスの業務目的を達成したかを yes / no で判定できないため,
       主要出力または正本の確定と対応する完了条件を各行へ追加してください。
-  - id: F003
+  - id: F010
     severity: major
     rule: vp-qe-omissions-consistency
     line: 52
@@ -90,7 +223,7 @@ findings:
     message: >-
       cdfd-rulebook の本文要件と完成判定, および cdfd-template・cdfd-sample が必須とする「完了条件」列が P-08〜P-10 の全プロセス表から欠落しているため,
       各プロセスへ判定可能な完了条件を追加してください。
-  - id: F004
+  - id: F011
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 304
@@ -101,7 +234,7 @@ findings:
       本グループでの扱い                                                                                                                     
       | 継続・再開条件                                                                                           |
     message: 主要例外表に cdfd-rulebook が必須とする「停止範囲」列がなく, 扱い欄に停止内容が混在しているため, 確定または起動してはならない後続プロセス・出力・委譲を例外ごとに独立して示してください。
-  - id: F005
+  - id: F012
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 19
@@ -111,7 +244,17 @@ findings:
     message: >-
       rulebook が求める人間と AI Agent の責任分担の対応文書として pm-roles だけを示しているが, 同文書は実行主体の割当を pm-members.yaml へ委譲しているため, pm-members と
       cdfd-overview への参照を補ってください。
-  - id: F006
+  - id: F013
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 25
+    anchor: >-
+      Check グループは P-08〜P-10 の 3 領域からなる。領域 ID と名称、およびグループ単位の主要入力・主要出力・データストアは [[cdfd-overview|概念データフロー図（全体概要）]]
+      を正本とし、本章では領域内部を詳細化する。
+    message: >-
+      cdfd-overview の Check の主要出力に含まれる「Orchestrator への評価・報告・生成結果」が P-08〜P-10 の主要出力から欠落しているため、各結果を確定するプロセスと Orchestrator
+      への応答を対応付けてください。
+  - id: F014
     severity: minor
     rule: vp-ux-readability
     line: 52
@@ -120,7 +263,7 @@ findings:
       業務目的                                                                                        | 主な担当 |
       起動条件                                                                     | 必須性 |
     message: P-08〜P-10 のプロセス表に完了条件がないため, 読者が「業務目的」と「完了したと判断できる事実」を区別できず, 各プロセスの終了点を個別入出力表から推測する必要があるため, 完了条件列を追加してください。
-  - id: F007
+  - id: F015
     severity: minor
     rule: vp-ux-readability
     line: 19
@@ -130,7 +273,7 @@ findings:
     message: >-
       適用範囲で Role code の語彙と member・agent・runner の責任分担を一つの pm-roles 正本へまとめて表現しており, 初見の読者がロール定義と実行主体割当の違いを読み分けにくいため,
       正本を分けて記述してください。
-  - id: F008
+  - id: F016
     severity: minor
     rule: vp-ux-user-flow
     line: 19
@@ -140,7 +283,30 @@ findings:
     message: >-
       member・agent・runner の責任分担を確認する導線が Role code の一覧である pm-roles に止まり, 実行主体の正本 pm-members と人間／AI の原則を示す cdfd-overview
       へ直接到達できないため, 参照を分けてください。
+  - id: F017
+    severity: major
+    rule: vp-ops-release-readiness
+    line: 52
+    anchor: >-
+      | プロセス ID | プロセス           |
+      業務目的                                                                                        | 主な担当 |
+      起動条件                                                                     | 必須性 |
+    message: 全九プロセスで rulebook の ready 条件となる完了条件が欠け、プロセス定義の完成可否を確認できないため、主要出力または正本の確定に対応する判定可能な完了条件を追加してから ready 化を判断してください。
+  - id: F018
+    severity: minor
+    rule: vp-ops-operability
+    line: 304
+    anchor: >-
+      | 例外 ID   | 対象プロセス         |
+      検出条件                                                                                                                          
+      |
+      本グループでの扱い                                                                                                                     
+      | 継続・再開条件                                                                                           |
+    message: 主要例外表に「停止範囲」列がなく、確定または起動してはならない後続プロセス・出力・委譲が扱い欄へ混在しているため、例外対応時に停止対象を一意に確認できる独立列を追加してください。
 done_criteria:
-  satisfied: 3
+  satisfied: 2
   total: 3
+  unsatisfied:
+    DC-001:
+      - BA
   detail_ref: cdfd-check-grade-criteria

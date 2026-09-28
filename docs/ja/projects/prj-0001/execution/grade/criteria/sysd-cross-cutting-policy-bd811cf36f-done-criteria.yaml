@@ -2,7 +2,7 @@
 id: sysd-cross-cutting-policy-grade-criteria
 document: sysd-cross-cutting-policy
 path: docs/ja/product/040-system-design/sysd-cross-cutting-policy.md
-graded_at: "2026-09-23T16:33:34.422Z"
+graded_at: "2026-09-27T22:21:41.318Z"
 graded_by: codex-expert-executor
 content_hash: d9215630b5b9505eb05ae82225d1c3578d06e11d724852874456a5826b9e9010
 summary:
@@ -22,7 +22,7 @@ criteria:
       - DEV
     viewpoint: vp-dev-implementation-readiness
     status: unsatisfied
-    reason: provider障害の判定・retry規則はあるが、冪等、タイムアウトの設定・打切り、ログ方針が記述されていない。
+    reason: 冪等方針、タイムアウトの設定・打切り方針、ログ方針が記述されていない。
   - id: DC-003
     text: 横断ルールのテスト・検証方針が確認できること
     roles:
@@ -35,4 +35,4 @@ criteria:
       - OPS
     viewpoint: vp-ops-operability
     status: unsatisfied
-    reason: セキュリティ規則はあるが、監視およびトレーシングの運用観点が記述されていない。
+    reason: 監視およびトレーシングの運用方針が記述されていない。

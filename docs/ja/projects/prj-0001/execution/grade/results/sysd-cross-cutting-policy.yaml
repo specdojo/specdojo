@@ -3,23 +3,71 @@ version: 1
 document: sysd-cross-cutting-policy
 path: docs/ja/product/040-system-design/sysd-cross-cutting-policy.md
 target: deliverable
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 69
-graded_at: "2026-09-23T16:33:34.422Z"
+score: 66
+graded_at: "2026-09-27T22:21:41.318Z"
 graded_by: codex-expert-executor
 content_hash: d9215630b5b9505eb05ae82225d1c3578d06e11d724852874456a5826b9e9010
+source_hashes:
+  catalog-entry: d83e8cfcd93baea87c5a83396cfc0763b481ba86313bfeb3356cddec6e89aa2f
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  dependency:sysd-index: 21eb4cf38ac3c7ca9157dd2c5ceb0c29f1edfaeb09802bb7583af11ecbe68813
+  members: ec838bbb5673ba76f1a15672e094c00088dcb686a2a67225ca8411c0dc5e90d3
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
 categories:
+  purpose:
+    score: 75
+  operations:
+    score: 69
+  planning:
+    score: 75
+  business:
+    score: 67
   consistency:
     score: 50
+  architecture:
+    score: 83
   usability:
     score: 75
-  architecture:
-    score: 100
+  implementation:
+    score: 63
   quality:
-    score: 58
+    score: 56
 viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 2
+    score: 50
+  vp-po-publication-accountability:
+    level: 3
+    score: 75
+  vp-pm-plan-feasibility:
+    level: 3
+    score: 75
+  vp-pm-dependency-risk:
+    level: 3
+    score: 75
+  vp-pm-control-reporting:
+    level: 3
+    score: 75
+  vp-ba-business-value:
+    level: 3
+    score: 75
+  vp-ba-requirements-completeness:
+    level: 2
+    score: 50
+  vp-ba-stakeholder-clarity:
+    level: 3
+    score: 75
   vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-technical-constraints:
     level: 2
     score: 50
   vp-arc-conciseness:
@@ -28,6 +76,15 @@ viewpoints:
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 2
+    score: 50
+  vp-dev-change-impact:
+    level: 3
+    score: 75
+  vp-dev-testability:
+    level: 2
+    score: 50
   vp-qe-done-criteria:
     level: 1
     score: 25
@@ -46,6 +103,15 @@ viewpoints:
   vp-ux-language-consistency:
     level: 3
     score: 75
+  vp-ops-release-readiness:
+    level: 2
+    score: 50
+  vp-ops-operability:
+    level: 2
+    score: 50
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
@@ -54,11 +120,61 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 5
-  minor: 5
+  major: 12
+  minor: 12
   note: 0
 findings:
   - id: F001
+    severity: major
+    rule: vp-po-decision-readiness
+    line: 194
+    anchor: "| OPD / NFR / DEC | （なし）                  | 後続成果物で接続        | 現時点 |"
+    message: "`OPD / NFR / DEC`を「後続成果物で接続」とするだけで、未決事項ごとの判断者、判断期限、影響範囲、次アクションがなく、POが承認・保留・差し戻しを選べる状態になっていない。"
+  - id: F002
+    severity: minor
+    rule: vp-po-publication-accountability
+    line: 163
+    anchor: "- **Rule（MUST NOT）**: 通常運用で確認回避、repository外の無制限書き込み、review agentの成果物編集、agentによる最終承認を許可しない。"
+    message: "`scp-SEC-001`はagentによる最終承認を禁止しているが、公開可否を最終判断し説明責任を負う人間のRole codeをPO等へ一意に割り当てていない。"
+  - id: F003
+    severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 11
+    anchor: "## 2. ルール一覧（ID/カテゴリ/要約/必須度）"
+    message: ルール一覧にはRule IDとOwnerがある一方、各ルールの実装済み・未実装、依存順、着手または確認タイミングがなく、進捗確認可能な作業計画へ直接展開できない。
+  - id: F004
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 194
+    anchor: "| OPD / NFR / DEC | （なし）                  | 後続成果物で接続        | 現時点 |"
+    message: OPD・NFR・DECへの接続を将来へ送っているが、作成対象ID、担当、ScheduleまたはPJRへの登録、未整備による後続影響を特定していない。
+  - id: F005
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 181
+    anchor: 現時点で恒久例外はない。例外を追加する場合は、Rule ID、影響範囲、期限、承認者、復帰条件、DECまたは登録項目IDを記録する。
+    message: 例外についてDECまたは登録項目IDを要求しているが、ルール違反、リスク、課題、変更要求をどの種別へ記録し誰が報告・追跡するかを区別していない。
+  - id: F006
+    severity: minor
+    rule: vp-ba-business-value
+    line: 3
+    anchor: >-
+      SpecDojo CLI、agent、実行runner、Git
+      worktreeへ横断的に適用する責務、設定解決、状態遷移、失敗処理、権限のルールを定義する。実装・設定を一次情報とし、本書は設計意図と検証可能な制約のSSOTである。
+    message: 文書目的と各Rationaleは技術的効果を示す一方、どのプロジェクト対象者の課題とBV・成功基準に寄与するかを上位文書参照または対応関係で示していない。
+  - id: F007
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 11
+    anchor: "## 2. ルール一覧（ID/カテゴリ/要約/必須度）"
+    message: 利用者が確認すべき共通エラー、冪等、タイムアウト、ログ・監査ログ、トレーシング、設定上書き階層、モジュール境界の要件と受入条件がなく、これらを対象外とする記述もない。
+  - id: F008
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 14
+    anchor: "| Rule ID | Category | Summary | Level | Owner |"
+    message: ルール一覧のOwner列はARC・QE・PM・OPSを示すだけで、文書を利用するDEV、確認者、最終承認者、および各Roleが合意する対象を定義していない。
+  - id: F009
     severity: major
     rule: vp-arc-cross-document-consistency
     line: 3
@@ -67,14 +183,23 @@ findings:
       worktreeへ横断的に適用する責務、設定解決、状態遷移、失敗処理、権限のルールを定義する。実装・設定を一次情報とし、本書は設計意図と検証可能な制約のSSOTである。
     message: >-
       成果物カタログはエラー・タイムアウト・冪等・トレーシング・設定上書き階層・モジュール境界を対象として宣言しているが、本文はSpecDojoのagent実行規範に限定されているため、カタログまたは本文の適用範囲を一致させる必要がある。
-  - id: F002
+  - id: F010
     severity: minor
     rule: vp-arc-cross-document-consistency
     line: 190
     anchor: "| CDFD            | `cdfd-task-execution`     | task状態の概念フロー    | 参照   |"
     message: >-
       関連文書表がstatus=deprecatedかつtrash配下へ移動済みの`cdfd-task-execution`、`cdfd-register-lifecycle`、`cdfd-multi-project`を現行参照としているため、後継SSOTへの更新または履歴参照である旨の明示が必要である。
-  - id: F003
+  - id: F011
+    severity: major
+    rule: vp-arc-technical-constraints
+    line: 109
+    anchor: >-
+      - **Rule（MUST）**: policyはtaskのcriticalityと正規化signalに従い、上限付きretry、適合memberへのfallback、またはblockを選ぶ。独立したReady
+      taskと別providerは継続できる。
+    message: >-
+      `scp-RET-002`が依存するcriticality区分、正規化signalとの対応、attempt・backoff上限の設定キーが定義されておらず、retry・fallback・blockを選択する構成判断を実装へ固定できない。
+  - id: F012
     severity: minor
     rule: vp-arc-conciseness
     line: 154
@@ -88,19 +213,40 @@ findings:
     message: >-
       `scp-GIT-004`はRule・Scope・EnforcementでVitest setup、`gitEnvironment()`、HEAD・local
       config比較などを反復し、実装ファイルで管理できる低レベル手順まで再掲しているため、Ruleを不変条件に絞り検証詳細をEnforcementと参照先へ集約する必要がある。
-  - id: F004
+  - id: F013
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 11
+    anchor: "## 2. ルール一覧（ID/カテゴリ/要約/必須度）"
+    message: 実装対象として必要な冪等、タイムアウトの設定・打切り、ログ方針がなく、既存のprovider retry規則にもattempt・backoff上限の値または設定キーがないため、DEVが必要な設定変更を確定できない。
+  - id: F014
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 183
+    anchor: "## 5. 関連ドキュメント導線（SYSD/SYSD-CF/NFR/OPD/OPR/DEC）"
+    message: 関連文書表と各Referencesは参照先を列挙するだけで、Rule変更時に更新すべきschema、生成物、CLI互換性、移行手順、回帰対象の対応関係を示していない。
+  - id: F015
+    severity: major
+    rule: vp-dev-testability
+    line: 109
+    anchor: >-
+      - **Rule（MUST）**: policyはtaskのcriticalityと正規化signalに従い、上限付きretry、適合memberへのfallback、またはblockを選ぶ。独立したReady
+      taskと別providerは継続できる。
+    message: >-
+      `scp-RET-002`のEnforcementはattempt上限、backoff上限、候補順、on_exhaustedのテスト名を列挙するだけで、入力別の期待動作、上限値または設定キー、実行する検証コマンドがなく、変更後の合否を再現できない。
+  - id: F016
     severity: major
     rule: vp-qe-done-criteria
     line: 11
     anchor: "## 2. ルール一覧（ID/カテゴリ/要約/必須度）"
     message: DC-002が要求する冪等方針、タイムアウトの設定・打切り方針、ログ方針がルール一覧および詳細に存在せず、provider障害の判定・retry規則だけでは条件を満たさない。
-  - id: F005
+  - id: F017
     severity: major
     rule: vp-qe-done-criteria
     line: 194
     anchor: "| OPD / NFR / DEC | （なし）                  | 後続成果物で接続        | 現時点 |"
     message: DC-004が要求する監視およびトレーシングの運用観点がなく、関連文書表でもOPDを「なし」としているため、セキュリティ規則だけでは条件を満たさない。
-  - id: F006
+  - id: F018
     severity: major
     rule: vp-qe-verifiability
     line: 109
@@ -110,13 +256,13 @@ findings:
     message: >-
       `scp-RET-002`はcriticalityと正規化signalに応じてretry・fallback・blockを選ぶとしているが,
       criticality区分、signalとの対応表、attempt・backoff上限の値または設定キーがなく、実装・テストのpass/failを一意に判定できない。
-  - id: F007
+  - id: F019
     severity: major
     rule: vp-qe-omissions-consistency
     line: 11
     anchor: "## 2. ルール一覧（ID/カテゴリ/要約/必須度）"
     message: rulebookと成果物カタログが要求する共通エラー、冪等、タイムアウト、ログ・監査ログ、トレーシング、設定上書き階層、モジュール境界のルールが欠落しているため、必須領域を追加するか適用範囲の正式な変更が必要である。
-  - id: F008
+  - id: F020
     severity: minor
     rule: vp-ux-readability
     line: 154
@@ -128,20 +274,32 @@ findings:
       configを比較して、差分があれば親検証・reporter・統合へ進めずblockする。runnerが作成したbranchの表示用metadataは比較から除外するが、`core.bare`を含むrepository動作に関わる設定は除外しない。テストfixtureのidentityはプロセス環境だけに注入し、local
       configへ書き込まない。
     message: >-
-      `scp-GIT-004`のRuleが環境変数除去、Vitest setup、Git起動環境、executor権限、HEAD・config比較、除外条件、fixture
-      identityを一段落に集約しているため、同一Rule内の条件別箇条書きへ分けて判断点を追いやすくする必要がある。
-  - id: F009
+      `scp-GIT-004`のRuleが環境変数除去、Vitest setup、Git起動環境、executor権限、HEAD・config比較、除外条件、fixture identityを一段落に集約しているため,
+      同一Rule内の条件別箇条書きへ分けて判断点を追いやすくする必要がある。
+  - id: F021
     severity: minor
     rule: vp-ux-user-flow
     line: 96
     anchor: "- **References（参照）**: `cdfd-task-execution`、登録簿運用ガイド。"
     message: "`登録簿運用ガイド`および複数箇所の`provider別子設計`が文書ID・相対パス・リンクを持たず参照先を一意に特定できないため、正式なIDまたはリポジトリ相対パスへ置き換える必要がある。"
-  - id: F010
+  - id: F022
     severity: minor
     rule: vp-ux-language-consistency
     line: 20
     anchor: "| scp-CFG-002 | Configuration | 設定と秘密情報の責務を分離する | MUST NOT | ARC / OPS |"
     message: "`scp-CFG-002`の要約「設定と秘密情報の責務を分離する」に`MUST NOT`を組み合わせると責務分離を禁止する意味になるため、詳細規則に合わせて要約を「秘密情報を設定・文書へ保存しない」等へ修正する必要がある。"
+  - id: F023
+    severity: major
+    rule: vp-ops-release-readiness
+    line: 1
+    anchor: "# SpecDojo システム設計横断ルール"
+    message: statusがdraftのまま、未充足の横断領域、deprecated参照、未接続のOPD・NFR・DECを解消するready条件、承認者、公開前確認手順が本文にない。
+  - id: F024
+    severity: major
+    rule: vp-ops-operability
+    line: 194
+    anchor: "| OPD / NFR / DEC | （なし）                  | 後続成果物で接続        | 現時点 |"
+    message: DC-004が要求する監視およびトレーシングの運用観点がなく、関連文書表でもOPDを「なし」としているため、セキュリティ規則だけでは条件を満たさない。
 done_criteria:
   satisfied: 2
   total: 4

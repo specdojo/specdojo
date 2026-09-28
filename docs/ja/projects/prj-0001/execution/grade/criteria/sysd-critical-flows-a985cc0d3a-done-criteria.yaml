@@ -2,12 +2,12 @@
 id: sysd-critical-flows-grade-criteria
 document: sysd-critical-flows
 path: docs/ja/product/040-system-design/sysd-critical-flows.md
-graded_at: "2026-09-19T16:29:47.712Z"
+graded_at: "2026-09-27T22:14:31.751Z"
 graded_by: codex-expert-executor
-content_hash: 0c053df264b820997c73427fd43ce256296cc1a9a9486c6e08649b547c4686a5
+content_hash: 966617c380ef236d4b8e01cde7d9122583b38dadea3d63971773790324dc133f
 summary:
-  satisfied: 5
-  unsatisfied: 0
+  satisfied: 1
+  unsatisfied: 4
   total: 5
 criteria:
   - id: DC-001
@@ -15,13 +15,15 @@ criteria:
     roles:
       - BA
     viewpoint: vp-ba-business-value
-    status: satisfied
+    status: unsatisfied
+    reason: 事故論点は示されるが、各フローの対象者、業務影響、期待価値および比較による選定理由が不足している。
   - id: DC-002
     text: 重要フローの内容を承認できること
     roles:
       - PO
     viewpoint: vp-po-decision-readiness
-    status: satisfied
+    status: unsatisfied
+    reason: 承認対象、未決事項、設定値の確定条件、承認者、ready化条件が不足している。
   - id: DC-003
     text: フローの境界・永続化点・再実行性・失敗時挙動が定義されていること
     roles:
@@ -33,10 +35,12 @@ criteria:
     roles:
       - QE
     viewpoint: vp-qe-verifiability
-    status: satisfied
+    status: unsatisfied
+    reason: テスト参照が一般名称またはglob風表記で、実行条件・期待結果・pass / fail基準が不足している。
   - id: DC-005
     text: フロー実装の共通理解として参照できること
     roles:
       - DEV
     viewpoint: vp-dev-implementation-readiness
-    status: satisfied
+    status: unsatisfied
+    reason: 実装対象の一意な参照、主要設定キー・値、入出力契約が不足し、共通実装理解から具体作業へ接続できない。

@@ -1,0 +1,32 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: cdsd-sharing-grade-criteria
+document: cdsd-sharing
+path: docs/ja/product/010-business-specs/020-data-model/cdsd-sharing.md
+graded_at: "2026-09-27T16:41:01.418Z"
+graded_by: codex-expert-executor
+content_hash: b20d1b0c124fac099975cbc56ffbe57def7e83dd272e665fa1c965ed77b4009a
+summary:
+  satisfied: 1
+  unsatisfied: 2
+  total: 3
+criteria:
+  - id: DC-001
+    text: データストアの業務的役割・内容・粒度が記述されていること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: unsatisfied
+    reason: カタログ対象の成果物本体・成果物索引が未収載で、費用・作業記録の粒度も未定である。
+  - id: DC-002
+    text: データストア構成を設計の基礎として参照できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: unsatisfied
+    reason: カタログ対象のデータストア構成が揃わず、成果物本体・成果物索引の正本区分、生成元、更新責務を設計の基礎として参照できない。
+  - id: DC-003
+    text: データ検証・整合性確認の対象が識別できること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: satisfied

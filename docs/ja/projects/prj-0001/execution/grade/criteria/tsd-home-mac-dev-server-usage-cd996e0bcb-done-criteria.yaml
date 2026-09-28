@@ -2,9 +2,9 @@
 id: tsd-home-mac-dev-server-usage-grade-criteria
 document: tsd-home-mac-dev-server-usage
 path: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server-usage.md
-graded_at: "2026-09-13T23:53:04.813Z"
-graded_by: gemma-expert-executor
-content_hash: 8f861937dd50968fb1168128903f185015cd62d0d7b5797b9be03a1fba2f7407
+graded_at: "2026-09-27T20:59:44.346Z"
+graded_by: codex-expert-executor
+content_hash: a9e13141cb32fbc617b89a475c0cd042104391a254ba40ec01c346d05b8cf3b8
 summary:
   satisfied: 2
   unsatisfied: 3
@@ -16,21 +16,21 @@ criteria:
       - BA
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
-    reason: 採用技術の選定理由と業務要件の整合性に関する記述がない。
+    reason: 採用技術の選定理由と業務要件との対応が記載されていない。
   - id: DC-002
     text: 技術スタック選定を承認できること
     roles:
       - PO
     viewpoint: vp-po-decision-readiness
     status: unsatisfied
-    reason: 技術スタック選定を承認するための判断材料（比較検討等）が記載されていない。
+    reason: 技術スタック選定を承認するための比較案、判断論点、承認者、未決事項が記載されていない。
   - id: DC-003
     text: 技術的制約・ライセンス・バージョン方針が識別できること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
-    reason: 全体的な技術的制約・ライセンス・バージョン方針の明示的な定義がない。
+    reason: 技術的制約の一部は示されるが、ライセンスとバージョン方針が識別できない。
   - id: DC-004
     text: テストフレームワーク・CI/CD環境の参照として使えること
     roles:

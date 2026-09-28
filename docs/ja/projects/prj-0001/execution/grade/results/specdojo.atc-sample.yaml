@@ -3,34 +3,80 @@ version: 1
 document: specdojo:atc-sample
 path: docs/ja/specdojo/samples/atc-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: fail
-score: 46
-graded_at: "2026-09-08T23:36:15.813Z"
-graded_by: gemma-expert-executor
+score: 41
+graded_at: "2026-09-27T20:37:37.569Z"
+graded_by: agy-claude-expert-executor
 content_hash: bb2f6e0c8c7c5eff9472bb592cb47cbea78c30dceaccc2275144118a50adefc4
 categories:
-  consistency:
-    score: 25
-  usability:
-    score: 67
+  purpose:
+    score: 50
+  operations:
+    score: 69
+  planning:
+    score: 50
+  business:
+    score: 42
   architecture:
-    score: 100
+    score: 92
+  usability:
+    score: 50
+  implementation:
+    score: 38
   quality:
-    score: 13
+    score: 17
+  consistency:
+    score: 0
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
     level: 2
     score: 50
+  vp-po-decision-readiness:
+    level: 2
+    score: 50
+  vp-po-publication-accountability:
+    level: 3
+    score: 75
+  vp-pm-plan-feasibility:
+    level: 2
+    score: 50
+  vp-pm-dependency-risk:
+    level: 2
+    score: 50
+  vp-pm-control-reporting:
+    level: 2
+    score: 50
+  vp-ba-business-value:
+    level: 2
+    score: 50
+  vp-ba-requirements-completeness:
+    level: 1
+    score: 25
+  vp-ba-stakeholder-clarity:
+    level: 2
+    score: 50
+  vp-arc-technical-constraints:
+    level: 3
+    score: 75
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
-  vp-qe-verifiability:
+  vp-dev-implementation-readiness:
     level: 1
     score: 25
+  vp-dev-change-impact:
+    level: 2
+    score: 50
+  vp-dev-testability:
+    level: 2
+    score: 50
+  vp-qe-verifiability:
+    level: 0
+    score: 0
   vp-qe-omissions-consistency:
     level: 0
     score: 0
@@ -41,62 +87,193 @@ viewpoints:
     level: 1
     score: 25
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 2
+    score: 50
+  vp-ops-release-readiness:
+    level: 2
+    score: 50
+  vp-ops-operability:
+    level: 2
+    score: 50
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
-  blocker: 4
-  major: 3
-  minor: 1
+  blocker: 5
+  major: 19
+  minor: 4
   note: 0
 findings:
-  - id: F003
-    severity: blocker
-    rule: vp-qe-omissions-consistency
-    line: 2
-    message: Frontmatter に必須項目である `title` および `based_on` が欠落している。
-    anchor: ""
   - id: F001
     severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 3
-    message: id が rulebook で定義された `atc-＜term＞` 形式に従っていない。
-    anchor: "## 1. 目的と適用範囲"
-  - id: F005
-    severity: blocker
-    rule: vp-qe-kata-conformance
-    line: 4
-    message: Frontmatter の `type` が `test` ではなく `project` となっている。
-    anchor: ""
+    rule: vp-po-purpose-alignment
+    line: 5
+    anchor: 本書は、受入テスト仕様を業務シナリオ/受入条件単位で分割して定義する（仕様）ための最小サンプルである。
+    message: Frontmatter に based_on が存在せず、上位文書（tsp-index, atc-index）との目的整合を確認できない。
   - id: F002
     severity: major
-    rule: vp-qe-verifiability
-    line: 57
-    message: 受入カタログのサンプルでありながら、判定基準やテストケースの具体的記述例が全く含まれていない。
-    anchor: ""
+    rule: vp-po-decision-readiness
+    line: 26
+    anchor: "## 5. 未解決事項"
+    message: 未解決事項の論点に判断者、影響範囲、次アクションが記載されておらず、PO が承認判断を行えない。
+  - id: F003
+    severity: minor
+    rule: vp-po-publication-accountability
+    line: 1
+    anchor: "# [受入テスト対象別](../rulebooks/atc-rulebook.md) サンプル"
+    message: 公開可否の最終判断や承認責任者に関する記述がない。
   - id: F004
-    severity: blocker
-    rule: vp-qe-omissions-consistency
-    line: 42
-    message: rulebook で定義された必須構成（見出し 1〜6）がすべて欠落している。
-    anchor: ""
+    severity: major
+    rule: vp-pm-plan-feasibility
+    line: 1
+    anchor: "# [受入テスト対象別](../rulebooks/atc-rulebook.md) サンプル"
+    message: 完了条件、担当 Role code、依存関係が未記載で、タスク化や進捗確認に使える粒度になっていない。
+  - id: F005
+    severity: major
+    rule: vp-pm-dependency-risk
+    line: 1
+    anchor: "# [受入テスト対象別](../rulebooks/atc-rulebook.md) サンプル"
+    message: depends_on/based_on が未定義で、後続成果物・スケジュールへの影響やリスクが識別されていない。
   - id: F006
-    severity: blocker
-    rule: vp-qe-kata-conformance
-    line: 42
-    message: "本文構成が rulebook の標準テンプレ（## 1. 概要 〜 ## 6. 受入観点とケース）に準拠していない。"
-    anchor: ""
+    severity: major
+    rule: vp-pm-control-reporting
+    line: 1
+    anchor: "# [受入テスト対象別](../rulebooks/atc-rulebook.md) サンプル"
+    message: PJR 転記候補、報告先、対応方針、担当 Role code が未記載で、進捗管理や課題追跡に使えない。
   - id: F007
     severity: major
-    rule: vp-ux-readability
-    line: 37
-    message: ATCの具体的な書き方を示すサンプルとして機能しておらず, 初見の読者が作成方法を理解できない。
-    anchor: ""
+    rule: vp-ba-business-value
+    line: 5
+    anchor: 本書は、受入テスト仕様を業務シナリオ/受入条件単位で分割して定義する（仕様）ための最小サンプルである。
+    message: 対象者の業務課題、期待価値、成功基準が明示されておらず、ビジネス価値の説明が不十分。
   - id: F008
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 15
+    anchor: "- 主な内容: 個別受入シナリオの前提、テスト条件、期待結果、合格基準、関連する業務受入条件ID/システム受入条件ID"
+    message: rulebook が求める受入条件・対象範囲・対象外の具体的記述例が欠落しており、サンプルとして要件の完成像を示せていない。
+  - id: F009
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 1
+    anchor: "# [受入テスト対象別](../rulebooks/atc-rulebook.md) サンプル"
+    message: 用語定義が存在せず、受入テスト固有の概念（観点、ケース、trace_key等）の定義がサンプル内で確認できない。
+  - id: F010
+    severity: major
+    rule: vp-ba-stakeholder-clarity
+    line: 1
+    anchor: "# [受入テスト対象別](../rulebooks/atc-rulebook.md) サンプル"
+    message: 関係者（PO、QA、利用部門等）、確認者、合意対象がサンプル内に記載されていない。
+  - id: F011
+    severity: minor
+    rule: vp-arc-technical-constraints
+    line: 11
+    anchor: "- 参照: `../rulebooks/atc-rulebook.md`"
+    message: schema 参照（deliverable-frontmatter.schema.yaml）や validate 手順への言及がなく、技術的な前提の確認が困難。
+  - id: F012
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 20
+    anchor: >-
+      | 項目         | 値                                                                                                |
+      備考                                 |
+    message: 「## 4. 最小記述例」の表の内容が「## 1. 目的と適用範囲」「## 3. 記述内容」と重複しており、統合可能。
+  - id: F013
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 1
+    anchor: "# [受入テスト対象別](../rulebooks/atc-rulebook.md) サンプル"
+    message: "rulebook 標準テンプレ（## 1. 概要 〜 ## 6. 受入観点とケース）に沿った具体的な記述例がなく、作成者が参照して ATC を実装できない。"
+  - id: F014
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 15
+    anchor: "- 主な内容: 個別受入シナリオの前提、テスト条件、期待結果、合格基準、関連する業務受入条件ID/システム受入条件ID"
+    message: 入力情報にケース表の具体例、trace_key の使い方、case_id の採番方法等の実装に必要な詳細がない。
+  - id: F015
+    severity: major
+    rule: vp-dev-change-impact
+    line: 1
+    anchor: "# [受入テスト対象別](../rulebooks/atc-rulebook.md) サンプル"
+    message: 変更時の影響範囲（関連する schema、生成物、コマンド、他成果物）が識別されていない。
+  - id: F016
+    severity: major
+    rule: vp-dev-testability
+    line: 1
+    anchor: "# [受入テスト対象別](../rulebooks/atc-rulebook.md) サンプル"
+    message: lint、schema validation、生成コマンド等の検証手段と期待結果が記載されておらず、成果物の正しさを確認できない。
+  - id: F017
+    severity: blocker
+    rule: vp-qe-verifiability
+    line: 15
+    anchor: "- 主な内容: 個別受入シナリオの前提、テスト条件、期待結果、合格基準、関連する業務受入条件ID/システム受入条件ID"
+    message: 受入カタログのサンプルでありながら、判定基準やテストケースの具体的記述例が全く含まれておらず、pass/fail判定の手本を示せていない。
+  - id: F018
+    severity: blocker
+    rule: vp-qe-omissions-consistency
+    line: 1
+    anchor: "# [受入テスト対象別](../rulebooks/atc-rulebook.md) サンプル"
+    message: Frontmatter に必須項目である title および based_on が欠落している。
+  - id: F019
+    severity: blocker
+    rule: vp-qe-omissions-consistency
+    line: 1
+    anchor: "# [受入テスト対象別](../rulebooks/atc-rulebook.md) サンプル"
+    message: "rulebook で定義された必須構成（## 1. 概要 〜 ## 6. 受入観点とケース）がすべて欠落している。"
+  - id: F020
+    severity: blocker
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# [受入テスト対象別](../rulebooks/atc-rulebook.md) サンプル"
+    message: Frontmatter の type が test ではなく project となっている。
+  - id: F021
+    severity: blocker
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# [受入テスト対象別](../rulebooks/atc-rulebook.md) サンプル"
+    message: "本文構成が rulebook の標準テンプレ（## 1. 概要 〜 ## 6. 受入観点とケース）に準拠していない。"
+  - id: F022
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# [受入テスト対象別](../rulebooks/atc-rulebook.md) サンプル"
+    message: id が rulebook で定義された atc-＜term＞ 形式に従っていない。
+  - id: F023
+    severity: major
+    rule: vp-ux-readability
+    line: 5
+    anchor: 本書は、受入テスト仕様を業務シナリオ/受入条件単位で分割して定義する（仕様）ための最小サンプルである。
+    message: ATCの具体的な書き方を示すサンプルとして機能しておらず、初見の読者が作成方法を理解できない。
+  - id: F024
+    severity: major
+    rule: vp-ux-readability
+    line: 18
+    anchor: "## 4. 最小記述例"
+    message: 本文の見出し構成が rulebook と異なるため、読者が rulebook との対応関係を把握できない。
+  - id: F025
+    severity: major
+    rule: vp-ux-language-consistency
+    line: 1
+    anchor: "# [受入テスト対象別](../rulebooks/atc-rulebook.md) サンプル"
+    message: id の命名形式が specdojo:atc-sample であり、rulebook で定義された atc-＜term＞（kebab-case）に準拠していない。
+  - id: F026
     severity: minor
     rule: vp-ux-language-consistency
-    line: 37
-    message: 成果物名（タイトル）が rulebook で定義された形式に準拠していない。
-    anchor: ""
+    line: 1
+    anchor: "# [受入テスト対象別](../rulebooks/atc-rulebook.md) サンプル"
+    message: "成果物タイトルが「受入テスト対象別 サンプル」であり、rulebook で定義された「受入テストカタログ: ＜対象名＞」形式に準拠していない。"
+  - id: F027
+    severity: major
+    rule: vp-ops-release-readiness
+    line: 1
+    anchor: "# [受入テスト対象別](../rulebooks/atc-rulebook.md) サンプル"
+    message: ready 化の条件、承認者、公開前確認事項が明示されておらず、リリース判断に必要な前提が不足している。
+  - id: F028
+    severity: major
+    rule: vp-ops-operability
+    line: 1
+    anchor: "# [受入テスト対象別](../rulebooks/atc-rulebook.md) サンプル"
+    message: 継続更新・再生成手順・変更管理・問い合わせ導線・担当 Role code が未記載で、運用に必要な情報が不足している。

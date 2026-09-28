@@ -1,0 +1,330 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: stsd-routine-run
+path: docs/ja/product/010-business-specs/020-data-model/stsd-routine-run.md
+target: deliverable
+rubric: grade-rubric-v2
+verdict: needs-work
+score: 64
+graded_at: "2026-09-27T20:39:40.521Z"
+graded_by: codex-expert-executor
+content_hash: ac79a57bfeaac8af23f280fbbc1262aeba79f678bef2fe196354a1575adaa07f
+source_hashes:
+  catalog-entry: 61349ed71d56bcc15b1d78ef8b2a5d66bb946e533122e404a48d703c8b5c1c3c
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  members: ec838bbb5673ba76f1a15672e094c00088dcb686a2a67225ca8411c0dc5e90d3
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
+categories:
+  purpose:
+    score: 63
+  operations:
+    score: 75
+  planning:
+    score: 50
+  business:
+    score: 58
+  consistency:
+    score: 50
+  architecture:
+    score: 83
+  usability:
+    score: 88
+  implementation:
+    score: 50
+  quality:
+    score: 50
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 3
+    score: 75
+  vp-po-decision-readiness:
+    level: 2
+    score: 50
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 2
+    score: 50
+  vp-pm-dependency-risk:
+    level: 2
+    score: 50
+  vp-pm-control-reporting:
+    level: 2
+    score: 50
+  vp-ba-business-value:
+    level: 3
+    score: 75
+  vp-ba-requirements-completeness:
+    level: 1
+    score: 25
+  vp-ba-stakeholder-clarity:
+    level: 3
+    score: 75
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-technical-constraints:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 2
+    score: 50
+  vp-dev-change-impact:
+    level: 2
+    score: 50
+  vp-dev-testability:
+    level: 2
+    score: 50
+  vp-qe-done-criteria:
+    level: 2
+    score: 50
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-user-flow:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 2
+    score: 50
+  vp-ops-operability:
+    level: 2
+    score: 50
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 2
+    score: 50
+finding_counts:
+  blocker: 0
+  major: 17
+  minor: 6
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-po-purpose-alignment
+    line: 93
+    anchor: >-
+      | _TODO_: `stsd-routine-run` の `based_on`
+      に業務データ辞書（`bdd-routine-definition`）を追加する。現時点で同文書は未作成である                                                           |
+      全状態                 | BA          | `bdd-routine-definition` 作成時 |
+    message: 成果物カタログが依存先とする `bdd-routine-definition` が未作成で `based_on` も空のため、主要な状態・遷移を上位の業務定義から必要と説明できる参照を追加する必要がある。
+  - id: F002
+    severity: major
+    rule: vp-po-decision-readiness
+    line: 90
+    anchor: >-
+      | _UNDECIDED_: 試行記録後に想定外例外が起きた場合、試行中のまま残る状態をどう復旧するか。`last_result` は直前値または未記録になり得るため、状態だけで成功・失敗・再試行要否を確定できない |
+      試行中、`T-03`〜`T-05` | PM、ARC、QE | 後続の仕様判断時                |
+    message: 試行中状態の復旧方針について選択肢、各案の業務影響、PO の判断対象、具体的な次アクションがなく、決定時期も「後続の仕様判断時」に留まるため承認可否を判断できない。
+  - id: F003
+    severity: major
+    rule: vp-pm-plan-feasibility
+    line: 90
+    anchor: >-
+      | _UNDECIDED_: 試行記録後に想定外例外が起きた場合、試行中のまま残る状態をどう復旧するか。`last_result` は直前値または未記録になり得るため、状態だけで成功・失敗・再試行要否を確定できない |
+      試行中、`T-03`〜`T-05` | PM、ARC、QE | 後続の仕様判断時                |
+    message: 復旧方針の決定と overlap 方針の決定を個別タスクとして識別できる owner、成果、完了条件、判断期限がなく、「PM、ARC、QE」「後続の仕様判断時」だけでは順序付けや進捗確認に使えない。
+  - id: F004
+    severity: major
+    rule: vp-pm-dependency-risk
+    line: 93
+    anchor: >-
+      | _TODO_: `stsd-routine-run` の `based_on`
+      に業務データ辞書（`bdd-routine-definition`）を追加する。現時点で同文書は未作成である                                                           |
+      全状態                 | BA          | `bdd-routine-definition` 作成時 |
+    message: 未作成の `bdd-routine-definition` への依存について PJR 登録先、作成順序、Schedule への影響、解消条件がなく、依存未解消のまま後続設計が進むリスクを管理できない。
+  - id: F005
+    severity: major
+    rule: vp-pm-control-reporting
+    line: 86
+    anchor: "## 5. 今後の検討メモ"
+    message: 復旧不能リスク、overlap 方針、仮置き状態値、未作成依存について、PJR 転記候補、報告先、対応方針、単一の担当 Role code を明示する必要がある。
+  - id: F006
+    severity: minor
+    rule: vp-ba-business-value
+    line: 5
+    anchor: >-
+      定期処理定義（routine）一件について、現行運用（AS-IS）の実行機会の選択から実行試行の記録、委譲結果の反映までの実行状態と遷移を定義する。PM・運用担当は現在状態から次回の実行機会と確認要否を、ARC・QE・DEV は
+      due 判定、結果記録、次回判定の設計・検証・実装の基礎として利用する。
+    message: 定期処理状態を一意に管理できない場合に誰のどの業務判断が阻害されるかと、上位目的・期待効果への参照を補い、状態定義が生む業務価値を明示する必要がある。
+  - id: F007
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 18
+    anchor: >-
+      | cron               | timezone 上の5フィールド cron に一致し、`last_scheduled_for` より後から現在分までの予定時刻を選ぶ。`missed_run: latest`
+      または未指定は最新一件、`all` は取りこぼした各予定時刻を古い順に扱う。 | 委譲前に各 scheduled time を `last_scheduled_for`
+      へ記録する。初回は直近の一致一件だけを選ぶ              |
+    message: "`src/routine.ts` が受理・実行する `policy.missed_run: skip` の起動条件と次回判定が cron 行から欠落しており、取りこぼしを実行しない経路の業務要件を確認できない。"
+  - id: F008
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 35
+    anchor: >-
+      | `running` | 試行中   | -    | 実行試行を先行記録し、action の結果をまだ反映していない定期処理                        | 新しい `last_run`
+      を記録した後、その試行に対応する `last_result` をまだ記録していない                      | routine 実行状態 |
+    message: 新しい `last_run` の記録時も以前の `last_result` が保持され、両者を対応付ける識別情報がないため、成立条件だけでは「直前結果あり」と「新しい試行の結果未反映」を区別して試行中を一意判定できない。
+  - id: F009
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 5
+    anchor: >-
+      定期処理定義（routine）一件について、現行運用（AS-IS）の実行機会の選択から実行試行の記録、委譲結果の反映までの実行状態と遷移を定義する。PM・運用担当は現在状態から次回の実行機会と確認要否を、ARC・QE・DEV は
+      due 判定、結果記録、次回判定の設計・検証・実装の基礎として利用する。
+    message: 利用者として PM・運用担当・ARC・QE・DEV は示されているが、状態遷移の業務妥当性を確認し合意する BA・PO の役割と確認タイミングを明記する必要がある。
+  - id: F010
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 93
+    anchor: >-
+      | _TODO_: `stsd-routine-run` の `based_on`
+      に業務データ辞書（`bdd-routine-definition`）を追加する。現時点で同文書は未作成である                                                           |
+      全状態                 | BA          | `bdd-routine-definition` 作成時 |
+    message: >-
+      `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-stsd.yaml` は `depends_on:
+      bdd-routine-definition` を宣言する一方、対象の Frontmatter は `based_on: []` で本文も同文書を未作成としており、カタログと成果物の依存関係が一致していない。
+  - id: F011
+    severity: major
+    rule: vp-arc-technical-constraints
+    line: 35
+    anchor: >-
+      | `running` | 試行中   | -    | 実行試行を先行記録し、action の結果をまだ反映していない定期処理                        | 新しい `last_run`
+      を記録した後、その試行に対応する `last_result` をまだ記録していない                      | routine 実行状態 |
+    message: "`last_run` と `last_result` の対応を保証する run ID、結果対象時刻、または開始時の結果クリア規則が定義されておらず、`running` を状態遷移実装の基礎として一意に導出できない。"
+  - id: F012
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 35
+    anchor: >-
+      | `running` | 試行中   | -    | 実行試行を先行記録し、action の結果をまだ反映していない定期処理                        | 新しい `last_run`
+      を記録した後、その試行に対応する `last_result` をまだ記録していない                      | routine 実行状態 |
+    message: 現行の保存項目だけでは新しい試行に対応する結果の有無を判定できないため、対応キーの追加、開始時の `last_result` 更新、または履歴との照合規則のいずれかを確定しなければ状態管理を実装できない。
+  - id: F013
+    severity: major
+    rule: vp-dev-change-impact
+    line: 92
+    anchor: >-
+      | _ASSUMPTION_: 未実行・試行中の値（`never`、`running`）は本書で導入した業務上の区分であり、routine
+      実行状態に同名のフィールド値は存在しない                                              | 未実行、試行中         | ARC         |
+      本書のレビュー時                |
+    message: >-
+      `never` と `running` を業務上の仮置き値として導入する変更について、`src/routine.ts`、routine state, run
+      history、表示・監視処理、既存データ互換性への影響を列挙する必要がある。
+  - id: F014
+    severity: major
+    rule: vp-dev-testability
+    line: 86
+    anchor: "## 5. 今後の検討メモ"
+    message: 状態遷移変更後に実行するテスト、lint、schema または生成コマンド、対象ファイル、期待結果、失敗時対応が記載されておらず、実装変更の確認手順として利用できない。
+  - id: F015
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 90
+    anchor: >-
+      | _UNDECIDED_: 試行記録後に想定外例外が起きた場合、試行中のまま残る状態をどう復旧するか。`last_result` は直前値または未記録になり得るため、状態だけで成功・失敗・再試行要否を確定できない |
+      試行中、`T-03`〜`T-05` | PM、ARC、QE | 後続の仕様判断時                |
+    message: 試行中の一意判定と復旧方針が未決のままであり、状態遷移の正確性、業務承認、実装基礎、状態テスト、実装参照という done criteria を満たしたと判定できない。
+  - id: F016
+    severity: major
+    rule: vp-qe-verifiability
+    line: 35
+    anchor: >-
+      | `running` | 試行中   | -    | 実行試行を先行記録し、action の結果をまだ反映していない定期処理                        | 新しい `last_run`
+      を記録した後、その試行に対応する `last_result` をまだ記録していない                      | routine 実行状態 |
+    message: "`last_result` が現在の `last_run` に対応するかを示す値がないため、同じ保存状態を「試行中」と「前回結果確定済み」のどちらにも解釈でき、状態ベーステストの期待状態を一意に判定できない。"
+  - id: F017
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 18
+    anchor: >-
+      | cron               | timezone 上の5フィールド cron に一致し、`last_scheduled_for` より後から現在分までの予定時刻を選ぶ。`missed_run: latest`
+      または未指定は最新一件、`all` は取りこぼした各予定時刻を古い順に扱う。 | 委譲前に各 scheduled time を `last_scheduled_for`
+      へ記録する。初回は直近の一致一件だけを選ぶ              |
+    message: "実装が許容する `missed_run: skip` が due 判定、遷移条件、補足のいずれにもなく、許容設定と本文の経路網羅性が一致していない。"
+  - id: F018
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 93
+    anchor: >-
+      | _TODO_: `stsd-routine-run` の `based_on`
+      に業務データ辞書（`bdd-routine-definition`）を追加する。現時点で同文書は未作成である                                                           |
+      全状態                 | BA          | `bdd-routine-definition` 作成時 |
+    message: "`stsd-recipe.md` の仕上げチェックは今後の検討メモに `_TODO_` を残さないことを求めているため、依存文書の作成または追跡可能な未決事項への置換が必要である。"
+  - id: F019
+    severity: minor
+    rule: vp-ux-readability
+    line: 10
+    anchor: >-
+      - 一意判定: `last_run` と `last_result` の有無と値で現在状態を一つに決める。委譲前に記録した `last_run` に対応する `last_result`
+      が未記録または直前値のままの場合は試行中とする
+    message: 「`last_run` に対応する `last_result`」を識別する項目や照合方法が説明されておらず、初見の読者は直前値が残る場合に現在状態を判定できない。
+  - id: F020
+    severity: minor
+    rule: vp-ux-user-flow
+    line: 8
+    anchor: >-
+      - スコープ: 現行運用（AS-IS）の due 判定、実行試行の先行記録、action の結果集約と記録。委譲先の登録項目・task・Job Run
+      の状態は対象外とし、[[prj-0001:stsd-register-entry|ステータス定義（登録項目個票）]]、`stsd-task-execution`、`stsd-job-run` を参照する
+    message: "`stsd-task-execution` と `stsd-job-run` はリンク形式でなく、現時点では対応ファイルも存在しないため、利用者が対象外の状態定義へ到達できる有効な参照または未作成表示を設ける必要がある。"
+  - id: F021
+    severity: major
+    rule: vp-ops-release-readiness
+    line: 86
+    anchor: "## 5. 今後の検討メモ"
+    message: 復旧方針、overlap 方針、仮置き状態値、未作成 BDD のうち何を解消すれば ready にできるか、確認者・承認者・公開前検証を明示する必要がある。
+  - id: F022
+    severity: major
+    rule: vp-ops-operability
+    line: 90
+    anchor: >-
+      | _UNDECIDED_: 試行記録後に想定外例外が起きた場合、試行中のまま残る状態をどう復旧するか。`last_result` は直前値または未記録になり得るため、状態だけで成功・失敗・再試行要否を確定できない |
+      試行中、`T-03`〜`T-05` | PM、ARC、QE | 後続の仕様判断時                |
+    message: 試行記録後に例外終了して `running` 相当で残った routine の検知方法、確認証跡、再試行または結果補正の手順、実施担当、問い合わせ・エスカレーション先を定義する必要がある。
+  - id: F023
+    severity: major
+    rule: vp-qe-config-validity
+    line: 92
+    anchor: >-
+      | _ASSUMPTION_: 未実行・試行中の値（`never`、`running`）は本書で導入した業務上の区分であり、routine
+      実行状態に同名のフィールド値は存在しない                                              | 未実行、試行中         | ARC         |
+      本書のレビュー時                |
+    message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+done_criteria:
+  satisfied: 0
+  total: 5
+  unsatisfied:
+    DC-001:
+      - BA
+    DC-002:
+      - PO
+    DC-003:
+      - ARC
+    DC-004:
+      - QE
+    DC-005:
+      - DEV
+  detail_ref: stsd-routine-run-grade-criteria

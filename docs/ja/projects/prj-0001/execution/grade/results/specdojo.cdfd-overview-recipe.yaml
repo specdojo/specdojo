@@ -3,29 +3,72 @@ version: 1
 document: specdojo:cdfd-overview-recipe
 path: docs/ja/specdojo/recipes/cdfd-overview-recipe.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: pass
-score: 96
-graded_at: "2026-09-17T07:28:40.267Z"
-graded_by: gemma-expert-executor
+score: 97
+graded_at: "2026-09-27T20:36:40.693Z"
+graded_by: agy-expert-executor
 content_hash: 17bbb3be23983437907bf00a7a348ca6446afd929a952727a19ed9c91e0b526d
 categories:
-  consistency:
-    score: 88
-  usability:
-    score: 92
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
   architecture:
+    score: 100
+  usability:
+    score: 100
+  implementation:
     score: 100
   quality:
     score: 100
+  consistency:
+    score: 75
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
-  vp-arc-single-responsibility:
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -38,9 +81,18 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-readability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -49,36 +101,54 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 5
+  minor: 8
   note: 0
 findings:
   - id: F001
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 80
+    line: 57
+    anchor: "### 4.2. 適用範囲"
     message: 成果物の必須構成要素である「導入文」について、他の章と同様に「問い」および「書き方」のガイドが提供されていない。
-    anchor: "### 4.4. データストア"
   - id: F002
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 102
+    line: 77
+    anchor: ""
     message: 「プロセス領域」章の冒頭に記載すべき「領域数、プロセスグループ数、正本の所在」に関する記述ガイドが欠けている。
-    anchor: ""
-  - id: F005
-    severity: minor
-    rule: vp-ux-readability
-    line: 114
-    message: 前回の指摘内容（finding）が HTML コメントとして本文中に残っており、不要な記述となっている。
-    anchor: ""
   - id: F003
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 116
-    message: 「データストア」章の冒頭に記載すべき「区分の意味、パスの略記、除外対象」に関する記述ガイドが欠けている。
+    line: 77
     anchor: ""
+    message: 「主な担当」について、Rulebookで定められている「採用済み Role code または組織定義にある役割名へ統一する」という制約への言及が欠けている。
   - id: F004
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 127
+    line: 89
+    anchor: マスタ・構成データとトランザクションデータの 2 表に分けます。図に置くデータストアはこの一覧の行と一対一にするため、図で使いたい名称をここで確定します。
+    message: 「データストア」章の冒頭に記載すべき「区分の意味、パスの略記、除外対象」に関する記述ガイドが欠けている。
+  - id: F005
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 89
+    anchor: マスタ・構成データとトランザクションデータの 2 表に分けます。図に置くデータストアはこの一覧の行と一対一にするため、図で使いたい名称をここで確定します。
+    message: Rulebookで定められている「複数の論理データストアが物理保管を共有する場合の境界と共有相手の注記」に関する記述ガイドが欠けている。
+  - id: F006
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 100
+    anchor: "- ノード総数が 16 を超える場合、トランザクションデータの図とマスタ・構成データの図に分け、両図で名称を統一し、グループ間の要求をトランザクションの図にだけ描いていますか。"
     message: 「概念データフロー（概要）」章の冒頭に記載すべき「ノード構成、矢印の意味、更新エッジ、外部主体の扱い」に関する記述ガイドが欠けている。
-    anchor: "### 4.8. 未決事項（条件付き）"
+  - id: F007
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 100
+    anchor: "- ノード総数が 16 を超える場合、トランザクションデータの図とマスタ・構成データの図に分け、両図で名称を統一し、グループ間の要求をトランザクションの図にだけ描いていますか。"
+    message: 対象範囲内の参加者から直接受け取る入力を図示省略した場合に、図直後に注記を追加するガイドが欠けている。
+  - id: F008
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 184
+    anchor: "- 対象範囲内の参加者を外部主体として描いていない。"
+    message: 「仕上げチェック」において、Rulebookの完成判定で求められる「H1直下の導入文の定義」「Frontmatterの要件」「POの承認記録の存在」の確認項目が漏れている。

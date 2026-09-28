@@ -2,12 +2,12 @@
 id: tsd-index-grade-criteria
 document: tsd-index
 path: docs/ja/product/030-architecture/020-infrastructure/tsd-index.md
-graded_at: "2026-09-14T00:32:17.517Z"
-graded_by: gemma-expert-executor
-content_hash: 60c89a384b0f5e9e637f1ba239d5d23e7b88aacea4584bdfc054253d3413a237
+graded_at: "2026-09-27T21:15:14.365Z"
+graded_by: codex-expert-executor
+content_hash: cbad622e8ac5d2ea57ea31392d814e3f2b9d46778df9fbabeea8aa75e222058b
 summary:
-  satisfied: 3
-  unsatisfied: 2
+  satisfied: 0
+  unsatisfied: 5
   total: 5
 criteria:
   - id: DC-001
@@ -16,29 +16,32 @@ criteria:
       - BA
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
-    reason: 選定理由と制約が業務要件と整合していることを示す記述が不足しています。
+    reason: 採用技術の選定理由と業務要件に対応する制約が記載されていません。
   - id: DC-002
     text: 技術スタック選定を承認できること
     roles:
       - PO
     viewpoint: vp-po-decision-readiness
-    status: satisfied
+    status: unsatisfied
+    reason: 選定理由、前提、制約、未決事項、影響がなく、PO が技術スタック選定を承認できません。
   - id: DC-003
     text: 技術的制約・ライセンス・バージョン方針が識別できること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
-    reason: ライセンスおよび詳細な技術的制約を識別できる記述が不足しています。
+    reason: 技術的制約、ライセンス、バージョン更新・固定方針を識別できません。
   - id: DC-004
     text: テストフレームワーク・CI/CD環境の参照として使えること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
-    status: satisfied
+    status: unsatisfied
+    reason: テストフレームワークが欠落し、CI/CDの検証対象・コマンド・期待結果を参照できません。
   - id: DC-005
     text: 開発環境構築・ライブラリ選定の参照として使えること
     roles:
       - DEV
     viewpoint: vp-dev-implementation-readiness
-    status: satisfied
+    status: unsatisfied
+    reason: 実装証跡と異なる依存バージョンがあり、開発環境構築・ライブラリ選定の信頼できる参照として使えません。

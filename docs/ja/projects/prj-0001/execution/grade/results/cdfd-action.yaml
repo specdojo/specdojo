@@ -3,37 +3,94 @@ version: 1
 document: cdfd-action
 path: docs/ja/product/010-business-specs/010-data-flow/cdfd-action.md
 target: deliverable
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 65
-graded_at: "2026-09-26T10:32:28.010Z"
-graded_by: agy-expert-executor
+score: 69
+graded_at: "2026-09-27T15:21:10.689Z"
+graded_by: codex-expert-executor
 content_hash: 5d3fc7872c2d9f07e2e7282dc9c546babd6f6c39af2fc4c2afc0ad10611e17da
+source_hashes:
+  catalog-entry: 143f5e3d6bddfc7b775438e881fb2db7bf612db3bbad63bf0922d71818e9bcc2
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  dependency:cdfd-overview: d21b0a535f2e00298b71f19804552832a8984c57ad7b58a895f7d96e8a3f2bb3
+  members: ec838bbb5673ba76f1a15672e094c00088dcb686a2a67225ca8411c0dc5e90d3
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
 categories:
+  purpose:
+    score: 63
+  operations:
+    score: 63
+  planning:
+    score: 83
+  business:
+    score: 83
   consistency:
     score: 25
-  usability:
-    score: 94
   architecture:
     score: 100
+  usability:
+    score: 94
+  implementation:
+    score: 75
   quality:
-    score: 50
+    score: 56
 viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 1
+    score: 25
+  vp-po-publication-accountability:
+    level: 2
+    score: 50
+  vp-pm-plan-feasibility:
+    level: 2
+    score: 50
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 2
+    score: 50
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
   vp-arc-cross-document-consistency:
     level: 1
     score: 25
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 2
+    score: 50
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 2
+    score: 50
   vp-qe-done-criteria:
     level: 1
     score: 25
   vp-qe-verifiability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-omissions-consistency:
     level: 1
     score: 25
@@ -46,6 +103,15 @@ viewpoints:
   vp-ux-language-consistency:
     level: 4
     score: 100
+  vp-ops-release-readiness:
+    level: 2
+    score: 50
+  vp-ops-operability:
+    level: 2
+    score: 50
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
@@ -54,58 +120,178 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 5
-  minor: 2
+  major: 16
+  minor: 3
   note: 0
 findings:
   - id: F001
     severity: major
+    rule: vp-po-decision-readiness
+    line: 35
+    anchor: >-
+      | プロセス ID | プロセス     |
+      業務目的                                                                                                                         
+      | 主な担当 | 起動条件                                                                      |
+      必須性                                                                           |
+    message: 全プロセス表に「完了条件」列がなく、特に P-12 の構成変更承認と P-13 の非推奨化判断で、何がそろえば承認・保留・差し戻しとするかを PO が判定できないため、yes / no で確認できる判断条件を追加してください。
+  - id: F002
+    severity: major
+    rule: vp-po-decision-readiness
+    line: 50
+    anchor: >-
+      | `P-12-01`   | 構成変更承認 | 変更の必要性と影響を人間が判断し、反映してよい変更範囲を確定できるようにする | ARC      | 稼働構成の変更要求が発生し、判断に必要な変更内容が提示された |
+      必須                                                                                       |
+    message: >-
+      P-12-01 の主担当を ARC、P-13-01 を PM・ARC として最終判断を割り当てていますが、RACI は変更要求の採否と継続判断の A を PO としているため、PO
+      の最終承認と各ロールの実作業・助言を分離してください。
+  - id: F003
+    severity: major
+    rule: vp-po-publication-accountability
+    line: 19
+    anchor: >-
+      - 組織境界は PO、PM、ARC、BA を含むプロジェクト参加者、システム境界は SpecDojo が管理する本章記載のデータストアまでとする。承認、完了判断、構成変更の承認、非推奨化の判断は人間が担い、AI Agent
+      は記録、提案、実行、検証を支援できる。この責任分担は [[cdfd-overview|概念データフロー図（全体概要）]] の「適用範囲」を正とする。
+    message: 構成変更の承認と非推奨化・継続判断を人間が担うことだけを示し、プロジェクトの RACI が定める PO の最終判断・説明責任を明示していないため、PO を最終承認者として責任境界を記述してください。
+  - id: F004
+    severity: major
+    rule: vp-pm-plan-feasibility
+    line: 35
+    anchor: >-
+      | プロセス ID | プロセス     |
+      業務目的                                                                                                                         
+      | 主な担当 | 起動条件                                                                      |
+      必須性                                                                           |
+    message: P-11〜P-13 の全プロセスに担当と起動条件はあるものの完了条件がないため、作業の進捗確認と後続着手の判断に使える判定可能な完了条件を各行へ追加してください。
+  - id: F005
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 35
+    anchor: >-
+      | プロセス ID | プロセス     |
+      業務目的                                                                                                                         
+      | 主な担当 | 起動条件                                                                      |
+      必須性                                                                           |
+    message: プロセス領域の各表に rulebook 必須の「完了条件」列がなく、利用者が各プロセスの受入可否を確認できないため、主要出力または正本の確定に対応する判定可能な条件を追加してください。
+  - id: F006
+    severity: major
     rule: vp-arc-cross-document-consistency
-    line: 54
-    anchor: ""
+    line: 44
+    anchor: "- **主要入力**: Orchestrator からの改善要求、参加者からの構成変更要求"
     message: >-
       P-12 の主要入力から全体概要が定める「参加者からの構成変更要求と承認結果」の承認結果が欠け、P-13
       も上位の「参加者からの非推奨化の判断」を候補情報へ置き換えて内部判断としているため、上位正本と承認境界が一致するよう入力・起点を揃えてください。
-  - id: F002
+  - id: F007
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 50
+    anchor: >-
+      | `P-12-01`   | 構成変更承認 | 変更の必要性と影響を人間が判断し、反映してよい変更範囲を確定できるようにする | ARC      | 稼働構成の変更要求が発生し、判断に必要な変更内容が提示された |
+      必須                                                                                       |
+    message: >-
+      docs/ja/projects/prj-0001/030-project-management/pm-raci.md は「変更要求の採否、初期公開、継続判断」の A を PO、R を PM、ARC を C とする一方、本書は
+      P-12-01 の主担当を ARC、P-13-01 を PM・ARC として人間の最終判断を割り当てているため、最終承認者と実作業担当を RACI に合わせて分離してください。
+  - id: F008
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 35
+    anchor: >-
+      | プロセス ID | プロセス     |
+      業務目的                                                                                                                         
+      | 主な担当 | 起動条件                                                                      |
+      必須性                                                                           |
+    message: 各プロセスに入力・出力・起動条件はあるものの完了条件がないため、実装や設定変更でどの出力・正本状態まで実現すれば完了かを判定できる条件を追加してください。
+  - id: F009
+    severity: major
+    rule: vp-dev-testability
+    line: 35
+    anchor: >-
+      | プロセス ID | プロセス     |
+      業務目的                                                                                                                         
+      | 主な担当 | 起動条件                                                                      |
+      必須性                                                                           |
+    message: 全プロセス表に判定可能な完了条件がなく、変更後に主要出力や正本更新が期待どおり成立したかを確認できないため、各行へ検証可能な完了事実を追加してください。
+  - id: F010
     severity: major
     rule: vp-qe-done-criteria
-    line: 54
-    anchor: ""
+    line: 44
+    anchor: "- **主要入力**: Orchestrator からの改善要求、参加者からの構成変更要求"
     message: DC-001 が要求する上位主要入力との無矛盾な詳細化に対し、P-12 の承認結果と P-13 の非推奨化判断が外部入力から内部生成へ変更されているため、全体概要との対応を修正してください。
-  - id: F003
+  - id: F011
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 50
+    anchor: >-
+      | `P-12-01`   | 構成変更承認 | 変更の必要性と影響を人間が判断し、反映してよい変更範囲を確定できるようにする | ARC      | 稼働構成の変更要求が発生し、判断に必要な変更内容が提示された |
+      必須                                                                                       |
+    message: >-
+      DC-003 の人間による承認境界について、P-12・P-13 の判断担当がプロジェクト RACI の PO 最終責任と一致せず承認可能な責任分担になっていないため、PO の最終判断と PM・ARC
+      の実行責任を明確に分離してください。
+  - id: F012
     severity: major
     rule: vp-qe-verifiability
-    line: 45
-    anchor: "- **主要出力**: 構成変更の決定記録、更新した稼働構成、Kata のバージョン更新、更新した成果物カタログ"
+    line: 35
+    anchor: >-
+      | プロセス ID | プロセス     |
+      業務目的                                                                                                                         
+      | 主な担当 | 起動条件                                                                      |
+      必須性                                                                           |
     message: プロセス領域の各表に rulebook で必須の「完了条件」列が存在せず、業務の完了状態を判定できないため、列を追加して pass/fail を判定できる条件を記述してください。
-  - id: F004
+  - id: F013
     severity: major
     rule: vp-qe-omissions-consistency
-    line: 54
-    anchor: ""
+    line: 44
+    anchor: "- **主要入力**: Orchestrator からの改善要求、参加者からの構成変更要求"
     message: 上位概要で Action の主要入力とされた P-12 の承認結果および P-13 の非推奨化判断が領域別入力へ引き継がれていないため、入力として維持するか上位正本を先に改訂して矛盾を解消してください。
-  - id: F005
+  - id: F014
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 136
-    anchor: ""
+    line: 126
+    anchor: >-
+      凡例は [[cdfd-overview|概念データフロー図（全体概要）]] の「凡例（本プロダクト共通）」に従う。`-->` は情報の流れであり、本図は物の流れを対象外とする。Plan
+      はグループ外委譲先の代表ノードであり、内部処理を省略する。参加者は領域の担当であるため外部主体として描かない。本図は P-11 の入力、出力、判断分岐に限定し、他領域のデータストアを省略する。別図と共有するノードはない。
     message: P-11・P-12・P-13 の各図は「成果物カタログ」と「登録簿」を共有しているため、三つの図注記にある「別図と共有するノードはない」を共有ノードの列挙へ修正してください。
-  - id: F006
+  - id: F015
     severity: major
     rule: vp-qe-omissions-consistency
-    line: 257
-    anchor: "| `cdfd-plan` | タスク完了に至らなかった事項の再計画 | 完了条件の未充足事項、再計画要求 | 再計画に基づく対応と評価を経て、完了条件を照合できる評価結果と完了要求がそろった |"
+    line: 247
+    anchor: >-
+      | 例外 ID   | 対象プロセス | 検出条件                                                                             |
+      本グループでの扱い                                                                 |
+      継続・再開条件                                                                                        |
     message: 主要例外の表に rulebook で必須の「停止範囲」列が欠落しているため、列を追加して例外検出時に確定または起動してはならないプロセスや出力を記述してください。
-  - id: F007
+  - id: F016
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 16
+    anchor: "- 対象グループは Action、対象領域はタスク完了（P-11）、稼働構成管理（P-12）、非推奨化保管（P-13）である。"
+    message: 適用範囲に rulebook で必須の対象期間がなく、現行正本として期間を限定しないのか特定期間だけに適用するのか判断できないため、適用期間を明記してください。
+  - id: F017
     severity: minor
     rule: vp-ux-user-flow
-    line: 267
-    anchor: ""
+    line: 257
+    anchor: "| `cdfd-plan` | タスク完了に至らなかった事項の再計画 | 完了条件の未充足事項、再計画要求 | 再計画に基づく対応と評価を経て、完了条件を照合できる評価結果と完了要求がそろった |"
     message: 実在する再計画先 `cdfd-plan` がコード表記のみで文書へ遷移できないため、文書名を伴う wikilink に変更してください。
+  - id: F018
+    severity: major
+    rule: vp-ops-release-readiness
+    line: 1
+    anchor: "# 概念データフロー図（Action）"
+    message: status が draft のままで、必須のプロセス完了条件・例外の停止範囲・上位入力および承認責任の整合が未解決であるため、修正と人間の承認記録を確認してから ready へ昇格してください。
+  - id: F019
+    severity: major
+    rule: vp-ops-operability
+    line: 247
+    anchor: >-
+      | 例外 ID   | 対象プロセス | 検出条件                                                                             |
+      本グループでの扱い                                                                 |
+      継続・再開条件                                                                                        |
+    message: 主要例外に停止範囲がなく、部分更新や後続プロセスの起動をどこまで禁止するか運用時に判断できないため、各例外へ停止するプロセス・出力・委譲を明記してください。
 done_criteria:
-  satisfied: 2
+  satisfied: 1
   total: 3
   unsatisfied:
     DC-001:
       - BA
+    DC-003:
+      - PO
   detail_ref: cdfd-action-grade-criteria

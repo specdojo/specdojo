@@ -2,8 +2,8 @@
 id: bps-task-completion-grade-criteria
 document: bps-task-completion
 path: docs/ja/product/010-business-specs/030-business-model/bps-task-completion.md
-graded_at: "2026-09-26T15:53:31.810Z"
-graded_by: agy-expert-executor
+graded_at: "2026-09-27T20:52:13.912Z"
+graded_by: codex-expert-executor
 content_hash: 23e173cda7e3215665b8ceea5dca4258cc489d5b2f75316f745471b273d2a722
 summary:
   satisfied: 5

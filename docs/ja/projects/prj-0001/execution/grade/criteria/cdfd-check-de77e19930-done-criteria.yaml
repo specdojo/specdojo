@@ -2,12 +2,12 @@
 id: cdfd-check-grade-criteria
 document: cdfd-check
 path: docs/ja/product/010-business-specs/010-data-flow/cdfd-check.md
-graded_at: "2026-09-26T15:34:36.434Z"
-graded_by: agy-expert-executor
+graded_at: "2026-09-27T15:30:22.265Z"
+graded_by: codex-expert-executor
 content_hash: e02cebf2a8ee62470a475fede1fcb6267cfcda9d93d320313a938f12c69ed3a8
 summary:
-  satisfied: 3
-  unsatisfied: 0
+  satisfied: 2
+  unsatisfied: 1
   total: 3
 criteria:
   - id: DC-001
@@ -15,7 +15,8 @@ criteria:
     roles:
       - BA
     viewpoint: vp-ba-requirements-completeness
-    status: satisfied
+    status: unsatisfied
+    reason: 「プロセス領域」章の P-08〜P-10 の主要出力に、全体概要が定める Orchestrator への評価・報告・生成結果の応答が配分されていない。
   - id: DC-002
     text: 評価結果、進捗報告、派生ビュー・索引の生成先と、成果物・実行記録・登録簿・Schedule（track）からの参照がプロセス単位で識別できること
     roles:

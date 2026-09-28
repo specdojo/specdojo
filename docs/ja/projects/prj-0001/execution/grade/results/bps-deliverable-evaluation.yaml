@@ -3,29 +3,85 @@ version: 1
 document: bps-deliverable-evaluation
 path: docs/ja/product/010-business-specs/030-business-model/bps-deliverable-evaluation.md
 target: deliverable
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: pass
-score: 97
-graded_at: "2026-09-26T15:51:32.458Z"
-graded_by: agy-expert-executor
+score: 96
+graded_at: "2026-09-27T20:47:07.976Z"
+graded_by: codex-expert-executor
 content_hash: 95e5a113b891d0a9af9eb93425f773398e6073adffa8da4954fab7bee1130a0c
+source_hashes:
+  catalog-entry: 3247f5eb39765fd5f1c1d12c83847bb47a3c4ed94beeef8fade45a514a9e2e8e
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  members: ec838bbb5673ba76f1a15672e094c00088dcb686a2a67225ca8411c0dc5e90d3
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
 categories:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
   consistency:
-    score: 88
+    score: 75
+  architecture:
+    score: 100
   usability:
     score: 100
-  architecture:
+  implementation:
     score: 100
   quality:
     score: 100
 viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
   vp-arc-cross-document-consistency:
+    level: 3
+    score: 75
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-done-criteria:
@@ -46,6 +102,15 @@ viewpoints:
   vp-ux-language-consistency:
     level: 4
     score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
@@ -55,10 +120,20 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 1
+  minor: 2
   note: 0
 findings:
   - id: F001
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 60
+    anchor: >-
+      | -------------- | ---------------------------------- |
+      ----------------------------------------------------------------------------------------- | -------- |
+      ------------------------------------- |
+    message: >-
+      docs/ja/product/010-business-specs/010-data-flow/cdfd-check.mdのE-08-02は評価不能の範囲と理由をfindingに記録してActionへ渡す一方、本表は評価不能時にgrade・findingを未確定としてQEとOrchestratorだけへ渡しており、評価不能時の出力契約が一致していません。
+  - id: F002
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 78

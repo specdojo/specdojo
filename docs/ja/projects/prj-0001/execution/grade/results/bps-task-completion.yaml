@@ -3,29 +3,86 @@ version: 1
 document: bps-task-completion
 path: docs/ja/product/010-business-specs/030-business-model/bps-task-completion.md
 target: deliverable
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: pass
 score: 99
-graded_at: "2026-09-26T15:53:31.810Z"
-graded_by: agy-expert-executor
+graded_at: "2026-09-27T20:52:13.912Z"
+graded_by: codex-expert-executor
 content_hash: 23e173cda7e3215665b8ceea5dca4258cc489d5b2f75316f745471b273d2a722
+source_hashes:
+  catalog-entry: eb5b5b77b090623b58e97ff4707989025b78310c051d88953beac75ddeed7700
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  dependency:bps-deliverable-evaluation: 95e5a113b891d0a9af9eb93425f773398e6073adffa8da4954fab7bee1130a0c
+  members: ec838bbb5673ba76f1a15672e094c00088dcb686a2a67225ca8411c0dc5e90d3
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
 categories:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
   consistency:
+    score: 100
+  architecture:
     score: 100
   usability:
     score: 94
-  architecture:
+  implementation:
     score: 100
   quality:
     score: 100
 viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
   vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
     level: 3
     score: 75
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-done-criteria:
@@ -46,6 +103,15 @@ viewpoints:
   vp-ux-language-consistency:
     level: 4
     score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
@@ -61,16 +127,19 @@ findings:
   - id: F001
     severity: minor
     rule: vp-arc-conciseness
-    line: 76
+    line: 68
     anchor: >-
-      | 完了可能                | 最新の grade・finding があり、変更内容が plan と完了条件を満たし、完了を妨げる未充足事項がない         | 完了可能の verdict
-      と根拠が確定し、登録簿と実行記録に一件ずつ完了の記録が残る                           | 評価結果、review の判断記録、登録簿、実行記録        |
+      | `E-01`  | `S-01`       | 評価結果がない、その `content_hash` が現在の成果物と一致しない、または評価コンテキストの変化が未反映である | review と完了可否の判断 |
+      runner | 現在の成果物について [[bps-deliverable-evaluation\|成果物評価]] を起動する。review 自身は成果物を評価せず、古い結果から verdict を推測しない |
+      現在の内容と評価コンテキストに対応する grade・finding が確定した後、`S-01` から再開する                           |
     message: "`E-01` の処置にある「review 自身は成果物を評価せず、古い結果から verdict を推測しない」は概要で説明済みのため、削除を検討してください。"
   - id: F002
     severity: minor
     rule: vp-arc-conciseness
-    line: 87
-    anchor: ""
+    line: 79
+    anchor: >-
+      | 評価結果が最新でない    | 評価結果がない、現在の成果物と `content_hash` が一致しない、または評価コンテキストの変化が未反映である | review が成果物を再評価せず、runner による grade
+      の確定まで完了判断を開始しない                         | 完了要求、評価要求、`content_hash`、評価コンテキスト |
     message: 「評価結果が最新でない」の期待する業務成果にある「review が成果物を再評価せず、」は概要で説明済みのため、削除を検討してください。
 done_criteria:
   satisfied: 5

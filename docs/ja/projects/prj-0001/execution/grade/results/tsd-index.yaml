@@ -3,47 +3,109 @@ version: 1
 document: tsd-index
 path: docs/ja/product/030-architecture/020-infrastructure/tsd-index.md
 target: deliverable
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 95
-graded_at: "2026-09-14T00:32:17.517Z"
-graded_by: gemma-expert-executor
+score: 72
+graded_at: "2026-09-27T21:15:14.365Z"
+graded_by: codex-expert-executor
 content_hash: cbad622e8ac5d2ea57ea31392d814e3f2b9d46778df9fbabeea8aa75e222058b
+source_hashes:
+  catalog-entry: e78ad55f23ff4f9a502d6f215ec1cb5c04e0338b4ade6f5079c516f4bb58f232
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  members: ec838bbb5673ba76f1a15672e094c00088dcb686a2a67225ca8411c0dc5e90d3
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
 categories:
+  purpose:
+    score: 75
+  operations:
+    score: 81
+  planning:
+    score: 100
+  business:
+    score: 58
   consistency:
-    score: 100
-  usability:
-    score: 100
+    score: 50
   architecture:
-    score: 100
+    score: 75
+  usability:
+    score: 94
+  implementation:
+    score: 75
   quality:
-    score: 83
+    score: 63
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
     level: 4
     score: 100
+  vp-po-decision-readiness:
+    level: 2
+    score: 50
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 2
+    score: 50
+  vp-ba-requirements-completeness:
+    level: 2
+    score: 50
+  vp-ba-stakeholder-clarity:
+    level: 3
+    score: 75
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-technical-constraints:
+    level: 2
+    score: 50
   vp-arc-conciseness:
     level: 4
     score: 100
-  vp-arc-single-responsibility:
+  vp-dev-implementation-readiness:
+    level: 2
+    score: 50
+  vp-dev-change-impact:
     level: 4
     score: 100
+  vp-dev-testability:
+    level: 2
+    score: 50
   vp-qe-done-criteria:
     level: 2
     score: 50
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-user-flow:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
     level: 4
     score: 100
-  vp-ux-language-consistency:
+  vp-ops-release-readiness:
+    level: 3
+    score: 75
+  vp-ops-operability:
+    level: 2
+    score: 50
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -54,22 +116,108 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 0
+  major: 11
+  minor: 3
   note: 0
 findings:
   - id: F001
     severity: major
+    rule: vp-po-decision-readiness
+    line: 5
+    anchor: "## 1. 技術スタック一覧"
+    message: 各技術の選定理由、前提・制約、未決事項、影響範囲が示されておらず、PO が技術スタック選定を承認できません。
+  - id: F002
+    severity: major
+    rule: vp-ba-business-value
+    line: 3
+    anchor: SpecDojo が採用する技術の一覧。各技術の担当責務を明示し、設計・実装・運用における前提条件として扱う。
+    message: 採用技術がどの利用者課題や業務価値に応えるか、低コスト・再利用・継続可能性へどう寄与するかが示されていません。
+  - id: F003
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 5
+    anchor: "## 1. 技術スタック一覧"
+    message: 採用技術ごとの選定理由と、対応する業務要件・制約・受入条件がなく、業務要件との整合を確認できません。
+  - id: F004
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 3
+    anchor: SpecDojo が採用する技術の一覧。各技術の担当責務を明示し、設計・実装・運用における前提条件として扱う。
+    message: 一覧を利用する領域は分かりますが、技術選定の確認者・承認者と合意対象となる Role code が示されていません。
+  - id: F005
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 9
+    anchor: "| 言語                | TypeScript 5.x                          | CLI・ドキュメント生成ツールの実装言語              |"
+    message: >-
+      本文の `TypeScript 5.x`、`Commander.js 12.x`、`dotenv 16.x`、`markdownlint-cli 0.45.x` は、`package.json` の `typescript
+      ^6.0.3`、`commander ^15.0.0`、`dotenv ^17.4.2`、`markdownlint-cli ^0.48.0` と相反しています。
+  - id: F006
+    severity: major
+    rule: vp-arc-technical-constraints
+    line: 7
+    anchor: "| 区分                | 採用技術                                | 担当責務                                           |"
+    message: 技術ごとの互換性・外部依存・実行条件に加え、ライセンスとバージョン更新・固定方針が示されていません。
+  - id: F007
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 9
+    anchor: "| 言語                | TypeScript 5.x                          | CLI・ドキュメント生成ツールの実装言語              |"
+    message: 現行 `package.json` と異なる依存バージョンが記載されているため、この一覧を開発環境構築やライブラリ選定の入力として安全に使用できません。
+  - id: F008
+    severity: major
+    rule: vp-dev-testability
+    line: 25
+    anchor: "| ソースコード管理    | GitHub                                  | リポジトリ管理・GitHub Actions による CI/CD        |"
+    message: "`package.json` で使用する Vitest が一覧になく、lint・schema・build・test の実行コマンドや期待結果への参照もないため、変更後の確認方法を特定できません。"
+  - id: F009
+    severity: major
     rule: vp-qe-done-criteria
-    line: 41
+    line: 5
+    anchor: "## 1. 技術スタック一覧"
     message: DC-001 および DC-003 が要求する「選定理由」「技術的制約」「ライセンス」の記述が不足しています。
-    anchor: ""
+  - id: F010
+    severity: major
+    rule: vp-qe-verifiability
+    line: 25
+    anchor: "| ソースコード管理    | GitHub                                  | リポジトリ管理・GitHub Actions による CI/CD        |"
+    message: テストフレームワークが記載されず、GitHub Actions の対象ワークフロー、検証コマンド、期待結果もないため、テスト・CI/CD環境の参照可否を判定できません。
+  - id: F011
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 7
+    anchor: "| 区分                | 採用技術                                | 担当責務                                           |"
+    message: 採用済みの Vitest が技術スタック一覧から欠落し、複数のバージョンも実装証跡と一致しないため、全体インベントリとして完全ではありません。
+  - id: F012
+    severity: minor
+    rule: vp-ux-user-flow
+    line: 30
+    anchor: "- Ollama の詳細（モデル定義・チューニング）は [[tsd-ollama]] を参照。"
+    message: CLI・検証ツール群と文書サイト技術について詳細文書または設定正本への導線がなく、利用者が選定根拠や設定情報へ進めません。
+  - id: F013
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 3
+    anchor: SpecDojo が採用する技術の一覧。各技術の担当責務を明示し、設計・実装・運用における前提条件として扱う。
+    message: "`draft` から `ready` へ移行するためのライセンス確認、技術選定承認、未解決事項の解消条件と承認者への導線がありません。"
+  - id: F014
+    severity: major
+    rule: vp-ops-operability
+    line: 7
+    anchor: "| 区分                | 採用技術                                | 担当責務                                           |"
+    message: "`package.json` 等の更新元、依存更新時の改訂契機、整合確認手順が示されず、現に複数バージョンが陳腐化しています。"
 done_criteria:
-  satisfied: 3
+  satisfied: 0
   total: 5
   unsatisfied:
     DC-001:
       - BA
+    DC-002:
+      - PO
     DC-003:
       - ARC
+    DC-004:
+      - QE
+    DC-005:
+      - DEV
   detail_ref: tsd-index-grade-criteria

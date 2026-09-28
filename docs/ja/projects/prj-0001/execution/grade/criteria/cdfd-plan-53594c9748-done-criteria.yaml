@@ -2,12 +2,12 @@
 id: cdfd-plan-grade-criteria
 document: cdfd-plan
 path: docs/ja/product/010-business-specs/010-data-flow/cdfd-plan.md
-graded_at: "2026-09-26T15:49:10.935Z"
-graded_by: agy-expert-executor
+graded_at: "2026-09-27T16:13:15.227Z"
+graded_by: codex-expert-executor
 content_hash: fa438c52a36eaa9e43b88df336f876264351918d14ece7b3bb8f46aaea8a30ba
 summary:
-  satisfied: 4
-  unsatisfied: 0
+  satisfied: 3
+  unsatisfied: 1
   total: 4
 criteria:
   - id: DC-001
@@ -15,7 +15,8 @@ criteria:
     roles:
       - BA
     viewpoint: vp-ba-requirements-completeness
-    status: satisfied
+    status: unsatisfied
+    reason: 全体概要が Plan の主要出力として定める「Orchestrator への計画要求への応答」が、P-02〜P-06 のプロセス領域で生成元を含めて詳細化されていない。
   - id: DC-002
     text: 登録簿、成果物カタログ、スケジュール戦略、Schedule（track）、実行計画、定期実行定義、ジョブ定義への読み書きがプロセス単位で識別でき、名称が全体概要の「データストア」と一致していること
     roles:

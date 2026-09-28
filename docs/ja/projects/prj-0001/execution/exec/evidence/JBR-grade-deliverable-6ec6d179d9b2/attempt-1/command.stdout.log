@@ -1,0 +1,19 @@
+
+> specdojo@0.2.1 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-deliverable-6ec6d179d9b2 project=prj-0001 target=deliverable kind=none changed_only=true ungraded=true incomplete=true max_stage_failures=3 stages=1 documents=10 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-deliverable-6ec6d179d9b2
+stage=1 executor=codex-expert-executor reporter=gemma-reporter reference=none
+document start: docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md
+document complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md
+document start: docs/ja/product/010-business-specs/010-data-flow/cdfd-plan.md
+document complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-plan.md
+document start: docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-deliverable.md
+document complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-deliverable.md
+document start: docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md
+document complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md
+document start: docs/ja/product/010-business-specs/020-data-model/cdsd-execution.md
+document complete: docs/ja/product/010-business-specs/020-data-model/cdsd-execution.md
+document start: docs/ja/product/010-business-specs/020-data-model/cdsd-planning.md
+document incomplete: docs/ja/product/010-business-specs/020-data-model/cdsd-planning.md failed_stage=1
+document start: docs/ja/product/010-business-specs/020-data-model/cdsd-sharing.md

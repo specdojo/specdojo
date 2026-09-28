@@ -3,23 +3,71 @@ version: 1
 document: sysd-antigravity-agent-settings
 path: docs/ja/product/040-system-design/sysd-antigravity-agent-settings.md
 target: deliverable
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 71
-graded_at: "2026-09-26T16:24:03.864Z"
+score: 67
+graded_at: "2026-09-27T21:44:33.909Z"
 graded_by: codex-expert-executor
 content_hash: 1b16c0e9eee40c4bc0bab086a919b47326877b376ff7906566053a193fa33198
+source_hashes:
+  catalog-entry: 6c03a31aaa64e3906ac4156a91ce5382b83cc66ddfe08ecee3cd53358faa57b7
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  dependency:sysd-agent-settings: 438490f057d962ee7b6eee44dc4d8d218c14578a592e4d15b4d7f6bf2bcbe2f3
+  members: ec838bbb5673ba76f1a15672e094c00088dcb686a2a67225ca8411c0dc5e90d3
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
 categories:
+  purpose:
+    score: 63
+  operations:
+    score: 81
+  planning:
+    score: 83
+  business:
+    score: 67
   consistency:
     score: 50
+  architecture:
+    score: 83
   usability:
     score: 75
-  architecture:
-    score: 100
+  implementation:
+    score: 50
   quality:
-    score: 67
+    score: 63
 viewpoints:
+  vp-po-purpose-alignment:
+    level: 3
+    score: 75
+  vp-po-decision-readiness:
+    level: 2
+    score: 50
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 3
+    score: 75
+  vp-pm-control-reporting:
+    level: 3
+    score: 75
+  vp-ba-business-value:
+    level: 3
+    score: 75
+  vp-ba-requirements-completeness:
+    level: 2
+    score: 50
+  vp-ba-stakeholder-clarity:
+    level: 3
+    score: 75
   vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-technical-constraints:
     level: 2
     score: 50
   vp-arc-conciseness:
@@ -28,6 +76,15 @@ viewpoints:
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 2
+    score: 50
+  vp-dev-change-impact:
+    level: 2
+    score: 50
+  vp-dev-testability:
+    level: 2
+    score: 50
   vp-qe-done-criteria:
     level: 2
     score: 50
@@ -46,6 +103,15 @@ viewpoints:
   vp-ux-language-consistency:
     level: 3
     score: 75
+  vp-ops-release-readiness:
+    level: 2
+    score: 50
+  vp-ops-operability:
+    level: 3
+    score: 75
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
@@ -54,11 +120,55 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 4
-  minor: 7
+  major: 11
+  minor: 13
   note: 0
 findings:
   - id: F001
+    severity: minor
+    rule: vp-po-purpose-alignment
+    line: 3
+    anchor: SpecDojo CLI と Antigravity CLI（`agy`）を組み合わせ、executor / reporter pipeline を非対話実行するための provider 固有設定を定義する。
+    message: Antigravity を第3の frontier 経路として採用する業務課題・期待効果と、その根拠である PJR-2T2S への参照がないため, provider 固有設計の必要性を追跡できない。
+  - id: F002
+    severity: major
+    rule: vp-po-decision-readiness
+    line: 9
+    anchor: "- `agy` はファイル定義 agent を選択する仕組みを持たないため、executor / reporter の役割は runner が plan へ付加する stage 指示を正本とする。"
+    message: 現行 `agy` の custom agent 対応を非対応と誤認したままで、stage agent の採否、影響範囲、安全境界が示されていないため、PO は設計方針を承認できない。
+  - id: F003
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 12
+    anchor: "- 自動選択の評価が完了するまでは codex / claude より低い `priority` を設定し、主に by-name と `--executor-by` / `--reporter-by` で使う。"
+    message: 自動選択評価を完了させる依存作業、担当、判断時期、および追跡先の PJR-ME20 が示されておらず、暫定 priority の解消条件を管理できない。
+  - id: F004
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 68
+    anchor: >-
+      利用制限の初期検出パターンは `rate limit`、`429`、`quota`、`RESOURCE_EXHAUSTED` とする。実文言は未観測のため、実行ログで新しい制限シグナルを確認したときに
+      `rate_limit_detection.stderr_patterns` を更新する。
+    message: 新しい制限シグナルを観測した場合の報告先、担当 Role code、PJR または変更要求への転記条件がなく、継続課題として追跡できない。
+  - id: F005
+    severity: minor
+    rule: vp-ba-business-value
+    line: 3
+    anchor: SpecDojo CLI と Antigravity CLI（`agy`）を組み合わせ、executor / reporter pipeline を非対話実行するための provider 固有設定を定義する。
+    message: codex / claude の利用制限時に代替経路を確保するという業務課題、対象利用者、期待効果を記載または上位文書から参照する必要がある。
+  - id: F006
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 9
+    anchor: "- `agy` はファイル定義 agent を選択する仕組みを持たないため、executor / reporter の役割は runner が plan へ付加する stage 指示を正本とする。"
+    message: custom agent を利用する場合と利用しない場合の選択条件、executor / reporter への対応付け、受入条件が欠落しており、利用者視点で要件を確定できない。
+  - id: F007
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 3
+    anchor: SpecDojo CLI と Antigravity CLI（`agy`）を組み合わせ、executor / reporter pipeline を非対話実行するための provider 固有設定を定義する。
+    message: 本設計を利用する DEV・QE・運用者と、暫定モデル・priority・custom agent 方針を確認または承認する関係者を明示する必要がある。
+  - id: F008
     severity: major
     rule: vp-arc-cross-document-consistency
     line: 9
@@ -66,7 +176,13 @@ findings:
     message: >-
       現行 `agy` は `.agents/agents/` の custom agent を `—agent` で選択できるため、非対応という前提を修正し, stage agent
       定義・command_template・保護対象への採否を再設計する必要がある。
-  - id: F002
+  - id: F009
+    severity: major
+    rule: vp-arc-technical-constraints
+    line: 9
+    anchor: "- `agy` はファイル定義 agent を選択する仕組みを持たないため、executor / reporter の役割は runner が plan へ付加する stage 指示を正本とする。"
+    message: 対応 CLI バージョンと custom agent の発見・選択仕様が技術前提から欠落し、現行 CLI と異なる構成判断になっているため、互換条件を明記して設計を見直す必要がある。
+  - id: F010
     severity: minor
     rule: vp-arc-conciseness
     line: 64
@@ -76,31 +192,55 @@ findings:
       `.agents/rules/**`、`.agents/skills/**`、`.claude/**`、`.codex/**`、`.opencode/**`、`.github/agents/**`、`AGENTS.md`、`CLAUDE.md`、`GEMINI.md`
       を含め、agent が自身や別 provider の指示を書き換えた場合は親検証前に block する。
     message: 全 provider 共通の固定保護パス一覧は親設計または横断ルールへの参照に置き換え、本書には `—dangerously-skip-permissions` に対する Antigravity 固有の境界だけを残す必要がある。
-  - id: F003
+  - id: F011
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 9
+    anchor: "- `agy` はファイル定義 agent を選択する仕組みを持たないため、executor / reporter の役割は runner が plan へ付加する stage 指示を正本とする。"
+    message: custom agent の採否が誤った能力前提で確定されているため、`.agents/agents/`、stage agent 定義、`—agent` を含む起動設定を実装すべきか判断できない。
+  - id: F012
+    severity: major
+    rule: vp-dev-change-impact
+    line: 52
+    anchor: >-
+      `agy` は repository root まで探索し、`AGENTS.md`、`.agents/rules/*.md`、`.agents/skills/<name>/SKILL.md`
+      を読む。プロジェクト共通の言語・安全規則は `AGENTS.md`、環境別の薄い規則ラッパーは `.agents/rules/`、再利用手順は `.agents/skills/` を正本とする。
+    message: >-
+      custom agent 対応によって影響する
+      `.agents/agents/`、`templates/antigravity/agents/`、`command_template`、scaffold、固定保護パス、member 定義を変更影響として列挙する必要がある。
+  - id: F013
+    severity: major
+    rule: vp-dev-testability
+    line: 70
+    anchor: 設定変更時は次を確認する。
+    message: >-
+      `agy —agent` による workspace custom agent の発見・選択、executor / reporter 対応、定義ファイル変更の block を検証するテストがなく、現行 CLI
+      との不整合を検出できない。
+  - id: F014
     severity: major
     rule: vp-qe-done-criteria
     line: 9
     anchor: "- `agy` はファイル定義 agent を選択する仕組みを持たないため、executor / reporter の役割は runner が plan へ付加する stage 指示を正本とする。"
     message: custom agent 非対応という設計前提が現行 CLI と一致せず、その採否と安全境界が未決定なため、設計承認およびテスト設計の完了条件を満たせない。
-  - id: F004
+  - id: F015
     severity: minor
     rule: vp-qe-done-criteria
     line: 3
     anchor: SpecDojo CLI と Antigravity CLI（`agy`）を組み合わせ、executor / reporter pipeline を非対話実行するための provider 固有設定を定義する。
     message: 非対話 pipeline という目的は示されているが、Antigravity を採用する業務要件、その出典、設計方針との対応が記載されていない。
-  - id: F005
+  - id: F016
     severity: major
     rule: vp-qe-verifiability
     line: 70
     anchor: 設定変更時は次を確認する。
     message: 検証項目に `agy —agent` と `.agents/agents/` の対応可否、対応 CLI バージョン, stage agent 採否の確認がなく、誤った能力前提でも検証を通過してしまう。
-  - id: F006
+  - id: F017
     severity: minor
     rule: vp-qe-verifiability
     line: 76
     anchor: 5. 実タスクでは executor evidence、親 runner 検証、reporter、統合までを確認する。
     message: 「統合までを確認する」だけでは期待する状態や必要証跡が定まらないため、各 stage の成功状態、evidence、統合結果の判定条件を明示する必要がある。
-  - id: F007
+  - id: F018
     severity: major
     rule: vp-qe-omissions-consistency
     line: 52
@@ -108,30 +248,44 @@ findings:
       `agy` は repository root まで探索し、`AGENTS.md`、`.agents/rules/*.md`、`.agents/skills/<name>/SKILL.md`
       を読む。プロジェクト共通の言語・安全規則は `AGENTS.md`、環境別の薄い規則ラッパーは `.agents/rules/`、再利用手順は `.agents/skills/` を正本とする。
     message: 指示読込元から `.agents/agents/` が欠落し、custom agent の `—agent` 選択、executor / reporter への対応付け、定義ファイルの書き込み保護と検証方針が設計されていない。
-  - id: F008
+  - id: F019
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 66
     anchor: "## 7. 利用制限と検証"
     message: "`sysd-index`、`sysd-cross-cutting-policy`、`sysd-critical-flows`、テスト、OPR への関連文書導線がなく、rulebook の必須参照観点を満たしていない。"
-  - id: F009
+  - id: F020
     severity: minor
     rule: vp-ux-readability
     line: 66
     anchor: "## 7. 利用制限と検証"
     message: 関連文書節を追加し、全体入口、横断ルール、重要フロー、テスト、CLI 更新手順を目的付きで示す必要がある。
-  - id: F010
+  - id: F021
     severity: minor
     rule: vp-ux-user-flow
     line: 66
     anchor: "## 7. 利用制限と検証"
     message: 検証手順の後に関連リンクを設け、横断ルール、一次設定、テストファイル、CLI 更新手順へ直接到達できるようにする必要がある。
-  - id: F011
+  - id: F022
     severity: minor
     rule: vp-ux-language-consistency
     line: 9
     anchor: "- `agy` はファイル定義 agent を選択する仕組みを持たないため、executor / reporter の役割は runner が plan へ付加する stage 指示を正本とする。"
     message: 「ファイル定義 agent」を公式用語の custom agent に改め、SpecDojo member、primary agent、subagent の違いと対応関係を定義する必要がある。
+  - id: F023
+    severity: major
+    rule: vp-ops-release-readiness
+    line: 9
+    anchor: "- `agy` はファイル定義 agent を選択する仕組みを持たないため、executor / reporter の役割は runner が plan へ付加する stage 指示を正本とする。"
+    message: 現行 CLI と異なる custom agent 非対応の前提が確定事項として記載され、再設計・再検証・承認を ready 化条件として識別していない。
+  - id: F024
+    severity: minor
+    rule: vp-ops-operability
+    line: 68
+    anchor: >-
+      利用制限の初期検出パターンは `rate limit`、`429`、`quota`、`RESOURCE_EXHAUSTED` とする。実文言は未観測のため、実行ログで新しい制限シグナルを確認したときに
+      `rate_limit_detection.stderr_patterns` を更新する。
+    message: CLI 更新や新しい制限シグナルの観測時に参照する `opr-agent-cli-update`、更新対象、再検証コマンド、担当者への導線を追加する必要がある。
 done_criteria:
   satisfied: 2
   total: 5

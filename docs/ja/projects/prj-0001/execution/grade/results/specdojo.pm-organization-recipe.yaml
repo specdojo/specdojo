@@ -3,29 +3,75 @@ version: 1
 document: specdojo:pm-organization-recipe
 path: docs/ja/specdojo/recipes/pm-organization-recipe.md
 target: kata
-rubric: grade-rubric-v1
-verdict: needs-work
-score: 93
-graded_at: "2026-09-04T14:39:32.873Z"
-graded_by: gemma-expert-executor
+rubric: grade-rubric-v2
+verdict: pass
+score: 98
+graded_at: "2026-09-27T20:48:51.674Z"
+graded_by: agy-expert-executor
 content_hash: a08d130f0866c92d25a512ecf23ce8ab433cd52ad2d01dc1b945d771f2a14061
 categories:
-  consistency:
-    score: 75
-  usability:
-    score: 92
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
   architecture:
     score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 100
   quality:
+    score: 92
+  consistency:
     score: 100
 viewpoints:
-  vp-arc-cross-document-consistency:
-    level: 2
-    score: 50
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -35,12 +81,21 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
-  vp-ux-readability:
     level: 3
     score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
   vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -48,19 +103,13 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
+  major: 0
   minor: 1
   note: 0
 findings:
-  - id: F002
-    severity: minor
-    rule: vp-ux-readability
-    line: 44
-    message: 各章の書き方において, 良質な実例（prj-overview-recipe）のような「問い」と「書き方（コツ）」の形式を採用し, 執筆者が具体的に何を記述すべきか導く構成にしてください。
-    anchor: "- Schedule ownerは採用済みRole codeに限定します。"
   - id: F001
-    severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 46
-    message: 採用判断を組織定義に残す責務境界として記述するよう誘導し、全Role codeを列挙しない方針との矛盾を解消してください。
-    anchor: ""
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 44
+    anchor: "- Schedule ownerは採用済みRole codeに限定します。"
+    message: 各章の書き方において, 良質な実例（prj-overview-recipe）のような「問い」と「書き方（コツ）」の形式を採用し, 執筆者が具体的に何を記述すべきか導く構成にしてください。

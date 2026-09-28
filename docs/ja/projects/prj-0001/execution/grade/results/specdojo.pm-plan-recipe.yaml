@@ -3,29 +3,75 @@ version: 1
 document: specdojo:pm-plan-recipe
 path: docs/ja/specdojo/recipes/pm-plan-recipe.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 89
-graded_at: "2026-09-04T15:10:44.945Z"
-graded_by: gemma-expert-executor
+score: 92
+graded_at: "2026-09-27T20:50:55.449Z"
+graded_by: agy-expert-executor
 content_hash: 73817c5d19f3eacb53b5b47b836a0334f9505f1428a7207e10e7d9bef6b9aa6e
 categories:
-  consistency:
-    score: 88
-  usability:
-    score: 83
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
   architecture:
     score: 100
+  usability:
+    score: 83
+  implementation:
+    score: 100
   quality:
-    score: 88
+    score: 92
+  consistency:
+    score: 75
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -43,6 +89,15 @@ viewpoints:
   vp-ux-language-consistency:
     level: 4
     score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
@@ -55,18 +110,18 @@ findings:
   - id: F001
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 69
-    message: 第4章「各章の書き方」において、rulebook の標準構成に含まれる「未決事項」の記述ガイドが欠落している。
+    line: 60
     anchor: ""
+    message: 第4章「各章の書き方」において、rulebook の標準構成に含まれる「未決事項」の記述ガイドが欠落している。
   - id: F002
     severity: minor
     rule: vp-qe-kata-conformance
-    line: 71
+    line: 35
+    anchor: "## 4. 各章の書き方"
     message: 成果物の具体化を支援するという recipe の種別責務に対し、第4章の内容が不十分であり、rulebook の要約に近い形式になっている。
-    anchor: "| -------- | -------------------------------- | ---------------------------- |"
   - id: F003
     severity: major
     rule: vp-ux-readability
-    line: 71
+    line: 35
+    anchor: "## 4. 各章の書き方"
     message: 第4章「各章の書き方」に、読者の思考を促す問いや具体化のための詳細なガイドがなく、構成案の提示に留まっているため、実用的レシピとしての記述水準が不足している。
-    anchor: "| -------- | -------------------------------- | ---------------------------- |"

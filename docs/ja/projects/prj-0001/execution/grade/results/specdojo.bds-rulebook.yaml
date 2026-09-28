@@ -3,70 +3,261 @@ version: 1
 document: specdojo:bds-rulebook
 path: docs/ja/specdojo/rulebooks/bds-rulebook.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 82
-graded_at: "2026-09-01T23:01:49.166Z"
-graded_by: gemma-expert-executor
+score: 64
+graded_at: "2026-09-27T20:44:14.210Z"
+graded_by: claude-expert-executor
 content_hash: 7b792421b274ce3aafd1068345d61d0f4a6b3f7501b66d0ffbe1a9261fea70f9
 categories:
-  consistency:
+  purpose:
     score: 75
-  usability:
+  operations:
+    score: 88
+  planning:
+    score: 75
+  business:
     score: 83
   architecture:
-    score: 100
+    score: 83
+  usability:
+    score: 67
+  implementation:
+    score: 63
   quality:
-    score: 75
+    score: 58
+  consistency:
+    score: 25
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 3
+    score: 75
+  vp-po-decision-readiness:
+    level: 3
+    score: 75
+  vp-po-publication-accountability:
     level: 4
     score: 100
+  vp-pm-plan-feasibility:
+    level: 3
+    score: 75
+  vp-pm-dependency-risk:
+    level: 3
+    score: 75
+  vp-pm-control-reporting:
+    level: 3
+    score: 75
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 3
+    score: 75
+  vp-ba-stakeholder-clarity:
+    level: 3
+    score: 75
+  vp-arc-technical-constraints:
+    level: 2
+    score: 50
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 2
+    score: 50
+  vp-dev-change-impact:
+    level: 3
+    score: 75
+  vp-dev-testability:
+    level: 3
+    score: 75
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-ux-readability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-language-consistency:
     level: 2
     score: 50
+  vp-ops-release-readiness:
+    level: 3
+    score: 75
+  vp-ops-operability:
+    level: 3
+    score: 75
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 0
-  major: 3
-  minor: 0
+  major: 7
+  minor: 17
   note: 0
 findings:
   - id: F001
+    severity: minor
+    rule: vp-po-purpose-alignment
+    line: 5
+    anchor: 本ドキュメントは、業務分析・要求定義のために **帳票仕様を統一形式で記述する標準ルール**です。
+    message: 上位文書（成果物リファレンス等）への参照と、schema 上 `ui`（画面・帳票仕様）とされる UIS との分担が書かれていないため、BDS を独立した成果物とする必要性を上位の根拠から説明できない。
+  - id: F002
+    severity: minor
+    rule: vp-po-decision-readiness
+    line: 1
+    anchor: "# 帳票仕様 作成ルール"
+    message: >-
+      Frontmatter の `recipe` / `template` が `undecided` のままだが、判断に必要な論点・判断タイミング・影響が本文に _UNDECIDED_ などで示されておらず、PO
+      が承認・保留を判断する材料が不足している。
+  - id: F003
+    severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 55
+    anchor: 各 BDS ファイルは以下見出しを順番に並べます。
+    message: 本文構成の各章に必須/任意の区別や完了条件がないため、BDS 作成タスクの完了判定と進捗確認の粒度に使いにくい。
+  - id: F004
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 45
+    anchor: "| based_on | 根拠となる仕様ID（BPS/UIS/BR/BES 等） | 任意 |"
+    message: "`based_on` に BPS/UIS/BR/BES を挙げるだけで、BDS 作成に先行して必要な成果物や、根拠文書が未確定の場合の扱い（依存・リスク）が示されていない。"
+  - id: F005
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 65
+    anchor: 9. メモ / 将来課題
+    message: 「メモ / 将来課題」章の記述ガイドがなく、PJR へ転記すべき課題・変更要求と、文書内のメモに留める事項の区別が示されていない。
+  - id: F006
+    severity: minor
+    rule: vp-ba-requirements-completeness
+    line: 55
+    anchor: 各 BDS ファイルは以下見出しを順番に並べます。
+    message: 本文構成に帳票の受入条件（検収観点・確認方法）を記述する章や項目がなく、要件を利用者が受入判定できる粒度まで落とす指示が不足している。
+  - id: F007
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 51
+    anchor: "- `type: data` は業務ドメイン仕様（業務側の合意対象）であることを示します。"
+    message: 「業務側の合意対象」とするだけで、帳票仕様をレビュー・合意する確認者（Role）と合意事項が本文構成・記述ガイドのどこにも定義されていない。
+  - id: F008
+    severity: major
+    rule: vp-arc-technical-constraints
+    line: 35
+    anchor: Frontmatter は `docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml` の制約に従います。
+    message: >-
+      参照先の deliverable-frontmatter schema は `specdojo:` 名前空間・`rulebook` 必須・`title` 不許可・`type` enum に `domain` なし（帳票は
+      `ui`）であり、本書の Frontmatter 指示（`type: domain` 固定、`title` 必須、トップレベル配置）と矛盾する。
+  - id: F009
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 15
+    anchor: "## 2. 用語定義"
+    message: 用語定義の「表示項目」「抽出条件」「集計/算出」「出力形式」は本文構成の見出しと記述ガイドの言い換えにとどまり、削除しても判断情報を失わない重複になっている。
+  - id: F010
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 141
+    anchor: "## 10. サンプル（簡易）"
+    message: サンプル章が全9章の完成例を埋め込んでおり、記述ガイドと重複している。形式の輪郭が伝わる最小例へ縮め、完成例は sample に置くべきである。
+  - id: F011
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 37
+    anchor: "| 項目 | 説明                | 必須 |"
+    message: >-
+      推奨 Frontmatter 項目の表が空行で分断されて `type`/`title`/`status` 等の行が表として描画されず、しかも指示に従うと schema 検証に失敗する（`specdojo:`
+      名前空間・`rulebook` 必須の欠落）。
+  - id: F012
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 46
+    anchor: "| supersedes | 置き換え関係（古仕様→新仕様） | 任意 |"
+    message: "`supersedes` の記載だけで、帳票仕様の変更時に `based_on` 先や用語集 `tm-...` との整合をどう確認・更新するかが示されていない。"
+  - id: F013
+    severity: minor
+    rule: vp-dev-testability
+    line: 35
+    anchor: Frontmatter は `docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml` の制約に従います。
+    message: BDS 作成・更新後に実行すべき検証コマンド（`npm run lint:md`、`npm run lint:fm`、schema 検証）と期待結果が記載されていない。
+  - id: F014
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 87
+    anchor: "- CSV 等のエクスポートがある場合は、- 文字コード（例: UTF-8）- ヘッダ行の有無 - 区切り文字（例: カンマ）"
+    message: CSV エクスポート時の必須記載事項（文字コード・ヘッダ行の有無・区切り文字）が1行に連結された崩れた箇条書きになっており、項目ごとにチェックできない。
+  - id: F015
     severity: major
     rule: vp-qe-omissions-consistency
     line: 1
+    anchor: "# 帳票仕様 作成ルール"
     message: "Frontmatterのtype項目に「domain固定」とあるが, 49行目で「type: dataは...」と記述されており, 指定値が矛盾している。"
-    anchor: "# 帳票仕様 作成ルール"
-  - id: F003
+  - id: F016
     severity: major
-    rule: vp-ux-language-consistency
-    line: 1
-    message: Frontmatterのtypeに指定される用語が「domain」と「data」で混在しており, 統一されていない。
-    anchor: "# 帳票仕様 作成ルール"
-  - id: F002
+    rule: vp-qe-omissions-consistency
+    line: 31
+    anchor: "- `title`: 「日次売上サマリ」などの帳票名"
+    message: >-
+      Frontmatter に `title` を書くよう指示しているが、Markdown 規約（Frontmatter に `title:` を書かない）と deliverable
+      schema（`unevaluatedProperties: false`）に矛盾する。
+  - id: F017
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 48
+    anchor: "### 4.1 ID規約"
+    message: 小見出し `### 4.1` および `### 6.1`〜`### 6.8` の番号末尾に `.` がなく、章番号書式の規約（`n.m.`）に違反している。
+  - id: F018
     severity: major
     rule: vp-qe-kata-conformance
     line: 1
-    message: 参照されているサンプル（specdojo:bds-sample）の内容が, 本書の「5. 本文構成（標準テンプレ）」に従っておらず, 実例としての機能が不十分である。
     anchor: "# 帳票仕様 作成ルール"
+    message: 参照されているサンプル（specdojo:bds-sample）の内容が, 本書の「5. 本文構成（標準テンプレ）」に従っておらず, 実例としての機能が不十分である。
+  - id: F019
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 143
+    anchor: "```markdown"
+    message: >-
+      埋め込みサンプルの Frontmatter が `specdojo:` 名前空間・`rulebook` を欠き、`type: data`・`title` を用いており、deliverable schema
+      と本書の型宣言の双方に整合しない例になっている。
+  - id: F020
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 53
+    anchor: "## 5. 本文構成（標準テンプレ）"
+    message: rulebook-authoring-standard は template 未整備系統の本文要件に各章の必須・任意の明示を求めるが、「本文構成（標準テンプレ）」には必須・任意の区別がない。
+  - id: F021
+    severity: minor
+    rule: vp-ux-readability
+    line: 37
+    anchor: "| 項目 | 説明                | 必須 |"
+    message: 推奨 Frontmatter 項目の表が空行で分断され、2行目以降が表として描画されないため、必須項目の一覧を一目で読み取れない。
+  - id: F022
+    severity: major
+    rule: vp-ux-language-consistency
+    line: 1
+    anchor: "# 帳票仕様 作成ルール"
+    message: Frontmatterのtypeに指定される用語が「domain」と「data」で混在しており, 統一されていない。
+  - id: F023
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 1
+    anchor: "# 帳票仕様 作成ルール"
+    message: ready 化の条件と未解決事項（`recipe`/`template` の `undecided`、sample 未整備）、承認者が本文に示されておらず、ready 判断の前提が読み取れない。
+  - id: F024
+    severity: minor
+    rule: vp-ops-operability
+    line: 46
+    anchor: "| supersedes | 置き換え関係（古仕様→新仕様） | 任意 |"
+    message: 帳票仕様の改版・廃止時の運用（`deprecated` 化の条件、`supersedes` の付け方、更新担当 Role）が示されておらず、継続更新の手順が読み取れない。

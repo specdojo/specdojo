@@ -3,31 +3,77 @@ version: 1
 document: specdojo:bes-sample
 path: docs/ja/specdojo/samples/bes-sample.md
 target: kata
-rubric: grade-rubric-v1
-verdict: needs-work
-score: 39
-graded_at: "2026-09-04T21:30:01.882Z"
-graded_by: gemma-expert-executor
+rubric: grade-rubric-v2
+verdict: fail
+score: 49
+graded_at: "2026-09-27T21:40:40.554Z"
+graded_by: codex-expert-executor
 content_hash: 308606d2e9321e5c043acbaa5c6fa298f59f96615344c443c805fccdfe643053
 categories:
-  consistency:
-    score: 25
+  purpose:
+    score: 63
+  operations:
+    score: 88
+  planning:
+    score: 75
+  business:
+    score: 58
+  architecture:
+    score: 67
   usability:
     score: 50
-  architecture:
+  implementation:
     score: 63
   quality:
     score: 25
-viewpoints:
-  vp-arc-cross-document-consistency:
-    level: 1
+  consistency:
     score: 25
-  vp-arc-conciseness:
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 2
+    score: 50
+  vp-po-decision-readiness:
+    level: 3
+    score: 75
+  vp-po-publication-accountability:
     level: 4
     score: 100
+  vp-pm-plan-feasibility:
+    level: 3
+    score: 75
+  vp-pm-dependency-risk:
+    level: 3
+    score: 75
+  vp-pm-control-reporting:
+    level: 3
+    score: 75
+  vp-ba-business-value:
+    level: 2
+    score: 50
+  vp-ba-requirements-completeness:
+    level: 2
+    score: 50
+  vp-ba-stakeholder-clarity:
+    level: 3
+    score: 75
+  vp-arc-technical-constraints:
+    level: 3
+    score: 75
+  vp-arc-conciseness:
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 1
     score: 25
+  vp-dev-implementation-readiness:
+    level: 2
+    score: 50
+  vp-dev-change-impact:
+    level: 3
+    score: 75
+  vp-dev-testability:
+    level: 2
+    score: 50
   vp-qe-verifiability:
     level: 1
     score: 25
@@ -35,68 +81,195 @@ viewpoints:
     level: 1
     score: 25
   vp-qe-kata-conformance:
-    level: 1
-    score: 25
+    level: 0
+    score: 0
   vp-ux-readability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ux-language-consistency:
     level: 1
     score: 25
+  vp-ops-release-readiness:
+    level: 3
+    score: 75
+  vp-ops-operability:
+    level: 3
+    score: 75
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
-  blocker: 0
-  major: 8
-  minor: 0
+  blocker: 1
+  major: 16
+  minor: 10
   note: 0
 findings:
   - id: F001
     severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 4
-    message: "`bes-rulebook.md` が定義する BES インスタンスとしての形式に従っておらず、参照先として不適切である。"
-    anchor: ""
-  - id: F004
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 4
-    message: Frontmatter の `type` が `domain` ではなく `project` となっており、ルールブックの制約に違反している。
-    anchor: ""
-  - id: F008
-    severity: major
-    rule: vp-ux-language-consistency
-    line: 4
-    message: "`type` の値が `domain` ではなく `project` となっており、用語・ラベルの統一性が欠けている。"
-    anchor: ""
+    rule: vp-po-purpose-alignment
+    line: 5
+    anchor: 本書は、業務上で発生する主要なイベントを個別に定義するための最小サンプルである。
+    message: 目的に「イベントを個別に定義するための最小サンプル」と記載されているが、実際の内容はBESインスタンスの完成例ではなく項目名の列挙に留まっており、sample としての目的と内容が乖離している。
   - id: F002
+    severity: minor
+    rule: vp-po-decision-readiness
+    line: 26
+    anchor: "## 5. 未解決事項"
+    message: 未解決事項が「要件詳細の補強」の1件のみで、PO が承認・差し戻しを判断するための具体的論点（対象イベントの選定基準、記述粒度の方針等）が不足している。
+  - id: F003
+    severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 18
+    anchor: "## 4. 最小記述例"
+    message: 最小記述例が項目名の列挙に留まり、具体的な完了条件（どのような値を記入すれば完成か）が読み取れない。
+  - id: F004
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 11
+    anchor: "- 参照: `../rulebooks/bes-rulebook.md`"
+    message: bes-rulebook への参照はあるが、BES が依存する BEL や、後続の BPS・BR との関係が識別されていない。
+  - id: F005
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 26
+    anchor: "## 5. 未解決事項"
+    message: PJR 転記候補、報告先、担当 Role code が記載されておらず、進捗報告や課題管理への転記に必要な情報が不足している。
+  - id: F006
+    severity: major
+    rule: vp-ba-business-value
+    line: 9
+    anchor: "- 対象: 駄菓子屋の販売管理システム"
+    message: 対象を「駄菓子屋の販売管理システム」としているが、対象者、業務課題、期待価値・効果が記載されておらず、この sample がどのビジネス価値に応えるか説明できない。
+  - id: F007
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 15
+    anchor: "- 主な内容: イベントID、イベント名、何が起きたか、いつ、発生条件 など"
+    message: 「主な内容」「必須観点」が項目名の列挙に留まり、各項目にどのような値をどの粒度で記述すべきかの要件・受入条件が示されていない。
+  - id: F008
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 7
+    anchor: "## 2. 入力情報"
+    message: 本 sample の利用者（BES 作成担当者）や確認者が明示されておらず、誰が参照して何を確認すべきか読み取れない。
+  - id: F009
+    severity: minor
+    rule: vp-arc-technical-constraints
+    line: 11
+    anchor: "- 参照: `../rulebooks/bes-rulebook.md`"
+    message: Frontmatter schema（deliverable-frontmatter.schema.yaml）への参照や validate 手順が記載されておらず、技術的制約の明示が不足している。
+  - id: F010
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 15
+    anchor: "- 主な内容: イベントID、イベント名、何が起きたか、いつ、発生条件 など"
+    message: "§3 の「主な内容: イベントID、イベント名、何が起きたか、いつ、発生条件 など」と §4 の表の「主な内容」行が同一内容を重複しており、統合しても情報を失わない。"
+  - id: F011
+    severity: major
+    rule: vp-arc-single-responsibility
+    line: 1
+    anchor: "# [業務イベント / 業務イベント仕様](../rulebooks/bes-rulebook.md) サンプル"
+    message: sample の責務は BES インスタンスの完成例を提示することであるが、本文は BES の概要解説となっており、責務が「解説」と「例示」の間で分裂している。
+  - id: F012
     severity: major
     rule: vp-arc-single-responsibility
     line: 9
+    anchor: "- 対象: 駄菓子屋の販売管理システム"
     message: BES の具体例を提示するサンプルとしての責務を果たさず、サンプルの解説書となっている。
-    anchor: "- 対象: 駄菓子屋の販売管理システム"
-  - id: F005
+  - id: F013
     severity: major
-    rule: vp-qe-omissions-consistency
-    line: 9
-    message: ルールブックで定義されている必須の構成項目（1. 何が起きたか, 2. いつ, 3. 誰が／何が, 4. 発生条件, 5. 事実データ）がすべて欠落している。
-    anchor: "- 対象: 駄菓子屋の販売管理システム"
-  - id: F006
+    rule: vp-dev-implementation-readiness
+    line: 13
+    anchor: "## 3. 記述内容"
+    message: 「記述内容」が項目名の列挙のみで、各項目に何をどのように書くかの具体的な指示がなく、BES 作成作業に必要な入力情報が不足している。
+  - id: F014
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 11
+    anchor: "- 参照: `../rulebooks/bes-rulebook.md`"
+    message: "本 sample の変更が bes-rulebook の sample 参照（`sample: specdojo:bes-sample`）や他の関連成果物に与える影響が記載されていない。"
+  - id: F015
     severity: major
-    rule: vp-qe-kata-conformance
-    line: 9
-    message: 成果物の完成例（インスタンス）を提示するという `sample` の責務を果たしておらず、ルールブックの形式を模倣して適用するための具体例となっていない。
-    anchor: "- 対象: 駄菓子屋の販売管理システム"
-  - id: F007
+    rule: vp-dev-testability
+    line: 3
+    anchor: "## 1. 目的と適用範囲"
+    message: Frontmatter schema のバリデーション手順や lint コマンドが記載されておらず、type の値が正しいかを含め、変更後の検証方法が不明である。
+  - id: F016
     severity: major
-    rule: vp-ux-readability
-    line: 23
-    message: 記述内容が項目名の列挙に留まっており、具体的にどのような値を書き込むべきかという判断基準が示されていない。
-    anchor: "| 目的         | 業務上で発生する主要なイベントを個別に定義する                  | specdojo:deliverables-reference 準拠 |"
-  - id: F003
+    rule: vp-qe-verifiability
+    line: 20
+    anchor: >-
+      | 項目         | 値                                                              | 備考                                
+      |
+    message: 最小記述例の表が項目名と一般的な説明のみで構成されており、具体的な値や判定条件がないため pass/fail の判定が不可能である。
+  - id: F017
     severity: major
     rule: vp-qe-verifiability
     line: 28
-    message: 具体的な業務イベントの定義（判定基準や事実データ）が具体的に記述されておらず、検証不可能な状態である。
     anchor: "| 論点           | 処理方針                 |"
+    message: 未解決事項の「処理方針」が「実案件適用時に具体化する」のみで、いつ・誰が・何を検証すれば完了かの判定基準がない。
+  - id: F018
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 4
+    anchor: ""
+    message: "Frontmatter の `type` が `project` のままであり、bes-rulebook が定める `type: domain` と矛盾している。"
+  - id: F019
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 9
+    anchor: "- 対象: 駄菓子屋の販売管理システム"
+    message: bes-rulebook が定める必須構成項目（1. 何が起きたか / 2. いつ / 3. 誰が／何が / 4. 発生条件 / 5. 事実データ）がすべて欠落している。
+  - id: F020
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 4
+    anchor: ""
+    message: bes-rulebook の Frontmatter 必須項目である `title` が欠落している。
+  - id: F021
+    severity: blocker
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# [業務イベント / 業務イベント仕様](../rulebooks/bes-rulebook.md) サンプル"
+    message: >-
+      sample は bes-rulebook が定める BES インスタンスの完成例を提示する責務があるが、ルールブック §4
+      の必須構成（何が起きたか/いつ/誰が・何が/発生条件/事実データ）に従った具体例が存在せず、sample の責務が成立していない。
+  - id: F022
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 9
+    anchor: "- 対象: 駄菓子屋の販売管理システム"
+    message: 成果物の完成例（インスタンス）を提示するという sample の責務を果たしておらず、ルールブックの形式を模倣して適用するための具体例となっていない。
+  - id: F023
+    severity: major
+    rule: vp-ux-readability
+    line: 15
+    anchor: "- 主な内容: イベントID、イベント名、何が起きたか、いつ、発生条件 など"
+    message: 「主な内容」「必須観点」が項目名の列挙のみで、具体的にどのような値を書き込むべきかの判断基準が示されておらず、初見の読者が主要な判断点を読み取れない。
+  - id: F024
+    severity: major
+    rule: vp-ux-language-consistency
+    line: 4
+    anchor: ""
+    message: Frontmatter の `type` が `project` であり、bes-rulebook が定める `domain`（§3 表）とも `data`（§3.1）とも一致せず、用語・ラベルの統一性が欠けている。
+  - id: F025
+    severity: major
+    rule: vp-ux-language-consistency
+    line: 1
+    anchor: "# [業務イベント / 業務イベント仕様](../rulebooks/bes-rulebook.md) サンプル"
+    message: H1 のタイトルが「業務イベント / 業務イベント仕様 サンプル」であるのに対し、bes-rulebook のタイトルは「業務イベント仕様 作成ルール」で、「業務イベント」と「業務イベント仕様」の使い分けが不明確である。
+  - id: F026
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 26
+    anchor: "## 5. 未解決事項"
+    message: ready 化のための具体的な条件（前回指摘の解消、必須構成項目の充足等）が記載されていない。
+  - id: F027
+    severity: minor
+    rule: vp-ops-operability
+    line: 1
+    anchor: "# [業務イベント / 業務イベント仕様](../rulebooks/bes-rulebook.md) サンプル"
+    message: sample の更新契機（bes-rulebook 変更時の追従等）や変更管理の手順が記載されていない。

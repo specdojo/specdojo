@@ -3,34 +3,91 @@ version: 1
 document: sysd-critical-flows
 path: docs/ja/product/040-system-design/sysd-critical-flows.md
 target: deliverable
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 86
-graded_at: "2026-09-19T16:29:47.712Z"
+score: 71
+graded_at: "2026-09-27T22:14:31.751Z"
 graded_by: codex-expert-executor
 content_hash: 966617c380ef236d4b8e01cde7d9122583b38dadea3d63971773790324dc133f
+source_hashes:
+  catalog-entry: 012f9a9f165cffc908edd01db257386e2b0a3bb92ced271ff6a34b3f9e42b19d
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  dependency:sysd-index: 21eb4cf38ac3c7ca9157dd2c5ceb0c29f1edfaeb09802bb7583af11ecbe68813
+  members: ec838bbb5673ba76f1a15672e094c00088dcb686a2a67225ca8411c0dc5e90d3
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
 categories:
+  purpose:
+    score: 75
+  operations:
+    score: 69
+  planning:
+    score: 58
+  business:
+    score: 58
   consistency:
     score: 75
-  usability:
-    score: 88
   architecture:
-    score: 100
-  quality:
     score: 83
+  usability:
+    score: 81
+  implementation:
+    score: 63
+  quality:
+    score: 63
 viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 2
+    score: 50
+  vp-po-publication-accountability:
+    level: 3
+    score: 75
+  vp-pm-plan-feasibility:
+    level: 2
+    score: 50
+  vp-pm-dependency-risk:
+    level: 3
+    score: 75
+  vp-pm-control-reporting:
+    level: 2
+    score: 50
+  vp-ba-business-value:
+    level: 2
+    score: 50
+  vp-ba-requirements-completeness:
+    level: 3
+    score: 75
+  vp-ba-stakeholder-clarity:
+    level: 2
+    score: 50
   vp-arc-cross-document-consistency:
     level: 4
     score: 100
+  vp-arc-technical-constraints:
+    level: 2
+    score: 50
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 2
+    score: 50
+  vp-dev-change-impact:
+    level: 3
+    score: 75
+  vp-dev-testability:
+    level: 2
+    score: 50
   vp-qe-done-criteria:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-qe-verifiability:
     level: 2
     score: 50
@@ -44,6 +101,15 @@ viewpoints:
     level: 2
     score: 50
   vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-ops-release-readiness:
+    level: 2
+    score: 50
+  vp-ops-operability:
+    level: 2
+    score: 50
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -54,31 +120,148 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 3
-  minor: 0
+  major: 14
+  minor: 6
   note: 0
 findings:
-  - id: F002
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 27
-    message: 5件の図にシステム内外・サービス境界と主要識別子を追加し、各フローのtrace伝搬範囲または非採用理由と、IDかリポジトリ相対パスで一意に辿れるテスト・運用参照を補う必要がある。
-    anchor: "```mermaid"
   - id: F001
     severity: major
-    rule: vp-qe-verifiability
-    line: 90
-    message: 最大並列数、provider別parallel limit、retry上限・backoffおよび監視条件について、設定キー・値または一意な参照先と確認手順を示し、pass / failを判定可能にする必要がある。
-    anchor: "- **目的**: Ready taskを最大並列数まで安全に実行し、task終了ごとに依存関係を再計算して空き枠を補充する。"
+    rule: vp-po-decision-readiness
+    line: 11
+    anchor: "| Flow ID | フロー名                        | 事故論点                         | 優先度 | 備考                       |"
+    message: 各フローを承認するための判断対象、未決事項、影響、承認者、設定値・参照先の確定条件を明示する必要がある。
+  - id: F002
+    severity: minor
+    rule: vp-po-publication-accountability
+    line: 5
+    anchor: 順序、排他、再実行、監査または人間承認を誤ると成果物・task状態・参照整合性を損なうフローだけを最大5件で管理する。詳細実装はコード・設定・GitをSSOTとし、本書は境界、永続化点、失敗時保持、再開条件への導線を示す。
+    message: 公開対象、非公開情報・個人情報の有無、およびready化・公開可否を最終判断する人間のRole codeを明記する必要がある。
   - id: F003
     severity: major
-    rule: vp-ux-user-flow
+    rule: vp-pm-plan-feasibility
+    line: 136
+    anchor: "## 4. 観測性と運用連携"
+    message: 各フローから必要となる実装・テスト・運用整備について、作業単位、依存順、担当Role code、完了条件、判断時期を示す必要がある。
+  - id: F004
+    severity: minor
+    rule: vp-pm-dependency-risk
     line: 150
-    message: 関連ドキュメント表の一般名称とglob風表記を、実在する文書IDまたはリポジトリ相対パスへ置き換え、未作成OPRには作成予定のIDまたは追跡先を示す必要がある。
     anchor: >-
       | Flow ID | SDI・一次情報                                     | テスト                    | 運用                  | DEC・判断記録
       |
+    message: 未作成OPR、一般名称の参照、未確定の制限値を依存・リスクとして分離し、Schedule影響とPJR登録先を示す必要がある。
+  - id: F005
+    severity: major
+    rule: vp-pm-control-reporting
+    line: 136
+    anchor: "## 4. 観測性と運用連携"
+    message: 各監視・手動介入条件を課題、リスク、変更要求、決定のどれとしてどのPJRまたは報告先へ転記するか、担当Role codeと対応方針を分離して示す必要がある。
+  - id: F006
+    severity: major
+    rule: vp-ba-business-value
+    line: 5
+    anchor: 順序、排他、再実行、監査または人間承認を誤ると成果物・task状態・参照整合性を損なうフローだけを最大5件で管理する。詳細実装はコード・設定・GitをSSOTとし、本書は境界、永続化点、失敗時保持、再開条件への導線を示す。
+    message: 各重要フローについて、影響を受ける利用者・運用者、放置時の業務影響、期待効果、他候補より優先した選定理由を対応付ける必要がある。
+  - id: F007
+    severity: minor
+    rule: vp-ba-requirements-completeness
+    line: 23
+    anchor: "- **目的**: PO留保事項と`develop`から`main`への昇格で、作成者と承認者を分離し、承認対象差分を追跡する。"
+    message: 各フローに利用者・運用者が確認できる受入条件を追加し、Ready、claim、block、resumeなどの状態用語を一意な定義先へ接続する必要がある。
+  - id: F008
+    severity: major
+    rule: vp-ba-stakeholder-clarity
+    line: 136
+    anchor: "## 4. 観測性と運用連携"
+    message: 各フローについて利用者・運用者、設計確認者、合意事項、承認責任をRole codeで明示し、runnerなど実装主体と人間の責任を区別する必要がある。
+  - id: F009
+    severity: major
+    rule: vp-arc-technical-constraints
+    line: 27
+    anchor: "```mermaid"
+    message: 5件の図でシステム内外・サービス境界、主要識別子、同期・非同期境界を明示し、設定依存の制約は設定キーまたは一意な設計参照へ接続する必要がある。
+  - id: F010
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 90
+    anchor: "- **目的**: Ready taskを最大並列数まで安全に実行し、task終了ごとに依存関係を再計算して空き枠を補充する。"
+    message: 最大並列数、provider別上限、retry・backoff、claim排他、監視条件について、実装対象ファイル、設定キー、値、入出力および制約を一意に辿れるようにする必要がある。
+  - id: F011
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 150
+    anchor: >-
+      | Flow ID | SDI・一次情報                                     | テスト                    | 運用                  | DEC・判断記録
+      |
+    message: 各フロー変更時に確認するschema、生成物、CLIコマンド、後方互換性、関連テスト・運用文書を影響範囲として対応付ける必要がある。
+  - id: F012
+    severity: major
+    rule: vp-dev-testability
+    line: 150
+    anchor: >-
+      | Flow ID | SDI・一次情報                                     | テスト                    | 運用                  | DEC・判断記録
+      |
+    message: 各フローのテストを実在するリポジトリ相対パスまたはテストIDで示し、実行コマンド、対象条件、期待結果、失敗時の判定を追加する必要がある。
+  - id: F013
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 136
+    anchor: "## 4. 観測性と運用連携"
+    message: 未充足の業務影響、承認条件、テスト参照、実装設定を未解決事項として明示し、各done_criteriaの確認根拠または解消先を対応付ける必要がある。
+  - id: F014
+    severity: major
+    rule: vp-qe-verifiability
+    line: 90
+    anchor: "- **目的**: Ready taskを最大並列数まで安全に実行し、task終了ごとに依存関係を再計算して空き枠を補充する。"
+    message: 最大並列数、provider別parallel limit、retry上限・backoffおよび監視条件について、設定キー・値または一意な参照先と確認手順を示し、pass / failを判定可能にする必要がある。
+  - id: F015
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 27
+    anchor: "```mermaid"
+    message: 5件の図にシステム内外・サービス境界と主要識別子を追加し、各フローのtrace伝搬範囲または非採用理由と、IDかリポジトリ相対パスで一意に辿れるテスト・運用参照を補う必要がある。
+  - id: F016
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 1
+    anchor: "# SpecDojo システム設計重要フロー"
+    message: rulebookの必須Frontmatter項目であるtitleがなく、文書名をメタデータから確認できないため追加する必要がある。
+  - id: F017
+    severity: major
+    rule: vp-ux-user-flow
+    line: 150
+    anchor: >-
+      | Flow ID | SDI・一次情報                                     | テスト                    | 運用                  | DEC・判断記録
+      |
+    message: 関連ドキュメント表の一般名称とglob風表記を、実在する文書IDまたはリポジトリ相対パスへ置き換え、未作成OPRには作成予定のIDまたは追跡先を示す必要がある。
+  - id: F018
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 144
+    anchor: "| scf-005 | task ID、provider、attempt       | retry枯渇、resume時刻不明、quota             | OPS / ARCが再開判断         |"
+    message: 「runnerがblock」を実装動作として記述し、運用責任を持つ人間のRole codeと分離して用語・責任表記を統一する必要がある。
+  - id: F019
+    severity: major
+    rule: vp-ops-release-readiness
+    line: 5
+    anchor: 順序、排他、再実行、監査または人間承認を誤ると成果物・task状態・参照整合性を損なうフローだけを最大5件で管理する。詳細実装はコード・設定・GitをSSOTとし、本書は境界、永続化点、失敗時保持、再開条件への導線を示す。
+    message: draftからreadyへ移行するための前提、未解決事項、公開前検証、承認者、未作成OPRの解消条件を明示する必要がある。
+  - id: F020
+    severity: major
+    rule: vp-ops-operability
+    line: 136
+    anchor: "## 4. 観測性と運用連携"
+    message: 各フローの監視閾値、アラート後の担当Role code、問い合わせ・エスカレーション先、復旧・再開手順を実在するOPRまたは追跡IDへ接続する必要がある。
 done_criteria:
-  satisfied: 5
+  satisfied: 1
   total: 5
+  unsatisfied:
+    DC-001:
+      - BA
+    DC-002:
+      - PO
+    DC-004:
+      - QE
+    DC-005:
+      - DEV
   detail_ref: sysd-critical-flows-grade-criteria

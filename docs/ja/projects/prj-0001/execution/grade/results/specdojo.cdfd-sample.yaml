@@ -3,29 +3,75 @@ version: 1
 document: specdojo:cdfd-sample
 path: docs/ja/specdojo/samples/cdfd-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: pass
-score: 91
-graded_at: "2026-09-21T11:57:07.575Z"
+score: 95
+graded_at: "2026-09-27T21:54:16.813Z"
 graded_by: codex-expert-executor
 content_hash: bccef843a4e229a3b3c26d94e7bfdc22d113ead5157cc0bcdd3f381bcc08e4b3
 categories:
-  consistency:
-    score: 75
-  usability:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
     score: 100
   architecture:
     score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 100
   quality:
-    score: 88
-viewpoints:
-  vp-arc-cross-document-consistency:
-    level: 3
+    score: 92
+  consistency:
     score: 75
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -43,6 +89,15 @@ viewpoints:
   vp-ux-language-consistency:
     level: 4
     score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
@@ -54,14 +109,6 @@ finding_counts:
 findings:
   - id: F001
     severity: minor
-    rule: vp-arc-cross-document-consistency
-    line: 25
-    anchor: 在庫グループからの補充依頼を商品台帳の発注条件へ合わせ、店主代表が承認した発注内容を仕入先と後続の入荷検品へ引き渡す。
-    message: >-
-      本書の `P-01-01` は補充数量を発注単位に合わせる責務を仕入グループに置く一方, 横断の `cdfd-uc-sample` は `H-01` 成立前に在庫グループが発注単位に合う数量を確定すると定めているため,
-      発注単位への数量調整・検証の担当を一方へ統一してください。
-  - id: F002
-    severity: minor
     rule: vp-qe-omissions-consistency
     line: 210
     anchor: >-
@@ -71,6 +118,14 @@ findings:
     message: >-
       `P-02-03` の完了条件は仕入記録と在庫記録の双方の確認を要求する一方, `E-02-02` は仕入記録の不一致しか扱わないため, 在庫記録の更新または読戻しを確認できない場合の停止範囲, 扱い,
       再開条件を追加してください。
+  - id: F002
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 25
+    anchor: 在庫グループからの補充依頼を商品台帳の発注条件へ合わせ、店主代表が承認した発注内容を仕入先と後続の入荷検品へ引き渡す。
+    message: >-
+      本書の `P-01-01` は補充数量を発注単位に合わせる責務を仕入グループに置く一方, 横断の `cdfd-uc-sample` は `H-01` 成立前に在庫グループが発注単位に合う数量を確定すると定めているため,
+      発注単位への数量調整・検証の担当を一方へ統一してください。
   - id: F003
     severity: minor
     rule: vp-qe-kata-conformance

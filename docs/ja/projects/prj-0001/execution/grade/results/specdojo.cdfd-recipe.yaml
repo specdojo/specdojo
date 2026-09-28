@@ -3,29 +3,75 @@ version: 1
 document: specdojo:cdfd-recipe
 path: docs/ja/specdojo/recipes/cdfd-recipe.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: pass
-score: 100
-graded_at: "2026-09-17T07:55:54.208Z"
-graded_by: codex-expert-executor
+score: 98
+graded_at: "2026-09-27T20:38:41.494Z"
+graded_by: agy-expert-executor
 content_hash: b2f47bc3a871fbfdeebe9d854e6c9f853747319274a972bb40bdafeb81402116
 categories:
-  consistency:
+  purpose:
     score: 100
-  usability:
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
     score: 100
   architecture:
     score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 100
   quality:
+    score: 92
+  consistency:
     score: 100
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -35,12 +81,21 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -49,6 +104,12 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 1
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 49
+    anchor: 14. 他グループの内部処理を委譲表へ移し、委譲先 `cdfd-<group>` または `cdfd-uc-<topic>`、引き渡す情報、戻す条件を記述します。
+    message: 手順5・13・14および仕上げチェックにおいて、Rulebookが定義する表の項目（プロセス名、完了条件、対象プロセス、停止範囲、委譲事項）の記載指示が一部漏れています。

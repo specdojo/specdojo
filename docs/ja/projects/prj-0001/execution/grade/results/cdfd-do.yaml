@@ -3,29 +3,86 @@ version: 1
 document: cdfd-do
 path: docs/ja/product/010-business-specs/010-data-flow/cdfd-do.md
 target: deliverable
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 83
-graded_at: "2026-09-26T15:38:14.322Z"
-graded_by: agy-expert-executor
+score: 85
+graded_at: "2026-09-27T15:37:02.051Z"
+graded_by: codex-expert-executor
 content_hash: 77bdd115c5f0005404837c4d440bc2af468071ee4364c697383e1019a52a0a99
+source_hashes:
+  catalog-entry: 66ea33ff6652178bf4445df9d4b170433ea97ae49467694b6cd33bf2a16a7202
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  dependency:cdfd-overview: d21b0a535f2e00298b71f19804552832a8984c57ad7b58a895f7d96e8a3f2bb3
+  members: ec838bbb5673ba76f1a15672e094c00088dcb686a2a67225ca8411c0dc5e90d3
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
 categories:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 83
+  business:
+    score: 83
   consistency:
     score: 63
+  architecture:
+    score: 92
   usability:
     score: 100
-  architecture:
-    score: 100
-  quality:
+  implementation:
     score: 75
+  quality:
+    score: 81
 viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 2
+    score: 50
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 2
+    score: 50
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
   vp-arc-cross-document-consistency:
     level: 4
     score: 100
+  vp-arc-technical-constraints:
+    level: 3
+    score: 75
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 2
+    score: 50
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-done-criteria:
@@ -46,6 +103,15 @@ viewpoints:
   vp-ux-language-consistency:
     level: 4
     score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
@@ -54,48 +120,139 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 3
-  minor: 2
+  major: 6
+  minor: 6
   note: 0
 findings:
   - id: F001
+    severity: major
+    rule: vp-pm-plan-feasibility
+    line: 32
+    anchor: >-
+      | プロセス ID | プロセス     | 業務目的                                                                                      
+      | 主な担当                                                                 |
+      起動条件                                                                                                           |
+      必須性                                                                                                                
+      |
+    message: プロセス表に完了条件がないため、P-07-01〜P-07-05 の各作業単位について完了したかを判定できず、進捗確認と後続プロセスの開始判断に利用できない。
+  - id: F002
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 32
+    anchor: >-
+      | プロセス ID | プロセス     | 業務目的                                                                                      
+      | 主な担当                                                                 |
+      起動条件                                                                                                           |
+      必須性                                                                                                                
+      |
+    message: 各プロセスの完了条件がプロセス表から欠落しており、利用者が業務目的を達成したかをプロセス単位で受け入れ判定できない。
+  - id: F003
+    severity: minor
+    rule: vp-arc-technical-constraints
+    line: 142
+    anchor: >-
+      | `P-07-03`   | 成果検証     | 成果候補または Job の実行結果、実行計画の完了条件、Kata
+      の検証基準                                                                    |
+      検証結果、evidence、統合可否                                                           | Kata / kata、実行計画 / plan、登録簿 /
+      register、成果物 / deliverable                                                |
+    message: 登録簿の利用を P-07-01・P-07-02・P-07-05 とするデータストア表に対し、個別プロセス表は P-07-03 にも登録簿を割り当てており、P-07-03 が登録簿を直接参照する技術前提を一意に識別できない。
+  - id: F004
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 32
+    anchor: >-
+      | プロセス ID | プロセス     | 業務目的                                                                                      
+      | 主な担当                                                                 |
+      起動条件                                                                                                           |
+      必須性                                                                                                                
+      |
+    message: P-07-01〜P-07-05 の完了条件がないため、実装時に各処理がどの出力または事実を確定した時点で正常終了するかを特定できない。
+  - id: F005
     severity: minor
     rule: vp-qe-done-criteria
-    line: 67
-    anchor: classDef event fill:#fff3e0,stroke:#fb8c00,color:#000
+    line: 142
+    anchor: >-
+      | `P-07-03`   | 成果検証     | 成果候補または Job の実行結果、実行計画の完了条件、Kata
+      の検証基準                                                                    |
+      検証結果、evidence、統合可否                                                           | Kata / kata、実行計画 / plan、登録簿 /
+      register、成果物 / deliverable                                                |
     message: >-
       DC-002 が求めるプロセス単位の読み書きについて、「データストア」表は登録簿の参照を P-07-01・P-07-02 とする一方、「個別プロセス主要入出力」は P-07-03 にも登録簿を含めており、P-07-03
       の参照有無を一意に識別できるよう統一する必要がある。
-  - id: F002
+  - id: F006
+    severity: minor
+    rule: vp-qe-done-criteria
+    line: 144
+    anchor: >-
+      | `P-07-05`   | 実行結果記録 | 成果、検証結果、evidence、条件付きの統合結果、ブロック理由、保護設定の変更差分または判断依頼、対象登録項目への対応結果                |
+      実行記録（result）、実行状態、登録項目の状態遷移、後続へ引き渡す成果                   | 登録簿 / register、実行記録、成果物 /
+      deliverable                                                                    |
+    message: >-
+      DC-002 が求めるプロセス単位の読み書きについて、「個別プロセス主要入出力」は P-07-05 に成果物 / deliverable を含める一方、「データストア」表と概念データフローは P-07-05
+      による成果物の直接参照・更新を示しておらず、利用有無を統一する必要がある。
+  - id: F007
     severity: major
     rule: vp-qe-verifiability
-    line: 43
-    anchor: ""
-    message: プロセスの表にルールブックが必須とする「完了条件」列が存在せず、各プロセスが成功裏に完了したことを yes / no で判定できる検証可能な基準がない。
-  - id: F003
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 43
-    anchor: ""
-    message: ルールブックで必須とされる「完了条件」列がプロセスの表（3.1節）から抜け落ちているため、列を追加し各プロセスの完了条件を明記する必要がある。
-  - id: F004
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 172
+    line: 32
     anchor: >-
-      | --------------------------------------------------------- |
-      -------------------------------------------------------- |
-      ---------------------------------------------------------------------- |
-      ------------------------------------------------------------------------------------------- |
+      | プロセス ID | プロセス     | 業務目的                                                                                      
+      | 主な担当                                                                 |
+      起動条件                                                                                                           |
+      必須性                                                                                                                
+      |
+    message: プロセスの表にルールブックが必須とする「完了条件」列が存在せず、各プロセスが成功裏に完了したことを yes / no で判定できる検証可能な基準がない。
+  - id: F008
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 32
+    anchor: >-
+      | プロセス ID | プロセス     | 業務目的                                                                                      
+      | 主な担当                                                                 |
+      起動条件                                                                                                           |
+      必須性                                                                                                                
+      |
+    message: ルールブックで必須とされる「完了条件」列がプロセスの表（3.1節）から抜け落ちているため、列を追加し各プロセスの完了条件を明記する必要がある。
+  - id: F009
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 161
+    anchor: >-
+      | 例外 ID   | 対象プロセス                           |
+      検出条件                                                                                           |
+      本グループでの扱い                                                                                                                                                  
+      |
+      継続・再開条件                                                                                                                                                           
+      |
     message: ルールブックで必須とされる「停止範囲」列が主要例外の表から抜け落ちており、例外発生時に確定または起動してはならない後続プロセスや出力が明記されていない。
-  - id: F005
+  - id: F010
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 67
-    anchor: classDef event fill:#fff3e0,stroke:#fb8c00,color:#000
+    line: 142
+    anchor: >-
+      | `P-07-03`   | 成果検証     | 成果候補または Job の実行結果、実行計画の完了条件、Kata
+      の検証基準                                                                    |
+      検証結果、evidence、統合可否                                                           | Kata / kata、実行計画 / plan、登録簿 /
+      register、成果物 / deliverable                                                |
     message: >-
       登録簿の利用を P-07-01・P-07-02・P-07-05 とするデータストア表と、P-07-03 にも登録簿を割り当てる個別プロセス表が矛盾するため、P-07-03
       の登録簿参照を追加するか同プロセスのデータストア欄から削除する必要がある。
+  - id: F011
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 144
+    anchor: >-
+      | `P-07-05`   | 実行結果記録 | 成果、検証結果、evidence、条件付きの統合結果、ブロック理由、保護設定の変更差分または判断依頼、対象登録項目への対応結果                |
+      実行記録（result）、実行状態、登録項目の状態遷移、後続へ引き渡す成果                   | 登録簿 / register、実行記録、成果物 /
+      deliverable                                                                    |
+    message: >-
+      個別プロセス表は P-07-05 に成果物 / deliverable を割り当てる一方、データストア表と図は同プロセスによる成果物の直接利用を示していないため、参照・更新関係を追加するか P-07-05
+      のデータストア欄から削除する必要がある。
+  - id: F012
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 9
+    anchor: "## 2. 適用範囲"
+    message: ルールブックが適用範囲に必須とする対象期間が記載されていないため、期間を限定するか、期間を限定せず現行の正本として適用するかを明記する必要がある。
 done_criteria:
   satisfied: 3
   total: 4

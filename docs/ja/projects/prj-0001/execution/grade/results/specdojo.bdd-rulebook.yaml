@@ -3,82 +3,256 @@ version: 1
 document: specdojo:bdd-rulebook
 path: docs/ja/specdojo/rulebooks/bdd-rulebook.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 78
-graded_at: "2026-09-01T22:46:40.744Z"
-graded_by: gemma-expert-executor
+score: 64
+graded_at: "2026-09-27T20:41:40.384Z"
+graded_by: claude-expert-executor
 content_hash: 5f09868c748f77fdc4b23397c0822e21029309e902b065110486a34f61b4c0ab
 categories:
-  consistency:
+  purpose:
+    score: 88
+  operations:
+    score: 88
+  planning:
+    score: 83
+  business:
     score: 63
-  usability:
-    score: 92
   architecture:
-    score: 100
-  quality:
+    score: 83
+  usability:
+    score: 67
+  implementation:
     score: 63
+  quality:
+    score: 42
+  consistency:
+    score: 50
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 3
+    score: 75
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 3
+    score: 75
+  vp-pm-dependency-risk:
+    level: 3
+    score: 75
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 2
+    score: 50
+  vp-ba-stakeholder-clarity:
+    level: 3
+    score: 75
+  vp-arc-technical-constraints:
     level: 2
     score: 50
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
-  vp-qe-verifiability:
-    level: 4
-    score: 100
-  vp-qe-omissions-consistency:
+  vp-dev-implementation-readiness:
+    level: 2
+    score: 50
+  vp-dev-change-impact:
     level: 3
     score: 75
+  vp-dev-testability:
+    level: 2
+    score: 50
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
   vp-qe-kata-conformance:
     level: 1
     score: 25
   vp-ux-readability:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-ux-language-consistency:
     level: 3
     score: 75
+  vp-ops-release-readiness:
+    level: 3
+    score: 75
+  vp-ops-operability:
+    level: 3
+    score: 75
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 0
-  major: 3
-  minor: 2
+  major: 9
+  minor: 16
   note: 0
 findings:
-  - id: F003
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 1
-    message: "成果物の種別（type: data）と、メタデータ項目としての設定値（type: domain）の内容が矛盾しており、正解の設定値が不明確である。"
-    anchor: "# 業務データ辞書 作成ルール"
-  - id: F005
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 1
-    message: 「type」という用語が成果物の種別とメタデータ項目名の両義的に使用されており、混同を招く恐れがある。
-    anchor: "# 業務データ辞書 作成ルール"
   - id: F001
-    severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 1
-    message: IDの正規表現 `^bdd-[a-z0-9-]+$` が、サンプル (`specdojo:bdd-sample`) のID形式（コロンを含む形式）と矛盾している。
-    anchor: "# 業務データ辞書 作成ルール"
-  - id: F004
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 1
-    message: IDの正規表現 `^bdd-[a-z0-9-]+$` が、サンプル (`specdojo:bdd-sample`) のID形式（コロンを含む形式）と矛盾している。
-    anchor: "# 業務データ辞書 作成ルール"
+    severity: minor
+    rule: vp-po-decision-readiness
+    line: 119
+    anchor: "- 技術的属性（`created_at`, `updated_at`, `deleted_at` など）を原則含めない。"
+    message: 「技術的属性（created_at 等）を原則含めない」の例外を認める条件と判断者が未記載のため、例外可否の判断基準を明記する。
   - id: F002
     severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 9
+    anchor: "## 1. 全体方針"
+    message: 業務データ辞書の完成条件（必須キー充足・schema 検証合格・用語集/CCD 照合済み等）が未定義のため、作業完了を判定できる完了条件を全体方針または記述ガイドに追記する。
+  - id: F003
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 19
+    anchor: "- `glossary_term_id` は用語集との参照キー、`related_terms` は関連用語への補助参照を指す。"
+    message: 成果物の検証正本である bdd schema への依存が本文に記載されておらず、rulebook と schema の乖離リスクが識別されていないため、依存関係として明記する。
+  - id: F004
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 50
+    anchor: "| キー | 説明 | 必須 |"
+    message: 本文要件の表（ルートキー・entities・fields）が空行で分断され entities/key_fields/fields/type 等の必須・任意が表として判読できないため、空行を除去して一つの表に統合する。
+  - id: F005
+    severity: minor
+    rule: vp-ba-requirements-completeness
+    line: 73
+    anchor: "| ------------- | ---------------------------------- | ---- |"
+    message: enum フィールドで必須となる allowed_values / allowed_values_detailed が fields の標準構成表に含まれていないため、条件付き必須キーとして表へ追加する。
+  - id: F006
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 7
+    anchor: データの意味や構造に関する共通理解を関係者間で図り、システム設計や実装の基礎情報として活用します。
+    message: 「関係者」が抽象的で、作成者・利用者・確認者（Role code）と合意対象が特定されていないため、主要な関係者と確認観点を明記する。
+  - id: F007
+    severity: major
+    rule: vp-arc-technical-constraints
+    line: 25
+    anchor: "- `id` は正規表現 `^bdd-[a-z0-9-]+$` に合致する一意IDを用いる。"
+    message: ID 正規表現 `^bdd-[a-z0-9-]+$` が bdd schema の pattern（project 修飾を許容）より狭く正本と矛盾するため、schema と一致させるか project 修飾の扱いを明記する。
+  - id: F008
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 5
+    anchor: 本ドキュメントは、業務分析・要求定義・システム設計のために **業務データ辞書を記述する標準ルール**です。
+    message: 導入文と全体方針がエンティティ/属性の定義と共通理解形成という同一主張を反復しているため、どちらか一方に統合する。
+  - id: F009
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 57
+    anchor: "| サブ項目      | 説明                               | 必須 |"
+    message: entities / fields の標準構成表が空行で複数に分断され、key_fields・fields・type 等の必須キーが表外の断片となり YAML 構造を正しく読み取れないため、表を修復する。
+  - id: F010
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 9
+    anchor: "## 1. 全体方針"
+    message: rulebook 変更時に同期が必要な bdd schema・sample・用語集/CCD への影響範囲が記載されていないため、変更時の同期対象を明記する。
+  - id: F011
+    severity: major
+    rule: vp-dev-testability
+    line: 94
+    anchor: "## 6. 記述ガイド"
+    message: YAML 成果物の検証手順（bdd schema を用いた validate:schema:file 等のコマンド・期待結果）が一切記載されておらず作成後の合否確認ができないため、検証手順を追記する。
+  - id: F012
+    severity: major
+    rule: vp-qe-verifiability
+    line: 50
+    anchor: "| キー | 説明 | 必須 |"
+    message: 必須・任意を示す本文要件表が分断され必須キー充足の pass/fail を判定できないため、表を修復する。
+  - id: F013
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 37
+    anchor: Frontmatter と同等の以下の項目をYAMLドキュメントの先頭に必ず定義してください。
+    message: 見出し「推奨 Frontmatter 項目」と本文「必ず定義してください」で強制度が矛盾しているため、必須か推奨かを一意に表現する。
+  - id: F014
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 122
+    anchor: "- 物理名と論理名で英語・日本語を無秩序に混在させない。"
+    message: 「無秩序に混在させない」は判定不能な表現のため、論理名は日本語・物理名は英語 lower_snake_case のように判定可能な条件に置き換える。
+  - id: F015
+    severity: minor
     rule: vp-qe-omissions-consistency
-    line: 1
+    line: 29
+    anchor: "### 3.2. ファイル命名規約"
     message: 推奨される配置ディレクトリの記述が不足しており、プロジェクト内での標準的な配置場所が不明である。
-    anchor: "# 業務データ辞書 作成ルール"
+  - id: F016
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 57
+    anchor: "| サブ項目      | 説明                               | 必須 |"
+    message: entities / fields の必須キー定義表が空行で分断され、key_fields・fields・type 等の必須キーが表から欠落した状態のため、表を修復して必須キーの抜けをなくす。
+  - id: F017
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 48
+    anchor: "## 5. 本文構成（標準テンプレ）"
+    message: "章見出し「本文構成（標準テンプレ）」が authoring standard の標準章名「本文要件」と不一致で、template: not-needed とも表現が矛盾するため、見出しを揃える。"
+  - id: F018
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 17
+    anchor: "- 本ルールは `type: data` の成果物に適用する。"
+    message: "成果物の種別（type: data）と、メタデータ項目としての設定値（type: domain）の内容が矛盾しており、正解の設定値が不明確である。"
+  - id: F019
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 25
+    anchor: "- `id` は正規表現 `^bdd-[a-z0-9-]+$` に合致する一意IDを用いる。"
+    message: IDの正規表現 `^bdd-[a-z0-9-]+$` が、サンプル (`specdojo:bdd-sample`) のID形式（コロンを含む形式）と矛盾している。
+  - id: F020
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 73
+    anchor: "| ------------- | ---------------------------------- | ---- |"
+    message: >-
+      sample と schema が使用する allowed_values_detailed / allowed_values が rulebook の fields 標準構成表に定義されておらず Kata
+      間で必須キー定義が不一致のため、表へ追加する。
+  - id: F021
+    severity: major
+    rule: vp-ux-readability
+    line: 50
+    anchor: "| キー | 説明 | 必須 |"
+    message: 本文要件の表が空行で分断され、描画時にヘッダーのみの空表と孤立行が並び主要なキー構造と必須/任意を読み取れないため、表を連続させる。
+  - id: F022
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 17
+    anchor: "- 本ルールは `type: data` の成果物に適用する。"
+    message: 「type」という用語が成果物の種別とメタデータ項目名の両義的に使用されており、混同を招く恐れがある。
+  - id: F023
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 12
+    anchor: "- 業務上の管理単位（エンティティ）と属性（フィールド）の意味・制約・例値を、判断可能な粒度で記述する。"
+    message: 属性を指す語が「属性」「項目」「フィールド」で混在しているため、fields に対応する用語へ統一する。
+  - id: F024
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 9
+    anchor: "## 1. 全体方針"
+    message: ready 化の前提条件（schema との pattern 整合、type 矛盾の解消、rulebook-enums 検証合格）が明示されていないため、ready 判定条件を記載する。
+  - id: F025
+    severity: minor
+    rule: vp-ops-operability
+    line: 27
+    anchor: "- 置き換えがある場合は `supersedes` に旧IDを列挙する。"
+    message: supersedes 以外の継続更新手順（用語集/CCD 変更時の追従、フィールド廃止時の扱い、保守担当 Role code）が未記載のため、変更管理の手順を追記する。

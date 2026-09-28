@@ -1,0 +1,5 @@
+grade pipeline aborted: reason=rate_limit exit_code=75 selected=10 visited=7 completed_now=5 incomplete=1 current_document=docs/ja/product/010-business-specs/020-data-model/cdsd-sharing.md current_stage=1 unstarted=3; rerun with --run-id JBR-grade-deliverable-6ec6d179d9b2 to resume
+grade pipeline unstarted: docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md
+grade pipeline unstarted: docs/ja/product/010-business-specs/020-data-model/stsd-routine-run.md
+grade pipeline unstarted: docs/ja/product/010-business-specs/030-business-model/bps-deliverable-evaluation.md
+grade pipeline failed: run_id=JBR-grade-deliverable-6ec6d179d9b2 exit_code=75

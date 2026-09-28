@@ -3,40 +3,97 @@ version: 1
 document: tsd-ollama-opencode
 path: docs/ja/product/030-architecture/020-infrastructure/tsd-ollama-opencode.md
 target: deliverable
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 84
-graded_at: "2026-09-14T00:52:34.197Z"
-graded_by: gemma-expert-executor
+score: 62
+graded_at: "2026-09-27T21:22:15.216Z"
+graded_by: codex-expert-executor
 content_hash: adf89fc90887cda2670ecba4f37a6e3d174c9a9af6b5af23127805b8751d5f12
+source_hashes:
+  catalog-entry: 2e0371271ba588926c5743e11f8cecd9d5b44d342feca841a14d48ee0f82a3b6
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  dependency:tsd-ollama: 0f2d1a2ce67a38a25d81011175b36fc1f035be0eee507df5db08a586c1afe69d
+  members: ec838bbb5673ba76f1a15672e094c00088dcb686a2a67225ca8411c0dc5e90d3
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
 categories:
+  purpose:
+    score: 75
+  operations:
+    score: 75
+  planning:
+    score: 67
+  business:
+    score: 67
   consistency:
-    score: 100
+    score: 50
+  architecture:
+    score: 83
   usability:
     score: 75
-  architecture:
-    score: 100
+  implementation:
+    score: 38
   quality:
-    score: 67
+    score: 44
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
     level: 4
     score: 100
+  vp-po-decision-readiness:
+    level: 2
+    score: 50
+  vp-po-publication-accountability:
+    level: 3
+    score: 75
+  vp-pm-plan-feasibility:
+    level: 3
+    score: 75
+  vp-pm-dependency-risk:
+    level: 2
+    score: 50
+  vp-pm-control-reporting:
+    level: 3
+    score: 75
+  vp-ba-business-value:
+    level: 3
+    score: 75
+  vp-ba-requirements-completeness:
+    level: 2
+    score: 50
+  vp-ba-stakeholder-clarity:
+    level: 3
+    score: 75
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-technical-constraints:
+    level: 2
+    score: 50
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 1
+    score: 25
+  vp-dev-change-impact:
+    level: 2
+    score: 50
+  vp-dev-testability:
+    level: 1
+    score: 25
   vp-qe-done-criteria:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-qe-verifiability:
+    level: 1
+    score: 25
+  vp-qe-omissions-consistency:
     level: 2
     score: 50
-  vp-qe-omissions-consistency:
-    level: 4
-    score: 100
   vp-ux-readability:
     level: 2
     score: 50
@@ -46,6 +103,15 @@ viewpoints:
   vp-ux-language-consistency:
     level: 2
     score: 50
+  vp-ops-release-readiness:
+    level: 2
+    score: 50
+  vp-ops-operability:
+    level: 3
+    score: 75
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
@@ -54,38 +120,187 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 4
-  minor: 0
+  major: 19
+  minor: 6
   note: 0
 findings:
   - id: F001
     severity: major
-    rule: vp-qe-done-criteria
-    line: 141
-    message: 検証用コマンドのモデル名に誤記があり、完了条件 DC-004 を十分に満たしていない。
-    anchor: ""
+    rule: vp-po-decision-readiness
+    line: 7
+    anchor: >-
+      本構成は、Host Mac 上で動く Ollama を devcontainer 内の opencode から利用するための接続定義である。Ollama は OpenAI互換の `/v1/*` API
+      を提供しており、SpecDojo の opencode 連携では `opencode.json` の custom provider 方式に合わせて OpenAI互換 API を標準とする。
+    message: custom provider 方式を標準とする判断について、代替方式との比較、影響範囲、承認者、未決事項、承認後の次アクションが記載されていない。
   - id: F002
-    severity: major
-    rule: vp-qe-verifiability
-    line: 141
-    message: 検証用コマンドのモデル名 (`gemma4:e4b-light-8k`) が, 4.2節で定義したモデル名 (`gemma4:e4b-mlx-light-8k`) と不整合であり、そのままでは動作しない。
-    anchor: ""
+    severity: minor
+    rule: vp-po-publication-accountability
+    line: 1
+    anchor: "# Ollama の opencode 接続定義"
+    message: status が draft の文書について、公開対象と公開可否を最終判断する人間の責任者が明示されていない。
   - id: F003
-    severity: major
-    rule: vp-ux-readability
-    line: 141
-    message: 検証用コマンドのモデル名に誤記があり、正しく疎通確認が行えないため, 読者に誤解を招く。
-    anchor: ""
+    severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 15
+    anchor: "## 2. 前提条件"
+    message: 設定作業と確認作業の担当 Role code、および実施・承認の判断タイミングが記載されていない。
   - id: F004
     severity: major
+    rule: vp-pm-dependency-risk
+    line: 53
+    anchor: "### 4.2. 設定例"
+    message: >-
+      モデル構成の変更が
+      `opencode.json`、`.opencode/agents/*.md`、`docs/ja/product/040-system-design/sysd-opencode-agent-settings.md`
+      に与える影響と更新要否が記載されていない。
+  - id: F005
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 1
+    anchor: "# Ollama の opencode 接続定義"
+    message: 未解決課題、変更要求、決定記録へ転記する事項、報告先、担当 Role codeを分離して記載する欄がない。
+  - id: F006
+    severity: minor
+    rule: vp-ba-business-value
+    line: 7
+    anchor: >-
+      本構成は、Host Mac 上で動く Ollama を devcontainer 内の opencode から利用するための接続定義である。Ollama は OpenAI互換の `/v1/*` API
+      を提供しており、SpecDojo の opencode 連携では `opencode.json` の custom provider 方式に合わせて OpenAI互換 API を標準とする。
+    message: 対象利用者が抱える業務上の課題、未対応時の影響、ローカル接続によって得る価値または成功基準が明示されていない。
+  - id: F007
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 7
+    anchor: >-
+      本構成は、Host Mac 上で動く Ollama を devcontainer 内の opencode から利用するための接続定義である。Ollama は OpenAI互換の `/v1/*` API
+      を提供しており、SpecDojo の opencode 連携では `opencode.json` の custom provider 方式に合わせて OpenAI互換 API を標準とする。
+    message: Ollama、OpenAI互換 API、custom provider の選定理由が業務要件と対応付けられておらず、DC-001 の整合性を確認できない。
+  - id: F008
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 9
+    anchor: 本書の対象は以下とする。
+    message: 利用者、Host Mac の運用者、設定確認者, 技術構成の合意者が Role code または関係者区分で明示されていない。
+  - id: F009
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 75
+    anchor: '"gemma4:e4b-mlx-light-8k": {'
+    message: >-
+      対象文書は `gemma4:e4b-mlx-light-8k` と `small_model` を設定する一方、正本 `opencode.json` は `gemma4:e4b-mlx` を定義して `small_model`
+      を持たず、`docs/ja/product/040-system-design/sysd-opencode-agent-settings.md` の現在設定とも不整合である。
+  - id: F010
+    severity: major
+    rule: vp-arc-technical-constraints
+    line: 15
+    anchor: "## 2. 前提条件"
+    message: Ollama、OpenCode、`@ai-sdk/openai-compatible` の対応バージョンまたは更新方針とライセンス上の制約が記載されておらず、DC-003 を確認できない。
+  - id: F011
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 75
+    anchor: '"gemma4:e4b-mlx-light-8k": {'
+    message: >-
+      設定例の軽量モデルと `small_model` が現行 `opencode.json` の `gemma4:e4b-mlx` および `small_model`
+      未設定という状態と一致せず、追加・移行・置換のどれを実施すべきか判断できない。
+  - id: F012
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 97
+    anchor: '"model": "gemma4:e4b-light-8k",'
+    message: 接続確認のモデル名 `gemma4:e4b-light-8k` は前提条件と設定例の `gemma4:e4b-mlx-light-8k` に一致せず、そのままでは実行できない。
+  - id: F013
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 109
+    anchor: opencode run --agent edit-agent "SpecDojo task を1件実行してください"
+    message: >-
+      `opencode run —agent edit-agent` が指定する `.opencode/agents/edit-agent.md` は存在せず、現行の `qwen-executor` または
+      `gemma-executor` 等へ合わせる必要がある。
+  - id: F014
+    severity: major
+    rule: vp-dev-change-impact
+    line: 53
+    anchor: "### 4.2. 設定例"
+    message: 設定例を適用した場合の `opencode.json`、`.opencode/agents/*.md`、`.specdojo/exec-defaults.yaml`、下流設計への変更内容と互換性が記載されていない。
+  - id: F015
+    severity: major
+    rule: vp-dev-testability
+    line: 97
+    anchor: '"model": "gemma4:e4b-light-8k",'
+    message: API 検証コマンドが未定義の `gemma4:e4b-light-8k` を指定しており、設定したモデルの pass / fail 確認に使用できない。
+  - id: F016
+    severity: major
+    rule: vp-dev-testability
+    line: 109
+    anchor: opencode run --agent edit-agent "SpecDojo task を1件実行してください"
+    message: opencode 検証コマンドが存在しない `edit-agent` を指定しており、現行 agent 定義による接続確認を実行できない。
+  - id: F017
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 97
+    anchor: '"model": "gemma4:e4b-light-8k",'
+    message: 検証用コマンドのモデル名に誤記があり、完了条件 DC-004 を十分に満たしていない。
+  - id: F018
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 1
+    anchor: "# Ollama の opencode 接続定義"
+    message: テストフレームワークと CI/CD 環境への参照がなく、DC-004 が要求する参照情報を本文から確認できない。
+  - id: F019
+    severity: major
+    rule: vp-qe-verifiability
+    line: 97
+    anchor: '"model": "gemma4:e4b-light-8k",'
+    message: 検証用コマンドのモデル名 (`gemma4:e4b-light-8k`) が, 4.2節で定義したモデル名 (`gemma4:e4b-mlx-light-8k`) と不整合であり、そのままでは動作しない。
+  - id: F020
+    severity: major
+    rule: vp-qe-verifiability
+    line: 109
+    anchor: opencode run --agent edit-agent "SpecDojo task を1件実行してください"
+    message: opencode 側の検証コマンドが存在しない `edit-agent` を指定し、期待する provider・モデルが使われたことを確認する判定方法も記載されていない。
+  - id: F021
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 15
+    anchor: "## 2. 前提条件"
+    message: "`docs/ja/specdojo/rulebooks/tsd-rulebook.md` が求める採用バージョン方針と動作確認の期待出力例がなく、構成の互換性および確認結果を一貫して判定できない。"
+  - id: F022
+    severity: major
+    rule: vp-ux-readability
+    line: 97
+    anchor: '"model": "gemma4:e4b-light-8k",'
+    message: 検証用コマンドのモデル名に誤記があり、正しく疎通確認が行えないため, 読者に誤解を招く。
+  - id: F023
+    severity: major
     rule: vp-ux-language-consistency
-    line: 141
+    line: 97
+    anchor: '"model": "gemma4:e4b-light-8k",'
     message: 4.2節で定義した `gemma4:e4b-mlx-light-8k` と、109行目の `gemma4:e4b-light-8k` で表記が揺れており、不整合が生じている。
-    anchor: ""
+  - id: F024
+    severity: major
+    rule: vp-ops-release-readiness
+    line: 1
+    anchor: "# Ollama の opencode 接続定義"
+    message: draft から ready へ移行する条件、モデル・agent 名の未解決不整合、公開前確認、承認者が明示されていない。
+  - id: F025
+    severity: minor
+    rule: vp-ops-operability
+    line: 114
+    anchor: "## 6. 運用上の注意"
+    message: モデルや OpenCode 設定の更新責任者、変更記録の管理先、問い合わせ・障害エスカレーション先が記載されていない。
 done_criteria:
-  satisfied: 4
+  satisfied: 0
   total: 5
   unsatisfied:
+    DC-001:
+      - BA
+    DC-002:
+      - PO
+    DC-003:
+      - ARC
     DC-004:
       - QE
+    DC-005:
+      - DEV
   detail_ref: tsd-ollama-opencode-grade-criteria

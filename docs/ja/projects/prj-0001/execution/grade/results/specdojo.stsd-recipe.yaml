@@ -3,29 +3,75 @@ version: 1
 document: specdojo:stsd-recipe
 path: docs/ja/specdojo/recipes/stsd-recipe.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: pass
-score: 96
-graded_at: "2026-09-17T08:40:40.059Z"
+score: 97
+graded_at: "2026-09-27T21:11:23.907Z"
 graded_by: codex-expert-executor
 content_hash: d406c471857d6d282ed3110e9fefc1ddfdd838811c33d71846743e202f9f4ece
 categories:
-  consistency:
+  purpose:
     score: 100
-  usability:
+  operations:
+    score: 88
+  planning:
+    score: 100
+  business:
     score: 100
   architecture:
     score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 100
   quality:
-    score: 88
+    score: 92
+  consistency:
+    score: 100
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 3
+    score: 75
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -43,18 +89,39 @@ viewpoints:
   vp-ux-language-consistency:
     level: 4
     score: 100
+  vp-ops-release-readiness:
+    level: 3
+    score: 75
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 0
   major: 0
-  minor: 1
+  minor: 3
   note: 0
 findings:
   - id: F001
     severity: minor
+    rule: vp-po-publication-accountability
+    line: 119
+    anchor: "## 8. 仕上げチェック"
+    message: 仕上げチェックに、個人情報・非公開情報を含まないことと、公開可否を人間の責任者が判断することを確認する項目を追加する必要がある。
+  - id: F002
+    severity: minor
     rule: vp-qe-kata-conformance
     line: 119
-    message: rulebook で定義された具体的なラベル（`_TODO_:`、`_UNDECIDED_:`、`_ASSUMPTION_:`）を明記し、使用を促す記述にする必要がある。
     anchor: "## 8. 仕上げチェック"
+    message: rulebook で定義された具体的なラベル（`_TODO_:`、`_UNDECIDED_:`、`_ASSUMPTION_:`）を明記し、使用を促す記述にする必要がある。
+  - id: F003
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 119
+    anchor: "## 8. 仕上げチェック"
+    message: 仕上げチェックに、公開対象、承認者、`ready` への昇格条件を確認する項目がなく、公開前のリリース判断を完結できない。

@@ -3,29 +3,72 @@ version: 1
 document: specdojo:pm-members-recipe
 path: docs/ja/specdojo/recipes/pm-members-recipe.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: pass
-score: 98
-graded_at: "2026-09-04T14:13:41.528Z"
-graded_by: gemma-expert-executor
+score: 97
+graded_at: "2026-09-27T20:47:01.471Z"
+graded_by: agy-expert-executor
 content_hash: 65b81361aef92a02ab6d274ff7245450630c939e7de54d8d302cc6dc8b7a039c
 categories:
-  consistency:
-    score: 88
-  usability:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
     score: 100
   architecture:
     score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 100
   quality:
     score: 100
+  consistency:
+    score: 75
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -43,36 +86,51 @@ viewpoints:
   vp-ux-language-consistency:
     level: 4
     score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 0
   major: 0
-  minor: 4
+  minor: 5
   note: 0
 findings:
   - id: F001
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 76
+    line: 55
+    anchor: ""
     message: メタ項目の設定手順において、rulebook で必須とされる `title` が漏れている。
-    anchor: "- Role code は大文字の標準表記で記載する。"
   - id: F002
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 76
+    line: 55
+    anchor: ""
     message: メタ項目の設定手順において、rulebook で必須とされる `status` が漏れている。
-    anchor: "- Role code は大文字の標準表記で記載する。"
   - id: F003
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 90
+    line: 63
+    anchor: "- 最終判断を担う人間は、`note` に承認・公開可否・説明責任の扱いを記載する。"
     message: "`members` の問いにおいて、必須項目である `display_name` の確認が漏れている。"
-    anchor: ""
   - id: F004
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 112
+    line: 98
+    anchor: 1. 組織定義から、PO が最終判断する範囲と agent 委任範囲を抜き出す。
     message: 書き方において、`stage_role` の設定基準や nickname の許容文字に関する rulebook 記載の具体ルールが記述されていない。
-    anchor: "| 汎用 agent     | `roles: []` とし、実行時の owner で文脈を補う    | `roles` 未記載のまま承認責任を曖昧にする            |"
+  - id: F005
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 98
+    anchor: 1. 組織定義から、PO が最終判断する範囲と agent 委任範囲を抜き出す。
+    message: agent のフィールド設定において、rulebook で定義されている `scheduler_strategy` と `disabled` の扱いが漏れている。

@@ -3,29 +3,75 @@ version: 1
 document: specdojo:cdfd-uc-recipe
 path: docs/ja/specdojo/recipes/cdfd-uc-recipe.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: pass
-score: 98
-graded_at: "2026-09-17T08:20:23.259Z"
-graded_by: codex-expert-executor
+score: 97
+graded_at: "2026-09-27T20:40:21.142Z"
+graded_by: agy-expert-executor
 content_hash: 311babc9ddd6ec7074c1515a4fe3400c305f98bc15ac7edbdbc76e075230a01f
 categories:
-  consistency:
-    score: 88
-  usability:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
     score: 100
   architecture:
     score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 100
   quality:
     score: 100
+  consistency:
+    score: 75
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -43,6 +89,15 @@ viewpoints:
   vp-ux-language-consistency:
     level: 4
     score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
@@ -55,6 +110,6 @@ findings:
   - id: F001
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 83
+    line: 51
+    anchor: "### 4.1. 目的"
     message: 「4. 各章の書き方」において、rulebook で必須とされている「導入文」に関する問いや具体的な記述ガイドが欠落している。
-    anchor: 各節の表の一行を一つの代表ノードへ対応させます。同じグループが正常系で再登場する場合は節を分け、前回と異なる引き渡し目的を説明します。内部の処理順や担当は書き写しません。

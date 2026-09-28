@@ -3,76 +3,273 @@ version: 1
 document: specdojo:bes-rulebook
 path: docs/ja/specdojo/rulebooks/bes-rulebook.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 77
-graded_at: "2026-09-01T23:27:34.195Z"
-graded_by: gemma-expert-executor
+score: 61
+graded_at: "2026-09-27T20:48:02.819Z"
+graded_by: claude-expert-executor
 content_hash: 1b9b1520eb472f1b299902f6f7edc4bb2d1c5d6c890518aca12f77c64054c790
 categories:
-  consistency:
-    score: 50
-  usability:
-    score: 83
-  architecture:
-    score: 100
-  quality:
+  purpose:
     score: 75
+  operations:
+    score: 81
+  planning:
+    score: 75
+  business:
+    score: 67
+  architecture:
+    score: 83
+  usability:
+    score: 67
+  implementation:
+    score: 63
+  quality:
+    score: 50
+  consistency:
+    score: 25
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 3
+    score: 75
+  vp-po-decision-readiness:
+    level: 3
+    score: 75
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 3
+    score: 75
+  vp-pm-dependency-risk:
+    level: 3
+    score: 75
+  vp-pm-control-reporting:
+    level: 3
+    score: 75
+  vp-ba-business-value:
+    level: 3
+    score: 75
+  vp-ba-requirements-completeness:
+    level: 2
+    score: 50
+  vp-ba-stakeholder-clarity:
+    level: 3
+    score: 75
+  vp-arc-technical-constraints:
     level: 2
     score: 50
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 2
+    score: 50
+  vp-dev-change-impact:
+    level: 3
+    score: 75
+  vp-dev-testability:
+    level: 2
+    score: 50
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-ux-readability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-language-consistency:
     level: 2
     score: 50
+  vp-ops-release-readiness:
+    level: 2
+    score: 50
+  vp-ops-operability:
+    level: 3
+    score: 75
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 0
-  major: 4
-  minor: 0
+  major: 11
+  minor: 16
   note: 0
 findings:
   - id: F001
-    severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 1
-    message: 参照先のサンプルファイル `docs/ja/specdojo/samples/bes-sample.md` が本ルールの形式に従った BES インスタンスになっていない。
-    anchor: "# 業務イベント仕様 作成ルール"
-  - id: F003
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 1
-    message: 指定されたサンプル `specdojo:bes-sample` が BES の具体例（インスタンス）になっていない。
-    anchor: "# 業務イベント仕様 作成ルール"
+    severity: minor
+    rule: vp-po-purpose-alignment
+    line: 7
+    anchor: "## 1. 位置づけ"
+    message: 標準章構成で必須の「全体方針」章（目的・適用範囲・記載レベル）がない。`based_on` にも BEL の rulebook などの上位根拠がなく、BES 規約が必要な理由を上位文書へたどれない。
   - id: F002
+    severity: minor
+    rule: vp-po-decision-readiness
+    line: 1
+    anchor: "# 業務イベント仕様 作成ルール"
+    message: "`recipe`・`template` が `undecided` のまま、未決事項（判断者・判断時期・影響）が本文に _UNDECIDED_ などで整理されていない。PO が承認するか保留するかの論点を読み取れない。"
+  - id: F003
+    severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 60
+    anchor: "## 4. 本文テンプレ（最小）"
+    message: 本文5項目それぞれの必須・任意と、何がそろえば完了かという判定条件がない。BES 作成をタスク化したとき、完了条件として使えない。
+  - id: F004
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 37
+    anchor: 個別 BES を作成したら、対応する BEL の一覧表で **イベントIDをBESファイルへのリンク** に更新します。
+    message: BEL からのリンク更新だけを定めていて、BES の廃止・置き換え（`supersedes`）時に BEL・BPS 側で必要な更新と、その影響が識別されていない。
+  - id: F005
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 1
+    anchor: "# 業務イベント仕様 作成ルール"
+    message: >-
+      `type` の値の未確定や `recipe`・`template` の `undecided` について、_TODO_ / _UNDECIDED_
+      ラベルなどで未決事項が本文と分けられていない。課題として転記すべき候補を特定できない。
+  - id: F006
+    severity: minor
+    rule: vp-ba-business-value
+    line: 21
+    anchor: "- それでも、BEL の 1 行だけでは **解釈が割れやすい**（= 後工程が迷う）場合があり、そのとき BES を作成します。"
+    message: BES 化で解消したい「後工程が迷う」状態について、誰の判断がどう一つに定まれば成功なのかが書かれていない。期待効果と成功基準がはっきりしない。
+  - id: F007
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 60
+    anchor: "## 4. 本文テンプレ（最小）"
+    message: "`template: undecided` の系統なのに、本文5項目それぞれの目的・必須/任意・記述規約（本文要件）がない。見出し名だけでは何を書けば受け入れられるのか判断できない。"
+  - id: F008
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 29
+    anchor: "- **事実データ** の範囲が合意できない（例: ID体系、金額内訳、訂正元ID、理由の必須性、個人情報の含有可否など）"
+    message: 「合意できない」「解釈が割れる」とあるのに、BES を作成・確認・合意する関係者（Role code）と利用者が示されていない。
+  - id: F009
+    severity: major
+    rule: vp-arc-technical-constraints
+    line: 50
+    anchor: "| title | 業務イベント名（例: 業務イベント: 会計確定（販売）） | ○ |"
+    message: Frontmatter の表とサンプルが `specdojo:` 名前空間を使っていない。禁止されている `title:` を必須項目にしている。参照先のスキーマ・Markdown 規約と一致しない。
+  - id: F010
+    severity: minor
+    rule: vp-arc-technical-constraints
+    line: 87
+    anchor: "---"
+    message: サンプルの Frontmatter で、開始の `—` の直後に空行があり、`id` などがトップレベルに書かれているため、正しい Frontmatter として解釈できない。
+  - id: F011
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 20
+    anchor: "- BES の本文は「何が起きたか / いつ / 誰が／何が / 発生条件 / 事実データ」の **事実（観測）** に限定します。"
+    message: 責務5項目の列挙が「位置づけ」「いつ BES を作るか」の前提、「本文テンプレ」に重複している。「本文テンプレ」を正本にして、ほかは参照に統合できる。
+  - id: F012
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 48
+    anchor: ""
+    message: Frontmatter の表の途中に空行があり、`type` 以降の行が表から外れて描画が壊れている。必須項目を正しく読み取れない。
+  - id: F013
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 39
+    anchor: "- 例（例示はコード表記）: `[bes-sale-checkout](./bes-sale-checkout.md)`"
+    message: BEL からのリンク例が相対パスの Markdown リンクで、BES ファイル名を変えると BEL 側の修正が必要になる。この影響と、`id` を使った参照方法が示されていない。
+  - id: F014
+    severity: major
+    rule: vp-dev-testability
+    line: 55
+    anchor: "### 3.1 ID規約"
+    message: BES 作成後に実行する lint:md・Frontmatter 検証・docs:build などの検証コマンドと期待結果が書かれておらず、表の破損や Frontmatter の違反を検出する手順がない。
+  - id: F015
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 5
+    anchor: BES は、BEL（業務イベント一覧）の各イベントについて、**重要/複雑なものだけ** を詳細化するための仕様です。
+    message: 「重要/複雑なものだけ」「最小限に明確化」が判定条件として定義されておらず、BES 化の要否や記述量が十分かを pass / fail で判定できない。
+  - id: F016
     severity: major
     rule: vp-qe-omissions-consistency
     line: 1
-    message: Frontmatter の `type` 項目において, 表内では `domain` とするが, 直後の説明とサンプルでは `data` となっており矛盾している。
     anchor: "# 業務イベント仕様 作成ルール"
-  - id: F004
+    message: Frontmatter の `type` 項目において, 表内では `domain` とするが, 直後の説明とサンプルでは `data` となっており矛盾している。
+  - id: F017
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 7
+    anchor: "## 1. 位置づけ"
+    message: 標準章構成で必須の「全体方針」「記述ガイド」章がなく、「ファイル命名・ID規則」も Frontmatter 章の下位節（3.1）に埋もれている。rulebook-authoring-standard の必須章を満たしていない。
+  - id: F018
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 35
+    anchor: "### 2.1 BEL からのリンク"
+    message: 見出し「2.1」「3.1」に番号末尾の `.` がなく、Markdown 規約・rulebook の禁止事項に違反している。
+  - id: F019
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 93
+    anchor: "part_of: []"
+    message: サンプルの Frontmatter で使っている `part_of` が、Frontmatter の項目の表に定義されておらず、表とサンプルが一致しない。
+  - id: F020
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# 業務イベント仕様 作成ルール"
+    message: 参照先のサンプルファイル `docs/ja/specdojo/samples/bes-sample.md` が本ルールの形式に従った BES インスタンスになっていない。
+  - id: F021
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# 業務イベント仕様 作成ルール"
+    message: 指定されたサンプル `specdojo:bes-sample` が BES の具体例（インスタンス）になっていない。
+  - id: F022
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 84
+    anchor: "## 6. サンプル（最小）"
+    message: >-
+      埋め込みサンプルが `specdojo:` 名前空間なし、`title:` あり、`type: data` という形で、本 rulebook の Frontmatter 定義や上位規約と矛盾している。sample と
+      rulebook の間で形式の輪郭が一致しない。
+  - id: F023
+    severity: minor
+    rule: vp-ux-readability
+    line: 60
+    anchor: "## 4. 本文テンプレ（最小）"
+    message: "章名「本文テンプレ（最小）」が template 成果物（`template: undecided`）と紛らわしい。標準章構成の「本文要件」に合わせないと役割を誤読しやすい。"
+  - id: F024
     severity: major
     rule: vp-ux-language-consistency
     line: 1
-    message: Frontmatter の `type` 指定値において `domain` と `data` の表記ゆれ（矛盾）がある。
     anchor: "# 業務イベント仕様 作成ルール"
+    message: Frontmatter の `type` 指定値において `domain` と `data` の表記ゆれ（矛盾）がある。
+  - id: F025
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 10
+    anchor: "- BES: イベント1件の記述を **責務の範囲で** 最小限に明確化（何が起きたか/いつ/誰が・何が/発生条件/事実データ）"
+    message: 区切り記号が全角「／」（誰が／何が）と半角「/」（何が起きたか/いつ）で混在しており、見出し名との一致を確認しにくい。
+  - id: F026
+    severity: major
+    rule: vp-ops-release-readiness
+    line: 1
+    anchor: "# 業務イベント仕様 作成ルール"
+    message: sample 不適合・`type` 矛盾・Frontmatter の表の破損という未解決の major 指摘が残っているのに、ready にする条件と公開前の確認事項が書かれていない。
+  - id: F027
+    severity: minor
+    rule: vp-ops-operability
+    line: 37
+    anchor: 個別 BES を作成したら、対応する BEL の一覧表で **イベントIDをBESファイルへのリンク** に更新します。
+    message: BES の改訂・廃止時の変更管理（`supersedes` の運用、`deprecated` への移行、BEL・BPS 側の追従）と担当 Role code が書かれていない。

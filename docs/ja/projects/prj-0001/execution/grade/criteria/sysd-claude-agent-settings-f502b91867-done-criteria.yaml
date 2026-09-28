@@ -2,12 +2,12 @@
 id: sysd-claude-agent-settings-grade-criteria
 document: sysd-claude-agent-settings
 path: docs/ja/product/040-system-design/sysd-claude-agent-settings.md
-graded_at: "2026-09-19T16:18:04.280Z"
+graded_at: "2026-09-27T21:52:22.735Z"
 graded_by: codex-expert-executor
-content_hash: f2b60a0bd3c67d31f01e34dfaf1db295c11228cdad2e955f29bcd8e78c2b665c
+content_hash: 47db16ac01a7457329ee0368f54165765d52deb1d43fa9510f0729fd582bb387
 summary:
-  satisfied: 2
-  unsatisfied: 3
+  satisfied: 1
+  unsatisfied: 4
   total: 5
 criteria:
   - id: DC-001
@@ -16,14 +16,14 @@ criteria:
       - BA
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
-    reason: Claude Code の一般的な適性は示されるが、採用理由と制約が具体的な業務要件へ追跡されていない。
+    reason: Claude Code の採用理由が具体的な業務要件と代替 provider の選択条件へ追跡できない。
   - id: DC-002
     text: 設計方針を承認できること
     roles:
       - PO
     viewpoint: vp-po-decision-readiness
     status: unsatisfied
-    reason: 無人実行の権限モードに相反する方針があり、安全性を含めた設計承認ができない。
+    reason: 無人実行の標準権限モードが `bypassPermissions`、禁止、`auto` の間で矛盾し、設計方針を承認できない。
   - id: DC-003
     text: 技術的制約・依存関係が識別できること
     roles:
@@ -36,10 +36,11 @@ criteria:
       - QE
     viewpoint: vp-qe-verifiability
     status: unsatisfied
-    reason: 設計制約とテスト・設定検証・レビュー方法を対応付けた検証観点および参照先がない。
+    reason: 設計制約ごとの確認方法、期待結果、対応テスト資産への参照がない。
   - id: DC-005
     text: 実装の基礎として参照できること
     roles:
       - DEV
     viewpoint: vp-dev-implementation-readiness
-    status: satisfied
+    status: unsatisfied
+    reason: 標準権限モードと安全境界が一意でなく、実装者が正しい起動設定を確定できない。

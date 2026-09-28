@@ -3,23 +3,60 @@ version: 1
 document: specdojo:cdfd-uc-sample
 path: docs/ja/specdojo/samples/cdfd-uc-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: pass
-score: 100
-graded_at: "2026-09-18T08:14:11.571Z"
-graded_by: gemma-expert-executor
+score: 94
+graded_at: "2026-09-27T21:58:25.899Z"
+graded_by: codex-expert-executor
 content_hash: f6dd4ae70cf6d9698f7dc7fd36ef0e2a47f8dc14c573f79782288acab13423e3
 categories:
-  consistency:
+  purpose:
     score: 100
-  usability:
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
     score: 100
   architecture:
     score: 100
-  quality:
+  usability:
     score: 100
+  implementation:
+    score: 88
+  quality:
+    score: 92
+  consistency:
+    score: 75
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
@@ -28,19 +65,37 @@ viewpoints:
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 3
+    score: 75
+  vp-dev-testability:
+    level: 4
+    score: 100
   vp-qe-verifiability:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -49,6 +104,33 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 3
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 121
+    anchor: >-
+      凡例の形状・色・絵文字は全体概要の「凡例（本プロダクト共通）」を参照する。`-->` は情報、`==>`
+      は商品の流れを表す。各グループ内部の在庫計算、補充判断、発注、入荷検品、売場補充、店頭販売は省略し、三つの代表ノードだけを置く。商品台帳と在庫記録は `H-01`、仕入記録と売場棚は `H-02`
+      の成立を確認する正本として必要なため図へ置いている。
+    message: 「在庫記録」はデータストア表で `H-01`・`H-02` の双方に関連付けられているのに、図注では `H-01` の正本としてしか説明されていないため、`H-02` にも用いることを明記してください。
+  - id: F002
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 121
+    anchor: >-
+      凡例の形状・色・絵文字は全体概要の「凡例（本プロダクト共通）」を参照する。`-->` は情報、`==>`
+      は商品の流れを表す。各グループ内部の在庫計算、補充判断、発注、入荷検品、売場補充、店頭販売は省略し、三つの代表ノードだけを置く。商品台帳と在庫記録は `H-01`、仕入記録と売場棚は `H-02`
+      の成立を確認する正本として必要なため図へ置いている。
+    message: データストア表では「在庫記録」を `H-02` の入荷数量確認にも使用すると定義しているため、図注も「在庫記録は `H-01` および `H-02` の正本」となるよう整合させてください。
+  - id: F003
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 121
+    anchor: >-
+      凡例の形状・色・絵文字は全体概要の「凡例（本プロダクト共通）」を参照する。`-->` は情報、`==>`
+      は商品の流れを表す。各グループ内部の在庫計算、補充判断、発注、入荷検品、売場補充、店頭販売は省略し、三つの代表ノードだけを置く。商品台帳と在庫記録は `H-01`、仕入記録と売場棚は `H-02`
+      の成立を確認する正本として必要なため図へ置いている。
+    message: rulebook は図直後の注記で配置した全データストアの選定理由を整合して説明するよう求めているため、「在庫記録」が `H-02` の入荷数量確認にも必要であることを追記してください。
