@@ -61,3 +61,29 @@
       from: "-"
       to: rate limit reached
   previous_event_id: reg_0a47bffcd7d54a6687f26649d09f8638
+- v: 1
+  id: reg_fada52097ae842fd87b5482dbebfc688
+  ts: "2026-09-28T14:15:07Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_97648ac6db5d407492ffdfb35abc6933
+- v: 1
+  id: reg_2c1cec5d35c544f1b71980c3fd147626
+  ts: "2026-09-28T14:27:11Z"
+  action: review
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_fada52097ae842fd87b5482dbebfc688

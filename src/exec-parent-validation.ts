@@ -1,5 +1,7 @@
 import { spawn } from "node:child_process";
+import { join } from "node:path";
 import { gitEnvironment } from "./exec-worktree.js";
+import { acquirePoolSlot, getActiveExecLocksDir, releaseLock } from "./exec-slot-lock.js";
 import type { EvidenceValidation, ExecEvidence } from "./exec-evidence.js";
 import { redactSensitiveText } from "./exec-evidence.js";
 
@@ -195,10 +197,18 @@ export function resolveParentValidationConcurrency(value: unknown): number {
 
 type ParentValidationWaiter = { label: string; resolve: () => void };
 
+export function parentValidationPoolPath(lockRoot: string): string {
+  return join(lockRoot, "parent-validation");
+}
+
 /**
  * Limits how many parent-validation batches run at once within one `exec run` process.
  * Waiters are served in arrival order and each waiting item is logged with the validations it
  * is waiting to run.
+ *
+ * When `lockRoot` is given, the same limit also holds across the `exec run` processes that share
+ * the project's lock directory (a primary run and its `--join` runs): after the in-process slot,
+ * the batch takes one of the slot locks under `<lockRoot>/parent-validation/`.
  */
 export class ParentValidationGate {
   private readonly active: string[] = [];
@@ -209,12 +219,29 @@ export class ParentValidationGate {
     private readonly log: (line: string) => void = (line) => {
       process.stdout.write(line);
     },
+    readonly lockRoot?: string,
   ) {}
 
   async run<T>(label: string, ids: readonly string[], task: () => Promise<T>): Promise<T> {
     await this.acquire(label, ids);
     try {
-      return await task();
+      if (!this.lockRoot) return await task();
+      const slot = await acquirePoolSlot(
+        parentValidationPoolPath(this.lockRoot),
+        this.limit,
+        { actor: "parent-validation", label },
+        {
+          onWait: () =>
+            this.log(
+              `  Waiting for parent validation slot held by another exec run: ${label} (${ids.join(", ")})\n`,
+            ),
+        },
+      );
+      try {
+        return await task();
+      } finally {
+        releaseLock(slot);
+      }
     } finally {
       this.release(label);
     }
@@ -247,16 +274,22 @@ export class ParentValidationGate {
 
 // exec-defaults は 1 回の exec run につき 1 度だけ読み込まれ、その run の全項目・全 stage で
 // 同じオブジェクトが共有される。設定オブジェクトをキーにすることで、呼び出し経路へ gate を
-// 引き回さずに run 全体の排他を得る。別プロセスの exec run は対象外。
+// 引き回さずに run 全体の排他を得る。別プロセスの exec run（主 run と `--join` run）とは、
+// exec-run lock を取得したプロセスが設定する project のロックディレクトリを介して枠を共有する。
 const gatesByConfig = new WeakMap<object, ParentValidationGate>();
 
-export function parentValidationGateFor(execDefaults: {
-  pipeline?: { parent_validation_concurrency?: number };
-}): ParentValidationGate {
+export function parentValidationGateFor(
+  execDefaults: {
+    pipeline?: { parent_validation_concurrency?: number };
+  },
+  lockRoot: string | undefined = getActiveExecLocksDir(),
+): ParentValidationGate {
   const existing = gatesByConfig.get(execDefaults);
   if (existing) return existing;
   const gate = new ParentValidationGate(
     resolveParentValidationConcurrency(execDefaults.pipeline?.parent_validation_concurrency),
+    undefined,
+    lockRoot,
   );
   gatesByConfig.set(execDefaults, gate);
   return gate;

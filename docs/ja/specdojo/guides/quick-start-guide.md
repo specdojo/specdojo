@@ -220,7 +220,7 @@ agent 設定が完了している場合は、同じ登録項目を実行でき�
 npx specdojo exec run --project <project-id> --register <issue-or-todo-id>
 ```
 
-個票内の `_TODO_` を解消してから `register close` すると、個票の文書状態も `ready` になります。基本手順では、成果物カタログ作成の todo を `open` のまま残し、次章で `dct-<domain>.yaml` を作成・検証した後に完了させます。登録簿は立ち上げ時の課題・判断・作業履歴、成果物カタログは合意後の管理対象成果物の正本です。同じ計画済み作業を register と schedule の両方で継続管理しません。
+個票内の `_TODO_` を解消してから `register close` すると、個票の文書状態も `ready` になります。基本手順では、成果物カタログ作成の todo を `open` のまま残し、`成果物カタログからscheduleへ展開する` で `dct-<domain>.yaml` を作成・検証した後に完了させます。登録簿は立ち上げ時の課題・判断・作業履歴、成果物カタログは合意後の管理対象成果物の正本です。同じ計画済み作業を register と schedule の両方で継続管理しません。
 
 ## 3. 成果物カタログからscheduleへ展開する
 
@@ -392,6 +392,8 @@ npx specdojo exec refresh --project <project-id>
 ```
 
 成果物の変更は作業ツリーに、実行結果は `<execution_path>/exec/results/` に記録されます。agent による自動実行や並列実行へ進む場合は、[exec設定ガイド](exec-config-guide.md) で設定してから [Schedule実行運用ガイド](schedule-operation-guide.md) を参照してください。
+
+`mode: review` のタスクを実行すると、runner は review plan の生成前に対象成果物を grade します。grade は成果物の品質を観点ごとに評価し、review はその評価結果を付け直さず、変更内容・実行記録・`done_criteria` を照合してタスクの完了可否を判断します。review result の verdict と finding の読み方、成果物を `ready` にする human finalize との境界は [レビューガイド](review-guide.md) を参照してください。
 
 ここまでで、register による立ち上げ整理から、成果物カタログ、Schedule、1タスクの完了までの Quick Start は終了です。以降の worktree 隔離実行と routine は、agent 設定後に試す任意の発展手順です。
 

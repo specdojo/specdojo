@@ -1,3 +1,6 @@
+import { mkdtemp, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
 import {
   failedParentValidationReason,
@@ -234,6 +237,35 @@ describe("parent validation concurrency", () => {
     ).rejects.toThrow("boom");
 
     await expect(gate.run("PJR-BBBB", ["test-unit"], async () => "ran")).resolves.toBe("ran");
+  });
+
+  it("serializes batches of separate gates (separate exec runs) sharing one lock root", async () => {
+    const lockRoot = await mkdtemp(path.join(tmpdir(), "specdojo-parent-validation-gate-"));
+    try {
+      const lines: string[] = [];
+      const primaryRun = new ParentValidationGate(1, () => undefined, lockRoot);
+      const joinedRun = new ParentValidationGate(1, (line) => lines.push(line), lockRoot);
+      let active = 0;
+      let maxActive = 0;
+      const batch = async (): Promise<void> => {
+        active++;
+        maxActive = Math.max(maxActive, active);
+        await new Promise((resolve) => setTimeout(resolve, 30));
+        active--;
+      };
+
+      await Promise.all([
+        primaryRun.run("PJR-AAAA", ["test-unit"], batch),
+        joinedRun.run("PJR-BBBB", ["test-unit", "typecheck"], batch),
+      ]);
+
+      expect(maxActive).toBe(1);
+      expect(lines).toEqual([
+        "  Waiting for parent validation slot held by another exec run: PJR-BBBB (test-unit, typecheck)\n",
+      ]);
+    } finally {
+      await rm(lockRoot, { recursive: true, force: true });
+    }
   });
 
   it("shares one gate per exec-defaults object", () => {

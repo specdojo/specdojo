@@ -180,7 +180,7 @@ viewpoint は継続品質評価 `specdojo grade` の正本です。review plan �
 
 文書の score は、category ごとの score（観点の level 平均 × 25）を `grade_rubric.weights` の重みで加重平均した値です。重みは kata と成果物で別に持ち、どちらも 9 category すべてに重みを置きます。文書に適用される観点が 1 つもない category は、その文書の加重平均から外します。観点の category に重みがない rubric は、grade の実行時にエラーで失敗します。verdict は blocker があれば `fail`、major があるか score が `pass_score` 未満なら `needs-work`、それ以外は `pass` です。`pass_score` は level 3（軽微な課題）の score に合わせて 75 とし、major のない文書が category の数や重みに関係なく満たす下限にしています。
 
-rubric は `grade-rubric-v2` です。v1 は 4 category（architecture / consistency / quality / usability）だけで score を計算していました。v2 は 28 観点すべてと 9 category で計算するため、v1 の grade result とは score・verdict を比較できません。同じ文書でも、目的・計画・業務価値・実装・運用の観点が加わることで score が変わります。grade result の `rubric` が `grade-rubric-v1` の結果は旧基準の値として扱い、現在品質の根拠や傾向比較に使う前に再評価します。`--changed-only` は rubric の違いを検出しないため、旧基準の結果を置き換えるときは対象を指定して grade を実行します。
+rubric は `grade-rubric-v2` です。v1 は 4 category（architecture / consistency / quality / usability）だけで score を計算していました。v2 は 28 観点すべてと 9 category で計算するため、v1 の grade result とは score・verdict を比較できません。同じ文書でも、目的・計画・業務価値・実装・運用の観点が加わることで score が変わります。grade result の `rubric` が `grade-rubric-v1` の結果は旧基準の値として扱い、現在品質の根拠や傾向比較に使う前に `grade list --rubric-outdated` で列挙して再評価します。`--changed-only` は rubric の違いを検出しません。
 
 grade は継続監視の最新スナップショット、review result は完成時の合意形成履歴です。Kata の grade は schedule strategy の approach 導出に使われますが、完成時の合意形成や最終承認を代替しません。
 

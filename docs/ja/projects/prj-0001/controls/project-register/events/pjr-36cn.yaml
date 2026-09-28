@@ -61,3 +61,32 @@
       from: "-"
       to: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=.specdojo/doc-index.json; agent must record the required change in…"
   previous_event_id: reg_dbc8bf7b5e3346bc868ddbb8dcca22fa
+- v: 1
+  id: reg_befef92103834a9ab4b84f8e31825957
+  ts: "2026-09-28T14:28:15Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_a5b990d6eaa84c2fb791d61ac1ca0a1b
+- v: 1
+  id: reg_c7bfa750457a4513bf38d590716519c9
+  ts: "2026-09-28T14:34:03Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: 親 runner が実行した runner 検証 `id: test-integration`（`npm run test:integration`）が `status: failed`（exit 1）である。plan の共通規約により、runner 検証が failed の場合は reporter が結果を complete とす…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=.specdojo/doc-index.json; agent must record the required change in…"
+      to: "agent exited with non-zero code: 親 runner が実行した runner 検証 `id: test-integration`（`npm run test:integration`）が `status: failed`（exit 1）である。plan の共通規約により、runner 検証が failed の場合は reporter が結果を complete とす…"
+  previous_event_id: reg_befef92103834a9ab4b84f8e31825957

@@ -1,0 +1,23 @@
+PJR-4HBG の executor 段は完了です。起動中の `exec run` へ、後から `--join` で別の項目を合流させて並行実行できるようにしました。確認は静的検査と CLI の手動実行までで、追加したテストはまだ一度も走らせていません。typecheck・`test:unit`・`test:integration`・`validate:schema` は親 runner が実行します。2 プロセスを実際に並行させる統合テストも未作成で、個票に `_TODO_` として残しています。result ファイルは変更していません。
+
+**実装の要点**
+- **合流の仕組み**：`exec run --register ... --worktree` の run だけが合流を受け入れます。後から起動する run に `--join` を付けると、`exec-run.lock` の代わりに `exec/.locks/exec-run-join/slot-<n>` を取って開始します。
+- **同時に動かせる run の数**：`exec-defaults.yaml` の `run.max_concurrent_runs`（既定 4、最初の run を含む）で決まります。`1` にすると `--join` は使えなくなります。この設定を schema にも追加しました。
+- **既定の動作は不変**：`--join` を付けない run は従来どおり `--if-busy` に従います。routine の skip（終了コード 75）もそのままです。`--auto`・`--task`・`exec cycle`・`exec resume` は、合流中の run が残っている間は busy になります。
+- **プロセスを跨ぐ統制**（ロックは `src/exec-slot-lock.ts` に分離し、stale になった枠は 30 秒で奪取されます）：
+  - provider の `max_concurrency`：`provider-<provider>/` の枠で数えます。
+  - root での状態遷移・生成物の再生成・develop への merge：`exec-lifecycle/` の mutex で 1 つずつ実行します。直列実行でも使うので、同じ項目の start 遷移を 2 つの run が同時に通ることもありません。
+  - 親検証（PJR-3HHW の直列化）：`parent-validation/` の枠で、合流した run を跨いで効きます。
+- **使用枠の確認**：`exec slots --project <id>` を追加しました。ロックを取らずに、各枠の上限・使用数・保持者を表示します。
+
+**変更したファイル**
+- `src/`：`exec-slot-lock.ts`（新規）、`exec-run-lock.ts`、`exec-agent-config.ts`、`exec-parent-validation.ts`、`exec-run.ts`、`exec.ts`
+- `tests/src/`：`exec-slot-lock.test.ts`（新規）、`exec-run-lock.test.ts`、`exec-agent-config.test.ts`、`exec-parent-validation.test.ts`。別プロセスは、同じロックディレクトリを使う別インスタンスで代用しています。
+- ドキュメント：`exec-defaults.schema.yaml`、`exec-operation-guide.md`、`exec-config-guide.md`、`register-operation-guide.md`、`command-reference.md`
+- 個票 `pjr-4hbg-exec-run.md`：作業内容と対応結果を記入しました。作業 5（実装と統合テスト）は、統合テストが無いため `partial` にしています。
+
+**実行した検査**：prettier、markdownlint、eslint（`src` / `tests` 全体）、`catalog validate`（既存の WARN のみ）、`register build`、`index build`、`validate:history-links` はすべて通過しました。CLI の手動確認で、`exec slots` が表を表示することと、`--task` と `--join` を組み合わせるとエラーで拒否されることを確かめました。
+
+<specdojo_executor_evidence>
+{"final_message":"Implemented cross-process concurrency for exec run (plan C): `exec run --register --worktree --join` joins a running shareable register worktree run through join slots limited by `run.max_concurrent_runs` (default 4). Provider `max_concurrency`, the register lifecycle (start transition, checkpoint, merge, wait commit, view rebuild) and parent validations are coordinated across processes via heartbeat slot locks in `src/exec-slot-lock.ts`. Default `--if-busy` behaviour and routine skip are unchanged. Added `exec slots` to show limits and usage, the schema key, unit tests, guide/reference updates, and the ticket's work table and results. None of the new tests has been run yet; parent-run test-unit and typecheck will be their first execution. A real two-process integration test is not written and is left as a `_TODO_` in the ticket.","validations":[{"command":"npx prettier --write (changed ts/yaml/md files)","status":"passed","summary":"all changed files formatted"},{"command":"npx eslint src tests --ext .ts","status":"passed","summary":"no errors"},{"command":"npx markdownlint + node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint (changed md files)","status":"passed","summary":"no errors in guides, reference and ticket"},{"command":"npx tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"OK; only pre-existing based_on WARNs"},{"command":"npx tsx src/specdojo.ts register build","status":"passed","summary":"generated views rebuilt"},{"command":"npx tsx src/specdojo.ts index build","status":"passed","summary":"2147 entries"},{"command":"npm run -s validate:history-links","status":"passed","summary":"no Markdown links in history files"},{"command":"npx tsx src/specdojo.ts exec slots --project prj-0001; exec run --task T-X --join --dry-run","status":"passed","summary":"slots report printed; --join outside register worktree rejected with exit 1"}],"target_coverage":[{"target":"src/exec-agent-config.ts","status":"changed","path":"src/exec-agent-config.ts"},{"target":"src/exec-run-lock.ts","status":"changed","path":"src/exec-run-lock.ts"},{"target":"src/exec-slot-lock.ts","status":"changed","path":"src/exec-slot-lock.ts"}]}
+</specdojo_executor_evidence>

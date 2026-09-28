@@ -1,6 +1,7 @@
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { listFilesRecursive, readYaml } from "./exec-shared.js";
+import { acquirePoolSlot, releaseLock } from "./exec-slot-lock.js";
 import {
   specdojoRootDir,
   type AgentMode,
@@ -78,6 +79,11 @@ export type ProviderOverride = {
 };
 
 export type ExecDefaultsConfig = {
+  run?: {
+    // Maximum number of `exec run` processes that may run at once for one project, counting the
+    // primary run and every `--join` run (default 4). 1 disables `--join`.
+    max_concurrent_runs?: number;
+  };
   pipeline?: {
     parent_validations?: string[];
     parent_validation_concurrency?: number;
@@ -264,19 +270,68 @@ export function createProviderCapacityTracker(config: ExecDefaultsConfig): Provi
   };
 }
 
+export function providerSlotPoolPath(lockRoot: string, provider: AgentProvider): string {
+  return join(lockRoot, `provider-${provider}`);
+}
+
+export const DEFAULT_MAX_CONCURRENT_RUNS = 4;
+
+// Resolve how many `exec run` processes may run at once for one project. Invalid values fall back
+// to the default so a typo cannot silently disable the busy guard.
+export function resolveMaxConcurrentRuns(config: ExecDefaultsConfig): number {
+  const raw = config.run?.max_concurrent_runs;
+  if (typeof raw !== "number" || !Number.isInteger(raw) || raw < 1) {
+    return DEFAULT_MAX_CONCURRENT_RUNS;
+  }
+  return raw;
+}
+
 // Waits for provider capacity instead of dropping work. Register worktree runs already have a
 // fixed item-to-agent assignment, so unlike auto selection they cannot switch to another provider
 // when a cap is full; each pipeline stage queues until that provider has room.
+//
+// When `lockRoot` is given, the cap also holds across `exec run` processes: after taking an
+// in-process slot, the stage takes one of the provider's slot locks under
+// `<lockRoot>/provider-<name>/`. The in-process queue keeps arrival order within the process;
+// between processes the slot locks are polled without ordering guarantees.
 export class ProviderConcurrencyGate {
   private readonly active = new Map<AgentProvider, number>();
   private readonly waiters = new Map<AgentProvider, Array<() => void>>();
 
-  constructor(private readonly config: ExecDefaultsConfig) {}
+  constructor(
+    private readonly config: ExecDefaultsConfig,
+    private readonly lockRoot?: string,
+    private readonly log: (line: string) => void = (line) => {
+      process.stdout.write(line);
+    },
+  ) {}
 
-  async run<T>(provider: AgentProvider | undefined, task: () => Promise<T>): Promise<T> {
+  async run<T>(
+    provider: AgentProvider | undefined,
+    task: () => Promise<T>,
+    label?: string,
+  ): Promise<T> {
     const release = await this.acquire(provider);
     try {
-      return await task();
+      const cap = resolveMaxConcurrency(this.config, provider);
+      if (!this.lockRoot || !provider || cap === undefined) return await task();
+      const suffix = label ? `: ${label}` : "";
+      const slot = await acquirePoolSlot(
+        providerSlotPoolPath(this.lockRoot, provider),
+        cap,
+        { actor: `provider:${provider}`, ...(label ? { label } : {}) },
+        {
+          onWait: () =>
+            this.log(
+              `  Waiting for ${provider} slot held by another exec run (max_concurrency: ${cap})${suffix}\n`,
+            ),
+        },
+      );
+      try {
+        return await task();
+      } finally {
+        releaseLock(slot);
+      }
     } finally {
       release();
     }
