@@ -139,6 +139,7 @@ import {
   type ExecWorktree,
 } from "./exec-worktree.js";
 import {
+  abortMerge,
   checkpointAndEnsureWorktree,
   commitTargetPaths,
   commitWorktreeChanges,
@@ -5058,7 +5059,7 @@ function syncExecBranchAfterWait(params: {
     if (unresolved) throw new Error(`wait sync has unresolved conflicts: ${unresolved}`);
     gitOutput(worktree.path, ["commit", "--no-verify", "-m", mergeMessage]);
   } catch (error) {
-    gitResult(worktree.path, ["merge", "--abort"]);
+    abortMerge(worktree.path);
     // The pre-merge release is safe to repeat from root and restores the visible waiting state even
     // when the merge was rejected before MERGE_HEAD was created.
     copyRepoPaths(repoRoot, worktree.path, repoRoot, params.bookkeepingPaths);
@@ -5284,6 +5285,9 @@ async function finalizeRegisterWorktreeRun(params: {
             `${subject}\n\n` +
             `Transition: start → review\nExecutor: ${executor}\nReporter: ${reporter}\nRefs: ${item.id}`,
           releaseRootPaths: [...params.bookkeepingPaths],
+          // waiting を複数回経た項目では、wait 時の同期後も統合先と exec branch の双方で
+          // 記帳ファイルが変わる。項目自身の記帳ファイルだけの競合は再開後の exec branch 側で解決する。
+          resolveConflictsWithBranchPaths: [...params.bookkeepingPaths],
           failureLogPath: integrateLogPath(params.pipelineStatePath),
         });
       }

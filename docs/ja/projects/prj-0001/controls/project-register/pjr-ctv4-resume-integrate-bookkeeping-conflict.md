@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: high
   owner: DEV
   registered_at: "2026-09-27T20:29:30Z"
@@ -53,7 +53,11 @@ PJR-R0XA の修正後の同期 merge（`syncExecBranchAfterWait`）は、wait �
 
 ## 4. 対応結果
 
--
+- `mergeWorktreeIntoCurrent`（`src/exec-worktree-ops.ts`）に `resolveConflictsWithBranchPaths` を追加した。統合 merge の競合がすべて指定パスに収まる場合は exec branch 側で解決し、`--no-verify` で merge commit を完了する。競合が無い失敗（hook の拒否）や指定外のパスの競合は従来どおり abort する。
+- register の統合（`src/exec-run.ts` の `finalizeRegisterWorktreeRun`）で、項目自身の記帳ファイル（個票・イベント・plan・result・登録簿）を解決対象に渡すようにした。
+- `abortMerge` を追加し、`git merge --abort` の前に `git update-index -q --refresh` を実行するようにした。統合 merge と wait 時の同期 merge（`syncExecBranchAfterWait`）の両方で使う。
+- 統合テスト（`tests/src/exec-worktree-ops.integration.test.ts`）に次の 3 件を追加した。`waiting` を 2 回経た項目の再開後の統合が記帳ファイルの競合で止まらないこと、記帳ファイル以外の競合を含む場合は abort すること、stat だけがずれたファイルがあっても abort が成功すること。
+- [[specdojo:exec-worktree-guide]] の統合の説明に、記帳ファイル競合の解決と abort 前の index 更新を追記した。
 
 ## 5. 関連ドキュメント
 

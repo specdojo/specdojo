@@ -5,13 +5,20 @@ import {
   mkdtempSync,
   readFileSync,
   rmSync,
+  utimesSync,
   writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { findExecWorktree, gitOutput, type ExecWorktree } from "../../src/exec-worktree.js";
 import {
+  findExecWorktree,
+  gitOutput,
+  gitResult,
+  type ExecWorktree,
+} from "../../src/exec-worktree.js";
+import {
+  abortMerge,
   checkpointAndEnsureWorktree,
   commitWorktreeChanges,
   deliverableStatus,
@@ -451,6 +458,126 @@ describe("exec worktree ops", () => {
     expect(failureLog).toContain("\u001b[31m╭── hook output ──╮\u001b[0m");
     expect(failureLog).toContain("src/a.ts(1,1): error TS2322: intentional merge failure");
     expect(failureLog).toContain("--- merge --abort ---\nexit: 0");
+  });
+
+  it("completes a resumed merge whose conflicts are only the item's own bookkeeping after two waits", () => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-010";
+    const worktree = prepare(fixture, taskId);
+    const targetBranch = git(fixture.repo, "rev-parse", "--abbrev-ref", "HEAD");
+    const resultRel = `execution/exec/results/${taskId}-result.md`;
+    const eventRel = `execution/exec/events/20260613T000000Z_agent_${taskId}_claim.json`;
+    const bookkeepingPaths = [
+      join(fixture.executionPath, "exec", "plans", `${taskId}-plan.md`),
+      join(fixture.repo, resultRel),
+      join(fixture.repo, eventRel),
+    ];
+    const commitAtRoot = (label: string): void => {
+      writeFile(join(fixture.repo, resultRel), `# Result ${taskId}\n\nstatus: ${label}\n`);
+      writeFile(join(fixture.repo, eventRel), `{"type":"${label}"}\n`);
+      git(fixture.repo, "add", "--", resultRel, eventRel);
+      git(fixture.repo, "commit", "-m", `exec(register ${taskId}): ${label}`);
+    };
+
+    // First wait: the wait commit lands on root and the exec branch is synced with the root side.
+    commitAtRoot("wait-1");
+    gitResult(worktree.path, ["merge", "--no-commit", "--no-ff", targetBranch]);
+    git(worktree.path, "checkout", "--theirs", "--", resultRel, eventRel);
+    git(worktree.path, "add", "--", resultRel, eventRel);
+    git(worktree.path, "commit", "--no-verify", "-m", `merge ${targetBranch} after wait`);
+
+    // Second wait: root records another wait while the exec branch keeps its own bookkeeping.
+    commitAtRoot("wait-2");
+
+    // Resume: the exec branch finishes the task and records the review bookkeeping.
+    writeFile(join(worktree.path, "docs", "a.md"), "deliverable after resume\n");
+    writeFile(join(worktree.path, resultRel), `# Result ${taskId}\n\nstatus: complete\n`);
+    commitWorktreeChanges({ context: fixture.context, worktree, taskId });
+    writeFile(join(worktree.path, eventRel), `{"type":"review"}\n`);
+    git(worktree.path, "add", "--", eventRel);
+    git(worktree.path, "commit", "-m", `exec(register ${taskId}): review`);
+
+    mergeWorktreeIntoCurrent({
+      context: fixture.context,
+      worktree,
+      taskId,
+      message: `exec(register ${taskId}): resumed integration`,
+      releaseRootPaths: bookkeepingPaths,
+      resolveConflictsWithBranchPaths: bookkeepingPaths,
+    });
+
+    expect(() => git(fixture.repo, "rev-parse", "--verify", "MERGE_HEAD")).toThrow();
+    expect(git(fixture.repo, "log", "-1", "--pretty=%s%n%P").split("\n")).toEqual([
+      `exec(register ${taskId}): resumed integration`,
+      expect.stringMatching(/^\S+ \S+$/),
+    ]);
+    expect(readFileSync(join(fixture.repo, resultRel), "utf8")).toContain("status: complete");
+    expect(readFileSync(join(fixture.repo, eventRel), "utf8")).toBe(`{"type":"review"}\n`);
+    expect(readFileSync(join(fixture.repo, "docs", "a.md"), "utf8")).toBe(
+      "deliverable after resume\n",
+    );
+    expect(git(fixture.repo, "status", "--porcelain", "-uall")).toBe("");
+  });
+
+  it("aborts a resumed merge when a conflict falls outside the item's own bookkeeping", () => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-010";
+    const worktree = prepare(fixture, taskId);
+    const resultRel = `execution/exec/results/${taskId}-result.md`;
+    const bookkeepingPaths = [
+      join(fixture.executionPath, "exec", "plans", `${taskId}-plan.md`),
+      join(fixture.repo, resultRel),
+      join(fixture.executionPath, "exec", "events", `20260613T000000Z_agent_${taskId}_claim.json`),
+    ];
+
+    writeFile(join(fixture.repo, resultRel), `# Result ${taskId}\n\nstatus: waiting\n`);
+    writeFile(join(fixture.repo, "docs", "conflict.md"), "root version\n");
+    git(fixture.repo, "add", "--", resultRel, "docs/conflict.md");
+    git(fixture.repo, "commit", "-m", "root wait with a deliverable edit");
+
+    writeFile(join(worktree.path, resultRel), `# Result ${taskId}\n\nstatus: complete\n`);
+    writeFile(join(worktree.path, "docs", "conflict.md"), "branch version\n");
+    commitWorktreeChanges({ context: fixture.context, worktree, taskId });
+
+    expect(() =>
+      mergeWorktreeIntoCurrent({
+        context: fixture.context,
+        worktree,
+        taskId,
+        releaseRootPaths: bookkeepingPaths,
+        resolveConflictsWithBranchPaths: bookkeepingPaths,
+      }),
+    ).toThrow(/git merge failed/);
+    expect(() => git(fixture.repo, "rev-parse", "--verify", "MERGE_HEAD")).toThrow();
+    expect(readFileSync(join(fixture.repo, "docs", "conflict.md"), "utf8")).toBe("root version\n");
+    expect(readFileSync(join(fixture.repo, resultRel), "utf8")).toContain("status: waiting");
+  });
+
+  it("aborts a merge even when a merged file only drifted in stat", () => {
+    const fixture = setupRepository();
+    const targetBranch = git(fixture.repo, "rev-parse", "--abbrev-ref", "HEAD");
+    writeFile(join(fixture.repo, "docs", "conflict.md"), "base\n");
+    git(fixture.repo, "add", "docs/conflict.md");
+    git(fixture.repo, "commit", "-m", "add conflict.md");
+    git(fixture.repo, "checkout", "-b", "side");
+    writeFile(join(fixture.repo, "docs", "conflict.md"), "side\n");
+    writeFile(join(fixture.repo, "docs", "template.md"), "same content\n");
+    git(fixture.repo, "add", "docs");
+    git(fixture.repo, "commit", "-m", "side edits");
+    git(fixture.repo, "checkout", targetBranch);
+    writeFile(join(fixture.repo, "docs", "conflict.md"), "target\n");
+    git(fixture.repo, "commit", "-am", "target edits");
+    expect(gitResult(fixture.repo, ["merge", "--no-ff", "--no-edit", "side"]).status).not.toBe(0);
+
+    // Another process touches the cleanly merged file: the content is unchanged but the cached
+    // stat no longer matches.
+    const past = new Date("2001-01-01T00:00:00Z");
+    utimesSync(join(fixture.repo, "docs", "template.md"), past, past);
+
+    expect(abortMerge(fixture.repo).status).toBe(0);
+    expect(() => git(fixture.repo, "rev-parse", "--verify", "MERGE_HEAD")).toThrow();
+    expect(existsSync(join(fixture.repo, "docs", "template.md"))).toBe(false);
+    expect(readFileSync(join(fixture.repo, "docs", "conflict.md"), "utf8")).toBe("target\n");
   });
 
   it("excludes plans, events, and generated files from the task commit", () => {
