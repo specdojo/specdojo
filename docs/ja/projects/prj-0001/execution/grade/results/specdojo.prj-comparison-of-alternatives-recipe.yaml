@@ -3,29 +3,75 @@ version: 1
 document: specdojo:prj-comparison-of-alternatives-recipe
 path: docs/ja/specdojo/recipes/prj-comparison-of-alternatives-recipe.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 78
-graded_at: "2026-09-04T17:42:43.165Z"
+score: 87
+graded_at: "2026-09-28T21:33:05.366Z"
 graded_by: codex-expert-executor
 content_hash: 9e1697c9ee6481252fb766516d042309826fa7ee60fb3586fb235b1f1dd508ca
 categories:
-  consistency:
-    score: 63
-  usability:
-    score: 92
+  purpose:
+    score: 100
+  operations:
+    score: 94
+  planning:
+    score: 100
+  business:
+    score: 100
   architecture:
     score: 100
+  usability:
+    score: 92
+  implementation:
+    score: 100
   quality:
-    score: 63
+    score: 67
+  consistency:
+    score: 75
 viewpoints:
-  vp-arc-cross-document-consistency:
-    level: 2
-    score: 50
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -35,76 +81,91 @@ viewpoints:
     level: 3
     score: 75
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
     level: 3
     score: 75
+  vp-ops-release-readiness:
+    level: 3
+    score: 75
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 0
   major: 2
-  minor: 7
+  minor: 8
   note: 0
 findings:
   - id: F001
-    severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 106
-    message: 評価軸の最低ラインに「リスク」「技術実現性」を含めると定めている一方、完成例 sample の評価軸・比較結果は両軸と省略理由を欠いており、recipe に従った完成例として成果物間の条件が一致していない。
-    anchor: "- 効果、コスト、期間、リスク、運用適合、技術実現性を最低ラインにし、比較目的に応じて適応性、追跡性、AI 適合、成熟度を追加する。"
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 211
+    anchor: "- 「全体の作成手順」で示した章立てと必須表がそろっている。"
+    message: 「必須表がそろっている」ことを求めているが, recipe 内では各表の必須・推奨を定義していないため、どの表が欠けた場合に fail とするのか判定できない。
   - id: F002
     severity: minor
-    rule: vp-arc-cross-document-consistency
-    line: 107
-    message: 重みの理由と低いほどよい軸の判定方向を「備考」に書くよう指示しているが、template の評価軸表には備考欄がなく、雛形から recipe の指示を実行できない。
-    anchor: "- 重みを使う場合は、重みの理由を備考に書く。"
+    rule: vp-qe-omissions-consistency
+    line: 209
+    anchor: "## 8. 仕上げチェック"
+    message: 「仕上げチェック」に個人名・個人連絡先・非公開の組織情報など公開範囲に不適切な情報がないことを確認する項目がなく、Recipe 記述標準が要求する公開適性を判定できない。
   - id: F003
-    severity: minor
-    rule: vp-arc-cross-document-consistency
+    severity: major
+    rule: vp-qe-kata-conformance
     line: 106
-    message: rulebook は理由を記載すれば評価軸を省略でき、template も不要な軸の削除を案内しているが、recipe は6軸を例外のない最低ラインとしており、省略時の適用方法が一致していない。
     anchor: "- 効果、コスト、期間、リスク、運用適合、技術実現性を最低ラインにし、比較目的に応じて適応性、追跡性、AI 適合、成熟度を追加する。"
+    message: 評価軸の最低ラインに「リスク」「技術実現性」を含めると定めている一方、完成例 sample の評価軸・比較結果は両軸と省略理由を欠いており、recipe に従った完成例として成果物間の条件が一致していない。
+  - id: F004
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 107
+    anchor: "- 重みを使う場合は、重みの理由を備考に書く。"
+    message: 重みの理由と低いほどよい軸の判定方向を「備考」に書くよう指示しているが, template の評価軸表には備考欄がなく、雛形から recipe の指示を実行できない。
+  - id: F005
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 106
+    anchor: "- 効果、コスト、期間、リスク、運用適合、技術実現性を最低ラインにし、比較目的に応じて適応性、追跡性、AI 適合、成熟度を追加する。"
+    message: rulebook は理由を記載すれば評価軸を省略でき、template も不要な軸の削除を案内しているが, recipe は6軸を例外のない最低ラインとしており、省略時の適用方法が一致していない。
   - id: F006
     severity: major
     rule: vp-qe-kata-conformance
     line: 106
+    anchor: "- 効果、コスト、期間、リスク、運用適合、技術実現性を最低ラインにし、比較目的に応じて適応性、追跡性、AI 適合、成熟度を追加する。"
     message: >-
       recipe と rulebook が最低評価軸とする「リスク」「技術実現性」を完成例 sample が評価軸・比較結果に含めず省略理由も示していないため、sample が recipe
       を適用した正しい完成例として機能していない。
-    anchor: "- 効果、コスト、期間、リスク、運用適合、技術実現性を最低ラインにし、比較目的に応じて適応性、追跡性、AI 適合、成熟度を追加する。"
-  - id: F008
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 106
-    message: 最低評価軸を「運用適合」と呼ぶ一方、同じ節と良い例では「業務適合」、sample/template では「業務適合」「利用者・業務適合」としており、同一軸か別軸かを判断できるよう名称を統一または定義する必要がある。
-    anchor: "- 効果、コスト、期間、リスク、運用適合、技術実現性を最低ラインにし、比較目的に応じて適応性、追跡性、AI 適合、成熟度を追加する。"
-  - id: F009
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 119
-    message: 比較試行の条件を問いでは「終了条件」、書き方と template では「完了条件」と呼んでいるため、同じ条件を指すラベルを「完了条件」などに統一する必要がある。
-    anchor: "- 比較試行と正式採用を区別し、試行の入力、評価軸、終了条件が決まっているか。"
-  - id: F005
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 209
-    message: 「仕上げチェック」に個人名・個人連絡先・非公開の組織情報など公開範囲に不適切な情報がないことを確認する項目がなく、Recipe 記述標準が要求する公開適性を判定できない。
-    anchor: "## 8. 仕上げチェック"
   - id: F007
     severity: minor
     rule: vp-qe-kata-conformance
     line: 209
-    message: Recipe 記述標準が「仕上げチェック」に要求する公開適性の確認項目がなく、recipe 種別の必須責務を完全には満たしていない。
     anchor: "## 8. 仕上げチェック"
-  - id: F004
+    message: Recipe 記述標準が「仕上げチェック」に要求する公開適性の確認項目がなく、recipe 種別の必須責務を完全には満たしていない。
+  - id: F008
     severity: minor
-    rule: vp-qe-verifiability
-    line: 211
-    message: 「必須表がそろっている」ことを求めているが, recipe 内では各表の必須・推奨を定義していないため、どの表が欠けた場合に fail とするのか判定できない。
-    anchor: "- 「全体の作成手順」で示した章立てと必須表がそろっている。"
+    rule: vp-ux-language-consistency
+    line: 106
+    anchor: "- 効果、コスト、期間、リスク、運用適合、技術実現性を最低ラインにし、比較目的に応じて適応性、追跡性、AI 適合、成熟度を追加する。"
+    message: 最低評価軸を「運用適合」と呼ぶ一方、同じ節と良い例では「業務適合」、sample/template では「業務適合」「利用者・業務適合」としており、同一軸か別軸かを判断できるよう名称を統一または定義する必要がある。
+  - id: F009
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 119
+    anchor: "- 比較試行と正式採用を区別し、試行の入力、評価軸、終了条件が決まっているか。"
+    message: 比較試行の条件を問いでは「終了条件」、書き方と template では「完了条件」と呼んでいるため、同じ条件を指すラベルを「完了条件」などに統一する必要がある。
+  - id: F010
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 209
+    anchor: "## 8. 仕上げチェック"
+    message: 「仕上げチェック」に公開適性の確認項目がなく、公開前に個人名・個人連絡先・非公開の組織情報の混入を検出する ready 条件が定義されていない。

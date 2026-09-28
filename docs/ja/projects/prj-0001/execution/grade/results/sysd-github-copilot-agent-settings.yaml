@@ -3,31 +3,88 @@ version: 1
 document: sysd-github-copilot-agent-settings
 path: docs/ja/product/040-system-design/sysd-github-copilot-agent-settings.md
 target: deliverable
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 58
-graded_at: "2026-09-19T16:40:32.193Z"
+score: 50
+graded_at: "2026-09-28T16:19:11.804Z"
 graded_by: codex-expert-executor
 content_hash: d10cad720566f4d096c0ce40c2bece543d5aa638691ec4c16b8ce9b7203b119b
+source_hashes:
+  catalog-entry: 05d02f6bde829837bc0ce9fd75a91efc9352e7579d07ec65024749e4eb592e65
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  dependency:sysd-agent-settings: 438490f057d962ee7b6eee44dc4d8d218c14578a592e4d15b4d7f6bf2bcbe2f3
+  members: ec838bbb5673ba76f1a15672e094c00088dcb686a2a67225ca8411c0dc5e90d3
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
 categories:
+  purpose:
+    score: 50
+  operations:
+    score: 50
+  planning:
+    score: 58
+  business:
+    score: 33
   consistency:
     score: 25
+  architecture:
+    score: 83
   usability:
     score: 56
-  architecture:
-    score: 100
+  implementation:
+    score: 38
   quality:
-    score: 58
+    score: 50
 viewpoints:
+  vp-po-purpose-alignment:
+    level: 2
+    score: 50
+  vp-po-decision-readiness:
+    level: 2
+    score: 50
+  vp-po-publication-accountability:
+    level: 3
+    score: 75
+  vp-pm-plan-feasibility:
+    level: 2
+    score: 50
+  vp-pm-dependency-risk:
+    level: 3
+    score: 75
+  vp-pm-control-reporting:
+    level: 2
+    score: 50
+  vp-ba-business-value:
+    level: 1
+    score: 25
+  vp-ba-requirements-completeness:
+    level: 1
+    score: 25
+  vp-ba-stakeholder-clarity:
+    level: 2
+    score: 50
   vp-arc-cross-document-consistency:
     level: 1
     score: 25
+  vp-arc-technical-constraints:
+    level: 2
+    score: 50
   vp-arc-conciseness:
     level: 3
     score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 1
+    score: 25
+  vp-dev-change-impact:
+    level: 2
+    score: 50
+  vp-dev-testability:
+    level: 1
+    score: 25
   vp-qe-done-criteria:
     level: 1
     score: 25
@@ -46,6 +103,15 @@ viewpoints:
   vp-ux-language-consistency:
     level: 2
     score: 50
+  vp-ops-release-readiness:
+    level: 1
+    score: 25
+  vp-ops-operability:
+    level: 2
+    score: 50
+  vp-ops-agent-boundary:
+    level: 2
+    score: 50
   vp-arc-document-structure:
     level: 4
     score: 100
@@ -54,114 +120,237 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 12
-  minor: 2
+  major: 28
+  minor: 4
   note: 0
 findings:
-  - id: F005
-    severity: major
-    rule: vp-qe-done-criteria
-    line: 3
-    message: GitHub Copilot を採用する業務上の要求、採用理由、代替 provider との選択条件が示されず、DC-001 の整合性を確認できない。
-    anchor: SpecDojo CLI と GitHub Copilot CLI / Copilot cloud agent を組み合わせてマルチエージェント実行を行うための設定・構成を定義する。
-  - id: F010
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 24
-    message: 現行必須構成である executor、reporter、runner による result 反映の各 stage と責務境界が全体フローから欠落している。
-    anchor: "## 3. 全体フロー"
   - id: F001
+    severity: major
+    rule: vp-po-purpose-alignment
+    line: 3
+    anchor: SpecDojo CLI と GitHub Copilot CLI / Copilot cloud agent を組み合わせてマルチエージェント実行を行うための設定・構成を定義する。
+    message: GitHub Copilot を採用するプロジェクト上の目的、期待成果、代替 provider との選択理由を上位成果物への参照または本文で示す必要がある。
+  - id: F002
+    severity: major
+    rule: vp-po-decision-readiness
+    line: 201
+    anchor: "`pm-members.yaml` の member は選択属性だけを持つ。運用検証が完了するまで `disabled: true` で定義し、`exec run --auto` の候補から除外しておく。"
+    message: "Copilot member を承認・有効化するための検証項目、合格条件、証跡、判断者、`disabled: true` の解除基準を定義する必要がある。"
+  - id: F003
+    severity: minor
+    rule: vp-po-publication-accountability
+    line: 3
+    anchor: SpecDojo CLI と GitHub Copilot CLI / Copilot cloud agent を組み合わせてマルチエージェント実行を行うための設定・構成を定義する。
+    message: 公開対象、非公開情報を含まないことの確認方法、および最終的な公開可否と説明責任を人間の PO が担うことを明記する必要がある。
+  - id: F004
+    severity: major
+    rule: vp-pm-plan-feasibility
+    line: 201
+    anchor: "`pm-members.yaml` の member は選択属性だけを持つ。運用検証が完了するまで `disabled: true` で定義し、`exec run --auto` の候補から除外しておく。"
+    message: 運用検証を実行可能な作業単位へ分解し、担当 Role、依存順序、確認コマンド、証跡、完了判断の時期を定義する必要がある。
+  - id: F005
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 256
+    anchor: stderr の実文言は CLI バージョンで変わりうるため、上記 pattern は実際の出力で検証してから確定する。
+    message: CLI バージョン変更に伴う stderr pattern・権限フラグ・モデル名の再検証を、PJR 等の管理先、影響する設定・テスト・運用文書、判断時期と関連付ける必要がある。
+  - id: F006
+    severity: major
+    rule: vp-pm-control-reporting
+    line: 256
+    anchor: stderr の実文言は CLI バージョンで変わりうるため、上記 pattern は実際の出力で検証してから確定する。
+    message: 未検証の rate-limit pattern と member 有効化を課題・リスク・変更要求として分離し、PJR 転記先、担当 Role、対応方針、報告先を示す必要がある。
+  - id: F007
+    severity: major
+    rule: vp-ba-business-value
+    line: 3
+    anchor: SpecDojo CLI と GitHub Copilot CLI / Copilot cloud agent を組み合わせてマルチエージェント実行を行うための設定・構成を定義する。
+    message: 対象利用者、解決する業務課題、Copilot 採用による期待価値、代替 provider に対する選択条件、成功基準を記載する必要がある。
+  - id: F008
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 3
+    anchor: SpecDojo CLI と GitHub Copilot CLI / Copilot cloud agent を組み合わせてマルチエージェント実行を行うための設定・構成を定義する。
+    message: Copilot CLI、cloud agent、code review の各対象範囲と対象外、利用者要件、受入条件、用語上の境界を明示する必要がある。
+  - id: F009
+    severity: major
+    rule: vp-ba-stakeholder-clarity
+    line: 3
+    anchor: SpecDojo CLI と GitHub Copilot CLI / Copilot cloud agent を組み合わせてマルチエージェント実行を行うための設定・構成を定義する。
+    message: 設計の利用者、実装・検証・運用を担う Role code、合意対象、`disabled` 解除および公開の確認者を明記する必要がある。
+  - id: F010
     severity: major
     rule: vp-arc-cross-document-consistency
     line: 30
+    anchor: "-> Copilot agent が成果物または result を編集"
     message: >-
       現行は executor が成果物編集またはレビューだけを行い、reporter の出力を runner が result へ反映する2段 pipeline であるため、Copilot agent が result
       を直接編集するフローを修正する必要がある。
-    anchor: "-> Copilot agent が成果物または result を編集"
-  - id: F012
-    severity: major
-    rule: vp-ux-readability
-    line: 122
-    message: >-
-      custom agent は `specdojo exec run` の worker 選択に関与しないと説明した後で同名を member・実行例に使用しており、手動選択用 profile と pipeline
-      executor/reporter の違いを一意に理解できない。
-    anchor: >-
-      exec の無人実行の command template は `--agent` を指定しない（`起動コマンドの設計` を参照）。本節の custom agent は Copilot Chat / cloud agent
-      で明示的に選択する用途であり、`specdojo exec run` の worker 選択には関与しない。
-  - id: F003
+  - id: F011
     severity: minor
     rule: vp-arc-cross-document-consistency
     line: 177
-    message: >-
-      現行の `providers.copilot.command_template` は個人設定への依存を避けるため `—model auto` を明示しているため、掲載する command template
-      を一致させる必要がある。
     anchor: >-
       起動コマンドは親設計の `起動コマンドの解決` に従い、`.specdojo/exec-defaults.yaml` の `providers.copilot` で定義する。`pm-members.yaml` の member
       には `command` を書かない。edit / review とも同一の許可リスト構成のため、プレースホルダと `command_params` は使わない。権限設計の根拠は
       [specdojo:exec-config-guide](../../specdojo/guides/exec-config-guide.md) の `agent 権限とプロンプトインジェクション対策` を正本とする。
-  - id: F002
+    message: >-
+      現行の `providers.copilot.command_template` は個人設定への依存を避けるため `—model auto` を明示しているため、掲載する command template
+      を一致させる必要がある。
+  - id: F012
     severity: major
     rule: vp-arc-cross-document-consistency
     line: 201
+    anchor: "`pm-members.yaml` の member は選択属性だけを持つ。運用検証が完了するまで `disabled: true` で定義し、`exec run --auto` の候補から除外しておく。"
     message: >-
       現行 member は `copilot-executor`、`copilot-review-executor`、`copilot-reporter` と `stage_role` で構成されており、記載された2 member
       の nickname・属性・reporter 欠落を現行 `pm-members.yaml` に合わせる必要がある。
+  - id: F013
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 122
+    anchor: >-
+      exec の無人実行の command template は `--agent` を指定しない（`起動コマンドの設計` を参照）。本節の custom agent は Copilot Chat / cloud agent
+      で明示的に選択する用途であり、`specdojo exec run` の worker 選択には関与しない。
+    message: >-
+      `.github/agents/copilot-*.md` は `disable-model-invocation: true` を指定していないため、custom agent
+      を明示選択専用とする記述に合わせて自動呼び出しの可否を設計・設定する必要がある。
+  - id: F014
+    severity: major
+    rule: vp-arc-technical-constraints
+    line: 256
+    anchor: stderr の実文言は CLI バージョンで変わりうるため、上記 pattern は実際の出力で検証してから確定する。
+    message: 対応する Copilot CLI バージョン、権限フラグと出力形式の互換性、rate-limit pattern の検証済み範囲を明示し、バージョン更新時の再検証条件を定義する必要がある。
+  - id: F015
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 277
+    anchor: >-
+      `specdojo exec run` との統合では、plan は標準入力で渡され、引数必須の `-p` は `"$(cat)"` で受ける。plan 全体が引用済みの単一引数になるため、YAML frontmatter の
+      `---` がコマンドラインオプションとして誤認されない。手動で同じ動作を再現する場合は次のとおり（フラグ構成は `起動コマンドの設計` の command template と同一）。
+    message: 9.1節と同一の全フラグを10節で再掲しているため、10節は9.1節への参照と標準入力による再現方法だけに絞り、二重管理を解消する必要がある。
+  - id: F016
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 201
     anchor: "`pm-members.yaml` の member は選択属性だけを持つ。運用検証が完了するまで `disabled: true` で定義し、`exec run --auto` の候補から除外しておく。"
-  - id: F006
+    message: >-
+      `pm-members.yaml` の例を `copilot-executor`、`copilot-review-executor`、`copilot-reporter` と各 `stage_role` を含む現行 schema
+      に更新する必要がある。
+  - id: F017
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 264
+    anchor: memberを明示して実行する場合は `--by` にnicknameを指定する。
+    message: 現行 pipeline member は `—by` では実行できないため、`—executor-by` と `—reporter-by` を用いた有効なコマンド例と自動選択時の stage 解決を示す必要がある。
+  - id: F018
+    severity: major
+    rule: vp-dev-change-impact
+    line: 177
+    anchor: >-
+      起動コマンドは親設計の `起動コマンドの解決` に従い、`.specdojo/exec-defaults.yaml` の `providers.copilot` で定義する。`pm-members.yaml` の member
+      には `command` を書かない。edit / review とも同一の許可リスト構成のため、プレースホルダと `command_params` は使わない。権限設計の根拠は
+      [specdojo:exec-config-guide](../../specdojo/guides/exec-config-guide.md) の `agent 権限とプロンプトインジェクション対策` を正本とする。
+    message: >-
+      command template、member、custom agent、pipeline stage
+      を変更した際の影響先として、`.specdojo/exec-defaults.yaml`、`pm-members.yaml`、runner、schema、関連テスト、運用手順を対応付ける必要がある。
+  - id: F019
+    severity: major
+    rule: vp-dev-testability
+    line: 297
+    anchor: "## 12. 公式仕様参照"
+    message: >-
+      command template、member schema、executor／reporter pipeline、権限制御、rate-limit
+      判定ごとに検証コマンド、対象ファイル、期待結果、失敗時対応、既存テストへの参照を追加する必要がある。
+  - id: F020
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 3
+    anchor: SpecDojo CLI と GitHub Copilot CLI / Copilot cloud agent を組み合わせてマルチエージェント実行を行うための設定・構成を定義する。
+    message: GitHub Copilot を採用する業務上の要求、採用理由、代替 provider との選択条件が示されず、DC-001 の整合性を確認できない。
+  - id: F021
     severity: major
     rule: vp-qe-done-criteria
     line: 201
-    message: 運用検証が未完了であるにもかかわらず完了条件・解除基準がなく、DC-002 の承認判断に必要な情報が不足している。
     anchor: "`pm-members.yaml` の member は選択属性だけを持つ。運用検証が完了するまで `disabled: true` で定義し、`exec run --auto` の候補から除外しておく。"
-  - id: F009
+    message: 運用検証が未完了であるにもかかわらず完了条件・解除基準がなく、DC-002 の承認判断に必要な情報が不足している。
+  - id: F022
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 256
+    anchor: stderr の実文言は CLI バージョンで変わりうるため、上記 pattern は実際の出力で検証してから確定する。
+    message: 制約ごとの検証方法、期待結果、テスト参照がなく、DC-004 のテスト設計・検証観点として使用できない。
+  - id: F023
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 264
+    anchor: memberを明示して実行する場合は `--by` にnicknameを指定する。
+    message: member 名、pipeline stage、reporter、実行コマンドが現行構成と一致せず, DC-005 の実装基礎として参照できない。
+  - id: F024
     severity: major
     rule: vp-qe-verifiability
     line: 201
-    message: 「運用検証が完了するまで」および rate-limit pattern の実出力確認について、対象 CLI バージョン、確認コマンド、期待結果、解除条件、証跡先が定義されておらず合否判定できない。
     anchor: "`pm-members.yaml` の member は選択属性だけを持つ。運用検証が完了するまで `disabled: true` で定義し、`exec run --auto` の候補から除外しておく。"
-  - id: F014
+    message: 「運用検証が完了するまで」および rate-limit pattern の実出力確認について、対象 CLI バージョン、確認コマンド、期待結果、解除条件、証跡先が定義されておらず合否判定できない。
+  - id: F025
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 24
+    anchor: "## 3. 全体フロー"
+    message: 現行必須構成である executor、reporter、runner による result 反映の各 stage と責務境界が全体フローから欠落している。
+  - id: F026
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 297
+    anchor: "## 12. 公式仕様参照"
+    message: 関連文書が公式仕様だけに限定され、rulebook が要求する設計制約ごとのテスト・設定検証、実装 SSOT、横断ルールへの検証導線が欠落している。
+  - id: F027
+    severity: major
+    rule: vp-ux-readability
+    line: 122
+    anchor: >-
+      exec の無人実行の command template は `--agent` を指定しない（`起動コマンドの設計` を参照）。本節の custom agent は Copilot Chat / cloud agent
+      で明示的に選択する用途であり、`specdojo exec run` の worker 選択には関与しない。
+    message: >-
+      custom agent は `specdojo exec run` の worker 選択に関与しないと説明した後で同名を member・実行例に使用しており、手動選択用 profile と pipeline
+      executor/reporter の違いを一意に理解できない。
+  - id: F028
+    severity: major
+    rule: vp-ux-user-flow
+    line: 264
+    anchor: memberを明示して実行する場合は `--by` にnicknameを指定する。
+    message: >-
+      実在しない `copilot-edit-agent` と `copilot-review-agent` を `—by` に指定しており、現行の `copilot-executor` と `copilot-reporter`
+      を用いる executor/reporter 指定手順へ更新する必要がある。
+  - id: F029
     severity: major
     rule: vp-ux-language-consistency
     line: 201
+    anchor: "`pm-members.yaml` の member は選択属性だけを持つ。運用検証が完了するまで `disabled: true` で定義し、`exec run --auto` の候補から除外しておく。"
     message: >-
       `copilot-edit-agent`、`copilot-review-agent` という member 名は現行の
       `copilot-executor`、`copilot-review-executor`、`copilot-reporter` と一致しないため、custom agent 名と pipeline member
       名を区別して統一する必要がある。
+  - id: F030
+    severity: major
+    rule: vp-ops-release-readiness
+    line: 201
     anchor: "`pm-members.yaml` の member は選択属性だけを持つ。運用検証が完了するまで `disabled: true` で定義し、`exec run --auto` の候補から除外しておく。"
-  - id: F007
+    message: "`disabled: true` を解除して ready 化するための対象バージョン、検証項目、合格条件、証跡、未解決指摘、承認者、公開前確認を定義する必要がある。"
+  - id: F031
     severity: major
-    rule: vp-qe-done-criteria
+    rule: vp-ops-operability
     line: 256
-    message: 制約ごとの検証方法、期待結果、テスト参照がなく、DC-004 のテスト設計・検証観点として使用できない。
     anchor: stderr の実文言は CLI バージョンで変わりうるため、上記 pattern は実際の出力で検証してから確定する。
-  - id: F008
+    message: rate-limit／quota 検出の確認、誤検出時の切り分け、CLI 更新後の再検証、証跡保存、問い合わせ先を具体化し、`opr-agent-cli-update` 等の運用 SSOT へリンクする必要がある。
+  - id: F032
     severity: major
-    rule: vp-qe-done-criteria
-    line: 264
-    message: member 名、pipeline stage、reporter、実行コマンドが現行構成と一致せず, DC-005 の実装基礎として参照できない。
-    anchor: memberを明示して実行する場合は `--by` にnicknameを指定する。
-  - id: F013
-    severity: major
-    rule: vp-ux-user-flow
-    line: 264
-    message: >-
-      実在しない `copilot-edit-agent` と `copilot-review-agent` を `—by` に指定しており、現行の `copilot-executor` と `copilot-reporter`
-      を用いる executor/reporter 指定手順へ更新する必要がある。
-    anchor: memberを明示して実行する場合は `--by` にnicknameを指定する。
-  - id: F004
-    severity: minor
-    rule: vp-arc-conciseness
-    line: 277
-    message: 9.1節と同一の全フラグを10節で再掲しているため、10節は9.1節への参照と標準入力による再現方法だけに絞り、二重管理を解消する必要がある。
+    rule: vp-ops-agent-boundary
+    line: 22
     anchor: >-
-      `specdojo exec run` との統合では、plan は標準入力で渡され、引数必須の `-p` は `"$(cat)"` で受ける。plan 全体が引用済みの単一引数になるため、YAML frontmatter の
-      `---` がコマンドラインオプションとして誤認されない。手動で同じ動作を再現する場合は次のとおり（フラグ構成は `起動コマンドの設計` の command template と同一）。
-  - id: F011
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 297
-    message: 関連文書が公式仕様だけに限定され、rulebook が要求する設計制約ごとのテスト・設定検証、実装 SSOT、横断ルールへの検証導線が欠落している。
-    anchor: "## 12. 公式仕様参照"
+      3層の共通責務は親設計に従う。Copilot agent は、Copilot 固有の custom instructions、custom agent、モデル、ツール許可を使用して plan
+      を処理する。claim、complete、reopen、block、並列起動、worktree 管理は行わない。
+    message: Copilot agent は最終承認・公開可否判断・説明責任を担わず人間の PO が担うこと、および executor／reporter の出力を runner が result へ反映する境界を明記する必要がある。
 done_criteria:
   satisfied: 1
   total: 5

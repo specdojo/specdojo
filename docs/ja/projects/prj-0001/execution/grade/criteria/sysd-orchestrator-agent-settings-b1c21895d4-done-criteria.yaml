@@ -2,12 +2,12 @@
 id: sysd-orchestrator-agent-settings-grade-criteria
 document: sysd-orchestrator-agent-settings
 path: docs/ja/product/040-system-design/sysd-orchestrator-agent-settings.md
-graded_at: "2026-09-23T16:39:46.698Z"
+graded_at: "2026-09-28T16:45:41.388Z"
 graded_by: codex-expert-executor
 content_hash: 99abd435119d358d0f41efbca1f4655cdb62e7ef20c49595a8a192030f1d72e1
 summary:
-  satisfied: 1
-  unsatisfied: 4
+  satisfied: 0
+  unsatisfied: 5
   total: 5
 criteria:
   - id: DC-001
@@ -15,32 +15,33 @@ criteria:
     roles:
       - BA
     viewpoint: vp-ba-requirements-completeness
-    status: satisfied
+    status: unsatisfied
+    reason: 対話代行の機能説明はあるが、採用理由・制約を対応する業務要件、業務課題、成功基準へ追跡できない。
   - id: DC-002
     text: 設計方針を承認できること
     roles:
       - PO
     viewpoint: vp-po-decision-readiness
     status: unsatisfied
-    reason: 現行支援対象のAntigravityが設計範囲から欠落し、失敗・復旧条件もないため、現在の設計方針を承認できない。
+    reason: Antigravity が承認範囲から欠落し, OpenCode の提示コマンドと権限規則も不一致であるため, 現行構成全体の設計方針を承認できない。
   - id: DC-003
     text: 技術的制約・依存関係が識別できること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
-    reason: Antigravityへの依存と、SSOTの`npx specdojo`に対応しないOpenCode権限規則が識別・整合されていない。
+    reason: Antigravity 固有の起動・指示読込依存と, `npx specdojo` を含む OpenCode 権限制約を識別できない。
   - id: DC-004
     text: テスト設計・検証観点の参照として使えること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
     status: unsatisfied
-    reason: 本文同期以外の承認、権限、project解決、起動、worktree動作に対する検証条件やテスト参照がない。
+    reason: 本文同期以外の承認フロー, 権限, project 解決, 起動, worktree 動作についてテスト設計・検証観点への参照がない。
   - id: DC-005
     text: 実装の基礎として参照できること
     roles:
       - DEV
     viewpoint: vp-dev-implementation-readiness
     status: unsatisfied
-    reason: 支援対象と起動構成が実装と一致せず、OpenCodeでは指示されたコマンドと権限規則も一致しないため、そのまま実装の基礎にできない。
+    reason: Antigravity の構成と配布テンプレート更新が欠落し, OpenCode 権限値も実際の提示コマンドに接続できない。

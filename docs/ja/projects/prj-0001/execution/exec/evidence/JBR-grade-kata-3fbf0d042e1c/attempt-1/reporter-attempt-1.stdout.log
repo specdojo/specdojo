@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "mode": "edit",
+  "outcome": "complete",
+  "summary": [
+    "`tools/grade/run-per-document.sh` の実行により、対象15件の文書すべてが正常に処理されました（`processed=15`, `completed_now=15`）。",
+    "終了コードは 0 であり、rate limit による未完了段や中断はありません。",
+    "`failed` または `retry_exhausted` となる文書は観測されませんでした。",
+    "評価結果の分布として、`verdict` が `pass` の文書が 5 件、`needs-work` の文書が 10 件であり、改善の余地がある文書が多数含まれています。スコアは 56 から 96 の範囲に分布しています。"
+  ],
+  "changed_files": [
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/bps-deliverable-evaluation.yaml",
+      "summary": "品質評価結果の更新"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/cdsd-planning.yaml",
+      "summary": "品質評価結果の更新"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/opr-agent-cli-update.yaml",
+      "summary": "品質評価結果の更新"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/prj-0001.prj-assumptions-constraints-dependencies.yaml",
+      "summary": "品質評価結果の更新"
+    }
+  ],
+  "handoff": [
+    "`needs-work` と判定された 10 件の文書について、`findings` に基づく改善作業を検討してください。"
+  ],
+  "approach": "runner が実行した `job-command` の stdout に出力された `results.tsv` を分析し、処理件数、終了ステータス、および verdict/score の分布を確認しました。",
+  "block_reason": ""
+}

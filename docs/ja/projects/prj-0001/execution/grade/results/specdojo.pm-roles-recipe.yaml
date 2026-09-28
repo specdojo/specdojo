@@ -3,37 +3,80 @@ version: 1
 document: specdojo:pm-roles-recipe
 path: docs/ja/specdojo/recipes/pm-roles-recipe.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 89
-graded_at: "2026-09-08T22:59:50.357Z"
-graded_by: gemma-expert-executor
+score: 79
+graded_at: "2026-09-28T21:18:39.553Z"
+graded_by: codex-expert-executor
 content_hash: 897c3eeb2e66cbbee4594b3ef0e7bdadee0997940d55ac085bad54dc38ecbdc2
 categories:
-  consistency:
-    score: 88
-  usability:
+  purpose:
+    score: 100
+  operations:
+    score: 94
+  planning:
+    score: 100
+  business:
     score: 100
   architecture:
+    score: 83
+  usability:
     score: 100
-  quality:
+  implementation:
     score: 75
+  quality:
+    score: 58
+  consistency:
+    score: 50
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
     level: 4
     score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 2
+    score: 50
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
-  vp-qe-verifiability:
+  vp-dev-implementation-readiness:
+    level: 2
+    score: 50
+  vp-dev-change-impact:
     level: 4
     score: 100
-  vp-qe-omissions-consistency:
+  vp-dev-testability:
     level: 3
     score: 75
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
   vp-qe-kata-conformance:
     level: 2
     score: 50
@@ -43,24 +86,69 @@ viewpoints:
   vp-ux-language-consistency:
     level: 4
     score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 3
+    score: 75
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 1
+  major: 5
+  minor: 3
   note: 0
 findings:
+  - id: F001
+    severity: major
+    rule: vp-arc-technical-constraints
+    line: 12
+    anchor: "- schema にないメタ項目を追加しない。rulebook 参照は成果物カタログまたは計画側で解決する。"
+    message: "`rulebook` を schema にない項目として扱う指示は、`pm-roles.schema.yaml` が同キーを必須としている定義と正反対であり、技術制約として使用できない。"
   - id: F002
     severity: major
-    rule: vp-qe-kata-conformance
-    line: 21
-    message: 必須項目である `rulebook` キーの追加を禁止しており、rulebook および schema と矛盾している。
-    anchor: "| 採用 Role code       | Schedule の `owner` と RACI の列に使う Role code             |"
-  - id: F001
+    rule: vp-dev-implementation-readiness
+    line: 30
+    anchor: 1. `id`、`type`、`status`、`version`、`project_id` を設定する。
+    message: メタ項目の作成手順が必須の `title` と `rulebook` を含まず、さらに後段で `rulebook` を禁止しているため、手順どおりの実装は schema 検証に合格しない。
+  - id: F003
+    severity: minor
+    rule: vp-dev-testability
+    line: 114
+    anchor: "| スキーマ適合           | 必須メタ項目、`roles` 配列、Role code の列挙が YAML スキーマに沿っているか        |"
+    message: schema 適合を確認項目にしているが、`pm-roles.schema.yaml` を使う検証コマンド、期待する成功結果、エラー時の対応が示されていない。
+  - id: F004
+    severity: major
+    rule: vp-qe-verifiability
+    line: 114
+    anchor: "| スキーマ適合           | 必須メタ項目、`roles` 配列、Role code の列挙が YAML スキーマに沿っているか        |"
+    message: schema 適合を完了条件にしている一方で必須の `rulebook` を禁止し `title` を要求していないため、レシピどおりの成果物に一貫した pass / fail 判定を適用できない。
+  - id: F005
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 12
+    anchor: "- schema にないメタ項目を追加しない。rulebook 参照は成果物カタログまたは計画側で解決する。"
+    message: schema と rulebook が必須とする `rulebook` を禁止しているため、必須キーに関する記述が正本と整合しない。
+  - id: F006
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 39
-    message: 必須メタ項目である `title` の設定指示が不足している。
     anchor: ""
+    message: 必須メタ項目である `title` の設定指示が不足している。
+  - id: F007
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 21
+    anchor: "| 採用 Role code       | Schedule の `owner` と RACI の列に使う Role code             |"
+    message: 必須項目である `rulebook` キーの追加を禁止しており、rulebook および schema と矛盾している。
+  - id: F008
+    severity: minor
+    rule: vp-ops-operability
+    line: 125
+    anchor: "- `pm-members.yaml` の `members[].roles` から参照できる Role code 語彙になっている。"
+    message: Role code を更新した際に `pm-members.yaml`、Schedule、RACI を再確認し、schema 検証や表示ページ再生成、変更記録を行う運用手順が示されていない。

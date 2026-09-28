@@ -1,0 +1,27 @@
+
+> specdojo@0.2.1 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-deliverable-8328578620b8 project=prj-0001 target=deliverable kind=none changed_only=true ungraded=true incomplete=true rubric_outdated=true max_stage_failures=3 stages=1 documents=9 exhausted=1 work_dir=logs/grade/runs/per-document/JBR-grade-deliverable-8328578620b8
+stage=1 executor=codex-expert-executor reporter=gemma-reporter reference=none
+document retry exhausted: docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md failed_stage=1 consecutive_failures=4 max_failures=3
+document start: docs/ja/product/010-business-specs/020-data-model/cdsd-planning.md
+document resume: docs/ja/product/010-business-specs/020-data-model/cdsd-planning.md start_stage=1
+document complete: docs/ja/product/010-business-specs/020-data-model/cdsd-planning.md
+document start: docs/ja/product/010-business-specs/030-business-model/bps-deliverable-evaluation.md
+document complete: docs/ja/product/010-business-specs/030-business-model/bps-deliverable-evaluation.md
+document start: docs/ja/product/040-system-design/sysd-github-copilot-agent-settings.md
+document complete: docs/ja/product/040-system-design/sysd-github-copilot-agent-settings.md
+document start: docs/ja/product/040-system-design/sysd-index.md
+document complete: docs/ja/product/040-system-design/sysd-index.md
+document start: docs/ja/product/040-system-design/sysd-job-execution.md
+document incomplete: docs/ja/product/040-system-design/sysd-job-execution.md failed_stage=1
+document start: docs/ja/product/040-system-design/sysd-opencode-agent-settings.md
+document incomplete: docs/ja/product/040-system-design/sysd-opencode-agent-settings.md failed_stage=1
+document start: docs/ja/product/040-system-design/sysd-orchestrator-agent-settings.md
+document complete: docs/ja/product/040-system-design/sysd-orchestrator-agent-settings.md
+document start: docs/ja/product/090-operations/opr-agent-cli-update.md
+document complete: docs/ja/product/090-operations/opr-agent-cli-update.md
+document start: docs/ja/projects/prj-0001/020-project-definition/prj-assumptions-constraints-dependencies.md
+document complete: docs/ja/projects/prj-0001/020-project-definition/prj-assumptions-constraints-dependencies.md
+grade pipeline complete: selected=9 processed=9 completed_now=7 incomplete=2 exhausted=1 results=logs/grade/runs/per-document/JBR-grade-deliverable-8328578620b8/results.tsv

@@ -1,0 +1,53 @@
+
+> specdojo@0.2.1 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-kata-3fbf0d042e1c project=prj-0001 target=kata kind=all changed_only=true ungraded=true incomplete=true rubric_outdated=true max_stage_failures=3 stages=1 documents=15 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-kata-3fbf0d042e1c
+stage=1 executor=codex-expert-executor reporter=gemma-reporter reference=none
+document start: docs/ja/specdojo/recipes/pm-quality-management-plan-recipe.md
+document complete: docs/ja/specdojo/recipes/pm-quality-management-plan-recipe.md
+document start: docs/ja/specdojo/recipes/pm-raci-recipe.md
+document complete: docs/ja/specdojo/recipes/pm-raci-recipe.md
+document start: docs/ja/specdojo/recipes/pm-roles-recipe.md
+document complete: docs/ja/specdojo/recipes/pm-roles-recipe.md
+document start: docs/ja/specdojo/recipes/prj-assumptions-constraints-dependencies-recipe.md
+document complete: docs/ja/specdojo/recipes/prj-assumptions-constraints-dependencies-recipe.md
+document start: docs/ja/specdojo/recipes/prj-charter-recipe.md
+document complete: docs/ja/specdojo/recipes/prj-charter-recipe.md
+document start: docs/ja/specdojo/recipes/prj-comparison-of-alternatives-recipe.md
+document complete: docs/ja/specdojo/recipes/prj-comparison-of-alternatives-recipe.md
+document start: docs/ja/specdojo/recipes/prj-issues-and-approach-recipe.md
+document complete: docs/ja/specdojo/recipes/prj-issues-and-approach-recipe.md
+document start: docs/ja/specdojo/recipes/prj-overview-recipe.md
+document complete: docs/ja/specdojo/recipes/prj-overview-recipe.md
+document start: docs/ja/specdojo/recipes/prj-scope-recipe.md
+document complete: docs/ja/specdojo/recipes/prj-scope-recipe.md
+document start: docs/ja/specdojo/recipes/prj-stakeholder-register-recipe.md
+document complete: docs/ja/specdojo/recipes/prj-stakeholder-register-recipe.md
+document start: docs/ja/specdojo/recipes/prj-success-criteria-and-acceptance-criteria-recipe.md
+document complete: docs/ja/specdojo/recipes/prj-success-criteria-and-acceptance-criteria-recipe.md
+document start: docs/ja/specdojo/rulebooks/br-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/br-rulebook.md
+document start: docs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md
+document start: docs/ja/specdojo/rulebooks/cdfd-mermaid-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/cdfd-mermaid-rulebook.md
+document start: docs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md
+grade pipeline complete: selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-kata-3fbf0d042e1c/results.tsv
+recorded_at	document	stage	status	duration_seconds	verdict	score	findings	executor	reporter	reference	consecutive_failures	max_failures
+2026-09-28T21:06:13Z	docs/ja/specdojo/recipes/pm-quality-management-plan-recipe.md	1	passed	356	pass	92	10	codex-expert-executor	gemma-reporter	none		
+2026-09-28T21:13:19Z	docs/ja/specdojo/recipes/pm-raci-recipe.md	1	passed	424	needs-work	73	19	codex-expert-executor	gemma-reporter	none		
+2026-09-28T21:18:40Z	docs/ja/specdojo/recipes/pm-roles-recipe.md	1	passed	319	needs-work	79	8	codex-expert-executor	gemma-reporter	none		
+2026-09-28T21:23:28Z	docs/ja/specdojo/recipes/prj-assumptions-constraints-dependencies-recipe.md	1	passed	286	needs-work	93	2	codex-expert-executor	gemma-reporter	none		
+2026-09-28T21:28:08Z	docs/ja/specdojo/recipes/prj-charter-recipe.md	1	passed	278	pass	94	3	codex-expert-executor	gemma-reporter	none		
+2026-09-28T21:33:06Z	docs/ja/specdojo/recipes/prj-comparison-of-alternatives-recipe.md	1	passed	296	needs-work	87	10	codex-expert-executor	gemma-reporter	none		
+2026-09-28T21:38:26Z	docs/ja/specdojo/recipes/prj-issues-and-approach-recipe.md	1	passed	318	pass	89	13	codex-expert-executor	gemma-reporter	none		
+2026-09-28T21:43:50Z	docs/ja/specdojo/recipes/prj-overview-recipe.md	1	passed	322	needs-work	81	11	codex-expert-executor	gemma-reporter	none		
+2026-09-28T21:48:35Z	docs/ja/specdojo/recipes/prj-scope-recipe.md	1	passed	283	needs-work	86	7	codex-expert-executor	gemma-reporter	none		
+2026-09-28T21:55:00Z	docs/ja/specdojo/recipes/prj-stakeholder-register-recipe.md	1	passed	383	needs-work	82	9	codex-expert-executor	gemma-reporter	none		
+2026-09-28T21:58:52Z	docs/ja/specdojo/recipes/prj-success-criteria-and-acceptance-criteria-recipe.md	1	passed	230	pass	96	3	codex-expert-executor	gemma-reporter	none		
+2026-09-28T22:06:44Z	docs/ja/specdojo/rulebooks/br-rulebook.md	1	passed	470	needs-work	77	13	codex-expert-executor	gemma-reporter	none		
+2026-09-28T22:13:17Z	docs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md	1	passed	391	needs-work	56	27	codex-expert-executor	gemma-reporter	none		
+2026-09-28T22:20:53Z	docs/ja/specdojo/rulebooks/cdfd-mermaid-rulebook.md	1	passed	454	needs-work	77	14	codex-expert-executor	gemma-reporter	none		
+2026-09-28T22:27:15Z	docs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md	1	passed	380	pass	87	9	codex-expert-executor	gemma-reporter	none		

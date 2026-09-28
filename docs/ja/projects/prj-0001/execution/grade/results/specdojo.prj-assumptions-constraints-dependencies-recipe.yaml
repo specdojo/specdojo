@@ -3,23 +3,60 @@ version: 1
 document: specdojo:prj-assumptions-constraints-dependencies-recipe
 path: docs/ja/specdojo/recipes/prj-assumptions-constraints-dependencies-recipe.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 91
-graded_at: "2026-09-04T16:44:19.668Z"
-graded_by: gemma-expert-executor
+score: 93
+graded_at: "2026-09-28T21:23:27.892Z"
+graded_by: codex-expert-executor
 content_hash: 003b26577dd58b97934fe75aeb8d4775c35bdf120d384c9503595780756a616c
 categories:
-  consistency:
+  purpose:
     score: 100
-  usability:
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
     score: 100
   architecture:
     score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 100
   quality:
+    score: 83
+  consistency:
     score: 75
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
@@ -28,12 +65,21 @@ viewpoints:
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
   vp-qe-verifiability:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
     level: 2
     score: 50
@@ -43,18 +89,33 @@ viewpoints:
   vp-ux-language-consistency:
     level: 4
     score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 0
   major: 1
-  minor: 0
+  minor: 1
   note: 0
 findings:
   - id: F001
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 145
+    anchor: "## 8. 仕上げチェック"
+    message: 仕上げチェックは「全体の作成手順」で示した章立てと必須表の確認を求めているが、同節には章立ても必須表も示されていないため、正本である rulebook の「本文構成（標準テンプレ）」を参照する記述に修正する必要がある。
+  - id: F002
     severity: major
     rule: vp-qe-kata-conformance
-    line: 86
+    line: 51
+    anchor: "- リポジトリ、作業環境、外部ツールなど、継続的な提供が必要な基盤は前提ではなく依存関係（4.3.）として書く。"
     message: 前提条件の例として「店頭で使う端末を利用できる」を挙げているが, 直前の記述（line 85）および rulebook の規定に反しており, 依存関係（4.3.）の例とするべきである。
-    anchor: "問い:"

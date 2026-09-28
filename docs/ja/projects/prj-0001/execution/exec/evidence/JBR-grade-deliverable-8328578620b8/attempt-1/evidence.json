@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "task_id": "JBR-grade-deliverable-8328578620b8",
+  "run_id": "attempt-1",
+  "stage": {
+    "role": "executor",
+    "actor": "specdojo-runner",
+    "status": "failed",
+    "started_at": "2026-09-28T16:00:08.167Z",
+    "completed_at": "2026-09-28T17:01:44.757Z",
+    "exit_code": 1,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/bps-deliverable-evaluation-e8ef6378e7-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdsd-planning-c998e41655-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/opr-agent-cli-update-beb291d74a-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/prj-assumptions-constraints-dependencies-04a3c0d40b-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/sysd-github-copilot-agent-settings-caeaa1d83f-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/sysd-index-920a4c50dc-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/sysd-orchestrator-agent-settings-b1c21895d4-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/pipeline/cdsd-planning-c998e41655ac.json",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/bps-deliverable-evaluation.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/cdsd-planning.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/opr-agent-cli-update.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/prj-0001.prj-assumptions-constraints-dependencies.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/sysd-github-copilot-agent-settings.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/sysd-index.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/sysd-orchestrator-agent-settings.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/pipeline/sysd-job-execution-f206c7f9d3b9.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/pipeline/sysd-opencode-agent-settings-7921b7f52776.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-deliverable-8328578620b8.json",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 18,
+    "summary": "...erable-evaluation-e8ef6378e7-done-criteria.yaml |   2 +-\n .../cdsd-planning-c998e41655-done-criteria.yaml    |   8 +-\n ...-agent-cli-update-beb291d74a-done-criteria.yaml |  13 +-\n ...ints-dependencies-04a3c0d40b-done-criteria.yaml |   4 +-\n ...ot-agent-settings-caeaa1d83f-done-criteria.yaml |  10 +-\n .../sysd-index-920a4c50dc-done-criteria.yaml       |   8 +-\n ...or-agent-settings-b1c21895d4-done-criteria.yaml |  17 +-\n .../grade/pipeline/cdsd-planning-c998e41655ac.json |  14 -\n .../grade/results/bps-deliverable-evaluation.yaml  |   2 +-\n .../execution/grade/results/cdsd-planning.yaml     |   2 +-\n .../grade/results/opr-agent-cli-update.yaml        | 240 +++++++++++++--\n ...1.prj-assumptions-constraints-dependencies.yaml | 233 ++++++++++++++-\n .../sysd-github-copilot-agent-settings.yaml        | 321 ++++++++++++++++-----\n .../execution/grade/results/sysd-index.yaml        | 234 +++++++++++----\n .../results/sysd-orchestrator-agent-settings.yaml  | 207 ++++++++++++-\n 15 files changed, 1100 insertions(+), 215 deletions(-)"
+  },
+  "validations": [
+    {
+      "id": "job-command",
+      "source": "runner",
+      "command": "npm run build\nif tools/grade/run-per-document.sh --run-id JBR-grade-deliverable-8328578620b8 --stages 1 --target deliverable --limit 10 --dependency-changed=true --rulebook-changed=true --unreviewed=true --changed-only=true --ungraded=true --incomplete=true --rubric-outdated=true; then\n  cat logs/grade/runs/per-document/JBR-grade-deliverable-8328578620b8/results.tsv\nelse\n  grade_status=$?\n  printf 'grade pipeline failed: run_id=%s exit_code=%s\\n' 'JBR-grade-deliverable-8328578620b8' \"$grade_sta…",
+      "status": "failed",
+      "summary": "exit 1"
+    }
+  ],
+  "final_message": "Runner command exit 1.",
+  "command": {
+    "shell": "/bin/sh -eu",
+    "value": "npm run build\nif tools/grade/run-per-document.sh --run-id JBR-grade-deliverable-8328578620b8 --stages 1 --target deliverable --limit 10 --dependency-changed=true --rulebook-changed=true --unreviewed=true --changed-only=true --ungraded=true --incomplete=true --rubric-outdated=true; then\n  cat logs/grade/runs/per-document/JBR-grade-deliverable-8328578620b8/results.tsv\nelse\n  grade_status=$?\n  printf 'grade pipeline failed: run_id=%s exit_code=%s\\n' 'JBR-grade-deliverable-8328578620b8' \"$grade_status\" >&2\n  exit \"$grade_status\"\nfi",
+    "exit_code": 1,
+    "stdout_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-deliverable-8328578620b8/attempt-1/command.stdout.log",
+    "stderr_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-deliverable-8328578620b8/attempt-1/command.stderr.log",
+    "stdout": "\n> specdojo@0.2.1 build\n> node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.build.json && node -e \"require('node:fs').chmodSync('dist/specdojo.js', 0o755)\"\n\nrun_id=JBR-grade-deliverable-8328578620b8 project=prj-0001 target=deliverable kind=none changed_only=true ungraded=true incomplete=true rubric_outdated=true max_stage_failures=3 stages=1 documents=9 exhausted=1 work_dir=logs/grade/runs/per-document/JBR-grade-deliverable-8328578620b8\nstage=1 executor=codex-expert-executor reporter=gemma-reporter reference=none\ndocument retry exhausted: docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md failed_stage=1 consecutive_failures=4 max_failures=3\ndocument start: docs/ja/product/010-business-specs/020-data-model/cdsd-planning.md\ndocument resume: docs/ja/product/010-business-specs/020-data-model/cdsd-planning.md start_stage=1\ndocument complete: docs/ja/product/010-business-specs/020-data-model/cdsd-planning.md\ndocument start: docs/ja/product/010-business-specs/030-business-model/bps-deliverable-evaluation.md\ndocument complete: docs/ja/product/010-business-specs/030-business-model/bps-deliverable-evaluation.md\ndocument start: docs/ja/product/040-system-design/sysd-github-copilot-agent-settings.md\ndocument complete: docs/ja/product/040-system-design/sysd-github-copilot-agent-settings.md\ndocument start: docs/ja/product/040-system-design/sysd-index.md\ndocument complete: docs/ja/product/040-system-design/sysd-index.md\ndocument start: docs/ja/product/040-system-design/sysd-job-execution.md\ndocument incomplete: docs/ja/product/040-system-design/sysd-job-execution.md failed_stage=1\ndocument start: docs/ja/product/040-system-design/sysd-opencode-agent-settings.md\ndocument incomplete: docs/ja/product/040-system-design/sysd-opencode-agent-settings.md failed_stage=1\ndocument start: docs/ja/product/040-system-design/sysd-orchestrator-agent-settings.md\ndocument complete: docs/ja/product/040-system-design/sysd-orchestrator-agent-settings.md\ndocument start: docs/ja/product/090-operations/opr-agent-cli-update.md\ndocument complete: docs/ja/product/090-operations/opr-agent-cli-update.md\ndocument start: docs/ja/projects/prj-0001/020-project-definition/prj-assumptions-constraints-dependencies.md\ndocument complete: docs/ja/projects/prj-0001/020-project-definition/prj-assumptions-constraints-dependencies.md\ngrade pipeline complete: selected=9 processed=9 completed_now=7 incomplete=2 exhausted=1 results=logs/grade/runs/per-document/JBR-grade-deliverable-8328578620b8/results.tsv\n",
+    "stderr": "grade pipeline incomplete: incomplete=2 run_id=JBR-grade-deliverable-8328578620b8; rerun with --run-id JBR-grade-deliverable-8328578620b8 to retry the failed stages, or start a new run with --incomplete\ngrade pipeline incomplete document: docs/ja/product/040-system-design/sysd-job-execution.md failed_stage=1\ngrade pipeline incomplete document: docs/ja/product/040-system-design/sysd-opencode-agent-settings.md failed_stage=1\ngrade pipeline failed: run_id=JBR-grade-deliverable-8328578620b8 exit_code=1\n"
+  },
+  "log_refs": [
+    {
+      "kind": "command-stdout",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-deliverable-8328578620b8/attempt-1/command.stdout.log",
+      "bytes": 2553,
+      "truncated": false
+    },
+    {
+      "kind": "command-stderr",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-deliverable-8328578620b8/attempt-1/command.stderr.log",
+      "bytes": 504,
+      "truncated": false
+    }
+  ]
+}

@@ -2,12 +2,12 @@
 id: opr-agent-cli-update-grade-criteria
 document: opr-agent-cli-update
 path: docs/ja/product/090-operations/opr-agent-cli-update.md
-graded_at: "2026-09-25T16:12:37.771Z"
+graded_at: "2026-09-28T16:54:05.552Z"
 graded_by: codex-expert-executor
 content_hash: 8592810431b49b5e57545a3d404fe96690adfe293bb54b99715190b2a462b67c
 summary:
-  satisfied: 1
-  unsatisfied: 2
+  satisfied: 0
+  unsatisfied: 3
   total: 3
 criteria:
   - id: DC-001
@@ -15,18 +15,19 @@ criteria:
     roles:
       - OPS
     viewpoint: vp-ops-operability
-    status: satisfied
+    status: unsatisfied
+    reason: Codexの実行バイナリを更新できず、CLI別の実行対象、実施者、障害時判断が確定していない。
   - id: DC-002
     text: 手順の技術的正確性が確認できること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
-    reason: Codexの更新方法が現行の公式インストーラー構成と一致せず、一時更新のコンテナ再作成もCodex・OpenCodeを既知の旧versionへ確実に戻せない。
+    reason: Codexの導入元と更新コマンドが不一致で、Featureのlockfile更新も4 CLI共通の永続更新にはなっていない。
   - id: DC-003
     text: 手順の完了条件・証跡要件が確認できること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
     status: unsatisfied
-    reason: 更新前後の比較値、期待version、全CLIの起動成功条件、証跡の識別子・保存方法が定義されていない。
+    reason: 更新前・期待version、全CLIの起動成功、再作成前後の一致条件、および追跡可能な証跡要件が不足している。

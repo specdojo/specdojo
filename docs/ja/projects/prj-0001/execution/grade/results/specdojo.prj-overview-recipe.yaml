@@ -3,29 +3,72 @@ version: 1
 document: specdojo:prj-overview-recipe
 path: docs/ja/specdojo/recipes/prj-overview-recipe.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 80
-graded_at: "2026-09-04T18:32:04.714Z"
+score: 81
+graded_at: "2026-09-28T21:43:49.915Z"
 graded_by: codex-expert-executor
 content_hash: 4aa02110d26564fa1200a6031bd9c54575e7e7cdaec4fe8b448511a19915456c
 categories:
-  consistency:
+  purpose:
     score: 75
-  usability:
-    score: 92
+  operations:
+    score: 63
+  planning:
+    score: 83
+  business:
+    score: 100
   architecture:
     score: 100
+  usability:
+    score: 92
+  implementation:
+    score: 100
   quality:
-    score: 63
+    score: 75
+  consistency:
+    score: 50
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 2
+    score: 50
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 2
+    score: 50
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 2
+    score: 50
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
-  vp-arc-single-responsibility:
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -43,40 +86,99 @@ viewpoints:
   vp-ux-language-consistency:
     level: 3
     score: 75
+  vp-ops-release-readiness:
+    level: 2
+    score: 50
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 2
+    score: 50
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 0
-  major: 2
-  minor: 2
+  major: 7
+  minor: 4
   note: 0
 findings:
   - id: F001
+    severity: major
+    rule: vp-po-purpose-alignment
+    line: 214
+    anchor: "問い:"
+    message: 「前提条件」に公開方針を導出する問いがなく、主要な対象範囲・判断が公開対象および再利用方針と整合するかを説明できないため、公開範囲と公開・再利用上の判断理由を確認する問いを追加する必要がある。
+  - id: F002
+    severity: major
+    rule: vp-po-publication-accountability
+    line: 214
+    anchor: "問い:"
+    message: >-
+      「誰が最終判断を行うか」と「AI Agent
+      やシステムはどこまで支援するか」を問うだけで、人間が最終判断と説明責任を担うこと、および公開対象・非公開対象を明示する記入指示がないため、人間の承認責任と公開範囲を明記する手順を追加する必要がある。
+  - id: F003
+    severity: major
+    rule: vp-pm-dependency-risk
+    line: 214
+    anchor: "問い:"
+    message: >-
+      依存前提は作成前情報の「前提・制約」に一括されるだけで、「前提条件」の問い・書き方・レビュー観点に依存先、成立条件、未成立時の影響を具体化する手順がないため,
+      後続成果物やスケジュールに影響する依存を識別できる問いを追加する必要がある。
+  - id: F004
     severity: minor
     rule: vp-qe-verifiability
     line: 196
-    message: 推奨表に具体的な「判定時期」と「初期仮説／確定値」の記入欄または記入指示がなく、本文177行目および仕上げチェック276行目の確認事項を表の適用だけでは判定できないため、これらを各指標へ記録できるようにする必要がある。
     anchor: "推奨表（観点・指標・目標・測定方法を 1 行ずつ書く。下記は三つの時間軸の記入例）:"
-  - id: F002
+    message: 推奨表に具体的な「判定時期」と「初期仮説／確定値」の記入欄または記入指示がなく、本文177行目および仕上げチェック276行目の確認事項を表の適用だけでは判定できないため、これらを各指標へ記録できるようにする必要がある。
+  - id: F005
     severity: major
     rule: vp-qe-omissions-consistency
     line: 214
+    anchor: "問い:"
     message: >-
       「前提条件」の問いと書き方が対象・対象外・判断責任・未決事項に偏り、rulebook と template
       が要求する「変えない前提」「依存前提」「公開方針」「取捨選択方針」を成果物へ反映する問いと確認項目が欠けているため、各項目の記述手順を追加する必要がある。
-    anchor: "問い:"
-  - id: F003
+  - id: F006
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 168
+    anchor: 期待効果では、初期公開前に確認する価値、提供後の短期的な利用成果、中長期で目指す事業・社会的成果を分ける。
+    message: >-
+      期待効果を三つの時間軸に分け、欠落がないか確認する書き方になっている一方、rulebook と template
+      が許容する不要な時間軸の省略理由または別の判定時期を記載する分岐がないため、適用不要な指標を無理に作らせない例外手順を追加する必要がある。
+  - id: F007
     severity: major
     rule: vp-qe-kata-conformance
     line: 214
+    anchor: "問い:"
     message: >-
       recipe-guided でも成果物を組み立てられるという Recipe 記述標準に対し、「前提条件」の問いが rulebook・template
       の変えない前提、依存前提、公開方針、取捨選択方針を導出しないため、対応する問い・具体化手順・レビュー項目を追加する必要がある。
-    anchor: "問い:"
-  - id: F004
+  - id: F008
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 168
+    anchor: 期待効果では、初期公開前に確認する価値、提供後の短期的な利用成果、中長期で目指す事業・社会的成果を分ける。
+    message: 三つの時間軸を一律に作成・確認させる記述が、不要な時間軸は省略理由または別の判定時期を示して省略できるとする rulebook・template と整合しないため、recipe に同じ省略条件を追加する必要がある。
+  - id: F009
     severity: minor
     rule: vp-ux-language-consistency
     line: 248
-    message: 第6章の「基本方針」は本文見出しおよび対応資料の「基本的な考え方」と表記が異なり、別の項目と誤読され得るため、正式な章名へ統一する必要がある。
     anchor: "| 基本方針       | 高度な分析より日々の記録継続を優先する                                     | 使いやすく高機能にする       |"
+    message: 第6章の「基本方針」は本文見出しおよび対応資料の「基本的な考え方」と表記が異なり、別の項目と誤読され得るため、正式な章名へ統一する必要がある。
+  - id: F010
+    severity: major
+    rule: vp-ops-release-readiness
+    line: 214
+    anchor: "問い:"
+    message: 「前提条件」に公開方針を導出する問いがなく、公開対象、公開上の制約、未解決事項をリリース判断へ引き渡せないため、公開範囲と公開前に人間が確認すべき前提を記述する手順を追加する必要がある。
+  - id: F011
+    severity: major
+    rule: vp-ops-agent-boundary
+    line: 218
+    anchor: "- 誰が最終判断を行うか。"
+    message: >-
+      「誰が最終判断を行うか」という問いだけでは AI Agent を最終判断者とする回答も排除できず、rulebook・template が要求する人間の判断責任を保証できないため、AI Agent
+      は支援に限定し最終承認と説明責任は人間が担うという記入指示とレビュー項目を追加する必要がある。

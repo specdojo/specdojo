@@ -3,29 +3,75 @@ version: 1
 document: specdojo:pm-quality-management-plan-recipe
 path: docs/ja/specdojo/recipes/pm-quality-management-plan-recipe.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: pass
-score: 91
-graded_at: "2026-09-04T15:33:11.670Z"
-graded_by: gemma-expert-executor
+score: 92
+graded_at: "2026-09-28T21:06:12.936Z"
+graded_by: codex-expert-executor
 content_hash: f7ebae152365c2f4612495388eecbdeb66acea278f1124e90df824e32b4384c9
 categories:
-  consistency:
+  purpose:
     score: 88
-  usability:
+  operations:
+    score: 94
+  planning:
+    score: 100
+  business:
     score: 92
   architecture:
     score: 100
+  usability:
+    score: 92
+  implementation:
+    score: 100
   quality:
-    score: 88
+    score: 92
+  consistency:
+    score: 75
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 3
+    score: 75
+  vp-po-publication-accountability:
+    level: 3
+    score: 75
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 3
+    score: 75
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -43,42 +89,81 @@ viewpoints:
   vp-ux-language-consistency:
     level: 3
     score: 75
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 0
   major: 0
-  minor: 5
+  minor: 10
   note: 0
 findings:
+  - id: F001
+    severity: minor
+    rule: vp-po-decision-readiness
+    line: 60
+    anchor: "## 5. 深掘り手順"
+    message: 見直し条件と未決事項を書くための問いがなく、PO が保留・差し戻しを判断する未決論点、影響、判断時期、次アクションを具体化できない。
+  - id: F002
+    severity: minor
+    rule: vp-po-publication-accountability
+    line: 19
+    anchor: "| 成果物品質 | 構造、参照整合、検証、公開適性           |"
+    message: 「公開適性」を収集項目として挙げるだけで、公開対象と個人情報・非公開情報の有無を確認する問いがなく, 公開可否の説明根拠を作れない。
+  - id: F003
+    severity: minor
+    rule: vp-ba-requirements-completeness
+    line: 36
+    anchor: "### 4.1. 品質方針と適用範囲"
+    message: 「品質方針と適用範囲」の書き方に対象範囲・対象外・対象期間を確認する問いがなく、品質計画の適用境界を具体化できない。
   - id: F004
     severity: minor
-    rule: vp-ux-language-consistency
-    line: 14
-    message: 用語「利用者価値」が rulebook で定義された「価値品質」と不整合である。
-    anchor: "## 2. 作成前に集める情報"
-  - id: F002
+    rule: vp-qe-omissions-consistency
+    line: 36
+    anchor: "### 4.1. 品質方針と適用範囲"
+    message: rulebook が「品質方針と適用範囲」に求める対象期間の書き方がなく、rulebook と recipe の章対応に抜けがある。
+  - id: F005
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 60
+    anchor: "## 5. 深掘り手順"
+    message: rulebook で定義されている「5. 見直し条件と未決事項」の書き方ガイドが欠落している。
+  - id: F006
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 16
+    anchor: "| 項目       | 集める情報                               |"
+    message: 「作成前に集める情報」が名詞の列挙に留まり、主要な What と Why、How と What の対応を具体化する問いになっていない。
+  - id: F007
     severity: minor
     rule: vp-qe-kata-conformance
     line: 44
-    message: 各章の書き方が問い形式ではなく指示文となっており、recipe としての責務に不十分である。
     anchor: "- 成功基準ID、受入条件ID、検証結果を参照します。"
-  - id: F001
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 68
-    message: rulebook で定義されている「5. 見直し条件と未決事項」の書き方ガイドが欠落している。
-    anchor: ""
-  - id: F003
+    message: 各章の書き方が問い形式ではなく指示文となっており、recipe としての責務に不十分である。
+  - id: F008
     severity: minor
     rule: vp-qe-kata-conformance
-    line: 84
+    line: 77
+    anchor: "- 利用者価値と成果物品質を区別できるか。"
     message: レビュー観点が表形式ではなく箇条書きとなっており、authoring standard に準拠していない。
-    anchor: "- 品質ゲート、レビュー、是正がそろっている。"
-  - id: F005
+  - id: F009
     severity: minor
     rule: vp-ux-language-consistency
-    line: 96
+    line: 20
+    anchor: "| 判定条件   | 成功基準ID、受入条件ID、検証結果         |"
+    message: 「成功基準 ID」「受入条件 ID」と「成功基準ID」「受入条件ID」の表記が混在している。
+  - id: F010
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 87
+    anchor: "- Agentに価値・例外・公開判断を委ねていない。"
     message: 「AI Agent」(line 49) と 「Agent」(line 96) の表記が混在している。
-    anchor: ""

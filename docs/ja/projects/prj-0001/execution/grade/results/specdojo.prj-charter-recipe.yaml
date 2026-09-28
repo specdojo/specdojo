@@ -3,44 +3,99 @@ version: 1
 document: specdojo:prj-charter-recipe
 path: docs/ja/specdojo/recipes/prj-charter-recipe.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: pass
-score: 98
-graded_at: "2026-09-04T17:14:46.512Z"
+score: 94
+graded_at: "2026-09-28T21:28:08.072Z"
 graded_by: codex-expert-executor
 content_hash: 9fff2b9faa808995295e982965f81b2450bd66cc0adf62f458ac8ec0f72a38eb
 categories:
-  consistency:
-    score: 88
-  usability:
+  purpose:
+    score: 100
+  operations:
+    score: 94
+  planning:
+    score: 100
+  business:
     score: 100
   architecture:
     score: 100
-  quality:
+  usability:
     score: 100
-viewpoints:
-  vp-arc-cross-document-consistency:
-    level: 3
+  implementation:
+    score: 100
+  quality:
+    score: 92
+  consistency:
     score: 75
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
   vp-qe-verifiability:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 3
+    score: 75
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -49,12 +104,24 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 1
+  minor: 3
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-arc-cross-document-consistency
+    rule: vp-qe-omissions-consistency
+    line: 125
+    anchor: "- 承認履歴は、未承認なら未承認と分かる状態で残す。版番号は管理せず、承認対象の文書状態は証跡リンクで特定する。"
+    message: ルールブック 6.9 が定める、目的・主要スコープ・権限委譲範囲・予算枠を変更した場合の承認履歴追加と再承認、および軽微な修正を Git 履歴に委ねる区分が記載されていません。
+  - id: F002
+    severity: minor
+    rule: vp-qe-kata-conformance
     line: 5
-    message: 承認主体として「PO」のみが記載されており、ルールブックの「PO またはスポンサー」という定義およびルールブック内の指摘（F001, F007）と整合していません。
     anchor: 本書は、プロジェクト憲章を、PO が立ち上げ認可、権限委譲、予算枠、後続判断条件を判断できる内容に仕上げるための作り方である。本書では問い、深掘り、具体化、レビュー観点を扱う。
+    message: 承認主体として「PO」のみが記載されており、ルールブックの「PO またはスポンサー」という定義およびルールブック内の指摘（F001, F007）と整合していません。
+  - id: F003
+    severity: minor
+    rule: vp-ops-operability
+    line: 125
+    anchor: "- 承認履歴は、未承認なら未承認と分かる状態で残す。版番号は管理せず、承認対象の文書状態は証跡リンクで特定する。"
+    message: 承認履歴の書き方に、目的・主要スコープ・権限委譲範囲・予算枠を変更した場合は履歴へ行を追加して再承認を受け、軽微な修正は Git 履歴に委ねるという運用手順がありません。

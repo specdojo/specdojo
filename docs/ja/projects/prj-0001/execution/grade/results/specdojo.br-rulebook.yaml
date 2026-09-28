@@ -3,29 +3,75 @@ version: 1
 document: specdojo:br-rulebook
 path: docs/ja/specdojo/rulebooks/br-rulebook.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 79
-graded_at: "2026-09-08T23:20:58.711Z"
+score: 77
+graded_at: "2026-09-28T22:06:43.545Z"
 graded_by: codex-expert-executor
 content_hash: 36bda5acdf84debf780bb1283429d9a7d524eb98e1105ee2adcd186fe20930e3
 categories:
-  consistency:
+  purpose:
     score: 50
-  usability:
+  operations:
+    score: 100
+  planning:
     score: 92
+  business:
+    score: 67
   architecture:
     score: 100
+  usability:
+    score: 83
+  implementation:
+    score: 88
   quality:
     score: 75
+  consistency:
+    score: 50
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
     level: 2
     score: 50
+  vp-po-decision-readiness:
+    level: 2
+    score: 50
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 3
+    score: 75
+  vp-ba-business-value:
+    level: 2
+    score: 50
+  vp-ba-requirements-completeness:
+    level: 2
+    score: 50
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 3
+    score: 75
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -35,58 +81,117 @@ viewpoints:
     level: 2
     score: 50
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-ux-readability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-language-consistency:
     level: 3
     score: 75
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 0
-  major: 3
-  minor: 2
+  major: 8
+  minor: 5
   note: 0
 findings:
   - id: F001
     severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 31
-    message: >-
-      第4節の Frontmatter 定義は、共通メタデータ標準と参照 sample が必須とする `specdojo:` 名前空間および `rulebook` を示さず、スキーマで許可されない `title`
-      を必須としているため、この規則から作成した BR が成果物 Frontmatter 検証に失敗する。
-    anchor: "## 4. 推奨 Frontmatter 項目"
+    rule: vp-po-purpose-alignment
+    line: 49
+    anchor: "## 5. 本文構成（標準テンプレ）"
+    message: 本文構成は各ルールの適用範囲、対象外、業務上の判断理由を要求していないため、PO がルールの必要性と上位目的との対応を確認できない。
   - id: F002
+    severity: major
+    rule: vp-po-decision-readiness
+    line: 49
+    anchor: "## 5. 本文構成（標準テンプレ）"
+    message: PO の承認・保留・差し戻しに必要な適用対象、未決事項、影響する業務プロセス、承認責任者を記載する欄がなく、業務ルールの確定判断に必要な論点が揃わない。
+  - id: F003
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 105
+    anchor: "### 6.6 メモ / 将来課題"
+    message: 「メモ / 将来課題」が単一の自由記述欄で、PJR へ転記すべき課題・リスク・変更要求の分類、報告先、担当 Role code を示さないため、継続管理が必要な事項を識別できない。
+  - id: F004
+    severity: major
+    rule: vp-ba-business-value
+    line: 62
+    anchor: "### 6.1 概要"
+    message: 「概要」を何を判断・計算するかの一文だけとしており、対象業務・利用者、解決する課題、期待効果、判断理由を要求しないため、ルールの業務価値を説明できない。
+  - id: F005
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 49
+    anchor: "## 5. 本文構成（標準テンプレ）"
+    message: 標準テンプレに適用範囲、対象外、前提条件、境界条件がなく、どの業務場面でルールを適用または適用除外するかを利用者視点で確認できない。
+  - id: F006
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 42
+    anchor: "| supersedes | 置き換え関係（古仕様→新仕様） | 任意 |"
+    message: "`supersedes` は旧仕様との置換だけを扱い、BR の条件・出力変更時に参照元 BPS、実装、テストへ及ぶ影響を識別する記述規則がない。"
+  - id: F007
     severity: major
     rule: vp-qe-omissions-consistency
     line: 31
+    anchor: "## 4. 推奨 Frontmatter 項目"
     message: >-
       第4節と第11節は、成果物 Frontmatter の必須キー `rulebook` と `specdojo:` 名前空間を欠き、共通スキーマで未定義の `title` を必須化しているため、必須キー一覧と最小例を
       `deliverable-frontmatter.schema.yaml` に合わせて修正する必要がある。
-    anchor: "## 4. 推奨 Frontmatter 項目"
-  - id: F003
+  - id: F008
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 36
-    message: 第4節の ID 形式の記述 `(br-xxx-xxxx)` が、第3節や第11節で例示されているセマンティックな ID 形式 `br-low-stock-judgment` と矛盾している。
     anchor: "| id | ルールID (br-xxx-xxxx) | ○ |"
-  - id: F005
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 37
+    message: 第4節の ID 形式の記述 `(br-xxx-xxxx)` が、第3節や第11節で例示されているセマンティックな ID 形式 `br-low-stock-judgment` と矛盾している。
+  - id: F009
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 31
+    anchor: "## 4. 推奨 Frontmatter 項目"
     message: >-
-      `id` の説明だけが `(br-xxx-xxxx)` となっており、第3節、NG/OK例、第11節で一貫して使用する `br-low-stock-judgment` 型のセマンティックな kebab-case
-      表記と統一されていない。
-    anchor: "| type | `rule` 固定 | ○ |"
-  - id: F004
+      第4節の Frontmatter 定義は、共通メタデータ標準と参照 sample が必須とする `specdojo:` 名前空間および `rulebook` を示さず、スキーマで許可されない `title`
+      を必須としているため、この規則から作成した BR が成果物 Frontmatter 検証に失敗する。
+  - id: F010
     severity: major
     rule: vp-qe-kata-conformance
     line: 144
+    anchor: "---"
     message: >-
       第11節の最小例は、成果物 Frontmatter を `specdojo:` 配下に置かず必須の `rulebook` と H1 を欠き、規定した見出し名「例外 / 異常系」「メモ / 将来課題」も短縮しているため,
       rulebook の適用例として成立していない。
-    anchor: "---"
+  - id: F011
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 25
+    anchor: "- ファイル名: `br-<番号>-<短い日本語名>.md` （例: `br-0010-在庫不足判定.md`）"
+    message: >-
+      ファイル名を `br-＜番号＞-＜短い日本語名＞.md` とする規則が、成果物リファレンスと成果物カタログテンプレートの `br-＜term＞.md` に一致せず、この rulebook から作成した BR をカタログの
+      `local_id`・`path` 規則へ整合させられない。
+  - id: F012
+    severity: minor
+    rule: vp-ux-readability
+    line: 36
+    anchor: "| id | ルールID (br-xxx-xxxx) | ○ |"
+    message: Frontmatter 表のヘッダー区切り行と最初のデータ行の間に空行があるため、項目行が表ではなくパイプ文字を含む段落として解析され、必須・任意の対応を表形式で読めない。
+  - id: F013
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 37
+    anchor: "| type | `rule` 固定 | ○ |"
+    message: >-
+      `id` の説明だけが `(br-xxx-xxxx)` となっており、第3節、NG/OK例、第11節で一貫して使用する `br-low-stock-judgment` 型のセマンティックな kebab-case
+      表記と統一されていない。

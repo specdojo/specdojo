@@ -2,7 +2,7 @@
 id: cdsd-planning-grade-criteria
 document: cdsd-planning
 path: docs/ja/product/010-business-specs/020-data-model/cdsd-planning.md
-graded_at: "2026-09-27T16:34:11.523Z"
+graded_at: "2026-09-28T16:06:23.613Z"
 graded_by: codex-expert-executor
 content_hash: 465645a27f2f91f437f68825eea853917093aa68ab32e62fc2c271fd80e8c020
 summary:
@@ -16,18 +16,18 @@ criteria:
       - BA
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
-    reason: カタログ対象のうちプロジェクト構成、運用構成、成果物カタログ、Schedule 戦略の業務的役割・内容・粒度が未記載である。
+    reason: プロジェクト構成、運用構成、成果物カタログ、Schedule 戦略について、業務的役割・内容・粒度が記述されていない。
   - id: DC-002
     text: データストア構成を設計の基礎として参照できること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
-    reason: データストア構成の一部が TODO であり、全体の正本・依存・schema・実装根拠を設計基礎として参照できない。
+    reason: 未記載データストアの正本、依存、schema、生成・検証方針がなく、データストア構成全体を設計の基礎として参照できない。
   - id: DC-003
     text: データ検証・整合性確認の対象が識別できること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
     status: unsatisfied
-    reason: 未記載データストアの検証対象がなく、記載済みストアについても必須項目・参照整合性・検証手順が識別できない。
+    reason: ストアごとの必須項目、参照整合性、正本と派生物の一致条件および検証手順がなく、検証・整合性確認対象を判定可能な形で識別できない。

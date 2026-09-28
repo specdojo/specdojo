@@ -3,45 +3,99 @@ version: 1
 document: specdojo:ccd-mermaid-rulebook
 path: docs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md
 target: kata
-rubric: grade-rubric-v1
-reference: specdojo:prj-overview-rulebook
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 80
-graded_at: "2026-09-02T00:11:05.932Z"
-graded_by: gemma-expert-executor
+score: 56
+graded_at: "2026-09-28T22:13:15.936Z"
+graded_by: codex-expert-executor
 content_hash: 2f1ba4c57d67645bc4159f5e9d55d0499ac1efe0206e5556bb2cc32083d32d67
 categories:
-  consistency:
-    score: 88
-  usability:
-    score: 100
+  purpose:
+    score: 75
+  operations:
+    score: 69
+  planning:
+    score: 58
+  business:
+    score: 58
   architecture:
-    score: 100
+    score: 83
+  usability:
+    score: 58
+  implementation:
+    score: 50
   quality:
+    score: 33
+  consistency:
     score: 50
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
     level: 4
     score: 100
+  vp-po-decision-readiness:
+    level: 2
+    score: 50
+  vp-po-publication-accountability:
+    level: 3
+    score: 75
+  vp-pm-plan-feasibility:
+    level: 2
+    score: 50
+  vp-pm-dependency-risk:
+    level: 3
+    score: 75
+  vp-pm-control-reporting:
+    level: 2
+    score: 50
+  vp-ba-business-value:
+    level: 3
+    score: 75
+  vp-ba-requirements-completeness:
+    level: 2
+    score: 50
+  vp-ba-stakeholder-clarity:
+    level: 2
+    score: 50
+  vp-arc-technical-constraints:
+    level: 2
+    score: 50
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 2
+    score: 50
+  vp-dev-change-impact:
+    level: 2
+    score: 50
+  vp-dev-testability:
+    level: 2
+    score: 50
   vp-qe-verifiability:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
-  vp-qe-kata-conformance:
     level: 2
     score: 50
+  vp-qe-kata-conformance:
+    level: 1
+    score: 25
   vp-ux-readability:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-ux-language-consistency:
+    level: 2
+    score: 50
+  vp-ops-release-readiness:
+    level: 2
+    score: 50
+  vp-ops-operability:
+    level: 2
+    score: 50
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -49,25 +103,169 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 2
-  minor: 1
+  major: 21
+  minor: 6
   note: 0
 findings:
+  - id: F001
+    severity: major
+    rule: vp-po-decision-readiness
+    line: 60
+    anchor: "- **概念クラス図ではメソッドは原則記載しない。**"
+    message: メソッドを例外的に記述できるとする一方で禁止事項ではメソッド定義を一律禁止しており、採用可能な条件や判断者を確定できない。
   - id: F002
+    severity: minor
+    rule: vp-po-publication-accountability
+    line: 1
+    anchor: "# Mermaid を用いた概念クラス図（CCD）作成ルール"
+    message: draft から ready へ移行して公開する際の承認者と、人間が最終判断を担うことを明記する必要がある。
+  - id: F003
+    severity: major
+    rule: vp-pm-plan-feasibility
+    line: 15
+    anchor: "## 2. クラス（エンティティ）のルール"
+    message: CCD 作成を計画可能にするため、入力確認から作図、レビュー、完了判定までの作業単位・順序・担当 Role code・完了条件を定義する必要がある。
+  - id: F004
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 1
+    anchor: "# Mermaid を用いた概念クラス図（CCD）作成ルール"
+    message: 記法や本文要件の変更時に sample、recipe、template、既存 CCD のどれを追従確認するかを依存関係として明記する必要がある。
+  - id: F005
+    severity: major
+    rule: vp-pm-control-reporting
+    line: 1
+    anchor: "# Mermaid を用いた概念クラス図（CCD）作成ルール"
+    message: recipe/template の未決定や規則間の矛盾を、PJR・課題・変更要求のいずれへ転記するかと担当 Role codeを定義する必要がある。
+  - id: F006
+    severity: minor
+    rule: vp-ba-business-value
+    line: 5
+    anchor: 本ドキュメントは、業務分析・要求定義のために **概念クラ図を Mermaid の `classDiagram` で記述する標準ルール**です。
+    message: BA、業務担当者、レビュー担当者などの対象者と、CCD 適用によって解決する業務上の問題または確認可能な期待効果を対応付ける必要がある。
+  - id: F007
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 15
+    anchor: "## 2. クラス（エンティティ）のルール"
+    message: CCD 成果物に必要な章・メタデータ・図要素を必須または任意として列挙し、対象外と受入条件を利用者が確認できる形で定義する必要がある。
+  - id: F008
+    severity: major
+    rule: vp-ba-stakeholder-clarity
+    line: 5
+    anchor: 本ドキュメントは、業務分析・要求定義のために **概念クラ図を Mermaid の `classDiagram` で記述する標準ルール**です。
+    message: CCD の作成者、業務内容の確認者、記法レビュー担当者、最終合意者を Role code または明確な役割名で定義する必要がある。
+  - id: F009
+    severity: major
+    rule: vp-arc-technical-constraints
+    line: 87
+    anchor: "| 関係     | Mermaid 記法  | 説明                    |"
+    message: 継承記法を `子 ＜|— 親` と定義している一方、関係例では上位概念の商品を左、下位概念のお菓子を右に置いており、親子の配置方向を一意に判断できない。
+  - id: F010
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 76
+    anchor: ""
+    message: 関係ラベルの推奨語彙表は「命名・表記ルール」の表と内容が重複するため、一方を正本として統合または参照に置き換えられる。
+  - id: F011
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 15
+    anchor: "## 2. クラス（エンティティ）のルール"
+    message: 実際の CCD ファイルを作成できるよう、対象ファイル名・ID・Frontmatter・必須構成・入力情報・完成条件を定義する必要がある。
+  - id: F012
+    severity: major
+    rule: vp-dev-change-impact
+    line: 1
+    anchor: "# Mermaid を用いた概念クラス図（CCD）作成ルール"
+    message: 関係記法や必須要素を変更した場合の既存 CCD、sample、recipe/template、生成・検証処理への影響と移行方針を明記する必要がある。
+  - id: F013
+    severity: major
+    rule: vp-dev-testability
+    line: 1
+    anchor: "# Mermaid を用いた概念クラス図（CCD）作成ルール"
+    message: 作成後の CCD を検証する lint・Mermaid 描画または build コマンド、期待結果、エラー時の修正方針を記載する必要がある。
+  - id: F014
+    severity: major
+    rule: vp-qe-verifiability
+    line: 95
+    anchor: "- 全ての関係線に **`: 関係の意味（役割名）` を付与することを推奨（必須）**"
+    message: 「推奨（必須）」という矛盾した表現になっており、ルールとして推奨なのか必須なのかが判定できない。
+  - id: F015
+    severity: major
+    rule: vp-qe-verifiability
+    line: 60
+    anchor: "- **概念クラス図ではメソッドは原則記載しない。**"
+    message: メソッドは例外的に記述可能とされる一方、禁止事項ではメソッド定義が全面禁止されており、許容可否を判定できない。
+  - id: F016
+    severity: major
+    rule: vp-qe-verifiability
+    line: 87
+    anchor: "| 関係     | Mermaid 記法  | 説明                    |"
+    message: 継承記法の表と具体例で親概念・子概念の配置方向が一致せず、正しい記法を判定できない。
+  - id: F017
+    severity: major
+    rule: vp-qe-verifiability
+    line: 100
+    anchor: 多重度は、Mermaid の以下の位置に記述する(原則必須)：
+    message: 多重度を原則必須としながら、直後の Mermaid 例では親子関係と参照関係の多重度を省略しており、合格条件と例が一致していない。
+  - id: F018
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 1
+    anchor: "# Mermaid を用いた概念クラス図（CCD）作成ルール"
     message: 成果物作成を支援するための recipe および template が未定義（undecided）である。
-    anchor: ""
-  - id: F001
+  - id: F019
     severity: major
-    rule: vp-qe-verifiability
-    line: 1
-    message: 「推奨（必須）」という矛盾した表現になっており、ルールとして推奨なのか必須なのかが判定できない。
-    anchor: ""
-  - id: F003
+    rule: vp-qe-omissions-consistency
+    line: 15
+    anchor: "## 2. クラス（エンティティ）のルール"
+    message: rulebook-authoring-standard が必須とする「ファイル命名・ID規則」「本文要件」「記述ガイド」がなく、template 未決定時に必要な章・キーの必須・任意も定義されていない。
+  - id: F020
     severity: major
     rule: vp-qe-kata-conformance
     line: 1
+    anchor: "# Mermaid を用いた概念クラス図（CCD）作成ルール"
     message: 参照されているサンプル `specdojo:ccd-sample` に具体的な Mermaid CCD の記述例が含まれておらず、完成例として機能していない。
-    anchor: ""
+  - id: F021
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 15
+    anchor: "## 2. クラス（エンティティ）のルール"
+    message: rulebook-authoring-standard の必須章構成に従わず、成果物の本文要件と記述ガイドが区別されていないため、rulebook としての責務を満たしていない。
+  - id: F022
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 201
+    anchor: "## 11. サンプル"
+    message: 完成例の正本を sample とする規約に反して詳細な完成図を rulebook に置く一方、参照 sample には完成図がなく、rulebook と sample の責務が逆転している。
+  - id: F023
+    severity: major
+    rule: vp-ux-readability
+    line: 95
+    anchor: "- 全ての関係線に **`: 関係の意味（役割名）` を付与することを推奨（必須）**"
+    message: 関係線ラベルを「推奨（必須）」とする表現を、必須または推奨のどちらかへ統一し、例外の有無も明記する必要がある。
+  - id: F024
+    severity: minor
+    rule: vp-ux-readability
+    line: 5
+    anchor: 本ドキュメントは、業務分析・要求定義のために **概念クラ図を Mermaid の `classDiagram` で記述する標準ルール**です。
+    message: 導入文の「概念クラ図」は「概念クラス図」の誤記であり、対象成果物名を初見で正確に理解できるよう修正する必要がある。
+  - id: F025
+    severity: major
+    rule: vp-ux-language-consistency
+    line: 60
+    anchor: "- **概念クラス図ではメソッドは原則記載しない。**"
+    message: メソッド、関係線ラベル、多重度について規範語が「原則」「例外可」「推奨」「必須」「禁止」の間で不統一なため、必須・任意・禁止のラベル体系を統一する必要がある。
+  - id: F026
+    severity: major
+    rule: vp-ops-release-readiness
+    line: 1
+    anchor: "# Mermaid を用いた概念クラス図（CCD）作成ルール"
+    message: ready 化の前提として、recipe/template の要否決定、完成 sample の整備、規則矛盾の解消、検証完了、人間の承認を明示的な公開前条件にする必要がある。
+  - id: F027
+    severity: major
+    rule: vp-ops-operability
+    line: 1
+    anchor: "# Mermaid を用いた概念クラス図（CCD）作成ルール"
+    message: rulebook 改訂時の sample・recipe・template 同期、既存 CCD の再検証、変更記録、問い合わせ先、担当 Role codeを運用手順として定義する必要がある。

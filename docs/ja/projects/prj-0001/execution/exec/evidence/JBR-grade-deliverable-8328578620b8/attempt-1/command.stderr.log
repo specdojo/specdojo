@@ -1,0 +1,4 @@
+grade pipeline incomplete: incomplete=2 run_id=JBR-grade-deliverable-8328578620b8; rerun with --run-id JBR-grade-deliverable-8328578620b8 to retry the failed stages, or start a new run with --incomplete
+grade pipeline incomplete document: docs/ja/product/040-system-design/sysd-job-execution.md failed_stage=1
+grade pipeline incomplete document: docs/ja/product/040-system-design/sysd-opencode-agent-settings.md failed_stage=1
+grade pipeline failed: run_id=JBR-grade-deliverable-8328578620b8 exit_code=1
