@@ -21,6 +21,9 @@ Options:
   --changed-only[=true|false]   Select documents changed since the latest grade
   --ungraded[=true|false]       Select documents without a stored grade
   --incomplete[=true|false]     Select retryable incomplete pipelines
+  --rubric-outdated[=true|false]
+                                Select documents whose stored grade was not
+                                made with the current grade rubric
   --stages <1|3>                Number of stages to run (default: 1)
   --max-stage-failures <count>  Stop retrying a stage after this many failures
                                 (default: 3)
@@ -73,6 +76,7 @@ incomplete=false
 dependency_changed=false
 rulebook_changed=false
 unreviewed=false
+rubric_outdated=false
 max_stage_failures=3
 # PJR-W5JT で 3 段構成を廃止し codex 単段へ移したため、既定は 1 とする。gemma の 1・2 段は
 # 門番として機能せず、本質的な major を見落として満点を付ける一方で前回 finding を現在内容と
@@ -167,6 +171,14 @@ while [[ $# -gt 0 ]]; do
       ;;
     --incomplete=*)
       incomplete=${1#*=}
+      shift
+      ;;
+    --rubric-outdated)
+      rubric_outdated=true
+      shift
+      ;;
+    --rubric-outdated=*)
+      rubric_outdated=${1#*=}
       shift
       ;;
     --max-stage-failures)
@@ -265,6 +277,14 @@ done
 [[ "$unreviewed" == true || "$unreviewed" == false ]] || fail "--unreviewed must be true or false"
 [[ "$ungraded" == true || "$ungraded" == false ]] || fail "--ungraded must be true or false"
 [[ "$incomplete" == true || "$incomplete" == false ]] || fail "--incomplete must be true or false"
+[[ "$rubric_outdated" == true || "$rubric_outdated" == false ]] ||
+  fail "--rubric-outdated must be true or false"
+# 選択条件が1つでも有効なら、grade list の結果の和集合を対象にする。条件がないときだけ全件を対象にする。
+has_selector=false
+if $changed_only || $dependency_changed || $rulebook_changed || $unreviewed || $ungraded ||
+  $incomplete || $rubric_outdated; then
+  has_selector=true
+fi
 [[ "$stages" == 1 || "$stages" == 3 ]] || fail "--stages must be 1 or 3"
 [[ "$max_stage_failures" =~ ^[1-9][0-9]*$ ]] ||
   fail "--max-stage-failures must be a positive integer"
@@ -408,9 +428,9 @@ select_documents() {
     list_command+=(--path "$path")
   done
 
-  if ! $changed_only && ! $ungraded && ! $incomplete && [[ ${#requested_paths[@]} -gt 0 ]]; then
+  if ! $has_selector && [[ ${#requested_paths[@]} -gt 0 ]]; then
     candidates=("${requested_paths[@]}")
-  elif ! $changed_only && ! $ungraded && ! $incomplete && [[ "$target" == kata ]]; then
+  elif ! $has_selector && [[ "$target" == kata ]]; then
     if [[ ${#requested_paths[@]} -eq 0 ]]; then
       for root in "${target_roots[@]}"; do
         while IFS= read -r path; do
@@ -418,7 +438,7 @@ select_documents() {
         done < <(find "$root" -type f -name '*.md' -not -path '*/generated/*' -print)
       done
     fi
-  elif ! $changed_only && ! $ungraded && ! $incomplete; then
+  elif ! $has_selector; then
     output=$("${specdojo_command[@]}" "${list_command[@]}") || fail "grade list failed"
     while IFS= read -r path; do
       [[ -n "$path" ]] && candidates+=("$path")
@@ -466,6 +486,13 @@ select_documents() {
         [[ -n "$path" ]] && candidates+=("$path")
       done <<<"$output"
     fi
+    if $rubric_outdated; then
+      output=$("${specdojo_command[@]}" "${list_command[@]}" --rubric-outdated) ||
+        fail "grade list --rubric-outdated failed"
+      while IFS= read -r path; do
+        [[ -n "$path" ]] && candidates+=("$path")
+      done <<<"$output"
+    fi
   fi
 
   exhausted_paths=()
@@ -509,12 +536,12 @@ select_documents() {
 
 requested_signature=$(printf '%s\n' "${requested_paths[@]}" | node -e \
   'const c=require("node:crypto");let s="";process.stdin.on("data",d=>s+=d).on("end",()=>process.stdout.write(c.createHash("sha256").update(s).digest("hex")))')
-expected_config=$(printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
+expected_config=$(printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
   "$project" "$target" "$kind" "$limit" "$changed_only" "$ungraded" "$incomplete" \
-  "$max_stage_failures" "$stages:$requested_signature" \
+  "$rubric_outdated" "$max_stage_failures" "$stages:$requested_signature" \
   "$stage_1_executor" "$stage_1_reporter" "$stage_1_reference" \
   "$stage_2_executor:$stage_2_reporter:$stage_2_reference" \
-  "$stage_3_executor:$stage_3_reporter:$stage_3_reference" "selection-v4" "pipeline-v4")
+  "$stage_3_executor:$stage_3_reporter:$stage_3_reference" "selection-v5" "pipeline-v4")
 config_file="$work_dir/config.tsv"
 selection_file="$work_dir/selection.txt"
 results_file="$work_dir/results.tsv"
@@ -544,9 +571,9 @@ else
 fi
 
 print_configuration() {
-  printf 'run_id=%s project=%s target=%s kind=%s changed_only=%s ungraded=%s incomplete=%s max_stage_failures=%s stages=%s documents=%s exhausted=%s work_dir=%s\n' \
+  printf 'run_id=%s project=%s target=%s kind=%s changed_only=%s ungraded=%s incomplete=%s rubric_outdated=%s max_stage_failures=%s stages=%s documents=%s exhausted=%s work_dir=%s\n' \
     "$run_id" "$project" "$target" "$kind" "$changed_only" "$ungraded" "$incomplete" \
-    "$max_stage_failures" "$stages" \
+    "$rubric_outdated" "$max_stage_failures" "$stages" \
     "${#selected_paths[@]}" "${#exhausted_paths[@]}" "$work_dir"
   printf 'stage=1 executor=%s reporter=%s reference=%s\n' \
     "$stage_1_executor" "$stage_1_reporter" "$stage_1_reference"

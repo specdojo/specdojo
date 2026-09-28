@@ -56,6 +56,7 @@ export type GradeTargetFilters = {
   maxFindings?: number;
   ungraded?: boolean;
   incomplete?: boolean;
+  rubricOutdated?: boolean;
 };
 
 export type GradePipelineState = {
@@ -1300,7 +1301,8 @@ export function discoverGradeTargets(
     opts.minScore === undefined &&
     opts.maxFindings === undefined &&
     !opts.ungraded &&
-    !opts.incomplete
+    !opts.incomplete &&
+    !opts.rubricOutdated
   ) {
     return unique;
   }
@@ -1309,9 +1311,11 @@ export function discoverGradeTargets(
     : new Map<string, GradePipelineState>();
 
   const sourceContext = createGradeSourceContext(opts.project, rootDir);
-  const viewpoints = opts.changedOnly
-    ? loadViewpointsIfConfigured(opts.project, rootDir)
-    : undefined;
+  const viewpoints =
+    opts.changedOnly || opts.rubricOutdated
+      ? loadViewpointsIfConfigured(opts.project, rootDir)
+      : undefined;
+  const currentRubricId = opts.rubricOutdated ? currentGradeRubricId(viewpoints) : undefined;
 
   let scheduledDocuments: Set<string> | undefined;
   if (opts.unreviewed) {
@@ -1396,6 +1400,10 @@ export function discoverGradeTargets(
 
     if (opts.ungraded && result !== undefined) return false;
 
+    if (currentRubricId !== undefined && !isGradeRubricOutdated(result, currentRubricId)) {
+      return false;
+    }
+
     if (result === undefined) {
       if (opts.dependencyChanged || opts.rulebookChanged) return false;
       return true;
@@ -1436,6 +1444,25 @@ export function discoverGradeTargets(
   });
 }
 
+function currentGradeRubricId(viewpoints: ReviewViewpointsDoc | undefined): string {
+  const id = viewpoints?.grade_rubric?.id;
+  if (typeof id !== "string" || id.length === 0) {
+    throw new Error("--rubric-outdated requires grade_rubric.id in the resolved review viewpoints");
+  }
+  return id;
+}
+
+// 保存済みの結果が現在の rubric 以外で付けられたかを判定する。rubric の記録がない結果は
+// どの版で付けたか確かめられないため旧版として扱う。結果がない文書は --ungraded の対象である。
+export function isGradeRubricOutdated(
+  result: { rubric?: unknown } | undefined,
+  currentRubricId: string,
+): boolean {
+  if (result === undefined) return false;
+  if (typeof result.rubric !== "string" || result.rubric.length === 0) return true;
+  return result.rubric !== currentRubricId;
+}
+
 function validateGradeTargetFilters(filters: GradeTargetFilters): void {
   if (
     filters.verdict !== undefined &&
@@ -1464,6 +1491,9 @@ function validateGradeTargetFilters(filters: GradeTargetFilters): void {
       filters.maxFindings !== undefined)
   ) {
     throw new Error("--ungraded cannot be combined with --verdict, --min-score, or --max-findings");
+  }
+  if (filters.ungraded && filters.rubricOutdated) {
+    throw new Error("--ungraded cannot be combined with --rubric-outdated");
   }
 }
 
@@ -1495,9 +1525,14 @@ function matchesParsedGradeTargetFilters(
   filters: GradeTargetFilters,
   incomplete = false,
 ): boolean {
-  if (filters.dependencyChanged || filters.rulebookChanged || filters.unreviewed) {
+  if (
+    filters.dependencyChanged ||
+    filters.rulebookChanged ||
+    filters.unreviewed ||
+    filters.rubricOutdated
+  ) {
     throw new Error(
-      "dependencyChanged, rulebookChanged, unreviewed cannot be evaluated individually without context",
+      "dependencyChanged, rulebookChanged, unreviewed, rubricOutdated cannot be evaluated individually without context",
     );
   }
   const specdojo = document.data.specdojo as Record<string, unknown>;
@@ -3184,7 +3219,12 @@ export function registerGradeCommand(program: Command): void {
         requireMaxFindings,
       )
       .option("--ungraded", "Select documents without a stored grade", false)
-      .option("--incomplete", "Select documents with a retryable incomplete pipeline", false);
+      .option("--incomplete", "Select documents with a retryable incomplete pipeline", false)
+      .option(
+        "--rubric-outdated",
+        "Select graded documents whose stored result was not graded with the current rubric",
+        false,
+      );
 
   addSelection(
     grade.command("list").description("Print selected document paths without writing grade plans"),
@@ -3203,6 +3243,7 @@ export function registerGradeCommand(program: Command): void {
         maxFindings: options.maxFindings,
         ungraded: options.ungraded,
         incomplete: options.incomplete,
+        rubricOutdated: options.rubricOutdated,
       });
       for (const path of paths) process.stdout.write(`${repoRelativePath(path)}\n`);
     } catch (error) {
@@ -3240,6 +3281,7 @@ export function registerGradeCommand(program: Command): void {
           maxFindings: options.maxFindings,
           ungraded: options.ungraded,
           incomplete: options.incomplete,
+          rubricOutdated: options.rubricOutdated,
         });
         if (options.reference && options.randomReference) {
           throw new Error("--reference and --random-reference cannot be combined");
@@ -3327,6 +3369,7 @@ export function registerGradeCommand(program: Command): void {
             maxFindings: options.maxFindings,
             ungraded: options.ungraded,
             incomplete: options.incomplete,
+            rubricOutdated: options.rubricOutdated,
           }).map(repoRelativePath),
         );
         const doneCriteriaByPath =
@@ -3398,6 +3441,7 @@ export function registerGradeCommand(program: Command): void {
         maxFindings: options.maxFindings,
         ungraded: options.ungraded,
         incomplete: options.incomplete,
+        rubricOutdated: options.rubricOutdated,
       });
       const errors = paths.flatMap((path) =>
         validateGradeResultForDocument({ path, target, project: options.project }),

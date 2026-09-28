@@ -1,7 +1,11 @@
 import { describe, expect, it, beforeEach, afterEach } from "vitest";
 import { mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { discoverGradeTargets, resolveGradeSourceHashes } from "../../src/grade.js";
+import {
+  discoverGradeTargets,
+  isGradeRubricOutdated,
+  resolveGradeSourceHashes,
+} from "../../src/grade.js";
 import {
   gradeContentHash,
   resolveGradeResultsDirectory,
@@ -84,7 +88,12 @@ describe("grade triggers", () => {
 
   function writeDeliverableResult(
     localId: string,
-    fields: { gradedAt?: number; contentHash?: string; sourceHashes?: Record<string, string> },
+    fields: {
+      gradedAt?: number;
+      contentHash?: string;
+      sourceHashes?: Record<string, string>;
+      rubric?: string;
+    },
   ): void {
     writeGradeResult(
       gradeResultPath(resolveGradeResultsDirectory("prj-0001", rootDir), `prj-0001:${localId}`),
@@ -93,7 +102,7 @@ describe("grade triggers", () => {
         document: `prj-0001:${localId}`,
         path: `docs/ja/projects/prj-0001/controls/${localId}.md`,
         target: "deliverable",
-        rubric: "r1",
+        rubric: fields.rubric ?? "r1",
         verdict: "pass",
         score: 100,
         graded_at: new Date(fields.gradedAt ?? 1000).toISOString(),
@@ -264,6 +273,88 @@ describe("grade triggers", () => {
         ),
       );
       expect(changedOnlyTargets()).toContain(docAPath());
+    });
+  });
+
+  describe("rubric-outdated", () => {
+    const viewpointsDirectory = () =>
+      join(rootDir, "docs/ja/projects/prj-0001/030-project-management");
+
+    function writeViewpoints(rubricId: string | undefined): void {
+      mkdirSync(viewpointsDirectory(), { recursive: true });
+      writeFileSync(
+        join(viewpointsDirectory(), "pm-review-viewpoints.yaml"),
+        [
+          "id: prj-0001:pm-review-viewpoints",
+          "viewpoints: []",
+          ...(rubricId === undefined
+            ? []
+            : ["grade_rubric:", `  id: ${rubricId}`, "  pass_score: 75", "  levels: []"]),
+          "",
+        ].join("\n"),
+      );
+    }
+
+    function rubricOutdatedTargets(): string[] {
+      return discoverGradeTargets(
+        { target: "deliverable", project: "prj-0001", rubricOutdated: true },
+        rootDir,
+      );
+    }
+
+    const controlsPath = (localId: string) =>
+      join(rootDir, `docs/ja/projects/prj-0001/controls/${localId}.md`);
+
+    it("selects results graded with an older rubric or without a rubric record", () => {
+      writeViewpoints("grade-rubric-v2");
+      writeDeliverableResult("doc-a", { rubric: "grade-rubric-v2" });
+      writeDeliverableResult("doc-b", { rubric: "grade-rubric-v1" });
+      writeDeliverableResult("doc-c", { rubric: "" });
+
+      expect(rubricOutdatedTargets()).toEqual([controlsPath("doc-b"), controlsPath("doc-c")]);
+    });
+
+    it("does not select documents without a stored grade", () => {
+      writeViewpoints("grade-rubric-v2");
+      writeDeliverableResult("doc-b", { rubric: "grade-rubric-v1" });
+
+      expect(rubricOutdatedTargets()).toEqual([controlsPath("doc-b")]);
+    });
+
+    it("fails with context when the current rubric id cannot be resolved", () => {
+      writeViewpoints(undefined);
+
+      expect(() => rubricOutdatedTargets()).toThrow(/--rubric-outdated requires grade_rubric\.id/);
+    });
+
+    it("rejects combining with --ungraded", () => {
+      writeViewpoints("grade-rubric-v2");
+
+      expect(() =>
+        discoverGradeTargets(
+          { target: "deliverable", project: "prj-0001", rubricOutdated: true, ungraded: true },
+          rootDir,
+        ),
+      ).toThrow(/--ungraded cannot be combined with --rubric-outdated/);
+    });
+  });
+
+  describe("isGradeRubricOutdated", () => {
+    it("does not treat a result graded with the current rubric as outdated", () => {
+      expect(isGradeRubricOutdated({ rubric: "grade-rubric-v2" }, "grade-rubric-v2")).toBe(false);
+    });
+
+    it("treats a result graded with another rubric as outdated", () => {
+      expect(isGradeRubricOutdated({ rubric: "grade-rubric-v1" }, "grade-rubric-v2")).toBe(true);
+    });
+
+    it("treats a result without a rubric record as outdated", () => {
+      expect(isGradeRubricOutdated({}, "grade-rubric-v2")).toBe(true);
+      expect(isGradeRubricOutdated({ rubric: "" }, "grade-rubric-v2")).toBe(true);
+    });
+
+    it("does not select a document without a result", () => {
+      expect(isGradeRubricOutdated(undefined, "grade-rubric-v2")).toBe(false);
     });
   });
 

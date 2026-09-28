@@ -1,0 +1,23 @@
+PJR-BVPS の変更は終わりました。自分で実行した検査はすべて通っています。ただし、新しく書いたテストはまだ一度も実行していません。単体・統合テスト、型チェック、スキーマ検証は、終了後に親 runner が実行します。
+
+**変更内容**
+- **`grade list` の新しい条件**（`src/grade.ts`）: `--rubric-outdated` を追加しました。保存済みの結果の `rubric` が現在の `grade_rubric.id`（`grade-rubric-v2`）と違う文書と、`rubric` が空の文書を選びます。結果がまだない文書は選びません（それは `--ungraded` の役割なので、両方を同時に指定するとエラーにしました）。rubric の id が定義されていない場合もエラーで止めます。
+- **`tools/grade/run-per-document.sh`**: `--rubric-outdated[=true|false]` を受け取り、他の条件と合わせて選ぶようにしました。条件を追加するため、選択の判定を「どれか1つでも条件が指定されているか」に書き換えました。従来の判定は `--changed-only`・`--ungraded`・`--incomplete` しか見ていなかったので、`--dependency-changed` などだけを指定すると全件が選ばれていました。この書き換えで、その既存の問題も直っています。保存する実行設定に `rubric_outdated` を加え、版を `selection-v5` に上げました。
+- **Job 定義と routine**: `job-grade-kata.yaml` と `job-grade-deliverable.yaml` に入力 `rubric_outdated`（既定 `false`）を追加し、`idempotency_key` の版を上げました。`rtn-grade-recheck.yaml` と `rtn-grade-deliverable-recheck.yaml` で有効にしています。件数上限（kata 15 件、成果物 10 件）と評価者（`codex-expert-executor`）は変えていません。
+- **テスト**: `tests/src/grade-triggers.test.ts` に、現在の rubric の結果は選ばれず、旧 rubric と rubric の記録がない結果は選ばれることなどを確かめるテストを追加しました。`tests/tools/grade-per-document.test.ts` には、この条件だけを指定したときに全件ではなく該当文書だけを選ぶことなどを確かめるテストを追加しました。
+- **ドキュメント**: `command-reference.md` と `routine-operation-guide.md` に、条件の説明、夜間に少しずつ評価し直す運用、残り件数の数え方を書きました。個票の作業内容と対応結果も更新しています。
+
+**旧 rubric の結果が残っている件数（2026-09-28 時点）**
+- Kata: 232 件（rulebook 99、recipe 11、sample 87、template 35）
+- 成果物: 19 件
+
+いまの上限なら、Kata は約16日、成果物は約2日で終わる見込みです。他の条件で選ばれた文書と枠を分け合う日は、その分遅れます。
+
+**注意点**
+- 個票の完了条件にある `npm run check` はまだ実行していません。親 runner の検査と重なるため省きました。
+- `run-per-document.sh` の dry-run はこの環境では承認待ちになり実行できませんでした。スクリプトの動作確認は親 runner のテスト頼みです。
+- スクリプトの設定の版を上げたので、実行途中の古い `--run-id` をそのまま再開しようとすると「設定が違う」エラーになります。新しい `--run-id` で始め直してください。
+
+<specdojo_executor_evidence>
+{"final_message":"Added `grade list --rubric-outdated` (`src/grade.ts`), wired it into `tools/grade/run-per-document.sh` (also fixed the full-selection fallback that ignored `--dependency-changed`/`--rulebook-changed`/`--unreviewed`), added `rubric_outdated` inputs to job-grade-kata / job-grade-deliverable and enabled them in rtn-grade-recheck / rtn-grade-deliverable-recheck without changing limits or executor, added unit tests, documented it in command-reference.md and routine-operation-guide.md, and updated the PJR-BVPS ticket. The new tests were not run by the executor; they are left to the parent-run test-unit / test-integration. Outdated counts on 2026-09-28: kata 232 (rulebook 99, recipe 11, sample 87, template 35), deliverable 19. `npm run check` was not run.","validations":[{"command":"npx tsx src/specdojo.ts grade list --target kata --project prj-0001 --rubric-outdated","status":"passed","summary":"232 kata selected (rulebooks 99, recipes 11, samples 87, templates 35)"},{"command":"npx tsx src/specdojo.ts grade list --target deliverable --project prj-0001 --rubric-outdated","status":"passed","summary":"19 deliverables selected"},{"command":"npx tsx src/specdojo.ts grade list --target kata --project prj-0001 --rubric-outdated --ungraded","status":"passed","summary":"rejected as expected with exit 1: --ungraded cannot be combined with --rubric-outdated"},{"command":"tools/grade/run-per-document.sh --run-id bvps-dry --target deliverable --rubric-outdated --limit 10 --dry-run","status":"not_run","summary":"sandbox required approval to run the script directly; script behavior is covered by tests/tools/grade-per-document.test.ts, which runs in the parent test-unit"},{"command":"npx prettier --write (10 changed files)","status":"passed","summary":"formatted; grade-triggers.test.ts and ticket md adjusted"},{"command":"npx markdownlint command-reference.md routine-operation-guide.md pjr-bvps-grade-rubric-outdated-selector.md","status":"passed","summary":"no errors"},{"command":"node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint (same 3 md files)","status":"passed","summary":"no errors"},{"command":"npx eslint src/grade.ts tests/src/grade-triggers.test.ts tests/tools/grade-per-document.test.ts","status":"passed","summary":"no errors"},{"command":"npx tsx src/specdojo.ts catalog validate && npx tsx src/specdojo.ts register build && npx tsx src/specdojo.ts index build","status":"passed","summary":"no errors (pre-existing based_on WARN only)"},{"command":"npx tsx src/specdojo.ts routine list","status":"passed","summary":"rtn-grade-recheck and rtn-grade-deliverable-recheck load as enabled"}]}
+</specdojo_executor_evidence>
