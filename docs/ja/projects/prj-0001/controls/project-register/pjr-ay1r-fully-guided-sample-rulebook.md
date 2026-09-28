@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: ARC
   registered_at: "2026-09-26T02:50:40Z"
-  block_reason: "agent exited with non-zero code: executor 自身が完了条件は未達と報告している。残りの rulebook のサンプル章の外出し、grade の再実行、`npm run check` が未実施で、plan の完了条件を根拠をもって満たしたと言えない。runner 検証はすべて passed だが、成果物の作業は未完了である。"
+  block_reason: "agent exited with non-zero code: 既存 rulebook の `サンプル` 章の一括外出しが未完了。外出し済みは `bps-rulebook.md` と `stsd-rulebook.md` の 2 件のみ。grade 再実行（`vp-qe-kata-conformance` / `vp-arc-conciseness`）と `npm run check` も `n…"
 ---
 
 # PJR-AY1R fully-guided が sample を参照できるようにし rulebook のサンプル章を外出しする
@@ -65,16 +65,6 @@ sample / template への本文中のリンクは実行不能な指示になる
 | 埋め込みコードブロックの行数の中央値 | 9    |
 
 大半は 9 行程度の断片であり、完成例を丸ごと埋め込んでいるものは少数である。`bps-rulebook` は 70 行で全体の 2 位だった。
-
-### 2.5. 範囲の見直し（2026-09-29）
-
-2026-09-29 の 2 回目の実行で、executor は段階移行の条件に従い、`xep-fully-guided-template.md` の変更と、bps-rulebook・stsd-rulebook のサンプル章の外出し（試行）までを行って止まった。grade による試行の確認は executor の sandbox では行えない。利用者の判断で、本項目の範囲を第 1 段（テンプレートの変更と試行 2 件、試行の確認）に絞り、残りの rulebook の外出しは別項目に分けた。次の完了条件のうち、「既存 54 件の `サンプル` 章のうち、完成例を埋め込んでいるものが sample へ外出しされている」「外部 sample を持たない 2 件」は第 2 段の項目で扱う。第 1 段の完了条件は次のとおり。
-
-- `xep-fully-guided-template.md` が sample を参照できるよう変更され、`recipe-guided` は対象外であることが明示されている。
-- bps-rulebook と stsd-rulebook のサンプル章が外出しされ、本文に sample への wikilink が発生していない。
-- 試行の確認として、2 件の rulebook を grade で評価し、外出し前の結果と比べて `vp-qe-kata-conformance` と `vp-arc-conciseness` の finding が悪化していない（orchestrator が行う）。
-- plan の肥大化がない（executor の確認では、増分はパス 1 行と手順 1 項目）。
-- runner の検証がすべて通過している。
 
 ## 3. 完了条件
 

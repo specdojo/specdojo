@@ -90,3 +90,32 @@
       from: "agent exited with non-zero code: 親 runner による整合性C-1 `test-integration` および `validate-schema` が失敗しているため。"
       to: "agent exited with non-zero code: executor 自身が完了条件は未達と報告している。残りの rulebook のサンプル章の外出し、grade の再実行、`npm run check` が未実施で、plan の完了条件を根拠をもって満たしたと言えない。runner 検証はすべて passed だが、成果物の作業は未完了である。"
   previous_event_id: reg_5e646a34f70e40269a25432d5830b13b
+- v: 1
+  id: reg_3a6a00edf8bb40e186a6628276fd723b
+  ts: "2026-09-28T23:26:11Z"
+  action: start
+  actor: claude-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_97b7ec91ac6f4264b8fb2fe5ac322fae
+- v: 1
+  id: reg_d427ab3257404c42afbd5630cc435df4
+  ts: "2026-09-28T23:26:24Z"
+  action: wait
+  actor: claude-reporter
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: 既存 rulebook の `サンプル` 章の一括外出しが未完了。外出し済みは `bps-rulebook.md` と `stsd-rulebook.md` の 2 件のみ。grade 再実行（`vp-qe-kata-conformance` / `vp-arc-conciseness`）と `npm run check` も `n…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "agent exited with non-zero code: executor 自身が完了条件は未達と報告している。残りの rulebook のサンプル章の外出し、grade の再実行、`npm run check` が未実施で、plan の完了条件を根拠をもって満たしたと言えない。runner 検証はすべて passed だが、成果物の作業は未完了である。"
+      to: "agent exited with non-zero code: 既存 rulebook の `サンプル` 章の一括外出しが未完了。外出し済みは `bps-rulebook.md` と `stsd-rulebook.md` の 2 件のみ。grade 再実行（`vp-qe-kata-conformance` / `vp-arc-conciseness`）と `npm run check` も `n…"
+  previous_event_id: reg_3a6a00edf8bb40e186a6628276fd723b
