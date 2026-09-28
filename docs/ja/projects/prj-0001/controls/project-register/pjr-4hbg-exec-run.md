@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-09-26T02:31:04Z"
@@ -95,18 +95,34 @@ specdojo:
 
 ## 6. 作業内容
 
-| No  | 作業                                           | 担当 | 状態 | メモ                          |
-| --- | ---------------------------------------------- | ---- | ---- | ----------------------------- |
-| 1   | 対応の候補から方針を決める                     | ARC  | open | 案 C を起点に検討             |
-| 2   | プロセスを跨いだ同時実行数の管理方式を設計する | ARC  | open | `max_concurrency` との対応    |
-| 3   | 生成物の再生成の競合を解消する                 | DEV  | open | 排他か、統合段への集約か      |
-| 4   | 統合段の直列化を実装する                       | DEV  | open | develop への merge            |
-| 5   | 実装と統合テストを行う                         | DEV  | open | 並行時の失敗の分離を含む      |
-| 6   | 運用ガイドを更新する                           | OPS  | open | `exec-operation-guide` を想定 |
+| No  | 作業                                           | 担当 | 状態    | メモ                                                   |
+| --- | ---------------------------------------------- | ---- | ------- | ------------------------------------------------------ |
+| 1   | 対応の候補から方針を決める                     | ARC  | done    | 案 C（2026-09-28 承認）                                |
+| 2   | プロセスを跨いだ同時実行数の管理方式を設計する | ARC  | done    | provider ごとの枠のロックで `max_concurrency` を数える |
+| 3   | 生成物の再生成の競合を解消する                 | DEV  | done    | register lifecycle のロックで排他                      |
+| 4   | 統合段の直列化を実装する                       | DEV  | done    | 同上                                                   |
+| 5   | 実装と統合テストを行う                         | DEV  | partial | 単体テストのみ。2 プロセスの統合テストは未作成         |
+| 6   | 運用ガイドを更新する                           | OPS  | done    | `exec-operation-guide` ほか                            |
 
 ## 7. 対応結果
 
--
+- 案 C を、次の 2 段の枠で実装した。`exec run --register ... --worktree` の run だけが合流を受け入れる（shareable）。
+  - 合流の枠: 後から起動する run に `--join` を付けると、`exec-run.lock` ではなく `exec/.locks/exec-run-join/slot-<n>` を取得して開始する。枠の数は `exec-defaults.yaml` の `run.max_concurrent_runs`（既定 4。最初の run を含む）から 1 を引いた数で、`1` にすると `--join` は無効になる。
+  - 共有資源の枠: provider の `max_concurrency`（`provider-<provider>/`）、root での状態遷移・統合・生成物の再生成（`exec-lifecycle/`）、親検証（`parent-validation/`）を、同じ project のロックディレクトリの枠で数える。
+- ロックの基盤を `src/exec-slot-lock.ts` に分離した。従来の `exec-run.lock` と同じく、原子的な `mkdir`・heartbeat の別プロセス・stale の奪取（30 秒）で成り立つ。枠の集合（`slot-1` … `slot-<n>`）と、プロセスを跨ぐ mutex（`CrossProcessMutex`）を加えた。
+- 完了条件との対応は次のとおり。
+  - 別項目の並行開始: `--join` で、実行中の run の終了を待たずに開始できる。
+  - agent の同時実行数: `ProviderConcurrencyGate` が、プロセス内の枠を得た後に provider の枠のロックも取得する。register pipeline の executor と reporter が対象である。
+  - 生成物の再生成と統合段: register worktree 実行の `lifecycleLock` を `CrossProcessMutex` に置き換え、直列実行でも使うようにした。start 遷移・checkpoint・develop への merge・wait commit・派生ビューの再生成が、別プロセスとも 1 つずつ実行される。一方の run が root の記帳ファイルを解放してから merge を終えるまでの間に、もう一方の統合は始まらない。
+  - 同じ項目の二重実行: register の start 遷移が防ぐ。遷移は上記の mutex の中で行うため、2 つの run が同時に通らない。
+  - `--if-busy` の既定: `--join` を付けない run の動作は変わらない。shareable な run が動いていても、`--join` なしの 2 つ目は従来どおり busy になる。`--auto`、`--task`、`exec cycle`、`exec resume` など register の worktree 実行以外の run は、合流中の run が残っている間は busy として扱う。
+  - routine の skip: 合流の枠が埋まっている場合は `--if-busy` に従い、`--if-busy skip` なら従来の終了コード 75 で skip になる。
+  - 失敗の分離: 各 run は自分の項目の worktree と結果だけを持つ。枠は `finally` で解放し、異常終了時は heartbeat が止まってから 30 秒で stale として奪取される。
+  - 上限と使用枠の確認: `exec slots --project <project-id>` を追加した。ロックを取得せずに、各枠の使用数・上限・保持者を表示する。
+  - 親検証の直列化: exec-run lock または合流の枠を取得したプロセスが project のロックディレクトリを設定し、`ParentValidationGate` がプロセス内の枠の後に `parent-validation/` の枠も取得する。PJR-3HHW の直列化が合流した run を跨いで効く。
+- 単体テストを追加した（`tests/src/exec-slot-lock.test.ts`、`tests/src/exec-run-lock.test.ts`、`tests/src/exec-agent-config.test.ts`、`tests/src/exec-parent-validation.test.ts`）。別プロセスは、同じロックディレクトリを使う別インスタンスで代用した。
+- `exec-defaults.schema.yaml` に `run.max_concurrent_runs` を追加し、`exec-operation-guide`・`exec-config-guide`・`register-operation-guide`・`command-reference` を更新した。
+- _TODO_: 2 つの `exec run` プロセスを実 Git リポジトリで並行させる統合テスト（`*.integration.test.ts`）は未作成である。並行時の片方の失敗の分離と、merge の直列化を実プロセスで確かめるテストを別途追加する。
 
 ## 8. 関連ドキュメント
 

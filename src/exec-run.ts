@@ -9,6 +9,9 @@ import {
   hasMemberCommandSource,
   loadExecDefaultsConfig,
   ProviderConcurrencyGate,
+  providerSlotPoolPath,
+  resolveMaxConcurrency,
+  resolveMaxConcurrentRuns,
   resolveMemberCommand,
   resolveRateLimitDetection,
   resolveRateLimitPolicy,
@@ -57,13 +60,22 @@ import type {
 } from "./exec-types.js";
 import {
   acquireExecRunLock,
+  collectExecLockUsage,
   EXEC_RUN_LOCK_TOKEN_ENV,
+  execLifecyclePoolPath,
+  execLocksDir,
+  formatExecLockUsage,
   inheritsExecRunLock,
   releaseExecRunLock,
   ROUTINE_BUSY_SKIP_EXIT_CODE,
   ROUTINE_EXEC_ENV,
   type ExecRunBusyPolicy,
 } from "./exec-run-lock.js";
+import {
+  CrossProcessMutex,
+  getActiveExecLocksDir,
+  setActiveExecLocksDir,
+} from "./exec-slot-lock.js";
 import { replaceDocIndexRefs } from "./doc-index.js";
 import {
   extractLocalId,
@@ -189,7 +201,9 @@ import {
   failedParentValidationReason,
   hasRecordedParentValidations,
   parentValidationGateFor,
+  parentValidationPoolPath,
   replaceParentValidationResults,
+  resolveParentValidationConcurrency,
   resolveParentValidationDefinitions,
   runParentValidations,
   type ParentValidationInvoker,
@@ -277,6 +291,7 @@ export type RunOpts = {
   worktreeBase?: string;
   due?: boolean;
   ifBusy?: string;
+  join?: boolean;
   cycleRebuildStaleTracks?: boolean;
 };
 
@@ -726,21 +741,64 @@ export function parseExecRunBusyPolicy(value: string | undefined): ExecRunBusyPo
   return policy;
 }
 
+// How the run shares the project exec-run lock. Only register worktree runs coordinate their
+// shared resources (agent slots, root lifecycle, parent validations) across processes, so only
+// they may run next to other processes.
+type ExecRunLockSharing = {
+  // The run tolerates `--join` runs next to it.
+  shareable: boolean;
+  // The run joins a running shareable run (`--join`).
+  join: boolean;
+};
+
+const EXCLUSIVE_EXEC_RUN: ExecRunLockSharing = { shareable: false, join: false };
+
+function resolveJoinSlotLimit(opts: RunOpts, schedulePath: string, executionPath: string): number {
+  const execDefaults = loadExecDefaultsConfig(
+    resolveExecDefaultsPath(opts, schedulePath),
+    executionPath,
+  );
+  return resolveMaxConcurrentRuns(execDefaults) - 1;
+}
+
 async function withProjectExecRunLock(
   opts: RunOpts,
   commandLabel: "run" | "resume" | "cycle",
   action: () => Promise<void>,
+  sharing: ExecRunLockSharing = EXCLUSIVE_EXEC_RUN,
 ): Promise<void> {
   const resolvedPaths = resolveProjectPaths({ project: opts.project });
+  const locksDir = execLocksDir(resolvedPaths.executionPath);
+  const previousLocksDir = getActiveExecLocksDir();
   if (inheritsExecRunLock(resolvedPaths.executionPath)) {
-    await action();
+    setActiveExecLocksDir(locksDir);
+    try {
+      await action();
+    } finally {
+      setActiveExecLocksDir(previousLocksDir);
+    }
     return;
   }
   const policy = parseExecRunBusyPolicy(opts.ifBusy);
+  const joinLimit = sharing.join
+    ? resolveJoinSlotLimit(opts, resolvedPaths.schedulePath, resolvedPaths.executionPath)
+    : 0;
+  if (sharing.join && joinLimit < 1) {
+    throw new Error(
+      "--join is disabled: run.max_concurrent_runs in exec-defaults is 1 (raise it to allow joining runs)",
+    );
+  }
   const handle = await acquireExecRunLock(resolvedPaths.executionPath, {
     actor: opts.by ?? `exec-${commandLabel}`,
     ifBusy: policy,
-    onWait: () => process.stdout.write(`[${commandLabel}] exec busy — waiting\n`),
+    shareable: sharing.shareable || sharing.join,
+    ...(sharing.join ? { join: { limit: joinLimit } } : {}),
+    onWait: () =>
+      process.stdout.write(
+        sharing.join
+          ? `[${commandLabel}] exec busy — waiting for a join slot (see "exec slots")\n`
+          : `[${commandLabel}] exec busy — waiting\n`,
+      ),
   });
 
   if (!handle) {
@@ -750,12 +808,19 @@ async function withProjectExecRunLock(
     }
     return;
   }
+  if (sharing.join) {
+    process.stdout.write(
+      `[${commandLabel}] running as a joined exec (${basename(handle.lockDir)})\n`,
+    );
+  }
 
   const previousInheritedToken = process.env[EXEC_RUN_LOCK_TOKEN_ENV];
   process.env[EXEC_RUN_LOCK_TOKEN_ENV] = handle.token;
+  setActiveExecLocksDir(locksDir);
   try {
     await action();
   } finally {
+    setActiveExecLocksDir(previousLocksDir);
     if (previousInheritedToken === undefined) delete process.env[EXEC_RUN_LOCK_TOKEN_ENV];
     else process.env[EXEC_RUN_LOCK_TOKEN_ENV] = previousInheritedToken;
     releaseExecRunLock(handle);
@@ -4199,7 +4264,11 @@ async function runReporterStage(params: {
       },
     });
   const reporter = params.providerConcurrencyGate
-    ? await params.providerConcurrencyGate.run(reporterCandidates[0]?.provider, runReporter)
+    ? await params.providerConcurrencyGate.run(
+        reporterCandidates[0]?.provider,
+        runReporter,
+        `${params.evidence.task_id} reporter`,
+      )
     : await runReporter();
 
   let exitCode: 0 | 1 = 1;
@@ -4343,7 +4412,7 @@ async function runAgentPipeline(params: {
   const runExecutor = () =>
     runWithRetry([executor], executorPrompt, execDefaults, cwd, env, resultPath);
   const outcome = params.providerConcurrencyGate
-    ? await params.providerConcurrencyGate.run(executor.provider, runExecutor)
+    ? await params.providerConcurrencyGate.run(executor.provider, runExecutor, `${taskId} executor`)
     : await runExecutor();
   const recorded = recordExecutorEvidence({
     repoRoot,
@@ -6154,7 +6223,9 @@ async function runRegisterMode(opts: RunOpts): Promise<void> {
     repoRoot,
     roster,
     execDefaults,
-    providerConcurrencyGate: new ProviderConcurrencyGate(execDefaults),
+    // provider の max_concurrency は、同じ project の exec run（主 run と --join run）を跨いで
+    // ロックディレクトリの枠で統制する。
+    providerConcurrencyGate: new ProviderConcurrencyGate(execDefaults, execLocksDir(executionPath)),
     registerCommit: !!opts.registerCommit,
     worktree: useWorktree,
     worktreeBase,
@@ -6177,10 +6248,26 @@ async function runRegisterMode(opts: RunOpts): Promise<void> {
       ? resumeSingleRegisterItemWorktree(context, optsForItem(pjrId), pjrId, lifecycleLock)
       : runSingleRegisterItemWorktree(context, optsForItem(pjrId), pjrId, lifecycleLock);
 
+  // worktree 実行の root 側の手順（start 遷移・checkpoint・merge・wait commit・派生ビューの
+  // 再生成）は、同じ project の別プロセス（--join run）とも重ならないよう、ロックディレクトリの
+  // mutex で直列化する。一方の run が root に記帳ファイルを書いている途中で、もう一方の統合が
+  // 始まらない。直列実行でも別プロセスと重なり得るため、並列・直列の両方で使う。
+  const lifecycleLock: AsyncLock | undefined = useWorktree
+    ? new CrossProcessMutex(
+        execLifecyclePoolPath(executionPath),
+        { actor: opts.by ?? "exec-run", label: ids.join(",") },
+        {
+          onWait: () =>
+            process.stdout.write(
+              "  Waiting for the register lifecycle lock held by another exec run\n",
+            ),
+        },
+      )
+    : undefined;
+
   if (useWorktree && parallel > 1) {
     // 並列実行: 成果物は worktree ごとに隔離し、状態遷移は lifecycleLock で直列化する。
     // stop 指定でも実行中の項目は完走し、未着手の残りだけを skipped にする。
-    const lifecycleLock = new SerialAsyncLock();
     const queue = [...ids];
     const byId = new Map<string, RegisterItemSummary>();
     let stop = false;
@@ -6205,7 +6292,7 @@ async function runRegisterMode(opts: RunOpts): Promise<void> {
         continue;
       }
       const summary = useWorktree
-        ? await runItem(pjrId)
+        ? await runItem(pjrId, lifecycleLock)
         : await runSingleRegisterItem(context, optsForItem(pjrId), pjrId);
       summaries.push(summary);
       if (summary.outcome === "failure" && failureMode === "stop") stopped = true;
@@ -6306,6 +6393,11 @@ export function registerRunCommand(exec: Command): void {
     "fail",
   );
   rcmd.option(
+    "--join",
+    "With --register --worktree: run next to a running register worktree exec instead of waiting for it, sharing its provider caps, lifecycle serialization, and parent-validation slots (up to run.max_concurrent_runs; --if-busy applies when all join slots are taken)",
+    false,
+  );
+  rcmd.option(
     "--exec-defaults <path>",
     "Path to exec-defaults.yaml global config (default: .specdojo/exec-defaults.yaml)",
   );
@@ -6388,6 +6480,13 @@ export function registerRunCommand(exec: Command): void {
         process.exitCode = 1;
         return;
       }
+      if (opts.join && !(hasRegister && opts.worktree)) {
+        process.stdout.write(
+          "--join requires --register (or --register-filter) with --worktree.\n",
+        );
+        process.exitCode = 1;
+        return;
+      }
       if (hasRegister && opts.worktree && opts.registerCommit) {
         process.stdout.write(
           "Note: --register-commit is ignored with --worktree; worktree runs always commit (checkpoint + merge back).\n",
@@ -6465,46 +6564,123 @@ export function registerRunCommand(exec: Command): void {
         return;
       }
 
-      await withProjectExecRunLock(opts, "run", async () => {
-        // Register-item run: in place (default) or in a worktree (--worktree), with state tracked
-        // via register transitions (start → review / waiting) instead of exec events.
-        if (hasRegister) {
-          await runRegisterMode(opts);
-          return;
-        }
+      // register worktree 実行だけが共有資源をプロセス横断で統制するため、後から --join する
+      // run を受け入れる。それ以外の run は従来どおり project 全体を排他する。
+      const registerWorktreeLockSharing: ExecRunLockSharing =
+        hasRegister && opts.worktree ? { shareable: true, join: !!opts.join } : EXCLUSIVE_EXEC_RUN;
+      await withProjectExecRunLock(
+        opts,
+        "run",
+        async () => {
+          // Register-item run: in place (default) or in a worktree (--worktree), with state tracked
+          // via register transitions (start → review / waiting) instead of exec events.
+          if (hasRegister) {
+            await runRegisterMode(opts);
+            return;
+          }
 
-        if (hasJob) {
-          await runJobMode(opts);
-          return;
-        }
+          if (hasJob) {
+            await runJobMode(opts);
+            return;
+          }
 
-        // In-place manual run (default): generate the plan on demand and run in the
-        // current repository. No validate/refresh pass — that is orchestration only.
-        if (isManual && !opts.worktree) {
-          await runInPlaceMode(opts);
-          return;
-        }
+          // In-place manual run (default): generate the plan on demand and run in the
+          // current repository. No validate/refresh pass — that is orchestration only.
+          if (isManual && !opts.worktree) {
+            await runInPlaceMode(opts);
+            return;
+          }
 
-        process.stdout.write("[run] validate...\n");
-        if (!spawnValidate(opts.project)) {
-          process.stdout.write("[run] validate failed — exit\n");
-          process.exitCode = 1;
-          return;
-        }
-        process.stdout.write("[run] validate: ok\n[run] refresh...\n");
-        if (!spawnRefresh(opts.project)) {
-          process.stdout.write("[run] refresh failed — exit\n");
-          process.exitCode = 1;
-          return;
-        }
-        process.stdout.write("[run] refresh: ok\n");
+          process.stdout.write("[run] validate...\n");
+          if (!spawnValidate(opts.project)) {
+            process.stdout.write("[run] validate failed — exit\n");
+            process.exitCode = 1;
+            return;
+          }
+          process.stdout.write("[run] validate: ok\n[run] refresh...\n");
+          if (!spawnRefresh(opts.project)) {
+            process.stdout.write("[run] refresh failed — exit\n");
+            process.exitCode = 1;
+            return;
+          }
+          process.stdout.write("[run] refresh: ok\n");
 
-        if (isBatch) {
-          await runBatchMode(opts);
-        } else {
-          await runManualMode(opts);
-        }
-      });
+          if (isBatch) {
+            await runBatchMode(opts);
+          } else {
+            await runManualMode(opts);
+          }
+        },
+        registerWorktreeLockSharing,
+      );
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      process.stdout.write(message + "\n");
+      process.exitCode = 1;
+    }
+  });
+}
+
+// 同じ project の exec run が共有する枠（主 run・--join run・register lifecycle・provider の
+// max_concurrency・親検証）の上限と現在の使用数を表示する。ロックは取得しない。
+export function formatExecSlotsReport(
+  executionPath: string,
+  execDefaults: ExecDefaultsConfig,
+): string {
+  const lockRoot = execLocksDir(executionPath);
+  const providers = Object.keys(execDefaults.providers ?? {}).sort() as AgentProvider[];
+  const providerPools = providers.flatMap((provider) => {
+    const cap = resolveMaxConcurrency(execDefaults, provider);
+    return cap === undefined
+      ? []
+      : [
+          {
+            name: `provider ${provider}`,
+            path: providerSlotPoolPath(lockRoot, provider),
+            limit: cap,
+          },
+        ];
+  });
+  const parentValidationPools = execDefaults.pipeline?.parent_validations?.length
+    ? [
+        {
+          name: "parent validations",
+          path: parentValidationPoolPath(lockRoot),
+          limit: resolveParentValidationConcurrency(
+            execDefaults.pipeline.parent_validation_concurrency,
+          ),
+        },
+      ]
+    : [];
+  const entries = collectExecLockUsage(executionPath, {
+    joinLimit: resolveMaxConcurrentRuns(execDefaults) - 1,
+    pools: [...providerPools, ...parentValidationPools],
+  });
+  return (
+    `max concurrent runs: ${resolveMaxConcurrentRuns(execDefaults)}\n` +
+    formatExecLockUsage(entries)
+  );
+}
+
+export function registerSlotsCommand(exec: Command): void {
+  const cmd = exec
+    .command("slots")
+    .description(
+      "Show the limits and current usage of the slots shared by concurrent exec runs of a project",
+    );
+  cmd.option("--project <projectId>", "Project id in .specdojo/specdojo.config.json");
+  cmd.option(
+    "--exec-defaults <path>",
+    "Path to exec-defaults.yaml global config (default: .specdojo/exec-defaults.yaml)",
+  );
+  cmd.action((opts: RunOpts) => {
+    try {
+      const { schedulePath, executionPath } = resolveProjectPaths({ project: opts.project });
+      const execDefaults = loadExecDefaultsConfig(
+        resolveExecDefaultsPath(opts, schedulePath),
+        executionPath,
+      );
+      process.stdout.write(formatExecSlotsReport(executionPath, execDefaults));
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       process.stdout.write(message + "\n");

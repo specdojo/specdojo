@@ -1,12 +1,15 @@
-import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   createProviderCapacityTracker,
+  DEFAULT_MAX_CONCURRENT_RUNS,
   loadExecDefaultsConfig,
   ProviderConcurrencyGate,
+  providerSlotPoolPath,
   resolveMaxConcurrency,
+  resolveMaxConcurrentRuns,
   resolveRateLimitDetection,
   resolveRateLimitPolicy,
   type ExecDefaultsConfig,
@@ -260,5 +263,61 @@ describe("ProviderConcurrencyGate", () => {
     await expect(gate.run("claude", async () => "done")).resolves.toBe("done");
     releaseOpencode();
     await capped;
+  });
+
+  it("lockRoot を共有する別の gate（別プロセス相当）とも max_concurrency を共有する", async () => {
+    const lockRoot = mkdtempSync(join(tmpdir(), "specdojo-provider-gate-"));
+    try {
+      const waits: string[] = [];
+      const primaryRun = new ProviderConcurrencyGate(config, lockRoot, () => undefined);
+      const joinedRun = new ProviderConcurrencyGate(config, lockRoot, (line) => waits.push(line));
+      let active = 0;
+      let maxActive = 0;
+      const agent = async (): Promise<void> => {
+        active++;
+        maxActive = Math.max(maxActive, active);
+        await new Promise((resolve) => setTimeout(resolve, 30));
+        active--;
+      };
+
+      await Promise.all([
+        primaryRun.run("opencode", agent, "PJR-AAAA executor"),
+        joinedRun.run("opencode", agent, "PJR-BBBB executor"),
+      ]);
+
+      expect(maxActive).toBe(1);
+      expect(waits).toEqual([
+        "  Waiting for opencode slot held by another exec run (max_concurrency: 1): PJR-BBBB executor\n",
+      ]);
+    } finally {
+      rmSync(lockRoot, { recursive: true, force: true });
+    }
+  });
+
+  it("上限の無い provider は lockRoot があっても枠を取らない", async () => {
+    const lockRoot = mkdtempSync(join(tmpdir(), "specdojo-provider-gate-"));
+    try {
+      const gate = new ProviderConcurrencyGate(config, lockRoot);
+
+      await expect(gate.run("claude", async () => "done")).resolves.toBe("done");
+
+      expect(existsSync(providerSlotPoolPath(lockRoot, "claude"))).toBe(false);
+    } finally {
+      rmSync(lockRoot, { recursive: true, force: true });
+    }
+  });
+});
+
+describe("resolveMaxConcurrentRuns", () => {
+  it("未指定・不正値は既定値にし、正の整数はそのまま使う", () => {
+    expect(resolveMaxConcurrentRuns({})).toBe(DEFAULT_MAX_CONCURRENT_RUNS);
+    expect(resolveMaxConcurrentRuns({ run: { max_concurrent_runs: 0 } })).toBe(
+      DEFAULT_MAX_CONCURRENT_RUNS,
+    );
+    expect(resolveMaxConcurrentRuns({ run: { max_concurrent_runs: 2.5 } })).toBe(
+      DEFAULT_MAX_CONCURRENT_RUNS,
+    );
+    expect(resolveMaxConcurrentRuns({ run: { max_concurrent_runs: 1 } })).toBe(1);
+    expect(resolveMaxConcurrentRuns({ run: { max_concurrent_runs: 6 } })).toBe(6);
   });
 });

@@ -75,7 +75,12 @@ import { resetResultForClaim, scaffoldResult } from "./exec-results.js";
 import { runProviderScaffold, specdojoPackageRootDir } from "./exec-provider-scaffold.js";
 import { generateRegisterPlan, normalizePjrId, resolveRegisterRunTarget } from "./exec-register.js";
 import { scaffoldViewpoints } from "./review-plan.js";
-import { registerCycleCommand, registerResumeCommand, registerRunCommand } from "./exec-run.js";
+import {
+  registerCycleCommand,
+  registerResumeCommand,
+  registerRunCommand,
+  registerSlotsCommand,
+} from "./exec-run.js";
 import { buildTaskView } from "./exec-task-view.js";
 import { registerExecWorktreeCommands } from "./exec-worktree-command.js";
 import { registerExecTrialCommands } from "./exec-trial.js";
@@ -1182,6 +1187,7 @@ export function registerExecCommands(program: Command): void {
   registerRunCommand(exec);
   registerResumeCommand(exec);
   registerCycleCommand(exec);
+  registerSlotsCommand(exec);
   registerExecWorktreeCommands(exec);
   registerExecTrialCommands(exec);
 

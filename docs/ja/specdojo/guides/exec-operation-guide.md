@@ -91,7 +91,7 @@ schedule タスクの自動実行・手動実行の具体的な手順は [Schedu
 
 ### 1.4. project単位の実行ロック
 
-`exec run` は、実行対象 project の `execution_path/exec/.locks/exec-run.lock` を run 全体で保持します。同じ project に対する手動実行、routine、CI の `exec run` は同時に進まず、1つの run 内の `--parallel` worker だけが並列に動きます。`exec resume` も同じロックへ参加するため、再開処理と新規実行も重なりません。`exec cycle` は再開・古い track の再生成・状態再計算・`--auto` loop の一連の step をこの単一ロック内で保持し、step 間に他の実行が割り込まないことを保証します。
+`exec run` は、実行対象 project の `execution_path/exec/.locks/exec-run.lock` を run 全体で保持します。同じ project に対する手動実行、routine、CI の `exec run` は同時に進まず、1つの run 内の `--parallel` worker だけが並列に動きます（register の worktree 実行へ `--join` で合流する場合を除きます。後述の「実行中の register worktree 実行へ後から合流する」を参照してください）。`exec resume` も同じロックへ参加するため、再開処理と新規実行も重なりません。`exec cycle` は再開・古い track の再生成・状態再計算・`--auto` loop の一連の step をこの単一ロック内で保持し、step 間に他の実行が割り込まないことを保証します。
 
 ロックは別プロセスの heartbeat で更新されます。正常終了時は `finally` で解放し、プロセスが異常終了して heartbeat が stale になった場合は、後続 run がロックを安全に奪取します。
 
@@ -106,6 +106,48 @@ specdojo exec run --project <project-id> --auto --if-busy skip
 
 # ロックが空くまで待ってから実行
 specdojo exec run --project <project-id> --auto --if-busy wait
+```
+
+#### 1.4.1. 実行中の register worktree 実行へ後から合流する
+
+`exec run --register <PJR-ID...> --worktree` の実行中に別の項目を並行で走らせたい場合は、後から起動する run に `--join` を付けます。`--join` の run は `exec-run.lock` ではなく `exec/.locks/exec-run-join/` の枠を取得し、実行中の run の終了を待たずに開始します。`--join` を付けない run の動作は従来どおりで、busy なら `--if-busy` に従います。
+
+```bash
+# 実行中の run（PJR-T3NN）へ、別項目 PJR-00QV を合流させる
+specdojo exec run --project <project-id> --register PJR-00QV --worktree --join
+```
+
+合流できるのは、register の worktree 実行どうしだけです。worktree 実行は、プロセスを跨いで共有される資源を次のとおり統制するため、並行しても衝突しません。
+
+| 資源                                      | 統制の方法                                                                                             | ロックの配置                       |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------------------ | ---------------------------------- |
+| agent の同時実行数                        | provider の `max_concurrency` をプロセスを跨いで数える                                                 | `exec/.locks/provider-<provider>/` |
+| root での状態遷移・生成物の再生成・統合段 | start 遷移・checkpoint・develop への merge・wait commit・派生ビューの再生成を 1 つずつ実行する         | `exec/.locks/exec-lifecycle/`      |
+| 親 runner の検証（`parent_validations`）  | `pipeline.parent_validation_concurrency` をプロセスを跨いで数える                                      | `exec/.locks/parent-validation/`   |
+| 同じ項目の二重実行                        | 従来どおり register の start 遷移が防ぐ。遷移は上記の直列化の中で行うため、2 つの run が同時に通らない | -                                  |
+
+- 同時に動かせる run の数は `exec-defaults.yaml` の `run.max_concurrent_runs`（既定 4。最初の run を含む）で決まります。`1` にすると `--join` を無効にできます。
+- 合流の枠が埋まっている場合は `--if-busy` に従います。routine から `--if-busy skip` で起動した場合は、従来どおり skip として記録されます。
+- `--auto`、`--task`、`exec cycle`、`exec resume` など register の worktree 実行以外の run は、合流中の run が残っている間は busy として扱われます。
+- 各 run は自分の項目の結果だけを持ち、一方が失敗しても、もう一方の run と worktree には影響しません。
+- 枠の待ちは run のログに `Waiting for <provider> slot held by another exec run`、`Waiting for the register lifecycle lock held by another exec run`、`Waiting for parent validation slot held by another exec run` として出力されます。
+
+上限と現在の使用枠は `exec slots` で確認できます。ロックは取得しないため、実行中にいつでも実行できます。
+
+```bash
+specdojo exec slots --project <project-id>
+```
+
+```text
+max concurrent runs: 4
+exec run (primary): 1/1
+  exec-run (pid 1234, since 2026-09-28T10:00:00Z, joinable)
+exec run (--join): 1/3
+  slot-1: exec-run (pid 5678, since 2026-09-28T10:05:00Z)
+register lifecycle: 0/1
+provider opencode: 1/1
+  slot-1: provider:opencode PJR-00QV executor (pid 5678, since 2026-09-28T10:05:10Z)
+parent validations: 0/1
 ```
 
 ### 1.5. 実行eventの保存粒度
