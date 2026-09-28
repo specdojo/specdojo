@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: ARC
   registered_at: "2026-09-26T02:50:40Z"
-  block_reason: "agent exited with non-zero code: 親 runner による整合性C-1 `test-integration` および `validate-schema` が失敗しているため。"
+  block_reason: "agent exited with non-zero code: executor 自身が完了条件は未達と報告している。残りの rulebook のサンプル章の外出し、grade の再実行、`npm run check` が未実施で、plan の完了条件を根拠をもって満たしたと言えない。runner 検証はすべて passed だが、成果物の作業は未完了である。"
 ---
 
 # PJR-AY1R fully-guided が sample を参照できるようにし rulebook のサンプル章を外出しする
@@ -102,19 +102,46 @@ fully-guided は「plan に列挙されていない他のプロジェクト文�
 
 ## 5. 作業内容
 
-| No  | 作業                                             | 担当 | 状態 | メモ                             |
-| --- | ------------------------------------------------ | ---- | ---- | -------------------------------- |
-| 1   | 参照範囲を広げる影響を評価する                   | ARC  | open | 逸脱防止との両立                 |
-| 2   | `xep-fully-guided-template.md` を変更する        | ARC  | open | sample の優先順位を明示          |
-| 3   | `recipe-guided` の扱いを決める                   | ARC  | open | 同じ変更を適用するか             |
-| 4   | 少数の rulebook で試行し plan の肥大化を確認する | QE   | open | 3 件程度                         |
-| 5   | 54 件の `サンプル` 章を外出しする                | ARC  | open | 完成例を埋め込んでいるものを優先 |
-| 6   | 外部 sample を持たない 2 件の扱いを決める        | ARC  | open |                                  |
-| 7   | grade を再実行し finding の悪化がないか確認する  | QE   | open |                                  |
+| No  | 作業                                             | 担当 | 状態        | メモ                                                                          |
+| --- | ------------------------------------------------ | ---- | ----------- | ----------------------------------------------------------------------------- |
+| 1   | 参照範囲を広げる影響を評価する                   | ARC  | done        | sample は形式の参照に限定し、業務内容の転記と具体化の裏付けへの流用を禁止した |
+| 2   | `xep-fully-guided-template.md` を変更する        | ARC  | done        | 既存の対象成果物を sample より優先すると明示した                              |
+| 3   | `recipe-guided` の扱いを決める                   | ARC  | done        | 利用者判断により対象外とした                                                  |
+| 4   | 少数の rulebook で試行し plan の肥大化を確認する | QE   | in-progress | 3 件で試行した。plan の増分はパス 1 行と手順 1 項目                           |
+| 5   | 54 件の `サンプル` 章を外出しする                | ARC  | in-progress | 試行分の 2 件を外出しした。残りは試行の確認後に広げる                         |
+| 6   | 外部 sample を持たない 2 件の扱いを決める        | ARC  | done        | 利用者判断により参照先を空のままにする                                        |
+| 7   | grade を再実行し finding の悪化がないか確認する  | QE   | open        | executor の sandbox では grade を実行できないため未実施                       |
 
 ## 6. 対応結果
 
--
+### 6.1. fully-guided の参照範囲の変更（2026-09-29）
+
+- `xep-fully-guided-template.md` の参照ファイルに `sample: _SAMPLE_REF_` を追加した。参照先は rulebook frontmatter の `sample` から解決される既存の `_SAMPLE_REF_` を使い、plan 生成コードは変更していない。
+- 進め方に sample の手順を追加した。sample は完成例の形式（章・表・記述の粒度）の確認に限って使い、業務内容・固有名詞・値を対象成果物へ転記しない。
+- 「磨き込みでは sample / template は読み込まない」を「template は読み込まない」に改めた。既存の対象成果物と sample の形式が異なる場合は、rulebook の許容範囲内である限り既存の対象成果物を優先する。
+- 参照してよい文書の列挙に sample を加えた。根拠のない具体化の禁止に、sample を対象成果物の具体的な記述の裏付けにしないことを追記した。
+- `rulebook-authoring-standard.md` の経過措置の記述を、参照範囲の変更後の状態へ合わせた。段階的に外出しする方針も同書へ反映した。
+- `tests/src/exec-plans.test.ts` に、fully-guided plan へ sample のパスが注入されること、rulebook 未宣言時は `_MISSING_` になることのテストを追加した。
+
+### 6.2. plan の肥大化の確認
+
+sample はパスだけを plan に注入し、本文は agent が読み込む。plan の増分は参照ファイルの 1 行と進め方の 1 項目であり、sample の行数に比例して plan が大きくなることはない。
+
+### 6.3. 試行（3 件）
+
+| rulebook                | 判断         | 理由                                                                                               |
+| ----------------------- | ------------ | -------------------------------------------------------------------------------------------------- |
+| `bps-rulebook`          | 外出し       | 70 行の完成例を埋め込んでいた。`bps-sample` が同じ章構成の完成例を持つため、章を削除した           |
+| `stsd-rulebook`         | 外出し       | 完成例を埋め込んでいた。`stsd-sample` が同じ対象（商品のステータス定義）の完成例を持つため削除した |
+| `stsd-mermaid-rulebook` | 最小例を残す | 5 遷移の図だけの最小例であり、形式の輪郭を示す経過措置の範囲に収まるため                           |
+
+- 既存の sample ファイルは変更していない。
+- 外出し後の rulebook の本文に sample へのリンクや wikilink は追加していない。対応は Frontmatter の `sample` 宣言だけで示している。
+
+### 6.4. 未完了の事項
+
+- grade の再実行（`vp-qe-kata-conformance`・`vp-arc-conciseness`）は未実施である。試行の 2 件で finding が悪化しないことを確認してから、残りの `サンプル` 章の外出しへ広げる。
+- 外部 sample を持たない 2 件（`ifx-index-rulebook`・`tml-rulebook`。いずれも `sample: not-needed`）は、利用者判断のとおり参照先を空のままにする。外出しは残りの移行と併せて行う。
 
 ## 7. 関連ドキュメント
 

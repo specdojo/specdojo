@@ -61,3 +61,32 @@
       from: "-"
       to: "agent exited with non-zero code: 親 runner による整合性C-1 `test-integration` および `validate-schema` が失敗しているため。"
   previous_event_id: reg_731e827659824310b31ef8ab69206779
+- v: 1
+  id: reg_5e646a34f70e40269a25432d5830b13b
+  ts: "2026-09-28T23:10:06Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_4e455ebb5ed3443fa863f4528057dbd7
+- v: 1
+  id: reg_97b7ec91ac6f4264b8fb2fe5ac322fae
+  ts: "2026-09-28T23:18:20Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: executor 自身が完了条件は未達と報告している。残りの rulebook のサンプル章の外出し、grade の再実行、`npm run check` が未実施で、plan の完了条件を根拠をもって満たしたと言えない。runner 検証はすべて passed だが、成果物の作業は未完了である。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "agent exited with non-zero code: 親 runner による整合性C-1 `test-integration` および `validate-schema` が失敗しているため。"
+      to: "agent exited with non-zero code: executor 自身が完了条件は未達と報告している。残りの rulebook のサンプル章の外出し、grade の再実行、`npm run check` が未実施で、plan の完了条件を根拠をもって満たしたと言えない。runner 検証はすべて passed だが、成果物の作業は未完了である。"
+  previous_event_id: reg_5e646a34f70e40269a25432d5830b13b
