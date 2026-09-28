@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=../../../../specdojo/schemas/v1/routine.schema.yaml
 id: rtn-grade-deliverable-recheck
 name: 依存先変更・kata更新・未レビューの成果物の定期評価
-description: 毎日1時（Asia/Tokyo）に、依存先が変更された、kataが更新された、またはscheduleタスクを持たない成果物を最大10件評価する。
+description: 毎日1時（Asia/Tokyo）に、依存先が変更された、kataが更新された、scheduleタスクを持たない、または旧rubricで評価された成果物を最大10件評価する。
 enabled: true
 trigger:
   cron: "0 1 * * *"
@@ -19,6 +19,9 @@ action:
     changed_only: "true"
     ungraded: "true"
     incomplete: "true"
+    # PJR-BVPS: 旧 rubric（grade-rubric-v1 など）の結果を、limit の範囲で夜間に少しずつ評価し直す。
+    # 評価者は Job 定義の既定（codex-expert-executor）のままとする。
+    rubric_outdated: "true"
 policy:
   missed_run: skip
   overlap: skip

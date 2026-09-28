@@ -30,13 +30,18 @@ inputs:
   incomplete:
     type: boolean
     default: false
+  # 保存済みの結果が現在の grade_rubric と異なる版（または版の記録なし）で付けられた成果物を選ぶ
+  # （PJR-BVPS）。rubric を改めたとき、旧版の結果を limit の範囲で少しずつ評価し直す。
+  rubric_outdated:
+    type: boolean
+    default: false
 task:
   mode: command
   owner: ARC
   precondition:
     command: |
       selection=$(
-        if [ "{{inputs.dependency_changed}}" = "false" ] && [ "{{inputs.rulebook_changed}}" = "false" ] && [ "{{inputs.unreviewed}}" = "false" ] && [ "{{inputs.changed_only}}" = "false" ] && [ "{{inputs.ungraded}}" = "false" ] && [ "{{inputs.incomplete}}" = "false" ]; then
+        if [ "{{inputs.dependency_changed}}" = "false" ] && [ "{{inputs.rulebook_changed}}" = "false" ] && [ "{{inputs.unreviewed}}" = "false" ] && [ "{{inputs.changed_only}}" = "false" ] && [ "{{inputs.ungraded}}" = "false" ] && [ "{{inputs.incomplete}}" = "false" ] && [ "{{inputs.rubric_outdated}}" = "false" ]; then
           {{specdojo}} grade list --target deliverable --project {{project_id}}
         else
           if [ "{{inputs.dependency_changed}}" = "true" ]; then
@@ -59,6 +64,9 @@ task:
             # 上限到達成果物は処理対象外だが、report-only Job を起動するため precondition に含める。
             {{specdojo}} grade state --target deliverable --project {{project_id}} --exhausted || exit $?
           fi
+          if [ "{{inputs.rubric_outdated}}" = "true" ]; then
+            {{specdojo}} grade list --target deliverable --project {{project_id}} --rubric-outdated || exit $?
+          fi
         fi
       )
       printf '%s\n' "$selection" | LC_ALL=C sort -u | awk -v limit="{{inputs.limit}}" '
@@ -70,7 +78,7 @@ task:
     skip_when: empty-output
   command: |
     npm run build
-    if tools/grade/run-per-document.sh --run-id {{job_run_id}} --stages 1 --target deliverable --limit {{inputs.limit}} --dependency-changed={{inputs.dependency_changed}} --rulebook-changed={{inputs.rulebook_changed}} --unreviewed={{inputs.unreviewed}} --changed-only={{inputs.changed_only}} --ungraded={{inputs.ungraded}} --incomplete={{inputs.incomplete}}; then
+    if tools/grade/run-per-document.sh --run-id {{job_run_id}} --stages 1 --target deliverable --limit {{inputs.limit}} --dependency-changed={{inputs.dependency_changed}} --rulebook-changed={{inputs.rulebook_changed}} --unreviewed={{inputs.unreviewed}} --changed-only={{inputs.changed_only}} --ungraded={{inputs.ungraded}} --incomplete={{inputs.incomplete}} --rubric-outdated={{inputs.rubric_outdated}}; then
       cat logs/grade/runs/per-document/{{job_run_id}}/results.tsv
     else
       grade_status=$?
@@ -97,4 +105,4 @@ task:
   paths:
     - docs/ja/projects/prj-0001
 run:
-  idempotency_key: "{{job_id}}:command-v6:{{scheduled_at}}:{{inputs.limit}}:{{inputs.dependency_changed}}:{{inputs.rulebook_changed}}:{{inputs.unreviewed}}:{{inputs.changed_only}}:{{inputs.ungraded}}:{{inputs.incomplete}}"
+  idempotency_key: "{{job_id}}:command-v7:{{scheduled_at}}:{{inputs.limit}}:{{inputs.dependency_changed}}:{{inputs.rulebook_changed}}:{{inputs.unreviewed}}:{{inputs.changed_only}}:{{inputs.ungraded}}:{{inputs.incomplete}}:{{inputs.rubric_outdated}}"

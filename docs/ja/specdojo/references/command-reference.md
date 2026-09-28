@@ -514,6 +514,8 @@ specdojo grade plan --target kata --verdict pass --min-score 96 --max-findings 1
 specdojo grade plan --target kata --ungraded --project prj-0001
 specdojo grade list --target deliverable --changed-only --project prj-0001
 specdojo grade plan --target deliverable --changed-only --project prj-0001
+# 現在の rubric 以外で付けた結果が残る文書を数える
+specdojo grade list --target kata --rubric-outdated --project prj-0001 | wc -l
 # executor plan の自由記述を保存し、reporter plan と一緒に reporter へ渡す
 specdojo grade apply --target kata --path <document.md> \
   --analysis-from <executor-output.txt> --from <grade-result.json> --by <executor-nickname>
@@ -536,14 +538,16 @@ specdojo grade validate --target kata --project prj-0001
 `--changed-only` が検出しないものは次のとおりです。これらの変更で評価を更新する場合は、`--path` で対象を明示するか、フィルタなしの全件再評価を実行します。
 
 - 観点の `check` や `comparison_sources` に宣言していない文書の変更。
-- 評価に使うルーブリックや観点定義そのものの変更。rulebook の変更は `--rulebook-changed` が扱います。
+- 評価に使うルーブリックや観点定義そのものの変更。rulebook の変更は `--rulebook-changed`、ルーブリックの版の変更は `--rubric-outdated` が扱います。
 - 生成物（`generated`）の変更。生成物は生成元の変更として検出します。
 
 `source_hashes` を持たないサイドカー（突き合わせ先の記録を導入する前の評価）は、突き合わせ先を宣言した観点が適用される場合に変更扱いとなり、次回の `--changed-only` で一度だけ選ばれます。
 
 `--dependency-changed` は成果物だけを対象に、`depends_on` 先の現在の内容が `source_hashes` の `dependency:<local_id>` と異なる文書を選びます。依存先の評価日時は判定に使わないため、依存先を再評価しただけでは選びません。`grade apply` は突き合わせ先の宣言に関係なく、成果物の依存先の hash を記録します。
 
-保存済みの判定結果では、`--verdict <pass|needs-work|fail>` で最新 verdict、`--min-score <score>` で総合 score が指定値以上、`--max-findings <count>` で全 severity の finding 合計が指定件数以下の文書に絞れます。score は 0 から 100 の整数で指定します。`--ungraded` は grade result サイドカーが存在しない文書だけ、`--incomplete` は同じ本文に対する設定済み段数の評価が未完了で連続失敗上限に達していない文書だけを選びます。`--unreviewed` は schedule タスクが割り当てられていない文書のうち、未評価または grade result サイドカーの `content_hash` が現在の内容と一致しない文書だけを選びます。複数の選択条件は AND で適用され、`--path` や `--changed-only` とも併用できます。保存済み grade を前提とする `--verdict`、`--min-score`、`--max-findings` のいずれかと `--ungraded` の併用は入力エラーです。`grade list` はこの選択規則を plan の生成や文書更新なしで利用するための機械可読な入口で、標準出力にはリポジトリ相対パスだけを辞書順で出力します。定期再評価の呼び出し側は変更済み、未評価、段未完了を別々に列挙して和集合を取ります。
+`--rubric-outdated` は、grade result サイドカーの `rubric` が、解決済みの観点定義にある `grade_rubric.id`（既定は `grade-rubric-v2`）と異なる文書を選びます。`rubric` が空の結果は、どの版で付けたか確かめられないため旧版として選びます。サイドカーがない文書は選ばず、`--ungraded` が扱います。そのため `--ungraded` との併用は入力エラーです。版の異なる結果は category と観点の構成が違い、score を比べられません。ルーブリックを改めたときは、この条件で旧版の結果を列挙して評価し直します。`grade list --rubric-outdated` の出力行数が、旧版の結果が残る文書の件数です。観点定義に `grade_rubric.id` がない場合は入力エラーとして終了します。
+
+保存済みの判定結果では、`--verdict <pass|needs-work|fail>` で最新 verdict、`--min-score <score>` で総合 score が指定値以上、`--max-findings <count>` で全 severity の finding 合計が指定件数以下の文書に絞れます。score は 0 から 100 の整数で指定します。`--ungraded` は grade result サイドカーが存在しない文書だけ、`--incomplete` は同じ本文に対する設定済み段数の評価が未完了で連続失敗上限に達していない文書だけを選びます。`--unreviewed` は schedule タスクが割り当てられていない文書のうち、未評価または grade result サイドカーの `content_hash` が現在の内容と一致しない文書だけを選びます。複数の選択条件は AND で適用され、`--path` や `--changed-only` とも併用できます。保存済み grade を前提とする `--verdict`、`--min-score`、`--max-findings` のいずれかと `--ungraded` の併用は入力エラーです。`grade list` はこの選択規則を plan の生成や文書更新なしで利用するための機械可読な入口で、標準出力にはリポジトリ相対パスだけを辞書順で出力します。定期再評価の呼び出し側は変更済み、未評価、段未完了、旧 rubric を別々に列挙して和集合を取ります。
 
 段の到達状況は `<execution_path>/grade/pipeline/` の文書別 JSON に保存します。`stage_completed`、`stage_failed`、`stage_total`、`consecutive_failures`、`max_failures` から再開段と上限到達を判定し、`content_hash` が現在本文と異なる古い state は再開に使いません。`grade state --target <target> --project <id> --path <document>` は現在本文に有効な state を JSON で返し、`--exhausted` は上限到達文書のパスを返します。state の更新は文書単位の実行 script が担い、pipeline 完了時にファイルを削除します。
 
@@ -567,7 +571,7 @@ finding の忠実性照合では、message に限り、Unicode の正準等価�
 
 ### 8.1. 文書単位の grade pipeline
 
-文書ごとに grade pipeline を実行する場合は、リポジトリルートから `tools/grade/run-per-document.sh` を実行します。既定の `--stages 1` は codex 単段、`--stages 3` は互換用の従来構成です。`--target kata` では `--kind` に `rulebook` / `recipe` / `sample` / `template` のいずれか、または `all` を指定します。`--target deliverable` では成果物カタログの Markdown 成果物を対象にし、`--kind` は使いません。`--path` を繰り返すと明示した文書だけを処理できます。`--changed-only`、`--ungraded`、`--incomplete` は `grade list` の選択結果を利用し、複数指定時は各結果の和集合を処理します。既定 target は `kata`、既定 kind は `rulebook` です。
+文書ごとに grade pipeline を実行する場合は、リポジトリルートから `tools/grade/run-per-document.sh` を実行します。既定の `--stages 1` は codex 単段、`--stages 3` は互換用の従来構成です。`--target kata` では `--kind` に `rulebook` / `recipe` / `sample` / `template` のいずれか、または `all` を指定します。`--target deliverable` では成果物カタログの Markdown 成果物を対象にし、`--kind` は使いません。`--path` を繰り返すと明示した文書だけを処理できます。`--changed-only`、`--dependency-changed`、`--rulebook-changed`、`--unreviewed`、`--ungraded`、`--incomplete`、`--rubric-outdated` は `grade list` の選択結果を利用し、複数指定時は各結果の和集合を処理します。いずれも指定しない場合だけ、対象範囲の全件を処理します。既定 target は `kata`、既定 kind は `rulebook` です。
 
 ```bash
 # 対象と agent / reference の確認だけを行う
@@ -583,6 +587,10 @@ tools/grade/run-per-document.sh --run-id 20260908-recheck --kind all \
 # 変更済み、未評価、または段未完了の成果物を最大5件再評価する
 tools/grade/run-per-document.sh --run-id 20260912-deliverables --target deliverable \
   --stages 1 --changed-only --ungraded --incomplete --limit 10
+
+# 旧 rubric で評価された成果物を最大10件評価し直す
+tools/grade/run-per-document.sh --run-id 20260928-rubric-v2 --target deliverable \
+  --stages 1 --rubric-outdated --limit 10
 ```
 
 `--stages 1` では stage 1 の既定を `codex-expert-executor` / `gemma-reporter` / リファレンスなしとし、stage 2・3は実行しません。定期実行する `job-grade-kata` と `job-grade-deliverable` はこの構成を指定します。

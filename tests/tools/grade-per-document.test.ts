@@ -108,6 +108,9 @@ if (args[0] === "grade" && args[1] === "list") {
     process.stdout.write("docs/ja/specdojo/rulebooks/fixture-rulebook.md\\n");
     process.stdout.write("docs/ja/specdojo/samples/prj-overview-sample.md\\n");
   }
+  if (args.includes("--rubric-outdated")) {
+    process.stdout.write("docs/ja/specdojo/samples/prj-overview-sample.md\\n");
+  }
   if (args.includes("--incomplete")) {
     const statePath = process.env.FAKE_PIPELINE_STATE_FILE;
     if (existsSync(statePath)) {
@@ -335,12 +338,38 @@ describe("grade per-document pipeline", () => {
 
     expect(result.status, result.stderr).toBe(0);
     expect(result.stdout).toContain(
-      "kind=all changed_only=true ungraded=true incomplete=false max_stage_failures=3 stages=3 documents=3",
+      "kind=all changed_only=true ungraded=true incomplete=false rubric_outdated=false max_stage_failures=3 stages=3 documents=3",
     );
     expect(result.stdout).toContain("reference=per-kind");
     expect(result.stdout.match(/fixture-rulebook\.md/g)).toHaveLength(1);
     expect(result.stdout).toContain("docs/ja/specdojo/recipes/prj-overview-recipe.md");
     expect(result.stdout).toContain("docs/ja/specdojo/samples/prj-overview-sample.md");
+  });
+
+  it("selects only documents with an outdated rubric when --rubric-outdated is the only filter", () => {
+    const fixture = makeFixture();
+
+    const result = runDryRun(fixture, "all", [
+      "--rubric-outdated",
+      "--specdojo-bin",
+      fixture.fakeSpecdojo,
+    ]);
+
+    expect(result.status, result.stderr).toBe(0);
+    expect(result.stdout).toContain(
+      "kind=all changed_only=false ungraded=false incomplete=false rubric_outdated=true max_stage_failures=3 stages=3 documents=1",
+    );
+    expect(result.stdout).toContain("docs/ja/specdojo/samples/prj-overview-sample.md");
+    expect(result.stdout).not.toContain("fixture-rulebook.md");
+  });
+
+  it("rejects a non-boolean --rubric-outdated value", () => {
+    const fixture = makeFixture();
+
+    const result = runDryRun(fixture, "rulebook", ["--rubric-outdated=yes"]);
+
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain("--rubric-outdated must be true or false");
   });
 
   it("treats an empty filtered selection as a successful no-op", () => {

@@ -111,17 +111,26 @@ Job Definition を持たないため、実行記録は `generated/routine-runs.j
 
 ### 1.2. grade の単段評価
 
-Kata と成果物の定期評価は、`codex-expert-executor` と `gemma-reporter` の単段で実行します。`job-grade-kata` と `job-grade-deliverable` は `tools/grade/run-per-document.sh --stages 1` を起動し、条件付きの後続段は持ちません。変更済み・未評価・段未完了を横断的に再評価する `rtn-grade-recheck` は `kind: all`、`changed_only: true`、`ungraded: true`、`incomplete: true`、`limit: 15` を入力します。
+Kata と成果物の定期評価は、`codex-expert-executor` と `gemma-reporter` の単段で実行します。`job-grade-kata` と `job-grade-deliverable` は `tools/grade/run-per-document.sh --stages 1` を起動し、条件付きの後続段は持ちません。変更済み・未評価・段未完了・旧 rubric を横断的に再評価する `rtn-grade-recheck` は `kind: all`、`changed_only: true`、`ungraded: true`、`incomplete: true`、`rubric_outdated: true`、`limit: 15` を入力します。
 
-成果物は `rtn-grade-deliverable-recheck` が `job-grade-deliverable` を起動します。Job は同じ script を `--stages 1 --target deliverable` で実行し、成果物カタログから変更済み・未評価・段未完了の Markdown 成果物だけを最大10件選びます。評価結果は成果物の最新 grade と成果物ごとの `done_criteria` 詳細へ上書きされるため、実行ごとの review result は増やしません。
+成果物は `rtn-grade-deliverable-recheck` が `job-grade-deliverable` を起動します。Job は同じ script を `--stages 1 --target deliverable` で実行し、成果物カタログから変更済み・未評価・段未完了・旧 rubric の Markdown 成果物だけを最大10件選びます。評価結果は成果物の最新 grade と成果物ごとの `done_criteria` 詳細へ上書きされるため、実行ごとの review result は増やしません。
 
 `rtn-grade-deliverable-recheck` は毎日1時、`rtn-grade-recheck` は毎日6時に実行し、いずれも `missed_run: skip` とします。`rtn-dashboard-refresh` は `action.kind: specdojo` で毎時 `dashboard build` を直接起動します（exec の実行ロックを取らないため、grade や register の実行中でも並行して動きます）。devcontainer の cron は毎時 `routine run --due` を呼びますが、各 routine の発火時刻は routine 側の cron で決まります。コンテナ停止中の実行枠を日中へ持ち越さず、対話的な register 実行との競合を避けます。
 
 `changed_only: true` は、本文の変更に加えて、観点定義の `comparison_sources` で宣言した突き合わせ先（成果物カタログの自身の項目、依存先、Schedule、メンバー定義、ロール定義、RACI、組織定義）の変更も検出します。検出範囲と検出しない変更は `command-reference.md` の `grade` の説明に従います。突き合わせ先の記録（`source_hashes`）を持たない既存の評価は一度だけ変更扱いになるため、導入直後は `rtn-grade-deliverable-recheck` の選択が上限の10件に張り付きます。2026-09-27 時点の成果物 46 件がすべて該当し、約5日で記録が揃います。その後は突き合わせ先を変更した日だけ、その突き合わせ先を持つ成果物が選ばれます。現在の宣言では Kata に適用される観点は突き合わせ先を持たないため、`rtn-grade-recheck` の選択は変わりません。
 
-全件再評価の定期経路は持ちません。`rtn-grade-kata` は `enabled: false` のままとし、突き合わせ先の変更による評価の陳腐化は上記の `changed_only` で解消します。観点定義やルーブリックの変更など `changed_only` が検出しない変更を反映する場合は、`tools/grade/run-per-document.sh` を選択条件なしで手動実行します。全件は成果物 46 件、Kata 262 件で、Job の件数上限を外すと1回で308文書を評価します。
+全件再評価の定期経路は持ちません。`rtn-grade-kata` は `enabled: false` のままとし、突き合わせ先の変更による評価の陳腐化は上記の `changed_only` で解消します。観点定義の変更など `changed_only` と `rubric_outdated` のどちらも検出しない変更を反映する場合は、`tools/grade/run-per-document.sh` を選択条件なしで手動実行します。全件は成果物 46 件、Kata 262 件で、Job の件数上限を外すと1回で308文書を評価します。
 
-両 routine では、Job の `task.precondition` が `grade list` を使って script の selection-v4 と同じ変更済み・未評価・再試行可能な段未完了の和集合、辞書順、対象種別、件数上限を先に評価します。連続失敗上限に達した文書は `grade state --exhausted` で同じ和集合に加えてから件数上限を適用し、処理対象からは外して report-only 対象にします。処理対象も report-only 対象も0件なら Job Run、plan、result、evidence を作らず、command と analysis reporter も起動しません。routine はこの結果を `skipped` として受け取り、`routine-state.json` の `last_run` / `last_result` と、cron の場合は `last_scheduled_for` を更新します。
+`rubric_outdated: true` は、grade result サイドカーの `rubric` が現在の `grade_rubric.id` と異なる文書、または `rubric` の記録がない文書を選びます（`grade list --rubric-outdated`）。ルーブリックを改めたとき（PJR-K351 の `grade-rubric-v2` など）、旧版の結果は score を新版と比べられないため評価し直します。全件を一度に評価し直すと agent の利用上限に達するため、両 routine の既存の件数上限（Kata 15 件、成果物 10 件）の範囲で、夜間の余った利用枠を使って少しずつ進めます。辞書順で上限までを選ぶため、変更済みや未評価の文書と同じ枠を分け合います。評価者は各 Job 定義の既定（`codex-expert-executor`）のままとし、手動で評価し直した結果の評価者はそのまま残します。評価し直した文書は `rubric` が現在の版になり、次回以降は選ばれません。
+
+旧 rubric の結果が残る件数は、次のコマンドの出力行数で数えます。0件になれば、評価し直しは完了です。2026-09-28 の導入時点では、Kata 232 件（rulebook 99、recipe 11、sample 87、template 35）と成果物 19 件が残っていました。1日あたり Kata 15 件、成果物 10 件を上限に進めると、Kata は約16日、成果物は約2日で揃います（ほかの選択条件と枠を分け合う日は延びます）。
+
+```bash
+npx tsx src/specdojo.ts grade list --target kata --project prj-0001 --rubric-outdated | wc -l
+npx tsx src/specdojo.ts grade list --target deliverable --project prj-0001 --rubric-outdated | wc -l
+```
+
+両 routine では、Job の `task.precondition` が `grade list` を使って script の selection-v5 と同じ変更済み・未評価・再試行可能な段未完了・旧 rubric の和集合、辞書順、対象種別、件数上限を先に評価します。連続失敗上限に達した文書は `grade state --exhausted` で同じ和集合に加えてから件数上限を適用し、処理対象からは外して report-only 対象にします。処理対象も report-only 対象も0件なら Job Run、plan、result、evidence を作らず、command と analysis reporter も起動しません。routine はこの結果を `skipped` として受け取り、`routine-state.json` の `last_run` / `last_result` と、cron の場合は `last_scheduled_for` を更新します。
 
 | 段  | executor / reporter                        | 対象と役割                                 |
 | --- | ------------------------------------------ | ------------------------------------------ |
