@@ -58,6 +58,16 @@ Ollama 本体は、公式インストールスクリプトで最新版を導入�
 curl -fsSL https://ollama.com/install.sh | sh
 ```
 
+macOS では、アプリ版（Ollama.app）を使う。アプリ版が最新の Ollama に最も早く対応するためである。公式インストールスクリプトは、macOS ではアプリ版を配置する（「macOSでの設定と常駐のさせ方」参照）。Homebrew の formula 版（`brew install ollama`、`brew services start ollama`）は使わない。
+
+以前 Homebrew の formula 版を導入していた場合は、停止して削除してから、公式インストールスクリプトで導入し直す。
+
+```bash
+brew services stop ollama
+brew uninstall ollama
+curl -fsSL https://ollama.com/install.sh | sh
+```
+
 ## 3. Ollamaモデルの選定
 
 Ollama では、Ollama の公式ライブラリタグを優先して指定する。
