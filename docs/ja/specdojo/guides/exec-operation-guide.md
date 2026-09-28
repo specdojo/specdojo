@@ -321,6 +321,13 @@ provider別の `max_concurrency` や agent 選択は [exec設定ガイド](exec-
 specdojo exec run --project <project-id> --task <task-id> --worktree
 ```
 
+schedule に `agent_pipeline` を持たない plan（`exec plan --deliverable <localId> --mode review` で生成した review plan など）は、`exec run --plan` または `exec run --deliverable` に `--executor-by` / `--reporter-by` を足すと同じ 2 stage で実行します。片方だけ指定した場合、もう一方は `stage_role` による自動選択で決まります。reporter が scaffold 済みの result を記入するため、`--plan` では frontmatter に `task_id` を持つ plan が必要です。`--by` に `stage_role` を持つ pipeline 用 agent を指定すると、result 未記入の blocked にはせず、`--executor-by` / `--reporter-by` を使うよう案内するエラーで実行前に拒否します。
+
+```bash
+specdojo exec run --project <project-id> --plan <execution-path>/exec/plans/<stem>-plan.md \
+  --executor-by <executor-nickname> --reporter-by <reporter-nickname>
+```
+
 run ごとの実行記録は `<execution_path>/exec/evidence/<task-id>/<run-id>/` に残ります。停止位置と再開可否はここを見て判断します。
 
 | ファイル                                                              | 確認できること                                                                                 |
