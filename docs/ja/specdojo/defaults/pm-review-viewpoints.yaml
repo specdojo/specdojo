@@ -154,18 +154,31 @@ severity_levels:
   - id: note
     description: 改善提案、将来検討、補足コメント。
 
+# review がタスクの完了可否を表す唯一の語彙。review result の verdict と同じ値を使い、
+# bps-task-completion の検証・受入観点 6 区分と一対一に対応する（PJR-XTAN）。
+# 旧値の pass / conditional_pass / changes_requested / blocked と、xrr-template.md の旧
+# decision.recommendation（approve / revise / reject）は読み込み時に移行先を示して拒否する。
+# revise は incomplete へ移す。grade の文書 verdict（pass / needs-work / fail）は成果物の品質を
+# 判定する別の語彙であり、ここへは統一しない。
 verdict_definitions:
-  - id: pass
-    description: 対象 Role code の観点では修正不要。次の Role code または PO 判断へ進める。
-  - id: conditional_pass
-    description: 軽微な修正または PO 判断待ちを条件に進めてよい。条件を明記し、必要に応じて minor 指摘を残す。
-  - id: changes_requested
-    description: 修正後の再レビューが必要。修正担当 Role code と再レビュー観点を明記する。
-  - id: blocked
-    description: 前提不足、依存成果物未整備、重大矛盾によりレビュー継続不可。PJR 登録または PO 判断を依頼する。
+  - id: complete
+    description: 最新の grade・finding があり、変更内容が plan と完了条件を満たし、完了を妨げる未充足事項がない。完了の決定と完了記録へ進める。
+  - id: complete-with-findings
+    description: 最新の評価結果に finding があるが、今回のタスク範囲と完了条件は満たしている。finding が完了を妨げない理由と、必要な改善指示を記録して完了へ進める。
+  - id: incomplete
+    description: plan または完了条件に未充足事項がある。完了記録を作らず、未充足事項と改善指示を含む再計画要求を引き渡す。
+  - id: grade-stale
+    description: 評価結果がない、現在の成果物と content_hash が一致しない、または評価コンテキストの変化が未反映である。review は再評価せず、grade の確定後に再開する。
+  - id: grade-unavailable
+    description: 成果物評価が評価不能で grade・finding を確定できない。完了を推測せず保留し、評価不能の理由・不足情報・補完担当・再開条件を記録する。
+  - id: changed-during-review
+    description: review 開始後に成果物が変更され、固定した評価結果の content_hash と一致しなくなった。verdict と完了記録を確定せず、変更後の grade の確定を待って再開する。
 
-# grade と review が共有する離散ルーブリック。review の blocked は判定不能を表すため
-# level へ写像せず、根拠が揃った判定だけを pass / conditional_pass / changes_requested へ対応させる。
+# grade と review が共有する離散ルーブリック。review_verdict は grade の level を review の入力に
+# する規則であり、review が完了可否の判断を始める起点の verdict を示す（review-guide.md の
+# 「grade の結果を review の入力にする規則」）。grade の level からは品質しか分からないため、写像先は
+# complete / complete-with-findings / incomplete の 3 値に限る。鮮度・評価不能・review 中の変更は
+# level から決まらないため写像しない。
 # v2 で全観点を grade の対象にし、weights を 9 category へ広げた（PJR-K351）。
 # v1 の score とは母集団の category が異なるため比較できない。id を改めて区別する。
 # pass_score は level 3（軽微な課題・実務上そのまま利用できる）の score 75 に合わせる。
@@ -179,23 +192,23 @@ grade_rubric:
     - level: 0
       name: 不成立
       description: blocker があり、その観点で文書が機能していない。
-      review_verdict: changes_requested
+      review_verdict: incomplete
     - level: 1
       name: 不十分
       description: major が複数、または観点の目的をほぼ果たしていない。
-      review_verdict: changes_requested
+      review_verdict: incomplete
     - level: 2
       name: 要改善
       description: major があり、誤用・誤読を招く箇所がある。
-      review_verdict: changes_requested
+      review_verdict: incomplete
     - level: 3
       name: 軽微な課題
       description: minor のみで、実務上はそのまま利用できる。
-      review_verdict: conditional_pass
+      review_verdict: complete-with-findings
     - level: 4
       name: 良好
       description: 指摘なし、または note のみである。
-      review_verdict: pass
+      review_verdict: complete
   # 重みは合計 100。文書に適用される観点がない category は、その文書の加重平均から外す。
   # v1 の 4 category の相対比を保ったまま縮め、空いた分を新たに加わる 5 category へ配る。
   weights:

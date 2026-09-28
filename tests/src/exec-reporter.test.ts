@@ -117,7 +117,13 @@ describe("reporter structured output", () => {
     expect(
       parseReporterOutput(JSON.stringify({ ...validReviewOutput, verdict: "approve" }), "review")
         .error,
-    ).toMatch(/verdict/);
+    ).toMatch(
+      /verdict is invalid: removed verdict 'approve'; use complete or complete-with-findings/,
+    );
+    expect(
+      parseReporterOutput(JSON.stringify({ ...validReviewOutput, verdict: "unknown" }), "review")
+        .error,
+    ).toMatch(/verdict is invalid: unknown verdict 'unknown'; allowed: complete,/);
     expect(
       parseReporterOutput(JSON.stringify({ ...validReviewOutput, rationale: [] }), "review").error,
     ).toMatch(/rationale/);
@@ -133,6 +139,16 @@ describe("reporter structured output", () => {
       block_reason: "",
     };
     expect(parseReporterOutput(JSON.stringify(legacyOutput), "review").error).toBeDefined();
+  });
+
+  it("names the replacement verdict when a review output uses the legacy recommendation", () => {
+    const { verdict: _verdict, ...withoutVerdict } = validReviewOutput;
+    const legacy = { ...withoutVerdict, recommendation: "revise" };
+
+    expect(parseReporterOutput(JSON.stringify(legacy), "review").error).toBe(
+      "recommendation was replaced by verdict; removed verdict 'revise'; use incomplete " +
+        "(allowed: complete, complete-with-findings, incomplete, grade-stale, grade-unavailable, changed-during-review)",
+    );
   });
 
   it("tells a review reporter that a non-complete verdict is still a recorded result", () => {

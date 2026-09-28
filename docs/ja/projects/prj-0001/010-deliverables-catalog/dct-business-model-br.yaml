@@ -73,7 +73,7 @@ groups:
         kind: work
         depends_on:
           - bps-task-verification
-        overview: レビュー結果を pass / conditional_pass / changes_requested / blocked のいずれに判定するかの規則を定義する
+        overview: タスクの完了可否を review の verdict（complete / complete-with-findings / incomplete / grade-stale / grade-unavailable / changed-during-review）のいずれに判定するかの規則を定義する
         path: br-review-verdict.md
         rulebook: specdojo:br-rulebook
         done_criteria: *br-done-criteria

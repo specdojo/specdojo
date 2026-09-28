@@ -2,6 +2,8 @@ import Ajv2020Module from "ajv/dist/2020.js";
 import { extractJsonText } from "./agent-response.js";
 import type { ExecEvidence } from "./exec-evidence.js";
 import type { TaskMode } from "./exec-types.js";
+import { REVIEW_VERDICTS, describeInvalidReviewVerdict, isReviewVerdict } from "./review-types.js";
+import type { ReviewVerdict } from "./review-types.js";
 
 const MAX_TEXT_LENGTH = 4_000;
 const MAX_ITEMS = 1_000;
@@ -20,17 +22,9 @@ export type EditReporterOutput = {
   block_reason: string;
 };
 
-// review の verdict。bps-task-completion の検証・受入観点 6 区分と一対一に対応する。
-export const REVIEW_VERDICTS = [
-  "complete",
-  "complete-with-findings",
-  "incomplete",
-  "grade-stale",
-  "grade-unavailable",
-  "changed-during-review",
-] as const;
-
-export type ReviewVerdict = (typeof REVIEW_VERDICTS)[number];
+// review の verdict の正本は review-types.ts であり、verdict_definitions と同じ語彙を使う。
+export { REVIEW_VERDICTS };
+export type { ReviewVerdict };
 
 // review は成果物を再評価しない。評価結果の確認、判断根拠、改善指示、verdict を記録する。
 export type ReviewReporterOutput = {
@@ -221,6 +215,18 @@ function validateEdit(value: Record<string, unknown>): string | undefined {
   return undefined;
 }
 
+// 改訂前の decision.recommendation（approve / revise / reject）と verdict_definitions の旧値は、
+// review の verdict へ統一した（PJR-XTAN）。
+function legacyReviewVocabularyError(value: Record<string, unknown>): string | undefined {
+  if (Object.hasOwn(value, "recommendation")) {
+    return `recommendation was replaced by verdict; ${describeInvalidReviewVerdict(value.recommendation)}`;
+  }
+  if (typeof value.verdict === "string" && !isReviewVerdict(value.verdict)) {
+    return `verdict is invalid: ${describeInvalidReviewVerdict(value.verdict)}`;
+  }
+  return undefined;
+}
+
 function validateReview(value: Record<string, unknown>): string | undefined {
   const keys = [
     "schema_version",
@@ -242,13 +248,9 @@ function validateReview(value: Record<string, unknown>): string | undefined {
     return "improvements must contain at most 100 bounded strings";
   }
   if (!isReviewVerdict(value.verdict)) {
-    return `verdict must be one of: ${REVIEW_VERDICTS.join(", ")}`;
+    return `verdict is invalid: ${describeInvalidReviewVerdict(value.verdict)}`;
   }
   return undefined;
-}
-
-function isReviewVerdict(value: unknown): value is ReviewVerdict {
-  return typeof value === "string" && (REVIEW_VERDICTS as readonly string[]).includes(value);
 }
 
 export function parseReporterOutput(
@@ -264,6 +266,9 @@ export function parseReporterOutput(
     };
   }
   if (!isRecord(value)) return { error: "response root must be an object" };
+  // 旧語彙はスキーマの汎用エラーでは移行先が分からないため、スキーマ検証より先に移行先を示す。
+  const legacyError = mode === "review" ? legacyReviewVocabularyError(value) : undefined;
+  if (legacyError) return { error: legacyError };
   if (!validateReporterSchema(value)) {
     // スキーマは edit / review の oneOf なので、両方の分岐のエラーが混ざる。先頭だけを
     // 表示すると期待する mode と無関係な分岐のエラーで原因が隠れるため、mode の分岐に絞る。

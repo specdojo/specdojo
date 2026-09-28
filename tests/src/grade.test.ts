@@ -43,7 +43,8 @@ const viewpoints: ReviewViewpointsDoc = {
       level,
       name: `L${level}`,
       description: `level ${level}`,
-      review_verdict: level === 4 ? "pass" : level === 3 ? "conditional_pass" : "changes_requested",
+      review_verdict:
+        level === 4 ? "complete" : level === 3 ? "complete-with-findings" : "incomplete",
     })),
     weights: {
       kata: { architecture: 20, quality: 40, usability: 40 },

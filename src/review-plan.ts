@@ -1,6 +1,11 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import yaml from "js-yaml";
 import { resolveSpecdojoPath } from "./template-resolution.js";
+import {
+  GRADE_LEVEL_REVIEW_VERDICTS,
+  REVIEW_VERDICTS,
+  describeInvalidReviewVerdict,
+} from "./review-types.js";
 import type { ReviewViewpoint, ReviewViewpointsDoc, ViewpointEvaluation } from "./review-types.js";
 
 export const COMMON_VIEWPOINTS_ID = "specdojo:pm-review-viewpoints";
@@ -200,6 +205,33 @@ function validateViewpointFields(doc: Record<string, unknown>, path: string): vo
   }
 }
 
+// verdict_definitions は review の verdict と同じ語彙に限る（PJR-XTAN）。grade_rubric の review_verdict は
+// grade の level を review の入力にする写像であり、level から決まる 3 値だけを許す。
+function validateVerdictVocabulary(doc: Record<string, unknown>, path: string): void {
+  for (const definition of recordArray(doc, "verdict_definitions", path)) {
+    const value = definition["id"];
+    if (!(REVIEW_VERDICTS as readonly unknown[]).includes(value)) {
+      throw new Error(`verdict_definitions has ${describeInvalidReviewVerdict(value)}: ${path}`);
+    }
+  }
+  const rubric = doc["grade_rubric"];
+  if (rubric === undefined) return;
+  if (!isRecord(rubric))
+    throw new Error(`Review viewpoints 'grade_rubric' must be a mapping: ${path}`);
+  const levels = rubric["levels"];
+  if (!Array.isArray(levels)) return;
+  for (const level of levels) {
+    if (!isRecord(level)) continue;
+    const value = level["review_verdict"];
+    if (!(GRADE_LEVEL_REVIEW_VERDICTS as readonly unknown[]).includes(value)) {
+      throw new Error(
+        `grade_rubric level ${String(level["level"])} review_verdict has ` +
+          `${describeInvalidReviewVerdict(value, GRADE_LEVEL_REVIEW_VERDICTS)}: ${path}`,
+      );
+    }
+  }
+}
+
 function validateResolvedInheritance(doc: Record<string, unknown>, projectPath: string): void {
   const categories = new Set(
     recordArray(doc, "categories", projectPath).map((item) => String(item.id)),
@@ -281,6 +313,7 @@ export function resolveViewpointsDoc(
   const project = loadYamlMapping(projectPath);
   if (project["extends"] === undefined) {
     validateViewpointFields(project, projectPath);
+    validateVerdictVocabulary(project, projectPath);
     return project as ReviewViewpointsDoc;
   }
   if (project["extends"] !== COMMON_VIEWPOINTS_ID) {
@@ -309,6 +342,8 @@ export function resolveViewpointsDoc(
   delete resolved["disabled"];
   validateViewpointFields(common, commonPath);
   validateViewpointFields(project, projectPath);
+  validateVerdictVocabulary(common, commonPath);
+  validateVerdictVocabulary(project, projectPath);
   validateResolvedInheritance(resolved, projectPath);
   return resolved as ReviewViewpointsDoc;
 }

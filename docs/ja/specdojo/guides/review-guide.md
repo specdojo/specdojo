@@ -176,7 +176,7 @@ viewpoint は継続品質評価 `specdojo grade` の正本です。review plan �
 
 `include` または `exclude` で rulebook ID を列挙した観点は、すべての rulebook について扱いを判断済みにします。列挙していない rulebook を既定の結果（`exclude` の観点では適用、`include` の観点では対象外）のままにすると判断した場合は、`document_kinds.confirmed_default` へ列挙します。`confirmed_default` は判断の記録で、適用判定は変えません。同じ rulebook を `include` / `exclude` と重ねて書くことはできません。`src/viewpoint-document-kinds-check.ts` の検証は、どこにも載っていない rulebook、存在しない rulebook ID、重複した判断を観点 ID と rulebook ID の組で error として報告します。この検証は `npm test`（`npm run check` に含まれる）で実行され、`npx tsx src/viewpoint-document-kinds-check.ts` で単独でも実行できます。`unclassified` だけを宣言した観点は全種類へ適用するため、検証の対象外です。
 
-`grade_rubric` の level 0-4 は category を跨いで共有し、viewpoint score を `level × 25` とします。`grade_rubric` には level ごとの `review_verdict`（level 4 が `pass`、level 3 が `conditional_pass`、level 0-2 が `changes_requested`）が定義されていますが、review はこの対応で観点を判定し直しません。review の verdict は `review plan と review result` に示すタスク完了可否の 6 値です。
+`grade_rubric` の level 0-4 は category を跨いで共有し、viewpoint score を `level × 25` とします。`grade_rubric` には level ごとの `review_verdict`（level 4 が `complete`、level 3 が `complete-with-findings`、level 0-2 が `incomplete`）が定義されています。これは grade の level を review の入力にする写像であり、review はこの対応で観点を判定し直しません。写像の使い方は `grade の結果を review の入力にする規則` に示します。
 
 文書の score は、category ごとの score（観点の level 平均 × 25）を `grade_rubric.weights` の重みで加重平均した値です。重みは kata と成果物で別に持ち、どちらも 9 category すべてに重みを置きます。文書に適用される観点が 1 つもない category は、その文書の加重平均から外します。観点の category に重みがない rubric は、grade の実行時にエラーで失敗します。verdict は blocker があれば `fail`、major があるか score が `pass_score` 未満なら `needs-work`、それ以外は `pass` です。`pass_score` は level 3（軽微な課題）の score に合わせて 75 とし、major のない文書が category の数や重みに関係なく満たす下限にしています。
 
@@ -343,7 +343,27 @@ specdojo:
 | approach に応じた確認 | `approach` に応じて確認した内容                                       |
 | decision              | `verdict`（タスク完了可否の 6 値。値の一覧は次のとおり）              |
 
-`verdict` は `complete` / `complete-with-findings` / `incomplete` / `grade-stale` / `grade-unavailable` / `changed-during-review` のいずれかです。各値を選ぶ条件は共通規約の `review の判断手順` を正本とします。verdict が `complete` 以外でも、review result を記録できた場合は正常終了します。runner は verdict に応じて再評価または再計画へ進みます。
+`verdict` は `complete` / `complete-with-findings` / `incomplete` / `grade-stale` / `grade-unavailable` / `changed-during-review` のいずれかです。`pm-review-viewpoints.yaml` の `verdict_definitions` も同じ 6 値を定義します。各値を選ぶ条件は共通規約の `review の判断手順` を正本とします。verdict が `complete` 以外でも、review result を記録できた場合は正常終了します。runner は verdict に応じて再評価または再計画へ進みます。
+
+### 3.8. grade の結果を review の入力にする規則
+
+grade と review は違う対象を判定します。判定の語彙は判定対象ごとに分け、同じ対象を判定する語彙だけを一つにします。
+
+| 語彙                                                                             | 判定対象               | 値                                                                                                                   |
+| -------------------------------------------------------------------------------- | ---------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| grade の文書 `verdict`                                                           | 成果物の品質           | `pass` / `needs-work` / `fail`                                                                                       |
+| grade の観点 level                                                               | 観点ごとの成果物の品質 | 0-4                                                                                                                  |
+| review result の `verdict`、`pm-review-viewpoints.yaml` の `verdict_definitions` | タスクの完了可否       | `complete` / `complete-with-findings` / `incomplete` / `grade-stale` / `grade-unavailable` / `changed-during-review` |
+
+タスクの完了可否は review result の `verdict` と `verdict_definitions` の同じ 6 値だけで表します。grade の語彙は review の語彙へ統一しません。grade の結果は、次の規則で review の入力になります。
+
+- grade の結果は review にとって確定済みの事実です。review は level や grade の `verdict` を付け直しません。
+- `grade_rubric` の `review_verdict` は、観点の level が review の判断に与える起点です。level 4 は `complete`、level 3 は `complete-with-findings`、level 0-2 は `incomplete` を起点とします。
+- review は、このタスクの範囲と完了条件に関わる観点の level から最も制限の強い起点を選び、変更内容・plan・実行記録・完了条件と照合して verdict を確定します。
+- 起点と異なる verdict を選ぶ場合は、理由を判断根拠に記録します。たとえば level 2 の finding がこのタスクの範囲外で完了を妨げない場合は `complete-with-findings` を選び、その理由を記録します。起点が `complete` でも、plan または完了条件に未充足事項があれば `incomplete` とします。
+- `grade-stale` / `grade-unavailable` / `changed-during-review` は grade の level からは決まらないため、写像に含めません。鮮度の確認と評価不能の判定で決めます。
+
+旧来の語彙は読み込み時に移行先の値を示すエラーで失敗します。`verdict_definitions` と `review_verdict` の旧値は `pass` → `complete`、`conditional_pass` → `complete-with-findings`、`changes_requested` → `incomplete`、`blocked` → `grade-stale` / `grade-unavailable` / `changed-during-review` のいずれかへ移ります。review result の旧 `decision.recommendation` は `verdict` へ置き換わり、`approve` は `complete` または `complete-with-findings`、`revise` と `reject` は `incomplete` へ移ります。
 
 ## 4. レビュー結果の記録
 

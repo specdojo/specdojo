@@ -132,7 +132,7 @@ properties:
 
   verdict_definitions:
     type: array
-    description: "Review verdict vocabulary."
+    description: "Review verdict vocabulary for task completion (same values as the review result verdict)."
     items:
       $ref: "#/$defs/VerdictDefinition"
 
@@ -224,8 +224,19 @@ $defs:
     properties:
       id:
         type: string
-        enum: [pass, conditional_pass, changes_requested, blocked]
-        description: "Verdict identifier."
+        enum:
+          [
+            complete,
+            complete-with-findings,
+            incomplete,
+            grade-stale,
+            grade-unavailable,
+            changed-during-review,
+          ]
+        description: >
+          Review verdict identifier for task completion. Shares the vocabulary of the review
+          result verdict. The legacy values pass, conditional_pass, changes_requested, and blocked
+          are rejected by the loader with the replacement value.
       description:
         type: string
         minLength: 1
@@ -388,7 +399,11 @@ $defs:
               type: string
               minLength: 1
             review_verdict:
-              enum: [pass, conditional_pass, changes_requested]
+              enum: [complete, complete-with-findings, incomplete]
+              description: >
+                Starting-point review verdict suggested by this grade level (review input rule).
+                Freshness, unavailable grades, and changes during review are not derived from
+                a level.
       weights:
         type: object
         additionalProperties: false
