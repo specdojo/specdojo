@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_335ce604a8ab4731a8bd992ecddfd33e
+  ts: "2026-09-28T22:27:35Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: config scaffoldに各Agentのパーミッション設定機能を追加
+    - field: description
+      from: ""
+      to: ローカル設定の生成(Claude等)およびグローバル設定へのマージ(Antigravity等)に対応する
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-29"
+    - field: due
+      from: ""
+      to: "2026-10-31"
