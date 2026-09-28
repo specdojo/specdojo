@@ -7,11 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-09-23T05:17:28Z"
   due_on: "2026-11-07"
+  completed_at: "2026-09-28T09:47:57Z"
+  conclusion: review の前に runner が grade の鮮度を確認し、content_hash が一致すれば既存の結果を使い、plan の評価結果章へ確定済みの事実として提示する。review-guide を観点別評価しない形に改めた。試行で plan と判断は意図どおりと確認し、result の記入経路は PJR-E2Q3 へ引き継ぐ。N03W の経過措置は理由を記録して残す
 ---
 
 # PJR-KCMH review フェーズで grade を実行し結果を plan へ提示する
@@ -77,6 +79,19 @@ specdojo:
 - _TODO_: review を agent で 1 件実行し、生成される plan と result を確認する作業（No.5）は未実施である。executor の sandbox では agent を起動できないため、runner または人が実施する。
 - _TODO_: 経過措置の `changed_only`・`ungraded`・`incomplete` の 3 入力（No.6）は、現時点では外さない。runner の grade は review タスクがある文書を review の時点でしか評価せず、review 経路を持たない文書の内容変化と未評価文書は引き続き定期実行で拾う必要がある。No.5 で実際の review を確認した後に改めて判断する。
 - _ASSUMPTION_: runner が grade で更新した評価結果サイドカーは、実行したリポジトリ（main 側）に書かれる。review を行う worktree へ反映されるかは未確認であり、plan 本文に評価結果を載せることで review の判断材料は確保している。
+
+### review の試行（2026-09-28、orchestrator）
+
+executor の sandbox で未実施だった作業 No.5 を、orchestrator が `stsd-register-entry`（rubric v2 で 2026-09-28 に評価済み、69 点、needs-work）で行った。
+
+| 確認項目                                                                  | 結果                                                                                                                                         |
+| ------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| plan に grade の結果が確定済みの事実として示される                        | 確認できた。鮮度は最新（`content_hash` が一致）、verdict・score・finding の内訳が示された                                                    |
+| `content_hash` が一致すれば grade を再実行しない                          | 確認できた。plan 生成時に既存の評価結果を使った                                                                                              |
+| review が観点を再評価せず、finding を事実としてタスクの完了可否を判断する | 確認できた。agent は finding（F001〜F018）を参照して verdict `incomplete` を選び、改善手順を示した                                           |
+| result が新しい書式で記入される                                           | 確認できなかった。`exec run --plan` では reporter 付きの構成を使えず、`--by` の executor は result を書かない設計だった。PJR-E2Q3 へ引き継ぐ |
+
+試行の plan と result（`stsd-register-entry-20260928T093919Z-6fd7`）は、試行の記録として残す。
 
 ## 5. 関連ドキュメント
 

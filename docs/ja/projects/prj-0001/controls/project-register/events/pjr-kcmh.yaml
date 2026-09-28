@@ -71,3 +71,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_d72a5db8cfeb413f930b607ddf88ecd3
+- v: 1
+  id: reg_ce840033c27f4f968317721f08de8293
+  ts: "2026-09-28T09:47:57Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: claude-expert-executor の実行結果を評価し、orchestrator が review を 1 件試行した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-28"
+    - field: conclusion
+      from: "-"
+      to: review の前に runner が grade の鮮度を確認し、content_hash が一致すれば既存の結果を使い、plan の評価結果章へ確定済みの事実として提示する。review-guide を観点別評価しない形に改めた。試行で plan と判断は意図どおりと確認し、result の記入経路は PJR-E2Q3 へ引き継ぐ。N03W の経過措置は理由を記録して残す
+  previous_event_id: reg_0334898996e14ef2aa8f2320cc2abd21
