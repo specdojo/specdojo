@@ -6,7 +6,16 @@ specdojo:
   target_format: markdown
   recipe: not-needed
   sample: not-needed
-  template: not-needed
+  template_dispatch:
+    selector: item_type
+    cases:
+      todo: specdojo:pjr-todo-template
+      question: specdojo:pjr-question-template
+      risk: specdojo:pjr-risk-template
+      issue: specdojo:pjr-issue-template
+      change-request: specdojo:pjr-change-request-template
+      decision: specdojo:pjr-decision-template
+      note: specdojo:pjr-note-template
   based_on:
     - specdojo:rulebook-authoring-standard
   supersedes:
@@ -17,7 +26,7 @@ specdojo:
 
 Project Register Documentation Rules
 
-本ドキュメントは、プロジェクト登録簿の個別登録項目（`pjr-XXXX-<topic>.md`）、項目別イベントログ、そこから生成する一覧・派生ビューの記述ルールです。現在値の正本は個票の Frontmatter、監査履歴の正本は項目別イベントログとし、一覧は表示専用の生成物として扱います。
+本ドキュメントは、プロジェクト登録簿の個別登録項目（`pjr-XXXX-<topic>.md`）、項目別イベントログ、そこから生成する一覧・派生ビューの記述ルールです。現在値の正本は個票の Frontmatter、監査履歴の正本は項目別イベントログとし、一覧は表示専用の生成物として扱います。フィールドの型は [個票 Frontmatter schema](../../../specdojo/schemas/v1/register-item-frontmatter.schema.yaml)、イベントの型は [Register event schema](../../../specdojo/schemas/v1/register-events.schema.yaml)、コマンドの選択基準は [登録簿運用ガイド](../guides/register-operation-guide.md) を参照してください。
 
 ## 1. 全体方針
 
@@ -28,7 +37,7 @@ Project Register Documentation Rules
 - `generated/pjr-index.md` とすべての派生ビューは個票から `register build` で生成し、直接編集しない。
 - `<project-id>:pjr-index` は `generated/pjr-index.md` の文書 ID とする。`controls/**/generated/` はdoc-indexの限定走査対象とし、`register build` の後に `index build` を実行する。
 - 一覧と個票で同じ構造化フィールドを保持・同期する規則は設けない。
-- type 別テンプレートの選択と初期生成は `register add` が担うため、本 rulebook は単一の template を参照しない。
+- `item_type` 別テンプレートの選択と初期生成は `register add` が担う。対応関係は Frontmatter の `template_dispatch` を正本とする。
 
 ## 2. ファイル命名・ID規則
 
@@ -49,11 +58,11 @@ Project Register Documentation Rules
 - 項目別イベントログは同ディレクトリの `events/` 配下に置き、個票 1 件につき 1 ファイルとする。
 - 登録項目一覧は `docs/ja/projects/<project-id>/controls/project-register/generated/pjr-index.md` に生成する。
 - 状態別・優先度別・担当者別の補助一覧は同じ `generated/` 配下に生成する。
-- controls 全体の type 別管理ビューは `controls/generated/` に生成する。生成物の別名コピーは作らない。
+- controls 全体の `item_type` 別管理ビューは `controls/generated/` に生成する。生成物の別名コピーは作らない。
 
 ## 3. 推奨 Frontmatter 項目
 
-個票には `register-item-frontmatter.schema.yaml` が定義する次の項目を置く。未定の担当、期限、完了日時、結論は表用のプレースホルダを保存せず、該当キーを省略する（期限なしだけは `due_on: null`）。
+個票には [個票 Frontmatter schema](../../../specdojo/schemas/v1/register-item-frontmatter.schema.yaml) が定義する次の項目を置く。未定の担当、期限、完了日時、結論は表用のプレースホルダを保存せず、該当キーを省略する（期限なしだけは `due_on: null`）。
 
 | 項目            | 説明                                         | 必須 |
 | --------------- | -------------------------------------------- | ---- |
@@ -80,7 +89,7 @@ Project Register Documentation Rules
 
 ### 3.1. 日時と日付の使い分け
 
-- 起票と終端は瞬間として記録し、`registered_at` / `completed_at` に UTC の RFC 3339・秒精度（`YYYY-MM-DDTHH:MM:SSZ`）で保存する。
+- 起票は `registered_at`、完了・決定・却下は `completed_at` に、UTC の RFC 3339・秒精度（`YYYY-MM-DDTHH:MM:SSZ`）で保存する。延期は終端状態だが `completed_at` を保存しない。
 - 期限は瞬間ではなくプロジェクトタイムゾーン上の暦日であるため、`due_on` は `YYYY-MM-DD` のまま保持する。
 - 一覧・派生ビューの「登録日」「完了日」は、保存した日時をプロジェクトの登録日タイムゾーンへ変換して導出する表示値であり、個票へ日付として重複保存しない。
 - 日時は register コマンドが記録する。手書きで日時を入力する場合も、タイムゾーンを含む値から UTC へ変換した値だけを保存する。
@@ -90,32 +99,37 @@ Project Register Documentation Rules
 - 個票の現在値は `item_status` などの Frontmatter フィールド、変更履歴は `events/pjr-XXXX.yaml`、保存・配布・差分レビューは Git が担う。Git コミットはイベントの発生単位ではなく、履歴再構成の正本にしない。
 - イベントファイルのルートは YAML 配列とし、イベントを古い順に追記する。項目ごとの配置により、イベントごとの追加ファイルを作らず、異なる項目を並行更新したときの共有ログ競合を避ける。
 - 各イベントは version、イベント ID、UTC 発生日時、action、actor、遷移前後の `item_status`、reason、変更フィールド、直前イベント ID を保持する。Git から移行したイベントだけは移行元 commit も保持できる。
-- action は `add` / `start` / `wait` / `review` / `close` / `reject` / `defer` / `reopen` / `update` / `renumber` / `migrate` のいずれかとする。詳細な型と enum は `register-events.schema.yaml` を正本とする。
+- action は `add` / `start` / `wait` / `review` / `close` / `reject` / `defer` / `reopen` / `update` / `renumber` / `migrate` のいずれかとする。詳細な型と enum は [Register event schema](../../../specdojo/schemas/v1/register-events.schema.yaml) を正本とする。
 - `register build` は個票とイベントファイルの 1 対 1 対応、イベント ID の一意性、時刻順、直前イベント参照、遷移前後状態の連鎖、最新イベントの状態と個票の `item_status` の一致を検証する。不正なイベントを無視して一覧を生成しない。
 
 ## 4. 本文構成（標準テンプレ）
 
 ### 4.1. 個別登録項目
 
-| 順序 | 内容             | 必須 | 説明                                   |
-| ---- | ---------------- | ---- | -------------------------------------- |
-| 1    | type 固有の記録  | ○    | 対象、背景、評価、対応・判断、結果など |
-| 末尾 | 関連ドキュメント | ○    | 根拠、影響先、追跡先を文書 ID で示す   |
+| `item_type`      | 必須節（記載順）                                                                           | 終端判定で必須の記入欄                                                                 |
+| ---------------- | ------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------- |
+| `todo`           | 概要、完了条件、作業内容、対応結果、関連ドキュメント                                       | 完了条件、作業内容、対応結果                                                           |
+| `question`       | 確認事項、背景、回答候補、回答・結論、承認、関連ドキュメント                               | 回答候補、回答・結論、承認                                                             |
+| `risk`           | リスク内容、影響評価、対応方針、モニタリング、関連ドキュメント                             | 発生確率、影響度、影響範囲、兆候、方針、対応策、トリガー、エスカレーション先、監視方法 |
+| `issue`          | 課題内容、影響範囲、対応方針、対応結果、関連ドキュメント                                   | 影響範囲、原因、対応策、依存事項、完了条件、対応結果                                   |
+| `change-request` | 変更要求、影響評価、審査・決定、実施追跡、関連ドキュメント                                 | 各表の全項目                                                                           |
+| `decision`       | 背景、検討した選択肢、決定内容、採択理由、承認、影響範囲とフォローアップ、関連ドキュメント | 選択肢、決定内容、採択理由、承認、影響範囲、必要な対応、追跡先                         |
+| `note`           | メモ、背景・文脈、フォローアップ、関連ドキュメント                                         | 終端しない。参照のみでフォローアップがなければ `-` を記載する                          |
 
 - H1 は `PJR-XXXX <タイトル>` 形式とする。
-- type 固有の構成は `todo` の概要・完了条件・作業内容・対応結果など、各 type 用テンプレートに従う。
+- 文書品質の判定では、必須節が欠けている、または終端判定で必須の記入欄に `_TODO_` が残る場合を fail とする。必須節と必須記入欄がすべて存在し、コード範囲を除いて `_TODO_` が残らない場合を pass とする。`register close` は `_TODO_` の残存を自動検出し、必須節の有無は close 前のレビューで確認する。
 - ID、分類、処理状態、優先度、担当、期限、完了日時は本文へ重複記載せず、Frontmatter を参照する。
 - 終端前に未確定の結果・結論がある場合は、`-` または共通ラベルを用い、確定済みの記述と混在させない。
 
 ### 4.2. 生成一覧と派生ビュー
 
-| 生成物                               | 内容                | 編集可否 |
-| ------------------------------------ | ------------------- | -------- |
-| `generated/pjr-index.md`             | 全個票の一覧        | 不可     |
-| `generated/pjr-views-by-status.md`   | 状態別の補助一覧    | 不可     |
-| `generated/pjr-views-by-priority.md` | 優先度別の補助一覧  | 不可     |
-| `generated/pjr-views-by-owner.md`    | 担当者別の補助一覧  | 不可     |
-| `controls/generated/pm-*.md`         | type 別の管理ビュー | 不可     |
+| 生成物                               | 内容                       | 編集可否 |
+| ------------------------------------ | -------------------------- | -------- |
+| `generated/pjr-index.md`             | 全個票の一覧               | 不可     |
+| `generated/pjr-views-by-status.md`   | 状態別の補助一覧           | 不可     |
+| `generated/pjr-views-by-priority.md` | 優先度別の補助一覧         | 不可     |
+| `generated/pjr-views-by-owner.md`    | 担当者別の補助一覧         | 不可     |
+| `controls/generated/pm-*.md`         | `item_type` 別の管理ビュー | 不可     |
 
 - 一覧の標準列は ID、ステータス、タイトル、説明、分類、優先度、担当、登録日、期限、完了日、結論、個票とする。
 - タイトルは個票の H1、説明は個票本文、その他の列は個票 Frontmatter から生成する。
@@ -135,7 +149,7 @@ Project Register Documentation Rules
 
 ### 5.2. 構造化フィールドと生成
 
-- 新しい項目は `register add` で作成し、個票の Frontmatter に初期値を書き込む。全 type で個票を省略しない。
+- 新しい項目は `register add` で作成し、個票の Frontmatter に初期値を書き込む。全 `item_type` で個票を省略しない。
 - 担当・期限・結論・topic などを変更するときは `register update`、処理状態を変えるときは状態遷移コマンドを使用する。待機理由は `register wait --reason` で記録する。
 - `register build` は個票を読み取り、一覧・派生ビューを再生成する。一覧を編集して個票へ反映する経路はない。
 - `register add`、状態遷移、`register update`、`register renumber` は現在値を個票へ、イベントを対応する項目別ログへ記録する。`--by` で actor、`--reason` で理由を明示でき、省略時もコマンドが既定値を記録する。
@@ -147,7 +161,7 @@ Project Register Documentation Rules
 
 #### 5.3.1. item_type 別の item_status 終端基準
 
-`item_status` の通常終端は、登録した目的を達成したときに使用する。type ごとの通常終端と判定基準は次のとおりとする。
+`item_status` の通常終端は、登録した目的を達成したときに使用する。`item_type` ごとの通常終端と判定基準は次のとおりとする。
 
 | `item_type`      | 通常終端  | 遷移条件                                                               | `conclusion` に残す内容      |
 | ---------------- | --------- | ---------------------------------------------------------------------- | ---------------------------- |
@@ -164,6 +178,7 @@ Project Register Documentation Rules
 - `note` の `open` は未対応を意味しない。内容を継続して更新できる、生きている記録であることを示す。
 - `note` から対応・回答・判断が必要になった場合は、`todo` / `question` / `decision` など目的に合う別項目を起票し、note 自体は `open` のまま参照元として保持する。
 - `note` の内容が陳腐化または置換された場合は、その事実と参照先を本文へ追記する。`done` / `decided` / `rejected` / `deferred` へ遷移させて閉じない。
+- `register close` / `register reject` / `register defer` は `note` を拒否し、終了コード 1 で終了する。内容の追記には `register update` を使う。
 
 #### 5.3.2. 例外的な追跡終了
 
@@ -190,14 +205,14 @@ Project Register Documentation Rules
 
 ### 5.4. 個票 status の遷移基準
 
-| `status`     | 意味                                              | 遷移させる時点                                    |
-| ------------ | ------------------------------------------------- | ------------------------------------------------- |
-| `draft`      | 作成直後。type 固有の必須節が未確定               | `register add` で個票を生成した時点               |
-| `ready`      | type 固有の必須節が固まり `_TODO_` が残っていない | `register close` 時に必須節を満たすと判定した時点 |
-| `deprecated` | 却下・破棄され成熟度を追う必要がない              | `register reject` 時点                            |
+| `status`     | 意味                                                     | 遷移させる時点                                    |
+| ------------ | -------------------------------------------------------- | ------------------------------------------------- |
+| `draft`      | 作成直後。`item_type` 固有の必須節が未確定               | `register add` で個票を生成した時点               |
+| `ready`      | `item_type` 固有の必須節が固まり `_TODO_` が残っていない | `register close` 時に必須節を満たすと判定した時点 |
+| `deprecated` | 却下・破棄され成熟度を追う必要がない                     | `register reject` 時点                            |
 
 - 遷移は register コマンドが担い、個票 Frontmatter を直接手書きで書き換えない。
-- `ready` への昇格には、type 固有の必須節に `_TODO_` が残っていないことを要する。
+- `ready` への昇格には、`item_type` 固有の必須節と必須記入欄を満たし、`_TODO_` が残っていないことを要する。
 - `reopen` は過去の結果を消さず、再開理由と新しい対応状況を個票本文へ追記する。
 
 ## 6. 禁止事項
@@ -205,9 +220,9 @@ Project Register Documentation Rules
 - 生成された `pjr-index.md`、補助一覧、controls 全体の派生ビューを直接編集しない。
 - 一覧と個票の同期、一覧から個票への書き戻し、または個票を作るかどうかの分離基準を設けない。
 - 構造化フィールドを個票本文や別の正本へ重複管理しない。
-- `type` / `item_status` / `priority` に schema 未定義の値を使用しない。
+- 文書種別の `type`、登録項目分類の `item_type`、`item_status`、`priority` に schema 未定義の値を使用しない。
 - `registered_at` / `completed_at` に、UTC 以外のオフセットやタイムゾーンを伴わない値、暦日だけの値を保存しない。
 - 個票の文書 ID から `<topic>` を省略したり、ファイル名と異なるローカル ID を使用したりしない。
-- type 固有の必須内容を、見出しだけ残した空欄のまま終端状態にしない。
+- `item_type` 固有の必須内容を、見出しだけ残した空欄のまま終端状態にしない。
 - 実行していない主体を actor とする状態遷移を、記録の体裁を揃える目的で追加しない。
 - `events/pjr-XXXX.yaml` を手書きで追加・修正・並べ替え・削除しない。履歴補正が必要な場合も register コマンドを使い、監査イベントを破壊しない。

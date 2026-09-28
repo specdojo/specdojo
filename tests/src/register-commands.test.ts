@@ -383,6 +383,84 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
     });
   });
 
+  it.each([
+    { command: "close", expectedStatus: "done", expectedDocumentStatus: "ready" },
+    { command: "reject", expectedStatus: "rejected", expectedDocumentStatus: "deprecated" },
+    { command: "defer", expectedStatus: "deferred", expectedDocumentStatus: "draft" },
+  ])(
+    "$command は note 以外の item_type を従来どおり終端できる",
+    async ({ command, expectedStatus, expectedDocumentStatus }) => {
+      await withRepo(async ({ registerDir }) => {
+        const ticketPath = join(registerDir, "pjr-ab12-topic.md");
+        writeFileSync(join(registerDir, "pjr-index.md"), buildIndex([]), "utf8");
+        writeFileSync(
+          ticketPath,
+          buildTicket("PJR-AB12", ["item_status: open", "priority: high"]),
+          "utf8",
+        );
+        vi.spyOn(process.stdout, "write").mockReturnValue(true);
+
+        await runRegister([command, "--id", "PJR-AB12"]);
+
+        const updated = readFileSync(ticketPath, "utf8");
+        expect(updated).toContain(`  item_status: ${expectedStatus}`);
+        expect(updated).toContain(`  status: ${expectedDocumentStatus}`);
+      });
+    },
+  );
+
+  it.each(["close", "reject", "defer"])(
+    "%s は note を書き換えず終了コード 1 で拒否する",
+    async (command) => {
+      await withRepo(async ({ registerDir }) => {
+        const ticketPath = join(registerDir, "pjr-ab12-topic.md");
+        writeFileSync(join(registerDir, "pjr-index.md"), buildIndex([]), "utf8");
+        const original = buildTicket("PJR-AB12", ["item_status: open", "priority: high"]).replace(
+          "  item_type: todo",
+          "  item_type: note",
+        );
+        writeFileSync(ticketPath, original, "utf8");
+        vi.spyOn(process.stdout, "write").mockReturnValue(true);
+        const stderr = vi.spyOn(process.stderr, "write").mockReturnValue(true);
+
+        await runRegister([command, "--id", "PJR-AB12"]);
+
+        expect(process.exitCode).toBe(1);
+        expect(stderr.mock.calls.map((call) => String(call[0])).join("")).toContain(
+          `Cannot ${command} PJR-AB12: item type "note" is non-terminal`,
+        );
+        expect(stderr.mock.calls.map((call) => String(call[0])).join("")).toContain(
+          "Create a todo, question, decision, or another appropriate item type",
+        );
+        expect(readFileSync(ticketPath, "utf8")).toBe(original);
+        expect(existsSync(registerEventFilePath(registerDir, "PJR-AB12"))).toBe(false);
+      });
+    },
+  );
+
+  it("update は note の内容を従来どおり更新できる", async () => {
+    await withRepo(async ({ registerDir }) => {
+      const ticketPath = join(registerDir, "pjr-ab12-topic.md");
+      writeFileSync(join(registerDir, "pjr-index.md"), buildIndex([]), "utf8");
+      writeFileSync(
+        ticketPath,
+        buildTicket("PJR-AB12", ["item_status: open", "priority: high"]).replace(
+          "  item_type: todo",
+          "  item_type: note",
+        ),
+        "utf8",
+      );
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+
+      await runRegister(["update", "--id", "PJR-AB12", "--description", "新しい事実を追記した。"]);
+
+      const updated = readFileSync(ticketPath, "utf8");
+      expect(updated).toContain("  item_type: note");
+      expect(updated).toContain("  item_status: open");
+      expect(updated).toContain("新しい事実を追記した。");
+    });
+  });
+
   it("wait はブロック理由を conclusion と分けて frontmatter へ記録する", async () => {
     await withRepo(async ({ registerDir }) => {
       const ticketPath = join(registerDir, "pjr-ab12-topic.md");

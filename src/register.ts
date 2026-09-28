@@ -26,6 +26,8 @@ import {
 } from "./register-migrate-timestamps.js";
 import { flattenTemplateFrontmatter } from "./template-frontmatter.js";
 import { parseSpecdojoDocument } from "./frontmatter-namespace.js";
+import { resolveDispatchedTemplateId } from "./kata.js";
+import { practiceLocalId } from "./practice-id.js";
 import { resolveSpecdojoTemplatePath } from "./template-resolution.js";
 import { collectRegisterHistoryEvents, formatRegisterHistoryEvents } from "./register-history.js";
 import {
@@ -1213,6 +1215,19 @@ function loadItemForUpdate(
   return view;
 }
 
+type TerminalRegisterCommand = "close" | "reject" | "defer";
+
+// note は未対応項目ではなく、open のまま更新し続ける記録である。終端操作による書き込みを
+// 始める前に共通ガードを通し、対応・回答・判断が必要な場合は別項目の起票へ誘導する。
+function assertTerminalOperationAllowed(item: PjrItem, command: TerminalRegisterCommand): void {
+  if (item.type !== "note") return;
+  throw new Error(
+    `Cannot ${command} ${item.id}: item type "note" is non-terminal and must remain open. ` +
+      `Create a todo, question, decision, or another appropriate item type when action, ` +
+      `an answer, or a decision is required.`,
+  );
+}
+
 // 更新後の項目値を個票 frontmatter へ書き戻す。未移行（source: index）の項目は、
 // 行から読んだ値も含めて全フィールドを書き込み、その場で個票正本へ移行する。
 // タイトル・説明は frontmatter に持たないため、H1 と概要段落を書き換える。
@@ -2216,7 +2231,15 @@ export function registerRegisterCommands(program: Command): void {
         completedAt: completedAt ?? CELL_NONE,
         conclusion: opts.conclusion,
       };
-      const templatePath = resolveSpecdojoTemplatePath(`pjr-${opts.type}-template.md`);
+      const templateId = resolveDispatchedTemplateId(
+        "specdojo:pjr-rulebook",
+        "item_type",
+        opts.type,
+      );
+      if (!templateId) {
+        throw new Error(`No PJR template is declared for item type "${opts.type}"`);
+      }
+      const templatePath = resolveSpecdojoTemplatePath(`${practiceLocalId(templateId)}.md`);
 
       const { assignedId: displayId, ticketFilename } = planRegisterItem({
         existingIds: loadRegisterItems(paths).map((view) => view.id),
@@ -2295,6 +2318,7 @@ export function registerRegisterCommands(program: Command): void {
       const paths = resolveRegisterPaths(opts);
       const view = loadItemForUpdate(paths, opts.id, "require-active");
       const item = view.item;
+      assertTerminalOperationAllowed(item, "close");
 
       const targetStatus =
         opts.status ?? (["decision", "question"].includes(item.type) ? "decided" : "done");
@@ -2348,6 +2372,7 @@ export function registerRegisterCommands(program: Command): void {
       const paths = resolveRegisterPaths(opts);
       const view = loadItemForUpdate(paths, opts.id, "require-active");
       const item = view.item;
+      assertTerminalOperationAllowed(item, "reject");
 
       const completedAt =
         parseRegisterTimestampOption(opts.completed, "completed", CELL_NONE) ?? nowUtcTimestamp();
@@ -2391,6 +2416,7 @@ export function registerRegisterCommands(program: Command): void {
       const paths = resolveRegisterPaths(opts);
       const view = loadItemForUpdate(paths, opts.id, "require-active");
       const item = view.item;
+      assertTerminalOperationAllowed(item, "defer");
 
       const updated: PjrItem = {
         ...item,

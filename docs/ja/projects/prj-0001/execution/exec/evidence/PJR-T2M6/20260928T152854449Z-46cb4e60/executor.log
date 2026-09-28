@@ -1,0 +1,12 @@
+`note` の終端拒否を実装しました。
+
+- `close` / `reject` / `defer` を書き込み前に拒否し、別の `item_type` 起票を案内。
+- 非 `note` の終端操作と `note` の更新をテストへ追加。
+- `template_dispatch` を導入し、`register add` のテンプレート選択を機械可読化。
+- rulebook、運用ガイド、コマンドリファレンス、個票を更新。
+- result ファイルと登録簿ステータスは executor 指示に従い未変更です。
+- 親 runner 担当の unit/integration/schema/typecheck は実行していません。
+
+<specdojo_executor_evidence>
+{"final_message":"`note` の close・reject・defer 拒否、テスト、関連文書と `template_dispatch` 定義を実装済み","validations":[{"command":"npx prettier --write <変更対象ファイル>","status":"passed","summary":"Markdown・YAML・TypeScript を整形"},{"command":"npx markdownlint <変更対象Markdown>","status":"passed","summary":"変更対象Markdownにエラーなし"},{"command":"npm run -s lint:md","status":"passed","summary":"全Markdown検査に成功"},{"command":"npm run lint:ts","status":"passed","summary":"ESLintに成功"},{"command":"npm run lint:fm","status":"passed","summary":"Frontmatter検査に成功"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"既存の欠落文書警告のみで検証成功"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿と派生ビューを再生成"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"2160件の文書インデックスを生成"},{"command":"npm run validate:history-links","status":"passed","summary":"履歴リンク検査に成功"}]}
+</specdojo_executor_evidence>

@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-09-28T15:26:55Z"
@@ -32,15 +32,17 @@ PJR-GDQC の回答（候補 A）を実装する。`pjr-rulebook` は `note` を�
 
 ## 3. 作業内容
 
-| No  | 作業                           | 担当 | 状態 | メモ                   |
-| --- | ------------------------------ | ---- | ---- | ---------------------- |
-| 1   | 終端操作で `note` を拒否する   | DEV  | open | close / reject / defer |
-| 2   | テストを追加する               | DEV  | open | -                      |
-| 3   | ガイドとリファレンスへ記載する | DEV  | open | -                      |
+| No  | 作業                           | 担当 | 状態 | メモ                                              |
+| --- | ------------------------------ | ---- | ---- | ------------------------------------------------- |
+| 1   | 終端操作で `note` を拒否する   | DEV  | done | close / reject / defer の共通ガードを追加         |
+| 2   | テストを追加する               | DEV  | done | 拒否、非 `note`、`note` の update を検証          |
+| 3   | ガイドとリファレンスへ記載する | DEV  | done | 運用ガイド、コマンドリファレンス、rulebook を更新 |
 
 ## 4. 対応結果
 
--
+- `register close` / `register reject` / `register defer` は、`item_type: note` を書き換える前に拒否し、終了コード 1 と別項目の起票案内を返すようにした。
+- `note` 以外の終端操作と `note` の `register update` が従来どおり動くことを単体テストへ追加した。
+- `pjr-rulebook` の `item_type` 別必須節、日時保存規則、schema・運用ガイドへの導線、template ディスパッチを明文化し、運用ガイドとコマンドリファレンスへ `note` の拒否を追記した。
 
 ## 5. 関連ドキュメント
 
