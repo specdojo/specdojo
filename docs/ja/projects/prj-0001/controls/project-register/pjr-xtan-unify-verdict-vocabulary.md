@@ -74,16 +74,25 @@ level 4 → pass、level 3 → conditional_pass、level 0-2 → changes_requeste
 
 ## 5. 作業内容
 
-| No  | 作業                                                  | 担当 | 状態 | メモ                       |
-| --- | ----------------------------------------------------- | ---- | ---- | -------------------------- |
-| 1   | 案 A・B・C から方針を決める                           | ARC  | open | **着手前の判断**。B を起点 |
-| 2   | `decision.recommendation` を `verdict_definitions` へ | DEV  | open | B の場合                   |
-| 3   | 写像を review の入力規則としてガイドへ記載する        | DEV  | open | `review-guide.md`          |
-| 4   | `xrr-viewpoint-detail` の扱いを N22N と揃える         | QE   | open |                            |
+| No  | 作業                                                  | 担当 | 状態 | メモ                                                                         |
+| --- | ----------------------------------------------------- | ---- | ---- | ---------------------------------------------------------------------------- |
+| 1   | 案 A・B・C から方針を決める                           | ARC  | done | 方針の決定（2026-09-27）で案 B に決定済み                                    |
+| 2   | `decision.recommendation` を `verdict_definitions` へ | DEV  | done | N22N 後の 6 値 `verdict` を正とし、`verdict_definitions` を同じ 6 値へ揃えた |
+| 3   | 写像を review の入力規則としてガイドへ記載する        | DEV  | done | `review-guide.md` に `grade の結果を review の入力にする規則` を追加した     |
+| 4   | `xrr-viewpoint-detail` の扱いを N22N と揃える         | QE   | done | N22N で削除済み。語彙の統一対象から外した                                    |
 
 ## 6. 対応結果
 
--
+- 方針: 方針の決定（2026-09-27）のとおり案 B を採った。review 側でタスクの完了可否を表す語彙だけを統一し、grade の語彙（`pass` / `needs-work` / `fail`）と level からの写像は残した。grade の結果は移行していない。
+- 前提の変化: 着手時点で [[prj-0001:pjr-n22n-xrp-xrr-review]] は完了しており、`xrr-template.md` の `decision.recommendation`（`approve` / `revise` / `reject`）はすでに `verdict`（`complete` / `complete-with-findings` / `incomplete` / `grade-stale` / `grade-unavailable` / `changed-during-review`）へ置き換わっていた。残る二重表現は `verdict_definitions`（`pass` / `conditional_pass` / `changes_requested` / `blocked`）と review result の `verdict` だった。受入観点 6 区分と一対一に対応する `verdict` を正とし、`verdict_definitions` を同じ 6 値へ改めた。
+- 語彙の正本: 6 値を `src/review-types.ts` の `REVIEW_VERDICTS` に移し、reporter（`src/exec-reporter.ts`）と観点定義の読み込み（`src/review-plan.ts`）が同じ定数を使う。`pm-review-viewpoints.schema.yaml` の `VerdictDefinition` の enum も同じ 6 値にした。
+- `revise` の対応先: `incomplete` とした。旧値の移行先は `pass` → `complete`、`conditional_pass` → `complete-with-findings`、`changes_requested` → `incomplete`、`blocked` → `grade-stale` / `grade-unavailable` / `changed-during-review`、`approve` → `complete` または `complete-with-findings`、`reject` → `incomplete` である。
+- 写像: `grade_rubric` の `review_verdict` は level 4 → `complete`、level 3 → `complete-with-findings`、level 0-2 → `incomplete` とした。3 帯の区切りは変えず、写像先の値だけを統一後の語彙へ付け替えた。写像先は level から決まる 3 値に限り、鮮度・評価不能・review 中の変更は含めない。rubric の id（`grade-rubric-v2`）と score・verdict の計算は変えていないため、既存の grade result は再評価の対象にならない。
+- ガイド: `review-guide.md` に `grade の結果を review の入力にする規則` を追加した。判定対象ごとの語彙の表、写像を review の判断の起点として使う規則、起点と異なる verdict を選ぶ場合の記録、旧値の移行先を記載した。
+- 旧値の拒否: 観点定義の `verdict_definitions` と `grade_rubric` の `review_verdict` に旧値があると、移行先を示すエラーで読み込みに失敗する。reporter の出力に `recommendation` や旧値の `verdict` があると、スキーマ検証より先に移行先を示すエラーで失敗する。
+- `xrr-viewpoint-detail-template.md`: N22N で削除済みであり、観点ごとの `result`（`pass` / `fail` / `unclear`）は語彙として残っていない。本項目では扱わない。
+- 成果物カタログ: 未作成の `br-review-verdict` の概要が旧値を挙げていたため、新しい 6 値へ改めた。
+- `npm run check` の通過: typecheck・単体テスト・統合テスト・schema 検証は親 runner が実行する。
 
 ## 7. 関連ドキュメント
 

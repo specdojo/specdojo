@@ -206,6 +206,92 @@ describe("resolveViewpointsDoc", () => {
     });
   });
 
+  it("verdict_definitions の旧値を移行先の値を示して拒否する", () => {
+    withTempDir((dir) => {
+      const projectPath = writeOverlay(dir, {
+        verdict_definitions: [{ id: "conditional_pass", description: "旧値" }],
+      });
+
+      expect(() => resolveViewpointsDoc(projectPath, resolve(COMMON_PATH))).toThrow(
+        /verdict_definitions has removed verdict 'conditional_pass'; use complete-with-findings \(allowed: complete, complete-with-findings, incomplete, grade-stale, grade-unavailable, changed-during-review\)/,
+      );
+    });
+  });
+
+  it("extends のない全量ファイルでも grade_rubric の旧 review_verdict を拒否する", () => {
+    withTempDir((dir) => {
+      const path = join(dir, "legacy.yaml");
+      writeFileSync(
+        path,
+        yaml.dump({
+          id: "test:viewpoints",
+          viewpoints: [],
+          grade_rubric: {
+            id: "grade-rubric-test",
+            levels: [
+              { level: 2, name: "L2", description: "d", review_verdict: "changes_requested" },
+            ],
+          },
+        }),
+        "utf8",
+      );
+
+      expect(() => resolveViewpointsDoc(path)).toThrow(
+        /grade_rubric level 2 review_verdict has removed verdict 'changes_requested'; use incomplete \(allowed: complete, complete-with-findings, incomplete\)/,
+      );
+    });
+  });
+
+  it("grade の level から決まらない verdict を review_verdict に使えない", () => {
+    withTempDir((dir) => {
+      const path = join(dir, "legacy.yaml");
+      writeFileSync(
+        path,
+        yaml.dump({
+          id: "test:viewpoints",
+          viewpoints: [],
+          grade_rubric: {
+            id: "grade-rubric-test",
+            levels: [{ level: 0, name: "L0", description: "d", review_verdict: "grade-stale" }],
+          },
+        }),
+        "utf8",
+      );
+
+      expect(() => resolveViewpointsDoc(path)).toThrow(
+        /grade_rubric level 0 review_verdict has unknown verdict 'grade-stale'/,
+      );
+    });
+  });
+
+  it("共通正本の verdict_definitions は review の verdict と同じ 6 値である", () => {
+    withTempDir((dir) => {
+      const resolved = resolveViewpointsDoc(writeOverlay(dir), resolve(COMMON_PATH)) as Record<
+        string,
+        unknown
+      >;
+      const ids = (resolved["verdict_definitions"] as { id: string }[]).map((item) => item.id);
+
+      expect(ids).toEqual([
+        "complete",
+        "complete-with-findings",
+        "incomplete",
+        "grade-stale",
+        "grade-unavailable",
+        "changed-during-review",
+      ]);
+      expect(resolved["grade_rubric"]).toMatchObject({
+        levels: [
+          { level: 0, review_verdict: "incomplete" },
+          { level: 1, review_verdict: "incomplete" },
+          { level: 2, review_verdict: "incomplete" },
+          { level: 3, review_verdict: "complete-with-findings" },
+          { level: 4, review_verdict: "complete" },
+        ],
+      });
+    });
+  });
+
   it("extends のない既存の全量ファイルは互換読み込みする", () => {
     withTempDir((dir) => {
       const path = join(dir, "legacy.yaml");
