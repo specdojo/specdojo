@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-QD81",
+  "run_id": "20260928T224317198Z-f711ad0a",
+  "stage": {
+    "role": "executor",
+    "actor": "agy-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-28T22:43:17.198Z",
+    "completed_at": "2026-09-28T22:46:20.564Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/rulebooks/gl-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/060-glossary/gl-common.yaml",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 2,
+    "summary": "docs/ja/specdojo/rulebooks/gl-rulebook.md | 1 +\n 1 file changed, 1 insertion(+)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/product/010-business-specs/060-glossary/gl-common.yaml docs/ja/specdojo/rulebooks/gl-rulebook.md",
+      "status": "not_run",
+      "summary": "sandbox error"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/specdojo/rulebooks/gl-rulebook.md",
+      "status": "not_run",
+      "summary": "sandbox error"
+    },
+    {
+      "source": "executor",
+      "command": "npm run check",
+      "status": "not_run",
+      "summary": "sandbox error"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-QD81\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\n[dry-run] git merge --no-ff --no-edit exec/T-T-doc-010\ncommit-targets:\n  docs/shared.md\nUpdated: /tmp/specdojo-register-resume-e2e-BVMUI9/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)\nUpdated: /tmp/specdojo-register-resume-e2e-BVMUI9/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml\nGenerated: /tmp/specdojo-register-resume-e2e-BVMUI9/docs/ja/projects/test/controls/project-register/generated/pjr-index.md\nGenerated: /tmp/specdojo-register-resume-e2e-BVMUI9/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md\nGenerated: /tmp…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.2.1 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/010-business-specs/060-glossary/gl-common.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-QD81/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-QD81/docs/specdojo/schemas/v1/dct…"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-QD81\n\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\nUpdated ticket status → ready: /tmp/specdojo-ticket-hfoVCz/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-VZbQtG/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-TlkxO4/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-H3iH47/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-4MxH8s/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-9yfzfg/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\nWrote agent stdout: /tmp/specdojo-agent-command-UMdKGt/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-W9DL3v/outputs/partial.txt\n\n Test Files  114 passed (114)\n      Tes…"
+    }
+  ],
+  "final_message": "用語集 gl-common.yaml を作成し、データストア 15 件と実行記録・評価結果の構成要素を定義しました。gl-rulebook.md の terms 構造に englishName を追加し、英語名の保持方法を明示しました。schema は作成しない方針としました。未確定 5 件は用語集内で単一名を持たないと定義（または構成要素として分割）したため、CDFD 側への反映（併記）は行いません。これは cdfd-rulebook の規定と整合します。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-QD81/20260928T224317198Z-f711ad0a/executor.log",
+      "bytes": 2170,
+      "truncated": false
+    }
+  ]
+}
