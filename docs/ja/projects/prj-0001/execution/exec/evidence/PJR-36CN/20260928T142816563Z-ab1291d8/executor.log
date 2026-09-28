@@ -1,0 +1,32 @@
+PJR-36CN を実装しました。統合時の merge でイベントファイルが競合したら、両側のイベントの和集合で解決します。ただし、テストと型チェックはまだ一度も実行していません。親 runner が実行する `npm run typecheck`・`npm run test:unit`・`npm run test:integration` の結果で確認してください。
+
+**変更内容**
+- **新規 `src/register-event-merge.ts`**:
+  - `unionRegisterEventLogs` は、同じ id のイベントを 1 件にまとめ（内容は exec branch 側を採用）、時刻順に並べて `previous_event_id` のつながりを付け直します。
+  - 統合先だけにある、状態を変えないイベント（`update` など）は、直前の状態を `from_status` / `to_status` に引き継ぎます。
+  - 統合先だけに状態遷移があるなど、状態の流れがつながらない場合は、その理由を返します。
+  - `rebuildRegisterTicketFromEvents` は、統合先だけのイベントが最後に変えた `type` / `priority` / `owner` / `due` を、exec branch 側の個票に反映します。
+- **`src/exec-worktree-ops.ts`**: `resolveBranchOwnedConflicts` で、競合したイベントファイルを和集合で解決します。対応する個票も競合していれば、再構築した内容で解決します。
+  - 和集合にできない場合は、これまでどおり exec branch 側で解決し、理由を統合ログに出します。このときは統合先で追記されたイベントが統合後に残らない点に注意してください。
+- **テスト**:
+  - 単体テスト `tests/src/register-event-merge.test.ts` を追加しました。
+  - `tests/src/exec-worktree-ops.integration.test.ts` に統合テストを追加しました。`waiting` 中に統合先で追記した `update`（期限の変更）が、統合後もイベントと個票の両方に残ることを確かめます。
+  - この統合テストでは、個票が git の自動 merge で競合せずに片付く可能性があります。個票の再構築そのものは単体テストで確かめています。
+- **ドキュメント**: `exec-worktree-guide.md` の統合の説明と、個票の作業内容・対応結果を更新しました。
+
+**個票の扱い**
+- タイトル・説明（本文にある）、状態遷移に伴う値（`status` / `block_reason` / `conclusion` / `completed`）、`registered`（イベントでは日付に変換されていて元の日時に戻せない）は再構築しません。
+- plan・result・登録簿もイベントから作れないため、これまでどおり exec branch 側で解決します。
+
+**実行した確認**
+- prettier と ESLint を変更した TS 4 ファイルに実行し、エラーはありませんでした。
+- prettier・markdownlint・docs-lint を変更した Markdown 2 ファイルに実行し、エラーはありませんでした。
+- `catalog validate` は OK でした（既存の WARN のみ）。
+
+**実行していない確認**
+- 前回の試行は保護された設定ファイル `.specdojo/doc-index.json` の変更で止まったため、`specdojo index build` は実行していません。runner 側で実行が必要です。
+- 完了条件の `npm run check` も、この sandbox では実行していません。
+
+<specdojo_executor_evidence>
+{"final_message":"Implemented union resolution of register event files on integrate-merge conflicts (new src/register-event-merge.ts; wired into resolveBranchOwnedConflicts in src/exec-worktree-ops.ts). Merge-target-only events are kept, relinked in time order, and non-status events inherit the preceding status. The ticket is rebuilt from merge-target-only events for type/priority/owner/due. Other bookkeeping files (plan, result, pjr-index) still take the exec branch side, and a union that breaks status continuity falls back to the exec branch side with a log message. Added unit tests (tests/src/register-event-merge.test.ts) and an integration test (tests/src/exec-worktree-ops.integration.test.ts) showing that a waiting-time update event on the merge target survives integration. The integration test's ticket may merge without a conflict, so the ticket rebuild is verified only by the unit tests. Updated exec-worktree-guide.md and the PJR-36CN ticket work/result sections. Verified: prettier/eslint on changed TS, prettier/markdownlint/docs-lint on changed Markdown, catalog validate. Not verified in sandbox: none of the new tests or the typecheck were run here; typecheck and unit/integration tests are left to the parent runner. `specdojo index build` was not run because it rewrites protected .specdojo/doc-index.json, and `npm run check` (a ticket completion condition) was not run.","validations":[{"command":"npx prettier --write src/register-event-merge.ts src/exec-worktree-ops.ts tests/src/register-event-merge.test.ts tests/src/exec-worktree-ops.integration.test.ts","status":"passed","summary":"formatted; 2 files reformatted"},{"command":"npx eslint src/register-event-merge.ts src/exec-worktree-ops.ts tests/src/register-event-merge.test.ts tests/src/exec-worktree-ops.integration.test.ts","status":"passed","summary":"no errors"},{"command":"npx prettier --write docs/ja/specdojo/guides/exec-worktree-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-36cn-integrate-bookkeeping-event-union.md","status":"passed","summary":"unchanged"},{"command":"npx markdownlint docs/ja/specdojo/guides/exec-worktree-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-36cn-integrate-bookkeeping-event-union.md","status":"passed","summary":"no errors"},{"command":"node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint docs/ja/specdojo/guides/exec-worktree-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-36cn-integrate-bookkeeping-event-union.md","status":"passed","summary":"exit 0"},{"command":"npx tsx src/specdojo.ts catalog validate","status":"passed","summary":"OK with pre-existing based_on warnings only"},{"command":"npx tsx src/specdojo.ts index build","status":"not_run","summary":"skipped: rewrites protected .specdojo/doc-index.json, which blocked the previous attempt"},{"command":"npm run check","status":"not_run","summary":"ticket completion condition; not run in the executor sandbox"}]}
+</specdojo_executor_evidence>
