@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-g8tb-docs-sync-4hbg-36cn-e2q3
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-09-28T15:26:56Z"
+  completed_at: "2026-09-28T22:14:26Z"
+  conclusion: 4HBG・36CN・E2Q3 の変更を Quick Start ガイド・登録簿運用ガイド・レビューガイドへ反映した
 ---
 
 # PJR-G8TB 4HBG・36CN・E2Q3 の変更を利用者向けドキュメントへ反映する

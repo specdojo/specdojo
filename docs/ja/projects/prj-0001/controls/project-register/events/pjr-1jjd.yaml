@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_41ad19b5a20f4db0af1f2e0b6b7093f8
+  ts: "2026-09-28T22:13:16Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: 2026-09-29 の T2M6 で範囲外の変更が develop に入り、orchestrator が取り除いたため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: register の plan が関連ドキュメントとして参照しただけの文書の grade finding を解消対象に展開する
+    - field: description
+      from: ""
+      to: 個票の wikilink 先すべての grade finding を plan に展開し解消を指示するため、関連ドキュメントとして参考に挙げた pjr-rulebook の finding を executor が直し、template_dispatch の新設など範囲外の設計変更を行った（XW9M、T2M6）
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-29"
+    - field: due
+      from: ""
+      to: _TODO_

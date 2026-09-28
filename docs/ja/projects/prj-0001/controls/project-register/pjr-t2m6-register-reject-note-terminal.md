@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-t2m6-register-reject-note-terminal
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-09-28T15:26:55Z"
+  completed_at: "2026-09-28T22:14:24Z"
+  conclusion: register close・reject・defer が type note の項目を拒否し、別 type の起票を案内する。範囲外だった template_dispatch などの変更は orchestrator が取り除いた
 ---
 
 # PJR-T2M6 register close・reject・defer で note を拒否する

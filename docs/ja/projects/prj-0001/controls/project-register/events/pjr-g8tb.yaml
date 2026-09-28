@@ -58,3 +58,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_94181728808d4caebbfb9518af1945d4
+- v: 1
+  id: reg_9892b1d12b474810a04d1cbb9d602232
+  ts: "2026-09-28T22:14:26Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: agy-expert-executor の実行結果を orchestrator が評価し、変更が範囲内であることを確認
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-29"
+    - field: conclusion
+      from: "-"
+      to: 4HBG・36CN・E2Q3 の変更を Quick Start ガイド・登録簿運用ガイド・レビューガイドへ反映した
+  previous_event_id: reg_30db57c67ebc4340913bdb6870a55fc3
