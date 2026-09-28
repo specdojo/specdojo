@@ -306,6 +306,14 @@ specdojo:
 
 人または agent は review plan に従って review します。`<execution_path>/exec/results/<task-id>-result.md` は `specdojo exec claim` の時点で scaffold される（手動 claim でも `exec run` 経由の claim でも同様）ため、agent または人はそこに結果を記入します。
 
+agent に review を実行させる場合は、`exec run --plan` で executor と reporter を指定して 2 段で実行します。
+
+```bash
+# review を 2 段で実行する
+npx specdojo exec run --project <project-id> --plan <execution_path>/exec/plans/<task-id>-plan.md \
+  --executor-by <executor-nickname> --reporter-by <reporter-nickname>
+```
+
 review で `approach` に応じて何を確かめるかは、plan の `進め方` と [実践の進め方ガイド](ryu-guide.md) に従います。
 
 実行時の原則

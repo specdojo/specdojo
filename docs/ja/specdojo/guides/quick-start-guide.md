@@ -395,6 +395,14 @@ npx specdojo exec refresh --project <project-id>
 
 `mode: review` のタスクを実行すると、runner は review plan の生成前に対象成果物を grade します。grade は成果物の品質を観点ごとに評価し、review はその評価結果を付け直さず、変更内容・実行記録・`done_criteria` を照合してタスクの完了可否を判断します。review result の verdict と finding の読み方、成果物を `ready` にする human finalize との境界は [レビューガイド](review-guide.md) を参照してください。
 
+agent に review を実行させる場合は、`exec run --plan` で executor と reporter を指定して 2 段で実行します。
+
+```bash
+# review を 2 段で実行する
+npx specdojo exec run --project <project-id> --plan <execution_path>/exec/plans/<task-id>-plan.md \
+  --executor-by <executor-nickname> --reporter-by <reporter-nickname>
+```
+
 ここまでで、register による立ち上げ整理から、成果物カタログ、Schedule、1タスクの完了までの Quick Start は終了です。以降の worktree 隔離実行と routine は、agent 設定後に試す任意の発展手順です。
 
 ## 4. （発展）worktreeで1タスクを隔離実行する
