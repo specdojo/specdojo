@@ -1309,15 +1309,15 @@ export function parsePlanTaskIdentity(planContent: string): PlanTaskIdentity | n
 export function registerGradeFindingsText(projectId: string, ticketPath: string): string {
   if (!existsSync(ticketPath)) return "- なし";
   const content = readFileSync(ticketPath, "utf8");
-  const match =
-    content.match(/##\s+5\.\s+関連ドキュメント\s+([\s\S]*?)(?:##|$)/i) ||
-    content.match(/##\s+関連ドキュメント\s+([\s\S]*?)(?:##|$)/i);
-  if (!match) return "- なし";
+  const metadata = readSpecdojoNamespace(content);
+  const targets = Array.isArray(metadata.targets)
+    ? metadata.targets
+        .filter((target): target is string => typeof target === "string")
+        .map((target) => target.trim())
+        .filter((target) => target.length > 0)
+    : [];
 
-  const docsText = match[1];
-  const links = [...docsText.matchAll(/\[\[([a-zA-Z0-9:-]+)(?:\|[^\]]+)?\]\]/g)].map((m) => m[1]);
-
-  if (links.length === 0) return "- なし";
+  if (targets.length === 0) return "- なし";
 
   const docIndexPath = join(specdojoRootDir(), ".specdojo", "doc-index.json");
   const MAX_DOCS = 10;
@@ -1326,9 +1326,9 @@ export function registerGradeFindingsText(projectId: string, ticketPath: string)
   const lines: string[] = [];
 
   let docCount = 0;
-  for (const id of links) {
+  for (const id of targets) {
     if (docCount >= MAX_DOCS) {
-      lines.push(`- その他 ${links.length - MAX_DOCS} 件の文書は省略されました`);
+      lines.push(`- その他 ${targets.length - MAX_DOCS} 件の文書は省略されました`);
       break;
     }
 

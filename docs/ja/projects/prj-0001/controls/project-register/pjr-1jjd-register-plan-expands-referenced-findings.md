@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: high
   owner: DEV
   registered_at: "2026-09-28T22:13:15Z"
@@ -47,7 +47,10 @@ register 項目の plan（`xep-register-template.md` の「grade result から�
 
 ## 4. 対応結果
 
--
+- `registerGradeFindingsText` が finding を展開する対象を、「関連ドキュメント」の wikilink ではなく個票 Frontmatter の `targets` に変更した。
+- `targets` がない個票では finding を展開せず、関連ドキュメントにあるだけの文書を解消対象にしないようにした。
+- `targets` に含まれる文書の展開、含まれない関連文書の除外、`targets` 未宣言、文書数・finding 数の上限を単体テストで確認できるようにした。
+- `register-operation-guide.md` に、`targets` は変更対象、関連ドキュメントは根拠や参考への導線であるという役割の違いを追記した。
 
 ## 5. 関連ドキュメント
 
