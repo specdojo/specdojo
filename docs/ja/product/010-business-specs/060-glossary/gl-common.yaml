@@ -1,0 +1,105 @@
+# specdojo-schema: none reason=schema-not-defined
+id: gl-common
+title: 用語集（共通）
+locale: ja
+status: draft
+terms:
+  - id: tm-config
+    term: 稼働構成
+    definition: SpecDojoを稼働させる最低限の設定（リポジトリ層とプロジェクト層）。
+    notes: 単一の英語名を持たない。
+    category: tm-data-store
+  - id: tm-kata
+    term: Kata
+    englishName: kata
+    definition: rulebook、recipe、templateなどの規約や雛形の集合。
+    category: tm-data-store
+  - id: tm-catalog
+    term: 成果物カタログ
+    englishName: catalog
+    definition: プロジェクトの成果物を定義するカタログ。
+    category: tm-data-store
+  - id: tm-schedule-strategy
+    term: スケジュール戦略
+    definition: トラックごとのタスク生成戦略や既定値の定義。
+    notes: 単一の英語名を持たない。
+    category: tm-data-store
+  - id: tm-routine
+    term: 定期実行定義
+    englishName: routine
+    definition: 周期や条件に基づき、継続的な確認や実行を定義するもの。
+    category: tm-data-store
+  - id: tm-job
+    term: ジョブ定義
+    englishName: job
+    definition: 定型的に実行する処理の手順や判断の定義。
+    category: tm-data-store
+  - id: tm-register
+    term: 登録簿
+    englishName: register
+    definition: タスクや課題、決定事項などの記録。
+    category: tm-data-store
+  - id: tm-schedule
+    term: Schedule
+    englishName: track
+    aliases:
+      - Schedule（track）
+    definition: 作成する成果物ごとのタスクを展開した計画の正本。
+    category: tm-data-store
+  - id: tm-plan
+    term: 実行計画
+    englishName: plan
+    definition: タスクごとの実施手順や対象文書、完了条件の定義。
+    category: tm-data-store
+  - id: tm-deliverable
+    term: 成果物
+    englishName: deliverable
+    definition: プロジェクトで作成・更新する対象成果物。
+    category: tm-data-store
+  - id: tm-trash
+    term: 保管庫
+    englishName: trash
+    aliases:
+      - 保管庫（trash）
+    definition: 非推奨化して退避した文書の保管場所。
+    category: tm-data-store
+  - id: tm-progress-report
+    term: 進捗報告
+    definition: プロジェクトの進捗状況を可視化して関係者に報告するビュー。
+    notes: 単一の英語名を持たない。
+    category: tm-data-store
+  - id: tm-derived-view
+    term: 派生ビュー・索引
+    definition: YAMLの閲覧ページや文書索引などの派生成果物。
+    notes: 単一の英語名を持たない。
+    category: tm-data-store
+  - id: tm-result
+    term: 実行結果
+    englishName: result
+    definition: タスクの実行によって得られた結果（実行記録の構成要素）。
+    category: tm-exec-log
+  - id: tm-event
+    term: 状態遷移イベント
+    englishName: event
+    definition: タスクや成果物の状態が遷移した記録（実行記録の構成要素）。
+    category: tm-exec-log
+  - id: tm-evidence
+    term: 証跡
+    englishName: evidence
+    definition: 実行の過程や結果を裏付ける記録（実行記録の構成要素）。
+    category: tm-exec-log
+  - id: tm-trial
+    term: 試行記録
+    englishName: trial
+    definition: タスク実行時の試行錯誤の過程（実行記録の構成要素）。
+    category: tm-exec-log
+  - id: tm-grade
+    term: 判定結果
+    englishName: grade
+    definition: 成果物の品質や適合性に対する総合的な評価判定（評価結果の構成要素）。
+    category: tm-evaluation
+  - id: tm-finding
+    term: 指摘事項
+    englishName: finding
+    definition: 評価によって発見された改善点や問題点（評価結果の構成要素）。
+    category: tm-evaluation

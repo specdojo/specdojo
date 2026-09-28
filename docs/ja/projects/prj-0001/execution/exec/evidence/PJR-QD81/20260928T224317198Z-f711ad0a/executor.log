@@ -1,0 +1,10 @@
+PJR-QD81 の対応を完了しました。
+
+- 英語名の保持方法として `gl-rulebook.md` の `terms` 基本構造に `englishName` 項目を追加し、これを用いて定義を行う方針としました。
+- 成果物ディレクトリに `docs/ja/product/010-business-specs/060-glossary/gl-common.yaml` を新規作成し、CDFD のデータストアおよび「実行記録」「評価結果」の構成要素（`result`, `event`, `evidence`, `trial`, `grade`, `finding`）を用語として定義しました。
+- 未確定だった 5 件について、「実行記録」と「評価結果」は個別の構成要素として用語定義を行いました。「稼働構成」「進捗報告」「派生ビュー・索引」は単一の英語名を持たない旨を `notes` に明記しました。これにより単一の英語名への確定は行われないため、`cdfd-rulebook.md` の規定に従い CDFD 側への英語名の併記（反映）は行いません。
+- Schema については、現状の `gl-rulebook.md` が Standard 非準拠であることなどから、今回のタイミングでの作成は見送り（不要）としました。
+
+<specdojo_executor_evidence>
+{"final_message":"用語集 gl-common.yaml を作成し、データストア 15 件と実行記録・評価結果の構成要素を定義しました。gl-rulebook.md の terms 構造に englishName を追加し、英語名の保持方法を明示しました。schema は作成しない方針としました。未確定 5 件は用語集内で単一名を持たないと定義（または構成要素として分割）したため、CDFD 側への反映（併記）は行いません。これは cdfd-rulebook の規定と整合します。","validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/060-glossary/gl-common.yaml docs/ja/specdojo/rulebooks/gl-rulebook.md","status":"not_run","summary":"sandbox error"},{"command":"npx markdownlint docs/ja/specdojo/rulebooks/gl-rulebook.md","status":"not_run","summary":"sandbox error"},{"command":"npm run check","status":"not_run","summary":"sandbox error"}]}
+</specdojo_executor_evidence>
