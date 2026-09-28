@@ -108,8 +108,8 @@ flowchart TD
 
 ### 4.1. レビューを回して成果物をreadyにする
 
-- ゴール: 観点別レビューで完全性・整合性・妥当性を確認し、成果物を `ready` へ確定する。
-- 進め方: `mode: review` のタスクで review plan / result を回し、指摘を扱う。`ready` への昇格は human が finalize タスクで行う。
+- ゴール: grade の品質評価とタスクの完了判断を分け、確認済みの成果物を `ready` へ確定する。
+- 進め方: grade が観点ごとの品質を評価し、`mode: review` のタスクはその結果を事実として変更内容・実行記録・完了条件を照合する。`ready` への昇格は human が finalize タスクで行う。
 - 主に使う文書: [レビューガイド](review-guide.md)、[exec運用ガイド](exec-operation-guide.md) の `humanタスクの実行`。
 
 ### 4.2. 計画外の単発対応・調査を管理する

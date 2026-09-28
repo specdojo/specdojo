@@ -580,13 +580,13 @@ tools/grade/run-per-document.sh --run-id 20260901-rulebooks --limit 3 --dry-run
 # rulebook を codex 単段で評価する。同じ run-id で再実行すると中断箇所から再開する
 tools/grade/run-per-document.sh --run-id 20260901-rulebooks --stages 1 --kind rulebook
 
-# 変更済み、未評価、または段未完了の4種別を最大5件再評価する
+# 変更済み、未評価、段未完了、または旧 rubric の4種別を最大15件再評価する
 tools/grade/run-per-document.sh --run-id 20260908-recheck --kind all \
-  --stages 1 --changed-only --ungraded --incomplete --limit 15
+  --stages 1 --changed-only --ungraded --incomplete --rubric-outdated --limit 15
 
-# 変更済み、未評価、または段未完了の成果物を最大5件再評価する
+# 変更済み、未評価、段未完了、または旧 rubric の成果物を最大10件再評価する
 tools/grade/run-per-document.sh --run-id 20260912-deliverables --target deliverable \
-  --stages 1 --changed-only --ungraded --incomplete --limit 10
+  --stages 1 --changed-only --ungraded --incomplete --rubric-outdated --limit 10
 
 # 旧 rubric で評価された成果物を最大10件評価し直す
 tools/grade/run-per-document.sh --run-id 20260928-rubric-v2 --target deliverable \
@@ -610,9 +610,9 @@ exit "$grade_status"
 
 各段の status、所要秒数、verdict、score、finding 件数、executor、reporter、reference、連続失敗回数は同ディレクトリの `results.tsv` で確認できます。通常の agent / apply 失敗はその段で文書処理を止め、成功済みの前段を残して次回同じ段から再試行します。既定の連続失敗上限は3回で、`--max-stage-failures` で変更できます。上限到達文書は処理対象から外れますが、`retry_exhausted` 行として `results.tsv` に含め、reporter が人手対応を促せるようにします。
 
-`apply` は level 3 以下に finding を要求し、`blocker` は level 0、`major` は最大 level 2、`minor` は最大 level 3 に制限します。category score は viewpoint score（`level × 25`）の平均、総合 score は対象種別ごとの重み付き平均です。verdict は `blocker` があれば `fail`、`major` があるか総合 score が 70 未満なら `needs-work`、それ以外を `pass` とします。
+`apply` は level 3 以下に finding を要求し、`blocker` は level 0、`major` は最大 level 2、`minor` は最大 level 3 に制限します。category score は viewpoint score（`level × 25`）の平均、総合 score は対象種別ごとの重み付き平均です。verdict は `blocker` があれば `fail`、`major` があるか総合 score が現行 rubric の `pass_score`（`grade-rubric-v2` では 75）未満なら `needs-work`、それ以外を `pass` とします。
 
-現行のインライン記録対象は Markdown です。YAML / JSON の kata・成果物はコメントと Frontmatter を同じ契約で保持できないため、`--path` で指定した場合は書き込まずエラーにします。非 Markdown の記録形式はサイドカー schema を導入する後続変更で扱います。
+現行の評価対象は Markdown です。評価結果は成果物本文へ書き込まず grade result サイドカーへ保存します。YAML / JSON の kata・成果物は Markdown と同じ Frontmatter・内容ハッシュの契約を持たないため、`--path` で指定した場合は書き込まずエラーにします。
 
 ## 9. exec worktree
 

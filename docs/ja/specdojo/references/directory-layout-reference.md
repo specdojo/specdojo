@@ -163,7 +163,9 @@ docs/
 │   │   │   │   │   ├── runs/                    # 入力・task・attempt・結果
 │   │   │   │   │   └── generated/               # checkpoint派生ビュー
 │   │   │   │   ├── grade/                        # 継続品質評価（最新状態）
+│   │   │   │   │   ├── results/                  # 文書別のgrade resultサイドカー
 │   │   │   │   │   ├── criteria/                 # 成果物別のdone_criteria判定詳細
+│   │   │   │   │   ├── pipeline/                 # 文書別pipelineの再開state
 │   │   │   │   │   └── generated/                # 再生成可能な派生物（git管理外）
 │   │   │   │   │       └── plans/                # 1文書単位の評価plan
 │   │   │   │   │           ├── kata/             # Kata評価plan
