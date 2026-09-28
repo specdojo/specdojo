@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-xtan-unify-verdict-vocabulary
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-09-24T14:01:35Z"
   due_on: "2026-10-31"
+  completed_at: "2026-09-28T09:38:45Z"
+  conclusion: review 側の完了可否の語彙を 6 値（complete / complete-with-findings / incomplete / grade-stale / grade-unavailable / changed-during-review）へ統一し、REVIEW_VERDICTS を正本とした。grade の語彙と level からの写像は残し、旧値は移行先を示すエラーで拒否する
 ---
 
 # PJR-XTAN 判定語彙を判定対象ごとに整理し 同じ対象の語彙だけを統一する

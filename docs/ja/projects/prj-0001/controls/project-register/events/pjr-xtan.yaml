@@ -71,3 +71,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_2705e9680d114fe7afc0fbccddedd7ca
+- v: 1
+  id: reg_57e13ea7107e4172818c3149dd9142e9
+  ts: "2026-09-28T09:38:45Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: claude-expert-executor の実行結果を orchestrator が評価し完了条件を満たすと判断
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-28"
+    - field: conclusion
+      from: "-"
+      to: review 側の完了可否の語彙を 6 値（complete / complete-with-findings / incomplete / grade-stale / grade-unavailable / changed-during-review）へ統一し、REVIEW_VERDICTS を正本とした。grade の語彙と level からの写像は残し、旧値は移行先を示すエラーで拒否する
+  previous_event_id: reg_56715e77234648b0889ab6f8398052ea
