@@ -49,7 +49,7 @@ import {
   type MemberRoster,
   type ProjectMember,
 } from "./specdojo-config.js";
-import { type ReadyTaskView } from "./exec-types.js";
+import { type AgentPipeline, type ReadyTaskView } from "./exec-types.js";
 import type {
   AgentStageRole,
   CurrentState,
@@ -3095,6 +3095,55 @@ export function resolveInPlaceCommand(
   };
 }
 
+// Default two-stage pipeline for in-place runs whose task has no schedule definition (a
+// bring-your-own --plan or --deliverable). Stage requirements are left open so explicit
+// --executor-by / --reporter-by nicknames (or stage_role-based auto selection) decide the agents.
+const DEFAULT_IN_PLACE_AGENT_PIPELINE: AgentPipeline = {
+  stages: [{ stage_role: "executor" }, { stage_role: "reporter" }],
+};
+
+// Decide whether an in-place run without a schedule-defined task (--plan / --deliverable) uses
+// the executor/reporter pipeline. --executor-by / --reporter-by opt in to the pipeline. A --by
+// nickname that names a pipeline stage agent is rejected as a configuration error: an executor
+// stage agent never writes the result, so a single-agent run would always end with an unfilled
+// result instead of a meaningful outcome.
+export function resolveInPlaceAgentPipeline(
+  task: ReadyTaskView | null,
+  roster: MemberRoster | null,
+  opts: Pick<RunOpts, "by" | "executorBy" | "reporterBy">,
+  source: "plan" | "deliverable",
+): AgentPipeline | undefined {
+  if (task?.agent_pipeline) return task.agent_pipeline;
+  const flag = source === "plan" ? "--plan" : "--deliverable";
+  if (opts.executorBy || opts.reporterBy) {
+    if (opts.by) {
+      throw new Error("--by cannot be combined with --executor-by / --reporter-by.");
+    }
+    if (!task) {
+      throw new Error(
+        `${flag} pipeline execution requires a plan with task_id in its frontmatter (the reporter fills the scaffolded result).`,
+      );
+    }
+    return DEFAULT_IN_PLACE_AGENT_PIPELINE;
+  }
+  const by = opts.by?.trim();
+  if (!by) return undefined;
+  const member = roster?.members.find((m) => m.type === "agent" && m.nickname === by);
+  if (member?.stage_role === "executor") {
+    throw new Error(
+      `--by ${by} is a pipeline executor agent (stage_role: executor) and does not write the result. ` +
+        `Run ${flag} with --executor-by ${by} --reporter-by <reporter> instead.`,
+    );
+  }
+  if (member?.stage_role === "reporter") {
+    throw new Error(
+      `--by ${by} is a pipeline reporter agent (stage_role: reporter) and cannot run a plan by itself. ` +
+        `Run ${flag} with --executor-by <executor> --reporter-by ${by} instead.`,
+    );
+  }
+  return undefined;
+}
+
 async function spawnAgentInPlace(
   command: string,
   prompt: string,
@@ -3236,6 +3285,19 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
       fifo_rank: 0,
       critical_first_rank: 0,
     };
+  }
+
+  // --plan / --deliverable tasks carry no schedule-defined agent_pipeline. Opt in to the
+  // executor/reporter pipeline via --executor-by / --reporter-by, and reject a pipeline stage
+  // agent passed to --by before it runs (it would leave the result unfilled).
+  if (!opts.task) {
+    const pipeline = resolveInPlaceAgentPipeline(
+      task,
+      roster,
+      opts,
+      opts.plan ? "plan" : "deliverable",
+    );
+    if (pipeline && task) task.agent_pipeline = pipeline;
   }
 
   const { command, actor, provider } = resolveInPlaceCommand(task, roster, opts, execDefaults);
@@ -6412,11 +6474,11 @@ export function registerRunCommand(exec: Command): void {
   );
   rcmd.option(
     "--executor-by <nickname>",
-    "Executor nickname; with --register, also accepts PJR-ID=nickname assignments separated by commas",
+    "Executor nickname; with --register, also accepts PJR-ID=nickname assignments separated by commas. With --plan / --deliverable, runs the executor/reporter pipeline",
   );
   rcmd.option(
     "--reporter-by <nickname>",
-    "pm-members.yaml reporter agent nickname for agent_pipeline tasks",
+    "pm-members.yaml reporter agent nickname for agent_pipeline tasks (with --plan / --deliverable, runs the executor/reporter pipeline)",
   );
   rcmd.option("--dry-run", "Print resolved command without executing", false);
 

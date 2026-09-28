@@ -103,3 +103,29 @@
       from: rate limit reached
       to: "integrate failed: git merge failed: CONFLICT (content): Merge conflict in docs/ja/specdojo/references/command-reference.md"
   previous_event_id: reg_0bc2cfb6028349ffadbc018f35ba5db6
+- v: 1
+  id: reg_b1ef431b0b534a2eb8d2b0f9ced5367c
+  ts: "2026-09-28T15:13:55Z"
+  action: start
+  actor: claude-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_3326f8c2101c41c38eb98cc1c41ad504
+- v: 1
+  id: reg_28e3a5b2d56741e59694269f70829b21
+  ts: "2026-09-28T15:14:06Z"
+  action: review
+  actor: claude-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_b1ef431b0b534a2eb8d2b0f9ced5367c
