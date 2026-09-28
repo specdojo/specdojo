@@ -123,13 +123,13 @@ type は派生ビューの生成と `exec run --register` の挙動（`agent実�
 | 他者・外部の対応を待つ   | `register wait`   | `waiting`                                                             |
 | 確認・レビューに回す     | `register review` | `review`                                                              |
 | 完了する                 | `register close`  | `done`（`decision` / `question` は `decided`。`note` は終端させない） |
-| 対応しないと判断する     | `register reject` | `rejected`                                                            |
-| 延期する                 | `register defer`  | `deferred`                                                            |
+| 対応しないと判断する     | `register reject` | `rejected`（`note` は拒否）                                           |
+| 延期する                 | `register defer`  | `deferred`（`note` は拒否）                                           |
 | 終了済み項目を再開する   | `register reopen` | `open`                                                                |
 | 担当・期限などを変更する | `register update` | （状態は変えずフィールドを更新）                                      |
 
-- 担当や期限が未定のまま登録する場合は、空欄ではなく _TODO_ のままにしておき、決まり次第 `register update` で埋めます。
-- 起票と完了は「日付」ではなく「瞬間」として記録します。個票 Frontmatter の `registered_at` / `completed_at` に UTC の RFC 3339・秒精度（例: `2026-08-09T14:08:51Z`）で保存し、`register add` / `register close` / `register reject` が実行時刻を自動記入します。`register reopen` は `completed_at` を削除します。
+- 担当や期限が未定のまま登録する場合は、個票 Frontmatter の `owner` / `due_on` を省略し、決まり次第 `register update` で追加します。期限なしを明示する場合だけ `due_on: null` とします。
+- 起票と完了・決定・却下は「日付」ではなく「瞬間」として記録します。個票 Frontmatter の `registered_at` / `completed_at` に UTC の RFC 3339・秒精度（例: `2026-08-09T14:08:51Z`）で保存し、`register add` / `register close` / `register reject` が実行時刻を自動記入します。`deferred` は終端状態ですが `completed_at` を持ちません。`register reopen` は `completed_at` を削除します。
 - 一覧の「登録日」「完了日」は、保存した日時を config の `run.register_date_timezone`（IANA タイムゾーン名、既定 `UTC`）へ変換して導出する表示値です。個票側に日付を持たないため、表示タイムゾーンを変えても記録は書き換わりません。ID が乱数化され採番順から起票順を追えないため、登録日時は起票順を辿る手がかりになります。過去の項目で時刻が不明な場合は値を推測せず、キーを省略します。
 - 「期限」（`due_on`）は瞬間ではなく同タイムゾーン上の暦日そのものなので、`YYYY-MM-DD` のまま扱います。
 - 日時の計算は OS / コンテナの `TZ` 環境変数に依存させません。日本時間で表示・運用する場合は次のように設定します。
@@ -147,7 +147,7 @@ type は派生ビューの生成と `exec run --register` の挙動（`agent実�
 - 状態遷移は `open` から終端まで順に辿る必要はありません。人が対応した項目や、対話型 orchestrator がその場で処理した項目は、`start` を経ずに `close` / `reject` して構いません。着手を記録していない時点の遷移を後から補うと、実際には起きていない事実がイベントログに残ります。詳しい基準は [プロジェクト登録簿 作成ルール](../rulebooks/pjr-rulebook.md) の `中間状態を経ない終端` を参照します。
 - 直接終端させる場合は、誰がどの経路で対応したかを `register close --by <actor> --reason "<経路と根拠>"` で残します。exec 経由でないため plan / result / evidence が生成されず、実施内容と検証結果は個票の対応結果が唯一の記録になります。
 - agent へ実行させる項目は `exec run --register` を使います。この経路では runner が `start` と `wait` / `review` を記録し、plan / result / evidence も残ります。着手の記録が要る項目は、この経路を選びます。
-- 動いていない `open` や期限切れの項目は放置せず、期限の更新、優先度の見直し、`defer` / `reject` のいずれかへ整理します。ただし `note` の `open` は生きている記録を意味し、終端させません。対応・回答・判断が必要になった場合は、目的に合う別項目を起票します。
+- 動いていない `open` や期限切れの項目は放置せず、期限の更新、優先度の見直し、`defer` / `reject` のいずれかへ整理します。ただし `note` の `open` は生きている記録を意味し、終端させません。`register close` / `register reject` / `register defer` は `note` をエラー終了し、対応・回答・判断が必要な場合は、目的に合う別項目の起票を案内します。
 - `waiting` へ移す理由は `register wait --reason "<理由>"` で個票 Frontmatter の `block_reason` に記録します。これは途中経過であり、終端時の結論を表す `conclusion` は変更しません。旧 `--conclusion` も互換性のため受け付けますが、記録先は `block_reason` です。
 
 すべての登録項目は個票（`pjr-XXXX-<topic>.md`）を持ちます。`close` / `reject` は処理状態の遷移とあわせて個票 Frontmatter の `status`（文書成熟度）も更新します。処理状態とは別の状態軸であり、遷移基準は [プロジェクト登録簿 作成ルール](../rulebooks/pjr-rulebook.md) の `個票 status の遷移基準` を正本とします。
@@ -175,7 +175,7 @@ specdojo register add \
 
 ### 2.3. 完了時の記録
 
-`close` / `reject` / `defer` するときは、完了日時と結論を残します。結論は「何をどう判断したか」が 1 文で分かる形にします。
+`close` / `reject` では完了日時と結論を、`defer` では再開条件または再評価時期を示す結論だけを残します。`defer` は `completed_at` を記録しません。結論は「何をどう判断したか」が 1 文で分かる形にします。
 
 ```bash
 specdojo register close \
@@ -188,7 +188,7 @@ specdojo register close \
 - `rejected`: 却下の理由を書きます。
 - `deferred`: 再開の条件または再評価のタイミングを書きます。
 
-`--completed` を省略すると実行時刻を UTC で記録します。後追いで登録する場合だけ、タイムゾーン付きの RFC 3339 で明示します（内部では UTC へ正規化して保存します）。
+`register close` / `register reject` で `--completed` を省略すると実行時刻を UTC で記録します。後追いで登録する場合だけ、タイムゾーン付きの RFC 3339 で明示します（内部では UTC へ正規化して保存します）。
 
 ```bash
 specdojo register close \

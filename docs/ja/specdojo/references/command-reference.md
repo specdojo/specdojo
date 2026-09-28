@@ -129,7 +129,7 @@ specdojo catalog scaffold \
 
 `--dct <name>` で対象を特定の `dct-*.yaml` に絞れます。`name` は `dct-` プレフィックスや `.yaml` の有無を問わず、ドメイン名（例: `project-definition`）でも一致します。カンマ区切りまたは複数回指定で複数のカタログを対象にできます。指定名に一致する `dct-*.yaml` がない場合はエラーで終了します。
 
-`deliverable scaffold` が使用する template は、各成果物の `rulebook` を辿り、rulebook frontmatter の `template` 文書 ID から解決します。同じ rulebook を参照する成果物は template を共有できます。`template: not-needed`、`template: undecided`、項目省略では template を使用せず、最小雛形を生成します。`local_id` と同名の template を暗黙には探索しません。
+`deliverable scaffold` が使用する template は、各成果物の `rulebook` を辿り、rulebook frontmatter の `template` 文書 ID から解決します。同じ rulebook を参照する成果物は template を共有できます。`template: not-needed`、`template: undecided`、項目省略では template を使用せず、最小雛形を生成します。`local_id` と同名の template を暗黙には探索しません。`template_dispatch` は選択値を持つ専用コマンド向けであり、`deliverable scaffold` は使用しません。
 
 ```bash
 specdojo deliverable scaffold --project prj-0001 --dct project-definition
@@ -311,6 +311,8 @@ specdojo schedule strategy generate \
 | `--json`                  | イベントを JSON で出力する                                    | `history`                                 |
 
 `register add` は個票 Frontmatter の `registered_at`（起票日時）を、`register close` / `register reject` は `completed_at`（完了・却下日時）を自動記入します。値は UTC の RFC 3339・秒精度（例: `2026-08-09T14:08:51Z`）で、OS / コンテナの `TZ` 環境変数には依存しません。`register reopen` は `completed_at` を削除します。
+
+`item_type: note` は `open` のまま更新する記録です。`register close` / `register reject` / `register defer` は終了コード 1 で拒否し、対応・回答・判断が必要な場合は `todo` / `question` / `decision` など目的に合う別の `item_type` で起票するよう案内します。本文の追記や修正には `register update` を使用できます。
 
 `--registered` / `--completed` にはタイムゾーン付きの RFC 3339 値（`2026-08-09T14:08:51Z` または `2026-08-09T23:08:51+09:00`）を指定し、保存時に UTC へ正規化します。タイムゾーンを含まない値は解釈が実行環境に依存するため受け付けません。期限（`--due`）は瞬間ではなく暦日のため `YYYY-MM-DD` のままです。
 

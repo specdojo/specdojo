@@ -24,7 +24,7 @@ applyTo: "docs/ja/specdojo/rulebooks/**/*-rulebook.md"
 1. 対象 `*-rulebook.md` を特定し、既存ファイル有無を確認する。
 2. 章立て・記述ルール・Frontmatter を `rulebook-authoring-standard.md` と差分を洗い出す。
 3. 新規作成またはアップサートで章構成・記述・Frontmatter を反映する。
-4. sample / recipe / template との対応を Frontmatter の `sample` / `recipe` / `template` で宣言する（本文にリンク章や wikilink を置かない）。
+4. sample / recipe / template との対応を Frontmatter の `sample` / `recipe` / `template` / `template_dispatch` で宣言する（本文にリンク章や wikilink を置かない）。
 5. 変更点を要約し、最終チェック結果を記録する。
 
 ## 4. 最終チェック
@@ -32,7 +32,7 @@ applyTo: "docs/ja/specdojo/rulebooks/**/*-rulebook.md"
 - Frontmatter が `rulebook-authoring-standard.md` の `Frontmatter 規約`（`id` / `type` / `status`）を満たしている。
 - 章構成が `rulebook-authoring-standard.md` に準拠し、`## 1.` からの連番で必須章が欠落していない。
 - `rulebook-authoring-standard.md` の禁止事項に該当する記述がない。
-- 本文に sample / recipe / template への wikilink・リンク章がない（対応関係は Frontmatter で宣言されている）。
+- 本文に sample / recipe / template への wikilink・リンク章がない（対応関係は Frontmatter の `sample` / `recipe` / `template` / `template_dispatch` で宣言されている）。
 - `npm run -s lint:md` を実行し、エラーがない。
 - `target_format` が `yaml` / `json` の場合は、対応する sample が schema と整合することを確認する。
   - schema がある場合は `npm run validate:schema:file -- --schema <schema-path> --data <sample-path>` を実行する。

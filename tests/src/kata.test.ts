@@ -6,6 +6,7 @@ import {
   declaredIncludes,
   declaredKata,
   resolveDeliverableSchemaRef,
+  resolveDispatchedTemplateId,
   resolveIncludedRulebooks,
   resolveKataRefs,
 } from "../../src/kata.js";
@@ -244,6 +245,36 @@ describe("kata", () => {
         sample: "_MISSING_",
         template: "_MISSING_",
       });
+    });
+  });
+
+  describe("resolveDispatchedTemplateId", () => {
+    it("selector の値から template ID を解決し、宣言済み kata として列挙する", () => {
+      writeRulebook(
+        "specdojo:pjr-rulebook",
+        [
+          "id: specdojo:pjr-rulebook",
+          "type: rulebook",
+          "status: draft",
+          "template_dispatch:",
+          "  selector: item_type",
+          "  cases:",
+          "    todo: specdojo:pjr-todo-template",
+          "    note: specdojo:pjr-note-template",
+        ].join("\n"),
+      );
+
+      expect(resolveDispatchedTemplateId("specdojo:pjr-rulebook", "item_type", "note")).toBe(
+        "specdojo:pjr-note-template",
+      );
+      expect(resolveDispatchedTemplateId("specdojo:pjr-rulebook", "item_type", "risk")).toBe(
+        undefined,
+      );
+      expect(resolveDispatchedTemplateId("specdojo:pjr-rulebook", "other", "note")).toBe(undefined);
+      expect(declaredKata("specdojo:pjr-rulebook").map((entry) => entry.id)).toEqual([
+        "specdojo:pjr-todo-template",
+        "specdojo:pjr-note-template",
+      ]);
     });
   });
 

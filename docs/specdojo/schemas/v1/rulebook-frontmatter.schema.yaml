@@ -59,3 +59,33 @@ properties:
             description: >-
               対応する template の ID、要否未判断の undecided、または不要を表す not-needed。
               省略は必要だが未整備であることを表す。
+          template_dispatch:
+            type: object
+            required:
+              - selector
+              - cases
+            additionalProperties: false
+            properties:
+              selector:
+                type: string
+                pattern: "^[a-z][a-z0-9_]*$"
+                description: "template を選択する成果物フィールド名"
+              cases:
+                type: object
+                minProperties: 1
+                propertyNames:
+                  pattern: "^[a-z0-9][a-z0-9-]*$"
+                additionalProperties:
+                  type: string
+                  pattern: "^(?:[a-z][a-z0-9-]*:)?[a-z0-9][a-z0-9-]*-template$"
+                description: "selector の値から対応する template ID への写像"
+            description: >-
+              1つの rulebook が成果物フィールドの値に応じて複数 template を使い分ける場合の
+              ディスパッチ宣言。template とは同時に指定しない。
+        not:
+          properties:
+            template: {}
+            template_dispatch: {}
+          required:
+            - template
+            - template_dispatch

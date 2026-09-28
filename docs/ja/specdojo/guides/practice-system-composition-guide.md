@@ -95,7 +95,9 @@ flowchart TB
 
 `recipe` / `sample` / `template` の要否と所在は rulebook frontmatter を正本とし、成果物カタログは `rulebook` の宣言だけを保持します。`kind: generated` の成果物には実践の型を適用せず、個別宣言ではなく `kind` から導出します。
 
-`deliverable scaffold` は成果物の `rulebook` を辿り、その frontmatter の `template` が宣言する文書 ID から雛形を解決します。成果物の `local_id` と template ファイル名を一致させる必要はなく、同じ rulebook 系統の複数成果物が 1 つの template を共有できます。`template: not-needed`、`template: undecided`、項目省略は template を適用せず、カタログ情報による最小雛形へ退避します。
+`deliverable scaffold` は成果物の `rulebook` を辿り、その frontmatter の `template` が宣言する文書 ID から雛形を解決します。成果物の `local_id` と template ファイル名を一致させる必要はなく、同じ rulebook 系統の複数成果物が 1 つの template を共有できます。`template: not-needed`、`template: undecided`、項目省略では template を適用せず、カタログ情報による最小雛形へ退避します。
+
+同じ rulebook が成果物フィールドの値ごとに複数の template を使い分ける場合は `template_dispatch` を宣言します。選択値を持つ専用コマンドがこの写像を解決し、プロジェクト登録簿では `register add` が `item_type` に対応する template を選びます。選択値を持たない `deliverable scaffold` は `template_dispatch` を使用しません。
 
 ## 4. 実践の型サブセットと活用
 

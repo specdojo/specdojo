@@ -31,6 +31,10 @@ type RulebookRefs = {
   recipe?: string;
   sample?: string | string[];
   template?: string;
+  template_dispatch?: {
+    selector: string;
+    cases: Record<string, string>;
+  };
   target_format?: string;
   includes?: string[];
 };
@@ -72,13 +76,44 @@ export function loadRulebookRefs(rulebookId: string): RulebookRefs {
       : undefined;
   const strOrArray = (value: unknown): string | string[] | undefined =>
     str(value) ?? strArray(value);
+  const templateDispatch = (
+    value: unknown,
+  ): { selector: string; cases: Record<string, string> } | undefined => {
+    if (typeof value !== "object" || value === null || Array.isArray(value)) return undefined;
+    const record = value as Record<string, unknown>;
+    const selector = str(record.selector);
+    const rawCases = record.cases;
+    if (!selector || typeof rawCases !== "object" || rawCases === null || Array.isArray(rawCases)) {
+      return undefined;
+    }
+    const cases = Object.fromEntries(
+      Object.entries(rawCases).flatMap(([key, entry]) => {
+        const id = str(entry);
+        return id ? [[key, id]] : [];
+      }),
+    );
+    return { selector, cases };
+  };
   return {
     recipe: str(fm.recipe),
     sample: strOrArray(fm.sample),
     template: str(fm.template),
+    template_dispatch: templateDispatch(fm.template_dispatch),
     target_format: str(fm.target_format),
     includes: strArray(fm.includes),
   };
+}
+
+// selector の値に応じて template を切り替える rulebook 宣言を解決する。
+// register のように、同じ rulebook の配下で成果物種別ごとに異なる雛形を使う経路向け。
+export function resolveDispatchedTemplateId(
+  rulebookId: string,
+  selector: string,
+  value: string,
+): string | undefined {
+  const dispatch = loadRulebookRefs(rulebookId).template_dispatch;
+  if (!dispatch || dispatch.selector !== selector) return undefined;
+  return dispatch.cases[value];
 }
 
 // sample / template は対象成果物のフォーマットに合わせて拡張子が変わる。
@@ -248,5 +283,8 @@ export function declaredKata(rulebookId: string): DeclaredKata[] {
   add("recipe", fm.recipe, "md");
   add("sample", fm.sample, formatExt(fm.target_format));
   add("template", fm.template, formatExt(fm.target_format));
+  for (const id of Object.values(fm.template_dispatch?.cases ?? {})) {
+    add("template", id, formatExt(fm.target_format));
+  }
   return out;
 }
