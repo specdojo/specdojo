@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-gdqc-register-close-reject-note
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: question
-  item_status: open
+  item_status: decided
   priority: low
   owner: DEV
   registered_at: "2026-09-27T12:46:35Z"
+  completed_at: "2026-09-28T15:27:36Z"
+  conclusion: 候補 A。register close / reject / defer は note を拒否し、別の type での起票を案内する。実装は PJR-T2M6
 ---
 
 # PJR-GDQC register close で note の終端を拒否するかを決める
@@ -35,16 +37,20 @@ PJR-ZFFZ で作成した `stsd-register-entry` は、この点を _UNDECIDED_（
 
 ## 4. 回答・結論
 
-_TODO_: 回答と結論を記載する。
+候補 A を採る。`register close` / `reject` / `defer` は、type が `note` の項目を拒否し、対応や判断が必要なら目的に合う別の type で起票するよう案内する。
+
+- 規則（`pjr-rulebook` の type 別の扱い）を CLI で強制する。2026-09-27 には、orchestrator が誤った定義を根拠に `note` 6 件を close 候補として示した。CLI が拒否していれば、閉じる前に止まる。
+- 過去に `note` を終端させた記録があれば、その扱い（そのまま残すか、`open` へ戻すか）を実装の項目で確認して決める。
+- 実装は別の todo で行う。
 
 ## 5. 承認
 
-| 項目     | 内容   |
-| -------- | ------ |
-| 回答者   | _TODO_ |
-| 回答日   | _TODO_ |
-| 承認方式 | _TODO_ |
-| 証跡     | _TODO_ |
+| 項目     | 内容                                                       |
+| -------- | ---------------------------------------------------------- |
+| 回答者   | PO                                                         |
+| 回答日   | 2026-09-29                                                 |
+| 承認方式 | commit                                                     |
+| 証跡     | 本個票の回答を記録した commit（`docs(register PJR-GDQC)`） |
 
 - 承認方式は既定で `commit`（`register close` により `decided` へ遷移）を用いる。
 - 回答が不可逆・高リスク・framework schema 破壊的変更を伴う場合は `PR` 方式で承認し、証跡に PR URL と merge SHA を記載する。
