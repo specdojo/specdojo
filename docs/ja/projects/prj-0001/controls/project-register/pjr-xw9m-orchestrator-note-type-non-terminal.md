@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   owner: DEV
   registered_at: "2026-09-27T12:46:34Z"
+  block_reason: "agent exited with non-zero code: executor evidence の `source: executor` 検証コマンド（`node -e ... orchestrator note terminal state is still done` チェック）が `status: failed` であり、要約は「SSOTのnote終端状態が依然done。読み取り専用の…"
 ---
 
 # PJR-XW9M オーケストレーター定義の種別表で note を終端しない記録に直す
@@ -38,14 +39,17 @@ specdojo:
 
 ## 3. 作業内容
 
-| No  | 作業                                   | 担当 | 状態 | メモ |
-| --- | -------------------------------------- | ---- | ---- | ---- |
-| 1   | SSOT 本文の type 表と close 手順を直す | DEV  | open | -    |
-| 2   | 各環境の配置先とテンプレートへ反映する | DEV  | open | -    |
+| No  | 作業                                   | 担当 | 状態    | メモ                                    |
+| --- | -------------------------------------- | ---- | ------- | --------------------------------------- |
+| 1   | SSOT 本文の type 表と close 手順を直す | DEV  | blocked | `.agents/` が実行環境で読み取り専用     |
+| 2   | 各環境の配置先とテンプレートへ反映する | DEV  | blocked | SSOT を更新できず同期不能               |
+| 3   | plan 展開の grade finding を解消する   | DEV  | done    | rulebook・guide・schema・参照解決を更新 |
 
 ## 4. 対応結果
 
--
+plan に展開された grade finding について、`pjr-rulebook.md` に `item_type` ごとの必須節・必須記入欄と schema・運用ガイドへの導線を追加し、`completed_at`、未定の `owner` / `due_on`、`deferred` の保存規則を正本間で統一した。複数 template の Frontmatter 宣言を schema と参照解決で扱えるようにし、PJR の全 `item_type` template を宣言した。
+
+オーケストレーター本文の SSOT である `.agents/specdojo-orchestrator.agent.md` は、この executor の filesystem policy で読み取り専用になっており、作業ツリー相対の `apply_patch` が拒否された。SSOT を変更できないため、`npm run orchestrator:sync` による各環境への同期は未実施である。書き込み権限を付与した executor で、type 表の `note` を「なし（`open` のまま追記する）」へ変更し、close 手順へ `note` を終端させない規則を追記してから同期する必要がある。
 
 ## 5. 関連ドキュメント
 
