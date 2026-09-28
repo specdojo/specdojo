@@ -107,7 +107,7 @@ worktree 付きは、全 CLI で `tools/worktree/open-agent-worktree.sh` を通�
 
 ## 5. 設定ファイルの構成
 
-指示本文（システムプロンプト）の正本を1ファイルに集約し、各 agent CLI の設定はその本文を埋め込む薄いラッパーとしています。4系統の設定形式は非互換のため、単一のネイティブ設定ファイルを共有することはできません。
+指示本文（システムプロンプト）の正本を1ファイルに集約し、各 agent CLI の設定はその本文を埋め込む薄いラッパーとしています。4系統の設定形式は非互換のため、単一のネイティブ設定ファイルを共有することはできません。リポジトリ内で使うラッパーに加え、`config scaffold` で利用者へ配る provider テンプレートも同じ本文から生成します。
 
 | 役割               | パス                                       |
 | ------------------ | ------------------------------------------ |
@@ -121,7 +121,7 @@ worktree 付きは、全 CLI で `tools/worktree/open-agent-worktree.sh` を通�
 本文を変更する場合は、次の手順で全環境を同期します。
 
 1. SSOT の `.agents/specdojo-orchestrator.agent.md` を編集します。
-2. Markdown ラッパー4ファイルでは frontmatter より後を、Codex ラッパーでは `developer_instructions` の複数行文字列を、SSOT と同じ本文に更新します。
-3. `npm run lint:orchestrator-sync` を実行し、5つのラッパーが SSOT とバイト単位で一致することを確認します。
+2. `npm run orchestrator:sync` を実行し、環境別ラッパーと配布テンプレートへ本文を生成します。
+3. `npm run lint:orchestrator-sync` を実行し、10個の同期対象が SSOT とバイト単位で一致することを確認します。
 
-この検証は対象ファイルの変更時に pre-commit hook からも自動実行され、不一致があれば commit を停止します。モデル・権限・provider の変更は本文ではなく、各ラッパーの frontmatter / TOML 側で行います。
+同期対象の一覧は `tools/validate-orchestrator-sync.mjs` を正本とします。pre-commit hook は対象ファイルの変更時に `npm run orchestrator:sync` を実行し、本文の反映漏れを自動で補います。モデル・権限・provider の変更は本文ではなく、各ラッパーの frontmatter / TOML 側で行います。

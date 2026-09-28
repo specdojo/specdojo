@@ -172,7 +172,7 @@ runner は一意名の新しい result を scaffold するとき、同じ `task_
 
 `exec status` が表示・集計する Schedule の `doing` / `blocked` などは event log から導出するタスク状態であり、result の status とは別です。このため、履歴上の `superseded` result が実行中件数や対応待ちの blocked 件数へ加算されることはありません。
 
-review の result には、scaffold 時に catalog から観点別セクション（RVP）を焼き込みます。同様に `finalize` / `bootstrap-finalize` の result には、done_criteria の確認チェックリスト（roles / viewpoint 注記付き）と確定対象（`status` を `ready` へ昇格する対象）のチェックリストを焼き込みます。human result は `execution: human` と `targets` を持ち、`plan_ref` を持ちません。確定手順・確認対象・確認記録・確定判断を result 側へ一元化し、恒久記録として残します。
+review plan には、catalog の `done_criteria` と review 前段で得た grade の評価結果を焼き込みます。review result は観点を再評価する欄を持たず、`評価結果の確認`、`判断根拠`、`未充足事項・改善指示`、`approach` に応じた確認、6値の `verdict` を記録します。`finalize` / `bootstrap-finalize` の result には、`done_criteria` の確認チェックリスト（roles / viewpoint 注記付き）と確定対象（`status` を `ready` へ昇格する対象）のチェックリストを焼き込みます。human result は `execution: human` と `targets` を持ち、`plan_ref` を持ちません。確定手順・確認対象・確認記録・確定判断を result 側へ一元化し、恒久記録として残します。
 
 既に result が存在する場合は上書きせず、既存ファイルを使います。エージェントや人は result に実行内容、検証結果、残課題を記録します。
 

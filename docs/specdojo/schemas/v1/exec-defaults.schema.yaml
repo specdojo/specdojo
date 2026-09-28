@@ -18,6 +18,10 @@ properties:
     $ref: "#/$defs/PipelineDefaults"
     description: "Runner-owned defaults for executor/reporter pipelines."
 
+  run:
+    $ref: "#/$defs/RunDefaults"
+    description: "Defaults for concurrent `exec run` processes of one project."
+
   rate_limit_detection:
     $ref: "#/$defs/RateLimitDetection"
     description: >
@@ -65,9 +69,23 @@ $defs:
         type: integer
         minimum: 1
         description: >
-          Maximum number of work items whose parent validations may run at the same time within
-          one `exec run` process (default 1). Executor and reporter stages stay parallel; only
-          parent validations wait for a slot. Separate `exec run` processes are not coordinated.
+          Maximum number of work items whose parent validations may run at the same time for one
+          project (default 1). The limit holds within one `exec run` process and across the
+          processes that share the project's exec-run lock (a primary run and its `--join` runs).
+          Executor and reporter stages stay parallel; only parent validations wait for a slot.
+
+  RunDefaults:
+    type: object
+    additionalProperties: false
+    minProperties: 1
+    properties:
+      max_concurrent_runs:
+        type: integer
+        minimum: 1
+        description: >
+          Maximum number of `exec run` processes that may run at the same time for one project,
+          counting the primary run and every `exec run --register --worktree --join` run
+          (default 4). 1 disables `--join`.
 
   ProviderOverride:
     type: object
