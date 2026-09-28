@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-bvps-grade-rubric-outdated-selector
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-09-28T03:43:11Z"
+  completed_at: "2026-09-28T09:58:01Z"
+  conclusion: grade list と run-per-document.sh に --rubric-outdated を追加し、Job 定義と両 routine で有効にした。変更時点の旧 rubric の結果は kata 232 件、成果物 19 件で、夜間に limit の範囲で評価し直す
 ---
 
 # PJR-BVPS 旧 rubric の grade 結果を選ぶ条件を追加し夜間に少しずつ評価し直す

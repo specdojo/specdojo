@@ -58,3 +58,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_d33f5a9e536f40e28db1002244a6efd7
+- v: 1
+  id: reg_cd551c7bea764d348dc4683235998a8f
+  ts: "2026-09-28T09:58:01Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: claude-expert-executor の実行結果を orchestrator が評価し、件数を再確認して完了条件を満たすと判断
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-28"
+    - field: conclusion
+      from: "-"
+      to: grade list と run-per-document.sh に --rubric-outdated を追加し、Job 定義と両 routine で有効にした。変更時点の旧 rubric の結果は kata 232 件、成果物 19 件で、夜間に limit の範囲で評価し直す
+  previous_event_id: reg_743121cd702a4396b13e3ad9b1a30db2
