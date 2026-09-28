@@ -2,20 +2,22 @@ _FRONTMATTER_
 
 # Review Result
 
-## 1. レビュー観点別結果
+## 1. 評価結果の確認
 
-各 RVP セクションの `result` / `evidence` / `notes` を記入する。`evidence` の参照は `[[id]]` 形式（Obsidian wikilink）で記載し、行番号アンカーや絶対パスは使わない。位置の補足が必要な場合は `evidence` 本文で述べる。
+_TODO_: 評価結果サイドカーのパス、鮮度確認で実行したコマンドとその出力（`content_hash` が現在の成果物と一致するか）、grade の `verdict` / `score` / finding 件数を記入する。評価結果が最新でない、または評価不能の場合は、その事実と理由を記入する。
 
-_REVIEW_RESULT_SECTIONS_
+## 2. 判断根拠
 
-## 2. findings
+_TODO_: 変更内容・plan・実行記録・完了条件・最新の finding を照合した内容と、verdict を選んだ理由を記入する。finding が残るのに完了とする場合は、その finding が今回の完了を妨げない理由を記入する。参照は `[[id]]` 形式（Obsidian wikilink）で記載し、行番号アンカーや絶対パスは使わない。
 
-_TODO_: 問題点・指摘事項を記入する（なければ削除）。
+## 3. 未充足事項・改善指示
 
-## 3. 実践の型との整合確認
+_TODO_: 未充足事項と、再計画・成果物の改善・再評価に使う改善指示を記入する（なければ「なし」と記入する）。評価結果の内容に疑義がある場合は、再評価が必要な対象と理由もここに記入する。
 
-_TODO_: `approach` に従ってどう確認したか（`fully-guided` で rulebook の必須要素・禁止事項、recipe の作り方、sample の粒度・文体、template の章構成との整合、`recipe-guided` で recipe のみを基準にした確認、`freeform` で実践の型より優先した実例やプロジェクト文脈との整合、`retrofit` で実際に参照した実装パス・成果物との対応判定・乖離ごとの修正対象候補・未確認範囲、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）を記入する。複数文書間に矛盾があり rulebook を正として判定した箇所、確認の基準から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+## 4. approach に応じた確認
 
-## 4. decision
+_TODO_: `approach` に応じて確認した内容を記入する。fully-guided / recipe-guided / freeform では求められた作成・更新が行われたか、retrofit では実装エビデンスの対応記録と未確認範囲、`rulebook-maintenance` などの maintenance 系では見直しの動機となった finding の解消状況を記入する。
 
-- recommendation: _TODO_（approve / revise / reject）
+## 5. decision
+
+- verdict: _TODO_（complete / complete-with-findings / incomplete / grade-stale / grade-unavailable / changed-during-review）

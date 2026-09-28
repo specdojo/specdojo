@@ -18,50 +18,49 @@ _PHASE_DESCRIPTION_
 
 _PROJECT_CONTEXT_
 
-## 3. レビュー観点
+## 3. 評価結果
+
+review は成果物を再評価しない。次の評価結果を事実として受け取り、共通規約の `review の判断手順` に従ってタスクの完了可否を判断する。
+
+- 評価対象: `_GRADE_SUBJECT_PATH_`
+- grade の対象種別（`--target`）: `_GRADE_TARGET_`
+- 評価結果サイドカー: `_GRADE_RESULT_PATH_`（`_MISSING_` は評価対象が未作成、または評価対象の `id` を解決できないことを示す。この場合は評価結果が最新でないものとして扱う）
+
+## 4. 完了条件
+
+成果物カタログの `done_criteria` を、このタスクの完了条件として照合する。観点ごとに成果物を評価し直すための表ではない。
 
 <!-- markdownlint-disable MD055 MD056 -->
 
 <!-- prettier-ignore-start -->
-| ID  | ロール | viewpoint_id | 確認基準 |
+| ID  | ロール | viewpoint_id | 完了条件 |
 | --- | ------ | ------------ | -------- |
-_REVIEW_VIEWPOINT_ROWS_
+_DONE_CRITERIA_ROWS_
 <!-- prettier-ignore-end -->
 
 <!-- markdownlint-enable MD055 MD056 -->
 
-_REVIEW_VIEWPOINT_DETAILS_
+## 5. 進め方
 
-owner ロールの観点は、成果物がその責務を果たしているかを確認する。owner 以外のロールの観点は、その文書から各ロールが自分の責務の成果物を作成できるかという入力適合性の最低限の確認とし、各ロールの内容まで踏み込む過剰な再レビューはしない（一文書一責務）。
-
-## 4. 進め方
-
-- exec plan frontmatter の `approach` を確認する。
-- `approach` が `rulebook-maintenance` / `recipe-maintenance` / `sample-maintenance` / `template-maintenance` の場合は、確認の向きを「成果物 → 対象の実践の型」に切り替え、対象の実践の型が見直しに値するかを確認する。
-- それ以外の場合は、対象成果物に紐づく rulebook / recipe / sample / template の有無を確認し、`approach` に応じて確認の基準を決める。
-  - `fully-guided`: rulebook の必須要素・禁止事項、recipe の問いとレビュー観点、sample の粒度・文体、template の章構成との整合を確認する（プレースホルダが残っていないことも確認する）。`併せて適用する rulebook` が `_MISSING_` でない場合は、その記法などのルールとの整合も確認する。
-  - `recipe-guided`: recipe の問いとレビュー観点に照らして確認する（rulebook / sample / template の構造・文体は基準にしない）。
-  - `freeform`: 実践の型より、類似成果物の実例やプロジェクト文脈との整合を確認する。
-  - 未指定の場合は、存在するすべての実践の型をそれぞれの役割に沿って確認の基準にする。
-- 複数の文書間で記述に矛盾がある場合、確認の基準に rulebook を含む `approach`（`fully-guided` など）では rulebook を正とする。
-- `freeform` と実践の型メンテナンス系（`*-maintenance`）を除く `approach` では、確認に用いてよい文書をこの plan に記載されたもの（対象成果物に紐づく rulebook / 併せて適用する rulebook / recipe / sample / template、`対象成果物` セクションの `depends_on` 成果物、プロジェクトコンテキスト）に限定する。クロス文書整合のレビュー観点では `depends_on` 成果物を読み込んで対象成果物と突き合わせ、目的整合の判断ではプロジェクトコンテキストを参照する。plan に列挙されていない他のプロジェクト文書を独自に探索・参照しない。
-- `freeform` を除く `approach` では、対象成果物中のファイルパス・コマンド・設定値など実装や設定の実態を示す具体的な記述が、確認に用いてよい文書で裏付けられているかを確認する。裏付けが確認できない具体的な記述は、正確性を検証できないため該当レビュー観点を unclear とし、findings に記録する。もっともらしく具体的に見えることは裏付けの代わりにならない。
-- evidence・notes は、対象成果物・実践の型を実際に読んで得た具体的な観察に限る。実行 agent（executor）の最終メッセージや result の自己申告を、そのまま、または言い換えて evidence として扱わない。対象成果物の内容と executor の報告が一致しない場合は、対象成果物側を優先し findings に記録する。
-- 存在しない、または確認の基準から外れた文書がある場合は、他に存在する文書、類似成果物、対象領域の慣行と整合しているかを確認し、判断の根拠を review result に残す。
+- exec plan frontmatter の `approach` を確認し、このタスクが何を求めたかを把握する。実践の型（rulebook / recipe / sample / template）との整合は grade が評価済みであり、review で照合し直さない。
+- `approach` が `rulebook-maintenance` / `recipe-maintenance` / `sample-maintenance` / `template-maintenance` の場合、評価対象は実践の型そのものである。見直しの動機となった finding が、最新の評価結果で解消しているかを確認する。
+- `approach` が `retrofit` の場合は、成果物と実装の対応記録（一致・乖離・確認不能・未確認）と、乖離ごとの修正対象候補が実行記録に残っているかを確認する。
+- それ以外の場合は、フェーズ説明と完了条件が求めた作成・更新が行われたかを確認する。
+- 確認に用いてよい文書は、この plan に記載されたものに限る。具体的には、評価結果、対象成果物、`depends_on` 成果物、プロジェクトコンテキスト、実行記録である。plan に列挙されていない他のプロジェクト文書を独自に探索・参照しない。
 
 詳細は [[specdojo:ryu-guide]] を参照する。
 
-## 5. 完了手順
+## 6. 完了手順
 
-1. レビュー観点ごとに pass / fail / unclear を判定し、根拠を記入する。
-2. result の各レビュー観点セクションに記入する。result には各 RVP の `### RVP-NNN（ロール: viewpoint_id）` と `確認基準` が展開済みなので、`result` / `evidence` / `notes` を埋める。レビュー結果の記入はタスク完了に必須であり、未記入のまま終了しない（詳細は共通規約を参照）。
-3. `evidence` の参照は `[[id]]` 形式（Obsidian wikilink）で記載する。行番号アンカー（`#L12-L18` など）や絶対パスは使わない。位置の補足が必要な場合は `evidence` 本文で述べる。
-4. fail / unclear、または recommendation が revise / reject でも、レビュー結果を記録できた場合は正常終了する（終了コード 0）。
+1. 共通規約の `review の判断手順` に従い、評価結果の鮮度を確認してから完了可否を判断する。
+2. result の各セクションを埋める。`評価結果の確認` には鮮度確認のコマンドと出力、grade の `verdict` / `score` / finding 件数を書く。`判断根拠` には照合した内容を、`未充足事項・改善指示` には未充足事項と改善指示を書く。`approach に応じた確認` には前章で確認した内容を、`decision` には `verdict` を書く。review result の記入はタスク完了に必須であり、未記入のまま終了しない（詳細は共通規約を参照）。
+3. 文書の参照は `[[id]]` 形式（Obsidian wikilink）で記載する。行番号アンカー（`#L12-L18` など）や絶対パスは使わない。位置の補足が必要な場合は本文で述べる。
+4. verdict が `complete` 以外でも、review result を記録できた場合は正常終了する（終了コード 0）。
 
-## 6. 異常終了の条件
+## 7. 異常終了の条件
 
-- 対象ファイル不明・依存未解決・result 更新不能など、レビュー自体を完了できない場合は異常終了する（終了コード 1）。
-- 標準エラー出力に理由を出力する（例: `review-blocked: <reason>; criterion=<id>; ref=<path>`）。
+- 対象ファイル不明・依存未解決・result 更新不能など、review 自体を完了できない場合は異常終了する（終了コード 1）。評価結果が最新でない・評価不能であることは異常終了の理由にせず、verdict として記録する。
+- 標準エラー出力に理由を出力する（例: `review-blocked: <reason>; ref=<path>`）。
 - agent 自身は claim / complete / reopen / block を記録せず、終了コードと標準エラー出力で runner に結果を返す。
 
 _COMMON_CONVENTIONS_

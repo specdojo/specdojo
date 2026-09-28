@@ -81,7 +81,6 @@ import {
   parsePlanTaskIdentity,
   resolveDeliverableTarget,
   finalizeResultSectionsForDeliverable,
-  reviewResultSectionsForDeliverable,
   targetDocIdsForScheduledTask,
   stemFromPlanPath,
 } from "./exec-plans.js";
@@ -1593,14 +1592,6 @@ async function prepareSingleTask(
 
   const planRef = `exec/plans/${task.id}-plan.md`;
   const startedAt = new Date().toISOString();
-  const reviewSections =
-    (task.mode ?? "edit") === "review"
-      ? reviewResultSectionsForDeliverable(
-          planGenPaths.catalogPath ?? "",
-          task.local_id,
-          planGenPaths.viewpointsPath,
-        )
-      : undefined;
   const finalizeSections =
     task.approach === "finalize" || task.approach === "bootstrap-finalize"
       ? finalizeResultSectionsForDeliverable(
@@ -1624,7 +1615,6 @@ async function prepareSingleTask(
     startedAt,
     ...(task.approach ? { approach: task.approach } : {}),
     ...(targets ? { targets } : {}),
-    ...(reviewSections ? { reviewSections } : {}),
     ...(finalizeSections ? { finalizeSections } : {}),
   });
 
@@ -3207,10 +3197,6 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
   let resultPath: string | undefined;
   let resultScaffold: Record<string, unknown> | undefined;
   if (task && slug) {
-    const reviewSections =
-      (task.mode ?? "edit") === "review"
-        ? reviewResultSectionsForDeliverable(catalogPath ?? "", task.local_id, viewpointsPath)
-        : undefined;
     const finalizeSections =
       task.approach === "finalize" || task.approach === "bootstrap-finalize"
         ? finalizeResultSectionsForDeliverable(catalogPath ?? "", task.local_id, task.approach)
@@ -3230,7 +3216,6 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
         ...(stem ? { stem } : {}),
         ...(task.approach ? { approach: task.approach } : {}),
         ...(targets ? { targets } : {}),
-        ...(reviewSections ? { reviewSections } : {}),
         ...(finalizeSections ? { finalizeSections } : {}),
       })
     ).resultPath;

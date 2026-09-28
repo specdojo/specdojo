@@ -17,60 +17,49 @@ _PHASE_DESCRIPTION_
 
 _PROJECT_CONTEXT_
 
-## 3. レビュー観点
+## 3. 評価結果
+
+review は成果物を再評価しない。次の評価結果を事実として受け取り、共通規約の `review の判断手順` に従ってタスクの完了可否を判断する。
+
+- 評価対象: `_GRADE_SUBJECT_PATH_`
+- grade の対象種別（`--target`）: `_GRADE_TARGET_`
+- 評価結果サイドカー: `_GRADE_RESULT_PATH_`（`_MISSING_` は評価対象が未作成、または評価対象の `id` を解決できないことを示す。この場合は評価結果が最新でないものとして扱う）
+
+## 4. 完了条件
+
+成果物カタログの `done_criteria` を、このタスクの完了条件として照合する。観点ごとに成果物を評価し直すための表ではない。
 
 <!-- markdownlint-disable MD055 MD056 -->
 
 <!-- prettier-ignore-start -->
-| ID  | ロール | viewpoint_id | 確認基準 |
+| ID  | ロール | viewpoint_id | 完了条件 |
 | --- | ------ | ------------ | -------- |
-_REVIEW_VIEWPOINT_ROWS_
+_DONE_CRITERIA_ROWS_
 <!-- prettier-ignore-end -->
 
 <!-- markdownlint-enable MD055 MD056 -->
 
-_REVIEW_VIEWPOINT_DETAILS_
+## 5. 進め方
 
-owner ロールの観点は、成果物がその責務を果たしているかを確認する。owner 以外のロールの観点は、その文書から各ロールが自分の責務の成果物を作成できるかという入力適合性の最低限の確認とし、各ロールの内容まで踏み込む過剰な再レビューはしない（一文書一責務）。
+recipe-guided のタスクは、recipe（`_RECIPE_REF_`）の問いに沿って成果物の内容を作成・更新することを求めた。rulebook / sample / template は未成熟と判断されており、構造・文体・粒度の必須基準ではない。recipe の問いに対する内容の十分さは grade が評価済みである。review はこれを照合し直さず、評価結果の finding として扱う。
 
-## 4. 進め方
-
-対象成果物に紐づく recipe を、指定されたファイルを実際に読み込んだうえで主な確認基準にする。読み込まずに記憶や推測で代替しない。レビューでは成果物を組み立てるのではなく、成果物が基準を満たすかを照合する。
-
-主な確認基準とする recipe（rulebook frontmatter から解決）: `_RECIPE_REF_`（`_MISSING_` の場合は「recipe が存在しない・内容が薄い場合」に従う）。
-
-1. recipe: 指定された recipe を読み込み、示された問い・観点に照らして成果物の内容が十分かを確認する。
-2. recipe だけでは判断できない箇所は、`depends_on` 成果物・類似成果物・プロジェクト文脈との整合を確認する。
-
-rulebook / sample / template は未成熟と判断されているため、存在しても構造・文体・粒度の必須基準としては扱わない。recipe の指示が他の文書と矛盾する場合は recipe を優先する。
+1. フェーズ説明と完了条件が求めた作成・更新が、対象成果物に行われたかを確認する。
+2. recipe が `_MISSING_`、または基準として機能しないほど内容が薄い場合は、実行記録に代わりの根拠が残っているかを確認する。recipe そのものの整備が必要な場合は、改善指示に残す。
+3. finding が残っている場合は、このタスクの完了を妨げるかを判断する。rulebook / sample / template の構造・文体だけを根拠とする finding は、recipe-guided の完了を妨げる理由にしない。
 
 本タスクの実行に必要な recipe-guided の確認方針は、このセクションで完結する。approach 全体の定義（他 approach との対比や edit への適用）を確認したい場合のみ、参考として [[specdojo:ryu-guide]] を参照する。
 
-### 4.1. recipe が存在しない・内容が薄い場合
+## 6. 完了手順
 
-- recipe は recipe-guided の唯一の主基準であるため、存在しない、または基準として機能しないほど内容が薄い場合は、その事実と判断を review result の `実践の型との整合確認` セクションに記録する。
-- 欠落を理由にレビュー観点を unclear のまま放置しない。`depends_on` 成果物・類似成果物・プロジェクト文脈を基準にして判定根拠を補い、何を recipe の代わりに根拠としたかを明示する。
-- recipe そのものの整備が必要と判断した場合でも、本タスクの範囲を超える整備は行わず、findings または申し送りに残す。
+1. 共通規約の `review の判断手順` に従い、評価結果の鮮度を確認してから完了可否を判断する。
+2. result の各セクションを埋める。`評価結果の確認` には鮮度確認のコマンドと出力、grade の `verdict` / `score` / finding 件数を書く。`判断根拠` には照合した内容を、`未充足事項・改善指示` には未充足事項と改善指示を書く。`approach に応じた確認` には前章で確認した内容を、`decision` には `verdict` を書く。review result の記入はタスク完了に必須であり、未記入のまま終了しない（詳細は共通規約を参照）。
+3. 文書の参照は `[[id]]` 形式（Obsidian wikilink）で記載する。行番号アンカー（`#L12-L18` など）や絶対パスは使わない。位置の補足が必要な場合は本文で述べる。
+4. verdict が `complete` 以外でも、review result を記録できた場合は正常終了する（終了コード 0）。
 
-### 4.2. 判断根拠の記録
+## 7. 異常終了の条件
 
-確認した文書と判断根拠を review result に残す。記録先は次のとおり。
-
-- レビュー観点ごとの pass / fail / unclear 判定と根拠: review result の `レビュー観点別結果` セクション（各 `RVP-NNN`）。
-- recipe に照らした確認内容、rulebook / sample / template を基準にしなかった理由と代わりに根拠にした内容、欠落・薄い recipe の扱い: review result の `実践の型との整合確認` セクション。
-- 検出した問題点・指摘事項: review result の `findings` セクション。
-
-## 5. 完了手順
-
-1. レビュー観点ごとに pass / fail / unclear を判定し、根拠を記入する。
-2. result の各レビュー観点セクションに記入する。result には各 RVP の `### RVP-NNN（ロール: viewpoint_id）` と `確認基準` が展開済みなので、`result` / `evidence` / `notes` を埋める。レビュー結果の記入はタスク完了に必須であり、未記入のまま終了しない（詳細は共通規約を参照）。
-3. `evidence` の参照は `[[id]]` 形式（Obsidian wikilink）で記載する。行番号アンカー（`#L12-L18` など）や絶対パスは使わない。位置の補足が必要な場合は `evidence` 本文で述べる。
-4. fail / unclear、または recommendation が revise / reject でも、レビュー結果を記録できた場合は正常終了する（終了コード 0）。
-
-## 6. 異常終了の条件
-
-- 対象ファイル不明・依存未解決・result 更新不能など、レビュー自体を完了できない場合は異常終了する（終了コード 1）。
-- 標準エラー出力に理由を出力する（例: `review-blocked: <reason>; criterion=<id>; ref=<path>`）。
+- 対象ファイル不明・依存未解決・result 更新不能など、review 自体を完了できない場合は異常終了する（終了コード 1）。評価結果が最新でない・評価不能であることは異常終了の理由にせず、verdict として記録する。
+- 標準エラー出力に理由を出力する（例: `review-blocked: <reason>; ref=<path>`）。
 - agent 自身は claim / complete / reopen / block を記録せず、終了コードと標準エラー出力で runner に結果を返す。
 
 _COMMON_CONVENTIONS_

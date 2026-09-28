@@ -310,23 +310,6 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
     expect(frontmatter).toContain("targets:\n    - prj-0001:prj-overview");
   });
 
-  it("expands the review result sections placeholder when reviewSections is provided", async () => {
-    const { resultPath } = await scaffoldResult({
-      executionPath,
-      taskId: "prj-overview",
-      mode: "review",
-      projectId: "prj-0001",
-      planRef: "exec/plans/prj-overview-plan.md",
-      agent: "codex-review-agent",
-      startedAt: "2026-06-20T00:00:00.000Z",
-      reviewSections: "### RVP-001（BA: vp-ba-business-value）\n\n**確認基準**: x",
-    });
-
-    const body = readFileSync(resultPath, "utf8");
-    expect(body).toContain("### RVP-001（BA: vp-ba-business-value）");
-    expect(body).not.toContain("_REVIEW_RESULT_SECTIONS_");
-  });
-
   it("cross-deliverable-dedup は重複整理の専用 result セクションを使う", async () => {
     const { resultPath } = await scaffoldResult({
       executionPath,
@@ -347,7 +330,7 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
     expect(body).toContain("## 6. 維持確認");
   });
 
-  it("falls back to a language-neutral _TODO_ marker when a review result has no reviewSections", async () => {
+  it("scaffolds a review result with the judgement sections instead of per-viewpoint results", async () => {
     const { resultPath } = await scaffoldResult({
       executionPath,
       taskId: "prj-overview",
@@ -359,9 +342,13 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
     });
 
     const body = readFileSync(resultPath, "utf8");
-    // The placeholder is replaced; no Japanese fallback prose is hardcoded in code.
-    expect(body).not.toContain("_REVIEW_RESULT_SECTIONS_");
-    expect(body).toContain("## 1. レビュー観点別結果");
+    expect(body).toContain("## 1. 評価結果の確認");
+    expect(body).toContain("## 2. 判断根拠");
+    expect(body).toContain("## 3. 未充足事項・改善指示");
+    expect(body).toContain("## 5. decision");
+    expect(body).toContain("- verdict: _TODO_");
+    expect(body).not.toContain("レビュー観点別結果");
+    expect(body).not.toContain("RVP-");
   });
 
   it("approach: bootstrap-finalize は finalize result テンプレートを使いチェックリストを焼き込む", async () => {
@@ -629,16 +616,7 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
     expect(markdownlintErrors(content)).toEqual([]);
   });
 
-  it("renders review viewpoints in scaffold order and rejects mismatched ids", async () => {
-    const reviewSections = [
-      "### RVP-001（DEV: vp-quality）",
-      "",
-      "**確認基準**: 内容が完全である。",
-      "",
-      "- result: _TODO_（pass / fail / unclear）",
-      "- evidence: _TODO_",
-      "- notes: _TODO_",
-    ].join("\n");
+  it("renders the review judgement sections and verdict from reporter output", async () => {
     const { resultPath } = await scaffoldResult({
       executionPath,
       taskId: "T-TEST-doc-020",
@@ -647,39 +625,28 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
       planRef: "exec/plans/T-TEST-doc-020-plan.md",
       agent: "pipeline-executor",
       startedAt: "2026-08-10T07:00:00.000Z",
-      reviewSections,
     });
     const output = {
       schema_version: 1 as const,
       mode: "review" as const,
       outcome: "complete" as const,
-      viewpoint_results: [
-        {
-          id: "RVP-001",
-          result: "pass" as const,
-          evidence: ["検証コマンドが成功した。"],
-          notes: "",
-        },
-      ],
-      findings: [],
-      approach: "done criteria と evidence を照合した。",
-      recommendation: "approve" as const,
+      grade_check: "評価結果は最新で、grade は pass、finding は minor 1 件だった。",
+      rationale: ["完了条件を満たし、minor の finding は今回の範囲外である。"],
+      improvements: ["minor の finding を次回の見直しで扱う。"],
+      approach: "fully-guided で求めた作成が行われたことを確認した。",
+      verdict: "complete-with-findings" as const,
       block_reason: "",
     };
 
     await renderReporterResult(resultPath, output);
     const content = readFileSync(resultPath, "utf8");
-    expect(content).toContain("- result: pass");
-    expect(content).toContain("- recommendation: approve");
+    expect(content).toContain("## 1. 評価結果の確認");
+    expect(content).toContain("- 完了条件を満たし、minor の finding は今回の範囲外である。");
+    expect(content).toContain("- minor の finding を次回の見直しで扱う。");
+    expect(content).toContain("- verdict: complete-with-findings");
     expect(content).not.toContain("_TODO_");
     expect(markdownlintErrors(content)).toEqual([]);
-
-    await expect(
-      renderReporterResult(resultPath, {
-        ...output,
-        viewpoint_results: [{ ...output.viewpoint_results[0], id: "RVP-002" }],
-      }),
-    ).rejects.toThrow(/must match scaffold order/);
+    expect(isResultUnfilled(resultPath, "review")).toBe(false);
   });
 
   it.each([
@@ -835,7 +802,7 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
     expect(isResultUnfilled(resultPath, "edit", scaffoldFrontmatter)).toBe(true);
   });
 
-  it("treats a review result with an undecided recommendation as unfilled", async () => {
+  it("treats a review result with an undecided verdict as unfilled", async () => {
     const { resultPath } = await scaffoldResult({
       executionPath,
       taskId: "prj-overview",
@@ -849,12 +816,32 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
     expect(isResultUnfilled(resultPath, "review")).toBe(true);
 
     const decided = readFileSync(resultPath, "utf8").replace(
-      "recommendation: _TODO_",
-      "recommendation: approve",
+      /verdict: _TODO_[^\n]*/,
+      "verdict: incomplete",
     );
     writeFileSync(resultPath, decided, "utf8");
 
     expect(isResultUnfilled(resultPath, "review")).toBe(false);
+  });
+
+  it("still treats a review result scaffolded before the verdict revision as unfilled", async () => {
+    const { resultPath } = await scaffoldResult({
+      executionPath,
+      taskId: "prj-overview",
+      mode: "review",
+      projectId: "prj-0001",
+      planRef: "exec/plans/prj-overview-plan.md",
+      agent: "claude-review-agent",
+      startedAt: "2026-06-20T00:00:00.000Z",
+    });
+    // 改訂前の xrr-template.md は decision に recommendation を置いていた。
+    const legacy = readFileSync(resultPath, "utf8").replace(
+      /verdict: _TODO_[^\n]*/,
+      "recommendation: _TODO_（approve / revise / reject）",
+    );
+    writeFileSync(resultPath, legacy, "utf8");
+
+    expect(isResultUnfilled(resultPath, "review")).toBe(true);
   });
 
   it("returns false for a missing result path", () => {

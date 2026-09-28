@@ -101,11 +101,16 @@ $defs:
       - schema_version
       - mode
       - outcome
-      - viewpoint_results
-      - findings
+      - grade_check
+      - rationale
+      - improvements
       - approach
-      - recommendation
+      - verdict
       - block_reason
+    description: >
+      Review does not re-grade the deliverable. It records the stored grade result it relied on,
+      the rationale for the task completion judgement, improvement instructions, and a verdict
+      that maps one-to-one to the acceptance viewpoints of bps-task-completion.
     properties:
       schema_version:
         const: 1
@@ -113,39 +118,30 @@ $defs:
         const: review
       outcome:
         $ref: "#/$defs/outcome"
-      viewpoint_results:
+      grade_check:
+        $ref: "#/$defs/text"
+      rationale:
         type: array
+        minItems: 1
         maxItems: 100
         items:
-          type: object
-          additionalProperties: false
-          required: [id, result, evidence, notes]
-          properties:
-            id:
-              type: string
-              pattern: "^RVP-[0-9]{3}$"
-            result:
-              type: string
-              enum: [pass, fail, unclear]
-            evidence:
-              type: array
-              minItems: 1
-              maxItems: 100
-              items:
-                $ref: "#/$defs/text"
-            notes:
-              type: string
-              maxLength: 4000
-      findings:
+          $ref: "#/$defs/text"
+      improvements:
         type: array
         maxItems: 100
         items:
           $ref: "#/$defs/text"
       approach:
         $ref: "#/$defs/text"
-      recommendation:
+      verdict:
         type: string
-        enum: [approve, revise, reject]
+        enum:
+          - complete
+          - complete-with-findings
+          - incomplete
+          - grade-stale
+          - grade-unavailable
+          - changed-during-review
       block_reason:
         type: string
         maxLength: 4000

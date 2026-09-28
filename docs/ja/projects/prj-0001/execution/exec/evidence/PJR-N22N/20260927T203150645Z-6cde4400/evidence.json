@@ -1,0 +1,231 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-N22N",
+  "run_id": "20260927T203150645Z-6cde4400",
+  "stage": {
+    "role": "executor",
+    "actor": "claude-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-27T20:31:50.645Z",
+    "completed_at": "2026-09-27T20:44:56.381Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-n22n-xrp-xrr-review.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xep-common-conventions-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-freeform-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-fully-guided-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-recipe-guided-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-recipe-maintenance-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-retrofit-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-rulebook-maintenance-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-sample-maintenance-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-template-maintenance-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-viewpoint-detail-template.md",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrr-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrr-viewpoint-detail-template.md",
+      "status": "D"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/exec-reporter-output.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-plans.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-reporter.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-results.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-pipeline-e2e.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-plans.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-reporter.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-results.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-run-inplace.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 25,
+    "summary": ".../project-register/pjr-n22n-xrp-xrr-review.md    |  20 +-\n .../xep-common-conventions-template.md             |  31 +++\n .../exec-templates/xrp-freeform-template.md        |  58 +++--\n .../exec-templates/xrp-fully-guided-template.md    |  87 +++-----\n .../exec-templates/xrp-recipe-guided-template.md   |  63 +++---\n .../xrp-recipe-maintenance-template.md             |  61 +++---\n .../exec-templates/xrp-retrofit-template.md        |  58 +++--\n .../xrp-rulebook-maintenance-template.md           |  61 +++---\n .../xrp-sample-maintenance-template.md             |  61 +++---\n .../xrp-template-maintenance-template.md           |  61 +++---\n docs/ja/specdojo/exec-templates/xrp-template.md    |  55 +++--\n .../xrp-viewpoint-detail-template.md               |   7 -\n docs/ja/specdojo/exec-templates/xrr-template.md    |  20 +-\n .../xrr-viewpoint-detail-template.md               |   7 -\n .../schemas/v1/exec-reporter-output.schema.yaml    |  48 ++--\n src/exec-plans.ts                                  | 199 ++++++-----------\n src/exec-reporter.ts                               | 116 ++++------\n src/exec-results.ts                                |  73 ++----\n src/exec-run.ts                                    |  15 --\n src/exec.ts                                        |  15 +-\n tests/src/exec-pipeline-e2e.integration.test.ts    |   5 -\n tests/src/exec-plans.test.ts                       | 244 ++++++++-------------\n tests/src/exec-reporter.test.ts                    |  58 ++++-\n tests/src/exec-results.test.ts                     |  97 ++++----\n tests/src/exec-run-inplace.test.ts                 |   5 -\n 25 files changed, 649 insertions(+), 876 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write <changed ts/md/yaml files>",
+      "status": "passed",
+      "summary": "all changed files formatted"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/specdojo/exec-templates/xrp-*.md docs/ja/specdojo/exec-templates/xrr-template.md docs/ja/specdojo/exec-templates/xep-common-conventions-template.md",
+      "status": "passed",
+      "summary": "no errors"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-n22n-xrp-xrr-review.md",
+      "status": "passed",
+      "summary": "no errors"
+    },
+    {
+      "source": "executor",
+      "command": "npx eslint src/exec-plans.ts src/exec-reporter.ts src/exec-results.ts src/exec-run.ts src/exec.ts tests/src/exec-plans.test.ts tests/src/exec-results.test.ts tests/src/exec-reporter.test.ts tests/src/exec-pipeline-e2e.integration.test.ts tests/src/exec-run-inplace.test.ts",
+      "status": "passed",
+      "summary": "no errors"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts catalog validate --project prj-0001",
+      "status": "passed",
+      "summary": "all dct files OK; 0 errors; only pre-existing `based_on` warnings"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "Built index: 2121 entries"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts exec validate --project prj-0001",
+      "status": "passed",
+      "summary": "OK: validation passed (pre-existing historical-event warnings only)"
+    },
+    {
+      "source": "executor",
+      "command": "npm run -s validate:history-links",
+      "status": "passed",
+      "summary": "all history files valid"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts exec plan --project prj-0001 --deliverable pm-plan --mode review --approach fully-guided --out /tmp/n22n-trial-review-plan.md",
+      "status": "passed",
+      "summary": "trial plan shows evaluated path, target deliverable, existing sidecar path, DC table, review judgement procedure, no marker lines"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts exec plan --project prj-0001 --deliverable pm-plan --mode review --approach rulebook-maintenance --out /tmp/n22n-trial-review-plan-rb.md",
+      "status": "passed",
+      "summary": "trial plan shows target kata and sidecar specdojo.pm-plan-rulebook.yaml"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts grade list --project prj-0001 --target deliverable --path docs/ja/projects/prj-0001/030-project-management/pm-plan.md --changed-only",
+      "status": "passed",
+      "summary": "freshness command works; pm-plan is listed, so a review now would be grade-stale"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint /tmp/n22n-trial-review-plan.md",
+      "status": "not_run",
+      "summary": "markdownlint-cli rejects paths outside the repo (RangeError); trial plan not linted"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-N22N\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\n[dry-run] git merge --no-ff --no-edit exec/T-T-doc-010\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nUpdated: /tmp/specdojo-register-resume-e2e-J2Cgi0/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)\nUpdated: /tmp/specdojo-register-resume-e2e-J2Cgi0/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml\nGenerated: /tmp/specdojo-register-resume-e2e-J2Cgi0/docs/ja/projects/test/controls/project-register/generated/pjr-index.md\nGenerated: /tmp/specdojo-register-resume-e2e-J2Cgi0/docs/ja/projects/test/controls/project-register/generated/pjr…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.2.1 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-N22N/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-N22N/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-tem…"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-N22N\n\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\nUpdated ticket status → ready: /tmp/specdojo-ticket-YmyOk0/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-jX0a8w/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-HbQUH2/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-5U9JZR/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-ZnYT6a/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-tEes9s/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\nWrote agent stdout: /tmp/specdojo-agent-command-1OLLPa/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-fRQC2n/outputs/partial.txt\n\n Test Files  111 passed (111)\n      Tes…"
+    }
+  ],
+  "final_message": "PJR-N22N: rewrote the 9 xrp templates to take the grade result as input (evaluation-result chapter, done-criteria table, no per-viewpoint pass/fail/unclear, no owner-only-role narrowing). Added a review-only judgement procedure (E-01 freshness via grade list --changed-only, E-02, change detection, 6-value verdict table) to xep-common-conventions-template.md; it is stripped from non-review plans. Rewrote xrr-template.md around a verdict that maps one-to-one to the 6 bps-task-completion acceptance viewpoints. Deleted both viewpoint-detail templates (staged by git rm; unstaging needs approval) and removed their code paths. Replaced review reporter output (`grade_check`/`rationale`/`improvements`/`approach`/`verdict`) in src/exec-reporter.ts, the public schema YAML, and src/exec-results.ts rendering and unfilled detection (legacy recommendation marker kept). Fixed the previous run's typecheck cause by removing `viewpointsPath` from `scaffoldClaimResult` and all its callers. Updated tests and the ticket's work and outcome sections. Generated trial review plans for pm-plan (fully-guided and rulebook-maintenance); agent-run review trial (ticket No.6) not done. review-guide.md not updated (out of scope). Temp trial plans remain in /tmp (rm needs approval).",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-N22N/20260927T203150645Z-6cde4400/executor.log",
+      "bytes": 8264,
+      "truncated": false
+    }
+  ]
+}

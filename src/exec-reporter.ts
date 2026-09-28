@@ -20,19 +20,28 @@ export type EditReporterOutput = {
   block_reason: string;
 };
 
+// review の verdict。bps-task-completion の検証・受入観点 6 区分と一対一に対応する。
+export const REVIEW_VERDICTS = [
+  "complete",
+  "complete-with-findings",
+  "incomplete",
+  "grade-stale",
+  "grade-unavailable",
+  "changed-during-review",
+] as const;
+
+export type ReviewVerdict = (typeof REVIEW_VERDICTS)[number];
+
+// review は成果物を再評価しない。評価結果の確認、判断根拠、改善指示、verdict を記録する。
 export type ReviewReporterOutput = {
   schema_version: 1;
   mode: "review";
   outcome: ReporterOutcome;
-  viewpoint_results: Array<{
-    id: string;
-    result: "pass" | "fail" | "unclear";
-    evidence: string[];
-    notes: string;
-  }>;
-  findings: string[];
+  grade_check: string;
+  rationale: string[];
+  improvements: string[];
   approach: string;
-  recommendation: "approve" | "revise" | "reject";
+  verdict: ReviewVerdict;
   block_reason: string;
 };
 
@@ -91,39 +100,22 @@ export const REPORTER_OUTPUT_SCHEMA = {
         "schema_version",
         "mode",
         "outcome",
-        "viewpoint_results",
-        "findings",
+        "grade_check",
+        "rationale",
+        "improvements",
         "approach",
-        "recommendation",
+        "verdict",
         "block_reason",
       ],
       properties: {
         schema_version: { const: 1 },
         mode: { const: "review" },
         outcome: { enum: ["complete", "blocked"] },
-        viewpoint_results: {
-          type: "array",
-          maxItems: 100,
-          items: {
-            type: "object",
-            additionalProperties: false,
-            required: ["id", "result", "evidence", "notes"],
-            properties: {
-              id: { type: "string", pattern: "^RVP-[0-9]{3}$" },
-              result: { enum: ["pass", "fail", "unclear"] },
-              evidence: {
-                type: "array",
-                minItems: 1,
-                maxItems: 100,
-                items: { $ref: "#/$defs/text" },
-              },
-              notes: { type: "string", maxLength: MAX_TEXT_LENGTH },
-            },
-          },
-        },
-        findings: { type: "array", maxItems: 100, items: { $ref: "#/$defs/text" } },
+        grade_check: { $ref: "#/$defs/text" },
+        rationale: { type: "array", minItems: 1, maxItems: 100, items: { $ref: "#/$defs/text" } },
+        improvements: { type: "array", maxItems: 100, items: { $ref: "#/$defs/text" } },
         approach: { $ref: "#/$defs/text" },
-        recommendation: { enum: ["approve", "revise", "reject"] },
+        verdict: { enum: [...REVIEW_VERDICTS] },
         block_reason: { type: "string", maxLength: MAX_TEXT_LENGTH },
       },
       allOf: [
@@ -144,6 +136,15 @@ const Ajv2020 = Ajv2020Module.default;
 const validateReporterSchema = new Ajv2020({ allErrors: true, strict: true }).compile(
   REPORTER_OUTPUT_SCHEMA,
 );
+
+// oneOf の各分岐は `properties.mode.const` で mode を固定している。分岐の並び順に依存せず、
+// mode から Ajv の schemaPath の接頭辞（`#/oneOf/<index>/`）を求める。
+function reporterSchemaBranchPath(mode: TaskMode): string | undefined {
+  const index = REPORTER_OUTPUT_SCHEMA.oneOf.findIndex(
+    (branch) => branch.properties.mode.const === mode,
+  );
+  return index >= 0 ? `#/oneOf/${index}/` : undefined;
+}
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === "object" && !Array.isArray(value);
@@ -225,49 +226,29 @@ function validateReview(value: Record<string, unknown>): string | undefined {
     "schema_version",
     "mode",
     "outcome",
-    "viewpoint_results",
-    "findings",
+    "grade_check",
+    "rationale",
+    "improvements",
     "approach",
-    "recommendation",
+    "verdict",
     "block_reason",
   ];
   if (!exactKeys(value, keys)) return "review output has missing or additional properties";
   const common = validateCommon(value, "review");
   if (common) return common;
-  if (!isTextArray(value.findings, 100)) return "findings must contain at most 100 bounded strings";
-  if (!Array.isArray(value.viewpoint_results) || value.viewpoint_results.length > 100) {
-    return "viewpoint_results must be an array with at most 100 items";
+  if (!isText(value.grade_check)) return "grade_check must be a non-empty bounded string";
+  if (!isTextArray(value.rationale, 100, 1)) return "rationale must contain 1-100 bounded strings";
+  if (!isTextArray(value.improvements, 100)) {
+    return "improvements must contain at most 100 bounded strings";
   }
-  const ids = new Set<string>();
-  for (const viewpoint of value.viewpoint_results) {
-    if (!isRecord(viewpoint) || !exactKeys(viewpoint, ["id", "result", "evidence", "notes"])) {
-      return "viewpoint_results entries have missing or additional properties";
-    }
-    if (typeof viewpoint.id !== "string" || !/^RVP-[0-9]{3}$/.test(viewpoint.id)) {
-      return "viewpoint id must match RVP-NNN";
-    }
-    if (ids.has(viewpoint.id)) return `duplicate viewpoint id: ${viewpoint.id}`;
-    ids.add(viewpoint.id);
-    if (
-      viewpoint.result !== "pass" &&
-      viewpoint.result !== "fail" &&
-      viewpoint.result !== "unclear"
-    ) {
-      return "viewpoint result must be pass, fail, or unclear";
-    }
-    if (!isTextArray(viewpoint.evidence, 100, 1)) {
-      return "viewpoint evidence must contain 1-100 bounded strings";
-    }
-    if (!isText(viewpoint.notes, true)) return "viewpoint notes must be a bounded string";
-  }
-  if (
-    value.recommendation !== "approve" &&
-    value.recommendation !== "revise" &&
-    value.recommendation !== "reject"
-  ) {
-    return "recommendation must be approve, revise, or reject";
+  if (!isReviewVerdict(value.verdict)) {
+    return `verdict must be one of: ${REVIEW_VERDICTS.join(", ")}`;
   }
   return undefined;
+}
+
+function isReviewVerdict(value: unknown): value is ReviewVerdict {
+  return typeof value === "string" && (REVIEW_VERDICTS as readonly string[]).includes(value);
 }
 
 export function parseReporterOutput(
@@ -284,7 +265,14 @@ export function parseReporterOutput(
   }
   if (!isRecord(value)) return { error: "response root must be an object" };
   if (!validateReporterSchema(value)) {
-    const details = (validateReporterSchema.errors ?? [])
+    // スキーマは edit / review の oneOf なので、両方の分岐のエラーが混ざる。先頭だけを
+    // 表示すると期待する mode と無関係な分岐のエラーで原因が隠れるため、mode の分岐に絞る。
+    const errors = validateReporterSchema.errors ?? [];
+    const modeBranch = reporterSchemaBranchPath(mode);
+    const modeErrors = modeBranch
+      ? errors.filter((error) => error.schemaPath.startsWith(modeBranch))
+      : [];
+    const details = (modeErrors.length > 0 ? modeErrors : errors)
       .slice(0, 5)
       .map(
         (error) =>
@@ -308,6 +296,14 @@ export function buildReporterPrompt(opts: {
   const correction = opts.validationError
     ? `\nThe previous response failed validation: ${opts.validationError}\nReturn a corrected JSON value.\n`
     : "";
+  const reviewGuidance =
+    opts.mode === "review"
+      ? `\n\nFor review mode, the executor did not re-grade the deliverable; it judged task completion
+from the stored grade result. Record that judgement in verdict. A verdict other than complete
+(for example incomplete or grade-stale) is still a recorded review result, so use
+outcome="complete" whenever the evidence supports the verdict, and put unmet items and
+improvement instructions in improvements.`
+      : "";
   return `You are the reporter stage of a SpecDojo executor/reporter pipeline.
 Use only the supplied plan and bounded executor evidence. Do not edit or inspect files. Do not
 invent facts that are absent from evidence. Return exactly one JSON object matching the supplied
@@ -331,7 +327,7 @@ evidence itself shows the deliverable work is incomplete, incorrect, unverifiabl
 falls short of the plan's completion criteria for the edit itself. Validation entries with
 source="runner" were executed by the SpecDojo parent process from a fixed allowlist and are
 authoritative. If any runner validation is failed or not_run, return outcome="blocked" and cite
-that validation; never replace or contradict its status.${correction}
+that validation; never replace or contradict its status.${reviewGuidance}${correction}
 <specdojo_plan>
 ${opts.plan.trimEnd()}
 </specdojo_plan>
