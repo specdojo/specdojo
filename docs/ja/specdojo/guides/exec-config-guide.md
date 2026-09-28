@@ -131,7 +131,7 @@ phase の by-name agent が rate limit になった場合は、別 agent へ自�
 
 ## 4. 実行フロー
 
-`providers.<provider>.max_concurrency` は1つの `exec run` プロセス内の provider 枠を制御します。複数の `exec run` プロセスを跨ぐ上限ではないため、project ごとの `exec-run.lock` が手動実行・routine・CI の run 全体を排他します。同一 run 内の `--parallel` はこのロックの内側で動作します。
+`providers.<provider>.max_concurrency` は1つの `exec run` プロセス内の provider 枠を制御します。project ごとの `exec-run.lock` が手動実行・routine・CI の run 全体を排他し、同一 run 内の `--parallel` はこのロックの内側で動作します。例外は register の worktree 実行へ `exec run --register ... --worktree --join` で合流する run です。この場合は、register pipeline の executor と reporter が `exec/.locks/provider-<provider>/` の枠を取得するため、`max_concurrency` は合流した run を跨いで効きます（[exec運用ガイド](exec-operation-guide.md) の「実行中の register worktree 実行へ後から合流する」を参照）。
 
 手動 CLI の busy 時既定は `--if-busy fail` です。必要に応じて `wait` または `skip` を明示します。routine は待機で cron worker を占有しないよう常に `--if-busy skip` を渡し、再試行は次回の cron tick に委ねます。
 
@@ -172,7 +172,10 @@ pipeline:
     - typecheck
     - test-unit
     - test-integration
-  parent_validation_concurrency: 1 # 省略時も 1（run 内の親検証を直列化）
+  parent_validation_concurrency: 1 # 省略時も 1（run 内と合流した run の親検証を直列化）
+
+run:
+  max_concurrent_runs: 4 # 省略時も 4（最初の run と --join の run の合計）
 
 rate_limit_detection:
   exit_codes: []
@@ -199,9 +202,11 @@ rate_limit_policy:
 
 `typecheck`（`npm run typecheck`）は Vitest と異なり型検査を行うため、executor が残した TypeScript の型エラーを検出します。Vitest は型検査を行わないため、`typecheck` を親検証に含めないと型エラーは test-unit を通過して統合時の pre-commit hook で初めて失敗するため、既定では `test-unit` の前に置いて早めに止めます（PJR-W66B）。
 
+`run.max_concurrent_runs` は、同じ project で同時に動かせる `exec run` プロセスの数の上限です。最初の run と、`exec run --register ... --worktree --join` で合流する run の合計で数えます。正の整数だけを指定でき、省略時や不正な値の場合は `4` です。`1` を指定すると `--join` は無効になります。現在の使用数は `exec slots --project <project-id>` で確認できます。
+
 `pipeline.parent_validation_concurrency` は、1 つの `exec run` プロセスの中で親検証を同時に実行できる項目数の上限です。正の整数だけを指定でき、省略時は `1` です。`--parallel` で複数項目を並行実行しても、親検証は項目単位で 1 本ずつ直列に実行されます。vitest は検証ごとに複数の worker を起動するため、検証が重なるとコンテナの負荷で成果物と無関係なタイムアウトが起きます。これを防ぐための既定値です（PJR-3HHW）。制限の対象は親検証だけで、executor と reporter は `--parallel` のとおり並行に動きます。空きを待つ項目は `Waiting for parent validation slot: <項目> (<検証 ID>); running: <実行中の項目>` をログへ出力し、枠を得たときに `Parent validation slot acquired: <項目>` を出力します。
 
-この直列化は、同じ `exec run` プロセス内の全経路に適用されます。対象は executor 成功後の検証、reporter 再開前の検証の再実行、`exec trial` の検証です。一方、別々の `exec run` プロセスどうしはこの枠を共有せず、直列化の対象外とします。同じ project の `exec run` は `exec-run.lock` によって run 全体で排他されるため、検証が重なることはありません。別 project の run を同時に起動した場合は、互いの検証が重なり得ます。プロセスをまたいだ枠を設けない理由は、異常終了時に枠の解放漏れが起き、無関係な run を止めてしまうおそれがあるためです。複数項目を並行で進める場合は、1 つの `exec run --parallel <n>` にまとめます。executor が sandbox 内で実行する検証は runner の管理外です。このため、vitest を使う `test-unit` / `test-integration` は `parent_validations` へ寄せ、executor には実行させません。
+この直列化は、同じ `exec run` プロセス内の全経路に適用されます。対象は executor 成功後の検証、reporter 再開前の検証の再実行、`exec trial` の検証です。同じ project の `exec run` は `exec-run.lock` によって run 全体で排他されるため、通常は別プロセスの検証が重なることはありません。register の worktree 実行へ `--join` で合流した run どうしは並行して動くため、`exec-run.lock` または合流の枠を取得したプロセスは、同じ上限の枠を `exec/.locks/parent-validation/` にも取得します。これにより、合流した run を跨いでも親検証は `parent_validation_concurrency` 本までに抑えられます（PJR-4HBG）。別プロセスの枠を待つ項目は `Waiting for parent validation slot held by another exec run: <項目> (<検証 ID>)` をログへ出力します。枠は heartbeat 付きのロックで、プロセスが異常終了した場合は heartbeat が止まってから 30 秒で stale とみなされ、後続の run が奪取します。このため、解放漏れで無関係な run が止まり続けることはありません。別 project の run を同時に起動した場合は、ロックの配置が異なるため、互いの検証が重なり得ます。executor が sandbox 内で実行する検証は runner の管理外です。このため、vitest を使う `test-unit` / `test-integration` は `parent_validations` へ寄せ、executor には実行させません。
 
 provider ごとに挙動が異なる設定は `providers.<provider>` に置きます。各キーは対応するグローバル値を完全に置き換え、未指定のキーはグローバル値にフォールバックします。`<provider>` は `pm-members[].provider` に対応します。指定できるキーは次のとおりです。
 
@@ -210,7 +215,7 @@ provider ごとに挙動が異なる設定は `providers.<provider>` に置き�
 - `rate_limit_detection`: provider 固有の検出シグナル（`stderr_patterns` を優先します）。
 - `rate_limit_policy`: provider 固有のリトライ／フォールバック／block ポリシー。
 - `rate_limit_policy.cooldown_seconds`: reset / retry-after が無い retryable signal にだけ使う明示的な延期秒数。未指定の kind は再開時刻を推定しません。
-- `max_concurrency`: その provider の agent を 1 ラウンドで同時に走らせる上限（正の整数）。未指定・0 以下・非整数は「上限なし」として扱います。
+- `max_concurrency`: その provider の agent を 1 ラウンドで同時に走らせる上限（正の整数）。未指定・0 以下・非整数は「上限なし」として扱います。register の worktree 実行では、`--join` で合流した run を跨いで数えます。
 
 `{nickname}` のような `{lower_snake}` は実行のたびに展開される実行時変数であり、ファイルに記法のまま残った状態が完成形です。テンプレート成果物の記入プレースホルダ `_UPPER_SNAKE_`（一度埋めたら消える）とは別の記法で、使い分けは [Template 記述標準](../standards/template-authoring-standard.md) の `他のプレースホルダ記法との使い分け` を正本とします。
 
