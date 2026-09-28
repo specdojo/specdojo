@@ -77,6 +77,9 @@ sample / template への本文中のリンクは実行不能な指示になる
 - 外部 sample を持たない 2 件について、sample を作るか `サンプル` 章を残すかが決まっている。
 - grade を再実行し、`vp-qe-kata-conformance` と `vp-arc-conciseness` の finding が悪化していない。
 - `npm run check` が通過している。
+- 既存の sample ファイルは、rulebook のサンプル章から外出しした内容を反映する場合を除き、書き直さない。YAML / JSON の sample（例: `ifx-cmd-sample.yaml`）の先頭のスキーマ指定（`# yaml-language-server: $schema=...` または `# specdojo-schema: ...`）を消さない（2026-09-29 の 1 回目の実行で `ifx-cmd-sample.yaml` のスキーマ指定が消え、`validate-schema` が失敗した）。
+- 段階的に移行する（検討事項「段階的な移行」のとおり）。最初に rulebook 3 件程度で外出しを行い、plan の肥大化と grade の finding を確認してから、残りへ広げる。確認結果を対応結果に記録する。
+- runner の検証（`test-unit`・`test-integration`・`typecheck`・`validate-schema`）がすべて通過している（1 回目の実行では `test-integration` と `validate-schema` が失敗した）。
 
 ## 4. 検討事項
 
