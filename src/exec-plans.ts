@@ -29,6 +29,8 @@ import type { RoleDefinition, RolesDoc } from "./role-types.js";
 import { readGradeResultForDocument, gradeResultPathForDocument } from "./grade-result.js";
 import { lookupDocIndex } from "./doc-index.js";
 import { resolveSpecdojoPath, resolveSpecdojoPathIfExists } from "./template-resolution.js";
+import { renderReviewGradeSummary, reviewGradeFreshness } from "./review-grade.js";
+import type { ReviewGradeOutcome, ReviewGradeTarget } from "./review-grade.js";
 
 // ---------------------------------------------------------------------------
 // Internal types
@@ -390,6 +392,36 @@ function gradeTargetKind(approach: Approach | undefined): "kata" | "deliverable"
     approach === "template-maintenance"
     ? "kata"
     : "deliverable";
+}
+
+// review の前段で runner が grade を実行する評価対象（PJR-KCMH）。review plan の「評価結果」章と
+// 同じ規則で決めるため、plan 生成と runner の実行対象が食い違わない。
+export function reviewGradeSubject(
+  catalogPath: string,
+  task: Pick<ReadyTaskView, "local_id" | "approach">,
+): { path: string; target: ReviewGradeTarget } | undefined {
+  const deliverable =
+    task.local_id && catalogPath ? findDeliverableInfo(catalogPath, task.local_id) : null;
+  const refs = resolveKataRefs(deliverable?.deliverable.rulebook, deliverable?.deliverable.kind);
+  const path = gradeFindingTargetPath(task.approach, deliverable, refs);
+  if (!path || path === MISSING) return undefined;
+  return { path, target: gradeTargetKind(task.approach) };
+}
+
+// review plan に提示する評価結果。runner の grade 実行結果があれば併記する。
+function reviewGradeSummaryText(
+  projectId: string,
+  subjectPath: string,
+  outcome: ReviewGradeOutcome | undefined,
+): string {
+  return renderReviewGradeSummary(
+    reviewGradeFreshness({
+      subjectPath: subjectPath === MISSING ? "" : subjectPath,
+      projectId,
+      rootDir: specdojoRootDir(),
+    }),
+    outcome,
+  );
 }
 
 // 評価対象に対応する評価結果サイドカーのリポジトリ相対パス。評価対象が未作成、または
@@ -930,6 +962,7 @@ function buildReviewPlanMarkdown(
   projectContext: readonly string[],
   resultRef: string,
   stem: string,
+  reviewGradeOutcome?: ReviewGradeOutcome,
 ): string {
   const cpm = task.cpm;
   const onCriticalPath = cpm !== undefined && cpm.slack === 0;
@@ -980,6 +1013,7 @@ function buildReviewPlanMarkdown(
     _GRADE_SUBJECT_PATH_: gradeSubjectPath,
     _GRADE_TARGET_: gradeTargetKind(task.approach),
     _GRADE_RESULT_PATH_: gradeResultRef(projectId, gradeSubjectPath),
+    _GRADE_SUMMARY_: reviewGradeSummaryText(projectId, gradeSubjectPath, reviewGradeOutcome),
     _DONE_CRITERIA_ROWS_: reviewDoneCriteriaRows(applicableCriteria),
   };
   return expandTemplate(template, values);
@@ -1000,6 +1034,8 @@ type PlanGenContext = {
   roleMap: Map<string, RoleDefinition>;
   projectContext: string[];
   templateCache: Map<string, string>;
+  // runner が review の前段で行った grade の結果。review plan にだけ反映する。
+  reviewGradeOutcome?: ReviewGradeOutcome;
 };
 
 async function writeTaskPlan(
@@ -1053,6 +1089,7 @@ async function writeTaskPlan(
           ctx.projectContext,
           resultRef,
           stem,
+          ctx.reviewGradeOutcome,
         )
       : buildEditPlanMarkdown(
           template,
@@ -1087,6 +1124,7 @@ export async function generateSinglePlan(opts: {
   task: ReadyTaskView;
   outPath?: string;
   stem?: string;
+  reviewGradeOutcome?: ReviewGradeOutcome;
 }): Promise<string> {
   if ((opts.task.execution ?? "agent") === "human") {
     throw new Error(
@@ -1094,6 +1132,7 @@ export async function generateSinglePlan(opts: {
     );
   }
   const ctx = newPlanGenContext(opts);
+  if (opts.reviewGradeOutcome) ctx.reviewGradeOutcome = opts.reviewGradeOutcome;
   const override =
     opts.outPath || opts.stem
       ? {
