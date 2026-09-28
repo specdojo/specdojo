@@ -21,3 +21,12 @@ kata からリンクされる guide / reference）のうち、利用リポジト
 内部の `.gitignore` で Git 管理対象から外れるため、`kata install --all` を実行する必要は
 ありません。参照元の package は `SPECDOJO_PACKAGE_ROOT`、未指定なら workspace から辿った
 `node_modules/specdojo` です。
+
+サイドバーは URL の範囲ごとに分かれ、`/ja/specdojo/` では SpecDojo 文書、
+`/ja/projects/<project-id>/` では対象 project の文書だけを表示します。plan / result / event などの
+実行記録はページとしてビルドしますが、サイドバーには列挙しません。project の dashboard から
+`exec-records.md` を経由して参照できます。
+
+ローカル検索には SpecDojo 文書と登録簿一覧 `pjr-index` を含め、登録簿の個票、派生ビュー、管理ログ、
+実行記録を含めません。登録項目は `pjr-index` のタイトル・説明・結論から検索し、一覧のリンクから
+個票へ移動します。
