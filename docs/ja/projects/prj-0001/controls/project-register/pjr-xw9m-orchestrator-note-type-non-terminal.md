@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-xw9m-orchestrator-note-type-non-terminal
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-09-27T12:46:34Z"
+  completed_at: "2026-09-28T11:18:34Z"
   block_reason: "agent exited with non-zero code: executor evidence の `source: executor` 検証コマンド（`node -e ... orchestrator note terminal state is still done` チェック）が `status: failed` であり、要約は「SSOTのnote終端状態が依然done。読み取り専用の…"
+  conclusion: SSOT（.agents/specdojo-orchestrator.agent.md）の種別表で note の終端を「なし」に改め、close 手順の後に note を終端させない旨を追記し、orchestrator:sync で 10 か所へ同期した
 ---
 
 # PJR-XW9M オーケストレーター定義の種別表で note を終端しない記録に直す

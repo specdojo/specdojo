@@ -61,3 +61,22 @@
       from: "-"
       to: "agent exited with non-zero code: executor evidence の `source: executor` 検証コマンド（`node -e ... orchestrator note terminal state is still done` チェック）が `status: failed` であり、要約は「SSOTのnote終端状態が依然done。読み取り専用の…"
   previous_event_id: reg_9d95aa1f714d427da6e4c0ec3ef83424
+- v: 1
+  id: reg_140f3de755b3476fbe5de131b317a29d
+  ts: "2026-09-28T11:18:34Z"
+  action: close
+  actor: orchestrator
+  from_status: waiting
+  to_status: done
+  reason: codex-expert-executor は対象ファイルに書き込めず範囲外の変更を残したため破棄し、利用者の承認を受け orchestrator が直接対応した（b03689a9）
+  changes:
+    - field: status
+      from: waiting
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-28"
+    - field: conclusion
+      from: "-"
+      to: SSOT（.agents/specdojo-orchestrator.agent.md）の種別表で note の終端を「なし」に改め、close 手順の後に note を終端させない旨を追記し、orchestrator:sync で 10 か所へ同期した
+  previous_event_id: reg_52d500db65634201a879f8dc4e13aba6
