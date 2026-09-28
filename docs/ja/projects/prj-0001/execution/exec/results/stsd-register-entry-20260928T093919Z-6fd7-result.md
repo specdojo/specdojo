@@ -4,15 +4,14 @@ specdojo:
   type: exec-result
   task_id: stsd-register-entry
   mode: review
-  status: blocked
+  status: superseded
   project_id: prj-0001
   plan_ref: exec/plans/stsd-register-entry-20260928T093919Z-6fd7-plan.md
   started_at: "2026-09-28T09:40:34.147Z"
-  completed_at: "2026-09-28T09:41:17.470Z"
+  completed_at: "2026-09-28T15:16:17.119Z"
   agent: claude-expert-review-executor
   targets:
     - stsd-register-entry
-  block_reason: "agent exited 0 but result is incomplete or its frontmatter differs from the scaffold (treated as blocked)"
 ---
 
 # Review Result

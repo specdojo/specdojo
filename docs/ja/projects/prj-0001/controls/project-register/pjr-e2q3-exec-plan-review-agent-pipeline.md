@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-e2q3-exec-plan-review-agent-pipeline
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-09-28T09:47:25Z"
+  completed_at: "2026-09-28T15:19:28Z"
   block_reason: "integrate failed: git merge failed: CONFLICT (content): Merge conflict in docs/ja/specdojo/references/command-reference.md"
+  conclusion: exec run --plan と --deliverable で --executor-by / --reporter-by を指定すると executor/reporter の 2 段で実行するようにし、--by に pipeline 用の agent を指定した場合は実行前に案内のエラーにした。review を 1 件実行し、reporter が新しい書式で result を記入することを確認した
 ---
 
 # PJR-E2Q3 exec run --plan で review を executor と reporter の構成で実行できるようにする
@@ -51,6 +53,19 @@ register 由来と schedule 由来のタスクは `agent_pipeline` で実行で�
 - 変更ファイル: `src/exec-run.ts`、`tests/src/exec-run-resolve-command.test.ts`、`docs/ja/specdojo/guides/exec-operation-guide.md`、`docs/ja/specdojo/references/command-reference.md`。
 - 確認: 試行の review plan（`stsd-register-entry-20260928T093919Z-6fd7-plan.md`）で `--executor-by claude-expert-review-executor --reporter-by claude-reporter --dry-run` が executor と reporter を解決することを確認した。`--by claude-expert-review-executor --dry-run` は案内付きエラーで終了コード 1 になった。
 - 未確認: review を実際に 1 件実行し、reporter が新しい書式で result を記入することの確認（作業内容 No.3）。agent 実行を伴うため、本タスクの executor では実施していない。
+
+### review の試行（2026-09-29、orchestrator）
+
+executor が未実施とした作業 No.3 を、orchestrator が次のとおり行った。
+
+```bash
+npx specdojo exec plan --project prj-0001 --deliverable stsd-register-entry --mode review
+npx specdojo exec run --project prj-0001 \
+  --plan docs/ja/projects/prj-0001/execution/exec/plans/stsd-register-entry-20260928T151609Z-8813-plan.md \
+  --executor-by claude-expert-review-executor --reporter-by claude-reporter
+```
+
+executor（review の判断）と reporter（result の記入）の 2 段で実行され、run は成功した。reporter は result を新しい書式（評価結果の確認、判断根拠、未充足事項・改善指示、approach に応じた確認、decision）で記入し、`status: complete`、verdict は `incomplete` だった。result に残る `_TODO_` の語は、対象成果物に未解決の `_TODO_` があるという指摘の本文であり、未記入ではない。PJR-KCMH の試行で確認できなかった「result が新しい書式で記入される」ことを、この経路で確認した。
 
 ## 5. 関連ドキュメント
 

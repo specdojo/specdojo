@@ -1,0 +1,55 @@
+`stsd-register-entry` の review 結果は **`incomplete`** です。評価結果は最新でしたが、完了条件 DC-001〜DC-005 が5件とも未達でした。指示どおり、result ファイルと成果物は変更していません。result の記入は reporter / runner に任せます。
+
+## 1. 評価結果の確認
+
+- **鮮度確認:** 次の3つのコマンドを実行し、いずれも出力なし（対象パスは出ていない）でした。評価結果は最新で、評価パイプラインも完了しています。
+  - `npx tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md --changed-only`
+  - 同じコマンドの `--dependency-changed` 版
+  - 同じコマンドの `--incomplete` 版
+- **verdict 記録前の再確認:** `--changed-only` と `--dependency-changed` をもう一度実行し、どちらも出力なしでした。review 中に成果物は変わっていません。
+- **サイドカー**（`docs/ja/projects/prj-0001/execution/grade/results/stsd-register-entry.yaml`）:
+  - `verdict: needs-work`、`score: 69`、`graded_at: 2026-09-27T20:31:25.568Z`
+  - finding は blocker 0 / major 13 / minor 7 / note 0
+  - `done_criteria` は 5件中 0件充足（DC-001 BA、DC-002 PO、DC-003 ARC、DC-004 QE、DC-005 DEV がすべて未充足）
+
+## 2. 判断根拠
+
+- **完了条件:** grade が判定した事実として、DC-001〜DC-005 が5件とも未充足です。そのため `complete` と `complete-with-findings` は選べません。
+- **成果物の未解決事項:** [[stsd-register-entry]] の「今後の検討メモ」に、未解決の項目が残っています。
+  - _ASSUMPTION_ が2件、_UNDECIDED_ が1件、_TODO_ が1件あります。
+  - _TODO_ は「`based_on` に `bdd-register-entry` を追加する（未作成）」という内容です。
+  - これは F020 に当たり、F015 と F017 にもつながっています。
+- **依存成果物:** frontmatter は `based_on: []` です。`depends_on` にある `bdd-register-entry` は、`docs/ja/product` の中で `id` が見つかりませんでした（未作成）。これは F010 と一致します。
+- **遷移の過不足:** 本文の遷移表では、`done` と `decided` に入る遷移が `review` からの T-11 と T-12 だけです。`open` から直接終わる遷移や、終了状態から直接再開する遷移はありません。これは F006 と F007 の指摘内容と一致します。
+- **実行記録:** この成果物の直前の edit result は特定できませんでした。
+  - results 配下にある同じタスクの記録は、前回の review result（`...093919Z-6fd7`）だけです。これは `superseded` で、中身も未記入でした。
+  - 成果物への直近の変更は `abcd86a66`（`exec(register PJR-ZFFZ)`、cdfd から stsd 等へ状態詳細を移したもの）です。
+  - このため、実行記録の検証結果が成功していたかは確かめられていません。
+
+## 3. 未充足事項・改善指示
+
+1. **依存成果物を先に用意する。** `bdd-register-entry` を作成してから、本書の `based_on` に反映し、_TODO_ を解消します（F010、F017）。
+2. **遷移を現行の正本にそろえる。** 対象は `pjr-rulebook.md` 5.3.3、`register-operation-guide.md` 2.1、`src/register.ts` です。
+   - `open`・`in-progress`・`waiting` から直接終わる遷移を、図と遷移表に加えます（F006、F007、F011、F012）。
+   - `in-progress` になる条件（担当・期限）を直します（F008）。
+   - 待機理由の記録先を `block_reason` にします（F009、F019）。
+3. **判断待ちの項目を PO / ARC が決める。** _ASSUMPTION_ 2件と _UNDECIDED_ 1件（`note` の終了を拒否するか）を決め、本文に反映します（F001、F013、F020）。
+4. **テストに使える形にする。** 条件の書き方を pass / fail で判定できる形にします（F016）。許可・禁止する遷移ごとに、期待する結果を書きます（F014）。
+5. **用語をそろえる。** `status` と `item_status` を区別し、event の保存先（`events/pjr-XXXX.yaml`）を正しく書きます（F018）。
+6. **修正後は grade をやり直す。**
+
+grade の評価内容に疑問はありません。
+
+## 4. approach に応じた確認
+
+- plan の frontmatter に `approach` がないため、「求められた作成・更新が行われたか」を確認しました。
+- 成果物はあり、状態一覧・遷移図3つ・遷移表 T-01〜T-18 がそろっています。ただし、完了条件は上のとおり満たしていません。
+- 作業範囲外の変更が混ざっていないかは、edit の実行記録を特定できなかったため確認できていません。
+
+## 5. decision
+
+- verdict: `incomplete`
+
+<specdojo_executor_evidence>
+{"final_message":"review verdict: incomplete. Grade is fresh (changed-only / dependency-changed / incomplete checks produced no output, and the re-check before recording also produced no output). Sidecar verdict needs-work, score 69, findings blocker 0 / major 13 / minor 7 / note 0, done_criteria satisfied 0/5 (DC-001 to DC-005 all unsatisfied). The deliverable still has unresolved _TODO_ / _ASSUMPTION_ / _UNDECIDED_ items, `based_on` is empty, and the `depends_on` item `bdd-register-entry` has not been created. The preceding edit result could not be identified, so the edit validation results were not checked. No files were modified.","validations":[{"command":"npx tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md --changed-only","status":"passed","summary":"no output (content_hash matches, grade is fresh); no output again on re-check"},{"command":"npx tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md --dependency-changed","status":"passed","summary":"no output (no dependency changes); no output again on re-check"},{"command":"npx tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md --incomplete","status":"passed","summary":"no output (grade pipeline complete)"}]}
+</specdojo_executor_evidence>

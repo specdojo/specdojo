@@ -129,3 +129,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_b1ef431b0b534a2eb8d2b0f9ced5367c
+- v: 1
+  id: reg_5999af9231ce4ed18c464fd82af268da
+  ts: "2026-09-28T15:19:28Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: claude-expert-executor の実行結果を評価。統合時の command-reference の競合は orchestrator が両方の変更を合わせて解決し、review の試行も orchestrator が行った
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-29"
+    - field: conclusion
+      from: "-"
+      to: exec run --plan と --deliverable で --executor-by / --reporter-by を指定すると executor/reporter の 2 段で実行するようにし、--by に pipeline 用の agent を指定した場合は実行前に案内のエラーにした。review を 1 件実行し、reporter が新しい書式で result を記入することを確認した
+  previous_event_id: reg_28e3a5b2d56741e59694269f70829b21

@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "task_id": "stsd-register-entry",
+  "run_id": "20260928T151617528Z-4016896d",
+  "updated_at": "2026-09-28T15:18:57.728Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "claude-expert-review-executor",
+      "attempts": 1,
+      "started_at": "2026-09-28T15:16:17.528Z",
+      "completed_at": "2026-09-28T15:17:08.370Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/stsd-register-entry/20260928T151617528Z-4016896d/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "claude-reporter",
+      "attempts": 1,
+      "started_at": "2026-09-28T15:18:32.308Z",
+      "completed_at": "2026-09-28T15:18:57.728Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/stsd-register-entry-20260928T151609Z-8813-result.md"
+    }
+  }
+}
