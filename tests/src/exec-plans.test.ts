@@ -563,6 +563,8 @@ describe("review plan templates", () => {
       expect(source).toContain("_GRADE_SUBJECT_PATH_");
       expect(source).toContain("_GRADE_TARGET_");
       expect(source).toContain("_GRADE_RESULT_PATH_");
+      // runner が review の前段で確認した評価結果を plan 本文へ提示する（PJR-KCMH）。
+      expect(source).toContain("_GRADE_SUMMARY_");
       expect(source).toContain("review の判断手順");
       expect(source).not.toContain("pass / fail / unclear");
       expect(source).not.toContain("RVP-");

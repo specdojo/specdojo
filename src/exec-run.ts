@@ -83,7 +83,10 @@ import {
   finalizeResultSectionsForDeliverable,
   targetDocIdsForScheduledTask,
   stemFromPlanPath,
+  reviewGradeSubject,
 } from "./exec-plans.js";
+import { ensureReviewGrade } from "./review-grade.js";
+import type { ReviewGradeOutcome } from "./review-grade.js";
 import { buildTaskView } from "./exec-task-view.js";
 import {
   formatRegisterRunSummary,
@@ -1367,6 +1370,44 @@ function findClaimEventPath(schedulePath: string, taskId: string): string | null
   return claims[claims.length - 1]?.path ?? null;
 }
 
+// review フェーズの前段で runner が対象文書へ grade を実行する（PJR-KCMH、PJR-2ZVS 3.6）。
+// executor には実行させない。評価結果が最新（content_hash 一致）なら再実行しない。
+// grade の失敗は review を止めず、結果を plan に示して review の verdict に委ねる。
+async function gradeBeforeReviewPlan(params: {
+  task: ReadyTaskView;
+  projectId: string | undefined;
+  catalogPath: string | undefined;
+  repoRoot: string;
+  dryRun: boolean;
+}): Promise<ReviewGradeOutcome | undefined> {
+  const { task, projectId } = params;
+  if ((task.mode ?? "edit") !== "review" || !projectId) return undefined;
+  const subject = reviewGradeSubject(params.catalogPath ?? "", task);
+  if (!subject) {
+    process.stdout.write("  [grade] skipped: grade subject is not resolvable\n");
+    return { action: "not-run", detail: "評価対象のパスを解決できない" };
+  }
+  process.stdout.write(`  [grade] checking ${subject.path} (--target ${subject.target})\n`);
+  const outcome = await ensureReviewGrade({
+    taskId: qualifyTaskId(projectId, task.id),
+    projectId,
+    subjectPath: subject.path,
+    target: subject.target,
+    repoRoot: params.repoRoot,
+    dryRun: params.dryRun,
+  });
+  const summary =
+    outcome.action === "skipped"
+      ? "skipped: content_hash matches the stored grade"
+      : outcome.action === "executed"
+        ? `executed: run id ${outcome.runId}`
+        : outcome.action === "failed"
+          ? `failed: run id ${outcome.runId}; ${outcome.detail}`
+          : `not run: ${outcome.detail}`;
+  process.stdout.write(`  [grade] ${summary}\n`);
+  return outcome;
+}
+
 async function prepareSingleTask(
   task: ReadyTaskView,
   projectId: string | undefined,
@@ -1525,6 +1566,14 @@ async function prepareSingleTask(
     }
   }
 
+  const reviewGradeOutcome = await gradeBeforeReviewPlan({
+    task,
+    projectId,
+    catalogPath: planGenPaths.catalogPath,
+    repoRoot,
+    dryRun,
+  });
+
   // Plans are generated on demand here; `exec refresh` does not manage them.
   await generateSinglePlan({
     executionPath,
@@ -1534,6 +1583,7 @@ async function prepareSingleTask(
     viewpointsPath: planGenPaths.viewpointsPath,
     projectContext: planGenPaths.projectContext,
     task,
+    ...(reviewGradeOutcome ? { reviewGradeOutcome } : {}),
   });
 
   const planPrompt = loadPrompt(executionPath, task.id);
@@ -3154,6 +3204,13 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
   // Generate the plan on demand (skip for bring-your-own --plan).
   const generatedPlan = !opts.plan;
   if (opts.task && task) {
+    const reviewGradeOutcome = await gradeBeforeReviewPlan({
+      task,
+      projectId,
+      catalogPath,
+      repoRoot,
+      dryRun: false,
+    });
     await generateSinglePlan({
       executionPath,
       projectId,
@@ -3163,6 +3220,7 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
       projectContext,
       task,
       ...(stem ? { stem } : {}),
+      ...(reviewGradeOutcome ? { reviewGradeOutcome } : {}),
     });
   } else if (target) {
     await generateDeliverablePlan({

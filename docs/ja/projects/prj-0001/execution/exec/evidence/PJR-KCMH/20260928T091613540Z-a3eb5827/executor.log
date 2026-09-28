@@ -1,0 +1,26 @@
+review の前に runner が grade を実行し、その結果を review plan に載せる処理を実装しました。typecheck と単体テストは実行しておらず、この後に親 runner が回します。また、個票の完了条件のうち 2 件は未完了です（後述）。
+
+**実装した内容**
+- **runner の grade 実行**（新規 `src/review-grade.ts`）: `mode: review` のタスクで plan を作る前に、対象文書の `content_hash` と既存の評価結果（sidecar）の `content_hash` を比べます。
+  - 一致すれば grade を再実行せず、既存の結果を使います。
+  - 一致しない・sidecar がない・読めない場合は、`tools/grade/run-per-document.sh` を対象 1 件に絞って実行します。
+  - grade が失敗しても review は止めず、失敗したことを plan に書きます。
+  - 対象を特定できない場合、スクリプトがないリポジトリ、dry-run のときは実行しません。
+- **呼び出し元**（`src/exec-run.ts`）: 通常の実行経路と in-place 実行の両方で上の処理を呼びます。executor には grade を実行させません。評価対象の決め方は `src/exec-plans.ts` の `reviewGradeSubject` にまとめ、plan の「評価結果」章と同じ規則（maintenance 系は実践の型、それ以外は成果物）にしています。
+- **plan への提示**: `xrp-*` テンプレート 9 種すべての「評価結果」章に `_GRADE_SUMMARY_` を追加しました。
+  - 載せる内容は、grade を実行したかどうか、鮮度、`verdict`・`score`・finding 件数、grade が判定した全観点の level と score、finding の一覧です。観点は `evaluation` で絞りません。
+  - 文面は「確定済みの事実であり、観点を評価し直したり同じ finding を指摘し直したりしない」という向きにしています。
+  - `content_hash` が一致しない場合は、載せた結果が変更前の内容に対するものだと明記します。
+  - 実際の sidecar（`cdfd-action`）で出力の形を確認しました。
+- **テスト**: `tests/src/review-grade.test.ts` を新規に作り、スキップ判定、grade の起動引数、plan への提示を確認します。`tests/src/exec-plans.test.ts` には、9 種のテンプレートが `_GRADE_SUMMARY_` を持つことの確認を追加しました。
+- **ガイド**: `docs/ja/specdojo/guides/review-guide.md` を書き直しました。旧来の観点別判定（`RVP-NNN`、pass / fail / unclear、approve / revise / reject）の説明を消し、grade と review の役割分担、review 前の grade、plan の「評価結果」章、6 値の verdict を記述しました。あわせて、重複していた章番号（1.2.1 → 1.4、2 つ目の 2.1 → 2.4 など）を直しました。
+- **個票**: `pjr-kcmh-review-grade-verdict.md` の作業内容と対応結果を更新しました。ステータスの項目は変えていません。
+
+**未完了・確認が必要な点**
+- **review を agent で 1 件実行する確認は未実施です。** sandbox では agent を起動できないため、runner か人が行う必要があります。個票には `_TODO_` として残しています。
+- **経過措置の 3 入力（`changed_only`・`ungraded`・`incomplete`）は今回外していません。** runner の grade は review タスクがある文書しか評価しないので、review 経路のない文書の変更や未評価の文書は、引き続き定期実行で拾う必要があるためです。上の review 実行を確認してから改めて判断します。
+- **runner が更新した sidecar は、実行したリポジトリ（main 側）に書かれます。** review を行う worktree にも反映されるかは確認していません。plan 本文に評価結果を載せているので判断材料は届きますが、agent が worktree で鮮度確認（`grade list --changed-only`）をすると「最新でない」と判定される可能性があります。個票に `_ASSUMPTION_` として記録しました。
+
+<specdojo_executor_evidence>
+{"final_message":"review フェーズの前に runner が grade を実行・再利用する処理を追加した（src/review-grade.ts、exec-run.ts、exec-plans.ts）。content_hash が一致すれば再実行しない。grade 結果を確定済みの事実として xrp-* 9 種の plan に提示する（_GRADE_SUMMARY_）。単体テストを追加し、review-guide.md を review が評価しない形に書き直し、個票の作業内容と対応結果を更新した。review を agent で 1 件実行する確認と、経過措置の 3 入力（changed_only・ungraded・incomplete）を外すかの判断は未完了。","validations":[{"command":"npx prettier --write src/review-grade.ts src/exec-plans.ts src/exec-run.ts tests/src/review-grade.test.ts tests/src/exec-plans.test.ts docs/ja/specdojo/exec-templates/xrp-*.md docs/ja/specdojo/guides/review-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-kcmh-review-grade-verdict.md","status":"passed","summary":"formatted"},{"command":"npx eslint src/review-grade.ts src/exec-plans.ts src/exec-run.ts tests/src/review-grade.test.ts tests/src/exec-plans.test.ts","status":"passed","summary":"no lint errors"},{"command":"npx markdownlint (xrp-* templates, review-guide.md, pjr-kcmh ticket)","status":"passed","summary":"no errors"},{"command":"node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint (xrp-* templates, review-guide.md, pjr-kcmh ticket)","status":"passed","summary":"no errors"},{"command":"node packages/docs-lint/bin/specdojo-docs-lint.js remark docs/ja/specdojo/guides/review-guide.md --quiet --frail","status":"passed","summary":"exit 0"},{"command":"npx tsx src/specdojo.ts register build","status":"passed","summary":"generated register outputs"},{"command":"npx tsx src/specdojo.ts catalog validate","status":"passed","summary":"exit 0; only pre-existing based_on WARNs for uis-index/bds-index"},{"command":"npx tsx src/specdojo.ts index build","status":"passed","summary":"Built index: 2133 entries"},{"command":"node packages/docs-lint/bin/specdojo-docs-lint.js history-links","status":"passed","summary":"all history files valid"},{"command":"npm run typecheck / npm run test:unit / npm run test:integration / npm run validate:schema","status":"not_run","summary":"delegated to parent runner"}]}
+</specdojo_executor_evidence>

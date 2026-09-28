@@ -45,3 +45,29 @@
       from: review フェーズで grade を実行し verdict を合成する
       to: review フェーズで grade を実行し結果を plan へ提示する
   previous_event_id: reg_6b430d37260a4c7a8037dd55f708dc8b
+- v: 1
+  id: reg_d72a5db8cfeb413f930b607ddf88ecd3
+  ts: "2026-09-28T09:15:15Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_4bf2f3083f22455ba7d078f9ef937e5e
+- v: 1
+  id: reg_0334898996e14ef2aa8f2320cc2abd21
+  ts: "2026-09-28T09:27:59Z"
+  action: review
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_d72a5db8cfeb413f930b607ddf88ecd3
