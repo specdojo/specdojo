@@ -66,6 +66,16 @@ sample / template への本文中のリンクは実行不能な指示になる
 
 大半は 9 行程度の断片であり、完成例を丸ごと埋め込んでいるものは少数である。`bps-rulebook` は 70 行で全体の 2 位だった。
 
+### 2.5. 範囲の見直し（2026-09-29）
+
+2026-09-29 の 2 回目の実行で、executor は段階移行の条件に従い、`xep-fully-guided-template.md` の変更と、bps-rulebook・stsd-rulebook のサンプル章の外出し（試行）までを行って止まった。grade による試行の確認は executor の sandbox では行えない。利用者の判断で、本項目の範囲を第 1 段（テンプレートの変更と試行 2 件、試行の確認）に絞り、残りの rulebook の外出しは別項目に分けた。次の完了条件のうち、「既存 54 件の `サンプル` 章のうち、完成例を埋め込んでいるものが sample へ外出しされている」「外部 sample を持たない 2 件」は第 2 段の項目で扱う。第 1 段の完了条件は次のとおり。
+
+- `xep-fully-guided-template.md` が sample を参照できるよう変更され、`recipe-guided` は対象外であることが明示されている。
+- bps-rulebook と stsd-rulebook のサンプル章が外出しされ、本文に sample への wikilink が発生していない。
+- 試行の確認として、2 件の rulebook を grade で評価し、外出し前の結果と比べて `vp-qe-kata-conformance` と `vp-arc-conciseness` の finding が悪化していない（orchestrator が行う）。
+- plan の肥大化がない（executor の確認では、増分はパス 1 行と手順 1 項目）。
+- runner の検証がすべて通過している。
+
 ## 3. 完了条件
 
 - fully-guided 実行で sample を参照できる。参照範囲の変更が `xep-fully-guided-template.md` に反映されている。
