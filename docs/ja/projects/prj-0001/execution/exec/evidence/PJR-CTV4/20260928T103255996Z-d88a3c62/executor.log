@@ -1,0 +1,25 @@
+PJR-CTV4 のコード・テスト・ドキュメントの変更を終えました。ただし型チェックと統合テストはまだ実行しておらず、親 runner が実行する予定です。3 件追加した統合テストもまだ一度も走っていません。
+
+**変更内容**
+- **`src/exec-worktree-ops.ts`**
+  - `mergeWorktreeIntoCurrent` に `resolveConflictsWithBranchPaths` を追加しました。merge の競合がすべて指定した記帳パスに収まる場合は、exec branch 側（再開後の最新の記帳）の内容で解決し、merge を完了します。
+  - 競合がない失敗（hook による拒否）や、それ以外のパスでの競合は、これまでどおり abort します。
+  - 解決後の commit は `--no-verify` で作ります。通常の `git merge` も pre-commit を走らせないためです。ただし commit-msg hook も走らなくなります。
+  - `abortMerge` を追加しました。`git merge --abort` の前に `git update-index -q --refresh` を実行し、stat だけのずれで abort が失敗しないようにします。
+- **`src/exec-run.ts`**
+  - register 統合（`finalizeRegisterWorktreeRun`）で、項目自身の記帳ファイル（個票・イベント・plan・result・登録簿）を解決対象として渡すようにしました。
+  - wait 時の同期 merge（`syncExecBranchAfterWait`）の abort も `abortMerge` に切り替えました。
+- **`tests/src/exec-worktree-ops.integration.test.ts`**：統合テストを 3 件追加しました。
+  - `waiting` を 2 回経た項目の再開後の統合が、記帳ファイルの競合で止まらず merge commit まで完了すること。
+  - 記帳ファイル以外の競合を含む場合は abort し、統合先が元のまま残ること。
+  - stat だけがずれたファイルがあっても `abortMerge` が成功すること。
+- **`docs/ja/specdojo/guides/exec-worktree-guide.md`**：記帳ファイル競合の解決と、abort 前の index 更新について追記しました。
+- **個票**：「対応結果」セクションに上記の対応内容を記入しました。
+
+**未確認の点**
+- 3 件目のテストの前提は、「stat だけのずれで素の `git merge --abort` が失敗する」ことです。一時リポジトリでの事前確認は権限がなく実行できなかったため、この前提は PJR-N22N で起きた事象だけを根拠にしています。テストは修正後の abort が成功することだけを確かめるので、前提が崩れていても通ってしまいます。
+- 1 件目のテストは `mergeWorktreeIntoCurrent` を直接呼んで 2 回の wait を再現しており、実際の `exec run --register ... --resume` の経路は通していません。
+
+<specdojo_executor_evidence>
+{"final_message":"PJR-CTV4: the integrate merge now resolves conflicts on the item's own bookkeeping paths with the exec branch side and completes; `abortMerge` runs `git update-index -q --refresh` before `git merge --abort`; 3 integration tests, guide, and ticket updated. Typecheck and tests are left to the parent runner.","validations":[{"command":"npx prettier --write src/exec-worktree-ops.ts src/exec-run.ts tests/src/exec-worktree-ops.integration.test.ts","status":"passed","summary":"unchanged after formatting"},{"command":"npx eslint src/exec-worktree-ops.ts src/exec-run.ts tests/src/exec-worktree-ops.integration.test.ts","status":"passed","summary":"no lint errors"},{"command":"npx prettier --write docs/ja/specdojo/guides/exec-worktree-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-ctv4-resume-integrate-bookkeeping-conflict.md","status":"passed","summary":"unchanged after formatting"},{"command":"npx markdownlint docs/ja/specdojo/guides/exec-worktree-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-ctv4-resume-integrate-bookkeeping-conflict.md","status":"passed","summary":"no markdownlint errors"},{"command":"npx tsx src/specdojo.ts catalog validate","status":"passed","summary":"OK; only pre-existing WARN about missing based_on docs for dct-user-interface-model.yaml"},{"command":"npx tsx src/specdojo.ts register build","status":"passed","summary":"generated register views"},{"command":"npx tsx src/specdojo.ts index build","status":"passed","summary":"Built index: 2142 entries"},{"command":"npm run -s validate:history-links","status":"passed","summary":"history files valid"}]}
+</specdojo_executor_evidence>

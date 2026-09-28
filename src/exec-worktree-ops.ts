@@ -712,6 +712,51 @@ export function restoreRootWorkingCopies(repoRoot: string, snapshot: RootWorking
   }
 }
 
+// `git merge --abort` (reset --merge) refuses to run when a tracked file's cached stat no longer
+// matches the file even though its content is unchanged ("not uptodate"), which happens when another
+// process in the same working tree (for example a routine) touches files during the merge. Refresh
+// the index first so a stat-only drift cannot leave the tree mid-merge.
+export function abortMerge(repoRoot: string): ReturnType<typeof gitResult> {
+  gitResult(repoRoot, ["update-index", "-q", "--refresh"]);
+  return gitResult(repoRoot, ["merge", "--abort"]);
+}
+
+// Resolve an in-progress merge whose conflicts are all on exec-branch-owned paths by taking the
+// exec branch side, then complete the merge commit. Returns the resolved paths, or null when the
+// merge has no conflicts (for example a hook rejection), conflicts on other paths, or cannot be
+// completed; the caller then aborts the merge. The commit uses --no-verify because a regular
+// `git merge` does not run pre-commit either, and only the item's own bookkeeping was resolved.
+function resolveBranchOwnedConflicts(params: {
+  repoRoot: string;
+  branchOwnedPaths: string[];
+  message?: string;
+}): string[] | null {
+  const { repoRoot } = params;
+  const conflicted = zeroSeparatedPaths(repoRoot, ["diff", "--name-only", "--diff-filter=U", "-z"]);
+  if (conflicted.length === 0) return null;
+  const owned = new Set(params.branchOwnedPaths);
+  if (conflicted.some((path) => !owned.has(path))) return null;
+  for (const path of conflicted) {
+    const stages = gitOutput(repoRoot, ["ls-files", "-u", "-z", "--", path])
+      .split("\0")
+      .filter(Boolean)
+      .map((entry) => entry.split("\t")[0]?.split(" ")[2]);
+    const step = stages.includes("3")
+      ? gitResult(repoRoot, ["checkout", "--theirs", "--", path])
+      : gitResult(repoRoot, ["rm", "--quiet", "--", path]);
+    if (step.status !== 0) return null;
+    if (stages.includes("3") && gitResult(repoRoot, ["add", "--", path]).status !== 0) return null;
+  }
+  const unresolved = zeroSeparatedPaths(repoRoot, ["diff", "--name-only", "--diff-filter=U", "-z"]);
+  if (unresolved.length > 0) return null;
+  const commit = gitResult(repoRoot, [
+    "commit",
+    "--no-verify",
+    ...(params.message ? ["-m", params.message] : ["--no-edit"]),
+  ]);
+  return commit.status === 0 ? conflicted : null;
+}
+
 // Merge the task exec branch into the branch currently checked out at repoRoot.
 // Serializes with the scheduler lock so parallel merges do not race on root HEAD.
 // `releaseRootPaths` are root-side working copies of bookkeeping files that the exec branch also
@@ -722,6 +767,10 @@ export function mergeWorktreeIntoCurrent(params: {
   taskId: string;
   message?: string;
   releaseRootPaths?: string[];
+  // Paths owned by the exec branch (the item's own bookkeeping: ticket / event / plan / result).
+  // When the merge conflicts only on these paths, the conflict is resolved with the exec branch
+  // side (the latest bookkeeping after the resume) and the merge is completed instead of aborted.
+  resolveConflictsWithBranchPaths?: string[];
   ffOnly?: boolean;
   dryRun?: boolean;
   failureLogPath?: string;
@@ -799,9 +848,24 @@ export function mergeWorktreeIntoCurrent(params: {
       const mergeInProgress =
         gitResult(context.repoRoot, ["rev-parse", "--verify", "--quiet", "MERGE_HEAD"]).status ===
         0;
-      const abortResult = mergeInProgress
-        ? gitResult(context.repoRoot, ["merge", "--abort"])
-        : undefined;
+      const resolved =
+        mergeInProgress && !params.ffOnly
+          ? resolveBranchOwnedConflicts({
+              repoRoot: context.repoRoot,
+              branchOwnedPaths: (params.resolveConflictsWithBranchPaths ?? []).map((path) =>
+                repoRelative(context.repoRoot, path),
+              ),
+              message: params.message,
+            })
+          : null;
+      if (resolved && resolved.length > 0) {
+        merged = true;
+        process.stdout.write(
+          `  [integrate] resolved bookkeeping conflicts with ${worktree.branch}: ${resolved.join(", ")}\n`,
+        );
+        return;
+      }
+      const abortResult = mergeInProgress ? abortMerge(context.repoRoot) : undefined;
 
       if (params.failureLogPath) {
         mkdirSync(resolve(params.failureLogPath, ".."), { recursive: true });

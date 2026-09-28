@@ -221,13 +221,15 @@ specdojo exec worktree merge \
 
 通常は `git merge --no-ff` 相当で統合します。自動実行では `exec(<task-id>): <task name>` を merge commit の subject に使い、統合先の first-parent を1タスク1commitにします（`prepare execution` / `apply task changes` は exec branch 側に残ります）。`--ff-only` 指定時は fast-forward 可能な場合だけ統合します。
 
-競合または commit hook の失敗で merge commit を作れなかった場合は、runner が `git merge --abort` を実行して統合先を開始前の状態へ戻します。Schedule タスクは `blocked`、register 項目は `waiting` へ遷移し、再開に使う exec branch と worktree は保持します。register の `wait` commit は abort 後に作るため、統合先へ `MERGE_HEAD` を残したまま部分 commit を試みません。block reason には hook の罫線や色を除いた失敗ステップ名と最初のエラー行を記録し、executor/reporter pipeline では生の stdout / stderr と abort 結果を同じ run の `integrate.log` に保存します。
+register 項目の統合で競合したのが項目自身の記帳ファイル（個票・イベント・plan・result）だけの場合は、exec branch 側（再開後の最新の記帳）の内容で解決して merge commit を作ります。`waiting` を複数回経た項目では、wait 時の同期 merge の後も統合先と exec branch の双方で記帳ファイルが変わるためです。解決後の commit は通常の `git merge` と同じく pre-commit hook を実行しません。
+
+上記以外の競合または commit hook の失敗で merge commit を作れなかった場合は、runner が `git merge --abort` を実行して統合先を開始前の状態へ戻します。Schedule タスクは `blocked`、register 項目は `waiting` へ遷移し、再開に使う exec branch と worktree は保持します。register の `wait` commit は abort 後に作るため、統合先へ `MERGE_HEAD` を残したまま部分 commit を試みません。block reason には hook の罫線や色を除いた失敗ステップ名と最初のエラー行を記録し、executor/reporter pipeline では生の stdout / stderr と abort 結果を同じ run の `integrate.log` に保存します。
 
 register 項目を `waiting` へ遷移したあとは、`wait` commit と、その時点までに統合先へ入った変更を exec branch へ通常 merge します。root の `wait` commit に保存済みの個票・イベント・plan・result は、worktree に残る同内容の未 commit 変更を解放してから merge し、これらの記帳パスの競合だけを `wait` commit 側で解決します。それ以外の競合は自動解決せずに同期 merge を中断します。これにより、再開時の merge-base を進めながら、別項目が統合先へ追加した成果を exec branch 側の削除として扱わないようにします。
 
 hook や検査を直した後は、Schedule タスクでは `specdojo exec resume --project <project-id> --task <task-id>`、register 項目では元の `exec run --register ... --worktree --resume` を実行します。統合段から再開するため agent は再実行せず、保持した exec branch を merge します。
 
-自動の `git merge --abort` 自体が失敗した場合は、runner が標準エラーへ手動復旧を案内します。案内された root worktree で状態と失敗原因を確認し、ロックファイルや Git プロセスなどの原因を解消してから次を実行してください。abort が完了するまでは commit や統合再開を行いません。
+runner は `git merge --abort` の前に `git update-index -q --refresh` を実行します。同じ作業ツリーで動く routine などがファイルの stat だけを変えた場合でも、`not uptodate` で abort が失敗しないようにするためです。自動の `git merge --abort` 自体が失敗した場合は、runner が標準エラーへ手動復旧を案内します。案内された root worktree で状態と失敗原因を確認し、ロックファイルや Git プロセスなどの原因を解消してから次を実行してください。abort が完了するまでは commit や統合再開を行いません。
 
 ```bash
 git status
