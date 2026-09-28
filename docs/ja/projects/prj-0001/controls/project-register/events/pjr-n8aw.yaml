@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_9c24375d4265425199a4efc6afad8681
+  ts: "2026-09-28T22:44:28Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: オーケストレーターの起票時対話サポート機能の追加
+    - field: description
+      from: ""
+      to: orchestrator.md を改修し、起票時の不足引数（owner/due等）や個票の初期記述を提案・ヒアリングするルールを追加する
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-29"
+    - field: due
+      from: ""
+      to: "2026-10-31"
