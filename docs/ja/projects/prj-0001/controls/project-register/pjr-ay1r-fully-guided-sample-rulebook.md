@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   owner: ARC
   registered_at: "2026-09-26T02:50:40Z"
+  block_reason: "agent exited with non-zero code: 親 runner による整合性C-1 `test-integration` および `validate-schema` が失敗しているため。"
 ---
 
 # PJR-AY1R fully-guided が sample を参照できるようにし rulebook のサンプル章を外出しする

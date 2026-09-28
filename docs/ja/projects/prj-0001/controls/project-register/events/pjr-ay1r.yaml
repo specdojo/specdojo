@@ -32,3 +32,32 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_731e827659824310b31ef8ab69206779
+  ts: "2026-09-28T22:43:20Z"
+  action: start
+  actor: agy-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_10bc067af77146f2a62a50025fe72d20
+- v: 1
+  id: reg_4e455ebb5ed3443fa863f4528057dbd7
+  ts: "2026-09-28T23:00:53Z"
+  action: wait
+  actor: agy-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: 親 runner による整合性C-1 `test-integration` および `validate-schema` が失敗しているため。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: 親 runner による整合性C-1 `test-integration` および `validate-schema` が失敗しているため。"
+  previous_event_id: reg_731e827659824310b31ef8ab69206779
