@@ -116,3 +116,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_58c52670c4fc449f8b220503494ecbee
+- v: 1
+  id: reg_54e57778a2aa4e35b9c64670cdaa14af
+  ts: "2026-09-28T15:15:55Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: claude-expert-executor の実行結果を評価。統合テストの準備漏れ（prepare の複製の解放）を orchestrator が worktree で直し、reporter の段から再開して全検証の通過を確認
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-29"
+    - field: conclusion
+      from: "-"
+      to: 統合時にイベントファイルが競合した場合、両側のイベントを和集合（同一 id は 1 件、時刻順）で解決する register-event-merge を追加した。waiting 中に統合先で追記されたイベントが統合後も残ることを統合テストで確認した
+  previous_event_id: reg_26f77045b3314335a85aee1c6862080e

@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-36cn-integrate-bookkeeping-event-union
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-09-28T11:18:10Z"
+  completed_at: "2026-09-28T15:15:55Z"
   block_reason: "agent exited with non-zero code: 親 runner が実行した runner 検証 `id: test-integration`（`npm run test:integration`）が `status: failed`（exit 1）である。plan の共通規約により、runner 検証が failed の場合は reporter が結果を complete とす…"
+  conclusion: 統合時にイベントファイルが競合した場合、両側のイベントを和集合（同一 id は 1 件、時刻順）で解決する register-event-merge を追加した。waiting 中に統合先で追記されたイベントが統合後も残ることを統合テストで確認した
 ---
 
 # PJR-36CN 統合時の記帳競合でイベントを和集合で合わせる
