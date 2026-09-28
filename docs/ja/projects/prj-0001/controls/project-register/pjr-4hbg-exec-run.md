@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   owner: DEV
   registered_at: "2026-09-26T02:31:04Z"
+  block_reason: rate limit reached
 ---
 
 # PJR-4HBG 実行中の exec run へ後から項目を追加して並行実行できるようにする
