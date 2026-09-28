@@ -26,8 +26,6 @@ import {
 } from "./register-migrate-timestamps.js";
 import { flattenTemplateFrontmatter } from "./template-frontmatter.js";
 import { parseSpecdojoDocument } from "./frontmatter-namespace.js";
-import { resolveDispatchedTemplateId } from "./kata.js";
-import { practiceLocalId } from "./practice-id.js";
 import { resolveSpecdojoTemplatePath } from "./template-resolution.js";
 import { collectRegisterHistoryEvents, formatRegisterHistoryEvents } from "./register-history.js";
 import {
@@ -2231,15 +2229,7 @@ export function registerRegisterCommands(program: Command): void {
         completedAt: completedAt ?? CELL_NONE,
         conclusion: opts.conclusion,
       };
-      const templateId = resolveDispatchedTemplateId(
-        "specdojo:pjr-rulebook",
-        "item_type",
-        opts.type,
-      );
-      if (!templateId) {
-        throw new Error(`No PJR template is declared for item type "${opts.type}"`);
-      }
-      const templatePath = resolveSpecdojoTemplatePath(`${practiceLocalId(templateId)}.md`);
+      const templatePath = resolveSpecdojoTemplatePath(`pjr-${opts.type}-template.md`);
 
       const { assignedId: displayId, ticketFilename } = planRegisterItem({
         existingIds: loadRegisterItems(paths).map((view) => view.id),

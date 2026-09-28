@@ -128,8 +128,8 @@ type は派生ビューの生成と `exec run --register` の挙動（`agent実�
 | 終了済み項目を再開する   | `register reopen` | `open`                                                                |
 | 担当・期限などを変更する | `register update` | （状態は変えずフィールドを更新）                                      |
 
-- 担当や期限が未定のまま登録する場合は、個票 Frontmatter の `owner` / `due_on` を省略し、決まり次第 `register update` で追加します。期限なしを明示する場合だけ `due_on: null` とします。
-- 起票と完了・決定・却下は「日付」ではなく「瞬間」として記録します。個票 Frontmatter の `registered_at` / `completed_at` に UTC の RFC 3339・秒精度（例: `2026-08-09T14:08:51Z`）で保存し、`register add` / `register close` / `register reject` が実行時刻を自動記入します。`deferred` は終端状態ですが `completed_at` を持ちません。`register reopen` は `completed_at` を削除します。
+- 担当や期限が未定のまま登録する場合は、空欄ではなく _TODO_ のままにしておき、決まり次第 `register update` で埋めます。
+- 起票と完了は「日付」ではなく「瞬間」として記録します。個票 Frontmatter の `registered_at` / `completed_at` に UTC の RFC 3339・秒精度（例: `2026-08-09T14:08:51Z`）で保存し、`register add` / `register close` / `register reject` が実行時刻を自動記入します。`register reopen` は `completed_at` を削除します。
 - 一覧の「登録日」「完了日」は、保存した日時を config の `run.register_date_timezone`（IANA タイムゾーン名、既定 `UTC`）へ変換して導出する表示値です。個票側に日付を持たないため、表示タイムゾーンを変えても記録は書き換わりません。ID が乱数化され採番順から起票順を追えないため、登録日時は起票順を辿る手がかりになります。過去の項目で時刻が不明な場合は値を推測せず、キーを省略します。
 - 「期限」（`due_on`）は瞬間ではなく同タイムゾーン上の暦日そのものなので、`YYYY-MM-DD` のまま扱います。
 - 日時の計算は OS / コンテナの `TZ` 環境変数に依存させません。日本時間で表示・運用する場合は次のように設定します。
@@ -175,7 +175,7 @@ specdojo register add \
 
 ### 2.3. 完了時の記録
 
-`close` / `reject` では完了日時と結論を、`defer` では再開条件または再評価時期を示す結論だけを残します。`defer` は `completed_at` を記録しません。結論は「何をどう判断したか」が 1 文で分かる形にします。
+`close` / `reject` / `defer` するときは、完了日時と結論を残します。結論は「何をどう判断したか」が 1 文で分かる形にします。
 
 ```bash
 specdojo register close \
@@ -188,7 +188,7 @@ specdojo register close \
 - `rejected`: 却下の理由を書きます。
 - `deferred`: 再開の条件または再評価のタイミングを書きます。
 
-`register close` / `register reject` で `--completed` を省略すると実行時刻を UTC で記録します。後追いで登録する場合だけ、タイムゾーン付きの RFC 3339 で明示します（内部では UTC へ正規化して保存します）。
+`--completed` を省略すると実行時刻を UTC で記録します。後追いで登録する場合だけ、タイムゾーン付きの RFC 3339 で明示します（内部では UTC へ正規化して保存します）。
 
 ```bash
 specdojo register close \

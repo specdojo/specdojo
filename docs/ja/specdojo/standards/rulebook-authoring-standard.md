@@ -35,22 +35,20 @@ Rulebook Authoring Standard
 - `id` はauthority、英小文字・数字・ハイフンで構成し、一意にする（正確な制約は参照スキーマに従う）。
 - `status` は `draft` / `ready` / `deprecated` のいずれかとする。
 
-| 項目                | 必須 | 説明                                                           |
-| ------------------- | ---- | -------------------------------------------------------------- |
-| id                  | ○    | `specdojo:<prefix>-rulebook` 形式の一意 ID                     |
-| type                | ○    | `rulebook` 固定                                                |
-| status              | ○    | `draft` / `ready` / `deprecated`                               |
-| `target_format`     | 任意 | 対象ドキュメントのフォーマット（`yaml` / `json` / `markdown`） |
-| recipe              | 任意 | 対応する recipe の完全 ID、`undecided`、`not-needed`           |
-| sample              | 任意 | 対応する sample の完全 ID または ID 配列、上記2状態            |
-| template            | 任意 | 対応する単一 template の完全 ID、`undecided`、`not-needed`     |
-| `template_dispatch` | 任意 | 選択フィールドと値ごとの template ID の写像                    |
-| based_on            | 任意 | 上位規約や根拠ドキュメント                                     |
-| supersedes          | 任意 | 置き換え関係                                                   |
+| 項目          | 必須 | 説明                                                           |
+| ------------- | ---- | -------------------------------------------------------------- |
+| id            | ○    | `specdojo:<prefix>-rulebook` 形式の一意 ID                     |
+| type          | ○    | `rulebook` 固定                                                |
+| status        | ○    | `draft` / `ready` / `deprecated`                               |
+| target_format | 任意 | 対象ドキュメントのフォーマット（`yaml` / `json` / `markdown`） |
+| recipe        | 任意 | 対応する recipe の完全 ID、`undecided`、`not-needed`           |
+| sample        | 任意 | 対応する sample の完全 ID または ID 配列、上記2状態            |
+| template      | 任意 | 対応する template の完全 ID、`undecided`、`not-needed`         |
+| based_on      | 任意 | 上位規約や根拠ドキュメント                                     |
+| supersedes    | 任意 | 置き換え関係                                                   |
 
 - `target_format` が未記載の場合は markdown を対象とみなす。
-- `recipe` / `sample` / `template` は要否と所在の正本であり、`undecided` は要否未判断、項目省略は必要だが未整備、完全 ID は必要かつ整備済み、`not-needed` は不要を表す。ただし `template_dispatch` がある場合の `template` 省略は、単一 template ではなくディスパッチを使うことを表す。
-- `template_dispatch` は、同じ rulebook が成果物フィールドの値ごとに異なる template を使う場合に用いる。`selector` へ選択フィールド名、`cases` へ値と完全 template ID の写像を記載し、`template` とは併記しない。
+- `recipe` / `sample` / `template` は要否と所在の正本であり、`undecided` は要否未判断、項目省略は必要だが未整備、完全 ID は必要かつ整備済み、`not-needed` は不要を表す。
 - 完全 ID は `fully-guided` / `recipe-guided` の plan 生成で参照先パスの解決に使う（rulebook を参照ハブとする）。命名規約に従う場合も明示的に宣言し、宣言された参照先ファイルが存在しないと `exec validate` が警告する。`sample` の拡張子は `target_format` に従う。
 - 同じ rulebook 系統に複数の完成例がある場合、`sample` を ID 配列で宣言する。配列の先頭を既定例として使う。
 - 機械検証は [rulebook-frontmatter.schema.yaml](../../../specdojo/schemas/v1/rulebook-frontmatter.schema.yaml) を SSOT とする。
@@ -86,7 +84,7 @@ specdojo:
 - template を文書 ID で宣言する系統では、見出し順・表・記入欄の骨組みを template の正本とし、rulebook の本文要件には各章・キーの目的、必須・任意、記述規約を残す。同じ見出しの羅列を転載しない。
 - `template: not-needed`、`template: undecided`、template 項目省略の系統では、成果物の内容要件を判断できるよう、本文要件に必要な章・キーと必須・任意を記載する。
 - 記述ガイドには、章ごとの書き方と例（表・サンプル）を置き、重複を避けるため共通事項は上位（index）を SSOT とする方針を記載する。
-- sample / recipe / template との対応関係は Frontmatter の `sample` / `recipe` / `template` / `template_dispatch` だけで示す。本文にリンク章（`サンプル` / `作成レシピ` / `テンプレート`）や wikilink を置かない。fully-guided 実行では rulebook と recipe だけが読み込まれるため、sample / template への本文中のリンクは実行不能な指示になる。
+- sample / recipe / template との対応関係は Frontmatter の `sample` / `recipe` / `template` だけで示す。本文にリンク章（`サンプル` / `作成レシピ` / `テンプレート`）や wikilink を置かない。fully-guided 実行では rulebook と recipe だけが読み込まれるため、sample / template への本文中のリンクは実行不能な指示になる。
 - **完成例の正本は sample とする。** 新規作成および改訂では、完成例を `<prefix>-sample` へ置き、rulebook へ再掲しない。同じ完成例を 2 箇所に持つと、本文要件を変えたときに片方が取り残される。
 - `サンプル` 章は経過措置である。`xep-fully-guided-template.md` が「磨き込みでは sample / template は読み込まない」と定めるため、章を削除すると fully-guided 実行で例が参照できなくなる。参照範囲が変わるまでは、**形式の輪郭が伝わる最小例**に限って残してよい。完成例を丸ごと埋め込まない。
 - 既存 rulebook の `サンプル` 章は、参照範囲の変更後に一括で外出しする。個別の改訂で先行して削除しない。
@@ -125,7 +123,7 @@ specdojo:
 - 章番号なし見出し（例: `## 全体方針`）を使用しない。
 - 章番号末尾の `.` を省略しない。
 - 章参照を番号のみ（例: `§5` / `第5章`）で記述しない。
-- 本文に sample / recipe / template への wikilink・リンク章を置かない。対応関係は Frontmatter の `sample` / `recipe` / `template` / `template_dispatch` で示す。
+- 本文に sample / recipe / template への wikilink・リンク章を置かない。対応関係は Frontmatter の `sample` / `recipe` / `template` で示す。
 - rulebook 本文に実装詳細（SQL 全文、具体クラス名、詳細 API 設計）を書かない。
 - 曖昧語（十分、適切、問題ない）を根拠なく使用しない。
 - _TODO_: / _UNDECIDED_: / _ASSUMPTION_: 以外の独自ラベルを、共通ルール未定義のまま追加しない。
