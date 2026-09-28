@@ -45,3 +45,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_aac9b60e405d4c04888c2cf016f6d049
+- v: 1
+  id: reg_68a48e0b5e10470195d8e2fd5d36e7d2
+  ts: "2026-09-28T22:50:20Z"
+  action: wait
+  actor: agy-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: runner による検証 `validate-schema` が failed となっており、成果物の整合性が担保されていないため。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: runner による検証 `validate-schema` が failed となっており、成果物の整合性が担保されていないため。"
+  previous_event_id: reg_13e6e81bd0be4b16b0e0c8ec582f8764
