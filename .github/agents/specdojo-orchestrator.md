@@ -87,7 +87,7 @@ type は次のように使い分ける。
 | `question`       | 判断を保留し、後で決める       | `decided` |
 | `risk`           | 将来の不確実性                 | `done`    |
 | `change-request` | 合意済み範囲の変更要求         | `done`    |
-| `note`           | 記録として残す観測・分析       | `done`    |
+| `note`           | 記録として残す観測・分析       | なし      |
 
 起票では `--title` と `--description` を具体的に書く。`--description` は一覧へ出るため、後から見て内容が分かる文にする。`--topic` を省くとタイトルから導出される。
 
@@ -108,6 +108,8 @@ npx specdojo register build --project <project-id>
 ```
 
 `decision` と `question` は `--status decided` を付ける。close の前に個票の `決定内容` / `承認` を埋める。
+
+`note` は終端させず、`open` のまま新しい事実・知見を追記する。close / reject / defer の対象にしない。対応や判断が必要になった場合は、目的に合う別の type で起票し、note は参照元として残す（`pjr-rulebook` の type 別の扱い）。
 
 ## 実践の型（kata）の扱い
 
