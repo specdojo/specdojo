@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: DEV
   registered_at: "2026-09-28T09:47:25Z"
-  block_reason: rate limit reached
+  block_reason: "integrate failed: git merge failed: CONFLICT (content): Merge conflict in docs/ja/specdojo/references/command-reference.md"
 ---
 
 # PJR-E2Q3 exec run --plan で review を executor と reporter の構成で実行できるようにする
@@ -37,15 +37,20 @@ register 由来と schedule 由来のタスクは `agent_pipeline` で実行で�
 
 ## 3. 作業内容
 
-| No  | 作業                                                            | 担当 | 状態 | メモ |
-| --- | --------------------------------------------------------------- | ---- | ---- | ---- |
-| 1   | plan からの実行で agent_pipeline を使えるようにする方式を決める | DEV  | open | -    |
-| 2   | 実装とテスト                                                    | DEV  | open | -    |
-| 3   | review を 1 件実行して result を確認する                        | DEV  | open | -    |
+| No  | 作業                                                            | 担当 | 状態 | メモ                                                              |
+| --- | --------------------------------------------------------------- | ---- | ---- | ----------------------------------------------------------------- |
+| 1   | plan からの実行で agent_pipeline を使えるようにする方式を決める | DEV  | done | `--executor-by` / `--reporter-by` で既定の 2 stage を合成する方式 |
+| 2   | 実装とテスト                                                    | DEV  | done | `resolveInPlaceAgentPipeline` と単体テストを追加                  |
+| 3   | review を 1 件実行して result を確認する                        | DEV  | open | agent 実行を伴うため人間または orchestrator が実施する            |
 
 ## 4. 対応結果
 
--
+- 方式: `exec run --plan`（および `exec run --deliverable`）に `--executor-by` / `--reporter-by` を指定したとき、既定の executor/reporter 2 stage の `agent_pipeline` を合成し、既存の in-place pipeline（executor evidence、親 runner 検証、reporter による result 描画）で実行する。別の実行経路を新設しなかった理由は、in-place 実行が `agent_pipeline` を持つタスク向けの 2 stage 処理を既に持ち、不足していたのは plan 由来のタスクに `agent_pipeline` を与える手段だけだったためである。
+- 片方の stage だけを指定した場合、もう一方は `stage_role` による自動選択で決まる。reporter が scaffold 済み result を記入するため、`--plan` では frontmatter に `task_id` を持つ plan を必須とし、持たない plan は実行前にエラーにする。`--by` との併用もエラーにする。
+- `--by` に `stage_role: executor` / `stage_role: reporter` の agent を指定した場合は、result 未記入の blocked にせず、`--executor-by` / `--reporter-by` を使うよう案内するエラーで実行前に拒否する。
+- 変更ファイル: `src/exec-run.ts`、`tests/src/exec-run-resolve-command.test.ts`、`docs/ja/specdojo/guides/exec-operation-guide.md`、`docs/ja/specdojo/references/command-reference.md`。
+- 確認: 試行の review plan（`stsd-register-entry-20260928T093919Z-6fd7-plan.md`）で `--executor-by claude-expert-review-executor --reporter-by claude-reporter --dry-run` が executor と reporter を解決することを確認した。`--by claude-expert-review-executor --dry-run` は案内付きエラーで終了コード 1 になった。
+- 未確認: review を実際に 1 件実行し、reporter が新しい書式で result を記入することの確認（作業内容 No.3）。agent 実行を伴うため、本タスクの executor では実施していない。
 
 ## 5. 関連ドキュメント
 
