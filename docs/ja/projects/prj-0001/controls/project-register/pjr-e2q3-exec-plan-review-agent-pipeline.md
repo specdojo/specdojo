@@ -7,11 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: waiting
   priority: medium
   owner: DEV
   registered_at: "2026-09-28T09:47:25Z"
-  block_reason: rate limit reached
+  block_reason: "integrate failed: git merge failed: CONFLICT (content): Merge conflict in docs/ja/specdojo/references/command-reference.md"
 ---
 
 # PJR-E2Q3 exec run --plan で review を executor と reporter の構成で実行できるようにする
