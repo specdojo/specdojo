@@ -68,7 +68,6 @@ import {
   generateSinglePlan,
   resolveDeliverableTarget,
   finalizeResultSectionsForDeliverable,
-  reviewResultSectionsForDeliverable,
   targetDocIdsForScheduledTask,
   stemFromPlanPath,
 } from "./exec-plans.js";
@@ -385,7 +384,6 @@ async function scaffoldClaimResult(opts: {
   schedulePath: string;
   executionPath: string;
   catalogPath?: string;
-  viewpointsPath?: string;
   state: LoadedExecState;
   taskId: string;
   projectId: string;
@@ -416,10 +414,6 @@ async function scaffoldClaimResult(opts: {
     scheduleNode?.phase_suffix,
     scheduleNode?.phase_set,
   );
-  const reviewSections =
-    mode === "review"
-      ? reviewResultSectionsForDeliverable(opts.catalogPath ?? "", localId, opts.viewpointsPath)
-      : undefined;
   const finalizeSections =
     approach === "finalize" || approach === "bootstrap-finalize"
       ? finalizeResultSectionsForDeliverable(opts.catalogPath ?? "", localId, approach)
@@ -444,7 +438,6 @@ async function scaffoldClaimResult(opts: {
     execution,
     ...(approach ? { approach } : {}),
     ...(targets ? { targets } : {}),
-    ...(reviewSections ? { reviewSections } : {}),
     ...(finalizeSections ? { finalizeSections } : {}),
   });
   if (!result.created) {
@@ -479,8 +472,7 @@ async function runLockedEventCommand(
   let lockDir = "";
 
   try {
-    const { schedulePath, executionPath, catalogPath, viewpointsPath } =
-      resolveProjectContext(opts);
+    const { schedulePath, executionPath, catalogPath } = resolveProjectContext(opts);
     const actor = requireNonEmpty("by", opts.by);
     const roster = loadRosterForOpts(opts);
     assertValidActor(actor, roster);
@@ -561,7 +553,6 @@ async function runLockedEventCommand(
         schedulePath,
         executionPath,
         catalogPath,
-        viewpointsPath,
         taskId,
         state,
         projectId: resolveProjectId(opts),
@@ -1028,8 +1019,7 @@ export function registerExecCommands(program: Command): void {
     let lockDir = "";
 
     try {
-      const { schedulePath, executionPath, catalogPath, viewpointsPath } =
-        resolveProjectContext(opts);
+      const { schedulePath, executionPath, catalogPath } = resolveProjectContext(opts);
       const actor = requireNonEmpty("by", opts.by);
       const roster = loadRosterForOpts(opts);
       assertValidActor(actor, roster);
@@ -1168,7 +1158,6 @@ export function registerExecCommands(program: Command): void {
         schedulePath,
         executionPath,
         catalogPath,
-        viewpointsPath,
         state,
         taskId: next,
         projectId: resolveProjectId(opts),

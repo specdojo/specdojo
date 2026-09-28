@@ -57,17 +57,11 @@ const validReviewOutput = {
   schema_version: 1,
   mode: "review",
   outcome: "complete",
-  viewpoint_results: [
-    {
-      id: "RVP-001",
-      result: "pass",
-      evidence: ["検証が成功した。"],
-      notes: "",
-    },
-  ],
-  findings: [],
+  grade_check: "評価結果は最新で、grade は pass だった。",
+  rationale: ["完了条件と実行記録を照合した。"],
+  improvements: [],
   approach: "done criteria と evidence を照合した。",
-  recommendation: "approve",
+  verdict: "complete",
   block_reason: "",
 } as const;
 
@@ -106,6 +100,50 @@ describe("reporter structured output", () => {
     expect(parseReporterOutput(JSON.stringify(validReviewOutput), "review").output).toEqual(
       validReviewOutput,
     );
+  });
+
+  it("accepts every task-completion verdict and rejects per-viewpoint review output", () => {
+    for (const verdict of [
+      "complete",
+      "complete-with-findings",
+      "incomplete",
+      "grade-stale",
+      "grade-unavailable",
+      "changed-during-review",
+    ]) {
+      const output = { ...validReviewOutput, verdict };
+      expect(parseReporterOutput(JSON.stringify(output), "review").output, verdict).toEqual(output);
+    }
+    expect(
+      parseReporterOutput(JSON.stringify({ ...validReviewOutput, verdict: "approve" }), "review")
+        .error,
+    ).toMatch(/verdict/);
+    expect(
+      parseReporterOutput(JSON.stringify({ ...validReviewOutput, rationale: [] }), "review").error,
+    ).toMatch(/rationale/);
+    // 改訂前の観点別出力（viewpoint_results / recommendation）は受け付けない。
+    const legacyOutput = {
+      schema_version: 1,
+      mode: "review",
+      outcome: "complete",
+      viewpoint_results: [{ id: "RVP-001", result: "pass", evidence: ["x"], notes: "" }],
+      findings: [],
+      approach: "done criteria と evidence を照合した。",
+      recommendation: "approve",
+      block_reason: "",
+    };
+    expect(parseReporterOutput(JSON.stringify(legacyOutput), "review").error).toBeDefined();
+  });
+
+  it("tells a review reporter that a non-complete verdict is still a recorded result", () => {
+    const prompt = buildReporterPrompt({
+      plan: "# Plan\n\nReview the task.",
+      evidence: evidence(),
+      mode: "review",
+    });
+
+    expect(prompt).toContain("did not re-grade the deliverable");
+    expect(prompt).toContain('outcome="complete" whenever the evidence supports the verdict');
   });
 
   it("passes only plan, bounded evidence, and schema to the reporter", () => {

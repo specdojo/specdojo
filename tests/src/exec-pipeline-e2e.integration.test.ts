@@ -426,11 +426,6 @@ function writeTemplates(repo: string): void {
     "utf8",
   );
   writeFileSync(
-    join(templates, "xrp-viewpoint-detail-template.md"),
-    "### _VP_ID_\n\n_VP_CHECK_\n",
-    "utf8",
-  );
-  writeFileSync(
     join(templates, "xep-common-conventions-template.md"),
     "## 記法・リンク規約（共通）\n\n- リンクは `[[id|title]]` 形式。\n",
     "utf8",

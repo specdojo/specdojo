@@ -180,7 +180,6 @@ export async function scaffoldResult(opts: {
   runId?: string;
   // タスクが対象とする文書の doc id リスト（plan frontmatter の targets と同じ規則）。
   targets?: string[];
-  reviewSections?: string;
   // finalize / bootstrap-finalize の result に焼き込む確認記録セクション（catalog から解決）。
   finalizeSections?: { doneCriteriaChecklist: string; targetsChecklist: string };
   // Shared plan/result stem. Defaults to taskId (fixed-name worktree/claim flow); in-place
@@ -220,12 +219,6 @@ export async function scaffoldResult(opts: {
   };
 
   const values: Record<string, string> = { _FRONTMATTER_: serializeFrontmatter(meta) };
-  // Review results pre-expand per-RVP sections (role / viewpoint_id / criterion) so the result
-  // is self-contained. When the caller cannot resolve them, leave a language-neutral _TODO_
-  // marker; the result template's own prose explains how to fill the sections.
-  if (mode === "review") {
-    values._REVIEW_RESULT_SECTIONS_ = opts.reviewSections ?? "_TODO_";
-  }
   // Finalize results pre-expand the confirmation record (done_criteria checklist and
   // ready-promotion targets) so every finalize is verified against the same items.
   // When the caller cannot resolve them, leave _TODO_ markers for manual fill-in.
@@ -246,7 +239,9 @@ export async function scaffoldResult(opts: {
 // テンプレート文言を変えた場合はここも合わせて更新する。
 const MANDATORY_PLACEHOLDERS: Record<TaskMode, readonly string[]> = {
   edit: ["_TODO_: 実施した内容", "_TODO_: 変更したファイル"],
-  review: ["recommendation: _TODO_"],
+  // recommendation は review が観点ごとに評価していた時期の xrr-template.md で scaffold された
+  // result 用。改訂前の scaffold が未記入のまま完了扱いにならないよう検知を残す。
+  review: ["verdict: _TODO_", "recommendation: _TODO_"],
 };
 
 // runner が scaffold 時に必ず設定する識別・ライフサイクル項目。agent が frontmatter を
@@ -417,63 +412,31 @@ function renderEditReporterBody(
   ].join("\n");
 }
 
-type ReviewViewpointContext = { id: string; suffix: string; criterion: string };
-
-function reviewViewpointContexts(body: string): ReviewViewpointContext[] {
-  const contexts: ReviewViewpointContext[] = [];
-  const pattern = /^### (RVP-[0-9]{3})([^\n]*)\n\n\*\*確認基準\*\*: ([^\n]+)$/gmu;
-  for (const match of body.matchAll(pattern)) {
-    contexts.push({ id: match[1], suffix: match[2], criterion: match[3] });
-  }
-  return contexts;
-}
-
-function renderReviewReporterBody(output: ReviewReporterOutput, scaffoldBody: string): string {
-  const contexts = reviewViewpointContexts(scaffoldBody);
-  const expectedIds = contexts.map((context) => context.id);
-  const actualIds = output.viewpoint_results.map((viewpoint) => viewpoint.id);
-  if (!isDeepStrictEqual(actualIds, expectedIds)) {
-    throw new Error(
-      `reporter viewpoint ids must match scaffold order: expected=[${expectedIds.join(", ")}], actual=[${actualIds.join(", ")}]`,
-    );
-  }
-  const byId = new Map(output.viewpoint_results.map((viewpoint) => [viewpoint.id, viewpoint]));
-  const viewpointSections =
-    contexts.length === 0
-      ? "- 観点別結果: 該当なし"
-      : contexts
-          .map((context) => {
-            const viewpoint = byId.get(context.id);
-            if (!viewpoint) throw new Error(`reporter viewpoint missing: ${context.id}`);
-            return [
-              `### ${context.id}${context.suffix}`,
-              "",
-              `**確認基準**: ${context.criterion}`,
-              "",
-              `- result: ${viewpoint.result}`,
-              `- evidence: ${viewpoint.evidence.map(reporterInlineText).join(" / ")}`,
-              `- notes: ${viewpoint.notes ? reporterInlineText(viewpoint.notes) : "なし"}`,
-            ].join("\n");
-          })
-          .join("\n\n");
+// review result の章立ては xrr-template.md と一致させる。review は成果物を再評価しないため、
+// 観点別の結果ではなく評価結果の確認・判断根拠・改善指示・verdict を記録する。
+function renderReviewReporterBody(output: ReviewReporterOutput): string {
   return [
     "# Review Result",
     "",
-    "## 1. レビュー観点別結果",
+    "## 1. 評価結果の確認",
     "",
-    viewpointSections,
+    reporterInlineText(output.grade_check),
     "",
-    "## 2. findings",
+    "## 2. 判断根拠",
     "",
-    reporterBulletList(output.findings, "なし"),
+    reporterBulletList(output.rationale, "なし"),
     "",
-    "## 3. 実践の型との整合確認",
+    "## 3. 未充足事項・改善指示",
+    "",
+    reporterBulletList(output.improvements, "なし"),
+    "",
+    "## 4. approach に応じた確認",
     "",
     reporterInlineText(output.approach),
     "",
-    "## 4. decision",
+    "## 5. decision",
     "",
-    `- recommendation: ${output.recommendation}`,
+    `- verdict: ${output.verdict}`,
   ].join("\n");
 }
 
@@ -497,7 +460,7 @@ export async function renderReporterResult(
   const body =
     output.mode === "edit"
       ? renderEditReporterBody(output, evidence)
-      : renderReviewReporterBody(output, parsed.body);
+      : renderReviewReporterBody(output);
   writeFileSync(resultPath, frontmatterWithBody(frontmatter, body), "utf8");
   await formatMarkdownFile(resultPath);
 }

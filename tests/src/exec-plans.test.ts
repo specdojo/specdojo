@@ -13,13 +13,11 @@ import {
   ownerRoleFields,
   parsePlanTaskIdentity,
   targetDocIdsForDeliverable,
-  reviewResultSections,
-  reviewViewpointDetails,
   stemFromPlanPath,
 } from "../../src/exec-plans.js";
 import type { CriteriaItem } from "../../src/catalog-types.js";
 import type { RoleDefinition } from "../../src/role-types.js";
-import type { CoverageType, ReviewViewpoint } from "../../src/review-types.js";
+import type { ReviewViewpoint } from "../../src/review-types.js";
 
 function roleMapOf(roles: RoleDefinition[]): Map<string, RoleDefinition> {
   return new Map(roles.map((role) => [role.code, role]));
@@ -151,125 +149,6 @@ describe("deliverableDocId", () => {
         "docs/ja/projects/prj-test/020-project-definition/prj-new.md",
       ),
     ).toBe("prj-test:prj-new");
-  });
-});
-
-// detail テンプレートの prose ラベルは本物のテンプレートファイル側にあるため、
-// テストでは値の差し込みだけを検証する最小の断片を使う。
-const DETAIL_TEMPLATE = [
-  "### _VP_ID_（_VP_ROLES_: _VP_VIEWPOINT_）",
-  "",
-  "criterion: _VP_CRITERION_",
-  "",
-  "_VP_COVERAGE_check: _VP_CHECK_",
-  "evidence: _VP_EVIDENCE_",
-].join("\n");
-
-describe("reviewResultSections", () => {
-  // Prose labels come from the detail template; the test supplies a minimal one and asserts
-  // that code injects only the data values (id / roles / viewpoint / criterion).
-  const DETAIL_TEMPLATE = [
-    "### _VP_ID_（_VP_ROLES_: _VP_VIEWPOINT_）",
-    "",
-    "基準: _VP_CRITERION_",
-    "",
-    "- result: _TODO_",
-  ].join("\n");
-
-  it("criteria が空の場合は MISSING を返す", () => {
-    expect(reviewResultSections([], DETAIL_TEMPLATE)).toBe("_MISSING_");
-  });
-
-  it("各 RVP に role / viewpoint_id / criterion を展開する", () => {
-    const criteria: CriteriaItem[] = [
-      { text: "業務価値が確認できる", roles: ["BA"], viewpoint: "vp-ba-business-value" },
-      { text: "スコープが承認できる", roles: ["PO"], viewpoint: "vp-po-purpose-alignment" },
-    ];
-
-    const actual = reviewResultSections(criteria, DETAIL_TEMPLATE);
-
-    expect(actual).toContain("### RVP-001（BA: vp-ba-business-value）");
-    expect(actual).toContain("基準: 業務価値が確認できる");
-    expect(actual).toContain("### RVP-002（PO: vp-po-purpose-alignment）");
-    expect(actual).toContain("- result: _TODO_");
-  });
-});
-
-describe("reviewViewpointDetails", () => {
-  it("criteria が空の場合は MISSING を返す", () => {
-    expect(reviewViewpointDetails([], vpMapOf([]), DETAIL_TEMPLATE)).toBe("_MISSING_");
-  });
-
-  it("観点ごとにテンプレートへ値を差し込み RVP 連番を付ける", () => {
-    const criteria: CriteriaItem[] = [
-      { text: "目的と整合しているか。", roles: ["PO"], viewpoint: "vp-po-purpose-alignment" },
-    ];
-    const actual = reviewViewpointDetails(criteria, vpMapOf(PO_VIEWPOINTS), DETAIL_TEMPLATE);
-
-    expect(actual).toContain("### RVP-001（PO: vp-po-purpose-alignment）");
-    expect(actual).toContain("criterion: 目的と整合しているか。");
-    expect(actual).toContain("check: 目的、スコープ、優先順位、公開方針と矛盾していないか。");
-    expect(actual).toContain("evidence: 目的、対象範囲、判断理由。");
-  });
-
-  it("coverage_types を持つ観点は coverage_required ブロックを出力する", () => {
-    const criteria: CriteriaItem[] = [
-      { text: "t", roles: ["PO"], viewpoint: "vp-po-purpose-alignment" },
-    ];
-    const actual = reviewViewpointDetails(criteria, vpMapOf(PO_VIEWPOINTS), DETAIL_TEMPLATE);
-
-    expect(actual).toContain("**coverage_required:**");
-    expect(actual).toContain("- business_goal");
-    expect(actual).toContain("- scope_boundary");
-  });
-
-  it("coverageMap がある場合は coverage_required を id: description に展開する", () => {
-    const criteria: CriteriaItem[] = [
-      { text: "t", roles: ["PO"], viewpoint: "vp-po-purpose-alignment" },
-    ];
-    const coverageMap = new Map<string, CoverageType>([
-      ["business_goal", { id: "business_goal", description: "業務目的との対応が説明できるか。" }],
-    ]);
-    const actual = reviewViewpointDetails(
-      criteria,
-      vpMapOf(PO_VIEWPOINTS),
-      DETAIL_TEMPLATE,
-      coverageMap,
-    );
-
-    expect(actual).toContain("- business_goal: 業務目的との対応が説明できるか。");
-    // 定義に無い id は説明なしのまま id だけを出力する
-    expect(actual).toContain("- scope_boundary\n");
-  });
-
-  it("coverage_types が無い観点は coverage_required ブロックごと省略する", () => {
-    const criteria: CriteriaItem[] = [
-      { text: "t", roles: ["BA"], viewpoint: "vp-ba-business-value" },
-    ];
-    const actual = reviewViewpointDetails(criteria, vpMapOf(PO_VIEWPOINTS), DETAIL_TEMPLATE);
-
-    expect(actual).not.toContain("coverage_required");
-    expect(actual).not.toContain("_MISSING_");
-  });
-
-  it("viewpoint が map に無い場合は check / evidence を MISSING にする", () => {
-    const criteria: CriteriaItem[] = [{ text: "t", roles: ["QE"], viewpoint: "vp-unknown" }];
-    const actual = reviewViewpointDetails(criteria, vpMapOf(PO_VIEWPOINTS), DETAIL_TEMPLATE);
-
-    expect(actual).toContain("check: _MISSING_");
-    expect(actual).toContain("evidence: _MISSING_");
-  });
-
-  it("複数観点は空行区切りで連番が増える", () => {
-    const criteria: CriteriaItem[] = [
-      { text: "a", roles: ["PO"], viewpoint: "vp-po-purpose-alignment" },
-      { text: "b", roles: ["BA"], viewpoint: "vp-ba-business-value" },
-    ];
-    const actual = reviewViewpointDetails(criteria, vpMapOf(PO_VIEWPOINTS), DETAIL_TEMPLATE);
-
-    expect(actual).toContain("### RVP-001（PO: vp-po-purpose-alignment）");
-    expect(actual).toContain("### RVP-002（BA: vp-ba-business-value）");
-    expect(actual).toContain("）\n\ncriterion: a");
   });
 });
 
@@ -524,6 +403,9 @@ describe("plan generation (edit done_criteria goals)", () => {
       expect(editPlan).toContain("- [PO] Purpose is approved");
       expect(editPlan).not.toContain("全 role 観点による自己レビュー");
       expect(editPlan).not.toContain("RVP-001");
+      // review 専用の判断手順は edit plan へ注入しない。
+      expect(editPlan).not.toContain("review の判断手順");
+      expect(editPlan).not.toContain("review-only:");
       expect(editPlan).not.toContain("自己レビューは初回を含めて最大3回まで行う");
       // 共通記法規約（リンク記法）が全 plan へ注入される。見出し文言ではなく安定した本文で検証。
       expect(editPlan).toContain("`[[id|title]]` 形式");
@@ -658,19 +540,63 @@ describe("review plan templates", () => {
     "xrp-template-maintenance-template.md",
   ];
 
-  it("Prettier 保存後もレビュー観点テーブルと行プレースホルダの間に空行を入れない", async () => {
+  it("Prettier 保存後も完了条件テーブルと行プレースホルダの間に空行を入れない", async () => {
     for (const template of reviewTemplates) {
       const path = join("docs/ja/specdojo/exec-templates", template);
       const source = readFileSync(path, "utf8");
       const formatted = await format(source, { parser: "markdown" });
 
       expect(formatted, template).toContain(
-        "| --- | ------ | ------------ | -------- |\n_REVIEW_VIEWPOINT_ROWS_",
+        "| --- | ------ | ------------ | -------- |\n_DONE_CRITERIA_ROWS_",
       );
       expect(formatted, template).not.toContain(
-        "| --- | ------ | ------------ | -------- |\n\n_REVIEW_VIEWPOINT_ROWS_",
+        "| --- | ------ | ------------ | -------- |\n\n_DONE_CRITERIA_ROWS_",
       );
     }
+  });
+
+  it.each(reviewTemplates)(
+    "%s は grade の評価結果を入力にし、観点ごとの評価を指示しない",
+    (template) => {
+      const source = readFileSync(join("docs/ja/specdojo/exec-templates", template), "utf8");
+
+      expect(source).toContain("_GRADE_SUBJECT_PATH_");
+      expect(source).toContain("_GRADE_TARGET_");
+      expect(source).toContain("_GRADE_RESULT_PATH_");
+      expect(source).toContain("review の判断手順");
+      expect(source).not.toContain("pass / fail / unclear");
+      expect(source).not.toContain("RVP-");
+      expect(source).not.toContain("_REVIEW_VIEWPOINT_");
+      // 責務による重み付けは撤回済み（PJR-2ZVS 決定 3.2）。
+      expect(source).not.toContain("owner 以外のロール");
+    },
+  );
+});
+
+describe("review-only block of the common conventions", () => {
+  const conventions = readFileSync(
+    join("docs/ja/specdojo/exec-templates", "xep-common-conventions-template.md"),
+    "utf8",
+  );
+
+  it("verdict を bps-task-completion の受入観点 6 区分と一対一に対応させる", () => {
+    const pairs = [
+      ["complete", "完了可能"],
+      ["complete-with-findings", "品質 finding を伴う完了"],
+      ["incomplete", "品質良好だが未完了"],
+      ["grade-stale", "評価結果が最新でない"],
+      ["grade-unavailable", "評価不能"],
+      ["changed-during-review", "review 中の成果物変更"],
+    ];
+
+    for (const [verdict, viewpoint] of pairs) {
+      expect(conventions).toMatch(new RegExp(`\\| \`${verdict}\` +\\| ${viewpoint} +\\|`));
+    }
+  });
+
+  it("鮮度確認を E-01 と対応させ、grade list --changed-only で確かめる", () => {
+    expect(conventions).toContain("（`E-01`）");
+    expect(conventions).toContain("--changed-only");
   });
 });
 
@@ -696,16 +622,14 @@ describe("finding correction instructions in edit plan templates", () => {
   });
 });
 
+// 規範を読んで finding を解消するのは edit の責務である。review は見直し後の実践の型を
+// 再評価しないため、この指示は xep 側だけに求める（review 側は下の describe で検証する）。
 describe("finding evidence instructions in maintenance plan templates", () => {
   const templates = [
     "xep-rulebook-maintenance-template.md",
     "xep-recipe-maintenance-template.md",
     "xep-sample-maintenance-template.md",
     "xep-template-maintenance-template.md",
-    "xrp-rulebook-maintenance-template.md",
-    "xrp-recipe-maintenance-template.md",
-    "xrp-sample-maintenance-template.md",
-    "xrp-template-maintenance-template.md",
   ];
 
   it.each(templates)("%s selects evidence from each finding", (template) => {
@@ -717,23 +641,35 @@ describe("finding evidence instructions in maintenance plan templates", () => {
     expect(source).toContain(
       "確認した資料、判断できなかった理由、不足している根拠、次のアクション",
     );
-    // edit は kata を見直し、review は見直し内容を確認する。責務が違うため記録を求める
-    // 動詞も異なる。同じ文言を両方へ要求すると、review 側の語彙を edit 側へ寄せてしまう。
-    const evidenceRecord = template.startsWith("xep-")
-      ? "見直しの根拠とした規範・成果物・review result"
-      : "確認の根拠とした規範・成果物・review result";
-    expect(source).toContain(evidenceRecord);
+    expect(source).toContain("見直しの根拠とした規範・成果物・review result");
   });
 
-  it.each(["xep-sample-maintenance-template.md", "xrp-sample-maintenance-template.md"])(
-    "%s treats the rulebook as evidence for structural findings",
-    (template) => {
-      const source = readFileSync(join("docs/ja/specdojo/exec-templates", template), "utf8");
+  it("xep-sample-maintenance-template.md treats the rulebook as evidence for structural findings", () => {
+    const source = readFileSync(
+      join("docs/ja/specdojo/exec-templates", "xep-sample-maintenance-template.md"),
+      "utf8",
+    );
 
-      expect(source).toContain("rulebook との構成不整合を指摘する finding");
-      expect(source).toContain("成果物の有無にかかわらず rulebook を正として");
-    },
-  );
+    expect(source).toContain("rulebook との構成不整合を指摘する finding");
+    expect(source).toContain("成果物の有無にかかわらず rulebook を正として");
+  });
+});
+
+describe("maintenance review plan templates", () => {
+  const templates = [
+    "xrp-rulebook-maintenance-template.md",
+    "xrp-recipe-maintenance-template.md",
+    "xrp-sample-maintenance-template.md",
+    "xrp-template-maintenance-template.md",
+  ];
+
+  it.each(templates)("%s checks that the motivating findings were resolved", (template) => {
+    const source = readFileSync(join("docs/ja/specdojo/exec-templates", template), "utf8");
+
+    expect(source).toContain("見直しの動機となった finding");
+    expect(source).toContain("最新の評価結果で解消しているか");
+    expect(source).toContain("未解消の理由と次のアクション");
+  });
 });
 
 describe("generateSinglePlan", () => {
@@ -1112,7 +1048,7 @@ describe("generateSinglePlan", () => {
     }
   });
 
-  it("review plan のレビュー観点テーブルは区切り行の直後に RVP 行を出力する", async () => {
+  it("review plan の完了条件テーブルは区切り行の直後に DC 行を出力する", async () => {
     const root = mkdtempSync(join(tmpdir(), "specdojo-single-plan-"));
     const executionPath = join(root, "execution");
     const catalogPath = join(root, "catalog");
@@ -1135,16 +1071,23 @@ describe("generateSinglePlan", () => {
       });
 
       const plan = readFileSync(outPath, "utf8");
-      expect(plan).toContain("| --- | ------ | ------------ | -------- |\n| RVP-001 |");
-      expect(plan).not.toContain("| --- | ------ | ------------ | -------- |\n\n| RVP-001 |");
+      expect(plan).toContain("| --- | ------ | ------------ | -------- |\n| DC-001 |");
+      expect(plan).not.toContain("| --- | ------ | ------------ | -------- |\n\n| DC-001 |");
       expect(plan).toContain("### プロジェクトコンテキスト");
       expect(plan).toContain("- [[test:prj-overview]]");
+      // review は grade の評価結果を入力にする。評価対象と対象種別を plan に展開する。
+      expect(plan).toContain("- 評価対象: `docs/test/overview.md`");
+      expect(plan).toContain("- grade の対象種別（`--target`）: `deliverable`");
+      expect(plan).not.toContain("_GRADE_");
+      // review 専用の判断手順は review plan にだけ残り、区切りのマーカー行は出力しない。
+      expect(plan).toContain("### review の判断手順");
+      expect(plan).not.toContain("review-only:");
     } finally {
       rmSync(root, { recursive: true, force: true });
     }
   });
 
-  it("review plan はプロジェクト差分から共通レビュー観点を解決して展開する", async () => {
+  it("review plan はプロジェクト差分から共通レビュー観点を解決して完了条件を選ぶ", async () => {
     const root = mkdtempSync(join(tmpdir(), "specdojo-single-plan-"));
     const executionPath = join(root, "execution");
     const catalogPath = join(root, "catalog");
@@ -1187,9 +1130,10 @@ describe("generateSinglePlan", () => {
       });
 
       const plan = readFileSync(outPath, "utf8");
-      // 適用条件は check の文面から document_kinds の宣言へ移した（PJR-AG7B）。
-      expect(plan).toContain("主要な定義・判断がどの対象者のどの業務課題・期待価値に応えるか");
-      expect(plan).toContain("vp-ba-business-value");
+      // review は観点ごとに評価しないため、観点の check 文面は展開しない。適用条件は
+      // document_kinds の宣言で判定し（PJR-AG7B）、該当する done_criteria を完了条件に残す。
+      expect(plan).toContain("| vp-ba-business-value |");
+      expect(plan).not.toContain("主要な定義・判断がどの対象者のどの業務課題・期待価値に応えるか");
     } finally {
       rmSync(root, { recursive: true, force: true });
     }

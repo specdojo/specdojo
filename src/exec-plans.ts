@@ -24,7 +24,7 @@ import {
 } from "./exec-shared.js";
 import type { Approach, ExecPlanMeta, ReadyTaskView, TaskMode, TaskOrigin } from "./exec-types.js";
 import type { CriteriaItem, DctDeliverableItem, DctDoc, DctSection } from "./catalog-types.js";
-import type { CoverageType, ReviewViewpoint } from "./review-types.js";
+import type { ReviewViewpoint } from "./review-types.js";
 import type { RoleDefinition, RolesDoc } from "./role-types.js";
 import { readGradeResultForDocument, gradeResultPathForDocument } from "./grade-result.js";
 import { lookupDocIndex } from "./doc-index.js";
@@ -171,12 +171,6 @@ function loadViewpoints(viewpointsPath: string): Map<string, ReviewViewpoint> {
   return new Map((doc.viewpoints ?? []).map((vp) => [vp.id, vp]));
 }
 
-function loadCoverageTypes(viewpointsPath: string): Map<string, CoverageType> {
-  if (!viewpointsPath || !existsSync(viewpointsPath)) return new Map();
-  const doc = resolveViewpointsDoc(viewpointsPath);
-  return new Map((doc.coverage_types ?? []).map((ct) => [ct.id, ct]));
-}
-
 function loadRoles(rolesPath: string | undefined): Map<string, RoleDefinition> {
   if (!rolesPath || !existsSync(rolesPath)) return new Map();
   try {
@@ -223,14 +217,6 @@ function frontmatter(meta: ExecPlanMeta): string {
 // ---------------------------------------------------------------------------
 // Template-based generation (edit-plan / review-plan テンプレートの展開)
 // ---------------------------------------------------------------------------
-
-// レビュー観点 1 件ぶんの記述ブロック断片。prose ラベル（確認基準・チェック観点など）は
-// 言語別 docs/<lang>/.../exec-templates のこの断片に置き、コードは値のみを供給する。
-const REVIEW_VIEWPOINT_DETAIL_TEMPLATE = "xrp-viewpoint-detail-template.md";
-
-// Per-RVP fragment for a review *result* (section 1). Prose labels for result/evidence/notes
-// live here; code supplies only data values.
-const REVIEW_RESULT_VIEWPOINT_DETAIL_TEMPLATE = "xrr-viewpoint-detail-template.md";
 
 // Shared conventions (link notation など) appended to every generated plan. The plan is the
 // only context guaranteed to reach the executing agent regardless of tool (it is piped via
@@ -290,12 +276,33 @@ function loadPlanTemplate(
   return readTemplate(resolvePlanTemplatePath(mode, approach), cache);
 }
 
-function loadViewpointDetailTemplate(cache: Map<string, string>): string {
-  return readTemplate(execTemplatePath(REVIEW_VIEWPOINT_DETAIL_TEMPLATE), cache);
-}
-
 // Marker a plan template places to control where the shared conventions fragment lands.
 const COMMON_CONVENTIONS_PLACEHOLDER = "_COMMON_CONVENTIONS_";
+// Lines delimiting the review-only block of the conventions fragment (review の判断手順). The
+// block is kept, without the marker lines, in review plans and dropped from every other plan.
+const REVIEW_ONLY_START = "<!-- review-only:start -->";
+const REVIEW_ONLY_END = "<!-- review-only:end -->";
+
+function selectReviewOnlyBlock(conventions: string, isReview: boolean): string {
+  const kept: string[] = [];
+  let inside = false;
+  for (const line of conventions.split("\n")) {
+    const marker = line.trim();
+    if (marker === REVIEW_ONLY_START) {
+      inside = true;
+      continue;
+    }
+    if (marker === REVIEW_ONLY_END) {
+      inside = false;
+      continue;
+    }
+    if (!inside || isReview) kept.push(line);
+  }
+  return kept
+    .join("\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trimEnd();
+}
 // Placeholder in the conventions fragment for the resolved schema path. The agent cannot derive
 // the schema path on its own (it would have to hunt for it and risks burning its turn before
 // filling the result), so the generator resolves it deterministically and bakes it in here.
@@ -307,12 +314,18 @@ const SCHEMA_REF_PLACEHOLDER = "_SCHEMA_REF_";
 // marker get the block appended so the rules are never silently dropped.
 // schemaRef is the resolved schema path: when MISSING (non-yaml deliverable or no schema), the
 // schema-validation bullet is dropped so the plan never asks for a check it cannot specify.
+// mode selects whether the review-only block (review の判断手順) is kept; it defaults to edit so
+// register / job plans never carry review instructions.
 export function injectCommonConventions(
   body: string,
   schemaRef: string,
   cache: Map<string, string>,
+  mode: TaskMode = "edit",
 ): string {
-  let conventions = readTemplate(execTemplatePath(COMMON_CONVENTIONS_TEMPLATE), cache).trimEnd();
+  let conventions = selectReviewOnlyBlock(
+    readTemplate(execTemplatePath(COMMON_CONVENTIONS_TEMPLATE), cache),
+    mode === "review",
+  );
   conventions =
     schemaRef === MISSING
       ? conventions
@@ -367,6 +380,30 @@ function gradeFindingTargetPath(
   if (approach === "sample-maintenance") return refs.sample;
   if (approach === "template-maintenance") return refs.template;
   return deliverablePath(deliverable);
+}
+
+// grade の --target。実践の型メンテナンス系は実践の型そのものを評価対象にする。
+function gradeTargetKind(approach: Approach | undefined): "kata" | "deliverable" {
+  return approach === "rulebook-maintenance" ||
+    approach === "recipe-maintenance" ||
+    approach === "sample-maintenance" ||
+    approach === "template-maintenance"
+    ? "kata"
+    : "deliverable";
+}
+
+// 評価対象に対応する評価結果サイドカーのリポジトリ相対パス。評価対象が未作成、または
+// frontmatter の id を解決できない場合は MISSING を返す（サイドカーの有無は問わない）。
+function gradeResultRef(projectId: string, subjectPath: string): string {
+  if (!subjectPath || subjectPath === MISSING) return MISSING;
+  if (!existsSync(join(specdojoRootDir(), subjectPath))) return MISSING;
+  try {
+    return repoRelativePath(
+      gradeResultPathForDocument({ documentPath: subjectPath, project: projectId }),
+    );
+  } catch {
+    return MISSING;
+  }
 }
 
 // plan に表示する実践の型の状態。宣言からパスを解決できたがファイルが無い場合と、
@@ -681,12 +718,14 @@ function crossDeliverableTargetDetails(
   return lines.join("\n").trimEnd();
 }
 
-function reviewViewpointRows(criteria: CriteriaItem[]): string {
+// review plan の完了条件表の行。review は観点ごとに評価せず、done_criteria をタスクの
+// 完了条件として照合するため、ID は DC-NNN とする。
+function reviewDoneCriteriaRows(criteria: CriteriaItem[]): string {
   if (criteria.length === 0) return MISSING;
   const lines: string[] = [];
   criteria.forEach((c, i) => {
-    const vpId = `RVP-${String(i + 1).padStart(3, "0")}`;
-    lines.push(`| ${vpId} | ${c.roles.join(", ")} | ${c.viewpoint} | ${c.text} |`);
+    const criterionId = `DC-${String(i + 1).padStart(3, "0")}`;
+    lines.push(`| ${criterionId} | ${c.roles.join(", ")} | ${c.viewpoint} | ${c.text} |`);
   });
   return lines.join("\n");
 }
@@ -701,51 +740,6 @@ export function applicableReviewCriteria(
     const viewpoint = vpMap.get(criterion.viewpoint);
     return viewpoint === undefined || viewpointAppliesToDocument(viewpoint, metadata);
   });
-}
-
-// Per-RVP skeleton for a review result's section 1. Each block carries the role,
-// viewpoint_id and criterion as context so the result is self-contained, and leaves
-// result / evidence / notes as _TODO_ for the agent to fill. Prose labels live in the
-// detailTemplate (language-specific docs/<lang>/.../exec-templates); code supplies only values.
-export function reviewResultSections(criteria: CriteriaItem[], detailTemplate: string): string {
-  if (criteria.length === 0) return MISSING;
-  return criteria
-    .map((c, i) => {
-      const vpId = `RVP-${String(i + 1).padStart(3, "0")}`;
-      return expandTemplate(detailTemplate, {
-        _VP_ID_: vpId,
-        _VP_ROLES_: c.roles.join(", "),
-        _VP_VIEWPOINT_: c.viewpoint,
-        _VP_CRITERION_: c.text,
-      }).trimEnd();
-    })
-    .join("\n\n");
-}
-
-// Resolve the review result sections for a deliverable by local_id. Returns undefined when
-// the catalog, deliverable, or its done_criteria cannot be resolved; the caller then falls
-// back to a generic result body.
-export function reviewResultSectionsForDeliverable(
-  catalogPath: string,
-  localId: string | undefined,
-  viewpointsPath?: string,
-): string | undefined {
-  if (!catalogPath || !localId) return undefined;
-  const info = findDeliverableInfo(catalogPath, localId);
-  const vpMap = viewpointsPath
-    ? loadViewpoints(viewpointsPath)
-    : new Map<string, ReviewViewpoint>();
-  const criteria = applicableReviewCriteria(
-    info?.deliverable.done_criteria ?? [],
-    vpMap,
-    info?.deliverable.rulebook,
-  );
-  if (criteria.length === 0) return undefined;
-  const detailTemplate = readTemplate(
-    execTemplatePath(REVIEW_RESULT_VIEWPOINT_DETAIL_TEMPLATE),
-    new Map<string, string>(),
-  );
-  return reviewResultSections(criteria, detailTemplate);
 }
 
 // finalize / bootstrap-finalize の result に焼き込む確認記録セクション。
@@ -801,51 +795,6 @@ export function finalizeResultSectionsForDeliverable(
     doneCriteriaChecklist: doneCriteriaResultChecklist(criteria),
     targetsChecklist: finalizeTargetsChecklist(info, approach),
   };
-}
-
-// coverage_types はビューポート任意項目。持たない観点では coverage_required ブロック
-// ごと省略し、持つ観点では見出し付きブロックを返す。末尾の空行で後続の `**チェック観点:**`
-// と段落を分離する。各項目は `id: description` 形式で展開し、id 単独では意味が読み取れない
-// 問題を避ける。pm-review-viewpoints.yaml の coverage_types 定義に説明が無い id は id のみ出力する。
-function viewpointCoverage(
-  vp: ReviewViewpoint | undefined,
-  coverageMap: Map<string, CoverageType>,
-): string {
-  if (!vp?.coverage_types || vp.coverage_types.length === 0) return "";
-  const items = vp.coverage_types
-    .map((ct) => {
-      const description = coverageMap.get(ct)?.description;
-      return description ? `- ${ct}: ${description}` : `- ${ct}`;
-    })
-    .join("\n");
-  return `**coverage_required:**\n\n${items}\n\n`;
-}
-
-// レビュー観点ごとに detail 断片テンプレートを展開して結合する。prose ラベルは
-// detailTemplate 側にあり、ここでは値を差し込むだけ。値が無い項目は他のプレースホルダと
-// 同様に MISSING にし、表示構造はテンプレート側に委ねる。
-export function reviewViewpointDetails(
-  criteria: CriteriaItem[],
-  vpMap: Map<string, ReviewViewpoint>,
-  detailTemplate: string,
-  coverageMap: Map<string, CoverageType> = new Map(),
-): string {
-  if (criteria.length === 0) return MISSING;
-  return criteria
-    .map((c, i) => {
-      const vpId = `RVP-${String(i + 1).padStart(3, "0")}`;
-      const vp = vpMap.get(c.viewpoint);
-      return expandTemplate(detailTemplate, {
-        _VP_ID_: vpId,
-        _VP_ROLES_: c.roles.join(", "),
-        _VP_VIEWPOINT_: c.viewpoint,
-        _VP_CRITERION_: c.text,
-        _VP_COVERAGE_: viewpointCoverage(vp, coverageMap),
-        _VP_CHECK_: vp?.check ?? MISSING,
-        _VP_EVIDENCE_: vp?.evidence ?? MISSING,
-      }).trimEnd();
-    })
-    .join("\n\n");
 }
 
 // owner ロール視点の記述ガイドを構成するデータ値。prose ラベルや見出しは
@@ -968,14 +917,14 @@ function buildEditPlanMarkdown(
   return expandTemplate(template, values);
 }
 
+// review plan は成果物を再評価しない。grade の評価結果（サイドカー）の位置と完了条件を示し、
+// 評価結果を事実として受け取ってタスクの完了可否を判断させる（bps-task-completion）。
 function buildReviewPlanMarkdown(
   template: string,
-  detailTemplate: string,
   task: PlanTask,
   deliverable: DeliverableInfo | null,
   criteria: CriteriaItem[],
   vpMap: Map<string, ReviewViewpoint>,
-  coverageMap: Map<string, CoverageType>,
   projectId: string,
   catalogPath: string,
   projectContext: readonly string[],
@@ -1008,6 +957,7 @@ function buildReviewPlanMarkdown(
     vpMap,
     deliverable?.deliverable.rulebook,
   );
+  const gradeSubjectPath = gradeFindingTargetPath(task.approach, deliverable, refs);
   const values: Record<string, string> = {
     _FRONTMATTER_: frontmatter(meta),
     _TASK_ID_: task.id,
@@ -1027,13 +977,10 @@ function buildReviewPlanMarkdown(
     _RECIPE_REF_: refs.recipe,
     _SAMPLE_REF_: refs.sample,
     _TEMPLATE_REF_: refs.template,
-    _REVIEW_VIEWPOINT_ROWS_: reviewViewpointRows(applicableCriteria),
-    _REVIEW_VIEWPOINT_DETAILS_: reviewViewpointDetails(
-      applicableCriteria,
-      vpMap,
-      detailTemplate,
-      coverageMap,
-    ),
+    _GRADE_SUBJECT_PATH_: gradeSubjectPath,
+    _GRADE_TARGET_: gradeTargetKind(task.approach),
+    _GRADE_RESULT_PATH_: gradeResultRef(projectId, gradeSubjectPath),
+    _DONE_CRITERIA_ROWS_: reviewDoneCriteriaRows(applicableCriteria),
   };
   return expandTemplate(template, values);
 }
@@ -1050,7 +997,6 @@ type PlanGenContext = {
   projectId: string;
   catalogPath: string;
   vpMap: Map<string, ReviewViewpoint>;
-  coverageMap: Map<string, CoverageType>;
   roleMap: Map<string, RoleDefinition>;
   projectContext: string[];
   templateCache: Map<string, string>;
@@ -1098,12 +1044,10 @@ async function writeTaskPlan(
     mode === "review"
       ? buildReviewPlanMarkdown(
           template,
-          loadViewpointDetailTemplate(ctx.templateCache),
           planTask,
           deliverable,
           criteria,
           ctx.vpMap,
-          ctx.coverageMap,
           ctx.projectId,
           ctx.catalogPath,
           ctx.projectContext,
@@ -1124,7 +1068,7 @@ async function writeTaskPlan(
           crossDeliverables,
         );
   const schemaRef = resolveDeliverableSchemaRef(deliverable?.resolvedPath);
-  const content = injectCommonConventions(body, schemaRef, ctx.templateCache);
+  const content = injectCommonConventions(body, schemaRef, ctx.templateCache, mode);
 
   writeFileSync(outPath, content, "utf8");
   await formatMarkdownFile(outPath);
@@ -1216,9 +1160,6 @@ function newPlanGenContext(opts: {
     vpMap: opts.viewpointsPath
       ? loadViewpoints(opts.viewpointsPath)
       : new Map<string, ReviewViewpoint>(),
-    coverageMap: opts.viewpointsPath
-      ? loadCoverageTypes(opts.viewpointsPath)
-      : new Map<string, CoverageType>(),
     roleMap: loadRoles(opts.rolesPath),
     projectContext: [
       ...(opts.projectContext ??
