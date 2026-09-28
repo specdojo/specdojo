@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-ctv4-resume-integrate-bookkeeping-conflict
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-09-27T20:29:30Z"
+  completed_at: "2026-09-28T10:54:06Z"
+  conclusion: 統合 merge の競合が項目自身の記帳ファイルだけの場合は exec branch 側で解決して完了し、それ以外は中止する。merge --abort の前に index を更新する。waiting を 2 回経た再開の統合を含む 3 件の統合テストを追加した
 ---
 
 # PJR-CTV4 waiting を複数回経た項目の再開時の統合で記帳ファイルが競合し merge が途中で残る

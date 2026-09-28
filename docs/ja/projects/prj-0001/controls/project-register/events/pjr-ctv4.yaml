@@ -58,3 +58,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_b5385d61e33b434d9c69e9591c32ad86
+- v: 1
+  id: reg_67bfc149070743948a79af133ae77444
+  ts: "2026-09-28T10:54:06Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: claude-expert-executor の実行結果を評価し完了条件を満たすと判断。waiting 中に統合先で追記されたイベントが失われ得る点は残るリスクとして利用者へ報告した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-28"
+    - field: conclusion
+      from: "-"
+      to: 統合 merge の競合が項目自身の記帳ファイルだけの場合は exec branch 側で解決して完了し、それ以外は中止する。merge --abort の前に index を更新する。waiting を 2 回経た再開の統合を含む 3 件の統合テストを追加した
+  previous_event_id: reg_d7ff157b4b0d4b7ab2943a799d4d534f
