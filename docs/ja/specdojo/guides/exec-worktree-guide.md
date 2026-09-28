@@ -221,7 +221,12 @@ specdojo exec worktree merge \
 
 通常は `git merge --no-ff` 相当で統合します。自動実行では `exec(<task-id>): <task name>` を merge commit の subject に使い、統合先の first-parent を1タスク1commitにします（`prepare execution` / `apply task changes` は exec branch 側に残ります）。`--ff-only` 指定時は fast-forward 可能な場合だけ統合します。
 
-register 項目の統合で競合したのが項目自身の記帳ファイル（個票・イベント・plan・result）だけの場合は、exec branch 側（再開後の最新の記帳）の内容で解決して merge commit を作ります。`waiting` を複数回経た項目では、wait 時の同期 merge の後も統合先と exec branch の双方で記帳ファイルが変わるためです。解決後の commit は通常の `git merge` と同じく pre-commit hook を実行しません。
+register 項目の統合で競合したのが項目自身の記帳ファイル（個票・イベント・plan・result）だけの場合は、記帳ファイルを次のように解決して merge commit を作ります。`waiting` を複数回経た項目では、wait 時の同期 merge の後も統合先と exec branch の双方で記帳ファイルが変わるためです。解決後の commit は通常の `git merge` と同じく pre-commit hook を実行しません。
+
+- イベント（`events/pjr-<id>.yaml`）は、両側のイベントの和集合で解決します。同じ id のイベントは 1 件にまとめ、時刻順に並べて `previous_event_id` の連鎖を張り直します。`waiting` の間に統合先で追記されたイベント（`register update` など）も統合後に残ります。
+- 統合先だけにある状態を変えないイベントは、並べ替え後の直前の状態を引き継ぎます。統合先だけに状態遷移があるなど、和集合で状態の連続性を保てない場合は、従来どおり exec branch 側で解決し、統合ログにその旨を出力します。
+- 個票は exec branch 側を基準にし、統合先だけにあるイベントが変えた `type` / `priority` / `owner` / `due` をイベントから再構築します。同じフィールドを後から exec branch 側のイベントが変えている場合は、exec branch 側を残します。タイトル・説明（本文）、状態遷移に伴うフィールド、登録日時はイベントから元の値を復元できないため再構築しません。
+- plan・result・登録簿（`pjr-index.md`）は exec branch 側（再開後の最新の記帳）の内容で解決します。
 
 上記以外の競合または commit hook の失敗で merge commit を作れなかった場合は、runner が `git merge --abort` を実行して統合先を開始前の状態へ戻します。Schedule タスクは `blocked`、register 項目は `waiting` へ遷移し、再開に使う exec branch と worktree は保持します。register の `wait` commit は abort 後に作るため、統合先へ `MERGE_HEAD` を残したまま部分 commit を試みません。block reason には hook の罫線や色を除いた失敗ステップ名と最初のエラー行を記録し、executor/reporter pipeline では生の stdout / stderr と abort 結果を同じ run の `integrate.log` に保存します。
 

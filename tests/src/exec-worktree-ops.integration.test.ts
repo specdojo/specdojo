@@ -33,6 +33,13 @@ import {
   WorktreeRemovedBranchDeletionError,
   type WorktreeOpsContext,
 } from "../../src/exec-worktree-ops.js";
+import {
+  readRegisterEventsFromContent,
+  serializeRegisterEvents,
+  validateRegisterEventLog,
+  type RegisterEventV1,
+} from "../../src/register-events.js";
+import { readSpecdojoFields } from "../../src/register-item.js";
 
 const ENV_KEYS = ["SPECDOJO_PROJECT", "SPECDOJO_SCHEDULE_PATH", "SPECDOJO_EXECUTION_PATH"];
 const originalEnv = Object.fromEntries(ENV_KEYS.map((key) => [key, process.env[key]]));
@@ -517,6 +524,147 @@ describe("exec worktree ops", () => {
       "deliverable after resume\n",
     );
     expect(git(fixture.repo, "status", "--porcelain", "-uall")).toBe("");
+  });
+
+  it("keeps register events appended on the merge target while the item was waiting", () => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-010";
+    const registerRel = "docs/prj/controls/project-register";
+    const ticketRel = `${registerRel}/pjr-0abc-sample.md`;
+    const eventRel = `${registerRel}/events/pjr-0abc.yaml`;
+    const ticket = (status: string, due: string): string =>
+      [
+        "---",
+        "specdojo:",
+        "  id: prj-0001:pjr-0abc-sample",
+        "  type: project",
+        "  status: draft",
+        "  item_type: todo",
+        `  item_status: ${status}`,
+        "  priority: medium",
+        "  owner: DEV",
+        '  registered_at: "2026-09-28T01:00:00Z"',
+        `  due_on: "${due}"`,
+        "---",
+        "",
+        "# PJR-0ABC Sample",
+        "",
+      ].join("\n");
+    const events: RegisterEventV1[] = [];
+    const appendEvent = (
+      index: number,
+      action: RegisterEventV1["action"],
+      fromStatus: string | null,
+      toStatus: string,
+      changes: RegisterEventV1["changes"],
+      previous: RegisterEventV1[],
+    ): RegisterEventV1[] => {
+      const last = previous.at(-1);
+      const next: RegisterEventV1 = {
+        v: 1,
+        id: `reg_${index.toString(16).padStart(32, "0")}`,
+        ts: `2026-09-28T0${index}:00:00Z`,
+        action,
+        actor: "tester",
+        from_status: fromStatus,
+        to_status: toStatus,
+        reason: action,
+        changes,
+        ...(last ? { previous_event_id: last.id } : {}),
+      };
+      return [...previous, next];
+    };
+    events.push(
+      ...appendEvent(1, "add", null, "waiting", [{ field: "status", from: "", to: "waiting" }], []),
+    );
+    writeFile(join(fixture.repo, ticketRel), ticket("waiting", "2026-10-01"));
+    writeFile(join(fixture.repo, eventRel), serializeRegisterEvents(events));
+    git(fixture.repo, "add", "--", ticketRel, eventRel);
+    git(fixture.repo, "commit", "-m", "register item waiting");
+    const worktree = prepare(fixture, taskId);
+    const bookkeepingPaths = [join(fixture.repo, ticketRel), join(fixture.repo, eventRel)];
+    // `prepare` leaves root-side replicas of the plan, result, and claim event. The production
+    // integration releases them before merging, so the test passes them the same way.
+    const rootReplicaPaths = [
+      join(fixture.executionPath, "exec", "plans", `${taskId}-plan.md`),
+      join(fixture.executionPath, "exec", "results", `${taskId}-result.md`),
+      join(fixture.executionPath, "exec", "events", `20260613T000000Z_agent_${taskId}_claim.json`),
+    ];
+
+    // While waiting, the user updates the due date on the merge target (`register update`).
+    const rootEvents = appendEvent(
+      2,
+      "update",
+      "waiting",
+      "waiting",
+      [{ field: "due", from: "2026-10-01", to: "2026-10-15" }],
+      events,
+    );
+    writeFile(join(fixture.repo, ticketRel), ticket("waiting", "2026-10-15"));
+    writeFile(join(fixture.repo, eventRel), serializeRegisterEvents(rootEvents));
+    git(fixture.repo, "add", "--", ticketRel, eventRel);
+    git(fixture.repo, "commit", "-m", "register update due");
+
+    // The resumed exec branch records start and review without the merge-target update.
+    const branchEvents = appendEvent(
+      4,
+      "review",
+      "in-progress",
+      "review",
+      [{ field: "status", from: "in-progress", to: "review" }],
+      appendEvent(
+        3,
+        "start",
+        "waiting",
+        "in-progress",
+        [{ field: "status", from: "waiting", to: "in-progress" }],
+        events,
+      ),
+    );
+    writeFile(join(worktree.path, "docs", "a.md"), "deliverable after resume\n");
+    commitWorktreeChanges({ context: fixture.context, worktree, taskId });
+    writeFile(join(worktree.path, ticketRel), ticket("review", "2026-10-01"));
+    writeFile(join(worktree.path, eventRel), serializeRegisterEvents(branchEvents));
+    git(worktree.path, "add", "--", ticketRel, eventRel);
+    git(worktree.path, "commit", "-m", `exec(register ${taskId}): review`);
+
+    mergeWorktreeIntoCurrent({
+      context: fixture.context,
+      worktree,
+      taskId,
+      message: `exec(register ${taskId}): resumed integration`,
+      releaseRootPaths: rootReplicaPaths,
+      resolveConflictsWithBranchPaths: bookkeepingPaths,
+    });
+
+    expect(() => git(fixture.repo, "rev-parse", "--verify", "MERGE_HEAD")).toThrow();
+    const mergedEvents = readFileSync(join(fixture.repo, eventRel), "utf8");
+    const mergedTicket = readFileSync(join(fixture.repo, ticketRel), "utf8");
+    expect(
+      readRegisterEventsFromContent(mergedEvents, eventRel).map((item) => [item.id, item.action]),
+    ).toEqual([
+      [`reg_${"1".padStart(32, "0")}`, "add"],
+      [`reg_${"2".padStart(32, "0")}`, "update"],
+      [`reg_${"3".padStart(32, "0")}`, "start"],
+      [`reg_${"4".padStart(32, "0")}`, "review"],
+    ]);
+    expect(
+      validateRegisterEventLog(
+        mergedTicket,
+        mergedEvents,
+        "pjr-0abc-sample.md",
+        "pjr-0abc.yaml",
+        "UTC",
+      ),
+    ).toEqual([]);
+    expect(readSpecdojoFields(mergedTicket)).toMatchObject({
+      item_status: "review",
+      due_on: "2026-10-15",
+    });
+    expect(readFileSync(join(fixture.repo, "docs", "a.md"), "utf8")).toBe(
+      "deliverable after resume\n",
+    );
+    expect(git(fixture.repo, "status", "--porcelain", "-uall", "--", registerRel)).toBe("");
   });
 
   it("aborts a resumed merge when a conflict falls outside the item's own bookkeeping", () => {

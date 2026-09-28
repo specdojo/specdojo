@@ -9,7 +9,7 @@ import {
   rmSync,
   writeFileSync,
 } from "node:fs";
-import { join, relative, resolve, sep } from "node:path";
+import { basename, dirname, join, relative, resolve, sep } from "node:path";
 import { load } from "js-yaml";
 import { acquireSchedulerLock, releaseSchedulerLock } from "./exec-events.js";
 import {
@@ -25,6 +25,9 @@ import {
 } from "./exec-agent-protected-config.js";
 import { recordProtectedConfigBlock } from "./exec-protection-handoff.js";
 import { specdojoPackageRootDir } from "./package-paths.js";
+import { rebuildRegisterTicketFromEvents, unionRegisterEventLogs } from "./register-event-merge.js";
+import { displayIdFromRegisterEventFilename, REGISTER_EVENTS_DIRNAME } from "./register-events.js";
+import { displayIdFromTicketFilename } from "./register-item.js";
 import {
   ensureExecWorktree,
   execBranchExists,
@@ -721,8 +724,15 @@ export function abortMerge(repoRoot: string): ReturnType<typeof gitResult> {
   return gitResult(repoRoot, ["merge", "--abort"]);
 }
 
-// Resolve an in-progress merge whose conflicts are all on exec-branch-owned paths by taking the
-// exec branch side, then complete the merge commit. Returns the resolved paths, or null when the
+// `controls/project-register/events/pjr-xxxx.yaml` 形式のイベントファイルなら表示 ID を返す。
+function registerEventDisplayId(path: string): string | undefined {
+  if (basename(dirname(path)) !== REGISTER_EVENTS_DIRNAME) return undefined;
+  return displayIdFromRegisterEventFilename(basename(path));
+}
+
+// Resolve an in-progress merge whose conflicts are all on exec-branch-owned paths, then complete
+// the merge commit. Register event files are resolved as the union of both sides and the matching
+// ticket is rebuilt from the merge-target-only events; other paths take the exec branch side. Returns the resolved paths, or null when the
 // merge has no conflicts (for example a hook rejection), conflicts on other paths, or cannot be
 // completed; the caller then aborts the merge. The commit uses --no-verify because a regular
 // `git merge` does not run pre-commit either, and only the item's own bookkeeping was resolved.
@@ -736,11 +746,70 @@ function resolveBranchOwnedConflicts(params: {
   if (conflicted.length === 0) return null;
   const owned = new Set(params.branchOwnedPaths);
   if (conflicted.some((path) => !owned.has(path))) return null;
-  for (const path of conflicted) {
-    const stages = gitOutput(repoRoot, ["ls-files", "-u", "-z", "--", path])
+  const stagesOf = (path: string): (string | undefined)[] =>
+    gitOutput(repoRoot, ["ls-files", "-u", "-z", "--", path])
       .split("\0")
       .filter(Boolean)
       .map((entry) => entry.split("\t")[0]?.split(" ")[2]);
+  // イベントファイルは両側の和集合で解決し、対応する個票はイベントから再構築する。
+  // 和集合で解決できないものは従来どおり exec branch 側で解決する。
+  const handled = new Set<string>();
+  for (const path of conflicted) {
+    const displayId = registerEventDisplayId(path);
+    if (!displayId) continue;
+    const stages = stagesOf(path);
+    if (!stages.includes("2") || !stages.includes("3")) continue;
+    const ours = gitResult(repoRoot, ["show", `:2:${path}`]);
+    const theirs = gitResult(repoRoot, ["show", `:3:${path}`]);
+    if (ours.status !== 0 || theirs.status !== 0) continue;
+    const union = unionRegisterEventLogs(String(ours.stdout), String(theirs.stdout), path);
+    if (!union.ok) {
+      process.stdout.write(
+        `  [integrate] could not union register events; using the exec branch side: ${union.reason}\n`,
+      );
+      continue;
+    }
+    writeFileSync(resolve(repoRoot, path), union.content, "utf8");
+    if (gitResult(repoRoot, ["add", "--", path]).status !== 0) return null;
+    handled.add(path);
+    process.stdout.write(
+      `  [integrate] merged register events as a union: ${path} ` +
+        `(kept ${union.oursOnlyIds.size} event(s) only on the merge target)\n`,
+    );
+    const ticketPath = conflicted.find(
+      (candidate) =>
+        dirname(candidate) === dirname(dirname(path)) &&
+        displayIdFromTicketFilename(basename(candidate)) === displayId,
+    );
+    if (!ticketPath || !stagesOf(ticketPath).includes("3")) continue;
+    const ticket = gitResult(repoRoot, ["show", `:3:${ticketPath}`]);
+    if (ticket.status !== 0) continue;
+    let rebuilt: ReturnType<typeof rebuildRegisterTicketFromEvents>;
+    try {
+      rebuilt = rebuildRegisterTicketFromEvents(
+        String(ticket.stdout),
+        union.events,
+        union.oursOnlyIds,
+      );
+    } catch (error) {
+      process.stdout.write(
+        `  [integrate] could not rebuild ${ticketPath} from events; using the exec branch side: ` +
+          `${error instanceof Error ? error.message : String(error)}\n`,
+      );
+      continue;
+    }
+    writeFileSync(resolve(repoRoot, ticketPath), rebuilt.content, "utf8");
+    if (gitResult(repoRoot, ["add", "--", ticketPath]).status !== 0) return null;
+    handled.add(ticketPath);
+    if (rebuilt.appliedFields.length > 0) {
+      process.stdout.write(
+        `  [integrate] rebuilt ${ticketPath} from merge-target events: ${rebuilt.appliedFields.join(", ")}\n`,
+      );
+    }
+  }
+  for (const path of conflicted) {
+    if (handled.has(path)) continue;
+    const stages = stagesOf(path);
     const step = stages.includes("3")
       ? gitResult(repoRoot, ["checkout", "--theirs", "--", path])
       : gitResult(repoRoot, ["rm", "--quiet", "--", path]);

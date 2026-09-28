@@ -1,0 +1,135 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-36CN",
+  "run_id": "20260928T142816563Z-ab1291d8",
+  "stage": {
+    "role": "executor",
+    "actor": "claude-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-28T14:28:16.563Z",
+    "completed_at": "2026-09-28T14:32:06.449Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-36cn.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-36cn-integrate-bookkeeping-event-union.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-worktree-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-worktree-ops.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-worktree-ops.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register-event-merge.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/register-event-merge.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 7,
+    "summary": ".../controls/project-register/events/pjr-36cn.yaml |  13 ++\n .../pjr-36cn-integrate-bookkeeping-event-union.md  |  16 ++-\n docs/ja/specdojo/guides/exec-worktree-guide.md     |   7 +-\n src/exec-worktree-ops.ts                           |  79 +++++++++++-\n tests/src/exec-worktree-ops.integration.test.ts    | 140 +++++++++++++++++++++\n 5 files changed, 244 insertions(+), 11 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write src/register-event-merge.ts src/exec-worktree-ops.ts tests/src/register-event-merge.test.ts tests/src/exec-worktree-ops.integration.test.ts",
+      "status": "passed",
+      "summary": "formatted; 2 files reformatted"
+    },
+    {
+      "source": "executor",
+      "command": "npx eslint src/register-event-merge.ts src/exec-worktree-ops.ts tests/src/register-event-merge.test.ts tests/src/exec-worktree-ops.integration.test.ts",
+      "status": "passed",
+      "summary": "no errors"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/guides/exec-worktree-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-36cn-integrate-bookkeeping-event-union.md",
+      "status": "passed",
+      "summary": "unchanged"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/specdojo/guides/exec-worktree-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-36cn-integrate-bookkeeping-event-union.md",
+      "status": "passed",
+      "summary": "no errors"
+    },
+    {
+      "source": "executor",
+      "command": "node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint docs/ja/specdojo/guides/exec-worktree-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-36cn-integrate-bookkeeping-event-union.md",
+      "status": "passed",
+      "summary": "exit 0"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "OK with pre-existing based_on warnings only"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts index build",
+      "status": "not_run",
+      "summary": "skipped: rewrites protected .specdojo/doc-index.json, which blocked the previous attempt"
+    },
+    {
+      "source": "executor",
+      "command": "npm run check",
+      "status": "not_run",
+      "summary": "ticket completion condition; not run in the executor sandbox"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-36CN\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\n[dry-run] git merge --no-ff --no-edit exec/T-T-doc-010\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nUpdated: /tmp/specdojo-register-resume-e2e-DugHP7/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)\nUpdated: /tmp/specdojo-register-resume-e2e-DugHP7/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml\nGenerated: /tmp/specdojo-register-resume-e2e-DugHP7/docs/ja/projects/test/controls/project-register/generated/pjr-index.md\nGenerated: /tmp/specdojo-register-resume-e2e-DugHP7/docs/ja/projects/test/controls/project-register/generated/pjr…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.2.1 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-36CN/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-36CN/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-tem…"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-36CN\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-d9Jsyc/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-cM1MNt/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-xnC2eI/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-hpYwG3/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-NqL2ll/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-Fr7dPi/pjr-0001-topic.md\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\nbefore\n  \n  \ndocs/selected.md\nWrote agent stdout: /tmp/specdojo-agent-command-3jMKM5/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-a9eiBj/outputs/partial.txt\n\n Test Files  114 passed (114)\n      Tes…"
+    }
+  ],
+  "final_message": "Implemented union resolution of register event files on integrate-merge conflicts (new src/register-event-merge.ts; wired into resolveBranchOwnedConflicts in src/exec-worktree-ops.ts). Merge-target-only events are kept, relinked in time order, and non-status events inherit the preceding status. The ticket is rebuilt from merge-target-only events for type/priority/owner/due. Other bookkeeping files (plan, result, pjr-index) still take the exec branch side, and a union that breaks status continuity falls back to the exec branch side with a log message. Added unit tests (tests/src/register-event-merge.test.ts) and an integration test (tests/src/exec-worktree-ops.integration.test.ts) showing that a waiting-time update event on the merge target survives integration. The integration test's ticket may merge without a conflict, so the ticket rebuild is verified only by the unit tests. Updated exec-worktree-guide.md and the PJR-36CN ticket work/result sections. Verified: prettier/eslint on changed TS, prettier/markdownlint/docs-lint on changed Markdown, catalog validate. Not verified in sandbox: none of the new tests or the typecheck were run here; typecheck and unit/integration tests are left to the parent runner. `specdojo index build` was not run because it rewrites protected .specdojo/doc-index.json, and `npm run check` (a ticket completion condition) was not run.",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-36CN/20260928T142816563Z-ab1291d8/executor.log",
+      "bytes": 6378,
+      "truncated": false
+    }
+  ]
+}
