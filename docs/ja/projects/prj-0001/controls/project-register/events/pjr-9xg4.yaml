@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_fa3aea817a96469c806e38d8626f1f78
+  ts: "2026-09-28T23:15:35Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者が run と並行した個票の commit を検討し、根本対策の起票を承認したため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: register の記帳コマンドに統合と記帳の枠を取って commit するオプションを加える
+    - field: description
+      from: ""
+      to: exec run の実行中に orchestrator や利用者が register add・close などで記帳して commit すると、runner の統合・記帳と index.lock を取り合う。PJR-4HBG の register lifecycle の枠を取ってから commit する --commit を加え、run と並行して安全に記帳できるようにする
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-29"
+    - field: due
+      from: ""
+      to: _TODO_

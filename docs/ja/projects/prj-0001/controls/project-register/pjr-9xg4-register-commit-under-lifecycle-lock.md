@@ -1,0 +1,54 @@
+---
+specdojo:
+  id: prj-0001:pjr-9xg4-register-commit-under-lifecycle-lock
+  type: project
+  status: draft
+  rulebook: specdojo:pjr-rulebook
+  part_of:
+    - prj-0001:pjr-index
+  item_type: todo
+  item_status: open
+  priority: medium
+  owner: DEV
+  registered_at: "2026-09-28T23:15:33Z"
+---
+
+# PJR-9XG4 register の記帳コマンドに統合と記帳の枠を取って commit するオプションを加える
+
+## 1. 概要
+
+`exec run` は、メインの作業ツリーで register の遷移の記帳と統合の merge を行う。PJR-4HBG で、これらを別プロセスの run の間でも直列化する枠（`exec slots` の `register lifecycle`）を導入した。
+
+一方、orchestrator や利用者が `register add` / `close` / `update` などで記帳し、`git commit` する操作は、この枠を取らない。run と同時に行うと、次の問題が起きうる。
+
+- git の `index.lock` を取り合い、どちらかの commit が失敗する（2026-09-27 に orchestrator の commit が衝突して失敗した）。
+- 記帳ファイルが未 commit のまま残ると、統合前の安全確認（統合するファイルと重なる未 commit の変更）が統合を止める。
+
+このため orchestrator は、run の実行中は記帳の commit を後回しにしてきた。2026-09-29 に利用者と相談し、当面の運用として「新しい個票を追加するだけの commit は run と並行してよい。既存のファイルを書き換える記帳（close など）は run の完了後に行う」とした。本項目は、その根本対策である。
+
+## 2. 完了条件
+
+- `register add` / `close` / `reject` / `defer` / `update` / `reopen` などの記帳コマンドに、変更したファイルを commit するオプション（例: `--commit`）がある。
+- このオプションは、`register lifecycle` の枠（PJR-4HBG の `CrossProcessMutex`）を取ってから、記帳と `register build` と commit を行い、終わったら枠を解放する。
+- commit の対象は、そのコマンドが変更した個票・イベントに限る（生成物は ignore 済み）。ほかの未 commit の変更を巻き込まない。
+- commit メッセージの既定値が、既存の記帳 commit（`docs(register PJR-XXXX): ...`）の形に合っている。`-m` で上書きできる。
+- run の実行中に `--commit` 付きで記帳しても、run の記帳と統合が失敗しないことを、統合テストで確かめる。
+- `register-operation-guide.md` と `command-reference.md` に記載されている。オーケストレーター定義（SSOT）の登録簿の手順も、必要なら `--commit` を使う形に改める（`npm run orchestrator:sync` で同期する）。
+- `npm run check` が成功する。
+
+## 3. 作業内容
+
+| No  | 作業                                                   | 担当 | 状態 | メモ                      |
+| --- | ------------------------------------------------------ | ---- | ---- | ------------------------- |
+| 1   | 記帳コマンドに枠を取って commit するオプションを加える | DEV  | open | PJR-4HBG の枠を再利用する |
+| 2   | 統合テストを追加する                                   | DEV  | open | run と並行した記帳        |
+| 3   | ガイド・リファレンス・オーケストレーター定義へ記載する | DEV  | open | -                         |
+
+## 4. 対応結果
+
+-
+
+## 5. 関連ドキュメント
+
+- PJR-4HBG（同時実行枠と `register lifecycle`）、PJR-CTV4（統合時の記帳競合）
+- `src/register.ts`、`src/exec-slot-lock.ts`
