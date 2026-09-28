@@ -7,11 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-09-26T02:31:04Z"
+  completed_at: "2026-09-28T14:43:15Z"
   block_reason: rate limit reached
+  conclusion: 案 C を実装した。--join を付けた exec run --register --worktree は実行中の run に合流して並行開始でき、上限は run.max_concurrent_runs。provider の同時実行数・root での遷移と統合・親検証をプロセスを跨いで枠で直列化し、exec slots で使用状況を確認できる
 ---
 
 # PJR-4HBG 実行中の exec run へ後から項目を追加して並行実行できるようにする
