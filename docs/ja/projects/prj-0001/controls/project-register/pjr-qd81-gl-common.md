@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   owner: BA
   registered_at: "2026-09-26T04:08:08Z"
+  block_reason: "agent exited with non-zero code: runner による検証 `validate-schema` が failed となっており、成果物の整合性が担保されていないため。"
 ---
 
 # PJR-QD81 用語集 gl-common を作成し概念名と英語名の対応を確定する
