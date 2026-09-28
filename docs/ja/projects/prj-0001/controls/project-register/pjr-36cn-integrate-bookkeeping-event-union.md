@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: DEV
   registered_at: "2026-09-28T11:18:10Z"
-  block_reason: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=.specdojo/doc-index.json; agent must record the required change in…"
+  block_reason: "agent exited with non-zero code: 親 runner が実行した runner 検証 `id: test-integration`（`npm run test:integration`）が `status: failed`（exit 1）である。plan の共通規約により、runner 検証が failed の場合は reporter が結果を complete とす…"
 ---
 
 # PJR-36CN 統合時の記帳競合でイベントを和集合で合わせる
@@ -35,13 +35,19 @@ PJR-CTV4 で、統合 merge の競合が項目自身の記帳ファイル（個�
 
 | No  | 作業                               | 担当 | 状態 | メモ |
 | --- | ---------------------------------- | ---- | ---- | ---- |
-| 1   | イベントの和集合での解決を実装する | DEV  | open | -    |
-| 2   | 個票の再構築の扱いを決めて実装する | DEV  | open | -    |
-| 3   | 統合テストを追加する               | DEV  | open | -    |
+| 1   | イベントの和集合での解決を実装する | DEV  | done | -    |
+| 2   | 個票の再構築の扱いを決めて実装する | DEV  | done | -    |
+| 3   | 統合テストを追加する               | DEV  | done | -    |
 
 ## 4. 対応結果
 
--
+- `src/register-event-merge.ts` を追加し、`unionRegisterEventLogs` でイベントファイルを両側の和集合で解決するようにした。同じ id のイベントは exec branch 側の内容で 1 件にまとめ、時刻順に並べて `previous_event_id` の連鎖を張り直す。
+- 統合先だけにある状態を変えないイベント（`update` など）は、並べ替え後の直前の状態を `from_status` / `to_status` に引き継ぐ。統合先だけに状態遷移があるなど状態の連続性を保てない場合は、従来どおり exec branch 側で解決し、統合ログに理由を出力する。
+- 個票の扱い: exec branch 側を基準にし、統合先だけにあるイベントが最後に変えた `type` / `priority` / `owner` / `due` を `rebuildRegisterTicketFromEvents` で frontmatter へ再構築する。タイトル・説明は本文、`status` / `block_reason` / `conclusion` / `completed` は状態遷移に伴う値、`registered` はイベント上で暦日に変換済みで元の日時を復元できないため、再構築せず exec branch 側を残す。
+- plan・result・登録簿（`pjr-index.md`）はイベントから再構築できないため、従来どおり exec branch 側で解決する。
+- `src/exec-worktree-ops.ts` の `resolveBranchOwnedConflicts` で、競合したイベントファイルに上記を適用し、対応する個票が競合していれば再構築した内容で解決する。
+- 単体テスト `tests/src/register-event-merge.test.ts` と、`waiting` 中に統合先で追記した `update` イベントが統合後に残ることを確かめる統合テストを `tests/src/exec-worktree-ops.integration.test.ts` に追加した。
+- [[specdojo:exec-worktree-guide]] の統合の説明を更新した。
 
 ## 5. 関連ドキュメント
 
