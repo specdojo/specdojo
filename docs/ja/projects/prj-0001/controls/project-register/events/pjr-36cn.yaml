@@ -32,3 +32,32 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_dbc8bf7b5e3346bc868ddbb8dcca22fa
+  ts: "2026-09-28T11:24:22Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_5a7f4724ddac4fbe9e2844740969e54a
+- v: 1
+  id: reg_a5b990d6eaa84c2fb791d61ac1ca0a1b
+  ts: "2026-09-28T11:25:21Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=.specdojo/doc-index.json; agent must record the required change in…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=.specdojo/doc-index.json; agent must record the required change in…"
+  previous_event_id: reg_dbc8bf7b5e3346bc868ddbb8dcca22fa

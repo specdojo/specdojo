@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   owner: DEV
   registered_at: "2026-09-28T11:18:10Z"
+  block_reason: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=.specdojo/doc-index.json; agent must record the required change in…"
 ---
 
 # PJR-36CN 統合時の記帳競合でイベントを和集合で合わせる
