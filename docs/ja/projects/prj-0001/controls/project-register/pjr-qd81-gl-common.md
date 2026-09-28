@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-qd81-gl-common
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: BA
   registered_at: "2026-09-26T04:08:08Z"
+  completed_at: "2026-09-28T23:20:01Z"
   block_reason: "agent exited with non-zero code: runner による検証 `validate-schema` が failed となっており、成果物の整合性が担保されていないため。"
+  conclusion: gl-common.yaml を作成し、gl-rulebook の terms に englishName を加えた。単一名を持たない実行記録・評価結果は構成要素を個別に定義し、総称と分類の用語も加えて 22 語とした。対象は cdfd-overview のデータストアとその構成要素
 ---
 
 # PJR-QD81 用語集 gl-common を作成し概念名と英語名の対応を確定する
@@ -107,7 +109,16 @@ specdojo:
 
 ## 6. 対応結果
 
--
+agy-expert-executor が `gl-common.yaml` を作成し、`gl-rulebook.md` の `terms` に英語名（`englishName`）の項目を加えた。executor は本個票の対応結果を記入しなかったため、orchestrator が評価と補完の内容を記録する。
+
+- 英語名の保持方法: `terms` に `englishName` を加えた（`aliases` は別名であり、訳語と性質が異なるため使わない）。
+- 未確定の 5 件: 利用者の判断（案 3）どおり、単一名を持たないもの（実行記録、評価結果）は構成要素を個別の用語として定義した。実行記録は実行結果・状態遷移イベント・証跡・試行記録、評価結果は判定結果・指摘事項である。CDFD 側への英語名の併記は行わず、用語集を正本とした。
+- 対象範囲: 概念データフロー図（全体概要）のデータストアと、その構成要素とする。CDFD の用語全体は対象外である。
+- orchestrator による補完: executor の用語集では、データストアのうち実行記録と評価結果が構成要素だけで定義されており、構成要素の `category` が指す `tm-exec-log` / `tm-evaluation`、13 件のデータストアが指す `tm-data-store` も用語集に存在しなかった。この 3 語を、cdfd-overview のデータストアの表の説明を根拠に追加した。追加後は 22 語で、`category` と `relatedTerms` がすべて用語集内の ID を指す。
+- データストアの件数: 完了条件と作業内容は「16 件」としていたが、2026-09-29 時点の cdfd-overview のデータストアは 15 件であり、すべて用語集に含まれる。
+- 用語集の形式: gl の schema がないため、先頭を `# specdojo-schema: none reason=schema-not-defined` とし、`id` を成果物の命名に合わせて `gl-common` とした（orchestrator が worktree で修正）。schema の作成は PJR-Y06Y で扱う。
+- `gl-rulebook.md` の作成標準への準拠（2.3.）は、利用者の判断で PJR-5DM3 に分けた。
+- runner の検証（`test-unit`・`test-integration`・`typecheck`・`validate-schema`）はすべて通過した。
 
 ## 7. 関連ドキュメント
 

@@ -87,3 +87,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_975aacb9cf934ddfa17474a76e155187
+- v: 1
+  id: reg_99c2ed8e23f2462cb76dec2fff17eb85
+  ts: "2026-09-28T23:20:01Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: agy-expert-executor の実行結果を評価し、schema 指定・id・データストアの総称と分類の用語を orchestrator が補完した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-29"
+    - field: conclusion
+      from: "-"
+      to: gl-common.yaml を作成し、gl-rulebook の terms に englishName を加えた。単一名を持たない実行記録・評価結果は構成要素を個別に定義し、総称と分類の用語も加えて 22 語とした。対象は cdfd-overview のデータストアとその構成要素
+  previous_event_id: reg_fbc3def983b0490da993e5ecd4801944

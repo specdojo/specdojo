@@ -73,6 +73,22 @@ terms:
     definition: YAMLの閲覧ページや文書索引などの派生成果物。
     notes: 単一の英語名を持たない。
     category: tm-data-store
+  - id: tm-data-store
+    term: データストア
+    definition: SpecDojo のプロジェクト運営で読み書きする、マスタ・構成データとトランザクションデータの保管先。概念データフロー図（全体概要）の「データストア」章で定義する。
+    notes: 本用語集の各データストアの用語は、この用語を category に持つ。
+  - id: tm-exec-log
+    term: 実行記録
+    definition: タスクの実行で残る記録の総称。result、状態遷移イベント、evidence、trial、ジョブ実行記録、agent 実行ログを含む。
+    notes: 単一の英語名を持たない。構成要素は実行結果・状態遷移イベント・証跡・試行記録として個別に定義し、各構成要素の category に本用語を指定する。
+    category: tm-data-store
+    relatedTerms: [tm-result, tm-event, tm-evidence, tm-trial]
+  - id: tm-evaluation
+    term: 評価結果
+    definition: 成果物に対する評価の記録の総称。完了条件の判定、grade、finding を含む。
+    notes: 単一の英語名を持たない。構成要素は判定結果・指摘事項として個別に定義し、各構成要素の category に本用語を指定する。
+    category: tm-data-store
+    relatedTerms: [tm-grade, tm-finding]
   - id: tm-result
     term: 実行結果
     englishName: result

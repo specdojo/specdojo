@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-5dm3-gl-rulebook-conformance
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-09-28T22:13:17Z"
+  completed_at: "2026-09-28T23:20:03Z"
+  conclusion: gl-rulebook.md を rulebook-authoring-standard に準拠させた
 ---
 
 # PJR-5DM3 gl-rulebook を rulebook-authoring-standard に準拠させる
