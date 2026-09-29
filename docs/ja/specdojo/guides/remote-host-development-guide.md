@@ -49,6 +49,17 @@ SpecDojo は自律実行を前提とします。次の 2 つが作業端末の�
 
 この文書では Tailscale + SSH + tmux + devcontainer の組み合わせを例にしますが、役割が満たせれば置き換えて構いません。
 
+### 2.1. Dev Container を生成する（任意）
+
+利用リポジトリに `.devcontainer/` がない場合は、指定した provider の CLI を含む最小構成を生成できます。まず dry-run で対象を確認します。
+
+```bash
+npx specdojo devcontainer scaffold --provider claude,codex --dry-run
+npx specdojo devcontainer scaffold --provider claude,codex
+```
+
+既存の `.devcontainer/` は通常実行では上書きしません。置き換える場合だけ `--force` を指定します。生成設定は provider の設定ディレクトリを名前付きボリュームへ保存し、ホストの認証情報・秘密鍵・`.env` は既定でマウントしません。Ollama 接続、コンテナ内の cron、コンテナ内の tmux が必要な場合だけ `--ollama`、`--cron`、`--tmux` を追加します。本書の構成図のようにホスト側の tmux でコンテナ自体を包む場合、`--tmux` は不要です。
+
 ## 3. 構成例
 
 ```text

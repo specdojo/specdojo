@@ -80,6 +80,23 @@ frontier モデルは Claude Code が `opus`、Codex が `gpt-5.6-sol` に対応
 
 worktree 付きは、全 CLI で `tools/worktree/open-agent-worktree.sh` を通して固定名の worktree を使い、無ければ起動時に作成します。ブランチは `worktree/<name>`、配置は `../worktrees/<name>` です。既存 worktree のブランチが一致しない場合は agent を起動しません。Claude Code の `--worktree` はブランチ名と配置を他の CLI に揃えられないため使用しません。
 
+### 2.1. 利用リポジトリへ設定を配置する
+
+npm package から利用する場合は、起動前に provider の設定と npm script を利用リポジトリへ配置します。
+
+```bash
+npx specdojo config scaffold --provider <name>
+```
+
+Antigravity CLI の無人実行に必要な permission rule は、利用者のすべてのリポジトリに効くグローバル設定です。通常の scaffold では変更されないため、明示的に dry-run で追加 rule を確認してから適用します。既存設定は保持され、実適用前にバックアップされます。
+
+```bash
+npx specdojo config scaffold --provider antigravity --global --dry-run
+npx specdojo config scaffold --provider antigravity --global
+```
+
+分離環境が必要な場合は、追加の任意手順として `devcontainer scaffold` を利用できます。既存の `.devcontainer/` は上書きされず、provider の設定ディレクトリは名前付きボリュームへ保存されます。詳細は [CLIコマンドリファレンス](../references/command-reference.md) の `devcontainer` を参照してください。
+
 ## 3. 対話の進め方
 
 オーケストレーターは「提案 → 承認 → 実行」を基本とします。
