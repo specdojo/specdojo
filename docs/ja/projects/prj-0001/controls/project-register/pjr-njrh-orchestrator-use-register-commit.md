@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-njrh-orchestrator-use-register-commit
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-09-29T12:29:05Z"
+  completed_at: "2026-09-29T13:49:19Z"
   block_reason: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=.claude/agents/specdojo-orchestrator.md, .codex/agents/specdojo-or…"
+  conclusion: オーケストレーター定義の記帳手順を register の --commit を使う形に改め、各環境へ同期した
 ---
 
 # PJR-NJRH オーケストレーター定義の記帳手順で register の --commit を使う

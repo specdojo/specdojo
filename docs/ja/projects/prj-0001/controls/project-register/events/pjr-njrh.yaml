@@ -61,3 +61,22 @@
       from: "-"
       to: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=.claude/agents/specdojo-orchestrator.md, .codex/agents/specdojo-or…"
   previous_event_id: reg_29be85ab850e49658a262ae851bb135d
+- v: 1
+  id: reg_66764857f70646f391e3c9afb02c0c64
+  ts: "2026-09-29T13:49:19Z"
+  action: close
+  actor: orchestrator
+  from_status: waiting
+  to_status: done
+  reason: agy-expert-executor は保護対象の定義ファイルを変更できないため、利用者が承認した文面を orchestrator が SSOT へ反映して同期した
+  changes:
+    - field: status
+      from: waiting
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-29"
+    - field: conclusion
+      from: "-"
+      to: オーケストレーター定義の記帳手順を register の --commit を使う形に改め、各環境へ同期した
+  previous_event_id: reg_266c7ce5e46d4b3385293eca850e552f
