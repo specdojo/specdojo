@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: low
   owner: DEV
   registered_at: "2026-09-29T13:28:05Z"
+  block_reason: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=package.json; agent must record the required change in the result …"
 ---
 
 # PJR-CF15 用語集の relatedTerms と category が用語集内の ID を指すことを検証する
@@ -35,15 +36,19 @@ PJR-Y06Y で用語集の schema（`docs/specdojo/schemas/v1/gl.schema.yaml`）�
 
 ## 3. 作業内容
 
-| No  | 作業                           | 担当 | 状態 | メモ |
-| --- | ------------------------------ | ---- | ---- | ---- |
-| 1   | 検証を置く場所を決めて実装する | DEV  | open | -    |
-| 2   | テストを追加する               | DEV  | open | -    |
-| 3   | gl-rulebook へ記載する         | DEV  | open | -    |
+| No  | 作業                           | 担当 | 状態 | メモ                                                                   |
+| --- | ------------------------------ | ---- | ---- | ---------------------------------------------------------------------- |
+| 1   | 検証を置く場所を決めて実装する | DEV  | done | `docs-lint` の新しいコマンドとして実装し、`validate:schema` に追加した |
+| 2   | テストを追加する               | DEV  | done | `validate-glossary-references.test.ts` を追加した                      |
+| 3   | gl-rulebook へ記載する         | DEV  | done | 6.3 節に追記した                                                       |
 
 ## 4. 対応結果
 
--
+- `packages/docs-lint/src/validate-glossary-references.ts` に検証ロジックを実装し、`specdojo-docs-lint.js` の `glossary-references` コマンドとして登録した。
+- `package.json` の `validate:schema` の最後に `npm run validate:schema:glossary` を追加し、JSON Schema でカバーできない ID 重複や存在しない用語 ID への参照を検知できるようにした。
+- `gl-sample.yaml` で未定義だった `tm-inventory`, `tm-safety-stock`, `tm-sales`, `tm-actor` を追加し、検証を通過するように修正した。
+- `gl-rulebook.md` の「6.3. 関連用語の運用」を「6.3. 関連用語と分類の運用」に改め、検証についてのルールを追記した。
+- `tests/packages/docs-lint/glossary-references.test.ts` に、存在しない ID 参照や重複を検知する単体テストを追加した。
 
 ## 5. 関連ドキュメント
 
