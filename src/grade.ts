@@ -1925,7 +1925,7 @@ export function renderGradeReporterPlan(opts: {
     "1. `<grade_executor_output>` の `[VIEWPOINT <id>]` ごとに `LEVEL` とすべての `FINDING` を読み取る。対象文書や参考資料は読まない。",
     "2. level、severity、line、message を executor の申告どおりにコピーする。message の要約、言い換え、校正を行わない。",
     "3. executor が述べていない finding を追加せず、述べた finding を省略しない。finding の `id` は出力しない。",
-    "4. marker が欠けている、値が曖昧、または GradeSubmission の検証規則と矛盾する場合は推測せず異常終了する。",
+    "4. finding の severity により viewpoint の level に上限がある（`blocker` は上限 0、`major` は上限 2、`minor` は上限 3）。executor の申告が上限を超えている場合や、marker が欠けているなど GradeSubmission の検証規則と矛盾する場合は、推測や機械的な値の修正を行わず異常終了する。",
     ...(doneCriteria.length > 0
       ? [
           "5. `[DONE_CRITERIA]` ブロックの各行を `done_criteria` へ写す。`id` と `status`（`satisfied` / `unsatisfied`）は申告どおりにコピーし、`unsatisfied` に続く不足内容は `reason` へ一字一句コピーする。条件の追加・省略・判定変更を行わない。",
