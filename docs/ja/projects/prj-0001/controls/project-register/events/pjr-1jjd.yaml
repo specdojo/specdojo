@@ -58,3 +58,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_1a87f881e0a34fcdb217751a24515ca7
+- v: 1
+  id: reg_97804e5b4d2b40c2a7fd5d847f404587
+  ts: "2026-09-29T11:11:51Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: codex-expert-executor の実行結果を評価し、直後の QD81 の plan で finding が展開されないことを確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-29"
+    - field: conclusion
+      from: "-"
+      to: register の plan が finding を展開する対象を、個票の関連ドキュメントの wikilink から frontmatter の targets に改めた。targets のない個票では展開しない
+  previous_event_id: reg_0863b0f5b10042aea224f9c79de6be18

@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-1jjd-register-plan-expands-referenced-findings
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-09-28T22:13:15Z"
+  completed_at: "2026-09-29T11:11:51Z"
+  conclusion: register の plan が finding を展開する対象を、個票の関連ドキュメントの wikilink から frontmatter の targets に改めた。targets のない個票では展開しない
 ---
 
 # PJR-1JJD register の plan が関連ドキュメントとして参照しただけの文書の grade finding を解消対象に展開する

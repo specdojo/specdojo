@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-9xg4-register-commit-under-lifecycle-lock
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-09-28T23:15:33Z"
+  completed_at: "2026-09-29T11:11:52Z"
+  conclusion: register の記帳コマンドに --commit を加え、register lifecycle の枠を取って記帳・register build・commit を行うようにした。run と並行した記帳の統合テストを追加した。オーケストレーター定義への取り込みは未実施
 ---
 
 # PJR-9XG4 register の記帳コマンドに統合と記帳の枠を取って commit するオプションを加える
