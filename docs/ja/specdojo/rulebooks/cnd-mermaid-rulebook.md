@@ -83,7 +83,7 @@ flowchart LR
 
 ## 3. ノードのルール
 
-### 3.1 Person（人/ロール）
+### 3.1. Person（人/ロール）
 
 - **四角 `[]`** を使用する。
 - 表示ラベルは業務ロール/主体を短い日本語で表す。
@@ -99,7 +99,7 @@ flowchart LR
   class 店員,店主 person;
 ```
 
-### 3.2 Container（コンテナ）
+### 3.2. Container（コンテナ）
 
 - **角丸長方形 `()`** を使用する。
 - 表示ラベルは「コンテナ名（＋必要なら技術/役割の短い補足）」とする。
@@ -116,7 +116,7 @@ flowchart LR
   class Webアプリ,API system;
 ```
 
-### 3.3 Database（データベース）
+### 3.3. Database（データベース）
 
 - **円柱ノード `[(...)]`** を使用する。
 - DBの論理名を短く書く（例: `販売DB`, `在庫DB`）。
@@ -131,7 +131,7 @@ flowchart LR
   class 販売DB system;
 ```
 
-### 3.4 External Software System（外部システム）
+### 3.4. External Software System（外部システム）
 
 - **四角 `[]`** を使用する。
 - 表示ラベルは外部システムの一般名（例: 会計、決済、EC、配送など）。
@@ -147,7 +147,7 @@ flowchart LR
   class 会計システム,決済サービス external;
 ```
 
-### 3.5 System Boundary（境界）
+### 3.5. System Boundary（境界）
 
 - 対象システムは **サブグラフ `subgraph ... end`** で囲う。
 - 境界内には、対象システムの **主要コンテナ**（2〜7個程度を目安）と、必要なら主要DBを置く。
@@ -172,7 +172,7 @@ flowchart LR
 
 ## 4. エッジ（関係）のルール
 
-### 4.1 方向
+### 4.1. 方向
 
 - `A --> B` を基本とする。
 - 方向は「主たる依存/利用/送信の向き」が分かるように統一する。
@@ -180,7 +180,7 @@ flowchart LR
   - 例: コンテナ間の呼び出し: `Webアプリ -->|"API呼び出し"| API`
   - 例: DBへの入出力: `API -->|"売上データ"| 販売DB`
 
-### 4.2 ラベル
+### 4.2. ラベル
 
 - すべてのエッジにラベルを付ける（「何の関係か」を合意するため）。
 - ラベルは **短い名詞句**または **短い動詞句**で書く。
@@ -210,46 +210,7 @@ flowchart LR
 
 ---
 
-## 7. サンプル（最小）
-
-```mermaid
-flowchart LR
-  %% Person
-  店員["👤店員"]
-
-  %% External Systems
-  会計システム["会計システム"]
-  決済サービス["決済サービス"]
-
-  %% Target System Boundary
-  subgraph 境界["対象システム"]
-    Webアプリ("Webアプリ<br>（レジ/管理画面）")
-    API("API<br>（販売/在庫）")
-    販売DB[("販売DB")]
-  end
-
-  %% Relationships
-  店員 -->|"売上登録"| Webアプリ
-  Webアプリ -->|"API呼び出し"| API
-  API -->|"売上データ"| 販売DB
-
-  API -->|"会計仕訳連携"| 会計システム
-  API -->|"決済依頼"| 決済サービス
-  決済サービス -->|"決済結果"| API
-
-  %% Styles
-  classDef person fill:#fff3bf,stroke:#f08c00,color:#000;
-  classDef system fill:#d0ebff,stroke:#1c7ed6,color:#000;
-  classDef external fill:#e9ecef,stroke:#495057,color:#000;
-  class 店員 person;
-  class Webアプリ,API,販売DB system;
-  class 会計システム,決済サービス external;
-  style 境界 fill:#ffffff,fill-opacity:0,stroke:#868e96,stroke-width:1px,stroke-dasharray: 5 5;
-```
-
----
-
-## 8. 凡例（推奨）
+## 7. 凡例（推奨）
 
 凡例は下記のように表現する（必要な場合のみ）。
 

@@ -4,6 +4,7 @@ specdojo:
   type: rulebook
   status: draft
   target_format: markdown
+  sample: ""
   template: not-needed
   based_on:
     - specdojo:rulebook-authoring-standard
