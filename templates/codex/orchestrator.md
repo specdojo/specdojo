@@ -10,7 +10,7 @@ CLI は利用リポジトリへローカル導入されるため、`npx specdojo
 - コマンドは「提案 → 承認 → 実行」の順で扱う。状態やファイルを変える操作は、実行するコマンドを提示して利用者の承認を得てから実行する。読み取り・状況確認のみのコマンド（`--help`、`list`、`status`、`where`、`validate`、`--dry-run`）は説明の上で実行してよい。
 - 破壊的変更や `git push` は行わない。
 - `git commit` は次の方針で行う。実行前に必ず現在のブランチを確認して提示し、`main` では commit しない（対象ブランチを提案して止まる）。
-  - register の状態遷移や worktree の統合など、runner 相当の記帳は承認なしに commit してよい。
+  - register の状態遷移や worktree の統合など、runner 相当の記帳は承認なしに commit してよい。register の記帳は `--commit` で commit する。
   - 自分が判断して書いた変更（実装・設定・規範文書など）は、対象ファイルと commit メッセージを提示して承認を得てから commit する。
 - commit 先のブランチは変更の種類で決める。作業を始める前に現在ブランチを確認し、想定と違う場合は切り替えを提案してから進める。
   - register の記帳（起票・状態遷移・生成物の再構築）は、対象 project の `develop` へ直接 commit してよい。個票とイベントが項目ごとに分かれ、ID も乱数で採番されるため、並行しても衝突しない。
@@ -89,15 +89,23 @@ npx specdojo register add --project <project-id> \
   --priority high --owner DEV --due <YYYY-MM-DD>
 ```
 
+起票の前に、会話から type・タイトル・説明・優先度・担当・期限を読み取る。読み取れたものは推奨値として示し、足りないものだけを質問する。担当と期限は会話で確定していなければ推測で埋めず、「未定のまま起票する」か「値を決める」かを利用者に選んでもらう。
+
+起票後は、個票の `_TODO_`（`概要` / `完了条件` / `作業内容` など）に入れる内容の案を、会話で確かめた事実だけから作って示す。承認を得てから個票へ書き込み、`register build` で一覧を更新する。事実が足りない箇所は `_TODO_` のまま残し、何が足りないかを伝える。
+
 起票後は個票を開き、`概要` / `完了条件` / `作業内容` を埋める。**完了条件は exec plan の入力になる**ため、検証可能な形で書く。曖昧なまま実行へ流すと、agent が意図と違う範囲を実装する。
 
 状態遷移は次で行う。`exec run --register` を使う場合、`start` と `review` は runner が自動で記帳するため手で打たない。
 
+記帳は `--commit` を付けて行う。`register lifecycle` の枠を取ってから記帳・`register build`・commit を行うため、`exec run` の実行中でも安全に記帳できる。commit 対象は、そのコマンドが変更した個票とイベントだけになる。
+
 ```bash
 npx specdojo register close --project <project-id> --id <PJR-XXXX> \
-  --conclusion "<結論>" --by <actor> --reason "<理由>"
-npx specdojo register build --project <project-id>
+  --conclusion "<結論>" --by <actor> --reason "<理由>" \
+  --commit -m "docs(register <PJR-XXXX>): <日本語の subject>"
 ```
+
+`-m` の本文には、commit メッセージの方針（「なぜ」と `Refs: PJR-XXXX`）を守って書く。`register add` / `update` / `reject` / `defer` / `reopen` も同じく `--commit` を使う。
 
 `decision` と `question` は `--status decided` を付ける。close の前に個票の `決定内容` / `承認` を埋める。
 
