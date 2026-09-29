@@ -525,6 +525,19 @@ describe("plan generation (rulebook includes)", () => {
     expect(plan).toContain("併せて適用する rulebook（記法など）: _MISSING_");
     expect(plan).not.toContain("_RULEBOOK_INCLUDES_");
   });
+
+  it("rulebook が sample を宣言していれば sample のパスを参照ファイルへ注入する", async () => {
+    const plan = await generateFullyGuidedPlan("specdojo:cdfd-rulebook");
+
+    expect(plan).toContain("- sample: `docs/ja/specdojo/samples/cdfd-sample.md`");
+    expect(plan).not.toContain("_SAMPLE_REF_");
+  });
+
+  it("rulebook 未宣言の成果物では sample は _MISSING_ になる", async () => {
+    const plan = await generateFullyGuidedPlan(undefined);
+
+    expect(plan).toContain("- sample: `_MISSING_`");
+  });
 });
 
 describe("review plan templates", () => {
