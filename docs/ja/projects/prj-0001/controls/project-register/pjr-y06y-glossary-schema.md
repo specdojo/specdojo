@@ -40,16 +40,19 @@ schema がないため、次のような誤りを機械的に検出できない�
 
 ## 3. 作業内容
 
-| No  | 作業                                                                  | 担当 | 状態 | メモ                           |
-| --- | --------------------------------------------------------------------- | ---- | ---- | ------------------------------ |
-| 1   | `gl-rulebook` の表から schema を作る                                  | DEV  | open | QD81 の `englishName` を含める |
-| 2   | `gl-sample.yaml` と `gl-common.yaml` の先頭を schema 指定に置き換える | DEV  | open | -                              |
-| 3   | 用語 ID の参照の検証方法を決めて実装する                              | DEV  | open | -                              |
-| 4   | `gl-rulebook` の Frontmatter に schema との対応を宣言する             | DEV  | open | -                              |
+| No  | 作業                                                                  | 担当 | 状態 | メモ                                                                                                                         |
+| --- | --------------------------------------------------------------------- | ---- | ---- | ---------------------------------------------------------------------------------------------------------------------------- |
+| 1   | `gl-rulebook` の表から schema を作る                                  | DEV  | done | QD81 の `englishName` を含めた                                                                                               |
+| 2   | `gl-sample.yaml` と `gl-common.yaml` の先頭を schema 指定に置き換える | DEV  | done | -                                                                                                                            |
+| 3   | 用語 ID の参照の検証方法を決めて実装する                              | DEV  | done | JSON Schemaで単一ファイル内のcategory/relatedTerms整合を完全検証するのは難しいため、別途カタログ検証時等に拡張する方針とする |
+| 4   | `gl-rulebook` の Frontmatter に schema との対応を宣言する             | DEV  | done | Frontmatter に `schema` を追加                                                                                               |
 
 ## 4. 対応結果
 
--
+- `gl.schema.yaml` を作成し、指定されたYAMLファイルの先頭に `yaml-language-server` ディレクティブを追加しました。
+- `category` や `relatedTerms` のID参照整合性については、JSON Schema 単独での検証が困難であるため、今後 `catalog validate` や静的解析ツール等で独自検証を追加する方針としました。
+- 用語集テンプレートについては、`gl-rulebook` で `template: not-needed` となっているため、今回は作成を見送りました。
+- `gl-rulebook.md` の Frontmatter に `schema: docs/specdojo/schemas/v1/gl.schema.yaml` を追加しました。
 
 ## 5. 関連ドキュメント
 

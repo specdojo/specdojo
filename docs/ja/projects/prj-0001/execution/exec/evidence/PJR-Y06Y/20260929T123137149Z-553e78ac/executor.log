@@ -1,0 +1,11 @@
+用語集（`gl-*.yaml`）の JSON Schema 作成と、各ファイルでの設定を実施しました。
+
+- `docs/specdojo/schemas/v1/gl.schema.yaml` を新規作成し、`gl-rulebook` に記載の必須・推奨項目に基づくスキーマ定義を実装しました（PJR-QD81 で追加された `englishName` 等も網羅しています）。
+- `gl-sample.yaml` と `gl-common.yaml` の先頭を `# yaml-language-server: $schema=...` ディレクティブによるスキーマ指定に置き換えました。
+- `gl-rulebook.md` の Frontmatter に、`schema: docs/specdojo/schemas/v1/gl.schema.yaml` を追加しました。
+- 同一 YAML 内での用語 ID の存在チェック等、JSON Schema だけで表現しきれないルールについては、今後の実装課題として申し送りに記録しました。
+- 実行結果（`pjr-y06y-20260929T123043Z-3927-result.md`）と個票（`pjr-y06y-glossary-schema.md`）へ対応内容を反映し、各種静的検査とカタログ更新も完了しています。
+
+<specdojo_executor_evidence>
+{"final_message":"Created glossary schema and updated documents","validations":[{"command":"npx prettier --write <files>","status":"passed","summary":"Formatted Markdown and YAML files"},{"command":"npx markdownlint <files>","status":"passed","summary":"Passed markdown lint"},{"command":"npx tsx src/specdojo.ts index build","status":"passed","summary":"Built index"},{"command":"npx tsx src/specdojo.ts register build","status":"passed","summary":"Built register"},{"command":"npm run lint:fm","status":"passed","summary":"Passed frontmatter lint"}]}
+</specdojo_executor_evidence>
