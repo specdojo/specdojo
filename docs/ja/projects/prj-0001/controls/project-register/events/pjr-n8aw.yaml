@@ -45,3 +45,16 @@
       from: open
       to: in-progress
   previous_event_id: reg_9c24375d4265425199a4efc6afad8681
+- v: 1
+  id: reg_6b6e1adb16b648baa72f4dec5d7de82b
+  ts: "2026-09-29T12:41:11Z"
+  action: review
+  actor: agy-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_a4eb1c09fa014fc1a0895f811876aaf2
