@@ -776,7 +776,7 @@ specdojo agent run --plan <plan.md> --by <nickname> --dry-run
 | ----------------------- | ------------------------------------------- |
 | `devcontainer scaffold` | `.devcontainer/` の設定ファイル群を生成する |
 
-`devcontainer scaffold` は、指定された provider の CLI と、要求された追加機能を組み込んだ `devcontainer.json` と `post-create.sh` を生成します。
+`devcontainer scaffold` は、指定された provider の CLI と、要求された追加機能を組み込んだ `devcontainer.json` と `post-create.sh` を生成します。provider は `antigravity`、`claude`、`codex`、`opencode` を指定できます。Dev Container は任意の実行環境であり、既存の Node.js 環境を置き換える必須手順ではありません。
 
 主要オプション:
 
@@ -796,6 +796,8 @@ npx specdojo devcontainer scaffold --provider claude,codex
 # 追加オプションを指定する
 npx specdojo devcontainer scaffold --provider claude --ollama --tmux
 ```
+
+`.devcontainer/` が既に存在する場合は何も書き込まず、置き換える場合だけ `--force` を指定します。上書き前や初回生成前は `--dry-run` で対象ファイルを確認してください。生成設定は provider の設定ディレクトリを名前付きボリュームへ保存してコンテナ再作成後も利用できるようにし、ホストの認証情報・秘密鍵・`.env` を直接マウントしません。認証は生成したコンテナ内で行います。
 
 ## 16. 関連ガイド
 

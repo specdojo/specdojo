@@ -89,15 +89,25 @@ npx specdojo config scaffold --provider claude
 
 配置されるファイルのモデル名は、手元で使えるモデルに合わせて編集してください。provider ごとの詳しい設定は [オーケストレーター運用ガイド](https://specdojo.github.io/specdojo/ja/specdojo/guides/orchestrator-operation-guide.html) を参照してください。
 
+Antigravity CLI を無人実行する場合は、利用者のグローバル設定へ permission rule を追加します。この設定はすべてのリポジトリに効くため、必ず先に差分を確認してから適用してください。通常の scaffold はグローバル設定へ触れません。
+
+```sh
+npx specdojo config scaffold --provider antigravity --global --dry-run
+npx specdojo config scaffold --provider antigravity --global
+```
+
+実適用では既存設定を残し、変更前のファイルをバックアップします。追加する allow は `git status` / `diff` / `log` / `show` の読み取り操作だけです。
+
 #### Dev Container を使う場合（任意）
 
 利用環境として Dev Container を使う場合は、オーケストレーターの配置に加えて次のコマンドを実行すると、指定した provider の CLI が組み込まれた `.devcontainer/` を生成できます。
 
 ```sh
+npx specdojo devcontainer scaffold --provider claude --dry-run
 npx specdojo devcontainer scaffold --provider claude
 ```
 
-生成後、VS Code などでコンテナを立ち上げると、分離された環境ですぐにオーケストレーターを起動できます。
+既存の `.devcontainer/` は上書きせず、置き換える場合だけ `--force` を指定します。生成設定は provider の設定ディレクトリを名前付きボリュームに保存し、ホストの認証情報・秘密鍵・`.env` はマウントしません。生成後、VS Code などでコンテナを立ち上げると、分離された環境ですぐにオーケストレーターを起動できます。Ollama 接続、cron、tmux はそれぞれ `--ollama`、`--cron`、`--tmux` で追加できます。
 
 ### 会話で操作する
 
@@ -134,6 +144,8 @@ npx specdojo register add \
   --title "最初のタスク"
 npx specdojo register build --project prj-0001
 ```
+
+`exec run` と並行して記帳し、その変更だけを commit まで完了させる場合は、`register add` / `update` / `renumber` または状態遷移コマンドへ `--commit` を付けます。同じ project の `register lifecycle` 枠が空くまで待ち、ほかの未 commit 変更を含めずに記帳・一覧再生成・commit を行います。対象の個票や event に既存差分がある場合は、混在を避けるため記帳前に停止します。
 
 ここまでの手順は、利用側へ kata をコピーせずに実行できます。生成された `todo` の個票が編集対象、
 `generated/pjr-index.md` が個票から作る一覧です。`register add` が表示した ID を使い、AI に作業を

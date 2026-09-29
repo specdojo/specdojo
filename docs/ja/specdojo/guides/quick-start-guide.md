@@ -82,12 +82,21 @@ npx specdojo config scaffold --provider <name>
 `<name>` には `antigravity`、`claude`、`codex`、`copilot`、`opencode` を指定します。従来の
 `specdojo exec scaffold --provider <name>` も互換入口として利用できます。
 
-Antigravity CLI を無人実行する場合は、先に dry-run でユーザー設定へ追加する permission rule を確認し、明示的に適用します。通常の scaffold はユーザーディレクトリへ触れません。
+Antigravity CLI を無人実行する場合は、先に dry-run でユーザー設定へ追加する permission rule を確認し、明示的に適用します。このグローバル設定は利用者のすべてのリポジトリに効きます。通常の scaffold はユーザーディレクトリへ触れません。
 
 ```bash
 npx specdojo config scaffold --provider antigravity --global --dry-run
 npx specdojo config scaffold --provider antigravity --global
 ```
+
+Dev Container は任意です。分離された環境が必要な場合だけ、既存の `.devcontainer/` がないことと生成内容を dry-run で確認してから作成します。
+
+```bash
+npx specdojo devcontainer scaffold --provider <name> --dry-run
+npx specdojo devcontainer scaffold --provider <name>
+```
+
+Dev Container の `<name>` には `antigravity`、`claude`、`codex`、`opencode` を指定します。既存の `.devcontainer/` は通常実行では上書きされません。生成設定は provider の設定ディレクトリを名前付きボリュームに保存し、ホストの認証情報・秘密鍵・`.env` はマウントしません。Ollama 接続、cron、tmux は必要な場合だけ `--ollama`、`--cron`、`--tmux` で追加します。
 
 設定したプロジェクトを確認します。
 
@@ -174,6 +183,8 @@ npx specdojo register add \
 ```
 
 `register add` の出力に表示された `PJR-XXXX` を控えます。すべての登録項目は、背景、選択肢、完了条件、結論などを記録する type 別の個票として生成されます。個票 Frontmatter が構造化フィールドの正本であり、一覧は個票から生成されます。成果物カタログを複数ドメインに分ける場合は、原則として `dct-<domain>.yaml` ごとに todo 個票を起票すると、対象と完了条件を追跡しやすくなります。
+
+agent の run と並行して記帳し、その変更だけを commit まで完了させる場合は `register add` や状態遷移コマンドへ `--commit` を付けます。同じ project の `register lifecycle` 枠が空くまで待って記帳・一覧再生成・commit を行うため、別の run の記帳・統合と競合しません。対象の個票や event に既存の未 commit 変更がある場合は、混在を避けるため書き込み前に停止します。
 
 | type       | 記録する内容                           | 完了状態  | agent実行                                  |
 | ---------- | -------------------------------------- | --------- | ------------------------------------------ |
