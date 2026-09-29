@@ -1,0 +1,15 @@
+実装を完了しました。
+
+- `--global` 指定時のみ Antigravity の権限設定を非破壊マージ。
+- dry-run 差分、timestamp 付きバックアップ、冪等性、不正設定の拒否を実装。
+- 安全な allow / deny テンプレートを追加し、全権限スキップを廃止。
+- 一時 HOME を使う単体テストを追加。
+- 設計書、ガイド、コマンドリファレンス、個票を更新。
+- 整形、Markdown lint、register / catalog / index 検証は成功しました。catalog の既存 `based_on` 警告以外に問題はありません。
+- 親 runner 管轄の unit / integration / schema / typecheck は指示どおり実行していません。result ファイルも更新していません。
+
+実装した形式は [Google Antigravity公式の権限仕様](https://antigravity.google/docs/permissions?tab=cli) に準拠しています。
+
+<specdojo_executor_evidence>
+{"final_message":"config scaffold に明示的 --global による Antigravity 権限設定の非破壊マージ、dry-run 差分、バックアップ、安全な allow/deny 原本を追加し、テスト・設計書・個票を更新した。tsx の IPC 制約は node --import tsx で同一 entrypoint を検証して解消した。","validations":[{"command":"npx prettier --write src/exec-provider-scaffold.ts src/exec.ts src/specdojo-config.ts tests/src/exec-provider-scaffold.test.ts templates/antigravity/settings.global.json templates/antigravity/exec-defaults-snippet.yaml templates/antigravity/README.md docs/ja/product/040-system-design/sysd-antigravity-agent-settings.md docs/ja/specdojo/guides/exec-config-guide.md docs/ja/specdojo/guides/quick-start-guide.md docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-0fk2-config-scaffold-agent.md","status":"passed","summary":"全対象ファイルが整形済みで最終実行は unchanged"},{"command":"npx markdownlint templates/antigravity/README.md docs/ja/product/040-system-design/sysd-antigravity-agent-settings.md docs/ja/specdojo/guides/exec-config-guide.md docs/ja/specdojo/guides/quick-start-guide.md docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-0fk2-config-scaffold-agent.md","status":"passed","summary":"Markdown lint エラーなし"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿と各 generated view の再生成に成功"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"全 DCT と dct-index.yaml が OK。既存の未配置成果物に関する based_on 警告のみ"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"2191 entries の文書索引を生成"},{"command":"git diff --check","status":"passed","summary":"whitespace エラーなし"}]}
+</specdojo_executor_evidence>

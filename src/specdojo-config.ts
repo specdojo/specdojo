@@ -390,6 +390,11 @@ export function registerConfigCommands(program: Command): void {
     )
     .option("--force", "Overwrite existing files", false)
     .option("--dry-run", "Show planned files without writing", false)
+    .option(
+      "--global",
+      "Merge provider permissions into user-level settings (currently antigravity only)",
+      false,
+    )
     .action(async (opts) => {
       try {
         await runProviderScaffold(String(opts.provider), {
@@ -397,6 +402,7 @@ export function registerConfigCommands(program: Command): void {
           repoRoot: specdojoRootDir(),
           force: !!opts.force,
           dryRun: !!opts.dryRun,
+          global: !!opts.global,
         });
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);

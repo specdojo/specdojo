@@ -28,7 +28,7 @@ SpecDojo CLI と Antigravity CLI（`agy`）を組み合わせ、executor / repor
 ```yaml
 providers:
   antigravity:
-    command_template: 'agy --sandbox --add-dir "$(pwd)" --dangerously-skip-permissions --model {model} -p "$(cat)"'
+    command_template: 'agy --sandbox --add-dir "$(pwd)" --model {model} -p "$(cat)"'
     command_params:
       by_proficiency:
         normal: { model: gemini-3.8-flash-medium }
@@ -61,7 +61,7 @@ providers:
 
 `agy` は repository root まで探索し、`AGENTS.md`、`.agents/rules/*.md`、`.agents/skills/<name>/SKILL.md` を読む。プロジェクト共通の言語・安全規則は `AGENTS.md`、環境別の薄い規則ラッパーは `.agents/rules/`、再利用手順は `.agents/skills/` を正本とする。
 
-executor / reporter の stage 契約は `src/exec-run.ts` が plan 末尾へ付加する。executor は成果物の編集と検証だけを行い result・lifecycle を更新せず、reporter は evidence から構造化結果を返すだけでファイルを書かない。したがって `templates/antigravity/agents/` と `config scaffold --provider antigravity` の配布物は設けない。
+executor / reporter の stage 契約は `src/exec-run.ts` が plan 末尾へ付加する。executor は成果物の編集と検証だけを行い result・lifecycle を更新せず、reporter は evidence から構造化結果を返すだけでファイルを書かない。したがって `templates/antigravity/agents/` は設けない。一方、`config scaffold --provider antigravity` はオーケストレーターと provider 設定スニペットをリポジトリへ配置し、`--global` 指定時だけ CLI のユーザー権限設定をマージする。
 
 対話型オーケストレーターはファイル定義 agent ではなく、`npm run orch:agy` が `.agents/specdojo-orchestrator.agent.md` の本文を `-i` で渡して起動する。
 
@@ -71,7 +71,15 @@ executor / reporter の stage 契約は `src/exec-run.ts` が plan 末尾へ付�
 
 ## 6. 権限と保護境界
 
-`--dangerously-skip-permissions` は無人実行に必要だが、書き込み範囲は worktree、commit 許可リスト、Git 状態ガード、固定保護パスで制限する。全 provider 共通の固定保護パスには `.agents/rules/**`、`.agents/skills/**`、`.claude/**`、`.codex/**`、`.opencode/**`、`.github/agents/**`、`AGENTS.md`、`CLAUDE.md`、`GEMINI.md` を含め、agent が自身や別 provider の指示を書き換えた場合は親検証前に block する。
+Antigravity CLI の権限は、[公式の fine-grained permissions](https://antigravity.google/docs/permissions?tab=cli) に従って `~/.gemini/antigravity-cli/settings.json` の `permissions.allow` / `deny` / `ask` で管理する。deny が ask と allow より優先されるため、必要な検証コマンドだけを allow し、次を deny する。
+
+- `git add` / `commit` / `push`、`git reset --hard`、`rm -rf`、`sudo`
+- `.env` と `secrets/` の読み取り
+- `.git/` と、親 runner・hook・CI・agent の実行内容を定義する固定保護パスへの書き込み。`.specdojo/` は設定ファイルと provider ディレクトリを個別に deny し、検証で再生成する `.specdojo/doc-index.json` は妨げない
+
+`--dangerously-skip-permissions` はこれらの承認境界を迂回するため command template へ含めない。permission 設定に加えて、worktree、commit 許可リスト、Git 状態ガード、provider 非依存の固定保護パス検査を併用する。
+
+`config scaffold --provider antigravity --global` は同設定へ不足ルールだけを追記する。既存キーと既存配列要素は変更・削除せず、書き換え前に `settings.json.backup-<timestamp>` を作る。`--global` を省略した場合はユーザーディレクトリへ触れず、`--global --dry-run` は追加ルールだけを差分表示して書き込まない。不正な JSON または文字列配列以外の permission 設定は、非破壊のためエラーとして扱う。
 
 ## 7. 利用制限と検証
 
@@ -84,3 +92,4 @@ executor / reporter の stage 契約は `src/exec-run.ts` が plan 末尾へ付�
 3. dry-run で各 nickname が意図した `--model` を含む `agy` コマンドへ解決される。
 4. 指示ディレクトリまたは root 指示ファイルの変更が `agent-config-write` で block される。
 5. 実タスクでは executor evidence、親 runner 検証、reporter、統合までを確認する。
+6. 一時 HOME を使い、`--global --dry-run` が無変更、実適用が既存キーを保持してバックアップを作ること、再実行が冪等であることを確認する。

@@ -400,7 +400,7 @@ agent が exec 実行時に読み込む provider 固有の設定（agent 定義�
 | codex       | `agents/*.toml`（親 Codex が spawn する subagent 定義）                                                                                             | `.codex/agents/`                       |
 | opencode    | `agents/*.md`（permission frontmatter 込みの agent 定義）                                                                                           | `.opencode/agents/`                    |
 | copilot     | `pm-members-snippet.yaml`（member 定義）と `exec-defaults-snippet.yaml`（`providers.copilot` の command template・rate limit 検出）の参照スニペット | `.specdojo/copilot/`                   |
-| antigravity | なし（`agy` は定義ファイルを持たず、member と `providers.antigravity` の設定だけで動く）                                                            | —                                      |
+| antigravity | `orchestrator.md`、member / provider 設定スニペット。`settings.global.json` は `--global` 用のマージ原本であり repository へは配置しない            | `.specdojo/antigravity/`               |
 
 導入手順とテンプレートに含めない手動設定（`opencode.json`、`.codex/config.toml` など）は各 `templates/<provider>/README.md` を参照します。
 
@@ -425,9 +425,11 @@ specdojo config scaffold --provider claude
 - 配布原本はインストール済み package のルートから解決します。`templates/<name>/` が存在しない provider を指定した場合は、指定可能な provider 一覧を添えてエラーにします。
 - 配置先に同名ファイルが存在する場合は上書きせず `Skipped (already exists):` を出力します。`--force` 指定時のみ上書きします。ファイルごとに `Written:` / `Skipped:` を 1 行ずつ出力します（既存の scaffold 系コマンドの出力形式に合わせます）。
 - `--dry-run` 指定時は書き込みを行わず、コピー予定のファイル一覧を表示します。
+- `antigravity` で `--global` を明示した場合だけ、`~/.gemini/antigravity-cli/settings.json` の `permissions.allow` / `deny` / `ask` へ不足 rule を追記します。既存キーと配列要素は保持し、書き換え前に timestamp 付きバックアップを作ります。`--global --dry-run` は追加 rule の差分だけを表示し、設定もバックアップも作りません。
+- `--global` をサポートしない provider へ指定した場合はエラーにします。`--force` はグローバル設定の既存値を上書きしません。
 - コピー完了後、次の 2 点を案内メッセージとして出力します。配置ファイルのコミットが必要であること（worktree 実行の前提）、および `.specdojo/exec-defaults.yaml` の `providers.claude.command_template` に `--settings` の指定が必要であること。
 - `settings.*.json` の `Edit(...)` / `Write(...)` パスパターンの調整は利用者に委ねます。scaffold は `.specdojo/specdojo.config.json` のパス設定に基づく書き換えを行いません（テンプレートを事実上の推奨レイアウト前提で配布します）。
-- 将来 provider を追加する場合は `templates/<provider>/` を追加し、`package.json` の `files` に含めます。コマンド側は provider 名からディレクトリを解決するだけで、provider ごとの分岐を持ちません。
+- 将来 provider を追加する場合は `templates/<provider>/` を追加し、`package.json` の `files` に含めます。repository 内へのコピーは provider 名からディレクトリを解決します。ユーザーディレクトリ設定も扱う provider だけは、グローバル設定原本と配置先を実装の許可リストへ明示します。
 
 ## 8. agent 権限とプロンプトインジェクション対策
 
@@ -449,6 +451,8 @@ provider によらず、exec の実行構造そのものが次の境界を提供
 ### 8.2. provider 別の権限設定
 
 **claude** は `provider 設定の配布と scaffold` のとおり、ロール別 `--settings`（edit は `docs/**`、`src/**`、`tests/**`、review は result 配下のみ書き込み可）でパス単位に制限します。`--permission-mode bypassPermissions` は使わず、`.claude/settings.json` の `disableBypassPermissionsMode: "disable"` で起動自体を拒否します。
+
+**antigravity** は `config scaffold --provider antigravity --global` で fine-grained permission を追記し、検証に必要な command だけを allow、Git の変更操作・破壊的 command・秘密情報・固定保護設定へのアクセスを deny します。`--dangerously-skip-permissions` は使いません。CLI の permission に加えて、実行後の provider 非依存ガードでも保護設定の変更を block します。
 
 **codex** はパス単位の permission 機構を持たず、sandbox（`read-only` / `workspace-write` / `danger-full-access`）の粒度で制御します。review でも result の記入が必要なため `read-only` にはできず、edit / review とも `workspace-write` を使います。command template には次を明示します。
 
