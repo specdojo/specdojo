@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   owner: DEV
   registered_at: "2026-09-29T12:29:04Z"
+  block_reason: "agent exited with non-zero code: Runner が実行した `typecheck`(`npm run typecheck`) が失敗しているため。`src/exec-run.ts` においてプロパティ `replan` が `RunOpts` に存在しない等の型エラーが発生しており、完了条件（静的検査の解消）を満たしていない。"
 ---
 
 # PJR-C915 exec run --resume で executor の成果を残したまま plan を作り直せるようにする
