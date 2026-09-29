@@ -2,7 +2,6 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { runDevcontainerScaffold } from "../src/devcontainer-scaffold.js";
 import * as fs from "node:fs";
 import * as fsPromises from "node:fs/promises";
-import * as path from "node:path";
 
 vi.mock("node:fs");
 vi.mock("node:fs/promises");
@@ -10,19 +9,31 @@ vi.mock("node:fs/promises");
 describe("runDevcontainerScaffold", () => {
   const packageRoot = "/pkg";
   const repoRoot = "/repo";
-  let stdoutWrite: any;
+  const stdoutWrite = vi.spyOn(process.stdout, "write");
+  const existsSyncMock = vi.mocked(fs.existsSync);
+  const readFileMock = vi.mocked(fsPromises.readFile);
+  const writeFileMock = vi.mocked(fsPromises.writeFile);
+
+  function findWriteCall(fileName: string) {
+    const call = writeFileMock.mock.calls.find(([file]) => String(file).endsWith(fileName));
+    expect(call).toBeDefined();
+    if (!call) throw new Error(`writeFile call not found: ${fileName}`);
+    return call;
+  }
 
   beforeEach(() => {
     vi.resetAllMocks();
-    stdoutWrite = vi.spyOn(process.stdout, "write").mockImplementation(() => true);
-    (fs.existsSync as any).mockImplementation((p: string) => {
-      if (p.includes(".devcontainer")) return false; // not exists in repo
-      if (p.includes("templates")) return true; // template exists
+    stdoutWrite.mockImplementation(() => true);
+    existsSyncMock.mockImplementation((p) => {
+      const file = String(p);
+      if (file.includes(".devcontainer")) return false; // not exists in repo
+      if (file.includes("templates")) return true; // template exists
       return false;
     });
 
-    (fsPromises.readFile as any).mockImplementation((p: string) => {
-      if (p.endsWith("devcontainer.json")) {
+    readFileMock.mockImplementation(async (p) => {
+      const file = String(p);
+      if (file.endsWith("devcontainer.json")) {
         return Promise.resolve(
           JSON.stringify({
             features: {},
@@ -32,7 +43,7 @@ describe("runDevcontainerScaffold", () => {
           }),
         );
       }
-      if (p.endsWith("post-create.sh")) {
+      if (file.endsWith("post-create.sh")) {
         return Promise.resolve("npm install");
       }
       return Promise.resolve("");
@@ -40,7 +51,7 @@ describe("runDevcontainerScaffold", () => {
   });
 
   it("should not overwrite existing .devcontainer by default", async () => {
-    (fs.existsSync as any).mockReturnValue(true); // .devcontainer exists
+    existsSyncMock.mockReturnValue(true); // .devcontainer exists
 
     await runDevcontainerScaffold({
       packageRoot,
@@ -54,11 +65,11 @@ describe("runDevcontainerScaffold", () => {
     });
 
     expect(stdoutWrite).toHaveBeenCalledWith(expect.stringContaining("Skipped (already exists)"));
-    expect(fsPromises.writeFile).not.toHaveBeenCalled();
+    expect(writeFileMock).not.toHaveBeenCalled();
   });
 
   it("should overwrite existing .devcontainer if force is true", async () => {
-    (fs.existsSync as any).mockReturnValue(true); // .devcontainer exists
+    existsSyncMock.mockReturnValue(true); // .devcontainer exists
 
     await runDevcontainerScaffold({
       packageRoot,
@@ -71,7 +82,7 @@ describe("runDevcontainerScaffold", () => {
       dryRun: false,
     });
 
-    expect(fsPromises.writeFile).toHaveBeenCalledTimes(2);
+    expect(writeFileMock).toHaveBeenCalledTimes(2);
   });
 
   it("should generate json and sh for basic setup", async () => {
@@ -86,12 +97,9 @@ describe("runDevcontainerScaffold", () => {
       dryRun: false,
     });
 
-    expect(fsPromises.writeFile).toHaveBeenCalledTimes(2);
-    const jsonCall = (fsPromises.writeFile as any).mock.calls.find((c: any[]) =>
-      c[0].endsWith("devcontainer.json"),
-    );
-    expect(jsonCall).toBeTruthy();
-    const json = JSON.parse(jsonCall[1]);
+    expect(writeFileMock).toHaveBeenCalledTimes(2);
+    const jsonCall = findWriteCall("devcontainer.json");
+    const json = JSON.parse(String(jsonCall[1]));
     expect(json.features).not.toHaveProperty(
       "ghcr.io/rocker-org/devcontainer-features/apt-packages:1",
     );
@@ -109,10 +117,8 @@ describe("runDevcontainerScaffold", () => {
       dryRun: false,
     });
 
-    const jsonCall = (fsPromises.writeFile as any).mock.calls.find((c: any[]) =>
-      c[0].endsWith("devcontainer.json"),
-    );
-    const json = JSON.parse(jsonCall[1]);
+    const jsonCall = findWriteCall("devcontainer.json");
+    const json = JSON.parse(String(jsonCall[1]));
     expect(
       json.features["ghcr.io/rocker-org/devcontainer-features/apt-packages:1"].packages,
     ).toContain("tmux");
@@ -134,10 +140,8 @@ describe("runDevcontainerScaffold", () => {
       dryRun: false,
     });
 
-    const jsonCall = (fsPromises.writeFile as any).mock.calls.find((c: any[]) =>
-      c[0].endsWith("devcontainer.json"),
-    );
-    const json = JSON.parse(jsonCall[1]);
+    const jsonCall = findWriteCall("devcontainer.json");
+    const json = JSON.parse(String(jsonCall[1]));
     expect(json.containerEnv["OLLAMA_BASE_URL"]).toBe("http://host.docker.internal:11434");
   });
 
@@ -153,16 +157,12 @@ describe("runDevcontainerScaffold", () => {
       dryRun: false,
     });
 
-    const jsonCall = (fsPromises.writeFile as any).mock.calls.find((c: any[]) =>
-      c[0].endsWith("devcontainer.json"),
-    );
-    const json = JSON.parse(jsonCall[1]);
+    const jsonCall = findWriteCall("devcontainer.json");
+    const json = JSON.parse(String(jsonCall[1]));
     expect(json.mounts).toContain("source=specdojo-claude,target=/home/node/.claude,type=volume");
     expect(json.mounts).toContain("source=specdojo-codex,target=/home/node/.codex,type=volume");
 
-    const shCall = (fsPromises.writeFile as any).mock.calls.find((c: any[]) =>
-      c[0].endsWith("post-create.sh"),
-    );
+    const shCall = findWriteCall("post-create.sh");
     expect(shCall[1]).toContain("curl -fsSL https://claude.ai/install.sh");
     expect(shCall[1]).toContain("curl -fsSL https://chatgpt.com/codex/install.sh");
   });

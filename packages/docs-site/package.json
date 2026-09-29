@@ -1,6 +1,6 @@
 {
   "name": "@specdojo/docs-site",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "VitePress documentation site and Mermaid renderer for SpecDojo projects.",
   "license": "MIT",
   "author": "naoji3x",

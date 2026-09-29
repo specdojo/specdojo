@@ -38,6 +38,10 @@ SpecDojo は、仕様駆動開発のためのドキュメントフレームワ�
 
 ## 使い始める
 
+現在の変更点は [CHANGELOG](CHANGELOG.md) にまとめています。v0.2.1 から更新する場合は、
+レビュー観点、rubric、review テンプレートに互換性のない変更があるため、
+[v0.3.0 移行ガイド](docs/ja/specdojo/guides/release-v0-3-0-migration-guide.md)を先に確認してください。
+
 ### npm で導入する
 
 既定では、SpecDojo の記録をプロダクトの Git 履歴に混ぜないため、次の **別リポジトリ構成**で始めます。

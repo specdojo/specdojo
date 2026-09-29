@@ -1,4 +1,4 @@
-import { Command } from "commander";
+import type { Command } from "commander";
 import { runDevcontainerScaffold } from "./devcontainer-scaffold.js";
 import { specdojoPackageRootDir } from "./package-paths.js";
 import { specdojoRootDir } from "./specdojo-config.js";
