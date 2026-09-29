@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-y06y-glossary-schema
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-09-28T23:12:34Z"
+  completed_at: "2026-09-29T13:28:07Z"
+  conclusion: gl.schema.yaml を作成し、gl-sample.yaml と gl-common.yaml を schema で検証する形に改めた。用語 ID の参照の検証は別項目へ切り出した
 ---
 
 # PJR-Y06Y 用語集（gl-\*.yaml）の schema を作成する

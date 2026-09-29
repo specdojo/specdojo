@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-avsr-grade-reporter-level-severity-mismatch
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-09-29T12:29:07Z"
+  completed_at: "2026-09-29T13:28:08Z"
+  conclusion: grade の reporter の plan に severity ごとの level の上限を明示し、apply の検証で失敗したときに 1 回だけ出し直させるようにした
 ---
 
 # PJR-AVSR grade の reporter が finding の severity と level の矛盾で形式の検査に落ちる

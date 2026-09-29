@@ -58,3 +58,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_78368b7cc4c348f591e9c3f62443873b
+- v: 1
+  id: reg_5d74283b4ed2424eb4ccdc617ff38f1e
+  ts: "2026-09-29T13:28:08Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: agy-expert-executor の実行結果を orchestrator が評価し完了条件を満たすと判断
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-29"
+    - field: conclusion
+      from: "-"
+      to: grade の reporter の plan に severity ごとの level の上限を明示し、apply の検証で失敗したときに 1 回だけ出し直させるようにした
+  previous_event_id: reg_cd40da483a68405d9c7c5ac59ac7f1dc
