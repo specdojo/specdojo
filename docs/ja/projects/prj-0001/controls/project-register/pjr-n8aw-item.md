@@ -7,11 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-09-28T22:44:28Z"
   due_on: "2026-10-31"
+  completed_at: "2026-09-29T13:49:11Z"
+  conclusion: 起票の前に会話から項目を読み取り足りないものだけ質問し、担当と期限は推測で埋めない。起票後は _TODO_ の案を会話の事実から作り、承認後に書き込む手順を定義へ加えた
 ---
 
 # PJR-N8AW オーケストレーターの起票時対話サポート機能の追加

@@ -58,3 +58,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_a4eb1c09fa014fc1a0895f811876aaf2
+- v: 1
+  id: reg_4af1045eac4343a1a7d5db89edd21465
+  ts: "2026-09-29T13:49:11Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: agy-expert-executor は保護対象の定義ファイルを変更できないため、利用者が承認した文面を orchestrator が SSOT へ反映して同期した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-29"
+    - field: conclusion
+      from: "-"
+      to: 起票の前に会話から項目を読み取り足りないものだけ質問し、担当と期限は推測で埋めない。起票後は _TODO_ の案を会話の事実から作り、承認後に書き込む手順を定義へ加えた
+  previous_event_id: reg_6b6e1adb16b648baa72f4dec5d7de82b
