@@ -87,3 +87,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_7e244749bd4245eabf50bb9d9aff5be8
+- v: 1
+  id: reg_1c36c524f0534542a658430bdf3d9500
+  ts: "2026-09-29T13:48:23Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: agy-expert-executor の変更は検査の省略と除外範囲の拡大で安全性を下げていたため、利用者の承認を受け orchestrator が修正した（単体 1,730 件・統合 123 件通過）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-29"
+    - field: conclusion
+      from: "-"
+      to: git check-ignore が判定不能なときに除外する生成物を .specdojo/doc-index.json に限り、36CN の誤検知を解消した。利用上限で止まった実行も保護の検査を行い、止まった理由の先頭に利用上限を記録する
+  previous_event_id: reg_a956d2c6e422402ab48d9876a9685c8e

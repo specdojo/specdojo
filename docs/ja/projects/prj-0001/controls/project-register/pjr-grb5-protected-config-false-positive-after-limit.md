@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-grb5-protected-config-false-positive-after-limit
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-09-29T12:29:09Z"
+  completed_at: "2026-09-29T13:48:23Z"
   block_reason: "integrate failed: git commit failed: error: unknown option '--reserve' / error: unknown option '--local' / error: unknown option '--strict-sync' / error: unknown option '--integration-branch' / error:…"
+  conclusion: git check-ignore が判定不能なときに除外する生成物を .specdojo/doc-index.json に限り、36CN の誤検知を解消した。利用上限で止まった実行も保護の検査を行い、止まった理由の先頭に利用上限を記録する
 ---
 
 # PJR-GRB5 利用上限で止まった直後に保護の検査が再生成可能な生成物を誤検知する
