@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   owner: DEV
   registered_at: "2026-09-29T12:29:05Z"
+  block_reason: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=.claude/agents/specdojo-orchestrator.md, .codex/agents/specdojo-or…"
 ---
 
 # PJR-NJRH オーケストレーター定義の記帳手順で register の --commit を使う
@@ -33,12 +34,16 @@ PJR-9XG4 で、`register add` / `close` / `reject` / `defer` / `update` / `reope
 
 | No  | 作業                                              | 担当 | 状態 | メモ                |
 | --- | ------------------------------------------------- | ---- | ---- | ------------------- |
-| 1   | SSOT の登録簿の手順を `--commit` を使う形に改める | DEV  | open | PJR-N8AW の後に着手 |
-| 2   | 各環境へ同期する                                  | DEV  | open | `orchestrator:sync` |
+| 1   | SSOT の登録簿の手順を `--commit` を使う形に改める | DEV  | done |                     |
+| 2   | 各環境へ同期する                                  | DEV  | done | `orchestrator:sync` |
 
 ## 4. 対応結果
 
--
+- `.agents/specdojo-orchestrator.agent.md` にて、`register add` および `register close` の呼び出し例を `--commit` を用いる形に修正した。
+- `register build` の個別の呼び出しを削除し、`--commit` によって一貫した排他制御・記帳・再構築・コミットが行われることを記載した。
+- `exec run` の実行中でも、既存個票の記帳を後回しにせず状態遷移可能であることを明記した。
+- `-m` オプションによるコミットメッセージの指定方針（subject、type、scope、Refs: の記載）を追記した。
+- `npm run orchestrator:sync` で各環境のラッパーへ変更を反映した。
 
 ## 5. 関連ドキュメント
 
