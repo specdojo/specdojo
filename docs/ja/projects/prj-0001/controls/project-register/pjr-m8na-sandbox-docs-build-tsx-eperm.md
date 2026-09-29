@@ -43,7 +43,8 @@ specdojo:
 
 ## 4. 対応結果
 
--
+- `package.json` 等のスクリプト変更は PJR-3S8Q の制約により agent の書き込み範囲外であるため、`docs:generate` 等での `tsx` を `node --import tsx` に変更する対応は、orchestrator への申し送りとした。
+- sandbox 環境で実行できる回避策として、`docs/ja/specdojo/exec-templates/xep-common-conventions-template.md`（plan の共通規約）を更新し、「sandbox 環境で `tsx` の IPC エラー（`EPERM`）が発生する場合は、代わりに `node --import tsx src/specdojo.ts <subcommand>` を使用して実行する」旨を追記した。これにより完了条件を満たした。
 
 ## 5. 関連ドキュメント
 
