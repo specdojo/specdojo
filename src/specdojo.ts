@@ -20,6 +20,7 @@ import { registerDashboardCommands } from "./dashboard.js";
 import { registerGradeCommand } from "./grade.js";
 import { registerAgentCommands } from "./agent.js";
 import { registerKataCommands } from "./kata-command.js";
+import { registerDevcontainerCommands } from "./devcontainer-command.js";
 
 /**
  * bin は dist/specdojo.js を指すため、開発チェックアウトで `npm run build` を忘れると
@@ -65,6 +66,7 @@ async function main(): Promise<void> {
   registerGradeCommand(program);
   registerAgentCommands(program);
   registerKataCommands(program);
+  registerDevcontainerCommands(program);
 
   await program.parseAsync(process.argv);
 }

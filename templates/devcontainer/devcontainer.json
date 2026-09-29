@@ -1,0 +1,22 @@
+{
+  "name": "specdojo-agent-env",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:22",
+  "remoteUser": "node",
+  "init": true,
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": false,
+      "upgradePackages": false
+    }
+  },
+  "mounts": ["source=specdojo-git,target=/home/node/.config/git,type=volume"],
+  "containerEnv": {
+    "GIT_CONFIG_GLOBAL": "/home/node/.config/git/config"
+  },
+  "postCreateCommand": "bash .devcontainer/post-create.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": []
+    }
+  }
+}

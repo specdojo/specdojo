@@ -89,6 +89,16 @@ npx specdojo config scaffold --provider claude
 
 配置されるファイルのモデル名は、手元で使えるモデルに合わせて編集してください。provider ごとの詳しい設定は [オーケストレーター運用ガイド](https://specdojo.github.io/specdojo/ja/specdojo/guides/orchestrator-operation-guide.html) を参照してください。
 
+#### Dev Container を使う場合（任意）
+
+利用環境として Dev Container を使う場合は、オーケストレーターの配置に加えて次のコマンドを実行すると、指定した provider の CLI が組み込まれた `.devcontainer/` を生成できます。
+
+```sh
+npx specdojo devcontainer scaffold --provider claude
+```
+
+生成後、VS Code などでコンテナを立ち上げると、分離された環境ですぐにオーケストレーターを起動できます。
+
 ### 会話で操作する
 
 起動したら、やりたいことをそのまま伝えます。オーケストレーターがコマンドへ翻訳し、実行前に内容を提示します。

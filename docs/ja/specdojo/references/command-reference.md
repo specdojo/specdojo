@@ -755,7 +755,36 @@ specdojo agent run --plan <plan.md> --by <nickname> --dry-run
 
 `exec run` と違い、`agent run` は claim や result の記帳を行いません。状態遷移を伴う実行は `exec run` を使い、`agent run` は plan と応答だけを扱う用途に限定します。
 
-## 15. 関連ガイド
+## 15. devcontainer
+
+`devcontainer` は、利用リポジトリの `.devcontainer/` 環境を構築するためのサブコマンドです。VS Code Dev Container などで、オーケストレーターを起動するための分離されたコンテナ環境を生成します。
+
+| コマンド                | 用途                                        |
+| ----------------------- | ------------------------------------------- |
+| `devcontainer scaffold` | `.devcontainer/` の設定ファイル群を生成する |
+
+`devcontainer scaffold` は、指定された provider の CLI と、要求された追加機能を組み込んだ `devcontainer.json` と `post-create.sh` を生成します。
+
+主要オプション:
+
+| オプション           | 用途                                                        |
+| -------------------- | ----------------------------------------------------------- |
+| `--provider <names>` | `claude,codex` のようにカンマ区切りで provider を指定する。 |
+| `--ollama`           | Ollama への接続設定（環境変数）を追加する。                 |
+| `--cron`             | cron をインストールし、起動時にサービスを開始する。         |
+| `--tmux`             | tmux をインストールする。                                   |
+| `--force`            | `.devcontainer/` が既に存在する場合に上書きする。           |
+| `--dry-run`          | 実際にファイルを作成せず、作成予定のファイルを表示する。    |
+
+```bash
+# claude と codex 用の CLI を含む Dev Container を生成する
+npx specdojo devcontainer scaffold --provider claude,codex
+
+# 追加オプションを指定する
+npx specdojo devcontainer scaffold --provider claude --ollama --tmux
+```
+
+## 16. 関連ガイド
 
 | 詳細                     | 参照先                                                                      |
 | ------------------------ | --------------------------------------------------------------------------- |
