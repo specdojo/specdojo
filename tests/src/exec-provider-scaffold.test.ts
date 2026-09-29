@@ -84,7 +84,13 @@ describe("specdojoPackageRootDir", () => {
       "utf8",
     );
 
-    expect(settings.permissions.allow).toContain("command(npm run)");
+    // グローバル設定は利用者のすべてのリポジトリに効くため、読み取りの git コマンドだけを許可する。
+    expect(settings.permissions.allow).toEqual([
+      "command(git status)",
+      "command(git diff)",
+      "command(git log)",
+      "command(git show)",
+    ]);
     expect(settings.permissions.deny).toEqual(
       expect.arrayContaining([
         "command(git push)",

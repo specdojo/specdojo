@@ -1,16 +1,6 @@
 {
   "permissions": {
-    "allow": [
-      "command(git status)",
-      "command(git diff)",
-      "command(git log)",
-      "command(git show)",
-      "command(npm run)",
-      "command(npm test)",
-      "command(npx prettier)",
-      "command(npx markdownlint)",
-      "command(npx tsx src/specdojo.ts)"
-    ],
+    "allow": ["command(git status)", "command(git diff)", "command(git log)", "command(git show)"],
     "deny": [
       "command(git add)",
       "command(git commit)",
