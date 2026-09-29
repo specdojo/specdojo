@@ -40,13 +40,17 @@ specdojo:
 
 | No  | 作業                                                   | 担当 | 状態 | メモ                      |
 | --- | ------------------------------------------------------ | ---- | ---- | ------------------------- |
-| 1   | 記帳コマンドに枠を取って commit するオプションを加える | DEV  | open | PJR-4HBG の枠を再利用する |
-| 2   | 統合テストを追加する                                   | DEV  | open | run と並行した記帳        |
-| 3   | ガイド・リファレンス・オーケストレーター定義へ記載する | DEV  | open | -                         |
+| 1   | 記帳コマンドに枠を取って commit するオプションを加える | DEV  | done | PJR-4HBG の枠を再利用した |
+| 2   | 統合テストを追加する                                   | DEV  | done | 同じ枠との競合待ちを確認  |
+| 3   | ガイド・リファレンス・オーケストレーター定義へ記載する | DEV  | done | ガイドとリファレンス      |
 
 ## 4. 対応結果
 
--
+- `register add` / `update` / `renumber` と全状態遷移コマンドへ `--commit` と `-m` / `--message` を追加した。`--commit` は project の execution path から `register lifecycle` 枠を解決し、枠内で記帳、個票・event の検証、派生ビュー再生成、pathspec 限定 commit を行う。
+- コマンド開始前の Git status を基準に、そのコマンドが新たに変更したファイルだけを commit する。対象個票・event・参照文書に既存の未 commit 変更がある場合は、混在を防ぐため書き込み前に停止する。pre-commit hook が対象を変更した場合は同じ commit へ収束させる。
+- 既定のcommit件名を `docs(register PJR-XXXX): <command> <title>` とし、`-m` / `--message` で上書きできるようにした。`--dry-run --commit` は表示だけを行う。
+- 統合テストで、開始前からある別ファイルの変更を残して個票とeventだけをcommitすること、および exec と同じ `register lifecycle` 枠が使用中の間は記帳・commitを開始せず、解放後に完了することを確認する。
+- [[specdojo:register-operation-guide|登録簿運用ガイド]] と [[specdojo:command-reference|SpecDojoコマンドリファレンス]] に利用方法と安全条件を記載した。オーケストレーター SSOT は executor の保護対象と同期先を含むため本実行では変更せず、CLIの利用手順を正本ドキュメントへ反映した。
 
 ## 5. 関連ドキュメント
 

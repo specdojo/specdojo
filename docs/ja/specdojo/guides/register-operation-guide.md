@@ -159,6 +159,18 @@ type は派生ビューの生成と `exec run --register` の挙動（`agent実�
 
 - 変更前に確認したい場合は `--dry-run` を付けると、個票 Frontmatter の変更予定と再生成されるビューを表示します。
 
+記帳と commit を一つの操作として完了させる場合は、`add` / `update` / `renumber` と各状態遷移コマンドに `--commit` を付けます。
+
+```bash
+specdojo register close \
+  --project <project-id> \
+  --id PJR-0005 \
+  --conclusion "取消処理で在庫数を戻すよう修正" \
+  --commit
+```
+
+`--commit` は `exec run --register --worktree` の記帳・統合と同じ `register lifecycle` 枠が空くまで待ち、枠の内側で記帳、`register build` 相当の検証・再生成、commit を順に行います。commit 対象はそのコマンドが新たに変更した個票・event・参照文書だけで、開始前からあるほかの未 commit 変更は残します。対象個票やevent自体に開始前の変更がある場合は、既存差分を混ぜないため書き込み前に停止します。既定の件名は `docs(register PJR-XXXX): <command> <title>` で、`-m <message>` または `--message <message>` で上書きできます。`--dry-run` と同時に指定した場合は表示だけを行い、枠の取得と commit は行いません。
+
 ### 2.2. 個票の作成
 
 すべての登録項目は、type 別のテンプレート（`pjr-todo-template.md` など `pjr-<type>-template.md`）から作る個票です。`register add` は個票の Frontmatter に構造化フィールドを書き込み、H1 と本文にタイトル・説明を置きます。
@@ -289,7 +301,7 @@ specdojo register history --project <project-id> --since 2026-08-01 --json
 2026-08-09T08:20:00Z  reg_cd2  PJR-0012  updated  status: review -> done; completed: - -> 2026-08-09  # close by PO: accepted
 ```
 
-- `register add`、状態遷移、`register update`、`register renumber` は、現在値を個票へ、event を項目別イベントファイルへ書き込みます。`--by` と `--reason` を指定すると actor と理由を明示できます。
+- `register add`、状態遷移、`register update`、`register renumber` は、現在値を個票へ、event を項目別イベントファイルへ書き込みます。`--by` と `--reason` を指定すると actor と理由を明示できます。記帳と再生成を `register lifecycle` 枠の内側で commit まで完了させる場合は `--commit` を付けます。
 - 一覧の列に現れない変更（対応結果本文の追記、個票 `status` の昇格など）は event になりません。個票の全差分が必要な場合は `git log -p` を使います。
 - `--status-only` は追加・削除・状態遷移だけを残し、変更内容も遷移に関わる項目（`status` / `type` / `completed` / `conclusion`）へ絞ります。
 - `renumber` による ID 付け替えは、`id` の変更を含む `updated` イベントとして現れます。
