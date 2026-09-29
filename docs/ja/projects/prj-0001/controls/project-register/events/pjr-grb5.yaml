@@ -61,3 +61,29 @@
       from: "-"
       to: "integrate failed: git commit failed: error: unknown option '--reserve' / error: unknown option '--local' / error: unknown option '--strict-sync' / error: unknown option '--integration-branch' / error:…"
   previous_event_id: reg_89ecec5f8b62410685c656a96d37b23a
+- v: 1
+  id: reg_7e244749bd4245eabf50bb9d9aff5be8
+  ts: "2026-09-29T13:28:28Z"
+  action: start
+  actor: gemma-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_2371e1b736464f09a8dcbb77301736a3
+- v: 1
+  id: reg_a956d2c6e422402ab48d9876a9685c8e
+  ts: "2026-09-29T13:29:26Z"
+  action: review
+  actor: gemma-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_7e244749bd4245eabf50bb9d9aff5be8
