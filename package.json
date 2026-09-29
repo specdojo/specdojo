@@ -85,7 +85,7 @@
     "lint:md:fix": "node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint --fix '**/*.md'",
     "format": "prettier --write '**/*.{ts,js,mjs,cjs,json,yaml,yml,md}'",
     "format:check": "prettier --check '**/*.{ts,js,mjs,cjs,json,yaml,yml,md}'",
-    "docs:generate": "tsx src/specdojo.ts build",
+    "docs:generate": "node --import tsx src/specdojo.ts build",
     "docs:dev": "npm run docs:generate && npm --prefix packages/docs-site run docs:dev",
     "docs:build:mermaid": "npm --prefix packages/docs-site run docs:build:mermaid",
     "docs:rebuild:mermaid": "rm -f public/mermaid/*.svg && npm run docs:build:mermaid",
