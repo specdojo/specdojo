@@ -61,3 +61,22 @@
       from: "-"
       to: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=package.json; agent must record the required change in the result …"
   previous_event_id: reg_22fa189c6aa84d2c9ad67149add913cd
+- v: 1
+  id: reg_80054ccb38074322b510d12620d577bc
+  ts: "2026-09-29T14:09:47Z"
+  action: close
+  actor: orchestrator
+  from_status: waiting
+  to_status: done
+  reason: codex-expert-executor の成果を orchestrator が適用し、実行後に入れた項目を CHANGELOG と移行ガイドへ追記した
+  changes:
+    - field: status
+      from: waiting
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-29"
+    - field: conclusion
+      from: "-"
+      to: CHANGELOG.md（package に同梱）と v0.3.0 の移行ガイドを作成し、README から辿れるようにした。specdojo を 0.3.0、@specdojo/docs-site を 0.2.0 に上げた。npm run check と docs:build（98 秒）の成功を確認。main への PR・merge・公開は人の作業
+  previous_event_id: reg_f2d8fbd10d7f4156a611bbfd20055718
