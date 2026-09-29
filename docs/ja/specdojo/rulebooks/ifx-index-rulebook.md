@@ -60,35 +60,3 @@ ESIL は「どの外部システムと」「何を」「どの方向で」「ど
 | timing         | 連携タイミング（例: 発注確定時、日次集計後）                                             | ○    |
 | error_handling | エラー処理・備考（簡潔に）                                                               | 任意 |
 | spec_ref       | 詳細仕様ID（`ifx-api-...` / `ifx-file-...` / `ifx-msg-...` / `ifx-cmd-...`）または `TBD` | 任意 |
-
-## 5. サンプル（YAML）
-
-```yaml
-id: ifx-main
-type: api
-title: 外部システムIF一覧(main)
-status: draft
-supersedes: []
-
-interfaces:
-  - name: 発注データ送信
-    source: 受発注管理（コンテナ）
-    target: 仕入先システム
-    direction: source_to_target
-    kind: ファイル
-    format: CSV
-    timing: 発注確定時
-    error_handling: 異常時は再送・管理者通知
-
-    spec_ref: ifx-file-orders
-
-  - name: 決済依頼/結果
-    source: 決済（コンテナ）
-    target: 決済サービス
-    direction: bidirectional
-    kind: API
-    format: JSON
-    timing: 決済時
-    error_handling: 失敗時はリトライ/保留
-    spec_ref: ifx-api-payment
-```

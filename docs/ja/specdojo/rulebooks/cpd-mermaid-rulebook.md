@@ -196,43 +196,7 @@ flowchart LR
 | 矢印ラベルなしの関係                                  | 合意が取れない                          |
 | 依存の網羅を目的とした大量の矢印（スパゲッティ化）    | 読めない/合意できない（図を分割すべき） |
 
-## 7. サンプル（最小）
-
-```mermaid
-flowchart LR
- %% Person
- 店員["👤店員"]
-
- %% External Systems
- 会計システム["会計システム"]
-
- %% Target Container Boundary
- subgraph 境界["対象コンテナ（例: API）"]
-  UI("UI<br>（画面ロジック）")
-  売上API("売上API<br>（販売ドメイン）")
-  在庫API("在庫API<br>（在庫ドメイン）")
-  販売DB[("販売DB")]
- end
-
- %% Relationships
- 店員 -->|"売上登録"| UI
- UI -->|"売上登録"| 売上API
- UI -->|"在庫照会"| 在庫API
- 売上API -->|"売上データ"| 販売DB
-
- 売上API -->|"会計仕訳連携"| 会計システム
-
- %% Styles
- classDef person fill:#fff3bf,stroke:#f08c00,color:#000;
- classDef system fill:#d0ebff,stroke:#1c7ed6,color:#000;
- classDef external fill:#e9ecef,stroke:#495057,color:#000;
- class 店員 person;
- class UI,売上API,在庫API,販売DB system;
- class 会計システム external;
- style 境界 fill:#ffffff,fill-opacity:0,stroke:#868e96,stroke-width:1px,stroke-dasharray: 5 5;
-```
-
-## 8. 凡例（推奨）
+## 7. 凡例（推奨）
 
 凡例は下記のように表現する（必要な場合のみ）。
 

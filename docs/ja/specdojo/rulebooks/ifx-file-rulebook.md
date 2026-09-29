@@ -66,17 +66,17 @@ ESIL 側の `spec_ref: ifx-file-...` は、このEFESのID（およびファイ�
 
 ## 4. 主要項目
 
-### 4.1 direction（連携方向）
+### 4.1. direction（連携方向）
 
 - `source_to_target` / `target_to_source`
 
 ※ ESIL の `direction` と同じ語彙で揃えます。
 
-### 4.2 format（ファイルフォーマット）
+### 4.2. format（ファイルフォーマット）
 
 - `CSV` / `TSV` / `JSON` / `XML`
 
-### 4.3 transport（受け渡し方法）
+### 4.3. transport（受け渡し方法）
 
 手段は実環境で変わりやすいため、仕様では以下を最低限にします。
 
@@ -94,7 +94,7 @@ EFES は「構造定義」を機械判読可能にするため、以下のいず
   - JSON: `schema.json_schema`（JSON Schema相当をYAMLで記述、または外部参照）
   - XML: `schema.xsd_ref`（XSDへの参照）
 
-### 5.1 schema.fields（共通フィールド定義）
+### 5.1. schema.fields（共通フィールド定義）
 
 - `schema.fields` は配列
 - 各フィールド要素は以下を持つ
@@ -116,7 +116,7 @@ EFES は「構造定義」を機械判読可能にするため、以下のいず
 - JSON: `mapping.json.pointer: "/data/order_id"`（JSON Pointer）
 - XML: `mapping.xml.xpath: "/Order/OrderId"`（XPath例）
 
-### 5.2 CSV/TSV 固有
+### 5.2. CSV/TSV 固有
 
 `schema.csv` を定義します。
 
@@ -126,7 +126,7 @@ EFES は「構造定義」を機械判読可能にするため、以下のいず
 - `encoding`: `UTF-8` 推奨
 - `line_ending`: `LF` 推奨（必要なら `CRLF`）
 
-### 5.3 JSON 固有
+### 5.3. JSON 固有
 
 `schema.json` を定義します。
 
@@ -134,7 +134,7 @@ EFES は「構造定義」を機械判読可能にするため、以下のいず
 - `content_type`: `application/json`
 - `json_schema`: 任意（厳密に縛る場合）
 
-### 5.4 XML 固有
+### 5.4. XML 固有
 
 `schema.xml` を定義します。
 
@@ -142,170 +142,3 @@ EFES は「構造定義」を機械判読可能にするため、以下のいず
 - `namespace`: 任意
 - `content_type`: `application/xml`
 - `xsd_ref`: 任意（厳密に縛る場合。ファイル名やURLを記載）
-
-## 6. サンプル（CSV）
-
-```yaml
-x-spec-meta:
-  id: ifx-file-orders
-  type: file
-  status: draft
-  based_on: []
-
-file:
-  name: orders.csv
-  naming_rule: orders_YYYYMMDD.csv
-  description: 発注データ（仕入先へ送付）
-
-source: 受発注管理（コンテナ）
-target: 仕入先システム
-
-direction: source_to_target
-format: CSV
-
-timing: 発注確定時
-
-transport:
-  method: SFTP
-  endpoint: supplier-sftp.example.com:/inbound/orders
-  frequency: 都度
-
-schema:
-  csv:
-    delimiter: ","
-    header: true
-    quote: '"'
-    encoding: UTF-8
-    line_ending: LF
-
-  fields:
-    - name: order_id
-      type: string
-      description: 発注ID
-      required: true
-      example: ORD-0001
-      mapping:
-        csv:
-          column: order_id
-
-    - name: ordered_at
-      type: datetime
-      description: 発注日時（RFC3339）
-      required: true
-      example: 2025-12-24T12:34:56Z
-      mapping:
-        csv:
-          column: ordered_at
-
-    - name: total_amount
-      type: integer
-      description: 合計金額
-      required: true
-      example: 1200
-      constraints:
-        min: 0
-      mapping:
-        csv:
-          column: total_amount
-```
-
-## 7. サンプル（JSON）
-
-```yaml
-x-spec-meta:
-  id: ifx-file-inventory-snapshot
-  type: file
-  status: draft
-  based_on: []
-
-file:
-  name: inventory.json
-  naming_rule: inventory_YYYYMMDD.json
-  description: 在庫スナップショット
-
-source: 在庫（コンテナ）
-target: 物流システム
-
-direction: source_to_target
-format: JSON
-
-timing: 日次集計後
-
-transport:
-  method: HTTPS
-  endpoint: https://logistics.example.com/upload
-  frequency: 日次 02:00
-
-schema:
-  json:
-    root_type: object
-    content_type: application/json
-
-  fields:
-    - name: snapshot_date
-      type: date
-      required: true
-      example: 2025-12-24
-      mapping:
-        json:
-          pointer: /snapshot_date
-
-    - name: items
-      type: string
-      description: 明細配列（厳密に縛る場合は json_schema を使用）
-      required: true
-      mapping:
-        json:
-          pointer: /items
-```
-
-## 8. サンプル（XML）
-
-```yaml
-x-spec-meta:
-  id: ifx-file-payment-result
-  type: file
-  status: draft
-  based_on: []
-
-file:
-  name: payment_result.xml
-  naming_rule: payment_result_YYYYMMDDHHmmss.xml
-  description: 決済結果（外部→当社）
-
-source: 決済サービス
-target: 決済（コンテナ）
-
-direction: target_to_source
-format: XML
-
-timing: 決済結果通知
-
-transport:
-  method: 共有ストレージ
-  endpoint: /shared/payment/result
-  frequency: 都度
-
-schema:
-  xml:
-    root_element: PaymentResult
-    namespace: TBD
-    content_type: application/xml
-    xsd_ref: TBD
-
-  fields:
-    - name: payment_id
-      type: string
-      required: true
-      mapping:
-        xml:
-          xpath: /PaymentResult/PaymentId
-
-    - name: status
-      type: enum
-      required: true
-      enum: [PENDING, PAID, FAILED]
-      mapping:
-        xml:
-          xpath: /PaymentResult/Status
-```
