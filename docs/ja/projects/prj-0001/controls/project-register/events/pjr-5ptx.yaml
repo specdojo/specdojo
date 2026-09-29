@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_74a49f71cf0346df8ab2e376c236a362
+  ts: "2026-09-29T11:48:49Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者が v0.3.0 のリリースに向けた準備を依頼したため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: v0.3.0 のリリースノートと移行ガイドを作成し版を 0.3.0 に上げる
+    - field: description
+      from: ""
+      to: v0.2.1 以降に、観点の evaluation の改名（WPWB）、continuous 廃止と rubric v2（K351）、review の判定語彙の統一（XTAN）、review テンプレートの改訂（N22N）など利用者に影響する破壊的変更が入った。変更点と、観点を overlay・kata を eject した利用者の移行手順をまとめ、package の版を 0.3.0 に上げる
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-29"
+    - field: due
+      from: ""
+      to: _TODO_
