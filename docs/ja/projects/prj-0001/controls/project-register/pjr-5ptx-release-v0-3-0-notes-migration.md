@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: high
   owner: DEV
   registered_at: "2026-09-29T11:48:49Z"
+  block_reason: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=package.json; agent must record the required change in the result …"
 ---
 
 # PJR-5PTX v0.3.0 のリリースノートと移行ガイドを作成し版を 0.3.0 に上げる
@@ -42,15 +43,33 @@ specdojo:
 
 | No  | 作業                                          | 担当 | 状態 | メモ                            |
 | --- | --------------------------------------------- | ---- | ---- | ------------------------------- |
-| 1   | v0.2.1 以降の変更を個票から洗い出し、分類する | PM   | open | 63 件                           |
-| 2   | `CHANGELOG.md` を作成する                     | PM   | open | package に同梱                  |
-| 3   | 移行ガイドを作成する                          | DEV  | open | 破壊的変更ごと                  |
-| 4   | 版を 0.3.0 に上げる                           | DEV  | open | `packages/*` は変更の有無で判断 |
-| 5   | PR・公開の手順を記録する                      | PM   | open | 人の作業                        |
+| 1   | v0.2.1 以降の変更を個票から洗い出し、分類する | PM   | done | 個票を正として分類              |
+| 2   | `CHANGELOG.md` を作成する                     | PM   | done | package に同梱                  |
+| 3   | 移行ガイドを作成する                          | DEV  | done | 破壊的変更ごと                  |
+| 4   | 版を 0.3.0 に上げる                           | DEV  | done | `packages/*` は変更の有無で判断 |
+| 5   | PR・公開の手順を記録する                      | PM   | done | 人の作業                        |
 
 ## 4. 対応結果
 
--
+- `v0.2.1` 以降の個票を正として、破壊的変更、追加機能、不具合修正を `CHANGELOG.md` の
+  0.3.0 節へ分類した。利用者の移行に直接関係する PJR-WPWB、PJR-K351、PJR-XTAN、PJR-N22N
+  は破壊的変更として明示し、主要な追加・修正には根拠となる PJR-ID を併記した。
+- [[specdojo:release-v0-3-0-migration-guide|v0.3.0 移行ガイド]]を作成した。
+  `evaluation` の再分類、`continuous` の削除、rubric v2、review verdict の 6 値、コピー済み
+  review テンプレートと既存 plan、`--rubric-outdated` による再評価の手順を記載した。
+- README の「使い始める」から `CHANGELOG.md` と移行ガイドへ辿れるようにした。
+- root の `package.json` と `package-lock.json` を `0.3.0` へ更新し、`CHANGELOG.md` を npm package
+  の同梱対象へ追加した。`v0.2.1` と同じく manifest と lockfile の版をそろえている。
+- `packages/*` は `v0.2.1` からの差分を確認した。機能変更がある
+  `@specdojo/docs-site` は `0.1.0` から `0.2.0` へ更新した。差分のない
+  `@specdojo/docs-lint` と `vscode-specdojo` は `0.1.0` のまま据え置いた。
+- リリース前の `npm run lint:ts` で検出した PJR-2H5F の lint 不備を修正した。
+  `devcontainer-command.ts` の型専用 import と、`devcontainer-scaffold.test.ts` の mock 型を
+  明示し、未使用 import と `any` を除いた。動作やテスト条件は変更していない。
+- main への Pull Request 作成・merge、npm staged release の tarball 確認と 2FA 承認、
+  `v0.3.0` tag と GitHub Release の作成は maintainer が行う。具体的なコマンドと順序は移行
+  ガイドの「リリース作業の境界」に記載した。本作業では PR、merge、npm 公開、tag 作成を
+  実行していない。
 
 ## 5. 関連ドキュメント
 
