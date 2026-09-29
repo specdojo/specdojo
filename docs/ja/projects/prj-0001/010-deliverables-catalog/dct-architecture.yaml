@@ -217,6 +217,26 @@ groups:
         note: 本カタログ整備前に作成済みの既存文書を retrofit で登録する
         done_criteria: *tsd-done-criteria
 
+      - local_id: tsd-omlx
+        name: 技術スタック定義（oMLX）
+        kind: work
+        depends_on:
+          - ifd-specdojo
+        overview: Host Mac上で1つのモデルを複数のagentから並列に使うローカルLLM実行（oMLX）の詳細
+        path: tsd-omlx.md
+        rulebook: specdojo:tsd-rulebook
+        done_criteria: *tsd-done-criteria
+
+      - local_id: tsd-omlx-opencode
+        name: 技術スタック定義（oMLX × opencode）
+        kind: work
+        depends_on:
+          - tsd-omlx
+        overview: opencodeからoMLXを利用する構成の詳細
+        path: tsd-omlx-opencode.md
+        rulebook: specdojo:tsd-rulebook
+        done_criteria: *tsd-done-criteria
+
       - local_id: tsd-home-mac-dev-server
         name: 技術スタック定義（ホームMac開発サーバ・初期設定）
         kind: work
