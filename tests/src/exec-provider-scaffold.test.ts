@@ -1,12 +1,13 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { existsSync } from "node:fs";
-import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import {
   applyProviderScaffoldPlan,
   buildProviderScaffoldPlan,
   listProviderTemplates,
+  mergeProviderGlobalSettings,
   runProviderScaffold,
   specdojoPackageRootDir,
 } from "../../src/exec-provider-scaffold.js";
@@ -20,6 +21,24 @@ async function makeClaudeTemplateFixture(packageRoot: string): Promise<void> {
   await writeFile(path.join(templateDir, "settings.review.json"), '{"mode":"review"}\n', "utf8");
   await writeFile(path.join(templateDir, "settings.report.json"), '{"mode":"report"}\n', "utf8");
   await writeFile(path.join(templateDir, "README.md"), "# readme\n", "utf8");
+}
+
+const ANTIGRAVITY_GLOBAL_SETTINGS = {
+  permissions: {
+    allow: ["command(git status)", "command(npm run)"],
+    deny: ["command(git push)", "write_file(.specdojo/)"],
+  },
+};
+
+async function makeAntigravityTemplateFixture(packageRoot: string): Promise<void> {
+  const templateDir = path.join(packageRoot, "templates", "antigravity");
+  await mkdir(templateDir, { recursive: true });
+  await writeFile(path.join(templateDir, "orchestrator.md"), "# orchestrator\n", "utf8");
+  await writeFile(
+    path.join(templateDir, "settings.global.json"),
+    `${JSON.stringify(ANTIGRAVITY_GLOBAL_SETTINGS, null, 2)}\n`,
+    "utf8",
+  );
 }
 
 afterEach(() => {
@@ -50,6 +69,31 @@ describe("specdojoPackageRootDir", () => {
       "Bash(git add *)",
       "Bash(git commit *)",
     ]);
+  });
+
+  it("ships scoped Antigravity permissions without the all-permissions bypass", async () => {
+    const packageRoot = specdojoPackageRootDir();
+    const settings = JSON.parse(
+      await readFile(
+        path.join(packageRoot, "templates", "antigravity", "settings.global.json"),
+        "utf8",
+      ),
+    ) as { permissions: { allow: string[]; deny: string[] } };
+    const execDefaults = await readFile(
+      path.join(packageRoot, "templates", "antigravity", "exec-defaults-snippet.yaml"),
+      "utf8",
+    );
+
+    expect(settings.permissions.allow).toContain("command(npm run)");
+    expect(settings.permissions.deny).toEqual(
+      expect.arrayContaining([
+        "command(git push)",
+        "read_file(.env)",
+        "write_file(.specdojo/exec-defaults.yaml)",
+        "write_file(package.json)",
+      ]),
+    );
+    expect(execDefaults).not.toContain("--dangerously-skip-permissions");
   });
 });
 
@@ -108,6 +152,27 @@ describe("buildProviderScaffoldPlan", () => {
     }
   });
 
+  it("keeps the opt-in global settings template out of the repository plan", async () => {
+    const dir = await mkdtemp(path.join(tmpdir(), "specdojo-test-"));
+    try {
+      const packageRoot = path.join(dir, "pkg");
+      const repoRoot = path.join(dir, "repo");
+      await makeAntigravityTemplateFixture(packageRoot);
+
+      const plan = await buildProviderScaffoldPlan({
+        packageRoot,
+        repoRoot,
+        provider: "antigravity",
+      });
+
+      expect(plan.entries.map((entry) => entry.destinationRelPath)).toEqual([
+        ".specdojo/antigravity/orchestrator.md",
+      ]);
+    } finally {
+      await rm(dir, { recursive: true, force: true });
+    }
+  });
+
   it("rejects an unknown provider with the available provider list", async () => {
     const dir = await mkdtemp(path.join(tmpdir(), "specdojo-test-"));
     try {
@@ -117,6 +182,141 @@ describe("buildProviderScaffoldPlan", () => {
       await expect(
         buildProviderScaffoldPlan({ packageRoot, repoRoot: dir, provider: "codex" }),
       ).rejects.toThrow(/Unknown provider template: codex\. Available: claude/);
+    } finally {
+      await rm(dir, { recursive: true, force: true });
+    }
+  });
+});
+
+describe("mergeProviderGlobalSettings", () => {
+  it("preserves existing settings, appends missing permissions, and backs up the original", async () => {
+    const dir = await mkdtemp(path.join(tmpdir(), "specdojo-test-"));
+    try {
+      const packageRoot = path.join(dir, "pkg");
+      const homeDir = path.join(dir, "home");
+      const settingsDir = path.join(homeDir, ".gemini", "antigravity-cli");
+      const settingsPath = path.join(settingsDir, "settings.json");
+      const original = {
+        colorScheme: "dark",
+        permissions: {
+          allow: ["command(custom)"],
+          deny: ["command(git push)"],
+          customList: ["keep-me"],
+        },
+      };
+      const originalContent = `${JSON.stringify(original, null, 4)}\n`;
+      await makeAntigravityTemplateFixture(packageRoot);
+      await mkdir(settingsDir, { recursive: true });
+      await writeFile(settingsPath, originalContent, "utf8");
+      vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+
+      await mergeProviderGlobalSettings("antigravity", {
+        packageRoot,
+        homeDir,
+        dryRun: false,
+      });
+
+      const merged = JSON.parse(await readFile(settingsPath, "utf8"));
+      expect(merged).toEqual({
+        colorScheme: "dark",
+        permissions: {
+          allow: ["command(custom)", "command(git status)", "command(npm run)"],
+          deny: ["command(git push)", "write_file(.specdojo/)"],
+          customList: ["keep-me"],
+        },
+      });
+      const backups = (await readdir(settingsDir)).filter((name) =>
+        name.startsWith("settings.json.backup-"),
+      );
+      expect(backups).toHaveLength(1);
+      expect(await readFile(path.join(settingsDir, backups[0]!), "utf8")).toBe(originalContent);
+    } finally {
+      await rm(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("shows additions on dry-run without writing settings or a backup", async () => {
+    const dir = await mkdtemp(path.join(tmpdir(), "specdojo-test-"));
+    try {
+      const packageRoot = path.join(dir, "pkg");
+      const homeDir = path.join(dir, "home");
+      const settingsDir = path.join(homeDir, ".gemini", "antigravity-cli");
+      const settingsPath = path.join(settingsDir, "settings.json");
+      const original = '{"colorScheme":"terminal"}\n';
+      const output: string[] = [];
+      await makeAntigravityTemplateFixture(packageRoot);
+      await mkdir(settingsDir, { recursive: true });
+      await writeFile(settingsPath, original, "utf8");
+      vi.spyOn(process.stdout, "write").mockImplementation((chunk) => {
+        output.push(String(chunk));
+        return true;
+      });
+
+      await mergeProviderGlobalSettings("antigravity", {
+        packageRoot,
+        homeDir,
+        dryRun: true,
+      });
+
+      expect(await readFile(settingsPath, "utf8")).toBe(original);
+      expect((await readdir(settingsDir)).filter((name) => name.includes(".backup-"))).toEqual([]);
+      expect(output.join("")).toContain(
+        "[dry-run] global settings diff: ~/.gemini/antigravity-cli/settings.json",
+      );
+      expect(output.join("")).toContain('+ "command(git status)"');
+      expect(output.join("")).toContain('+ "write_file(.specdojo/)"');
+    } finally {
+      await rm(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("is idempotent and does not create another backup when nothing is added", async () => {
+    const dir = await mkdtemp(path.join(tmpdir(), "specdojo-test-"));
+    try {
+      const packageRoot = path.join(dir, "pkg");
+      const homeDir = path.join(dir, "home");
+      const settingsDir = path.join(homeDir, ".gemini", "antigravity-cli");
+      await makeAntigravityTemplateFixture(packageRoot);
+      vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+
+      await mergeProviderGlobalSettings("antigravity", {
+        packageRoot,
+        homeDir,
+        dryRun: false,
+      });
+      await mergeProviderGlobalSettings("antigravity", {
+        packageRoot,
+        homeDir,
+        dryRun: false,
+      });
+
+      expect((await readdir(settingsDir)).filter((name) => name.includes(".backup-"))).toEqual([]);
+    } finally {
+      await rm(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("rejects an invalid existing permission list without modifying it", async () => {
+    const dir = await mkdtemp(path.join(tmpdir(), "specdojo-test-"));
+    try {
+      const packageRoot = path.join(dir, "pkg");
+      const homeDir = path.join(dir, "home");
+      const settingsDir = path.join(homeDir, ".gemini", "antigravity-cli");
+      const settingsPath = path.join(settingsDir, "settings.json");
+      const original = '{"permissions":{"allow":"all"}}\n';
+      await makeAntigravityTemplateFixture(packageRoot);
+      await mkdir(settingsDir, { recursive: true });
+      await writeFile(settingsPath, original, "utf8");
+
+      await expect(
+        mergeProviderGlobalSettings("antigravity", {
+          packageRoot,
+          homeDir,
+          dryRun: false,
+        }),
+      ).rejects.toThrow(/permissions\.allow must be an array of strings/);
+      expect(await readFile(settingsPath, "utf8")).toBe(original);
+      expect((await readdir(settingsDir)).filter((name) => name.includes(".backup-"))).toEqual([]);
     } finally {
       await rm(dir, { recursive: true, force: true });
     }
@@ -177,6 +377,83 @@ describe("applyProviderScaffoldPlan", () => {
 });
 
 describe("runProviderScaffold", () => {
+  it("does not touch user-level settings unless global is explicitly enabled", async () => {
+    const dir = await mkdtemp(path.join(tmpdir(), "specdojo-test-"));
+    try {
+      const packageRoot = path.join(dir, "pkg");
+      const repoRoot = path.join(dir, "repo");
+      const homeDir = path.join(dir, "home");
+      await makeAntigravityTemplateFixture(packageRoot);
+      await mkdir(repoRoot, { recursive: true });
+      vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+
+      await runProviderScaffold("antigravity", {
+        packageRoot,
+        repoRoot,
+        homeDir,
+        force: false,
+        dryRun: false,
+      });
+
+      expect(existsSync(path.join(homeDir, ".gemini", "antigravity-cli", "settings.json"))).toBe(
+        false,
+      );
+    } finally {
+      await rm(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("merges provider permissions into the injected temporary home with global enabled", async () => {
+    const dir = await mkdtemp(path.join(tmpdir(), "specdojo-test-"));
+    try {
+      const packageRoot = path.join(dir, "pkg");
+      const repoRoot = path.join(dir, "repo");
+      const homeDir = path.join(dir, "home");
+      await makeAntigravityTemplateFixture(packageRoot);
+      await mkdir(repoRoot, { recursive: true });
+      vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+
+      await runProviderScaffold("antigravity", {
+        packageRoot,
+        repoRoot,
+        homeDir,
+        force: false,
+        dryRun: false,
+        global: true,
+      });
+
+      const settings = JSON.parse(
+        await readFile(path.join(homeDir, ".gemini", "antigravity-cli", "settings.json"), "utf8"),
+      );
+      expect(settings).toEqual(ANTIGRAVITY_GLOBAL_SETTINGS);
+    } finally {
+      await rm(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("rejects global mode for unsupported providers before writing repository files", async () => {
+    const dir = await mkdtemp(path.join(tmpdir(), "specdojo-test-"));
+    try {
+      const packageRoot = path.join(dir, "pkg");
+      const repoRoot = path.join(dir, "repo");
+      await makeClaudeTemplateFixture(packageRoot);
+
+      await expect(
+        runProviderScaffold("claude", {
+          packageRoot,
+          repoRoot,
+          homeDir: path.join(dir, "home"),
+          force: false,
+          dryRun: false,
+          global: true,
+        }),
+      ).rejects.toThrow(/does not define global settings/);
+      expect(existsSync(path.join(repoRoot, ".claude"))).toBe(false);
+    } finally {
+      await rm(dir, { recursive: true, force: true });
+    }
+  });
+
   it("adds npm scripts for the provider when package.json exists", async () => {
     const dir = await mkdtemp(path.join(tmpdir(), "specdojo-test-"));
     try {

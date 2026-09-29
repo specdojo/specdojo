@@ -79,8 +79,15 @@ agent を使う場合は、設定ファイルを確認した後で利用する p
 npx specdojo config scaffold --provider <name>
 ```
 
-`<name>` には `claude`、`codex`、`copilot`、`opencode` を指定します。従来の
+`<name>` には `antigravity`、`claude`、`codex`、`copilot`、`opencode` を指定します。従来の
 `specdojo exec scaffold --provider <name>` も互換入口として利用できます。
+
+Antigravity CLI を無人実行する場合は、先に dry-run でユーザー設定へ追加する permission rule を確認し、明示的に適用します。通常の scaffold はユーザーディレクトリへ触れません。
+
+```bash
+npx specdojo config scaffold --provider antigravity --global --dry-run
+npx specdojo config scaffold --provider antigravity --global
+```
 
 設定したプロジェクトを確認します。
 

@@ -1204,14 +1204,23 @@ export function registerExecCommands(program: Command): void {
     "Copy the provider's agent/settings templates (templates/<name>) into the repository",
   );
   scaffoldCmd.option("--dry-run", "Show planned files without writing", false);
+  scaffoldCmd.option(
+    "--global",
+    "Merge provider permissions into user-level settings (currently antigravity only)",
+    false,
+  );
   scaffoldCmd.action(async (opts) => {
     try {
+      if (opts.global && !opts.provider) {
+        throw new Error("--global requires --provider <name>");
+      }
       if (opts.provider) {
         await runProviderScaffold(String(opts.provider), {
           packageRoot: specdojoPackageRootDir(),
           repoRoot: specdojoRootDir(),
           force: !!opts.force,
           dryRun: !!opts.dryRun,
+          global: !!opts.global,
         });
         return;
       }

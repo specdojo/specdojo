@@ -51,7 +51,16 @@ provider 設定、登録簿作成の順に次のコマンドを案内します�
 場合も `.gitignore` の確認だけは行います。追記した行と飛ばした行を表示し、追記があった場合は管理済みの
 生成物を `git rm -r --cached` で外す手順を案内します。`config init --dry-run` は設定と `.gitignore` を
 書き込まず、予定の内容だけを表示します。`config scaffold` の `--provider` には
-`claude`、`codex`、`copilot`、`opencode` を指定でき、`--dry-run` と `--force` も利用できます。
+`antigravity`、`claude`、`codex`、`copilot`、`opencode` を指定でき、`--dry-run` と `--force` も利用できます。
+
+`antigravity` に限り `--global` を指定すると、`~/.gemini/antigravity-cli/settings.json` へ SpecDojo 用の permission rule を追記します。既存キー・既存 rule は保持し、実書き込み前に timestamp 付きバックアップを作ります。`--global` を省略した通常実行はユーザーディレクトリへ触れません。適用前は次の dry-run で追加 rule を確認してください。
+
+```bash
+specdojo config scaffold --provider antigravity --global --dry-run
+specdojo config scaffold --provider antigravity --global
+```
+
+`--force` はリポジトリ内の scaffold ファイルだけを上書きし、グローバル設定の既存項目は上書きしません。従来の `exec scaffold --provider antigravity` でも同じ `--global` / `--dry-run` の挙動を利用できます。
 
 `current_project` を設定しておくと、多くのコマンドで `--project` を省略できます。
 
