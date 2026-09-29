@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_72514f4f651d40838ff18fcc4878ddf0
+  ts: "2026-09-29T12:29:07Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: v0.3.0 に向けて利用者が解消を承認したため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: executor の sandbox で docs:build が tsx の IPC で EPERM になる
+    - field: description
+      from: ""
+      to: npm run docs:build は docs:generate で tsx src/specdojo.ts build を実行し、codex の sandbox では tsx が IPC ソケットを作れず EPERM で止まる。executor が docs:build で検証できず、orchestrator が後で代わりに実行している（F346、5PTX）
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-29"
+    - field: due
+      from: ""
+      to: _TODO_
