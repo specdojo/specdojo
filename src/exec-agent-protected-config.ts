@@ -101,8 +101,11 @@ function ignoredGeneratedPaths(
     input: `${generatedCandidates.join("\0")}\0`,
     encoding: "utf8",
   });
-  // 0: 1件以上が ignore 対象、1: 該当なし。それ以外は判定不能として除外しない。
-  if (result.error || (result.status !== 0 && result.status !== 1)) return new Set();
+  // 0: 1件以上が ignore 対象、1: 該当なし。それ以外は git が使えないなどの異常系。
+  // GENERATED_PATHS 等の既知の生成物に限定して判定しているため、判定不能時は安全側に倒してすべて除外する
+  // （誤検知による block を防ぐ）。
+  if (result.error || (result.status !== 0 && result.status !== 1))
+    return new Set(generatedCandidates);
   return new Set(
     (result.stdout ?? "")
       .split("\0")

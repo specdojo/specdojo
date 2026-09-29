@@ -45,3 +45,32 @@
       from: open
       to: in-progress
   previous_event_id: reg_af36883946364cf98fcb1a711ba51420
+- v: 1
+  id: reg_2371e1b736464f09a8dcbb77301736a3
+  ts: "2026-09-29T13:13:56Z"
+  action: wait
+  actor: agy-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: git commit failed: error: unknown option '--reserve' / error: unknown option '--local' / error: unknown option '--strict-sync' / error: unknown option '--integration-branch' / error:…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: git commit failed: error: unknown option '--reserve' / error: unknown option '--local' / error: unknown option '--strict-sync' / error: unknown option '--integration-branch' / error:…"
+  previous_event_id: reg_89ecec5f8b62410685c656a96d37b23a
+- v: 1
+  id: reg_7e244749bd4245eabf50bb9d9aff5be8
+  ts: "2026-09-29T13:28:28Z"
+  action: start
+  actor: gemma-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_2371e1b736464f09a8dcbb77301736a3

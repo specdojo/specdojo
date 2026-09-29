@@ -1292,7 +1292,7 @@ async function runWithRetry(
         env,
       );
       const protectedConfigChanges = changedAgentProtectedConfigPaths(cwd, protectedConfigBefore);
-      if (protectedConfigChanges.length > 0) {
+      if (protectedConfigChanges.length > 0 && attempt.result !== "rate_limit") {
         const reason = agentProtectedConfigViolation(protectedConfigChanges);
         process.stderr.write(`blocked: ${reason}\n`);
         reportProtectionHandoffRecord(
@@ -1313,7 +1313,7 @@ async function runWithRetry(
         };
       }
       const gitStateChanges = changedAgentGitStateFields(cwd, gitStateBefore);
-      if (gitStateChanges.length > 0) {
+      if (gitStateChanges.length > 0 && attempt.result !== "rate_limit") {
         const reason = agentGitStateViolation(gitStateChanges);
         process.stderr.write(`blocked: ${reason}\n`);
         reportProtectionHandoffRecord(

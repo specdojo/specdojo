@@ -11,6 +11,7 @@ specdojo:
   priority: medium
   owner: DEV
   registered_at: "2026-09-29T12:29:09Z"
+  block_reason: "integrate failed: git commit failed: error: unknown option '--reserve' / error: unknown option '--local' / error: unknown option '--strict-sync' / error: unknown option '--integration-branch' / error:…"
 ---
 
 # PJR-GRB5 利用上限で止まった直後に保護の検査が再生成可能な生成物を誤検知する
@@ -46,7 +47,12 @@ specdojo:
 
 ## 4. 対応結果
 
--
+- **原因**:
+  - `git check-ignore` が失敗した際に（セッション上限等による何らかの異常で git が使えない場合など）、従来は空の Set を返していたため、`GENERATED_PATHS` に指定された既知の生成物がすべて保護対象として残ってしまい、それが検知されて `blocked` となっていました。
+- **対応内容**:
+  - `src/exec-agent-protected-config.ts` の `ignoredGeneratedPaths` を修正し、`git check-ignore` が判定不能なエラー（0, 1 以外）で失敗した場合は、安全側に倒して `generatedCandidates` をすべて除外（保護対象外）するように変更しました。
+  - `src/exec-run.ts` の `executeAgent` 呼び出し後において、`attempt.result === "rate_limit"` の場合は保護構成の変更検知ブロックおよび git 状態変更検知ブロックをスキップするよう条件を追加しました。これにより、利用上限で止まった場合は、保護の検査の結果よりも利用上限（`rate_limit`）がブロック理由として優先して返されるようになります。
+  - `tests/src/exec-agent-protected-config.test.ts` において、リポジトリではないディレクトリ等で git コマンドが失敗した場合でも、既知の生成物パスが保護対象から除外されることを確認する単体テストに修正しました。
 
 ## 5. 関連ドキュメント
 

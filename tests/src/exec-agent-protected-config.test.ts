@@ -220,7 +220,7 @@ describe("agent protected configuration paths", () => {
     ]);
   });
 
-  it("protects every candidate when the directory is not a Git repository", () => {
+  it("excludes known generated paths even when git check-ignore fails (e.g. not a Git repository)", () => {
     const root = mkdtempSync(join(tmpdir(), "specdojo-protected-config-"));
     roots.push(root);
     write(join(root, ".specdojo", "doc-index.json"), '{"entries":[]}\n');
@@ -228,7 +228,7 @@ describe("agent protected configuration paths", () => {
     const before = captureAgentProtectedConfigSnapshot(root);
     write(join(root, ".specdojo", "doc-index.json"), '{"entries":[{"id":"a"}]}\n');
 
-    expect(changedAgentProtectedConfigPaths(root, before)).toEqual([".specdojo/doc-index.json"]);
+    expect(changedAgentProtectedConfigPaths(root, before)).toEqual([]);
   });
 
   it("records a git failure reason without copying the whole file", () => {
