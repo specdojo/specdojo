@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: deferred
   priority: medium
   owner: DEV
   registered_at: "2026-09-29T12:29:04Z"
   block_reason: "agent exited with non-zero code: runner 検証の `typecheck`（`npm run typecheck`、exit 2、`src/exec-run.ts(6268,36)` の TS2339: `RegisterResumeTarget` に `initialChanges` が存在しない）と `test-integration`（`npm run t…"
+  conclusion: v0.3.0 には入れず次の版で再開する。再開時は agy・claude の 2 回の失敗（RunOpts に replan がない、RegisterResumeTarget に evidence・initialChanges がない型エラーと統合テストの失敗、範囲外の Job 実行記録の変更）を完了条件に加えてから実行する
 ---
 
 # PJR-C915 exec run --resume で executor の成果を残したまま plan を作り直せるようにする

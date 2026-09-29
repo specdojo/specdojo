@@ -90,3 +90,19 @@
       from: "agent exited with non-zero code: Runner が実行した `typecheck`(`npm run typecheck`) が失敗しているため。`src/exec-run.ts` においてプロパティ `replan` が `RunOpts` に存在しない等の型エラーが発生しており、完了条件（静的検査の解消）を満たしていない。"
       to: "agent exited with non-zero code: runner 検証の `typecheck`（`npm run typecheck`、exit 2、`src/exec-run.ts(6268,36)` の TS2339: `RegisterResumeTarget` に `initialChanges` が存在しない）と `test-integration`（`npm run t…"
   previous_event_id: reg_5c8ec28fede545879b6821b505d540c8
+- v: 1
+  id: reg_3b76a236da654b59825121c6d88f34a2
+  ts: "2026-09-29T14:01:20Z"
+  action: defer
+  actor: PO
+  from_status: waiting
+  to_status: deferred
+  reason: 2 回の実行で完成せず、利用者の判断で v0.3.0 のリリース準備を優先した
+  changes:
+    - field: status
+      from: waiting
+      to: deferred
+    - field: conclusion
+      from: "-"
+      to: v0.3.0 には入れず次の版で再開する。再開時は agy・claude の 2 回の失敗（RunOpts に replan がない、RegisterResumeTarget に evidence・initialChanges がない型エラーと統合テストの失敗、範囲外の Job 実行記録の変更）を完了条件に加えてから実行する
+  previous_event_id: reg_0f63aa71da0c46b582ab18f3989ddf89
