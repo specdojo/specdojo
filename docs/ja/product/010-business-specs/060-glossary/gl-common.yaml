@@ -1,4 +1,4 @@
-# specdojo-schema: none reason=schema-not-defined
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/gl.schema.yaml
 id: gl-common
 title: 用語集（共通）
 locale: ja

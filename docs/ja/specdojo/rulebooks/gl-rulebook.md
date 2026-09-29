@@ -1,4 +1,5 @@
 ---
+schema: docs/specdojo/schemas/v1/gl.schema.yaml
 specdojo:
   id: specdojo:gl-rulebook
   type: rulebook
