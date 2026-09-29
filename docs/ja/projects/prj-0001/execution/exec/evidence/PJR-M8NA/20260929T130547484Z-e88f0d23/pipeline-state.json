@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-M8NA",
   "run_id": "20260929T130547484Z-e88f0d23",
-  "updated_at": "2026-09-29T13:15:57.637Z",
+  "updated_at": "2026-09-29T13:16:47.712Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-m8na-20260929T130251Z-b8e2-result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "agy-expert-executor",
       "attempts": 1,
       "started_at": "2026-09-29T13:15:57.637Z",
-      "completed_at": null,
+      "completed_at": "2026-09-29T13:16:47.712Z",
       "artifact_ref": null
     }
   },
