@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-m8na-sandbox-docs-build-tsx-eperm
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-09-29T12:29:06Z"
+  completed_at: "2026-09-29T13:53:57Z"
+  conclusion: docs:generate を node --import tsx src/specdojo.ts build に改め、tsx の CLI の IPC を使わないようにした。共通規約にも回避方法を追記した。開発環境の docs:build は成功（151 秒）。sandbox での成功は次に codex で docs:build を実行したときに確認する
 ---
 
 # PJR-M8NA executor の sandbox で docs:build が tsx の IPC で EPERM になる

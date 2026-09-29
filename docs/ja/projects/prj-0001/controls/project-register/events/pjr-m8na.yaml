@@ -58,3 +58,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_f4debb914a5d476fbed3780ca1cf4163
+- v: 1
+  id: reg_801fc5ee305c44b9a9dad7b0497d444d
+  ts: "2026-09-29T13:53:57Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: agy-expert-executor は package.json を変更できないため申し送りを orchestrator が適用し、docs:build の成功を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-29"
+    - field: conclusion
+      from: "-"
+      to: docs:generate を node --import tsx src/specdojo.ts build に改め、tsx の CLI の IPC を使わないようにした。共通規約にも回避方法を追記した。開発環境の docs:build は成功（151 秒）。sandbox での成功は次に codex で docs:build を実行したときに確認する
+  previous_event_id: reg_684b82730703475d95e9edf4154475ad
