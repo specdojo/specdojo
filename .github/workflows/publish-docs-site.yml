@@ -1,0 +1,99 @@
+name: Publish @specdojo/docs-site to npm
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "packages/docs-site/**"
+      - ".github/workflows/publish-docs-site.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: publish-docs-site
+  cancel-in-progress: false
+
+defaults:
+  run:
+    working-directory: packages/docs-site
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+          cache: npm
+          cache-dependency-path: packages/docs-site/package-lock.json
+
+      # staged publishing は npm CLI 11.15.0 以上を要求する。Node に同梱される npm が
+      # 条件を満たすとは限らないため、publish 前に明示的に更新する。
+      - name: Ensure npm supports staged publishing
+        run: npm install -g npm@^11.15.0
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Read package metadata
+        id: pkg
+        shell: bash
+        run: |
+          echo "name=$(node -p "require('./package.json').name")" >> "$GITHUB_OUTPUT"
+          echo "version=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - name: Check published version
+        id: version_check
+        shell: bash
+        run: |
+          set -euo pipefail
+          package_name='${{ steps.pkg.outputs.name }}'
+          package_version='${{ steps.pkg.outputs.version }}'
+          published_version="$(npm view "$package_name" version 2>/dev/null || true)"
+
+          echo "published=$published_version" >> "$GITHUB_OUTPUT"
+
+          if [ "$published_version" = "$package_version" ]; then
+            echo "should_publish=false" >> "$GITHUB_OUTPUT"
+            echo "$package_name@$package_version is already published. Skipping publish."
+          else
+            echo "should_publish=true" >> "$GITHUB_OUTPUT"
+            echo "Will publish $package_name@$package_version (current npm version: ${published_version:-<none>})."
+          fi
+
+      # このパッケージは VitePress の設定と bin をそのまま配布する。build 成果物が無いため
+      # publish-specdojo.yml のビルド段は置かず、設定の型チェックだけを行う。
+      - name: Typecheck VitePress config
+        if: steps.version_check.outputs.should_publish == 'true'
+        run: npm run typecheck
+
+      - name: Verify package contents
+        if: steps.version_check.outputs.should_publish == 'true'
+        run: npm pack --dry-run
+
+      # 直接 publish せず staged publishing を使う。CI は公開候補を登録するだけで、
+      # 実際の公開は maintainer が npm stage approve（2FA 必須）で承認したときに行う。
+      # agent が編集した成果物を、公開前に tarball として検査する機会を残すためである。
+      - name: Stage the release via Trusted Publishing
+        if: steps.version_check.outputs.should_publish == 'true'
+        run: npm stage publish --access public
+
+      - name: Show how to approve
+        if: steps.version_check.outputs.should_publish == 'true'
+        run: |
+          package_name='${{ steps.pkg.outputs.name }}'
+          echo "Staged $package_name@${{ steps.pkg.outputs.version }}."
+          echo "This version is NOT published yet. Approve it with 2FA:"
+          echo "  npm stage list $package_name"
+          echo "  npm stage download <stage-id>   # inspect the tarball"
+          echo "  npm stage approve <stage-id>"
