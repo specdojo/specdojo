@@ -231,6 +231,17 @@ describe("agent protected configuration paths", () => {
     expect(changedAgentProtectedConfigPaths(root, before)).toEqual([]);
   });
 
+  it("keeps settings.local.json protected when git check-ignore fails", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-protected-config-"));
+    roots.push(root);
+    write(join(root, ".claude", "settings.local.json"), '{"permissions":{"allow":[]}}\n');
+
+    const before = captureAgentProtectedConfigSnapshot(root);
+    write(join(root, ".claude", "settings.local.json"), '{"permissions":{"allow":["Bash(*)"]}}\n');
+
+    expect(changedAgentProtectedConfigPaths(root, before)).toEqual([".claude/settings.local.json"]);
+  });
+
   it("records a git failure reason without copying the whole file", () => {
     const root = mkdtempSync(join(tmpdir(), "specdojo-protected-config-"));
     roots.push(root);

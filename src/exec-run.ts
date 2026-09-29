@@ -1240,6 +1240,10 @@ function reportProtectionHandoffRecord(recorded: boolean, resultPath?: string): 
 //
 // resultPath は保護機構が block したときの申し送り記録先（agent が動く cwd 側の result）。
 // 未指定でも block と終了コードの扱いは変わらない。
+function rateLimitPrefix(result: RunResult): string {
+  return result === "rate_limit" ? "rate limit reached; " : "";
+}
+
 async function runWithRetry(
   candidates: AgentRunCandidate[],
   prompt: string,
@@ -1292,8 +1296,10 @@ async function runWithRetry(
         env,
       );
       const protectedConfigChanges = changedAgentProtectedConfigPaths(cwd, protectedConfigBefore);
-      if (protectedConfigChanges.length > 0 && attempt.result !== "rate_limit") {
-        const reason = agentProtectedConfigViolation(protectedConfigChanges);
+      if (protectedConfigChanges.length > 0) {
+        // 利用上限で止まった場合も保護の検査は飛ばさない。止まった理由として利用上限を先に記録する。
+        const reason =
+          rateLimitPrefix(attempt.result) + agentProtectedConfigViolation(protectedConfigChanges);
         process.stderr.write(`blocked: ${reason}\n`);
         reportProtectionHandoffRecord(
           recordProtectedConfigBlock({
@@ -1313,8 +1319,9 @@ async function runWithRetry(
         };
       }
       const gitStateChanges = changedAgentGitStateFields(cwd, gitStateBefore);
-      if (gitStateChanges.length > 0 && attempt.result !== "rate_limit") {
-        const reason = agentGitStateViolation(gitStateChanges);
+      if (gitStateChanges.length > 0) {
+        // 利用上限で止まった場合も保護の検査は飛ばさない。止まった理由として利用上限を先に記録する。
+        const reason = rateLimitPrefix(attempt.result) + agentGitStateViolation(gitStateChanges);
         process.stderr.write(`blocked: ${reason}\n`);
         reportProtectionHandoffRecord(
           recordGitStateBlock({

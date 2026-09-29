@@ -67,6 +67,10 @@ const GENERATED_PATHS = new Set([
   ".claude/settings.local.json",
 ]);
 
+// git の ignore 判定が行えない場合でも除外してよい生成物。内容が設定として働かず、
+// 親 runner / hook / CI の実行内容や agent の権限を変えないものだけを列挙する。
+const SAFE_WHEN_IGNORE_UNKNOWN = new Set([".specdojo/doc-index.json"]);
+
 // provider が agent 実行時に作る作業ディレクトリ。配下のファイル数が多く個別に列挙できないため
 // prefix で判定する。GENERATED_PATHS と同じく、ignore 済みであることを併せて条件にする。
 const GENERATED_DIRECTORY_PREFIXES = [".opencode/node_modules/", ".claude/worktrees/"] as const;
@@ -102,10 +106,11 @@ function ignoredGeneratedPaths(
     encoding: "utf8",
   });
   // 0: 1件以上が ignore 対象、1: 該当なし。それ以外は git が使えないなどの異常系。
-  // GENERATED_PATHS 等の既知の生成物に限定して判定しているため、判定不能時は安全側に倒してすべて除外する
-  // （誤検知による block を防ぐ）。
+  // 判定不能時は、内容が設定として働かない生成物（SAFE_WHEN_IGNORE_UNKNOWN）だけを除外し、
+  // それ以外は保護対象に残す。`.claude/settings.local.json` のように権限規則を書ける
+  // ファイルを判定不能のまま除外すると、保護をすり抜けられるため。
   if (result.error || (result.status !== 0 && result.status !== 1))
-    return new Set(generatedCandidates);
+    return new Set(generatedCandidates.filter((path) => SAFE_WHEN_IGNORE_UNKNOWN.has(path)));
   return new Set(
     (result.stdout ?? "")
       .split("\0")
