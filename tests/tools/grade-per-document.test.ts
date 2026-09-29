@@ -149,6 +149,8 @@ if (args[0] === "grade" && args[1] === "apply") {
   writeFileSync(countPath, String(count));
   const failFrom = Number(process.env.FAKE_APPLY_FAIL_FROM ?? 0);
   if (failFrom > 0 && count >= failFrom) process.exit(1);
+  const failOnly = Number(process.env.FAKE_APPLY_FAIL_ONLY ?? 0);
+  if (failOnly > 0 && count === failOnly) process.exit(1);
   const score = count === 1 ? 80 : count === 2 ? 100 : 95;
   // apply は成果物を変更せず、grade result サイドカーだけを書く。
   const resultFile = process.env.FAKE_RESULT_FILE;
@@ -538,7 +540,7 @@ describe("grade per-document pipeline", () => {
     expect(retried.stdout).toContain("start_stage=3");
     expect(retried.stdout).toContain("stage=1 document=");
     expect(retried.stdout).toContain("status=resumed_completed");
-    expect(readFileSync(fixture.stateFile, "utf8")).toBe("4");
+    expect(readFileSync(fixture.stateFile, "utf8")).toBe("5");
     expect(existsSync(fixture.pipelineStateFile)).toBe(false);
   });
 
@@ -576,7 +578,7 @@ describe("grade per-document pipeline", () => {
         "utf8",
       ),
     ).toContain("\t3\tretry_exhausted\t");
-    expect(readFileSync(fixture.stateFile, "utf8")).toBe("5");
+    expect(readFileSync(fixture.stateFile, "utf8")).toBe("8");
   });
 
   it("does not reselect an exhausted ungraded document through the filter union", () => {
@@ -606,6 +608,17 @@ describe("grade per-document pipeline", () => {
     expect(reported.status, reported.stderr).toBe(0);
     expect(reported.stdout).toContain("documents=0 exhausted=1");
     expect(reported.stdout).toContain("selected=0 processed=0");
+    expect(readFileSync(fixture.stateFile, "utf8")).toBe("6");
+  });
+
+  it("retries reporter and apply once when apply fails", () => {
+    const fixture = makeFixture();
+
+    const result = runPipeline(fixture, { FAKE_APPLY_FAIL_ONLY: "1" });
+    expect(result.status, result.stderr).toBe(0);
+    // Stage 1: count 1 (fail) -> count 2 (success, score=100)
+    // Stage 2: count 3 (success, score=95)
+    // Stage 3: skipped because score < 96
     expect(readFileSync(fixture.stateFile, "utf8")).toBe("3");
   });
 

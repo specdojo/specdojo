@@ -897,7 +897,31 @@ execute_stage() {
     return 0
   fi
 
-  if run_specdojo "$log_file" "${apply_command[@]}"; then
+  local apply_temp_log="$document_dir/stage-$stage-apply.log"
+  local apply_status=0
+  printf 'run: %s\n' "${apply_command[*]}" >>"$log_file"
+  "${specdojo_command[@]}" "${apply_command[@]}" >"$apply_temp_log" 2>&1
+  apply_status=$?
+  cat "$apply_temp_log" >>"$log_file"
+
+  if [[ $apply_status -ne 0 ]]; then
+    printf '\nThe previous response failed validation:\n%s\nReturn a corrected JSON value.\n' "$(cat "$apply_temp_log")" >>"$reporter_input"
+    if run_specdojo "$log_file" agent run --project "$project" --plan "$reporter_input" --by "$reporter" --out "$reporter_output"; then
+      printf 'run (retry): %s\n' "${apply_command[*]}" >>"$log_file"
+      "${specdojo_command[@]}" "${apply_command[@]}" >"$apply_temp_log" 2>&1
+      apply_status=$?
+      cat "$apply_temp_log" >>"$log_file"
+    else
+      exit_code=$?
+      if [[ $exit_code -eq 75 ]]; then
+        record_result "$document" "$stage" rate_limited "$((SECONDS - started_at))" "" "" "" "$executor" "$reporter" "$reference"
+        return 75
+      fi
+      apply_status=1
+    fi
+  fi
+
+  if [[ $apply_status -eq 0 ]]; then
     :
   else
     record_pipeline_stage "$document" "$stage" failed
