@@ -5,7 +5,7 @@ import { isRecord } from "./exec-shared.js";
 
 export { specdojoPackageRootDir } from "./package-paths.js";
 
-const ORCHESTRATOR_NPM_SCRIPTS: Record<string, Record<string, string>> = {
+export const ORCHESTRATOR_NPM_SCRIPTS: Record<string, Record<string, string>> = {
   claude: {
     "orch:opus": "claude --agent specdojo-orchestrator --model opus",
     "orch:sonnet": "claude --agent specdojo-orchestrator --model sonnet",
