@@ -61,3 +61,32 @@
       from: "-"
       to: "agent exited with non-zero code: Runner が実行した `typecheck`(`npm run typecheck`) が失敗しているため。`src/exec-run.ts` においてプロパティ `replan` が `RunOpts` に存在しない等の型エラーが発生しており、完了条件（静的検査の解消）を満たしていない。"
   previous_event_id: reg_8183c8c16bbe4a8f97004a37897cb308
+- v: 1
+  id: reg_5c8ec28fede545879b6821b505d540c8
+  ts: "2026-09-29T13:31:46Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_d201444c2ba64a1a8f7bc54780697cf8
+- v: 1
+  id: reg_0f63aa71da0c46b582ab18f3989ddf89
+  ts: "2026-09-29T13:44:46Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: runner 検証の `typecheck`（`npm run typecheck`、exit 2、`src/exec-run.ts(6268,36)` の TS2339: `RegisterResumeTarget` に `initialChanges` が存在しない）と `test-integration`（`npm run t…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "agent exited with non-zero code: Runner が実行した `typecheck`(`npm run typecheck`) が失敗しているため。`src/exec-run.ts` においてプロパティ `replan` が `RunOpts` に存在しない等の型エラーが発生しており、完了条件（静的検査の解消）を満たしていない。"
+      to: "agent exited with non-zero code: runner 検証の `typecheck`（`npm run typecheck`、exit 2、`src/exec-run.ts(6268,36)` の TS2339: `RegisterResumeTarget` に `initialChanges` が存在しない）と `test-integration`（`npm run t…"
+  previous_event_id: reg_5c8ec28fede545879b6821b505d540c8
