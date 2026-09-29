@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-0fk2-config-scaffold-agent
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-09-28T22:27:34Z"
   due_on: "2026-10-31"
+  completed_at: "2026-09-29T11:48:05Z"
+  conclusion: config scaffold --provider antigravity --global で ~/.gemini/antigravity-cli/settings.json へ permission rule を差分表示・バックアップ付きでマージするようにした。グローバルの allow は読み取りの git コマンドだけに絞った
 ---
 
 # PJR-0FK2 config scaffoldに各Agentのパーミッション設定機能を追加
