@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-ay1r-fully-guided-sample-rulebook
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-09-26T02:50:40Z"
+  completed_at: "2026-09-29T03:29:46Z"
   block_reason: "agent exited with non-zero code: 既存 rulebook の `サンプル` 章の一括外出しが未完了。外出し済みは `bps-rulebook.md` と `stsd-rulebook.md` の 2 件のみ。grade 再実行（`vp-qe-kata-conformance` / `vp-arc-conciseness`）と `npm run check` も `n…"
+  conclusion: 第 1 段を完了した。fully-guided の plan が sample を参照できるようにし（recipe-guided は対象外）、bps・stsd のサンプル章を外出しした。試行の grade で finding の悪化はなかった。残りは PJR-GWYJ
 ---
 
 # PJR-AY1R fully-guided が sample を参照できるようにし rulebook のサンプル章を外出しする
@@ -114,34 +116,23 @@ fully-guided は「plan に列挙されていない他のプロジェクト文�
 
 ## 6. 対応結果
 
-### 6.1. fully-guided の参照範囲の変更（2026-09-29）
+第 1 段（2.5. の範囲の見直しのとおり）を完了した。claude-expert-executor の 2 回目の実行の成果を、orchestrator が worktree から develop へ適用した（c6f3d2cf）。reporter が範囲を絞る前の plan で判断して runner の統合が行われなかったためである。
 
-- `xep-fully-guided-template.md` の参照ファイルに `sample: _SAMPLE_REF_` を追加した。参照先は rulebook frontmatter の `sample` から解決される既存の `_SAMPLE_REF_` を使い、plan 生成コードは変更していない。
-- 進め方に sample の手順を追加した。sample は完成例の形式（章・表・記述の粒度）の確認に限って使い、業務内容・固有名詞・値を対象成果物へ転記しない。
-- 「磨き込みでは sample / template は読み込まない」を「template は読み込まない」に改めた。既存の対象成果物と sample の形式が異なる場合は、rulebook の許容範囲内である限り既存の対象成果物を優先する。
-- 参照してよい文書の列挙に sample を加えた。根拠のない具体化の禁止に、sample を対象成果物の具体的な記述の裏付けにしないことを追記した。
-- `rulebook-authoring-standard.md` の経過措置の記述を、参照範囲の変更後の状態へ合わせた。段階的に外出しする方針も同書へ反映した。
-- `tests/src/exec-plans.test.ts` に、fully-guided plan へ sample のパスが注入されること、rulebook 未宣言時は `_MISSING_` になることのテストを追加した。
+- `xep-fully-guided-template.md`: fully-guided の edit plan が sample を参照できるようにした。参照は形式の確認に限り、既存の成果物を優先する。`recipe-guided` は対象外とした。plan の増分は、sample のパス 1 行と手順 1 項目である。
+- 試行: bps-rulebook と stsd-rulebook の完成例のサンプル章を削除した。既存の sample とほぼ同じ内容のため、sample ファイルは変更していない。stsd-mermaid-rulebook の最小例は残した。
+- `rulebook-authoring-standard.md`: 経過措置の記述を段階移行に合わせた。
+- `tests/src/exec-plans.test.ts`: sample のパスを plan へ差し込むテストを 2 件追加した。
 
-### 6.2. plan の肥大化の確認
+試行の確認（orchestrator、評価者は claude-expert-executor、rubric v2 にそろえた）:
 
-sample はパスだけを plan に注入し、本文は agent が読み込む。plan の増分は参照ファイルの 1 行と進め方の 1 項目であり、sample の行数に比例して plan が大きくなることはない。
+| rulebook      | 外出し前       | 外出し後       | `vp-qe-kata-conformance` | `vp-arc-conciseness` |
+| ------------- | -------------- | -------------- | ------------------------ | -------------------- |
+| bps-rulebook  | 89 点・minor 6 | 89 点・minor 6 | 1 → 1                    | 1 → 1                |
+| stsd-rulebook | 91 点・minor 5 | 93 点・minor 3 | 2 → 1                    | 1 → 1                |
 
-### 6.3. 試行（3 件）
+finding は悪化せず、stsd-rulebook は改善した。適用後に、単体テスト 1,713 件・統合テスト 121 件・型チェック・schema 検証が通過した。
 
-| rulebook                | 判断         | 理由                                                                                               |
-| ----------------------- | ------------ | -------------------------------------------------------------------------------------------------- |
-| `bps-rulebook`          | 外出し       | 70 行の完成例を埋め込んでいた。`bps-sample` が同じ章構成の完成例を持つため、章を削除した           |
-| `stsd-rulebook`         | 外出し       | 完成例を埋め込んでいた。`stsd-sample` が同じ対象（商品のステータス定義）の完成例を持つため削除した |
-| `stsd-mermaid-rulebook` | 最小例を残す | 5 遷移の図だけの最小例であり、形式の輪郭を示す経過措置の範囲に収まるため                           |
-
-- 既存の sample ファイルは変更していない。
-- 外出し後の rulebook の本文に sample へのリンクや wikilink は追加していない。対応は Frontmatter の `sample` 宣言だけで示している。
-
-### 6.4. 未完了の事項
-
-- grade の再実行（`vp-qe-kata-conformance`・`vp-arc-conciseness`）は未実施である。試行の 2 件で finding が悪化しないことを確認してから、残りの `サンプル` 章の外出しへ広げる。
-- 外部 sample を持たない 2 件（`ifx-index-rulebook`・`tml-rulebook`。いずれも `sample: not-needed`）は、利用者判断のとおり参照先を空のままにする。外出しは残りの移行と併せて行う。
+残りの rulebook の外出しと、外部 sample を持たないものの扱いは PJR-GWYJ（第 2 段）で行う。
 
 ## 7. 関連ドキュメント
 

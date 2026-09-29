@@ -119,3 +119,22 @@
       from: "agent exited with non-zero code: executor 自身が完了条件は未達と報告している。残りの rulebook のサンプル章の外出し、grade の再実行、`npm run check` が未実施で、plan の完了条件を根拠をもって満たしたと言えない。runner 検証はすべて passed だが、成果物の作業は未完了である。"
       to: "agent exited with non-zero code: 既存 rulebook の `サンプル` 章の一括外出しが未完了。外出し済みは `bps-rulebook.md` と `stsd-rulebook.md` の 2 件のみ。grade 再実行（`vp-qe-kata-conformance` / `vp-arc-conciseness`）と `npm run check` も `n…"
   previous_event_id: reg_3a6a00edf8bb40e186a6628276fd723b
+- v: 1
+  id: reg_9b5a0c1fefcd44ebbfdbbc93b0577a9f
+  ts: "2026-09-29T03:29:46Z"
+  action: close
+  actor: orchestrator
+  from_status: waiting
+  to_status: done
+  reason: 利用者の判断で範囲を第 1 段に絞り、executor の成果を orchestrator が試行の grade で確認して develop へ適用した
+  changes:
+    - field: status
+      from: waiting
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-29"
+    - field: conclusion
+      from: "-"
+      to: 第 1 段を完了した。fully-guided の plan が sample を参照できるようにし（recipe-guided は対象外）、bps・stsd のサンプル章を外出しした。試行の grade で finding の悪化はなかった。残りは PJR-GWYJ
+  previous_event_id: reg_d427ab3257404c42afbd5630cc435df4

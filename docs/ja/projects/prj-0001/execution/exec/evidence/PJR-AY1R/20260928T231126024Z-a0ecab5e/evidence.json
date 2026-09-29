@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-AY1R",
+  "run_id": "20260928T231126024Z-a0ecab5e",
+  "stage": {
+    "role": "executor",
+    "actor": "claude-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-28T23:11:26.024Z",
+    "completed_at": "2026-09-28T23:16:42.153Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-ay1r-fully-guided-sample-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xep-fully-guided-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/bps-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/stsd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/rulebook-authoring-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-plans.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 6,
+    "summary": ".../pjr-ay1r-fully-guided-sample-rulebook.md       | 47 +++++++++++---\n .../exec-templates/xep-fully-guided-template.md    | 12 ++--\n docs/ja/specdojo/rulebooks/bps-rulebook.md         | 75 ----------------------\n docs/ja/specdojo/rulebooks/stsd-rulebook.md        | 61 ------------------\n .../standards/rulebook-authoring-standard.md       | 26 ++++----\n tests/src/exec-plans.test.ts                       | 13 ++++\n 6 files changed, 70 insertions(+), 164 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/exec-templates/xep-fully-guided-template.md docs/ja/specdojo/standards/rulebook-authoring-standard.md docs/ja/specdojo/rulebooks/bps-rulebook.md docs/ja/specdojo/rulebooks/stsd-rulebook.md docs/ja/projects/prj-0001/controls/project-register/pjr-ay1r-fully-guided-sample-rulebook.md tests/src/exec-plans.test.ts",
+      "status": "passed",
+      "summary": "整形完了（standard と個票を再整形）"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint (変更した Markdown 5 件)",
+      "status": "passed",
+      "summary": "エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint (変更した Markdown 5 件)",
+      "status": "passed",
+      "summary": "exit 0"
+    },
+    {
+      "source": "executor",
+      "command": "npm run -s lint:md",
+      "status": "passed",
+      "summary": "エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "exit 0、ERROR 0 件（既存の based_on 未検出 WARN のみ）"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "2176 entries を構築"
+    },
+    {
+      "source": "executor",
+      "command": "npm run -s validate:history-links",
+      "status": "passed",
+      "summary": "exit 0"
+    },
+    {
+      "source": "executor",
+      "command": "grade 再実行（vp-qe-kata-conformance / vp-arc-conciseness）",
+      "status": "not_run",
+      "summary": "executor の sandbox では実行できないため未実施"
+    },
+    {
+      "source": "executor",
+      "command": "npm run check",
+      "status": "not_run",
+      "summary": "未実行（個票の完了条件の一つ）"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-AY1R\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\n[dry-run] git merge --no-ff --no-edit exec/T-T-doc-010\ncommit-targets:\n  docs/shared.md\nUpdated: /tmp/specdojo-register-resume-e2e-NTZQ4B/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)\nUpdated: /tmp/specdojo-register-resume-e2e-NTZQ4B/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml\nGenerated: /tmp/specdojo-register-resume-e2e-NTZQ4B/docs/ja/projects/test/controls/project-register/generated/pjr-index.md\nGenerated: /tmp/specdojo-register-resume-e2e-NTZQ4B/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md\nGenerated: /tmp…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.2.1 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-AY1R/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-AY1R/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-tem…"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-AY1R\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-UdOjni/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-Jz7zGk/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-DveI2v/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-lVNbCA/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-W8WM0c/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-JXXxo8/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\nWrote agent stdout: /tmp/specdojo-agent-command-fajAld/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-Sb6UNr/outputs/partial.txt\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\n\n Test Files  114 passed (114)\n      Tes…"
+    }
+  ],
+  "final_message": "fully-guided の edit plan で sample を参照できるよう xep-fully-guided-template.md を変更し（形式の参照に限定、既存成果物を優先、recipe-guided は対象外）、rulebook-authoring-standard.md の経過措置の記述を段階移行に合わせた。試行として bps-rulebook / stsd-rulebook の完成例サンプル章を削除し（既存 sample とほぼ同内容。sample ファイルは未変更）、stsd-mermaid-rulebook の最小例は残した。plan の増分はパス 1 行と手順 1 項目のみ。tests/src/exec-plans.test.ts に sample パス注入のテストを 2 件追加し、個票の作業内容と対応結果を更新した。完了条件は未達で、grade の再実行・残りのサンプル章の外出し・npm run check が残る。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-AY1R/20260928T231126024Z-a0ecab5e/executor.log",
+      "bytes": 5699,
+      "truncated": false
+    }
+  ]
+}
