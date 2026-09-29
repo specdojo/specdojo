@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-a4py-docs-sync-9xg4-2h5f-0fk2
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-09-29T11:48:50Z"
+  completed_at: "2026-09-29T12:18:26Z"
+  conclusion: 9XG4・2H5F・0FK2 の 3 機能について README・ガイド 5 本・コマンドリファレンスを実装に合わせて更新した
 ---
 
 # PJR-A4PY 9XG4・2H5F・0FK2 の変更を利用者向けドキュメントへ反映する

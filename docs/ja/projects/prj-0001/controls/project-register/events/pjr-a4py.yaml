@@ -58,3 +58,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_f4762b89cd0041b2aecebfc0047cdf02
+- v: 1
+  id: reg_3840c7a62a964af490cdc2c1c5206f47
+  ts: "2026-09-29T12:18:26Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: codex-expert-executor の実行結果を orchestrator が評価し、変更が範囲内であることを確認
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-29"
+    - field: conclusion
+      from: "-"
+      to: 9XG4・2H5F・0FK2 の 3 機能について README・ガイド 5 本・コマンドリファレンスを実装に合わせて更新した
+  previous_event_id: reg_39f75fb481d64ab9825b45ccb2de1795
