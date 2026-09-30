@@ -200,7 +200,7 @@ function frontmatter(meta: ExecPlanMeta): string {
     `type: ${meta.type}`,
     `rulebook: ${meta.rulebook}`,
     `task_id: ${meta.task_id}`,
-    ...(meta.name ? [`name: ${meta.name}`] : []),
+    ...(meta.name ? [`name: ${JSON.stringify(meta.name)}`] : []),
     `mode: ${meta.mode}`,
     `status: ${meta.status}`,
     `project_id: ${meta.project_id}`,

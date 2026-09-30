@@ -61,3 +61,29 @@
       from: "-"
       to: "integrate failed: git commit failed: hint: to use in all of your new repositories, which will suppress this warning, / hint: to use in all of your new repositories, which will suppress this warning, /…"
   previous_event_id: reg_b0686029d307459fbc7dc541bc3aa7cd
+- v: 1
+  id: reg_9bce94c68d8d485eb69703d450f368b2
+  ts: "2026-09-30T03:28:00Z"
+  action: start
+  actor: gemma-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_7ffe619b861c4f4eafe009c6d710d945
+- v: 1
+  id: reg_e9d64a80671144c098ac820929184ed9
+  ts: "2026-09-30T03:28:54Z"
+  action: review
+  actor: gemma-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_9bce94c68d8d485eb69703d450f368b2

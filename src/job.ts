@@ -1000,7 +1000,7 @@ function jobPlanFrontmatter(
     "type: exec-plan",
     "rulebook: none",
     `task_id: ${record.run_id}`,
-    `name: "${definition.name.replaceAll('"', "'")}"`,
+    `name: ${JSON.stringify(definition.name)}`,
     // A command Run's plan is consumed only by the optional analysis reporter. Exec result
     // frontmatter intentionally keeps the existing edit/review vocabulary for compatibility.
     `mode: ${isJobCommandTask(record.task) ? "edit" : record.task.mode}`,
