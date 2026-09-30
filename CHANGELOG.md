@@ -6,6 +6,8 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 破壊的変更
 
+- SpecDojo 本体および同梱の docs-site、docs-lint の実行に Node 22.13 以上が必要になりました。
+  puppeteer 25 と mermaid-cli 12 への更新に伴う変更です（PJR-XMMA）。
 - レビュー観点の `evaluation` を、判定主体ではなく判定規準の所在を表す
   `deterministic` / `referential` / `discretionary` に変更しました。旧値の `agent` と
   `human` は読み込み時にエラーになります（PJR-WPWB）。
@@ -89,5 +91,9 @@ SpecDojo の利用者に影響する変更を記録します。
   `node --import tsx` で実行する形にして回避しました（PJR-M8NA）。
 - 個票のタイトルに Markdown のエスケープ（`\*` など）が含まれると、plan・result・job の
   frontmatter の `name` が不正な YAML になる問題を修正しました（PJR-C44H）。
+
+### 既知の問題
+
+- docs-site に high 1 件、moderate 1 件の脆弱性が残っています。mermaid 12 が依存する chevrotain 11 が `lodash-es` 4.17.23 を固定している問題と、vite 経由の `esbuild` に起因するものであり、いずれも上流の対応待ちです（PJR-XMMA）。
 
 [0.3.0]: https://github.com/specdojo/specdojo/compare/v0.2.1...v0.3.0
