@@ -91,6 +91,10 @@ SpecDojo の利用者に影響する変更を記録します。
   `node --import tsx` で実行する形にして回避しました（PJR-M8NA）。
 - 個票のタイトルに Markdown のエスケープ（`\*` など）が含まれると、plan・result・job の
   frontmatter の `name` が不正な YAML になる問題を修正しました（PJR-C44H）。
+- 文書サイトの mermaid の SVG キャッシュが、mermaid-cli の版と `mermaid-config.json` の変更を
+  判定に含めず、更新後も古い SVG を使い回す問題を修正しました（PJR-XMMA）。
+- 利用者の環境に入る依存の脆弱性に対応しました。`js-yaml` を 4.3.2 以上、`dotenv` を 18 に
+  上げ、docs-site を puppeteer 25 と mermaid-cli 12 に上げました（PJR-6TKA、PJR-XMMA）。
 
 ### 既知の問題
 
