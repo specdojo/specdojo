@@ -87,3 +87,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_d8ff2470c005402294f4f486c27f493c
+- v: 1
+  id: reg_7b9716f1984b4f3096024452747a893b
+  ts: "2026-09-30T11:38:47Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（agy-expert-executor / gemma-reporter）の結果を orchestrator が評価した。対象が gl-*.yaml に限られること、不正な参照と重複を exit 1 で検出することを確かめ、package.json への組み込みは申し送りに従い orchestrator が反映した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-30"
+    - field: conclusion
+      from: "-"
+      to: docs-lint に glossary-references を追加し、用語集の category・relatedTerms の参照先と用語 ID の重複を検証する。validate:schema に組み込んだ
+  previous_event_id: reg_b3ae62c335114632a3401b3cea701b9f
