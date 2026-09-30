@@ -38,7 +38,11 @@ specdojo:
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- 実施内容: `src/exec-parent-validation.ts` の `ParentValidationId` と固定の許可リストに `lint-ts`（`npm run lint:ts`）、`lint-fm`（`npm run lint:fm`）、`lint-md`（`npm run lint:md`）を追加した。既存の 4 つと同じく `shell: false` の固定 argv で実行する。
+- schema: `docs/specdojo/schemas/v1/exec-defaults.schema.yaml` の `parent_validations` の `enum` に 3 つの ID を追加した。
+- テスト: `tests/src/exec-parent-validation.test.ts` に、3 つの ID の解決と、未知 ID の拒否時に許可 ID 一覧へ 3 つが含まれることを確かめるテストを追加した。既存 ID の解決と未知・重複 ID の拒否のテストは変更していない。
+- docs: `exec-config-guide` と `command-reference` の親検証の説明に 3 つの ID を加えた。`templates/*/exec-defaults-snippet.yaml` には親検証の例がないため変更していない。`CHANGELOG.md` の v0.3.0「追加機能」に追記した。
+- 残課題: `.specdojo/exec-defaults.yaml` の `pipeline.parent_validations` へ `lint-ts`・`lint-fm`・`lint-md` を加える変更は、作業内容 No.2 として統合後に orchestrator が反映する。
 
 ## 5. 関連ドキュメント
 

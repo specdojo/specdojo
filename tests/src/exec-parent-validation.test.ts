@@ -80,6 +80,37 @@ describe("parent validation allowlist", () => {
     ]);
   });
 
+  it("resolves the lint IDs to fixed npm lint scripts", () => {
+    const definitions = resolveParentValidationDefinitions(["lint-ts", "lint-fm", "lint-md"]);
+
+    expect(definitions).toEqual([
+      expect.objectContaining({
+        id: "lint-ts",
+        command: expect.stringMatching(/^npm(?:\.cmd)?$/),
+        args: ["run", "lint:ts"],
+        displayCommand: "npm run lint:ts",
+      }),
+      expect.objectContaining({
+        id: "lint-fm",
+        command: expect.stringMatching(/^npm(?:\.cmd)?$/),
+        args: ["run", "lint:fm"],
+        displayCommand: "npm run lint:fm",
+      }),
+      expect.objectContaining({
+        id: "lint-md",
+        command: expect.stringMatching(/^npm(?:\.cmd)?$/),
+        args: ["run", "lint:md"],
+        displayCommand: "npm run lint:md",
+      }),
+    ]);
+  });
+
+  it("lists the lint IDs among the allowed IDs when rejecting an unknown ID", () => {
+    expect(() => resolveParentValidationDefinitions(["lint"])).toThrow(
+      /allowed: validate-schema, typecheck, test-unit, test-integration, lint-ts, lint-fm, lint-md/,
+    );
+  });
+
   it("rejects unknown and duplicate IDs before any process starts", () => {
     expect(() => resolveParentValidationDefinitions(["arbitrary-command"])).toThrow(
       /Unknown parent validation id/,

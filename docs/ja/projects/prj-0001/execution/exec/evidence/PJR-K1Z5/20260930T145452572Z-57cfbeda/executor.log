@@ -1,0 +1,23 @@
+親検証の許可リストに `lint-ts`・`lint-fm`・`lint-md` を追加しました。`npm run lint:ts`・`lint:fm`・`lint:md` は、すべて終了コード 0 で通っています。typecheck と単体テストは親 runner が後で実行するため、ここではまだ実行していません。
+
+**変更したファイル**
+- `src/exec-parent-validation.ts`：`ParentValidationId` と固定の許可リストに 3 つの ID を追加しました。それぞれ `npm run lint:ts` / `lint:fm` / `lint:md` に対応します。既存の 4 つと同じく、shell を介さない固定の引数で実行します。
+- `docs/specdojo/schemas/v1/exec-defaults.schema.yaml`：`parent_validations` の `enum` に 3 つの ID を追加しました。
+- `tests/src/exec-parent-validation.test.ts`：テストを 2 件追加しました。
+  - 3 つの ID が正しいコマンドに解決されること。
+  - 未知の ID を拒否したときのメッセージの許可 ID 一覧に、3 つが含まれること。
+  - 既存 ID の解決と、未知・重複 ID の拒否のテストはそのままです。
+- `exec-config-guide.md` と `command-reference.md`：親検証の説明に 3 つの ID を加えました。
+- `templates/*/exec-defaults-snippet.yaml`：親検証の例がないため変更していません。
+- `CHANGELOG.md`：v0.3.0 の「追加機能」に追記しました。
+- 個票 `pjr-k1z5-parent-validations-lint.md`：「対応結果」を記入しました。
+
+**対応が必要な残作業**
+- `.specdojo/exec-defaults.yaml` は完了条件どおり変更していません。統合後に orchestrator が `pipeline.parent_validations` へ 3 つの ID を加えれば有効になります（個票の作業内容 No.2）。
+
+**変えなかったもの**
+- `xep-common-conventions-template.md` の「ID とコマンドの対応」の記述は、完了条件の対象外なので変更していません。このため、生成される plan の説明には新しい 3 つの ID が載りません。
+
+<specdojo_executor_evidence>
+{"final_message":"親検証の固定許可リストと exec-defaults schema の enum に lint-ts / lint-fm / lint-md を追加した。単体テスト、exec-config-guide、command-reference、CHANGELOG、個票の対応結果を更新した。.specdojo/exec-defaults.yaml は変更しておらず、有効化は統合後に orchestrator が行う。","validations":[{"command":"npx prettier --write CHANGELOG.md docs/ja/specdojo/guides/exec-config-guide.md docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-k1z5-parent-validations-lint.md src/exec-parent-validation.ts tests/src/exec-parent-validation.test.ts docs/specdojo/schemas/v1/exec-defaults.schema.yaml","status":"passed","summary":"all files formatted (unchanged)"},{"command":"npx markdownlint CHANGELOG.md docs/ja/specdojo/guides/exec-config-guide.md docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-k1z5-parent-validations-lint.md","status":"passed","summary":"no errors"},{"command":"npm run -s lint:ts","status":"passed","summary":"exit 0, no ESLint errors"},{"command":"npm run -s lint:fm","status":"passed","summary":"exit 0"},{"command":"npm run -s lint:md","status":"passed","summary":"exit 0"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"OK with pre-existing based_on WARNs unrelated to this change"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"Built index: 2251 entries"}]}
+</specdojo_executor_evidence>
