@@ -74,3 +74,32 @@
       from: "-"
       to: "review で差し戻し: sample を持たない tml・ifx-index の例を失い、grade も未実行のため作業 4・5 と grade を追加して再実行する"
   previous_event_id: reg_3a09cbf9761248e2bc6524f83f3fe7a3
+- v: 1
+  id: reg_c0434cf0700b499bb7f4f1a112ad40bd
+  ts: "2026-09-30T03:32:06Z"
+  action: start
+  actor: agy-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_bf28efa59ce347399678f4fd2964c43b
+- v: 1
+  id: reg_1101238cf47d484b9ceb27e01dcab481
+  ts: "2026-09-30T04:03:04Z"
+  action: wait
+  actor: agy-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: agent exited 0 but result is incomplete or its frontmatter differs from the scaffold (treated as blocked)
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "review で差し戻し: sample を持たない tml・ifx-index の例を失い、grade も未実行のため作業 4・5 と grade を追加して再実行する"
+      to: agent exited 0 but result is incomplete or its frontmatter differs from the scaffold (treated as blocked)
+  previous_event_id: reg_c0434cf0700b499bb7f4f1a112ad40bd
