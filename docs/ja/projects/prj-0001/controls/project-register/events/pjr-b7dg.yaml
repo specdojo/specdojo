@@ -32,3 +32,32 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_43e32b28791b4bd6844d5f08de39a7ae
+  ts: "2026-09-30T15:15:40Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_665fae9847214f31adbf0e639dd29f6e
+- v: 1
+  id: reg_7f00b4d9d742490ba2c75e24c6636e6d
+  ts: "2026-09-30T15:26:01Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: 外出し後の `grade` による比較（finding の記録）が sandbox の承認待ちにより実行できず、プランの完了条件を満たせていないため。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: 外出し後の `grade` による比較（finding の記録）が sandbox の承認待ちにより実行できず、プランの完了条件を満たせていないため。"
+  previous_event_id: reg_43e32b28791b4bd6844d5f08de39a7ae
