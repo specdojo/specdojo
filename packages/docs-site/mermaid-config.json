@@ -1,4 +1,5 @@
 {
+  "layout": "dagre",
   "theme": "default",
   "fontFamily": "Noto Sans Mono CJK JP, Noto Sans CJK JP, Noto Sans JP, monospace, sans-serif",
   "themeVariables": {

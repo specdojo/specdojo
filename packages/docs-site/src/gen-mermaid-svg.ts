@@ -13,6 +13,13 @@ const DEFAULT_OUT_DIR = path.join(WORKSPACE_ROOT, "public", "mermaid");
 const PUPPETEER_CONFIG = path.join(PACKAGE_ROOT, "puppeteer-config.json");
 const MERMAID_CONFIG = path.join(PACKAGE_ROOT, "mermaid-config.json");
 const MERMAID_CLI = path.join(path.dirname(require.resolve("@mermaid-js/mermaid-cli")), "cli.js");
+const MERMAID_CLI_PKG_PATH = path.join(
+  path.dirname(require.resolve("@mermaid-js/mermaid-cli")),
+  "..",
+  "package.json",
+);
+const MERMAID_CLI_VERSION = JSON.parse(fs.readFileSync(MERMAID_CLI_PKG_PATH, "utf8")).version;
+const MERMAID_CONFIG_CONTENT = fs.readFileSync(MERMAID_CONFIG, "utf8");
 
 // ファイル単位の差分判定キャッシュ。outDir 配下に置き、生成済み SVG と一緒に gitignore される。
 const MANIFEST_FILE = ".manifest.json";
@@ -35,7 +42,11 @@ interface Manifest {
  * → 同じコードなら同じSVGを使い回せる
  */
 function hashCode(code: string): string {
-  return crypto.createHash("md5").update(code).digest("hex").slice(0, 8);
+  return crypto
+    .createHash("md5")
+    .update(`${MERMAID_CLI_VERSION}\n${MERMAID_CONFIG_CONTENT}\n${code}`)
+    .digest("hex")
+    .slice(0, 8);
 }
 
 function svgPathFor(outDir: string, id: string): string {
