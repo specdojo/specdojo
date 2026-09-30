@@ -1,0 +1,39 @@
+作業 6 を終え、`.manifest.json` による再利用に版と設定の判定を入れました。途中で、前回の作業 5 が原因で `npm run docs:build` が失敗していたことも分かり、あわせて直しています。修正後はビルドが通り、関連するテストも通っています。
+
+**作業 6（ファイル単位のキャッシュ）**
+- `.manifest.json` の各エントリに、描画に使った mermaid-cli の版（`mermaidCliVersion`）と `mermaid-config.json` の内容のハッシュ（`mermaidConfigHash`）を記録するようにしました。
+- 記録がない、または今の値と違うエントリは、Markdown の mtime と size が同じでも使い回さず、図を描き直します。
+- 版と設定はファイル全体ではなくエントリごとに記録しています。dev のホットリロードで 1 ファイルだけ更新したときに、他のファイルの判定がずれないようにするためです。
+
+**ビルド失敗の修正**
+- 作業 5 で SVG ファイル名の計算に版と設定を含めましたが、ページ側（`packages/docs-site/.vitepress/config.mts`）は図のコードだけで名前を計算していました。そのため `npm run docs:build` が「`/mermaid/ce1fe66a.svg` を解決できない」で失敗していました。
+- 名前を計算する関数を `mermaidSvgId` として公開し、生成側とページ側が同じ関数を使うようにしました。
+
+**テスト**
+- `tests/packages/docs-site/gen-mermaid-svg.test.ts` を、`any` と未使用の引数を使わない形に書き直しました。
+- 追加したケースは次のとおりです。
+  - 版と設定が同じなら使い回す。
+  - 前回の `.manifest.json` と SVG が残っていても、設定または版を変えると描き直し、古い SVG を消す。
+  - 版と設定の記録がない旧形式のエントリも描き直す。
+  - ページ側が参照する SVG 名が、生成された SVG 名と一致する。
+
+**個票**
+- 作業 6 の行を `done` にし、対応結果に上の内容を追記しました。`item_status` は変えていません。
+
+**確認できていないこと**
+- この worktree には前回の `public/mermaid` がなかったため、実際のビルドでは 174 枚すべてを mermaid-cli 12.0.0 で新しく描きました。「既存の SVG が描き直される」ことは、実ビルドではなく単体テストでだけ確かめています。
+- 作業 4（SVG 3 図以上を人が見て確認する）は残っています。
+
+**手順上の注意**
+- 対象のテストファイルだけを `npx vitest run --config vitest.unit.config.ts` で 1 回実行してしまいました（8 件すべて通過）。親の runner が実行する `test:unit` と一部重なりますが、正式な結果は runner 側の実行です。
+- `specdojo catalog validate` の WARN 2 件（`uis-index` と `bds-index` の `based_on` の検証先が見つからない）は、今回の変更と関係ありません。
+
+**変更したファイル**
+- `packages/docs-site/src/gen-mermaid-svg.ts`
+- `packages/docs-site/.vitepress/config.mts`
+- `tests/packages/docs-site/gen-mermaid-svg.test.ts`
+- `docs/ja/projects/prj-0001/controls/project-register/pjr-xmma-docs-site-puppeteer25-mermaid12.md`
+
+<specdojo_executor_evidence>
+{"final_message":"Task 6 done: each .manifest.json entry now records mermaidCliVersion and mermaidConfigHash, and a cached file is skipped only when both match the current values. Found and fixed a docs:build failure left by task 5: config.mts still named SVGs from the diagram code alone, so pages pointed at SVGs that did not exist. Both sides now use the exported mermaidSvgId. Rewrote the cache tests without any or unused arguments and added cases for redraw after config or version changes, for old-format entries, and for matching page and SVG names. Updated task 6 and the results section in the ticket; item_status was not changed. docs:build passes with chromium-headless-shell and rendered 174 SVGs with mermaid-cli 12.0.0. Redrawing of existing SVGs is covered only by unit tests because this worktree had no earlier public/mermaid. Task 4 (a person checking 3 or more diagrams) is still open.","validations":[{"command":"npx prettier --write packages/docs-site/src/gen-mermaid-svg.ts packages/docs-site/.vitepress/config.mts tests/packages/docs-site/gen-mermaid-svg.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-xmma-docs-site-puppeteer25-mermaid12.md","status":"passed","summary":"formatted"},{"command":"npm run -s lint:ts","status":"passed","summary":"no ESLint errors"},{"command":"npx vitest run --config vitest.unit.config.ts tests/packages/docs-site/gen-mermaid-svg.test.ts","status":"passed","summary":"8 tests passed; ran once by mistake, overlaps the runner's test-unit, runner results take precedence"},{"command":"npm run docs:build","status":"passed","summary":"first run failed: page referenced an SVG name that was not generated; fixed in config.mts, rerun passed and rendered 174 SVGs with mermaid-cli 12.0.0"},{"command":"npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-xmma-docs-site-puppeteer25-mermaid12.md","status":"passed","summary":"no errors"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"OK; 2 WARNs about missing based_on targets unrelated to this change"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"2249 entries"}]}
+</specdojo_executor_evidence>
