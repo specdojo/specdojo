@@ -145,3 +145,29 @@
       from: "agent exited with non-zero code: 親検証の `typecheck` (exit 2) および `test-unit` (exit 1) が失敗しています。具体的に `tests/scratch.test.ts` で TS2698 および TS2307 エラーが発生しており、完了基準である静的検査の解消を満たしていません。"
       to: "review で差し戻し: .manifest.json のファイル単位のスキップで SVG が描き直されず、テストが lint:ts に反するため作業 6 を追加して再実行する"
   previous_event_id: reg_1b2804e6af7648a8bf2b2ec1d5780fed
+- v: 1
+  id: reg_946df830fc264a61b48920e858b060cc
+  ts: "2026-09-30T13:39:13Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_580d3542c65e4ef5ae15e21b6c7bcbb4
+- v: 1
+  id: reg_a907e33a648448d7af757ed1b72d69fa
+  ts: "2026-09-30T13:55:29Z"
+  action: review
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_946df830fc264a61b48920e858b060cc

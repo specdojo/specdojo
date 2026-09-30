@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-XMMA",
+  "run_id": "20260930T134013648Z-b528b34b",
+  "stage": {
+    "role": "executor",
+    "actor": "claude-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-30T13:40:13.648Z",
+    "completed_at": "2026-09-30T13:47:42.198Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-xmma-docs-site-puppeteer25-mermaid12.md",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-site/.vitepress/config.mts",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-site/src/gen-mermaid-svg.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/packages/docs-site/gen-mermaid-svg.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 4,
+    "summary": ".../pjr-xmma-docs-site-puppeteer25-mermaid12.md    |  24 +-\n packages/docs-site/.vitepress/config.mts           |   8 +-\n packages/docs-site/src/gen-mermaid-svg.ts          |  46 ++-\n tests/packages/docs-site/gen-mermaid-svg.test.ts   | 317 +++++++++++++++------\n 4 files changed, 289 insertions(+), 106 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write packages/docs-site/src/gen-mermaid-svg.ts packages/docs-site/.vitepress/config.mts tests/packages/docs-site/gen-mermaid-svg.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-xmma-docs-site-puppeteer25-mermaid12.md",
+      "status": "passed",
+      "summary": "formatted"
+    },
+    {
+      "source": "executor",
+      "command": "npm run -s lint:ts",
+      "status": "passed",
+      "summary": "no ESLint errors"
+    },
+    {
+      "source": "executor",
+      "command": "npx vitest run --config vitest.unit.config.ts tests/packages/docs-site/gen-mermaid-svg.test.ts",
+      "status": "passed",
+      "summary": "8 tests passed; ran once by mistake, overlaps the runner's test-unit, runner results take precedence"
+    },
+    {
+      "source": "executor",
+      "command": "npm run docs:build",
+      "status": "passed",
+      "summary": "first run failed: page referenced an SVG name that was not generated; fixed in config.mts, rerun passed and rendered 174 SVGs with mermaid-cli 12.0.0"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-xmma-docs-site-puppeteer25-mermaid12.md",
+      "status": "passed",
+      "summary": "no errors"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "OK; 2 WARNs about missing based_on targets unrelated to this change"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "2249 entries"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-XMMA\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\n[dry-run] git merge --no-ff --no-edit exec/T-T-doc-010\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nUpdated: /tmp/specdojo-register-resume-e2e-lINkIb/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)\nUpdated: /tmp/specdojo-register-resume-e2e-lINkIb/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml\nGenerated: /tmp/specdojo-register-resume-e2e-lINkIb/docs/ja/projects/test/controls/project-register/generated/pjr-index.md\nGenerated: /tmp/specdojo-register-resume-e2e-lINkIb/docs/ja/projects/test/controls/project-register/generated/pj…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.3.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-implemented)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-XMMA/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-XMMA/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specd…"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-XMMA\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-6InsdI/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-0IZcWY/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-0KNkBz/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-ukU53Z/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-wAwUtK/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-vRWEWw/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\nWrote agent stdout: /tmp/specdojo-agent-command-eaXoMc/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-NiG8Dr/outputs/partial.txt\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\n\n Test Files  116 passed (116)\n      Te…"
+    }
+  ],
+  "final_message": "Task 6 done: each .manifest.json entry now records mermaidCliVersion and mermaidConfigHash, and a cached file is skipped only when both match the current values. Found and fixed a docs:build failure left by task 5: config.mts still named SVGs from the diagram code alone, so pages pointed at SVGs that did not exist. Both sides now use the exported mermaidSvgId. Rewrote the cache tests without any or unused arguments and added cases for redraw after config or version changes, for old-format entries, and for matching page and SVG names. Updated task 6 and the results section in the ticket; item_status was not changed. docs:build passes with chromium-headless-shell and rendered 174 SVGs with mermaid-cli 12.0.0. Redrawing of existing SVGs is covered only by unit tests because this worktree had no earlier public/mermaid. Task 4 (a person checking 3 or more diagrams) is still open.",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-XMMA/20260930T134013648Z-b528b34b/executor.log",
+      "bytes": 5589,
+      "truncated": false
+    }
+  ]
+}

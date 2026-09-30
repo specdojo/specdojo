@@ -1,6 +1,5 @@
 import { defineConfig } from "vitepress";
 import { generateSidebar } from "vitepress-sidebar";
-import * as crypto from "crypto";
 import {
   specdojoSidebarItems,
   PROJECTS_SEGMENT_TEXT,
@@ -16,6 +15,7 @@ import type { Plugin } from "vite";
 import {
   generateMermaidSvgs,
   generateMermaidSvgsForFile,
+  mermaidSvgId,
   shouldGenerateMermaidForFile,
 } from "../src/gen-mermaid-svg";
 import {
@@ -274,9 +274,6 @@ const specdojoItems = {
 
 // GitHub Pages の公開パス: https://specdojo.github.io/specdojo/
 const base = "/specdojo/";
-
-const hashCode = (code: string): string =>
-  crypto.createHash("md5").update(code).digest("hex").slice(0, 8);
 
 const mermaidSvgAutoGenerate = (): Plugin => {
   let timer: NodeJS.Timeout | undefined;
@@ -1090,7 +1087,8 @@ export default defineConfig({
 
         if (info === "mermaid") {
           const code = token.content.trim();
-          const id = hashCode(code);
+          // 生成側と同じキー（mermaid-cli の版・設定・コード）で SVG 名を求める
+          const id = mermaidSvgId(code);
           const src = `/mermaid/${id}.svg`;
 
           // 800x800 を超える場合はスクロールさせるためのラッパーを用意
