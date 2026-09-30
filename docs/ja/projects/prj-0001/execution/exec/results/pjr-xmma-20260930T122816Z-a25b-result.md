@@ -4,11 +4,12 @@ specdojo:
   type: exec-result
   task_id: PJR-XMMA
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: exec/plans/pjr-xmma-20260930T122816Z-a25b-plan.md
   started_at: "2026-09-30T12:28:16.288Z"
+  completed_at: "2026-09-30T12:38:04.360Z"
   agent: agy-expert-executor
 ---
 
@@ -16,16 +17,20 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- docs-site の `puppeteer` (25) および `mermaid-cli` (12) への更新に伴い、`mermaid-config.json` に `layout: dagre` を追加して設定を最適化しました。
+- Node.js v22.13 以上への下限引き上げ要件および既知の脆弱性に関する情報を `CHANGELOG.md` と移行ガイド (`docs/ja/specdojo/guides/release-v0-3-0-migration-guide.md`) に追記しました。
+- `npm run docs:build:mermaid` を実行し、`mermaid-cli` 12 による SVG 生成が正常に動作することを検証済みです。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `CHANGELOG.md`: Node 22.13 以上の要件および脆弱性に関する記述を追記
+- `docs/ja/specdojo/guides/release-v0-3-0-migration-guide.md`: Node 22.13 以上の要件および移行に関する情報を追記
+- `packages/docs-site/mermaid-config.json`: `layout: dagre` 設定を追加
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 生成された SVG の視覚的な整合性確認は、完了条件に基づき人間によるレビューをお願いします。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`fully-guided` で rulebook / recipe / sample / template をどう使い分けたか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+まず `mermaid-config.json` を更新して新しいバージョンの `mermaid-cli` に対応し、その後 `CHANGELOG.md` と移行ガイドに Node.js のバージョン要件を明記しました。最後に `npm run docs:build:mermaid` によるビルド検証、および `prettier`, `markdownlint`, `specdojo index build` 等の静的検査・インデックス更新を行い、品質を担保しました。
