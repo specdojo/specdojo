@@ -56,6 +56,11 @@ SpecDojo の利用者に影響する変更を記録します。
   しました（PJR-AY1R）。
 - 用語集（`gl-*.yaml`）の schema を追加し、`validate:schema` で検証できるようにしました
   （PJR-Y06Y）。
+- 用語集の `category` と `relatedTerms` が同じ用語集の中の用語 ID を指すことと、用語 ID の
+  重複がないことを検証する `glossary-references` を docs-lint に追加し、`validate:schema` に
+  組み込みました（PJR-CF15）。
+- rulebook に埋め込まれていたサンプル章を sample へ外出ししました。sample を持たなかった
+  `tml-rulebook` と `ifx-index-rulebook` には sample を新設しました（PJR-GWYJ）。
 - 同梱のオーケストレーター定義に、起票時の対話支援（不足項目の確認と、個票の `_TODO_` の
   内容案の提示）と、記帳の `--commit` を使う手順を加えました（PJR-N8AW、PJR-NJRH）。
 
@@ -82,5 +87,7 @@ SpecDojo の利用者に影響する変更を記録します。
   （PJR-GRB5）。
 - executor の sandbox で `docs:build` が `tsx` の IPC で失敗する問題を、`docs:generate` を
   `node --import tsx` で実行する形にして回避しました（PJR-M8NA）。
+- 個票のタイトルに Markdown のエスケープ（`\*` など）が含まれると、plan・result・job の
+  frontmatter の `name` が不正な YAML になる問題を修正しました（PJR-C44H）。
 
 [0.3.0]: https://github.com/specdojo/specdojo/compare/v0.2.1...v0.3.0
