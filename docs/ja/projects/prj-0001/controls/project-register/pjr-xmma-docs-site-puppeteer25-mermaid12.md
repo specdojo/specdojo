@@ -28,6 +28,9 @@ high の脆弱性 extract-zip を除くため docs-site の puppeteer を 25、m
 - `src/gen-mermaid-svg.ts` の mermaid-cli の呼び出しが 12 の引数と整合している。
 - `packages/docs-site/src/gen-mermaid-svg.ts` の SVG キャッシュの判定に、図のコードに加えて mermaid-cli の版と `mermaid-config.json` の内容を含める。mermaid-cli の版か設定が変わると、既存の SVG が使い回されず描き直される。
 - 版または設定が変わったときに SVG を描き直すこと、変わらないときは使い回すことを確かめる単体テストがある。
+- ファイル単位のキャッシュ（`.manifest.json`）にも、描画に使った mermaid-cli の版と `mermaid-config.json` の内容のハッシュを記録する。今の値と異なる場合は、Markdown の mtime と size が一致していてもファイル単位のキャッシュを使わず、図を描き直す。
+- 前回の `.manifest.json` と SVG が残っている状態で版または設定を変えると描き直されることを、単体テストで確かめる。テストは `npm run lint:ts` を通す（`any` と未使用の引数を使わない）。
+- 変更後に `npm run docs:build` を実行すると、既存の SVG が mermaid-cli 12 で描き直される。
 - devcontainer の `PUPPETEER_EXECUTABLE_PATH`（chromium-headless-shell）で `npm run docs:build` が通り、mermaid の SVG が生成される。
 - 生成した SVG のうち 3 図以上を人が見て、更新前と同等であることを確かめている。
 - `CHANGELOG.md` と v0.3.0 の移行ガイドに、Node 22.13 以上が必要になることが書かれている。
@@ -35,13 +38,14 @@ high の脆弱性 extract-zip を除くため docs-site の puppeteer を 25、m
 
 ## 3. 作業内容
 
-| No  | 作業                                                   | 担当         | 状態 | メモ                                                                      |
-| --- | ------------------------------------------------------ | ------------ | ---- | ------------------------------------------------------------------------- |
-| 1   | `package.json`・lockfile の更新と `engines` の引き上げ | orchestrator | done | `606744b2` で対応した。mermaid-cli 12 の要求に合わせ下限は 22.13 とした   |
-| 2   | `gen-mermaid-svg.ts` と `mermaid-config.json` の手直し | DEV          | done | `mermaid-config.json` のルートに `layout: dagre` を追加した               |
-| 3   | CHANGELOG と移行ガイドへの追記                         | DEV          | done | `3d548005` で対応済み                                                     |
-| 4   | 生成した SVG の見た目の確認                            | 人           | open | 3 図以上                                                                  |
-| 5   | SVG キャッシュの判定に mermaid-cli の版と設定を含める  | DEV          | done | `gen-mermaid-svg.ts` の `hashCode` に含めた。単体テストも追加して検証した |
+| No  | 作業                                                   | 担当         | 状態 | メモ                                                                                                    |
+| --- | ------------------------------------------------------ | ------------ | ---- | ------------------------------------------------------------------------------------------------------- |
+| 1   | `package.json`・lockfile の更新と `engines` の引き上げ | orchestrator | done | `606744b2` で対応した。mermaid-cli 12 の要求に合わせ下限は 22.13 とした                                 |
+| 2   | `gen-mermaid-svg.ts` と `mermaid-config.json` の手直し | DEV          | done | `mermaid-config.json` のルートに `layout: dagre` を追加した                                             |
+| 3   | CHANGELOG と移行ガイドへの追記                         | DEV          | done | `3d548005` で対応済み                                                                                   |
+| 4   | 生成した SVG の見た目の確認                            | 人           | open | 3 図以上                                                                                                |
+| 5   | SVG キャッシュの判定に mermaid-cli の版と設定を含める  | DEV          | done | `gen-mermaid-svg.ts` の `hashCode` に含めた。単体テストも追加して検証した                               |
+| 6   | ファイル単位のキャッシュにも版と設定を反映する         | DEV          | open | 2026-09-30 の評価で、作業 5 の後も `.manifest.json` のスキップにより 1 枚も描き直されないことが分かった |
 
 ## 4. 対応結果
 
