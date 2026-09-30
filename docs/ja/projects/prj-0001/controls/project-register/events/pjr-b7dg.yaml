@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_665fae9847214f31adbf0e639dd29f6e
+  ts: "2026-09-30T11:39:31Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-GWYJ の 2 回の実行で、sample の網羅の確認と grade による比較が完了しなかったため、残課題として切り出す
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: rulebook から削除した例が sample に含まれるかの確認と grade による比較
+    - field: description
+      from: ""
+      to: PJR-GWYJ で 52 件の rulebook から削除したサンプル章の要点が既存の sample に含まれるかを確かめ、欠けるものだけを反映する。外出しの前後を grade で比べ、vp-qe-kata-conformance と vp-arc-conciseness の finding を記録する
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-30"
+    - field: due
+      from: ""
+      to: _TODO_
