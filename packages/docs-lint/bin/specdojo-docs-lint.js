@@ -12,6 +12,7 @@ const commands = new Map([
   ["rulebook-schema-enums", "validate-rulebook-schema-enums.ts"],
   ["history-links", "validate-history-links.ts"],
   ["md-content", "validate-md-content.ts"],
+  ["glossary-references", "validate-glossary-references.ts"],
 ]);
 
 function usage() {
@@ -22,6 +23,7 @@ Commands:
   rulebook-schema-enums   Check ready rulebooks for schema enum coverage
   history-links           Reject rename-fragile Markdown links in history files
   md-content              Validate Markdown content against a content schema
+  glossary-references     Validate term ID references and uniqueness in glossary files
   markdownlint            Run markdownlint-cli from this package
   remark                  Run remark-cli from this package`);
 }

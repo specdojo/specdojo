@@ -35,3 +35,19 @@ terms:
     definition: 駄菓子屋の店主。システムの主な利用者。
     notes: IT に詳しくない前提で画面を設計する。
     category: tm-actor
+
+  - id: tm-inventory
+    term: 在庫
+    definition: 管理対象の物品。
+
+  - id: tm-safety-stock
+    term: 安全在庫
+    definition: 需要変動に備えて保持する最小限の在庫量。
+
+  - id: tm-sales
+    term: 販売
+    definition: 商品を顧客に提供し、代金を受け取ること。
+
+  - id: tm-actor
+    term: アクター
+    definition: システムの利用者または外部システム。

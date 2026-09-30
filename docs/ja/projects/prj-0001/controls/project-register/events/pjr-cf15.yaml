@@ -61,3 +61,29 @@
       from: "-"
       to: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=package.json; agent must record the required change in the result …"
   previous_event_id: reg_11c0e07be8804ac0be03aeffc9fb9c40
+- v: 1
+  id: reg_d8ff2470c005402294f4f486c27f493c
+  ts: "2026-09-30T03:31:12Z"
+  action: start
+  actor: agy-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_31943737b5124b6f9e62e2b065b0bbbf
+- v: 1
+  id: reg_b3ae62c335114632a3401b3cea701b9f
+  ts: "2026-09-30T03:41:23Z"
+  action: review
+  actor: agy-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_d8ff2470c005402294f4f486c27f493c
