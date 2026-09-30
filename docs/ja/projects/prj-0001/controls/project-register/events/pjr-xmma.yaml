@@ -103,3 +103,29 @@
       from: "review で差し戻し: SVG キャッシュが mermaid の版と設定を判定に含めず、更新が反映されないため作業 5 を追加して再実行する"
       to: "agent exited with non-zero code: 親検証の `typecheck` (exit 2) および `test-unit` (exit 1) が失敗しています。具体的に `tests/scratch.test.ts` で TS2698 および TS2307 エラーが発生しており、完了基準である静的検査の解消を満たしていません。"
   previous_event_id: reg_7e94e947f15741dbbaca751f57fe7822
+- v: 1
+  id: reg_8e5af9ab908a43ed9d317e025d81e229
+  ts: "2026-09-30T13:27:27Z"
+  action: start
+  actor: gemma-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_2ce57d2323f447b395ea1e3b71c07bda
+- v: 1
+  id: reg_1b2804e6af7648a8bf2b2ec1d5780fed
+  ts: "2026-09-30T13:32:13Z"
+  action: review
+  actor: gemma-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_8e5af9ab908a43ed9d317e025d81e229
