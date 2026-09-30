@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-6tka-deps-in-range-update-dotenv18
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-09-29T22:17:07Z"
+  completed_at: "2026-09-30T12:23:04Z"
+  conclusion: js-yaml を 4.3.2、dotenv を 18 に上げ、範囲内の依存を更新した。ルートの本番依存の脆弱性は 0 件。prettier 3.9 の整形も反映した
 ---
 
 # PJR-6TKA 範囲内の依存の更新と dotenv 18 への更新

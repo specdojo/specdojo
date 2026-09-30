@@ -32,3 +32,22 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_97703762a29a4a4986d72c7e2e1fff86
+  ts: "2026-09-30T12:23:04Z"
+  action: close
+  actor: orchestrator
+  from_status: open
+  to_status: done
+  reason: orchestrator が直接対応した（package.json と lockfile は agent が変更できない設定のため）。npm run check と docs:build の通過を確かめた
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-30"
+    - field: conclusion
+      from: "-"
+      to: js-yaml を 4.3.2、dotenv を 18 に上げ、範囲内の依存を更新した。ルートの本番依存の脆弱性は 0 件。prettier 3.9 の整形も反映した
+  previous_event_id: reg_008563c74a724ce5a927fb5b66c0dcdf
