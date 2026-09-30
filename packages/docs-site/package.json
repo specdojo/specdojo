@@ -33,7 +33,7 @@
     "access": "public"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=22.13"
   },
   "scripts": {
     "docs:dev": "node bin/specdojo-docs-site.js dev ../.. --host 0.0.0.0 --port 5173",
@@ -42,8 +42,8 @@
     "typecheck": "tsc -p .vitepress/tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@mermaid-js/mermaid-cli": "^11.15.0",
-    "puppeteer": "^24.43.1",
+    "@mermaid-js/mermaid-cli": "^12.0.0",
+    "puppeteer": "^25.12.0",
     "tsx": "^4.22.4",
     "vitepress": "^1.6.4",
     "vitepress-sidebar": "^1.36.1"

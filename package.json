@@ -112,6 +112,9 @@
     "specdojo:exec:auto3": "specdojo exec run --auto --loop --parallel 3 > logs/exec-auto.stdout.log 2> logs/exec-auto.stderr.log",
     "validate:schema:yaml": "node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline"
   },
+  "engines": {
+    "node": ">=22.13"
+  },
   "dependencies": {
     "ajv": "^8.20.0",
     "commander": "^15.0.0",
