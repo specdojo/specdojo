@@ -58,3 +58,19 @@
       from: in-progress
       to: review
   previous_event_id: reg_855644dc996d46ddafd777c1c55c9851
+- v: 1
+  id: reg_6db6624634254d4ab688518090bebfde
+  ts: "2026-09-30T13:14:21Z"
+  action: wait
+  actor: orchestrator
+  from_status: review
+  to_status: waiting
+  reason: "review で差し戻し: SVG キャッシュが mermaid の版と設定を判定に含めず、更新が反映されないため作業 5 を追加して再実行する"
+  changes:
+    - field: status
+      from: review
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "review で差し戻し: SVG キャッシュが mermaid の版と設定を判定に含めず、更新が反映されないため作業 5 を追加して再実行する"
+  previous_event_id: reg_730db71c25034670b40e84fda6502194
