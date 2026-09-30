@@ -87,3 +87,19 @@
       from: waiting
       to: in-progress
   previous_event_id: reg_6db6624634254d4ab688518090bebfde
+- v: 1
+  id: reg_2ce57d2323f447b395ea1e3b71c07bda
+  ts: "2026-09-30T13:25:38Z"
+  action: wait
+  actor: agy-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: 親検証の `typecheck` (exit 2) および `test-unit` (exit 1) が失敗しています。具体的に `tests/scratch.test.ts` で TS2698 および TS2307 エラーが発生しており、完了基準である静的検査の解消を満たしていません。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "review で差し戻し: SVG キャッシュが mermaid の版と設定を判定に含めず、更新が反映されないため作業 5 を追加して再実行する"
+      to: "agent exited with non-zero code: 親検証の `typecheck` (exit 2) および `test-unit` (exit 1) が失敗しています。具体的に `tests/scratch.test.ts` で TS2698 および TS2307 エラーが発生しており、完了基準である静的検査の解消を満たしていません。"
+  previous_event_id: reg_7e94e947f15741dbbaca751f57fe7822
