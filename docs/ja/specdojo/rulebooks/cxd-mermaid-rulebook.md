@@ -115,7 +115,7 @@ flowchart LR
 
 ## 3. ノードのルール
 
-### 3.1. Person（人/ロール）
+### 3.1 Person（人/ロール）
 
 - **四角 `[]`** を使用する。
 - 表示ラベルは業務ロール/主体を短い日本語で表す。
@@ -140,7 +140,7 @@ flowchart LR
   class 店員,店主 person;
 ```
 
-### 3.2. Software System（対象システム）
+### 3.2 Software System（対象システム）
 
 - **角丸長方形 `()`** を使用する。
 - 図の中心として扱い、表示ラベルは「システム名（＋必要なら短い補足）」とする。
@@ -164,7 +164,7 @@ flowchart LR
   class 販売管理システム system;
 ```
 
-### 3.3. External Software System（外部システム）
+### 3.3 External Software System（外部システム）
 
 - **四角 `[]`** を使用する。
 - 表示ラベルは外部システムの一般名（例: 決済、会計、EC、配送など）。
@@ -189,7 +189,7 @@ flowchart LR
   class 会計システム,決済サービス external;
 ```
 
-### 3.4. System Boundary（境界）
+### 3.4 System Boundary（境界）
 
 - 対象システムは **サブグラフ `subgraph ... end`** で囲う。
 - 境界内には、原則として **対象システムのノード1つ**だけを置く（コンテキスト図の過密化防止）。
@@ -220,14 +220,14 @@ flowchart LR
 
 ## 4. エッジ（関係）のルール
 
-### 4.1. 方向
+### 4.1 方向
 
 - `A --> B` を基本とする。
 - 方向は「主たる依存/利用/送信の向き」が分かるように統一する。
   - 例: 人がシステムを利用する: `人 -->|"利用"| 対象システム`
   - 例: 対象システムが外部システムに連携する: `対象システム -->|"連携"| 外部システム`
 
-### 4.2. ラベル
+### 4.2 ラベル
 
 - すべてのエッジにラベルを付ける（「何の関係か」を合意するため）。
 - ラベルは **短い名詞句**または **短い動詞句**で書く。
@@ -284,7 +284,70 @@ flowchart LR
 
 ---
 
-## 7. 凡例（推奨）
+## 7. サンプル（最小）
+
+```mermaid
+flowchart LR
+  %% Person
+  店員["👤店員"]
+  店主["👤店主"]
+
+  %% External Systems
+  会計システム["会計システム"]
+  決済サービス["決済サービス"]
+
+  %% Target System Boundary
+  subgraph 境界["対象システム"]
+    販売管理システム("駄菓子屋きぬや<br>販売管理システム")
+  end
+
+  %% Relationships
+  店員 -->|"売上登録"| 販売管理システム
+  店主 -->|"商品・在庫管理"| 販売管理システム
+
+  販売管理システム -->|"会計仕訳連携"| 会計システム
+  販売管理システム -->|"決済依頼"| 決済サービス
+  決済サービス -->|"決済結果"| 販売管理システム
+
+  %% Styles
+  classDef person fill:#fff3bf,stroke:#f08c00,color:#000;
+  classDef system fill:#d0ebff,stroke:#1c7ed6,color:#000;
+  classDef external fill:#e9ecef,stroke:#495057,color:#000;
+  class 店員,店主 person;
+  class 販売管理システム system;
+  class 会計システム,決済サービス external;
+  style 境界 fill:#ffffff,fill-opacity:0,stroke:#868e96,stroke-width:1px,stroke-dasharray: 5 5;
+```
+
+```plainText
+flowchart LR
+  店員["👤店員"]
+  店主["👤店主"]
+
+  会計システム["会計システム"]
+  決済サービス["決済サービス"]
+
+  subgraph 境界["対象システム"]
+    販売管理システム("駄菓子屋きぬや<br>販売管理システム")
+  end
+
+  店員 -->|"売上登録"| 販売管理システム
+  店主 -->|"商品・在庫管理"| 販売管理システム
+
+  販売管理システム -->|"会計仕訳連携"| 会計システム
+  販売管理システム -->|"決済依頼"| 決済サービス
+  決済サービス -->|"決済結果"| 販売管理システム
+
+  classDef person fill:#fff3bf,stroke:#f08c00,color:#000;
+  classDef system fill:#d0ebff,stroke:#1c7ed6,color:#000;
+  classDef external fill:#e9ecef,stroke:#495057,color:#000;
+  class 店員,店主 person;
+  class 販売管理システム system;
+  class 会計システム,決済サービス external;
+  style 境界 fill:#ffffff,fill-opacity:0,stroke:#868e96,stroke-width:1px,stroke-dasharray: 5 5;
+```
+
+## 8. 凡例（推奨）
 
 凡例は下記のように表現する（必要な場合のみ）。
 

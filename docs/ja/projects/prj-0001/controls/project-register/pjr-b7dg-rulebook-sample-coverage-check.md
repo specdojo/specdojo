@@ -138,6 +138,14 @@ bash tools/grade/run-per-document.sh --run-id pjr-b7dg-dryrun --target kata --ki
 - `docs/ja/specdojo/samples/dmd-sample.md`: `概要` 章に共通方針を `dmd-index` を正とする一文を加えた。
 - rulebook 本文と、対象でない sample は変更していない。
 
+### 4.6. 2026-10-01 の利用者の判断と orchestrator の対応
+
+- 利用者の判断: 雛形の sample の作り直し（sample の分離）は、今後 bootstrap や rulebook-maintenance などで時間をかけて進める。本項目は in-progress のまま残す。
+- v0.3.0 で記述例が失われたまま配布されるのを避けるため、判定が「欠ける」の 43 件の rulebook を、PJR-GWYJ の 1 回目の実行の直前（`f940b1b6~1`）の内容へ戻し、削除したサンプル章を復元した。43 件とも PJR-GWYJ の後に別の変更はなく、PJR-GWYJ による変更だけを取り消した。frontmatter の `sample` の宣言は PJR-GWYJ の前から同じである。
+- 復元後に prettier・markdownlint・`npm run lint:fm`・`npm run validate:schema`・`npm run validate:catalog` が通過した。
+- 4.5. の otp・dmd の sample への追記は、利用者の判断（復元まで）に従い取り込まなかった。exec run の worktree は破棄した。
+- grade による外出し前後の比較（作業 3）は、sample の分離を進める段階で行う。
+
 ## 5. 関連ドキュメント
 
 - [[prj-0001:pjr-gwyj-rulebook-sample-chapter-extraction-phase2]]

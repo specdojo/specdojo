@@ -188,3 +188,126 @@ Frontmatter は共通スキーマに従います（参照: [docs/specdojo/schema
 | 例外をSYSD-CCP本文に散在させる                | 例外管理が追跡不能になるため |
 | SSOT本文（OpenAPI/DDL等）を貼り付ける         | 二重管理で不整合を招くため   |
 | 検証方法（CI/テスト/レビュー）を書かない      | ルールが形骸化するため       |
+
+## 8. サンプル
+
+注：以下はルール文書内の例示です。生成する `sysd-cross-cutting-policy` では `## 1...` から始まります。
+
+```yaml
+---
+id: sysd-cross-cutting-policy
+type: architecture
+title: システム設計: 横断ルール
+status: draft
+based_on: []
+supersedes: []
+---
+```
+
+### 8.1. 概要（適用範囲・優先順位）
+
+本書は、実装全体に適用する横断ルールを統一し、レビュー判断と運用判断を一貫させるための基準である。
+優先順位は `SEC > ERR > RET > IDM > LOG > CFG > MOD > JOB` を原則とする。
+
+### 8.2. ルール一覧（ID/カテゴリ/要約/必須度）
+
+<!-- prettier-ignore -->
+| Rule ID | Category | Summary | Level | Owner |
+| --- | --- | --- | --- | --- |
+| scp-API-001 | API | 共通エラー応答形式を統一する | MUST | Dev |
+| scp-RET-001 | Retry/Timeout | 外部I/Fのタイムアウトとリトライ規約 | MUST | Dev/Ops |
+| scp-IDM-001 | Idempotency | 更新系APIは冪等キーを必須とする | MUST | Dev |
+| scp-LOG-001 | Logging | 共通ログ項目（trace_id等） | MUST | Dev |
+| scp-SEC-001 | Security | 認可チェック責務と境界 | MUST | Dev |
+| scp-CFG-001 | Config | 設定上書き階層と反映方法 | MUST | Dev/Ops |
+| scp-MOD-001 | Module | 依存方向（domain←app←interface） | MUST | Dev |
+| scp-JOB-001 | Job | run_id と再実行性 | MUST | Ops |
+
+### 8.3. 各ルール詳細（ID単位）
+
+#### scp-API-001: 共通エラー応答形式
+
+- **Rule（MUST）**
+  すべてのHTTP APIは、エラー時に共通フォーマットで応答する。
+  必須フィールド：`error_code`, `message`, `detail`, `trace_id`
+
+- **Rationale（意図）**
+  クライアント実装の分岐を減らし、障害解析を高速化する。
+
+- **Scope（適用範囲）**
+  内部API・外部公開API（REST）すべて。
+
+- **Enforcement（検証）**
+  OpenAPIにエラースキーマを共通定義し、CIでlintする。
+  ITSで代表エラーケースを検証する。
+
+- **Exception（例外）**
+  例外が必要な場合はDECを起票し、影響範囲と移行方針を明記する。
+
+- **References（参照）**
+  SDI：OpenAPI定義（`api/openapi.yaml`）
+  テスト：ITC（エラー系） / 運用：OPD（アラート）
+
+#### scp-RET-001: 外部I/Fのタイムアウトとリトライ
+
+- **Rule（MUST）**
+  外部I/F呼び出しはタイムアウトを必ず設定し、最大3回まで指数バックオフでリトライする。
+  リトライは **冪等が担保できる場合のみ** 実施する。
+
+- **Rationale（意図）**
+  ハング/遅延の波及を防ぎ、外部障害時の影響を限定する。
+
+- **Scope（適用範囲）**
+  外部API、外部メッセージ送信、外部ファイル転送。
+
+- **Enforcement（検証）**
+  ETSでタイムアウト/リトライ/二重送信防止を検証する。
+  リトライ回数・待機は設定で制御し、既定値をconfig schemaで固定する。
+
+- **Exception（例外）**
+  課金など二重実行が致命的な場合は、DECで別方式（補償/確認照会）を定義する。
+
+- **References（参照）**
+  SDI：外部I/F仕様（OpenAPI/AsyncAPI/EFES）
+  SYSD Critical Flows：外部決済フロー（存在する場合）
+  OPD：外部I/Fの監視指標（エラー率/レイテンシ）
+
+#### scp-MOD-001: モジュール依存方向
+
+- **Rule（MUST NOT / MUST）**
+  `domain` は `application` / `interface` に依存してはならない。
+  依存方向は **domain ← application ← interface** を守る。
+
+- **Rationale（意図）**
+  ドメインロジックを技術詳細から分離し、変更耐性とテスト容易性を高める。
+
+- **Scope（適用範囲）**
+  全コード（ビルド単位/パッケージ/ディレクトリ）。
+
+- **Enforcement（検証）**
+  静的解析/アーキテクチャテスト（例：依存ルールテスト）で検証する。
+  PRレビューで違反をブロックする。
+
+- **Exception（例外）**
+  例外は原則認めない。やむを得ない場合はDECで期限付き例外とする。
+
+- **References（参照）**
+  SDI：モジュール境界ドキュメント/規約へのリンク
+  テスト：UTS（層別テスト方針）
+
+### 8.4. 例外（DECリンク）
+
+| Rule ID     | 例外条件                 | 影響範囲            | 期限       | DEC                                 |
+| ----------- | ------------------------ | ------------------- | ---------- | ----------------------------------- |
+| scp-RET-001 | 外部課金APIで再送が不可  | 決済機能のみ        | 2026-12-31 | `dec-00xx-payment-retry-exception`  |
+| scp-MOD-001 | 移行期間中の一時依存許容 | legacy adapter のみ | 2026-06-30 | `dec-00yy-legacy-dependency-waiver` |
+
+### 8.5. 関連ドキュメント導線（SYSD/SYSD-CF/NFR/OPD/OPR/DEC）
+
+| 種別       | ドキュメントID/参照先                                  | 目的                         | 備考 |
+| ---------- | ------------------------------------------------------ | ---------------------------- | ---- |
+| SSOT       | sysd-index / `api/openapi.yaml` / `config/schema.yaml` | 一次情報参照                 | 必須 |
+| 重要フロー | sysd-critical-flows                                    | 難所フローでのルール適用確認 | 必須 |
+| 非機能     | nfr-index                                              | タイムアウト/SLA/SLO整合     | 必須 |
+| 運用       | opd-index / opr-index                                  | 監視・障害対応・証跡運用     | 必須 |
+| 判断記録   | dec-index                                              | 例外・設計判断の追跡         | 必須 |

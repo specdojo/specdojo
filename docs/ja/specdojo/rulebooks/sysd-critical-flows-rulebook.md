@@ -198,3 +198,179 @@ flowchart LR
 | 冪等/整合性/失敗時の記述を省略する          | SYSD-CFの主目的を満たせないため          |
 | SDI・運用・テスト・DECへの導線を置かない    | 実行・検証・運用へ接続できないため       |
 | 重要フローを6件以上に増やす（無整理の追加） | 文書が肥大化し、合意形成が困難になるため |
+
+## 8. サンプル
+
+注：以下はルール文書内の例示です。生成する `sysd-critical-flows` では `## 1...` から始まります。
+
+```yaml
+
+---
+id: sysd-critical-flows
+type: architecture
+title: システム設計: 重要フロー
+status: draft
+based_on: []
+supersedes: []
+---
+```
+
+### 8.1. 概要（対象・運用方針）
+
+本書は、事故影響の大きい重要フローを最大5件まで整理し、
+設計・テスト・運用が同じ前提で判断できる状態を作る。
+
+### 8.2. 重要フロー一覧（最大5件）
+
+| フローID | フロー名                       | 事故論点                               | 優先度 | 備考       |
+| -------- | ------------------------------ | -------------------------------------- | ------ | ---------- |
+| scf-001  | 売上確定→在庫更新→発注候補生成 | 非同期整合性 / 冪等                    | 高     | outbox採用 |
+| scf-002  | 外部決済作成                   | タイムアウト / リトライ / 二重課金防止 | 高     | 補償あり   |
+| scf-003  | バッチ再実行（売上集計）       | 再実行性 / run_id / 重複排除           | 中     | 日次ジョブ |
+
+### 8.3. フロー詳細（IDごと）
+
+#### 8.3.1. scf-001: 売上確定→在庫更新→発注候補生成（非同期）
+
+- **目的**：売上確定を起点に在庫を更新し、在庫不足時に発注候補を生成する
+- **トリガー**：`POST /sales`（内部API）
+- **範囲**：売上確定、在庫更新イベント発行、発注候補生成（外部仕入先送信は別フロー）
+
+##### 8.3.1.1. フロー概要
+
+```mermaid
+flowchart LR
+  UI[UI] -->|POST /sales| API[Sales API]
+  API --> SVC[Sales Service]
+  SVC -->|commit| DB[(Sales DB)]
+  SVC -->|outbox enqueue| OB[(Outbox)]
+  OB -->|publish| MQ[(Event Bus)]
+  MQ --> INV[Inventory Service]
+  INV -->|commit| IDB[(Inventory DB)]
+```
+
+##### 8.3.1.2. 整合性・冪等・再実行
+
+- 整合性：売上確定は同期で確定、在庫更新はイベントで最終的整合性
+- 冪等キー：`sale_id`
+- 重複時：同一 `sale_id` は二重計上しない（既処理判定）
+- 再実行：イベントはリプレイ可能、`event_id` で重複排除
+
+##### 8.3.1.3. 失敗時
+
+- イベント発行失敗：outbox再送（指数バックオフ、最大5回）
+- 在庫更新失敗：メッセージをDLQへ退避し、Ops通知後に手動リプレイ
+
+##### 8.3.1.4. 観測性
+
+- trace_id を API→イベント→在庫更新まで継承
+- 必須ログ：`flow_id`, `sale_id`, `event_id`, `result`, `retry_count`
+- 監査：売上確定は who/when/amount/before/after を記録
+
+##### 8.3.1.5. 参照
+
+- SDI：`api/openapi.yaml`、`api/asyncapi.yaml`、`db/migrations/*`
+- テスト：ITC（内部結合）、STC（E2E）
+- 運用：OPD（監視/アラート）、OPR（DLQ対応）
+- DEC：outbox採用理由
+
+#### 8.3.2. scf-002: 外部決済作成（タイムアウト/リトライ/二重課金防止）
+
+- **目的**：決済要求の成功率を担保しつつ、二重課金を防止する
+- **トリガー**：`POST /payments`
+- **範囲**：決済要求送信、結果確定、失敗時補償（返金）
+
+##### 8.3.2.1. フロー概要
+
+```mermaid
+flowchart LR
+  UI[Client] -->|POST /payments| API[Payment API]
+  API --> APP[Payment Service]
+  APP -->|idempotency check| IDEM[(Idempotency Store)]
+  APP -->|request| PSP[External PSP]
+  PSP -->|result webhook| API
+  API -->|commit| PDB[(Payment DB)]
+  APP -->|on partial failure| CQ[(Compensation Queue)]
+```
+
+##### 8.3.2.2. 整合性・冪等・再実行
+
+- 整合性：外部確定前は `pending`、確定通知で `confirmed` へ遷移
+- 冪等キー：`payment_request_id`
+- 重複時：同一キーは既存決済結果を返却し、新規作成しない
+- 再実行：タイムアウト時のみ最大3回リトライ（指数バックオフ）
+
+##### 8.3.2.3. 失敗時
+
+- 3回失敗で `manual_review` へ遷移
+- 部分失敗（外部成功/内部失敗）は補償キューへ投入し、返金または再同期
+
+##### 8.3.2.4. 観測性
+
+- 必須ログ：`flow_id`, `payment_request_id`, `provider_tx_id`, `result`, `error_code`
+- アラート条件：外部失敗率 > 5% / 5分
+
+##### 8.3.2.5. 参照
+
+- SDI：外部I/F仕様、決済API仕様
+- テスト：ETC（外部I/F障害系）、STC（決済E2E）
+- 運用：OPR（障害一次対応）、OPD（停止判断基準）
+- DEC：補償方式（返金優先）
+
+#### 8.3.3. scf-003: 売上集計バッチ再実行（run_id単位）
+
+- **目的**：集計失敗時に重複計上なく安全に再実行する
+- **トリガー**：日次スケジュール（`02:00 JST`）
+- **範囲**：集計ジョブ実行、結果反映、失敗時再実行
+
+##### 8.3.3.1. フロー概要
+
+```mermaid
+flowchart LR
+  SCH[Scheduler] -->|daily 02:00| JOB[Aggregation Job]
+  JOB -->|read| SRC[(Sales Source)]
+  JOB -->|calculate| TMP[(Result by run_id)]
+  TMP -->|validate| VAL{valid?}
+  VAL -->|yes| REP[(Aggregated Report)]
+  VAL -->|no| INV[(invalid mark)]
+  JOB -->|notify on failure| OPS[Ops Alert]
+```
+
+##### 8.3.3.2. 整合性・冪等・再実行
+
+- 整合性：`run_id` 単位で結果を分離し、最新成功runのみ採用
+- 冪等キー：`aggregation_date + run_id`
+- 再実行上限：自動1回、以降はOps承認で手動再実行
+
+##### 8.3.3.3. 失敗時
+
+- 失敗時は部分結果を `invalid` マークし採用対象から除外
+- 2回連続失敗でP2アラートを発報し、OPRへエスカレーション
+
+##### 8.3.3.4. 観測性
+
+- 必須ログ：`flow_id`, `job_name`, `run_id`, `input_count`, `output_count`, `result`
+
+##### 8.3.3.5. 参照
+
+- SDI：ジョブ定義、DB migration
+- テスト：ITC（再実行性）、STC（月次締め影響）
+- 運用：OPR（バッチ再実行手順）、OPD（SLA）
+
+### 8.4. 観測性と運用連携
+
+| 項目     | ルール                                                       | 監視/運用連携                          |
+| -------- | ------------------------------------------------------------ | -------------------------------------- |
+| trace_id | API入口で採番し、イベント・ジョブまで必ず伝搬                | 監査調査時は trace_id を起点に横断追跡 |
+| 必須ログ | `flow_id`, `request_id`, `entity_id`, `result`, `error_code` | 欠落時は開発品質アラート               |
+| 失敗通知 | P1/P2相当は即時通知、P3は定時集約可                          | OPR の一次対応手順へ接続               |
+| 手動介入 | DLQ滞留、再実行上限超過、補償失敗時に介入                    | OPD の停止判断基準に従う               |
+
+### 8.5. 関連ドキュメント導線
+
+| 種別     | ドキュメントID/参照先                                                    | 目的                   | 備考 |
+| -------- | ------------------------------------------------------------------------ | ---------------------- | ---- |
+| SSOT     | sysd-index / `api/openapi.yaml` / `api/asyncapi.yaml` / `db/migrations/` | 一次情報参照           | 必須 |
+| テスト   | its-index / ets-index / stc-index                                        | 観点検証               | 必須 |
+| 運用     | opd-index / opr-index                                                    | 監視・障害対応・再実行 | 必須 |
+| 判断記録 | dec-index                                                                | 例外・設計判断の追跡   | 必須 |

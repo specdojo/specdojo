@@ -183,3 +183,64 @@ Code as Spec の適用にあたり、種別（Category）ごとに何を SSOT �
 | 古い/未使用/不明確なリンクを残す       | Indexとしての信頼性が低下するため      |
 | Owner を未記載にする                   | 更新責任が不明となり形骸化するため     |
 | 備考に詳細仕様を書き始める             | 本文肥大化と責務混在を招くため         |
+
+## 8. サンプル
+
+注：以下はルール文書内の例示です。生成する `sysd-index` では `## 1...` から始まります。
+
+```yaml
+---
+id: sysd-index
+type: architecture
+title: システム設計: 全体構成リンク集
+status: draft
+based_on: []
+supersedes: []
+---
+```
+
+### 8.1. 概要（対象範囲・更新責任）
+
+本書は、システム設計情報のSSOTを参照するための導線を一元化する。
+更新責任: Dev Lead（構成管理）/ Ops Lead（運用系SSOT）
+
+### 8.2. SSOT 一覧（例）
+
+<!-- prettier-ignore -->
+| 種別 | SSOT | 参照先 | 更新責任 | 備考 |
+| --- | --- | --- | --- | --- |
+| Internal API | OpenAPI | `api/openapi.yaml` | Dev | CIでlint、破壊的変更はDEC必須 |
+| Internal Events | AsyncAPI + CloudEvents | `api/asyncapi.yaml` | Dev | schema互換性チェックを実施 |
+| External I/F | 外部連携定義 | `spec/external-if/` | Dev | 接続先契約変更時は `dec-*` を更新 |
+| Database Schema | migrations | `db/migrations/` | Dev | schema dumpはCI生成 |
+| Jobs / Batch | workflow | `ops/workflows/` | Ops | 失敗時通知・リトライもここで定義 |
+| Configurations | config schema | `config/schema.yaml` | Dev/Ops | 上書き階層はSCR参照 |
+| Observability | ログ/監査定義 | `ops/observability/` | Ops | 監査ログ保持方針は `opd-*` 参照 |
+| Module Boundary | package rule | `docs/architecture/module-boundary.md` | Dev | 依存方向はSCR参照 |
+
+### 8.3. 自動生成物（例）
+
+| 生成物        | 入力SSOT            | 生成コマンド            | 生成先                     | 閲覧先                               | 更新方式 |
+| ------------- | ------------------- | ----------------------- | -------------------------- | ------------------------------------ | -------- |
+| OpenAPI Docs  | `api/openapi.yaml`  | `npm run docs:openapi`  | `docs/generated/openapi/`  | `docs/generated/openapi/index.html`  | CI       |
+| AsyncAPI Docs | `api/asyncapi.yaml` | `npm run docs:asyncapi` | `docs/generated/asyncapi/` | `docs/generated/asyncapi/index.html` | CI       |
+| ERD           | `db/migrations/`    | `npm run docs:erd`      | `docs/generated/erd/`      | `docs/generated/erd/index.html`      | CI       |
+
+### 8.4. 変更の入口（典型ケース例）
+
+| 変更トリガ            | 最初に直す場所（SSOT） | 併せて更新する場所                       | 完了条件（最低限）        |
+| --------------------- | ---------------------- | ---------------------------------------- | ------------------------- |
+| APIエンドポイント追加 | `api/openapi.yaml`     | `docs/generated/openapi/`, SDIのSSOT一覧 | API lint通過、SDI導線追加 |
+| テーブル追加          | `db/migrations/`       | `docs/generated/erd/`, SDIのSSOT一覧     | migration適用可、ERD更新  |
+| バッチ新設            | `ops/workflows/`       | 監視設定、SDIのSSOT一覧                  | 実行定義・通知先が明記    |
+| 設定項目追加          | `config/schema.yaml`   | 設定一覧生成物、SDIのSSOT一覧            | 既定値・型・説明が確定    |
+
+### 8.5. 関連ドキュメント導線（例）
+
+| 種別   | ドキュメントID      | 目的                   | 備考                   |
+| ------ | ------------------- | ---------------------- | ---------------------- |
+| アーキ | cpd-business-domain | 外部境界・依存先の把握 | 入口として必須         |
+| 品質   | nfr-index           | 非機能要件との整合確認 | 可用性・性能の判断基準 |
+
+| 運用方針 | opd-index | 運用統制（監視/証跡/権限）確認 | 監査観点で参照 |
+| 決定記録 | dec-index | 設計判断の背景追跡 | 破壊的変更時に必須 |
