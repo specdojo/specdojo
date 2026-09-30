@@ -58,3 +58,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_e4394f27130c4770b5848093711983f9
+- v: 1
+  id: reg_26ee1471636c469397da17eb38937ff9
+  ts: "2026-09-30T21:56:05Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（claude-expert-executor / gemma-reporter）の結果を orchestrator が評価した。有効化は申し送りに従い orchestrator が反映した（ee612f74）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-01"
+    - field: conclusion
+      from: "-"
+      to: 親検証の許可リストに lint-ts・lint-fm・lint-md を追加し、exec-defaults で有効にした
+  previous_event_id: reg_6ac4555a06bf4fbf8054690f20e61d04

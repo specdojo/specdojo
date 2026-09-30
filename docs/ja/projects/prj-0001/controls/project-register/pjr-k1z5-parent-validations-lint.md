@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-k1z5-parent-validations-lint
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-09-30T11:52:53Z"
+  completed_at: "2026-09-30T21:56:05Z"
+  conclusion: 親検証の許可リストに lint-ts・lint-fm・lint-md を追加し、exec-defaults で有効にした
 ---
 
 # PJR-K1Z5 runner の親検証に lint:ts・lint:fm・lint:md を加える
