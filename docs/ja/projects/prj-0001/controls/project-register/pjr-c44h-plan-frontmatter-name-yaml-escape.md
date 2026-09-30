@@ -11,6 +11,7 @@ specdojo:
   priority: medium
   owner: DEV
   registered_at: "2026-09-29T13:53:49Z"
+  block_reason: "integrate failed: git commit failed: hint: to use in all of your new repositories, which will suppress this warning, / hint: to use in all of your new repositories, which will suppress this warning, /…"
 ---
 
 # PJR-C44H plan の frontmatter の name に個票の H1 のエスケープが残り YAML が不正になる

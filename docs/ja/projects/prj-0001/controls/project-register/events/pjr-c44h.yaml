@@ -45,3 +45,32 @@
       from: open
       to: in-progress
   previous_event_id: reg_c6d5bb370ccc4ac1a930f561060947b0
+- v: 1
+  id: reg_7ffe619b861c4f4eafe009c6d710d945
+  ts: "2026-09-29T22:47:36Z"
+  action: wait
+  actor: agy-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: git commit failed: hint: to use in all of your new repositories, which will suppress this warning, / hint: to use in all of your new repositories, which will suppress this warning, /…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: git commit failed: hint: to use in all of your new repositories, which will suppress this warning, / hint: to use in all of your new repositories, which will suppress this warning, /…"
+  previous_event_id: reg_b0686029d307459fbc7dc541bc3aa7cd
+- v: 1
+  id: reg_9bce94c68d8d485eb69703d450f368b2
+  ts: "2026-09-30T03:28:00Z"
+  action: start
+  actor: gemma-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_7ffe619b861c4f4eafe009c6d710d945

@@ -345,7 +345,7 @@ function registerPlanFrontmatter(projectId: string, stem: string, item: PjrItem)
     `type: exec-plan`,
     `rulebook: none`,
     `task_id: ${item.id}`,
-    `name: "${escapeMarkdownInline(item.title).replace(/"/g, "'")}"`,
+    `name: ${JSON.stringify(item.title)}`,
     `mode: edit`,
     `status: ready`,
     `project_id: ${projectId}`,
