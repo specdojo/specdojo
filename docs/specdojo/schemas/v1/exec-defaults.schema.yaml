@@ -64,7 +64,7 @@ $defs:
           allowlist; command strings and arguments cannot be supplied by agents or config.
         items:
           type: string
-          enum: [validate-schema, typecheck, test-unit, test-integration]
+          enum: [validate-schema, typecheck, test-unit, test-integration, lint-ts, lint-fm, lint-md]
       parent_validation_concurrency:
         type: integer
         minimum: 1

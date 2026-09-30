@@ -58,6 +58,9 @@ SpecDojo の利用者に影響する変更を記録します。
   しました（PJR-AY1R）。
 - 用語集（`gl-*.yaml`）の schema を追加し、`validate:schema` で検証できるようにしました
   （PJR-Y06Y）。
+- 親 runner の検証（`pipeline.parent_validations`）に `lint-ts`・`lint-fm`・`lint-md` を
+  追加し、`npm run lint:ts`・`lint:fm`・`lint:md` を agent の段階で実行できるようにしました
+  （PJR-K1Z5）。
 - 用語集の `category` と `relatedTerms` が同じ用語集の中の用語 ID を指すことと、用語 ID の
   重複がないことを検証する `glossary-references` を docs-lint に追加し、`validate:schema` に
   組み込みました（PJR-CF15）。

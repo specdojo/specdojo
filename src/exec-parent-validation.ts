@@ -8,7 +8,14 @@ import { redactSensitiveText } from "./exec-evidence.js";
 const MAX_CAPTURE_BYTES = 64 * 1024;
 const MAX_SUMMARY_LENGTH = 1_000;
 
-export type ParentValidationId = "validate-schema" | "typecheck" | "test-unit" | "test-integration";
+export type ParentValidationId =
+  | "validate-schema"
+  | "typecheck"
+  | "test-unit"
+  | "test-integration"
+  | "lint-ts"
+  | "lint-fm"
+  | "lint-md";
 
 export type ParentValidationDefinition = {
   id: ParentValidationId;
@@ -58,6 +65,27 @@ const PARENT_VALIDATION_REGISTRY: Record<ParentValidationId, ParentValidationDef
     command: process.platform === "win32" ? "npm.cmd" : "npm",
     args: ["run", "test:integration"],
     displayCommand: "npm run test:integration",
+    timeoutMs: 10 * 60 * 1_000,
+  },
+  "lint-ts": {
+    id: "lint-ts",
+    command: process.platform === "win32" ? "npm.cmd" : "npm",
+    args: ["run", "lint:ts"],
+    displayCommand: "npm run lint:ts",
+    timeoutMs: 10 * 60 * 1_000,
+  },
+  "lint-fm": {
+    id: "lint-fm",
+    command: process.platform === "win32" ? "npm.cmd" : "npm",
+    args: ["run", "lint:fm"],
+    displayCommand: "npm run lint:fm",
+    timeoutMs: 10 * 60 * 1_000,
+  },
+  "lint-md": {
+    id: "lint-md",
+    command: process.platform === "win32" ? "npm.cmd" : "npm",
+    args: ["run", "lint:md"],
+    displayCommand: "npm run lint:md",
     timeoutMs: 10 * 60 * 1_000,
   },
 };
