@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-c44h-plan-frontmatter-name-yaml-escape
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-09-29T13:53:49Z"
+  completed_at: "2026-09-30T04:05:15Z"
   block_reason: "integrate failed: git commit failed: hint: to use in all of your new repositories, which will suppress this warning, / hint: to use in all of your new repositories, which will suppress this warning, /…"
+  conclusion: plan・result・job の frontmatter の name を JSON.stringify で出力し、H1 のエスケープが残らず YAML として正しくなった
 ---
 
 # PJR-C44H plan の frontmatter の name に個票の H1 のエスケープが残り YAML が不正になる

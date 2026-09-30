@@ -87,3 +87,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_9bce94c68d8d485eb69703d450f368b2
+- v: 1
+  id: reg_b710f54698f9404aa4143fbba41912fb
+  ts: "2026-09-30T04:05:15Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（agy-expert-executor / gemma-reporter）の結果を orchestrator が評価した。3 か所の name 生成の修正と回帰テストを確認し、runner の検証 4 種の通過を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-30"
+    - field: conclusion
+      from: "-"
+      to: plan・result・job の frontmatter の name を JSON.stringify で出力し、H1 のエスケープが残らず YAML として正しくなった
+  previous_event_id: reg_e9d64a80671144c098ac820929184ed9
