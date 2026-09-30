@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: waiting
   priority: medium
   owner: DEV
   registered_at: "2026-09-28T23:20:52Z"
+  block_reason: "review で差し戻し: sample を持たない tml・ifx-index の例を失い、grade も未実行のため作業 4・5 と grade を追加して再実行する"
 ---
 
 # PJR-GWYJ 残りの rulebook のサンプル章を sample へ外出しする（AY1R 第 2 段）

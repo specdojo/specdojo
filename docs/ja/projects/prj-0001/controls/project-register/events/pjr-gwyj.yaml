@@ -58,3 +58,19 @@
       from: in-progress
       to: review
   previous_event_id: reg_6676d60501404f03a8153fd4a64b4533
+- v: 1
+  id: reg_bf28efa59ce347399678f4fd2964c43b
+  ts: "2026-09-30T03:27:40Z"
+  action: wait
+  actor: orchestrator
+  from_status: review
+  to_status: waiting
+  reason: "review で差し戻し: sample を持たない tml・ifx-index の例を失い、grade も未実行のため作業 4・5 と grade を追加して再実行する"
+  changes:
+    - field: status
+      from: review
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "review で差し戻し: sample を持たない tml・ifx-index の例を失い、grade も未実行のため作業 4・5 と grade を追加して再実行する"
+  previous_event_id: reg_3a09cbf9761248e2bc6524f83f3fe7a3
