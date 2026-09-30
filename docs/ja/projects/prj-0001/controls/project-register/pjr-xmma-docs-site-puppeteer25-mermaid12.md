@@ -25,6 +25,8 @@ high の脆弱性 extract-zip を除くため docs-site の puppeteer を 25、m
 - specdojo 本体・docs-lint・docs-site の `engines.node` が `>=22.13` にそろっている（specdojo 本体には `engines` を追加する）。
 - `packages/docs-site/mermaid-config.json` に `"layout": "dagre"` を明示し、mermaid 12 で既定になる elk へ図の見た目が変わらない。
 - `src/gen-mermaid-svg.ts` の mermaid-cli の呼び出しが 12 の引数と整合している。
+- `packages/docs-site/src/gen-mermaid-svg.ts` の SVG キャッシュの判定に、図のコードに加えて mermaid-cli の版と `mermaid-config.json` の内容を含める。mermaid-cli の版か設定が変わると、既存の SVG が使い回されず描き直される。
+- 版または設定が変わったときに SVG を描き直すこと、変わらないときは使い回すことを確かめる単体テストがある。
 - devcontainer の `PUPPETEER_EXECUTABLE_PATH`（chromium-headless-shell）で `npm run docs:build` が通り、mermaid の SVG が生成される。
 - 生成した SVG のうち 3 図以上を人が見て、更新前と同等であることを確かめている。
 - `CHANGELOG.md` と v0.3.0 の移行ガイドに、Node 22.13 以上が必要になることが書かれている。
@@ -32,12 +34,13 @@ high の脆弱性 extract-zip を除くため docs-site の puppeteer を 25、m
 
 ## 3. 作業内容
 
-| No  | 作業                                                   | 担当         | 状態 | メモ                                                                    |
-| --- | ------------------------------------------------------ | ------------ | ---- | ----------------------------------------------------------------------- |
-| 1   | `package.json`・lockfile の更新と `engines` の引き上げ | orchestrator | done | `606744b2` で対応した。mermaid-cli 12 の要求に合わせ下限は 22.13 とした |
-| 2   | `gen-mermaid-svg.ts` と `mermaid-config.json` の手直し | DEV          | open | exec run で agent が行う                                                |
-| 3   | CHANGELOG と移行ガイドへの追記                         | DEV          | open | -                                                                       |
-| 4   | 生成した SVG の見た目の確認                            | 人           | open | 3 図以上                                                                |
+| No  | 作業                                                   | 担当         | 状態 | メモ                                                                          |
+| --- | ------------------------------------------------------ | ------------ | ---- | ----------------------------------------------------------------------------- |
+| 1   | `package.json`・lockfile の更新と `engines` の引き上げ | orchestrator | done | `606744b2` で対応した。mermaid-cli 12 の要求に合わせ下限は 22.13 とした       |
+| 2   | `gen-mermaid-svg.ts` と `mermaid-config.json` の手直し | DEV          | open | exec run で agent が行う                                                      |
+| 3   | CHANGELOG と移行ガイドへの追記                         | DEV          | open | -                                                                             |
+| 4   | 生成した SVG の見た目の確認                            | 人           | open | 3 図以上                                                                      |
+| 5   | SVG キャッシュの判定に mermaid-cli の版と設定を含める  | DEV          | open | 2026-09-30 の評価で、版を上げても 174 枚が 1 枚も描き直されないことが分かった |
 
 ## 4. 対応結果
 
