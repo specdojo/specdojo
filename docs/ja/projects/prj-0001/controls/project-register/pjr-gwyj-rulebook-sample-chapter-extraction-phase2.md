@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-gwyj-rulebook-sample-chapter-extraction-phase2
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-09-28T23:20:52Z"
+  completed_at: "2026-09-30T11:40:19Z"
   block_reason: agent exited 0 but result is incomplete or its frontmatter differs from the scaffold (treated as blocked)
+  conclusion: 54 件の rulebook のサンプル章を外出しし、sample を持たなかった tml・ifx-index は sample を新設した。sample の網羅の確認と grade による比較は PJR-B7DG へ切り出した
 ---
 
 # PJR-GWYJ 残りの rulebook のサンプル章を sample へ外出しする（AY1R 第 2 段）

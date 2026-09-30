@@ -103,3 +103,22 @@
       from: "review で差し戻し: sample を持たない tml・ifx-index の例を失い、grade も未実行のため作業 4・5 と grade を追加して再実行する"
       to: agent exited 0 but result is incomplete or its frontmatter differs from the scaffold (treated as blocked)
   previous_event_id: reg_c0434cf0700b499bb7f4f1a112ad40bd
+- v: 1
+  id: reg_d541032a662141e7a8f2348b4c98501c
+  ts: "2026-09-30T11:40:19Z"
+  action: close
+  actor: orchestrator
+  from_status: waiting
+  to_status: done
+  reason: 2 回の exec run（agy-expert-executor / gemma-reporter）の結果を orchestrator が評価した。2 回目は blocked のため、新設した sample 2 件と frontmatter の更新だけを orchestrator が取り込み（0d9d23f0）、残りは破棄した
+  changes:
+    - field: status
+      from: waiting
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-30"
+    - field: conclusion
+      from: "-"
+      to: 54 件の rulebook のサンプル章を外出しし、sample を持たなかった tml・ifx-index は sample を新設した。sample の網羅の確認と grade による比較は PJR-B7DG へ切り出した
+  previous_event_id: reg_1101238cf47d484b9ceb27e01dcab481
