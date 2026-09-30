@@ -5,7 +5,7 @@ specdojo:
   status: draft
   target_format: yaml
   recipe: not-needed
-  sample: not-needed
+  sample: specdojo:tml-sample
   template: not-needed
   based_on:
     - specdojo:rulebook-authoring-standard
