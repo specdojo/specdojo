@@ -31,10 +31,10 @@ specdojo:
 
 ## 3. 作業内容
 
-| No  | 作業                                        | 担当         | 状態 | メモ                                       |
-| --- | ------------------------------------------- | ------------ | ---- | ------------------------------------------ |
-| 1   | 許可リスト・schema・テスト・docs の変更     | DEV          | open | exec run で agent が行う                   |
-| 2   | `.specdojo/exec-defaults.yaml` で有効にする | orchestrator | open | 統合後に orchestrator が承認を得て反映する |
+| No  | 作業                                        | 担当         | 状態 | メモ                                                                               |
+| --- | ------------------------------------------- | ------------ | ---- | ---------------------------------------------------------------------------------- |
+| 1   | 許可リスト・schema・テスト・docs の変更     | DEV          | open | exec run で agent が行う                                                           |
+| 2   | `.specdojo/exec-defaults.yaml` で有効にする | orchestrator | done | `ee612f74` で `lint-ts`・`lint-fm`・`lint-md` を `test-integration` の前に追加した |
 
 ## 4. 対応結果
 
@@ -43,6 +43,8 @@ specdojo:
 - テスト: `tests/src/exec-parent-validation.test.ts` に、3 つの ID の解決と、未知 ID の拒否時に許可 ID 一覧へ 3 つが含まれることを確かめるテストを追加した。既存 ID の解決と未知・重複 ID の拒否のテストは変更していない。
 - docs: `exec-config-guide` と `command-reference` の親検証の説明に 3 つの ID を加えた。`templates/*/exec-defaults-snippet.yaml` には親検証の例がないため変更していない。`CHANGELOG.md` の v0.3.0「追加機能」に追記した。
 - 残課題: `.specdojo/exec-defaults.yaml` の `pipeline.parent_validations` へ `lint-ts`・`lint-fm`・`lint-md` を加える変更は、作業内容 No.2 として統合後に orchestrator が反映する。
+
+2026-10-01 の評価（orchestrator）: 許可リスト・schema・テスト・docs・CHANGELOG の変更を確かめ、`tests/src/exec-parent-validation.test.ts`（18 件）と `npm run lint:ts` の通過を確認した。`templates/*/exec-defaults-snippet.yaml` には親検証の例がないため変更は不要だった。申し送りに従い、orchestrator が `.specdojo/exec-defaults.yaml` で 3 つを有効にし（`ee612f74`）、ビルド後の CLI が 3 つを `npm run lint:ts`・`lint:fm`・`lint:md` へ解決することを確かめた。
 
 ## 5. 関連ドキュメント
 
