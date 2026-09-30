@@ -23,7 +23,7 @@ action:
     ungraded: "true"
     incomplete: "true"
     # PJR-BVPS: 旧 rubric（grade-rubric-v1 など）の結果を、limit の範囲で夜間に少しずつ評価し直す。
-    # 評価者は Job 定義の既定（codex-expert-executor）のままとする。
+    # 評価者は Job 定義で指定した agy-expert-executor とする（2026-09-30 に codex から変更）。
     rubric_outdated: "true"
 policy:
   missed_run: skip

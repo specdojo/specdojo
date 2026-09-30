@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=../../../../specdojo/schemas/v1/job.schema.yaml
 id: job-grade-kata
 name: 実践の型の品質評価
-description: 文書単位の codex 単段評価を起動し、その実行結果に異常がないかを判断する。
+description: 文書単位の agy 単段評価を起動し、その実行結果に異常がないかを判断する。
 inputs:
   period:
     type: string
@@ -84,7 +84,7 @@ task:
     skip_when: empty-output
   command: |
     npm run build
-    if tools/grade/run-per-document.sh --run-id {{job_run_id}} --stages 1 --kind {{inputs.kind}} --limit {{inputs.limit}} --dependency-changed={{inputs.dependency_changed}} --rulebook-changed={{inputs.rulebook_changed}} --unreviewed={{inputs.unreviewed}} --changed-only={{inputs.changed_only}} --ungraded={{inputs.ungraded}} --incomplete={{inputs.incomplete}} --rubric-outdated={{inputs.rubric_outdated}}; then
+    if tools/grade/run-per-document.sh --run-id {{job_run_id}} --stages 1 --stage-1-executor agy-expert-executor --kind {{inputs.kind}} --limit {{inputs.limit}} --dependency-changed={{inputs.dependency_changed}} --rulebook-changed={{inputs.rulebook_changed}} --unreviewed={{inputs.unreviewed}} --changed-only={{inputs.changed_only}} --ungraded={{inputs.ungraded}} --incomplete={{inputs.incomplete}} --rubric-outdated={{inputs.rubric_outdated}}; then
       cat logs/grade/runs/per-document/{{job_run_id}}/results.tsv
     else
       grade_status=$?
@@ -103,7 +103,7 @@ task:
         忠実性検証による拒否のいずれかへ切り分ける。
       - `retry_exhausted` の文書があるか。ある場合は失敗段と連続失敗回数を示し、人手での
         原因解消または state の再開判断を促す。
-      - codex 単段の verdict と score の分布に、評価設定の見直しを要する偏りがあるか。
+      - agy 単段の verdict と score の分布に、評価設定の見直しを要する偏りがあるか。
 
       選択された文書が0件の場合は no-op と判断する。判断できない事象は推測で埋めず、
       観測した事実と未確認の範囲を分けて報告する。

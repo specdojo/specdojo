@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=../../../../specdojo/schemas/v1/job.schema.yaml
 id: job-grade-deliverable
 name: 成果物の継続品質評価
-description: 成果物を文書単位の codex 単段評価へ流し、最新の品質と done_criteria 充足状況を更新する。
+description: 成果物を文書単位の agy 単段評価へ流し、最新の品質と done_criteria 充足状況を更新する。
 inputs:
   period:
     type: string
@@ -78,7 +78,7 @@ task:
     skip_when: empty-output
   command: |
     npm run build
-    if tools/grade/run-per-document.sh --run-id {{job_run_id}} --stages 1 --target deliverable --limit {{inputs.limit}} --dependency-changed={{inputs.dependency_changed}} --rulebook-changed={{inputs.rulebook_changed}} --unreviewed={{inputs.unreviewed}} --changed-only={{inputs.changed_only}} --ungraded={{inputs.ungraded}} --incomplete={{inputs.incomplete}} --rubric-outdated={{inputs.rubric_outdated}}; then
+    if tools/grade/run-per-document.sh --run-id {{job_run_id}} --stages 1 --stage-1-executor agy-expert-executor --target deliverable --limit {{inputs.limit}} --dependency-changed={{inputs.dependency_changed}} --rulebook-changed={{inputs.rulebook_changed}} --unreviewed={{inputs.unreviewed}} --changed-only={{inputs.changed_only}} --ungraded={{inputs.ungraded}} --incomplete={{inputs.incomplete}} --rubric-outdated={{inputs.rubric_outdated}}; then
       cat logs/grade/runs/per-document/{{job_run_id}}/results.tsv
     else
       grade_status=$?
@@ -97,7 +97,7 @@ task:
         done_criteria の過不足のいずれかへ切り分ける。
       - `retry_exhausted` の成果物があるか。ある場合は失敗段と連続失敗回数を示し、人手での
         原因解消または state の再開判断を促す。
-      - codex 単段の verdict と score に、評価設定の見直しを要する偏りがあるか。
+      - agy 単段の verdict と score に、評価設定の見直しを要する偏りがあるか。
       - 未充足の done_criteria がある成果物と、その確認担当ロールを特定する。
 
       選択された成果物が0件の場合は no-op と判断する。判断できない事象は推測で埋めず、
