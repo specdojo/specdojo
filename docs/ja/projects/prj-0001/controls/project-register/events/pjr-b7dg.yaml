@@ -61,3 +61,16 @@
       from: "-"
       to: "agent exited with non-zero code: 外出し後の `grade` による比較（finding の記録）が sandbox の承認待ちにより実行できず、プランの完了条件を満たせていないため。"
   previous_event_id: reg_43e32b28791b4bd6844d5f08de39a7ae
+- v: 1
+  id: reg_39042ca1d7234f7f9ee6f84787ed604a
+  ts: "2026-09-30T22:03:30Z"
+  action: start
+  actor: orchestrator
+  from_status: waiting
+  to_status: in-progress
+  reason: 利用者の判断により、記述例が失われた 43 件の rulebook を復元したうえで、sample の分離は今後 bootstrap や rulebook-maintenance などで進めるため in-progress のまま残す
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_7f00b4d9d742490ba2c75e24c6636e6d
