@@ -33,6 +33,8 @@ PJR-Y06Y で用語集の schema（`docs/specdojo/schemas/v1/gl.schema.yaml`）�
 - `npm run check` に含まれ、`gl-sample.yaml` と `gl-common.yaml` が検証を通る。
 - 存在しない ID の参照と、ID の重複を検出する単体テストがある。
 - `gl-rulebook.md` に、この検証があることが書かれている。
+- 検証の既定の対象は用語集（`docs/**/gl-*.yaml`）に限る。用語集ではない YAML を対象に含めず、結果にも表示しない。
+- `package.json` の script は agent が変更できない設定であるため変更しない。`npm run check` へ組み込むために必要な script の追加は、result の申し送りに記載し、統合後に orchestrator が反映する。
 
 ## 3. 作業内容
 

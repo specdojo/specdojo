@@ -21,13 +21,19 @@ js-yaml の下限を 4.3.2 に上げ、ルート・docs-site・docs-lint で npm
 
 ## 2. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- `js-yaml` の下限を `^4.3.2` に上げている。
+- ルート・docs-site・docs-lint で `npm audit fix`（`--force` なし）と `npm update` を行い、`npm audit --omit=dev` で `fast-uri` と `js-yaml` の high が報告されない。
+- `dotenv` を `^18` に上げ、`.env` の読み込みで stdout に余計な出力が出ない。
+- prettier が 3.9 に上がっても、`npm run format` で既存ファイルに差分が出ない。差分が出た場合は差分を示して判断を仰ぐ。
+- `npm run check` と `npm run docs:build` が通る。
 
 ## 3. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                           | 担当         | 状態 | メモ                                                    |
+| --- | ---------------------------------------------- | ------------ | ---- | ------------------------------------------------------- |
+| 1   | `package.json`・lockfile の範囲内の更新        | orchestrator | open | agent が変更できない設定のため orchestrator が行う      |
+| 2   | `dotenv` 18 への更新と動作確認                 | orchestrator | open | コードの手直しが要る場合だけ exec run で agent に任せる |
+| 3   | `npm run check` と `npm run docs:build` の確認 | orchestrator | open | -                                                       |
 
 ## 4. 対応結果
 
@@ -35,4 +41,5 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 5. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-xmma-docs-site-puppeteer25-mermaid12]]
+- [[prj-0001:pjr-rcvs-js-yaml-5-migration]]
