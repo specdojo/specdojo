@@ -1361,7 +1361,7 @@ function isEscapedMarkdownCharacter(markdown: string, index: number): boolean {
 }
 
 function findClosingBacktickRun(markdown: string, start: number, length: number): number {
-  for (let cursor = start; cursor < markdown.length; ) {
+  for (let cursor = start; cursor < markdown.length;) {
     if (markdown[cursor] !== "`") {
       cursor++;
       continue;
@@ -1379,7 +1379,7 @@ function findClosingBacktickRun(markdown: string, start: number, length: number)
 function stripInlineCode(markdown: string): string {
   let result = "";
 
-  for (let cursor = 0; cursor < markdown.length; ) {
+  for (let cursor = 0; cursor < markdown.length;) {
     if (markdown[cursor] !== "`" || isEscapedMarkdownCharacter(markdown, cursor)) {
       result += markdown[cursor];
       cursor++;

@@ -5,12 +5,7 @@ import { ensureDir, safeSlug } from "./exec-shared.js";
 import type { AgentStageRole } from "./exec-types.js";
 
 export type PipelineStageStatus =
-  | "pending"
-  | "running"
-  | "succeeded"
-  | "failed"
-  | "rate_limited"
-  | "blocked";
+  "pending" | "running" | "succeeded" | "failed" | "rate_limited" | "blocked";
 
 // 統合段（commit → merge → worktree 撤去）は agent ではなく runner が実行する段。executor /
 // reporter と同じ粒度で記録し、agent 段が成功したまま統合だけ失敗した run を特定できるようにする。

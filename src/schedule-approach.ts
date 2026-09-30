@@ -43,12 +43,7 @@ export type StrategyScope = {
 
 type GradeFact = { verdict: "pass" | "needs-work" | "fail" };
 type KataDeclaration =
-  | "declared"
-  | "conventional"
-  | "none"
-  | "undecided"
-  | "not-needed"
-  | "unresolved";
+  "declared" | "conventional" | "none" | "undecided" | "not-needed" | "unresolved";
 type KataFact = {
   declaration: KataDeclaration;
   exists: boolean;
