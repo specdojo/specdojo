@@ -2,12 +2,7 @@ import type { AgentProvider } from "./specdojo-config.js";
 import type { CurrentState, StateSnapshot } from "./exec-types.js";
 
 export type AgentLimitKind =
-  | "rate_limit"
-  | "session_limit"
-  | "quota_exhausted"
-  | "overloaded"
-  | "timeout"
-  | "oom";
+  "rate_limit" | "session_limit" | "quota_exhausted" | "overloaded" | "timeout" | "oom";
 
 export type AgentLimitSignal = {
   availability_state: "limited" | "transient_failure";

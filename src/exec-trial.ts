@@ -56,21 +56,12 @@ import {
 } from "./specdojo-config.js";
 
 type TrialStatus =
-  | "pending"
-  | "prepared"
-  | "running"
-  | "succeeded"
-  | "failed"
-  | "adopted"
-  | "discarded";
+  "pending" | "prepared" | "running" | "succeeded" | "failed" | "adopted" | "discarded";
 
 type ReporterMode = "none" | "shared" | "paired";
 type ReporterStatus = "not_run" | "succeeded" | "blocked" | "failed";
 type ReporterFailureCategory =
-  | "reported_blocked"
-  | "invalid_output"
-  | "invocation_failure"
-  | "rate_limit";
+  "reported_blocked" | "invalid_output" | "invocation_failure" | "rate_limit";
 
 export type TrialAgentPair = {
   executor: string;

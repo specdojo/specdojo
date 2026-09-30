@@ -44,8 +44,7 @@ export type RegisterResumeTarget =
     });
 
 export type RegisterResumeLookup =
-  | { kind: "resumable"; target: RegisterResumeTarget }
-  | { kind: "not-resumable"; reason: string };
+  { kind: "resumable"; target: RegisterResumeTarget } | { kind: "not-resumable"; reason: string };
 
 export function registerEvidenceDir(input: {
   repoRoot: string;
