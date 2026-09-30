@@ -30,11 +30,11 @@ docs-lint に残る high 6 件・moderate 3 件（markdownlint-cli 0.48 経由�
 
 ## 3. 作業内容
 
-| No  | 作業                                              | 担当         | 状態 | メモ                               |
-| --- | ------------------------------------------------- | ------------ | ---- | ---------------------------------- |
-| 1   | 9 件の経路・修正版・解消方法の調査と記録          | DEV          | done | 対応結果に記録                     |
-| 2   | 必要なコード・設定の変更と CHANGELOG の既知の問題 | DEV          | done | 変更不要（対応結果を参照）         |
-| 3   | `package.json`・lockfile の更新と検証             | orchestrator | open | 申し送りに従い orchestrator が行う |
+| No  | 作業                                              | 担当         | 状態 | メモ                       |
+| --- | ------------------------------------------------- | ------------ | ---- | -------------------------- |
+| 1   | 9 件の経路・修正版・解消方法の調査と記録          | DEV          | done | 対応結果に記録             |
+| 2   | 必要なコード・設定の変更と CHANGELOG の既知の問題 | DEV          | done | 変更不要（対応結果を参照） |
+| 3   | `package.json`・lockfile の更新と検証             | orchestrator | done | `43dc9ef8` で反映した      |
 
 ## 4. 対応結果
 
@@ -83,6 +83,15 @@ docs-lint に残る high 6 件・moderate 3 件（markdownlint-cli 0.48 経由�
   - 両方の lockfile を更新し、`smol-toml` が 1.7.1 以上、`yaml` が 2.8.3 以上に解決されていることと、`npm audit --omit=dev --package-lock-only` が 0 件であることを確認する。
   - `npm run lint:md` と `npm run lint:fm` を実行し、`markdownlint` 0.41 の判定変更で新たな指摘が出た場合は対応する。
 - 反映後に脆弱性が残った場合は、`CHANGELOG.md` の v0.3.0 の「既知の問題」へ追記する。
+
+### 4.6. orchestrator による反映と検証（2026-10-01）
+
+- `remark-lint-frontmatter-schema` が `package.json` 以外から参照されていないことを grep で確かめた。
+- ルートと `packages/docs-lint` の `package.json` で `markdownlint-cli` を `^0.49.1` に上げ、`remark-lint-frontmatter-schema` を削除した。lockfile は `npm update yaml js-yaml smol-toml` で範囲内の最新にそろえた（`43dc9ef8`）。`smol-toml` は 1.7.2 に解決された。
+- ルートの `npm audit --omit=dev` は 0 件になった。docs-lint の `npm audit --omit=dev --package-lock-only` は、9 件のうち 8 件が解消した。
+- 調査の見込みと異なり、`markdownlint-cli` 0.49.1 が `js-yaml` を `~5.2.1` に固定するため、`js-yaml` 5.2 系の moderate 1 件（修正版は 5.4.1）が残った。`markdownlint-cli` の最新は 0.49.1 のため上流の対応待ちとし、`CHANGELOG.md` の「既知の問題」に追記した。
+- markdownlint 0.41 の判定の変更による新たな指摘はなく、`npm run lint:md`・`npm run lint:fm`・`npm run check`（1865 件）が通過した。
+- ルートの開発用の依存に残る 4 件（`ajv-cli` 経由の `fast-json-patch` など）は配布物に入らないため、[[prj-0001:pjr-q3f0-dev-dependencies-major-update]] で扱う。
 
 ## 5. 関連ドキュメント
 

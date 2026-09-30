@@ -98,9 +98,13 @@ SpecDojo の利用者に影響する変更を記録します。
   判定に含めず、更新後も古い SVG を使い回す問題を修正しました（PJR-XMMA）。
 - 利用者の環境に入る依存の脆弱性に対応しました。`js-yaml` を 4.3.2 以上、`dotenv` を 18 に
   上げ、docs-site を puppeteer 25 と mermaid-cli 12 に上げました（PJR-6TKA、PJR-XMMA）。
+  docs-lint は `markdownlint-cli` を 0.49 に上げ、使われていなかった
+  `remark-lint-frontmatter-schema` を依存から外しました（PJR-7GAK）。
 
 ### 既知の問題
 
 - docs-site に high 1 件、moderate 1 件の脆弱性が残っています。mermaid 12 が依存する chevrotain 11 が `lodash-es` 4.17.23 を固定している問題と、vite 経由の `esbuild` に起因するものであり、いずれも上流の対応待ちです（PJR-XMMA）。
+- docs-lint に moderate 1 件の脆弱性が残っています。`markdownlint-cli` 0.49.1 が `js-yaml` を
+  `~5.2.1` に固定しているためで、上流の対応待ちです（PJR-7GAK）。
 
 [0.3.0]: https://github.com/specdojo/specdojo/compare/v0.2.1...v0.3.0
