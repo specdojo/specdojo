@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-xmma-docs-site-puppeteer25-mermaid12
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-09-29T22:16:57Z"
+  completed_at: "2026-09-30T14:24:44Z"
   block_reason: "review で差し戻し: .manifest.json のファイル単位のスキップで SVG が描き直されず、テストが lint:ts に反するため作業 6 を追加して再実行する"
+  conclusion: docs-site を puppeteer 25 と mermaid-cli 12 に上げ、3 パッケージの Node の下限を 22.13 にそろえた。SVG キャッシュは版と設定の変更で描き直すようにした
 ---
 
 # PJR-XMMA docs-site の puppeteer 25 と mermaid-cli 12 への更新と Node 下限の引き上げ

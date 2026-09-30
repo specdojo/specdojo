@@ -171,3 +171,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_946df830fc264a61b48920e858b060cc
+- v: 1
+  id: reg_8c2c62bc06db424880feb82207bd6568
+  ts: "2026-09-30T14:24:44Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: 3 回の exec run（agy 2 回、claude-expert-executor 1 回 / gemma-reporter）の結果を orchestrator が評価した。利用者が mermaid 12 の見た目を確認し、統合後に 174 枚が描き直されることと lint:ts・docs:build の通過を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-30"
+    - field: conclusion
+      from: "-"
+      to: docs-site を puppeteer 25 と mermaid-cli 12 に上げ、3 パッケージの Node の下限を 22.13 にそろえた。SVG キャッシュは版と設定の変更で描き直すようにした
+  previous_event_id: reg_a907e33a648448d7af757ed1b72d69fa
