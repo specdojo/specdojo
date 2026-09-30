@@ -17,6 +17,11 @@
 # evidence や設定ファイルから任意の command / 引数を注入することはできない。
 pipeline:
   parent_validations:
+    # lint は短時間で終わるため先に実行し、executor が残した ESLint・frontmatter・Markdown の
+    # エラーを統合前に検出する（PJR-K1Z5）。
+    - lint-ts # npm run lint:ts
+    - lint-fm # npm run lint:fm
+    - lint-md # npm run lint:md
     - test-integration # npm run test:integration（shell を介さず固定 argv で実行）
     # sandbox 内では tsx の IPC ソケット作成、Vitest の終了、git の子プロセス終了が
     # 成立せず、成果物と無関係に failed となるため親プロセスで実行する（PJR-QVGX）。
