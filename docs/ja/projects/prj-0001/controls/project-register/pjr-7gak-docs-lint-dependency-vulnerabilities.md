@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-7gak-docs-lint-dependency-vulnerabilities
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-09-30T12:06:40Z"
+  completed_at: "2026-09-30T22:01:01Z"
+  conclusion: markdownlint-cli を 0.49.1 に上げ、未使用の remark-lint-frontmatter-schema を外した。docs-lint の 9 件のうち 8 件が解消し、js-yaml の moderate 1 件は上流の対応待ち
 ---
 
 # PJR-7GAK docs-lint の依存の脆弱性への対応

@@ -58,3 +58,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_5b0ddf83c06349a698c681b22df63c64
+- v: 1
+  id: reg_2a3ecea1fc5343ab8eee7fcd08ef73a5
+  ts: "2026-09-30T22:01:01Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（claude-expert-executor / gemma-reporter）の調査を orchestrator が評価し、申し送りに従い package.json と lockfile を反映した（43dc9ef8）。npm run check の通過を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-01"
+    - field: conclusion
+      from: "-"
+      to: markdownlint-cli を 0.49.1 に上げ、未使用の remark-lint-frontmatter-schema を外した。docs-lint の 9 件のうち 8 件が解消し、js-yaml の moderate 1 件は上流の対応待ち
+  previous_event_id: reg_286d0d4d656347de8ab05d6c0a8abd32
