@@ -7,11 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: waiting
   priority: high
   owner: DEV
   registered_at: "2026-09-29T22:16:57Z"
-  block_reason: "agent exited with non-zero code: 親検証の `typecheck` (exit 2) および `test-unit` (exit 1) が失敗しています。具体的に `tests/scratch.test.ts` で TS2698 および TS2307 エラーが発生しており、完了基準である静的検査の解消を満たしていません。"
+  block_reason: "review で差し戻し: .manifest.json のファイル単位のスキップで SVG が描き直されず、テストが lint:ts に反するため作業 6 を追加して再実行する"
 ---
 
 # PJR-XMMA docs-site の puppeteer 25 と mermaid-cli 12 への更新と Node 下限の引き上げ
