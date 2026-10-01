@@ -363,6 +363,9 @@ export function resolveCommitScope(
   const unresolvedTargets: string[] = [];
   const lookup = headDocIndexLookup(worktree.path);
   for (const target of identity.targets ?? []) {
+    // `<repo>:<path>` はプロダクトリポジトリの対象で、プロダクト側の commit 対象に入る
+    // （exec-repo-integration）。プロジェクト側の doc id としては解決しない。
+    if (isProductRepoTarget(worktree, target)) continue;
     const fromIndex = lookup(target);
     if (fromIndex) {
       allowedFiles.add(fromIndex);
@@ -395,9 +398,32 @@ export function resolveCommitScope(
   };
 }
 
+// checkpoint 済みの HEAD の plan（human は result）frontmatter の targets。agent の working tree
+// 改変の影響を受けない。プロダクトリポジトリの commit 対象（`<repo>:<path>`）の導出に使う。
+export function taskTargetsAtHead(
+  context: WorktreeOpsContext,
+  worktree: ExecWorktree,
+  taskId: string,
+): string[] {
+  const { planRel, resultRel } = taskPaths(context, taskId);
+  const resultContent = readWorktreeHeadFile(worktree.path, resultRel);
+  const resultIdentity = resultContent ? parseResultTaskIdentity(resultContent) : null;
+  if (resultIdentity?.execution === "human") return resultIdentity.targets ?? [];
+  const planContent = readWorktreeHeadFile(worktree.path, planRel);
+  return (planContent ? parsePlanTaskIdentity(planContent) : null)?.targets ?? [];
+}
+
+// `<repo>:<path>` 形式で、接頭辞がタスクのプロダクト worktree のリポジトリ名である値。
+function isProductRepoTarget(worktree: ExecWorktree, target: string): boolean {
+  const separator = target.indexOf(":");
+  if (separator <= 0) return false;
+  const prefix = target.slice(0, separator);
+  return (worktree.repos ?? []).some((product) => product.name === prefix);
+}
+
 // register 由来のタスクで新規ファイルの作成を許す既知の成果物ディレクトリ。HEAD に追跡
 // ファイルを持つ最上位ディレクトリもこれに加える（利用プロジェクト固有の構成に追従するため）。
-const REGISTER_NEW_FILE_DIR_PREFIXES: readonly string[] = [
+export const REGISTER_NEW_FILE_DIR_PREFIXES: readonly string[] = [
   "docs/",
   "src/",
   "tests/",
@@ -667,12 +693,14 @@ export function commitWorktreeChanges(params: {
   // commit-scope の警告を追記する evidence 側のログ（run ディレクトリの integrate.log）。
   // worktree 内の evidence 配下を指す場合は、同じ commit に含まれる。
   scopeLogPath?: string;
+  // 呼び出し側（exec run の統合段）がプロダクトリポジトリの commit と統合を行う場合に true。
+  // false（手動の `exec worktree commit` など）では、プロダクトに未統合の変更が残るタスクの
+  // プロジェクト側だけを commit しない。統合後の撤去でプロダクトの変更を失わないため。
+  productsIntegratedByCaller?: boolean;
 }): { targets: string[]; committed: boolean } {
   const { context, worktree, taskId } = params;
   assertNoAgentProtectedConfigChanges(context, worktree, taskId);
-  // プロダクト側の commit・統合（PJR-0WAA）が入るまでは、プロダクトに変更が残るタスクの
-  // プロジェクト側だけを commit・統合しない。統合後の撤去でプロダクトの変更を失わないため。
-  assertNoPendingProductChanges(worktree);
+  if (!params.productsIntegratedByCaller) assertNoPendingProductChanges(worktree);
   let partition = partitionCommitTargets(context, worktree, taskId);
   const scopeWarnings = [
     ...partition.unresolvedTargets.map(

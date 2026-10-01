@@ -176,9 +176,17 @@ import {
   removeWorktree,
   stabilizeCommitTargets,
   stageCommitTargets,
+  taskTargetsAtHead,
   WorktreeRemovedBranchDeletionError,
   worktreeStatusPaths,
 } from "./exec-worktree-ops.js";
+import {
+  commitProductWorktrees,
+  integrateTaskRepositories,
+  projectMergeBlockers,
+  PROJECT_REPO_NAME,
+  RepoIntegrationError,
+} from "./exec-repo-integration.js";
 import {
   agentProtectedConfigViolation,
   captureAgentProtectedConfigAcrossRepos,
@@ -247,8 +255,10 @@ import {
   loadPipelineResumeCheckpoint,
   pipelineStateLocation,
   readPipelineState,
+  updatePipelineRepoIntegration,
   updatePipelineStage,
   writePipelineState,
+  type PipelineRepoIntegrationState,
   type PipelineStageState,
   type PipelineStageRole,
   type PipelineState,
@@ -2402,8 +2412,8 @@ async function runPreparedTask(
           );
         } else {
           // Record completion and integration start before the first commit. The succeeded state
-          // is committed on the exec branch before the single merge, so successful runs retain a
-          // durable integrate checkpoint after the worktree is removed.
+          // is committed on the project exec branch before its merge, so successful runs retain a
+          // durable integrate checkpoint after all worktrees are removed.
           if (worktreeResultPath)
             await updateResultStatus(worktreeResultPath, "complete", completedAt);
           const integrateStartedAt = new Date().toISOString();
@@ -2414,37 +2424,77 @@ async function runPreparedTask(
             started_at: integrateStartedAt,
             completed_at: null,
           }));
-          commitWorktreeChanges({
-            context,
-            worktree: prepared.worktree,
-            taskId: prepared.task.id,
-            scopeLogPath: integrateLogPath(pipelineStatePath),
-          });
-
-          if (pipelineStatePath) {
-            const integrateCompletedAt = new Date().toISOString();
-            recordIntegrateStage(pipelineStatePath, integrateCompletedAt, () => ({
-              status: "succeeded",
-              completed_at: integrateCompletedAt,
-            }));
+          const mergeMessage = commitSubject(
+            `exec(${prepared.task.id}): `,
+            prepared.task.name?.trim() || "apply task changes",
+          );
+          const productNames = (prepared.worktree.repos ?? []).map((product) => product.name);
+          try {
+            commitProductWorktrees({
+              worktree: prepared.worktree,
+              message: mergeMessage,
+              targets: taskTargetsAtHead(context, prepared.worktree, prepared.task.id),
+              scopeLogPath: integrateLogPath(pipelineStatePath),
+            });
             commitWorktreeChanges({
               context,
               worktree: prepared.worktree,
               taskId: prepared.task.id,
+              scopeLogPath: integrateLogPath(pipelineStatePath),
+              productsIntegratedByCaller: true,
+            });
+          } catch (error) {
+            const message = error instanceof Error ? error.message : String(error);
+            const repo =
+              productNames.find((name) => message.startsWith(`${name}:`)) ?? PROJECT_REPO_NAME;
+            recordRepoIntegration(pipelineStatePath, repo, {
+              status: "failed",
+              error: message,
+            });
+            throw new RepoIntegrationError({
+              repo,
+              cause: message,
+              integrated: [],
+              pending: [...productNames, PROJECT_REPO_NAME],
             });
           }
-          // One merge commit per task on the integration branch's first-parent line. Its subject
-          // names the task; the prepare/apply commits stay on the exec branch.
-          mergeWorktreeIntoCurrent({
-            context,
+
+          integrateTaskRepositories({
             worktree: prepared.worktree,
-            taskId: prepared.task.id,
-            message: commitSubject(
-              `exec(${prepared.task.id}): `,
-              prepared.task.name?.trim() || "apply task changes",
-            ),
-            releaseRootPaths: prepared.checkpointPaths,
+            mergeMessage,
+            checkProject: () =>
+              projectMergeBlockers({
+                context,
+                worktree: prepared.worktree,
+                taskId: prepared.task.id,
+                releasePaths: prepared.checkpointPaths,
+              }),
+            beforeProjectMerge: () => {
+              if (!pipelineStatePath) return;
+              const integrateCompletedAt = new Date().toISOString();
+              recordIntegrateStage(pipelineStatePath, integrateCompletedAt, () => ({
+                status: "succeeded",
+                completed_at: integrateCompletedAt,
+              }));
+              commitWorktreeChanges({
+                context,
+                worktree: prepared.worktree,
+                taskId: prepared.task.id,
+                productsIntegratedByCaller: true,
+              });
+            },
+            mergeProject: () =>
+              mergeWorktreeIntoCurrent({
+                context,
+                worktree: prepared.worktree,
+                taskId: prepared.task.id,
+                message: mergeMessage,
+                releaseRootPaths: prepared.checkpointPaths,
+                failureLogPath: integrateLogPath(pipelineStatePath),
+              }),
+            record: (repo, patch) => recordRepoIntegration(pipelineStatePath, repo, patch),
             failureLogPath: integrateLogPath(pipelineStatePath),
+            lockPath: schedulePath,
           });
         }
 
@@ -5326,6 +5376,27 @@ function recordIntegrateStage(
   }
 }
 
+// 複数リポジトリ統合の進捗を同じ pipeline state へ追記する。プロダクトを統合するたびに
+// project worktree 側へ書くため、途中で失敗しても `--resume` は Git の実状態とこの記録の両方を
+// 手掛かりに、統合済みリポジトリを飛ばせる。
+function recordRepoIntegration(
+  statePath: string | undefined,
+  repo: string,
+  patch: Partial<PipelineRepoIntegrationState>,
+): void {
+  if (!statePath || !existsSync(statePath)) return;
+  const updatedAt = new Date().toISOString();
+  try {
+    const state = readPipelineState(statePath);
+    writePipelineState(statePath, updatePipelineRepoIntegration(state, repo, patch, updatedAt));
+  } catch (error) {
+    process.stderr.write(
+      `warning: could not record repository ${repo} in ${statePath}: ` +
+        `${error instanceof Error ? error.message : String(error)}\n`,
+    );
+  }
+}
+
 function integrateLogPath(statePath: string | undefined): string | undefined {
   return statePath ? join(dirname(statePath), "integrate.log") : undefined;
 }
@@ -5468,63 +5539,100 @@ async function finalizeRegisterWorktreeRun(params: {
       completed_at: null,
     }));
     try {
-      commitWorktreeChanges({
-        context: wtContext,
-        worktree,
-        taskId: stem,
-        message: subject,
-        scopeLogPath: integrateLogPath(params.pipelineStatePath),
-      });
-      // review は exec branch 側（worktree）で記録し、merge commit に同梱する。統合ブランチで
-      // 遷移すると first-parent に独立した commit が増えるため、root では遷移しない。
-      if (
-        !spawnRegisterTransition(
-          projectId,
-          ["review", "--id", item.id, "--by", actor],
-          worktree.path,
-        )
-      ) {
-        throw new Error(`register review transition failed: ${item.id}`);
-      }
-      const integrateCompletedAt = new Date().toISOString();
-      recordIntegrateStage(params.pipelineStatePath, integrateCompletedAt, () => ({
-        status: "succeeded",
-        completed_at: integrateCompletedAt,
-      }));
-      commitRegisterState(
-        worktree.path,
-        worktreeRegisterPaths,
-        `exec(register ${item.id}): review`,
-        worktreeTicketPath,
-        params.pipelineStatePath ? [params.pipelineStatePath] : [],
-      );
-      if (
-        params.resumedIntegration &&
-        isExecBranchMergedIntoCurrent({ context: wtContext, worktree })
-      ) {
-        process.stdout.write(`  [integrate] already merged: ${worktree.branch} (skipping merge)\n`);
-      } else {
-        let executor = actor;
-        let reporter = "-";
-        if (params.pipelineStatePath && existsSync(params.pipelineStatePath)) {
-          const state = readPipelineState(params.pipelineStatePath);
-          executor = state.stages.executor.actor ?? executor;
-          reporter = state.stages.reporter.actor ?? reporter;
-        }
-        mergeWorktreeIntoCurrent({
+      const productNames = (worktree.repos ?? []).map((product) => product.name);
+      try {
+        commitProductWorktrees({
+          worktree,
+          message: subject,
+          targets: taskTargetsAtHead(wtContext, worktree, stem),
+          scopeLogPath: integrateLogPath(params.pipelineStatePath),
+        });
+        commitWorktreeChanges({
           context: wtContext,
           worktree,
           taskId: stem,
-          message:
-            `${subject}\n\n` +
-            `Transition: start → review\nExecutor: ${executor}\nReporter: ${reporter}\nRefs: ${item.id}`,
-          releaseRootPaths: [...params.bookkeepingPaths],
-          // waiting を複数回経た項目では、wait 時の同期後も統合先と exec branch の双方で
-          // 記帳ファイルが変わる。項目自身の記帳ファイルだけの競合は再開後の exec branch 側で解決する。
-          resolveConflictsWithBranchPaths: [...params.bookkeepingPaths],
-          failureLogPath: integrateLogPath(params.pipelineStatePath),
+          message: subject,
+          scopeLogPath: integrateLogPath(params.pipelineStatePath),
+          productsIntegratedByCaller: true,
+        });
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        const repo =
+          productNames.find((name) => message.startsWith(`${name}:`)) ?? PROJECT_REPO_NAME;
+        recordRepoIntegration(params.pipelineStatePath, repo, {
+          status: "failed",
+          error: message,
+        });
+        throw new RepoIntegrationError({
+          repo,
+          cause: message,
+          integrated: [],
+          pending: [...productNames, PROJECT_REPO_NAME],
         });
       }
+
+      let executor = actor;
+      let reporter = "-";
+      if (params.pipelineStatePath && existsSync(params.pipelineStatePath)) {
+        const state = readPipelineState(params.pipelineStatePath);
+        executor = state.stages.executor.actor ?? executor;
+        reporter = state.stages.reporter.actor ?? reporter;
+      }
+      const mergeMessage =
+        `${subject}\n\n` +
+        `Transition: start → review\nExecutor: ${executor}\nReporter: ${reporter}\nRefs: ${item.id}`;
+      integrateTaskRepositories({
+        worktree,
+        mergeMessage,
+        checkProject: () =>
+          projectMergeBlockers({
+            context: wtContext,
+            worktree,
+            taskId: stem,
+            releasePaths: params.bookkeepingPaths,
+            ownedPaths: params.bookkeepingPaths,
+          }),
+        beforeProjectMerge: () => {
+          // review は exec branch 側（worktree）で記録し、最後の project merge commit に
+          // 同梱する。統合ブランチで遷移すると first-parent に独立した commit が増える。
+          if (
+            !spawnRegisterTransition(
+              projectId,
+              ["review", "--id", item.id, "--by", actor],
+              worktree.path,
+            )
+          ) {
+            throw new Error(`register review transition failed: ${item.id}`);
+          }
+          const integrateCompletedAt = new Date().toISOString();
+          recordIntegrateStage(params.pipelineStatePath, integrateCompletedAt, () => ({
+            status: "succeeded",
+            completed_at: integrateCompletedAt,
+          }));
+          commitRegisterState(
+            worktree.path,
+            worktreeRegisterPaths,
+            `exec(register ${item.id}): review`,
+            worktreeTicketPath,
+            params.pipelineStatePath ? [params.pipelineStatePath] : [],
+          );
+        },
+        mergeProject: () =>
+          mergeWorktreeIntoCurrent({
+            context: wtContext,
+            worktree,
+            taskId: stem,
+            message: mergeMessage,
+            releaseRootPaths: [...params.bookkeepingPaths],
+            // waiting を複数回経た項目では、wait 時の同期後も統合先と exec branch の双方で
+            // 記帳ファイルが変わる。項目自身の記帳ファイルだけの競合は exec branch 側で解決する。
+            resolveConflictsWithBranchPaths: [...params.bookkeepingPaths],
+            failureLogPath: integrateLogPath(params.pipelineStatePath),
+          }),
+        record: (repo, patch) => recordRepoIntegration(params.pipelineStatePath, repo, patch),
+        failureLogPath: integrateLogPath(params.pipelineStatePath),
+        lockPath: schedulePath,
+      });
       // 撤去も統合の一部として扱う。merge 前に失敗した場合は waiting へ戻し、merge 後の撤去
       // だけが失敗した場合は review を維持して `--resume` で cleanup だけをやり直す。撤去後の
       // branch 削除だけが失敗した場合は、成果の統合を取り消さず cleanup 警告として扱う。
