@@ -15,7 +15,7 @@ specdojo:
   conclusion: Refs trailer の値を `<project-id>`:`<item-id>` とし、プロダクトとプロジェクトの両リポジトリに適用する。過去の履歴は書き換えない
 ---
 
-# PJR-1SXK Refs trailer の ID を <project-id>:<item-id> に修飾する
+# PJR-1SXK Refs trailer の ID を `<project-id>:<item-id>` に修飾する
 
 ## 1. 背景
 

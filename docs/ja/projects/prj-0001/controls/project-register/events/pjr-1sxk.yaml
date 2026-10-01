@@ -51,3 +51,16 @@
       from: "-"
       to: Refs trailer の値を `<project-id>`:`<item-id>` とし、プロダクトとプロジェクトの両リポジトリに適用する。過去の履歴は書き換えない
   previous_event_id: reg_4954f91abfe64067be0313d786cf7f63
+- v: 1
+  id: reg_1b36f158c7514f71990977c65438cc8a
+  ts: "2026-10-01T04:11:16Z"
+  action: update
+  actor: orchestrator
+  from_status: decided
+  to_status: decided
+  reason: タイトルの山括弧プレースホルダがインラインコードで囲まれておらず、lint:fm と docs:build が失敗するため
+  changes:
+    - field: title
+      from: Refs trailer の ID を <project-id>:<item-id> に修飾する
+      to: Refs trailer の ID を `<project-id>:<item-id>` に修飾する
+  previous_event_id: reg_1b88bca6d7de4d84be2cc67cc62409cf
