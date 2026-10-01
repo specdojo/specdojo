@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_35e04fe34b244e9a982683c94a1ef1bf
+  ts: "2026-10-01T03:54:10Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: 既定の別リポジトリ構成で実装を伴う項目を exec run で扱えるようにするため（v0.3.0）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 複数リポジトリ構成の実構成検証と文書の更新
+    - field: description
+      from: ""
+      to: 2 リポジトリの統合テストと e2e で動作を確かめ、docs-structure-guide・exec のガイド・CHANGELOG・移行ガイドを更新する（v0.3.0）
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-01"
+    - field: due
+      from: ""
+      to: _TODO_
