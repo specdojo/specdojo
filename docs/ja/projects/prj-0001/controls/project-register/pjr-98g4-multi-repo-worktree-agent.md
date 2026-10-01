@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-98g4-multi-repo-worktree-agent
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-01T03:53:39Z"
+  completed_at: "2026-10-01T05:09:23Z"
+  conclusion: repos を持つ project で `<task-id>`/project/ と `<task-id>`/`<name>`/ の worktree を作り、agent への追加ディレクトリ・環境変数、保護設定と Git 状態の検査、evidence をリポジトリ別に扱うようにした
 ---
 
 # PJR-98G4 タスク単位の複数 worktree と agent の作業ディレクトリ
