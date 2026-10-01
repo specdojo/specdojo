@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-0waa-multi-repo-integration-resume
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-01T03:53:55Z"
+  completed_at: "2026-10-01T11:05:04Z"
   block_reason: "agent exited with non-zero code: runner による検証 `test-integration` が失敗しているため。"
+  conclusion: リポジトリごとに commit 対象を算出し、事前検査の後に宣言順でプロダクト、最後にプロジェクトを統合する。リポジトリ別の統合状態を記録し、失敗位置から再開する
 ---
 
 # PJR-0WAA 複数リポジトリの統合と再開

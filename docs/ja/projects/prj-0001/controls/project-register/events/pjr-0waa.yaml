@@ -145,3 +145,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_d0db0326d504420d9ecfd728199c20e7
+- v: 1
+  id: reg_6eae8a70a692425fa7c26236747d1c0b
+  ts: "2026-10-01T11:05:04Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（codex-expert-executor / gemma-reporter、1 回目は統合テストの失敗でやり直し）の結果を orchestrator が評価した。releasePaths の除外、2 製品構成の失敗位置ごとの再開テスト、親検証 7 種の通過を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-01"
+    - field: conclusion
+      from: "-"
+      to: リポジトリごとに commit 対象を算出し、事前検査の後に宣言順でプロダクト、最後にプロジェクトを統合する。リポジトリ別の統合状態を記録し、失敗位置から再開する
+  previous_event_id: reg_9316f862b19c4d1ba17947d2d504ed30
