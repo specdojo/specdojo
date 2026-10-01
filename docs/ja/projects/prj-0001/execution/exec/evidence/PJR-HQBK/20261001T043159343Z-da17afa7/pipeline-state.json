@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-HQBK",
   "run_id": "20261001T043159343Z-da17afa7",
-  "updated_at": "2026-10-01T04:42:05.390Z",
+  "updated_at": "2026-10-01T04:42:58.092Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-hqbk-20261001T043106Z-e6e4-result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "claude-expert-executor",
       "attempts": 1,
       "started_at": "2026-10-01T04:42:05.390Z",
-      "completed_at": null,
+      "completed_at": "2026-10-01T04:42:58.092Z",
       "artifact_ref": null
     }
   },
