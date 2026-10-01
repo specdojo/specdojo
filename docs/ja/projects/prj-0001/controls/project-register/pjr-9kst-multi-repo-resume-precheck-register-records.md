@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: waiting
   priority: high
   owner: DEV
   registered_at: "2026-10-01T11:39:21Z"
+  block_reason: "agent exited with non-zero code: runner による統合テスト `test-integration` が failed となっており、完了条件を満たしていないため。"
 ---
 
 # PJR-9KST 複数リポジトリの統合を再開すると waiting の記帳が事前検査を妨げる
@@ -40,7 +41,9 @@ specdojo:
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- 再開経路の runner 管理パスを、`start` 遷移と root の派生ビュー再生成の後に取り直すようにした。個票・event・plan・result に加え、初回 checkpoint と同じ基準で検出した生成ビューを `releasePaths` と merge 競合解決の対象に渡す。
+- プロダクト 2 リポジトリの実 CLI 経路で、1 つ目のプロダクト、2 つ目のプロダクト、プロジェクトのそれぞれの merge を失敗させ、`waiting` 後の `--resume` が失敗位置から統合を完了する回帰テストを追加した。先に統合済みのプロダクトは merge commit を作り直さないことも確かめる。
+- `repos` を宣言しない project は、既存の単一リポジトリ用テストと経路を変更していない。
 
 ## 5. 関連ドキュメント
 
