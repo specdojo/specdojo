@@ -32,3 +32,32 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_a29ff13355d349949d0b697151c07035
+  ts: "2026-10-01T11:53:59Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_1646f9a9ca8b465fbf38ed703c34815e
+- v: 1
+  id: reg_6f1dea87cd9544509e709019d059bfc0
+  ts: "2026-10-01T12:10:54Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: runner による親検証 `test-unit` が失敗（exit 1）しているため。具体的に `tests/src/doc-index.test.ts` で「個票の `part_of` と `pjr-index` wikilink が生成された登録台帳へ解決する」テストが失敗している。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: runner による親検証 `test-unit` が失敗（exit 1）しているため。具体的に `tests/src/doc-index.test.ts` で「個票の `part_of` と `pjr-index` wikilink が生成された登録台帳へ解決する」テストが失敗している。"
+  previous_event_id: reg_a29ff13355d349949d0b697151c07035
