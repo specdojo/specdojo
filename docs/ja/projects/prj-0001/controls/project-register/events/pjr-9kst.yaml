@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_acff14d603764e0f9d23f4a3fd135c94
+  ts: "2026-10-01T11:39:22Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-69VP の 3 リポジトリ構成の e2e で、失敗位置ごとの再開 3 件がすべてこの理由で失敗したため。PJR-0WAA の統合テストは関数を直接呼ぶためこの経路を通らなかった
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 複数リポジトリの統合を再開すると waiting の記帳が事前検査を妨げる
+    - field: description
+      from: ""
+      to: 統合の途中で失敗して waiting に戻った項目を exec run --resume で再開すると、runner がプロジェクト側に書いた waiting の記帳（個票と event）が、事前検査で merge の対象と重なる未 commit の変更と判定され、統合できない。初回の統合と同じく releasePaths として除外する（v0.3.0）
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-01"
+    - field: due
+      from: ""
+      to: _TODO_
