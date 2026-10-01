@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_51d33252e44b45d4995c6e7441b0c112
+  ts: "2026-10-01T03:53:24Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: 既定の別リポジトリ構成で、実装を伴う項目を exec run で扱えるようにするため（v0.3.0）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 1 つの項目で複数リポジトリを変更する exec の方針を決める
+    - field: description
+      from: ""
+      to: 複数リポジトリ変更の可否、specdojo.config.json でのリポジトリの宣言（名前・パス・統合先ブランチ・検証の割り当て）、統合順序（宣言順でプロダクト先行）、部分状態の記録と再開位置を決める。N 個のリポジトリを扱える設計とし、まず 1 対 1 で動かす
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-10-01"
+    - field: due
+      from: ""
+      to: _TODO_
