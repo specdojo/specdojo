@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-6rn3-resume-sync-remerges-integrated-products
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-01T19:51:47Z"
+  completed_at: "2026-10-01T20:00:28Z"
+  conclusion: bookkeepingPaths の呼び出しの型エラーを直し、再開前の統合先の取り込みから統合済みのリポジトリを除外した
 ---
 
 # PJR-6RN3 再開前の統合先の取り込みが統合済みのプロダクトの merge commit を作り直す
