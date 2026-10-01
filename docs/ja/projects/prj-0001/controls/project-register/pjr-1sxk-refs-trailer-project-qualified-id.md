@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-1sxk-refs-trailer-project-qualified-id
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: high
   owner: ARC
   registered_at: "2026-10-01T03:53:15Z"
+  completed_at: "2026-10-01T03:54:56Z"
+  conclusion: Refs trailer の値を `<project-id>`:`<item-id>` とし、プロダクトとプロジェクトの両リポジトリに適用する。過去の履歴は書き換えない
 ---
 
 # PJR-1SXK Refs trailer の ID を <project-id>:<item-id> に修飾する

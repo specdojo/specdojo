@@ -32,3 +32,22 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_1b88bca6d7de4d84be2cc67cc62409cf
+  ts: "2026-10-01T03:54:56Z"
+  action: close
+  actor: orchestrator
+  from_status: open
+  to_status: decided
+  reason: orchestrator の提案（選択肢 C）を利用者が承認した（2026-10-01）
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-10-01"
+    - field: conclusion
+      from: "-"
+      to: Refs trailer の値を `<project-id>`:`<item-id>` とし、プロダクトとプロジェクトの両リポジトリに適用する。過去の履歴は書き換えない
+  previous_event_id: reg_4954f91abfe64067be0313d786cf7f63
