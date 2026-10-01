@@ -1,0 +1,21 @@
+PJR-6RN3 の 2 つの問題を直しました。親 runner の検証（`npm run typecheck`・`npm run build` 相当・`npm test`）はまだ結果が出ていないので、完了条件にある e2e 2 件（app2・project の merge が失敗した後の再開）が通るかは未確認です。
+
+**直したこと**
+- **型エラー**: `src/exec-run.ts` で関数の `bookkeepingPaths` を配列として使っていた箇所を `bookkeepingPaths().map(...)` に直しました。src だけを対象にした型検査（`tsconfig.build.json`）は通っています。
+- **merge commit の作り直し**: 再開前の統合先の取り込みで、前回の統合段で統合済み（merged / unchanged）と記録されたプロダクトを取り込まないようにしました。取り込みの対象は pipeline state から決めます。統合済みのものは `skipped`（already integrated）と表示され、exec branch に merge commit は作られません。
+  - 新しい関数 `integratedRepoNames` を `src/exec-pipeline-state.ts` に追加しました。
+  - `syncTaskWorktreesWithIntegrationTargets` に引数 `integratedProducts` を追加しました（`src/exec-repo-integration.ts`）。
+- **PJR-GENJ の動作**: 未統合のリポジトリでは、これまでどおり再開前に統合先を取り込みます。project リポジトリの扱いも変えていません。
+
+**あなたの判断で、ticket の対応策を少し広げた点**
+- ticket は「統合済み」としか書いていませんが、「変更が無い（unchanged）」と記録されたプロダクトも除外対象にしました。統合処理側が「統合済み」をこの 2 つとして扱っているのに合わせたためです。
+
+**追加したテスト**
+- `tests/src/exec-pipeline-state.test.ts`: merged / unchanged だけが統合済みとして返ることを確認する単体テスト。
+- `tests/src/exec-task-repos.integration.test.ts`: 統合済みのプロダクトの exec branch に merge commit を作らないことを確認する統合テスト。
+
+**個票**: 「対応結果」セクションを記入しました。登録簿と個票の状態は変えていません。
+
+<specdojo_executor_evidence>
+{"final_message":"PJR-6RN3 の 2 点を修正した: (1) `src/exec-run.ts` で `bookkeepingPaths` を `bookkeepingPaths()` に直し TS2339 を解消。(2) 再開前の統合先の取り込みで、pipeline state に merged / unchanged と記録されたプロダクトを除外（`integratedRepoNames` と `syncTaskWorktreesWithIntegrationTargets` の引数 `integratedProducts` を追加）。未統合のリポジトリでは取り込みを維持する。unchanged も除外対象にしたのは ticket の対応策を広げた判断。単体テスト・統合テストを追加し、個票の対応結果を記入した。完了条件の e2e 2 件の合否は親 runner の検証待ち。","validations":[{"command":"npx prettier --write src/exec-run.ts src/exec-repo-integration.ts src/exec-pipeline-state.ts tests/src/exec-pipeline-state.test.ts tests/src/exec-task-repos.integration.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-6rn3-resume-sync-remerges-integrated-products.md","status":"passed","summary":"整形済み（個票のみ表の整形で変更あり）"},{"command":"npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-6rn3-resume-sync-remerges-integrated-products.md","status":"passed","summary":"エラーなし"},{"command":"npx tsc -p tsconfig.build.json --noEmit","status":"passed","summary":"src の型エラーなし（TS2339 解消）。tests を含む型検査は親 runner の typecheck に委ねる"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"OK（既存の based_on 参照先欠落 WARN のみ）"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"Built index: 2295 entries"}]}
+</specdojo_executor_evidence>

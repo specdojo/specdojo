@@ -8,6 +8,7 @@ import addFormatsModule from "ajv-formats";
 import { afterEach, describe, expect, it } from "vitest";
 import {
   createPipelineState,
+  integratedRepoNames,
   loadPipelineResumeCheckpoint,
   pipelineStateLocation,
   readPipelineState,
@@ -308,6 +309,29 @@ describe("pipeline state", () => {
     expect(validate(completed), JSON.stringify(validate.errors)).toBe(true);
     // `repos` の無い旧形式も引き続き schema-valid。
     expect(validate(running), JSON.stringify(validate.errors)).toBe(true);
+  });
+
+  // PJR-6RN3: 再開前の統合先の取り込みから、統合済みのリポジトリを除外するために使う。
+  it("lists only repositories recorded as merged or unchanged as integrated", () => {
+    const created = createPipelineState({
+      taskId: "PJR-AB12",
+      runId: "run-1",
+      updatedAt: "2026-08-10T07:00:00Z",
+    });
+    const records: Array<[string, "merged" | "unchanged" | "failed" | "pending"]> = [
+      ["app1", "merged"],
+      ["app2", "unchanged"],
+      ["app3", "failed"],
+      ["project", "pending"],
+    ];
+    const state = records.reduce(
+      (current, [repo, status]) =>
+        updatePipelineRepoIntegration(current, repo, { status }, "2026-08-10T07:01:00Z"),
+      created,
+    );
+
+    expect([...integratedRepoNames(state)]).toEqual(["app1", "app2"]);
+    expect(integratedRepoNames(created).size).toBe(0);
   });
 
   it("persists a schema-valid protection block separately from a process failure", () => {
