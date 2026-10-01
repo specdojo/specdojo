@@ -573,6 +573,8 @@ export function syncWorktreeWithIntegrationTarget(params: {
  * Bring every repository of a task up to date with its integration target before a resumed stage
  * re-runs parent validations: products in declaration order, then the project. A product whose
  * integration target is not a local branch is skipped (the integration preflight reports it).
+ * Products named in `integratedProducts` are skipped too: merging into an already integrated exec
+ * branch would make the integration stage merge it again.
  * Throws on the first repository that cannot be synced; earlier repositories keep their merge.
  */
 export function syncTaskWorktreesWithIntegrationTargets(params: {
@@ -581,10 +583,16 @@ export function syncTaskWorktreesWithIntegrationTargets(params: {
   message: string;
   // project worktree からの相対パス。項目自身の記帳ファイルで、競合時は統合先の内容を採る。
   projectTheirsPaths?: readonly string[];
+  // PJR-6RN3: 前回の統合段で統合済み（merged / unchanged）と記録されたプロダクト名。
+  integratedProducts?: ReadonlySet<string>;
 }): IntegrationTargetSync[] {
   const synced: IntegrationTargetSync[] = [];
   for (const product of params.worktree.repos ?? []) {
     const target = productIntegrationTarget(product);
+    if (params.integratedProducts?.has(product.name)) {
+      synced.push({ repo: product.name, target, status: "skipped", detail: "already integrated" });
+      continue;
+    }
     if (!existsSync(product.path)) {
       synced.push({ repo: product.name, target, status: "skipped", detail: "worktree missing" });
       continue;

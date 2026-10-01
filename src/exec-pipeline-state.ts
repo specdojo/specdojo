@@ -257,6 +257,19 @@ export function updatePipelineRepoIntegration(
   };
 }
 
+/**
+ * Names of the repositories recorded as integrated (`merged` or `unchanged`) under
+ * `stages.integrate.repos`. A state without per-repository records yields an empty set.
+ */
+export function integratedRepoNames(state: PipelineState): Set<string> {
+  const repos = state.stages.integrate?.repos ?? {};
+  return new Set(
+    Object.entries(repos)
+      .filter(([, entry]) => entry.status === "merged" || entry.status === "unchanged")
+      .map(([name]) => name),
+  );
+}
+
 function resolveArtifactRef(worktreePath: string, ref: string): string | null {
   const root = resolve(worktreePath);
   const path = resolve(root, ref);

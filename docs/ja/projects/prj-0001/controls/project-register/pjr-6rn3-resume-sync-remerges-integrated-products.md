@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: high
   owner: DEV
   registered_at: "2026-10-01T19:51:47Z"
@@ -40,7 +40,11 @@ PJR-GENJ の再開前の統合先の取り込みが、統合済みのプロダ�
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+| 項目       | 内容                                                                                                                                                                                                                                                                                                                       |
+| ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 解決内容   | `src/exec-run.ts` の `bookkeepingPaths.map(` を `bookkeepingPaths().map(` に直した。`src/exec-pipeline-state.ts` に `integratedRepoNames` を追加し、`syncTaskWorktreesWithIntegrationTargets` が pipeline state で統合済み（merged / unchanged）のプロダクトを取り込まずに `skipped`（already integrated）とするようにした |
+| 確認結果   | 単体テスト（`integratedRepoNames`）と統合テスト（統合済みのプロダクトの exec branch に merge commit を作らない）を追加した。型検査・全件テストは親 runner の検証結果で確認する                                                                                                                                             |
+| 再発防止策 | 未統合のリポジトリだけを取り込む動作をテストで固定した。統合済みの記録と取り込みの対象が食い違わないよう、取り込みの対象を pipeline state から決める                                                                                                                                                                       |
 
 ## 5. 関連ドキュメント
 

@@ -262,6 +262,7 @@ import {
 } from "./exec-register-resume.js";
 import {
   createPipelineState,
+  integratedRepoNames,
   loadPipelineResumeCheckpoint,
   pipelineStateLocation,
   readPipelineState,
@@ -6286,6 +6287,8 @@ async function resumeSingleRegisterItemWorktree(
   // 取り込む。wait 後に統合先で直した不具合を検証へ反映するためである。register の遷移（begin）より
   // 前に行い、取り込めない場合は状態を変えずに再開を拒否する。merge 済みで撤去だけが残る統合再開は
   // 取り込まない（取り込むと merge 済みの判定が崩れる）。
+  // PJR-6RN3: 前回の統合段で統合済み（merged / unchanged）と記録されたプロダクトも取り込まない。
+  // 取り込むと exec branch に新しい merge commit ができ、統合段がそのプロダクトを再び統合する。
   let syncedIntegrationTargets = false;
   if (
     (target.stage === "reporter" || target.stage === "integrate") &&
@@ -6304,7 +6307,8 @@ async function resumeSingleRegisterItemWorktree(
         worktree,
         projectTarget,
         message: `exec(register ${item.id}): merge integration target before resume`,
-        projectTheirsPaths: bookkeepingPaths.map((path) => repoRelativePath(repoRoot, path)),
+        projectTheirsPaths: bookkeepingPaths().map((path) => repoRelativePath(repoRoot, path)),
+        integratedProducts: integratedRepoNames(target.state),
       });
     } catch (error) {
       return refuse(

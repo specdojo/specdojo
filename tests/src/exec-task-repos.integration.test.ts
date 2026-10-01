@@ -852,6 +852,33 @@ describe("syncTaskWorktreesWithIntegrationTargets", () => {
     expect(existsSync(join(worktree.path, "FIX.md"))).toBe(true);
   });
 
+  // PJR-6RN3: 統合済みのプロダクトへ merge commit を作ると、統合段が再び統合してしまう。
+  it("skips products recorded as integrated and creates no merge commit on their exec branch", () => {
+    const fixture = setup();
+    const worktree = prepare(fixture);
+    const [app1] = fixture.products;
+    const [app1Worktree] = worktree.repos ?? [];
+    commitOn(app1!.repoRoot, "APP1_FIX.md", "app1 fix\n");
+    const before = git(app1Worktree!.path, "rev-parse", "HEAD");
+
+    const synced = syncTaskWorktreesWithIntegrationTargets({
+      worktree,
+      projectTarget: currentBranch(fixture.repo),
+      message: "merge integration target before resume",
+      integratedProducts: new Set(["app1"]),
+    });
+
+    expect(synced[0]).toEqual({
+      repo: "app1",
+      target: productIntegrationTarget(app1!),
+      status: "skipped",
+      detail: "already integrated",
+    });
+    expect(synced.map((entry) => entry.repo)).toEqual(["app1", "app2", "project"]);
+    expect(git(app1Worktree!.path, "rev-parse", "HEAD")).toBe(before);
+    expect(existsSync(join(app1Worktree!.path, "APP1_FIX.md"))).toBe(false);
+  });
+
   it("aborts and throws without touching the worktree when the fix overlaps uncommitted changes", () => {
     const fixture = setup({ withProducts: false });
     const worktree = prepare(fixture);
