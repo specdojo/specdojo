@@ -11,6 +11,7 @@ import {
   loadPipelineResumeCheckpoint,
   pipelineStateLocation,
   readPipelineState,
+  updatePipelineRepoIntegration,
   updatePipelineStage,
   writePipelineState,
 } from "../../src/exec-pipeline-state.js";
@@ -249,6 +250,64 @@ describe("pipeline state", () => {
     addFormats(ajv);
     const validate = ajv.compile(schema);
     expect(validate(failed), JSON.stringify(validate.errors)).toBe(true);
+  });
+
+  it("records repository integration in declaration order while preserving old states", () => {
+    const created = createPipelineState({
+      taskId: "PJR-AB12",
+      runId: "run-repos",
+      updatedAt: "2026-08-10T07:00:00Z",
+    });
+    const running = updatePipelineStage(
+      created,
+      "integrate",
+      { status: "running", attempts: 1 },
+      "2026-08-10T07:01:00Z",
+    );
+    const firstFailed = updatePipelineRepoIntegration(
+      running,
+      "app1",
+      { status: "failed", error: "hook rejected merge" },
+      "2026-08-10T07:02:00Z",
+    );
+    const resumed = updatePipelineRepoIntegration(
+      firstFailed,
+      "app1",
+      {
+        status: "merged",
+        commit: "abc123",
+        merged_at: "2026-08-10T07:03:00Z",
+      },
+      "2026-08-10T07:03:00Z",
+    );
+    const completed = updatePipelineRepoIntegration(
+      resumed,
+      "project",
+      { status: "merged", merged_at: "2026-08-10T07:04:00Z" },
+      "2026-08-10T07:04:00Z",
+    );
+
+    expect(completed.stages.integrate?.repos).toEqual({
+      app1: {
+        status: "merged",
+        commit: "abc123",
+        merged_at: "2026-08-10T07:03:00Z",
+      },
+      project: {
+        status: "merged",
+        commit: null,
+        merged_at: "2026-08-10T07:04:00Z",
+      },
+    });
+    expect(Object.keys(completed.stages.integrate?.repos ?? {})).toEqual(["app1", "project"]);
+
+    const schema = load(readFileSync(schemaPath(), "utf8")) as Record<string, unknown>;
+    const ajv = new Ajv2020({ allErrors: true, strict: false });
+    addFormats(ajv);
+    const validate = ajv.compile(schema);
+    expect(validate(completed), JSON.stringify(validate.errors)).toBe(true);
+    // `repos` の無い旧形式も引き続き schema-valid。
+    expect(validate(running), JSON.stringify(validate.errors)).toBe(true);
   });
 
   it("persists a schema-valid protection block separately from a process failure", () => {

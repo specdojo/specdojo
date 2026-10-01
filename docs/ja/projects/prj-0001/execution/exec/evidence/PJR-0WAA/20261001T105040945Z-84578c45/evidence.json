@@ -1,0 +1,164 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-0WAA",
+  "run_id": "20261001T105040945Z-84578c45",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-01T10:50:40.945Z",
+    "completed_at": "2026-10-01T10:58:26.520Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-0waa-multi-repo-integration-resume.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/pipeline-state.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-pipeline-state.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-task-repos.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-worktree-ops.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-pipeline-state.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-task-repos.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-repo-integration.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 9,
+    "summary": ".../pjr-0waa-multi-repo-integration-resume.md      |   1 +\n .../specdojo/schemas/v1/pipeline-state.schema.yaml |  50 +++-\n src/exec-pipeline-state.ts                         |  78 +++++-\n src/exec-run.ts                                    | 262 ++++++++++++++------\n src/exec-task-repos.ts                             |   9 +-\n src/exec-worktree-ops.ts                           |  36 ++-\n tests/src/exec-pipeline-state.test.ts              |  59 +++++\n tests/src/exec-task-repos.integration.test.ts      | 273 ++++++++++++++++++++-\n 8 files changed, 677 insertions(+), 91 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/specdojo/schemas/v1/pipeline-state.schema.yaml src/exec-pipeline-state.ts src/exec-repo-integration.ts src/exec-run.ts src/exec-task-repos.ts src/exec-worktree-ops.ts tests/src/exec-pipeline-state.test.ts tests/src/exec-task-repos.integration.test.ts",
+      "status": "passed",
+      "summary": "変更したTypeScript・YAMLを整形した。"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-0waa-multi-repo-integration-resume.md",
+      "status": "passed",
+      "summary": "個票を整形した。"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-0waa-multi-repo-integration-resume.md",
+      "status": "passed",
+      "summary": "個票のMarkdown検査に合格した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate --project prj-0001",
+      "status": "passed",
+      "summary": "カタログ検証に合格した。既存の未配置文書に関する警告のみ。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "文書インデックスを正常に再生成した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "プロジェクト登録簿の派生ビューを正常に再生成した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx --input-type=module -e \"await Promise.all([import('./src/exec-repo-integration.ts'), import('./src/exec-pipeline-state.ts'), import('./src/exec-worktree-ops.ts')])\"",
+      "status": "passed",
+      "summary": "主要変更モジュールの読み込みに成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分に空白エラーはない。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0WAA\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\n[dry-run] git merge --no-ff --no-edit exec/T-T-doc-010\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nUpdated: /tmp/specdojo-register-resume-e2e-r4dary/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)\nUpdated: /tmp/specdojo-register-resume-e2e-r4dary/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml\nGenerated: /tmp/specdojo-register-resume-e2e-r4dary/docs/ja/projects/test/controls/project-register/generated/pjr-index.md\nGenerated: /tmp/specdojo-register-resume-e2e-r4dary/docs/ja/projects/test/controls/p…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.3.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-implemented)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0WAA/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0WAA/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specd…"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0WAA\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-VbZNLK/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-TulBlw/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-k3pmG7/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-hNRYde/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-3JN2Oe/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-8QKRYC/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\nWrote agent stdout: /tmp/specdojo-agent-command-qva4nh/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-UoqjYj/outputs/partial.txt\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\n\n Test Files  119 passed (119)\n      Te…"
+    }
+  ],
+  "final_message": "複数リポジトリの宣言順統合、pipeline stateへの進捗記録、失敗位置からの再開、およびreleasePathsを考慮した事前検査を実装した。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-0WAA/20261001T105040945Z-84578c45/executor.log",
+      "bytes": 2549,
+      "truncated": false
+    }
+  ]
+}

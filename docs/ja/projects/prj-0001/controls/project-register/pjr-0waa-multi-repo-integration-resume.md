@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: high
   owner: DEV
   registered_at: "2026-10-01T03:53:55Z"
@@ -46,6 +46,7 @@ commit 対象の算出と統合をリポジトリごとに行い、宣言順（�
 ## 4. 対応結果
 
 - commit 対象をリポジトリごとに算出し、全対象を commit した後に merge 可否を一括検査する統合段を追加した。
+- プロジェクト側の事前検査は、単一リポジトリ統合と同じ `releasePaths` を除外する。runner 自身の plan・result・event は統合を妨げず、統合先の無関係な未 commit ファイルも merge 対象と重ならなければ保持したまま統合できる。
 - 宣言順のプロダクトからプロジェクトの順に統合し、`stages.integrate.repos` へ `status`、`commit`、`merged_at`、失敗理由を記録する。`repos` の無い旧 pipeline state は従来どおり読める。
 - 部分失敗時は統合済みと未統合のリポジトリを理由へ含め、再開時は Git の到達関係から統合済みを飛ばす。
 - 2 製品構成の各統合位置で merge を失敗させ、失敗位置から再開して既統合リポジトリを再統合しない実 Git テストを追加した。宣言の無い project は従来の単一 worktree 経路を維持する。

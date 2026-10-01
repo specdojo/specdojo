@@ -217,8 +217,9 @@ function isMergedIntoTarget(product: ProductWorktree): boolean {
 
 /**
  * Describe product worktrees that hold work not yet in their integration target: uncommitted
- * changes or exec-branch commits. Integrating product repositories is PJR-0WAA; until then the
- * runner must not integrate the project side and remove worktrees that still hold product work.
+ * changes or exec-branch commits. Only the exec run integrate stage (exec-repo-integration)
+ * commits and merges product repositories; other paths (manual `exec worktree commit`) must not
+ * integrate the project side and remove worktrees that still hold product work.
  */
 export function pendingProductWorktreeChanges(worktree: ExecWorktree): string[] {
   const pending: string[] = [];
@@ -242,8 +243,8 @@ export function assertNoPendingProductChanges(worktree: ExecWorktree): void {
   const pending = pendingProductWorktreeChanges(worktree);
   if (pending.length === 0) return;
   throw new Error(
-    `product repository changes cannot be integrated yet: ${pending.join(" / ")}; ` +
-      `product integration is not implemented (PJR-0WAA), so all task worktrees are kept`,
+    `product repository changes are not integrated: ${pending.join(" / ")}; ` +
+      `product repositories are integrated only by exec run, so all task worktrees are kept`,
   );
 }
 
