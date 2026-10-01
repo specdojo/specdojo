@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-genj-resume-validation-before-develop-sync
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-01T04:30:54Z"
+  completed_at: "2026-10-01T20:00:38Z"
   block_reason: "agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=.opencode/.gitignore, .opencode/package-lock.json, .opencode/package.json; agent must record the re…"
+  conclusion: reporter 段・統合段からの再開で、親検証の前に統合先の最新を worktree へ取り込むようにした
 ---
 
 # PJR-GENJ reporter 段からの再開で develop を取り込む前に親検証を実行する
