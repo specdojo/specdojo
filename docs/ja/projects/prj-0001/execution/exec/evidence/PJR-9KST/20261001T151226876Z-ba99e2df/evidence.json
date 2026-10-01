@@ -1,0 +1,148 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-9KST",
+  "run_id": "20261001T151226876Z-ba99e2df",
+  "stage": {
+    "role": "executor",
+    "actor": "claude-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-01T15:12:26.876Z",
+    "completed_at": "2026-10-01T15:13:52.685Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-9kst.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-9kst-multi-repo-resume-precheck-register-records.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-repo-trace.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-register-pipeline-e2e.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-repo-trace.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 6,
+    "summary": ".../controls/project-register/events/pjr-9kst.yaml |  13 ++\n ...-multi-repo-resume-precheck-register-records.md |   2 +-\n src/exec-repo-trace.ts                             |  13 +-\n src/exec-run.ts                                    |  43 ++--\n .../exec-register-pipeline-e2e.integration.test.ts | 222 ++++++++++++++++++++-\n tests/src/exec-repo-trace.test.ts                  |  14 ++\n 6 files changed, 285 insertions(+), 22 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --check src/exec-repo-trace.ts src/exec-run.ts tests/src/exec-register-pipeline-e2e.integration.test.ts tests/src/exec-repo-trace.test.ts",
+      "status": "passed",
+      "summary": "All matched files use Prettier code style"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "OK: dct-index.yaml (only pre-existing based_on WARNs)"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/projects/prj-0001/controls/project-register/pjr-9kst-multi-repo-resume-precheck-register-records.md && npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-9kst-multi-repo-resume-precheck-register-records.md",
+      "status": "passed",
+      "summary": "Ticket formatting and markdownlint clean"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-9KST\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\n[dry-run] git merge --no-ff --no-edit exec/T-T-doc-010\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nUpdated: /tmp/specdojo-register-resume-e2e-AbLjIC/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)\nUpdated: /tmp/specdojo-register-resume-e2e-AbLjIC/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml\nGenerated: /tmp/specdojo-register-resume-e2e-AbLjIC/docs/ja/projects/test/controls/project-register/generated/pjr-index.md\nGenerated: /tmp/specdojo-register-resume-e2e-AbLjIC/docs/ja/projects/test/controls/p…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.3.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-implemented)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-9KST/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-9KST/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specd…"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-9KST\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-5mKb5C/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-pVmTA2/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-9Opy0i/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-tcZ19J/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-nZecJH/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-tmDyD4/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\nWrote agent stdout: /tmp/specdojo-agent-command-sux0ks/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-j8A1Sn/outputs/partial.txt\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\n\n Test Files  120 passed (120)\n      Te…"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "src/exec-repo-trace.ts",
+      "status": "changed",
+      "path": "src/exec-repo-trace.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec-run.ts",
+      "status": "changed",
+      "path": "src/exec-run.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/exec-register-pipeline-e2e.integration.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec-register-pipeline-e2e.integration.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/exec-repo-trace.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec-repo-trace.test.ts",
+      "reason": ""
+    }
+  ],
+  "final_message": "Verified the resume fix from the previous attempt: release paths for the resume path are now recomputed right before finalize, after the start transition, using the same criteria as the initial integration. Also verified the MD013 fix for the result trace body and the added unit and E2E tests. No additional edits were needed. Behavior is confirmed by the parent-run test-integration.",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-9KST/20261001T151226876Z-ba99e2df/executor.log",
+      "bytes": 4020,
+      "truncated": false
+    }
+  ]
+}

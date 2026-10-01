@@ -150,12 +150,19 @@ export function renderResultTraceBody(params: {
     ["trace key", "repository", "integration branch", "PR", "commit snapshot", "recorded at"],
     traceRows(params.traceKey, params.traces, params.recordedAt),
   );
+  // PJR-9KST: result は利用側プロジェクトの markdownlint 設定で検査され、既定の MD013（80 文字）が
+  // 効くことがある。説明文は文ごとに改行して短く保ち、行長を内容で決められない表だけ MD013 を外す。
   return [
-    "runner がプロダクトリポジトリを統合した後に記録した、統合先の commit snapshot です。" +
-      `プロジェクトリポジトリの統合は、この result を含む merge commit（\`Refs: ${params.traceKey}\`）で確認します。` +
-      "PR が `not applicable` の行は、runner がローカルで統合し PR を経由していないことを示します。",
+    "runner がプロダクトリポジトリを統合した後に記録した、統合先の commit snapshot です。",
+    "プロジェクトリポジトリの統合は、この result を含む merge commit で確認します。",
+    `その merge commit には \`Refs: ${params.traceKey}\` を付けます。`,
+    "PR が `not applicable` の行は、runner がローカルで統合し PR を経由していません。",
+    "",
+    "<!-- markdownlint-disable MD013 -->",
     "",
     ...table,
+    "",
+    "<!-- markdownlint-enable MD013 -->",
   ].join("\n");
 }
 

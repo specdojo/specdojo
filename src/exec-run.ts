@@ -5159,18 +5159,25 @@ function registerTransitionPaths(
   return paths;
 }
 
-// register 項目の実行管理ファイル（root 側の絶対パス）: 遷移ファイルに plan / result を加えた
-// もの。exec branch の checkpoint、失敗時の wait commit、merge 前の root 解放で同じ集合を使う。
+// register 項目の実行管理ファイル（root 側の絶対パス）。再開時は plan / result /
+// 遷移ファイルに加え、start 遷移で再生成された派生ビューも、初回 checkpoint と同じ基準で
+// runner 管理パスとして扱う。この集合を失敗時の wait commit、merge 前の root 解放で使う。
 function registerBookkeepingPaths(params: {
+  repoRoot: string;
   registerPaths: RegisterPaths;
   planPath: string;
   resultPath: string;
   ticketPath: string | null;
 }): string[] {
-  const { registerPaths, planPath, resultPath, ticketPath } = params;
-  return [
-    ...new Set([planPath, resultPath, ...registerTransitionPaths(registerPaths, ticketPath)]),
-  ];
+  const { repoRoot, registerPaths, planPath, resultPath, ticketPath } = params;
+  return registerRunnerManagedPaths(
+    repoRoot,
+    registerPaths,
+    planPath,
+    resultPath,
+    worktreeStatusPaths(repoRoot),
+    ticketPath,
+  ).map((path) => resolve(repoRoot, path));
 }
 
 // root の登録簿派生ビュー（pjr-index / generated）は非追跡の生成物で、merge や複製では更新され
@@ -6074,7 +6081,7 @@ async function resumeRegisterIntegration(params: {
   stem: string;
   worktreeResultPath: string;
   actor: string;
-  bookkeepingPaths: readonly string[];
+  bookkeepingPaths: () => readonly string[];
   begin: (actor: string, transitionReason: string) => Promise<RegisterItemSummary | null>;
   lifecycleLock?: AsyncLock;
 }): Promise<RegisterItemSummary> {
@@ -6119,7 +6126,7 @@ async function resumeRegisterIntegration(params: {
       agentResult: "success",
       stderr: "",
       actor,
-      bookkeepingPaths: params.bookkeepingPaths,
+      bookkeepingPaths: params.bookkeepingPaths(),
       pipelineStatePath: target.statePath,
       resumedIntegration: true,
     });
@@ -6199,12 +6206,16 @@ async function resumeSingleRegisterItemWorktree(
   }
 
   // root 側の実行管理ファイル。plan / result は前回の wait commit で統合ブランチに入っている。
-  const bookkeepingPaths = registerBookkeepingPaths({
-    registerPaths,
-    planPath: resolve(repoRoot, artifacts.planRef),
-    resultPath: resolve(repoRoot, artifacts.resultRef),
-    ticketPath,
-  });
+  // begin は個票と event を root へ写し、派生ビューを再生成する。その後の差分を拾うため、
+  // 再開開始前に集合を固定せず finalize の直前に評価する。
+  const bookkeepingPaths = (): string[] =>
+    registerBookkeepingPaths({
+      repoRoot,
+      registerPaths,
+      planPath: resolve(repoRoot, artifacts.planRef),
+      resultPath: resolve(repoRoot, artifacts.resultRef),
+      ticketPath,
+    });
 
   // waiting のまま再開しないよう、通常実行と同じく in-progress へ戻す。遷移は exec branch
   // 側の worktree で記録し（統合ブランチに独立した resume commit を作らない）、成功時は
@@ -6331,7 +6342,7 @@ async function resumeSingleRegisterItemWorktree(
         agentResult: outcome.runResult,
         stderr: outcome.blockReason ?? "",
         actor: executor.candidate.actor,
-        bookkeepingPaths,
+        bookkeepingPaths: bookkeepingPaths(),
         pipelineStatePath: resolve(worktree.path, outcome.stateRef),
       });
     return lifecycleLock ? lifecycleLock.runExclusive(finalize) : finalize();
@@ -6393,7 +6404,7 @@ async function resumeSingleRegisterItemWorktree(
       agentResult: outcome.runResult,
       stderr: outcome.blockReason ?? "",
       actor: reporter.candidate.actor,
-      bookkeepingPaths,
+      bookkeepingPaths: bookkeepingPaths(),
       pipelineStatePath: target.statePath,
     });
 
