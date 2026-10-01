@@ -54,6 +54,45 @@ specdojo:
 - 文書: `docs-structure-guide` の「別リポジトリ構成」（採用条件、現行実装の境界、複数リポジトリの worktree と統合順序、複数リポジトリの統合の失敗と再開）、`exec-worktree-guide`、`exec-operation-guide`（再開前の取り込みで統合済みのプロダクトを除くこと）、`specdojo-config-reference` の古い記述、v0.3.0 移行ガイドを実装後の動作に合わせて更新した。
 - 残課題: `CHANGELOG.md` と `tools/` は agent の書き込み許可の外にあるため変更していない。CHANGELOG の追記案、実 agent CLI の確認手順、opencode の差分案は result の申し送りに記載する。実 agent CLI（claude・codex・antigravity）での確認は orchestrator が行う。
 
+### 4.1. orchestrator による取り込み（2026-10-02）
+
+- 2 回目の実行（claude-expert-executor / claude-reporter）は、文書 5 件の更新と 3 リポジトリの e2e を終えて親検証 7 種を通したが、`CHANGELOG.md` と `tools/` が executor の書き込み許可の外にあり、完了と判断できず `waiting` で止まった。
+- worktree の差分（文書 5 件と `tests/src/exec-register-pipeline-e2e.integration.test.ts`）を orchestrator が develop へ取り込み、`CHANGELOG.md` に複数リポジトリ対応・`Refs:` の修飾・PJR-GENJ の修正を追記した（`319dc427`）。`npm run check`（1967 件）が通過した。
+
+### 4.2. 実際の agent CLI での書き込みの確認手順
+
+agent の sandbox と orchestrator の権限では、権限確認を省くフラグ付きで agent CLI を起動できないため、利用者が実行する。runner が付ける引数（`src/exec-task-repos.ts` の `agentExtraRootArguments`）と同じ形で、プロジェクト側を作業ディレクトリにしたまま、プロダクト側へ書き込めるかを確かめる。
+
+```bash
+S=$(mktemp -d); mkdir -p "$S/proj" "$S/app1"
+git -C "$S/proj" init -q; git -C "$S/app1" init -q
+APP="$S/app1"; SET=/workspaces/specdojo-workspace/specdojo/.specdojo/claude/settings.edit.json
+cd "$S/proj"
+echo "Create the file $APP/claude.txt containing exactly OK. Do nothing else." \
+  | claude -p --settings "$SET" --add-dir "$APP" --allowedTools "Edit(/$APP/**)"
+codex exec --ephemeral --sandbox workspace-write -c approval_policy="never" --add-dir "$APP" \
+  "Create the file $APP/codex.txt containing exactly OK. Do nothing else."
+echo "Create the file $APP/agy.txt containing exactly OK. Do nothing else." \
+  | agy --sandbox --add-dir "$(pwd)" --dangerously-skip-permissions -p "$(cat)" --add-dir "$APP"
+ls -l "$APP"; cat "$APP"/*.txt
+```
+
+`claude.txt`・`codex.txt`・`agy.txt` の 3 つが `OK` で作られていれば、各 provider でプロダクト worktree への書き込みが働く。作られないものがあれば、その provider の出力を残して報告する。agy は `-p "$(cat)"` の後ろに置いた `--add-dir` が解釈されるかを、この手順で確かめる。
+
+### 4.3. opencode の `external_directory` の差分案
+
+opencode の agent 定義（`.opencode/agents/*.md`、12 件）は `permission.external_directory: deny` で作業ディレクトリ外への書き込みを拒否するため、opencode の executor はプロダクト worktree へ書き込めない。保護された設定のため変更していない。opencode の executor でもプロダクトを変更する場合の案は次のとおり。
+
+- 対象は executor の agent 定義だけとし、reporter と review の agent 定義は `deny` のまま残す。
+- `external_directory` を一律の `deny` から、worktree の置き場だけを許す指定へ変える。_ASSUMPTION_: opencode の `permission.external_directory` がパスのパターンごとの指定を受け付けること。採用する前に opencode の文書で書式を確かめる。
+
+```yaml
+permission:
+  external_directory:
+    "/workspaces/specdojo-workspace/worktrees/**": allow
+    "*": deny
+```
+
 ## 5. 関連ドキュメント
 
 - [[prj-0001:pjr-5822-multi-repo-item-design]]
