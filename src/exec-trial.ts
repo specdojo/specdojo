@@ -26,6 +26,7 @@ import {
   type EvidenceValidation,
   type ExecEvidence,
 } from "./exec-evidence.js";
+import { parentValidationLabels } from "./exec-parent-validation.js";
 import { activateResolvedProjectPaths, resolveProjectPaths } from "./exec-project.js";
 import {
   buildExecutorPrompt,
@@ -928,8 +929,10 @@ async function runTrials(opts: TrialRunOptions): Promise<void> {
       resolveRateLimitDetection(defaults, reporterMember.provider),
     );
   }
-  const parentValidationIds = defaults.pipeline?.parent_validations ?? [];
-  const prompt = `${buildExecutorPrompt(planContent, parentValidationIds).trimEnd()}${TRIAL_PROMPT_SUFFIX}`;
+  const parentValidationEntries = defaults.pipeline?.parent_validations ?? [];
+  // Labels are `<id>` for the project repository and `<repo>:<id>` for a product repository.
+  const parentValidationIds = parentValidationLabels(parentValidationEntries);
+  const prompt = `${buildExecutorPrompt(planContent, parentValidationEntries).trimEnd()}${TRIAL_PROMPT_SUFFIX}`;
   const requestedRevision = opts.base?.trim() || "HEAD";
   const headCommit = resolveBaseCommit(repoRoot, "HEAD");
   const baseCommit = resolveBaseCommit(repoRoot, requestedRevision);

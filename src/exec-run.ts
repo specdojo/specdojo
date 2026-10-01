@@ -226,10 +226,15 @@ import {
   parentValidationGateFor,
   parentValidationPoolPath,
   replaceParentValidationResults,
+  parentValidationDisplayCommands,
+  parentValidationLabels,
+  parentValidationRoots,
+  recordedParentValidationLabel,
   resolveParentValidationConcurrency,
-  resolveParentValidationDefinitions,
   runParentValidations,
+  type ParentValidationEntry,
   type ParentValidationInvoker,
+  type ParentValidationRoots,
 } from "./exec-parent-validation.js";
 import { runReporterWithFormatRetry } from "./exec-reporter.js";
 import {
@@ -900,15 +905,14 @@ export function resolveResumedCoverageTargets(
 }
 
 function executorEvidenceContract(
-  parentValidationIds: readonly string[],
+  parentValidations: readonly ParentValidationEntry[],
   options: ExecutorPromptOptions = {},
 ): string {
-  const parentValidationCommands = resolveParentValidationDefinitions(parentValidationIds).map(
-    (definition) => definition.displayCommand,
-  );
+  const parentValidationLabelList = parentValidationLabels(parentValidations);
+  const parentValidationCommands = parentValidationDisplayCommands(parentValidations);
   const parentValidationInstruction =
-    parentValidationIds.length > 0
-      ? `\nThe SpecDojo parent runner will execute these allowlisted validations after you exit: ${parentValidationIds.join(", ")} (${parentValidationCommands.join(", ")}). Do not run those commands inside the agent sandbox or report duplicate executor results for them. Run only the remaining sandbox-safe validations required by the plan. Parent-run results will be appended to evidence with source=runner and are authoritative.\n`
+    parentValidationLabelList.length > 0
+      ? `\nThe SpecDojo parent runner will execute these allowlisted validations after you exit: ${parentValidationLabelList.join(", ")} (${parentValidationCommands.join(", ")}). Do not run those commands inside the agent sandbox or report duplicate executor results for them. Run only the remaining sandbox-safe validations required by the plan. Parent-run results will be appended to evidence with source=runner and are authoritative.\n`
       : "";
   const coverage = {
     source: options.coverageSource ?? "none",
@@ -979,11 +983,11 @@ Markdown fences around the JSON.
 
 export function buildExecutorPrompt(
   plan: string,
-  parentValidationIds: readonly string[] = [],
+  parentValidations: readonly ParentValidationEntry[] = [],
   options: ExecutorPromptOptions = {},
 ): string {
   const coverage = resolveResumedCoverageTargets(plan, options.initialChangeTargets);
-  return `${plan.trimEnd()}${executorEvidenceContract(parentValidationIds, {
+  return `${plan.trimEnd()}${executorEvidenceContract(parentValidations, {
     ...options,
     initialChangeTargets: coverage.targets,
     coverageSource: coverage.source,
@@ -1014,22 +1018,24 @@ export type ParentValidationRunOptions = {
 };
 
 // 同じ exec run 内の親検証は run 全体の gate（既定 1 本）で直列化する。executor と reporter は
-// gate の外で並列に動き、検証だけが順番待ちになる。
+// gate の外で並列に動き、検証だけが順番待ちになる。`cwd` に文字列を渡すとプロジェクト worktree
+// だけを持つ run として扱い、プロダクトリポジトリへ割り当てた検証は failed になる（PJR-V96B）。
 export async function runConfiguredParentValidations(
   execDefaults: ExecDefaultsConfig,
-  cwd: string,
+  cwd: string | ParentValidationRoots,
   options: ParentValidationRunOptions = {},
 ): Promise<Awaited<ReturnType<typeof runParentValidations>>> {
-  const ids = execDefaults.pipeline?.parent_validations;
-  if (!ids?.length) return [];
-  const label = options.label ?? basename(cwd);
-  const validations = await parentValidationGateFor(execDefaults).run(label, ids, async () => {
-    process.stdout.write(`  Running parent validations (${label}): ${ids.join(", ")}\n`);
-    return await runParentValidations(ids, cwd, options.invoke);
+  const entries = execDefaults.pipeline?.parent_validations;
+  if (!entries?.length) return [];
+  const labels = parentValidationLabels(entries);
+  const label = options.label ?? basename(typeof cwd === "string" ? cwd : cwd.project);
+  const validations = await parentValidationGateFor(execDefaults).run(label, labels, async () => {
+    process.stdout.write(`  Running parent validations (${label}): ${labels.join(", ")}\n`);
+    return await runParentValidations(entries, cwd, options.invoke);
   });
   for (const validation of validations) {
     process.stdout.write(
-      `  Parent validation ${validation.id ?? validation.command}: ${validation.status}\n`,
+      `  Parent validation ${recordedParentValidationLabel(validation)}: ${validation.status}\n`,
     );
   }
   return validations;
@@ -1038,21 +1044,24 @@ export async function runConfiguredParentValidations(
 async function refreshParentValidationsForReporterResume(params: {
   execDefaults: ExecDefaultsConfig;
   cwd: string;
+  productWorktrees?: readonly ProductWorktree[];
   evidence: ExecEvidence;
   evidencePath: string;
 }): Promise<ExecEvidence> {
-  const configuredIds = params.execDefaults.pipeline?.parent_validations;
+  const configuredEntries = params.execDefaults.pipeline?.parent_validations;
   if (
-    hasRecordedParentValidations(params.evidence.validations, configuredIds) &&
+    hasRecordedParentValidations(params.evidence.validations, configuredEntries) &&
     !failedParentValidationReason(params.evidence.validations)
   ) {
     return params.evidence;
   }
 
   process.stdout.write("  Refreshing parent validations before reporter resume.\n");
-  const parentValidations = await runConfiguredParentValidations(params.execDefaults, params.cwd, {
-    label: params.evidence.task_id,
-  });
+  const parentValidations = await runConfiguredParentValidations(
+    params.execDefaults,
+    parentValidationRoots(params.cwd, params.productWorktrees),
+    { label: params.evidence.task_id },
+  );
   const evidence = replaceParentValidationResults(params.evidence, parentValidations);
   writeExecutorEvidence(params.evidencePath, evidence);
   process.stdout.write(
@@ -1067,12 +1076,15 @@ async function refreshParentValidationsForReporterResume(params: {
 async function appendParentValidationsToExecutorEvidence(params: {
   execDefaults: ExecDefaultsConfig;
   cwd: string;
+  productWorktrees?: readonly ProductWorktree[];
   evidence: ExecEvidence;
   evidencePath: string;
 }): Promise<ExecEvidence> {
-  const parentValidations = await runConfiguredParentValidations(params.execDefaults, params.cwd, {
-    label: params.evidence.task_id,
-  });
+  const parentValidations = await runConfiguredParentValidations(
+    params.execDefaults,
+    parentValidationRoots(params.cwd, params.productWorktrees),
+    { label: params.evidence.task_id },
+  );
   const evidence = replaceParentValidationResults(params.evidence, parentValidations);
   writeExecutorEvidence(params.evidencePath, evidence);
   return evidence;
@@ -2023,6 +2035,7 @@ async function runPreparedTask(
         executorEvidence = await refreshParentValidationsForReporterResume({
           execDefaults,
           cwd: prepared.worktree.path,
+          productWorktrees: prepared.worktree.repos,
           evidence: executorEvidence,
           evidencePath: executorEvidencePath,
         });
@@ -2173,6 +2186,7 @@ async function runPreparedTask(
       executorEvidence = await appendParentValidationsToExecutorEvidence({
         execDefaults,
         cwd: prepared.worktree.path,
+        productWorktrees: prepared.worktree.repos,
         evidence: executorEvidence,
         evidencePath: executorEvidencePath,
       });
@@ -4636,6 +4650,7 @@ async function runAgentPipeline(params: {
   recorded.evidence = await appendParentValidationsToExecutorEvidence({
     execDefaults,
     cwd,
+    productWorktrees: params.productWorktrees,
     evidence: recorded.evidence,
     evidencePath: recorded.evidencePath,
   });
@@ -6204,6 +6219,7 @@ async function resumeSingleRegisterItemWorktree(
   const evidence = await refreshParentValidationsForReporterResume({
     execDefaults: context.execDefaults,
     cwd: worktree.path,
+    productWorktrees: worktree.repos,
     evidence: target.evidence,
     evidencePath: resolve(worktree.path, target.evidenceRef),
   });

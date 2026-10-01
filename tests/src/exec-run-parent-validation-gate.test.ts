@@ -112,3 +112,53 @@ describe("runConfiguredParentValidations in a parallel run", () => {
     expect(validationProbe.maxActive).toBe(2);
   });
 });
+
+describe("runConfiguredParentValidations with repository assignments", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("runs product assignments in their worktrees and logs <repo>:<id> labels", async () => {
+    const writes: string[] = [];
+    vi.spyOn(process.stdout, "write").mockImplementation((chunk: string | Uint8Array) => {
+      writes.push(String(chunk));
+      return true;
+    });
+    const execDefaults: ExecDefaultsConfig = {
+      pipeline: {
+        parent_validations: [
+          "lint-md",
+          { id: "test-unit", repo: "app1" },
+          { id: "test-unit", repo: "app2" },
+        ],
+      },
+    };
+    const calls: string[] = [];
+
+    const validations = await runConfiguredParentValidations(
+      execDefaults,
+      {
+        project: "/worktrees/PJR-AAAA/project",
+        repos: { app1: "/worktrees/PJR-AAAA/app1", app2: "/worktrees/PJR-AAAA/app2" },
+      },
+      {
+        label: "PJR-AAAA",
+        invoke: async (definition, cwd) => {
+          calls.push(`${definition.id}@${cwd}`);
+          return { exitCode: 0, stdout: "ok", stderr: "" };
+        },
+      },
+    );
+
+    expect(calls).toEqual([
+      "lint-md@/worktrees/PJR-AAAA/project",
+      "test-unit@/worktrees/PJR-AAAA/app1",
+      "test-unit@/worktrees/PJR-AAAA/app2",
+    ]);
+    expect(validations.map((validation) => validation.repo)).toEqual(["project", "app1", "app2"]);
+    expect(writes).toContain(
+      "  Running parent validations (PJR-AAAA): lint-md, app1:test-unit, app2:test-unit\n",
+    );
+    expect(writes).toContain("  Parent validation app2:test-unit: passed\n");
+  });
+});

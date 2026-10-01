@@ -13,6 +13,7 @@ import type { Proficiency } from "./exec-types.js";
 import {
   resolveParentValidationConcurrency,
   resolveParentValidationDefinitions,
+  type ParentValidationEntry,
 } from "./exec-parent-validation.js";
 
 // ── Types for .specdojo/exec-defaults.yaml (global + per-provider) ─────────────
@@ -85,7 +86,8 @@ export type ExecDefaultsConfig = {
     max_concurrent_runs?: number;
   };
   pipeline?: {
-    parent_validations?: string[];
+    // A string runs in the project repository; `{ id, repo }` runs in the named repository.
+    parent_validations?: ParentValidationEntry[];
     parent_validation_concurrency?: number;
   };
   rate_limit_detection?: RateLimitDetection;

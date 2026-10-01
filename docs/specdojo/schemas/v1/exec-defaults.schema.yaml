@@ -49,6 +49,10 @@ properties:
       $ref: "#/$defs/ProviderOverride"
 
 $defs:
+  ParentValidationId:
+    type: string
+    enum: [validate-schema, typecheck, test-unit, test-integration, lint-ts, lint-fm, lint-md]
+
   PipelineDefaults:
     type: object
     additionalProperties: false
@@ -62,9 +66,26 @@ $defs:
           Fixed validation IDs executed by the SpecDojo parent runner after a successful
           executor process and before reporter invocation. IDs resolve through the built-in
           allowlist; command strings and arguments cannot be supplied by agents or config.
+          A plain ID runs in the project repository worktree. `{ id, repo }` runs the same fixed
+          command in the worktree of the named repository (`project` or a product repository
+          declared in `projects.<id>.repos` of specdojo.config.json), even when that repository
+          has no changes. The same ID may be assigned to several repositories; each
+          `(id, repo)` pair must be unique.
         items:
-          type: string
-          enum: [validate-schema, typecheck, test-unit, test-integration, lint-ts, lint-fm, lint-md]
+          oneOf:
+            - $ref: "#/$defs/ParentValidationId"
+            - type: object
+              additionalProperties: false
+              required: [id, repo]
+              properties:
+                id:
+                  $ref: "#/$defs/ParentValidationId"
+                repo:
+                  type: string
+                  pattern: "^[a-z0-9-]+$"
+                  description: >
+                    Repository name: `project` for the project repository, or a product
+                    repository name from `projects.<id>.repos`.
       parent_validation_concurrency:
         type: integer
         minimum: 1

@@ -4,6 +4,7 @@ import { gitEnvironment } from "./exec-worktree.js";
 import { acquirePoolSlot, getActiveExecLocksDir, releaseLock } from "./exec-slot-lock.js";
 import type { EvidenceValidation, ExecEvidence } from "./exec-evidence.js";
 import { redactSensitiveText } from "./exec-evidence.js";
+import { PROJECT_REPO_WORKTREE_DIRNAME, REPO_NAME_PATTERN } from "./specdojo-config.js";
 
 const MAX_CAPTURE_BYTES = 64 * 1024;
 const MAX_SUMMARY_LENGTH = 1_000;
@@ -102,24 +103,112 @@ function appendBounded(chunks: Buffer[], chunk: Buffer, currentBytes: number): n
   return currentBytes + Math.min(chunk.length, remaining);
 }
 
-export function resolveParentValidationDefinitions(
-  ids: readonly string[] | undefined,
-): ParentValidationDefinition[] {
-  if (!ids) return [];
+// PJR-V96B: `pipeline.parent_validations` の要素は ID の文字列か `{ id, repo }`。文字列は
+// プロジェクトリポジトリ（`project`）で実行する。ID が同じなら、どのリポジトリでも同じ固定 argv
+// を実行する（リポジトリ別の command 指定は受け付けない）。
+export const PARENT_VALIDATION_PROJECT_REPO = PROJECT_REPO_WORKTREE_DIRNAME;
+
+/** One element of `pipeline.parent_validations` in exec-defaults. */
+export type ParentValidationEntry = string | { id: string; repo: string };
+
+export type ParentValidationAssignment = {
+  definition: ParentValidationDefinition;
+  /** Repository name: `project` or a product repository declared in `projects.<id>.repos`. */
+  repo: string;
+  /** `<id>` for the project repository, `<repo>:<id>` for a product repository. */
+  label: string;
+};
+
+/** Worktree roots the parent validations may run in (project worktree and product worktrees). */
+export type ParentValidationRoots = {
+  project: string;
+  repos?: Readonly<Record<string, string>>;
+};
+
+export function parentValidationRoots(
+  projectPath: string,
+  productWorktrees?: readonly { name: string; path: string }[],
+): ParentValidationRoots {
+  if (!productWorktrees || productWorktrees.length === 0) return { project: projectPath };
+  return {
+    project: projectPath,
+    repos: Object.fromEntries(productWorktrees.map((product) => [product.name, product.path])),
+  };
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function assignmentLabel(id: string, repo: string): string {
+  return repo === PARENT_VALIDATION_PROJECT_REPO ? id : `${repo}:${id}`;
+}
+
+function parseEntry(entry: unknown, index: number): { id: string; repo: string } {
+  const where = `pipeline.parent_validations[${index}] in exec-defaults`;
+  if (typeof entry === "string") return { id: entry, repo: PARENT_VALIDATION_PROJECT_REPO };
+  if (!isRecord(entry)) {
+    throw new Error(`${where} must be a validation id or { id, repo }: ${JSON.stringify(entry)}`);
+  }
+  const unknownKeys = Object.keys(entry)
+    .filter((key) => key !== "id" && key !== "repo")
+    .sort();
+  if (unknownKeys.length > 0) {
+    throw new Error(`${where}: unknown key(s) ${unknownKeys.map((key) => `"${key}"`).join(", ")}`);
+  }
+  if (typeof entry.id !== "string" || entry.id.length === 0) {
+    throw new Error(`${where}.id must be a non-empty string`);
+  }
+  if (typeof entry.repo !== "string" || !REPO_NAME_PATTERN.test(entry.repo)) {
+    throw new Error(
+      `${where}.repo must match ${String(REPO_NAME_PATTERN)} (got ${JSON.stringify(entry.repo)})`,
+    );
+  }
+  return { id: entry.id, repo: entry.repo };
+}
+
+export function resolveParentValidationAssignments(
+  entries: readonly unknown[] | undefined,
+): ParentValidationAssignment[] {
+  if (!entries) return [];
   const seen = new Set<string>();
-  return ids.map((id) => {
-    if (seen.has(id)) {
-      throw new Error(`Duplicate parent validation id in exec-defaults: ${id}`);
+  return entries.map((entry, index) => {
+    const { id, repo } = parseEntry(entry, index);
+    const label = assignmentLabel(id, repo);
+    if (seen.has(label)) {
+      throw new Error(`Duplicate parent validation id in exec-defaults: ${label}`);
     }
-    seen.add(id);
-    const definition = PARENT_VALIDATION_REGISTRY[id as ParentValidationId];
+    seen.add(label);
+    const definition = Object.hasOwn(PARENT_VALIDATION_REGISTRY, id)
+      ? PARENT_VALIDATION_REGISTRY[id as ParentValidationId]
+      : undefined;
     if (!definition) {
       throw new Error(
         `Unknown parent validation id in exec-defaults: ${id} (allowed: ${Object.keys(PARENT_VALIDATION_REGISTRY).join(", ")})`,
       );
     }
-    return definition;
+    return { definition, repo, label };
   });
+}
+
+export function resolveParentValidationDefinitions(
+  entries: readonly unknown[] | undefined,
+): ParentValidationDefinition[] {
+  return resolveParentValidationAssignments(entries).map((assignment) => assignment.definition);
+}
+
+/** Labels (`<id>` or `<repo>:<id>`) of the configured parent validations, in order. */
+export function parentValidationLabels(entries: readonly unknown[] | undefined): string[] {
+  return resolveParentValidationAssignments(entries).map((assignment) => assignment.label);
+}
+
+/** Display command with the repository for product assignments (`npm run test:unit (in app1)`). */
+export function parentValidationDisplayCommands(entries: readonly unknown[] | undefined): string[] {
+  return resolveParentValidationAssignments(entries).map((assignment) =>
+    assignment.repo === PARENT_VALIDATION_PROJECT_REPO
+      ? assignment.definition.displayCommand
+      : `${assignment.definition.displayCommand} (in ${assignment.repo})`,
+  );
 }
 
 async function invokeParentValidation(
@@ -188,24 +277,64 @@ function validationSummary(result: ParentValidationProcessResult): string {
   return truncate(output ? `${prefix}: ${output}` : prefix, MAX_SUMMARY_LENGTH);
 }
 
+/**
+ * Run the configured parent validations in order. Each validation runs with the worktree of its
+ * assigned repository as cwd, whether or not that repository changed (to detect breakage of the
+ * integration target). A validation assigned to a repository without a worktree in `cwd` fails
+ * without spawning anything. Results carry `repo` when the run spans product repositories or the
+ * assignment names one, so single-repository evidence keeps its previous shape.
+ */
 export async function runParentValidations(
-  ids: readonly string[] | undefined,
-  cwd: string,
+  entries: readonly unknown[] | undefined,
+  cwd: string | ParentValidationRoots,
   invoke: ParentValidationInvoker = invokeParentValidation,
 ): Promise<EvidenceValidation[]> {
-  const definitions = resolveParentValidationDefinitions(ids);
+  const assignments = resolveParentValidationAssignments(entries);
+  const roots = typeof cwd === "string" ? { project: cwd } : cwd;
+  const recordsRepo =
+    Object.keys(roots.repos ?? {}).length > 0 ||
+    assignments.some((assignment) => assignment.repo !== PARENT_VALIDATION_PROJECT_REPO);
   const validations: EvidenceValidation[] = [];
-  for (const definition of definitions) {
-    const result = await invoke(definition, cwd);
+  for (const { definition, repo } of assignments) {
+    const repoField = recordsRepo ? { repo } : {};
+    const root =
+      repo === PARENT_VALIDATION_PROJECT_REPO
+        ? roots.project
+        : Object.hasOwn(roots.repos ?? {}, repo)
+          ? roots.repos?.[repo]
+          : undefined;
+    if (!root) {
+      validations.push({
+        id: definition.id,
+        source: "runner",
+        ...repoField,
+        command: definition.displayCommand,
+        status: "failed",
+        summary: truncate(
+          `repository "${repo}" has no worktree for this task; declare it in projects.<project-id>.repos ` +
+            `or assign ${definition.id} to another repository in pipeline.parent_validations`,
+          MAX_SUMMARY_LENGTH,
+        ),
+      });
+      continue;
+    }
+    const result = await invoke(definition, root);
     validations.push({
       id: definition.id,
       source: "runner",
+      ...repoField,
       command: definition.displayCommand,
       status: result.exitCode === 0 && !result.error && !result.timedOut ? "passed" : "failed",
       summary: validationSummary(result),
     });
   }
   return validations;
+}
+
+/** `<id>` or `<repo>:<id>` of a recorded runner validation (no `repo` means the project). */
+export function recordedParentValidationLabel(validation: EvidenceValidation): string {
+  const id = validation.id ?? validation.command;
+  return assignmentLabel(id, validation.repo ?? PARENT_VALIDATION_PROJECT_REPO);
 }
 
 // 並列の worktree 実行で親検証（vitest など複数 worker を起動するコマンド）が重なると、
@@ -330,7 +459,7 @@ export function failedParentValidationReason(
     (validation) => validation.source === "runner" && validation.status !== "passed",
   );
   if (failed.length === 0) return undefined;
-  return `parent validation failed: ${failed.map((validation) => validation.id ?? validation.command).join(", ")}`;
+  return `parent validation failed: ${failed.map(recordedParentValidationLabel).join(", ")}`;
 }
 
 /**
@@ -359,17 +488,15 @@ export function replaceParentValidationResults(
 
 export function hasRecordedParentValidations(
   validations: readonly EvidenceValidation[],
-  configuredIds: readonly string[] | undefined,
+  configuredEntries: readonly unknown[] | undefined,
 ): boolean {
-  const expectedIds = resolveParentValidationDefinitions(configuredIds).map(
-    (definition) => definition.id,
-  );
-  const recordedIds = validations
-    .filter((validation) => validation.source === "runner")
-    .map((validation) => validation.id)
-    .filter((id): id is string => typeof id === "string");
+  // Compare `<repo>:<id>` pairs so a changed repository assignment re-runs the validations.
+  const expectedLabels = parentValidationLabels(configuredEntries);
+  const recordedLabels = validations
+    .filter((validation) => validation.source === "runner" && typeof validation.id === "string")
+    .map(recordedParentValidationLabel);
   return (
-    recordedIds.length === expectedIds.length &&
-    expectedIds.every((id, index) => recordedIds[index] === id)
+    recordedLabels.length === expectedLabels.length &&
+    expectedLabels.every((label, index) => recordedLabels[index] === label)
   );
 }

@@ -15,6 +15,8 @@ const MAX_VALIDATION_SUMMARY_LENGTH = 1_000;
 export type EvidenceValidation = {
   id?: string;
   source?: "executor" | "runner";
+  /** Repository the runner ran the validation in (`project` or a declared product repository). */
+  repo?: string;
   command: string;
   status: "passed" | "failed" | "not_run";
   summary: string;
