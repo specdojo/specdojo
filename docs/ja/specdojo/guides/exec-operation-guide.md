@@ -441,7 +441,7 @@ specdojo exec run \
 
 executor のプロセス結果は、親 runner 検証を始める前に `executor.log` と `evidence.json` へ保存し、`pipeline-state.json` の executor を `succeeded` へ更新します。親検証中にプロセスが中断した場合、`--resume` は保存済みの executor evidence を再利用し、不足している親検証を実行してから reporter へ進みます。agent 実行中の中断で executor が `running` のまま残った場合は、未コミット成果を含む既存 worktree を破棄せず、同じ plan/result を入力に executor から再実行します。`--executor-by` / `--reporter-by` を省略した場合は state に記録された各 agent を引き継ぎます。
 
-`reporter` 段または `integrate` 段から再開する場合、runner は親検証より前に、統合先ブランチの最新を exec branch と worktree へ merge commit で取り込みます。複数リポジトリの project では、宣言順に各プロダクトの統合先（`integration_branch`、未指定なら現在のブランチ）を取り込み、最後にプロジェクトの統合先を取り込みます。worktree に残る executor の未コミット成果はそのまま保持します。取り込みで新しい commit が入った場合は、記録済みの親検証が成功していても検証し直します。これにより、wait の後に統合先で直した不具合が再開時の親検証に反映されます。`integrate` 段の再開で親検証が失敗した場合は、統合せずに `waiting` へ戻します。統合先の変更が未コミット成果と重なる場合や、項目自身の記帳ファイル以外で競合する場合は、merge を中止し、register の状態を変えずに再開を拒否して理由を表示します。merge 済みで worktree の撤去だけが残っている統合再開では取り込みを行いません。
+`reporter` 段または `integrate` 段から再開する場合、runner は親検証より前に、統合先ブランチの最新を exec branch と worktree へ merge commit で取り込みます。複数リポジトリの project では、宣言順に各プロダクトの統合先（`integration_branch`、未指定なら現在のブランチ）を取り込み、最後にプロジェクトの統合先を取り込みます。`pipeline-state.json` の `integrate.repos` で統合済み（`merged` / `unchanged`）のプロダクトは取り込まず、exec branch に merge commit を作りません。worktree に残る executor の未コミット成果はそのまま保持します。取り込みで新しい commit が入った場合は、記録済みの親検証が成功していても検証し直します。これにより、wait の後に統合先で直した不具合が再開時の親検証に反映されます。`integrate` 段の再開で親検証が失敗した場合は、統合せずに `waiting` へ戻します。統合先の変更が未コミット成果と重なる場合や、項目自身の記帳ファイル以外で競合する場合は、merge を中止し、register の状態を変えずに再開を拒否して理由を表示します。merge 済みで worktree の撤去だけが残っている統合再開では取り込みを行いません。
 
 中断した executor を再実行するとき、runner は再開前から worktree に存在する変更パスを prompt へ添え、既存差分を完了の証拠とみなさず plan 全体と全 `targets` を確認するよう指示します。再開後の executor evidence は各 target について `target_coverage` を持ち、変更した target は repo 相対 `path` が累積 worktree 差分に実在すること、変更不要の target は具体的な `reason` があることを runner が検査します。target の欠落、差分にない変更申告、理由のない未変更申告が一つでもあれば executor は `failed` となり、reporter と統合へ進みません。この検査は rate limit、crash、手動停止のいずれから executor 段を再開した場合も同じです。
 
@@ -455,11 +455,14 @@ reporter 段の再開の入力は、`pipeline-state.json`（stage 状態と plan
 
 統合段の再開は、executor と reporter が成功したまま commit・merge・worktree 撤去のいずれかが失敗した run が対象です。worktree は統合が完了したときにだけ撤去されるため、reporter 成功済みの worktree が残っていること自体が統合の未完了を意味します。この再開では agent を1つも起動せず、worktree に残っている成果物と記入済み result をそのまま統合します。前回の試行で merge まで完了していた場合は、取り込み済みの exec ブランチを再 merge せずに残りの手順（worktree 撤去と `register review`）だけを進めます。再開の開始時に項目は `in-progress` へ戻り、成功なら `review`、失敗なら `waiting` へ遷移するため、再試行の成否は登録簿の状態とイベントに残ります。統合段の進捗（開始と失敗）は `pipeline-state.json` の `integrate` にも記録します。
 
+`specdojo.config.json` の project に `repos` を宣言している場合、統合段は宣言順のプロダクトリポジトリ、最後にプロジェクトリポジトリの順で統合し、リポジトリ別の状態（`pending` / `merged` / `unchanged` / `failed`）を `pipeline-state.json` の `integrate.repos` に記録します。途中で失敗すると、統合済みのリポジトリはそのまま残し、項目を `waiting` へ戻して全リポジトリの worktree を保持します。統合段の再開では、統合先へ取り込み済みのプロダクトを merge し直さず、失敗したリポジトリから統合を続けます。統合の順序と部分状態の詳細は [[specdojo:docs-structure-guide|ドキュメント構成ガイド]] の「複数リポジトリの統合の失敗と再開」を参照してください。
+
 再開できるかどうかは、対象 worktree の最新 run だけで判定します。次の場合は worktree・exec ブランチ・未コミットの成果を一切変更せず、理由を出力して終了コード 1 で終わります。
 
 | 状況                                                 | 扱い                                                         |
 | ---------------------------------------------------- | ------------------------------------------------------------ |
 | 項目の exec worktree が無い                          | 再開せず、通常の再実行を促す                                 |
+| 宣言したプロダクトリポジトリの worktree が欠けている | 再開せず、通常の再実行を促す                                 |
 | 最新 run の executor が `pending` / `failed`         | 再開せず、通常の再実行を促す（古い run へは遡らない）        |
 | 最新 run の executor が `rate_limited` / `blocked`   | 既存 worktree の executor 段から再開する                     |
 | succeeded executor の `evidence.json` が欠損・不整合 | executor の記録を再利用できないため拒否する                  |

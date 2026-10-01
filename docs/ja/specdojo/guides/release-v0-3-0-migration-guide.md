@@ -23,6 +23,7 @@ SpecDojo v0.2.1 から v0.3.0 へ更新するときに、利用者側の設定�
 
 - レビュー観点、rubric、review verdict とテンプレートの旧値・新値の対応
 - overlay、コピー済みテンプレート、既存 grade 結果の移行手順
+- 複数リポジトリ構成の変更点と、プロダクトリポジトリを exec の対象にする手順
 - 移行後の検証方法と、人が行う公開作業の境界
 
 **次に読む文書**
@@ -41,14 +42,16 @@ Node のバージョンが要件を満たしているか確認し、必要に応
 作業中の plan / result がない状態で更新し、利用リポジトリの変更を commit してから始めます。
 次のファイルや記録を変更している場合は、移行対象です。
 
-| 対象                       | 確認箇所                           | 必要な対応                                                                                        |
-| -------------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------- |
-| レビュー観点の overlay     | project の `viewpoints_path`       | `evaluation`、`continuous`、rubric、verdict を更新する                                            |
-| コピー済み kata            | `npx specdojo kata status`         | v0.3.0 の package 原本との差分を確認する                                                          |
-| コピー済み実行テンプレート | `docs/ja/specdojo/exec-templates/` | review テンプレートを同期し、削除済みファイルを除く                                               |
-| 既存 review plan           | `execution/exec/plans/`            | 未着手の review plan を更新後に再生成する                                                         |
-| 既存 grade 結果            | grade result サイドカー            | rubric v2 で再評価する                                                                            |
-| 登録簿の `note` の扱い     | `note` を close する運用や script  | `register close` / `reject` / `defer` が `note` を拒否するため、`open` のまま追記する運用へ改める |
+| 対象                        | 確認箇所                           | 必要な対応                                                                                        |
+| --------------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------- |
+| レビュー観点の overlay      | project の `viewpoints_path`       | `evaluation`、`continuous`、rubric、verdict を更新する                                            |
+| コピー済み kata             | `npx specdojo kata status`         | v0.3.0 の package 原本との差分を確認する                                                          |
+| コピー済み実行テンプレート  | `docs/ja/specdojo/exec-templates/` | review テンプレートを同期し、削除済みファイルを除く                                               |
+| 既存 review plan            | `execution/exec/plans/`            | 未着手の review plan を更新後に再生成する                                                         |
+| 既存 grade 結果             | grade result サイドカー            | rubric v2 で再評価する                                                                            |
+| 登録簿の `note` の扱い      | `note` を close する運用や script  | `register close` / `reject` / `defer` が `note` を拒否するため、`open` のまま追記する運用へ改める |
+| `Refs:` で履歴を引く script | commit message を検索する処理      | `Refs: <project-id>:<item-id>` の修飾形も検索の対象にする                                         |
+| プロダクトリポジトリの変更  | 項目を分けるか人が統合している運用 | 必要に応じて `repos` を宣言し、`exec run --worktree` の統合へ移す                                 |
 
 依存 package を更新します。`@specdojo/docs-lint` は v0.3.0 の変更対象ではないため、利用中の
 版をそのまま使えます。docs サイトを直接利用している場合は `@specdojo/docs-site@0.2.0` へ
@@ -160,7 +163,51 @@ npx specdojo kata status --kind exec-template
 再生成します。進行中の review は新旧の指示を混在させず、いったん中止して grade の鮮度を確認し、
 新しい plan から再開してください。
 
-## 6. 移行を検証する
+## 6. 複数リポジトリ構成へ移行する
+
+v0.3.0 では、1 つの項目でプロジェクトリポジトリと複数のプロダクトリポジトリを変更し、
+`exec run --worktree` で統合できるようになりました。`repos` を宣言しない project の
+worktree の配置、commit、統合は v0.2.1 と同じです。宣言しない場合の変更点は、
+`exec run --register` がプロジェクト側の merge commit に付ける `Refs:` の書式だけです。
+
+| 項目                                  | v0.2.1                                      | v0.3.0                                                                                 |
+| ------------------------------------- | ------------------------------------------- | -------------------------------------------------------------------------------------- |
+| プロジェクト側の merge commit の Refs | `Refs: <item-id>`                           | `Refs: <project-id>:<item-id>`                                                         |
+| プロダクトリポジトリの変更            | exec の対象外（項目を分けるか人が統合する） | project の `repos` に宣言したリポジトリを、同じ項目で変更・統合する                    |
+| `targets`・`paths`                    | doc id または SpecDojo ルート相対のパス     | 加えて `<repo>:<path>` でプロダクトリポジトリのパスを指定できる                        |
+| task の worktree                      | `<worktree_base>/<task-id>/`                | `repos` を宣言した project だけ `<task-id>/project/` と `<task-id>/<name>/` に分かれる |
+| 親検証                                | ID の配列をプロジェクトリポジトリで実行する | 要素に `{ id, repo }` を書き、リポジトリを割り当てられる                               |
+| result                                | 本文の構成は変わらない                      | `repos` を宣言した project の register 項目は「トレーサビリティ」の章を末尾に持つ      |
+
+過去の commit の `Refs: <item-id>` は書き換えません。履歴を検索する script は、修飾形と
+修飾なしの両方を対象にします。
+
+```bash
+git log <target-branch> -E --grep='^Refs: (<project-id>:)?<item-id>$' --format='%H %s'
+```
+
+プロダクトリポジトリを exec の対象にする場合は、次の順で移行します。
+
+1. 作業中の項目がない状態で、`.specdojo/specdojo.config.json` の project に `repos` を追加する。
+   書き方と検証規則は [[specdojo:specdojo-config-reference|specdojo.config.json リファレンス]]
+   の「`repos`のキー」を参照する。
+2. プロダクトリポジトリで実行する親検証があれば、`.specdojo/exec-defaults.yaml` の
+   `pipeline.parent_validations` に `{ id, repo }` を追加し、プロダクト側の `package.json` に
+   同じ名前の npm script を用意する。詳細は [[specdojo:exec-config-guide|exec設定ガイド]] を
+   参照する。
+3. プロダクトを変更する項目の `targets` に `<repo>:<path>` を書く。プロダクト文書は doc id では
+   参照できないため、パスで指定する。
+4. executor に使う provider を確認する。claude・codex・antigravity・copilot は runner が
+   プロダクト worktree への書き込み許可を起動引数へ付け足す。opencode は agent 定義の
+   `permission.external_directory` で作業ディレクトリ外を拒否するため、そのままでは
+   プロダクト worktree へ書き込めない。
+5. `exec worktree prepare` などの分割コマンドで手動運用している場合は、プロダクト側の統合を
+   `exec run --worktree` へ移す。分割コマンドはプロダクト側を統合しない。
+
+統合の順序、失敗時の部分状態、再開は [[specdojo:docs-structure-guide|ドキュメント構成ガイド]]
+の「別リポジトリ構成」を参照してください。
+
+## 7. 移行を検証する
 
 overlay を含む設定と、生成される plan / result を検証します。
 
@@ -183,7 +230,7 @@ npm run docs:build
 検証後は、overlay と独自テンプレートの差分、再評価を後回しにした grade 結果の件数を移行記録へ
 残してください。
 
-## 7. リリース作業の境界
+## 8. リリース作業の境界
 
 このリポジトリで v0.3.0 を公開する場合、agent の作業は版、リリース文書、移行ガイド、検証まで
 です。次は maintainer が行います。

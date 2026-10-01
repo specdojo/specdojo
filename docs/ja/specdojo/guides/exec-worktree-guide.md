@@ -91,6 +91,21 @@ specdojo exec complete \
 
 project が解決できる場合、branch 名は project ID を含めます。例として `prj-0001:T-LAUNCH-prj-scope-010` は `exec/prj-0001-T-LAUNCH-prj-scope-010` になります。
 
+### 1.4. プロダクトリポジトリを宣言した project
+
+`specdojo.config.json` の project に `repos` を宣言すると、分割コマンドはタスクの全リポジトリの worktree を扱います。宣言しない project の動作は前節までと同じです。
+
+| コマンド           | `repos` を宣言した project での動作                                                                                                    |
+| ------------------ | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `worktree prepare` | `<worktree_base>/<task-id>/project/` と、宣言したリポジトリごとの `<worktree_base>/<task-id>/<name>/` を作り、すべての path を表示する |
+| `worktree status`  | プロダクト worktree の path・branch・未 commit 変更（`<name>:<path>`）と、欠けている worktree を表示する                               |
+| `worktree agent`   | `SPECDOJO_REPO_<NAME>` と provider の追加ディレクトリを付けて agent を起動し、全 worktree で保護設定と Git 状態を検査する              |
+| `worktree commit`  | プロダクト側を commit・統合しない。プロダクト worktree に変更が残る場合は、プロジェクト側も commit せずに停止する                      |
+| `worktree remove`  | 全リポジトリの worktree が撤去できることを確かめてから、まとめて撤去する                                                               |
+| `worktree prune`   | プロダクトリポジトリに残った孤立した exec ブランチも対象にする                                                                         |
+
+プロダクト側を含む commit と統合は `exec run --worktree`（register 項目は `exec run --register ... --worktree`）だけが行います。統合の順序、失敗時の部分状態、再開の扱いは [[specdojo:docs-structure-guide|ドキュメント構成ガイド]] の「複数リポジトリの worktree と統合順序」と「複数リポジトリの統合の失敗と再開」を参照してください。
+
 ## 2. 分割コマンドの詳細
 
 各分割コマンドの役割、入出力、安全条件を示します。

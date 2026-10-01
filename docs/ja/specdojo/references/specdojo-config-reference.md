@@ -162,7 +162,7 @@ agent の起動コマンドには、provider ごとにプロダクト worktree �
 
 agent 実行の前後で行う保護設定（`package.json`、CI 設定など）と Git 状態（HEAD・ローカル設定）の検査は、プロダクト worktree にも同じ一覧で行います。evidence の変更ファイルは、プロダクト側を `<name>:<path>` で記録します。
 
-プロダクトリポジトリの変更の commit と統合は未実装です。プロダクト worktree に未 commit の変更か exec branch の commit が残るタスクは、プロジェクト側の commit の前に block し、全リポジトリの worktree を残します。撤去は、全リポジトリの worktree が撤去できることを確かめてからまとめて行います。
+プロダクトリポジトリの変更は、`exec run --worktree` の統合段で runner がリポジトリごとに commit し、宣言順のプロダクト、最後にプロジェクトの順で統合します。統合の順序、失敗時の部分状態、再開は [[specdojo:docs-structure-guide|ドキュメント構成ガイド]] の「複数リポジトリの worktree と統合順序」と「複数リポジトリの統合の失敗と再開」を参照してください。`exec worktree commit` はプロダクト側を統合しないため、プロダクト worktree に未 commit の変更か exec branch の commit が残るタスクは、プロジェクト側の commit の前に停止します。撤去は、全リポジトリの worktree が撤去できることを確かめてからまとめて行います。
 
 exec worktree の中で設定を読む場合（agent が worktree で `specdojo` を実行する場合など）、`path` の代わりに同じタスクの `<worktree_base>/<task-id>/<name>/` へ解決します。
 

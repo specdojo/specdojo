@@ -7,6 +7,7 @@ import {
   mkdtempSync,
   readFileSync,
   readdirSync,
+  realpathSync,
   rmSync,
   symlinkSync,
   writeFileSync,
@@ -81,6 +82,13 @@ const ORIGINAL_PACKAGE = `${JSON.stringify(
 )}\n`;
 const PARTIAL_ARTIFACT = "partial-first-attempt.md";
 const CONCURRENT_ARTIFACT = "concurrent-artifact.md";
+// PJR-69VP: exec-multi-repo はプロジェクト worktree（cwd）にも成果物を書き、cwd を記録する。
+// register 由来のタスクは既知の成果物ディレクトリ外の新規ファイルを commit しないため docs/ に置く。
+const MULTI_REPO_ARTIFACT = "docs/multi-repo-artifact.md";
+const AGENT_CWD_RECORD = "docs/agent-cwd.txt";
+const TRACE_KEY = "test:PJR-AB12";
+const TASK_DIR_NAME = "test-PJR-AB12";
+const EXEC_BRANCH = `exec/${TASK_DIR_NAME}`;
 
 const CONFIG = {
   version: 1,
@@ -181,6 +189,11 @@ if (role === "executor") {
       root + "/src/feature.ts",
       "export const repo = " + JSON.stringify(name) + ";\\n",
     );
+  }
+  if (nickname === "exec-multi-repo") {
+    mkdirSync("docs", { recursive: true });
+    writeFileSync(${JSON.stringify(MULTI_REPO_ARTIFACT)}, "# project artifact\\n", "utf8");
+    writeFileSync(${JSON.stringify(AGENT_CWD_RECORD)}, process.cwd() + "\\n", "utf8");
   }
   if (nickname === "exec-advance-root") {
     const root = execFileSync("git", ["worktree", "list", "--porcelain"], {
@@ -349,6 +362,39 @@ function integrateRepoStatuses(root: string): Record<string, string | undefined>
   );
 }
 
+function readRootResult(root: string): string {
+  const resultDir = join(root, EXECUTION_REL, "exec", "results");
+  const files = readdirSync(resultDir);
+  expect(files).toHaveLength(1);
+  return readFileSync(join(resultDir, files[0]!), "utf8");
+}
+
+function readIntegrateState(root: string): { status: string; repos?: Record<string, unknown> } {
+  const evidenceRoot = join(root, EXECUTION_REL, "exec", "evidence", "PJR-AB12");
+  const runIds = readdirSync(evidenceRoot);
+  expect(runIds).toHaveLength(1);
+  const state = JSON.parse(
+    readFileSync(join(evidenceRoot, runIds[0]!, "pipeline-state.json"), "utf8"),
+  ) as { stages: { integrate: { status: string; repos?: Record<string, unknown> } } };
+  return state.stages.integrate;
+}
+
+// プロダクトの統合先の先端が runner の merge commit であり、merge commit とプロダクト側の commit が
+// 修飾した `Refs:` を持ち、exec branch が撤去済みであることを確かめて、merge commit を返す。
+function expectIntegratedProduct(repoRoot: string, target: string, repo: string): string {
+  const mergeCommit = git(repoRoot, "rev-parse", target);
+  expect(git(repoRoot, "rev-list", "--parents", "-n", "1", target).split(" ")).toHaveLength(3);
+  expect(git(repoRoot, "log", "-1", "--format=%B", target)).toContain(`Refs: ${TRACE_KEY}`);
+  expect(git(repoRoot, "log", "--format=%B", `${target}^1..${target}^2`)).toContain(
+    `Refs: ${TRACE_KEY}`,
+  );
+  expect(git(repoRoot, "show", `${target}:src/feature.ts`)).toBe(
+    `export const repo = ${JSON.stringify(repo)};`,
+  );
+  expect(git(repoRoot, "branch", "--list", EXEC_BRANCH)).toBe("");
+  return mergeCommit;
+}
+
 function withRepo(fn: (fixture: Fixture) => Promise<void> | void): Promise<void> {
   return (async () => {
     const root = mkdtempSync(join(tmpdir(), "specdojo-register-pipeline-e2e-"));
@@ -423,6 +469,17 @@ function withRepo(fn: (fixture: Fixture) => Promise<void> | void): Promise<void>
           "    roles: []",
           "    type: agent",
           "    provider: codex",
+          "    mode: edit",
+          "    stage_role: executor",
+          "    capabilities: []",
+          "    proficiency: normal",
+          "    priority: 1",
+          "  - nickname: exec-multi-repo",
+          "    display_name: exec-multi-repo",
+          "    email: null",
+          "    roles: []",
+          "    type: agent",
+          "    provider: opencode",
           "    mode: edit",
           "    stage_role: executor",
           "    capabilities: []",
@@ -961,6 +1018,132 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
     },
   );
 
+  // PJR-69VP: プロジェクトリポジトリ 1 つとプロダクトリポジトリ 2 つ（app2 は integration_branch を
+  // 宣言）で、1 つの項目が 3 つのリポジトリを変更する run が、worktree の作成から統合・trace の
+  // 記録・撤去まで通ることを確かめる。
+  it(
+    "changes three repositories in one item and integrates them with the qualified Refs and the trace",
+    { timeout: 120_000 },
+    async () => {
+      await withRepo(async ({ root, worktreeBase }) => {
+        vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+        vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+        const products = enableProductRepositories(root);
+
+        try {
+          await runExec([
+            "run",
+            "--project",
+            "test",
+            "--register",
+            "PJR-AB12",
+            "--executor-by",
+            "exec-multi-repo",
+            "--reporter-by",
+            "report-1",
+            "--worktree",
+            "--worktree-base",
+            worktreeBase,
+          ]);
+
+          expect(process.exitCode ?? 0).toBe(0);
+          expect(
+            readFileSync(join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md"), "utf8"),
+          ).toContain("item_status: review");
+
+          // agent の cwd は <worktree_base>/<task>/project/。プロダクトは同じタスクの隣に置かれる。
+          expect(readFileSync(join(root, AGENT_CWD_RECORD), "utf8")).toBe(
+            `${join(realpathSync(worktreeBase), TASK_DIR_NAME, "project")}\n`,
+          );
+          expect(readFileSync(join(root, MULTI_REPO_ARTIFACT), "utf8")).toBe(
+            "# project artifact\n",
+          );
+
+          const app1Merge = expectIntegratedProduct(products.app1, products.targets.app1, "app1");
+          const app2Merge = expectIntegratedProduct(products.app2, products.targets.app2, "app2");
+
+          // プロジェクト側は merge commit 1 件で、修飾した Refs を持つ（PJR-30SW）。
+          const projectMessage = git(root, "log", "-1", "--format=%B");
+          expect(projectMessage).toContain("Transition: start → review");
+          expect(projectMessage).toContain(`Refs: ${TRACE_KEY}`);
+          expect(projectMessage).not.toMatch(/^Refs: PJR-AB12$/m);
+          expect(git(root, "rev-list", "--parents", "-n", "1", "HEAD").split(" ")).toHaveLength(3);
+
+          // result にはプロダクトの統合先の commit snapshot が記録される。
+          const result = readRootResult(root);
+          expect(result).toContain("status: complete");
+          expect(result).toMatch(/^## \d+\. トレーサビリティ$/m);
+          expect(result).toContain(`\`${app1Merge}\``);
+          expect(result).toContain(`\`${app2Merge}\``);
+          expect(result).toContain(`\`${products.targets.app2}\``);
+
+          const integrate = readIntegrateState(root);
+          expect(integrate.status).toBe("succeeded");
+          expect(integrateRepoStatuses(root)).toEqual({
+            app1: "merged",
+            app2: "merged",
+            project: "merged",
+          });
+
+          // 全リポジトリの worktree と exec branch が撤去される。
+          expect(existsSync(join(worktreeBase, TASK_DIR_NAME))).toBe(false);
+          expect(execWorktreePath(root)).toBeNull();
+          expect(git(root, "branch", "--list", EXEC_BRANCH)).toBe("");
+        } finally {
+          rmSync(products.app1, { recursive: true, force: true });
+          rmSync(products.app2, { recursive: true, force: true });
+        }
+      });
+    },
+  );
+
+  // PJR-69VP: repos を宣言しない構成（同一リポジトリ構成を含む）の回帰。worktree は
+  // <worktree_base>/<task>/ 直下に置かれ、Refs は修飾形、result は trace の章を持たず、
+  // pipeline state はリポジトリ別の統合状態を持たない。
+  it(
+    "keeps the single-repository layout and result when no repos are declared",
+    { timeout: 120_000 },
+    async () => {
+      await withRepo(async ({ root, worktreeBase }) => {
+        vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+        vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+
+        await runExec([
+          "run",
+          "--project",
+          "test",
+          "--register",
+          "PJR-AB12",
+          "--executor-by",
+          "exec-multi-repo",
+          "--reporter-by",
+          "report-1",
+          "--worktree",
+          "--worktree-base",
+          worktreeBase,
+        ]);
+
+        expect(process.exitCode ?? 0).toBe(0);
+        expect(
+          readFileSync(join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md"), "utf8"),
+        ).toContain("item_status: review");
+        expect(readFileSync(join(root, AGENT_CWD_RECORD), "utf8")).toBe(
+          `${join(realpathSync(worktreeBase), TASK_DIR_NAME)}\n`,
+        );
+        expect(readFileSync(join(root, MULTI_REPO_ARTIFACT), "utf8")).toBe("# project artifact\n");
+        const projectMessage = git(root, "log", "-1", "--format=%B");
+        expect(projectMessage).toContain("Transition: start → review");
+        expect(projectMessage).toContain(`Refs: ${TRACE_KEY}`);
+        expect(readRootResult(root)).not.toContain("トレーサビリティ");
+        const integrate = readIntegrateState(root);
+        expect(integrate.status).toBe("succeeded");
+        expect(integrate.repos).toBeUndefined();
+        expect(existsSync(join(worktreeBase, TASK_DIR_NAME))).toBe(false);
+        expect(git(root, "branch", "--list", EXEC_BRANCH)).toBe("");
+      });
+    },
+  );
+
   // PJR-9KST: 部分統合が waiting に戻った後の `--resume` で、root に再記帳した
   // 個票・event・派生ビューが project の事前検査を妨げないことを、3 つの失敗位置で確かめる。
   const multiRepoFailurePositions: Array<{
@@ -1022,6 +1205,11 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
             const worktreePath = execWorktreePath(root);
             expect(worktreePath).not.toBeNull();
             expect(integrateRepoStatuses(worktreePath ?? "")).toEqual(position.expectedStatuses);
+            // PJR-69VP: 失敗後も、タスクの全リポジトリの worktree が残る。
+            for (const repo of ["project", "app1", "app2"]) {
+              expect(existsSync(join(worktreeBase, TASK_DIR_NAME, repo))).toBe(true);
+            }
+            expect(isAncestor(root, EXEC_BRANCH, "HEAD")).toBe(false);
 
             const mergedBefore = new Map<"app1" | "app2", string>();
             for (const repo of ["app1", "app2"] as const) {
@@ -1065,6 +1253,14 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
             for (const [repo, commit] of mergedBefore) {
               expect(git(productRoots[repo], "rev-parse", products.targets[repo])).toBe(commit);
             }
+            // PJR-69VP: 再開後も Refs は修飾形で、result の trace には各プロダクトの merge commit が入る。
+            const app1Merge = expectIntegratedProduct(products.app1, products.targets.app1, "app1");
+            const app2Merge = expectIntegratedProduct(products.app2, products.targets.app2, "app2");
+            expect(git(root, "log", "-1", "--format=%B")).toContain(`Refs: ${TRACE_KEY}`);
+            const result = readRootResult(root);
+            expect(result).toContain(`\`${app1Merge}\``);
+            expect(result).toContain(`\`${app2Merge}\``);
+            expect(existsSync(join(worktreeBase, TASK_DIR_NAME))).toBe(false);
           } finally {
             allowMerge();
             rmSync(products.app1, { recursive: true, force: true });

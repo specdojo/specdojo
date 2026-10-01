@@ -31,6 +31,15 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 追加機能
 
+- 1 つの登録簿項目で、プロジェクトリポジトリと N 個のプロダクトリポジトリを変更できるように
+  しました。`specdojo.config.json` の project に `repos` を宣言すると、`exec run --worktree` が
+  リポジトリごとの worktree を作り、`targets`・`paths` の `<repo>:<path>` を解決し、親検証を
+  `{ id, repo }` でリポジトリへ割り当てます。統合は事前検査の後に宣言順のプロダクト、最後に
+  プロジェクトの順で行い、途中で失敗した場合は統合済みのリポジトリを飛ばして再開します
+  （PJR-5822、PJR-HQBK、PJR-98G4、PJR-V96B、PJR-0WAA、PJR-69VP）。
+- runner が付ける commit の `Refs:` trailer を `<project-id>:<item-id>` に修飾し、プロダクト側の
+  commit と merge commit にも付けるようにしました。統合後の commit snapshot は result の
+  トレーサビリティ表に記録します（PJR-1SXK、PJR-30SW）。
 - `exec run --register --worktree --join` で実行中の run へ項目を追加し、
   `run.max_concurrent_runs` の範囲で並行実行できるようにしました。`exec slots` で実行枠を
   確認でき、項目ごとの executor 指定にも対応しました（PJR-4HBG、PJR-K332）。
@@ -71,6 +80,9 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 不具合修正
 
+- `exec run --resume` で reporter 段または統合段から再開するとき、統合先で直した不具合が
+  親検証に反映されない問題を、親検証の前に統合先の最新を worktree へ取り込む形で修正しました
+  （PJR-GENJ）。
 - waiting からの再開時に develop の変更を消す可能性がある merge と、複数回の waiting 後に
   記帳競合が未解決のまま残る問題を修正しました（PJR-R0XA、PJR-CTV4）。
 - 並行実行時の親検証と遷移・統合をプロセス間で直列化し、イベント競合は両側の和集合で
