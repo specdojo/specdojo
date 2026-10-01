@@ -29,6 +29,7 @@ specdojo:
 - 実際の agent CLI（claude・codex・antigravity）でプロダクト worktree へ書き込めるかの確認手順を、一時ディレクトリに 3 リポジトリ構成を作るスクリプトまたはコマンドの列として `tools/` か result に用意する。agent の sandbox からは別の agent を起動できないため、確認の実行は orchestrator が行う。
 - opencode の `permission.external_directory` を変える場合の差分案（保護された agent 定義のため変更はしない）を result の申し送りに書く。
 - 統合 commit の `Refs:` が `<project-id>:<item-id>` になっていることを、統合テストで確かめる（PJR-30SW）。
+- 2026-10-01〜02 の 1 回目の実行（claude）の差分の控えは `/workspaces/specdojo-workspace/specdojo/logs/pjr-69vp-attempt1.patch` にある（e2e と文書 5 件）。その後に develop へ入った PJR-9KST・PJR-GENJ・PJR-6RN3 の変更を踏まえて作り直す。`CHANGELOG.md` の更新を忘れない。
 - `docs-structure-guide` の「別リポジトリ構成」（「現行実装の境界」「二重 worktree」の各章）、exec のガイド、`CHANGELOG.md`、v0.3.0 の移行ガイドを、実装後の動作に合わせて更新する。
 - 宣言（`repos`）を持たない project の動作が変わらないことを、既存のテストと回帰テストで確かめる。
 - `.specdojo/exec-defaults.yaml`・`package.json` など agent が変更できない設定は変更しない。必要な変更は result の申し送りに書く。
