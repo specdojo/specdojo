@@ -11,7 +11,7 @@ specdojo:
   priority: high
   owner: DEV
   registered_at: "2026-10-01T03:54:10Z"
-  block_reason: "agent exited with non-zero code: 親 runner の検証 `test-integration` が失敗しており、実構成検証が完了していないため。また、`CHANGELOG.md` の更新が未完了である。"
+  block_reason: "agent exited with non-zero code: タスクが要求する `CHANGELOG.md` の更新と、tools 配下の検証スクリプトが未実施です(executor の書き込み許可リスト外のため)。このため完了条件を満たしていません。次のアクションは、許可リストの調整、または人間による `CHANGELOG.md` への反映です。"
 ---
 
 # PJR-69VP 複数リポジトリ構成の実構成検証と文書の更新
@@ -37,21 +37,22 @@ specdojo:
 
 ## 3. 作業内容
 
-| No  | 作業                                | 担当 | 状態 | メモ                                                |
-| --- | ----------------------------------- | ---- | ---- | --------------------------------------------------- |
-| 1   | 3 リポジトリ構成の e2e              | DEV  | done | `tests/src/exec-multi-repo-e2e.integration.test.ts` |
-| 2   | 失敗と再開の検証                    | DEV  | done | app1・app2・project の各位置                        |
-| 3   | 宣言のない構成の回帰                | DEV  | done | 同じテストファイルの回帰ケース                      |
-| 4   | ガイド・CHANGELOG・移行ガイドの更新 | DEV  | done | `CHANGELOG.md` は agent が変更できないため申し送り  |
+| No  | 作業                                | 担当 | 状態 | メモ                                                       |
+| --- | ----------------------------------- | ---- | ---- | ---------------------------------------------------------- |
+| 1   | 3 リポジトリ構成の e2e              | DEV  | done | `tests/src/exec-register-pipeline-e2e.integration.test.ts` |
+| 2   | 失敗と再開の検証                    | DEV  | done | app1・app2・project の各位置（PJR-9KST のケースを拡張）    |
+| 3   | 宣言のない構成の回帰                | DEV  | done | 同じテストファイルの回帰ケース                             |
+| 4   | ガイド・CHANGELOG・移行ガイドの更新 | DEV  | done | `CHANGELOG.md` は agent が変更できないため申し送り         |
 
 ## 4. 対応結果
 
-- 実施内容: `tests/src/exec-multi-repo-e2e.integration.test.ts` を追加した。プロジェクトリポジトリ 1 つとプロダクトリポジトリ 2 つ（`app2` は `integration_branch` を宣言）を一時ディレクトリに作り、実際の CLI 経路の `exec run --register --worktree` で、worktree の作成・3 リポジトリへの書き込み・統合・trace の記録・撤去までを確かめる。
-- 統合の失敗と再開: `app1`・`app2`・project の各位置で merge を hook で拒否し、`waiting` への遷移、`stages.integrate.repos` の状態、統合済みの範囲、worktree の保持を確かめた後、`--resume` で失敗位置から再開して統合済みの merge commit が変わらないことを確かめる。
+- 実施内容（2 回目）: 1 回目の差分の控えを、PJR-9KST・PJR-GENJ・PJR-6RN3 の後の develop に合わせて作り直した。PJR-9KST が失敗位置ごとの再開テストを `tests/src/exec-register-pipeline-e2e.integration.test.ts` に入れていたため、別ファイルを作らず、同じファイルの fixture（プロジェクトリポジトリ 1 つとプロダクトリポジトリ 2 つ、`app2` は `integration_branch` を宣言）にケースを加えた。
+- 3 リポジトリの e2e: 新しい executor `exec-multi-repo` がプロジェクト worktree とプロダクト worktree 2 つへ書き込み、実際の CLI 経路の `exec run --register --worktree` が、worktree の作成から統合・trace の記録・撤去まで通ることを確かめる。agent の `cwd` が `<worktree_base>/<task>/project/` であることも確かめる。
+- 統合の失敗と再開: PJR-9KST の `app1`・`app2`・project の各位置のケースに、失敗後に全リポジトリの worktree が残ること、プロジェクトが未統合であること、再開後の `Refs:` と result の trace 表の merge commit を確かめる検査を加えた。
 - `Refs:`: プロダクト側の commit・merge commit とプロジェクト側の merge commit が `Refs: <project-id>:<item-id>` を持つことを、統合テストで確かめる（PJR-30SW）。
-- 回帰: `repos` を宣言しない構成で、`<worktree_base>/<task-id>/` 直下の worktree、修飾した `Refs:`、trace の章を持たない result、`integrate.repos` が無い pipeline state を確かめる。既存の統合テストは変更していない。
-- 文書: `docs-structure-guide` の「別リポジトリ構成」（採用条件、現行実装の境界、複数リポジトリの worktree と統合順序、複数リポジトリの統合の失敗と再開）、`exec-worktree-guide`、`exec-operation-guide`、`specdojo-config-reference` の古い記述、v0.3.0 移行ガイドを実装後の動作に合わせて更新した。
-- 残課題: `CHANGELOG.md` と `tools/` は agent の書き込み許可の外にあるため変更していない。CHANGELOG の追記案と、実 agent CLI の確認手順は result の申し送りに記載する。実 agent CLI（claude・codex・antigravity）での確認は orchestrator が行う。
+- 回帰: `repos` を宣言しない構成で、`<worktree_base>/<task-id>/` 直下の worktree、修飾した `Refs:`、trace の章を持たない result、`integrate.repos` が無い pipeline state を確かめる。
+- 文書: `docs-structure-guide` の「別リポジトリ構成」（採用条件、現行実装の境界、複数リポジトリの worktree と統合順序、複数リポジトリの統合の失敗と再開）、`exec-worktree-guide`、`exec-operation-guide`（再開前の取り込みで統合済みのプロダクトを除くこと）、`specdojo-config-reference` の古い記述、v0.3.0 移行ガイドを実装後の動作に合わせて更新した。
+- 残課題: `CHANGELOG.md` と `tools/` は agent の書き込み許可の外にあるため変更していない。CHANGELOG の追記案、実 agent CLI の確認手順、opencode の差分案は result の申し送りに記載する。実 agent CLI（claude・codex・antigravity）での確認は orchestrator が行う。
 
 ## 5. 関連ドキュメント
 

@@ -90,3 +90,32 @@
       from: "agent exited with non-zero code: 親 runner による検証 `test-integration` が失敗しており、完了条件である「2 リポジトリの統合テストと e2e で動作を確かめ」を満たせていないため。また、CHANGELOG.md 等の必須更新ファイルが権限不足で書き換えられていない。"
       to: "agent exited with non-zero code: 親 runner の検証 `test-integration` が失敗しており、実構成検証が完了していないため。また、`CHANGELOG.md` の更新が未完了である。"
   previous_event_id: reg_ae668037984f4611af3bac8252c72df6
+- v: 1
+  id: reg_7bb6b30522484997af87820cc5309ac9
+  ts: "2026-10-01T20:02:50Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_dc7beb2189084a9bbddd622b3cb7ba74
+- v: 1
+  id: reg_a942444c302749aba8ecef4f4247e77e
+  ts: "2026-10-01T20:13:22Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: タスクが要求する `CHANGELOG.md` の更新と、tools 配下の検証スクリプトが未実施です(executor の書き込み許可リスト外のため)。このため完了条件を満たしていません。次のアクションは、許可リストの調整、または人間による `CHANGELOG.md` への反映です。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "agent exited with non-zero code: 親 runner の検証 `test-integration` が失敗しており、実構成検証が完了していないため。また、`CHANGELOG.md` の更新が未完了である。"
+      to: "agent exited with non-zero code: タスクが要求する `CHANGELOG.md` の更新と、tools 配下の検証スクリプトが未実施です(executor の書き込み許可リスト外のため)。このため完了条件を満たしていません。次のアクションは、許可リストの調整、または人間による `CHANGELOG.md` への反映です。"
+  previous_event_id: reg_7bb6b30522484997af87820cc5309ac9
