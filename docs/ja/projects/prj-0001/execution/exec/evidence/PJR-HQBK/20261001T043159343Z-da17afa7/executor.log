@@ -1,0 +1,23 @@
+`specdojo.config.json` の project で `repos` を宣言できるようにし、`<repo>:<path>` を解決する関数を追加しました。追加した単体テストはまだ一度も実行していません。typecheck・lint・テストは親 runner が後で実行するため、sandbox では走らせていません。手元の動作確認スクリプトも `/tmp` への書き込みが拒否されて実行できませんでした。そのため結果は親 runner の検証で判断してください。
+
+**変更内容**
+- **設定の読み込み・検証**（`src/specdojo-config.ts`）: `repos`（`name`・`path`・`integration_branch`・`setup`）の型と、検証関数 `validateProjectRepos` を追加しました。`loadConfig` は全 project の誤りをまとめて、対象（`projects.<id>.repos[<n>]`）と原因付きで報告します。検出するのは次の誤りです。
+  - `name` が `[a-z0-9-]` 以外の文字を含む、重複している、または project id と同じ
+  - `path` が空・絶対パス・存在しない・ディレクトリでない
+  - 未知のキーがある、または `setup` の値が真偽値でない
+- **`<repo>:<path>` の解決**: `resolveRepoQualifiedRef` は、接頭辞が宣言済みのリポジトリ名ならそのリポジトリ内のパスを返し、それ以外は値を変えずに返します（`targets` では doc id、`paths` ではプロジェクトリポジトリのパス）。空のパス、絶対パス、リポジトリの外へ出るパスはエラーにします。絶対パスへ解決する `resolveRepoQualifiedPath` も追加しました。
+- **schema**: `docs/specdojo/schemas/v1/specdojo-config.schema.yaml` を新設しました。project id との重複と `path` の実在は schema では表せないため、読み込み時の検証が正本です。
+- **案内と文書**: `config init` の次の手順に `repos` の案内を加え、`specdojo-config-reference` に「`repos`のキー」の章を追加しました。
+- **テスト**: `tests/src/specdojo-config-repos.test.ts` と `tests/docs/specdojo/schemas/specdojo-config-schema.test.ts` を新規作成し、`tests/src/specdojo-config-command.test.ts` に案内文の確認を追加しました。`repos` の無い既存設定が今までどおり読めることを確かめるテストも含めています。
+- **個票**: 作業内容の表と対応結果を更新しました。`item_status` は変えていません。
+
+**判断が要る点・申し送り**
+- `config init` が生成する JSON には `repos` を書き込んでいません。存在しないパスを宣言すると設定の読み込みがエラーになるためです。説明は案内文とリファレンスに置きました（_ASSUMPTION_）。
+- `path` は SpecDojo ルートを起点に解決します。exec worktree の中で設定を読むと相対パスが別の場所を指すため、`repos` を宣言した project はこの点を直すまで exec が失敗する可能性があります。対応は PJR-98G4 の範囲です。
+- 解決関数を commit 対象の算出や job の plan 生成に組み込む作業は、PJR-98G4・PJR-0WAA に残しています。job の `qualifyTargets` は `:` を含む値を変えないため、`app1:src/...` は今でもそのまま渡ります。
+- プロジェクトリポジトリの暗黙名（仮称 `project`）を予約名として拒否するかは決まっていません。
+- `.specdojo/exec-defaults.yaml` と `package.json` は変更していません。
+
+<specdojo_executor_evidence>
+{"final_message":"Added project `repos` declaration (types, loadConfig validation with per-entry errors, new specdojo-config.schema.yaml), `<repo>:<path>` resolvers (resolveRepoQualifiedRef / resolveRepoQualifiedPath), config init guidance, specdojo-config-reference repos section, unit/schema tests, and updated the PJR-HQBK ticket work/result sections. New unit tests were not run in the sandbox (test-unit is parent-run); a manual sanity script was blocked from writing to /tmp. Follow-ups: worktree-relative repo path resolution and wiring resolvers into commit scope/job planning (PJR-98G4/PJR-0WAA); config init JSON intentionally omits repos (_ASSUMPTION_).","validations":[{"command":"npx prettier --write src/specdojo-config.ts tests/src/specdojo-config-repos.test.ts tests/src/specdojo-config-command.test.ts tests/docs/specdojo/schemas/specdojo-config-schema.test.ts docs/specdojo/schemas/v1/specdojo-config.schema.yaml docs/ja/specdojo/references/specdojo-config-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-hqbk-multi-repo-config-resolution.md","status":"passed","summary":"formatted all changed files"},{"command":"npx markdownlint docs/ja/specdojo/references/specdojo-config-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-hqbk-multi-repo-config-resolution.md","status":"passed","summary":"no errors"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"OK: dct-index.yaml (only pre-existing based_on WARNs for dct-user-interface-model.yaml)"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"Built index: 2270 entries; config without repos loads unchanged"},{"command":"npm run -s validate:schema:file -- --schema docs/specdojo/schemas/v1/specdojo-config.schema.yaml --data .specdojo/specdojo.config.json","status":"passed","summary":".specdojo/specdojo.config.json: valid against the new schema"},{"command":"npm run -s validate:history-links","status":"passed","summary":"no Markdown-link violations reported"}]}
+</specdojo_executor_evidence>

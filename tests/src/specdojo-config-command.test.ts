@@ -58,6 +58,8 @@ describe("config onboarding commands", () => {
       expect(output.join("")).toContain("npx specdojo config scaffold --provider <name>");
       expect(output.join("")).toContain("npx specdojo register scaffold --project prj-0001");
       expect(output.join("")).toContain(SPECDOJO_CONFIG_REFERENCE_URL);
+      expect(output.join("")).toContain('declare it under "repos"');
+      expect(output.join("")).toContain("app1:<path>");
 
       expect(() => resolveCatalogPath({ project: "prj-0001" })).toThrow(
         SPECDOJO_CONFIG_REFERENCE_URL,

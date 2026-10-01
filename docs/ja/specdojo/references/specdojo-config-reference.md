@@ -13,7 +13,7 @@ SpecDojo Configuration Reference
 
 **対象範囲**
 
-- `.specdojo/specdojo.config.json` のトップレベル、project、`run` の設定キー
+- `.specdojo/specdojo.config.json` のトップレベル、project、`run`、`repos` の設定キー
 
 **ここで引けるもの**
 
@@ -47,6 +47,8 @@ SpecDojo Configuration Reference
 ```
 
 この構成では `config init`、`register scaffold` / `add` / `build`、`dashboard build`、`exec plan --register` を利用できます。catalog へ進むときは `catalog_path`、schedule へ進むときは後述の関連キーを段階的に追加します。
+
+最小構成は `repos` を含みません。プロダクトリポジトリ（既定の別リポジトリ構成では `../app1`）をタスクの変更対象にする場合は、`config init` の次の手順の案内に従い、後述の「`repos`のキー」を追加します。生成時に存在しないリポジトリを宣言すると設定の読み込みがエラーになるため、雛形には書き込みません。
 
 ## 2. トップレベルのキー
 
@@ -84,6 +86,7 @@ SpecDojo Configuration Reference
 | ----------------- | ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `project_context` | `["prj-overview"]` | edit / review plan へ常に渡す project 共通文書のローカル ID です。空配列 `[]` で無効化できます。`depends_on` や成果物の `based_on` は変更しません。 |
 | `run`             | `{}`               | agent 実行、worktree、登録日の表示に関する project 単位の設定です。                                                                                 |
+| `repos`           | なし               | project のタスクが変更するプロダクトリポジトリの宣言です。詳細は「`repos`のキー」を参照してください。                                               |
 
 ## 5. `run`のキー
 
@@ -100,7 +103,50 @@ SpecDojo Configuration Reference
 
 `config init` は、設定した配置から生成物を除外する `.gitignore` の行も導きます。既定の行は `.specdojo/doc-index.json`、`docs/**/generated/*`、`!docs/**/generated/.gitkeep`、`docs/**/execution/exec/.locks/` です。`base_path` が `docs/` の外にある場合は `<base_path>/**/generated/*` などを追加し、`base_path` が無い場合は各パス設定から導いた行を追加します。リポジトリ外を指すパスは対象にしません。配置を変えた後は `config init` を再実行すると、足りない行だけが追記されます。
 
-## 6. catalog・schedule・execへ進む設定例
+## 6. `repos`のキー
+
+`projects.<project-id>.repos` は、プロジェクトリポジトリとは別のプロダクトリポジトリを配列で宣言します。プロジェクトリポジトリ自身は宣言しません。キーを省略した project（または空配列）は、従来どおりプロジェクトリポジトリ 1 つだけを扱います。
+
+| キー                 | 必須 | 既定値                         | 役割・利用箇所                                                                                           |
+| -------------------- | ---- | ------------------------------ | -------------------------------------------------------------------------------------------------------- |
+| `name`               | 必須 | なし                           | `targets`・`paths` の接頭辞に使うリポジトリ名です。`[a-z0-9-]` だけを使い、project 内で一意です。        |
+| `path`               | 必須 | なし                           | リポジトリのルートです。SpecDojo ルートからの相対パスで書き、実在するディレクトリを指します。            |
+| `integration_branch` | 任意 | そのリポジトリの現在のブランチ | exec が変更を統合する先のブランチです。                                                                  |
+| `setup`              | 任意 | なし                           | worktree 作成時の準備の有無です。`install`（依存導入）と `build`（生成物の build）を真偽値で指定します。 |
+
+```json
+{
+  "base_path": "docs/ja/projects/prj-0001",
+  "project_register_path": "controls/project-register",
+  "repos": [
+    {
+      "name": "app1",
+      "path": "../app1",
+      "integration_branch": "main",
+      "setup": { "install": true, "build": false }
+    }
+  ]
+}
+```
+
+`targets`（個票・job）と `paths`（job）では、`<repo>:<path>`（例: `app1:src/auth/token.ts`）でプロダクトリポジトリ内のパスを指定します。値の区別は次の規則に従います。
+
+- `:` より前の接頭辞が宣言済みのリポジトリ名なら、そのリポジトリのルートからの相対パスとして扱います。空のパス、絶対パス、リポジトリの外へ出るパス（`..` を含むもの）はエラーです。
+- それ以外の値は従来どおりです。`targets` では doc id（例: `prj-0001:pjr-index`、`ifx-cmd`）、`paths` ではプロジェクトリポジトリ内のパスとして扱います。
+- プロダクトリポジトリの文書は doc id では引けません。パスで指定します。
+
+宣言の検証と書式の解決は、設定の読み込みと解決関数として提供します。exec がプロダクトリポジトリの worktree を作り、変更を commit・統合する処理は段階的に追加中です。
+
+設定の読み込み時に、次の誤りを対象（`projects.<project-id>.repos[<n>]`）と原因を示すエラーにします。誤りは全 project 分をまとめて表示します。
+
+- `name` が `[a-z0-9-]` 以外の文字を含む、または同じ project 内で重複している。
+- `name` がいずれかの project ID と同じである。`<name>:<...>` が doc id とリポジトリのパスのどちらか区別できなくなるためです。
+- `path` が空、絶対パス、存在しない、またはディレクトリでない。
+- 宣言に無いキーがある、`integration_branch` が空文字、`setup` の値が真偽値でない。
+
+設定の形は `docs/specdojo/schemas/v1/specdojo-config.schema.yaml` でも検証できます。リポジトリ名と project ID の重複と `path` の実在は schema で表せないため、CLI の読み込み時の検証が正本です。
+
+## 7. catalog・schedule・execへ進む設定例
 
 register の最小構成から成果物カタログと Schedule へ進む場合は、対象 project へ必要なキーを追加します。次は Quick Start の代表例です。
 
@@ -125,7 +171,7 @@ register の最小構成から成果物カタログと Schedule へ進む場合�
 
 routine / Job を使う段階で、同じ project 設定へ `routines_path` と `jobs_path` を追加します。未使用のキーまで最初から埋める必要はありません。
 
-## 7. 設定不足時の確認順序
+## 8. 設定不足時の確認順序
 
 1. エラーに表示されたキーが対象 project にあるか確認します。
 2. `base_path` と対象パスを連結した先が意図した配置か確認します。

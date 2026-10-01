@@ -1,6 +1,6 @@
 import { type Command } from "commander";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { dirname, join, resolve } from "node:path";
+import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
+import { dirname, isAbsolute, join, posix, resolve } from "node:path";
 import dotenv from "dotenv";
 import yaml from "js-yaml";
 import type { AgentStageRole, SchedulerStrategy, TaskMode } from "./exec-types.js";
@@ -55,8 +55,32 @@ export type SpecDojoProjectConfig = {
    * catalog depends_on. Omit to use the default prj-overview context; set [] to opt out.
    */
   project_context?: string[];
+  /**
+   * Product repositories that tasks of this project may change in addition to the project
+   * repository itself. The project repository is implicit and never declared here. Omit (or set
+   * []) to keep the single-repository behavior.
+   */
+  repos?: SpecDojoRepoConfig[];
   run?: SpecDojoRunConfig;
 };
+
+/** Whether exec prepares a worktree of the repository with dependency install and/or build. */
+export type SpecDojoRepoSetup = {
+  install?: boolean;
+  build?: boolean;
+};
+
+export type SpecDojoRepoConfig = {
+  /** Prefix used in targets/paths (`<name>:<path>`). Must match REPO_NAME_PATTERN. */
+  name: string;
+  /** Repository root, relative to the SpecDojo root. */
+  path: string;
+  /** Branch exec integrates into. Omit to use the repository's current branch. */
+  integration_branch?: string;
+  setup?: SpecDojoRepoSetup;
+};
+
+export const REPO_NAME_PATTERN = /^[a-z0-9-]+$/;
 
 export const DEFAULT_PROJECT_CONTEXT = ["prj-overview"] as const;
 
@@ -205,6 +229,162 @@ export function getProjectContext(project: SpecDojoProjectConfig): string[] {
     : [...project.project_context];
 }
 
+export function getProjectRepos(project: SpecDojoProjectConfig): SpecDojoRepoConfig[] {
+  return project.repos ? project.repos.map((repo) => ({ ...repo })) : [];
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+const REPO_KEYS = new Set(["name", "path", "integration_branch", "setup"]);
+const REPO_SETUP_KEYS = new Set(["install", "build"]);
+
+/**
+ * Validate `projects.<projectId>.repos`. Returns one message per problem (empty when valid) so
+ * loadConfig can report every misconfigured repository at once. `path` is resolved from
+ * `rootDir` (the SpecDojo root) and must exist.
+ */
+export function validateProjectRepos(
+  projectId: string,
+  project: SpecDojoProjectConfig,
+  projectIds: readonly string[],
+  rootDir: string,
+): string[] {
+  const repos: unknown = project.repos;
+  if (repos === undefined) return [];
+  const where = `projects.${projectId}.repos`;
+  if (!Array.isArray(repos)) return [`${where} must be an array`];
+
+  const errors: string[] = [];
+  const seen = new Map<string, number>();
+  repos.forEach((repo: unknown, index) => {
+    const at = `${where}[${index}]`;
+    if (!isRecord(repo)) {
+      errors.push(`${at} must be an object with name and path`);
+      return;
+    }
+    for (const key of Object.keys(repo).sort()) {
+      if (!REPO_KEYS.has(key)) errors.push(`${at}: unknown key "${key}"`);
+    }
+
+    const name = repo.name;
+    if (typeof name !== "string" || !REPO_NAME_PATTERN.test(name)) {
+      errors.push(
+        `${at}.name must match ${String(REPO_NAME_PATTERN)} (got ${JSON.stringify(name)})`,
+      );
+    } else {
+      const firstIndex = seen.get(name);
+      if (firstIndex !== undefined) {
+        errors.push(`${at}.name "${name}" duplicates ${where}[${firstIndex}].name`);
+      } else {
+        seen.set(name, index);
+      }
+      if (projectIds.includes(name)) {
+        errors.push(
+          `${at}.name "${name}" collides with project id "${name}"; ` +
+            `"${name}:<...>" in targets would be ambiguous between a repository path and a doc id`,
+        );
+      }
+    }
+
+    const path = repo.path;
+    if (typeof path !== "string" || path.trim().length === 0) {
+      errors.push(`${at}.path must be a non-empty string`);
+    } else if (isAbsolute(path)) {
+      errors.push(`${at}.path must be relative to the SpecDojo root (got absolute "${path}")`);
+    } else {
+      const absolutePath = resolve(rootDir, path);
+      if (!existsSync(absolutePath)) {
+        errors.push(`${at}.path "${path}" does not exist (resolved to ${absolutePath})`);
+      } else if (!statSync(absolutePath).isDirectory()) {
+        errors.push(`${at}.path "${path}" is not a directory (resolved to ${absolutePath})`);
+      }
+    }
+
+    if (
+      repo.integration_branch !== undefined &&
+      !isOmittedOrNonEmptyString(repo.integration_branch)
+    ) {
+      errors.push(`${at}.integration_branch must be a non-empty string when present`);
+    }
+
+    const setup = repo.setup;
+    if (setup !== undefined) {
+      if (!isRecord(setup)) {
+        errors.push(`${at}.setup must be an object ({ install?: boolean, build?: boolean })`);
+      } else {
+        for (const [key, value] of Object.entries(setup).sort(([a], [b]) => a.localeCompare(b))) {
+          if (!REPO_SETUP_KEYS.has(key)) errors.push(`${at}.setup: unknown key "${key}"`);
+          else if (typeof value !== "boolean") errors.push(`${at}.setup.${key} must be a boolean`);
+        }
+      }
+    }
+  });
+  return errors;
+}
+
+/**
+ * A `targets` / `paths` value split by repository. `repo` means the value had the
+ * `<repo>:<path>` form with a declared repository name; `project` means the value is unchanged
+ * (a doc id for targets, a project-repository path for paths).
+ */
+export type RepoQualifiedRef =
+  { kind: "repo"; repo: string; path: string } | { kind: "project"; value: string };
+
+/**
+ * Resolve a `targets` / `paths` value. The value is a repository path only when the prefix
+ * before the first `:` is a declared repository name; any other value (including doc ids such as
+ * `prj-0001:foo` and un-prefixed values) is returned unchanged as `project`.
+ */
+export function resolveRepoQualifiedRef(
+  value: string,
+  repos: readonly Pick<SpecDojoRepoConfig, "name">[],
+): RepoQualifiedRef {
+  const trimmed = value.trim();
+  const separator = trimmed.indexOf(":");
+  if (separator <= 0) return { kind: "project", value: trimmed };
+
+  const prefix = trimmed.slice(0, separator);
+  if (!repos.some((repo) => repo.name === prefix)) return { kind: "project", value: trimmed };
+
+  const rawPath = trimmed.slice(separator + 1).replaceAll("\\", "/");
+  if (rawPath.trim().length === 0) {
+    throw new Error(`Invalid repository path "${value}": the path after "${prefix}:" is empty`);
+  }
+  if (posix.isAbsolute(rawPath) || /^[A-Za-z]:\//.test(rawPath)) {
+    throw new Error(
+      `Invalid repository path "${value}": the path must be relative to repository "${prefix}"`,
+    );
+  }
+  const normalized = posix.normalize(rawPath).replace(/\/+$/, "");
+  if (normalized === ".." || normalized.startsWith("../")) {
+    throw new Error(`Invalid repository path "${value}": the path escapes repository "${prefix}"`);
+  }
+  return { kind: "repo", repo: prefix, path: normalized === "" ? "." : normalized };
+}
+
+/**
+ * Resolve a `<repo>:<path>` value to an absolute path under the declared repository. Returns
+ * null for values that are not repository-qualified so callers keep their current handling.
+ */
+export function resolveRepoQualifiedPath(
+  rootDir: string,
+  project: SpecDojoProjectConfig,
+  value: string,
+): { repo: string; path: string; absolutePath: string } | null {
+  const repos = getProjectRepos(project);
+  const ref = resolveRepoQualifiedRef(value, repos);
+  if (ref.kind !== "repo") return null;
+  const repo = repos.find((candidate) => candidate.name === ref.repo);
+  if (!repo) return null;
+  return {
+    repo: ref.repo,
+    path: ref.path,
+    absolutePath: resolve(rootDir, repo.path, ref.path),
+  };
+}
+
 export function loadMemberRoster(
   baseDir: string,
   project: SpecDojoProjectConfig,
@@ -289,6 +469,20 @@ export function loadConfig(): ConfigLoadResult {
           `and project_context must be a string[] when present`,
       );
     }
+  }
+
+  const projectIds = Object.keys(parsed.projects);
+  const rootDir = dirname(dirname(configPath));
+  const repoErrors = projectIds
+    .sort()
+    .flatMap((projectId) =>
+      validateProjectRepos(projectId, parsed.projects[projectId], projectIds, rootDir),
+    );
+  if (repoErrors.length > 0) {
+    throw new Error(
+      `Invalid .specdojo/specdojo.config.json (${configPath}):\n` +
+        repoErrors.map((message) => `  - ${message}`).join("\n"),
+    );
   }
 
   return { configPath, config: parsed };
@@ -377,7 +571,9 @@ export function registerConfigCommands(program: Command): void {
           "  2. Review the project ID and paths; worktrees default to ../app1-worktrees.\n" +
           "  3. Optional agent setup: npx specdojo config scaffold --provider <name>\n" +
           "  4. Create a register: npx specdojo register scaffold --project prj-0001\n" +
-          `  5. Before using catalog or schedule, add the required paths: ${SPECDOJO_CONFIG_REFERENCE_URL}\n`,
+          `  5. Before using catalog or schedule, add the required paths: ${SPECDOJO_CONFIG_REFERENCE_URL}\n` +
+          '  6. To let tasks change the product repository, declare it under "repos" ' +
+          '(e.g. { "name": "app1", "path": "../app1" }) and write targets/paths as app1:<path>.\n',
       );
     });
 
