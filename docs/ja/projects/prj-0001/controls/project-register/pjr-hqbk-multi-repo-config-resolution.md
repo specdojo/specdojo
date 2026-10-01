@@ -21,13 +21,22 @@ specdojo.config.json の project にリポジトリの宣言を加え、task の
 
 ## 2. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- 方針は [[prj-0001:pjr-5822-multi-repo-item-design]] の決定内容に従う。変更箇所は同個票の「現行実装の変更箇所」を起点にする。
+- `specdojo.config.json` の project に `repos`（`name`・`path`・`integration_branch`・`setup`）を宣言でき、schema（`docs/specdojo/schemas/v1/` の config schema）と設定の読み込みで検証する。`name` は `[a-z0-9-]`、`path` は SpecDojo ルートからの相対パスとする。
+- リポジトリ名と project id の重複、`name` の重複、存在しない `path` を、対象と原因を示すエラーにする。
+- `targets`・`paths` の `<repo>:<path>` を解決する関数があり、接頭辞が宣言済みのリポジトリ名ならそのリポジトリのパス、それ以外は doc id として扱う。この規則の単体テストがある。
+- `config init` の雛形と `specdojo-config-reference` に `repos` の説明がある。
+- 宣言（`repos`）を持たない project の動作が変わらないことを、既存のテストと回帰テストで確かめる。
+- `.specdojo/exec-defaults.yaml`・`package.json` など agent が変更できない設定は変更しない。必要な変更は result の申し送りに書く。
+- 親検証（lint・test・typecheck・validate-schema）がすべて通る。
 
 ## 3. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                     | 担当 | 状態 | メモ |
+| --- | ---------------------------------------- | ---- | ---- | ---- |
+| 1   | `repos` の schema と設定の読み込み・検証 | DEV  | open | -    |
+| 2   | `<repo>:<path>` の解決と単体テスト       | DEV  | open | -    |
+| 3   | 設定リファレンスと雛形の更新             | DEV  | open | -    |
 
 ## 4. 対応結果
 
@@ -35,4 +44,4 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 5. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-5822-multi-repo-item-design]]
