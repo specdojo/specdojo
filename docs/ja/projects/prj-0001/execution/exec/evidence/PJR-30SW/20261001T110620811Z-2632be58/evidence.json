@@ -1,0 +1,132 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-30SW",
+  "run_id": "20261001T110620811Z-2632be58",
+  "stage": {
+    "role": "executor",
+    "actor": "claude-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-01T11:06:20.811Z",
+    "completed_at": "2026-10-01T11:11:45.284Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-30sw-multi-repo-refs-trace.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/docs-structure-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-repo-integration.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-task-repos.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-repo-trace.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec-repo-trace.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 7,
+    "summary": ".../pjr-30sw-multi-repo-refs-trace.md              | 13 ++-\n docs/ja/specdojo/guides/docs-structure-guide.md    | 49 +++++++----\n src/exec-repo-integration.ts                       |  5 +-\n src/exec-run.ts                                    | 40 +++++++--\n tests/src/exec-task-repos.integration.test.ts      | 97 ++++++++++++++++++++++\n 5 files changed, 178 insertions(+), 26 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/guides/docs-structure-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-30sw-multi-repo-refs-trace.md src/exec-repo-trace.ts src/exec-repo-integration.ts src/exec-run.ts tests/src/exec-repo-trace.test.ts tests/src/exec-task-repos.integration.test.ts",
+      "status": "passed",
+      "summary": "formatted changed files"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-30sw-multi-repo-refs-trace.md docs/ja/specdojo/guides/docs-structure-guide.md",
+      "status": "passed",
+      "summary": "no errors"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "OK; 4 based_on warnings about missing product docs, unrelated to this change"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "Built index: 2280 entries"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-30SW\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\n[dry-run] git merge --no-ff --no-edit exec/T-T-doc-010\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nUpdated: /tmp/specdojo-register-resume-e2e-yvcuaf/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)\nUpdated: /tmp/specdojo-register-resume-e2e-yvcuaf/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml\nGenerated: /tmp/specdojo-register-resume-e2e-yvcuaf/docs/ja/projects/test/controls/project-register/generated/pjr-index.md\nGenerated: /tmp/specdojo-register-resume-e2e-yvcuaf/docs/ja/projects/test/controls/p…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.3.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-implemented)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-30SW/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-30SW/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specd…"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-30SW\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-hl8mNE/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-JfWLLS/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-C4cHkK/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-eor9hj/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-glowom/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-cgb5yh/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\nWrote agent stdout: /tmp/specdojo-agent-command-iEM7gu/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-o0EfsC/outputs/partial.txt\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\n\n Test Files  120 passed (120)\n      Te…"
+    }
+  ],
+  "final_message": "PJR-30SW: runner now adds `Refs: <project-id>:<item-id>` to product commits, product merge commits, and the project merge commit (qualified form) in exec run --register, and records each product's integration branch / merge commit / PR reference in a trailing トレーサビリティ section of the result before the project merge (repos-declared projects only; resume rewrites the section). Updated docs-structure-guide result traceability format and git log --grep examples (including legacy unqualified search), updated the ticket, and added unit tests plus 2 real-Git integration tests. The new tests have not been run in this executor; they depend on the parent runner's validations. Schedule-origin task commits are unchanged (no register item).",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-30SW/20261001T110620811Z-2632be58/executor.log",
+      "bytes": 5468,
+      "truncated": false
+    }
+  ]
+}

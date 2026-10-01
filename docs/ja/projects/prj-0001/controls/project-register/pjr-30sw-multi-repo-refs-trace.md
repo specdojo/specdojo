@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: high
   owner: DEV
   registered_at: "2026-10-01T03:54:02Z"
@@ -34,13 +34,18 @@ specdojo:
 
 | No  | 作業                                        | 担当 | 状態 | メモ |
 | --- | ------------------------------------------- | ---- | ---- | ---- |
-| 1   | Refs の自動付与（プロダクト・プロジェクト） | DEV  | open | -    |
-| 2   | result の trace 表の自動記録                | DEV  | open | -    |
-| 3   | ガイドの更新とテスト                        | DEV  | open | -    |
+| 1   | Refs の自動付与（プロダクト・プロジェクト） | DEV  | done | -    |
+| 2   | result の trace 表の自動記録                | DEV  | done | -    |
+| 3   | ガイドの更新とテスト                        | DEV  | done | -    |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `src/exec-repo-trace.ts` を追加し、`Refs: <project-id>:<item-id>` の組み立て、統合後の commit snapshot の取得、result への trace 表の記録をまとめた。
+- `exec run --register` の統合段で、プロダクト側の exec branch の commit と merge commit に修飾形の `Refs:` を付けるようにした。プロダクト側の merge commit には遷移や agent 名を複製しない。プロジェクト側の merge commit の `Refs:` も修飾形に直した。
+- プロダクトの統合後・プロジェクトの統合前に、リポジトリごとの統合先ブランチ、merge commit（40 文字）、分かる場合は PR 参照を result 末尾の「トレーサビリティ」章へ記録し、プロジェクト側の merge commit に同梱する。統合を再開した場合は同じ章を書き直し、統合先が先へ進んでいても exec branch を取り込んだ merge commit を記録する。
+- `repos` を宣言しない project では trace 表を記録せず、統合の手順は変わらない。schedule 由来のタスクの統合（`runPreparedTask`）は登録簿の項目を持たないため、commit message を変えていない。
+- [[specdojo:docs-structure-guide]] の「result によるトレーサビリティ」の書式、trace 表の例、`git log --grep` の例を修飾形にし、修飾なしの過去の履歴も検索する方法を書いた。
+- 単体テスト（`tests/src/exec-repo-trace.test.ts`）と、実 Git の統合テスト（`tests/src/exec-task-repos.integration.test.ts` の 2 件）を追加した。宣言の無い project の回帰は既存のテストで確かめる。
 
 ## 5. 関連ドキュメント
 

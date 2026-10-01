@@ -188,6 +188,14 @@ import {
   RepoIntegrationError,
 } from "./exec-repo-integration.js";
 import {
+  productIntegrationTrace,
+  recordResultTrace,
+  refsTrailer,
+  registerProjectMergeMessage,
+  traceKey,
+  withCommitTrailers,
+} from "./exec-repo-trace.js";
+import {
   agentProtectedConfigViolation,
   captureAgentProtectedConfigAcrossRepos,
   captureAgentProtectedConfigSnapshot,
@@ -5530,6 +5538,10 @@ async function finalizeRegisterWorktreeRun(params: {
 
     await updateResultStatus(worktreeResultPath, "complete", completedAt);
     const subject = commitSubject(`exec(register ${item.id}): `, item.title);
+    // PJR-30SW: プロダクト側の commit と merge commit、プロジェクト側の merge commit に
+    // `Refs: <project-id>:<item-id>` を付ける（PJR-1SXK）。
+    const itemTraceKey = traceKey(projectId, item.id);
+    const productMessage = withCommitTrailers(subject, [refsTrailer(projectId, item.id)]);
     const integrateStartedAt = new Date().toISOString();
     recordIntegrateStage(params.pipelineStatePath, integrateStartedAt, (current) => ({
       status: "running",
@@ -5543,7 +5555,7 @@ async function finalizeRegisterWorktreeRun(params: {
       try {
         commitProductWorktrees({
           worktree,
-          message: subject,
+          message: productMessage,
           targets: taskTargetsAtHead(wtContext, worktree, stem),
           scopeLogPath: integrateLogPath(params.pipelineStatePath),
         });
@@ -5578,12 +5590,17 @@ async function finalizeRegisterWorktreeRun(params: {
         executor = state.stages.executor.actor ?? executor;
         reporter = state.stages.reporter.actor ?? reporter;
       }
-      const mergeMessage =
-        `${subject}\n\n` +
-        `Transition: start → review\nExecutor: ${executor}\nReporter: ${reporter}\nRefs: ${item.id}`;
+      const mergeMessage = registerProjectMergeMessage({
+        subject,
+        executor,
+        reporter,
+        projectId,
+        itemId: item.id,
+      });
       integrateTaskRepositories({
         worktree,
         mergeMessage,
+        productMergeMessage: productMessage,
         checkProject: () =>
           projectMergeBlockers({
             context: wtContext,
@@ -5604,6 +5621,19 @@ async function finalizeRegisterWorktreeRun(params: {
           ) {
             throw new Error(`register review transition failed: ${item.id}`);
           }
+          // プロダクトの統合後・プロジェクトの統合前に、統合先の commit snapshot を result の
+          // trace 表へ記録し、プロジェクト側の merge commit に同梱する。宣言の無い project では
+          // 記録せず、result は従来どおりになる。
+          const products = worktree.repos ?? [];
+          const tracePaths: string[] = [];
+          if (products.length > 0 && existsSync(worktreeResultPath)) {
+            recordResultTrace({
+              resultPath: worktreeResultPath,
+              traceKey: itemTraceKey,
+              traces: products.map(productIntegrationTrace),
+            });
+            tracePaths.push(worktreeResultPath);
+          }
           const integrateCompletedAt = new Date().toISOString();
           recordIntegrateStage(params.pipelineStatePath, integrateCompletedAt, () => ({
             status: "succeeded",
@@ -5614,7 +5644,7 @@ async function finalizeRegisterWorktreeRun(params: {
             worktreeRegisterPaths,
             `exec(register ${item.id}): review`,
             worktreeTicketPath,
-            params.pipelineStatePath ? [params.pipelineStatePath] : [],
+            [...(params.pipelineStatePath ? [params.pipelineStatePath] : []), ...tracePaths],
           );
         },
         mergeProject: () =>

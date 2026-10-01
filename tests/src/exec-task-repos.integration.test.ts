@@ -31,10 +31,17 @@ import {
 } from "../../src/exec-task-repos.js";
 import { gitOutput, gitResult, type ExecWorktree } from "../../src/exec-worktree.js";
 import {
+  commitProductWorktrees,
   integrateTaskRepositories,
   projectMergeBlockers,
   type RepoIntegrationRecorder,
 } from "../../src/exec-repo-integration.js";
+import {
+  productIntegrationTrace,
+  recordResultTrace,
+  refsTrailer,
+  withCommitTrailers,
+} from "../../src/exec-repo-trace.js";
 import {
   checkpointAndEnsureWorktree,
   commitWorktreeChanges,
@@ -634,6 +641,96 @@ describe("multi-repository task worktrees", () => {
     expect(
       gitResult(fixture.repo, ["merge-base", "--is-ancestor", worktree.branch, "HEAD"]).status,
     ).toBe(0);
+  });
+
+  it("adds the qualified Refs trailer to product commits and records the trace after integration", () => {
+    const fixture = setup();
+    const worktree = prepare(fixture);
+    const [app1, app2] = worktree.repos!;
+    writeFile(join(app1!.path, "src", "feature.ts"), "export const feature = 1;\n");
+    writeFile(join(worktree.path, "project.txt"), "project change\n");
+    git(worktree.path, "add", "project.txt");
+    git(worktree.path, "commit", "-m", "change project");
+    const subject = "exec(register PJR-30SW): trace product integration";
+    const productMessage = withCommitTrailers(subject, [refsTrailer("prj-0001", "PJR-30SW")]);
+    const resultPath = join(fixture.parent, "result.md");
+    writeFile(resultPath, "# Edit Result\n\n## 1. 実施内容\n\n- done\n");
+    const releasePaths = checkpointPaths(fixture);
+
+    const outcomes = commitProductWorktrees({ worktree, message: productMessage });
+    integrateTaskRepositories({
+      worktree,
+      mergeMessage: `${subject}\n\nTransition: start → review\nRefs: prj-0001:PJR-30SW`,
+      productMergeMessage: productMessage,
+      checkProject: () =>
+        projectMergeBlockers({ context: fixture.context, worktree, taskId: TASK_ID, releasePaths }),
+      beforeProjectMerge: () =>
+        recordResultTrace({
+          resultPath,
+          traceKey: "prj-0001:PJR-30SW",
+          traces: worktree.repos!.map(productIntegrationTrace),
+          recordedAt: "2026-10-01T00:00:00.000Z",
+        }),
+      mergeProject: () =>
+        mergeWorktreeIntoCurrent({
+          context: fixture.context,
+          worktree,
+          taskId: TASK_ID,
+          message: subject,
+          releaseRootPaths: releasePaths,
+        }),
+    });
+
+    expect(outcomes.map((outcome) => [outcome.repo, outcome.committed])).toEqual([
+      ["app1", true],
+      ["app2", false],
+    ]);
+    expect(git(app1!.path, "log", "-1", "--format=%B")).toBe(
+      `${subject}\n\nRefs: prj-0001:PJR-30SW`,
+    );
+    const target = productIntegrationTarget(app1!);
+    const mergeCommit = git(app1!.repoRoot, "rev-parse", target);
+    const mergeBody = git(app1!.repoRoot, "log", "-1", "--format=%B", target);
+    expect(git(app1!.repoRoot, "rev-list", "--parents", "-n", "1", target).split(" ")).toHaveLength(
+      3,
+    );
+    expect(mergeBody).toBe(`${subject}\n\nRefs: prj-0001:PJR-30SW`);
+    expect(mergeBody).not.toContain("Transition:");
+    expect(
+      git(app1!.repoRoot, "log", target, "--grep=^Refs: prj-0001:PJR-30SW$", "--format=%H"),
+    ).toBe([mergeCommit, git(app1!.repoRoot, "rev-parse", app1!.branch)].join("\n"));
+    expect(git(app2!.repoRoot, "log", "-1", "--format=%s", "release")).toBe("release commit");
+
+    const result = readFileSync(resultPath, "utf8");
+    expect(result).toContain("## 2. トレーサビリティ\n");
+    expect(result).toMatch(
+      new RegExp(`\\| \`app1\` +\\| \`${target}\` +\\| not applicable \\| \`${mergeCommit}\``),
+    );
+    expect(result).toMatch(
+      /\| `app2` +\| `release` +\| not applicable \| not applicable \(no changes\)/,
+    );
+  });
+
+  it("records the merge commit of a product that a resumed integration skips", () => {
+    const fixture = setup();
+    const worktree = prepare(fixture);
+    commitIntegrationFixture(worktree);
+    const [app1, app2] = worktree.repos!;
+    git(app2!.repoRoot, "checkout", "release");
+    const removeHook = rejectMergeCommit(app2!.repoRoot);
+    expect(() => integrateFixture(fixture, worktree)).toThrow(/not integrated: app2, project/);
+    const firstMerge = git(app1!.repoRoot, "rev-parse", productIntegrationTarget(app1!));
+    removeHook();
+    // 統合先が先へ進んでも、記録するのは exec branch を取り込んだ merge commit とする。
+    git(app1!.repoRoot, "commit", "--allow-empty", "-m", "later work on the target");
+
+    integrateFixture(fixture, worktree);
+    const traces = worktree.repos!.map(productIntegrationTrace);
+
+    expect(traces.map((trace) => [trace.repo, trace.state, trace.commit])).toEqual([
+      ["app1", "merged", firstMerge],
+      ["app2", "merged", git(app2!.repoRoot, "rev-parse", "release")],
+    ]);
   });
 
   it("keeps the single <base>/<task>/ worktree for projects without repos", () => {

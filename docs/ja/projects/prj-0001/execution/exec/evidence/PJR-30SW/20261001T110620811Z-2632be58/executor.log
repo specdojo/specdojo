@@ -1,0 +1,34 @@
+PJR-30SW の実装は終わりましたが、追加したテストはまだ一度も実行していません。担当外の検証を受け持つ runner が、この後で unit・integration・typecheck・lint を実行します。その結果で合否が決まります。
+
+**変更内容**
+- **`Refs:` の付与:** `exec run --register` の統合で、プロダクト側の commit と merge commit の両方に `Refs: <project-id>:<item-id>` を自動で付けます。プロダクト側の merge commit には、プロジェクト側の遷移や agent 名を書きません（ガイドの「commit message 1 行に限定」に合わせました）。プロジェクト側の merge commit の `Refs:` も、修飾なしの ID から修飾形に直しました。
+- **result の trace 表:** プロダクトを統合した後、プロジェクトを統合する前に、result の末尾に「トレーサビリティ」の章を追記します。中身はリポジトリごとの統合先ブランチ、merge commit の完全な hash、PR 参照です。追記した result はプロジェクト側の merge commit に含めます。
+  - runner はローカルで統合するため、PR 参照はふつう `not applicable` になります。merge commit の件名が `Merge pull request #N` のときだけ番号を拾います。
+  - 統合を再開したときは同じ章を書き直します。統合先にその後の commit が増えていても、exec branch を取り込んだ merge commit の方を記録します。
+- **ガイド:** `docs-structure-guide` の「result によるトレーサビリティ」で、書式・trace 表の例・`git log --grep` の例を修飾形にしました。修飾なしの過去の `Refs: PJR-XXXX` も一緒に検索するコマンドと、その注意点も加えました。
+- **個票:** 作業内容の表を `done` にし、対応結果を書きました。frontmatter のステータスは変えていません。
+- **テスト:** pure 関数の単体テストと、実 Git を使う統合テスト 2 件を追加しました。統合テストは、Refs の付与と trace の記録、および再開時に記録する commit を確かめます。
+
+**範囲外にしたもの**
+- `repos` を宣言していない project では trace 表を書きません。変わるのはプロジェクト側の `Refs:` の書式だけです。宣言なしの構成の回帰は、新しいテストを書かず既存のテストに頼っています。
+- schedule 由来のタスク（`runPreparedTask`）は登録簿の項目を持たないので、commit message を変えていません。
+- `.specdojo/exec-defaults.yaml`・`package.json` などの保護された設定には触れていません。
+
+**変更ファイル**
+- `src/exec-repo-trace.ts`（新規）
+- `src/exec-repo-integration.ts`
+- `src/exec-run.ts`
+- `tests/src/exec-repo-trace.test.ts`（新規）
+- `tests/src/exec-task-repos.integration.test.ts`
+- `docs/ja/specdojo/guides/docs-structure-guide.md`
+- `docs/ja/projects/prj-0001/controls/project-register/pjr-30sw-multi-repo-refs-trace.md`
+
+**こちらで実行した検査**
+- 変更ファイルに `npx prettier --write`、変更した Markdown 2 件に `npx markdownlint`：エラーなし。
+- `node --import tsx src/specdojo.ts catalog validate`：成功。警告 4 件は、存在しないプロダクト側文書を指す `based_on` に関するもので、この変更とは関係ありません。
+- `node --import tsx src/specdojo.ts index build`：成功（2280 件）。
+- 作業途中に一度、`npx tsc -p tsconfig.json --noEmit` を実行し、エラーはありませんでした。これは runner に任せる typecheck と重なるので、記録には含めていません。
+
+<specdojo_executor_evidence>
+{"final_message":"PJR-30SW: runner now adds `Refs: <project-id>:<item-id>` to product commits, product merge commits, and the project merge commit (qualified form) in exec run --register, and records each product's integration branch / merge commit / PR reference in a trailing トレーサビリティ section of the result before the project merge (repos-declared projects only; resume rewrites the section). Updated docs-structure-guide result traceability format and git log --grep examples (including legacy unqualified search), updated the ticket, and added unit tests plus 2 real-Git integration tests. The new tests have not been run in this executor; they depend on the parent runner's validations. Schedule-origin task commits are unchanged (no register item).","validations":[{"command":"npx prettier --write docs/ja/specdojo/guides/docs-structure-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-30sw-multi-repo-refs-trace.md src/exec-repo-trace.ts src/exec-repo-integration.ts src/exec-run.ts tests/src/exec-repo-trace.test.ts tests/src/exec-task-repos.integration.test.ts","status":"passed","summary":"formatted changed files"},{"command":"npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-30sw-multi-repo-refs-trace.md docs/ja/specdojo/guides/docs-structure-guide.md","status":"passed","summary":"no errors"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"OK; 4 based_on warnings about missing product docs, unrelated to this change"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"Built index: 2280 entries"}]}
+</specdojo_executor_evidence>

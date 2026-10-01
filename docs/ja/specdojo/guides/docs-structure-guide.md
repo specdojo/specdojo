@@ -399,8 +399,8 @@ workspace/
 
 ### 10.5. result によるトレーサビリティ
 
-プロダクト実装の変更を伴う項目では、登録簿の item ID を履歴改変に依存しないトレースキーとし、
-app 側の commit message と SpecDojo 側の result 本文の両方に記録します。result frontmatter は
+プロダクト実装の変更を伴う項目では、登録簿の item ID をプロジェクト ID で修飾した `<project-id>:<item-id>`（例: `prj-0001:PJR-XXXX`）を履歴改変に依存しないトレースキーとし、
+app 側の commit message と SpecDojo 側の result 本文の両方に記録します。登録簿の ID はプロジェクトの中でしか一意でないため、修飾しないと複数プロジェクトの構成やプロダクトリポジトリの履歴から所属を特定できません。result frontmatter は
 scaffold の構造を維持し、独自キーを追加しません。
 
 app 側では、対象項目に対応する commit message の body 末尾に `Refs:` trailer を記載します。
@@ -410,33 +410,44 @@ feat(auth): トークン失効処理を追加する
 
 認証済み端末を紛失した場合に、利用者がセッションを失効できるようにする。
 
-Refs: PJR-XXXX
+Refs: prj-0001:PJR-XXXX
 ```
 
-SpecDojo 側の result には、同じ item ID と app 側の参照を本文へ記録します。commit hash は特定時点の
-スナップショットであり、主たる参照にはしません。Pull Request を使わない場合は `app PR` を
-`not applicable` とし、理由を添えます。
+`specdojo.config.json` の project に `repos` を宣言し、`exec run --register` で項目を統合する場合は、runner が次を自動で行います。
+
+- プロダクト側の exec branch の commit と、統合先ブランチへの merge commit の両方に `Refs: <project-id>:<item-id>` を付けます。プロダクト側の merge commit には、遷移や agent 名などプロジェクト側の記帳を複製しません。
+- プロジェクト側の merge commit の `Refs:` も同じ修飾形で付けます。
+- 宣言順にプロダクトを統合した後、プロジェクトを統合する前に、リポジトリごとの統合先ブランチと commit snapshot を result 本文の末尾に「トレーサビリティ」の章として記録します。統合を再開した場合は同じ章を書き直します。
+
+`repos` を宣言しない project では、プロダクト側の統合と trace 表の記録は行いません。プロジェクト側の merge commit の `Refs:` だけが修飾形になります。
+
+SpecDojo 側の result には、同じトレースキーと app 側の参照を本文へ記録します。commit hash は特定時点の
+スナップショットであり、主たる参照にはしません。Pull Request を使わない場合は `PR` を
+`not applicable` とし、理由を添えます。runner がローカルで統合した行は `not applicable` になります。
 
 ```markdown
-| trace key | app repository | app PR | app commit snapshot                        | 確認時点                 |
-| --------- | -------------- | ------ | ------------------------------------------ | ------------------------ |
-| PJR-XXXX  | app1           | #123   | `0123456789abcdef0123456789abcdef01234567` | 統合先ブランチへの統合後 |
+| trace key           | repository | integration branch | PR             | commit snapshot                            | recorded at              |
+| ------------------- | ---------- | ------------------ | -------------- | ------------------------------------------ | ------------------------ |
+| `prj-0001:PJR-XXXX` | `app1`     | `main`             | #123           | `0123456789abcdef0123456789abcdef01234567` | 2026-10-01T00:00:00.000Z |
+| `prj-0001:PJR-XXXX` | `app2`     | `release`          | not applicable | not applicable (no changes)                | 2026-10-01T00:00:00.000Z |
 ```
 
 次の規則で運用します。
 
-- `Refs:` の値は登録簿の item ID と完全一致させます。表示名や一時的な branch 名をトレースキーに
-  しません。
+- `Refs:` の値は `<project-id>:<item-id>` とし、item ID は登録簿の ID と完全一致させます。表示名や一時的な branch 名をトレースキーに
+  しません。1 つの commit が複数の項目に関わる場合は、`Refs:` を項目ごとに 1 行ずつ書きます。
+- プロダクトリポジトリから参照される project ID は、別々のプロジェクトリポジトリの間で重ならないよう、意味のある名前（例: `app1`）にします。
 - app 側の対象 commit には `Refs:` trailer を付けます。複数 commit を1つへ squash する場合は、
   最終 commit message に trailer を1行残します。app のソースや設定ファイルへ逆参照を埋め込みません。
 - PR を使う場合は、番号だけでリポジトリを特定できないため、result へ repository 名と PR 番号または
   URL を対で記録します。
 - app commit snapshot は、意図する統合先ブランチが実装変更を含んだ直後の40文字の完全長 hash と
   します。merge commit が作られた場合はその merge commit、fast-forward または squash merge の
-  場合は統合後の先端を記録します。
+  場合は統合後の先端を記録します。統合する変更が無かったリポジトリは `not applicable (no changes)` とします。
 - 記録と確認は app 側の統合成功後、SpecDojo 側の result と成果物を統合する前に行います。app 側への
   統合が未完了なら PR や hash を推測で記録しません。
 - 文書のみの項目で app 側の変更がない場合は、`app change: not applicable` とその理由を記録します。
+- 過去の commit の `Refs: PJR-XXXX`（修飾なし）は書き換えません。検索するときは修飾形と修飾なしの両方を対象にします。
 
 #### 10.5.1. rebase / squash merge 後の確認
 
@@ -444,18 +455,24 @@ rebase や squash により commit hash は変わるため、統合後の commit
 いることを完了条件として確認します。
 
 1. rebase 後は、書き換え後の各対象 commit の message を確認する。commit をまとめた場合は、残った
-   commit の body 末尾に `Refs: PJR-XXXX` があることを確認する。
-2. squash merge では、最終 commit message を確定する画面またはコマンドで `Refs: PJR-XXXX` を
+   commit の body 末尾に `Refs: prj-0001:PJR-XXXX` があることを確認する。
+2. squash merge では、最終 commit message を確定する画面またはコマンドで `Refs: prj-0001:PJR-XXXX` を
    明示的に残す。プラットフォームによる commit message の自動連結には依存しない。
 3. 統合後の app リポジトリで次を実行し、統合先ブランチから到達可能な commit が表示されることを
    確認する。
 
 ```bash
-git log <target-branch> --grep='^Refs: PJR-XXXX$' --format='%H %s'
+git log <target-branch> --grep='^Refs: prj-0001:PJR-XXXX$' --format='%H %s'
 ```
 
 1. 表示された最終 hash と PR 番号または URL を result へ記録する。対象 commit が表示されなければ、
    SpecDojo 側を統合せず、app 側のトレースキーを是正する。
+
+修飾形を導入する前の履歴も含めて検索する場合は、修飾なしの `Refs: PJR-XXXX` も対象にします。修飾なしの ID は別のプロジェクトの同じ ID にも一致し得るため、表示された commit がどのプロジェクトの項目かを result や期間で確かめます。
+
+```bash
+git log <target-branch> -E --grep='^Refs: (prj-0001:)?PJR-XXXX$' --format='%H %s'
+```
 
 この確認により、rebase や squash で hash が変わっても item ID から app の到達可能な履歴を検索
 できます。PR は squash 後の commit とレビュー経緯を結ぶ補助参照、hash は確認時点を固定する補助値
@@ -498,7 +515,7 @@ app1-worktrees/
 
 1. `src/` で app 側の検証を実行し、`app1/` の統合先ブランチへ統合する。
 2. 統合後の app 履歴に `Refs:` trailer が残っていることを確認し、trace key、PR 参照、最終 commit
-   snapshot を `docs/` 側の result 本文へ記録する。
+   snapshot を `docs/` 側の result 本文へ記録する。`exec run --register` では runner がこの記録を自動で行う。
 3. `docs/` で SpecDojo 側の検証を実行し、`app1-specdojo/` の統合先ブランチへ統合する。
 
 ソースを先に統合することで、プロダクトの統合を SpecDojo 側の統合成否から切り離します。失敗時の部分状態は次の2つに限定します。
