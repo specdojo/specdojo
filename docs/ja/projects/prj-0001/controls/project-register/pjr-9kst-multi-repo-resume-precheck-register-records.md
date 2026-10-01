@@ -11,7 +11,7 @@ specdojo:
   priority: high
   owner: DEV
   registered_at: "2026-10-01T11:39:21Z"
-  block_reason: "agent exited with non-zero code: runner による統合テスト `test-integration` が failed となっており、完了条件を満たしていないため。"
+  block_reason: rate limit reached
 ---
 
 # PJR-9KST 複数リポジトリの統合を再開すると waiting の記帳が事前検査を妨げる

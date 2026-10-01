@@ -4,14 +4,13 @@ specdojo:
   type: exec-result
   task_id: PJR-9KST
   mode: edit
-  status: blocked
+  status: superseded
   project_id: prj-0001
   origin: register
   plan_ref: exec/plans/pjr-9kst-20261001T114028Z-adaa-plan.md
   started_at: "2026-10-01T11:40:28.989Z"
-  completed_at: "2026-10-01T11:53:43.180Z"
+  completed_at: "2026-10-01T12:20:43.759Z"
   agent: codex-expert-executor
-  block_reason: "agent exited with non-zero code: runner による統合テスト `test-integration` が failed となっており、完了条件を満たしていないため。"
 ---
 
 # Edit Result
