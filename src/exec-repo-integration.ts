@@ -478,6 +478,147 @@ export function mergeProductIntoTarget(params: {
   return commit;
 }
 
+// ── 再開前の統合先取り込み ─────────────────────────────────────────────────
+
+// PJR-GENJ: `--resume` で reporter 段・統合段から再開する前に、統合先ブランチの最新を各リポジトリの
+// exec branch と worktree へ取り込む。取り込まないまま親検証を実行すると、統合先で直した不具合が
+// 検証に反映されず、同じ失敗を繰り返す。executor の成果は worktree に未 commit のまま残っているため、
+// 通常の merge（`--no-commit`）で取り込み、未 commit の変更と重なる場合は Git が merge を拒否する。
+// 競合は自動解決せず merge を中止して理由を返す。ただし `theirsPaths`（項目自身の記帳ファイル）の
+// 競合だけは統合先の内容で解決する。wait commit 後の統合先が記帳の正本になるためである。
+
+export type IntegrationTargetSyncStatus = "merged" | "up-to-date" | "skipped";
+
+export type IntegrationTargetSync = {
+  repo: string;
+  target: string;
+  status: IntegrationTargetSyncStatus;
+  detail?: string;
+};
+
+function isAncestor(cwd: string, ancestor: string, descendant: string): boolean {
+  return gitResult(cwd, ["merge-base", "--is-ancestor", ancestor, descendant]).status === 0;
+}
+
+function hasPathAt(cwd: string, ref: string, path: string): boolean {
+  return gitResult(cwd, ["cat-file", "-e", `${ref}:${path}`]).status === 0;
+}
+
+/**
+ * Merge `target` into the branch checked out at `cwd` (an exec worktree) with a merge commit.
+ * Uncommitted changes in the worktree are kept as they are. Conflicts on `theirsPaths`
+ * (repository-relative) take the target side; any other conflict, or a merge that Git refuses to
+ * start (for example because it would overwrite uncommitted changes), aborts the merge and throws.
+ */
+export function syncWorktreeWithIntegrationTarget(params: {
+  repo: string;
+  cwd: string;
+  target: string;
+  message: string;
+  theirsPaths?: readonly string[];
+}): IntegrationTargetSync {
+  const { repo, cwd, target, message } = params;
+  if (isAncestor(cwd, target, "HEAD")) return { repo, target, status: "up-to-date" };
+
+  const merge = gitResult(cwd, [
+    "merge",
+    "--no-commit",
+    "--no-ff",
+    "--no-verify",
+    "-m",
+    message,
+    target,
+  ]);
+  if (merge.status !== 0 && !mergeInProgress(cwd)) {
+    const output = [gitText(merge.stdout), gitText(merge.stderr)]
+      .join("\n")
+      .split("\n")
+      .map((line) => line.trim())
+      .filter(Boolean)
+      .join(" ");
+    throw new Error(
+      `${repo}: cannot merge ${target} into the exec branch` + (output ? `: ${output}` : ""),
+    );
+  }
+
+  try {
+    const conflicted = zeroSeparated(cwd, ["diff", "--name-only", "--diff-filter=U", "-z"]);
+    const theirs = new Set(params.theirsPaths ?? []);
+    const unexpected = conflicted.filter((path) => !theirs.has(path));
+    if (unexpected.length > 0) {
+      throw new Error(`${repo}: merge conflicts with ${target}: ${unexpected.join(", ")}`);
+    }
+    for (const path of conflicted) {
+      if (hasPathAt(cwd, target, path)) {
+        gitOutput(cwd, ["checkout", target, "--", path]);
+        gitOutput(cwd, ["add", "--", path]);
+      } else {
+        gitOutput(cwd, ["rm", "--quiet", "--force", "--", path]);
+      }
+    }
+    const unresolved = zeroSeparated(cwd, ["diff", "--name-only", "--diff-filter=U", "-z"]);
+    if (unresolved.length > 0) {
+      throw new Error(`${repo}: unresolved conflicts with ${target}: ${unresolved.join(", ")}`);
+    }
+    // The merge is runner-internal; hooks would re-run the very checks the resume is about to run.
+    gitOutput(cwd, ["commit", "--no-verify", "-m", message]);
+  } catch (error) {
+    if (mergeInProgress(cwd)) abortMerge(cwd);
+    throw error;
+  }
+  return { repo, target, status: "merged" };
+}
+
+/**
+ * Bring every repository of a task up to date with its integration target before a resumed stage
+ * re-runs parent validations: products in declaration order, then the project. A product whose
+ * integration target is not a local branch is skipped (the integration preflight reports it).
+ * Throws on the first repository that cannot be synced; earlier repositories keep their merge.
+ */
+export function syncTaskWorktreesWithIntegrationTargets(params: {
+  worktree: ExecWorktree;
+  projectTarget: string;
+  message: string;
+  // project worktree からの相対パス。項目自身の記帳ファイルで、競合時は統合先の内容を採る。
+  projectTheirsPaths?: readonly string[];
+}): IntegrationTargetSync[] {
+  const synced: IntegrationTargetSync[] = [];
+  for (const product of params.worktree.repos ?? []) {
+    const target = productIntegrationTarget(product);
+    if (!existsSync(product.path)) {
+      synced.push({ repo: product.name, target, status: "skipped", detail: "worktree missing" });
+      continue;
+    }
+    if (target === "HEAD" || target === product.branch || !branchExists(product.repoRoot, target)) {
+      synced.push({
+        repo: product.name,
+        target,
+        status: "skipped",
+        detail: "integration branch is not a local branch",
+      });
+      continue;
+    }
+    synced.push(
+      syncWorktreeWithIntegrationTarget({
+        repo: product.name,
+        cwd: product.path,
+        target,
+        message: params.message,
+      }),
+    );
+  }
+  synced.push(
+    syncWorktreeWithIntegrationTarget({
+      repo: PROJECT_REPO_NAME,
+      cwd: params.worktree.path,
+      target: params.projectTarget,
+      message: params.message,
+      theirsPaths: params.projectTheirsPaths,
+    }),
+  );
+  return synced;
+}
+
 // ── 統合段 ─────────────────────────────────────────────────────────────────
 
 export type RepoIntegrationRecorder = (

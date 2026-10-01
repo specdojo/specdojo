@@ -61,3 +61,45 @@
       from: "-"
       to: "agent exited with non-zero code: runner による親検証 `test-unit` が失敗（exit 1）しているため。具体的に `tests/src/doc-index.test.ts` で「個票の `part_of` と `pjr-index` wikilink が生成された登録台帳へ解決する」テストが失敗している。"
   previous_event_id: reg_a29ff13355d349949d0b697151c07035
+- v: 1
+  id: reg_6d3a9683d1c14f7489d2da7539801aa5
+  ts: "2026-10-01T15:20:58Z"
+  action: start
+  actor: gemma-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_6f1dea87cd9544509e709019d059bfc0
+- v: 1
+  id: reg_bd555feaf731484385f89a400f1210fd
+  ts: "2026-10-01T15:27:11Z"
+  action: wait
+  actor: gemma-reporter
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=.opencode/.gitignore, .opencode/package-lock.json, .opencode/package.json; agent must record the re…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "agent exited with non-zero code: runner による親検証 `test-unit` が失敗（exit 1）しているため。具体的に `tests/src/doc-index.test.ts` で「個票の `part_of` と `pjr-index` wikilink が生成された登録台帳へ解決する」テストが失敗している。"
+      to: "agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=.opencode/.gitignore, .opencode/package-lock.json, .opencode/package.json; agent must record the re…"
+  previous_event_id: reg_6d3a9683d1c14f7489d2da7539801aa5
+- v: 1
+  id: reg_85128fb679c24a94a54a0a716dec4504
+  ts: "2026-10-01T19:45:51Z"
+  action: start
+  actor: claude-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_bd555feaf731484385f89a400f1210fd

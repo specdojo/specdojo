@@ -1,0 +1,48 @@
+```json
+{
+  "schema_version": 1,
+  "mode": "edit",
+  "outcome": "complete",
+  "summary": [
+    "register の `reporter` 段および統合段からの再開において、親検証を実行する前に統合先ブランチの最新を `exec branch` と worktree へ取り込む処理を実装した。",
+    "新しい commit が取り込まれた場合は、整合性を確保するために親検証をやり直す構成とした。",
+    "未コミット成果物と重なる場合や記帳ファイル以外の競合が発生した際は、`merge` を中止し、register の状態を変更せずに再開を拒否する制御を追加した。",
+    "統合段の再開時においても親検証を実行し、失敗時は `waiting` 状態へ戻す仕様とした。"
+  ],
+  "changed_files": [
+    {
+      "path": "src/exec-repo-integration.ts",
+      "summary": "統合先ブランチからの取り込み処理および競合検知ロジックの実装"
+    },
+    {
+      "path": "src/exec-run.ts",
+      "summary": "再開フローにおける統合先同期と親検証の実行順序制御の変更"
+    },
+    {
+      "path": "tests/src/exec-register-resume.integration.test.ts",
+      "summary": "`reporter` 段再開時の E2E テストを追加"
+    },
+    {
+      "path": "tests/src/exec-task-repos.integration.test.ts",
+      "summary": "ブランチ取り込み処理に関するテストケース 6 件を追加"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-genj-resume-validation-before-develop-sync.md",
+      "summary": "個票の対応結果セクションを更新"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "summary": "再開時の動作仕様に関する記述を追加"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "summary": "コマンドリファレンスの更新"
+    }
+  ],
+  "handoff": [
+    "Schedule タスクの再開対応および、統合段再開の E2E テストの実装が未完了であるため、今後の対応が必要。"
+  ],
+  "approach": "親検証の前に最新の統合先ブランチを取り込むことで、古い状態で検証し直して失敗することを防ぐ設計に変更した。同時に、取り込みによる意図しない上書きを防ぐため、未コミット成果物との競合検知を厳格化し、安全に再開できる場合にのみ処理を継続するように実装した。",
+  "block_reason": ""
+}
+```
