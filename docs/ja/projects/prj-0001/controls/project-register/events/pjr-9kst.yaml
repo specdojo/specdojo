@@ -142,3 +142,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_aeb0e33da53948338de0014187923991
+- v: 1
+  id: reg_49c441ed2e11476db8667e10b0dd8c6c
+  ts: "2026-10-01T19:41:52Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（codex は上限で中断、claude-expert-executor で完了 / gemma-reporter）の結果を orchestrator が評価した。完了条件と親検証 7 種の通過を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-02"
+    - field: conclusion
+      from: "-"
+      to: 再開経路でも runner の記帳を初回と同じ基準で releasePaths として扱い、trace の文章を result の Markdown 検査に合わせた。2 製品構成の CLI 経路で失敗位置ごとの再開を確かめた
+  previous_event_id: reg_bc4d88cd2fc5420cb0a2aa703647d110

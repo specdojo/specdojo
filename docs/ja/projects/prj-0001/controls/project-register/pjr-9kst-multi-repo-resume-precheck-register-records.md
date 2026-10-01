@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-9kst-multi-repo-resume-precheck-register-records
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-01T11:39:21Z"
+  completed_at: "2026-10-01T19:41:52Z"
   block_reason: rate limit reached
+  conclusion: 再開経路でも runner の記帳を初回と同じ基準で releasePaths として扱い、trace の文章を result の Markdown 検査に合わせた。2 製品構成の CLI 経路で失敗位置ごとの再開を確かめた
 ---
 
 # PJR-9KST 複数リポジトリの統合を再開すると waiting の記帳が事前検査を妨げる
