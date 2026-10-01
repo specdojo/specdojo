@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-30sw-multi-repo-refs-trace
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-01T03:54:02Z"
+  completed_at: "2026-10-01T11:19:01Z"
+  conclusion: "runner がプロダクト側の commit と merge commit、プロジェクト側の merge commit に Refs: `<project-id>`:`<item-id>` を付け、統合後の trace 表を result に記録するようにした"
 ---
 
 # PJR-30SW プロダクト側 commit の Refs 付与と result の trace 記録

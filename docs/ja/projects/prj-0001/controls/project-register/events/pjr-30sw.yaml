@@ -58,3 +58,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_30de12f3ff784b639f08604bf4ce7ea6
+- v: 1
+  id: reg_0b13cf3b445f4f04a4dbb307498dff9d
+  ts: "2026-10-01T11:19:01Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（claude-expert-executor / gemma-reporter）の結果を orchestrator が評価した。完了条件と親検証 7 種の通過を確かめた。統合 commit の修飾形は実行中の runner が旧ビルドのため次回の実行から反映される
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-01"
+    - field: conclusion
+      from: "-"
+      to: "runner がプロダクト側の commit と merge commit、プロジェクト側の merge commit に Refs: `<project-id>`:`<item-id>` を付け、統合後の trace 表を result に記録するようにした"
+  previous_event_id: reg_506a7940363f4f809c62155ca8aff5e2
