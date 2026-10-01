@@ -11,7 +11,7 @@ specdojo:
   priority: high
   owner: ARC
   registered_at: "2026-10-01T03:58:50Z"
-  block_reason: "agent exited with non-zero code: runner による検証のうち、`test-unit` が `failed` となっており、完了条件を満たしていない。"
+  block_reason: "agent exited with non-zero code: 親検証 `test-unit` が失敗（exit 1）しており、完了条件である静的検査・テストの全件通過を満たしていないため。"
 ---
 
 # PJR-FZC4 複数リポジトリ対応の調査と選択肢の比較
