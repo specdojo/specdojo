@@ -25,6 +25,9 @@ specdojo:
 - プロジェクトリポジトリ 1 つとプロダクトリポジトリ 2 つの構成を一時ディレクトリに作り、1 つの項目で 3 つのリポジトリを変更する exec run が、worktree の作成から統合・trace の記録まで通る e2e または統合テストがある。
 - 同じ構成で、統合の各位置での失敗と再開が期待どおりになることを確かめる。
 - 宣言を持たない構成（同一リポジトリ構成を含む）の回帰を確かめる。
+- 実際の agent CLI（claude・codex・antigravity）でプロダクト worktree へ書き込めるかの確認手順を、一時ディレクトリに 3 リポジトリ構成を作るスクリプトまたはコマンドの列として `tools/` か result に用意する。agent の sandbox からは別の agent を起動できないため、確認の実行は orchestrator が行う。
+- opencode の `permission.external_directory` を変える場合の差分案（保護された agent 定義のため変更はしない）を result の申し送りに書く。
+- 統合 commit の `Refs:` が `<project-id>:<item-id>` になっていることを、統合テストで確かめる（PJR-30SW）。
 - `docs-structure-guide` の「別リポジトリ構成」（「現行実装の境界」「二重 worktree」の各章）、exec のガイド、`CHANGELOG.md`、v0.3.0 の移行ガイドを、実装後の動作に合わせて更新する。
 - 宣言（`repos`）を持たない project の動作が変わらないことを、既存のテストと回帰テストで確かめる。
 - `.specdojo/exec-defaults.yaml`・`package.json` など agent が変更できない設定は変更しない。必要な変更は result の申し送りに書く。
