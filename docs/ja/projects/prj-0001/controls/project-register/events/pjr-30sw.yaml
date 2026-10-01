@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ae4f658aa70d4945ac96ab80cbfb2d6d
+  ts: "2026-10-01T03:54:03Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: 既定の別リポジトリ構成で実装を伴う項目を exec run で扱えるようにするため（v0.3.0）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: プロダクト側 commit の Refs 付与と result の trace 記録
+    - field: description
+      from: ""
+      to: "プロダクト側の commit に Refs: `<project-id>`:`<item-id>` を自動で付け、統合後の commit snapshot・PR 参照を result の trace 表へ自動で記録する（v0.3.0）"
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-01"
+    - field: due
+      from: ""
+      to: _TODO_
