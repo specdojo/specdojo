@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-v96b-multi-repo-parent-validations
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-01T03:53:47Z"
+  completed_at: "2026-10-01T10:42:01Z"
   block_reason: rate limit reached
+  conclusion: parent_validations の要素に { id, repo } を許し、割り当てたリポジトリの worktree で実行して evidence にリポジトリ名を記録するようにした
 ---
 
 # PJR-V96B 親検証のリポジトリ別の割り当て

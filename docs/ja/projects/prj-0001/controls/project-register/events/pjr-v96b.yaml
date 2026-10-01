@@ -87,3 +87,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_37b43738bebf4643b7efecf06a6dc3d0
+- v: 1
+  id: reg_e4e56191f40f4621bd8e8003623c95e7
+  ts: "2026-10-01T10:42:01Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（claude-expert-executor / gemma-reporter、利用上限後に再開）の結果を orchestrator が評価した。完了条件と親検証 7 種の通過を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-01"
+    - field: conclusion
+      from: "-"
+      to: parent_validations の要素に { id, repo } を許し、割り当てたリポジトリの worktree で実行して evidence にリポジトリ名を記録するようにした
+  previous_event_id: reg_321a34975d41478fb651007b7bd3dbcc
