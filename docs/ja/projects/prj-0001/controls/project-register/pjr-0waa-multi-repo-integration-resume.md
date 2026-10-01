@@ -11,7 +11,7 @@ specdojo:
   priority: high
   owner: DEV
   registered_at: "2026-10-01T03:53:55Z"
-  block_reason: "agent exited with non-zero code: runner による検証 `test-integration` が失敗（exit 1）しているため、完了条件を満たしていない。"
+  block_reason: "agent exited with non-zero code: runner による検証 `test-integration` が失敗しているため。"
 ---
 
 # PJR-0WAA 複数リポジトリの統合と再開
