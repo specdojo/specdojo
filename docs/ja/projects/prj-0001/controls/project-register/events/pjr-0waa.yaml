@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_7f541498416149d49146ef9613a101f9
+  ts: "2026-10-01T03:53:55Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: 既定の別リポジトリ構成で実装を伴う項目を exec run で扱えるようにするため（v0.3.0）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 複数リポジトリの統合と再開
+    - field: description
+      from: ""
+      to: commit 対象の算出と統合をリポジトリごとに行い、宣言順（プロダクト先行）で統合する。統合済みの範囲を pipeline state に記録し、失敗した位置から再開する（v0.3.0）
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-01"
+    - field: due
+      from: ""
+      to: _TODO_
