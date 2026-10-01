@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: high
   owner: ARC
   registered_at: "2026-10-01T03:58:50Z"
+  block_reason: "agent exited with non-zero code: runner による検証のうち、`test-unit` が `failed` となっており、完了条件を満たしていない。"
 ---
 
 # PJR-FZC4 複数リポジトリ対応の調査と選択肢の比較
@@ -44,15 +45,18 @@ PJR-5822 の決定に必要な調査として、現行実装の変更箇所を�
 
 ## 3. 作業内容
 
-| No  | 作業                      | 担当 | 状態 | メモ                  |
-| --- | ------------------------- | ---- | ---- | --------------------- |
-| 1   | 現行実装の変更箇所の一覧  | ARC  | open | -                     |
-| 2   | 論点ごとの選択肢と推奨案  | ARC  | open | PJR-5822 の個票に書く |
-| 3   | todo の分担と実施順の確認 | ARC  | open | -                     |
+| No  | 作業                      | 担当 | 状態 | メモ                               |
+| --- | ------------------------- | ---- | ---- | ---------------------------------- |
+| 1   | 現行実装の変更箇所の一覧  | ARC  | done | PJR-5822 の「現行実装の変更箇所」  |
+| 2   | 論点ごとの選択肢と推奨案  | ARC  | done | PJR-5822 の「検討した選択肢」      |
+| 3   | todo の分担と実施順の確認 | ARC  | done | PJR-5822 の「todo の分担と実施順」 |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- 実施内容: 現行実装（`src/exec-worktree.ts`、`src/exec-worktree-ops.ts`、`src/exec-run.ts`、`src/exec-agent-config.ts`、`src/exec-agent-protected-config.ts`、`src/exec-agent-git-state.ts`、`src/exec-parent-validation.ts`、`src/exec-pipeline-state.ts`、`src/exec-register-resume.ts`、`src/exec-evidence.ts`、`src/specdojo-config.ts`、`src/job.ts`、`src/doc-index.ts` など）と provider の設定（`.specdojo/exec-defaults.yaml`、`.specdojo/claude/settings.<mode>.json`、`.opencode/agents/*.md`）を調べた。
+- 成果物: [[prj-0001:pjr-5822-multi-repo-item-design]] に、変更が要る箇所のファイル・関数単位の一覧、8 つの論点ごとの選択肢（各 3 案）と推奨案、単一リポジトリ構成との互換性、todo の実施順と分担への提案を書いた。PJR-5822 の「決定内容」「採択理由」「承認」「影響範囲とフォローアップ」は `_TODO_` のまま残した。
+- 推奨案の要旨: N 個を扱える設計で v0.3.0 はプロダクト 1 つに限る。宣言は `specdojo.config.json` の project に置く。`targets`・`paths` は `<repo>:<path>` とする。worktree は `<task-id>/<repo>/` に置き、`cwd` はプロジェクト worktree とする。統合はプロダクト先行で、リポジトリ別の統合状態を pipeline state に記録する。部分状態は `waiting` とする。親検証は `{ id, repo }` で割り当てる。`Refs:` は runner が付ける。
+- 残課題: codex CLI の追加書き込みルートの指定と、opencode の外部ディレクトリ許可をタスクの worktree に限る方法は未確認（PJR-98G4 で確かめる）。現行の register 統合の merge commit が `Refs:` を修飾なしで付けている点は、PJR-30SW での修正を提案した。コード・設定・ガイドは変更していない。
 
 ## 5. 関連ドキュメント
 
