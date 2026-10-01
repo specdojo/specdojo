@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: high
   owner: DEV
   registered_at: "2026-10-01T03:54:10Z"
+  block_reason: "agent exited with non-zero code: 親 runner による検証 `test-integration` が失敗しており、完了条件である「2 リポジトリの統合テストと e2e で動作を確かめ」を満たせていないため。また、CHANGELOG.md 等の必須更新ファイルが権限不足で書き換えられていない。"
 ---
 
 # PJR-69VP 複数リポジトリ構成の実構成検証と文書の更新
@@ -35,16 +36,21 @@ specdojo:
 
 ## 3. 作業内容
 
-| No  | 作業                                | 担当 | 状態 | メモ |
-| --- | ----------------------------------- | ---- | ---- | ---- |
-| 1   | 3 リポジトリ構成の e2e              | DEV  | open | -    |
-| 2   | 失敗と再開の検証                    | DEV  | open | -    |
-| 3   | 宣言のない構成の回帰                | DEV  | open | -    |
-| 4   | ガイド・CHANGELOG・移行ガイドの更新 | DEV  | open | -    |
+| No  | 作業                                | 担当 | 状態 | メモ                                                |
+| --- | ----------------------------------- | ---- | ---- | --------------------------------------------------- |
+| 1   | 3 リポジトリ構成の e2e              | DEV  | done | `tests/src/exec-multi-repo-e2e.integration.test.ts` |
+| 2   | 失敗と再開の検証                    | DEV  | done | app1・app2・project の各位置                        |
+| 3   | 宣言のない構成の回帰                | DEV  | done | 同じテストファイルの回帰ケース                      |
+| 4   | ガイド・CHANGELOG・移行ガイドの更新 | DEV  | done | `CHANGELOG.md` は agent が変更できないため申し送り  |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- 実施内容: `tests/src/exec-multi-repo-e2e.integration.test.ts` を追加した。プロジェクトリポジトリ 1 つとプロダクトリポジトリ 2 つ（`app2` は `integration_branch` を宣言）を一時ディレクトリに作り、実際の CLI 経路の `exec run --register --worktree` で、worktree の作成・3 リポジトリへの書き込み・統合・trace の記録・撤去までを確かめる。
+- 統合の失敗と再開: `app1`・`app2`・project の各位置で merge を hook で拒否し、`waiting` への遷移、`stages.integrate.repos` の状態、統合済みの範囲、worktree の保持を確かめた後、`--resume` で失敗位置から再開して統合済みの merge commit が変わらないことを確かめる。
+- `Refs:`: プロダクト側の commit・merge commit とプロジェクト側の merge commit が `Refs: <project-id>:<item-id>` を持つことを、統合テストで確かめる（PJR-30SW）。
+- 回帰: `repos` を宣言しない構成で、`<worktree_base>/<task-id>/` 直下の worktree、修飾した `Refs:`、trace の章を持たない result、`integrate.repos` が無い pipeline state を確かめる。既存の統合テストは変更していない。
+- 文書: `docs-structure-guide` の「別リポジトリ構成」（採用条件、現行実装の境界、複数リポジトリの worktree と統合順序、複数リポジトリの統合の失敗と再開）、`exec-worktree-guide`、`exec-operation-guide`、`specdojo-config-reference` の古い記述、v0.3.0 移行ガイドを実装後の動作に合わせて更新した。
+- 残課題: `CHANGELOG.md` と `tools/` は agent の書き込み許可の外にあるため変更していない。CHANGELOG の追記案と、実 agent CLI の確認手順は result の申し送りに記載する。実 agent CLI（claude・codex・antigravity）での確認は orchestrator が行う。
 
 ## 5. 関連ドキュメント
 
