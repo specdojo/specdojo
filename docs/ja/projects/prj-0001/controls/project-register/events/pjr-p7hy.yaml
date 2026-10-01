@@ -45,3 +45,16 @@
       from: low
       to: medium
   previous_event_id: reg_fe376fd8c10a4e3484e5e74afa043b99
+- v: 1
+  id: reg_28e0924d4a914bbca63a76567ec06912
+  ts: "2026-10-01T03:55:03Z"
+  action: update
+  actor: orchestrator
+  from_status: open
+  to_status: open
+  reason: v0.3.0 で複数リポジトリ対応を進める方針になり、PJR-5822 の決定で扱う範囲に含めるため
+  changes:
+    - field: priority
+      from: medium
+      to: high
+  previous_event_id: reg_98dfa914a9354d7d8c3e5543d2815bc6
