@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-fzc4-multi-repo-design-investigation
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: ARC
   registered_at: "2026-10-01T03:58:50Z"
+  completed_at: "2026-10-01T04:29:39Z"
   block_reason: "agent exited with non-zero code: 親検証 `test-unit` が失敗（exit 1）しており、完了条件である静的検査・テストの全件通過を満たしていないため。"
+  conclusion: 現行実装の変更箇所を一覧にし、10 の論点の選択肢と推奨案を PJR-5822 に記録した
 ---
 
 # PJR-FZC4 複数リポジトリ対応の調査と選択肢の比較
