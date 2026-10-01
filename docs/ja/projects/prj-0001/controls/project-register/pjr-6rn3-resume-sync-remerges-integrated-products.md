@@ -21,22 +21,22 @@ PJR-GENJ の再開前の統合先の取り込みが、統合済みのプロダ�
 
 ## 2. 影響範囲
 
-| 観点         | 影響   |
-| ------------ | ------ |
-| スコープ     | _TODO_ |
-| スケジュール | _TODO_ |
-| コスト       | _TODO_ |
-| 品質         | _TODO_ |
-| 関係者       | _TODO_ |
+| 観点         | 影響                                                                                       |
+| ------------ | ------------------------------------------------------------------------------------------ |
+| スコープ     | `repos` を持つ project の、統合段の失敗からの再開と、develop の `src/exec-run.ts` の型検査 |
+| スケジュール | develop で `npm test` と `npm run build` が通らず、以降の exec run と commit が止まる      |
+| コスト       | 型の修正と、再開前の取り込みの対象の修正                                                   |
+| 品質         | 再開で統合済みのプロダクトに不要な merge commit が作られ、統合済みの範囲の記録と食い違う   |
+| 関係者       | 別リポジトリ構成の利用者                                                                   |
 
 ## 3. 対応方針
 
-| 項目     | 内容   |
-| -------- | ------ |
-| 原因     | _TODO_ |
-| 対応策   | _TODO_ |
-| 依存事項 | _TODO_ |
-| 完了条件 | _TODO_ |
+| 項目     | 内容                                                                                                                                                                                                                                                                                                 |
+| -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 原因     | PJR-GENJ の再開前の統合先の取り込みが、統合済みのプロダクトの exec branch にも merge を作る。また PJR-9KST が `bookkeepingPaths` を関数に変え、PJR-GENJ は配列として使ったため、develop の `src/exec-run.ts` 6307 行で型エラー（TS2339）になっている                                                 |
+| 対応策   | `bookkeepingPaths.map(` を `bookkeepingPaths().map(` に直す。再開前の取り込みは、pipeline state で統合済みのリポジトリを除外し、未統合のリポジトリだけに行う                                                                                                                                         |
+| 依存事項 | [[prj-0001:pjr-genj-resume-validation-before-develop-sync]]、[[prj-0001:pjr-9kst-multi-repo-resume-precheck-register-records]]                                                                                                                                                                       |
+| 完了条件 | `npm run typecheck` と `npm run build` が通る。`tests/src/exec-register-pipeline-e2e.integration.test.ts` の「app2 の merge が失敗した後の再開」と「project の merge が失敗した後の再開」を含む `npm test` が全件通る。PJR-GENJ の「再開前に統合先を取り込む」動作は、未統合のリポジトリでは維持する |
 
 ## 4. 対応結果
 
@@ -44,4 +44,5 @@ _TODO_: 解決内容、確認結果、再発防止策を記載する。未解決
 
 ## 5. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-genj-resume-validation-before-develop-sync]]
+- [[prj-0001:pjr-9kst-multi-repo-resume-precheck-register-records]]
