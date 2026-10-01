@@ -90,3 +90,16 @@
       from: "agent exited with non-zero code: runner による統合テスト `test-integration` が failed となっており、完了条件を満たしていないため。"
       to: rate limit reached
   previous_event_id: reg_c6aa820aaea34906a1ec4dc24a15bb0f
+- v: 1
+  id: reg_d653c4375ca2433d9cbd3e47c386f876
+  ts: "2026-10-01T12:22:41Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_ead1fa3cabf4481aa17166049d0fe141
