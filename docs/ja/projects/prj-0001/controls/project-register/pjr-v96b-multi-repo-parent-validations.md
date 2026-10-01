@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: high
   owner: DEV
   registered_at: "2026-10-01T03:53:47Z"
+  block_reason: rate limit reached
 ---
 
 # PJR-V96B 親検証のリポジトリ別の割り当て

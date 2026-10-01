@@ -32,3 +32,32 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_ff0388ed1a9048228efcb189b8f3a688
+  ts: "2026-10-01T05:17:16Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_6fb8026829d142bf88c8ac82a8da0490
+- v: 1
+  id: reg_3668d83470b74d18acef03ddd2da6d5b
+  ts: "2026-10-01T05:18:11Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: rate limit reached
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: rate limit reached
+  previous_event_id: reg_ff0388ed1a9048228efcb189b8f3a688
