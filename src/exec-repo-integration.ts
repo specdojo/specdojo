@@ -529,6 +529,9 @@ function errorMessage(error: unknown): string {
 export function integrateTaskRepositories(params: {
   worktree: ExecWorktree;
   mergeMessage: string;
+  // プロダクト側の merge commit の message。省略時は `mergeMessage`。プロジェクト側の記帳
+  // （遷移・executor など）をプロダクトの履歴へ複製しないために分ける（PJR-30SW）。
+  productMergeMessage?: string;
   checkProject: () => RepoIntegrationBlocker[];
   beforeProjectMerge: () => void;
   mergeProject: () => void;
@@ -622,7 +625,7 @@ export function integrateTaskRepositories(params: {
       }
       commit = mergeProductIntoTarget({
         product,
-        message: params.mergeMessage,
+        message: params.productMergeMessage ?? params.mergeMessage,
         failureLogPath: params.failureLogPath,
       });
     } catch (error) {
