@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-5822-multi-repo-item-design
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: high
   owner: ARC
   registered_at: "2026-10-01T03:53:24Z"
+  completed_at: "2026-10-01T04:29:32Z"
+  conclusion: 推奨案を採択し、論点 2.1. は N 個のリポジトリを v0.3.0 で実装・保証する形に変更した
 ---
 
 # PJR-5822 1 つの項目で複数リポジトリを変更する exec の方針を決める

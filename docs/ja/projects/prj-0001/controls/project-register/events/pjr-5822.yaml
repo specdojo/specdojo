@@ -32,3 +32,22 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_e9f2202e5b42473f96d2ea32d549cf44
+  ts: "2026-10-01T04:29:32Z"
+  action: close
+  actor: orchestrator
+  from_status: open
+  to_status: decided
+  reason: PJR-FZC4 の調査と推奨案を orchestrator が確認して提示し、利用者が承認した（2026-10-01）
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-10-01"
+    - field: conclusion
+      from: "-"
+      to: 推奨案を採択し、論点 2.1. は N 個のリポジトリを v0.3.0 で実装・保証する形に変更した
+  previous_event_id: reg_51d33252e44b45d4995c6e7441b0c112
