@@ -11,7 +11,7 @@ specdojo:
   priority: high
   owner: DEV
   registered_at: "2026-10-01T03:53:55Z"
-  block_reason: rate limit reached
+  block_reason: "agent exited with non-zero code: runner による検証 `test-integration` が失敗（exit 1）しているため、完了条件を満たしていない。"
 ---
 
 # PJR-0WAA 複数リポジトリの統合と再開
@@ -34,16 +34,20 @@ commit 対象の算出と統合をリポジトリごとに行い、宣言順（�
 
 ## 3. 作業内容
 
-| No  | 作業                                     | 担当 | 状態 | メモ |
-| --- | ---------------------------------------- | ---- | ---- | ---- |
-| 1   | 事前検査                                 | DEV  | open | -    |
-| 2   | 宣言順の統合とリポジトリ別の commit 対象 | DEV  | open | -    |
-| 3   | pipeline state のリポジトリ別記録と再開  | DEV  | open | -    |
-| 4   | 失敗位置ごとの統合テスト                 | DEV  | open | -    |
+| No  | 作業                                     | 担当 | 状態 | メモ                                             |
+| --- | ---------------------------------------- | ---- | ---- | ------------------------------------------------ |
+| 1   | 事前検査                                 | DEV  | done | 全リポジトリの commit 後、merge 前に一括検査する |
+| 2   | 宣言順の統合とリポジトリ別の commit 対象 | DEV  | done | 宣言順のプロダクト、最後にプロジェクトを統合する |
+| 3   | pipeline state のリポジトリ別記録と再開  | DEV  | done | Git の実状態から統合済みを判定して飛ばす         |
+| 4   | 失敗位置ごとの統合テスト                 | DEV  | done | 2 製品とプロジェクトの各失敗位置を実 Git で扱う  |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- commit 対象をリポジトリごとに算出し、全対象を commit した後に merge 可否を一括検査する統合段を追加した。
+- 宣言順のプロダクトからプロジェクトの順に統合し、`stages.integrate.repos` へ `status`、`commit`、`merged_at`、失敗理由を記録する。`repos` の無い旧 pipeline state は従来どおり読める。
+- 部分失敗時は統合済みと未統合のリポジトリを理由へ含め、再開時は Git の到達関係から統合済みを飛ばす。
+- 2 製品構成の各統合位置で merge を失敗させ、失敗位置から再開して既統合リポジトリを再統合しない実 Git テストを追加した。宣言の無い project は従来の単一 worktree 経路を維持する。
+- 親 runner が lint、schema 検証、型検査、unit test、integration test を実行する。
 
 ## 5. 関連ドキュメント
 
