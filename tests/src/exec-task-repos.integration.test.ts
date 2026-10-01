@@ -34,6 +34,7 @@ import {
   commitProductWorktrees,
   integrateTaskRepositories,
   projectMergeBlockers,
+  syncTaskWorktreesWithIntegrationTargets,
   type RepoIntegrationRecorder,
 } from "../../src/exec-repo-integration.js";
 import {
@@ -45,6 +46,7 @@ import {
 import {
   checkpointAndEnsureWorktree,
   commitWorktreeChanges,
+  currentBranch,
   discardStaleExecWorktree,
   mergeWorktreeIntoCurrent,
   removeWorktree,
@@ -768,5 +770,143 @@ describe("multi-repository task worktrees", () => {
     });
 
     expect(calls).toEqual(["before-project", "merge-project"]);
+  });
+});
+
+// PJR-GENJ: reporter 段・統合段の再開前に、統合先で直した変更を exec branch と worktree へ取り込む。
+describe("syncTaskWorktreesWithIntegrationTargets", () => {
+  function commitOn(repoRoot: string, file: string, content: string): void {
+    writeFile(join(repoRoot, file), content);
+    git(repoRoot, "add", file);
+    git(repoRoot, "commit", "-m", `fix ${file}`);
+  }
+
+  it("merges a fix committed on the project integration branch while keeping uncommitted executor changes", () => {
+    const fixture = setup({ withProducts: false });
+    const worktree = prepare(fixture);
+    writeFile(join(worktree.path, "docs", "artifact.md"), "# executor artifact\n");
+    commitOn(fixture.repo, "FIX.md", "fixed on the integration branch\n");
+
+    const synced = syncTaskWorktreesWithIntegrationTargets({
+      worktree,
+      projectTarget: currentBranch(fixture.repo),
+      message: "merge integration target before resume",
+    });
+
+    expect(synced.map((entry) => [entry.repo, entry.status])).toEqual([["project", "merged"]]);
+    expect(readFileSync(join(worktree.path, "FIX.md"), "utf8")).toBe(
+      "fixed on the integration branch\n",
+    );
+    expect(readFileSync(join(worktree.path, "docs", "artifact.md"), "utf8")).toBe(
+      "# executor artifact\n",
+    );
+    expect(git(worktree.path, "log", "-1", "--format=%s")).toBe(
+      "merge integration target before resume",
+    );
+    expect(git(worktree.path, "rev-list", "--parents", "-n", "1", "HEAD").split(" ")).toHaveLength(
+      3,
+    );
+  });
+
+  it("reports up-to-date and creates no commit when the integration branch has nothing new", () => {
+    const fixture = setup({ withProducts: false });
+    const worktree = prepare(fixture);
+    const before = git(worktree.path, "rev-parse", "HEAD");
+
+    const synced = syncTaskWorktreesWithIntegrationTargets({
+      worktree,
+      projectTarget: currentBranch(fixture.repo),
+      message: "merge integration target before resume",
+    });
+
+    expect(synced.map((entry) => entry.status)).toEqual(["up-to-date"]);
+    expect(git(worktree.path, "rev-parse", "HEAD")).toBe(before);
+  });
+
+  it("merges each product integration branch and the project for multi-repository tasks", () => {
+    const fixture = setup();
+    const worktree = prepare(fixture);
+    const [app1, app2] = fixture.products;
+    commitOn(app1!.repoRoot, "APP1_FIX.md", "app1 fix\n");
+    commitOn(fixture.repo, "FIX.md", "project fix\n");
+
+    // app2 integrates into "release", which is not checked out; the fix lands there.
+    git(app2!.repoRoot, "checkout", "release");
+    commitOn(app2!.repoRoot, "APP2_FIX.md", "app2 fix\n");
+    git(app2!.repoRoot, "checkout", "-");
+
+    const synced = syncTaskWorktreesWithIntegrationTargets({
+      worktree,
+      projectTarget: currentBranch(fixture.repo),
+      message: "merge integration target before resume",
+    });
+
+    expect(synced.map((entry) => [entry.repo, entry.target, entry.status])).toEqual([
+      ["app1", productIntegrationTarget(app1!), "merged"],
+      ["app2", "release", "merged"],
+      ["project", currentBranch(fixture.repo), "merged"],
+    ]);
+    const [app1Worktree, app2Worktree] = worktree.repos ?? [];
+    expect(existsSync(join(app1Worktree!.path, "APP1_FIX.md"))).toBe(true);
+    expect(existsSync(join(app2Worktree!.path, "APP2_FIX.md"))).toBe(true);
+    expect(existsSync(join(worktree.path, "FIX.md"))).toBe(true);
+  });
+
+  it("aborts and throws without touching the worktree when the fix overlaps uncommitted changes", () => {
+    const fixture = setup({ withProducts: false });
+    const worktree = prepare(fixture);
+    const before = git(worktree.path, "rev-parse", "HEAD");
+    writeFile(join(worktree.path, "README.md"), "executor edit\n");
+    commitOn(fixture.repo, "README.md", "integration branch edit\n");
+
+    expect(() =>
+      syncTaskWorktreesWithIntegrationTargets({
+        worktree,
+        projectTarget: currentBranch(fixture.repo),
+        message: "merge integration target before resume",
+      }),
+    ).toThrow(/project: cannot merge .* into the exec branch/);
+    expect(git(worktree.path, "rev-parse", "HEAD")).toBe(before);
+    expect(readFileSync(join(worktree.path, "README.md"), "utf8")).toBe("executor edit\n");
+    expect(
+      gitResult(worktree.path, ["rev-parse", "--verify", "--quiet", "MERGE_HEAD"]).status,
+    ).not.toBe(0);
+  });
+
+  it("aborts on a committed conflict outside the item's bookkeeping paths", () => {
+    const fixture = setup({ withProducts: false });
+    const worktree = prepare(fixture);
+    commitOn(worktree.path, "README.md", "exec branch edit\n");
+    const before = git(worktree.path, "rev-parse", "HEAD");
+    commitOn(fixture.repo, "README.md", "integration branch edit\n");
+
+    expect(() =>
+      syncTaskWorktreesWithIntegrationTargets({
+        worktree,
+        projectTarget: currentBranch(fixture.repo),
+        message: "merge integration target before resume",
+      }),
+    ).toThrow(/project: merge conflicts with .*: README\.md/);
+    expect(git(worktree.path, "rev-parse", "HEAD")).toBe(before);
+    expect(readFileSync(join(worktree.path, "README.md"), "utf8")).toBe("exec branch edit\n");
+  });
+
+  it("resolves conflicts on the item's bookkeeping paths with the integration branch content", () => {
+    const fixture = setup({ withProducts: false });
+    const worktree = prepare(fixture);
+    commitOn(worktree.path, "ticket.md", "exec branch ticket\n");
+    commitOn(fixture.repo, "ticket.md", "integration branch ticket\n");
+
+    const synced = syncTaskWorktreesWithIntegrationTargets({
+      worktree,
+      projectTarget: currentBranch(fixture.repo),
+      message: "merge integration target before resume",
+      projectTheirsPaths: ["ticket.md"],
+    });
+
+    expect(synced.map((entry) => entry.status)).toEqual(["merged"]);
+    expect(readFileSync(join(worktree.path, "ticket.md"), "utf8")).toBe(
+      "integration branch ticket\n",
+    );
   });
 });

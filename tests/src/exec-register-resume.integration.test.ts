@@ -57,6 +57,8 @@ const TICKET_REL = `${REGISTER_REL}/pjr-cd34-resume-test.md`;
 // agent の一時ファイルとして commit しない（PJR-FFPK）。成果物は docs/ 配下へ置く。
 const ARTIFACT_NAME = "docs/pipeline-artifact.md";
 const REPORTER_FAILURE_MARKER = "fail-reporter";
+// PJR-GENJ: wait の後に統合先で直す修正。親検証はこのファイルの有無で成否が決まる。
+const FIX_NAME = "docs/integration-fix.md";
 
 const CONFIG = {
   version: 1,
@@ -381,6 +383,96 @@ describe("exec run --register --worktree --resume", () => {
 
         // executor は再実行されず、run は1件のままで worktree は撤去されている。
         expect(readdirSync(evidenceDir)).toHaveLength(1);
+        expect(worktreePathFor(root)).toBeNull();
+      });
+    },
+  );
+
+  it(
+    "merges a fix committed on the integration branch after the wait before re-running parent validations",
+    { timeout: 180_000 },
+    async () => {
+      await withRepo(async ({ root, markerPath, worktreeBase }) => {
+        vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+        vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+
+        // 親検証（test-unit）は統合先で直す修正ファイルが無い間だけ失敗する。
+        writeFileSync(
+          join(root, "package.json"),
+          `${JSON.stringify(
+            {
+              private: true,
+              scripts: {
+                "test:unit": `node -e "process.exit(require('fs').existsSync('${FIX_NAME}') ? 0 : 1)"`,
+              },
+            },
+            null,
+            2,
+          )}\n`,
+          "utf8",
+        );
+        writeFileSync(
+          join(root, ".specdojo", "exec-defaults.yaml"),
+          [
+            "providers:",
+            "  opencode:",
+            `    command_template: "node ${join(root, "fake-agent.mjs")} --nickname {nickname}"`,
+            "pipeline:",
+            "  parent_validations:",
+            "    - test-unit",
+            "",
+          ].join("\n"),
+          "utf8",
+        );
+        git(root, "add", "package.json", ".specdojo/exec-defaults.yaml");
+        git(root, "commit", "-m", "configure parent validation");
+
+        await runWithFailingReporter(markerPath, worktreeBase);
+        expect(readFileSync(join(root, TICKET_REL), "utf8")).toContain("item_status: waiting");
+        const worktreePath = worktreePathFor(root) ?? "";
+        expect(worktreePath).not.toBe("");
+        const evidenceDir = join(worktreePath, EXECUTION_REL, "exec", "evidence", "PJR-CD34");
+        const runId = readdirSync(evidenceDir)[0];
+        const readParentValidation = (): Record<string, unknown> | undefined => {
+          const evidence = JSON.parse(
+            readFileSync(join(evidenceDir, runId, "evidence.json"), "utf8"),
+          ) as { validations: Record<string, unknown>[] };
+          return evidence.validations.find((validation) => validation.source === "runner");
+        };
+        expect(readParentValidation()?.status).toBe("failed");
+
+        // wait の後に統合先で不具合を直す。worktree にはまだ無い。
+        writeFileSync(join(root, FIX_NAME), "# fix on the integration branch\n", "utf8");
+        git(root, "add", FIX_NAME);
+        git(root, "commit", "-m", "fix on the integration branch");
+        expect(existsSync(join(worktreePath, FIX_NAME))).toBe(false);
+
+        rmSync(markerPath, { force: true });
+        process.exitCode = undefined;
+        await runExec([
+          "run",
+          "--project",
+          "test",
+          "--register",
+          "PJR-CD34",
+          "--worktree",
+          "--worktree-base",
+          worktreeBase,
+          "--resume",
+        ]);
+
+        expect(process.exitCode ?? 0).toBe(0);
+        expect(readFileSync(join(root, TICKET_REL), "utf8")).toContain("item_status: review");
+        expect(existsSync(join(root, ARTIFACT_NAME))).toBe(true);
+        const mergedEvidence = JSON.parse(
+          readFileSync(
+            join(root, EXECUTION_REL, "exec", "evidence", "PJR-CD34", runId, "evidence.json"),
+            "utf8",
+          ),
+        ) as { validations: Record<string, unknown>[] };
+        expect(
+          mergedEvidence.validations.find((validation) => validation.source === "runner"),
+        ).toMatchObject({ id: "test-unit", status: "passed" });
         expect(worktreePathFor(root)).toBeNull();
       });
     },

@@ -1,0 +1,1 @@
+agent-config-write: protected configuration changes detected; paths=.opencode/.gitignore, .opencode/package-lock.json, .opencode/package.json; agent must record the required change in the result handoff for human or orchestrator application

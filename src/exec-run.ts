@@ -186,6 +186,8 @@ import {
   projectMergeBlockers,
   PROJECT_REPO_NAME,
   RepoIntegrationError,
+  syncTaskWorktreesWithIntegrationTargets,
+  type IntegrationTargetSync,
 } from "./exec-repo-integration.js";
 import {
   productIntegrationTrace,
@@ -1065,16 +1067,24 @@ async function refreshParentValidationsForReporterResume(params: {
   productWorktrees?: readonly ProductWorktree[];
   evidence: ExecEvidence;
   evidencePath: string;
+  // 再開前に統合先の最新を取り込んだ場合は、記録済みの結果が成功でも検証し直す（PJR-GENJ）。
+  force?: boolean;
+  stageLabel?: string;
 }): Promise<ExecEvidence> {
   const configuredEntries = params.execDefaults.pipeline?.parent_validations;
+  const force = params.force === true && (configuredEntries?.length ?? 0) > 0;
   if (
+    !force &&
     hasRecordedParentValidations(params.evidence.validations, configuredEntries) &&
     !failedParentValidationReason(params.evidence.validations)
   ) {
     return params.evidence;
   }
 
-  process.stdout.write("  Refreshing parent validations before reporter resume.\n");
+  process.stdout.write(
+    `  Refreshing parent validations before ${params.stageLabel ?? "reporter"} resume` +
+      `${force ? " (integration targets were merged into the worktree)" : ""}.\n`,
+  );
   const parentValidations = await runConfiguredParentValidations(
     params.execDefaults,
     parentValidationRoots(params.cwd, params.productWorktrees),
@@ -5441,6 +5451,9 @@ async function finalizeRegisterWorktreeRun(params: {
   // 統合段の再試行。前回の attempt が merge 済みで後段だけ失敗した場合に備え、
   // 取り込み済みの exec ブランチを再 merge せず後続の手順を続ける。
   resumedIntegration?: boolean;
+  // runner 自身が判定した失敗理由（統合再開前の親検証の失敗など）。agent の stderr から理由を
+  // 抜き出さず、この文言を waiting の理由にする。
+  runnerBlockReason?: string;
 }): Promise<RegisterItemSummary> {
   const { context, registerPaths, item, ticketPath, worktree, stem, agentResult, actor } = params;
   const { projectId, schedulePath, executionPath, repoRoot } = context;
@@ -5727,11 +5740,13 @@ async function finalizeRegisterWorktreeRun(params: {
   }
 
   // 失敗 / rate limit: worktree は保持し（調査・再開のため）、waiting へ遷移する。
-  const reason = unfilledBlock
-    ? "agent exited 0 but result is incomplete or its frontmatter differs from the scaffold (treated as blocked)"
-    : agentResult === "rate_limit"
-      ? "rate limit reached"
-      : extractBlockReason(params.stderr);
+  const reason = params.runnerBlockReason
+    ? params.runnerBlockReason
+    : unfilledBlock
+      ? "agent exited 0 but result is incomplete or its frontmatter differs from the scaffold (treated as blocked)"
+      : agentResult === "rate_limit"
+        ? "rate limit reached"
+        : extractBlockReason(params.stderr);
   await updateResultStatus(
     worktreeResultPath,
     "blocked",
@@ -6084,6 +6099,8 @@ async function resumeRegisterIntegration(params: {
   bookkeepingPaths: () => readonly string[];
   begin: (actor: string, transitionReason: string) => Promise<RegisterItemSummary | null>;
   lifecycleLock?: AsyncLock;
+  // 再開前に統合先の最新を worktree へ取り込んだか（PJR-GENJ）。取り込んだ場合は親検証をやり直す。
+  syncedIntegrationTargets?: boolean;
 }): Promise<RegisterItemSummary> {
   const { item, worktree, target, worktreeResultPath, actor } = params;
 
@@ -6096,6 +6113,7 @@ async function resumeRegisterIntegration(params: {
   // waiting のまま統合しないよう、通常実行と同じく in-progress へ戻してから統合する。ただし
   // merge 済みで worktree 撤去だけを再試行する場合は、root はすでに review なので遷移を
   // 再記録しない（finalize は cleanup だけを行う）。
+  let validationFailure: string | undefined;
   if (
     !isExecBranchMergedIntoCurrent({
       context: {
@@ -6108,6 +6126,21 @@ async function resumeRegisterIntegration(params: {
   ) {
     const beginFailure = await params.begin(actor, "integration resumed");
     if (beginFailure) return beginFailure;
+
+    // PJR-GENJ: 統合先の最新を取り込んだ worktree で親検証をやり直し、失敗なら統合せず waiting へ
+    // 戻す。前回の親検証が失敗・未記録の場合も同じく検証してから統合する。
+    if (target.stage === "integrate") {
+      const evidence = await refreshParentValidationsForReporterResume({
+        execDefaults: params.context.execDefaults,
+        cwd: worktree.path,
+        productWorktrees: worktree.repos,
+        evidence: target.evidence,
+        evidencePath: resolve(worktree.path, target.evidenceRef),
+        force: params.syncedIntegrationTargets,
+        stageLabel: "integration",
+      });
+      validationFailure = failedParentValidationReason(evidence.validations);
+    }
   }
 
   // reporter が記入済みの result をそのまま使う。agent は起動しないため、成果は success 扱いで
@@ -6123,8 +6156,9 @@ async function resumeRegisterIntegration(params: {
       stem: params.stem,
       worktreeResultPath,
       resultScaffold,
-      agentResult: "success",
-      stderr: "",
+      agentResult: validationFailure ? "failure" : "success",
+      stderr: validationFailure ?? "",
+      ...(validationFailure ? { runnerBlockReason: validationFailure } : {}),
       actor,
       bookkeepingPaths: params.bookkeepingPaths(),
       pipelineStatePath: target.statePath,
@@ -6248,6 +6282,46 @@ async function resumeSingleRegisterItemWorktree(
     return lifecycleLock ? lifecycleLock.runExclusive(start) : start();
   };
 
+  // PJR-GENJ: reporter 段・統合段の再開では、親検証の前に統合先の最新を exec branch と worktree へ
+  // 取り込む。wait 後に統合先で直した不具合を検証へ反映するためである。register の遷移（begin）より
+  // 前に行い、取り込めない場合は状態を変えずに再開を拒否する。merge 済みで撤去だけが残る統合再開は
+  // 取り込まない（取り込むと merge 済みの判定が崩れる）。
+  let syncedIntegrationTargets = false;
+  if (
+    (target.stage === "reporter" || target.stage === "integrate") &&
+    !isExecBranchMergedIntoCurrent({
+      context: { repoRoot, schedulePath, executionPath },
+      worktree,
+    })
+  ) {
+    let synced: IntegrationTargetSync[];
+    try {
+      const projectTarget = currentBranch(repoRoot);
+      process.stdout.write(
+        `  Syncing integration targets before ${target.stage} resume: ${item.id}\n`,
+      );
+      synced = syncTaskWorktreesWithIntegrationTargets({
+        worktree,
+        projectTarget,
+        message: `exec(register ${item.id}): merge integration target before resume`,
+        projectTheirsPaths: bookkeepingPaths.map((path) => repoRelativePath(repoRoot, path)),
+      });
+    } catch (error) {
+      return refuse(
+        `cannot sync the worktree with the integration target before resume: ` +
+          `${error instanceof Error ? error.message : String(error)}; ` +
+          `resolve it in ${worktree.path} and resume again`,
+      );
+    }
+    for (const entry of synced) {
+      process.stdout.write(
+        `  [sync] ${entry.repo}: ${entry.status} (${entry.target})` +
+          `${entry.detail ? ` — ${entry.detail}` : ""}\n`,
+      );
+    }
+    syncedIntegrationTargets = synced.some((entry) => entry.status === "merged");
+  }
+
   if (target.stage === "integrate") {
     // 統合は runner の作業だが、register の遷移とイベントには実行者が必要になる。前回 run の
     // reporter（無ければ executor）を引き継ぎ、--reporter-by で明示指定もできる。
@@ -6275,6 +6349,7 @@ async function resumeSingleRegisterItemWorktree(
       bookkeepingPaths,
       begin,
       lifecycleLock,
+      syncedIntegrationTargets,
     });
   }
 
@@ -6371,6 +6446,7 @@ async function resumeSingleRegisterItemWorktree(
     productWorktrees: worktree.repos,
     evidence: target.evidence,
     evidencePath: resolve(worktree.path, target.evidenceRef),
+    force: syncedIntegrationTargets,
   });
 
   const resultScaffold = readResultFrontmatterSnapshot(worktreeResultPath);
