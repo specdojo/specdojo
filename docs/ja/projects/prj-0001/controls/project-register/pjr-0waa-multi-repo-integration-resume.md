@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: high
   owner: DEV
   registered_at: "2026-10-01T03:53:55Z"
+  block_reason: rate limit reached
 ---
 
 # PJR-0WAA 複数リポジトリの統合と再開
