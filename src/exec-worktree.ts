@@ -1,6 +1,6 @@
 import { spawnSync } from "node:child_process";
 import { existsSync, lstatSync, mkdirSync, unlinkSync } from "node:fs";
-import { isAbsolute, join, relative, resolve, sep } from "node:path";
+import { dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import { stripTerminalControlSequences } from "./exec-shared.js";
 import { gitEnvironment } from "./git-environment.js";
 
@@ -11,6 +11,24 @@ export type ExecWorktree = {
   branch: string;
   name: string;
   created: boolean;
+  /**
+   * Worktrees of the product repositories declared in `repos`, in declaration order. Absent for
+   * projects without `repos`, which keep the single `<worktree_base>/<task-id>/` worktree.
+   */
+  repos?: ProductWorktree[];
+};
+
+/** Worktree of one declared product repository at `<worktree_base>/<task-id>/<name>/`. */
+export type ProductWorktree = {
+  /** Repository name from `repos[].name`. */
+  name: string;
+  /** Root of the product repository's main checkout (where the exec branch is created). */
+  repoRoot: string;
+  path: string;
+  branch: string;
+  created: boolean;
+  /** Declared `integration_branch`; undefined means the repository's current branch. */
+  integrationBranch?: string;
 };
 
 export type RegisteredWorktree = {
@@ -450,11 +468,26 @@ export function generateWorktreeArtifacts(
   build(root);
 }
 
+/**
+ * Path of a task worktree. Without `repoDirName` (projects without `repos`) the worktree is
+ * `<base>/<task-name>/`; with it, each repository gets `<base>/<task-name>/<repoDirName>/`.
+ */
+export function execWorktreePath(
+  worktreeBase: string,
+  taskId: string,
+  repoDirName?: string,
+): string {
+  const name = worktreeNameFromTaskId(taskId);
+  return resolve(repoDirName ? join(worktreeBase, name, repoDirName) : join(worktreeBase, name));
+}
+
 export function ensureExecWorktree(opts: {
   repoRoot: string;
   worktreeBase: string;
   taskId: string;
   startPoint?: string;
+  /** Directory under `<base>/<task-name>/` for multi-repository tasks (see execWorktreePath). */
+  repoDirName?: string;
   installDependencies?: (worktreePath: string) => void;
   generateArtifacts?: (worktreePath: string) => void;
 }): ExecWorktree {
@@ -465,7 +498,7 @@ export function ensureExecWorktree(opts: {
   }
   const name = worktreeNameFromTaskId(opts.taskId);
   const branch = `exec/${name}`;
-  const worktreePath = resolve(join(opts.worktreeBase, name));
+  const worktreePath = execWorktreePath(opts.worktreeBase, opts.taskId, opts.repoDirName);
   const registered = listRegisteredWorktrees(repoRoot);
   const registeredAtPath = registered.find((item) => item.path === worktreePath);
 
@@ -487,7 +520,7 @@ export function ensureExecWorktree(opts: {
     throw new Error(`Worktree path already exists but is not registered: ${worktreePath}`);
   }
 
-  mkdirSync(opts.worktreeBase, { recursive: true });
+  mkdirSync(dirname(worktreePath), { recursive: true });
   const branchExists =
     gitResult(repoRoot, ["show-ref", "--verify", "--quiet", `refs/heads/${branch}`]).status === 0;
   const args = branchExists

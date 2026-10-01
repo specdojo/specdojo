@@ -16,15 +16,32 @@ import {
 import { activateResolvedProjectPaths, resolveProjectPaths } from "./exec-project.js";
 import {
   agentGitStateViolation,
-  captureAgentGitStateSnapshot,
-  changedAgentGitStateFields,
+  captureAgentGitStateAcrossRepos,
+  changedAgentGitStateAcrossRepos,
+  qualifiedGitStateFields,
 } from "./exec-agent-git-state.js";
 import {
   agentProtectedConfigViolation,
-  captureAgentProtectedConfigSnapshot,
-  changedAgentProtectedConfigPaths,
+  captureAgentProtectedConfigAcrossRepos,
+  changedAgentProtectedConfigAcrossRepos,
+  qualifiedRepoPaths,
 } from "./exec-agent-protected-config.js";
-import { recordGitStateBlock, recordProtectedConfigBlock } from "./exec-protection-handoff.js";
+import {
+  recordGitStateBlockAcrossRepos,
+  recordProtectedConfigBlockAcrossRepos,
+} from "./exec-protection-handoff.js";
+import {
+  configuredProductRepos,
+  missingProductWorktrees,
+  plannedProjectWorktreePath,
+  pruneOrphanedProductExecBranches,
+  productRepoEnvironment,
+  withAgentExtraRoots,
+  withoutInheritedRepoEnvironment,
+  withProductRepoPrompt,
+  withProductWorktrees,
+} from "./exec-task-repos.js";
+import type { AgentProvider } from "./specdojo-config.js";
 import {
   buildTaskPhaseMap,
   loadPrompt,
@@ -153,11 +170,20 @@ function requireDoingTask(schedulePath: string, taskId: string): Required<TaskEx
   return state as Required<TaskExecutionState>;
 }
 
-function requireWorktree(repoRoot: string, worktreeTaskId: string): ExecWorktree {
-  const worktree = findExecWorktree(repoRoot, worktreeTaskId);
-  if (!worktree) throw new Error(`Worktree is not prepared for task: ${worktreeTaskId}`);
-  if (!existsSync(worktree.path)) {
-    throw new Error(`Registered worktree path does not exist: ${worktree.path}`);
+// PJR-98G4: repos を宣言した project では、プロダクトの worktree もタスクの worktree として扱う。
+function requireWorktree(context: ProjectContext, worktreeTaskId: string): ExecWorktree {
+  const found = findExecWorktree(context.repoRoot, worktreeTaskId);
+  if (!found) throw new Error(`Worktree is not prepared for task: ${worktreeTaskId}`);
+  if (!existsSync(found.path)) {
+    throw new Error(`Registered worktree path does not exist: ${found.path}`);
+  }
+  const products = configuredProductRepos(context.schedulePath);
+  const worktree = withProductWorktrees(found, products, worktreeTaskId);
+  const missing = missingProductWorktrees(products, worktree);
+  if (missing.length > 0) {
+    throw new Error(
+      `Product worktrees are not prepared for task ${worktreeTaskId}: ${missing.join(", ")}`,
+    );
   }
   return worktree;
 }
@@ -175,6 +201,7 @@ function resolveAgent(
 ): {
   actor: string;
   command: string;
+  provider?: AgentProvider;
   prompt: string;
 } {
   const state = requireDoingTask(context.schedulePath, taskId);
@@ -215,11 +242,14 @@ function resolveAgent(
 
   const prompt = loadPrompt(context.executionPath, taskId);
   if (!prompt) throw new Error(`Plan not found for task: ${taskId}`);
-  return { actor: nickname, command, prompt };
+  return { actor: nickname, command, provider: member?.provider, prompt };
 }
 
 function printWorktree(worktree: ExecWorktree): void {
   process.stdout.write(`worktree: ${worktree.path}\nbranch: ${worktree.branch}\n`);
+  for (const product of worktree.repos ?? []) {
+    process.stdout.write(`repo ${product.name}: ${product.path} (${product.branch})\n`);
+  }
 }
 
 async function prepare(opts: CommonOpts): Promise<void> {
@@ -233,17 +263,30 @@ async function prepare(opts: CommonOpts): Promise<void> {
     opts.worktreeBase,
     configuredWorktreeBase(context.schedulePath),
   );
+  const products = configuredProductRepos(context.schedulePath);
   const planned: ExecWorktree = {
-    path: resolve(base, name),
+    path: plannedProjectWorktreePath(base, worktreeTaskId, products),
     branch,
     name,
     created: false,
+    ...(products.length > 0
+      ? {
+          repos: products.map((product) => ({
+            name: product.name,
+            repoRoot: product.repoRoot,
+            path: resolve(base, name, product.name),
+            branch,
+            created: false,
+          })),
+        }
+      : {}),
   };
 
   if (opts.dryRun) {
     process.stdout.write(`[dry-run] claim actor: ${state.actor}\n`);
     process.stdout.write(`[dry-run] checkpoint: exec(${opts.task}): prepare execution\n`);
-    printWorktree(findExecWorktree(context.repoRoot, worktreeTaskId) ?? planned);
+    const existing = findExecWorktree(context.repoRoot, worktreeTaskId);
+    printWorktree(existing ? withProductWorktrees(existing, products, worktreeTaskId) : planned);
     return;
   }
 
@@ -282,6 +325,7 @@ async function prepare(opts: CommonOpts): Promise<void> {
       base,
       checkpointPaths: [planPath, resultPath, lockedState.claimEventPath],
       commitMessage: `exec(${opts.task}): prepare execution`,
+      products,
     });
     printWorktree(worktree);
   } finally {
@@ -293,22 +337,23 @@ function status(opts: CommonOpts): void {
   const context = resolveContext(opts);
   const state = taskExecutionState(context.schedulePath, opts.task);
   const worktreeTaskId = qualifyTaskId(context.projectId, opts.task);
-  const worktree = findExecWorktree(context.repoRoot, worktreeTaskId);
+  const found = findExecWorktree(context.repoRoot, worktreeTaskId);
+  const products = configuredProductRepos(context.schedulePath);
   const branch = `exec/${worktreeNameFromTaskId(worktreeTaskId)}`;
   process.stdout.write(`task: ${opts.task}\nstate: ${state.state}\n`);
   process.stdout.write(`claim-actor: ${state.actor ?? "not found"}\n`);
-  if (!worktree) {
+  if (!found) {
     const base = resolveWorktreeBase(
       context.repoRoot,
       opts.worktreeBase,
       configuredWorktreeBase(context.schedulePath),
     );
-    process.stdout.write(
-      `worktree: not prepared (expected ${resolve(base, worktreeNameFromTaskId(worktreeTaskId))})\n`,
-    );
+    const expected = plannedProjectWorktreePath(base, worktreeTaskId, products);
+    process.stdout.write(`worktree: not prepared (expected ${expected})\n`);
     process.stdout.write(`branch: ${branch}\n`);
     return;
   }
+  const worktree = withProductWorktrees(found, products, worktreeTaskId);
 
   const { planRel, resultRel } = taskPaths(context, opts.task);
   const compareBase = gitOutput(context.repoRoot, ["merge-base", "HEAD", branch]).trim();
@@ -334,65 +379,77 @@ function status(opts: CommonOpts): void {
   const changes = worktreeStatusPaths(worktree.path);
   process.stdout.write(`uncommitted: ${changes.length > 0 ? changes.join(", ") : "none"}\n`);
   process.stdout.write(`merged-into-current: ${merged ? "yes" : "no"}\n`);
+  for (const name of missingProductWorktrees(products, worktree)) {
+    process.stdout.write(`repo ${name}: not prepared\n`);
+  }
+  for (const product of worktree.repos ?? []) {
+    const productChanges = worktreeStatusPaths(product.path).map(
+      (path) => `${product.name}:${path}`,
+    );
+    process.stdout.write(
+      `repo ${product.name} uncommitted: ${productChanges.length > 0 ? productChanges.join(", ") : "none"}\n`,
+    );
+  }
 }
 
 async function agent(opts: AgentOpts): Promise<void> {
   const context = resolveContext(opts);
-  const worktree = requireWorktree(context.repoRoot, qualifyTaskId(context.projectId, opts.task));
+  const worktree = requireWorktree(context, qualifyTaskId(context.projectId, opts.task));
   requireInsideWorktree(context.repoRoot, worktree);
   const resolved = resolveAgent(context, opts.task, opts);
+  const productDirs = (worktree.repos ?? []).map((product) => product.path);
+  const command = withAgentExtraRoots(resolved.command, resolved.provider, productDirs);
   if (opts.dryRun) {
     process.stdout.write(`[dry-run] actor: ${resolved.actor}\n`);
-    process.stdout.write(`[dry-run] command: ${resolved.command}\n`);
+    process.stdout.write(`[dry-run] command: ${command}\n`);
     process.stdout.write(`[dry-run] cwd: ${worktree.path}\n`);
     process.stdout.write(`[dry-run] plan: ${resolved.prompt.length} chars\n`);
     return;
   }
 
-  const protectedConfigBefore = captureAgentProtectedConfigSnapshot(worktree.path);
-  const gitStateBefore = captureAgentGitStateSnapshot(worktree.path);
-  const child = spawn(resolved.command, {
+  const agentRepos = [
+    { root: worktree.path },
+    ...(worktree.repos ?? []).map((product) => ({ name: product.name, root: product.path })),
+  ];
+  const protectedConfigBefore = captureAgentProtectedConfigAcrossRepos(agentRepos);
+  const gitStateBefore = captureAgentGitStateAcrossRepos(agentRepos);
+  const child = spawn(command, {
     cwd: worktree.path,
     env: {
-      ...gitEnvironment(),
+      ...withoutInheritedRepoEnvironment(gitEnvironment()),
       SPECDOJO_SCHEDULE_PATH: context.schedulePath,
       SPECDOJO_EXECUTION_PATH: context.executionPath,
+      ...productRepoEnvironment(worktree.path, worktree.repos),
     },
     shell: true,
     stdio: ["pipe", "inherit", "inherit"],
   });
-  child.stdin.end(resolved.prompt);
+  child.stdin.end(withProductRepoPrompt(resolved.prompt, worktree.repos));
   const exitCode = await new Promise<number>((resolveExit) => {
     child.once("error", () => resolveExit(1));
     child.once("close", (code) => resolveExit(code ?? 1));
   });
   // 保護機構が block した場合も、対象と提案差分を worktree 側 result の申し送りへ残す。
   const worktreeResultPath = resolve(worktree.path, taskPaths(context, opts.task).resultRel);
-  const protectedConfigChanges = changedAgentProtectedConfigPaths(
-    worktree.path,
-    protectedConfigBefore,
-  );
+  const protectedConfigChanges = changedAgentProtectedConfigAcrossRepos(protectedConfigBefore);
   if (protectedConfigChanges.length > 0) {
-    const reason = agentProtectedConfigViolation(protectedConfigChanges);
+    const reason = agentProtectedConfigViolation(qualifiedRepoPaths(protectedConfigChanges));
     process.stderr.write(`blocked: ${reason}\n`);
-    recordProtectedConfigBlock({
+    recordProtectedConfigBlockAcrossRepos({
       resultPath: worktreeResultPath,
-      repoRoot: worktree.path,
-      paths: protectedConfigChanges,
+      changes: protectedConfigChanges,
       reason,
     });
     process.exitCode = 1;
     return;
   }
-  const gitStateChanges = changedAgentGitStateFields(worktree.path, gitStateBefore);
+  const gitStateChanges = changedAgentGitStateAcrossRepos(gitStateBefore);
   if (gitStateChanges.length > 0) {
-    const reason = agentGitStateViolation(gitStateChanges);
+    const reason = agentGitStateViolation(qualifiedGitStateFields(gitStateChanges));
     process.stderr.write(`blocked: ${reason}\n`);
-    recordGitStateBlock({
+    recordGitStateBlockAcrossRepos({
       resultPath: worktreeResultPath,
-      repoRoot: worktree.path,
-      before: gitStateBefore,
-      fields: gitStateChanges,
+      changes: gitStateChanges,
       reason,
     });
     process.exitCode = 1;
@@ -404,7 +461,7 @@ async function agent(opts: AgentOpts): Promise<void> {
 function commit(opts: CommitOpts): void {
   const context = resolveContext(opts);
   requireDoingTask(context.schedulePath, opts.task);
-  const worktree = requireWorktree(context.repoRoot, qualifyTaskId(context.projectId, opts.task));
+  const worktree = requireWorktree(context, qualifyTaskId(context.projectId, opts.task));
   requireInsideWorktree(context.repoRoot, worktree);
   commitWorktreeChanges({
     context,
@@ -417,7 +474,7 @@ function commit(opts: CommitOpts): void {
 
 function merge(opts: MergeOpts): void {
   const context = resolveContext(opts);
-  const worktree = requireWorktree(context.repoRoot, qualifyTaskId(context.projectId, opts.task));
+  const worktree = requireWorktree(context, qualifyTaskId(context.projectId, opts.task));
   // prepare left the root's own copies of the checkpoint files uncommitted (the exec branch
   // carries the commit). Release them so the merge can bring the committed versions in.
   const { claimEventPath } = taskExecutionState(context.schedulePath, opts.task);
@@ -438,7 +495,7 @@ function merge(opts: MergeOpts): void {
 
 function remove(opts: RemoveOpts): void {
   const context = resolveContext(opts);
-  const worktree = requireWorktree(context.repoRoot, qualifyTaskId(context.projectId, opts.task));
+  const worktree = requireWorktree(context, qualifyTaskId(context.projectId, opts.task));
   removeWorktree({
     context,
     worktree,
@@ -460,17 +517,23 @@ function prune(opts: PruneOpts): void {
     projectId,
     dryRun: opts.dryRun,
   });
-  if (orphaned.length === 0) {
+  // PJR-98G4: 宣言済みのプロダクトリポジトリでも、同じ project の孤児 exec branch を検出する。
+  const productOrphaned = pruneOrphanedProductExecBranches({
+    products: configuredProductRepos(context.schedulePath),
+    projectId,
+    dryRun: opts.dryRun,
+  });
+  if (orphaned.length === 0 && productOrphaned.length === 0) {
     process.stdout.write(`No orphaned exec branches for project ${projectId}.\n`);
     return;
   }
+  const describe = (merged: boolean): string =>
+    merged ? (opts.dryRun ? "would delete (merged)" : "deleted (merged)") : "kept (not merged)";
   for (const item of orphaned) {
-    const action = item.mergedIntoCurrent
-      ? opts.dryRun
-        ? "would delete (merged)"
-        : "deleted (merged)"
-      : "kept (not merged)";
-    process.stdout.write(`${item.branch}: ${action}\n`);
+    process.stdout.write(`${item.branch}: ${describe(item.mergedIntoCurrent)}\n`);
+  }
+  for (const item of productOrphaned) {
+    process.stdout.write(`${item.repo}:${item.branch}: ${describe(item.mergedIntoTarget)}\n`);
   }
 }
 

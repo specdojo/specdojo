@@ -1,6 +1,6 @@
 import { type Command } from "commander";
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
-import { dirname, isAbsolute, join, posix, resolve } from "node:path";
+import { basename, dirname, isAbsolute, join, posix, resolve } from "node:path";
 import dotenv from "dotenv";
 import yaml from "js-yaml";
 import type { AgentStageRole, SchedulerStrategy, TaskMode } from "./exec-types.js";
@@ -81,6 +81,54 @@ export type SpecDojoRepoConfig = {
 };
 
 export const REPO_NAME_PATTERN = /^[a-z0-9-]+$/;
+
+/**
+ * Directory name of the project repository worktree under `<worktree_base>/<task-id>/` when the
+ * project declares `repos`. Product worktrees sit beside it as `<task-id>/<repo-name>/`, so a
+ * repository must not use this name.
+ */
+export const PROJECT_REPO_WORKTREE_DIRNAME = "project";
+
+function readTextFileOrNull(path: string): string | null {
+  try {
+    return readFileSync(path, "utf8");
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * True when `rootDir` is the project worktree of a multi-repository exec task, i.e.
+ * `<worktree_base>/<task-name>/project/` checked out on `exec/<task-name>`. Detected from the
+ * linked worktree's `.git` file and HEAD only (no git process), so it is cheap enough to run on
+ * every config load.
+ */
+export function isMultiRepoProjectWorktree(rootDir: string): boolean {
+  const root = resolve(rootDir);
+  if (basename(root) !== PROJECT_REPO_WORKTREE_DIRNAME) return false;
+  const dotGit = join(root, ".git");
+  if (!existsSync(dotGit) || statSync(dotGit).isDirectory()) return false;
+  const gitdirLine = readTextFileOrNull(dotGit)
+    ?.split(/\r?\n/)
+    .find((line) => line.startsWith("gitdir:"));
+  if (!gitdirLine) return false;
+  const gitdir = resolve(root, gitdirLine.slice("gitdir:".length).trim());
+  const head = readTextFileOrNull(join(gitdir, "HEAD"))?.trim();
+  return head === `ref: refs/heads/exec/${basename(dirname(root))}`;
+}
+
+/**
+ * Absolute root of a declared repository. Normally `path` is resolved from the SpecDojo root.
+ * Inside the project worktree of a multi-repository exec task, the repository is the sibling
+ * worktree `<task-name>/<repo-name>/`, so `path` (written for the main checkout) is not used.
+ */
+export function resolveRepoRoot(
+  rootDir: string,
+  repo: Pick<SpecDojoRepoConfig, "name" | "path">,
+): string {
+  if (isMultiRepoProjectWorktree(rootDir)) return join(dirname(resolve(rootDir)), repo.name);
+  return resolve(rootDir, repo.path);
+}
 
 export const DEFAULT_PROJECT_CONTEXT = ["prj-overview"] as const;
 
@@ -273,6 +321,11 @@ export function validateProjectRepos(
       errors.push(
         `${at}.name must match ${String(REPO_NAME_PATTERN)} (got ${JSON.stringify(name)})`,
       );
+    } else if (name === PROJECT_REPO_WORKTREE_DIRNAME) {
+      errors.push(
+        `${at}.name "${name}" is reserved: the project repository worktree uses ` +
+          `<worktree_base>/<task-id>/${PROJECT_REPO_WORKTREE_DIRNAME}/`,
+      );
     } else {
       const firstIndex = seen.get(name);
       if (firstIndex !== undefined) {
@@ -294,7 +347,10 @@ export function validateProjectRepos(
     } else if (isAbsolute(path)) {
       errors.push(`${at}.path must be relative to the SpecDojo root (got absolute "${path}")`);
     } else {
-      const absolutePath = resolve(rootDir, path);
+      const absolutePath =
+        typeof name === "string" && REPO_NAME_PATTERN.test(name)
+          ? resolveRepoRoot(rootDir, { name, path })
+          : resolve(rootDir, path);
       if (!existsSync(absolutePath)) {
         errors.push(`${at}.path "${path}" does not exist (resolved to ${absolutePath})`);
       } else if (!statSync(absolutePath).isDirectory()) {
@@ -381,7 +437,7 @@ export function resolveRepoQualifiedPath(
   return {
     repo: ref.repo,
     path: ref.path,
-    absolutePath: resolve(rootDir, repo.path, ref.path),
+    absolutePath: resolve(resolveRepoRoot(rootDir, repo), ref.path),
   };
 }
 

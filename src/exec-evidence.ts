@@ -105,11 +105,18 @@ export type RecordExecutorEvidenceInput = {
   stderr: string;
   changesBeforeAttempt?: WorktreeChangeSnapshot;
   parentValidations?: EvidenceValidation[];
+  /**
+   * Product worktrees of a multi-repository task (PJR-98G4). Their changes are recorded as
+   * `<name>:<path>` beside the project worktree changes, which keep their bare paths.
+   */
+  productWorktrees?: readonly EvidenceProductWorktree[];
 };
+
+export type EvidenceProductWorktree = { name: string; path: string };
 
 export type BuildExecutorEvidenceInput = Omit<
   RecordExecutorEvidenceInput,
-  "repoRoot" | "worktreePath" | "executionPath" | "changesBeforeAttempt"
+  "repoRoot" | "worktreePath" | "executionPath" | "changesBeforeAttempt" | "productWorktrees"
 > & {
   changes: ExecEvidence["changes"];
   attemptChanges?: ExecEvidence["changes"];
@@ -273,12 +280,65 @@ function changeFingerprint(worktreePath: string, change: ExecEvidence["changes"]
 }
 
 /** Captures bounded fingerprints of the current cumulative worktree diff without storing content. */
-export function snapshotWorktreeChanges(worktreePath: string): WorktreeChangeSnapshot {
+export function snapshotWorktreeChanges(
+  worktreePath: string,
+  productWorktrees: readonly EvidenceProductWorktree[] = [],
+): WorktreeChangeSnapshot {
   return new Map(
-    parseStatusPaths(worktreePath)
+    repoStatusChanges(worktreePath, productWorktrees)
       .slice(0, MAX_CHANGE_FILES)
-      .map((change) => [change.path, changeFingerprint(worktreePath, change)]),
+      .map((change) => [change.path, changeFingerprint(change.root, change.local)]),
   );
+}
+
+type RepoStatusChange = {
+  /** Path recorded in evidence (`<name>:<path>` for product repositories). */
+  path: string;
+  status: string;
+  /** Worktree the change belongs to and its repository-relative form, for fingerprints. */
+  root: string;
+  local: { path: string; status: string };
+};
+
+function qualifyEvidencePath(name: string, path: string): string {
+  // Rename entries are "old -> new"; qualify each side so both stay attributable to the repository.
+  return path
+    .split(" -> ")
+    .map((side) => `${name}:${side}`)
+    .join(" -> ");
+}
+
+// PJR-98G4: プロジェクト worktree の変更は従来どおり相対パス、プロダクト worktree の変更は
+// `<name>:<path>` で記録する。targets・paths の `<repo>:<path>` と同じ書式にそろえる。
+function repoStatusChanges(
+  worktreePath: string,
+  productWorktrees: readonly EvidenceProductWorktree[],
+): RepoStatusChange[] {
+  return [
+    ...parseStatusPaths(worktreePath).map((change) => ({
+      ...change,
+      root: worktreePath,
+      local: change,
+    })),
+    ...productWorktrees.flatMap((product) =>
+      parseStatusPaths(product.path).map((change) => ({
+        path: qualifyEvidencePath(product.name, change.path),
+        status: change.status,
+        root: product.path,
+        local: change,
+      })),
+    ),
+  ];
+}
+
+function productDiffStat(productWorktrees: readonly EvidenceProductWorktree[]): string {
+  return productWorktrees
+    .map((product) => {
+      const stat = gitOutput(product.path, ["diff", "--stat", "HEAD", "--"]).trim();
+      return stat ? `[${product.name}]\n${stat}` : "";
+    })
+    .filter(Boolean)
+    .join("\n");
 }
 
 /**
@@ -440,18 +500,29 @@ export function recordExecutorEvidence(input: RecordExecutorEvidenceInput): {
     `${executionRel}/exec/evidence/`,
     `${executionRel}/generated/`,
   ];
-  const changesBeforeEvidence = parseStatusPaths(input.worktreePath).filter((change) =>
-    runnerManagedPrefixes.every((prefix) => !change.path.startsWith(prefix)),
+  const productWorktrees = input.productWorktrees ?? [];
+  const repoChanges = repoStatusChanges(input.worktreePath, productWorktrees).filter(
+    (change) =>
+      change.root !== input.worktreePath ||
+      runnerManagedPrefixes.every((prefix) => !change.path.startsWith(prefix)),
   );
+  const changesBeforeEvidence = repoChanges.map(({ path, status }) => ({ path, status }));
   const attemptChanges =
     input.changesBeforeAttempt && input.status === "rate_limited"
-      ? changesBeforeEvidence.filter(
-          (change) =>
-            input.changesBeforeAttempt?.get(change.path) !==
-            changeFingerprint(input.worktreePath, change),
-        )
+      ? repoChanges
+          .filter(
+            (change) =>
+              input.changesBeforeAttempt?.get(change.path) !==
+              changeFingerprint(change.root, change.local),
+          )
+          .map(({ path, status }) => ({ path, status }))
       : undefined;
-  const diffStat = gitOutput(input.worktreePath, ["diff", "--stat", "HEAD", "--"]);
+  const diffStat = [
+    gitOutput(input.worktreePath, ["diff", "--stat", "HEAD", "--"]).trimEnd(),
+    productDiffStat(productWorktrees),
+  ]
+    .filter(Boolean)
+    .join("\n");
 
   const executionInWorktree = join(input.worktreePath, executionRel);
   const evidenceDir = join(

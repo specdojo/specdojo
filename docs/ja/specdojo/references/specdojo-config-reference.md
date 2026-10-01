@@ -107,12 +107,12 @@ SpecDojo Configuration Reference
 
 `projects.<project-id>.repos` は、プロジェクトリポジトリとは別のプロダクトリポジトリを配列で宣言します。プロジェクトリポジトリ自身は宣言しません。キーを省略した project（または空配列）は、従来どおりプロジェクトリポジトリ 1 つだけを扱います。
 
-| キー                 | 必須 | 既定値                         | 役割・利用箇所                                                                                           |
-| -------------------- | ---- | ------------------------------ | -------------------------------------------------------------------------------------------------------- |
-| `name`               | 必須 | なし                           | `targets`・`paths` の接頭辞に使うリポジトリ名です。`[a-z0-9-]` だけを使い、project 内で一意です。        |
-| `path`               | 必須 | なし                           | リポジトリのルートです。SpecDojo ルートからの相対パスで書き、実在するディレクトリを指します。            |
-| `integration_branch` | 任意 | そのリポジトリの現在のブランチ | exec が変更を統合する先のブランチです。                                                                  |
-| `setup`              | 任意 | なし                           | worktree 作成時の準備の有無です。`install`（依存導入）と `build`（生成物の build）を真偽値で指定します。 |
+| キー                 | 必須 | 既定値                         | 役割・利用箇所                                                                                                                    |
+| -------------------- | ---- | ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------- |
+| `name`               | 必須 | なし                           | `targets`・`paths` の接頭辞に使うリポジトリ名です。`[a-z0-9-]` だけを使い、project 内で一意です。`project` は予約名で使えません。 |
+| `path`               | 必須 | なし                           | リポジトリのルートです。SpecDojo ルートからの相対パスで書き、実在するディレクトリを指します。                                     |
+| `integration_branch` | 任意 | そのリポジトリの現在のブランチ | exec が変更を統合する先のブランチです。exec branch もこのブランチの先端から作ります。                                             |
+| `setup`              | 任意 | 両方 `true`                    | worktree 作成時の準備の有無です。`install`（依存導入）と `build`（生成物の build）を真偽値で指定します。                          |
 
 ```json
 {
@@ -135,12 +135,42 @@ SpecDojo Configuration Reference
 - それ以外の値は従来どおりです。`targets` では doc id（例: `prj-0001:pjr-index`、`ifx-cmd`）、`paths` ではプロジェクトリポジトリ内のパスとして扱います。
 - プロダクトリポジトリの文書は doc id では引けません。パスで指定します。
 
-宣言の検証と書式の解決は、設定の読み込みと解決関数として提供します。exec がプロダクトリポジトリの worktree を作り、変更を commit・統合する処理は段階的に追加中です。
+`setup` の `install` は追跡済みの `package-lock.json` ごとの `npm ci`、`build` はリポジトリに `.specdojo/specdojo.config.json` がある場合の `specdojo build` です。対象が無いリポジトリでは、`true` でも何も実行しません。
+
+`repos` を宣言した project の `exec run --worktree` と `exec worktree prepare` は、タスクごとに次の worktree を作ります。宣言の無い project は従来どおり `<worktree_base>/<task-id>/` の直下に 1 つだけ作ります。
+
+- `<worktree_base>/<task-id>/project/`: プロジェクトリポジトリの worktree です。agent の作業ディレクトリ（`cwd`）になります。`project` が予約名なのはこのためです。
+- `<worktree_base>/<task-id>/<name>/`: 宣言した各リポジトリの worktree です。exec branch は `integration_branch`（省略時は現在のブランチ）の先端から作ります。
+
+agent には、各 worktree の絶対パスを次の環境変数で渡します。
+
+| 環境変数                | 値                                                    |
+| ----------------------- | ----------------------------------------------------- |
+| `SPECDOJO_REPO_PROJECT` | プロジェクトリポジトリの worktree                     |
+| `SPECDOJO_REPO_<NAME>`  | `<name>` の worktree。`<NAME>` は大文字で、`-` は `_` |
+| `SPECDOJO_REPO_NAMES`   | 宣言したリポジトリ名を宣言順にカンマで区切ったもの    |
+
+agent の起動コマンドには、provider ごとにプロダクト worktree への書き込み許可を runner が付け足します。`exec-defaults.yaml` の `command_template` を変える必要はありません。
+
+| provider      | 付け足す引数                                                     | 制約                                                                                                                  |
+| ------------- | ---------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `claude`      | `--add-dir <path>...` と `--allowedTools 'Edit(//<path>/**)'...` | mode 別 settings の `Edit` 許可は作業ディレクトリ相対のため、絶対パスの許可を別に渡す                                 |
+| `codex`       | `--add-dir <path>`（リポジトリの数だけ）                         | `--sandbox workspace-write` の書き込みルートに加わる。`.git` は codex の仕様で読み取り専用のまま                      |
+| `antigravity` | `--add-dir <path>`（リポジトリの数だけ）                         | テンプレートの `--add-dir "$(pwd)"` に追加する                                                                        |
+| `copilot`     | `--add-dir <path>`（リポジトリの数だけ）                         | 書き込みはテンプレートの `--allow-tool write` に従う                                                                  |
+| `opencode`    | なし                                                             | 作業ディレクトリ外は agent 定義の `permission.external_directory` で拒否される。許可には agent 定義の変更が必要になる |
+
+agent 実行の前後で行う保護設定（`package.json`、CI 設定など）と Git 状態（HEAD・ローカル設定）の検査は、プロダクト worktree にも同じ一覧で行います。evidence の変更ファイルは、プロダクト側を `<name>:<path>` で記録します。
+
+プロダクトリポジトリの変更の commit と統合は未実装です。プロダクト worktree に未 commit の変更か exec branch の commit が残るタスクは、プロジェクト側の commit の前に block し、全リポジトリの worktree を残します。撤去は、全リポジトリの worktree が撤去できることを確かめてからまとめて行います。
+
+exec worktree の中で設定を読む場合（agent が worktree で `specdojo` を実行する場合など）、`path` の代わりに同じタスクの `<worktree_base>/<task-id>/<name>/` へ解決します。
 
 設定の読み込み時に、次の誤りを対象（`projects.<project-id>.repos[<n>]`）と原因を示すエラーにします。誤りは全 project 分をまとめて表示します。
 
 - `name` が `[a-z0-9-]` 以外の文字を含む、または同じ project 内で重複している。
 - `name` がいずれかの project ID と同じである。`<name>:<...>` が doc id とリポジトリのパスのどちらか区別できなくなるためです。
+- `name` が予約名 `project` である。プロジェクトリポジトリの worktree のディレクトリ名と重なるためです。
 - `path` が空、絶対パス、存在しない、またはディレクトリでない。
 - 宣言に無いキーがある、`integration_branch` が空文字、`setup` の値が真偽値でない。
 

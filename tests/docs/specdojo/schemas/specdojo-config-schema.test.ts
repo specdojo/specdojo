@@ -69,6 +69,13 @@ describe("specdojo-config.schema.yaml", () => {
     );
   });
 
+  it("rejects the reserved repository name project", () => {
+    expect(validate(configWithRepos([{ name: "project", path: "../app1" }]))).toBe(false);
+    expect(validate.errors?.map((error) => error.instancePath)).toContain(
+      "/projects/prj-0001/repos/0/name",
+    );
+  });
+
   it("rejects a repository without path and an absolute path", () => {
     expect(validate(configWithRepos([{ name: "app1" }]))).toBe(false);
     expect(validate(configWithRepos([{ name: "app1", path: "/srv/app1" }]))).toBe(false);

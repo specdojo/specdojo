@@ -60,6 +60,47 @@ export function changedAgentGitStateFields(
   return changed;
 }
 
+/** A repository of an agent run; `name` is undefined for the project repository (cwd). */
+export type AgentGitStateRepo = { name?: string; root: string };
+
+export type AgentRepoGitStateSnapshot = ReadonlyArray<{
+  repo: AgentGitStateRepo;
+  snapshot: AgentGitStateSnapshot;
+}>;
+
+export type AgentRepoGitStateChanges = {
+  repo: AgentGitStateRepo;
+  before: AgentGitStateSnapshot;
+  fields: string[];
+};
+
+// PJR-98G4: プロダクト worktree も runner が commit を管理するため、同じ比較を全リポジトリで行う。
+export function captureAgentGitStateAcrossRepos(
+  repos: readonly AgentGitStateRepo[],
+): AgentRepoGitStateSnapshot {
+  return repos.map((repo) => ({ repo, snapshot: captureAgentGitStateSnapshot(repo.root) }));
+}
+
+/** Changed Git state fields per repository; unchanged repositories are omitted. */
+export function changedAgentGitStateAcrossRepos(
+  before: AgentRepoGitStateSnapshot,
+): AgentRepoGitStateChanges[] {
+  return before
+    .map(({ repo, snapshot }) => ({
+      repo,
+      before: snapshot,
+      fields: changedAgentGitStateFields(repo.root, snapshot),
+    }))
+    .filter((change) => change.fields.length > 0);
+}
+
+/** Fields qualified with the product repository name (`<name>:HEAD`); project fields stay bare. */
+export function qualifiedGitStateFields(changes: readonly AgentRepoGitStateChanges[]): string[] {
+  return changes.flatMap((change) =>
+    change.fields.map((field) => (change.repo.name ? `${change.repo.name}:${field}` : field)),
+  );
+}
+
 function commandStdout(snapshot: string): string {
   try {
     const parsed: unknown = JSON.parse(snapshot);

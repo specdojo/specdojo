@@ -149,7 +149,19 @@ import {
   resolveWorktreeBase,
   worktreeNameFromTaskId,
   type ExecWorktree,
+  type ProductWorktree,
 } from "./exec-worktree.js";
+import {
+  configuredProductRepos,
+  missingProductWorktrees,
+  plannedProjectWorktreePath,
+  productRepoEnvironment,
+  productRootsFromEnvironment,
+  withAgentExtraRoots,
+  withoutInheritedRepoEnvironment,
+  withProductRepoPrompt,
+  withProductWorktrees,
+} from "./exec-task-repos.js";
 import {
   abortMerge,
   checkpointAndEnsureWorktree,
@@ -169,15 +181,26 @@ import {
 } from "./exec-worktree-ops.js";
 import {
   agentProtectedConfigViolation,
+  captureAgentProtectedConfigAcrossRepos,
   captureAgentProtectedConfigSnapshot,
+  changedAgentProtectedConfigAcrossRepos,
   changedAgentProtectedConfigPaths,
+  qualifiedRepoPaths,
 } from "./exec-agent-protected-config.js";
 import {
   agentGitStateViolation,
+  captureAgentGitStateAcrossRepos,
   captureAgentGitStateSnapshot,
+  changedAgentGitStateAcrossRepos,
   changedAgentGitStateFields,
+  qualifiedGitStateFields,
 } from "./exec-agent-git-state.js";
-import { recordGitStateBlock, recordProtectedConfigBlock } from "./exec-protection-handoff.js";
+import {
+  recordGitStateBlock,
+  recordGitStateBlockAcrossRepos,
+  recordProtectedConfigBlock,
+  recordProtectedConfigBlockAcrossRepos,
+} from "./exec-protection-handoff.js";
 import {
   buildPhaseModeIndex,
   resolveAgentAssignment,
@@ -1262,6 +1285,13 @@ async function runWithRetry(
 }> {
   const policy = resolveRateLimitPolicy(execDefaults, candidates[0]?.provider);
   let attempts = 0;
+  // PJR-98G4: agentEnvironment が渡したプロダクト worktree を、provider の追加ディレクトリと
+  // 保護設定・Git 状態の検査対象に加える。宣言の無い project では cwd だけになる。
+  const productRoots = productRootsFromEnvironment(env);
+  const agentRepos = [
+    { root: cwd },
+    ...productRoots.map((root) => ({ name: root.name, root: root.path })),
+  ];
 
   // One pass tries every candidate in priority order with no wait between switches.
   const runPass = async (): Promise<{
@@ -1284,10 +1314,14 @@ async function runWithRetry(
       }
       const detection = resolveRateLimitDetection(execDefaults, candidates[idx].provider);
       attempts++;
-      const protectedConfigBefore = captureAgentProtectedConfigSnapshot(cwd);
-      const gitStateBefore = captureAgentGitStateSnapshot(cwd);
+      const protectedConfigBefore = captureAgentProtectedConfigAcrossRepos(agentRepos);
+      const gitStateBefore = captureAgentGitStateAcrossRepos(agentRepos);
       const attempt = await executeAgent(
-        candidates[idx].command,
+        withAgentExtraRoots(
+          candidates[idx].command,
+          candidates[idx].provider,
+          productRoots.map((root) => root.path),
+        ),
         prompt,
         detection,
         candidates[idx].provider,
@@ -1295,17 +1329,17 @@ async function runWithRetry(
         cwd,
         env,
       );
-      const protectedConfigChanges = changedAgentProtectedConfigPaths(cwd, protectedConfigBefore);
+      const protectedConfigChanges = changedAgentProtectedConfigAcrossRepos(protectedConfigBefore);
       if (protectedConfigChanges.length > 0) {
         // 利用上限で止まった場合も保護の検査は飛ばさない。止まった理由として利用上限を先に記録する。
         const reason =
-          rateLimitPrefix(attempt.result) + agentProtectedConfigViolation(protectedConfigChanges);
+          rateLimitPrefix(attempt.result) +
+          agentProtectedConfigViolation(qualifiedRepoPaths(protectedConfigChanges));
         process.stderr.write(`blocked: ${reason}\n`);
         reportProtectionHandoffRecord(
-          recordProtectedConfigBlock({
+          recordProtectedConfigBlockAcrossRepos({
             resultPath,
-            repoRoot: cwd,
-            paths: protectedConfigChanges,
+            changes: protectedConfigChanges,
             reason,
           }),
           resultPath,
@@ -1318,17 +1352,17 @@ async function runWithRetry(
           protectionBlock: true,
         };
       }
-      const gitStateChanges = changedAgentGitStateFields(cwd, gitStateBefore);
+      const gitStateChanges = changedAgentGitStateAcrossRepos(gitStateBefore);
       if (gitStateChanges.length > 0) {
         // 利用上限で止まった場合も保護の検査は飛ばさない。止まった理由として利用上限を先に記録する。
-        const reason = rateLimitPrefix(attempt.result) + agentGitStateViolation(gitStateChanges);
+        const reason =
+          rateLimitPrefix(attempt.result) +
+          agentGitStateViolation(qualifiedGitStateFields(gitStateChanges));
         process.stderr.write(`blocked: ${reason}\n`);
         reportProtectionHandoffRecord(
-          recordGitStateBlock({
+          recordGitStateBlockAcrossRepos({
             resultPath,
-            repoRoot: cwd,
-            before: gitStateBefore,
-            fields: gitStateChanges,
+            changes: gitStateChanges,
             reason,
           }),
           resultPath,
@@ -1423,16 +1457,30 @@ function pathInsideWorktree(repoRoot: string, worktreePath: string, sourcePath: 
   return resolve(worktreePath, repoRelative);
 }
 
+function reportProductWorktrees(worktree: ExecWorktree): void {
+  for (const product of worktree.repos ?? []) {
+    process.stdout.write(
+      `  [run] ${product.created ? "setup" : "reuse"}: worktree ${product.path} ` +
+        `(${product.branch} in ${product.name})\n`,
+    );
+  }
+}
+
+// productWorktrees（PJR-98G4）は、cwd（プロジェクト worktree）以外に agent が書き込むプロダクト
+// worktree。SPECDOJO_REPO_<NAME> で絶対パスを渡し、runWithRetry はここから provider の追加
+// ディレクトリと保護検査の対象を導く。
 function agentEnvironment(
   repoRoot: string,
   worktreePath: string,
   schedulePath: string,
   executionPath: string,
+  productWorktrees?: readonly ProductWorktree[],
 ): NodeJS.ProcessEnv {
   return {
-    ...gitEnvironment(),
+    ...withoutInheritedRepoEnvironment(gitEnvironment()),
     SPECDOJO_SCHEDULE_PATH: pathInsideWorktree(repoRoot, worktreePath, schedulePath),
     SPECDOJO_EXECUTION_PATH: pathInsideWorktree(repoRoot, worktreePath, executionPath),
+    ...productRepoEnvironment(worktreePath, productWorktrees),
   };
 }
 
@@ -1673,15 +1721,23 @@ async function prepareSingleTask(
 
   const worktreeTaskId = qualifyTaskId(projectId, task.id);
   const worktreeName = worktreeNameFromTaskId(worktreeTaskId);
+  // PJR-98G4: repos を宣言した project では <base>/<task>/project/ と <base>/<task>/<repo>/ を作る。
+  const products = configuredProductRepos(schedulePath);
 
   if (dryRun) {
     const worktree: ExecWorktree = {
-      path: join(worktreeBase, worktreeName),
+      path: plannedProjectWorktreePath(worktreeBase, worktreeTaskId, products),
       branch: `exec/${worktreeName}`,
       name: worktreeName,
       created: false,
     };
     process.stdout.write(`  [run] would setup: worktree ${worktree.path} (${worktree.branch})\n`);
+    for (const product of products) {
+      process.stdout.write(
+        `  [run] would setup: worktree ${join(worktreeBase, worktreeName, product.name)} ` +
+          `(${worktree.branch} in ${product.repoRoot})\n`,
+      );
+    }
     const claimMsg = skipClaim
       ? `  [dry-run] already claimed: ${task.id} as ${actor} (skip claim)`
       : `  [dry-run] would claim: ${task.id} as ${actor}`;
@@ -1757,6 +1813,7 @@ async function prepareSingleTask(
     const discarded = discardStaleExecWorktree({
       context: { repoRoot, schedulePath, executionPath },
       worktreeTaskId,
+      products,
     });
     if (discarded) {
       process.stdout.write(`  [run] discarded stale worktree/branch: ${discarded}\n`);
@@ -1776,6 +1833,7 @@ async function prepareSingleTask(
       base: worktreeBase,
       checkpointPaths,
       commitMessage: `exec(${task.id}): prepare execution`,
+      products,
     });
   } catch (error) {
     // We claimed this task in this call (skipClaim is false); the checkpoint failed, so release the
@@ -1789,6 +1847,7 @@ async function prepareSingleTask(
   }
   const setupAction = worktree.created ? "setup" : "reuse";
   process.stdout.write(`  [run] ${setupAction}: worktree ${worktree.path} (${worktree.branch})\n`);
+  reportProductWorktrees(worktree);
 
   return {
     task,
@@ -1905,10 +1964,16 @@ async function runPreparedTask(
     process.stdout.write(`  Running: ${prepared.agentCandidates[0]?.command ?? ""}\n`);
     const outcome = await runWithRetry(
       prepared.agentCandidates,
-      prepared.prompt,
+      withProductRepoPrompt(prepared.prompt, prepared.worktree.repos),
       execDefaults,
       prepared.worktree.path,
-      agentEnvironment(repoRoot, prepared.worktree.path, schedulePath, executionPath),
+      agentEnvironment(
+        repoRoot,
+        prepared.worktree.path,
+        schedulePath,
+        executionPath,
+        prepared.worktree.repos,
+      ),
       worktreeResultPath,
     );
     result = outcome.result;
@@ -2029,10 +2094,16 @@ async function runPreparedTask(
         : prepared.prompt;
     const executorOutcome = await runWithRetry(
       prepared.agentCandidates,
-      executorPrompt,
+      withProductRepoPrompt(executorPrompt, prepared.worktree.repos),
       execDefaults,
       prepared.worktree.path,
-      agentEnvironment(repoRoot, prepared.worktree.path, schedulePath, executionPath),
+      agentEnvironment(
+        repoRoot,
+        prepared.worktree.path,
+        schedulePath,
+        executionPath,
+        prepared.worktree.repos,
+      ),
       worktreeResultPath,
     );
     result = executorOutcome.result;
@@ -2056,6 +2127,7 @@ async function runPreparedTask(
       attempts,
       stdout,
       stderr,
+      productWorktrees: prepared.worktree.repos,
     });
     executorEvidenceRef = relative(prepared.worktree.path, recorded.evidencePath)
       .split(sep)
@@ -2144,7 +2216,13 @@ async function runPreparedTask(
             reporterPrompt,
             execDefaults,
             prepared.worktree.path,
-            agentEnvironment(repoRoot, prepared.worktree.path, schedulePath, executionPath),
+            agentEnvironment(
+              repoRoot,
+              prepared.worktree.path,
+              schedulePath,
+              executionPath,
+              prepared.worktree.repos,
+            ),
             worktreeResultPath,
           );
           reporterAttempts += outcome.attempts;
@@ -4284,6 +4362,7 @@ async function runReporterStage(params: {
   state: PipelineState;
   statePath: string;
   providerConcurrencyGate?: ProviderConcurrencyGate;
+  productWorktrees?: readonly ProductWorktree[];
 }): Promise<{
   exitCode: 0 | 1;
   runResult: RunResult;
@@ -4291,7 +4370,7 @@ async function runReporterStage(params: {
   state: PipelineState;
 }> {
   const { repoRoot, cwd, schedulePath, executionPath, reporterCandidates, execDefaults } = params;
-  const env = agentEnvironment(repoRoot, cwd, schedulePath, executionPath);
+  const env = agentEnvironment(repoRoot, cwd, schedulePath, executionPath, params.productWorktrees);
   let state = params.state;
 
   const reporterStartedAt = new Date().toISOString();
@@ -4415,6 +4494,7 @@ async function runAgentPipeline(params: {
   resumedExecutor?: boolean;
   initialChangeTargets?: readonly string[];
   providerConcurrencyGate?: ProviderConcurrencyGate;
+  productWorktrees?: readonly ProductWorktree[];
 }): Promise<{
   exitCode: 0 | 1;
   runResult: RunResult;
@@ -4465,19 +4545,18 @@ async function runAgentPipeline(params: {
   );
   writePipelineState(stateLocation.path, state);
 
-  const env = agentEnvironment(repoRoot, cwd, schedulePath, executionPath);
-  const executorPrompt = buildExecutorPrompt(
-    planPrompt,
-    execDefaults.pipeline?.parent_validations,
-    {
+  const env = agentEnvironment(repoRoot, cwd, schedulePath, executionPath, params.productWorktrees);
+  const executorPrompt = withProductRepoPrompt(
+    buildExecutorPrompt(planPrompt, execDefaults.pipeline?.parent_validations, {
       resumed: params.resumedExecutor,
       ...(params.resumedExecutor ? { existingChanges: worktreeStatusPaths(cwd) } : {}),
       ...(params.resumedExecutor
         ? { initialChangeTargets: params.initialChangeTargets ?? [] }
         : {}),
-    },
+    }),
+    params.productWorktrees,
   );
-  const changesBeforeAttempt = snapshotWorktreeChanges(cwd);
+  const changesBeforeAttempt = snapshotWorktreeChanges(cwd, params.productWorktrees);
   const runExecutor = () =>
     runWithRetry([executor], executorPrompt, execDefaults, cwd, env, resultPath);
   const outcome = params.providerConcurrencyGate
@@ -4503,6 +4582,7 @@ async function runAgentPipeline(params: {
     stdout: outcome.stdout,
     stderr: outcome.stderr,
     changesBeforeAttempt,
+    productWorktrees: params.productWorktrees,
   });
   const coverageFailure =
     outcome.result === "success"
@@ -4574,6 +4654,7 @@ async function runAgentPipeline(params: {
     state,
     statePath: stateLocation.path,
     providerConcurrencyGate: params.providerConcurrencyGate,
+    productWorktrees: params.productWorktrees,
   });
 
   return {
@@ -5541,6 +5622,8 @@ async function runSingleRegisterItemWorktree(
     context.roster?.members.find((m) => m.nickname === actor && m.type === "agent")?.provider;
   const stem = buildInPlaceStem(pjrId.toLowerCase());
   const worktreeTaskId = qualifyTaskId(projectId, item.id);
+  // PJR-98G4: repos を宣言した project では、プロダクトの worktree も同じタスクの下に作る。
+  const products = configuredProductRepos(schedulePath);
 
   // Phase 1: plan/result 生成 → register start → checkpoint → worktree 作成（root で直列化）。
   const setup = async (): Promise<
@@ -5570,7 +5653,7 @@ async function runSingleRegisterItemWorktree(
       };
     }
 
-    const discarded = discardStaleExecWorktree({ context: wtContext, worktreeTaskId });
+    const discarded = discardStaleExecWorktree({ context: wtContext, worktreeTaskId, products });
     if (discarded) process.stdout.write(`  [run] discarded stale worktree/branch: ${discarded}\n`);
 
     const { planPath } = await generateRegisterPlan({
@@ -5617,11 +5700,13 @@ async function runSingleRegisterItemWorktree(
         base: worktreeBase,
         checkpointPaths,
         commitMessage: `exec(register ${item.id}): start`,
+        products,
       });
       const setupAction = worktree.created ? "setup" : "reuse";
       process.stdout.write(
         `  [run] ${setupAction}: worktree ${worktree.path} (${worktree.branch})\n`,
       );
+      reportProductWorktrees(worktree);
       return {
         worktree,
         planPath,
@@ -5652,7 +5737,13 @@ async function runSingleRegisterItemWorktree(
   const { worktree, planPath, resultPath, resultScaffold, prompt, bookkeepingPaths } = prepared;
 
   // Phase 2: agent を worktree 内で実行（ロック外・並列可能な長時間部分）。
-  const env = agentEnvironment(repoRoot, worktree.path, schedulePath, executionPath);
+  const env = agentEnvironment(
+    repoRoot,
+    worktree.path,
+    schedulePath,
+    executionPath,
+    worktree.repos,
+  );
   let agentResult: RunResult;
   let stderr = "";
   // pipeline 実行のみ run state を持つ。統合段の記録先として Phase 3 へ渡す。
@@ -5675,6 +5766,7 @@ async function runSingleRegisterItemWorktree(
       resultPath: worktreeResultPathForPipeline,
       execDefaults: context.execDefaults,
       providerConcurrencyGate: context.providerConcurrencyGate,
+      productWorktrees: worktree.repos,
     });
     agentResult = pipelineOutcome.runResult;
     stderr = pipelineOutcome.blockReason ?? "";
@@ -5683,7 +5775,7 @@ async function runSingleRegisterItemWorktree(
     process.stdout.write(`Running ${item.id} in worktree: ${command}\n  CWD: ${worktree.path}\n`);
     const outcome = await runWithRetry(
       [{ command, actor, provider: resolvedProvider }],
-      prompt,
+      withProductRepoPrompt(prompt, worktree.repos),
       context.execDefaults,
       worktree.path,
       env,
@@ -5914,9 +6006,20 @@ async function resumeSingleRegisterItemWorktree(
   };
 
   const worktreeTaskId = qualifyTaskId(projectId, item.id);
-  const worktree = findExecWorktree(repoRoot, worktreeTaskId);
-  if (!worktree) {
+  const foundWorktree = findExecWorktree(repoRoot, worktreeTaskId);
+  if (!foundWorktree) {
     return refuse(`no exec worktree to resume for ${item.id}; run the item again instead`);
+  }
+  // PJR-98G4: プロダクトの worktree も揃っていることを再開の条件にする。欠けたまま再開すると、
+  // agent がプロダクト側の変更先を失う。
+  const products = configuredProductRepos(schedulePath);
+  const worktree = withProductWorktrees(foundWorktree, products, worktreeTaskId);
+  const missingProducts = missingProductWorktrees(products, worktree);
+  if (missingProducts.length > 0) {
+    return refuse(
+      `product worktrees are missing for ${item.id}: ${missingProducts.join(", ")}; ` +
+        `run the item again instead`,
+    );
   }
 
   const lookup = findResumableRegisterRun({
@@ -6059,6 +6162,7 @@ async function resumeSingleRegisterItemWorktree(
       resumedExecutor: true,
       initialChangeTargets: target.initialChanges,
       providerConcurrencyGate: context.providerConcurrencyGate,
+      productWorktrees: worktree.repos,
     });
 
     const finalize = async (): Promise<RegisterItemSummary> =>
@@ -6119,6 +6223,7 @@ async function resumeSingleRegisterItemWorktree(
     state: target.state,
     statePath: target.statePath,
     providerConcurrencyGate: context.providerConcurrencyGate,
+    productWorktrees: worktree.repos,
   });
 
   const finalize = async (): Promise<RegisterItemSummary> =>
@@ -7014,8 +7119,14 @@ function prepareScheduleIntegrationResume(params: {
     throw new Error(`integration resume has no pipeline_state_ref for ${task.id}`);
   }
 
-  const worktree = findExecWorktree(repoRoot, qualifyTaskId(projectId, task.id));
-  if (!worktree) throw new Error(`no exec worktree to resume integration for ${task.id}`);
+  const worktreeTaskId = qualifyTaskId(projectId, task.id);
+  const foundWorktree = findExecWorktree(repoRoot, worktreeTaskId);
+  if (!foundWorktree) throw new Error(`no exec worktree to resume integration for ${task.id}`);
+  const worktree = withProductWorktrees(
+    foundWorktree,
+    configuredProductRepos(schedulePath),
+    worktreeTaskId,
+  );
 
   const checkpoint = loadPipelineResumeCheckpoint({
     worktreePath: worktree.path,

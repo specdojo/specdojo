@@ -85,6 +85,7 @@ import { buildTaskView } from "./exec-task-view.js";
 import { registerExecWorktreeCommands } from "./exec-worktree-command.js";
 import { registerExecTrialCommands } from "./exec-trial.js";
 import { discardStaleExecWorktree } from "./exec-worktree-ops.js";
+import { configuredProductRepos } from "./exec-task-repos.js";
 import { buildInitialStateFromStrategy } from "./exec-schedule-initial.js";
 import {
   buildPhaseModeIndex,
@@ -611,6 +612,8 @@ function resetExecWorktreeForTask(args: {
       executionPath: args.executionPath,
     },
     worktreeTaskId,
+    // PJR-98G4: repos を宣言した project では、プロダクト側の worktree と exec branch も破棄する。
+    products: configuredProductRepos(args.schedulePath),
   });
   process.stdout.write(
     discarded

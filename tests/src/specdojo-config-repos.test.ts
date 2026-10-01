@@ -4,9 +4,11 @@ import { join, resolve } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
   getProjectRepos,
+  isMultiRepoProjectWorktree,
   loadConfig,
   resolveRepoQualifiedPath,
   resolveRepoQualifiedRef,
+  resolveRepoRoot,
   validateProjectRepos,
 } from "../../src/specdojo-config.js";
 import type { SpecDojoProjectConfig } from "../../src/specdojo-config.js";
@@ -300,5 +302,73 @@ describe("loadConfig with repos", () => {
       'projects.prj-0001.repos[0].name "prj-0002" collides with project id "prj-0002"',
     );
     expect(message).toContain('projects.prj-0002.repos[0].path "../app9" does not exist');
+  });
+});
+
+describe("reserved repository name", () => {
+  it("rejects project because the project repository worktree uses <task-id>/project/", () => {
+    const errors = validateProjectRepos(
+      "prj-0001",
+      withRepos([{ name: "project", path: "../app1" }]),
+      ["prj-0001"],
+      root,
+    );
+
+    expect(errors).toEqual([
+      'projects.prj-0001.repos[0].name "project" is reserved: the project repository worktree ' +
+        "uses <worktree_base>/<task-id>/project/",
+    ]);
+  });
+});
+
+describe("repository paths inside a multi-repository exec worktree", () => {
+  // <parent>/worktrees/prj-0001-PJR-1/{project,app1} mimics the layout exec run creates. The
+  // project worktree is a linked worktree whose .git file points at a gitdir with the exec HEAD.
+  function linkedProjectWorktree(branch: string): { projectDir: string; app1Dir: string } {
+    const parent = resolve(root, "..");
+    const taskDir = join(parent, "worktrees", "prj-0001-PJR-1");
+    const projectDir = join(taskDir, "project");
+    const app1Dir = join(taskDir, "app1");
+    const gitdir = join(parent, "gitdirs", "prj-0001-PJR-1");
+    mkdirSync(projectDir, { recursive: true });
+    mkdirSync(app1Dir, { recursive: true });
+    mkdirSync(gitdir, { recursive: true });
+    writeFileSync(join(projectDir, ".git"), `gitdir: ${gitdir}\n`, "utf8");
+    writeFileSync(join(gitdir, "HEAD"), `ref: refs/heads/${branch}\n`, "utf8");
+    return { projectDir, app1Dir };
+  }
+
+  it("resolves a declared repository to the sibling product worktree", () => {
+    const { projectDir, app1Dir } = linkedProjectWorktree("exec/prj-0001-PJR-1");
+
+    expect(isMultiRepoProjectWorktree(projectDir)).toBe(true);
+    expect(resolveRepoRoot(projectDir, { name: "app1", path: "../app1-main" })).toBe(app1Dir);
+  });
+
+  it("keeps resolving from path when the worktree is not on the task exec branch", () => {
+    const { projectDir } = linkedProjectWorktree("main");
+
+    expect(isMultiRepoProjectWorktree(projectDir)).toBe(false);
+    expect(resolveRepoRoot(projectDir, { name: "app1", path: "../app1-main" })).toBe(
+      resolve(projectDir, "../app1-main"),
+    );
+  });
+
+  it("loads the config and resolves <repo>:<path> inside the project worktree", () => {
+    const { projectDir, app1Dir } = linkedProjectWorktree("exec/prj-0001-PJR-1");
+    const project = { repos: [{ name: "app1", path: "../app1-main" }] };
+    mkdirSync(join(projectDir, ".specdojo"), { recursive: true });
+    writeFileSync(
+      join(projectDir, ".specdojo", "specdojo.config.json"),
+      JSON.stringify({ version: 1, projects: { "prj-0001": project } }),
+      "utf8",
+    );
+    process.chdir(projectDir);
+
+    const { config } = loadConfig();
+
+    expect(
+      resolveRepoQualifiedPath(projectDir, config?.projects["prj-0001"] ?? {}, "app1:src/a.ts"),
+    ).toEqual({ repo: "app1", path: "src/a.ts", absolutePath: join(app1Dir, "src", "a.ts") });
   });
 });
