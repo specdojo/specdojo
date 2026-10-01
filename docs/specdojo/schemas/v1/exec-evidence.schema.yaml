@@ -107,6 +107,13 @@ properties:
         source:
           type: string
           enum: [executor, runner]
+        repo:
+          type: string
+          pattern: "^[a-z0-9-]+$"
+          description: >
+            Repository whose worktree was the cwd of a runner validation: `project` for the
+            project repository or a product repository name from `projects.<id>.repos`. Recorded
+            when the task spans product repositories or the validation is assigned to one.
         command:
           type: string
           minLength: 1

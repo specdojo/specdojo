@@ -163,7 +163,7 @@ flowchart LR
 
 ## 5. exec-defaults
 
-`.specdojo/exec-defaults.yaml` には、全トラック共通の実行ポリシーを定義します。executor の sandbox 外で親 runner に実行させる固定検証は `pipeline.parent_validations` に許可リスト ID だけを指定します。
+`.specdojo/exec-defaults.yaml` には、全トラック共通の実行ポリシーを定義します。executor の sandbox 外で親 runner に実行させる固定検証は `pipeline.parent_validations` に許可リスト ID だけを指定します。別リポジトリ構成では、ID と実行するリポジトリの組（`{ id, repo }`）も指定できます。
 
 ```yaml
 pipeline:
@@ -203,6 +203,25 @@ rate_limit_policy:
 `typecheck`（`npm run typecheck`）は Vitest と異なり型検査を行うため、executor が残した TypeScript の型エラーを検出します。Vitest は型検査を行わないため、`typecheck` を親検証に含めないと型エラーは test-unit を通過して統合時の pre-commit hook で初めて失敗するため、既定では `test-unit` の前に置いて早めに止めます（PJR-W66B）。
 
 `lint-ts`（`npm run lint:ts`）、`lint-fm`（`npm run lint:fm`）、`lint-md`（`npm run lint:md`）は、executor が残した ESLint・frontmatter・Markdown の lint エラーを agent の段階で検出します。指定しない場合、これらのエラーは統合後の `npm run check` まで持ち越されます（PJR-K1Z5）。
+
+`specdojo.config.json` の project に `repos` を宣言した別リポジトリ構成では、`pipeline.parent_validations` の要素に `{ id, repo }` を書き、検証を実行するリポジトリを割り当てられます（PJR-V96B）。ID だけの要素はプロジェクトリポジトリで実行します。`repo` には、プロジェクトリポジトリを表す `project` か、`repos` で宣言したプロダクトリポジトリの名前を書きます。
+
+```yaml
+pipeline:
+  parent_validations:
+    - lint-md # プロジェクトリポジトリ（文書の lint）
+    - validate-schema # プロジェクトリポジトリ（schema 検証）
+    - { id: typecheck, repo: app1 } # プロダクトリポジトリ app1
+    - { id: test-unit, repo: app1 }
+    - { id: test-unit, repo: app2 } # 同じ ID を別のリポジトリにも割り当てられる
+```
+
+- 親 runner は、割り当てたリポジトリの task worktree（`<worktree_base>/<task-id>/<repo>/`）を `cwd` にして検証を実行します。そのリポジトリに変更が無くても省略しません。統合先の破損を検出するためです。
+- evidence の runner 検証には `repo` を記録します。記録するのは、task がプロダクトリポジトリを持つ場合か、要素が `{ id, repo }` の場合です。`repos` を持たない project で ID だけを書いた場合、evidence と実行場所は従来と同じです。
+- ログと block 理由では、プロダクトリポジトリの検証を `<repo>:<id>`（例: `app2:test-unit`）と表示します。
+- task の worktree が無いリポジトリへ割り当てた検証は、コマンドを起動せずに `failed` になります。`repos` に無い名前を書いた場合も同じです。
+- 同じ `id` と `repo` の組の重複、`id`・`repo` 以外のキー、`repo` の無いオブジェクトは、agent 起動前の設定エラーになります。
+- 実行するコマンドは、どのリポジトリでも ID ごとの固定 argv です（例: `test-unit` は `npm run test:unit`）。リポジトリ別に command や npm script 名を指定する手段は設けません。プロダクトリポジトリの npm script 名が異なる場合は、プロダクト側の `package.json` に許可リストと同じ名前の script（`test:unit` など）を用意してください。用意できない検証は、そのリポジトリへ割り当てないでください。script が無いまま割り当てると、`npm run` が失敗して親検証は `failed` になります。
 
 `run.max_concurrent_runs` は、同じ project で同時に動かせる `exec run` プロセスの数の上限です。最初の run と、`exec run --register ... --worktree --join` で合流する run の合計で数えます。正の整数だけを指定でき、省略時や不正な値の場合は `4` です。`1` を指定すると `--join` は無効になります。現在の使用数は `exec slots --project <project-id>` で確認できます。
 
@@ -387,7 +406,7 @@ executor の出力は、そのまま reporter へ渡さずに run 単位の evid
 - executor prompt には設定済み ID と対応コマンドを明示します。executor はそのコマンドや対象限定版を sandbox 内で実行せず、親 runner の結果だけを `source: runner` と許可リスト `id` 付きで同じ `validations` 配列へ保存します。これにより sandbox 内で成立しない検証を親へ移した場合も二重実行しません。
 - 親検証が失敗しても reporter は evidence を受け取り、block 内容を構成できます。ただし reporter が誤って `outcome: complete` を返しても、runner は親検証の失敗を優先してタスクを成功扱いにしません。
 - reporter の出力は JSON Schema で厳格に検証します。形式不正のときは同じ plan と evidence のまま reporter だけを最大 3 回再実行し、executor は再実行しません。
-- reporter stage の再開では、現在の設定 ID と一致する親検証が保存済み evidence にそろっている場合だけ executor evidence を再利用します。保存済みの親検証がすべて成功していれば再実行しません。`failed` / `not_run` があれば、親 runner が現在の worktree で固定許可リストの親検証を再実行し、同じ ID の結果を evidence 上で置換してから reporter へ渡します。executor 由来の検証は再実行・置換しません。設定 ID が変わった、または結果が欠けている場合、Schedule 実行は新しい executor run としてやり直し、register 実行は明示的な再実行を促して再開を拒否します。
+- reporter stage の再開では、現在の設定 ID と一致する親検証が保存済み evidence にそろっている場合だけ executor evidence を再利用します。`{ id, repo }` を使う場合は、ID とリポジトリの組が一致することを求めます。再実行時も同じ割り当てで、各リポジトリの worktree を `cwd` にします。保存済みの親検証がすべて成功していれば再実行しません。`failed` / `not_run` があれば、親 runner が現在の worktree で固定許可リストの親検証を再実行し、同じ ID の結果を evidence 上で置換してから reporter へ渡します。executor 由来の検証は再実行・置換しません。設定 ID が変わった、または結果が欠けている場合、Schedule 実行は新しい executor run としてやり直し、register 実行は明示的な再実行を促して再開を拒否します。
 - result の frontmatter は runner が scaffold した内容を保ち、本文は検証済み JSON から runner が描画します。reporter はファイルを書きません。
 
 ## 7. provider 設定の配布と scaffold

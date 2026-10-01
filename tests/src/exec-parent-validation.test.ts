@@ -6,11 +6,16 @@ import {
   failedParentValidationReason,
   hasRecordedParentValidations,
   ParentValidationGate,
+  parentValidationDisplayCommands,
   parentValidationGateFor,
+  parentValidationLabels,
+  parentValidationRoots,
   replaceParentValidationResults,
+  resolveParentValidationAssignments,
   resolveParentValidationConcurrency,
   resolveParentValidationDefinitions,
   runParentValidations,
+  type ParentValidationInvoker,
 } from "../../src/exec-parent-validation.js";
 import type { ExecEvidence } from "../../src/exec-evidence.js";
 
@@ -214,6 +219,183 @@ describe("parent validation allowlist", () => {
     expect(failedParentValidationReason(refreshed.validations)).toBe(
       "parent validation failed: test-integration",
     );
+  });
+});
+
+describe("parent validation repository assignment", () => {
+  const passed = async () => ({ exitCode: 0, stdout: "ok", stderr: "" });
+
+  it("assigns plain IDs to the project and { id, repo } entries to the named repository", () => {
+    const assignments = resolveParentValidationAssignments([
+      "lint-md",
+      { id: "test-unit", repo: "app1" },
+      { id: "test-unit", repo: "app2" },
+      { id: "validate-schema", repo: "project" },
+    ]);
+
+    expect(
+      assignments.map(({ definition, repo, label }) => ({ id: definition.id, repo, label })),
+    ).toEqual([
+      { id: "lint-md", repo: "project", label: "lint-md" },
+      { id: "test-unit", repo: "app1", label: "app1:test-unit" },
+      { id: "test-unit", repo: "app2", label: "app2:test-unit" },
+      { id: "validate-schema", repo: "project", label: "validate-schema" },
+    ]);
+  });
+
+  it("keeps the fixed argv of an ID regardless of the assigned repository", () => {
+    const [project, product] = resolveParentValidationDefinitions([
+      "test-unit",
+      { id: "test-unit", repo: "app1" },
+    ]);
+
+    expect(product).toBe(project);
+    expect(product.args).toEqual(["run", "test:unit"]);
+  });
+
+  it("rejects malformed entries, unknown IDs and duplicate (id, repo) pairs", () => {
+    expect(() => resolveParentValidationAssignments([{ id: "test-unit" }])).toThrow(
+      /pipeline\.parent_validations\[0\] in exec-defaults\.repo must match/,
+    );
+    expect(() => resolveParentValidationAssignments([{ id: "test-unit", repo: "App1" }])).toThrow(
+      /\.repo must match/,
+    );
+    expect(() =>
+      resolveParentValidationAssignments([{ id: "test-unit", repo: "app1", command: "rm -rf /" }]),
+    ).toThrow(/unknown key\(s\) "command"/);
+    expect(() => resolveParentValidationAssignments([42])).toThrow(
+      /must be a validation id or \{ id, repo \}/,
+    );
+    expect(() =>
+      resolveParentValidationAssignments([{ id: "npm-run-arbitrary", repo: "app1" }]),
+    ).toThrow(/Unknown parent validation id in exec-defaults: npm-run-arbitrary/);
+    expect(() =>
+      resolveParentValidationAssignments([
+        { id: "test-unit", repo: "app1" },
+        { id: "test-unit", repo: "app1" },
+      ]),
+    ).toThrow(/Duplicate parent validation id in exec-defaults: app1:test-unit/);
+    expect(() =>
+      resolveParentValidationAssignments(["lint-md", { id: "lint-md", repo: "project" }]),
+    ).toThrow(/Duplicate parent validation id in exec-defaults: lint-md/);
+  });
+
+  it("does not treat inherited object properties as allowlisted IDs", () => {
+    expect(() => resolveParentValidationAssignments(["toString"])).toThrow(
+      /Unknown parent validation id in exec-defaults: toString/,
+    );
+  });
+
+  it("runs each validation in the worktree of its repository with two product repositories", async () => {
+    const invoke = vi.fn<ParentValidationInvoker>(passed);
+
+    const validations = await runParentValidations(
+      [
+        "lint-md",
+        "validate-schema",
+        { id: "test-unit", repo: "app1" },
+        { id: "typecheck", repo: "app2" },
+        { id: "test-unit", repo: "app2" },
+      ],
+      parentValidationRoots("/wt/T-1/project", [
+        { name: "app1", path: "/wt/T-1/app1" },
+        { name: "app2", path: "/wt/T-1/app2" },
+      ]),
+      invoke,
+    );
+
+    expect(invoke.mock.calls.map(([definition, cwd]) => [definition.id, cwd])).toEqual([
+      ["lint-md", "/wt/T-1/project"],
+      ["validate-schema", "/wt/T-1/project"],
+      ["test-unit", "/wt/T-1/app1"],
+      ["typecheck", "/wt/T-1/app2"],
+      ["test-unit", "/wt/T-1/app2"],
+    ]);
+    expect(validations.map(({ id, repo, status }) => ({ id, repo, status }))).toEqual([
+      { id: "lint-md", repo: "project", status: "passed" },
+      { id: "validate-schema", repo: "project", status: "passed" },
+      { id: "test-unit", repo: "app1", status: "passed" },
+      { id: "typecheck", repo: "app2", status: "passed" },
+      { id: "test-unit", repo: "app2", status: "passed" },
+    ]);
+  });
+
+  it("names the repository when a product validation fails", async () => {
+    const validations = await runParentValidations(
+      ["lint-md", { id: "test-unit", repo: "app1" }, { id: "test-unit", repo: "app2" }],
+      parentValidationRoots("/wt/T-1/project", [
+        { name: "app1", path: "/wt/T-1/app1" },
+        { name: "app2", path: "/wt/T-1/app2" },
+      ]),
+      async (_definition, cwd) =>
+        cwd === "/wt/T-1/app2"
+          ? { exitCode: 1, stdout: "", stderr: "1 test failed" }
+          : { exitCode: 0, stdout: "", stderr: "" },
+    );
+
+    expect(failedParentValidationReason(validations)).toBe(
+      "parent validation failed: app2:test-unit",
+    );
+  });
+
+  it("fails a validation assigned to a repository without a worktree and does not spawn it", async () => {
+    const invoke = vi.fn<ParentValidationInvoker>(passed);
+
+    const validations = await runParentValidations(
+      ["lint-md", { id: "test-unit", repo: "app9" }],
+      parentValidationRoots("/wt/T-1/project", [{ name: "app1", path: "/wt/T-1/app1" }]),
+      invoke,
+    );
+
+    expect(invoke).toHaveBeenCalledTimes(1);
+    expect(validations[1]).toMatchObject({
+      id: "test-unit",
+      source: "runner",
+      repo: "app9",
+      command: "npm run test:unit",
+      status: "failed",
+      summary: expect.stringMatching(/repository "app9" has no worktree for this task/),
+    });
+  });
+
+  it("keeps the single-repository evidence shape for plain IDs without product worktrees", async () => {
+    const invoke = vi.fn<ParentValidationInvoker>(passed);
+
+    const validations = await runParentValidations(
+      ["lint-md", "test-unit"],
+      parentValidationRoots("/repo"),
+      invoke,
+    );
+
+    expect(invoke.mock.calls.map(([, cwd]) => cwd)).toEqual(["/repo", "/repo"]);
+    expect(validations.every((validation) => !("repo" in validation))).toBe(true);
+  });
+
+  it("re-runs persisted validations when the repository assignment changed", () => {
+    const recorded = [
+      {
+        id: "test-unit",
+        source: "runner" as const,
+        repo: "app1",
+        command: "npm run test:unit",
+        status: "passed" as const,
+        summary: "exit 0",
+      },
+    ];
+
+    expect(hasRecordedParentValidations(recorded, [{ id: "test-unit", repo: "app1" }])).toBe(true);
+    expect(hasRecordedParentValidations(recorded, [{ id: "test-unit", repo: "app2" }])).toBe(false);
+    expect(hasRecordedParentValidations(recorded, ["test-unit"])).toBe(false);
+  });
+
+  it("lists labels and display commands with the repository for product assignments", () => {
+    const entries = ["lint-md", { id: "test-unit", repo: "app1" }];
+
+    expect(parentValidationLabels(entries)).toEqual(["lint-md", "app1:test-unit"]);
+    expect(parentValidationDisplayCommands(entries)).toEqual([
+      "npm run lint:md",
+      "npm run test:unit (in app1)",
+    ]);
   });
 });
 

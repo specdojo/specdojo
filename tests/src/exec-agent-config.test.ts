@@ -43,6 +43,40 @@ describe("parent validation config", () => {
       rmSync(root, { recursive: true, force: true });
     }
   });
+
+  it("loads { id, repo } assignments beside plain IDs and rejects a missing repo", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-parent-validation-config-"));
+    try {
+      const validPath = join(root, "valid.yaml");
+      writeFileSync(
+        validPath,
+        [
+          "pipeline:",
+          "  parent_validations:",
+          "    - lint-md",
+          "    - { id: test-unit, repo: app1 }",
+          "    - { id: test-unit, repo: app2 }",
+          "",
+        ].join("\n"),
+        "utf8",
+      );
+      expect(loadExecDefaultsConfig(validPath).pipeline?.parent_validations).toEqual([
+        "lint-md",
+        { id: "test-unit", repo: "app1" },
+        { id: "test-unit", repo: "app2" },
+      ]);
+
+      const invalidPath = join(root, "invalid.yaml");
+      writeFileSync(
+        invalidPath,
+        "pipeline:\n  parent_validations:\n    - { id: test-unit }\n",
+        "utf8",
+      );
+      expect(() => loadExecDefaultsConfig(invalidPath)).toThrow(/\.repo must match/);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
 });
 
 const globalPolicy: RateLimitPolicy = {
