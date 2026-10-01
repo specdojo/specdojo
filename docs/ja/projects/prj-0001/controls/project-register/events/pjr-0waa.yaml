@@ -119,3 +119,16 @@
       from: "agent exited with non-zero code: runner による検証 `test-integration` が失敗（exit 1）しているため、完了条件を満たしていない。"
       to: "agent exited with non-zero code: runner による検証 `test-integration` が失敗しているため。"
   previous_event_id: reg_94fe60a2eb4143afac1162a3175dbc0f
+- v: 1
+  id: reg_d0db0326d504420d9ecfd728199c20e7
+  ts: "2026-10-01T10:49:50Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_e28ae0c965624af192ec9d9041bfe510
