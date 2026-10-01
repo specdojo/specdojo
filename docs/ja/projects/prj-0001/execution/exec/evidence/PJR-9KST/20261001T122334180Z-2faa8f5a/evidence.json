@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-9KST",
+  "run_id": "20261001T122334180Z-2faa8f5a",
+  "stage": {
+    "role": "executor",
+    "actor": "claude-expert-executor",
+    "status": "rate_limited",
+    "started_at": "2026-10-01T12:23:34.180Z",
+    "completed_at": "2026-10-01T12:25:49.630Z",
+    "exit_code": 1,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "src/exec-repo-trace.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-register-pipeline-e2e.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-repo-trace.test.ts",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "src/exec-repo-trace.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-register-pipeline-e2e.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-repo-trace.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 4,
+    "summary": "src/exec-repo-trace.ts                             |  13 +-\n src/exec-run.ts                                    |  43 ++--\n .../exec-register-pipeline-e2e.integration.test.ts | 222 ++++++++++++++++++++-\n tests/src/exec-repo-trace.test.ts                  |  14 ++\n 4 files changed, 271 insertions(+), 21 deletions(-)"
+  },
+  "validations": [],
+  "final_message": "You've hit your session limit · resets 12:10am (Asia/Tokyo)",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-9KST/20261001T122334180Z-2faa8f5a/executor.log",
+      "bytes": 60,
+      "truncated": false
+    }
+  ]
+}

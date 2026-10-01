@@ -1,3 +1,4 @@
+import { lint } from "markdownlint/sync";
 import { describe, expect, it } from "vitest";
 import {
   refsTrailer,
@@ -106,6 +107,19 @@ describe("renderResultTraceBody", () => {
     );
     expect(rows[3]).toContain("| not applicable (no changes) ");
     expect(new Set(rows.map((row) => row.length)).size).toBe(1);
+  });
+
+  it("passes markdownlint with the default line length when appended to a result", () => {
+    const body = renderResultTraceBody({
+      traceKey: "prj-0001:PJR-30SW",
+      traces: [MERGED, { ...UNCHANGED, integrationBranch: "release/2026-10-integration" }],
+      recordedAt: "2026-10-01T00:00:00.000Z",
+    });
+    const content = upsertResultTraceSection(RESULT, body);
+
+    const violations = lint({ strings: { result: content }, config: { default: true } }).result;
+
+    expect(violations?.map((violation) => violation.ruleNames[0])).toEqual([]);
   });
 
   it("uses the PR reference when the merge commit names one", () => {

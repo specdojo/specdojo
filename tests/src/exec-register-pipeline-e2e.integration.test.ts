@@ -12,7 +12,7 @@ import {
   writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { join, relative, sep } from "node:path";
 import { Command } from "commander";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { registerExecCommands } from "../../src/exec.js";
@@ -161,7 +161,7 @@ function buildTicket(id: string): string {
 
 const FAKE_PIPELINE_AGENT_SCRIPT = `
 import { execFileSync } from "node:child_process";
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 
 function arg(name) {
   const index = process.argv.indexOf("--" + name);
@@ -173,6 +173,15 @@ const role = nickname.startsWith("exec-") ? "executor" : "reporter";
 const prompt = readFileSync(0, "utf8");
 
 if (role === "executor") {
+  for (const name of (process.env.SPECDOJO_REPO_NAMES ?? "").split(",").filter(Boolean)) {
+    const root = process.env["SPECDOJO_REPO_" + name.toUpperCase().replaceAll("-", "_")];
+    if (!root) throw new Error("product worktree is missing: " + name);
+    mkdirSync(root + "/src", { recursive: true });
+    writeFileSync(
+      root + "/src/feature.ts",
+      "export const repo = " + JSON.stringify(name) + ";\\n",
+    );
+  }
   if (nickname === "exec-advance-root") {
     const root = execFileSync("git", ["worktree", "list", "--porcelain"], {
       encoding: "utf8",
@@ -244,6 +253,101 @@ process.exit(1);
 `;
 
 type Fixture = { root: string; worktreeBase: string };
+
+type ProductFixture = {
+  app1: string;
+  app2: string;
+  targets: { app1: string; app2: string };
+};
+
+function initProductRepository(path: string, name: string): void {
+  mkdirSync(join(path, "src"), { recursive: true });
+  writeFileSync(join(path, "README.md"), `# ${name}\n`, "utf8");
+  writeFileSync(join(path, "src", "index.ts"), "export {};\n", "utf8");
+  git(path, "init", "--quiet");
+  git(path, "add", "-A");
+  git(path, "commit", "--quiet", "-m", "initial");
+}
+
+function enableProductRepositories(root: string): ProductFixture {
+  const app1 = `${root}-app1`;
+  const app2 = `${root}-app2`;
+  initProductRepository(app1, "app1");
+  initProductRepository(app2, "app2");
+  git(app2, "checkout", "--quiet", "-b", "release");
+  const targets = {
+    app1: git(app1, "branch", "--show-current"),
+    app2: "release",
+  };
+  const repoPath = (path: string): string => relative(root, path).split(sep).join("/");
+  const config = {
+    ...CONFIG,
+    projects: {
+      test: {
+        ...CONFIG.projects.test,
+        repos: [
+          { name: "app1", path: repoPath(app1), setup: { install: false, build: false } },
+          {
+            name: "app2",
+            path: repoPath(app2),
+            integration_branch: targets.app2,
+            setup: { install: false, build: false },
+          },
+        ],
+      },
+    },
+  };
+  writeFileSync(
+    join(root, ".specdojo", "specdojo.config.json"),
+    `${JSON.stringify(config, null, 2)}\n`,
+    "utf8",
+  );
+  git(root, "add", ".specdojo/specdojo.config.json");
+  git(root, "commit", "--quiet", "-m", "configure product repositories");
+  return { app1, app2, targets };
+}
+
+function rejectMergeCommit(repoRoot: string): () => void {
+  const marker = join(repoRoot, ".git", "reject-merge");
+  const hook = join(repoRoot, ".git", "hooks", "pre-merge-commit");
+  writeFileSync(marker, "reject\n", "utf8");
+  writeFileSync(
+    hook,
+    [
+      "#!/bin/sh",
+      `if [ -f '${marker}' ]; then`,
+      "  echo 'intentional merge failure' >&2",
+      "  exit 1",
+      "fi",
+      "exit 0",
+      "",
+    ].join("\n"),
+    "utf8",
+  );
+  chmodSync(hook, 0o755);
+  return () => rmSync(marker, { force: true });
+}
+
+function isAncestor(repoRoot: string, ancestor: string, descendant: string): boolean {
+  try {
+    git(repoRoot, "merge-base", "--is-ancestor", ancestor, descendant);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function integrateRepoStatuses(root: string): Record<string, string | undefined> {
+  const evidenceRoot = join(root, EXECUTION_REL, "exec", "evidence", "PJR-AB12");
+  const runIds = readdirSync(evidenceRoot);
+  expect(runIds).toHaveLength(1);
+  const state = JSON.parse(
+    readFileSync(join(evidenceRoot, runIds[0]!, "pipeline-state.json"), "utf8"),
+  ) as { stages: { integrate: { repos?: Record<string, { status: string }> } } };
+  return Object.fromEntries(
+    Object.entries(state.stages.integrate.repos ?? {}).map(([repo, value]) => [repo, value.status]),
+  );
+}
 
 function withRepo(fn: (fixture: Fixture) => Promise<void> | void): Promise<void> {
   return (async () => {
@@ -856,6 +960,120 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
       });
     },
   );
+
+  // PJR-9KST: 部分統合が waiting に戻った後の `--resume` で、root に再記帳した
+  // 個票・event・派生ビューが project の事前検査を妨げないことを、3 つの失敗位置で確かめる。
+  const multiRepoFailurePositions: Array<{
+    failing: "app1" | "app2" | "project";
+    integratedBefore: ReadonlyArray<"app1" | "app2">;
+    expectedStatuses: Record<"app1" | "app2" | "project", string>;
+  }> = [
+    {
+      failing: "app1",
+      integratedBefore: [],
+      expectedStatuses: { app1: "failed", app2: "pending", project: "pending" },
+    },
+    {
+      failing: "app2",
+      integratedBefore: ["app1"],
+      expectedStatuses: { app1: "merged", app2: "failed", project: "pending" },
+    },
+    {
+      failing: "project",
+      integratedBefore: ["app1", "app2"],
+      expectedStatuses: { app1: "merged", app2: "merged", project: "failed" },
+    },
+  ];
+
+  for (const position of multiRepoFailurePositions) {
+    it(
+      `releases resumed register bookkeeping when the ${position.failing} merge failed`,
+      { timeout: 180_000 },
+      async () => {
+        await withRepo(async ({ root, worktreeBase }) => {
+          vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+          vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+          const products = enableProductRepositories(root);
+          const productRoots = { app1: products.app1, app2: products.app2 };
+          const failingRoot =
+            position.failing === "project" ? root : productRoots[position.failing];
+          const allowMerge = rejectMergeCommit(failingRoot);
+
+          try {
+            await runExec([
+              "run",
+              "--project",
+              "test",
+              "--register",
+              "PJR-AB12",
+              "--executor-by",
+              "exec-1",
+              "--reporter-by",
+              "report-1",
+              "--worktree",
+              "--worktree-base",
+              worktreeBase,
+            ]);
+
+            expect(process.exitCode).toBe(1);
+            expect(
+              readFileSync(join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md"), "utf8"),
+            ).toContain("item_status: waiting");
+            const worktreePath = execWorktreePath(root);
+            expect(worktreePath).not.toBeNull();
+            expect(integrateRepoStatuses(worktreePath ?? "")).toEqual(position.expectedStatuses);
+
+            const mergedBefore = new Map<"app1" | "app2", string>();
+            for (const repo of ["app1", "app2"] as const) {
+              const merged = isAncestor(
+                productRoots[repo],
+                "exec/test-PJR-AB12",
+                products.targets[repo],
+              );
+              expect(merged).toBe(position.integratedBefore.includes(repo));
+              if (merged) {
+                mergedBefore.set(
+                  repo,
+                  git(productRoots[repo], "rev-parse", products.targets[repo]),
+                );
+              }
+            }
+
+            allowMerge();
+            await runExec([
+              "run",
+              "--project",
+              "test",
+              "--register",
+              "PJR-AB12",
+              "--worktree",
+              "--worktree-base",
+              worktreeBase,
+              "--resume",
+            ]);
+
+            expect(process.exitCode ?? 0).toBe(0);
+            expect(execWorktreePath(root)).toBeNull();
+            expect(
+              readFileSync(join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md"), "utf8"),
+            ).toContain("item_status: review");
+            expect(integrateRepoStatuses(root)).toEqual({
+              app1: "merged",
+              app2: "merged",
+              project: "merged",
+            });
+            for (const [repo, commit] of mergedBefore) {
+              expect(git(productRoots[repo], "rev-parse", products.targets[repo])).toBe(commit);
+            }
+          } finally {
+            allowMerge();
+            rmSync(products.app1, { recursive: true, force: true });
+            rmSync(products.app2, { recursive: true, force: true });
+          }
+        });
+      },
+    );
+  }
 
   it(
     "resumes cleanup without a second merge when removal fails after integration",

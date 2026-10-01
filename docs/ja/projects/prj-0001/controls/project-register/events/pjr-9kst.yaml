@@ -116,3 +116,16 @@
       from: in-progress
       to: waiting
   previous_event_id: reg_d653c4375ca2433d9cbd3e47c386f876
+- v: 1
+  id: reg_aeb0e33da53948338de0014187923991
+  ts: "2026-10-01T15:12:25Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_989dcb802f29484a93279da22baa1c3b
