@@ -26,6 +26,8 @@ specdojo:
 - agent の `cwd` はプロジェクト worktree とし、プロダクト worktree を各 provider（claude・codex・antigravity・opencode）の追加ディレクトリと書き込み許可に加える。リポジトリごとの絶対パスを環境変数（`SPECDOJO_REPO_<NAME>` など）で渡す。provider ごとの対応状況と制約を result に記録する。
 - 保護設定の検査（`src/exec-agent-protected-config.ts`）・Git 状態の検査（`src/exec-agent-git-state.ts`）・evidence の変更記録（`src/exec-evidence.ts`）を、プロダクト worktree を含むリポジトリ別に行う。
 - プロダクトが 2 つ以上の宣言でも worktree の作成・撤去・検査が働くことを、実 Git を使う統合テストで確かめる。
+- プロジェクト worktree のディレクトリ名（`<task-id>/` の下の名前）を決め、その名前を `repos` の `name` の予約名として設定の検証で拒否する（PJR-HQBK の残課題）。
+- exec worktree の中で設定を読む場合も、`repos` の `path` がリポジトリ別の worktree を指すよう解決する（PJR-HQBK の残課題）。
 - 宣言（`repos`）を持たない project の動作が変わらないことを、既存のテストと回帰テストで確かめる。
 - `.specdojo/exec-defaults.yaml`・`package.json` など agent が変更できない設定は変更しない。必要な変更は result の申し送りに書く。
 - 親検証（lint・test・typecheck・validate-schema）がすべて通る。
