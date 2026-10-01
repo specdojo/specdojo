@@ -1,0 +1,102 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: SpecDojo Config (.specdojo/specdojo.config.json)
+description: >-
+  Shape of .specdojo/specdojo.config.json. The CLI (src/specdojo-config.ts loadConfig) is the
+  authority for checks that a schema cannot express: repository names that collide with a
+  project id and repository paths that do not exist.
+type: object
+required:
+  - version
+  - projects
+properties:
+  version:
+    const: 1
+  current_project:
+    type: string
+    minLength: 1
+  projects:
+    type: object
+    additionalProperties:
+      $ref: "#/$defs/Project"
+$defs:
+  NonEmptyString:
+    type: string
+    pattern: "\\S"
+  Project:
+    type: object
+    properties:
+      base_path:
+        type: string
+      catalog_path:
+        type: string
+      schedule_path:
+        $ref: "#/$defs/NonEmptyString"
+      execution_path:
+        $ref: "#/$defs/NonEmptyString"
+      timeline_path:
+        type: string
+      members_path:
+        type: string
+      roles_path:
+        type: string
+      viewpoints_path:
+        type: string
+      project_register_path:
+        type: string
+      routines_path:
+        type: string
+      jobs_path:
+        type: string
+      project_context:
+        type: array
+        items:
+          $ref: "#/$defs/NonEmptyString"
+      repos:
+        description: >-
+          Product repositories that tasks of this project may change. The project repository is
+          implicit and is not declared. Names must be unique within the project.
+        type: array
+        items:
+          $ref: "#/$defs/Repo"
+      run:
+        $ref: "#/$defs/Run"
+  Repo:
+    type: object
+    additionalProperties: false
+    required:
+      - name
+      - path
+    properties:
+      name:
+        description: Prefix used in targets/paths as <name>:<path>.
+        type: string
+        pattern: "^[a-z0-9-]+$"
+      path:
+        description: Repository root, relative to the SpecDojo root.
+        type: string
+        pattern: "\\S"
+        not:
+          pattern: "^(/|[A-Za-z]:[\\\\/])"
+      integration_branch:
+        description: Branch exec integrates into. Omit to use the repository's current branch.
+        $ref: "#/$defs/NonEmptyString"
+      setup:
+        description: Whether exec installs dependencies and builds in the repository worktree.
+        type: object
+        additionalProperties: false
+        properties:
+          install:
+            type: boolean
+          build:
+            type: boolean
+  Run:
+    type: object
+    properties:
+      exec_defaults:
+        type: string
+      agent_config:
+        type: string
+      worktree_base:
+        type: string
+      register_date_timezone:
+        type: string

@@ -4,11 +4,12 @@ specdojo:
   type: exec-result
   task_id: PJR-HQBK
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: exec/plans/pjr-hqbk-20261001T043106Z-e6e4-plan.md
   started_at: "2026-10-01T04:31:06.290Z"
+  completed_at: "2026-10-01T04:42:05.384Z"
   agent: claude-expert-executor
 ---
 
@@ -16,16 +17,26 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- specdojo.config.json における `repos` 宣言機能を追加し、リポジトリごとのパス解決を可能にした。
+- `&lt;repo&gt;:&lt;path&gt;` 形式の参照を解決するための `resolveRepoQualifiedRef` および `resolveRepoQualifiedPath` リゾルバーを実装した。
+- 設定ファイルのバリデーションおよびスキーマ定義 (`specdojo-config.schema.yaml`) を更新した。
+- リポジトリ設定に関するドキュメント (`specdojo-config-reference.md`) を更新し、個票 (`pjr-hqbk-multi-repo-config-resolution.md`) に実施内容を記録した。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `src/specdojo-config.ts`: `repos` 宣言の型定義、設定ロード時のバリデーション、およびリポジトリ修飾パス・参照のリゾルバーを実装。
+- `docs/specdojo/schemas/v1/specdojo-config.schema.yaml`: `repos` フィールドを追加し、設定スキーマを更新。
+- `docs/ja/specdojo/references/specdojo-config-reference.md`: `repos` セクションに関する解説を追加。
+- `docs/ja/projects/prj-0001/controls/project-register/pjr-hqbk-multi-repo-config-resolution.md`: 作業内容および対応結果を更新。
+- `tests/src/specdojo-config-repos.test.ts`: リポジトリ設定に関する新規ユニットテストを追加。
+- `tests/src/specdojo-config-command.test.ts`: 設定コマンドのテストを更新。
+- `tests/docs/specdojo/schemas/specdojo-config-schema.test.ts`: 構成スキーマの検証テストを更新。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- ワークツリー相対のリポジトリパス解決の実装、およびコミットスコープやジョブプランニングへのリゾルバーの組み込みが必要（`PJR-98G4`/`PJR-0WAA`）。
+- config 初期化時の JSON に `repos` を含めない仕様としている点についての確認。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`fully-guided` で rulebook / recipe / sample / template をどう使い分けたか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+まず `specdojo.config.json` で複数リポジトリを定義できるように型とスキーマを拡張し、次に `app1:src/...` のような形式を解析して適切なパスに変換するリゾルバーを `src/specdojo-config.ts` に実装した。その後、関連ドキュメントの更新と、ユニットテストおよびスキーマ検証による動作確認を行った。
