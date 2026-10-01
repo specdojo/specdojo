@@ -24,7 +24,7 @@ CLI は利用リポジトリへローカル導入されるため、`npx specdojo
   - 自分が内容を書いた変更（実装・設定・規範文書など）は `feature/<project-id>/<topic>` を切ってそこへ commit する。`git push` と PR 作成は行わず、コマンドを提示して利用者へ引き渡す。
   - `exec run` は現在ブランチを統合先にするため、実行前に対象 project の `develop` にいることを確認する。
   - exec に流す予定の `todo` は、実行前に対象 project の `develop` へ入れておく。worktree は commit から作られるため、feature ブランチにしかない個票は実行できない。
-- commit メッセージは subject を日本語で書き、conventional commit の type と scope を保つ。本文には「なぜ」と、関連する登録簿項目があれば `Refs: PJR-XXXX` を日本語で記載する。
+- commit メッセージは subject を日本語で書き、conventional commit の type と scope を保つ。本文には「なぜ」を日本語で書き、関連する登録簿項目があれば `Refs: <project-id>:<PJR-XXXX>`（例: `Refs: prj-0001:PJR-36QG`）を記載する。項目ごとに 1 行とし、過去の commit の書式は書き換えない。
 - 登録簿項目の実行は既定で `exec run --register` を使う。自分で実装するのは、利用者が実装者として自分を指定した場合に限る。「着手してください」は実行経路の指示であり、自分が実装してよい根拠として扱わない。実装者が読み取れない場合は確認する。
 - 自分が直接対応した項目は `start` を経ずに `close` してよい。実行していない主体を actor とする遷移を、記録の体裁を揃える目的で追加しない。終端イベントの `reason` に対応経路を記録し、実施内容と検証結果は個票の対応結果へ残す。
 - 認証情報・秘密鍵・`.env`・`secrets/` を読み込まない。
@@ -112,7 +112,7 @@ npx specdojo register close --project <project-id> --id <PJR-XXXX> \
   --commit -m "docs(register <PJR-XXXX>): <日本語の subject>"
 ```
 
-`-m` の本文には、commit メッセージの方針（「なぜ」と `Refs: PJR-XXXX`）を守って書く。`register add` / `update` / `reject` / `defer` / `reopen` も同じく `--commit` を使う。
+`-m` の本文には、commit メッセージの方針（「なぜ」と `Refs: <project-id>:<PJR-XXXX>`）を守って書く。`register add` / `update` / `reject` / `defer` / `reopen` も同じく `--commit` を使う。
 
 `decision` と `question` は `--status decided` を付ける。close の前に個票の `決定内容` / `承認` を埋める。
 
