@@ -11,7 +11,7 @@ specdojo:
   priority: high
   owner: DEV
   registered_at: "2026-10-01T03:54:10Z"
-  block_reason: "agent exited with non-zero code: 親 runner による検証 `test-integration` が失敗しており、完了条件である「2 リポジトリの統合テストと e2e で動作を確かめ」を満たせていないため。また、CHANGELOG.md 等の必須更新ファイルが権限不足で書き換えられていない。"
+  block_reason: "agent exited with non-zero code: 親 runner の検証 `test-integration` が失敗しており、実構成検証が完了していないため。また、`CHANGELOG.md` の更新が未完了である。"
 ---
 
 # PJR-69VP 複数リポジトリ構成の実構成検証と文書の更新
