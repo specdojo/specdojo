@@ -210,6 +210,51 @@ export function changedAgentProtectedConfigPaths(
     .sort((a, b) => a.localeCompare(b));
 }
 
+/**
+ * One repository of an agent run. `name` is undefined for the project repository (the agent's
+ * cwd) and the `repos[].name` for a product worktree, whose paths are reported as `<name>:<path>`.
+ */
+export type AgentRepoRoot = { name?: string; root: string };
+
+export type AgentRepoProtectedConfigSnapshot = ReadonlyArray<{
+  repo: AgentRepoRoot;
+  snapshot: AgentProtectedConfigSnapshot;
+}>;
+
+export type AgentRepoPathChanges = { repo: AgentRepoRoot; paths: string[] };
+
+/** Qualify a repository-relative path with its product repository name (`<name>:<path>`). */
+export function qualifyRepoPath(repo: Pick<AgentRepoRoot, "name">, path: string): string {
+  return repo.name ? `${repo.name}:${path}` : path;
+}
+
+// PJR-98G4: 保護パスの一覧はプロダクトリポジトリにもそのまま適用する。プロダクト側の
+// `package.json` や CI 設定も、親 runner・hook・CI の実行内容を変えうるため。
+export function captureAgentProtectedConfigAcrossRepos(
+  repos: readonly AgentRepoRoot[],
+): AgentRepoProtectedConfigSnapshot {
+  return repos.map((repo) => ({ repo, snapshot: captureAgentProtectedConfigSnapshot(repo.root) }));
+}
+
+/** Changed protected paths per repository; repositories without changes are omitted. */
+export function changedAgentProtectedConfigAcrossRepos(
+  before: AgentRepoProtectedConfigSnapshot,
+): AgentRepoPathChanges[] {
+  return before
+    .map(({ repo, snapshot }) => ({
+      repo,
+      paths: changedAgentProtectedConfigPaths(repo.root, snapshot),
+    }))
+    .filter((change) => change.paths.length > 0);
+}
+
+/** Flatten per-repository changes to qualified paths for block messages. */
+export function qualifiedRepoPaths(changes: readonly AgentRepoPathChanges[]): string[] {
+  return changes.flatMap((change) =>
+    change.paths.map((path) => qualifyRepoPath(change.repo, path)),
+  );
+}
+
 // block した変更を人が判断できるよう、対象パスごとの差分を git から取得する。
 // diff は差分ありで status 1 を返すため、0 と 1 のみ結果として採用する。
 type GitTextResult = { text: string; failure?: string };

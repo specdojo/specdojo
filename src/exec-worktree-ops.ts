@@ -22,8 +22,21 @@ import { stripTerminalControlSequences } from "./exec-shared.js";
 import {
   agentProtectedConfigPaths,
   agentProtectedConfigViolation,
+  qualifiedRepoPaths,
+  type AgentRepoPathChanges,
 } from "./exec-agent-protected-config.js";
-import { recordProtectedConfigBlock } from "./exec-protection-handoff.js";
+import { recordProtectedConfigBlockAcrossRepos } from "./exec-protection-handoff.js";
+import {
+  assertNoPendingProductChanges,
+  discardStaleProductWorktrees,
+  ensureProductWorktrees,
+  productIntegrationTarget,
+  projectRepoDirName,
+  productWorktreeRemovalBlockers,
+  removeEmptyTaskDirectory,
+  removeProductWorktrees,
+  type ProductRepo,
+} from "./exec-task-repos.js";
 import { specdojoPackageRootDir } from "./package-paths.js";
 import { rebuildRegisterTicketFromEvents, unionRegisterEventLogs } from "./register-event-merge.js";
 import { displayIdFromRegisterEventFilename, REGISTER_EVENTS_DIRNAME } from "./register-events.js";
@@ -217,17 +230,47 @@ function assertNoAgentProtectedConfigChanges(
     ...statusPaths(worktree.path),
     ...committed,
   ]);
-  if (protectedPaths.length > 0) {
-    const reason = agentProtectedConfigViolation(protectedPaths);
+  const changes: AgentRepoPathChanges[] = [
+    ...(protectedPaths.length > 0
+      ? [{ repo: { root: worktree.path }, paths: protectedPaths }]
+      : []),
+    ...productProtectedConfigChanges(worktree),
+  ];
+  if (changes.length > 0) {
+    const reason = agentProtectedConfigViolation(qualifiedRepoPaths(changes));
     // commit 前の再検査でも、対象と提案差分を result の申し送りへ残してから block する。
-    recordProtectedConfigBlock({
+    recordProtectedConfigBlockAcrossRepos({
       resultPath: resolve(worktree.path, resultRel),
-      repoRoot: worktree.path,
-      paths: protectedPaths,
+      changes,
       reason,
     });
     throw new Error(reason);
   }
+}
+
+// プロダクト worktree の未 commit 差分と、統合先から進んだ exec branch の commit を保護パスで検査する。
+function productProtectedConfigChanges(worktree: ExecWorktree): AgentRepoPathChanges[] {
+  return (worktree.repos ?? []).flatMap((product) => {
+    if (!existsSync(product.path)) return [];
+    const target = productIntegrationTarget(product);
+    const base = gitResult(product.path, ["merge-base", "HEAD", target]);
+    const compareBase = typeof base.stdout === "string" ? base.stdout.trim() : "";
+    const committed =
+      base.status === 0 && compareBase
+        ? zeroSeparatedPaths(product.path, [
+            "diff",
+            "--no-renames",
+            "--name-only",
+            "-z",
+            `${compareBase}..HEAD`,
+          ])
+        : [];
+    const paths = agentProtectedConfigPaths(product.path, [
+      ...statusPaths(product.path),
+      ...committed,
+    ]);
+    return paths.length > 0 ? [{ repo: { name: product.name, root: product.path }, paths }] : [];
+  });
 }
 
 const DOC_INDEX_REL = ".specdojo/doc-index.json";
@@ -627,6 +670,9 @@ export function commitWorktreeChanges(params: {
 }): { targets: string[]; committed: boolean } {
   const { context, worktree, taskId } = params;
   assertNoAgentProtectedConfigChanges(context, worktree, taskId);
+  // プロダクト側の commit・統合（PJR-0WAA）が入るまでは、プロダクトに変更が残るタスクの
+  // プロジェクト側だけを commit・統合しない。統合後の撤去でプロダクトの変更を失わないため。
+  assertNoPendingProductChanges(worktree);
   let partition = partitionCommitTargets(context, worktree, taskId);
   const scopeWarnings = [
     ...partition.unresolvedTargets.map(
@@ -1029,6 +1075,12 @@ export function removeWorktree(params: {
   if (!params.force && !merged) {
     throw new Error(`Exec branch is not merged into current HEAD: ${worktree.branch}`);
   }
+  // プロダクト worktree もすべて撤去できることを先に確かめる。一部のリポジトリだけを撤去した
+  // 状態を作らないため、検査はどの worktree を消すよりも前に行う。
+  const productBlockers = params.force ? [] : productWorktreeRemovalBlockers(worktree);
+  if (productBlockers.length > 0) {
+    throw new Error(`Product worktrees cannot be removed: ${productBlockers.join("; ")}`);
+  }
   // Past the guards, any remaining uncommitted files are non-commit-target bookkeeping
   // (doc-index, generated/, events) that were intentionally excluded from the task commit.
   // git refuses to remove a worktree while those are dirty, so force past them: they are
@@ -1041,6 +1093,7 @@ export function removeWorktree(params: {
     process.stderr.write(`Discarding regenerated files in worktree: ${leftover.join(", ")}\n`);
   }
   if (params.dryRun) {
+    removeProductWorktrees({ worktree, deleteBranch: params.deleteBranch, dryRun: true });
     process.stdout.write(
       `[dry-run] git worktree remove${forceGit ? " --force" : ""} ${worktree.path}\n`,
     );
@@ -1048,12 +1101,14 @@ export function removeWorktree(params: {
     return;
   }
 
+  removeProductWorktrees({ worktree, deleteBranch: params.deleteBranch });
   gitOutput(context.repoRoot, [
     "worktree",
     "remove",
     ...(forceGit ? ["--force"] : []),
     worktree.path,
   ]);
+  removeEmptyTaskDirectory(worktree);
   if (params.deleteBranch) {
     try {
       gitOutput(context.repoRoot, ["branch", "-d", worktree.branch]);
@@ -1155,11 +1210,17 @@ export function pruneOrphanedExecBranches(params: {
 export function discardStaleExecWorktree(params: {
   context: WorktreeOpsContext;
   worktreeTaskId: string;
+  /** Declared product repositories whose task worktrees/branches are discarded together. */
+  products?: readonly ProductRepo[];
 }): string | null {
   const { context, worktreeTaskId } = params;
   const branch = `exec/${worktreeNameFromTaskId(worktreeTaskId)}`;
   const existing = findExecWorktree(context.repoRoot, worktreeTaskId);
-  if (!existing && !execBranchExists(context.repoRoot, worktreeTaskId)) return null;
+  // プロダクト側の残骸は、プロジェクト側に残骸が無くても片付ける（作成途中で失敗した場合など）。
+  const discardedProducts = discardStaleProductWorktrees(params.products ?? [], worktreeTaskId);
+  if (!existing && !execBranchExists(context.repoRoot, worktreeTaskId)) {
+    return discardedProducts.length > 0 ? discardedProducts.join(", ") : null;
+  }
   if (existing) {
     if (resolve(context.repoRoot) === resolve(existing.path)) {
       throw new Error(`Refusing to discard the merge-target worktree as stale residue: ${branch}`);
@@ -1167,13 +1228,14 @@ export function discardStaleExecWorktree(params: {
     // Force past any uncommitted/blocked state in the abandoned worktree; its branch is discarded
     // next, so nothing here is worth preserving.
     gitOutput(context.repoRoot, ["worktree", "remove", "--force", existing.path]);
+    if ((params.products ?? []).length > 0) removeEmptyTaskDirectory({ ...existing, repos: [] });
   }
   // The branch is unmerged (the scheduler reset the task to todo), so a safe `-d` would fail; use
   // `-D` to drop it deliberately.
   if (execBranchExists(context.repoRoot, worktreeTaskId)) {
     gitOutput(context.repoRoot, ["branch", "-D", branch]);
   }
-  return branch;
+  return [branch, ...discardedProducts].join(", ");
 }
 
 function copyCheckpointPath(sourceRoot: string, targetRoot: string, relPath: string): void {
@@ -1209,13 +1271,42 @@ function restoreToHead(repoRoot: string, relPath: string): void {
 // the merge releases them (releaseRootWorkingCopies) right before the exec branch lands.
 // Consequently the prepare/start bookkeeping is reachable through the merge DAG without adding a
 // first-parent commit to the integration branch.
+//
+// PJR-98G4: with declared product repositories the project worktree moves to
+// `<base>/<task-name>/project/` and each product gets `<base>/<task-name>/<repo>/`. The checkpoint
+// commit stays in the project repository; product exec branches start from their integration
+// target.
 export function checkpointAndEnsureWorktree(params: {
   context: WorktreeOpsContext;
   worktreeTaskId: string;
   base: string;
   checkpointPaths: string[];
   commitMessage: string;
+  products?: readonly ProductRepo[];
 }): ExecWorktree {
+  const products = params.products ?? [];
+  const worktree = checkpointAndEnsureProjectWorktree(params, projectRepoDirName(products));
+  if (products.length === 0) return worktree;
+  return {
+    ...worktree,
+    repos: ensureProductWorktrees({
+      products,
+      worktreeBase: params.base,
+      taskId: params.worktreeTaskId,
+    }),
+  };
+}
+
+function checkpointAndEnsureProjectWorktree(
+  params: {
+    context: WorktreeOpsContext;
+    worktreeTaskId: string;
+    base: string;
+    checkpointPaths: string[];
+    commitMessage: string;
+  },
+  repoDirName: string | undefined,
+): ExecWorktree {
   const { context, worktreeTaskId, base } = params;
   const branch = `exec/${worktreeNameFromTaskId(worktreeTaskId)}`;
 
@@ -1245,6 +1336,7 @@ export function checkpointAndEnsureWorktree(params: {
       repoRoot: context.repoRoot,
       worktreeBase: base,
       taskId: worktreeTaskId,
+      repoDirName,
     });
     for (const path of paths) copyCheckpointPath(context.repoRoot, worktree.path, path);
     stageCommitTargets(worktree.path, paths);
@@ -1286,5 +1378,6 @@ export function checkpointAndEnsureWorktree(params: {
     repoRoot: context.repoRoot,
     worktreeBase: base,
     taskId: worktreeTaskId,
+    repoDirName,
   });
 }

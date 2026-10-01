@@ -68,9 +68,13 @@ $defs:
       - path
     properties:
       name:
-        description: Prefix used in targets/paths as <name>:<path>.
+        description: >-
+          Prefix used in targets/paths as <name>:<path>. "project" is reserved for the project
+          repository worktree (<worktree_base>/<task-id>/project/).
         type: string
         pattern: "^[a-z0-9-]+$"
+        not:
+          const: project
       path:
         description: Repository root, relative to the SpecDojo root.
         type: string
