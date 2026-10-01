@@ -9,9 +9,9 @@ specdojo:
   origin: register
   plan_ref: exec/plans/pjr-genj-20261001T115359Z-9eae-plan.md
   started_at: "2026-10-01T11:53:59.482Z"
-  completed_at: "2026-10-01T12:10:52.734Z"
+  completed_at: "2026-10-01T15:27:09.692Z"
   agent: claude-expert-executor
-  block_reason: "agent exited with non-zero code: runner による親検証 `test-unit` が失敗（exit 1）しているため。具体的に `tests/src/doc-index.test.ts` で「個票の `part_of` と `pjr-index` wikilink が生成された登録台帳へ解決する」テストが失敗している。"
+  block_reason: "agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=.opencode/.gitignore, .opencode/package-lock.json, .opencode/package.json; agent must record the re…"
 ---
 
 # Edit Result
@@ -36,6 +36,23 @@ specdojo:
 
 - 親検証の `test-unit` が失敗しているため、原因の調査と修正が必要である。
 - executor が未対応として挙げている「Schedule タスクの再開」および「統合段再開の E2E テスト」への対応を検討する必要がある。
+
+<!-- specdojo:agent-protection-handoff -->
+
+**保護機構による自動記録**: `agent-config-write` が agent の変更を止めた。適用するかどうかは人または対話型 orchestrator が agent 実行外で判断する。
+
+- 対象パス: `.opencode/.gitignore`, `.opencode/package-lock.json`, `.opencode/package.json`
+- 変更理由: この節の上に agent が記入した申し送りを参照する。
+- 変更後に必要な検証: この節の上に agent が記入した申し送りを参照する。
+- block メッセージ: `agent-config-write: protected configuration changes detected; paths=.opencode/.gitignore, .opencode/package-lock.json, .opencode/package.json; agent must record the required change in the result handoff for human or orchestrator application`
+
+提案差分:
+
+```diff
+# .opencode/.gitignore: git diff の出力が空でした（HEAD に反映済み、削除、またはバイナリの可能性があります）
+# .opencode/package-lock.json: git diff の出力が空でした（HEAD に反映済み、削除、またはバイナリの可能性があります）
+# .opencode/package.json: git diff の出力が空でした（HEAD に反映済み、削除、またはバイナリの可能性があります）
+```
 
 ## 4. 進め方と実践の型の適用
 

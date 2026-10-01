@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: DEV
   registered_at: "2026-10-01T04:30:54Z"
-  block_reason: "agent exited with non-zero code: runner による親検証 `test-unit` が失敗（exit 1）しているため。具体的に `tests/src/doc-index.test.ts` で「個票の `part_of` と `pjr-index` wikilink が生成された登録台帳へ解決する」テストが失敗している。"
+  block_reason: "agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=.opencode/.gitignore, .opencode/package-lock.json, .opencode/package.json; agent must record the re…"
 ---
 
 # PJR-GENJ reporter 段からの再開で develop を取り込む前に親検証を実行する
