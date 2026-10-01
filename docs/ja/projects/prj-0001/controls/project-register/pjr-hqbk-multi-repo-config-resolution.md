@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-hqbk-multi-repo-config-resolution
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-01T03:53:32Z"
+  completed_at: "2026-10-01T04:44:34Z"
+  conclusion: specdojo.config.json の project に repos を宣言でき、schema と読み込みで検証する。`<repo>`:`<path>` の解決関数を加えた
 ---
 
 # PJR-HQBK 複数リポジトリの宣言と targets・paths の解決

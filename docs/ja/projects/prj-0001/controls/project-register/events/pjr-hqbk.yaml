@@ -58,3 +58,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_1400bd6507f14d4c9b81f6646d072307
+- v: 1
+  id: reg_109b643933844a308804fec236ec6646
+  ts: "2026-10-01T04:44:34Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（claude-expert-executor / gemma-reporter）の結果を orchestrator が評価した。完了条件と親検証 7 種の通過を確かめ、残課題は PJR-98G4 の完了条件へ移した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-01"
+    - field: conclusion
+      from: "-"
+      to: specdojo.config.json の project に repos を宣言でき、schema と読み込みで検証する。`<repo>`:`<path>` の解決関数を加えた
+  previous_event_id: reg_6966c5f72fd844e7820d86d28e389108
