@@ -518,7 +518,8 @@ export function setRegisterItemTitle(content: string, title: string): string {
     throw new Error("H1 heading not found in register item file");
   }
   const idPrefix = heading[1].match(/^(PJR-[0-9A-Za-z]{4})\s+/);
-  const replacement = idPrefix ? `# ${idPrefix[1]} ${title}` : `# ${title}`;
+  const safeTitle = inlineCodeAnglePlaceholders(title);
+  const replacement = idPrefix ? `# ${idPrefix[1]} ${safeTitle}` : `# ${safeTitle}`;
   return content.replace(/^#\s+.+$/m, () => replacement);
 }
 

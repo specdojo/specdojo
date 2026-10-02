@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-10-01T04:30:47Z"
@@ -40,7 +40,9 @@ register add / update の --title と --description に、インラインコー�
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- `register add` の個票生成時と `register update` のタイトル更新時に、既存の共通処理でコードスパン外の山括弧プレースホルダをインラインコード化するようにした。
+- 説明に対する既存の変換と同じ規則を使うため、連結したファイル名を一つのコードスパンに保ち、既にインラインコードで囲まれた値は二重化しない。
+- CLI 回帰テストで `add` / `update` のタイトルと説明を確認し、タイトル更新の単体テストで既存コードスパンの保持も確認した。
 
 ## 5. 関連ドキュメント
 
