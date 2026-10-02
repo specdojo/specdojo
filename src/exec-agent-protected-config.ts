@@ -80,6 +80,11 @@ function isGeneratedCandidate(path: string): boolean {
   return GENERATED_DIRECTORY_PREFIXES.some((prefix) => path.startsWith(prefix));
 }
 
+function isGeneratedDirectoryRoot(path: string): boolean {
+  const normalized = `${normalizeRepoPath(path).replace(/\/+$/, "")}/`;
+  return GENERATED_DIRECTORY_PREFIXES.some((prefix) => prefix === normalized);
+}
+
 export type AgentProtectedConfigSnapshot = ReadonlyMap<string, string>;
 
 // `.specdojo/doc-index.json` のように、保護対象ディレクトリの下にある gitignore 済みの生成物を
@@ -167,9 +172,14 @@ function addTreeFiles(repoRoot: string, rootPath: string, out: Map<string, strin
     const entryPath = join(rootPath, entry.name);
     if (entry.isDirectory()) {
       // `.opencode/node_modules` のような実行時生成ディレクトリは数百〜数千ファイルになる。
-      // 走査して fingerprint を取っても結果は除外されるため、入口で辿らない。
+      // ignore 済みなら走査して fingerprint を取っても結果は除外されるため、入口で辿らない。
+      // ignore されていない場合や git の判定に失敗した場合は、保護対象として検出するため走査する。
       const relDir = normalizeRepoPath(relative(repoRoot, entryPath).split(sep).join("/"));
-      if (GENERATED_DIRECTORY_PREFIXES.some((prefix) => `${relDir}/` === prefix)) continue;
+      if (
+        isGeneratedDirectoryRoot(relDir) &&
+        ignoredGeneratedPaths(repoRoot, [`${relDir}/`]).has(`${relDir}/`)
+      )
+        continue;
       addTreeFiles(repoRoot, entryPath, out);
       continue;
     }

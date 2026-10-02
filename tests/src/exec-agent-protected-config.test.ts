@@ -142,11 +142,16 @@ describe("agent protected configuration paths", () => {
     roots.push(root);
     initRepository(root);
     write(join(root, ".opencode", "agents", "reporter.md"), "# reporter\n");
-    write(join(root, ".opencode", ".gitignore"), "node_modules\npackage.json\n.gitignore\n");
 
     const before = captureAgentProtectedConfigSnapshot(root);
-    // opencode は起動時に plugin を install し、自分用の package.json を書き出す。
+    // opencode は起動時に ignore 規則と plugin の導入ファイルをまとめて書き出す。
+    write(
+      join(root, ".opencode", ".gitignore"),
+      "node_modules\npackage.json\npackage-lock.json\nbun.lock\n.gitignore\n",
+    );
     write(join(root, ".opencode", "package.json"), '{"dependencies":{}}\n');
+    write(join(root, ".opencode", "package-lock.json"), '{"lockfileVersion":3}\n');
+    write(join(root, ".opencode", "bun.lock"), "lockfileVersion = 1\n");
     write(join(root, ".opencode", "node_modules", "yaml", "package.json"), '{"name":"yaml"}\n');
 
     expect(changedAgentProtectedConfigPaths(root, before)).toEqual([]);
@@ -170,16 +175,49 @@ describe("agent protected configuration paths", () => {
     ]);
   });
 
-  it("keeps runtime artifact paths protected when git does not ignore them", () => {
+  it("keeps opencode runtime artifacts protected when git does not ignore them", () => {
     const root = mkdtempSync(join(tmpdir(), "specdojo-protected-config-"));
     roots.push(root);
     initRepository(root);
     write(join(root, ".opencode", "agents", "reporter.md"), "# reporter\n");
 
+    const before = captureAgentProtectedConfigSnapshot(root);
+    write(join(root, ".opencode", "package.json"), '{"dependencies":{}}\n');
+    write(join(root, ".opencode", "package-lock.json"), '{"lockfileVersion":3}\n');
+    write(join(root, ".opencode", "bun.lock"), "lockfileVersion = 1\n");
+    write(join(root, ".opencode", "node_modules", "yaml", "package.json"), '{"name":"yaml"}\n');
+
     // ignore 規則がない場合は生成物と判定できないため、保護対象のまま残す。
-    expect(
-      agentProtectedConfigPaths(root, [".opencode/package.json", ".opencode/agents/reporter.md"]),
-    ).toEqual([".opencode/agents/reporter.md", ".opencode/package.json"]);
+    expect(changedAgentProtectedConfigPaths(root, before)).toEqual([
+      ".opencode/bun.lock",
+      ".opencode/node_modules/yaml/package.json",
+      ".opencode/package-lock.json",
+      ".opencode/package.json",
+    ]);
+  });
+
+  it("keeps opencode runtime artifacts protected when git check-ignore fails", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-protected-config-"));
+    roots.push(root);
+    write(join(root, ".opencode", "agents", "reporter.md"), "# reporter\n");
+
+    const before = captureAgentProtectedConfigSnapshot(root);
+    write(
+      join(root, ".opencode", ".gitignore"),
+      "node_modules\npackage.json\npackage-lock.json\nbun.lock\n.gitignore\n",
+    );
+    write(join(root, ".opencode", "package.json"), '{"dependencies":{}}\n');
+    write(join(root, ".opencode", "package-lock.json"), '{"lockfileVersion":3}\n');
+    write(join(root, ".opencode", "bun.lock"), "lockfileVersion = 1\n");
+    write(join(root, ".opencode", "node_modules", "yaml", "package.json"), '{"name":"yaml"}\n');
+
+    expect(changedAgentProtectedConfigPaths(root, before)).toEqual([
+      ".opencode/.gitignore",
+      ".opencode/bun.lock",
+      ".opencode/node_modules/yaml/package.json",
+      ".opencode/package-lock.json",
+      ".opencode/package.json",
+    ]);
   });
 
   it("excludes a known generated path even when it is already tracked", () => {

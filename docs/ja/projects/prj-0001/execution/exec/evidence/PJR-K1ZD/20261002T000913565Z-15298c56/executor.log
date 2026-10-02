@@ -1,0 +1,11 @@
+OpenCode 導入ファイルの保護検査を修正しました。
+
+- Git ignore 成功時のみ `.opencode/node_modules/` の走査を省略。
+- 非 ignore・Git 判定失敗時は保護対象として検出。
+- OpenCode の全生成ファイル、agent 定義変更、安全側への失敗をテスト化。
+- 個票の対応結果を更新。
+- catalog 検証、index 生成、整形、差分検査は成功。テスト等は親 runner に委譲しました。
+
+<specdojo_executor_evidence>
+{"final_message":"OpenCode の gitignore 済み導入ファイルのみを保護検査から除外し、非 ignore・Git 判定失敗時には node_modules 配下も検出するよう修正した。再現・安全側の単体テストと個票の対応結果も更新した。","validations":[{"command":"npx prettier --write src/exec-agent-protected-config.ts tests/src/exec-agent-protected-config.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-k1zd-opencode-plugin-bootstrap-protected-false-positive.md","status":"passed","summary":"変更3ファイルは整形済み"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"終了コード0。既存の未作成 based_on 文書に関する警告のみ"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"doc index 2300件を生成"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"},{"command":"npm run lint:ts","status":"not_run","summary":"親 runner の検証へ委譲"},{"command":"npm run lint:fm","status":"not_run","summary":"親 runner の検証へ委譲"},{"command":"npm run lint:md","status":"not_run","summary":"親 runner の検証へ委譲"},{"command":"npm run test:integration","status":"not_run","summary":"親 runner の検証へ委譲"},{"command":"npm run validate:schema","status":"not_run","summary":"親 runner の検証へ委譲"},{"command":"npm run typecheck","status":"not_run","summary":"親 runner の検証へ委譲"},{"command":"npm run test:unit","status":"not_run","summary":"親 runner の検証へ委譲"}]}
+</specdojo_executor_evidence>
