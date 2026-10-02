@@ -1,0 +1,12 @@
+devcontainer のエディタ環境を実装しました。
+
+- [Dockerfile](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FPCM/.devcontainer/Dockerfile:9) に Neovim 0.12.5、Marksman、lazygit、LSP、tree-sitter CLI、C コンパイラ、git-delta を追加。公式 release の SHA-256 を固定しました（[Neovim](https://github.com/neovim/neovim/releases/expanded_assets/v0.12.5)、[Marksman](https://github.com/artempyanykh/marksman/releases/expanded_assets/2026-02-08)、[lazygit](https://github.com/jesseduffield/lazygit/releases/expanded_assets/v0.65.1)）。
+- [devcontainer.json](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FPCM/.devcontainer/devcontainer.json:49) から Emacs の bind mount を外し、Emacs／Neovim の named volume を追加。
+- [技術スタック定義](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FPCM/docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md:538) に dotfiles、`early-init.el`、Eglot、再ビルド後の確認手順を追記。
+- [個票](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FPCM/docs/ja/projects/prj-0001/controls/project-register/pjr-fpcm-devcontainer-editor-toolchain.md:35) の作業内容・対応結果を更新。
+- 配布用 devcontainer scaffold と result ファイルは変更していません。
+- 実機でのコンテナ再ビルドとエディタ動作確認は人による残作業です。
+
+<specdojo_executor_evidence>
+{"final_message":"devcontainer のエディタツールチェーン、named volume、dotfiles 手順を実装した。実機再ビルドとエディタ確認は人の残作業。","validations":[{"command":"npx prettier --write .devcontainer/devcontainer.json docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md docs/ja/projects/prj-0001/controls/project-register/pjr-fpcm-devcontainer-editor-toolchain.md","status":"passed","summary":"対象 JSONC・Markdown を整形した"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿生成に成功した"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"終了コード 0。既存の欠落文書に関する警告のみ"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"2309 件の文書索引を生成した"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"},{"command":"devcontainer build --workspace-folder .","status":"not_run","summary":"executor 環境に devcontainer／docker がなく、個票指定どおり実機再ビルドは人が実施する"}]}
+</specdojo_executor_evidence>

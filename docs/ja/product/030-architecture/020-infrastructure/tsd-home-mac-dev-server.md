@@ -508,18 +508,19 @@ VS Code 接続断後の復帰、tmux session の維持、SpecDojo と agent CLI 
 
 本リポジトリの `.devcontainer/devcontainer.json` を devcontainer 設定の正本とする。現在の構成では、次を devcontainer 内に用意する。
 
-| 設定                               | 内容                                                                                                                        | 用途                                                               |
-| ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
-| `remoteUser`                       | `node`                                                                                                                      | agent CLI と開発コマンドの実行ユーザー                             |
-| `workspaceMount`                   | `source=${localWorkspaceFolder}/..`                                                                                         | worktree を含む親ディレクトリをコンテナへ bind mount               |
-| `shutdownAction`                   | `none`                                                                                                                      | VS Code 切断時もコンテナを即停止しない                             |
-| `features.copilot-cli`             | GitHub Copilot CLI                                                                                                          | `copilot` コマンドを devcontainer 内に用意                         |
-| `features.claude-code`             | Claude Code                                                                                                                 | `claude` コマンドを devcontainer 内に用意                          |
-| `features.apt-packages`            | `tmux` などの補助 CLI                                                                                                       | 長時間実行、ログ確認、shell 整備                                   |
-| `postCreateCommand`                | `.devcontainer/post-create.sh` で SpecDojo CLI の build / npm link と `@openai/codex` / `opencode-ai` の npm global install | `specdojo` / `codex` / `opencode` コマンドを devcontainer 内に用意 |
-| `mounts`                           | `.claude` / `.codex` / `.copilot` / `.config/opencode` / `.config/gh` を named volume 化                                    | CLI 認証状態をコンテナ再作成後も保持                               |
-| `containerEnv`                     | `OLLAMA_BASE_URL` / `LOCAL_OPENAI_BASE_URL`                                                                                 | devcontainer から Host Mac の LLM API へ接続                       |
-| `customizations.vscode.extensions` | Claude Code / ChatGPT / GitHub Copilot / GitHub Copilot Chat 等                                                             | VS Code 側の補助機能                                               |
+| 設定                               | 内容                                                                                                                        | 用途                                                                     |
+| ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| `remoteUser`                       | `node`                                                                                                                      | agent CLI と開発コマンドの実行ユーザー                                   |
+| `workspaceMount`                   | `source=${localWorkspaceFolder}/..`                                                                                         | worktree を含む親ディレクトリをコンテナへ bind mount                     |
+| `shutdownAction`                   | `none`                                                                                                                      | VS Code 切断時もコンテナを即停止しない                                   |
+| `features.copilot-cli`             | GitHub Copilot CLI                                                                                                          | `copilot` コマンドを devcontainer 内に用意                               |
+| `features.claude-code`             | Claude Code                                                                                                                 | `claude` コマンドを devcontainer 内に用意                                |
+| `features.apt-packages`            | `tmux` などの補助 CLI                                                                                                       | 長時間実行、ログ確認、shell 整備                                         |
+| `Dockerfile`                       | Neovim、Emacs、LSP、tree-sitter CLI、C コンパイラ、lazygit、git-delta                                                       | Neovim / Emacs で共通の編集・解析ツールを用意                            |
+| `postCreateCommand`                | `.devcontainer/post-create.sh` で SpecDojo CLI の build / npm link と `@openai/codex` / `opencode-ai` の npm global install | `specdojo` / `codex` / `opencode` コマンドを devcontainer 内に用意       |
+| `mounts`                           | agent CLI の設定と `.local/share/emacs` / `.local/share/nvim` を named volume 化                                            | 認証状態とエディタの package / plugin / grammar / cache を再作成後も保持 |
+| `containerEnv`                     | `OLLAMA_BASE_URL` / `LOCAL_OPENAI_BASE_URL`                                                                                 | devcontainer から Host Mac の LLM API へ接続                             |
+| `customizations.vscode.extensions` | Claude Code / ChatGPT / GitHub Copilot / GitHub Copilot Chat 等                                                             | VS Code 側の補助機能                                                     |
 
 認証情報は `.devcontainer/devcontainer.json` へ書かず、各 CLI のログイン結果を named volume に保持する。API key を使う場合も、個人の shell profile、1回限りの export、または Docker / VS Code の secret 注入に留め、リポジトリへ保存しない。
 
@@ -533,6 +534,103 @@ VS Code 接続断後の復帰、tmux session の維持、SpecDojo と agent CLI 
   },
 }
 ```
+
+#### 4.10.1. エディタ設定を dotfiles から導入する
+
+Emacs と Neovim の設定はイメージや `.devcontainer/devcontainer.json` に含めず、利用者の dotfiles リポジトリからコンテナ作成時に導入する。Host Mac の設定ディレクトリは bind mount しないため、Host Mac に対象ディレクトリがなくても devcontainer を起動できる。
+
+dotfiles リポジトリは、例えば次の構成にする。
+
+```text
+dotfiles/
+├── emacs/
+│   ├── early-init.el
+│   └── init.el
+├── nvim/
+│   └── init.lua
+└── install.sh
+```
+
+`install.sh` では、clone されたリポジトリ内の設定をコンテナユーザーの設定パスへリンクする。既存の設定ディレクトリがある場合は、内容を dotfiles リポジトリへ移してからリンクへ置き換える。
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+
+dotfiles_dir="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+
+mkdir -p "${HOME}/.config"
+ln -sfnT "${dotfiles_dir}/emacs" "${HOME}/.emacs.d"
+ln -sfnT "${dotfiles_dir}/nvim" "${HOME}/.config/nvim"
+```
+
+VS Code では、Dev Containers を実行する側の User Settings に次を設定する。リポジトリ固有の `.devcontainer/devcontainer.json` には個人のリポジトリ URL を書かない。
+
+```json
+{
+  "dotfiles.repository": "your-github-id/your-dotfiles-repo",
+  "dotfiles.targetPath": "~/dotfiles",
+  "dotfiles.installCommand": "install.sh"
+}
+```
+
+Dev Container CLI を使う場合は、コンテナを新規作成するときに同じ情報を引数で渡す。
+
+```bash
+devcontainer up \
+  --workspace-folder . \
+  --dotfiles-repository https://github.com/your-github-id/your-dotfiles-repo.git \
+  --dotfiles-target-path '~/dotfiles' \
+  --dotfiles-install-command install.sh
+```
+
+`.devcontainer/devcontainer.json` は、Emacs の package・native compile・tree-sitter grammar 用に `/home/node/.local/share/emacs`、Neovim の plugin・parser 用に `/home/node/.local/share/nvim` を named volume へ mount する。Emacs の `early-init.el` では、生成物を Emacs 用 volume へ明示的に寄せる。
+
+```elisp
+(let* ((data-directory
+        (file-name-as-directory
+         (expand-file-name "emacs" "~/.local/share/")))
+       (eln-directory (expand-file-name "eln-cache/" data-directory))
+       (treesit-directory (expand-file-name "tree-sitter/" data-directory)))
+  (setq package-user-dir (expand-file-name "elpa/" data-directory)
+        treesit-extra-load-path (list treesit-directory))
+  (dolist (directory (list package-user-dir eln-directory treesit-directory))
+    (make-directory directory t))
+  (startup-redirect-eln-cache eln-directory))
+```
+
+TypeScript と Markdown を Eglot から起動する場合は、`init.el` の `eglot-server-programs` にコンテナ内の共通 LSP を登録する。
+
+```elisp
+(with-eval-after-load 'eglot
+  (add-to-list
+   'eglot-server-programs
+   '((typescript-mode typescript-ts-mode tsx-ts-mode js-mode js-ts-mode)
+     . ("typescript-language-server" "--stdio")))
+  (add-to-list
+   'eglot-server-programs
+   '((markdown-mode markdown-ts-mode) . ("marksman" "server"))))
+```
+
+#### 4.10.2. 再ビルド後の確認
+
+`.devcontainer/` の変更後は Dev Container を rebuild し、まず導入されたコマンドを確認する。
+
+```bash
+nvim --version | head -n 1
+emacs --version | head -n 1
+tree-sitter --version
+typescript-language-server --version
+lazygit --version
+delta --version
+```
+
+続いて、dotfiles を導入した状態で次を確認する。
+
+1. Neovim で TypeScript と Markdown のファイルを開き、設定した LSP client から `typescript-language-server` と `marksman` が起動する。
+2. Emacs で同じ種類のファイルを開いて `M-x eglot` を実行し、TypeScript では `typescript-language-server`、Markdown では `marksman` へ接続する。
+3. Git リポジトリ内で `lazygit` を実行し、画面を開いて終了できる。
+4. Dev Container を再作成し、Emacs と Neovim の package / plugin / grammar / cache が named volume に残る。
 
 ### 4.11. tmux の導入と初期設定
 
