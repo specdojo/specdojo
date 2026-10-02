@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-h9r2-resume-sync-uncommitted-overlap
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-01T20:01:26Z"
+  completed_at: "2026-10-02T00:55:19Z"
   block_reason: "agent exited with non-zero code: runner 検証 `test-integration`（`npm run test:integration`）が exit 1 で failed のため、完了条件を満たすと確認できない。"
+  conclusion: 再開前の取り込みの前に executor の成果を stash で退避し、取り込み後に index を復元せずに戻す。衝突した場合は成果を失わずに止める
 ---
 
 # PJR-H9R2 再開前の統合先の取り込みが worktree の未 commit の変更と重なると再開できない

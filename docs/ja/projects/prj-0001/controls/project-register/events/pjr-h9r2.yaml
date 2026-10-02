@@ -87,3 +87,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_99fa51c7d6524effa33266a7500f13b2
+- v: 1
+  id: reg_5db690896558441a84fb7d8281d387ee
+  ts: "2026-10-02T00:55:19Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（codex-expert-executor / claude-reporter、1 回目は stash の戻し方の誤りでやり直し）の結果を orchestrator が評価した。衝突しない同一ファイルの変更と衝突する場合の統合テスト、親検証 7 種の通過を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-02"
+    - field: conclusion
+      from: "-"
+      to: 再開前の取り込みの前に executor の成果を stash で退避し、取り込み後に index を復元せずに戻す。衝突した場合は成果を失わずに止める
+  previous_event_id: reg_d4d554273cec4a87a57675374b143810
