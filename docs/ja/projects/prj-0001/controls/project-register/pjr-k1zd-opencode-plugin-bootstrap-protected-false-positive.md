@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-k1zd-opencode-plugin-bootstrap-protected-false-positive
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-01T15:29:49Z"
+  completed_at: "2026-10-02T00:42:42Z"
+  conclusion: opencode の導入ファイルが git に ignore されている場合だけ保護設定の検査から除外し、agent 定義は引き続き保護する
 ---
 
 # PJR-K1ZD opencode が生成するプラグインの導入ファイルを保護設定の検査が検出する
