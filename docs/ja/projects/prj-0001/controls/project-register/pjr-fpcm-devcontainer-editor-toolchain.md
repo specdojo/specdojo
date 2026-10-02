@@ -34,19 +34,23 @@ specdojo:
 
 ## 3. 作業内容
 
-| No  | 作業                                                  | 担当 | 状態 | メモ                                            |
-| --- | ----------------------------------------------------- | ---- | ---- | ----------------------------------------------- |
-| 1   | Dockerfile へのツールの導入（版の固定とチェックサム） | DEV  | open | exec run で agent が行う                        |
-| 2   | `devcontainer.json` の mount と volume の変更         | DEV  | open | exec run で agent が行う                        |
-| 3   | dotfiles のリポジトリを使う手順の記載                 | DEV  | open | exec run で agent が行う                        |
-| 4   | 今の Emacs の設定を dotfiles のリポジトリへ移す       | 人   | open | bind mount を外す前に行う。early-init.el を直す |
-| 5   | イメージの再ビルドとエディタでの動作確認              | 人   | open | -                                               |
+| No  | 作業                                                  | 担当 | 状態 | メモ                                                                 |
+| --- | ----------------------------------------------------- | ---- | ---- | -------------------------------------------------------------------- |
+| 1   | Dockerfile へのツールの導入（版の固定とチェックサム） | DEV  | done | Neovim 0.12.5、Marksman 2026-02-08、lazygit 0.65.1 と npm CLI を固定 |
+| 2   | `devcontainer.json` の mount と volume の変更         | DEV  | done | Host の Emacs bind を外し、Emacs / Neovim の data volume を追加      |
+| 3   | dotfiles のリポジトリを使う手順の記載                 | DEV  | done | 技術スタック定義 4.10.1〜4.10.2 に設定例と確認手順を追加             |
+| 4   | 今の Emacs の設定を dotfiles のリポジトリへ移す       | 人   | open | 4.10.1 の例に従い、再ビルド前に設定と生成物の保存先を移す            |
+| 5   | イメージの再ビルドとエディタでの動作確認              | 人   | open | 4.10.2 に従い、両エディタの LSP と lazygit を確認する                |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `.devcontainer/Dockerfile` に、amd64 / arm64 対応の Neovim 0.12.5、Marksman 2026-02-08、lazygit 0.65.1 を公式 release と SHA-256 固定で追加した。npm global の TypeScript、JSON / ESLint、YAML、Bash の LSP と tree-sitter CLI は版を固定し、`build-essential` と `git-delta` は apt で追加した。Emacs は trixie の `emacs-nox` 30.1 を維持した。
+- `.devcontainer/devcontainer.json` から Host Mac の `~/dotfiles/.emacs.d` bind mount を削除し、`/home/node/.local/share/emacs` と `/home/node/.local/share/nvim` を named volume にした。Neovim の設定を Host から mount する設定は追加していない。
+- [[tsd-home-mac-dev-server|自宅 MacBook Pro 開発サーバ技術スタック定義]] に、VS Code / Dev Container CLI から dotfiles を導入する手順、`emacs/`・`nvim/`・`install.sh` の構成例、Emacs の package・native compile・tree-sitter grammar を data volume へ置く `early-init.el` の例、再ビルド後の確認手順を追加した。
+- 残課題は人が担当する No. 4〜5 である。現在の Emacs 設定を dotfiles リポジトリへ移した後、Dev Container を再ビルドし、Neovim / Emacs Eglot の TypeScript・Markdown LSP、lazygit、named volume の再作成後の保持を実機で確認する。
 
 ## 5. 関連ドキュメント
 
 - [[prj-0001:pjr-2h5f-devcontainer-scaffold]]
 - [[prj-0001:pjr-0029-devcontainer]]
+- [[tsd-home-mac-dev-server|自宅 MacBook Pro 開発サーバ技術スタック定義]]
