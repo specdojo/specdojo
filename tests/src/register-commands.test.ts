@@ -265,7 +265,7 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
     });
   });
 
-  it("add は description の山括弧プレースホルダを個票本文で code span 化する", async () => {
+  it("add は title と description の山括弧プレースホルダを個票本文で code span 化する", async () => {
     await withRepo(async ({ registerDir }) => {
       writeFileSync(join(registerDir, "pjr-index.md"), buildIndex([]), "utf8");
       vi.spyOn(process.stdout, "write").mockReturnValue(true);
@@ -275,7 +275,7 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
         "--type",
         "todo",
         "--title",
-        "プレースホルダを扱う",
+        "dct-<domain>.yaml のプレースホルダを扱う",
         "--description",
         "dct-<domain>.yaml と <phase>. を確認する。",
         "--topic",
@@ -287,6 +287,7 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
       ]);
 
       const ticket = readFileSync(join(registerDir, "pjr-ab12-angle-placeholder.md"), "utf8");
+      expect(ticket).toContain("# PJR-AB12 `dct-<domain>.yaml` のプレースホルダを扱う");
       expect(ticket).toContain("`dct-<domain>.yaml` と `<phase>`. を確認する。");
     });
   });
@@ -598,6 +599,37 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
       expect(updated).toContain('  due_on: "2026-09-30"');
       expect(updated).toContain("# PJR-AB12 在庫初期値を見直す");
       expect(updated).toContain("仕入れ先変更に伴う見直し。");
+    });
+  });
+
+  it("update は title と description の山括弧プレースホルダを個票本文で code span 化する", async () => {
+    await withRepo(async ({ registerDir }) => {
+      const ticketPath = join(registerDir, "pjr-ab12-topic.md");
+      writeFileSync(join(registerDir, "pjr-index.md"), buildIndex([]), "utf8");
+      writeFileSync(
+        ticketPath,
+        buildTicket("PJR-AB12", [
+          "item_status: open",
+          "priority: high",
+          'registered_at: "2026-08-01T12:00:00Z"',
+        ]),
+        "utf8",
+      );
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+
+      await runRegister([
+        "update",
+        "--id",
+        "PJR-AB12",
+        "--title",
+        "dct-<domain>.yaml を見直す",
+        "--description",
+        "<phase> の定義を確認する。",
+      ]);
+
+      const updated = readFileSync(ticketPath, "utf8");
+      expect(updated).toContain("# PJR-AB12 `dct-<domain>.yaml` を見直す");
+      expect(updated).toContain("`<phase>` の定義を確認する。");
     });
   });
 

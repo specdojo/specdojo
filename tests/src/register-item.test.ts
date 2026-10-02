@@ -408,6 +408,15 @@ describe("setRegisterItemTitle / setRegisterItemDescription — 本文側の項�
     expect(updated).toContain("# PJR-AB12 在庫初期値を見直す");
   });
 
+  it("タイトルの山括弧プレースホルダを code span 化し、既存 code span は二重化しない", () => {
+    const updated = setRegisterItemTitle(buildItemFile(), "dct-<domain>.yaml を見直す");
+
+    expect(updated).toContain("# PJR-AB12 `dct-<domain>.yaml` を見直す");
+    expect(setRegisterItemTitle(updated, "`dct-<domain>.yaml` を見直す")).not.toContain(
+      "``dct-<domain>.yaml``",
+    );
+  });
+
   it("最初の章の段落を差し替える", () => {
     const updated = setRegisterItemDescription(buildItemFile(), "仕入れ先変更に伴う見直し。");
 

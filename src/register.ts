@@ -478,9 +478,10 @@ function generateTicket(opts: {
   content = content.replace(/_PJR-XXXX_/g, opts.displayId);
   // Replace type-specific title placeholder
   const titlePh = getTitlePlaceholder(opts.type);
+  const safeTitle = inlineCodeAnglePlaceholders(opts.title);
   content = content.replace(
     new RegExp(titlePh.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g"),
-    opts.title,
+    safeTitle,
   );
 
   return content;
