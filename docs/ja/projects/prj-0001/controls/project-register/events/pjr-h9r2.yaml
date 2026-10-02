@@ -32,3 +32,32 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_296be5216b6242a78bd0d436cc4e8353
+  ts: "2026-10-02T00:19:06Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_68c1b2ac029c421f991e0bfb662d734e
+- v: 1
+  id: reg_01be7f6a40114152bacd8a9d394c007c
+  ts: "2026-10-02T00:32:21Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: runner 検証 `test-integration`（`npm run test:integration`）が exit 1 で failed のため、完了条件を満たすと確認できない。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: runner 検証 `test-integration`（`npm run test:integration`）が exit 1 で failed のため、完了条件を満たすと確認できない。"
+  previous_event_id: reg_296be5216b6242a78bd0d436cc4e8353

@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: waiting
   priority: medium
   owner: DEV
   registered_at: "2026-10-01T20:01:26Z"
+  block_reason: "agent exited with non-zero code: runner 検証 `test-integration`（`npm run test:integration`）が exit 1 で failed のため、完了条件を満たすと確認できない。"
 ---
 
 # PJR-H9R2 再開前の統合先の取り込みが worktree の未 commit の変更と重なると再開できない
@@ -40,7 +41,10 @@ PJR-GENJ の再開前の取り込みは、executor が worktree に残した未 
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- 解決内容: 再開前の統合先取り込みで、worktree の未 commit 変更を未追跡ファイルと stage 状態ごと一時退避し、merge commit 作成後に復元するようにした。同一ファイルの非競合 hunk は両方を反映して再開を続行する。復元が競合した場合は同期 merge を元の HEAD へ巻き戻し、executor の成果を元の worktree へ戻してから理由を示して停止する。
+- 変更箇所: `src/exec-repo-integration.ts`、`tests/src/exec-task-repos.integration.test.ts`、`tests/src/exec-register-resume.integration.test.ts`、`docs/ja/specdojo/guides/exec-operation-guide.md`、`docs/ja/specdojo/references/command-reference.md`。
+- 確認結果: 宣言を持たない project と複数リポジトリの project で、同一ファイルの非競合変更を同期できるテストを追加した。CLI の reporter 再開で、未 commit 成果と重なる統合先の修正を取り込んだ後に親検証へ進むケースと、競合時に追跡済み・未追跡の executor 成果を失わずに停止するケースも追加した。親検証は pipeline runner で実行する。
+- 再発防止策: 同一ファイルの非競合、実競合時の巻き戻しと成果復元、複数リポジトリの同期順序を統合テストで固定した。
 
 ## 5. 関連ドキュメント
 
