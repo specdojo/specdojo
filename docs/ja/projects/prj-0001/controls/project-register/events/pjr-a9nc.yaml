@@ -58,3 +58,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_f649b2d8567e42d6822e39593e41fa84
+- v: 1
+  id: reg_8446fd029ba848dfbce4a5e8e5afb9fd
+  ts: "2026-10-02T07:23:25Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（codex-expert-executor / claude-reporter）の結果を orchestrator が評価した。完了条件の「拒否する」ではなく自動で囲む形で実装されたが、説明欄の既存の変換と同じ規則で利用者の手間がないため、利用者が受け入れた（2026-10-02）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-02"
+    - field: conclusion
+      from: "-"
+      to: register add / update のタイトルと説明で、コードスパン外の山括弧プレースホルダを自動でインラインコードに囲む
+  previous_event_id: reg_0925993496874472ab984ded6cd9e4bb

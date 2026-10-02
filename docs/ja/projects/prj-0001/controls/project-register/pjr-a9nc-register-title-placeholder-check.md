@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-a9nc-register-title-placeholder-check
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-01T04:30:47Z"
+  completed_at: "2026-10-02T07:23:25Z"
+  conclusion: register add / update のタイトルと説明で、コードスパン外の山括弧プレースホルダを自動でインラインコードに囲む
 ---
 
 # PJR-A9NC register add のタイトルに素の山括弧プレースホルダを入れられる
