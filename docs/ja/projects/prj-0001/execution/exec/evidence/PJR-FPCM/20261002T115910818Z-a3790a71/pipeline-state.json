@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-FPCM",
   "run_id": "20261002T115910818Z-a3790a71",
-  "updated_at": "2026-10-02T12:17:18.825Z",
+  "updated_at": "2026-10-02T12:17:26.368Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-fpcm-20261002T115817Z-0b1e-result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "codex-expert-executor",
       "attempts": 1,
       "started_at": "2026-10-02T12:17:18.825Z",
-      "completed_at": null,
+      "completed_at": "2026-10-02T12:17:26.368Z",
       "artifact_ref": null
     }
   },
