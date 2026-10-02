@@ -40,7 +40,10 @@ opencode の reporter が worktree の .opencode/ にプラグインを自動導
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- OpenCode が agent 実行中に `.opencode/.gitignore`、`package.json`、`package-lock.json`、`bun.lock`、`node_modules/**` をまとめて生成する条件を単体テストで再現し、既知の導入ファイルかつ Git の ignore 対象である場合だけ保護設定の検査から除外することを確認できるようにした。
+- `.opencode/node_modules/` の走査省略を無条件ではなく Git の ignore 判定が成功した場合だけに限定した。ignore されていない場合と Git の判定に失敗した場合は配下を走査し、導入ファイルを保護対象として検出する。
+- `.opencode/agents/**` と `.opencode/AGENTS.md` は既知の生成物へ追加せず、従来どおり保護対象に残した。単体テストでは導入ファイルと同時に agent 定義を変更した場合も agent 定義だけを検出する。
+- 親 runner が `lint-ts`、`lint-fm`、`lint-md`、`test-integration`、`validate-schema`、`typecheck`、`test-unit` を実行する。
 
 ## 5. 関連ドキュメント
 
