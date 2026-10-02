@@ -483,9 +483,10 @@ export function mergeProductIntoTarget(params: {
 // PJR-GENJ: `--resume` で reporter 段・統合段から再開する前に、統合先ブランチの最新を各リポジトリの
 // exec branch と worktree へ取り込む。取り込まないまま親検証を実行すると、統合先で直した不具合が
 // 検証に反映されず、同じ失敗を繰り返す。executor の成果は worktree に未 commit のまま残っているため、
-// 通常の merge（`--no-commit`）で取り込み、未 commit の変更と重なる場合は Git が merge を拒否する。
-// 競合は自動解決せず merge を中止して理由を返す。ただし `theirsPaths`（項目自身の記帳ファイル）の
-// 競合だけは統合先の内容で解決する。wait commit 後の統合先が記帳の正本になるためである。
+// 未追跡ファイルも含めて一時退避してから merge し、merge commit の作成後に index を復元せず戻す。
+// 戻すときに競合した場合は merge commit を巻き戻し、元の HEAD 上へ成果を戻して理由を返す。
+// commit 済み変更の競合は自動解決しない。ただし `theirsPaths`（項目自身の記帳ファイル）の競合だけは
+// 統合先の内容で解決する。wait commit 後の統合先が記帳の正本になるためである。
 
 export type IntegrationTargetSyncStatus = "merged" | "up-to-date" | "skipped";
 
@@ -504,11 +505,89 @@ function hasPathAt(cwd: string, ref: string, path: string): boolean {
   return gitResult(cwd, ["cat-file", "-e", `${ref}:${path}`]).status === 0;
 }
 
+function gitFailure(result: ReturnType<typeof gitResult>): string {
+  return [gitText(result.stdout), gitText(result.stderr)]
+    .join("\n")
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .join(" ");
+}
+
+type StashedWorktree = {
+  oid: string;
+  untrackedPaths: string[];
+};
+
+function stashWorktreeChanges(cwd: string, repo: string): StashedWorktree | undefined {
+  if (dirtyPaths(cwd).size === 0) return undefined;
+  const untrackedPaths = zeroSeparated(cwd, ["ls-files", "--others", "--exclude-standard", "-z"]);
+  const stash = gitResult(cwd, [
+    "stash",
+    "push",
+    "--include-untracked",
+    "--message",
+    `specdojo: ${repo} integration-target sync`,
+  ]);
+  if (stash.status !== 0) {
+    const detail = gitFailure(stash) || `exit ${stash.status ?? "unknown"}`;
+    throw new Error(`${repo}: cannot preserve uncommitted changes before sync: ${detail}`);
+  }
+  return {
+    oid: gitOutput(cwd, ["rev-parse", "--verify", "refs/stash"]).trim(),
+    untrackedPaths,
+  };
+}
+
+function dropStash(cwd: string, stashOid: string): void {
+  const stashes = gitOutput(cwd, ["stash", "list", "--format=%H"])
+    .split("\n")
+    .map((line) => line.trim());
+  const index = stashes.indexOf(stashOid);
+  if (index >= 0) gitOutput(cwd, ["stash", "drop", `stash@{${index}}`]);
+}
+
+function applyStashedWorktree(cwd: string, stashOid: string): ReturnType<typeof gitResult> {
+  // `--index` は merge commit 側の index と衝突し、同一ファイルの非競合 hunk も戻せないため使わない。
+  return gitResult(cwd, ["stash", "apply", "--quiet", stashOid]);
+}
+
+function restoreOriginalWorktree(params: {
+  cwd: string;
+  repo: string;
+  originalHead: string;
+  stash: StashedWorktree;
+  reason: string;
+}): never {
+  const reset = gitResult(params.cwd, ["reset", "--hard", params.originalHead]);
+  if (reset.status === 0 && params.stash.untrackedPaths.length > 0) {
+    gitResult(params.cwd, ["clean", "-d", "-f", "--", ...params.stash.untrackedPaths]);
+  }
+  if (reset.status !== 0) {
+    const detail = gitFailure(reset) || `exit ${reset.status ?? "unknown"}`;
+    throw new Error(
+      `${params.repo}: ${params.reason}; failed to restore the original HEAD: ${detail}; ` +
+        `executor changes remain preserved in stash ${params.stash.oid}`,
+    );
+  }
+  const restored = applyStashedWorktree(params.cwd, params.stash.oid);
+  if (restored.status !== 0) {
+    const detail = gitFailure(restored) || `exit ${restored.status ?? "unknown"}`;
+    throw new Error(
+      `${params.repo}: ${params.reason}; failed to restore executor changes: ${detail}; ` +
+        `executor changes remain preserved in stash ${params.stash.oid}`,
+    );
+  }
+  dropStash(params.cwd, params.stash.oid);
+  throw new Error(`${params.repo}: ${params.reason}`);
+}
+
 /**
  * Merge `target` into the branch checked out at `cwd` (an exec worktree) with a merge commit.
- * Uncommitted changes in the worktree are kept as they are. Conflicts on `theirsPaths`
- * (repository-relative) take the target side; any other conflict, or a merge that Git refuses to
- * start (for example because it would overwrite uncommitted changes), aborts the merge and throws.
+ * Uncommitted changes (including untracked files) are stashed before the merge and restored
+ * without restoring the old index. Conflicts on `theirsPaths` (repository-relative) take the
+ * target side. Any other committed conflict aborts the merge. If restoring the stash conflicts,
+ * the merge commit is rolled back and the executor changes are restored on the original HEAD.
  */
 export function syncWorktreeWithIntegrationTarget(params: {
   repo: string;
@@ -520,6 +599,9 @@ export function syncWorktreeWithIntegrationTarget(params: {
   const { repo, cwd, target, message } = params;
   if (isAncestor(cwd, target, "HEAD")) return { repo, target, status: "up-to-date" };
 
+  const originalHead = gitOutput(cwd, ["rev-parse", "HEAD"]).trim();
+  const stash = stashWorktreeChanges(cwd, repo);
+
   const merge = gitResult(cwd, [
     "merge",
     "--no-commit",
@@ -530,15 +612,12 @@ export function syncWorktreeWithIntegrationTarget(params: {
     target,
   ]);
   if (merge.status !== 0 && !mergeInProgress(cwd)) {
-    const output = [gitText(merge.stdout), gitText(merge.stderr)]
-      .join("\n")
-      .split("\n")
-      .map((line) => line.trim())
-      .filter(Boolean)
-      .join(" ");
-    throw new Error(
-      `${repo}: cannot merge ${target} into the exec branch` + (output ? `: ${output}` : ""),
-    );
+    const output = gitFailure(merge);
+    const reason = `cannot merge ${target} into the exec branch` + (output ? `: ${output}` : "");
+    if (stash) {
+      restoreOriginalWorktree({ cwd, repo, originalHead, stash, reason });
+    }
+    throw new Error(`${repo}: ${reason}`);
   }
 
   try {
@@ -564,7 +643,31 @@ export function syncWorktreeWithIntegrationTarget(params: {
     gitOutput(cwd, ["commit", "--no-verify", "-m", message]);
   } catch (error) {
     if (mergeInProgress(cwd)) abortMerge(cwd);
+    if (stash) {
+      restoreOriginalWorktree({
+        cwd,
+        repo,
+        originalHead,
+        stash,
+        reason: error instanceof Error ? error.message.replace(`${repo}: `, "") : String(error),
+      });
+    }
     throw error;
+  }
+
+  if (stash) {
+    const restored = applyStashedWorktree(cwd, stash.oid);
+    if (restored.status !== 0) {
+      const detail = gitFailure(restored) || `exit ${restored.status ?? "unknown"}`;
+      restoreOriginalWorktree({
+        cwd,
+        repo,
+        originalHead,
+        stash,
+        reason: `uncommitted executor changes conflict with ${target}: ${detail}`,
+      });
+    }
+    dropStash(cwd, stash.oid);
   }
   return { repo, target, status: "merged" };
 }

@@ -59,6 +59,7 @@ const ARTIFACT_NAME = "docs/pipeline-artifact.md";
 const REPORTER_FAILURE_MARKER = "fail-reporter";
 // PJR-GENJ: wait の後に統合先で直す修正。親検証はこのファイルの有無で成否が決まる。
 const FIX_NAME = "docs/integration-fix.md";
+const OVERLAP_NAME = "docs/resume-overlap.md";
 
 const CONFIG = {
   version: 1,
@@ -424,7 +425,13 @@ describe("exec run --register --worktree --resume", () => {
           ].join("\n"),
           "utf8",
         );
+        writeFileSync(
+          join(root, OVERLAP_NAME),
+          "executor line\nshared 1\nshared 2\nshared 3\nshared 4\nshared 5\nshared 6\nshared 7\nintegration line\n",
+          "utf8",
+        );
         git(root, "add", "package.json", ".specdojo/exec-defaults.yaml");
+        git(root, "add", OVERLAP_NAME);
         git(root, "commit", "-m", "configure parent validation");
 
         await runWithFailingReporter(markerPath, worktreeBase);
@@ -441,9 +448,21 @@ describe("exec run --register --worktree --resume", () => {
         };
         expect(readParentValidation()?.status).toBe("failed");
 
+        // executor の未 commit 成果と、統合先の修正を同じファイルの別 hunk に作る。
+        writeFileSync(
+          join(worktreePath, OVERLAP_NAME),
+          "executor changed\nshared 1\nshared 2\nshared 3\nshared 4\nshared 5\nshared 6\nshared 7\nintegration line\n",
+          "utf8",
+        );
+
         // wait の後に統合先で不具合を直す。worktree にはまだ無い。
         writeFileSync(join(root, FIX_NAME), "# fix on the integration branch\n", "utf8");
-        git(root, "add", FIX_NAME);
+        writeFileSync(
+          join(root, OVERLAP_NAME),
+          "executor line\nshared 1\nshared 2\nshared 3\nshared 4\nshared 5\nshared 6\nshared 7\nintegration changed\n",
+          "utf8",
+        );
+        git(root, "add", FIX_NAME, OVERLAP_NAME);
         git(root, "commit", "-m", "fix on the integration branch");
         expect(existsSync(join(worktreePath, FIX_NAME))).toBe(false);
 
@@ -464,6 +483,9 @@ describe("exec run --register --worktree --resume", () => {
         expect(process.exitCode ?? 0).toBe(0);
         expect(readFileSync(join(root, TICKET_REL), "utf8")).toContain("item_status: review");
         expect(existsSync(join(root, ARTIFACT_NAME))).toBe(true);
+        expect(readFileSync(join(root, OVERLAP_NAME), "utf8")).toBe(
+          "executor changed\nshared 1\nshared 2\nshared 3\nshared 4\nshared 5\nshared 6\nshared 7\nintegration changed\n",
+        );
         const mergedEvidence = JSON.parse(
           readFileSync(
             join(root, EXECUTION_REL, "exec", "evidence", "PJR-CD34", runId, "evidence.json"),
@@ -474,6 +496,58 @@ describe("exec run --register --worktree --resume", () => {
           mergedEvidence.validations.find((validation) => validation.source === "runner"),
         ).toMatchObject({ id: "test-unit", status: "passed" });
         expect(worktreePathFor(root)).toBeNull();
+      });
+    },
+  );
+
+  it(
+    "refuses the resume without losing executor results when restoring them conflicts",
+    { timeout: 180_000 },
+    async () => {
+      await withRepo(async ({ root, markerPath, worktreeBase }) => {
+        const stderr: string[] = [];
+        vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+        vi.spyOn(process.stderr, "write").mockImplementation((chunk) => {
+          stderr.push(String(chunk));
+          return true;
+        });
+
+        writeFileSync(join(root, OVERLAP_NAME), "base\n", "utf8");
+        git(root, "add", OVERLAP_NAME);
+        git(root, "commit", "-m", "add overlap fixture");
+
+        await runWithFailingReporter(markerPath, worktreeBase);
+        const worktreePath = worktreePathFor(root) ?? "";
+        expect(worktreePath).not.toBe("");
+        const before = git(worktreePath, "rev-parse", "HEAD");
+        writeFileSync(join(worktreePath, OVERLAP_NAME), "executor edit\n", "utf8");
+        writeFileSync(join(root, OVERLAP_NAME), "integration edit\n", "utf8");
+        git(root, "add", OVERLAP_NAME);
+        git(root, "commit", "-m", "conflicting integration edit");
+
+        rmSync(markerPath, { force: true });
+        process.exitCode = undefined;
+        await runExec([
+          "run",
+          "--project",
+          "test",
+          "--register",
+          "PJR-CD34",
+          "--worktree",
+          "--worktree-base",
+          worktreeBase,
+          "--resume",
+        ]);
+
+        expect(process.exitCode).toBe(1);
+        expect(stderr.join("")).toContain("uncommitted executor changes conflict with");
+        expect(stderr.join("")).toContain(`resolve it in ${worktreePath}`);
+        expect(readFileSync(join(root, TICKET_REL), "utf8")).toContain("item_status: waiting");
+        expect(worktreePathFor(root)).toBe(worktreePath);
+        expect(git(worktreePath, "rev-parse", "HEAD")).toBe(before);
+        expect(readFileSync(join(worktreePath, OVERLAP_NAME), "utf8")).toBe("executor edit\n");
+        expect(existsSync(join(worktreePath, ARTIFACT_NAME))).toBe(true);
+        expect(git(worktreePath, "stash", "list")).toBe("");
       });
     },
   );
