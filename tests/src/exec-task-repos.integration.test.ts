@@ -808,6 +808,37 @@ describe("syncTaskWorktreesWithIntegrationTargets", () => {
     );
   });
 
+  it("merges non-conflicting changes to the same file and restores the executor edit", () => {
+    const fixture = setup({ withProducts: false });
+    const base =
+      "executor line\nshared 1\nshared 2\nshared 3\nshared 4\nshared 5\nshared 6\nshared 7\nintegration line\n";
+    commitOn(fixture.repo, "README.md", base);
+    const worktree = prepare(fixture);
+    writeFile(join(worktree.path, "README.md"), base.replace("executor line", "executor changed"));
+    git(worktree.path, "add", "README.md");
+    writeFile(join(worktree.path, "docs", "untracked.md"), "untracked executor result\n");
+    commitOn(fixture.repo, "README.md", base.replace("integration line", "integration changed"));
+
+    const synced = syncTaskWorktreesWithIntegrationTargets({
+      worktree,
+      projectTarget: currentBranch(fixture.repo),
+      message: "merge integration target before resume",
+    });
+
+    expect(synced.map((entry) => entry.status)).toEqual(["merged"]);
+    expect(readFileSync(join(worktree.path, "README.md"), "utf8")).toBe(
+      base
+        .replace("executor line", "executor changed")
+        .replace("integration line", "integration changed"),
+    );
+    expect(readFileSync(join(worktree.path, "docs", "untracked.md"), "utf8")).toBe(
+      "untracked executor result\n",
+    );
+    // 復元時は merge commit の index と衝突する `stash apply --index` を使わない。
+    expect(gitResult(worktree.path, ["diff", "--cached", "--quiet"]).status).toBe(0);
+    expect(git(worktree.path, "stash", "list")).toBe("");
+  });
+
   it("reports up-to-date and creates no commit when the integration branch has nothing new", () => {
     const fixture = setup({ withProducts: false });
     const worktree = prepare(fixture);
@@ -825,10 +856,20 @@ describe("syncTaskWorktreesWithIntegrationTargets", () => {
 
   it("merges each product integration branch and the project for multi-repository tasks", () => {
     const fixture = setup();
-    const worktree = prepare(fixture);
     const [app1, app2] = fixture.products;
-    commitOn(app1!.repoRoot, "APP1_FIX.md", "app1 fix\n");
-    commitOn(fixture.repo, "FIX.md", "project fix\n");
+    const base =
+      "executor line\nshared 1\nshared 2\nshared 3\nshared 4\nshared 5\nshared 6\nshared 7\nintegration line\n";
+    commitOn(app1!.repoRoot, "README.md", base);
+    commitOn(fixture.repo, "README.md", base);
+    const worktree = prepare(fixture);
+    const [app1Worktree, app2Worktree] = worktree.repos ?? [];
+    writeFile(
+      join(app1Worktree!.path, "README.md"),
+      base.replace("executor line", "app1 executor"),
+    );
+    writeFile(join(worktree.path, "README.md"), base.replace("executor line", "project executor"));
+    commitOn(app1!.repoRoot, "README.md", base.replace("integration line", "app1 integration"));
+    commitOn(fixture.repo, "README.md", base.replace("integration line", "project integration"));
 
     // app2 integrates into "release", which is not checked out; the fix lands there.
     git(app2!.repoRoot, "checkout", "release");
@@ -846,10 +887,17 @@ describe("syncTaskWorktreesWithIntegrationTargets", () => {
       ["app2", "release", "merged"],
       ["project", currentBranch(fixture.repo), "merged"],
     ]);
-    const [app1Worktree, app2Worktree] = worktree.repos ?? [];
-    expect(existsSync(join(app1Worktree!.path, "APP1_FIX.md"))).toBe(true);
+    expect(readFileSync(join(app1Worktree!.path, "README.md"), "utf8")).toBe(
+      base
+        .replace("executor line", "app1 executor")
+        .replace("integration line", "app1 integration"),
+    );
     expect(existsSync(join(app2Worktree!.path, "APP2_FIX.md"))).toBe(true);
-    expect(existsSync(join(worktree.path, "FIX.md"))).toBe(true);
+    expect(readFileSync(join(worktree.path, "README.md"), "utf8")).toBe(
+      base
+        .replace("executor line", "project executor")
+        .replace("integration line", "project integration"),
+    );
   });
 
   // PJR-6RN3: 統合済みのプロダクトへ merge commit を作ると、統合段が再び統合してしまう。
@@ -879,11 +927,12 @@ describe("syncTaskWorktreesWithIntegrationTargets", () => {
     expect(existsSync(join(app1Worktree!.path, "APP1_FIX.md"))).toBe(false);
   });
 
-  it("aborts and throws without touching the worktree when the fix overlaps uncommitted changes", () => {
+  it("rolls back the sync and preserves executor results when restoring them conflicts", () => {
     const fixture = setup({ withProducts: false });
     const worktree = prepare(fixture);
     const before = git(worktree.path, "rev-parse", "HEAD");
     writeFile(join(worktree.path, "README.md"), "executor edit\n");
+    writeFile(join(worktree.path, "docs", "untracked.md"), "untracked executor result\n");
     commitOn(fixture.repo, "README.md", "integration branch edit\n");
 
     expect(() =>
@@ -892,9 +941,13 @@ describe("syncTaskWorktreesWithIntegrationTargets", () => {
         projectTarget: currentBranch(fixture.repo),
         message: "merge integration target before resume",
       }),
-    ).toThrow(/project: cannot merge .* into the exec branch/);
+    ).toThrow(/project: uncommitted executor changes conflict with/);
     expect(git(worktree.path, "rev-parse", "HEAD")).toBe(before);
     expect(readFileSync(join(worktree.path, "README.md"), "utf8")).toBe("executor edit\n");
+    expect(readFileSync(join(worktree.path, "docs", "untracked.md"), "utf8")).toBe(
+      "untracked executor result\n",
+    );
+    expect(git(worktree.path, "stash", "list")).toBe("");
     expect(
       gitResult(worktree.path, ["rev-parse", "--verify", "--quiet", "MERGE_HEAD"]).status,
     ).not.toBe(0);
