@@ -148,7 +148,7 @@ Decode Fairness:         ON
 Admin UI で Ornith の per-model settings を開き、次の値を入れる。
 
 ```text
-Max Context Window:       32768
+Max Context Window:       65536
 Temperature:              0.6
 Top P:                    0.95
 Top K:                    20
@@ -182,7 +182,7 @@ Ornith は reasoning model のため、thinking を完全には切らず、上�
 
 ```text
 Max Concurrent Requests: 2
-Context per agent:        32768
+Context per agent:        65536
 Thinking Budget:          2048
 Chunked Prefill:          ON
 Prefill Priority:         speed
@@ -210,7 +210,7 @@ oMLX #1
 | 3      | バックグラウンドの一括処理 |
 | 4      | スループット重視           |
 
-普段は `max_concurrent_requests = 2` とする。夜間の一括処理などで 3～4 並列を試す場合は、context を 16K～24K、thinking budget を 2048 程度まで抑える。
+普段は `max_concurrent_requests = 2` とする。夜間の一括処理などで 3～4 並列を試す場合も、context は 64K を基準とし、thinking budget は 2048 程度にする。並列数を増やすときは、Admin UI で総スループット、リクエストごとの TTFT、Peak memory、長い文脈での品質を確認する。prefill の遅延や一時的なメモリ使用量、memory pressure に問題が出た場合に限り、実測結果に基づいて context を下げる。
 
 ## 8. devcontainerからの接続
 
@@ -271,6 +271,21 @@ macOS + GUI          8～12GB
 
 Docker Desktop に 32GB 以上を割り当てる必要はない。SpecDojo の用途では、まず 12～16GB 程度を目安にし、memory pressure が黄色・赤にならない範囲で調整する。
 
+Ornith-1.5 の KV cache は、`config.json` にある次の値から fp16 で概算する。
+
+| 項目                      | 値        | 算定への反映                                  |
+| ------------------------- | --------- | --------------------------------------------- |
+| `num_hidden_layers`       | 40        | 全レイヤー数                                  |
+| `full_attention_interval` | 4         | 通常の attention は 40 層中 10 層             |
+| `num_key_value_heads`     | 2         | K/V それぞれのヘッド数                        |
+| `head_dim`                | 256       | 1 ヘッドの次元数                              |
+| 1 トークンあたり          | 約 20 KB  | 10 層 × K/V × 2 ヘッド × 256 次元 × 2 byte    |
+| 64K × 1 リクエスト        | 約 1.3 GB | 20,480 byte × 65,536 tokens                   |
+| 64K × 2 リクエスト        | 約 2.7 GB | 64K × 1 の 2 リクエスト分                     |
+| モデル本体との合計        | 約 24 GB  | 約 20.9 GB のモデル本体 + 64K × 2 の KV cache |
+
+この概算の対象は通常の attention 10 層の KV cache である。残りの linear attention の状態は context の長さによらず一定である。値は fp16 を仮定した概算で、oMLX 内部のバッファや一時領域などのオーバーヘッドは含まない。そのため、運用時は計算値だけでなく Admin UI の Peak memory も確認する。
+
 監視は次で行う。
 
 - Activity Monitor の Memory Pressure と Swap Used
@@ -291,7 +306,7 @@ swap が継続的に大きく増える場合は、次の順で調整する。
 最初の数日は、次の設定で固定する。
 
 ```text
-Context:                32K
+Context:                64K
 Concurrency:            2
 Thinking budget:        2048
 Lightning MTP:          OFF
@@ -309,13 +324,16 @@ Memory Guard:           48GB
 
 ### 11.3. フェーズ3：context の拡張
 
-32K で不足したときだけ、48K または 64K へ増やす。常時 64K 以上にする必要はない。opencode の agent では tool の結果や diff が積み重なるため、context が大きすぎると、prefill の時間、KV cache、2 並列時のメモリが増え、古い情報を抱え込みすぎる。通常は 32K、レビューは 64K 程度で使い分ける。
+64K を通常運用の基準とし、必要な場合に 128K 以上への拡張を検討する。このモデルでは 64K × 2 の KV cache が約 2.7GB のため、64K での主な判断材料は KV cache の容量ではなく、prefill の時間、prefill 中の一時的なメモリ使用量、長い文脈での回答と tool calling の品質である。Admin UI の TTFT と Peak memory を確認し、同じ実タスクで修正漏れ、不要な変更、tool call の失敗率を比較する。
+
+prefix cache が再利用できる共通 prefix は prefill の負担を減らせるが、新規部分の prefill は残る。Chunked Prefill は長い入力を分割して処理し、decode との干渉や一時的なメモリ使用量を抑えるため、ON を維持する。どちらも長い文脈での品質低下を補う機能ではないため、最終判断は実タスクの品質を含めて行う。
 
 ### 11.4. TurboQuant KV Cache
 
-M3 Max 64GB で 32K × 2 の場合は OFF のままとする。64K 以上を多用する、3～4 並列へ増やす、memory pressure が高い、のいずれかの場合だけ検討する。試す場合は 6-bit から始める。4-bit はメモリの節約効果が大きいが、coding や tool calling の用途では品質を確認してから採用する。
+M3 Max 64GB で 64K × 2 の場合は、KV cache が約 2.7GB に収まるため OFF のままとする。3 並列以上または 128K 以上へ増やす場合に検討し、実測した Peak memory や memory pressure に余裕がなければ試す。試す場合は 6-bit から始める。4-bit はメモリの節約効果が大きいが、coding や tool calling の用途では品質を確認してから採用する。
 
 ## 12. 参照
 
 - <https://github.com/TomLeeLive/jundot-omlx>
+- <https://huggingface.co/mlx-works/Ornith-1.5-35B-A3B-oQ4e-mtp/raw/main/config.json>
 - <https://jacar.es/en/omlx-api-key-port-endpoints/>

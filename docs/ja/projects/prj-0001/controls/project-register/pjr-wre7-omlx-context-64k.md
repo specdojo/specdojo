@@ -32,14 +32,14 @@ Ornith-1.5（qwen3_5_moe）は 40 層中 10 層だけが通常の attention で�
 
 ## 3. 作業内容
 
-| No  | 作業                                      | 担当 | 状態 | メモ |
-| --- | ----------------------------------------- | ---- | ---- | ---- |
-| 1   | tsd-omlx の設定値と説明の更新             | DEV  | open | -    |
-| 2   | tsd-omlx-opencode の limit.context の更新 | DEV  | open | -    |
+| No  | 作業                                      | 担当 | 状態 | メモ                                          |
+| --- | ----------------------------------------- | ---- | ---- | --------------------------------------------- |
+| 1   | tsd-omlx の設定値と説明の更新             | DEV  | done | 64K の既定値、KV cache の概算、運用判断を更新 |
+| 2   | tsd-omlx-opencode の limit.context の更新 | DEV  | done | `limit.context` と説明を 65536 に更新         |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+[[tsd-omlx]] の Ornith の既定 context を 64K に変更し、モデル構成に基づく KV cache の概算、prefill・Peak memory・品質を使った判断基準、3～4 並列および TurboQuant KV Cache の運用方針を更新した。[[tsd-omlx-opencode]] の `limit.context` も `65536` にそろえた。残課題はない。
 
 ## 5. 関連ドキュメント
 

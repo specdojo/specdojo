@@ -1,0 +1,11 @@
+64K化を完了しました。
+
+- [tsd-omlx.md](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-WRE7/docs/ja/product/030-architecture/020-infrastructure/tsd-omlx.md): 64K既定、KV cache概算、prefill・品質中心の判断基準を追加
+- [tsd-omlx-opencode.md](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-WRE7/docs/ja/product/030-architecture/020-infrastructure/tsd-omlx-opencode.md): `limit.context` を65536へ変更
+- [個票](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-WRE7/docs/ja/projects/prj-0001/controls/project-register/pjr-wre7-omlx-context-64k.md): 作業内容・対応結果を更新
+
+KV算定の構成値は[公式モデルのconfig](https://huggingface.co/ornith-ai/Ornith-1.5-35B-A3B/blob/main/config.json)とも照合済みです。整形、register/index生成、catalog検証、差分検査は成功しました。親runner担当のlint・テストは指示どおり実行していません。
+
+<specdojo_executor_evidence>
+{"final_message":"Ornithの既定コンテキストを64Kへ変更し、KV cache概算と運用判断を更新した","validations":[{"command":"npx prettier --write docs/ja/product/030-architecture/020-infrastructure/tsd-omlx.md docs/ja/product/030-architecture/020-infrastructure/tsd-omlx-opencode.md docs/ja/projects/prj-0001/controls/project-register/pjr-wre7-omlx-context-64k.md","status":"passed","summary":"対象Markdown 3ファイルを整形"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿生成に成功"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"既存の欠落文書警告のみで検証成功"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"2342件の文書インデックスを生成"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>
