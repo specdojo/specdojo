@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-MGNW",
   "run_id": "20261003T012644162Z-8816f3ca",
-  "updated_at": "2026-10-03T01:46:02.629Z",
+  "updated_at": "2026-10-03T01:46:10.802Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-mgnw-20261003T012544Z-6d89-result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "codex-expert-executor",
       "attempts": 1,
       "started_at": "2026-10-03T01:46:02.629Z",
-      "completed_at": null,
+      "completed_at": "2026-10-03T01:46:10.802Z",
       "artifact_ref": null
     }
   },
