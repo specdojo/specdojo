@@ -61,3 +61,16 @@
       from: "-"
       to: 個票の完了条件が commit されないまま exec run が始まったため、agent の起動前に orchestrator が止めた。直した個票で最初から実行し直す
   previous_event_id: reg_907ba6b79c6c4269af641ea333b2fb70
+- v: 1
+  id: reg_6974bc90f7764d40a60d7c51f8026ca3
+  ts: "2026-10-03T01:25:50Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_369968b58ef54f6897933552c665ea36
