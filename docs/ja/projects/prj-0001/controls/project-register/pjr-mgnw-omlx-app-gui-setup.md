@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: in-progress
   priority: medium
   owner: DEV
   registered_at: "2026-10-03T01:24:08Z"
@@ -21,13 +21,23 @@ tsd-omlx と tsd-omlx-opencode は、インストールはアプリ版を前提�
 
 ## 2. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- [[tsd-omlx]] の「oMLXのインストール」に、アプリ版の初回起動とメニューバーの初期設定（モデルの置き場を `~/.omlx/models` にする、サーバーの起動、最初のモデルのダウンロード）を書く。`omlx --version` は CLI の shim の確認として残す。
+- 「起動とモデル alias」を、メニューバーからのサーバーの起動と、Admin UI（`http://127.0.0.1:8000/admin`）でのモデル alias の設定に書き直す。`omlx serve` による起動の手順を本筋から外す。
+- 「M3 Max 64GB向けの初期設定」の値は変えず、Admin UI のサーバーの設定とモデルの設定で入れることを明記する。
+- 「devcontainerからの接続」を、Admin UI で待ち受けを `0.0.0.0` にして API key を設定し、メニューバーからサーバーを再起動する手順に書き直す。API key の値は `~/.omlx/settings.json` に保存されるため、このファイルを Git やリポジトリに置かない注意に書き換える。
+- アプリと CLI は同じ `~/.omlx/settings.json` を使い、優先順位がコマンドの引数・環境変数・`settings.json`・既定値の順であること、アプリの起動中に `omlx serve` を実行するとポート 8000 が衝突することを書く。CLI による起動は、Homebrew 版や自動化のための別の手段として短くまとめる。
+- アプリの画面やメニューの正確な名前は、公開情報で確かめられたものだけを書き、確かめられないものは `_TODO_` として残す。推測で画面の名前を作らない。
+- [[tsd-omlx-opencode]] の「oMLX の起動確認」など、`omlx serve` の起動を前提にした記述を同じ前提にそろえる。
+- 参照した公開情報の URL を本文の参照に残す（<https://github.com/TomLeeLive/jundot-omlx>、<https://jacar.es/en/omlx-api-key-port-endpoints/>）。
+- `npm run lint:md`・`npm run lint:fm`・`npm run docs:build` が通る。
 
 ## 3. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                       | 担当 | 状態 | メモ                    |
+| --- | -------------------------- | ---- | ---- | ----------------------- |
+| 1   | tsd-omlx の書き直し        | DEV  | open | -                       |
+| 2   | tsd-omlx-opencode のそろえ | DEV  | open | -                       |
+| 3   | アプリの画面の名前の確認   | 人   | open | `_TODO_` を実機で埋める |
 
 ## 4. 対応結果
 
@@ -35,4 +45,5 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 5. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[tsd-omlx]]
+- [[tsd-omlx-opencode]]
