@@ -52,7 +52,15 @@ macOS アプリ版を使う理由は次のとおり。
 
 Homebrew 版でも動作するが、本構成の Qwen3.5 MoE 系のモデルではアプリ版を優先する。
 
-インストール後、バージョンを確認する。
+インストール後は Applications から oMLX を初回起動し、Welcome screen に従って次の 3 段階を実施する。
+
+1. モデルの保存先に `~/.omlx/models` を指定する。
+2. アプリが管理するサーバーを起動する。
+3. `mlx-works/Ornith-1.5-35B-A3B-oQ4e-mtp` を検索し、最初のモデルとしてダウンロードする。
+
+初回設定後は oMLX がメニューバーに常駐する。サーバーの起動・停止・監視はここから行う。
+
+最後に、アプリがインストールする CLI shim のバージョンを確認する。この確認はサーバーの起動手順ではない。
 
 ```bash
 ~/.omlx/bin/omlx --version
@@ -86,7 +94,7 @@ mkdir -p ~/.omlx/models
 
 モデルは、oMLX の Admin UI または Hugging Face CLI でダウンロードする。
 
-1. Admin UI を使う場合は、oMLX を起動して Admin UI から Hugging Face のモデルを検索し、`mlx-works/Ornith-1.5-35B-A3B-oQ4e-mtp` を `~/.omlx/models` に保存する。
+1. Admin UI を使う場合は、メニューバーからサーバーを起動し、`http://127.0.0.1:8000/admin` を開く。モデルの検索とダウンロードの機能から `mlx-works/Ornith-1.5-35B-A3B-oQ4e-mtp` を選び、初回設定で指定した `~/.omlx/models` に保存する。
 2. Hugging Face CLI（`hf`）を使う場合は、次を実行する。
 
 ```bash
@@ -105,14 +113,7 @@ du -sh ~/.omlx/models/Ornith-1.5-35B-A3B-oQ4e-mtp
 
 ## 5. 起動とモデル alias
 
-動作確認の段階では、localhost だけで待ち受けて起動する。
-
-```bash
-~/.omlx/bin/omlx serve \
-  --model-dir ~/.omlx/models \
-  --max-concurrent-requests 2 \
-  --memory-guard-gb 48
-```
+動作確認の段階では、初回設定のまま `127.0.0.1:8000` だけで待ち受ける。メニューバーの oMLX アイコンを開き、サーバー開始の操作（表示名: `_TODO_`）を選ぶ。正確な表示名は公開情報で確認できないため、実機確認後にプレースホルダーを置き換える。
 
 OpenAI 互換 API は `http://127.0.0.1:8000/v1`、Admin UI は `http://127.0.0.1:8000/admin` で提供される。モデル一覧を確認する。
 
@@ -122,13 +123,15 @@ curl http://127.0.0.1:8000/v1/models
 
 Ornith が一覧に含まれれば、oMLX 側は正常に動いている。
 
-Admin UI で、Ornith の Model Alias を `ornith-1.5-35b` に設定する。以後、opencode からは Hugging Face 上の長い名前ではなく、この alias で呼べる。設定後、`curl http://127.0.0.1:8000/v1/models` で alias が表示されることを確認する。
+Admin UI のモデル一覧から Ornith の per-model settings を開き、Model Alias を `ornith-1.5-35b` に設定する。以後、opencode からは Hugging Face 上の長い名前ではなく、この alias で呼べる。設定後、`curl http://127.0.0.1:8000/v1/models` で alias が表示されることを確認する。
 
 ## 6. M3 Max 64GB向けの初期設定
 
-最初から最大性能を狙わず、安定する基準の設定から始める。
+最初から最大性能を狙わず、安定する基準の設定から始める。以下の値は CLI の引数ではなく、Admin UI で入力する。
 
 ### 6.1. サーバー設定
+
+Admin UI のサーバー全体の設定に次の値を入れる。
 
 ```text
 Max Concurrent Requests: 2
@@ -141,6 +144,8 @@ Decode Fairness:         ON
 64GB のすべてを oMLX に使わせず、48GB 程度に抑える。macOS、VS Code、Docker Desktop、devcontainer、opencode、Git / Node などの開発ツールのための余裕を残すためである。
 
 ### 6.2. モデル設定
+
+Admin UI で Ornith の per-model settings を開き、次の値を入れる。
 
 ```text
 Max Context Window:       32768
@@ -209,18 +214,14 @@ oMLX #1
 
 ## 8. devcontainerからの接続
 
-devcontainer からは Mac ホストの `localhost` を直接参照できないため、oMLX を `0.0.0.0:8000` で待ち受けさせる。ネットワークに bind するときは、必ず API key を設定する。
+devcontainer からは Mac ホストの `localhost` を直接参照できないため、oMLX を `0.0.0.0:8000` で待ち受けさせる。ネットワークに bind するときは、必ず長いランダムな API key を設定する。
 
-API key は Mac ホストのシェルの環境変数 `OMLX_API_KEY` に、長いランダムな値を設定する。値は Git に commit せず、本書を含むリポジトリ内のファイルにも書かない。
+1. Mac ホストのブラウザーで `http://127.0.0.1:8000/admin` を開く。
+2. Admin UI のサーバー全体の設定で、待ち受けアドレスを `0.0.0.0`、ポートを `8000`、Max Concurrent Requests を `2` にする。
+3. 同じ設定で API key を入力し、保存する。
+4. メニューバーの oMLX からサーバーを再起動する。停止と開始の項目の正確な表示名は、実機確認後に前節の `_TODO_` と同時に確定する。
 
-```bash
-~/.omlx/bin/omlx serve \
-  --model-dir ~/.omlx/models \
-  --host 0.0.0.0 \
-  --api-key "$OMLX_API_KEY" \
-  --max-concurrent-requests 2 \
-  --memory-guard-gb 48
-```
+Admin UI で保存した API key を含む設定は `~/.omlx/settings.json` に永続化される。このファイルと API key の値を Git に commit せず、本書を含むリポジトリ内にコピーしない。
 
 devcontainer 内から、モデル一覧を取得できることを確認する。`<OMLX_API_KEY>` には Mac ホストで設定した値を入れる。
 
@@ -249,7 +250,15 @@ curl http://host.docker.internal:8000/v1/chat/completions \
   }'
 ```
 
-## 9. メモリ配分と監視
+## 9. CLI で起動する場合
+
+CLI での起動は、Homebrew 版を使う場合や自動化する場合の別手段とする。アプリ版の通常運用ではメニューバーから起動し、`omlx serve` を使わない。
+
+アプリと CLI は同じ `~/.omlx/settings.json` を使う。設定の優先順位は、強い順にコマンドの引数、`OMLX_*` 環境変数、`~/.omlx/settings.json`、組み込みの既定値である。
+
+アプリが管理するサーバーの起動中に別プロセスの `omlx serve` を実行すると、既定のポート `8000` が衝突する。CLI で起動する前に、メニューバーからアプリ管理のサーバーを停止する。
+
+## 10. メモリ配分と監視
 
 64GB の Mac での配分の目安は次のとおり。
 
@@ -275,9 +284,9 @@ swap が継続的に大きく増える場合は、次の順で調整する。
 3. thinking budget を下げる
 4. Docker のメモリの割り当てを見直す
 
-## 10. 段階的な最適化
+## 11. 段階的な最適化
 
-### 10.1. フェーズ1：安定性の基準
+### 11.1. フェーズ1：安定性の基準
 
 最初の数日は、次の設定で固定する。
 
@@ -294,14 +303,19 @@ Memory Guard:           48GB
 
 この状態で、Ollama の Qwen3.8（[[tsd-ollama]]）と同じ実タスクを比べる。成功・失敗、総処理時間、tool call の失敗回数、テストの再実行回数、修正漏れ、不要な変更、最終的な diff の品質を記録する。tokens/sec だけで判断しない。比較の方法は [[tsd-omlx-opencode]] で定義する。
 
-### 10.2. フェーズ2：Lightning MTP
+### 11.2. フェーズ2：Lightning MTP
 
 安定性を確認できたら、Lightning MTP を ON にして同じタスクを再実行する。生成速度、tool call の精度、重複生成、reasoning の破綻、JSON や tool の引数の破損、テストの成功率を確認し、品質に問題がなければ ON を採用する。問題が出れば OFF に戻す。
 
-### 10.3. フェーズ3：context の拡張
+### 11.3. フェーズ3：context の拡張
 
 32K で不足したときだけ、48K または 64K へ増やす。常時 64K 以上にする必要はない。opencode の agent では tool の結果や diff が積み重なるため、context が大きすぎると、prefill の時間、KV cache、2 並列時のメモリが増え、古い情報を抱え込みすぎる。通常は 32K、レビューは 64K 程度で使い分ける。
 
-### 10.4. TurboQuant KV Cache
+### 11.4. TurboQuant KV Cache
 
 M3 Max 64GB で 32K × 2 の場合は OFF のままとする。64K 以上を多用する、3～4 並列へ増やす、memory pressure が高い、のいずれかの場合だけ検討する。試す場合は 6-bit から始める。4-bit はメモリの節約効果が大きいが、coding や tool calling の用途では品質を確認してから採用する。
+
+## 12. 参照
+
+- <https://github.com/TomLeeLive/jundot-omlx>
+- <https://jacar.es/en/omlx-api-key-port-endpoints/>
