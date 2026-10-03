@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   owner: DEV
   registered_at: "2026-10-03T01:24:08Z"
+  block_reason: 個票の完了条件が commit されないまま exec run が始まったため、agent の起動前に orchestrator が止めた。直した個票で最初から実行し直す
 ---
 
 # PJR-MGNW oMLX の手順をアプリ版のメニューバーと Admin UI の操作に直す

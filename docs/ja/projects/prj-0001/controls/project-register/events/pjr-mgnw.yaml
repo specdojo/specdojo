@@ -45,3 +45,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_19bbdfefa9c44b4691f78d255d6469d8
+- v: 1
+  id: reg_369968b58ef54f6897933552c665ea36
+  ts: "2026-10-03T01:25:36Z"
+  action: wait
+  actor: orchestrator
+  from_status: in-progress
+  to_status: waiting
+  reason: 個票の完了条件が commit されないまま exec run が始まったため、agent の起動前に orchestrator が止めた。直した個票で最初から実行し直す
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: 個票の完了条件が commit されないまま exec run が始まったため、agent の起動前に orchestrator が止めた。直した個票で最初から実行し直す
+  previous_event_id: reg_907ba6b79c6c4269af641ea333b2fb70
