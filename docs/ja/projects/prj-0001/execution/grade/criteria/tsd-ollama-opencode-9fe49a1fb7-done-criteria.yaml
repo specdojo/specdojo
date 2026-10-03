@@ -2,7 +2,7 @@
 id: tsd-ollama-opencode-grade-criteria
 document: tsd-ollama-opencode
 path: docs/ja/product/030-architecture/020-infrastructure/tsd-ollama-opencode.md
-graded_at: "2026-09-27T21:22:15.216Z"
+graded_at: "2026-09-29T16:41:55.262Z"
 graded_by: codex-expert-executor
 content_hash: adf89fc90887cda2670ecba4f37a6e3d174c9a9af6b5af23127805b8751d5f12
 summary:
@@ -16,32 +16,32 @@ criteria:
       - BA
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
-    reason: 採用技術の選定理由が業務要件、対象者の課題、期待価値と対応付けられていない。
+    reason: Ollama、OpenAI互換 API、custom provider の選定理由が、対象利用者の業務要件および期待価値と対応付けられていない。
   - id: DC-002
     text: 技術スタック選定を承認できること
     roles:
       - PO
     viewpoint: vp-po-decision-readiness
     status: unsatisfied
-    reason: 技術スタックの代替案、影響範囲、未決事項、承認者がなく、PO が選定を承認する材料が不足している。
+    reason: 技術スタック選定の代替比較、影響範囲、未決事項、判断者、承認後の次アクションが不足している。
   - id: DC-003
     text: 技術的制約・ライセンス・バージョン方針が識別できること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
-    reason: Ollama、OpenCode、関連 SDK のライセンスと互換バージョン方針を識別できない。
+    reason: Ollama、OpenCode、`@ai-sdk/openai-compatible` の対応バージョンまたは更新方針とライセンス上の制約を識別できない。
   - id: DC-004
     text: テストフレームワーク・CI/CD環境の参照として使えること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
     status: unsatisfied
-    reason: テストフレームワークと CI/CD 環境の参照がなく、API と opencode の検証コマンドにもモデル名・agent 名の誤りがある。
+    reason: テストフレームワークと CI/CD 環境への参照がなく、検証コマンドにも未定義のモデル名と存在しない agent 名が含まれている。
   - id: DC-005
     text: 開発環境構築・ライブラリ選定の参照として使えること
     roles:
       - DEV
     viewpoint: vp-dev-implementation-readiness
     status: unsatisfied
-    reason: 設定例が現行 `opencode.json` と一致せず、検証コマンドもそのまま実行できないため、開発環境構築の確実な参照として使えない。
+    reason: 設定例が正本 `opencode.json` と一致せず、検証コマンドも現行モデルおよび agent 定義に対して実行できないため、開発環境構築の参照として利用できない。

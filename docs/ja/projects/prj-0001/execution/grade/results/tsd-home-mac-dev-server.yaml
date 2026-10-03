@@ -5,21 +5,21 @@ path: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-serve
 target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 73
-graded_at: "2026-09-27T21:09:03.303Z"
-graded_by: codex-expert-executor
-content_hash: 5b6e8238ca207912e1d9600ed1f79ce5789442559d414400da5cbc7c2fd838f7
+score: 65
+graded_at: "2026-10-02T16:08:49.906Z"
+graded_by: agy-expert-executor
+content_hash: 3ee780c1bc6a7a2b2d8f9259f464f662ad8ec5497392c007b81f9294b0f750a1
 source_hashes:
   catalog-entry: bb483985bdf41bd3443126c473f1c2b85153f3b2cce49fc42d9af238e789d10b
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
   deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
   dependency:sysd-agent-settings: 438490f057d962ee7b6eee44dc4d8d218c14578a592e4d15b4d7f6bf2bcbe2f3
-  dependency:sysd-antigravity-agent-settings: 1b16c0e9eee40c4bc0bab086a919b47326877b376ff7906566053a193fa33198
+  dependency:sysd-antigravity-agent-settings: ade83ab86eecf2ce4f88cc1219bea911534c633f15a5abe677a7eb397ad41027
   dependency:sysd-claude-agent-settings: 47db16ac01a7457329ee0368f54165765d52deb1d43fa9510f0729fd582bb387
   dependency:sysd-codex-agent-settings: 2e3269bd969d836047e87a7897916f48182efa75d064163f045bf2d3d9280746
   dependency:sysd-github-copilot-agent-settings: d10cad720566f4d096c0ce40c2bece543d5aa638691ec4c16b8ce9b7203b119b
   dependency:sysd-opencode-agent-settings: 6a5964f92c63db08b8d878fd284174bd06061efa35ec23938769c3ad012b88ec
-  dependency:tsd-ollama: 0f2d1a2ce67a38a25d81011175b36fc1f035be0eee507df5db08a586c1afe69d
+  dependency:tsd-ollama: 93a3c681956e6af4912e7171787845e2818d3812741eba9f35a6d5b736111286
   members: ec838bbb5673ba76f1a15672e094c00088dcb686a2a67225ca8411c0dc5e90d3
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
   schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
@@ -27,21 +27,21 @@ categories:
   purpose:
     score: 75
   operations:
-    score: 63
+    score: 56
   planning:
     score: 58
   business:
-    score: 83
+    score: 75
   consistency:
-    score: 63
+    score: 38
   architecture:
-    score: 83
+    score: 75
   usability:
     score: 94
   implementation:
     score: 88
   quality:
-    score: 56
+    score: 44
 viewpoints:
   vp-po-purpose-alignment:
     level: 3
@@ -50,8 +50,8 @@ viewpoints:
     level: 3
     score: 75
   vp-po-publication-accountability:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-pm-plan-feasibility:
     level: 3
     score: 75
@@ -65,17 +65,17 @@ viewpoints:
     level: 3
     score: 75
   vp-ba-requirements-completeness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-stakeholder-clarity:
     level: 3
     score: 75
   vp-arc-cross-document-consistency:
-    level: 3
-    score: 75
-  vp-arc-technical-constraints:
     level: 2
     score: 50
+  vp-arc-technical-constraints:
+    level: 1
+    score: 25
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -89,17 +89,17 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-qe-done-criteria:
     level: 1
     score: 25
   vp-qe-verifiability:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-ux-readability:
     level: 4
     score: 100
@@ -127,162 +127,167 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 8
-  minor: 14
+  minor: 15
   note: 0
 findings:
   - id: F001
     severity: minor
     rule: vp-po-purpose-alignment
-    line: 4
+    line: 20
     anchor: ""
     message: 自宅開発サーバの安定稼働という固有目的を、上位文書の低コストな実現・継続可能性・OSS公開という目的へ対応付ける必要がある。
   - id: F002
     severity: minor
     rule: vp-po-decision-readiness
-    line: 55
-    anchor: ""
+    line: 71
+    anchor: "## 4. セットアップ"
     message: 採用設定は示されているが、POが承認・保留・差し戻しを判断できるよう、承認対象、判断者、未決事項の有無と影響を明示する必要がある。
   - id: F003
     severity: major
     rule: vp-po-publication-accountability
-    line: 690
+    line: 20
     anchor: ""
     message: 秘密情報の禁止だけでなく、公開対象、公開前の権利・個人情報・設定値確認、および最終公開判断を担う人間のPOを明示する必要がある。
   - id: F004
     severity: minor
     rule: vp-pm-plan-feasibility
-    line: 72
+    line: 88
     anchor: ""
     message: 各セットアップ作業について、担当Role code、実施タイミングまたは所要時間の目安、完了判定を対応付ける必要がある。
   - id: F005
     severity: minor
     rule: vp-pm-dependency-risk
-    line: 701
-    anchor: ""
+    line: 787
+    anchor: "## 6. セキュリティ方針"
     message: トラブルシュートで解消しない障害をPJRの課題・リスク・変更要求へ登録する条件と、後続作業や予定への影響確認を追記する必要がある。
   - id: F006
     severity: major
     rule: vp-pm-control-reporting
-    line: 701
-    anchor: ""
+    line: 787
+    anchor: "## 6. セキュリティ方針"
     message: 発生事象を進捗、課題、リスク、変更要求、決定事項へ分類し、報告先、担当Role code、PJR転記条件を定義する必要がある。
   - id: F007
     severity: minor
     rule: vp-ba-business-value
-    line: 4
+    line: 20
     anchor: ""
     message: 接続断、スリープ、環境差異による作業中断という業務課題と、採用構成による期待効果および成功基準を明示する必要がある。
   - id: F008
     severity: minor
-    rule: vp-ba-stakeholder-clarity
-    line: 4
+    rule: vp-ba-requirements-completeness
+    line: 28
     anchor: ""
-    message: 接続元の利用者, Host Mac運用者、構成変更の確認者、および各者が確認・合意する事項をRole code付きで明示する必要がある。
+    message: 要件、受入条件、対象範囲、対象外が利用者視点で確認できる粒度になっているかについて、受入条件が明示されていないため追記する必要がある。
   - id: F009
     severity: minor
-    rule: vp-arc-cross-document-consistency
-    line: 1
-    anchor: "# 自宅 MacBook Pro 開発サーバ技術スタック定義"
-    message: 成果物カタログの `depends_on` に含まれる `ifd-specdojo` がFrontmatterの `based_on` に反映されておらず、依存関係の追跡結果が一致しない。
+    rule: vp-ba-stakeholder-clarity
+    line: 20
+    anchor: ""
+    message: 接続元の利用者, Host Mac運用者、構成変更の確認者、および各者が確認・合意する事項をRole code付きで明示する必要がある。
   - id: F010
     severity: minor
     rule: vp-arc-cross-document-consistency
-    line: 1
-    anchor: "# 自宅 MacBook Pro 開発サーバ技術スタック定義"
-    message: >-
-      `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-architecture.yaml` の `tsd-home-mac-dev-server.depends_on`
-      は `sysd-antigravity-agent-settings` を含むが、対象の `based_on` とagent CLI一覧には同文書およびAntigravityがなく、依存関係が一致していない。
+    line: 9
+    anchor: 本書では、MacBook Pro を開発サーバとして安定稼働させ、リモート端末から devcontainer 内の SpecDojo CLI と agent CLI を安全に使うための周辺設定だけを定義する。
+    message: 成果物カタログの `depends_on` に含まれる `ifd-specdojo` がFrontmatterの `based_on` に反映されておらず、依存関係の追跡結果が一致しない。
   - id: F011
     severity: minor
     rule: vp-arc-cross-document-consistency
-    line: 501
-    anchor: >-
-      | `features.apt-packages`            | `tmux` などの補助
-      CLI                                                                                                       |
-      長時間実行、ログ確認、shell 整備                                   |
+    line: 9
+    anchor: 本書では、MacBook Pro を開発サーバとして安定稼働させ、リモート端末から devcontainer 内の SpecDojo CLI と agent CLI を安全に使うための周辺設定だけを定義する。
     message: >-
-      正本の `.devcontainer/devcontainer.json` は `features.claude-code` を定義せず、`.devcontainer/post-create.sh` がClaude
-      Code公式インストーラを使用しているが、本文はDev Container Featureで導入すると記載している。
+      `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-architecture.yaml` の `tsd-home-mac-dev-server.depends_on`
+      は `sysd-antigravity-agent-settings` を含むが、対象の `based_on` とagent CLI一覧には同文書およびAntigravityがなく、依存関係が一致していない。
   - id: F012
     severity: minor
     rule: vp-arc-cross-document-consistency
-    line: 506
+    line: 517
+    anchor: "},"
+    message: >-
+      正本の `.devcontainer/devcontainer.json` は `features.claude-code` を定義せず、`.devcontainer/post-create.sh` がClaude
+      Code公式インストーラを使用しているが、本文はDev Container Featureで導入すると記載している。
+  - id: F013
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 520
     anchor: ""
     message: >-
       正本の `.devcontainer/post-create.sh` はCodex公式インストーラを優先しnpm版をフォールバックにしているが、本文は `@openai/codex` のnpm global
       installと断定しているため、現在の導入方法に合わせて更新する必要がある。
-  - id: F013
+  - id: F014
     severity: major
     rule: vp-arc-technical-constraints
-    line: 55
-    anchor: ""
+    line: 71
+    anchor: "## 4. セットアップ"
     message: >-
-      Tailscale、Docker Desktop、VS Code、Dev Container CLI、tmux、Amphetamine、agent
+      Tailscale、Docker Desktop、VS Code, Dev Container CLI, tmux, Amphetamine, agent
       CLIについて、対応バージョン・更新方針とライセンス条件を識別できる形で追加する必要がある。
-  - id: F014
+  - id: F015
     severity: minor
     rule: vp-dev-implementation-readiness
-    line: 493
+    line: 507
     anchor: ""
     message: >-
       devcontainer構成表を現行の `.devcontainer/devcontainer.json` と `.devcontainer/post-create.sh`
       に合わせ、Claude・Codex・Antigravityの導入方法と認証用mountを正確に更新する必要がある。
-  - id: F015
-    severity: major
-    rule: vp-dev-testability
-    line: 673
-    anchor: ""
-    message: 初期確認にテストフレームワーク、CI/CD、build・lint・schema検証の参照がなく、各確認コマンドの期待状態と失敗時対応も揃っていないため、構築完了を再現可能に判定できない。
   - id: F016
     severity: major
-    rule: vp-qe-done-criteria
-    line: 55
-    anchor: ""
-    message: DC-003のライセンス・バージョン方針、DC-004のテストフレームワーク・CI/CD環境、DC-005のライブラリ選定が採用設定または参照先として示されていない。
+    rule: vp-dev-testability
+    line: 787
+    anchor: "## 6. セキュリティ方針"
+    message: 初期確認にテストフレームワーク、CI/CD、build・lint・schema検証の参照がなく、各確認コマンドの期待状態と失敗時対応も揃っていないため、構築完了を再現可能に判定できない。
   - id: F017
     severity: major
-    rule: vp-qe-verifiability
-    line: 676
-    anchor: "```bash"
-    message: >-
-      初期確認にテストフレームワークとCI/CD環境の参照・確認手順がなく、`pmset -g assertions`、`pwd`、`git
-      status`にも合格となる期待状態が示されていないため、必要な受入判定をpass/failで確定できない。
+    rule: vp-qe-done-criteria
+    line: 71
+    anchor: "## 4. セットアップ"
+    message: DC-003のライセンス・バージョン方針、DC-004のテストフレームワーク・CI/CD環境、DC-005のライブラリ選定が採用設定または参照先として示されていない。
   - id: F018
     severity: major
-    rule: vp-qe-omissions-consistency
-    line: 55
-    anchor: ""
-    message: 採用設定に各技術のバージョン方針とライセンス条件がなく、テストフレームワーク、CI/CD環境、依存ライブラリの選定または正本への参照も欠落している。
+    rule: vp-qe-verifiability
+    line: 787
+    anchor: "## 6. セキュリティ方針"
+    message: 初期確認にテストフレームワークとCI/CD環境の参照・確認手順がなく、`pmset -g assertions`などの確認コマンドにも合格となる期待状態が示されていないため、必要な受入判定をpass/failで確定できない。
   - id: F019
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 71
+    anchor: "## 4. セットアップ"
+    message: 採用設定に各技術のバージョン方針とライセンス条件がなく、テストフレームワーク、CI/CD環境、依存ライブラリの選定または正本への参照も欠落している。
+  - id: F020
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 19
-    anchor: "- Ollama API への安全な到達方法"
+    line: 28
+    anchor: ""
     message: >-
       成果物カタログと現行devcontainerがAntigravity CLIを含む一方、対象範囲、全体構成、採用設定、参照一覧からAntigravityと `sysd-antigravity-agent-settings`
       が欠落している。
-  - id: F020
+  - id: F021
     severity: minor
     rule: vp-ux-language-consistency
-    line: 8
+    line: 20
     anchor: ""
     message: 同一の開発サーバを `Host Mac`、`Home MacBook Pro`、`接続先 Mac` と定義せずに呼び分けており、接続元もMacの場合に識別しづらいため、冒頭で正式呼称と別名を定義して統一する必要がある。
-  - id: F021
+  - id: F022
     severity: major
     rule: vp-ops-release-readiness
-    line: 4
+    line: 20
     anchor: ""
     message: ready化に必要な確認項目、未解決事項、公開範囲、承認者、および人間による公開前確認を明示する必要がある。
-  - id: F022
+  - id: F023
     severity: minor
     rule: vp-ops-operability
-    line: 701
-    anchor: ""
+    line: 787
+    anchor: "## 6. セキュリティ方針"
     message: 手順・依存CLI・macOS設定の更新責任者、問い合わせ先、障害を解消できない場合のエスカレーション経路と変更管理方法を追記する必要がある。
 done_criteria:
-  satisfied: 2
+  satisfied: 0
   total: 5
   unsatisfied:
+    DC-001:
+      - BA
+    DC-002:
+      - PO
     DC-003:
       - ARC
     DC-004:

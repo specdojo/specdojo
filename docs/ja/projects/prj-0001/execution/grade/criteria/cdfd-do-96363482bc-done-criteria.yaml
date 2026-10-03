@@ -2,8 +2,8 @@
 id: cdfd-do-grade-criteria
 document: cdfd-do
 path: docs/ja/product/010-business-specs/010-data-flow/cdfd-do.md
-graded_at: "2026-09-27T15:37:02.051Z"
-graded_by: codex-expert-executor
+graded_at: "2026-09-30T16:16:51.188Z"
+graded_by: agy-expert-executor
 content_hash: 77bdd115c5f0005404837c4d440bc2af468071ee4364c697383e1019a52a0a99
 summary:
   satisfied: 3
@@ -22,7 +22,7 @@ criteria:
       - ARC
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
-    reason: P-07-03 の登録簿参照と P-07-05 の成果物利用がデータストア表・図・個別プロセス表で一致せず、読み書きをプロセス単位で一意に識別できない。
+    reason: 「データストア」表と「個別プロセス主要入出力」で P-07-03 の登録簿および P-07-05 の成果物の利用について矛盾があるため、プロセス単位の読み書きを一意に識別できない。
   - id: DC-003
     text: 利用制限、保護対象の変更、検証失敗、統合失敗など、成果の採否と再開位置を変える主要例外の検出条件と再開条件が判定できること
     roles:

@@ -3,29 +3,85 @@ version: 1
 document: sysd-job-execution
 path: docs/ja/product/040-system-design/sysd-job-execution.md
 target: deliverable
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 68
-graded_at: "2026-09-19T16:51:39.478Z"
-graded_by: codex-expert-executor
+score: 81
+graded_at: "2026-10-01T16:27:14.507Z"
+graded_by: agy-expert-executor
 content_hash: 32bdb45ec2ed79a3242b1fe18859e7acb2389cc4156752f5cad701de897d141a
+source_hashes:
+  catalog-entry: db038a4fa9b3f18fd5227eec2bd56d78d0d0ee1c409c00f22393decfe82f1cea
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  members: ec838bbb5673ba76f1a15672e094c00088dcb686a2a67225ca8411c0dc5e90d3
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
 categories:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
   consistency:
     score: 50
-  usability:
-    score: 63
   architecture:
     score: 100
+  usability:
+    score: 63
+  implementation:
+    score: 100
   quality:
-    score: 67
+    score: 75
 viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
   vp-arc-cross-document-consistency:
     level: 2
     score: 50
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 3
     score: 75
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-done-criteria:
@@ -46,6 +102,15 @@ viewpoints:
   vp-ux-language-consistency:
     level: 2
     score: 50
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
@@ -58,66 +123,75 @@ finding_counts:
   minor: 4
   note: 0
 findings:
+  - id: F001
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 74
+    anchor: Job Definitionはプロジェクトの`jobs_path`配下へ`job-<slug>.yaml`として配置し、ファイル名と`id`を一致させる案を基本とする。
+    message: ファイル名とJob IDの一致は`job-definition-standard`で必須の判定基準だが、「案を基本とする」と任意に読めるため、必須規則として表現を統一する必要がある。
+  - id: F002
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 237
+    anchor: "owner: TR"
+    message: "`owner: TR` は `pm-roles.yaml` に存在しないため、Schedule taskと共通のRole codeを使うという方針に従い、登録済みRole codeへ置換する必要がある。"
+  - id: F003
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 289
+    anchor: >-
+      - `task.mode:
+      command`はrunnerがin-placeで直接実行する。`task.analysis`を持つ場合だけ成功後にreporterを起動し、redact・上限付きstdout/stderrを含むevidence本体を渡す。commandまたはanalysisの失敗はRun全体をfailedにする。
+    message: command実行・analysis起動・失敗判定の説明が第3節と第4節を反復しているため、この節では現在未対応の差分と実装上の制約だけを残して前節を参照する形へ整理する必要がある。
+  - id: F004
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 294
+    anchor: ""
+    message: 設計制約ごとの検査方法、対象テスト、期待結果, またはテスト設計への参照がないため、DC-004「テスト設計・検証観点の参照として使えること」を確認できない。
+  - id: F005
+    severity: major
+    rule: vp-qe-verifiability
+    line: 294
+    anchor: ""
+    message: Job生成、重複排除、precondition、retry、checkpoint、権限・秘密情報の各制約について検証手段と期待結果を対応付けた検証観点を追加する必要がある。
+  - id: F006
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 294
+    anchor: ""
+    message: "`sysd-rulebook`で必須の検証観点・関連文書がなく、`sysd-index`、横断ルール、テスト設計、運用ガイド、`job-definition-standard`への解決可能な導線を追加する必要がある。"
+  - id: F007
+    severity: minor
+    rule: vp-ux-readability
+    line: 124
+    anchor: >-
+      決定論的な処理は`task.mode:
+      command`とし、入力を展開する`task.command`を必須にする。対象選択を伴う処理では任意の`task.precondition`をRun保存前に実行し、空出力または指定終了コードならJob
+      Runと付随成果物を作らずskipする。runnerはmaterialize済みコマンドをPOSIX環境では`/bin/sh
+      -eu`で直接実行し、コマンド、終了コード、標準出力、標準エラーをevidenceへ記録する。stdout / stderr
+      はredact・上限付きログへの参照と、その参照先と同じbounded内容をevidence本体へ保持する。終了コードが0以外なら、その値からRunを直接`failed`と判定しagentは起動しない。結果の解釈が必要な場合だけ`task.analysis.agent`と`task.analysis.description`を指定し、成功時のcommand
+      evidence本体をreporterへ渡す。これによりreporterは作業ツリーや参照先ログを追加で読むことなく出力を解釈できる。analysisを省略した場合はrunnerがresultを確定する。同じprojectの`specdojo
+      exec`を子プロセスで呼ぶcommandでは、親runnerのproject実行lock tokenとowner tokenの一致を検証してlockを継承し、自己デッドロックを避けながら排他範囲を維持する。
+    message: precondition、shell実行、evidence、失敗判定、analysis、lock継承という複数論点が一段落に集中しているため、小見出しまたは表へ分割して条件と結果を対応付ける必要がある。
   - id: F008
     severity: major
     rule: vp-ux-user-flow
     line: 31
+    anchor: ""
     message: "`job-definition-standard`をSSOTとして示しているがリンクがなく、関連文書一覧も存在しないため、実装者・検証者・運用者が必要な正本へ到達できるリンク付き導線を追加する必要がある。"
-    anchor: ""
-  - id: F002
-    severity: minor
-    rule: vp-arc-cross-document-consistency
-    line: 75
-    message: ファイル名とJob IDの一致は`job-definition-standard`で必須の判定基準だが、「案を基本とする」と任意に読めるため、必須規則として表現を統一する必要がある。
-    anchor: ""
-  - id: F010
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 75
-    message: 冒頭では実装済みと宣言している一方で「案を基本とする」「追加し」「既定案」と未確定に見える表現が残るため、現行仕様と将来案を明示的に区別する必要がある。
-    anchor: ""
-  - id: F007
-    severity: minor
-    rule: vp-ux-readability
-    line: 125
-    message: precondition、shell実行、evidence、失敗判定、analysis、lock継承という複数論点が一段落に集中しているため、小見出しまたは表へ分割して条件と結果を対応付ける必要がある。
-    anchor: ""
-  - id: F001
-    severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 238
-    message: "`owner: TR` は `pm-roles.yaml` に存在しないため、Schedule taskと共通のRole codeを使うという方針に従い、登録済みRole codeへ置換する必要がある。"
-    anchor: "description: |"
   - id: F009
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 74
+    anchor: Job Definitionはプロジェクトの`jobs_path`配下へ`job-<slug>.yaml`として配置し、ファイル名と`id`を一致させる案を基本とする。
+    message: 冒頭では実装済みと宣言している一方で「案を基本とする」「追加し」「既定案」と未確定に見える表現が残るため、現行仕様と将来案を明示的に区別する必要がある。
+  - id: F010
     severity: major
     rule: vp-ux-language-consistency
-    line: 238
+    line: 237
+    anchor: "owner: TR"
     message: 翻訳Job例の`TR`はプロジェクトで定義されたRole codeではなく、ownerの語彙を混乱させるため登録済みRole codeへ統一する必要がある。
-    anchor: "description: |"
-  - id: F004
-    severity: major
-    rule: vp-qe-done-criteria
-    line: 286
-    message: 設計制約ごとの検査方法、対象テスト、期待結果、またはテスト設計への参照がないため、DC-004「テスト設計・検証観点の参照として使えること」を確認できない。
-    anchor: ""
-  - id: F005
-    severity: major
-    rule: vp-qe-verifiability
-    line: 286
-    message: Job生成、重複排除、precondition、retry、checkpoint、権限・秘密情報の各制約について検証手段と期待結果を対応付けた検証観点を追加する必要がある。
-    anchor: ""
-  - id: F006
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 286
-    message: "`sysd-rulebook`で必須の検証観点・関連文書がなく、`sysd-index`、横断ルール、テスト設計、運用ガイド、`job-definition-standard`への解決可能な導線を追加する必要がある。"
-    anchor: ""
-  - id: F003
-    severity: minor
-    rule: vp-arc-conciseness
-    line: 290
-    message: command実行・analysis起動・失敗判定の説明が第3節と第4節を反復しているため、この節では現在未対応の差分と実装上の制約だけを残して前節を参照する形へ整理する必要がある。
-    anchor: "- cronは5フィールド形式を扱い、数値、`*`、リスト、範囲、stepを受け付ける。"
 done_criteria:
   satisfied: 4
   total: 5

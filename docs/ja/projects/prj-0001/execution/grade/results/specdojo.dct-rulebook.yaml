@@ -3,29 +3,72 @@ version: 1
 document: specdojo:dct-rulebook
 path: docs/ja/specdojo/rulebooks/dct-rulebook.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 77
-graded_at: "2026-09-16T07:25:35.663Z"
-graded_by: gemma-expert-executor
+score: 84
+graded_at: "2026-10-02T21:47:57.413Z"
+graded_by: agy-expert-executor
 content_hash: 2565ef5da09bf68b49f17ab5b16f91fc4cc66e9a40342dfbc080eeb17a295946
 categories:
-  consistency:
-    score: 50
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
+  architecture:
+    score: 100
   usability:
     score: 83
-  architecture:
+  implementation:
     score: 100
   quality:
     score: 75
-viewpoints:
-  vp-arc-cross-document-consistency:
-    level: 2
+  consistency:
     score: 50
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 3
     score: 75
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -35,12 +78,21 @@ viewpoints:
     level: 2
     score: 50
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-ux-readability:
     level: 3
     score: 75
   vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -49,56 +101,62 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 3
-  minor: 4
+  minor: 5
   note: 0
 findings:
-  - id: F002
+  - id: F001
     severity: minor
     rule: vp-arc-conciseness
-    line: 80
+    line: 89
+    anchor: "| `title`    | ○    | ドキュメント名              |"
     message: 「4. 推奨メタ項目」と「5.1. ルート構造」でトップレベルキーの定義が重複しており, 冗長であるため。
-    anchor: "### 5.1. ルート構造"
-  - id: F006
-    severity: minor
-    rule: vp-ux-readability
-    line: 80
-    message: 「推奨メタ項目」と「ルート構造」が同じトップレベルキーを連続して再掲し、両節の役割差を読み分けにくいため。
-    anchor: "### 5.1. ルート構造"
-  - id: F007
-    severity: minor
-    rule: vp-ux-readability
-    line: 132
-    message: 「5.1」の空行と「5.3」の finding コメントがフィールド表を途中で分断し、`domain` 以降および `depends_on` 以降が列見出しに結び付かない表示になるため。
-    anchor: "| `kind`     | ○    | エビデンス種別。現在は `implementation` のみ               |"
-  - id: F003
+  - id: F002
     severity: major
     rule: vp-qe-omissions-consistency
-    line: 140
+    line: 110
+    anchor: ""
     message: >-
       `groups` と `deliverables` はどちらか一方だけを持つと規定しているが、`dct.schema.yaml` は `anyOf` のため両方を持つ構造も検証に合格し, rulebook
       上の親・葉グループ境界を機械検証できないため。
-    anchor: "| `text`      | ○    | 成果物が満たすべき検証可能な条件                                                           |"
-  - id: F001
-    severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 203
-    message: >-
-      `sch-track-＜track＞` は対応する `sch-strategy-＜track＞` を `depends_on` に宣言すると規定しているが、`dct-project-management-template` の
-      `sch-track-launch` は `depends_on: []` であり、生成元 `sch-strategy-launch` へのトレーサビリティが欠落しているため。
-    anchor: "- `work` 成果物には最低 1 件の完了条件を記載する。"
-  - id: F005
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 219
-    message: >-
-      recipe・sample・template の要否と所在は rulebook Frontmatter を正本とすると定義している一方、既存の DCT template 群が本 rulebook を参照しているのに
-      `template` 宣言がなく、fully-guided の参照ハブから適用テンプレートを解決できないため。
-    anchor: "- テンプレートでは `local_id` や `part_of` にアンダースコアで囲んだプレースホルダ（例: `_PROJECT_ID_:dct-index`）を使用できる。"
+  - id: F003
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 207
+    anchor: ""
+    message: ドメインの `base_path` について、スキーマ（`^/[^\s]+$`）および4章の表では絶対パスを必須としているが、6.6節では「絶対パスで記載することを推奨する」と任意に読める表現になっており矛盾しているため。
   - id: F004
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 260
+    line: 225
+    anchor: "- どちらのパターンでも `groups[]` と `deliverables[]` の項目数に上限はない。テンプレートの1件は書式サンプルであり、実際に必要な数だけ記載する。"
     message: >-
       `min_size` は `type: template` でのみ使用可能と規定しているが、`dct.schema.yaml` は project の group と deliverable でも受理するため、禁止事項と
       schema 検証結果が一致しないため。
+  - id: F005
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 172
+    anchor: "- 参照先は同一カタログまたは他ドメインカタログに存在する `local_id` とし、ファイルパスや URL を混在させない。"
+    message: >-
+      `sch-track-＜track＞` は対応する `sch-strategy-＜track＞` を `depends_on` に宣言すると規定しているが、`dct-project-management-template` の
+      `sch-track-launch` は `depends_on: []` であり、生成元 `sch-strategy-launch` へのトレーサビリティが欠落しているため。
+  - id: F006
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 186
+    anchor: "- `evidence_refs` は成果物ごとの安定した調査入力であり、`approach: retrofit` の edit / review plan に「実装エビデンス」として展開される。"
+    message: >-
+      recipe・sample・template の要否と所在は rulebook Frontmatter を正本とすると定義している一方、既存の DCT template 群が本 rulebook を参照しているのに
+      `template` 宣言がなく、fully-guided の参照ハブから適用テンプレートを解決できないため。
+  - id: F007
+    severity: minor
+    rule: vp-ux-readability
+    line: 89
+    anchor: "| `title`    | ○    | ドキュメント名              |"
+    message: 「推奨メタ項目」と「ルート構造」が同じトップレベルキーを連続して再掲し、両節の役割差を読み分けにくいため。
+  - id: F008
+    severity: minor
+    rule: vp-ux-readability
+    line: 102
     anchor: ""
+    message: 「5.1」の空行と「5.3」の finding コメントがフィールド表を途中で分断し、`domain` 以降および `depends_on` 以降が列見出しに結び付かない表示になるため。

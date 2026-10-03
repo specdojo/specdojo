@@ -3,44 +3,99 @@ version: 1
 document: specdojo:cnd-rulebook
 path: docs/ja/specdojo/rulebooks/cnd-rulebook.md
 target: kata
-rubric: grade-rubric-v1
-verdict: pass
-score: 91
-graded_at: "2026-09-02T02:37:17.001Z"
-graded_by: gemma-expert-executor
+rubric: grade-rubric-v2
+verdict: needs-work
+score: 78
+graded_at: "2026-10-02T21:35:27.603Z"
+graded_by: agy-expert-executor
 content_hash: 4b32dc55a54b7161a69542761a12f9f07a90d0673ebf61be4f3e74eece119f86
 categories:
-  consistency:
-    score: 75
+  purpose:
+    score: 88
+  operations:
+    score: 88
+  planning:
+    score: 83
+  business:
+    score: 92
+  architecture:
+    score: 83
   usability:
     score: 100
-  architecture:
-    score: 100
+  implementation:
+    score: 75
   quality:
-    score: 88
+    score: 67
+  consistency:
+    score: 50
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
     level: 3
     score: 75
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 3
+    score: 75
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 3
+    score: 75
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 3
+    score: 75
+  vp-arc-technical-constraints:
+    level: 2
+    score: 50
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
-  vp-qe-verifiability:
+  vp-dev-implementation-readiness:
+    level: 2
+    score: 50
+  vp-dev-change-impact:
     level: 4
     score: 100
+  vp-dev-testability:
+    level: 3
+    score: 75
+  vp-qe-verifiability:
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 2
+    score: 50
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
+    level: 2
+    score: 50
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 3
+    score: 75
+  vp-ops-operability:
+    level: 3
+    score: 75
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -48,27 +103,95 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 0
-  minor: 3
+  major: 4
+  minor: 10
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-arc-cross-document-consistency
-    line: 1
+    rule: vp-po-decision-readiness
+    line: 61
+    anchor: "- コンテナ内部の分解（コンポーネント/クラス、内部モジュール構成）"
+    message: 合意すべき内容や未決事項は明示されているが、POやアーキテクトなど誰が最終的な承認判断を行うかの判断者が定義されていない。
+  - id: F002
+    severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 11
+    anchor: ""
+    message: 成果物の作成やレビューを担う担当 Role code や、開発プロセスのどのタイミングで完了すべきかが明示されていないため、タスク化の粒度が不足している。
+  - id: F003
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 178
+    anchor: "## 9. 禁止事項"
+    message: 補足に未確定な論点を列挙する指示はあるが、それらをプロジェクトの課題管理（PJRなど）へ転記・報告するプロセスが定義されていない。
+  - id: F004
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 61
+    anchor: "- コンテナ内部の分解（コンポーネント/クラス、内部モジュール構成）"
+    message: Person（利用者）の定義基準はあるが、作成された図をビジネス側や開発側の誰と合意すべきかの確認者（ステークホルダー）が明記されていない。
+  - id: F005
+    severity: major
+    rule: vp-arc-technical-constraints
+    line: 43
+    anchor: "### 3.1. `based_on` の考え方（例）"
+    message: >-
+      成果物 Frontmatter の項目表が `specdojo:` 名前空間を用いず、標準で H1 に置く `title` を Frontmatter
+      必須としているため、現行メタデータ規約とスキーマに適合する成果物を作成できない。
+  - id: F006
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 43
+    anchor: "### 3.1. `based_on` の考え方（例）"
+    message: 実装入力となる Frontmatter 規定が必須の `specdojo:` ラッパーと `rulebook` を示さず、非標準の `title` を要求しているため、記載例を有効な成果物として実装できない。
+  - id: F007
+    severity: minor
+    rule: vp-dev-testability
+    line: 201
+    anchor: ""
+    message: 第10章は目視チェックだけで、対象ファイルに対する lint、Frontmatter schema 検証、Mermaid 描画確認のコマンドと合格条件を示していない。
+  - id: F008
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 205
+    anchor: "type: architecture"
+    message: レビュー条件の「主要」「過不足なく」「必要十分」「意味が解釈一致」に具体的な合否基準がなく、同じ図でも判定者によって結果が変わり得る。
+  - id: F009
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 43
+    anchor: "### 3.1. `based_on` の考え方（例）"
+    message: Frontmatter の必須項目表が `specdojo:` 名前空間や必須の `rulebook` を欠き、本文 H1 に置くべき `title` を必須項目としているため、参照先のメタデータ標準と整合していない。
+  - id: F010
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 7
+    anchor: この章の成果物は、次の2つをセットで扱います。
     message: >-
       指定されているサンプル `specdojo:cnd-sample` の Frontmatter で、準拠ルールが `specdojo:cnd-rulebook` ではなく
       `specdojo:cnd-mermaid-rulebook` になっている。
-    anchor: "# C4コンテナ図 ドキュメント作成ルール"
-  - id: F002
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 1
-    message: Frontmatter の必須項目一覧に `rulebook` が含まれていない。
-    anchor: "# C4コンテナ図 ドキュメント作成ルール"
-  - id: F003
+  - id: F011
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 7
+    anchor: この章の成果物は、次の2つをセットで扱います。
+    message: 指定されているサンプル `specdojo:cnd-sample` が第6章の標準構成（概要、C4コンテナ図、要素の説明、補足）に従っておらず、適用例として不十分である。
+  - id: F012
     severity: minor
     rule: vp-qe-kata-conformance
-    line: 1
-    message: 指定されているサンプル `specdojo:cnd-sample` が第6章の標準構成に従っておらず、適用例として不十分である。
-    anchor: "# C4コンテナ図 ドキュメント作成ルール"
+    line: 7
+    anchor: この章の成果物は、次の2つをセットで扱います。
+    message: "指定されているサンプル `specdojo:cnd-sample` の `type: project` が、本ルールで固定している成果物の `type: architecture` と一致しない。"
+  - id: F013
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 48
+    anchor: ""
+    message: status を ready に変更して公開するための具体的な判定基準（承認の完了など）や、公開前確認の手順が明記されていない。
+  - id: F014
+    severity: minor
+    rule: vp-ops-operability
+    line: 11
+    anchor: ""
+    message: ルールの継続更新や内容に関する問い合わせに対応するための担当 Role code（アーキテクチャチームなど）が明記されていない。

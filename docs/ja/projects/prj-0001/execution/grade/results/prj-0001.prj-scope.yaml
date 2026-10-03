@@ -3,49 +3,115 @@ version: 1
 document: prj-0001:prj-scope
 path: docs/ja/projects/prj-0001/020-project-definition/prj-scope.md
 target: deliverable
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 65
-graded_at: "2026-09-24T16:24:45.064Z"
-graded_by: codex-expert-executor
+score: 70
+graded_at: "2026-10-02T16:19:54.503Z"
+graded_by: agy-expert-executor
 content_hash: e631f8a78068b515871352df3a7547fdd32eef4c91fb923f944e19605c3b5564
+source_hashes:
+  catalog-entry: ef40c66e676a0baa07d084c1b467b0a387cddad8ac9691f4be5e90f867c2a17a
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  dependency:prj-overview: a88ff7cd0188a42619a304502c5fb5dd2ac200a6222763d09e437f5d3cf80691
+  members: ec838bbb5673ba76f1a15672e094c00088dcb686a2a67225ca8411c0dc5e90d3
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
 categories:
+  purpose:
+    score: 100
+  operations:
+    score: 88
+  planning:
+    score: 75
+  business:
+    score: 100
   consistency:
-    score: 50
-  usability:
-    score: 69
+    score: 25
   architecture:
+    score: 100
+  usability:
+    score: 63
+  implementation:
     score: 100
   quality:
     score: 50
 viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 1
+    score: 25
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
   vp-arc-cross-document-consistency:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 3
     score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
   vp-qe-done-criteria:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-qe-verifiability:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-ux-readability:
     level: 3
     score: 75
   vp-ux-user-flow:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-ux-language-consistency:
     level: 3
     score: 75
+  vp-ops-release-readiness:
+    level: 2
+    score: 50
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
@@ -54,93 +120,114 @@ viewpoints:
     score: 50
 finding_counts:
   blocker: 0
-  major: 6
+  major: 8
   minor: 6
   note: 0
 findings:
   - id: F001
     severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 45
-    anchor: "- 公開後: 実利用3件を目安に、価値、費用・負荷、継続状況を確認するまで。"
-    message: 「公開後は実利用3件を目安に確認するまで」という終了境界は、成功基準文書が SC-04 を公開後6か月、SC-05を9か月、SC-06を24か月で判定すると定める期間と対応せず、公開後スコープを3件到達時に終了すると誤読できる。
-  - id: F002
-    severity: minor
-    rule: vp-arc-cross-document-consistency
-    line: 71
+    rule: vp-pm-plan-feasibility
+    line: 56
     anchor: >-
-      変更提案には、対応する P-ID / SC-ID、利用者価値、現金支出、作業負荷、追加・削除する成果物、公開時期への影響を記録する。`BA` と `ARC` が影響を確認し、`PO`
-      が承認する。初期公開前に追加する場合は、同時に削除または延期する項目を示す。
-    message: pm-raci.md と pm-plan.md は重大なスコープ変更の実行責任・起案整理を `PM` としているが、本節には `PM` の役割または管理計画への委譲がなく、変更運用の責任分担を本文から復元できない。
+      | 外部サービス・団体システムとの連携   |
+      初期検証に不要で、運用と情報管理の範囲が広がる                                                                                                                                                                     
+      |
+    message: 「実利用3件を目安に確認するまで」という終了境界は、具体的な終了条件や期間を一意に決められず、スケジュール計画の前提として利用できないため確定的な期間または条件を記述する必要がある。
+  - id: F002
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 56
+    anchor: >-
+      | 外部サービス・団体システムとの連携   |
+      初期検証に不要で、運用と情報管理の範囲が広がる                                                                                                                                                                     
+      |
+    message: >-
+      「公開後は実利用3件を目安に確認するまで」という終了境界は、成功基準文書が SC-04 を公開後6か月、SC-05を9か月、SC-06を24か月で判定すると定める期間と対応せず,
+      公開後スコープを3件到達時に終了すると誤読できる。
   - id: F003
     severity: minor
-    rule: vp-arc-conciseness
-    line: 52
-    anchor: >-
-      | 全ライフサイクル・全文書種別の完成   |
-      三つの価値仮説に必要な最小セットを優先する（kata＝rulebook/recipe/sample/templateと成果物カタログへの宣言は例外とし、テーラリングの土台として広く整備してよい。成果物本体の完成はSC-01〜SC-03に必要な範囲に留める）
-      |
-    message: Kata を広く整備する例外と成果物本体を SC-01〜SC-03 の範囲に留める説明が line 25 と重複しているため, 本行は例外への参照と対象外にした理由だけに短縮すると判断情報を失わず簡潔になる。
+    rule: vp-arc-cross-document-consistency
+    line: 82
+    anchor: ""
+    message: pm-raci.md と pm-plan.md は重大なスコープ変更の実行責任・起案整理を PM としているが、本節には PM の役割または管理計画への委譲がなく、変更運用の責任分担を本文から復元できない。
   - id: F004
-    severity: major
-    rule: vp-qe-done-criteria
-    line: 45
-    anchor: "- 公開後: 実利用3件を目安に、価値、費用・負荷、継続状況を確認するまで。"
-    message: 公開後期間を「実利用3件を目安」としているため終了イベントを一意に決められず、SC-04〜SC-06 の6・9・24か月の判定時期も反映されていないので、DC-004を満たす確定的な期間境界を記述する必要がある。
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 63
+    anchor: 1. 課題と技術の接続、低コストな実現、無理のない継続のいずれを検証するか。
+    message: Kata を広く整備する例外と成果物本体を SC-01〜SC-03 の範囲に留める説明が line 36 と重複しているため、本行は例外への参照と対象外にした理由だけに短縮すると判断情報を失わず簡潔になる。
   - id: F005
     severity: major
-    rule: vp-qe-verifiability
-    line: 45
-    anchor: "- 公開後: 実利用3件を目安に、価値、費用・負荷、継続状況を確認するまで。"
-    message: 「実利用3件を目安」では2件または3件のどちらで期間を終了するか判定できないため、確定件数と期限を明示するか、SC-04〜SC-06 を期間境界の正本として参照する必要がある。
-  - id: F006
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 50
+    rule: vp-qe-done-criteria
+    line: 56
     anchor: >-
-      | 対象（Out）                          |
-      理由                                                                                                                                                                                                               
+      | 外部サービス・団体システムとの連携   |
+      初期検証に不要で、運用と情報管理の範囲が広がる                                                                                                                                                                     
       |
-    message: スコープ外表に後続で扱う条件または再検討時期がなく、初期検証後に再評価すべき項目を識別できないため、該当項目ごとの補足条件を追加する必要がある。
+    message: DC-004を満たすため、公開後期間の「実利用3件を目安」を、スケジュール計画の前提となる確定的な期間境界に修正する必要がある。
+  - id: F006
+    severity: major
+    rule: vp-qe-verifiability
+    line: 56
+    anchor: >-
+      | 外部サービス・団体システムとの連携   |
+      初期検証に不要で、運用と情報管理の範囲が広がる                                                                                                                                                                     
+      |
+    message: 「実利用3件を目安」では2件または3件のどちらで期間を終了するか判定できないため、確定件数と期限を明示するか、SC-04〜SC-06 を期間境界の正本として参照する必要がある。
   - id: F007
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 46
-    anchor: "- 具体的な公開日は _TODO_: 初期公開計画で決定する。"
-    message: 日付が未決定で決定先だけが定まっている事項には rulebook が `_UNDECIDED_:` を求めているため、作業待ちを表す `_TODO_:` から置き換える必要がある。
-  - id: F008
     severity: major
     rule: vp-qe-omissions-consistency
-    line: 71
-    anchor: >-
-      変更提案には、対応する P-ID / SC-ID、利用者価値、現金支出、作業負荷、追加・削除する成果物、公開時期への影響を記録する。`BA` と `ARC` が影響を確認し、`PO`
-      が承認する。初期公開前に追加する場合は、同時に削除または延期する項目を示す。
+    line: 82
+    anchor: ""
     message: スコープ変更方針に、rulebook が必須としている変更の提案入口と判断理由の記録先がないため、誰がどこへ起票し証跡を残すかを定義する必要がある。
+  - id: F008
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 57
+    anchor: >-
+      | 人間の意思決定責任の代替             | AI Agent
+      は言語化、実行、検証の支援者として扱う                                                                                                                                                                    
+      |
+    message: "日付が未決定で決定先だけが定まっている事項には rulebook が _UNDECIDED_: を求めているため、作業待ちを表す _TODO_: から置き換える必要がある。"
   - id: F009
     severity: minor
-    rule: vp-ux-readability
-    line: 25
-    anchor: >-
-      2. rulebook、recipe、sample、template
-      一式と選択案内。kata（実践の型）自体は将来のテーラリングに備えて広めに整備してよく、これは1の最小成果物セットの原則の例外とする。個別プロジェクトでの実装・運用は SC-01〜SC-03 に必要な範囲へ絞る。
-    message: "`SC-01〜SC-03` が名称や参照先なしで使用されているため、各基準の短い意味を添えるか成功基準文書へのリンクを付けないと、初見の読者が「必要な範囲」を判断できない。"
+    rule: vp-qe-omissions-consistency
+    line: 61
+    anchor: 追加候補は、次の順で判断する。
+    message: スコープ外表に後続で扱う条件または再検討時期がなく、初期検証後に再評価すべき項目を識別できないため、該当項目ごとの補足条件を追加する必要がある。
   - id: F010
+    severity: minor
+    rule: vp-ux-readability
+    line: 36
+    anchor: "| 文書フレームワーク | 最小成果物、作成支援資料、schema、ID、メタデータ、参照関係             | 個別システムの本番実装は含めない                 |"
+    message: SC-01〜SC-03 が名称や参照先なしで使用されているため、各基準の短い意味を添えるか成功基準文書へのリンクを付けないと、初見の読者が「必要な範囲」を判断できない。
+  - id: F011
     severity: major
     rule: vp-ux-user-flow
-    line: 25
-    anchor: >-
-      2. rulebook、recipe、sample、template
-      一式と選択案内。kata（実践の型）自体は将来のテーラリングに備えて広めに整備してよく、これは1の最小成果物セットの原則の例外とする。個別プロジェクトでの実装・運用は SC-01〜SC-03 に必要な範囲へ絞る。
+    line: 36
+    anchor: "| 文書フレームワーク | 最小成果物、作成支援資料、schema、ID、メタデータ、参照関係             | 個別システムの本番実装は含めない                 |"
     message: >-
-      `SC-01〜SC-03`、line 71 の `P-ID / SC-ID`、line 46
+      SC-01〜SC-03、line 82 の P-ID / SC-ID、line 57
       の「初期公開計画」に対応する文書リンクがなく、利用者が成功基準・課題定義・計画へ迷わず到達できないため、関連文書への明示的な導線を追加する必要がある。
-  - id: F011
+  - id: F012
     severity: minor
     rule: vp-ux-language-consistency
-    line: 46
-    anchor: "- 具体的な公開日は _TODO_: 初期公開計画で決定する。"
-    message: 公開日は未決定事項であり、同プロジェクトの憲章と rulebook はこの状態を `_UNDECIDED_:` と表記しているため、`_TODO_:` ではなく `_UNDECIDED_:` に統一する必要がある。
-  - id: F012
+    line: 57
+    anchor: >-
+      | 人間の意思決定責任の代替             | AI Agent
+      は言語化、実行、検証の支援者として扱う                                                                                                                                                                    
+      |
+    message: "公開日は未決定事項であり、同プロジェクトの憲章と rulebook はこの状態を _UNDECIDED_: と表記しているため、_TODO_: ではなく _UNDECIDED_: に統一する必要がある。"
+  - id: F013
+    severity: major
+    rule: vp-ops-release-readiness
+    line: 57
+    anchor: >-
+      | 人間の意思決定責任の代替             | AI Agent
+      は言語化、実行、検証の支援者として扱う                                                                                                                                                                    
+      |
+    message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+  - id: F014
     severity: major
     rule: vp-qe-config-validity
     line: 46

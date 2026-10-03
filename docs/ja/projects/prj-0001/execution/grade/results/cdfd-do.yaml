@@ -5,9 +5,9 @@ path: docs/ja/product/010-business-specs/010-data-flow/cdfd-do.md
 target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 85
-graded_at: "2026-09-27T15:37:02.051Z"
-graded_by: codex-expert-executor
+score: 82
+graded_at: "2026-09-30T16:16:51.188Z"
+graded_by: agy-expert-executor
 content_hash: 77bdd115c5f0005404837c4d440bc2af468071ee4364c697383e1019a52a0a99
 source_hashes:
   catalog-entry: 66ea33ff6652178bf4445df9d4b170433ea97ae49467694b6cd33bf2a16a7202
@@ -23,9 +23,9 @@ categories:
   operations:
     score: 100
   planning:
-    score: 83
+    score: 75
   business:
-    score: 83
+    score: 75
   consistency:
     score: 63
   architecture:
@@ -33,9 +33,9 @@ categories:
   usability:
     score: 100
   implementation:
-    score: 75
+    score: 63
   quality:
-    score: 81
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -47,8 +47,8 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-pm-dependency-risk:
     level: 4
     score: 100
@@ -59,8 +59,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-requirements-completeness:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-ba-stakeholder-clarity:
     level: 4
     score: 100
@@ -77,8 +77,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-dev-change-impact:
     level: 4
     score: 100
@@ -89,8 +89,8 @@ viewpoints:
     level: 3
     score: 75
   vp-qe-verifiability:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-qe-omissions-consistency:
     level: 1
     score: 25
@@ -213,17 +213,11 @@ findings:
       |
     message: ルールブックで必須とされる「完了条件」列がプロセスの表（3.1節）から抜け落ちているため、列を追加し各プロセスの完了条件を明記する必要がある。
   - id: F009
-    severity: major
+    severity: minor
     rule: vp-qe-omissions-consistency
-    line: 161
-    anchor: >-
-      | 例外 ID   | 対象プロセス                           |
-      検出条件                                                                                           |
-      本グループでの扱い                                                                                                                                                  
-      |
-      継続・再開条件                                                                                                                                                           
-      |
-    message: ルールブックで必須とされる「停止範囲」列が主要例外の表から抜け落ちており、例外発生時に確定または起動してはならない後続プロセスや出力が明記されていない。
+    line: 9
+    anchor: "## 2. 適用範囲"
+    message: ルールブックが適用範囲に必須とする対象期間が記載されていないため、期間を限定するか、期間を限定せず現行の正本として適用するかを明記する必要がある。
   - id: F010
     severity: minor
     rule: vp-qe-omissions-consistency
@@ -248,11 +242,17 @@ findings:
       個別プロセス表は P-07-05 に成果物 / deliverable を割り当てる一方、データストア表と図は同プロセスによる成果物の直接利用を示していないため、参照・更新関係を追加するか P-07-05
       のデータストア欄から削除する必要がある。
   - id: F012
-    severity: minor
+    severity: major
     rule: vp-qe-omissions-consistency
-    line: 9
-    anchor: "## 2. 適用範囲"
-    message: ルールブックが適用範囲に必須とする対象期間が記載されていないため、期間を限定するか、期間を限定せず現行の正本として適用するかを明記する必要がある。
+    line: 161
+    anchor: >-
+      | 例外 ID   | 対象プロセス                           |
+      検出条件                                                                                           |
+      本グループでの扱い                                                                                                                                                  
+      |
+      継続・再開条件                                                                                                                                                           
+      |
+    message: ルールブックで必須とされる「停止範囲」列が主要例外の表から抜け落ちており、例外発生時に確定または起動してはならない後続プロセスや出力が明記されていない。
 done_criteria:
   satisfied: 3
   total: 4

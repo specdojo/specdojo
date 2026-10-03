@@ -5,9 +5,9 @@ path: docs/ja/product/010-business-specs/020-data-model/cdsd-execution.md
 target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 70
-graded_at: "2026-09-27T16:30:48.345Z"
-graded_by: codex-expert-executor
+score: 67
+graded_at: "2026-10-01T16:04:45.569Z"
+graded_by: agy-expert-executor
 content_hash: ff4dd600af10ea7b0f1dd8e845cf5f5fa71cb39dd7291e3c2d89c406997370b1
 source_hashes:
   catalog-entry: eb8ff286cafcf63e69cd1fcd77fdce26e662f633f4e82a019b4caad594be1958
@@ -34,7 +34,7 @@ categories:
   implementation:
     score: 63
   quality:
-    score: 63
+    score: 50
 viewpoints:
   vp-po-purpose-alignment:
     level: 2
@@ -85,8 +85,8 @@ viewpoints:
     level: 2
     score: 50
   vp-qe-done-criteria:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-qe-verifiability:
     level: 2
     score: 50
@@ -119,154 +119,182 @@ viewpoints:
     score: 50
 finding_counts:
   blocker: 0
-  major: 10
+  major: 11
   minor: 10
   note: 0
 findings:
   - id: F001
     severity: major
     rule: vp-po-purpose-alignment
-    line: 9
-    anchor: "- _TODO_: 実行状態（Ready）、plan / result、evidence、worktree のデータストアは、対応する業務データ辞書の作成時に追加する。"
+    line: 19
+    anchor: >-
+      | Job Run 履歴     | 定期処理、タスク実行       | Job Run ID、idempotency key、attempt、Run の状態、解決済み入力、checkpoint              |
+      イベント（Run 生成時・attempt 終了時） | Job Run・attempt 毎 | 重複実行の防止、反復位置の引き継ぎ、実行結果の監査 |
     message: >-
       成果物カタログ `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-cdsd.yaml`
       が対象とする実行状態、plan/result、evidence、worktree を追加するか、カタログ側のスコープを変更して目的と対象範囲を一致させる必要がある。
   - id: F002
     severity: major
     rule: vp-po-decision-readiness
-    line: 9
-    anchor: "- _TODO_: 実行状態（Ready）、plan / result、evidence、worktree のデータストアは、対応する業務データ辞書の作成時に追加する。"
+    line: 19
+    anchor: >-
+      | Job Run 履歴     | 定期処理、タスク実行       | Job Run ID、idempotency key、attempt、Run の状態、解決済み入力、checkpoint              |
+      イベント（Run 生成時・attempt 終了時） | Job Run・attempt 毎 | 重複実行の防止、反復位置の引き継ぎ、実行結果の監査 |
     message: 未収録の4領域について、追加の判断者、判断時期、既存設計への影響、次アクションを明記しないと承認または保留を判断できない。
   - id: F003
     severity: minor
     rule: vp-po-publication-accountability
-    line: 5
+    line: 15
     anchor: >-
-      プロジェクト実行で扱う概念データストアのうち、実行 event と定期処理・Job に関わるデータストアについて、業務上の役割、内容、粒度、更新責務を一覧で定義する。BA は実行記録の管理単位の確認に、ARC
-      は正本と派生物の区別を設計の基礎に、QE はデータ検証・整合性確認の対象の識別に利用する。
+      | 実行 event       | タスク実行、定期処理、報告 | task の claim・complete・block・release・reopen 等の状態遷移、actor、理由、日時         |
+      イベント（状態変更時）                 | 状態遷移毎          | task 状態の再構成、進捗・滞留の監視根拠            |
     message: "`ready` 化または公開時の対象範囲、非公開情報確認、最終承認を担う人間の PO を明記する必要がある。"
   - id: F004
     severity: minor
     rule: vp-pm-plan-feasibility
-    line: 9
-    anchor: "- _TODO_: 実行状態（Ready）、plan / result、evidence、worktree のデータストアは、対応する業務データ辞書の作成時に追加する。"
+    line: 19
+    anchor: >-
+      | Job Run 履歴     | 定期処理、タスク実行       | Job Run ID、idempotency key、attempt、Run の状態、解決済み入力、checkpoint              |
+      イベント（Run 生成時・attempt 終了時） | Job Run・attempt 毎 | 重複実行の防止、反復位置の引き継ぎ、実行結果の監査 |
     message: 未収録データストアの追加を、担当 Role code、依存順序、判断時期、完了条件を持つ作業単位として具体化する必要がある。
   - id: F005
     severity: minor
     rule: vp-pm-dependency-risk
-    line: 9
-    anchor: "- _TODO_: 実行状態（Ready）、plan / result、evidence、worktree のデータストアは、対応する業務データ辞書の作成時に追加する。"
+    line: 19
+    anchor: >-
+      | Job Run 履歴     | 定期処理、タスク実行       | Job Run ID、idempotency key、attempt、Run の状態、解決済み入力、checkpoint              |
+      イベント（Run 生成時・attempt 終了時） | Job Run・attempt 毎 | 重複実行の防止、反復位置の引き継ぎ、実行結果の監査 |
     message: >-
       「対応する業務データ辞書」をカタログ上の `bdd-exec-state`、`bdd-exec-plan-result`、`bdd-exec-evidence`、`bdd-worktree-branch`
       と対応付け、Schedule または PJR で追跡する必要がある。
   - id: F006
     severity: minor
     rule: vp-pm-control-reporting
-    line: 9
-    anchor: "- _TODO_: 実行状態（Ready）、plan / result、evidence、worktree のデータストアは、対応する業務データ辞書の作成時に追加する。"
+    line: 19
+    anchor: >-
+      | Job Run 履歴     | 定期処理、タスク実行       | Job Run ID、idempotency key、attempt、Run の状態、解決済み入力、checkpoint              |
+      イベント（Run 生成時・attempt 終了時） | Job Run・attempt 毎 | 重複実行の防止、反復位置の引き継ぎ、実行結果の監査 |
     message: 未収録データストアの追加を PJR の課題または変更要求として転記する条件、報告先、担当 Role code を明記する必要がある。
   - id: F007
     severity: minor
     rule: vp-ba-business-value
-    line: 5
+    line: 15
     anchor: >-
-      プロジェクト実行で扱う概念データストアのうち、実行 event と定期処理・Job に関わるデータストアについて、業務上の役割、内容、粒度、更新責務を一覧で定義する。BA は実行記録の管理単位の確認に、ARC
-      は正本と派生物の区別を設計の基礎に、QE はデータ検証・整合性確認の対象の識別に利用する。
+      | 実行 event       | タスク実行、定期処理、報告 | task の claim・complete・block・release・reopen 等の状態遷移、actor、理由、日時         |
+      イベント（状態変更時）                 | 状態遷移毎          | task 状態の再構成、進捗・滞留の監視根拠            |
     message: 実行記録の管理単位や正本区分が解決する業務課題、未整備時の影響、期待する確認結果を上位文書への参照または本文で補う必要がある。
   - id: F008
     severity: major
     rule: vp-ba-requirements-completeness
-    line: 9
-    anchor: "- _TODO_: 実行状態（Ready）、plan / result、evidence、worktree のデータストアは、対応する業務データ辞書の作成時に追加する。"
+    line: 19
+    anchor: >-
+      | Job Run 履歴     | 定期処理、タスク実行       | Job Run ID、idempotency key、attempt、Run の状態、解決済み入力、checkpoint              |
+      イベント（Run 生成時・attempt 終了時） | Job Run・attempt 毎 | 重複実行の防止、反復位置の引き継ぎ、実行結果の監査 |
     message: 実行状態、plan/result、evidence、worktree の役割、内容、更新タイミング、粒度、用途、正本区分を追加しない限り、成果物カタログが要求する対象範囲は完結しない。
   - id: F009
     severity: minor
     rule: vp-ba-stakeholder-clarity
-    line: 25
-    anchor: >-
-      | 実行 event       | task 状態遷移の正本                   | タスク実行           |
-      報告・監視では参照のみ行い、状態訂正はタスク実行へ委譲する                                | task owner、PM     |
+    line: 35
+    anchor: ""
     message: "`運用担当`、`実行担当`、`Job owner` を組織定義上の Role code に対応付け、定義変更の確認者と合意対象を明記する必要がある。"
   - id: F010
     severity: major
     rule: vp-arc-cross-document-consistency
-    line: 9
-    anchor: "- _TODO_: 実行状態（Ready）、plan / result、evidence、worktree のデータストアは、対応する業務データ辞書の作成時に追加する。"
+    line: 19
+    anchor: >-
+      | Job Run 履歴     | 定期処理、タスク実行       | Job Run ID、idempotency key、attempt、Run の状態、解決済み入力、checkpoint              |
+      イベント（Run 生成時・attempt 終了時） | Job Run・attempt 毎 | 重複実行の防止、反復位置の引き継ぎ、実行結果の監査 |
     message: >-
       `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-cdsd.yaml` の `cdsd-execution.overview` および
       `depends_on` は実行状態、plan/result、evidence、worktree を対象とする一方、本文は追加予定として未収録なので、いずれかを修正して整合させる必要がある。
   - id: F011
     severity: major
     rule: vp-arc-technical-constraints
-    line: 9
-    anchor: "- _TODO_: 実行状態（Ready）、plan / result、evidence、worktree のデータストアは、対応する業務データ辞書の作成時に追加する。"
+    line: 19
+    anchor: >-
+      | Job Run 履歴     | 定期処理、タスク実行       | Job Run ID、idempotency key、attempt、Run の状態、解決済み入力、checkpoint              |
+      イベント（Run 生成時・attempt 終了時） | Job Run・attempt 毎 | 重複実行の防止、反復位置の引き継ぎ、実行結果の監査 |
     message: 実行状態、plan/result、evidence、worktree の正本・派生区分、生成元、更新制約、外部依存を定義しないと、実行系データストア全体の設計基礎として利用できない。
   - id: F012
     severity: major
     rule: vp-dev-implementation-readiness
-    line: 9
-    anchor: "- _TODO_: 実行状態（Ready）、plan / result、evidence、worktree のデータストアは、対応する業務データ辞書の作成時に追加する。"
+    line: 19
+    anchor: >-
+      | Job Run 履歴     | 定期処理、タスク実行       | Job Run ID、idempotency key、attempt、Run の状態、解決済み入力、checkpoint              |
+      イベント（Run 生成時・attempt 終了時） | Job Run・attempt 毎 | 重複実行の防止、反復位置の引き継ぎ、実行結果の監査 |
     message: "`src/exec.ts` が扱う実行状態、plan/result、evidence、worktree について、入力、出力、正本、更新制約、対象ファイルまたは保存単位を定義する必要がある。"
   - id: F013
     severity: minor
     rule: vp-dev-change-impact
-    line: 13
+    line: 23
     anchor: >-
-      | データストア名   | 対応プロセス               |
-      主な内容                                                                                |
-      更新タイミング                         | 粒度                | 主な用途                                           |
+      | データストア名   | 位置づけ                              | 主な生成・更新       |
+      利用時の扱い                                                                              | 更新責務           |
     message: 各データストアの変更時に影響する `src/exec.ts`、`src/routine.ts`、`src/job.ts`、関連 schema、生成物またはコマンドを識別できる参照を追加する必要がある。
   - id: F014
     severity: major
     rule: vp-dev-testability
-    line: 28
-    anchor: >-
-      | Job Definition   | 反復実行単位の定義の正本              | 人間による定義変更   | Run
-      生成前の検証に合格した定義だけを使う                                                  | Job owner          |
+    line: 38
+    anchor: ""
     message: Job Definition を含む各正本について、検証コマンド、対象ファイルまたは schema、期待結果、エラー時の停止・修正手順を明記する必要がある。
   - id: F015
     severity: major
-    rule: vp-qe-verifiability
-    line: 28
+    rule: vp-qe-done-criteria
+    line: 19
     anchor: >-
-      | Job Definition   | 反復実行単位の定義の正本              | 人間による定義変更   | Run
-      生成前の検証に合格した定義だけを使う                                                  | Job owner          |
-    message: Job Definition の合否条件、idempotency・checkpoint・precondition の必須項目と許容値、検証手順を pass/fail 判定可能な形で定義する必要がある。
+      | Job Run 履歴     | 定期処理、タスク実行       | Job Run ID、idempotency key、attempt、Run の状態、解決済み入力、checkpoint              |
+      イベント（Run 生成時・attempt 終了時） | Job Run・attempt 毎 | 重複実行の防止、反復位置の引き継ぎ、実行結果の監査 |
+    message: 成果物カタログで定義された実行状態などの対象データストアが未定義であり、完了条件を満たしていない箇所が残存している。
   - id: F016
     severity: major
-    rule: vp-qe-omissions-consistency
-    line: 9
-    anchor: "- _TODO_: 実行状態（Ready）、plan / result、evidence、worktree のデータストアは、対応する業務データ辞書の作成時に追加する。"
-    message: カタログで `cdsd-execution` の対象とされた4領域を「概念データストア一覧」と「正本区分と更新責務」の双方へ追加し、必須情報の欠落を解消する必要がある。
+    rule: vp-qe-verifiability
+    line: 38
+    anchor: ""
+    message: Job Definition の合否条件、idempotency・checkpoint・precondition の必須項目と許容値、検証手順を pass/fail 判定可能な形で定義する必要がある。
   - id: F017
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 5
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 19
     anchor: >-
-      プロジェクト実行で扱う概念データストアのうち、実行 event と定期処理・Job に関わるデータストアについて、業務上の役割、内容、粒度、更新責務を一覧で定義する。BA は実行記録の管理単位の確認に、ARC
-      は正本と派生物の区別を設計の基礎に、QE はデータ検証・整合性確認の対象の識別に利用する。
-    message: "`実行 event`、`task`、`routine`、`Job Definition`、`Job Run` の正式名称と使い分けを用語定義で示すか、日本語の業務名称へ統一する必要がある。"
+      | Job Run 履歴     | 定期処理、タスク実行       | Job Run ID、idempotency key、attempt、Run の状態、解決済み入力、checkpoint              |
+      イベント（Run 生成時・attempt 終了時） | Job Run・attempt 毎 | 重複実行の防止、反復位置の引き継ぎ、実行結果の監査 |
+    message: カタログで `cdsd-execution` の対象とされた4領域を「概念データストア一覧」と「正本区分と更新責務」の双方へ追加し、必須情報の欠落を解消する必要がある。
   - id: F018
     severity: minor
-    rule: vp-ops-release-readiness
-    line: 9
-    anchor: "- _TODO_: 実行状態（Ready）、plan / result、evidence、worktree のデータストアは、対応する業務データ辞書の作成時に追加する。"
-    message: TODO 解消後の ready 条件、公開前に確認する項目、最終承認者を明記する必要がある。
+    rule: vp-ux-language-consistency
+    line: 15
+    anchor: >-
+      | 実行 event       | タスク実行、定期処理、報告 | task の claim・complete・block・release・reopen 等の状態遷移、actor、理由、日時         |
+      イベント（状態変更時）                 | 状態遷移毎          | task 状態の再構成、進捗・滞留の監視根拠            |
+    message: "`実行 event`、`task`、`routine`、`Job Definition`、`Job Run` の正式名称と使い分けを用語定義で示すか、日本語の業務名称へ統一する必要がある。"
   - id: F019
     severity: minor
-    rule: vp-ops-operability
-    line: 25
+    rule: vp-ops-release-readiness
+    line: 19
     anchor: >-
-      | 実行 event       | task 状態遷移の正本                   | タスク実行           |
-      報告・監視では参照のみ行い、状態訂正はタスク実行へ委譲する                                | task owner、PM     |
-    message: 正本に不整合や更新失敗が発生した場合の問い合わせ先、変更申請先、訂正・復旧手順への参照を追加する必要がある。
+      | Job Run 履歴     | 定期処理、タスク実行       | Job Run ID、idempotency key、attempt、Run の状態、解決済み入力、checkpoint              |
+      イベント（Run 生成時・attempt 終了時） | Job Run・attempt 毎 | 重複実行の防止、反復位置の引き継ぎ、実行結果の監査 |
+    message: TODO 解消後の ready 条件、公開前に確認する項目、最終承認者を明記する必要がある。
   - id: F020
+    severity: minor
+    rule: vp-ops-operability
+    line: 35
+    anchor: ""
+    message: 正本に不整合や更新失敗が発生した場合の問い合わせ先、変更申請先、訂正・復旧手順への参照を追加する必要がある。
+  - id: F021
     severity: major
     rule: vp-qe-config-validity
     line: 9
     anchor: "- _TODO_: 実行状態（Ready）、plan / result、evidence、worktree のデータストアは、対応する業務データ辞書の作成時に追加する。"
     message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
 done_criteria:
-  satisfied: 3
+  satisfied: 0
   total: 3
+  unsatisfied:
+    DC-001:
+      - BA
+    DC-002:
+      - ARC
+    DC-003:
+      - QE
   detail_ref: cdsd-execution-grade-criteria

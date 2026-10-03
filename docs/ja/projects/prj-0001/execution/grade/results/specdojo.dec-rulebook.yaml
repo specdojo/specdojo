@@ -3,29 +3,75 @@ version: 1
 document: specdojo:dec-rulebook
 path: docs/ja/specdojo/rulebooks/dec-rulebook.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: pass
-score: 96
-graded_at: "2026-09-02T16:04:46.577Z"
-graded_by: gemma-expert-executor
+score: 93
+graded_at: "2026-10-02T21:51:10.129Z"
+graded_by: agy-expert-executor
 content_hash: 94a8b4b4306aff73c3510ab181df5c4ebc5b120b1f926cc0f373ebd4645edfd9
 categories:
-  consistency:
+  purpose:
     score: 88
-  usability:
+  operations:
+    score: 94
+  planning:
+    score: 92
+  business:
     score: 92
   architecture:
     score: 100
+  usability:
+    score: 92
+  implementation:
+    score: 100
   quality:
     score: 100
+  consistency:
+    score: 75
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 3
+    score: 75
+  vp-po-publication-accountability:
+    level: 3
+    score: 75
+  vp-pm-plan-feasibility:
+    level: 3
+    score: 75
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 3
+    score: 75
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -43,30 +89,69 @@ viewpoints:
   vp-ux-language-consistency:
     level: 4
     score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 0
   major: 0
-  minor: 3
+  minor: 8
   note: 0
 findings:
-  - id: F002
-    severity: minor
-    rule: vp-ux-readability
-    line: 1
-    message: 「位置づけ」において、成果物リファレンス等の上位ガイドへの参照を記述し、プロジェクト全体における役割を明確にすべきである。
-    anchor: "# 決定記録 作成ルール"
   - id: F001
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 1
-    message: Frontmatter 必須項目に rulebook ID の指定を追加し、成果物とルールのトレーサビリティを確保すべきである。
-    anchor: "# 決定記録 作成ルール"
+    rule: vp-po-decision-readiness
+    line: 32
+    anchor: "## 5. 本文構成（標準テンプレ）"
+    message: 本文構成に「判断者」や「未決事項」を設けておらず、誰が判断を下したか、および残存する論点が不明瞭になる恐れがある。
+  - id: F002
+    severity: minor
+    rule: vp-po-publication-accountability
+    line: 7
+    anchor: "## 1. 全体方針"
+    message: 決定記録に含める情報の機密度（個人情報や非公開情報の扱い）や公開対象についての方針が記載されていない。
   - id: F003
     severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 32
+    anchor: "## 5. 本文構成（標準テンプレ）"
+    message: 影響範囲をタスク化するための「次アクション」や「担当者」の項目が標準テンプレに含まれておらず、実行可能性を担保しにくい。
+  - id: F004
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 7
+    anchor: "## 1. 全体方針"
+    message: 決定記録の作成者、レビュー者、承認者など、関与すべきステークホルダーの役割が明示されていない。
+  - id: F005
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 23
+    anchor: "## 4. 推奨 Frontmatter 項目"
+    message: Frontmatter 必須項目に rulebook ID の指定を追加し、成果物とルールのトレーサビリティを確保すべきである。
+  - id: F006
+    severity: minor
     rule: vp-ux-readability
-    line: 1
+    line: 13
+    anchor: "## 2. 位置づけと用語定義（必要に応じて）"
+    message: 「位置づけ」において、成果物リファレンス等の上位ガイドへの参照を記述し、プロジェクト全体における役割を明確にすべきである。
+  - id: F007
+    severity: minor
+    rule: vp-ux-readability
+    line: 27
+    anchor: ""
+    message: Markdownの表のヘッダーとデータ行の間に空行が含まれており、レンダリングが崩れる恐れがあるため削除すべきである。
+  - id: F008
+    severity: minor
+    rule: vp-ux-readability
+    line: 42
+    anchor: "## 6. 記述ガイド"
     message: 「記述ガイド」の具体性が不足しており、「判断軸」の書き方や曖昧さを排除する記述方法など、作成者が迷わないための具体的な指針を追記すべきである。
-    anchor: "# 決定記録 作成ルール"

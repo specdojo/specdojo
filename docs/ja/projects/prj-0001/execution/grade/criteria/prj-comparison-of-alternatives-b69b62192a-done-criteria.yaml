@@ -2,12 +2,12 @@
 id: prj-0001:prj-comparison-of-alternatives-grade-criteria
 document: prj-0001:prj-comparison-of-alternatives
 path: docs/ja/projects/prj-0001/020-project-definition/prj-comparison-of-alternatives.md
-graded_at: "2026-09-23T17:11:26.441Z"
-graded_by: codex-expert-executor
+graded_at: "2026-10-01T16:38:22.095Z"
+graded_by: agy-expert-executor
 content_hash: 266402ac08a10581bb2882e9794b3aa0708aaf46b04ec78032b646673915e355
 summary:
-  satisfied: 3
-  unsatisfied: 1
+  satisfied: 2
+  unsatisfied: 2
   total: 4
 criteria:
   - id: DC-001
@@ -15,7 +15,8 @@ criteria:
     roles:
       - BA
     viewpoint: vp-ba-business-value
-    status: satisfied
+    status: unsatisfied
+    reason: D-02とD-03の評価軸において、業務課題・制約との対応が明示されていません。
   - id: DC-002
     text: 推奨案を判断できる情報が含まれていること
     roles:
@@ -34,4 +35,4 @@ criteria:
       - PM
     viewpoint: vp-pm-dependency-risk
     status: unsatisfied
-    reason: リスクとトレードオフが案IDへ対応付いておらず、各候補について比較されたことを確認できない。
+    reason: リスクとトレードオフが案IDに対応付けられておらず、案ごとの比較になっていません。

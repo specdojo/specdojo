@@ -1,0 +1,505 @@
+{
+  "schema_version": 1,
+  "task_id": "JBR-grade-kata-8f02c497b730",
+  "run_id": "attempt-1",
+  "stage": {
+    "role": "executor",
+    "actor": "specdojo-runner",
+    "status": "succeeded",
+    "started_at": "2026-10-02T21:00:08.668Z",
+    "completed_at": "2026-10-02T21:56:08.015Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/bps-deliverable-evaluation-e8ef6378e7-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/bps-task-completion-d17c24e4f4-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-action-96f0bab377-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-check-de77e19930-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-do-96363482bc-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-onboarding-61a4d6c9ef-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-orchestrator-0888f9bb68-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-overview-4f5ff02b38-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-plan-53594c9748-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-uc-deliverable-20176468f7-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-uc-register-7fa05372dd-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdsd-execution-225183781b-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdsd-planning-c998e41655-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdsd-sharing-20fb2f3b70-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/pm-organization-3bb06d1a82-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/pm-plan-1817063f8a-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/prj-charter-e502ad9760-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/prj-comparison-of-alternatives-b69b62192a-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/prj-issues-and-approach-6ef704f034-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/prj-overview-0cce063d8f-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/prj-scope-b521ba27f3-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/prj-stakeholder-register-dd42317729-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/prj-success-criteria-and-acceptance-criteria-11b049ad8a-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/stsd-register-entry-461ba77e06-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/stsd-routine-run-72deff80c2-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/sysd-antigravity-agent-settings-e0daf68b06-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/sysd-job-execution-f206c7f9d3-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/sysd-opencode-agent-settings-7921b7f527-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/tsd-home-mac-dev-server-39e4cdf49b-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/tsd-home-mac-dev-server-usage-cd996e0bcb-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/tsd-index-f8017f063b-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/tsd-ollama-opencode-9fe49a1fb7-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/pipeline/sysd-job-execution-f206c7f9d3b9.json",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/pipeline/sysd-opencode-agent-settings-7921b7f52776.json",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/pipeline/tsd-ollama-1333c3ab83bb.json",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/bps-deliverable-evaluation.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/bps-task-completion.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/cdfd-action.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/cdfd-check.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/cdfd-do.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/cdfd-onboarding.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/cdfd-orchestrator.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/cdfd-overview.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/cdfd-plan.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/cdfd-uc-deliverable.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/cdfd-uc-register.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/cdsd-execution.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/cdsd-planning.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/cdsd-sharing.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/prj-0001.pm-organization.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/prj-0001.pm-plan.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/prj-0001.prj-charter.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/prj-0001.prj-comparison-of-alternatives.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/prj-0001.prj-issues-and-approach.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/prj-0001.prj-overview.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/prj-0001.prj-scope.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/prj-0001.prj-stakeholder-register.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/prj-0001.prj-success-criteria-and-acceptance-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.atc-index-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.atc-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.bac-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.bds-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.bps-recipe.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.bps-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.br-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.ccd-mermaid-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.cdfd-overview-recipe.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.cdfd-recipe.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.cdfd-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.cdfd-uc-recipe.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.cdfd-uc-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.cdsd-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.cld-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.cnd-mermaid-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.cnd-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.cop-index-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.cop-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.cpd-mermaid-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.cpd-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.cstd-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.cxd-mermaid-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.cxd-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.dct-index-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.dct-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.dec-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.dmd-index-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.dmd-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.stsd-recipe.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/stsd-register-entry.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/stsd-routine-run.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/sysd-antigravity-agent-settings.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/sysd-job-execution.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/sysd-opencode-agent-settings.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/tsd-home-mac-dev-server-usage.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/tsd-home-mac-dev-server.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/tsd-index.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/tsd-ollama-opencode.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/tsd-ollama-1333c3ab83-done-criteria.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/tsd-omlx-f7cad9fd9b-done-criteria.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/tsd-omlx-opencode-824c965487-done-criteria.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/pipeline/bes-rulebook-36aaf6396fc7.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/pipeline/pm-communication-plan-6a68d585dcbf.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/tsd-ollama.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/tsd-omlx-opencode.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/tsd-omlx.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-deliverable-710933c29195.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-deliverable-88db3b4d0339.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-deliverable-b329d0aa2739.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-deliverable-c01c1b09885c.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-kata-19d22fa1c5f5.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-kata-6e23633d2f4f.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-kata-8f02c497b730.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-kata-ec59912477f8.json",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 113,
+    "summary": "...erable-evaluation-e8ef6378e7-done-criteria.yaml |   4 +-\n ...s-task-completion-d17c24e4f4-done-criteria.yaml |   4 +-\n .../cdfd-action-96f0bab377-done-criteria.yaml      |   8 +-\n .../cdfd-check-de77e19930-done-criteria.yaml       |   6 +-\n .../criteria/cdfd-do-96363482bc-done-criteria.yaml |   6 +-\n .../cdfd-onboarding-61a4d6c9ef-done-criteria.yaml  |  11 +-\n ...cdfd-orchestrator-0888f9bb68-done-criteria.yaml |   4 +-\n .../cdfd-overview-4f5ff02b38-done-criteria.yaml    |   4 +-\n .../cdfd-plan-53594c9748-done-criteria.yaml        |   6 +-\n ...fd-uc-deliverable-20176468f7-done-criteria.yaml |   4 +-\n .../cdfd-uc-register-7fa05372dd-done-criteria.yaml |   4 +-\n .../cdsd-execution-225183781b-done-criteria.yaml   |  17 +-\n .../cdsd-planning-c998e41655-done-criteria.yaml    |  10 +-\n .../cdsd-sharing-20fb2f3b70-done-criteria.yaml     |  15 +-\n .../pm-organization-3bb06d1a82-done-criteria.yaml  |   4 +-\n .../criteria/pm-plan-1817063f8a-done-criteria.yaml |   4 +-\n .../prj-charter-e502ad9760-done-criteria.yaml      |   6 +-\n ...n-of-alternatives-b69b62192a-done-criteria.yaml |  13 +-\n ...sues-and-approach-6ef704f034-done-criteria.yaml |   4 +-\n .../prj-overview-0cce063d8f-done-criteria.yaml     |   4 +-\n .../prj-scope-b521ba27f3-done-criteria.yaml        |   6 +-\n ...keholder-register-dd42317729-done-criteria.yaml |   4 +-\n ...ceptance-criteria-11b049ad8a-done-criteria.yaml |  15 +-\n ...sd-register-entry-461ba77e06-done-criteria.yaml |  12 +-\n .../stsd-routine-run-72deff80c2-done-criteria.yaml |   8 +-\n ...ty-agent-settings-e0daf68b06-done-criteria.yaml |  22 +-\n ...ysd-job-execution-f206c7f9d3-done-criteria.yaml |   8 +-\n ...de-agent-settings-7921b7f527-done-criteria.yaml |  14 +-\n ...me-mac-dev-server-39e4cdf49b-done-criteria.yaml |  22 +-\n ...-dev-server-usage-cd996e0bcb-done-criteria.yaml |  17 +-\n .../tsd-index-f8017f063b-done-criteria.yaml        |  14 +-\n ...d-ollama-opencode-9fe49a1fb7-done-criteria.yaml |  12 +-\n .../pipeline/sysd-job-execution-f206c7f9d3b9.json  |  14 -\n .../sysd-opencode-agent-settings-7921b7f52776.json |  14 -\n .../grade/pipeline/tsd-ollama-1333c3ab83bb.json    |  14 -\n .../grade/results/bps-deliverable-evaluation.yaml  |  12 +-\n .../grade/results/bps-task-completion.yaml         |  36 ++-\n .../execution/grade/results/cdfd-action.yaml       |  26 +-\n .../execution/grade/results/cdfd-check.yaml        | 174 +++++-------\n .../prj-0001/execution/grade/results/cdfd-do.yaml  |  58 ++--\n .../execution/grade/results/cdfd-onboarding.yaml   | 207 +++++++-------\n .../execution/grade/results/cdfd-orchestrator.yaml |  65 +++--\n .../execution/grade/results/cdfd-overview.yaml     |   2 +-\n .../execution/grade/results/cdfd-plan.yaml         |  85 +++---\n .../grade/results/cdfd-uc-deliverable.yaml         |   4 +-\n .../execution/grade/results/cdfd-uc-register.yaml  |   4 +-\n .../execution/grade/results/cdsd-execution.yaml    | 156 ++++++-----\n .../execution/grade/results/cdsd-planning.yaml     | 128 ++++-----\n .../execution/grade/results/cdsd-sharing.yaml      | 302 +++++++++++----------\n .../grade/results/prj-0001.pm-organization.yaml    |  78 +++++-\n .../execution/grade/results/prj-0001.pm-plan.yaml  |  84 +++++-\n .../grade/results/prj-0001.prj-charter.yaml        | 121 +++++++--\n .../prj-0001.prj-comparison-of-alternatives.yaml   |  99 ++++++-\n .../results/prj-0001.prj-issues-and-approach.yaml  |  93 ++++++-\n .../grade/results/prj-0001.prj-overview.yaml       | 130 ++++++---\n .../grade/results/prj-0001.prj-scope.yaml          | 233 +++++++++++-----\n .../results/prj-0001.prj-stakeholder-register.yaml | 102 ++++++-\n ...j-success-criteria-and-acceptance-criteria.yaml | 170 +++++++++---\n .../grade/results/specdojo.atc-index-rulebook.yaml | 140 +++++-----\n .../grade/results/specdojo.atc-rulebook.yaml       |   4 +-\n .../grade/results/specdojo.bac-rulebook.yaml       | 112 ++++----\n .../grade/results/specdojo.bds-rulebook.yaml       | 144 +++++-----\n .../grade/results/specdojo.bps-recipe.yaml         |   4 +-\n .../grade…"
+  },
+  "validations": [
+    {
+      "id": "job-command",
+      "source": "runner",
+      "command": "npm run build\nif tools/grade/run-per-document.sh --run-id JBR-grade-kata-8f02c497b730 --stages 1 --stage-1-executor agy-expert-executor --kind all --limit 15 --dependency-changed=true --rulebook-changed=true --unreviewed=true --changed-only=true --ungraded=true --incomplete=true --rubric-outdated=true; then\n  cat logs/grade/runs/per-document/JBR-grade-kata-8f02c497b730/results.tsv\nelse\n  grade_status=$?\n  printf 'grade pipeline failed: run_id=%s exit_code=%s\\n' 'JBR-grade-kata-8f02c497b730' \"$g…",
+      "status": "passed",
+      "summary": "exit 0"
+    }
+  ],
+  "final_message": "Runner command exit 0.",
+  "command": {
+    "shell": "/bin/sh -eu",
+    "value": "npm run build\nif tools/grade/run-per-document.sh --run-id JBR-grade-kata-8f02c497b730 --stages 1 --stage-1-executor agy-expert-executor --kind all --limit 15 --dependency-changed=true --rulebook-changed=true --unreviewed=true --changed-only=true --ungraded=true --incomplete=true --rubric-outdated=true; then\n  cat logs/grade/runs/per-document/JBR-grade-kata-8f02c497b730/results.tsv\nelse\n  grade_status=$?\n  printf 'grade pipeline failed: run_id=%s exit_code=%s\\n' 'JBR-grade-kata-8f02c497b730' \"$grade_status\" >&2\n  exit \"$grade_status\"\nfi",
+    "exit_code": 0,
+    "stdout_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-8f02c497b730/attempt-1/command.stdout.log",
+    "stderr_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-8f02c497b730/attempt-1/command.stderr.log",
+    "stdout": "\n> specdojo@0.3.0 build\n> node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.build.json && node -e \"require('node:fs').chmodSync('dist/specdojo.js', 0o755)\"\n\nrun_id=JBR-grade-kata-8f02c497b730 project=prj-0001 target=kata kind=all changed_only=true ungraded=true incomplete=true rubric_outdated=true max_stage_failures=3 stages=1 documents=15 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-kata-8f02c497b730\nstage=1 executor=agy-expert-executor reporter=gemma-reporter reference=none\ndocument start: docs/ja/specdojo/rulebooks/atc-index-rulebook.md\ndocument resume: docs/ja/specdojo/rulebooks/atc-index-rulebook.md start_stage=1\ndocument complete: docs/ja/specdojo/rulebooks/atc-index-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/atc-rulebook.md\ndocument resume: docs/ja/specdojo/rulebooks/atc-rulebook.md start_stage=1\ndocument complete: docs/ja/specdojo/rulebooks/atc-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/bac-rulebook.md\ndocument resume: docs/ja/specdojo/rulebooks/bac-rulebook.md start_stage=1\ndocument complete: docs/ja/specdojo/rulebooks/bac-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/bds-rulebook.md\ndocument resume: docs/ja/specdojo/rulebooks/bds-rulebook.md start_stage=1\ndocument complete: docs/ja/specdojo/rulebooks/bds-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md\ndocument resume: docs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md start_stage=1\ndocument complete: docs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/cdsd-rulebook.md\ndocument resume: docs/ja/specdojo/rulebooks/cdsd-rulebook.md start_stage=1\ndocument complete: docs/ja/specdojo/rulebooks/cdsd-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/cld-rulebook.md\ndocument resume: docs/ja/specdojo/rulebooks/cld-rulebook.md start_stage=1\ndocument complete: docs/ja/specdojo/rulebooks/cld-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/cnd-mermaid-rulebook.md\ndocument resume: docs/ja/specdojo/rulebooks/cnd-mermaid-rulebook.md start_stage=1\ndocument complete: docs/ja/specdojo/rulebooks/cnd-mermaid-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/cnd-rulebook.md\ndocument resume: docs/ja/specdojo/rulebooks/cnd-rulebook.md start_stage=1\ndocument complete: docs/ja/specdojo/rulebooks/cnd-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/cxd-rulebook.md\ndocument resume: docs/ja/specdojo/rulebooks/cxd-rulebook.md start_stage=1\ndocument complete: docs/ja/specdojo/rulebooks/cxd-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/dct-index-rulebook.md\ndocument resume: docs/ja/specdojo/rulebooks/dct-index-rulebook.md start_stage=1\ndocument complete: docs/ja/specdojo/rulebooks/dct-index-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/dct-rulebook.md\ndocument resume: docs/ja/specdojo/rulebooks/dct-rulebook.md start_stage=1\ndocument complete: docs/ja/specdojo/rulebooks/dct-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/dec-rulebook.md\ndocument resume: docs/ja/specdojo/rulebooks/dec-rulebook.md start_stage=1\ndocument complete: docs/ja/specdojo/rulebooks/dec-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/dmd-index-rulebook.md\ndocument resume: docs/ja/specdojo/rulebooks/dmd-index-rulebook.md start_stage=1\ndocument complete: docs/ja/specdojo/rulebooks/dmd-index-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/dmd-rulebook.md\ndocument resume: docs/ja/specdojo/rulebooks/dmd-rulebook.md start_stage=1\ndocument complete: docs/ja/specdojo/rulebooks/dmd-rulebook.md\ngrade pipeline complete: selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-kata-8f02c497b730/results.tsv\nrecorded_at\tdocument\tstage\tstatus\tduration_seconds\tverdict\tscore\tfindings\texecutor\treporter\treference\tconsecutive_failures\tmax_failures\n2026-10-02T21:04:31Z\tdocs/ja/specdojo/rulebooks/atc-index-rulebook.md\t1\tpassed\t253\tneeds-work\t69\t16\tagy-expert-executor\tgemma-reporter\tnone\t\t\n2026-10-02T21:08:46Z\tdocs/ja/specdojo/rulebooks/atc-rulebook.md\t1\tpassed\t253\tneeds-work\t77\t15\tagy-expert-executor\tgemma-reporter\tnone\t\t\n2026-10-02T21:12:58Z\tdocs/ja/specdojo/rulebooks/bac-rulebook.md\t1\tpassed\t250\tneeds-work\t77\t23\tagy-expert-executor\tgemma-reporter\tnone\t\t\n2026-10-02T21:16:38Z\tdocs/ja/specdojo/rulebooks/bds-rulebook.md\t1\tpassed\t218\tneeds-work\t67\t21\tagy-expert-executor\tgemma-reporter\tnone\t\t\n2026-10-02T21:21:06Z\tdocs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md\t1\tpassed\t266\tneeds-work\t42\t27\tagy-expert-executor\tgemma-reporter\tnone\t\t\n2026-10-02T21:24:59Z\tdocs/ja/specdojo/rulebooks/cdsd-rulebook.md\t1\tpassed\t231\tneeds-work\t56\t23\tagy-expert-executor\tgemma-reporter\tnone\t\t\n2026-10-02T21:28:31Z\tdocs/ja/specdojo/rulebooks/cld-rulebook.md\t1\tpassed\t210\tneeds-work\t63\t23\tagy-expert-executor\tgemma-reporter\tnone\t\t\n2026-10-02T21:32:25Z\tdocs/ja/specdojo/rulebooks/cnd-mermaid-rulebook.md\t1\tpassed\t232\tneeds-work\t59\t17\tagy-expert-executor\tgemma-reporter\tnone\t\t\n2026-10-02T21:35:28Z\tdocs/ja/specdojo/rulebooks/cnd-rulebook.md\t1\tpassed\t181\tneeds-work\t78\t14\tagy-expert-executor\tgemma-reporter\tnone\t\t\n2026-10-02T21:38:43Z\tdocs/ja/specdojo/rulebooks/cxd-rulebook.md\t1\tpassed\t193\tpass\t93\t4\tagy-expert-executor\tgemma-reporter\tnone\t\t\n2026-10-02T21:41:20Z\tdocs/ja/specdojo/rulebooks/dct-index-rulebook.md\t1\tpassed\t156\tpass\t100\t0\tagy-expert-executor\tgemma-reporter\tnone\t\t\n2026-10-02T21:47:58Z\tdocs/ja/specdojo/rulebooks/dct-rulebook.md\t1\tpassed\t396\tneeds-work\t84\t8\tagy-expert-executor\tgemma-reporter\tnone\t\t\n2026-10-02T21:51:10Z\tdocs/ja/specdojo/rulebooks/dec-rulebook.md\t1\tpassed\t190\tpass\t93\t8\tagy-expert-executor\tgemma-reporter\tnone\t\t\n2026-10-02T21:53:37Z\tdocs/ja/specdojo/rulebooks/dmd-index-rulebook.md\t1\tpassed\t145\tneeds-work\t93\t3\tagy-expert-executor\tgemma-reporter\tnone\t\t\n2026-10-02T21:56:06Z\tdocs/ja/specdojo/rulebooks/dmd-rulebook.md\t1\tpassed\t147\tneeds-work\t96\t1\tagy-expert-executor\tgemma-reporter\tnone\t\t\n",
+    "stderr": ""
+  },
+  "log_refs": [
+    {
+      "kind": "command-stdout",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-8f02c497b730/attempt-1/command.stdout.log",
+      "bytes": 5930,
+      "truncated": false
+    },
+    {
+      "kind": "command-stderr",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-8f02c497b730/attempt-1/command.stderr.log",
+      "bytes": 0,
+      "truncated": false
+    }
+  ]
+}

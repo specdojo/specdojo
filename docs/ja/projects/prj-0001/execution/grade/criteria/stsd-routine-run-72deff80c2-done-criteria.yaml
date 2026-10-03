@@ -2,7 +2,7 @@
 id: stsd-routine-run-grade-criteria
 document: stsd-routine-run
 path: docs/ja/product/010-business-specs/020-data-model/stsd-routine-run.md
-graded_at: "2026-09-27T20:39:40.521Z"
+graded_at: "2026-09-29T16:18:50.684Z"
 graded_by: codex-expert-executor
 content_hash: ac79a57bfeaac8af23f280fbbc1262aeba79f678bef2fe196354a1575adaa07f
 summary:
@@ -23,7 +23,7 @@ criteria:
       - PO
     viewpoint: vp-po-purpose-alignment
     status: unsatisfied
-    reason: 試行中の復旧、overlap 方針、仮置き状態値が未決であり、状態遷移全体の業務的妥当性を承認できない。
+    reason: 試行中の復旧方針、overlap 方針、依存先が未決であり、状態遷移の業務的妥当性を承認できない。
   - id: DC-003
     text: 状態遷移実装の基礎として参照できること
     roles:
@@ -37,11 +37,11 @@ criteria:
       - QE
     viewpoint: vp-qe-verifiability
     status: unsatisfied
-    reason: 試行中を観測可能な pass / fail 条件がなく、cron の skip 方針に対応する状態ベーステストも設計できない。
+    reason: 同じ保存状態を試行中と前回結果確定済みの両方に解釈でき、状態ベーステストの期待結果を一意に定められない。
   - id: DC-005
     text: 状態管理実装の参照として使えること
     roles:
       - DEV
     viewpoint: vp-dev-implementation-readiness
     status: unsatisfied
-    reason: 現行保存項目から `running` を導出する実装規則が確定せず、有効な cron 方針も網羅していないため状態管理実装の参照として不十分である。
+    reason: 試行と結果の対応方法および仮置き状態値の実装方針が未確定で、状態管理実装の参照として使用できない。

@@ -1,0 +1,155 @@
+---
+specdojo:
+  id: prj-0001:xer-jbr-grade-deliverable-710933c29195
+  type: exec-result
+  task_id: JBR-grade-deliverable-710933c29195
+  mode: edit
+  status: blocked
+  project_id: prj-0001
+  origin: job
+  job_id: job-grade-deliverable
+  run_id: JBR-grade-deliverable-710933c29195
+  plan_ref: exec/plans/JBR-grade-deliverable-710933c29195-plan.md
+  started_at: "2026-10-02T16:00:06.637Z"
+  completed_at: "2026-10-02T16:40:56.774Z"
+  agent: gemma-reporter
+  block_reason: "command exited with code 1"
+---
+
+# Edit Result
+
+## 1. 実施内容
+
+- runner が解決済みコマンドを直接実行したが、command exited with code 1。
+
+## 2. 変更ファイル
+
+- `docs/ja/projects/prj-0001/execution/grade/criteria/bps-deliverable-evaluation-e8ef6378e7-done-criteria.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/criteria/bps-task-completion-d17c24e4f4-done-criteria.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-action-96f0bab377-done-criteria.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-check-de77e19930-done-criteria.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-do-96363482bc-done-criteria.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-onboarding-61a4d6c9ef-done-criteria.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-orchestrator-0888f9bb68-done-criteria.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-overview-4f5ff02b38-done-criteria.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-plan-53594c9748-done-criteria.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-uc-deliverable-20176468f7-done-criteria.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-uc-register-7fa05372dd-done-criteria.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/criteria/cdsd-execution-225183781b-done-criteria.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/criteria/cdsd-planning-c998e41655-done-criteria.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/criteria/cdsd-sharing-20fb2f3b70-done-criteria.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/criteria/pm-organization-3bb06d1a82-done-criteria.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/criteria/pm-plan-1817063f8a-done-criteria.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/criteria/prj-charter-e502ad9760-done-criteria.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/criteria/prj-comparison-of-alternatives-b69b62192a-done-criteria.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/criteria/prj-issues-and-approach-6ef704f034-done-criteria.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/criteria/prj-overview-0cce063d8f-done-criteria.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/criteria/prj-scope-b521ba27f3-done-criteria.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/criteria/prj-stakeholder-register-dd42317729-done-criteria.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/criteria/prj-success-criteria-and-acceptance-criteria-11b049ad8a-done-criteria.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/criteria/stsd-register-entry-461ba77e06-done-criteria.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/criteria/stsd-routine-run-72deff80c2-done-criteria.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/criteria/sysd-antigravity-agent-settings-e0daf68b06-done-criteria.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/criteria/sysd-job-execution-f206c7f9d3-done-criteria.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/criteria/sysd-opencode-agent-settings-7921b7f527-done-criteria.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/criteria/tsd-home-mac-dev-server-39e4cdf49b-done-criteria.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/criteria/tsd-home-mac-dev-server-usage-cd996e0bcb-done-criteria.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/criteria/tsd-index-f8017f063b-done-criteria.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/criteria/tsd-ollama-opencode-9fe49a1fb7-done-criteria.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/pipeline/sysd-job-execution-f206c7f9d3b9.json`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/pipeline/sysd-opencode-agent-settings-7921b7f52776.json`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/pipeline/tsd-ollama-1333c3ab83bb.json`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/bps-deliverable-evaluation.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/bps-task-completion.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/cdfd-action.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/cdfd-check.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/cdfd-do.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/cdfd-onboarding.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/cdfd-orchestrator.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/cdfd-overview.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/cdfd-plan.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/cdfd-uc-deliverable.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/cdfd-uc-register.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/cdsd-execution.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/cdsd-planning.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/cdsd-sharing.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/prj-0001.pm-organization.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/prj-0001.pm-plan.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/prj-0001.prj-charter.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/prj-0001.prj-comparison-of-alternatives.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/prj-0001.prj-issues-and-approach.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/prj-0001.prj-overview.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/prj-0001.prj-scope.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/prj-0001.prj-stakeholder-register.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/prj-0001.prj-success-criteria-and-acceptance-criteria.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/specdojo.atc-index-rulebook.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/specdojo.atc-rulebook.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/specdojo.bac-rulebook.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/specdojo.bds-rulebook.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/specdojo.bps-recipe.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/specdojo.bps-rulebook.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/specdojo.br-rulebook.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/specdojo.ccd-mermaid-rulebook.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/specdojo.cdfd-overview-recipe.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/specdojo.cdfd-recipe.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/specdojo.cdfd-rulebook.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/specdojo.cdfd-uc-recipe.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/specdojo.cdfd-uc-rulebook.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/specdojo.cdsd-rulebook.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/specdojo.cld-rulebook.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/specdojo.cnd-mermaid-rulebook.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/specdojo.cnd-rulebook.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/specdojo.cop-index-rulebook.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/specdojo.cop-rulebook.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/specdojo.cpd-mermaid-rulebook.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/specdojo.cpd-rulebook.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/specdojo.cstd-rulebook.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/specdojo.cxd-mermaid-rulebook.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/specdojo.stsd-recipe.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/stsd-register-entry.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/stsd-routine-run.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/sysd-antigravity-agent-settings.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/sysd-job-execution.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/sysd-opencode-agent-settings.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/tsd-home-mac-dev-server-usage.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/tsd-home-mac-dev-server.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/tsd-index.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/tsd-ollama-opencode.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/criteria/tsd-ollama-1333c3ab83-done-criteria.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/criteria/tsd-omlx-f7cad9fd9b-done-criteria.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/criteria/tsd-omlx-opencode-824c965487-done-criteria.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/pipeline/atc-index-rulebook-0df6ed2c7c83.json`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/pipeline/atc-rulebook-cb9efe305228.json`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/pipeline/bac-rulebook-9f4b16d6619c.json`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/pipeline/bds-rulebook-e4b6b0cd534e.json`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/pipeline/bes-rulebook-36aaf6396fc7.json`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/pipeline/ccd-mermaid-rulebook-374a5b0a1714.json`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/pipeline/cdsd-rulebook-b592cd666eae.json`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/pipeline/cld-rulebook-fa18b355cffa.json`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/pipeline/cnd-mermaid-rulebook-808e0e9c71ef.json`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/pipeline/cnd-rulebook-8e5cc7a4b5f7.json`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/pipeline/cxd-rulebook-960e8eea28e5.json`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/pipeline/dct-index-rulebook-f14900b007ce.json`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/pipeline/dct-rulebook-59a47c185ce9.json`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/pipeline/dec-rulebook-860ce0bba137.json`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/pipeline/dmd-index-rulebook-93b79258c915.json`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/pipeline/dmd-rulebook-c7538bc17bdd.json`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/pipeline/pm-communication-plan-6a68d585dcbf.json`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/tsd-ollama.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/tsd-omlx-opencode.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/grade/results/tsd-omlx.yaml`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-deliverable-710933c29195.json`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-deliverable-88db3b4d0339.json`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-deliverable-b329d0aa2739.json`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-deliverable-c01c1b09885c.json`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-kata-19d22fa1c5f5.json`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-kata-6e23633d2f4f.json`: runner command の実行後に検出した変更
+- `docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-kata-ec59912477f8.json`: runner command の実行後に検出した変更
+
+## 3. 申し送り
+
+- command evidence: docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-deliverable-710933c29195/attempt-1/evidence.json
+
+## 4. 進め方と実践の型の適用
+
+Job Definition から materialize したコマンドを agent の解釈を介さず実行し、runner evidence を正本とした。

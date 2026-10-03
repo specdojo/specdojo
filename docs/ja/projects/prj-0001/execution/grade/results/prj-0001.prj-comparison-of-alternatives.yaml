@@ -3,29 +3,87 @@ version: 1
 document: prj-0001:prj-comparison-of-alternatives
 path: docs/ja/projects/prj-0001/020-project-definition/prj-comparison-of-alternatives.md
 target: deliverable
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 84
-graded_at: "2026-09-23T17:11:26.441Z"
-graded_by: codex-expert-executor
+score: 90
+graded_at: "2026-10-01T16:38:22.095Z"
+graded_by: agy-expert-executor
 content_hash: 266402ac08a10581bb2882e9794b3aa0708aaf46b04ec78032b646673915e355
+source_hashes:
+  catalog-entry: 45f28b64a72bff5c4a2ac190021085a90b320b7cb95a5d42edbc611b85b96185
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  dependency:prj-issues-and-approach: ae90307d8224fab79e09ae1f1947389032e361f513b8ba0364776cf340937706
+  dependency:prj-scope: e631f8a78068b515871352df3a7547fdd32eef4c91fb923f944e19605c3b5564
+  members: ec838bbb5673ba76f1a15672e094c00088dcb686a2a67225ca8411c0dc5e90d3
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
 categories:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 83
   consistency:
     score: 75
-  usability:
-    score: 100
   architecture:
     score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 100
   quality:
-    score: 67
+    score: 75
 viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 2
+    score: 50
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
   vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-done-criteria:
@@ -46,6 +104,15 @@ viewpoints:
   vp-ux-language-consistency:
     level: 4
     score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
@@ -54,11 +121,17 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 3
+  major: 4
   minor: 1
   note: 0
 findings:
   - id: F001
+    severity: major
+    rule: vp-ba-business-value
+    line: 109
+    anchor: "| 評価軸             | 判定基準                                                          |"
+    message: D-02とD-03の評価軸に「主に対応する課題・制約」の列がなく業務課題との対応が不明なため、各評価軸と根拠資料の課題・制約の対応を明記してください。
+  - id: F002
     severity: major
     rule: vp-qe-done-criteria
     line: 198
@@ -66,7 +139,7 @@ findings:
       | 区分         | 内容                                                                           |
       軽減策                                                               |
     message: リスクとトレードオフ表に案IDがなく、D-02・D-03を含む各候補のリスクとトレードオフを比較できないため、各記述を案IDへ対応付けてください。
-  - id: F002
+  - id: F003
     severity: major
     rule: vp-qe-verifiability
     line: 132
@@ -74,22 +147,24 @@ findings:
       評価は `High` / `Middle` / `Low` とし、採択に有利なほど高くする。重みは D-01 の優先順位を示すが、機械的な合計だけで決定しない。D-02 と D-03
       は、追跡可能な正本、人間の判断責任、可逆性を必須条件とする。
     message: High・Middle・Lowの判定境界、各セルの根拠、D-01の重みを総合評価と採否へ反映する規則がなく比較結果を再現できないため、尺度・証拠・集約規則を明記してください。
-  - id: F003
+  - id: F004
     severity: minor
     rule: vp-qe-verifiability
     line: 167
     anchor: 試行では同じ小規模な変更要求を処理し、成果物の重複と反映手順、要求から検証までの追跡漏れ、人間のレビューによる意図保持、ツールや Agent / IDE を外した場合の再開可能性を測定する。
-    message: OpenSpecとSpec Kitの試行は測定項目だけで完了条件と採用・撤退の閾値がないため、合否を判定できる数値または状態条件を追加してください。
-  - id: F004
+    message: OpenSpecとSpec Kitの試行は測定項目だけで完了条件と採用・撤退の閾値がないため,合否を判定できる数値または状態条件を追加してください。
+  - id: F005
     severity: major
     rule: vp-qe-omissions-consistency
     line: 107
     anchor: "### 3.2. D-02 の評価軸"
     message: D-02とD-03は最低ラインである効果・コスト・期間・リスク・運用適合・技術実現性の一部を省略しているのに省略理由がないため、必要な軸を追加するか各省略理由を明記してください。
 done_criteria:
-  satisfied: 3
+  satisfied: 2
   total: 4
   unsatisfied:
+    DC-001:
+      - BA
     DC-004:
       - PM
   detail_ref: prj-0001:prj-comparison-of-alternatives-grade-criteria

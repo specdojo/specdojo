@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: tsd-omlx-opencode-grade-criteria
+document: tsd-omlx-opencode
+path: docs/ja/product/030-architecture/020-infrastructure/tsd-omlx-opencode.md
+graded_at: "2026-09-29T16:59:44.330Z"
+graded_by: codex-expert-executor
+content_hash: b6a0ff37d37426abdcd0b8a53afacc15c7e632cb0994e3b99c16f192c40850cb
+summary:
+  satisfied: 1
+  unsatisfied: 4
+  total: 5
+criteria:
+  - id: DC-001
+    text: 採用技術の選定理由と制約が業務要件と整合していること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: unsatisfied
+    reason: 採用理由と制約が、対応する業務要件や期待価値とどのように整合するか示されていない。
+  - id: DC-002
+    text: 技術スタック選定を承認できること
+    roles:
+      - PO
+    viewpoint: vp-po-decision-readiness
+    status: unsatisfied
+    reason: 選定の承認者、代替案、合否閾値、未決事項、判断期限、採否の影響が揃っていない。
+  - id: DC-003
+    text: 技術的制約・ライセンス・バージョン方針が識別できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: unsatisfied
+    reason: 技術的制約は一部記載されているが、ライセンスと対応バージョン・更新方針を識別できない。
+  - id: DC-004
+    text: テストフレームワーク・CI/CD環境の参照として使えること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: unsatisfied
+    reason: テストフレームワークおよびCI/CD環境への参照が記載されていない。
+  - id: DC-005
+    text: 開発環境構築・ライブラリ選定の参照として使えること
+    roles:
+      - DEV
+    viewpoint: vp-dev-implementation-readiness
+    status: satisfied

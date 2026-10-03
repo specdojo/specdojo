@@ -5,9 +5,9 @@ path: docs/ja/specdojo/recipes/cdfd-overview-recipe.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 97
-graded_at: "2026-09-27T20:36:40.693Z"
-graded_by: agy-expert-executor
+score: 95
+graded_at: "2026-09-29T21:05:19.786Z"
+graded_by: codex-expert-executor
 content_hash: 17bbb3be23983437907bf00a7a348ca6446afd929a952727a19ed9c91e0b526d
 categories:
   purpose:
@@ -25,7 +25,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 92
   consistency:
     score: 75
 viewpoints:
@@ -78,8 +78,8 @@ viewpoints:
     level: 3
     score: 75
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -101,7 +101,7 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 8
+  minor: 9
   note: 0
 findings:
   - id: F001
@@ -152,3 +152,11 @@ findings:
     line: 184
     anchor: "- 対象範囲内の参加者を外部主体として描いていない。"
     message: 「仕上げチェック」において、Rulebookの完成判定で求められる「H1直下の導入文の定義」「Frontmatterの要件」「POの承認記録の存在」の確認項目が漏れている。
+  - id: F009
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 46
+    anchor: "## 4. 各章の書き方"
+    message: >-
+      Recipe の章別ガイドと仕上げチェックが、Rulebook の必須要件である導入文、章冒頭の宣言、Role code、共有保管、参加者由来入力の注記、Frontmatter、および PO
+      承認記録を網羅しておらず、Template と Sample が示す記載水準を Recipe 単独では再現できない。

@@ -6,8 +6,8 @@ target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 78
-graded_at: "2026-09-27T16:13:15.227Z"
-graded_by: codex-expert-executor
+graded_at: "2026-09-30T16:28:30.130Z"
+graded_by: agy-expert-executor
 content_hash: fa438c52a36eaa9e43b88df336f876264351918d14ece7b3bb8f46aaea8a30ba
 source_hashes:
   catalog-entry: 36f4797979f3eed2de0b8cbeb67b385e5553a89a36868f31b11b91fc45521657
@@ -127,105 +127,88 @@ findings:
   - id: F001
     severity: minor
     rule: vp-po-decision-readiness
-    line: 6
-    anchor: ""
+    line: 15
+    anchor: "- **システム境界**: Plan グループが各正本を定義または更新し、Orchestrator、Do、Check、Action との受け渡しまでを扱う。他グループの内部処理は扱わない。"
     message: BA・PM・ARC・QE の利用目的は示されているが、業務境界、主要例外、グループ外委譲を最終承認する人間の Role code が特定できないため、承認対象と承認者を明示してください。
   - id: F002
     severity: major
     rule: vp-pm-plan-feasibility
-    line: 30
-    anchor: >-
-      | プロセス ID | プロセス   | 業務目的                                                     | 主な担当             |
-      起動条件                                                               | 必須性 |
+    line: 40
+    anchor: "- **データストア**: Kata / kata、登録簿 / register、成果物カタログ / catalog"
     message: 各プロセス表に完了条件がないため、担当者が作業終了を判定できず、Schedule の進捗確認や後続プロセスの開始判断に利用できる粒度になっていません。
   - id: F003
     severity: major
     rule: vp-ba-requirements-completeness
-    line: 30
-    anchor: >-
-      | プロセス ID | プロセス   | 業務目的                                                     | 主な担当             |
-      起動条件                                                               | 必須性 |
+    line: 40
+    anchor: "- **データストア**: Kata / kata、登録簿 / register、成果物カタログ / catalog"
     message: 全プロセスについて業務目的を達成したかを yes / no で確認する完了条件がなく、利用者が各プロセスの受入可否を確認できません。
   - id: F004
     severity: major
     rule: vp-ba-requirements-completeness
-    line: 14
-    anchor: >-
-      - **組織境界**: 各領域の主担当と参加者の関与は [[cdfd-overview|概念データフロー図（全体概要）]] の「プロセス領域」を正本とする。人間と AI Agent の責任分担は
-      [[prj-0001:prj-overview|プロジェクト概要]] の「基本的な考え方」を参照し、本書では再定義しない。
+    line: 23
+    anchor: ""
     message: 全体概要が Plan の主要出力として定める「Orchestrator への計画要求への応答」が終了条件および各領域の主要出力に含まれず、どのプロセスが生成するかも詳細化されていません。
   - id: F005
     severity: major
     rule: vp-arc-cross-document-consistency
-    line: 14
-    anchor: >-
-      - **組織境界**: 各領域の主担当と参加者の関与は [[cdfd-overview|概念データフロー図（全体概要）]] の「プロセス領域」を正本とする。人間と AI Agent の責任分担は
-      [[prj-0001:prj-overview|プロジェクト概要]] の「基本的な考え方」を参照し、本書では再定義しない。
+    line: 23
+    anchor: ""
     message: >-
-      `docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md` は Plan の主要出力に「Orchestrator
+      docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md は Plan の主要出力に「Orchestrator
       への計画要求への応答」を定めている一方、本書の終了条件と P-02〜P-06 の主要出力には存在しないため、生成プロセスと入出力を特定して整合させてください。
   - id: F006
     severity: major
     rule: vp-dev-implementation-readiness
-    line: 30
-    anchor: >-
-      | プロセス ID | プロセス   | 業務目的                                                     | 主な担当             |
-      起動条件                                                               | 必須性 |
+    line: 40
+    anchor: "- **データストア**: Kata / kata、登録簿 / register、成果物カタログ / catalog"
     message: 各プロセスの完了条件がないため、実装者が出力確定、検証成功、後続引き渡しのどの状態まで実装すれば完了かを判断できません。
   - id: F007
     severity: major
     rule: vp-dev-testability
-    line: 30
-    anchor: >-
-      | プロセス ID | プロセス   | 業務目的                                                     | 主な担当             |
-      起動条件                                                               | 必須性 |
+    line: 40
+    anchor: "- **データストア**: Kata / kata、登録簿 / register、成果物カタログ / catalog"
     message: 正常系の各プロセスに完了条件がないため、実装・設定変更後に主要出力または正本が期待状態へ到達したことを検証するテスト条件を導出できません。
   - id: F008
     severity: major
     rule: vp-qe-done-criteria
-    line: 14
-    anchor: >-
-      - **組織境界**: 各領域の主担当と参加者の関与は [[cdfd-overview|概念データフロー図（全体概要）]] の「プロセス領域」を正本とする。人間と AI Agent の責任分担は
-      [[prj-0001:prj-overview|プロジェクト概要]] の「基本的な考え方」を参照し、本書では再定義しない。
+    line: 23
+    anchor: ""
     message: DC-001 が要求する全体概要の主要出力の詳細化について、「Orchestrator への計画要求への応答」が P-02〜P-06 の主要出力と生成プロセスに含まれていません。
   - id: F009
     severity: major
     rule: vp-qe-verifiability
-    line: 30
-    anchor: >-
-      | プロセス ID | プロセス   | 業務目的                                                     | 主な担当             |
-      起動条件                                                               | 必須性 |
+    line: 40
+    anchor: "- **データストア**: Kata / kata、登録簿 / register、成果物カタログ / catalog"
     message: 各プロセスの完了を判定する「完了条件」が記述されておらず、プロセスがいつ完了したか（pass/fail）を検証できないため、検証可能な完了条件を定義してください。
   - id: F010
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 9
-    anchor: "## 2. 適用範囲"
+    line: 21
+    anchor: ""
     message: 前回の指摘が未解消です。rulebook 6.1 が適用範囲に対象期間の明示を求めているが、本書は期間または期間を限定しない旨を示していないため、対象期間の記載を追加してください。
   - id: F011
     severity: major
     rule: vp-qe-omissions-consistency
-    line: 30
-    anchor: >-
-      | プロセス ID | プロセス   | 業務目的                                                     | 主な担当             |
-      起動条件                                                               | 必須性 |
+    line: 40
+    anchor: "- **データストア**: Kata / kata、登録簿 / register、成果物カタログ / catalog"
     message: rulebook 6.2 がプロセス領域の表に必須としている「完了条件」列が欠落しているため、列を追加してください。
   - id: F012
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 296
+    line: 305
     anchor: >-
-      | --------- | ------------ |
-      -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-      | ------------------------------------------------------------------------- |
-      --------------------------------------------------------------------------------------------------------------------------------------------------------
-      |
+      | 委譲先                | 委譲する事項                                                   |
+      引き渡す情報                                                                         |
+      本グループへ戻す条件                                                                            |
     message: 前回の指摘が未解消です。主要例外表に rulebook 6.7 と template が必須とする「停止範囲」列がなく、「本グループでの扱い」に停止内容が混在しているため、停止対象と対応を別列で識別できるようにしてください。
   - id: F013
     severity: major
     rule: vp-ops-release-readiness
-    line: 1
-    anchor: "# 概念データフロー図（Plan）: SpecDojo"
+    line: 5
+    anchor: >-
+      本書は、[[cdfd-overview|概念データフロー図（全体概要）]] の Plan グループ（P-02〜P-06）を詳細化し、何を管理対象とし、いつ、誰が、どの形で実行するかを合意できるようにする。BA
+      は登録簿、成果物カタログ、スケジュール、定期実行、ジョブの責任境界を利用者視点で確認し、PM は計画を作成・更新する際の入力と完了条件を確認する。ARC は各プロセスによるデータストアの読み書きを設計入力として使い、QE
+      は後続起動を止める例外の検出条件と再開条件を検証に使う。
     message: 文書は draft で、必須の完了条件列と停止範囲列が欠落し、業務境界・主要例外・委譲境界の承認者および承認記録も特定できないため, 指摘解消と人間による承認を ready 化の前提として明示してください。
 done_criteria:
   satisfied: 3

@@ -5,9 +5,9 @@ path: docs/ja/product/010-business-specs/020-data-model/cdsd-sharing.md
 target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 63
-graded_at: "2026-09-27T16:41:01.418Z"
-graded_by: codex-expert-executor
+score: 42
+graded_at: "2026-10-01T16:13:09.932Z"
+graded_by: agy-expert-executor
 content_hash: b20d1b0c124fac099975cbc56ffbe57def7e83dd272e665fa1c965ed77b4009a
 source_hashes:
   catalog-entry: 7c62f8847ef267677fd34e63206cf44cf86d30658667f545a1972aca0a1cb987
@@ -18,57 +18,57 @@ source_hashes:
   schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
 categories:
   purpose:
-    score: 50
+    score: 25
   operations:
-    score: 56
+    score: 44
   planning:
-    score: 50
+    score: 25
   business:
-    score: 75
+    score: 33
   consistency:
-    score: 50
+    score: 25
   architecture:
-    score: 83
+    score: 75
   usability:
-    score: 88
+    score: 75
   implementation:
-    score: 50
+    score: 25
   quality:
-    score: 50
+    score: 31
 viewpoints:
   vp-po-purpose-alignment:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-po-decision-readiness:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-po-publication-accountability:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-pm-plan-feasibility:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-pm-dependency-risk:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-pm-control-reporting:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-ba-business-value:
-    level: 4
-    score: 100
+    level: 1
+    score: 25
   vp-ba-requirements-completeness:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-ba-stakeholder-clarity:
-    level: 3
-    score: 75
+    level: 2
+    score: 50
   vp-arc-cross-document-consistency:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-arc-technical-constraints:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -76,38 +76,38 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-dev-change-impact:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-dev-testability:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-qe-done-criteria:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-qe-verifiability:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-qe-omissions-consistency:
+    level: 1
+    score: 25
+  vp-ux-readability:
     level: 2
     score: 50
-  vp-ux-readability:
-    level: 3
-    score: 75
   vp-ux-user-flow:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 3
-    score: 75
+    level: 2
+    score: 50
   vp-ops-release-readiness:
     level: 1
     score: 25
   vp-ops-operability:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -119,198 +119,226 @@ viewpoints:
     score: 50
 finding_counts:
   blocker: 0
-  major: 19
+  major: 20
   minor: 6
   note: 0
 findings:
   - id: F001
     severity: major
     rule: vp-po-purpose-alignment
-    line: 9
-    anchor: "- _TODO_: 成果物本体と成果物索引のデータストアは、対応する業務データ辞書の作成時に追加する。"
+    line: 19
+    anchor: >-
+      | 監視結果           | 報告                                 | 監視基準時点、検知した遅延・滞留・判断漏れ、差異なしの確認結果、担当・対応期限・再確認時点 |
+      イベント（監視時）                      | 監視時点毎              | 報告記録の材料、次回監視への引き継ぎ         |
     message: 成果物カタログは `cdsd-sharing` の対象を「成果物、派生ビュー、報告記録」としているのに、本書は成果物本体と成果物索引を未収載としているため、定義を追加するかカタログ側の対象範囲を変更する必要がある。
   - id: F002
     severity: major
     rule: vp-po-decision-readiness
-    line: 9
-    anchor: "- _TODO_: 成果物本体と成果物索引のデータストアは、対応する業務データ辞書の作成時に追加する。"
-    message: 9行目と33行目の未決事項について、判断対象、選択肢、影響、判断者、決定時期、次アクションを一組の意思決定情報として明示する必要がある。
+    line: 19
+    anchor: >-
+      | 監視結果           | 報告                                 | 監視基準時点、検知した遅延・滞留・判断漏れ、差異なしの確認結果、担当・対応期限・再確認時点 |
+      イベント（監視時）                      | 監視時点毎              | 報告記録の材料、次回監視への引き継ぎ         |
+    message: 19行目と43行目の未決事項について、判断対象、選択肢、影響、判断者、決定時期、次アクションを一組の意思決定情報として明示する必要がある。
   - id: F003
     severity: major
     rule: vp-po-publication-accountability
-    line: 33
-    anchor: 監視結果と報告記録の保管先・保持期間・公開範囲は未決であり、[[prj-0001:cdfd-reporting|概念データフロー図（進捗監視・報告・ログ管理）]] の未決事項で扱う。
+    line: 43
+    anchor: ""
     message: 公開範囲が未決のままで、個人情報・非公開情報の有無、公開可否の最終承認者、公開前確認条件が定義されていない。
   - id: F004
     severity: major
     rule: vp-pm-plan-feasibility
-    line: 9
-    anchor: "- _TODO_: 成果物本体と成果物索引のデータストアは、対応する業務データ辞書の作成時に追加する。"
+    line: 19
+    anchor: >-
+      | 監視結果           | 報告                                 | 監視基準時点、検知した遅延・滞留・判断漏れ、差異なしの確認結果、担当・対応期限・再確認時点 |
+      イベント（監視時）                      | 監視時点毎              | 報告記録の材料、次回監視への引き継ぎ         |
     message: 成果物本体・成果物索引の追加作業に、依存関係、担当 Role code、完了条件、判断または実施時期がなく、タスク化と進捗確認ができない。
   - id: F005
     severity: major
     rule: vp-pm-dependency-risk
-    line: 7
-    anchor: "- 本書は進捗監視・報告・ログ管理の CDFD に記載していた情報の正本・参照情報・更新責務の詳細を移設したものである。"
+    line: 17
+    anchor: >-
+      | 登録項目の監査履歴 | 登録簿ライフサイクル、報告           | 項目の追加・変更・削除、状態遷移、actor、reason、event ID                                  |
+      随時（期間レビュー・監査の要求時）      | 登録項目の変更 event 毎 | 期間内の変化の確認、報告との対応確認         |
     message: >-
       `dct-data-model-cdsd.yaml` の `cdsd-sharing.depends_on` にある
       `bdd-deliverable`、`bdd-derived-view`、`bdd-report-record` との依存、未作成時の影響、PJR・Schedule への登録方針を明示する必要がある。
   - id: F006
     severity: major
     rule: vp-pm-control-reporting
-    line: 20
+    line: 30
     anchor: >-
-      | 進捗報告・議事録   | 報告                                 | 状況、判断、決定と理由、未決事項、アクション、担当・期限、根拠参照                         |
-      イベント（報告契機到来時・会議開催時）  | 報告毎、会議毎          | 人間の判断と申し送り、決定・アクションの追跡 |
+      | 監視結果           | 監視で作る基準時点・検知・対応の作業記録        | 報告（監視入力確認〜対応整理）         | 報告記録の材料として保持し、正本の代替にしない           |
+      PM・BA・QE が監視のたびに更新する                    |
     message: 進捗報告・議事録の決定やアクションを PJR または Schedule へ転記する条件、報告先、担当 Role code、転記完了の確認方法を定義する必要がある。
   - id: F007
     severity: major
-    rule: vp-ba-requirements-completeness
-    line: 9
-    anchor: "- _TODO_: 成果物本体と成果物索引のデータストアは、対応する業務データ辞書の作成時に追加する。"
-    message: カタログが対象とする成果物本体と成果物索引が一覧および更新責務表に存在せず、対象範囲の要件が欠落している。
-  - id: F008
-    severity: minor
-    rule: vp-ba-requirements-completeness
-    line: 18
+    rule: vp-ba-business-value
+    line: 15
     anchor: >-
-      | 費用・作業記録     | 報告                                 |
-      費用、作業時間、参加負荷                                                                   |
-      随時                                    | 記録単位は _TODO_: 未定 | 費用と参加負荷への影響の判断材料             |
-    message: 費用・作業記録の粒度が未定のため、記録単位と集計境界を確定する必要がある。
+      | 計画派生情報       | 計画展開、派生生成、報告             | state、Ready、CPM、critical
+      path、timeline                                                 | 変更時（Schedule・実行 event の更新後） | プロジェクト×生成時点   |
+      実行候補・遅延・余裕の監視、進捗報告の根拠   |
+    message: データストアの役割は示されているが、対象者の業務課題、放置時の影響、期待価値・効果、成功基準が定義されておらず, ビジネス価値との繋がりが説明できない。
+  - id: F008
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 19
+    anchor: >-
+      | 監視結果           | 報告                                 | 監視基準時点、検知した遅延・滞留・判断漏れ、差異なしの確認結果、担当・対応期限・再確認時点 |
+      イベント（監視時）                      | 監視時点毎              | 報告記録の材料、次回監視への引き継ぎ         |
+    message: カタログが対象とする成果物本体と成果物索引が一覧および更新責務表に存在せず、対象範囲の要件が欠落している。
   - id: F009
     severity: minor
-    rule: vp-ba-stakeholder-clarity
-    line: 5
+    rule: vp-ba-requirements-completeness
+    line: 28
     anchor: >-
-      活用と共有で扱う概念データストアのうち、正本から再生成する派生情報、監査履歴、人が確定する報告記録について、業務上の役割、内容、粒度、更新責務を一覧で定義する。BA は報告に使う情報の位置づけの確認に、ARC
-      は直接編集してよいデータストアと再生成するデータストアの区別を設計の基礎に、QE は陳腐化・未転記の確認対象の識別に利用する。
-    message: 文書全体の確認者、合意対象、未決事項の承認者が明示されていないため、レビューと合意の責任境界を追加する必要がある。
+      | 登録項目の監査履歴 | 個票内の追記型 event から都度再構成する参照結果 | 登録簿ライフサイクル                   | 期間内の変化と報告の対応確認に使い、履歴自体は変更しない |
+      PM・監査担当が再構成し、元の個票・event は変更しない |
+    message: 費用・作業記録の粒度が未定のため、記録単位と集計境界を確定する必要がある。
   - id: F010
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 15
+    anchor: >-
+      | 計画派生情報       | 計画展開、派生生成、報告             | state、Ready、CPM、critical
+      path、timeline                                                 | 変更時（Schedule・実行 event の更新後） | プロジェクト×生成時点   |
+      実行候補・遅延・余裕の監視、進捗報告の根拠   |
+    message: 文書全体の確認者、合意対象、未決事項の承認者が明示されていないため、レビューと合意の責任境界を追加する必要がある。
+  - id: F011
     severity: major
     rule: vp-arc-cross-document-consistency
-    line: 9
-    anchor: "- _TODO_: 成果物本体と成果物索引のデータストアは、対応する業務データ辞書の作成時に追加する。"
+    line: 19
+    anchor: >-
+      | 監視結果           | 報告                                 | 監視基準時点、検知した遅延・滞留・判断漏れ、差異なしの確認結果、担当・対応期限・再確認時点 |
+      イベント（監視時）                      | 監視時点毎              | 報告記録の材料、次回監視への引き継ぎ         |
     message: >-
       `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-cdsd.yaml` は `cdsd-sharing`
       を「成果物、派生ビュー、報告記録」の定義とする一方、本書は成果物本体と成果物索引を TODO として除外しており、双方の対象範囲を一致させる必要がある。
-  - id: F011
+  - id: F012
     severity: minor
     rule: vp-arc-cross-document-consistency
-    line: 17
+    line: 27
     anchor: >-
-      | 登録項目の監査履歴 | 登録簿ライフサイクル、報告           | 項目の追加・変更・削除、状態遷移、actor、reason、event ID                                  |
-      随時（期間レビュー・監査の要求時）      | 登録項目の変更 event 毎 | 期間内の変化の確認、報告との対応確認         |
+      | 登録簿管理ビュー   | 登録項目個票から再生成する管理ビュー            | 派生生成                               |
+      横断監視と報告材料に使い、直接編集しない                 | BA・運用担当が再生成する                             |
     message: >-
-      `docs/ja/product/trash/cdfd-reporting.md` 77行目および103〜114行目は「Git監査履歴」を入力とする一方、本書17行目と28行目は個票内の追記型 event
+      `docs/ja/product/trash/cdfd-reporting.md` 77行目および103〜114行目は「Git監査履歴」を入力とする一方、本書17行目と27行目は個票内の追記型 event
       から監査履歴を再構成するとしているため、参照元と正本の記述を統一する必要がある。
-  - id: F012
-    severity: major
-    rule: vp-arc-technical-constraints
-    line: 9
-    anchor: "- _TODO_: 成果物本体と成果物索引のデータストアは、対応する業務データ辞書の作成時に追加する。"
-    message: カタログが設計対象とする成果物本体・成果物索引の構成、正本区分、生成元、編集制約が未定義であり、対象全体の設計基礎としては不完全である。
   - id: F013
     severity: major
-    rule: vp-dev-implementation-readiness
-    line: 9
-    anchor: "- _TODO_: 成果物本体と成果物索引のデータストアは、対応する業務データ辞書の作成時に追加する。"
-    message: "`src/deliverable.ts` と `src/catalog.ts` に対応する成果物本体・成果物索引について、入力、出力、保存対象、生成制約、作業対象ファイルが定義されていない。"
+    rule: vp-arc-technical-constraints
+    line: 19
+    anchor: >-
+      | 監視結果           | 報告                                 | 監視基準時点、検知した遅延・滞留・判断漏れ、差異なしの確認結果、担当・対応期限・再確認時点 |
+      イベント（監視時）                      | 監視時点毎              | 報告記録の材料、次回監視への引き継ぎ         |
+    message: カタログが設計対象とする成果物本体・成果物索引の構成、正本区分、生成元、編集制約が未定義であり、対象全体の設計基礎としては不完全である。
   - id: F014
     severity: major
-    rule: vp-dev-change-impact
-    line: 15
+    rule: vp-dev-implementation-readiness
+    line: 19
     anchor: >-
-      | 計画派生情報       | 計画展開、派生生成、報告             | state、Ready、CPM、critical
-      path、timeline                                                 | 変更時（Schedule・実行 event の更新後） | プロジェクト×生成時点   |
-      実行候補・遅延・余裕の監視、進捗報告の根拠   |
-    message: 計画派生情報や登録簿管理ビューの項目・粒度を変更した場合に影響する schema、`src/catalog.ts` 等の生成処理、コマンド、既存生成物、互換性確認を識別する必要がある。
+      | 監視結果           | 報告                                 | 監視基準時点、検知した遅延・滞留・判断漏れ、差異なしの確認結果、担当・対応期限・再確認時点 |
+      イベント（監視時）                      | 監視時点毎              | 報告記録の材料、次回監視への引き継ぎ         |
+    message: "`src/deliverable.ts` と `src/catalog.ts` に対応する成果物本体・成果物索引について、入力、出力、保存対象、生成制約、作業対象ファイルが定義されていない。"
   - id: F015
     severity: major
-    rule: vp-dev-testability
-    line: 5
+    rule: vp-dev-change-impact
+    line: 25
     anchor: >-
-      活用と共有で扱う概念データストアのうち、正本から再生成する派生情報、監査履歴、人が確定する報告記録について、業務上の役割、内容、粒度、更新責務を一覧で定義する。BA は報告に使う情報の位置づけの確認に、ARC
-      は直接編集してよいデータストアと再生成するデータストアの区別を設計の基礎に、QE は陳腐化・未転記の確認対象の識別に利用する。
-    message: 対象ファイル、lint・schema・生成コマンド、期待結果、陳腐化または未転記を検出した場合のエラー対応を明示する必要がある。
+      | ------------------ | ----------------------------------------------- | -------------------------------------- |
+      -------------------------------------------------------- | ---------------------------------------------------- |
+    message: 計画派生情報や登録簿管理ビューの項目・粒度を変更した場合に影響する schema、`src/catalog.ts` 等の生成処理、コマンド、既存生成物、互換性確認を識別する必要がある。
   - id: F016
     severity: major
-    rule: vp-qe-done-criteria
-    line: 9
-    anchor: "- _TODO_: 成果物本体と成果物索引のデータストアは、対応する業務データ辞書の作成時に追加する。"
-    message: 成果物本体・成果物索引の未収載と費用・作業記録の粒度未定により、DC-001 と DC-002 を現在の本文だけでは充足できない。
-  - id: F017
-    severity: major
-    rule: vp-qe-verifiability
-    line: 5
-    anchor: >-
-      活用と共有で扱う概念データストアのうち、正本から再生成する派生情報、監査履歴、人が確定する報告記録について、業務上の役割、内容、粒度、更新責務を一覧で定義する。BA は報告に使う情報の位置づけの確認に、ARC
-      は直接編集してよいデータストアと再生成するデータストアの区別を設計の基礎に、QE は陳腐化・未転記の確認対象の識別に利用する。
-    message: 陳腐化と未転記について、比較対象、基準時点、必須項目、合格条件、確認手順を定義し、結果を再現可能にする必要がある。
-  - id: F018
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 9
-    anchor: "- _TODO_: 成果物本体と成果物索引のデータストアは、対応する業務データ辞書の作成時に追加する。"
-    message: "`bdd-deliverable` に対応する成果物本体と、概要で対象とされる成果物索引が一覧・正本区分・更新責務から欠落している。"
-  - id: F019
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 18
-    anchor: >-
-      | 費用・作業記録     | 報告                                 |
-      費用、作業時間、参加負荷                                                                   |
-      随時                                    | 記録単位は _TODO_: 未定 | 費用と参加負荷への影響の判断材料             |
-    message: 標準列である粒度が「未定」のままなので、費用・作業記録の必須情報を補完する必要がある。
-  - id: F020
-    severity: minor
-    rule: vp-ux-readability
+    rule: vp-dev-testability
     line: 15
     anchor: >-
       | 計画派生情報       | 計画展開、派生生成、報告             | state、Ready、CPM、critical
       path、timeline                                                 | 変更時（Schedule・実行 event の更新後） | プロジェクト×生成時点   |
       実行候補・遅延・余裕の監視、進捗報告の根拠   |
-    message: "`state`、`Ready`、`CPM`、`critical path`、`timeline` の意味または定義先が示されておらず、初見の読者向けに用語説明か正本への参照を追加する必要がある。"
+    message: 対象ファイル、lint・schema・生成コマンド、期待結果、陳腐化または未転記を検出した場合のエラー対応を明示する必要がある。
+  - id: F017
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 19
+    anchor: >-
+      | 監視結果           | 報告                                 | 監視基準時点、検知した遅延・滞留・判断漏れ、差異なしの確認結果、担当・対応期限・再確認時点 |
+      イベント（監視時）                      | 監視時点毎              | 報告記録の材料、次回監視への引き継ぎ         |
+    message: 成果物本体・成果物索引の未収載と費用・作業記録の粒度未定により、DC-001 と DC-002 を現在の本文だけでは充足できない。
+  - id: F018
+    severity: major
+    rule: vp-qe-verifiability
+    line: 15
+    anchor: >-
+      | 計画派生情報       | 計画展開、派生生成、報告             | state、Ready、CPM、critical
+      path、timeline                                                 | 変更時（Schedule・実行 event の更新後） | プロジェクト×生成時点   |
+      実行候補・遅延・余裕の監視、進捗報告の根拠   |
+    message: 陳腐化と未転記について、比較対象、基準時点、必須項目、合格条件、確認手順を定義し、結果を再現可能にする必要がある。
+  - id: F019
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 19
+    anchor: >-
+      | 監視結果           | 報告                                 | 監視基準時点、検知した遅延・滞留・判断漏れ、差異なしの確認結果、担当・対応期限・再確認時点 |
+      イベント（監視時）                      | 監視時点毎              | 報告記録の材料、次回監視への引き継ぎ         |
+    message: "`bdd-deliverable` に対応する成果物本体と、概要で対象とされる成果物索引が一覧・正本区分・更新責務から欠落している。"
+  - id: F020
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 28
+    anchor: >-
+      | 登録項目の監査履歴 | 個票内の追記型 event から都度再構成する参照結果 | 登録簿ライフサイクル                   | 期間内の変化と報告の対応確認に使い、履歴自体は変更しない |
+      PM・監査担当が再構成し、元の個票・event は変更しない |
+    message: 標準列である粒度が「未定」のままなので、費用・作業記録の必須情報を補完する必要がある。
   - id: F021
     severity: minor
-    rule: vp-ux-language-consistency
-    line: 26
+    rule: vp-ux-readability
+    line: 25
     anchor: >-
-      | 計画派生情報       | Schedule・実行 event から再生成する計画情報     | 計画展開、派生生成                     | 同じ更新時点の集合として参照し、一部だけを手修正しない  
-      | PM・運用担当が再生成する                             |
-    message: "`運用担当`、`監査担当`、`会議の確認者` が正式な Role code か説明的な呼称か判別できないため、組織定義に対応する Role code へ統一する必要がある。"
+      | ------------------ | ----------------------------------------------- | -------------------------------------- |
+      -------------------------------------------------------- | ---------------------------------------------------- |
+    message: "`state`、`Ready`、`CPM`、`critical path`、`timeline` の意味または定義先が示されておらず、初見の読者向けに用語説明か正本への参照を追加する必要がある。"
   - id: F022
-    severity: major
-    rule: vp-ops-release-readiness
-    line: 9
-    anchor: "- _TODO_: 成果物本体と成果物索引のデータストアは、対応する業務データ辞書の作成時に追加する。"
-    message: 成果物本体・成果物索引が未収載で、費用・作業記録の粒度も確定していないため、ready 化前の必須定義を完了する必要がある。
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 36
+    anchor: ""
+    message: "`運用担当`、`監査担当`、`会議の確認者` が正式な Role code か説明的な呼称か判別できないため、組織定義に対応する Role code へ統一する必要がある。"
   - id: F023
     severity: major
     rule: vp-ops-release-readiness
-    line: 33
-    anchor: 監視結果と報告記録の保管先・保持期間・公開範囲は未決であり、[[prj-0001:cdfd-reporting|概念データフロー図（進捗監視・報告・ログ管理）]] の未決事項で扱う。
-    message: 監視結果と報告記録の保管先、保持期間、公開範囲、承認者、公開前確認が未確定であり、公開または運用開始の判定ができない。
+    line: 19
+    anchor: >-
+      | 監視結果           | 報告                                 | 監視基準時点、検知した遅延・滞留・判断漏れ、差異なしの確認結果、担当・対応期限・再確認時点 |
+      イベント（監視時）                      | 監視時点毎              | 報告記録の材料、次回監視への引き継ぎ         |
+    message: 成果物本体・成果物索引が未収載で、費用・作業記録の粒度も確定していないため、ready 化前の必須定義を完了する必要がある。
   - id: F024
     severity: major
-    rule: vp-ops-operability
-    line: 26
-    anchor: >-
-      | 計画派生情報       | Schedule・実行 event から再生成する計画情報     | 計画展開、派生生成                     | 同じ更新時点の集合として参照し、一部だけを手修正しない  
-      | PM・運用担当が再生成する                             |
-    message: 派生情報の再生成・監査履歴の再構成について、実行コマンド、入力確認、失敗時対応、問い合わせ先、再確認手順を明示する必要がある。
+    rule: vp-ops-release-readiness
+    line: 43
+    anchor: ""
+    message: 監視結果と報告記録の保管先、保持期間、公開範囲、承認者、公開前確認が未確定であり、公開または運用開始の判定ができない。
   - id: F025
+    severity: major
+    rule: vp-ops-operability
+    line: 36
+    anchor: ""
+    message: 派生情報の再生成・監査履歴の再構成について、実行コマンド、入力確認、失敗時対応、問い合わせ先、再確認手順を明示する必要がある。
+  - id: F026
     severity: major
     rule: vp-qe-config-validity
     line: 9
     anchor: "- _TODO_: 成果物本体と成果物索引のデータストアは、対応する業務データ辞書の作成時に追加する。"
     message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
 done_criteria:
-  satisfied: 1
+  satisfied: 0
   total: 3
   unsatisfied:
     DC-001:
       - BA
     DC-002:
       - ARC
+    DC-003:
+      - QE
   detail_ref: cdsd-sharing-grade-criteria

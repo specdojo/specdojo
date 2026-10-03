@@ -2,12 +2,12 @@
 id: cdsd-execution-grade-criteria
 document: cdsd-execution
 path: docs/ja/product/010-business-specs/020-data-model/cdsd-execution.md
-graded_at: "2026-09-27T16:30:48.345Z"
-graded_by: codex-expert-executor
+graded_at: "2026-10-01T16:04:45.569Z"
+graded_by: agy-expert-executor
 content_hash: ff4dd600af10ea7b0f1dd8e845cf5f5fa71cb39dd7291e3c2d89c406997370b1
 summary:
-  satisfied: 3
-  unsatisfied: 0
+  satisfied: 0
+  unsatisfied: 3
   total: 3
 criteria:
   - id: DC-001
@@ -15,16 +15,19 @@ criteria:
     roles:
       - BA
     viewpoint: vp-ba-requirements-completeness
-    status: satisfied
+    status: unsatisfied
+    reason: 実行状態、plan/result、evidence、worktree のデータストアに関する役割・内容・粒度が未記載である。
   - id: DC-002
     text: データストア構成を設計の基礎として参照できること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
-    status: satisfied
+    status: unsatisfied
+    reason: 実行系データストアの4領域が未収録のため、構成全体を設計基礎として参照できない。
   - id: DC-003
     text: データ検証・整合性確認の対象が識別できること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
-    status: satisfied
+    status: unsatisfied
+    reason: 定義対象の一部が未定義のままであり、データ検証・整合性確認の対象を完全に識別できない。

@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "project_id": "prj-0001",
+  "target": "deliverable",
+  "document": "docs/ja/projects/prj-0001/030-project-management/pm-communication-plan.md",
+  "content_hash": "9079267db2d4ded76eaf486b2ae824cc1c2706cfb132d257fe65c54f63217edb",
+  "stage_completed": 0,
+  "stage_failed": 1,
+  "stage_total": 1,
+  "consecutive_failures": 1,
+  "max_failures": 3,
+  "last_run_id": "JBR-grade-deliverable-710933c29195",
+  "updated_at": "2026-10-02T16:34:12.327Z"
+}

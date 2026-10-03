@@ -1,0 +1,3 @@
+grade pipeline incomplete: incomplete=1 run_id=JBR-grade-deliverable-710933c29195; rerun with --run-id JBR-grade-deliverable-710933c29195 to retry the failed stages, or start a new run with --incomplete
+grade pipeline incomplete document: docs/ja/projects/prj-0001/030-project-management/pm-communication-plan.md failed_stage=1
+grade pipeline failed: run_id=JBR-grade-deliverable-710933c29195 exit_code=1

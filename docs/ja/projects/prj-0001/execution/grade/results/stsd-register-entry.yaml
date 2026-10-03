@@ -6,7 +6,7 @@ target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 69
-graded_at: "2026-09-27T20:31:25.568Z"
+graded_at: "2026-09-29T16:13:49.870Z"
 graded_by: codex-expert-executor
 content_hash: 48c647b4efecd15bfe8dcfe583519d02eea22fa18c70c886d97ce88f85fcbb19
 source_hashes:
@@ -119,8 +119,8 @@ viewpoints:
     score: 50
 finding_counts:
   blocker: 0
-  major: 13
-  minor: 7
+  major: 14
+  minor: 8
   note: 0
 findings:
   - id: F001
@@ -211,19 +211,39 @@ findings:
       `depends_on` に宣言しているが、本書の `based_on` は空で、依存成果物も未作成のままである。
   - id: F011
     severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 124
+    anchor: >-
+      | _ASSUMPTION_: 再開は起票済みへ戻す遷移として定義した。再開時に対応中・待機中・審査待ちを直接指定する運用は、再開と後続遷移を同時に記録したものとして扱う   |
+      `T-15`〜`T-18`                 | ARC、PO | 本書のレビュー時            |
+    message: >-
+      `src/register.ts` の `register reopen —status` は終端状態から `open`・`in-progress`・`waiting`・`review` への直接遷移を許可するが、本書は
+      `T-15`〜`T-18` を `open` のみに限定し、直接指定を後続遷移との同時記録として扱っている。
+  - id: F012
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 126
+    anchor: >-
+      | _UNDECIDED_: `note` の終了を CLI で拒否するか。現行運用規則は `note` を終端させないが、完了操作が `note` を拒否する検証は確認できていない                  |
+      `T-02`、`T-05`、`T-06`         | ARC、QE | 登録簿検証の改訂時          |
+    message: >-
+      `src/register.ts` は `note` に対する `close`・`reject`・`defer` を既に拒否しているため、「拒否する検証は確認できていない」という _UNDECIDED_
+      を現行制約へ更新する必要がある。
+  - id: F013
+    severity: major
     rule: vp-arc-technical-constraints
     line: 29
     anchor: "## 2. 状態一覧"
     message: >-
       `item_status`、`block_reason`、`completed_at` と `src/register.ts` の活動中・終端ガードを明示的に対応付け、状態表と許可遷移を schema・CLI
       の現行制約へ整合させる必要がある。
-  - id: F012
+  - id: F014
     severity: major
     rule: vp-dev-implementation-readiness
     line: 97
     anchor: "## 4. 遷移の説明"
     message: 実装可能な遷移行列として使えるよう、各 `register` コマンドの遷移元・遷移先、更新する Frontmatter キー、拒否条件を T-ID 単位で現行実装へ整合させる必要がある。
-  - id: F013
+  - id: F015
     severity: minor
     rule: vp-dev-change-impact
     line: 124
@@ -233,13 +253,13 @@ findings:
     message: >-
       遷移方針を確定した際の影響先として `src/register.ts`、register item/event
       schema、関連テスト、`pjr-rulebook.md`、`register-operation-guide.md` を列挙する必要がある。
-  - id: F014
+  - id: F016
     severity: major
     rule: vp-dev-testability
     line: 97
     anchor: "## 4. 遷移の説明"
     message: 全許可・禁止遷移、type 別終端、`note` の拒否、日時・理由フィールド更新について、検証対象と期待結果を定義し `register build` および関連テストへ接続する必要がある。
-  - id: F015
+  - id: F017
     severity: major
     rule: vp-qe-done-criteria
     line: 124
@@ -247,13 +267,13 @@ findings:
       | _ASSUMPTION_: 再開は起票済みへ戻す遷移として定義した。再開時に対応中・待機中・審査待ちを直接指定する運用は、再開と後続遷移を同時に記録したものとして扱う   |
       `T-15`〜`T-18`                 | ARC、PO | 本書のレビュー時            |
     message: 再開・却下・延期・`note` の未決事項と正本文書との差異を解消し、DC-001〜DC-005 を本文根拠から再判定できる状態にする必要がある。
-  - id: F016
+  - id: F018
     severity: major
     rule: vp-qe-verifiability
     line: 57
     anchor: "open --> in_progress : 担当・対応方針設定 / type が note 以外で着手できる"
     message: "`着手できる`、`対応結果と検証結果がそろった`、`新事実により再評価が必要` を、必須記録、承認者、確認結果による pass / fail 条件へ具体化する必要がある。"
-  - id: F017
+  - id: F019
     severity: major
     rule: vp-qe-omissions-consistency
     line: 127
@@ -262,13 +282,13 @@ findings:
       に業務データ辞書（`bdd-register-entry`）を追加する。現時点で同文書は未作成である                               | 全状態                         |
       BA      | `bdd-register-entry` 作成時 |
     message: "カタログの `depends_on: bdd-register-entry` を解消して `based_on` へ反映し、recipe の完成条件に反する _TODO_ と未収載の直接終端遷移を残さないようにする必要がある。"
-  - id: F018
+  - id: F020
     severity: minor
     rule: vp-ux-language-consistency
     line: 9
     anchor: "- 状態の正本: 個票 Frontmatter の状態・登録日時・完了日時と、本文の結論。登録項目一覧や状態別ビューは個票から再生成する派生物であり、状態の正本にしない"
     message: 文書成熟度の `status` と処理状態の `item_status` を明確に区別し、追記型 event は個票内ではなく `events/pjr-XXXX.yaml` に保存されることを正確に記述する必要がある。
-  - id: F019
+  - id: F021
     severity: major
     rule: vp-ops-operability
     line: 35
@@ -276,7 +296,7 @@ findings:
       | `waiting`     | 待機中   | 保留   | 外部回答、前提解消、Agent 実行の失敗復旧、審査材料の補完を待つ項目                |
       待機理由と再開条件が個票の結論欄または本文へ記録され、状態が `waiting` である                        | 個票 Frontmatter・本文  |
     message: 待機理由は `block_reason`、再開条件は本文の所定箇所へ記録し、終端時の `conclusion` を待機操作で変更しない運用へ統一する必要がある。
-  - id: F020
+  - id: F022
     severity: major
     rule: vp-qe-config-validity
     line: 124

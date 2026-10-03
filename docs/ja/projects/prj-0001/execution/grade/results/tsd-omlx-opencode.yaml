@@ -1,0 +1,260 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: tsd-omlx-opencode
+path: docs/ja/product/030-architecture/020-infrastructure/tsd-omlx-opencode.md
+target: deliverable
+rubric: grade-rubric-v2
+verdict: needs-work
+score: 73
+graded_at: "2026-09-29T16:59:44.330Z"
+graded_by: codex-expert-executor
+content_hash: b6a0ff37d37426abdcd0b8a53afacc15c7e632cb0994e3b99c16f192c40850cb
+source_hashes:
+  catalog-entry: 98fc4fcd2881655ea7e9929cec248e9a79cbe9d6ac71955a800d3a503fe279e9
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  dependency:tsd-omlx: aa27a13e13c2e6e3d05ce578d59e754a0fe2906d0fd432fba65443f9fac00d31
+  members: ec838bbb5673ba76f1a15672e094c00088dcb686a2a67225ca8411c0dc5e90d3
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
+categories:
+  purpose:
+    score: 75
+  operations:
+    score: 63
+  planning:
+    score: 67
+  business:
+    score: 50
+  consistency:
+    score: 63
+  architecture:
+    score: 83
+  usability:
+    score: 100
+  implementation:
+    score: 100
+  quality:
+    score: 56
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 2
+    score: 50
+  vp-po-publication-accountability:
+    level: 3
+    score: 75
+  vp-pm-plan-feasibility:
+    level: 3
+    score: 75
+  vp-pm-dependency-risk:
+    level: 3
+    score: 75
+  vp-pm-control-reporting:
+    level: 2
+    score: 50
+  vp-ba-business-value:
+    level: 2
+    score: 50
+  vp-ba-requirements-completeness:
+    level: 2
+    score: 50
+  vp-ba-stakeholder-clarity:
+    level: 2
+    score: 50
+  vp-arc-cross-document-consistency:
+    level: 3
+    score: 75
+  vp-arc-technical-constraints:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 2
+    score: 50
+  vp-qe-done-criteria:
+    level: 1
+    score: 25
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 2
+    score: 50
+  vp-ops-operability:
+    level: 3
+    score: 75
+  vp-ops-agent-boundary:
+    level: 2
+    score: 50
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 13
+  minor: 5
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-po-decision-readiness
+    line: 82
+    anchor: 最初は既定のモデルにせず、`/models` から選んで、Ollama の Gemma / Qwen と比べてから決める。
+    message: 既定モデルを比較後に決めるとしているが、比較結果の合否閾値、承認者、判断期限、決定記録先、採否による影響を明記しなければPOが技術スタック選定を承認できない。
+  - id: F002
+    severity: minor
+    rule: vp-po-publication-accountability
+    line: 123
+    anchor: >-
+      | Claude Code / Codex | 大規模な設計判断、複数の仕様にまたがる高度な整合性の判断、難しい根本原因の解析、大規模なリファクタの最終レビュー、セキュリティに関わる変更、Ornith
+      の結果のレビュー       |
+    message: Claude Code/Codexに「最終レビュー」とセキュリティ変更を割り当てる記述へ、人間のPOが公開可否と最終判断を担うmanual gateおよび公開前の機密情報確認を追記する必要がある。
+  - id: F003
+    severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 138
+    anchor: "[[tsd-omlx]] の「段階的な最適化」のフェーズ1では、Ollama の Qwen3.8（[[tsd-ollama-opencode]]）と同じ実タスクで比べる。公平に比べるため、同じ commit から始める。"
+    message: Qwen3.8との比較について、担当Role code、実施時期、完了条件を明記しなければ進捗確認可能な作業計画へ落とし込めない。
+  - id: F004
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 82
+    anchor: 最初は既定のモデルにせず、`/models` から選んで、Ollama の Gemma / Qwen と比べてから決める。
+    message: 既定モデルの保留判断について、`opencode.json`やagent設定への影響、ScheduleまたはPJRへの登録要否、判断後の更新対象を明記する必要がある。
+  - id: F005
+    severity: major
+    rule: vp-pm-control-reporting
+    line: 146
+    anchor: >-
+      比較する項目は、総時間、Prompt / Prefill、Generation、thinking の量、tool call
+      の回数、テストの成功、修正漏れ、不要な変更、人間が修正にかけた時間とする。最も重視する指標は、人間が最終的に作業を完了するまでの総時間である。
+    message: 比較結果の記録先・報告先・担当Role codeと、検出した課題・リスク・変更要求・採用決定をPJR等へ分離して転記する規則がない。
+  - id: F006
+    severity: major
+    rule: vp-ba-business-value
+    line: 3
+    anchor: 本書では、[[tsd-omlx]] の構成を前提に、devcontainer 内の opencode から Mac ホスト上の oMLX を利用するための設定方法を定義する。
+    message: oMLX接続という技術目的を、どの利用者のどの業務課題に対応させるのか、未導入時の影響、期待効果、上位の成功基準への参照を明記する必要がある。
+  - id: F007
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 9
+    anchor: 本書の対象は次のとおり。
+    message: 対象ユースケースだけでなく、対応する業務要件、対象外、採用技術の選定理由、バージョンおよびライセンス上の要件を定義しなければ要件充足を確認できない。
+  - id: F008
+    severity: major
+    rule: vp-ba-stakeholder-clarity
+    line: 118
+    anchor: "## 7. 使い分け"
+    message: agent別の作業適性に加え、設定担当、運用確認者、技術選定の承認者と合意対象をRole codeで明記する必要がある。
+  - id: F009
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 123
+    anchor: >-
+      | Claude Code / Codex | 大規模な設計判断、複数の仕様にまたがる高度な整合性の判断、難しい根本原因の解析、大規模なリファクタの最終レビュー、セキュリティに関わる変更、Ornith
+      の結果のレビュー       |
+    message: >-
+      本文はClaude
+      Code/Codexを「大規模なリファクタの最終レビュー」とする一方、`docs/ja/projects/prj-0001/030-project-management/pm-organization.md`の24行目はAI
+      Agentをレビュー支援に限定して最終判断を禁止し、`pm-members.yaml`の718行目は最終承認を人間POに留保しているため、支援範囲と人間ゲートを明記して整合させる必要がある。
+  - id: F010
+    severity: major
+    rule: vp-arc-technical-constraints
+    line: 15
+    anchor: "## 2. 前提条件"
+    message: oMLX、opencode、`@ai-sdk/openai-compatible`、Ornithモデルの対応バージョン、更新方針、ライセンスおよび互換性制約を識別できるようにする必要がある。
+  - id: F011
+    severity: major
+    rule: vp-dev-testability
+    line: 162
+    anchor: "- oMLX が起動していること: `curl http://127.0.0.1:8000/v1/models`"
+    message: "API key付きで起動する前提にもかかわらず起動確認の`curl`に`Authorization: Bearer`ヘッダーがなく、認証が正常な環境でも失敗するため、認証付きコマンドと期待結果へ修正する必要がある。"
+  - id: F012
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 3
+    anchor: 本書では、[[tsd-omlx]] の構成を前提に、devcontainer 内の opencode から Mac ホスト上の oMLX を利用するための設定方法を定義する。
+    message: DC-001の業務要件との整合およびDC-002の承認判断に必要な選定理由、代替案、判断者、合否条件、未決事項と影響が不足している。
+  - id: F013
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 44
+    anchor: プロジェクトの `opencode.json` の `provider` に、次を追加する。既存の設定へ merge する。
+    message: DC-003のライセンス・バージョン方針とDC-004のテストフレームワーク・CI/CD環境への参照がなく、カタログの完了条件を確認できない。
+  - id: F014
+    severity: major
+    rule: vp-qe-verifiability
+    line: 146
+    anchor: >-
+      比較する項目は、総時間、Prompt / Prefill、Generation、thinking の量、tool call
+      の回数、テストの成功、修正漏れ、不要な変更、人間が修正にかけた時間とする。最も重視する指標は、人間が最終的に作業を完了するまでの総時間である。
+    message: 比較指標は列挙されているものの採用・不採用を決める閾値、測定回数、許容失敗率がなく、同じ結果から一意にpass/failを判定できない。
+  - id: F015
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 15
+    anchor: "## 2. 前提条件"
+    message: "`tsd-rulebook.md`の全体方針が求めるバージョン記載と、API key必須構成を一貫して検証する認証付き確認手順が欠落している。"
+  - id: F016
+    severity: major
+    rule: vp-ops-release-readiness
+    line: 82
+    anchor: 最初は既定のモデルにせず、`/models` から選んで、Ollama の Gemma / Qwen と比べてから決める。
+    message: 既定モデルの比較判断が未解決のまま、ready化の合格条件、承認Role、公開前確認、未採用時の扱いがないためリリース可否を判断できない。
+  - id: F017
+    severity: minor
+    rule: vp-ops-operability
+    line: 154
+    anchor: "### 9.2. API key の管理"
+    message: API keyの漏えい・期限切れ・ローテーション時に、Mac側の値とopencode credential storeを更新して再接続確認する手順を追記する必要がある。
+  - id: F018
+    severity: major
+    rule: vp-ops-agent-boundary
+    line: 123
+    anchor: >-
+      | Claude Code / Codex | 大規模な設計判断、複数の仕様にまたがる高度な整合性の判断、難しい根本原因の解析、大規模なリファクタの最終レビュー、セキュリティに関わる変更、Ornith
+      の結果のレビュー       |
+    message: Claude Code/Codexによる設計判断・最終レビュー・セキュリティ変更は支援作業に限定し、最終承認、公開可否判断、説明責任を人間のPOに残すmanual gateを明記する必要がある。
+done_criteria:
+  satisfied: 1
+  total: 5
+  unsatisfied:
+    DC-001:
+      - BA
+    DC-002:
+      - PO
+    DC-003:
+      - ARC
+    DC-004:
+      - QE
+  detail_ref: tsd-omlx-opencode-grade-criteria

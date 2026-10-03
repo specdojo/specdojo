@@ -2,8 +2,8 @@
 id: prj-0001:prj-scope-grade-criteria
 document: prj-0001:prj-scope
 path: docs/ja/projects/prj-0001/020-project-definition/prj-scope.md
-graded_at: "2026-09-24T16:24:45.064Z"
-graded_by: codex-expert-executor
+graded_at: "2026-10-02T16:19:54.503Z"
+graded_by: agy-expert-executor
 content_hash: e631f8a78068b515871352df3a7547fdd32eef4c91fb923f944e19605c3b5564
 summary:
   satisfied: 3
@@ -34,4 +34,4 @@ criteria:
       - PM
     viewpoint: vp-pm-plan-feasibility
     status: unsatisfied
-    reason: 公開後の終了境界が「実利用3件を目安」という非確定表現で、SC-04〜SC-06 の判定時期とも対応せず、スケジュール計画の確定前提にできない。
+    reason: 公開後期間が「実利用3件を目安」と曖昧で、終了イベントを一意に決められずスケジュール計画の前提にならないため。

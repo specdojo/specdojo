@@ -2,12 +2,12 @@
 id: tsd-home-mac-dev-server-grade-criteria
 document: tsd-home-mac-dev-server
 path: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md
-graded_at: "2026-09-27T21:09:03.303Z"
-graded_by: codex-expert-executor
-content_hash: 5b6e8238ca207912e1d9600ed1f79ce5789442559d414400da5cbc7c2fd838f7
+graded_at: "2026-10-02T16:08:49.906Z"
+graded_by: agy-expert-executor
+content_hash: 3ee780c1bc6a7a2b2d8f9259f464f662ad8ec5497392c007b81f9294b0f750a1
 summary:
-  satisfied: 2
-  unsatisfied: 3
+  satisfied: 0
+  unsatisfied: 5
   total: 5
 criteria:
   - id: DC-001
@@ -15,31 +15,33 @@ criteria:
     roles:
       - BA
     viewpoint: vp-ba-requirements-completeness
-    status: satisfied
+    status: unsatisfied
+    reason: 採用技術の選定理由と制約が業務要件（接続断・スリープ等）と整合していることが明示されていない。
   - id: DC-002
     text: 技術スタック選定を承認できること
     roles:
       - PO
     viewpoint: vp-po-decision-readiness
-    status: satisfied
+    status: unsatisfied
+    reason: 承認対象、判断者、未決事項の有無と影響が明示されておらず技術スタック選定を承認できない。
   - id: DC-003
     text: 技術的制約・ライセンス・バージョン方針が識別できること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
-    reason: 採用技術の対応バージョン、更新方針、ライセンス条件を識別できない。
+    reason: 各技術の対応バージョン・更新方針とライセンス条件が示されていない。
   - id: DC-004
     text: テストフレームワーク・CI/CD環境の参照として使えること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
     status: unsatisfied
-    reason: テストフレームワークとCI/CD環境の正本または確認手順が示されていない。
+    reason: テストフレームワーク、CI/CD環境への参照が欠落している。
   - id: DC-005
     text: 開発環境構築・ライブラリ選定の参照として使えること
     roles:
       - DEV
     viewpoint: vp-dev-implementation-readiness
     status: unsatisfied
-    reason: 開発環境構築は参照できるが、依存ライブラリの選定方針または正本への参照がない。
+    reason: devcontainerの構成情報が現行の実装（Antigravity、Claude Code、Codexの導入方法）と乖離しており参照として不十分。

@@ -2,7 +2,7 @@
 id: cdfd-overview-grade-criteria
 document: cdfd-overview
 path: docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md
-graded_at: "2026-09-27T16:06:53.362Z"
+graded_at: "2026-09-29T16:06:33.682Z"
 graded_by: codex-expert-executor
 content_hash: d21b0a535f2e00298b71f19804552832a8984c57ad7b58a895f7d96e8a3f2bb3
 summary:
@@ -22,7 +22,7 @@ criteria:
       - PO
     viewpoint: vp-po-purpose-alignment
     status: unsatisfied
-    reason: 現行の14領域・六グループと補助操作の境界に対する PO の承認記録を特定できない。
+    reason: 現行の 14 領域・六グループに対する PO の承認記録を本文から確認できない。
   - id: DC-003
     text: 各領域の起点イベントと、プロセスグループ単位の主要入力・主要出力・データストアが識別でき、概念データフローのエッジと相互に対応し、プロセスグループ別 CDFD の構成方針として参照できること
     roles:

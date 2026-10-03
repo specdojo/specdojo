@@ -5,9 +5,9 @@ path: docs/ja/product/010-business-specs/010-data-flow/cdfd-orchestrator.md
 target: deliverable
 rubric: grade-rubric-v2
 verdict: pass
-score: 98
-graded_at: "2026-09-27T15:51:34.265Z"
-graded_by: codex-expert-executor
+score: 96
+graded_at: "2026-09-30T16:24:34.141Z"
+graded_by: agy-expert-executor
 content_hash: 1c0c4356f655ccdaf485fcbbbe8c03b97b6d604f8864da1574caddcdcfe6a814
 source_hashes:
   catalog-entry: 41ffa9d01cc1b70debbefd962b011eeb2cd17df5bdcc0a1e51947c6570d681e6
@@ -26,7 +26,7 @@ categories:
   operations:
     score: 100
   planning:
-    score: 100
+    score: 92
   business:
     score: 100
   consistency:
@@ -38,7 +38,7 @@ categories:
   implementation:
     score: 100
   quality:
-    score: 100
+    score: 94
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -50,8 +50,8 @@ viewpoints:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-dependency-risk:
     level: 4
     score: 100
@@ -92,8 +92,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
     level: 3
     score: 75
@@ -124,38 +124,53 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 4
+  minor: 6
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 13
-    anchor: "## 2. 適用範囲"
-    message: rulebook 6.1 と recipe 4.2 は適用範囲への期間の明記を要求している一方、本節には対象期間または期間を限定しない旨がないため追記してください。
+    rule: vp-pm-plan-feasibility
+    line: 49
+    anchor: >-
+      | 成果物カタログ / catalog | 参照     | 対象成果物、依存、`done_criteria`、`evidence_refs`
+      を確認し、計画・実行・評価・完了のどの要求が必要かを判定する。             |
+    message: プロセス領域の表に完了条件が定義されていないため、各タスクの完了や進捗を客観的に判定できません。完了条件を明記してください。
   - id: F002
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 13
-    anchor: "## 2. 適用範囲"
-    message: rulebook と recipe が必須とする適用期間または期間を限定しない旨が適用範囲から欠落しているため追記してください。
+    rule: vp-qe-verifiability
+    line: 49
+    anchor: >-
+      | 成果物カタログ / catalog | 参照     | 対象成果物、依存、`done_criteria`、`evidence_refs`
+      を確認し、計画・実行・評価・完了のどの要求が必要かを判定する。             |
+    message: プロセスごとの完了条件が記載されていないため、各処理のテストや受入の合否を判定する基準が不足しています。
   - id: F003
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 35
-    anchor: >-
-      | プロセス ID | プロセス      | 業務目的                                                                                      
-      | 主な担当                                             |
-      起動条件                                                                                                     | 必須性 |
-    message: rulebook 6.2 が必須とする「完了条件」列がプロセス領域の表から欠落しているため、列を追加し各プロセスの完了条件を明記してください。
+    line: 27
+    anchor: "### 3.1. オーケストレーター（P-14）"
+    message: rulebook 6.1 と recipe 4.2 は適用範囲への期間の明記を要求している一方、本節には対象期間または期間を限定しない旨がないため追記してください。
   - id: F004
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 149
+    line: 27
+    anchor: "### 3.1. オーケストレーター（P-14）"
+    message: rulebook と recipe が必須とする適用期間または期間を限定しない旨が適用範囲から欠落しているため追記してください。
+  - id: F005
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 49
     anchor: >-
-      | `E-14-03` | `P-14-04`    | 要求先から失敗またはブロックの応答があり、要求で求めた出力または次の判断に必要な情報がそろわない。                             |
-      後続グループへの要求発行を止め、失敗・ブロック理由、判断依頼、再開位置を実行記録へ残して、人間の判断対象として提示する。                                                 |
-      失敗・ブロック原因が解消され、再実行、別要求、または中止のいずれかを人間が判断した後、再開する場合は `P-14-02` から要求を再判定する。 |
+      | 成果物カタログ / catalog | 参照     | 対象成果物、依存、`done_criteria`、`evidence_refs`
+      を確認し、計画・実行・評価・完了のどの要求が必要かを判定する。             |
+    message: rulebook 6.2 が必須とする「完了条件」列がプロセス領域の表から欠落しているため、列を追加し各プロセスの完了条件を明記してください。
+  - id: F006
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 159
+    anchor: >-
+      | [[cdfd-action\|概念データフロー図（Action）]] | 完了・改善の人間判断、必要な構成変更、完了不能時の再計画 |
+      完了・改善要求、評価結果、進捗報告の判断事項、完了条件、必要に応じた構成変更要求              |
+      完了・改善の判断、完了記録、再計画要求、または承認結果に基づく更新結果が引き渡された。                 |
     message: rulebook 6.7 と template が必須とする「停止範囲」列が例外表にないため、各例外で確定・起動してはならない後続プロセス、出力、委譲を独立した列として明示してください。
 done_criteria:
   satisfied: 3

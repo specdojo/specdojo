@@ -2,12 +2,12 @@
 id: sysd-antigravity-agent-settings-grade-criteria
 document: sysd-antigravity-agent-settings
 path: docs/ja/product/040-system-design/sysd-antigravity-agent-settings.md
-graded_at: "2026-09-27T21:44:33.909Z"
-graded_by: codex-expert-executor
-content_hash: 1b16c0e9eee40c4bc0bab086a919b47326877b376ff7906566053a193fa33198
+graded_at: "2026-10-01T16:23:06.222Z"
+graded_by: agy-expert-executor
+content_hash: ade83ab86eecf2ce4f88cc1219bea911534c633f15a5abe677a7eb397ad41027
 summary:
-  satisfied: 2
-  unsatisfied: 3
+  satisfied: 0
+  unsatisfied: 5
   total: 5
 criteria:
   - id: DC-001
@@ -16,30 +16,32 @@ criteria:
       - BA
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
-    reason: Antigravity 採用の業務要件・出典が本文になく、custom agent 非対応という制約も現行 CLI と一致しない。
+    reason: 業務要件や期待効果への言及がなく、custom agent 採否等の要件も未確定である。
   - id: DC-002
     text: 設計方針を承認できること
     roles:
       - PO
     viewpoint: vp-po-decision-readiness
     status: unsatisfied
-    reason: custom agent の採否、stage agent 定義、安全境界が未決定であり、設計方針を承認できない。
+    reason: custom agent 非対応の誤った前提に基づき、安全境界や影響範囲が示されていない。
   - id: DC-003
     text: 技術的制約・依存関係が識別できること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
-    status: satisfied
+    status: unsatisfied
+    reason: custom agent 発見・選択仕様や対応 CLI バージョンなどの技術前提が欠落している。
   - id: DC-004
     text: テスト設計・検証観点の参照として使えること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
     status: unsatisfied
-    reason: "`--agent`、`.agents/agents/`、stage agent 対応と統合結果の判定条件が検証観点から欠落している。"
+    reason: custom agent 採否に関する検証項目がなく、検証手順の成功状態も不明確である。
   - id: DC-005
     text: 実装の基礎として参照できること
     roles:
       - DEV
     viewpoint: vp-dev-implementation-readiness
-    status: satisfied
+    status: unsatisfied
+    reason: 誤った能力前提に基づくため、設定や保護パス等の実装内容を確定できない。

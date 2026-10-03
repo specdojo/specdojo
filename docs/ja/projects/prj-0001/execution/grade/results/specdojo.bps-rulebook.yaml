@@ -5,10 +5,10 @@ path: docs/ja/specdojo/rulebooks/bps-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 89
-graded_at: "2026-09-27T20:49:35.285Z"
-graded_by: claude-expert-executor
-content_hash: 6606fbcdeaec9b6b16bea144a80163407812b66e5d6d76d7e9ed9f7c20306e0e
+score: 93
+graded_at: "2026-09-29T21:13:24.764Z"
+graded_by: codex-expert-executor
+content_hash: c15d0ddf46459041ce80f2ac5971b27c2387d33e4fa5174576b453d56d9d4c1b
 categories:
   purpose:
     score: 100
@@ -21,11 +21,11 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 83
+    score: 92
   implementation:
     score: 100
   quality:
-    score: 83
+    score: 92
   consistency:
     score: 75
 viewpoints:
@@ -60,8 +60,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -81,8 +81,8 @@ viewpoints:
     level: 3
     score: 75
   vp-qe-kata-conformance:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-readability:
     level: 4
     score: 100
@@ -104,40 +104,22 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 6
+  minor: 3
   note: 0
 findings:
   - id: F001
-    severity: minor
-    rule: vp-arc-conciseness
-    line: 172
-    anchor: "## 8. サンプル"
-    message: 第8章は Frontmatter から検証・受入観点まで完成例を再掲しており、独立した sample と二重管理になるため, 形式の輪郭だけを示す最小例へ縮小する必要がある。
-  - id: F002
     severity: minor
     rule: vp-dev-testability
     line: 150
     anchor: "### 6.9. 完成判定"
     message: 完成判定に Markdown lint や成果物 Frontmatter スキーマ検証など機械的に確認する検証手段が示されておらず、BPS 作成後にどのコマンドで形式適合を確認するかが読み取れない。
-  - id: F003
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 187
-    anchor: "## 1. 概要"
-    message: 第8章の埋め込みサンプルの「概要」には、本文要件で必須とした「対象者」がなく、ルール自身が示す完成例として必須項目を満たしていない。
-  - id: F004
+  - id: F002
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 37
     anchor: "- 処理ステップ ID は文書内で一意な `S-01` 形式、主要例外 ID は `E-01` 形式とします。CDFD のプロセス ID がある場合は、処理表の「CDFD プロセス」列で対応させます。"
     message: ファイル命名・ID規則では処理ステップ ID と主要例外 ID の形式だけを定め、6.2 で使うトリガー ID の `T-01` 形式が規則章に含まれておらず ID 規則が分散している。
-  - id: F005
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 172
-    anchor: "## 8. サンプル"
-    message: "`specdojo:bps-sample` を完成例の正本として宣言しながら、第8章にも別の完成例を全章構成で保持しており、rulebook と sample の責務分担に反する。"
-  - id: F006
+  - id: F003
     severity: minor
     rule: vp-ux-language-consistency
     line: 79

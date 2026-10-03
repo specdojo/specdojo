@@ -2,8 +2,8 @@
 id: cdfd-action-grade-criteria
 document: cdfd-action
 path: docs/ja/product/010-business-specs/010-data-flow/cdfd-action.md
-graded_at: "2026-09-27T15:21:10.689Z"
-graded_by: codex-expert-executor
+graded_at: "2026-09-30T16:07:51.110Z"
+graded_by: agy-expert-executor
 content_hash: 5d3fc7872c2d9f07e2e7282dc9c546babd6f6c39af2fc4c2afc0ad10611e17da
 summary:
   satisfied: 1
@@ -16,7 +16,7 @@ criteria:
       - BA
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
-    reason: P-12 の承認結果と P-13 の非推奨化判断が、全体概要の主要入力から領域別入力へ矛盾なく引き継がれていない。
+    reason: 全体概要の主要入力であるP-12の承認結果とP-13の非推奨化判断が引き継がれていない。
   - id: DC-002
     text: 完了記録、稼働構成、Kata のバージョン、成果物カタログ、保管庫への更新がプロセス単位で識別でき、Plan への再計画要求がグループ外委譲として示されていること
     roles:
@@ -29,4 +29,4 @@ criteria:
       - PO
     viewpoint: vp-po-decision-readiness
     status: unsatisfied
-    reason: 判断を人間へ残している一方、P-12・P-13 の最終判断担当がプロジェクト RACI の PO 最終責任と一致せず、承認可能な責任境界になっていない。
+    reason: 構成変更承認と非推奨化の最終判断者がPOとして分離されておらず、承認可能な責任分担になっていない。

@@ -1,0 +1,287 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: tsd-omlx
+path: docs/ja/product/030-architecture/020-infrastructure/tsd-omlx.md
+target: deliverable
+rubric: grade-rubric-v2
+verdict: needs-work
+score: 65
+graded_at: "2026-09-29T17:07:24.489Z"
+graded_by: codex-expert-executor
+content_hash: aa27a13e13c2e6e3d05ce578d59e754a0fe2906d0fd432fba65443f9fac00d31
+source_hashes:
+  catalog-entry: 5f2dd78dd3649e59ee4f7601b8cf27070eb88278665b56de0fab32a8f775b196
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  members: ec838bbb5673ba76f1a15672e094c00088dcb686a2a67225ca8411c0dc5e90d3
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
+categories:
+  purpose:
+    score: 63
+  operations:
+    score: 50
+  planning:
+    score: 42
+  business:
+    score: 58
+  consistency:
+    score: 50
+  architecture:
+    score: 83
+  usability:
+    score: 94
+  implementation:
+    score: 50
+  quality:
+    score: 63
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 3
+    score: 75
+  vp-po-decision-readiness:
+    level: 2
+    score: 50
+  vp-po-publication-accountability:
+    level: 2
+    score: 50
+  vp-pm-plan-feasibility:
+    level: 2
+    score: 50
+  vp-pm-dependency-risk:
+    level: 2
+    score: 50
+  vp-pm-control-reporting:
+    level: 1
+    score: 25
+  vp-ba-business-value:
+    level: 3
+    score: 75
+  vp-ba-requirements-completeness:
+    level: 2
+    score: 50
+  vp-ba-stakeholder-clarity:
+    level: 2
+    score: 50
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-technical-constraints:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 3
+    score: 75
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 2
+    score: 50
+  vp-dev-change-impact:
+    level: 2
+    score: 50
+  vp-dev-testability:
+    level: 3
+    score: 75
+  vp-qe-done-criteria:
+    level: 1
+    score: 25
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 1
+    score: 25
+  vp-ops-operability:
+    level: 3
+    score: 75
+  vp-ops-agent-boundary:
+    level: 2
+    score: 50
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 16
+  minor: 5
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-po-purpose-alignment
+    line: 3
+    anchor: >-
+      SpecDojo では、ローカル LLM の実行基盤として、Ollama（[[tsd-ollama]]）に加えて oMLX を技術スタックの一部として定義する。oMLX は Apple Silicon 向けの MLX
+      推論サーバで、1 つのモデルを continuous batching で複数のリクエストに共有させられる。devcontainer 内の複数の opencode agent から同じモデルを並列に使う用途に向く。なお、oMLX
+      の使用は必須ではない。
+    message: oMLX の並列実行がプロジェクトの費用、情報管理、処理時間などのどの目的に寄与するかを、上位文書への参照とともに明記する必要がある。
+  - id: F002
+    severity: major
+    rule: vp-po-decision-readiness
+    line: 53
+    anchor: "## 3. モデルの選定"
+    message: 技術スタック選定を承認できるよう、oMLX・モデルの代替案比較、ライセンス、固定または更新するバージョン、定量的な採否条件、未決事項、承認者を明示する必要がある。
+  - id: F003
+    severity: major
+    rule: vp-po-publication-accountability
+    line: 58
+    anchor: "| 最終判断・難しい設計レビュー | Claude Code / Codex                     | ローカル LLM の結果を必要に応じて補完する                     |"
+    message: 「最終判断・難しい設計レビュー」を Claude Code / Codex に割り当てず、Agent は判断支援に限定し、人間の PO または所定ロールが公開・採否の最終責任を負うことを明記する必要がある。
+  - id: F004
+    severity: major
+    rule: vp-pm-plan-feasibility
+    line: 31
+    anchor: "## 2. oMLXのインストール"
+    message: セットアップと最適化の各作業について、担当 Role code、依存順序、所要時間または実施タイミング、完了条件を整理する必要がある。
+  - id: F005
+    severity: major
+    rule: vp-pm-dependency-risk
+    line: 1
+    anchor: "# oMLX 技術スタック定義"
+    message: >-
+      `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-architecture.yaml` が宣言する `ifd-specdojo`
+      依存について、参照先文書が未作成で対象にも `based_on` がないため、影響、担当、解消条件、ScheduleまたはPJRへの反映先を明記する必要がある。
+  - id: F006
+    severity: major
+    rule: vp-pm-control-reporting
+    line: 268
+    anchor: "## 10. 段階的な最適化"
+    message: 段階的最適化で得た結果を決定記録、課題、リスク、変更要求へ分離し、PJR転記候補、報告先、対応方針、担当 Role codeを定義する必要がある。
+  - id: F007
+    severity: minor
+    rule: vp-ba-business-value
+    line: 3
+    anchor: >-
+      SpecDojo では、ローカル LLM の実行基盤として、Ollama（[[tsd-ollama]]）に加えて oMLX を技術スタックの一部として定義する。oMLX は Apple Silicon 向けの MLX
+      推論サーバで、1 つのモデルを continuous batching で複数のリクエストに共有させられる。devcontainer 内の複数の opencode agent から同じモデルを並列に使う用途に向く。なお、oMLX
+      の使用は必須ではない。
+    message: 開発者または運用者の現状課題、放置時の影響、oMLX 採用で期待する処理時間・費用・資源効率の成功基準を明記する必要がある。
+  - id: F008
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 7
+    anchor: oMLX は Mac ホスト側で実行し、opencode は devcontainer 内で実行する。本書は次の環境を対象とする。
+    message: 採用技術の選定理由と業務要件の対応、対象外環境、性能・品質・セキュリティを含む利用者視点の受入条件を要件として整理する必要がある。
+  - id: F009
+    severity: major
+    rule: vp-ba-stakeholder-clarity
+    line: 3
+    anchor: >-
+      SpecDojo では、ローカル LLM の実行基盤として、Ollama（[[tsd-ollama]]）に加えて oMLX を技術スタックの一部として定義する。oMLX は Apple Silicon 向けの MLX
+      推論サーバで、1 つのモデルを continuous batching で複数のリクエストに共有させられる。devcontainer 内の複数の opencode agent から同じモデルを並列に使う用途に向く。なお、oMLX
+      の使用は必須ではない。
+    message: 開発者、opencode利用者、Macホスト運用者、ARC、QE、POなどの関係者と、各者が確認または合意する事項を明記する必要がある。
+  - id: F010
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 1
+    anchor: "# oMLX 技術スタック定義"
+    message: >-
+      `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-architecture.yaml` は `tsd-omlx.depends_on` に
+      `ifd-specdojo` を宣言するが、対象 Frontmatter に対応する `based_on` がなく、カタログ指定先
+      `docs/ja/product/030-architecture/020-infrastructure/ifd-specdojo.md` も存在しないため依存関係を整合させる必要がある。
+  - id: F011
+    severity: major
+    rule: vp-arc-technical-constraints
+    line: 33
+    anchor: oMLX は、macOS アプリ版を使う。GitHub Releases から最新の macOS アプリを取得し、Applications へインストールする。
+    message: oMLX・採用モデル・関連CLIのライセンス、採用バージョンまたはリビジョン、互換性を確認した組合せ、固定・更新方針を明記する必要がある。
+  - id: F012
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 166
+    anchor: 2 つの opencode agent を同時に動かす場合は、次の設定とする。
+    message: >-
+      Concurrency、Context、Thinking Budget, Chunked Prefill, Memory
+      Guardの基準値は6章の正本表へ統合し、7章と10章には並列運用・各フェーズで変わる差分だけを記載できる。
+  - id: F013
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 121
+    anchor: "### 6.1. サーバー設定"
+    message: サーバー設定とモデル設定の各項目について、Admin UI上の設定箇所または対応するCLI引数、保存先、再起動要否を示し、記載値を再現可能にする必要がある。
+  - id: F014
+    severity: major
+    rule: vp-dev-change-impact
+    line: 38
+    anchor: "- 自動アップデートに対応している"
+    message: oMLXの自動更新時に確認するモデル・CLI引数・Admin UI・OpenAI互換API・`tsd-omlx-opencode`への影響、更新前バックアップ、問題発生時のロールバック方法を明記する必要がある。
+  - id: F015
+    severity: minor
+    rule: vp-dev-testability
+    line: 223
+    anchor: 次に、chat completion を確認する。
+    message: chat completion、2並列、Memory Guard、各最適化設定について、実行手順、期待結果、タイムアウトやエラー時の切り分け、結果の記録先を追加する必要がある。
+  - id: F016
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 3
+    anchor: >-
+      SpecDojo では、ローカル LLM の実行基盤として、Ollama（[[tsd-ollama]]）に加えて oMLX を技術スタックの一部として定義する。oMLX は Apple Silicon 向けの MLX
+      推論サーバで、1 つのモデルを continuous batching で複数のリクエストに共有させられる。devcontainer 内の複数の opencode agent から同じモデルを並列に使う用途に向く。なお、oMLX
+      の使用は必須ではない。
+    message: 成果物カタログのdone_criteriaを本文の章または確認表へ対応付け、未充足の業務要件との整合、承認情報、ライセンス・バージョン方針、テストフレームワーク・CI/CD環境の参照を補う必要がある。
+  - id: F017
+    severity: major
+    rule: vp-qe-verifiability
+    line: 289
+    anchor: >-
+      安定性を確認できたら、Lightning MTP を ON にして同じタスクを再実行する。生成速度、tool call の精度、重複生成、reasoning の破綻、JSON や tool
+      の引数の破損、テストの成功率を確認し、品質に問題がなければ ON を採用する。問題が出れば OFF に戻す。
+    message: Lightning MTPなどの採否について、比較タスク、反復回数、速度改善率、tool call失敗率、テスト成功率、許容メモリ・swap量の閾値を定義する必要がある。
+  - id: F018
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 33
+    anchor: oMLX は、macOS アプリ版を使う。GitHub Releases から最新の macOS アプリを取得し、Applications へインストールする。
+    message: >-
+      `docs/ja/specdojo/rulebooks/tsd-rulebook.md`
+      が要求する採用技術のバージョン記載に対し、対象は「最新のmacOSアプリ」とするだけでoMLXの具体的な採用バージョンまたは固定方針が欠落している。
+  - id: F019
+    severity: major
+    rule: vp-ops-release-readiness
+    line: 1
+    anchor: "# oMLX 技術スタック定義"
+    message: ready化の条件として、ライセンスと採用バージョンの確定、M3 Max実機での手順・性能検証、未決事項の解消、公開前確認者、最終承認者を明記する必要がある。
+  - id: F020
+    severity: minor
+    rule: vp-ops-operability
+    line: 255
+    anchor: 監視は次で行う。
+    message: oMLXとモデルの更新手順、更新失敗時の復旧・ロールバック、設定変更の記録先、問い合わせおよび障害エスカレーション先のRole codeを追記する必要がある。
+  - id: F021
+    severity: major
+    rule: vp-ops-agent-boundary
+    line: 58
+    anchor: "| 最終判断・難しい設計レビュー | Claude Code / Codex                     | ローカル LLM の結果を必要に応じて補完する                     |"
+    message: Claude Code / Codexを含むAgentの責務を分析・提案・レビュー支援までに限定し、設計採否、公開可否、説明責任を人間のPOまたは所定ロールが担うmanual gateを明記する必要がある。
+done_criteria:
+  satisfied: 1
+  total: 5
+  unsatisfied:
+    DC-001:
+      - BA
+    DC-002:
+      - PO
+    DC-003:
+      - ARC
+    DC-004:
+      - QE
+  detail_ref: tsd-omlx-grade-criteria

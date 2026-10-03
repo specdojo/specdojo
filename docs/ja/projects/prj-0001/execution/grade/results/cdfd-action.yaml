@@ -6,8 +6,8 @@ target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 69
-graded_at: "2026-09-27T15:21:10.689Z"
-graded_by: codex-expert-executor
+graded_at: "2026-09-30T16:07:51.110Z"
+graded_by: agy-expert-executor
 content_hash: 5d3fc7872c2d9f07e2e7282dc9c546babd6f6c39af2fc4c2afc0ad10611e17da
 source_hashes:
   catalog-entry: 143f5e3d6bddfc7b775438e881fb2db7bf612db3bbad63bf0922d71818e9bcc2
@@ -133,7 +133,7 @@ findings:
       業務目的                                                                                                                         
       | 主な担当 | 起動条件                                                                      |
       必須性                                                                           |
-    message: 全プロセス表に「完了条件」列がなく、特に P-12 の構成変更承認と P-13 の非推奨化判断で、何がそろえば承認・保留・差し戻しとするかを PO が判定できないため、yes / no で確認できる判断条件を追加してください。
+    message: 全プロセス表に「完了条件」列がなく、特に P-12 の構成変更承認と P-13 の非推奨化判断で、何がそろえば承認・保留・差し戻しとするかを PO が判定できないため, yes / no で確認できる判断条件を追加してください。
   - id: F002
     severity: major
     rule: vp-po-decision-readiness
@@ -171,7 +171,7 @@ findings:
       業務目的                                                                                                                         
       | 主な担当 | 起動条件                                                                      |
       必須性                                                                           |
-    message: プロセス領域の各表に rulebook 必須の「完了条件」列がなく、利用者が各プロセスの受入可否を確認できないため、主要出力または正本の確定に対応する判定可能な条件を追加してください。
+    message: プロセス領域の各表に rulebook 必須の「完了条件」列がなく, 利用者が各プロセスの受入可否を確認できないため、主要出力または正本の確定に対応する判定可能な条件を追加してください。
   - id: F006
     severity: major
     rule: vp-arc-cross-document-consistency
@@ -243,14 +243,6 @@ findings:
     anchor: "- **主要入力**: Orchestrator からの改善要求、参加者からの構成変更要求"
     message: 上位概要で Action の主要入力とされた P-12 の承認結果および P-13 の非推奨化判断が領域別入力へ引き継がれていないため、入力として維持するか上位正本を先に改訂して矛盾を解消してください。
   - id: F014
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 126
-    anchor: >-
-      凡例は [[cdfd-overview|概念データフロー図（全体概要）]] の「凡例（本プロダクト共通）」に従う。`-->` は情報の流れであり、本図は物の流れを対象外とする。Plan
-      はグループ外委譲先の代表ノードであり、内部処理を省略する。参加者は領域の担当であるため外部主体として描かない。本図は P-11 の入力、出力、判断分岐に限定し、他領域のデータストアを省略する。別図と共有するノードはない。
-    message: P-11・P-12・P-13 の各図は「成果物カタログ」と「登録簿」を共有しているため、三つの図注記にある「別図と共有するノードはない」を共有ノードの列挙へ修正してください。
-  - id: F015
     severity: major
     rule: vp-qe-omissions-consistency
     line: 247
@@ -259,12 +251,20 @@ findings:
       本グループでの扱い                                                                 |
       継続・再開条件                                                                                        |
     message: 主要例外の表に rulebook で必須の「停止範囲」列が欠落しているため、列を追加して例外検出時に確定または起動してはならないプロセスや出力を記述してください。
-  - id: F016
+  - id: F015
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 16
     anchor: "- 対象グループは Action、対象領域はタスク完了（P-11）、稼働構成管理（P-12）、非推奨化保管（P-13）である。"
     message: 適用範囲に rulebook で必須の対象期間がなく、現行正本として期間を限定しないのか特定期間だけに適用するのか判断できないため、適用期間を明記してください。
+  - id: F016
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 126
+    anchor: >-
+      凡例は [[cdfd-overview|概念データフロー図（全体概要）]] の「凡例（本プロダクト共通）」に従う。`-->` は情報の流れであり、本図は物の流れを対象外とする。Plan
+      はグループ外委譲先の代表ノードであり、内部処理を省略する。参加者は領域の担当であるため外部主体として描かない。本図は P-11 の入力、出力、判断分岐に限定し、他領域のデータストアを省略する。別図と共有するノードはない。
+    message: P-11・P-12・P-13 の各図は「成果物カタログ」と「登録簿」を共有しているため、三つの図注記にある「別図と共有するノードはない」を共有ノードの列挙へ修正してください。
   - id: F017
     severity: minor
     rule: vp-ux-user-flow

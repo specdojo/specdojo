@@ -1,0 +1,292 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: tsd-ollama
+path: docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md
+target: deliverable
+rubric: grade-rubric-v2
+verdict: needs-work
+score: 59
+graded_at: "2026-09-29T16:52:38.418Z"
+graded_by: codex-expert-executor
+content_hash: 93a3c681956e6af4912e7171787845e2818d3812741eba9f35a6d5b736111286
+source_hashes:
+  catalog-entry: 16f308b73256cfd46420fdc48757f6c85ba2ce3dca70991344c49e12f7397ebd
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  members: ec838bbb5673ba76f1a15672e094c00088dcb686a2a67225ca8411c0dc5e90d3
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
+categories:
+  purpose:
+    score: 50
+  operations:
+    score: 50
+  planning:
+    score: 42
+  business:
+    score: 42
+  consistency:
+    score: 50
+  architecture:
+    score: 83
+  usability:
+    score: 75
+  implementation:
+    score: 63
+  quality:
+    score: 56
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 3
+    score: 75
+  vp-po-decision-readiness:
+    level: 1
+    score: 25
+  vp-po-publication-accountability:
+    level: 2
+    score: 50
+  vp-pm-plan-feasibility:
+    level: 2
+    score: 50
+  vp-pm-dependency-risk:
+    level: 2
+    score: 50
+  vp-pm-control-reporting:
+    level: 1
+    score: 25
+  vp-ba-business-value:
+    level: 2
+    score: 50
+  vp-ba-requirements-completeness:
+    level: 2
+    score: 50
+  vp-ba-stakeholder-clarity:
+    level: 1
+    score: 25
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-technical-constraints:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 3
+    score: 75
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 3
+    score: 75
+  vp-dev-change-impact:
+    level: 2
+    score: 50
+  vp-dev-testability:
+    level: 2
+    score: 50
+  vp-qe-done-criteria:
+    level: 1
+    score: 25
+  vp-qe-verifiability:
+    level: 2
+    score: 50
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-user-flow:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-ops-release-readiness:
+    level: 1
+    score: 25
+  vp-ops-operability:
+    level: 3
+    score: 75
+  vp-ops-agent-boundary:
+    level: 2
+    score: 50
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 17
+  minor: 7
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-po-purpose-alignment
+    line: 3
+    anchor: SpecDojoでは、ドキュメント作成、コード生成、レビューなどでLLMを活用することを想定しており、ローカル実行基盤として Ollama を技術スタックの一部として定義する。なお、Ollama の使用は必須ではない。
+    message: Ollama 採用がプロジェクトの低コスト化、情報保護、継続可能性のどれに寄与するかを上位文書への参照とともに明記する必要がある。
+  - id: F002
+    severity: major
+    rule: vp-po-decision-readiness
+    line: 63
+    anchor: "## 3. Ollamaモデルの選定"
+    message: 技術スタック選定の承認に必要な代替案比較、必要メモリ・ディスク、ライセンス、費用、未決事項、承認者を明示する必要がある。
+  - id: F003
+    severity: major
+    rule: vp-po-publication-accountability
+    line: 72
+    anchor: "| 最終判断・難しい設計レビュー | Claude Code / Codex | ローカルLLMの結果を必要に応じて補完する                    |"
+    message: 「最終判断」を Claude Code / Codex に割り当てず、人間の PO または所定ロールが公開・採否の最終責任を負うことを明記する必要がある。
+  - id: F004
+    severity: major
+    rule: vp-pm-plan-feasibility
+    line: 7
+    anchor: Ollama を対象とする。以下、macOSでの設定、常駐のさせ方、devcontainer からの疎通確認、モデル定義をまとめる。LinuxやWindowsでの設定については、今後追記予定。
+    message: セットアップ作業ごとの担当 Role code、依存順序、完了条件、所要時間または実施タイミングを追記しなければ計画・進捗管理に利用できない。
+  - id: F005
+    severity: major
+    rule: vp-pm-dependency-risk
+    line: 7
+    anchor: Ollama を対象とする。以下、macOSでの設定、常駐のさせ方、devcontainer からの疎通確認、モデル定義をまとめる。LinuxやWindowsでの設定については、今後追記予定。
+    message: Linux・Windows対応予定とカタログ上の `ifd-specdojo` 依存について、課題・リスク、影響、担当、PJRまたはScheduleへの反映先を明記する必要がある。
+  - id: F006
+    severity: major
+    rule: vp-pm-control-reporting
+    line: 7
+    anchor: Ollama を対象とする。以下、macOSでの設定、常駐のさせ方、devcontainer からの疎通確認、モデル定義をまとめる。LinuxやWindowsでの設定については、今後追記予定。
+    message: 「今後追記予定」を未決事項として識別し、PJR転記候補、報告先、対応方針、担当 Role codeを記録する必要がある。
+  - id: F007
+    severity: major
+    rule: vp-ba-business-value
+    line: 3
+    anchor: SpecDojoでは、ドキュメント作成、コード生成、レビューなどでLLMを活用することを想定しており、ローカル実行基盤として Ollama を技術スタックの一部として定義する。なお、Ollama の使用は必須ではない。
+    message: ローカルLLMが誰のどの課題を解決し、クラウド利用と比べて費用・情報管理・継続性にどの価値をもたらすかを明記する必要がある。
+  - id: F008
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 7
+    anchor: Ollama を対象とする。以下、macOSでの設定、常駐のさせ方、devcontainer からの疎通確認、モデル定義をまとめる。LinuxやWindowsでの設定については、今後追記予定。
+    message: 対応macOS、CPU、メモリ、ディスク、ネットワーク、対象外環境と、利用者が確認できる受入条件を要件として整理する必要がある。
+  - id: F009
+    severity: major
+    rule: vp-ba-stakeholder-clarity
+    line: 3
+    anchor: SpecDojoでは、ドキュメント作成、コード生成、レビューなどでLLMを活用することを想定しており、ローカル実行基盤として Ollama を技術スタックの一部として定義する。なお、Ollama の使用は必須ではない。
+    message: 開発者、AI Agent利用者、Host Mac運用者、ARC、POなどの関係者と、各者が確認・合意する事項を明記する必要がある。
+  - id: F010
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 1
+    anchor: "# Ollama 技術スタック定義"
+    message: >-
+      `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-architecture.yaml` は `tsd-ollama` の `depends_on` を
+      `ifd-specdojo` とする一方、対象Frontmatterには対応する `based_on` がなく依存関係が不整合である。
+  - id: F011
+    severity: major
+    rule: vp-arc-technical-constraints
+    line: 63
+    anchor: "## 3. Ollamaモデルの選定"
+    message: Ollama・モデル・mise・uvのライセンス、対応macOSとハードウェア、必要メモリ・ディスク容量、固定または更新するバージョン方針を明記する必要がある。
+  - id: F012
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 80
+    anchor: 複数Agentを使う場合、重いモデルを常時複数ロードしない方が安定するため、環境変数を設定して Ollama を起動する運用を採用する。
+    message: macOSアプリには引き継がれない `export` 設定を削除するかCLI起動時専用として分離し、次章の `launchctl` 設定へ統合できる。
+  - id: F013
+    severity: minor
+    rule: vp-dev-implementation-readiness
+    line: 117
+    anchor: >-
+      内容は `ops/local/launchd/org.specdojo.ollama-env.plist` を参照。ログイン時に `launchctl setenv` で環境変数を設定し、Ollama.app
+      を再起動する。app のログイン項目より先に起動しても、この再起動で環境変数が確実に反映される。
+    message: >-
+      `ops/local/launchd/org.specdojo.ollama-env.plist` を `~/Library/LaunchAgents/`
+      へコピーする具体的コマンドと、既存ファイルを上書きする場合の扱いを追記する必要がある。
+  - id: F014
+    severity: major
+    rule: vp-dev-change-impact
+    line: 47
+    anchor: Ollama 本体は、公式インストールスクリプトで最新版を導入する。
+    message: "`latest` 更新時の互換性確認、モデル再取得・派生モデル再生成、設定ファイルへの影響、ロールバック方法を明記する必要がある。"
+  - id: F015
+    severity: major
+    rule: vp-dev-testability
+    line: 139
+    anchor: モデル一覧の JSON が返れば、常駐と環境変数の反映まで確認できている。
+    message: >-
+      `/api/tags` はAPI到達とモデル一覧しか確認できないため、`OLLAMA_KEEP_ALIVE` と `OLLAMA_MAX_LOADED_MODELS`
+      がOllamaプロセスへ反映されたことを別の検証手順と期待結果で確認する必要がある。
+  - id: F016
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 3
+    anchor: SpecDojoでは、ドキュメント作成、コード生成、レビューなどでLLMを活用することを想定しており、ローカル実行基盤として Ollama を技術スタックの一部として定義する。なお、Ollama の使用は必須ではない。
+    message: 成果物カタログの5件のdone_criteriaを本文の章または確認表へ対応付け、未充足の業務整合、承認材料、ライセンス、CI/CD参照を補う必要がある。
+  - id: F017
+    severity: major
+    rule: vp-qe-verifiability
+    line: 63
+    anchor: "## 3. Ollamaモデルの選定"
+    message: 推奨モデルごとに必要資源、対象タスク、品質・速度・失敗率などの採用基準と検証手順を定義し、選定結果を再判定可能にする必要がある。
+  - id: F018
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 1
+    anchor: "# Ollama 技術スタック定義"
+    message: "`docs/ja/specdojo/rulebooks/tsd-rulebook.md` の必須Frontmatterである `part_of: tsd-index` が対象文書に欠落している。"
+  - id: F019
+    severity: minor
+    rule: vp-ux-readability
+    line: 3
+    anchor: SpecDojoでは、ドキュメント作成、コード生成、レビューなどでLLMを活用することを想定しており、ローカル実行基盤として Ollama を技術スタックの一部として定義する。なお、Ollama の使用は必須ではない。
+    message: "`tsd-index`、`tsd-ollama-opencode`、`tsd-home-mac-dev-server` などの位置づけと参照先を導入部または関連文書節に追加する必要がある。"
+  - id: F020
+    severity: minor
+    rule: vp-ux-user-flow
+    line: 210
+    anchor: 不要になった元モデルまたは派生モデルは `ollama rm` で削除する。
+    message: "`ollama rm` の削除手順を派生モデル作成後またはアンインストール章へ移し、セットアップ中に必要な元モデルを削除しない説明順へ改める必要がある。"
+  - id: F021
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 207
+    anchor: ollama run gemma4:31b-mlx "中量作業用として、設計書の要約を3文でまとめてください。"
+    message: 選定表の「Markdown生成・レビュー」と実行例の「中量作業用」を同一の用途名へ統一する必要がある。
+  - id: F022
+    severity: major
+    rule: vp-ops-release-readiness
+    line: 7
+    anchor: Ollama を対象とする。以下、macOSでの設定、常駐のさせ方、devcontainer からの疎通確認、モデル定義をまとめる。LinuxやWindowsでの設定については、今後追記予定。
+    message: ready化に必要な対応環境、ライセンス確認、手順検証、未解決事項の扱い、公開前確認者と最終承認者を明記する必要がある。
+  - id: F023
+    severity: minor
+    rule: vp-ops-operability
+    line: 141
+    anchor: ログを見る場合：
+    message: Ollama・モデルの更新手順、更新失敗時の復旧、設定変更の記録先、問い合わせ・障害エスカレーション先のRole codeを追記する必要がある。
+  - id: F024
+    severity: major
+    rule: vp-ops-agent-boundary
+    line: 72
+    anchor: "| 最終判断・難しい設計レビュー | Claude Code / Codex | ローカルLLMの結果を必要に応じて補完する                    |"
+    message: >-
+      「最終判断・難しい設計レビュー」の担当を Claude Code / Codex とする記述は `prj-overview` と `pm-raci`
+      の人間最終責任に反するため、Agentは提案・レビュー支援に限定し人間の承認gateを明記する必要がある。
+done_criteria:
+  satisfied: 1
+  total: 5
+  unsatisfied:
+    DC-001:
+      - BA
+    DC-002:
+      - PO
+    DC-003:
+      - ARC
+    DC-004:
+      - QE
+  detail_ref: tsd-ollama-grade-criteria

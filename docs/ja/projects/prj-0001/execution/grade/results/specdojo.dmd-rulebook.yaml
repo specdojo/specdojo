@@ -3,29 +3,75 @@ version: 1
 document: specdojo:dmd-rulebook
 path: docs/ja/specdojo/rulebooks/dmd-rulebook.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 91
-graded_at: "2026-09-02T16:34:44.934Z"
-graded_by: gemma-expert-executor
-content_hash: fff3be31bf06c245a5781bc4e6b3faf20bdfbe8400bc2900e7d4a63b408ff4b0
+score: 96
+graded_at: "2026-10-02T21:56:06.127Z"
+graded_by: agy-expert-executor
+content_hash: 1d0c890ed73a2afa7b7a7ecdd675b3eb8e33f4374e667691ba4575b2124418a1
 categories:
-  consistency:
+  purpose:
     score: 100
-  usability:
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
     score: 100
   architecture:
     score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 100
   quality:
-    score: 75
+    score: 83
+  consistency:
+    score: 100
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -43,6 +89,15 @@ viewpoints:
   vp-ux-language-consistency:
     level: 4
     score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
@@ -56,5 +111,5 @@ findings:
     severity: major
     rule: vp-qe-kata-conformance
     line: 1
-    message: 推奨 Frontmatter の type が「migration 固定」と定義されている一方で、本書内のサンプルおよび `dmd-sample.md` では「project」となっており矛盾している。
     anchor: "# データ移行設計 作成ルール"
+    message: 推奨 Frontmatter の type が「migration 固定」と定義されている一方で、本書内のサンプルおよび `dmd-sample.md` では「project」となっており矛盾している。

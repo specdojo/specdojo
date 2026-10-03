@@ -5,8 +5,8 @@ path: docs/ja/specdojo/recipes/cdfd-recipe.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 98
-graded_at: "2026-09-27T20:38:41.494Z"
+score: 95
+graded_at: "2026-09-30T21:07:32.813Z"
 graded_by: agy-expert-executor
 content_hash: b2f47bc3a871fbfdeebe9d854e6c9f853747319274a972bb40bdafeb81402116
 categories:
@@ -27,7 +27,7 @@ categories:
   quality:
     score: 92
   consistency:
-    score: 100
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -78,8 +78,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
     level: 3
     score: 75
@@ -104,10 +104,16 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 1
+  minor: 2
   note: 0
 findings:
   - id: F001
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 196
+    anchor: "## 8. 仕上げチェック"
+    message: 仕上げチェックにおいて、Rulebookが完成判定で求める Frontmatter（id、type、status等）や、適用範囲での責任分担の参照確認が漏れています。
+  - id: F002
     severity: minor
     rule: vp-qe-kata-conformance
     line: 49

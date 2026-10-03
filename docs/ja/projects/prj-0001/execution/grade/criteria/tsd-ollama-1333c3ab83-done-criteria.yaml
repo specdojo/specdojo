@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: tsd-ollama-grade-criteria
+document: tsd-ollama
+path: docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md
+graded_at: "2026-09-29T16:52:38.418Z"
+graded_by: codex-expert-executor
+content_hash: 93a3c681956e6af4912e7171787845e2818d3812741eba9f35a6d5b736111286
+summary:
+  satisfied: 1
+  unsatisfied: 4
+  total: 5
+criteria:
+  - id: DC-001
+    text: 採用技術の選定理由と制約が業務要件と整合していること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: unsatisfied
+    reason: 採用技術・モデルの選定理由が対象者の業務要件、費用、情報管理、継続性と対応付けられていない。
+  - id: DC-002
+    text: 技術スタック選定を承認できること
+    roles:
+      - PO
+    viewpoint: vp-po-decision-readiness
+    status: unsatisfied
+    reason: 代替案、必要資源、費用、ライセンス、未決事項、承認者がなくPOが技術スタック選定を承認できない。
+  - id: DC-003
+    text: 技術的制約・ライセンス・バージョン方針が識別できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: unsatisfied
+    reason: ライセンス、対応OS・ハードウェア、必要資源、再現可能なバージョン方針を識別できない。
+  - id: DC-004
+    text: テストフレームワーク・CI/CD環境の参照として使えること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: unsatisfied
+    reason: テストフレームワークおよびCI/CD環境への参照が記載されていない。
+  - id: DC-005
+    text: 開発環境構築・ライブラリ選定の参照として使えること
+    roles:
+      - DEV
+    viewpoint: vp-dev-implementation-readiness
+    status: satisfied

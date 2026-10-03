@@ -6,8 +6,8 @@ target: deliverable
 rubric: grade-rubric-v2
 verdict: pass
 score: 96
-graded_at: "2026-09-28T16:11:13.820Z"
-graded_by: codex-expert-executor
+graded_at: "2026-10-01T16:16:10.946Z"
+graded_by: agy-expert-executor
 content_hash: 95e5a113b891d0a9af9eb93425f773398e6073adffa8da4954fab7bee1130a0c
 source_hashes:
   catalog-entry: 3247f5eb39765fd5f1c1d12c83847bb47a3c4ed94beeef8fade45a514a9e2e8e
@@ -126,11 +126,11 @@ findings:
   - id: F001
     severity: minor
     rule: vp-arc-cross-document-consistency
-    line: 60
+    line: 70
     anchor: >-
-      | -------------- | ---------------------------------- |
-      ----------------------------------------------------------------------------------------- | -------- |
-      ------------------------------------- |
+      | `E-01`  | `S-01`、`S-02`、`S-03` | 評価対象、基準、観点、根拠、または実行記録が不足し、成果物の品質を判定できない | grade・finding の確定  | QE     |
+      評価不能の理由、不足情報、補完担当を記録し、判定可能な grade を推測で補わない              | 不足情報と独立した runner がそろった後、`S-01`
+      から再開する                       |
     message: >-
       docs/ja/product/010-business-specs/010-data-flow/cdfd-check.mdのE-08-02は評価不能の範囲と理由をfindingに記録してActionへ渡す一方、本表は評価不能時にgrade・findingを未確定としてQEとOrchestratorだけへ渡しており、評価不能時の出力契約が一致していません。
   - id: F002

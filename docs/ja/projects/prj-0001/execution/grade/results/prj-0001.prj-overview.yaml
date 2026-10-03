@@ -3,49 +3,111 @@ version: 1
 document: prj-0001:prj-overview
 path: docs/ja/projects/prj-0001/020-project-definition/prj-overview.md
 target: deliverable
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: pass
-score: 92
-graded_at: "2026-09-24T16:19:13.321Z"
-graded_by: codex-expert-executor
+score: 95
+graded_at: "2026-10-02T16:16:09.511Z"
+graded_by: agy-expert-executor
 content_hash: a88ff7cd0188a42619a304502c5fb5dd2ac200a6222763d09e437f5d3cf80691
+source_hashes:
+  catalog-entry: 49f827db63d31d71fae992fecd49b7ae43ac931334599d6169d5d865a8a27ca4
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  members: ec838bbb5673ba76f1a15672e094c00088dcb686a2a67225ca8411c0dc5e90d3
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
 categories:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
   consistency:
     score: 88
-  usability:
-    score: 81
   architecture:
     score: 100
-  quality:
+  usability:
+    score: 88
+  implementation:
     score: 100
+  quality:
+    score: 94
 viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
   vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
     level: 3
     score: 75
-  vp-arc-single-responsibility:
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-done-criteria:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
     level: 3
     score: 75
   vp-ux-readability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-user-flow:
     level: 4
     score: 100
   vp-ux-language-consistency:
     level: 3
     score: 75
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
@@ -55,40 +117,46 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 5
+  minor: 6
   note: 0
 findings:
   - id: F001
     severity: minor
     rule: vp-arc-conciseness
-    line: 82
-    anchor: "| 観点             | 確認する変化                                           |"
+    line: 92
+    anchor: "- 人と AI Agent が同じ正本を参照できる形式を用いる。"
     message: 80行目で列挙した社会課題への寄与、利用可能性、継続可能性を表がほぼそのまま反復しているため、表を本文へ統合するか、表に固有の指標・判定時期・確認方法を加えて役割を分けてください。
   - id: F002
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 9
-    anchor: この協働には、相互に切り離せない三つの課題がある。
-    message: 三つの課題を現状として提示している一方で、続く記述は可能性表現のみで観察事実か仮説かを判別できないため、代表事例・頻度・影響などの根拠を補うか、検証対象の仮説として明示してください。
+    rule: vp-arc-conciseness
+    line: 92
+    anchor: "- 人と AI Agent が同じ正本を参照できる形式を用いる。"
+    message: 80行目の説明と表が同じ三つの中長期効果を重ねて示しているため、どちらかへ統合するか、表には本文にない測定上の情報だけを記載してください。
   - id: F003
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 90
-    anchor: "- 代表利用者と技術協力者が、課題、期待価値、試行結果を確認できる。"
-    message: 前提条件で依存前提である代表利用者・技術協力者の参加と、費用の扱い、形式、技術非依存、公開方針などの制約を同列に列挙しているため、種別を明示して未充足時の影響を判断できるようにしてください。
+    rule: vp-qe-verifiability
+    line: 76
+    anchor: 公開後9か月までは、実際のシビックテックでの利用件数、課題と仕様の対応に対する当事者評価、現金支出と作業負荷、継続利用の状況を確認する。
+    message: 初期公開指標の表が「指標」「目標」「測定方法」の列を持たず判定基準が不明確なため, 初期仮説としての指標と測定方法を記述するか、「未確定」として明示してください。
   - id: F004
     severity: minor
-    rule: vp-ux-readability
-    line: 82
-    anchor: "| 観点             | 確認する変化                                           |"
-    message: 80行目の説明と表が同じ三つの中長期効果を重ねて示しているため、どちらかへ統合するか、表には本文にない測定上の情報だけを記載してください。
+    rule: vp-qe-omissions-consistency
+    line: 19
+    anchor: >-
+      個別の文書、ツール、属人的な調整をその都度追加する方法では、課題と技術の対応、費用、作業負荷の判断が分散し、次の参加者が同じ前提から改善を続けられない。AI Agent と OSS の利用が広がる時点で、手段を選ぶ前に Why
+      を共有し、実現から継承まで同じ判断軸を使える正本が必要である。
+    message: 三つの課題を現状として提示している一方で、続く記述は可能性表現のみで観察事実か仮説かを判別できないため、代表事例・頻度・影響などの根拠を補うか、検証対象の仮説として明示してください。
   - id: F005
     severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 98
+    anchor: ""
+    message: 前提条件で依存前提である代表利用者・技術協力者の参加と、費用の扱い, 形式, 技術非依存, 公開方針などの制約を同列に列挙しているため、種別を明示して未充足時の影響を判断できるようにしてください。
+  - id: F006
+    severity: minor
     rule: vp-ux-language-consistency
-    line: 7
-    anchor: >-
-      本プロジェクトの直接の対象者は、資金と専門人材が限られる中で社会課題に取り組むシビックテックの参加者である。当事者、市民、地域団体、行政・公共領域の担当者は解くべき課題と期待価値を判断し、専門家、開発者、AI Agent
-      活用担当、将来の貢献者はそれを実現・改善するために協働する。
+    line: 17
+    anchor: "## 2. 必要性"
     message: 技術側の参加者を「専門家」「開発者」「技術者」「技術協力者」「技術参加者」「AI Agent 活用担当」と呼び分けており同一群か別の役割か判断しにくいため、代表となる区分名を定義して用語を統一してください。
 done_criteria:
   satisfied: 3

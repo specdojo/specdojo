@@ -3,29 +3,72 @@ version: 1
 document: specdojo:dmd-index-rulebook
 path: docs/ja/specdojo/rulebooks/dmd-index-rulebook.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
 score: 93
-graded_at: "2026-09-02T16:18:52.722Z"
-graded_by: gemma-expert-executor
+graded_at: "2026-10-02T21:53:36.602Z"
+graded_by: agy-expert-executor
 content_hash: 21996265fb560ba9ee3ebfbd600cc5cbc73bc6d5d0941d88494a39a7038c99df
 categories:
-  consistency:
-    score: 75
-  usability:
-    score: 92
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
   architecture:
     score: 100
+  usability:
+    score: 83
+  implementation:
+    score: 100
   quality:
+    score: 83
+  consistency:
     score: 100
 viewpoints:
-  vp-arc-cross-document-consistency:
-    level: 2
-    score: 50
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
-  vp-arc-single-responsibility:
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -35,32 +78,47 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-ux-readability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-language-consistency:
     level: 3
     score: 75
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 0
   major: 1
-  minor: 1
+  minor: 2
   note: 0
 findings:
-  - id: F002
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 1
-    message: "ID規則において、プロジェクトIDを含む具体的な命名パターン（例: ＜project-id＞:dmd-index）が明示されていない。"
-    anchor: "# データ移行設計 作成ルール"
   - id: F001
     severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 1
-    message: Frontmatter の type, title, id の定義が、対応するサンプル成果物 dmd-index-sample.md と矛盾している。
-    anchor: "# データ移行設計 作成ルール"
+    rule: vp-qe-kata-conformance
+    line: 36
+    anchor: "| supersedes | 置き換え関係（ID配列。未指定は `[]` 可） | 任意 |"
+    message: Frontmatter の type, title, id の定義ルールが、対応するサンプル成果物 dmd-index-sample.md の実態と矛盾している。
+  - id: F002
+    severity: minor
+    rule: vp-ux-readability
+    line: 38
+    anchor: "## 5. 本文構成（標準テンプレ）"
+    message: 推奨 Frontmatter 項目や本文構成の表の途中に空行が含まれており、Markdownの表として正しく描画されない箇所がある。
+  - id: F003
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 31
+    anchor: "| type  | `migration` 固定       | ○    |"
+    message: "ID規則において、プロジェクトIDを含む具体的な命名パターン（例: ＜project-id＞:dmd-index）が明示されていない。"

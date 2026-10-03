@@ -1,0 +1,40 @@
+
+> specdojo@0.3.0 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-deliverable-b329d0aa2739 project=prj-0001 target=deliverable kind=none changed_only=true ungraded=true incomplete=true rubric_outdated=true max_stage_failures=3 stages=1 documents=10 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-deliverable-b329d0aa2739
+stage=1 executor=agy-expert-executor reporter=gemma-reporter reference=none
+document start: docs/ja/product/010-business-specs/020-data-model/cdsd-execution.md
+document complete: docs/ja/product/010-business-specs/020-data-model/cdsd-execution.md
+document start: docs/ja/product/010-business-specs/020-data-model/cdsd-planning.md
+document complete: docs/ja/product/010-business-specs/020-data-model/cdsd-planning.md
+document start: docs/ja/product/010-business-specs/020-data-model/cdsd-sharing.md
+document complete: docs/ja/product/010-business-specs/020-data-model/cdsd-sharing.md
+document start: docs/ja/product/010-business-specs/030-business-model/bps-deliverable-evaluation.md
+document complete: docs/ja/product/010-business-specs/030-business-model/bps-deliverable-evaluation.md
+document start: docs/ja/product/010-business-specs/030-business-model/bps-task-completion.md
+document complete: docs/ja/product/010-business-specs/030-business-model/bps-task-completion.md
+document start: docs/ja/product/040-system-design/sysd-antigravity-agent-settings.md
+document complete: docs/ja/product/040-system-design/sysd-antigravity-agent-settings.md
+document start: docs/ja/product/040-system-design/sysd-job-execution.md
+document resume: docs/ja/product/040-system-design/sysd-job-execution.md start_stage=1
+document complete: docs/ja/product/040-system-design/sysd-job-execution.md
+document start: docs/ja/product/040-system-design/sysd-opencode-agent-settings.md
+document resume: docs/ja/product/040-system-design/sysd-opencode-agent-settings.md start_stage=1
+document complete: docs/ja/product/040-system-design/sysd-opencode-agent-settings.md
+document start: docs/ja/projects/prj-0001/020-project-definition/prj-charter.md
+document complete: docs/ja/projects/prj-0001/020-project-definition/prj-charter.md
+document start: docs/ja/projects/prj-0001/020-project-definition/prj-comparison-of-alternatives.md
+document complete: docs/ja/projects/prj-0001/020-project-definition/prj-comparison-of-alternatives.md
+grade pipeline complete: selected=10 processed=10 completed_now=10 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-deliverable-b329d0aa2739/results.tsv
+recorded_at	document	stage	status	duration_seconds	verdict	score	findings	executor	reporter	reference	consecutive_failures	max_failures
+2026-10-01T16:04:46Z	docs/ja/product/010-business-specs/020-data-model/cdsd-execution.md	1	passed	270	needs-work	67	21	agy-expert-executor	gemma-reporter	none		
+2026-10-01T16:09:10Z	docs/ja/product/010-business-specs/020-data-model/cdsd-planning.md	1	passed	262	needs-work	66	19	agy-expert-executor	gemma-reporter	none		
+2026-10-01T16:13:10Z	docs/ja/product/010-business-specs/020-data-model/cdsd-sharing.md	1	passed	239	needs-work	42	26	agy-expert-executor	gemma-reporter	none		
+2026-10-01T16:16:11Z	docs/ja/product/010-business-specs/030-business-model/bps-deliverable-evaluation.md	1	passed	179	pass	96	2	agy-expert-executor	gemma-reporter	none		
+2026-10-01T16:19:02Z	docs/ja/product/010-business-specs/030-business-model/bps-task-completion.md	1	passed	169	pass	98	3	agy-expert-executor	gemma-reporter	none		
+2026-10-01T16:23:06Z	docs/ja/product/040-system-design/sysd-antigravity-agent-settings.md	1	passed	242	needs-work	55	25	agy-expert-executor	gemma-reporter	none		
+2026-10-01T16:27:15Z	docs/ja/product/040-system-design/sysd-job-execution.md	1	passed	247	needs-work	81	10	agy-expert-executor	gemma-reporter	none		
+2026-10-01T16:31:20Z	docs/ja/product/040-system-design/sysd-opencode-agent-settings.md	1	passed	243	needs-work	74	17	agy-expert-executor	gemma-reporter	none		
+2026-10-01T16:34:46Z	docs/ja/projects/prj-0001/020-project-definition/prj-charter.md	1	passed	204	needs-work	84	7	agy-expert-executor	gemma-reporter	none		
+2026-10-01T16:38:22Z	docs/ja/projects/prj-0001/020-project-definition/prj-comparison-of-alternatives.md	1	passed	214	needs-work	90	5	agy-expert-executor	gemma-reporter	none		

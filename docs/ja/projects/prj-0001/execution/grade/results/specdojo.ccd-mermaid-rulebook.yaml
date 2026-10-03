@@ -5,60 +5,60 @@ path: docs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 56
-graded_at: "2026-09-28T22:13:15.936Z"
-graded_by: codex-expert-executor
+score: 42
+graded_at: "2026-10-02T21:21:06.088Z"
+graded_by: agy-expert-executor
 content_hash: 2f1ba4c57d67645bc4159f5e9d55d0499ac1efe0206e5556bb2cc32083d32d67
 categories:
   purpose:
-    score: 75
+    score: 63
   operations:
-    score: 69
+    score: 56
   planning:
-    score: 58
+    score: 42
   business:
-    score: 58
+    score: 42
   architecture:
-    score: 83
+    score: 75
   usability:
-    score: 58
+    score: 42
   implementation:
-    score: 50
+    score: 25
   quality:
-    score: 33
+    score: 25
   consistency:
-    score: 50
+    score: 25
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-po-publication-accountability:
     level: 3
     score: 75
   vp-pm-plan-feasibility:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-pm-dependency-risk:
     level: 3
     score: 75
   vp-pm-control-reporting:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-ba-business-value:
     level: 3
     score: 75
   vp-ba-requirements-completeness:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-ba-stakeholder-clarity:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-arc-technical-constraints:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-arc-conciseness:
     level: 3
     score: 75
@@ -66,35 +66,35 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-dev-change-impact:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-dev-testability:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-qe-verifiability:
     level: 1
     score: 25
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-qe-kata-conformance:
     level: 1
     score: 25
   vp-ux-readability:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-ux-language-consistency:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-ops-release-readiness:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-ops-operability:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -160,12 +160,12 @@ findings:
     rule: vp-arc-technical-constraints
     line: 87
     anchor: "| 関係     | Mermaid 記法  | 説明                    |"
-    message: 継承記法を `子 ＜|— 親` と定義している一方、関係例では上位概念の商品を左、下位概念のお菓子を右に置いており、親子の配置方向を一意に判断できない。
+    message: 継承記法を「子 ＜|— 親」と定義している一方、関係例では上位概念の商品を左、下位概念のお菓子を右に置いており、親子の配置方向を一意に判断できない。
   - id: F010
     severity: minor
     rule: vp-arc-conciseness
-    line: 76
-    anchor: ""
+    line: 77
+    anchor: "| カテゴリ | 推奨ラベル例                                           |"
     message: 関係ラベルの推奨語彙表は「命名・表記ルール」の表と内容が重複するため、一方を正本として統合または参照に置き換えられる。
   - id: F011
     severity: major
@@ -226,7 +226,7 @@ findings:
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# Mermaid を用いた概念クラス図（CCD）作成ルール"
-    message: 参照されているサンプル `specdojo:ccd-sample` に具体的な Mermaid CCD の記述例が含まれておらず、完成例として機能していない。
+    message: 参照されているサンプル specdojo:ccd-sample に具体的な Mermaid CCD の記述例が含まれておらず、完成例として機能していない。
   - id: F021
     severity: major
     rule: vp-qe-kata-conformance

@@ -1,0 +1,38 @@
+
+> specdojo@0.3.0 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-deliverable-c01c1b09885c project=prj-0001 target=deliverable kind=none changed_only=true ungraded=true incomplete=true rubric_outdated=true max_stage_failures=3 stages=1 documents=10 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-deliverable-c01c1b09885c
+stage=1 executor=agy-expert-executor reporter=gemma-reporter reference=none
+document start: docs/ja/product/010-business-specs/010-data-flow/cdfd-action.md
+document complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-action.md
+document start: docs/ja/product/010-business-specs/010-data-flow/cdfd-check.md
+document complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-check.md
+document start: docs/ja/product/010-business-specs/010-data-flow/cdfd-do.md
+document complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-do.md
+document start: docs/ja/product/010-business-specs/010-data-flow/cdfd-onboarding.md
+document complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-onboarding.md
+document start: docs/ja/product/010-business-specs/010-data-flow/cdfd-orchestrator.md
+document complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-orchestrator.md
+document start: docs/ja/product/010-business-specs/010-data-flow/cdfd-plan.md
+document complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-plan.md
+document start: docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-deliverable.md
+document complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-deliverable.md
+document start: docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md
+document complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md
+document start: docs/ja/product/010-business-specs/020-data-model/cdsd-execution.md
+document complete: docs/ja/product/010-business-specs/020-data-model/cdsd-execution.md
+document start: docs/ja/product/010-business-specs/020-data-model/cdsd-planning.md
+document complete: docs/ja/product/010-business-specs/020-data-model/cdsd-planning.md
+grade pipeline complete: selected=10 processed=10 completed_now=10 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-deliverable-c01c1b09885c/results.tsv
+recorded_at	document	stage	status	duration_seconds	verdict	score	findings	executor	reporter	reference	consecutive_failures	max_failures
+2026-09-30T16:07:51Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-action.md	1	passed	454	needs-work	69	19	agy-expert-executor	gemma-reporter	none		
+2026-09-30T16:13:11Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-check.md	1	passed	318	needs-work	71	18	agy-expert-executor	gemma-reporter	none		
+2026-09-30T16:16:51Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-do.md	1	passed	219	needs-work	82	12	agy-expert-executor	gemma-reporter	none		
+2026-09-30T16:20:58Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-onboarding.md	1	passed	245	needs-work	55	19	agy-expert-executor	gemma-reporter	none		
+2026-09-30T16:24:34Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-orchestrator.md	1	passed	214	pass	96	6	agy-expert-executor	gemma-reporter	none		
+2026-09-30T16:28:30Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-plan.md	1	passed	234	needs-work	78	13	agy-expert-executor	gemma-reporter	none		
+2026-09-30T16:31:35Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-deliverable.md	1	passed	183	pass	100	0	agy-expert-executor	gemma-reporter	none		
+2026-09-30T16:35:07Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md	1	passed	210	needs-work	98	1	agy-expert-executor	gemma-reporter	none		
+2026-09-30T16:39:33Z	docs/ja/product/010-business-specs/020-data-model/cdsd-execution.md	1	passed	263	needs-work	54	21	agy-expert-executor	gemma-reporter	none		
+2026-09-30T16:43:34Z	docs/ja/product/010-business-specs/020-data-model/cdsd-planning.md	1	passed	239	needs-work	67	18	agy-expert-executor	gemma-reporter	none		

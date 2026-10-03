@@ -1,0 +1,141 @@
+{
+  "schema_version": 1,
+  "task_id": "JBR-grade-deliverable-88db3b4d0339",
+  "run_id": "attempt-1",
+  "stage": {
+    "role": "executor",
+    "actor": "specdojo-runner",
+    "status": "succeeded",
+    "started_at": "2026-09-29T16:00:08.004Z",
+    "completed_at": "2026-09-29T17:07:26.536Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-overview-4f5ff02b38-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/stsd-register-entry-461ba77e06-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/stsd-routine-run-72deff80c2-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/tsd-home-mac-dev-server-39e4cdf49b-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/tsd-home-mac-dev-server-usage-cd996e0bcb-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/tsd-index-f8017f063b-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/tsd-ollama-opencode-9fe49a1fb7-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/pipeline/tsd-ollama-1333c3ab83bb.json",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/cdfd-overview.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/stsd-register-entry.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/stsd-routine-run.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/tsd-home-mac-dev-server-usage.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/tsd-home-mac-dev-server.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/tsd-index.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/tsd-ollama-opencode.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/tsd-ollama-1333c3ab83-done-criteria.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/tsd-omlx-f7cad9fd9b-done-criteria.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/tsd-omlx-opencode-824c965487-done-criteria.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/tsd-ollama.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/tsd-omlx-opencode.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/tsd-omlx.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-deliverable-88db3b4d0339.json",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 22,
+    "summary": ".../cdfd-overview-4f5ff02b38-done-criteria.yaml    |  4 +-\n ...sd-register-entry-461ba77e06-done-criteria.yaml | 12 +--\n .../stsd-routine-run-72deff80c2-done-criteria.yaml |  8 +-\n ...me-mac-dev-server-39e4cdf49b-done-criteria.yaml | 18 +++--\n ...-dev-server-usage-cd996e0bcb-done-criteria.yaml | 15 ++--\n .../tsd-index-f8017f063b-done-criteria.yaml        | 14 ++--\n ...d-ollama-opencode-9fe49a1fb7-done-criteria.yaml | 12 +--\n .../grade/pipeline/tsd-ollama-1333c3ab83bb.json    | 14 ----\n .../execution/grade/results/cdfd-overview.yaml     |  2 +-\n .../grade/results/stsd-register-entry.yaml         | 44 ++++++++---\n .../execution/grade/results/stsd-routine-run.yaml  |  2 +-\n .../results/tsd-home-mac-dev-server-usage.yaml     | 42 +++++++----\n .../grade/results/tsd-home-mac-dev-server.yaml     | 32 ++++----\n .../execution/grade/results/tsd-index.yaml         | 86 +++++++++++++---------\n .../grade/results/tsd-ollama-opencode.yaml         | 20 ++---\n 15 files changed, 187 insertions(+), 138 deletions(-)"
+  },
+  "validations": [
+    {
+      "id": "job-command",
+      "source": "runner",
+      "command": "npm run build\nif tools/grade/run-per-document.sh --run-id JBR-grade-deliverable-88db3b4d0339 --stages 1 --target deliverable --limit 10 --dependency-changed=true --rulebook-changed=true --unreviewed=true --changed-only=true --ungraded=true --incomplete=true --rubric-outdated=true; then\n  cat logs/grade/runs/per-document/JBR-grade-deliverable-88db3b4d0339/results.tsv\nelse\n  grade_status=$?\n  printf 'grade pipeline failed: run_id=%s exit_code=%s\\n' 'JBR-grade-deliverable-88db3b4d0339' \"$grade_sta…",
+      "status": "passed",
+      "summary": "exit 0"
+    }
+  ],
+  "final_message": "Runner command exit 0.",
+  "command": {
+    "shell": "/bin/sh -eu",
+    "value": "npm run build\nif tools/grade/run-per-document.sh --run-id JBR-grade-deliverable-88db3b4d0339 --stages 1 --target deliverable --limit 10 --dependency-changed=true --rulebook-changed=true --unreviewed=true --changed-only=true --ungraded=true --incomplete=true --rubric-outdated=true; then\n  cat logs/grade/runs/per-document/JBR-grade-deliverable-88db3b4d0339/results.tsv\nelse\n  grade_status=$?\n  printf 'grade pipeline failed: run_id=%s exit_code=%s\\n' 'JBR-grade-deliverable-88db3b4d0339' \"$grade_status\" >&2\n  exit \"$grade_status\"\nfi",
+    "exit_code": 0,
+    "stdout_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-deliverable-88db3b4d0339/attempt-1/command.stdout.log",
+    "stderr_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-deliverable-88db3b4d0339/attempt-1/command.stderr.log",
+    "stdout": "\n> specdojo@0.3.0 build\n> node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.build.json && node -e \"require('node:fs').chmodSync('dist/specdojo.js', 0o755)\"\n\nrun_id=JBR-grade-deliverable-88db3b4d0339 project=prj-0001 target=deliverable kind=none changed_only=true ungraded=true incomplete=true rubric_outdated=true max_stage_failures=3 stages=1 documents=10 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-deliverable-88db3b4d0339\nstage=1 executor=codex-expert-executor reporter=gemma-reporter reference=none\ndocument start: docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md\ndocument complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md\ndocument start: docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md\ndocument complete: docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md\ndocument start: docs/ja/product/010-business-specs/020-data-model/stsd-routine-run.md\ndocument complete: docs/ja/product/010-business-specs/020-data-model/stsd-routine-run.md\ndocument start: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server-usage.md\ndocument complete: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server-usage.md\ndocument start: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md\ndocument complete: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md\ndocument start: docs/ja/product/030-architecture/020-infrastructure/tsd-index.md\ndocument complete: docs/ja/product/030-architecture/020-infrastructure/tsd-index.md\ndocument start: docs/ja/product/030-architecture/020-infrastructure/tsd-ollama-opencode.md\ndocument complete: docs/ja/product/030-architecture/020-infrastructure/tsd-ollama-opencode.md\ndocument start: docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md\ndocument complete: docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md\ndocument start: docs/ja/product/030-architecture/020-infrastructure/tsd-omlx-opencode.md\ndocument complete: docs/ja/product/030-architecture/020-infrastructure/tsd-omlx-opencode.md\ndocument start: docs/ja/product/030-architecture/020-infrastructure/tsd-omlx.md\ndocument complete: docs/ja/product/030-architecture/020-infrastructure/tsd-omlx.md\ngrade pipeline complete: selected=10 processed=10 completed_now=10 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-deliverable-88db3b4d0339/results.tsv\nrecorded_at\tdocument\tstage\tstatus\tduration_seconds\tverdict\tscore\tfindings\texecutor\treporter\treference\tconsecutive_failures\tmax_failures\n2026-09-29T16:06:34Z\tdocs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md\t1\tpassed\t378\tneeds-work\t85\t8\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-29T16:13:50Z\tdocs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md\t1\tpassed\t434\tneeds-work\t69\t22\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-29T16:18:51Z\tdocs/ja/product/010-business-specs/020-data-model/stsd-routine-run.md\t1\tpassed\t299\tneeds-work\t64\t23\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-29T16:24:52Z\tdocs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server-usage.md\t1\tpassed\t359\tneeds-work\t71\t20\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-29T16:30:53Z\tdocs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md\t1\tpassed\t359\tneeds-work\t75\t22\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-29T16:37:03Z\tdocs/ja/product/030-architecture/020-infrastructure/tsd-index.md\t1\tpassed\t368\tneeds-work\t66\t15\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-29T16:41:56Z\tdocs/ja/product/030-architecture/020-infrastructure/tsd-ollama-opencode.md\t1\tpassed\t291\tneeds-work\t62\t25\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-29T16:52:39Z\tdocs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md\t1\tpassed\t641\tneeds-work\t59\t24\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-29T16:59:45Z\tdocs/ja/product/030-architecture/020-infrastructure/tsd-omlx-opencode.md\t1\tpassed\t424\tneeds-work\t73\t18\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-29T17:07:25Z\tdocs/ja/product/030-architecture/020-infrastructure/tsd-omlx.md\t1\tpassed\t458\tneeds-work\t65\t21\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n",
+    "stderr": ""
+  },
+  "log_refs": [
+    {
+      "kind": "command-stdout",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-deliverable-88db3b4d0339/attempt-1/command.stdout.log",
+      "bytes": 4326,
+      "truncated": false
+    },
+    {
+      "kind": "command-stderr",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-deliverable-88db3b4d0339/attempt-1/command.stderr.log",
+      "bytes": 0,
+      "truncated": false
+    }
+  ]
+}

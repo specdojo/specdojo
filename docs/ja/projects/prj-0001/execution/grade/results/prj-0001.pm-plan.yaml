@@ -3,29 +3,86 @@ version: 1
 document: prj-0001:pm-plan
 path: docs/ja/projects/prj-0001/030-project-management/pm-plan.md
 target: deliverable
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: pass
-score: 97
-graded_at: "2026-09-24T16:47:06.097Z"
-graded_by: codex-expert-executor
+score: 98
+graded_at: "2026-10-02T16:40:54.416Z"
+graded_by: agy-expert-executor
 content_hash: e260af762e401c50f009dba6629220aba1eb742df249e35cd2a6ed1691dab5aa
+source_hashes:
+  catalog-entry: 775bfb9cdf2fd9715519efcbfed22f1a4d7bd096b83d6ec14a83c4460c18b471
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  dependency:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  members: ec838bbb5673ba76f1a15672e094c00088dcb686a2a67225ca8411c0dc5e90d3
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
 categories:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
   consistency:
     score: 88
+  architecture:
+    score: 100
   usability:
     score: 100
-  architecture:
+  implementation:
     score: 100
   quality:
     score: 100
 viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
   vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-done-criteria:
@@ -46,6 +103,15 @@ viewpoints:
   vp-ux-language-consistency:
     level: 4
     score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
@@ -61,11 +127,9 @@ findings:
   - id: F001
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 53
-    anchor: >-
-      代表課題、試行成果、追加現金支出上限、参加者別作業時間上限、公開範囲は、[[prj-0001:prj-success-criteria-and-acceptance-criteria|成功基準と受入条件]]
-      の未解決事項を正本とし、本書へ重複記載しない。
-    message: 未決事項がルールブック所定の `_UNDECIDED_:` として明示されていないため、各論点が未決状態であることを所定形式で示し, 決定時期と判断者は参照先を正本とする旨を明記する必要がある。
+    line: 65
+    anchor: ""
+    message: 未決事項がルールブック所定の `_UNDECIDED_:` として明示されていないため、各論点が未決状態であることを所定形式の表で示し、決定時期と判断者は参照先を正本とする旨を明記する必要がある。
 done_criteria:
   satisfied: 3
   total: 3

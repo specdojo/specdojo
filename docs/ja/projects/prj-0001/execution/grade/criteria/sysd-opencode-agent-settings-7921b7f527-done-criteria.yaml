@@ -2,9 +2,9 @@
 id: sysd-opencode-agent-settings-grade-criteria
 document: sysd-opencode-agent-settings
 path: docs/ja/product/040-system-design/sysd-opencode-agent-settings.md
-graded_at: "2026-09-19T16:57:37.778Z"
-graded_by: codex-expert-executor
-content_hash: 9573566fdf1285ef385384dad171d2ceb67117e9e8786f52577fee72fa11b6e0
+graded_at: "2026-10-01T16:31:20.053Z"
+graded_by: agy-expert-executor
+content_hash: 6a5964f92c63db08b8d878fd284174bd06061efa35ec23938769c3ad012b88ec
 summary:
   satisfied: 1
   unsatisfied: 4
@@ -16,14 +16,14 @@ criteria:
       - BA
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
-    reason: 採用理由と制約は説明されているが、対応する業務要件または上位要求への参照がなく、業務要件との整合を確認できない。
+    reason: 設計方針に対応する業務要件または上位要求への参照がなく、採用理由・制約が要件と整合しているか確認できない。
   - id: DC-002
     text: 設計方針を承認できること
     roles:
       - PO
     viewpoint: vp-po-decision-readiness
     status: unsatisfied
-    reason: provider制限、review権限、member名、モデル割り当て、導入状況に矛盾があり、設計方針を一意に承認できない。
+    reason: 業務要件との整合性が確認できず、承認条件も示されていないため、設計方針を承認できない。
   - id: DC-003
     text: 技術的制約・依存関係が識別できること
     roles:
@@ -36,11 +36,11 @@ criteria:
       - QE
     viewpoint: vp-qe-verifiability
     status: unsatisfied
-    reason: 制約ごとのテスト方法、期待結果、合否条件およびテスト設計への参照がない。
+    reason: 導入確認手順に実行コマンド、期待される出力、失敗条件などのテスト設計・検証観点が欠落している。
   - id: DC-005
     text: 実装の基礎として参照できること
     roles:
       - DEV
     viewpoint: vp-dev-implementation-readiness
     status: unsatisfied
-    reason: 実在しないagent名を使う割り当て例と古い現状差分により、そのまま実装・設定作業の基礎として使用できない。
+    reason: 導入状況が実設定と食い違っており、確認手順も不十分であるため実装の基礎として参照できない。

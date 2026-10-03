@@ -3,28 +3,77 @@ version: 1
 document: specdojo:cdfd-rulebook
 path: docs/ja/specdojo/rulebooks/cdfd-rulebook.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: pass
-score: 86
-graded_at: "2026-09-26T21:10:01.850Z"
+score: 89
+graded_at: "2026-09-29T21:20:15.651Z"
 graded_by: codex-expert-executor
 content_hash: 5723aeac5250afaa6dfbbf0c4042dbd4771c5476e49aecb7767afe151946c68a
 categories:
-  usability:
+  purpose:
     score: 100
+  operations:
+    score: 94
+  planning:
+    score: 92
+  business:
+    score: 92
   architecture:
     score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 88
   quality:
     score: 75
   consistency:
     score: 75
 viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 3
+    score: 75
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 3
+    score: 75
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 3
+    score: 75
+  vp-dev-testability:
+    level: 3
+    score: 75
   vp-qe-verifiability:
     level: 3
     score: 75
@@ -40,23 +89,59 @@ viewpoints:
   vp-ux-language-consistency:
     level: 4
     score: 100
+  vp-ops-release-readiness:
+    level: 3
+    score: 75
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 0
   major: 0
-  minor: 3
+  minor: 10
   note: 0
 findings:
   - id: F001
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 114
+    anchor: "- 全体概要の各領域を一つの代表ノードとして再掲せず、「プロセス領域」の各表の行を一つずつ個別のプロセスノードとして配置します。"
+    message: >-
+      `status: ready` の本 rulebook が `status: draft` の `specdojo:cdfd-mermaid-rulebook` を `includes`
+      しているにもかかわらず、記法変更の影響範囲と依存先確定までの扱いが示されていないため、依存リスクと解消条件を明記してください。
+  - id: F002
+    severity: minor
+    rule: vp-ba-requirements-completeness
+    line: 145
+    anchor: ""
+    message: 完成判定が条件付き／選択プロセスの非起動時の正常な扱い、個別プロセス主要入出力への一度だけの掲載、図直後の必須注記、主要例外の扱い、グループ外委譲の全列を確認しないため、本文要件との併用を明記するか受入条件へ追加してください。
+  - id: F003
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 145
+    anchor: ""
+    message: >-
+      rulebookの完成判定要件がrecipeへ反映されておらず、全体手順5では完了条件、仕上げチェックではFrontmatter・ready承認記録・対象期間・停止範囲を確認できないため、関連成果物へ変更を反映する手順または整合確認を追加してください。
+  - id: F004
+    severity: minor
+    rule: vp-dev-testability
+    line: 145
+    anchor: ""
+    message: 完成判定だけでは条件付き／選択プロセスの非起動経路、図直後の必須注記、主要例外の扱い、委譲表の全列を検証できないため、各条件のpass / fail確認を追加するか本文要件を併用する検証手順を明記してください。
+  - id: F005
     severity: minor
     rule: vp-qe-verifiability
     line: 145
     anchor: ""
     message: >-
       前回指摘されたFrontmatter・目的・適用範囲・プロセス表の確認は追加済みですが、完成判定には条件付き／選択プロセスの非起動時の扱い、図直後注記の凡例・線種・省略理由・共有ノード、主要例外の「本グループでの扱い」、委譲表の各列が反映されておらず、これらを欠く文書も完成扱いにできるため、全必須条件を列挙するか本文要件との併用を明記してください。
-  - id: F002
+  - id: F006
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 145
@@ -64,10 +149,32 @@ findings:
     message: >-
       完成判定が、本文で必須とした条件付き／選択プロセスの非起動時の正常な扱い、全プロセスの個別入出力表への一度だけの掲載、図直後の必須注記、主要例外の扱い, グループ外委譲の委譲先・委譲事項・戻す条件を確認対象に含めていないため,
       本文要件との併用を明記するか確認項目を過不足なく追加してください。
-  - id: F003
+  - id: F007
     severity: minor
     rule: vp-qe-kata-conformance
     line: 145
     anchor: ""
     message: >-
       rulebookとtemplate・sampleは必須Frontmatter、対象期間、完了条件、停止範囲を扱いますが、recipeはFrontmatterとready承認記録を確認せず、全体手順5から完了条件、仕上げチェックから対象期間と停止範囲が欠けているため、recipeの主要手順と最終チェックを本節の完成条件へ揃えてください。
+  - id: F008
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 114
+    anchor: "- 全体概要の各領域を一つの代表ノードとして再掲せず、「プロセス領域」の各表の行を一つずつ個別のプロセスノードとして配置します。"
+    message: >-
+      `status: ready` の主 rulebook と ready の template・sample が `status: draft` の共通記法 rulebook に依存しているため、共通部品を ready
+      化するか、未確定な記法依存として各成果物の状態と適用条件を整合させてください。
+  - id: F009
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 145
+    anchor: ""
+    message: ready昇格条件が「完成判定」の全項目を参照する一方、同節は本文の必須条件を網羅していないため、本文要件との併用を明記するか全必須条件を完成判定へ追加し、不完全な成果物がreadyにならないようにしてください。
+  - id: F010
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 114
+    anchor: "- 全体概要の各領域を一つの代表ノードとして再掲せず、「プロセス領域」の各表の行を一つずつ個別のプロセスノードとして配置します。"
+    message: >-
+      本rulebookは`status: ready`ですが、適用必須の`specdojo:cdfd-mermaid-rulebook`が`status:
+      draft`であるため、依存先のready化または未確定依存を許容する明示的なリリース判断を行ってください。

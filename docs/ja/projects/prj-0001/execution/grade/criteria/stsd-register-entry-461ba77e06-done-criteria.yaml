@@ -2,7 +2,7 @@
 id: stsd-register-entry-grade-criteria
 document: stsd-register-entry
 path: docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md
-graded_at: "2026-09-27T20:31:25.568Z"
+graded_at: "2026-09-29T16:13:49.870Z"
 graded_by: codex-expert-executor
 content_hash: 48c647b4efecd15bfe8dcfe583519d02eea22fa18c70c886d97ce88f85fcbb19
 summary:
@@ -16,32 +16,32 @@ criteria:
       - BA
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
-    reason: 現行運用で許可される直接終端・直接再開が遷移集合に含まれず、一部の成立条件と記録先も正本の運用規則に一致していない。
+    reason: 現行運用で成立する直接終端・任意の活動中状態からの終端・直接再開先が欠落し、主要条件も業務上の事実だけで判定できない。
   - id: DC-002
     text: 状態遷移の業務的妥当性を承認できること
     roles:
       - PO
     viewpoint: vp-po-purpose-alignment
     status: unsatisfied
-    reason: 再開先、対応中・待機中からの終了、`note` の終了拒否が未決のため、PO が状態遷移全体の業務的妥当性を承認できない。
+    reason: 再開、却下、延期の遷移方針が仮定のままで、正本文書・CLI との差異も残るため業務的妥当性を承認できない。
   - id: DC-003
     text: 状態遷移実装の基礎として参照できること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
-    reason: CLI の許可遷移、正規 Frontmatter キー、状態ガードと文書の定義が一致せず、状態遷移実装の確定した基礎にできない。
+    reason: "`item_status`、`block_reason`、`completed_at`、イベントログ、コマンドガードとの対応が不足し、実装の基礎として整合していない。"
   - id: DC-004
     text: 状態ベースのテスト設計に活用できること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
     status: unsatisfied
-    reason: 実装可能な直接遷移が欠落し、重要条件の pass / fail 証跡も未定義なため、網羅的な状態ベーステストを設計できない。
+    reason: 全許可・禁止遷移と主要条件の pass / fail、必須記録、期待結果が定義されておらず状態ベースのテストを網羅設計できない。
   - id: DC-005
     text: 状態管理実装の参照として使えること
     roles:
       - DEV
     viewpoint: vp-dev-implementation-readiness
     status: unsatisfied
-    reason: 状態表と現行 CLI・schema の差異が残っているため、状態管理実装の信頼できる参照として使用できない。
+    reason: T-ID ごとのコマンド、遷移元・遷移先、更新キー、拒否条件が現行実装に整合した形で示されていない。

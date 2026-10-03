@@ -2,12 +2,12 @@
 id: prj-0001:prj-success-criteria-and-acceptance-criteria-grade-criteria
 document: prj-0001:prj-success-criteria-and-acceptance-criteria
 path: docs/ja/projects/prj-0001/020-project-definition/prj-success-criteria-and-acceptance-criteria.md
-graded_at: "2026-09-24T16:34:02.588Z"
-graded_by: codex-expert-executor
+graded_at: "2026-10-02T16:28:07.763Z"
+graded_by: agy-expert-executor
 content_hash: 1f13815822bf1c827afc860617ef794e1c2a8cb4f76108a489582419a2393daf
 summary:
-  satisfied: 2
-  unsatisfied: 2
+  satisfied: 1
+  unsatisfied: 3
   total: 4
 criteria:
   - id: DC-001
@@ -22,17 +22,18 @@ criteria:
       - PO
     viewpoint: vp-po-decision-readiness
     status: unsatisfied
-    reason: SC-01 の「重大な不一致」と SC-02・SC-03 の支出・作業時間上限が確定または判定可能に定義されておらず、成功基準を承認できない。
+    reason: SC-01の「重大な不一致」や上限値などの合否基準が曖昧であり、未確定事項の暫定影響もないためPOが承認できない。
   - id: DC-003
     text: 技術的受入条件が確認できること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
-    status: satisfied
+    status: unsatisfied
+    reason: AC-02の「検証に合格」など、検証すべき技術的制約や手順が明示されていない。
   - id: DC-004
     text: 受入条件が検証可能な形で記述されていること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
     status: unsatisfied
-    reason: AC-01 の最小成果物・代表試行の合格条件と AC-02 の検証対象・合格条件が具体化されておらず、受入条件を再現可能に検証できない。
+    reason: 「重大な不一致がない」「代表試行に合格」など、第三者が合否を再現できる判定規則が定義されていない。

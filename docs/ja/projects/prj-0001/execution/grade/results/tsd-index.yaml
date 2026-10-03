@@ -5,10 +5,10 @@ path: docs/ja/product/030-architecture/020-infrastructure/tsd-index.md
 target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 72
-graded_at: "2026-09-27T21:15:14.365Z"
+score: 66
+graded_at: "2026-09-29T16:37:03.081Z"
 graded_by: codex-expert-executor
-content_hash: cbad622e8ac5d2ea57ea31392d814e3f2b9d46778df9fbabeea8aa75e222058b
+content_hash: 865c78a040e444d78e0098701fe700d905bd94693ef7e0124d1d580c6ff48ed3
 source_hashes:
   catalog-entry: e78ad55f23ff4f9a502d6f215ec1cb5c04e0338b4ade6f5079c516f4bb58f232
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
@@ -18,13 +18,13 @@ source_hashes:
   schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
 categories:
   purpose:
-    score: 75
+    score: 63
   operations:
     score: 81
   planning:
     score: 100
   business:
-    score: 58
+    score: 42
   consistency:
     score: 50
   architecture:
@@ -34,14 +34,14 @@ categories:
   implementation:
     score: 75
   quality:
-    score: 63
+    score: 44
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-po-publication-accountability:
     level: 4
     score: 100
@@ -55,11 +55,11 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-business-value:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-ba-requirements-completeness:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-ba-stakeholder-clarity:
     level: 3
     score: 75
@@ -79,14 +79,14 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-qe-done-criteria:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-qe-verifiability:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-qe-omissions-consistency:
     level: 2
     score: 50
@@ -116,7 +116,7 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 11
+  major: 12
   minor: 3
   note: 0
 findings:
@@ -148,7 +148,9 @@ findings:
     severity: major
     rule: vp-arc-cross-document-consistency
     line: 9
-    anchor: "| 言語                | TypeScript 5.x                          | CLI・ドキュメント生成ツールの実装言語              |"
+    anchor: >-
+      | 言語                 | TypeScript 5.x                          |
+      CLI・ドキュメント生成ツールの実装言語                                    |
     message: >-
       本文の `TypeScript 5.x`、`Commander.js 12.x`、`dotenv 16.x`、`markdownlint-cli 0.45.x` は、`package.json` の `typescript
       ^6.0.3`、`commander ^15.0.0`、`dotenv ^17.4.2`、`markdownlint-cli ^0.48.0` と相反しています。
@@ -156,19 +158,25 @@ findings:
     severity: major
     rule: vp-arc-technical-constraints
     line: 7
-    anchor: "| 区分                | 採用技術                                | 担当責務                                           |"
+    anchor: >-
+      | 区分                 | 採用技術                                |
+      担当責務                                                                 |
     message: 技術ごとの互換性・外部依存・実行条件に加え、ライセンスとバージョン更新・固定方針が示されていません。
   - id: F007
     severity: major
     rule: vp-dev-implementation-readiness
     line: 9
-    anchor: "| 言語                | TypeScript 5.x                          | CLI・ドキュメント生成ツールの実装言語              |"
+    anchor: >-
+      | 言語                 | TypeScript 5.x                          |
+      CLI・ドキュメント生成ツールの実装言語                                    |
     message: 現行 `package.json` と異なる依存バージョンが記載されているため、この一覧を開発環境構築やライブラリ選定の入力として安全に使用できません。
   - id: F008
     severity: major
     rule: vp-dev-testability
-    line: 25
-    anchor: "| ソースコード管理    | GitHub                                  | リポジトリ管理・GitHub Actions による CI/CD        |"
+    line: 26
+    anchor: >-
+      | ソースコード管理     | GitHub                                  | リポジトリ管理・GitHub Actions による
+      CI/CD                              |
     message: "`package.json` で使用する Vitest が一覧になく、lint・schema・build・test の実行コマンドや期待結果への参照もないため、変更後の確認方法を特定できません。"
   - id: F009
     severity: major
@@ -178,33 +186,45 @@ findings:
     message: DC-001 および DC-003 が要求する「選定理由」「技術的制約」「ライセンス」の記述が不足しています。
   - id: F010
     severity: major
-    rule: vp-qe-verifiability
-    line: 25
-    anchor: "| ソースコード管理    | GitHub                                  | リポジトリ管理・GitHub Actions による CI/CD        |"
-    message: テストフレームワークが記載されず、GitHub Actions の対象ワークフロー、検証コマンド、期待結果もないため、テスト・CI/CD環境の参照可否を判定できません。
+    rule: vp-qe-done-criteria
+    line: 5
+    anchor: "## 1. 技術スタック一覧"
+    message: DC-002、DC-004、DC-005 が要求する承認根拠、テスト・CI/CD環境への参照、現行バージョンに基づく開発環境構築情報が不足しています。
   - id: F011
+    severity: major
+    rule: vp-qe-verifiability
+    line: 26
+    anchor: >-
+      | ソースコード管理     | GitHub                                  | リポジトリ管理・GitHub Actions による
+      CI/CD                              |
+    message: テストフレームワークが記載されず、GitHub Actions の対象ワークフロー、検証コマンド、期待結果もないため、テスト・CI/CD環境の参照可否を判定できません。
+  - id: F012
     severity: major
     rule: vp-qe-omissions-consistency
     line: 7
-    anchor: "| 区分                | 採用技術                                | 担当責務                                           |"
+    anchor: >-
+      | 区分                 | 採用技術                                |
+      担当責務                                                                 |
     message: 採用済みの Vitest が技術スタック一覧から欠落し、複数のバージョンも実装証跡と一致しないため、全体インベントリとして完全ではありません。
-  - id: F012
+  - id: F013
     severity: minor
     rule: vp-ux-user-flow
-    line: 30
+    line: 31
     anchor: "- Ollama の詳細（モデル定義・チューニング）は [[tsd-ollama]] を参照。"
     message: CLI・検証ツール群と文書サイト技術について詳細文書または設定正本への導線がなく、利用者が選定根拠や設定情報へ進めません。
-  - id: F013
+  - id: F014
     severity: minor
     rule: vp-ops-release-readiness
     line: 3
     anchor: SpecDojo が採用する技術の一覧。各技術の担当責務を明示し、設計・実装・運用における前提条件として扱う。
     message: "`draft` から `ready` へ移行するためのライセンス確認、技術選定承認、未解決事項の解消条件と承認者への導線がありません。"
-  - id: F014
+  - id: F015
     severity: major
     rule: vp-ops-operability
     line: 7
-    anchor: "| 区分                | 採用技術                                | 担当責務                                           |"
+    anchor: >-
+      | 区分                 | 採用技術                                |
+      担当責務                                                                 |
     message: "`package.json` 等の更新元、依存更新時の改訂契機、整合確認手順が示されず、現に複数バージョンが陳腐化しています。"
 done_criteria:
   satisfied: 0

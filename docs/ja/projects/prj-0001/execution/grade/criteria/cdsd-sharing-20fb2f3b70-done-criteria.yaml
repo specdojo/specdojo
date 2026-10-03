@@ -2,12 +2,12 @@
 id: cdsd-sharing-grade-criteria
 document: cdsd-sharing
 path: docs/ja/product/010-business-specs/020-data-model/cdsd-sharing.md
-graded_at: "2026-09-27T16:41:01.418Z"
-graded_by: codex-expert-executor
+graded_at: "2026-10-01T16:13:09.932Z"
+graded_by: agy-expert-executor
 content_hash: b20d1b0c124fac099975cbc56ffbe57def7e83dd272e665fa1c965ed77b4009a
 summary:
-  satisfied: 1
-  unsatisfied: 2
+  satisfied: 0
+  unsatisfied: 3
   total: 3
 criteria:
   - id: DC-001
@@ -16,17 +16,18 @@ criteria:
       - BA
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
-    reason: カタログ対象の成果物本体・成果物索引が未収載で、費用・作業記録の粒度も未定である。
+    reason: 成果物本体・成果物索引が未収載であり、費用・作業記録の粒度が未定である。
   - id: DC-002
     text: データストア構成を設計の基礎として参照できること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
-    reason: カタログ対象のデータストア構成が揃わず、成果物本体・成果物索引の正本区分、生成元、更新責務を設計の基礎として参照できない。
+    reason: 成果物本体・成果物索引のデータストア構成が設計基礎として参照できる状態になっていない。
   - id: DC-003
     text: データ検証・整合性確認の対象が識別できること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
-    status: satisfied
+    status: unsatisfied
+    reason: 陳腐化と未転記の確認のための比較対象、基準時点、必須項目、合格条件、確認手順が定義されていない。

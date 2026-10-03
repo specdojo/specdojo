@@ -5,9 +5,9 @@ path: docs/ja/product/010-business-specs/030-business-model/bps-task-completion.
 target: deliverable
 rubric: grade-rubric-v2
 verdict: pass
-score: 99
-graded_at: "2026-09-27T20:52:13.912Z"
-graded_by: codex-expert-executor
+score: 98
+graded_at: "2026-10-01T16:19:01.696Z"
+graded_by: agy-expert-executor
 content_hash: 23e173cda7e3215665b8ceea5dca4258cc489d5b2f75316f745471b273d2a722
 source_hashes:
   catalog-entry: eb5b5b77b090623b58e97ff4707989025b78310c051d88953beac75ddeed7700
@@ -31,7 +31,7 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 94
+    score: 88
   implementation:
     score: 100
   quality:
@@ -101,8 +101,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
     level: 4
     score: 100
@@ -121,26 +121,32 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 2
+  minor: 3
   note: 0
 findings:
   - id: F001
     severity: minor
     rule: vp-arc-conciseness
-    line: 68
+    line: 76
     anchor: >-
-      | `E-01`  | `S-01`       | 評価結果がない、その `content_hash` が現在の成果物と一致しない、または評価コンテキストの変化が未反映である | review と完了可否の判断 |
-      runner | 現在の成果物について [[bps-deliverable-evaluation\|成果物評価]] を起動する。review 自身は成果物を評価せず、古い結果から verdict を推測しない |
-      現在の内容と評価コンテキストに対応する grade・finding が確定した後、`S-01` から再開する                           |
+      | 完了可能                | 最新の grade・finding があり、変更内容が plan と完了条件を満たし、完了を妨げる未充足事項がない         | 完了可能の verdict
+      と根拠が確定し、登録簿と実行記録に一件ずつ完了の記録が残る                           | 評価結果、review の判断記録、登録簿、実行記録        |
     message: "`E-01` の処置にある「review 自身は成果物を評価せず、古い結果から verdict を推測しない」は概要で説明済みのため、削除を検討してください。"
   - id: F002
     severity: minor
     rule: vp-arc-conciseness
-    line: 79
-    anchor: >-
-      | 評価結果が最新でない    | 評価結果がない、現在の成果物と `content_hash` が一致しない、または評価コンテキストの変化が未反映である | review が成果物を再評価せず、runner による grade
-      の確定まで完了判断を開始しない                         | 完了要求、評価要求、`content_hash`、評価コンテキスト |
+    line: 87
+    anchor: ""
     message: 「評価結果が最新でない」の期待する業務成果にある「review が成果物を再評価せず、」は概要で説明済みのため、削除を検討してください。
+  - id: F003
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 58
+    anchor: >-
+      | ------------------------------------ | ------------------------ |
+      -------------------------------------------------------------------------------------------- | ----------------- |
+      ------------------------------------- |
+    message: "`S-02` の入力に `進捗報告` とありますが、4章の入力名 `進捗報告の判断事項` に統一してください。"
 done_criteria:
   satisfied: 5
   total: 5

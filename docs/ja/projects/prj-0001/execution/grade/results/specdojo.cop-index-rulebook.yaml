@@ -3,45 +3,96 @@ version: 1
 document: specdojo:cop-index-rulebook
 path: docs/ja/specdojo/rulebooks/cop-index-rulebook.md
 target: kata
-rubric: grade-rubric-v1
-reference: specdojo:prj-overview-rulebook
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 91
-graded_at: "2026-09-02T02:46:57.724Z"
-graded_by: gemma-expert-executor
+score: 76
+graded_at: "2026-09-29T21:57:07.769Z"
+graded_by: codex-expert-executor
 content_hash: 4af6a4bdcdcbba0f4644395e59f4165151a8d2c27a6703cc0cbfb4f76c29ab65
 categories:
-  consistency:
+  purpose:
     score: 100
+  operations:
+    score: 69
+  planning:
+    score: 75
+  business:
+    score: 92
+  architecture:
+    score: 75
   usability:
     score: 100
-  architecture:
-    score: 100
+  implementation:
+    score: 63
   quality:
-    score: 75
+    score: 67
+  consistency:
+    score: 50
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
     level: 4
     score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 2
+    score: 50
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 3
+    score: 75
+  vp-pm-control-reporting:
+    level: 2
+    score: 50
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 3
+    score: 75
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 2
+    score: 50
   vp-arc-conciseness:
     level: 4
     score: 100
-  vp-arc-single-responsibility:
-    level: 4
-    score: 100
+  vp-dev-implementation-readiness:
+    level: 2
+    score: 50
+  vp-dev-change-impact:
+    level: 3
+    score: 75
+  vp-dev-testability:
+    level: 3
+    score: 75
   vp-qe-verifiability:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
-  vp-qe-kata-conformance:
     level: 2
     score: 50
+  vp-qe-kata-conformance:
+    level: 1
+    score: 25
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 2
+    score: 50
+  vp-ops-operability:
+    level: 3
+    score: 75
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -49,13 +100,89 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 0
+  major: 8
+  minor: 5
   note: 0
 findings:
   - id: F001
     severity: major
+    rule: vp-po-publication-accountability
+    line: 106
+    anchor: "- 担当、責務、連絡経路、エスカレーション先を明記する。"
+    message: 担当・連絡先とユーザ向け周知を同じ成果物に収める一方、内部限定情報と公開可能な通知内容の分離、個人情報の扱い、公開承認者を定義しておらず、公開時に機微情報を混在させるおそれがある。
+  - id: F002
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 21
+    anchor: "`cop-index` と他ドキュメントの関係を示す。"
+    message: 関連成果物の役割は列挙されているが、各依存の未達・変更が当日スケジュールへ及ぼす影響と、PJR等へ登録する条件が定義されていない。
+  - id: F003
+    severity: major
+    rule: vp-pm-control-reporting
+    line: 97
+    anchor: "- 実施者と証跡（ログ、チケット、チェック欄）を含める。"
+    message: ログやチケットは証跡用途としてのみ示され、進捗、課題、リスク、変更要求、決定事項の区分、報告先、転記担当が定義されていないため、当日の統制記録を一貫して管理できない。
+  - id: F004
+    severity: minor
+    rule: vp-ba-requirements-completeness
+    line: 81
+    anchor: "- 切替対象と目的を1〜3行で示す。"
+    message: 概要には切替対象と目的だけを要求しており、対象外システム、対象外業務、今回実施しない作業を明示する規則がないため、切替範囲の境界を確認しにくい。
+  - id: F005
+    severity: major
+    rule: vp-arc-technical-constraints
+    line: 49
+    anchor: "| type       | `migration`                      | ○    |"
+    message: >-
+      `deliverable-frontmatter.schema.yaml` は `type: migration` と `title` を許可せず、必須の `rulebook`
+      を要求するため、推奨Frontmatter表のままではスキーマ適合成果物を作成できない。
+  - id: F006
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 49
+    anchor: "| type       | `migration`                      | ○    |"
+    message: "必須設定として示された `type: migration` と `title` は参照スキーマに適合せず、必要な `rulebook` も表から欠落しているため、記載どおりに有効なFrontmatterを実装できない。"
+  - id: F007
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 21
+    anchor: "`cop-index` と他ドキュメントの関係を示す。"
+    message: 関連成果物の役割は示されているが、`cop-index`の判定点、時刻、手順を変更した際に再確認・更新すべき成果物と互換性への影響を記録する規則がない。
+  - id: F008
+    severity: minor
+    rule: vp-dev-testability
+    line: 43
+    anchor: "- 参照: `docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml`"
+    message: 共通スキーマへの参照だけで、対象ファイルに対する検証コマンド、成功時の期待結果、検証失敗時の修正手順が明記されていない。
+  - id: F009
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 49
+    anchor: "| type       | `migration`                      | ○    |"
+    message: "推奨Frontmatterはスキーマ必須の `rulebook` を欠落させる一方、許容されない `type: migration` と `title` を必須としており、参照先の正本と矛盾している。"
+  - id: F010
+    severity: major
     rule: vp-qe-kata-conformance
     line: 1
-    message: サンプル specdojo:cop-index-sample の Frontmatter type が project となっており、ルールで定義された migration と矛盾している。
     anchor: "# カットオーバー計画（本番切替手順） 作成ルール"
+    message: サンプル specdojo:cop-index-sample の Frontmatter type が project となっており、ルールで定義された migration と矛盾している。
+  - id: F011
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 62
+    anchor: "`cop-index` は以下の見出し構成を順序固定で配置する。"
+    message: >-
+      Frontmatterで完成例として宣言された `specdojo:cop-index-sample`
+      は、順序固定かつ全項目必須とされた10章を持たず、タイムライン、手順、連絡系統、実施条件、GO/NO-GO、ロールバック、障害対応、周知を具体化していないため、rulebook準拠の完成例として機能していない。
+  - id: F012
+    severity: major
+    rule: vp-ops-release-readiness
+    line: 51
+    anchor: "| status     | `draft` / `ready` / `deprecated` | ○    |"
+    message: "`status`の値だけが列挙され、`ready`への昇格条件、承認者, 未解決事項の確認、公開・配布前チェックが定義されていないため、切替に使用可能な版を判断できない。"
+  - id: F013
+    severity: minor
+    rule: vp-ops-operability
+    line: 138
+    anchor: "- 障害時の判断フローと連絡経路を明記する。"
+    message: 障害時対応は定義されているが、切替計画の更新責任者、変更履歴、再レビュー条件、更新後の関係者への再周知手順が定義されていない。

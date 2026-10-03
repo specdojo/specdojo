@@ -1,0 +1,3 @@
+grade pipeline incomplete: incomplete=1 run_id=JBR-grade-kata-6e23633d2f4f; rerun with --run-id JBR-grade-kata-6e23633d2f4f to retry the failed stages, or start a new run with --incomplete
+grade pipeline incomplete document: docs/ja/specdojo/rulebooks/bes-rulebook.md failed_stage=1
+grade pipeline failed: run_id=JBR-grade-kata-6e23633d2f4f exit_code=1

@@ -1,0 +1,37 @@
+
+> specdojo@0.3.0 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-kata-6e23633d2f4f project=prj-0001 target=kata kind=all changed_only=true ungraded=true incomplete=true rubric_outdated=true max_stage_failures=3 stages=1 documents=15 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-kata-6e23633d2f4f
+stage=1 executor=agy-expert-executor reporter=gemma-reporter reference=none
+document start: docs/ja/specdojo/recipes/bps-recipe.md
+document complete: docs/ja/specdojo/recipes/bps-recipe.md
+document start: docs/ja/specdojo/recipes/cdfd-recipe.md
+document complete: docs/ja/specdojo/recipes/cdfd-recipe.md
+document start: docs/ja/specdojo/recipes/cdfd-uc-recipe.md
+document complete: docs/ja/specdojo/recipes/cdfd-uc-recipe.md
+document start: docs/ja/specdojo/rulebooks/atc-index-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/atc-index-rulebook.md
+document start: docs/ja/specdojo/rulebooks/atc-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/atc-rulebook.md
+document start: docs/ja/specdojo/rulebooks/bac-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/bac-rulebook.md
+document start: docs/ja/specdojo/rulebooks/bds-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/bds-rulebook.md
+document start: docs/ja/specdojo/rulebooks/bes-rulebook.md
+document incomplete: docs/ja/specdojo/rulebooks/bes-rulebook.md failed_stage=1
+document start: docs/ja/specdojo/rulebooks/br-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/br-rulebook.md
+document start: docs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md
+document start: docs/ja/specdojo/rulebooks/cdsd-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/cdsd-rulebook.md
+document start: docs/ja/specdojo/rulebooks/cld-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/cld-rulebook.md
+document start: docs/ja/specdojo/rulebooks/cnd-mermaid-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/cnd-mermaid-rulebook.md
+document start: docs/ja/specdojo/rulebooks/cnd-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/cnd-rulebook.md
+document start: docs/ja/specdojo/rulebooks/cop-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/cop-rulebook.md
+grade pipeline complete: selected=15 processed=15 completed_now=14 incomplete=1 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-kata-6e23633d2f4f/results.tsv
