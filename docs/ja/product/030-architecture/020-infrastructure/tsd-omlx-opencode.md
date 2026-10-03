@@ -69,7 +69,7 @@ API key は `opencode.json` に直接書かない。opencode の credential stor
         "ornith-1.5-35b": {
           "name": "Ornith 1.5 35B-A3B oQ4e",
           "limit": {
-            "context": 32768,
+            "context": 65536,
             "output": 8192,
           },
         },
@@ -79,7 +79,7 @@ API key は `opencode.json` に直接書かない。opencode の credential stor
 }
 ```
 
-`limit.context` は、[[tsd-omlx]] のモデル設定の Max Context Window（32768）に合わせる。
+`limit.context` は、[[tsd-omlx]] のモデル設定の Max Context Window（65536）に合わせる。
 
 ### 4.3. 既定のモデルにする場合
 
