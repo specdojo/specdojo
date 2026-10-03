@@ -28,7 +28,7 @@ oMLX は OpenAI 互換の `/v1/*` API を提供する。SpecDojo の opencode �
 
 事前に [[tsd-omlx]] の手順で、次が完了していることを前提とする。
 
-- Mac ホスト上の oMLX が、`0.0.0.0:8000` で API key を付けて起動していること
+- Mac ホスト上の oMLX が、Admin UI で待ち受けを `0.0.0.0:8000`、API key ありに設定され、メニューバーから起動されていること
 - `mlx-works/Ornith-1.5-35B-A3B-oQ4e-mtp` がダウンロード済みで、Model Alias `ornith-1.5-35b` が設定されていること
 - devcontainer 内から `http://host.docker.internal:8000/v1/models` でモデル一覧を取得できること
 
@@ -41,7 +41,7 @@ API key は `opencode.json` に直接書かない。opencode の credential stor
 1. opencode を起動し、`/connect` を実行する。
 2. `Other` を選ぶ。
 3. Provider ID に `omlx` を入力する。
-4. API key に、Mac ホストで設定した `OMLX_API_KEY` と同じ値を入力する。
+4. API key に、Mac ホストの oMLX Admin UI で設定した API key と同じ値を入力する。
 
 ## 4. `opencode.json` 設定
 
@@ -165,14 +165,16 @@ Claude / Codex
 
 ### 9.2. API key の管理
 
-API key は opencode の credential store と、Mac ホストのシェルの環境変数だけに置く。`opencode.json` や、リポジトリ内のファイルに書かない。
+API key は opencode の credential store に保存する。Mac ホストでは oMLX が `~/.omlx/settings.json` に永続化するため、このファイルや API key を `opencode.json`、Git、またはリポジトリ内のファイルに書かない。
 
 ### 9.3. oMLX の起動確認
 
 Mac ホスト側で oMLX が止まっていると、devcontainer からの接続はタイムアウトになる。接続できない場合は、Mac ホスト側で次を確認する。
 
-- oMLX が起動していること: `curl http://127.0.0.1:8000/v1/models`
-- `0.0.0.0` で待ち受けていること
+- メニューバーで oMLX サーバーが起動中であること
+- Admin UI のサーバー全体の設定で、待ち受けが `0.0.0.0`、ポートが `8000`、API key が設定済みであること
+- 設定変更後にメニューバーからサーバーを再起動したこと
+- Mac ホストで `curl -H "Authorization: Bearer <OMLX_API_KEY>" http://127.0.0.1:8000/v1/models` が成功すること
 - devcontainer が Docker Desktop 上で動いていること
 - `host.docker.internal` を名前解決できること: `getent hosts host.docker.internal`
 
@@ -180,3 +182,5 @@ Mac ホスト側で oMLX が止まっていると、devcontainer からの接続
 
 - [[tsd-omlx]]
 - [[tsd-ollama-opencode]]
+- <https://github.com/TomLeeLive/jundot-omlx>
+- <https://jacar.es/en/omlx-api-key-port-endpoints/>
