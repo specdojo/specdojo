@@ -126,6 +126,7 @@ RUN install -d -o node -g node \
       /home/node/.local \
       /home/node/.local/bin \
       /home/node/.local/share \
+      /home/node/.local/share/opencode \
       /home/node/.local/share/emacs \
       /home/node/.local/share/nvim
 

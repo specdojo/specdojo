@@ -17,6 +17,7 @@ DIRS=(
   /home/node/.copilot
   /home/node/.config/gh
   /home/node/.config/opencode
+  /home/node/.local/share/opencode
   /home/node/.config/antigravity
   /home/node/.gemini
 )
