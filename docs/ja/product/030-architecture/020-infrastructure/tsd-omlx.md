@@ -113,7 +113,7 @@ du -sh ~/.omlx/models/Ornith-1.5-35B-A3B-oQ4e-mtp
 
 ## 5. 起動とモデル alias
 
-動作確認の段階では、初回設定のまま `127.0.0.1:8000` だけで待ち受ける。メニューバーの oMLX アイコンを開き、サーバー開始の操作（表示名: `_TODO_`）を選ぶ。正確な表示名は公開情報で確認できないため、実機確認後にプレースホルダーを置き換える。
+動作確認の段階では、初回設定のまま `127.0.0.1:8000` だけで待ち受ける。メニューバーの oMLX アイコンを開き、サーバーが開始されていることを確認する（`Server: running (port 8000)`）。
 
 OpenAI 互換 API は `http://127.0.0.1:8000/v1`、Admin UI は `http://127.0.0.1:8000/admin` で提供される。モデル一覧を確認する。
 
@@ -121,9 +121,18 @@ OpenAI 互換 API は `http://127.0.0.1:8000/v1`、Admin UI は `http://127.0.0.
 curl http://127.0.0.1:8000/v1/models
 ```
 
+API key を設定済みの場合は、`/v1/models` にも認証が必要になり、上記は `API key required` で失敗する。その場合は API key を `read -s` で読み込み、`Authorization` ヘッダーを付ける。`read -s` は入力を画面に表示せず、シェルの履歴にも残さない。API key を `.zshrc` などのファイルに書かず、確認が終わったら `unset` で破棄する。
+
+```bash
+read -s OMLX_API_KEY
+curl -H "Authorization: Bearer $OMLX_API_KEY" \
+  http://127.0.0.1:8000/v1/models
+unset OMLX_API_KEY
+```
+
 Ornith が一覧に含まれれば、oMLX 側は正常に動いている。
 
-Admin UI のモデル一覧から Ornith の per-model settings を開き、Model Alias を `ornith-1.5-35b` に設定する。以後、opencode からは Hugging Face 上の長い名前ではなく、この alias で呼べる。設定後、`curl http://127.0.0.1:8000/v1/models` で alias が表示されることを確認する。
+Admin UI のモデル一覧から Ornith の per-model settings を開き、Model Alias を `ornith-1.5-35b` に設定する。以後、opencode からは Hugging Face 上の長い名前ではなく、この alias で呼べる。設定後、同じ方法で `/v1/models` を取得し、alias が表示されることを確認する。
 
 ## 6. M3 Max 64GB向けの初期設定
 
@@ -131,31 +140,98 @@ Admin UI のモデル一覧から Ornith の per-model settings を開き、Mode
 
 ### 6.1. サーバー設定
 
-Admin UI のサーバー全体の設定に次の値を入れる。
+Admin UI のサーバー全体の設定の Resource Management に次の値を入れる。
 
 ```text
-Max Concurrent Requests: 2
-Memory Guard:            48 GB
-Chunked Prefill:         ON
-Prefill Priority:        speed
-Decode Fairness:         ON
+Memory guard:                        48 GB
+Hot Cache Limit (In-Memory Cache):   10%
+Cold Cache Limit (SSD Cache):        50 GB
+Max Concurrent Requests:             2
+Embedding Batch Size:                既定値のまま
+Chunked Prefill:                     ON
+Prioritize Decoding During Prefill:  ON
+Prefill Priority:                    Speed
+Idle Timeout:                        None
 ```
 
-64GB のすべてを oMLX に使わせず、48GB 程度に抑える。macOS、VS Code、Docker Desktop、devcontainer、opencode、Git / Node などの開発ツールのための余裕を残すためである。
+各項目の意図は次のとおり。
 
-### 6.2. モデル設定
+| 項目                               | 意図                                                                                                                                          |
+| ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| Memory guard                       | 既定値（システム RAM − 8GB）では開発ツールの余裕が残りにくいため、48GB に抑える。変更後はサーバーの再起動が必要である                         |
+| Hot Cache Limit (In-Memory Cache)  | opencode が毎回送る長い system prompt などの KV cache を RAM に保持する。memory pressure が上がる場合は 5% に下げる                           |
+| Cold Cache Limit (SSD Cache)       | 既定値の `auto` は空きディスクの 50% まで使うため、固定値で上限を決める。サーバーの再起動後も prefix cache を SSD から復元できる              |
+| Max Concurrent Requests            | 2 つの opencode agent の並列実行に合わせる（既定値は 8）                                                                                      |
+| Embedding Batch Size               | embedding モデルを使わないため、影響しない                                                                                                    |
+| Chunked Prefill                    | 長い入力を分割して処理し、もう一方のリクエストの decode を止めにくくする                                                                      |
+| Prioritize Decoding During Prefill | prefill 中も、生成中のリクエストの decode を優先する                                                                                          |
+| Prefill Priority                   | `Speed` は prefill を最大速度で処理し、メモリに収まらないリクエストは拒否する。拒否が発生する場合は、prefill を縮小して続ける方式に切り替える |
+| Idle Timeout                       | モデルをロードしたままにし、初回のロード待ちをなくす。oMLX を使わない時間が長く、メモリを解放したい場合は 30～60 分にする                     |
 
-Admin UI で Ornith の per-model settings を開き、次の値を入れる。
+64GB のすべてを oMLX に使わせず、48GB 程度に抑える。macOS、VS Code、Docker Desktop、devcontainer、opencode、Git / Node などの開発ツールのための余裕を残すためである。Hot Cache が Memory guard の上限に含まれるかは公開情報で確認できないため、設定後は Admin UI の Peak memory と Activity Monitor の Memory Pressure で確認する。
+
+### 6.2. キャッシュ設定
+
+Admin UI のサーバー全体の設定の Cache に次の値を入れる。
+
+```text
+Cache Enabled:        ON
+Hot Cache Only:       OFF
+SSD Cache Directory:  既定値のまま
+```
+
+| 項目                | 意図                                                                                                |
+| ------------------- | --------------------------------------------------------------------------------------------------- |
+| Cache Enabled       | opencode は毎回同じ長い system prompt を送るため、prefix cache で prefill の時間を減らす            |
+| Hot Cache Only      | ON にすると SSD の層を使わず、サーバー設定の Cold Cache Limit が無駄になるため OFF にする           |
+| SSD Cache Directory | 内蔵 SSD 上の既定値を使う。外付けドライブや、iCloud・Dropbox などで同期されるフォルダーを指定しない |
+
+### 6.3. 生成の既定値
+
+Admin UI のサーバー全体の設定の Generation Defaults は、全モデルに共通する既定値である。Ornith 個別の値は次節のモデル設定で入れるため、ここでは最低限の安全な値にとどめる。
+
+```text
+Global Context Window Cap:  65536
+Fallback Context Window:    32768
+Max Tokens:                 16384
+Temperature:                既定値のまま
+Top P:                      既定値のまま
+Top K:                      既定値のまま
+Repetition Penalty:         1.0
+```
+
+| 項目                        | 意図                                                                                                                    |
+| --------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Global Context Window Cap   | 全モデルの context の上限を、64K の運用方針に合わせる。context を拡張する場合は、モデル設定と同時にこの値も上げる       |
+| Fallback Context Window     | モデルが最大 context を宣言していない場合の値として、控えめにする。Ornith は宣言しているため影響しない                  |
+| Max Tokens                  | リクエストが出力の上限を指定しない場合の既定値である。thinking とファイル編集の出力が途中で切れないよう、余裕を持たせる |
+| Temperature / Top P / Top K | Ornith 向けの値はモデル設定で入れるため、全体の既定値は変更しない                                                       |
+| Repetition Penalty          | コードは同じ字句を正当に繰り返すため、ペナルティを無効（1.0）にする                                                     |
+
+Global Context Window Cap と Fallback Context Window の正確な定義、および Generation Defaults とモデル設定の優先順位は、公開情報で確認できない。モデル設定の値が有効になっていることを、Admin UI のログや chat completion の応答で確認する。
+
+### 6.4. モデル設定
+
+Admin UI で Ornith の per-model settings を開き、次の値を入れる。opencode は temperature などのサンプリングの値をリクエストで送らないため、ここで設定した値がそのまま使われる。
 
 ```text
 Max Context Window:       65536
 Temperature:              0.6
+Thinking Budget:          2048
+```
+
+| 項目               | 意図                                                                                                                                                          |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Max Context Window | 生成の既定値の Global Context Window Cap でも 64K に制限されるが、opencode の `limit.context`（[[tsd-omlx-opencode]]）と合わせる前提の値のため明示する        |
+| Temperature        | モデルの `generation_config.json` の既定値は 1.0 である。Qwen 系が thinking を使うコーディング向けに推奨する 0.6 とし、tool の引数や diff の安定性を優先する  |
+| Thinking Budget    | 上限がないと考えすぎて遅くなり、出力の Max Tokens も消費するため、上限を付ける。難しい設計やレビューで 4096 にする基準は、後述の Thinking Budget の節で定める |
+
+次の項目は既定値のままとし、画面上の既定値が次の値であることを確認する。異なる場合は次の値を入れる。
+
+```text
 Top P:                    0.95
 Top K:                    20
-
 Thinking:                 ON
-Thinking Budget:          2048～4096
-
 Lightning MTP:            OFF
 TurboQuant KV:            OFF
 SpecPrefill:              OFF
@@ -163,7 +239,9 @@ DFlash:                   OFF
 Qwen ANE Prefill:         OFF
 ```
 
-### 6.3. Lightning MTP を最初は OFF にする理由
+Top P と Top K は、モデルの `generation_config.json` の既定値と同じである。ただし、oMLX が `generation_config.json` の値を既定値として使うかは、公開情報で確認できない。
+
+### 6.5. Lightning MTP を最初は OFF にする理由
 
 このモデルは MTP head を保持しているが、配布元は MoE での Lightning MTP について、まず OFF で評価することを推奨している。別のベンチマークでは ON で高速化した例もあるため、次の順で判断する。
 
@@ -172,23 +250,13 @@ Qwen ANE Prefill:         OFF
 3. 速度の向上と失敗率を比べる
 4. 品質が落ちなければ ON で運用する
 
-### 6.4. Thinking Budget
+### 6.6. Thinking Budget
 
 Ornith は reasoning model のため、thinking を完全には切らず、上限を付けて使う。通常は 2048 tokens、難しい設計やレビューでは 4096 tokens とする。考えすぎて遅くなるのを避けるため、通常作業で 8192 以上にはしない。
 
 ## 7. 並列実行
 
-2 つの opencode agent を同時に動かす場合は、次の設定とする。
-
-```text
-Max Concurrent Requests: 2
-Context per agent:        65536
-Thinking Budget:          2048
-Chunked Prefill:          ON
-Prefill Priority:         speed
-Decode Fairness:          ON
-Memory Guard:             48GB
-```
+2 つの opencode agent を同時に動かす場合の設定値は、`サーバー設定` と `モデル設定` に従う。
 
 Ornith を 2 コピー起動しない。1 つの oMLX に 1 つの Ornith をロードし、2 つのリクエストを continuous batching で処理させる。
 
@@ -219,15 +287,21 @@ devcontainer からは Mac ホストの `localhost` を直接参照できない�
 1. Mac ホストのブラウザーで `http://127.0.0.1:8000/admin` を開く。
 2. Admin UI のサーバー全体の設定で、待ち受けアドレスを `0.0.0.0`、ポートを `8000`、Max Concurrent Requests を `2` にする。
 3. 同じ設定で API key を入力し、保存する。
-4. メニューバーの oMLX からサーバーを再起動する。停止と開始の項目の正確な表示名は、実機確認後に前節の `_TODO_` と同時に確定する。
+4. メニューバーの oMLX から配信統計の`Restart`をクリックしサーバーを再起動する。
 
 Admin UI で保存した API key を含む設定は `~/.omlx/settings.json` に永続化される。このファイルと API key の値を Git に commit せず、本書を含むリポジトリ内にコピーしない。
 
-devcontainer 内から、モデル一覧を取得できることを確認する。`<OMLX_API_KEY>` には Mac ホストで設定した値を入れる。
+devcontainer 内のシェルで、Mac ホストで設定した API key を `read -s` で読み込む。入力は画面に表示されず、シェルの履歴にも残らない。
+
+```bash
+read -s OMLX_API_KEY
+```
+
+モデル一覧を取得できることを確認する。
 
 ```bash
 curl \
-  -H "Authorization: Bearer <OMLX_API_KEY>" \
+  -H "Authorization: Bearer $OMLX_API_KEY" \
   http://host.docker.internal:8000/v1/models
 ```
 
@@ -236,7 +310,7 @@ curl \
 ```bash
 curl http://host.docker.internal:8000/v1/chat/completions \
   -H "Content-Type: application/json" \
-  -H "Authorization: Bearer <OMLX_API_KEY>" \
+  -H "Authorization: Bearer $OMLX_API_KEY" \
   -d '{
     "model": "ornith-1.5-35b",
     "messages": [
@@ -248,6 +322,12 @@ curl http://host.docker.internal:8000/v1/chat/completions \
     "temperature": 0.6,
     "max_tokens": 32
   }'
+```
+
+確認が終わったら、API key を破棄する。
+
+```bash
+unset OMLX_API_KEY
 ```
 
 ## 9. CLI で起動する場合
@@ -312,8 +392,8 @@ Thinking budget:        2048
 Lightning MTP:          OFF
 TurboQuant KV:          OFF
 Chunked Prefill:        ON
-Prefill Priority:       speed
-Memory Guard:           48GB
+Prefill Priority:       Speed
+Memory guard:           48GB
 ```
 
 この状態で、Ollama の Qwen3.8（[[tsd-ollama]]）と同じ実タスクを比べる。成功・失敗、総処理時間、tool call の失敗回数、テストの再実行回数、修正漏れ、不要な変更、最終的な diff の品質を記録する。tokens/sec だけで判断しない。比較の方法は [[tsd-omlx-opencode]] で定義する。
@@ -324,7 +404,7 @@ Memory Guard:           48GB
 
 ### 11.3. フェーズ3：context の拡張
 
-64K を通常運用の基準とし、必要な場合に 128K 以上への拡張を検討する。このモデルでは 64K × 2 の KV cache が約 2.7GB のため、64K での主な判断材料は KV cache の容量ではなく、prefill の時間、prefill 中の一時的なメモリ使用量、長い文脈での回答と tool calling の品質である。Admin UI の TTFT と Peak memory を確認し、同じ実タスクで修正漏れ、不要な変更、tool call の失敗率を比較する。
+64K を通常運用の基準とし、必要な場合に 128K 以上への拡張を検討する。拡張する場合は、モデル設定の Max Context Window と、生成の既定値の Global Context Window Cap を合わせて上げる。このモデルでは 64K × 2 の KV cache が約 2.7GB のため、64K での主な判断材料は KV cache の容量ではなく、prefill の時間、prefill 中の一時的なメモリ使用量、長い文脈での回答と tool calling の品質である。Admin UI の TTFT と Peak memory を確認し、同じ実タスクで修正漏れ、不要な変更、tool call の失敗率を比較する。
 
 prefix cache が再利用できる共通 prefix は prefill の負担を減らせるが、新規部分の prefill は残る。Chunked Prefill は長い入力を分割して処理し、decode との干渉や一時的なメモリ使用量を抑えるため、ON を維持する。どちらも長い文脈での品質低下を補う機能ではないため、最終判断は実タスクの品質を含めて行う。
 
