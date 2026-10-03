@@ -79,7 +79,14 @@ API key は `opencode.json` に直接書かない。opencode の credential stor
 }
 ```
 
-`limit.context` は、[[tsd-omlx]] のモデル設定の Max Context Window（65536）に合わせる。
+`limit` の各値は次の方針で決める。
+
+| 項目            | 値    | 方針                                                                                                                                                                                                                   |
+| --------------- | ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `limit.context` | 65536 | [[tsd-omlx]] のモデル設定の Max Context Window に合わせる                                                                                                                                                              |
+| `limit.output`  | 8192  | opencode はこの値を出力の上限としてリクエストで送るため、[[tsd-omlx]] の生成の既定値の Max Tokens より優先される。Thinking Budget（2048、難しい作業では 4096）を差し引いても、tool call 単位の編集には十分な出力が残る |
+
+opencode は `limit.context` から `limit.output` を差し引いた量（約 57K）を入力に使える量とみなし、超えそうになると会話を圧縮（compaction）する。`limit.output` を大きくすると入力に使える量が減り、圧縮が早く起きるため、64K の context では 8192 とする。
 
 ### 4.3. 既定のモデルにする場合
 
@@ -174,7 +181,7 @@ Mac ホスト側で oMLX が止まっていると、devcontainer からの接続
 - メニューバーで oMLX サーバーが起動中であること
 - Admin UI のサーバー全体の設定で、待ち受けが `0.0.0.0`、ポートが `8000`、API key が設定済みであること
 - 設定変更後にメニューバーからサーバーを再起動したこと
-- Mac ホストで `curl -H "Authorization: Bearer <OMLX_API_KEY>" http://127.0.0.1:8000/v1/models` が成功すること
+- Mac ホストで、[[tsd-omlx]] の「devcontainerからの接続」の確認を接続先 `http://127.0.0.1:8000` で実行し、モデル一覧を取得できること（API key は `read -s` で読み込み、確認後に `unset` で破棄する）
 - devcontainer が Docker Desktop 上で動いていること
 - `host.docker.internal` を名前解決できること: `getent hosts host.docker.internal`
 
