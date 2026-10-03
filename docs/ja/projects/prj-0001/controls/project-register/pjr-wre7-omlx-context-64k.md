@@ -21,13 +21,21 @@ Ornith-1.5（qwen3_5_moe）は 40 層中 10 層だけが通常の attention で�
 
 ## 2. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- [[tsd-omlx]] の「モデル設定」の `Max Context Window` と「並列実行」の `Context per agent` を `65536` にする。「段階的な最適化」のフェーズ1の `Context` も 64K にそろえる。
+- 「メモリ配分と監視」に、KV cache の見積もりを表で加える。根拠は `config.json` の値（40 層、`full_attention_interval` 4、`num_key_value_heads` 2、`head_dim` 256）とし、1 トークンあたり約 20 KB、64K × 1 で約 1.3 GB、64K × 2 で約 2.7 GB、linear attention の状態は長さによらず一定、モデル本体と合わせて約 24 GB とする。fp16 の概算で oMLX の内部のオーバーヘッドを含まないことを明記する。
+- 「context の拡張」を、64K を基準とし、メモリより prefill の時間・prefill 中の一時的なメモリ（Admin UI の Peak memory）・長い文脈での品質を見て判断する書き方に直す。prefix cache と Chunked Prefill の効果にも触れる。
+- 「TurboQuant KV Cache」を、このモデルでは 64K × 2 でも KV cache が小さいため、3 並列以上か 128K 以上の場合に検討する書き方に直す。
+- 「並列実行」で 3〜4 並列のときに context を 16K〜24K へ抑えるとしている記述を、上の見積もりと矛盾しないように見直す。
+- [[tsd-omlx-opencode]] の `limit.context` を `65536` にし、本文の対応する説明をそろえる。
+- 参照に `config.json` の URL（<https://huggingface.co/mlx-works/Ornith-1.5-35B-A3B-oQ4e-mtp/raw/main/config.json>）を加える。
+- `npm run lint:md`・`npm run lint:fm` が通る。
 
 ## 3. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                      | 担当 | 状態 | メモ |
+| --- | ----------------------------------------- | ---- | ---- | ---- |
+| 1   | tsd-omlx の設定値と説明の更新             | DEV  | open | -    |
+| 2   | tsd-omlx-opencode の limit.context の更新 | DEV  | open | -    |
 
 ## 4. 対応結果
 
@@ -35,4 +43,6 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 5. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[tsd-omlx]]
+- [[tsd-omlx-opencode]]
+- [[prj-0001:pjr-mgnw-omlx-app-gui-setup]]
