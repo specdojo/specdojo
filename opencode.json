@@ -19,6 +19,22 @@
           "name": "Gemma 4 E4B-MLX"
         }
       }
+    },
+    "omlx": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "oMLX",
+      "options": {
+        "baseURL": "http://host.docker.internal:8000/v1"
+      },
+      "models": {
+        "ornith-1.5-35b": {
+          "name": "Ornith 1.5 35B-A3B oQ4e",
+          "limit": {
+            "context": 65536,
+            "output": 8192
+          }
+        }
+      }
     }
   },
   "model": "ollama-local/qwen3.8:27b-mlx-work-64k"
