@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_d7288e0d27d84fbc9dc205fda9e9e7b5
+  ts: "2026-10-03T14:27:19Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: devcontainer の設定の保存先（named volume・コンテナ内のみ・母艦と共有）を文書に明記する
+    - field: description
+      from: ""
+      to: devcontainer の各設定・認証情報が named volume に残るか、リビルドで消えるか、母艦と共有・コピーされるかが文書にない。opencode の API key がリビルドで消えた件を受け、保存先の一覧と、リビルド後に必要な再設定を guide か設計書に明記する
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-03"
