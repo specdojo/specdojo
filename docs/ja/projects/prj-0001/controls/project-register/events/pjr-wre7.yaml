@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_61353579d7ba430cbef5c9bba2c38979
+  ts: "2026-10-03T02:59:26Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者が 64K を使いたいとし、モデルの config.json から M3 Max 64GB でもメモリに余裕があると見積もれたため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: oMLX の Ornith のコンテキストを 64K にする
+    - field: description
+      from: ""
+      to: Ornith-1.5（qwen3_5_moe）は 40 層中 10 層だけが通常の attention で、64K × 2 並列でも KV cache は約 2.7GB に収まる。tsd-omlx と tsd-omlx-opencode のコンテキストの既定を 32K から 64K にし、KV cache の見積もりと、メモリより prefill の時間と品質を見る判断の書き方に直す
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-03"
+    - field: due
+      from: ""
+      to: _TODO_
