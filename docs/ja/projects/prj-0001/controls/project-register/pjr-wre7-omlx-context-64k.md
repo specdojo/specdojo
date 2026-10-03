@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-wre7-omlx-context-64k
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-03T02:59:25Z"
+  completed_at: "2026-10-03T03:09:48Z"
+  conclusion: tsd-omlx と tsd-omlx-opencode のコンテキストの既定を 64K にし、config.json に基づく KV cache の見積もり（64K × 2 で約 2.7GB、合計約 24GB）と、prefill の時間・品質を見る判断の書き方に直した
 ---
 
 # PJR-WRE7 oMLX の Ornith のコンテキストを 64K にする

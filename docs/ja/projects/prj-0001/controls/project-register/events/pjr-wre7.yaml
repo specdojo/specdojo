@@ -58,3 +58,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_216d4fabee5946c2b8b367ddb8d7ce5e
+- v: 1
+  id: reg_427a2991c4844cd090707a5e7c58e06b
+  ts: "2026-10-03T03:09:48Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（codex-expert-executor / codex-reporter）の結果を orchestrator が評価した。設定値・見積もりの表・TurboQuant と 3〜4 並列の記述・opencode の limit.context と、親検証 7 種の通過を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-03"
+    - field: conclusion
+      from: "-"
+      to: tsd-omlx と tsd-omlx-opencode のコンテキストの既定を 64K にし、config.json に基づく KV cache の見積もり（64K × 2 で約 2.7GB、合計約 24GB）と、prefill の時間・品質を見る判断の書き方に直した
+  previous_event_id: reg_cba374d2258e49c6b492fcfd5d2da1c6
