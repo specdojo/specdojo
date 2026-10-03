@@ -1,9 +1,22 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+USER_LOCAL_DIR="${HOME}/.local"
+
+# postCreateCommand runs before postStartCommand. Fix ownership of the named volume mount points
+# here as well, because the git config and agent installers below write into them.
+bash "$(dirname "$0")/prepare-agent-dirs.sh"
+
 if command -v fdfind >/dev/null 2>&1; then
   sudo ln -sf "$(command -v fdfind)" /usr/local/bin/fd
 fi
+
+# Official installers write executables and application data below ~/.local.
+sudo install -d -o "$(id -u)" -g "$(id -g)" \
+  "$USER_LOCAL_DIR" \
+  "$USER_LOCAL_DIR/bin" \
+  "$USER_LOCAL_DIR/share"
+export PATH="$USER_LOCAL_DIR/bin:$PATH"
 
 echo "Installing frequently updated agent CLIs..."
 sudo npm install -g opencode-ai@latest
@@ -31,11 +44,6 @@ fi
 # update failures hard to attribute.
 if [ -d /usr/local/share/npm-global/lib/node_modules/@anthropic-ai/claude-code ]; then
   sudo npm uninstall -g @anthropic-ai/claude-code || echo "Warning: could not remove the npm global Claude Code."
-fi
-
-# Some installers place binaries under ~/.local/bin.
-if [ -d "${HOME}/.local/bin" ]; then
-  export PATH="${HOME}/.local/bin:${PATH}"
 fi
 
 if command -v codex >/dev/null 2>&1; then

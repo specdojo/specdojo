@@ -123,6 +123,9 @@ RUN npm install --global \
 
 # named volume の初回作成時に node ユーザーの所有権を引き継がせる。
 RUN install -d -o node -g node \
+      /home/node/.local \
+      /home/node/.local/bin \
+      /home/node/.local/share \
       /home/node/.local/share/emacs \
       /home/node/.local/share/nvim
 
