@@ -29,3 +29,32 @@
     - field: registered
       from: ""
       to: "2026-10-04"
+- v: 1
+  id: reg_b5f5be5166204764bb5c14a1b4164f63
+  ts: "2026-10-04T03:45:58Z"
+  action: start
+  actor: agy-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_12110d5281d64299be86c8ae77da00db
+- v: 1
+  id: reg_9666625357e2406789fde8f7b08561e5
+  ts: "2026-10-04T04:00:43Z"
+  action: wait
+  actor: agy-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: runner validation failed: `validate-schema` (exit 1), `typecheck` (error TS2532 in `tests/src/grade.test.ts`), and `test-unit` (4 tests failed in `tests/tools/grade-pe…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: runner validation failed: `validate-schema` (exit 1), `typecheck` (error TS2532 in `tests/src/grade.test.ts`), and `test-unit` (4 tests failed in `tests/tools/grade-pe…"
+  previous_event_id: reg_b5f5be5166204764bb5c14a1b4164f63
