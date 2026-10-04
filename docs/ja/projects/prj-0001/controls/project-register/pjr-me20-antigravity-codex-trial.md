@@ -47,7 +47,7 @@ PJR-2T2S の作業 4 を切り出した項目である。単発の実行では P
 
 ## 4. 対応結果
 
--
+- 2026-10-03 に grade の plan 3 件で agy と codex を含む5系統を比較した（[[prj-0001:pjr-vqb5-agent-grade-comparison]] の「agy・ornith を加えた比較（2026-10-03）」）。agy は3件とも検証を通過し、executor 平均 101 秒・reporter 15 秒で最速、major を出した唯一の agent だった。codex は sandbox の起動失敗（[[prj-0001:pjr-27z9-codex-bwrap-proc-mount]]）で判定できず、同一 plan での agy と codex の比較は未完了である。exec trial による親検証付きの比較（作業 2）は未実施。
 
 ## 5. 関連ドキュメント
 

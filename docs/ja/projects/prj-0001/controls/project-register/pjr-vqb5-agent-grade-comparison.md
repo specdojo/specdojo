@@ -390,6 +390,77 @@ codex が約 1.7 倍速い。gemma は 1 段で 9 分前後かかる。
 今回は 8 件中 1 件（12.5%）で、前回の 40% から下がった。忠実性検証による拒否であり、2 段目で
 回復している。
 
+### 1.22. agy・ornith を加えた比較（2026-10-03）
+
+oMLX の Ornith（`ornith-*`）を追加し、未評価だった agy（`agy-*`）と合わせて、同じ plan で5系統を比較した。各系統の expert executor と reporter を組にしている。
+
+#### 1.22.1. 実行条件
+
+| 項目     | 内容                                                                                                                        |
+| -------- | --------------------------------------------------------------------------------------------------------------------------- |
+| 対象文書 | `trc-requirements-to-tests-rulebook`、`imp-business-rulebook`、`stsd-mermaid-rulebook`（いずれも 6〜9 KB）                  |
+| 参考     | codex の保存済み grade（v1 rubric）は 55、85、100 であり、良否の差がある文書を選んだ                                        |
+| plan     | `grade plan` の出力から「前回の指摘」だけを空にした。前回の codex の finding を引き継がせず、独立した判定を比べるためである |
+| 記録     | executor、reporter、`grade apply --dry-run` を本番と同じ順で実行した。reporter は検証に失敗した場合に1回だけ再実行した      |
+| score    | grade-rubric-v2 の重みで、agent が判定する観点だけから算出した。決定的観点は全 agent で共通のため除いている                 |
+
+#### 1.22.2. 結果
+
+| 組み合わせ      | trc  | imp  | stsd | executor 平均 | reporter 平均 | 検証 |
+| --------------- | ---- | ---- | ---- | ------------: | ------------: | ---- |
+| agy → agy       | 92   | 95   | 95   |        101 秒 |         15 秒 | 3/3  |
+| ornith → ornith | 98   | 失敗 | 100  |        445 秒 |         36 秒 | 2/3  |
+| gemma → gemma   | 100  | 100  | 100  |        469 秒 |        151 秒 | 3/3  |
+| qwen → qwen     | 93   | 92   | 97   |      1,150 秒 |        174 秒 | 3/3  |
+| codex → codex   | 失敗 | 失敗 | 失敗 |             - |             - | 0/3  |
+
+ornith の reporter 平均は成功した2件の値である。失敗した件は再実行を含めて 163 秒かかった。qwen の executor は 707〜1,952 秒と幅があり、中央値は 792 秒である。
+
+#### 1.22.3. agent 別の所見
+
+- agy は最も速く、major を出した唯一の agent である。codex が最も低く評価した trc を3件中で最も低く判定し、良否の順序が codex と一致した。reporter も3件とも1回で検証を通過した。
+- ornith の reporter はローカルモデルで最速である（gemma の約4分の1）。executor は対象外の標準やスキーマまで読みに行き、tool call が 12〜26 回に及ぶ。
+- ornith の imp は、thinking が本文に混入して出力の上限で途切れ、`[VIEWPOINT ...]` marker が1つもなかった。ornith-reporter は判定がないにもかかわらず全観点 level 4 の JSON を生成し、忠実性検証が拒否した。同じ状況で codex-reporter は生成できない旨のエラーを返している。根拠のない JSON を作る reporter は、検証がなければ誤った grade を記録しうる。
+- gemma は3件とも 100、finding 0 件であり、良否を区別できていない。[[prj-0001:pjr-w5jt-grade-single-stage-nightly]] で gemma を門番から外した判断と一致する。
+- qwen は minor だけを出し、良否の順序が codex と一致しない。最も遅い。
+- codex は3件とも、sandbox の起動に失敗して判定前に終了した。比較データは得られていない（[[prj-0001:pjr-27z9-codex-bwrap-proc-mount]]）。
+
+#### 1.22.4. 評価
+
+今回の5系統では agy が grade に最も適している。ローカルモデルの3系統はいずれも判定が甘く、単独では門番にならない。文書3件・各1回の結果であり、傾向の把握にとどまる。agy の priority と proficiency の確定は [[prj-0001:pjr-me20-antigravity-codex-trial]] で行う。
+
+ornith と qwen の executor が遅い要因として、thinking が各応答に入り tool call の回数分だけ積み上がることが考えられる。thinking を切った場合の所要時間と判定の質は未測定である。
+
+### 1.23. ornith の executor の改善（2026-10-04）
+
+「agy・ornith を加えた比較（2026-10-03）」の ornith を対象に、thinking、パラメータ、prompt、plan を変えて同じ3文書を評価した。⑤以降は reporter を通さず、executor の marker から GradeSubmission を機械的に生成して検証した（[[prj-0001:pjr-e9h3-grade-deterministic-reporter]] の再現）。
+
+#### 1.23.1. 条件と結果
+
+| 条件                                                                | 検証通過 | executor 平均 | 主な失敗                                               |
+| ------------------------------------------------------------------- | -------: | ------------: | ------------------------------------------------------ |
+| ① thinking ON                                                       |      2/3 |        445 秒 | thinking が本文へ混入し出力上限で途切れた              |
+| ② thinking OFF                                                      |      2/3 |         70 秒 | reporter の書き写し誤り                                |
+| ③ ②＋AGENTS.md の Language 改訂＋`min_p` 0.05                       |      2/3 |         55 秒 | `[END VIEWPOINT]` を書かない                           |
+| ④ ③＋executor の temperature 0.3・top_p 0.8＋形式規則＋字体の置換例 |      2/6 |         49 秒 | marker の太字囲み、文中の `FINDING`、書き写し誤り      |
+| ⑤ ④の形式規則を改訂、reporter を機械変換に置換                      |      4/6 |         65 秒 | `[END VIEWPOINT]` 欠落、level 3 で `FINDING` なし      |
+| ⑥ ⑤＋判定例を agent に提示＋本文を plan に埋め込み                  |      5/6 |         62 秒 | 英語の分析だけを出力し marker がない                   |
+| ⑦ ⑥＋「最初の行から marker で始める」規則                           |      3/6 |         50 秒 | 英語の分析だけを出力（2件）、level 3 で `FINDING` なし |
+
+①〜③は各文書1回、④〜⑦は各文書2回の実行である。⑦の規則は守られず（6回中5回が英語の前置きで始まった）、通過率も下がったため、規則を外して⑥の構成へ戻した。⑥と⑦は1つの規則以外は同じ条件であり、合わせると 8/12 である。1条件あたり6回では、⑥の 5/6 と⑦の 3/6 の差を偶然と区別できない。
+
+#### 1.23.2. 施策ごとの効果
+
+- thinking OFF は executor を約6倍速くし、対象外のファイルを読みに行く動きを止めた。一方で形式の崩れが増えた。
+- 崩れ方を具体的に禁じた規則は、禁じた崩れ方（太字囲み、文中の `FINDING`）だけを消した。別の崩れ方が残る。
+- 本文の埋め込み（⑥）で tool call が 0〜1 回になり、2回実行した score の差が 1〜3 点に縮まった。[[prj-0001:pjr-26k4-grade-plan-embed-documents]] で起票した。
+- 判定例の提示（⑥）で指摘が増え、trc にも major を出した。ただし codex が最も低く評価した trc（55）を imp より高く評価しており、良否の弁別は不十分である。
+- 中国語の字体（为・时・问题・这个 など）は、AGENTS.md の指示、置換例、`min_p`、低い temperature のいずれでも消えなかった。4bit 量子化の影響を疑っているが未検証である。
+
+#### 1.23.3. 評価
+
+ornith の executor は1回1分前後と最速だが、厳密な行形式を安定して守れず、判定も codex より甘い。reporter を機械変換に置き換え（[[prj-0001:pjr-e9h3-grade-deterministic-reporter]]）、本文を埋め込み、失敗時に executor を再実行する構成なら、高速な一次評価には使える。門番（最終判定）には使わない。
+
 ## 2. 背景・文脈
 
 kata 285 件を定期評価するにあたり、ローカルモデルで運用できれば API コストなしで全件を回せる。その可否と、どの agent をどの用途に使うかを判断するために比較した。

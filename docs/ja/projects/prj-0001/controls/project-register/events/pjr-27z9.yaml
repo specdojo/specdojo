@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_8dbd9a6158f44de086b4b4885a08ea32
+  ts: "2026-10-03T22:19:26Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: codex 0.160 の bubblewrap sandbox が devcontainer 内で /proc をマウントできず exec と grade が失敗する
+    - field: description
+      from: ""
+      to: "2026-10-03 のリビルドで codex が 0.160.0 になり、Linux sandbox が bubblewrap 必須になった。devcontainer 内では bwrap: Can't mount proc on /proc: Operation not permitted で起動に失敗し、codex の executor はファイルを読めず異常終了する。codex 単段の定期 kata grade と codex を使う exec が失敗する"
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-04"

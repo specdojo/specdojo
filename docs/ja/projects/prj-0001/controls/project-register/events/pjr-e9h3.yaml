@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_12110d5281d64299be86c8ae77da00db
+  ts: "2026-10-04T00:28:36Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: grade の reporter を LLM から executor の marker の機械変換に置き換える
+    - field: description
+      from: ""
+      to: "grade の reporter は executor の [VIEWPOINT] / [DONE_CRITERIA] marker を GradeSubmission JSON へ一字一句写すだけだが、LLM が担うため書き写しの誤り（例: 三箇所→三箇会）、JSON の構文破損、根拠のない JSON の生成が起き、時間もかかる。grade apply は既に executor の分析を parse して忠実性を検証しているため、同じ parse から GradeSubmission を機械的に生成すれば、reporter 起因の失敗をなくし、executor の選択肢も広げられる"
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-04"
