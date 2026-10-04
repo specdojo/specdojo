@@ -1294,6 +1294,46 @@ LEVEL: 4
     expect(plan.length).toBeLessThan(20_000);
   });
 
+  it("embeds frontmatter separately and numbers body lines from the H1", () => {
+    const path = "docs/ja/specdojo/rulebooks/pm-quality-management-plan-rulebook.md";
+    const reference = "docs/ja/specdojo/rulebooks/cdfd-rulebook.md";
+    const plan = renderGradePlan({
+      target: "kata",
+      path,
+      references: [reference],
+      viewpoints,
+      projectId: "prj-0001",
+      embedDocuments: true,
+    });
+
+    expect(plan).toContain("### 埋め込み資料");
+    expect(plan).toContain(`#### 評価対象: \`${path}\``);
+    expect(plan).toContain(`#### 参考資料: \`${reference}\``);
+    expect(plan).toContain("Frontmatter（`finding.line` の行番号対象外）:");
+    expect(plan).toContain("specdojo:\n  id: specdojo:pm-quality-management-plan-rulebook");
+    expect(plan).toContain("1 | # 品質管理計画 作成ルール");
+    expect(plan).toContain("1 | # 概念データフロー図（プロセスグループ別）作成ルール");
+    expect(plan).toContain("ファイル読み取りツールと検索ツールを使わず");
+    expect(plan).not.toContain("実行ログに読み取り操作を残す");
+  });
+
+  it("falls back to path references when embedded documents exceed the character limit", () => {
+    const path = "docs/ja/specdojo/rulebooks/pm-quality-management-plan-rulebook.md";
+    const plan = renderGradePlan({
+      target: "kata",
+      path,
+      references: [],
+      viewpoints,
+      projectId: "prj-0001",
+      embedDocuments: true,
+      maxEmbeddedDocumentCharacters: 1,
+    });
+
+    expect(plan).toContain("上限 1 文字を超えたため、本文を埋め込まずパス参照へフォールバックした");
+    expect(plan).not.toContain("1 | # 品質管理計画 作成ルール");
+    expect(plan).toContain("評価対象をファイル読み取りツールで全文読み");
+  });
+
   it("selects a ready reference example from the same Kata kind on each run", () => {
     const path = "docs/ja/specdojo/rulebooks/pm-quality-management-plan-rulebook.md";
     const candidates = [

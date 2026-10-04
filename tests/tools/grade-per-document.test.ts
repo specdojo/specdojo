@@ -341,7 +341,7 @@ describe("grade per-document pipeline", () => {
 
     expect(result.status, result.stderr).toBe(0);
     expect(result.stdout).toContain(
-      "kind=all changed_only=true ungraded=true incomplete=false rubric_outdated=false max_stage_failures=3 stages=3 documents=3",
+      "kind=all changed_only=true ungraded=true incomplete=false rubric_outdated=false embed_documents=false max_stage_failures=3 stages=3 documents=3",
     );
     expect(result.stdout).toContain("reference=per-kind");
     expect(result.stdout.match(/fixture-rulebook\.md/g)).toHaveLength(1);
@@ -360,7 +360,7 @@ describe("grade per-document pipeline", () => {
 
     expect(result.status, result.stderr).toBe(0);
     expect(result.stdout).toContain(
-      "kind=all changed_only=false ungraded=false incomplete=false rubric_outdated=true max_stage_failures=3 stages=3 documents=1",
+      "kind=all changed_only=false ungraded=false incomplete=false rubric_outdated=true embed_documents=false max_stage_failures=3 stages=3 documents=1",
     );
     expect(result.stdout).toContain("docs/ja/specdojo/samples/prj-overview-sample.md");
     expect(result.stdout).not.toContain("fixture-rulebook.md");
@@ -448,6 +448,19 @@ describe("grade per-document pipeline", () => {
     expect(results).not.toContain("\t3\t");
     expect(readFileSync(fixture.argsFile, "utf8")).toContain("agent run --project prj-0001");
     expect(readFileSync(fixture.argsFile, "utf8")).toContain("--by codex-expert-executor");
+  });
+
+  it("passes the document embedding option to every grade plan stage", () => {
+    const fixture = makeFixture();
+
+    const result = runPipeline(fixture, {}, ["--stages", "1", "--embed-documents"]);
+
+    expect(result.status, result.stderr).toBe(0);
+    expect(result.stdout).toContain("embed_documents=true");
+    expect(readFileSync(fixture.argsFile, "utf8")).toContain(
+      "grade plan --target kata --project prj-0001 --path docs/ja/specdojo/rulebooks/fixture-rulebook.md --out",
+    );
+    expect(readFileSync(fixture.argsFile, "utf8")).toContain("--embed-documents");
   });
 
   it("re-evaluates a current three-stage state when switching to one stage", () => {

@@ -83,7 +83,11 @@ describe("CLI generation verb taxonomy", () => {
 
     expect(longs).toContain("--reference");
     expect(longs).toContain("--random-reference");
+    expect(longs).toContain("--embed-documents");
     expect(plan?.options.find((option) => option.long === "--random-reference")?.defaultValue).toBe(
+      false,
+    );
+    expect(plan?.options.find((option) => option.long === "--embed-documents")?.defaultValue).toBe(
       false,
     );
   });
