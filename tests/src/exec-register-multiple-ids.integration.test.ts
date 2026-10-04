@@ -34,11 +34,11 @@ function createGitRepository(): string {
   return repo;
 }
 
-function makeItem(id = "PJR-0001"): PjrItem {
+function makeItem(id = "PJR-0001", title = "register commit test"): PjrItem {
   return {
     id,
     status: "in-progress",
-    title: "register commit test",
+    title,
     description: "test",
     type: "issue",
     priority: "high",
@@ -52,6 +52,23 @@ function makeItem(id = "PJR-0001"): PjrItem {
 }
 
 describe("commitRegisterItemChanges", () => {
+  it("100文字を超えるタイトルでもsubjectを上限内に収めてcommitする", () => {
+    const repo = createGitRepository();
+    try {
+      writeFileSync(join(repo, "src", "target.ts"), "long title change\n", "utf8");
+
+      const result = commitRegisterItemChanges(repo, makeItem("PJR-0001", "長".repeat(120)), []);
+      const subject = git(repo, "log", "-1", "--pretty=%s");
+
+      expect(result.committed).toBe(true);
+      expect(subject).toHaveLength(100);
+      expect(subject).toMatch(/^exec\(register PJR-0001\): /);
+      expect(subject.endsWith("…")).toBe(true);
+    } finally {
+      rmSync(repo, { recursive: true, force: true });
+    }
+  });
+
   it("hookが整形した対象を同じIDのcommitへ収束させ、次IDでも同じパスをcommitできる", () => {
     const repo = createGitRepository();
     try {

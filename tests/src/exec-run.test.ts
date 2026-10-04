@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import {
   buildExecutorPrompt,
+  commitSubject,
   executorRequirements,
   extractBlockReason,
   isRateLimitError,
@@ -16,6 +17,24 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import type { ExecDefaultsConfig, RateLimitDetection } from "../../src/exec-agent-config.js";
 import type { MemberRoster, ProjectMember } from "../../src/specdojo-config.js";
+
+describe("commitSubject", () => {
+  const prefix = "exec(register PJR-AB12): ";
+
+  it("100文字のsubjectを変更しない", () => {
+    const title = "a".repeat(100 - prefix.length);
+
+    expect(commitSubject(prefix, title)).toBe(`${prefix}${title}`);
+  });
+
+  it("101文字のsubjectを省略記号付き100文字へ切り詰める", () => {
+    const title = "a".repeat(101 - prefix.length);
+    const subject = commitSubject(prefix, title);
+
+    expect(subject).toHaveLength(100);
+    expect(subject).toBe(`${prefix}${"a".repeat(99 - prefix.length)}…`);
+  });
+});
 
 describe("parseExecRunBusyPolicy", () => {
   it("既定を fail とし、skip / wait / fail だけを受け入れる", () => {
