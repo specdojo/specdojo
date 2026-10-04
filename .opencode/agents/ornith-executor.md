@@ -1,8 +1,9 @@
 ---
-description: oMLX の Ornith を使う SpecDojo pipeline executor。成果物の編集と検証だけを行う。
+description: oMLX の Ornith（thinking なし）を使う SpecDojo pipeline executor。成果物の編集と検証だけを行う。
 mode: primary
 model: omlx/ornith-1.5-35b
-reasoningEffort: none
+temperature: 0.7
+top_p: 0.8
 permission:
   read: { "*": allow, "*.env": deny, "*.env.*": deny, "secrets/**": deny, "**/secrets/**": deny }
   glob: allow

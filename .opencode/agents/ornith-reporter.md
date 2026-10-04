@@ -1,9 +1,9 @@
 ---
-description: oMLX の Ornith を使う SpecDojo pipeline reporter。
+description: oMLX の Ornith（thinking なし）を使う SpecDojo pipeline reporter。
 mode: primary
 model: omlx/ornith-1.5-35b
-reasoningEffort: none
 temperature: 0.1
+top_p: 0.8
 permission:
   {
     read: deny,
@@ -19,8 +19,6 @@ permission:
     question: deny,
   }
 ---
-
-/no_think
 
 渡された plan、executor evidence、出力スキーマだけから構造化結果を返してください。追加調査・ファイル変更・推測は行わず、指定スキーマ以外を出力しません。
 

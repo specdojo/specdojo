@@ -72,6 +72,13 @@ API key は `opencode.json` に直接書かない。opencode の credential stor
             "context": 65536,
             "output": 8192,
           },
+          "options": {
+            "chat_template_kwargs": { "enable_thinking": false },
+            "top_k": 20,
+            "min_p": 0.05,
+            "presence_penalty": 0.0,
+            "repetition_penalty": 1.0,
+          },
         },
       },
     },
@@ -81,14 +88,45 @@ API key は `opencode.json` に直接書かない。opencode の credential stor
 
 `limit` の各値は次の方針で決める。
 
-| 項目            | 値    | 方針                                                                                                                                                                                                                   |
-| --------------- | ----- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `limit.context` | 65536 | [[tsd-omlx]] のモデル設定の Max Context Window に合わせる                                                                                                                                                              |
-| `limit.output`  | 8192  | opencode はこの値を出力の上限としてリクエストで送るため、[[tsd-omlx]] の生成の既定値の Max Tokens より優先される。Thinking Budget（2048、難しい作業では 4096）を差し引いても、tool call 単位の編集には十分な出力が残る |
+| 項目            | 値    | 方針                                                                                                                                                                                                            |
+| --------------- | ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `limit.context` | 65536 | [[tsd-omlx]] のモデル設定の Max Context Window に合わせる                                                                                                                                                       |
+| `limit.output`  | 8192  | opencode はこの値を出力の上限としてリクエストで送るため、[[tsd-omlx]] の生成の既定値の Max Tokens より優先される。thinking を使わないため、tool call 単位の編集にも、grade の 23 観点の判定にも十分な出力である |
 
 opencode は `limit.context` から `limit.output` を差し引いた量（約 57K）を入力に使える量とみなし、超えそうになると会話を圧縮（compaction）する。`limit.output` を大きくすると入力に使える量が減り、圧縮が早く起きるため、64K の context では 8192 とする。
 
-### 4.3. 既定のモデルにする場合
+### 4.3. サンプリングと thinking
+
+Ornith のサンプリングの値と thinking の有無は、opencode の設定で指定する。oMLX はリクエストで指定された値を、Admin UI のモデル設定より優先する。Admin UI の値は、opencode を介さないリクエストのための既定値として、[[tsd-omlx]] の「モデル設定」で同じ値にそろえる。
+
+モデル全体の値は、`opencode.json` のモデルの `options` に書く。opencode はこれをリクエストの本文へそのまま加える。
+
+| 項目                                   | 値      | 方針                                                                                                        |
+| -------------------------------------- | ------- | ----------------------------------------------------------------------------------------------------------- |
+| `chat_template_kwargs.enable_thinking` | `false` | thinking を使わない。2026-10-04 の計測で、thinking ON は約3倍遅く、判定が甘く、検証の通過率も上がらなかった |
+| `top_k`                                | 20      | Qwen 系の推奨値                                                                                             |
+| `min_p`                                | 0.05    | 確率の低いトークンを外し、中国語の字体や崩れた語の混入を抑える                                              |
+| `presence_penalty`                     | 0.0     | 上げると言語の混在が増える                                                                                  |
+| `repetition_penalty`                   | 1.0     | executor の文の書き写しや、コードで同じ字句を繰り返すことを妨げないよう無効にする                           |
+
+`temperature` と `top_p` は、用途ごとに `.opencode/agents/ornith-*.md` の frontmatter で指定する。opencode は agent の値をリクエストで送る。
+
+| agent                    | `temperature` | `top_p` | 方針                                                                                                                          |
+| ------------------------ | ------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `ornith-executor`        | 0.7           | 0.8     | Qwen 系が thinking なしで推奨する値                                                                                           |
+| `ornith-expert-executor` | 0.3           | 0.8     | grade など厳密な出力形式を求める作業向けに、確率の低い候補を選びにくくする。2026-10-04 の計測で最も検証の通過率が高かった構成 |
+| `ornith-reporter`        | 0.1           | 0.8     | 渡された内容を構造化結果へ写すだけのため、ほぼ決定的にする                                                                    |
+
+opencode の `reasoningEffort` は、oMLX では thinking の切り替えに使われない。thinking を agent ごとに変える場合は、agent の frontmatter に `chat_template_kwargs` を書く。agent の値は `opencode.json` の値より優先される。
+
+```yaml
+chat_template_kwargs:
+  enable_thinking: true
+```
+
+計測の経緯と結果は [[prj-0001:pjr-vqb5-agent-grade-comparison]] の「ornith の executor の改善（2026-10-04）」に記録している。
+
+### 4.4. 既定のモデルにする場合
 
 既定のモデルにする場合は、トップレベルに次を追加する。
 

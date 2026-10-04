@@ -142,7 +142,7 @@ SSD Cache Directory:  既定値のまま
 
 ### 4.4. 生成の既定値
 
-Admin UI のサーバー全体の設定の Generation Defaults は、全モデルに共通する既定値である。Ornith 個別の値はモデル設定で入れるため、ここでは最低限の安全な値にとどめる。
+Admin UI のサーバー全体の設定の Generation Defaults は、全モデルに共通する既定値である。リクエストが値を指定しない場合だけ使われる。opencode は Ornith のサンプリングの値と thinking の有無をリクエストで送るため（[[tsd-omlx-opencode]]）、ここでは最低限の安全な値にとどめる。
 
 ```text
 Global Context Window Cap:  65536
@@ -154,42 +154,48 @@ Top K:                      既定値のまま
 Repetition Penalty:         1.0
 ```
 
-| 項目                        | 意図                                                                                                                                                                                                                                                      |
-| --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Global Context Window Cap   | 全モデルの context の上限を、64K の運用方針に合わせる                                                                                                                                                                                                     |
-| Fallback Context Window     | モデルが最大 context を宣言していない場合の値として、控えめにする。Ornith は宣言しているため影響しない                                                                                                                                                    |
-| Max Tokens                  | リクエストが出力の上限を指定しない場合の既定値である。thinking とファイル編集の出力が途中で切れないよう、余裕を持たせる。opencode はモデルの `limit.output`（[[tsd-omlx-opencode]]）を出力の上限として送るため、opencode からの利用ではこの値は使われない |
-| Temperature / Top P / Top K | Ornith 向けの値はモデル設定で入れるため、全体の既定値は変更しない                                                                                                                                                                                         |
-| Repetition Penalty          | コードは同じ字句を正当に繰り返すため、ペナルティを無効（1.0）にする                                                                                                                                                                                       |
+| 項目                        | 意図                                                                                                                                                                                                                                           |
+| --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Global Context Window Cap   | 全モデルの context の上限を、64K の運用方針に合わせる                                                                                                                                                                                          |
+| Fallback Context Window     | モデルが最大 context を宣言していない場合の値として、控えめにする。Ornith は宣言しているため影響しない                                                                                                                                         |
+| Max Tokens                  | リクエストが出力の上限を指定しない場合の既定値である。ファイル編集の出力が途中で切れないよう、余裕を持たせる。opencode はモデルの `limit.output`（[[tsd-omlx-opencode]]）を出力の上限として送るため、opencode からの利用ではこの値は使われない |
+| Temperature / Top P / Top K | Ornith 向けの値は opencode のリクエストで指定するため、全体の既定値は変更しない                                                                                                                                                                |
+| Repetition Penalty          | コードは同じ字句を正当に繰り返すため、ペナルティを無効（1.0）にする                                                                                                                                                                            |
 
 Global Context Window Cap と Fallback Context Window の正確な定義、および Generation Defaults とモデル設定の優先順位は、公開情報で確認できない。モデル設定の値が有効になっていることを、Admin UI のログや chat completion の応答で確認する。
 
 ### 4.5. モデル設定
 
-Admin UI のモデル一覧から Ornith の per-model settings を開き、次の値を入れる。opencode は temperature などのサンプリングの値をリクエストで送らないため、ここで設定した値がそのまま使われる。出力の上限だけは、opencode が `limit.output` の値をリクエストで送る。
+Ornith のサンプリングの値と thinking の有無は、opencode の設定（[[tsd-omlx-opencode]] の「サンプリングと thinking」）を正とする。oMLX はリクエストで指定された `temperature`、`top_p`、`top_k`、`min_p`、`presence_penalty`、`repetition_penalty`、`chat_template_kwargs.enable_thinking` を、Admin UI のモデル設定より優先する。2026-10-04 に、Admin UI の Thinking を OFF にしたままリクエストで `enable_thinking: true` を送ると thinking が出ることで確認した。
+
+Admin UI のモデル設定には、opencode を介さないリクエスト（`curl` による確認など）のための既定値を入れる。値は opencode の設定とそろえる。Admin UI のモデル一覧から Ornith の per-model settings を開き、次の値を入れる。
 
 ```text
 Model Alias:              ornith-1.5-35b
 Max Context Window:       65536
-Temperature:              0.6
-Thinking Budget:          2048
+Thinking:                 OFF
+Temperature:              0.7
+Top P:                    0.8
+Top K:                    20
+Min P:                    0.05
+Presence Penalty:         0.0
+Repetition Penalty:       1.0
 ```
 
-| 項目               | 意図                                                                                                                                                                             |
-| ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Model Alias        | API で公開するモデル名を短くし、opencode から Hugging Face 上の長い名前ではなく alias で呼べるようにする                                                                         |
-| Max Context Window | Global Context Window Cap でも 64K に制限されるが、opencode の `limit.context`（[[tsd-omlx-opencode]]）と合わせる前提の値のため明示する                                          |
-| Temperature        | モデルの `generation_config.json` の既定値は 1.0 である。Qwen 系が thinking を使うコーディング向けに推奨する 0.6 とし、tool の引数や diff の安定性を優先する                     |
-| Thinking Budget    | Ornith は reasoning model のため、thinking は切らずに上限を付ける。上限がないと考えすぎて遅くなり、出力の上限も消費する。難しい設計やレビューでは 4096 とし、8192 以上にはしない |
+| 項目                                  | 意図                                                                                                                                                                                                                      |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Model Alias                           | API で公開するモデル名を短くし、opencode から Hugging Face 上の長い名前ではなく alias で呼べるようにする                                                                                                                  |
+| Max Context Window                    | Global Context Window Cap でも 64K に制限されるが、opencode の `limit.context`（[[tsd-omlx-opencode]]）と合わせる前提の値のため明示する                                                                                   |
+| Thinking                              | OFF とする。2026-10-04 の grade の計測で、thinking ON は OFF より約3倍遅く、判定が甘く、検証の通過率も上がらなかった（[[prj-0001:pjr-vqb5-agent-grade-comparison]]）。thinking の有無は opencode のリクエストでも指定する |
+| Temperature / Top P / Top K           | Qwen 系が thinking なしで推奨する値（0.7 / 0.8 / 20）とする。opencode の agent は用途ごとにこれを上書きする                                                                                                               |
+| Min P                                 | 確率の低いトークンを候補から外し、中国語の字体や崩れた語の混入を抑える。混入を完全には防げない                                                                                                                            |
+| Presence Penalty / Repetition Penalty | どちらも無効にする。presence penalty は言語の混在を増やし、repetition penalty は executor の文の書き写しや、コードで同じ字句を正当に繰り返すことを妨げる                                                                  |
 
 Model Alias は Basic Settings にある。空欄に表示される「Falls back to the model id」はプレースホルダーであり、model id（ディレクトリ名）自体は変更できない。欄に alias を入力して保存すると、`/v1/models` は alias を返し、リクエストでは alias と model id のどちらも受け付ける。
 
 次の項目は既定値のままとし、画面上の既定値が次の値であることを確認する。異なる場合は次の値を入れる。
 
 ```text
-Top P:                    0.95
-Top K:                    20
-Thinking:                 ON
 Lightning MTP:            OFF
 TurboQuant KV:            OFF
 SpecPrefill:              OFF
@@ -197,7 +203,7 @@ DFlash:                   OFF
 Qwen ANE Prefill:         OFF
 ```
 
-Top P と Top K は、モデルの `generation_config.json` の既定値と同じである。ただし、oMLX が `generation_config.json` の値を既定値として使うかは、公開情報で確認できない。Lightning MTP は、配布元が MoE ではまず OFF で評価することを推奨しているため OFF で始め、ON にするかは `段階的な最適化` で判断する。
+Lightning MTP は、配布元が MoE ではまず OFF で評価することを推奨しているため OFF で始め、ON にするかは `段階的な最適化` で判断する。
 
 ## 5. devcontainerからの接続
 
@@ -223,7 +229,7 @@ curl \
 {"object":"list","data":[{"id":"ornith-1.5-35b","object":"model",...}]}
 ```
 
-次に、chat completion を確認する。サンプリングの値は opencode と同じくサーバー側の設定を使うため、リクエストでは指定しない。出力の上限も指定せず、thinking の途中で打ち切られないよう、生成の既定値の Max Tokens を使う。
+次に、chat completion を確認する。この確認ではサンプリングの値と出力の上限を指定せず、Admin UI のモデル設定と生成の既定値を使う。
 
 ```bash
 curl http://host.docker.internal:8000/v1/chat/completions \
@@ -269,7 +275,7 @@ unset OMLX_API_KEY
 | 3      | バックグラウンドの一括処理 |
 | 4      | スループット重視           |
 
-普段は 2 並列とする。夜間の一括処理などで 3～4 並列を試す場合も、context は 64K、Thinking Budget は 2048 を基準とする。並列数を増やすときは、Admin UI で総スループット、リクエストごとの TTFT、Peak memory、長い文脈での品質を確認する。prefill の遅延や一時的なメモリ使用量、memory pressure に問題が出た場合に限り、実測結果に基づいて context を下げる。
+普段は 2 並列とする。夜間の一括処理などで 3～4 並列を試す場合も、context は 64K を基準とする。並列数を増やすときは、Admin UI で総スループット、リクエストごとの TTFT、Peak memory、長い文脈での品質を確認する。prefill の遅延や一時的なメモリ使用量、memory pressure に問題が出た場合に限り、実測結果に基づいて context を下げる。
 
 ## 7. メモリ配分と監視
 
@@ -309,14 +315,14 @@ swap が継続的に大きく増える場合は、次の順で調整する。
 
 1. context を下げる
 2. 並列数を 2 に戻す
-3. Thinking Budget を下げる
+3. Hot Cache Limit を下げる
 4. Docker のメモリの割り当てを見直す
 
 ## 8. 段階的な最適化
 
 ### 8.1. フェーズ1：安定性の基準
 
-最初の数日は、`M3 Max 64GB向けの初期設定` の値（context 64K、2 並列、Thinking Budget 2048、Lightning MTP と TurboQuant KV は OFF）のまま固定する。
+最初の数日は、`M3 Max 64GB向けの初期設定` の値（context 64K、2 並列、thinking OFF、Lightning MTP と TurboQuant KV は OFF）のまま固定する。
 
 この状態で、Ollama の Qwen3.8（[[tsd-ollama]]）と同じ実タスクを比べる。成功・失敗、総処理時間、tool call の失敗回数、テストの再実行回数、修正漏れ、不要な変更、最終的な diff の品質を記録する。tokens/sec だけで判断しない。比較の方法は [[tsd-omlx-opencode]] で定義する。
 

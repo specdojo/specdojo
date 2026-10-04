@@ -1,8 +1,7 @@
 ---
-description: thinking を有効化した oMLX の Ornith を使う SpecDojo pipeline executor。
+description: oMLX の Ornith（thinking なし）を使う SpecDojo pipeline executor。grade など厳密な出力形式を求める作業向けに、出力形式の規則と判定例を持つ。
 mode: primary
 model: omlx/ornith-1.5-35b
-reasoningEffort: high
 temperature: 0.3
 top_p: 0.8
 permission:
