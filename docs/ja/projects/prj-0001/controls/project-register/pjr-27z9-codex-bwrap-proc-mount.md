@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: waiting
   priority: high
   owner: DEV
   registered_at: "2026-10-03T22:19:25Z"
   due_on: null
+  block_reason: "register commit incomplete: git commit failed: summary: (done in 0.65 seconds) / 🥊 commitlint (0.65 seconds) (args: -m exec(register PJR-27Z9): codex 0.160 の … -- 9 paths)"
 ---
 
 # PJR-27Z9 codex 0.160 の bubblewrap sandbox が devcontainer 内で /proc をマウントできず exec と grade が失敗する
