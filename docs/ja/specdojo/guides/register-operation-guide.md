@@ -169,7 +169,7 @@ specdojo register close \
   --commit
 ```
 
-`--commit` は `exec run --register --worktree` の記帳・統合と同じ `register lifecycle` 枠が空くまで待ち、枠の内側で記帳、`register build` 相当の検証・再生成、commit を順に行います。commit 対象はそのコマンドが新たに変更した個票・event・参照文書だけで、開始前からあるほかの未 commit 変更は残します。対象個票やevent自体に開始前の変更がある場合は、既存差分を混ぜないため書き込み前に停止します。既定の件名は `docs(register PJR-XXXX): <command> <title>` で、`-m <message>` または `--message <message>` で上書きできます。`--dry-run` と同時に指定した場合は表示だけを行い、枠の取得と commit は行いません。
+`--commit` は register の worktree 実行の記帳・統合と同じ `register lifecycle` 枠が空くまで待ち、枠の内側で記帳、`register build` 相当の検証・再生成、commit を順に行います。commit 対象はそのコマンドが新たに変更した個票・event・参照文書だけで、開始前からあるほかの未 commit 変更は残します。対象個票やevent自体に開始前の変更がある場合は、既存差分を混ぜないため書き込み前に停止します。既定の件名は `docs(register PJR-XXXX): <command> <title>` で、`-m <message>` または `--message <message>` で上書きできます。`--dry-run` と同時に指定した場合は表示だけを行い、枠の取得と commit は行いません。
 
 ### 2.2. 個票の作成
 
@@ -350,8 +350,8 @@ specdojo exec run --project <project-id> --register PJR-0012
 # 複数項目を指定順に直列実行する（成功IDごとにcommit、途中失敗でも継続）
 specdojo exec run --project <project-id> --register PJR-0012 PJR-0013 --register-commit --on-failure continue
 
-# 成果物を worktree に隔離して実行し、統合ブランチへ merge back する
-specdojo exec run --project <project-id> --register PJR-0012 --worktree
+# 設定に関係なく、現在の作業ツリーで明示的に実行する
+specdojo exec run --project <project-id> --register PJR-0012 --in-place
 
 # worktree 隔離のまま複数項目を並列実行する
 specdojo exec run --project <project-id> --register PJR-0012 PJR-0013 --worktree --parallel 2
@@ -363,9 +363,10 @@ specdojo exec run --project <project-id> --register PJR-0012 PJR-0013 --worktree
 - `--register` には複数の PJR-ID を空白区切り・カンマ区切り（またはその混在）で渡せます。指定順に1件ずつ実行し、各IDが plan/result 生成・開始・agent実行・状態遷移まで完結してから次へ進みます。重複したIDは最初の1件だけを実行します。
 - 全ID処理後にID別の成否・状態遷移・commit 結果を一覧表示します。いずれかが失敗した場合は終了コード 1 で終了します。
 - `--register-commit` を付けると成功IDごとに、その実行で生じた変更だけをcommitします（実行前から作業ツリーにある利用者の変更は含めません）。commit subject は `exec(register <PJR-ID>): <title>` とし、commitlint の100文字上限を超える場合は末尾を `…` に置き換えて100文字へ切り詰めます。`--on-failure`（`stop` 既定 / `continue`）で途中失敗時に停止するか継続するかを選びます。`stop` では失敗以降のIDが skipped として記録されます。
-- 既定は in-place の直列実行で、変更は作業ツリーに残ります（`--register-commit` を付けると commit します）。
-- `--worktree` を付けると、成果物の変更を git worktree に隔離して実行し、成功時に統合ブランチへ merge back します。task worktree では root と package-lock 付き独立 package ごとに `npm ci` を実行し、書き込み可能な独立 `node_modules` を準備してから agent を起動します。成功時の `start → review`、plan、result、成果物は `exec(register <PJR-ID>): <title>` の merge commit に同梱され、統合ブランチの first-parent には1項目1commitだけが増えます。失敗時は `start → waiting` と plan / result を `exec(register <PJR-ID>): wait` commit 1件にまとめ、worktree を保持します。`--resume` で再開した場合の `start` 遷移も exec branch 側に記録され、成功時は merge commit 1件、再び失敗した場合は `wait` commit 1件になります。worktree モードは常に commit するため `--register-commit` は無視されます（指定すると注記を表示します）。
-- `--worktree` と併用する場合に限り `--parallel <n>` で複数項目を並列実行できます。状態遷移は直列化され、成果物は項目ごとの worktree に隔離されます。親 runner の検証（`pipeline.parent_validations`）も既定では 1 項目ずつ直列に実行され、executor と reporter だけが並列に動きます（同時数は `pipeline.parent_validation_concurrency` で変更できます）。`--parallel` を単独（`--worktree` なし）で指定するとエラーになります。失敗時は当該項目の worktree を保持します（調査・再実行のため）。
+- 実行場所の既定は `.specdojo/exec-defaults.yaml` の `run.register_execution` で `worktree` / `in-place` を選びます。未設定の既存リポジトリは互換性のため in-place です。CLI の `--worktree` / `--in-place` は設定を上書きし、同時指定はエラーになります。
+- worktree モードでは、成果物の変更を git worktree に隔離して実行し、成功時に統合ブランチへ merge back します。task worktree では root と package-lock 付き独立 package ごとに `npm ci` を実行し、書き込み可能な独立 `node_modules` を準備してから agent を起動します。成功時の `start → review`、plan、result、成果物は `exec(register <PJR-ID>): <title>` の merge commit に同梱され、統合ブランチの first-parent には1項目1commitだけが増えます。失敗時は `start → waiting` と plan / result を `exec(register <PJR-ID>): wait` commit 1件にまとめ、worktree を保持します。`--resume` で再開した場合の `start` 遷移も exec branch 側に記録され、成功時は merge commit 1件、再び失敗した場合は `wait` commit 1件になります。worktree モードは常に commit するため `--register-commit` は無視されます（指定すると注記を表示します）。
+- worktree の準備時間が見合わない小さな作業で、失敗差分を現在の作業ツリーで直ちに整理できる場合だけ `--in-place` を明示します。in-place は直列実行で、変更を作業ツリーへ残します。`--register-commit` を付けると成功IDごとに commit しますが、`--resume` / `--force-restart` / `--join` と `--parallel` は使えません。
+- worktree モードに限り `--parallel <n>` で複数項目を並列実行できます。状態遷移は直列化され、成果物は項目ごとの worktree に隔離されます。親 runner の検証（`pipeline.parent_validations`）も既定では 1 項目ずつ直列に実行され、executor と reporter だけが並列に動きます（同時数は `pipeline.parent_validation_concurrency` で変更できます）。in-place モードで `--parallel` を指定するとエラーになります。失敗時は当該項目の worktree を保持します（調査・再実行のため）。
 - `--worktree` の実行中に別の項目を後から並行させる場合は、後から起動する run に `--join` を付けます（例: `exec run --register <PJR-ID> --worktree --join`）。状態遷移・統合・生成物の再生成、provider の `max_concurrency`、親検証の枠は、合流した run を跨いで統制されます。同時に動かせる run の数は `run.max_concurrent_runs`（既定 4）で、使用中の枠は `exec slots` で確認できます。詳細は [exec運用ガイド](exec-operation-guide.md) の「実行中の register worktree 実行へ後から合流する」を参照してください。
 - 実行せずに plan の内容だけ確認したい場合は `exec plan --register <PJR-ID>` を使います。
 - open な項目の定期スイープなど、時刻条件で繰り返す場合は routine（`rtn-*.yaml`）を使います。

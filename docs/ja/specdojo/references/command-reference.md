@@ -330,7 +330,7 @@ specdojo schedule strategy generate \
 
 `register update --topic <slug>` は個票のファイル名と Frontmatter の文書 ID を同時に変更し、`docs/ja` 配下の旧文書 ID 参照を更新してから生成ビューを再生成します。変更は `action: update` の event に文書 ID の変更として記録されます。形式は英小文字・数字・単一ハイフン区切りに限り、変更先ファイルが存在する場合は書き込み前に停止します。
 
-記帳系コマンドの `--commit` は、`exec run --register --worktree` と同じ project の `register lifecycle` 枠を取得してから、記帳、`register build` 相当の検証・派生ビュー再生成、pathspec を限定した commit を行います。commit 対象はコマンドが新たに変更した個票・event・参照文書だけで、開始前からあるほかの変更を含めません。対象個票・event・参照文書に開始前の未 commit 変更がある場合は、既存差分との混在を避けるため記帳前に停止します。既定件名は `docs(register PJR-XXXX): <command> <title>` で、`-m` / `--message` により上書きできます。`--dry-run --commit` は変更予定だけを表示し、枠の取得と commit は行いません。
+記帳系コマンドの `--commit` は、register の worktree 実行と同じ project の `register lifecycle` 枠を取得してから、記帳、`register build` 相当の検証・派生ビュー再生成、pathspec を限定した commit を行います。commit 対象はコマンドが新たに変更した個票・event・参照文書だけで、開始前からあるほかの変更を含めません。対象個票・event・参照文書に開始前の未 commit 変更がある場合は、既存差分との混在を避けるため記帳前に停止します。既定件名は `docs(register PJR-XXXX): <command> <title>` で、`-m` / `--message` により上書きできます。`--dry-run --commit` は変更予定だけを表示し、枠の取得と commit は行いません。
 
 一覧・派生ビューの「登録日」「完了日」は、保存した日時を config の `run.register_date_timezone`（IANA タイムゾーン名、既定 `UTC`）へ変換して導出する表示値です。
 
@@ -387,27 +387,28 @@ specdojo schedule strategy generate \
 
 主要オプション:
 
-| オプション                      | 用途                                                                                                    | 対象                                                                            |
-| ------------------------------- | ------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| `--task <task-id>`              | 対象タスクを指定する                                                                                    | 状態遷移系 / `run` / `plan`                                                     |
-| `--by <actor>`                  | 実行 actor / agent の nickname を指定する（手動ターゲットの agent 選択も兼ねる）                        | 状態遷移系 / `run` / `resume` / `worktree agent`                                |
-| `--edit-by <nickname>`          | `--auto` バッチで edit タスクに使う agent nickname                                                      | `run --auto` / `resume`                                                         |
-| `--review-by <nickname>`        | `--auto` バッチで review タスクに使う agent nickname                                                    | `run --auto` / `resume`                                                         |
-| `--strategy <name>`             | 選択戦略を切り替える（`critical-first` 既定 / `fifo`）                                                  | `scheduler` / `run --auto`                                                      |
-| `--auto` / `--loop`             | Ready タスクを自動選択する / Ready がなくなるまで繰り返す                                               | `run`                                                                           |
-| `--parallel <n>`                | 同時に走らせる agent 数の上限を指定する                                                                 | `run --auto` / `run --register --worktree`                                      |
-| `--worktree`                    | worktree に隔離して実行する                                                                             | `run --task` / `run --register`                                                 |
-| `--track-state`                 | claim / complete の状態イベントを記録する                                                               | `run --task`                                                                    |
-| `--register <PJR-ID>`           | 登録簿の項目を実行する（空白・カンマ区切りで複数可。既定は in-place、`--worktree` で隔離）              | `run` / `plan`                                                                  |
-| `--register-filter`             | 登録簿項目を type / priority / status / limit の条件で決定論的に選ぶ                                    | `run`                                                                           |
-| `--register-commit`             | 成功したIDごとに、その実行で生じた変更を1コミットにまとめる（`--worktree` 時は常に commit のため無視）  | `run --register`                                                                |
-| `--on-failure <stop\|continue>` | 途中失敗時に残りのIDを停止するか継続するか（既定は `stop`）                                             | `run --register`                                                                |
-| `--resume`                      | run が止まった段（executor / reporter / 統合）を既存 worktree と checkpoint で再開する                  | `run --register --worktree`                                                     |
-| `--force-restart`               | 再開可能な run の成果があっても、worktree を破棄して項目全体を再実行する                                | `run --register --worktree`                                                     |
-| `--join`                        | 実行中の register worktree 実行の終了を待たずに合流して並行実行する（上限は `run.max_concurrent_runs`） | `run --register --worktree`                                                     |
-| `--executor-by <nickname>`      | executor 段の agent。register では `PJR-ID=nickname,...` による項目別指定も可能                         | `run --auto` / `resume` / `run --register` / `run --plan` / `run --deliverable` |
-| `--reporter-by <nickname>`      | executor/reporter パイプラインの reporter 段に使う agent nickname                                       | `run --auto` / `resume` / `run --register` / `run --plan` / `run --deliverable` |
-| `--due`                         | 再開時刻を迎えた利用制限延期 task を対象にする                                                          | `resume`                                                                        |
+| オプション                      | 用途                                                                                                     | 対象                                                                            |
+| ------------------------------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| `--task <task-id>`              | 対象タスクを指定する                                                                                     | 状態遷移系 / `run` / `plan`                                                     |
+| `--by <actor>`                  | 実行 actor / agent の nickname を指定する（手動ターゲットの agent 選択も兼ねる）                         | 状態遷移系 / `run` / `resume` / `worktree agent`                                |
+| `--edit-by <nickname>`          | `--auto` バッチで edit タスクに使う agent nickname                                                       | `run --auto` / `resume`                                                         |
+| `--review-by <nickname>`        | `--auto` バッチで review タスクに使う agent nickname                                                     | `run --auto` / `resume`                                                         |
+| `--strategy <name>`             | 選択戦略を切り替える（`critical-first` 既定 / `fifo`）                                                   | `scheduler` / `run --auto`                                                      |
+| `--auto` / `--loop`             | Ready タスクを自動選択する / Ready がなくなるまで繰り返す                                                | `run`                                                                           |
+| `--parallel <n>`                | 同時に走らせる agent 数の上限を指定する                                                                  | `run --auto` / register の worktree モード                                      |
+| `--worktree`                    | worktree に隔離して実行する                                                                              | `run --task` / `run --register`                                                 |
+| `--in-place`                    | register 項目を現在の作業ツリーで実行する（`run.register_execution` を上書き）                           | `run --register`                                                                |
+| `--track-state`                 | claim / complete の状態イベントを記録する                                                                | `run --task`                                                                    |
+| `--register <PJR-ID>`           | 登録簿の項目を実行する（空白・カンマ区切りで複数可。場所の既定は `run.register_execution`）              | `run` / `plan`                                                                  |
+| `--register-filter`             | 登録簿項目を type / priority / status / limit の条件で決定論的に選ぶ                                     | `run`                                                                           |
+| `--register-commit`             | 成功したIDごとに、その実行で生じた変更を1コミットにまとめる（worktree モードでは常に commit のため無視） | `run --register`                                                                |
+| `--on-failure <stop\|continue>` | 途中失敗時に残りのIDを停止するか継続するか（既定は `stop`）                                              | `run --register`                                                                |
+| `--resume`                      | run が止まった段（executor / reporter / 統合）を既存 worktree と checkpoint で再開する                   | register の worktree モード                                                     |
+| `--force-restart`               | 再開可能な run の成果があっても、worktree を破棄して項目全体を再実行する                                 | register の worktree モード                                                     |
+| `--join`                        | 実行中の register worktree 実行の終了を待たずに合流して並行実行する（上限は `run.max_concurrent_runs`）  | register の worktree モード                                                     |
+| `--executor-by <nickname>`      | executor 段の agent。register では `PJR-ID=nickname,...` による項目別指定も可能                          | `run --auto` / `resume` / `run --register` / `run --plan` / `run --deliverable` |
+| `--reporter-by <nickname>`      | executor/reporter パイプラインの reporter 段に使う agent nickname                                        | `run --auto` / `resume` / `run --register` / `run --plan` / `run --deliverable` |
+| `--due`                         | 再開時刻を迎えた利用制限延期 task を対象にする                                                           | `resume`                                                                        |
 
 `--plan` と `--deliverable` も Schedule のパイプライン宣言を持たないため、`--executor-by` / `--reporter-by` の少なくとも一方を指定したときだけ executor/reporter 2段階で実行します。指定しなかった段は `stage_role` による自動選択で決まります。`--plan` では reporter が scaffold 済みの result を記入するため、frontmatter に `task_id` を持つ plan が必要です。`--by` との併用はエラーです。`--by` に `stage_role` を持つ pipeline 用 agent を指定すると、result 未記入の blocked にはせず、`--executor-by` / `--reporter-by` を使うよう案内するエラーで実行前に拒否します。
 
@@ -438,8 +439,8 @@ specdojo exec run --project prj-0001 --auto --loop --parallel 5
 # 登録簿の項目を実行する（開始で in-progress、成功で review、失敗で waiting へ遷移）
 specdojo exec run --project prj-0001 --register PJR-0012
 
-# 複数の項目を指定順に直列実行し、成功IDごとにcommitする
-specdojo exec run --project prj-0001 --register PJR-0012 PJR-0013 --register-commit
+# 複数の項目を明示的に in-place で直列実行し、成功IDごとにcommitする
+specdojo exec run --project prj-0001 --register PJR-0012 PJR-0013 --in-place --register-commit
 
 # 途中で失敗しても残りの項目を続行する（既定は失敗時に停止）
 specdojo exec run --project prj-0001 --register PJR-0012,PJR-0013 --on-failure continue
@@ -466,9 +467,9 @@ specdojo exec run --project prj-0001 --register PJR-0012 --worktree --resume
 specdojo exec run --project prj-0001 --job job-weekly-report --input period=2026-W32
 ```
 
-`--register` は指定した個票の項目を実行します。`--register-filter` は `--register-types` / `--register-priorities` / `--register-statuses` のカンマ区切り条件と、正の整数の `--register-limit` で項目を選びます。条件省略時は open かつ実行可能な type が対象です。いずれも実行対象になる type は `todo` / `issue` / `change-request` / `question` / `risk` で、`decision` / `note` は対象外です。既定は in-place の直列実行です。`--worktree` を付けると成果物の変更を worktree に隔離し、状態遷移（`start` / `review` / `waiting`）を直列化したうえで、成功時に merge back します。`--parallel <n>` は `--worktree` との併用時のみ指定でき、単独で指定するとエラーになります。
+`--register` は指定した個票の項目を実行します。`--register-filter` は `--register-types` / `--register-priorities` / `--register-statuses` のカンマ区切り条件と、正の整数の `--register-limit` で項目を選びます。条件省略時は open かつ実行可能な type が対象です。いずれも実行対象になる type は `todo` / `issue` / `change-request` / `question` / `risk` で、`decision` / `note` は対象外です。実行場所の既定は `.specdojo/exec-defaults.yaml` の `run.register_execution`（`worktree` / `in-place`）で選び、未設定時は互換性のため in-place です。`--worktree` / `--in-place` は設定を上書きし、同時指定はエラーになります。worktree モードは成果物の変更を隔離し、状態遷移（`start` / `review` / `waiting`）を直列化したうえで、成功時に merge back します。`--parallel <n>` は worktree モードでのみ指定できます。
 
-`--resume` は `--register --worktree` の pipeline 実行専用で、途中で止まった run を止まった段から再開します。対象 run は既存 worktree に残る最新の `pipeline-state.json` から特定し、再開段も state から決まります。executor が `running` のまま残っていれば、同じ plan/result と未コミット成果を保持した worktree 上で executor を再実行します。executor が成功済みで reporter が未完了なら、保存済みの `evidence.json` を使って reporter だけを再開します。reporter 段と統合段の再開では、親検証の前に統合先ブランチの最新を exec branch と worktree へ取り込み（複数リポジトリの project ではプロダクトごとの統合先も取り込む）、新しい commit が入った場合は親検証をやり直します。worktree の未コミット成果は未追跡ファイルを含めて一時退避し、取り込み後に index を復元せず戻すため、同一ファイルの非競合変更も両方保持できます。commit 済み変更または退避した成果の復元が競合する場合は同期 merge を巻き戻し、executor の成果を元の worktree へ戻してから、register の状態を変えずに再開を拒否します。親検証の記録が不足または失敗している場合は、現在の固定許可リストで親検証を更新してから reporter へ進みます。reporter も成功していて統合（commit → merge → worktree 撤去）だけが残っている場合は、agent を起動せずに統合段だけを再試行します。worktree や plan/result が無い、成功済み executor の evidence が欠損しているなど再開できない場合は、worktree を含め何も変更せずエラー終了します。再開可能な成果が残っている項目を `--resume` なしで再実行しようとした場合も、未統合の成果を守るために中断します。破棄して最初からやり直す場合は `--force-restart` を指定します。手順の使い分けは [exec運用ガイド](../guides/exec-operation-guide.md) を参照します。
+`--resume` は register の worktree モードで使う pipeline 実行専用オプションで、途中で止まった run を止まった段から再開します。対象 run は既存 worktree に残る最新の `pipeline-state.json` から特定し、再開段も state から決まります。executor が `running` のまま残っていれば、同じ plan/result と未コミット成果を保持した worktree 上で executor を再実行します。executor が成功済みで reporter が未完了なら、保存済みの `evidence.json` を使って reporter だけを再開します。reporter 段と統合段の再開では、親検証の前に統合先ブランチの最新を exec branch と worktree へ取り込み（複数リポジトリの project ではプロダクトごとの統合先も取り込む）、新しい commit が入った場合は親検証をやり直します。worktree の未コミット成果は未追跡ファイルを含めて一時退避し、取り込み後に index を復元せず戻すため、同一ファイルの非競合変更も両方保持できます。commit 済み変更または退避した成果の復元が競合する場合は同期 merge を巻き戻し、executor の成果を元の worktree へ戻してから、register の状態を変えずに再開を拒否します。親検証の記録が不足または失敗している場合は、現在の固定許可リストで親検証を更新してから reporter へ進みます。reporter も成功していて統合（commit → merge → worktree 撤去）だけが残っている場合は、agent を起動せずに統合段だけを再試行します。worktree や plan/result が無い、成功済み executor の evidence が欠損しているなど再開できない場合は、worktree を含め何も変更せずエラー終了します。再開可能な成果が残っている項目を `--resume` なしで再実行しようとした場合も、未統合の成果を守るために中断します。破棄して最初からやり直す場合は `--force-restart` を指定します。手順の使い分けは [exec運用ガイド](../guides/exec-operation-guide.md) を参照します。
 
 `--by`（または owner 解決）を指定した場合は、従来どおり単一 agent が成果物編集と result 記入を1回の実行で完結します。`--executor-by` と `--reporter-by` を両方指定した場合は、`stage_role: executor` の agent が成果物を編集・検証し、その evidence（実行ログの要約・検証結果）を渡された `stage_role: reporter` の agent が result 本文を描画する2段階実行に切り替わります。`stage_role` が一致しない nickname を指定するとエラーになります。
 

@@ -125,7 +125,7 @@ pipeline 専用 agent には `stage_role: executor` または `stage_role: repor
 2. `priority` 昇順（同値なら次へ）。
 3. 余剰 capabilities 数の少ない順。
 
-ソート後、`exec-defaults.yaml` の `providers.<provider>.max_concurrency` が設定された provider について、現在実行中の agent が上限に達していれば、その provider の候補を除外します。別 provider の候補が残ればそれを実行者に繰り上げます。すべての候補の provider が上限に達している場合は、claim も worktree 生成も行わずにそのタスクを繰り延べます（タスクは `todo` のまま保持され、取りこぼしません）。`--loop` 実行では、agent 終了時に provider の枠を解放し、空いた `--parallel` 枠へ次の Ready タスクを投入します。`max_concurrency` はグローバルな `--parallel` を下げないため、他 provider は並列実行を維持します。auto 選択以外では、`exec run --register --worktree --parallel` の executor/reporter pipeline（`--resume` を含む）に適用し、項目ごとの各 stage を provider の空き枠まで待機させます。その他の Schedule phase の `agent`、`--by` / `--edit-by` / `--review-by` / `--executor-by` / `--reporter-by` による明示指定や Schedule task の resume 実行には適用しません。
+ソート後、`exec-defaults.yaml` の `providers.<provider>.max_concurrency` が設定された provider について、現在実行中の agent が上限に達していれば、その provider の候補を除外します。別 provider の候補が残ればそれを実行者に繰り上げます。すべての候補の provider が上限に達している場合は、claim も worktree 生成も行わずにそのタスクを繰り延べます（タスクは `todo` のまま保持され、取りこぼしません）。`--loop` 実行では、agent 終了時に provider の枠を解放し、空いた `--parallel` 枠へ次の Ready タスクを投入します。`max_concurrency` はグローバルな `--parallel` を下げないため、他 provider は並列実行を維持します。auto 選択以外では、register の worktree モードで実行する executor/reporter pipeline（`--parallel` / `--resume` を含む）に適用し、項目ごとの各 stage を provider の空き枠まで待機させます。その他の Schedule phase の `agent`、`--by` / `--edit-by` / `--review-by` / `--executor-by` / `--reporter-by` による明示指定や Schedule task の resume 実行には適用しません。
 
 phase の by-name agent が rate limit になった場合は、別 agent へ自動フォールバックせず待機状態にします。`exec resume` は同じ agent を再開し、運用者が差し替える場合だけ stage override を指定します。
 
@@ -223,7 +223,9 @@ pipeline:
 - 同じ `id` と `repo` の組の重複、`id`・`repo` 以外のキー、`repo` の無いオブジェクトは、agent 起動前の設定エラーになります。
 - 実行するコマンドは、どのリポジトリでも ID ごとの固定 argv です（例: `test-unit` は `npm run test:unit`）。リポジトリ別に command や npm script 名を指定する手段は設けません。プロダクトリポジトリの npm script 名が異なる場合は、プロダクト側の `package.json` に許可リストと同じ名前の script（`test:unit` など）を用意してください。用意できない検証は、そのリポジトリへ割り当てないでください。script が無いまま割り当てると、`npm run` が失敗して親検証は `failed` になります。
 
-`run.max_concurrent_runs` は、同じ project で同時に動かせる `exec run` プロセスの数の上限です。最初の run と、`exec run --register ... --worktree --join` で合流する run の合計で数えます。正の整数だけを指定でき、省略時や不正な値の場合は `4` です。`1` を指定すると `--join` は無効になります。現在の使用数は `exec slots --project <project-id>` で確認できます。
+`run.register_execution` は、`exec run --register` の既定の実行場所です。`worktree` または `in-place` を指定します。省略時は既存リポジトリとの互換性のため `in-place` です。CLI の `--worktree` / `--in-place` は設定を上書きし、同時指定はエラーになります。
+
+`run.max_concurrent_runs` は、同じ project で同時に動かせる `exec run` プロセスの数の上限です。最初の run と、register の worktree 実行へ `--join` で合流する run の合計で数えます。正の整数だけを指定でき、省略時や不正な値の場合は `4` です。`1` を指定すると `--join` は無効になります。現在の使用数は `exec slots --project <project-id>` で確認できます。
 
 `pipeline.parent_validation_concurrency` は、1 つの `exec run` プロセスの中で親検証を同時に実行できる項目数の上限です。正の整数だけを指定でき、省略時は `1` です。`--parallel` で複数項目を並行実行しても、親検証は項目単位で 1 本ずつ直列に実行されます。vitest は検証ごとに複数の worker を起動するため、検証が重なるとコンテナの負荷で成果物と無関係なタイムアウトが起きます。これを防ぐための既定値です（PJR-3HHW）。制限の対象は親検証だけで、executor と reporter は `--parallel` のとおり並行に動きます。空きを待つ項目は `Waiting for parent validation slot: <項目> (<検証 ID>); running: <実行中の項目>` をログへ出力し、枠を得たときに `Parent validation slot acquired: <項目>` を出力します。
 

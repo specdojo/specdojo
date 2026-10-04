@@ -51,7 +51,7 @@ agent にタスクを実行させる経路は、実行対象の出どころに�
 | 代表コマンド | `exec run --task` / `exec run --auto`     | `exec run --register`                             | `routine run --due`                      |
 | 起動         | 人、または routine（`job-exec-auto`）     | 人、または routine（`job-register-sweep`）        | 外部スケジューラ（cron / CI）            |
 | 状態追跡     | exec events（claim / complete / block）   | register の遷移（in-progress / review / waiting） | `last_run` の記録のみ                    |
-| 隔離         | worktree（`--worktree` / `--auto`）       | in-place のみ                                     | -（実行経路へ委譲）                      |
+| 隔離         | worktree（`--worktree` / `--auto`）       | `run.register_execution` または CLI で選択        | -（実行経路へ委譲）                      |
 | 終端の扱い   | `complete` event（human finalize で確定） | 人が確認して `register close`                     | -（発火の記録のみ）                      |
 | 典型用途     | 計画された成果物の作成・レビュー・確定    | 立ち上げ時の課題・判断、進行中の計画外対応・調査  | 日次スイープ・夜間バッチなどの定期実行   |
 
@@ -79,13 +79,17 @@ register 実行は exec events を記録しないため、schedule の Ready・C
 | 1 task をカレントで実行し進捗へ反映する | `exec run --task --track-state`       | あり            | なし     |
 | 1 task を隔離して実行する               | `exec run --task --worktree`          | あり            | あり     |
 | Ready 順に自動実行する                  | `exec run --auto`                     | あり            | あり     |
-| 登録簿の項目を agent に実行させる       | `exec run --register`                 | register の遷移 | なし     |
-| 登録簿の複数項目を指定順に直列実行する  | `exec run --register PJR-A PJR-B`     | register の遷移 | なし     |
+| 登録簿の項目を agent に実行させる       | `exec run --register`                 | register の遷移 | 設定依存 |
+| 登録簿の複数項目を指定順に実行する      | `exec run --register PJR-A PJR-B`     | register の遷移 | 設定依存 |
 | plan を確認してから実行する             | `exec plan` -> `exec run --plan`      | 任意            | 任意     |
 | worktree の各段階を人が確認する         | `exec worktree prepare` から `remove` | 手動            | あり     |
 | 同じplanで複数agentを比較する           | `exec trial run`                      | なし            | agent別  |
 
 `exec run --register ... --register-commit` は、各IDのcommit後にhookによる整形差分を同じcommitへ収束させ、対象差分が残っていないことを検証します。登録簿・派生ビュー・当該plan/resultはrunner管理パスとして扱い、その他の実行前からある利用者変更はcommitしません。過去の未commit plan/resultを検出した場合は、現在のIDへ混ぜず警告します。
+
+register 実行の場所は `.specdojo/exec-defaults.yaml` の `run.register_execution`（`worktree` / `in-place`）で選びます。設定がない既存リポジトリは互換性のため in-place のままです。CLI の `--worktree` / `--in-place` は設定を上書きし、両方を同時に指定するとエラーになります。
+
+通常は、失敗時の変更を隔離でき、`--resume` / `--force-restart` を使える worktree を選びます。worktree の準備時間が作業時間に見合わない、変更対象が小さく、失敗時に作業ツリーへ残る差分をその場で整理できる場合だけ `--in-place` を使います。in-place では `--resume` / `--force-restart` / `--join` と `--parallel` は使えません。`--register-commit` は in-place だけで意味を持ち、worktree は常に checkpoint と統合 commit を作ります。
 
 schedule タスクの自動実行・手動実行の具体的な手順は [Schedule実行運用ガイド](schedule-operation-guide.md)、routine の定義と実行は [routine運用ガイド](routine-operation-guide.md) を参照してください。
 
@@ -110,7 +114,7 @@ specdojo exec run --project <project-id> --auto --if-busy wait
 
 #### 1.4.1. 実行中の register worktree 実行へ後から合流する
 
-`exec run --register <PJR-ID...> --worktree` の実行中に別の項目を並行で走らせたい場合は、後から起動する run に `--join` を付けます。`--join` の run は `exec-run.lock` ではなく `exec/.locks/exec-run-join/` の枠を取得し、実行中の run の終了を待たずに開始します。`--join` を付けない run の動作は従来どおりで、busy なら `--if-busy` に従います。
+register の worktree 実行中に別の項目を並行で走らせたい場合は、後から起動する run に `--join` を付けます。`--join` の run は `exec-run.lock` ではなく `exec/.locks/exec-run-join/` の枠を取得し、実行中の run の終了を待たずに開始します。`--join` を付けない run の動作は従来どおりで、busy なら `--if-busy` に従います。
 
 ```bash
 # 実行中の run（PJR-T3NN）へ、別項目 PJR-00QV を合流させる
@@ -421,7 +425,7 @@ specdojo exec run \
 
 並列 pipeline の executor と reporter は、それぞれの provider に設定された `max_concurrency` の枠を agent プロセスの実行中だけ使用します。同じ provider の枠が埋まっている stage は待機し、別 provider に空きがあればそちらは並行して進みます。このため、たとえばローカル provider の reporter を `max_concurrency: 1` にしたまま、複数のクラウド provider に executor を分散できます。
 
-register 実行（`exec run --register --worktree`）を executor/reporter パイプラインで走らせた場合、途中で止まった run は止まった段から再開できます。register 実行は exec events を持たないため、再開は `exec resume` ではなく `exec run --register` の `--resume` で行います。
+register 実行を worktree モードで executor/reporter パイプラインとして走らせた場合、途中で止まった run は止まった段から再開できます。register 実行は exec events を持たないため、再開は `exec resume` ではなく `exec run --register` の `--resume` で行います。
 
 ```bash
 specdojo exec run \

@@ -8,6 +8,7 @@ import {
   parseExecRunBusyPolicy,
   pipelineRecoveryMeta,
   rebuildStaleGeneratedTracksForCycle,
+  resolveRegisterWorktree,
   resolveAgentOverride,
   reporterRequirements,
   selectCandidates,
@@ -43,6 +44,25 @@ describe("parseExecRunBusyPolicy", () => {
     expect(parseExecRunBusyPolicy("wait")).toBe("wait");
     expect(parseExecRunBusyPolicy("fail")).toBe("fail");
     expect(() => parseExecRunBusyPolicy("retry")).toThrow(/--if-busy/);
+  });
+});
+
+describe("resolveRegisterWorktree", () => {
+  it("設定の既定を使い、CLI の明示指定を優先する", () => {
+    expect(resolveRegisterWorktree({}, {})).toBe(false);
+    expect(resolveRegisterWorktree({}, { run: { register_execution: "worktree" } })).toBe(true);
+    expect(
+      resolveRegisterWorktree({ inPlace: true }, { run: { register_execution: "worktree" } }),
+    ).toBe(false);
+    expect(
+      resolveRegisterWorktree({ worktree: true }, { run: { register_execution: "in-place" } }),
+    ).toBe(true);
+  });
+
+  it("--worktree と --in-place の同時指定を拒否する", () => {
+    expect(() => resolveRegisterWorktree({ worktree: true, inPlace: true }, {})).toThrow(
+      /either --worktree or --in-place/,
+    );
   });
 });
 
