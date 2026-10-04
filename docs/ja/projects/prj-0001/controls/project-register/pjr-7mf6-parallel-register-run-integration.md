@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: waiting
   priority: medium
   owner: DEV
   registered_at: "2026-10-04T07:26:49Z"
   due_on: null
+  block_reason: "agent exited with non-zero code: runner による検証 `test-integration` が失敗（exit 1）しているため、完了条件を満たしていません。"
 ---
 
 # PJR-7MF6 並列の register 実行で、失敗した項目の遷移が他の項目の統合を妨げる
@@ -41,7 +42,15 @@ exec run --register A B --worktree --parallel 2 で A が親検証に失敗す�
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+失敗時の root への反映対象を、runner が生成する plan・result に限定した。個票と event は
+root に残る検証済み checkpoint 版を基準に `waiting` へ遷移・commit し、親検証で検出された
+未検証の個票本文は exec worktree に保持する。wait commit を exec branch へ同期するときは、
+root の lifecycle frontmatter と exec worktree の個票本文を合成するため、再開に必要な作業内容を
+失わない。
+
+あわせて、片方の親検証が失敗し、その個票を commit hook が拒否する条件でも、もう片方が
+`review` への遷移と統合 commit を完了できる integration test を追加した。テスト内の排他 marker
+により、項目ごとの commit が同時に走らないことも確認する。
 
 ## 5. 関連ドキュメント
 
