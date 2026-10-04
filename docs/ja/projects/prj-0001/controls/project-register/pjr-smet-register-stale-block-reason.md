@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: waiting
   priority: low
   owner: DEV
   registered_at: "2026-10-04T03:46:04Z"
   due_on: null
+  block_reason: "agent-git-state-write: Git state changes detected; fields=HEAD; agent must leave commits and repository configuration changes to the parent runner"
 ---
 
 # PJR-SMET review や start への遷移で block_reason が残る
@@ -41,7 +42,9 @@ register review で waiting から review へ戻しても、frontmatter の bloc
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- 登録項目の更新処理で、遷移先が `waiting` 以外なら個票 Frontmatter の `block_reason` を削除するようにした。`start` / `review` / `close` / `reject` / `defer` / `reopen` の各経路に適用され、削除前の理由は項目別イベントログの `changes` に残る。
+- `register update --block-reason <text>` を追加した。`waiting` 中は理由を更新でき、`-` で状態を変えずに誤った現在値を削除できる。`waiting` 以外で理由を設定する操作は拒否する。
+- unit test に、非 `waiting` への各遷移での削除、イベントへの変更前理由の保持、`register update` による更新・削除・不正設定の拒否を追加した。
 
 ## 5. 関連ドキュメント
 

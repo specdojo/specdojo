@@ -462,7 +462,7 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
     });
   });
 
-  it("wait はブロック理由を conclusion と分けて frontmatter へ記録する", async () => {
+  it("wait はブロック理由を記録し、waiting を離れると event に残して削除する", async () => {
     await withRepo(async ({ registerDir }) => {
       const ticketPath = join(registerDir, "pjr-ab12-topic.md");
       writeFileSync(join(registerDir, "pjr-index.md"), buildIndex([]), "utf8");
@@ -490,13 +490,53 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
       expect(waiting).not.toContain("conclusion:");
 
       await runRegister(["start", "--id", "PJR-AB12"]);
+      const started = readFileSync(ticketPath, "utf8");
+      expect(started).toContain("item_status: in-progress");
+      expect(started).not.toContain("block_reason:");
+      expect(readEvents(registerDir, "PJR-AB12").at(-1)?.changes).toContainEqual({
+        field: "block_reason",
+        from: "`dct-<domain>.yaml` と `<phase>`. を確認する",
+        to: "-",
+      });
+
       await runRegister(["review", "--id", "PJR-AB12"]);
       await runRegister(["close", "--id", "PJR-AB12", "--completed", "2026-08-05T10:15:30Z"]);
 
       const completed = readFileSync(ticketPath, "utf8");
       expect(completed).toContain("item_status: done");
-      expect(completed).toContain("block_reason:");
+      expect(completed).not.toContain("block_reason:");
       expect(completed).not.toContain("conclusion:");
+    });
+  });
+
+  it.each([
+    { command: "review", extraArgs: [] },
+    { command: "close", extraArgs: ["--completed", "2026-08-05T10:15:30Z"] },
+    { command: "reject", extraArgs: ["--completed", "2026-08-05T10:15:30Z"] },
+    { command: "defer", extraArgs: [] },
+  ])("$command は waiting の block_reason を削除する", async ({ command, extraArgs }) => {
+    await withRepo(async ({ registerDir }) => {
+      const ticketPath = join(registerDir, "pjr-ab12-topic.md");
+      writeFileSync(join(registerDir, "pjr-index.md"), buildIndex([]), "utf8");
+      writeFileSync(
+        ticketPath,
+        buildTicket("PJR-AB12", [
+          "item_status: waiting",
+          "priority: high",
+          "block_reason: dependency unavailable",
+        ]),
+        "utf8",
+      );
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+
+      await runRegister([command, "--id", "PJR-AB12", ...extraArgs]);
+
+      expect(readFileSync(ticketPath, "utf8")).not.toContain("block_reason:");
+      expect(readEvents(registerDir, "PJR-AB12").at(-1)?.changes).toContainEqual({
+        field: "block_reason",
+        from: "dependency unavailable",
+        to: "-",
+      });
     });
   });
 
@@ -538,6 +578,61 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
     });
   });
 
+  it("update は waiting の block_reason を更新でき、- で削除できる", async () => {
+    await withRepo(async ({ registerDir }) => {
+      const ticketPath = join(registerDir, "pjr-ab12-topic.md");
+      writeFileSync(join(registerDir, "pjr-index.md"), buildIndex([]), "utf8");
+      writeFileSync(
+        ticketPath,
+        buildTicket("PJR-AB12", [
+          "item_status: waiting",
+          "priority: high",
+          "block_reason: old reason",
+        ]),
+        "utf8",
+      );
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+
+      await runRegister([
+        "update",
+        "--id",
+        "PJR-AB12",
+        "--block-reason",
+        "dct-<domain>.yaml を待つ",
+      ]);
+      expect(readFileSync(ticketPath, "utf8")).toContain(
+        'block_reason: "`dct-<domain>.yaml` を待つ"',
+      );
+
+      await runRegister(["update", "--id", "PJR-AB12", "--block-reason", "-"]);
+      expect(readFileSync(ticketPath, "utf8")).not.toContain("block_reason:");
+      expect(readEvents(registerDir, "PJR-AB12").at(-1)?.changes).toContainEqual({
+        field: "block_reason",
+        from: "`dct-<domain>.yaml` を待つ",
+        to: "-",
+      });
+    });
+  });
+
+  it("update は waiting 以外への block_reason 設定を拒否する", async () => {
+    await withRepo(async ({ registerDir }) => {
+      const ticketPath = join(registerDir, "pjr-ab12-topic.md");
+      writeFileSync(join(registerDir, "pjr-index.md"), buildIndex([]), "utf8");
+      const original = buildTicket("PJR-AB12", ["item_status: open", "priority: high"]);
+      writeFileSync(ticketPath, original, "utf8");
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+      const stderr = vi.spyOn(process.stderr, "write").mockReturnValue(true);
+
+      await runRegister(["update", "--id", "PJR-AB12", "--block-reason", "not waiting"]);
+
+      expect(process.exitCode).toBe(1);
+      expect(stderr.mock.calls.map((call) => String(call[0])).join("")).toContain(
+        'status is "open" (expected "waiting")',
+      );
+      expect(readFileSync(ticketPath, "utf8")).toBe(original);
+    });
+  });
+
   it("reopen は完了日時のキーを削除して活動中の状態へ戻す", async () => {
     await withRepo(async ({ registerDir }) => {
       const ticketPath = join(registerDir, "pjr-ab12-topic.md");
@@ -549,6 +644,7 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
           "priority: high",
           'registered_at: "2026-08-01T12:00:00Z"',
           'completed_at: "2026-08-05T10:15:30Z"',
+          "block_reason: stale reason",
         ]),
         "utf8",
       );
@@ -558,6 +654,7 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
 
       const reopened = readFileSync(ticketPath, "utf8");
       expect(reopened).toContain("  item_status: open");
+      expect(reopened).not.toContain("block_reason:");
       expect(reopened).not.toContain("completed_at");
     });
   });

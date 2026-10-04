@@ -148,7 +148,7 @@ type は派生ビューの生成と `exec run --register` の挙動（`agent実�
 - 直接終端させる場合は、誰がどの経路で対応したかを `register close --by <actor> --reason "<経路と根拠>"` で残します。exec 経由でないため plan / result / evidence が生成されず、実施内容と検証結果は個票の対応結果が唯一の記録になります。
 - agent へ実行させる項目は `exec run --register` を使います。この経路では runner が `start` と `wait` / `review` を記録し、plan / result / evidence も残ります。着手の記録が要る項目は、この経路を選びます。
 - 動いていない `open` や期限切れの項目は放置せず、期限の更新、優先度の見直し、`defer` / `reject` のいずれかへ整理します。ただし `note` の `open` は生きている記録を意味し、終端させません。`register close` / `register reject` / `register defer` は `note` をエラー終了し、対応・回答・判断が必要な場合は、目的に合う別項目の起票を案内します。
-- `waiting` へ移す理由は `register wait --reason "<理由>"` で個票 Frontmatter の `block_reason` に記録します。これは途中経過であり、終端時の結論を表す `conclusion` は変更しません。旧 `--conclusion` も互換性のため受け付けますが、記録先は `block_reason` です。
+- `waiting` へ移す理由は `register wait --reason "<理由>"` で個票 Frontmatter の `block_reason` に記録します。これは `waiting` 中だけの現在値であり、`start` / `review` / `close` などで別の状態へ遷移すると個票から削除されます。削除前の理由は項目別イベントログに残り、終端時の結論を表す `conclusion` は変更しません。旧 `--conclusion` も互換性のため受け付けますが、記録先は `block_reason` です。誤った現在値を状態遷移なしで削除する場合は `register update --block-reason -` を使います。
 
 すべての登録項目は個票（`pjr-XXXX-<topic>.md`）を持ちます。`close` / `reject` は処理状態の遷移とあわせて個票 Frontmatter の `status`（文書成熟度）も更新します。処理状態とは別の状態軸であり、遷移基準は [プロジェクト登録簿 作成ルール](../rulebooks/pjr-rulebook.md) の `個票 status の遷移基準` を正本とします。
 

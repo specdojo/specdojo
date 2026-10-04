@@ -29,3 +29,32 @@
     - field: registered
       from: ""
       to: "2026-10-04"
+- v: 1
+  id: reg_df09979a7c664adcaa38c34f30dff80b
+  ts: "2026-10-04T04:50:28Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_caae0ed8b31040259c2935deb345c672
+- v: 1
+  id: reg_b61ab6fb13394702869d4266361ed5d4
+  ts: "2026-10-04T05:05:00Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent-git-state-write: Git state changes detected; fields=HEAD; agent must leave commits and repository configuration changes to the parent runner"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent-git-state-write: Git state changes detected; fields=HEAD; agent must leave commits and repository configuration changes to the parent runner"
+  previous_event_id: reg_df09979a7c664adcaa38c34f30dff80b

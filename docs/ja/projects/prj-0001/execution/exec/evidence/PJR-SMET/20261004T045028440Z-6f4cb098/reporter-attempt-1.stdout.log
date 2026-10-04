@@ -1,0 +1,45 @@
+```json
+{
+  "schema_version": 1,
+  "mode": "edit",
+  "outcome": "complete",
+  "summary": [
+    "review や start への遷移時に `block_reason` が残留する問題を解決するため、非 `waiting` 状態への遷移時に `block_reason` を自動削除する処理を `src/register.ts` に実装した。",
+    "併せて、手動で補正するための CLI コマンドのサポート、イベント履歴の保持、および関連ドキュメント（操作ガイド、コマンドリファレンス、ルールブック）へ反映を行った。",
+    "`tests/src/register-commands.test.ts` に回帰テストを追加し、正常に動作することを確認した。"
+  ],
+  "changed_files": [
+    {
+      "path": "src/register.ts",
+      "summary": "非 `waiting` 遷移時の `block_reason` 削除ロジックおよび手動補正CLIの実装"
+    },
+    {
+      "path": "tests/src/register-commands.test.ts",
+      "summary": " `block_reason` 削除および補正機能の回帰テスト追加"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-smet-register-stale-block-reason.md",
+      "summary": "個票の作業内容・対応結果を更新"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-smet.yaml",
+      "summary": "イベント履歴を記録"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/register-operation-guide.md",
+      "summary": "操作ガイドへの反映"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "summary": "コマンドリファレンスへの反映"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pjr-rulebook.md",
+      "summary": "ルールブックの更新"
+    }
+  ],
+  "handoff": [],
+  "approach": "まず `src/register.ts` において、ステータス遷移時に遷移先が `waiting` でない場合に frontmatter の `block_reason` をクリアするロジックを追加した。また、意図しない削除や手動での修正ニーズに対応するため、CLI による補正手段を実装した。変更内容はテストコードで検証し、操作手順や仕様をガイド・リファレンス・ルールブックの各文書に同期させた。",
+  "block_reason": ""
+}
+```

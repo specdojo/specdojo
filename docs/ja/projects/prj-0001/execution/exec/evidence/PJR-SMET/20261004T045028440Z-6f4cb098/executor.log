@@ -1,0 +1,12 @@
+`waiting` 以外への遷移で `block_reason` を削除し、変更前理由をイベントへ保持するよう修正しました。
+
+- [`register.ts`](/workspaces/specdojo-workspace/specdojo/src/register.ts:1265): 共通更新処理と `register update --block-reason` を実装
+- [`register-commands.test.ts`](/workspaces/specdojo-workspace/specdojo/tests/src/register-commands.test.ts:465): 各遷移、履歴保持、手動更新・削除の回帰テストを追加
+- [`pjr-smet-register-stale-block-reason.md`](/workspaces/specdojo-workspace/specdojo/docs/ja/projects/prj-0001/controls/project-register/pjr-smet-register-stale-block-reason.md:42): 対応結果を記録
+- rulebook、運用ガイド、コマンドリファレンスを更新
+
+整形、カタログ検証、index build、register build dry-run、差分検査は成功しました。unit/integration test、typecheck、lint は指示どおり親 runner に委ねています。result ファイルは編集していません。
+
+<specdojo_executor_evidence>
+{"final_message":"非 `waiting` 遷移時の `block_reason` 削除、イベント履歴保持、手動補正CLI、回帰テストと関連文書を実装した。","validations":[{"command":"npx prettier --write src/register.ts tests/src/register-commands.test.ts docs/ja/specdojo/rulebooks/pjr-rulebook.md docs/ja/specdojo/guides/register-operation-guide.md docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-smet-register-stale-block-reason.md","status":"passed","summary":"変更対象6ファイルを整形した。"},{"command":"npx prettier --write tests/src/register-commands.test.ts","status":"passed","summary":"最終テスト差分を整形した。"},{"command":"node --import tsx src/specdojo.ts catalog validate && node --import tsx src/specdojo.ts index build","status":"passed","summary":"全カタログ検証が終了コード0で完了し、文書indexを2361件で再生成した。未作成成果物に関する警告は出力された。"},{"command":"node --import tsx src/specdojo.ts register build --project prj-0001 --dry-run > /dev/null","status":"passed","summary":"登録個票とイベントの整合性、および派生ビュー生成をdry-runで確認した。"},{"command":"git diff --check","status":"passed","summary":"空白エラーは検出されなかった。"}]}
+</specdojo_executor_evidence>

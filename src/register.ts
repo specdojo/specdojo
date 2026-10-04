@@ -63,6 +63,7 @@ import {
   PJR_ID_RE,
   prependRegisterItemDescription,
   readRegisterItemContent,
+  REMOVE_REGISTER_ITEM_FIELD,
   registerItemFieldsFromItem,
   setRegisterItemDescription,
   setRegisterItemTitle,
@@ -1264,6 +1265,9 @@ function applyItemUpdate(opts: {
   const label = opts.action ?? `→ ${opts.updated.status}`;
   const updates: RegisterItemFieldUpdates = {
     ...registerItemFieldsFromItem(opts.updated),
+    // block_reason は waiting の現在値にだけ属する。waiting 以外への遷移や、
+    // stale な個票に対する更新では削除し、削除前の値は event の差分へ残す。
+    ...(opts.updated.status === "waiting" ? {} : { block_reason: REMOVE_REGISTER_ITEM_FIELD }),
     ...opts.fieldUpdates,
   };
 
@@ -1650,6 +1654,7 @@ export function retopicPjrItem(opts: {
   id: string;
   topic: string;
   updated: PjrItem;
+  fieldUpdates?: RegisterItemFieldUpdates;
   dryRun: boolean;
   title?: string;
   description?: string;
@@ -1665,10 +1670,11 @@ export function retopicPjrItem(opts: {
   if (opts.description !== undefined) {
     ticketWrite.content = setRegisterItemDescription(ticketWrite.content, opts.description);
   }
-  ticketWrite.content = applyRegisterItemFields(
-    ticketWrite.content,
-    registerItemFieldsFromItem(opts.updated),
-  );
+  ticketWrite.content = applyRegisterItemFields(ticketWrite.content, {
+    ...registerItemFieldsFromItem(opts.updated),
+    ...(opts.updated.status === "waiting" ? {} : { block_reason: REMOVE_REGISTER_ITEM_FIELD }),
+    ...opts.fieldUpdates,
+  });
 
   if (opts.dryRun) {
     process.stdout.write(`Would change topic for ${opts.id}: ${plan.fromTopic} → ${opts.topic}\n`);
@@ -2768,6 +2774,7 @@ export function registerRegisterCommands(program: Command): void {
   updateCmd.option("--owner <owner>", "Update owner or role");
   updateCmd.option("--due <date>", "Update due date (YYYY-MM-DD, -, or _TODO_)");
   updateCmd.option("--conclusion <text>", "Update conclusion or use - to remove it");
+  updateCmd.option("--block-reason <text>", "Update the waiting reason or use - to remove it");
   updateCmd.option(
     "--topic <topic>",
     "Update the topic slug in the ticket filename and document ID",
@@ -2789,11 +2796,12 @@ export function registerRegisterCommands(program: Command): void {
         "owner",
         "due",
         "conclusion",
+        "blockReason",
         "topic",
       ].some((k) => opts[k] !== undefined);
       if (!hasUpdates) {
         throw new Error(
-          "At least one field option must be specified (--title, --description, --priority, --owner, --due, --conclusion, --topic)",
+          "At least one field option must be specified (--title, --description, --priority, --owner, --due, --conclusion, --block-reason, --topic)",
         );
       }
 
@@ -2814,6 +2822,24 @@ export function registerRegisterCommands(program: Command): void {
           `Invalid topic: "${topic}". Must use lowercase letters, numbers, and single hyphens`,
         );
       }
+      const blockReason = opts.blockReason?.trim();
+      if (blockReason !== undefined && blockReason === "") {
+        throw new Error("Block reason must not be empty; use - to remove it");
+      }
+      if (blockReason !== undefined && blockReason !== "-" && item.status !== "waiting") {
+        throw new Error(
+          `Cannot set block reason for ${item.id}: status is "${item.status}" (expected "waiting"). Use - to remove it.`,
+        );
+      }
+      const blockReasonUpdates: RegisterItemFieldUpdates | undefined =
+        blockReason === undefined
+          ? undefined
+          : {
+              block_reason:
+                blockReason === "-"
+                  ? REMOVE_REGISTER_ITEM_FIELD
+                  : inlineCodeAnglePlaceholders(blockReason),
+            };
 
       const updated: PjrItem = {
         ...item,
@@ -2840,6 +2866,7 @@ export function registerRegisterCommands(program: Command): void {
           topic,
           updated,
           dryRun: opts.dryRun,
+          ...(blockReasonUpdates ? { fieldUpdates: blockReasonUpdates } : {}),
           ...(opts.title !== undefined ? { title: opts.title } : {}),
           ...(opts.description !== undefined ? { description: opts.description } : {}),
           actor: registerEventActor(opts),
@@ -2856,6 +2883,7 @@ export function registerRegisterCommands(program: Command): void {
         action: "fields updated",
         ...(opts.title !== undefined ? { title: opts.title } : {}),
         ...(opts.description !== undefined ? { description: opts.description } : {}),
+        ...(blockReasonUpdates ? { fieldUpdates: blockReasonUpdates } : {}),
         eventAction: "update",
         eventActor: registerEventActor(opts),
         eventReason: opts.reason?.trim() || "fields updated",

@@ -1,0 +1,150 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-SMET",
+  "run_id": "20261004T045028440Z-6f4cb098",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-04T04:50:28.440Z",
+    "completed_at": "2026-10-04T04:59:21.389Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-smet.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-smet-register-stale-block-reason.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/register-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pjr-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "src/register.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register-commands.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 7,
+    "summary": ".../controls/project-register/events/pjr-smet.yaml |  13 +++\n .../pjr-smet-register-stale-block-reason.md        |   6 +-\n .../ja/specdojo/guides/register-operation-guide.md |   2 +-\n docs/ja/specdojo/references/command-reference.md   |   1 +\n docs/ja/specdojo/rulebooks/pjr-rulebook.md         |   4 +-\n src/register.ts                                    |  38 +++++++-\n tests/src/register-commands.test.ts                | 101 ++++++++++++++++++++-\n 7 files changed, 153 insertions(+), 12 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write src/register.ts tests/src/register-commands.test.ts docs/ja/specdojo/rulebooks/pjr-rulebook.md docs/ja/specdojo/guides/register-operation-guide.md docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-smet-register-stale-block-reason.md",
+      "status": "passed",
+      "summary": "変更対象6ファイルを整形した。"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write tests/src/register-commands.test.ts",
+      "status": "passed",
+      "summary": "最終テスト差分を整形した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate && node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "全カタログ検証が終了コード0で完了し、文書indexを2361件で再生成した。未作成成果物に関する警告は出力された。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001 --dry-run > /dev/null",
+      "status": "passed",
+      "summary": "登録個票とイベントの整合性、および派生ビュー生成をdry-runで確認した。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーは検出されなかった。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/specdojo\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\n[dry-run] git merge --no-ff --no-edit exec/T-T-doc-010\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/conflict.md\nUpdated: /tmp/specdojo-register-resume-e2e-VLnCZX/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)\nUpdated: /tmp/specdojo-register-resume-e2e-VLnCZX/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml\nGenerated: /tmp/specdojo-register-resume-e2e-VLnCZX/docs/ja/projects/test/controls/project-register/generated/pjr-index.md\nGenerated: /tmp/specdojo-register-resume-e2e-VLnCZX/docs/ja/projects/test/c…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.3.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-implemented)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema /workspaces/specdojo-workspace/specdojo/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema /workspaces/specdojo-workspace/specdojo/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-t…"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/specdojo\n\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\nUpdated ticket status → ready: /tmp/specdojo-ticket-NJuGmt/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-0cVa9R/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-Jq4YJe/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-PpmxbN/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-ZV4htQ/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-kQtZ1d/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\nWrote agent stdout: /tmp/specdojo-agent-command-pxbVzK/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-XvJNEy/outputs/partial.txt\n\n Test Files  120 passed (120)\n      Tests  1831 passed (1…"
+    }
+  ],
+  "final_message": "非 `waiting` 遷移時の `block_reason` 削除、イベント履歴保持、手動補正CLI、回帰テストと関連文書を実装した。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-SMET/20261004T045028440Z-6f4cb098/executor.log",
+      "bytes": 2417,
+      "truncated": false
+    },
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-SMET/20261004T045028440Z-6f4cb098/reporter-attempt-1.stdout.log",
+      "bytes": 2288,
+      "truncated": false
+    },
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-SMET/20261004T045028440Z-6f4cb098/reporter-attempt-1.stderr.log",
+      "bytes": 147,
+      "truncated": false
+    }
+  ]
+}

@@ -75,7 +75,7 @@ Project Register Documentation Rules
 
 - `status` は文書成熟度、`item_status` は処理状態であり、同じ状態軸として扱わない。
 - `item_type`、`item_status`、`priority` の値は schema の enum だけを使用する。
-- `block_reason` は途中の待機・失敗理由、`conclusion` は終端時の結論として用途を分ける。`register wait --reason` は前者だけを更新する。
+- `block_reason` は `waiting` 中の直近の待機・失敗理由、`conclusion` は終端時の結論として用途を分ける。`register wait --reason` は前者だけを更新し、`waiting` 以外へ遷移すると現在値から削除する。削除前の理由は項目別イベントログの変更前の値に残す。
 - Frontmatter の構造化フィールドを本文や生成一覧へ手作業で複製しない。
 
 ### 3.1. 日時と日付の使い分け
@@ -136,7 +136,7 @@ Project Register Documentation Rules
 ### 5.2. 構造化フィールドと生成
 
 - 新しい項目は `register add` で作成し、個票の Frontmatter に初期値を書き込む。全 type で個票を省略しない。
-- 担当・期限・結論・topic などを変更するときは `register update`、処理状態を変えるときは状態遷移コマンドを使用する。待機理由は `register wait --reason` で記録する。
+- 担当・期限・結論・topic などを変更するときは `register update`、処理状態を変えるときは状態遷移コマンドを使用する。待機理由は `register wait --reason` で記録し、誤った現在値を手動補正するときは `register update --block-reason -` で削除する。
 - `register build` は個票を読み取り、一覧・派生ビューを再生成する。一覧を編集して個票へ反映する経路はない。
 - `register add`、状態遷移、`register update`、`register renumber` は現在値を個票へ、イベントを対応する項目別ログへ記録する。`--by` で actor、`--reason` で理由を明示でき、省略時もコマンドが既定値を記録する。
 - 同じ現在値へ同じ操作を再実行した場合は、新しいイベントを追加しない。イベント ID と直前イベント参照を保ったまま再実行し、既存イベントの置換や削除で重複を解消しない。

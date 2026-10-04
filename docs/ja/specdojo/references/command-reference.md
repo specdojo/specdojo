@@ -310,6 +310,7 @@ specdojo schedule strategy generate \
 | `--by <actor>`            | 追記型 event に記録する actor を指定                          | `add` / 更新 / 遷移コマンド                      |
 | `--reason <text>`         | event の理由を記録（`wait` では `block_reason` も更新）       | `add` / 更新 / 遷移コマンド                      |
 | `--conclusion <text>`     | 終端時の結論を記録・更新（`update` では `-` で削除）          | `add` / `update` / 終端コマンド                  |
+| `--block-reason <text>`   | `waiting` の理由を更新（`-` で削除）                          | `update`                                         |
 | `--topic <slug>`          | 個票ファイル名と文書 ID の論点部分を指定・更新する            | `add` / `update`                                 |
 | `--commit`                | `register lifecycle` 枠内で記帳・再生成・commitを行う         | `add` / `update` / `renumber` / 遷移             |
 | `-m, --message <message>` | `--commit` のcommitメッセージを上書きする                     | `add` / `update` / `renumber` / 遷移             |
