@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_b5d88e42105d44a2bbe09ea22d4c8c9d
+  ts: "2026-10-04T05:03:36Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: devcontainer テンプレートで codex の sandbox が動くか確認し、必要な設定を加える
+    - field: description
+      from: ""
+      to: specdojo devcontainer scaffold のテンプレートはシステムの bubblewrap を入れないため、PJR-27Z9 の /proc の問題は起きない見込みである。一方、runArgs を持たず Docker 既定の seccomp が名前空間の作成（unshare / clone の名前空間フラグ）を禁止するため、codex 同梱の bwrap が sandbox を作れない可能性が高い。Docker が必要なため Host Mac で実際に確認し、問題があれば codex provider の指定時だけ設定を加える
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-04"
