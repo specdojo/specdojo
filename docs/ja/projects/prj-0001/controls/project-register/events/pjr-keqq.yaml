@@ -100,3 +100,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_ff74efa8285e4180859331ed7c6059a3
+- v: 1
+  id: reg_e056d26d4eab45be88c634a2d4fef161
+  ts: "2026-10-04T08:25:41Z"
+  action: close
+  actor: claude
+  from_status: review
+  to_status: done
+  reason: 利用者が分離の方針を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-04"
+    - field: conclusion
+      from: "-"
+      to: scaffold の named volume を `<repository>-specdojo-`* としてリポジトリごとに分離し、OpenCode のデータと GitHub CLI の volume を追加した。保存先の一覧、分離の理由、dotfiles の自動導入、volume 名の衝突の注意をコマンドリファレンスに記載した
+  previous_event_id: reg_18f30fb4c86544049a5eb916257cb527

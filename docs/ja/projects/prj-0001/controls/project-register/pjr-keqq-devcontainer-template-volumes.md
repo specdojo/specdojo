@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-keqq-devcontainer-template-volumes
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-04T06:29:15Z"
   due_on: null
+  completed_at: "2026-10-04T08:25:41Z"
+  conclusion: scaffold の named volume を `<repository>-specdojo-`* としてリポジトリごとに分離し、OpenCode のデータと GitHub CLI の volume を追加した。保存先の一覧、分離の理由、dotfiles の自動導入、volume 名の衝突の注意をコマンドリファレンスに記載した
 ---
 
 # PJR-KEQQ devcontainer テンプレートの named volume を本体とそろえ、共有の方針を決める
