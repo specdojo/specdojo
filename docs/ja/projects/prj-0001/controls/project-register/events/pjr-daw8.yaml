@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ea94f3c2fbb041febca818d955ff48b6
+  ts: "2026-10-04T03:46:03Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: register の自動 commit がタイトルの長さで commitlint に拒否される
+    - field: description
+      from: ""
+      to: "exec run --register --register-commit は個票タイトルから exec(register PJR-XXXX): `<title>` のヘッダーを作るが、長さを調整しない。PJR-27Z9（109 文字）で header-max-length（100）に拒否され、executor・親検証・reporter が成功した実行が commit incomplete として waiting になった"
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-04"

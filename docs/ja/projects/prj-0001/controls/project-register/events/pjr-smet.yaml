@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_caae0ed8b31040259c2935deb345c672
+  ts: "2026-10-04T03:46:05Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: review や start への遷移で block_reason が残る
+    - field: description
+      from: ""
+      to: register review で waiting から review へ戻しても、frontmatter の block_reason が残る（PJR-27Z9 で観測）。register update にも block_reason を消す手段がなく、解消済みの理由が表示され続ける
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: low
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-04"
