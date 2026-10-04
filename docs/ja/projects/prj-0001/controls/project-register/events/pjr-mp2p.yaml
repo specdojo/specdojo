@@ -55,3 +55,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_d2db72e18adc4eb1891639ad439a5c3b
+- v: 1
+  id: reg_2ae4aca3e9444264beb1426dc731e98f
+  ts: "2026-10-04T06:23:58Z"
+  action: close
+  actor: claude
+  from_status: review
+  to_status: done
+  reason: 利用者が文書の内容を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-04"
+    - field: conclusion
+      from: "-"
+      to: tsd-home-mac-dev-server に設定・認証情報の保存先を named volume・コンテナ内のみ・母艦と共有/コピー・母艦のみの4分類で整理し、再作成後の作業を記載した。tsd-home-mac-dev-server-usage の一覧は正本への参照に置き換えた。docs:build と利用者の確認を経て close した
+  previous_event_id: reg_8398e81816c1408dadf4c3fab557fd9f

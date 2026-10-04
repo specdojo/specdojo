@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-mp2p-devcontainer-config-persistence
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-03T14:27:19Z"
   due_on: null
+  completed_at: "2026-10-04T06:23:58Z"
+  conclusion: tsd-home-mac-dev-server に設定・認証情報の保存先を named volume・コンテナ内のみ・母艦と共有/コピー・母艦のみの4分類で整理し、再作成後の作業を記載した。tsd-home-mac-dev-server-usage の一覧は正本への参照に置き換えた。docs:build と利用者の確認を経て close した
 ---
 
 # PJR-MP2P devcontainer の設定の保存先（named volume・コンテナ内のみ・母艦と共有）を文書に明記する
