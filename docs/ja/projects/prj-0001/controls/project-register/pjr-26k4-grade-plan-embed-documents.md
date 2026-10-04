@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-26k4-grade-plan-embed-documents
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-04T01:48:14Z"
   due_on: null
+  completed_at: "2026-10-04T05:59:41Z"
+  conclusion: grade plan --embed-documents を追加し、評価対象と参考資料を行番号付きで埋め込めるようにした。既定はパス参照のまま。実際の grade と npm run check で確認した
 ---
 
 # PJR-26K4 grade plan に評価対象と参考資料の本文を埋め込むオプションを追加する
