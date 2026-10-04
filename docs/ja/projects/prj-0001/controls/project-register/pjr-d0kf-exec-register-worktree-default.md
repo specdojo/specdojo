@@ -12,7 +12,7 @@ specdojo:
   owner: DEV
   registered_at: "2026-10-04T05:12:44Z"
   due_on: null
-  block_reason: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=.specdojo/exec-defaults.yaml; agent must record the required chang…"
+  block_reason: rate limit reached
 ---
 
 # PJR-D0KF exec run --register の既定を worktree にし、in-place を明示指定にする
