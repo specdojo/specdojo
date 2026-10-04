@@ -29,3 +29,32 @@
     - field: registered
       from: ""
       to: "2026-10-04"
+- v: 1
+  id: reg_0f0a2a22119d4f82acdb4bce594cea30
+  ts: "2026-10-04T13:22:31Z"
+  action: start
+  actor: agy-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_99190a2be4c644e6a44b456ef2f5d370
+- v: 1
+  id: reg_5a0231d536f445729ac06f288c28396a
+  ts: "2026-10-04T13:43:05Z"
+  action: wait
+  actor: agy-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: reporter result rendering failed: reporter changed_files summaries (6) do not match evidence changes (14)"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: reporter result rendering failed: reporter changed_files summaries (6) do not match evidence changes (14)"
+  previous_event_id: reg_0f0a2a22119d4f82acdb4bce594cea30
