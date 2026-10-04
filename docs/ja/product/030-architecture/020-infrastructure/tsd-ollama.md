@@ -77,9 +77,12 @@ Ollama では、Ollama の公式ライブラリタグを優先して指定する
 | 通常作業                     | `qwen3.8:27b-mlx`   | 設計、レビュー、通常のコード生成で使う標準モデル           |
 | Markdown生成・レビュー       | `gemma4:31b-mlx`    | Markdown の生成・レビューで使う標準モデル                  |
 | 軽作業                       | `gemma4:e4b-mlx`    | 短い要約、分類、文面調整、軽いMarkdown整理で使う軽量モデル |
+| reporter の要約              | `gemma4:26b-mlx`    | 速い MoE（全 25.2B・動作 3.8B）。判定には使わない          |
 | 最終判断・難しい設計レビュー | Claude Code / Codex | ローカルLLMの結果を必要に応じて補完する                    |
 
-SpecDojo では、通常作業と重い実装を `qwen3.8:27b-mlx`、Markdown の生成・レビューを `gemma4:31b-mlx`、軽作業を `gemma4:e4b-mlx` に分担させる。
+SpecDojo では、通常作業と重い実装を `qwen3.8:27b-mlx`、Markdown の生成・レビューを `gemma4:31b-mlx`、軽作業を `gemma4:e4b-mlx`、exec の reporter の要約を `gemma4:26b-mlx` に分担させる。
+
+`gemma4:26b-mlx` は `gemma4:31b-mlx` の約3倍速く、日本語に中国語の字体が混ざらない。一方、grade の判定は 31B と同じく甘く、判定の規則や例を加えても変わらなかった（[[prj-0001:pjr-vqb5-agent-grade-comparison]]）。そのため、判定を伴わない reporter の文章要約に使う。
 
 `qwen3.8:27b-mlx` は Ollama 公式ライブラリ側のモデルタグである。サードパーティ名前空間のモデルは、公式ライブラリに必要な量子化やタグがない場合の代替候補として扱う。
 
@@ -199,6 +202,7 @@ Ollama のモデルは Host Mac 側でダウンロードする。devcontainer �
 ollama pull qwen3.8:27b-mlx
 ollama pull gemma4:e4b-mlx
 ollama pull gemma4:31b-mlx
+ollama pull gemma4:26b-mlx
 ```
 
 取得済みモデルを確認する。
@@ -213,6 +217,7 @@ ollama list
 ollama run qwen3.8:27b-mlx "通常作業用として、TypeScript の関数例を1つ示してください。"
 ollama run gemma4:e4b-mlx "軽作業用として、短い設計書のタイトル案を3つ出してください。"
 ollama run gemma4:31b-mlx "中量作業用として、設計書の要約を3文でまとめてください。"
+ollama run gemma4:26b-mlx "reporter 用として、作業内容を3行で要約してください。"
 ```
 
 不要になった元モデルまたは派生モデルは `ollama rm` で削除する。
@@ -221,6 +226,7 @@ ollama run gemma4:31b-mlx "中量作業用として、設計書の要約を3文�
 ollama rm qwen3.8:27b-mlx
 ollama rm gemma4:e4b-mlx
 ollama rm gemma4:31b-mlx
+ollama rm gemma4:26b-mlx
 ```
 
 複数Agent運用前提のため、すべてのモデルを巨大コンテキストで動かさない設定を適用する。ダウンロード済みの元モデルを `FROM` に指定し、用途ごとにコンテキスト長と生成パラメータを分けた派生モデルを作成する。
@@ -285,7 +291,27 @@ PARAMETER repeat_penalty 1.05
 ollama create gemma4:31b-mlx-work-64k -f gemma4-31b-mlx-work-64k/Modelfile
 ```
 
-### 7.4. 動作確認
+### 7.4. Gemma 4 26B reporter の要約用（64k）
+
+`gemma4-26b-mlx-work-64k/Modelfile`:
+
+```text
+FROM gemma4:26b-mlx
+PARAMETER num_ctx 65536
+PARAMETER temperature 0.2
+PARAMETER top_p 0.9
+PARAMETER repeat_penalty 1.0
+```
+
+作成:
+
+```bash
+ollama create gemma4:26b-mlx-work-64k -f gemma4-26b-mlx-work-64k/Modelfile
+```
+
+context は 64k とする。計測では、入力が 64k に収まる範囲で 128k にしても精度は変わらなかった。repeat_penalty は、executor の出力の書き写しを妨げないよう 1.0 とする。
+
+### 7.5. 動作確認
 
 ```bash
 ollama run qwen3.8:27b-mlx-work-64k "レビュー用として、このMarkdownの構成上の問題点を指摘してください。"
@@ -297,6 +323,10 @@ ollama run gemma4:31b-mlx-work-64k "Markdown生成・レビュー用として、
 
 ```bash
 ollama run gemma4:e4b-mlx-light-8k "軽作業用として、短い設計書のタイトル案を3つ出してください。"
+```
+
+```bash
+ollama run gemma4:26b-mlx-work-64k "reporter 用として、次の作業内容を3行で要約してください。"
 ```
 
 ## 8. アンインストール
