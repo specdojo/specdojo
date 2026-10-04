@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_feed0665ea7f45f3817f7ff7e51daacd
+  ts: "2026-10-04T11:46:27Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: worktree の resume 前の同期で、衝突確認の git diff がリポジトリ外で実行される
+    - field: description
+      from: ""
+      to: exec run --register --resume は、reporter の再開前に integration target（project/prj-0001/develop）を worktree へ同期する。worktree に未 commit の変更があり develop に新しい commit がある状態で再開すると、同期後の衝突確認 git diff --name-only --diff-filter=U -z が Not a git repository で失敗し、resume refused になる（2026-10-04 の PJR-GBEV）。develop の変更（3 ファイル）と worktree の変更は重ならず、作業者が worktree で git merge を手で行うと衝突なく成功し、その後の resume も成功した
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-04"
