@@ -58,3 +58,29 @@
       from: "-"
       to: "agent exited with non-zero code: runner validation failed: `validate-schema` (exit 1), `typecheck` (error TS2532 in `tests/src/grade.test.ts`), and `test-unit` (4 tests failed in `tests/tools/grade-pe…"
   previous_event_id: reg_b5f5be5166204764bb5c14a1b4164f63
+- v: 1
+  id: reg_29281c9ee9c045b1a1b753275499c1ce
+  ts: "2026-10-04T04:26:45Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_9666625357e2406789fde8f7b08561e5
+- v: 1
+  id: reg_2042cbbc29d34d5d81c476a70249e5a2
+  ts: "2026-10-04T04:39:56Z"
+  action: review
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_29281c9ee9c045b1a1b753275499c1ce

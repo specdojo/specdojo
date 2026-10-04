@@ -1,0 +1,158 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-E9H3",
+  "run_id": "20261004T042740577Z-f1afd3f6",
+  "stage": {
+    "role": "executor",
+    "actor": "claude-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-04T04:27:40.577Z",
+    "completed_at": "2026-10-04T04:33:16.661Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-e9h3-grade-deterministic-reporter.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/routine-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "src/grade.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/grade.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/tools/grade-per-document.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tools/grade/run-per-document.sh",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 9,
+    "summary": ".../pjr-e9h3-grade-deterministic-reporter.md       |  28 ++--\n .../prj-0001/jobs/job-grade-deliverable.yaml       |   4 +-\n docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml |   5 +-\n docs/ja/specdojo/guides/routine-operation-guide.md |  12 +-\n docs/ja/specdojo/references/command-reference.md   |  38 +++--\n src/grade.ts                                       | 185 ++++++++++++++++-----\n tests/src/grade.test.ts                            | 177 ++++++++++++++++++++\n tests/tools/grade-per-document.test.ts             |  62 ++++++-\n tools/grade/run-per-document.sh                    |  92 ++++++----\n 9 files changed, 490 insertions(+), 113 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write src/grade.ts tests/src/grade.test.ts tests/tools/grade-per-document.test.ts docs/ja/specdojo/references/command-reference.md docs/ja/specdojo/guides/routine-operation-guide.md docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml docs/ja/projects/prj-0001/controls/project-register/pjr-e9h3-grade-deterministic-reporter.md",
+      "status": "passed",
+      "summary": "formatted; npx prettier --check src/grade.ts clean after final edit"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/specdojo/references/command-reference.md docs/ja/specdojo/guides/routine-operation-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-e9h3-grade-deterministic-reporter.md",
+      "status": "passed",
+      "summary": "no errors"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "OK with pre-existing based_on WARN only"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "Built index: 2359 entries"
+    },
+    {
+      "source": "executor",
+      "command": "npm run -s validate:history-links",
+      "status": "passed",
+      "summary": "output tail reports valid (exit code not captured)"
+    },
+    {
+      "source": "executor",
+      "command": "npx vitest run tests/tools/grade-per-document.test.ts",
+      "status": "passed",
+      "summary": "27 tests passed; targeted run that overlaps parent test-unit, executed once before noticing the restriction"
+    },
+    {
+      "source": "executor",
+      "command": "bash -n tools/grade/run-per-document.sh",
+      "status": "not_run",
+      "summary": "command required approval in sandbox; script behavior exercised by the per-document vitest run"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-E9H3\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\n[dry-run] git merge --no-ff --no-edit exec/T-T-doc-010\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/conflict.md\nUpdated: /tmp/specdojo-register-resume-e2e-cveMSe/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)\nUpdated: /tmp/specdojo-register-resume-e2e-cveMSe/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml\nGenerated: /tmp/specdojo-register-resume-e2e-cveMSe/docs/ja/projects/test/controls/project-register/generated/pjr-index.md\nGenerated: /tmp/specdojo-register-resume-e2e-cveMSe/docs…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.3.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-implemented)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-E9H3/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-E9H3/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specd…"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-E9H3\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-klNX5b/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-lPuqj0/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-euC7gH/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-HDOd6B/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-syRoQU/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-HMcS5Z/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\nWrote agent stdout: /tmp/specdojo-agent-command-uEJfaK/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-fgImVs/outputs/partial.txt\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\n\n Test Files  120 passed (120)\n      Te…"
+    }
+  ],
+  "final_message": "grade の reporter を LLM から executor marker の機械変換へ置き換えた。src/grade.ts に buildGradeSubmissionFromAnalysis（忠実性検証と同じ parse・検証を共有）と marker 行の軽微な装飾の正規化（message/reason 本文は不変）を追加し、grade apply の --from を任意化して --analysis-from 単独で機械変換、--submission-out で JSON 保存できるようにした。tools/grade/run-per-document.sh の reporter 既定を machine にし、拒否時は拒否応答と理由を残して executor を1回再実行、nickname 指定時のみ LLM reporter を起動する（設定の版を pipeline-v5 に変更）。executor/reporter plan の文言、command-reference、routine-operation-guide、job-grade-kata/deliverable の analysis 記述、個票の作業内容・対応結果を更新した。unit test を tests/src/grade.test.ts と tests/tools/grade-per-document.test.ts に追加した。grade.test.ts は未実行。exec-defaults.yaml と sch-*.yaml は grade reporter と無関係のため変更していない。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-E9H3/20261004T042740577Z-f1afd3f6/executor.log",
+      "bytes": 7208,
+      "truncated": false
+    }
+  ]
+}

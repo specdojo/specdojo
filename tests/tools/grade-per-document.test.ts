@@ -3,6 +3,7 @@ import {
   existsSync,
   mkdirSync,
   mkdtempSync,
+  readdirSync,
   readFileSync,
   rmSync,
   writeFileSync,
@@ -261,7 +262,7 @@ describe("grade per-document pipeline", () => {
 
     expect(result.status, result.stderr).toBe(0);
     expect(result.stdout).toContain(
-      `stage=1 executor=gemma-expert-executor reporter=gemma-reporter reference=docs/ja/specdojo/${directory}/prj-overview-${kind}.md`,
+      `stage=1 executor=gemma-expert-executor reporter=machine reference=docs/ja/specdojo/${directory}/prj-overview-${kind}.md`,
     );
   });
 
@@ -324,7 +325,7 @@ describe("grade per-document pipeline", () => {
       "default stage 1 reference not found for kind sample; continuing without a reference",
     );
     expect(result.stdout).toContain(
-      "stage=1 executor=gemma-expert-executor reporter=gemma-reporter reference=none",
+      "stage=1 executor=gemma-expert-executor reporter=machine reference=none",
     );
   });
 
@@ -432,7 +433,7 @@ describe("grade per-document pipeline", () => {
     expect(result.status, result.stderr).toBe(0);
     expect(result.stdout).toContain("stages=1");
     expect(result.stdout).toContain(
-      "stage=1 executor=codex-expert-executor reporter=gemma-reporter reference=none",
+      "stage=1 executor=codex-expert-executor reporter=machine reference=none",
     );
     expect(result.stdout).not.toContain("stage=2 executor=");
     expect(result.stdout).not.toContain("stage=3 executor=");
@@ -487,7 +488,7 @@ describe("grade per-document pipeline", () => {
     expect(result.status, result.stderr).toBe(0);
     expect(result.stdout).toContain("target=deliverable kind=none");
     expect(result.stdout).toContain(
-      "stage=1 executor=gemma-expert-executor reporter=gemma-reporter reference=none",
+      "stage=1 executor=gemma-expert-executor reporter=machine reference=none",
     );
     const invocations = readFileSync(fixture.argsFile, "utf8");
     expect(invocations).toContain("grade plan --target deliverable");
@@ -611,15 +612,64 @@ describe("grade per-document pipeline", () => {
     expect(readFileSync(fixture.stateFile, "utf8")).toBe("6");
   });
 
-  it("retries reporter and apply once when apply fails", () => {
+  it("converts executor markers with grade apply instead of starting a reporter agent", () => {
+    const fixture = makeFixture();
+
+    const result = runPipeline(fixture, {}, ["--stages", "1"]);
+
+    expect(result.status, result.stderr).toBe(0);
+    const invocations = readFileSync(fixture.argsFile, "utf8").trim().split("\n");
+    const agentRuns = invocations.filter((line) => line.startsWith("agent run "));
+    expect(agentRuns).toHaveLength(1);
+    expect(agentRuns[0]).toContain("--by codex-expert-executor");
+    const apply = invocations.find((line) => line.startsWith("grade apply "));
+    expect(apply).toContain("--analysis-from");
+    expect(apply).toContain("--submission-out");
+    expect(apply).not.toContain("--from ");
+  });
+
+  it("reruns the executor once when grade apply rejects the executor markers", () => {
     const fixture = makeFixture();
 
     const result = runPipeline(fixture, { FAKE_APPLY_FAIL_ONLY: "1" });
     expect(result.status, result.stderr).toBe(0);
-    // Stage 1: count 1 (fail) -> count 2 (success, score=100)
+    // Stage 1: count 1 (rejected) -> executor rerun -> count 2 (success, score=100)
     // Stage 2: count 3 (success, score=95)
     // Stage 3: skipped because score < 96
     expect(readFileSync(fixture.stateFile, "utf8")).toBe("3");
+    const invocations = readFileSync(fixture.argsFile, "utf8");
+    expect(invocations.match(/^agent run .*--by gemma-expert-executor/gm)).toHaveLength(3);
+    expect(invocations).not.toContain("--by gemma-reporter");
+    const documentsDirectory = join(
+      fixture.root,
+      "logs/grade/runs/per-document/fixture-run/documents",
+    );
+    const savedFiles = readdirSync(documentsDirectory, { recursive: true, encoding: "utf8" });
+    expect(savedFiles).toContainEqual(
+      expect.stringMatching(/stage-1\/executor-output\.rejected\.txt$/),
+    );
+    expect(savedFiles).toContainEqual(expect.stringMatching(/stage-1\/apply-rejection\.log$/));
+  });
+
+  it("runs an explicitly selected LLM reporter and retries it once when apply fails", () => {
+    const fixture = makeFixture();
+
+    const result = runPipeline(fixture, { FAKE_APPLY_FAIL_ONLY: "1" }, [
+      "--stages",
+      "1",
+      "--stage-1-reporter",
+      "gemma-reporter",
+    ]);
+
+    expect(result.status, result.stderr).toBe(0);
+    expect(result.stdout).toContain(
+      "stage=1 executor=codex-expert-executor reporter=gemma-reporter",
+    );
+    const invocations = readFileSync(fixture.argsFile, "utf8");
+    expect(invocations.match(/^agent run .*--by gemma-reporter/gm)).toHaveLength(2);
+    expect(invocations.match(/^agent run .*--by codex-expert-executor/gm)).toHaveLength(1);
+    expect(invocations).toMatch(/^grade apply .*--analysis-from .*--from /m);
+    expect(readFileSync(fixture.stateFile, "utf8")).toBe("2");
   });
 
   it("leaves the current stage incomplete on rate limit and resumes it", () => {

@@ -1734,7 +1734,7 @@ export function renderGradePlan(opts: {
     "",
     `# Review Plan: ${taskId} grade: ${rel}`,
     "",
-    "この plan は grade pipeline の executor stage 用である。評価と根拠の記述だけを行い、GradeSubmission JSON は作成しない。後続の reporter が判定内容を変更せず JSON へ構造化する。",
+    "この plan は grade pipeline の executor stage 用である。評価と根拠の記述だけを行い、GradeSubmission JSON は作成しない。`grade apply` が最終応答の marker を機械的に解析して GradeSubmission を生成し、契約を満たさない応答は拒否して executor を再実行する。",
     "",
     "## 1. このタスクで行うこと",
     "",
@@ -1822,7 +1822,7 @@ export function renderGradePlan(opts: {
     "",
     "1. すべての agent viewpoint の判定と、必要な finding が揃っていることを確認する。",
     "2. 最終応答では各 viewpoint を次のマーカーで1回ずつ宣言する。マーカー間には根拠や検討過程を自由形式で詳しく記述してよい。JSON、Markdown コードフェンス、GradeSubmission は出力しない。",
-    "3. `LEVEL` と各 `FINDING` は reporter が忠実性を機械検証する申告値である。message は1行で具体的に記し、reporter が一字一句コピーできるようにする。finding がない場合は `FINDING` 行を記さない。",
+    "3. `LEVEL` と各 `FINDING` は `grade apply` が機械的に読み取る申告値である。marker・`LEVEL`・`FINDING` はそれぞれ行頭に1行で記し、message は1行で具体的に記す。message はそのまま記録される。finding がない場合は `FINDING` 行を記さない。",
     "4. すべての viewpoint marker、0-4 の level、level 3 以下の finding、severity と非空 message が揃っていることを確認する。",
     ...(doneCriteria.length > 0
       ? [
@@ -1907,7 +1907,7 @@ export function renderGradeReporterPlan(opts: {
     "",
     `# Reporter Plan: ${taskId} grade: ${rel}`,
     "",
-    "この plan は grade pipeline の reporter stage 用である。executor の最終応答が `<grade_executor_output>` としてこの plan と一緒に渡される。評価やファイル読み取りは行わず、申告済みの判定を GradeSubmission JSON へ忠実に構造化する。",
+    "この plan は grade pipeline の reporter stage 用である。既定の pipeline は reporter を起動せず、`grade apply` が executor の marker から GradeSubmission を機械的に生成する。この plan は LLM reporter を明示指定して書き写しの精度を比較・検証する場合にだけ使う。executor の最終応答が `<grade_executor_output>` としてこの plan と一緒に渡される。評価やファイル読み取りは行わず、申告済みの判定を GradeSubmission JSON へ忠実に構造化する。",
     "",
     "## 1. このタスクで行うこと",
     "",
@@ -2069,6 +2069,26 @@ export function writeGradePlans(opts: {
   });
 }
 
+// executor の最終応答に現れる marker 行の軽微な書式の揺れを正規化する。受理するのは、行頭の
+// 空白、ブロッククオート `>`、リスト記号（`-` / `*` / `+` と空白）、および marker・LEVEL・
+// FINDING・DC-NNN の見出し部分を囲む `**` だけである。message と reason の本文は変更しない。
+// 文中に埋もれた FINDING などは marker とみなさず、従来どおり無視または拒否する。
+export function normalizeGradeExecutorLine(line: string): string {
+  let normalized = line.replace(/^\s*(?:>\s*)*(?:[-*+]\s+)?/, "");
+  const wrappedMarker = normalized.match(
+    /^\*\*(\[(?:END )?(?:VIEWPOINT[^\]]*|DONE_CRITERIA)\])\*\*\s*$/,
+  );
+  if (wrappedMarker) return wrappedMarker[1];
+  const wrappedLevel = normalized.match(/^\*\*(LEVEL:\s*[0-4])\*\*\s*$/);
+  if (wrappedLevel) return wrappedLevel[1];
+  normalized = normalized.replace(
+    /^\*\*(LEVEL|FINDING(?:\s+[a-z]+)?(?:\s+line=[0-9]+)?|DC-[0-9]{3,})(:?)\*\*(:?)/,
+    (_match, head: string, innerColon: string, outerColon: string) =>
+      `${head}${innerColon}${outerColon}`,
+  );
+  return normalized;
+}
+
 export function parseGradeExecutorAnalysis(raw: string): GradeExecutorAnalysis {
   const viewpoints: GradeViewpointInput[] = [];
   let doneCriteria: GradeCriterionInput[] | undefined;
@@ -2081,7 +2101,8 @@ export function parseGradeExecutorAnalysis(raw: string): GradeExecutorAnalysis {
       }
     | undefined;
 
-  for (const [lineIndex, line] of raw.split(/\r?\n/).entries()) {
+  for (const [lineIndex, rawLine] of raw.split(/\r?\n/).entries()) {
+    const line = normalizeGradeExecutorLine(rawLine);
     if (/^\[DONE_CRITERIA\]\s*$/.test(line)) {
       if (current) throw new Error(`line ${lineIndex + 1}: DONE_CRITERIA inside VIEWPOINT`);
       if (doneCriteria !== undefined) {
@@ -2291,6 +2312,70 @@ function doneCriteriaFidelityIssues(
   return issues;
 }
 
+export type GradeExecutorConversionOptions = {
+  executorOutput: string;
+  viewpoints: ReviewViewpointsDoc;
+  target: GradeTarget;
+  expectedPath: string;
+  doneCriteria?: GradeDoneCriterion[];
+};
+
+type GradeExecutorConversion =
+  | { analysis: GradeExecutorAnalysis; submission: GradeSubmission; issues: [] }
+  | { analysis?: undefined; submission?: undefined; issues: GradeValidationIssue[] };
+
+// executor の marker を parse し、GradeSubmission へ機械的に変換したうえで既存の
+// GradeSubmission 検証にかける。reporter の忠実性検証と機械変換は同じ parse と検証を共有し、
+// marker の欠落・重複・level と severity の矛盾・done_criteria の過不足を同じ条件で拒否する。
+function convertGradeExecutorOutput(opts: GradeExecutorConversionOptions): GradeExecutorConversion {
+  let analysis: GradeExecutorAnalysis;
+  try {
+    analysis = parseGradeExecutorAnalysis(opts.executorOutput);
+  } catch (error) {
+    return {
+      issues: [
+        {
+          path: "$analysis",
+          message: error instanceof Error ? error.message : String(error),
+        },
+      ],
+    };
+  }
+
+  const rubric = assertRubric(opts.viewpoints);
+  const submission: GradeSubmission = {
+    rubric: rubric.id,
+    documents: [
+      {
+        path: opts.expectedPath,
+        viewpoints: analysis.viewpoints,
+        ...(analysis.doneCriteria ? { done_criteria: analysis.doneCriteria } : {}),
+      },
+    ],
+  };
+  const issues = validateGradeSubmission(
+    submission,
+    opts.viewpoints,
+    opts.target,
+    opts.doneCriteria
+      ? { doneCriteriaByPath: new Map([[opts.expectedPath, opts.doneCriteria]]) }
+      : {},
+  ).map((issue) => ({ path: `$analysis.${issue.path}`, message: issue.message }));
+  if (issues.length > 0) return { issues };
+  return { analysis, submission, issues: [] };
+}
+
+// executor の分析から GradeSubmission を生成する。LLM の reporter を通さずに grade を記録する
+// 既定の経路で使う。拒否時は issues を返し、呼び出し側は executor を再実行する。
+export function buildGradeSubmissionFromAnalysis(opts: GradeExecutorConversionOptions): {
+  submission?: GradeSubmission;
+  issues: GradeValidationIssue[];
+} {
+  const conversion = convertGradeExecutorOutput(opts);
+  if (conversion.submission === undefined) return { issues: conversion.issues };
+  return { submission: conversion.submission, issues: [] };
+}
+
 export function validateGradeReporterFidelity(opts: {
   executorOutput: string;
   submission: GradeSubmission;
@@ -2299,37 +2384,9 @@ export function validateGradeReporterFidelity(opts: {
   expectedPath: string;
   doneCriteria?: GradeDoneCriterion[];
 }): GradeValidationIssue[] {
-  let analysis: GradeExecutorAnalysis;
-  try {
-    analysis = parseGradeExecutorAnalysis(opts.executorOutput);
-  } catch (error) {
-    return [
-      {
-        path: "$analysis",
-        message: error instanceof Error ? error.message : String(error),
-      },
-    ];
-  }
-
-  const rubric = assertRubric(opts.viewpoints);
-  const analysisIssues = validateGradeSubmission(
-    {
-      rubric: rubric.id,
-      documents: [
-        {
-          path: opts.expectedPath,
-          viewpoints: analysis.viewpoints,
-          ...(analysis.doneCriteria ? { done_criteria: analysis.doneCriteria } : {}),
-        },
-      ],
-    },
-    opts.viewpoints,
-    opts.target,
-    opts.doneCriteria
-      ? { doneCriteriaByPath: new Map([[opts.expectedPath, opts.doneCriteria]]) }
-      : {},
-  ).map((issue) => ({ path: `$analysis.${issue.path}`, message: issue.message }));
-  if (analysisIssues.length > 0) return analysisIssues;
+  const conversion = convertGradeExecutorOutput(opts);
+  if (conversion.analysis === undefined) return conversion.issues;
+  const analysis = conversion.analysis;
 
   if (opts.submission.documents.length !== 1) {
     return [
@@ -3330,13 +3387,22 @@ export function registerGradeCommand(program: Command): void {
   addSelection(
     grade
       .command("apply")
-      .description("Validate reporter fidelity and JSON, calculate scores, and update documents"),
+      .description(
+        "Convert executor markers (or validate reporter JSON), calculate scores, and update documents",
+      ),
   )
-    .requiredOption("--from <path>", "GradeSubmission JSON produced by the assessment agent")
+    .option(
+      "--from <path>",
+      "GradeSubmission JSON produced by an LLM reporter; omit to convert --analysis-from mechanically",
+    )
     .requiredOption("--by <nickname>", "Grading agent nickname from pm-members.yaml")
     .option(
       "--analysis-from <path>",
-      "Executor analysis used to verify reporter fidelity (omit only for legacy one-stage output)",
+      "Executor analysis converted to GradeSubmission, or used to verify --from fidelity",
+    )
+    .option(
+      "--submission-out <path>",
+      "Write the GradeSubmission converted from --analysis-from to this repository path",
     )
     .option(
       "--reference <pathOrId>",
@@ -3352,9 +3418,12 @@ export function registerGradeCommand(program: Command): void {
           options.by,
           loadMemberRoster(specdojoRootDir(), project),
         );
-        const submission = parseGradeSubmission(
-          readFileSync(resolveSafeRepositoryPath(options.from, "--from"), "utf8"),
-        );
+        if (!options.from && !options.analysisFrom) {
+          throw new Error("grade apply requires --analysis-from, --from, or both");
+        }
+        if (options.submissionOut && (options.from || !options.analysisFrom)) {
+          throw new Error("--submission-out requires --analysis-from without --from");
+        }
         const selected = new Set(
           discoverGradeTargets({
             target,
@@ -3376,27 +3445,61 @@ export function registerGradeCommand(program: Command): void {
           target === "deliverable"
             ? resolveDeliverableDoneCriteria([...selected], options.project)
             : undefined;
+        let submission: GradeSubmission;
         if (options.analysisFrom) {
           if (selected.size !== 1) {
             throw new Error("--analysis-from requires exactly one selected --path");
           }
           const expectedPath = [...selected][0];
-          const fidelityIssues = validateGradeReporterFidelity({
-            executorOutput: readFileSync(
-              resolveSafeRepositoryPath(options.analysisFrom, "--analysis-from"),
-              "utf8",
-            ),
-            submission,
+          const executorOutput = readFileSync(
+            resolveSafeRepositoryPath(options.analysisFrom, "--analysis-from"),
+            "utf8",
+          );
+          const conversionOptions = {
+            executorOutput,
             viewpoints,
             target,
             expectedPath,
             doneCriteria: doneCriteriaByPath?.get(expectedPath),
-          });
-          if (fidelityIssues.length > 0) {
-            throw new Error(
-              fidelityIssues.map((issue) => `${issue.path}: ${issue.message}`).join("\n"),
+          };
+          if (options.from) {
+            // LLM reporter の JSON を executor marker と照合する互換・比較用の経路。
+            submission = parseGradeSubmission(
+              readFileSync(resolveSafeRepositoryPath(options.from, "--from"), "utf8"),
             );
+            const fidelityIssues = validateGradeReporterFidelity({
+              ...conversionOptions,
+              submission,
+            });
+            if (fidelityIssues.length > 0) {
+              throw new Error(
+                fidelityIssues.map((issue) => `${issue.path}: ${issue.message}`).join("\n"),
+              );
+            }
+          } else {
+            const converted = buildGradeSubmissionFromAnalysis(conversionOptions);
+            if (converted.submission === undefined) {
+              throw new Error(
+                [
+                  "executor analysis rejected; rerun the executor",
+                  ...converted.issues.map((issue) => `${issue.path}: ${issue.message}`),
+                ].join("\n"),
+              );
+            }
+            submission = converted.submission;
+            if (options.submissionOut && !options.dryRun) {
+              const submissionOut = resolveSafeRepositoryPath(
+                options.submissionOut,
+                "--submission-out",
+              );
+              mkdirSync(dirname(submissionOut), { recursive: true });
+              writeFileSync(submissionOut, `${JSON.stringify(submission, null, 2)}\n`, "utf8");
+            }
           }
+        } else {
+          submission = parseGradeSubmission(
+            readFileSync(resolveSafeRepositoryPath(options.from, "--from"), "utf8"),
+          );
         }
         for (const document of submission.documents)
           if (!selected.has(repoRelativePath(resolve(specdojoRootDir(), document.path))))
