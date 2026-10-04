@@ -70,7 +70,13 @@ temperature と top_p は、[[prj-0001:pjr-4rr8-ollama-sampling-recommended-para
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+Host Mac に `gemma4:26b-mlx` と 64K・128K の派生モデルを作成し、計測用の executor で grade を計測した。結果は [[prj-0001:pjr-vqb5-agent-grade-comparison]] の「gemma4 26B（MoE）（2026-10-04）」に記録した。
+
+- 速さと日本語: gemma4 31B の約3倍速く（1件 2〜3 分）、すべての実行で中国語の字体が混ざらなかった。
+- 判定: 31B と同じく良否を区別できず、参考資料付き・128K・判定の規則と例と「問題を先に挙げる」手順のいずれでも厳しくならなかった。grade の executor には採用しない。
+- context: 入力が 64K に収まる範囲では、128K にしても精度・時間・メモリに差がなかった。128K の派生モデルは使わない（Host Mac の `gemma4:26b-mlx-work-128k` は削除してよい）。
+
+使い道は、判定を伴わない reporter の文章要約とした。`gemma26-reporter` を priority 4 で追加し、gemma-reporter としばらく併用して実際の exec で様子を見る。[[tsd-ollama]] に用途と派生モデル（`gemma4:26b-mlx-work-64k`）の定義を追加した。計測用の executor と 128K モデルの登録は外した（コミット c512cee6d）。
 
 ## 5. 関連ドキュメント
 
