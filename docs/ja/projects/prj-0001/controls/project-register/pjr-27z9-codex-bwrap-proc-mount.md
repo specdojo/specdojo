@@ -33,18 +33,25 @@ specdojo:
 
 ## 3. 対応方針
 
-| 項目     | 内容                                                                                                                                                                                                                                                                                                           |
-| -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 原因     | 推定：Docker が `/proc` の一部をマスクしているため、bubblewrap による新しい proc の mount がカーネルに拒否される。未検証                                                                                                                                                                                       |
-| 対応策   | 候補：`.devcontainer/devcontainer.json` の `runArgs` に `--security-opt=systempaths=unconfined` を加えてリビルドする。コンテナの隔離が弱まるため、弱まる範囲を評価して採否を決める。採用しない場合は、codex の sandbox 設定や `exec-defaults.yaml` の codex の起動引数など代わりの手段と、その安全性を評価する |
-| 依存事項 | devcontainer のリビルド                                                                                                                                                                                                                                                                                        |
-| 完了条件 | devcontainer 内で `codex sandbox linux -- ls -d /` が成功し、`codex-expert-executor` で grade の executor plan を実行して `[VIEWPOINT ...]` 形式の判定を返せる。採否の判断と変更が `.devcontainer/` と [[tsd-home-mac-dev-server]] に反映されている                                                            |
+| 項目     | 内容                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 原因     | Dockerfile で入れたシステムの bubblewrap 0.12.0 は `/proc` の mount に失敗したときのエラー文が codex の想定と異なり（`/newroot/proc` ではなく `/proc`）、codex が `/proc` を mount しない方式へ切り替えられない（openai/codex#44329）。Docker が `/proc` の一部をマスクしていることが mount の失敗の原因                                                                                                                    |
+| 対応策   | システムの bubblewrap を外し、codex 同梱の bwrap（`~/.codex/packages/standalone/current/codex-resources/bwrap`）を使わせる。codex は PATH 上の `bwrap` を優先し、なければ同梱版を使う。`runArgs` に `--security-opt=systempaths=unconfined` を加える案は、Docker がマスクしている `/proc`・`/sys` を読み書きできるようにし、`node` の sudo 経由で Docker Desktop の VM のカーネル設定まで変更できるようになるため採用しない |
+| 依存事項 | devcontainer のリビルド                                                                                                                                                                                                                                                                                                                                                                                                     |
+| 完了条件 | devcontainer 内で `codex sandbox linux -- ls -d /` が成功し、`codex-expert-executor` で grade の executor plan を実行して `[VIEWPOINT ...]` 形式の判定を返せる。採否の判断と変更が `.devcontainer/` と [[tsd-home-mac-dev-server]] に反映されている                                                                                                                                                                         |
 
 ## 4. 対応結果
 
-解決内容: `.devcontainer/devcontainer.json` の `runArgs` に `--security-opt=systempaths=unconfined` を追加し、Docker の `/proc` マスクを緩和して bubblewrap が動作するようにした。変更内容は `tsd-home-mac-dev-server.md` の devcontainer 設定テーブルにも反映した。
-確認結果: 設定を追加した。devcontainer のリビルドと `codex sandbox linux -- ls -d /` による動作確認は runner による検証に委ねる。
-再発防止策: `tsd-home-mac-dev-server.md` に `runArgs` の設定理由を明記し、今後の設定見直しで誤って削除されないようにした。
+解決内容: `.devcontainer/Dockerfile` からシステムの `bubblewrap` を削除し、codex 同梱の bwrap が使われるようにした。exec（agy-expert-executor）が加えた `runArgs` の `--security-opt=systempaths=unconfined` は、コンテナの隔離を弱めるため取り消した。理由を [[tsd-home-mac-dev-server]] の devcontainer 設定に記載した（コミット 3802bd5a2）。
+
+確認結果（2026-10-04、現行コンテナで `apt-get remove bubblewrap` を実行した状態）:
+
+- `codex sandbox -- sh -c 'ls -d /; head -1 package.json; touch /etc/x'` は、読み取りに成功し、`/etc` への書き込みは「読み込み専用ファイルシステム」で拒否された。sandbox の保護が効いている。
+- `codex-expert-executor` で grade の executor plan（`trc-requirements-to-tests-rulebook`）を実行し、326 秒で 23 観点の `[VIEWPOINT ...]` を返した。`grade apply --dry-run` の検証を通過し、score 62（major 17・minor 3）だった。
+
+再発防止策: システムの bubblewrap を入れない理由を設計書に明記した。codex が上流で判定を直した場合（openai/codex#44329）も、同梱版を使う構成のままでよい。
+
+exec の実行の経緯: 1回目の実行（agy-expert-executor / gemma-reporter）は `systempaths=unconfined` を加えて「解決」と記録したが、隔離の評価とリビルド後の確認がなかった。自動 commit はヘッダー長で失敗した（[[prj-0001:pjr-daw8-register-commit-header-length]]）。
 
 ## 5. 関連ドキュメント
 
