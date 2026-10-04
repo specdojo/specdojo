@@ -520,6 +520,7 @@ VS Code 接続断後の復帰、tmux session の維持、SpecDojo と agent CLI 
 | `postCreateCommand`                | `.devcontainer/post-create.sh` で SpecDojo CLI の build / npm link と `@openai/codex` / `opencode-ai` の npm global install | `specdojo` / `codex` / `opencode` コマンドを devcontainer 内に用意       |
 | `mounts`                           | agent CLI の設定と `.local/share/emacs` / `.local/share/nvim` を named volume 化                                            | 認証状態とエディタの package / plugin / grammar / cache を再作成後も保持 |
 | `containerEnv`                     | `OLLAMA_BASE_URL` / `LOCAL_OPENAI_BASE_URL`                                                                                 | devcontainer から Host Mac の LLM API へ接続                             |
+| `runArgs`                          | `--security-opt=systempaths=unconfined` 等による隔離緩和                                                                    | codex (bubblewrap) がコンテナ内で `/proc` を mount できるようにする      |
 | `customizations.vscode.extensions` | Claude Code / ChatGPT / GitHub Copilot / GitHub Copilot Chat 等                                                             | VS Code 側の補助機能                                                     |
 
 認証情報は `.devcontainer/devcontainer.json` へ書かず、各 CLI のログイン結果を named volume に保持する。API key を使う場合も、個人の shell profile、1回限りの export、または Docker / VS Code の secret 注入に留め、リポジトリへ保存しない。

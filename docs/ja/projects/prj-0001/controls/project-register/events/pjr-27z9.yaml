@@ -29,3 +29,29 @@
     - field: registered
       from: ""
       to: "2026-10-04"
+- v: 1
+  id: reg_9620c09c92604a83a2175bbb810f023c
+  ts: "2026-10-04T03:32:18Z"
+  action: start
+  actor: agy-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_8dbd9a6158f44de086b4b4885a08ea32
+- v: 1
+  id: reg_2e95a0e7d9444a68bc2f97bf8ce1d248
+  ts: "2026-10-04T03:39:43Z"
+  action: review
+  actor: agy-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_9620c09c92604a83a2175bbb810f023c

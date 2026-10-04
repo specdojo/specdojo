@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: high
   owner: DEV
   registered_at: "2026-10-03T22:19:25Z"
@@ -41,7 +41,9 @@ specdojo:
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+解決内容: `.devcontainer/devcontainer.json` の `runArgs` に `--security-opt=systempaths=unconfined` を追加し、Docker の `/proc` マスクを緩和して bubblewrap が動作するようにした。変更内容は `tsd-home-mac-dev-server.md` の devcontainer 設定テーブルにも反映した。
+確認結果: 設定を追加した。devcontainer のリビルドと `codex sandbox linux -- ls -d /` による動作確認は runner による検証に委ねる。
+再発防止策: `tsd-home-mac-dev-server.md` に `runArgs` の設定理由を明記し、今後の設定見直しで誤って削除されないようにした。
 
 ## 5. 関連ドキュメント
 
