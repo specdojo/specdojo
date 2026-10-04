@@ -106,3 +106,16 @@
       from: "integrate failed: project: git commit failed: error: unknown option '--reserve' / error: unknown option '--local' / error: unknown option '--strict-sync' / error: unknown option '--integration-branch'…"
       to: "-"
   previous_event_id: reg_d0570b3289c5495b9ff2cd1778b2e612
+- v: 1
+  id: reg_2e97af2061044804a059c07ecbce75ac
+  ts: "2026-10-04T07:25:52Z"
+  action: review
+  actor: agy-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_6b7316f896d54194a5c9b24183d9e3aa
