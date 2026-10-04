@@ -31,6 +31,11 @@ pipeline:
     - typecheck # npm run typecheck
     - test-unit # npm run test:unit
 
+# register 項目は失敗時の変更と再開用 checkpoint を隔離するため、既定で task worktree
+# を使う。短時間の軽微な作業を現在の作業ツリーで行う場合だけ --in-place を明示する。
+run:
+  register_execution: worktree
+
 rate_limit_detection:
   # exit_codes は最小限にする。多くの agent CLI は通常失敗と agent 自身の block も
   # exit 1 で返すため、素の exit 1 は rate limit と区別できない。通常失敗を利用制限
