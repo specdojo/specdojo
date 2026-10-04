@@ -13,6 +13,12 @@ export interface RunDevcontainerScaffoldOptions {
   dryRun: boolean;
 }
 
+function repositoryVolumePrefix(repoRoot: string): string {
+  const repositoryName = path.basename(path.resolve(repoRoot)).toLowerCase();
+  const safeName = repositoryName.replace(/[^a-z0-9_.-]+/g, "-").replace(/^[._-]+|[._-]+$/g, "");
+  return safeName || "project";
+}
+
 export async function runDevcontainerScaffold(opts: RunDevcontainerScaffoldOptions): Promise<void> {
   const { packageRoot, repoRoot, providers, ollama, cron, tmux, force, dryRun } = opts;
   const devcontainerDir = path.join(repoRoot, ".devcontainer");
@@ -35,6 +41,11 @@ export async function runDevcontainerScaffold(opts: RunDevcontainerScaffoldOptio
   const devcontainerJsonPath = path.join(templateDir, "devcontainer.json");
   const baseJsonStr = await readFile(devcontainerJsonPath, "utf8");
   const devcontainer = JSON.parse(baseJsonStr);
+  const volumePrefix = repositoryVolumePrefix(repoRoot);
+  const volumeName = (name: string) => `${volumePrefix}-specdojo-${name}`;
+  devcontainer.mounts = devcontainer.mounts.map((mount: string) =>
+    mount.replace(/^source=specdojo-/, `source=${volumePrefix}-specdojo-`),
+  );
 
   const postCreateScriptPath = path.join(templateDir, "post-create.sh");
   let postCreateScript = await readFile(postCreateScriptPath, "utf8");
@@ -71,26 +82,31 @@ export async function runDevcontainerScaffold(opts: RunDevcontainerScaffoldOptio
     }
 
     if (provider === "claude") {
-      devcontainer.mounts.push("source=specdojo-claude,target=/home/node/.claude,type=volume");
+      devcontainer.mounts.push(
+        `source=${volumeName("claude")},target=/home/node/.claude,type=volume`,
+      );
       devcontainer.containerEnv["CLAUDE_CONFIG_DIR"] = "/home/node/.claude";
       extraScripts.push(
         'if ! curl -fsSL https://claude.ai/install.sh | bash; then\n  echo "Warning: Claude Code installer failed."\nfi',
       );
     } else if (provider === "codex") {
-      devcontainer.mounts.push("source=specdojo-codex,target=/home/node/.codex,type=volume");
+      devcontainer.mounts.push(
+        `source=${volumeName("codex")},target=/home/node/.codex,type=volume`,
+      );
       // Codex は curl -fsSL https://chatgpt.com/codex/install.sh | CODEX_NON_INTERACTIVE=1 sh
       extraScripts.push(
         'if ! curl -fsSL https://chatgpt.com/codex/install.sh | CODEX_NON_INTERACTIVE=1 sh; then\n  echo "Warning: Codex installer failed."\nfi',
       );
     } else if (provider === "opencode") {
       devcontainer.mounts.push(
-        "source=specdojo-opencode,target=/home/node/.config/opencode,type=volume",
+        `source=${volumeName("opencode")},target=/home/node/.config/opencode,type=volume`,
+        `source=${volumeName("opencode-data")},target=/home/node/.local/share/opencode,type=volume`,
       );
       devcontainer.containerEnv["OPENCODE_DISABLE_AUTO_UPDATE"] = "1";
       extraScripts.push("sudo npm install -g opencode-ai@latest");
     } else if (provider === "antigravity") {
       devcontainer.mounts.push(
-        "source=specdojo-antigravity,target=/home/node/.config/antigravity,type=volume",
+        `source=${volumeName("antigravity")},target=/home/node/.config/antigravity,type=volume`,
       );
       extraScripts.push(
         'if ! curl -fsSL https://antigravity.google/cli/install.sh | bash; then\n  echo "Warning: Antigravity CLI installer failed."\nfi',
