@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-wjpx-gemma4-26b-moe-evaluation
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-04T10:00:13Z"
   due_on: null
+  completed_at: "2026-10-04T12:45:39Z"
+  conclusion: gemma4 26B は 31B の約3倍速く日本語に中国語の字体が混ざらないが、判定は甘く参考資料・128K・判定例でも改善しないため、grade の executor には採用せず reporter の要約に使う。gemma26-reporter を追加し tsd-ollama を更新した
 ---
 
 # PJR-WJPX gemma4 26B（MoE）を導入し、速度・日本語・判定を計測して使い道を決める
