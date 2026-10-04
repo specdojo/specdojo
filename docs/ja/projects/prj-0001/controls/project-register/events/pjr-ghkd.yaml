@@ -29,3 +29,32 @@
     - field: registered
       from: ""
       to: "2026-10-04"
+- v: 1
+  id: reg_2ff98990175745f5884b1868870ef906
+  ts: "2026-10-04T13:21:13Z"
+  action: start
+  actor: agy-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_feed0665ea7f45f3817f7ff7e51daacd
+- v: 1
+  id: reg_5d071bfd3f7144cfb86868afa9564b20
+  ts: "2026-10-04T13:37:58Z"
+  action: wait
+  actor: agy-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: test-integration"
+  previous_event_id: reg_2ff98990175745f5884b1868870ef906
