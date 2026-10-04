@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_3d86f30978ec4576ab91b3dc95b54a56
+  ts: "2026-10-04T06:29:15Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: devcontainer テンプレートの named volume を本体とそろえ、共有の方針を決める
+    - field: description
+      from: ""
+      to: specdojo devcontainer scaffold のテンプレートは、opencode provider でも ~/.local/share/opencode を named volume にしないため、リビルドで OpenCode の API key（auth.json）が消える（本体は PJR-MP2P までに specdojo-opencode-data で対応済み）。volume 名は本体と同じ specdojo-* に固定され、利用リポジトリと本体で認証情報や git 設定を共有する。GitHub CLI の volume もない。テンプレートで作るコンテナの保存先の一覧と、dotfiles が VS Code のユーザー設定で自動導入されることも文書にない
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-04"
