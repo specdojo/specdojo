@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_98ab51fb2e834a9fb52c1018665dc1bb
+  ts: "2026-10-04T05:12:45Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: exec run --register の既定を worktree にし、in-place を明示指定にする
+    - field: description
+      from: ""
+      to: exec run --register は既定で in-place に実行される。in-place の実行中にメインの作業ツリーで commit すると HEAD 検査（agent-git-state-write）で成功した作業が waiting になり、失敗時の変更が作業ツリーに残って後続の実行も止まる（2026-10-04 の PJR-SMET）。worktree なら作業ツリーが分かれ、失敗時の隔離と --resume が使える。既定を worktree にし、in-place は明示指定にする
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-04"
