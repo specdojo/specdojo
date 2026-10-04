@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: waiting
+  item_status: review
   priority: low
   owner: DEV
   registered_at: "2026-10-04T03:46:04Z"
   due_on: null
-  block_reason: "agent-git-state-write: Git state changes detected; fields=HEAD; agent must leave commits and repository configuration changes to the parent runner"
 ---
 
 # PJR-SMET review や start への遷移で block_reason が残る

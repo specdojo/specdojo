@@ -58,3 +58,19 @@
       from: "-"
       to: "agent-git-state-write: Git state changes detected; fields=HEAD; agent must leave commits and repository configuration changes to the parent runner"
   previous_event_id: reg_df09979a7c664adcaa38c34f30dff80b
+- v: 1
+  id: reg_3c9b711488eb478499d23e359a2ca69a
+  ts: "2026-10-04T05:08:52Z"
+  action: review
+  actor: claude
+  from_status: waiting
+  to_status: review
+  reason: block は作業者の並行 commit が原因。成果を確認して a4f5daa91 で commit した
+  changes:
+    - field: status
+      from: waiting
+      to: review
+    - field: block_reason
+      from: "agent-git-state-write: Git state changes detected; fields=HEAD; agent must leave commits and repository configuration changes to the parent runner"
+      to: "-"
+  previous_event_id: reg_b61ab6fb13394702869d4266361ed5d4
