@@ -138,3 +138,16 @@
       from: "agent exited with non-zero code: runner による検証 `test-integration` が失敗しているため（`exit 1`）。"
       to: "-"
   previous_event_id: reg_d3382edac7cd40f980c5f966deac3552
+- v: 1
+  id: reg_1b15f4a3bcde49b59d45a739becf03c0
+  ts: "2026-10-04T09:53:16Z"
+  action: review
+  actor: gemma-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_c805cdae3eb84776bb295649aa5a60e2
