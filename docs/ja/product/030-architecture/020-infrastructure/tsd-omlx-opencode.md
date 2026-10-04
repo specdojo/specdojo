@@ -111,11 +111,11 @@ Ornith のサンプリングの値と thinking の有無は、opencode の設定
 
 `temperature` と `top_p` は、用途ごとに `.opencode/agents/ornith-*.md` の frontmatter で指定する。opencode は agent の値をリクエストで送る。
 
-| agent                    | `temperature` | `top_p` | 方針                                                                                                                          |
-| ------------------------ | ------------- | ------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| `ornith-executor`        | 0.7           | 0.8     | Qwen 系が thinking なしで推奨する値                                                                                           |
-| `ornith-expert-executor` | 0.3           | 0.8     | grade など厳密な出力形式を求める作業向けに、確率の低い候補を選びにくくする。2026-10-04 の計測で最も検証の通過率が高かった構成 |
-| `ornith-reporter`        | 0.1           | 0.8     | 渡された内容を構造化結果へ写すだけのため、ほぼ決定的にする                                                                    |
+| agent                    | `temperature` | `top_p` | 方針                                                                                                                                                                                                                     |
+| ------------------------ | ------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `ornith-executor`        | 0.7           | 0.8     | Qwen 系が thinking なしで推奨する値                                                                                                                                                                                      |
+| `ornith-expert-executor` | 0.3           | 0.8     | grade など厳密な出力形式を求める作業向けに、確率の低い候補を選びにくくする。grade の判定（根拠と finding）は英語で出力する。英語では日本語より判定が厳しくなり、中国語の字体が混ざらなかった（2026-10-04、検証通過 5/6） |
+| `ornith-reporter`        | 0.1           | 0.8     | 渡された内容を構造化結果へ写すだけのため、ほぼ決定的にする                                                                                                                                                               |
 
 opencode の `reasoningEffort` は、oMLX では thinking の切り替えに使われない。thinking を agent ごとに変える場合は、agent の frontmatter に `chat_template_kwargs` を書く。agent の値は `opencode.json` の値より優先される。
 
@@ -124,7 +124,7 @@ chat_template_kwargs:
   enable_thinking: true
 ```
 
-計測の経緯と結果は [[prj-0001:pjr-vqb5-agent-grade-comparison]] の「ornith の executor の改善（2026-10-04）」に記録している。
+`.opencode/AGENTS.md` は日本語での回答を求めるが、agent の定義が出力の言語を指定する場合はそれを優先する。計測の経緯と結果は [[prj-0001:pjr-vqb5-agent-grade-comparison]] の「ornith の executor の改善（2026-10-04）」に記録している。
 
 ### 4.4. 既定のモデルにする場合
 

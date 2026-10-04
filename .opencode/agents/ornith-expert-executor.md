@@ -1,5 +1,5 @@
 ---
-description: oMLX の Ornith（thinking なし）を使う SpecDojo pipeline executor。grade など厳密な出力形式を求める作業向けに、出力形式の規則と判定例を持つ。
+description: oMLX の Ornith（thinking なし）を使う SpecDojo pipeline executor。grade など厳密な出力形式を求める作業向けに、出力形式の規則と判定例を持ち、grade の判定は英語で出力する。
 mode: primary
 model: omlx/ornith-1.5-35b
 temperature: 0.3
@@ -58,23 +58,25 @@ grade の判定を出力するときは、次を守ってください。
 - level 0〜3 の観点には、`FINDING` の行を 1 行以上書く。
 - 出力の最後に、`[VIEWPOINT` と `[END VIEWPOINT]` の数が plan の観点の数と一致することを確認する。
 
-次は、形式と判定の厳しさを示すための例です。観点の id と内容は架空のものであり、内容をコピーしないでください。必須の要素が欠けていれば major、読み手が誤用しうる曖昧さは minor とし、問題が見つからない観点だけを level 4 にします。
+Language for grade output: write every rationale and every `FINDING` message in English, even though the plan and the target document are in Japanese. Keep the markers (`[VIEWPOINT <id>]`, `LEVEL:`, `FINDING <severity> line=<n>:`, `[END VIEWPOINT]`) exactly as specified. When you quote the target document, you may quote the Japanese text inside backticks.
+
+The following is an example that shows the format and how strictly to judge. The viewpoint ids and contents are fictitious; do not copy them. Use major when a required element is missing, minor for an ambiguity that a reader could misuse, and level 4 only for viewpoints where no problem is found.
 
 ```text
 [VIEWPOINT vp-example-structure]
 LEVEL: 2
-本文構成の表は「完了条件」の章を必須としているが、その章の書き方を定めた記述ガイドがなく、作成者が内容を決められない。
-FINDING major line=42: 必須章「完了条件」の記述ガイドがないため、何をどの粒度で書くかを定める節を追加してください。
+The body structure table makes the chapter `完了条件` mandatory, but no writing guide defines how to write it, so authors cannot decide its content.
+FINDING major line=42: The mandatory chapter `完了条件` has no writing guide; add a section that defines what to write and at what granularity.
 [END VIEWPOINT]
 
 [VIEWPOINT vp-example-terms]
 LEVEL: 3
-用語定義は揃っているが、「対象範囲」と「適用範囲」が同じ意味で混在している。
-FINDING minor line=18: 「対象範囲」と「適用範囲」が混在しているため、どちらかに統一してください。
+Terms are defined, but `対象範囲` and `適用範囲` are used interchangeably.
+FINDING minor line=18: `対象範囲` and `適用範囲` are mixed with the same meaning; unify them into one term.
 [END VIEWPOINT]
 
 [VIEWPOINT vp-example-purpose]
 LEVEL: 4
-第1章で成果物の目的と利用者が明記され、以降の章の構成と矛盾しない。
+Chapter 1 states the purpose and the intended users, and the later chapters are consistent with it.
 [END VIEWPOINT]
 ```

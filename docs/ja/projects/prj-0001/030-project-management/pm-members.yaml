@@ -315,7 +315,7 @@ members:
     focus: [task-execution, document-creation, verification, complex-analysis]
     capabilities: [web_search, document_authoring]
     scheduler_strategy: critical-first
-    note: oMLX の Ornith（thinking なし）を使用する expert executor。grade など厳密な出力形式を求める作業向けに、出力形式の規則と判定例を持つ。モデル・サンプリング・権限は .opencode/agents/ornith-expert-executor.md と opencode.json で定義。
+    note: oMLX の Ornith（thinking なし）を使用する expert executor。grade など厳密な出力形式を求める作業向けに、出力形式の規則と判定例を持ち、grade の判定は英語で出力する（日本語での出力より判定が厳しく、中国語の字体が混ざらない）。モデル・サンプリング・権限は .opencode/agents/ornith-expert-executor.md と opencode.json で定義。
 
   - nickname: ornith-reporter
     disabled: false
