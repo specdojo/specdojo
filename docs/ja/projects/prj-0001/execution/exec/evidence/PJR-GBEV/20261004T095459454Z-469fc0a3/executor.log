@@ -1,0 +1,11 @@
+実装完了です。
+
+- `changed_files` のパス、`outcome`、`block_reason` を evidence から機械生成。
+- reporter schema を文章項目だけに縮小し、説明件数と evidence の変更件数を照合。
+- pipeline、Job、trial、公開 schema、運用ガイド、関連テストを更新。
+- 段階2は不採用とし、理由を個票へ記録。
+- result と登録簿ステータスは変更していません。親 runner の検査は指示どおり委譲しています。
+
+<specdojo_executor_evidence>
+{"final_message":"reporter の事実項目（`changed_files` のパス、`outcome`、`block_reason`）を evidence から機械生成し、LLM 出力を文章項目だけに限定した。pipeline・trial・schema・ガイド・テスト fixture・個票を更新済み。","validations":[{"command":"npx prettier --check src/exec-{evidence,reporter,results,run,trial}.ts tests/src/exec-{evidence,reporter,results,run-inplace,pipeline-e2e.integration,register-pipeline-e2e.integration,register-resume.integration}.test.ts docs/ja/specdojo/{guides/exec-config-guide.md,guides/exec-operation-guide.md,references/command-reference.md} docs/specdojo/schemas/v1/exec-{evidence,reporter-output}.schema.yaml docs/ja/projects/prj-0001/controls/project-register/pjr-gbev-exec-reporter-machine-facts.md","status":"passed","summary":"全変更対象が Prettier 形式に適合"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"全カタログ OK。既存の based_on 警告のみ"},{"command":"node --import tsx src/specdojo.ts register build --project prj-0001","status":"passed","summary":"登録簿派生ビューを正常生成"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"文書索引 2381 件を正常生成"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>

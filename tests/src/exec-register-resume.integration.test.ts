@@ -151,7 +151,7 @@ function arg(name) {
 
 const nickname = arg("nickname");
 const role = nickname.startsWith("exec-") ? "executor" : "reporter";
-readFileSync(0, "utf8");
+const prompt = readFileSync(0, "utf8");
 
 if (role === "executor") {
   writeFileSync(${JSON.stringify(ARTIFACT_NAME)}, "# executor artifact\\n", "utf8");
@@ -171,16 +171,18 @@ if (existsSync(${JSON.stringify(markerPath)})) {
   process.exit(1);
 }
 
+const evidenceTag = "<specdojo_executor_evidence>";
+const evidenceStart = prompt.lastIndexOf(evidenceTag) + evidenceTag.length;
+const evidenceEnd = prompt.indexOf("</specdojo_executor_evidence>", evidenceStart);
+const evidence = JSON.parse(prompt.slice(evidenceStart, evidenceEnd).trim());
 process.stdout.write(
   JSON.stringify({
     schema_version: 1,
     mode: "edit",
-    outcome: "complete",
     summary: ["reporter 再開で result を記入した。"],
-    changed_files: [{ path: ${JSON.stringify(ARTIFACT_NAME)}, summary: "成果物を追加した。" }],
+    changed_files: evidence.changes.map(() => ({ summary: "変更内容を result に記録した。" })),
     handoff: [],
     approach: "plan と executor evidence だけを根拠に結果を構成した。",
-    block_reason: "",
   }),
 );
 process.exit(0);
@@ -677,6 +679,15 @@ describe("exec run --register --worktree --resume", () => {
             ),
           ),
         ).toBe(true);
+        const resultFiles = readdirSync(join(root, EXECUTION_REL, "exec", "results"));
+        expect(resultFiles).toHaveLength(1);
+        const result = readFileSync(
+          join(root, EXECUTION_REL, "exec", "results", resultFiles[0]),
+          "utf8",
+        );
+        expect(result.match(/## 2\. 変更ファイル\n\n([\s\S]*?)\n\n## 3\./u)?.[1]).toBe(
+          `- \`${ARTIFACT_NAME}\`: 変更内容を result に記録した。`,
+        );
         expect(worktreePathFor(root)).toBeNull();
       });
     },

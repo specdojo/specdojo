@@ -35,7 +35,12 @@ import {
   runConfiguredParentValidations,
 } from "./exec-run.js";
 import { parsePlanTaskIdentity } from "./exec-plans.js";
-import { runReporterWithFormatRetry, type ReporterOutput } from "./exec-reporter.js";
+import {
+  deriveReporterFacts,
+  evidenceForReporter,
+  runReporterWithFormatRetry,
+  type ReporterOutput,
+} from "./exec-reporter.js";
 import { ensureDir, safeSlug } from "./exec-shared.js";
 import {
   ensureExecWorktree,
@@ -62,7 +67,7 @@ type TrialStatus =
 type ReporterMode = "none" | "shared" | "paired";
 type ReporterStatus = "not_run" | "succeeded" | "blocked" | "failed";
 type ReporterFailureCategory =
-  "reported_blocked" | "invalid_output" | "invocation_failure" | "rate_limit";
+  "evidence_blocked" | "invalid_output" | "invocation_failure" | "rate_limit";
 
 export type TrialAgentPair = {
   executor: string;
@@ -739,9 +744,14 @@ async function runOneTrial(params: {
 
   let reporterSucceeded = true;
   if (outcome.exitCode === 0 && params.reporterCommand) {
+    const reporterEvidence = evidenceForReporter(evidenceRecorded.evidence, {
+      repoRoot: params.repoRoot,
+      worktreePath: worktree.path,
+      executionPath: params.executionPath,
+    });
     const reporter = await runReporterWithFormatRetry({
       plan: params.plan,
-      evidence: evidenceRecorded.evidence,
+      evidence: reporterEvidence,
       mode: parsePlanTaskIdentity(params.plan)?.mode ?? "edit",
       invoke: async (reporterPrompt) => {
         const reporterOutcome = await spawnAgent(
@@ -775,16 +785,17 @@ async function runOneTrial(params: {
     trial.reporter.format_attempts = reporter.formatAttempts;
     trial.reporter.format_retries = Math.max(0, reporter.formatAttempts - 1);
     if (reporter.result === "success") {
+      const facts = deriveReporterFacts(reporterEvidence);
       trial.reporter.structured_output = true;
-      trial.reporter.outcome = reporter.output.outcome;
+      trial.reporter.outcome = facts.outcome;
       trial.reporter.output = reporter.output;
-      reporterSucceeded = reporter.output.outcome === "complete";
+      reporterSucceeded = facts.outcome === "complete";
       if (reporterSucceeded) {
         trial.reporter.status = "succeeded";
       } else {
         trial.reporter.status = "blocked";
-        trial.reporter.failure_category = "reported_blocked";
-        trial.reporter.failure_reason = reporter.output.block_reason;
+        trial.reporter.failure_category = "evidence_blocked";
+        trial.reporter.failure_reason = facts.block_reason;
       }
     } else {
       trial.reporter.status = "failed";

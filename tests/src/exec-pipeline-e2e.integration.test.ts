@@ -32,7 +32,7 @@ const RAW_LOG_MARKER = "raw-executor-log-marker";
 
 type AgentBehavior = {
   role: "executor" | "reporter" | "legacy";
-  kind?: "ok" | "fail" | "invalid" | "blocked" | "rate_limit" | "resume_ok";
+  kind?: "ok" | "fail" | "invalid" | "rate_limit" | "resume_ok";
   task?: string;
   lockWorktree?: boolean;
 };
@@ -127,19 +127,18 @@ if (behavior.role === "reporter") {
     process.stdout.write(JSON.stringify({ schema_version: 1, mode: "edit" }));
     process.exit(0);
   }
-  const blocked = behavior.kind === "blocked";
+  const evidenceTag = "<specdojo_executor_evidence>";
+  const evidenceStart = prompt.lastIndexOf(evidenceTag) + evidenceTag.length;
+  const evidenceEnd = prompt.indexOf("</specdojo_executor_evidence>", evidenceStart);
+  const evidence = JSON.parse(prompt.slice(evidenceStart, evidenceEnd).trim());
   process.stdout.write(
     JSON.stringify({
       schema_version: 1,
       mode: "edit",
-      outcome: blocked ? "blocked" : "complete",
-      summary: blocked
-        ? ["検証が完了しなかったため結果を確定できなかった。"]
-        : ["成果物を更新し、検証を完了した。"],
-      changed_files: [{ path: "pipeline-artifact.md", summary: "文書を更新した。" }],
+      summary: ["成果物を更新し、検証を完了した。"],
+      changed_files: evidence.changes.map(() => ({ summary: "文書を更新した。" })),
       handoff: [],
       approach: "plan と executor evidence だけを根拠に結果を構成した。",
-      block_reason: blocked ? "検証コマンドの結果が evidence に含まれていない。" : "",
     }),
   );
   process.exit(0);
@@ -921,20 +920,6 @@ describe("executor / reporter pipeline E2E", () => {
     const result = readResult(target, "T-TEST-doc-010");
     expect(result).toContain("status: blocked");
     expect(result).toContain("format attempts");
-  });
-
-  it("blocks when the reporter reports outcome blocked", async () => {
-    const target = setup();
-    setBehavior(target.behaviorPath, {
-      "local-gemma-reporter": { role: "reporter", kind: "blocked" },
-    });
-
-    await runExec(["run", "--project", "test", "--task", "T-TEST-doc-010"]);
-
-    expect(process.exitCode).toBe(1);
-    const result = readResult(target, "T-TEST-doc-010");
-    expect(result).toContain("status: blocked");
-    expect(result).toContain("検証コマンドの結果が evidence に含まれていない。");
   });
 
   it("rejects an executor override whose member is not a pipeline executor", async () => {

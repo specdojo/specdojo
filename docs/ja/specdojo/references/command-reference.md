@@ -510,7 +510,7 @@ specdojo exec trial adopt --project prj-0001 --comparison <comparison-id> --tria
 
 `run`はplan frontmatterの`task_id` / `mode` / `project_id`を要求します。`--base`はworktreeの起点となるcommit-ishで、省略時は従来どおりHEADです。指定値は完全なcommitへ解決され、実行開始時のHEAD（完了済み作業の参照結果）、baseがHEADの祖先か、plan内で参照されたリポジトリ相対パスが起点ツリーに存在するかという互換性確認とともに比較記録へ保存されます。plan自体が起点に存在しなくても、指定した現在のplan内容を全trialへ共通で渡します。
 
-`--agent`と任意の`--reporter-by`を使うと、reporterなしまたは全trial共通reporterの従来方式になります。`--pair <executor>=<reporter>...`は2組以上を指定し、executorとreporterを一組として比較します。`--pair`は`--agent` / `--reporter-by`と併用できません。比較記録の`reporter_mode`には`none` / `shared` / `paired`のいずれかを保存します。各reporterについて構造化出力の成否、形式試行回数、形式再試行回数、`reported_blocked` / `invalid_output` / `invocation_failure` / `rate_limit`の失敗分類も保存します。
+`--agent`と任意の`--reporter-by`を使うと、reporterなしまたは全trial共通reporterの従来方式になります。`--pair <executor>=<reporter>...`は2組以上を指定し、executorとreporterを一組として比較します。`--pair`は`--agent` / `--reporter-by`と併用できません。比較記録の`reporter_mode`には`none` / `shared` / `paired`のいずれかを保存します。各reporterについて構造化出力の成否、形式試行回数、形式再試行回数、`evidence_blocked` / `invalid_output` / `invocation_failure` / `rate_limit`の失敗分類も保存します。`evidence_blocked` は reporter の申告ではなく、executor evidence から runner が機械判定した blocked を表します。
 
 `pipeline.parent_validations`に指定できるIDは`validate-schema`、`typecheck`、`test-unit`、`test-integration`、`lint-ts`、`lint-fm`、`lint-md`です（各IDは組み込み許可リストの固定argvへ解決されます）。`pipeline.parent_validations`はtrialにも適用され、executor成功後・reporter起動前に各worktreeで実行されます。親検証結果は`source: runner`付きでevidenceへ保存し、失敗時はtrialを`failed`にします。比較記録と`trial status`はexecutor・親検証・全体の時間を分け、executorの検証報告総数と`passed` / `failed` / `not_run`、親検証の状態と件数を別々に表示します。採用前に親検証の成功とexecutorの未実施・未報告を確認してください。
 

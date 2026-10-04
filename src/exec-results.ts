@@ -5,7 +5,11 @@ import { buildSpecdojoFrontmatter, parseSpecdojoDocument } from "./frontmatter-n
 import { expandTemplate, stripTerminalControlSequences } from "./exec-shared.js";
 import { formatMarkdownFile } from "./exec-format.js";
 import type { Approach, ExecResultMeta, TaskMode, TaskOrigin } from "./exec-types.js";
-import type { ReporterOutput, ReviewReporterOutput } from "./exec-reporter.js";
+import {
+  deriveReporterFacts,
+  type ReporterOutput,
+  type ReviewReporterOutput,
+} from "./exec-reporter.js";
 import type { ExecEvidence } from "./exec-evidence.js";
 import { resolveSpecdojoPath, resolveSpecdojoPathIfExists } from "./template-resolution.js";
 
@@ -374,15 +378,21 @@ function reporterBulletList(values: string[], empty: string): string {
 
 function renderEditReporterBody(
   output: Extract<ReporterOutput, { mode: "edit" }>,
-  evidence?: ExecEvidence,
+  evidence: ExecEvidence,
 ): string {
+  const facts = deriveReporterFacts(evidence);
+  if (output.changed_files.length !== facts.changed_files.length) {
+    throw new Error(
+      `reporter changed_files summaries (${output.changed_files.length}) do not match evidence changes (${facts.changed_files.length})`,
+    );
+  }
   const changedFiles =
-    output.changed_files.length === 0
+    facts.changed_files.length === 0
       ? "- なし"
-      : output.changed_files
+      : facts.changed_files
           .map(
-            (file) =>
-              `- \`${reporterInlineText(file.path).replace(/`/g, "'")}\`: ${reporterInlineText(file.summary)}`,
+            (file, index) =>
+              `- \`${reporterInlineText(file.path).replace(/`/g, "'")}\`: ${reporterInlineText(output.changed_files[index].summary)}`,
           )
           .join("\n");
   const unchangedTargetNotes = (evidence?.target_coverage ?? [])
@@ -447,7 +457,7 @@ function renderReviewReporterBody(output: ReviewReporterOutput): string {
 export async function renderReporterResult(
   resultPath: string,
   output: ReporterOutput,
-  evidence?: ExecEvidence,
+  evidence: ExecEvidence,
 ): Promise<void> {
   if (!existsSync(resultPath)) throw new Error(`Result not found: ${resultPath}`);
   const content = readFileSync(resultPath, "utf8");

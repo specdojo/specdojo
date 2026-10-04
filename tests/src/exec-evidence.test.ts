@@ -201,6 +201,28 @@ describe("executor evidence", () => {
     expect(validate(evidence), JSON.stringify(validate.errors)).toBe(true);
   });
 
+  it("stores a bounded protection reason as a machine-readable evidence fact", () => {
+    const { evidence } = buildExecutorEvidence({
+      taskId: "T-TEST-doc-010",
+      runId: "run-protected",
+      actor: "executor",
+      status: "failed",
+      startedAt: "2026-08-10T07:03:34Z",
+      completedAt: "2026-08-10T07:04:34Z",
+      exitCode: 1,
+      attempts: 1,
+      stdout: "",
+      stderr: "blocked: agent-config-write: protected configuration changes detected",
+      changes: [],
+      diffStat: "",
+      logRefPath: "execution/exec/evidence/T-TEST-doc-010/run-protected/executor.log",
+    });
+
+    expect(evidence.block_reason).toBe(
+      "agent exited with non-zero code: blocked: agent-config-write: protected configuration changes detected",
+    );
+  });
+
   it("bounds change, validation, final-message, and log payload sizes", () => {
     const validations = Array.from({ length: 55 }, (_, index) => ({
       command: `check-${index}`,
