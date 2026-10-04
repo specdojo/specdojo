@@ -4797,8 +4797,8 @@ export function commitRegisterItemChanges(
   if (staged.status === 0) return { committed: false };
   if (staged.status !== 1) throw new Error("Failed to inspect staged register changes.");
 
-  const title = item.title.replace(/\r?\n/g, " ").trim();
-  gitOutput(repoRoot, ["commit", "-m", `exec(register ${item.id}): ${title}`, "--", ...paths]);
+  const subject = commitSubject(`exec(register ${item.id}): `, item.title);
+  gitOutput(repoRoot, ["commit", "-m", subject, "--", ...paths]);
   stabilizeCommitTargets(repoRoot, remainingPaths);
   const sha = gitOutput(repoRoot, ["rev-parse", "--short", "HEAD"]).trim();
   return { committed: true, sha };

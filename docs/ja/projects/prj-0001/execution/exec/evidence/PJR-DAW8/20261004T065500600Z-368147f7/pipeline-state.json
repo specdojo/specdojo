@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-DAW8",
+  "run_id": "20261004T065500600Z-368147f7",
+  "updated_at": "2026-10-04T07:25:53.272Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "codex-expert-executor",
+      "attempts": 1,
+      "started_at": "2026-10-04T06:55:00.600Z",
+      "completed_at": "2026-10-04T06:58:13.539Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-DAW8/20261004T065500600Z-368147f7/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "agy-reporter",
+      "attempts": 2,
+      "started_at": "2026-10-04T07:14:07.061Z",
+      "completed_at": "2026-10-04T07:14:23.419Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-daw8-20261004T065348Z-f88d-result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "agy-reporter",
+      "attempts": 2,
+      "started_at": "2026-10-04T07:24:27.974Z",
+      "completed_at": "2026-10-04T07:25:53.272Z",
+      "artifact_ref": null,
+      "repos": {
+        "project": {
+          "status": "failed",
+          "commit": null,
+          "merged_at": null,
+          "error": "git commit failed: error: unknown option '--reserve' / error: unknown option '--local' / error: unknown option '--strict-sync' / error: unknown option '--integration-branch' / error: unknown option '--integration-worktree' / docs/conflict.md / Warning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-RBzdFA/pjr-0001-topic.md / docs/conflict.md / Warning: forcing wor… (args: -m exec(register PJR-DAW8): register の自動 c… -- 10 paths)"
+        }
+      }
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/exec/plans/pjr-daw8-20261004T065348Z-f88d-plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-daw8-20261004T065348Z-f88d-result.md"
+  }
+}
