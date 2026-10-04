@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f83d3ced10e74c2683c33417eb976e06
+  ts: "2026-10-04T20:39:02Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: reporter の変更ファイルの説明の件数がずれると、結果の作成が失敗する
+    - field: description
+      from: ""
+      to: PJR-GBEV で、changed_files のパスは runner が evidence から作り、reporter は同じ件数・同じ順序の説明だけを返す契約にした。LLM の reporter は件数をそろえるのが苦手で、2026-10-05 の並列実行で gemma26-reporter が 4 件に対し 3 件、14 件に対し 6 件を返し、reporter result rendering failed で PJR-86JE と PJR-27Y0 が waiting になった。変更ファイルが多い exec ほど失敗し、今後のすべての exec に影響する
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-05"
