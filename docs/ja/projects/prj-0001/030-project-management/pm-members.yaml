@@ -255,43 +255,6 @@ members:
     scheduler_strategy: fifo
     note: thinking を有効化した Gemma を使用する expert review executor。モデル・権限は .opencode/agents/gemma-expert-review-executor.md で定義。
 
-  # PJR-4RR8 の計測用。サンプリングを公式推奨値にした派生モデル（*-agent-64k）を使う。
-  # 計測で採否を決めるまで priority は最も低くし、自動選択では選ばれず by-name で使う。
-
-  - nickname: qwen-agent-expert-executor
-    disabled: false
-    priority: 4
-    display_name: Qwen Agent Expert Executor
-    email: null
-    roles: []
-    type: agent
-    provider: opencode
-    mode: edit
-    stage_role: executor
-    proficiency: expert
-    persona: task-executor
-    focus: [task-execution, implementation, verification, complex-analysis]
-    capabilities: [web_search, code_generation]
-    scheduler_strategy: critical-first
-    note: 公式推奨のサンプリング値の Qwen（qwen3.8:27b-mlx-agent-64k）を使用する expert executor。PJR-4RR8 の計測用。モデル・権限は .opencode/agents/qwen-agent-expert-executor.md で定義。
-
-  - nickname: gemma-agent-expert-executor
-    disabled: false
-    priority: 4
-    display_name: Gemma Agent Expert Executor
-    email: null
-    roles: []
-    type: agent
-    provider: opencode
-    mode: edit
-    stage_role: executor
-    proficiency: expert
-    persona: task-executor
-    focus: [task-execution, document-creation, verification, complex-analysis]
-    capabilities: [web_search, document_authoring]
-    scheduler_strategy: critical-first
-    note: 公式推奨のサンプリング値の Gemma（gemma4:31b-mlx-agent-64k）を使用する expert executor。PJR-4RR8 の計測用。モデル・権限は .opencode/agents/gemma-agent-expert-executor.md で定義。
-
   #
   # opencode (oMLX) members
   #
