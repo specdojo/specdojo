@@ -87,3 +87,16 @@
       from: "integrate failed: git merge failed: error: Your local changes to the following files would be overwritten by merge:"
       to: "-"
   previous_event_id: reg_8fb4d4daec6a4562a4288e296b217f4d
+- v: 1
+  id: reg_18f30fb4c86544049a5eb916257cb527
+  ts: "2026-10-04T07:19:07Z"
+  action: review
+  actor: agy-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_ff74efa8285e4180859331ed7c6059a3
