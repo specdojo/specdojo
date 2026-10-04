@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-4rr8-ollama-sampling-recommended-params
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-04T02:28:38Z"
   due_on: null
+  completed_at: "2026-10-04T08:28:53Z"
+  conclusion: 推奨サンプリングは qwen で速くならず形式が崩れ、gemma は良否を区別できず形式も崩れたため採用しない。grade の用途には現行の低い温度が合う。計測用の agent と登録は削除した
 ---
 
 # PJR-4RR8 qwen と gemma のサンプリングを公式推奨値へ合わせて grade の executor の改善を計測する

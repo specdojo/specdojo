@@ -29,3 +29,22 @@
     - field: registered
       from: ""
       to: "2026-10-04"
+- v: 1
+  id: reg_a445b99a8a704ab68b8516b3621a0ec4
+  ts: "2026-10-04T08:28:53Z"
+  action: close
+  actor: claude
+  from_status: open
+  to_status: done
+  reason: 見込みの試行で改善がなかった
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-04"
+    - field: conclusion
+      from: "-"
+      to: 推奨サンプリングは qwen で速くならず形式が崩れ、gemma は良否を区別できず形式も崩れたため採用しない。grade の用途には現行の低い温度が合う。計測用の agent と登録は削除した
+  previous_event_id: reg_1c0e03a6d39d49118ecbed3d1784705f
