@@ -84,3 +84,22 @@
       from: waiting
       to: review
   previous_event_id: reg_47ddc39ed90a4accb8e7ed6fa551d553
+- v: 1
+  id: reg_574bec25017640a19e368a62aec986e9
+  ts: "2026-10-04T04:41:35Z"
+  action: close
+  actor: claude
+  from_status: review
+  to_status: done
+  reason: codex sandbox と grade executor の動作を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-04"
+    - field: conclusion
+      from: "-"
+      to: システムの bubblewrap を外し codex 同梱の bwrap を使わせて解決した。systempaths=unconfined は隔離を弱めるため採用しない。codex sandbox と codex-expert-executor の grade を確認済み
+  previous_event_id: reg_2877d2c63615424f9d311870168b772f
