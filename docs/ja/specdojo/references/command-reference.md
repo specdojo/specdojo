@@ -814,6 +814,24 @@ npx specdojo devcontainer scaffold --provider claude --ollama --tmux
 
 `.devcontainer/` が既に存在する場合は何も書き込まず、置き換える場合だけ `--force` を指定します。上書き前や初回生成前は `--dry-run` で対象ファイルを確認してください。生成設定は provider の設定ディレクトリを名前付きボリュームへ保存してコンテナ再作成後も利用できるようにし、ホストの認証情報・秘密鍵・`.env` を直接マウントしません。認証は生成したコンテナ内で行います。
 
+名前付きボリュームは `<repository>-specdojo-*` という名前で生成します。`<repository>` は scaffold の対象ディレクトリ名を Docker volume 名に使える小文字へ正規化した値です。本体リポジトリや別の利用リポジトリとは共有せず、同じリポジトリの Dev Container を作り直した場合だけ再利用します。固定名を共有すればログインを使い回せますが、プロジェクトごとのアカウントを分けられず、`safe.directory` などのコンテナ固有 Git 設定も混在するため、分離を既定とします。
+
+保存先は次のとおりです。表の「常時」は provider の指定にかかわらず mount します。GitHub CLI の設定は `gh` を利用者が導入して使う場合に保存され、未使用時は空の volume のままです。
+
+| 対象                          | コンテナ内の保存先                 | volume 名                             | 条件                   |
+| ----------------------------- | ---------------------------------- | ------------------------------------- | ---------------------- |
+| コンテナ固有の Git 設定       | `/home/node/.config/git`           | `<repository>-specdojo-git`           | 常時                   |
+| GitHub CLI の設定・認証       | `/home/node/.config/gh`            | `<repository>-specdojo-gh`            | 常時                   |
+| Claude Code の設定・認証      | `/home/node/.claude`               | `<repository>-specdojo-claude`        | `claude` provider      |
+| Codex の設定・認証            | `/home/node/.codex`                | `<repository>-specdojo-codex`         | `codex` provider       |
+| OpenCode の設定               | `/home/node/.config/opencode`      | `<repository>-specdojo-opencode`      | `opencode` provider    |
+| OpenCode の認証・アプリデータ | `/home/node/.local/share/opencode` | `<repository>-specdojo-opencode-data` | `opencode` provider    |
+| Antigravity の設定・認証      | `/home/node/.config/antigravity`   | `<repository>-specdojo-antigravity`   | `antigravity` provider |
+
+OpenCode の API key は `/home/node/.local/share/opencode/auth.json` に入り、設定とは別の `opencode-data` volume に残ります。`post-create.sh` は mount 先をコンテナユーザーが読み書きできる所有者へ整えます。Git 設定は volume 内の global config から、Dev Containers がホストからコピーした `~/.gitconfig` を include しますが、ホスト上のファイル自体を mount しません。
+
+エディタや shell の個人設定は scaffold の出力へ埋め込みません。VS Code の Dev Containers を実行する側の User Settings に `dotfiles.repository`、必要に応じて `dotfiles.targetPath` と `dotfiles.installCommand` を設定すると、コンテナ作成時に dotfiles が自動導入されます。個人のリポジトリ URL は生成される `devcontainer.json` へ記録されません。
+
 ## 16. 関連ガイド
 
 | 詳細                     | 参照先                                                                      |

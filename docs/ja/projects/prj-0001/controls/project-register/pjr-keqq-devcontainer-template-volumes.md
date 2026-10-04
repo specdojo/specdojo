@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-10-04T06:29:15Z"
   due_on: null
-  block_reason: "integrate failed: git merge failed: error: Your local changes to the following files would be overwritten by merge:"
 ---
 
 # PJR-KEQQ devcontainer テンプレートの named volume を本体とそろえ、共有の方針を決める

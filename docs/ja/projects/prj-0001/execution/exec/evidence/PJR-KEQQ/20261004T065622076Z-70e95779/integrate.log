@@ -1,0 +1,17 @@
+=== 2026-10-04T07:08:56.135Z git merge --no-ff -m exec(register PJR-KEQQ): devcontainer テンプレートの named volume を本体とそろえ、共有の方針を決める
+
+Transition: start → review
+Executor: codex-expert-executor
+Reporter: agy-reporter
+Refs: prj-0001:PJR-KEQQ exec/prj-0001-PJR-KEQQ ===
+exit: 2
+--- stdout ---
+
+--- stderr ---
+error: Your local changes to the following files would be overwritten by merge:
+  docs/ja/projects/prj-0001/controls/project-register/events/pjr-daw8.yaml docs/ja/projects/prj-0001/controls/project-register/pjr-daw8-register-commit-header-length.md docs/ja/projects/prj-0001/execution/exec/plans/pjr-daw8-20261004T065348Z-f88d-plan.md
+Merge with strategy ort failed.
+
+--- merge --abort ---
+not required
+

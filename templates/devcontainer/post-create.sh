@@ -13,10 +13,12 @@ for dir in \
   "${HOME}/.config/git" \
   "${HOME}/.claude" \
   "${HOME}/.codex" \
+  "${HOME}/.config/gh" \
   "${HOME}/.config/opencode" \
+  "${HOME}/.local/share/opencode" \
   "${HOME}/.config/antigravity"; do
   if [ -d "$dir" ]; then
-    sudo chown "$(id -u):$(id -g)" "$dir"
+    sudo chown -R "$(id -u):$(id -g)" "$dir"
   fi
 done
 
