@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-smet-register-stale-block-reason
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: low
   owner: DEV
   registered_at: "2026-10-04T03:46:04Z"
   due_on: null
+  completed_at: "2026-10-04T05:59:33Z"
+  conclusion: waiting 以外への遷移で block_reason を消し、変更前の理由はイベントに残すようにした。register update --block-reason を追加した。実際の遷移と npm run check で確認した
 ---
 
 # PJR-SMET review や start への遷移で block_reason が残る
