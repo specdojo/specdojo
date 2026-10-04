@@ -20,7 +20,7 @@ properties:
 
   run:
     $ref: "#/$defs/RunDefaults"
-    description: "Defaults for concurrent `exec run` processes of one project."
+    description: "Defaults for `exec run`, including register execution location and project concurrency."
 
   rate_limit_detection:
     $ref: "#/$defs/RateLimitDetection"
@@ -100,6 +100,13 @@ $defs:
     additionalProperties: false
     minProperties: 1
     properties:
+      register_execution:
+        type: string
+        enum: [in-place, worktree]
+        description: >
+          Default execution location for `exec run --register`. `--worktree` and `--in-place`
+          override this value. When omitted, the historical `in-place` behavior is retained for
+          compatibility with existing repositories.
       max_concurrent_runs:
         type: integer
         minimum: 1

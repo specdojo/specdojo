@@ -12,6 +12,7 @@ import {
   providerSlotPoolPath,
   resolveMaxConcurrency,
   resolveMaxConcurrentRuns,
+  resolveRegisterExecution,
   resolveMemberCommand,
   resolveRateLimitDetection,
   resolveRateLimitPolicy,
@@ -334,6 +335,7 @@ export type RunOpts = {
   resume?: boolean;
   forceRestart?: boolean;
   worktree?: boolean;
+  inPlace?: boolean;
   trackState?: boolean;
   archiveOnSuccess?: boolean;
   editBy?: string;
@@ -794,6 +796,18 @@ export function parseExecRunBusyPolicy(value: string | undefined): ExecRunBusyPo
     throw new Error(`--if-busy must be "skip", "wait", or "fail": ${value ?? ""}`);
   }
   return policy;
+}
+
+export function resolveRegisterWorktree(
+  opts: Pick<RunOpts, "worktree" | "inPlace">,
+  execDefaults: ExecDefaultsConfig,
+): boolean {
+  if (opts.worktree && opts.inPlace) {
+    throw new Error("Specify either --worktree or --in-place, not both.");
+  }
+  if (opts.worktree) return true;
+  if (opts.inPlace) return false;
+  return resolveRegisterExecution(execDefaults) === "worktree";
 }
 
 // How the run shares the project exec-run lock. Only register worktree runs coordinate their
@@ -6813,7 +6827,7 @@ export function registerRunCommand(exec: Command): void {
   rcmd.option("--plan <path>", "Run an existing plan file (in-place; no generation)");
   rcmd.option(
     "--register <pjrIds...>",
-    "One or more project register item IDs (PJR-XXXX) to run; tracks state via register transitions. In place and serial by default; add --worktree to isolate deliverables (and --parallel to run concurrently)",
+    "One or more project register item IDs (PJR-XXXX) to run; execution location defaults to run.register_execution in exec-defaults (in-place when unset)",
   );
   rcmd.option(
     "--register-filter",
@@ -6833,7 +6847,7 @@ export function registerRunCommand(exec: Command): void {
   rcmd.option("--job-trigger <source>", "Job trigger source: manual|routine|ci", "manual");
   rcmd.option(
     "--register-commit",
-    "With --register (in-place only): commit each successful item's changes as a separate commit (default: leave changes in the working tree). Ignored with --worktree, which always commits",
+    "With in-place --register: commit each successful item's changes as a separate commit (default: leave changes in the working tree). Ignored in worktree mode, which always commits",
     false,
   );
   rcmd.option(
@@ -6842,17 +6856,22 @@ export function registerRunCommand(exec: Command): void {
   );
   rcmd.option(
     "--resume",
-    "With --register --worktree: resume the stage where a run stopped (executor, reporter, or integration), reusing the existing worktree and checkpoints",
+    "With register worktree mode: resume the stage where a run stopped (executor, reporter, or integration), reusing the existing worktree and checkpoints",
     false,
   );
   rcmd.option(
     "--force-restart",
-    "With --register --worktree: re-run the whole item even when a resumable executor result exists (discards the worktree and its uncommitted changes)",
+    "With register worktree mode: re-run the whole item even when a resumable executor result exists (discards the worktree and its uncommitted changes)",
     false,
   );
   rcmd.option(
     "--worktree",
-    "Isolate execution in a git worktree and integrate back (requires --task or --register)",
+    "Use a git worktree and integrate back (requires --task or --register; overrides run.register_execution for --register)",
+    false,
+  );
+  rcmd.option(
+    "--in-place",
+    "Run a register item in the current working tree (overrides run.register_execution; cannot be combined with --worktree)",
     false,
   );
   rcmd.option(
@@ -6887,7 +6906,7 @@ export function registerRunCommand(exec: Command): void {
   );
   rcmd.option(
     "--join",
-    "With --register --worktree: run next to a running register worktree exec instead of waiting for it, sharing its provider caps, lifecycle serialization, and parent-validation slots (up to run.max_concurrent_runs; --if-busy applies when all join slots are taken)",
+    "With register worktree mode: run next to a running register worktree exec instead of waiting for it, sharing its provider caps, lifecycle serialization, and parent-validation slots (up to run.max_concurrent_runs; --if-busy applies when all join slots are taken)",
     false,
   );
   rcmd.option(
@@ -6966,23 +6985,41 @@ export function registerRunCommand(exec: Command): void {
         process.exitCode = 1;
         return;
       }
+      if (opts.worktree && opts.inPlace) {
+        process.stdout.write("Specify either --worktree or --in-place, not both.\n");
+        process.exitCode = 1;
+        return;
+      }
+      if (opts.inPlace && !hasRegister) {
+        process.stdout.write("--in-place requires --register or --register-filter.\n");
+        process.exitCode = 1;
+        return;
+      }
+      if (hasRegister) {
+        const { schedulePath, executionPath } = resolveProjectPaths({ project: opts.project });
+        const execDefaults = loadExecDefaultsConfig(
+          resolveExecDefaultsPath(opts, schedulePath),
+          executionPath,
+        );
+        opts.worktree = resolveRegisterWorktree(opts, execDefaults);
+      }
       if (hasRegister && !opts.worktree && parseParallel(opts.parallel) !== 1) {
         process.stdout.write(
-          "--parallel with --register requires --worktree (in-place register items run serially).\n",
+          "--parallel with --register requires worktree mode; use --worktree or configure run.register_execution: worktree.\n",
         );
         process.exitCode = 1;
         return;
       }
       if (opts.join && !(hasRegister && opts.worktree)) {
         process.stdout.write(
-          "--join requires --register (or --register-filter) with --worktree.\n",
+          "--join requires --register (or --register-filter) in worktree mode.\n",
         );
         process.exitCode = 1;
         return;
       }
       if (hasRegister && opts.worktree && opts.registerCommit) {
         process.stdout.write(
-          "Note: --register-commit is ignored with --worktree; worktree runs always commit (checkpoint + merge back).\n",
+          "Note: --register-commit is ignored in worktree mode; worktree runs always commit (checkpoint + merge back).\n",
         );
       }
       if ((opts.registerCommit || opts.onFailure) && !hasRegister) {
@@ -6998,7 +7035,9 @@ export function registerRunCommand(exec: Command): void {
       // 再開は既存 worktree の成果を再利用する操作のため、worktree 実行に限る。in-place 実行は
       // executor の変更が作業ツリーに残り、再開時のID単位 commit が対象を判別できない。
       if ((opts.resume || opts.forceRestart) && !opts.worktree) {
-        process.stdout.write("--resume and --force-restart require --worktree with --register.\n");
+        process.stdout.write(
+          "--resume and --force-restart require register worktree mode; use --worktree or configure run.register_execution: worktree.\n",
+        );
         process.exitCode = 1;
         return;
       }
@@ -7065,7 +7104,7 @@ export function registerRunCommand(exec: Command): void {
         opts,
         "run",
         async () => {
-          // Register-item run: in place (default) or in a worktree (--worktree), with state tracked
+          // Register-item run: use the configured location or an explicit CLI override, with state tracked
           // via register transitions (start → review / waiting) instead of exec events.
           if (hasRegister) {
             await runRegisterMode(opts);

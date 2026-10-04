@@ -4,12 +4,14 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   createProviderCapacityTracker,
+  DEFAULT_REGISTER_EXECUTION,
   DEFAULT_MAX_CONCURRENT_RUNS,
   loadExecDefaultsConfig,
   ProviderConcurrencyGate,
   providerSlotPoolPath,
   resolveMaxConcurrency,
   resolveMaxConcurrentRuns,
+  resolveRegisterExecution,
   resolveRateLimitDetection,
   resolveRateLimitPolicy,
   type ExecDefaultsConfig,
@@ -353,5 +355,18 @@ describe("resolveMaxConcurrentRuns", () => {
     );
     expect(resolveMaxConcurrentRuns({ run: { max_concurrent_runs: 1 } })).toBe(1);
     expect(resolveMaxConcurrentRuns({ run: { max_concurrent_runs: 6 } })).toBe(6);
+  });
+});
+
+describe("resolveRegisterExecution", () => {
+  it("未指定では互換性のため in-place、設定時は指定値を使う", () => {
+    expect(resolveRegisterExecution({})).toBe(DEFAULT_REGISTER_EXECUTION);
+    expect(resolveRegisterExecution({ run: { register_execution: "in-place" } })).toBe("in-place");
+    expect(resolveRegisterExecution({ run: { register_execution: "worktree" } })).toBe("worktree");
+  });
+
+  it("未知の値を設定エラーにする", () => {
+    const config = { run: { register_execution: "temporary" } } as unknown as ExecDefaultsConfig;
+    expect(() => resolveRegisterExecution(config)).toThrow(/run\.register_execution/);
   });
 });

@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-10-04T05:12:44Z"
   due_on: null
-  block_reason: "agent exited with non-zero code: runner による検証 `test-integration` が失敗しているため（`exit 1`）。"
 ---
 
 # PJR-D0KF exec run --register の既定を worktree にし、in-place を明示指定にする
@@ -36,16 +35,15 @@ exec run --register は既定で in-place に実行される。in-place の実�
 | No  | 作業                                                  | 担当 | 状態    | メモ                            |
 | --- | ----------------------------------------------------- | ---- | ------- | ------------------------------- |
 | 1   | 既定の設定方法と互換性の方針を決める                  | DEV  | done    | 未設定時は in-place を維持      |
-| 2   | CLI と exec-defaults の実装                           | DEV  | blocked | project 既定は保護設定パス      |
+| 2   | CLI と exec-defaults の実装                           | DEV  | done    | project 既定は worktree         |
 | 3   | 運用ガイド、コマンドリファレンス、orchestrator の更新 | DEV  | blocked | orchestrator 正本は読み取り専用 |
 
 ## 4. 対応結果
 
-- `.specdojo/exec-defaults.yaml` に `run.register_execution: worktree` の変更を用意した。設定未指定の利用リポジトリは互換性のため従来どおり in-place とする。
+- `.specdojo/exec-defaults.yaml` に `run.register_execution: worktree` を反映した。設定未指定の利用リポジトリは互換性のため従来どおり in-place とする。
 - CLI に `--in-place` を追加し、`--worktree` との同時指定をエラーにした。両フラグは設定値を上書きし、worktree モードに依存する `--parallel` / `--join` / `--resume` / `--force-restart` と、in-place 専用の `--register-commit` は解決後のモードで判定する。
 - exec 運用ガイド、登録簿運用ガイド、コマンドリファレンス、exec 設定ガイドを新しい既定にそろえた。
 - 設定の既定・上書き、`--in-place`、`--worktree` との同時指定を unit test に追加した。
-- 残課題: `.specdojo/exec-defaults.yaml` は agent の保護設定パスであり、executor の変更は統合前ガードの対象になる。書き込み権限を持つ runner または人が同じ変更を適用する必要がある。
 - 残課題: orchestrator の SSOT `.agents/specdojo-orchestrator.agent.md` は executor のファイル権限で読み取り専用となり、編集が拒否された。書き込み権限を持つ runner または人が「タスク実行」の例から `--worktree` を外し、`run.register_execution` に従うことと小さな作業だけ `--in-place` を明示する基準を追記した後、`npm run orchestrator:sync` で各環境ラッパーへ反映する。
 
 ## 5. 関連ドキュメント

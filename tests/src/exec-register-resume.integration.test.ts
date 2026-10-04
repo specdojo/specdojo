@@ -720,7 +720,7 @@ describe("exec run --register --worktree --resume", () => {
       await runExec(["run", "--project", "test", "--register", "PJR-CD34", "--resume"]);
 
       expect(stdout.join("")).toContain(
-        "--resume and --force-restart require --worktree with --register.",
+        "--resume and --force-restart require register worktree mode; use --worktree or configure run.register_execution: worktree.",
       );
       expect(process.exitCode).toBe(1);
     });

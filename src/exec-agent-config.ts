@@ -81,6 +81,9 @@ export type ProviderOverride = {
 
 export type ExecDefaultsConfig = {
   run?: {
+    // Default execution location for register items. Omitted keeps the historical in-place
+    // behavior so existing repositories do not start creating worktrees after an upgrade.
+    register_execution?: "in-place" | "worktree";
     // Maximum number of `exec run` processes that may run at once for one project, counting the
     // primary run and every `--join` run (default 4). 1 disables `--join`.
     max_concurrent_runs?: number;
@@ -277,6 +280,22 @@ export function providerSlotPoolPath(lockRoot: string, provider: AgentProvider):
 }
 
 export const DEFAULT_MAX_CONCURRENT_RUNS = 4;
+export const DEFAULT_REGISTER_EXECUTION = "in-place" as const;
+
+export type RegisterExecution = "in-place" | "worktree";
+
+// Preserve the historical default for repositories that have not opted into worktree execution.
+// Invalid YAML-sourced values are rejected instead of silently changing where agents write.
+export function resolveRegisterExecution(config: ExecDefaultsConfig): RegisterExecution {
+  const raw = config.run?.register_execution;
+  if (raw === undefined) return DEFAULT_REGISTER_EXECUTION;
+  if (raw !== "in-place" && raw !== "worktree") {
+    throw new Error(
+      `run.register_execution in exec-defaults must be "in-place" or "worktree": ${String(raw)}`,
+    );
+  }
+  return raw;
+}
 
 // Resolve how many `exec run` processes may run at once for one project. Invalid values fall back
 // to the default so a typo cannot silently disable the busy guard.
@@ -422,6 +441,7 @@ export function loadExecDefaultsConfig(
 
   resolveParentValidationDefinitions(defaults.pipeline?.parent_validations);
   resolveParentValidationConcurrency(defaults.pipeline?.parent_validation_concurrency);
+  resolveRegisterExecution(defaults);
 
   return defaults;
 }
