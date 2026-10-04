@@ -54,6 +54,8 @@ grade の reporter は executor の [VIEWPOINT] / [DONE_CRITERIA] marker を Gra
 - テスト: `tests/src/grade.test.ts` に正常な出力、marker の装飾の正規化、文中の `FINDING` の非受理、viewpoint marker の欠落、`END VIEWPOINT` の欠落、level と severity の矛盾、done_criteria を含む成果物の変換と条件の欠落のケースを追加した。`tests/tools/grade-per-document.test.ts` に、機械変換の既定経路、拒否時の executor 再実行、LLM reporter の明示指定のケースを追加した。
 - 未確認: `npm run check` の全体の結果は runner の検証で確認する。
 
+確認（2026-10-04）: `tools/grade/run-per-document.sh --stages 1 --stage-1-executor agy-expert-executor` で `trc-requirements-to-tests-rulebook` を実際に評価した。reporter は既定の `machine` で、LLM の reporter は起動せず（reporter plan の書き出しだけ）、161 秒で `needs-work` 69（finding 15）が grade-rubric-v2 で記録された。
+
 ## 5. 関連ドキュメント
 
 - [[prj-0001:pjr-vqb5-agent-grade-comparison]]: 2026-10-03〜04 の比較で、reporter の書き写しの誤り・JSON 構文破損・根拠のない JSON の生成を観測した。
