@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_11eb71b5b65c40cdae594777d532c652
+  ts: "2026-10-04T05:20:41Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: exec の reporter の事実項目を evidence から機械生成し、LLM は要約だけに使う
+    - field: description
+      from: ""
+      to: exec の reporter（LLM）は、changed_files のパス・outcome・block_reason という evidence に正確な値がある事実項目まで書き写しており、誤りや根拠のない出力の原因になっている。事実項目は runner が evidence から機械生成し、LLM の reporter は summary などの文章項目だけに使う。review の verdict など判定は executor の申告を正とする方向も検討する。grade の reporter は PJR-E9H3 で機械変換へ置き換え済み
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-04"
