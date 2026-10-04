@@ -55,3 +55,19 @@
       from: in-progress
       to: review
   previous_event_id: reg_376b45dc7abd4942a70f10b03a472fe0
+- v: 1
+  id: reg_8fb4d4daec6a4562a4288e296b217f4d
+  ts: "2026-10-04T07:08:57Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: review
+  to_status: waiting
+  reason: "integrate failed: git merge failed: error: Your local changes to the following files would be overwritten by merge:"
+  changes:
+    - field: status
+      from: review
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: git merge failed: error: Your local changes to the following files would be overwritten by merge:"
+  previous_event_id: reg_7d7bbb131e7c4506aebc24e12f242eb9
