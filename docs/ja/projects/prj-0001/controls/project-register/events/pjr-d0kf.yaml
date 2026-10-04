@@ -90,3 +90,35 @@
       from: "-"
       to: rate limit reached
   previous_event_id: reg_9dcae789a2fe483cbffbbae17ab6e496
+- v: 1
+  id: reg_e5505441809540e4a60c9eb30e848156
+  ts: "2026-10-04T09:28:19Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: rate limit reached
+      to: "-"
+  previous_event_id: reg_8518dbce78b74ad39dfa42c5deaaccda
+- v: 1
+  id: reg_d3382edac7cd40f980c5f966deac3552
+  ts: "2026-10-04T09:39:05Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: runner による検証 `test-integration` が失敗しているため（`exit 1`）。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: runner による検証 `test-integration` が失敗しているため（`exit 1`）。"
+  previous_event_id: reg_e5505441809540e4a60c9eb30e848156
