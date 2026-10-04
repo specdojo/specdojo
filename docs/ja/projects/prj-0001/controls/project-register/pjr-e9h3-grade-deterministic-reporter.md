@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-e9h3-grade-deterministic-reporter
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-04T00:28:36Z"
   due_on: null
+  completed_at: "2026-10-04T04:46:44Z"
   block_reason: "agent exited with non-zero code: runner validation failed: `validate-schema` (exit 1), `typecheck` (error TS2532 in `tests/src/grade.test.ts`), and `test-unit` (4 tests failed in `tests/tools/grade-pe…"
+  conclusion: grade の reporter の既定を executor の marker の機械変換（machine）にした。grade apply は --analysis-from だけで反映でき、拒否時は executor を1回再実行する。実際の grade 1 件で LLM の reporter を起動せずに記録できることを確認した
 ---
 
 # PJR-E9H3 grade の reporter を LLM から executor の marker の機械変換に置き換える

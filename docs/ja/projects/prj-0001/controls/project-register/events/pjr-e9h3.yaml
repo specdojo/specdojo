@@ -84,3 +84,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_29281c9ee9c045b1a1b753275499c1ce
+- v: 1
+  id: reg_07f72081a87b446c8200be07a27724c9
+  ts: "2026-10-04T04:46:44Z"
+  action: close
+  actor: claude
+  from_status: review
+  to_status: done
+  reason: 実際の grade で機械変換の経路を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-04"
+    - field: conclusion
+      from: "-"
+      to: grade の reporter の既定を executor の marker の機械変換（machine）にした。grade apply は --analysis-from だけで反映でき、拒否時は executor を1回再実行する。実際の grade 1 件で LLM の reporter を起動せずに記録できることを確認した
+  previous_event_id: reg_2042cbbc29d34d5d81c476a70249e5a2
