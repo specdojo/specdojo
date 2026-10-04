@@ -38,7 +38,6 @@ RUN apt-get update && \
       libxrandr2 \
       libgbm1 \
       libasound2 \
-      bubblewrap \
     && rm -rf /var/lib/apt/lists/*
 
 # コンテナ全体の既定タイムゾーンを日本時間にする。

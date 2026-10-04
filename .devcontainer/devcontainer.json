@@ -73,8 +73,7 @@
   "runArgs": [
     "--add-host=host.docker.internal:host-gateway",
     "--security-opt=apparmor=unconfined",
-    "--security-opt=seccomp=unconfined",
-    "--security-opt=systempaths=unconfined"
+    "--security-opt=seccomp=unconfined"
   ],
 
   "postCreateCommand": "bash .devcontainer/post-create.sh",
