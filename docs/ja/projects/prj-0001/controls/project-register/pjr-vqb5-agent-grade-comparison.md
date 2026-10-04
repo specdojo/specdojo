@@ -464,6 +464,18 @@ ornith と qwen の executor が遅い要因として、thinking が各応答に
 
 ornith の executor は1回1分前後と最速だが、厳密な行形式を安定して守れず、判定も codex より甘い。reporter を機械変換に置き換え（[[prj-0001:pjr-e9h3-grade-deterministic-reporter]]）、本文を埋め込み、失敗時に executor を再実行する構成なら、高速な一次評価には使える。門番（最終判定）には使わない。 thinking を ON に戻しても改善しない（⑧）。
 
+### 1.24. qwen と gemma の推奨サンプリング（2026-10-04）
+
+[[prj-0001:pjr-4rr8-ollama-sampling-recommended-params]] で、qwen と gemma の expert executor を公式推奨のサンプリング（qwen: temperature 0.6 / top_p 0.95 / repeat_penalty 1.0、gemma: temperature 1.0 / top_p 0.95 / top_k 64）にした派生モデルで試した。plan は「ornith の executor の改善（2026-10-04）」と同じ本文埋め込みの plan とし、GradeSubmission は marker から機械的に生成した。見込みを先に確かめるため、推奨値で各文書1回だけ実行した。
+
+| agent                | trc                          | imp              | stsd                       | executor 平均 | 検証通過 |
+| -------------------- | ---------------------------- | ---------------- | -------------------------- | ------------: | -------: |
+| qwen（推奨値）       | 失敗（END VIEWPOINT の欠落） | 96（minor 2）    | 失敗（marker なし）        |      1,099 秒 |      1/3 |
+| qwen（現行値、参考） | 88（minor 10）               | -                | -                          |      1,151 秒 |      1/1 |
+| gemma（推奨値）      | 100（finding 0）             | 100（finding 0） | 失敗（VIEWPOINT の入れ子） |        495 秒 |      2/3 |
+
+qwen は推奨値でも速くならず（同じ trc で 1,362 秒と 1,151 秒）、marker の形式が崩れた。gemma は推奨値でも良否を区別できず、形式も崩れた。温度を上げると形式が崩れやすいという懸念どおりで、grade の用途には現行の低い温度が合う。改善の兆しがないため、現行値との本格的な比較は行わずに打ち切り、現行値を維持した。
+
 ## 2. 背景・文脈
 
 kata 285 件を定期評価するにあたり、ローカルモデルで運用できれば API コストなしで全件を回せる。その可否と、どの agent をどの用途に使うかを判断するために比較した。

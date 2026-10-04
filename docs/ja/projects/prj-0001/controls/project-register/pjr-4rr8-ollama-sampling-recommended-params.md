@@ -113,7 +113,11 @@ curl -s http://host.docker.internal:11434/api/generate -d '{"model":"qwen3.8:27b
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+Host Mac に推奨値の派生モデル（`qwen3.8:27b-mlx-agent-64k`、`gemma4:31b-mlx-agent-64k`）を作成し、計測用の agent で見込みを先に確かめた（各文書1回）。推奨値の出典は Ollama 公式ライブラリの各モデルの既定値でも確認した（qwen3.8: temperature 1.0 / top_p 0.95 / top_k 20 / min_p 0 / presence_penalty 0 / repeat_penalty 1.0、gemma4: temperature 1.0 / top_p 0.95 / top_k 64）。
+
+結果は [[prj-0001:pjr-vqb5-agent-grade-comparison]] の「qwen と gemma の推奨サンプリング（2026-10-04）」に記録した。qwen は速くならず検証通過 1/3、gemma は良否を区別できず検証通過 2/3 で、改善の兆しがなかった。
+
+採用しない。grade の用途では、温度を上げると marker の形式が崩れやすく、現行の低い温度（qwen・gemma とも 0.2）が合う。[[tsd-ollama]] の Modelfile は変更しない。計測用の agent・モデルの登録・member は削除した（コミット ac232e341）。Host Mac の派生モデルは `ollama rm` で削除してよい。
 
 ## 5. 関連ドキュメント
 
