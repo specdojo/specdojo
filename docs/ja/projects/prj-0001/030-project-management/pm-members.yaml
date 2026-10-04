@@ -255,6 +255,26 @@ members:
     scheduler_strategy: fifo
     note: thinking を有効化した Gemma を使用する expert review executor。モデル・権限は .opencode/agents/gemma-expert-review-executor.md で定義。
 
+  # PJR-WJPX の計測用。gemma4 26B（MoE、gemma4:26b-mlx-work-64k）を使う。
+  # 計測で使い道を決めるまで priority は最も低くし、自動選択では選ばれず by-name で使う。
+
+  - nickname: gemma26-expert-executor
+    disabled: false
+    priority: 4
+    display_name: Gemma 26B Expert Executor
+    email: null
+    roles: []
+    type: agent
+    provider: opencode
+    mode: edit
+    stage_role: executor
+    proficiency: expert
+    persona: task-executor
+    focus: [task-execution, document-creation, verification, complex-analysis]
+    capabilities: [web_search, document_authoring]
+    scheduler_strategy: critical-first
+    note: gemma4 26B（MoE）を使用する expert executor。PJR-WJPX の計測用。モデル・権限は .opencode/agents/gemma26-expert-executor.md で定義。
+
   #
   # opencode (oMLX) members
   #
