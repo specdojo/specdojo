@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_903dfb93d15e43d3b7437c3a2872db08
+  ts: "2026-10-04T10:00:13Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: gemma4 26B（MoE）を導入し、速度・日本語・判定を計測して使い道を決める
+    - field: description
+      from: ""
+      to: Ornith-1.5（Qwen 系 MoE）は速いが、日本語に中国語の字体が混ざる（2026-10-04 の計測で 6 回中 3〜4 回）。gemma4 31B（dense）は同じ計測で 0 回だった。gemma4 26B-A4B は全 25.2B・動作 3.8B の MoE で Ornith と同程度の速さが見込め、日本語の質は 31B に近いと期待できる。Ollama の gemma4:26b-mlx（18GB）を導入し、grade の executor としての速さ・形式・中国語の字体・判定を計測して使い道を決める。sliding window 主体で長い context に強いため、参考資料付きの評価で 128K の効果も確かめる
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-04"
