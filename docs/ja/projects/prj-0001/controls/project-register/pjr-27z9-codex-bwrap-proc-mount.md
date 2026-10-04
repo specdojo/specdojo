@@ -13,7 +13,6 @@ specdojo:
   registered_at: "2026-10-03T22:19:25Z"
   due_on: null
   completed_at: "2026-10-04T04:41:35Z"
-  block_reason: "register commit incomplete: git commit failed: summary: (done in 0.65 seconds) / 🥊 commitlint (0.65 seconds) (args: -m exec(register PJR-27Z9): codex 0.160 の … -- 9 paths)"
   conclusion: システムの bubblewrap を外し codex 同梱の bwrap を使わせて解決した。systempaths=unconfined は隔離を弱めるため採用しない。codex sandbox と codex-expert-executor の grade を確認済み
 ---
 
