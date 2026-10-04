@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: waiting
   priority: medium
   owner: DEV
   registered_at: "2026-10-04T03:46:03Z"
   due_on: null
+  block_reason: "agent exited with non-zero code: 親 runner 検証 `lint-md` が失敗しました（`docs/ja/projects/prj-0001/controls/project-register/pjr-daw8-register-commit-header-length.md:44:116 error MD038/no-space-in-code Spaces…"
 ---
 
 # PJR-DAW8 register の自動 commit がタイトルの長さで commitlint に拒否される
@@ -41,7 +42,9 @@ exec run --register --register-commit は個票タイトルから exec(register 
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+`--register-commit` の commit subject 生成に、worktree 統合で使用していた共通の長さ調整処理を適用した。タイトル内の空白を正規化した後、接頭辞 `exec(register <PJR-ID>):` を含む subject が100文字を超える場合は、末尾を `…` に置き換えて100文字へ切り詰める。
+
+100文字はそのまま保持し、101文字は100文字へ切り詰める unit test を追加した。また、100文字を超える個票タイトルでも `commitRegisterItemChanges` が commit を完了し、生成した subject が100文字になる統合テストを追加した。これにより、commit 前に commitlint の `header-max-length` と同じ上限へ収め、長いタイトルによる再発を防止する。
 
 ## 5. 関連ドキュメント
 
