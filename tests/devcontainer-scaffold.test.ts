@@ -37,7 +37,10 @@ describe("runDevcontainerScaffold", () => {
         return Promise.resolve(
           JSON.stringify({
             features: {},
-            mounts: [],
+            mounts: [
+              "source=specdojo-git,target=/home/node/.config/git,type=volume",
+              "source=specdojo-gh,target=/home/node/.config/gh,type=volume",
+            ],
             containerEnv: {},
             postCreateCommand: "bash .devcontainer/post-create.sh",
           }),
@@ -103,6 +106,12 @@ describe("runDevcontainerScaffold", () => {
     expect(json.features).not.toHaveProperty(
       "ghcr.io/rocker-org/devcontainer-features/apt-packages:1",
     );
+    expect(json.mounts).toContain(
+      "source=repo-specdojo-git,target=/home/node/.config/git,type=volume",
+    );
+    expect(json.mounts).toContain(
+      "source=repo-specdojo-gh,target=/home/node/.config/gh,type=volume",
+    );
   });
 
   it("should add tmux and cron features", async () => {
@@ -149,7 +158,7 @@ describe("runDevcontainerScaffold", () => {
     await runDevcontainerScaffold({
       packageRoot,
       repoRoot,
-      providers: ["claude", "codex"],
+      providers: ["claude", "codex", "opencode"],
       ollama: false,
       cron: false,
       tmux: false,
@@ -159,11 +168,41 @@ describe("runDevcontainerScaffold", () => {
 
     const jsonCall = findWriteCall("devcontainer.json");
     const json = JSON.parse(String(jsonCall[1]));
-    expect(json.mounts).toContain("source=specdojo-claude,target=/home/node/.claude,type=volume");
-    expect(json.mounts).toContain("source=specdojo-codex,target=/home/node/.codex,type=volume");
+    expect(json.mounts).toContain(
+      "source=repo-specdojo-claude,target=/home/node/.claude,type=volume",
+    );
+    expect(json.mounts).toContain(
+      "source=repo-specdojo-codex,target=/home/node/.codex,type=volume",
+    );
+    expect(json.mounts).toContain(
+      "source=repo-specdojo-opencode,target=/home/node/.config/opencode,type=volume",
+    );
+    expect(json.mounts).toContain(
+      "source=repo-specdojo-opencode-data,target=/home/node/.local/share/opencode,type=volume",
+    );
 
     const shCall = findWriteCall("post-create.sh");
     expect(shCall[1]).toContain("curl -fsSL https://claude.ai/install.sh");
     expect(shCall[1]).toContain("curl -fsSL https://chatgpt.com/codex/install.sh");
+    expect(shCall[1]).toContain("sudo npm install -g opencode-ai@latest");
+  });
+
+  it("should normalize the repository name used as the volume prefix", async () => {
+    await runDevcontainerScaffold({
+      packageRoot,
+      repoRoot: "/workspaces/My Project!",
+      providers: [],
+      ollama: false,
+      cron: false,
+      tmux: false,
+      force: false,
+      dryRun: false,
+    });
+
+    const jsonCall = findWriteCall("devcontainer.json");
+    const json = JSON.parse(String(jsonCall[1]));
+    expect(json.mounts).toContain(
+      "source=my-project-specdojo-git,target=/home/node/.config/git,type=volume",
+    );
   });
 });

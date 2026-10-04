@@ -1,0 +1,12 @@
+実装を完了しました。
+
+- OpenCode の `auth.json` 保存用 volume と GitHub CLI volume を追加。
+- volume を `<repository>-specdojo-*` としてリポジトリ単位に分離。
+- mount 先の所有者を再帰的に補修。
+- 保存先一覧、共有方針、dotfiles 自動導入をコマンドリファレンスへ追記。
+- unit test と PJR 個票の作業結果を更新。
+- result ファイルは executor 指示に従い未編集です。unit test・typecheck 等は親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"final_message":"devcontainer scaffold の named volume をリポジトリ単位に分離し、OpenCode・GitHub CLI の永続化、所有者補修、文書、unit test を更新した","validations":[{"command":"npx prettier --write src/devcontainer-scaffold.ts templates/devcontainer/devcontainer.json tests/devcontainer-scaffold.test.ts docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-keqq-devcontainer-template-volumes.md","status":"passed","summary":"対象ファイルを整形"},{"command":"npx markdownlint docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-keqq-devcontainer-template-volumes.md","status":"passed","summary":"対象 Markdown に違反なし"},{"command":"bash -n templates/devcontainer/post-create.sh","status":"passed","summary":"shell 構文に問題なし"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"検証成功。既存の未作成文書に関する警告のみ"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿生成成功"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"2371 件の文書 index を生成"},{"command":"npm run validate:history-links","status":"passed","summary":"履歴文書リンク検証に合格"},{"command":"node --import tsx --input-type=module -e 'import { runDevcontainerScaffold } from \"./src/devcontainer-scaffold.ts\"; await runDevcontainerScaffold({ packageRoot: process.cwd(), repoRoot: \"/tmp/specdojo-keqq.gbQoFd\", providers: [\"opencode\"], ollama: false, cron: false, tmux: false, force: false, dryRun: false });'","status":"passed","summary":"実テンプレートから Git、GitHub CLI、OpenCode 設定・データ volume を含む scaffold を生成"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>
