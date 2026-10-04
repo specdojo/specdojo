@@ -1,0 +1,13 @@
+文書更新は完了しました。
+
+- 保存先・永続化方式・再設定手順の正本表を追加
+- OpenCode の `specdojo-opencode-data` を明記
+- 運用ガイドの古い volume 一覧を正本参照へ変更
+- 個票の作業内容・対応結果を更新
+- result ファイルは未変更
+
+Markdown・カタログ・索引検証は成功しました。`docs:build` のみ、sandbox で Chromium/Mermaid を起動できず `EPERM` で停止しています。親 runner 管轄の全体 lint・test は実行していません。
+
+<specdojo_executor_evidence>
+{"final_message":"devcontainer設定・認証情報の保存先一覧を正本文書へ追加し、運用ガイドと個票を更新した。docs:buildのみsandboxのChromium起動制限で失敗。","validations":[{"command":"npx prettier --write docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server-usage.md docs/ja/projects/prj-0001/controls/project-register/pjr-mp2p-devcontainer-config-persistence.md","status":"passed","summary":"3文書を整形"},{"command":"npx markdownlint docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server-usage.md docs/ja/projects/prj-0001/controls/project-register/pjr-mp2p-devcontainer-config-persistence.md","status":"passed","summary":"対象文書にMarkdown lintエラーなし"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿生成に成功"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"検証成功。既存の欠落文書に関する警告のみ"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"2364件の索引を生成"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"},{"command":"npm run docs:build","status":"failed","summary":"sandbox内でtsx IPCがEPERMとなったため、生成工程をnode --import tsxの個別コマンドで代替"},{"command":"npm --prefix packages/docs-site run docs:build","status":"failed","summary":"Mermaid用Chromiumがsandbox制限によりOperation not permittedで起動不可"}]}
+</specdojo_executor_evidence>

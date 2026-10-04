@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-10-03T14:27:19Z"
@@ -40,13 +40,15 @@ devcontainer の各設定・認証情報が named volume に残るか、リビ�
 
 | No  | 作業                                   | 担当 | 状態 | メモ                                 |
 | --- | -------------------------------------- | ---- | ---- | ------------------------------------ |
-| 1   | 保存先の棚卸し                         | DEV  | open | `.devcontainer` の実装から一覧を作る |
-| 2   | tsd-home-mac-dev-server への追記       | DEV  | open | 正本の一覧表                         |
-| 3   | tsd-home-mac-dev-server-usage のそろえ | DEV  | open | 参照に置き換え                       |
+| 1   | 保存先の棚卸し                         | DEV  | done | `.devcontainer` の実装から一覧を作成 |
+| 2   | tsd-home-mac-dev-server への追記       | DEV  | done | 正本の一覧表を追加                   |
+| 3   | tsd-home-mac-dev-server-usage のそろえ | DEV  | done | 正本への参照に置き換え               |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+[[tsd-home-mac-dev-server]] の 4.10.1 に、named volume、コンテナ内のみ、母艦との共有・コピー、母艦のみの4分類で設定・認証情報の保存先と再作成後の作業を整理した。`specdojo-opencode-data` と `auth.json`、Git 設定、エディタデータと dotfiles、CLI、shell profile、tmux、cron、oMLX、Ollama を実装に合わせて記載した。
+
+[[tsd-home-mac-dev-server-usage]] の古い named volume 一覧は正本への参照に置き換え、存在しない `specdojo-claude-state` を削除するとともに `specdojo-opencode-data` の確認先を明記した。残課題はない。
 
 ## 5. 関連ドキュメント
 
