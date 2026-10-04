@@ -47,6 +47,8 @@ grade plan は評価対象と参考資料をパスで渡すため、executor が
 - 既定動作、Frontmatter と本文の分離、行番号、上限超過時のフォールバック、pipeline への引き渡しを unit test で固定した。
 - 残課題はない。
 
+確認（2026-10-04）: `tools/grade/run-per-document.sh --stages 1 --stage-1-executor agy-expert-executor --embed-documents` で `stsd-mermaid-rulebook` を実際に評価した。生成された executor plan に「埋め込み資料」と行番号付きの本文が含まれ、72 秒で `pass` 100（finding 0）が記録された。`npm run check`（1,991 件のテストを含む）も通過した。
+
 ## 5. 関連ドキュメント
 
 - [[prj-0001:pjr-vqb5-agent-grade-comparison]]: 2026-10-04 の ornith の計測結果。

@@ -45,6 +45,8 @@ register review で waiting から review へ戻しても、frontmatter の bloc
 - `register update --block-reason <text>` を追加した。`waiting` 中は理由を更新でき、`-` で状態を変えずに誤った現在値を削除できる。`waiting` 以外で理由を設定する操作は拒否する。
 - unit test に、非 `waiting` への各遷移での削除、イベントへの変更前理由の保持、`register update` による更新・削除・不正設定の拒否を追加した。
 
+確認（2026-10-04）: 本機能で PJR-SMET 自身を waiting から review へ遷移させ、frontmatter の `block_reason` が消え、イベントの `changes` に変更前の理由が残ることを確認した。`register update --block-reason -` で PJR-27Z9 の古い `block_reason` も消した。`npm run check`（1,991 件のテストを含む）も通過した。
+
 ## 5. 関連ドキュメント
 
 - [[prj-0001:pjr-27z9-codex-bwrap-proc-mount]]: 観測した個票。
