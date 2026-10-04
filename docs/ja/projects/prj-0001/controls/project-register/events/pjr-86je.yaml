@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_33c21341ef7f4e118a48692524a158fd
+  ts: "2026-10-04T08:46:04Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 日本語の文書に中国語の字体が混ざったことを検出する lint を追加する
+    - field: description
+      from: ""
+      to: ローカル LLM（oMLX の Ornith など）は日本語の出力に中国語の字体・語彙（业、为、时、这个、问题 など）を混ぜることがあり、2026-10-04 の grade の計測では executor の出力の 6 回中 3〜4 回に現れた。agent が日本語の文書を書くと、そのままコミットされる。どの agent が混ぜても検出できるよう、docs-lint に中国語でしか使わない字体を検出する規則を追加する
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-04"
