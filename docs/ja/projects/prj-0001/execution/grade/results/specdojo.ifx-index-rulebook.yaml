@@ -3,31 +3,71 @@ version: 1
 document: specdojo:ifx-index-rulebook
 path: docs/ja/specdojo/rulebooks/ifx-index-rulebook.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: pass
-score: 93
-graded_at: "2026-09-02T18:44:08.560Z"
-graded_by: gemma-expert-executor
-content_hash: c62aee29df9c3cae873fe62aa530b947de3c7ec1ad9dcfffcc0b046423ffa549
+score: 87
+graded_at: "2026-10-03T21:26:32.303Z"
+graded_by: agy-expert-executor
+content_hash: a3d5a331f7e79929e685d551baf6d1c548c7870b25a19c90e0e85528b93b5ee5
 categories:
-  consistency:
+  purpose:
     score: 88
-  usability:
-    score: 100
+  operations:
+    score: 94
+  planning:
+    score: 75
+  business:
+    score: 88
   architecture:
     score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 100
   quality:
-    score: 88
+    score: 75
+  consistency:
+    score: 75
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 3
+    score: 75
+  vp-po-publication-accountability:
+    level: 3
+    score: 75
+  vp-pm-plan-feasibility:
+    level: 3
+    score: 75
+  vp-pm-dependency-risk:
+    level: 3
+    score: 75
+  vp-pm-control-reporting:
+    level: 3
+    score: 75
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 3
+    score: 75
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
-  vp-arc-single-responsibility:
+  vp-dev-implementation-readiness:
     level: 4
     score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 3
+    score: 75
   vp-qe-verifiability:
     level: 3
     score: 75
@@ -35,12 +75,21 @@ viewpoints:
     level: 3
     score: 75
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -49,18 +98,68 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 2
+  minor: 10
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-qe-verifiability
-    line: 1
-    message: 記述内容の指示に「短い」「簡潔に」などの曖昧な表現が含まれており、客観的な品質判定基準が不明確である。
-    anchor: "# 外部システムIF一覧（External System Interface List: ESIL）作成ルール"
+    rule: vp-po-decision-readiness
+    line: 18
+    anchor: "## 2. ファイル規約"
+    message: POが承認・保留の判断を行うための未決事項（TBD）の扱い方や影響範囲をどのように可視化するかに関する記述が不足している。
   - id: F002
+    severity: minor
+    rule: vp-po-publication-accountability
+    line: 42
+    anchor: >-
+      | -------------- | ---------------------------------------------------------------------------------------- | ----
+      |
+    message: status項目はあるが、一覧の承認責任者や公開可否を判断する主体（オーナー）に関する記述が明記されていない。
+  - id: F003
+    severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 62
+    anchor: ""
+    message: 詳細仕様を作成する担当者（Role code）や完了期限・マイルストーンを計画として管理するための項目がない。
+  - id: F004
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 48
+    anchor: "| format         | `CSV` / `JSON` / `XML` / `その他` / `TBD`                                                | ○    |"
+    message: 外部連携に伴うリスク、課題、変更要求、スケジュールの影響を識別して記載する項目が不足している。
+  - id: F005
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 48
+    anchor: "| format         | `CSV` / `JSON` / `XML` / `その他` / `TBD`                                                | ○    |"
+    message: IFごとの進捗状況や課題を識別し、報告用や決定記録へ転記・分離すべき事項を記載するための記述がない。
+  - id: F006
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 18
+    anchor: "## 2. ファイル規約"
+    message: 「関係者間で合意するための入口」とあるが、各IFごとの具体的な合意者や確認者を記述する項目がない。
+  - id: F007
+    severity: minor
+    rule: vp-dev-testability
+    line: 26
+    anchor: "| キー       | 説明                          | 必須 |"
+    message: 参照スキーマに基づくYAMLファイルの具体的な検証手順（lintやvalidateコマンドなど）が記載されていない。
+  - id: F008
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 31
+    anchor: "| status     | `draft`/`ready`/`deprecated`  | ○    |"
+    message: "前回指摘未解消: 記述内容の指示に「短い」「簡潔に」などの曖昧な表現（31行目、54行目、61行目）が含まれており、客観的な品質判定基準が依然として不明確である。"
+  - id: F009
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 1
-    message: 誤用を防止するための「禁止事項」セクションが不足しており, 詳細仕様への委譲などの制約をより強く明示すべきである。
     anchor: "# 外部システムIF一覧（External System Interface List: ESIL）作成ルール"
+    message: "前回指摘未解消: 誤用を防止するための「禁止事項」セクションが依然として不足しており、詳細仕様への委譲などの制約をより強く明示すべきである。"
+  - id: F010
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 32
+    anchor: "| interfaces | 外部連携の配列（1件以上）     | ○    |"
+    message: ルールブックで定義された id の正規表現（^ifx-[a-z0-9-]+$）と、サンプルにおける id（specdojo:ifx-index-sample）の形式が矛盾している。

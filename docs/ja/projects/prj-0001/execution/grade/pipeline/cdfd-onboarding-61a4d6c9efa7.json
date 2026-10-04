@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "project_id": "prj-0001",
+  "target": "deliverable",
+  "document": "docs/ja/product/010-business-specs/010-data-flow/cdfd-onboarding.md",
+  "content_hash": "49e33de5aa2be69433cf813bbcbd95b37a6266c4c857b20a7fb30db27b4f47c1",
+  "stage_completed": 0,
+  "stage_failed": 1,
+  "stage_total": 1,
+  "consecutive_failures": 1,
+  "max_failures": 3,
+  "last_run_id": "JBR-grade-deliverable-7665a95709d6",
+  "updated_at": "2026-10-03T16:35:29.516Z"
+}

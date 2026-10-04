@@ -3,29 +3,72 @@ version: 1
 document: specdojo:gl-rulebook
 path: docs/ja/specdojo/rulebooks/gl-rulebook.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: pass
-score: 96
-graded_at: "2026-09-02T17:17:25.191Z"
-graded_by: gemma-expert-executor
-content_hash: 99fdf6ecc8dab54352ecb54f98c7b8c579f6c8dd886af2ad457d38b51cf11381
+score: 97
+graded_at: "2026-10-03T21:10:57.722Z"
+graded_by: agy-expert-executor
+content_hash: 7dd253e24b9bbfb8f2306fa267abeb3ee8499f3014358b2cda907cdba499bf23
 categories:
-  consistency:
+  purpose:
     score: 100
-  usability:
-    score: 83
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
   architecture:
     score: 100
+  usability:
+    score: 92
+  implementation:
+    score: 100
   quality:
+    score: 92
+  consistency:
     score: 100
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
     level: 3
     score: 75
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -35,12 +78,21 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
-  vp-ux-readability:
     level: 3
     score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
   vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -49,18 +101,24 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 2
+  minor: 3
   note: 0
 findings:
   - id: F001
     severity: minor
     rule: vp-arc-conciseness
-    line: 1
+    line: 100
+    anchor: ""
     message: 第5章の「禁止事項」が第3章の内容と重複しているため、統合が必要。
-    anchor: "# 用語集（Glossary）作成ルール"
   - id: F002
     severity: minor
-    rule: vp-ux-readability
-    line: 1
+    rule: vp-arc-conciseness
+    line: 100
+    anchor: ""
     message: 「禁止事項」の節が重複して存在しており、情報の配置として不自然である。
-    anchor: "# 用語集（Glossary）作成ルール"
+  - id: F003
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 43
+    anchor: "## 5. 本文要件"
+    message: 用語集IDの形式を ^gl-[a-z0-9-]+$ と定めているが、サンプル（gl-sample）では specdojo:gl-sample のようにコロンを含む形式が使われており矛盾している。

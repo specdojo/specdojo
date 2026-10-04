@@ -5,8 +5,8 @@ path: docs/ja/product/010-business-specs/010-data-flow/cdfd-plan.md
 target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 78
-graded_at: "2026-09-30T16:28:30.130Z"
+score: 76
+graded_at: "2026-10-03T16:49:05.171Z"
 graded_by: agy-expert-executor
 content_hash: fa438c52a36eaa9e43b88df336f876264351918d14ece7b3bb8f46aaea8a30ba
 source_hashes:
@@ -14,7 +14,7 @@ source_hashes:
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
   deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
   dependency:cdfd-overview: d21b0a535f2e00298b71f19804552832a8984c57ad7b58a895f7d96e8a3f2bb3
-  members: ec838bbb5673ba76f1a15672e094c00088dcb686a2a67225ca8411c0dc5e90d3
+  members: b2714ed4b0d922a9e00f460331cadabe0fe66334099403b2a4937e4378bd9721
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
   schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
 categories:
@@ -27,7 +27,7 @@ categories:
   business:
     score: 75
   consistency:
-    score: 50
+    score: 38
   architecture:
     score: 100
   usability:
@@ -92,8 +92,8 @@ viewpoints:
     level: 2
     score: 50
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-ux-readability:
     level: 4
     score: 100

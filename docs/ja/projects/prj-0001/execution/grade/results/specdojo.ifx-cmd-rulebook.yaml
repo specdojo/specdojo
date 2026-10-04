@@ -3,37 +3,80 @@ version: 1
 document: specdojo:ifx-cmd-rulebook
 path: docs/ja/specdojo/rulebooks/ifx-cmd-rulebook.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 70
-graded_at: "2026-09-02T18:15:58.959Z"
-graded_by: codex-expert-executor
-content_hash: 803782aa7074dcfb613e0108db1eb2331e5c98933da344becd70cbda3c4db936
+score: 82
+graded_at: "2026-10-03T21:20:24.413Z"
+graded_by: agy-expert-executor
+content_hash: 0dd0411b334899ce3f45aee19e0aa7ecb1b77a4cf681db083aeb250bf0061db2
 categories:
-  consistency:
-    score: 38
-  usability:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
     score: 100
   architecture:
     score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 100
   quality:
-    score: 50
-viewpoints:
-  vp-arc-cross-document-consistency:
-    level: 1
+    score: 67
+  consistency:
     score: 25
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
   vp-qe-verifiability:
     level: 2
     score: 50
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-qe-kata-conformance:
     level: 2
     score: 50
@@ -41,6 +84,15 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -54,53 +106,53 @@ finding_counts:
 findings:
   - id: F001
     severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 1
-    message: >-
-      `version` に SemVer、`supersedes` に ID 配列を許可していますが、対応 schema は `version` を正整数に限定し、`supersedes` を許可していないため, メタ項目の契約を
-      schema と一致させてください。
-    anchor: "# 外部コマンド連携仕様作成ルール"
-  - id: F004
-    severity: major
     rule: vp-qe-verifiability
-    line: 1
+    line: 64
+    anchor: ""
     message: >-
       ルートキーだけでなく、`command`、`arguments`、`streams`、`authentication`、`execution`、`error_handling`
       の各入れ子キーについて必須・任意と条件付き必須を明記し、仕様だけで pass / fail を判定できるようにしてください。
-    anchor: "# 外部コマンド連携仕様作成ルール"
-  - id: F006
+  - id: F002
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 118
+    anchor: ""
+    message: error_handling 内で記載すべき具体的なキー名（timeout_action, malformed_output_action, authentication_failure_action 等）を明記してください。
+  - id: F003
     severity: major
     rule: vp-qe-omissions-consistency
-    line: 1
+    line: 56
+    anchor: "| arguments      | option／positional の種別、必須性、型、値の供給元、説明                          | ○    |"
+    message: >-
+      `version` に SemVer、`supersedes` に ID 配列を許可していますが、対応 schema は `version` を正整数に限定し、`supersedes` を許可していないため, メタ項目の契約を
+      schema と一致させてください。
+  - id: F004
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 64
+    anchor: ""
     message: >-
       対応 schema が必須とする
       `command.purpose`、`command.subcommands`、`command.shell`、各引数属性、各認証属性、実行属性、エラー処理属性の必須性を本文要件へ追加してください。
-    anchor: "# 外部コマンド連携仕様作成ルール"
-  - id: F002
+  - id: F005
     severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 1
+    rule: vp-qe-omissions-consistency
+    line: 83
+    anchor: ""
     message: >-
       `arguments[].kind` の `positional`、`position` キー、`value_source` の `config` は対応 schema で許可されず、rulebook
       に従った引数定義が検証エラーになるため、許容キーと enum を統一してください。
-    anchor: "# 外部コマンド連携仕様作成ルール"
+  - id: F006
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 100
+    anchor: ""
+    message: 終了カテゴリとして定義した `rate_limit` は対応 schema の `exit_codes[].category` で許可されていないため, rulebook と schema の enum を一致させてください。
   - id: F007
     severity: major
     rule: vp-qe-kata-conformance
-    line: 1
+    line: 83
+    anchor: ""
     message: >-
       rulebook と recipe が許容する `positional` および rulebook が許容する `config` を対応 schema
       が拒否するため、rulebook・recipe・template・schemaを通じた引数契約を統一してください。
-    anchor: "# 外部コマンド連携仕様作成ルール"
-  - id: F003
-    severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 1
-    message: 終了カテゴリとして定義した `rate_limit` は対応 schema の `exit_codes[].category` で許可されていないため、rulebook と schema の enum を一致させてください。
-    anchor: "# 外部コマンド連携仕様作成ルール"
-  - id: F005
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 1
-    message: error_handling 内で記載すべき具体的なキー名（timeout_action, malformed_output_action, authentication_failure_action 等）を明記してください。
-    anchor: "# 外部コマンド連携仕様作成ルール"
