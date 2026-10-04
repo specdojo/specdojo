@@ -1,0 +1,11 @@
+対応を完了しました。
+
+- 失敗項目の未検証な個票本文を root に持ち込まず、検証済み checkpoint から `waiting` を commit
+- 未統合の個票本文は exec worktree に保持し、再開時の作業を保全
+- 片方が親検証に失敗しても、もう片方が直列化された commit・統合を完了する回帰テストを追加
+- 個票の対応結果を更新
+- result ファイルは reporter 管轄のため未変更
+
+<specdojo_executor_evidence>
+{"final_message":"並列 register 実行の失敗項目を root から隔離し、他項目の統合を妨げないよう修正しました。","validations":[{"command":"npx prettier --write src/exec-run.ts tests/src/exec-register-pipeline-e2e.integration.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-7mf6-parallel-register-run-integration.md","status":"passed","summary":"変更した TypeScript・Markdown を整形しました。"},{"command":"node --import tsx src/specdojo.ts register build --project prj-0001","status":"passed","summary":"登録簿の派生ビューを正常に再生成しました。"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"既存の参照先未作成 warning はありますが、検証は終了コード 0 でした。"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"文書索引を正常に再生成しました。"},{"command":"node --import tsx -e \"import('./src/exec-run.ts')\"","status":"passed","summary":"変更した実装モジュールを正常にロードできました。"},{"command":"git diff --check","status":"passed","summary":"空白エラーや不正な差分はありません。"}]}
+</specdojo_executor_evidence>

@@ -221,6 +221,19 @@ if (role === "executor") {
     process.stderr.write("rate limit reached\\n");
     process.exit(75);
   }
+  if (nickname === "exec-parent-validation-fail") {
+    const ticket = "${REGISTER_REL}/pjr-ab12-pipeline-test.md";
+    writeFileSync(
+      ticket,
+      readFileSync(ticket, "utf8") + "\\nINVALID_WAIT_TICKET  \\n",
+      "utf8",
+    );
+    writeFileSync(
+      "package.json",
+      '{"scripts":{"test:integration":"node -e \\"process.exit(1)\\""}}\\n',
+      "utf8",
+    );
+  }
   if (nickname.includes("protected-write") && !existsSync("docs/protection-applied")) {
     writeFileSync(
       "package.json",
@@ -529,6 +542,17 @@ function withRepo(fn: (fixture: Fixture) => Promise<void> | void): Promise<void>
           "    capabilities: []",
           "    proficiency: normal",
           "    priority: 2",
+          "  - nickname: exec-parent-validation-fail",
+          "    display_name: exec-parent-validation-fail",
+          "    email: null",
+          "    roles: []",
+          "    type: agent",
+          "    provider: opencode",
+          "    mode: edit",
+          "    stage_role: executor",
+          "    capabilities: []",
+          "    proficiency: normal",
+          "    priority: 2",
           "  - nickname: exec-claude-protected-write",
           "    display_name: exec-claude-protected-write",
           "    email: null",
@@ -792,6 +816,98 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
           expect(state.stages.reporter.actor).toBe("report-1");
         }
         expect(process.exitCode ?? 0).toBe(0);
+      });
+    },
+  );
+
+  it(
+    "keeps an invalid failed item isolated while another parallel item integrates",
+    { timeout: 120_000 },
+    async () => {
+      await withRepo(async ({ root, worktreeBase }) => {
+        const secondTicket = "pjr-cd34-pipeline-test.md";
+        writeFileSync(join(root, REGISTER_REL, secondTicket), buildTicket("PJR-CD34"), "utf8");
+        vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+        vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+        await runConfig(["init"]);
+        const trackedIgnored = git(root, "ls-files", "-ci", "--exclude-standard")
+          .split("\n")
+          .filter((line) => line.length > 0);
+        git(root, "rm", "-r", "--cached", "--quiet", ...trackedIgnored);
+        git(root, "add", "-A");
+        git(root, "commit", "-m", "add second register item");
+
+        // 失敗項目の未検証な個票本文が wait commit に混ざれば hook が拒否する。commit の
+        // 同時実行も共通 marker で拒否し、lifecycle 区間が項目間で直列であることを確認する。
+        const hookPath = join(root, ".git", "hooks", "pre-commit");
+        writeFileSync(
+          hookPath,
+          [
+            "#!/bin/sh",
+            'common_dir="$(git rev-parse --path-format=absolute --git-common-dir)"',
+            'active="$common_dir/specdojo-test-pre-commit-active"',
+            'if ! mkdir "$active" 2>/dev/null; then',
+            "  echo 'concurrent pre-commit detected' >&2",
+            "  exit 1",
+            "fi",
+            "trap 'rmdir \"$active\"' EXIT HUP INT TERM",
+            `ticket=${REGISTER_REL}/pjr-ab12-pipeline-test.md`,
+            'if git diff --cached --name-only -- "$ticket" | grep -q . &&',
+            '   git show ":$ticket" | grep -q "INVALID_WAIT_TICKET  $"; then',
+            "  echo 'invalid failed ticket reached the integration branch' >&2",
+            "  exit 1",
+            "fi",
+            "sleep 1",
+            "",
+          ].join("\n"),
+          "utf8",
+        );
+        chmodSync(hookPath, 0o755);
+
+        await runExec([
+          "run",
+          "--project",
+          "test",
+          "--register",
+          "PJR-AB12",
+          "PJR-CD34",
+          "--executor-by",
+          "PJR-AB12=exec-parent-validation-fail,PJR-CD34=exec-2",
+          "--reporter-by",
+          "report-1",
+          "--worktree",
+          "--worktree-base",
+          worktreeBase,
+          "--parallel",
+          "2",
+          "--on-failure",
+          "continue",
+        ]);
+
+        const failedTicketPath = join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md");
+        expect(readFileSync(failedTicketPath, "utf8")).toContain("item_status: waiting");
+        expect(readFileSync(failedTicketPath, "utf8")).not.toContain("INVALID_WAIT_TICKET");
+        expect(readFileSync(join(root, REGISTER_REL, secondTicket), "utf8")).toContain(
+          "item_status: review",
+        );
+        expect(git(root, "status", "--porcelain")).toBe("");
+
+        const subjects = git(root, "log", "--format=%s");
+        expect(subjects).toContain("exec(register PJR-AB12): wait");
+        expect(subjects).toContain("exec(register PJR-CD34): pipeline test item");
+        const failedWorktree = git(root, "worktree", "list", "--porcelain")
+          .split("\n")
+          .filter((line) => line.startsWith("worktree "))
+          .map((line) => line.slice("worktree ".length))
+          .find((path) => path !== root);
+        expect(failedWorktree).toBeDefined();
+        const preserved = readFileSync(
+          join(failedWorktree ?? "", REGISTER_REL, "pjr-ab12-pipeline-test.md"),
+          "utf8",
+        );
+        expect(preserved).toContain("item_status: waiting");
+        expect(preserved).toContain("INVALID_WAIT_TICKET");
+        expect(process.exitCode).toBe(1);
       });
     },
   );
