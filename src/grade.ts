@@ -160,6 +160,7 @@ const DONE_CRITERIA_SCHEMA = "docs/specdojo/schemas/v1/grade-done-criteria.schem
 const GRADE_PLACEHOLDER = "__SPECDOJO_GRADE_FLOW_PLACEHOLDER__";
 const GRADE_FINDINGS_PLACEHOLDER = "__SPECDOJO_GRADE_FINDINGS_FLOW_PLACEHOLDER__";
 const GRADE_UNSATISFIED_PLACEHOLDER = "__SPECDOJO_GRADE_UNSATISFIED_BLOCK_PLACEHOLDER__";
+export const GRADE_PLAN_EMBEDDED_DOCUMENT_CHARACTER_LIMIT = 100_000;
 const SEVERITY_LEVEL_CAP: Record<GradeSeverity, number> = {
   blocker: 0,
   major: 2,
@@ -1675,7 +1676,7 @@ function applicableDoneCriteria(
   });
 }
 
-export function renderGradePlan(opts: {
+type RenderGradePlanOptions = {
   target: GradeTarget;
   path: string;
   references?: string[];
@@ -1683,9 +1684,110 @@ export function renderGradePlan(opts: {
   viewpoints: ReviewViewpointsDoc;
   projectId: string;
   doneCriteria?: GradeDoneCriterion[];
+  embedDocuments?: boolean;
+  /** テスト用に上限を差し替える。CLI は既定の 100,000 文字を使う。 */
+  maxEmbeddedDocumentCharacters?: number;
   /** 前回結果の読み取り元。省略時は project の execution/grade/results を使う。 */
   resultsDirectory?: string;
-}): string {
+};
+
+type GradePlanEmbedding = {
+  requested: boolean;
+  embedded: boolean;
+  characterCount: number;
+  limit: number;
+  lines: string[];
+};
+
+function markdownFence(content: string): string {
+  let longestRun = 0;
+  for (const match of content.matchAll(/`+/g)) longestRun = Math.max(longestRun, match[0].length);
+  return "`".repeat(Math.max(3, longestRun + 1));
+}
+
+function splitDocumentForEmbedding(content: string): { frontmatter?: string; body: string } {
+  const normalized = content.replace(/\r\n?/g, "\n");
+  const match = normalized.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
+  if (!match) return { body: normalized.replace(/\n$/, "") };
+  return {
+    frontmatter: match[1],
+    body: (match[2] ?? "").replace(/^\n+/, "").replace(/\n$/, ""),
+  };
+}
+
+function renderEmbeddedGradeDocument(path: string, roles: readonly string[]): string[] {
+  const content = readFileSync(resolveSafeRepositoryPath(path, "embedded document"), "utf8");
+  const { frontmatter, body } = splitDocumentForEmbedding(content);
+  const bodyLines = body === "" ? [] : body.split("\n");
+  const numberedBody = bodyLines.map((line, index) => `${index + 1} | ${line}`).join("\n");
+  const lines = [
+    `#### ${roles.join("・")}: \`${path}\``,
+    "",
+    "Frontmatter（`finding.line` の行番号対象外）:",
+    "",
+  ];
+  if (frontmatter === undefined) {
+    lines.push("- なし", "");
+  } else {
+    const fence = markdownFence(frontmatter);
+    lines.push(`${fence}yaml`, frontmatter, fence, "");
+  }
+  const bodyFence = markdownFence(numberedBody);
+  lines.push(
+    "本文（左端は `finding.line` と同じ、Frontmatter を除く1始まりの行番号）:",
+    "",
+    `${bodyFence}text`,
+    numberedBody,
+    bodyFence,
+    "",
+  );
+  return lines;
+}
+
+function gradePlanEmbedding(opts: {
+  requested: boolean;
+  targetPath: string;
+  references: readonly string[];
+  referenceExample?: string;
+  limit: number;
+}): GradePlanEmbedding {
+  if (!Number.isSafeInteger(opts.limit) || opts.limit < 1) {
+    throw new Error("maxEmbeddedDocumentCharacters must be a positive integer");
+  }
+  if (!opts.requested) {
+    return { requested: false, embedded: false, characterCount: 0, limit: opts.limit, lines: [] };
+  }
+
+  const rolesByPath = new Map<string, string[]>();
+  const add = (path: string, role: string) => {
+    const roles = rolesByPath.get(path);
+    if (roles) {
+      if (!roles.includes(role)) roles.push(role);
+    } else {
+      rolesByPath.set(path, [role]);
+    }
+  };
+  add(opts.targetPath, "評価対象");
+  for (const reference of opts.references) add(reference, "参考資料");
+  if (opts.referenceExample) add(opts.referenceExample, "良い実例");
+
+  const lines = [...rolesByPath].flatMap(([path, roles]) =>
+    renderEmbeddedGradeDocument(path, roles),
+  );
+  const characterCount = lines.join("\n").length;
+  return {
+    requested: true,
+    embedded: characterCount <= opts.limit,
+    characterCount,
+    limit: opts.limit,
+    lines: characterCount <= opts.limit ? lines : [],
+  };
+}
+
+function renderGradePlanWithEmbedding(opts: RenderGradePlanOptions): {
+  content: string;
+  embedding: GradePlanEmbedding;
+} {
   const rubric = assertRubric(opts.viewpoints);
   const absolute = resolveSafeMarkdownPath(opts.path);
   const rel = repoRelativePath(absolute);
@@ -1706,6 +1808,13 @@ export function renderGradePlan(opts: {
   const referenceExample = opts.referenceExample
     ? repoRelativePath(resolveSafeMarkdownPath(opts.referenceExample))
     : undefined;
+  const embedding = gradePlanEmbedding({
+    requested: opts.embedDocuments ?? false,
+    targetPath: rel,
+    references,
+    referenceExample,
+    limit: opts.maxEmbeddedDocumentCharacters ?? GRADE_PLAN_EMBEDDED_DOCUMENT_CHARACTER_LIMIT,
+  });
   const doneCriteria =
     opts.target === "deliverable"
       ? applicableDoneCriteria(opts.doneCriteria ?? [], opts.viewpoints, metadata)
@@ -1765,10 +1874,33 @@ export function renderGradePlan(opts: {
           "",
         ]
       : []),
+    ...(embedding.embedded
+      ? [
+          "### 埋め込み資料",
+          "",
+          `評価対象・参考資料・良い実例を plan 生成時点の内容で埋め込む。埋め込み部分は ${embedding.characterCount.toLocaleString("en-US")} 文字（上限 ${embedding.limit.toLocaleString("en-US")} 文字）である。`,
+          "",
+          ...embedding.lines,
+        ]
+      : embedding.requested
+        ? [
+            "### 埋め込み資料",
+            "",
+            `警告: 埋め込み部分が ${embedding.characterCount.toLocaleString("en-US")} 文字となり、上限 ${embedding.limit.toLocaleString("en-US")} 文字を超えたため、本文を埋め込まずパス参照へフォールバックした。`,
+            "",
+          ]
+        : []),
     "## 3. 進め方",
     "",
-    "1. 評価対象をファイル読み取りツールで全文読み、実行ログに読み取り操作を残す。plan に対象本文は埋め込まれていないため、この手順を省略しない。",
-    "2. 参考資料と良い実例がある場合は列挙された全ファイルを全文読み、実行ログに各パスの読み取り操作を残す。参考資料や良い実例を評価対象と混同しない。",
+    ...(embedding.embedded
+      ? [
+          "1. plan の「埋め込み資料」にある評価対象の本文を全文読む。Frontmatter は行番号の対象外であり、本文左端の番号を finding の `line` に使う。",
+          "2. 埋め込まれた参考資料と良い実例がある場合はすべて読む。ファイル読み取りツールと検索ツールを使わず、plan に埋め込まれた資料だけで判定し、参考資料や良い実例を評価対象と混同しない。",
+        ]
+      : [
+          "1. 評価対象をファイル読み取りツールで全文読み、実行ログに読み取り操作を残す。plan に対象本文は埋め込まれていないため、この手順を省略しない。",
+          "2. 参考資料と良い実例がある場合は列挙された全ファイルを全文読み、実行ログに各パスの読み取り操作を残す。参考資料や良い実例を評価対象と混同しない。",
+        ]),
     "3. 良い実例がある場合は、章ごとの具体性、根拠の密度、過不足を評価対象と比較して記載水準を判定する。表現の類似や実例自体の欠点を評価理由にせず、rubric と viewpoint を最終的な判定基準にする。",
     "4. 評価対象を次の rubric と viewpoint に照らし、各 viewpoint を 0-4 で判定する。ある viewpoint の finding の有無から、ほかの viewpoint の判定を推論しない。",
     "5. level 3 以下には finding を付ける。finding には severity（blocker / major / minor / note）、対象直前の本文行番号、具体的な修正理由を含める。line は Frontmatter を除く本文の1始まり（通常は H1 が1行目）とする。level 4 は finding なしとする。",
@@ -1853,14 +1985,22 @@ export function renderGradePlan(opts: {
     "",
     "## 5. 異常終了の条件",
     "",
-    "- 評価対象、参考資料、または良い実例を読み取れない場合は、内容を推測せず異常終了する。",
+    ...(embedding.embedded
+      ? [
+          "- plan に評価対象、参考資料、または良い実例の埋め込み内容が欠けている場合は、内容を推測せず異常終了する。",
+        ]
+      : ["- 評価対象、参考資料、または良い実例を読み取れない場合は、内容を推測せず異常終了する。"]),
     "- rubric または viewpoint に不足があり、全項目を判定できない場合は異常終了する。",
     "- すべての viewpoint の level と finding を申告できない場合は異常終了する。",
     ...(doneCriteria.length > 0
       ? ["- 列挙された完了条件のいずれかを判定できない場合は異常終了する。"]
       : []),
   ];
-  return `${lines.join("\n")}\n`;
+  return { content: `${lines.join("\n")}\n`, embedding };
+}
+
+export function renderGradePlan(opts: RenderGradePlanOptions): string {
+  return renderGradePlanWithEmbedding(opts).content;
 }
 
 export function renderGradeReporterPlan(opts: {
@@ -2005,6 +2145,7 @@ export function writeGradePlans(opts: {
   viewpoints: ReviewViewpointsDoc;
   projectId: string;
   outputDirectory: string;
+  embedDocuments?: boolean;
   random?: () => number;
   // リポジトリ相対パスをキーにした done_criteria 定義。deliverable の plan だけが使う。
   doneCriteriaByPath?: ReadonlyMap<string, GradeDoneCriterion[]>;
@@ -2015,6 +2156,9 @@ export function writeGradePlans(opts: {
   reporterChanged: boolean;
   target: string;
   referenceExample?: string;
+  documentsEmbedded: boolean;
+  embeddingCharacterCount: number;
+  embeddingCharacterLimit: number;
 }[] {
   const outputDirectory = resolveSafeRepositoryPath(opts.outputDirectory, "--out");
   if (opts.paths.length === 0) return [];
@@ -2037,7 +2181,7 @@ export function writeGradePlans(opts: {
         random: opts.random,
       });
     const doneCriteria = opts.doneCriteriaByPath?.get(repoRelativePath(absolute));
-    const content = renderGradePlan({
+    const rendered = renderGradePlanWithEmbedding({
       target: opts.target,
       path: absolute,
       references: resolveGradeReferencePathsFromCatalog(absolute, kataReferences),
@@ -2045,7 +2189,9 @@ export function writeGradePlans(opts: {
       viewpoints: opts.viewpoints,
       projectId: opts.projectId,
       doneCriteria,
+      embedDocuments: opts.embedDocuments,
     });
+    const content = rendered.content;
     const reporterContent = renderGradeReporterPlan({
       target: opts.target,
       path: absolute,
@@ -2065,6 +2211,9 @@ export function writeGradePlans(opts: {
       reporterChanged,
       target: repoRelativePath(absolute),
       referenceExample,
+      documentsEmbedded: rendered.embedding.embedded,
+      embeddingCharacterCount: rendered.embedding.characterCount,
+      embeddingCharacterLimit: rendered.embedding.limit,
     };
   });
 }
@@ -3316,6 +3465,11 @@ export function registerGradeCommand(program: Command): void {
     .option("--out <directory>", "Write plans below this repository-relative directory")
     .option("--reference <path>", "Use this document as the comparison reference")
     .option(
+      "--embed-documents",
+      "Embed the target and reference documents in the executor plan",
+      false,
+    )
+    .option(
       "--random-reference",
       "Select a comparison reference at random from ready documents",
       false,
@@ -3359,6 +3513,7 @@ export function registerGradeCommand(program: Command): void {
           viewpoints,
           projectId,
           outputDirectory,
+          embedDocuments: options.embedDocuments,
           doneCriteriaByPath:
             target === "deliverable"
               ? resolveDeliverableDoneCriteria(paths, options.project)
@@ -3371,6 +3526,11 @@ export function registerGradeCommand(program: Command): void {
           if (options.randomReference && !plan.referenceExample) {
             process.stderr.write(
               `warning: no ready reference of the same kind for ${plan.target}; grading without a reference\n`,
+            );
+          }
+          if (options.embedDocuments && !plan.documentsEmbedded) {
+            process.stderr.write(
+              `warning: embedded documents for ${plan.target} would use ${plan.embeddingCharacterCount} characters and exceed the ${plan.embeddingCharacterLimit} character limit; falling back to path references\n`,
             );
           }
           process.stdout.write(`${plan.changed ? "written" : "unchanged"}: ${plan.path}\n`);

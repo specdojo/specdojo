@@ -24,6 +24,9 @@ Options:
   --rubric-outdated[=true|false]
                                 Select documents whose stored grade was not
                                 made with the current grade rubric
+  --embed-documents[=true|false]
+                                Embed target and reference contents in each
+                                grade plan (default: false)
   --stages <1|3>                Number of stages to run (default: 1)
   --max-stage-failures <count>  Stop retrying a stage after this many failures
                                 (default: 3)
@@ -81,6 +84,7 @@ dependency_changed=false
 rulebook_changed=false
 unreviewed=false
 rubric_outdated=false
+embed_documents=false
 max_stage_failures=3
 # PJR-W5JT で 3 段構成を廃止し codex 単段へ移したため、既定は 1 とする。gemma の 1・2 段は
 # 門番として機能せず、本質的な major を見落として満点を付ける一方で前回 finding を現在内容と
@@ -188,6 +192,14 @@ while [[ $# -gt 0 ]]; do
       rubric_outdated=${1#*=}
       shift
       ;;
+    --embed-documents)
+      embed_documents=true
+      shift
+      ;;
+    --embed-documents=*)
+      embed_documents=${1#*=}
+      shift
+      ;;
     --max-stage-failures)
       require_value "$@"
       max_stage_failures=$2
@@ -286,6 +298,8 @@ done
 [[ "$incomplete" == true || "$incomplete" == false ]] || fail "--incomplete must be true or false"
 [[ "$rubric_outdated" == true || "$rubric_outdated" == false ]] ||
   fail "--rubric-outdated must be true or false"
+[[ "$embed_documents" == true || "$embed_documents" == false ]] ||
+  fail "--embed-documents must be true or false"
 # 選択条件が1つでも有効なら、grade list の結果の和集合を対象にする。条件がないときだけ全件を対象にする。
 has_selector=false
 if $changed_only || $dependency_changed || $rulebook_changed || $unreviewed || $ungraded ||
@@ -543,12 +557,12 @@ select_documents() {
 
 requested_signature=$(printf '%s\n' "${requested_paths[@]}" | node -e \
   'const c=require("node:crypto");let s="";process.stdin.on("data",d=>s+=d).on("end",()=>process.stdout.write(c.createHash("sha256").update(s).digest("hex")))')
-expected_config=$(printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
+expected_config=$(printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
   "$project" "$target" "$kind" "$limit" "$changed_only" "$ungraded" "$incomplete" \
-  "$rubric_outdated" "$max_stage_failures" "$stages:$requested_signature" \
+  "$rubric_outdated" "$embed_documents" "$max_stage_failures" "$stages:$requested_signature" \
   "$stage_1_executor" "$stage_1_reporter" "$stage_1_reference" \
   "$stage_2_executor:$stage_2_reporter:$stage_2_reference" \
-  "$stage_3_executor:$stage_3_reporter:$stage_3_reference" "selection-v5" "pipeline-v5")
+  "$stage_3_executor:$stage_3_reporter:$stage_3_reference" "selection-v5" "pipeline-v6")
 config_file="$work_dir/config.tsv"
 selection_file="$work_dir/selection.txt"
 results_file="$work_dir/results.tsv"
@@ -578,9 +592,9 @@ else
 fi
 
 print_configuration() {
-  printf 'run_id=%s project=%s target=%s kind=%s changed_only=%s ungraded=%s incomplete=%s rubric_outdated=%s max_stage_failures=%s stages=%s documents=%s exhausted=%s work_dir=%s\n' \
+  printf 'run_id=%s project=%s target=%s kind=%s changed_only=%s ungraded=%s incomplete=%s rubric_outdated=%s embed_documents=%s max_stage_failures=%s stages=%s documents=%s exhausted=%s work_dir=%s\n' \
     "$run_id" "$project" "$target" "$kind" "$changed_only" "$ungraded" "$incomplete" \
-    "$rubric_outdated" "$max_stage_failures" "$stages" \
+    "$rubric_outdated" "$embed_documents" "$max_stage_failures" "$stages" \
     "${#selected_paths[@]}" "${#exhausted_paths[@]}" "$work_dir"
   printf 'stage=1 executor=%s reporter=%s reference=%s\n' \
     "$stage_1_executor" "$stage_1_reporter" "$stage_1_reference"
@@ -848,6 +862,9 @@ execute_stage() {
   if [[ "$reference" != none ]]; then
     plan_command+=(--reference "$reference")
     apply_command+=(--reference "$reference")
+  fi
+  if $embed_documents; then
+    plan_command+=(--embed-documents)
   fi
 
   if run_specdojo "$log_file" "${plan_command[@]}"; then

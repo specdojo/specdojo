@@ -529,6 +529,8 @@ specdojo exec trial adopt --project prj-0001 --comparison <comparison-id> --tria
 
 ```bash
 specdojo grade plan --target kata --changed-only --project prj-0001
+# 評価対象・参考資料・比較リファレンスを plan へ埋め込む
+specdojo grade plan --target kata --changed-only --embed-documents --project prj-0001
 specdojo grade list --target kata --changed-only --project prj-0001
 specdojo grade plan --target kata --verdict pass --min-score 96 --max-findings 1 --project prj-0001
 specdojo grade plan --target kata --ungraded --project prj-0001
@@ -571,13 +573,15 @@ specdojo grade validate --target kata --project prj-0001
 
 段の到達状況は `<execution_path>/grade/pipeline/` の文書別 JSON に保存します。`stage_completed`、`stage_failed`、`stage_total`、`consecutive_failures`、`max_failures` から再開段と上限到達を判定し、`content_hash` が現在本文と異なる古い state は再開に使いません。`grade state --target <target> --project <id> --path <document>` は現在本文に有効な state を JSON で返し、`--exhausted` は上限到達文書のパスを返します。state の更新は文書単位の実行 script が担い、pipeline 完了時にファイルを削除します。
 
-`grade plan` は対象ごとに executor plan と reporter plan の2ファイルを生成し、既定では `<execution_path>/grade/generated/plans/<target>/` へ保存します。`generated/` 配下は再生成可能な派生生成物の置き場で、git 管理と文書索引の対象外です。`--out <directory>` で保存先を変更できます。ファイル名は対象パスから決定され、同じ対象の再生成は同じファイルを上書きするため履歴を増やしません。executor plan は評価対象を1件だけリポジトリ相対パスで示し、Kata の `rulebook` / `recipe` / `sample` / `template` 参照と逆参照から解決した対応文書も参考資料のパスとして列挙します。`--random-reference` を指定した場合は、同じ種別で `status: ready` の別文書から良い実例を1件無作為に選び、記載水準を比較するリファレンスとして記録します。Kata は同じ rulebook / recipe / sample / template 種別、成果物は同じ `specdojo.type` を候補範囲とします。実例は評価対象ではなく、`ready` も品質保証ではありません。対象・参考資料・実例の本文は plan に埋め込みません。再生成のたびに候補集合から選び直すため、同じ対象の plan でも実例だけが変わることがあります。`--random-reference` も `--reference` も指定しなければリファレンスは付けません。reporter plan は対象の固定 facts と GradeSubmission テンプレートだけを持ち、評価資料は持ちません。既定の pipeline は reporter plan を使わず、LLM reporter を明示指定して書き写しの精度を比較する場合にだけ使います。
+`grade plan` は対象ごとに executor plan と reporter plan の2ファイルを生成し、既定では `<execution_path>/grade/generated/plans/<target>/` へ保存します。`generated/` 配下は再生成可能な派生生成物の置き場で、git 管理と文書索引の対象外です。`--out <directory>` で保存先を変更できます。ファイル名は対象パスから決定され、同じ対象の再生成は同じファイルを上書きするため履歴を増やしません。executor plan は評価対象を1件だけリポジトリ相対パスで示し、Kata の `rulebook` / `recipe` / `sample` / `template` 参照と逆参照から解決した対応文書も参考資料のパスとして列挙します。`--random-reference` を指定した場合は、同じ種別で `status: ready` の別文書から良い実例を1件無作為に選び、記載水準を比較するリファレンスとして記録します。Kata は同じ rulebook / recipe / sample / template 種別、成果物は同じ `specdojo.type` を候補範囲とします。実例は評価対象ではなく、`ready` も品質保証ではありません。再生成のたびに候補集合から選び直すため、同じ対象の plan でも実例だけが変わることがあります。`--random-reference` も `--reference` も指定しなければリファレンスは付けません。reporter plan は対象の固定 facts と GradeSubmission テンプレートだけを持ち、評価資料は持ちません。既定の pipeline は reporter plan を使わず、LLM reporter を明示指定して書き写しの精度を比較する場合にだけ使います。
+
+既定では対象・参考資料・実例の本文を plan に埋め込みません。`--embed-documents` を指定した場合だけ、executor plan の「埋め込み資料」へ plan 生成時点の内容を格納します。Markdown の Frontmatter は行番号の対象外として本文と分離し、本文には Frontmatter を除く1始まりの行番号を付けます。この番号は finding の `line` と同じ基準で、通常は H1 が1行目です。埋め込み部分の上限は100,000文字です。評価対象・参考資料・実例を行番号付きで描画した合計が上限を超える場合は、CLI が警告し、当該 plan だけをパス参照へフォールバックします。上限内では、executor にファイル読み取りツールと検索ツールを使わず、埋め込み資料だけで判定するよう指示します。埋め込みは plan のサイズ増加と対象更新時の陳腐化を伴うため、既定値はパス参照のままです。
 
 成果物の plan は、成果物カタログの `done_criteria` を `DC-001` から順に列挙し、条件文、担当 Role code、viewpoint を executor へ渡します。executor は各条件を `satisfied` / `unsatisfied` として score とは独立に申告し、`grade apply` はその判定と不足理由を `[DONE_CRITERIA]` ブロックからそのまま GradeSubmission の `done_criteria` へ変換します。`grade apply --target deliverable` は過不足を検証し、grade result サイドカーの要約と `<execution_path>/grade/criteria/` の詳細 YAML を同時に更新します。詳細は成果物ごとに1ファイルで、再評価では同じファイルを上書きします。
 
 再評価時は、grade result サイドカーの `findings[]` から `rule`、`severity`、`line`、`anchor`、`message` を前回の指摘として plan へ含めます。agent は各指摘が現在も未解消かを確認し、未解消なら前回の message を変更せず、前回と同等以上の severity で今回の finding に含めます。`grade apply` も同じ message の finding を未解消と扱い、提出された severity が前回より軽ければ前回値へ戻し、対応する viewpoint level を severity 上限まで補正します。前回の問題が解消され、別の軽微な問題だけが残る場合は、新しい finding の message に引き下げの根拠を含めます。前回の観点割り当てに判定を引きずられないよう各 viewpoint を現在の根拠から独立に評価し、前回指摘にない問題も検出します。前回の level、score、verdict や解消履歴は plan に引き継ぎません。適用結果は最新サイドカーへ上書きされ、成果物本文は変更しません。
 
-executor は判定前に、plan が示す評価対象、すべての参考資料、選定された良い実例をファイル読み取りツールで全文読み、実行ログに各パスの読み取り操作を残します。参考資料は成果物間整合、良い実例は章ごとの具体性・根拠の密度・過不足を比較する材料であり、どちらも評価対象にはしません。実例の表現や欠点を機械的に転用せず、rubric と viewpoint を最終的な判定基準にします。いずれかのファイルを読み取れない場合は、内容を推測せず異常終了します。grade plan の Frontmatter と「このタスクで行うこと / 対象項目 / 進め方 / 完了手順 / 異常終了の条件」の章構成は exec plan に準拠します。
+パス参照の executor は判定前に、plan が示す評価対象、すべての参考資料、選定された良い実例をファイル読み取りツールで全文読み、実行ログに各パスの読み取り操作を残します。埋め込みを使う executor は、plan に埋め込まれた同じ範囲だけを読みます。参考資料は成果物間整合、良い実例は章ごとの具体性・根拠の密度・過不足を比較する材料であり、どちらも評価対象にはしません。実例の表現や欠点を機械的に転用せず、rubric と viewpoint を最終的な判定基準にします。必要な資料を読み取れない場合は、内容を推測せず異常終了します。grade plan の Frontmatter と「このタスクで行うこと / 対象項目 / 進め方 / 完了手順 / 異常終了の条件」の章構成は exec plan に準拠します。
 
 executor plan は JSON 契約を持ちません。各 viewpoint を `[VIEWPOINT <id>]` と `[END VIEWPOINT]` で囲み、`LEVEL: <0-4>` と、必要な `FINDING <severity> line=<line>: <message>` を申告します。marker 間の根拠と検討過程は自由記述です。この軽量な申告形式により、JSON を安定して生成できない agent でも分析を完了できます。
 
@@ -597,7 +601,7 @@ finding の忠実性照合では、message に限り、Unicode の正準等価�
 
 ### 8.1. 文書単位の grade pipeline
 
-文書ごとに grade pipeline を実行する場合は、リポジトリルートから `tools/grade/run-per-document.sh` を実行します。既定の `--stages 1` は codex 単段、`--stages 3` は互換用の従来構成です。`--target kata` では `--kind` に `rulebook` / `recipe` / `sample` / `template` のいずれか、または `all` を指定します。`--target deliverable` では成果物カタログの Markdown 成果物を対象にし、`--kind` は使いません。`--path` を繰り返すと明示した文書だけを処理できます。`--changed-only`、`--dependency-changed`、`--rulebook-changed`、`--unreviewed`、`--ungraded`、`--incomplete`、`--rubric-outdated` は `grade list` の選択結果を利用し、複数指定時は各結果の和集合を処理します。いずれも指定しない場合だけ、対象範囲の全件を処理します。既定 target は `kata`、既定 kind は `rulebook` です。
+文書ごとに grade pipeline を実行する場合は、リポジトリルートから `tools/grade/run-per-document.sh` を実行します。既定の `--stages 1` は codex 単段、`--stages 3` は互換用の従来構成です。`--target kata` では `--kind` に `rulebook` / `recipe` / `sample` / `template` のいずれか、または `all` を指定します。`--target deliverable` では成果物カタログの Markdown 成果物を対象にし、`--kind` は使いません。`--path` を繰り返すと明示した文書だけを処理できます。`--embed-documents` を指定すると、各段の `grade plan` に同名のオプションを渡します。選択値は Run state に保存するため、同じ `run-id` の再開時に切り替えることはできません。`--changed-only`、`--dependency-changed`、`--rulebook-changed`、`--unreviewed`、`--ungraded`、`--incomplete`、`--rubric-outdated` は `grade list` の選択結果を利用し、複数指定時は各結果の和集合を処理します。いずれも指定しない場合だけ、対象範囲の全件を処理します。既定 target は `kata`、既定 kind は `rulebook` です。
 
 ```bash
 # 対象と agent / reference の確認だけを行う
@@ -605,6 +609,10 @@ tools/grade/run-per-document.sh --run-id 20260901-rulebooks --limit 3 --dry-run
 
 # rulebook を codex 単段で評価する。同じ run-id で再実行すると中断箇所から再開する
 tools/grade/run-per-document.sh --run-id 20260901-rulebooks --stages 1 --kind rulebook
+
+# 評価対象と参考資料を plan に埋め込み、埋め込み資料だけで評価する
+tools/grade/run-per-document.sh --run-id 20261004-embedded --stages 1 --kind rulebook \
+  --embed-documents
 
 # 変更済み、未評価、段未完了、または旧 rubric の4種別を最大15件再評価する
 tools/grade/run-per-document.sh --run-id 20260908-recheck --kind all \
