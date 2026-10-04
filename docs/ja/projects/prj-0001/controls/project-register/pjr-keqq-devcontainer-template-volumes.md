@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   owner: DEV
   registered_at: "2026-10-04T06:29:15Z"
   due_on: null
+  block_reason: "integrate failed: git merge failed: error: Your local changes to the following files would be overwritten by merge:"
 ---
 
 # PJR-KEQQ devcontainer テンプレートの named volume を本体とそろえ、共有の方針を決める
@@ -31,16 +32,20 @@ specdojo devcontainer scaffold のテンプレートは、opencode provider で�
 
 ## 3. 作業内容
 
-| No  | 作業                                               | 担当 | 状態 | メモ                                 |
-| --- | -------------------------------------------------- | ---- | ---- | ------------------------------------ |
-| 1   | opencode のデータ volume の追加                    | DEV  | open | 確実に直す                           |
-| 2   | volume 名の共有方針の決定と反映                    | DEV  | open | 利便性とプロジェクト間の分離を比べる |
-| 3   | GitHub CLI の volume の要否の判断と反映            | DEV  | open | -                                    |
-| 4   | 保存先の一覧と dotfiles の説明の記載、テストの更新 | DEV  | open | -                                    |
+| No  | 作業                                               | 担当 | 状態 | メモ                       |
+| --- | -------------------------------------------------- | ---- | ---- | -------------------------- |
+| 1   | opencode のデータ volume の追加                    | DEV  | done | `opencode-data` を追加     |
+| 2   | volume 名の共有方針の決定と反映                    | DEV  | done | リポジトリごとに分離       |
+| 3   | GitHub CLI の volume の要否の判断と反映            | DEV  | done | 常時 mount する            |
+| 4   | 保存先の一覧と dotfiles の説明の記載、テストの更新 | DEV  | done | コマンドリファレンスへ記載 |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+scaffold が生成する named volume は、保存先を本体の構成とそろえたうえで、対象リポジトリ名を正規化した `<repository>-specdojo-*` に変更した。本体や別リポジトリと認証情報を共有する利便性より、プロジェクトごとのアカウント分離とコンテナ固有の `safe.directory` などを混在させないことを優先した。同じリポジトリの Dev Container を rebuild / recreate する場合は同じ volume 名になるため、設定と認証情報は引き継ぐ。
+
+OpenCode provider には `/home/node/.local/share/opencode` の `opencode-data` volume を追加し、`post-create.sh` で設定・認証用の mount 先とともに所有者を整えるようにした。GitHub CLI の `/home/node/.config/gh` は、後から `gh` を導入する利用者も認証を失わないよう、provider に関係なく常時 mount する。
+
+[[specdojo:command-reference]] の `devcontainer scaffold` に保存先と volume 名の一覧、共有しない理由、OpenCode の `auth.json`、Git 設定、VS Code User Settings の `dotfiles.repository` による dotfiles の自動導入を記載した。unit test はリポジトリ別の volume 名、GitHub CLI、OpenCode の設定とアプリデータの mount を検証するよう更新した。残課題はない。
 
 ## 5. 関連ドキュメント
 
