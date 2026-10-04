@@ -7,6 +7,7 @@ import yaml from "js-yaml";
 import { format } from "prettier";
 import {
   applyGradeSubmission,
+  buildGradeSubmissionFromAnalysis,
   discoverGradeTargets,
   doneCriteriaDetailPath,
   gradeMarkdownContent,
@@ -1119,6 +1120,151 @@ LEVEL: 4
     ]);
   });
 
+  it("converts executor markers into a GradeSubmission without a reporter", () => {
+    const executorOutput = `前置きの分析も許容する。
+[VIEWPOINT vp-qe-kata-conformance]
+LEVEL: 2
+規約の必須事項と比較した。
+FINDING major line=7: 必須の禁止事項が欠落している（三箇所）。
+FINDING note: 用語の揺れがある。
+[END VIEWPOINT]
+[VIEWPOINT vp-arc-conciseness]
+LEVEL: 4
+[END VIEWPOINT]
+`;
+    const expectedPath = "docs/ja/specdojo/rulebooks/example-rulebook.md";
+
+    const actual = buildGradeSubmissionFromAnalysis({
+      executorOutput,
+      viewpoints,
+      target: "kata",
+      expectedPath,
+    });
+
+    expect(actual).toEqual({
+      issues: [],
+      submission: {
+        rubric: "grade-rubric-v1",
+        documents: [
+          {
+            path: expectedPath,
+            viewpoints: [
+              {
+                id: "vp-qe-kata-conformance",
+                level: 2,
+                findings: [
+                  {
+                    severity: "major",
+                    line: 7,
+                    message: "必須の禁止事項が欠落している（三箇所）。",
+                  },
+                  { severity: "note", message: "用語の揺れがある。" },
+                ],
+              },
+              { id: "vp-arc-conciseness", level: 4, findings: [] },
+            ],
+          },
+        ],
+      },
+    });
+  });
+
+  it("normalizes bold, list, and quote decorations around markers without changing messages", () => {
+    const executorOutput = `**[VIEWPOINT vp-qe-kata-conformance]**
+- **LEVEL:** 2
+  - **FINDING major line=7:** **必須**の禁止事項が欠落している。
+**[END VIEWPOINT]**
+> [VIEWPOINT vp-arc-conciseness]
+> **LEVEL: 4**
+> [END VIEWPOINT]
+`;
+
+    const analysis = parseGradeExecutorAnalysis(executorOutput);
+
+    expect(analysis.viewpoints).toEqual([
+      {
+        id: "vp-qe-kata-conformance",
+        level: 2,
+        findings: [{ severity: "major", line: 7, message: "**必須**の禁止事項が欠落している。" }],
+      },
+      { id: "vp-arc-conciseness", level: 4, findings: [] },
+    ]);
+  });
+
+  it("does not treat a FINDING embedded in prose as a marker", () => {
+    const executorOutput = `[VIEWPOINT vp-arc-conciseness]
+LEVEL: 4
+本文中の FINDING major: という表記は申告ではない。
+[END VIEWPOINT]
+`;
+
+    expect(parseGradeExecutorAnalysis(executorOutput).viewpoints).toEqual([
+      { id: "vp-arc-conciseness", level: 4, findings: [] },
+    ]);
+  });
+
+  it("rejects executor output with a missing viewpoint marker", () => {
+    const executorOutput = `[VIEWPOINT vp-arc-conciseness]
+LEVEL: 4
+[END VIEWPOINT]
+`;
+
+    const actual = buildGradeSubmissionFromAnalysis({
+      executorOutput,
+      viewpoints,
+      target: "kata",
+      expectedPath: "docs/ja/specdojo/rulebooks/example-rulebook.md",
+    });
+
+    expect(actual.submission).toBeUndefined();
+    expect(actual.issues).toContainEqual({
+      path: "$analysis.documents[0]",
+      message: "missing agent viewpoint: vp-qe-kata-conformance",
+    });
+  });
+
+  it("rejects executor output without an END VIEWPOINT marker", () => {
+    const actual = buildGradeSubmissionFromAnalysis({
+      executorOutput: "[VIEWPOINT vp-arc-conciseness]\nLEVEL: 4\n",
+      viewpoints,
+      target: "kata",
+      expectedPath: "docs/ja/specdojo/rulebooks/example-rulebook.md",
+    });
+
+    expect(actual).toEqual({
+      issues: [
+        {
+          path: "$analysis",
+          message: "viewpoint vp-arc-conciseness: END VIEWPOINT marker is required",
+        },
+      ],
+    });
+  });
+
+  it("rejects executor output whose level exceeds the finding severity cap", () => {
+    const executorOutput = `[VIEWPOINT vp-qe-kata-conformance]
+LEVEL: 3
+FINDING major line=7: 必須の禁止事項が欠落している。
+[END VIEWPOINT]
+[VIEWPOINT vp-arc-conciseness]
+LEVEL: 4
+[END VIEWPOINT]
+`;
+
+    const actual = buildGradeSubmissionFromAnalysis({
+      executorOutput,
+      viewpoints,
+      target: "kata",
+      expectedPath: "docs/ja/specdojo/rulebooks/example-rulebook.md",
+    });
+
+    expect(actual.submission).toBeUndefined();
+    expect(actual.issues).toContainEqual({
+      path: "$analysis.documents[0].viewpoints[0]",
+      message: "finding severity caps level at 2",
+    });
+  });
+
   it("resolves declared and reverse-linked Kata references", () => {
     const references = resolveGradeReferencePaths("docs/ja/specdojo/samples/opr-batch-sample.md");
     expect(references).toEqual(
@@ -1534,6 +1680,37 @@ DC-002: unsatisfied: 承認時点の記載がない。
     ).toContainEqual({
       path: "documents[0]",
       message: "done_criteria[] is required for this deliverable",
+    });
+  });
+
+  it("converts executor markers with done_criteria into a deliverable GradeSubmission", () => {
+    const actual = buildGradeSubmissionFromAnalysis({
+      executorOutput,
+      viewpoints,
+      target: "deliverable",
+      expectedPath: deliverableInput.path,
+      doneCriteria,
+    });
+
+    expect(actual).toEqual({
+      issues: [],
+      submission: { rubric: "grade-rubric-v1", documents: [deliverableInput] },
+    });
+  });
+
+  it("rejects deliverable executor output that omits a catalog criterion", () => {
+    const actual = buildGradeSubmissionFromAnalysis({
+      executorOutput: executorOutput.replace("DC-001: satisfied\n", ""),
+      viewpoints,
+      target: "deliverable",
+      expectedPath: deliverableInput.path,
+      doneCriteria,
+    });
+
+    expect(actual.submission).toBeUndefined();
+    expect(actual.issues).toContainEqual({
+      path: "$analysis.documents[0]",
+      message: "missing criterion: DC-001",
     });
   });
 

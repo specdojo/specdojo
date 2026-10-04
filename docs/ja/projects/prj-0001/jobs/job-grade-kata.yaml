@@ -99,8 +99,9 @@ task:
 
       - 終了コード75（rate limit）または中断で未完了の段が残っているか。残る場合は同じ
         `--run-id` で再開できる状態かを確認する。
-      - `failed` の段があるか。ある場合は rate limit、agent 側の失敗、`grade apply` の
-        忠実性検証による拒否のいずれかへ切り分ける。
+      - `failed` の段があるか。ある場合は rate limit、agent 側の失敗、`grade apply` が
+        executor の marker を機械変換できず拒否したもの（executor を1回再実行しても
+        解消しなかったもの）のいずれかへ切り分ける。
       - `retry_exhausted` の文書があるか。ある場合は失敗段と連続失敗回数を示し、人手での
         原因解消または state の再開判断を促す。
       - agy 単段の verdict と score の分布に、評価設定の見直しを要する偏りがあるか。

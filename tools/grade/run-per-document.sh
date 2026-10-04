@@ -31,14 +31,18 @@ Options:
   --work-dir <directory>        State and result directory
   --stage-1-executor <nickname> (default: codex-expert-executor for 1 stage,
                                 gemma-expert-executor for 3 stages)
-  --stage-1-reporter <nickname> (default: gemma-reporter)
+  --stage-1-reporter <machine|nickname>
+                                machine converts the executor markers with
+                                `grade apply --analysis-from` (default). A
+                                nickname runs that LLM reporter instead; use it
+                                only to compare transcription accuracy
   --stage-1-reference <path>    Comparison document. Kata defaults to the
                                 same-kind prj-overview; deliverable defaults to none
   --stage-2-executor <nickname> (default: gemma-expert-executor)
-  --stage-2-reporter <nickname> (default: gemma-reporter)
+  --stage-2-reporter <machine|nickname> (default: machine)
   --stage-2-reference <path|none> (default: none)
   --stage-3-executor <nickname> (default: codex-expert-executor)
-  --stage-3-reporter <nickname> (default: gemma-reporter)
+  --stage-3-reporter <machine|nickname> (default: machine)
   --stage-3-reference <path|none> (default: none)
   --specdojo-bin <path>         Use one executable instead of npx tsx
   --dry-run                     Print selection and configuration only
@@ -88,14 +92,17 @@ declare -a exhausted_paths=()
 
 stage_1_executor=gemma-expert-executor
 stage_1_executor_explicit=false
-stage_1_reporter=gemma-reporter
+# PJR-E9H3 で reporter の既定を LLM から executor marker の機械変換（machine）へ移した。
+# LLM reporter は書き写しの誤り・JSON の構文破損・根拠のない JSON を生じたためである。
+# nickname を指定した場合だけ、比較用に LLM reporter を起動する。
+stage_1_reporter=machine
 stage_1_reference=
 stage_1_reference_explicit=false
 stage_2_executor=gemma-expert-executor
-stage_2_reporter=gemma-reporter
+stage_2_reporter=machine
 stage_2_reference=none
 stage_3_executor=codex-expert-executor
-stage_3_reporter=gemma-reporter
+stage_3_reporter=machine
 stage_3_reference=none
 
 while [[ $# -gt 0 ]]; do
@@ -541,7 +548,7 @@ expected_config=$(printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s
   "$rubric_outdated" "$max_stage_failures" "$stages:$requested_signature" \
   "$stage_1_executor" "$stage_1_reporter" "$stage_1_reference" \
   "$stage_2_executor:$stage_2_reporter:$stage_2_reference" \
-  "$stage_3_executor:$stage_3_reporter:$stage_3_reference" "selection-v5" "pipeline-v4")
+  "$stage_3_executor:$stage_3_reporter:$stage_3_reference" "selection-v5" "pipeline-v5")
 config_file="$work_dir/config.tsv"
 selection_file="$work_dir/selection.txt"
 results_file="$work_dir/results.tsv"
@@ -817,7 +824,14 @@ execute_stage() {
   local reporter_input="$stage_dir/reporter-input.md"
   local reporter_output="$stage_dir/grade-submission.json"
   local -a plan_command=(grade plan --target "$target" --project "$project" --path "$document" --out "$stage_dir/plans")
-  local -a apply_command=(grade apply --target "$target" --project "$project" --path "$document" --analysis-from "$executor_output" --from "$reporter_output" --by "$executor")
+  local -a apply_command=(grade apply --target "$target" --project "$project" --path "$document" --analysis-from "$executor_output" --by "$executor")
+  local machine_reporter=false
+  if [[ "$reporter" == machine ]]; then
+    machine_reporter=true
+    apply_command+=(--submission-out "$reporter_output")
+  else
+    apply_command+=(--from "$reporter_output")
+  fi
 
   if [[ -f "$state_file" ]]; then
     IFS=$'\t' read -r stage_status stage_verdict stage_score stage_findings <"$state_file"
@@ -849,7 +863,7 @@ execute_stage() {
 
   mapfile -t executor_plans < <(find "$stage_dir/plans" -maxdepth 1 -type f -name '*-grade-plan.md' ! -name '*-reporter-*' -print)
   mapfile -t reporter_plans < <(find "$stage_dir/plans" -maxdepth 1 -type f -name '*-grade-reporter-plan.md' -print)
-  if [[ ${#executor_plans[@]} -ne 1 || ${#reporter_plans[@]} -ne 1 ]]; then
+  if [[ ${#executor_plans[@]} -ne 1 ]] || { ! $machine_reporter && [[ ${#reporter_plans[@]} -ne 1 ]]; }; then
     printf 'expected exactly one executor and reporter plan\n' >>"$log_file"
     record_pipeline_stage "$document" "$stage" failed
     record_result "$document" "$stage" failed "$((SECONDS - started_at))" "" "" "" "$executor" "$reporter" "$reference" "$pipeline_consecutive_failures" "$pipeline_max_failures"
@@ -858,7 +872,7 @@ execute_stage() {
     return 0
   fi
   executor_plan=${executor_plans[0]}
-  reporter_plan=${reporter_plans[0]}
+  reporter_plan=${reporter_plans[0]-}
 
   if run_specdojo "$log_file" agent run --project "$project" --plan "$executor_plan" --by "$executor" --out "$executor_output"; then
     :
@@ -875,26 +889,28 @@ execute_stage() {
     return 0
   fi
 
-  {
-    cat "$reporter_plan"
-    printf '\n<grade_executor_output>\n'
-    cat "$executor_output"
-    printf '\n</grade_executor_output>\n'
-  } >"$reporter_input"
+  if ! $machine_reporter; then
+    {
+      cat "$reporter_plan"
+      printf '\n<grade_executor_output>\n'
+      cat "$executor_output"
+      printf '\n</grade_executor_output>\n'
+    } >"$reporter_input"
 
-  if run_specdojo "$log_file" agent run --project "$project" --plan "$reporter_input" --by "$reporter" --out "$reporter_output"; then
-    :
-  else
-    exit_code=$?
-    if [[ $exit_code -eq 75 ]]; then
-      record_result "$document" "$stage" rate_limited "$((SECONDS - started_at))" "" "" "" "$executor" "$reporter" "$reference"
-      return 75
+    if run_specdojo "$log_file" agent run --project "$project" --plan "$reporter_input" --by "$reporter" --out "$reporter_output"; then
+      :
+    else
+      exit_code=$?
+      if [[ $exit_code -eq 75 ]]; then
+        record_result "$document" "$stage" rate_limited "$((SECONDS - started_at))" "" "" "" "$executor" "$reporter" "$reference"
+        return 75
+      fi
+      record_pipeline_stage "$document" "$stage" failed
+      record_result "$document" "$stage" failed "$((SECONDS - started_at))" "" "" "" "$executor" "$reporter" "$reference" "$pipeline_consecutive_failures" "$pipeline_max_failures"
+      save_stage_state "$state_file" failed "" "" ""
+      stage_status=failed
+      return 0
     fi
-    record_pipeline_stage "$document" "$stage" failed
-    record_result "$document" "$stage" failed "$((SECONDS - started_at))" "" "" "" "$executor" "$reporter" "$reference" "$pipeline_consecutive_failures" "$pipeline_max_failures"
-    save_stage_state "$state_file" failed "" "" ""
-    stage_status=failed
-    return 0
   fi
 
   local apply_temp_log="$document_dir/stage-$stage-apply.log"
@@ -904,7 +920,25 @@ execute_stage() {
   apply_status=$?
   cat "$apply_temp_log" >>"$log_file"
 
-  if [[ $apply_status -ne 0 ]]; then
+  if [[ $apply_status -ne 0 ]] && $machine_reporter; then
+    # 機械変換は executor の応答をそのまま解析するため、同じ応答の変換を繰り返しても結果は
+    # 変わらない。拒否された応答と理由を残し、executor を1回だけ再実行して変換し直す。
+    cp "$executor_output" "$stage_dir/executor-output.rejected.txt"
+    cp "$apply_temp_log" "$stage_dir/apply-rejection.log"
+    if run_specdojo "$log_file" agent run --project "$project" --plan "$executor_plan" --by "$executor" --out "$executor_output"; then
+      printf 'run (executor retry): %s\n' "${apply_command[*]}" >>"$log_file"
+      "${specdojo_command[@]}" "${apply_command[@]}" >"$apply_temp_log" 2>&1
+      apply_status=$?
+      cat "$apply_temp_log" >>"$log_file"
+    else
+      exit_code=$?
+      if [[ $exit_code -eq 75 ]]; then
+        record_result "$document" "$stage" rate_limited "$((SECONDS - started_at))" "" "" "" "$executor" "$reporter" "$reference"
+        return 75
+      fi
+      apply_status=1
+    fi
+  elif [[ $apply_status -ne 0 ]]; then
     printf '\nThe previous response failed validation:\n%s\nReturn a corrected JSON value.\n' "$(cat "$apply_temp_log")" >>"$reporter_input"
     if run_specdojo "$log_file" agent run --project "$project" --plan "$reporter_input" --by "$reporter" --out "$reporter_output"; then
       printf 'run (retry): %s\n' "${apply_command[*]}" >>"$log_file"
