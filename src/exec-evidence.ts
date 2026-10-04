@@ -53,6 +53,8 @@ export type ExecEvidence = {
   /** Executor-reported disposition of plan targets. Required by the runner on executor resume. */
   target_coverage?: EvidenceTargetCoverage[];
   final_message: string;
+  /** Runner-derived failure/protection reason. Present only when the executor did not succeed. */
+  block_reason?: string;
   command?: {
     shell: string;
     value: string;
@@ -175,6 +177,20 @@ export function redactSensitiveText(value: string): string {
 
 function boundedText(value: unknown, limit: number): string {
   return truncate(redactSensitiveText(typeof value === "string" ? value.trim() : ""), limit);
+}
+
+function executorBlockReason(status: ExecEvidence["stage"]["status"], stderr: string): string {
+  if (status === "rate_limited") return "executor rate limit reached";
+  const lines = stderr
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+  const tagged = lines.find((line) => /^(blocked|review-blocked):/iu.test(line));
+  const detail = tagged ?? lines.at(-1);
+  return boundedText(
+    detail ? `agent exited with non-zero code: ${detail}` : "agent exited with non-zero code",
+    MAX_VALIDATION_SUMMARY_LENGTH,
+  );
 }
 
 export function parseExecutorReport(stdout: string): {
@@ -478,6 +494,9 @@ export function buildExecutorEvidence(input: BuildExecutorEvidenceInput): {
       validations,
       ...(report.targetCoverage.length > 0 ? { target_coverage: report.targetCoverage } : {}),
       final_message: report.finalMessage,
+      ...(input.status === "succeeded"
+        ? {}
+        : { block_reason: executorBlockReason(input.status, input.stderr) }),
       log_refs: [
         {
           kind: "agent-output-excerpt",
@@ -631,6 +650,13 @@ export function recordCommandEvidence(input: RecordCommandEvidenceInput): {
       },
     ],
     final_message: `Runner command ${summary}.`,
+    ...(!succeeded
+      ? {
+          block_reason: input.error
+            ? `command spawn failed: ${boundedText(input.error, MAX_VALIDATION_SUMMARY_LENGTH)}`
+            : `command exited with code ${input.exitCode ?? "unknown"}`,
+        }
+      : {}),
     command: {
       shell: input.shell,
       value: safeCommand,

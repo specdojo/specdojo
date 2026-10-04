@@ -194,7 +194,7 @@ specdojo exec trial run \
 
 `--agent`だけならreporterなし、`--agent`と`--reporter-by`なら全trialで同じreporter、`--pair`ならtrialごとのreporterを使います。比較記録の`reporter_mode`にはそれぞれ`none` / `shared` / `paired`を保存します。
 
-比較記録は`execution_path/exec/trials/<comparison-id>/comparison.json`へ集約します。planと実際のpromptのSHA-256、base commitと互換性確認、agent別の所要時間、終了コード、変更ファイル、検証結果、executor構造化出力を記録します。所要時間はexecutor、親検証、trial全体を分け、親検証の実行時間がagent比較へ混入しないようにします。検証件数もexecutor報告と親runner実行を分け、executorの`passed` / `failed` / `not_run`と報告総数を保存します。理由付きの`not_run`は意図した省略、報告件数の不足は未報告として比較できます。reporterについては構造化出力の成否、形式試行回数、形式再試行回数、結果、失敗理由に加え、失敗分類（`reported_blocked` / `invalid_output` / `invocation_failure` / `rate_limit`）を記録します。判断の質、文章の質、範囲の遵守は機械指標と混ぜず、`exec trial rate`で1〜5と注記を記録します。
+比較記録は`execution_path/exec/trials/<comparison-id>/comparison.json`へ集約します。planと実際のpromptのSHA-256、base commitと互換性確認、agent別の所要時間、終了コード、変更ファイル、検証結果、executor構造化出力を記録します。所要時間はexecutor、親検証、trial全体を分け、親検証の実行時間がagent比較へ混入しないようにします。検証件数もexecutor報告と親runner実行を分け、executorの`passed` / `failed` / `not_run`と報告総数を保存します。理由付きの`not_run`は意図した省略、報告件数の不足は未報告として比較できます。reporterについては構造化出力の成否、形式試行回数、形式再試行回数、結果、失敗理由に加え、失敗分類（`evidence_blocked` / `invalid_output` / `invocation_failure` / `rate_limit`）を記録します。判断の質、文章の質、範囲の遵守は機械指標と混ぜず、`exec trial rate`で1〜5と注記を記録します。
 
 `pipeline.parent_validations`が設定されている場合、trialも通常のpipelineと同様にexecutor成功後・reporter起動前に各worktreeで親検証を実行します。結果は`source: runner`としてevidenceへ追記され、失敗したtrialは採用可能な`succeeded`になりません。executorが失敗して親検証へ進めなかった場合も`parent_validation.status: not_run`として比較記録と`trial status`に表示します。これにより、採用前に親検証の不足を確認できます。
 
@@ -383,7 +383,7 @@ run ごとの実行記録は `<execution_path>/exec/evidence/<task-id>/<run-id>/
 | `executor.log`                                                        | executor の出力抜粋（秘匿値は伏せ字化、64KiB で切り詰め）                                      |
 | `reporter-attempt-<n>.stdout.log` / `reporter-attempt-<n>.stderr.log` | 失敗した reporter の形式試行別の生出力（秘匿値は伏せ字化、各ストリーム 64KiB で切り詰め）      |
 
-agent ログは人が調査するための参照先で、reporter には渡りません。reporter が受け取るのは plan と `evidence.json` と出力スキーマだけです。失敗理由の要約だけでは原因が分からない場合は、`evidence.json` の `log_refs` から stdout / stderr を個別に確認します。ログは Git 管理対象の evidence ディレクトリにありますが、失敗中の worktree では未コミットのため、`--force-restart` などで破棄する前に確認します（詳細は [exec設定ガイド](exec-config-guide.md) の `evidence とログの引き渡し方針`）。
+agent ログは人が調査するための参照先で、reporter には渡りません。reporter が受け取るのは plan、runner 管理記録を除いた `evidence.json` の変更一覧、文章項目だけの出力スキーマです。runner 管理記録は、解決済みの execution path 配下の evidence、project register とその派生ビュー、当該 result のパスを基準に除外します。result の変更パスはこの除外後の `changes`、`outcome` と `block_reason` は executor の stage・終了コード・保護理由と検証結果から runner が機械生成します。executor または親 runner の検証に failed / `not_run` があれば blocked です。reporter は実施内容、各変更の説明、申し送り、approach、review の判断根拠と改善指示だけを返し、変更の説明は除外後の `changes` と同じ順・同じ件数にします。件数が違う出力や、機械管理項目を追加した出力は形式不正として拒否されます。失敗理由の要約だけでは原因が分からない場合は、記録済み `evidence.json` の `log_refs` から stdout / stderr を個別に確認します。ログは Git 管理対象の evidence ディレクトリにありますが、失敗中の worktree では未コミットのため、`--force-restart` などで破棄する前に確認します（詳細は [exec設定ガイド](exec-config-guide.md) の `evidence とログの引き渡し方針`）。
 
 stage 別の失敗と対応は次のとおりです。
 
@@ -394,7 +394,7 @@ stage 別の失敗と対応は次のとおりです。
 | reporter のプロセス失敗       | executor が `succeeded`、reporter が `failed`          | `exec resume --task <task-id>` で reporter から再開する                                            |
 | reporter の出力形式エラー     | reporter を最大3回再実行した後に `failed`              | 同上（executor は再実行されない）                                                                  |
 | 親 runner の検証失敗          | evidence の `source: runner` が `failed`               | 原因を解消して reporter を再開する（親検証だけ再実行される）                                       |
-| reporter の `outcome=blocked` | result が `blocked` になり `block_reason` に理由が残る | 理由を読み、成果物側の不足を解消してから再実行する                                                 |
+| evidence の機械判定が blocked | result が `blocked` になり `block_reason` に理由が残る | executor または親検証の理由を読み、成果物側の不足を解消してから再実行する                          |
 | commit / merge / 撤去の失敗   | executor・reporter が `succeeded`、統合が `failed`     | `exec resume --task <task-id>` で統合段だけ再開する                                                |
 
 reporter で止まったタスクは、同じ claim のまま reporter だけを再開できます。再開時は `pipeline-state.json` と executor evidence の task ID / run ID の一致を確認し、一致しない場合や欠損している場合は evidence を再利用せず、新しい run として executor から実行し直します。保存済みの親 runner 検証だけが失敗している場合は、現在の worktree でその固定許可リスト検証を再実行し、結果を evidence へ反映してから reporter を起動します。`source: executor` の検証失敗は成果物側の記録なので、この経路では再評価しません。

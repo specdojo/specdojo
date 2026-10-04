@@ -58,3 +58,32 @@
       from: "-"
       to: "agent exited with non-zero code: 親 runner による `test-integration` が失敗しているため（status: failed）。"
   previous_event_id: reg_841c1602b4194ac088e0603ef9caf86f
+- v: 1
+  id: reg_235d1902c77e4d33b30c5845cdaccd8e
+  ts: "2026-10-04T11:33:46Z"
+  action: start
+  actor: agy-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: 親 runner による `test-integration` が失敗しているため（status: failed）。"
+      to: "-"
+  previous_event_id: reg_e87b173d44d54418b8cde466d0323863
+- v: 1
+  id: reg_aba681da766e4f17a92eb1ccb36fcfae
+  ts: "2026-10-04T11:38:58Z"
+  action: review
+  actor: agy-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_235d1902c77e4d33b30c5845cdaccd8e

@@ -32,12 +32,10 @@ function configurePipeline(repo: string, reporterCommandOverride?: string): void
   const reporterOutput = JSON.stringify({
     schema_version: 1,
     mode: "edit",
-    outcome: "complete",
     summary: ["成果物を更新し、検証を完了した。"],
-    changed_files: [{ path: "pipeline-artifact.md", summary: "文書を更新した。" }],
+    changed_files: [{ summary: "文書を更新した。" }],
     handoff: [],
     approach: "plan と executor evidence のみを根拠に結果を構成した。",
-    block_reason: "",
   });
   const reporterOutputBase64 = Buffer.from(reporterOutput, "utf8").toString("base64");
   const reporterCommand =
@@ -390,12 +388,10 @@ describe("exec run (in-place, default)", () => {
     const reporterOutput = JSON.stringify({
       schema_version: 1,
       mode: "edit",
-      outcome: "complete",
       summary: ["reporter should not run"],
       changed_files: [],
       handoff: [],
       approach: "unexpected reporter invocation",
-      block_reason: "",
     });
     const reporterOutputBase64 = Buffer.from(reporterOutput, "utf8").toString("base64");
     configurePipeline(
@@ -468,12 +464,10 @@ describe("exec run (in-place, default)", () => {
     const reporterOutput = JSON.stringify({
       schema_version: 1,
       mode: "edit",
-      outcome: "complete",
       summary: ["成果物を更新し、検証を完了した。"],
-      changed_files: [],
+      changed_files: [{ summary: "runner command の実行後に検出した変更を記録した。" }],
       handoff: [],
       approach: "command evidence の stdout と stderr を確認した。",
-      block_reason: "",
     });
     const reporterOutputBase64 = Buffer.from(reporterOutput, "utf8").toString("base64");
     configurePipeline(

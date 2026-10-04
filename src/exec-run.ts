@@ -261,7 +261,11 @@ import {
   type ParentValidationInvoker,
   type ParentValidationRoots,
 } from "./exec-parent-validation.js";
-import { runReporterWithFormatRetry } from "./exec-reporter.js";
+import {
+  deriveReporterFacts,
+  evidenceForReporter,
+  runReporterWithFormatRetry,
+} from "./exec-reporter.js";
 import {
   findResumableRegisterRun,
   resolveRegisterResumeArtifacts,
@@ -2255,6 +2259,12 @@ async function runPreparedTask(
       pipelineBlockReason = "reporter stage could not start because its managed inputs are missing";
       stderr = pipelineBlockReason;
     } else {
+      const reporterEvidence = evidenceForReporter(executorEvidence, {
+        repoRoot,
+        worktreePath: prepared.worktree.path,
+        executionPath,
+        resultPath: worktreeResultPath,
+      });
       const reporterStartedAt = new Date().toISOString();
       pipelineState = updatePipelineStage(
         pipelineState,
@@ -2271,7 +2281,7 @@ async function runPreparedTask(
       process.stdout.write(`  Running reporter: ${prepared.reporterCandidates[0].command}\n`);
       const reporter = await runReporterWithFormatRetry({
         plan: prepared.plan,
-        evidence: executorEvidence,
+        evidence: reporterEvidence,
         mode: prepared.task.mode ?? "edit",
         invoke: async (reporterPrompt) => {
           const outcome = await runWithRetry(
@@ -2295,21 +2305,11 @@ async function runPreparedTask(
       });
       if (reporter.result === "success") {
         try {
-          await renderReporterResult(worktreeResultPath, reporter.output, executorEvidence);
-          const parentValidationFailure = failedParentValidationReason(
-            executorEvidence.validations,
-          );
-          result =
-            reporter.output.outcome === "complete" && !parentValidationFailure
-              ? "success"
-              : "failure";
-          if (reporter.output.outcome === "blocked") {
-            pipelineBlockReason = reporter.output.block_reason;
-            stderr = reporter.output.block_reason;
-          } else if (parentValidationFailure) {
-            pipelineBlockReason = parentValidationFailure;
-            stderr = parentValidationFailure;
-          }
+          await renderReporterResult(worktreeResultPath, reporter.output, reporterEvidence);
+          const facts = deriveReporterFacts(reporterEvidence);
+          result = facts.outcome === "complete" ? "success" : "failure";
+          pipelineBlockReason = facts.block_reason || undefined;
+          if (pipelineBlockReason) stderr = pipelineBlockReason;
           process.stdout.write(
             `  Reporter complete: ${prepared.reporterCandidates[0].actor ?? "reporter"} (format attempts: ${reporter.formatAttempts})\n`,
           );
@@ -3692,6 +3692,12 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
     }
     if (outcome.result === "success") {
       pipelineFailureStage = "reporter";
+      const reporterEvidence = evidenceForReporter(recorded.evidence, {
+        repoRoot,
+        worktreePath: repoRoot,
+        executionPath,
+        ...(resultPath ? { resultPath } : {}),
+      });
       const reporterStartedAt = new Date().toISOString();
       pipelineState = updatePipelineStage(
         pipelineState,
@@ -3708,7 +3714,7 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
       process.stdout.write(`Running reporter: ${reporterCandidates?.[0]?.command ?? ""}\n`);
       const reporter = await runReporterWithFormatRetry({
         plan: planPrompt,
-        evidence: recorded.evidence,
+        evidence: reporterEvidence,
         mode: task.mode ?? "edit",
         invoke: async (reporterPrompt) => {
           const reporterOutcome = await runWithRetry(
@@ -3733,15 +3739,10 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
       });
       if (reporter.result === "success" && resultPath) {
         try {
-          await renderReporterResult(resultPath, reporter.output, recorded.evidence);
-          const parentValidationFailure = failedParentValidationReason(
-            recorded.evidence.validations,
-          );
-          exitCode = reporter.output.outcome === "complete" && !parentValidationFailure ? 0 : 1;
-          pipelineBlockReason =
-            reporter.output.outcome === "blocked"
-              ? reporter.output.block_reason
-              : parentValidationFailure;
+          await renderReporterResult(resultPath, reporter.output, reporterEvidence);
+          const facts = deriveReporterFacts(reporterEvidence);
+          exitCode = facts.outcome === "complete" ? 0 : 1;
+          pipelineBlockReason = facts.block_reason || undefined;
           process.stdout.write(
             `Reporter complete: ${reporterCandidates?.[0]?.actor ?? "reporter"} (format attempts: ${reporter.formatAttempts})\n`,
           );
@@ -3973,29 +3974,36 @@ async function runCommandJobMode(params: {
 
   const commandSucceeded = commandOutcome.exitCode === 0 && !commandOutcome.error;
   if (!commandSucceeded || !analysisCandidate) {
+    const reporterEvidence = evidenceForReporter(recorded.evidence, {
+      repoRoot,
+      worktreePath: repoRoot,
+      executionPath,
+      resultPath,
+    });
     const reason = commandSucceeded
       ? undefined
       : commandOutcome.error
         ? `command spawn failed: ${commandOutcome.error}`
         : `command exited with code ${commandOutcome.exitCode ?? "unknown"}`;
-    await renderReporterResult(resultPath, {
-      schema_version: 1,
-      mode: "edit",
-      outcome: commandSucceeded ? "complete" : "blocked",
-      summary: [
-        commandSucceeded
-          ? "runner が解決済みコマンドを直接実行し、終了コード 0 を確認した。"
-          : `runner が解決済みコマンドを直接実行したが、${reason}。`,
-      ],
-      changed_files: recorded.evidence.changes.map((change) => ({
-        path: change.path,
-        summary: "runner command の実行後に検出した変更",
-      })),
-      handoff: [`command evidence: ${evidenceRef}`],
-      approach:
-        "Job Definition から materialize したコマンドを agent の解釈を介さず実行し、runner evidence を正本とした。",
-      block_reason: reason ?? "",
-    });
+    await renderReporterResult(
+      resultPath,
+      {
+        schema_version: 1,
+        mode: "edit",
+        summary: [
+          commandSucceeded
+            ? "runner が解決済みコマンドを直接実行し、終了コード 0 を確認した。"
+            : `runner が解決済みコマンドを直接実行したが、${reason}。`,
+        ],
+        changed_files: reporterEvidence.changes.map(() => ({
+          summary: "runner command の実行後に検出した変更",
+        })),
+        handoff: [`command evidence: ${evidenceRef}`],
+        approach:
+          "Job Definition から materialize したコマンドを agent の解釈を介さず実行し、runner evidence を正本とした。",
+      },
+      reporterEvidence,
+    );
     await updateResultStatus(
       resultPath,
       commandSucceeded ? "complete" : "blocked",
@@ -4459,6 +4467,7 @@ async function runReporterStage(params: {
   reporterCandidates: AgentRunCandidate[];
   planPrompt: string;
   resultPath: string;
+  registerPaths?: readonly string[];
   execDefaults: ExecDefaultsConfig;
   evidence: ExecEvidence;
   evidencePath: string;
@@ -4474,6 +4483,13 @@ async function runReporterStage(params: {
 }> {
   const { repoRoot, cwd, schedulePath, executionPath, reporterCandidates, execDefaults } = params;
   const env = agentEnvironment(repoRoot, cwd, schedulePath, executionPath, params.productWorktrees);
+  const reporterEvidence = evidenceForReporter(params.evidence, {
+    repoRoot,
+    worktreePath: cwd,
+    executionPath,
+    resultPath: params.resultPath,
+    ...(params.registerPaths ? { registerPaths: params.registerPaths } : {}),
+  });
   let state = params.state;
 
   const reporterStartedAt = new Date().toISOString();
@@ -4495,7 +4511,7 @@ async function runReporterStage(params: {
   const runReporter = () =>
     runReporterWithFormatRetry({
       plan: params.planPrompt,
-      evidence: params.evidence,
+      evidence: reporterEvidence,
       mode: "edit",
       invoke: async (reporterPrompt) => {
         const reporterOutcome = await runWithRetry(
@@ -4526,13 +4542,10 @@ async function runReporterStage(params: {
   let blockReason: string | undefined;
   if (reporter.result === "success") {
     try {
-      await renderReporterResult(params.resultPath, reporter.output, params.evidence);
-      const parentValidationFailure = failedParentValidationReason(params.evidence.validations);
-      exitCode = reporter.output.outcome === "complete" && !parentValidationFailure ? 0 : 1;
-      blockReason =
-        reporter.output.outcome === "blocked"
-          ? reporter.output.block_reason
-          : parentValidationFailure;
+      await renderReporterResult(params.resultPath, reporter.output, reporterEvidence);
+      const facts = deriveReporterFacts(reporterEvidence);
+      exitCode = facts.outcome === "complete" ? 0 : 1;
+      blockReason = facts.block_reason || undefined;
       process.stdout.write(
         `  Reporter complete: ${reporterCandidates[0]?.actor ?? "reporter"} (format attempts: ${reporter.formatAttempts})\n`,
       );
@@ -4593,6 +4606,7 @@ async function runAgentPipeline(params: {
   planPath: string;
   planPrompt: string;
   resultPath: string;
+  registerPaths?: readonly string[];
   execDefaults: ExecDefaultsConfig;
   resumedExecutor?: boolean;
   initialChangeTargets?: readonly string[];
@@ -4752,6 +4766,7 @@ async function runAgentPipeline(params: {
     reporterCandidates,
     planPrompt,
     resultPath,
+    registerPaths: params.registerPaths,
     execDefaults,
     evidence: recorded.evidence,
     evidencePath: recorded.evidencePath,
@@ -4878,6 +4893,14 @@ function registerRunnerManagedPaths(
   return [...exact];
 }
 
+function registerReporterManagedPaths(registerPaths: RegisterPaths): string[] {
+  return [
+    registerPaths.projectRegisterPath,
+    registerPaths.generatedPath,
+    registerPaths.controlsGeneratedPath,
+  ];
+}
+
 // register 項目1件の in-place 実行。plan 生成 → `register start` → agent 実行 → 成否を
 // register の状態遷移（成功: review / 失敗: waiting）と result に反映し、成功かつ
 // registerCommit 有効なら当該IDの変更だけを commit する。ID別の結果を要約で返す。
@@ -4960,6 +4983,7 @@ async function runSingleRegisterItem(
       planPath,
       planPrompt: prompt,
       resultPath,
+      registerPaths: registerReporterManagedPaths(registerPaths),
       execDefaults: context.execDefaults,
       providerConcurrencyGate: context.providerConcurrencyGate,
     });
@@ -6028,6 +6052,7 @@ async function runSingleRegisterItemWorktree(
       planPath,
       planPrompt: prompt,
       resultPath: worktreeResultPathForPipeline,
+      registerPaths: registerReporterManagedPaths(registerPaths),
       execDefaults: context.execDefaults,
       providerConcurrencyGate: context.providerConcurrencyGate,
       productWorktrees: worktree.repos,
@@ -6489,6 +6514,7 @@ async function resumeSingleRegisterItemWorktree(
       planPath,
       planPrompt: prompt,
       resultPath: worktreeResultPath,
+      registerPaths: registerReporterManagedPaths(registerPaths),
       execDefaults: context.execDefaults,
       resumedExecutor: true,
       initialChangeTargets: target.initialChanges,
@@ -6550,6 +6576,7 @@ async function resumeSingleRegisterItemWorktree(
     reporterCandidates: [reporter.candidate],
     planPrompt: prompt,
     resultPath: worktreeResultPath,
+    registerPaths: registerReporterManagedPaths(registerPaths),
     execDefaults: context.execDefaults,
     evidence,
     evidencePath: resolve(worktree.path, target.evidenceRef),

@@ -13,7 +13,30 @@ import {
   scaffoldResult,
   updateResultStatus,
 } from "../../src/exec-results.js";
+import type { ExecEvidence } from "../../src/exec-evidence.js";
 import { specdojoRootDir } from "../../src/specdojo-config.js";
+
+function reporterEvidence(changes: ExecEvidence["changes"]): ExecEvidence {
+  return {
+    schema_version: 1,
+    task_id: "prj-overview",
+    run_id: "run-1",
+    stage: {
+      role: "executor",
+      actor: "pipeline-executor",
+      status: "succeeded",
+      started_at: "2026-08-10T07:00:00.000Z",
+      completed_at: "2026-08-10T07:01:00.000Z",
+      exit_code: 0,
+      attempts: 1,
+    },
+    changes,
+    diff_summary: { files_changed: changes.length, summary: "" },
+    validations: [],
+    final_message: "executor completed",
+    log_refs: [],
+  };
+}
 
 function markdownlintErrors(content: string): unknown[] {
   const parsed = yaml.load(readFileSync(join(specdojoRootDir(), ".markdownlint.yaml"), "utf8"));
@@ -540,17 +563,16 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
     const output = {
       schema_version: 1 as const,
       mode: "edit" as const,
-      outcome: "complete" as const,
       summary: ["成果物とテストを更新した。"],
-      changed_files: [{ path: "docs/test.md", summary: "記述を追加した。" }],
+      changed_files: [{ summary: "記述を追加した。" }],
       handoff: [],
       approach: "plan と evidence の範囲だけを根拠にした。",
-      block_reason: "",
     };
+    const evidence = reporterEvidence([{ path: "docs/test.md", status: "M" }]);
 
-    await renderReporterResult(resultPath, output);
+    await renderReporterResult(resultPath, output, evidence);
     const first = readFileSync(resultPath, "utf8");
-    await renderReporterResult(resultPath, output);
+    await renderReporterResult(resultPath, output, evidence);
     const second = readFileSync(resultPath, "utf8");
 
     expect(second).toBe(first);
@@ -559,6 +581,33 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
     expect(first).not.toContain("_TODO_");
     expect(isResultUnfilled(resultPath, "edit", scaffoldFrontmatter)).toBe(false);
     expect(markdownlintErrors(first)).toEqual([]);
+  });
+
+  it("refuses to pair reporter descriptions with a different number of evidence paths", async () => {
+    const { resultPath } = await scaffoldResult({
+      executionPath,
+      taskId: "prj-overview",
+      mode: "edit",
+      projectId: "prj-0001",
+      planRef: "exec/plans/prj-overview-plan.md",
+      agent: "pipeline-executor",
+      startedAt: "2026-08-10T07:00:00.000Z",
+    });
+
+    await expect(
+      renderReporterResult(
+        resultPath,
+        {
+          schema_version: 1,
+          mode: "edit",
+          summary: ["成果物を更新した。"],
+          changed_files: [],
+          handoff: [],
+          approach: "evidence を照合した。",
+        },
+        reporterEvidence([{ path: "docs/test.md", status: "M" }]),
+      ),
+    ).rejects.toThrow(/summaries \(0\) do not match evidence changes \(1\)/);
   });
 
   it("preserves an unchanged target reason from resumed executor evidence in the result", async () => {
@@ -576,12 +625,10 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
       {
         schema_version: 1,
         mode: "edit",
-        outcome: "complete",
         summary: ["全対象を確認した。"],
-        changed_files: [{ path: "docs/a.md", summary: "記述を更新した。" }],
+        changed_files: [{ summary: "記述を更新した。" }],
         handoff: [],
         approach: "再開前後の差分と plan を照合した。",
-        block_reason: "",
       },
       {
         schema_version: 1,
@@ -629,16 +676,14 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
     const output = {
       schema_version: 1 as const,
       mode: "review" as const,
-      outcome: "complete" as const,
       grade_check: "評価結果は最新で、grade は pass、finding は minor 1 件だった。",
       rationale: ["完了条件を満たし、minor の finding は今回の範囲外である。"],
       improvements: ["minor の finding を次回の見直しで扱う。"],
       approach: "fully-guided で求めた作成が行われたことを確認した。",
       verdict: "complete-with-findings" as const,
-      block_reason: "",
     };
 
-    await renderReporterResult(resultPath, output);
+    await renderReporterResult(resultPath, output, reporterEvidence([]));
     const content = readFileSync(resultPath, "utf8");
     expect(content).toContain("## 1. 評価結果の確認");
     expect(content).toContain("- 完了条件を満たし、minor の finding は今回の範囲外である。");

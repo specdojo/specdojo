@@ -7,7 +7,10 @@ import { describe, expect, it } from "vitest";
 import type { ExecEvidence } from "../../src/exec-evidence.js";
 import {
   buildReporterPrompt,
+  deriveReporterFacts,
+  evidenceForReporter,
   parseReporterOutput,
+  reporterOutputSchemaForMode,
   runReporterWithFormatRetry,
 } from "../../src/exec-reporter.js";
 
@@ -45,24 +48,20 @@ function evidence(): ExecEvidence {
 const validEditOutput = {
   schema_version: 1,
   mode: "edit",
-  outcome: "complete",
   summary: ["文書を更新した。"],
-  changed_files: [{ path: "docs/test.md", summary: "内容を追加した。" }],
+  changed_files: [{ summary: "内容を追加した。" }],
   handoff: [],
   approach: "plan と evidence を照合した。",
-  block_reason: "",
 } as const;
 
 const validReviewOutput = {
   schema_version: 1,
   mode: "review",
-  outcome: "complete",
   grade_check: "評価結果は最新で、grade は pass だった。",
   rationale: ["完了条件と実行記録を照合した。"],
   improvements: [],
   approach: "done criteria と evidence を照合した。",
   verdict: "complete",
-  block_reason: "",
 } as const;
 
 describe("reporter structured output", () => {
@@ -102,6 +101,15 @@ describe("reporter structured output", () => {
     );
   });
 
+  it("supplies a simple mode-specific schema suitable for structured output", () => {
+    const schema = reporterOutputSchemaForMode("edit");
+    const validate = new Ajv2020({ allErrors: true, strict: true }).compile(schema);
+
+    expect(schema).not.toHaveProperty("oneOf");
+    expect(validate(validEditOutput), JSON.stringify(validate.errors)).toBe(true);
+    expect(validate(validReviewOutput)).toBe(false);
+  });
+
   it("accepts every task-completion verdict and rejects per-viewpoint review output", () => {
     for (const verdict of [
       "complete",
@@ -131,12 +139,10 @@ describe("reporter structured output", () => {
     const legacyOutput = {
       schema_version: 1,
       mode: "review",
-      outcome: "complete",
       viewpoint_results: [{ id: "RVP-001", result: "pass", evidence: ["x"], notes: "" }],
       findings: [],
       approach: "done criteria と evidence を照合した。",
       recommendation: "approve",
-      block_reason: "",
     };
     expect(parseReporterOutput(JSON.stringify(legacyOutput), "review").error).toBeDefined();
   });
@@ -151,7 +157,7 @@ describe("reporter structured output", () => {
     );
   });
 
-  it("tells a review reporter that a non-complete verdict is still a recorded result", () => {
+  it("keeps review judgement prose while reserving lifecycle facts for the runner", () => {
     const prompt = buildReporterPrompt({
       plan: "# Plan\n\nReview the task.",
       evidence: evidence(),
@@ -159,7 +165,8 @@ describe("reporter structured output", () => {
     });
 
     expect(prompt).toContain("did not re-grade the deliverable");
-    expect(prompt).toContain('outcome="complete" whenever the evidence supports the verdict');
+    expect(prompt).toContain("Record that judgement in verdict");
+    expect(prompt).toContain("runner owns frontmatter, outcome");
   });
 
   it("passes only plan, bounded evidence, and schema to the reporter", () => {
@@ -173,27 +180,116 @@ describe("reporter structured output", () => {
     expect(prompt).toContain('"diff_summary"');
     expect(prompt).toContain("<specdojo_reporter_output_schema");
     expect(prompt).toContain('source="runner"');
-    expect(prompt).toContain('outcome="blocked"');
+    expect(prompt).toContain("changed-file paths");
     expect(prompt).toContain("identifier or field name");
     expect(prompt).toContain("`depends_on`");
     expect(prompt).not.toContain("raw_diff");
     expect(prompt).not.toContain("executor log body");
   });
 
-  it("tells the reporter its own response fulfills the plan's result-recording requirement", () => {
-    // Regression: without this, a reporter reading a plan written for a single edit+record
-    // agent (record to result before finishing) alongside executor evidence that correctly
-    // leaves the result file untouched (writing it is the reporter's job, not the executor's)
-    // can conclude the task is incomplete and return outcome=blocked even though a
-    // outcome="complete" response is exactly what fulfills that requirement.
+  it("asks for descriptions in evidence order without copying factual paths", () => {
     const prompt = buildReporterPrompt({
       plan: "# Plan\n\nDo the work.",
       evidence: evidence(),
       mode: "edit",
     });
 
-    expect(prompt).toContain('outcome="complete"');
-    expect(prompt).toContain("Do not treat the executor's evidence");
+    expect(prompt).toContain("exactly one changed_files summary");
+    expect(prompt).toContain("do not copy\npaths or statuses");
+    expect(prompt).not.toContain('"outcome"');
+    expect(prompt).not.toContain('"block_reason"');
+  });
+
+  it("rejects reporter attempts to supply machine-owned facts", () => {
+    expect(
+      parseReporterOutput(
+        JSON.stringify({
+          ...validEditOutput,
+          outcome: "blocked",
+          block_reason: "LLM judgement",
+          changed_files: [{ path: "invented.md", summary: "内容を追加した。" }],
+        }),
+        "edit",
+      ).error,
+    ).toMatch(/additional properties/);
+  });
+
+  it("derives paths and a complete outcome from successful evidence", () => {
+    expect(deriveReporterFacts(evidence())).toEqual({
+      outcome: "complete",
+      changed_files: [{ path: "docs/test.md", status: "M" }],
+      block_reason: "",
+    });
+  });
+
+  it("keeps deliverables and excludes resolved evidence, register, and result paths", () => {
+    const input = evidence();
+    input.changes = [
+      { path: "docs/test.md", status: "M" },
+      { path: "runtime/custom/exec/evidence/T-TEST/run-1/pipeline-state.json", status: "??" },
+      { path: "runtime/custom/exec/evidence/T-TEST/run-1/evidence.json", status: "??" },
+      { path: "runtime/custom/exec/evidence/T-TEST/run-1/executor.log", status: "??" },
+      { path: "records/register/pjr-ab12-test.md", status: "M" },
+      { path: "records/register/events/pjr-ab12-events.json", status: "M" },
+      { path: "records/generated/pm-issue-log.md", status: "M" },
+      { path: "runtime/custom/exec/results/pjr-ab12-result.md", status: "M" },
+    ];
+    input.attempt_changes = [...input.changes];
+    input.diff_summary = { files_changed: input.changes.length, summary: "unfiltered" };
+
+    const selected = evidenceForReporter(input, {
+      repoRoot: "/repo",
+      worktreePath: "/worktrees/task",
+      executionPath: "/repo/runtime/custom",
+      registerPaths: ["/repo/records/register", "/repo/records/generated"],
+      resultPath: "/worktrees/task/runtime/custom/exec/results/pjr-ab12-result.md",
+    });
+
+    expect(selected.changes).toEqual([{ path: "docs/test.md", status: "M" }]);
+    expect(selected.attempt_changes).toEqual([{ path: "docs/test.md", status: "M" }]);
+    expect(selected.diff_summary).toEqual({ files_changed: 1, summary: "M docs/test.md" });
+    expect(deriveReporterFacts(selected).changed_files).toEqual([
+      { path: "docs/test.md", status: "M" },
+    ]);
+    expect(input.changes).toHaveLength(8);
+  });
+
+  it("blocks mechanically on runner validation failure even when prose is valid", () => {
+    const input = evidence();
+    input.validations.push({
+      id: "test-unit",
+      source: "runner",
+      command: "npm run test:unit",
+      status: "failed",
+      summary: "exit 1",
+    });
+    expect(deriveReporterFacts(input)).toMatchObject({
+      outcome: "blocked",
+      block_reason: "parent validation failed: test-unit",
+      changed_files: [{ path: "docs/test.md", status: "M" }],
+    });
+  });
+
+  it("blocks mechanically on an executor-reported failed validation", () => {
+    const input = evidence();
+    input.validations = [
+      { command: "npx markdownlint docs/test.md", status: "failed", summary: "1 error" },
+    ];
+    expect(deriveReporterFacts(input)).toMatchObject({
+      outcome: "blocked",
+      block_reason: "executor validation failed or not run: npx markdownlint docs/test.md",
+    });
+  });
+
+  it("uses the evidence block reason for a failed protected executor", () => {
+    const input = evidence();
+    input.stage.status = "failed";
+    input.stage.exit_code = 1;
+    input.block_reason = "agent-config-write: protected configuration changes detected";
+    expect(deriveReporterFacts(input)).toMatchObject({
+      outcome: "blocked",
+      block_reason: "agent-config-write: protected configuration changes detected",
+    });
   });
 
   it("retries only the reporter after a format error and reuses the same evidence", async () => {

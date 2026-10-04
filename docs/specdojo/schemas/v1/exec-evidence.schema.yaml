@@ -162,6 +162,12 @@ properties:
   final_message:
     type: string
     maxLength: 4000
+  block_reason:
+    description: >
+      Runner-derived failure or protection reason. Reporter prose never supplies this field.
+    type: string
+    minLength: 1
+    maxLength: 1000
   command:
     description: >
       Runner-executed deterministic Job command, stream references, and optional redacted,

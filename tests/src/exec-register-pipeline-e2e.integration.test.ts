@@ -259,16 +259,18 @@ if (role === "reporter") {
     process.exit(1);
   }
   if (nickname === "report-lock") execFileSync("git", ["worktree", "lock", "."]);
+  const evidenceTag = "<specdojo_executor_evidence>";
+  const evidenceStart = prompt.lastIndexOf(evidenceTag) + evidenceTag.length;
+  const evidenceEnd = prompt.indexOf("</specdojo_executor_evidence>", evidenceStart);
+  const evidence = JSON.parse(prompt.slice(evidenceStart, evidenceEnd).trim());
   process.stdout.write(
     JSON.stringify({
       schema_version: 1,
       mode: "edit",
-      outcome: "complete",
       summary: ["register 項目を pipeline 経由で処理した。"],
-      changed_files: [{ path: "pipeline-artifact.md", summary: "文書を更新した。" }],
+      changed_files: evidence.changes.map(() => ({ summary: "文書を更新した。" })),
       handoff: [],
       approach: "plan と executor evidence だけを根拠に結果を構成した。",
-      block_reason: "",
     }),
   );
   process.exit(0);
@@ -1528,6 +1530,10 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
           readFileSync(join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md"), "utf8"),
         ).toContain("item_status: review");
         expect(existsSync(join(root, "docs", "protection-applied"))).toBe(true);
+        const result = readRootResult(root);
+        expect(result.match(/## 2\. 変更ファイル\n\n([\s\S]*?)\n\n## 3\./u)?.[1]).toBe(
+          "- `docs/protection-applied`: 文書を更新した。",
+        );
         expect(execWorktreePath(root)).toBeNull();
         expect(Number(git(root, "rev-list", "--first-parent", "--count", "HEAD"))).toBe(
           beforeResume + 1,
