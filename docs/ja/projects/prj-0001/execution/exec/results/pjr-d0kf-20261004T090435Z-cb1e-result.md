@@ -4,12 +4,14 @@ specdojo:
   type: exec-result
   task_id: PJR-D0KF
   mode: edit
-  status: in_progress
+  status: blocked
   project_id: prj-0001
   origin: register
   plan_ref: exec/plans/pjr-d0kf-20261004T090435Z-cb1e-plan.md
   started_at: "2026-10-04T09:04:35.443Z"
+  completed_at: "2026-10-04T09:13:11.398Z"
   agent: codex-expert-executor
+  block_reason: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=.specdojo/exec-defaults.yaml; agent must record the required chang…"
 ---
 
 # Edit Result
@@ -24,7 +26,35 @@ _TODO_: 変更したファイルのパスを記入する。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+<!-- specdojo:agent-protection-handoff -->
+
+**保護機構による自動記録**: `agent-config-write` が agent の変更を止めた。適用するかどうかは人または対話型 orchestrator が agent 実行外で判断する。
+
+- 対象パス: `.specdojo/exec-defaults.yaml`
+- 変更理由: agent の記入なし。自動記録では意図までは復元できないため、下の差分と block メッセージから判断する。
+- 変更後に必要な検証: agent の記入なし。適用者が対象設定に対応する test / hook / CI 検証を判断する。
+- block メッセージ: `agent-config-write: protected configuration changes detected; paths=.specdojo/exec-defaults.yaml; agent must record the required change in the result handoff for human or orchestrator application`
+
+提案差分:
+
+```diff
+diff --git a/.specdojo/exec-defaults.yaml b/.specdojo/exec-defaults.yaml
+index be87c907b..1fbb334a3 100644
+--- a/.specdojo/exec-defaults.yaml
++++ b/.specdojo/exec-defaults.yaml
+@@ -31,6 +31,11 @@ pipeline:
+     - typecheck # npm run typecheck
+     - test-unit # npm run test:unit
+
++# register 項目は失敗時の変更と再開用 checkpoint を隔離するため、既定で task worktree
++# を使う。短時間の軽微な作業を現在の作業ツリーで行う場合だけ --in-place を明示する。
++run:
++  register_execution: worktree
++
+ rate_limit_detection:
+   # exit_codes は最小限にする。多くの agent CLI は通常失敗と agent 自身の block も
+   # exit 1 で返すため、素の exit 1 は rate limit と区別できない。通常失敗を利用制限
+```
 
 ## 4. 進め方と実践の型の適用
 
