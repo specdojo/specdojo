@@ -47,4 +47,4 @@ _TODO_: 解決内容、確認結果、再発防止策を記載する。未解決
 
 - [[prj-0001:pjr-gbev-exec-reporter-machine-facts]]: 観測した再開。
 - [[prj-0001:pjr-7mf6-parallel-register-run-integration]]: 同じ日に統合と再開まわりを変更した項目。
-- `src/exec-run.ts`、`src/exec-register-resume.ts`
+- `src/exec-repo-integration.ts`（エラーの「project: git diff failed」の形から、624 行目付近の `zeroSeparated(cwd, ["diff", "--name-only", "--diff-filter=U", "-z"])` が有力。`cwd` の解決を確認する）、`src/exec-run.ts`、`src/exec-register-resume.ts`
