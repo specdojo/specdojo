@@ -1,5 +1,5 @@
 import { spawn, spawnSync } from "node:child_process";
-import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { basename, dirname, join, relative, resolve, sep } from "node:path";
 import { type Command } from "commander";
 import { selfRunArgs } from "./spawn-self.js";
@@ -126,7 +126,13 @@ import {
   type RegisterPaths,
 } from "./register.js";
 import { registerEventFilePath } from "./register-events.js";
-import { displayIdFromTicketFilename } from "./register-item.js";
+import {
+  applyRegisterItemFields,
+  CELL_NONE,
+  displayIdFromTicketFilename,
+  readRegisterItemContent,
+  registerItemFieldsFromItem,
+} from "./register-item.js";
 import {
   isResultUnfilled,
   readResultFrontmatterSnapshot,
@@ -5155,6 +5161,59 @@ function copyRepoPaths(
   }
 }
 
+// 失敗時に root へ戻すのは runner が生成・更新した plan / result だけに限定する。個票と
+// event は agent が編集した未検証の本文を含みうるため、root に残してある checkpoint 版を
+// wait 遷移の入力にする。派生ビューは遷移後に root で再生成する。
+function registerFailureArtifactPaths(repoRoot: string, paths: readonly string[]): string[] {
+  return paths.filter((path) =>
+    /(?:^|\/)exec\/(?:plans|results)\//.test(repoRelativePath(repoRoot, path)),
+  );
+}
+
+type PreservedRegisterTicket = {
+  path: string;
+  content: string;
+};
+
+// wait commit の個票は検証済みの root 本文を使う一方、exec branch には agent が編集した本文を
+// 残す。root の frontmatter から lifecycle フィールドだけを重ね、resume 後も waiting 状態と
+// 未統合の作業内容の両方を保持する。
+function restorePreservedRegisterTicket(
+  worktreePath: string,
+  repoRoot: string,
+  preserved: PreservedRegisterTicket | undefined,
+): void {
+  if (!preserved) return;
+  const rel = repoRelativePath(repoRoot, preserved.path);
+  const rootTicketPath = resolve(repoRoot, rel);
+  const worktreeTicketPath = resolve(worktreePath, rel);
+  if (!existsSync(rootTicketPath)) {
+    mkdirSync(dirname(worktreeTicketPath), { recursive: true });
+    writeFileSync(worktreeTicketPath, preserved.content, "utf8");
+    return;
+  }
+  try {
+    const rootContent = readFileSync(rootTicketPath, "utf8");
+    const parsed = readRegisterItemContent(rootContent, basename(rel));
+    if (!parsed) throw new Error(`could not parse register item: ${rel}`);
+    const content = applyRegisterItemFields(preserved.content, {
+      ...registerItemFieldsFromItem(parsed.item),
+      block_reason: parsed.blockReason === CELL_NONE ? null : parsed.blockReason,
+    });
+    mkdirSync(dirname(worktreeTicketPath), { recursive: true });
+    writeFileSync(worktreeTicketPath, content, "utf8");
+  } catch (error) {
+    // frontmatter 自体が壊れている場合も agent の作業を失わない。root の wait commit はすでに
+    // clean な checkpoint 版で確定しているため、worktree 側だけ元の内容へ戻して警告する。
+    mkdirSync(dirname(worktreeTicketPath), { recursive: true });
+    writeFileSync(worktreeTicketPath, preserved.content, "utf8");
+    process.stderr.write(
+      `warning: could not apply the waiting lifecycle to ${rel} in the exec branch: ` +
+        `${error instanceof Error ? error.message : String(error)}\n`,
+    );
+  }
+}
+
 // register の状態遷移（start / wait / review）が書き換える追跡ファイル（root 側の絶対パス）:
 // 個票、append-only のイベント、存在する場合は登録簿本体（移行前のレイアウト）。gitignore 済みの
 // 派生ビューは含めない。
@@ -5200,12 +5259,10 @@ function rebuildRootRegisterViews(projectId: string, itemId: string): void {
   }
 }
 
-// register worktree 実行の失敗確定。worktree 側の実行管理ファイル（start 済みの個票・イベント、
-// blocked の result、plan）を root へ写してから waiting へ遷移し、統合ブランチには
-// `exec(register X): wait` commit 1件だけを作る（start の遷移事象も同じ commit に入る）。
-// exec branch には同じ内容を commit したうえで統合ブランチを取り込み、再開後の merge が
-// 記帳ファイルで競合しないようにする。worktree が無い（checkpoint 前の失敗）場合は root の
-// 実行管理ファイルをそのまま commit する。
+// register worktree 実行の失敗確定。worktree 側の plan / blocked result だけを root へ写し、
+// 個票・event は root に残る検証済み checkpoint 版を基準に waiting へ遷移する。統合ブランチには
+// `exec(register X): wait` commit 1件だけを作り、未検証の個票本文は exec branch に保持する。
+// worktree が無い（checkpoint 前の失敗）場合は root の実行管理ファイルをそのまま commit する。
 function registerWaitSummary(params: {
   repoRoot: string;
   projectId: string;
@@ -5214,14 +5271,27 @@ function registerWaitSummary(params: {
   ticketPath: string | null;
   reason: string;
   actor: string;
-  // root 側の絶対パス。worktree がある場合は worktree → root へ写してから遷移する。
+  // root 側の絶対パス。worktree がある場合は plan / result だけを root へ写してから遷移する。
   bookkeepingPaths: readonly string[];
   worktree?: ExecWorktree;
 }): RegisterItemSummary {
   const { repoRoot, projectId, registerPaths, item, ticketPath, actor, worktree } = params;
   const blockReason = sanitizeRegisterConclusion(params.reason);
   const bookkeepingPaths = [...params.bookkeepingPaths];
-  if (worktree) copyRepoPaths(worktree.path, repoRoot, repoRoot, bookkeepingPaths);
+  const preservedTicketPath =
+    worktree && ticketPath ? pathInsideWorktree(repoRoot, worktree.path, ticketPath) : undefined;
+  const preservedTicket: PreservedRegisterTicket | undefined =
+    ticketPath && preservedTicketPath && existsSync(preservedTicketPath)
+      ? { path: ticketPath, content: readFileSync(preservedTicketPath, "utf8") }
+      : undefined;
+  if (worktree) {
+    copyRepoPaths(
+      worktree.path,
+      repoRoot,
+      repoRoot,
+      registerFailureArtifactPaths(repoRoot, bookkeepingPaths),
+    );
+  }
   let transition: RegisterItemTransition = "waiting";
   if (
     !spawnRegisterTransition(projectId, [
@@ -5252,6 +5322,7 @@ function registerWaitSummary(params: {
         worktree,
         item,
         bookkeepingPaths: committedPaths,
+        preservedTicket,
       });
   }
   return {
@@ -5320,6 +5391,7 @@ function syncExecBranchAfterWait(params: {
   worktree: ExecWorktree;
   item: PjrItem;
   bookkeepingPaths: readonly string[];
+  preservedTicket?: PreservedRegisterTicket;
 }): void {
   const { repoRoot, worktree, item } = params;
   const bookkeepingPaths = params.bookkeepingPaths.map((path) => repoRelativePath(repoRoot, path));
@@ -5364,6 +5436,7 @@ function syncExecBranchAfterWait(params: {
     }
 
     copyRepoPaths(repoRoot, worktree.path, repoRoot, params.bookkeepingPaths);
+    restorePreservedRegisterTicket(worktree.path, repoRoot, params.preservedTicket);
     stageCommitTargets(worktree.path, bookkeepingPaths);
     const unresolved = gitOutput(worktree.path, ["diff", "--name-only", "--diff-filter=U"]).trim();
     if (unresolved) throw new Error(`wait sync has unresolved conflicts: ${unresolved}`);
@@ -5373,6 +5446,7 @@ function syncExecBranchAfterWait(params: {
     // The pre-merge release is safe to repeat from root and restores the visible waiting state even
     // when the merge was rejected before MERGE_HEAD was created.
     copyRepoPaths(repoRoot, worktree.path, repoRoot, params.bookkeepingPaths);
+    restorePreservedRegisterTicket(worktree.path, repoRoot, params.preservedTicket);
     process.stderr.write(
       `warning: could not sync the exec branch of ${item.id} with the wait commit; ` +
         `the resumed merge may still conflict: ` +

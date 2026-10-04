@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: waiting
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-10-04T07:26:49Z"
   due_on: null
-  block_reason: "agent exited with non-zero code: runner による検証 `test-integration` が失敗（exit 1）しているため、完了条件を満たしていません。"
 ---
 
 # PJR-7MF6 並列の register 実行で、失敗した項目の遷移が他の項目の統合を妨げる
