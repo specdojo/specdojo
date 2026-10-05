@@ -49,7 +49,7 @@ const validEditOutput = {
   schema_version: 1,
   mode: "edit",
   summary: ["文書を更新した。"],
-  changed_files: [{ summary: "内容を追加した。" }],
+  changed_files: [{ path: "docs/test.md", summary: "内容を追加した。" }],
   handoff: [],
   approach: "plan と evidence を照合した。",
 } as const;
@@ -180,22 +180,24 @@ describe("reporter structured output", () => {
     expect(prompt).toContain('"diff_summary"');
     expect(prompt).toContain("<specdojo_reporter_output_schema");
     expect(prompt).toContain('source="runner"');
-    expect(prompt).toContain("changed-file paths");
+    expect(prompt).toContain("the authoritative changed-file list");
     expect(prompt).toContain("identifier or field name");
     expect(prompt).toContain("`depends_on`");
     expect(prompt).not.toContain("raw_diff");
     expect(prompt).not.toContain("executor log body");
   });
 
-  it("asks for descriptions in evidence order without copying factual paths", () => {
+  it("asks for path-keyed descriptions without requiring the evidence order or count", () => {
     const prompt = buildReporterPrompt({
       plan: "# Plan\n\nDo the work.",
       evidence: evidence(),
       mode: "edit",
     });
 
-    expect(prompt).toContain("exactly one changed_files summary");
-    expect(prompt).toContain("do not copy\npaths or statuses");
+    expect(prompt).toContain("exact path from its evidence.changes entry");
+    expect(prompt).toContain("order does not matter");
+    expect(prompt).toContain("missing descriptions use a default message");
+    expect(prompt).toContain("paths\nabsent from evidence are discarded");
     expect(prompt).not.toContain('"outcome"');
     expect(prompt).not.toContain('"block_reason"');
   });
@@ -207,7 +209,7 @@ describe("reporter structured output", () => {
           ...validEditOutput,
           outcome: "blocked",
           block_reason: "LLM judgement",
-          changed_files: [{ path: "invented.md", summary: "内容を追加した。" }],
+          changed_files: [{ path: "docs/test.md", summary: "内容を追加した。" }],
         }),
         "edit",
       ).error,

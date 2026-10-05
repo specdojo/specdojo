@@ -58,3 +58,32 @@
       from: "-"
       to: "agent exited with non-zero code: parent validation failed: test-integration, typecheck, test-unit"
   previous_event_id: reg_160391977ce944cfad683a4f6f9ca7e6
+- v: 1
+  id: reg_283705aa4ad74b21bc9ce095eec53277
+  ts: "2026-10-05T21:34:36Z"
+  action: start
+  actor: codex-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: test-integration, typecheck, test-unit"
+      to: "-"
+  previous_event_id: reg_b7c2f2f02ab94360832f37b73883fefa
+- v: 1
+  id: reg_e259d2efec74422c8b8ae320fc96c80d
+  ts: "2026-10-05T21:39:16Z"
+  action: review
+  actor: codex-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_283705aa4ad74b21bc9ce095eec53277

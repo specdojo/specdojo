@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: waiting
+  item_status: review
   priority: high
   owner: DEV
   registered_at: "2026-10-04T20:39:02Z"
   due_on: null
-  block_reason: "agent exited with non-zero code: parent validation failed: test-integration, typecheck, test-unit"
 ---
 
 # PJR-0ECY reporter の変更ファイルの説明の件数がずれると、結果の作成が失敗する
@@ -42,7 +41,9 @@ PJR-GBEV で、changed_files のパスは runner が evidence から作り、rep
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- reporter の `changed_files` をパスと説明の組に変更し、runner が evidence のパスを正本として説明を突き合わせるようにした。順序は問わず、説明不足には差分参照を促す既定文を記録し、evidence にないパスの説明は捨てる。
+- 件数一致による描画失敗を廃止し、説明の不足・過剰・順序違いでも result を作成できる unit test と pipeline integration test を追加した。パス、`outcome`、`block_reason` は引き続き evidence から機械生成する。
+- reporter の runtime schema、公開 JSON Schema、prompt、exec 運用ガイドを同じ契約へ更新し、件数・順序への依存が再導入されないようにした。
 
 ## 5. 関連ドキュメント
 

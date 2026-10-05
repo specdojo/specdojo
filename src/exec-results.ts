@@ -13,6 +13,8 @@ import {
 import type { ExecEvidence } from "./exec-evidence.js";
 import { resolveSpecdojoPath, resolveSpecdojoPathIfExists } from "./template-resolution.js";
 
+const MISSING_CHANGED_FILE_SUMMARY = "reporter の説明がないため、変更差分を参照。";
+
 // ---------------------------------------------------------------------------
 // Frontmatter helpers
 // ---------------------------------------------------------------------------
@@ -381,18 +383,19 @@ function renderEditReporterBody(
   evidence: ExecEvidence,
 ): string {
   const facts = deriveReporterFacts(evidence);
-  if (output.changed_files.length !== facts.changed_files.length) {
-    throw new Error(
-      `reporter changed_files summaries (${output.changed_files.length}) do not match evidence changes (${facts.changed_files.length})`,
-    );
+  const summariesByPath = new Map<string, string>();
+  for (const file of output.changed_files) {
+    // The evidence path list remains authoritative. Ignore invented paths and keep the first
+    // description when a reporter repeats a path so rendering stays deterministic.
+    if (!summariesByPath.has(file.path)) summariesByPath.set(file.path, file.summary);
   }
   const changedFiles =
     facts.changed_files.length === 0
       ? "- なし"
       : facts.changed_files
           .map(
-            (file, index) =>
-              `- \`${reporterInlineText(file.path).replace(/`/g, "'")}\`: ${reporterInlineText(output.changed_files[index].summary)}`,
+            (file) =>
+              `- \`${reporterInlineText(file.path).replace(/`/g, "'")}\`: ${reporterInlineText(summariesByPath.get(file.path) ?? MISSING_CHANGED_FILE_SUMMARY)}`,
           )
           .join("\n");
   const unchangedTargetNotes = (evidence?.target_coverage ?? [])

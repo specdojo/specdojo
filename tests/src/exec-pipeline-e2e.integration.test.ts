@@ -32,7 +32,7 @@ const RAW_LOG_MARKER = "raw-executor-log-marker";
 
 type AgentBehavior = {
   role: "executor" | "reporter" | "legacy";
-  kind?: "ok" | "fail" | "invalid" | "rate_limit" | "resume_ok";
+  kind?: "ok" | "fail" | "invalid" | "rate_limit" | "resume_ok" | "path_mismatch";
   task?: string;
   lockWorktree?: boolean;
 };
@@ -92,6 +92,10 @@ if (behavior.role === "executor") {
     writeFileSync("docs/test/doc.md", "# completed after resume\\n", "utf8");
   } else {
     writeFileSync("pipeline-artifact.md", "# " + nickname + " / " + model + "\\n", "utf8");
+    if (behavior.kind === "path_mismatch") {
+      writeFileSync("pipeline-secondary.md", "# secondary artifact\\n", "utf8");
+      writeFileSync("pipeline-tertiary.md", "# tertiary artifact\\n", "utf8");
+    }
   }
   const target = prompt.match(/\\n\\s*targets:\\s*\\n\\s*-\\s*([^\\n]+)/)?.[1]?.trim();
   process.stdout.write("${RAW_LOG_MARKER} api_key: sk-proj-abcdefgh12345678\\n");
@@ -131,12 +135,22 @@ if (behavior.role === "reporter") {
   const evidenceStart = prompt.lastIndexOf(evidenceTag) + evidenceTag.length;
   const evidenceEnd = prompt.indexOf("</specdojo_executor_evidence>", evidenceStart);
   const evidence = JSON.parse(prompt.slice(evidenceStart, evidenceEnd).trim());
+  const changedFiles =
+    behavior.kind === "path_mismatch"
+      ? [
+          ...evidence.changes
+            .slice(1)
+            .reverse()
+            .map(({ path }) => ({ path, summary: path + " の説明。" })),
+          { path: "invented-by-reporter.md", summary: "evidence にない説明。" },
+        ]
+      : evidence.changes.map(({ path }) => ({ path, summary: "文書を更新した。" }));
   process.stdout.write(
     JSON.stringify({
       schema_version: 1,
       mode: "edit",
       summary: ["成果物を更新し、検証を完了した。"],
-      changed_files: evidence.changes.map(() => ({ summary: "文書を更新した。" })),
+      changed_files: changedFiles,
       handoff: [],
       approach: "plan と executor evidence だけを根拠に結果を構成した。",
     }),
@@ -183,6 +197,7 @@ type PipelineFixture = {
   logPath: string;
   behaviorPath: string;
   parentValidationDir: string;
+  agentFixtureDir: string;
   parentValidationLogPath: string;
   parentValidationBehaviorPath: string;
 };
@@ -446,8 +461,11 @@ function setupPipelineRepository(): PipelineFixture {
     mkdirSync(dir, { recursive: true });
   }
 
-  const logPath = join(repo, "agent-invocations.jsonl");
-  const behaviorPath = join(repo, "agent-behavior.json");
+  // fake agent の呼び出し記録と振る舞いは対象リポジトリの外に置く。リポジトリ内に置くと、
+  // runner が executor の変更として evidence と result の変更一覧に含めてしまう。
+  const agentFixtureDir = mkdtempSync(join(tmpdir(), "specdojo-agent-e2e-"));
+  const logPath = join(agentFixtureDir, "agent-invocations.jsonl");
+  const behaviorPath = join(agentFixtureDir, "agent-behavior.json");
   writeFileSync(logPath, "", "utf8");
   writeFileSync(parentValidationLogPath, "", "utf8");
   writeFileSync(parentValidationBehaviorPath, "pass\n", "utf8");
@@ -510,6 +528,7 @@ function setupPipelineRepository(): PipelineFixture {
     logPath,
     behaviorPath,
     parentValidationDir,
+    agentFixtureDir,
     parentValidationLogPath,
     parentValidationBehaviorPath,
   };
@@ -563,6 +582,15 @@ function readResult(fixture: PipelineFixture, taskId: string): string {
     join(fixture.executionPath, "exec", "results", `${taskId}-result.md`),
     "utf8",
   );
+}
+
+function resultChangedFiles(result: string): Array<{ path: string; summary: string }> {
+  const section = result.match(/## 2\. 変更ファイル\n\n([\s\S]*?)\n\n## 3\./u)?.[1];
+  if (section === undefined) throw new Error("result changed-files section is missing");
+  return [...section.matchAll(/^- `([^`]+)`: (.+)$/gmu)].map((match) => ({
+    path: match[1]!,
+    summary: match[2]!,
+  }));
 }
 
 // 実行が失敗すると worktree はマージされずに保持されるため、その run の result は
@@ -645,6 +673,7 @@ describe("executor / reporter pipeline E2E", () => {
     if (fixture) {
       rmSync(fixture.repo, { recursive: true, force: true });
       rmSync(fixture.parentValidationDir, { recursive: true, force: true });
+      rmSync(fixture.agentFixtureDir, { recursive: true, force: true });
     }
     fixture = undefined;
   });
@@ -746,6 +775,45 @@ describe("executor / reporter pipeline E2E", () => {
     });
     // in-place 実行は worktree の統合段を持たないため integrate は記録されない。
     expect(state.stages.integrate).toBeUndefined();
+  });
+
+  it("renders by evidence path when reporter descriptions are missing, extra, and reordered", async () => {
+    const target = setup();
+    setBehavior(target.behaviorPath, {
+      "local-gemma-executor": { role: "executor", kind: "path_mismatch" },
+      "local-gemma-reporter": { role: "reporter", kind: "path_mismatch" },
+    });
+
+    await runExec(["run", "--project", "test", "--task", "T-TEST-doc-010"]);
+
+    expect(process.exitCode).toBeUndefined();
+    const runDir = evidenceRunDir(target, "T-TEST-doc-010");
+    const evidence = JSON.parse(readFileSync(join(runDir, "evidence.json"), "utf8")) as {
+      changes: Array<{ path: string }>;
+    };
+
+    const result = readResult(target, "T-TEST-doc-010");
+    const changedFiles = resultChangedFiles(result);
+    expect(changedFiles.map(({ path }) => path)).toEqual([
+      "pipeline-artifact.md",
+      "pipeline-secondary.md",
+      "pipeline-tertiary.md",
+    ]);
+    // 保存版 evidence は runner 管理記録も保持するが、result の変更一覧からは除外する。
+    expect(evidence.changes.map(({ path }) => path)).toEqual(
+      expect.arrayContaining(changedFiles.map(({ path }) => path)),
+    );
+    expect(evidence.changes.length).toBeGreaterThan(changedFiles.length);
+    expect(result).toContain("status: complete");
+    expect(changedFiles).toEqual([
+      {
+        path: "pipeline-artifact.md",
+        summary: "reporter の説明がないため、変更差分を参照。",
+      },
+      { path: "pipeline-secondary.md", summary: "pipeline-secondary.md の説明。" },
+      { path: "pipeline-tertiary.md", summary: "pipeline-tertiary.md の説明。" },
+    ]);
+    expect(result).not.toContain("invented-by-reporter.md");
   });
 
   it("hands the reporter bounded evidence only, keeping raw log text and secrets out of the prompt", async () => {
@@ -954,6 +1022,7 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
     if (fixture) {
       rmSync(fixture.repo, { recursive: true, force: true });
       rmSync(fixture.parentValidationDir, { recursive: true, force: true });
+      rmSync(fixture.agentFixtureDir, { recursive: true, force: true });
     }
     worktreeBase = undefined;
     fixture = undefined;

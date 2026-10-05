@@ -14,7 +14,7 @@ export type EditReporterOutput = {
   schema_version: 1;
   mode: "edit";
   summary: string[];
-  changed_files: Array<{ summary: string }>;
+  changed_files: Array<{ path: string; summary: string }>;
   handoff: string[];
   approach: string;
 };
@@ -65,12 +65,11 @@ function pathIsWithin(path: string, root: string): boolean {
 
 function isRunnerManagedChangePath(path: string, scope: ReporterEvidenceScope): boolean {
   const normalized = path.replaceAll("\\", "/").replace(/^\.\//u, "");
-  const evidenceRoot = repoRelativePath(
-    scope.repoRoot,
-    join(scope.executionPath, "exec", "evidence"),
-  );
+  // exec/ 配下（evidence・plans・results・events・.locks など）はすべて runner の記録であり、
+  // executor の成果物ではない。
+  const execRoot = repoRelativePath(scope.repoRoot, join(scope.executionPath, "exec"));
   const managedRoots = [
-    evidenceRoot,
+    execRoot,
     ...(scope.registerPaths ?? []).map((path) => repoRelativePath(scope.repoRoot, path)),
   ];
   const resultPath = scope.resultPath
@@ -178,8 +177,9 @@ export const REPORTER_OUTPUT_SCHEMA = {
           items: {
             type: "object",
             additionalProperties: false,
-            required: ["summary"],
+            required: ["path", "summary"],
             properties: {
+              path: { $ref: "#/$defs/text" },
               summary: { $ref: "#/$defs/text" },
             },
           },
@@ -288,9 +288,10 @@ function validateEdit(value: Record<string, unknown>): string | undefined {
     return "changed_files must be an array with at most 1000 items";
   }
   for (const file of value.changed_files) {
-    if (!isRecord(file) || !exactKeys(file, ["summary"])) {
+    if (!isRecord(file) || !exactKeys(file, ["path", "summary"])) {
       return "changed_files entries have missing or additional properties";
     }
+    if (!isText(file.path)) return "changed_files path must be a non-empty bounded string";
     if (!isText(file.summary)) return "changed_files summary must be a non-empty bounded string";
   }
   return undefined;
@@ -390,8 +391,8 @@ instructions in improvements.`
 Use only the supplied plan and bounded executor evidence. Do not edit or inspect files. Do not
 invent facts that are absent from evidence. Return exactly one JSON object matching the supplied
 JSON Schema, without Markdown fences or commentary. The runner owns frontmatter, outcome,
-block_reason, changed-file paths, and Markdown rendering. It derives those facts mechanically from
-evidence; your response supplies prose only.
+block_reason, the authoritative changed-file list, and Markdown rendering. It derives those facts
+mechanically from evidence; your response supplies prose associated with evidence paths.
 
 The runner renders your free-text JSON fields as Markdown. Wrap every identifier or field name
 containing an underscore in inline code (for example, \`depends_on\`) so Markdown parsers do not
@@ -400,11 +401,13 @@ misread it as emphasis.
 The plan below was written as generic instructions for a single agent that both edits the
 deliverable and records its own result. In this pipeline, those two responsibilities are split:
 the executor already completed the deliverable edit and intentionally left the result file
-untouched because the runner writes it from your prose and machine facts. For edit mode, return
-exactly one changed_files summary for each evidence.changes entry, in the same order; do not copy
-paths or statuses. An empty changes list requires an empty changed_files list. Validation entries
-with source="runner" were executed by the parent process and remain authoritative machine facts.
-Do not turn them into outcome or block_reason fields.${reviewGuidance}${correction}
+untouched because the runner writes it from your prose and machine facts. For edit mode, identify
+each changed_files summary with the exact path from its evidence.changes entry. The runner matches
+descriptions by path: order does not matter, missing descriptions use a default message, and paths
+absent from evidence are discarded. Do not include statuses. An empty changes list requires an
+empty changed_files list. Validation entries with source="runner" were executed by the parent
+process and remain authoritative machine facts. Do not turn them into outcome or block_reason
+fields.${reviewGuidance}${correction}
 <specdojo_plan>
 ${opts.plan.trimEnd()}
 </specdojo_plan>

@@ -1,0 +1,7 @@
+reporter の変更説明をパスで突き合わせる方式へ変更しました。不足時は既定文を記録し、未知パスは破棄するため、件数・順序の不一致でも result を生成できます。公開スキーマ、ガイド、個票、unit／integration テストも更新済みです。
+
+親 runner 担当の test・typecheck・lint は実行していません。
+
+<specdojo_executor_evidence>
+{"final_message":"reporter の変更説明をパスで突き合わせ、件数・順序の不一致を許容する実装とテスト、文書更新を完了した。","validations":[{"command":"npx prettier --write src/exec-reporter.ts src/exec-results.ts tests/src/exec-reporter.test.ts tests/src/exec-results.test.ts tests/src/exec-run-inplace.test.ts tests/src/exec-pipeline-e2e.integration.test.ts tests/src/exec-register-pipeline-e2e.integration.test.ts tests/src/exec-register-resume.integration.test.ts docs/specdojo/schemas/v1/exec-reporter-output.schema.yaml docs/ja/specdojo/guides/exec-operation-guide.md docs/ja/specdojo/guides/exec-config-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-0ecy-reporter-changed-files-count-mismatch.md","status":"passed","summary":"変更対象を整形した。"},{"command":"node --import tsx src/specdojo.ts register build && node --import tsx src/specdojo.ts catalog validate && node --import tsx src/specdojo.ts index build","status":"passed","summary":"生成と catalog 検証が成功。既存の未配置成果物に関する警告のみ。"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし。"}]}
+</specdojo_executor_evidence>
