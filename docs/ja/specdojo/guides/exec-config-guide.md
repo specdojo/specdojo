@@ -585,10 +585,11 @@ commit 許可リストだけでは、register 由来の除外リスト方式や�
 - `AGENTS.md`、`CLAUDE.md`、`GEMINI.md`
 - `commitlint.config.*`、`.commitlintrc*`
 - `.github/workflows/**`、`.gitlab-ci.*`、`.gitlab/ci/**`、`.circleci/**`、Azure Pipelines / Jenkins の設定
+- `pm-members.yaml`（置き場所を問わない）。名簿は agent の起動コマンド・モデル・役割の定義を含むため、agent が自身や他の agent の定義を書き換えられないようにする
 
 runner は agent の各試行前後でファイル内容を比較し、差分があれば親検証と reporter を起動せず block します。worktree の commit 前には Git status と exec branch の commit 済み差分を再検査するため、register の除外リスト方式や agent 自身による commit があっても merge されません。違反時は `agent-config-write:` と対象パスを標準エラーへ出力します。この定義は `exec-defaults.yaml` や member 設定から解除・拡張できません。
 
-保護対象の候補はパスの固定定義で分類し、実際に block する対象は `agentProtectedConfigPaths()` で確定します。`.specdojo/doc-index.json` は `index build` が再生成し commit しない既知の生成物なので、リポジトリの ignore 規則にも一致する場合だけ除外します。判定には `git check-ignore --no-index` を使い、過去に追跡されていた worktree でも生成物として扱います。任意の ignore 対象を除外すると、agent が `.gitignore` と新規設定を同時に作って回避できるため、除外は既知の生成物の固定リストに限定します。Git による判定が失敗した場合や ignore 規則から外れた場合は除外せず、保護側へ倒します。agent 前後の snapshot と commit 前の再検査はこの判定を共有します。
+保護対象の候補はパスの固定定義で分類し、実際に block する対象は `agentProtectedConfigPaths()` で確定します。`.specdojo/doc-index.json` は `index build` が再生成し commit しない既知の生成物なので、リポジトリの ignore 規則にも一致する場合だけ除外します。判定には `git check-ignore --no-index` を使い、過去に追跡されていた worktree でも生成物として扱います。任意の ignore 対象を除外すると、agent が `.gitignore` と新規設定を同時に作って回避できるため、除外は既知の生成物の固定リストに限定します。Git による判定が失敗した場合や ignore 規則から外れた場合は除外せず、保護側へ倒します。agent 前後の snapshot と commit 前の再検査はこの判定を共有します。名簿は project の `base_path` 配下にあり固定のディレクトリ走査では拾えないため、snapshot には `.specdojo/specdojo.config.json` の `members_path` から解決した名簿のファイルを加えます。
 
 agentと親検証の子プロセスを起動する際は、`gitEnvironment()`で`GIT_DIR`、`GIT_WORK_TREE`、`GIT_COMMON_DIR`、index・object・replace関連のrepository固有環境変数を除去します。除去対象は`src/git-environment.ts`の`GIT_LOCAL_ENV_VARS`を正本とします。Vitestの全3設定も共通setupを使ってtest module読込前に同じ変数をworkerから除去するため、Git hook経由で`npm test`が起動されても、テストfixtureはcwdの一時repositoryを参照し、linked worktreeのgitdirや共有configを参照しません。
 

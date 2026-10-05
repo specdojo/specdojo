@@ -55,6 +55,8 @@ describe("agent protected configuration paths", () => {
     ".circleci/config.yml",
     "azure-pipelines.yml",
     "Jenkinsfile",
+    "pm-members.yaml",
+    "docs/ja/projects/prj-0001/030-project-management/pm-members.yaml",
   ])("protects %s with one provider-independent definition", (path) => {
     expect(isAgentProtectedConfigPath(path)).toBe(true);
   });
@@ -65,6 +67,7 @@ describe("agent protected configuration paths", () => {
     ".agents/specdojo-orchestrator.agent.md",
     ".github/CODEOWNERS",
     "src/config.ts",
+    "docs/ja/projects/prj-0001/030-project-management/pm-members-sample.yaml",
   ])("does not overmatch %s", (path) => {
     expect(isAgentProtectedConfigPath(path)).toBe(false);
   });
@@ -85,6 +88,43 @@ describe("agent protected configuration paths", () => {
       ".github/workflows/ci.yml",
       "package.json",
     ]);
+  });
+
+  it("detects changes to the members roster resolved from the project config", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-protected-config-"));
+    roots.push(root);
+    write(
+      join(root, ".specdojo", "specdojo.config.json"),
+      JSON.stringify({
+        projects: {
+          "prj-0001": {
+            base_path: "docs/ja/projects/prj-0001",
+            members_path: "030-project-management/pm-members.yaml",
+          },
+        },
+      }),
+    );
+    const membersPath = "docs/ja/projects/prj-0001/030-project-management/pm-members.yaml";
+    write(join(root, membersPath), "members: []\n");
+
+    const before = captureAgentProtectedConfigSnapshot(root);
+    expect(before.has(membersPath)).toBe(true);
+
+    write(join(root, membersPath), "members:\n  - nickname: rogue\n");
+
+    expect(changedAgentProtectedConfigPaths(root, before)).toEqual([membersPath]);
+  });
+
+  it("keeps checking other protected files when the project config is not valid JSON", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-protected-config-"));
+    roots.push(root);
+    write(join(root, ".specdojo", "specdojo.config.json"), "{not json");
+    write(join(root, "package.json"), "{}\n");
+
+    const before = captureAgentProtectedConfigSnapshot(root);
+    write(join(root, "package.json"), '{"scripts":{}}\n');
+
+    expect(changedAgentProtectedConfigPaths(root, before)).toEqual(["package.json"]);
   });
 
   it("detects changes and additions under agent instruction directories", () => {
