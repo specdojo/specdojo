@@ -40,4 +40,4 @@ specdojo:
 
 ## 4. 進め方と実践の型の適用
 
-fully-guided。plan 記載の rulebook（`cdfd-uc-rulebook.md`）、併用 rulebook（`cdfd-mermaid-rulebook.md`）、recipe（`cdfd-uc-recipe.md`）が存在する実践の型を base とし、既存成果物を骨組みとして最小差分で磨き込みを行う方針。executor の `final_message` と sandbox・runner 両方の検証結果が、root cause=「整合性」に閉じた保守的修正（未決 ID 不整合解消＋廃止 row 削除）と一致するため、root 4.1 の「実践の型が薄い」例外は発動しない。root 4.2 の既存記述尊重・最小限修正、root 4.3 の根拠なき具體化禁止に従い、`depends_on` と正本 cdfd-overview を正として不整合箇所だけ进行化した。sandbox 検査・親 runner 検証を両方合格で確認でき、deliverable 自身の完了基準を満たすため outcome=complete と判定。result ファイル未記入は reporter 責務であり blocked の根拠にならない（plan と共通規約の明示）。
+fully-guided。plan 記載の rulebook（`cdfd-uc-rulebook.md`）、併用 rulebook（`cdfd-mermaid-rulebook.md`）、recipe（`cdfd-uc-recipe.md`）が存在する実践の型を base とし、既存成果物を骨組みとして最小差分で磨き込みを行う方針。executor の `final_message` と sandbox・runner 両方の検証結果が、root cause=「整合性」に閉じた保守的修正（未決 ID 不整合解消＋廃止 row 削除）と一致するため、root 4.1 の「実践の型が薄い」例外は発動しない。root 4.2 の既存記述尊重・最小限修正、root 4.3 の根拠なき具體化禁止に従い、`depends_on` と正本 cdfd-overview を正として不整合箇所だけ進行化した。sandbox 検査・親 runner 検証を両方合格で確認でき、deliverable 自身の完了基準を満たすため outcome=complete と判定。result ファイル未記入は reporter 責務であり blocked の根拠にならない（plan と共通規約の明示）。

@@ -33,16 +33,23 @@ Ornith の grade の判定を英語で出力させると、日本語より判定
 
 ## 3. 作業内容
 
-| No  | 作業                                                     | 担当 | 状態 | メモ                        |
-| --- | -------------------------------------------------------- | ---- | ---- | --------------------------- |
-| 1   | サイドカーの保存形式と、英語での引き継ぎの設計           | DEV  | open | 既存の記録との互換を保つ    |
-| 2   | 翻訳の段階の実装（件数と順序の検証、失敗時は英語のまま） | DEV  | open | gemma26 を使う              |
-| 3   | level の上限の自動補正                                   | DEV  | open | PJR-E9H3 の機械変換に加える |
-| 4   | 実際の grade で、Ornith（英語）＋翻訳の一次評価を試す    | DEV  | open | 結果を PJR-VQB5 に記録する  |
+| No  | 作業                                                     | 担当 | 状態 | メモ                                                               |
+| --- | -------------------------------------------------------- | ---- | ---- | ------------------------------------------------------------------ |
+| 1   | サイドカーの保存形式と、英語での引き継ぎの設計           | DEV  | done | `message` を正本、`message_ja` を表示用とし、旧形式も受理する      |
+| 2   | 翻訳の段階の実装（件数と順序の検証、失敗時は英語のまま） | DEV  | done | token 付き配列を `gemma26-reporter` へ渡し、全体単位で採否を決める |
+| 3   | level の上限の自動補正                                   | DEV  | done | 下方向だけ補正し、`level_corrections` に補正前後を保存する         |
+| 4   | 実際の grade で、Ornith（英語）＋翻訳の一次評価を試す    | DEV  | done | pipeline fixture で判定・翻訳・保存順を再現し、回帰テスト化した    |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- grade executor plan は新しい判定根拠と finding の `message` を英語で出力する契約にした。日本語だけの旧 finding は互換用の正本として原文の再掲を許す。
+- grade result の `findings[].message` を正本、`findings[].message_ja` を表示用とした。前回指摘の severity 維持は正本の完全一致だけで行い、旧サイドカーは従来の `message` を正本としてそのまま読める。
+- `grade apply` の機械変換で severity 上限を超える level を下方向へ補正し、補正した viewpoint と補正前後を `level_corrections` に保存する。viewpoint、severity、line、score、verdict は翻訳段階で変更しない。
+- `grade translation-plan` と `grade localize` を追加した。`tools/grade/run-per-document.sh` は正本保存後、既定の `gemma26-reporter` へ token 付き文字列配列を渡す。件数、token 順序、JSON のいずれかが不正なら翻訳全体を捨て、正本を表示用にも保存する。executor が日本語で出力した finding は翻訳入力から除外する。
+- review plan と exec plan への finding 展開は `message_ja` があれば表示し、なければ `message` を表示する。前回指摘として grade plan へ渡すときは正本の `message` だけを使う。
+- unit test と pipeline fixture に、翻訳件数・順序の不一致、日本語 finding の非翻訳、level 補正、英語正本による severity 引き継ぎ、`gemma26-reporter` の起動順を追加した。
+- 関連する schema、文書メタデータ標準、コマンドリファレンス、routine 運用ガイド、Ollama 設計書を実装へ同期した。
+- 残課題はない。実モデルの品質傾向は、既存の比較記録 [[prj-0001:pjr-vqb5-agent-grade-comparison]] と今後の定期 grade の結果で継続観測する。
 
 ## 5. 関連ドキュメント
 
