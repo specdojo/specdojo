@@ -74,3 +74,16 @@
       from: "agent exited with non-zero code: reporter result rendering failed: reporter changed_files summaries (3) do not match evidence changes (4)"
       to: "-"
   previous_event_id: reg_79473cafe66d4486b329438e3f191cfc
+- v: 1
+  id: reg_8487f1922eb84bbd9bb45ce90d6ecf2a
+  ts: "2026-10-05T22:06:41Z"
+  action: review
+  actor: agy-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_687c62650529414598ddb5ff5fb8ae43
