@@ -268,7 +268,7 @@ if (role === "reporter") {
       schema_version: 1,
       mode: "edit",
       summary: ["register 項目を pipeline 経由で処理した。"],
-      changed_files: evidence.changes.map(() => ({ summary: "文書を更新した。" })),
+      changed_files: evidence.changes.map(({ path }) => ({ path, summary: "文書を更新した。" })),
       handoff: [],
       approach: "plan と executor evidence だけを根拠に結果を構成した。",
     }),

@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: waiting
+  item_status: in-progress
   priority: high
   owner: DEV
   registered_at: "2026-10-04T20:39:02Z"
   due_on: null
-  block_reason: "agent exited with non-zero code: parent validation failed: test-integration, typecheck, test-unit"
 ---
 
 # PJR-0ECY reporter の変更ファイルの説明の件数がずれると、結果の作成が失敗する

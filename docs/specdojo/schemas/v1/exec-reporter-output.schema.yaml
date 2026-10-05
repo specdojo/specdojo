@@ -2,9 +2,10 @@
 $schema: "https://json-schema.org/draft/2020-12/schema"
 title: "SpecDojo reporter output schema"
 description: >
-  Prose-only structured output produced by the reporter pipeline stage. The runner validates this
-  object before combining it with evidence-derived facts and rendering result Markdown. The runner
-  owns all result frontmatter fields, outcome, block_reason, and changed-file paths.
+  Structured output produced by the reporter pipeline stage. The runner validates this object
+  before combining it with evidence-derived facts and rendering result Markdown. The runner owns
+  all result frontmatter fields, outcome, block_reason, and the authoritative changed-file list.
+  Reporter descriptions carry evidence paths only as correlation keys.
 oneOf:
   - $ref: "#/$defs/edit"
   - $ref: "#/$defs/review"
@@ -40,8 +41,10 @@ $defs:
         items:
           type: object
           additionalProperties: false
-          required: [summary]
+          required: [path, summary]
           properties:
+            path:
+              $ref: "#/$defs/text"
             summary:
               $ref: "#/$defs/text"
       handoff:

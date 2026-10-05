@@ -3995,7 +3995,8 @@ async function runCommandJobMode(params: {
             ? "runner が解決済みコマンドを直接実行し、終了コード 0 を確認した。"
             : `runner が解決済みコマンドを直接実行したが、${reason}。`,
         ],
-        changed_files: reporterEvidence.changes.map(() => ({
+        changed_files: reporterEvidence.changes.map(({ path }) => ({
+          path,
           summary: "runner command の実行後に検出した変更",
         })),
         handoff: [`command evidence: ${evidenceRef}`],

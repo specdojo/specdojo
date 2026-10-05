@@ -33,7 +33,7 @@ function configurePipeline(repo: string, reporterCommandOverride?: string): void
     schema_version: 1,
     mode: "edit",
     summary: ["成果物を更新し、検証を完了した。"],
-    changed_files: [{ summary: "文書を更新した。" }],
+    changed_files: [{ path: "pipeline-artifact.md", summary: "文書を更新した。" }],
     handoff: [],
     approach: "plan と executor evidence のみを根拠に結果を構成した。",
   });
@@ -465,7 +465,12 @@ describe("exec run (in-place, default)", () => {
       schema_version: 1,
       mode: "edit",
       summary: ["成果物を更新し、検証を完了した。"],
-      changed_files: [{ summary: "runner command の実行後に検出した変更を記録した。" }],
+      changed_files: [
+        {
+          path: "nested-agent.txt",
+          summary: "runner command の実行後に検出した変更を記録した。",
+        },
+      ],
       handoff: [],
       approach: "command evidence の stdout と stderr を確認した。",
     });

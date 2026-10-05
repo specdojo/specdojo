@@ -180,7 +180,10 @@ process.stdout.write(
     schema_version: 1,
     mode: "edit",
     summary: ["reporter 再開で result を記入した。"],
-    changed_files: evidence.changes.map(() => ({ summary: "変更内容を result に記録した。" })),
+    changed_files: evidence.changes.map(({ path }) => ({
+      path,
+      summary: "変更内容を result に記録した。",
+    })),
     handoff: [],
     approach: "plan と executor evidence だけを根拠に結果を構成した。",
   }),

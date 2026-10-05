@@ -564,7 +564,7 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
       schema_version: 1 as const,
       mode: "edit" as const,
       summary: ["成果物とテストを更新した。"],
-      changed_files: [{ summary: "記述を追加した。" }],
+      changed_files: [{ path: "docs/test.md", summary: "記述を追加した。" }],
       handoff: [],
       approach: "plan と evidence の範囲だけを根拠にした。",
     };
@@ -583,7 +583,7 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
     expect(markdownlintErrors(first)).toEqual([]);
   });
 
-  it("refuses to pair reporter descriptions with a different number of evidence paths", async () => {
+  it("matches descriptions by path and tolerates missing, extra, and reordered entries", async () => {
     const { resultPath } = await scaffoldResult({
       executionPath,
       taskId: "prj-overview",
@@ -594,20 +594,31 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
       startedAt: "2026-08-10T07:00:00.000Z",
     });
 
-    await expect(
-      renderReporterResult(
-        resultPath,
-        {
-          schema_version: 1,
-          mode: "edit",
-          summary: ["成果物を更新した。"],
-          changed_files: [],
-          handoff: [],
-          approach: "evidence を照合した。",
-        },
-        reporterEvidence([{ path: "docs/test.md", status: "M" }]),
-      ),
-    ).rejects.toThrow(/summaries \(0\) do not match evidence changes \(1\)/);
+    await renderReporterResult(
+      resultPath,
+      {
+        schema_version: 1,
+        mode: "edit",
+        summary: ["成果物を更新した。"],
+        changed_files: [
+          { path: "docs/b.md", summary: "B を更新した。" },
+          { path: "docs/not-in-evidence.md", summary: "未知の変更。" },
+        ],
+        handoff: [],
+        approach: "evidence を照合した。",
+      },
+      reporterEvidence([
+        { path: "docs/a.md", status: "M" },
+        { path: "docs/b.md", status: "M" },
+      ]),
+    );
+
+    const content = readFileSync(resultPath, "utf8");
+    expect(content).toContain("`docs/a.md`: reporter の説明がないため、変更差分を参照。");
+    expect(content).toContain("`docs/b.md`: B を更新した。");
+    expect(content.indexOf("`docs/a.md`")).toBeLessThan(content.indexOf("`docs/b.md`"));
+    expect(content).not.toContain("docs/not-in-evidence.md");
+    expect(markdownlintErrors(content)).toEqual([]);
   });
 
   it("preserves an unchanged target reason from resumed executor evidence in the result", async () => {
@@ -626,7 +637,7 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
         schema_version: 1,
         mode: "edit",
         summary: ["全対象を確認した。"],
-        changed_files: [{ summary: "記述を更新した。" }],
+        changed_files: [{ path: "docs/a.md", summary: "記述を更新した。" }],
         handoff: [],
         approach: "再開前後の差分と plan を照合した。",
       },
