@@ -2,7 +2,7 @@
 id: cdsd-execution-grade-criteria
 document: cdsd-execution
 path: docs/ja/product/010-business-specs/020-data-model/cdsd-execution.md
-graded_at: "2026-10-03T17:00:02.223Z"
+graded_at: "2026-10-04T16:20:24.992Z"
 graded_by: agy-expert-executor
 content_hash: ff4dd600af10ea7b0f1dd8e845cf5f5fa71cb39dd7291e3c2d89c406997370b1
 summary:
@@ -16,18 +16,18 @@ criteria:
       - BA
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
-    reason: 実行状態、plan / result、evidence、worktree のデータストアの役割、内容、粒度が記述されていない。
+    reason: 実行状態、plan/result、evidence、worktree のデータストア定義が未記載である。
   - id: DC-002
     text: データストア構成を設計の基礎として参照できること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
-    reason: 実行状態などの主要な4つのデータストアが未定義であり、実行系データストア構成を設計の基礎として参照できない。
+    reason: 実行状態などの正本区分、更新制約が未定義で設計基礎として不十分である。
   - id: DC-003
     text: データ検証・整合性確認の対象が識別できること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
     status: unsatisfied
-    reason: Job Definition などの正本について、合否条件や検証手順を pass/fail 判定可能な形で定義できていない。
+    reason: Job Definition等の検証コマンド、期待結果などの合否判定条件が定義されていない。

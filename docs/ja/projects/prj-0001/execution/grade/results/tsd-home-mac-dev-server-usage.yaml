@@ -5,10 +5,10 @@ path: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-serve
 target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 65
-graded_at: "2026-10-02T16:04:21.784Z"
+score: 63
+graded_at: "2026-10-05T16:20:13.042Z"
 graded_by: agy-expert-executor
-content_hash: a9e13141cb32fbc617b89a475c0cd042104391a254ba40ec01c346d05b8cf3b8
+content_hash: 84e5166ae9032b808439d054ee80103b35752dca405c56e2fefd7f0ba5c7e3ec
 source_hashes:
   catalog-entry: 7a7276acd5fe566ed20b44a4e60412b59f89092d1373198db88a54e6c5c2fd23
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
@@ -19,8 +19,8 @@ source_hashes:
   dependency:sysd-codex-agent-settings: 2e3269bd969d836047e87a7897916f48182efa75d064163f045bf2d3d9280746
   dependency:sysd-github-copilot-agent-settings: d10cad720566f4d096c0ce40c2bece543d5aa638691ec4c16b8ce9b7203b119b
   dependency:sysd-opencode-agent-settings: 6a5964f92c63db08b8d878fd284174bd06061efa35ec23938769c3ad012b88ec
-  dependency:tsd-home-mac-dev-server: 3ee780c1bc6a7a2b2d8f9259f464f662ad8ec5497392c007b81f9294b0f750a1
-  members: ec838bbb5673ba76f1a15672e094c00088dcb686a2a67225ca8411c0dc5e90d3
+  dependency:tsd-home-mac-dev-server: e626143eb7338bec96ee3302423d7a4cc21cead994aa591f4a273859f73970cc
+  members: f116f9255291fe74d8bdfef5619309a4e575eb59b9ae2ecc7af1290ebddf80a1
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
   schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
 categories:
@@ -37,9 +37,9 @@ categories:
   architecture:
     score: 75
   usability:
-    score: 100
+    score: 94
   implementation:
-    score: 88
+    score: 75
   quality:
     score: 69
 viewpoints:
@@ -86,8 +86,8 @@ viewpoints:
     level: 3
     score: 75
   vp-dev-change-impact:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-testability:
     level: 3
     score: 75
@@ -101,8 +101,8 @@ viewpoints:
     level: 1
     score: 25
   vp-ux-readability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-user-flow:
     level: 4
     score: 100
@@ -127,68 +127,72 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 12
-  minor: 8
+  minor: 10
   note: 0
 findings:
   - id: F001
     severity: major
     rule: vp-po-purpose-alignment
-    line: 20
-    anchor: tmux new-session -A -s specdojo
+    line: 21
+    anchor: "```"
     message: 運用対象と手段は示されているが、各構成判断を必要とする上位目的・期待効果と採用理由の対応を追記する必要がある。
   - id: F002
     severity: major
     rule: vp-po-decision-readiness
-    line: 20
-    anchor: tmux new-session -A -s specdojo
+    line: 21
+    anchor: "```"
     message: 採用構成の比較候補、選定理由、承認対象、判断者、未決事項とその影響を明示しなければ、PO が承認・保留・差し戻しを判断できない。
   - id: F003
     severity: major
     rule: vp-po-publication-accountability
-    line: 261
-    anchor: ""
+    line: 241
+    anchor: >-
+      Copilot CLI の `--allow-all-tools`、Claude Code の bypass 系権限、OpenCode の `--dangerously-skip-permissions`、Codex の
+      `danger-full-access` は通常運用で使わない。agent の `git push`、破壊的削除、秘密情報読み取りは、個別設定の deny 方針と実行 plan
+      の両方で禁止する。ネットワーク公開、SSH、Host Mac の基盤設定に関するセキュリティ方針は、[[tsd-home-mac-dev-server|自宅 MacBook Pro 開発サーバ技術スタック定義]] の 6
+      章を正本とする。
     message: 秘密情報の禁止だけでなく、公開範囲、公開前確認項目、最終公開判断を担う人間の責任者を明示する必要がある。
   - id: F004
     severity: major
     rule: vp-pm-plan-feasibility
-    line: 24
+    line: 8
     anchor: ""
     message: 初期設定完了後の各運用確認について、担当 Role code、実施タイミング、所要時間の目安、完了判定を追加する必要がある。
   - id: F005
     severity: minor
     rule: vp-pm-dependency-risk
-    line: 218
+    line: 202
     anchor: ""
     message: トラブルシュートで解消しない障害を PJR の課題・リスク・変更要求へ登録する条件と、長時間実行や作業予定への影響確認を追記するとよい。
   - id: F006
     severity: major
     rule: vp-pm-control-reporting
-    line: 218
+    line: 202
     anchor: ""
     message: 運用中に発生した事象を進捗・課題・リスク・変更要求・決定事項へ分類し、報告先、担当 Role code、PJR 転記条件を定義する必要がある。
   - id: F007
     severity: major
     rule: vp-ba-business-value
-    line: 20
-    anchor: tmux new-session -A -s specdojo
+    line: 21
+    anchor: "```"
     message: リモート開発者が被る作業中断や再実行の損失と、tmux・devcontainer 運用で得る価値および成功基準を明示する必要がある。
   - id: F008
     severity: major
     rule: vp-ba-requirements-completeness
-    line: 20
-    anchor: tmux new-session -A -s specdojo
+    line: 21
+    anchor: "```"
     message: tmux、devcontainer 内実行、SSH local forwarding の選定理由を業務要件へ対応付け、利用者が確認できる受入条件を追加する必要がある。
   - id: F009
     severity: minor
     rule: vp-ba-stakeholder-clarity
-    line: 24
+    line: 8
     anchor: ""
     message: 日常利用者、Host Mac 運用者、設定変更の確認者と、それぞれが合意・確認する事項を Role code 付きで明示するとよい。
   - id: F010
     severity: minor
     rule: vp-arc-cross-document-consistency
-    line: 209
-    anchor: "```bash"
+    line: 193
+    anchor: ""
     message: >-
       `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-architecture.yaml` の
       `tsd-home-mac-dev-server-usage.depends_on` は `sysd-antigravity-agent-settings` を含むが、対象の `based_on` と agent
@@ -196,63 +200,75 @@ findings:
   - id: F011
     severity: minor
     rule: vp-arc-cross-document-consistency
-    line: 250
+    line: 234
     anchor: ""
     message: >-
-      本文は `specdojo-claude-state` を必要な認証 volume として挙げるが `.devcontainer/devcontainer.json` には存在せず、実装にある
-      `specdojo-antigravity` と `specdojo-gemini` を欠いているため、認証永続化の一覧が一致していない。
+      前回指摘の `specdojo-claude-state` の記述は解消されたが、実装にある `specdojo-antigravity` と `specdojo-gemini`
+      を欠いており、認証永続化の一覧が一致していない問題が残るため追記するとよい。
   - id: F012
     severity: major
     rule: vp-arc-technical-constraints
-    line: 20
-    anchor: tmux new-session -A -s specdojo
+    line: 21
+    anchor: "```"
     message: tmux、Dev Container CLI, Docker Desktop, Tailscale, agent CLI の対応バージョン方針、更新方針、ライセンス上の制約を識別できる形で追加する必要がある。
   - id: F013
     severity: minor
     rule: vp-dev-implementation-readiness
-    line: 66
+    line: 50
     anchor: ""
     message: 本文の `specdojo exec run —loop` は `—auto` または手動ターゲットを欠いて単独実行できないため、直後の例と同じ有効なコマンドへ修正する必要がある。
   - id: F014
     severity: minor
+    rule: vp-dev-change-impact
+    line: 234
+    anchor: ""
+    message: agent CLI の認証情報の保存先を変更した場合の、既存 devcontainer の再構築手順や既存ボリュームへの影響を記載するとよい。
+  - id: F015
+    severity: minor
     rule: vp-dev-testability
-    line: 218
+    line: 202
     anchor: ""
     message: 接続、detach、再接続、長時間処理継続、VitePress 到達、agent 実行について、確認コマンドと期待状態を対応付けた動作確認手順を追加するとよい。
-  - id: F015
-    severity: major
-    rule: vp-qe-done-criteria
-    line: 20
-    anchor: tmux new-session -A -s specdojo
-    message: DC-001, DC-002, DC-003 を満たす記述（選定理由、承認判断情報、技術的制約・ライセンス方針）が不足している。
   - id: F016
     severity: major
     rule: vp-qe-done-criteria
-    line: 200
+    line: 21
+    anchor: "```"
+    message: DC-001, DC-002, DC-003 を満たす記述（選定理由、承認判断情報、技術的制約・ライセンス方針）が不足している。
+  - id: F017
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 184
     anchor: ""
     message: DC-004 を満たすテストフレームワークと CI/CD 環境の参照先、検証対象、コマンド、期待結果が本文にない。
-  - id: F017
+  - id: F018
     severity: minor
     rule: vp-qe-verifiability
-    line: 218
+    line: 202
     anchor: ""
     message: 主要ユースケースごとに、前提、操作、期待状態、失敗条件を列挙した受入チェックリストを追加するとよい。
-  - id: F018
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 20
-    anchor: tmux new-session -A -s specdojo
-    message: TSDルールブックで必須とされる「採用理由」の記述が欠落している。
   - id: F019
     severity: major
-    rule: vp-ops-release-readiness
-    line: 20
-    anchor: tmux new-session -A -s specdojo
-    message: ready 化に必要な確認項目、未解決事項、公開範囲、承認者、人間による公開前確認を明示する必要がある。
+    rule: vp-qe-omissions-consistency
+    line: 4
+    anchor: ""
+    message: TSDルールブックで必須とされる「採用理由」の記述が欠落している。
   - id: F020
     severity: minor
+    rule: vp-ux-readability
+    line: 4
+    anchor: ""
+    message: TSDルールブックに基づくドキュメントであるが、冒頭に「採用理由」がなく、いきなり手順から始まっているため、読者がなぜこの構成なのか理解しにくい。
+  - id: F021
+    severity: major
+    rule: vp-ops-release-readiness
+    line: 21
+    anchor: "```"
+    message: ready 化に必要な確認項目、未解決事項、公開範囲、承認者、人間による公開前確認を明示する必要がある。
+  - id: F022
+    severity: minor
     rule: vp-ops-operability
-    line: 218
+    line: 202
     anchor: ""
     message: 手順や依存 CLI の更新責任者、問い合わせ先、障害を解消できない場合のエスカレーション経路と変更管理方法を追記するとよい。
 done_criteria:

@@ -5,15 +5,15 @@ path: docs/ja/product/010-business-specs/020-data-model/cdsd-sharing.md
 target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 42
-graded_at: "2026-10-01T16:13:09.932Z"
+score: 45
+graded_at: "2026-10-05T16:08:43.373Z"
 graded_by: agy-expert-executor
 content_hash: b20d1b0c124fac099975cbc56ffbe57def7e83dd272e665fa1c965ed77b4009a
 source_hashes:
   catalog-entry: 7c62f8847ef267677fd34e63206cf44cf86d30658667f545a1972aca0a1cb987
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
   deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
-  members: ec838bbb5673ba76f1a15672e094c00088dcb686a2a67225ca8411c0dc5e90d3
+  members: f116f9255291fe74d8bdfef5619309a4e575eb59b9ae2ecc7af1290ebddf80a1
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
   schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
 categories:
@@ -24,13 +24,13 @@ categories:
   planning:
     score: 25
   business:
-    score: 33
+    score: 42
   consistency:
     score: 25
   architecture:
     score: 75
   usability:
-    score: 75
+    score: 88
   implementation:
     score: 25
   quality:
@@ -61,8 +61,8 @@ viewpoints:
     level: 1
     score: 25
   vp-ba-stakeholder-clarity:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-arc-cross-document-consistency:
     level: 1
     score: 25
@@ -94,14 +94,14 @@ viewpoints:
     level: 1
     score: 25
   vp-ux-readability:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ux-user-flow:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-ops-release-readiness:
     level: 1
     score: 25
@@ -179,7 +179,7 @@ findings:
       | 計画派生情報       | 計画展開、派生生成、報告             | state、Ready、CPM、critical
       path、timeline                                                 | 変更時（Schedule・実行 event の更新後） | プロジェクト×生成時点   |
       実行候補・遅延・余裕の監視、進捗報告の根拠   |
-    message: データストアの役割は示されているが、対象者の業務課題、放置時の影響、期待価値・効果、成功基準が定義されておらず, ビジネス価値との繋がりが説明できない。
+    message: データストアの役割は示されているが、対象者の業務課題、放置時の影響、期待価値・効果、成功基準が定義されておらず、ビジネス価値との繋がりが説明できない。
   - id: F008
     severity: major
     rule: vp-ba-requirements-completeness

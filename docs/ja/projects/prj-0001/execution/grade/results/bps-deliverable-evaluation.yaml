@@ -5,15 +5,15 @@ path: docs/ja/product/010-business-specs/030-business-model/bps-deliverable-eval
 target: deliverable
 rubric: grade-rubric-v2
 verdict: pass
-score: 96
-graded_at: "2026-10-01T16:16:10.946Z"
+score: 92
+graded_at: "2026-10-05T16:16:29.578Z"
 graded_by: agy-expert-executor
 content_hash: 95e5a113b891d0a9af9eb93425f773398e6073adffa8da4954fab7bee1130a0c
 source_hashes:
   catalog-entry: 3247f5eb39765fd5f1c1d12c83847bb47a3c4ed94beeef8fade45a514a9e2e8e
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
   deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
-  members: ec838bbb5673ba76f1a15672e094c00088dcb686a2a67225ca8411c0dc5e90d3
+  members: f116f9255291fe74d8bdfef5619309a4e575eb59b9ae2ecc7af1290ebddf80a1
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
   schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
 categories:
@@ -26,7 +26,7 @@ categories:
   business:
     score: 100
   consistency:
-    score: 75
+    score: 50
   architecture:
     score: 100
   usability:
@@ -64,8 +64,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-cross-document-consistency:
-    level: 3
-    score: 75
+    level: 2
+    score: 50
   vp-arc-technical-constraints:
     level: 4
     score: 100
@@ -91,8 +91,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 2
+    score: 50
   vp-ux-readability:
     level: 4
     score: 100

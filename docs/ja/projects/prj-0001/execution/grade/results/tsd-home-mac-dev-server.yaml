@@ -5,10 +5,10 @@ path: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-serve
 target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 65
-graded_at: "2026-10-02T16:08:49.906Z"
+score: 63
+graded_at: "2026-10-05T16:22:15.758Z"
 graded_by: agy-expert-executor
-content_hash: 3ee780c1bc6a7a2b2d8f9259f464f662ad8ec5497392c007b81f9294b0f750a1
+content_hash: e626143eb7338bec96ee3302423d7a4cc21cead994aa591f4a273859f73970cc
 source_hashes:
   catalog-entry: bb483985bdf41bd3443126c473f1c2b85153f3b2cce49fc42d9af238e789d10b
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
@@ -19,13 +19,13 @@ source_hashes:
   dependency:sysd-codex-agent-settings: 2e3269bd969d836047e87a7897916f48182efa75d064163f045bf2d3d9280746
   dependency:sysd-github-copilot-agent-settings: d10cad720566f4d096c0ce40c2bece543d5aa638691ec4c16b8ce9b7203b119b
   dependency:sysd-opencode-agent-settings: 6a5964f92c63db08b8d878fd284174bd06061efa35ec23938769c3ad012b88ec
-  dependency:tsd-ollama: 93a3c681956e6af4912e7171787845e2818d3812741eba9f35a6d5b736111286
-  members: ec838bbb5673ba76f1a15672e094c00088dcb686a2a67225ca8411c0dc5e90d3
+  dependency:tsd-ollama: ec0bb77fe5d44a34e30293216190680e375e19bbcf6e11c335d7caae45a49293
+  members: f116f9255291fe74d8bdfef5619309a4e575eb59b9ae2ecc7af1290ebddf80a1
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
   schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
 categories:
   purpose:
-    score: 75
+    score: 63
   operations:
     score: 56
   planning:
@@ -39,7 +39,7 @@ categories:
   usability:
     score: 94
   implementation:
-    score: 88
+    score: 75
   quality:
     score: 44
 viewpoints:
@@ -47,8 +47,8 @@ viewpoints:
     level: 3
     score: 75
   vp-po-decision-readiness:
-    level: 3
-    score: 75
+    level: 2
+    score: 50
   vp-po-publication-accountability:
     level: 1
     score: 25
@@ -86,8 +86,8 @@ viewpoints:
     level: 3
     score: 75
   vp-dev-change-impact:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-testability:
     level: 1
     score: 25
@@ -126,159 +126,159 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 8
-  minor: 15
+  major: 10
+  minor: 12
   note: 0
 findings:
   - id: F001
     severity: minor
     rule: vp-po-purpose-alignment
-    line: 20
-    anchor: ""
+    line: 3
+    anchor: >-
+      MacBook Pro を自宅用の常時起動開発サーバとして利用し、Mac 上の devcontainer を主作業環境にして、ローカル LLM、SSH、VS Code Remote SSH、SpecDojo agent
+      実行の接続先にするための構成を定義する。本構成は個人または小規模開発用途を対象とし、インターネットへ SSH や LLM API を直接公開しない。
     message: 自宅開発サーバの安定稼働という固有目的を、上位文書の低コストな実現・継続可能性・OSS公開という目的へ対応付ける必要がある。
   - id: F002
-    severity: minor
+    severity: major
     rule: vp-po-decision-readiness
-    line: 71
-    anchor: "## 4. セットアップ"
+    line: 54
+    anchor: "## 3. 採用設定"
     message: 採用設定は示されているが、POが承認・保留・差し戻しを判断できるよう、承認対象、判断者、未決事項の有無と影響を明示する必要がある。
   - id: F003
     severity: major
     rule: vp-po-publication-accountability
-    line: 20
-    anchor: ""
+    line: 819
+    anchor: "## 6. セキュリティ方針"
     message: 秘密情報の禁止だけでなく、公開対象、公開前の権利・個人情報・設定値確認、および最終公開判断を担う人間のPOを明示する必要がある。
   - id: F004
     severity: minor
     rule: vp-pm-plan-feasibility
-    line: 88
-    anchor: ""
+    line: 71
+    anchor: "## 4. セットアップ"
     message: 各セットアップ作業について、担当Role code、実施タイミングまたは所要時間の目安、完了判定を対応付ける必要がある。
   - id: F005
     severity: minor
     rule: vp-pm-dependency-risk
-    line: 787
-    anchor: "## 6. セキュリティ方針"
+    line: 830
+    anchor: "## 7. トラブルシュート"
     message: トラブルシュートで解消しない障害をPJRの課題・リスク・変更要求へ登録する条件と、後続作業や予定への影響確認を追記する必要がある。
   - id: F006
     severity: major
     rule: vp-pm-control-reporting
-    line: 787
-    anchor: "## 6. セキュリティ方針"
+    line: 830
+    anchor: "## 7. トラブルシュート"
     message: 発生事象を進捗、課題、リスク、変更要求、決定事項へ分類し、報告先、担当Role code、PJR転記条件を定義する必要がある。
   - id: F007
     severity: minor
     rule: vp-ba-business-value
-    line: 20
-    anchor: ""
+    line: 3
+    anchor: >-
+      MacBook Pro を自宅用の常時起動開発サーバとして利用し、Mac 上の devcontainer を主作業環境にして、ローカル LLM、SSH、VS Code Remote SSH、SpecDojo agent
+      実行の接続先にするための構成を定義する。本構成は個人または小規模開発用途を対象とし、インターネットへ SSH や LLM API を直接公開しない。
     message: 接続断、スリープ、環境差異による作業中断という業務課題と、採用構成による期待効果および成功基準を明示する必要がある。
   - id: F008
     severity: minor
     rule: vp-ba-requirements-completeness
-    line: 28
-    anchor: ""
+    line: 11
+    anchor: "対象範囲:"
     message: 要件、受入条件、対象範囲、対象外が利用者視点で確認できる粒度になっているかについて、受入条件が明示されていないため追記する必要がある。
   - id: F009
     severity: minor
     rule: vp-ba-stakeholder-clarity
-    line: 20
-    anchor: ""
+    line: 3
+    anchor: >-
+      MacBook Pro を自宅用の常時起動開発サーバとして利用し、Mac 上の devcontainer を主作業環境にして、ローカル LLM、SSH、VS Code Remote SSH、SpecDojo agent
+      実行の接続先にするための構成を定義する。本構成は個人または小規模開発用途を対象とし、インターネットへ SSH や LLM API を直接公開しない。
     message: 接続元の利用者, Host Mac運用者、構成変更の確認者、および各者が確認・合意する事項をRole code付きで明示する必要がある。
   - id: F010
-    severity: minor
+    severity: major
     rule: vp-arc-cross-document-consistency
-    line: 9
-    anchor: 本書では、MacBook Pro を開発サーバとして安定稼働させ、リモート端末から devcontainer 内の SpecDojo CLI と agent CLI を安全に使うための周辺設定だけを定義する。
-    message: 成果物カタログの `depends_on` に含まれる `ifd-specdojo` がFrontmatterの `based_on` に反映されておらず、依存関係の追跡結果が一致しない。
+    line: 1
+    anchor: "# 自宅 MacBook Pro 開発サーバ技術スタック定義"
+    message: >-
+      成果物カタログの `depends_on` に含まれる `ifd-specdojo` および `sysd-antigravity-agent-settings` がFrontmatterの `based_on`
+      に反映されておらず、依存関係の追跡結果が一致しない。
   - id: F011
     severity: minor
     rule: vp-arc-cross-document-consistency
-    line: 9
-    anchor: 本書では、MacBook Pro を開発サーバとして安定稼働させ、リモート端末から devcontainer 内の SpecDojo CLI と agent CLI を安全に使うための周辺設定だけを定義する。
+    line: 18
+    anchor: "- devcontainer 内の OpenCode / Claude Code / Codex / GitHub Copilot CLI 利用"
     message: >-
-      `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-architecture.yaml` の `tsd-home-mac-dev-server.depends_on`
-      は `sysd-antigravity-agent-settings` を含むが、対象の `based_on` とagent CLI一覧には同文書およびAntigravityがなく、依存関係が一致していない。
+      `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-architecture.yaml` ではAntigravity
+      CLIへの依存が示されているが、本項の対象範囲のAgent CLI一覧にAntigravityが含まれていない。
   - id: F012
-    severity: minor
-    rule: vp-arc-cross-document-consistency
-    line: 517
-    anchor: "},"
-    message: >-
-      正本の `.devcontainer/devcontainer.json` は `features.claude-code` を定義せず、`.devcontainer/post-create.sh` がClaude
-      Code公式インストーラを使用しているが、本文はDev Container Featureで導入すると記載している。
-  - id: F013
-    severity: minor
-    rule: vp-arc-cross-document-consistency
-    line: 520
-    anchor: ""
-    message: >-
-      正本の `.devcontainer/post-create.sh` はCodex公式インストーラを優先しnpm版をフォールバックにしているが、本文は `@openai/codex` のnpm global
-      installと断定しているため、現在の導入方法に合わせて更新する必要がある。
-  - id: F014
     severity: major
     rule: vp-arc-technical-constraints
-    line: 71
-    anchor: "## 4. セットアップ"
+    line: 54
+    anchor: "## 3. 採用設定"
     message: >-
       Tailscale、Docker Desktop、VS Code, Dev Container CLI, tmux, Amphetamine, agent
       CLIについて、対応バージョン・更新方針とライセンス条件を識別できる形で追加する必要がある。
-  - id: F015
+  - id: F013
     severity: minor
     rule: vp-dev-implementation-readiness
-    line: 507
-    anchor: ""
-    message: >-
-      devcontainer構成表を現行の `.devcontainer/devcontainer.json` と `.devcontainer/post-create.sh`
-      に合わせ、Claude・Codex・Antigravityの導入方法と認証用mountを正確に更新する必要がある。
-  - id: F016
+    line: 65
+    anchor: >-
+      | Agent CLI      | OpenCode / Claude Code / Codex / GitHub Copilot CLI | `pm-members.yaml` の member
+      として起動方法を管理する                                 |
+    message: Agent CLIの採用技術一覧にAntigravity CLIが含まれておらず、後段のdevcontainer設定（4.10）との間で記述漏れがあるため追加する必要がある。
+  - id: F014
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 54
+    anchor: "## 3. 採用設定"
+    message: 採用技術や設定の変更が、既存の開発環境や運用手順に与える影響範囲と互換性について識別できるよう追記する必要がある。
+  - id: F015
     severity: major
     rule: vp-dev-testability
-    line: 787
-    anchor: "## 6. セキュリティ方針"
+    line: 802
+    anchor: "## 5. 初期セットアップの確認"
     message: 初期確認にテストフレームワーク、CI/CD、build・lint・schema検証の参照がなく、各確認コマンドの期待状態と失敗時対応も揃っていないため、構築完了を再現可能に判定できない。
-  - id: F017
+  - id: F016
     severity: major
     rule: vp-qe-done-criteria
-    line: 71
-    anchor: "## 4. セットアップ"
+    line: 54
+    anchor: "## 3. 採用設定"
     message: DC-003のライセンス・バージョン方針、DC-004のテストフレームワーク・CI/CD環境、DC-005のライブラリ選定が採用設定または参照先として示されていない。
-  - id: F018
+  - id: F017
     severity: major
     rule: vp-qe-verifiability
-    line: 787
-    anchor: "## 6. セキュリティ方針"
+    line: 802
+    anchor: "## 5. 初期セットアップの確認"
     message: 初期確認にテストフレームワークとCI/CD環境の参照・確認手順がなく、`pmset -g assertions`などの確認コマンドにも合格となる期待状態が示されていないため、必要な受入判定をpass/failで確定できない。
-  - id: F019
+  - id: F018
     severity: major
     rule: vp-qe-omissions-consistency
-    line: 71
-    anchor: "## 4. セットアップ"
+    line: 54
+    anchor: "## 3. 採用設定"
     message: 採用設定に各技術のバージョン方針とライセンス条件がなく、テストフレームワーク、CI/CD環境、依存ライブラリの選定または正本への参照も欠落している。
-  - id: F020
+  - id: F019
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 28
-    anchor: ""
+    line: 11
+    anchor: "対象範囲:"
     message: >-
       成果物カタログと現行devcontainerがAntigravity CLIを含む一方、対象範囲、全体構成、採用設定、参照一覧からAntigravityと `sysd-antigravity-agent-settings`
       が欠落している。
-  - id: F021
+  - id: F020
     severity: minor
     rule: vp-ux-language-consistency
-    line: 20
-    anchor: ""
+    line: 3
+    anchor: >-
+      MacBook Pro を自宅用の常時起動開発サーバとして利用し、Mac 上の devcontainer を主作業環境にして、ローカル LLM、SSH、VS Code Remote SSH、SpecDojo agent
+      実行の接続先にするための構成を定義する。本構成は個人または小規模開発用途を対象とし、インターネットへ SSH や LLM API を直接公開しない。
     message: 同一の開発サーバを `Host Mac`、`Home MacBook Pro`、`接続先 Mac` と定義せずに呼び分けており、接続元もMacの場合に識別しづらいため、冒頭で正式呼称と別名を定義して統一する必要がある。
-  - id: F022
+  - id: F021
     severity: major
     rule: vp-ops-release-readiness
-    line: 20
-    anchor: ""
+    line: 1
+    anchor: "# 自宅 MacBook Pro 開発サーバ技術スタック定義"
     message: ready化に必要な確認項目、未解決事項、公開範囲、承認者、および人間による公開前確認を明示する必要がある。
-  - id: F023
+  - id: F022
     severity: minor
     rule: vp-ops-operability
-    line: 787
-    anchor: "## 6. セキュリティ方針"
+    line: 830
+    anchor: "## 7. トラブルシュート"
     message: 手順・依存CLI・macOS設定の更新責任者、問い合わせ先、障害を解消できない場合のエスカレーション経路と変更管理方法を追記する必要がある。
 done_criteria:
   satisfied: 0

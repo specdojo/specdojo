@@ -6,7 +6,7 @@ target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 94
-graded_at: "2026-09-27T20:43:39.759Z"
+graded_at: "2026-10-04T21:02:44.037Z"
 graded_by: agy-expert-executor
 content_hash: 71696bf1a7b50506d0b3695553f90ef467da2b521b55f0f24e8f48193594476f
 categories:
@@ -107,24 +107,24 @@ findings:
   - id: F001
     severity: major
     rule: vp-qe-kata-conformance
-    line: 33
-    anchor: 5. stdin、stdout、stderr の契約を別々に書き、呼び出し元が解析する stdout の安定フィールドを固定する。
+    line: 41
+    anchor: "### 4.1. 実行目的とコマンド"
     message: >-
       `positional` を引数種別として指示しているが、対応 schema の `arguments[].kind` は `argument` と `option` しか許可しないため、recipe
       に従った成果物が検証エラーにならないよう recipe・rulebook・schema の許容値を統一してください。
   - id: F002
     severity: major
     rule: vp-qe-kata-conformance
-    line: 33
-    anchor: 5. stdin、stdout、stderr の契約を別々に書き、呼び出し元が解析する stdout の安定フィールドを固定する。
+    line: 41
+    anchor: "### 4.1. 実行目的とコマンド"
     message: >-
       recipe と rulebook が許容する `positional` および `rate_limit` を対応 schema が拒否し、template のプレースホルダを recipe
       に従って埋めても有効な成果物にならない場合があるため、kata 一式と schema を同一の引数種別・終了カテゴリ契約へ統一してください。
   - id: F003
     severity: major
     rule: vp-qe-kata-conformance
-    line: 115
-    anchor: "| 認証注入     | 環境変数名とシークレットストアの境界だけを記載する          | トークン実値または認証ファイルの個人パスを記載する |"
+    line: 123
+    anchor: "| 目的と境界       | ESIL の 1 連携と対応し、API／ファイル／メッセージ仕様の責務を重複定義していないか  |"
     message: >-
       `rate_limit` を終了カテゴリとして扱う例になっているが、対応 schema の `exit_codes[].category` は `rate_limit` を許可しないため,
       正しく識別したレート制限でも成果物が検証エラーにならないようカテゴリ契約を統一してください。

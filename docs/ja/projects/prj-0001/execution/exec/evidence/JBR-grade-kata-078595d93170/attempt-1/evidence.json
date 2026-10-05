@@ -1,0 +1,341 @@
+{
+  "schema_version": 1,
+  "task_id": "JBR-grade-kata-078595d93170",
+  "run_id": "attempt-1",
+  "stage": {
+    "role": "executor",
+    "actor": "specdojo-runner",
+    "status": "succeeded",
+    "started_at": "2026-10-05T21:00:15.840Z",
+    "completed_at": "2026-10-05T21:22:23.798Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/030-architecture/020-infrastructure/tsd-omlx-opencode.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/030-architecture/020-infrastructure/tsd-omlx.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/bps-deliverable-evaluation-e8ef6378e7-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/bps-task-completion-d17c24e4f4-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-action-96f0bab377-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-check-de77e19930-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-do-96363482bc-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-onboarding-61a4d6c9ef-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-orchestrator-0888f9bb68-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-overview-4f5ff02b38-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-plan-53594c9748-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-uc-deliverable-20176468f7-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-uc-register-7fa05372dd-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdsd-execution-225183781b-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdsd-planning-c998e41655-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdsd-sharing-20fb2f3b70-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/stsd-routine-run-72deff80c2-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/tsd-home-mac-dev-server-39e4cdf49b-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/tsd-home-mac-dev-server-usage-cd996e0bcb-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/pipeline/cdfd-onboarding-61a4d6c9efa7.json",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/bps-deliverable-evaluation.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/bps-task-completion.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/cdfd-action.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/cdfd-check.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/cdfd-do.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/cdfd-onboarding.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/cdfd-orchestrator.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/cdfd-overview.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/cdfd-plan.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/cdfd-uc-deliverable.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/cdfd-uc-register.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/cdsd-execution.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/cdsd-planning.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/cdsd-sharing.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.ifx-cmd-recipe.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.itc-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.mip-index-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.mm-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.mtp-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.nfr-availability-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.nfr-index-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.nfr-integrity-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.nfr-maintainability-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.nfr-operations-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.nfr-performance-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.nfr-reliability-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.nfr-security-safety-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.nfr-usability-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.ntp-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.opd-index-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.opd-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.opr-index-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.opr-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.otp-index-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.otp-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.pjr-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-change-request-log-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-communication-plan-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-issue-log-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-members-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-organization-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-plan-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-quality-management-plan-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-raci-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/stsd-routine-run.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/tsd-home-mac-dev-server-usage.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/tsd-home-mac-dev-server.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/pipeline/stsd-register-entry-461ba77e06e8.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-deliverable-14bb240d0b61.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-deliverable-80a72e412cef.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-kata-078595d93170.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-kata-ff13352b7fbb.json",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 72,
+    "summary": ".../020-infrastructure/tsd-omlx-opencode.md        |  67 +++++--\n .../020-infrastructure/tsd-omlx.md                 |  67 +++++--\n ...erable-evaluation-e8ef6378e7-done-criteria.yaml |   7 +-\n ...s-task-completion-d17c24e4f4-done-criteria.yaml |   2 +-\n .../cdfd-action-96f0bab377-done-criteria.yaml      |   6 +-\n .../cdfd-check-de77e19930-done-criteria.yaml       |   4 +-\n .../criteria/cdfd-do-96363482bc-done-criteria.yaml |  11 +-\n .../cdfd-onboarding-61a4d6c9ef-done-criteria.yaml  |   4 +-\n ...cdfd-orchestrator-0888f9bb68-done-criteria.yaml |   2 +-\n .../cdfd-overview-4f5ff02b38-done-criteria.yaml    |   4 +-\n .../cdfd-plan-53594c9748-done-criteria.yaml        |   4 +-\n ...fd-uc-deliverable-20176468f7-done-criteria.yaml |   2 +-\n .../cdfd-uc-register-7fa05372dd-done-criteria.yaml |   2 +-\n .../cdsd-execution-225183781b-done-criteria.yaml   |   8 +-\n .../cdsd-planning-c998e41655-done-criteria.yaml    |   8 +-\n .../cdsd-sharing-20fb2f3b70-done-criteria.yaml     |   8 +-\n .../stsd-routine-run-72deff80c2-done-criteria.yaml |  14 +-\n ...me-mac-dev-server-39e4cdf49b-done-criteria.yaml |  14 +-\n ...-dev-server-usage-cd996e0bcb-done-criteria.yaml |  12 +-\n .../pipeline/cdfd-onboarding-61a4d6c9efa7.json     |  14 --\n .../grade/results/bps-deliverable-evaluation.yaml  |  16 +-\n .../grade/results/bps-task-completion.yaml         |   4 +-\n .../execution/grade/results/cdfd-action.yaml       | 166 ++++++++++------\n .../execution/grade/results/cdfd-check.yaml        | 174 ++++++++++------\n .../prj-0001/execution/grade/results/cdfd-do.yaml  | 103 +++++++---\n .../execution/grade/results/cdfd-onboarding.yaml   |   4 +-\n .../execution/grade/results/cdfd-orchestrator.yaml |   4 +-\n .../execution/grade/results/cdfd-overview.yaml     |  28 +--\n .../execution/grade/results/cdfd-plan.yaml         | 113 ++++++-----\n .../grade/results/cdfd-uc-deliverable.yaml         |   4 +-\n .../execution/grade/results/cdfd-uc-register.yaml  |   6 +-\n .../execution/grade/results/cdsd-execution.yaml    |  96 +++++----\n .../execution/grade/results/cdsd-planning.yaml     | 144 +++++++-------\n .../execution/grade/results/cdsd-sharing.yaml      |  24 +--\n .../grade/results/specdojo.ifx-cmd-recipe.yaml     |  14 +-\n .../grade/results/specdojo.itc-rulebook.yaml       |  77 ++++++-\n .../grade/results/specdojo.mip-index-rulebook.yaml |  76 +++++--\n .../grade/results/specdojo.mm-rulebook.yaml        | 221 ++++++++++++++++++---\n .../grade/results/specdojo.mtp-rulebook.yaml       |  75 ++++++-\n .../specdojo.nfr-availability-rulebook.yaml        |  73 ++++++-\n .../grade/results/specdojo.nfr-index-rulebook.yaml |  84 ++++++--\n .../results/specdojo.nfr-integrity-rulebook.yaml   |  79 ++++++--\n .../specdojo.nfr-maintainability-rulebook.yaml     |  90 +++++++--\n .../results/specdojo.nfr-operations-rulebook.yaml  |  83 ++++++--\n .../results/specdojo.nfr-performance-rulebook.yaml |  95 ++++++++-\n .../results/specdojo.nfr-reliability-rulebook.yaml |  83 +++++++-\n .../specdojo.nfr-security-safety-rulebook.yaml     | 115 ++++++++---\n .../results/specdojo.nfr-usability-rulebook.yaml   |  79 ++++++--\n .../grade/results/specdojo.ntp-rulebook.yaml       | 159 +++++++++++++--\n .../grade/results/specdojo.opd-index-rulebook.yaml | 122 ++++++++----\n .../grade/results/specdojo.opd-rulebook.yaml       | 102 ++++++++--\n .../grade/results/specdojo.opr-index-rulebook.yaml | 126 +++++++++---\n .../grade/results/specdojo.opr-rulebook.yaml       |  93 +++++++--\n .../grade/results/specdojo.otp-index-rulebook.yaml | 104 +++++++---\n .../grade/results/specdojo.otp-rulebook.yaml       |  91 +++++++--\n .../grade/results/specdojo.pjr-rulebook.yaml       |  96 +++++++--\n .../specdojo.pm-change-request-log-rulebook.yaml   | 131 +++++++++---\n .../specdojo.pm-communication-plan-rulebook.yaml   |  75 ++++++-\n .../results/specdojo.pm-issue-log-rulebook.yaml    | 105 ++++++++--\n .../results/specdojo.pm-members-rulebook.yaml      | 159 +++++++++------\n .../results/specdojo.pm-organization-rulebook.yaml |  91 +++++++-…"
+  },
+  "validations": [
+    {
+      "id": "job-command",
+      "source": "runner",
+      "command": "npm run build\nif tools/grade/run-per-document.sh --run-id JBR-grade-kata-078595d93170 --stages 1 --stage-1-executor agy-expert-executor --kind all --limit 15 --dependency-changed=true --rulebook-changed=true --unreviewed=true --changed-only=true --ungraded=true --incomplete=true --rubric-outdated=true; then\n  cat logs/grade/runs/per-document/JBR-grade-kata-078595d93170/results.tsv\nelse\n  grade_status=$?\n  printf 'grade pipeline failed: run_id=%s exit_code=%s\\n' 'JBR-grade-kata-078595d93170' \"$g…",
+      "status": "passed",
+      "summary": "exit 0"
+    }
+  ],
+  "final_message": "Runner command exit 0.",
+  "command": {
+    "shell": "/bin/sh -eu",
+    "value": "npm run build\nif tools/grade/run-per-document.sh --run-id JBR-grade-kata-078595d93170 --stages 1 --stage-1-executor agy-expert-executor --kind all --limit 15 --dependency-changed=true --rulebook-changed=true --unreviewed=true --changed-only=true --ungraded=true --incomplete=true --rubric-outdated=true; then\n  cat logs/grade/runs/per-document/JBR-grade-kata-078595d93170/results.tsv\nelse\n  grade_status=$?\n  printf 'grade pipeline failed: run_id=%s exit_code=%s\\n' 'JBR-grade-kata-078595d93170' \"$grade_status\" >&2\n  exit \"$grade_status\"\nfi",
+    "exit_code": 0,
+    "stdout_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-078595d93170/attempt-1/command.stdout.log",
+    "stderr_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-078595d93170/attempt-1/command.stderr.log",
+    "stdout": "\n> specdojo@0.3.0 build\n> node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.build.json && node -e \"require('node:fs').chmodSync('dist/specdojo.js', 0o755)\"\n\nrun_id=JBR-grade-kata-078595d93170 project=prj-0001 target=kata kind=all changed_only=true ungraded=true incomplete=true rubric_outdated=true embed_documents=false max_stage_failures=3 stages=1 documents=15 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-kata-078595d93170\nstage=1 executor=agy-expert-executor reporter=machine reference=none\ndocument start: docs/ja/specdojo/rulebooks/opd-index-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/opd-index-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/opd-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/opd-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/opr-index-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/opr-index-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/opr-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/opr-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/otp-index-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/otp-index-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/otp-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/otp-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/pjr-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/pjr-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/pm-change-request-log-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/pm-change-request-log-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/pm-communication-plan-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/pm-communication-plan-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/pm-issue-log-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/pm-issue-log-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/pm-members-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/pm-members-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/pm-organization-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/pm-organization-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/pm-plan-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/pm-plan-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/pm-quality-management-plan-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/pm-quality-management-plan-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/pm-raci-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/pm-raci-rulebook.md\ngrade pipeline complete: selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-kata-078595d93170/results.tsv\nrecorded_at\tdocument\tstage\tstatus\tduration_seconds\tverdict\tscore\tfindings\texecutor\treporter\treference\tconsecutive_failures\tmax_failures\n2026-10-05T21:01:46Z\tdocs/ja/specdojo/rulebooks/opd-index-rulebook.md\t1\tpassed\t78\tneeds-work\t87\t7\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-05T21:03:30Z\tdocs/ja/specdojo/rulebooks/opd-rulebook.md\t1\tpassed\t101\tpass\t95\t4\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-05T21:05:03Z\tdocs/ja/specdojo/rulebooks/opr-index-rulebook.md\t1\tpassed\t91\tneeds-work\t83\t8\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-05T21:07:19Z\tdocs/ja/specdojo/rulebooks/opr-rulebook.md\t1\tpassed\t134\tneeds-work\t94\t2\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-05T21:08:21Z\tdocs/ja/specdojo/rulebooks/otp-index-rulebook.md\t1\tpassed\t60\tneeds-work\t84\t5\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-05T21:09:46Z\tdocs/ja/specdojo/rulebooks/otp-rulebook.md\t1\tpassed\t83\tneeds-work\t94\t2\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-05T21:11:00Z\tdocs/ja/specdojo/rulebooks/pjr-rulebook.md\t1\tpassed\t72\tneeds-work\t82\t6\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-05T21:12:10Z\tdocs/ja/specdojo/rulebooks/pm-change-request-log-rulebook.md\t1\tpassed\t68\tneeds-work\t83\t9\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-05T21:13:25Z\tdocs/ja/specdojo/rulebooks/pm-communication-plan-rulebook.md\t1\tpassed\t73\tpass\t95\t2\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-05T21:14:26Z\tdocs/ja/specdojo/rulebooks/pm-issue-log-rulebook.md\t1\tpassed\t59\tneeds-work\t91\t5\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-05T21:15:53Z\tdocs/ja/specdojo/rulebooks/pm-members-rulebook.md\t1\tpassed\t85\tneeds-work\t82\t10\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-05T21:17:22Z\tdocs/ja/specdojo/rulebooks/pm-organization-rulebook.md\t1\tpassed\t87\tneeds-work\t89\t2\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-05T21:19:30Z\tdocs/ja/specdojo/rulebooks/pm-plan-rulebook.md\t1\tpassed\t126\tneeds-work\t80\t14\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-05T21:21:07Z\tdocs/ja/specdojo/rulebooks/pm-quality-management-plan-rulebook.md\t1\tpassed\t95\tneeds-work\t81\t11\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-05T21:22:22Z\tdocs/ja/specdojo/rulebooks/pm-raci-rulebook.md\t1\tpassed\t73\tneeds-work\t82\t5\tagy-expert-executor\tmachine\tnone\t\t\n",
+    "stderr": ""
+  },
+  "log_refs": [
+    {
+      "kind": "command-stdout",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-078595d93170/attempt-1/command.stdout.log",
+      "bytes": 4916,
+      "truncated": false
+    },
+    {
+      "kind": "command-stderr",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-078595d93170/attempt-1/command.stderr.log",
+      "bytes": 0,
+      "truncated": false
+    }
+  ]
+}

@@ -3,29 +3,75 @@ version: 1
 document: specdojo:pm-communication-plan-rulebook
 path: docs/ja/specdojo/rulebooks/pm-communication-plan-rulebook.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: pass
-score: 96
-graded_at: "2026-09-03T02:44:13.430Z"
-graded_by: gemma-expert-executor
+score: 95
+graded_at: "2026-10-05T21:13:24.712Z"
+graded_by: agy-expert-executor
 content_hash: f816cef26ab691548cb25692742af7f12ecccd0b26c0f9c44b3eacb407573e7b
 categories:
-  consistency:
-    score: 88
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
+  architecture:
+    score: 100
   usability:
     score: 92
-  architecture:
+  implementation:
     score: 100
   quality:
     score: 100
+  consistency:
+    score: 75
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -43,6 +89,15 @@ viewpoints:
   vp-ux-language-consistency:
     level: 4
     score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
@@ -56,11 +111,11 @@ findings:
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 1
-    message: 「位置づけ」という見出しがあるが、他成果物から見た本文書の役割や依存関係などの位置づけに関する記述が不足している。
     anchor: "# コミュニケーション計画 作成ルール"
+    message: 「位置づけ」という見出しがあるが、他成果物から見た本文書の役割や依存関係などの位置づけに関する記述が不足している。
   - id: F002
     severity: minor
     rule: vp-ux-readability
     line: 1
-    message: 見出しに「位置づけ」が含まれているが、具体的な位置づけの説明がないため、利用者が文書の役割を把握しにくい。
     anchor: "# コミュニケーション計画 作成ルール"
+    message: 見出しに「位置づけ」が含まれているが、具体的な位置づけの説明がないため、利用者が文書の役割を把握しにくい。
