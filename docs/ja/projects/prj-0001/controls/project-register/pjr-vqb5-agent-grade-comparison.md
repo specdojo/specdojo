@@ -14,6 +14,8 @@ specdojo:
   due_on: "2026-09-30"
 ---
 
+<!-- markdownlint-disable no-chinese-glyphs -->
+
 # PJR-VQB5 grade 判定の agent 比較結果
 
 ## 1. メモ

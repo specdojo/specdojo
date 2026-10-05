@@ -61,6 +61,9 @@ if (command === "--help" || command === "-h") {
     ...process.env,
     PATH: [executableDirectory, process.env.PATH].filter(Boolean).join(path.delimiter),
   };
+  if (command === "markdownlint") {
+    args.unshift("-r", path.join(packageRoot, "src", "markdownlint-rule-no-chinese-glyphs.cjs"));
+  }
   process.exitCode = run(command, args, env);
 } else {
   usage();
