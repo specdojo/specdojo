@@ -58,3 +58,19 @@
       from: "-"
       to: "agent exited with non-zero code: reporter result rendering failed: reporter changed_files summaries (6) do not match evidence changes (14)"
   previous_event_id: reg_0f0a2a22119d4f82acdb4bce594cea30
+- v: 1
+  id: reg_2e07531efb4f4909bbbc8bd900a68c1e
+  ts: "2026-10-05T21:48:14Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: reporter result rendering failed: reporter changed_files summaries (6) do not match evidence changes (14)"
+      to: "-"
+  previous_event_id: reg_5a0231d536f445729ac06f288c28396a
