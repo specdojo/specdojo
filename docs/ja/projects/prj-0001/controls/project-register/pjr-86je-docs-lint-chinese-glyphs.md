@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   owner: DEV
   registered_at: "2026-10-04T08:46:04Z"
   due_on: null
-  block_reason: "agent exited with non-zero code: reporter result rendering failed: reporter changed_files summaries (3) do not match evidence changes (4)"
 ---
 
 # PJR-86JE 日本語の文書に中国語の字体が混ざったことを検出する lint を追加する
