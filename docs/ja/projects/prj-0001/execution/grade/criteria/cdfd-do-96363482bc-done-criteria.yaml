@@ -2,12 +2,12 @@
 id: cdfd-do-grade-criteria
 document: cdfd-do
 path: docs/ja/product/010-business-specs/010-data-flow/cdfd-do.md
-graded_at: "2026-10-03T16:25:15.904Z"
+graded_at: "2026-10-04T16:06:26.425Z"
 graded_by: agy-expert-executor
 content_hash: 77bdd115c5f0005404837c4d440bc2af468071ee4364c697383e1019a52a0a99
 summary:
-  satisfied: 3
-  unsatisfied: 1
+  satisfied: 2
+  unsatisfied: 2
   total: 4
 criteria:
   - id: DC-001
@@ -22,13 +22,14 @@ criteria:
       - ARC
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
-    reason: データストア表と個別プロセス主要入出力表で P-07-03 の登録簿アクセスおよび P-07-05 の成果物アクセスの有無が矛盾しており、プロセス単位の読み書きを一意に識別できない。
+    reason: 登録簿と成果物の読み書きについて、データストア表と個別プロセス表の間で P-07-03 および P-07-05 の利用有無が矛盾し、一意に識別できない。
   - id: DC-003
     text: 利用制限、保護対象の変更、検証失敗、統合失敗など、成果の採否と再開位置を変える主要例外の検出条件と再開条件が判定できること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
-    status: satisfied
+    status: unsatisfied
+    reason: 主要例外の表に「停止範囲」列がなく、成果の採否を変える際の停止範囲が明示されていない。
   - id: DC-004
     text: 人間が担う判断（承認、完了確定）を AI Agent の自動処理として表していないこと
     roles:

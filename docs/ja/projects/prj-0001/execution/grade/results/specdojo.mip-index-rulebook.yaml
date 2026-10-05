@@ -3,29 +3,72 @@ version: 1
 document: specdojo:mip-index-rulebook
 path: docs/ja/specdojo/rulebooks/mip-index-rulebook.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 91
-graded_at: "2026-09-02T21:15:34.356Z"
-graded_by: gemma-expert-executor
+score: 96
+graded_at: "2026-10-04T21:05:13.369Z"
+graded_by: agy-expert-executor
 content_hash: 123a4da38aa1faf4ed0fcb32ef9208e81485245eb52bae4a940d6eb7e6e2f4a5
 categories:
-  consistency:
+  purpose:
     score: 100
-  usability:
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
     score: 100
   architecture:
     score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 100
   quality:
-    score: 75
+    score: 83
+  consistency:
+    score: 100
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
-  vp-arc-single-responsibility:
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -43,6 +86,15 @@ viewpoints:
   vp-ux-language-consistency:
     level: 4
     score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
@@ -56,11 +108,11 @@ findings:
     severity: major
     rule: vp-qe-kata-conformance
     line: 1
-    message: 参照先のサンプル `docs/ja/specdojo/samples/mip-index-sample.md` が、本書で定義した必須構成（1〜9章の順序固定）および命名規則に従っておらず、著者に誤読を招く。
     anchor: "# 移行計画 作成ルール"
+    message: 参照先のサンプル `docs/ja/specdojo/samples/mip-index-sample.md` が、本書で定義した必須構成（1〜9章の順序固定）および命名規則に従っておらず、著者に誤読を招く。
   - id: F002
     severity: minor
     rule: vp-qe-kata-conformance
-    line: 1
+    line: 214
+    anchor: 既存システムの保守限界に伴い、新基盤へ移行するための計画を定義する。
     message: ルール内のサンプルにおける Frontmatter の `type` が `project` となっており、4.1 節の規定（`migration` 固定）と矛盾している。
-    anchor: "# 移行計画 作成ルール"

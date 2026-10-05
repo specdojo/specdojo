@@ -2,7 +2,7 @@
 id: cdfd-action-grade-criteria
 document: cdfd-action
 path: docs/ja/product/010-business-specs/010-data-flow/cdfd-action.md
-graded_at: "2026-10-03T16:11:04.801Z"
+graded_at: "2026-10-04T16:02:35.302Z"
 graded_by: agy-expert-executor
 content_hash: 5d3fc7872c2d9f07e2e7282dc9c546babd6f6c39af2fc4c2afc0ad10611e17da
 summary:
@@ -16,7 +16,7 @@ criteria:
       - BA
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
-    reason: 全体概要の主要入力とされた承認結果および非推奨化判断が各領域の主要入力へ引き継がれていない。
+    reason: 全体概要で定義された入力「承認結果」「非推奨化の判断」と出力「Orchestratorへの完了・改善判断」が各領域の詳細化から漏れているため。
   - id: DC-002
     text: 完了記録、稼働構成、Kata のバージョン、成果物カタログ、保管庫への更新がプロセス単位で識別でき、Plan への再計画要求がグループ外委譲として示されていること
     roles:
@@ -29,4 +29,4 @@ criteria:
       - PO
     viewpoint: vp-po-decision-readiness
     status: unsatisfied
-    reason: P-12とP-13の最終承認者がプロジェクトのRACIが定めるPOの責任と一致していない。
+    reason: 承認のための「完了条件」列がプロセス表になく、構成変更と非推奨化の最終判断者がRACIでAを持つPOと一致していないため。

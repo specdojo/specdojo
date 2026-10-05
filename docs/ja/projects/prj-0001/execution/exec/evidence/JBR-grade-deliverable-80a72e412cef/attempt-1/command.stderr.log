@@ -1,0 +1,3 @@
+grade pipeline incomplete: incomplete=1 run_id=JBR-grade-deliverable-80a72e412cef; rerun with --run-id JBR-grade-deliverable-80a72e412cef to retry the failed stages, or start a new run with --incomplete
+grade pipeline incomplete document: docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md failed_stage=1
+grade pipeline failed: run_id=JBR-grade-deliverable-80a72e412cef exit_code=1

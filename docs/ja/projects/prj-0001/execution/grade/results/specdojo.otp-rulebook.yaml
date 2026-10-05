@@ -3,29 +3,75 @@ version: 1
 document: specdojo:otp-rulebook
 path: docs/ja/specdojo/rulebooks/otp-rulebook.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 91
-graded_at: "2026-09-03T01:55:03.840Z"
-graded_by: gemma-expert-executor
-content_hash: 7da95561667fe46a29b36b367a2ce31099cd0057758953947ad3dda7b9c49be1
+score: 94
+graded_at: "2026-10-05T21:09:46.060Z"
+graded_by: agy-expert-executor
+content_hash: 13d515501de58410f11ae168c56b8e538630f7c569718f1d47993948f11bd35d
 categories:
-  consistency:
+  purpose:
     score: 100
-  usability:
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
     score: 100
   architecture:
     score: 100
+  usability:
+    score: 92
+  implementation:
+    score: 100
   quality:
-    score: 75
+    score: 83
+  consistency:
+    score: 100
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
+    level: 3
+    score: 75
+  vp-arc-single-responsibility:
     level: 4
     score: 100
-  vp-arc-single-responsibility:
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -43,20 +89,35 @@ viewpoints:
   vp-ux-language-consistency:
     level: 4
     score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 0
   major: 1
-  minor: 0
+  minor: 1
   note: 0
 findings:
   - id: F001
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 194
+    anchor: ""
+    message: 191行目で「otp-index への導線（本体SSOT）を必ず記載する」と述べており、直後の194行目の記述は内容が重複しているため削除できる。
+  - id: F002
     severity: major
     rule: vp-qe-kata-conformance
-    line: 1
+    line: 59
+    anchor: "- `based_on` には運用・移行判断に直接利用した成果物（例: `mip-index` / `cop-index` / `mtp-index` / `br-*` / `issue-*`）のみ列挙する"
     message: >-
-      推奨 Frontmatter の定義（59行目）では type を migration 固定としているが、同文書内のサンプル（221行目）および参考資料の otp-sample.md では project
-      となっており矛盾している。
-    anchor: "# 運用切替計画 作成ルール"
+      前回の指摘（未解消）: 推奨 Frontmatter の定義（59行目）では type を migration 固定としているが、同文書内のサンプル（221行目）および参考資料の otp-sample.md では project
+      となっており矛盾している。（※同文書内のサンプルは削除されたが、参考資料との矛盾は残存）

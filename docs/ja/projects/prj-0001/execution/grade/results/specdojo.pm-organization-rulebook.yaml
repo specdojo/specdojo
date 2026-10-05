@@ -3,29 +3,75 @@ version: 1
 document: specdojo:pm-organization-rulebook
 path: docs/ja/specdojo/rulebooks/pm-organization-rulebook.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 90
-graded_at: "2026-09-03T03:44:11.788Z"
-graded_by: codex-expert-executor
+score: 89
+graded_at: "2026-10-05T21:17:21.915Z"
+graded_by: agy-expert-executor
 content_hash: abaf0d512a3e8862ae1948f20053e4d0946513a9b57c98eec498951cc7774ab9
 categories:
-  consistency:
-    score: 50
-  usability:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
     score: 100
   architecture:
     score: 100
-  quality:
+  usability:
     score: 100
-viewpoints:
-  vp-arc-cross-document-consistency:
-    level: 2
+  implementation:
+    score: 100
+  quality:
+    score: 83
+  consistency:
     score: 50
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -35,12 +81,21 @@ viewpoints:
     level: 2
     score: 50
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -52,17 +107,17 @@ finding_counts:
   minor: 0
   note: 0
 findings:
-  - id: F002
+  - id: F001
     severity: major
     rule: vp-qe-omissions-consistency
     line: 1
-    message: 本文要件に上位標準が必須とする採用／未採用 Role code、使用可能な owner、同標準への参照がなく、生成物だけではSchedule・RACIのRole code適合を判定できないため、必須項目として追加してください。
     anchor: "# 組織定義 作成ルール"
-  - id: F001
+    message: 本文要件に上位標準が必須とする採用／未採用 Role code、使用可能な owner、同標準への参照がなく、生成物だけではSchedule・RACIのRole code適合を判定できないため、必須項目として追加してください。
+  - id: F002
     severity: major
-    rule: vp-arc-cross-document-consistency
+    rule: vp-qe-kata-conformance
     line: 1
+    anchor: "# 組織定義 作成ルール"
     message: >-
       全Role codeを組織定義へ記載しない方針は、上位標準が同文書を採用／未採用 Role code と使用可能な owner
       の正本としてSchedule・RACIを検証する規則と矛盾するため、採用判断を組織定義に残す責務境界へ修正してください。
-    anchor: "# 組織定義 作成ルール"
