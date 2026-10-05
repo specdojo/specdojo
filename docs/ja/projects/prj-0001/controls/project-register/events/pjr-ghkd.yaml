@@ -138,3 +138,16 @@
       from: "parent validation failed: lint-md"
       to: "-"
   previous_event_id: reg_a4f5b4ef7b47406684625193ab197f39
+- v: 1
+  id: reg_5e81dfc433154de5ba4c15ac347a166c
+  ts: "2026-10-05T22:52:43Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_7355656e0372452ea3a51e1fe506c768
