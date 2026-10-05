@@ -12,7 +12,7 @@ specdojo:
   owner: DEV
   registered_at: "2026-10-04T11:46:27Z"
   due_on: null
-  block_reason: "agent exited with non-zero code: parent validation failed: test-integration"
+  block_reason: "integrate failed: project: git commit failed: error: unknown option '--reserve' / error: unknown option '--local' / error: unknown option '--strict-sync' / error: unknown option '--integration-branch'…"
 ---
 
 # PJR-GHKD worktree の resume 前の同期で、衝突確認の git diff がリポジトリ外で実行される

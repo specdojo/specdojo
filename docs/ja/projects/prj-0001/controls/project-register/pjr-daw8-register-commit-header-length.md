@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-daw8-register-commit-header-length
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-04T03:46:03Z"
   due_on: null
+  completed_at: "2026-10-05T21:59:23Z"
+  conclusion: register の自動 commit のヘッダーを header-max-length 内に収めるようにした（超える場合は末尾を … に置き換える）。unit test・integration test と npm run check で確認した。100 文字を超えるタイトルでの実地の確認は未実施
 ---
 
 # PJR-DAW8 register の自動 commit がタイトルの長さで commitlint に拒否される
