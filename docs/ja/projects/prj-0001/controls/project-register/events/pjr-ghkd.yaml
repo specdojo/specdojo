@@ -122,3 +122,19 @@
       from: "-"
       to: "parent validation failed: lint-md"
   previous_event_id: reg_4b937c8a5e0e4c2f89db71baf4626746
+- v: 1
+  id: reg_7355656e0372452ea3a51e1fe506c768
+  ts: "2026-10-05T22:48:45Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: lint-md"
+      to: "-"
+  previous_event_id: reg_a4f5b4ef7b47406684625193ab197f39
