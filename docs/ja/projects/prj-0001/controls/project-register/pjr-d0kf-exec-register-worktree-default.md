@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-d0kf-exec-register-worktree-default
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-04T05:12:44Z"
   due_on: null
+  completed_at: "2026-10-05T21:59:08Z"
+  conclusion: exec run --register の実行場所の既定を exec-defaults の run.register_execution で設定できるようにし、本プロジェクトの既定を worktree にした。in-place は --in-place で明示する。--worktree なしの実行が worktree で行われることを実地で確認した
 ---
 
 # PJR-D0KF exec run --register の既定を worktree にし、in-place を明示指定にする
