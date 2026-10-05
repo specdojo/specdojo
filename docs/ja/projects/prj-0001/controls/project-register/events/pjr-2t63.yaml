@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_c04f03ddf48d4fa8a2416a94949a7759
+  ts: "2026-10-05T22:59:51Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: pm-members.yaml の保護（b99b3042f）の次の段階として起票
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: agent の定義を pm-members.yaml から保護された設定へ分ける
+    - field: description
+      from: ""
+      to: pm-members.yaml には人と agent の定義が同居している。agent の定義（provider・コマンド・モデル・役割）を .specdojo/ 配下など保護された設定へ移し、人は pm-members.yaml に残す。名簿の読み込みは両方を合わせ、ニックネームの一意性を検査する。schema・rulebook・scaffold も合わせて直す。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-06"

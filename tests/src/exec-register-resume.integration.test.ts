@@ -11,7 +11,7 @@ import {
   writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { isAbsolute, join } from "node:path";
 import { Command } from "commander";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { registerExecCommands } from "../../src/exec.js";
@@ -402,6 +402,9 @@ describe("exec run --register --worktree --resume", () => {
         vi.spyOn(process.stdout, "write").mockImplementation(() => true);
         vi.spyOn(process.stderr, "write").mockImplementation(() => true);
 
+        // PJR-GHKD: 実運用と同じ相対 gitdir の linked worktree で、resume 前の同期を通す。
+        git(root, "config", "worktree.useRelativePaths", "true");
+
         // 親検証（test-unit）は統合先で直す修正ファイルが無い間だけ失敗する。
         writeFileSync(
           join(root, "package.json"),
@@ -443,6 +446,10 @@ describe("exec run --register --worktree --resume", () => {
         expect(readFileSync(join(root, TICKET_REL), "utf8")).toContain("item_status: waiting");
         const worktreePath = worktreePathFor(root) ?? "";
         expect(worktreePath).not.toBe("");
+        const gitdir = readFileSync(join(worktreePath, ".git"), "utf8")
+          .trim()
+          .replace(/^gitdir:\s*/u, "");
+        expect(isAbsolute(gitdir)).toBe(false);
         const evidenceDir = join(worktreePath, EXECUTION_REL, "exec", "evidence", "PJR-CD34");
         const runId = readdirSync(evidenceDir)[0];
         const readParentValidation = (): Record<string, unknown> | undefined => {

@@ -12,7 +12,7 @@ specdojo:
   owner: DEV
   registered_at: "2026-10-04T13:13:47Z"
   due_on: null
-  block_reason: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=.opencode/agents/gemma26-reporter.md; agent must record the requir…"
+  block_reason: "agent exited with non-zero code: parent validation failed: test-unit"
 ---
 
 # PJR-27Y0 grade の英語の判定を正本として保存し、gemma26 で日本語へ翻訳する
