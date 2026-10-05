@@ -12,7 +12,7 @@ specdojo:
   owner: DEV
   registered_at: "2026-10-04T11:46:27Z"
   due_on: null
-  block_reason: "integrate failed: project: git commit failed: error: unknown option '--reserve' / error: unknown option '--local' / error: unknown option '--strict-sync' / error: unknown option '--integration-branch'…"
+  block_reason: "parent validation failed: lint-md"
 ---
 
 # PJR-GHKD worktree の resume 前の同期で、衝突確認の git diff がリポジトリ外で実行される
@@ -35,14 +35,16 @@ exec run --register --resume は、reporter の再開前に integration target�
 
 | 項目     | 内容                                                                                                                                                                                                                                                   |
 | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 原因     | 未調査。同期の衝突確認の `git diff --name-only --diff-filter=U -z` を、worktree ではない cwd（または worktree を指さない Git 環境）で実行している可能性が高い。worktree の `.git` は相対パスの gitdir（`worktree.useRelativePaths`）である点も確認する |
+| 原因     | Git 実行ヘルパーは `git -C <repo>` を指定する一方、子プロセスの `cwd` を指定せず runner の `cwd` を継承していた。相対 gitdir の linked worktree を同期する経路では、衝突確認の `git diff` が worktree 自体を実行ディレクトリとして保証されていなかった |
 | 対応策   | 同期の各 git 操作の cwd と Git 環境を worktree に固定する。未 commit の変更がある場合の同期（変更を保ったままの merge）を正しく扱う                                                                                                                    |
 | 依存事項 | なし                                                                                                                                                                                                                                                   |
 | 完了条件 | worktree に未 commit の変更があり integration target が先に進んだ状態で `--resume` しても、同期・再開・統合が成功する。相対パスの gitdir の worktree でも成功する。integration test で再現と修正を確認し、`npm run check` が通る                       |
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- `src/exec-worktree.ts` の Git 実行ヘルパーで、`git -C <repo>` に加えて子プロセスの `cwd` も対象リポジトリへ固定した。再開前の同期に含まれる stash、merge、衝突確認、commit は同じヘルパーを使うため、runner の実行ディレクトリに依存しない。
+- `tests/src/exec-register-resume.integration.test.ts` の reporter 再開 E2E を `worktree.useRelativePaths=true` で実行し、worktree の `.git` が相対 gitdir であることを確認するようにした。未 commit の executor 変更と統合先の非競合変更を保持したまま同期・親検証・reporter・統合まで完了する既存の確認に、障害時の条件を追加した。
+- `npm run test:integration` を含む親 runner の検証で、再現シナリオと全体への影響を確認する。
 
 ## 5. 関連ドキュメント
 
