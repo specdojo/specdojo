@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-GHKD",
+  "run_id": "20261005T214605074Z-32bbabf7",
+  "updated_at": "2026-10-05T22:52:44.014Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "codex-expert-executor",
+      "attempts": 1,
+      "started_at": "2026-10-05T21:46:05.074Z",
+      "completed_at": "2026-10-05T21:54:01.150Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-GHKD/20261005T214605074Z-32bbabf7/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma26-reporter",
+      "attempts": 2,
+      "started_at": "2026-10-05T21:58:10.399Z",
+      "completed_at": "2026-10-05T22:00:12.158Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-ghkd-20261005T214003Z-0e15-result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "gemma26-reporter",
+      "attempts": 2,
+      "started_at": "2026-10-05T22:51:21.376Z",
+      "completed_at": "2026-10-05T22:52:44.014Z",
+      "artifact_ref": null,
+      "repos": {
+        "project": {
+          "status": "failed",
+          "commit": null,
+          "merged_at": null,
+          "error": "git commit failed: error: unknown option '--reserve' / error: unknown option '--local' / error: unknown option '--strict-sync' / error: unknown option '--integration-branch' / error: unknown option '--integration-worktree' / Warning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-fSTR8L/pjr-0001-topic.md / docs/conflict.md / docs/conflict.md / Warning: forcing wor… (args: -m exec(register PJR-GHKD): worktree の res… -- 7 paths)"
+        }
+      }
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/exec/plans/pjr-ghkd-20261005T214003Z-0e15-plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-ghkd-20261005T214003Z-0e15-result.md"
+  }
+}

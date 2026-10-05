@@ -113,8 +113,12 @@ export function runGitWithTransientRetry<T extends RetryableGitResult>(
 }
 
 export function gitResult(repoRoot: string, args: string[]): ReturnType<typeof spawnSync> {
+  const cwd = resolve(repoRoot);
   const run = (): ReturnType<typeof spawnSync> =>
-    spawnSync("git", ["-C", repoRoot, ...args], {
+    spawnSync("git", ["-C", cwd, ...args], {
+      // `-C` だけに依存せず、子プロセス自体も対象 repository から起動する。linked worktree の
+      // `.git` が相対 gitdir の場合も、resume 中の diff を runner の cwd から切り離す。
+      cwd,
       encoding: "utf8",
       env: gitEnvironment(),
       stdio: ["ignore", "pipe", "pipe"],
