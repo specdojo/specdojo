@@ -20,12 +20,12 @@ oMLX は Mac ホスト側で実行し、opencode は devcontainer 内で実行�
 - macOS 15 以降
 - 最初の目標は、2 つの opencode agent の並列実行とする
 
-構成の基本は、モデルを 1 つだけロードし、oMLX の continuous batching で 2 つのリクエストを並列に処理することである。同じモデルを 2 つ別々にロードしない。
+構成の基本は、Ornith または Qwen3.6 のいずれか 1 つだけをロードし、oMLX の continuous batching で 2 つのリクエストを並列に処理することである。同じモデルを 2 つ別々にロードせず、モデルを比較するときも同時にはロードしない。
 
 ```text
 Mac host
 ├─ oMLX
-│  └─ Ornith-1.5 35B-A3B oQ4e-mtp  ← 1 copy
+│  └─ Ornith-1.5 35B-A3B oQ4e-mtp または Qwen3.6 35B-A3B 4bit  ← 1 copy
 │
 ├─ Docker / devcontainer A
 │  └─ opencode agent A ─┐
@@ -41,6 +41,7 @@ opencode からの接続設定は [[tsd-omlx-opencode]] で定義する。
 | 用途                         | 採用モデル                              | 補足                                                          |
 | ---------------------------- | --------------------------------------- | ------------------------------------------------------------- |
 | 並列の agent 作業            | `mlx-works/Ornith-1.5-35B-A3B-oQ4e-mtp` | 約 35B total / 約 3B active の MoE。oQ4e mixed-precision 4bit |
+| agentic coding の比較運用    | `mlx-community/Qwen3.6-35B-A3B-4bit`    | 約 35B total / 約 3B active の MoE。MLX 4bit、約 20.4GB       |
 | 最終判断・難しい設計レビュー | Claude Code / Codex                     | ローカル LLM の結果を必要に応じて補完する                     |
 
 `mlx-works/Ornith-1.5-35B-A3B-oQ4e-mtp` を選ぶ理由は次のとおり。
@@ -50,6 +51,8 @@ opencode からの接続設定は [[tsd-omlx-opencode]] で定義する。
 - text-only 版である
 - Qwen 用に修正された chat template を含む。opencode では chat template と tool call の形式が重要なため、単純な MLX 4bit 変換よりこの版を優先する
 
+`mlx-community/Qwen3.6-35B-A3B-4bit` は、agentic coding と tool calling を重視した Qwen3.6 を Ornith と同程度のメモリで比較するために追加する。vision encoder を含むモデルだが、本構成では opencode から text-only で利用する。通常運用では Ornith と Qwen3.6 のどちらか一方だけをロードする。
+
 ## 3. oMLXのインストール
 
 oMLX は macOS アプリ版を使う。Apple Silicon 向けのネイティブカーネルを同梱し、自動アップデートと Admin UI に対応しているためである。サーバーの起動・停止・監視はメニューバーから、設定は Admin UI から行う。
@@ -58,7 +61,8 @@ GitHub Releases から最新の macOS アプリを取得して Applications へ�
 
 1. モデルの保存先に `~/.omlx/models` を指定する。
 2. アプリが管理するサーバーを起動する。
-3. `mlx-works/Ornith-1.5-35B-A3B-oQ4e-mtp` を検索し、最初のモデルとしてダウンロードする。
+3. `mlx-works/Ornith-1.5-35B-A3B-oQ4e-mtp` を検索し、ダウンロードする。
+4. `mlx-community/Qwen3.6-35B-A3B-4bit` を検索し、比較用モデルとしてダウンロードする。
 
 初回設定後は oMLX がメニューバーに常駐する。メニューバーの oMLX アイコンを開き、サーバーが起動していることを確認する。
 
@@ -66,10 +70,11 @@ GitHub Releases から最新の macOS アプリを取得して Applications へ�
 Server: running (port 8000)
 ```
 
-ダウンロードしたモデルの容量を確認する。20GB 強になっていればよい。
+ダウンロードしたモデルの容量を確認する。どちらも 20GB 強になっていればよい。
 
 ```bash
 du -sh ~/.omlx/models/*Ornith-1.5-35B-A3B-oQ4e-mtp*
+du -sh ~/.omlx/models/*Qwen3.6-35B-A3B-4bit*
 ```
 
 ## 4. M3 Max 64GB向けの初期設定
@@ -142,12 +147,12 @@ SSD Cache Directory:  既定値のまま
 
 ### 4.4. 生成の既定値
 
-Admin UI のサーバー全体の設定の Generation Defaults は、全モデルに共通する既定値である。リクエストが値を指定しない場合だけ使われる。opencode は Ornith のサンプリングの値と thinking の有無をリクエストで送るため（[[tsd-omlx-opencode]]）、ここでは最低限の安全な値にとどめる。
+Admin UI のサーバー全体の設定の Generation Defaults は、全モデルに共通する既定値である。リクエストが値を指定しない場合だけ使われる。opencode はモデルごとのサンプリングの値と thinking の有無をリクエストで送るため（[[tsd-omlx-opencode]]）、ここでは最低限の安全な値にとどめる。
 
 ```text
-Global Context Window Cap:  65536
+Global Context Window Cap:  131072
 Fallback Context Window:    32768
-Max Tokens:                 16384
+Max Tokens:                 32768
 Temperature:                既定値のまま
 Top P:                      既定値のまま
 Top K:                      既定値のまま
@@ -156,19 +161,23 @@ Repetition Penalty:         1.0
 
 | 項目                        | 意図                                                                                                                                                                                                                                           |
 | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Global Context Window Cap   | 全モデルの context の上限を、64K の運用方針に合わせる                                                                                                                                                                                          |
-| Fallback Context Window     | モデルが最大 context を宣言していない場合の値として、控えめにする。Ornith は宣言しているため影響しない                                                                                                                                         |
+| Global Context Window Cap   | Qwen3.6 の thinking で使う 128K を上限とする。Ornith は per-model settings で 64K に制限する                                                                                                                                                   |
+| Fallback Context Window     | モデルが最大 context を宣言していない場合の値として、控えめにする。採用する 2 モデルは宣言しているため影響しない                                                                                                                               |
 | Max Tokens                  | リクエストが出力の上限を指定しない場合の既定値である。ファイル編集の出力が途中で切れないよう、余裕を持たせる。opencode はモデルの `limit.output`（[[tsd-omlx-opencode]]）を出力の上限として送るため、opencode からの利用ではこの値は使われない |
-| Temperature / Top P / Top K | Ornith 向けの値は opencode のリクエストで指定するため、全体の既定値は変更しない                                                                                                                                                                |
+| Temperature / Top P / Top K | モデルごとに推奨値が異なり、opencode のリクエストでも指定するため、全体の既定値は変更しない                                                                                                                                                    |
 | Repetition Penalty          | コードは同じ字句を正当に繰り返すため、ペナルティを無効（1.0）にする                                                                                                                                                                            |
 
 Global Context Window Cap と Fallback Context Window の正確な定義、および Generation Defaults とモデル設定の優先順位は、公開情報で確認できない。モデル設定の値が有効になっていることを、Admin UI のログや chat completion の応答で確認する。
 
 ### 4.5. モデル設定
 
-Ornith のサンプリングの値と thinking の有無は、opencode の設定（[[tsd-omlx-opencode]] の「サンプリングと thinking」）を正とする。oMLX はリクエストで指定された `temperature`、`top_p`、`top_k`、`min_p`、`presence_penalty`、`repetition_penalty`、`chat_template_kwargs.enable_thinking` を、Admin UI のモデル設定より優先する。2026-10-04 に、Admin UI の Thinking を OFF にしたままリクエストで `enable_thinking: true` を送ると thinking が出ることで確認した。
+各モデルのサンプリングの値と thinking の有無は、opencode の設定（[[tsd-omlx-opencode]] の「サンプリングと thinking」）を正とする。oMLX はリクエストで指定された `temperature`、`top_p`、`top_k`、`min_p`、`presence_penalty`、`repetition_penalty`、`chat_template_kwargs.enable_thinking` を、Admin UI のモデル設定より優先する。2026-10-04 に、Admin UI の Thinking を OFF にしたままリクエストで `enable_thinking: true` を送ると thinking が出ることで確認した。
 
-Admin UI のモデル設定には、opencode を介さないリクエスト（`curl` による確認など）のための既定値を入れる。値は opencode の設定とそろえる。Admin UI のモデル一覧から Ornith の per-model settings を開き、次の値を入れる。
+Admin UI のモデル設定には、opencode を介さないリクエスト（`curl` による確認など）のための既定値を入れる。値は opencode の設定とそろえる。
+
+#### 4.5.1. Ornith
+
+Admin UI のモデル一覧から Ornith の per-model settings を開き、次の値を入れる。
 
 ```text
 Model Alias:              ornith-1.5-35b
@@ -191,9 +200,27 @@ Repetition Penalty:       1.0
 | Min P                                 | 確率の低いトークンを候補から外し、中国語の字体や崩れた語の混入を抑える。混入を完全には防げない                                                                                                                            |
 | Presence Penalty / Repetition Penalty | どちらも無効にする。presence penalty は言語の混在を増やし、repetition penalty は executor の文の書き写しや、コードで同じ字句を正当に繰り返すことを妨げる                                                                  |
 
+#### 4.5.2. Qwen3.6
+
+Admin UI のモデル一覧から Qwen3.6 の per-model settings を開き、次の値を入れる。
+
+```text
+Model Alias:              qwen3.6-35b-a3b
+Max Context Window:       131072
+Thinking:                 ON
+Temperature:              0.6
+Top P:                    0.95
+Top K:                    20
+Min P:                    0.0
+Presence Penalty:         0.0
+Repetition Penalty:       1.0
+```
+
+Qwen3.6 は thinking が既定であり、agentic coding の比較では維持する。サンプリング値は Qwen3.6 の公式モデルカードが precise coding tasks 向けに推奨する値を使う。モデル自体は 262,144 tokens をサポートするが、M3 Max 64GB で 2 並列を安定させる初期値として 128K に制限する。公式は thinking 能力を保つため 128K 以上を推奨している。
+
 Model Alias は Basic Settings にある。空欄に表示される「Falls back to the model id」はプレースホルダーであり、model id（ディレクトリ名）自体は変更できない。欄に alias を入力して保存すると、`/v1/models` は alias を返し、リクエストでは alias と model id のどちらも受け付ける。
 
-次の項目は既定値のままとし、画面上の既定値が次の値であることを確認する。異なる場合は次の値を入れる。
+両モデルとも次の項目は既定値のままとし、画面上の既定値が次の値であることを確認する。異なる場合は次の値を入れる。
 
 ```text
 Lightning MTP:            OFF
@@ -204,6 +231,16 @@ Qwen ANE Prefill:         OFF
 ```
 
 Lightning MTP は、配布元が MoE ではまず OFF で評価することを推奨しているため OFF で始め、ON にするかは `段階的な最適化` で判断する。
+
+#### 4.5.3. モデルの切り替え
+
+サーバー設定の Idle Timeout を None にしているため、一度ロードしたモデルは使い終わっても外れない。Ornith（約 20.9GB）と Qwen3.6（約 20.4GB）を同時にロードすると、KV cache を含めて Memory guard の 48GB に迫る。そのため、使うモデルを切り替えるときは次の順にする。
+
+1. 実行中のリクエストがないことを Admin UI の Concurrent requests で確認する。
+2. Admin UI のモデル一覧で、使い終わったモデルをアンロードする。
+3. Admin UI の Loaded model が 0 個になったことを確認してから、使うモデルへのリクエストを送る（最初のリクエストでロードされる）。
+
+モデルを比較する計測でも、1 つのモデルの計測をすべて終えてから切り替え、同時にはロードしない。
 
 ## 5. devcontainerからの接続
 
@@ -223,20 +260,20 @@ curl \
   http://host.docker.internal:8000/v1/models
 ```
 
-`data` に、`id` が alias の要素が含まれればよい（抜粋）。
+`data` に、設定した 2 つの alias が含まれればよい（抜粋）。
 
 ```text
-{"object":"list","data":[{"id":"ornith-1.5-35b","object":"model",...}]}
+{"object":"list","data":[{"id":"ornith-1.5-35b","object":"model",...},{"id":"qwen3.6-35b-a3b","object":"model",...}]}
 ```
 
-次に、chat completion を確認する。この確認ではサンプリングの値と出力の上限を指定せず、Admin UI のモデル設定と生成の既定値を使う。
+次に、chat completion をモデルごとに確認する。この確認ではサンプリングの値と出力の上限を指定せず、Admin UI のモデル設定と生成の既定値を使う。次の `model` を `ornith-1.5-35b` に変え、Ornith でも同じ確認を行う。
 
 ```bash
 curl http://host.docker.internal:8000/v1/chat/completions \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $OMLX_API_KEY" \
   -d '{
-    "model": "ornith-1.5-35b",
+    "model": "qwen3.6-35b-a3b",
     "messages": [
       {
         "role": "user",
@@ -275,14 +312,14 @@ unset OMLX_API_KEY
 | 3      | バックグラウンドの一括処理 |
 | 4      | スループット重視           |
 
-普段は 2 並列とする。夜間の一括処理などで 3～4 並列を試す場合も、context は 64K を基準とする。並列数を増やすときは、Admin UI で総スループット、リクエストごとの TTFT、Peak memory、長い文脈での品質を確認する。prefill の遅延や一時的なメモリ使用量、memory pressure に問題が出た場合に限り、実測結果に基づいて context を下げる。
+普段は 2 並列とする。夜間の一括処理などで 3～4 並列を試す場合も、context は Ornith で 64K、Qwen3.6 で 128K を基準とする。並列数を増やすときは、Admin UI で総スループット、リクエストごとの TTFT、Peak memory、長い文脈での品質を確認する。prefill の遅延や一時的なメモリ使用量、memory pressure に問題が出た場合に限り、実測結果に基づいて context を下げる。
 
 ## 7. メモリ配分と監視
 
 64GB の Mac での配分の目安は次のとおり。
 
 ```text
-Ornith + oMLX       22～30GB前後
+Ornith または Qwen3.6 + oMLX  22～32GB前後
 Docker/devcontainer  8～16GB
 macOS + GUI          8～12GB
 余裕                 残り
@@ -290,18 +327,20 @@ macOS + GUI          8～12GB
 
 Docker Desktop に 32GB 以上を割り当てる必要はない。SpecDojo の用途では、まず 12～16GB 程度を目安にし、memory pressure が黄色・赤にならない範囲で調整する。
 
-Ornith-1.5 の KV cache は、`config.json` にある次の値から fp16 で概算する。
+Ornith-1.5 と Qwen3.6 の KV cache は、`config.json` にある次の値から fp16 で概算する。Qwen3.6 も Ornith と同じく、40 層のうち通常の attention は 10 層で、KV のヘッド数と次元数も同じである。
 
-| 項目                      | 値        | 算定への反映                                  |
-| ------------------------- | --------- | --------------------------------------------- |
-| `num_hidden_layers`       | 40        | 全レイヤー数                                  |
-| `full_attention_interval` | 4         | 通常の attention は 40 層中 10 層             |
-| `num_key_value_heads`     | 2         | K/V それぞれのヘッド数                        |
-| `head_dim`                | 256       | 1 ヘッドの次元数                              |
-| 1 トークンあたり          | 約 20 KB  | 10 層 × K/V × 2 ヘッド × 256 次元 × 2 byte    |
-| 64K × 1 リクエスト        | 約 1.3 GB | 20,480 byte × 65,536 tokens                   |
-| 64K × 2 リクエスト        | 約 2.7 GB | 64K × 1 の 2 リクエスト分                     |
-| モデル本体との合計        | 約 24 GB  | 約 20.9 GB のモデル本体 + 64K × 2 の KV cache |
+| 項目                        | 値        | 算定への反映                                   |
+| --------------------------- | --------- | ---------------------------------------------- |
+| `num_hidden_layers`         | 40        | 全レイヤー数                                   |
+| `full_attention_interval`   | 4         | 通常の attention は 40 層中 10 層              |
+| `num_key_value_heads`       | 2         | K/V それぞれのヘッド数                         |
+| `head_dim`                  | 256       | 1 ヘッドの次元数                               |
+| 1 トークンあたり            | 約 20 KB  | 10 層 × K/V × 2 ヘッド × 256 次元 × 2 byte     |
+| 64K × 1 リクエスト          | 約 1.3 GB | 20,480 byte × 65,536 tokens                    |
+| 64K × 2 リクエスト          | 約 2.7 GB | 64K × 1 の 2 リクエスト分                      |
+| Ornith: モデル本体との合計  | 約 24 GB  | 約 20.9 GB のモデル本体 + 64K × 2 の KV cache  |
+| 128K × 2 リクエスト         | 約 5.4 GB | Qwen3.6 の context で 2 リクエスト分           |
+| Qwen3.6: モデル本体との合計 | 約 26 GB  | 約 20.4 GB のモデル本体 + 128K × 2 の KV cache |
 
 この概算の対象は通常の attention 10 層の KV cache である。残りの linear attention の状態は context の長さによらず一定である。値は fp16 を仮定した概算で、oMLX 内部のバッファや一時領域などのオーバーヘッドは含まない。そのため、運用時は計算値だけでなく Admin UI の Peak memory も確認する。
 
@@ -322,7 +361,7 @@ swap が継続的に大きく増える場合は、次の順で調整する。
 
 ### 8.1. フェーズ1：安定性の基準
 
-最初の数日は、`M3 Max 64GB向けの初期設定` の値（context 64K、2 並列、thinking OFF、Lightning MTP と TurboQuant KV は OFF）のまま固定する。
+最初の数日は、`M3 Max 64GB向けの初期設定` の値（Ornith は context 64K / thinking OFF、Qwen3.6 は context 128K / thinking ON、2 並列、Lightning MTP と TurboQuant KV は OFF）のまま固定する。
 
 この状態で、Ollama の Qwen3.8（[[tsd-ollama]]）と同じ実タスクを比べる。成功・失敗、総処理時間、tool call の失敗回数、テストの再実行回数、修正漏れ、不要な変更、最終的な diff の品質を記録する。tokens/sec だけで判断しない。比較の方法は [[tsd-omlx-opencode]] で定義する。
 
@@ -332,13 +371,13 @@ swap が継続的に大きく増える場合は、次の順で調整する。
 
 ### 8.3. フェーズ3：context の拡張
 
-64K を通常運用の基準とし、必要な場合に 128K 以上への拡張を検討する。拡張する場合は、モデル設定の Max Context Window、生成の既定値の Global Context Window Cap、opencode の `limit.context` を合わせて上げる。
+Ornith は 64K、Qwen3.6 は 128K を通常運用の基準とし、Ornith は必要な場合に 128K 以上への拡張を検討する。拡張する場合は、モデル設定の Max Context Window、生成の既定値の Global Context Window Cap、opencode の `limit.context` を合わせて上げる。
 
-このモデルでは 64K × 2 の KV cache が約 2.7GB のため、主な判断材料は KV cache の容量ではなく、prefill の時間、prefill 中の一時的なメモリ使用量、長い文脈での回答と tool calling の品質である。prefix cache と Chunked Prefill は prefill の負担を減らすが、長い文脈での品質低下を補う機能ではない。Admin UI の TTFT と Peak memory を確認し、同じ実タスクで修正漏れ、不要な変更、tool call の失敗率を比較して判断する。
+Ornith の 64K × 2 の KV cache は約 2.7GB、Qwen3.6 の 128K × 2 でも約 5.4GB のため、主な判断材料は KV cache の容量ではなく、prefill の時間、prefill 中の一時的なメモリ使用量、長い文脈での回答と tool calling の品質である。prefix cache と Chunked Prefill は prefill の負担を減らすが、長い文脈での品質低下を補う機能ではない。Admin UI の TTFT と Peak memory を確認し、同じ実タスクで修正漏れ、不要な変更、tool call の失敗率を比較して判断する。
 
 ### 8.4. TurboQuant KV Cache
 
-64K × 2 の場合は、KV cache が約 2.7GB に収まるため OFF のままとする。3 並列以上または 128K 以上へ増やし、実測した Peak memory や memory pressure に余裕がない場合に試す。試す場合は 6-bit から始める。4-bit はメモリの節約効果が大きいが、coding や tool calling の用途では品質を確認してから採用する。
+Ornith の 64K × 2（約 2.7GB）、Qwen3.6 の 128K × 2（約 5.4GB）の KV cache はいずれも Memory guard に収まるため OFF のままとする。3 並列以上または context をさらに増やし、実測した Peak memory や memory pressure に余裕がない場合に試す。試す場合は 6-bit から始める。4-bit はメモリの節約効果が大きいが、coding や tool calling の用途では品質を確認してから採用する。
 
 ## 9. 参照
 
@@ -346,5 +385,7 @@ swap が継続的に大きく増える場合は、次の順で調整する。
 - <https://github.com/TomLeeLive/jundot-omlx>
 - <https://huggingface.co/mlx-works/Ornith-1.5-35B-A3B-oQ4e-mtp>
 - <https://huggingface.co/mlx-works/Ornith-1.5-35B-A3B-oQ4e-mtp/raw/main/config.json>
+- <https://huggingface.co/mlx-community/Qwen3.6-35B-A3B-4bit>
+- <https://huggingface.co/Qwen/Qwen3.6-35B-A3B>
 - <https://jacar.es/en/omlx-api-key-port-endpoints/>
 - <https://jacar.es/en/how-to-install-and-tune-omlx-on-m5-max-128-gb/>

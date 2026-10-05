@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_a1b7e923c9d644bb96dcf3cb008943db
+  ts: "2026-10-05T22:00:11Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 親検証が失敗したとき、出力の全文を evidence に残し、要約に末尾を含める
+    - field: description
+      from: ""
+      to: 親検証の出力は evidence に先頭から 1,000 文字までの要約としてだけ保存される（src/exec-parent-validation.ts の truncate）。vitest などは失敗したケースの名前と件数を出力の末尾に出すため、失敗の肝心な部分が毎回切り捨てられ、全文も残らない。2026-10-04〜06 の PJR-GBEV・PJR-D0KF・PJR-7MF6 の調査では、作業者がテストを流し直すかテストを一時的に書き換えて出力を取り出す必要があった。PJR-7MF6 の一時的な統合テストの失敗は、再開で evidence が上書きされ特定できなくなった
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-06"

@@ -151,3 +151,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_c805cdae3eb84776bb295649aa5a60e2
+- v: 1
+  id: reg_f87f717b9a5849d091b94b513ad301e0
+  ts: "2026-10-05T21:59:08Z"
+  action: close
+  actor: claude
+  from_status: review
+  to_status: done
+  reason: 既定の worktree 実行を実地で確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-06"
+    - field: conclusion
+      from: "-"
+      to: exec run --register の実行場所の既定を exec-defaults の run.register_execution で設定できるようにし、本プロジェクトの既定を worktree にした。in-place は --in-place で明示する。--worktree なしの実行が worktree で行われることを実地で確認した
+  previous_event_id: reg_1b15f4a3bcde49b59d45a739becf03c0

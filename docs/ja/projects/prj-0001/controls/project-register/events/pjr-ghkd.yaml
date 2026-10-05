@@ -74,3 +74,19 @@
       from: "agent exited with non-zero code: parent validation failed: test-integration"
       to: "-"
   previous_event_id: reg_5d071bfd3f7144cfb86868afa9564b20
+- v: 1
+  id: reg_9c06ea03308e46b7b8d14af02991d94a
+  ts: "2026-10-05T22:01:50Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: project: git commit failed: error: unknown option '--reserve' / error: unknown option '--local' / error: unknown option '--strict-sync' / error: unknown option '--integration-branch'…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: project: git commit failed: error: unknown option '--reserve' / error: unknown option '--local' / error: unknown option '--strict-sync' / error: unknown option '--integration-branch'…"
+  previous_event_id: reg_1a1fcc6a109f4e11bc87cfd5d60f64cc

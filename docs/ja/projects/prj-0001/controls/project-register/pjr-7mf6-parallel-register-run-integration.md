@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-7mf6-parallel-register-run-integration
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-04T07:26:49Z"
   due_on: null
+  completed_at: "2026-10-05T21:58:45Z"
+  conclusion: 並列実行で片方が失敗しても失敗の遷移をそれぞれ commit し、他の項目の統合を妨げないようにした。2026-10-05 の第1陣（3並列）で、3件とも失敗した際に遷移が個別に commit され統合が妨げられないことを実地で確認した
 ---
 
 # PJR-7MF6 並列の register 実行で、失敗した項目の遷移が他の項目の統合を妨げる

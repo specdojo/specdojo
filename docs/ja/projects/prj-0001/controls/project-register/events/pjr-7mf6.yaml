@@ -87,3 +87,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_354e75e1a2de4bcca3a0029f3f0a395c
+- v: 1
+  id: reg_9872010ef95647c6b41e41dfcbb1299d
+  ts: "2026-10-05T21:58:45Z"
+  action: close
+  actor: claude
+  from_status: review
+  to_status: done
+  reason: 並列実行での失敗時の挙動を実地で確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-06"
+    - field: conclusion
+      from: "-"
+      to: 並列実行で片方が失敗しても失敗の遷移をそれぞれ commit し、他の項目の統合を妨げないようにした。2026-10-05 の第1陣（3並列）で、3件とも失敗した際に遷移が個別に commit され統合が妨げられないことを実地で確認した
+  previous_event_id: reg_afa08eb477404423b634ee6798bcc7b5

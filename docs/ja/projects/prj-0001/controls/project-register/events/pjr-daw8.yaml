@@ -119,3 +119,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_6b7316f896d54194a5c9b24183d9e3aa
+- v: 1
+  id: reg_4ba0fc06a0364eeeb7b863e88a4c39f7
+  ts: "2026-10-05T21:59:23Z"
+  action: close
+  actor: claude
+  from_status: review
+  to_status: done
+  reason: テストで確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-06"
+    - field: conclusion
+      from: "-"
+      to: register の自動 commit のヘッダーを header-max-length 内に収めるようにした（超える場合は末尾を … に置き換える）。unit test・integration test と npm run check で確認した。100 文字を超えるタイトルでの実地の確認は未実施
+  previous_event_id: reg_2e97af2061044804a059c07ecbce75ac
