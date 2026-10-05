@@ -20,7 +20,7 @@ oMLX は OpenAI 互換の `/v1/*` API を提供する。SpecDojo の opencode �
 
 本書の対象は次のとおり。
 
-- opencode から oMLX の Ornith-1.5 35B を利用したい
+- opencode から oMLX の Ornith-1.5 35B または Qwen3.6 35B-A3B を利用したい
 - 2 つの opencode agent から同じモデルを並列に使いたい
 - 既存の Claude、Codex、Ollama などの provider を残したまま、oMLX を追加したい
 
@@ -30,6 +30,7 @@ oMLX は OpenAI 互換の `/v1/*` API を提供する。SpecDojo の opencode �
 
 - Mac ホスト上の oMLX が、Admin UI で待ち受けを `0.0.0.0:8000`、API key ありに設定され、メニューバーから起動されていること
 - `mlx-works/Ornith-1.5-35B-A3B-oQ4e-mtp` がダウンロード済みで、Model Alias `ornith-1.5-35b` が設定されていること
+- `mlx-community/Qwen3.6-35B-A3B-4bit` がダウンロード済みで、Model Alias `qwen3.6-35b-a3b` が設定されていること
 - devcontainer 内から `http://host.docker.internal:8000/v1/models` でモデル一覧を取得できること
 
 ## 3. 接続方式
@@ -80,6 +81,25 @@ API key は `opencode.json` に直接書かない。opencode の credential stor
             "repetition_penalty": 1.0,
           },
         },
+        "qwen3.6-35b-a3b": {
+          "name": "Qwen3.6 35B-A3B 4bit",
+          "limit": {
+            "context": 131072,
+            "output": 32768,
+          },
+          "options": {
+            "chat_template_kwargs": {
+              "enable_thinking": true,
+              "preserve_thinking": true,
+            },
+            "temperature": 0.6,
+            "top_p": 0.95,
+            "top_k": 20,
+            "min_p": 0.0,
+            "presence_penalty": 0.0,
+            "repetition_penalty": 1.0,
+          },
+        },
       },
     },
   },
@@ -88,18 +108,18 @@ API key は `opencode.json` に直接書かない。opencode の credential stor
 
 `limit` の各値は次の方針で決める。
 
-| 項目            | 値    | 方針                                                                                                                                                                                                            |
-| --------------- | ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `limit.context` | 65536 | [[tsd-omlx]] のモデル設定の Max Context Window に合わせる                                                                                                                                                       |
-| `limit.output`  | 8192  | opencode はこの値を出力の上限としてリクエストで送るため、[[tsd-omlx]] の生成の既定値の Max Tokens より優先される。thinking を使わないため、tool call 単位の編集にも、grade の 23 観点の判定にも十分な出力である |
+| モデル  | `limit.context` | `limit.output` | 方針                                                                                                   |
+| ------- | --------------- | -------------- | ------------------------------------------------------------------------------------------------------ |
+| Ornith  | 65536           | 8192           | thinking を使わないため、tool call 単位の編集にも、grade の 23 観点の判定にも十分な出力とする          |
+| Qwen3.6 | 131072          | 32768          | 公式が thinking 能力の維持に推奨する 128K context と、通常の問い合わせに推奨する 32K output を確保する |
 
-opencode は `limit.context` から `limit.output` を差し引いた量（約 57K）を入力に使える量とみなし、超えそうになると会話を圧縮（compaction）する。`limit.output` を大きくすると入力に使える量が減り、圧縮が早く起きるため、64K の context では 8192 とする。
+opencode は `limit.context` から `limit.output` を差し引いた量を入力に使える量とみなし、超えそうになると会話を圧縮（compaction）する。Ornith は約 57K、Qwen3.6 は約 98K を入力に使える。
 
 ### 4.3. サンプリングと thinking
 
-Ornith のサンプリングの値と thinking の有無は、opencode の設定で指定する。oMLX はリクエストで指定された値を、Admin UI のモデル設定より優先する。Admin UI の値は、opencode を介さないリクエストのための既定値として、[[tsd-omlx]] の「モデル設定」で同じ値にそろえる。
+各モデルのサンプリングの値と thinking の有無は、opencode の設定で指定する。oMLX はリクエストで指定された値を、Admin UI のモデル設定より優先する。Admin UI の値は、opencode を介さないリクエストのための既定値として、[[tsd-omlx]] の「モデル設定」で同じ値にそろえる。
 
-モデル全体の値は、`opencode.json` のモデルの `options` に書く。opencode はこれをリクエストの本文へそのまま加える。
+モデル全体の値は、`opencode.json` のモデルの `options` に書く。opencode はこれをリクエストの本文へそのまま加える。Ornith は既存の実測に基づいて thinking を無効にする。Qwen3.6 は公式の agent 用推奨に従い thinking と過去ターンの thinking の保持を有効にし、precise coding tasks 向けの値を使う。
 
 | 項目                                   | 値      | 方針                                                                                                        |
 | -------------------------------------- | ------- | ----------------------------------------------------------------------------------------------------------- |
@@ -109,7 +129,20 @@ Ornith のサンプリングの値と thinking の有無は、opencode の設定
 | `presence_penalty`                     | 0.0     | 上げると言語の混在が増える                                                                                  |
 | `repetition_penalty`                   | 1.0     | executor の文の書き写しや、コードで同じ字句を繰り返すことを妨げないよう無効にする                           |
 
-`temperature` と `top_p` は、用途ごとに `.opencode/agents/ornith-*.md` の frontmatter で指定する。opencode は agent の値をリクエストで送る。
+Qwen3.6 固有の値は次のとおり。
+
+| 項目                                      | 値        | 方針                                                                 |
+| ----------------------------------------- | --------- | -------------------------------------------------------------------- |
+| `chat_template_kwargs.enable_thinking`    | `true`    | Qwen3.6 の既定動作を維持する                                         |
+| `chat_template_kwargs.preserve_thinking`  | `true`    | agent の過去ターンの reasoning を保持し、重複した reasoning を減らす |
+| `temperature`                             | 0.6       | precise coding tasks 向けの公式推奨値                                |
+| `top_p`                                   | 0.95      | precise coding tasks 向けの公式推奨値                                |
+| `top_k` / `min_p`                         | 20 / 0    | precise coding tasks 向けの公式推奨値                                |
+| `presence_penalty` / `repetition_penalty` | 0.0 / 1.0 | coding での言語混在や、正当な字句の繰り返しへのペナルティを避ける    |
+
+Qwen3.6 は、用途別の agent をまだ定義していないため、`temperature` と `top_p` もモデルの `options` に書く。agent の frontmatter とモデルの `options` の両方に `temperature` がある場合にどちらが優先されるかは確認していない。Qwen3.6 の agent を追加するときは、Ornith と同じく `temperature` と `top_p` を agent 側へ移し、モデルの `options` からは外す。
+
+Ornith の `temperature` と `top_p` は、用途ごとに `.opencode/agents/ornith-*.md` の frontmatter で指定する。opencode は agent の値をリクエストで送る。
 
 | agent                    | `temperature` | `top_p` | 方針                                                                                                                                                                                                                     |
 | ------------------------ | ------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -138,6 +171,8 @@ chat_template_kwargs:
 
 最初は既定のモデルにせず、`/models` から選んで、Ollama の Gemma / Qwen と比べてから決める。
 
+Qwen3.6 を既定にする場合は、`model` を `omlx/qwen3.6-35b-a3b` にする。
+
 ## 5. 接続確認
 
 opencode で `/models` を実行し、次のように表示されれば認識できている。
@@ -145,6 +180,7 @@ opencode で `/models` を実行し、次のように表示されれば認識で
 ```text
 oMLX
   Ornith 1.5 35B-A3B oQ4e
+  Qwen3.6 35B-A3B 4bit
 ```
 
 次に、tool call を伴う短い依頼で動作を確かめる。
@@ -170,14 +206,15 @@ cd /workspaces/specdojo-workspace/worktrees/task-b
 opencode
 ```
 
-両方で `omlx/ornith-1.5-35b` を選び、oMLX の Admin UI で Concurrent Requests が 2 になっていることを確認する。
+両方で同じモデル（`omlx/ornith-1.5-35b` または `omlx/qwen3.6-35b-a3b`）を選び、oMLX の Admin UI で Concurrent Requests が 2 になっていることを確認する。
 
 ## 7. 使い分け
 
 | 担当                | 向いている作業                                                                                                                                                            |
 | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Ornith（oMLX）      | 既存コードの調査、小～中規模の実装、テストの修正、lint の修正、仕様 Markdown とコードの同期、リポジトリ内の検索、単純なリファクタ、バックグラウンドの agent、並列のタスク |
-| Claude Code / Codex | 大規模な設計判断、複数の仕様にまたがる高度な整合性の判断、難しい根本原因の解析、大規模なリファクタの最終レビュー、セキュリティに関わる変更、Ornith の結果のレビュー       |
+| Ornith（oMLX）      | 既存コードの調査、小～中規模の実装、テストの修正、lint の修正、仕様 Markdown とコードの同期、単純なリファクタ、速度を優先する並列タスク                                   |
+| Qwen3.6（oMLX）     | repository-level reasoning、tool call を伴う agentic coding、長めの文脈を使う実装、Ornith との品質比較                                                                    |
+| Claude Code / Codex | 大規模な設計判断、複数の仕様にまたがる高度な整合性の判断、難しい根本原因の解析、大規模なリファクタの最終レビュー、セキュリティに関わる変更、ローカル LLM の結果のレビュー |
 
 ```text
 Claude / Codex
@@ -186,8 +223,8 @@ Claude / Codex
       │
       └─ Orchestrator
               │
-              ├─ Ornith agent A
-              └─ Ornith agent B
+              ├─ local agent A
+              └─ local agent B
 ```
 
 ## 8. Qwen3.8との比較
@@ -202,11 +239,13 @@ Claude / Codex
 
 比較する項目は、総時間、Prompt / Prefill、Generation、thinking の量、tool call の回数、テストの成功、修正漏れ、不要な変更、人間が修正にかけた時間とする。最も重視する指標は、人間が最終的に作業を完了するまでの総時間である。
 
+Qwen3.6 は thinking を有効にし、Thinking Budget を設定しない。同じ Qwen 系の Ornith では、grade の計測で thinking を有効にすると約3倍遅くなり、判定の質と出力形式の安定性も上がらなかった（[[prj-0001:pjr-vqb5-agent-grade-comparison]]）。agentic coding の比較では thinking の量と総時間を必ず記録する。grade など厳密な出力形式を求める用途に Qwen3.6 を使う場合は、計測してから採否を決める。
+
 ## 9. 運用上の注意
 
 ### 9.1. model 名の整合
 
-`opencode.json` の `models` のキーは、oMLX の Model Alias（`ornith-1.5-35b`）と一致させる。一致しない場合、Chat Completions のリクエストがエラーになる。alias を変えた場合は、`opencode.json` も合わせて更新する。
+`opencode.json` の `models` のキーは、oMLX の Model Alias（`ornith-1.5-35b`、`qwen3.6-35b-a3b`）と一致させる。一致しない場合、Chat Completions のリクエストがエラーになる。alias を変えた場合は、`opencode.json` も合わせて更新する。
 
 ### 9.2. API key の管理
 
@@ -228,4 +267,6 @@ Mac ホスト側で oMLX が止まっていると、devcontainer からの接続
 - [[tsd-omlx]]
 - [[tsd-ollama-opencode]]
 - <https://github.com/TomLeeLive/jundot-omlx>
+- <https://huggingface.co/mlx-community/Qwen3.6-35B-A3B-4bit>
+- <https://huggingface.co/Qwen/Qwen3.6-35B-A3B>
 - <https://jacar.es/en/omlx-api-key-port-endpoints/>
