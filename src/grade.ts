@@ -3491,7 +3491,7 @@ export function renderGradeFindingTranslationPlan(
   return [
     "# Grade finding translation",
     "",
-    "次の JSON 文字列配列に含まれる英語の finding だけを、簡潔で自然な日本語へ翻訳してください。入力と同じ件数・同じ順序の、訳文だけの JSON 文字列配列を返してください。元の文にあるインラインコード（バッククォートで囲んだ部分）は一字一句変えずに残してください。Markdown fence、説明、番号、token、判定の変更は不要です。",
+    "次の JSON 文字列配列に含まれる英語の finding だけを、簡潔で自然な日本語へ翻訳してください。入力と同じ件数・同じ順序の、訳文だけの JSON 文字列配列を返してください。元の文にあるインラインコード（バッククォートで囲んだ部分）は一字一句変えずに残し、元の文にないインラインコードやバッククォートは追加しないでください。インラインコード以外の英語の語句は、固有名詞・識別子を除いて日本語に訳してください。Markdown fence、説明、番号、token、判定の変更は不要です。",
     "",
     "```json",
     JSON.stringify(messages, null, 2),

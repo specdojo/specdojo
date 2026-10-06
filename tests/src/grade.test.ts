@@ -16,6 +16,7 @@ import {
   parseGradeExecutorAnalysis,
   parseGradeSubmission,
   renderGradePlan,
+  renderGradeFindingTranslationPlan,
   renderGradeReporterPlan,
   resolveGradeActor,
   resolveGradeReferenceId,
@@ -32,7 +33,7 @@ import {
 } from "../../src/grade.js";
 import type { ReviewViewpointsDoc } from "../../src/review-types.js";
 import type { MemberRoster } from "../../src/specdojo-config.js";
-import type { StoredGradeFinding } from "../../src/grade-result.js";
+import type { GradeResult, StoredGradeFinding } from "../../src/grade-result.js";
 
 const viewpoints: ReviewViewpointsDoc = {
   id: "specdojo:pm-review-viewpoints",
@@ -2056,6 +2057,44 @@ DC-002: unsatisfied: 承認時点の記載がない。
     } finally {
       rmSync(directory, { recursive: true, force: true });
     }
+  });
+});
+
+describe("renderGradeFindingTranslationPlan", () => {
+  it("requires exact inline code preservation and translation of ordinary English phrases", () => {
+    const result: GradeResult = {
+      version: 1,
+      document: "prj-0001:example-doc",
+      path: "docs/example-doc.md",
+      target: "deliverable",
+      rubric: "grade-rubric-v1",
+      verdict: "needs-work",
+      score: 80,
+      graded_at: "2026-10-06T00:00:00.000Z",
+      graded_by: "codex-expert-executor",
+      content_hash: "a".repeat(64),
+      categories: { quality: { score: 80 } },
+      viewpoints: { "vp-qe-verifiability": { level: 3, score: 80 } },
+      finding_counts: { blocker: 0, major: 0, minor: 1, note: 0 },
+      findings: [
+        {
+          id: "F001",
+          severity: "minor",
+          rule: "vp-qe-verifiability",
+          line: 1,
+          anchor: "# Example",
+          message: "Run `npm test` with the decision owner.",
+        },
+      ],
+    };
+
+    const plan = renderGradeFindingTranslationPlan(result);
+
+    expect(plan).toContain("元の文にないインラインコードやバッククォートは追加しない");
+    expect(plan).toContain(
+      "インラインコード以外の英語の語句は、固有名詞・識別子を除いて日本語に訳してください",
+    );
+    expect(plan).toContain("元の文にあるインラインコード");
   });
 });
 

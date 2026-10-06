@@ -240,7 +240,8 @@ export type GradeFindingTranslationRejection = {
     | "not-string"
     | "empty"
     | "missing-kana"
-    | "missing-inline-code";
+    | "missing-inline-code"
+    | "extra-inline-code";
   detail?: string;
 };
 
@@ -305,11 +306,21 @@ export function applyGradeFindingTranslations(
     } else if (!/[\p{Script=Hiragana}\p{Script=Katakana}]/u.test(value)) {
       reason = "missing-kana";
     } else {
-      const inlineCode = target.finding.message.match(/`[^`\r\n]*`/gu) ?? [];
-      const missingInlineCode = inlineCode.find((code) => !value.includes(code));
+      const sourceInlineCode = target.finding.message.match(/`[^`\r\n]*`/gu) ?? [];
+      const translatedInlineCode = value.match(/`[^`\r\n]*`/gu) ?? [];
+      const unmatchedTranslatedInlineCode = [...translatedInlineCode];
+      const missingInlineCode = sourceInlineCode.find((code) => {
+        const matchedIndex = unmatchedTranslatedInlineCode.indexOf(code);
+        if (matchedIndex === -1) return true;
+        unmatchedTranslatedInlineCode.splice(matchedIndex, 1);
+        return false;
+      });
       if (missingInlineCode) {
         reason = "missing-inline-code";
         detail = missingInlineCode;
+      } else if (unmatchedTranslatedInlineCode.length > 0) {
+        reason = "extra-inline-code";
+        detail = unmatchedTranslatedInlineCode[0];
       }
     }
     if (reason) {
