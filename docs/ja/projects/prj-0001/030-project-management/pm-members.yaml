@@ -275,6 +275,20 @@ members:
     scheduler_strategy: fifo
     note: OpenCode CLI と Ollama の gemma4 26B（MoE）を使用する pipeline reporter。実行結果の日本語要約と、英語で確定した grade finding の表示用翻訳を担う。権限とプロンプトは .opencode/agents/gemma26-reporter.md で定義。
 
+  - nickname: gemma26-translator
+    disabled: false
+    priority: 4
+    display_name: Gemma 26B Translator
+    email: null
+    roles: []
+    type: agent
+    provider: opencode
+    proficiency: normal
+    focus: [translation]
+    capabilities: [document_authoring]
+    scheduler_strategy: fifo
+    note: OpenCode CLI と Ollama の gemma4 26B（MoE）を使用する翻訳専用の agent。pipeline の段には入らず、`agent run --by` で翻訳の plan を処理する。reporter 向けの「識別子はインラインコードで囲む」指示を持たない。権限とプロンプトは .opencode/agents/gemma26-translator.md で定義。
+
   #
   # opencode (oMLX) members
   #
