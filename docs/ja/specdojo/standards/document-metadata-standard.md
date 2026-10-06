@@ -276,7 +276,7 @@ Markdown 文書の最新の継続品質評価は、プロジェクトの `<execu
 
 再評価で正本の `message` が同じ finding が残る場合は未解消として扱い、severity を前回より引き下げません。`message_ja` の一致は使いません。日本語の `message` だけを持つ旧サイドカーはその日本語を互換用の正本として扱うため、英語へ翻訳した別文とは一致しません。前回の問題が解消され、別の軽微な問題だけが残る場合は、新しい finding の `message` に severity を引き下げる根拠を含めます。
 
-executor は新しい判定根拠と finding を英語で出力します。機械変換後に `gemma26-reporter` が英語 finding だけを日本語へ翻訳し、`message_ja` に保存します。モデルへ渡すのは英語文だけの配列であり、対応する index はコード側で管理します。`grade localize` は件数が一致するとき、各訳文が空でないこと、仮名を含むこと、元のインラインコードをそのまま含むことを検証し、合格した項目だけを採用します。不合格項目は1件ずつ1回だけ再翻訳し、再び不合格なら `message_ja` に正本の `message` を保存します。件数が一致しない場合は全項目を不合格とします。executor が日本語で出力した finding は翻訳対象から外し、その原文を `message` と `message_ja` の両方に保存します。
+executor は新しい判定根拠と finding を英語で出力します。機械変換後に `gemma26-reporter` が英語 finding だけを日本語へ翻訳し、`message_ja` に保存します。モデルへ渡すのは英語文だけの配列であり、対応する index はコード側で管理します。`grade translation-plan` は元のインラインコードをそのまま残し、新しいインラインコードやバッククォートを加えず、固有名詞・識別子以外の英語の語句を日本語へ訳すよう求めます。`grade localize` は件数が一致するとき、各訳文が空でないこと、仮名を含むこと、元の文と訳文のインラインコードの多重集合が一致することを検証し、合格した項目だけを採用します。不合格項目は1件ずつ1回だけ再翻訳し、再び不合格なら `message_ja` に正本の `message` を保存します。件数が一致しない場合は全項目を不合格とします。executor が日本語で出力した finding は翻訳対象から外し、その原文を `message` と `message_ja` の両方に保存します。
 
 機械変換では、finding の severity が許す level 上限を超えた viewpoint だけを上限まで下げます。level を上げる補正や、viewpoint・severity・line の変更は行いません。補正した場合は `level_corrections` に viewpoint、`original_level`、`corrected_level` を保存します。
 

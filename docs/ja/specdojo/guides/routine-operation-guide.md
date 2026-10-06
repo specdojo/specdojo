@@ -111,7 +111,7 @@ Job Definition を持たないため、実行記録は `generated/routine-runs.j
 
 ### 1.2. grade の単段評価
 
-Kata と成果物の定期評価は、executor の単段で実行します。GradeSubmission は LLM の reporter を通さず、`grade apply` が executor の英語 marker から機械的に生成します。正本の grade result を保存した後、英語 finding が1件以上ある場合だけ `gemma26-reporter` が日本語へ翻訳し、表示用の `message_ja` を更新します。モデルには英語文だけの配列を渡し、件数と各訳文の仮名・インラインコードをコードで検証します。不合格項目だけを1件ずつ1回再翻訳し、それでも不合格なら正本の英語を表示に使います。翻訳は判定値を変えません。`job-grade-kata` と `job-grade-deliverable` は `tools/grade/run-per-document.sh --stages 1` を起動し、条件付きの後続段は持ちません。変更済み・未評価・段未完了・旧 rubric を横断的に再評価する `rtn-grade-recheck` は `kind: all`、`changed_only: true`、`ungraded: true`、`incomplete: true`、`rubric_outdated: true`、`limit: 15` を入力します。
+Kata と成果物の定期評価は、executor の単段で実行します。GradeSubmission は LLM の reporter を通さず、`grade apply` が executor の英語 marker から機械的に生成します。正本の grade result を保存した後、英語 finding が1件以上ある場合だけ `gemma26-reporter` が日本語へ翻訳し、表示用の `message_ja` を更新します。モデルには英語文だけの配列を渡し、件数、各訳文の仮名、元の文と訳文のインラインコードの多重集合の一致をコードで検証します。元にないインラインコードが増えた項目も不合格とし、不合格項目だけを1件ずつ1回再翻訳します。それでも不合格なら正本の英語を表示に使います。翻訳は判定値を変えません。`job-grade-kata` と `job-grade-deliverable` は `tools/grade/run-per-document.sh --stages 1` を起動し、条件付きの後続段は持ちません。変更済み・未評価・段未完了・旧 rubric を横断的に再評価する `rtn-grade-recheck` は `kind: all`、`changed_only: true`、`ungraded: true`、`incomplete: true`、`rubric_outdated: true`、`limit: 15` を入力します。
 
 成果物は `rtn-grade-deliverable-recheck` が `job-grade-deliverable` を起動します。Job は同じ script を `--stages 1 --target deliverable` で実行し、成果物カタログから変更済み・未評価・段未完了・旧 rubric の Markdown 成果物だけを最大10件選びます。評価結果は成果物の最新 grade と成果物ごとの `done_criteria` 詳細へ上書きされるため、実行ごとの review result は増やしません。
 

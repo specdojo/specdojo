@@ -167,9 +167,9 @@ describe("grade result sidecar", () => {
     expect(countMismatch.result.findings[1].message_ja).toBe("Add a verification command.");
   });
 
-  it("validates kana and inline code per item while keeping valid translations", () => {
+  it("validates kana and the exact inline code multiset per item while keeping valid translations", () => {
     const stored = result();
-    stored.finding_counts.minor = 4;
+    stored.finding_counts.minor = 5;
     stored.findings = [
       {
         id: "F001",
@@ -203,6 +203,14 @@ describe("grade result sidecar", () => {
         anchor: "# Example",
         message: "Clarify the expected result.",
       },
+      {
+        id: "F005",
+        severity: "minor",
+        rule: "vp-qe-verifiability",
+        line: 5,
+        anchor: "# Example",
+        message: "Define the decision owner.",
+      },
     ];
 
     const localized = applyGradeFindingTranslations(stored, [
@@ -210,6 +218,7 @@ describe("grade result sidecar", () => {
       "ファイルを修正してください。",
       "Add documentation.",
       " ",
+      "`decision owner` を定義してください。",
     ]);
 
     expect(localized.accepted).toBe(false);
@@ -222,13 +231,41 @@ describe("grade result sidecar", () => {
       },
       { translation_index: 2, finding_id: "F003", reason: "missing-kana" },
       { translation_index: 3, finding_id: "F004", reason: "empty" },
+      {
+        translation_index: 4,
+        finding_id: "F005",
+        reason: "extra-inline-code",
+        detail: "`decision owner`",
+      },
     ]);
     expect(localized.result.findings.map(({ message_ja }) => message_ja)).toEqual([
       "`npm test` を実行してください。",
       "Edit `src/example.ts`.",
       "Add documentation.",
       "Clarify the expected result.",
+      "Define the decision owner.",
     ]);
+  });
+
+  it("accepts a translation with exactly the same inline code", () => {
+    const stored = result();
+    stored.finding_counts.minor = 1;
+    stored.findings = [
+      {
+        id: "F001",
+        severity: "minor",
+        rule: "vp-qe-verifiability",
+        line: 1,
+        anchor: "# Example",
+        message: "Run `npm test`.",
+      },
+    ];
+
+    const localized = applyGradeFindingTranslations(stored, ["`npm test` を実行してください。"]);
+
+    expect(localized.accepted).toBe(true);
+    expect(localized.rejections).toEqual([]);
+    expect(localized.result.findings[0].message_ja).toBe("`npm test` を実行してください。");
   });
 
   it("detects swapped translations when their inline code differs", () => {
