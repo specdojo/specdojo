@@ -42,7 +42,7 @@ token はコードの側で管理し、モデルには英語の文だけの配�
 | 1   | 翻訳の入出力から token を外し、件ごとの点検を実装する                       | DEV          | done | `grade translation-plan` / `grade localize` |
 | 2   | 点検に落ちた件だけの 1 件ずつの訳し直しを script に加える                   | DEV          | done | 訳し直しは 1 件につき 1 回まで              |
 | 3   | unit test・pipeline fixture・文書を更新する                                 | DEV          | done | 件別採否、単件再試行、英語 fallback を検証  |
-| 4   | 統合後、`pm-risk-register-rulebook.md` の翻訳を実モデルでやり直して確かめる | orchestrator | open | 判定はやり直さない                          |
+| 4   | 統合後、`pm-risk-register-rulebook.md` の翻訳を実モデルでやり直して確かめる | orchestrator | done | 13件すべて点検に通過（d38c252a9）           |
 
 ## 4. 対応結果
 
@@ -51,6 +51,7 @@ token はコードの側で管理し、モデルには英語の文だけの配�
 - `tools/grade/run-per-document.sh` は不合格 index だけを1件ずつ翻訳 agent へ再送し、各1回の再試行後も不合格なら英語正本を `message_ja` に残す。
 - unit test と pipeline fixture へ、件数不一致、仮名・インラインコードの欠落、入れ替え、部分採用、単件再試行の成功・失敗を追加した。運用ガイド、コマンドリファレンス、メタデータ標準、Ollama 設計書、関連する比較記録を新方式へ同期した。
 - 残課題は、orchestrator が実モデルで `pm-risk-register-rulebook.md` の表示翻訳を再確認する作業（No. 4）のみであり、実装上の残課題はない。
+- 実モデルでの確認（orchestrator、2026-10-06）: `pm-risk-register-rulebook.md` を codex（判定）と gemma26-reporter（翻訳）で流し直し、英語の finding 13 件がすべて1回目の翻訳で点検に通った（28 秒）。旧形式の日本語の finding 4 件は翻訳されず原文のまま残った（d38c252a9）。ただし訳文の大半で、英語の語句がバッククォートで囲まれて訳されずに残ったため、[[prj-0001:pjr-wafc-grade-translation-no-added-code]] で扱った。
 
 ## 5. 関連ドキュメント
 

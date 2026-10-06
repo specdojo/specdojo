@@ -116,8 +116,8 @@ findings:
       The risk table requires priority and response data but omits the decision owner, decision state, decision
       deadline, and residual-risk acceptance criteria needed for PO approval, hold, or rejection decisions.
     message_ja: >-
-      リスクテーブルには `priority` と `response` のデータが必要ですが、PO による承認、保留、または拒否の決定に必要な `decision owner`、`decision state`、`decision
-      deadline`、および `residual-risk acceptance criteria` が省略されています。
+      The risk table requires priority and response data but omits the decision owner, decision state, decision
+      deadline, and residual-risk acceptance criteria needed for PO approval, hold, or rejection decisions.
   - id: F002
     severity: major
     rule: vp-po-publication-accountability
@@ -126,7 +126,7 @@ findings:
     message: >-
       The metadata rules define publication-like statuses but provide no restrictions for personal or confidential
       information and no human PO approval responsibility for making a register ready or public.
-    message_ja: メタデータ規則には公開に近いステータスが定義されていますが、個人情報や機密情報に対する制限がなく、レジスターを準備または公開するための人間による PO の承認責任も定義されていません。
+    message_ja: メタデータルールは公開に近いステータスを定義していますが、個人情報や機密情報の制限がなく、レジスターを準備または公開するための人的なPOの承認責任も定められていません。
   - id: F003
     severity: major
     rule: vp-pm-plan-feasibility
@@ -136,8 +136,8 @@ findings:
       The response-plan rules do not require a work unit, dependency, due date, completion criterion, or accountable
       Role code, even though the sample relies on deadlines and completion conditions to make responses actionable.
     message_ja: >-
-      `response-plan` 規則では、サンプルではレスポンスを実行可能にするために `deadlines` や `completion conditions` に依存しているにもかかわらず、`work
-      unit`、`dependency`、`due date`、`completion criterion`、または `accountable Role` コードが要求されていません。
+      response-plan のルールには、work unit、dependency、due date、completion criterion、または accountable Role code
+      は必要ありません。ただし、サンプルではレスポンスを実行可能なものにするために、期限や完了条件に依存しています。
   - id: F004
     severity: major
     rule: vp-pm-dependency-risk
@@ -147,8 +147,8 @@ findings:
       The related-document guidance omits affected deliverables, dependencies, schedule impact, and PJR linkage, so
       downstream planning consequences of a risk cannot be traced.
     message_ja: >-
-      `related-document` ガイダンスでは、影響を受ける `deliverables`、`dependencies`、`schedule impact`、および `PJR linkage`
-      が省略されているため、リスクによる下流の計画への影響を追跡することができません。
+      The related-document guidance omits affected deliverables, dependencies, schedule impact, and PJR linkage, so
+      downstream planning consequences of a risk cannot be traced.
   - id: F005
     severity: major
     rule: vp-pm-control-reporting
@@ -158,8 +158,8 @@ findings:
       The rules name the issue and change-request logs but do not define transfer criteria, reporting destinations, or
       ownership for separating risks from realized issues, change requests, and decisions.
     message_ja: >-
-      規則には `issue` および `change-request` ログの名前が記されていますが、リスクを、現実化した `issues`、`change requests`、および `decisions` から分離するための
-      `transfer criteria`、`reporting destinations`、または `ownership` が定義されていません。
+      The rules name the issue and change-request logs but do not define transfer criteria, reporting destinations, or
+      ownership for separating risks from realized issues, change requests, and decisions.
   - id: F006
     severity: minor
     rule: vp-ba-business-value
@@ -168,7 +168,7 @@ findings:
     message: >-
       The purpose states the management activity but does not identify its beneficiary or the business consequence
       avoided through risk control, leaving business-value alignment implicit.
-    message_ja: 目的には管理活動が記載されていますが、その対象者やリスク制御を通じて回避されるビジネス上の結果が特定されていないため、ビジネス価値との整合性が暗黙的なものになっています。
+    message_ja: 目的には管理活動が記載されていますが、その受益者や、リスク管理によって回避されるビジネス上の影響が特定されていないため、ビジネス価値との整合性が暗黙的なままになっています。
   - id: F007
     severity: minor
     rule: vp-ba-requirements-completeness
@@ -177,7 +177,9 @@ findings:
     message: >-
       The required risk table includes a status column but defines neither allowed values nor transition criteria,
       leaving the usage requirements incomplete.
-    message_ja: 必要なリスクテーブルには `status` カラムが含まれていますが、許可された値も遷移基準も定義されていないため、使用要件が不完全な状態です。
+    message_ja: >-
+      The required risk table includes a status column but defines neither allowed values nor transition criteria,
+      leaving the usage requirements incomplete.
   - id: F008
     severity: major
     rule: vp-ba-stakeholder-clarity
@@ -186,9 +188,7 @@ findings:
     message: >-
       The rules require a responsible person but do not distinguish the maintainer, reviewer, approver, consulted
       stakeholders, or the decisions on which their agreement is required.
-    message_ja: >-
-      規則では `responsible person` が要求されていますが、`maintainer`、`reviewer`、`approver`、`consulted stakeholders`、あるいは彼らの合意が必要となる
-      `decisions` が区別されていません。
+    message_ja: ルールでは責任ある人物を求めていますが、maintainer、reviewer、approver、consulted stakeholders、またはそれらの合意が必要となる決定事項について区別していません。
   - id: F009
     severity: minor
     rule: vp-dev-change-impact
@@ -198,8 +198,8 @@ findings:
       The metadata includes supersedes but gives no procedure for migrating existing registers or assessing impacts on
       templates, generated views, and consumers when this rulebook changes.
     message_ja: >-
-      メタデータには `supersedes` が含まれていますが、既存のレジスターの移行方法や、この `rulebook` が変更された際の `templates`、`generated views`、および `consumers`
-      への影響を評価するための手順が示されていません。
+      The metadata includes supersedes but gives no procedure for migrating existing registers or assessing impacts on
+      templates, generated views, and consumers when this rulebook changes.
   - id: F010
     severity: major
     rule: vp-dev-testability
@@ -209,8 +209,8 @@ findings:
       The rulebook provides no lint, schema-validation, build, or generation command with expected results, so an
       implementation cannot be tested against the stated authoring rules.
     message_ja: >-
-      `rulebook` には、期待される結果を伴う `lint`、`schema-validation`、`build`、または `generation`
-      コマンドが提供されていないため、記載された作成規則に沿って実装をテストすることができません。
+      The rulebook provides no lint, schema-validation, build, or generation command with expected results, so an
+      implementation cannot be tested against the stated authoring rules.
   - id: F011
     severity: minor
     rule: vp-qe-verifiability
@@ -219,9 +219,7 @@ findings:
     message: >-
       The evaluation guidance does not require numeric mappings, thresholds, or a complete priority matrix, so reviewers
       cannot reliably reproduce the stated priority from probability and impact values.
-    message_ja: >-
-      評価ガイダンスでは、数値マッピング、しきい値、または完全な `priority matrix` が要求されていないため、レビュー担当者が `probability` と `impact` の値から記載された `priority`
-      を確実に再現することができません。
+    message_ja: 評価ガイダンスには数値によるマッピング、閾値、または完全な優先順位マトリックスの規定がないため、レビュアーは、確率と影響の値から記載された優先順位を確実に再現することができません。
   - id: F012
     severity: major
     rule: vp-qe-omissions-consistency
@@ -259,8 +257,8 @@ findings:
       The status field includes ready, but the rulebook defines no readiness criteria, unresolved-risk policy, approver,
       or pre-publication gate for promoting a register from draft.
     message_ja: >-
-      `status` フィールドには `ready` が含まれていますが、`rulebook` には、レジスターを `draft` から昇格させるための `readiness criteria`、`unresolved-risk
-      policy`、`approver`、または `pre-publication gate` が定義されていません。
+      status フィールドには ready が含まれていますが、rulebook では、register を draft から昇格させるための readiness criteria、unresolved-risk
+      policy、approver、または pre-publication gate が定義されていません。
   - id: F017
     severity: minor
     rule: vp-ops-operability
@@ -269,4 +267,4 @@ findings:
     message: >-
       The monitoring rules do not require an operator, escalation path, or recovery action for a missed review or failed
       update.
-    message_ja: "`monitoring` 規則では、レビューの漏れや更新の失敗に対する `operator`、`escalation path`、または `recovery action` が要求されていません。"
+    message_ja: 監視ルールには、レビューの漏れや更新の失敗に対するオペレーター、エスカレーションパス、またはリカバリアクションの要件が含まれていません。
