@@ -6,7 +6,7 @@ target: kata
 rubric: grade-rubric-v2
 verdict: pass
 score: 98
-graded_at: "2026-09-27T20:48:51.674Z"
+graded_at: "2026-10-06T21:04:17.751Z"
 graded_by: agy-expert-executor
 content_hash: a08d130f0866c92d25a512ecf23ce8ab433cd52ad2d01dc1b945d771f2a14061
 categories:
@@ -110,6 +110,7 @@ findings:
   - id: F001
     severity: minor
     rule: vp-qe-kata-conformance
-    line: 44
-    anchor: "- Schedule ownerは採用済みRole codeに限定します。"
+    line: 33
+    anchor: "## 4. 各章の書き方"
     message: 各章の書き方において, 良質な実例（prj-overview-recipe）のような「問い」と「書き方（コツ）」の形式を採用し, 執筆者が具体的に何を記述すべきか導く構成にしてください。
+    message_ja: 各章の書き方において, 良質な実例（prj-overview-recipe）のような「問い」と「書き方（コツ）」の形式を採用し, 執筆者が具体的に何を記述すべきか導く構成にしてください。

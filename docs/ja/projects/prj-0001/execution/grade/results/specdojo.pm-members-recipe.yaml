@@ -6,7 +6,7 @@ target: kata
 rubric: grade-rubric-v2
 verdict: pass
 score: 97
-graded_at: "2026-09-27T20:47:01.471Z"
+graded_at: "2026-10-06T21:03:12.324Z"
 graded_by: agy-expert-executor
 content_hash: 65b81361aef92a02ab6d274ff7245450630c939e7de54d8d302cc6dc8b7a039c
 categories:
@@ -101,36 +101,55 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 5
+  minor: 7
   note: 0
 findings:
   - id: F001
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 55
+    line: 37
     anchor: ""
-    message: メタ項目の設定手順において、rulebook で必須とされる `title` が漏れている。
+    message: 全体の作成手順において、rulebook で必須とされる title の設定手順が漏れている。
+    message_ja: 全体の作成手順において、rulebook で必須とされる title の設定手順が漏れている。
   - id: F002
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 55
     anchor: ""
-    message: メタ項目の設定手順において、rulebook で必須とされる `status` が漏れている。
+    message: メタ項目の設定手順において、rulebook で必須とされる `title` が漏れている。
+    message_ja: メタ項目の設定手順において、rulebook で必須とされる `title` が漏れている。
   - id: F003
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 55
+    anchor: ""
+    message: メタ項目の設定手順において、rulebook で必須とされる `status` が漏れている。
+    message_ja: メタ項目の設定手順において、rulebook で必須とされる `status` が漏れている。
+  - id: F004
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 63
     anchor: "- 最終判断を担う人間は、`note` に承認・公開可否・説明責任の扱いを記載する。"
     message: "`members` の問いにおいて、必須項目である `display_name` の確認が漏れている。"
-  - id: F004
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 98
-    anchor: 1. 組織定義から、PO が最終判断する範囲と agent 委任範囲を抜き出す。
-    message: 書き方において、`stage_role` の設定基準や nickname の許容文字に関する rulebook 記載の具体ルールが記述されていない。
+    message_ja: "`members` の問いにおいて、必須項目である `display_name` の確認が漏れている。"
   - id: F005
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 98
     anchor: 1. 組織定義から、PO が最終判断する範囲と agent 委任範囲を抜き出す。
+    message: 書き方において、`stage_role` の設定基準や nickname の許容文字に関する rulebook 記載の具体ルールが記述されていない。
+    message_ja: 書き方において、`stage_role` の設定基準や nickname の許容文字に関する rulebook 記載の具体ルールが記述されていない。
+  - id: F006
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 98
+    anchor: 1. 組織定義から、PO が最終判断する範囲と agent 委任範囲を抜き出す。
     message: agent のフィールド設定において、rulebook で定義されている `scheduler_strategy` と `disabled` の扱いが漏れている。
+    message_ja: agent のフィールド設定において、rulebook で定義されている `scheduler_strategy` と `disabled` の扱いが漏れている。
+  - id: F007
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 98
+    anchor: 1. 組織定義から、PO が最終判断する範囲と agent 委任範囲を抜き出す。
+    message: agent のフィールド設定において、persona のフォーマット (kebab-case) に関する指定が漏れている。
+    message_ja: agent のフィールド設定において、persona のフォーマット (kebab-case) に関する指定が漏れている。

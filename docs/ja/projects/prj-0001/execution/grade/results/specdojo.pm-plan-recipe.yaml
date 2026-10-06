@@ -6,7 +6,7 @@ target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 92
-graded_at: "2026-09-27T20:50:55.449Z"
+graded_at: "2026-10-06T21:05:58.173Z"
 graded_by: agy-expert-executor
 content_hash: 73817c5d19f3eacb53b5b47b836a0334f9505f1428a7207e10e7d9bef6b9aa6e
 categories:
@@ -110,18 +110,21 @@ findings:
   - id: F001
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 60
-    anchor: ""
+    line: 70
+    anchor: "| 観点     | 良い例                           | 悪い例                       |"
     message: 第4章「各章の書き方」において、rulebook の標準構成に含まれる「未決事項」の記述ガイドが欠落している。
+    message_ja: 第4章「各章の書き方」において、rulebook の標準構成に含まれる「未決事項」の記述ガイドが欠落している。
   - id: F002
     severity: minor
     rule: vp-qe-kata-conformance
-    line: 35
-    anchor: "## 4. 各章の書き方"
+    line: 44
+    anchor: ""
     message: 成果物の具体化を支援するという recipe の種別責務に対し、第4章の内容が不十分であり、rulebook の要約に近い形式になっている。
+    message_ja: 成果物の具体化を支援するという recipe の種別責務に対し、第4章の内容が不十分であり、rulebook の要約に近い形式になっている。
   - id: F003
     severity: major
     rule: vp-ux-readability
-    line: 35
-    anchor: "## 4. 各章の書き方"
+    line: 44
+    anchor: ""
     message: 第4章「各章の書き方」に、読者の思考を促す問いや具体化のための詳細なガイドがなく、構成案の提示に留まっているため、実用的レシピとしての記述水準が不足している。
+    message_ja: 第4章「各章の書き方」に、読者の思考を促す問いや具体化のための詳細なガイドがなく、構成案の提示に留まっているため、実用的レシピとしての記述水準が不足している。

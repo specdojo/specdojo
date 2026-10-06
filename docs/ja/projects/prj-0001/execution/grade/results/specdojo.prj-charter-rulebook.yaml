@@ -3,29 +3,75 @@ version: 1
 document: specdojo:prj-charter-rulebook
 path: docs/ja/specdojo/rulebooks/prj-charter-rulebook.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: pass
-score: 85
-graded_at: "2026-09-03T06:39:10.740Z"
-graded_by: codex-expert-executor
+score: 90
+graded_at: "2026-10-06T21:24:25.153Z"
+graded_by: agy-expert-executor
 content_hash: 4ebc851074f75025909e92c5d0dde6b4eee81cc5ecbc835a16a37744d4c403a2
 categories:
-  consistency:
-    score: 75
-  usability:
-    score: 75
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
   architecture:
     score: 100
-  quality:
-    score: 88
-viewpoints:
-  vp-arc-cross-document-consistency:
-    level: 3
+  usability:
     score: 75
+  implementation:
+    score: 100
+  quality:
+    score: 92
+  consistency:
+    score: 75
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 3
     score: 75
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -43,6 +89,15 @@ viewpoints:
   vp-ux-language-consistency:
     level: 3
     score: 75
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
@@ -52,49 +107,60 @@ finding_counts:
   minor: 7
   note: 0
 findings:
-  - id: F002
-    severity: minor
-    rule: vp-arc-conciseness
-    line: 1
-    message: H1直下に立ち上げ認可・権限委譲・本格実行開始を承認しない旨を書く規則は直後の6.1共通ルールでより具体的に再掲されているため、本行を削除または6.1への参照へ置き換えてください。
-    anchor: "# プロジェクト憲章 作成ルール"
-  - id: F006
-    severity: minor
-    rule: vp-ux-readability
-    line: 1
-    message: 冒頭文の必須内容は直後の6.1で文数を含めて具体化されているため、本行を統合し、読者が同じ規則を二度確認しなくてよい構成にしてください。
-    anchor: "# プロジェクト憲章 作成ルール"
-  - id: F004
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 1
-    message: 作成済み参照先をwikilinkへ更新する規則に対し、完成例のsampleでは実在する参照先が相対MarkdownリンクまたはバッククォートIDのままなので、完成例が規則どおりの参照形式を示すよう整合させてください。
-    anchor: "# プロジェクト憲章 作成ルール"
   - id: F001
     severity: minor
-    rule: vp-arc-cross-document-consistency
-    line: 1
+    rule: vp-arc-conciseness
+    line: 120
+    anchor: "- 認可しない範囲を明記し、憲章承認と本格実行開始を混同しない。"
+    message: H1直下に立ち上げ認可・権限委譲・本格実行開始を承認しない旨を書く規則は直後の6.1共通ルールでより具体的に再掲されているため、本行を削除または6.1への参照へ置き換えてください。
+    message_ja: H1直下に立ち上げ認可・権限委譲・本格実行開始を承認しない旨を書く規則は直後の6.1共通ルールでより具体的に再掲されているため、本行を削除または6.1への参照へ置き換えてください。
+  - id: F002
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 114
+    anchor: ""
     message: >-
       全体方針と権限委譲の定義では「PO またはスポンサー」を判断主体としている一方、本行、recipe、成果物カタログの完了条件は PO のみを主体としているため、スポンサーが PO Role code
       を兼ねる必要があるのかを明記して責任定義を統一してください。
-    anchor: "# プロジェクト憲章 作成ルール"
-  - id: F007
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 1
-    message: 「PO またはスポンサー」を選択可能とする前段に対して本行以降は「人間のPO」だけを最終判断主体としているため、スポンサーをPO Role codeへ対応付けるのか、承認責任者という共通語へ統一するのかを明示してください。
-    anchor: "# プロジェクト憲章 作成ルール"
-  - id: F005
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 1
-    message: AI Agentの支援範囲を含める規則がsampleとtemplateのハイレベルスコープに反映されていないため、適用条件を明記するか、該当する記入欄と完成例を追加してください。
-    anchor: "# プロジェクト憲章 作成ルール"
+    message_ja: >-
+      全体方針と権限委譲の定義では「PO またはスポンサー」を判断主体としている一方、本行、recipe、成果物カタログの完了条件は PO のみを主体としているため、スポンサーが PO Role code
+      を兼ねる必要があるのかを明記して責任定義を統一してください。
   - id: F003
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 1
+    line: 215
+    anchor: "| 認可対象または認可しない範囲を記載しない             | PO が承認範囲を判断できないため              |"
     message: >-
       frontmatterのstatusを文書状態の正本としつつ認可状態との関係を定義しておらず、sampleがstatus:
       readyのまま本文で「ドラフト」と表現しているため、statusは文書成熟度、承認履歴は認可状態という独立した状態軸であることを明記してください。
-    anchor: "# プロジェクト憲章 作成ルール"
+    message_ja: >-
+      frontmatterのstatusを文書状態の正本としつつ認可状態との関係を定義しておらず、sampleがstatus:
+      readyのまま本文で「ドラフト」と表現しているため、statusは文書成熟度、承認履歴は認可状態という独立した状態軸であることを明記してください。
+  - id: F004
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 129
+    anchor: "- 承認に条件が付く場合は、`認可条件` を補足として 1 行追加してよい。ただし、承認章の代替にはせず、承認日・承認者・証跡リンクの管理は別途必要とする。"
+    message: 作成済み参照先をwikilinkへ更新する規則に対し、完成例のsampleでは実在する参照先が相対MarkdownリンクまたはバッククォートIDのままなので、完成例が規則どおりの参照形式を示すよう整合させてください。
+    message_ja: 作成済み参照先をwikilinkへ更新する規則に対し、完成例のsampleでは実在する参照先が相対MarkdownリンクまたはバッククォートIDのままなので、完成例が規則どおりの参照形式を示すよう整合させてください。
+  - id: F005
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 170
+    anchor: "### 6.5. 初期ステークホルダー"
+    message: AI Agentの支援範囲を含める規則がsampleとtemplateのハイレベルスコープに反映されていないため、適用条件を明記するか、該当する記入欄と完成例を追加してください。
+    message_ja: AI Agentの支援範囲を含める規則がsampleとtemplateのハイレベルスコープに反映されていないため、適用条件を明記するか、該当する記入欄と完成例を追加してください。
+  - id: F006
+    severity: minor
+    rule: vp-ux-readability
+    line: 120
+    anchor: "- 認可しない範囲を明記し、憲章承認と本格実行開始を混同しない。"
+    message: 冒頭文の必須内容は直後の6.1で文数を含めて具体化されているため、本行を統合し、読者が同じ規則を二度確認しなくてよい構成にしてください。
+    message_ja: 冒頭文の必須内容は直後の6.1で文数を含めて具体化されているため、本行を統合し、読者が同じ規則を二度確認しなくてよい構成にしてください。
+  - id: F007
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 133
+    anchor: "| 項目            | 内容 |"
+    message: 「PO またはスポンサー」を選択可能とする前段に対して本行以降は「人間のPO」だけを最終判断主体としているため、スポンサーをPO Role codeへ対応付けるのか、承認責任者という共通語へ統一するのかを明示してください。
+    message_ja: 「PO またはスポンサー」を選択可能とする前段に対して本行以降は「人間のPO」だけを最終判断主体としているため、スポンサーをPO Role codeへ対応付けるのか、承認責任者という共通語へ統一するのかを明示してください。

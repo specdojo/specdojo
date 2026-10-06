@@ -2,12 +2,12 @@
 id: cdfd-onboarding-grade-criteria
 document: cdfd-onboarding
 path: docs/ja/product/010-business-specs/010-data-flow/cdfd-onboarding.md
-graded_at: "2026-10-04T16:08:12.442Z"
+graded_at: "2026-10-06T16:07:37.402Z"
 graded_by: agy-expert-executor
 content_hash: 49e33de5aa2be69433cf813bbcbd95b37a6266c4c857b20a7fb30db27b4f47c1
 summary:
-  satisfied: 2
-  unsatisfied: 1
+  satisfied: 0
+  unsatisfied: 3
   total: 3
 criteria:
   - id: DC-001
@@ -16,16 +16,22 @@ criteria:
       - BA
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
-    reason: プロセス表に完了条件列がなく、Kata の配置と稼働構成の初期化がプロセス単位で完了したことを判定できない。
+    reason: >-
+      The completion condition column is missing from the process table, and the flows for existing projects are not
+      covered.
   - id: DC-002
     text: 各プロセスの起動条件、読み書きするデータストア（Kata、稼働構成）、生成先が識別でき、後続の Plan への引き渡しがグループ外委譲として示されていること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
-    status: satisfied
+    status: unsatisfied
+    reason: The startup conditions, read/write stores, and generation targets for non-new projects are missing.
   - id: DC-003
     text: 既存設定の検出、雛形の不足、権限不足など、成果の採否を変える主要例外の検出条件と再開条件が判定できること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
-    status: satisfied
+    status: unsatisfied
+    reason: >-
+      The stopping scope column is missing from the exceptions table, making it impossible to determine the exact impact
+      of exceptions.

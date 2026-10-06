@@ -6,7 +6,7 @@ target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 88
-graded_at: "2026-09-27T20:45:19.120Z"
+graded_at: "2026-10-06T21:01:54.757Z"
 graded_by: agy-expert-executor
 content_hash: a185a5387ba9ef67cf796304870dbe8f1afd50485416b25e57148a007209db79
 categories:
@@ -113,21 +113,25 @@ findings:
     line: 84
     anchor: "- コミュニケーション機会、エスカレーション、情報取扱いがある。"
     message: レビュー観点における判定基準を具体化し、何を根拠に pass/fail を判断するかを明記してほしい。
+    message_ja: レビュー観点における判定基準を具体化し、何を根拠に pass/fail を判断するかを明記してほしい。
   - id: F002
     severity: major
     rule: vp-qe-omissions-consistency
     line: 68
     anchor: ""
     message: 「各章の書き方」に、ルールブックの内容に基づいた「4.5. 見直し条件と未決事項」の記述ガイドを追加してほしい。
+    message_ja: 「各章の書き方」に、ルールブックの内容に基づいた「4.5. 見直し条件と未決事項」の記述ガイドを追加してほしい。
   - id: F003
     severity: minor
     rule: vp-qe-kata-conformance
     line: 43
     anchor: ""
     message: 各章の書き方に「問い」と「具体例（良い例/悪い例）」を導入し、作成者が判断に迷わない具体性を確保してほしい。
+    message_ja: 各章の書き方に「問い」と「具体例（良い例/悪い例）」を導入し、作成者が判断に迷わない具体性を確保してほしい。
   - id: F004
     severity: minor
     rule: vp-ux-readability
     line: 84
     anchor: "- コミュニケーション機会、エスカレーション、情報取扱いがある。"
     message: レビュー観点を表形式にし、「観点」と「確認内容（判定基準）」を明確に分けて記述してほしい。
+    message_ja: レビュー観点を表形式にし、「観点」と「確認内容（判定基準）」を明確に分けて記述してほしい。
