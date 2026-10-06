@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_58e09b7301bb48c298a0b46a3855e6d1
+  ts: "2026-10-06T22:14:59Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-WAFC の後続。翻訳専用の agent を追加したため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: grade の既定の翻訳の agent を gemma26-translator へ切り替える
+    - field: description
+      from: ""
+      to: PJR-WAFC の実モデルでの確認で、gemma26-reporter は reporter 向けの指示に引っ張られ英語の語句をバッククォートで残した。翻訳専用の gemma26-translator（792dfd222）を追加したので、grade の翻訳の既定の agent を切り替え、関連する文書とテストを合わせる。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-07"
