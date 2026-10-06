@@ -197,79 +197,143 @@ function isJapaneseFindingMessage(message: string): boolean {
   return /\p{Script=Han}/u.test(prose) && !/[A-Za-z]/u.test(prose);
 }
 
-function translationToken(index: number): string {
-  return `[T${String(index + 1).padStart(3, "0")}]`;
+function translatableGradeFindings(result: GradeResult): Array<{
+  finding: StoredGradeFinding;
+  findingIndex: number;
+}> {
+  return result.findings
+    .map((finding, findingIndex) => ({ finding, findingIndex }))
+    .filter(({ finding }) => !isJapaneseFindingMessage(finding.message));
 }
 
-export function gradeFindingTranslationInput(result: GradeResult): string[] {
-  return result.findings
-    .filter((finding) => !isJapaneseFindingMessage(finding.message))
-    .map((finding, index) => `${translationToken(index)} ${finding.message}`);
+function selectTranslationTargets(
+  result: GradeResult,
+  translationIndex?: number,
+): Array<{ finding: StoredGradeFinding; findingIndex: number; translationIndex: number }> {
+  const targets = translatableGradeFindings(result).map((target, index) => ({
+    ...target,
+    translationIndex: index,
+  }));
+  if (translationIndex === undefined) return targets;
+  const selected = targets[translationIndex];
+  if (!selected) {
+    throw new Error(
+      `translation index out of range: index=${translationIndex}, count=${targets.length}`,
+    );
+  }
+  return [selected];
 }
+
+export function gradeFindingTranslationInput(
+  result: GradeResult,
+  translationIndex?: number,
+): string[] {
+  return selectTranslationTargets(result, translationIndex).map(({ finding }) => finding.message);
+}
+
+export type GradeFindingTranslationRejection = {
+  translation_index: number;
+  finding_id: string;
+  reason:
+    | "invalid-output"
+    | "count-mismatch"
+    | "not-string"
+    | "empty"
+    | "missing-kana"
+    | "missing-inline-code";
+  detail?: string;
+};
 
 export type GradeFindingTranslationResult = {
   result: GradeResult;
   accepted: boolean;
   reason?: string;
+  rejections: GradeFindingTranslationRejection[];
 };
 
 export function applyGradeFindingTranslations(
   result: GradeResult,
   translations: unknown,
+  translationIndex?: number,
 ): GradeFindingTranslationResult {
-  const fallback: GradeResult = {
-    ...result,
-    findings: result.findings.map((finding) => ({ ...finding, message_ja: finding.message })),
-  };
-  const translatable = result.findings
-    .map((finding, index) => ({ finding, index }))
-    .filter(({ finding }) => !isJapaneseFindingMessage(finding.message));
+  const targets = selectTranslationTargets(result, translationIndex);
+  const targetFindingIndexes = new Set(targets.map(({ findingIndex }) => findingIndex));
+  const localizedFindings = result.findings.map((finding, findingIndex) => {
+    if (translationIndex === undefined || targetFindingIndexes.has(findingIndex)) {
+      return { ...finding, message_ja: finding.message };
+    }
+    return { ...finding };
+  });
+  const fallback = (): GradeResult => ({ ...result, findings: localizedFindings });
+  const rejectAll = (
+    reason: GradeFindingTranslationRejection["reason"],
+    detail?: string,
+  ): GradeFindingTranslationRejection[] =>
+    targets.map(({ finding, translationIndex: index }) => ({
+      translation_index: index,
+      finding_id: finding.id,
+      reason,
+      ...(detail ? { detail } : {}),
+    }));
   if (!Array.isArray(translations)) {
     return {
-      result: fallback,
+      result: fallback(),
       accepted: false,
       reason: "translation output must be a string array",
+      rejections: rejectAll("invalid-output", "translation output must be a string array"),
     };
   }
-  if (translations.length !== translatable.length) {
+  if (translations.length !== targets.length) {
+    const reason = `translation count mismatch: expected=${targets.length}, actual=${translations.length}`;
     return {
-      result: fallback,
+      result: fallback(),
       accepted: false,
-      reason: `translation count mismatch: expected=${translatable.length}, actual=${translations.length}`,
+      reason,
+      rejections: rejectAll("count-mismatch", reason),
     };
-  }
-  const translatedMessages: string[] = [];
-  for (const [index, value] of translations.entries()) {
-    const token = translationToken(index);
-    if (
-      typeof value !== "string" ||
-      !value.startsWith(`${token} `) ||
-      !value.slice(token.length).trim()
-    ) {
-      return {
-        result: fallback,
-        accepted: false,
-        reason: `translation order mismatch at index ${index}: expected token ${token}`,
-      };
-    }
-    translatedMessages.push(value.slice(token.length).trim());
   }
 
-  const messageByFindingIndex = new Map(
-    translatable.map(({ index }, translationIndex) => [
-      index,
-      translatedMessages[translationIndex],
-    ]),
-  );
+  const rejections: GradeFindingTranslationRejection[] = [];
+  for (const [arrayIndex, value] of translations.entries()) {
+    const target = targets[arrayIndex];
+    let reason: GradeFindingTranslationRejection["reason"] | undefined;
+    let detail: string | undefined;
+    if (typeof value !== "string") {
+      reason = "not-string";
+    } else if (!value.trim()) {
+      reason = "empty";
+    } else if (!/[\p{Script=Hiragana}\p{Script=Katakana}]/u.test(value)) {
+      reason = "missing-kana";
+    } else {
+      const inlineCode = target.finding.message.match(/`[^`\r\n]*`/gu) ?? [];
+      const missingInlineCode = inlineCode.find((code) => !value.includes(code));
+      if (missingInlineCode) {
+        reason = "missing-inline-code";
+        detail = missingInlineCode;
+      }
+    }
+    if (reason) {
+      rejections.push({
+        translation_index: target.translationIndex,
+        finding_id: target.finding.id,
+        reason,
+        ...(detail ? { detail } : {}),
+      });
+    } else {
+      localizedFindings[target.findingIndex] = {
+        ...localizedFindings[target.findingIndex],
+        message_ja: (value as string).trim(),
+      };
+    }
+  }
+
   return {
-    accepted: true,
-    result: {
-      ...result,
-      findings: result.findings.map((finding, index) => ({
-        ...finding,
-        message_ja: messageByFindingIndex.get(index) ?? finding.message,
-      })),
-    },
+    accepted: rejections.length === 0,
+    ...(rejections.length > 0
+      ? { reason: `rejected ${rejections.length} of ${targets.length} translations` }
+      : {}),
+    rejections,
+    result: { ...result, findings: localizedFindings },
   };
 }
 

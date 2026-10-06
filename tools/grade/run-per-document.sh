@@ -849,6 +849,7 @@ execute_stage() {
   local reporter_output="$stage_dir/grade-submission.json"
   local translation_plan="$stage_dir/grade-finding-translation-plan.md"
   local translation_output="$stage_dir/grade-finding-translations.json"
+  local translation_rejections="$stage_dir/grade-finding-translation-rejections.json"
   local -a plan_command=(grade plan --target "$target" --project "$project" --path "$document" --out "$stage_dir/plans")
   local -a apply_command=(grade apply --target "$target" --project "$project" --path "$document" --analysis-from "$executor_output" --by "$executor")
   local machine_reporter=false
@@ -994,8 +995,9 @@ execute_stage() {
     return 0
   fi
 
-  # The canonical result is already stored. Translation is display-only: any plan/agent/output
-  # failure is converted to an empty array, and `grade localize` records the canonical English
+  # The canonical result is already stored. Translation is display-only. `grade localize`
+  # validates each translated item and records rejected translation indexes as JSON. Each
+  # rejected item is retried separately once; a second rejection leaves the canonical English
   # message as the display fallback without changing viewpoint, level, severity, or line.
   if run_specdojo "$log_file" grade translation-plan --target "$target" --project "$project" --path "$document" --out "$translation_plan"; then
     if grep -Fqx '[]' "$translation_plan"; then
@@ -1003,15 +1005,52 @@ execute_stage() {
     elif run_specdojo "$log_file" agent run --project "$project" --plan "$translation_plan" --by "$translation_by" --out "$translation_output"; then
       :
     else
-      printf 'warning: finding translation agent failed; using canonical messages\n' >>"$log_file"
+      printf 'warning: finding translation agent failed; retrying canonical messages individually\n' >>"$log_file"
       printf '[]\n' >"$translation_output"
     fi
   else
-    printf 'warning: finding translation plan failed; using canonical messages\n' >>"$log_file"
+    printf 'warning: finding translation plan failed; retrying canonical messages individually\n' >>"$log_file"
     printf '[]\n' >"$translation_output"
   fi
-  if run_specdojo "$log_file" grade localize --target "$target" --project "$project" --path "$document" --from "$translation_output"; then
-    :
+  if run_specdojo "$log_file" grade localize --target "$target" --project "$project" --path "$document" --from "$translation_output" --rejections-out "$translation_rejections"; then
+    local -a rejected_translation_indices=()
+    if [[ -f "$translation_rejections" ]]; then
+      mapfile -t rejected_translation_indices < <(
+        node -e '
+          const { readFileSync } = require("node:fs");
+          const report = JSON.parse(readFileSync(process.argv[1], "utf8"));
+          for (const rejection of report.rejections ?? []) {
+            if (Number.isSafeInteger(rejection.translation_index)) {
+              process.stdout.write(`${rejection.translation_index}\n`);
+            }
+          }
+        ' "$translation_rejections"
+      )
+    fi
+    local translation_index
+    for translation_index in "${rejected_translation_indices[@]}"; do
+      local retry_plan="$stage_dir/grade-finding-translation-retry-$translation_index-plan.md"
+      local retry_output="$stage_dir/grade-finding-translation-retry-$translation_index.json"
+      local retry_rejections="$stage_dir/grade-finding-translation-retry-$translation_index-rejections.json"
+      if run_specdojo "$log_file" grade translation-plan --target "$target" --project "$project" --path "$document" --translation-index "$translation_index" --out "$retry_plan" &&
+        run_specdojo "$log_file" agent run --project "$project" --plan "$retry_plan" --by "$translation_by" --out "$retry_output"; then
+        if run_specdojo "$log_file" grade localize --target "$target" --project "$project" --path "$document" --translation-index "$translation_index" --from "$retry_output" --rejections-out "$retry_rejections"; then
+          if node -e '
+            const { readFileSync } = require("node:fs");
+            const report = JSON.parse(readFileSync(process.argv[1], "utf8"));
+            process.exit((report.rejections ?? []).length === 0 ? 0 : 1);
+          ' "$retry_rejections"; then
+            :
+          else
+            printf 'warning: finding translation retry rejected index=%s; using canonical message\n' "$translation_index" >>"$log_file"
+          fi
+        else
+          printf 'warning: finding localization retry failed index=%s; using canonical message\n' "$translation_index" >>"$log_file"
+        fi
+      else
+        printf 'warning: finding translation retry failed index=%s; using canonical message\n' "$translation_index" >>"$log_file"
+      fi
+    done
   else
     printf 'warning: finding localization failed; canonical grade remains recorded\n' >>"$log_file"
   fi

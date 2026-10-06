@@ -133,9 +133,12 @@ if (args[0] === "grade" && args[1] === "plan") {
 if (args[0] === "grade" && args[1] === "translation-plan") {
   const out = value("--out");
   mkdirSync(dirname(out), { recursive: true });
-  writeFileSync(out, process.env.FAKE_TRANSLATION_INPUT === "1"
-    ? "# Grade finding translation\\n\\n[\\n  \\\"[T001] Add a test.\\\"\\n]\\n"
-    : "# Grade finding translation\\n\\n[]\\n");
+  const translationIndex = value("--translation-index");
+  const inputCount = Number(process.env.FAKE_TRANSLATION_INPUT ?? 0);
+  const messages = translationIndex === undefined
+    ? Array.from({ length: inputCount }, (_, index) => "Finding " + (index + 1) + ".")
+    : ["Finding " + (Number(translationIndex) + 1) + "."];
+  writeFileSync(out, "# Grade finding translation\\n\\n" + JSON.stringify(messages, null, 2) + "\\n");
   process.exit(0);
 }
 if (args[0] === "agent" && args[1] === "run") {
@@ -182,7 +185,22 @@ if (args[0] === "grade" && args[1] === "result") {
   if (resultFile && existsSync(resultFile)) process.stdout.write(readFileSync(resultFile, "utf8"));
   process.exit(0);
 }
-if (args[0] === "grade" && args[1] === "localize") process.exit(0);
+if (args[0] === "grade" && args[1] === "localize") {
+  const rejectionsOut = value("--rejections-out");
+  if (rejectionsOut) {
+    const translationIndex = value("--translation-index");
+    const rejectedIndex = process.env.FAKE_REJECT_TRANSLATION_INDEX;
+    const rejectRetry = process.env.FAKE_REJECT_TRANSLATION_RETRY === "1";
+    const shouldReject = rejectedIndex !== undefined &&
+      (translationIndex === undefined || (rejectRetry && translationIndex === rejectedIndex));
+    const rejections = shouldReject
+      ? [{ translation_index: Number(rejectedIndex), finding_id: "F002", reason: "missing-inline-code" }]
+      : [];
+    mkdirSync(dirname(rejectionsOut), { recursive: true });
+    writeFileSync(rejectionsOut, JSON.stringify({ version: 1, rejections }) + "\\n");
+  }
+  process.exit(0);
+}
 process.exit(1);
 `,
   );
@@ -667,6 +685,61 @@ describe("grade per-document pipeline", () => {
     expect(agentRuns[0]).toContain("--by codex-expert-executor");
     expect(invocations).toContainEqual(expect.stringMatching(/^grade translation-plan /));
     expect(invocations).toContainEqual(expect.stringMatching(/^grade localize /));
+  });
+
+  it("retries only rejected translations one at a time", () => {
+    const fixture = makeFixture();
+
+    const result = runPipeline(
+      fixture,
+      { FAKE_TRANSLATION_INPUT: "2", FAKE_REJECT_TRANSLATION_INDEX: "1" },
+      ["--stages", "1"],
+    );
+
+    expect(result.status, result.stderr).toBe(0);
+    const invocations = readFileSync(fixture.argsFile, "utf8").trim().split("\n");
+    const translationAgentRuns = invocations.filter(
+      (line) => line.startsWith("agent run ") && line.includes("--by gemma26-reporter"),
+    );
+    expect(translationAgentRuns).toHaveLength(2);
+    expect(invocations).toContainEqual(
+      expect.stringMatching(/^grade translation-plan .*--translation-index 1 /),
+    );
+    expect(invocations).toContainEqual(
+      expect.stringMatching(/^grade localize .*--translation-index 1 /),
+    );
+    expect(invocations.some((line) => line.includes("--translation-index 0"))).toBe(false);
+  });
+
+  it("tries a rejected translation only once before keeping the canonical fallback", () => {
+    const fixture = makeFixture();
+
+    const result = runPipeline(
+      fixture,
+      {
+        FAKE_TRANSLATION_INPUT: "2",
+        FAKE_REJECT_TRANSLATION_INDEX: "1",
+        FAKE_REJECT_TRANSLATION_RETRY: "1",
+      },
+      ["--stages", "1"],
+    );
+
+    expect(result.status, result.stderr).toBe(0);
+    const invocations = readFileSync(fixture.argsFile, "utf8").trim().split("\n");
+    expect(
+      invocations.filter(
+        (line) =>
+          line.startsWith("grade translation-plan ") && line.includes("--translation-index 1"),
+      ),
+    ).toHaveLength(1);
+    const logsRoot = join(fixture.root, "logs/grade/runs/per-document/fixture-run/documents");
+    const commandLog = readdirSync(logsRoot, { recursive: true, encoding: "utf8" }).find((path) =>
+      path.endsWith("stage-1/commands.log"),
+    );
+    expect(commandLog).toBeDefined();
+    expect(readFileSync(join(logsRoot, commandLog!), "utf8")).toContain(
+      "finding translation retry rejected index=1; using canonical message",
+    );
   });
 
   it("reruns the executor once when grade apply rejects the executor markers", () => {
