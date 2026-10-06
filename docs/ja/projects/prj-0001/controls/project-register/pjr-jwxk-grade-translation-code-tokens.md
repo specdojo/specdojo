@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-jwxk-grade-translation-code-tokens
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-06T12:06:51Z"
   due_on: null
+  completed_at: "2026-10-06T22:13:53Z"
+  conclusion: 翻訳の印をコードで管理し、件数・仮名・インラインコードを件ごとに点検、不合格の件だけ1件ずつ訳し直すようにした。実モデルで13件すべて点検に通ることを確認した
 ---
 
 # PJR-JWXK grade の翻訳でモデルに印を書かせず、各件をコードで点検する

@@ -55,3 +55,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_9976ab07fd1d413b8002d654ed9d4b09
+- v: 1
+  id: reg_2c31e05ad8ef4e3aae76d92a89ba615e
+  ts: "2026-10-06T22:13:53Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: "review: 差分を確認し、実モデルで翻訳をやり直して確認"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-07"
+    - field: conclusion
+      from: "-"
+      to: 翻訳の印をコードで管理し、件数・仮名・インラインコードを件ごとに点検、不合格の件だけ1件ずつ訳し直すようにした。実モデルで13件すべて点検に通ることを確認した
+  previous_event_id: reg_810cc245e4fe4a5dad686d2b7494b793
