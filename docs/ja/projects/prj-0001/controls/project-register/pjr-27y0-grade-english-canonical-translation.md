@@ -48,6 +48,7 @@ Ornith の grade の判定を英語で出力させると、日本語より判定
 - review plan と exec plan への finding 展開は `message_ja` があれば表示し、なければ `message` を表示する。前回指摘として grade plan へ渡すときは正本の `message` だけを使う。
 - unit test と pipeline fixture に、翻訳件数・順序の不一致、日本語 finding の非翻訳、level 補正、英語正本による severity 引き継ぎ、`gemma26-reporter` の起動順を追加した。
 - 関連する schema、文書メタデータ標準、コマンドリファレンス、routine 運用ガイド、Ollama 設計書を実装へ同期した。
+- 実行の経緯: executor（codex）は `pm-members.yaml` の gemma26-reporter の説明を更新したが、名簿は agent の書き込み禁止対象のため、人が develop へ適用した（fa0c0c6ea）。`tests/src/cli-verb-taxonomy.test.ts` の期待値に `translation-plan` と `localize` が足りず親検証の unit テストが失敗したため、orchestrator（claude）が worktree で期待値を追加した。委譲された検証で block される runner 側の不具合は PJR-979N で直した。
 - 残課題はない。実モデルの品質傾向は、既存の比較記録 [[prj-0001:pjr-vqb5-agent-grade-comparison]] と今後の定期 grade の結果で継続観測する。
 
 ## 5. 関連ドキュメント
