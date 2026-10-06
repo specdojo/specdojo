@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-0ecy-reporter-changed-files-count-mismatch
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-04T20:39:02Z"
   due_on: null
+  completed_at: "2026-10-06T10:43:22Z"
+  conclusion: reporter の changed_files をパスと説明の組にし、runner がパスで突き合わせるようにした。件数・順序のずれで result 作成が失敗しない。orchestrator がテストの fixture と runner 管理パスの除外（exec/ 全体）を補修した
 ---
 
 # PJR-0ECY reporter の変更ファイルの説明の件数がずれると、結果の作成が失敗する
