@@ -29,3 +29,22 @@
     - field: registered
       from: ""
       to: "2026-10-06"
+- v: 1
+  id: reg_6b9ae8e2aab940dd8632af3b11e0481e
+  ts: "2026-10-06T10:34:50Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: open
+  to_status: done
+  reason: orchestrator が利用者の指示で直接修正。PJR-27Y0 の resume で統合を確認
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-06"
+    - field: conclusion
+      from: "-"
+      to: 親 runner が project で同じコマンドを通した executor の not_run を満たされたものとして扱うよう修正した（73de62d3b）
+  previous_event_id: reg_1c55cdb7313d42db96a8a55e132f76bc

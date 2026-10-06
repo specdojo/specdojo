@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-979n-delegated-validation-block
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-06T10:25:34Z"
   due_on: null
+  completed_at: "2026-10-06T10:34:50Z"
+  conclusion: 親 runner が project で同じコマンドを通した executor の not_run を満たされたものとして扱うよう修正した（73de62d3b）
 ---
 
 # PJR-979N executor が親 runner へ委ねた検証を runner が通しても block される
