@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-gbev-exec-reporter-machine-facts
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-04T05:20:41Z"
   due_on: null
+  completed_at: "2026-10-06T10:44:08Z"
+  conclusion: reporter の事実項目（変更パス・outcome・block_reason）を runner が evidence から機械生成するようにした。その後の不具合は PJR-0ECY（件数ずれ）と PJR-979N（委譲した検証の扱い）で修正済み
 ---
 
 # PJR-GBEV exec の reporter の事実項目を evidence から機械生成し、LLM は要約だけに使う

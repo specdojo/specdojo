@@ -87,3 +87,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_235d1902c77e4d33b30c5845cdaccd8e
+- v: 1
+  id: reg_2160b632ae8941e084d314dc36d98970
+  ts: "2026-10-06T10:44:08Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: "review: 後続の修正を含め、PJR-27Y0 の resume で reporter の機械判定が期待どおり動くことを確認"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-06"
+    - field: conclusion
+      from: "-"
+      to: reporter の事実項目（変更パス・outcome・block_reason）を runner が evidence から機械生成するようにした。その後の不具合は PJR-0ECY（件数ずれ）と PJR-979N（委譲した検証の扱い）で修正済み
+  previous_event_id: reg_aba681da766e4f17a92eb1ccb36fcfae
