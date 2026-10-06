@@ -2,7 +2,10 @@ import Ajv2020Module from "ajv/dist/2020.js";
 import { join, relative, sep } from "node:path";
 import { extractJsonText } from "./agent-response.js";
 import type { ExecEvidence } from "./exec-evidence.js";
-import { failedParentValidationReason } from "./exec-parent-validation.js";
+import {
+  PARENT_VALIDATION_PROJECT_REPO,
+  failedParentValidationReason,
+} from "./exec-parent-validation.js";
 import type { TaskMode } from "./exec-types.js";
 import { REVIEW_VERDICTS, describeInvalidReviewVerdict, isReviewVerdict } from "./review-types.js";
 import type { ReviewVerdict } from "./review-types.js";
@@ -145,8 +148,24 @@ export function deriveReporterFacts(evidence: ExecEvidence): ReporterFacts {
       block_reason: validationFailure,
     };
   }
+  // sandbox で実行できない検証を executor が not_run（親 runner へ委譲）と記録し、runner が
+  // 同じコマンドを project で実行して通した場合は満たされたものとして扱う。executor の failed は
+  // runner の結果で打ち消さない。
+  const runnerPassedCommands = new Set(
+    evidence.validations
+      .filter(
+        (validation) =>
+          validation.source === "runner" &&
+          validation.status === "passed" &&
+          (validation.repo === undefined || validation.repo === PARENT_VALIDATION_PROJECT_REPO),
+      )
+      .map((validation) => validation.command.trim()),
+  );
   const executorValidationFailures = evidence.validations.filter(
-    (validation) => validation.source !== "runner" && validation.status !== "passed",
+    (validation) =>
+      validation.source !== "runner" &&
+      validation.status !== "passed" &&
+      !(validation.status === "not_run" && runnerPassedCommands.has(validation.command.trim())),
   );
   if (executorValidationFailures.length > 0) {
     return {
