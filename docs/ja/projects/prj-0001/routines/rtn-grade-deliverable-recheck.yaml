@@ -2,7 +2,7 @@
 id: rtn-grade-deliverable-recheck
 name: 依存先変更・kata更新・未レビューの成果物の定期評価
 description: 毎日1時（Asia/Tokyo）に、依存先が変更された、kataが更新された、scheduleタスクを持たない、または旧rubricで評価された成果物を最大10件評価する。
-enabled: true
+enabled: false
 trigger:
   cron: "0 1 * * *"
   timezone: Asia/Tokyo

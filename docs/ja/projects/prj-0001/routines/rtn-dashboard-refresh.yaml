@@ -4,7 +4,7 @@
 id: rtn-dashboard-refresh
 name: dashboard の毎時更新
 description: 毎時 0 分（Asia/Tokyo）にプロジェクト dashboard を再生成する。grade や register の実行中でも並行して動く。
-enabled: true
+enabled: false
 trigger:
   cron: "0 * * * *"
   timezone: Asia/Tokyo
