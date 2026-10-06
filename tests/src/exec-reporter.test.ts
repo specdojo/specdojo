@@ -283,6 +283,78 @@ describe("reporter structured output", () => {
     });
   });
 
+  it("accepts an executor validation delegated as not_run when the runner passed the same command", () => {
+    const input = evidence();
+    input.validations = [
+      {
+        source: "executor",
+        command: "npm run test:unit",
+        status: "not_run",
+        summary: "delegated to the parent runner",
+      },
+      {
+        id: "test-unit",
+        source: "runner",
+        command: "npm run test:unit",
+        status: "passed",
+        summary: "exit 0",
+      },
+    ];
+    expect(deriveReporterFacts(input)).toMatchObject({ outcome: "complete", block_reason: "" });
+  });
+
+  it("still blocks a delegated not_run validation that the runner did not run", () => {
+    const input = evidence();
+    input.validations = [
+      { source: "executor", command: "npm run lint:md", status: "not_run", summary: "delegated" },
+      {
+        id: "test-unit",
+        source: "runner",
+        command: "npm run test:unit",
+        status: "passed",
+        summary: "exit 0",
+      },
+    ];
+    expect(deriveReporterFacts(input)).toMatchObject({
+      outcome: "blocked",
+      block_reason: "executor validation failed or not run: npm run lint:md",
+    });
+  });
+
+  it("does not let a runner pass override an executor-reported failure of the same command", () => {
+    const input = evidence();
+    input.validations = [
+      { source: "executor", command: "npm run test:unit", status: "failed", summary: "1 failed" },
+      {
+        id: "test-unit",
+        source: "runner",
+        command: "npm run test:unit",
+        status: "passed",
+        summary: "exit 0",
+      },
+    ];
+    expect(deriveReporterFacts(input)).toMatchObject({
+      outcome: "blocked",
+      block_reason: "executor validation failed or not run: npm run test:unit",
+    });
+  });
+
+  it("does not accept a delegated validation passed only in a product repository", () => {
+    const input = evidence();
+    input.validations = [
+      { source: "executor", command: "npm run test:unit", status: "not_run", summary: "delegated" },
+      {
+        id: "test-unit",
+        source: "runner",
+        repo: "app",
+        command: "npm run test:unit",
+        status: "passed",
+        summary: "exit 0",
+      },
+    ];
+    expect(deriveReporterFacts(input).outcome).toBe("blocked");
+  });
+
   it("uses the evidence block reason for a failed protected executor", () => {
     const input = evidence();
     input.stage.status = "failed";
