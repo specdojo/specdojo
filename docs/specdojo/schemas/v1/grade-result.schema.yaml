@@ -116,6 +116,27 @@ properties:
         message:
           type: string
           minLength: 1
+        message_ja:
+          type: string
+          minLength: 1
+  level_corrections:
+    type: array
+    items:
+      type: object
+      additionalProperties: false
+      required: [viewpoint, original_level, corrected_level]
+      properties:
+        viewpoint:
+          type: string
+          pattern: "^vp-[a-z][a-z0-9-]*$"
+        original_level:
+          type: integer
+          minimum: 0
+          maximum: 4
+        corrected_level:
+          type: integer
+          minimum: 0
+          maximum: 4
   done_criteria:
     type: object
 $defs:

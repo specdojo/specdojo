@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { extractJsonText } from "../../src/agent-response.js";
+import { extractJsonArrayText, extractJsonText } from "../../src/agent-response.js";
 
 describe("extractJsonText", () => {
   it("returns the input unchanged when the response is bare JSON", () => {
@@ -49,5 +49,19 @@ describe("extractJsonText", () => {
     const raw = "前置き {not json} 後書き";
 
     expect(() => JSON.parse(extractJsonText(raw))).toThrow();
+  });
+});
+
+describe("extractJsonArrayText", () => {
+  it("extracts a fenced array even when a translated string contains object delimiters", () => {
+    const raw = '```json\n["[T001] `{name}` を指定してください。"]\n```';
+
+    expect(JSON.parse(extractJsonArrayText(raw))).toEqual(["[T001] `{name}` を指定してください。"]);
+  });
+
+  it("skips bracketed prose before a bare JSON array", () => {
+    const raw = '[translation]\n["[T001] テストを追加してください。"]\n以上です。';
+
+    expect(JSON.parse(extractJsonArrayText(raw))).toEqual(["[T001] テストを追加してください。"]);
   });
 });

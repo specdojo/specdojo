@@ -512,6 +512,19 @@ ornith-expert-executor（⑥の構成）に、grade の根拠と finding を英�
 
 ornith-expert-executor を英語で出力する版に置き換えた（コミット 4f658a754）。判定の精度は codex に届かないため、用途は速い一次評価とする。日本語の記録へ翻訳する設計は [[prj-0001:pjr-27y0-grade-english-canonical-translation]] で扱う。
 
+### 1.27. 英語正本と日本語表示の pipeline 化（2026-10-06）
+
+[[prj-0001:pjr-27y0-grade-english-canonical-translation]] で、1.26 の英語判定を定期 pipeline へ組み込んだ。一次評価のモデル比較値は 1.26 の 3 文書×2回（補正後の検証通過 5/6）を引き続き基準とし、今回の実装確認では同じ処理順を pipeline fixture で再現した。
+
+| 段階       | 正本・表示の扱い                                                                |
+| ---------- | ------------------------------------------------------------------------------- |
+| 判定       | executor の英語 `message` を正本として保存し、前回指摘の一致にも使う            |
+| level 補正 | severity 上限を超えた level だけを下方向へ補正し、補正前後を結果へ記録する      |
+| 翻訳       | `gemma26-reporter` が token 付き文字列配列を日本語化し、`message_ja` へ保存する |
+| 失敗時     | 件数・token 順序・JSON が不正なら翻訳全体を捨て、英語正本を表示にも使う         |
+
+unit test では、英語 finding の正本維持と severity 引き継ぎ、日本語 finding を翻訳入力へ含めないこと、翻訳の件数・順序不一致で英語へフォールバックすること、level の下方向補正を確認した。pipeline fixture では、判定の機械変換と正本保存が完了した後にだけ `gemma26-reporter` と表示更新を起動する順序を確認した。翻訳は表示専用であり、1.26 の viewpoint、level、severity、line、score、verdict を変更しない。
+
 ## 2. 背景・文脈
 
 kata 285 件を定期評価するにあたり、ローカルモデルで運用できれば API コストなしで全件を回せる。その可否と、どの agent をどの用途に使うかを判断するために比較した。

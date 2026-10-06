@@ -21,6 +21,29 @@ export function extractJsonText(raw: string): string {
   return unfenced.slice(start, end + 1);
 }
 
+/**
+ * agent の生応答から JSON 配列の本文を取り出す。
+ * 配列内の文字列にオブジェクト記号が含まれていても、配列全体を優先する。
+ */
+export function extractJsonArrayText(raw: string): string {
+  const unfenced = stripCodeFence(raw.trim());
+  for (let start = unfenced.indexOf("["); start >= 0; start = unfenced.indexOf("[", start + 1)) {
+    for (
+      let end = unfenced.lastIndexOf("]");
+      end > start;
+      end = unfenced.lastIndexOf("]", end - 1)
+    ) {
+      const candidate = unfenced.slice(start, end + 1);
+      try {
+        if (Array.isArray(JSON.parse(candidate))) return candidate;
+      } catch {
+        // 別の角括弧または不完全な配列を飛ばし、次の候補を試す。
+      }
+    }
+  }
+  return unfenced;
+}
+
 // 最初のコードフェンスの中身を返す。フェンスが無ければ入力をそのまま返す。
 function stripCodeFence(text: string): string {
   const fenced = /```[a-z]*\r?\n([\s\S]*?)```/i.exec(text);

@@ -253,27 +253,32 @@ specdojo:
 
 Markdown 文書の最新の継続品質評価は、プロジェクトの `<execution_path>/grade/results/<doc-id>.yaml` にサイドカーとして記録します。成果物の Frontmatter と本文には grade や finding を書き込みません。サイドカーは最新状態のスナップショットであり、`specdojo grade apply` は文書 ID ごとの同じファイルを冪等に上書きします。履歴は Job Run と evidence、合意形成は review result が担います。成果物の現在品質を参照するときは、サイドカーの `content_hash` が現在のファイル全体と一致することを確認します。
 
-| 項目             | 意味                                                                         |
-| ---------------- | ---------------------------------------------------------------------------- |
-| `rubric`         | 判定に使った共通 rubric の版                                                 |
-| `target`         | `kata` または `deliverable`                                                  |
-| `verdict`        | `pass` / `needs-work` / `fail`                                               |
-| `score`          | category の重み付き総合点（0-100）                                           |
-| `graded_at/by`   | 評価日時と `pm-members.yaml` の判定主体 nickname                             |
-| `content_hash`   | 成果物ファイル全体の SHA-256                                                 |
-| `categories`     | category 別 score                                                            |
-| `viewpoints`     | viewpoint 別 level / score                                                   |
-| `finding_counts` | `blocker` / `major` / `minor` / `note` の件数                                |
-| `findings`       | `id` / `severity` / `rule` / `line` / `anchor` / `message` の指摘一覧        |
-| `done_criteria`  | 成果物カタログの完了条件の充足数・総数、未充足条件の担当 Role code、詳細参照 |
+| 項目                | 意味                                                                                 |
+| ------------------- | ------------------------------------------------------------------------------------ |
+| `rubric`            | 判定に使った共通 rubric の版                                                         |
+| `target`            | `kata` または `deliverable`                                                          |
+| `verdict`           | `pass` / `needs-work` / `fail`                                                       |
+| `score`             | category の重み付き総合点（0-100）                                                   |
+| `graded_at/by`      | 評価日時と `pm-members.yaml` の判定主体 nickname                                     |
+| `content_hash`      | 成果物ファイル全体の SHA-256                                                         |
+| `categories`        | category 別 score                                                                    |
+| `viewpoints`        | viewpoint 別 level / score                                                           |
+| `finding_counts`    | `blocker` / `major` / `minor` / `note` の件数                                        |
+| `findings`          | `id` / `severity` / `rule` / `line` / `anchor` / `message` / `message_ja` の指摘一覧 |
+| `level_corrections` | severity 上限に合わせて下方向へ補正した viewpoint と補正前後の level                 |
+| `done_criteria`     | 成果物カタログの完了条件の充足数・総数、未充足条件の担当 Role code、詳細参照         |
 
 `target: deliverable` で成果物カタログに `done_criteria` がある場合、サイドカーに要約を記録します。条件文、条件ごとの判定、不足理由は `<execution_path>/grade/criteria/` 配下の成果物ごとの YAML に記録し、`detail_ref` から参照します。同じ成果物の詳細ファイルは再評価ごとに上書きします。`satisfied` / `total` と総合 `score` / `verdict` は独立した評価軸であり、一方の値から他方を補完・上書きしません。
 
 未充足条件がある場合だけ `done_criteria.unsatisfied` を置き、条件 ID をキー、その条件の `roles` を値として記録します。これにより詳細を grade result へ複製せず、次の確認担当を特定できます。詳細 YAML は `grade-done-criteria.schema.yaml` に従い、成果物と同じ `content_hash` を持ちます。
 
-`findings[].line` は Frontmatter を除く本文での指摘行（1始まり）、`anchor` は評価時点の該当行の引用です。本文編集で行番号がずれた場合は `anchor` を照合に使います。`grade validate` はサイドカーの文書 ID・対象・件数・内容ハッシュを成果物と突き合わせます。
+`findings[].line` は Frontmatter を除く本文での指摘行（1始まり）、`anchor` は評価時点の該当行の引用です。`message` は executor が出力した原文を正本として保存し、前回 finding の一致にも使います。`message_ja` は表示専用で、判定、score、severity、引き継ぎに使いません。旧サイドカーのように `message_ja` がない場合は `message` を表示します。本文編集で行番号がずれた場合は `anchor` を照合に使います。`grade validate` はサイドカーの文書 ID・対象・件数・内容ハッシュを成果物と突き合わせます。
 
-再評価で同じ message の finding が残る場合は未解消として扱い、severity を前回より引き下げません。前回の問題が解消され、別の軽微な問題だけが残る場合は、新しい finding の message に severity を引き下げる根拠を含めます。
+再評価で正本の `message` が同じ finding が残る場合は未解消として扱い、severity を前回より引き下げません。`message_ja` の一致は使いません。日本語の `message` だけを持つ旧サイドカーはその日本語を互換用の正本として扱うため、英語へ翻訳した別文とは一致しません。前回の問題が解消され、別の軽微な問題だけが残る場合は、新しい finding の `message` に severity を引き下げる根拠を含めます。
+
+executor は新しい判定根拠と finding を英語で出力します。機械変換後に `gemma26-reporter` が英語 finding だけを日本語へ翻訳し、`message_ja` に保存します。翻訳は token 付き文字列配列で受け渡し、件数または token の順序が一致しない場合は配列全体を捨て、`message_ja` に正本の `message` を保存します。executor が日本語で出力した finding は翻訳対象から外し、その原文を `message` と `message_ja` の両方に保存します。
+
+機械変換では、finding の severity が許す level 上限を超えた viewpoint だけを上限まで下げます。level を上げる補正や、viewpoint・severity・line の変更は行いません。補正した場合は `level_corrections` に viewpoint、`original_level`、`corrected_level` を保存します。
 
 サイドカーは `grade-result.schema.yaml` に従います。現在の評価対象は Markdown 文書であり、YAML / JSON を対象へ指定した場合はエラーとします。
 

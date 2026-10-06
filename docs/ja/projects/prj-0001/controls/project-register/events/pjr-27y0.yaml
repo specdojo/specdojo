@@ -218,3 +218,32 @@
       from: "-"
       to: "agent exited with non-zero code: executor validation failed or not run: npm run lint:ts, npm run lint:fm, npm run lint:md, npm run test:integration, npm run validate:schema, npm run typecheck, npm run…"
   previous_event_id: reg_19bf44c05c3d4e9190a97aab2ba6e4bf
+- v: 1
+  id: reg_0ead12a4e99a42b196f051c4f32f93aa
+  ts: "2026-10-06T10:28:12Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: executor validation failed or not run: npm run lint:ts, npm run lint:fm, npm run lint:md, npm run test:integration, npm run validate:schema, npm run typecheck, npm run…"
+      to: "-"
+  previous_event_id: reg_8336f9fcde774f969116437dcadb2ada
+- v: 1
+  id: reg_56e4f09f6b964c60933d37a026add222
+  ts: "2026-10-06T10:33:08Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_0ead12a4e99a42b196f051c4f32f93aa

@@ -1,0 +1,16 @@
+実装を完了しました。
+
+- 英語の `message` を正本、`message_ja` を表示用として保存
+- 前回 finding を英語正本で照合
+- gemma26 翻訳と件数・token 順序検証、失敗時の英語フォールバックを追加
+- severity に応じた level 補正と `level_corrections` 記録を追加
+- pipeline、schema、表示処理、文書、個票、回帰テストを更新
+- result ファイルは executor 指示どおり未編集
+
+親 runner 担当の型検査・テスト・schema 検証は実行していません。
+
+<specdojo_executor_evidence>
+{"final_message":"英語判定を正本として保存し、gemma26による検証付き日本語表示翻訳を行うgrade pipelineを実装した","validations":[{"command":"npx prettier --write <変更したMarkdown・TypeScript・YAMLファイル>","status":"passed","summary":"変更ファイルを整形"},{"command":"npx markdownlint .opencode/agents/gemma26-reporter.md docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md docs/ja/projects/prj-0001/controls/project-register/pjr-27y0-grade-english-canonical-translation.md docs/ja/projects/prj-0001/controls/project-register/pjr-vqb5-agent-grade-comparison.md docs/ja/specdojo/guides/routine-operation-guide.md docs/ja/specdojo/references/command-reference.md docs/ja/specdojo/standards/document-metadata-standard.md","status":"passed","summary":"変更Markdownの静的検査に成功"},{"command":"bash -n tools/grade/run-per-document.sh","status":"passed","summary":"grade pipeline shellの構文に問題なし"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿の生成に成功"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"既存の欠落文書警告のみでcatalog検証成功"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"2403件の文書索引を生成"},{"command":"node --import tsx -e \"Promise.all([import('./src/grade.ts'),import('./src/grade-result.ts'),import('./src/exec-plans.ts'),import('./src/review-grade.ts')])\"","status":"passed","summary":"変更モジュールの読み込みに成功"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>
+
+agent-config-write: protected configuration changes detected; paths=.opencode/agents/gemma26-reporter.md; agent must record the required change in the result handoff for human or orchestrator application

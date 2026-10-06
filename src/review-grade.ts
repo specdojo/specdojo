@@ -3,7 +3,12 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { gitEnvironment } from "./git-environment.js";
 import type { GradeResult } from "./grade-result.js";
-import { gradeContentHash, gradeResultPathForDocument, parseGradeResult } from "./grade-result.js";
+import {
+  gradeContentHash,
+  gradeFindingDisplayMessage,
+  gradeResultPathForDocument,
+  parseGradeResult,
+} from "./grade-result.js";
 
 // review フェーズの前段で runner が行う grade の実行判断と、その結果を review plan へ提示する
 // 文面を扱う（PJR-KCMH）。評価は grade が 1 回だけ行い、review は評価結果を事実として受け取る
@@ -284,7 +289,7 @@ function gradeResultLines(result: GradeResult): string[] {
   } else {
     for (const finding of result.findings) {
       lines.push(
-        `- \`${finding.id}\` [${finding.severity}/\`${finding.rule}\`; line=${finding.line}]: ${inlineText(finding.message)}`,
+        `- \`${finding.id}\` [${finding.severity}/\`${finding.rule}\`; line=${finding.line}]: ${inlineText(gradeFindingDisplayMessage(finding))}`,
       );
     }
   }

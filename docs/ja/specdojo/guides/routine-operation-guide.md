@@ -111,7 +111,7 @@ Job Definition を持たないため、実行記録は `generated/routine-runs.j
 
 ### 1.2. grade の単段評価
 
-Kata と成果物の定期評価は、executor の単段で実行します。GradeSubmission は LLM の reporter を通さず、`grade apply` が executor の marker から機械的に生成します。`job-grade-kata` と `job-grade-deliverable` は `tools/grade/run-per-document.sh --stages 1` を起動し、条件付きの後続段は持ちません。変更済み・未評価・段未完了・旧 rubric を横断的に再評価する `rtn-grade-recheck` は `kind: all`、`changed_only: true`、`ungraded: true`、`incomplete: true`、`rubric_outdated: true`、`limit: 15` を入力します。
+Kata と成果物の定期評価は、executor の単段で実行します。GradeSubmission は LLM の reporter を通さず、`grade apply` が executor の英語 marker から機械的に生成します。正本の grade result を保存した後、英語 finding が1件以上ある場合だけ `gemma26-reporter` が日本語へ翻訳し、表示用の `message_ja` を更新します。翻訳配列の件数・token 順序が一致しない場合は正本の英語を表示に使い、判定値は変えません。`job-grade-kata` と `job-grade-deliverable` は `tools/grade/run-per-document.sh --stages 1` を起動し、条件付きの後続段は持ちません。変更済み・未評価・段未完了・旧 rubric を横断的に再評価する `rtn-grade-recheck` は `kind: all`、`changed_only: true`、`ungraded: true`、`incomplete: true`、`rubric_outdated: true`、`limit: 15` を入力します。
 
 成果物は `rtn-grade-deliverable-recheck` が `job-grade-deliverable` を起動します。Job は同じ script を `--stages 1 --target deliverable` で実行し、成果物カタログから変更済み・未評価・段未完了・旧 rubric の Markdown 成果物だけを最大10件選びます。評価結果は成果物の最新 grade と成果物ごとの `done_criteria` 詳細へ上書きされるため、実行ごとの review result は増やしません。
 
@@ -132,9 +132,10 @@ npx tsx src/specdojo.ts grade list --target deliverable --project prj-0001 --rub
 
 両 routine では、Job の `task.precondition` が `grade list` を使って script の selection-v5 と同じ変更済み・未評価・再試行可能な段未完了・旧 rubric の和集合、辞書順、対象種別、件数上限を先に評価します。連続失敗上限に達した文書は `grade state --exhausted` で同じ和集合に加えてから件数上限を適用し、処理対象からは外して report-only 対象にします。処理対象も report-only 対象も0件なら Job Run、plan、result、evidence を作らず、command と analysis reporter も起動しません。routine はこの結果を `skipped` として受け取り、`routine-state.json` の `last_run` / `last_result` と、cron の場合は `last_scheduled_for` を更新します。
 
-| 段  | executor / reporter                 | 対象と役割                                 |
-| --- | ----------------------------------- | ------------------------------------------ |
-| 1   | `codex-expert-executor` / `machine` | 対象文書をリファレンスなしで評価し確定する |
+| 段     | agent                               | 対象と役割                                                   |
+| ------ | ----------------------------------- | ------------------------------------------------------------ |
+| 判定   | `codex-expert-executor` / `machine` | 対象文書を英語で評価し、正本の判定を確定する                 |
+| 表示化 | `gemma26-reporter`                  | finding の英語原文だけを日本語へ翻訳し、表示文として付加する |
 
 Job runnerは、この入口をmaterialize済みの引数で1回起動し、コマンド、終了コード、stdout/stderrをevidenceへ記録します。コマンドが成功した場合だけanalysis reporterが、未完了の段、失敗の切り分け、verdict と score の偏りを判断します。executor、reporter（既定は機械変換の `machine`）、対象種別、件数上限はscriptの引数またはJobの`inputs`から解決します。
 

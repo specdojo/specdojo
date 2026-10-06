@@ -15,7 +15,16 @@ export type StoredGradeFinding = {
   rule: string;
   line: number;
   anchor: string;
+  /** Canonical executor wording used for carry-over matching. */
   message: string;
+  /** Japanese display wording. Omitted by legacy results. */
+  message_ja?: string;
+};
+
+export type StoredGradeLevelCorrection = {
+  viewpoint: string;
+  original_level: number;
+  corrected_level: number;
 };
 
 export type GradeResult = {
@@ -36,6 +45,7 @@ export type GradeResult = {
   viewpoints: Record<string, { level: number; score: number }>;
   finding_counts: Record<StoredGradeSeverity, number>;
   findings: StoredGradeFinding[];
+  level_corrections?: StoredGradeLevelCorrection[];
   done_criteria?: Record<string, unknown>;
 };
 
@@ -173,6 +183,94 @@ export function writeGradeResult(path: string, result: GradeResult, dryRun = fal
 
 export function gradeFindingCount(result: GradeResult): number {
   return SEVERITIES.reduce((sum, severity) => sum + result.finding_counts[severity], 0);
+}
+
+export function gradeFindingDisplayMessage(finding: StoredGradeFinding): string {
+  return finding.message_ja?.trim() || finding.message;
+}
+
+function isJapaneseFindingMessage(message: string): boolean {
+  // 英語の finding は対象文書の日本語を inline code で引用できるため、その引用は
+  // 言語判定から外す。引用以外に仮名がある文、または漢字だけの短文を日本語と扱う。
+  const prose = message.replace(/`[^`]*`/gu, "");
+  if (/[\p{Script=Hiragana}\p{Script=Katakana}]/u.test(prose)) return true;
+  return /\p{Script=Han}/u.test(prose) && !/[A-Za-z]/u.test(prose);
+}
+
+function translationToken(index: number): string {
+  return `[T${String(index + 1).padStart(3, "0")}]`;
+}
+
+export function gradeFindingTranslationInput(result: GradeResult): string[] {
+  return result.findings
+    .filter((finding) => !isJapaneseFindingMessage(finding.message))
+    .map((finding, index) => `${translationToken(index)} ${finding.message}`);
+}
+
+export type GradeFindingTranslationResult = {
+  result: GradeResult;
+  accepted: boolean;
+  reason?: string;
+};
+
+export function applyGradeFindingTranslations(
+  result: GradeResult,
+  translations: unknown,
+): GradeFindingTranslationResult {
+  const fallback: GradeResult = {
+    ...result,
+    findings: result.findings.map((finding) => ({ ...finding, message_ja: finding.message })),
+  };
+  const translatable = result.findings
+    .map((finding, index) => ({ finding, index }))
+    .filter(({ finding }) => !isJapaneseFindingMessage(finding.message));
+  if (!Array.isArray(translations)) {
+    return {
+      result: fallback,
+      accepted: false,
+      reason: "translation output must be a string array",
+    };
+  }
+  if (translations.length !== translatable.length) {
+    return {
+      result: fallback,
+      accepted: false,
+      reason: `translation count mismatch: expected=${translatable.length}, actual=${translations.length}`,
+    };
+  }
+  const translatedMessages: string[] = [];
+  for (const [index, value] of translations.entries()) {
+    const token = translationToken(index);
+    if (
+      typeof value !== "string" ||
+      !value.startsWith(`${token} `) ||
+      !value.slice(token.length).trim()
+    ) {
+      return {
+        result: fallback,
+        accepted: false,
+        reason: `translation order mismatch at index ${index}: expected token ${token}`,
+      };
+    }
+    translatedMessages.push(value.slice(token.length).trim());
+  }
+
+  const messageByFindingIndex = new Map(
+    translatable.map(({ index }, translationIndex) => [
+      index,
+      translatedMessages[translationIndex],
+    ]),
+  );
+  return {
+    accepted: true,
+    result: {
+      ...result,
+      findings: result.findings.map((finding, index) => ({
+        ...finding,
+        message_ja: messageByFindingIndex.get(index) ?? finding.message,
+      })),
+    },
+  };
 }
 
 export function validateGradeResult(
