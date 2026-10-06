@@ -2,16 +2,17 @@
 specdojo:
   id: prj-0001:pjr-mgnw-omlx-app-gui-setup
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-03T01:24:08Z"
-  block_reason: 個票の完了条件が commit されないまま exec run が始まったため、agent の起動前に orchestrator が止めた。直した個票で最初から実行し直す
+  completed_at: "2026-10-06T10:44:17Z"
+  conclusion: tsd-omlx と tsd-omlx-opencode を macOS アプリと Admin UI の操作を本筋とする手順へ書き直した。残っていた _TODO_（メニューバーの表示名）は利用者が実機で設定しながら解消した（40eb6b03b）
 ---
 
 # PJR-MGNW oMLX の手順をアプリ版のメニューバーと Admin UI の操作に直す
