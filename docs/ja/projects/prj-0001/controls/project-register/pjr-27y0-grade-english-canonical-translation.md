@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-27y0-grade-english-canonical-translation
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-04T13:13:47Z"
   due_on: null
+  completed_at: "2026-10-06T22:13:45Z"
+  conclusion: grade の英語の判定を正本（message）、日本語の翻訳を表示用（message_ja）として保存する仕組みと、level の下方向の補正を実装した。翻訳の方式は PJR-JWXK・PJR-WAFC で改良した
 ---
 
 # PJR-27Y0 grade の英語の判定を正本として保存し、gemma26 で日本語へ翻訳する

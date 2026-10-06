@@ -247,3 +247,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_0ead12a4e99a42b196f051c4f32f93aa
+- v: 1
+  id: reg_c2c596ab07b644bca70a6188db322327
+  ts: "2026-10-06T22:13:45Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: "review: 差分と完了条件を確認し、実モデル（codex＋gemma26）で判定・保存・前回の指摘の引き継ぎを確認"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-07"
+    - field: conclusion
+      from: "-"
+      to: grade の英語の判定を正本（message）、日本語の翻訳を表示用（message_ja）として保存する仕組みと、level の下方向の補正を実装した。翻訳の方式は PJR-JWXK・PJR-WAFC で改良した
+  previous_event_id: reg_56e4f09f6b964c60933d37a026add222
