@@ -29,3 +29,22 @@
     - field: registered
       from: ""
       to: "2026-10-06"
+- v: 1
+  id: reg_a55dba96a82e4ec98edd4eef06ee4648
+  ts: "2026-10-06T22:04:38Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: open
+  to_status: done
+  reason: 利用者の判断で計測を打ち切り、結果を PJR-VQB5 に記録した
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-07"
+    - field: conclusion
+      from: "-"
+      to: Qwen3.6 は grade の判定に使わない。thinking ON は判定が甘く、OFF は Ornith と同程度の精度で約2倍遅く、oMLX の memory guard に拒否されやすい。member は disabled にした
+  previous_event_id: reg_9f9e8ebf124b49579c4e14e3f1c3ee4f

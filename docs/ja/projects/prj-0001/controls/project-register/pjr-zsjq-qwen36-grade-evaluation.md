@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-zsjq-qwen36-grade-evaluation
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-06T12:58:02Z"
   due_on: null
+  completed_at: "2026-10-06T22:04:38Z"
+  conclusion: Qwen3.6 は grade の判定に使わない。thinking ON は判定が甘く、OFF は Ornith と同程度の精度で約2倍遅く、oMLX の memory guard に拒否されやすい。member は disabled にした
 ---
 
 # PJR-ZSJQ oMLX の Qwen3.6 を grade の executor として評価する
