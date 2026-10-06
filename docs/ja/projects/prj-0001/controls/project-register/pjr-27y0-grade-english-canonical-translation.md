@@ -32,19 +32,19 @@ Ornith の grade の判定を英語で出力させると、日本語より判定
 
 ## 3. 作業内容
 
-| No  | 作業                                                     | 担当 | 状態 | メモ                                                               |
-| --- | -------------------------------------------------------- | ---- | ---- | ------------------------------------------------------------------ |
-| 1   | サイドカーの保存形式と、英語での引き継ぎの設計           | DEV  | done | `message` を正本、`message_ja` を表示用とし、旧形式も受理する      |
-| 2   | 翻訳の段階の実装（件数と順序の検証、失敗時は英語のまま） | DEV  | done | token 付き配列を `gemma26-reporter` へ渡し、全体単位で採否を決める |
-| 3   | level の上限の自動補正                                   | DEV  | done | 下方向だけ補正し、`level_corrections` に補正前後を保存する         |
-| 4   | 実際の grade で、Ornith（英語）＋翻訳の一次評価を試す    | DEV  | done | pipeline fixture で判定・翻訳・保存順を再現し、回帰テスト化した    |
+| No  | 作業                                                     | 担当 | 状態 | メモ                                                            |
+| --- | -------------------------------------------------------- | ---- | ---- | --------------------------------------------------------------- |
+| 1   | サイドカーの保存形式と、英語での引き継ぎの設計           | DEV  | done | `message` を正本、`message_ja` を表示用とし、旧形式も受理する   |
+| 2   | 翻訳の段階の実装（件数と順序の検証、失敗時は英語のまま） | DEV  | done | 初版は token 付き配列を渡した。後続の PJR-JWXK で件別検証へ更新 |
+| 3   | level の上限の自動補正                                   | DEV  | done | 下方向だけ補正し、`level_corrections` に補正前後を保存する      |
+| 4   | 実際の grade で、Ornith（英語）＋翻訳の一次評価を試す    | DEV  | done | pipeline fixture で判定・翻訳・保存順を再現し、回帰テスト化した |
 
 ## 4. 対応結果
 
 - grade executor plan は新しい判定根拠と finding の `message` を英語で出力する契約にした。日本語だけの旧 finding は互換用の正本として原文の再掲を許す。
 - grade result の `findings[].message` を正本、`findings[].message_ja` を表示用とした。前回指摘の severity 維持は正本の完全一致だけで行い、旧サイドカーは従来の `message` を正本としてそのまま読める。
 - `grade apply` の機械変換で severity 上限を超える level を下方向へ補正し、補正した viewpoint と補正前後を `level_corrections` に保存する。viewpoint、severity、line、score、verdict は翻訳段階で変更しない。
-- `grade translation-plan` と `grade localize` を追加した。`tools/grade/run-per-document.sh` は正本保存後、既定の `gemma26-reporter` へ token 付き文字列配列を渡す。件数、token 順序、JSON のいずれかが不正なら翻訳全体を捨て、正本を表示用にも保存する。executor が日本語で出力した finding は翻訳入力から除外する。
+- `grade translation-plan` と `grade localize` を追加した。初版は token 付き配列を全体単位で検証したが、後続の [[prj-0001:pjr-jwxk-grade-translation-code-tokens]] で英語文だけの配列、件別検証、不合格項目だけの単件再試行へ更新した。executor が日本語で出力した finding は引き続き翻訳入力から除外する。
 - review plan と exec plan への finding 展開は `message_ja` があれば表示し、なければ `message` を表示する。前回指摘として grade plan へ渡すときは正本の `message` だけを使う。
 - unit test と pipeline fixture に、翻訳件数・順序の不一致、日本語 finding の非翻訳、level 補正、英語正本による severity 引き継ぎ、`gemma26-reporter` の起動順を追加した。
 - 関連する schema、文書メタデータ標準、コマンドリファレンス、routine 運用ガイド、Ollama 設計書を実装へ同期した。

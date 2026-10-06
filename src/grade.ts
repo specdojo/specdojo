@@ -3463,6 +3463,14 @@ function requirePositiveInteger(value: string): number {
   return parsed;
 }
 
+function requireNonNegativeInteger(value: string): number {
+  const parsed = Number(value);
+  if (!Number.isSafeInteger(parsed) || parsed < 0) {
+    throw new Error("value must be a non-negative integer");
+  }
+  return parsed;
+}
+
 function requirePipelineStatus(value: string): "passed" | "failed" | "complete" {
   if (value !== "passed" && value !== "failed" && value !== "complete") {
     throw new Error("--status must be passed, failed, or complete");
@@ -3475,12 +3483,15 @@ function commandError(error: unknown): void {
   process.exitCode = 1;
 }
 
-export function renderGradeFindingTranslationPlan(result: GradeResult): string {
-  const messages = gradeFindingTranslationInput(result);
+export function renderGradeFindingTranslationPlan(
+  result: GradeResult,
+  translationIndex?: number,
+): string {
+  const messages = gradeFindingTranslationInput(result, translationIndex);
   return [
     "# Grade finding translation",
     "",
-    "次の JSON 文字列配列に含まれる英語の finding だけを、簡潔で自然な日本語へ翻訳してください。各要素の先頭にある `[Tnnn]` token は変更せず、入力と同じ件数・順序の JSON 文字列配列だけを返してください。Markdown fence、説明、判定の変更は不要です。",
+    "次の JSON 文字列配列に含まれる英語の finding だけを、簡潔で自然な日本語へ翻訳してください。入力と同じ件数・同じ順序の、訳文だけの JSON 文字列配列を返してください。元の文にあるインラインコード（バッククォートで囲んだ部分）は一字一句変えずに残してください。Markdown fence、説明、番号、token、判定の変更は不要です。",
     "",
     "```json",
     JSON.stringify(messages, null, 2),
@@ -3822,6 +3833,11 @@ export function registerGradeCommand(program: Command): void {
       .description("Create a Japanese translation request for the latest canonical findings"),
   )
     .requiredOption("--out <path>", "Write the translation plan to this repository path")
+    .option(
+      "--translation-index <index>",
+      "Translate only this zero-based index from the translatable findings",
+      requireNonNegativeInteger,
+    )
     .action((options) => {
       try {
         const target = requireTarget(options.target);
@@ -3855,9 +3871,14 @@ export function registerGradeCommand(program: Command): void {
         }
         const output = resolveSafeRepositoryPath(options.out, "--out");
         mkdirSync(dirname(output), { recursive: true });
-        writeFileSync(output, renderGradeFindingTranslationPlan(result), "utf8");
+        const messages = gradeFindingTranslationInput(result, options.translationIndex);
+        writeFileSync(
+          output,
+          renderGradeFindingTranslationPlan(result, options.translationIndex),
+          "utf8",
+        );
         process.stdout.write(
-          `written: ${repoRelativePath(output)}\nTranslations: ${gradeFindingTranslationInput(result).length}\n`,
+          `written: ${repoRelativePath(output)}\nTranslations: ${messages.length}\n`,
         );
       } catch (error) {
         commandError(error);
@@ -3870,6 +3891,15 @@ export function registerGradeCommand(program: Command): void {
       .description("Attach Japanese display messages to the latest canonical grade findings"),
   )
     .requiredOption("--from <path>", "JSON string array returned by the translation agent")
+    .option(
+      "--translation-index <index>",
+      "Apply a retry for this zero-based index from the translatable findings",
+      requireNonNegativeInteger,
+    )
+    .requiredOption(
+      "--rejections-out <path>",
+      "Write machine-readable rejected translation details as JSON",
+    )
     .action((options) => {
       try {
         const target = requireTarget(options.target);
@@ -3912,15 +3942,26 @@ export function registerGradeCommand(program: Command): void {
         } catch (error) {
           translations = undefined;
           process.stderr.write(
-            `warning: discarded grade finding translations: ${error instanceof Error ? error.message : String(error)}\n`,
+            `warning: could not parse grade finding translations: ${error instanceof Error ? error.message : String(error)}\n`,
           );
         }
-        const localized = applyGradeFindingTranslations(result, translations);
+        const localized = applyGradeFindingTranslations(
+          result,
+          translations,
+          options.translationIndex,
+        );
         if (!localized.accepted) {
           process.stderr.write(
-            `warning: discarded grade finding translations: ${localized.reason ?? "invalid output"}\n`,
+            `warning: rejected grade finding translations: ${localized.reason ?? "invalid output"}\n`,
           );
         }
+        const rejectionsPath = resolveSafeRepositoryPath(options.rejectionsOut, "--rejections-out");
+        mkdirSync(dirname(rejectionsPath), { recursive: true });
+        writeFileSync(
+          rejectionsPath,
+          `${JSON.stringify({ version: 1, rejections: localized.rejections }, null, 2)}\n`,
+          "utf8",
+        );
         const changed = writeGradeResult(resultPath, localized.result);
         process.stdout.write(
           `${changed ? "updated" : "unchanged"}: ${repoRelativePath(resultPath)}\n`,

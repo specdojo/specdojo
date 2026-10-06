@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: high
   owner: DEV
   registered_at: "2026-10-06T12:06:51Z"
@@ -39,14 +39,18 @@ token はコードの側で管理し、モデルには英語の文だけの配�
 
 | No  | 作業                                                                        | 担当         | 状態 | メモ                                        |
 | --- | --------------------------------------------------------------------------- | ------------ | ---- | ------------------------------------------- |
-| 1   | 翻訳の入出力から token を外し、件ごとの点検を実装する                       | DEV          | open | `grade translation-plan` / `grade localize` |
-| 2   | 点検に落ちた件だけの 1 件ずつの訳し直しを script に加える                   | DEV          | open | 訳し直しは 1 件につき 1 回まで              |
-| 3   | unit test・pipeline fixture・文書を更新する                                 | DEV          | open | -                                           |
+| 1   | 翻訳の入出力から token を外し、件ごとの点検を実装する                       | DEV          | done | `grade translation-plan` / `grade localize` |
+| 2   | 点検に落ちた件だけの 1 件ずつの訳し直しを script に加える                   | DEV          | done | 訳し直しは 1 件につき 1 回まで              |
+| 3   | unit test・pipeline fixture・文書を更新する                                 | DEV          | done | 件別採否、単件再試行、英語 fallback を検証  |
 | 4   | 統合後、`pm-risk-register-rulebook.md` の翻訳を実モデルでやり直して確かめる | orchestrator | open | 判定はやり直さない                          |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `grade translation-plan` の入力を token のない英語文の配列へ変更し、同数・同順の訳文とインラインコードの保持を指示するようにした。
+- `grade localize` は件数不一致を全件不合格とし、件数一致時は空文字、仮名、インラインコードを項目ごとに検証する。合格項目だけを採用し、不合格の `translation_index`、finding ID、理由を JSON へ出力する。
+- `tools/grade/run-per-document.sh` は不合格 index だけを1件ずつ翻訳 agent へ再送し、各1回の再試行後も不合格なら英語正本を `message_ja` に残す。
+- unit test と pipeline fixture へ、件数不一致、仮名・インラインコードの欠落、入れ替え、部分採用、単件再試行の成功・失敗を追加した。運用ガイド、コマンドリファレンス、メタデータ標準、Ollama 設計書、関連する比較記録を新方式へ同期した。
+- 残課題は、orchestrator が実モデルで `pm-risk-register-rulebook.md` の表示翻訳を再確認する作業（No. 4）のみであり、実装上の残課題はない。
 
 ## 5. 関連ドキュメント
 
