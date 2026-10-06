@@ -551,6 +551,12 @@ trc の本文にも表の途中の空行があるが、どの agent も指摘し
 
 結論として、Qwen3.6 は grade の判定に使わない。Ornith より遅く（約2倍）、精度は同程度で、oMLX のメモリの保護にも拒否されやすい。`qwen36-expert-executor` は名簿で `disabled: true` にし、agent の定義は再現用に残した。計測の記録は `logs/agent-compare-20261003/`（git 管理外）の `runs-qwen36*` にある。
 
+### 1.29. ornith-expert-executor の無効化（2026-10-07）
+
+「oMLX の Qwen3.6 35B-A3B（2026-10-06〜07）」の finding の比較で、Ornith（英語）は実在の欠陥を当てず、一般的な改善提案が多く、Frontmatter の推奨表の `type: project` を rulebook 自身の type と取り違える誤指摘を2文書で繰り返した。score もほぼ 80〜92 に収まり、文書の良し悪しを区別できていない。「ornith の英語での判定（2026-10-04）」で決めた「速い一次評価」の用途も、問題のある文書を拾えなければ選別に使えない。
+
+利用者の判断で、`ornith-expert-executor` を名簿で `disabled: true` にし、grade には使わないことにした。比較は2文書に限られるため、傾向としての判断である。`ornith-executor` と `ornith-reporter` は grade で評価していないため対象外とした。定期の grade は agy が判定している。
+
 ## 2. 背景・文脈
 
 kata 285 件を定期評価するにあたり、ローカルモデルで運用できれば API コストなしで全件を回せる。その可否と、どの agent をどの用途に使うかを判断するために比較した。
