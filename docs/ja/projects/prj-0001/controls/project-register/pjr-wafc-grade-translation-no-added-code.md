@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-wafc-grade-translation-no-added-code
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-06T12:29:04Z"
   due_on: null
+  completed_at: "2026-10-06T22:14:02Z"
+  conclusion: 翻訳の指示で新たなバッククォートを禁じ、訳文のインラインコードが元の文と一致することを点検に加えた。gemma26-reporter では指示が守られないため、翻訳専用の agent への切り替えを後続の todo で扱う
 ---
 
 # PJR-WAFC grade の翻訳で英語の語句をバッククォートで残させない
