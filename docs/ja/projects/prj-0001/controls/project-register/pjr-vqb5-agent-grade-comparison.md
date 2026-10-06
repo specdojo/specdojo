@@ -526,6 +526,31 @@ ornith-expert-executor を英語で出力する版に置き換えた（コミッ
 
 unit test では、英語 finding の正本維持と severity 引き継ぎ、日本語 finding を翻訳入力へ含めないこと、翻訳の件数不一致、仮名の欠落、インラインコードの欠落・追加を検出して英語へフォールバックすること、level の下方向補正を確認した。pipeline fixture では、判定の機械変換と正本保存が完了した後にだけ `gemma26-reporter` と表示更新を起動する順序に加え、不合格項目だけを単件で1回再翻訳することを確認した。翻訳は表示専用であり、1.26 の viewpoint、level、severity、line、score、verdict を変更しない。
 
+### 1.28. oMLX の Qwen3.6 35B-A3B（2026-10-06〜07）
+
+[[prj-0001:pjr-zsjq-qwen36-grade-evaluation]] で、oMLX に導入した Qwen3.6 35B-A3B（4bit）を、「ornith の英語での判定（2026-10-04）」と同じ plan と方法（本文埋め込み、3文書×2回、機械変換）で計測した。agent は `qwen36-expert-executor`（`ornith-expert-executor` と同じ規則・判定例・英語出力の指示）とした。
+
+| 条件                                                                            | 機械変換の通過 | 判定                                        | 英語での出力                               |  平均時間 |
+| ------------------------------------------------------------------------------- | -------------: | ------------------------------------------- | ------------------------------------------ | --------: |
+| thinking ON（Qwen の推奨値: temperature 0.6、top_p 0.95）                       |            5/6 | 甘い。6回中4回が全観点 level 4（finding 0） | 守られた                                   |    172 秒 |
+| thinking OFF（Qwen の推奨値: temperature 0.7、top_p 0.8、presence_penalty 1.5） |            2/6 | 厳しい（level 3 が中心）                    | 崩れた（1回は finding 46件中24件が日本語） | 約 130 秒 |
+| thinking OFF（Ornith と同じ値: temperature 0.3、top_p 0.8、presence_penalty 0） |            2/3 | Ornith に近い（major あり）                 | ほぼ守られた（日本語は1件）                |    107 秒 |
+
+- thinking ON は書式を守るが判定が甘い。サンプリングで変わる性質ではないと判断した。
+- thinking OFF で presence_penalty 1.5 にすると、`- FINDING` の箇条書き化、`line=57-64` のような範囲指定、日本語への切り替わりが出た。同じ印を23観点ぶん繰り返す grade の出力と相性が悪い。presence_penalty 0 にすると、英語での出力と書式がほぼ守られた。
+- oMLX の prefill のメモリの保護（memory guard）に、計測の途中で何度も拒否された。拒否時の見積もりは「現在 19.5〜20.5 GB ＋ KV+SDPA 27〜32 GB」で、上限（dynamic ceiling）は 41.8〜44.7 GB の間で変動した。oMLX を再起動しても、数回で再び拒否された。Ornith の計測では起きていない。Qwen3.6 の出力の上限（32768）が Ornith（8192）より大きいことが関係している可能性があるが、確かめていない。Ornith と同じ値の条件は、このため3回で打ち切った。
+- 同じ plan での finding の内容を、trc-requirements-to-tests と imp-business で比べた（Qwen3.6 は Ornith と同じ値の条件）。
+
+| agent          | trc の finding | imp の finding   | 内容                                                                                                                                                                                |
+| -------------- | -------------- | ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| agy            | 2（major 1）   | 2                | 具体的な欠陥を当てた。imp の「表の途中の空行で表が崩れる」は本文で確認した実在の欠陥                                                                                                |
+| Ornith（英語） | 9〜11          | 9〜12（major 1） | 一般的な改善提案が多い。Frontmatter の推奨表の `type: project`（成果物の値）を rulebook 自身の `type: rulebook` と取り違え、両文書で矛盾として指摘した（imp では major）            |
+| Qwen3.6        | 17（major 2）  | 7                | 一般的な改善提案が多い。trc の「`一部充足` の判定基準がない」は妥当。imp の2件は「対象外なので finding は不要」と自ら書いた文を minor の finding にしており、指摘として成り立たない |
+
+trc の本文にも表の途中の空行があるが、どの agent も指摘しなかった。Ornith と Qwen3.6 の finding の精度は同程度で、どちらも agy に大きく劣る。
+
+結論として、Qwen3.6 は grade の判定に使わない。Ornith より遅く（約2倍）、精度は同程度で、oMLX のメモリの保護にも拒否されやすい。`qwen36-expert-executor` は名簿で `disabled: true` にし、agent の定義は再現用に残した。計測の記録は `logs/agent-compare-20261003/`（git 管理外）の `runs-qwen36*` にある。
+
 ## 2. 背景・文脈
 
 kata 285 件を定期評価するにあたり、ローカルモデルで運用できれば API コストなしで全件を回せる。その可否と、どの agent をどの用途に使うかを判断するために比較した。
