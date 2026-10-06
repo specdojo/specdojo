@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-86je-docs-lint-chinese-glyphs
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-04T08:46:04Z"
   due_on: null
+  completed_at: "2026-10-06T10:43:30Z"
+  conclusion: markdownlint のカスタムルール MD061（no-chinese-glyphs）を追加し、日本語と字形の異なる簡体字 20 字を検出する。コードと URL は対象外、意図した箇所は disable コメントで除外する。統合後に残った 3 件の検出は orchestrator が修正した（d27af7c89）
 ---
 
 <!-- markdownlint-disable no-chinese-glyphs -->

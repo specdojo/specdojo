@@ -87,3 +87,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_687c62650529414598ddb5ff5fb8ae43
+- v: 1
+  id: reg_6c052c127c2046d3bd932c3539718181
+  ts: "2026-10-06T10:43:30Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: "review: ルールと unit test を確認し、npm run lint:md が全件で通ることを確認"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-06"
+    - field: conclusion
+      from: "-"
+      to: markdownlint のカスタムルール MD061（no-chinese-glyphs）を追加し、日本語と字形の異なる簡体字 20 字を検出する。コードと URL は対象外、意図した箇所は disable コメントで除外する。統合後に残った 3 件の検出は orchestrator が修正した（d27af7c89）
+  previous_event_id: reg_8487f1922eb84bbd9bb45ce90d6ecf2a
