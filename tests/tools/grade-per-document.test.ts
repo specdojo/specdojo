@@ -130,6 +130,14 @@ if (args[0] === "grade" && args[1] === "plan") {
   writeFileSync(join(out, "fixture-grade-reporter-plan.md"), "reporter plan\\n");
   process.exit(0);
 }
+if (args[0] === "grade" && args[1] === "translation-plan") {
+  const out = value("--out");
+  mkdirSync(dirname(out), { recursive: true });
+  writeFileSync(out, process.env.FAKE_TRANSLATION_INPUT === "1"
+    ? "# Grade finding translation\\n\\n[\\n  \\\"[T001] Add a test.\\\"\\n]\\n"
+    : "# Grade finding translation\\n\\n[]\\n");
+  process.exit(0);
+}
 if (args[0] === "agent" && args[1] === "run") {
   const limiter = process.env.FAKE_RATE_LIMIT_FILE;
   if (limiter && existsSync(limiter)) {
@@ -139,9 +147,11 @@ if (args[0] === "agent" && args[1] === "run") {
   const out = value("--out");
   mkdirSync(dirname(out), { recursive: true });
   const plan = readFileSync(value("--plan"), "utf8");
-  writeFileSync(out, plan.includes("<grade_executor_output>")
-    ? "{\\\"rubric\\\":\\\"fixture\\\",\\\"documents\\\":[]}\\n"
-    : "[VIEWPOINT fixture]\\nLEVEL: 4\\n[END VIEWPOINT]\\n");
+  writeFileSync(out, plan.includes("Grade finding translation")
+    ? "[]\\n"
+    : plan.includes("<grade_executor_output>")
+      ? "{\\\"rubric\\\":\\\"fixture\\\",\\\"documents\\\":[]}\\n"
+      : "[VIEWPOINT fixture]\\nLEVEL: 4\\n[END VIEWPOINT]\\n");
   process.exit(0);
 }
 if (args[0] === "grade" && args[1] === "apply") {
@@ -172,6 +182,7 @@ if (args[0] === "grade" && args[1] === "result") {
   if (resultFile && existsSync(resultFile)) process.stdout.write(readFileSync(resultFile, "utf8"));
   process.exit(0);
 }
+if (args[0] === "grade" && args[1] === "localize") process.exit(0);
 process.exit(1);
 `,
   );
@@ -625,7 +636,26 @@ describe("grade per-document pipeline", () => {
     expect(readFileSync(fixture.stateFile, "utf8")).toBe("6");
   });
 
-  it("converts executor markers with grade apply instead of starting a reporter agent", () => {
+  it("converts executor markers mechanically and starts the display translator afterward", () => {
+    const fixture = makeFixture();
+
+    const result = runPipeline(fixture, { FAKE_TRANSLATION_INPUT: "1" }, ["--stages", "1"]);
+
+    expect(result.status, result.stderr).toBe(0);
+    const invocations = readFileSync(fixture.argsFile, "utf8").trim().split("\n");
+    const agentRuns = invocations.filter((line) => line.startsWith("agent run "));
+    expect(agentRuns).toHaveLength(2);
+    expect(agentRuns[0]).toContain("--by codex-expert-executor");
+    expect(agentRuns[1]).toContain("--by gemma26-reporter");
+    const apply = invocations.find((line) => line.startsWith("grade apply "));
+    expect(apply).toContain("--analysis-from");
+    expect(apply).toContain("--submission-out");
+    expect(apply).not.toContain("--from ");
+    expect(invocations).toContainEqual(expect.stringMatching(/^grade translation-plan /));
+    expect(invocations).toContainEqual(expect.stringMatching(/^grade localize /));
+  });
+
+  it("does not start the display translator when there are no translatable findings", () => {
     const fixture = makeFixture();
 
     const result = runPipeline(fixture, {}, ["--stages", "1"]);
@@ -635,10 +665,8 @@ describe("grade per-document pipeline", () => {
     const agentRuns = invocations.filter((line) => line.startsWith("agent run "));
     expect(agentRuns).toHaveLength(1);
     expect(agentRuns[0]).toContain("--by codex-expert-executor");
-    const apply = invocations.find((line) => line.startsWith("grade apply "));
-    expect(apply).toContain("--analysis-from");
-    expect(apply).toContain("--submission-out");
-    expect(apply).not.toContain("--from ");
+    expect(invocations).toContainEqual(expect.stringMatching(/^grade translation-plan /));
+    expect(invocations).toContainEqual(expect.stringMatching(/^grade localize /));
   });
 
   it("reruns the executor once when grade apply rejects the executor markers", () => {

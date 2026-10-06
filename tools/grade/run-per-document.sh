@@ -47,6 +47,8 @@ Options:
   --stage-3-executor <nickname> (default: codex-expert-executor)
   --stage-3-reporter <machine|nickname> (default: machine)
   --stage-3-reference <path|none> (default: none)
+  --translation-by <nickname>    Agent used only to translate finding messages
+                                after canonical grade storage (default: gemma26-reporter)
   --specdojo-bin <path>         Use one executable instead of npx tsx
   --dry-run                     Print selection and configuration only
   --help                        Show this help
@@ -108,6 +110,7 @@ stage_2_reference=none
 stage_3_executor=codex-expert-executor
 stage_3_reporter=machine
 stage_3_reference=none
+translation_by=gemma26-reporter
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -267,6 +270,11 @@ while [[ $# -gt 0 ]]; do
       stage_3_reference=$2
       shift 2
       ;;
+    --translation-by)
+      require_value "$@"
+      translation_by=$2
+      shift 2
+      ;;
     --specdojo-bin)
       require_value "$@"
       specdojo_bin=$2
@@ -370,7 +378,8 @@ for option_and_value in \
   "--stage-2-reference:$stage_2_reference" \
   "--stage-3-executor:$stage_3_executor" \
   "--stage-3-reporter:$stage_3_reporter" \
-  "--stage-3-reference:$stage_3_reference"; do
+  "--stage-3-reference:$stage_3_reference" \
+  "--translation-by:$translation_by"; do
   validate_scalar "${option_and_value%%:*}" "${option_and_value#*:}"
 done
 
@@ -557,12 +566,12 @@ select_documents() {
 
 requested_signature=$(printf '%s\n' "${requested_paths[@]}" | node -e \
   'const c=require("node:crypto");let s="";process.stdin.on("data",d=>s+=d).on("end",()=>process.stdout.write(c.createHash("sha256").update(s).digest("hex")))')
-expected_config=$(printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
+expected_config=$(printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
   "$project" "$target" "$kind" "$limit" "$changed_only" "$ungraded" "$incomplete" \
   "$rubric_outdated" "$embed_documents" "$max_stage_failures" "$stages:$requested_signature" \
   "$stage_1_executor" "$stage_1_reporter" "$stage_1_reference" \
   "$stage_2_executor:$stage_2_reporter:$stage_2_reference" \
-  "$stage_3_executor:$stage_3_reporter:$stage_3_reference" "selection-v5" "pipeline-v6")
+  "$stage_3_executor:$stage_3_reporter:$stage_3_reference" "$translation_by" "selection-v5" "pipeline-v7")
 config_file="$work_dir/config.tsv"
 selection_file="$work_dir/selection.txt"
 results_file="$work_dir/results.tsv"
@@ -598,6 +607,7 @@ print_configuration() {
     "${#selected_paths[@]}" "${#exhausted_paths[@]}" "$work_dir"
   printf 'stage=1 executor=%s reporter=%s reference=%s\n' \
     "$stage_1_executor" "$stage_1_reporter" "$stage_1_reference"
+  printf 'translation_by=%s\n' "$translation_by"
   if [[ "$stages" == 3 ]]; then
     printf 'stage=2 executor=%s reporter=%s reference=%s\n' \
       "$stage_2_executor" "$stage_2_reporter" "$stage_2_reference"
@@ -837,6 +847,8 @@ execute_stage() {
   local executor_output="$stage_dir/executor-output.txt"
   local reporter_input="$stage_dir/reporter-input.md"
   local reporter_output="$stage_dir/grade-submission.json"
+  local translation_plan="$stage_dir/grade-finding-translation-plan.md"
+  local translation_output="$stage_dir/grade-finding-translations.json"
   local -a plan_command=(grade plan --target "$target" --project "$project" --path "$document" --out "$stage_dir/plans")
   local -a apply_command=(grade apply --target "$target" --project "$project" --path "$document" --analysis-from "$executor_output" --by "$executor")
   local machine_reporter=false
@@ -980,6 +992,28 @@ execute_stage() {
     save_stage_state "$state_file" failed "" "" ""
     stage_status=failed
     return 0
+  fi
+
+  # The canonical result is already stored. Translation is display-only: any plan/agent/output
+  # failure is converted to an empty array, and `grade localize` records the canonical English
+  # message as the display fallback without changing viewpoint, level, severity, or line.
+  if run_specdojo "$log_file" grade translation-plan --target "$target" --project "$project" --path "$document" --out "$translation_plan"; then
+    if grep -Fqx '[]' "$translation_plan"; then
+      printf '[]\n' >"$translation_output"
+    elif run_specdojo "$log_file" agent run --project "$project" --plan "$translation_plan" --by "$translation_by" --out "$translation_output"; then
+      :
+    else
+      printf 'warning: finding translation agent failed; using canonical messages\n' >>"$log_file"
+      printf '[]\n' >"$translation_output"
+    fi
+  else
+    printf 'warning: finding translation plan failed; using canonical messages\n' >>"$log_file"
+    printf '[]\n' >"$translation_output"
+  fi
+  if run_specdojo "$log_file" grade localize --target "$target" --project "$project" --path "$document" --from "$translation_output"; then
+    :
+  else
+    printf 'warning: finding localization failed; canonical grade remains recorded\n' >>"$log_file"
   fi
 
   IFS=$'\t' read -r stage_verdict stage_score stage_findings < <(read_grade_metrics "$document")

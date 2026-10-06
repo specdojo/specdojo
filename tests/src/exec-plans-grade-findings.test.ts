@@ -17,6 +17,9 @@ vi.mock("../../src/doc-index.js", () => ({
 import * as docIndex from "../../src/doc-index.js";
 
 vi.mock("../../src/grade-result.js", () => ({
+  gradeFindingDisplayMessage: vi.fn(
+    (finding: { message: string; message_ja?: string }) => finding.message_ja ?? finding.message,
+  ),
   gradeResultPathForDocument: vi.fn(),
   readGradeResultForDocument: vi.fn(),
 }));
@@ -78,7 +81,8 @@ describe("registerGradeFindingsText", () => {
               rule: "R02",
               line: 10,
               anchor: "anch",
-              message: "warning msg",
+              message: "Canonical warning message",
+              message_ja: "警告メッセージ",
             },
           ],
         } as unknown as GradeResult;
@@ -106,6 +110,8 @@ describe("registerGradeFindingsText", () => {
     expect(text).toContain("[error/R01; line=20; anchor=null]: msg 19");
     expect(text).not.toContain("[error/R01; line=21; anchor=null]: msg 20");
     expect(text).toContain("- 他 5 件の finding があります。詳細はサイドカーを参照してください。");
+    expect(text).toContain('[warning/R02; line=10; anchor="anch"]: 警告メッセージ');
+    expect(text).not.toContain("Canonical warning message");
 
     // サイドカー未存在（または finding 0件）の扱い
     expect(text).toContain("- [[doc-c]]: finding なし");

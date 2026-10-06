@@ -82,7 +82,7 @@ Ollama では、Ollama の公式ライブラリタグを優先して指定する
 
 SpecDojo では、通常作業と重い実装を `qwen3.8:27b-mlx`、Markdown の生成・レビューを `gemma4:31b-mlx`、軽作業を `gemma4:e4b-mlx`、exec の reporter の要約を `gemma4:26b-mlx` に分担させる。
 
-`gemma4:26b-mlx` は `gemma4:31b-mlx` の約3倍速く、日本語に中国語の字体が混ざらない。一方、grade の判定は 31B と同じく甘く、判定の規則や例を加えても変わらなかった（[[prj-0001:pjr-vqb5-agent-grade-comparison]]）。そのため、判定を伴わない reporter の文章要約に使う。
+`gemma4:26b-mlx` は `gemma4:31b-mlx` の約3倍速く、日本語に中国語の字体が混ざらない。一方、grade の判定は 31B と同じく甘く、判定の規則や例を加えても変わらなかった（[[prj-0001:pjr-vqb5-agent-grade-comparison]]）。そのため、判定を伴わない reporter の文章要約と、英語で確定した grade finding の日本語表示文への翻訳に使う。grade の翻訳では token 付き文字列配列だけを受け渡し、件数・順序が崩れた出力を判定へ反映しない。
 
 `qwen3.8:27b-mlx` は Ollama 公式ライブラリ側のモデルタグである。サードパーティ名前空間のモデルは、公式ライブラリに必要な量子化やタグがない場合の代替候補として扱う。
 

@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   owner: DEV
   registered_at: "2026-10-04T13:13:47Z"
   due_on: null
-  block_reason: "agent exited with non-zero code: executor validation failed or not run: npm run lint:ts, npm run lint:fm, npm run lint:md, npm run test:integration, npm run validate:schema, npm run typecheck, npm run…"
 ---
 
 # PJR-27Y0 grade の英語の判定を正本として保存し、gemma26 で日本語へ翻訳する

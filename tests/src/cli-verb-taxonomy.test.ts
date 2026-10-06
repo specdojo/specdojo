@@ -49,6 +49,8 @@ describe("CLI generation verb taxonomy", () => {
       "list",
       "plan",
       "apply",
+      "translation-plan",
+      "localize",
       "validate",
       "result",
       "state",

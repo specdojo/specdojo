@@ -5,7 +5,7 @@ import { type Command } from "commander";
 import yaml from "js-yaml";
 import remarkParse from "remark-parse";
 import { unified } from "unified";
-import { extractJsonText } from "./agent-response.js";
+import { extractJsonArrayText, extractJsonText } from "./agent-response.js";
 import { collectResolvedDeliverables, loadCatalogDocs } from "./catalog-build.js";
 import { isTrashedPath, resolveBasePath } from "./catalog-paths.js";
 import { resolveViewpointsDoc, viewpointAppliesToDocument } from "./review-plan.js";
@@ -28,9 +28,12 @@ import { listFilesRecursive } from "./exec-shared.js";
 import { buildScheduleIndex } from "./exec-schedule-index.js";
 import { resolveSpecdojoPath } from "./template-resolution.js";
 import {
+  applyGradeFindingTranslations,
   gradeContentHash,
   gradeFindingCount,
+  gradeFindingTranslationInput,
   gradeResultPath,
+  gradeResultPathForDocument,
   markdownDocumentId,
   readGradeResult,
   readGradeResultForDocument,
@@ -77,8 +80,17 @@ export type GradePipelineState = {
 export type GradeFindingInput = {
   id?: string;
   severity: GradeSeverity;
+  /** Canonical executor wording. */
   message: string;
+  /** Japanese display wording. It never participates in scoring or carry-over matching. */
+  message_ja?: string;
   line?: number;
+};
+
+export type GradeLevelCorrection = {
+  viewpoint: string;
+  original_level: number;
+  corrected_level: number;
 };
 
 type PreviousGradeFinding = Pick<GradeFindingInput, "severity" | "message" | "line"> & {
@@ -102,6 +114,7 @@ export type GradeCriterionInput = {
 export type GradeDocumentInput = {
   path: string;
   viewpoints: GradeViewpointInput[];
+  level_corrections?: GradeLevelCorrection[];
   done_criteria?: GradeCriterionInput[];
 };
 
@@ -235,6 +248,26 @@ function levelCapForFindings(findings: readonly GradeFindingInput[]): number {
     4,
   );
   return majorCount >= 2 ? Math.min(severityCap, 1) : severityCap;
+}
+
+function correctViewpointLevels(viewpoints: readonly GradeViewpointInput[]): {
+  viewpoints: GradeViewpointInput[];
+  corrections: GradeLevelCorrection[];
+} {
+  const corrections: GradeLevelCorrection[] = [];
+  const corrected = viewpoints.map((viewpoint) => {
+    const cap = levelCapForFindings(viewpoint.findings ?? []);
+    const correctedLevel = Math.min(viewpoint.level, cap);
+    if (correctedLevel !== viewpoint.level) {
+      corrections.push({
+        viewpoint: viewpoint.id,
+        original_level: viewpoint.level,
+        corrected_level: correctedLevel,
+      });
+    }
+    return { ...viewpoint, level: correctedLevel };
+  });
+  return { viewpoints: corrected, corrections };
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -1903,12 +1936,13 @@ function renderGradePlanWithEmbedding(opts: RenderGradePlanOptions): {
         ]),
     "3. 良い実例がある場合は、章ごとの具体性、根拠の密度、過不足を評価対象と比較して記載水準を判定する。表現の類似や実例自体の欠点を評価理由にせず、rubric と viewpoint を最終的な判定基準にする。",
     "4. 評価対象を次の rubric と viewpoint に照らし、各 viewpoint を 0-4 で判定する。ある viewpoint の finding の有無から、ほかの viewpoint の判定を推論しない。",
-    "5. level 3 以下には finding を付ける。finding には severity（blocker / major / minor / note）、対象直前の本文行番号、具体的な修正理由を含める。line は Frontmatter を除く本文の1始まり（通常は H1 が1行目）とする。level 4 は finding なしとする。",
-    "6. 前回の指摘を対象の現在内容と照合し、解消済みか確認する。未解消なら前回の message を変更せず今回の finding に含め、severity は前回と同等以上を指定する。前回の rule は前回評価時の分類として扱い、各 viewpoint は現在の根拠から独立に評価する。前回の問題が解消され、別の軽微な問題だけが残るため severity を引き下げる場合は、その根拠を新しい finding の message に含める。",
-    "7. 前回の指摘の確認だけで終了せず、前回の指摘にない問題もすべての viewpoint で独立して検出する。",
+    "5. 判定根拠と新しい finding の message は英語で記述する。固有名詞・識別子・引用は原文を保ってよい。日本語だけの既存 finding は互換用の正本として扱い、未解消ならその message を翻訳せず原文のまま再掲する。",
+    "6. level 3 以下には finding を付ける。finding には severity（blocker / major / minor / note）、対象直前の本文行番号、具体的な修正理由を含める。line は Frontmatter を除く本文の1始まり（通常は H1 が1行目）とする。level 4 は finding なしとする。",
+    "7. 前回の指摘を対象の現在内容と照合し、解消済みか確認する。未解消なら前回の canonical message を変更せず今回の finding に含め、severity は前回と同等以上を指定する。前回の rule は前回評価時の分類として扱い、各 viewpoint は現在の根拠から独立に評価する。前回の問題が解消され、別の軽微な問題だけが残るため severity を引き下げる場合は、その根拠を新しい finding の message に含める。",
+    "8. 前回の指摘の確認だけで終了せず、前回の指摘にない問題もすべての viewpoint で独立して検出する。",
     ...(doneCriteria.length > 0
       ? [
-          "8. 完了条件（done_criteria）を1件ずつ本文の根拠と照合し、`satisfied` / `unsatisfied` を判定する。viewpoint の level や総合 score とは独立した判定であり、level が高いことを理由に条件を満たしたとみなさない。`unsatisfied` には不足している内容を1行で記す。",
+          "9. 完了条件（done_criteria）を1件ずつ本文の根拠と照合し、`satisfied` / `unsatisfied` を判定する。viewpoint の level や総合 score とは独立した判定であり、level が高いことを理由に条件を満たしたとみなさない。`unsatisfied` には不足している内容を英語で1行に記す。",
         ]
       : []),
     "",
@@ -1954,7 +1988,7 @@ function renderGradePlanWithEmbedding(opts: RenderGradePlanOptions): {
     "",
     "1. すべての agent viewpoint の判定と、必要な finding が揃っていることを確認する。",
     "2. 最終応答では各 viewpoint を次のマーカーで1回ずつ宣言する。マーカー間には根拠や検討過程を自由形式で詳しく記述してよい。JSON、Markdown コードフェンス、GradeSubmission は出力しない。",
-    "3. `LEVEL` と各 `FINDING` は `grade apply` が機械的に読み取る申告値である。marker・`LEVEL`・`FINDING` はそれぞれ行頭に1行で記し、message は1行で具体的に記す。message はそのまま記録される。finding がない場合は `FINDING` 行を記さない。",
+    "3. `LEVEL` と各 `FINDING` は `grade apply` が機械的に読み取る申告値である。marker・`LEVEL`・`FINDING` はそれぞれ行頭に1行で記し、message は英語で1行に具体的に記す。message は正本としてそのまま記録される。finding がない場合は `FINDING` 行を記さない。",
     "4. すべての viewpoint marker、0-4 の level、level 3 以下の finding、severity と非空 message が揃っていることを確認する。",
     ...(doneCriteria.length > 0
       ? [
@@ -2065,7 +2099,7 @@ export function renderGradeReporterPlan(opts: {
     "1. `<grade_executor_output>` の `[VIEWPOINT <id>]` ごとに `LEVEL` とすべての `FINDING` を読み取る。対象文書や参考資料は読まない。",
     "2. level、severity、line、message を executor の申告どおりにコピーする。message の要約、言い換え、校正を行わない。",
     "3. executor が述べていない finding を追加せず、述べた finding を省略しない。finding の `id` は出力しない。",
-    "4. finding の severity により viewpoint の level に上限がある（`blocker` は上限 0、`major` は上限 2、`minor` は上限 3）。executor の申告が上限を超えている場合や、marker が欠けているなど GradeSubmission の検証規則と矛盾する場合は、推測や機械的な値の修正を行わず異常終了する。",
+    "4. finding の severity により viewpoint の level に上限がある（`blocker` は上限 0、`major` は上限 2、`minor` は上限 3）。executor の申告が上限を超えていても level は申告どおりにコピーし、補正は `grade apply` に委ねる。marker 欠落など、それ以外の GradeSubmission 契約違反は推測で補わず異常終了する。",
     ...(doneCriteria.length > 0
       ? [
           "5. `[DONE_CRITERIA]` ブロックの各行を `done_criteria` へ写す。`id` と `status`（`satisfied` / `unsatisfied`）は申告どおりにコピーし、`unsatisfied` に続く不足内容は `reason` へ一字一句コピーする。条件の追加・省略・判定変更を行わない。",
@@ -2116,7 +2150,7 @@ export function renderGradeReporterPlan(opts: {
     "## 5. 異常終了の条件",
     "",
     "- `<grade_executor_output>` が渡されていない、または marker 契約を解析できない場合は異常終了する。",
-    "- executor の申告を変更しなければ GradeSubmission の契約を満たせない場合は異常終了する。",
+    "- level の下方向補正を除き、executor の申告を変更しなければ GradeSubmission の契約を満たせない場合は異常終了する。",
   ];
   return `${lines.join("\n")}\n`;
 }
@@ -2474,8 +2508,9 @@ type GradeExecutorConversion =
   | { analysis?: undefined; submission?: undefined; issues: GradeValidationIssue[] };
 
 // executor の marker を parse し、GradeSubmission へ機械的に変換したうえで既存の
-// GradeSubmission 検証にかける。reporter の忠実性検証と機械変換は同じ parse と検証を共有し、
-// marker の欠落・重複・level と severity の矛盾・done_criteria の過不足を同じ条件で拒否する。
+// GradeSubmission 検証にかける。severity が定める上限より level が高い場合は、判定を甘くしない
+// 方向へ level だけを補正し、補正前後を submission に残す。それ以外の marker 契約違反と
+// done_criteria の過不足は拒否する。
 function convertGradeExecutorOutput(opts: GradeExecutorConversionOptions): GradeExecutorConversion {
   let analysis: GradeExecutorAnalysis;
   try {
@@ -2492,12 +2527,14 @@ function convertGradeExecutorOutput(opts: GradeExecutorConversionOptions): Grade
   }
 
   const rubric = assertRubric(opts.viewpoints);
+  const corrected = correctViewpointLevels(analysis.viewpoints);
   const submission: GradeSubmission = {
     rubric: rubric.id,
     documents: [
       {
         path: opts.expectedPath,
-        viewpoints: analysis.viewpoints,
+        viewpoints: corrected.viewpoints,
+        ...(corrected.corrections.length > 0 ? { level_corrections: corrected.corrections } : {}),
         ...(analysis.doneCriteria ? { done_criteria: analysis.doneCriteria } : {}),
       },
     ],
@@ -2771,6 +2808,15 @@ export function validateGradeSubmission(
           });
           continue;
         }
+        if (
+          finding.message_ja !== undefined &&
+          (typeof finding.message_ja !== "string" || !finding.message_ja.trim())
+        ) {
+          issues.push({
+            path: `${resultPath}.findings[${findingIndex}].message_ja`,
+            message: "message_ja must be a non-empty string when present",
+          });
+        }
         if (finding.id !== undefined) {
           if (!/^[A-Za-z0-9][A-Za-z0-9._-]*$/.test(finding.id)) {
             issues.push({
@@ -2795,6 +2841,35 @@ export function validateGradeSubmission(
       const cap = levelCapForFindings(findings);
       if (result.level > cap)
         issues.push({ path: resultPath, message: `finding severity caps level at ${cap}` });
+    }
+    if (document.level_corrections !== undefined) {
+      if (!Array.isArray(document.level_corrections)) {
+        issues.push({ path: `${where}.level_corrections`, message: "must be an array" });
+      } else {
+        for (const [index, correction] of document.level_corrections.entries()) {
+          const correctedViewpoint = document.viewpoints.find(
+            (viewpoint) => viewpoint.id === correction?.viewpoint,
+          );
+          if (
+            !correction ||
+            typeof correction.viewpoint !== "string" ||
+            !correctedViewpoint ||
+            !Number.isInteger(correction.original_level) ||
+            !Number.isInteger(correction.corrected_level) ||
+            correction.original_level < 0 ||
+            correction.original_level > 4 ||
+            correction.corrected_level < 0 ||
+            correction.corrected_level >= correction.original_level ||
+            correctedViewpoint.level !== correction.corrected_level
+          ) {
+            issues.push({
+              path: `${where}.level_corrections[${index}]`,
+              message:
+                "viewpoint and matching downward original/corrected levels from 0 to 4 are required",
+            });
+          }
+        }
+      }
     }
     for (const viewpoint of required) {
       if (!ids.has(viewpoint.id)) {
@@ -2913,6 +2988,24 @@ export function applyGradeSubmission(opts: {
       const previous = readGradeResult(resultPath);
       const document = parseMarkdown(current, rel);
       const agentResults = preserveStoredFindingSeverities(previous, input.viewpoints);
+      const correctionByViewpoint = new Map(
+        (input.level_corrections ?? []).map((correction) => [
+          correction.viewpoint,
+          { ...correction },
+        ]),
+      );
+      for (const [index, result] of agentResults.entries()) {
+        const submitted = input.viewpoints[index];
+        if (submitted && result.level < submitted.level) {
+          const existing = correctionByViewpoint.get(result.id);
+          correctionByViewpoint.set(result.id, {
+            viewpoint: result.id,
+            original_level: existing?.original_level ?? submitted.level,
+            corrected_level: result.level,
+          });
+        }
+      }
+      const levelCorrections = [...correctionByViewpoint.values()];
       const evaluated = {
         ...input,
         viewpoints: [
@@ -2944,6 +3037,7 @@ export function applyGradeSubmission(opts: {
             line,
             anchor: bodyLines[Math.min(bodyLines.length, line) - 1]?.trim() ?? "",
             message: sanitizeCommentText(finding.message),
+            message_ja: sanitizeCommentText(finding.message_ja ?? finding.message),
           };
         }),
       );
@@ -2974,6 +3068,7 @@ export function applyGradeSubmission(opts: {
         viewpoints: summary.viewpoints,
         finding_counts: summary.findings,
         findings,
+        ...(levelCorrections.length > 0 ? { level_corrections: levelCorrections } : {}),
         ...(criteriaResults && definitions && detailRef
           ? { done_criteria: summarizeDoneCriteria(definitions, criteriaResults, detailRef) }
           : {}),
@@ -3284,6 +3379,7 @@ export function migrateInlineGrades(opts: {
     const findings: StoredGradeFinding[] = legacyFindings.map((finding) => ({
       ...finding,
       anchor: bodyLines[Math.min(bodyLines.length, finding.line) - 1]?.trim() ?? "",
+      message_ja: finding.message,
     }));
     const counts: Record<GradeSeverity, number> = { blocker: 0, major: 0, minor: 0, note: 0 };
     for (const finding of findings) counts[finding.severity] += 1;
@@ -3377,6 +3473,20 @@ function requirePipelineStatus(value: string): "passed" | "failed" | "complete" 
 function commandError(error: unknown): void {
   process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
   process.exitCode = 1;
+}
+
+export function renderGradeFindingTranslationPlan(result: GradeResult): string {
+  const messages = gradeFindingTranslationInput(result);
+  return [
+    "# Grade finding translation",
+    "",
+    "次の JSON 文字列配列に含まれる英語の finding だけを、簡潔で自然な日本語へ翻訳してください。各要素の先頭にある `[Tnnn]` token は変更せず、入力と同じ件数・順序の JSON 文字列配列だけを返してください。Markdown fence、説明、判定の変更は不要です。",
+    "",
+    "```json",
+    JSON.stringify(messages, null, 2),
+    "```",
+    "",
+  ].join("\n");
 }
 
 export function registerGradeCommand(program: Command): void {
@@ -3636,6 +3746,26 @@ export function registerGradeCommand(program: Command): void {
                 fidelityIssues.map((issue) => `${issue.path}: ${issue.message}`).join("\n"),
               );
             }
+            const converted = buildGradeSubmissionFromAnalysis(conversionOptions);
+            if (converted.submission === undefined) {
+              throw new Error(
+                converted.issues.map((issue) => `${issue.path}: ${issue.message}`).join("\n"),
+              );
+            }
+            const convertedDocument = converted.submission.documents[0];
+            const correctedLevels = new Map(
+              convertedDocument.viewpoints.map((viewpoint) => [viewpoint.id, viewpoint.level]),
+            );
+            submission.documents[0] = {
+              ...submission.documents[0],
+              viewpoints: submission.documents[0].viewpoints.map((viewpoint) => ({
+                ...viewpoint,
+                level: correctedLevels.get(viewpoint.id) ?? viewpoint.level,
+              })),
+              ...(convertedDocument.level_corrections
+                ? { level_corrections: convertedDocument.level_corrections }
+                : {}),
+            };
           } else {
             const converted = buildGradeSubmissionFromAnalysis(conversionOptions);
             if (converted.submission === undefined) {
@@ -3680,6 +3810,120 @@ export function registerGradeCommand(program: Command): void {
           process.stdout.write(`${options.dryRun ? "would update" : "updated"}: ${path}\n`);
         process.stdout.write(
           `Graded: ${submission.documents.length}, updated: ${changed.length}\n`,
+        );
+      } catch (error) {
+        commandError(error);
+      }
+    });
+
+  addSelection(
+    grade
+      .command("translation-plan")
+      .description("Create a Japanese translation request for the latest canonical findings"),
+  )
+    .requiredOption("--out <path>", "Write the translation plan to this repository path")
+    .action((options) => {
+      try {
+        const target = requireTarget(options.target);
+        const selected = discoverGradeTargets({
+          target,
+          project: options.project,
+          paths: options.path,
+          changedOnly: options.changedOnly,
+          dependencyChanged: options.dependencyChanged,
+          rulebookChanged: options.rulebookChanged,
+          unreviewed: options.unreviewed,
+          verdict: options.verdict,
+          minScore: options.minScore,
+          maxFindings: options.maxFindings,
+          ungraded: options.ungraded,
+          incomplete: options.incomplete,
+          rubricOutdated: options.rubricOutdated,
+        }).map(repoRelativePath);
+        if (selected.length !== 1) {
+          throw new Error("grade translation-plan requires exactly one selected --path");
+        }
+        const result = readGradeResultForDocument({
+          documentPath: selected[0],
+          project: options.project,
+        });
+        if (!result) throw new Error(`${selected[0]}: grade result not found`);
+        if (result.target !== target) {
+          throw new Error(
+            `${selected[0]}: grade result target=${result.target}, expected=${target}`,
+          );
+        }
+        const output = resolveSafeRepositoryPath(options.out, "--out");
+        mkdirSync(dirname(output), { recursive: true });
+        writeFileSync(output, renderGradeFindingTranslationPlan(result), "utf8");
+        process.stdout.write(
+          `written: ${repoRelativePath(output)}\nTranslations: ${gradeFindingTranslationInput(result).length}\n`,
+        );
+      } catch (error) {
+        commandError(error);
+      }
+    });
+
+  addSelection(
+    grade
+      .command("localize")
+      .description("Attach Japanese display messages to the latest canonical grade findings"),
+  )
+    .requiredOption("--from <path>", "JSON string array returned by the translation agent")
+    .action((options) => {
+      try {
+        const target = requireTarget(options.target);
+        const selected = discoverGradeTargets({
+          target,
+          project: options.project,
+          paths: options.path,
+          changedOnly: options.changedOnly,
+          dependencyChanged: options.dependencyChanged,
+          rulebookChanged: options.rulebookChanged,
+          unreviewed: options.unreviewed,
+          verdict: options.verdict,
+          minScore: options.minScore,
+          maxFindings: options.maxFindings,
+          ungraded: options.ungraded,
+          incomplete: options.incomplete,
+          rubricOutdated: options.rubricOutdated,
+        }).map(repoRelativePath);
+        if (selected.length !== 1) {
+          throw new Error("grade localize requires exactly one selected --path");
+        }
+        const resultPath = gradeResultPathForDocument({
+          documentPath: selected[0],
+          project: options.project,
+        });
+        const result = readGradeResult(resultPath);
+        if (!result) throw new Error(`${selected[0]}: grade result not found`);
+        if (result.target !== target) {
+          throw new Error(
+            `${selected[0]}: grade result target=${result.target}, expected=${target}`,
+          );
+        }
+        let translations: unknown;
+        try {
+          translations = JSON.parse(
+            extractJsonArrayText(
+              readFileSync(resolveSafeRepositoryPath(options.from, "--from"), "utf8"),
+            ),
+          );
+        } catch (error) {
+          translations = undefined;
+          process.stderr.write(
+            `warning: discarded grade finding translations: ${error instanceof Error ? error.message : String(error)}\n`,
+          );
+        }
+        const localized = applyGradeFindingTranslations(result, translations);
+        if (!localized.accepted) {
+          process.stderr.write(
+            `warning: discarded grade finding translations: ${localized.reason ?? "invalid output"}\n`,
+          );
+        }
+        const changed = writeGradeResult(resultPath, localized.result);
+        process.stdout.write(
+          `${changed ? "updated" : "unchanged"}: ${repoRelativePath(resultPath)}\n`,
         );
       } catch (error) {
         commandError(error);

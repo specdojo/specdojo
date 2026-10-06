@@ -26,7 +26,11 @@ import type { Approach, ExecPlanMeta, ReadyTaskView, TaskMode, TaskOrigin } from
 import type { CriteriaItem, DctDeliverableItem, DctDoc, DctSection } from "./catalog-types.js";
 import type { ReviewViewpoint } from "./review-types.js";
 import type { RoleDefinition, RolesDoc } from "./role-types.js";
-import { readGradeResultForDocument, gradeResultPathForDocument } from "./grade-result.js";
+import {
+  gradeFindingDisplayMessage,
+  gradeResultPathForDocument,
+  readGradeResultForDocument,
+} from "./grade-result.js";
 import { lookupDocIndex } from "./doc-index.js";
 import { resolveSpecdojoPath, resolveSpecdojoPathIfExists } from "./template-resolution.js";
 import { renderReviewGradeSummary, reviewGradeFreshness } from "./review-grade.js";
@@ -364,7 +368,7 @@ function gradeFindingsText(projectId: string, targetPath: string): string {
     return result.findings
       .map(
         (finding) =>
-          `- ${finding.id} [${finding.severity}/${finding.rule}; line=${finding.line}; anchor=${JSON.stringify(finding.anchor)}]: ${finding.message}`,
+          `- ${finding.id} [${finding.severity}/${finding.rule}; line=${finding.line}; anchor=${JSON.stringify(finding.anchor)}]: ${gradeFindingDisplayMessage(finding)}`,
       )
       .join("\n");
   } catch {
@@ -1359,7 +1363,7 @@ export function registerGradeFindingsText(projectId: string, ticketPath: string)
         break;
       }
       lines.push(
-        `  - [${finding.severity}/${finding.rule}; line=${finding.line}; anchor=${JSON.stringify(finding.anchor)}]: ${finding.message}`,
+        `  - [${finding.severity}/${finding.rule}; line=${finding.line}; anchor=${JSON.stringify(finding.anchor)}]: ${gradeFindingDisplayMessage(finding)}`,
       );
       findingCount++;
     }

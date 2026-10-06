@@ -520,13 +520,15 @@ specdojo exec trial adopt --project prj-0001 --comparison <comparison-id> --tria
 
 `grade` は kata（rulebook / recipe / sample / template）または成果物を、review と同じ共通 viewpoint・category rubric で継続評価します。agent に直接ファイル探索やスコア計算をさせず、plan 生成と反映を分離します。
 
-| コマンド         | 用途                                                     |
-| ---------------- | -------------------------------------------------------- |
-| `grade list`     | 選択した文書のパスを1行1件で出力し、plan は保存しない    |
-| `grade plan`     | 1文書ごとに executor / reporter の評価 plan を保存する   |
-| `grade apply`    | executor の申告を GradeSubmission へ機械変換して反映する |
-| `grade validate` | サイドカーの内容ハッシュと finding 件数を検証する        |
-| `grade migrate`  | インライン grade / finding をサイドカーへ一括移行する    |
+| コマンド                 | 用途                                                           |
+| ------------------------ | -------------------------------------------------------------- |
+| `grade list`             | 選択した文書のパスを1行1件で出力し、plan は保存しない          |
+| `grade plan`             | 1文書ごとに executor / reporter の評価 plan を保存する         |
+| `grade apply`            | executor の申告を GradeSubmission へ機械変換して正本を反映する |
+| `grade translation-plan` | 正本の英語 finding から日本語表示用の翻訳 plan を作る          |
+| `grade localize`         | 翻訳配列を検証し、finding の表示用 `message_ja` を更新する     |
+| `grade validate`         | サイドカーの内容ハッシュと finding 件数を検証する              |
+| `grade migrate`          | インライン grade / finding をサイドカーへ一括移行する          |
 
 ```bash
 specdojo grade plan --target kata --changed-only --project prj-0001
@@ -580,15 +582,15 @@ specdojo grade validate --target kata --project prj-0001
 
 成果物の plan は、成果物カタログの `done_criteria` を `DC-001` から順に列挙し、条件文、担当 Role code、viewpoint を executor へ渡します。executor は各条件を `satisfied` / `unsatisfied` として score とは独立に申告し、`grade apply` はその判定と不足理由を `[DONE_CRITERIA]` ブロックからそのまま GradeSubmission の `done_criteria` へ変換します。`grade apply --target deliverable` は過不足を検証し、grade result サイドカーの要約と `<execution_path>/grade/criteria/` の詳細 YAML を同時に更新します。詳細は成果物ごとに1ファイルで、再評価では同じファイルを上書きします。
 
-再評価時は、grade result サイドカーの `findings[]` から `rule`、`severity`、`line`、`anchor`、`message` を前回の指摘として plan へ含めます。agent は各指摘が現在も未解消かを確認し、未解消なら前回の message を変更せず、前回と同等以上の severity で今回の finding に含めます。`grade apply` も同じ message の finding を未解消と扱い、提出された severity が前回より軽ければ前回値へ戻し、対応する viewpoint level を severity 上限まで補正します。前回の問題が解消され、別の軽微な問題だけが残る場合は、新しい finding の message に引き下げの根拠を含めます。前回の観点割り当てに判定を引きずられないよう各 viewpoint を現在の根拠から独立に評価し、前回指摘にない問題も検出します。前回の level、score、verdict や解消履歴は plan に引き継ぎません。適用結果は最新サイドカーへ上書きされ、成果物本文は変更しません。
+再評価時は、grade result サイドカーの `findings[]` から `rule`、`severity`、`line`、`anchor`、正本の `message` を前回の指摘として plan へ含めます。表示用の `message_ja` は含めません。agent は各指摘が現在も未解消かを確認し、未解消なら前回の `message` を変更せず、前回と同等以上の severity で今回の finding に含めます。`grade apply` も同じ正本 `message` の finding を未解消と扱い、提出された severity が前回より軽ければ前回値へ戻し、対応する viewpoint level を severity 上限まで補正します。日本語 `message` だけの旧記録はその日本語を互換用の正本とし、英語への翻訳とは照合しません。前回の問題が解消され、別の軽微な問題だけが残る場合は、新しい finding の `message` に引き下げの根拠を含めます。前回の観点割り当てに判定を引きずられないよう各 viewpoint を現在の根拠から独立に評価し、前回指摘にない問題も検出します。前回の level、score、verdict や解消履歴は plan に引き継ぎません。適用結果は最新サイドカーへ上書きされ、成果物本文は変更しません。
 
 パス参照の executor は判定前に、plan が示す評価対象、すべての参考資料、選定された良い実例をファイル読み取りツールで全文読み、実行ログに各パスの読み取り操作を残します。埋め込みを使う executor は、plan に埋め込まれた同じ範囲だけを読みます。参考資料は成果物間整合、良い実例は章ごとの具体性・根拠の密度・過不足を比較する材料であり、どちらも評価対象にはしません。実例の表現や欠点を機械的に転用せず、rubric と viewpoint を最終的な判定基準にします。必要な資料を読み取れない場合は、内容を推測せず異常終了します。grade plan の Frontmatter と「このタスクで行うこと / 対象項目 / 進め方 / 完了手順 / 異常終了の条件」の章構成は exec plan に準拠します。
 
-executor plan は JSON 契約を持ちません。各 viewpoint を `[VIEWPOINT <id>]` と `[END VIEWPOINT]` で囲み、`LEVEL: <0-4>` と、必要な `FINDING <severity> line=<line>: <message>` を申告します。marker 間の根拠と検討過程は自由記述です。この軽量な申告形式により、JSON を安定して生成できない agent でも分析を完了できます。
+executor plan は JSON 契約を持ちません。各 viewpoint を `[VIEWPOINT <id>]` と `[END VIEWPOINT]` で囲み、`LEVEL: <0-4>` と、必要な `FINDING <severity> line=<line>: <message>` を申告します。新しい判定根拠と finding の `message` は英語で記述します。marker 間の根拠と検討過程は自由記述です。この軽量な申告形式により、JSON を安定して生成できない agent でも分析を完了できます。
 
-`grade apply --analysis-from <executor-output>` を `--from` なしで実行すると、executor の最終応答の marker を解析して GradeSubmission を機械的に生成し、既存の GradeSubmission 検証を通してから反映します。LLM の reporter は起動しません。level、severity、line、message、done_criteria の status と reason は申告のまま写し、書き写しの誤りや JSON の構文破損は起こりません。`--submission-out <path>` を指定すると、生成した GradeSubmission をリポジトリ内のパスへ保存します（`--dry-run` では保存しません）。判定主体は executor なので、`--by <executor-nickname>` がプロジェクトの `pm-members.yaml` に存在する nickname を検証してサイドカーの `graded_by` へ記録します。
+`grade apply --analysis-from <executor-output>` を `--from` なしで実行すると、executor の最終応答の marker を解析して GradeSubmission を機械的に生成し、既存の GradeSubmission 検証を通してから反映します。LLM の reporter は起動しません。severity、line、message、done_criteria の status と reason は申告のまま写し、level だけは severity 上限を超える場合に下方向へ補正します。書き写しの誤りや JSON の構文破損は起こりません。`--submission-out <path>` を指定すると、生成した GradeSubmission をリポジトリ内のパスへ保存します（`--dry-run` では保存しません）。判定主体は executor なので、`--by <executor-nickname>` がプロジェクトの `pm-members.yaml` に存在する nickname を検証してサイドカーの `graded_by` へ記録します。
 
-executor の応答が契約を満たさない場合は、従来の忠実性検証と同じ parse と検証の条件で拒否し、理由を `$analysis` で始まるパスとともにエラーへ示します。拒否する条件は、`VIEWPOINT` / `END VIEWPOINT` / `DONE_CRITERIA` の欠落・入れ子・重複、`LEVEL` の欠落・重複・書式不正、`FINDING` の書式不正、適用されない viewpoint や viewpoint の欠落・重複、finding の severity による level 上限の超過、level 3 以下で finding がないこと、done_criteria の欠落・重複・未知の ID、および不足内容のない `unsatisfied` です。拒否された応答は変換し直しても結果が変わらないため、再試行は executor の再実行で行います。
+executor の応答が契約を満たさない場合は、従来の忠実性検証と同じ parse と検証の条件で拒否し、理由を `$analysis` で始まるパスとともにエラーへ示します。拒否する条件は、`VIEWPOINT` / `END VIEWPOINT` / `DONE_CRITERIA` の欠落・入れ子・重複、`LEVEL` の欠落・重複・書式不正、`FINDING` の書式不正、適用されない viewpoint や viewpoint の欠落・重複、level 3 以下で finding がないこと、done_criteria の欠落・重複・未知の ID、および不足内容のない `unsatisfied` です。severity 上限だけは拒否せず level を下げます。拒否された応答は変換し直しても結果が変わらないため、再試行は executor の再実行で行います。
 
 marker 行の書式の軽微な揺れは、正規化して受理します。対象は、行頭の空白、ブロッククオート `>`、リスト記号（`-` / `*` / `+` と空白）、および marker・`LEVEL`・`FINDING`・`DC-NNN` の見出し部分を囲む `**` です。executor が Markdown として整形しても判定内容は同じであり、拒否して再実行する費用に見合わないためです。message と reason の本文は正規化せず、`**` などの装飾も含めてそのまま記録します。文中に埋もれた `FINDING` は申告とみなしません。行頭以外の位置を許すと、根拠の説明に現れた語を申告と誤認するためです。
 
@@ -630,7 +632,11 @@ tools/grade/run-per-document.sh --run-id 20260928-rubric-v2 --target deliverable
 
 `--stages 1` では stage 1 の既定を `codex-expert-executor` / 機械変換（`machine`）/ リファレンスなしとし、stage 2・3は実行しません。定期実行する `job-grade-kata` と `job-grade-deliverable` はこの構成を指定します。
 
-reporter の既定はすべての段で `machine` です。`machine` の段は reporter agent を起動せず、`grade apply --analysis-from <executor-output> --submission-out <grade-submission.json>` で executor の marker を変換して反映します。`grade apply` が応答を拒否した場合は、拒否された応答を `executor-output.rejected.txt`、理由を `apply-rejection.log` として段のディレクトリへ残し、executor を1回だけ再実行して変換し直します。`--stage-<n>-reporter <nickname>` で agent の nickname を指定した段だけ、従来どおり LLM reporter を起動して `--from` の忠実性照合を行い、拒否時は reporter を1回だけ再実行します。LLM reporter は書き写しの精度を比較する用途に限ります。\n\n互換用の `--stages 3` では、各段の executor と reporter を個別に指定できます。1段目の比較リファレンスは `--kind` に応じて `docs/ja/specdojo/<種別ディレクトリ>/prj-overview-<kind>.md` を既定とします。たとえば `--kind recipe` では `docs/ja/specdojo/recipes/prj-overview-recipe.md` です。対応する既定文書が存在しない場合は警告し、1段目もリファレンスなしで続行します。`--stage-1-reference` の明示指定は既定値より優先しますが、選択した種別のディレクトリにある `prj-overview` 系 Markdown だけを受理し、異なる種別や `none` は入力エラーとします。2段目はリファレンスなし、3段目は `codex-expert-executor` によるリファレンスなしの確認が既定です。2段目が `pass`、score 96以上、finding 1件以下の3条件をすべて満たす場合だけ3段目を実行します。解決した構成は `--dry-run` の `stage=<n>` 行で確認できます。
+reporter の既定はすべての段で `machine` です。`machine` の段は reporter agent を起動せず、`grade apply --analysis-from <executor-output> --submission-out <grade-submission.json>` で executor の marker を変換して反映します。finding の severity が許す level 上限を executor の申告が超えた場合は、機械変換が level を上限まで下げ、補正前後を grade result の `level_corrections` に記録します。`grade apply` が応答を拒否した場合は、拒否された応答を `executor-output.rejected.txt`、理由を `apply-rejection.log` として段のディレクトリへ残し、executor を1回だけ再実行して変換し直します。`--stage-<n>-reporter <nickname>` で agent の nickname を指定した段だけ、従来どおり LLM reporter を起動して `--from` の忠実性照合を行い、拒否時は reporter を1回だけ再実行します。LLM reporter は書き写しの精度を比較する用途に限ります。
+
+正本の grade result を保存した後、script は `grade translation-plan` で英語 finding の token 付き文字列配列を作り、1件以上ある場合だけ既定の `gemma26-reporter`（`--translation-by` で変更可）へ渡します。返された配列は `grade localize` が件数と token 順序を確認し、成功時だけ `message_ja` へ反映します。不一致、翻訳 agent の失敗、または不正な JSON では翻訳全体を捨て、正本の `message` を表示用にも保存します。翻訳段階は viewpoint、level、severity、line、score、verdict を変更しません。
+
+互換用の `--stages 3` では、各段の executor と reporter を個別に指定できます。1段目の比較リファレンスは `--kind` に応じて `docs/ja/specdojo/<種別ディレクトリ>/prj-overview-<kind>.md` を既定とします。たとえば `--kind recipe` では `docs/ja/specdojo/recipes/prj-overview-recipe.md` です。対応する既定文書が存在しない場合は警告し、1段目もリファレンスなしで続行します。`--stage-1-reference` の明示指定は既定値より優先しますが、選択した種別のディレクトリにある `prj-overview` 系 Markdown だけを受理し、異なる種別や `none` は入力エラーとします。2段目はリファレンスなし、3段目は `codex-expert-executor` によるリファレンスなしの確認が既定です。2段目が `pass`、score 96以上、finding 1件以下の3条件をすべて満たす場合だけ3段目を実行します。解決した構成は `--dry-run` の `stage=<n>` 行で確認できます。
 
 Run 内の実行 state は既定で `logs/grade/runs/per-document/<run-id>/documents/` に文書・段ごとに保存し、保存先を変える場合は `--work-dir` で指定します。初回に選択した文書は同じ Run の `selection.txt` へ固定し、再開時に grade の更新で選択結果が変わっても、未完了の段を同じ対象で継続します。Run をまたぐ到達状況は前述の文書別 JSON に保存し、新しい Run は `stage_failed`、または `stage_completed + 1` から再開します。保存済み state の `stage_total` が今回の段数と異なる場合は、古い評価を完了済みへ移行せず state を削除し、現在の構成で1段目から再評価します。`content_hash` が現在本文と異なる state は `grade state` が返さないため、このリセット処理の対象になりません。`logs/` へ plan を置くのは、段ごとの plan が同じ文書 ID を持ち、`docs/` 配下では `index build` が重複 ID で失敗するためです。agent が rate limit を返した場合は終了コード75で中断し、その段を失敗回数には数えません。同じ引数と `--run-id` で再実行すると、完了済みの段を再適用せず未完了の段から続行します。設定が保存済み Run state と異なる場合は、別条件の結果を混在させず、新しい `--run-id` を要求します。
 
@@ -645,7 +651,7 @@ exit "$grade_status"
 
 各段の status、所要秒数、verdict、score、finding 件数、executor、reporter、reference、連続失敗回数は同ディレクトリの `results.tsv` で確認できます。通常の agent / apply 失敗はその段で文書処理を止め、成功済みの前段を残して次回同じ段から再試行します。既定の連続失敗上限は3回で、`--max-stage-failures` で変更できます。上限到達文書は処理対象から外れますが、`retry_exhausted` 行として `results.tsv` に含め、reporter が人手対応を促せるようにします。
 
-`apply` は level 3 以下に finding を要求し、`blocker` は level 0、`major` は最大 level 2、`minor` は最大 level 3 に制限します。category score は viewpoint score（`level × 25`）の平均、総合 score は対象種別ごとの重み付き平均です。verdict は `blocker` があれば `fail`、`major` があるか総合 score が現行 rubric の `pass_score`（`grade-rubric-v2` では 75）未満なら `needs-work`、それ以外を `pass` とします。
+`apply` は level 3 以下に finding を要求し、`blocker` は level 0、`major` は最大 level 2、`minor` は最大 level 3 に制限します。executor marker の機械変換では上限超過を下方向だけに補正します。手書きの GradeSubmission は補正せず検証エラーにします。category score は viewpoint score（`level × 25`）の平均、総合 score は対象種別ごとの重み付き平均です。verdict は `blocker` があれば `fail`、`major` があるか総合 score が現行 rubric の `pass_score`（`grade-rubric-v2` では 75）未満なら `needs-work`、それ以外を `pass` とします。
 
 現行の評価対象は Markdown です。評価結果は成果物本文へ書き込まず grade result サイドカーへ保存します。YAML / JSON の kata・成果物は Markdown と同じ Frontmatter・内容ハッシュの契約を持たないため、`--path` で指定した場合は書き込まずエラーにします。
 

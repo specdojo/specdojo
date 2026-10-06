@@ -32,6 +32,7 @@ import {
 } from "../../src/grade.js";
 import type { ReviewViewpointsDoc } from "../../src/review-types.js";
 import type { MemberRoster } from "../../src/specdojo-config.js";
+import type { StoredGradeFinding } from "../../src/grade-result.js";
 
 const viewpoints: ReviewViewpointsDoc = {
   id: "specdojo:pm-review-viewpoints",
@@ -924,6 +925,7 @@ describe("grade plan", () => {
     expect(plan).toContain(`"path": "${path}"`);
     expect(plan).toContain('"rubric": "grade-rubric-v1"');
     expect(plan).toContain("message の要約、言い換え、校正を行わない");
+    expect(plan).toContain("level は申告どおりにコピーし、補正は `grade apply` に委ねる");
   });
 
   it("parses free-form executor rationale and rejects reporter judgment changes", () => {
@@ -1241,7 +1243,7 @@ LEVEL: 4
     });
   });
 
-  it("rejects executor output whose level exceeds the finding severity cap", () => {
+  it("clamps executor levels to the finding severity cap and records the correction", () => {
     const executorOutput = `[VIEWPOINT vp-qe-kata-conformance]
 LEVEL: 3
 FINDING major line=7: 必須の禁止事項が欠落している。
@@ -1258,11 +1260,15 @@ LEVEL: 4
       expectedPath: "docs/ja/specdojo/rulebooks/example-rulebook.md",
     });
 
-    expect(actual.submission).toBeUndefined();
-    expect(actual.issues).toContainEqual({
-      path: "$analysis.documents[0].viewpoints[0]",
-      message: "finding severity caps level at 2",
-    });
+    expect(actual.issues).toEqual([]);
+    expect(actual.submission?.documents[0].viewpoints[0].level).toBe(2);
+    expect(actual.submission?.documents[0].level_corrections).toEqual([
+      {
+        viewpoint: "vp-qe-kata-conformance",
+        original_level: 3,
+        corrected_level: 2,
+      },
+    ]);
   });
 
   it("resolves declared and reverse-linked Kata references", () => {
@@ -1522,6 +1528,7 @@ LEVEL: 4
             line: 11,
             anchor: "本文です。",
             message: "必須の禁止事項が欠落している。",
+            message_ja: "表示用の日本語。",
           },
         ],
       }),
@@ -1550,13 +1557,15 @@ LEVEL: 4
     expect(previousSection).not.toContain("level");
     expect(previousSection).not.toContain("score");
     expect(previousSection).not.toContain("verdict");
-    expect(plan).toContain("未解消なら前回の message を変更せず今回の finding に含め");
+    expect(previousSection).not.toContain("message_ja");
+    expect(plan).toContain("未解消なら前回の canonical message を変更せず今回の finding に含め");
     expect(plan).toContain("severity は前回と同等以上を指定する");
     expect(plan).toContain(
       "severity を引き下げる場合は、その根拠を新しい finding の message に含める",
     );
     expect(plan).toContain("各 viewpoint は現在の根拠から独立に評価する");
     expect(plan).toContain("前回の指摘にない問題もすべての viewpoint で独立して検出する");
+    expect(plan).toContain("判定根拠と新しい finding の message は英語で記述する");
   });
 });
 
@@ -1965,6 +1974,85 @@ DC-002: unsatisfied: 承認時点の記載がない。
       expect(sidecar).toContain(
         `content_hash: ${createHash("sha256").update(before).digest("hex")}`,
       );
+    } finally {
+      rmSync(directory, { recursive: true, force: true });
+    }
+  });
+
+  it("carries severity by the canonical English message, not the Japanese display text", () => {
+    const directory = "logs/grade-canonical-message-test";
+    const documentPath = `${directory}/example-doc.md`;
+    const resultsDirectory = `${directory}/results`;
+    mkdirSync(directory, { recursive: true });
+    writeFileSync(documentPath, deliverableMarkdown, "utf8");
+    const canonical = "The approval timing is missing.";
+    try {
+      const base: GradeSubmission = {
+        rubric: "grade-rubric-v1",
+        documents: [
+          {
+            ...deliverableInput,
+            path: documentPath,
+            viewpoints: [
+              {
+                id: "vp-arc-conciseness",
+                level: 2,
+                findings: [{ severity: "major" as const, message: canonical, line: 1 }],
+              },
+            ],
+          },
+        ],
+      };
+      applyGradeSubmission({
+        submission: base,
+        viewpoints,
+        target: "deliverable",
+        gradedBy: "ornith-expert-executor",
+        resultsDirectory,
+      });
+      const repeated = structuredClone(base);
+      repeated.documents[0].viewpoints[0].level = 3;
+      repeated.documents[0].viewpoints[0].findings![0] = {
+        severity: "minor",
+        message: canonical,
+        message_ja: "承認時点がありません。",
+        line: 1,
+      };
+      applyGradeSubmission({
+        submission: repeated,
+        viewpoints,
+        target: "deliverable",
+        gradedBy: "ornith-expert-executor",
+        resultsDirectory,
+      });
+
+      const stored = yaml.load(
+        readFileSync(join(resultsDirectory, "prj-0001.example-doc.yaml"), "utf8")
+          .split("\n")
+          .slice(1)
+          .join("\n"),
+      ) as {
+        viewpoints: Record<string, { level: number }>;
+        findings: StoredGradeFinding[];
+        level_corrections: Array<{
+          viewpoint: string;
+          original_level: number;
+          corrected_level: number;
+        }>;
+      };
+      expect(stored.viewpoints["vp-arc-conciseness"].level).toBe(2);
+      expect(stored.level_corrections).toEqual([
+        {
+          viewpoint: "vp-arc-conciseness",
+          original_level: 3,
+          corrected_level: 2,
+        },
+      ]);
+      expect(stored.findings[0]).toMatchObject({
+        severity: "major",
+        message: canonical,
+        message_ja: "承認時点がありません。",
+      });
     } finally {
       rmSync(directory, { recursive: true, force: true });
     }
