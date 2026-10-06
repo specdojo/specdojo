@@ -39,14 +39,18 @@ specdojo:
 
 | No  | 作業                                   | 担当         | 状態 | メモ                                   |
 | --- | -------------------------------------- | ------------ | ---- | -------------------------------------- |
-| 1   | agent の定義と名簿の member を追加する | orchestrator | open | 保護された設定のため利用者の承認が必要 |
-| 2   | モデル ID と疎通を確かめる             | orchestrator | open | -                                      |
-| 3   | 1.26 と同じ条件で grade を計測する     | orchestrator | open | thinking ON、必要なら OFF も           |
-| 4   | 結果を PJR-VQB5 に記録し、用途を決める | orchestrator | open | 用途の決定は利用者の確認を得る         |
+| 1   | agent の定義と名簿の member を追加する | orchestrator | done | 保護された設定のため利用者の承認が必要 |
+| 2   | モデル ID と疎通を確かめる             | orchestrator | done | -                                      |
+| 3   | 1.26 と同じ条件で grade を計測する     | orchestrator | done | thinking ON、必要なら OFF も           |
+| 4   | 結果を PJR-VQB5 に記録し、用途を決める | orchestrator | done | 用途の決定は利用者の確認を得る         |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `qwen36-expert-executor` の agent 定義と名簿の member を追加し（6847e7e0f）、モデル ID と疎通を確かめた。
+- thinking ON、thinking OFF（Qwen の推奨値）、thinking OFF（Ornith と同じ値）の3条件で計測した。Ornith と同じ値の条件は、oMLX の memory guard に繰り返し拒否されたため3回で打ち切った。利用者の判断で、残りの計測は行わない。
+- 結果と、Ornith・agy との finding の内容の比較を [[prj-0001:pjr-vqb5-agent-grade-comparison]] の「oMLX の Qwen3.6 35B-A3B（2026-10-06〜07）」に記録した。
+- 結論: grade の判定には使わない。thinking ON は判定が甘く、OFF は Ornith と同程度の精度で約2倍遅く、memory guard に拒否されやすい。名簿の member を `disabled: true` にした（ef1d33cd7）。agent の定義は再現用に残す。
+- 設計書（tsd-omlx-opencode）の Qwen3.6 の記載は、モデルの導入手順として残し、変更しない。
 
 ## 5. 関連ドキュメント
 
