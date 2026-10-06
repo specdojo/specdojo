@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_9f9e8ebf124b49579c4e14e3f1c3ee4f
+  ts: "2026-10-06T12:58:02Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者が oMLX に Qwen3.6 を導入し、PJR-VQB5 の評価への追加を依頼
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: oMLX の Qwen3.6 を grade の executor として評価する
+    - field: description
+      from: ""
+      to: oMLX に Qwen3.6 35B-A3B を導入した。opencode の agent（qwen36-expert-executor）と pm-members.yaml の member を追加し、PJR-VQB5 の 1.26 と同じ条件で grade の判定の精度・時間・字体の混入を計測して、Ornith・codex・agy と比べる。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-06"
