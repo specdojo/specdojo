@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-ghkd-resume-sync-git-diff-outside-repo
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-04T11:46:27Z"
   due_on: null
+  completed_at: "2026-10-06T10:43:12Z"
+  conclusion: Git 実行ヘルパーの cwd を対象リポジトリへ固定し、resume 前の同期が実行ディレクトリに依存しないようにした。PJR-27Y0 の resume で同期（merge）が成功することを実地で確認した
 ---
 
 # PJR-GHKD worktree の resume 前の同期で、衝突確認の git diff がリポジトリ外で実行される

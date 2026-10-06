@@ -151,3 +151,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_7355656e0372452ea3a51e1fe506c768
+- v: 1
+  id: reg_5da29f09d74f4520b6696992ce57c93a
+  ts: "2026-10-06T10:43:12Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: "review: 差分と integration test を確認し、PJR-27Y0 の resume で同期の成功を確認"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-06"
+    - field: conclusion
+      from: "-"
+      to: Git 実行ヘルパーの cwd を対象リポジトリへ固定し、resume 前の同期が実行ディレクトリに依存しないようにした。PJR-27Y0 の resume で同期（merge）が成功することを実地で確認した
+  previous_event_id: reg_5e81dfc433154de5ba4c15ac347a166c
