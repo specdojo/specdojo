@@ -333,6 +333,23 @@ members:
     scheduler_strategy: fifo
     note: OpenCode CLI と oMLX の Ornith を使用する pipeline reporter。権限とプロンプトは .opencode/agents/ornith-reporter.md で定義。
 
+  - nickname: qwen36-expert-executor
+    disabled: false
+    priority: 4
+    display_name: Qwen3.6 Expert Executor
+    email: null
+    roles: []
+    type: agent
+    provider: opencode
+    mode: edit
+    stage_role: executor
+    proficiency: expert
+    persona: task-executor
+    focus: [task-execution, document-creation, verification, complex-analysis]
+    capabilities: [web_search, document_authoring]
+    scheduler_strategy: critical-first
+    note: oMLX の Qwen3.6 35B-A3B（thinking あり）を使用する expert executor。ornith-expert-executor と同じ出力形式の規則と判定例を持ち、grade の判定は英語で出力する。grade の評価（PJR-ZSJQ）用。モデル・サンプリング・権限は .opencode/agents/qwen36-expert-executor.md と opencode.json で定義。
+
   #
   # claude code members
   #
