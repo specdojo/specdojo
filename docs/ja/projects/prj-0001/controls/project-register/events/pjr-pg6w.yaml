@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ebbd7bdb1bd7414f8a06f5be9acf98e1
+  ts: "2026-10-06T10:18:09Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-27Y0 の resume で観測した 2 つの問題をまとめて起票
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: register の resume は executor 段へ戻れず、executor 段の再開でも統合先を取り込まない
+    - field: description
+      from: ""
+      to: 親検証の失敗後の resume は reporter 段から始まり、executor に直させる経路がない（--force-restart は worktree ごと捨てる）。executor 段から再開するときは統合先を merge しないため、保護された設定を人が develop へ適用する手順と噛み合わず、手で merge する必要がある。PJR-27Y0 で両方が起きた。
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-06"
