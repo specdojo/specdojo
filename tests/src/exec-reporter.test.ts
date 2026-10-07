@@ -450,6 +450,24 @@ describe("reporter structured output", () => {
       expect(facts.outcome).toBe("complete");
     });
 
+    it("accepts a nested composite component that the runner ran as a whole", () => {
+      const input = evidence();
+      input.validations = [
+        { source: "executor", command: "npm run check", status: "not_run", summary: "delegated" },
+        runner("npm run validate:schema"),
+        runner("npm run typecheck"),
+      ];
+      const facts = deriveReporterFacts(input, {
+        packageScripts: {
+          check: "npm run typecheck && npm run validate:schema",
+          "validate:schema": "npm run validate:schema:docs && npm run validate:schema:samples",
+          "validate:schema:docs": "tsx tools/validate.ts docs",
+          "validate:schema:samples": "tsx tools/validate.ts samples",
+        },
+      });
+      expect(facts.outcome).toBe("complete");
+    });
+
     it("still blocks npm run check when a component was not run by anyone", () => {
       const input = evidence();
       input.validations = [
