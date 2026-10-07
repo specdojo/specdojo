@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-pzpa-grade-translation-default-translator
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-06T22:14:59Z"
   due_on: null
+  completed_at: "2026-10-07T10:31:34Z"
+  conclusion: grade の既定の翻訳の agent を gemma26-translator に切り替えた。実モデルで 13 件中 12 件が翻訳され、gemma26-reporter（7 件）より改善した
 ---
 
 # PJR-PZPA grade の既定の翻訳の agent を gemma26-translator へ切り替える
