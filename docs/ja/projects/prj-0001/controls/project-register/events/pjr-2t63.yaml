@@ -58,3 +58,25 @@
       from: "-"
       to: "agent exited with non-zero code: parent validation failed: validate-schema, test-unit"
   previous_event_id: reg_e596a9b79b5f46b89a70b334277eb3a0
+- v: 1
+  id: reg_95903d4187484fde9de574a92cc8e09b
+  ts: "2026-10-07T13:32:07Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: waiting
+  to_status: done
+  reason: orchestrator が統合と移行を行い、検証と名簿の読み込みを確認した。コメントを補ってから完了
+  changes:
+    - field: status
+      from: waiting
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-07"
+    - field: conclusion
+      from: "-"
+      to: agent の定義を .specdojo/agent-members.yaml へ分け、名簿の読み込みで両ファイルを schema 検証して合成する。pm-members.yaml の agent はエラーにし（案 A）、pm-members.yaml の保護を外した。本リポジトリの agent 37 件を移行し、失われたコメントを補った
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: validate-schema, test-unit"
+      to: "-"
+  previous_event_id: reg_392ccdf903c4487e95f91010d4ecfacc

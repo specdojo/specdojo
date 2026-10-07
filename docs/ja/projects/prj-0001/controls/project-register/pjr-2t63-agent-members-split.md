@@ -2,17 +2,18 @@
 specdojo:
   id: prj-0001:pjr-2t63-agent-members-split
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-05T22:59:51Z"
   due_on: null
-  block_reason: "agent exited with non-zero code: parent validation failed: validate-schema, test-unit"
+  completed_at: "2026-10-07T13:32:07Z"
+  conclusion: agent の定義を .specdojo/agent-members.yaml へ分け、名簿の読み込みで両ファイルを schema 検証して合成する。pm-members.yaml の agent はエラーにし（案 A）、pm-members.yaml の保護を外した。本リポジトリの agent 37 件を移行し、失われたコメントを補った
 ---
 
 # PJR-2T63 agent の定義を pm-members.yaml から保護された設定へ分ける
