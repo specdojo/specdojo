@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-pg6w-resume-stage-and-sync
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-06T10:18:08Z"
   due_on: null
+  completed_at: "2026-10-07T10:38:47Z"
+  conclusion: "--resume-from executor で reporter 段の run を executor 段から再開でき、失敗の理由を申し送る。すべての段の再開で統合先を取り込む。保護された設定を人が統合先へ適用して再開する流れ（同じ変更なら通り、異なれば衝突として拒否）を integration test で確認した"
 ---
 
 # PJR-PG6W register の resume は executor 段へ戻れず、executor 段の再開でも統合先を取り込まない

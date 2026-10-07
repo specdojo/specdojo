@@ -113,3 +113,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_1e3a18e869534c338a30163869130e3c
+- v: 1
+  id: reg_371aca3bcb724b74ad00f5e062d742c7
+  ts: "2026-10-07T10:38:47Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: "review: 初回の実装と、review で追加したテスト（83ebdc982）を確認"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-07"
+    - field: conclusion
+      from: "-"
+      to: "--resume-from executor で reporter 段の run を executor 段から再開でき、失敗の理由を申し送る。すべての段の再開で統合先を取り込む。保護された設定を人が統合先へ適用して再開する流れ（同じ変更なら通り、異なれば衝突として拒否）を integration test で確認した"
+  previous_event_id: reg_47bc35210b5a4813be6f2225eb5b7dd6
