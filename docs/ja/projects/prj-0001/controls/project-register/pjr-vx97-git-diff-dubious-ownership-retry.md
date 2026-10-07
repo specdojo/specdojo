@@ -49,7 +49,10 @@ worktree で Git が一時的に dubious ownership を返すとき、git diff �
 
 ## 4. 対応結果
 
--
+- `src/exec-worktree.ts` で、`Not a git repository` を大文字小文字を問わず検出し、対象 repository の `.git` が存在する場合だけ一時的な Git 失敗として再試行するようにした。dubious ownership と 2 秒・5 秒・10 秒の待ち時間および最大 3 回の上限を共有し、警告には判定理由を出力する。
+- `tests/src/exec-worktree.test.ts` に、`.git` がディレクトリの場合とファイルの場合、`.git` がない場合、2 種類の一時的失敗で上限を共有する場合、既存の dubious ownership と index.lock の判定を追加した。
+- [[specdojo:exec-worktree-guide|exec worktree運用ガイド]] に、追加した再試行条件と上限、再試行しない条件を反映した。
+- unit test、typecheck、lint などの全体検証は executor 終了後に親 runner が実行する。
 
 ## 5. 関連ドキュメント
 
