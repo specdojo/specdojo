@@ -62,6 +62,13 @@ agent の定義を、保護された `.specdojo/` 配下の設定へ移す。人
 - `config migrate-members`、分割 schema・template、保護判定、エラーメッセージ、unit / integration fixture、rulebook・recipe・sample・各リファレンス・移行ガイド・CHANGELOG を更新した。
 - 本リポジトリの実データでは agent member を 37 件検出した。計画記載の 39 件との差異はあるが、統合後に orchestrator が移行コマンドを実行する境界は維持し、本 executor では `.specdojo/` と実名簿を変更していない。
 
+### 4.1. orchestrator による統合（2026-10-07）
+
+- 親検証で `validate-schema` と `test-unit` が失敗し、waiting になった。`validate-schema` は本リポジトリの名簿が未移行のため（想定どおり）、`test-unit` は codex の修正漏れ（`config` のサブコマンド一覧と、nickname のエラーメッセージのテストの期待値）だった。
+- コードの統合と名簿の移行を同時に行う必要があるため、orchestrator が runner を経ずに統合した。worktree でテストの期待値 2 件と `agent-members-template.yaml` の schema の modeline を直し、`config migrate-members` で agent 37 件を `.specdojo/agent-members.yaml` へ移した（人は 1 件）。計画の 39 件は、コメント中の `type: agent` まで数えた誤りだった。
+- `npm run check` 相当の検証（型検査・lint・schema・catalog・履歴リンク・全テスト 2054 件）が通った状態で exec branch に commit し（6f80d107f）、develop へ merge した（6367dfc88）。統合後の `dist` で、名簿が人 1 件と agent 37 件として読み込めることを確かめた。
+- 移行コマンドは YAML を出力し直すため、元の `pm-members.yaml` にあった provider ごとの区切りや説明のコメントが失われた。orchestrator が元のコメントを `.specdojo/agent-members.yaml` と `pm-members.yaml` へ戻した（882587494、値は変えていない）。
+
 ## 5. 関連ドキュメント
 
 - [[specdojo:pm-members-rulebook]]（名簿の規範）
