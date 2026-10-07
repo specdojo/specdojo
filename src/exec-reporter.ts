@@ -165,6 +165,7 @@ export function deriveReporterFacts(evidence: ExecEvidence): ReporterFacts {
     (validation) =>
       validation.source !== "runner" &&
       validation.status !== "passed" &&
+      validation.status !== "requires_human" &&
       !(validation.status === "not_run" && runnerPassedCommands.has(validation.command.trim())),
   );
   if (executorValidationFailures.length > 0) {

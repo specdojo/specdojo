@@ -184,6 +184,15 @@ describe("extractBlockReason", () => {
     expect(prompt).toContain("`depends_on`");
   });
 
+  it("requires_human を sandbox 外で人が行う確認だけに限定する", () => {
+    const prompt = buildExecutorPrompt("# Plan\n");
+
+    expect(prompt).toContain("`requires_human`");
+    expect(prompt).toContain("cannot run from the agent sandbox");
+    expect(prompt).toContain("Do not use it for a check that could run but was skipped");
+    expect(prompt).toContain('"status":"passed|failed|not_run|requires_human"');
+  });
+
   it("再開 executor に既存差分と全 target の構造化確認を要求する", () => {
     const prompt = buildExecutorPrompt("# Plan\n", [], {
       resumed: true,

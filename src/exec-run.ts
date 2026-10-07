@@ -1027,11 +1027,17 @@ underscore in inline code (for example, \`depends_on\`).
 ${parentValidationInstruction}
 ${resumeInstruction}
 
+Use validation status \`requires_human\` only for a check that cannot run from the agent sandbox,
+such as launching a real agent CLI, consuming a usage quota or incurring a charge, or requiring
+credentials or a host-side operation. Do not use it for a check that could run but was skipped;
+report that as \`not_run\`. A \`requires_human\` check is carried into the result as a human handoff
+and does not block pipeline completion.
+
 End the final response with exactly one machine-readable report using this envelope. Do not place
 Markdown fences around the JSON.
 
 <specdojo_executor_evidence>
-{"final_message":"concise outcome","validations":[{"command":"exact command","status":"passed|failed|not_run","summary":"concise result"}]${targetCoverageExample}}
+{"final_message":"concise outcome","validations":[{"command":"exact command","status":"passed|failed|not_run|requires_human","summary":"concise result or required human check"}]${targetCoverageExample}}
 </specdojo_executor_evidence>
 `;
 }

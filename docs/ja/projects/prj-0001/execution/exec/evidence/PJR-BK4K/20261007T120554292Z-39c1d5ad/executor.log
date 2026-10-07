@@ -1,0 +1,11 @@
+`requires_human` 区分を実装しました。
+
+- 当該検証は完了を妨げず、result の申し送りへ機械的に追記されます。
+- `failed` と未充足の `not_run` は引き続き block します。
+- evidence schema、executor prompt、trial 集計、ガイド、個票を更新しました。
+- 読み込み・判定・申し送り・集計の単体テストを追加しました。
+- result ファイルと登録簿のステータスは変更していません。
+
+<specdojo_executor_evidence>
+{"final_message":"`requires_human` 検証区分、機械判定、result 申し送り、trial 集計、文書および単体テストを実装した。","validations":[{"command":"npx prettier --write <変更対象ファイル>","status":"passed","summary":"変更した TypeScript、Markdown、YAML を整形した。"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"register 派生ビューを正常に生成した。"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"catalog 検証に成功した。既存文書欠落に関する warning のみ。"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"2436 件の文書インデックスを生成した。"},{"command":"npm run validate:history-links","status":"passed","summary":"履歴リンク検証に成功した。"},{"command":"git diff --check","status":"passed","summary":"空白エラーや競合マーカーは検出されなかった。"}]}
+</specdojo_executor_evidence>

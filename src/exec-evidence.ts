@@ -18,7 +18,7 @@ export type EvidenceValidation = {
   /** Repository the runner ran the validation in (`project` or a declared product repository). */
   repo?: string;
   command: string;
-  status: "passed" | "failed" | "not_run";
+  status: "passed" | "failed" | "not_run" | "requires_human";
   summary: string;
 };
 
@@ -235,7 +235,13 @@ export function parseExecutorReport(stdout: string): {
       const candidate = item as Record<string, unknown>;
       const command = boundedText(candidate.command, MAX_VALIDATION_COMMAND_LENGTH);
       const status = candidate.status;
-      if (!command || (status !== "passed" && status !== "failed" && status !== "not_run")) {
+      if (
+        !command ||
+        (status !== "passed" &&
+          status !== "failed" &&
+          status !== "not_run" &&
+          status !== "requires_human")
+      ) {
         continue;
       }
       validations.push({

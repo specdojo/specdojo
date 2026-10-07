@@ -404,6 +404,15 @@ function renderEditReporterBody(
       const target = reporterInlineText(entry.target).replace(/`/g, "'");
       return `対象 \`${target}\` は未変更: ${reporterInlineText(entry.reason)}`;
     });
+  const humanValidationNotes = evidence.validations
+    .filter(
+      (validation) => validation.source !== "runner" && validation.status === "requires_human",
+    )
+    .map((validation) => {
+      const command = reporterInlineText(validation.command).replace(/`/g, "'");
+      const summary = reporterInlineText(validation.summary) || "要約なし";
+      return `人の確認が必要: \`${command}\`（${summary}）`;
+    });
   return [
     "# Edit Result",
     "",
@@ -417,7 +426,10 @@ function renderEditReporterBody(
     "",
     "## 3. 申し送り",
     "",
-    reporterBulletList([...output.handoff, ...unchangedTargetNotes], "なし"),
+    reporterBulletList(
+      [...output.handoff, ...unchangedTargetNotes, ...humanValidationNotes],
+      "なし",
+    ),
     "",
     "## 4. 進め方と実践の型の適用",
     "",

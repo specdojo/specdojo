@@ -321,6 +321,41 @@ describe("reporter structured output", () => {
     });
   });
 
+  it("completes when only a requires_human validation remains", () => {
+    const input = evidence();
+    input.validations = [
+      {
+        source: "executor",
+        command: "real-agent-cli --version",
+        status: "requires_human",
+        summary: "実 agent CLI の起動は sandbox 外で人が確認する",
+      },
+    ];
+
+    expect(deriveReporterFacts(input)).toMatchObject({ outcome: "complete", block_reason: "" });
+  });
+
+  it.each([
+    { command: "npm test", status: "failed" as const, summary: "1 failed" },
+    { command: "npm run lint:md", status: "not_run" as const, summary: "not delegated" },
+  ])("still blocks $status mixed with requires_human", (blockingValidation) => {
+    const input = evidence();
+    input.validations = [
+      {
+        source: "executor",
+        command: "real-agent-cli --version",
+        status: "requires_human",
+        summary: "人が確認する",
+      },
+      { source: "executor", ...blockingValidation },
+    ];
+
+    expect(deriveReporterFacts(input)).toMatchObject({
+      outcome: "blocked",
+      block_reason: `executor validation failed or not run: ${blockingValidation.command}`,
+    });
+  });
+
   it("does not let a runner pass override an executor-reported failure of the same command", () => {
     const input = evidence();
     input.validations = [

@@ -120,7 +120,11 @@ properties:
           maxLength: 500
         status:
           type: string
-          enum: [passed, failed, not_run]
+          enum: [passed, failed, not_run, requires_human]
+          description: >
+            Executor validations may use requires_human only for checks that cannot run in the
+            agent sandbox. The runner preserves those checks as human handoff items without
+            treating them as validation failures.
         summary:
           type: string
           maxLength: 1000
