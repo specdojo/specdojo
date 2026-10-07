@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   owner: DEV
   registered_at: "2026-10-05T22:59:51Z"
   due_on: null
+  block_reason: "agent exited with non-zero code: parent validation failed: validate-schema, test-unit"
 ---
 
 # PJR-2T63 agent の定義を pm-members.yaml から保護された設定へ分ける
@@ -50,13 +51,16 @@ agent の定義を、保護された `.specdojo/` 配下の設定へ移す。人
 
 | No  | 作業                                                 | 担当         | 状態 | メモ                                                                    |
 | --- | ---------------------------------------------------- | ------------ | ---- | ----------------------------------------------------------------------- |
-| 1   | 読み込み・schema・保護の判定・移行コマンドを実装する | DEV          | open | 案 A                                                                    |
-| 2   | scaffold と文書を更新する                            | DEV          | open | rulebook・recipe・template・sample・リファレンス・移行ガイド・CHANGELOG |
+| 1   | 読み込み・schema・保護の判定・移行コマンドを実装する | DEV          | done | 案 A                                                                    |
+| 2   | scaffold と文書を更新する                            | DEV          | done | rulebook・recipe・template・sample・リファレンス・移行ガイド・CHANGELOG |
 | 3   | 本リポジトリの agent の member を移行する            | orchestrator | open | 統合後に移行コマンドで行う（保護された設定のため）                      |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- repository 共通の agent 定義を `.specdojo/agent-members.yaml`（`agent_members_path` で変更可）へ分離し、`loadMemberRoster` が人間名簿と agent 定義を schema 検証後に合成するようにした。
+- 型の取り違え、schema 違反、合成後の nickname 重複をファイル名と nickname 付きで拒否する。`pm-members.yaml` に agent が残る場合は `config migrate-members --dry-run` を案内する。
+- `config migrate-members`、分割 schema・template、保護判定、エラーメッセージ、unit / integration fixture、rulebook・recipe・sample・各リファレンス・移行ガイド・CHANGELOG を更新した。
+- 本リポジトリの実データでは agent member を 37 件検出した。計画記載の 39 件との差異はあるが、統合後に orchestrator が移行コマンドを実行する境界は維持し、本 executor では `.specdojo/` と実名簿を変更していない。
 
 ## 5. 関連ドキュメント
 
