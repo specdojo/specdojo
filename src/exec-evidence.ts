@@ -67,7 +67,7 @@ export type ExecEvidence = {
     stderr?: string;
   };
   log_refs: Array<{
-    kind: "agent-output-excerpt" | "command-stdout" | "command-stderr";
+    kind: "agent-output-excerpt" | "command-stdout" | "command-stderr" | "parent-validation-output";
     path: string;
     bytes: number;
     truncated: boolean;
@@ -134,6 +134,22 @@ export type RecordReporterFailureOutputInput = {
   evidencePath: string;
   evidence: ExecEvidence;
   invocationOutputs: Array<{ stdout: string; stderr: string }>;
+};
+
+export type RecordParentValidationFailureOutputInput = {
+  worktreePath: string;
+  evidencePath: string;
+  evidence: ExecEvidence;
+  failureOutputs: readonly {
+    label: string;
+    exitCode: number | null;
+    stdout: string;
+    stderr: string;
+    error?: string;
+    timedOut?: boolean;
+    stdoutTruncated?: boolean;
+    stderrTruncated?: boolean;
+  }[];
 };
 
 type ExecutorReport = {
@@ -694,6 +710,59 @@ export function writeExecutorEvidence(path: string, evidence: ExecEvidence): voi
   const temporaryPath = `${path}.tmp`;
   writeFileSync(temporaryPath, `${JSON.stringify(evidence, null, 2)}\n`, "utf8");
   renameSync(temporaryPath, path);
+}
+
+/**
+ * Persists failed parent-validation output beside executor evidence. A new numbered set is added
+ * for every validation batch so reporter/integration resume never overwrites the prior failure.
+ */
+export function recordParentValidationFailureOutput(
+  input: RecordParentValidationFailureOutputInput,
+): ExecEvidence {
+  if (input.failureOutputs.length === 0) return input.evidence;
+  const evidenceDir = dirname(input.evidencePath);
+  ensureDir(evidenceDir);
+  const priorAttempts = input.evidence.log_refs
+    .map((ref) => /^parent-validation-attempt-(\d+)-/u.exec(ref.path.split("/").at(-1) ?? "")?.[1])
+    .filter((attempt): attempt is string => attempt !== undefined)
+    .map(Number);
+  const attempt = Math.max(0, ...priorAttempts) + 1;
+  const refs: ExecEvidence["log_refs"] = [];
+
+  for (const output of input.failureOutputs) {
+    const logPath = join(
+      evidenceDir,
+      `parent-validation-attempt-${attempt}-${safeSlug(output.label)}.log`,
+    );
+    const content = redactSensitiveText(
+      [
+        `parent validation: ${output.label}`,
+        `exit code: ${output.exitCode ?? "unknown"}`,
+        `timed out: ${output.timedOut === true ? "yes" : "no"}`,
+        ...(output.error ? [`spawn error: ${output.error}`] : []),
+        "",
+        "--- stdout ---",
+        output.stdout,
+        "",
+        "--- stderr ---",
+        output.stderr,
+      ].join("\n"),
+    );
+    writeFileSync(logPath, content, "utf8");
+    refs.push({
+      kind: "parent-validation-output",
+      path: repoRelative(input.worktreePath, logPath),
+      bytes: Buffer.byteLength(content, "utf8"),
+      truncated: output.stdoutTruncated === true || output.stderrTruncated === true,
+    });
+  }
+
+  const evidence = {
+    ...input.evidence,
+    log_refs: [...input.evidence.log_refs, ...refs],
+  };
+  writeExecutorEvidence(input.evidencePath, evidence);
+  return evidence;
 }
 
 /**
