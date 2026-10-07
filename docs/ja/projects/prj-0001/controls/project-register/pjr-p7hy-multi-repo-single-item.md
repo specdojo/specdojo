@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-p7hy-multi-repo-single-item
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: high
   owner: ARC
   registered_at: "2026-09-06T13:40:45Z"
   due_on: "2026-09-30"
+  completed_at: "2026-10-07T12:42:35Z"
+  conclusion: 後続の PJR-5822・PJR-9KST・PJR-6RN3・PJR-V96B・PJR-69VP で、統合順序・失敗パターンごとの回復・リポジトリ別の親検証・部分状態の扱い・実構成での確認がすべて満たされた。本項目での実装はない
 ---
 
 # PJR-P7HY 1つの項目が複数リポジトリを変更する場合の統合を扱う
