@@ -7,11 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   owner: ARC
   registered_at: "2026-09-30T11:39:31Z"
-  block_reason: "agent exited with non-zero code: 外出し後の `grade` による比較（finding の記録）が sandbox の承認待ちにより実行できず、プランの完了条件を満たせていないため。"
+  block_reason: grade による外出し前後の比較は agent を起動するため、codex の sandbox では実行できない。比較の実行者（orchestrator など）を決めてから再開する
 ---
 
 # PJR-B7DG rulebook から削除した例が sample に含まれるかの確認と grade による比較
