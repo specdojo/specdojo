@@ -154,3 +154,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_cf8bf98c6a46494799c529baacf64516
+- v: 1
+  id: reg_5d0a30aeaca64b35891215aaa3c342f4
+  ts: "2026-10-07T22:18:00Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: "review: 調査結果と PJR-Q761 の比較を確認し、利用者が方針を決定"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-08"
+    - field: conclusion
+      from: "-"
+      to: exec-run.ts の関数の分類・依存・重複・状態遷移を調べ、3 案を PJR-Q761 で比較した。利用者が選択肢 C を選んだ
+  previous_event_id: reg_0c7fad1d3a7a45f3b3cc91dee3ebb848

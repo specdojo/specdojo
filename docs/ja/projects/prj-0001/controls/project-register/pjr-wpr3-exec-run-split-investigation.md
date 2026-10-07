@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-wpr3-exec-run-split-investigation
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-10-02T12:14:16Z"
+  completed_at: "2026-10-07T22:18:00Z"
+  conclusion: exec-run.ts の関数の分類・依存・重複・状態遷移を調べ、3 案を PJR-Q761 で比較した。利用者が選択肢 C を選んだ
 ---
 
 # PJR-WPR3 exec-run.ts の分割方針の調査と選択肢の比較
