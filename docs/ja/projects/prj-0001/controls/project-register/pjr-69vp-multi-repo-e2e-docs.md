@@ -11,7 +11,7 @@ specdojo:
   priority: high
   owner: DEV
   registered_at: "2026-10-01T03:54:10Z"
-  block_reason: "agent exited with non-zero code: タスクが要求する `CHANGELOG.md` の更新と、tools 配下の検証スクリプトが未実施です(executor の書き込み許可リスト外のため)。このため完了条件を満たしていません。次のアクションは、許可リストの調整、または人間による `CHANGELOG.md` への反映です。"
+  block_reason: "agent exited with non-zero code: executor validation failed or not run: tools/exec/verify-multi-repo-agent-write.sh all"
 ---
 
 # PJR-69VP 複数リポジトリ構成の実構成検証と文書の更新

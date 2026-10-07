@@ -119,3 +119,35 @@
       from: "agent exited with non-zero code: 親 runner の検証 `test-integration` が失敗しており、実構成検証が完了していないため。また、`CHANGELOG.md` の更新が未完了である。"
       to: "agent exited with non-zero code: タスクが要求する `CHANGELOG.md` の更新と、tools 配下の検証スクリプトが未実施です(executor の書き込み許可リスト外のため)。このため完了条件を満たしていません。次のアクションは、許可リストの調整、または人間による `CHANGELOG.md` への反映です。"
   previous_event_id: reg_7bb6b30522484997af87820cc5309ac9
+- v: 1
+  id: reg_f9b8797e1f3046138e368ae3ff1c4d6b
+  ts: "2026-10-07T11:01:56Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: タスクが要求する `CHANGELOG.md` の更新と、tools 配下の検証スクリプトが未実施です(executor の書き込み許可リスト外のため)。このため完了条件を満たしていません。次のアクションは、許可リストの調整、または人間による `CHANGELOG.md` への反映です。"
+      to: "-"
+  previous_event_id: reg_a942444c302749aba8ecef4f4247e77e
+- v: 1
+  id: reg_f8455ee5b69b45dc8accd42076539d36
+  ts: "2026-10-07T11:11:23Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: executor validation failed or not run: tools/exec/verify-multi-repo-agent-write.sh all"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: executor validation failed or not run: tools/exec/verify-multi-repo-agent-write.sh all"
+  previous_event_id: reg_f9b8797e1f3046138e368ae3ff1c4d6b
