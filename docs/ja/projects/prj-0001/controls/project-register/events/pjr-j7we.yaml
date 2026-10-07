@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_50cdf7eda982421bad2500d8425b3ab4
+  ts: "2026-10-07T13:56:22Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者の依頼（2026-10-07）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: devcontainer scaffold で Emacs の設定をテンプレートから展開する
+    - field: description
+      from: ""
+      to: devcontainer scaffold のオプションで Emacs を選べるようにする。必要なツール（Emacs・LSP サーバー・検索ツール）と、一般的なキーバインド（C-h を後退にするなど）を設定した init.el をテンプレートとして同梱し、scaffold 時に展開する。既存の Emacs の設定は上書きしない。PJR-2H5F の scaffold の上に作る。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-07"
