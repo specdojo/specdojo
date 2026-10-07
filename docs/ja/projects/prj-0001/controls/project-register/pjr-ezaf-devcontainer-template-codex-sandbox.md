@@ -12,7 +12,7 @@ specdojo:
   owner: DEV
   registered_at: "2026-10-04T05:03:36Z"
   due_on: null
-  block_reason: rate limit reached
+  block_reason: "agent exited with non-zero code: executor validation failed or not run: npm run check"
 ---
 
 # PJR-EZAF devcontainer テンプレートで codex の sandbox が動くか確認し、必要な設定を加える

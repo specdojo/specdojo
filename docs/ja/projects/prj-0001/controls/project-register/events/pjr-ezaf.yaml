@@ -58,3 +58,35 @@
       from: "-"
       to: rate limit reached
   previous_event_id: reg_867051e0b3e14c01bfaf190e56f51be6
+- v: 1
+  id: reg_4cd63614e2fe45e0aa98e44de918db95
+  ts: "2026-10-07T20:53:38Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: rate limit reached
+      to: "-"
+  previous_event_id: reg_3c4fe49cea43488e9880e320ffa7bdae
+- v: 1
+  id: reg_b58fe41c8bb1479c97c27ec895b9f536
+  ts: "2026-10-07T21:03:32Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: executor validation failed or not run: npm run check"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: executor validation failed or not run: npm run check"
+  previous_event_id: reg_4cd63614e2fe45e0aa98e44de918db95
