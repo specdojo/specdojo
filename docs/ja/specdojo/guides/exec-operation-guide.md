@@ -466,7 +466,7 @@ register 由来の plan が `targets` を宣言していない場合、runner �
 
 変更不要として受理した target の理由は reporter が生成する result の「申し送り」へ runner が転記します。これにより、ファイル差分がないことを黙って成功扱いにせず、変更不要と判断した根拠を完了記録に残します。通常の新規 run は既存 executor との互換性を保つため `target_coverage` を必須とせず、この追加ガードは中断後の executor 再開に限定します。
 
-`agent-config-write` または `agent-git-state-write` が executor を止めた場合は、通常の実装失敗を示す `failed` と区別して executor を `blocked` と記録します。申し送りの設定変更を人または orchestrator が統合先へ適用し、agent 由来の保護対象差分や Git 状態変更を worktree から解消した後、`--resume` を実行します。runner が統合先を worktree へ取り込んでから、既存成果を保持した executor を再開するため、worktree で手動 merge する必要はありません。申し送りを適用せず保護対象差分を残したまま再開した場合、executor が完了しても統合前の保護検査で再び block し、worktree を保持します。
+`agent-config-write` または `agent-git-state-write` が executor を止めた場合は、通常の実装失敗を示す `failed` と区別して executor を `blocked` と記録します。申し送りの設定変更を人または orchestrator が統合先へ適用し、agent 由来の保護対象差分や Git 状態変更を worktree から解消した後、`--resume` を実行します。runner が統合先を worktree へ取り込んでから、既存成果を保持した executor を再開するため、worktree で手動 merge する必要はありません。人が統合先へ適用した保護対象の内容と worktree に残る agent の変更が同じなら、同期によって agent 側の差分は解消され、その変更を理由に再び block されません。両者が異なり同じ箇所で競合する場合は、同期を巻き戻して register の状態を変えずに再開を拒否し、統合先には人が適用した内容、worktree には agent の提案内容をそれぞれ保持します。申し送りを適用せず保護対象差分を残したまま再開した場合、executor が完了しても統合前の保護検査で再び block し、worktree を保持します。
 
 reporter 段の再開の入力は、`pipeline-state.json`（stage 状態と plan / result の参照）と `evidence.json`（executor の変更・検証結果・最終メッセージ）です。`--reporter-by` を省略した場合は、その run で使った reporter agent を state から引き継ぎます。保存済みの親 runner 検証が失敗しているか不足していれば、Schedule 実行と同様に再実行して evidence を更新します。再開が成功した後は通常実行と同じ経路で、result の記入と status 更新、成果物の commit、統合ブランチへの merge、`register review` までを行います。
 

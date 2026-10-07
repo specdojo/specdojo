@@ -66,7 +66,9 @@ specdojo:
 - executor 再開時の prompt に、失敗した親検証の ID と要約、または保存済みの block 理由を申し送りするようにした。
 - executor／reporter／統合の全再開段で、状態遷移や agent 起動より先に統合先を exec branch と worktree へ取り込むようにした。競合時は従来どおり同期を巻き戻し、register の状態を変えずに拒否する。
 - unit test に段指定・拒否条件・申し送りの検証を追加し、integration test に reporter 段から executor へ戻して統合先の修正を取り込む経路を追加した。
+- integration test に、`agent-config-write` で block されたあと、人が同じ保護対象変更を統合先へ commit して通常の `--resume` で review まで進む経路を追加した。人と agent の変更内容が異なる場合は、同期を巻き戻して waiting と双方の内容を保持したまま拒否することも確認した。
 - コマンドリファレンス、exec 運用ガイド、worktree ガイドへ指定方法と、保護対象設定を統合先へ適用して再開する手順を追記した。
+- exec 運用ガイドへ、人が適用した保護対象変更が agent の提案と同じ場合は差分が解消され、異なる場合は再開前同期を拒否する扱いを追記した。
 
 ## 5. 関連ドキュメント
 
