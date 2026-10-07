@@ -137,6 +137,10 @@ fi`);
         'if ! curl -fsSL https://claude.ai/install.sh | bash; then\n  echo "Warning: Claude Code installer failed."\nfi',
       );
     } else if (provider === "codex") {
+      devcontainer.runArgs = devcontainer.runArgs ?? [];
+      if (!devcontainer.runArgs.includes("--security-opt=seccomp=unconfined")) {
+        devcontainer.runArgs.push("--security-opt=seccomp=unconfined");
+      }
       devcontainer.mounts.push(
         `source=${volumeName("codex")},target=/home/node/.codex,type=volume`,
       );

@@ -217,6 +217,7 @@ describe("runDevcontainerScaffold", () => {
     expect(json.mounts).toContain(
       "source=repo-specdojo-antigravity,target=/home/node/.config/antigravity,type=volume",
     );
+    expect(json.runArgs).toEqual(["--security-opt=seccomp=unconfined"]);
 
     const shCall = findWriteCall("post-create.sh");
     expect(shCall[1]).toContain("curl -fsSL https://claude.ai/install.sh");
@@ -275,6 +276,24 @@ describe("runDevcontainerScaffold", () => {
     } finally {
       actualFs.rmSync(temporaryHome, { recursive: true, force: true });
     }
+  });
+
+  it("should keep the default seccomp profile without the codex provider", async () => {
+    await runDevcontainerScaffold({
+      packageRoot,
+      repoRoot,
+      providers: ["claude", "opencode", "antigravity"],
+      editors: [],
+      ollama: false,
+      cron: false,
+      tmux: false,
+      force: false,
+      dryRun: false,
+    });
+
+    const jsonCall = findWriteCall("devcontainer.json");
+    const json = JSON.parse(String(jsonCall[1]));
+    expect(json).not.toHaveProperty("runArgs");
   });
 
   it("should normalize the repository name used as the volume prefix", async () => {

@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-10-04T05:03:36Z"
   due_on: null
-  block_reason: "agent exited with non-zero code: parent validation failed: lint-md"
 ---
 
 # PJR-EZAF devcontainer テンプレートで codex の sandbox が動くか確認し、必要な設定を加える
