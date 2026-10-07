@@ -179,7 +179,7 @@ export function deriveReporterFacts(
   const isDelegatedValidationSatisfied = (command: string): boolean => {
     const normalized = normalizeValidationCommand(command);
     if (runnerPassedCommands.has(normalized)) return true;
-    const components = expandCompositeCommand(normalized, packageScripts);
+    const components = compositeComponents(normalized, packageScripts);
     return (
       components !== undefined &&
       components.every((component) =>
@@ -224,20 +224,18 @@ function scriptNameOf(command: string): string | undefined {
   return /^npm run ([A-Za-z0-9:_.-]+)$/.exec(command)?.[1];
 }
 
-// package.json の script が npm script の呼び出しを `&&` でつないだだけの合成なら、構成する
-// コマンドへ再帰的に展開する。それ以外（任意のシェル、引数付きなど）は展開しない。
-function expandCompositeCommand(
+// package.json の script が npm script の呼び出しを `&&` でつないだだけの合成なら、直下の構成
+// コマンドを返す。それ以外（任意のシェル、引数付きなど）は合成として扱わない。
+function compositeComponents(
   command: string,
   scripts: Readonly<Record<string, string>>,
-  depth = 0,
 ): string[] | undefined {
-  if (depth > MAX_COMPOSITE_DEPTH) return undefined;
   const name = scriptNameOf(command);
   const body = name === undefined ? undefined : scripts[name];
   if (body === undefined) return undefined;
   const parts = body.split("&&").map((part) => normalizeValidationCommand(part));
   if (parts.length < 2 || parts.some((part) => scriptNameOf(part) === undefined)) return undefined;
-  return parts.flatMap((part) => expandCompositeCommand(part, scripts, depth + 1) ?? [part]);
+  return parts;
 }
 
 // executor は `npm run <name>` の代わりに script の中身（例: `node --import tsx src/specdojo.ts
@@ -246,12 +244,24 @@ function normalizeScriptBody(command: string): string {
   return normalizeValidationCommand(command).replace(/^(?:node --import tsx|npx tsx) /, "tsx ");
 }
 
+// 構成コマンドは、それ自体が通っていれば満たす。通っていなければ、同等のコマンドの組、script の
+// 中身の直接実行、さらに合成ならその構成コマンドの順に確かめる（runner が合成の script を丸ごと
+// 実行して通した場合に、中身を分解して探さないため）。
 function isComponentSatisfied(
   command: string,
   passed: ReadonlySet<string>,
   scripts: Readonly<Record<string, string>>,
+  depth = 0,
 ): boolean {
   if (passed.has(command)) return true;
+  if (depth < MAX_COMPOSITE_DEPTH) {
+    const components = compositeComponents(command, scripts);
+    if (
+      components?.every((component) => isComponentSatisfied(component, passed, scripts, depth + 1))
+    ) {
+      return true;
+    }
+  }
   const equivalents = COMMAND_EQUIVALENTS[command];
   if (equivalents !== undefined && equivalents.every((equivalent) => passed.has(equivalent))) {
     return true;
