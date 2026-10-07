@@ -221,8 +221,9 @@ describe("runDevcontainerScaffold", () => {
 
     const shCall = findWriteCall("post-create.sh");
     expect(shCall[1]).toContain("curl -fsSL https://claude.ai/install.sh");
+    expect(shCall[1]).toContain("curl -fsSL https://chatgpt.com/codex/install.sh");
     expect(shCall[1]).toContain("sudo npm install -g @openai/codex@latest");
-    expect(shCall[1]).toContain("sudo npm install -g @opencode/cli@latest");
+    expect(shCall[1]).toContain("sudo npm install -g opencode-ai@latest");
     expect(shCall[1]).toContain("curl -fsSL https://antigravity.google/cli/install.sh");
   });
 

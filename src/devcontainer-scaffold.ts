@@ -144,14 +144,18 @@ fi`);
       devcontainer.mounts.push(
         `source=${volumeName("codex")},target=/home/node/.codex,type=volume`,
       );
-      extraScripts.push("sudo npm install -g @openai/codex@latest");
+      // 本リポジトリの devcontainer と同じく公式の install.sh を使い、失敗したら npm で入れる。
+      extraScripts.push(
+        'if ! curl -fsSL https://chatgpt.com/codex/install.sh | CODEX_NON_INTERACTIVE=1 sh; then\n  echo "Warning: Codex installer failed; falling back to npm."\n  sudo npm install -g @openai/codex@latest\nfi',
+      );
     } else if (provider === "opencode") {
       devcontainer.mounts.push(
         `source=${volumeName("opencode")},target=/home/node/.config/opencode,type=volume`,
         `source=${volumeName("opencode-data")},target=/home/node/.local/share/opencode,type=volume`,
       );
       devcontainer.containerEnv["OPENCODE_DISABLE_AUTO_UPDATE"] = "1";
-      extraScripts.push("sudo npm install -g @opencode/cli@latest");
+      // 本リポジトリで設定を確かめている opencode の npm パッケージ（opencode-ai）を使う。
+      extraScripts.push("sudo npm install -g opencode-ai@latest");
     } else if (provider === "antigravity") {
       devcontainer.mounts.push(
         `source=${volumeName("antigravity")},target=/home/node/.config/antigravity,type=volume`,
