@@ -10,6 +10,11 @@ based_on:
   - prj-0001:pm-roles
 version: 1
 project_id: prj-0001
+# Member は、実際に作業する人間または agent を表す。
+# roles には対応する Role code のリストを指定する。兼務の場合は複数記載する。
+# タスク側の owner には pm-roles.yaml に存在する Role code を使う。
+# agent の定義は .specdojo/agent-members.yaml にある（PJR-2T63）。
+
 members:
   - nickname: indie
     display_name: Indie Hacker
