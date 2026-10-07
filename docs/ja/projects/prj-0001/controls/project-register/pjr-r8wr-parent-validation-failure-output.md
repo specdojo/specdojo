@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-r8wr-parent-validation-failure-output
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-05T22:00:10Z"
   due_on: null
+  completed_at: "2026-10-07T10:12:35Z"
+  conclusion: 失敗した親検証の stdout / stderr を秘匿処理のうえ各 1MiB まで evidence のログ（parent-validation-output）に保存し、resume ごとに attempt 番号で追記する。要約は先頭と末尾を残して中間を省略する。成功時は要約だけを残す
 ---
 
 # PJR-R8WR 親検証が失敗したとき、出力の全文を evidence に残し、要約に末尾を含める

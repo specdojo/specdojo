@@ -55,3 +55,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_64aa4c68638847168c93576f7c430812
+- v: 1
+  id: reg_2f3534b690754981b8c7442eb5b4f3c6
+  ts: "2026-10-07T10:12:35Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: "review: 差分と完了条件を確認（保存・参照・秘匿・要約・resume での保持・reporter 入力との独立）"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-07"
+    - field: conclusion
+      from: "-"
+      to: 失敗した親検証の stdout / stderr を秘匿処理のうえ各 1MiB まで evidence のログ（parent-validation-output）に保存し、resume ごとに attempt 番号で追記する。要約は先頭と末尾を残して中間を省略する。成功時は要約だけを残す
+  previous_event_id: reg_5e5edf0206f14437ba66e00fd424f8ba
