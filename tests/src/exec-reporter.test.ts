@@ -426,6 +426,30 @@ describe("reporter structured output", () => {
       });
     });
 
+    it("accepts a component that the executor ran as the script body", () => {
+      const input = evidence();
+      input.validations = [
+        { source: "executor", command: "npm run check", status: "not_run", summary: "delegated" },
+        {
+          source: "executor",
+          command: "node --import tsx src/specdojo.ts catalog validate",
+          status: "passed",
+          summary: "ok",
+        },
+        runner("npm run typecheck"),
+        runner("npm run lint:md"),
+        runner("npm run test:unit"),
+        runner("npm run test:integration"),
+      ];
+      const facts = deriveReporterFacts(input, {
+        packageScripts: {
+          ...packageScripts,
+          "validate:catalog": "tsx src/specdojo.ts catalog validate",
+        },
+      });
+      expect(facts.outcome).toBe("complete");
+    });
+
     it("still blocks npm run check when a component was not run by anyone", () => {
       const input = evidence();
       input.validations = [

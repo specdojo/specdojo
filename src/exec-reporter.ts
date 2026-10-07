@@ -182,7 +182,9 @@ export function deriveReporterFacts(
     const components = expandCompositeCommand(normalized, packageScripts);
     return (
       components !== undefined &&
-      components.every((component) => isComponentSatisfied(component, passedCommands))
+      components.every((component) =>
+        isComponentSatisfied(component, passedCommands, packageScripts),
+      )
     );
   };
   const executorValidationFailures = evidence.validations.filter(
@@ -238,10 +240,27 @@ function expandCompositeCommand(
   return parts.flatMap((part) => expandCompositeCommand(part, scripts, depth + 1) ?? [part]);
 }
 
-function isComponentSatisfied(command: string, passed: ReadonlySet<string>): boolean {
+// executor は `npm run <name>` の代わりに script の中身（例: `node --import tsx src/specdojo.ts
+// catalog validate`）を直接実行して記録することがある。tsx の起動の書き方の違いだけをそろえて比べる。
+function normalizeScriptBody(command: string): string {
+  return normalizeValidationCommand(command).replace(/^(?:node --import tsx|npx tsx) /, "tsx ");
+}
+
+function isComponentSatisfied(
+  command: string,
+  passed: ReadonlySet<string>,
+  scripts: Readonly<Record<string, string>>,
+): boolean {
   if (passed.has(command)) return true;
   const equivalents = COMMAND_EQUIVALENTS[command];
-  return equivalents !== undefined && equivalents.every((equivalent) => passed.has(equivalent));
+  if (equivalents !== undefined && equivalents.every((equivalent) => passed.has(equivalent))) {
+    return true;
+  }
+  const name = scriptNameOf(command);
+  const body = name === undefined ? undefined : scripts[name];
+  if (body === undefined) return false;
+  const normalizedBody = normalizeScriptBody(body);
+  return [...passed].some((candidate) => normalizeScriptBody(candidate) === normalizedBody);
 }
 
 let cachedPackageScripts: Readonly<Record<string, string>> | undefined;
