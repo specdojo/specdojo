@@ -38,11 +38,12 @@ project の解決順序と設定は [遂行の技活用ガイド](../guides/waza
 
 ## 2. config / project
 
-| コマンド          | 用途                                              | 例                                          |
-| ----------------- | ------------------------------------------------- | ------------------------------------------- |
-| `config init`     | `specdojo.config.json` と `.gitignore` を用意する | `specdojo config init`                      |
-| `config scaffold` | provider の agent・settings 設定を配置する        | `specdojo config scaffold --provider codex` |
-| `project list`    | 登録済み project を表示する                       | `specdojo project list`                     |
+| コマンド                 | 用途                                              | 例                                          |
+| ------------------------ | ------------------------------------------------- | ------------------------------------------- |
+| `config init`            | `specdojo.config.json` と `.gitignore` を用意する | `specdojo config init`                      |
+| `config migrate-members` | agent 定義を保護設定へ移す                        | `specdojo config migrate-members --dry-run` |
+| `config scaffold`        | provider の agent・settings 設定を配置する        | `specdojo config scaffold --provider codex` |
+| `project list`           | 登録済み project を表示する                       | `specdojo project list`                     |
 
 `config init` は、register 単体で始められる `prj-0001` の最小設定を作成し、設定確認、任意の
 provider 設定、登録簿作成の順に次のコマンドを案内します。あわせて、生成物（`generated/` 配下、
@@ -61,6 +62,8 @@ specdojo config scaffold --provider antigravity --global
 ```
 
 `--force` はリポジトリ内の scaffold ファイルだけを上書きし、グローバル設定の既存項目は上書きしません。従来の `exec scaffold --provider antigravity` でも同じ `--global` / `--dry-run` の挙動を利用できます。
+
+`config migrate-members` は、各 project の `pm-members.yaml` から `type: agent` の member を取り出し、トップレベルの `agent_members_path`（既定 `.specdojo/agent-members.yaml`）へ統合します。通常実行前に `--dry-run` で対象と件数を確認してください。`--project <id>` を指定すると 1 project だけを対象にします。
 
 `current_project` を設定しておくと、多くのコマンドで `--project` を省略できます。
 
@@ -413,7 +416,7 @@ specdojo schedule strategy generate \
 
 `--plan` と `--deliverable` も Schedule のパイプライン宣言を持たないため、`--executor-by` / `--reporter-by` の少なくとも一方を指定したときだけ executor/reporter 2段階で実行します。指定しなかった段は `stage_role` による自動選択で決まります。`--plan` では reporter が scaffold 済みの result を記入するため、frontmatter に `task_id` を持つ plan が必要です。`--by` との併用はエラーです。`--by` に `stage_role` を持つ pipeline 用 agent を指定すると、result 未記入の blocked にはせず、`--executor-by` / `--reporter-by` を使うよう案内するエラーで実行前に拒否します。
 
-agent の指定は roster nickname（`pm-members.yaml`）へ一本化します。手動ターゲット（`--task` / `--register` など）では `--by <nickname>`、`--auto` バッチでは mode 別に `--edit-by` / `--review-by` を使い、バッチ起動は `--auto` に一本化します。解決の優先順位は「単体指定（`--by`）＞ mode 別指定（`--edit-by` / `--review-by`）＞ 自動選択」です。
+agent の指定は repository 共通 roster nickname（`.specdojo/agent-members.yaml`）へ一本化します。手動ターゲット（`--task` / `--register` など）では `--by <nickname>`、`--auto` バッチでは mode 別に `--edit-by` / `--review-by` を使い、バッチ起動は `--auto` に一本化します。解決の優先順位は「単体指定（`--by`）＞ mode 別指定（`--edit-by` / `--review-by`）＞ 自動選択」です。
 
 Schedule タスクの `agent_pipeline`（`sch-strategy-<track>.yaml` の phase 設定）と同じ executor/reporter 2段階（`stage_role: executor` が成果物を編集・検証し、`stage_role: reporter` が evidence から result を描画する）は、`--register` でも `--executor-by <nickname>` と `--reporter-by <nickname>` を **両方セットで** 指定すると使えます。register 項目は Schedule のような per-item のパイプライン宣言を持たないため、owner・role からの自動選択は行わず、この2フラグの明示指定のみで切り替わります。複数項目では `--executor-by PJR-0001=exec-a,PJR-0002=exec-b` のような項目別指定も使用できます。項目別指定は選択した全項目を含む必要があり、対象外 ID と指定漏れは実行前にエラーになります。片方だけの指定もエラーになります。
 
@@ -520,7 +523,7 @@ specdojo exec trial adopt --project prj-0001 --comparison <comparison-id> --tria
 
 `pipeline.parent_validations`に指定できるIDは`validate-schema`、`typecheck`、`test-unit`、`test-integration`、`lint-ts`、`lint-fm`、`lint-md`です（各IDは組み込み許可リストの固定argvへ解決されます）。`pipeline.parent_validations`はtrialにも適用され、executor成功後・reporter起動前に各worktreeで実行されます。親検証結果は`source: runner`付きでevidenceへ保存し、失敗時はtrialを`failed`にします。比較記録と`trial status`はexecutor・親検証・全体の時間を分け、executorの検証報告総数と`passed` / `failed` / `not_run` / `requires_human`、親検証の状態と件数を別々に表示します。採用前に親検証の成功、executorの未実施・未報告、sandbox 外で人が行う確認を確認してください。
 
-記録先は`execution_path/exec/trials/<comparison-id>/`です。agent選定への反映は自動化せず、人が複数比較を確認して`pm-members.yaml`を更新します。
+記録先は`execution_path/exec/trials/<comparison-id>/`です。agent選定への反映は自動化せず、人が複数比較を確認して `.specdojo/agent-members.yaml` を更新します。
 
 ## 8. grade
 
@@ -594,7 +597,7 @@ specdojo grade validate --target kata --project prj-0001
 
 executor plan は JSON 契約を持ちません。各 viewpoint を `[VIEWPOINT <id>]` と `[END VIEWPOINT]` で囲み、`LEVEL: <0-4>` と、必要な `FINDING <severity> line=<line>: <message>` を申告します。新しい判定根拠と finding の `message` は英語で記述します。marker 間の根拠と検討過程は自由記述です。この軽量な申告形式により、JSON を安定して生成できない agent でも分析を完了できます。
 
-`grade apply --analysis-from <executor-output>` を `--from` なしで実行すると、executor の最終応答の marker を解析して GradeSubmission を機械的に生成し、既存の GradeSubmission 検証を通してから反映します。LLM の reporter は起動しません。severity、line、message、done_criteria の status と reason は申告のまま写し、level だけは severity 上限を超える場合に下方向へ補正します。書き写しの誤りや JSON の構文破損は起こりません。`--submission-out <path>` を指定すると、生成した GradeSubmission をリポジトリ内のパスへ保存します（`--dry-run` では保存しません）。判定主体は executor なので、`--by <executor-nickname>` がプロジェクトの `pm-members.yaml` に存在する nickname を検証してサイドカーの `graded_by` へ記録します。
+`grade apply --analysis-from <executor-output>` を `--from` なしで実行すると、executor の最終応答の marker を解析して GradeSubmission を機械的に生成し、既存の GradeSubmission 検証を通してから反映します。LLM の reporter は起動しません。severity、line、message、done_criteria の status と reason は申告のまま写し、level だけは severity 上限を超える場合に下方向へ補正します。書き写しの誤りや JSON の構文破損は起こりません。`--submission-out <path>` を指定すると、生成した GradeSubmission をリポジトリ内のパスへ保存します（`--dry-run` では保存しません）。判定主体は executor なので、`--by <executor-nickname>` が `.specdojo/agent-members.yaml` に存在する nickname を検証してサイドカーの `graded_by` へ記録します。
 
 executor の応答が契約を満たさない場合は、従来の忠実性検証と同じ parse と検証の条件で拒否し、理由を `$analysis` で始まるパスとともにエラーへ示します。拒否する条件は、`VIEWPOINT` / `END VIEWPOINT` / `DONE_CRITERIA` の欠落・入れ子・重複、`LEVEL` の欠落・重複・書式不正、`FINDING` の書式不正、適用されない viewpoint や viewpoint の欠落・重複、level 3 以下で finding がないこと、done_criteria の欠落・重複・未知の ID、および不足内容のない `unsatisfied` です。severity 上限だけは拒否せず level を下げます。拒否された応答は変換し直しても結果が変わらないため、再試行は executor の再実行で行います。
 
@@ -779,7 +782,7 @@ schedule / register / job / routine の使い分けの基準は [exec運用ガ�
 
 ## 14. agent
 
-`agent` は、保存済みの plan を指定した1つの agent へ渡し、その標準出力を取得します。agent の選択は `pm-members.yaml` の nickname で一意に決まるため、実行のたびに担当が変わりません。決定論的な手順を shell script や CLI 側に置き、agent には判断だけを委ねるための最小の部品です。
+`agent` は、保存済みの plan を指定した1つの agent へ渡し、その標準出力を取得します。agent の選択は `.specdojo/agent-members.yaml` の nickname で一意に決まるため、実行のたびに担当が変わりません。決定論的な手順を shell script や CLI 側に置き、agent には判断だけを委ねるための最小の部品です。
 
 | コマンド    | 用途                                                        |
 | ----------- | ----------------------------------------------------------- |
@@ -790,7 +793,7 @@ specdojo agent run --plan <plan.md> --by <nickname> --out <response.txt>
 specdojo agent run --plan <plan.md> --by <nickname> --dry-run
 ```
 
-`--plan` は agent へ標準入力で渡すファイルです。存在しない場合と内容が空の場合は、空のプロンプトを送らずにエラーにします。`--by` は `pm-members.yaml` の agent nickname で、同じ nickname の agent が複数ある場合、`type: agent` 以外、`disabled: true` の member は拒否します。`capabilities` や `proficiency` による間接的な絞り込みは行わないため、候補が複数になって担当が揺れることがありません。
+`--plan` は agent へ標準入力で渡すファイルです。存在しない場合と内容が空の場合は、空のプロンプトを送らずにエラーにします。`--by` は `.specdojo/agent-members.yaml` の agent nickname で、重複、`type: agent` 以外、`disabled: true` の member は拒否します。`capabilities` や `proficiency` による間接的な絞り込みは行わないため、候補が複数になって担当が揺れることがありません。
 
 `--out` を指定すると標準出力をそのファイルへ書き、親プロセスの標準出力には保存先だけを表示します。指定しない場合は agent の出力をそのまま端末へ流します。`--out` の親ディレクトリは必要に応じて作成します。`--dry-run` は解決したコマンドを表示するだけで agent を起動しません。
 

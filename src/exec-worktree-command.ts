@@ -574,7 +574,7 @@ export function registerExecWorktreeCommands(exec: Command): void {
   const agentCommand = addCommonOptions(
     worktree.command("agent").description("Run the task agent once inside its worktree"),
   );
-  agentCommand.option("--by <nickname>", "Select a pm-members.yaml agent nickname");
+  agentCommand.option("--by <nickname>", "Select an agent-members.yaml nickname");
   agentCommand.option("--dry-run", "Print the resolved command without executing", false);
   agentCommand.action(async (opts: AgentOpts) => {
     try {

@@ -6,6 +6,8 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 破壊的変更
 
+- agent の定義を project ごとの `pm-members.yaml` から repository 共通の保護設定 `.specdojo/agent-members.yaml` へ分離しました。`pm-members.yaml` は人間だけを受け付け、agent が残る場合は `specdojo config migrate-members --dry-run` を案内して読み込みを停止します。移行後は人間名簿を通常成果物として agent が編集でき、agent 定義は `.specdojo/**` の既存保護境界に残ります（PJR-2T63）。
+
 - SpecDojo 本体および同梱の docs-site、docs-lint の実行に Node 22.13 以上が必要になりました。
   puppeteer 25 と mermaid-cli 12 への更新に伴う変更です（PJR-XMMA）。
 - レビュー観点の `evaluation` を、判定主体ではなく判定規準の所在を表す

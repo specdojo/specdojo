@@ -1,0 +1,76 @@
+# agent-members.schema.yaml
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: "SpecDojo Protected Agent Member Registry schema"
+type: object
+additionalProperties: false
+required: [version, members]
+properties:
+  version:
+    type: integer
+    minimum: 1
+  members:
+    type: array
+    items:
+      $ref: "#/$defs/AgentMember"
+    uniqueItems: true
+$defs:
+  RoleLabel:
+    type: string
+    pattern: "^[A-Z]{2,4}$"
+  AgentMember:
+    type: object
+    additionalProperties: false
+    required: [nickname, display_name, roles, type, provider, capabilities, proficiency, priority]
+    properties:
+      nickname:
+        type: string
+        pattern: "^[a-z0-9][a-z0-9_-]{0,62}$"
+      display_name:
+        type: string
+        minLength: 1
+      email:
+        oneOf:
+          - type: string
+            format: email
+          - type: "null"
+      roles:
+        type: array
+        items:
+          $ref: "#/$defs/RoleLabel"
+        uniqueItems: true
+      type:
+        const: agent
+      provider:
+        enum: [opencode, claude, codex, copilot, antigravity, custom]
+      persona:
+        type: string
+        minLength: 1
+      focus:
+        type: array
+        items:
+          type: string
+          minLength: 1
+        uniqueItems: true
+      capabilities:
+        type: array
+        items:
+          $ref: "./exec-common.schema.yaml#/$defs/Capability"
+        uniqueItems: true
+      proficiency:
+        $ref: "./exec-common.schema.yaml#/$defs/Proficiency"
+      priority:
+        type: integer
+        minimum: 1
+      command:
+        type: string
+        minLength: 1
+      mode:
+        enum: [edit, review, report]
+      stage_role:
+        enum: [executor, reporter]
+      disabled:
+        type: boolean
+      scheduler_strategy:
+        enum: [critical-first, dependency-first, fifo, manual]
+      note:
+        type: string

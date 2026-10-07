@@ -225,8 +225,22 @@ function writeMembers(repo: string): void {
   writeFileSync(
     join(repo, "pm-members.yaml"),
     [
+      "id: test:pm-members",
+      "type: project",
+      "status: draft",
+      "title: Members",
+      "rulebook: specdojo:pm-members-rulebook",
       "version: 1",
       "project_id: test",
+      "members: []",
+      "",
+    ].join("\n"),
+    "utf8",
+  );
+  writeFileSync(
+    join(repo, ".specdojo", "agent-members.yaml"),
+    [
+      "version: 1",
       "members:",
       // 従来フロー専用（stage_role なし）
       ...member("legacy-edit-agent", "opencode", "normal"),

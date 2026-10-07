@@ -166,7 +166,7 @@ export type AgentComparisonRecord = {
   trials: AgentTrialRecord[];
   agent_selection: {
     policy: "manual";
-    target: "pm-members.yaml";
+    target: "agent-members.yaml";
     rationale: string;
   };
 };
@@ -403,8 +403,8 @@ function resolveMember(
   const member = roster?.members.find(
     (candidate) => candidate.type === "agent" && candidate.nickname === nickname,
   );
-  if (!member) throw new Error(`Agent nickname not found in pm-members.yaml: ${nickname}`);
-  if (member.disabled) throw new Error(`Agent is disabled in pm-members.yaml: ${nickname}`);
+  if (!member) throw new Error(`Agent nickname not found in agent-members.yaml: ${nickname}`);
+  if (member.disabled) throw new Error(`Agent is disabled in agent-members.yaml: ${nickname}`);
   if (
     (stageRole === "reporter" && member.stage_role !== "reporter") ||
     (stageRole === "executor" && member.stage_role === "reporter")
@@ -611,9 +611,9 @@ export function buildComparisonRecord(params: {
     ),
     agent_selection: {
       policy: "manual",
-      target: "pm-members.yaml",
+      target: "agent-members.yaml",
       rationale:
-        "A single comparison does not automatically change agent assignment. A human reviews objective and subjective results, then updates pm-members.yaml priority/capabilities when repeated evidence supports the change.",
+        "A single comparison does not automatically change agent assignment. A human reviews objective and subjective results, then updates agent-members.yaml priority/capabilities when repeated evidence supports the change.",
     },
   };
 }

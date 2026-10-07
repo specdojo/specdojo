@@ -41,7 +41,9 @@ workspace/
 │   └── docs/ja/product/             # プロダクトドキュメント
 ├── app1-specdojo/                   # プロジェクトリポジトリ
 │   ├── .specdojo/
-│   │   └── specdojo.config.json
+│   │   ├── specdojo.config.json
+│   │   ├── agent-members.yaml       # repository 共通の保護された agent 定義
+│   │   └── exec-defaults.yaml       # provider 起動・実行ポリシー
 │   └── docs/ja/
 │       ├── specdojo/                # 実践体系
 │       └── projects/<project-id>/   # プロジェクト文書と実行記録
@@ -97,7 +99,7 @@ docs/
 │   │   │   │   ├── pm-review-viewpoints.yaml     # レビュー観点
 │   │   │   │   ├── pm-organization.md            # 組織とロールの定義
 │   │   │   │   ├── pm-roles.yaml                 # ロール定義
-│   │   │   │   ├── pm-members.yaml               # メンバー定義
+│   │   │   │   ├── pm-members.yaml               # 人間のメンバー定義
 │   │   │   │   └── pm-raci.md                    # 組織体制とRACI
 │   │   │   │
 │   │   │   ├── 040-current-state/                # 現状（必要な成果物だけを配置）

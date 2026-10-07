@@ -200,7 +200,7 @@ describe("resolveMemberCommand", () => {
     const member = buildMember({ nickname: "$(whoami)" });
 
     expect(() => resolveMemberCommand(claudeTemplateConfig, member)).toThrow(
-      /Invalid nickname.*pm-members\.schema\.yaml/,
+      /Invalid nickname.*agent-members\.schema\.yaml/,
     );
   });
 

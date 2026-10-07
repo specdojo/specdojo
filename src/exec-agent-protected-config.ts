@@ -1,7 +1,7 @@
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { existsSync, lstatSync, readdirSync, readFileSync, readlinkSync } from "node:fs";
-import { join, posix, relative, sep } from "node:path";
+import { join, relative, sep } from "node:path";
 import { gitEnvironment, gitResult } from "./exec-worktree.js";
 
 // PJR-3S8Q で agent の書き込み対象外とした、親 runner / hook / CI の実行内容を
@@ -133,40 +133,7 @@ export function isAgentProtectedConfigPath(path: string): boolean {
   if (PROTECTED_EXACT_PATHS.has(normalized)) return true;
   if (PROTECTED_DIRECTORY_PREFIXES.some((prefix) => normalized.startsWith(prefix))) return true;
   if (/^(?:commitlint\.config\.[^/]+|\.commitlintrc(?:\.[^/]+)?)$/.test(normalized)) return true;
-  // メンバー名簿は agent の定義（起動コマンド・モデル・役割）を含む。agent が自分や他の agent の
-  // 定義を書き換えられないよう、どの project の名簿も保護する。
-  return /(?:^|\/)pm-members\.yaml$/.test(normalized);
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
-}
-
-// 名簿は project ごとの base_path 配下にあり固定のディレクトリ走査では拾えないため、
-// 設定から解決した名簿のパスをスナップショットへ加える。設定が読めない場合は名簿の追加を
-// 見送り、他の保護対象の検査は続ける（統合直前の再検査はパス判定だけで名簿を検出する）。
-function configuredMembersPaths(repoRoot: string): string[] {
-  const configPath = join(repoRoot, ".specdojo", "specdojo.config.json");
-  if (!existsSync(configPath)) return [];
-  let parsed: unknown;
-  try {
-    parsed = JSON.parse(readFileSync(configPath, "utf8"));
-  } catch (error) {
-    console.warn(
-      `agent protected config: failed to read ${configPath} for members paths: ${String(error)}`,
-    );
-    return [];
-  }
-  if (!isRecord(parsed) || !isRecord(parsed.projects)) return [];
-  const paths: string[] = [];
-  for (const project of Object.values(parsed.projects)) {
-    if (!isRecord(project) || typeof project.members_path !== "string") continue;
-    const membersPath = project.members_path.trim();
-    if (!membersPath) continue;
-    const basePath = typeof project.base_path === "string" ? project.base_path.trim() : "";
-    paths.push(normalizeRepoPath(basePath ? posix.join(basePath, membersPath) : membersPath));
-  }
-  return paths;
+  return false;
 }
 
 // snapshot と統合直前の再検査で同じ保護境界を使う。isAgentProtectedConfigPath は
@@ -235,9 +202,6 @@ export function captureAgentProtectedConfigSnapshot(
   }
   for (const relRoot of SNAPSHOT_DIRECTORY_ROOTS) {
     addTreeFiles(repoRoot, join(repoRoot, relRoot), snapshot);
-  }
-  for (const membersPath of configuredMembersPaths(repoRoot)) {
-    addTreeFiles(repoRoot, join(repoRoot, membersPath), snapshot);
   }
   const protectedPaths = new Set(agentProtectedConfigPaths(repoRoot, [...snapshot.keys()]));
   for (const path of snapshot.keys()) {

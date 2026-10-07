@@ -79,7 +79,7 @@ LLM API は原則として Host Mac の `localhost` に閉じる。devcontainer 
 | 作業環境       | `.devcontainer/devcontainer.json`                   | agent CLI、VS Code 拡張、認証用 named volume を定義する                              |
 | 端末セッション | tmux                                                | devcontainer 内の長時間実行、切断復帰、ログ確認を安定させる                          |
 | SpecDojo 実行  | `specdojo exec run`                                 | devcontainer 内から agent CLI を非対話起動する                                       |
-| Agent CLI      | OpenCode / Claude Code / Codex / GitHub Copilot CLI | `pm-members.yaml` の member として起動方法を管理する                                 |
+| Agent CLI      | OpenCode / Claude Code / Codex / GitHub Copilot CLI | `.specdojo/agent-members.yaml` の member として選択属性を管理する                    |
 | LLM Serving    | Ollama                                              | [[tsd-ollama]] の起動方式に従い、devcontainer から `host.docker.internal` で接続する |
 | 外部公開       | なし                                                | ルータのポート開放、Tailscale Funnel、Tailscale Serve は使わない                     |
 

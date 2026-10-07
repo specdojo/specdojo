@@ -169,7 +169,7 @@ sonnet モデルを使用する pipeline reporter。渡された evidence だけ
 
 ### 9.1. 起動コマンドの設計
 
-起動コマンドは親設計の `起動コマンドの解決` に従い、`.specdojo/exec-defaults.yaml` の `providers.claude.command_template` で定義する。`pm-members.yaml` の member には `command` を書かない。
+起動コマンドは親設計の `起動コマンドの解決` に従い、`.specdojo/exec-defaults.yaml` の `providers.claude.command_template` で定義する。`.specdojo/agent-members.yaml` の member には `command` を書かない。
 
 ```yaml
 providers:
@@ -185,7 +185,7 @@ providers:
 
 `-p`（print mode）と `--agent <name>` を組み合わせることで、`.claude/agents/<name>.md` に定義されたシステムプロンプト・ツール・モデルを使って確認ダイアログなしの自動実行を実現する。`--permission-mode bypassPermissions` は使わない（`.claude/settings.json` の `disableBypassPermissionsMode: "disable"` で起動自体を拒否する）。
 
-`pm-members.yaml` の member は選択属性だけを持つ。全員 `stage_role`（`executor` / `reporter`）を持つ pipeline member とし、単体で edit/review を完結する legacy member は使わない。
+`.specdojo/agent-members.yaml` の member は選択属性だけを持つ。全員 `stage_role`（`executor` / `reporter`）を持つ pipeline member とし、単体で edit/review を完結する legacy member は使わない。
 
 ```yaml
 members:
@@ -256,7 +256,7 @@ phase の共通契約は親設計に従う。Claude Code を必要とする phas
 
 ### 9.3. `.specdojo/exec-defaults.yaml`
 
-共通の retry / fallback / block 方針とグローバル既定 / provider 別上書きの2層構造は親設計に従う。Claude 固有の検出条件は `providers.claude.rate_limit_detection` に置き、`pm-members.yaml` で `provider: claude` の member に適用する。
+共通の retry / fallback / block 方針とグローバル既定 / provider 別上書きの2層構造は親設計に従う。Claude 固有の検出条件は `providers.claude.rate_limit_detection` に置き、`.specdojo/agent-members.yaml` で `provider: claude` の member に適用する。
 
 ```yaml
 providers:
@@ -288,7 +288,7 @@ Claude Code の limit は次の種類があり、reset horizon が異なるた�
 
 ### 9.4. `exec run` による実行
 
-共通の実行コマンドは親設計を参照する。Claude Code の member は phase の `capabilities` / `proficiency` と `pm-members.yaml` の属性により自動選択される。
+共通の実行コマンドは親設計を参照する。Claude Code の member は phase の `capabilities` / `proficiency` と `.specdojo/agent-members.yaml` の属性により自動選択される。
 
 ## 10. バックグラウンドセッションによる並列実行
 

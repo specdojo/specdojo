@@ -1,4 +1,8 @@
 import { describe, expect, it } from "vitest";
+import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { dirname, join } from "node:path";
+import { load as loadYaml } from "js-yaml";
 import {
   assertValidActor,
   getProjectCatalogPath,
@@ -6,6 +10,8 @@ import {
   getProjectMembersPath,
   getProjectExecutionPath,
   getProjectSchedulePath,
+  loadMemberRoster,
+  migrateAgentMembers,
 } from "../../src/specdojo-config.js";
 import type { MemberRoster, SpecDojoProjectConfig } from "../../src/specdojo-config.js";
 
@@ -130,5 +136,113 @@ describe("project path accessors with base_path", () => {
     expect(
       getProjectContext(project({ project_context: ["project-why", "prj-shared:policy"] })),
     ).toEqual(["project-why", "prj-shared:policy"]);
+  });
+});
+
+function write(path: string, content: string): void {
+  mkdirSync(dirname(path), { recursive: true });
+  writeFileSync(path, content, "utf8");
+}
+
+const humanRoster = `
+id: prj-test:pm-members
+type: project
+status: draft
+title: Members
+rulebook: specdojo:pm-members-rulebook
+version: 1
+project_id: prj-test
+members:
+  - nickname: alice
+    display_name: Alice
+    email: null
+    roles: [PO]
+    type: human
+`;
+
+const agentMember = `
+  - nickname: codex-executor
+    display_name: Codex Executor
+    email: null
+    roles: []
+    type: agent
+    provider: codex
+    capabilities: [exec]
+    proficiency: expert
+    priority: 1
+    mode: edit
+    stage_role: executor
+`;
+
+describe("split human and agent member registries", () => {
+  it("validates and combines the project human roster with the repository agent registry", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-members-"));
+    write(join(root, "members.yaml"), humanRoster);
+    write(join(root, ".specdojo", "agent-members.yaml"), `version: 1\nmembers:${agentMember}`);
+
+    const roster = loadMemberRoster(root, { members_path: "members.yaml" });
+
+    expect(roster?.members.map((member) => member.nickname)).toEqual(["alice", "codex-executor"]);
+  });
+
+  it("reports duplicate nicknames across both files", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-members-"));
+    write(join(root, "members.yaml"), humanRoster.replaceAll("alice", "codex-executor"));
+    write(join(root, ".specdojo", "agent-members.yaml"), `version: 1\nmembers:${agentMember}`);
+
+    expect(() => loadMemberRoster(root, { members_path: "members.yaml" })).toThrow(
+      /Duplicate member nickname 'codex-executor'/,
+    );
+  });
+
+  it("rejects an agent in pm-members.yaml and points to the migration command", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-members-"));
+    write(join(root, "members.yaml"), humanRoster.replace(/  - nickname:[\s\S]*$/, agentMember));
+
+    expect(() => loadMemberRoster(root, { members_path: "members.yaml" })).toThrow(
+      /codex-executor.*config migrate-members --dry-run/,
+    );
+  });
+
+  it("rejects a human in agent-members.yaml", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-members-"));
+    write(join(root, "members.yaml"), humanRoster);
+    write(
+      join(root, ".specdojo", "agent-members.yaml"),
+      `version: 1\nmembers:\n  - nickname: bob\n    display_name: Bob\n    roles: []\n    type: human\n`,
+    );
+
+    expect(() => loadMemberRoster(root, { members_path: "members.yaml" })).toThrow(
+      /human 'bob' is not allowed/,
+    );
+  });
+
+  it("migrates agents and leaves dry-run unchanged", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-members-"));
+    const membersPath = join(root, "project", "pm-members.yaml");
+    const mixed = humanRoster.replace(
+      /members:[\s\S]*$/,
+      `members:\n${humanRoster.split("members:\n")[1]}${agentMember}`,
+    );
+    write(membersPath, mixed);
+    write(
+      join(root, ".specdojo", "specdojo.config.json"),
+      JSON.stringify({
+        version: 1,
+        projects: { "prj-test": { base_path: "project", members_path: "pm-members.yaml" } },
+      }),
+    );
+
+    migrateAgentMembers({ rootDir: root, dryRun: true });
+    expect(readFileSync(membersPath, "utf8")).toBe(mixed);
+    expect(() => readFileSync(join(root, ".specdojo", "agent-members.yaml"), "utf8")).toThrow();
+
+    migrateAgentMembers({ rootDir: root, dryRun: false });
+    const humans = loadYaml(readFileSync(membersPath, "utf8")) as { members: unknown[] };
+    const agents = loadYaml(
+      readFileSync(join(root, ".specdojo", "agent-members.yaml"), "utf8"),
+    ) as { members: unknown[] };
+    expect(humans.members).toHaveLength(1);
+    expect(agents.members).toHaveLength(1);
   });
 });

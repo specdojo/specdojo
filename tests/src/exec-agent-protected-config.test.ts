@@ -55,8 +55,7 @@ describe("agent protected configuration paths", () => {
     ".circleci/config.yml",
     "azure-pipelines.yml",
     "Jenkinsfile",
-    "pm-members.yaml",
-    "docs/ja/projects/prj-0001/030-project-management/pm-members.yaml",
+    ".specdojo/agent-members.yaml",
   ])("protects %s with one provider-independent definition", (path) => {
     expect(isAgentProtectedConfigPath(path)).toBe(true);
   });
@@ -67,6 +66,8 @@ describe("agent protected configuration paths", () => {
     ".agents/specdojo-orchestrator.agent.md",
     ".github/CODEOWNERS",
     "src/config.ts",
+    "pm-members.yaml",
+    "docs/ja/projects/prj-0001/030-project-management/pm-members.yaml",
     "docs/ja/projects/prj-0001/030-project-management/pm-members-sample.yaml",
   ])("does not overmatch %s", (path) => {
     expect(isAgentProtectedConfigPath(path)).toBe(false);
@@ -90,7 +91,7 @@ describe("agent protected configuration paths", () => {
     ]);
   });
 
-  it("detects changes to the members roster resolved from the project config", () => {
+  it("allows project rosters while protecting the repository agent registry", () => {
     const root = mkdtempSync(join(tmpdir(), "specdojo-protected-config-"));
     roots.push(root);
     write(
@@ -108,11 +109,14 @@ describe("agent protected configuration paths", () => {
     write(join(root, membersPath), "members: []\n");
 
     const before = captureAgentProtectedConfigSnapshot(root);
-    expect(before.has(membersPath)).toBe(true);
+    expect(before.has(membersPath)).toBe(false);
 
     write(join(root, membersPath), "members:\n  - nickname: rogue\n");
+    write(join(root, ".specdojo", "agent-members.yaml"), "version: 1\nmembers: []\n");
 
-    expect(changedAgentProtectedConfigPaths(root, before)).toEqual([membersPath]);
+    expect(changedAgentProtectedConfigPaths(root, before)).toEqual([
+      ".specdojo/agent-members.yaml",
+    ]);
   });
 
   it("keeps checking other protected files when the project config is not valid JSON", () => {

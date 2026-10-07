@@ -464,8 +464,22 @@ function withRepo(fn: (fixture: Fixture) => Promise<void> | void): Promise<void>
       writeFileSync(
         join(root, PROJECT_BASE, "pm-members.yaml"),
         [
+          "id: test:pm-members",
+          "type: project",
+          "status: draft",
+          "title: Members",
+          "rulebook: specdojo:pm-members-rulebook",
           "version: 1",
           "project_id: test",
+          "members: []",
+          "",
+        ].join("\n"),
+        "utf8",
+      );
+      writeFileSync(
+        join(root, ".specdojo", "agent-members.yaml"),
+        [
+          "version: 1",
           "members:",
           "  - nickname: exec-1",
           "    display_name: exec-1",

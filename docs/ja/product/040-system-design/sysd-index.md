@@ -24,7 +24,8 @@ SpecDojo のシステム設計情報と、コード・設定ファイルを正�
 | Project Catalog | Deliverables catalog | `docs/ja/projects/prj-0001/010-deliverables-catalog/` | ARC / PM | 成果物の構成・依存・完了条件 |
 | Schedule | Strategy YAML | `docs/ja/projects/prj-0001/schedule/sch-strategy-*.yaml` | PM | phase・mode・依存・実行順序 |
 | Configurations | Agent runner defaults | `.specdojo/exec-defaults.yaml` | ARC / DEV | provider起動、検証、retry / fallback |
-| Configurations | Member registry | `docs/ja/projects/prj-0001/030-project-management/pm-members.yaml` | PM / ARC | member属性、選択条件、優先度 |
+| Configurations | Human member registry | `docs/ja/projects/prj-0001/030-project-management/pm-members.yaml` | PM | 人間のidentity、連絡先、Role code |
+| Configurations | Agent member registry | `.specdojo/agent-members.yaml` | ARC / DEV | agent属性、選択条件、優先度 |
 | Configurations | Claude Code agents | `.claude/agents/`、`.specdojo/claude/` | ARC | executor / reviewer / reporterと権限 |
 | Configurations | Codex agents | `.codex/agents/`、`.codex/config.toml` | ARC | custom agentと実行設定 |
 | Configurations | OpenCode agents | `.opencode/agents/`、`opencode.json` | ARC | ローカルLLMを含むagent定義 |
@@ -46,14 +47,14 @@ SpecDojo のシステム設計情報と、コード・設定ファイルを正�
 
 ## 4. 変更の入口
 
-| 変更トリガー           | 最初に直す場所（SSOT）                       | 併せて確認する場所                 | 完了条件                      |
-| ---------------------- | -------------------------------------------- | ---------------------------------- | ----------------------------- |
-| CLIコマンド変更        | `src/`                                       | schema、guide、test                | test・lint・docs build成功    |
-| agent/provider変更     | `.specdojo/exec-defaults.yaml`、provider設定 | `pm-members.yaml`、provider別SYSD  | 設定検証と代表実行成功        |
-| 並列実行・worktree変更 | `src/exec-run.ts`、`src/exec-worktree*.ts`   | 横断ルール、重要フロー、統合テスト | 競合・block・resume経路を検証 |
-| 登録項目ID規則変更     | `src/register.ts`、命名標準                  | register CDFD、重要フロー          | 衝突検出と参照更新を検証      |
-| PO承認・PR境界変更     | Git運用標準、登録簿運用ガイド                | register CDFD、重要フロー          | authorとapproverの分離を確認  |
-| 運用手順変更           | `docs/ja/product/090-operations/`            | OPD、関連SYSD                      | 手順・完了条件・証跡を確認    |
+| 変更トリガー           | 最初に直す場所（SSOT）                       | 併せて確認する場所                             | 完了条件                      |
+| ---------------------- | -------------------------------------------- | ---------------------------------------------- | ----------------------------- |
+| CLIコマンド変更        | `src/`                                       | schema、guide、test                            | test・lint・docs build成功    |
+| agent/provider変更     | `.specdojo/exec-defaults.yaml`、provider設定 | `.specdojo/agent-members.yaml`、provider別SYSD | 設定検証と代表実行成功        |
+| 並列実行・worktree変更 | `src/exec-run.ts`、`src/exec-worktree*.ts`   | 横断ルール、重要フロー、統合テスト             | 競合・block・resume経路を検証 |
+| 登録項目ID規則変更     | `src/register.ts`、命名標準                  | register CDFD、重要フロー                      | 衝突検出と参照更新を検証      |
+| PO承認・PR境界変更     | Git運用標準、登録簿運用ガイド                | register CDFD、重要フロー                      | authorとapproverの分離を確認  |
+| 運用手順変更           | `docs/ja/product/090-operations/`            | OPD、関連SYSD                                  | 手順・完了条件・証跡を確認    |
 
 ## 5. 関連ドキュメント導線
 

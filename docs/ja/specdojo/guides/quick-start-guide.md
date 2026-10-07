@@ -107,7 +107,7 @@ npx specdojo project list
 
 以降の例では、対象プロジェクトを `<project-id>` と表記します。`current_project` を設定している場合も、最初は対象を確認しやすいように `--project` を明示します。
 
-このガイドの基本手順は、provider 未設定でも完了できるように人が作業する経路を使います。agent に実行させる箇所は、`pm-members.yaml` と provider を [exec設定ガイド](exec-config-guide.md) に従って設定した後に試してください。
+このガイドの基本手順は、provider 未設定でも完了できるように人が作業する経路を使います。agent に実行させる箇所は、`.specdojo/agent-members.yaml` と provider を [exec設定ガイド](exec-config-guide.md) に従って設定した後に試してください。
 
 ### 1.1. kataの参照元を確認する
 
@@ -425,7 +425,7 @@ npx specdojo exec run --project <project-id> --plan <execution_path>/exec/plans/
 
 ## 4. （発展）worktreeで1タスクを隔離実行する
 
-前節「1タスクを実行する」は human・in-place の経路でした。agent に成果物を作らせる場合は、変更を git worktree に隔離して実行し、成功時に現在ブランチへ merge back できます。この経路は agent・provider の設定が前提です。先に [exec設定ガイド](exec-config-guide.md) に従って `pm-members.yaml` の agent と `.specdojo/exec-defaults.yaml` を用意し、`execution: agent` のフェーズを持つ strategy で `schedule build` / `exec refresh` まで済ませておきます。
+前節「1タスクを実行する」は human・in-place の経路でした。agent に成果物を作らせる場合は、変更を git worktree に隔離して実行し、成功時に現在ブランチへ merge back できます。この経路は agent・provider の設定が前提です。先に [exec設定ガイド](exec-config-guide.md) に従って `.specdojo/agent-members.yaml` の agent と `.specdojo/exec-defaults.yaml` を用意し、`execution: agent` のフェーズを持つ strategy で `schedule build` / `exec refresh` まで済ませておきます。
 
 対象タスクを worktree に隔離して一括実行します。SpecDojo が worktree 準備・agent 実行・commit・merge・状態更新をまとめて行います。
 
