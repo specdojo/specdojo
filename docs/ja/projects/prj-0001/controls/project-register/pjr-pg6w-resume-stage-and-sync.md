@@ -49,6 +49,17 @@ specdojo:
 - コマンドリファレンスと exec 運用ガイドに、新しい指定と、保護された設定の変更を人が適用して再開する手順を記載する。
 - `npm run check` が通る。
 
+### 3.2. review での追加の作業（2026-10-07）
+
+初回の実装（d2256380b）の review で、完了条件の「保護された設定の変更を人が統合先へ適用したあと `--resume` すれば、同じ変更が agent 由来として再び block されない」ことを確かめるテストがないと分かった。既存の integration test は、保護対象ではないファイルを統合先へ commit して取り込みを確かめている。次のテストを追加する。実装に不足が見つかった場合は直す。
+
+- integration test で、PJR-27Y0 で起きた次の流れを再現する。
+  1. executor（fake agent）が保護対象のファイル（例: `pm-members.yaml` や `.opencode/agents/` 配下）を書き換え、`agent-config-write` で block されて waiting になる。
+  2. 人が同じ変更を統合先のブランチへ commit する。
+  3. `--resume` で executor 段から再開する（executor は保護対象を変更しない）。
+  4. 再開が block されずに review へ進み、統合後の統合先で保護対象のファイルが人の commit した内容のままであることを確かめる。
+- 人が統合先へ適用した内容と、worktree に残る agent の変更が異なる場合の扱い（取り込みの衝突として拒否されるか、再び block されるか）も 1 件のテストで確かめ、挙動をコマンドリファレンスか exec 運用ガイドに記録する。
+
 ## 4. 対応結果
 
 - `exec run --register --resume --resume-from executor` を追加し、reporter 段から再開可能な run を、既存 worktree と未コミット成果を保持したまま executor 段へ戻せるようにした。通常の `--resume` の段選択は変更していない。
