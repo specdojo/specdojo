@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-10-06T22:14:59Z"
@@ -34,12 +34,15 @@ grade の翻訳の既定の agent を `gemma26-translator` に切り替える。
 
 | No  | 作業                                      | 担当         | 状態 | メモ                                                  |
 | --- | ----------------------------------------- | ------------ | ---- | ----------------------------------------------------- |
-| 1   | script の既定値・文書・テストを切り替える | DEV          | open | agent の定義と名簿は変更しない                        |
+| 1   | script の既定値・文書・テストを切り替える | DEV          | done | agent の定義と名簿は変更しない                        |
 | 2   | Ollama の起動後、実モデルで翻訳を確かめる | orchestrator | open | `pm-risk-register-rulebook.md` で、判定はやり直さない |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `tools/grade/run-per-document.sh` の `--translation-by` の既定値と help を `gemma26-translator` へ切り替え、pipeline fixture の期待値を同期した。
+- コマンドリファレンス、routine 運用ガイド、文書メタデータ標準に記載する既定の翻訳 agent を `gemma26-translator` へ更新した。
+- `.opencode/agents/` と `pm-members.yaml` は変更していない。
+- 残作業は、Ollama の起動後に orchestrator が `pm-risk-register-rulebook.md` の表示翻訳を実モデルで確認する No. 2 のみである。判定はやり直さない。
 
 ## 5. 関連ドキュメント
 

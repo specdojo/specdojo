@@ -307,6 +307,7 @@ describe("grade per-document pipeline", () => {
     expect(result.status, result.stderr).toBe(0);
     expect(result.stdout).toContain("stages=1");
     expect(result.stdout).toContain("stage=1 executor=codex-expert-executor");
+    expect(result.stdout).toContain("translation_by=gemma26-translator");
     expect(result.stdout).not.toContain("stage=2 ");
   });
 
@@ -664,7 +665,7 @@ describe("grade per-document pipeline", () => {
     const agentRuns = invocations.filter((line) => line.startsWith("agent run "));
     expect(agentRuns).toHaveLength(2);
     expect(agentRuns[0]).toContain("--by codex-expert-executor");
-    expect(agentRuns[1]).toContain("--by gemma26-reporter");
+    expect(agentRuns[1]).toContain("--by gemma26-translator");
     const apply = invocations.find((line) => line.startsWith("grade apply "));
     expect(apply).toContain("--analysis-from");
     expect(apply).toContain("--submission-out");
@@ -699,7 +700,7 @@ describe("grade per-document pipeline", () => {
     expect(result.status, result.stderr).toBe(0);
     const invocations = readFileSync(fixture.argsFile, "utf8").trim().split("\n");
     const translationAgentRuns = invocations.filter(
-      (line) => line.startsWith("agent run ") && line.includes("--by gemma26-reporter"),
+      (line) => line.startsWith("agent run ") && line.includes("--by gemma26-translator"),
     );
     expect(translationAgentRuns).toHaveLength(2);
     expect(invocations).toContainEqual(

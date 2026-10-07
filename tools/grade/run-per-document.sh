@@ -48,7 +48,7 @@ Options:
   --stage-3-reporter <machine|nickname> (default: machine)
   --stage-3-reference <path|none> (default: none)
   --translation-by <nickname>    Agent used only to translate finding messages
-                                after canonical grade storage (default: gemma26-reporter)
+                                after canonical grade storage (default: gemma26-translator)
   --specdojo-bin <path>         Use one executable instead of npx tsx
   --dry-run                     Print selection and configuration only
   --help                        Show this help
@@ -110,7 +110,7 @@ stage_2_reference=none
 stage_3_executor=codex-expert-executor
 stage_3_reporter=machine
 stage_3_reference=none
-translation_by=gemma26-reporter
+translation_by=gemma26-translator
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
