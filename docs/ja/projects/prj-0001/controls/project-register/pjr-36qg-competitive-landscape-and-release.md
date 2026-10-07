@@ -22,7 +22,7 @@ Spec-Driven Development（SDD）領域の競合状況を記録する。位置づ
 公開作業は [[prj-0001:pjr-7vkr-npm-release]] と [[prj-0001:pjr-0143-vs-code-marketplace]] で扱う。
 本 note は競合の観測に絞る。
 
-本 note は状況の変化に応じて更新する。終端させない。初回調査は 2026-09-06 時点で、`Gas Town / Gas City` は 2026-09-24、Claude Code / Codex の plan 機能との比較とチームでの利用は 2026-09-30 に追加した。
+本 note は状況の変化に応じて更新する。終端させない。初回調査は 2026-09-06 時点で、`Gas Town / Gas City` は 2026-09-24、Claude Code / Codex の plan 機能との比較とチームでの利用は 2026-09-30、v0.3.0 の機能の比較と設計文書の領域の比較は 2026-10-08 に追加した。
 
 ## 2. 競合の状況
 
@@ -574,6 +574,67 @@ PJR-HG98 の統合テストで、2 つの worktree で並行に起票・実行�
 
 - 2〜3 週間かかる作業を題材に、Claude Code の plan や ExecPlan だけで進める場合と、register と orchestrator で進める場合を比べる。1 週間空けたあと再開するまでの時間、過去の判断を探して見つけられるか、誤った変更を途中で止められたかを測る。
 - v0.3.0 の公開後に 3〜5 人に試用してもらい、最初の起票までの時間と、1 週間後も使い続けているかを聞く。
+
+### 3.11. v0.3.0 の機能と SDD のツールの比較（2026-10-08）
+
+v0.3.0（`package.json` は 0.3.0、npm の公開版は 0.2.1）で出す機能を、公開情報で競合と比べた。競合の内部実装は確認していない。
+
+競合の現状は次のとおりである。Spec Kit は 2026-06 時点で 115k star、2026-08-21 に 1.0 を公開し、agent の統合 38、コミュニティの extension 157、preset 33 を持つ。OpenSpec は 2026-04 時点で 50k star で、2026-09-19 に GitHub Trending に載った。Kiro は IDE に加えて CLI とクラウドの sandbox で動く Web 版を持ち、外部サービスと連携する Powers を加えた。
+
+| v0.3.0 の機能                                                                                                           | Spec Kit / OpenSpec / Kiro                     | beads・Gas City・plan 機能                                       | 判定                                                                                                                                                    |
+| ----------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| register と orchestrator（Markdown が正本の 7 種別の登録簿、提案・承認・実行、`--commit` の記帳）                       | 該当なし（変更提案単位の状態遷移のみ）         | beads は DB が正本で依存グラフを持つ。plan 機能は 1 タスクの計画 | 独自                                                                                                                                                    |
+| exec pipeline（executor と reporter の分離、worktree、親検証、再開、rate limit からの回復、N 個のプロダクトリポジトリ） | Kiro は並列実行と hooks、Spec Kit は workflows | Gas City がほぼ同じ問題をより大きな規模で解く                    | 劣位〜同等                                                                                                                                              |
+| 保護機構（agent による定義・フック・CI の変更を止める、agent の定義の `.specdojo/` への分離）                           | 確認できず                                     | 確認できず                                                       | 独自                                                                                                                                                    |
+| grade と review（28 観点の継続評価、review は最新の grade を入力にする）                                                | 確認できず                                     | gates や tests はあるが文書の品質評価ではない                    | 独自                                                                                                                                                    |
+| kata（rulebook 106 種と recipe・sample・template）                                                                      | 機能単位の 3〜4 文書、Spec Kit は preset 33    | なし                                                             | 範囲は独自、維持負担は劣位                                                                                                                              |
+| local LLM の段構成                                                                                                      | 確認できず                                     | Gas City は runtime の抽象のみ                                   | 弱まった。2026-10 の計測で、ローカルモデルは grade の判定に使える水準に届かなかった（[[prj-0001:pjr-vqb5-agent-grade-comparison]]）。要約と翻訳には有効 |
+| 導入（`config init` / `scaffold`、`devcontainer scaffold`、docs-site、docs-lint）                                       | Spec Kit は 1 行の導入、OpenSpec は 5 コマンド | beads はバイナリ 1 つ、plan 機能は設定不要                       | 劣位                                                                                                                                                    |
+| 日本語の kata・文書・対話                                                                                               | 英語中心                                       | 英語中心                                                         | 独自                                                                                                                                                    |
+
+当初は SpecDojo を SDD のツールとして Spec Kit と同じ土俵に置いて比べたが、利用者の指摘で位置づけを改めた。Spec Kit などは 1 つの機能を実装するまで（仕様 → 計画 → タスク → コード）を扱い、仕様は実装が済めば役目をほぼ終える。SpecDojo の主な機能は、プロジェクトの仕様と設計を成果物の体系として作るまでであり、それを運用・保守へつなぐ。工程として SpecDojo は Spec Kit の上流に立ち、重なるのは「spec」という言葉と市場での分類くらいである。比較の相手は 3.12. の領域にある。
+
+参照した公開情報:
+
+- <https://github.github.com/spec-kit/>
+- <https://github.github.com/spec-kit/history.html>
+- <https://codemyspec.com/blog/github-spec-kit-guide>
+- <https://ssojet.com/blog/best-spec-driven-development-tools>
+- <https://realpython.com/ref/ai-coding-tools/kiro/>
+- <https://www.gilricardo.com/blog/kiro-review-spec-driven-agentic-ide>
+- <https://agentic-ai.readthedocs.io/en/latest/Standards/openspec/>
+- <https://aitoolly.com/ai-news/article/2026-09-20-openspec-trends-on-github-advancing-specification-driven-development-for-ai-coding-assistants-by-fis>
+
+### 3.12. 設計文書・判断の記録・文書の維持の領域の比較（2026-10-08）
+
+3.11. の位置づけにもとづき、設計文書を作る、判断を残す、文書を保つ、の各領域の競合を公開情報で調べた。
+
+| 領域                 | 見つかったもの                                                                                                                                                                      | SpecDojo との違い                                                                                                                                |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 設計書を作る         | arc42 Toolkit。AI agent（Claude Code・Copilot・Cursor など）の skill として arc42 の 12 章を対話で作る。深さの 3 段階（LEAN / ESSENTIAL / THOROUGH）、C4 の図、整合性の lint を持つ | 発想が最も近い（型に沿って AI が書く）。範囲はアーキテクチャ文書だけで、要件・データ・テスト・トレーサビリティ、品質の継続評価、判断の台帳はない |
+| 設計書を作る（日本） | 生成 AI でソースコードから設計書を作る取り組みが主流                                                                                                                                | 方向が逆（コード → 文書）。SpecDojo は文書を先に作り正本とする                                                                                   |
+| 判断を残す           | ADR の系統（adr-tools、adrpy-ai、Vercel の adr-skill、Claude Code のセッション中の判断を ADR として残す skill など）                                                                | 判断だけを扱い、agent の skill として汎用品になりつつある。register は論点・リスク・作業も扱い、設計書と実行につながる                           |
+| 文書を保つ           | Swimm。コードと結びつけた文書のずれを CI で検知し更新案を出す（2,000 以上のチーム、商用）                                                                                           | 対象はコードに近い説明文書で、設計書の体系や型に照らした品質評価ではない                                                                         |
+| トレーサビリティ     | RTMX。AI 向けの要件トレーサビリティ（CSV、依存グラフ、MCP サーバ）                                                                                                                  | 要件とテストの対応に特化し、設計書の本文は扱わない                                                                                               |
+| 規制                 | EU AI Act の技術文書の要件（高リスクのシステムは 2026-08 から施行）                                                                                                                 | 保たれた設計文書と判断の監査証跡の需要が規制の側から生まれている                                                                                 |
+
+**判定**: 仕様の判断 → 設計書の体系 → 品質の継続評価 → 運用・保守を 1 つにつないだものは見つからなかった。各部分には専門の道具がある（arc42 Toolkit、ADR の skill、Swimm、RTMX）。寄せ集めと見られないよう、1 本の流れとして見せる必要がある。arc42 Toolkit の深さの 3 段階は、`approach` や規模別の kata の組と同じ問題への答えであり参考になる。
+
+**register を入口にする位置づけ**: 利用者の提案により、register を「仕様を決めるまで、そして仕様を保つための台帳」と位置づける。仕様を決めるまでは question・decision・todo・risk で論点と判断を残し、決まったら設計書（kata）へ反映し、運用・保守では change-request・issue と grade で設計書を保つ。kata を用意せずに始められ、使ううちに設計書の体系へ進める。一方、「登録簿」という言葉と種別の一覧だけでは「git に置く課題管理」と受け取られやすく、価値の核心である「判断が設計書につながること」が見えにくい。打ち出す言葉と、起票から設計書の更新・変更要求までを通すクイックスタートで補う必要がある。戦略は [[prj-0001:pjr-nyzr-adoption-strategy]] で決める。
+
+参照した公開情報:
+
+- <https://github.com/MSiccDev/arc42-toolkit>
+- <https://heise.de/-11267038>
+- <https://arxiv.org/html/2603.28735v1>
+- <https://docs.swimm.io/ide-integrations/vs-code/ide-plugins-vscode-keep-docs-up-to-date>
+- <https://falconer.com/guides/sync-documentation-code-changes/>
+- <https://pypi.org/project/rtmx/>
+- <https://weel.co.jp/media/design-document-creation/>
+- <https://book.st-hakky.com/business/efficient-specification-document-creation-automation-and-flowcharts>
+- <https://pypi.org/project/adrpy-ai/>
+- <https://codex.danielvaughan.com/2026/04/28/codex-cli-architecture-decision-records-adr-automated-governance/>
+- <https://agentskillsfinder.com/skills/adr-skill>
 
 ## 4. 関連ドキュメント
 
