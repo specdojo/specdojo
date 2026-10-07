@@ -2,12 +2,12 @@
 id: cdfd-overview-grade-criteria
 document: cdfd-overview
 path: docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md
-graded_at: "2026-10-06T16:13:55.209Z"
+graded_at: "2026-10-07T16:11:41.218Z"
 graded_by: agy-expert-executor
-content_hash: d21b0a535f2e00298b71f19804552832a8984c57ad7b58a895f7d96e8a3f2bb3
+content_hash: 9b8b4b2f64e2ef5c6ce0069204a94780e3ae43bc1b7d68004a654308d80abd7a
 summary:
-  satisfied: 3
-  unsatisfied: 1
+  satisfied: 2
+  unsatisfied: 2
   total: 4
 criteria:
   - id: DC-001
@@ -22,13 +22,14 @@ criteria:
       - PO
     viewpoint: vp-po-purpose-alignment
     status: unsatisfied
-    reason: PO による対象範囲と領域分割の承認を満たす承認記録が特定できない。
+    reason: PO による対象範囲と領域分割を承認した記録が特定できないため。
   - id: DC-003
     text: 各領域の起点イベントと、プロセスグループ単位の主要入力・主要出力・データストアが識別でき、概念データフローのエッジと相互に対応し、プロセスグループ別 CDFD の構成方針として参照できること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
-    status: satisfied
+    status: unsatisfied
+    reason: 他のプロセスグループ別 CDFD（cdfd-plan、cdfd-action、cdfd-orchestrator）との間に入出力の不整合があり、正確な構成方針として参照できないため。
   - id: DC-004
     text: プロセスグループ別 CDFD とユースケース別 CDFD への分割に重複または欠落がないことを、詳細 CDFD 一覧と各領域の対応で確認できること
     roles:

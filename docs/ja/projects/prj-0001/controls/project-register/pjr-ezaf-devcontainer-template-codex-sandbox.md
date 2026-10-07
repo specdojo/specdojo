@@ -12,7 +12,7 @@ specdojo:
   owner: DEV
   registered_at: "2026-10-04T05:03:36Z"
   due_on: null
-  block_reason: rate limit reached
+  block_reason: "agent exited with non-zero code: executor validation failed or not run: npm run check"
 ---
 
 # PJR-EZAF devcontainer テンプレートで codex の sandbox が動くか確認し、必要な設定を加える
@@ -23,7 +23,7 @@ specdojo devcontainer scaffold のテンプレートはシステムの bubblewra
 
 ## 2. 完了条件
 
-- Host Mac で、テンプレートから作った devcontainer（`--providers codex`）の中で `codex sandbox -- ls -d /` を実行した結果を記録している。ベースイメージ（`mcr.microsoft.com/devcontainers/typescript-node:22`）に bubblewrap が入っているかも記録している。
+- Host Mac で、テンプレートから作った devcontainer（`--provider codex`）の中で `codex sandbox -- ls -d /` を実行した結果を記録している。ベースイメージ（`mcr.microsoft.com/devcontainers/typescript-node:22`）に bubblewrap が入っているかも記録している。
 - sandbox が動かない場合は、原因（seccomp、AppArmor、`/proc` のマスクなど）を特定し、codex provider を指定したときだけ必要な設定（例: `runArgs` の `--security-opt=seccomp=unconfined`）を scaffold が加えるようにしている。隔離を緩める設定は、緩む範囲と採否の理由を記録し、`--security-opt=systempaths=unconfined` のように隔離を大きく弱める設定は使わない。
 - 設定を加えた場合、設定後の devcontainer で `codex sandbox` と `codex exec --sandbox workspace-write` が動き、sandbox の外への書き込みが拒否されることを確認している。
 - scaffold の unit test、生成される `devcontainer.json`、`docs/ja/specdojo/references/command-reference.md` の `devcontainer scaffold` の説明を更新している。
@@ -34,8 +34,8 @@ specdojo devcontainer scaffold のテンプレートはシステムの bubblewra
 | No  | 作業                                                                       | 担当 | 状態 | メモ                                                              |
 | --- | -------------------------------------------------------------------------- | ---- | ---- | ----------------------------------------------------------------- |
 | 1   | Host Mac でテンプレートの devcontainer を作り、codex の sandbox を確認する | DEV  | open | 「確認の手順」。Docker が必要なため devcontainer の中ではできない |
-| 2   | 原因の特定と、codex provider の指定時だけ設定を加える実装                  | DEV  | open | 1 で問題がなければ不要                                            |
-| 3   | 文書とテストの更新、設定後の確認                                           | DEV  | open | -                                                                 |
+| 2   | 原因の特定と、codex provider の指定時だけ設定を加える実装                  | DEV  | done | Docker 既定 seccomp の名前空間作成制限に対応                      |
+| 3   | 文書とテストの更新、設定後の確認                                           | DEV  | open | 文書・unit test は更新済み。Host Mac での設定後確認が残る         |
 
 ### 3.1. 確認の手順
 
@@ -61,7 +61,11 @@ devcontainer exec --workspace-folder . bash -lc 'codex sandbox -- sh -c "ls -d /
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+`codex` provider を指定したときだけ、scaffold が生成する `devcontainer.json` の `runArgs` に `--security-opt=seccomp=unconfined` を追加するようにした。Codex 同梱の bubblewrap が user namespace を作成できるよう Docker の syscall filter を無効にする設定であり、追加の Linux capability は付与しない。Docker が保護する `/proc`・`/sys` を公開する `--security-opt=systempaths=unconfined` は、隔離をさらに弱めるため採用していない。Codex を指定しない場合は `runArgs` 自体を生成せず、Docker の既定 seccomp profile を維持する。
+
+scaffold の unit test には、Codex を含む場合に上記 `runArgs` が生成されることと、Codex を含まない場合は生成されないことを追加した。[[specdojo:command-reference|SpecDojo コマンドリファレンス]] には、設定の適用条件、緩和する隔離の範囲、`systempaths=unconfined` を採用しない理由、Codex sandbox を引き続き使うことを記載した。
+
+executor 環境には Docker と Dev Container CLI がないため、Host Mac での実機確認は未実施である。「確認の手順」に従い、ベースイメージの system bubblewrap の有無、変更前の失敗、変更後の `codex sandbox` と `codex exec --sandbox workspace-write`、sandbox 外への書き込み拒否を確認して記録する必要がある。
 
 ## 5. 関連ドキュメント
 
