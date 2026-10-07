@@ -7,15 +7,18 @@ import {
   formatWorktreeBuildFailure,
   generateWorktreeArtifacts,
   isGitDubiousOwnership,
+  isGitIndexLockContention,
+  isGitNotRepositoryWithGitMetadata,
   resolveWorktreeBuildCommand,
   runGitWithTransientRetry,
   summarizeGitStderr,
   summarizeGitHookFailure,
   summarizeGitArguments,
+  type TransientGitRetryNotice,
 } from "../../src/exec-worktree.js";
 import { sanitizeRegisterConclusion } from "../../src/exec-register.js";
 
-describe("dubious ownership retry", () => {
+describe("transient git failure retry", () => {
   const dubiousOwnership =
     "fatal: detected dubious ownership in repository at '/workspaces/example'";
 
@@ -31,7 +34,7 @@ describe("dubious ownership retry", () => {
       { status: 0, stderr: "" },
     ];
     let calls = 0;
-    const notices: Array<{ attempt: number; maxAttempts: number; waitMilliseconds: number }> = [];
+    const notices: TransientGitRetryNotice[] = [];
     const waits: number[] = [];
 
     const actual = runGitWithTransientRetry(
@@ -43,7 +46,14 @@ describe("dubious ownership retry", () => {
     expect(actual.status).toBe(0);
     expect(calls).toBe(2);
     expect(waits).toEqual([2000]);
-    expect(notices).toEqual([{ attempt: 1, maxAttempts: 3, waitMilliseconds: 2000 }]);
+    expect(notices).toEqual([
+      {
+        attempt: 1,
+        maxAttempts: 3,
+        waitMilliseconds: 2000,
+        reason: "dubious ownership",
+      },
+    ]);
   });
 
   it("widens the wait on each retry and gives up after three retries", () => {
@@ -104,6 +114,113 @@ describe("dubious ownership retry", () => {
     expect(calls).toBe(1);
     expect(retryReports).toBe(0);
     expect(waits).toEqual([]);
+  });
+
+  it("detects not-a-repository only when the working directory has git metadata", () => {
+    const withGitMetadata = mkdtempSync(join(tmpdir(), "specdojo-git-retry-"));
+    const withoutGitMetadata = mkdtempSync(join(tmpdir(), "specdojo-git-retry-"));
+    mkdirSync(join(withGitMetadata, ".git"));
+
+    try {
+      const stderr = "warning: Not a git repository. Use --no-index to compare two paths";
+      expect(isGitNotRepositoryWithGitMetadata(stderr, withGitMetadata)).toBe(true);
+      expect(isGitNotRepositoryWithGitMetadata(stderr.toUpperCase(), withGitMetadata)).toBe(true);
+      expect(isGitNotRepositoryWithGitMetadata(stderr, withoutGitMetadata)).toBe(false);
+      expect(isGitNotRepositoryWithGitMetadata("fatal: unrelated failure", withGitMetadata)).toBe(
+        false,
+      );
+    } finally {
+      rmSync(withGitMetadata, { recursive: true, force: true });
+      rmSync(withoutGitMetadata, { recursive: true, force: true });
+    }
+  });
+
+  it("retries not-a-repository with git metadata and reports its reason", () => {
+    const repoRoot = mkdtempSync(join(tmpdir(), "specdojo-git-retry-"));
+    writeFileSync(join(repoRoot, ".git"), "gitdir: ../git-dir\n", "utf8");
+    const results = [
+      { status: 128, stderr: "warning: Not a git repository. Use --no-index" },
+      { status: 0, stderr: "" },
+    ];
+    let calls = 0;
+    const reasons: string[] = [];
+    const waits: number[] = [];
+
+    try {
+      const actual = runGitWithTransientRetry(
+        () => results[calls++]!,
+        ({ reason }) => reasons.push(reason),
+        (milliseconds) => waits.push(milliseconds),
+        repoRoot,
+      );
+
+      expect(actual.status).toBe(0);
+      expect(calls).toBe(2);
+      expect(reasons).toEqual(["not a git repository"]);
+      expect(waits).toEqual([2000]);
+    } finally {
+      rmSync(repoRoot, { recursive: true, force: true });
+    }
+  });
+
+  it("does not retry not-a-repository without git metadata", () => {
+    const repoRoot = mkdtempSync(join(tmpdir(), "specdojo-git-retry-"));
+    let calls = 0;
+    const waits: number[] = [];
+
+    try {
+      const actual = runGitWithTransientRetry(
+        () => {
+          calls += 1;
+          return { status: 128, stderr: "fatal: not a git repository" };
+        },
+        () => undefined,
+        (milliseconds) => waits.push(milliseconds),
+        repoRoot,
+      );
+
+      expect(actual.status).toBe(128);
+      expect(calls).toBe(1);
+      expect(waits).toEqual([]);
+    } finally {
+      rmSync(repoRoot, { recursive: true, force: true });
+    }
+  });
+
+  it("shares one retry limit across both transient failure reasons", () => {
+    const repoRoot = mkdtempSync(join(tmpdir(), "specdojo-git-retry-"));
+    mkdirSync(join(repoRoot, ".git"));
+    const failures = [
+      dubiousOwnership,
+      "warning: Not a git repository. Use --no-index",
+      dubiousOwnership,
+      "warning: Not a git repository. Use --no-index",
+    ];
+    let calls = 0;
+    const reasons: string[] = [];
+    const waits: number[] = [];
+
+    try {
+      const actual = runGitWithTransientRetry(
+        () => ({ status: 128, stderr: failures[calls++]! }),
+        ({ reason }) => reasons.push(reason),
+        (milliseconds) => waits.push(milliseconds),
+        repoRoot,
+      );
+
+      expect(actual.status).toBe(128);
+      expect(calls).toBe(4);
+      expect(reasons).toEqual(["dubious ownership", "not a git repository", "dubious ownership"]);
+      expect(waits).toEqual([2000, 5000, 10000]);
+    } finally {
+      rmSync(repoRoot, { recursive: true, force: true });
+    }
+  });
+
+  it("keeps the existing index-lock classification separate", () => {
+    expect(isGitIndexLockContention("Unable to create '/repo/.git/index.lock'")).toBe(true);
+    expect(isGitDubiousOwnership(dubiousOwnership)).toBe(true);
+    expect(isGitDubiousOwnership("warning: Not a git repository")).toBe(false);
   });
 });
 

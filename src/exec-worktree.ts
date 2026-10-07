@@ -43,9 +43,9 @@ export type RegisteredWorktree = {
 // happens before git mutates anything, so retrying the same command is safe and idempotent.
 const INDEX_LOCK_RETRY_ATTEMPTS = 5;
 const INDEX_LOCK_RETRY_BASE_MS = 50;
-// dubious ownership は所有者が一致していても一時的に起き、すぐの再試行では収まらない
-// ことがある（並行実行中の統合段で確認した）。間隔を広げながら最大 3 回まで待って再試行する。
-const DUBIOUS_OWNERSHIP_RETRY_DELAYS_MS = [2000, 5000, 10000] as const;
+// dubious ownership と、`.git` がある cwd での not-a-repository は一時的に起き、すぐの
+// 再試行では収まらないことがある（並行実行中の統合段で確認した）。両方で上限を共有する。
+const TRANSIENT_GIT_RETRY_DELAYS_MS = [2000, 5000, 10000] as const;
 
 export function isGitIndexLockContention(stderr: string): boolean {
   return (
@@ -56,6 +56,16 @@ export function isGitIndexLockContention(stderr: string): boolean {
 
 export function isGitDubiousOwnership(stderr: string): boolean {
   return /fatal:\s+detected dubious ownership in repository\b/i.test(stderr);
+}
+
+export function isGitNotRepositoryWithGitMetadata(stderr: string, repoRoot: string): boolean {
+  if (!/\bnot a git repository\b/i.test(stderr)) return false;
+  try {
+    const metadata = lstatSync(join(resolve(repoRoot), ".git"));
+    return metadata.isFile() || metadata.isDirectory();
+  } catch {
+    return false;
+  }
 }
 
 // Synchronously block the thread. gitResult is intentionally spawnSync-based (blocking), and we
@@ -69,33 +79,54 @@ type RetryableGitResult = {
   stderr: unknown;
 };
 
+export type TransientGitRetryReason = "dubious ownership" | "not a git repository";
+
+// Kept as a public compatibility type for callers that only consume retry timing.
 export type DubiousOwnershipRetryNotice = {
   attempt: number;
   maxAttempts: number;
   waitMilliseconds: number;
 };
 
+export type TransientGitRetryNotice = DubiousOwnershipRetryNotice & {
+  reason: TransientGitRetryReason;
+};
+
+export function transientGitFailureReason(
+  stderr: string,
+  repoRoot?: string,
+): TransientGitRetryReason | undefined {
+  if (isGitDubiousOwnership(stderr)) return "dubious ownership";
+  if (repoRoot !== undefined && isGitNotRepositoryWithGitMetadata(stderr, repoRoot)) {
+    return "not a git repository";
+  }
+  return undefined;
+}
+
 export function runGitWithTransientRetry<T extends RetryableGitResult>(
   run: () => T,
-  onDubiousOwnershipRetry: (notice: DubiousOwnershipRetryNotice) => void = () => undefined,
+  onTransientFailureRetry: (notice: TransientGitRetryNotice) => void = () => undefined,
   sleep: (milliseconds: number) => void = sleepSync,
+  repoRoot?: string,
 ): T {
   let indexLockRetries = 0;
-  let dubiousOwnershipRetries = 0;
+  let transientFailureRetries = 0;
   let result = run();
 
   while (result.status !== 0) {
     const stderr = typeof result.stderr === "string" ? result.stderr : "";
+    const transientFailure = transientGitFailureReason(stderr, repoRoot);
     if (
-      dubiousOwnershipRetries < DUBIOUS_OWNERSHIP_RETRY_DELAYS_MS.length &&
-      isGitDubiousOwnership(stderr)
+      transientFailureRetries < TRANSIENT_GIT_RETRY_DELAYS_MS.length &&
+      transientFailure !== undefined
     ) {
-      const waitMilliseconds = DUBIOUS_OWNERSHIP_RETRY_DELAYS_MS[dubiousOwnershipRetries];
-      dubiousOwnershipRetries += 1;
-      onDubiousOwnershipRetry({
-        attempt: dubiousOwnershipRetries,
-        maxAttempts: DUBIOUS_OWNERSHIP_RETRY_DELAYS_MS.length,
+      const waitMilliseconds = TRANSIENT_GIT_RETRY_DELAYS_MS[transientFailureRetries];
+      transientFailureRetries += 1;
+      onTransientFailureRetry({
+        attempt: transientFailureRetries,
+        maxAttempts: TRANSIENT_GIT_RETRY_DELAYS_MS.length,
         waitMilliseconds,
+        reason: transientFailure,
       });
       sleep(waitMilliseconds);
       result = run();
@@ -124,13 +155,18 @@ export function gitResult(repoRoot: string, args: string[]): ReturnType<typeof s
       stdio: ["ignore", "pipe", "pipe"],
     });
 
-  return runGitWithTransientRetry(run, ({ attempt, maxAttempts, waitMilliseconds }) => {
-    const summary = summarizeGitArguments(args);
-    process.stderr.write(
-      `warning: git command failed with dubious ownership; retrying in ${waitMilliseconds / 1000}s` +
-        ` (attempt ${attempt}/${maxAttempts}, cwd: ${repoRoot}${summary ? `, args: ${summary}` : ""})\n`,
-    );
-  });
+  return runGitWithTransientRetry(
+    run,
+    ({ attempt, maxAttempts, waitMilliseconds, reason }) => {
+      const summary = summarizeGitArguments(args);
+      process.stderr.write(
+        `warning: git command failed with ${reason}; retrying in ${waitMilliseconds / 1000}s` +
+          ` (attempt ${attempt}/${maxAttempts}, cwd: ${repoRoot}${summary ? `, args: ${summary}` : ""})\n`,
+      );
+    },
+    sleepSync,
+    cwd,
+  );
 }
 
 // git 失敗メッセージは register イベントの reason、result の block_reason、実行ログの一覧行の
