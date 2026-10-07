@@ -6,8 +6,9 @@ import type { EvidenceValidation, ExecEvidence } from "./exec-evidence.js";
 import { redactSensitiveText } from "./exec-evidence.js";
 import { PROJECT_REPO_WORKTREE_DIRNAME, REPO_NAME_PATTERN } from "./specdojo-config.js";
 
-const MAX_CAPTURE_BYTES = 64 * 1024;
+export const MAX_PARENT_VALIDATION_STREAM_BYTES = 1024 * 1024;
 const MAX_SUMMARY_LENGTH = 1_000;
+const CAPTURE_MARKER_RESERVE_BYTES = 256;
 
 export type ParentValidationId =
   | "validate-schema"
@@ -32,6 +33,19 @@ export type ParentValidationProcessResult = {
   stderr: string;
   error?: string;
   timedOut?: boolean;
+  stdoutTruncated?: boolean;
+  stderrTruncated?: boolean;
+};
+
+export type ParentValidationFailureOutput = ParentValidationProcessResult & {
+  id: ParentValidationId;
+  repo?: string;
+  label: string;
+};
+
+export type ParentValidationBatchResult = {
+  validations: EvidenceValidation[];
+  failureOutputs: ParentValidationFailureOutput[];
 };
 
 export type ParentValidationInvoker = (
@@ -91,16 +105,74 @@ const PARENT_VALIDATION_REGISTRY: Record<ParentValidationId, ParentValidationDef
   },
 };
 
-function truncate(value: string, limit: number): string {
+function truncateHead(value: string, limit: number): string {
   if (value.length <= limit) return value;
   return `${value.slice(0, Math.max(0, limit - 1))}…`;
 }
 
-function appendBounded(chunks: Buffer[], chunk: Buffer, currentBytes: number): number {
-  if (currentBytes >= MAX_CAPTURE_BYTES) return currentBytes;
-  const remaining = MAX_CAPTURE_BYTES - currentBytes;
-  chunks.push(chunk.subarray(0, remaining));
-  return currentBytes + Math.min(chunk.length, remaining);
+function truncateMiddle(value: string, limit: number): string {
+  if (value.length <= limit) return value;
+  const marker = "\n… output omitted …\n";
+  if (limit <= marker.length) return truncateHead(value, limit);
+  const retained = limit - marker.length;
+  const headLength = Math.ceil(retained / 2);
+  return `${value.slice(0, headLength)}${marker}${value.slice(-Math.floor(retained / 2))}`;
+}
+
+type BoundedCapture = {
+  chunks: Buffer[];
+  head?: Buffer;
+  tail?: Buffer;
+  totalBytes: number;
+};
+
+function appendBounded(capture: BoundedCapture, chunk: Buffer): void {
+  capture.totalBytes += chunk.length;
+  const payloadBytes = MAX_PARENT_VALIDATION_STREAM_BYTES - CAPTURE_MARKER_RESERVE_BYTES;
+  const headBytes = Math.ceil(payloadBytes / 2);
+  const tailBytes = Math.floor(payloadBytes / 2);
+  if (!capture.head && capture.totalBytes <= MAX_PARENT_VALIDATION_STREAM_BYTES) {
+    capture.chunks.push(chunk);
+    return;
+  }
+  if (!capture.head) {
+    const buffered = Buffer.concat([...capture.chunks, chunk]);
+    capture.chunks = [];
+    capture.head = buffered.subarray(0, headBytes);
+    capture.tail = buffered.subarray(-tailBytes);
+    return;
+  }
+  const tail = Buffer.concat([capture.tail ?? Buffer.alloc(0), chunk]);
+  capture.tail = tail.subarray(Math.max(0, tail.length - tailBytes));
+}
+
+function completeUtf8Prefix(buffer: Buffer): Buffer {
+  if (buffer.length === 0) return buffer;
+  let start = buffer.length - 1;
+  while (start > 0 && (buffer[start] & 0xc0) === 0x80) start--;
+  const lead = buffer[start];
+  const expectedBytes =
+    (lead & 0x80) === 0 ? 1 : (lead & 0xe0) === 0xc0 ? 2 : (lead & 0xf0) === 0xe0 ? 3 : 4;
+  return buffer.length - start < expectedBytes ? buffer.subarray(0, start) : buffer;
+}
+
+function capturedOutput(capture: BoundedCapture): { output: string; truncated: boolean } {
+  if (!capture.head) {
+    return { output: Buffer.concat(capture.chunks).toString("utf8"), truncated: false };
+  }
+  const omitted = Math.max(
+    0,
+    capture.totalBytes - capture.head.length - (capture.tail?.length ?? 0),
+  );
+  const marker = Buffer.from(`\n… ${omitted} bytes omitted …\n`, "utf8");
+  const head = completeUtf8Prefix(capture.head);
+  const tail = capture.tail ?? Buffer.alloc(0);
+  let tailStart = 0;
+  while (tailStart < tail.length && (tail[tailStart] & 0xc0) === 0x80) tailStart++;
+  return {
+    output: Buffer.concat([head, marker, tail.subarray(tailStart)]).toString("utf8"),
+    truncated: true,
+  };
 }
 
 // PJR-V96B: `pipeline.parent_validations` の要素は ID の文字列か `{ id, repo }`。文字列は
@@ -216,10 +288,8 @@ async function invokeParentValidation(
   cwd: string,
 ): Promise<ParentValidationProcessResult> {
   return await new Promise((resolve) => {
-    const stdoutChunks: Buffer[] = [];
-    const stderrChunks: Buffer[] = [];
-    let stdoutBytes = 0;
-    let stderrBytes = 0;
+    const stdoutCapture: BoundedCapture = { chunks: [], totalBytes: 0 };
+    const stderrCapture: BoundedCapture = { chunks: [], totalBytes: 0 };
     let settled = false;
     let timedOut = false;
     const child = spawn(definition.command, [...definition.args], {
@@ -230,10 +300,10 @@ async function invokeParentValidation(
       windowsHide: true,
     });
     child.stdout.on("data", (chunk: Buffer) => {
-      stdoutBytes = appendBounded(stdoutChunks, chunk, stdoutBytes);
+      appendBounded(stdoutCapture, chunk);
     });
     child.stderr.on("data", (chunk: Buffer) => {
-      stderrBytes = appendBounded(stderrChunks, chunk, stderrBytes);
+      appendBounded(stderrCapture, chunk);
     });
     const timer = setTimeout(() => {
       timedOut = true;
@@ -246,35 +316,44 @@ async function invokeParentValidation(
       resolve(result);
     };
     child.on("error", (error) => {
+      const stdout = capturedOutput(stdoutCapture);
+      const stderr = capturedOutput(stderrCapture);
       finish({
         exitCode: null,
-        stdout: Buffer.concat(stdoutChunks).toString("utf8"),
-        stderr: Buffer.concat(stderrChunks).toString("utf8"),
+        stdout: stdout.output,
+        stderr: stderr.output,
         error: error.message,
         timedOut,
+        stdoutTruncated: stdout.truncated,
+        stderrTruncated: stderr.truncated,
       });
     });
     child.on("close", (exitCode) => {
+      const stdout = capturedOutput(stdoutCapture);
+      const stderr = capturedOutput(stderrCapture);
       finish({
         exitCode,
-        stdout: Buffer.concat(stdoutChunks).toString("utf8"),
-        stderr: Buffer.concat(stderrChunks).toString("utf8"),
+        stdout: stdout.output,
+        stderr: stderr.output,
         timedOut,
+        stdoutTruncated: stdout.truncated,
+        stderrTruncated: stderr.truncated,
       });
     });
   });
 }
 
 function validationSummary(result: ParentValidationProcessResult): string {
-  const output = redactSensitiveText(
-    [result.stdout, result.stderr].filter(Boolean).join("\n").trim(),
-  );
+  const output = [result.stdout, result.stderr].filter(Boolean).join("\n").trim();
   const prefix = result.timedOut
     ? "timed out"
     : result.error
       ? `spawn failed: ${result.error}`
       : `exit ${result.exitCode ?? "unknown"}`;
-  return truncate(output ? `${prefix}: ${output}` : prefix, MAX_SUMMARY_LENGTH);
+  return truncateMiddle(
+    redactSensitiveText(output ? `${prefix}: ${output}` : prefix),
+    MAX_SUMMARY_LENGTH,
+  );
 }
 
 /**
@@ -284,17 +363,18 @@ function validationSummary(result: ParentValidationProcessResult): string {
  * without spawning anything. Results carry `repo` when the run spans product repositories or the
  * assignment names one, so single-repository evidence keeps its previous shape.
  */
-export async function runParentValidations(
+export async function runParentValidationBatch(
   entries: readonly unknown[] | undefined,
   cwd: string | ParentValidationRoots,
   invoke: ParentValidationInvoker = invokeParentValidation,
-): Promise<EvidenceValidation[]> {
+): Promise<ParentValidationBatchResult> {
   const assignments = resolveParentValidationAssignments(entries);
   const roots = typeof cwd === "string" ? { project: cwd } : cwd;
   const recordsRepo =
     Object.keys(roots.repos ?? {}).length > 0 ||
     assignments.some((assignment) => assignment.repo !== PARENT_VALIDATION_PROJECT_REPO);
   const validations: EvidenceValidation[] = [];
+  const failureOutputs: ParentValidationFailureOutput[] = [];
   for (const { definition, repo } of assignments) {
     const repoField = recordsRepo ? { repo } : {};
     const root =
@@ -310,7 +390,7 @@ export async function runParentValidations(
         ...repoField,
         command: definition.displayCommand,
         status: "failed",
-        summary: truncate(
+        summary: truncateHead(
           `repository "${repo}" has no worktree for this task; declare it in projects.<project-id>.repos ` +
             `or assign ${definition.id} to another repository in pipeline.parent_validations`,
           MAX_SUMMARY_LENGTH,
@@ -319,16 +399,33 @@ export async function runParentValidations(
       continue;
     }
     const result = await invoke(definition, root);
+    const passed = result.exitCode === 0 && !result.error && !result.timedOut;
     validations.push({
       id: definition.id,
       source: "runner",
       ...repoField,
       command: definition.displayCommand,
-      status: result.exitCode === 0 && !result.error && !result.timedOut ? "passed" : "failed",
+      status: passed ? "passed" : "failed",
       summary: validationSummary(result),
     });
+    if (!passed) {
+      failureOutputs.push({
+        ...result,
+        id: definition.id,
+        ...(recordsRepo ? { repo } : {}),
+        label: assignmentLabel(definition.id, repo),
+      });
+    }
   }
-  return validations;
+  return { validations, failureOutputs };
+}
+
+export async function runParentValidations(
+  entries: readonly unknown[] | undefined,
+  cwd: string | ParentValidationRoots,
+  invoke: ParentValidationInvoker = invokeParentValidation,
+): Promise<EvidenceValidation[]> {
+  return (await runParentValidationBatch(entries, cwd, invoke)).validations;
 }
 
 /** `<id>` or `<repo>:<id>` of a recorded runner validation (no `repo` means the project). */

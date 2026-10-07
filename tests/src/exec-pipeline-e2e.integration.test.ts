@@ -735,7 +735,7 @@ describe("executor / reporter pipeline E2E", () => {
       changes: Array<{ path: string }>;
       validations: Array<{ command: string; status: string }>;
       final_message: string;
-      log_refs: Array<{ path: string; truncated: boolean }>;
+      log_refs: Array<{ kind: string; path: string; truncated: boolean }>;
     };
     expect(evidence.task_id).toBe("T-TEST-doc-010");
     expect(evidence.stage).toMatchObject({
@@ -760,6 +760,7 @@ describe("executor / reporter pipeline E2E", () => {
         summary: expect.stringContaining("integration validation pass"),
       },
     ]);
+    expect(evidence.log_refs.some((ref) => ref.kind === "parent-validation-output")).toBe(false);
     expect(readFileSync(target.parentValidationLogPath, "utf8")).toBe("run\n");
 
     const state = JSON.parse(readFileSync(join(runDir, "pipeline-state.json"), "utf8")) as {
@@ -916,6 +917,7 @@ describe("executor / reporter pipeline E2E", () => {
     const runDir = evidenceRunDir(target, "T-TEST-doc-010");
     const evidence = JSON.parse(readFileSync(join(runDir, "evidence.json"), "utf8")) as {
       validations: Array<{ id?: string; source?: string; status: string }>;
+      log_refs: Array<{ kind: string; path: string; truncated: boolean }>;
     };
     expect(evidence.validations).toContainEqual(
       expect.objectContaining({
@@ -923,6 +925,11 @@ describe("executor / reporter pipeline E2E", () => {
         source: "runner",
         status: "failed",
       }),
+    );
+    const parentLog = evidence.log_refs.find((ref) => ref.kind === "parent-validation-output");
+    expect(parentLog).toMatchObject({ truncated: false });
+    expect(readFileSync(join(target.repo, parentLog?.path ?? ""), "utf8")).toContain(
+      "integration validation fail",
     );
     expect(readResult(target, "T-TEST-doc-010")).toContain(
       "parent validation failed: test-integration",
@@ -1388,9 +1395,19 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
 
     const evidence = JSON.parse(
       readFileSync(join(evidenceRunDir(fixture, "T-TEST-doc-010"), "evidence.json"), "utf8"),
-    ) as { validations: Array<{ source?: string; status: string }> };
+    ) as {
+      validations: Array<{ source?: string; status: string }>;
+      log_refs: Array<{ kind: string; path: string }>;
+    };
     expect(evidence.validations).toContainEqual(
       expect.objectContaining({ source: "runner", status: "passed" }),
+    );
+    const retainedFailureLog = evidence.log_refs.find(
+      (ref) => ref.kind === "parent-validation-output",
+    );
+    expect(retainedFailureLog).toBeDefined();
+    expect(readFileSync(join(fixture.repo, retainedFailureLog?.path ?? ""), "utf8")).toContain(
+      "integration validation fail",
     );
   }, 20_000);
 

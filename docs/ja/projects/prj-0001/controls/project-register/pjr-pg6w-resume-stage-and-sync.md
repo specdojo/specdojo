@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: in-progress
+  item_status: waiting
   priority: high
   owner: DEV
   registered_at: "2026-10-06T10:18:08Z"
   due_on: null
+  block_reason: "integrate failed: project: git commit failed: error: unknown option '--reserve' / error: unknown option '--local' / error: unknown option '--strict-sync' / error: unknown option '--integration-branch'…"
 ---
 
 # PJR-PG6W register の resume は executor 段へ戻れず、executor 段の再開でも統合先を取り込まない

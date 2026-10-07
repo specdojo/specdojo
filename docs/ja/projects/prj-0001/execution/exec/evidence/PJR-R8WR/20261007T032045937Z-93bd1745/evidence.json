@@ -1,0 +1,158 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-R8WR",
+  "run_id": "20261007T032045937Z-93bd1745",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-07T03:20:45.937Z",
+    "completed_at": "2026-10-07T03:34:53.232Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-r8wr-parent-validation-failure-output.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-config-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/exec-evidence.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-evidence.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-parent-validation.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-trial.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-parent-validation.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-pipeline-e2e.integration.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 9,
+    "summary": ".../pjr-r8wr-parent-validation-failure-output.md   |  14 +-\n docs/ja/specdojo/guides/exec-config-guide.md       |   6 +-\n docs/specdojo/schemas/v1/exec-evidence.schema.yaml |  23 +++-\n src/exec-evidence.ts                               |  71 +++++++++-\n src/exec-parent-validation.ts                      | 149 +++++++++++++++++----\n src/exec-run.ts                                    |  60 +++++++--\n src/exec-trial.ts                                  |  42 ++++--\n tests/src/exec-parent-validation.test.ts           |  61 ++++++++-\n tests/src/exec-pipeline-e2e.integration.test.ts    |  21 ++-\n 9 files changed, 376 insertions(+), 71 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write src/exec-parent-validation.ts src/exec-evidence.ts src/exec-run.ts src/exec-trial.ts tests/src/exec-parent-validation.test.ts tests/src/exec-run-parent-validation-gate.test.ts tests/src/exec-pipeline-e2e.integration.test.ts docs/specdojo/schemas/v1/exec-evidence.schema.yaml docs/ja/specdojo/guides/exec-config-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-r8wr-parent-validation-failure-output.md",
+      "status": "passed",
+      "summary": "対象ファイルを整形した。"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --check src/exec-parent-validation.ts src/exec-evidence.ts src/exec-run.ts src/exec-trial.ts tests/src/exec-parent-validation.test.ts tests/src/exec-pipeline-e2e.integration.test.ts docs/specdojo/schemas/v1/exec-evidence.schema.yaml docs/ja/specdojo/guides/exec-config-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-r8wr-parent-validation-failure-output.md",
+      "status": "passed",
+      "summary": "対象ファイルはすべて整形済み。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate --project prj-0001",
+      "status": "passed",
+      "summary": "カタログ検証に成功。既存の参照文書不足に関する警告のみ。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "履歴リンク検証に成功。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿の生成に成功し、追加の追跡差分なし。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "2425件の文書インデックス生成に成功し、追加の追跡差分なし。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーなし。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv4.1.11 \u001b[39m\u001b[90m/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-R8WR\u001b[39m\n\n \u001b[32m✓\u001b[39m tests/src/deliverable-trash.integration.test.ts \u001b[2m(\u001b[22m\u001b[2m4 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 120\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/tools/open-agent-worktree.integration.test.ts \u001b[2m(\u001b[22m\u001b[2m2 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 206\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/src/exec-agent-git-state.integration.test.ts \u001b[2m(\u001b[22m\u001b[2m6 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 314\u001b[2mms\u001b[22m\u001b[39m\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\n \u001b[32m✓\u001b[39m tests/src/exec-register-worktree.integration.test.ts \u001b[2m(\u001b[22m\u001b[2m3 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 93\u001b[2mms\u001b[22m\u001b[39m\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\n \u001b[32m✓\u001b[39m tests/src/exec-register-multiple-ids.integration.test.ts \u001b[…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.3.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-implemented)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-R8WR/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-R8WR/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specd…"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv4.1.11 \u001b[39m\u001b[90m/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-R8WR\u001b[39m\n\n \u001b[32m✓\u001b[39m tests/src/grade.test.ts \u001b[2m(\u001b[22m\u001b[2m69 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 881\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/src/exec-plans.test.ts \u001b[2m(\u001b[22m\u001b[2m66 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 1011\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/src/exec-results.test.ts \u001b[2m(\u001b[22m\u001b[2m37 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 1027\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/src/register-commands.test.ts \u001b[2m(\u001b[22m\u001b[2m42 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 1624\u001b[2mms\u001b[22m\u001b[39m\nUpdated ticket status → ready: /tmp/specdojo-ticket-eVCNFI/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-R6STvm/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-pTKpQK/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-d0nT9Z/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draf…"
+    }
+  ],
+  "final_message": "親検証の失敗出力保存、両端要約、秘匿処理、再開時のログ保持を実装し、関連テスト・スキーマ・文書を更新した。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-R8WR/20261007T032045937Z-93bd1745/executor.log",
+      "bytes": 2505,
+      "truncated": false
+    }
+  ]
+}

@@ -42,3 +42,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_ebbd7bdb1bd7414f8a06f5be9acf98e1
+- v: 1
+  id: reg_d8c5abc70523408f93dcb8efe589b085
+  ts: "2026-10-07T03:40:40Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: project: git commit failed: error: unknown option '--reserve' / error: unknown option '--local' / error: unknown option '--strict-sync' / error: unknown option '--integration-branch'…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: project: git commit failed: error: unknown option '--reserve' / error: unknown option '--local' / error: unknown option '--strict-sync' / error: unknown option '--integration-branch'…"
+  previous_event_id: reg_54ff178121194c1da8be6873ed489216

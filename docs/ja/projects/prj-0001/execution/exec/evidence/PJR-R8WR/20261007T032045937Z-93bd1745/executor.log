@@ -1,0 +1,13 @@
+実装を完了しました。
+
+- 失敗要約は先頭・末尾を含む1,000文字に変更。
+- 失敗ログは秘匿処理後、stdout/stderr 各1MiB上限で保存。
+- 再開時は連番ログとして追記し、過去ログを保持。
+- 成功時はログを保存しない仕様に決定。
+- unit／integration テスト、スキーマ、運用ガイド、個票を更新。
+- result は executor 指示に従い未編集です。
+- 親検証の lint・test・typecheck・schema は runner に委ねています。
+
+<specdojo_executor_evidence>
+{"final_message":"親検証の失敗出力保存、両端要約、秘匿処理、再開時のログ保持を実装し、関連テスト・スキーマ・文書を更新した。","validations":[{"command":"npx prettier --write src/exec-parent-validation.ts src/exec-evidence.ts src/exec-run.ts src/exec-trial.ts tests/src/exec-parent-validation.test.ts tests/src/exec-run-parent-validation-gate.test.ts tests/src/exec-pipeline-e2e.integration.test.ts docs/specdojo/schemas/v1/exec-evidence.schema.yaml docs/ja/specdojo/guides/exec-config-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-r8wr-parent-validation-failure-output.md","status":"passed","summary":"対象ファイルを整形した。"},{"command":"npx prettier --check src/exec-parent-validation.ts src/exec-evidence.ts src/exec-run.ts src/exec-trial.ts tests/src/exec-parent-validation.test.ts tests/src/exec-pipeline-e2e.integration.test.ts docs/specdojo/schemas/v1/exec-evidence.schema.yaml docs/ja/specdojo/guides/exec-config-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-r8wr-parent-validation-failure-output.md","status":"passed","summary":"対象ファイルはすべて整形済み。"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"カタログ検証に成功。既存の参照文書不足に関する警告のみ。"},{"command":"npm run validate:history-links","status":"passed","summary":"履歴リンク検証に成功。"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿の生成に成功し、追加の追跡差分なし。"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"2425件の文書インデックス生成に成功し、追加の追跡差分なし。"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし。"}]}
+</specdojo_executor_evidence>
