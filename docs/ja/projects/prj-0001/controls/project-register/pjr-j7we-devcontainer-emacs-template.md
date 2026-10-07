@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   owner: DEV
   registered_at: "2026-10-07T13:56:21Z"
   due_on: null
+  block_reason: "agent exited with non-zero code: parent validation failed: lint-ts"
 ---
 
 # PJR-J7WE devcontainer scaffold で Emacs の設定をテンプレートから展開する
@@ -44,13 +45,17 @@ scaffold のオプションで Emacs を選んだ場合に、必要なツール�
 
 | No  | 作業                                                              | 担当 | 状態 | メモ                        |
 | --- | ----------------------------------------------------------------- | ---- | ---- | --------------------------- |
-| 1   | scaffold のオプション・テンプレート・post-create の配置を実装する | DEV  | open | PJR-2H5F の統合後に着手する |
-| 2   | テストと文書を更新する                                            | DEV  | open | -                           |
+| 1   | scaffold のオプション・テンプレート・post-create の配置を実装する | DEV  | done | `--editor emacs` で実装した |
+| 2   | テストと文書を更新する                                            | DEV  | done | 単体テストと利用手順を更新  |
 | 3   | 生成した devcontainer で Emacs の動作を確かめる                   | PO   | open | 人が行う                    |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `devcontainer scaffold` に `--editor emacs` を追加した。指定時だけ `emacs-nox`、ripgrep、TypeScript・Markdown・YAML・Bash の LSP サーバーと `.devcontainer/emacs/init.el` を生成し、既定では追加しない。
+- post-create は `~/.emacs.d/init.el` と `~/.config/emacs/init.el` がどちらも無い場合だけ、生成したテンプレートを後者へコピーする。既存の dotfiles は上書きしない。
+- テンプレートは Emacs 組み込み機能だけを使い、`C-h`、UTF-8、行番号、括弧、バックアップ・自動保存、端末マウス、Eglot の設定をコメント付きで提供する。単体テストではオプションによる生成の有無、導入ツール、既存設定の保護条件、Emacs がある環境での batch 読み込みを検証する。
+- [[specdojo:command-reference]] と [[specdojo:remote-host-development-guide]] にオプション、テンプレートの配置・変更方法、dotfiles 優先の挙動を記載した。
+- 残課題は No. 3 の実機確認である。生成した Dev Container を作成し、端末 Emacs の `C-h` と TypeScript バッファの Eglot 接続を人が確認する。
 
 ## 5. 関連ドキュメント
 
