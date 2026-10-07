@@ -58,3 +58,32 @@
       from: "-"
       to: "integrate failed: project: git commit failed: error: unknown option '--reserve' / error: unknown option '--local' / error: unknown option '--strict-sync' / error: unknown option '--integration-branch'…"
   previous_event_id: reg_54ff178121194c1da8be6873ed489216
+- v: 1
+  id: reg_1a2465b9925b474f8a78ad08e886a125
+  ts: "2026-10-07T03:47:11Z"
+  action: start
+  actor: agy-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "integrate failed: project: git commit failed: error: unknown option '--reserve' / error: unknown option '--local' / error: unknown option '--strict-sync' / error: unknown option '--integration-branch'…"
+      to: "-"
+  previous_event_id: reg_d8c5abc70523408f93dcb8efe589b085
+- v: 1
+  id: reg_d5ac60a963c14973b1b1afc2aa11b395
+  ts: "2026-10-07T03:51:01Z"
+  action: review
+  actor: agy-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_1a2465b9925b474f8a78ad08e886a125

@@ -12,8 +12,10 @@ import { safeSlug } from "./exec-shared.js";
 // 再開段は3つある。executor が running のまま中断した場合は既存 worktree 上で executor を
 // 再実行する。executor が成功済みで reporter が未完了なら reporter 段から、reporter も成功して
 // 統合（commit → merge → worktree 撤去）だけが残っているなら integrate 段から再開する。
+// reporter 段から再開可能な run は、明示指定により既存成果を保持して executor へ戻せる。
 
 export type RegisterResumeStage = "executor" | "reporter" | "integrate";
+export type RegisterResumeFrom = "executor";
 
 export type RegisterResumeCandidate = {
   runId: string;
@@ -36,6 +38,7 @@ export type RegisterResumeTarget =
   | (RegisterResumeTargetBase & {
       stage: "executor";
       initialChanges: string[];
+      handoff: string[];
     })
   | (RegisterResumeTargetBase & {
       stage: "reporter" | "integrate";
@@ -45,6 +48,22 @@ export type RegisterResumeTarget =
 
 export type RegisterResumeLookup =
   { kind: "resumable"; target: RegisterResumeTarget } | { kind: "not-resumable"; reason: string };
+
+function executorResumeHandoff(evidence?: ExecEvidence): string[] {
+  if (!evidence) return [];
+  const failedParentValidations = evidence.validations
+    .filter((validation) => validation.source === "runner" && validation.status === "failed")
+    .map((validation) => {
+      const id = validation.id?.trim() || validation.command.trim() || "parent validation";
+      const label =
+        validation.repo && validation.repo !== "project" ? `${validation.repo}:${id}` : id;
+      const summary = validation.summary.trim() || "failed without a summary";
+      return `parent validation ${label} failed: ${summary}`;
+    });
+  if (failedParentValidations.length > 0) return failedParentValidations;
+  const blockReason = evidence.block_reason?.trim();
+  return blockReason ? [blockReason] : [];
+}
 
 export function registerEvidenceDir(input: {
   repoRoot: string;
@@ -108,6 +127,7 @@ export function loadRegisterResumeCandidates(input: {
 // 未コミット成果や result と食い違うため、最新 run が再開できない場合は理由を返して止める。
 export function selectResumableRegisterRun(
   candidates: readonly RegisterResumeCandidate[],
+  options: { resumeFrom?: RegisterResumeFrom } = {},
 ): RegisterResumeLookup {
   if (candidates.length === 0) {
     return { kind: "not-resumable", reason: "no pipeline run state found in the worktree" };
@@ -134,6 +154,19 @@ export function selectResumableRegisterRun(
     ),
   ];
 
+  const executorTarget = (
+    candidate: RegisterResumeCandidate,
+    changes: readonly string[] = initialChanges,
+  ): RegisterResumeTarget => ({
+    stage: "executor",
+    runId: candidate.runId,
+    stateRef: candidate.stateRef,
+    statePath: candidate.statePath,
+    state: candidate.state,
+    initialChanges: [...changes],
+    handoff: executorResumeHandoff(candidate.executorEvidence ?? candidate.evidence),
+  });
+
   // rate limit または保護機構の block で打ち切られた executor は、evidence が記録されていても
   // 作業を完了していない。reporter へ進めず、申し送りを反映できるよう既存 worktree 上で
   // executor を再開する。通常のプロセス失敗は failed のまま区別し、再開対象にしない。
@@ -143,14 +176,7 @@ export function selectResumableRegisterRun(
   ) {
     return {
       kind: "resumable",
-      target: {
-        stage: "executor",
-        runId: latest.runId,
-        stateRef: latest.stateRef,
-        statePath: latest.statePath,
-        state: latest.state,
-        initialChanges,
-      },
+      target: executorTarget(latest),
     };
   }
 
@@ -171,6 +197,15 @@ export function selectResumableRegisterRun(
           },
         },
       };
+      if (options.resumeFrom === "executor") {
+        const forcedChanges =
+          initialChanges.length > 0
+            ? initialChanges
+            : (latest.evidence.attempt_changes ?? latest.evidence.changes).map(
+                (change) => change.path,
+              );
+        return { kind: "resumable", target: executorTarget(latest, forcedChanges) };
+      }
       return {
         kind: "resumable",
         target: {
@@ -186,14 +221,7 @@ export function selectResumableRegisterRun(
     }
     return {
       kind: "resumable",
-      target: {
-        stage: "executor",
-        runId: latest.runId,
-        stateRef: latest.stateRef,
-        statePath: latest.statePath,
-        state: latest.state,
-        initialChanges,
-      },
+      target: executorTarget(latest),
     };
   }
   if (latest.state.stages.executor.status !== "succeeded") {
@@ -209,11 +237,26 @@ export function selectResumableRegisterRun(
       reason: `executor evidence is missing or invalid for run ${latest.runId}`,
     };
   }
+  const inferredStage =
+    latest.state.stages.reporter.status === "succeeded" ? "integrate" : "reporter";
+  if (options.resumeFrom === "executor") {
+    if (inferredStage !== "reporter") {
+      return {
+        kind: "not-resumable",
+        reason: `cannot resume the executor from the ${inferredStage} stage of run ${latest.runId}`,
+      };
+    }
+    const forcedChanges =
+      initialChanges.length > 0
+        ? initialChanges
+        : (latest.evidence.attempt_changes ?? latest.evidence.changes).map((change) => change.path);
+    return { kind: "resumable", target: executorTarget(latest, forcedChanges) };
+  }
   return {
     kind: "resumable",
     target: {
       // reporter が成功済みなら残っているのは統合だけ。executor / reporter は起動しない。
-      stage: latest.state.stages.reporter.status === "succeeded" ? "integrate" : "reporter",
+      stage: inferredStage,
       runId: latest.runId,
       stateRef: latest.stateRef,
       statePath: latest.statePath,
@@ -229,8 +272,12 @@ export function findResumableRegisterRun(input: {
   worktreePath: string;
   executionPath: string;
   taskId: string;
+  resumeFrom?: RegisterResumeFrom;
 }): RegisterResumeLookup {
-  return selectResumableRegisterRun(loadRegisterResumeCandidates(input));
+  return selectResumableRegisterRun(
+    loadRegisterResumeCandidates(input),
+    input.resumeFrom ? { resumeFrom: input.resumeFrom } : {},
+  );
 }
 
 // plan / result のファイル名は `<pjr-id>-<UTC>-<rand>-(plan|result).md`（buildInPlaceStem）。

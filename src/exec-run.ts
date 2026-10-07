@@ -339,6 +339,7 @@ export type RunOpts = {
   registerCommit?: boolean;
   onFailure?: string;
   resume?: boolean;
+  resumeFrom?: string;
   forceRestart?: boolean;
   worktree?: boolean;
   inPlace?: boolean;
@@ -934,6 +935,7 @@ type ExecutorPromptOptions = {
   resumed?: boolean;
   existingChanges?: readonly string[];
   initialChangeTargets?: readonly string[];
+  resumeHandoff?: readonly string[];
   coverageSource?: "declared" | "initial-changes" | "none";
 };
 
@@ -984,6 +986,12 @@ remain unverified.`;
 This executor invocation resumes an interrupted attempt. Existing worktree changes may represent
 only a partial implementation; they are not proof that the plan is complete. Re-read the entire
 plan before reporting success. ${coverageInstruction}
+
+${
+  options.resumeHandoff?.length
+    ? `The previous attempt left these failure details. Address them before reporting success:\n${options.resumeHandoff.map((detail) => `- ${detail}`).join("\n")}\n`
+    : ""
+}
 
 A changed target must use status \`changed\`, provide its
 repository-relative \`path\`, and actually be present in the cumulative worktree diff. A target
@@ -4643,6 +4651,7 @@ async function runAgentPipeline(params: {
   execDefaults: ExecDefaultsConfig;
   resumedExecutor?: boolean;
   initialChangeTargets?: readonly string[];
+  resumeHandoff?: readonly string[];
   providerConcurrencyGate?: ProviderConcurrencyGate;
   productWorktrees?: readonly ProductWorktree[];
 }): Promise<{
@@ -4703,6 +4712,7 @@ async function runAgentPipeline(params: {
       ...(params.resumedExecutor
         ? { initialChangeTargets: params.initialChangeTargets ?? [] }
         : {}),
+      ...(params.resumedExecutor ? { resumeHandoff: params.resumeHandoff ?? [] } : {}),
     }),
     params.productWorktrees,
   );
@@ -6368,6 +6378,7 @@ async function resumeSingleRegisterItemWorktree(
     worktreePath: worktree.path,
     executionPath,
     taskId: item.id,
+    ...(opts.resumeFrom === "executor" ? { resumeFrom: "executor" } : {}),
   });
   if (lookup.kind !== "resumable") return refuse(lookup.reason);
   const target = lookup.target;
@@ -6429,15 +6440,14 @@ async function resumeSingleRegisterItemWorktree(
     return lifecycleLock ? lifecycleLock.runExclusive(start) : start();
   };
 
-  // PJR-GENJ: reporter 段・統合段の再開では、親検証の前に統合先の最新を exec branch と worktree へ
-  // 取り込む。wait 後に統合先で直した不具合を検証へ反映するためである。register の遷移（begin）より
-  // 前に行い、取り込めない場合は状態を変えずに再開を拒否する。merge 済みで撤去だけが残る統合再開は
-  // 取り込まない（取り込むと merge 済みの判定が崩れる）。
+  // PJR-GENJ / PJR-PG6W: どの段の再開でも、親検証または agent の起動前に統合先の最新を exec
+  // branch と worktree へ取り込む。wait 後に統合先で直した不具合や、人が適用した保護対象設定を
+  // executor に反映するためである。register の遷移（begin）より前に行い、取り込めない場合は状態を
+  // 変えずに再開を拒否する。merge 済みで撤去だけが残る統合再開は取り込まない。
   // PJR-6RN3: 前回の統合段で統合済み（merged / unchanged）と記録されたプロダクトも取り込まない。
   // 取り込むと exec branch に新しい merge commit ができ、統合段がそのプロダクトを再び統合する。
   let syncedIntegrationTargets = false;
   if (
-    (target.stage === "reporter" || target.stage === "integrate") &&
     !isExecBranchMergedIntoCurrent({
       context: { repoRoot, schedulePath, executionPath },
       worktree,
@@ -6528,7 +6538,7 @@ async function resumeSingleRegisterItemWorktree(
 
     process.stdout.write(`Register item: ${item.id} — ${item.title}  [${item.type}]\n`);
     process.stdout.write(
-      `  Resuming executor from interrupted run ${target.runId} in a new pipeline checkpoint\n` +
+      `  Resuming executor from run ${target.runId} in a new pipeline checkpoint\n` +
         `  CWD: ${worktree.path}\n  Agent: ${executor.candidate.actor} (executor)\n`,
     );
 
@@ -6551,6 +6561,7 @@ async function resumeSingleRegisterItemWorktree(
       execDefaults: context.execDefaults,
       resumedExecutor: true,
       initialChangeTargets: target.initialChanges,
+      resumeHandoff: target.handoff,
       providerConcurrencyGate: context.providerConcurrencyGate,
       productWorktrees: worktree.repos,
     });
@@ -6729,6 +6740,7 @@ async function runRegisterMode(opts: RunOpts): Promise<void> {
         worktreePath: worktree.path,
         executionPath,
         taskId: item.id,
+        ...(opts.resumeFrom === "executor" ? { resumeFrom: "executor" } : {}),
       });
       process.stdout.write(
         lookup.kind === "resumable"
@@ -6920,6 +6932,10 @@ export function registerRunCommand(exec: Command): void {
     false,
   );
   rcmd.option(
+    "--resume-from <stage>",
+    "With --resume: resume a reporter-stage run from executor instead (accepted value: executor)",
+  );
+  rcmd.option(
     "--force-restart",
     "With register worktree mode: re-run the whole item even when a resumable executor result exists (discards the worktree and its uncommitted changes)",
     false,
@@ -7089,6 +7105,16 @@ export function registerRunCommand(exec: Command): void {
       }
       if ((opts.resume || opts.forceRestart) && !hasRegister) {
         process.stdout.write("--resume and --force-restart require --register.\n");
+        process.exitCode = 1;
+        return;
+      }
+      if (opts.resumeFrom && !opts.resume) {
+        process.stdout.write("--resume-from requires --resume.\n");
+        process.exitCode = 1;
+        return;
+      }
+      if (opts.resumeFrom && opts.resumeFrom !== "executor") {
+        process.stdout.write('--resume-from must be "executor".\n');
         process.exitCode = 1;
         return;
       }

@@ -155,11 +155,26 @@ const prompt = readFileSync(0, "utf8");
 
 if (role === "executor") {
   writeFileSync(${JSON.stringify(ARTIFACT_NAME)}, "# executor artifact\\n", "utf8");
+  const resumedWithCoverage = prompt.includes("incomplete lower bound, not an upper bound");
   process.stdout.write(
     "<specdojo_executor_evidence>" +
       JSON.stringify({
-        final_message: "${ARTIFACT_NAME} を追加した。",
+        final_message: existsSync(${JSON.stringify(FIX_NAME)})
+          ? "統合先の修正を取り込んで ${ARTIFACT_NAME} を確認した。"
+          : "${ARTIFACT_NAME} を追加した。",
         validations: [{ command: "npm run test:unit", status: "passed", summary: "全テスト成功。" }],
+        ...(resumedWithCoverage
+          ? {
+              target_coverage: [
+                {
+                  target: ${JSON.stringify(ARTIFACT_NAME)},
+                  status: "changed",
+                  path: ${JSON.stringify(ARTIFACT_NAME)},
+                  reason: "",
+                },
+              ],
+            }
+          : {}),
       }) +
       "</specdojo_executor_evidence>\\n",
   );
@@ -507,6 +522,65 @@ describe("exec run --register --worktree --resume", () => {
         expect(
           mergedEvidence.validations.find((validation) => validation.source === "runner"),
         ).toMatchObject({ id: "test-unit", status: "passed" });
+        expect(worktreePathFor(root)).toBeNull();
+      });
+    },
+  );
+
+  it(
+    "resumes a reporter-stage run from executor after syncing the integration branch",
+    { timeout: 180_000 },
+    async () => {
+      await withRepo(async ({ root, markerPath, worktreeBase }) => {
+        vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+        vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+
+        await runWithFailingReporter(markerPath, worktreeBase);
+        const worktreePath = worktreePathFor(root) ?? "";
+        expect(worktreePath).not.toBe("");
+        const evidenceDir = join(worktreePath, EXECUTION_REL, "exec", "evidence", "PJR-CD34");
+        const firstRunId = readdirSync(evidenceDir)[0];
+
+        writeFileSync(join(root, FIX_NAME), "# human-applied integration fix\n", "utf8");
+        git(root, "add", FIX_NAME);
+        git(root, "commit", "-m", "apply protected setting on integration branch");
+
+        rmSync(markerPath, { force: true });
+        process.exitCode = undefined;
+        await runExec([
+          "run",
+          "--project",
+          "test",
+          "--register",
+          "PJR-CD34",
+          "--worktree",
+          "--worktree-base",
+          worktreeBase,
+          "--resume",
+          "--resume-from",
+          "executor",
+        ]);
+
+        expect(process.exitCode ?? 0).toBe(0);
+        expect(readFileSync(join(root, TICKET_REL), "utf8")).toContain("item_status: review");
+        const runIds = readdirSync(join(root, EXECUTION_REL, "exec", "evidence", "PJR-CD34"));
+        expect(runIds).toHaveLength(2);
+        const resumedRunId = runIds.find((runId) => runId !== firstRunId) ?? "";
+        const resumedEvidence = JSON.parse(
+          readFileSync(
+            join(
+              root,
+              EXECUTION_REL,
+              "exec",
+              "evidence",
+              "PJR-CD34",
+              resumedRunId,
+              "evidence.json",
+            ),
+            "utf8",
+          ),
+        ) as { final_message: string };
+        expect(resumedEvidence.final_message).toContain("統合先の修正を取り込んで");
         expect(worktreePathFor(root)).toBeNull();
       });
     },
