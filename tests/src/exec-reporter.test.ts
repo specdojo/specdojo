@@ -390,6 +390,105 @@ describe("reporter structured output", () => {
     expect(deriveReporterFacts(input).outcome).toBe("blocked");
   });
 
+  describe("composite commands delegated as not_run", () => {
+    const packageScripts = {
+      check: "npm run typecheck && npm run lint:md && npm run validate:catalog && npm test",
+      test: "vitest run",
+      "test:unit": "vitest run --config vitest.unit.config.ts",
+      "test:integration": "vitest run --config vitest.integration.config.ts",
+    };
+    const runner = (command: string, status: "passed" | "failed" = "passed") => ({
+      id: command,
+      source: "runner" as const,
+      command,
+      status,
+      summary: status === "passed" ? "exit 0" : "exit 1",
+    });
+
+    it("accepts npm run check when every component passed in the runner or the executor", () => {
+      const input = evidence();
+      input.validations = [
+        { source: "executor", command: "npm run check", status: "not_run", summary: "delegated" },
+        {
+          source: "executor",
+          command: "npm run validate:catalog",
+          status: "passed",
+          summary: "ok",
+        },
+        runner("npm run typecheck"),
+        runner("npm run lint:md"),
+        runner("npm run test:unit"),
+        runner("npm run test:integration"),
+      ];
+      expect(deriveReporterFacts(input, { packageScripts })).toMatchObject({
+        outcome: "complete",
+        block_reason: "",
+      });
+    });
+
+    it("still blocks npm run check when a component was not run by anyone", () => {
+      const input = evidence();
+      input.validations = [
+        { source: "executor", command: "npm run check", status: "not_run", summary: "delegated" },
+        runner("npm run typecheck"),
+        runner("npm run lint:md"),
+        runner("npm run test:unit"),
+        runner("npm run test:integration"),
+      ];
+      expect(deriveReporterFacts(input, { packageScripts })).toMatchObject({
+        outcome: "blocked",
+        block_reason: "executor validation failed or not run: npm run check",
+      });
+    });
+
+    it("does not treat npm test as passed when only the unit tests passed", () => {
+      const input = evidence();
+      input.validations = [
+        { source: "executor", command: "npm run check", status: "not_run", summary: "delegated" },
+        {
+          source: "executor",
+          command: "npm run validate:catalog",
+          status: "passed",
+          summary: "ok",
+        },
+        runner("npm run typecheck"),
+        runner("npm run lint:md"),
+        runner("npm run test:unit"),
+      ];
+      expect(deriveReporterFacts(input, { packageScripts }).outcome).toBe("blocked");
+    });
+
+    it("does not expand a script that runs arbitrary shell commands", () => {
+      const input = evidence();
+      input.validations = [
+        { source: "executor", command: "npm run verify", status: "not_run", summary: "delegated" },
+        runner("npm run typecheck"),
+      ];
+      const facts = deriveReporterFacts(input, {
+        packageScripts: { verify: "npm run typecheck && rm -rf tmp" },
+      });
+      expect(facts.outcome).toBe("blocked");
+    });
+
+    it("keeps an executor failure of npm run check blocking", () => {
+      const input = evidence();
+      input.validations = [
+        { source: "executor", command: "npm run check", status: "failed", summary: "1 failed" },
+        {
+          source: "executor",
+          command: "npm run validate:catalog",
+          status: "passed",
+          summary: "ok",
+        },
+        runner("npm run typecheck"),
+        runner("npm run lint:md"),
+        runner("npm run test:unit"),
+        runner("npm run test:integration"),
+      ];
+      expect(deriveReporterFacts(input, { packageScripts }).outcome).toBe("blocked");
+    });
+  });
+
   it("uses the evidence block reason for a failed protected executor", () => {
     const input = evidence();
     input.stage.status = "failed";
