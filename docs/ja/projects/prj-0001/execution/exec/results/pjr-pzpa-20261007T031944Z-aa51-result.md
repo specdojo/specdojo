@@ -4,11 +4,12 @@ specdojo:
   type: exec-result
   task_id: PJR-PZPA
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: exec/plans/pjr-pzpa-20261007T031944Z-aa51-plan.md
   started_at: "2026-10-07T03:21:52.678Z"
+  completed_at: "2026-10-07T03:32:37.949Z"
   agent: codex-expert-executor
 ---
 
@@ -16,16 +17,21 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- grade の既定の翻訳 agent を `gemma26-translator` へ切り替えました。
+- シェルスクリプトの既定値およびヘルプ出力、テスト期待値、および関連文書を同期しました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/guides/routine-operation-guide.md`: 日常運用ガイドにおける grade の翻訳 agent に関する記述を `gemma26-translator` に更新
+- `docs/ja/specdojo/references/command-reference.md`: コマンドリファレンスにおける grade コマンドの既定の翻訳 agent に関する記載を更新
+- `docs/ja/specdojo/standards/document-metadata-standard.md`: 文書メタデータ標準内の grade 翻訳に関する記述を更新
+- `tests/tools/grade-per-document.test.ts`: 既定の翻訳 agent の切り替えに合わせてテストの期待値を更新
+- `tools/grade/run-per-document.sh`: grade パイプラインスクリプトの既定の翻訳 agent を `gemma26-translator` に変更しヘルプ出力を同期
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- grade パイプライン実行時に既定で `gemma26-translator` が呼び出される挙動を確認済みです。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`fully-guided` で rulebook / recipe / sample / template をどう使い分けたか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+PJR-PZPA の計画に基づき、grade の既定の翻訳 agent を `gemma26-translator` に切り替えました。パイプラインスクリプト `tools/grade/run-per-document.sh` の既定値とヘルプ表示を修正し、テスト期待値および関連ドキュメント（運用ガイド、コマンドリファレンス、メタデータ標準）を同期した上で、各種静的検査とテストを実施して検証しました。
