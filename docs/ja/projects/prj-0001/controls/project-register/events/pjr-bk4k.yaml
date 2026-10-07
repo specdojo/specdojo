@@ -55,3 +55,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_9451cf5db506414da1f07499c4c85d2a
+- v: 1
+  id: reg_57e0261b0ba7428eb3ad551a5a72eb59
+  ts: "2026-10-07T12:21:38Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: "review: 差分と完了条件を確認（schema・prompt の契約・機械判定・申し送り・trial の集計・テスト・ガイド）"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-07"
+    - field: conclusion
+      from: "-"
+      to: executor の検証の状態に requires_human を加えた。sandbox の外で人が行う確認に限って使い、機械判定で block せず、result の申し送りに「人の確認が必要」として機械的に載せる。failed と runner が満たさない not_run は従来どおり block する
+  previous_event_id: reg_7dd02281dd054605b53f17ebed8945ce

@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-bk4k-executor-not-run-human-check
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-07T11:43:26Z"
   due_on: null
+  completed_at: "2026-10-07T12:21:38Z"
+  conclusion: executor の検証の状態に requires_human を加えた。sandbox の外で人が行う確認に限って使い、機械判定で block せず、result の申し送りに「人の確認が必要」として機械的に載せる。failed と runner が満たさない not_run は従来どおり block する
 ---
 
 # PJR-BK4K sandbox の外で行う確認を executor が not_run と記録すると完了できない
