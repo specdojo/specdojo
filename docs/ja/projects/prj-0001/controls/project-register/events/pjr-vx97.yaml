@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_162c6212d5434cc68d8fcde69b3c47e5
+  ts: "2026-10-07T22:18:25Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者の依頼。PJR-EZAF の再開で観測
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 一時的な dubious ownership で git diff が失敗し、再試行されない
+    - field: description
+      from: ""
+      to: "worktree で Git が一時的に dubious ownership を返すとき、git diff は「fatal: detected dubious ownership」ではなく「warning: Not a git repository. Use --no-index ...」を出して失敗する。exec-worktree.ts の再試行は前者の文言だけを検出するため、git diff は再試行されず、再開前の統合先の取り込みが拒否される。PJR-EZAF の再開（2026-10-08）で発生した。"
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-08"
