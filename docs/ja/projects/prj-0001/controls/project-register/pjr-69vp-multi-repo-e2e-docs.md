@@ -2,16 +2,17 @@
 specdojo:
   id: prj-0001:pjr-69vp-multi-repo-e2e-docs
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-01T03:54:10Z"
-  block_reason: "agent exited with non-zero code: executor validation failed or not run: tools/exec/verify-multi-repo-agent-write.sh all"
+  completed_at: "2026-10-07T11:43:00Z"
+  conclusion: 3 リポジトリ構成の e2e・失敗と再開・回帰を統合テストで確かめ、文書と CHANGELOG を更新した。実 agent CLI（claude・codex・antigravity）でプロダクトリポジトリへの書き込みを確認する script を追加し、3 つとも成功した
 ---
 
 # PJR-69VP 複数リポジトリ構成の実構成検証と文書の更新
