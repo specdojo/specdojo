@@ -58,3 +58,19 @@
       from: in-progress
       to: review
   previous_event_id: reg_7eb8c0c62da9415db8eb07e0726d552d
+- v: 1
+  id: reg_19dff967b7f146d6a13407b440034309
+  ts: "2026-10-07T11:01:41Z"
+  action: wait
+  actor: claude-orchestrator
+  from_status: review
+  to_status: waiting
+  reason: 作業内容 1〜5 が未実施のまま review に遷移していた（2026-09-29）。実装から再開する
+  changes:
+    - field: status
+      from: review
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: 作業内容 1〜5 が未実施のまま review に遷移していた（2026-09-29）。実装から再開する
+  previous_event_id: reg_de07bc60c52340939a8f5ec4e81b54f6

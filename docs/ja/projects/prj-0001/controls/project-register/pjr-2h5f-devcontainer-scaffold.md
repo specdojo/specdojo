@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: waiting
   priority: high
   owner: DEV
   registered_at: "2026-09-28T23:27:46Z"
+  block_reason: 作業内容 1〜5 が未実施のまま review に遷移していた（2026-09-29）。実装から再開する
 ---
 
 # PJR-2H5F specdojo devcontainer scaffold で利用リポジトリに devcontainer を生成する
