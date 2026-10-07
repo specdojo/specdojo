@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_9c4ddfa63bb0441d92da79b47dbbb6e0
+  ts: "2026-10-07T11:43:26Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-69VP の実行で観測
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: sandbox の外で行う確認を executor が not_run と記録すると完了できない
+    - field: description
+      from: ""
+      to: executor が実 agent CLI の起動など sandbox の外で人が行う確認を not_run と正しく記録すると、runner が同じコマンドを実行しないため、親検証がすべて通っても必ず waiting になる。PJR-69VP の 3 回目の実行で発生し、orchestrator が確認を実行して手で取り込んだ。人の確認として申し送る区分か、reporter 段の再開前に人の確認の結果を記録する手段が要る。
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-07"
