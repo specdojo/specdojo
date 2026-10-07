@@ -117,6 +117,7 @@ export type AgentTrialRecord = {
     validations_passed: number;
     validations_failed: number;
     validations_not_run: number;
+    validations_requires_human: number;
     files_changed: number;
     evidence_ref: string | null;
     final_message: string;
@@ -505,6 +506,7 @@ function blankTrial(params: {
       validations_passed: 0,
       validations_failed: 0,
       validations_not_run: 0,
+      validations_requires_human: 0,
       files_changed: 0,
       evidence_ref: null,
       final_message: "",
@@ -634,10 +636,14 @@ export function updateObjectiveMetrics(
   trial.executor.validations_passed = 0;
   trial.executor.validations_failed = 0;
   trial.executor.validations_not_run = 0;
+  trial.executor.validations_requires_human = 0;
   for (const validation of executorValidations) {
     if (validation.status === "passed") trial.executor.validations_passed++;
     else if (validation.status === "failed") trial.executor.validations_failed++;
-    else trial.executor.validations_not_run++;
+    else if (validation.status === "not_run") trial.executor.validations_not_run++;
+    else if (validation.status === "requires_human") {
+      trial.executor.validations_requires_human++;
+    }
   }
 
   const parentValidations = evidence.validations.filter(
@@ -1086,7 +1092,7 @@ function statusTrials(opts: TrialRecordOptions): void {
       validations_not_run: 0,
     };
     process.stdout.write(
-      `${trial.trial_id}\t${trial.status}\ttime(executor/parent/total)=${trial.executor.duration_ms ?? "-"}/${parentValidation.duration_ms ?? "-"}/${trial.duration_ms ?? "-"}ms\tfiles=${trial.executor.files_changed}\texecutor-validations(reported/passed/failed/not_run)=${trial.executor.validations_reported ?? trial.executor.validations.length}/${trial.executor.validations_passed}/${trial.executor.validations_failed}/${trial.executor.validations_not_run}\tparent-validations(status/passed/failed/not_run)=${parentValidation.status}/${parentValidation.validations_passed}/${parentValidation.validations_failed}/${parentValidation.validations_not_run}\treporter=${reporterStatus}/${trial.reporter.format_attempts}/${trial.reporter.failure_category ?? "-"}\n`,
+      `${trial.trial_id}\t${trial.status}\ttime(executor/parent/total)=${trial.executor.duration_ms ?? "-"}/${parentValidation.duration_ms ?? "-"}/${trial.duration_ms ?? "-"}ms\tfiles=${trial.executor.files_changed}\texecutor-validations(reported/passed/failed/not_run/requires_human)=${trial.executor.validations_reported ?? trial.executor.validations.length}/${trial.executor.validations_passed}/${trial.executor.validations_failed}/${trial.executor.validations_not_run}/${trial.executor.validations_requires_human ?? 0}\tparent-validations(status/passed/failed/not_run)=${parentValidation.status}/${parentValidation.validations_passed}/${parentValidation.validations_failed}/${parentValidation.validations_not_run}\treporter=${reporterStatus}/${trial.reporter.format_attempts}/${trial.reporter.failure_category ?? "-"}\n`,
     );
   }
 }

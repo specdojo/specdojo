@@ -76,6 +76,7 @@ describe("exec trial comparison record", () => {
       validations_passed: 0,
       validations_failed: 0,
       validations_not_run: 0,
+      validations_requires_human: 0,
     });
     expect(record.trials[0].parent_validation).toEqual({
       configured_ids: [],
@@ -139,6 +140,12 @@ describe("exec trial comparison record", () => {
           summary: "No Markdown files changed.",
         },
         {
+          source: "executor",
+          command: "real-agent-cli --version",
+          status: "requires_human",
+          summary: "Run on the host.",
+        },
+        {
           id: "test-unit",
           source: "runner",
           command: "npm run test:unit",
@@ -153,10 +160,11 @@ describe("exec trial comparison record", () => {
     updateObjectiveMetrics(record.trials[0], evidence, true);
 
     expect(record.trials[0].executor).toMatchObject({
-      validations_reported: 2,
+      validations_reported: 3,
       validations_passed: 1,
       validations_failed: 0,
       validations_not_run: 1,
+      validations_requires_human: 1,
     });
     expect(record.trials[0].parent_validation).toMatchObject({
       validations_passed: 1,

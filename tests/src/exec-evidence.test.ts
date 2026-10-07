@@ -44,6 +44,32 @@ describe("executor evidence", () => {
     expect(redactSensitiveText("Authorization: Bearer abc.def.ghi")).not.toContain("abc.def.ghi");
   });
 
+  it("accepts a requires_human validation in executor evidence", () => {
+    const stdout = [
+      "<specdojo_executor_evidence>",
+      JSON.stringify({
+        final_message: "sandbox 外の確認を申し送る",
+        validations: [
+          {
+            command: "real-agent-cli --version",
+            status: "requires_human",
+            summary: "実 agent CLI をホスト側で起動する必要がある",
+          },
+        ],
+      }),
+      "</specdojo_executor_evidence>",
+    ].join("\n");
+
+    expect(parseExecutorReport(stdout).validations).toEqual([
+      {
+        source: "executor",
+        command: "real-agent-cli --version",
+        status: "requires_human",
+        summary: "実 agent CLI をホスト側で起動する必要がある",
+      },
+    ]);
+  });
+
   it("validates every resumed plan target against cumulative changes or an unchanged reason", () => {
     const { evidence } = buildExecutorEvidence({
       taskId: "T-TEST-doc-010",
@@ -134,7 +160,14 @@ describe("executor evidence", () => {
       "<specdojo_executor_evidence>",
       JSON.stringify({
         final_message: "artifact updated",
-        validations: [{ command: "npm test", status: "passed", summary: "ok" }],
+        validations: [
+          { command: "npm test", status: "passed", summary: "ok" },
+          {
+            command: "real-agent-cli --version",
+            status: "requires_human",
+            summary: "run on the host",
+          },
+        ],
       }),
       "</specdojo_executor_evidence>",
     ].join("\n");
@@ -172,6 +205,12 @@ describe("executor evidence", () => {
     expect(evidence.final_message).toBe("artifact updated");
     expect(evidence.validations).toEqual([
       { source: "executor", command: "npm test", status: "passed", summary: "ok" },
+      {
+        source: "executor",
+        command: "real-agent-cli --version",
+        status: "requires_human",
+        summary: "run on the host",
+      },
       {
         id: "test-integration",
         source: "runner",

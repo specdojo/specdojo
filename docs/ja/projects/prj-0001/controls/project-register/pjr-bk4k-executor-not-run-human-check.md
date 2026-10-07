@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-10-07T11:43:26Z"
@@ -52,7 +52,12 @@ executor が実 agent CLI の起動など sandbox の外で人が行う確認を
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- executor evidence の検証状態へ `requires_human` を追加した。evidence schema と読み込み処理を更新し、executor prompt では実 agent CLI の起動、利用枠・課金を伴う操作、認証情報・ホスト側の操作など、sandbox から実行できない確認だけに使用を限定した。
+- `deriveReporterFacts` は executor の `requires_human` を block 理由から除外した。`failed` と、親 runner が同じコマンドを成功させていない `not_run` は従来どおり block する。
+- runner は `requires_human` を edit result の申し送りへ「人の確認が必要: `<コマンド>`（<要約>）」として機械的に追記する。reporter の文章には依存しない。
+- `exec trial` の比較記録と `trial status` に `validations_requires_human` の独立した件数を追加し、`not_run` と区別した。
+- evidence の読み込み、完了判定、他の失敗状態との混在、result の申し送り、trial 集計、prompt 契約を unit test で確認できるようにした。exec 設定ガイドと exec 運用ガイドにも新しい区分と機械判定を反映した。
+- executor 内では Prettier、register build、catalog validate、index build、履歴リンク検証が成功した。typecheck、lint、schema 検証、unit / integration test は親 runner の固定検証で実行する。
 
 ## 5. 関連ドキュメント
 

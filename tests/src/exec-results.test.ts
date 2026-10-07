@@ -674,6 +674,46 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
     expect(markdownlintErrors(content)).toEqual([]);
   });
 
+  it("adds requires_human validations to the result handoff mechanically", async () => {
+    const { resultPath } = await scaffoldResult({
+      executionPath,
+      taskId: "prj-overview",
+      mode: "edit",
+      projectId: "prj-0001",
+      planRef: "exec/plans/prj-overview-plan.md",
+      agent: "pipeline-executor",
+      startedAt: "2026-08-10T07:00:00.000Z",
+    });
+    const evidence = reporterEvidence([]);
+    evidence.validations = [
+      {
+        source: "executor",
+        command: "real-agent-cli --version",
+        status: "requires_human",
+        summary: "実 agent CLI をホスト側で起動する",
+      },
+    ];
+
+    await renderReporterResult(
+      resultPath,
+      {
+        schema_version: 1,
+        mode: "edit",
+        summary: ["sandbox 内の作業を完了した。"],
+        changed_files: [],
+        handoff: [],
+        approach: "evidence を照合した。",
+      },
+      evidence,
+    );
+
+    const content = readFileSync(resultPath, "utf8");
+    expect(content).toContain(
+      "人の確認が必要: `real-agent-cli --version`（実 agent CLI をホスト側で起動する）",
+    );
+    expect(markdownlintErrors(content)).toEqual([]);
+  });
+
   it("renders the review judgement sections and verdict from reporter output", async () => {
     const { resultPath } = await scaffoldResult({
       executionPath,
