@@ -4,12 +4,14 @@ specdojo:
   type: exec-result
   task_id: PJR-EZAF
   mode: edit
-  status: in_progress
+  status: blocked
   project_id: prj-0001
   origin: register
   plan_ref: exec/plans/pjr-ezaf-20261007T140657Z-4dac-plan.md
   started_at: "2026-10-07T14:06:57.233Z"
+  completed_at: "2026-10-07T14:08:53.722Z"
   agent: codex-expert-executor
+  block_reason: "rate limit reached"
 ---
 
 # Edit Result
