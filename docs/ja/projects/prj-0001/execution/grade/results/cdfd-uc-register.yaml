@@ -6,7 +6,7 @@ target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 98
-graded_at: "2026-10-06T16:19:28.899Z"
+graded_at: "2026-10-07T16:16:35.052Z"
 graded_by: agy-expert-executor
 content_hash: c1df04d5b03e29e8e669e24f2e41371c2f57585b0519274761981abccffcc3e9
 source_hashes:
@@ -17,7 +17,7 @@ source_hashes:
   dependency:cdfd-check: e02cebf2a8ee62470a475fede1fcb6267cfcda9d93d320313a938f12c69ed3a8
   dependency:cdfd-do: 77bdd115c5f0005404837c4d440bc2af468071ee4364c697383e1019a52a0a99
   dependency:cdfd-plan: fa438c52a36eaa9e43b88df336f876264351918d14ece7b3bb8f46aaea8a30ba
-  members: ac5c4679b65e58a227e4a2a91f3a7d1f9c00548ca797836400f0ff5dc132a0ee
+  members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
   schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
 categories:

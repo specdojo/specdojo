@@ -6,15 +6,15 @@ target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 53
-graded_at: "2026-10-06T16:07:37.402Z"
+graded_at: "2026-10-07T16:07:35.457Z"
 graded_by: agy-expert-executor
 content_hash: 49e33de5aa2be69433cf813bbcbd95b37a6266c4c857b20a7fb30db27b4f47c1
 source_hashes:
   catalog-entry: 3947f9651f373eb747ed7a7122361d5ef1083326477eb627765c8d9b6800aec0
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
   deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
-  dependency:cdfd-overview: d21b0a535f2e00298b71f19804552832a8984c57ad7b58a895f7d96e8a3f2bb3
-  members: ac5c4679b65e58a227e4a2a91f3a7d1f9c00548ca797836400f0ff5dc132a0ee
+  dependency:cdfd-overview: 9b8b4b2f64e2ef5c6ce0069204a94780e3ae43bc1b7d68004a654308d80abd7a
+  members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
   schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
 categories:
@@ -203,9 +203,7 @@ findings:
     message: >-
       Explicit technical constraints and validation schemas for the Kata and execution configuration data stores should
       be defined to ensure structural integrity.
-    message_ja: >-
-      Explicit technical constraints and validation schemas for the Kata and execution configuration data stores should
-      be defined to ensure structural integrity.
+    message_ja: 構造的な整合性を確保するために、Kata および実行構成データストアに対する明示的な技術的制約とバリデーションスキーマを定義する必要があります。
   - id: F011
     severity: major
     rule: vp-dev-implementation-readiness
@@ -294,9 +292,7 @@ findings:
     message: >-
       The missing completion condition column forces the reader to guess the definition of done, slightly degrading the
       overall readability of the process table.
-    message_ja: >-
-      The missing completion condition column forces the reader to guess the definition of done, slightly degrading the
-      overall readability of the process table.
+    message_ja: 完了条件の列が不足しているため、読み手が完了の定義を推測せざるを得ず、プロセス表全体の可読性がわずかに低下しています。
   - id: F020
     severity: major
     rule: vp-ops-release-readiness
@@ -312,13 +308,9 @@ findings:
     message: 既存プロジェクトおよび別リポジトリ構成について、既存設定の検出、変更を許可する範囲、部分生成時の保護、再開位置を運用可能なフローとして追加する必要がある。
     message_ja: 既存プロジェクトおよび別リポジトリ構成について、既存設定の検出、変更を許可する範囲、部分生成時の保護、再開位置を運用可能なフローとして追加する必要がある。
 done_criteria:
-  satisfied: 0
+  satisfied: 2
   total: 3
   unsatisfied:
     DC-001:
       - BA
-    DC-002:
-      - ARC
-    DC-003:
-      - QE
   detail_ref: cdfd-onboarding-grade-criteria

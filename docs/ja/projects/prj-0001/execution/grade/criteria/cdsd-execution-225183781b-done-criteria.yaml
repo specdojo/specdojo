@@ -2,7 +2,7 @@
 id: cdsd-execution-grade-criteria
 document: cdsd-execution
 path: docs/ja/product/010-business-specs/020-data-model/cdsd-execution.md
-graded_at: "2026-10-06T16:21:01.560Z"
+graded_at: "2026-10-07T16:19:19.712Z"
 graded_by: agy-expert-executor
 content_hash: ff4dd600af10ea7b0f1dd8e845cf5f5fa71cb39dd7291e3c2d89c406997370b1
 summary:
@@ -16,18 +16,22 @@ criteria:
       - BA
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
-    reason: 実行状態、plan / result、evidence、worktree の4領域のデータストアの業務的役割・内容・粒度が欠落している。
+    reason: The business roles, contents, and granularity of the 4 target data stores are undefined.
   - id: DC-002
     text: データストア構成を設計の基礎として参照できること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
-    reason: 対象となる4領域のデータストアについての制約や区分が未定義であり、設計の基礎として参照できない。
+    reason: >-
+      The configuration details for the overall execution data stores are missing, failing to provide a foundation for
+      design.
   - id: DC-003
     text: データ検証・整合性確認の対象が識別できること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
     status: unsatisfied
-    reason: データ検証の手順、対象ファイル、許容値などの具体的な確認条件が定義されていない。
+    reason: >-
+      The 4 target data stores are not yet recorded, making it impossible to identify targets for data validation and
+      consistency checks.
