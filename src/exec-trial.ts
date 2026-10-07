@@ -1,7 +1,7 @@
 import { spawn } from "node:child_process";
 import { createHash, randomUUID } from "node:crypto";
 import { copyFileSync, existsSync, readFileSync, renameSync, writeFileSync } from "node:fs";
-import { dirname, join, relative, resolve, sep } from "node:path";
+import { basename, dirname, join, relative, resolve, sep } from "node:path";
 import type { Command } from "commander";
 import {
   defaultExecDefaultsPath,
@@ -23,16 +23,20 @@ import {
 } from "./exec-agent-git-state.js";
 import {
   recordExecutorEvidence,
+  recordParentValidationFailureOutput,
   type EvidenceValidation,
   type ExecEvidence,
 } from "./exec-evidence.js";
-import { parentValidationLabels } from "./exec-parent-validation.js";
+import {
+  parentValidationLabels,
+  type ParentValidationFailureOutput,
+} from "./exec-parent-validation.js";
 import { activateResolvedProjectPaths, resolveProjectPaths } from "./exec-project.js";
 import {
   buildExecutorPrompt,
   isRateLimitError,
   loadRosterForExecutionPath,
-  runConfiguredParentValidations,
+  runConfiguredParentValidationBatch,
 } from "./exec-run.js";
 import { parsePlanTaskIdentity } from "./exec-plans.js";
 import {
@@ -681,15 +685,22 @@ async function runOneTrial(params: {
   trial.executor.duration_ms = executorCompletedAt.getTime() - startedAt.getTime();
   trial.parent_validation.configured_ids = [...params.parentValidationIds];
   let parentValidations: EvidenceValidation[] = [];
+  let parentValidationFailureOutputs: ParentValidationFailureOutput[] = [];
   if (params.parentValidationIds.length === 0) {
     trial.parent_validation.status = "not_configured";
   } else if (outcome.exitCode !== 0) {
     trial.parent_validation.status = "not_run";
   } else {
     const parentValidationStartedAt = Date.now();
-    parentValidations = await runConfiguredParentValidations(params.execDefaults, worktree.path, {
-      label: `${params.record.task_id} (${trial.trial_id})`,
-    });
+    const parentValidationBatch = await runConfiguredParentValidationBatch(
+      params.execDefaults,
+      worktree.path,
+      {
+        label: `${params.record.task_id} (${trial.trial_id})`,
+      },
+    );
+    parentValidations = parentValidationBatch.validations;
+    parentValidationFailureOutputs = parentValidationBatch.failureOutputs;
     trial.parent_validation.duration_ms = Date.now() - parentValidationStartedAt;
     trial.parent_validation.status = parentValidations.some(
       (validation) => validation.status !== "passed",
@@ -714,20 +725,25 @@ async function runOneTrial(params: {
     stderr: outcome.stderr,
     parentValidations,
   });
+  evidenceRecorded.evidence = recordParentValidationFailureOutput({
+    worktreePath: worktree.path,
+    evidencePath: evidenceRecorded.evidencePath,
+    evidence: evidenceRecorded.evidence,
+    failureOutputs: parentValidationFailureOutputs,
+  });
   const centralizedEvidenceDir = join(
     comparisonDir(params.executionPath, params.record.comparison_id),
     "trials",
     trial.trial_id,
   );
   ensureDir(centralizedEvidenceDir);
-  const centralizedLogPath = join(centralizedEvidenceDir, "executor.log");
-  const worktreeLogPath = join(dirname(evidenceRecorded.evidencePath), "executor.log");
-  copyFileSync(worktreeLogPath, centralizedLogPath);
   const centralizedEvidencePath = join(centralizedEvidenceDir, "evidence.json");
-  evidenceRecorded.evidence.log_refs = evidenceRecorded.evidence.log_refs.map((ref) => ({
-    ...ref,
-    path: repoRelative(params.repoRoot, centralizedLogPath),
-  }));
+  evidenceRecorded.evidence.log_refs = evidenceRecorded.evidence.log_refs.map((ref) => {
+    const logName = basename(ref.path);
+    const centralizedLogPath = join(centralizedEvidenceDir, logName);
+    copyFileSync(join(dirname(evidenceRecorded.evidencePath), logName), centralizedLogPath);
+    return { ...ref, path: repoRelative(params.repoRoot, centralizedLogPath) };
+  });
   writeFileSync(
     centralizedEvidencePath,
     `${JSON.stringify(evidenceRecorded.evidence, null, 2)}\n`,

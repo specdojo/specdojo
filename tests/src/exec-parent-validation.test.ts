@@ -1,4 +1,4 @@
-import { mkdtemp, rm } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
@@ -14,10 +14,11 @@ import {
   resolveParentValidationAssignments,
   resolveParentValidationConcurrency,
   resolveParentValidationDefinitions,
+  runParentValidationBatch,
   runParentValidations,
   type ParentValidationInvoker,
 } from "../../src/exec-parent-validation.js";
-import type { ExecEvidence } from "../../src/exec-evidence.js";
+import { recordParentValidationFailureOutput, type ExecEvidence } from "../../src/exec-evidence.js";
 
 function evidenceWithRunnerStatus(status: "passed" | "failed" | "not_run"): ExecEvidence {
   return {
@@ -162,6 +163,62 @@ describe("parent validation allowlist", () => {
     expect(failedParentValidationReason(validations)).toBe(
       "parent validation failed: test-integration",
     );
+  });
+
+  it("keeps both the beginning and end of a long redacted failure summary", async () => {
+    const [validation] = await runParentValidations(["test-integration"], "/repo", async () => ({
+      exitCode: 1,
+      stdout: `suite start api_key=super-secret-value\n${"middle\n".repeat(300)}FAILED tail-case\nTests 1 failed`,
+      stderr: "",
+    }));
+
+    expect(validation.summary).toContain("suite start api_key=[REDACTED]");
+    expect(validation.summary).toContain("… output omitted …");
+    expect(validation.summary).toContain("FAILED tail-case\nTests 1 failed");
+    expect(validation.summary).not.toContain("super-secret-value");
+    expect(validation.summary.length).toBeLessThanOrEqual(1_000);
+  });
+
+  it("persists redacted failed output and adds a new log ref on revalidation", async () => {
+    const root = await mkdtemp(path.join(tmpdir(), "specdojo-parent-validation-output-"));
+    try {
+      const evidenceDir = path.join(root, "execution", "exec", "evidence", "task", "run");
+      await mkdir(evidenceDir, { recursive: true });
+      const evidencePath = path.join(evidenceDir, "evidence.json");
+      const batch = await runParentValidationBatch(["test-integration"], root, async () => ({
+        exitCode: 1,
+        stdout: "begin api_key=raw-secret-value",
+        stderr: "FAILED tail-case; Tests 1 failed",
+        stdoutTruncated: true,
+      }));
+      const base = evidenceWithRunnerStatus("failed");
+      const first = recordParentValidationFailureOutput({
+        worktreePath: root,
+        evidencePath,
+        evidence: { ...base, validations: batch.validations },
+        failureOutputs: batch.failureOutputs,
+      });
+      const second = recordParentValidationFailureOutput({
+        worktreePath: root,
+        evidencePath,
+        evidence: first,
+        failureOutputs: batch.failureOutputs,
+      });
+
+      const refs = second.log_refs.filter((ref) => ref.kind === "parent-validation-output");
+      expect(refs.map((ref) => path.basename(ref.path))).toEqual([
+        "parent-validation-attempt-1-test-integration.log",
+        "parent-validation-attempt-2-test-integration.log",
+      ]);
+      expect(refs.every((ref) => ref.truncated)).toBe(true);
+      const firstLog = await readFile(path.join(root, refs[0].path), "utf8");
+      expect(firstLog).toContain("begin api_key=[REDACTED]");
+      expect(firstLog).toContain("FAILED tail-case; Tests 1 failed");
+      expect(firstLog).not.toContain("raw-secret-value");
+      expect(JSON.parse(await readFile(evidencePath, "utf8"))).toEqual(second);
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
   });
 
   it("accepts persisted validations only when they match the current configured IDs", () => {

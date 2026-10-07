@@ -239,6 +239,7 @@ import {
 import {
   recordCommandEvidence,
   recordExecutorEvidence,
+  recordParentValidationFailureOutput,
   recordReporterFailureOutput,
   snapshotWorktreeChanges,
   validateResumedTargetCoverage,
@@ -256,7 +257,8 @@ import {
   parentValidationRoots,
   recordedParentValidationLabel,
   resolveParentValidationConcurrency,
-  runParentValidations,
+  runParentValidationBatch,
+  type ParentValidationBatchResult,
   type ParentValidationEntry,
   type ParentValidationInvoker,
   type ParentValidationRoots,
@@ -1065,25 +1067,33 @@ export type ParentValidationRunOptions = {
 // 同じ exec run 内の親検証は run 全体の gate（既定 1 本）で直列化する。executor と reporter は
 // gate の外で並列に動き、検証だけが順番待ちになる。`cwd` に文字列を渡すとプロジェクト worktree
 // だけを持つ run として扱い、プロダクトリポジトリへ割り当てた検証は failed になる（PJR-V96B）。
-export async function runConfiguredParentValidations(
+export async function runConfiguredParentValidationBatch(
   execDefaults: ExecDefaultsConfig,
   cwd: string | ParentValidationRoots,
   options: ParentValidationRunOptions = {},
-): Promise<Awaited<ReturnType<typeof runParentValidations>>> {
+): Promise<ParentValidationBatchResult> {
   const entries = execDefaults.pipeline?.parent_validations;
-  if (!entries?.length) return [];
+  if (!entries?.length) return { validations: [], failureOutputs: [] };
   const labels = parentValidationLabels(entries);
   const label = options.label ?? basename(typeof cwd === "string" ? cwd : cwd.project);
-  const validations = await parentValidationGateFor(execDefaults).run(label, labels, async () => {
+  const batch = await parentValidationGateFor(execDefaults).run(label, labels, async () => {
     process.stdout.write(`  Running parent validations (${label}): ${labels.join(", ")}\n`);
-    return await runParentValidations(entries, cwd, options.invoke);
+    return await runParentValidationBatch(entries, cwd, options.invoke);
   });
-  for (const validation of validations) {
+  for (const validation of batch.validations) {
     process.stdout.write(
       `  Parent validation ${recordedParentValidationLabel(validation)}: ${validation.status}\n`,
     );
   }
-  return validations;
+  return batch;
+}
+
+export async function runConfiguredParentValidations(
+  execDefaults: ExecDefaultsConfig,
+  cwd: string | ParentValidationRoots,
+  options: ParentValidationRunOptions = {},
+): Promise<ParentValidationBatchResult["validations"]> {
+  return (await runConfiguredParentValidationBatch(execDefaults, cwd, options)).validations;
 }
 
 async function refreshParentValidationsForReporterResume(params: {
@@ -1110,13 +1120,24 @@ async function refreshParentValidationsForReporterResume(params: {
     `  Refreshing parent validations before ${params.stageLabel ?? "reporter"} resume` +
       `${force ? " (integration targets were merged into the worktree)" : ""}.\n`,
   );
-  const parentValidations = await runConfiguredParentValidations(
+  const parentValidationBatch = await runConfiguredParentValidationBatch(
     params.execDefaults,
     parentValidationRoots(params.cwd, params.productWorktrees),
     { label: params.evidence.task_id },
   );
-  const evidence = replaceParentValidationResults(params.evidence, parentValidations);
-  writeExecutorEvidence(params.evidencePath, evidence);
+  const evidenceWithValidations = replaceParentValidationResults(
+    params.evidence,
+    parentValidationBatch.validations,
+  );
+  const evidence = recordParentValidationFailureOutput({
+    worktreePath: params.cwd,
+    evidencePath: params.evidencePath,
+    evidence: evidenceWithValidations,
+    failureOutputs: parentValidationBatch.failureOutputs,
+  });
+  if (parentValidationBatch.failureOutputs.length === 0) {
+    writeExecutorEvidence(params.evidencePath, evidence);
+  }
   process.stdout.write(
     `  Refreshed executor evidence: ${relative(params.cwd, params.evidencePath).split(sep).join("/")}\n`,
   );
@@ -1133,13 +1154,24 @@ async function appendParentValidationsToExecutorEvidence(params: {
   evidence: ExecEvidence;
   evidencePath: string;
 }): Promise<ExecEvidence> {
-  const parentValidations = await runConfiguredParentValidations(
+  const parentValidationBatch = await runConfiguredParentValidationBatch(
     params.execDefaults,
     parentValidationRoots(params.cwd, params.productWorktrees),
     { label: params.evidence.task_id },
   );
-  const evidence = replaceParentValidationResults(params.evidence, parentValidations);
-  writeExecutorEvidence(params.evidencePath, evidence);
+  const evidenceWithValidations = replaceParentValidationResults(
+    params.evidence,
+    parentValidationBatch.validations,
+  );
+  const evidence = recordParentValidationFailureOutput({
+    worktreePath: params.cwd,
+    evidencePath: params.evidencePath,
+    evidence: evidenceWithValidations,
+    failureOutputs: parentValidationBatch.failureOutputs,
+  });
+  if (parentValidationBatch.failureOutputs.length === 0) {
+    writeExecutorEvidence(params.evidencePath, evidence);
+  }
   return evidence;
 }
 
