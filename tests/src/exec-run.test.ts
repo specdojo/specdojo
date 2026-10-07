@@ -189,6 +189,7 @@ describe("extractBlockReason", () => {
       resumed: true,
       existingChanges: ["docs/a.md"],
       initialChangeTargets: ["docs/first-attempt.md"],
+      resumeHandoff: ["parent validation test-unit failed: 1 test failed"],
     });
 
     expect(prompt).toContain("resumes an interrupted attempt");
@@ -196,6 +197,7 @@ describe("extractBlockReason", () => {
     expect(prompt).toContain("incomplete lower bound, not an upper bound");
     expect(prompt).toContain("`docs/first-attempt.md`");
     expect(prompt).toContain("`docs/a.md`");
+    expect(prompt).toContain("parent validation test-unit failed: 1 test failed");
   });
 
   it("plan が targets を宣言した場合は初回変更集合より宣言を優先する", () => {

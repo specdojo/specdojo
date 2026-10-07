@@ -247,7 +247,7 @@ register 項目の統合で競合したのが項目自身の記帳ファイル�
 
 register 項目を `waiting` へ遷移したあとは、`wait` commit と、その時点までに統合先へ入った変更を exec branch へ通常 merge します。root の `wait` commit に保存済みの個票・イベント・plan・result は、worktree に残る同内容の未 commit 変更を解放してから merge し、これらの記帳パスの競合だけを `wait` commit 側で解決します。それ以外の競合は自動解決せずに同期 merge を中断します。これにより、再開時の merge-base を進めながら、別項目が統合先へ追加した成果を exec branch 側の削除として扱わないようにします。
 
-hook や検査を直した後は、Schedule タスクでは `specdojo exec resume --project <project-id> --task <task-id>`、register 項目では元の `exec run --register ... --worktree --resume` を実行します。統合段から再開するため agent は再実行せず、保持した exec branch を merge します。
+hook や検査を直した後は、Schedule タスクでは `specdojo exec resume --project <project-id> --task <task-id>`、register 項目では元の `exec run --register ... --worktree --resume` を実行します。統合段から再開するため agent は再実行せず、保持した exec branch を merge します。親検証の失敗を成果物側で修正する必要がある register 項目は `--resume-from executor` を併用します。保護対象の設定変更を人が統合先へ適用した場合も、通常の `--resume` が統合先を exec branch と worktree へ取り込んでから executor を再開するため、worktree で手動 merge しません。
 
 runner は `git merge --abort` の前に `git update-index -q --refresh` を実行します。同じ作業ツリーで動く routine などがファイルの stat だけを変えた場合でも、`not uptodate` で abort が失敗しないようにするためです。自動の `git merge --abort` 自体が失敗した場合は、runner が標準エラーへ手動復旧を案内します。案内された root worktree で状態と失敗原因を確認し、ロックファイルや Git プロセスなどの原因を解消してから次を実行してください。abort が完了するまでは commit や統合再開を行いません。
 

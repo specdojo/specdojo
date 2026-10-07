@@ -154,6 +154,44 @@ describe("selectResumableRegisterRun", () => {
     expect(actual.target.evidenceRef).toContain("run-new/evidence.json");
   });
 
+  it("reporter 未完了の run は指定により executor から再開できる", () => {
+    const evidence = {
+      ...makeEvidence("run-parent-failed"),
+      validations: [
+        {
+          id: "test-unit",
+          source: "runner" as const,
+          command: "npm run test:unit",
+          status: "failed" as const,
+          summary: "1 test failed",
+        },
+      ],
+    };
+    const candidate = makeCandidate({
+      state: makeState({ runId: "run-parent-failed" }),
+      executorEvidence: evidence,
+      evidence,
+    });
+
+    const actual = selectResumableRegisterRun([candidate], { resumeFrom: "executor" });
+
+    expect(actual.kind).toBe("resumable");
+    if (actual.kind !== "resumable" || actual.target.stage !== "executor") return;
+    expect(actual.target.initialChanges).toEqual(["docs/sample.md"]);
+    expect(actual.target.handoff).toEqual(["parent validation test-unit failed: 1 test failed"]);
+  });
+
+  it("統合段から executor へ戻す指定は拒否する", () => {
+    const candidate = makeCandidate({ state: makeState({ reporterStatus: "succeeded" }) });
+
+    const actual = selectResumableRegisterRun([candidate], { resumeFrom: "executor" });
+
+    expect(actual).toEqual({
+      kind: "not-resumable",
+      reason: `cannot resume the executor from the integrate stage of run ${candidate.runId}`,
+    });
+  });
+
   it("executor が running のまま残った最新 run を executor 再開対象にする", () => {
     const candidate = makeCandidate({
       state: makeState({ executorStatus: "running", evidenceRef: null }),
@@ -278,6 +316,10 @@ describe("selectResumableRegisterRun", () => {
         runId: "run-protection-blocked",
         executorStatus: "blocked",
       }),
+      executorEvidence: {
+        ...makeEvidence("run-protection-blocked"),
+        block_reason: "agent-config-write requires a human handoff",
+      },
     });
 
     const actual = selectResumableRegisterRun([candidate]);
@@ -286,6 +328,8 @@ describe("selectResumableRegisterRun", () => {
     if (actual.kind !== "resumable") return;
     expect(actual.target.stage).toBe("executor");
     expect(actual.target.runId).toBe("run-protection-blocked");
+    if (actual.target.stage !== "executor") return;
+    expect(actual.target.handoff).toEqual(["agent-config-write requires a human handoff"]);
   });
 
   it("最新 run の executor が未完了なら、古い再開可能な run へ遡らない", () => {

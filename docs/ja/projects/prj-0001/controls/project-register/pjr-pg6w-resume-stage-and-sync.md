@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: waiting
+  item_status: in-progress
   priority: high
   owner: DEV
   registered_at: "2026-10-06T10:18:08Z"
   due_on: null
-  block_reason: "integrate failed: project: git commit failed: error: unknown option '--reserve' / error: unknown option '--local' / error: unknown option '--strict-sync' / error: unknown option '--integration-branch'…"
 ---
 
 # PJR-PG6W register の resume は executor 段へ戻れず、executor 段の再開でも統合先を取り込まない
@@ -52,7 +51,11 @@ specdojo:
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- `exec run --register --resume --resume-from executor` を追加し、reporter 段から再開可能な run を、既存 worktree と未コミット成果を保持したまま executor 段へ戻せるようにした。通常の `--resume` の段選択は変更していない。
+- executor 再開時の prompt に、失敗した親検証の ID と要約、または保存済みの block 理由を申し送りするようにした。
+- executor／reporter／統合の全再開段で、状態遷移や agent 起動より先に統合先を exec branch と worktree へ取り込むようにした。競合時は従来どおり同期を巻き戻し、register の状態を変えずに拒否する。
+- unit test に段指定・拒否条件・申し送りの検証を追加し、integration test に reporter 段から executor へ戻して統合先の修正を取り込む経路を追加した。
+- コマンドリファレンス、exec 運用ガイド、worktree ガイドへ指定方法と、保護対象設定を統合先へ適用して再開する手順を追記した。
 
 ## 5. 関連ドキュメント
 

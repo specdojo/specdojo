@@ -443,9 +443,22 @@ specdojo exec run \
 | `reporter`  | executor が `succeeded`、reporter が未完了         | reporter だけを起動し、成功後に統合まで進む                         |
 | `integrate` | executor と reporter が `succeeded`、統合が未完了  | agent を起動せず、commit → merge → worktree 撤去だけ行う            |
 
+親検証の失敗を executor に直させる場合は、reporter 段から再開可能な run に `--resume-from executor` を指定します。worktree、未コミット成果、plan/result は保持され、executor を新しい checkpoint で再実行します。通常の `--resume` は引き続き state が示す段から再開します。
+
+```bash
+specdojo exec run \
+  --project <project-id> \
+  --register <PJR-ID> \
+  --worktree \
+  --resume \
+  --resume-from executor
+```
+
+強制した executor の prompt には、保存済み evidence にある失敗した親検証の ID と要約を申し送ります。保護機構の block から通常どおり executor を再開する場合は、保存済みの block 理由を申し送ります。統合段から executor へ戻す指定、worktree が無い run、再開できない run は、register の状態と既存成果を変えずに拒否します。
+
 executor のプロセス結果は、親 runner 検証を始める前に `executor.log` と `evidence.json` へ保存し、`pipeline-state.json` の executor を `succeeded` へ更新します。親検証中にプロセスが中断した場合、`--resume` は保存済みの executor evidence を再利用し、不足している親検証を実行してから reporter へ進みます。agent 実行中の中断で executor が `running` のまま残った場合は、未コミット成果を含む既存 worktree を破棄せず、同じ plan/result を入力に executor から再実行します。`--executor-by` / `--reporter-by` を省略した場合は state に記録された各 agent を引き継ぎます。
 
-`reporter` 段または `integrate` 段から再開する場合、runner は親検証より前に、統合先ブランチの最新を exec branch と worktree へ merge commit で取り込みます。複数リポジトリの project では、宣言順に各プロダクトの統合先（`integration_branch`、未指定なら現在のブランチ）を取り込み、最後にプロジェクトの統合先を取り込みます。`pipeline-state.json` の `integrate.repos` で統合済み（`merged` / `unchanged`）のプロダクトは取り込まず、exec branch に merge commit を作りません。worktree に残る executor の未コミット成果は、未追跡ファイルを含めて一時退避し、取り込み後に index を復元せず戻します。同じファイルでも hunk が競合しなければ統合先と executor の変更を両方保持して再開します。取り込みで新しい commit が入った場合は、記録済みの親検証が成功していても検証し直します。これにより、wait の後に統合先で直した不具合が再開時の親検証に反映されます。`integrate` 段の再開で親検証が失敗した場合は、統合せずに `waiting` へ戻します。commit 済み変更の競合、または退避した成果を戻す際の競合が起きた場合は、同期用の merge commit を巻き戻して元の worktree へ executor の成果を戻し、register の状態を変えずに再開を拒否して理由を表示します。merge 済みで worktree の撤去だけが残っている統合再開では取り込みを行いません。
+どの段から再開する場合も、runner は親検証または agent の起動より前に、統合先ブランチの最新を exec branch と worktree へ merge commit で取り込みます。複数リポジトリの project では、宣言順に各プロダクトの統合先（`integration_branch`、未指定なら現在のブランチ）を取り込み、最後にプロジェクトの統合先を取り込みます。`pipeline-state.json` の `integrate.repos` で統合済み（`merged` / `unchanged`）のプロダクトは取り込まず、exec branch に merge commit を作りません。worktree に残る executor の未コミット成果は、未追跡ファイルを含めて一時退避し、取り込み後に index を復元せず戻します。同じファイルでも hunk が競合しなければ統合先と executor の変更を両方保持して再開します。取り込みで新しい commit が入った場合は、記録済みの親検証が成功していても検証し直します。これにより、wait の後に統合先で直した不具合や、人が統合先へ適用した保護対象設定が再開時の executor／親検証へ反映されます。`integrate` 段の再開で親検証が失敗した場合は、統合せずに `waiting` へ戻します。commit 済み変更の競合、または退避した成果を戻す際の競合が起きた場合は、同期用の merge commit を巻き戻して元の worktree へ executor の成果を戻し、register の状態を変えずに再開を拒否して理由を表示します。merge 済みで worktree の撤去だけが残っている統合再開では取り込みを行いません。
 
 中断した executor を再実行するとき、runner は再開前から worktree に存在する変更パスを prompt へ添え、既存差分を完了の証拠とみなさず plan 全体と全 `targets` を確認するよう指示します。再開後の executor evidence は各 target について `target_coverage` を持ち、変更した target は repo 相対 `path` が累積 worktree 差分に実在すること、変更不要の target は具体的な `reason` があることを runner が検査します。target の欠落、差分にない変更申告、理由のない未変更申告が一つでもあれば executor は `failed` となり、reporter と統合へ進みません。この検査は rate limit、crash、手動停止のいずれから executor 段を再開した場合も同じです。
 
@@ -453,7 +466,7 @@ register 由来の plan が `targets` を宣言していない場合、runner �
 
 変更不要として受理した target の理由は reporter が生成する result の「申し送り」へ runner が転記します。これにより、ファイル差分がないことを黙って成功扱いにせず、変更不要と判断した根拠を完了記録に残します。通常の新規 run は既存 executor との互換性を保つため `target_coverage` を必須とせず、この追加ガードは中断後の executor 再開に限定します。
 
-`agent-config-write` または `agent-git-state-write` が executor を止めた場合は、通常の実装失敗を示す `failed` と区別して executor を `blocked` と記録します。申し送りを人または orchestrator が適用し、agent 由来の保護対象差分や Git 状態変更を worktree から解消した後、`--resume` は既存成果を保持したまま executor から再開します。申し送りを適用せず保護対象差分を残したまま再開した場合、executor が完了しても統合前の保護検査で再び block し、worktree を保持します。
+`agent-config-write` または `agent-git-state-write` が executor を止めた場合は、通常の実装失敗を示す `failed` と区別して executor を `blocked` と記録します。申し送りの設定変更を人または orchestrator が統合先へ適用し、agent 由来の保護対象差分や Git 状態変更を worktree から解消した後、`--resume` を実行します。runner が統合先を worktree へ取り込んでから、既存成果を保持した executor を再開するため、worktree で手動 merge する必要はありません。申し送りを適用せず保護対象差分を残したまま再開した場合、executor が完了しても統合前の保護検査で再び block し、worktree を保持します。
 
 reporter 段の再開の入力は、`pipeline-state.json`（stage 状態と plan / result の参照）と `evidence.json`（executor の変更・検証結果・最終メッセージ）です。`--reporter-by` を省略した場合は、その run で使った reporter agent を state から引き継ぎます。保存済みの親 runner 検証が失敗しているか不足していれば、Schedule 実行と同様に再実行して evidence を更新します。再開が成功した後は通常実行と同じ経路で、result の記入と status 更新、成果物の commit、統合ブランチへの merge、`register review` までを行います。
 
