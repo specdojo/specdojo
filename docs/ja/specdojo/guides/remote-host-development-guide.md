@@ -60,6 +60,14 @@ npx specdojo devcontainer scaffold --provider claude,codex
 
 既存の `.devcontainer/` は通常実行では上書きしません。置き換える場合だけ `--force` を指定します。生成設定は provider の設定ディレクトリを名前付きボリュームへ保存し、ホストの認証情報・秘密鍵・`.env` は既定でマウントしません。Ollama 接続、コンテナ内の cron、コンテナ内の tmux が必要な場合だけ `--ollama`、`--cron`、`--tmux` を追加します。本書の構成図のようにホスト側の tmux でコンテナ自体を包む場合、`--tmux` は不要です。
 
+端末版 Emacs と TypeScript・Markdown・YAML・Bash の LSP 環境を追加する場合は `--editor emacs` を指定します。
+
+```bash
+npx specdojo devcontainer scaffold --provider claude,codex --editor emacs
+```
+
+生成される `.devcontainer/emacs/init.el` は、`~/.emacs.d/init.el` と `~/.config/emacs/init.el` の両方が無い場合だけ後者へコピーされます。初回作成前の既定値は生成されたテンプレートで変更でき、作成後はコピー先を編集します。dotfiles が設定を配置していれば上書きされません。
+
 ## 3. 構成例
 
 ```text
