@@ -7,11 +7,10 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   owner: ARC
   registered_at: "2026-10-02T12:14:16Z"
-  block_reason: "agent exited with non-zero code: executor validation failed or not run: npm run check"
 ---
 
 # PJR-WPR3 exec-run.ts の分割方針の調査と選択肢の比較

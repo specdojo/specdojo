@@ -1,0 +1,11 @@
+調査・比較を完了しました。
+
+- [PJR-WPR3 個票](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-WPR3/docs/ja/projects/prj-0001/controls/project-register/pjr-wpr3-exec-run-split-investigation.md)に全114関数、依存関係、重複箇所、状態遷移、循環依存リスク、推奨分割順を記載。
+- [PJR-Q761 決定個票](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-WPR3/docs/ja/projects/prj-0001/controls/project-register/pjr-q761-exec-run-module-split.md)に3案の比較と推奨案Cを記載。
+- 決定・承認欄、frontmatterの状態、`src/`、result は変更していません。
+- Markdown、登録簿生成、カタログ、索引、履歴リンクを検証済みです。カタログは既存の欠落文書警告のみで成功しました。
+- 型検査・各種lint・unit/integration/schema検証は親runnerが実行します。
+
+<specdojo_executor_evidence>
+{"final_message":"exec-run.tsの全114関数、依存・重複・状態遷移を調査し、3案の比較と段階的分割を推奨案として個票へ記載した。","validations":[{"command":"npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-wpr3-exec-run-split-investigation.md docs/ja/projects/prj-0001/controls/project-register/pjr-q761-exec-run-module-split.md","status":"passed","summary":"変更したMarkdown 2件を整形した。"},{"command":"npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-wpr3-exec-run-split-investigation.md docs/ja/projects/prj-0001/controls/project-register/pjr-q761-exec-run-module-split.md","status":"passed","summary":"Markdown静的検査に成功した。"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿派生ビューの生成に成功した。"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"カタログ検証に成功した。既存の欠落文書警告のみ。"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"2448件の文書索引を生成した。"},{"command":"npm run validate:history-links","status":"passed","summary":"履歴リンク検証に成功した。"},{"command":"git diff --check","status":"passed","summary":"空白エラーはない。"},{"command":"npm run check","status":"not_run","summary":"親runnerのallowlist検証と重複するため一括実行せず、残りの検証を個別実行した。"}]}
+</specdojo_executor_evidence>
