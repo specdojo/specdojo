@@ -32,3 +32,32 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_2f2258146b7f49bdadc5bdc8b06fb757
+  ts: "2026-10-07T21:03:53Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_cc790500bbab4f199fc787d22df7a97b
+- v: 1
+  id: reg_bf532a01513247e7ba2706e29edb4bf1
+  ts: "2026-10-07T21:14:23Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: executor validation failed or not run: npm run check"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: executor validation failed or not run: npm run check"
+  previous_event_id: reg_2f2258146b7f49bdadc5bdc8b06fb757
