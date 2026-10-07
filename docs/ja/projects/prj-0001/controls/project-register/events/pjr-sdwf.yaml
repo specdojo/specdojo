@@ -29,3 +29,22 @@
     - field: registered
       from: ""
       to: "2026-10-08"
+- v: 1
+  id: reg_7b217afcf2d849338978db9aa6b67777
+  ts: "2026-10-07T22:13:11Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: open
+  to_status: done
+  reason: orchestrator が直接修正し、実際の evidence で確認
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-08"
+    - field: conclusion
+      from: "-"
+      to: 合成コマンドの not_run を、構成するコマンドが runner か executor の検証で通っていれば満たすようにした。PJR-EZAF と PJR-WPR3 が再開で review へ進んだ
+  previous_event_id: reg_af3db5cf12384c7d9ea904dfa8f6dacb

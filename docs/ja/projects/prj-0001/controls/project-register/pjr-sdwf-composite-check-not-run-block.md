@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-sdwf-composite-check-not-run-block
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-07T21:32:21Z"
   due_on: null
+  completed_at: "2026-10-07T22:13:11Z"
+  conclusion: 合成コマンドの not_run を、構成するコマンドが runner か executor の検証で通っていれば満たすようにした。PJR-EZAF と PJR-WPR3 が再開で review へ進んだ
 ---
 
 # PJR-SDWF executor が npm run check を not_run とすると、中身が通っていても block される
