@@ -1,4 +1,5 @@
 import Ajv2020Module from "ajv/dist/2020.js";
+import { existsSync, readFileSync } from "node:fs";
 import { join, relative, sep } from "node:path";
 import { extractJsonText } from "./agent-response.js";
 import type { ExecEvidence } from "./exec-evidence.js";
@@ -7,6 +8,7 @@ import {
   failedParentValidationReason,
 } from "./exec-parent-validation.js";
 import type { TaskMode } from "./exec-types.js";
+import { specdojoRootDir } from "./specdojo-config.js";
 import { REVIEW_VERDICTS, describeInvalidReviewVerdict, isReviewVerdict } from "./review-types.js";
 import type { ReviewVerdict } from "./review-types.js";
 
@@ -125,7 +127,10 @@ export function evidenceForReporter(
  * Derives result facts only from runner-owned evidence. Reporter prose is deliberately absent
  * from this decision so an LLM cannot change paths or turn a failed run into a completed one.
  */
-export function deriveReporterFacts(evidence: ExecEvidence): ReporterFacts {
+export function deriveReporterFacts(
+  evidence: ExecEvidence,
+  options: { packageScripts?: Readonly<Record<string, string>> } = {},
+): ReporterFacts {
   const changedFiles = evidence.changes.map(({ path, status }) => ({ path, status }));
   if (evidence.stage.status !== "succeeded" || evidence.stage.exit_code !== 0) {
     const blockReason =
@@ -159,14 +164,35 @@ export function deriveReporterFacts(evidence: ExecEvidence): ReporterFacts {
           validation.status === "passed" &&
           (validation.repo === undefined || validation.repo === PARENT_VALIDATION_PROJECT_REPO),
       )
-      .map((validation) => validation.command.trim()),
+      .map((validation) => normalizeValidationCommand(validation.command)),
   );
+  // `npm run check` のような合成コマンドを executor が not_run（親 runner へ委譲）とした場合は、
+  // package.json の script を展開し、構成する各コマンドが runner の親検証か executor 自身の検証で
+  // 通っていれば満たされたものとして扱う（PJR-SDWF）。
+  const passedCommands = new Set([
+    ...runnerPassedCommands,
+    ...evidence.validations
+      .filter((validation) => validation.source !== "runner" && validation.status === "passed")
+      .map((validation) => normalizeValidationCommand(validation.command)),
+  ]);
+  const packageScripts = options.packageScripts ?? defaultPackageScripts();
+  const isDelegatedValidationSatisfied = (command: string): boolean => {
+    const normalized = normalizeValidationCommand(command);
+    if (runnerPassedCommands.has(normalized)) return true;
+    const components = compositeComponents(normalized, packageScripts);
+    return (
+      components !== undefined &&
+      components.every((component) =>
+        isComponentSatisfied(component, passedCommands, packageScripts),
+      )
+    );
+  };
   const executorValidationFailures = evidence.validations.filter(
     (validation) =>
       validation.source !== "runner" &&
       validation.status !== "passed" &&
       validation.status !== "requires_human" &&
-      !(validation.status === "not_run" && runnerPassedCommands.has(validation.command.trim())),
+      !(validation.status === "not_run" && isDelegatedValidationSatisfied(validation.command)),
   );
   if (executorValidationFailures.length > 0) {
     return {
@@ -178,6 +204,102 @@ export function deriveReporterFacts(evidence: ExecEvidence): ReporterFacts {
     };
   }
   return { outcome: "complete", changed_files: changedFiles, block_reason: "" };
+}
+
+// `npm test` は単体テストと統合テストの全件ゲートであり、親 runner は同じ範囲を
+// `npm run test:unit` と `npm run test:integration` に分けて実行する。
+const COMMAND_EQUIVALENTS: Readonly<Record<string, readonly string[]>> = {
+  "npm test": ["npm run test:unit", "npm run test:integration"],
+};
+const MAX_COMPOSITE_DEPTH = 5;
+
+function normalizeValidationCommand(command: string): string {
+  const collapsed = command.trim().replace(/\s+/g, " ");
+  if (collapsed === "npm t" || collapsed === "npm run test") return "npm test";
+  return collapsed.replace(/^npm run-script /, "npm run ");
+}
+
+function scriptNameOf(command: string): string | undefined {
+  if (command === "npm test") return "test";
+  return /^npm run ([A-Za-z0-9:_.-]+)$/.exec(command)?.[1];
+}
+
+// package.json の script が npm script の呼び出しを `&&` でつないだだけの合成なら、直下の構成
+// コマンドを返す。それ以外（任意のシェル、引数付きなど）は合成として扱わない。
+function compositeComponents(
+  command: string,
+  scripts: Readonly<Record<string, string>>,
+): string[] | undefined {
+  const name = scriptNameOf(command);
+  const body = name === undefined ? undefined : scripts[name];
+  if (body === undefined) return undefined;
+  const parts = body.split("&&").map((part) => normalizeValidationCommand(part));
+  if (parts.length < 2 || parts.some((part) => scriptNameOf(part) === undefined)) return undefined;
+  return parts;
+}
+
+// executor は `npm run <name>` の代わりに script の中身（例: `node --import tsx src/specdojo.ts
+// catalog validate`）を直接実行して記録することがある。tsx の起動の書き方の違いだけをそろえて比べる。
+function normalizeScriptBody(command: string): string {
+  return normalizeValidationCommand(command).replace(/^(?:node --import tsx|npx tsx) /, "tsx ");
+}
+
+// 構成コマンドは、それ自体が通っていれば満たす。通っていなければ、同等のコマンドの組、script の
+// 中身の直接実行、さらに合成ならその構成コマンドの順に確かめる（runner が合成の script を丸ごと
+// 実行して通した場合に、中身を分解して探さないため）。
+function isComponentSatisfied(
+  command: string,
+  passed: ReadonlySet<string>,
+  scripts: Readonly<Record<string, string>>,
+  depth = 0,
+): boolean {
+  if (passed.has(command)) return true;
+  if (depth < MAX_COMPOSITE_DEPTH) {
+    const components = compositeComponents(command, scripts);
+    if (
+      components?.every((component) => isComponentSatisfied(component, passed, scripts, depth + 1))
+    ) {
+      return true;
+    }
+  }
+  const equivalents = COMMAND_EQUIVALENTS[command];
+  if (equivalents !== undefined && equivalents.every((equivalent) => passed.has(equivalent))) {
+    return true;
+  }
+  const name = scriptNameOf(command);
+  const body = name === undefined ? undefined : scripts[name];
+  if (body === undefined) return false;
+  const normalizedBody = normalizeScriptBody(body);
+  return [...passed].some((candidate) => normalizeScriptBody(candidate) === normalizedBody);
+}
+
+let cachedPackageScripts: Readonly<Record<string, string>> | undefined;
+
+function defaultPackageScripts(): Readonly<Record<string, string>> {
+  if (cachedPackageScripts) return cachedPackageScripts;
+  cachedPackageScripts = readPackageScripts(join(specdojoRootDir(), "package.json"));
+  return cachedPackageScripts;
+}
+
+export function readPackageScripts(packageJsonPath: string): Readonly<Record<string, string>> {
+  if (!existsSync(packageJsonPath)) return {};
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(readFileSync(packageJsonPath, "utf8"));
+  } catch (error) {
+    process.stderr.write(
+      `warning: cannot read package scripts from ${packageJsonPath}: ${String(error)}\n`,
+    );
+    return {};
+  }
+  if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) return {};
+  const scripts = (parsed as { scripts?: unknown }).scripts;
+  if (typeof scripts !== "object" || scripts === null || Array.isArray(scripts)) return {};
+  return Object.fromEntries(
+    Object.entries(scripts).filter(
+      (entry): entry is [string, string] => typeof entry[1] === "string",
+    ),
+  );
 }
 
 export const REPORTER_OUTPUT_SCHEMA = {
