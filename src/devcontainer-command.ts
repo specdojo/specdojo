@@ -13,6 +13,11 @@ export function registerDevcontainerCommands(program: Command): void {
       "Comma-separated list of agent providers to install (e.g. claude,codex,opencode,antigravity)",
       "",
     )
+    .option(
+      "--editor <names>",
+      "Comma-separated list of editors to install and configure (currently: emacs)",
+      "",
+    )
     .option("--ollama", "Add Ollama connection settings", false)
     .option("--cron", "Add cron support", false)
     .option("--tmux", "Add tmux", false)
@@ -25,6 +30,11 @@ export function registerDevcontainerCommands(program: Command): void {
           repoRoot: specdojoRootDir(),
           providers: opts.provider
             ? String(opts.provider)
+                .split(",")
+                .map((s) => s.trim())
+            : [],
+          editors: opts.editor
+            ? String(opts.editor)
                 .split(",")
                 .map((s) => s.trim())
             : [],

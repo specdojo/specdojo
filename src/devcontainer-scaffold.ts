@@ -6,6 +6,7 @@ export interface RunDevcontainerScaffoldOptions {
   packageRoot: string;
   repoRoot: string;
   providers: string[];
+  editors: string[];
   ollama: boolean;
   cron: boolean;
   tmux: boolean;
@@ -20,7 +21,7 @@ function repositoryVolumePrefix(repoRoot: string): string {
 }
 
 export async function runDevcontainerScaffold(opts: RunDevcontainerScaffoldOptions): Promise<void> {
-  const { packageRoot, repoRoot, providers, ollama, cron, tmux, force, dryRun } = opts;
+  const { packageRoot, repoRoot, providers, editors, ollama, cron, tmux, force, dryRun } = opts;
   const devcontainerDir = path.join(repoRoot, ".devcontainer");
 
   if (existsSync(devcontainerDir) && !force) {
@@ -52,6 +53,8 @@ export async function runDevcontainerScaffold(opts: RunDevcontainerScaffoldOptio
 
   // options に応じて json と script を改変
   const aptPackages: string[] = [];
+  const extraScripts: string[] = [];
+  let emacsInitTemplate: string | undefined;
 
   if (tmux) {
     aptPackages.push("tmux");
@@ -59,6 +62,51 @@ export async function runDevcontainerScaffold(opts: RunDevcontainerScaffoldOptio
   if (cron) {
     aptPackages.push("cron");
     devcontainer.postAttachCommand = "sudo service cron start";
+  }
+
+  const knownEditors = new Set(["emacs"]);
+  for (const editor of editors) {
+    if (!knownEditors.has(editor)) {
+      process.stdout.write(`Warning: unknown editor "${editor}"\n`);
+    }
+
+    if (editor === "emacs") {
+      aptPackages.push("emacs-nox", "ripgrep");
+      emacsInitTemplate = await readFile(path.join(templateDir, "emacs", "init.el"), "utf8");
+      extraScripts.push(`sudo npm install --global \\
+  typescript@6.0.3 \\
+  typescript-language-server@6.0.1 \\
+  yaml-language-server@1.24.0 \\
+  bash-language-server@5.8.1
+
+MARKSMAN_VERSION="2026-02-08"
+case "$(dpkg --print-architecture)" in
+  amd64)
+    MARKSMAN_ARCH="x64"
+    MARKSMAN_SHA256="be5098e8213219269c47fc0d916a66fa31ce0602ec967475c722260aabf26087"
+    ;;
+  arm64)
+    MARKSMAN_ARCH="arm64"
+    MARKSMAN_SHA256="db8e124527f7f8048e3e6c91821b9c52ef173d92c01e47d221bf1337afd962fb"
+    ;;
+  *)
+    echo "Unsupported architecture for Marksman: $(dpkg --print-architecture)" >&2
+    exit 1
+    ;;
+esac
+curl -fsSL --retry 3 \\
+  "https://github.com/artempyanykh/marksman/releases/download/$MARKSMAN_VERSION/marksman-linux-$MARKSMAN_ARCH" \\
+  -o /tmp/marksman
+echo "$MARKSMAN_SHA256  /tmp/marksman" | sha256sum -c -
+sudo install -m 0755 /tmp/marksman /usr/local/bin/marksman
+rm -f /tmp/marksman
+
+# Keep dotfiles authoritative: install the bundled defaults only when neither supported init file exists.
+if [ ! -f "$HOME/.emacs.d/init.el" ] && [ ! -f "$HOME/.config/emacs/init.el" ]; then
+  mkdir -p "$HOME/.config/emacs"
+  cp .devcontainer/emacs/init.el "$HOME/.config/emacs/init.el"
+fi`);
+    }
   }
 
   if (aptPackages.length > 0) {
@@ -74,7 +122,6 @@ export async function runDevcontainerScaffold(opts: RunDevcontainerScaffoldOptio
   }
 
   // providers の処理
-  const extraScripts: string[] = [];
   const knownProviders = new Set(["claude", "codex", "opencode", "antigravity"]);
   for (const provider of providers) {
     if (!knownProviders.has(provider)) {
@@ -121,6 +168,9 @@ export async function runDevcontainerScaffold(opts: RunDevcontainerScaffoldOptio
   if (dryRun) {
     process.stdout.write(`[dry-run] would write: .devcontainer/devcontainer.json\n`);
     process.stdout.write(`[dry-run] would write: .devcontainer/post-create.sh\n`);
+    if (emacsInitTemplate !== undefined) {
+      process.stdout.write(`[dry-run] would write: .devcontainer/emacs/init.el\n`);
+    }
     return;
   }
 
@@ -131,9 +181,16 @@ export async function runDevcontainerScaffold(opts: RunDevcontainerScaffoldOptio
     "utf8",
   );
   await writeFile(path.join(devcontainerDir, "post-create.sh"), postCreateScript, "utf8");
+  if (emacsInitTemplate !== undefined) {
+    await mkdir(path.join(devcontainerDir, "emacs"), { recursive: true });
+    await writeFile(path.join(devcontainerDir, "emacs", "init.el"), emacsInitTemplate, "utf8");
+  }
 
   process.stdout.write(`Written: .devcontainer/devcontainer.json\n`);
   process.stdout.write(`Written: .devcontainer/post-create.sh\n`);
+  if (emacsInitTemplate !== undefined) {
+    process.stdout.write(`Written: .devcontainer/emacs/init.el\n`);
+  }
 
   process.stdout.write(
     "Next steps:\n" +

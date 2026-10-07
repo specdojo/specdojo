@@ -809,13 +809,14 @@ specdojo agent run --plan <plan.md> --by <nickname> --dry-run
 | ----------------------- | ------------------------------------------- |
 | `devcontainer scaffold` | `.devcontainer/` の設定ファイル群を生成する |
 
-`devcontainer scaffold` は、指定された provider の CLI と、要求された追加機能を組み込んだ `devcontainer.json` と `post-create.sh` を生成します。provider は `antigravity`、`claude`、`codex`、`opencode` を指定できます。Dev Container は任意の実行環境であり、既存の Node.js 環境を置き換える必須手順ではありません。
+`devcontainer scaffold` は、指定された provider の CLI と、要求された追加機能を組み込んだ `devcontainer.json` と `post-create.sh` を生成します。provider は `antigravity`、`claude`、`codex`、`opencode` を指定できます。`--editor emacs` を指定した場合は Emacs 用の `emacs/init.el` も生成します。Dev Container は任意の実行環境であり、既存の Node.js 環境を置き換える必須手順ではありません。
 
 主要オプション:
 
 | オプション           | 用途                                                        |
 | -------------------- | ----------------------------------------------------------- |
 | `--provider <names>` | `claude,codex` のようにカンマ区切りで provider を指定する。 |
+| `--editor emacs`     | 端末版 Emacs、LSP・検索ツール、初期設定を追加する。         |
 | `--ollama`           | Ollama への接続設定（環境変数）を追加する。                 |
 | `--cron`             | cron をインストールし、起動時にサービスを開始する。         |
 | `--tmux`             | tmux をインストールする。                                   |
@@ -828,6 +829,9 @@ npx specdojo devcontainer scaffold --provider claude,codex
 
 # 追加オプションを指定する
 npx specdojo devcontainer scaffold --provider claude --ollama --tmux
+
+# 端末版 Emacs と、すぐ使える組み込み機能だけの設定を追加する
+npx specdojo devcontainer scaffold --provider claude --editor emacs
 ```
 
 `.devcontainer/` が既に存在する場合は何も書き込まず、置き換える場合だけ `--force` を指定します。上書き前や初回生成前は `--dry-run` で対象ファイルを確認してください。生成設定は provider の設定ディレクトリを名前付きボリュームへ保存してコンテナ再作成後も利用できるようにし、ホストの認証情報・秘密鍵・`.env` を直接マウントしません。認証は生成したコンテナ内で行います。
@@ -848,7 +852,11 @@ npx specdojo devcontainer scaffold --provider claude --ollama --tmux
 
 OpenCode の API key は `/home/node/.local/share/opencode/auth.json` に入り、設定とは別の `opencode-data` volume に残ります。`post-create.sh` は mount 先をコンテナユーザーが読み書きできる所有者へ整えます。Git 設定は volume 内の global config から、Dev Containers がホストからコピーした `~/.gitconfig` を include しますが、ホスト上のファイル自体を mount しません。
 
-エディタや shell の個人設定は scaffold の出力へ埋め込みません。VS Code の Dev Containers を実行する側の User Settings に `dotfiles.repository`、必要に応じて `dotfiles.targetPath` と `dotfiles.installCommand` を設定すると、コンテナ作成時に dotfiles が自動導入されます。個人のリポジトリ URL は生成される `devcontainer.json` へ記録されません。
+エディタや shell の個人設定は既定では scaffold の出力へ埋め込みません。VS Code の Dev Containers を実行する側の User Settings に `dotfiles.repository`、必要に応じて `dotfiles.targetPath` と `dotfiles.installCommand` を設定すると、コンテナ作成時に dotfiles が自動導入されます。個人のリポジトリ URL は生成される `devcontainer.json` へ記録されません。
+
+`--editor emacs` を指定すると、端末版 Emacs、ripgrep、TypeScript・Markdown・YAML・Bash 用の LSP サーバーと `.devcontainer/emacs/init.el` を追加します。初期設定は Emacs 組み込み機能だけを使い、`C-h` の後退、UTF-8、行番号、対応する括弧、端末マウス、作業ツリー外のバックアップ・自動保存、対応ファイルでの Eglot 自動接続を設定します。
+
+post-create は `~/.emacs.d/init.el` と `~/.config/emacs/init.el` の両方が無い場合だけ、生成したテンプレートを後者へコピーします。dotfiles が設定を先に配置した場合は上書きしません。初回のコンテナ作成前に既定値を変える場合は `.devcontainer/emacs/init.el` を編集してください。作成後はコピー先を編集します。コピー先を削除しない限り、再度 post-create を実行してもテンプレートの変更は反映されません。
 
 ## 16. 関連ガイド
 
