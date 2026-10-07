@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-vx97-git-diff-dubious-ownership-retry
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-07T22:18:25Z"
   due_on: null
+  completed_at: "2026-10-07T22:33:20Z"
+  conclusion: 作業ディレクトリに .git がある場合に限り、Not a git repository の失敗も dubious ownership と同じ間隔・上限で再試行するようにした。.git がない場合は従来どおりすぐ失敗する
 ---
 
 # PJR-VX97 一時的な dubious ownership で git diff が失敗し、再試行されない

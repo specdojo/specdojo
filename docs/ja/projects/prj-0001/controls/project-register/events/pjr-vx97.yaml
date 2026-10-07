@@ -55,3 +55,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_84cd333be2f741b4a578b8aaae0535c8
+- v: 1
+  id: reg_b9ff09e79eac483ebc53a9657ff8a891
+  ts: "2026-10-07T22:33:20Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: "review: 差分と完了条件を確認"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-08"
+    - field: conclusion
+      from: "-"
+      to: 作業ディレクトリに .git がある場合に限り、Not a git repository の失敗も dubious ownership と同じ間隔・上限で再試行するようにした。.git がない場合は従来どおりすぐ失敗する
+  previous_event_id: reg_e4f0ff7910db47968fb858908e2467d2
