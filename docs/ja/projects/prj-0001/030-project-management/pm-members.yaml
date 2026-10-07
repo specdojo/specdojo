@@ -273,7 +273,7 @@ members:
     focus: [evidence-summarization, structured-result-generation]
     capabilities: [document_authoring]
     scheduler_strategy: fifo
-    note: OpenCode CLI と Ollama の gemma4 26B（MoE）を使用する pipeline reporter。実行結果の日本語要約と、英語で確定した grade finding の表示用翻訳を担う。権限とプロンプトは .opencode/agents/gemma26-reporter.md で定義。
+    note: OpenCode CLI と Ollama の gemma4 26B（MoE）を使用する pipeline reporter。実行結果の日本語要約を担う。grade finding の表示用翻訳は gemma26-translator が担う。権限とプロンプトは .opencode/agents/gemma26-reporter.md で定義。
 
   - nickname: gemma26-translator
     disabled: false

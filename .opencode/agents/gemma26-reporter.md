@@ -1,5 +1,5 @@
 ---
-description: gemma4 26B（MoE）を使う SpecDojo pipeline reporter。gemma-reporter より速く、日本語の要約と grade finding の翻訳に使う。
+description: gemma4 26B（MoE）を使う SpecDojo pipeline reporter。gemma-reporter より速く、日本語の要約に使う。grade finding の翻訳は gemma26-translator が担う。
 mode: primary
 model: ollama-local/gemma4:26b-mlx-work-64k
 reasoningEffort: none
