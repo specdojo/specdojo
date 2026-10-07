@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-q761-exec-run-module-split
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: medium
   owner: ARC
   registered_at: "2026-10-02T12:14:06Z"
+  completed_at: "2026-10-07T22:17:51Z"
+  conclusion: 選択肢 C（現行の挙動のまま下位の層から段階的に切り出し、characterization test を加えてから開始段の判定を純粋な遷移関数へ寄せる）を採る。実施は v0.3.0 の公開後
 ---
 
 # PJR-Q761 exec-run.ts の分割方針を決める
