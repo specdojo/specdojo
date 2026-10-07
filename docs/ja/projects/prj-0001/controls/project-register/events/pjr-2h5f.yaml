@@ -74,3 +74,32 @@
       from: "-"
       to: 作業内容 1〜5 が未実施のまま review に遷移していた（2026-09-29）。実装から再開する
   previous_event_id: reg_de07bc60c52340939a8f5ec4e81b54f6
+- v: 1
+  id: reg_7cbf48c9967c4022bdcba288d4f0b4fc
+  ts: "2026-10-07T13:55:20Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: 作業内容 1〜5 が未実施のまま review に遷移していた（2026-09-29）。実装から再開する
+      to: "-"
+  previous_event_id: reg_19dff967b7f146d6a13407b440034309
+- v: 1
+  id: reg_1d5e4b4567444461a6bd703c97021209
+  ts: "2026-10-07T14:06:14Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_7cbf48c9967c4022bdcba288d4f0b4fc

@@ -93,17 +93,14 @@ export async function runDevcontainerScaffold(opts: RunDevcontainerScaffoldOptio
       devcontainer.mounts.push(
         `source=${volumeName("codex")},target=/home/node/.codex,type=volume`,
       );
-      // Codex は curl -fsSL https://chatgpt.com/codex/install.sh | CODEX_NON_INTERACTIVE=1 sh
-      extraScripts.push(
-        'if ! curl -fsSL https://chatgpt.com/codex/install.sh | CODEX_NON_INTERACTIVE=1 sh; then\n  echo "Warning: Codex installer failed."\nfi',
-      );
+      extraScripts.push("sudo npm install -g @openai/codex@latest");
     } else if (provider === "opencode") {
       devcontainer.mounts.push(
         `source=${volumeName("opencode")},target=/home/node/.config/opencode,type=volume`,
         `source=${volumeName("opencode-data")},target=/home/node/.local/share/opencode,type=volume`,
       );
       devcontainer.containerEnv["OPENCODE_DISABLE_AUTO_UPDATE"] = "1";
-      extraScripts.push("sudo npm install -g opencode-ai@latest");
+      extraScripts.push("sudo npm install -g @opencode/cli@latest");
     } else if (provider === "antigravity") {
       devcontainer.mounts.push(
         `source=${volumeName("antigravity")},target=/home/node/.config/antigravity,type=volume`,

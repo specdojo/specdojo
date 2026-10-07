@@ -88,6 +88,27 @@ describe("runDevcontainerScaffold", () => {
     expect(writeFileMock).toHaveBeenCalledTimes(2);
   });
 
+  it("should only report planned files in dry-run mode", async () => {
+    await runDevcontainerScaffold({
+      packageRoot,
+      repoRoot,
+      providers: [],
+      ollama: false,
+      cron: false,
+      tmux: false,
+      force: false,
+      dryRun: true,
+    });
+
+    expect(stdoutWrite).toHaveBeenCalledWith(
+      expect.stringContaining("[dry-run] would write: .devcontainer/devcontainer.json"),
+    );
+    expect(stdoutWrite).toHaveBeenCalledWith(
+      expect.stringContaining("[dry-run] would write: .devcontainer/post-create.sh"),
+    );
+    expect(writeFileMock).not.toHaveBeenCalled();
+  });
+
   it("should generate json and sh for basic setup", async () => {
     await runDevcontainerScaffold({
       packageRoot,
@@ -158,7 +179,7 @@ describe("runDevcontainerScaffold", () => {
     await runDevcontainerScaffold({
       packageRoot,
       repoRoot,
-      providers: ["claude", "codex", "opencode"],
+      providers: ["claude", "codex", "opencode", "antigravity"],
       ollama: false,
       cron: false,
       tmux: false,
@@ -180,11 +201,15 @@ describe("runDevcontainerScaffold", () => {
     expect(json.mounts).toContain(
       "source=repo-specdojo-opencode-data,target=/home/node/.local/share/opencode,type=volume",
     );
+    expect(json.mounts).toContain(
+      "source=repo-specdojo-antigravity,target=/home/node/.config/antigravity,type=volume",
+    );
 
     const shCall = findWriteCall("post-create.sh");
     expect(shCall[1]).toContain("curl -fsSL https://claude.ai/install.sh");
-    expect(shCall[1]).toContain("curl -fsSL https://chatgpt.com/codex/install.sh");
-    expect(shCall[1]).toContain("sudo npm install -g opencode-ai@latest");
+    expect(shCall[1]).toContain("sudo npm install -g @openai/codex@latest");
+    expect(shCall[1]).toContain("sudo npm install -g @opencode/cli@latest");
+    expect(shCall[1]).toContain("curl -fsSL https://antigravity.google/cli/install.sh");
   });
 
   it("should normalize the repository name used as the volume prefix", async () => {

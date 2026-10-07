@@ -7,11 +7,10 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: high
   owner: DEV
   registered_at: "2026-09-28T23:27:46Z"
-  block_reason: 作業内容 1〜5 が未実施のまま review に遷移していた（2026-09-29）。実装から再開する
 ---
 
 # PJR-2H5F specdojo devcontainer scaffold で利用リポジトリに devcontainer を生成する
@@ -40,17 +39,23 @@ scaffold の土台として、`config scaffold --provider <name>` が provider �
 
 ## 3. 作業内容
 
-| No  | 作業                                                      | 担当 | 状態 | メモ                                 |
-| --- | --------------------------------------------------------- | ---- | ---- | ------------------------------------ |
-| 1   | 配布用の最小構成とオプションを設計する                    | ARC  | open | 現行 `.devcontainer/` から切り出す   |
-| 2   | テンプレートと `devcontainer scaffold` コマンドを実装する | DEV  | open | `config scaffold` の仕組みに合わせる |
-| 3   | 実機でコンテナを作り、orchestrator の起動を確認する       | DEV  | open | Docker Desktop on macOS              |
-| 4   | README・コマンドリファレンスへ記載する                    | DEV  | open | -                                    |
-| 5   | PJR-E8TT に判断の変更を追記する                           | PM   | open | 完了後                               |
+| No  | 作業                                                      | 担当 | 状態           | メモ                                                                     |
+| --- | --------------------------------------------------------- | ---- | -------------- | ------------------------------------------------------------------------ |
+| 1   | 配布用の最小構成とオプションを設計する                    | ARC  | done           | Node・Git を基本とし、provider と追加機能を任意指定にした                |
+| 2   | テンプレートと `devcontainer scaffold` コマンドを実装する | DEV  | done           | package 同梱の `templates/devcontainer/` から 2 ファイルを生成する       |
+| 3   | 実機でコンテナを作り、orchestrator の起動を確認する       | DEV  | requires-human | Docker Desktop on macOS が必要。executor の Linux sandbox に Docker 無し |
+| 4   | README・コマンドリファレンスへ記載する                    | DEV  | done           | 任意手順、オプション、上書き・認証情報の方針を記載した                   |
+| 5   | PJR-E8TT に判断の変更を追記する                           | PM   | done           | 2026-09-29 の追記として反映済み                                          |
 
 ## 4. 対応結果
 
--
+`specdojo devcontainer scaffold` を実装し、package に同梱する `templates/devcontainer/` から `devcontainer.json` と `post-create.sh` を生成するようにした。既定は Node 22 と Git の最小構成であり、agent CLI は `--provider` で指定した `antigravity`、`claude`、`codex`、`opencode` だけを導入する。2026-10-07 に公式手順を再確認し、Claude と Antigravity は公式の `install.sh`、Codex は `@openai/codex`、OpenCode は `@opencode/cli` を利用する構成にそろえた。
+
+Ollama 接続、cron、tmux はそれぞれ `--ollama`、`--cron`、`--tmux` を指定した場合だけ追加する。provider の設定・認証情報と Git・GitHub CLI の設定はリポジトリ名を接頭辞とする named volume に保存する。ホストの認証情報、秘密鍵、`.env` は mount しない。既存の `.devcontainer/` は通常実行では変更せず、`--force` の場合だけ生成対象を上書きする。`--dry-run` は書き込む予定の 2 ファイルを表示する。
+
+README の「使い始める」では Dev Container を任意手順として案内し、[[specdojo:command-reference]] には全オプション、named volume の保存先、分離方針、dotfiles の扱いを記載した。[[prj-0001:pjr-e8tt-initial-release-positioning]] には、配布用の最小構成を分離できたため初期リリースへ含めるという判断変更を追記した。単体テストは基本構成、追加機能、provider ごとの mount と導入コマンド、既存構成の保護、`--force`、リポジトリ名の正規化を対象とする。
+
+executor 環境には Docker と `devcontainer` CLI が無いため、Docker Desktop on macOS での作成と orchestrator の起動確認は実施できない。Host Mac で空のリポジトリに `config scaffold --provider <provider>` と `devcontainer scaffold --provider <provider>` を適用し、`devcontainer up --workspace-folder .` の後に `devcontainer exec --workspace-folder . npm run orch:opus`（Claude）、`orch:codex`、`orch:opencode`、`orch:agy` をそれぞれ実行して確認する。この確認は対話ログインや provider の利用枠を使うため、人が実施する。Codex の sandbox 固有の確認は [[prj-0001:pjr-ezaf-devcontainer-template-codex-sandbox]] で追跡する。
 
 ## 5. 関連ドキュメント
 
