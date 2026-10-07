@@ -13,178 +13,106 @@ specdojo:
 
 # プロジェクトメンバー定義 作成ルール
 
-Project Member Roster Documentation Rulebook
+Project Human Member Roster Documentation Rulebook
 
-本ドキュメントは、`pm-members.yaml` を一貫した構造で作成・更新するためのルールを定義する。`pm-members.yaml` は、`specdojo exec --by <nickname>` で指定できる実行主体と、各主体が対応できる Role code を管理する YAML 台帳である。
+`pm-members.yaml` を、人間の実行主体と対応 Role code を管理するプロジェクト成果物として作成・更新するためのルールです。実行可能な agent の定義は、リポジトリ共通の保護設定へ分離します。
 
 ## 1. 全体方針
 
-- `pm-members.yaml` には、実際に作業または支援する人間と agent を記載する。
-- Member は実行主体を表し、責務・判断権限を表す Role とは分離する。
-- Member が対応できる Role code は `members[].roles` で表す。Schedule の `owner` には member nickname を書かない。
-- `members[].roles` には、`pm-roles.yaml` に存在する Role code だけを記載する。特定 Role に固定しない汎用 agent は `roles: []` としてよい。
-- agent は草案作成、レビュー支援、整合確認、機械的更新を支援できるが、最終承認、公開可否判断、説明責任は人間の PO が担う。
-- 公開文書には、不要な個人名、私用メールアドレス、非公開組織情報、アクセス情報を記載しない。
+- `pm-members.yaml` には人間の member だけを記載し、`members[].type` は `human` とします。
+- 実行可能な agent は `.specdojo/agent-members.yaml` を正本とし、`pm-members.yaml` に複製しません。
+- Member は実行主体、Role code は責務を表します。Schedule の `owner` には member nickname を書きません。
+- `members[].roles` には `pm-roles.yaml` に存在する Role code だけを記載します。
+- 公開文書には、不要な個人名、私用メールアドレス、非公開組織情報、アクセス情報を記載しません。
+- 人間の最終承認、公開可否、説明責任は agent 定義へ移しません。
 
 ## 2. 位置づけと用語定義
 
-`pm-members.yaml` は、Role 定義と実行ログの間にある実行主体の台帳である。
+| 情報                          | 正本                           | 粒度       |
+| ----------------------------- | ------------------------------ | ---------- |
+| 人間の identity・連絡先・兼務 | `pm-members.yaml`              | project    |
+| agent の identity・選択属性   | `.specdojo/agent-members.yaml` | repository |
+| provider の起動コマンド       | `.specdojo/exec-defaults.yaml` | repository |
+| Role code と責務              | `pm-roles.yaml`                | project    |
+| Schedule の主責任             | Schedule の `owner`            | task       |
 
-| 文書                 | 役割                                                            | 正本とする内容                                                    |
-| -------------------- | --------------------------------------------------------------- | ----------------------------------------------------------------- |
-| `pm-organization.md` | ロール・メンバー構成の方針と設計根拠を記述する                  | 採用方針、最終判断の集約先、見直し条件                            |
-| `pm-roles.yaml`      | 採用した Role code を machine-readable な YAML として一覧化する | `owner` 語彙、Role code 名、プロジェクト固有メモ                  |
-| `pm-members.yaml`    | 実行主体と対応する Role code の対応を管理する                   | member nickname、人間または agent、兼務割り当て、agent の選択属性 |
-| `pm-raci.md`         | 必要時の責任分担を記述する                                      | 成果物・プロセスごとの責任分担                                    |
-
-agent の起動コマンドは `pm-members.yaml` には置かず、`.specdojo/exec-defaults.yaml` の `providers.<provider>.command_template` を member 属性（`nickname` / `mode` / `proficiency`）で展開して解決する。`pm-members.yaml` は「誰が・どの能力で・どの優先度か」に加え、pipeline 専用 agent の場合だけ「どの stage を担当するか」を表し、モデル名や CLI フラグなどの実行基盤設定を持ち込まない。
-
-用語は次のように使い分ける。
-
-| 用語              | 意味                                               | `pm-members.yaml` での扱い      |
-| ----------------- | -------------------------------------------------- | ------------------------------- |
-| Role code         | 責務・判断権限・専門性を表す短い識別子             | `members[].roles` に列挙する    |
-| Member            | 実際に作業または支援する主体                       | `members[]` に列挙する          |
-| nickname          | CLI と実行ログで使う Member の安定識別子           | `members[].nickname` に記載する |
-| legacy agent      | pipeline を使わない従来の単一 agent 実行主体       | `stage_role` を省略する         |
-| pipeline executor | 成果物編集と検証を担う pipeline の第 1 stage agent | `stage_role: executor` とする   |
-| pipeline reporter | evidence から結果を構成する第 2 stage agent        | `stage_role: reporter` とする   |
+`loadMemberRoster` は人間名簿と agent 定義を schema 検証した後に合成します。合成後の nickname は一意でなければならず、`--by` と実行イベントはこの合成名簿を参照します。
 
 ## 3. ファイル命名・ID規則
 
-- ファイル名は `pm-members.yaml` を推奨する。
-- 配置先は `pm-organization.md`、`pm-roles.yaml`、`pm-raci.md` と同じ組織定義ディレクトリに置く。
-- 推奨パス: `docs/ja/projects/<project-id>/030-project-management/pm-members.yaml`
-- `project_id` は配置先プロジェクト ID と一致させる。例: `prj-0001`
-- `id` は `<project-id>:pm-members` 形式を推奨する。例: `prj-0001:pm-members`
-
-- `members[].nickname` は英小文字、数字、ハイフン、アンダースコアで記述する。
-
-- 一度実行ログに記録した `nickname` は変更せず、改名が必要な場合は新しい member を追加する。
+- ファイル名は `pm-members.yaml` とします。
+- 配置は `docs/ja/projects/<project-id>/030-project-management/pm-members.yaml` を推奨します。
+- `id` は `<project-id>:pm-members`、`project_id` は配置先 project ID と一致させます。
+- `members[].nickname` は英小文字または数字で始め、英小文字、数字、ハイフン、アンダースコアだけを使います。
+- 実行ログへ記録済みの nickname は変更せず、交代時は新しい member を追加します。
+- 同じ nickname を `.specdojo/agent-members.yaml` に定義しません。
 
 ## 4. 推奨メタ項目
 
-YAML 成果物のため、Markdown Frontmatter ではなく YAML 先頭のメタ項目として記載する。
+| 項目         | 必須 | 内容                             |
+| ------------ | ---- | -------------------------------- |
+| `id`         | ○    | `<project-id>:pm-members`        |
+| `type`       | ○    | `project`                        |
+| `status`     | ○    | `draft` / `ready` / `deprecated` |
+| `title`      | ○    | 名簿の表示名                     |
+| `rulebook`   | ○    | `specdojo:pm-members-rulebook`   |
+| `based_on`   | 任意 | 根拠文書 ID                      |
+| `version`    | ○    | 1 以上のデータ版                 |
+| `project_id` | ○    | 対象 project ID                  |
 
-| 項目 | 説明 | 必須 |
-| ---- | ---- | ---- |
+schema にないメタ項目は追加しません。成果物の `status` は作成中は `draft` とし、`ready` への変更は人間が判断します。
 
-| `id` | `<project-id>:pm-members` 形式の成果物 ID | ○ |
-| `type` | `project` 固定 | ○ |
-| `status` | `draft` / `ready` / `deprecated` | ○ |
-| `title` | ドキュメント名。表示ページの見出しになる | ○ |
-| `rulebook` | `specdojo:pm-members-rulebook` 固定 | ○ |
-| `based_on` | 根拠ドキュメント ID の配列 | 任意 |
-| `version` | データバージョン。初期値は `1` | ○ |
-| `project_id` | プロジェクト ID | ○ |
+## 5. 本文要件
 
-## 5. 本文構成（標準テンプレ）
+| 要素      | 必須 | 内容                                  |
+| --------- | ---- | ------------------------------------- |
+| `members` | ○    | 人間 member の配列                    |
+| `rules`   | 任意 | 名簿利用時の project 固有の運用ルール |
 
-`pm-members.yaml` は次のルート構造を標準とする。
+`members[]` は次のフィールドを使用します。
 
-| 要素 | 必須 | 内容 |
-| ---- | ---- | ---- |
-
-| `id` | ○ | 成果物 ID |
-| `type` | ○ | 成果物種別 |
-
-| `status` | ○ | 成果物状態 |
-| `title` | ○ | ドキュメント名 |
-| `rulebook` | ○ | 参照する rulebook ID |
-| `based_on` | 任意 | 根拠 ID 配列 |
-| `version` | ○ | データバージョン |
-| `project_id` | ○ | プロジェクト ID |
-| `members` | ○ | Member 定義の配列 |
-| `rules` | 任意 | この member 定義を使う際の運用ルール |
-
-`members[]` は次のフィールドを標準とする。
-
-| フィールド     | 必須 | 内容                                   |
-| -------------- | ---- | -------------------------------------- |
-| `nickname`     | ○    | `--by` で指定する安定識別子            |
-| `display_name` | ○    | 表示名。公開文書では個人名を避けてよい |
-
-| `email` | 任意 | 公開可能な連絡先。非公開または不要なら `null` |
-| `roles` | ○ | 対応する Role code のリスト。汎用 agent は `[]` 可 |
-| `type` | ○ | `human` または `agent` |
-| `provider` | agent 必須 | agent を実行する CLI 種別（`opencode` など） |
-| `priority` | agent 推奨 | 同条件の agent 候補間での優先度。小さい値を優先する |
-
-| `mode` | agent 推奨 | `edit` / `review` / `report`。agent の起動プロファイルを表す |
-
-| `stage_role` | 任意 | pipeline 専用 agent の `executor` / `reporter` |
-| `proficiency` | agent 推奨 | `normal` / `expert` などの品質 tier |
-
-| `persona` | 任意 | 実行姿勢やレビュー観点を表す短いラベル |
-| `focus` | 任意 | 重視する観点の配列 |
-| `capabilities` | agent 推奨 | `web_search` などのツール能力 |
-| `command` | 任意 | provider の command template を使わない場合の上書き |
-| `disabled` | 任意 | `true` で `exec run --auto` の候補から一時除外する |
-| `scheduler_strategy` | 任意 | 既定の scheduler 戦略 |
-| `note` | 任意 | 補足。責務境界や公開上の注意を簡潔に書く |
+| フィールド           | 必須 | 内容                                                      |
+| -------------------- | ---- | --------------------------------------------------------- |
+| `nickname`           | ○    | CLI と履歴で使う安定識別子                                |
+| `display_name`       | ○    | 公開可能な表示名                                          |
+| `email`              | 任意 | 公開可能な連絡先。不要または非公開なら `null`             |
+| `roles`              | ○    | 対応可能な Role code の配列                               |
+| `type`               | ○    | `human` 固定                                              |
+| `persona`            | 任意 | 作業姿勢を示す短いラベル                                  |
+| `focus`              | 任意 | 重視する観点の配列                                        |
+| `scheduler_strategy` | 任意 | `critical-first` / `dependency-first` / `fifo` / `manual` |
+| `note`               | 任意 | 稼働条件や最終判断範囲などの公開可能な補足                |
 
 ## 6. 記述ガイド
 
-### 6.1. `members`
+### 6.1. 人間 member
 
-- `members` には、実行ログに残る可能性がある人間と agent を過不足なく記載する。
-- PO などの人間 member は、最終判断・公開可否・説明責任を担う範囲を `note` で明示する。
-- agent member は、支援範囲、実行モード、能力、provider が分かる粒度で記載する。
-- 一時的に使うだけの個人名、ローカル端末名、秘密情報を member として記載しない。
+- 個人名を必要としない場合は、`po` や `store-owner` のような役割ベースの nickname と表示名を使います。
+- `roles` は兼務を表し、責務定義そのものは `pm-roles.yaml` に委ねます。
+- 最終判断、公開可否、説明責任を担う範囲は `note` に短く記載します。
+- 連絡先を公開できない場合は推測で補わず `email: null` とします。
 
-### 6.2. `members[].nickname`
+### 6.2. 合成名簿との整合
 
-- `nickname` は CLI、実行ログ、イベント履歴で参照されるため、短く安定した値にする。
-- 人間の member には `po`、agent には `ba-agent` のように、用途が分かる値を使う。
-- 表示名や担当範囲が変わっても、実行ログ記録後の `nickname` は変更しない。
-- 大文字、空白、記号を含む表示名を `nickname` にしない。
+- nickname が `.specdojo/agent-members.yaml` と重複しないことを確認します。
+- `--by` に人間または agent の nickname を指定する場合、合成名簿に一意に存在する値を使います。
+- `pm-members.yaml` に `type: agent` が残る場合は、`specdojo config migrate-members --dry-run` で移行内容を確認します。
+- agent の追加・優先度・能力変更は、保護設定を変更できる人間または orchestrator が行います。
 
-### 6.3. `members[].roles`
+### 6.3. 運用ルール
 
-- `members[].roles` には、`pm-roles.yaml` の `roles[].code` に存在する Role code だけを記載する。
-- 兼務がある場合は複数の Role code を列挙する。
-- 特定 Role に固定しない汎用 agent は `roles: []` としてよい。
-- `roles` は member 側の対応ロールを表す。Schedule の `owner` の代替として使わない。
-
-### 6.4. `members[].type` と agent 用フィールド
-
-- 人間の実行主体は `human`、自動化または生成 AI 支援主体は `agent` とする。
-- `type: agent` の member には `provider` を必ず記載する。値は `opencode`、`claude`、`codex`、`copilot`、`antigravity`、`custom` から選ぶ。
-- `exec run --auto` の候補にする agent には、`priority`、`mode`、`proficiency`、`capabilities` を記載する。`mode` は executor に `edit` / `review`、reporter に `report` を指定する。
-- `capabilities` はツールアクセスの能力だけを表し、成果物の責務や承認権限を表さない。
-- `stage_role` は pipeline 専用 agent にだけ指定し、`executor` または `reporter` とする。人間 member には指定しない。
-- `stage_role` を省略した agent は従来の単一 agent フロー専用とする。`stage_role` を持つ agent と持たない agent は、自動選択時に相互の代替候補にしない。
-- pipeline stage の agent は、strategy の stage に宣言された `stage_role`、`capabilities`、`proficiency` と member 属性が一致する候補から選ぶ。strategy に member nickname を固定しない。
-- 起動コマンドは member には書かず、`.specdojo/exec-defaults.yaml` の `providers.<provider>.command_template` から member 属性で解決する。モデル名や CLI フラグの変更は member 定義に影響させない。
-- `command` は、テンプレートで表現できない特殊構成（`provider: custom` など）に限って上書きとして使う。記載する場合も、認証情報、秘密鍵、トークン、個人環境に閉じたパスを含めない。
-- `disabled: true` を指定した agent は `exec run --auto` の候補選択（rate limit 時のフォールバックを含む）から一時的に除外される。特定 provider の挙動（例: rate limit）をテストする際に、member 定義を削除せずに他 agent を止める用途で使う。省略時または `false` は通常どおり選択対象になる。
-
-### 6.5. `persona`、`focus`、`scheduler_strategy`
-
-- `persona` は実行姿勢を表す短い kebab-case のラベルにする。例: `risk-averse-reviewer`
-- `focus` は agent や member が重視する観点を配列で列挙する。
-- `scheduler_strategy` は実行順序の既定方針に限定し、個別タスクの判断理由を詰め込まない。
-- scheduler 戦略は、プロジェクトで使う語彙に限定する。例: `critical-first`, `dependency-first`, `fifo`, `manual`
-
-### 6.6. `rules`
-
-- `rules` には、この member 定義を使う際に検証可能な運用ルールを箇条書きで記載する。
-- `owner`、`roles`、`--by` の使い分けを明記する。
-- 起動コマンドが `.specdojo/exec-defaults.yaml` の command template から解決されることと、`command` 上書きを使う限定条件を記載する。
-- agent が支援できる作業と、人間の PO が担う最終判断を分けて記載する。
-- 公開文書で扱わない個人情報や非公開組織情報を記載しない方針を含める。
+- `rules` には `owner`、`roles`、`--by` の使い分けを判定可能な文として記載します。
+- project 固有の公開制約や交代時の扱いだけを記載し、共通 schema を再掲しません。
+- agent の provider、モデル、起動 command は記載しません。
+- 名簿の変更理由は project の変更管理記録に残します。
 
 ## 7. 禁止事項
 
-| 禁止事項                                                             | 理由                                                                       |
-| -------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| `pm-members.yaml` の member 側で `owner` フィールドを使う            | `owner` は Schedule の主責任ロールであり、member 側では `roles` を使うため |
-| Schedule の `owner` に `nickname`、人名、agent 名を書く              | タスク責任が Role code で追跡できなくなるため                              |
-| `members[].roles` に `pm-roles.yaml` で未定義の Role code を書く     | 実行候補の判定が不整合になるため                                           |
-| agent に最終承認や公開可否判断を割り当てる                           | 人間の判断責任を代替してしまうため                                         |
-| 公開文書に不要な個人名、私用メールアドレス、非公開組織情報を書く     | 公開範囲とプライバシーに反するため                                         |
-| `command` に認証情報、秘密鍵、トークン、個人環境に閉じたパスを書く   | 秘密情報の漏えいと再利用不能な構成を招くため                               |
-| provider の command template で解決できる member に `command` を書く | 起動設定が `.specdojo/exec-defaults.yaml` と二重管理になるため             |
-| 人間 member に `stage_role` を指定する                               | pipeline stage は agent 実行だけを対象とするため                           |
-| pipeline stage の指定に member nickname を使う                       | strategy と実行主体が密結合し、候補選択と差し替えができなくなるため        |
-| 実行ログ記録後に `nickname` を変更する                               | 履歴との対応が壊れるため                                                   |
+| 禁止事項                                               | 理由                                     |
+| ------------------------------------------------------ | ---------------------------------------- |
+| `type: agent` の member を記載する                     | 保護設定との責務境界が崩れるため         |
+| `provider`、`command`、`mode`、`stage_role` を記載する | agent 実行設定を成果物から変更できるため |
+| Schedule の `owner` に nickname や人名を書く           | 責務と実行主体を混同するため             |
+| 未定義の Role code を `roles` に書く                   | ロール正本との整合が失われるため         |
+| 実行ログ記録後の nickname を変更する                   | 履歴の参照先が不明になるため             |
+| 秘密情報、私用連絡先、非公開組織情報を記載する         | 公開適性と安全性を損なうため             |

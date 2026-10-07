@@ -226,13 +226,14 @@ tasks:
 
 大規模プロジェクトでは、次の文書を併用することを推奨する。
 
-| 文書                          | 目的                                         |
-| ----------------------------- | -------------------------------------------- |
-| `pm-organization.md`          | ロールと責務境界を定義する                   |
-| `pm-members.yaml`             | 実行主体を定義する                           |
-| `pm-raci.md`                  | 成果物・プロセスごとの責任分担を定義する     |
-| `prj-stakeholder-register.md` | 外部関係者、期待、懸念、合意対象を管理する   |
-| communication 関連文書        | 報告、共有、合意、エスカレーションを管理する |
+| 文書                           | 目的                                         |
+| ------------------------------ | -------------------------------------------- |
+| `pm-organization.md`           | ロールと責務境界を定義する                   |
+| `pm-members.yaml`              | 人間の実行主体を project ごとに定義する      |
+| `.specdojo/agent-members.yaml` | agent の実行主体を repository 共通で定義する |
+| `pm-raci.md`                   | 成果物・プロセスごとの責任分担を定義する     |
+| `prj-stakeholder-register.md`  | 外部関係者、期待、懸念、合意対象を管理する   |
+| communication 関連文書         | 報告、共有、合意、エスカレーションを管理する |
 
 ## 5. 用語定義
 
@@ -268,7 +269,7 @@ tasks:
 
 ### 6.2. `pm-members.yaml`
 
-`pm-members.yaml` は、実行主体の machine-readable な一覧を管理する。
+`pm-members.yaml` は、人間の実行主体の machine-readable な一覧を project ごとに管理する。agent の実行定義は repository 共通の `.specdojo/agent-members.yaml` に置き、CLI は両者を検証・合成して利用する。
 
 標準フィールド:
 
@@ -280,9 +281,9 @@ tasks:
 | `members[].display_name`       | ○    | 表示名                                                                       |
 | `members[].email`              | 任意 | 公開可能な連絡先。公開文書では `null` を推奨                                 |
 | `members[].roles`              | 任意 | 対応する Role code のリスト。兼務の場合は複数記載する。汎用 agent は `[]` 可 |
-| `members[].type`               | ○    | `human` または `agent`                                                       |
-| `members[].persona`            | 任意 | agent の実行姿勢                                                             |
-| `members[].focus`              | 任意 | agent が重視する観点                                                         |
+| `members[].type`               | ○    | `human` 固定                                                                 |
+| `members[].persona`            | 任意 | member の作業姿勢                                                            |
+| `members[].focus`              | 任意 | member が重視する観点                                                        |
 | `members[].scheduler_strategy` | 任意 | scheduler の既定選択戦略                                                     |
 | `members[].note`               | 任意 | 補足                                                                         |
 
@@ -324,16 +325,16 @@ WBS Item から Schedule Task を作る際は、以下の順で担当を決め�
 
 ### 7.2. `owner` と `--by` の違い
 
-| 項目    | 意味                              | 値の例                  | 管理先                  |
-| ------- | --------------------------------- | ----------------------- | ----------------------- |
-| `owner` | タスクの主責任ロール              | `PO`, `BA`, `ARC`, `QE` | Schedule                |
-| `roles` | member が対応できるロールのリスト | `[BA]`, `[PO, PM, OPS]` | `pm-members.yaml`       |
-| `--by`  | タスクを claim / 実行する主体     | `ba-agent`              | 実行コマンド / 実行ログ |
+| 項目    | 意味                              | 値の例                  | 管理先              |
+| ------- | --------------------------------- | ----------------------- | ------------------- |
+| `owner` | タスクの主責任ロール              | `PO`, `BA`, `ARC`, `QE` | Schedule            |
+| `roles` | member が対応できるロールのリスト | `[BA]`, `[PO, PM, OPS]` | `pm-members.yaml`   |
+| `--by`  | タスクを claim / 実行する主体     | `ba-agent`              | 合成名簿 / 実行ログ |
 
 原則:
 
 - Schedule Task の `owner` には member nickname を書かない。
-- `--by` に指定できる nickname は `pm-members.yaml` に存在しなければならない。
+- `--by` に指定できる nickname は、`pm-members.yaml` と `.specdojo/agent-members.yaml` の合成名簿に一意に存在しなければならない。
 - member の `roles` にタスクの `owner` が含まれていることを推奨する。
 - `roles: []` の汎用 agent が実行する場合は、実行時の文脈で対象 Role を明示する。
 
@@ -380,17 +381,21 @@ members:
     display_name: Project Owner
     roles: [PO, PM, OPS]
     type: human
+```
 
-  - nickname: po-agent
-    display_name: Project Owner Agent
-    roles: [PO, PM, OPS]
-    type: agent
-    scheduler_strategy: critical-first
+`.specdojo/agent-members.yaml`:
 
+```yaml
+version: 1
+members:
   - nickname: ba-agent
     display_name: Business Analyst Agent
     roles: [BA]
     type: agent
+    provider: custom
+    capabilities: []
+    proficiency: normal
+    priority: 1
 ```
 
 Schedule:
@@ -408,16 +413,16 @@ tasks:
 
 People / Organization 定義は、以下のタイミングで見直す。
 
-| 更新トリガー                           | 見直し対象                                   |
-| -------------------------------------- | -------------------------------------------- |
-| プロジェクトスコープ変更               | Stakeholder、Role、RACI                      |
-| 成果物カタログまたは WBS の変更        | RACI、Schedule owner                         |
-| Schedule のトラック追加                | Role、Member、scheduler strategy             |
-| agent 追加・削除                       | `pm-members.yaml`、委任方針、agent overrides |
-| 複数人運用の開始                       | `PM` ロール、RACI、承認責任                  |
-| 外部利用者・貢献者の関与開始           | stakeholder register、コミュニケーション要件 |
-| 公開前                                 | 個人情報、機密情報、公開可能な連絡先         |
-| 実行ログに存在する nickname の変更要求 | 変更せず、新 nickname 追加または無効化で対応 |
+| 更新トリガー                           | 見直し対象                                                |
+| -------------------------------------- | --------------------------------------------------------- |
+| プロジェクトスコープ変更               | Stakeholder、Role、RACI                                   |
+| 成果物カタログまたは WBS の変更        | RACI、Schedule owner                                      |
+| Schedule のトラック追加                | Role、Member、scheduler strategy                          |
+| agent 追加・削除                       | `.specdojo/agent-members.yaml`、委任方針、agent overrides |
+| 複数人運用の開始                       | `PM` ロール、RACI、承認責任                               |
+| 外部利用者・貢献者の関与開始           | stakeholder register、コミュニケーション要件              |
+| 公開前                                 | 個人情報、機密情報、公開可能な連絡先                      |
+| 実行ログに存在する nickname の変更要求 | 変更せず、新 nickname 追加または無効化で対応              |
 
 ## 12. 禁止事項
 

@@ -184,7 +184,7 @@ review agent には `edit` tool を含めない。ただし CLI の tool filter 
 
 ### 9.1. 起動コマンドの設計
 
-起動コマンドは親設計の `起動コマンドの解決` に従い、`.specdojo/exec-defaults.yaml` の `providers.copilot` で定義する。`pm-members.yaml` の member には `command` を書かない。edit / review とも同一の許可リスト構成のため、プレースホルダと `command_params` は使わない。権限設計の根拠は [specdojo:exec-config-guide](../../specdojo/guides/exec-config-guide.md) の `agent 権限とプロンプトインジェクション対策` を正本とする。
+起動コマンドは親設計の `起動コマンドの解決` に従い、`.specdojo/exec-defaults.yaml` の `providers.copilot` で定義する。`.specdojo/agent-members.yaml` の member には `command` を書かない。edit / review とも同一の許可リスト構成のため、プレースホルダと `command_params` は使わない。権限設計の根拠は [specdojo:exec-config-guide](../../specdojo/guides/exec-config-guide.md) の `agent 権限とプロンプトインジェクション対策` を正本とする。
 
 ```yaml
 providers:
@@ -208,7 +208,7 @@ providers:
 - URL アクセスは許可しない（`--allow-url` を追加しない）ため、member に `web_search` capability を持たせない。
 - `--allow-all`、`--allow-all-tools`、`--allow-all-paths`、`--yolo`、環境変数 `COPILOT_ALLOW_ALL` は権限を広げすぎるため使用しない。
 
-`pm-members.yaml` の member は選択属性だけを持つ。運用検証が完了するまで `disabled: true` で定義し、`exec run --auto` の候補から除外しておく。
+`.specdojo/agent-members.yaml` の member は選択属性だけを持つ。運用検証が完了するまで `disabled: true` で定義し、`exec run --auto` の候補から除外しておく。
 
 ```yaml
 members:
@@ -241,7 +241,7 @@ phase の共通契約は親設計に従う。copilot member は URL アクセス
 
 ### 9.3. `.specdojo/exec-defaults.yaml`
 
-共通の retry / fallback / block 方針とグローバル既定 / provider 別上書きの2層構造は親設計に従う。Copilot 固有の検出条件は `providers.copilot.rate_limit_detection` に置き、`pm-members.yaml` で `provider: copilot` の member に適用する。
+共通の retry / fallback / block 方針とグローバル既定 / provider 別上書きの2層構造は親設計に従う。Copilot 固有の検出条件は `providers.copilot.rate_limit_detection` に置き、`.specdojo/agent-members.yaml` で `provider: copilot` の member に適用する。
 
 ```yaml
 providers:
@@ -269,7 +269,7 @@ stderr の実文言は CLI バージョンで変わりうるため、上記 patt
 
 ### 9.4. `exec run` による実行
 
-共通の実行コマンドは親設計を参照する。Copilot member は phase の `capabilities` / `proficiency` と `pm-members.yaml` の属性により自動選択される。
+共通の実行コマンドは親設計を参照する。Copilot member は phase の `capabilities` / `proficiency` と `.specdojo/agent-members.yaml` の属性により自動選択される。
 
 memberを明示して実行する場合は `--by` にnicknameを指定する。
 

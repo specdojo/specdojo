@@ -259,7 +259,7 @@ Markdown 文書の最新の継続品質評価は、プロジェクトの `<execu
 | `target`            | `kata` または `deliverable`                                                          |
 | `verdict`           | `pass` / `needs-work` / `fail`                                                       |
 | `score`             | category の重み付き総合点（0-100）                                                   |
-| `graded_at/by`      | 評価日時と `pm-members.yaml` の判定主体 nickname                                     |
+| `graded_at/by`      | 評価日時と人間・agent の合成名簿にある判定主体 nickname                              |
 | `content_hash`      | 成果物ファイル全体の SHA-256                                                         |
 | `categories`        | category 別 score                                                                    |
 | `viewpoints`        | viewpoint 別 level / score                                                           |

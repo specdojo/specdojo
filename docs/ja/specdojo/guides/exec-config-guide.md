@@ -9,7 +9,7 @@ specdojo:
 
 Exec Configuration Guide
 
-SpecDojo のエージェント実行は、`sch-strategy-<track>.yaml` の phase に作業要件を定義し、`pm-members.yaml` のエージェント定義から実行者を選択します。レートリミットなどの共通実行ポリシーは `exec-defaults.yaml` に分離します。
+SpecDojo のエージェント実行は、`sch-strategy-<track>.yaml` の phase に作業要件を定義し、`.specdojo/agent-members.yaml` のエージェント定義から実行者を選択します。人間の名簿は project ごとの `pm-members.yaml`、レートリミットなどの共通実行ポリシーは `exec-defaults.yaml` に分離します。
 
 **対象読者**
 
@@ -38,10 +38,11 @@ SpecDojo のエージェント実行は、`sch-strategy-<track>.yaml` の phase 
 | ファイル                       | 役割                                                                                     | 粒度         |
 | ------------------------------ | ---------------------------------------------------------------------------------------- | ------------ |
 | `sch-strategy-<track>.yaml`    | phase ごとの `mode`・`approach`・実行要件・任意の `agent` / `agent_pipeline`             | トラック     |
-| `pm-members.yaml`              | 誰が作業するか（identity・capabilities・proficiency・priority・任意の `stage_role`）     | プロジェクト |
+| `pm-members.yaml`              | 人間の identity・連絡先・対応 Role code                                                  | プロジェクト |
+| `.specdojo/agent-members.yaml` | agent の identity・capabilities・proficiency・priority・任意の `stage_role`              | リポジトリ   |
 | `.specdojo/exec-defaults.yaml` | provider 別起動コマンドテンプレート・rate limit 検出条件・リトライポリシー・同時実行上限 | システム     |
 
-`sch-strategy` は通常、phase に「どんな能力が必要か」を書き、`pm-members.yaml` の候補から自動選択します。provider の利用枠を計画する phase だけは `agent` で個体を指名できます。
+`sch-strategy` は通常、phase に「どんな能力が必要か」を書き、`.specdojo/agent-members.yaml` の候補から自動選択します。provider の利用枠を計画する phase だけは `agent` で個体を指名できます。
 
 ## 2. phase の実行要件
 
@@ -92,7 +93,7 @@ pipeline では `agent_pipeline.stages` を `executor`、`reporter` の順に定
 
 ## 3. エージェントの定義
 
-`pm-members.yaml` の `type: agent` メンバーには `provider`・`capabilities`・`proficiency`・`priority` を定義します。起動コマンドは member には書かず、`.specdojo/exec-defaults.yaml` の `providers.<provider>.command_template` を member 属性（`{nickname}`・`{mode}`・`{proficiency}` と `command_params` の変数）で展開して解決します。member の `command` はテンプレートで表現できない特殊構成向けの上書きとしてのみ使います。
+`.specdojo/agent-members.yaml` の member には `type: agent` と `provider`・`capabilities`・`proficiency`・`priority` を定義します。起動コマンドは通常 member には書かず、`.specdojo/exec-defaults.yaml` の `providers.<provider>.command_template` を member 属性（`{nickname}`・`{mode}`・`{proficiency}` と `command_params` の変数）で展開して解決します。member の `command` はテンプレートで表現できない特殊構成向けの上書きとしてのみ使います。
 
 ```yaml
 members:
@@ -506,7 +507,7 @@ providers:
 
 `bash` を deny 基点の許可リストにするのは、`git add` / `git commit` を含む任意コマンドを塞ぐためで、denylist（`git push` などの列挙）では不十分です。ローカル Ollama 前提のため外部送信面はもともと小さいですが、`read` の `.env` / `secrets` deny と `external_directory: deny` は維持します。
 
-**copilot**（GitHub Copilot CLI）は command のフラグで権限を制御します。deny は allow より常に優先され、`--allow-all-tools` すら上書きできます。`pm-members.yaml` には copilot member を `disabled: true` で定義済みで、起動コマンドは `providers.copilot.command_template` に定義します。有効化する際も次の構成を維持します。
+**copilot**（GitHub Copilot CLI）は command のフラグで権限を制御します。deny は allow より常に優先され、`--allow-all-tools` すら上書きできます。`.specdojo/agent-members.yaml` には copilot member を `disabled: true` で定義し、起動コマンドは `providers.copilot.command_template` に定義します。有効化する際も次の構成を維持します。
 
 ```yaml
 providers:
@@ -574,7 +575,7 @@ providers:
 - `retrofit` の `evidence_refs` は plan 本文へ読み取り専用の調査入力として展開されますが、`targets` や実践の型ディレクトリの許可には変換されません。実装エビデンスへの変更は commit 対象外です。
 - agent で HEAD に plan が無い場合、または human で HEAD に result が無い場合など、frontmatter から task 識別を復元できない場合のみ従来の除外リスト方式へフォールバックします。CLI 経由では正本となる plan / result を checkpoint するため、agent 側からこの分岐を誘発することはできません。
 - この許可リストは specdojo CLI が行う commit にのみ効くため、**agent 自身に `git commit` を許可しないこと**が全 provider 共通の前提になります。agent が exec branch 上に直接 commit すると許可リストを経由せず merge に到達します。claude は settings の allow に `git add` / `git commit` を含めません（`-p` 実行では未許可ツールは自動拒否されます）、codex は共有 `.git` が worktree 外にあるため sandbox が書き込みを遮断します、opencode は `bash` の許可リストで塞ぎます。
-- worktree 内をパス単位で制約しない provider（codex / copilot）への本命の対策であると同時に、claude / opencode に対しても provider 設定と独立した深層防御として機能します。provider 非依存の specdojo CLI 側実装であり、`pm-members.yaml` の変更を必要としません。
+- worktree 内をパス単位で制約しない provider（codex / copilot）への本命の対策であると同時に、claude / opencode に対しても provider 設定と独立した深層防御として機能します。provider 非依存の specdojo CLI 側実装です。
 
 ### 8.4. 親 runner が実行する設定と Git 状態の変更ガード
 
@@ -587,11 +588,11 @@ commit 許可リストだけでは、register 由来の除外リスト方式や�
 - `AGENTS.md`、`CLAUDE.md`、`GEMINI.md`
 - `commitlint.config.*`、`.commitlintrc*`
 - `.github/workflows/**`、`.gitlab-ci.*`、`.gitlab/ci/**`、`.circleci/**`、Azure Pipelines / Jenkins の設定
-- `pm-members.yaml`（置き場所を問わない）。名簿は agent の起動コマンド・モデル・役割の定義を含むため、agent が自身や他の agent の定義を書き換えられないようにする
+- `.specdojo/**`。この中の `agent-members.yaml` は agent の identity・起動上書き・選択属性を含むため、agent が自身や他の agent の定義を書き換えられないようにする
 
 runner は agent の各試行前後でファイル内容を比較し、差分があれば親検証と reporter を起動せず block します。worktree の commit 前には Git status と exec branch の commit 済み差分を再検査するため、register の除外リスト方式や agent 自身による commit があっても merge されません。違反時は `agent-config-write:` と対象パスを標準エラーへ出力します。この定義は `exec-defaults.yaml` や member 設定から解除・拡張できません。
 
-保護対象の候補はパスの固定定義で分類し、実際に block する対象は `agentProtectedConfigPaths()` で確定します。`.specdojo/doc-index.json` は `index build` が再生成し commit しない既知の生成物なので、リポジトリの ignore 規則にも一致する場合だけ除外します。判定には `git check-ignore --no-index` を使い、過去に追跡されていた worktree でも生成物として扱います。任意の ignore 対象を除外すると、agent が `.gitignore` と新規設定を同時に作って回避できるため、除外は既知の生成物の固定リストに限定します。Git による判定が失敗した場合や ignore 規則から外れた場合は除外せず、保護側へ倒します。agent 前後の snapshot と commit 前の再検査はこの判定を共有します。名簿は project の `base_path` 配下にあり固定のディレクトリ走査では拾えないため、snapshot には `.specdojo/specdojo.config.json` の `members_path` から解決した名簿のファイルを加えます。
+保護対象の候補はパスの固定定義で分類し、実際に block する対象は `agentProtectedConfigPaths()` で確定します。`.specdojo/doc-index.json` は `index build` が再生成し commit しない既知の生成物なので、リポジトリの ignore 規則にも一致する場合だけ除外します。判定には `git check-ignore --no-index` を使い、過去に追跡されていた worktree でも生成物として扱います。任意の ignore 対象を除外すると、agent が `.gitignore` と新規設定を同時に作って回避できるため、除外は既知の生成物の固定リストに限定します。Git による判定が失敗した場合や ignore 規則から外れた場合は除外せず、保護側へ倒します。agent 前後の snapshot と commit 前の再検査はこの判定を共有します。`pm-members.yaml` は schema により人間だけを受け付ける通常成果物なので、この保護対象には含めません。
 
 agentと親検証の子プロセスを起動する際は、`gitEnvironment()`で`GIT_DIR`、`GIT_WORK_TREE`、`GIT_COMMON_DIR`、index・object・replace関連のrepository固有環境変数を除去します。除去対象は`src/git-environment.ts`の`GIT_LOCAL_ENV_VARS`を正本とします。Vitestの全3設定も共通setupを使ってtest module読込前に同じ変数をworkerから除去するため、Git hook経由で`npm test`が起動されても、テストfixtureはcwdの一時repositoryを参照し、linked worktreeのgitdirや共有configを参照しません。
 
@@ -612,17 +613,18 @@ executor / reporter pipelineのexecutor promptは、commitとrepository設定を
 
 自動記録は edit result の申し送り節（無い場合は末尾に専用節）へ書き込み、agent が書いた申し送りは残したまま自動記録を後ろへ追加します。同じ result へ再度 block した場合は前回の自動記録を置き換えます。frontmatter と他節（`実施内容` / `変更ファイル` のプレースホルダを含む）は変更しないため、未記入 result を block として扱う判定と終了コードの契約はそのままです。記録先の result が無い run では自動記録を行わず、その旨を実行ログへ出力します。`exec trial` は exec result を持たないため、違反は trial の evidence と標準エラーにのみ残ります。
 
-### 8.5. pm-members.yaml の値検証（nickname インジェクション対策）
+### 8.5. agent-members.yaml の値検証（nickname インジェクション対策）
 
-`nickname` は `providers.<provider>.command_template` の `{nickname}` へ無エスケープで展開され、展開後のコマンドは `shell: true` で実行されます。`pm-members.yaml` を書き換えられる者が `nickname` にシェルメタ文字を仕込むと、command 起動時にコマンドインジェクションが成立し得ます。これを次の 2 層で防ぎます。
+`nickname` は `providers.<provider>.command_template` の `{nickname}` へ無エスケープで展開され、展開後のコマンドは `shell: true` で実行されます。これを次の 3 層で防ぎます。
 
-- 入力検証: `pm-members.yaml` の先頭 modeline を `pm-members.schema.yaml` へ向け、CI の `npm run validate:schema` が同じ宣言を読んで検証します。`nickname` は schema の `^[a-z0-9][a-z0-9_-]{0,62}$` に一致しない値を拒否します。
-- 実行時の深層防御: 起動コマンドを組み立てる `resolveMemberCommand`（`src/exec-agent-config.ts`）は、`{nickname}` を展開する直前に同じパターンで `nickname` を再検証し、不一致の場合は command を組み立てずに例外を送出します。schema 検証を経ていない `pm-members.yaml` を読み込んだ場合でも、不正な `nickname` が shell へ到達する前に停止します。
+- 書き込み境界: agent 定義を保護対象の `.specdojo/agent-members.yaml` に置きます。
+- 入力検証: `loadMemberRoster` が `agent-members.schema.yaml` を実行時に検証し、`nickname` は `^[a-z0-9][a-z0-9_-]{0,62}$` に一致しない値を拒否します。
+- 実行時の深層防御: 起動コマンドを組み立てる `resolveMemberCommand` は、`{nickname}` を展開する直前に同じパターンで再検証します。
 
 再検証のパターンは `pm-members.schema.yaml` の `nickname` と同一に保ちます（一方を変更したら他方も合わせます）。
 
 ## 9. 変更手順
 
-新しい作業要件を追加する場合は、まず `sch-strategy-<track>.yaml` の phase に `capabilities` / `proficiency` を追加します。必要な能力を持つ agent が `pm-members.yaml` に存在しない場合だけ、新しい agent を追加します。
+新しい作業要件を追加する場合は、まず `sch-strategy-<track>.yaml` の phase に `capabilities` / `proficiency` を追加します。必要な能力を持つ agent が `.specdojo/agent-members.yaml` に存在しない場合だけ、保護設定を変更できる人間または orchestrator が追加します。
 
 `approach: rulebook-maintenance` のような進め方の違いも phase に直接定義します。実践の型メンテナンスを通常成果物作業に暗黙で混ぜず、必要な phase として明示します。

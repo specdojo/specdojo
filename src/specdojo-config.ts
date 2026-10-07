@@ -1,8 +1,10 @@
 import { type Command } from "commander";
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
-import { basename, dirname, isAbsolute, join, posix, resolve } from "node:path";
+import { basename, dirname, isAbsolute, join, posix, relative, resolve } from "node:path";
 import dotenv from "dotenv";
 import yaml from "js-yaml";
+import Ajv2020Module from "ajv/dist/2020.js";
+import type { ValidateFunction } from "ajv";
 import type { AgentStageRole, SchedulerStrategy, TaskMode } from "./exec-types.js";
 import { runProviderScaffold, specdojoPackageRootDir } from "./exec-provider-scaffold.js";
 import {
@@ -169,7 +171,16 @@ export type MemberRoster = {
 export type SpecDojoConfig = {
   version: 1;
   current_project?: string;
+  /** Repository-wide protected agent registry. Must stay under .specdojo/. */
+  agent_members_path?: string;
   projects: Record<string, SpecDojoProjectConfig>;
+};
+
+export const DEFAULT_AGENT_MEMBERS_PATH = ".specdojo/agent-members.yaml";
+
+type AgentMemberRoster = {
+  version: number;
+  members: ProjectMember[];
 };
 
 export type ConfigLoadResult = {
@@ -453,13 +464,128 @@ export function loadMemberRoster(
     throw new Error(`members_path not found: ${fullPath}`);
   }
 
-  const raw = readFileSync(fullPath, "utf8");
-  const parsed = yaml.load(raw) as MemberRoster;
+  const parsed = readYamlFile(fullPath) as MemberRoster;
   if (!parsed || !Array.isArray(parsed.members)) {
     throw new Error(`Invalid members file: ${fullPath} (expected { members: [...] })`);
   }
 
-  return parsed;
+  const legacyAgent = parsed.members.find((member) => member?.type === "agent");
+  if (legacyAgent) {
+    throw new Error(
+      `Invalid members file: ${fullPath}: agent '${legacyAgent.nickname ?? "<unknown>"}' ` +
+        `must be moved to ${resolve(baseDir, configuredAgentMembersPath(baseDir))}. ` +
+        `Run: specdojo config migrate-members --dry-run`,
+    );
+  }
+  validateMemberFile("pm-members.schema.yaml", fullPath, parsed);
+
+  const agentMembersPath = configuredAgentMembersPath(baseDir);
+  const agentFullPath = resolve(baseDir, agentMembersPath);
+  let agents: ProjectMember[] = [];
+  if (existsSync(agentFullPath)) {
+    const agentRoster = readYamlFile(agentFullPath) as AgentMemberRoster;
+    if (!agentRoster || !Array.isArray(agentRoster.members)) {
+      throw new Error(`Invalid agent members file: ${agentFullPath} (expected { members: [...] })`);
+    }
+    const human = agentRoster.members.find((member) => member?.type === "human");
+    if (human) {
+      throw new Error(
+        `Invalid agent members file: ${agentFullPath}: human '${human.nickname ?? "<unknown>"}' is not allowed`,
+      );
+    }
+    validateMemberFile("agent-members.schema.yaml", agentFullPath, agentRoster);
+    agents = agentRoster.members;
+  }
+
+  const seen = new Set<string>();
+  for (const member of [...parsed.members, ...agents]) {
+    if (seen.has(member.nickname)) {
+      throw new Error(
+        `Duplicate member nickname '${member.nickname}' across ${fullPath} and ${agentFullPath}`,
+      );
+    }
+    seen.add(member.nickname);
+  }
+
+  return { ...parsed, members: [...parsed.members, ...agents] };
+}
+
+const Ajv2020 = Ajv2020Module.default;
+const memberSchemaValidators = new Map<string, ValidateFunction>();
+
+function readYamlFile(path: string): unknown {
+  try {
+    return yaml.load(readFileSync(path, "utf8"));
+  } catch (error) {
+    throw new Error(
+      `Invalid YAML: ${path}: ${error instanceof Error ? error.message : String(error)}`,
+    );
+  }
+}
+
+function memberSchemaValidator(schemaName: string): ValidateFunction {
+  const schemaDir = join(specdojoPackageRootDir(), "docs", "specdojo", "schemas", "v1");
+  const cacheKey = `${schemaDir}/${schemaName}`;
+  const cached = memberSchemaValidators.get(cacheKey);
+  if (cached) return cached;
+  const ajv = new Ajv2020({ allErrors: true, strict: false });
+  ajv.addFormat("email", /^[^\s@]+@[^\s@]+\.[^\s@]+$/);
+  for (const entry of ["exec-common.schema.yaml", "pm-members.schema.yaml"]) {
+    if (entry === schemaName) continue;
+    const path = join(schemaDir, entry);
+    if (existsSync(path)) ajv.addSchema(readYamlFile(path) as object, entry);
+  }
+  const validator = ajv.compile(readYamlFile(join(schemaDir, schemaName)) as object);
+  memberSchemaValidators.set(cacheKey, validator);
+  return validator;
+}
+
+function validateMemberFile(schemaName: string, path: string, value: unknown): void {
+  const validate = memberSchemaValidator(schemaName);
+  if (validate(value)) return;
+  const details = (validate.errors ?? [])
+    .map((error) => `${error.instancePath || "/"} ${error.message ?? "is invalid"}`)
+    .join("; ");
+  throw new Error(`Schema validation failed: ${path}: ${details}`);
+}
+
+function dumpMemberFile(path: string, schemaName: string, value: unknown): string {
+  const schemaPath = join(
+    specdojoPackageRootDir(),
+    "docs",
+    "specdojo",
+    "schemas",
+    "v1",
+    schemaName,
+  );
+  const schemaRef = relative(dirname(path), schemaPath).replaceAll("\\", "/");
+  return (
+    `# yaml-language-server: $schema=${schemaRef}\n` +
+    yaml.dump(value, { lineWidth: 100, noRefs: true })
+  );
+}
+
+function configuredAgentMembersPath(baseDir: string): string {
+  const configPath = resolve(baseDir, ".specdojo", "specdojo.config.json");
+  if (!existsSync(configPath)) return DEFAULT_AGENT_MEMBERS_PATH;
+  const parsed = JSON.parse(readFileSync(configPath, "utf8")) as Partial<SpecDojoConfig>;
+  const configured = parsed.agent_members_path?.trim() || DEFAULT_AGENT_MEMBERS_PATH;
+  assertProtectedAgentMembersPath(configured, configPath);
+  return configured;
+}
+
+function assertProtectedAgentMembersPath(path: string, source: string): void {
+  const normalized = path.replaceAll("\\", "/");
+  if (
+    isAbsolute(path) ||
+    !normalized.startsWith(".specdojo/") ||
+    normalized.includes("../") ||
+    !/\.ya?ml$/i.test(normalized)
+  ) {
+    throw new Error(
+      `Invalid agent_members_path in ${source}: expected a repository-relative YAML path under .specdojo/`,
+    );
+  }
 }
 
 export function assertValidActor(actor: string, roster: MemberRoster | null): void {
@@ -468,7 +594,7 @@ export function assertValidActor(actor: string, roster: MemberRoster | null): vo
   if (!known.includes(actor)) {
     throw new Error(
       `Unknown actor: "${actor}". Must be one of: ${known.join(", ")}\n` +
-        `Register the nickname in members_path file before use.`,
+        `Register a human in members_path or an agent in agent_members_path before use.`,
     );
   }
 }
@@ -515,6 +641,15 @@ export function loadConfig(): ConfigLoadResult {
     throw new Error(
       `Invalid .specdojo/specdojo.config.json: expected { version: 1, projects: { ... } }`,
     );
+  }
+
+  if (parsed.agent_members_path !== undefined) {
+    if (!isOmittedOrNonEmptyString(parsed.agent_members_path)) {
+      throw new Error(
+        `Invalid .specdojo/specdojo.config.json: agent_members_path must be a non-empty string`,
+      );
+    }
+    assertProtectedAgentMembersPath(parsed.agent_members_path, configPath);
   }
 
   for (const [projectId, project] of Object.entries(parsed.projects)) {
@@ -634,6 +769,20 @@ export function registerConfigCommands(program: Command): void {
     });
 
   cfg
+    .command("migrate-members")
+    .description("Move agent entries from project pm-members.yaml files to protected agent members")
+    .option("--project <projectId>", "Migrate only one project (default: all configured projects)")
+    .option("--dry-run", "Show planned changes without writing", false)
+    .action((opts: { project?: string; dryRun?: boolean }) => {
+      try {
+        migrateAgentMembers({ projectId: opts.project, dryRun: !!opts.dryRun });
+      } catch (error) {
+        process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
+        process.exitCode = 1;
+      }
+    });
+
+  cfg
     .command("scaffold")
     .description("Scaffold agent/settings templates for a provider")
     .requiredOption(
@@ -662,6 +811,105 @@ export function registerConfigCommands(program: Command): void {
         process.exitCode = 1;
       }
     });
+}
+
+export function migrateAgentMembers(options: {
+  projectId?: string;
+  dryRun: boolean;
+  rootDir?: string;
+}): void {
+  const rootDir = options.rootDir ? resolve(options.rootDir) : specdojoRootDir();
+  const configPath = join(rootDir, ".specdojo", "specdojo.config.json");
+  if (!existsSync(configPath)) throw new Error(`No config found: ${configPath}`);
+  const config = JSON.parse(readFileSync(configPath, "utf8")) as SpecDojoConfig;
+
+  const projectEntries: Array<[string, SpecDojoProjectConfig | undefined]> = options.projectId
+    ? [[options.projectId, config.projects[options.projectId]]]
+    : Object.entries(config.projects);
+  if (options.projectId && !config.projects[options.projectId]) {
+    throw new Error(`Unknown project: ${options.projectId}`);
+  }
+
+  const agentRelPath = config.agent_members_path?.trim() || DEFAULT_AGENT_MEMBERS_PATH;
+  assertProtectedAgentMembersPath(agentRelPath, configPath);
+  const agentPath = resolve(rootDir, agentRelPath);
+  let existingAgents: AgentMemberRoster = { version: 1, members: [] };
+  if (existsSync(agentPath)) {
+    existingAgents = readYamlFile(agentPath) as AgentMemberRoster;
+    validateMemberFile("agent-members.schema.yaml", agentPath, existingAgents);
+  }
+
+  const agentNicknames = new Set(existingAgents.members.map((member) => member.nickname));
+  const moved: ProjectMember[] = [];
+  const updates: Array<{ path: string; roster: MemberRoster; count: number }> = [];
+  for (const [projectId, project] of projectEntries) {
+    if (!project) continue;
+    const relPath = getProjectMembersPath(project);
+    if (!relPath) throw new Error(`projects.${projectId}.members_path is required`);
+    const path = resolve(rootDir, relPath);
+    if (!existsSync(path)) throw new Error(`members_path not found: ${path}`);
+    const roster = readYamlFile(path) as MemberRoster;
+    if (!roster || !Array.isArray(roster.members)) {
+      throw new Error(`Invalid members file: ${path} (expected { members: [...] })`);
+    }
+    const humans = roster.members.filter((member) => member.type !== "agent");
+    const agents = roster.members.filter((member) => member.type === "agent");
+    const humanNicknames = new Set<string>();
+    for (const human of humans) {
+      if (humanNicknames.has(human.nickname)) {
+        throw new Error(`Duplicate human nickname '${human.nickname}' while migrating ${path}`);
+      }
+      humanNicknames.add(human.nickname);
+    }
+    for (const agent of agents) {
+      if (agentNicknames.has(agent.nickname)) {
+        throw new Error(`Duplicate agent nickname '${agent.nickname}' while migrating ${path}`);
+      }
+      agentNicknames.add(agent.nickname);
+      moved.push(agent);
+    }
+    const humanRoster = { ...roster, members: humans };
+    validateMemberFile("pm-members.schema.yaml", path, humanRoster);
+    updates.push({ path, roster: humanRoster, count: agents.length });
+  }
+
+  const mergedAgents = {
+    version: existingAgents.version || 1,
+    members: [...existingAgents.members, ...moved],
+  } satisfies AgentMemberRoster;
+  validateMemberFile("agent-members.schema.yaml", agentPath, mergedAgents);
+  for (const update of updates) {
+    for (const human of update.roster.members) {
+      if (agentNicknames.has(human.nickname)) {
+        throw new Error(
+          `Duplicate member nickname '${human.nickname}' across ${update.path} and ${agentPath}`,
+        );
+      }
+    }
+  }
+
+  const verb = options.dryRun ? "Would move" : "Moved";
+  for (const update of updates) {
+    process.stdout.write(`${verb} ${update.count} agent member(s) from ${update.path}\n`);
+  }
+  process.stdout.write(
+    `${options.dryRun ? "Would write" : "Wrote"} ${mergedAgents.members.length} agent member(s) to ${agentPath}\n`,
+  );
+  if (options.dryRun) return;
+
+  for (const update of updates) {
+    writeFileSync(
+      update.path,
+      dumpMemberFile(update.path, "pm-members.schema.yaml", update.roster),
+      "utf8",
+    );
+  }
+  mkdirSync(dirname(agentPath), { recursive: true });
+  writeFileSync(
+    agentPath,
+    dumpMemberFile(agentPath, "agent-members.schema.yaml", mergedAgents),
+    "utf8",
+  );
 }
 
 export function registerProjectCommands(program: Command): void {

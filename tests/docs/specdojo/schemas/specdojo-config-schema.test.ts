@@ -62,6 +62,30 @@ describe("specdojo-config.schema.yaml", () => {
     expect(valid).toBe(true);
   });
 
+  it("accepts only protected repository-relative agent member paths", () => {
+    expect(
+      validate({
+        version: 1,
+        agent_members_path: ".specdojo/custom-agents.yaml",
+        projects: { "prj-0001": {} },
+      }),
+    ).toBe(true);
+    expect(
+      validate({
+        version: 1,
+        agent_members_path: "docs/agent-members.yaml",
+        projects: { "prj-0001": {} },
+      }),
+    ).toBe(false);
+    expect(
+      validate({
+        version: 1,
+        agent_members_path: ".specdojo/../agent-members.yaml",
+        projects: { "prj-0001": {} },
+      }),
+    ).toBe(false);
+  });
+
   it("rejects a repository name outside [a-z0-9-]", () => {
     expect(validate(configWithRepos([{ name: "App1", path: "../app1" }]))).toBe(false);
     expect(validate.errors?.map((error) => error.instancePath)).toContain(

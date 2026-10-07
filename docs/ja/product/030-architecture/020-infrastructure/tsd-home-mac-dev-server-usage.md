@@ -206,7 +206,7 @@ tmux new-session -A -s specdojo
 specdojo exec run --auto --parallel 3
 ```
 
-agent の責務分担、`pm-members.yaml`、実行コマンド、モデル、認証、権限は次を正本とする。認証状態は devcontainer の named volume に保存し、API key や token をリポジトリや設定ファイルに記載しない。
+agent の責務分担、`.specdojo/agent-members.yaml`、実行コマンド、モデル、認証、権限は次を正本とする。認証状態は devcontainer の named volume に保存し、API key や token をリポジトリや設定ファイルに記載しない。
 
 - [[sysd-agent-settings|エージェント共通設定]]
 - [[sysd-opencode-agent-settings|OpenCode エージェント設定]]

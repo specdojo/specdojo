@@ -140,7 +140,7 @@ function buildTicket(): string {
   ].join("\n");
 }
 
-// executor は worktree 内に成果物を1件書き、保護対象マーカーがあれば pm-members.yaml も変更する。
+// executor は worktree 内に成果物を1件書き、保護対象マーカーがあれば agent-members.yaml も変更する。
 // reporter は失敗マーカーがある間だけ失敗するため、各再開段と保護機構の block を再現できる。
 function fakeAgentScript(markerPath: string, protectedWriteMarkerPath: string): string {
   return `
@@ -158,7 +158,7 @@ const prompt = readFileSync(0, "utf8");
 if (role === "executor") {
   writeFileSync(${JSON.stringify(ARTIFACT_NAME)}, "# executor artifact\\n", "utf8");
   if (existsSync(${JSON.stringify(protectedWriteMarkerPath)})) {
-    const membersPath = ${JSON.stringify(`${PROJECT_BASE}/pm-members.yaml`)};
+    const membersPath = ".specdojo/agent-members.yaml";
     const members = readFileSync(membersPath, "utf8");
     writeFileSync(membersPath, members.replace("    priority: 1", "    priority: 2"), "utf8");
   }
@@ -267,8 +267,22 @@ function withRepo(fn: (fixture: Fixture) => Promise<void> | void): Promise<void>
       writeFileSync(
         join(root, PROJECT_BASE, "pm-members.yaml"),
         [
+          "id: test:pm-members",
+          "type: project",
+          "status: draft",
+          "title: Members",
+          "rulebook: specdojo:pm-members-rulebook",
           "version: 1",
           "project_id: test",
+          "members: []",
+          "",
+        ].join("\n"),
+        "utf8",
+      );
+      writeFileSync(
+        join(root, ".specdojo", "agent-members.yaml"),
+        [
+          "version: 1",
           "members:",
           "  - nickname: exec-1",
           "    display_name: exec-1",
@@ -367,7 +381,7 @@ async function runWithProtectedExecutor(
 }
 
 function setExecutorPriority(root: string, priority: number): void {
-  const membersPath = join(root, PROJECT_BASE, "pm-members.yaml");
+  const membersPath = join(root, ".specdojo", "agent-members.yaml");
   const members = readFileSync(membersPath, "utf8");
   writeFileSync(
     membersPath,
@@ -648,10 +662,10 @@ describe("exec run --register --worktree --resume", () => {
         expect(readFileSync(join(root, TICKET_REL), "utf8")).toContain("item_status: waiting");
         const worktreePath = worktreePathFor(root) ?? "";
         expect(worktreePath).not.toBe("");
-        expect(readFileSync(join(worktreePath, PROJECT_BASE, "pm-members.yaml"), "utf8")).toContain(
-          "    priority: 2",
-        );
-        expect(readFileSync(join(root, PROJECT_BASE, "pm-members.yaml"), "utf8")).toContain(
+        expect(
+          readFileSync(join(worktreePath, ".specdojo", "agent-members.yaml"), "utf8"),
+        ).toContain("    priority: 2");
+        expect(readFileSync(join(root, ".specdojo", "agent-members.yaml"), "utf8")).toContain(
           "    priority: 1",
         );
         const firstRunId = readdirSync(
@@ -677,7 +691,7 @@ describe("exec run --register --worktree --resume", () => {
         // 解消されるため、再実行した executor は保護対象を書き換えていないと判定される。
         rmSync(protectedWriteMarkerPath, { force: true });
         setExecutorPriority(root, 2);
-        git(root, "add", `${PROJECT_BASE}/pm-members.yaml`);
+        git(root, "add", ".specdojo/agent-members.yaml");
         git(root, "commit", "-m", "apply protected config as a human");
 
         process.exitCode = undefined;
@@ -695,7 +709,7 @@ describe("exec run --register --worktree --resume", () => {
 
         expect(process.exitCode ?? 0).toBe(0);
         expect(readFileSync(join(root, TICKET_REL), "utf8")).toContain("item_status: review");
-        expect(readFileSync(join(root, PROJECT_BASE, "pm-members.yaml"), "utf8")).toContain(
+        expect(readFileSync(join(root, ".specdojo", "agent-members.yaml"), "utf8")).toContain(
           "    priority: 2",
         );
         expect(worktreePathFor(root)).toBeNull();
@@ -723,7 +737,7 @@ describe("exec run --register --worktree --resume", () => {
 
         rmSync(protectedWriteMarkerPath, { force: true });
         setExecutorPriority(root, 3);
-        git(root, "add", `${PROJECT_BASE}/pm-members.yaml`);
+        git(root, "add", ".specdojo/agent-members.yaml");
         git(root, "commit", "-m", "apply different protected config as a human");
 
         stderr.length = 0;
@@ -745,10 +759,10 @@ describe("exec run --register --worktree --resume", () => {
         expect(readFileSync(join(root, TICKET_REL), "utf8")).toContain("item_status: waiting");
         expect(worktreePathFor(root)).toBe(worktreePath);
         expect(git(worktreePath, "rev-parse", "HEAD")).toBe(before);
-        expect(readFileSync(join(worktreePath, PROJECT_BASE, "pm-members.yaml"), "utf8")).toContain(
-          "    priority: 2",
-        );
-        expect(readFileSync(join(root, PROJECT_BASE, "pm-members.yaml"), "utf8")).toContain(
+        expect(
+          readFileSync(join(worktreePath, ".specdojo", "agent-members.yaml"), "utf8"),
+        ).toContain("    priority: 2");
+        expect(readFileSync(join(root, ".specdojo", "agent-members.yaml"), "utf8")).toContain(
           "    priority: 3",
         );
         expect(git(worktreePath, "stash", "list")).toBe("");

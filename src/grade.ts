@@ -545,7 +545,7 @@ function loadViewpointsIfConfigured(
 
 export function resolveGradeActor(actor: string, roster: MemberRoster | null): string {
   const normalized = actor.trim();
-  if (!normalized) throw new Error("--by must be a non-empty pm-members.yaml nickname");
+  if (!normalized) throw new Error("--by must be a non-empty agent-members.yaml nickname");
   if (!roster) throw new Error("members_path is required for grade apply --by");
   assertValidActor(normalized, roster);
   if (roster.members.filter((member) => member.nickname === normalized).length !== 1) {
@@ -3676,7 +3676,7 @@ export function registerGradeCommand(program: Command): void {
       "--from <path>",
       "GradeSubmission JSON produced by an LLM reporter; omit to convert --analysis-from mechanically",
     )
-    .requiredOption("--by <nickname>", "Grading agent nickname from pm-members.yaml")
+    .requiredOption("--by <nickname>", "Grading agent nickname from agent-members.yaml")
     .option(
       "--analysis-from <path>",
       "Executor analysis converted to GradeSubmission, or used to verify --from fidelity",

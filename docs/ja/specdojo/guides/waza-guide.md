@@ -183,7 +183,7 @@ specdojo schedule build --project prj-0001 --track launch --force
 # 5. 実行状態、Ready、CPMを生成する
 specdojo exec refresh --project prj-0001
 
-# 6. pm-members.yaml と provider 設定を用意して Readyタスクを実行する
+# 6. `.specdojo/agent-members.yaml` と provider 設定を用意して Readyタスクを実行する
 specdojo exec run --project prj-0001 --auto --parallel 5
 ```
 

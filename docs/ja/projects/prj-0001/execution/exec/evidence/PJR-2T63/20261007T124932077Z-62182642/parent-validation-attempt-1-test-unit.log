@@ -1,0 +1,366 @@
+parent validation: test-unit
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.3.0 test:unit
+> vitest run --config vitest.unit.config.ts
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv4.1.11 [39m[90m/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2T63[39m
+
+ [32m✓[39m tests/src/grade.test.ts [2m([22m[2m69 tests[22m[2m)[22m[33m 1023[2mms[22m[39m
+ [32m✓[39m tests/src/exec-plans.test.ts [2m([22m[2m66 tests[22m[2m)[22m[33m 1108[2mms[22m[39m
+ [32m✓[39m tests/src/exec-results.test.ts [2m([22m[2m38 tests[22m[2m)[22m[33m 668[2mms[22m[39m
+ [32m✓[39m tests/src/register-commands.test.ts [2m([22m[2m42 tests[22m[2m)[22m[33m 1527[2mms[22m[39m
+Updated ticket status → ready: /tmp/specdojo-ticket-shDSWa/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-WQZUu0/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-RdO9j0/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-wmZote/pjr-0001-topic.md
+Warning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-q3OaRM/pjr-0001-topic.md
+Updated ticket status → deprecated: /tmp/specdojo-ticket-jADueH/pjr-0001-topic.md
+ [32m✓[39m tests/src/register.test.ts [2m([22m[2m58 tests[22m[2m)[22m[33m 1099[2mms[22m[39m
+ [32m✓[39m tests/src/exec-run-inplace.test.ts [2m([22m[2m16 tests[22m[2m)[22m[33m 796[2mms[22m[39m
+ [32m✓[39m tests/src/exec-events.test.ts [2m([22m[2m84 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+ [32m✓[39m tests/src/doc-index.test.ts [2m([22m[2m28 tests[22m[2m)[22m[33m 4304[2mms[22m[39m
+     [33m[2m✓[22m[39m 個票の part_of と pjr-index wikilink が生成された登録台帳へ解決する [33m 4270[2mms[22m[39m
+ [32m✓[39m tests/src/schedule-build.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+ [32m✓[39m tests/src/exec-run.test.ts [2m([22m[2m46 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m tests/src/exec-provider-scaffold.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 100[2mms[22m[39m
+ [32m✓[39m tests/src/exec-register-resume.test.ts [2m([22m[2m29 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+ [32m✓[39m tests/src/catalog-plan.test.ts [2m([22m[2m42 tests[22m[2m)[22m[32m 110[2mms[22m[39m
+ [32m✓[39m tests/src/dashboard.test.ts [2m([22m[2m27 tests[22m[2m)[22m[33m 391[2mms[22m[39m
+before
+  
+  
+docs/selected.md
+ [32m✓[39m tests/src/job.test.ts [2m([22m[2m23 tests[22m[2m)[22m[32m 156[2mms[22m[39m
+ [32m✓[39m tests/src/kata.test.ts [2m([22m[2m31 tests[22m[2m)[22m[32m 80[2mms[22m[39m
+ [32m✓[39m tests/tools/grade-per-document.test.ts [2m([22m[2m31 tests[22m[2m)[22m[33m 8837[2mms[22m[39m
+     [33m[2m✓[22m[39m runs all three stages for one document and skips it on resume [33m 545[2mms[22m[39m
+     [33m[2m✓[22m[39m routes deliverables through deliverable grade plans and apply [33m 545[2mms[22m[39m
+     [33m[2m✓[22m[39m exits with 1 and reports how to resume when a stage failure leaves a document incomplete [33m 353[2mms[22m[39m
+     [33m[2m✓[22m[39m exits with 0 when no document is left incomplete [33m 526[2mms[22m[39m
+     [33m[2m✓[22m[39m retries a failed stage in a new run without repeating completed stages [33m 796[2mms[22m[39m
+     [33m[2m✓[22m[39m excludes an exhausted stage from retries and reports it [33m 1092[2mms[22m[39m
+     [33m[2m✓[22m[39m does not reselect an exhausted ungraded document through the filter union [33m 777[2mms[22m[39m
+     [33m[2m✓[22m[39m retries only rejected translations one at a time [33m 302[2mms[22m[39m
+     [33m[2m✓[22m[39m tries a rejected translation only once before keeping the canonical fallback [33m 307[2mms[22m[39m
+     [33m[2m✓[22m[39m reruns the executor once when grade apply rejects the executor markers [33m 400[2mms[22m[39m
+     [33m[2m✓[22m[39m leaves the current stage incomplete on rate limit and resumes it [33m 589[2mms[22m[39m
+     [33m[2m✓[22m[39m reuses the initial filtered selection when resuming [33m 623[2mms[22m[39m
+ [32m✓[39m tests/src/exec-parent-validation.test.ts [2m([22m[2m30 tests[22m[2m)[22m[32m 250[2mms[22m[39m
+ [32m✓[39m tests/src/register-history.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 57[2mms[22m[39m
+ [32m✓[39m tests/src/register-item.test.ts [2m([22m[2m35 tests[22m[2m)[22m[32m 105[2mms[22m[39m
+ [32m✓[39m tests/src/exec-reporter.test.ts [2m([22m[2m24 tests[22m[2m)[22m[32m 61[2mms[22m[39m
+ [32m✓[39m tests/src/grade-triggers.test.ts [2m([22m[2m19 tests[22m[2m)[22m[32m 168[2mms[22m[39m
+ [32m✓[39m tests/src/catalog-build.test.ts [2m([22m[2m36 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m tests/src/catalog-generate.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 73[2mms[22m[39m
+ [32m✓[39m tests/src/review-plan.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 134[2mms[22m[39m
+ [32m✓[39m tests/src/exec-agent-protected-config.test.ts [2m([22m[2m45 tests[22m[2m)[22m[32m 171[2mms[22m[39m
+ [32m✓[39m tests/src/schedule-strategy-generate.test.ts [2m([22m[2m10 tests[22m[2m)[22m[33m 404[2mms[22m[39m
+ [32m✓[39m tests/src/exec-register.test.ts [2m([22m[2m36 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32m✓[39m tests/src/specdojo-config-repos.test.ts [2m([22m[2m25 tests[22m[2m)[22m[32m 49[2mms[22m[39m
+ [32m✓[39m tests/src/routine.test.ts [2m([22m[2m24 tests[22m[2m)[22m[32m 71[2mms[22m[39m
+ [32m✓[39m tests/src/exec-evidence.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 41[2mms[22m[39m
+ [32m✓[39m tests/src/exec-agent-config.test.ts [2m([22m[2m25 tests[22m[2m)[22m[32m 247[2mms[22m[39m
+ [32m✓[39m tests/src/timeline-build.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+ [32m✓[39m tests/src/exec-pipeline-state.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 91[2mms[22m[39m
+ [32m✓[39m tests/src/exec-worktree.test.ts [2m([22m[2m24 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+[90mstdout[2m | tests/packages/docs-site/gen-mermaid-svg.test.ts[2m > [22m[2mMermaid SVG generation cache[2m > [22m[2mredraws SVG when mermaid-cli version or config changes, reuses otherwise
+[22m[39m🌀 Generating mermaid SVG from: ../../../../tmp/specdojo-mermaid-cache-tOnRsI/docs/ja/test.md
+🌀 Generating mermaid SVG: ../../../../tmp/specdojo-mermaid-cache-tOnRsI/public/mermaid/147b6cb4.svg
+🌀 Generating mermaid SVG from: ../../../../tmp/specdojo-mermaid-cache-tOnRsI/docs/ja/test.md
+
+[90mstdout[2m | tests/packages/docs-site/gen-mermaid-svg.test.ts[2m > [22m[2mMermaid SVG generation cache[2m > [22m[2mredraws SVG when mermaid-cli version or config changes, reuses otherwise
+[22m[39m🌀 Generating mermaid SVG from: ../../../../tmp/specdojo-mermaid-cache-tOnRsI/docs/ja/test.md
+🌀 Generating mermaid SVG: ../../../../tmp/specdojo-mermaid-cache-tOnRsI/public/mermaid/4b643ccb.svg
+🧹 Removing orphan mermaid SVG: 147b6cb4.svg
+
+[90mstdout[2m | tests/packages/docs-site/gen-mermaid-svg.test.ts[2m > [22m[2mMermaid SVG generation cache[2m > [22m[2mredraws SVG when mermaid-cli version or config changes, reuses otherwise
+[22m[39m🌀 Generating mermaid SVG from: ../../../../tmp/specdojo-mermaid-cache-tOnRsI/docs/ja/test.md
+🌀 Generating mermaid SVG: ../../../../tmp/specdojo-mermaid-cache-tOnRsI/public/mermaid/6a0876a7.svg
+🧹 Removing orphan mermaid SVG: 4b643ccb.svg
+
+[90mstdout[2m | tests/packages/docs-site/gen-mermaid-svg.test.ts[2m > [22m[2mMermaid SVG generation cache[2m > [22m[2mreuses the file-level manifest cache when version and config are unchanged
+[22m[39m🔍 Scanning docs for mermaid code blocks...
+🌀 Generating mermaid SVG from: ../../../../tmp/specdojo-mermaid-cache-nzp86T/docs/ja/test.md
+🌀 Generating mermaid SVG: ../../../../tmp/specdojo-mermaid-cache-nzp86T/public/mermaid/147b6cb4.svg
+✅ Mermaid SVG generation done.
+
+[90mstdout[2m | tests/packages/docs-site/gen-mermaid-svg.test.ts[2m > [22m[2mMermaid SVG generation cache[2m > [22m[2mreuses the file-level manifest cache when version and config are unchanged
+[22m[39m🔍 Scanning docs for mermaid code blocks...
+✅ Mermaid SVG generation done.
+
+[90mstdout[2m | tests/packages/docs-site/gen-mermaid-svg.test.ts[2m > [22m[2mMermaid SVG generation cache[2m > [22m[2mredraws despite a matching manifest entry when the config changes
+[22m[39m🔍 Scanning docs for mermaid code blocks...
+🌀 Generating mermaid SVG from: ../../../../tmp/specdojo-mermaid-cache-YAzlpv/docs/ja/test.md
+🌀 Generating mermaid SVG: ../../../../tmp/specdojo-mermaid-cache-YAzlpv/public/mermaid/147b6cb4.svg
+✅ Mermaid SVG generation done.
+
+[90mstdout[2m | tests/packages/docs-site/gen-mermaid-svg.test.ts[2m > [22m[2mMermaid SVG generation cache[2m > [22m[2mredraws despite a matching manifest entry when the config changes
+[22m[39m🔍 Scanning docs for mermaid code blocks...
+🌀 Generating mermaid SVG from: ../../../../tmp/specdojo-mermaid-cache-YAzlpv/docs/ja/test.md
+🌀 Generating mermaid SVG: ../../../../tmp/specdojo-mermaid-cache-YAzlpv/public/mermaid/4b643ccb.svg
+🧹 Removing orphan mermaid SVG: 147b6cb4.svg
+✅ Mermaid SVG generation done.
+
+[90mstdout[2m | tests/packages/docs-site/gen-mermaid-svg.test.ts[2m > [22m[2mMermaid SVG generation cache[2m > [22m[2mredraws despite a matching manifest entry when the mermaid-cli version changes
+[22m[39m🔍 Scanning docs for mermaid code blocks...
+🌀 Generating mermaid SVG from: ../../../../tmp/specdojo-mermaid-cache-xAlhpi/docs/ja/test.md
+🌀 Generating mermaid SVG: ../../../../tmp/specdojo-mermaid-cache-xAlhpi/public/mermaid/147b6cb4.svg
+✅ Mermaid SVG generation done.
+
+[90mstdout[2m | tests/packages/docs-site/gen-mermaid-svg.test.ts[2m > [22m[2mMermaid SVG generation cache[2m > [22m[2mredraws despite a matching manifest entry when the mermaid-cli version changes
+[22m[39m🔍 Scanning docs for mermaid code blocks...
+🌀 Generating mermaid SVG from: ../../../../tmp/specdojo-mermaid-cache-xAlhpi/docs/ja/test.md
+🌀 Generating mermaid SVG: ../../../../tmp/specdojo-mermaid-cache-xAlhpi/public/mermaid/e4c1c6ef.svg
+🧹 Removing orphan mermaid SVG: 147b6cb4.svg
+✅ Mermaid SVG generation done.
+
+[90mstdout[2m | tests/packages/docs-site/gen-mermaid-svg.test.ts[2m > [22m[2mMermaid SVG generation cache[2m > [22m[2mredraws when a previous manifest entry lacks the version and config hash
+[22m[39m🔍 Scanning docs for mermaid code blocks...
+🌀 Generating mermaid SVG from: ../../../../tmp/specdojo-mermaid-cache-ciPU6R/docs/ja/test.md
+🌀 Generating mermaid SVG: ../../../../tmp/specdojo-mermaid-cache-ciPU6R/public/mermaid/147b6cb4.svg
+🧹 Removing orphan mermaid SVG: 1234abcd.svg
+✅ Mermaid SVG generation done.
+
+[90mstdout[2m | tests/packages/docs-site/gen-mermaid-svg.test.ts[2m > [22m[2mMermaid SVG generation basics[2m > [22m[2mremoves a missing Markdown entry from the manifest without throwing
+[22m[39m🧹 Removing orphan mermaid SVG: 1234abcd.svg
+
+ [32m✓[39m tests/packages/docs-site/gen-mermaid-svg.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 75[2mms[22m[39m
+ [32m✓[39m tests/src/catalog-merge.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 46[2mms[22m[39m
+ [32m✓[39m tests/src/exec-schedule-ready.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32m✓[39m tests/src/catalog-plan-command.test.ts [2m([22m[2m10 tests[22m[2m)[22m[33m 631[2mms[22m[39m
+ [32m✓[39m tests/src/exec-deliverable.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 180[2mms[22m[39m
+ [32m✓[39m tests/src/grade-result.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m tests/packages/docs-lint/remark-md-content.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 55[2mms[22m[39m
+ [32m✓[39m tests/src/catalog-scaffold.test.ts [2m([22m[2m65 tests[22m[2m)[22m[33m 1863[2mms[22m[39m
+ [32m✓[39m tests/src/schedule-command.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+ [32m✓[39m tests/src/catalog-index.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 136[2mms[22m[39m
+ [32m✓[39m tests/src/review-grade.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32m✓[39m tests/src/exec-run-resolve-command.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m tests/src/dist-freshness.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 94[2mms[22m[39m
+ [32m✓[39m tests/src/kata-command.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 80[2mms[22m[39m
+ [32m✓[39m tests/src/exec-trial.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 39[2mms[22m[39m
+ [32m✓[39m tests/src/exec-run-lock.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 106[2mms[22m[39m
+ [32m✓[39m tests/src/exec-register-plan-escape.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 294[2mms[22m[39m
+ [32m✓[39m tests/src/exec-protection-handoff.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+Would move 1 agent member(s) from /tmp/specdojo-members-paj9fh/project/pm-members.yaml
+Would write 1 agent member(s) to /tmp/specdojo-members-paj9fh/.specdojo/agent-members.yaml
+Moved 1 agent member(s) from /tmp/specdojo-members-paj9fh/project/pm-members.yaml
+Wrote 1 agent member(s) to /tmp/specdojo-members-paj9fh/.specdojo/agent-members.yaml
+ [32m✓[39m tests/src/specdojo-config.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 66[2mms[22m[39m
+ [32m✓[39m tests/src/exec-strategy.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m tests/src/exec-schedule-cpm.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m tests/src/exec.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m tests/src/exec-event-msg-default.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 46[2mms[22m[39m
+ [32m✓[39m tests/src/register-date.test.ts [2m([22m[2m27 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [31m❯[39m tests/src/exec-agent-config-command.test.ts [2m([22m[2m17 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[32m 7[2mms[22m[39m
+     [32m✓[39m expands built-in placeholders from member attributes[32m 1[2mms[22m[39m
+     [32m✓[39m expands the same template differently per member mode[32m 0[2mms[22m[39m
+     [32m✓[39m expands the report profile for a reporter member[32m 0[2mms[22m[39m
+     [32m✓[39m expands by_proficiency variables for the member's proficiency[32m 0[2mms[22m[39m
+     [32m✓[39m expands by_mode variables for the member's mode[32m 0[2mms[22m[39m
+     [32m✓[39m supports report-specific command variables without changing task modes[32m 0[2mms[22m[39m
+     [32m✓[39m prefers the member-level command override over the provider template[32m 0[2mms[22m[39m
+     [32m✓[39m returns undefined when the member has no override and the provider has no template[32m 0[2mms[22m[39m
+     [32m✓[39m throws with member context when a placeholder stays unresolved[32m 0[2mms[22m[39m
+     [32m✓[39m resolves command variables by nickname, proficiency, then mode[32m 0[2mms[22m[39m
+     [32m✓[39m rejects a nickname carrying shell metacharacters before building a command[32m 0[2mms[22m[39m
+[31m     [31m×[31m rejects a nickname that violates the schema pattern[39m[32m 3[2mms[22m[39m
+     [32m✓[39m throws when command_params redefines a built-in variable[32m 0[2mms[22m[39m
+     [32m✓[39m throws when by_nickname redefines a built-in variable[32m 0[2mms[22m[39m
+     [32m✓[39m accepts a member with a command override and no template[32m 0[2mms[22m[39m
+     [32m✓[39m accepts a member whose provider declares a command_template[32m 0[2mms[22m[39m
+     [32m✓[39m rejects a member with neither an override nor a provider template[32m 0[2mms[22m[39m
+ [32m✓[39m tests/src/yaml-pages.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m tests/src/exec-schedule-calendar.test.ts [2m([22m[2m27 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m tests/src/catalog-plan-generate.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 21[2mms[22m[39m
+ [32m✓[39m tests/src/git-environment-isolation.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 587[2mms[22m[39m
+     [33m[2m✓[22m[39m TypeScript から git を起動する箇所はすべて gitEnvironment() を使う [33m 581[2mms[22m[39m
+ [32m✓[39m tests/src/exec-release-all-blocked.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 35[2mms[22m[39m
+ [32m✓[39m tests/src/exec-reopen-command.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 70[2mms[22m[39m
+ [32m✓[39m tests/src/register-migrate-timestamps.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+ [32m✓[39m tests/devcontainer-scaffold.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m tests/src/register-event-merge.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+ [32m✓[39m tests/src/template-frontmatter.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+ [32m✓[39m tests/src/catalog-based-on.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32m✓[39m tests/src/exec-register-multiple-ids.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m tests/src/register-migration.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 94[2mms[22m[39m
+ [32m✓[39m tests/src/template-resolution.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32m✓[39m tests/src/specdojo-config-command.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+Wrote agent stdout: /tmp/specdojo-agent-command-dRMsLS/outputs/response.txt
+Wrote agent stdout: /tmp/specdojo-agent-command-jVmKfL/outputs/partial.txt
+ [32m✓[39m tests/src/agent-command.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 87[2mms[22m[39m
+ [32m✓[39m tests/src/exec-plans-grade-findings.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m tests/src/exec-run-parent-validation-gate.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 36[2mms[22m[39m
+ [32m✓[39m tests/src/exec-schedule-hash.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m tests/docs/specdojo/schemas/sch-strategy-schema.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32m✓[39m tests/src/exec-schedule-progress.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m tests/src/viewpoint-document-kinds-check.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 46[2mms[22m[39m
+ [32m✓[39m tests/src/exec-project.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m tests/src/exec-shared.test.ts [2m([22m[2m26 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m tests/src/exec-run-downgrade-unfilled.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m tests/tools/build-if-stale.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m tests/src/exec-task-repos.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m tests/src/exec-repo-trace.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32m✓[39m tests/src/exec-format.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 65[2mms[22m[39m
+ [32m✓[39m tests/tools/validate-orchestrator-sync.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 29[2mms[22m[39m
+ [32m✓[39m tests/src/exec-schedule-gantt-chart-scope.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [31m❯[39m tests/src/cli-verb-taxonomy.test.ts [2m([22m[2m7 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[32m 10[2mms[22m[39m
+[31m     [31m×[31m offers provider setup under config while retaining the exec compatibility entry[39m[32m 6[2mms[22m[39m
+     [32m✓[39m registers deliverable scaffold and removes catalog generate[32m 1[2mms[22m[39m
+     [32m✓[39m registers exec refresh and removes exec build[32m 1[2mms[22m[39m
+     [32m✓[39m registers the grade list/plan/apply/validate workflow[32m 1[2mms[22m[39m
+     [32m✓[39m accepts the grading reference on grade apply[32m 0[2mms[22m[39m
+     [32m✓[39m offers reference selection as an opt-in on grade plan[32m 0[2mms[22m[39m
+     [32m✓[39m offers stored-result filters on every grade workflow command[32m 0[2mms[22m[39m
+ [32m✓[39m tests/src/register-view-order.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m tests/src/exec-run-resolve-claiming-actor.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m tests/src/exec-run-lock-command.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m tests/src/exec-slot-lock.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 90[2mms[22m[39m
+ [32m✓[39m tests/src/exec-limit.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m tests/packages/docs-lint/rulebook-schema-enums.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32m✓[39m tests/src/exec-schedule-gantt-chart-render.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+result-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint
+ [32m✓[39m tests/src/exec-worktree-ops.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 1122[2mms[22m[39m
+     [33m[2m✓[22m[39m commit 前に result の Markdown 記法違反を明示的な理由で block する [33m 548[2mms[22m[39m
+     [33m[2m✓[22m[39m prettier が強調へ書き換えた再現文（PJR-19HX）を MD049 として block する [33m 310[2mms[22m[39m
+ [32m✓[39m tests/src/exec-scheduler-command.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 49[2mms[22m[39m
+ [32m✓[39m tests/docs/specdojo/schemas/specdojo-config-schema.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m tests/src/specdojo-gitignore.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+ [32m✓[39m tests/src/exec-schedule-validation.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m tests/packages/docs-lint/remark-frontmatter-ajv2020.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 46[2mms[22m[39m
+ [32m✓[39m tests/src/register-migrate-events.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m tests/packages/docs-lint/markdownlint-rule-no-chinese-glyphs.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 79[2mms[22m[39m
+ [32m✓[39m tests/src/exec-run-worker-pool.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m tests/packages/docs-lint/glossary-references.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m tests/packages/docs-lint/history-links.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32m✓[39m tests/docs/specdojo/schemas/pm-members-schema.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m tests/src/agent-response.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m tests/tools/protect-main-push.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m tests/src/spawn-self.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m tests/src/package-paths.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m tests/src/catalog-paths.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+ [32m✓[39m tests/vscode-markdown-table.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+ [32m✓[39m tests/src/exec-shared-display-width.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+ [32m✓[39m tests/src/practice-id.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m tests/src/specdojo-config-env.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 2[2mms[22m[39m
+ [32m✓[39m tests/packages/docs-lint/remark-no-unescaped-angle-placeholder.test.ts [2m([22m[2m14 tests[22m[2m)[22m[33m 10698[2mms[22m[39m
+     [33m[2m✓[22m[39m produces no false positives on the existing docs/ markdown [33m 10672[2mms[22m[39m
+
+[2m Test Files [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m119 passed[39m[22m[90m (121)[39m
+[2m      Tests [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m1890 passed[39m[22m[90m (1892)[39m
+[2m   Start at [22m 22:16:11
+[2m   Duration [22m 38.12s[2m (transform 2.14s, setup 584ms, import 19.59s, tests 39.60s, environment 7ms)[22m
+
+
+
+--- stderr ---
+error: unknown option '--reserve'
+error: unknown option '--local'
+error: unknown option '--strict-sync'
+error: unknown option '--integration-branch'
+error: unknown option '--integration-worktree'
+reporter failedproblem
+[90mstderr[2m | tests/src/schedule-strategy-generate.test.ts[2m > [22m[2mstrategy generator[2m > [22m[2mDCT・Timeline・intent・grade から混在 profile、owner、gate、依存を生成する
+[22m[39munknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+
+[90mstderr[2m | tests/src/schedule-strategy-generate.test.ts[2m > [22m[2mstrategy generator[2m > [22m[2m既存 scope の local_ids を保ち、選択した成果物だけの strategy を再生成する
+[22m[39munknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+
+[90mstderr[2m | tests/src/schedule-strategy-generate.test.ts[2m > [22m[2mstrategy generator[2m > [22m[2m既存 scope の local_ids がカタログに存在しない場合は停止する
+[22m[39munknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+
+[90mstderr[2m | tests/src/schedule-strategy-generate.test.ts[2m > [22m[2mstrategy generator[2m > [22m[2mowner を解決できない場合は推測せず停止する
+[22m[39munknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+
+[90mstderr[2m | tests/src/schedule-strategy-generate.test.ts[2m > [22m[2mstrategy generator[2m > [22m[2mintent 宣言が不足する場合は候補を返さない
+[22m[39munknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+
+[90mstderr[2m | tests/src/schedule-strategy-generate.test.ts[2m > [22m[2mstrategy generator[2m > [22m[2mschedule strategy generate CLI が正準パスへ strategy を生成する
+[22m[39munknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+
+[90mstderr[2m | tests/packages/docs-site/gen-mermaid-svg.test.ts[2m > [22m[2mMermaid SVG generation basics[2m > [22m[2mremoves a missing Markdown entry from the manifest without throwing
+[22m[39m[mermaid] skipping missing or generated Markdown: ja/removed.md
+
+[90mstderr[2m | tests/packages/docs-site/gen-mermaid-svg.test.ts[2m > [22m[2mMermaid SVG generation basics[2m > [22m[2mignores generated Markdown and removes any stale manifest entry
+[22m[39m[mermaid] skipping missing or generated Markdown: ja/generated/invalid.md
+
+WARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 2 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/src/cli-verb-taxonomy.test.ts[2m > [22mCLI generation verb taxonomy[2m > [22moffers provider setup under config while retaining the exec compatibility entry
+[31m[1mAssertionError[22m: expected [ 'init', 'migrate-members', …(1) ] to deeply equal [ 'init', 'scaffold' ][39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[2m  [[22m
+[2m    "init",[22m
+[31m+   "migrate-members",[39m
+[2m    "scaffold",[22m
+[2m  ][22m
+
+[36m [2m❯[22m tests/src/cli-verb-taxonomy.test.ts:[2m23:48[22m[39m
+    [90m 21|[39m     [34mregisterExecCommands[39m(program)[33m;[39m
+    [90m 22|[39m
+    [90m 23|[39m     expect(subcommandNames(program, "config")).toEqual(["init", "scaff…
+    [90m   |[39m                                                [31m^[39m
+    [90m 24|[39m     [34mexpect[39m([34msubcommandNames[39m(program[33m,[39m [32m"exec"[39m))[33m.[39m[34mtoContain[39m([32m"scaffold"[39m)[33m;[39m
+    [90m 25|[39m   })[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m tests/src/exec-agent-config-command.test.ts[2m > [22mresolveMemberCommand[2m > [22mrejects a nickname that violates the schema pattern
+[31m[1mAssertionError[22m: expected [Function] to throw error matching /Invalid nickname.*pm-members\.schema\…/ but got 'Invalid nickname "$(whoami)" for prov…'[39m
+
+[32m- Expected:[39m
+/Invalid nickname.*pm-members\.schema\.yaml/
+
+[31m+ Received:[39m
+"Invalid nickname \"$(whoami)\" for provider claude: must match ^[a-z0-9][a-z0-9_-]{0,62}$ (agent-members.schema.yaml). nickname is expanded into command_template and executed with shell: true; refusing to build a command."
+
+[36m [2m❯[22m tests/src/exec-agent-config-command.test.ts:[2m202:70[22m[39m
+    [90m200|[39m     [35mconst[39m member [33m=[39m [34mbuildMember[39m({ nickname[33m:[39m [32m"$(whoami)"[39m })[33m;[39m
+    [90m201|[39m
+    [90m202|[39m     expect(() => resolveMemberCommand(claudeTemplateConfig, member)).t…
+    [90m   |[39m                                                                      [31m^[39m
+    [90m203|[39m       [36m/Invalid nickname.*pm-members\.schema\.yaml/[39m[33m,[39m
+    [90m204|[39m     )[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯[22m[39m
+

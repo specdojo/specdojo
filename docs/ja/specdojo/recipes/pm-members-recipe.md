@@ -9,141 +9,76 @@ specdojo:
 
 # メンバー定義 作成レシピ
 
-Project Member Roster Writing Recipe
+Project Human Member Roster Writing Recipe
 
-本ドキュメントは、メンバー定義を「PO が実行主体と担当 Role code の対応を承認できる内容」に仕上げるための作り方です。本書では問い、深掘り手順、レビュー観点を扱います。
+人間の実行主体と Role code の対応を `pm-members.yaml` に整理し、agent の実行定義を保護設定へ混在させないための作成手順です。
 
 ## 1. このレシピの使い方
 
-- 最初に、組織定義とロール定義から、採用する Role code、最終判断の集約先、公開方針を確認する。
-- 次に、実行ログに残す必要がある人間と agent を洗い出し、各 member の `roles` に対応 Role code を割り当てる。
-- 最後に、member nickname、Role code、Schedule の `owner` を混同せず、公開してよい情報だけを残す。
-- 組織上の判断・実行需要（Why）を根拠に、必要な member と Role code 割り当て（What）を定め、agent の実行属性と共通 rules（How）は実行に必要な範囲だけを扱う。`based_on`、nickname、Role code で対応を追跡し（Trace）、そのために schema 外のキーは追加しない。
+- 組織定義とロール定義から、人間が担う最終判断と使用可能な Role code を確認します。
+- 実行ログへ残す人間の nickname、公開可能な表示名、兼務を整理します。
+- agent の provider、能力、優先度、command は `.specdojo/agent-members.yaml` へ分離します。
+- 既存名簿に agent がある場合は、手編集より先に移行コマンドの dry-run を確認します。
 
 ## 2. 作成前に集める情報
 
-| 項目            | 集める情報                                               |
-| --------------- | -------------------------------------------------------- |
-| 組織定義        | 最終判断の集約先、agent 委任範囲、公開方針               |
-| ロール定義      | `members[].roles` に使える Role code の一覧              |
-| プロジェクト ID | `project_id` と `id` に使う値                            |
-| 人間 member     | 最終判断を担う人間、兼務する Role code、公開可能な表示名 |
-| agent member    | 実行モード、provider、能力、優先度、品質 tier            |
-| 実行ログ        | 既に使われた nickname と、変更してはいけない値           |
-| 公開制約        | 個人情報、連絡先、非公開組織情報、認証情報を含めない条件 |
+| 項目        | 集める情報                                                   |
+| ----------- | ------------------------------------------------------------ |
+| 組織定義    | 最終判断の集約先、公開方針、兼務方針                         |
+| ロール定義  | `members[].roles` に使える Role code                         |
+| 人間 member | 安定 nickname、公開可能な表示名・連絡先、対応 Role code      |
+| 実行ログ    | 既に使われ、変更してはいけない nickname                      |
+| agent 定義  | 人間 nickname と重複しないことを確認するための nickname 一覧 |
+| 公開制約    | 個人情報、私用連絡先、非公開組織情報を含めない条件           |
 
 ## 3. 全体の作成手順
 
-1. `id`、`type`、`status`、`rulebook`、`version`、`project_id` を設定する。
-2. `based_on` に、組織定義、ロール定義など実際に確認した根拠 ID を記載する。
-3. `members` に、人間の最終判断主体を少なくとも 1 件記載する。
-4. 実行に使う agent を列挙し、`provider`、`mode`、`proficiency`、`priority`、`capabilities` を確認する。起動コマンドは `.specdojo/exec-defaults.yaml` の `providers.<provider>.command_template` で解決されるため、member には書かない。
-5. 各 member の `roles` が `pm-roles.yaml` に存在する Role code だけで構成されているか確認する。
-6. `rules` に、`owner`、`roles`、`--by` の使い分け、agent の支援範囲、公開制約を記載する。
-7. PO が承認できるよう、実行主体の過不足、公開可否、説明責任の所在を確認する。
+1. `project_id`、成果物 ID、`based_on` を確定します。
+2. 人間の実行主体だけを列挙し、`type: human` とします。
+3. `pm-roles.yaml` と照合して各 member の `roles` を割り当てます。
+4. 実行ログと `.specdojo/agent-members.yaml` を確認し、nickname の重複と改名を避けます。
+5. 非公開の連絡先は `null` にし、最終判断範囲を `note` に簡潔に記載します。
+6. schema 検証で agent 用フィールドや未定義キーが混入していないことを確認します。
 
-## 4. 各要素の書き方
+## 4. 深掘りする問い
 
-### 4.1. メタ項目
+### 4.1. 実行主体
 
-問い:
+- 人間として最終判断、受入、公開可否を担う主体は誰ですか。
+- 人物が交代しても意味が変わらない nickname になっていますか。
+- 兼務する Role code は責務正本と一致していますか。
+- 公開できない個人情報を推測で補っていませんか。
 
-- `id` は `<project-id>:pm-members` 形式になっているか。
-- `project_id` は配置先プロジェクトと一致しているか。
-- `based_on` は member 割り当ての根拠を指しているか。
+### 4.2. agent との境界
 
-書き方:
+- `type: agent`、`provider`、`command`、`mode`、`stage_role` が名簿に残っていませんか。
+- 人間 nickname が repository 共通の agent nickname と重複していませんか。
+- agent の追加・優先度変更を通常成果物の編集として扱っていませんか。
+- 既存 agent の移行には `specdojo config migrate-members --dry-run` を先に使いましたか。
 
-- `type` は `project`、`version` は整数で記載する。
-- `rulebook` には `specdojo:pm-members-rulebook` を記載する。
-- 根拠 ID は、内容を実際に確認した文書だけを記載する。
+### 4.3. Role と履歴
 
-### 4.2. `members`
+- `roles` は `pm-roles.yaml` に存在する値だけですか。
+- Schedule の `owner` と member nickname を混同していませんか。
+- 実行ログに記録済みの nickname を変更していませんか。
+- nickname を廃止する場合も履歴参照を維持できる記録がありますか。
 
-問い:
+## 5. レビュー観点
 
-- 実際に `specdojo exec --by` で指定される主体が入っているか。
-- 人間の最終判断主体が明示されているか。
-- agent の支援範囲と実行条件が読み取れるか。
+| 観点             | 確認内容                                                      |
+| ---------------- | ------------------------------------------------------------- |
+| schema           | `pm-members.schema.yaml` に適合し、人間だけを含む             |
+| Role code        | `members[].roles` がロール定義と一致する                      |
+| nickname         | project 内と agent 定義との合成後に一意で、履歴上安定している |
+| 責任境界         | 人間の最終判断と agent の実行支援が混在していない             |
+| 公開適性         | 私用連絡先、秘密情報、非公開組織情報を含まない                |
+| トレーサビリティ | 組織定義、ロール定義、変更記録から割り当て理由を追える        |
 
-書き方:
+## 6. 完了チェック
 
-- 人間 member と agent member を混在させてよいが、`type` で必ず区別する。
-- 最終判断を担う人間は、`note` に承認・公開可否・説明責任の扱いを記載する。
-- agent は、支援範囲を `provider`、`persona`、`focus`、`capabilities`、`mode` で表す。
-
-### 4.3. `members[].roles`
-
-問い:
-
-- 各 Role code は `pm-roles.yaml` の `roles[].code` に存在するか。
-- 兼務が必要な人間 member には、対応 Role code が過不足なく入っているか。
-- 汎用 agent の `roles: []` を、承認責任の空白として扱っていないか。
-
-書き方:
-
-- Role code は大文字の標準表記で記載する。
-- 汎用 agent は `roles: []` としてよいが、実行時にはタスク `owner` または plan で対象 Role を補う。
-- Schedule の `owner` に member nickname を書く代替として `roles` を使わない。
-
-### 4.4. agent 用フィールド
-
-問い:
-
-- `mode` は edit / review のどちらに対応するか。
-- `proficiency` と `priority` は scheduler の選択条件として使えるか。
-- `provider` に対応する `command_template` が `.specdojo/exec-defaults.yaml` に存在するか。
-- `command` を上書きする場合、秘密情報や個人環境依存のパスを含めていないか。
-
-書き方:
-
-- `provider` は実行する CLI 種別を表す。起動コマンドはこの値で `providers.<provider>.command_template` から解決される。
-- `command` は、テンプレートを持たない構成（`provider: custom` など）に限って 1 行の上書きとして記載する。
-- `capabilities` は `web_search` などのツール能力に限定する。
-- agent の `note` には、最終判断を持たないことを明示する。
-
-## 5. 深掘り手順
-
-1. 組織定義から、PO が最終判断する範囲と agent 委任範囲を抜き出す。
-2. ロール定義から、`members[].roles` に使える Role code を一覧化する。
-3. 実行ログ、Schedule、既存 event から、使われている nickname を確認する。
-4. 各 member を「人間の最終判断主体」「Role 固定 agent」「汎用 agent（executor）」「汎用 agent（reporter）」に分類する。
-5. agent ごとに、mode、provider、proficiency、priority、capabilities の不足と、provider に対応する command template の有無を確認する。
-6. 公開文書に残してよい表示名、連絡先、コマンドだけになっているか確認する。
-7. PO 以外に最終承認、公開可否、説明責任が移っていないことを確認する。
-
-## 6. 良い例 / 悪い例
-
-| 観点           | 良い例                                           | 悪い例                                              |
-| -------------- | ------------------------------------------------ | --------------------------------------------------- |
-| nickname       | `codex-executor`                                 | `Codex Expert Executor`                             |
-| roles          | `roles: [PO, PM, OPS]`                           | `owner: po`                                         |
-| 汎用 agent     | `roles: []` とし、実行時の owner で文脈を補う    | `roles` 未記載のまま承認責任を曖昧にする            |
-| agent の責務   | 草案作成と整合確認を支援し、承認しない           | agent が公開可否を判断する                          |
-| provider       | `provider: custom` のように実行種別が分かる      | `provider` を省略して実行主体が曖昧になる           |
-| 起動コマンド   | member には書かず command template で解決する    | テンプレートで解決できる member に `command` を書く |
-| command 上書き | 認証情報を含まない CLI コマンド                  | トークンや秘密鍵を含むコマンド                      |
-| 公開可否       | `email: null` とし、公開不要な個人情報を出さない | 私用メールアドレスを公開する                        |
-
-## 7. レビュー観点
-
-| 観点                   | 確認内容                                                                                                                      |
-| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| 目的・スコープとの整合 | 組織定義で採用した運用規模と agent 委任方針に合っているか                                                                     |
-| 承認判断               | PO が実行主体、兼務、agent 支援範囲を承認、保留、差し戻しできるか                                                             |
-| Role code 整合         | `members[].roles` が `pm-roles.yaml` の `roles[].code` に存在するか                                                           |
-| provider 整合          | agent の `provider` に対応する `command_template` が `.specdojo/exec-defaults.yaml` にあるか（無い構成のみ `command` 上書き） |
-| 実行可能性             | `--by` に指定する nickname と、agent 実行に必要な情報が揃っているか                                                           |
-| 公開可否               | 個人情報、非公開情報、認証情報、agent への最終判断委任が含まれていないか                                                      |
-| 下流入力               | scheduler、exec run、実行ログが参照できる安定した member 台帳になっているか                                                   |
-
-## 8. 仕上げチェック
-
-- 「全体の作成手順」で示した構成と必須項目がそろっている。
-- 人間と agent の違いが分かる粒度で書けている。
-- `members[].roles` に未定義 Role code、member nickname、人名、agent 名が混ざっていない。
-- agent の `provider`、`mode`、`proficiency` が揃っており、command template から起動コマンドを解決できる。
-- `command` を上書きしている場合、秘密情報や個人環境に閉じた値が含まれていない。
-- `pm-organization.md` と `pm-roles.yaml` の方針と矛盾していない。
-- 公開してよい情報だけで構成され、最終判断と説明責任が人間の PO に残っている。
-- 各 member の採用理由、Role code、実行属性を、`based_on` と既存フィールドの対応から追跡できる。
+- `members[]` はすべて `type: human` です。
+- nickname、`display_name`、`roles` が全 member にあります。
+- agent 用の選択属性と起動設定は含まれていません。
+- `pm-members.schema.yaml` の検証を通過します。
+- agent 定義と合成したとき nickname が重複しません。
+- 最終判断と公開可否を担う人間の範囲が読み取れます。

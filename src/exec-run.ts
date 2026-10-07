@@ -370,7 +370,7 @@ export type AgentExecution = {
 };
 
 // Mode-specific agent overrides from --edit-by / --review-by. Each value is an agent
-// nickname (not a raw command); the command is resolved from pm-members.yaml. undefined means
+// nickname (not a raw command); the command is resolved from agent-members.yaml. undefined means
 // "auto-select for that mode".
 export type ModeAgentOverrides = {
   edit?: string;
@@ -405,7 +405,7 @@ function pinnedReporter(task: ReadyTaskView | null | undefined): string | undefi
 
 // Resolve the agent override for a task's mode. A single explicit --by nickname wins for every
 // mode. Otherwise the mode-specific --edit-by / --review-by nickname applies. Commands are always
-// resolved from pm-members.yaml and exec-defaults.yaml; raw command strings are not accepted.
+// resolved from agent-members.yaml and exec-defaults.yaml; raw command strings are not accepted.
 export function resolveAgentOverride(
   mode: "edit" | "review",
   agentNicknameOverride: string | undefined,
@@ -436,7 +436,7 @@ export function resolveAgentOverride(
   if (!member || !command) {
     return {
       kind: "error",
-      message: `${flag} agent nickname not found in pm-members.yaml (or has no resolvable command): ${nickname}`,
+      message: `${flag} agent nickname not found in agent-members.yaml (or has no resolvable command): ${nickname}`,
     };
   }
   return {
@@ -1671,7 +1671,7 @@ async function prepareSingleTask(
 
   // Mode-specific overrides (--edit-by / --review-by) let nightly batch runs route edit and
   // review to different agents (e.g. local LLMs) without editing the roster. They take an agent
-  // nickname whose command is resolved from pm-members.yaml; a mode without an override falls back
+  // nickname whose command is resolved from agent-members.yaml; a mode without an override falls back
   // to normal auto-selection.
   const overrideResolution = resolveAgentOverride(
     mode,
@@ -4471,7 +4471,7 @@ export function resolveRegisterPipelineCommand(
     throw new Error(executorResolution.message.replace(/^--by/, "--executor-by"));
   }
   if (executorResolution.kind !== "command") {
-    throw new Error(`--executor-by agent not found in pm-members.yaml: ${opts.executorBy}`);
+    throw new Error(`--executor-by agent not found in agent-members.yaml: ${opts.executorBy}`);
   }
   const reporterResolution = resolveAgentOverride(
     "edit",
@@ -4485,7 +4485,7 @@ export function resolveRegisterPipelineCommand(
     throw new Error(reporterResolution.message.replace(/^--by/, "--reporter-by"));
   }
   if (reporterResolution.kind !== "command") {
-    throw new Error(`--reporter-by agent not found in pm-members.yaml: ${opts.reporterBy}`);
+    throw new Error(`--reporter-by agent not found in agent-members.yaml: ${opts.reporterBy}`);
   }
   return {
     executor: {
@@ -6199,7 +6199,10 @@ export function resolveRegisterResumeReporter(
     return { kind: "error", message: resolution.message.replace(/^--by/, "--reporter-by") };
   }
   if (resolution.kind !== "command") {
-    return { kind: "error", message: `reporter agent not found in pm-members.yaml: ${nickname}` };
+    return {
+      kind: "error",
+      message: `reporter agent not found in agent-members.yaml: ${nickname}`,
+    };
   }
   return {
     kind: "command",
@@ -6233,7 +6236,10 @@ export function resolveRegisterResumeExecutor(
     return { kind: "error", message: resolution.message.replace(/^--by/, "--executor-by") };
   }
   if (resolution.kind !== "command") {
-    return { kind: "error", message: `executor agent not found in pm-members.yaml: ${nickname}` };
+    return {
+      kind: "error",
+      message: `executor agent not found in agent-members.yaml: ${nickname}`,
+    };
   }
   return {
     kind: "command",
@@ -6895,7 +6901,7 @@ export function registerRunCommand(exec: Command): void {
     .description("Run AI agent for a ready task (--auto selects next by strategy)");
 
   rcmd.option("--project <projectId>", "Project id in .specdojo/specdojo.config.json");
-  rcmd.option("--by <nickname>", "Select a pm-members.yaml agent for a manual target");
+  rcmd.option("--by <nickname>", "Select an agent-members.yaml agent for a manual target");
   rcmd.option("--auto", "Automatically select and run next ready task", false);
   rcmd.option("--task <taskId>", "Task ID to run (manual selection)");
   rcmd.option(
@@ -6998,11 +7004,11 @@ export function registerRunCommand(exec: Command): void {
   rcmd.option("--agent-config <path>", "Deprecated alias for --exec-defaults");
   rcmd.option(
     "--edit-by <nickname>",
-    "pm-members.yaml agent nickname for edit-mode tasks in --auto batch runs",
+    "agent-members.yaml nickname for edit-mode tasks in --auto batch runs",
   );
   rcmd.option(
     "--review-by <nickname>",
-    "pm-members.yaml agent nickname for review-mode tasks in --auto batch runs",
+    "agent-members.yaml nickname for review-mode tasks in --auto batch runs",
   );
   rcmd.option(
     "--executor-by <nickname>",
@@ -7010,7 +7016,7 @@ export function registerRunCommand(exec: Command): void {
   );
   rcmd.option(
     "--reporter-by <nickname>",
-    "pm-members.yaml reporter agent nickname for agent_pipeline tasks (with --plan / --deliverable, runs the executor/reporter pipeline)",
+    "agent-members.yaml reporter nickname for agent_pipeline tasks (with --plan / --deliverable, runs the executor/reporter pipeline)",
   );
   rcmd.option("--dry-run", "Print resolved command without executing", false);
 
@@ -7511,19 +7517,19 @@ export function registerCycleCommand(exec: Command): void {
   cmd.option("--max-rounds <n>", "Maximum number of auto rounds when using --loop");
   cmd.option(
     "--edit-by <nickname>",
-    "pm-members.yaml agent nickname for edit-mode tasks (resume + auto)",
+    "agent-members.yaml nickname for edit-mode tasks (resume + auto)",
   );
   cmd.option(
     "--review-by <nickname>",
-    "pm-members.yaml agent nickname for review-mode tasks (resume + auto)",
+    "agent-members.yaml nickname for review-mode tasks (resume + auto)",
   );
   cmd.option(
     "--executor-by <nickname>",
-    "pm-members.yaml executor agent nickname for pipeline tasks (resume + auto)",
+    "agent-members.yaml executor nickname for pipeline tasks (resume + auto)",
   );
   cmd.option(
     "--reporter-by <nickname>",
-    "pm-members.yaml reporter agent nickname for pipeline tasks (resume + auto)",
+    "agent-members.yaml reporter nickname for pipeline tasks (resume + auto)",
   );
   cmd.option("--worktree-base <path>", "Override worktree base directory");
   cmd.option(
@@ -7900,24 +7906,18 @@ export function registerResumeCommand(exec: Command): void {
   );
   cmd.option(
     "--by <nickname>",
-    "Select a pm-members.yaml agent (default: the agent that claimed the task)",
+    "Select an agent-members.yaml agent (default: the agent that claimed the task)",
   );
   cmd.option(
     "--edit-by <nickname>",
-    "pm-members.yaml agent nickname for edit-mode tasks (overrides the claiming actor)",
+    "agent-members.yaml nickname for edit-mode tasks (overrides the claiming actor)",
   );
   cmd.option(
     "--review-by <nickname>",
-    "pm-members.yaml agent nickname for review-mode tasks (overrides the claiming actor)",
+    "agent-members.yaml nickname for review-mode tasks (overrides the claiming actor)",
   );
-  cmd.option(
-    "--executor-by <nickname>",
-    "pm-members.yaml executor agent nickname for pipeline tasks",
-  );
-  cmd.option(
-    "--reporter-by <nickname>",
-    "pm-members.yaml reporter agent nickname for pipeline tasks",
-  );
+  cmd.option("--executor-by <nickname>", "agent-members.yaml executor nickname for pipeline tasks");
+  cmd.option("--reporter-by <nickname>", "agent-members.yaml reporter nickname for pipeline tasks");
   cmd.option("--parallel <n>", "Number of tasks to resume in parallel", "1");
   cmd.option("--worktree-base <path>", "Override worktree base directory");
   cmd.option(

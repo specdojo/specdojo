@@ -93,7 +93,7 @@ describe("exec trial comparison record", () => {
       notes: "",
     });
     expect(record.agent_selection.policy).toBe("manual");
-    expect(record.agent_selection.target).toBe("pm-members.yaml");
+    expect(record.agent_selection.target).toBe("agent-members.yaml");
     expect(record.reporter_mode).toBe("none");
     expect(record.trials[0].reporter).toMatchObject({
       status: "not_run",

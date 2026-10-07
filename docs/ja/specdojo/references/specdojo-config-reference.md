@@ -52,11 +52,12 @@ SpecDojo Configuration Reference
 
 ## 2. トップレベルのキー
 
-| キー              | 必須 | 既定値                                 | 役割・利用箇所                                                                                  |
-| ----------------- | ---- | -------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| `version`         | 必須 | なし。現行値は `1`                     | 設定形式のバージョンです。すべての config 利用コマンドが検証します。                            |
-| `current_project` | 任意 | コマンドにより `projects` の先頭を使用 | `--project` と `SPECDOJO_PROJECT` を省略したときの対象 project です。                           |
-| `projects`        | 必須 | なし                                   | project ID をキー、project 設定を値とするオブジェクトです。複数 project を1ファイルで扱えます。 |
+| キー                 | 必須 | 既定値                                 | 役割・利用箇所                                                                                  |
+| -------------------- | ---- | -------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| `version`            | 必須 | なし。現行値は `1`                     | 設定形式のバージョンです。すべての config 利用コマンドが検証します。                            |
+| `current_project`    | 任意 | コマンドにより `projects` の先頭を使用 | `--project` と `SPECDOJO_PROJECT` を省略したときの対象 project です。                           |
+| `agent_members_path` | 任意 | `.specdojo/agent-members.yaml`         | 全 project が共有する保護済み agent 定義です。`.specdojo/` 配下の YAML だけを指定できます。     |
+| `projects`           | 必須 | なし                                   | project ID をキー、project 設定を値とするオブジェクトです。複数 project を1ファイルで扱えます。 |
 
 対象 project の一般的な解決順序は、`--project <id>`、`SPECDOJO_PROJECT`、`current_project`、`projects` の先頭です。一部のコマンドは `current_project` を参照せず `projects` の先頭へフォールバックするため、複数 project では `--project` を明示してください。
 
@@ -64,19 +65,19 @@ SpecDojo Configuration Reference
 
 `projects.<project-id>` に指定するキーです。`base_path` 以外の表中のパスは、`base_path` があればそこからの相対パス、無ければリポジトリルートからの相対パスとして解決します。
 
-| キー                    | 既定値           | 主な役割                                                 | 必要とする主なコマンド                                        |
-| ----------------------- | ---------------- | -------------------------------------------------------- | ------------------------------------------------------------- |
-| `base_path`             | リポジトリルート | project 文書に共通するパス接頭辞                         | project に紐づく各コマンド                                    |
-| `project_register_path` | なし             | 個票、event、登録簿の配置先                              | `register *`、`exec plan/run --register`                      |
-| `catalog_path`          | なし             | `dct-*.yaml` と生成ビューの配置先                        | `catalog *`、`deliverable scaffold`、catalog を使う grade 等  |
-| `schedule_path`         | `schedule`       | strategy、track、Schedule の配置先                       | `schedule *`、schedule 対象の `exec *`                        |
-| `execution_path`        | `execution`      | plan、result、実行状態、grade / Job Run の配置先         | `exec *`、`grade *`、`job *`、`dashboard build`               |
-| `timeline_path`         | `timeline`       | Timeline の正本と生成物の配置先                          | `timeline *`、`dashboard build`、`schedule strategy generate` |
-| `members_path`          | なし             | 人・agent、ロール、provider を定義する `pm-members.yaml` | actor 検証、agent 実行、owner 検証、`grade apply --by`        |
-| `roles_path`            | なし             | role 定義ファイルの配置先                                | `schedule strategy generate`、owner を解決する `exec plan`    |
-| `viewpoints_path`       | なし             | review / grade 観点ファイルの配置先                      | `grade *`、review plan、`exec scaffold --project`             |
-| `routines_path`         | なし             | `rtn-*.yaml` と routine 状態の配置先                     | `routine *`、routine を集約する `dashboard build`             |
-| `jobs_path`             | なし             | `job-*.yaml` の配置先                                    | `job *`、`exec run --job`                                     |
+| キー                    | 既定値           | 主な役割                                          | 必要とする主なコマンド                                        |
+| ----------------------- | ---------------- | ------------------------------------------------- | ------------------------------------------------------------- |
+| `base_path`             | リポジトリルート | project 文書に共通するパス接頭辞                  | project に紐づく各コマンド                                    |
+| `project_register_path` | なし             | 個票、event、登録簿の配置先                       | `register *`、`exec plan/run --register`                      |
+| `catalog_path`          | なし             | `dct-*.yaml` と生成ビューの配置先                 | `catalog *`、`deliverable scaffold`、catalog を使う grade 等  |
+| `schedule_path`         | `schedule`       | strategy、track、Schedule の配置先                | `schedule *`、schedule 対象の `exec *`                        |
+| `execution_path`        | `execution`      | plan、result、実行状態、grade / Job Run の配置先  | `exec *`、`grade *`、`job *`、`dashboard build`               |
+| `timeline_path`         | `timeline`       | Timeline の正本と生成物の配置先                   | `timeline *`、`dashboard build`、`schedule strategy generate` |
+| `members_path`          | なし             | 人間と対応 Role code を定義する `pm-members.yaml` | actor 検証、owner 検証、合成名簿の project 側入力             |
+| `roles_path`            | なし             | role 定義ファイルの配置先                         | `schedule strategy generate`、owner を解決する `exec plan`    |
+| `viewpoints_path`       | なし             | review / grade 観点ファイルの配置先               | `grade *`、review plan、`exec scaffold --project`             |
+| `routines_path`         | なし             | `rtn-*.yaml` と routine 状態の配置先              | `routine *`、routine を集約する `dashboard build`             |
+| `jobs_path`             | なし             | `job-*.yaml` の配置先                             | `job *`、`exec run --job`                                     |
 
 `schedule_path`、`execution_path`、`timeline_path` には解決時の既定値があります。ただし `schedule` コマンドや一括 `build` の対象判定ではキーの明示が必要なため、catalog から Schedule と exec へ進む構成では省略しないでください。
 
@@ -179,6 +180,8 @@ exec worktree の中で設定を読む場合（agent が worktree で `specdojo`
 ## 7. catalog・schedule・execへ進む設定例
 
 register の最小構成から成果物カタログと Schedule へ進む場合は、対象 project へ必要なキーを追加します。次は Quick Start の代表例です。
+
+agent 実行を使う場合は、この project オブジェクトとは別にトップレベルへ `"agent_members_path": ".specdojo/agent-members.yaml"` を指定できます。省略時も同じパスが既定です。
 
 ```json
 {

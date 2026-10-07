@@ -207,7 +207,19 @@ git log <target-branch> -E --grep='^Refs: (<project-id>:)?<item-id>$' --format='
 統合の順序、失敗時の部分状態、再開は [[specdojo:docs-structure-guide|ドキュメント構成ガイド]]
 の「別リポジトリ構成」を参照してください。
 
-## 7. 移行を検証する
+## 7. agent 名簿を保護設定へ移行する
+
+agent 定義は project ごとの `pm-members.yaml` から、repository 共通の `.specdojo/agent-members.yaml` へ移りました。`pm-members.yaml` に `type: agent` が残っていると、読み込みはファイルと nickname を示して停止します。
+
+1. 作業中の agent 実行がないことを確認します。
+2. `npx specdojo config migrate-members --dry-run` で、各 project から移す件数と出力先を確認します。
+3. 人間または orchestrator が `npx specdojo config migrate-members` を実行します。agent 自身には `.specdojo/**` の変更を許可しません。
+4. 出力先を変える場合は、`.specdojo/specdojo.config.json` のトップレベルへ `"agent_members_path": ".specdojo/<name>.yaml"` を追加します。
+5. `pm-members.yaml` に人間だけ、agent 定義ファイルに agent だけが残り、nickname が両者で重複しないことを確認します。
+
+複数 project の同名 agent は repository 共通定義へ1件だけ統合する必要があります。移行コマンドが重複を報告した場合は、自動で上書きせず、どの定義を正本にするか人間が決めてから再実行してください。
+
+## 8. 移行を検証する
 
 overlay を含む設定と、生成される plan / result を検証します。
 
@@ -230,7 +242,7 @@ npm run docs:build
 検証後は、overlay と独自テンプレートの差分、再評価を後回しにした grade 結果の件数を移行記録へ
 残してください。
 
-## 8. リリース作業の境界
+## 9. リリース作業の境界
 
 このリポジトリで v0.3.0 を公開する場合、agent の作業は版、リリース文書、移行ガイド、検証まで
 です。次は maintainer が行います。
