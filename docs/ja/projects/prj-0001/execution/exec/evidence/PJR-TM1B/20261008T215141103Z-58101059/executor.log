@@ -1,0 +1,5 @@
+Claude edit executor の権限をリポジトリ全体へ拡張し、runner 保護対象を deny する設定・回帰テスト・関連文書を更新しました。review/report 設定と result は変更していません。
+
+<specdojo_executor_evidence>
+{"final_message":"Claude edit executor を Edit(**) に拡張し、runner 保護対象の deny、定数との整合性を検証する unit test、設計・ガイド・CHANGELOG・個票を更新した。","validations":[{"command":"npx prettier --write src/exec-agent-protected-config.ts templates/claude/settings.edit.json tests/src/exec-provider-scaffold.test.ts docs/ja/specdojo/guides/exec-config-guide.md docs/ja/product/040-system-design/sysd-claude-agent-settings.md CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-tm1b-claude-edit-allowlist-too-narrow.md","status":"passed","summary":"変更した全ファイルの整形に成功。"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿の生成ビューを正常に再構築。"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"検証成功。既存の欠落文書に関する警告のみ。"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"文書索引2489件を正常に生成。"},{"command":"git diff --check","status":"passed","summary":"差分の空白・形式エラーなし。"}]}
+</specdojo_executor_evidence>

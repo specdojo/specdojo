@@ -120,6 +120,7 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 不具合修正
 
+- Claude の edit executor がルート直下の成果物や `app/`・`lib/` などを編集できない問題を修正しました。既定でリポジトリ全体への編集を許可し、agent 設定・CI 設定・`package.json` などの保護対象は Claude の deny と runner の検査で拒否します（PJR-TM1B）。
 - `exec run --resume` で reporter 段または統合段から再開するとき、統合先で直した不具合が
   親検証に反映されない問題を、親検証の前に統合先の最新を worktree へ取り込む形で修正しました
   （PJR-GENJ）。

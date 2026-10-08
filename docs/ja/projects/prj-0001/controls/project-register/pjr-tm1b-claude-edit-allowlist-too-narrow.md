@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: high
   owner: DEV
   registered_at: "2026-10-08T14:40:23Z"
@@ -52,7 +52,11 @@ specdojo:
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+`templates/claude/settings.edit.json` の既定許可を `Edit(**)` へ広げ、runner の agent-config-write 検査が保護するディレクトリとルート直下の設定ファイルを deny へ列挙した。これにより、README、ルート直下の成果物、`app/`・`lib/` など利用者固有の構成を編集できる一方、agent の権限や親 runner・hook・CI の実行内容は変更できない。
+
+再発防止として、保護対象の定数と Claude の deny を照合する unit test を追加した。保護対象を増やしてテンプレートの deny を更新しなかった場合は test が失敗する。利用者向けガイド、Claude 固有の設計書、CHANGELOG にも権限境界を反映した。
+
+変更ファイルの Prettier 整形、register build、catalog validate、index build は成功した。型検査、lint、schema 検証、unit / integration test は pipeline の親 runner が実行する。
 
 ## 5. 関連ドキュメント
 

@@ -434,6 +434,8 @@ agent が exec 実行時に読み込む provider 固有の設定（agent 定義�
 
 Claude member の `mode` はこの `{mode}` を権限プロファイル名へ展開するためにも使います。edit executor は `edit`、review executor は `review`、reporter は `report` を指定します。reporter の適格性は task mode ではなく `stage_role: reporter` で決まり、`settings.report.json` は Edit/Write と `git add` / `git commit` を deny します。
 
+`settings.edit.json` は、利用者のリポジトリ固有の構成（ルート直下の成果物や `app/`・`lib/` など）にも対応できるよう、既定でリポジトリ全体への Edit を許可します。一方、agent の権限や親 runner・hook・CI の実行内容を変更できる `.specdojo/`、agent 設定、CI 設定、ルート直下の `package.json` などは deny します。deny の範囲は runner の agent-config-write 検査と同じ保護対象を unit test で照合し、Claude Code の事前拒否と runner の事後検査を重ねます。
+
 ### 7.1. scaffold コマンド
 
 この配置は、初期設定の導線にある `config scaffold` の `--provider <name>` オプションで自動化します。

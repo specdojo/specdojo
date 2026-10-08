@@ -135,7 +135,7 @@ member は全員 `stage_role`（`executor` / `reporter`）を持つ pipeline 構
 
 ### 8.2. `claude-executor.md` / `claude-expert-executor.md`
 
-sonnet（`claude-executor`）または opus（`claude-expert-executor`）モデルを使用する pipeline executor（edit）。executor plan を読んで対象成果物の編集と検証だけを行い、result は更新しない。`.specdojo/claude/settings.edit.json`（`docs/**` / `src/**` / `tests/**` への Edit を許可）で起動する。
+sonnet（`claude-executor`）または opus（`claude-expert-executor`）モデルを使用する pipeline executor（edit）。executor plan を読んで対象成果物の編集と検証だけを行い、result は更新しない。`.specdojo/claude/settings.edit.json` はリポジトリ全体への Edit を許可し、agent の権限や親 runner・hook・CI の実行内容を変更できる保護対象を deny する。runner も終了後に同じ保護対象への書き込みを検査する。
 
 実際のファイル: `.claude/agents/claude-executor.md`、`.claude/agents/claude-expert-executor.md`
 
