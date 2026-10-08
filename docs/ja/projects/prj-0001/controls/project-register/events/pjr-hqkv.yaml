@@ -58,3 +58,35 @@
       from: "-"
       to: "checkpoint failed: Root index has staged changes; commit or unstage them first: docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-deliverable-32c25dd4476f/attempt-1/command.stderr.log docs/j…"
   previous_event_id: reg_cc1ca263a4534b8298a20df16224c16d
+- v: 1
+  id: reg_a076ddd3dc50437c8c35c28374937474
+  ts: "2026-10-08T22:02:21Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "checkpoint failed: Root index has staged changes; commit or unstage them first: docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-deliverable-32c25dd4476f/attempt-1/command.stderr.log docs/j…"
+      to: "-"
+  previous_event_id: reg_a6b7b1a671ce4703b00057eb47983bb1
+- v: 1
+  id: reg_da346d0daf0e4803b3247a09659eba29
+  ts: "2026-10-08T22:09:14Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=package.json; agent must record the required change in the result …"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=package.json; agent must record the required change in the result …"
+  previous_event_id: reg_a076ddd3dc50437c8c35c28374937474
