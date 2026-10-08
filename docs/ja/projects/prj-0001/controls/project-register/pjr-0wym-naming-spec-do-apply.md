@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: high
   owner: DEV
   registered_at: "2026-10-08T03:45:19Z"
   due_on: null
-  block_reason: "agent exited with non-zero code: executor validation failed or not run: npm run check"
 ---
 
 # PJR-0WYM README と概要の呼び方を仕様道（Spec-Dō）に改める
@@ -34,14 +33,18 @@ specdojo:
 
 ## 3. 作業内容
 
-| No  | 作業                                                       | 担当         | 状態 | メモ                             |
-| --- | ---------------------------------------------------------- | ------------ | ---- | -------------------------------- |
-| 1   | README・トップ・概要ガイド・ryu-guide・waza-guide を改める | DEV          | open | CLI の値は変えない               |
-| 2   | `package.json` の説明を改める                              | orchestrator | open | 保護された設定のため統合後に行う |
+| No  | 作業                                                       | 担当         | 状態 | メモ                               |
+| --- | ---------------------------------------------------------- | ------------ | ---- | ---------------------------------- |
+| 1   | README・トップ・概要ガイド・ryu-guide・waza-guide を改める | DEV          | done | CLI の値は変えず表示と文書だけ変更 |
+| 2   | `package.json` の説明を改める                              | orchestrator | open | 保護された設定のため統合後に行う   |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `README.md`、`docs/ja/index.md`、`docs/ja/specdojo/guides/specdojo-overview-guide.md` の冒頭を「仕様道（Spec-Dō）の道場」に改め、仕様駆動開発のツールとの上流関係と標語「決めて、書いて、腐らせない」を記載した。
+- 概要ガイドと `docs/ja/specdojo/guides/waza-guide.md` に、記帳・実戦・評定・講評と CLI 機能の対応を記載した。
+- `docs/ja/specdojo/guides/ryu-guide.md` に、各 `approach` の流の名前と守破離の説明を記載した。
+- CLI のコマンド名、`approach` の値、設定のキーは変更していない。
+- 残課題は、orchestrator が統合後に行う `package.json` の英語 description 更新である。
 
 ## 5. 関連ドキュメント
 

@@ -58,3 +58,32 @@
       from: "-"
       to: "agent exited with non-zero code: executor validation failed or not run: npm run check"
   previous_event_id: reg_b658574695084db5990f649d25516c62
+- v: 1
+  id: reg_1cbc596441324d2db737a812a8b04236
+  ts: "2026-10-08T11:56:23Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: executor validation failed or not run: npm run check"
+      to: "-"
+  previous_event_id: reg_cdaddf7524a7490c8d14fffa1dfab016
+- v: 1
+  id: reg_d88d23bd7f454ea5b725e16e7e49d7a8
+  ts: "2026-10-08T12:00:01Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_1cbc596441324d2db737a812a8b04236
