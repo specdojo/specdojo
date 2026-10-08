@@ -2,7 +2,7 @@
 
 SpecDojo の利用者に影響する変更を記録します。
 
-## [0.3.0] - 2026-09-29
+## [0.3.0] - 未定
 
 ### 破壊的変更
 
@@ -38,6 +38,10 @@ SpecDojo の利用者に影響する変更を記録します。
   非対話オプション、既存ファイルの非上書き、`--dry-run` にも対応します。親検証は利用先の
   `package.json` に対応 script があるものだけを設定し、worktree 既定先はリポジトリ名から作ります
   （PJR-6QDA）。
+- 人の名簿を設定しない project でも `.specdojo/agent-members.yaml` から agent を読み込めるようにし、
+  provider の scaffold が示す配置先とスニペット名を新しい agent 名簿へ統一しました。exec plan の
+  共通規約は、利用先に依存・npm script・project 設定がある検査だけを求めるようになりました
+  （PJR-WZYW、PJR-44J9）。
 - 1 つの登録簿項目で、プロジェクトリポジトリと N 個のプロダクトリポジトリを変更できるように
   しました。`specdojo.config.json` の project に `repos` を宣言すると、`exec run --worktree` が
   リポジトリごとの worktree を作り、`targets`・`paths` の `<repo>:<path>` を解決し、親検証を
@@ -55,6 +59,22 @@ SpecDojo の利用者に影響する変更を記録します。
 - grade の再評価対象を内容・依存先・rulebook・rubric の変化から選べるようにしました。
   旧 rubric の結果は `--rubric-outdated` で抽出できます
   （PJR-N03W、PJR-2F3Y、PJR-Z47X、PJR-BVPS）。
+- grade の reporter の既定を executor の marker の機械変換にし、`grade plan --embed-documents` で
+  評価対象と参考資料を行番号付きで埋め込めるようにしました（PJR-E9H3、PJR-26K4）。finding は
+  英語の `message` を正本、日本語の `message_ja` を表示用として保存し、severity 上限を超える
+  level は下方向だけに補正して記録します。翻訳は各件の仮名とインラインコードを点検し、不合格の
+  件だけを再試行します。既定の翻訳 agent は `gemma26-translator` です
+  （PJR-27Y0、PJR-JWXK、PJR-WAFC、PJR-PZPA）。
+- `exec run --resume --resume-from executor` を追加しました。既存の worktree と未 commit の成果を
+  保持して executor 段へ戻り、直前の block 理由や失敗した親検証を prompt へ引き継ぎます。
+  executor・reporter・統合のどの段から再開するときも、起動前に統合先の最新を取り込みます
+  （PJR-PG6W）。
+- executor evidence の検証状態に `requires_human` を追加しました。実 agent CLI、利用枠・課金、
+  認証情報、ホスト側の操作など sandbox から実行できない確認を、機械判定で block せず result の
+  申し送りへ残せます（PJR-BK4K）。失敗した親検証の stdout / stderr は秘匿処理後に evidence へ
+  保存され、要約には出力の先頭と末尾が残ります（PJR-R8WR）。
+- `exec run --register` の実行場所を `run.register_execution` で設定できるようにし、`--in-place` を
+  追加しました。設定がない既存 project の既定は従来どおり in-place です（PJR-D0KF）。
 - `register` の記帳コマンドに `--commit` を追加しました。記帳用の実行枠を取得し、対象を
   限定して commit します（PJR-9XG4）。
 - `config init` が生成物を除外する `.gitignore` を作成・追記するようになりました
@@ -62,8 +82,13 @@ SpecDojo の利用者に影響する変更を記録します。
 - `config scaffold` が provider 別の起動スクリプトを `package.json` へ追加します。
   Antigravity では、差分確認とバックアップを伴う `--global` により、読み取り専用 Git
   コマンドの permission rule を設定できます（PJR-RPSX、PJR-0FK2）。
-- `devcontainer scaffold` を追加しました。provider の CLI、Ollama、cron、tmux を選び、
-  利用リポジトリ向けの分離環境を生成できます（PJR-2H5F）。
+- 試験的な機能として `devcontainer scaffold` を追加しました。provider の CLI、Ollama、cron、
+  tmux を選び、利用リポジトリごとに設定・認証情報を分離した環境を生成できます。Codex の
+  sandbox 用 seccomp 設定、OpenCode と GitHub CLI の named volume、既存 dotfiles を上書きしない
+  Emacs・Eglot のテンプレートにも対応しました。Codex は公式 installer（失敗時は npm）、OpenCode
+  は `opencode-ai` で導入します。Codex sandbox と Emacs は生成物の unit test まで完了していますが、
+  生成した Dev Container での実機確認は公開前の人の確認事項です
+  （PJR-2H5F、PJR-KEQQ、PJR-EZAF、PJR-J7WE）。
 - docs サイトは実行記録をナビゲーションと検索の対象外にし、パス単位でサイドバーを
   分割しました。package 内の kata を一時配置して、eject していない文書も表示します
   （PJR-E8FY、PJR-QQXP、PJR-SJ3X）。
@@ -80,10 +105,18 @@ SpecDojo の利用者に影響する変更を記録します。
 - 用語集の `category` と `relatedTerms` が同じ用語集の中の用語 ID を指すことと、用語 ID の
   重複がないことを検証する `glossary-references` を docs-lint に追加し、`validate:schema` に
   組み込みました（PJR-CF15）。
+- 日本語文書へ混入した、日本語と字形の異なる簡体字 20 字を検出する markdownlint の
+  `MD061`（`no-chinese-glyphs`）を追加しました。コード、URL、明示的に除外した箇所は対象外です
+  （PJR-86JE）。
 - rulebook に埋め込まれていたサンプル章を sample へ外出ししました。sample を持たなかった
   `tml-rulebook` と `ifx-index-rulebook` には sample を新設しました（PJR-GWYJ）。
 - 同梱のオーケストレーター定義に、起票時の対話支援（不足項目の確認と、個票の `_TODO_` の
   内容案の提示）と、記帳の `--commit` を使う手順を加えました（PJR-N8AW、PJR-NJRH）。
+- SpecDojo の呼び方を「仕様道（Spec-Dō）の道場」に改め、記帳・実戦・評定・講評の技と、
+  `approach` に対応する流の名前を利用者向け文書へ加えました。標語は「決めて、書いて、
+  鍛え続ける。」です（PJR-QGP4、PJR-0WYM、PJR-J29X）。
+- Quick Start に、`specdojo init` から question・decision の記帳、設計書の更新、change-request、
+  決定ログの確認までを 10 分で体験する「仕様の判断台帳」の手順を追加しました（PJR-XMQH）。
 
 ### 不具合修正
 
@@ -93,9 +126,19 @@ SpecDojo の利用者に影響する変更を記録します。
 - waiting からの再開時に develop の変更を消す可能性がある merge と、複数回の waiting 後に
   記帳競合が未解決のまま残る問題を修正しました（PJR-R0XA、PJR-CTV4）。
 - 並行実行時の親検証と遷移・統合をプロセス間で直列化し、イベント競合は両側の和集合で
-  解決するようにしました（PJR-3HHW、PJR-36CN）。
+  解決するようにしました。一部の項目が失敗しても遷移を項目ごとに記録し、ほかの項目の統合を
+  妨げません（PJR-3HHW、PJR-36CN、PJR-7MF6）。
 - resume 後の executor が plan の残作業を引き継がない問題と、rate limit 後に executor が
   再起動しない問題を修正しました（PJR-1Y9P、PJR-TDB0）。
+- 再開前の同期で未 commit の成果と統合先の変更が重なる場合に成果を退避・復元し、統合済みの
+  product repository は再度取り込まないようにしました。Git の一時的な
+  `dubious ownership`、`Not a git repository`、index lock は、対象に `.git` がある場合だけ
+  同じ上限で再試行します（PJR-H9R2、PJR-6RN3、PJR-GHKD、PJR-VX97）。
+- executor が親 runner へ委ねた `not_run` は、project で同じコマンドが成功していれば満たされた
+  ものと扱います。`npm run check` のような合成コマンドも、その構成要素が runner または executor
+  で成功していれば block しないようにしました（PJR-979N、PJR-SDWF）。
+- reporter が説明した変更ファイルの件数や順序に依存せず、変更パス、outcome、`block_reason` を
+  evidence から機械生成するようにしました（PJR-GBEV、PJR-0ECY）。
 - grade が未完了または途中で打ち切られたときに成功扱いになる問題を修正しました
   （PJR-QJAD、PJR-9PZ7）。
 - agent の一時ファイルが commit や統合前検査へ混入する問題を、commit 対象を限定して
@@ -108,20 +151,30 @@ SpecDojo の利用者に影響する変更を記録します。
   添えて 1 回だけ出し直させるようにしました（PJR-AVSR）。
 - 保護設定の検査が、利用上限で止まった直後に再生成可能な生成物を誤検知する問題を修正
   しました。利用上限で止まった場合も検査は行い、止まった理由として利用上限を記録します
-  （PJR-GRB5）。
+  （PJR-GRB5）。OpenCode の導入ファイルは Git で無視されている場合だけ検査対象から除外します
+  （PJR-K1ZD）。
 - executor の sandbox で `docs:build` が `tsx` の IPC で失敗する問題を、`docs:generate` を
   `node --import tsx` で実行する形にして回避しました（PJR-M8NA）。
 - 個票のタイトルに Markdown のエスケープ（`\*` など）が含まれると、plan・result・job の
   frontmatter の `name` が不正な YAML になる問題を修正しました（PJR-C44H）。
+- `register add` / `update` のタイトルと説明にある山括弧のプレースホルダを自動でインライン
+  コード化しました。waiting 以外への遷移では古い `block_reason` を消し、自動 commit の subject は
+  commitlint の長さの上限内に収めます（PJR-A9NC、PJR-SMET、PJR-DAW8）。
 - 文書サイトの mermaid の SVG キャッシュが、mermaid-cli の版と `mermaid-config.json` の変更を
   判定に含めず、更新後も古い SVG を使い回す問題を修正しました（PJR-XMMA）。
-- 利用者の環境に入る依存の脆弱性に対応しました。`js-yaml` を 4.3.2 以上、`dotenv` を 18 に
+- 利用者の環境に入る依存のうち、修正版を利用できる脆弱性に対応しました。`js-yaml` を 4.3.2 以上、`dotenv` を 18 に
   上げ、docs-site を puppeteer 25 と mermaid-cli 12 に上げました（PJR-6TKA、PJR-XMMA）。
   docs-lint は `markdownlint-cli` を 0.49 に上げ、使われていなかった
   `remark-lint-frontmatter-schema` を依存から外しました（PJR-7GAK）。
 
 ### 既知の問題
 
+- SpecDojo 本体の実行時依存 `fast-glob` が `micromatch` 経由で利用する `braces` に、サービス不能を
+  引き起こし得る high の脆弱性が 3 件報告されます。2026-10-08 時点で修正版はありません
+  （PJR-HQKV）。
+- 統合の commit で pre-commit hook の全テストが一時的に失敗することがあります。同じ worktree で
+  再実行すると成功しており、`exec run --resume` で統合を再開できます。並列実行時と単独実行時の
+  両方で観測されており、原因は未特定です（PJR-Q7GJ）。
 - docs-site に high 1 件、moderate 1 件の脆弱性が残っています。mermaid 12 が依存する chevrotain 11 が `lodash-es` 4.17.23 を固定している問題と、vite 経由の `esbuild` に起因するものであり、いずれも上流の対応待ちです（PJR-XMMA）。
 - docs-lint に moderate 1 件の脆弱性が残っています。`markdownlint-cli` 0.49.1 が `js-yaml` を
   `~5.2.1` に固定しているためで、上流の対応待ちです（PJR-7GAK）。

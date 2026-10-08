@@ -58,3 +58,32 @@
       from: "-"
       to: rate limit reached
   previous_event_id: reg_d944da9e80fa45fa8dcc6e3f0e95d90f
+- v: 1
+  id: reg_ad75c11a5ee54720af3f41a027d4538c
+  ts: "2026-10-08T16:50:41Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: rate limit reached
+      to: "-"
+  previous_event_id: reg_64629ba281964c4d8bbd224954bf974d
+- v: 1
+  id: reg_0cd6534aaf114fe7aada0dcadbd236b0
+  ts: "2026-10-08T16:58:12Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_ad75c11a5ee54720af3f41a027d4538c

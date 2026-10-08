@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: high
   owner: DEV
   registered_at: "2026-10-08T12:08:02Z"
   due_on: null
-  block_reason: rate limit reached
 ---
 
 # PJR-HRMS v0.3.0 の CHANGELOG と移行ガイドを最終化する
@@ -49,12 +48,27 @@ CHANGELOG の v0.3.0 は 2026-09-29 付けのままで、その後に入った�
 
 | No  | 作業                               | 担当 | 状態 | メモ                             |
 | --- | ---------------------------------- | ---- | ---- | -------------------------------- |
-| 1   | CHANGELOG と移行ガイドを最終化する | DEV  | open | 本リポジトリだけの変更は載せない |
+| 1   | CHANGELOG と移行ガイドを最終化する | DEV  | done | 本リポジトリだけの変更は載せない |
 | 2   | 公開日を記入する                   | PO   | open | 公開の当日に人が行う             |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- 2026-09-29 以降に完了した登録簿項目と `feat` / `fix` の commit を確認し、利用者に見える変更を
+  `CHANGELOG.md` の追加機能・不具合修正・既知の問題へ追記した。既存の記載へ統合できる変更は
+  重複させず、本リポジトリだけの member 設定、モデルの評価、開発用 Dev Container の調整は
+  除外した。
+- executor evidence の `requires_human`、`--resume-from executor`、grade の英語正本と表示用翻訳・
+  level 補正、親検証の失敗ログ、委譲した検証と合成コマンドの判定、Git の一時的失敗の再試行、
+  選択式の `specdojo init` と導入経路、文書 lint、仕様道（Spec-Dō）の呼び方、判断台帳の
+  Quick Start を反映した。
+- `fast-glob` 経由の `braces` の high の脆弱性と、統合 commit の hook が一時的に失敗する問題を
+  既知の問題へ追加した。依存の修正済み項目は「修正版を利用できる脆弱性」に表現を限定し、
+  未修正の脆弱性との矛盾を避けた。
+- [[specdojo:release-v0-3-0-migration-guide|v0.3.0 移行ガイド]]を `CHANGELOG.md` の破壊的変更と
+  照合した。Node 22.13、`evaluation`、`continuous` と rubric v2、review verdict とテンプレート、
+  `note` の終端拒否、複数リポジトリ、agent 名簿の移行をすべて扱っており、追加の変更は不要と
+  判断した。
+- `CHANGELOG.md` の公開日は `未定` とした。公開日に PO が日付を記入する作業だけが残る。
 
 ## 5. 関連ドキュメント
 
