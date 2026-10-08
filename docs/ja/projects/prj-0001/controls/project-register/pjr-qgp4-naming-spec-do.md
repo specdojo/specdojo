@@ -48,15 +48,31 @@ README・docs サイトのトップ・概要ガイドは、SpecDojo を「仕様
 | 標語                 | 決めて、書いて、腐らせない（英語: Decide with a register, write with kata, and keep your specs alive.）       |
 | 使う比喩             | dojo・kata・dō・shu-ha-ri（守破離）・稽古に限る。ninja・samurai・zen などは使わない                           |
 
-道場の比喩と仕組みの対応は次のとおりとする。
+道場の比喩と仕組みの対応は次のとおりとする（2026-10-08 に利用者との対話で確定。当初案の「稽古・審査・稽古日誌」を改めた）。既存の Kata・Waza・Ryu（型・技・流）の体系に合わせ、技（CLI の機能）の名前は活動の言葉でそろえる。
 
-| 道場の言葉 | SpecDojo の仕組み                                         |
-| ---------- | --------------------------------------------------------- |
-| 型（kata） | rulebook・recipe・sample・template                        |
-| 稽古       | 型に沿って AI と仕様を書く（exec）                        |
-| 審査       | grade（型に照らして品質を評価する）                       |
-| 稽古日誌   | register（決めたこと・迷っていることの台帳）              |
-| 守・破・離 | `approach` の `fully-guided`・`recipe-guided`・`freeform` |
+| 道場の言葉 | SpecDojo の仕組み                                                                                        |
+| ---------- | -------------------------------------------------------------------------------------------------------- |
+| 型（Kata） | rulebook・recipe・sample・template                                                                       |
+| 技（Waza） | `specdojo` CLI                                                                                           |
+| 流（Ryu）  | `approach`                                                                                               |
+| 記帳       | register。起票から状態の遷移・決定・完了までを記録し続ける。最初の操作（`register add`）は「起票」と呼ぶ |
+| 実戦       | exec。型に沿って実際の成果物を作る                                                                       |
+| 評定       | grade。型に照らして品質を 0〜4 で評価する                                                                |
+| 講評       | review。評定を入力に、タスクの完了を判断する                                                             |
+
+各流（`approach`）には、表示と文書で使う名前を付ける。CLI と設定の値は互換性のため変えない。
+
+| `approach`                | 名前     | 意味                                                              |
+| ------------------------- | -------- | ----------------------------------------------------------------- |
+| `fully-guided`            | 守       | 型をそのまま守る。rulebook・recipe・sample・template をすべて使う |
+| `recipe-guided`           | 破       | 型を崩して工夫する。recipe の問いと観点だけを基準にする           |
+| `freeform`                | 離       | 型から離れ、完了条件と根拠から組み立てる                          |
+| `bootstrap`               | 型起こし | 成果物と、その型を同時に初めて作る                                |
+| `retrofit`                | 見取り   | 見取り稽古のように、既存の実装を読み取って成果物に反映する        |
+| `cross-deliverable-dedup` | 型寄せ   | 複数の成果物の重複を、正本の 1 つへ寄せる                         |
+| `*-maintenance`           | 手入れ   | rulebook などの型を見直す（例: rulebook の手入れ）                |
+| `finalize`                | 免許     | 人が確かめ、成果物を `ready` と認める                             |
+| `bootstrap-finalize`      | 皆伝     | 型起こしで作った成果物と型を、まとめて認める                      |
 
 ## 4. 採択理由
 
