@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: high
   owner: DEV
   registered_at: "2026-10-08T03:45:19Z"
   due_on: null
+  block_reason: "agent exited with non-zero code: executor validation failed or not run: npm run check"
 ---
 
 # PJR-0WYM README と概要の呼び方を仕様道（Spec-Dō）に改める
