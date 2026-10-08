@@ -3,23 +3,57 @@ version: 1
 document: specdojo:sch-rulebook
 path: docs/ja/specdojo/rulebooks/sch-rulebook.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 87
-graded_at: "2026-09-14T01:11:32.676Z"
-graded_by: gemma-expert-executor
-content_hash: 5bcc515ceaba2dd7606e8795826beb6dcfb68e17a2c179462e27635b298fd327
+score: 92
+graded_at: "2026-10-08T21:22:27.146Z"
+graded_by: agy-expert-executor
+content_hash: 236797af0a9aa0d807552fee5060d7ac043821e5de369c124e59931a5574547c
 categories:
-  consistency:
+  purpose:
     score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
+  architecture:
+    score: 83
   usability:
     score: 67
-  architecture:
-    score: 75
+  implementation:
+    score: 100
   quality:
     score: 100
+  consistency:
+    score: 100
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
@@ -28,6 +62,15 @@ viewpoints:
   vp-arc-single-responsibility:
     level: 2
     score: 50
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
   vp-qe-verifiability:
     level: 4
     score: 100
@@ -43,6 +86,15 @@ viewpoints:
   vp-ux-language-consistency:
     level: 4
     score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
@@ -56,23 +108,26 @@ findings:
     severity: major
     rule: vp-arc-conciseness
     line: 103
+    anchor: "### 5.5. intent と grade からの strategy 生成"
     message: >-
       Section 5.5 describes generation flow, contradicting the statement in line 45 and 49 that refers to
       `specdojo:schedule-design-guide`.
-    anchor: "### 5.5. intent と grade からの strategy 生成"
+    message_ja: セクション 5.5 は生成フローについて説明しており、`specdojo:schedule-design-guide` に言及している 45行目と 49行目の記述と矛盾しています。
   - id: F002
     severity: major
     rule: vp-arc-single-responsibility
     line: 103
+    anchor: "### 5.5. intent と grade からの strategy 生成"
     message: >-
       The document mixes detailed tool generator logic (Section 5.5) with authoring rules; this belongs in a design
       guide or tool specification.
-    anchor: "### 5.5. intent と grade からの strategy 生成"
+    message_ja: このドキュメントは、詳細なツール生成ロジック（セクション 5.5）と作成ルールが混在しています。これらは設計ガイドまたはツールの仕様書に記載すべき内容です。
   - id: F003
     severity: major
     rule: vp-ux-readability
     line: 103
+    anchor: "### 5.5. intent と grade からの strategy 生成"
     message: >-
       Contradiction between line 45/49 and section 5.5 creates confusion regarding the authoritative source for
       generation flow and logic.
-    anchor: "### 5.5. intent と grade からの strategy 生成"
+    message_ja: 45/49行目とセクション 5.5 の矛盾により、生成フローとロジックの正当な情報源に関して混乱が生じています。

@@ -2,7 +2,7 @@
 id: stsd-routine-run-grade-criteria
 document: stsd-routine-run
 path: docs/ja/product/010-business-specs/020-data-model/stsd-routine-run.md
-graded_at: "2026-10-05T16:13:42.577Z"
+graded_at: "2026-10-08T16:09:08.630Z"
 graded_by: agy-expert-executor
 content_hash: ac79a57bfeaac8af23f280fbbc1262aeba79f678bef2fe196354a1575adaa07f
 summary:
@@ -16,32 +16,32 @@ criteria:
       - BA
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
-    reason: "missed_run: skip の要件欠落と、running 状態の成立条件が直前結果と新規試行を区別できない問題がある。"
+    reason: "`missed_run: skip` の経路が欠落しており、直前結果と新試行の対応も識別できないため要件が不完全である。"
   - id: DC-002
     text: 状態遷移の業務的妥当性を承認できること
     roles:
       - PO
     viewpoint: vp-po-purpose-alignment
     status: unsatisfied
-    reason: 試行中状態からの復旧方針が未決であり、影響や次アクションが示されておらず承認判断できない。
+    reason: 試行中状態の復旧方針などが未決であり、承認可否を判断できない。
   - id: DC-003
     text: 状態遷移実装の基礎として参照できること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
-    reason: last_run と last_result の対応関係を保証するキーや規則が定義されておらず実装基礎にならない。
+    reason: "`last_run` と `last_result` の対応保証がなく、状態の導出基礎として使えない。"
   - id: DC-004
     text: 状態ベースのテスト設計に活用できること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
     status: unsatisfied
-    reason: 状態値が直前実行か最新実行のものか区別できず、期待状態を一意に判定できない。
+    reason: 同じ保存状態を「試行中」と「前回結果確定済み」の両方に解釈でき、期待状態を一意に判定できない。
   - id: DC-005
     text: 状態管理実装の参照として使えること
     roles:
       - DEV
     viewpoint: vp-dev-implementation-readiness
     status: unsatisfied
-    reason: 対応キーの追加や結果クリア規則などの実装作業に必要な入力が確定していない。
+    reason: 現在の保存項目で試行中の一意判定ができないため、実装の参照にならない。

@@ -6,8 +6,8 @@ target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 87
-graded_at: "2026-09-28T21:33:05.366Z"
-graded_by: codex-expert-executor
+graded_at: "2026-10-08T21:08:24.793Z"
+graded_by: agy-expert-executor
 content_hash: 9e1697c9ee6481252fb766516d042309826fa7ee60fb3586fb235b1f1dd508ca
 categories:
   purpose:
@@ -110,62 +110,74 @@ findings:
   - id: F001
     severity: minor
     rule: vp-qe-verifiability
-    line: 211
-    anchor: "- 「全体の作成手順」で示した章立てと必須表がそろっている。"
+    line: 220
+    anchor: "- 評価軸が根拠資料の課題 ID や業務価値に対応している。"
     message: 「必須表がそろっている」ことを求めているが, recipe 内では各表の必須・推奨を定義していないため、どの表が欠けた場合に fail とするのか判定できない。
+    message_ja: 「必須表がそろっている」ことを求めているが, recipe 内では各表の必須・推奨を定義していないため、どの表が欠けた場合に fail とするのか判定できない。
   - id: F002
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 209
-    anchor: "## 8. 仕上げチェック"
+    line: 218
+    anchor: "- 評価軸と評価基準が案ごとに固定されている。"
     message: 「仕上げチェック」に個人名・個人連絡先・非公開の組織情報など公開範囲に不適切な情報がないことを確認する項目がなく、Recipe 記述標準が要求する公開適性を判定できない。
+    message_ja: 「仕上げチェック」に個人名・個人連絡先・非公開の組織情報など公開範囲に不適切な情報がないことを確認する項目がなく、Recipe 記述標準が要求する公開適性を判定できない。
   - id: F003
     severity: major
     rule: vp-qe-kata-conformance
-    line: 106
-    anchor: "- 効果、コスト、期間、リスク、運用適合、技術実現性を最低ラインにし、比較目的に応じて適応性、追跡性、AI 適合、成熟度を追加する。"
+    line: 115
+    anchor: "問い:"
     message: 評価軸の最低ラインに「リスク」「技術実現性」を含めると定めている一方、完成例 sample の評価軸・比較結果は両軸と省略理由を欠いており、recipe に従った完成例として成果物間の条件が一致していない。
+    message_ja: 評価軸の最低ラインに「リスク」「技術実現性」を含めると定めている一方、完成例 sample の評価軸・比較結果は両軸と省略理由を欠いており、recipe に従った完成例として成果物間の条件が一致していない。
   - id: F004
     severity: minor
     rule: vp-qe-kata-conformance
-    line: 107
-    anchor: "- 重みを使う場合は、重みの理由を備考に書く。"
+    line: 116
+    anchor: ""
     message: 重みの理由と低いほどよい軸の判定方向を「備考」に書くよう指示しているが, template の評価軸表には備考欄がなく、雛形から recipe の指示を実行できない。
+    message_ja: 重みの理由と低いほどよい軸の判定方向を「備考」に書くよう指示しているが, template の評価軸表には備考欄がなく、雛形から recipe の指示を実行できない。
   - id: F005
     severity: minor
     rule: vp-qe-kata-conformance
-    line: 106
-    anchor: "- 効果、コスト、期間、リスク、運用適合、技術実現性を最低ラインにし、比較目的に応じて適応性、追跡性、AI 適合、成熟度を追加する。"
+    line: 115
+    anchor: "問い:"
     message: rulebook は理由を記載すれば評価軸を省略でき、template も不要な軸の削除を案内しているが, recipe は6軸を例外のない最低ラインとしており、省略時の適用方法が一致していない。
+    message_ja: rulebook は理由を記載すれば評価軸を省略でき、template も不要な軸の削除を案内しているが, recipe は6軸を例外のない最低ラインとしており、省略時の適用方法が一致していない。
   - id: F006
     severity: major
     rule: vp-qe-kata-conformance
-    line: 106
-    anchor: "- 効果、コスト、期間、リスク、運用適合、技術実現性を最低ラインにし、比較目的に応じて適応性、追跡性、AI 適合、成熟度を追加する。"
+    line: 115
+    anchor: "問い:"
     message: >-
+      recipe と rulebook が最低評価軸とする「リスク」「技術実現性」を完成例 sample が評価軸・比較結果に含めず省略理由も示していないため、sample が recipe
+      を適用した正しい完成例として機能していない。
+    message_ja: >-
       recipe と rulebook が最低評価軸とする「リスク」「技術実現性」を完成例 sample が評価軸・比較結果に含めず省略理由も示していないため、sample が recipe
       を適用した正しい完成例として機能していない。
   - id: F007
     severity: minor
     rule: vp-qe-kata-conformance
-    line: 209
-    anchor: "## 8. 仕上げチェック"
+    line: 218
+    anchor: "- 評価軸と評価基準が案ごとに固定されている。"
     message: Recipe 記述標準が「仕上げチェック」に要求する公開適性の確認項目がなく、recipe 種別の必須責務を完全には満たしていない。
+    message_ja: Recipe 記述標準が「仕上げチェック」に要求する公開適性の確認項目がなく、recipe 種別の必須責務を完全には満たしていない。
   - id: F008
     severity: minor
     rule: vp-ux-language-consistency
-    line: 106
-    anchor: "- 効果、コスト、期間、リスク、運用適合、技術実現性を最低ラインにし、比較目的に応じて適応性、追跡性、AI 適合、成熟度を追加する。"
+    line: 115
+    anchor: "問い:"
     message: 最低評価軸を「運用適合」と呼ぶ一方、同じ節と良い例では「業務適合」、sample/template では「業務適合」「利用者・業務適合」としており、同一軸か別軸かを判断できるよう名称を統一または定義する必要がある。
+    message_ja: 最低評価軸を「運用適合」と呼ぶ一方、同じ節と良い例では「業務適合」、sample/template では「業務適合」「利用者・業務適合」としており、同一軸か別軸かを判断できるよう名称を統一または定義する必要がある。
   - id: F009
     severity: minor
     rule: vp-ux-language-consistency
-    line: 119
-    anchor: "- 比較試行と正式採用を区別し、試行の入力、評価軸、終了条件が決まっているか。"
+    line: 128
+    anchor: "- 製品・サービスを採択する場合は、データの正本、移行方法、利用停止時の取り出し方を書く。"
     message: 比較試行の条件を問いでは「終了条件」、書き方と template では「完了条件」と呼んでいるため、同じ条件を指すラベルを「完了条件」などに統一する必要がある。
+    message_ja: 比較試行の条件を問いでは「終了条件」、書き方と template では「完了条件」と呼んでいるため、同じ条件を指すラベルを「完了条件」などに統一する必要がある。
   - id: F010
     severity: minor
     rule: vp-ops-release-readiness
-    line: 209
-    anchor: "## 8. 仕上げチェック"
+    line: 218
+    anchor: "- 評価軸と評価基準が案ごとに固定されている。"
     message: 「仕上げチェック」に公開適性の確認項目がなく、公開前に個人名・個人連絡先・非公開の組織情報の混入を検出する ready 条件が定義されていない。
+    message_ja: 「仕上げチェック」に公開適性の確認項目がなく、公開前に個人名・個人連絡先・非公開の組織情報の混入を検出する ready 条件が定義されていない。

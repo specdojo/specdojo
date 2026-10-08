@@ -2,8 +2,8 @@
 id: stsd-register-entry-grade-criteria
 document: stsd-register-entry
 path: docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md
-graded_at: "2026-09-29T16:13:49.870Z"
-graded_by: codex-expert-executor
+graded_at: "2026-10-08T16:07:33.717Z"
+graded_by: agy-expert-executor
 content_hash: 48c647b4efecd15bfe8dcfe583519d02eea22fa18c70c886d97ce88f85fcbb19
 summary:
   satisfied: 0
@@ -16,32 +16,34 @@ criteria:
       - BA
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
-    reason: 現行運用で成立する直接終端・任意の活動中状態からの終端・直接再開先が欠落し、主要条件も業務上の事実だけで判定できない。
+    reason: The current status transitions do not correctly cover all edge cases such as direct termination from open state.
   - id: DC-002
     text: 状態遷移の業務的妥当性を承認できること
     roles:
       - PO
     viewpoint: vp-po-purpose-alignment
     status: unsatisfied
-    reason: 再開、却下、延期の遷移方針が仮定のままで、正本文書・CLI との差異も残るため業務的妥当性を承認できない。
+    reason: >-
+      Assumptions about transition behaviors are unresolved and do not provide sufficient clarity for the product
+      owner's approval.
   - id: DC-003
     text: 状態遷移実装の基礎として参照できること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
-    reason: "`item_status`、`block_reason`、`completed_at`、イベントログ、コマンドガードとの対応が不足し、実装の基礎として整合していない。"
+    reason: Technical constraints like item_status mapping are inconsistent with current CLI behaviors and schemas.
   - id: DC-004
     text: 状態ベースのテスト設計に活用できること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
     status: unsatisfied
-    reason: 全許可・禁止遷移と主要条件の pass / fail、必須記録、期待結果が定義されておらず状態ベースのテストを網羅設計できない。
+    reason: Acceptance criteria lack testable and measurable assertions for automated validation.
   - id: DC-005
     text: 状態管理実装の参照として使えること
     roles:
       - DEV
     viewpoint: vp-dev-implementation-readiness
     status: unsatisfied
-    reason: T-ID ごとのコマンド、遷移元・遷移先、更新キー、拒否条件が現行実装に整合した形で示されていない。
+    reason: Missing explicit command parameters and frontmatter keys required for development and implementation readiness.

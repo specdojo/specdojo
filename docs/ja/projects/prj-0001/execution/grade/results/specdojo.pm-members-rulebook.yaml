@@ -4,11 +4,11 @@ document: specdojo:pm-members-rulebook
 path: docs/ja/specdojo/rulebooks/pm-members-rulebook.md
 target: kata
 rubric: grade-rubric-v2
-verdict: needs-work
-score: 82
-graded_at: "2026-10-05T21:15:52.637Z"
+verdict: pass
+score: 93
+graded_at: "2026-10-08T21:16:37.437Z"
 graded_by: agy-expert-executor
-content_hash: 4226599c8333049c170a5ea38209e05d8c7bce511f7ac462e062fe966e2a4e0c
+content_hash: 9042fd0e0576c3996b06168b14b76df91bac98ee223338b7295e3bf2bbfc8341
 categories:
   purpose:
     score: 100
@@ -21,13 +21,13 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 83
+    score: 100
   implementation:
     score: 100
   quality:
-    score: 67
+    score: 83
   consistency:
-    score: 50
+    score: 75
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -57,8 +57,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
@@ -72,17 +72,17 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 2
-    score: 50
-  vp-qe-omissions-consistency:
-    level: 2
-    score: 50
-  vp-qe-kata-conformance:
-    level: 2
-    score: 50
-  vp-ux-readability:
     level: 3
     score: 75
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
   vp-ux-language-consistency:
     level: 4
     score: 100
@@ -100,67 +100,28 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 3
-  minor: 7
+  major: 0
+  minor: 3
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-arc-conciseness
-    line: 65
-    anchor: "| `version` | データバージョン。初期値は `1` | ○ |"
-    message: 4節の「推奨メタ項目」と5節の「本文構成」で共通メタ項目の定義が重複しており、YAML形式において冗長な記述となっている。
+    rule: vp-qe-verifiability
+    line: 46
+    anchor: "| `based_on`   | 任意 | 根拠文書 ID                      |"
+    message: nicknameの許容文字だけを示し、先頭を英小文字か数字とする条件と最大文字数のschema制約を示していないため、schemaでrejectされる値を作成し得る。
+    message_ja: nicknameの許容文字だけを示し、先頭を英小文字か数字とする条件と最大文字数のschema制約を示していないため、schemaでrejectされる値を作成し得る。
   - id: F002
     severity: minor
-    rule: vp-qe-verifiability
-    line: 61
-    anchor: "| `status` | `draft` / `ready` / `deprecated` | ○ |"
-    message: nicknameの許容文字だけを示し、先頭を英小文字か数字とする条件と最大文字数のschema制約を示していないため、schemaでrejectされる値を作成し得る。
-  - id: F003
-    severity: major
-    rule: vp-qe-verifiability
-    line: 111
-    anchor: "| `note` | 任意 | 補足。責務境界や公開上の注意を簡潔に書く |"
-    message: "priority、proficiency、capabilitiesを「agent 推奨」としているが、schemaは全てのtype: agentで必須としているため、rulebookに従うと検証に失敗し得る。"
-  - id: F004
-    severity: minor
     rule: vp-qe-omissions-consistency
-    line: 65
-    anchor: "| `version` | データバージョン。初期値は `1` | ○ |"
+    line: 50
+    anchor: schema にないメタ項目は追加しません。成果物の `status` は作成中は `draft` とし、`ready` への変更は人間が判断します。
     message: schemaが任意のルートメタ項目として許可するsupersedesが「推奨メタ項目」とルート構造から欠落しており、置き換え関係の記述可否を判断できない。
-  - id: F005
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 111
-    anchor: "| `note` | 任意 | 補足。責務境界や公開上の注意を簡潔に書く |"
-    message: "schemaでは全てのtype: agentにpriority等が必須だが、フィールド表や記述ガイドでは一部条件での推奨としており、必須キーの規定が矛盾している。"
-  - id: F006
+    message_ja: schemaが任意のルートメタ項目として許可するsupersedesが「推奨メタ項目」とルート構造から欠落しており、置き換え関係の記述可否を判断できない。
+  - id: F003
     severity: minor
     rule: vp-qe-kata-conformance
-    line: 51
+    line: 74
     anchor: ""
-    message: "rulebookはpipeline reporterとmode: reportを定義しているが、対応recipeのagent用フィールドではmodeをedit/reviewの二択としており整合していない。"
-  - id: F007
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 108
-    anchor: "| `command` | 任意 | provider の command template を使わない場合の上書き |"
     message: members[].rolesを必須としているが、based_onの標準定義では任意とされており、関連文書間で必須性と優先する規定を判断できない。
-  - id: F008
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 111
-    anchor: "| `note` | 任意 | 補足。責務境界や公開上の注意を簡潔に書く |"
-    message: schema必須のpriority等を推奨扱いとし、priorityの整数・最小値等の型制約も正本化していないため、YAML rulebookとして実装可能な規定になっていない。
-  - id: F009
-    severity: minor
-    rule: vp-ux-readability
-    line: 65
-    anchor: "| `version` | データバージョン。初期値は `1` | ○ |"
-    message: 「推奨メタ項目」と「本文構成（標準テンプレ）」で同じ8個のメタ項目を再掲しているため、読者が二つの表を比較しなければ差分の有無を判断できない。
-  - id: F010
-    severity: minor
-    rule: vp-ux-readability
-    line: 70
-    anchor: "`pm-members.yaml` は次のルート構造を標準とする。"
-    message: 「推奨メタ項目」と「本文構成」の表で区切り行直後やデータ行間に空行が入り、Markdown上で表が分断されるため一つの表として読み取れない。
+    message_ja: members[].rolesを必須としているが、based_onの標準定義では任意とされており、関連文書間で必須性と優先する規定を判断できない。
