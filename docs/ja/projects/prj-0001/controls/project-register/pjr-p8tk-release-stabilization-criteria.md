@@ -53,6 +53,21 @@ v0.3.0 の公開前に、exec の再開・統合・判定まわりの未解決�
 
 登録簿の未完了の issue と risk は 0 件。10/01 以降に `fix(exec)` の commit が 6 件あり、ほかに exec で直した runner の不具合が 5 件（PJR-GHKD・PJR-0ECY・PJR-PG6W・PJR-BK4K・PJR-R8WR）ある。いずれも実際の実行で見つかった。
 
+### 2.3. 公開物での実地の確認の途中経過（2026-10-08）
+
+`npm pack` の tarball（specdojo 0.3.0）を一時的なリポジトリに入れ、利用者と同じ手順で試した。
+
+| 手順                               | 結果                                                                                                                                                         |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `npm install`（tarball）           | 成功                                                                                                                                                         |
+| `config init`、`register scaffold` | 成功                                                                                                                                                         |
+| register の起票・決定・build       | 成功。日本語のタイトルの topic が `item` などになる（PJR-17HH）                                                                                              |
+| `config scaffold --provider codex` | codex の agent の定義と `npm run orch:codex` を作る。起動コマンド（`exec-defaults.yaml`）と agent の名簿（`agent-members.yaml`）は作らず、手で書く必要がある |
+| `exec run --register`（codex）     | 既定の設定では agent が読まれず失敗した（PJR-WZYW）。人の名簿と `members_path` を足す回避策で成功し、成果物の更新と review への遷移を確かめた                |
+| grade                              | 未実施。成果物カタログと設定のキー（`catalog_path`）を手で足す必要がある                                                                                     |
+
+判定基準 3 は、PJR-WZYW（公開を止める不具合）を直したあとに、grade まで含めて確かめ直す。
+
 ## 3. 作業内容
 
 | No  | 作業                                   | 担当         | 状態 | メモ                       |
