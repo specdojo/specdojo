@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_8584de6dd4f84967a538c7915cfe4e07
+  ts: "2026-10-08T12:08:02Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: v0.3.0 の公開に向けた洗い出しで判明（2026-10-08）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: v0.3.0 の CHANGELOG と移行ガイドを最終化する
+    - field: description
+      from: ""
+      to: CHANGELOG の v0.3.0 は 2026-09-29 付けのままで、その後に入った利用者に見える変更（requires_human、--resume-from executor、grade の英語正本と翻訳、合成コマンドの判定など）が載っていない。公開の前に CHANGELOG と移行ガイドを最終化する。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-08"
