@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_d860f73768164fd082577b6655253999
+  ts: "2026-10-08T12:32:42Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-P8TK の棚卸し（c）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 本体の実行時の依存 fast-glob 経由で braces の high の脆弱性が残る
+    - field: description
+      from: ""
+      to: npm audit --omit=dev で、直接の依存 fast-glob → micromatch → braces のサービス不能攻撃の脆弱性が high 3 件として出る（2026-10-08）。修正版はまだない。CHANGELOG の v0.3.0 は依存の脆弱性に対応したと書いている。fast-glob を別の実装（Node 標準の glob など）に置き換えるか、既知の問題として CHANGELOG に書くかを決める。
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-08"
