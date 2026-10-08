@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-xmqh-quickstart-decision-register
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-08T03:45:28Z"
   due_on: null
+  completed_at: "2026-10-08T14:47:42Z"
+  conclusion: quick-start ガイドの冒頭に、init から question・decision・設計書の更新・change-request・ログの確認までを 10 分で体験する流れを加えた。公開物で手順どおりに動くことを確かめた
 ---
 
 # PJR-XMQH 仕様の判断台帳としてのクイックスタートを作る

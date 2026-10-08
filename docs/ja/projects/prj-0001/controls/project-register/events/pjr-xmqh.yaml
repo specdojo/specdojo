@@ -87,3 +87,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_390210f81a104b03afedf3617d86eb85
+- v: 1
+  id: reg_f6527b702589421fa5629a908556ee7d
+  ts: "2026-10-08T14:47:42Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: "review: 内容と公開物での確認"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-08"
+    - field: conclusion
+      from: "-"
+      to: quick-start ガイドの冒頭に、init から question・decision・設計書の更新・change-request・ログの確認までを 10 分で体験する流れを加えた。公開物で手順どおりに動くことを確かめた
+  previous_event_id: reg_1d40500f4e9d4643b83a61ccd828bad1
