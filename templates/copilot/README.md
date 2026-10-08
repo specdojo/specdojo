@@ -9,7 +9,7 @@ specdojo:
 
 ## 1. 目的
 
-`specdojo exec` が GitHub Copilot CLI を agent として起動する際の設定の配布原本です。copilot は agent 定義ファイルを持たず、permission は `.specdojo/exec-defaults.yaml` の `providers.copilot.command_template` のフラグがすべてです。
+`specdojo exec` が GitHub Copilot CLI を agent として起動する際の設定と、対話用オーケストレーターの配布原本です。exec の executor / reporter は個別の agent 定義ファイルを使わず、permission は `.specdojo/exec-defaults.yaml` の `providers.copilot.command_template` のフラグが正本です。オーケストレーターだけは Copilot CLI の custom agent として `.github/agents/specdojo-orchestrator.md` を使います。
 
 ## 2. 構成
 
@@ -17,6 +17,7 @@ specdojo:
 | ---------------------------- | -------------------------- | ----------------------------------------------------------------------------------------------------------------- |
 | `agent-members-snippet.yaml` | `.specdojo/copilot/`       | agent 定義のスニペット。`.specdojo/agent-members.yaml` へ統合して使う参照用                                       |
 | `exec-defaults-snippet.yaml` | `.specdojo/copilot/`       | `providers.copilot`（command template・rate limit 検出）のスニペット。`exec-defaults.yaml` へコピーして使う参照用 |
+| 同梱 orchestrator wrapper    | `.github/agents/`          | `npm run orch:copilot` が参照する `specdojo-orchestrator` custom agent                                            |
 
 ## 3. 導入手順
 
@@ -31,7 +32,8 @@ specdojo config scaffold --provider copilot
 1. `.specdojo/copilot/exec-defaults-snippet.yaml` の `providers.copilot` を `.specdojo/exec-defaults.yaml` の `providers` へコピーする。
 2. `.specdojo/copilot/agent-members-snippet.yaml` の member 定義をリポジトリ共通の `.specdojo/agent-members.yaml` の `members` へコピーし、使う場合は `disabled: false` にする。agent は project ごとの `pm-members.yaml` へ書かない。
 3. `copilot login` で認証する（premium request の課金が発生する）。
-4. 最初のタスクで permission ログを確認し、`shell(...)` パターンのマッチ粒度が不足していれば `--allow-tool` を追記する。
+4. `npm run orch:copilot` でオーケストレーターを起動できることを確認する。
+5. 最初のタスクで permission ログを確認し、`shell(...)` パターンのマッチ粒度が不足していれば `--allow-tool` を追記する。
 
 ## 4. カスタマイズ
 

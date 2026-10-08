@@ -15,7 +15,7 @@ CLI Command Reference
 
 **対象範囲**
 
-- `specdojo` CLI の主要コマンド（config / kata / catalog / deliverable / schedule / register / exec / agent / grade / index / watch / build / routine）
+- `specdojo` CLI の主要コマンド（init / config / kata / catalog / deliverable / schedule / register / exec / agent / grade / index / watch / build / routine）
 
 **ここで引けるもの**
 
@@ -36,14 +36,40 @@ CLI Command Reference
 
 project の解決順序と設定は [遂行の技活用ガイド](../guides/waza-guide.md) を参照します。
 
-## 2. config / project
+## 2. init / config / project
 
-| コマンド                 | 用途                                              | 例                                          |
-| ------------------------ | ------------------------------------------------- | ------------------------------------------- |
-| `config init`            | `specdojo.config.json` と `.gitignore` を用意する | `specdojo config init`                      |
-| `config migrate-members` | agent 定義を保護設定へ移す                        | `specdojo config migrate-members --dry-run` |
-| `config scaffold`        | provider の agent・settings 設定を配置する        | `specdojo config scaffold --provider codex` |
-| `project list`           | 登録済み project を表示する                       | `specdojo project list`                     |
+| コマンド                 | 用途                                                    | 例                                          |
+| ------------------------ | ------------------------------------------------------- | ------------------------------------------- |
+| `init`                   | project から agent 実行までを質問式で初期設定する       | `specdojo init`                             |
+| `config init`            | `specdojo.config.json` と `.gitignore` を個別に用意する | `specdojo config init`                      |
+| `config migrate-members` | agent 定義を保護設定へ移す                              | `specdojo config migrate-members --dry-run` |
+| `config scaffold`        | provider の agent・settings 設定を個別に配置する        | `specdojo config scaffold --provider codex` |
+| `project list`           | 登録済み project を表示する                             | `specdojo project list`                     |
+
+`init` は対話できる端末で、project ID と名前、register、人の nickname と表示名、複数指定可能な
+provider、exec、成果物カタログの規模、Dev Container の順に質問します。既存ファイルは上書きせず、
+スキップしたパスを表示します。`--dry-run` は予定だけを表示し、ファイルや `package.json` を変更しません。
+
+非対話環境では質問せず、次の主要オプションと既定値を使います。
+
+| オプション              | 用途                                                | 既定値          |
+| ----------------------- | --------------------------------------------------- | --------------- |
+| `--yes`                 | 質問せず既定値と指定済みオプションで実行する        | -               |
+| `--project <id>`        | project ID                                          | `prj-0001`      |
+| `--name <name>`         | project の表示名                                    | `My Project`    |
+| `--no-register`         | register を作らない                                 | register を作る |
+| `--nickname <nickname>` | 人の名簿に書く nickname                             | `owner`         |
+| `--display-name <name>` | 人の名簿に書く表示名                                | `Project Owner` |
+| `--provider <names>`    | provider をカンマ区切りで指定する                   | `codex`         |
+| `--exec`                | executor / reporter の名簿と起動設定を作る          | 作らない        |
+| `--catalog <size>`      | `small` / `medium` / `large` の成果物カタログを作る | 作らない        |
+| `--devcontainer`        | 選んだ provider の Dev Container を作る             | 作らない        |
+| `--dry-run`             | 作成・変更予定だけを表示する                        | 書き込む        |
+
+`init` が作る `.specdojo/agent-members.yaml` と `.specdojo/exec-defaults.yaml` は、選択した
+provider だけを含みます。最後にオーケストレーターの起動コマンド、最初の起票、作成ファイルの commit を
+次の一歩として表示します。個別に設定する場合は、以下の `config init`、`config scaffold`、
+`register scaffold` などを利用します。
 
 `config init` は、register 単体で始められる `prj-0001` の最小設定を作成し、設定確認、任意の
 provider 設定、登録簿作成の順に次のコマンドを案内します。あわせて、生成物（`generated/` 配下、

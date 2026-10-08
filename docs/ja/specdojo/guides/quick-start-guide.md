@@ -51,9 +51,33 @@ git -C app1-specdojo init
 cd app1-specdojo
 npm init -y
 npm install --save-dev specdojo @specdojo/docs-lint
-# チャット:「<project-id> の SpecDojo 設定を初期化して」
-npx specdojo config init
+# 質問に答えて project、register、agent 実行までを初期設定する
+npx specdojo init
 ```
+
+`specdojo init` は、project ID と名前、人の nickname と表示名、利用する agent provider、
+exec・成果物カタログ・Dev Container の要否を順に質問します。選択に応じて設定、登録簿、人と
+agent の名簿、provider の scaffold、`package.json` の `orch:<provider>`、exec の起動設定を
+作成します。既存ファイルは上書きせず、作成内容は `--dry-run` で先に確認できます。
+
+CI や標準入力が端末でない環境では質問しません。次のようにオプションだけで同じ初期設定を
+行えます。省略値は画面に表示されます。
+
+```bash
+npx specdojo init --yes \
+  --project prj-0001 \
+  --name "Example Project" \
+  --nickname owner \
+  --display-name "Project Owner" \
+  --provider claude,codex \
+  --exec \
+  --catalog small \
+  --devcontainer \
+  --dry-run
+```
+
+初期化後は、表示された `npm run orch:<provider>` でオーケストレーターを起動し、最初の 1 件を
+起票します。作成された設定と文書は内容を確認して commit してください。
 
 `@specdojo/docs-lint` は SpecDojo 文書向けの remark プラグインと検証コマンドを提供します。
 最小構成では、リポジトリルートの `.remarkrc.yaml` から次のように公開 export を参照できます。
@@ -65,6 +89,15 @@ plugins:
 ```
 
 文書 lint の全設定例と検証コマンドは [[specdojo:docs-editing-guide|ドキュメント編集ガイド]] を参照してください。
+
+### 1.1. 個別に設定する場合
+
+各設定を個別に管理したい場合は、従来どおり `config init` と各 scaffold を順に実行できます。
+
+```bash
+# チャット:「<project-id> の SpecDojo 設定を初期化して」
+npx specdojo config init
+```
 
 `specdojo config init` は `.specdojo/specdojo.config.json` が存在しない場合に雛形を作成し、既存ファイルは上書きしません。雛形は register だけを使える最小構成であり、project パスは `app1-specdojo/` のリポジトリルートを基準とし、`run.worktree_base` は兄弟ディレクトリの `../app1-worktrees` を指します。作成された設定を開き、対象プロジェクトの ID と各パスを実際の名前に合わせてください。catalog、schedule、exec へ進むときに追加するキーと既定値は [[specdojo:specdojo-config-reference|SpecDojo設定リファレンス]] で確認できます。
 
@@ -107,9 +140,9 @@ npx specdojo project list
 
 以降の例では、対象プロジェクトを `<project-id>` と表記します。`current_project` を設定している場合も、最初は対象を確認しやすいように `--project` を明示します。
 
-このガイドの基本手順は、provider 未設定でも完了できるように人が作業する経路を使います。agent に実行させる箇所は、`.specdojo/agent-members.yaml` と provider を [exec設定ガイド](exec-config-guide.md) に従って設定した後に試してください。
+このガイドの基本手順は、exec 未設定でも完了できるように人が作業する経路を使います。agent に実行させる箇所は、`specdojo init --exec` で設定するか、`.specdojo/agent-members.yaml` と provider を [exec設定ガイド](exec-config-guide.md) に従って個別に設定した後に試してください。
 
-### 1.1. kataの参照元を確認する
+### 1.2. kataの参照元を確認する
 
 rulebook、standard、recipe、sample、template は、利用リポジトリに同じ ID のファイルがあればそれを優先し、無ければ npm package 内を参照します。初期導入時に kata 一式をコピーする必要はありません。
 

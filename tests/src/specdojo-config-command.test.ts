@@ -101,6 +101,7 @@ describe("config onboarding commands", () => {
         true,
       );
       expect(existsSync(join(repo, ".specdojo", "copilot", "pm-members-snippet.yaml"))).toBe(false);
+      expect(existsSync(join(repo, ".github", "agents", "specdojo-orchestrator.md"))).toBe(true);
       expect(output.join("")).toContain("Written: .specdojo/copilot/agent-members-snippet.yaml");
       expect(output.join("")).toContain("Define agent members in .specdojo/agent-members.yaml");
     } finally {

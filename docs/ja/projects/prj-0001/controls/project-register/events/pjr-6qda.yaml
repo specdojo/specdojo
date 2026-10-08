@@ -90,3 +90,32 @@
       from: "-"
       to: "integrate failed: project: git commit failed: error: unknown option '--reserve' / error: unknown option '--local' / error: unknown option '--strict-sync' / error: unknown option '--integration-branch'…"
   previous_event_id: reg_2ba359608aab4c9c8b2f0a88a877d4aa
+- v: 1
+  id: reg_5361d47f9b6c49c9a05ca74ec5e6b86f
+  ts: "2026-10-08T13:35:32Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "integrate failed: project: git commit failed: error: unknown option '--reserve' / error: unknown option '--local' / error: unknown option '--strict-sync' / error: unknown option '--integration-branch'…"
+      to: "-"
+  previous_event_id: reg_c052e45a5850467c81eaccc847fa00de
+- v: 1
+  id: reg_aa79a9e317d34929aa5422b8b5a2a649
+  ts: "2026-10-08T13:40:29Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_5361d47f9b6c49c9a05ca74ec5e6b86f
