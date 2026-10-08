@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: high
   owner: DEV
   registered_at: "2026-10-08T03:45:28Z"
   due_on: null
-  block_reason: rate limit reached
 ---
 
 # PJR-XMQH 仕様の判断台帳としてのクイックスタートを作る
@@ -42,12 +41,15 @@ question の起票 → decision で決める → 設計書を 1 つ更新 → �
 
 | No  | 作業                                            | 担当         | 状態 | メモ                     |
 | --- | ----------------------------------------------- | ------------ | ---- | ------------------------ |
-| 1   | クイックスタートの「10 分で体験する」流れを書く | DEV          | open | quick-start ガイドの冒頭 |
+| 1   | クイックスタートの「10 分で体験する」流れを書く | DEV          | done | quick-start ガイドの冒頭 |
 | 2   | 公開物で手順どおりに試す                        | orchestrator | open | 統合後                   |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- 実施内容: [[specdojo:quick-start-guide|Quick Start ガイド]] の冒頭に `10分で体験する — 仕様の判断台帳` を追加し、既存の章を 1 つずつ繰り下げた。駄菓子屋きぬやの「支払い方法をどこまで扱うか」を題材に、導入と `npx specdojo init`（質問への答え方の例）→ question の起票 → decision で決めて close → 成果物カタログを使わない設計書（`payment-policy.md`）の作成 → change-request の起票と設計書の修正・close → `register build` と生成される一覧・決定ログ・変更要求ログの確認、の順に、コマンドとチャットの例を示した。「次に進む」に型と実戦・評定と講評への入口を置いた。
+- README: 「記帳ひとつから始められます。」の直後に、この流れへの案内を追加した。
+- コマンドの確認: `init` の質問文と既定値、`register add` / `close` / `build` のオプション、close 時の状態（decision と question は `decided`、change-request は `done`）、生成ログのパスを CLI のソースと照合した。
+- 残課題: 公開物で手順どおりに試す作業（No 2）は統合後に orchestrator が行う。
 
 ## 5. 関連ドキュメント
 

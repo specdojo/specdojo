@@ -1,0 +1,31 @@
+Quick Start ガイドの冒頭に「10 分で体験する」流れを追加し、README からそこへ案内しました。ただし手順の実地確認はできていません。sandbox で一時リポジトリを作って `init` やコマンドを動かすことが拒否されたため、各コマンドが実際に動く形かは CLI のソースと照らし合わせて確かめただけです。公開物で手順どおりに試す作業（個票の作業内容 No 2）は、統合後に orchestrator が行う予定のまま残っています。
+
+**変更したファイル**
+- `docs/ja/specdojo/guides/quick-start-guide.md`
+  - 新しい第 1 章「10分で体験する — 仕様の判断台帳」を追加し、既存の第 1〜5 章を第 2〜6 章へ繰り下げました。
+  - 題材は駄菓子屋きぬやの「支払い方法をどこまで扱うか」です。次の順に、コマンドとオーケストレーターへの話しかけ方の例（`# チャット:`）を並べました。
+    1. `npm install --save-dev specdojo` と `npx specdojo init`（質問への答え方の例つき）
+    2. question として起票する
+    3. decision で決めて、decision と question を close する
+    4. 成果物カタログを使わずに設計書 `payment-policy.md` を 1 つ書く
+    5. 後日の変更を change-request として起票し、設計書を直して close する
+    6. `register build` を実行し、一覧・決定ログ・変更要求ログ・課題ログを確かめる
+  - 「次に進む」として、型と実戦・評定と講評・登録簿運用ガイドへの入口を短く置きました。標語と道場の言葉は PJR-QGP4 で決めた範囲に合わせています。
+- `README.md`: 「記帳ひとつから始められます。」の直後に、この流れへの案内を 1 文加えました。
+- 個票 `pjr-xmqh-quickstart-decision-register.md`: 作業内容 No 1 を `done` にし、`対応結果` に実施内容・ソースとの照合結果・残課題を書きました。frontmatter のステータス類は変えていません。
+
+**ソースで照合した点**
+- `init` の質問文と既定値
+- `register add` / `close` / `build` のオプション
+- close 後の状態：decision と question は `decided`、change-request は `done`
+- 記帳のたびに一覧とログが作り直されること、生成されるファイルのパス
+
+**検証結果**
+- `npx prettier --write`（変更した 3 ファイル）: 完了
+- `register build`、`catalog validate`、`index build`、`npm run validate:history-links`: すべて成功（`catalog validate` は、この変更と関係のない既存の WARN のみ）
+- `npm run validate:catalog`: 出力は既存の WARN と `OK: dct-index.yaml` で、エラーは出ていません。ただしパイプ経由で実行したため、終了コードそのものは確かめていません。
+- `npm run check` は、この中で通しで実行していません。lint・typecheck・schema 検証・unit / integration テストは親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"final_message":"Quick Start ガイドの冒頭に「10分で体験する — 仕様の判断台帳」を追加し（question の起票 → decision で決めて close → カタログなしの設計書 → change-request で修正 → 台帳の確認、の各手順にコマンドとチャットの例。「次に進む」で型・実戦・評定・講評へ案内）、既存の章を 1 つずつ繰り下げた。README の「記帳ひとつから始められます。」からこの流れへ案内し、個票の作業内容 No 1 と対応結果を更新した。確認済み: quick-start-guide.md、README.md、個票、コマンドと CLI ソース（init の質問と既定値、register add/close/build のオプション、close 後の状態、生成ログのパス）の照合。未確認: sandbox が一時リポジトリの作成とコマンド実行を拒否したため、手順を実地では試していない（個票の作業内容 No 2 として、統合後に orchestrator が行う）。`npm run check` 全体は親 runner に委ねた。","validations":[{"command":"npx prettier --write docs/ja/specdojo/guides/quick-start-guide.md README.md docs/ja/projects/prj-0001/controls/project-register/pjr-xmqh-quickstart-decision-register.md","status":"passed","summary":"整形済み"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"一覧と、決定ログ・変更要求ログなどの派生ビューを生成した"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"終了コード 0。この変更と関係のない既存の based_on WARN のみ"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"2485 件のインデックスを生成した"},{"command":"npm run validate:history-links","status":"passed","summary":"終了コード 0"},{"command":"npm run validate:catalog","status":"passed","summary":"既存の WARN と OK: dct-index.yaml を出力し、エラーなし。パイプ経由で実行したため終了コード自体は未確認"}]}
+</specdojo_executor_evidence>

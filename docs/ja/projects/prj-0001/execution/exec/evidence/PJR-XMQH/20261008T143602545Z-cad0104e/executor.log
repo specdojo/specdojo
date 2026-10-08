@@ -1,0 +1,670 @@
+Reading prompt from stdin...
+OpenAI Codex v0.160.0
+--------
+workdir: /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-XMQH
+model: gpt-5.6-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: high
+reasoning summaries: none
+session id: 01a11bf1-54f1-7672-9111-7e1ab81d0e31
+--------
+user
+---
+specdojo:
+  id: prj-0001:xep-pjr-xmqh-20261008t143457z-afb5
+  type: exec-plan
+  rulebook: none
+  task_id: PJR-XMQH
+  name: "仕様の判断台帳としてのクイックスタートを作る"
+  mode: edit
+  status: ready
+  project_id: prj-0001
+  origin: register
+  owner: DEV
+---
+
+# Edit Plan: PJR-XMQH 仕様の判断台帳としてのクイックスタートを作る
+
+## 1. このタスクで行うこと
+
+プロジェクト登録簿の項目 PJR-XMQH「仕様の判断台帳としてのクイックスタートを作る」に対応する。
+
+question の起票 → decision で決める → 設計書を 1 つ更新 → 後日 change-request で直す、までを 10 分で体験できるクイックスタートを作る。kata を事前に用意しなくても始められることを示す。
+
+## 2. 対象項目
+
+- `id`: PJR-XMQH
+- `type`: todo
+- `priority`: high
+- `owner`: DEV
+- `due`: -
+- `登録簿`: `docs/ja/projects/prj-0001/controls/project-register/pjr-index.md`
+- `個票`: `docs/ja/projects/prj-0001/controls/project-register/pjr-xmqh-quickstart-decision-register.md`
+- `result`: `docs/ja/projects/prj-0001/execution/exec/results/pjr-xmqh-20261008T143457Z-afb5-result.md`
+
+## 3. 進め方
+
+1. 登録簿の該当行と個票（存在する場合）を読み、目的・完了条件・制約を把握する。
+2. 個票に完了条件がある場合はそれを作業の基準にする。無い場合はタイトルと説明から完了条件の仮説を立て、その仮説を result に明記する。
+3. 関連する成果物・設計書・実装を確認し、対象ファイルを特定して変更する。
+4. 個票が存在する場合は、個票の作業内容・対応結果セクションを実施内容で更新する。
+5. 判断に迷う箇所は _TODO_ / _ASSUMPTION_ で残し、根拠と次のアクションを result に書く。
+
+### grade result から展開された finding
+
+- なし
+
+plan に展開された finding は、message と同じ viewpoint ID の判定根拠に照らして解消する。未解消、根拠不足、または判断不能の場合は、理由と次のアクションを result に記録する。grade result サイドカーは再評価時に更新されるため、本タスクでは直接編集しない。
+
+## 4. 完了手順
+
+1. 「進め方」に従って対応を完了する。
+2. 共通規約に従って、必要な整形・静的検査を実行する。
+3. result に実施内容・変更ファイル・申し送りを記入する。これはタスク完了に必須であり、_TODO_ を残したまま終了しない（詳細は共通規約を参照）。
+4. 登録簿（`pjr-index.md`）の行と個票のステータス項目は変更しない。状態遷移（review / close など）は runner と人間が行う。
+
+## 5. 異常終了の条件
+
+- 前提不足・対象ファイル不明・静的検査未解消の場合は異常終了する（終了コード 1）。
+- 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
+- agent 自身は登録簿の状態を変更せず、終了コードと標準エラー出力で runner に結果を返す。
+
+## 共通: 記法・成果物規約
+
+この規約は、生成される全 exec plan に共通で適用される。result の完了条件、他文書を参照する際のリンク記法、成果物の状態（status）の扱いを統一する。
+
+- result（review plan の場合は review result）への記入は、タスク完了に必須の作業である。成果物の編集とは別に、最後に必ず実施する。
+- 終了コード 0 で完了する前に、result の必須セクションをすべて実際の内容で埋め、プレースホルダ（_TODO_ など）や未記入のセクションを残さない。
+- 成果物に変更が不要と判断した場合でも、result の記入は省略しない。変更不要と判断した理由と根拠を result に記入してから完了する。
+- result が未記入・プレースホルダのまま終了コード 0 で終了すると、runner は成果物未完了（block）として扱い、タスクはやり直しになる。完了前に result の記入漏れがないことを必ず確認する。
+- result の frontmatter は scaffold 済みの構造を正本とする。`id` / `task_id` / `mode` / `project_id` / `plan_ref` / `agent` / `execution` / `approach` / `targets` はキーの追加・削除・改名をせず、scaffold された値のまま維持する。見出し構成（`# Edit Result` などの H1、`## 1.` 以降の章立て）も独自の構成に置き換えない。埋めるのは本文セクションの `_TODO_` プレースホルダの中身だけである。`status` と `completed_at` は完了処理（runner 側）が更新するため、自分で書き換えない。
+- 文書へのリンクは、対象文書が既に存在する場合は `[[id|title]]` 形式で記載する（`id` は project 修飾 doc id）。
+- リンクを表（テーブル）のセル内に置く場合は、区切りの `|` を `[[id\|title]]` のようにエスケープする。エスケープしないと列がずれて表が壊れ、prettier 整形でセルが分割されて固定化される。
+- まだ存在しない文書を参照する場合は、`[[...]]` ではなく `` `id` `` または `` `filename` `` のようにバッククォートで仮置きする。
+- Markdown の自由記述では、`_` を含む識別子・フィールド名（例: `depends_on`）を必ずインラインコードで囲む。result に描画される executor evidence や reporter の自由記述も同じ記法にする。
+- 成果物 frontmatter の `status` を `ready` に変更しない。`ready` への昇格は人間のみが行うため、`draft` のまま据え置く（exec のコミット時ガードでも昇格はブロックされる）。
+- plan に「プロジェクトコンテキスト」章がある場合、そこに挙がる文書はプロジェクト共通の前提を読むための参照であり、成果物 frontmatter の `based_on` へ転記しない。参照して得た前提は本文の記述内容へ反映する。
+- 成果物 frontmatter の `based_on` に書けるのは、その成果物の `depends_on` の推移閉包に含まれる先行成果物だけである。閉包外の ID を書くと `catalog validate` が「`based_on` が `depends_on` の推移閉包に含まれていません」としてエラーになり、コミットがブロックされる。`based_on` を増やす必要が生じた場合は、自分で転記せず、根拠不足として result に記録する。
+- ファイルの読み取り・書き込み・編集は、作業ディレクトリ（カレントディレクトリ）からの相対パスで指定する。絶対パスを自分で組み立てたり、作業ディレクトリ名を推測して指定したりしない（作業ディレクトリ名の取り違えは外部パス扱いになり拒否される）。
+- 編集・書き込みが作業ディレクトリ外（`external_directory`）として拒否された場合、原因はパス指定の誤り（誤った絶対パス・ディレクトリ名の取り違え）である。bash の heredoc などへ回避的に切り替えず、相対パスに直したうえで同じ編集ツールで再実行する。
+- 作業用のファイル（編集用スクリプト、検証用の一時データなど）はリポジトリの外（一時ディレクトリ）に置き、終了前に削除する。リポジトリ内、とくにリポジトリ直下に作業用のファイルを作らない。成果物ではない新規ファイルは commit されず、`commit-scope:` の警告として記録される。
+- 整形・静的検査は、この plan の完了手順または本共通規約で明示されたコマンドを実行する。変更対象に必要な test、build、schema 検証は、plan に個別記載がなくても実行してよい。同じ test script では対象限定と全件を同一 executor run 内で連続実行せず、どちらか一方に絞る。下表、plan、またはプロジェクト標準が全件 test を求める場合は、全件を1回だけ実行して対象限定の実行を省く。この制約は executor が sandbox 内で実行する test script の回数に対するものであり、親検証に設定された ID のコマンドは対象外である（親 runner が別途実行する）。実行したコマンド・対象・結果は result に記録する。
+- executor / reporter pipeline で親 runner の検証が設定されている場合、executor は設定済み ID に対応するコマンドを sandbox 内で実行せず、executor 終了後に親 runner が固定許可リストから実行して evidence へ追記する。`validate-schema` は `npm run validate:schema`、`test-unit` は `npm run test:unit`、`test-integration` は `npm run test:integration` に対応する。executor は親検証と同じコマンドの対象限定版も追加せず、二重実行しない。
+- 検査を実行する前に、リポジトリの `package.json`、`.specdojo/specdojo.config.json`、hook 設定を読み、下表の適用条件を確認する。条件を満たさない検査は実行せず、result や executor evidence の validations に `not_run` としても記録しない。非適用の理由を残す必要がある場合は、検証結果ではなく result の実施内容または申し送りに記録する。
+- 依存パッケージの有無は、対象リポジトリの `package.json` の `dependencies` / `devDependencies` と、リポジトリに固定された package manager の設定を基準に判断する。`npx` が未導入パッケージをネットワークから一時取得できることは、導入済みとはみなさない。設定ファイルがない、壊れているなどの理由で適用条件を確定できない検査は実行せず、validations にも記録しない。その理由と次の確認事項を result の申し送りに記録する。
+- Markdown 成果物を編集した場合、Prettier が導入されているときだけ `npx prettier --write <対象ファイル>` で整形する。`markdownlint-cli` または `markdownlint` が導入されているときだけ `npx markdownlint <対象ファイル>` を実行し、`markdownlint-cli2` を採用するリポジトリでは、そのリポジトリで定めた CLI2 のコマンドを実行する。適用した検査でエラーが出た場合は修正してから完了とする。
+- 終了する前に、コミット時に実行される検査（pre-commit 相当）のうち、現在のリポジトリに設定され、上記の適用条件を満たすものを先回りで実行する。適用した検査の失敗はすべて修正してから完了する。
+- 実行対象は、変更したファイルの種別で判断する。下表のうち、変更したファイルが該当し、かつ適用条件を満たす行の検査を実行する。該当行がない場合や適用条件を満たさない場合は追加の検査は不要である。ただし親検証に設定された ID のコマンドは下表よりも優先し、executor は実行しない。下表に同じコマンドが挙がっていても、親 runner の実行に委ねる。
+- 検査コマンドの正本はリポジトリの hook 設定（`lefthook.yml` など）である。下表と設定が食い違う場合は、適用条件を満たす設定側のコマンドに合わせ、実行したコマンドと結果を result に記録する。`specdojo` コマンドは、リポジトリで定められた起動方法（`npx specdojo <subcommand>`、`npx tsx src/specdojo.ts <subcommand>` など）で実行する。ただし、sandbox 環境で `tsx` の IPC エラー（`EPERM`）が発生する場合は、代わりに `node --import tsx src/specdojo.ts <subcommand>` を使用して実行する。
+
+| 変更したファイル                                                                                       | 適用条件                                                                            | 実行する検査                                                                                                                          |
+| ------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `*.md`                                                                                                 | 対応するローカル依存が `package.json` にある                                        | `npx prettier --write <対象ファイル>`、導入済み実装に対応する markdownlint コマンド                                                   |
+| `*.ts` / `*.js` / `*.json` / `*.yaml` / `*.yml`                                                        | Prettier が `package.json` にある                                                   | `npx prettier --write <対象ファイル>`                                                                                                 |
+| `src/`、`tests/`、`scripts/`、`tools/`、`tsconfig*.json`                                               | `package.json` に `typecheck` script がある                                         | `npm run typecheck`                                                                                                                   |
+| `src/`、`tests/`、`docs/ja/specdojo/templates/`、`docs/ja/specdojo/exec-templates/`、`vitest.config.*` | pipeline executor は `test:unit`、それ以外は `test` script が `package.json` にある | pipeline executor は `npm run test:unit`、それ以外は `npm test`（`test-unit` が親検証に設定されている場合は executor では実行しない） |
+| `docs/ja/projects/` 配下                                                                               | 対象 project に `catalog_path` が設定されている                                     | `specdojo catalog validate`                                                                                                           |
+| `dct-*.yaml`                                                                                           | 対象 project に `catalog_path` が設定されている                                     | `specdojo catalog build`                                                                                                              |
+| `pjr-index.md`                                                                                         | 対象 project に `project_register_path` が設定されている                            | `specdojo register build`                                                                                                             |
+| `sch-*.yaml`                                                                                           | 対象 project に `schedule_path` が設定されている                                    | `specdojo exec refresh`                                                                                                               |
+| `docs/` 配下                                                                                           | リポジトリで定められた起動方法により SpecDojo CLI を実行できる                      | `specdojo index build`                                                                                                                |
+
+---
+
+# Pipeline executor stage instructions
+
+This invocation is the executor stage of an executor/reporter pipeline. Edit and validate the
+artifacts required by the plan, but do not create or update the result file. Any plan instruction
+that assigns result writing or lifecycle transitions to the agent belongs to the later reporter or
+runner stage and does not apply here.
+
+The parent runner owns Git commits and repository configuration. Do not run git commit or change
+local, global, or system Git configuration, including user.name and user.email. A Git state change
+will stop the pipeline before validation, reporting, commit, or merge.
+
+When writing Markdown in the final evidence, wrap identifiers or field names containing an
+underscore in inline code (for example, `depends_on`).
+
+The SpecDojo parent runner will execute these allowlisted validations after you exit: lint-ts, lint-fm, lint-md, test-integration, validate-schema, typecheck, test-unit (npm run lint:ts, npm run lint:fm, npm run lint:md, npm run test:integration, npm run validate:schema, npm run typecheck, npm run test:unit). Do not run those commands inside the agent sandbox or report duplicate executor results for them. Run only the remaining sandbox-safe validations required by the plan. Parent-run results will be appended to evidence with source=runner and are authoritative.
+
+
+
+Use validation status `requires_human` only for a check that cannot run from the agent sandbox,
+such as launching a real agent CLI, consuming a usage quota or incurring a charge, or requiring
+credentials or a host-side operation. Do not use it for a check that could run but was skipped;
+report that as `not_run`. A `requires_human` check is carried into the result as a human handoff
+and does not block pipeline completion.
+
+End the final response with exactly one machine-readable report using this envelope. Do not place
+Markdown fences around the JSON.
+
+<specdojo_executor_evidence>
+{"final_message":"concise outcome","validations":[{"command":"exact command","status":"passed|failed|not_run|requires_human","summary":"concise result or required human check"}]}
+</specdojo_executor_evidence>
+
+warning: Codex could not find bubblewrap on PATH. Install bubblewrap with your OS package manager. See the sandbox prerequisites: https://developers.openai.com/codex/concepts/sandboxing#prerequisites. Codex will use the bundled bubblewrap in the meantime.
+codex
+計画に従い、まず登録簿・個票と関連する設計書、検査設定を確認します。result は executor 段階の指示に従って編集せず、クイックスタート本体と個票の作業内容・対応結果だけを対象にします。
+exec
+/bin/bash -lc "pwd && rg --files -g 'AGENTS.md' -g '"'!**/.env'"' -g '"'!secrets/**'"' -g 'package.json' -g '.specdojo/specdojo.config.json' -g 'lefthook.yml' -g 'lefthook.yaml' -g 'docs/ja/projects/prj-0001/**' -g 'docs/ja/specdojo/**' | sed -n '1,240p'" in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-XMQH
+ succeeded in 14ms:
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-XMQH
+package.json
+AGENTS.md
+lefthook.yml
+packages/vscode-specdojo/package.json
+packages/docs-lint/package.json
+packages/docs-site/package.json
+docs/ja/specdojo/standards/philosophy-authoring-standard.md
+docs/ja/specdojo/standards/document-metadata-standard.md
+docs/ja/specdojo/standards/sample-authoring-standard.md
+docs/ja/specdojo/standards/test-document-scope-standard.md
+docs/ja/specdojo/standards/exec-human-finalize-standard.md
+docs/ja/specdojo/standards/template-authoring-standard.md
+docs/ja/specdojo/standards/people-and-organization-definition-standard.md
+docs/ja/specdojo/standards/id-and-file-naming-standard.md
+docs/ja/specdojo/standards/reference-authoring-standard.md
+docs/ja/specdojo/standards/git-branching-standard.md
+docs/ja/specdojo/standards/recipe-authoring-standard.md
+docs/ja/specdojo/standards/job-definition-standard.md
+docs/ja/specdojo/standards/guide-authoring-standard.md
+docs/ja/specdojo/standards/rulebook-authoring-standard.md
+docs/ja/specdojo/standards/standard-authoring-standard.md
+docs/ja/projects/prj-0001/030-project-management/pm-review-viewpoints.yaml
+docs/ja/specdojo/exec-templates/xep-template-maintenance-template.md
+docs/ja/projects/prj-0001/030-project-management/pm-communication-plan.md
+docs/ja/projects/prj-0001/030-project-management/pm-organization.md
+docs/ja/projects/prj-0001/030-project-management/pm-raci.md
+docs/ja/projects/prj-0001/030-project-management/pm-quality-management-plan.md
+docs/ja/projects/prj-0001/030-project-management/pm-roles.yaml
+docs/ja/projects/prj-0001/030-project-management/pm-plan.md
+docs/ja/projects/prj-0001/030-project-management/pm-members.yaml
+docs/ja/specdojo/exec-templates/xep-register-template.md
+docs/ja/specdojo/exec-templates/xep-fully-guided-template.md
+docs/ja/specdojo/exec-templates/xrp-rulebook-maintenance-template.md
+docs/ja/specdojo/exec-templates/xer-human-bootstrap-finalize-template.md
+docs/ja/specdojo/exec-templates/xrr-template.md
+docs/ja/specdojo/exec-templates/xrp-retrofit-template.md
+docs/ja/specdojo/exec-templates/xep-job-template.md
+docs/ja/specdojo/exec-templates/xer-human-finalize-template.md
+docs/ja/specdojo/exec-templates/xep-retrofit-template.md
+docs/ja/specdojo/exec-templates/xep-register-investigate-template.md
+docs/ja/specdojo/exec-templates/xep-common-conventions-template.md
+docs/ja/specdojo/exec-templates/xep-sample-maintenance-template.md
+docs/ja/specdojo/exec-templates/xer-cross-deliverable-dedup-template.md
+docs/ja/specdojo/exec-templates/xep-recipe-maintenance-template.md
+docs/ja/specdojo/exec-templates/xep-template.md
+docs/ja/specdojo/exec-templates/xrp-sample-maintenance-template.md
+docs/ja/specdojo/exec-templates/xrp-recipe-maintenance-template.md
+docs/ja/specdojo/exec-templates/xrp-template-maintenance-template.md
+docs/ja/specdojo/exec-templates/xrp-freeform-template.md
+docs/ja/specdojo/exec-templates/xrp-fully-guided-template.md
+docs/ja/specdojo/exec-templates/xep-rulebook-maintenance-template.md
+docs/ja/specdojo/exec-templates/xer-template.md
+docs/ja/specdojo/exec-templates/xep-cross-deliverable-dedup-template.md
+docs/ja/specdojo/exec-templates/xep-bootstrap-template.md
+docs/ja/specdojo/exec-templates/xep-freeform-template.md
+docs/ja/specdojo/exec-templates/xep-recipe-guided-template.md
+docs/ja/specdojo/exec-templates/xrp-recipe-guided-template.md
+docs/ja/specdojo/exec-templates/xrp-template.md
+docs/ja/specdojo/defaults/pm-review-viewpoints.yaml
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-current-state.yaml
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-project-definition.yaml
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bes.yaml
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-stsd.yaml
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-system-acceptance-criteria.yaml
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-index.yaml
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-acceptance-criteria.yaml
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-non-functional-requirements.yaml
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-br.yaml
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-ccd.yaml
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-glossary.yaml
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-impact-analysis.yaml
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-cdsd.yaml
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-project-management.yaml
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-architecture.yaml
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-system-design.yaml
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-bdd.yaml
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-operations.yaml
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-migration-planning.yaml
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-planning.yaml
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-user-interface-model.yaml
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-cld.yaml
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bps.yaml
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-system-functions.yaml
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-external-interface-specs.yaml
+docs/ja/specdojo/philosophy/specdojo-philosophy.md
+docs/ja/specdojo/philosophy/needs-to-implementation-philosophy.md
+docs/ja/projects/prj-0001/timeline/tml-index.yaml
+docs/ja/projects/prj-0001/030-project-management/generated/pm-members.md
+docs/ja/specdojo/templates/dct-data-model-cdsd-template.yaml
+docs/ja/projects/prj-0001/030-project-management/generated/pm-roles.md
+docs/ja/projects/prj-0001/030-project-management/generated/pm-review-viewpoints.md
+docs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml
+docs/ja/specdojo/templates/pm-communication-plan-template.md
+docs/ja/specdojo/templates/prj-comparison-of-alternatives-template.md
+docs/ja/specdojo/templates/stsd-template.md
+docs/ja/specdojo/templates/prj-success-criteria-and-acceptance-criteria-template.md
+docs/ja/specdojo/templates/opr-template.md
+docs/ja/specdojo/templates/prj-overview-template.md
+docs/ja/specdojo/templates/dct-business-model-bes-template.yaml
+docs/ja/specdojo/templates/prj-assumptions-constraints-dependencies-template.md
+docs/ja/specdojo/templates/dct-operations-template.yaml
+docs/ja/specdojo/templates/dct-index-template.md
+docs/ja/specdojo/templates/cdfd-template.md
+docs/ja/specdojo/templates/dct-impact-analysis-template.yaml
+docs/ja/specdojo/templates/pm-organization-template.md
+docs/ja/specdojo/templates/prj-scope-template.md
+docs/ja/specdojo/templates/prj-issues-and-approach-template.md
+docs/ja/specdojo/templates/dct-system-acceptance-criteria-template.yaml
+docs/ja/specdojo/templates/pjr-risk-template.md
+docs/ja/specdojo/templates/prj-charter-template.md
+docs/ja/specdojo/templates/dct-data-model-sld-template.yaml
+docs/ja/specdojo/templates/pm-risk-register-template.md
+docs/ja/specdojo/templates/dct-system-functions-template.yaml
+docs/ja/specdojo/templates/agent-members-template.yaml
+docs/ja/specdojo/templates/pjr-views-by-owner-template.md
+docs/ja/specdojo/templates/pjr-decision-template.md
+docs/ja/specdojo/templates/prj-stakeholder-register-template.md
+docs/ja/specdojo/templates/dct-external-interface-specs-template.yaml
+docs/ja/specdojo/templates/cdfd-overview-template.md
+docs/ja/specdojo/templates/pjr-note-template.md
+docs/ja/specdojo/templates/dct-glossary-template.yaml
+docs/ja/specdojo/templates/pm-decision-log-template.md
+docs/ja/specdojo/templates/pm-raci-template.md
+docs/ja/specdojo/templates/pjr-issue-template.md
+docs/ja/specdojo/templates/dct-project-definition-template.yaml
+docs/ja/specdojo/templates/dct-data-model-cld-template.yaml
+docs/ja/specdojo/templates/dct-test-specs-template.yaml
+docs/ja/specdojo/templates/pm-quality-management-plan-template.md
+docs/ja/specdojo/templates/pjr-change-request-template.md
+docs/ja/specdojo/templates/pjr-question-template.md
+docs/ja/specdojo/templates/pjr-views-by-priority-template.md
+docs/ja/specdojo/templates/dct-migration-planning-template.yaml
+docs/ja/specdojo/templates/dct-data-model-ccd-template.yaml
+docs/ja/specdojo/templates/pm-plan-template.md
+docs/ja/specdojo/templates/pjr-todo-template.md
+docs/ja/specdojo/templates/cdfd-uc-template.md
+docs/ja/specdojo/templates/dct-data-model-stsd-template.yaml
+docs/ja/specdojo/templates/dct-user-interface-model-template.yaml
+docs/ja/specdojo/templates/dct-business-model-br-template.yaml
+docs/ja/specdojo/templates/dct-data-model-bdd-template.yaml
+docs/ja/specdojo/templates/dct-system-design-template.yaml
+docs/ja/specdojo/templates/dct-architecture-template.yaml
+docs/ja/specdojo/templates/dct-data-flow-template.yaml
+docs/ja/specdojo/templates/dct-business-model-bps-template.yaml
+docs/ja/specdojo/templates/dct-project-management-template.yaml
+docs/ja/specdojo/templates/pjr-index-template.md
+docs/ja/specdojo/templates/pm-change-request-log-template.md
+docs/ja/specdojo/templates/ifx-cmd-template.yaml
+docs/ja/specdojo/templates/dct-non-functional-requirements-template.yaml
+docs/ja/specdojo/templates/pm-roles-template.yaml
+docs/ja/specdojo/templates/bps-template.md
+docs/ja/specdojo/templates/pm-members-template.yaml
+docs/ja/specdojo/templates/pm-issue-log-template.md
+docs/ja/specdojo/templates/pjr-views-by-status-template.md
+docs/ja/specdojo/defaults/generated/pm-review-viewpoints.md
+docs/ja/specdojo/guides/release-v0-3-0-migration-guide.md
+docs/ja/specdojo/guides/track-design-guide.md
+docs/ja/specdojo/guides/schedule-design-guide.md
+docs/ja/specdojo/guides/routine-operation-guide.md
+docs/ja/specdojo/guides/docs-editing-guide.md
+docs/ja/specdojo/guides/waza-guide.md
+docs/ja/specdojo/guides/specdojo-overview-guide.md
+docs/ja/specdojo/guides/orchestrator-operation-guide.md
+docs/ja/specdojo/guides/exec-worktree-guide.md
+docs/ja/specdojo/guides/register-operation-guide.md
+docs/ja/specdojo/guides/branch-workflow-guide.md
+docs/ja/specdojo/guides/use-case-guide.md
+docs/ja/specdojo/guides/schedule-operation-guide.md
+docs/ja/specdojo/guides/timeline-design-guide.md
+docs/ja/specdojo/guides/ryu-guide.md
+docs/ja/specdojo/guides/kata-guide.md
+docs/ja/specdojo/guides/exec-config-guide.md
+docs/ja/specdojo/guides/plan-result-lifecycle-guide.md
+docs/ja/specdojo/guides/exec-operation-guide.md
+docs/ja/specdojo/guides/quick-start-guide.md
+docs/ja/specdojo/guides/remote-host-development-guide.md
+docs/ja/specdojo/guides/docs-structure-guide.md
+docs/ja/specdojo/guides/practice-system-composition-guide.md
+docs/ja/specdojo/guides/review-guide.md
+docs/ja/projects/prj-0001/010-deliverables-catalog/generated/dct-non-functional-requirements.md
+docs/ja/projects/prj-0001/010-deliverables-catalog/generated/dct-data-model-stsd.md
+docs/ja/projects/prj-0001/010-deliverables-catalog/generated/dct-system-functions.md
+docs/ja/projects/prj-0001/010-deliverables-catalog/generated/dct-system-acceptance-criteria.md
+docs/ja/projects/prj-0001/010-deliverables-catalog/generated/dct-architecture.md
+docs/ja/projects/prj-0001/010-deliverables-catalog/generated/dct-index.md
+docs/ja/projects/prj-0001/010-deliverables-catalog/generated/dct-migration-planning.md
+docs/ja/projects/prj-0001/010-deliverables-catalog/generated/dct-operations.md
+docs/ja/projects/prj-0001/010-deliverables-catalog/generated/dct-data-model-cdsd.md
+docs/ja/projects/prj-0001/010-deliverables-catalog/generated/dct-data-model-ccd.md
+docs/ja/projects/prj-0001/010-deliverables-catalog/generated/dct-user-interface-model.md
+docs/ja/projects/prj-0001/010-deliverables-catalog/generated/dct-data-model-bdd.md
+docs/ja/projects/prj-0001/010-deliverables-catalog/generated/dct-business-model-br.md
+docs/ja/projects/prj-0001/010-deliverables-catalog/generated/dct-system-design.md
+docs/ja/projects/prj-0001/010-deliverables-catalog/generated/dct-business-acceptance-criteria.md
+docs/ja/projects/prj-0001/010-deliverables-catalog/generated/dct-business-model.md
+docs/ja/projects/prj-0001/010-deliverables-catalog/generated/dct-business-model-bps.md
+docs/ja/projects/prj-0001/010-deliverables-catalog/generated/dct-test-specs.md
+docs/ja/projects/prj-0001/010-deliverables-catalog/generated/dct-data-model.md
+docs/ja/projects/prj-0001/010-deliverables-catalog/generated/dct-planning.md
+docs/ja/projects/prj-0001/010-deliverables-catalog/generated/dct-business-model-bes.md
+docs/ja/projects/prj-0001/010-deliverables-catalog/generated/dct-data-model-cld.md
+docs/ja/projects/prj-0001/010-deliverables-catalog/generated/dct-impact-analysis.md
+docs/ja/projects/prj-0001/010-deliverables-catalog/generated/dct-glossary.md
+docs/ja/projects/prj-0001/010-deliverables-catalog/generated/dct-current-state.md
+docs/ja/projects/prj-0001/010-deliverables-catalog/generated/dct-external-interface-specs.md
+docs/ja/projects/prj-0001/010-deliverables-catalog/generated/dct-project-management.md
+docs/ja/projects/prj-0001/010-deliverables-catalog/generated/dct-data-flow.md
+docs/ja/projects/prj-0001/010-deliverables-catalog/generated/dct-project-definition.md
+docs/ja/projects/prj-0001/schedule/sch-strategy-launch.yaml
+docs/ja/projects/prj-0001/schedule/sch-track-data-flow-pdca.yaml
+docs/ja/projects/prj-0001/schedule/sch-track-launch.yaml
+docs/ja/projects/prj-0001/schedule/sch-track-planning.yaml
+docs/ja/projects/prj-0001/schedule/sch-strategy-data-flow-pdca.yaml
+docs/ja/projects/prj-0001/schedule/sch-defaults.yaml
+docs/ja/projects/prj-0001/schedule/sch-strategy-data-flow.yaml
+docs/ja/projects/prj-0001/schedule/sch-track-data-flow.yaml
+docs/ja/projects/prj-0001/schedule/sch-strategy-planning.yaml
+docs/ja/projects/prj-0001/schedule/sch-milestones.yaml
+docs/ja/specdojo/samples/nfr-security-safety-sample.md
+docs/ja/specdojo/samples/prj-comparison-of-alternatives-sample.md
+docs/ja/specdojo/samples/ifx-msg-sample.yaml
+docs/ja/specdojo/samples/itc-sample.md
+docs/ja/specdojo/samples/dct-sample.yaml
+docs/ja/specdojo/samples/pm-communication-plan-sample.md
+docs/ja/specdojo/samples/pm-issue-log-sample.md
+docs/ja/specdojo/samples/bac-sample.md
+docs/ja/specdojo/samples/nfr-maintainability-sample.md
+docs/ja/specdojo/samples/nfr-performance-sample.md
+docs/ja/specdojo/samples/ifx-file-sample.md
+docs/ja/specdojo/samples/opd-monitoring-sample.md
+docs/ja/specdojo/samples/etc-sample.md
+docs/ja/specdojo/samples/tsd-index-sample.md
+docs/ja/specdojo/samples/opr-batch-sample.md
+docs/ja/specdojo/samples/stc-sample.md
+docs/ja/specdojo/samples/prj-scope-sample.md
+docs/ja/specdojo/samples/opr-backup-restore-sample.md
+docs/ja/specdojo/samples/trc-requirements-to-specs-sample.md
+docs/ja/specdojo/samples/ifx-cmd-sample.yaml
+
+exec
+/bin/bash -lc "git status --short && printf '%s\\n' '--- AGENTS ---' && sed -n '1,200p' AGENTS.md && printf '%s\\n' '--- REGISTER ROW ---' && rg -n -C 3 'PJR-XMQH|判断台帳|クイックスタート' docs/ja/projects/prj-0001/controls/project-register/pjr-index.md docs/ja/projects/prj-0001/controls/project-register/pjr-xmqh-quickstart-decision-register.md docs/ja/specdojo/guides/quick-start-guide.md docs/ja/specdojo/guides/register-operation-guide.md docs/ja/specdojo/guides/kata-guide.md || true && printf '%s\\n' '--- PACKAGE SCRIPTS/DEPS ---' && node -e \"const p=require('./package.json'); console.log(JSON.stringify({scripts:p.scripts,dependencies:p.dependencies,devDependencies:p.devDependencies},null,2))\" && printf '%s\\n' '--- CONFIG ---' && sed -n '1,240p' .specdojo/specdojo.config.json && printf '%s\\n' '--- HOOK ---' && sed -n '1,260p' lefthook.yml" in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-XMQH
+ succeeded in 306ms:
+?? docs/ja/projects/prj-0001/execution/exec/evidence/PJR-XMQH/
+--- AGENTS ---
+# Agent Instructions
+
+## Language
+
+- 回答は原則として日本語で行う。
+
+## Project Policy
+
+- 変更前に関連する設計書を確認する。
+- タスクに関係しない変更を行わない。
+
+## Safety
+
+- 認証情報、秘密鍵、`.env`、`secrets/` を読み込まない。
+- 破壊的変更や `git push` を行わない。
+--- REGISTER ROW ---
+rg: docs/ja/projects/prj-0001/controls/project-register/pjr-index.md: No such file or directory (os error 2)
+docs/ja/projects/prj-0001/controls/project-register/pjr-xmqh-quickstart-decision-register.md-14-  due_on: null
+docs/ja/projects/prj-0001/controls/project-register/pjr-xmqh-quickstart-decision-register.md-15----
+docs/ja/projects/prj-0001/controls/project-register/pjr-xmqh-quickstart-decision-register.md-16-
+docs/ja/projects/prj-0001/controls/project-register/pjr-xmqh-quickstart-decision-register.md:17:# PJR-XMQH 仕様の判断台帳としてのクイックスタートを作る
+docs/ja/projects/prj-0001/controls/project-register/pjr-xmqh-quickstart-decision-register.md-18-
+docs/ja/projects/prj-0001/controls/project-register/pjr-xmqh-quickstart-decision-register.md-19-## 1. 概要
+docs/ja/projects/prj-0001/controls/project-register/pjr-xmqh-quickstart-decision-register.md-20-
+docs/ja/projects/prj-0001/controls/project-register/pjr-xmqh-quickstart-decision-register.md:21:question の起票 → decision で決める → 設計書を 1 つ更新 → 後日 change-request で直す、までを 10 分で体験できるクイックスタートを作る。kata を事前に用意しなくても始められることを示す。
+docs/ja/projects/prj-0001/controls/project-register/pjr-xmqh-quickstart-decision-register.md-22-
+docs/ja/projects/prj-0001/controls/project-register/pjr-xmqh-quickstart-decision-register.md-23-普及戦略（[[prj-0001:pjr-nyzr-adoption-strategy]]）の段階 0 の施策で、入口を register（記帳）にする方針の最初の体験になる。選択式の init（[[prj-0001:pjr-6qda-interactive-init]]）を起点にする。
+docs/ja/projects/prj-0001/controls/project-register/pjr-xmqh-quickstart-decision-register.md-24-
+--
+docs/ja/projects/prj-0001/controls/project-register/pjr-xmqh-quickstart-decision-register.md-41-
+docs/ja/projects/prj-0001/controls/project-register/pjr-xmqh-quickstart-decision-register.md-42-| No  | 作業                                            | 担当         | 状態 | メモ                     |
+docs/ja/projects/prj-0001/controls/project-register/pjr-xmqh-quickstart-decision-register.md-43-| --- | ----------------------------------------------- | ------------ | ---- | ------------------------ |
+docs/ja/projects/prj-0001/controls/project-register/pjr-xmqh-quickstart-decision-register.md:44:| 1   | クイックスタートの「10 分で体験する」流れを書く | DEV          | open | quick-start ガイドの冒頭 |
+docs/ja/projects/prj-0001/controls/project-register/pjr-xmqh-quickstart-decision-register.md-45-| 2   | 公開物で手順どおりに試す                        | orchestrator | open | 統合後                   |
+docs/ja/projects/prj-0001/controls/project-register/pjr-xmqh-quickstart-decision-register.md-46-
+docs/ja/projects/prj-0001/controls/project-register/pjr-xmqh-quickstart-decision-register.md-47-## 4. 対応結果
+--- PACKAGE SCRIPTS/DEPS ---
+{
+  "scripts": {
+    "prepare": "node tools/install-lefthook.mjs",
+    "pre-commit": "lefthook run pre-commit",
+    "build": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.build.json && node -e \"require('node:fs').chmodSync('dist/specdojo.js', 0o755)\"",
+    "build:if-stale": "node tools/build-if-stale.mjs",
+    "test": "vitest run",
+    "test:unit": "vitest run --config vitest.unit.config.ts",
+    "test:integration": "vitest run --config vitest.integration.config.ts",
+    "test:watch": "vitest",
+    "test:e2e": "npm run build && tsx tools/e2e/exec-run-e2e.ts",
+    "dev": "tsx src/specdojo.ts",
+    "start": "node dist/specdojo.js",
+    "prepack": "npm run build",
+    "specdojo:build": "npm run build",
+    "vscode:install": "npm --prefix packages/vscode-specdojo ci",
+    "update:agents": "node tools/update-agent-clis.mjs",
+    "vscode:build": "npm --prefix packages/vscode-specdojo run compile",
+    "vscode:package": "npm --prefix packages/vscode-specdojo run package",
+    "exec:watch-claude-log": "tools/exec/watch-claude-log.sh",
+    "worktree:sync": "tools/worktree/sync.sh",
+    "orch:sonnet": "claude --agent specdojo-orchestrator --model sonnet",
+    "orch:sonnet:work": "tools/worktree/open-agent-worktree.sh claude-work claude --agent specdojo-orchestrator --model sonnet",
+    "orch:opus": "claude --agent specdojo-orchestrator --model opus",
+    "orch:opus:work": "tools/worktree/open-agent-worktree.sh claude-work claude --agent specdojo-orchestrator --model opus",
+    "orch:terra": "codex -m gpt-5.6-terra \"$(cat .agents/specdojo-orchestrator.agent.md)\"",
+    "orch:terra:work": "tools/worktree/open-agent-worktree.sh codex-work codex -m gpt-5.6-terra \"$(cat .agents/specdojo-orchestrator.agent.md)\"",
+    "orch:sol": "codex -m gpt-5.6-sol \"$(cat .agents/specdojo-orchestrator.agent.md)\"",
+    "orch:sol:work": "tools/worktree/open-agent-worktree.sh codex-work codex -m gpt-5.6-sol \"$(cat .agents/specdojo-orchestrator.agent.md)\"",
+    "orch:copilot": "copilot --agent specdojo-orchestrator",
+    "orch:copilot:work": "tools/worktree/open-agent-worktree.sh copilot-work copilot --agent specdojo-orchestrator",
+    "orch:agy": "agy --add-dir \"$(pwd)\" --model gemini-3.1-pro-high -i \"$(cat .agents/specdojo-orchestrator.agent.md)\"",
+    "orch:agy:work": "tools/worktree/open-agent-worktree.sh agy-work agy --add-dir \"$(pwd)\" --model gemini-3.1-pro-high -i \"$(cat .agents/specdojo-orchestrator.agent.md)\"",
+    "orch:qwen": "opencode --agent qwen-orchestrator",
+    "orch:qwen:work": "tools/worktree/open-agent-worktree.sh qwen-work opencode --agent qwen-orchestrator",
+    "orch:gemma": "opencode --agent gemma-orchestrator",
+    "orch:gemma:work": "tools/worktree/open-agent-worktree.sh gemma-work opencode --agent gemma-orchestrator",
+    "code:red": "tools/vscode/open-worktree-workspace.sh red",
+    "code:blue": "tools/vscode/open-worktree-workspace.sh blue",
+    "code:green": "tools/vscode/open-worktree-workspace.sh green",
+    "typecheck": "tsc -b --noEmit",
+    "lint:ts": "eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'",
+    "lint:ts:fix": "eslint --fix 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'",
+    "lint:orchestrator-sync": "node tools/validate-orchestrator-sync.mjs",
+    "orchestrator:sync": "node tools/generate-orchestrator-wrappers.mjs",
+    "lint:md": "node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'",
+    "lint:md:fix": "node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint --fix '**/*.md'",
+    "format": "prettier --write '**/*.{ts,js,mjs,cjs,json,yaml,yml,md}'",
+    "format:check": "prettier --check '**/*.{ts,js,mjs,cjs,json,yaml,yml,md}'",
+    "docs:generate": "node --import tsx src/specdojo.ts build",
+    "docs:dev": "npm run docs:generate && npm --prefix packages/docs-site run docs:dev",
+    "docs:build:mermaid": "npm --prefix packages/docs-site run docs:build:mermaid",
+    "docs:rebuild:mermaid": "rm -f public/mermaid/*.svg && npm run docs:build:mermaid",
+    "docs:build": "npm run docs:generate && npm --prefix packages/docs-site run docs:build",
+    "lint:fm": "node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail",
+    "validate:schema:job-run": "node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --schema docs/specdojo/schemas/v1/job-run.schema.yaml --data \"docs/ja/**/execution/jobs/runs/*.json\" --allow-empty",
+    "validate:schema:grade-pipeline": "node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --schema docs/specdojo/schemas/v1/grade-pipeline-state.schema.yaml --data \"docs/ja/**/execution/grade/pipeline/*.json\" --allow-empty",
+    "validate:schema:file": "node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema",
+    "validate:schema": "npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary",
+    "validate:schema:rulebook-enums": "node packages/docs-lint/bin/specdojo-docs-lint.js rulebook-schema-enums",
+    "validate:schema:glossary": "node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references",
+    "validate:catalog": "tsx src/specdojo.ts catalog validate",
+    "validate:history-links": "node packages/docs-lint/bin/specdojo-docs-lint.js history-links",
+    "check": "npm run typecheck && npm run lint:ts && npm run lint:md && npm run lint:fm && npm run validate:schema && npm run validate:catalog && npm run validate:history-links && npm test",
+    "dc:ps": "docker ps --format \"table {{.Names}}\\t{{.Image}}\\t{{.Status}}\"",
+    "dc:name": "bash -lc 'docker ps --format \"{{.Names}}\\t{{.Image}}\" | awk \"\\$2 ~ /^vsc-specdojo/ {print \\$1; exit}\"'",
+    "dc:bash": "bash -lc 'name=$(docker ps --format \"{{.Names}}\\t{{.Image}}\" | awk \"\\$2 ~ /^vsc-specdojo/ {print \\$1; exit}\"); [ -n \"$name\" ] && docker exec -it --detach-keys=\"ctrl-]\" -e LANG=C.UTF-8 -e LC_ALL=C.UTF-8 -u node \"$name\" bash -lc \"cd /workspaces/specdojo-workspace/specdojo && exec bash\" || echo \"matching container not found\"'",
+    "vscode:ps": "bash .devcontainer/kill-stale-vscode.sh --list",
+    "vscode:kill-stale": "bash .devcontainer/kill-stale-vscode.sh",
+    "specdojo:exec:opencode": "specdojo exec run --auto --loop --parallel 1 --edit-by opencode-edit-agent --review-by opencode-review-agent > logs/exec-opencode.stdout.log 2> logs/exec-opencode.stderr.log",
+    "specdojo:exec:auto": "specdojo exec run --auto --loop --parallel 1 > logs/exec-auto.stdout.log 2> logs/exec-auto.stderr.log",
+    "specdojo:exec:auto2": "specdojo exec run --auto --loop --parallel 2 > logs/exec-auto.stdout.log 2> logs/exec-auto.stderr.log",
+    "specdojo:exec:auto3": "specdojo exec run --auto --loop --parallel 3 > logs/exec-auto.stdout.log 2> logs/exec-auto.stderr.log",
+    "validate:schema:yaml": "node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline"
+  },
+  "dependencies": {
+    "ajv": "^8.20.0",
+    "commander": "^15.0.0",
+    "dotenv": "^18.0.4",
+    "fast-glob": "^3.3.3",
+    "js-yaml": "^4.3.2",
+    "prettier": "^3.8.4",
+    "remark-parse": "^11.0.0",
+    "unified": "^11.0.5"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^21.0.2",
+    "@commitlint/config-conventional": "^21.0.2",
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^25.9.2",
+    "@typescript-eslint/eslint-plugin": "^8.61.0",
+    "@typescript-eslint/parser": "^8.61.0",
+    "ajv-cli": "^5.0.0",
+    "ajv-formats": "^3.0.1",
+    "cloc": "^2.6.0-cloc",
+    "eslint-config-prettier": "^10.1.8",
+    "gray-matter": "^4.0.3",
+    "lefthook": "^2.1.9",
+    "markdownlint-cli": "^0.49.1",
+    "remark": "^15.0.1",
+    "remark-cli": "^12.0.1",
+    "remark-frontmatter": "^5.0.0",
+    "remark-gfm": "^4.0.1",
+    "remark-lint": "^10.0.1",
+    "remark-mdx": "^3.1.1",
+    "remark-stringify": "^11.0.0",
+    "tsx": "^4.22.4",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.61.0",
+    "vitest": "^4.1.8"
+  }
+}
+--- CONFIG ---
+{
+  "version": 1,
+  "current_project": "prj-0001",
+  "projects": {
+    "prj-0001": {
+      "base_path": "docs/ja/projects/prj-0001",
+      "catalog_path": "010-deliverables-catalog",
+      "schedule_path": "schedule",
+      "execution_path": "execution",
+      "members_path": "030-project-management/pm-members.yaml",
+      "roles_path": "030-project-management/pm-roles.yaml",
+      "viewpoints_path": "030-project-management/pm-review-viewpoints.yaml",
+      "project_register_path": "controls/project-register",
+      "routines_path": "routines",
+      "jobs_path": "jobs",
+      "project_context": ["prj-overview"],
+      "run": {
+        "register_date_timezone": "Asia/Tokyo",
+        "exec_defaults": ".specdojo/exec-defaults.yaml"
+      }
+    }
+  }
+}
+--- HOOK ---
+# Git hooks for development workflow
+pre-commit:
+  piped: false
+  parallel: true
+  commands:
+    # docs-build（vitepress build）は rendering pages 時にメモリを大量消費し、
+    # 環境によっては OOM (exit 137) で commit がブロックされるため pre-commit から外す。
+    # フルビルドの検証は CI 側で実行する想定。
+    # 整形は prettier に一本化する。
+    # md 以外（ts/js/json/yaml）は prettier で整形する。
+    format:
+      glob: "*.{ts,js,mjs,cjs,json,yaml,yml}"
+      run: npx prettier --write {staged_files}
+      stage_fixed: true
+
+    # md は prettier で整形してから markdownlint でルール検査する。
+    # 別コマンドかつ parallel:true だと「整形前の内容を検査して誤ブロック」する
+    # 競合が起きるため、整形→検査を 1 コマンドに連結して順序を保証する。
+    markdown:
+      glob: "*.md"
+      run: npx prettier --write {staged_files} && node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint {staged_files}
+      stage_fixed: true
+
+    # SSOT の変更をラッパーと配布テンプレートへ反映する。検査ではなく生成にしているのは、
+    # parallel:true で format（prettier）と同時に走るため、検査だけだと「整形前の本文で
+    # 比較して通り、整形後の SSOT との差分が commit へ入る」順序事故が起きるからである。
+    # 生成は冪等で、prettier が整形しない .toml 側のずれもここで吸収する。
+    orchestrator-sync:
+      glob: "{.agents/specdojo-orchestrator.agent.md,.claude/agents/specdojo-orchestrator.md,.github/agents/specdojo-orchestrator.md,.codex/agents/specdojo-orchestrator.toml,.opencode/agents/gemma-orchestrator.md,.opencode/agents/qwen-orchestrator.md,templates/*/agents/specdojo-orchestrator.*,templates/antigravity/orchestrator.md}"
+      run: npm run orchestrator:sync
+      stage_fixed: true
+
+    # tsc -b は staged 単位で実行できないため、プロジェクト全体を型チェックする。
+    # tsconfig.build.json（src）だけでなく tests / tools も参照経由で対象になる。
+    typecheck:
+      glob: "{src/**,tests/**,scripts/**,tools/**,packages/docs-lint/**,tsconfig*.json}"
+      run: npm run typecheck
+
+    test:
+      glob: "{src/**,tests/**,docs/ja/specdojo/templates/**,docs/ja/specdojo/exec-templates/**,vitest.config.*}"
+      run: npm test
+
+    # *-build 系は generated/ 配下を出力するが、generated/ は gitignore 済みの生成物
+    # （VitePress build 前段の docs:generate で再生成する）。ここでは再生成のみ行い、
+    # commit には含めない（stage_fixed しない）。ローカル作業ツリーを最新化しつつ、
+    # 入力変更でビルドが壊れていないことの確認も兼ねる。
+    register-build:
+      glob: "docs/**/project-register/*.md"
+      run: npx tsx src/specdojo.ts register build
+
+    catalog-build:
+      glob: "docs/**/dct-*.yaml"
+      run: npx tsx src/specdojo.ts catalog build
+
+    catalog-validate:
+      glob: "docs/ja/projects/**"
+      run: npx tsx src/specdojo.ts catalog validate
+
+    exec-refresh:
+      glob: "docs/**/sch-*.yaml"
+      run: npx tsx src/specdojo.ts exec refresh
+
+    index-build:
+      glob: "docs/**"
+      # doc-index.json も gitignore 済みの生成物。再生成のみ行い commit に含めない。
+      run: npx tsx src/specdojo.ts index build
+
+commit-msg:
+  commands:
+    commitlint:
+      run: npx commitlint --edit $1
+
+# Git が pre-push の標準入力へ渡す remote ref を検査する。リモート名にかかわらず
+# refs/heads/main への更新だけを拒否し、develop / feature / exec は妨げない。
+pre-push:
+  commands:
+    protect-main:
+      run: node tools/protect-main-push.mjs
+      use_stdin: true
+
+# specdojo の bin は dist/specdojo.js を指すため、merge / checkout で src が更新された
+# あとに再ビルドしないと、CLI が古い挙動のまま動く（PJR-CMYX）。src が dist より新しい
+# 場合だけ再ビルドし、それ以外は何もしない。失敗しても hook を止めない best-effort。
+post-merge:
+  commands:
+    build-if-stale:
+      run: node tools/build-if-stale.mjs
+
+post-checkout:
+  commands:
+    build-if-stale:
+      run: node tools/build-if-stale.mjs
+
+ERROR: You’ve hit your usage limit. Upgrade to Pro (https://chatgpt.com/explore/pro), visit https://chatgpt.com/codex/settings/usage to purchase more credits or try again at Oct 9th, 2026 1:47 AM.
+ERROR: You’ve hit your usage limit. Upgrade to Pro (https://chatgpt.com/explore/pro), visit https://chatgpt.com/codex/settings/usage to purchase more credits or try again at Oct 9th, 2026 1:47 AM.
+tokens used
+17,304
