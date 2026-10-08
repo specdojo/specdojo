@@ -74,3 +74,16 @@
       from: rate limit reached
       to: "-"
   previous_event_id: reg_64629ba281964c4d8bbd224954bf974d
+- v: 1
+  id: reg_0cd6534aaf114fe7aada0dcadbd236b0
+  ts: "2026-10-08T16:58:12Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_ad75c11a5ee54720af3f41a027d4538c
