@@ -4,12 +4,14 @@ specdojo:
   type: exec-result
   task_id: PJR-XMQH
   mode: edit
-  status: in_progress
+  status: blocked
   project_id: prj-0001
   origin: register
   plan_ref: exec/plans/pjr-xmqh-20261008T143457Z-afb5-plan.md
   started_at: "2026-10-08T14:34:57.109Z"
+  completed_at: "2026-10-08T14:36:20.308Z"
   agent: codex-expert-executor
+  block_reason: "rate limit reached"
 ---
 
 # Edit Result
