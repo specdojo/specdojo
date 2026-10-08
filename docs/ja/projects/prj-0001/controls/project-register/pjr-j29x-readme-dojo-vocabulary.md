@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-j29x-readme-dojo-vocabulary
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-08T13:52:50Z"
   due_on: null
+  completed_at: "2026-10-08T14:01:57Z"
+  conclusion: README・トップ・概要ガイドの標語を「決めて、書いて、鍛え続ける」に改め、README に道場の言葉の表と記帳・型と実戦・評定と講評の見出しを加えた。package.json の説明も合わせた
 ---
 
 # PJR-J29X README とトップに新しい標語と道場の言葉を反映する

@@ -55,3 +55,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_9f8f8a71e39d4e9a9ca3113011f0bd3a
+- v: 1
+  id: reg_f03fcdb22f2a40e4ae9294a30fe88819
+  ts: "2026-10-08T14:01:57Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: "review: README の冒頭と完了条件を確認"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-08"
+    - field: conclusion
+      from: "-"
+      to: README・トップ・概要ガイドの標語を「決めて、書いて、鍛え続ける」に改め、README に道場の言葉の表と記帳・型と実戦・評定と講評の見出しを加えた。package.json の説明も合わせた
+  previous_event_id: reg_fde2a0a424424cf9b878ab98b1bffd7a
