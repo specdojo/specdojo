@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f703e99eca644727ba6c2a87dff50f3e
+  ts: "2026-10-08T03:45:55Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-NYZR の段階 0
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 公開前に exec の未解決の不具合を棚卸しし、公開の判定基準を決める
+    - field: description
+      from: ""
+      to: v0.3.0 の公開前に、exec の再開・統合・判定まわりの未解決の不具合と既知の問題を棚卸しし、公開してよいかの判定基準（未解決を許す範囲など）を決める。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-08"
