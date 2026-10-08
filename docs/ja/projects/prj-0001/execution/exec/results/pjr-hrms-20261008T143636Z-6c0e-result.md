@@ -4,30 +4,32 @@ specdojo:
   type: exec-result
   task_id: PJR-HRMS
   mode: edit
-  status: blocked
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: exec/plans/pjr-hrms-20261008T143636Z-6c0e-plan.md
   started_at: "2026-10-08T14:36:36.318Z"
-  completed_at: "2026-10-08T14:37:47.641Z"
+  completed_at: "2026-10-08T16:58:02.528Z"
   agent: codex-expert-executor
-  block_reason: "rate limit reached"
 ---
 
 # Edit Result
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- `CHANGELOG.md` の更新を行い、v0.3.0 で追加された利用者向けの変更事項（`requires_human`、`--resume-from` オプション、`grade` の英語正本と翻訳、合成コマンドの判定処理など）を記載した。
+- `docs/ja/projects/prj-0001/controls/project-register/pjr-hrms-v030-changelog-finalize.md` を確認し、個票の作業内容を更新した。
+- 移行ガイドについては、現在の `CHANGELOG.md` の内容から判断して追加の更新は不要と判断した。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `CHANGELOG.md`: v0.3.0 における利用者向けの変更事項（`requires_human`、`--resume-from`、`grade` の翻訳、合成コマンドの判定等）を追記。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- CHANGELOG および個票の更新を完了した。移行ガイドは変更不要と判断している。
+- 公開日の記入および親 `runner` による固定検証の実行を後続工程に依頼する。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`fully-guided` で rulebook / recipe / sample / template をどう使い分けたか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+まず `CHANGELOG.md` を読み込み、v0.3.0 の内容が不足していることを確認した。次に、エージェントが行った変更（`requires_human` や `--resume-from` 等）を抽出し、それらを `CHANGELOG.md` に適切に追記した。併せて個票の更新も行った。移行ガイドについては、現在の変更内容を鑑みて追加の記載は不要であると判断し、作業を完了した。
