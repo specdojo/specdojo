@@ -33,6 +33,11 @@ CHANGELOG の v0.3.0 は 2026-09-29 付けのままで、その後に入った�
   - Git の一時的な失敗の再試行の拡張（PJR-VX97）
   - `devcontainer scaffold` の Emacs のテンプレートと codex の設定（PJR-J7WE・PJR-EZAF）
   - Markdown の lint の中国語の字体の規則（PJR-86JE）
+  - 選択式の `specdojo init`（PJR-6QDA）と、名簿の読み込みが `members_path` なしでも agent を読む修正・provider のテンプレートの案内の修正（PJR-WZYW）
+  - exec plan の共通規約が、実行できない検査を求めない修正（PJR-44J9）
+  - 呼び方を「仕様道（Spec-Dō）の道場」に改め、技・流の名前を加えたこと（PJR-QGP4・PJR-0WYM・PJR-J29X）
+  - 判断台帳のクイックスタート（PJR-XMQH）
+- 既知の問題に、本体の実行時の依存 `fast-glob` 経由の `braces` の high の脆弱性（修正版なし、PJR-HQKV）と、統合の commit のフックのテストが一時的に失敗することがあり `--resume` で回避できること（PJR-Q7GJ）を載せる。CHANGELOG の「依存の脆弱性に対応しました」の記述と矛盾しないように書く。
 - 本リポジトリだけの設定の変更（Ornith や Qwen などの member の追加と無効化、本リポジトリの devcontainer の調整）は載せない。
 - 既に載っている項目（agent の定義の分離など）と重複させない。表現は既存の項目の文体にそろえる。
 - 見出しの日付は公開日に人が記入する。それまでは `## [0.3.0] - 未定` とする。
