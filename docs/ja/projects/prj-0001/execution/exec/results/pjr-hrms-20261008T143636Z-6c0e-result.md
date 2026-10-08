@@ -4,12 +4,14 @@ specdojo:
   type: exec-result
   task_id: PJR-HRMS
   mode: edit
-  status: in_progress
+  status: blocked
   project_id: prj-0001
   origin: register
   plan_ref: exec/plans/pjr-hrms-20261008T143636Z-6c0e-plan.md
   started_at: "2026-10-08T14:36:36.318Z"
+  completed_at: "2026-10-08T14:37:47.641Z"
   agent: codex-expert-executor
+  block_reason: "rate limit reached"
 ---
 
 # Edit Result
