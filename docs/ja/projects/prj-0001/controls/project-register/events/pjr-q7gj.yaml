@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_8c97fd27ff4544a4ba98aa4b3df1cf16
+  ts: "2026-10-08T12:32:32Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-P8TK の棚卸し（a）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 並列実行で統合の commit のフックのテストが一時的に失敗する
+    - field: description
+      from: ""
+      to: exec run --parallel で 3 件を並べて流したとき、PJR-PG6W の統合段の commit で lefthook の pre-commit が実行する全テストが失敗した。同じ worktree で全テストを実行し直すと 2039 件すべて通り、--resume で統合できた。並列の親検証・統合とフックのテストが重なり、資源の競合で一時的に失敗したとみられる。原因の特定か、統合の commit でのフックの扱いの見直しが要る。
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-08"
