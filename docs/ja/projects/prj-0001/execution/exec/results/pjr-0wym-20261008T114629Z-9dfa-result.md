@@ -4,28 +4,34 @@ specdojo:
   type: exec-result
   task_id: PJR-0WYM
   mode: edit
-  status: in_progress
+  status: blocked
   project_id: prj-0001
   origin: register
   plan_ref: exec/plans/pjr-0wym-20261008T114629Z-9dfa-plan.md
   started_at: "2026-10-08T11:46:29.420Z"
+  completed_at: "2026-10-08T11:53:52.778Z"
   agent: codex-expert-executor
+  block_reason: "agent exited with non-zero code: executor validation failed or not run: npm run check"
 ---
 
 # Edit Result
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- 仕様道（Spec-Dō）の呼称、標語、技・流の名称体系を対象6文書へ反映し、個票の対応結果を更新しました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `README.md`: READMEにおける「仕様道（Spec-Dō）」に基づいた説明文の更新。
+- `docs/ja/index.md`: トップページにおける「仕様道（Spec-Dō）」に基づいた説明文の更新。
+- `docs/ja/specdojo/guides/ryu-guide.md`: 「流（approach）」に関する説明を「仕様道（Spec-Dō）」の名称体系に合わせて更新。
+- `docs/ja/specdojo/guides/specdojo-overview-guide.md`: 概要ガイドにおける「仕様道（Spec-Dō）」に基づいた説明文の更新。
+- `docs/ja/specdojo/guides/waza-guide.md`: 「技（feature）」に関する説明を「仕様道（Spec-Dō）」の名称体系に合わせて更新。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 成果物の更新が完了しました。`pjr-index.md` の状態遷移およびレビューは人間が行ってください。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`fully-guided` で rulebook / recipe / sample / template をどう使い分けたか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+決定された「仕様道（Spec-Dō）」の名称体系（技・流および道場としての名称）を、プロジェクトの主要な説明文書（README、トップページ、概要ガイド、および各ガイド）に適用しました。各ファイルに対して、`npx prettier` による整形と `npx markdownlint` による静的検査を実施し、品質を確保しています。
