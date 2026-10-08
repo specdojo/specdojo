@@ -6,8 +6,8 @@ target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 79
-graded_at: "2026-09-28T21:18:39.553Z"
-graded_by: codex-expert-executor
+graded_at: "2026-10-08T21:03:33.771Z"
+graded_by: agy-expert-executor
 content_hash: 897c3eeb2e66cbbee4594b3ef0e7bdadee0997940d55ac085bad54dc38ecbdc2
 categories:
   purpose:
@@ -107,48 +107,56 @@ findings:
   - id: F001
     severity: major
     rule: vp-arc-technical-constraints
-    line: 12
-    anchor: "- schema にないメタ項目を追加しない。rulebook 参照は成果物カタログまたは計画側で解決する。"
+    line: 21
+    anchor: "| 採用 Role code       | Schedule の `owner` と RACI の列に使う Role code             |"
     message: "`rulebook` を schema にない項目として扱う指示は、`pm-roles.schema.yaml` が同キーを必須としている定義と正反対であり、技術制約として使用できない。"
+    message_ja: "`rulebook` を schema にない項目として扱う指示は、`pm-roles.schema.yaml` が同キーを必須としている定義と正反対であり、技術制約として使用できない。"
   - id: F002
     severity: major
     rule: vp-dev-implementation-readiness
-    line: 30
-    anchor: 1. `id`、`type`、`status`、`version`、`project_id` を設定する。
+    line: 39
+    anchor: ""
     message: メタ項目の作成手順が必須の `title` と `rulebook` を含まず、さらに後段で `rulebook` を禁止しているため、手順どおりの実装は schema 検証に合格しない。
+    message_ja: メタ項目の作成手順が必須の `title` と `rulebook` を含まず、さらに後段で `rulebook` を禁止しているため、手順どおりの実装は schema 検証に合格しない。
   - id: F003
     severity: minor
     rule: vp-dev-testability
-    line: 114
-    anchor: "| スキーマ適合           | 必須メタ項目、`roles` 配列、Role code の列挙が YAML スキーマに沿っているか        |"
+    line: 123
+    anchor: "- `roles[].project_note` の未決事項は _UNDECIDED_: または _TODO_: で明示され、放置されていない。"
     message: schema 適合を確認項目にしているが、`pm-roles.schema.yaml` を使う検証コマンド、期待する成功結果、エラー時の対応が示されていない。
+    message_ja: schema 適合を確認項目にしているが、`pm-roles.schema.yaml` を使う検証コマンド、期待する成功結果、エラー時の対応が示されていない。
   - id: F004
     severity: major
     rule: vp-qe-verifiability
-    line: 114
-    anchor: "| スキーマ適合           | 必須メタ項目、`roles` 配列、Role code の列挙が YAML スキーマに沿っているか        |"
+    line: 123
+    anchor: "- `roles[].project_note` の未決事項は _UNDECIDED_: または _TODO_: で明示され、放置されていない。"
     message: schema 適合を完了条件にしている一方で必須の `rulebook` を禁止し `title` を要求していないため、レシピどおりの成果物に一貫した pass / fail 判定を適用できない。
+    message_ja: schema 適合を完了条件にしている一方で必須の `rulebook` を禁止し `title` を要求していないため、レシピどおりの成果物に一貫した pass / fail 判定を適用できない。
   - id: F005
     severity: major
     rule: vp-qe-omissions-consistency
-    line: 12
-    anchor: "- schema にないメタ項目を追加しない。rulebook 参照は成果物カタログまたは計画側で解決する。"
+    line: 21
+    anchor: "| 採用 Role code       | Schedule の `owner` と RACI の列に使う Role code             |"
     message: schema と rulebook が必須とする `rulebook` を禁止しているため、必須キーに関する記述が正本と整合しない。
+    message_ja: schema と rulebook が必須とする `rulebook` を禁止しているため、必須キーに関する記述が正本と整合しない。
   - id: F006
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 39
     anchor: ""
     message: 必須メタ項目である `title` の設定指示が不足している。
+    message_ja: 必須メタ項目である `title` の設定指示が不足している。
   - id: F007
     severity: major
     rule: vp-qe-kata-conformance
     line: 21
     anchor: "| 採用 Role code       | Schedule の `owner` と RACI の列に使う Role code             |"
     message: 必須項目である `rulebook` キーの追加を禁止しており、rulebook および schema と矛盾している。
+    message_ja: 必須項目である `rulebook` キーの追加を禁止しており、rulebook および schema と矛盾している。
   - id: F008
     severity: minor
     rule: vp-ops-operability
-    line: 125
-    anchor: "- `pm-members.yaml` の `members[].roles` から参照できる Role code 語彙になっている。"
+    line: 134
+    anchor: ""
     message: Role code を更新した際に `pm-members.yaml`、Schedule、RACI を再確認し、schema 検証や表示ページ再生成、変更記録を行う運用手順が示されていない。
+    message_ja: Role code を更新した際に `pm-members.yaml`、Schedule、RACI を再確認し、schema 検証や表示ページ再生成、変更記録を行う運用手順が示されていない。

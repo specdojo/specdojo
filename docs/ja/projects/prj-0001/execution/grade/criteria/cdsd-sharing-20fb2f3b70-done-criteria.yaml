@@ -2,7 +2,7 @@
 id: cdsd-sharing-grade-criteria
 document: cdsd-sharing
 path: docs/ja/product/010-business-specs/020-data-model/cdsd-sharing.md
-graded_at: "2026-10-05T16:08:43.373Z"
+graded_at: "2026-10-08T16:03:52.155Z"
 graded_by: agy-expert-executor
 content_hash: b20d1b0c124fac099975cbc56ffbe57def7e83dd272e665fa1c965ed77b4009a
 summary:
@@ -16,18 +16,18 @@ criteria:
       - BA
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
-    reason: 成果物本体・成果物索引が一覧から未収載であり、費用・作業記録の粒度も未定である。
+    reason: 成果物本体・成果物索引が未収載で、費用・作業記録の粒度が未定である。
   - id: DC-002
     text: データストア構成を設計の基礎として参照できること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
-    reason: カタログ側で要求されている成果物本体・成果物索引の構成や制約が未定義である。
+    reason: 成果物本体・成果物索引の構成や正本区分が未定義である。
   - id: DC-003
     text: データ検証・整合性確認の対象が識別できること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
     status: unsatisfied
-    reason: 陳腐化や未転記を確認するための比較対象、基準時点、合格条件が明示されていない。
+    reason: 陳腐化と未転記の比較対象や基準時点、確認手順が定義されていない。

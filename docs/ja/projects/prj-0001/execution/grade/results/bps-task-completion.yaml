@@ -5,8 +5,8 @@ path: docs/ja/product/010-business-specs/030-business-model/bps-task-completion.
 target: deliverable
 rubric: grade-rubric-v2
 verdict: pass
-score: 98
-graded_at: "2026-10-05T16:18:27.569Z"
+score: 96
+graded_at: "2026-10-08T16:12:47.715Z"
 graded_by: agy-expert-executor
 content_hash: 23e173cda7e3215665b8ceea5dca4258cc489d5b2f75316f745471b273d2a722
 source_hashes:
@@ -14,7 +14,7 @@ source_hashes:
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
   deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
   dependency:bps-deliverable-evaluation: 95e5a113b891d0a9af9eb93425f773398e6073adffa8da4954fab7bee1130a0c
-  members: f116f9255291fe74d8bdfef5619309a4e575eb59b9ae2ecc7af1290ebddf80a1
+  members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
   schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
 categories:
@@ -27,7 +27,7 @@ categories:
   business:
     score: 100
   consistency:
-    score: 100
+    score: 88
   architecture:
     score: 100
   usability:
@@ -92,8 +92,8 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
@@ -121,7 +121,7 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 3
+  minor: 7
   note: 0
 findings:
   - id: F001
@@ -132,13 +132,54 @@ findings:
       | 完了可能                | 最新の grade・finding があり、変更内容が plan と完了条件を満たし、完了を妨げる未充足事項がない         | 完了可能の verdict
       と根拠が確定し、登録簿と実行記録に一件ずつ完了の記録が残る                           | 評価結果、review の判断記録、登録簿、実行記録        |
     message: "`E-01` の処置にある「review 自身は成果物を評価せず、古い結果から verdict を推測しない」は概要で説明済みのため、削除を検討してください。"
+    message_ja: "`E-01` の処置にある「review 自身は成果物を評価せず、古い結果から verdict を推測しない」は概要で説明済みのため、削除を検討してください。"
   - id: F002
     severity: minor
     rule: vp-arc-conciseness
     line: 87
     anchor: ""
     message: 「評価結果が最新でない」の期待する業務成果にある「review が成果物を再評価せず、」は概要で説明済みのため、削除を検討してください。
+    message_ja: 「評価結果が最新でない」の期待する業務成果にある「review が成果物を再評価せず、」は概要で説明済みのため、削除を検討してください。
   - id: F003
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 51
+    anchor: >-
+      | `S-03`      | `P-11-02`     | PM     | 完了可能の verdict と判断根拠                                       |
+      完了の決定を登録簿へ、完了記録を実行記録へ残す                                                                                                     
+      | 対象タスク、verdict、判断者、判断根拠、判断時点を登録簿と実行記録で確認できる                          | -              |
+    message: 入力「進捗報告の判断事項」が欠落した場合の扱い（非起動や例外への対応）が、ルールブックの規定に反して前提条件や主要例外に定義されていません。
+    message_ja: 入力「進捗報告の判断事項」が欠落した場合の扱い（非起動や例外への対応）が、ルールブックの規定に反して前提条件や主要例外に定義されていません。
+  - id: F004
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 57
+    anchor: >-
+      | 出力                                 | 受け手                   |
+      確定条件                                                                                     | 正本              |
+      後続処理                              |
+    message: ステップの担当が「PO、PM」と複数になっています。ルールブックの「責任主体が複数ならステップを分ける」に従い、担当を一つにするかステップを分割してください。
+    message_ja: ステップの担当が「PO、PM」と複数になっています。ルールブックの「責任主体が複数ならステップを分ける」に従い、担当を一つにするかステップを分割してください。
+  - id: F005
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 58
+    anchor: >-
+      | ------------------------------------ | ------------------------ |
+      -------------------------------------------------------------------------------------------- | ----------------- |
+      ------------------------------------- |
+    message: ステップの担当が「PO、PM」と複数になっています。ルールブックの「責任主体が複数ならステップを分ける」に従い、担当を一つにするかステップを分割してください。
+    message_ja: ステップの担当が「PO、PM」と複数になっています。ルールブックの「責任主体が複数ならステップを分ける」に従い、担当を一つにするかステップを分割してください。
+  - id: F006
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 78
+    anchor: >-
+      | 品質良好だが未完了      | grade は良好だが、plan または完了条件に未充足事項がある                                                |
+      完了記録を作らず、完了不可の verdict と未充足事項を含む再計画要求が引き渡される                         | 評価結果、plan、完了条件、再計画要求                 |
+    message: 前提条件（35行目）で E-03 となる条件に含まれている「対象タスク、変更内容の特定不能」が、E-03 の検出条件に記載されていません。
+    message_ja: 前提条件（35行目）で E-03 となる条件に含まれている「対象タスク、変更内容の特定不能」が、E-03 の検出条件に記載されていません。
+  - id: F007
     severity: minor
     rule: vp-ux-language-consistency
     line: 58
@@ -147,6 +188,7 @@ findings:
       -------------------------------------------------------------------------------------------- | ----------------- |
       ------------------------------------- |
     message: "`S-02` の入力に `進捗報告` とありますが、4章の入力名 `進捗報告の判断事項` に統一してください。"
+    message_ja: "`S-02` の入力に `進捗報告` とありますが、4章の入力名 `進捗報告の判断事項` に統一してください。"
 done_criteria:
   satisfied: 5
   total: 5

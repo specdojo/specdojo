@@ -6,8 +6,8 @@ target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 93
-graded_at: "2026-09-28T21:23:27.892Z"
-graded_by: codex-expert-executor
+graded_at: "2026-10-08T21:05:02.301Z"
+graded_by: agy-expert-executor
 content_hash: 003b26577dd58b97934fe75aeb8d4775c35bdf120d384c9503595780756a616c
 categories:
   purpose:
@@ -104,18 +104,33 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 1
-  minor: 1
+  minor: 2
   note: 0
 findings:
   - id: F001
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 145
-    anchor: "## 8. 仕上げチェック"
+    line: 147
+    anchor: "- 「全体の作成手順」で示した章立てと必須表がそろっている。"
     message: 仕上げチェックは「全体の作成手順」で示した章立てと必須表の確認を求めているが、同節には章立ても必須表も示されていないため、正本である rulebook の「本文構成（標準テンプレ）」を参照する記述に修正する必要がある。
+    message_ja: 仕上げチェックは「全体の作成手順」で示した章立てと必須表の確認を求めているが、同節には章立ても必須表も示されていないため、正本である rulebook の「本文構成（標準テンプレ）」を参照する記述に修正する必要がある。
   - id: F002
     severity: major
     rule: vp-qe-kata-conformance
-    line: 51
-    anchor: "- リポジトリ、作業環境、外部ツールなど、継続的な提供が必要な基盤は前提ではなく依存関係（4.3.）として書く。"
+    line: 52
+    anchor: "- 例: 「店頭で使う端末を利用できる」を前提として、利用不可時の代替記録を対応に置く。"
     message: 前提条件の例として「店頭で使う端末を利用できる」を挙げているが, 直前の記述（line 85）および rulebook の規定に反しており, 依存関係（4.3.）の例とするべきである。
+    message_ja: 前提条件の例として「店頭で使う端末を利用できる」を挙げているが, 直前の記述（line 85）および rulebook の規定に反しており, 依存関係（4.3.）の例とするべきである。
+  - id: F003
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 126
+    anchor: >-
+      | 分類     | 「単一店舗で運用する」を前提として記載する                                                 |
+      「単一店舗で進める」を種別なしで書く                                     |
+    message: >-
+      The good example "単一店舗で運用する" contradicts the sample which explicitly excludes it as a scope boundary, violating
+      the rule not to repeat upstream decisions; it should be replaced with an operational assumption.
+    message_ja: >-
+      The good example "単一店舗で運用する" contradicts the sample which explicitly excludes it as a scope boundary, violating
+      the rule not to repeat upstream decisions; it should be replaced with an operational assumption.

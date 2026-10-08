@@ -6,21 +6,21 @@ target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 63
-graded_at: "2026-10-05T16:20:13.042Z"
+graded_at: "2026-10-08T16:14:41.085Z"
 graded_by: agy-expert-executor
-content_hash: 84e5166ae9032b808439d054ee80103b35752dca405c56e2fefd7f0ba5c7e3ec
+content_hash: 122a31bab81314a9f48992acb49cfcc55cf3d4233e9491dac0cb1833283203c9
 source_hashes:
   catalog-entry: 7a7276acd5fe566ed20b44a4e60412b59f89092d1373198db88a54e6c5c2fd23
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
   deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
-  dependency:sysd-agent-settings: 438490f057d962ee7b6eee44dc4d8d218c14578a592e4d15b4d7f6bf2bcbe2f3
+  dependency:sysd-agent-settings: fcdb84f4ffd29a2119ae5aab0a3195a97a33b2e7cdc70c794e5e61ad2dee48c9
   dependency:sysd-antigravity-agent-settings: ade83ab86eecf2ce4f88cc1219bea911534c633f15a5abe677a7eb397ad41027
-  dependency:sysd-claude-agent-settings: 47db16ac01a7457329ee0368f54165765d52deb1d43fa9510f0729fd582bb387
-  dependency:sysd-codex-agent-settings: 2e3269bd969d836047e87a7897916f48182efa75d064163f045bf2d3d9280746
-  dependency:sysd-github-copilot-agent-settings: d10cad720566f4d096c0ce40c2bece543d5aa638691ec4c16b8ce9b7203b119b
-  dependency:sysd-opencode-agent-settings: 6a5964f92c63db08b8d878fd284174bd06061efa35ec23938769c3ad012b88ec
-  dependency:tsd-home-mac-dev-server: e626143eb7338bec96ee3302423d7a4cc21cead994aa591f4a273859f73970cc
-  members: f116f9255291fe74d8bdfef5619309a4e575eb59b9ae2ecc7af1290ebddf80a1
+  dependency:sysd-claude-agent-settings: dd9bde86b280585274d7f770c08ad6d3e14ccdf57389052ddd2d3e25234937f2
+  dependency:sysd-codex-agent-settings: 42a2cd4f17db9160725236e0e253365b83ba8383f39c224e60b1de5a8f56eeaf
+  dependency:sysd-github-copilot-agent-settings: 3e7cc787e2b9c1e0978b891463416a1c906e896afd4bf7fcbde48f85303427fb
+  dependency:sysd-opencode-agent-settings: 6e1d7d6cdacbea0f8b5042901d4e8a88096dd00eb27591882b1765e062f3d871
+  dependency:tsd-home-mac-dev-server: d0d3aa9edab9042511674be17988a318e62bdc18a2ffc0c497c43163e08d08c1
+  members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
   schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
 categories:
@@ -133,15 +133,17 @@ findings:
   - id: F001
     severity: major
     rule: vp-po-purpose-alignment
-    line: 21
-    anchor: "```"
+    line: 1
+    anchor: "# 自宅 MacBook Pro 開発サーバ運用ガイド"
     message: 運用対象と手段は示されているが、各構成判断を必要とする上位目的・期待効果と採用理由の対応を追記する必要がある。
+    message_ja: 運用対象と手段は示されているが、各構成判断を必要とする上位目的・期待効果と採用理由の対応を追記する必要がある。
   - id: F002
     severity: major
     rule: vp-po-decision-readiness
-    line: 21
-    anchor: "```"
+    line: 1
+    anchor: "# 自宅 MacBook Pro 開発サーバ運用ガイド"
     message: 採用構成の比較候補、選定理由、承認対象、判断者、未決事項とその影響を明示しなければ、PO が承認・保留・差し戻しを判断できない。
+    message_ja: 採用構成の比較候補、選定理由、承認対象、判断者、未決事項とその影響を明示しなければ、PO が承認・保留・差し戻しを判断できない。
   - id: F003
     severity: major
     rule: vp-po-publication-accountability
@@ -152,125 +154,156 @@ findings:
       の両方で禁止する。ネットワーク公開、SSH、Host Mac の基盤設定に関するセキュリティ方針は、[[tsd-home-mac-dev-server|自宅 MacBook Pro 開発サーバ技術スタック定義]] の 6
       章を正本とする。
     message: 秘密情報の禁止だけでなく、公開範囲、公開前確認項目、最終公開判断を担う人間の責任者を明示する必要がある。
+    message_ja: 秘密情報の禁止だけでなく、公開範囲、公開前確認項目、最終公開判断を担う人間の責任者を明示する必要がある。
   - id: F004
     severity: major
     rule: vp-pm-plan-feasibility
-    line: 8
-    anchor: ""
+    line: 5
+    anchor: "## 1. 前提と責務"
     message: 初期設定完了後の各運用確認について、担当 Role code、実施タイミング、所要時間の目安、完了判定を追加する必要がある。
+    message_ja: 初期設定完了後の各運用確認について、担当 Role code、実施タイミング、所要時間の目安、完了判定を追加する必要がある。
   - id: F005
     severity: minor
     rule: vp-pm-dependency-risk
-    line: 202
-    anchor: ""
+    line: 201
+    anchor: "## 6. 運用時のトラブルシュート"
     message: トラブルシュートで解消しない障害を PJR の課題・リスク・変更要求へ登録する条件と、長時間実行や作業予定への影響確認を追記するとよい。
+    message_ja: トラブルシュートで解消しない障害を PJR の課題・リスク・変更要求へ登録する条件と、長時間実行や作業予定への影響確認を追記するとよい。
   - id: F006
     severity: major
     rule: vp-pm-control-reporting
-    line: 202
-    anchor: ""
+    line: 201
+    anchor: "## 6. 運用時のトラブルシュート"
     message: 運用中に発生した事象を進捗・課題・リスク・変更要求・決定事項へ分類し、報告先、担当 Role code、PJR 転記条件を定義する必要がある。
+    message_ja: 運用中に発生した事象を進捗・課題・リスク・変更要求・決定事項へ分類し、報告先、担当 Role code、PJR 転記条件を定義する必要がある。
   - id: F007
     severity: major
     rule: vp-ba-business-value
-    line: 21
-    anchor: "```"
+    line: 1
+    anchor: "# 自宅 MacBook Pro 開発サーバ運用ガイド"
     message: リモート開発者が被る作業中断や再実行の損失と、tmux・devcontainer 運用で得る価値および成功基準を明示する必要がある。
+    message_ja: リモート開発者が被る作業中断や再実行の損失と、tmux・devcontainer 運用で得る価値および成功基準を明示する必要がある。
   - id: F008
     severity: major
     rule: vp-ba-requirements-completeness
-    line: 21
-    anchor: "```"
+    line: 1
+    anchor: "# 自宅 MacBook Pro 開発サーバ運用ガイド"
     message: tmux、devcontainer 内実行、SSH local forwarding の選定理由を業務要件へ対応付け、利用者が確認できる受入条件を追加する必要がある。
+    message_ja: tmux、devcontainer 内実行、SSH local forwarding の選定理由を業務要件へ対応付け、利用者が確認できる受入条件を追加する必要がある。
   - id: F009
     severity: minor
     rule: vp-ba-stakeholder-clarity
-    line: 8
-    anchor: ""
+    line: 5
+    anchor: "## 1. 前提と責務"
     message: 日常利用者、Host Mac 運用者、設定変更の確認者と、それぞれが合意・確認する事項を Role code 付きで明示するとよい。
+    message_ja: 日常利用者、Host Mac 運用者、設定変更の確認者と、それぞれが合意・確認する事項を Role code 付きで明示するとよい。
   - id: F010
     severity: minor
     rule: vp-arc-cross-document-consistency
-    line: 193
-    anchor: ""
+    line: 1
+    anchor: "# 自宅 MacBook Pro 開発サーバ運用ガイド"
     message: >-
+      `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-architecture.yaml` の
+      `tsd-home-mac-dev-server-usage.depends_on` は `sysd-antigravity-agent-settings` を含むが、対象の `based_on` と agent
+      設定の正本一覧には同文書がなく、依存関係が一致していない。
+    message_ja: >-
       `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-architecture.yaml` の
       `tsd-home-mac-dev-server-usage.depends_on` は `sysd-antigravity-agent-settings` を含むが、対象の `based_on` と agent
       設定の正本一覧には同文書がなく、依存関係が一致していない。
   - id: F011
     severity: minor
     rule: vp-arc-cross-document-consistency
-    line: 234
-    anchor: ""
+    line: 233
+    anchor: >-
+      設定・認証情報の保存先と named volume の完全な一覧は、[[tsd-home-mac-dev-server|自宅 MacBook Pro 開発サーバ技術スタック定義]] の 4.10.1
+      を正本とする。`.devcontainer/devcontainer.json` の `mounts` が正本どおりか確認し、対象 volume を削除していないか調べる。OpenCode の API key は
+      `specdojo-opencode-data` に mount した `/home/node/.local/share/opencode/auth.json` に保存される。
     message: >-
+      前回指摘の `specdojo-claude-state` の記述は解消されたが、実装にある `specdojo-antigravity` と `specdojo-gemini`
+      を欠いており、認証永続化の一覧が一致していない問題が残るため追記するとよい。
+    message_ja: >-
       前回指摘の `specdojo-claude-state` の記述は解消されたが、実装にある `specdojo-antigravity` と `specdojo-gemini`
       を欠いており、認証永続化の一覧が一致していない問題が残るため追記するとよい。
   - id: F012
     severity: major
     rule: vp-arc-technical-constraints
-    line: 21
-    anchor: "```"
+    line: 1
+    anchor: "# 自宅 MacBook Pro 開発サーバ運用ガイド"
     message: tmux、Dev Container CLI, Docker Desktop, Tailscale, agent CLI の対応バージョン方針、更新方針、ライセンス上の制約を識別できる形で追加する必要がある。
+    message_ja: tmux、Dev Container CLI, Docker Desktop, Tailscale, agent CLI の対応バージョン方針、更新方針、ライセンス上の制約を識別できる形で追加する必要がある。
   - id: F013
     severity: minor
     rule: vp-dev-implementation-readiness
-    line: 50
-    anchor: ""
+    line: 49
+    anchor: "`specdojo exec run --loop` は tmux 内で実行する。"
     message: 本文の `specdojo exec run —loop` は `—auto` または手動ターゲットを欠いて単独実行できないため、直後の例と同じ有効なコマンドへ修正する必要がある。
+    message_ja: 本文の `specdojo exec run —loop` は `—auto` または手動ターゲットを欠いて単独実行できないため、直後の例と同じ有効なコマンドへ修正する必要がある。
   - id: F014
     severity: minor
     rule: vp-dev-change-impact
-    line: 234
-    anchor: ""
+    line: 233
+    anchor: >-
+      設定・認証情報の保存先と named volume の完全な一覧は、[[tsd-home-mac-dev-server|自宅 MacBook Pro 開発サーバ技術スタック定義]] の 4.10.1
+      を正本とする。`.devcontainer/devcontainer.json` の `mounts` が正本どおりか確認し、対象 volume を削除していないか調べる。OpenCode の API key は
+      `specdojo-opencode-data` に mount した `/home/node/.local/share/opencode/auth.json` に保存される。
     message: agent CLI の認証情報の保存先を変更した場合の、既存 devcontainer の再構築手順や既存ボリュームへの影響を記載するとよい。
+    message_ja: agent CLI の認証情報の保存先を変更した場合の、既存 devcontainer の再構築手順や既存ボリュームへの影響を記載するとよい。
   - id: F015
     severity: minor
     rule: vp-dev-testability
-    line: 202
-    anchor: ""
+    line: 201
+    anchor: "## 6. 運用時のトラブルシュート"
     message: 接続、detach、再接続、長時間処理継続、VitePress 到達、agent 実行について、確認コマンドと期待状態を対応付けた動作確認手順を追加するとよい。
+    message_ja: 接続、detach、再接続、長時間処理継続、VitePress 到達、agent 実行について、確認コマンドと期待状態を対応付けた動作確認手順を追加するとよい。
   - id: F016
     severity: major
     rule: vp-qe-done-criteria
-    line: 21
-    anchor: "```"
+    line: 1
+    anchor: "# 自宅 MacBook Pro 開発サーバ運用ガイド"
     message: DC-001, DC-002, DC-003 を満たす記述（選定理由、承認判断情報、技術的制約・ライセンス方針）が不足している。
+    message_ja: DC-001, DC-002, DC-003 を満たす記述（選定理由、承認判断情報、技術的制約・ライセンス方針）が不足している。
   - id: F017
     severity: major
     rule: vp-qe-done-criteria
-    line: 184
-    anchor: ""
+    line: 1
+    anchor: "# 自宅 MacBook Pro 開発サーバ運用ガイド"
     message: DC-004 を満たすテストフレームワークと CI/CD 環境の参照先、検証対象、コマンド、期待結果が本文にない。
+    message_ja: DC-004 を満たすテストフレームワークと CI/CD 環境の参照先、検証対象、コマンド、期待結果が本文にない。
   - id: F018
     severity: minor
     rule: vp-qe-verifiability
-    line: 202
-    anchor: ""
+    line: 67
+    anchor: "## 4. tmux の利用ユースケース"
     message: 主要ユースケースごとに、前提、操作、期待状態、失敗条件を列挙した受入チェックリストを追加するとよい。
+    message_ja: 主要ユースケースごとに、前提、操作、期待状態、失敗条件を列挙した受入チェックリストを追加するとよい。
   - id: F019
     severity: major
     rule: vp-qe-omissions-consistency
-    line: 4
-    anchor: ""
+    line: 1
+    anchor: "# 自宅 MacBook Pro 開発サーバ運用ガイド"
     message: TSDルールブックで必須とされる「採用理由」の記述が欠落している。
+    message_ja: TSDルールブックで必須とされる「採用理由」の記述が欠落している。
   - id: F020
     severity: minor
     rule: vp-ux-readability
-    line: 4
-    anchor: ""
+    line: 1
+    anchor: "# 自宅 MacBook Pro 開発サーバ運用ガイド"
     message: TSDルールブックに基づくドキュメントであるが、冒頭に「採用理由」がなく、いきなり手順から始まっているため、読者がなぜこの構成なのか理解しにくい。
+    message_ja: TSDルールブックに基づくドキュメントであるが、冒頭に「採用理由」がなく、いきなり手順から始まっているため、読者がなぜこの構成なのか理解しにくい。
   - id: F021
     severity: major
     rule: vp-ops-release-readiness
-    line: 21
-    anchor: "```"
+    line: 1
+    anchor: "# 自宅 MacBook Pro 開発サーバ運用ガイド"
     message: ready 化に必要な確認項目、未解決事項、公開範囲、承認者、人間による公開前確認を明示する必要がある。
+    message_ja: ready 化に必要な確認項目、未解決事項、公開範囲、承認者、人間による公開前確認を明示する必要がある。
   - id: F022
     severity: minor
     rule: vp-ops-operability
-    line: 202
-    anchor: ""
+    line: 201
+    anchor: "## 6. 運用時のトラブルシュート"
     message: 手順や依存 CLI の更新責任者、問い合わせ先、障害を解消できない場合のエスカレーション経路と変更管理方法を追記するとよい。
+    message_ja: 手順や依存 CLI の更新責任者、問い合わせ先、障害を解消できない場合のエスカレーション経路と変更管理方法を追記するとよい。
 done_criteria:
   satisfied: 1
   total: 5

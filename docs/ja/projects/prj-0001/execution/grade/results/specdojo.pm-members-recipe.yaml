@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: pass
 score: 97
-graded_at: "2026-10-06T21:03:12.324Z"
+graded_at: "2026-10-08T21:01:52.982Z"
 graded_by: agy-expert-executor
-content_hash: 65b81361aef92a02ab6d274ff7245450630c939e7de54d8d302cc6dc8b7a039c
+content_hash: 95105c117df50ea0d2cef0f9306e0215107fe2d3ed8a86452aa5245c84d36fc4
 categories:
   purpose:
     score: 100
@@ -101,55 +101,62 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 7
+  minor: 8
   note: 0
 findings:
   - id: F001
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 37
-    anchor: ""
+    line: 36
+    anchor: "### 4.1. 実行主体"
     message: 全体の作成手順において、rulebook で必須とされる title の設定手順が漏れている。
     message_ja: 全体の作成手順において、rulebook で必須とされる title の設定手順が漏れている。
   - id: F002
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 55
-    anchor: ""
+    line: 36
+    anchor: "### 4.1. 実行主体"
     message: メタ項目の設定手順において、rulebook で必須とされる `title` が漏れている。
     message_ja: メタ項目の設定手順において、rulebook で必須とされる `title` が漏れている。
   - id: F003
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 55
-    anchor: ""
+    line: 36
+    anchor: "### 4.1. 実行主体"
     message: メタ項目の設定手順において、rulebook で必須とされる `status` が漏れている。
     message_ja: メタ項目の設定手順において、rulebook で必須とされる `status` が漏れている。
   - id: F004
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 63
-    anchor: "- 最終判断を担う人間は、`note` に承認・公開可否・説明責任の扱いを記載する。"
+    line: 45
+    anchor: "- `type: agent`、`provider`、`command`、`mode`、`stage_role` が名簿に残っていませんか。"
     message: "`members` の問いにおいて、必須項目である `display_name` の確認が漏れている。"
     message_ja: "`members` の問いにおいて、必須項目である `display_name` の確認が漏れている。"
   - id: F005
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 98
-    anchor: 1. 組織定義から、PO が最終判断する範囲と agent 委任範囲を抜き出す。
+    line: 48
+    anchor: "- 既存 agent の移行には `specdojo config migrate-members --dry-run` を先に使いましたか。"
     message: 書き方において、`stage_role` の設定基準や nickname の許容文字に関する rulebook 記載の具体ルールが記述されていない。
     message_ja: 書き方において、`stage_role` の設定基準や nickname の許容文字に関する rulebook 記載の具体ルールが記述されていない。
   - id: F006
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 98
-    anchor: 1. 組織定義から、PO が最終判断する範囲と agent 委任範囲を抜き出す。
+    line: 38
+    anchor: "- 人間として最終判断、受入、公開可否を担う主体は誰ですか。"
     message: agent のフィールド設定において、rulebook で定義されている `scheduler_strategy` と `disabled` の扱いが漏れている。
     message_ja: agent のフィールド設定において、rulebook で定義されている `scheduler_strategy` と `disabled` の扱いが漏れている。
   - id: F007
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 98
-    anchor: 1. 組織定義から、PO が最終判断する範囲と agent 委任範囲を抜き出す。
+    line: 38
+    anchor: "- 人間として最終判断、受入、公開可否を担う主体は誰ですか。"
     message: agent のフィールド設定において、persona のフォーマット (kebab-case) に関する指定が漏れている。
     message_ja: agent のフィールド設定において、persona のフォーマット (kebab-case) に関する指定が漏れている。
+  - id: F008
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 36
+    anchor: "### 4.1. 実行主体"
+    message: メタ項目の設定手順において、rulebook で必須とされる `version` の設定手順が漏れている。
+    message_ja: メタ項目の設定手順において、rulebook で必須とされる `version` の設定手順が漏れている。

@@ -2,7 +2,7 @@
 id: bps-deliverable-evaluation-grade-criteria
 document: bps-deliverable-evaluation
 path: docs/ja/product/010-business-specs/030-business-model/bps-deliverable-evaluation.md
-graded_at: "2026-10-05T16:16:29.578Z"
+graded_at: "2026-10-08T16:11:13.148Z"
 graded_by: agy-expert-executor
 content_hash: 95e5a113b891d0a9af9eb93425f773398e6073adffa8da4954fab7bee1130a0c
 summary:
@@ -16,32 +16,27 @@ criteria:
       - BA
     viewpoint: vp-ba-requirements-completeness
     status: satisfied
-    reason: トリガー・前提・入力・処理・出力が各セクションで業務観点から正確に整理されている。
   - id: DC-002
     text: プロセスのスコープと業務的妥当性を承認できること
     roles:
       - PO
     viewpoint: vp-po-purpose-alignment
     status: satisfied
-    reason: 成果物の品質評価に特化してスコープが定義され、業務的な妥当性がある。
   - id: DC-003
     text: システム設計・機能設計の入力として参照できること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
     status: satisfied
-    reason: 特定の実装に依存せず、システム設計や機能設計の参照入力として十分な論理情報が示されている。
   - id: DC-004
     text: テストシナリオ設計・受入条件との対応が確認できること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
     status: satisfied
-    reason: セクション8において正常系および例外系の具体的な受入条件と期待成果が明示されている。
   - id: DC-005
     text: 実装設計（サービス・ユースケース）の基礎として参照できること
     roles:
       - DEV
     viewpoint: vp-dev-implementation-readiness
     status: satisfied
-    reason: 処理ステップ（S-01〜S-03）や例外経路が明確で、実装設計（サービス・ユースケース）の基礎として機能する。

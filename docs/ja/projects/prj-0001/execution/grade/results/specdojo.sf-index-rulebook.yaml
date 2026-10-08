@@ -3,44 +3,96 @@ version: 1
 document: specdojo:sf-index-rulebook
 path: docs/ja/specdojo/rulebooks/sf-index-rulebook.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 70
-graded_at: "2026-09-03T09:39:09.863Z"
-graded_by: gemma-expert-executor
+score: 48
+graded_at: "2026-10-08T21:24:15.611Z"
+graded_by: agy-expert-executor
 content_hash: 0c02fc0b4a0fc930c6bc00189bdaf4d8b693d6f1d77e0b6e6b6a135b43880907
 categories:
-  consistency:
-    score: 38
-  usability:
-    score: 83
-  architecture:
-    score: 100
-  quality:
+  purpose:
+    score: 50
+  operations:
     score: 63
+  planning:
+    score: 50
+  business:
+    score: 50
+  architecture:
+    score: 75
+  usability:
+    score: 42
+  implementation:
+    score: 50
+  quality:
+    score: 42
+  consistency:
+    score: 25
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 2
+    score: 50
+  vp-po-decision-readiness:
+    level: 2
+    score: 50
+  vp-po-publication-accountability:
+    level: 2
+    score: 50
+  vp-pm-plan-feasibility:
+    level: 2
+    score: 50
+  vp-pm-dependency-risk:
+    level: 2
+    score: 50
+  vp-pm-control-reporting:
+    level: 2
+    score: 50
+  vp-ba-business-value:
+    level: 2
+    score: 50
+  vp-ba-requirements-completeness:
+    level: 2
+    score: 50
+  vp-ba-stakeholder-clarity:
+    level: 2
+    score: 50
+  vp-arc-technical-constraints:
     level: 2
     score: 50
   vp-arc-conciseness:
-    level: 4
-    score: 100
-  vp-arc-single-responsibility:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
+  vp-dev-implementation-readiness:
+    level: 2
+    score: 50
+  vp-dev-change-impact:
+    level: 2
+    score: 50
+  vp-dev-testability:
+    level: 2
+    score: 50
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 2
+    score: 50
   vp-qe-omissions-consistency:
     level: 1
     score: 25
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-ux-readability:
+    level: 1
+    score: 25
+  vp-ux-language-consistency:
     level: 2
     score: 50
-  vp-ux-language-consistency:
+  vp-ops-release-readiness:
+    level: 2
+    score: 50
+  vp-ops-operability:
+    level: 2
+    score: 50
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -48,43 +100,182 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 5
+  major: 22
   minor: 1
   note: 0
 findings:
   - id: F001
     severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 1
-    message: H1に成果物名の代わりに別ドキュメントへのリンクが記述されており、成果物の識別を混乱させる。
-    anchor: ""
-  - id: F006
-    severity: major
-    rule: vp-ux-readability
-    line: 1
-    message: 成果物の位置づけや責務境界が具体化されていないため、作成者が判断に迷う。
-    anchor: ""
+    rule: vp-po-purpose-alignment
+    line: 19
+    anchor: "## 3. ファイル命名・ID規則"
+    message: >-
+      The stated purpose is tautological and fails to align with broader project goals or explain the necessity of the
+      artifact.
+    message_ja: 述べられている目的は同語反復的であり、より広いプロジェクトの目標と一致していないか、アーティファクトの必要性を説明できていません。
   - id: F002
-    severity: minor
-    rule: vp-qe-verifiability
+    severity: major
+    rule: vp-po-decision-readiness
     line: 1
-    message: 判定可能な記述を求める指示はあるが, 具体的にどのような状態が「判定可能」であるかの基準が不足している。
-    anchor: ""
+    anchor: "# [システム化機能一覧 / 全体構成](../rulebooks/sf-rulebook.md) 作成ルール"
+    message: The rulebook does not define the necessary decision points, approvers, or criteria for PO approval.
+    message_ja: ルールブックには、必要な意思決定ポイント、承認者、またはPOの承認基準が定義されていません。
   - id: F003
     severity: major
-    rule: vp-qe-omissions-consistency
+    rule: vp-po-publication-accountability
     line: 1
-    message: 「2. 位置づけと用語定義」がテンプレートの指示文のままであり、実際の定義が記載されていない。
-    anchor: ""
+    anchor: "# [システム化機能一覧 / 全体構成](../rulebooks/sf-rulebook.md) 作成ルール"
+    message: >-
+      Accountability for the document and guidelines for publication scope and sensitive information handling are
+      missing.
+    message_ja: ドキュメントの責任、ならびに公開範囲や機密情報の取り扱いに関するガイドラインが不足しています。
   - id: F004
     severity: major
-    rule: vp-qe-omissions-consistency
+    rule: vp-pm-plan-feasibility
     line: 1
-    message: 第5節で定義した必須章（目的、入力情報、記述内容、検証観点）に対する具体的な記述ガイドが不足している。
-    anchor: ""
+    anchor: "# [システム化機能一覧 / 全体構成](../rulebooks/sf-rulebook.md) 作成ルール"
+    message: >-
+      The rulebook lacks the necessary definitions of work units, Role codes, and completion conditions required for
+      effective task planning.
+    message_ja: ルールブックには、効果的なタスク計画に必要な作業単位、Roleコード、および完了条件の定義が不足しています。
   - id: F005
     severity: major
-    rule: vp-qe-kata-conformance
-    line: 1
-    message: 本文構成の定義（必須章）と、対応するサンプルの構成が矛盾しており、適用方法が不透明である。
+    rule: vp-pm-dependency-risk
+    line: 20
     anchor: ""
+    message: Specific dependencies, risks, and impacts on downstream schedules are not explicitly identified.
+    message_ja: 特定の依存関係、リスク、および後続のスケジュールへの影響が明示的に特定されていません。
+  - id: F006
+    severity: major
+    rule: vp-pm-control-reporting
+    line: 1
+    anchor: "# [システム化機能一覧 / 全体構成](../rulebooks/sf-rulebook.md) 作成ルール"
+    message: Instructions for reporting progress, escalating issues, and managing change requests are missing.
+    message_ja: 進捗の報告、問題のエスカレーション、および変更リクエストの管理に関する指示が不足しています。
+  - id: F007
+    severity: major
+    rule: vp-ba-business-value
+    line: 1
+    anchor: "# [システム化機能一覧 / 全体構成](../rulebooks/sf-rulebook.md) 作成ルール"
+    message: The artifact's business value, target audience, and the business problems it addresses are not articulated.
+    message_ja: アーティファクトのビジネス価値、ターゲット層、およびそれが解決するビジネス上の課題が明確に述べられていません。
+  - id: F008
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 47
+    anchor: "- 章参照は章番号ではなく章タイトルで記述する。"
+    message: >-
+      The rulebook delegates the definition of scope without providing necessary guidelines or criteria for
+      completeness.
+    message_ja: ルールブックは、完全性のための必要なガイドラインや基準を提供せずに、スコープの定義を委任しています。
+  - id: F009
+    severity: major
+    rule: vp-ba-stakeholder-clarity
+    line: 1
+    anchor: "# [システム化機能一覧 / 全体構成](../rulebooks/sf-rulebook.md) 作成ルール"
+    message: The stakeholders, users, and reviewers of the artifact are not identified.
+    message_ja: アーティファクトのステークホルダー、ユーザー、およびレビュアーが特定されていません。
+  - id: F010
+    severity: major
+    rule: vp-arc-technical-constraints
+    line: 1
+    anchor: "# [システム化機能一覧 / 全体構成](../rulebooks/sf-rulebook.md) 作成ルール"
+    message: Required technical constraints, schema definitions, and validation procedures are missing.
+    message_ja: 必要な技術的制約、スキーマ定義、および検証手順が不足しています。
+  - id: F011
+    severity: major
+    rule: vp-arc-conciseness
+    line: 24
+    anchor: "## 4. 推奨 Frontmatter 項目"
+    message: >-
+      Section 2 contains raw template instructions instead of actual rules, failing to provide necessary judgment
+      criteria.
+    message_ja: セクション2には実際のルールではなく生のテンプレート指示が含まれており、必要な判断基準を提供できていません。
+  - id: F012
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 1
+    anchor: "# [システム化機能一覧 / 全体構成](../rulebooks/sf-rulebook.md) 作成ルール"
+    message: Specifications for inputs, constraints, and schemas necessary for implementation are not provided.
+    message_ja: 実装に必要な入力、制約、およびスキーマの仕様が提供されていません。
+  - id: F013
+    severity: major
+    rule: vp-dev-change-impact
+    line: 1
+    anchor: "# [システム化機能一覧 / 全体構成](../rulebooks/sf-rulebook.md) 作成ルール"
+    message: Guidelines for assessing the impact of changes on related artifacts or downstream processes are missing.
+    message_ja: 関連するアーティファクトや後続のプロセスに対する変更の影響を評価するためのガイドラインが不足しています。
+  - id: F014
+    severity: major
+    rule: vp-dev-testability
+    line: 50
+    anchor: ""
+    message: >-
+      Specific validation criteria, lint rules, or verification procedures are not defined despite requiring a
+      validation chapter.
+    message_ja: バリデーションの章が必要であるにもかかわらず、特定の検証基準、lintルール、または検証手順が定義されていません。
+  - id: F015
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 22
+    anchor: "- ドキュメントID: `sf-index-<term>` または用途に応じた識別子"
+    message: 判定可能な記述を求める指示はあるが, 具体的にどのような状態が「判定可能」であるかの基準が不足している。
+    message_ja: 判定可能な記述を求める指示はあるが, 具体的にどのような状態が「判定可能」であるかの基準が不足している。
+  - id: F016
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 24
+    anchor: "## 4. 推奨 Frontmatter 項目"
+    message: 「2. 位置づけと用語定義」がテンプレートの指示文のままであり、実際の定義が記載されていない。
+    message_ja: 「2. 位置づけと用語定義」がテンプレートの指示文のままであり、実際の定義が記載されていない。
+  - id: F017
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 43
+    anchor: "## 6. 記述ガイド"
+    message: 第5節で定義した必須章（目的、入力情報、記述内容、検証観点）に対する具体的な記述ガイドが不足している。
+    message_ja: 第5節で定義した必須章（目的、入力情報、記述内容、検証観点）に対する具体的な記述ガイドが不足している。
+  - id: F018
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 43
+    anchor: "## 6. 記述ガイド"
+    message: 本文構成の定義（必須章）と、対応するサンプルの構成が矛盾しており、適用方法が不透明である。
+    message_ja: 本文構成の定義（必須章）と、対応するサンプルの構成が矛盾しており、適用方法が不透明である。
+  - id: F019
+    severity: major
+    rule: vp-ux-readability
+    line: 11
+    anchor: ""
+    message: H1に成果物名の代わりに別ドキュメントへのリンクが記述されており、成果物の識別を混乱させる。
+    message_ja: H1に成果物名の代わりに別ドキュメントへのリンクが記述されており、成果物の識別を混乱させる。
+  - id: F020
+    severity: major
+    rule: vp-ux-readability
+    line: 24
+    anchor: "## 4. 推奨 Frontmatter 項目"
+    message: 成果物の位置づけや責務境界が具体化されていないため、作成者が判断に迷う。
+    message_ja: 成果物の位置づけや責務境界が具体化されていないため、作成者が判断に迷う。
+  - id: F021
+    severity: major
+    rule: vp-ux-language-consistency
+    line: 11
+    anchor: ""
+    message: >-
+      The H1 title uses terminology and references that conflict with the document's ID and intended purpose, causing
+      confusion.
+    message_ja: H1タイトルで使用されている用語や参照が、ドキュメントのIDや意図された目的と矛盾しており、混乱を招いています。
+  - id: F022
+    severity: major
+    rule: vp-ops-release-readiness
+    line: 1
+    anchor: "# [システム化機能一覧 / 全体構成](../rulebooks/sf-rulebook.md) 作成ルール"
+    message: The rulebook does not define the criteria or prerequisites for marking the artifact as ready for release.
+    message_ja: ルールブックには、アーティファクションをリリース準備完了としてマークするための基準や前提条件が定義されていません。
+  - id: F023
+    severity: major
+    rule: vp-ops-operability
+    line: 1
+    anchor: "# [システム化機能一覧 / 全体構成](../rulebooks/sf-rulebook.md) 作成ルール"
+    message: Guidelines for the ongoing maintenance, change management, and operational handling of the artifact are absent.
+    message_ja: アーティファクトの継続的な保守、変更管理、および運用上の取り扱いに関するガイドラインがありません。
