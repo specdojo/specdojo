@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-XMQH",
   "run_id": "20261008T143841981Z-6f103851",
-  "updated_at": "2026-10-08T14:45:44.762Z",
+  "updated_at": "2026-10-08T14:45:54.686Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-xmqh-20261008T143457Z-afb5-result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "claude-expert-executor",
       "attempts": 1,
       "started_at": "2026-10-08T14:45:44.762Z",
-      "completed_at": null,
+      "completed_at": "2026-10-08T14:45:54.686Z",
       "artifact_ref": null
     }
   },
