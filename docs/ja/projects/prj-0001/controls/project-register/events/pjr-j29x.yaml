@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_c2a54788be084ed185132848b1d63f31
+  ts: "2026-10-08T13:52:50Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者の指摘（語感と道場の比喩の少なさ）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: README とトップに新しい標語と道場の言葉を反映する
+    - field: description
+      from: ""
+      to: 標語を「決めて、書いて、鍛え続ける。」に改め（PJR-QGP4）、README の見出しと冒頭に道場の言葉（記帳・型・実戦・評定・講評・流）を加えて、比喩と機能を結びつける。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-08"
