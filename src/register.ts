@@ -3,13 +3,13 @@ import { randomInt, randomUUID } from "node:crypto";
 import {
   existsSync,
   mkdirSync,
+  readdirSync,
   readFileSync,
   renameSync,
   unlinkSync,
   writeFileSync,
 } from "node:fs";
 import { basename, dirname, join, relative, resolve, sep } from "node:path";
-import fg from "fast-glob";
 import {
   getProjectExecutionPath,
   getProjectRegisterPath,
@@ -132,6 +132,27 @@ function atomicWriteFile(path: string, content: string): void {
   } finally {
     if (existsSync(temporary)) unlinkSync(temporary);
   }
+}
+
+export function findMarkdownReferenceFiles(root: string): string[] {
+  const markdownFiles: string[] = [];
+  const docsJaPath = join(resolve(root), "docs", "ja");
+
+  function walk(directory: string): void {
+    for (const entry of readdirSync(directory, { withFileTypes: true })) {
+      if (entry.name.startsWith(".")) continue;
+
+      const entryPath = join(directory, entry.name);
+      if (entry.isDirectory()) {
+        if (entry.name !== "generated") walk(entryPath);
+      } else if (entry.isFile() && entry.name.endsWith(".md")) {
+        markdownFiles.push(entryPath);
+      }
+    }
+  }
+
+  if (existsSync(docsJaPath)) walk(docsJaPath);
+  return markdownFiles.sort((left, right) => left.localeCompare(right));
 }
 
 function prepareRegisterEventFile(
@@ -1621,9 +1642,7 @@ export function planRetopic(paths: RegisterPaths, id: string, topic: string): Re
     },
   ];
   const root = specdojoRootDir();
-  const referenceFiles = fg
-    .sync("docs/ja/**/*.md", { cwd: root, absolute: true, ignore: ["**/generated/**"] })
-    .sort((a, b) => a.localeCompare(b));
+  const referenceFiles = findMarkdownReferenceFiles(root);
 
   for (const absPath of referenceFiles) {
     if (absPath === view.ticketPath) continue;
@@ -1789,9 +1808,7 @@ export function planRenumber(paths: RegisterPaths, fromId: string, toId: string)
   // 参照リンク・targets の付け替え（doc id を持つ個票がある場合のみ）。
   if (fromDocId && toDocId) {
     const root = specdojoRootDir();
-    const referenceFiles = fg
-      .sync("docs/ja/**/*.md", { cwd: root, absolute: true, ignore: ["**/generated/**"] })
-      .sort((a, b) => a.localeCompare(b));
+    const referenceFiles = findMarkdownReferenceFiles(root);
 
     for (const absPath of referenceFiles) {
       if (absPath === paths.pjrIndexPath) continue;

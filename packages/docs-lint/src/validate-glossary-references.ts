@@ -2,7 +2,7 @@
 
 import { readFileSync } from "node:fs";
 import { load } from "js-yaml";
-import fg from "fast-glob";
+import { globFilesSync } from "./glob-files.js";
 
 type Term = {
   id?: string;
@@ -84,7 +84,7 @@ function main() {
   const args = process.argv.slice(2);
   const patterns = args.length > 0 ? args : ["docs/**/gl-*.yaml"];
 
-  const files = fg.sync(patterns, { dot: false });
+  const files = globFilesSync(patterns);
 
   if (files.length === 0) {
     console.log("No glossary files found.");

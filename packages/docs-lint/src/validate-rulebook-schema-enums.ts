@@ -3,8 +3,8 @@
 import { existsSync, readFileSync } from "node:fs";
 import { basename, join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
-import fg from "fast-glob";
 import { load } from "js-yaml";
+import { globFilesSync } from "./glob-files.js";
 import { resolveSpecdojoAssetPath } from "./specdojo-package.js";
 
 type JsonObject = Record<string, unknown>;
@@ -114,22 +114,18 @@ export function findReadyRulebookSchemaPairs(
   const effectiveSchemaDir = existsSync(resolve(schemaDir))
     ? schemaDir
     : resolveSpecdojoAssetPath(schemaDir);
-  return fg
-    .sync(join(effectiveSchemaDir, `*${SCHEMA_SUFFIX}`).replaceAll("\\", "/"), {
-      absolute: false,
-      onlyFiles: true,
-    })
-    .sort((left, right) => left.localeCompare(right))
-    .flatMap((schemaPath) => {
-      const stem = basename(schemaPath).slice(0, -SCHEMA_SUFFIX.length);
-      const rulebookPath = join(rulebookDir, `${stem}-rulebook.md`).replaceAll("\\", "/");
-      if (!existsSync(resolve(rulebookPath))) return [];
+  return globFilesSync(join(effectiveSchemaDir, `*${SCHEMA_SUFFIX}`).replaceAll("\\", "/"), {
+    absolute: true,
+  }).flatMap((schemaPath) => {
+    const stem = basename(schemaPath).slice(0, -SCHEMA_SUFFIX.length);
+    const rulebookPath = join(rulebookDir, `${stem}-rulebook.md`).replaceAll("\\", "/");
+    if (!existsSync(resolve(rulebookPath))) return [];
 
-      const { metadata } = parseRulebook(readFileSync(resolve(rulebookPath), "utf8"));
-      return metadata.status === "ready" && ["yaml", "json"].includes(metadata.targetFormat ?? "")
-        ? [{ rulebookPath, schemaPath }]
-        : [];
-    });
+    const { metadata } = parseRulebook(readFileSync(resolve(rulebookPath), "utf8"));
+    return metadata.status === "ready" && ["yaml", "json"].includes(metadata.targetFormat ?? "")
+      ? [{ rulebookPath, schemaPath }]
+      : [];
+  });
 }
 
 export function validateReadyRulebookSchemaEnums(): boolean {

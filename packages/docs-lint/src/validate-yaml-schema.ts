@@ -3,10 +3,10 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { basename, dirname, join, resolve } from "node:path";
 import { load } from "js-yaml";
-import fg from "fast-glob";
 import Ajv from "ajv";
 import addFormats from "ajv-formats";
 import Ajv2020 from "ajv/dist/2020";
+import { globFilesSync } from "./glob-files.js";
 import { resolveSpecdojoAssetPath } from "./specdojo-package.js";
 
 type JsonObject = Record<string, unknown>;
@@ -165,13 +165,7 @@ function validateFiles(schemaPath: string, files: string[]): boolean {
 }
 
 function explicitFiles(patterns: string[], allowEmpty: boolean): string[] {
-  const files = fg
-    .sync(patterns, {
-      absolute: false,
-      onlyFiles: true,
-      unique: true,
-    })
-    .sort((left, right) => left.localeCompare(right));
+  const files = globFilesSync(patterns, { absolute: false });
 
   if (files.length === 0) {
     if (allowEmpty) {
@@ -185,14 +179,10 @@ function explicitFiles(patterns: string[], allowEmpty: boolean): string[] {
 
 function validateByModeline(patterns: string[]): boolean {
   const targetPatterns = patterns.length > 0 ? patterns : ["docs/**/*.{yaml,yml}"];
-  const files = fg
-    .sync(targetPatterns, {
-      absolute: false,
-      ignore: ["docs/**/schemas/**/*.{yaml,yml}"],
-      onlyFiles: true,
-      unique: true,
-    })
-    .sort((left, right) => left.localeCompare(right));
+  const files = globFilesSync(targetPatterns, {
+    absolute: false,
+    ignore: ["docs/**/schemas/**/*.{yaml,yml}"],
+  });
 
   const bySchema = new Map<string, string[]>();
   let hasError = false;

@@ -167,12 +167,11 @@ SpecDojo の利用者に影響する変更を記録します。
   上げ、docs-site を puppeteer 25 と mermaid-cli 12 に上げました（PJR-6TKA、PJR-XMMA）。
   docs-lint は `markdownlint-cli` を 0.49 に上げ、使われていなかった
   `remark-lint-frontmatter-schema` を依存から外しました（PJR-7GAK）。
+- `fast-glob` を、本体では Node 標準 API による再帰走査、docs-lint では `tinyglobby` に置き換え、
+  `micromatch` 経由の `braces` の high の脆弱性を本体の実行時依存から除きました（PJR-HQKV）。
 
 ### 既知の問題
 
-- SpecDojo 本体の実行時依存 `fast-glob` が `micromatch` 経由で利用する `braces` に、サービス不能を
-  引き起こし得る high の脆弱性が 3 件報告されます。2026-10-08 時点で修正版はありません
-  （PJR-HQKV）。
 - 統合の commit で pre-commit hook の全テストが一時的に失敗することがあります。同じ worktree で
   再実行すると成功しており、`exec run --resume` で統合を再開できます。並列実行時と単独実行時の
   両方で観測されており、原因は未特定です（PJR-Q7GJ）。

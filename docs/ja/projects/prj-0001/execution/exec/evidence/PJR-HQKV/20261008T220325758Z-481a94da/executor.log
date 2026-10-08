@@ -1,0 +1,15 @@
+`fast-glob` を本体・docs-lint・テストから除去しました。
+
+- 本体は `node:fs` の再帰走査へ移行。
+- docs-lint は `tinyglobby` 共通ヘルパーへ移行。
+- 除外、重複排除、辞書順を unit test で固定。
+- lockfile、個票、CHANGELOG を更新。
+- 実行時の `braces` 依存は空、オフライン監査は 0 件です。
+- オンライン監査のみ sandbox の DNS 制限により再確認が必要です。
+- result ファイルは executor 指示どおり編集していません。
+
+<specdojo_executor_evidence>
+{"final_message":"fast-globを除去し、互換走査・依存・テスト・文書を更新しました。オンラインnpm auditのみネットワーク環境での再確認が必要です。","validations":[{"command":"npx prettier --write CHANGELOG.md package.json package-lock.json packages/docs-lint/package.json packages/docs-lint/package-lock.json packages/docs-lint/src/glob-files.ts packages/docs-lint/src/validate-glossary-references.ts packages/docs-lint/src/validate-history-links.ts packages/docs-lint/src/validate-md-content.ts packages/docs-lint/src/validate-rulebook-schema-enums.ts packages/docs-lint/src/validate-yaml-schema.ts src/register.ts tests/packages/docs-lint/glob-files.test.ts tests/packages/docs-lint/remark-no-unescaped-angle-placeholder.test.ts tests/src/catalog-scaffold.test.ts tests/src/doc-index.test.ts tests/src/register.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-hqkv-fast-glob-braces-vulnerability.md","status":"passed","summary":"変更したMarkdown、JSON、TypeScriptを整形しました。"},{"command":"npm run validate:history-links","status":"passed","summary":"対象となる全履歴文書がvalidでした。"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿と派生ビューを正常に再生成しました。"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"全カタログがOKでした。既存の未作成文書に関する警告のみです。"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"2493件の文書インデックスを生成しました。"},{"command":"npm ls braces --omit=dev --all","status":"passed","summary":"依存ツリーは(empty)で、実行時のbraces依存はありません。"},{"command":"npm audit --omit=dev --offline","status":"passed","summary":"ルートの監査結果は0 vulnerabilitiesでした。"},{"command":"npm audit --omit=dev --offline","status":"passed","summary":"packages/docs-lintの監査結果は0 vulnerabilitiesでした。"},{"command":"npm audit --omit=dev","status":"requires_human","summary":"sandboxのDNS制限によりregistry.npmjs.orgがEAI_AGAINとなるため、ネットワーク利用可能な環境で再確認が必要です。"},{"command":"git diff --check","status":"passed","summary":"空白エラーはありません。"}]}
+</specdojo_executor_evidence>
+
+agent-config-write: protected configuration changes detected; paths=package.json; agent must record the required change in the result handoff for human or orchestrator application

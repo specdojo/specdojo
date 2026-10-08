@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
-import fg from "fast-glob";
+import { globSync } from "tinyglobby";
 import {
   assertControlGeneratedIndexes,
   buildDocIndex,
@@ -663,9 +663,10 @@ describe("prj-0001 project register references", () => {
         "docs/ja/projects/prj-0001/controls/project-register/generated/pjr-index.md";
       expect(lookupDocIndex(registerId, indexPath)).toBe(expectedPath);
 
-      const registerFiles = fg.sync("docs/ja/projects/prj-0001/controls/project-register/*.md", {
+      const registerFiles = globSync("docs/ja/projects/prj-0001/controls/project-register/*.md", {
         cwd: repoRoot,
         absolute: true,
+        expandDirectories: false,
       });
       let partOfReferenceCount = 0;
       for (const file of registerFiles) {
@@ -679,9 +680,10 @@ describe("prj-0001 project register references", () => {
       }
       expect(partOfReferenceCount).toBeGreaterThan(0);
 
-      const markdownFiles = fg.sync("docs/**/*.md", {
+      const markdownFiles = globSync("docs/**/*.md", {
         cwd: repoRoot,
         absolute: true,
+        expandDirectories: false,
         ignore: ["**/generated/**"],
       });
       let wikilinkReferenceCount = 0;

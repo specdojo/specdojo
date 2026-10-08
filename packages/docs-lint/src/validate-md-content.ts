@@ -5,8 +5,8 @@ import { resolve } from "node:path";
 import { remark } from "remark";
 import remarkFrontmatter from "remark-frontmatter";
 import remarkGfm from "remark-gfm";
-import fg from "fast-glob";
 import type { Point, Position } from "unist";
+import { globFilesSync } from "./glob-files.js";
 import remarkMdContent from "./remark-md-content.js";
 
 function parseArgs(): { schemaPath: string; patterns: string[] } {
@@ -49,9 +49,7 @@ function main(): void {
       schemas: { [schemaPath]: ["**"] },
     });
 
-  const files = fg
-    .sync(patterns, { absolute: false, onlyFiles: true })
-    .sort((a, b) => a.localeCompare(b));
+  const files = globFilesSync(patterns, { absolute: false });
 
   if (files.length === 0) {
     console.warn(`警告: ファイルが見つかりません: ${patterns.join(", ")}`);
