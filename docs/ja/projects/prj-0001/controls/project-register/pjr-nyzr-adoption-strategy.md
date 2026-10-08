@@ -93,4 +93,4 @@ SpecDojo を何と呼ぶか（現在の「仕様駆動開発のためのドキ�
 
 ## 7. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-36qg-competitive-landscape-and-release]]（競合の比較）
