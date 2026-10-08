@@ -1,0 +1,72 @@
+# yaml-language-server: $schema=../docs/specdojo/schemas/v1/exec-defaults.schema.yaml
+# Runtime defaults used by `specdojo init --exec`.
+# The init command keeps only the selected provider blocks.
+pipeline:
+  parent_validations:
+    - lint-ts
+    - lint-fm
+    - lint-md
+    - test-integration
+    - validate-schema
+    - typecheck
+    - test-unit
+run:
+  register_execution: worktree
+rate_limit_detection:
+  exit_codes: []
+  stderr_patterns: [rate limit, "429"]
+rate_limit_policy:
+  cooldown_seconds:
+    rate_limit: 900
+  on_non_critical:
+    action: skip
+  on_critical:
+    action: try_next
+    retry:
+      max_attempts: 3
+      initial_wait_seconds: 60
+      backoff_multiplier: 3
+      max_wait_seconds: 600
+    on_exhausted: block
+providers:
+  claude:
+    command_template: "claude -p --verbose --agent {nickname} --settings .specdojo/claude/settings.{mode}.json"
+    rate_limit_detection:
+      stderr_patterns: [rate limit, "429", overloaded, session limit]
+  codex:
+    command_template: >-
+      codex exec --ephemeral --sandbox workspace-write -c approval_policy="never"
+      -c sandbox_workspace_write.network_access=false --model {model}
+      -c model_reasoning_effort="{effort}"
+    command_params:
+      by_proficiency:
+        normal: { model: gpt-5.6-terra, effort: medium }
+        expert: { model: gpt-5.6-sol, effort: high }
+    rate_limit_detection:
+      stderr_patterns: [rate limit, "429", session limit, weekly limit, usage limit]
+  opencode:
+    command_template: "opencode run --agent {nickname}"
+    max_concurrency: 1
+    rate_limit_detection:
+      exit_codes: []
+      stderr_patterns: [timeout, connection refused, out of memory, model is loading]
+  antigravity:
+    command_template: 'agy --sandbox --add-dir "$(pwd)" --model {model} -p "$(cat)"'
+    command_params:
+      by_proficiency:
+        normal: { model: gemini-3.8-flash-medium }
+        expert: { model: gemini-3.1-pro-high }
+    rate_limit_detection:
+      stderr_patterns: [rate limit, "429", quota, RESOURCE_EXHAUSTED]
+  copilot:
+    command_template: >-
+      copilot -p "$(cat)" --no-color --no-ask-user --model auto
+      --no-remote --no-remote-export --disable-builtin-mcps
+      --allow-tool write --allow-tool 'shell(git status)' --allow-tool 'shell(git diff)'
+      --allow-tool 'shell(git log)' --allow-tool 'shell(git show)'
+      --allow-tool 'shell(npm run)' --allow-tool 'shell(npm test)'
+      --allow-tool 'shell(specdojo:*)' --deny-tool 'shell(git add)'
+      --deny-tool 'shell(git commit)' --deny-tool 'shell(git push)'
+      --deny-tool 'shell(git reset)'
+    rate_limit_detection:
+      stderr_patterns: [rate limit, "429", quota, premium request]

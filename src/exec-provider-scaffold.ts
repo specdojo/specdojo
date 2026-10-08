@@ -20,6 +20,9 @@ export const ORCHESTRATOR_NPM_SCRIPTS: Record<string, Record<string, string>> = 
   opencode: {
     "orch:opencode": "opencode --agent specdojo-orchestrator",
   },
+  copilot: {
+    "orch:copilot": "copilot --agent specdojo-orchestrator",
+  },
 };
 
 // config scaffold --provider <name> と互換入口 exec scaffold --provider <name> の実体。
@@ -28,6 +31,7 @@ export const ORCHESTRATOR_NPM_SCRIPTS: Record<string, Record<string, string>> = 
 //   templates/<provider>/agents/**        -> .<provider>/agents/**   （--agent の自動発見位置）
 //   templates/<provider>/README.md        -> コピーしない（配布原本の説明書）
 //   templates/<provider>/ 配下のその他    -> .specdojo/<provider>/** （--settings 等で明示参照）
+// Copilot の orchestrator だけは native の探索先 .github/agents/ に同梱 wrapper を配置する。
 // ユーザーディレクトリ設定は PROVIDER_GLOBAL_SETTINGS で明示し、--global 時だけマージする。
 
 export interface ProviderScaffoldEntry {
@@ -53,6 +57,8 @@ export interface RunProviderScaffoldOptions {
   force: boolean;
   dryRun: boolean;
   global?: boolean;
+  /** Composite commands such as `specdojo init` print one consolidated handoff. */
+  showNextSteps?: boolean;
   /** テストでは実ユーザーのホームへ触れないよう一時ディレクトリを注入する。 */
   homeDir?: string;
 }
@@ -143,7 +149,23 @@ export async function buildProviderScaffoldPlan(opts: {
     });
   }
 
-  return { provider, entries };
+  // GitHub Copilot CLI discovers custom agents under .github/agents rather than
+  // .copilot/agents. The canonical wrapper is shipped directly from that native location.
+  if (provider === "copilot") {
+    const sourcePath = path.join(packageRoot, ".github", "agents", "specdojo-orchestrator.md");
+    if (existsSync(sourcePath)) {
+      entries.push({
+        sourcePath,
+        destinationPath: path.join(repoRoot, ".github", "agents", "specdojo-orchestrator.md"),
+        destinationRelPath: ".github/agents/specdojo-orchestrator.md",
+      });
+    }
+  }
+
+  return {
+    provider,
+    entries: entries.sort((a, b) => a.destinationRelPath.localeCompare(b.destinationRelPath)),
+  };
 }
 
 function parseJsonObject(content: string, sourcePath: string): Record<string, unknown> {
@@ -304,7 +326,10 @@ export async function applyProviderScaffoldPlan(
 ): Promise<ProviderScaffoldOutcome[]> {
   const outcomes: ProviderScaffoldOutcome[] = [];
   for (const entry of plan.entries) {
-    if (existsSync(entry.destinationPath) && !opts.force) {
+    if (
+      path.resolve(entry.sourcePath) === path.resolve(entry.destinationPath) ||
+      (existsSync(entry.destinationPath) && !opts.force)
+    ) {
       outcomes.push({ entry, written: false });
       continue;
     }
@@ -335,7 +360,14 @@ export async function runProviderScaffold(
 
   if (opts.dryRun) {
     for (const entry of plan.entries) {
-      process.stdout.write(`[dry-run] would write: ${entry.destinationRelPath}\n`);
+      if (
+        path.resolve(entry.sourcePath) === path.resolve(entry.destinationPath) ||
+        (existsSync(entry.destinationPath) && !opts.force)
+      ) {
+        process.stdout.write(`Skipped (already exists): ${entry.destinationRelPath}\n`);
+      } else {
+        process.stdout.write(`[dry-run] would write: ${entry.destinationRelPath}\n`);
+      }
     }
   } else {
     const outcomes = await applyProviderScaffoldPlan(plan, { force: opts.force });
@@ -363,12 +395,14 @@ export async function runProviderScaffold(
     return;
   }
 
-  process.stdout.write(
-    "Next steps:\n" +
-      "  1. Commit the scaffolded files (worktree runs read committed content).\n" +
-      `  2. Define providers.${provider}.command_template in .specdojo/exec-defaults.yaml (see templates/${provider}/README.md).\n` +
-      "  3. Define agent members in .specdojo/agent-members.yaml (merge any agent-members-snippet.yaml members).\n",
-  );
+  if (opts.showNextSteps !== false) {
+    process.stdout.write(
+      "Next steps:\n" +
+        "  1. Commit the scaffolded files (worktree runs read committed content).\n" +
+        `  2. Define providers.${provider}.command_template in .specdojo/exec-defaults.yaml (see templates/${provider}/README.md).\n` +
+        "  3. Define agent members in .specdojo/agent-members.yaml (merge any agent-members-snippet.yaml members).\n",
+    );
+  }
 }
 
 /**
