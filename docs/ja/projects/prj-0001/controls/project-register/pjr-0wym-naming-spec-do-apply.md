@@ -18,17 +18,25 @@ specdojo:
 
 ## 1. 概要
 
-PJR-QGP4 の決定に従い、README・docs サイトのトップ・概要ガイド・package.json の説明の冒頭の文を「仕様道（Spec-Dō）の道場」に改め、標語と比喩の対応を載せる。仕様駆動開発とは名乗らず、関係として触れる。
+[[prj-0001:pjr-qgp4-naming-spec-do]] で、SpecDojo を「仕様道（Spec-Dō）の道場」と呼び、技（CLI の機能）と流（`approach`）に道場の名前を付けることを決めた。README・docs サイトのトップ・概要ガイドは、まだ「仕様駆動開発のためのドキュメントフレームワーク」と呼んでいる。決定に従って、冒頭の文と説明を改める。
 
 ## 2. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- `README.md`、`docs/ja/index.md`、`docs/ja/specdojo/guides/specdojo-overview-guide.md` の冒頭の文を、PJR-QGP4 の表記の規則に従って「仕様道（Spec-Dō）の道場」とする。仕様駆動開発とは名乗らず、「仕様駆動開発のツールの上流で、仕様と設計の体系を担う」と関係として触れる。標語「決めて、書いて、腐らせない」を載せる。
+- 概要ガイドの Kata・Waza・Ryu の説明に、技の名前（記帳＝register、実戦＝exec、評定＝grade、講評＝review）を加える。
+- `docs/ja/specdojo/guides/ryu-guide.md` の approach の一覧に、各流の名前（守・破・離・型起こし・見取り・型寄せ・手入れ・免許・皆伝）を加え、守破離の説明を載せる。
+- `docs/ja/specdojo/guides/waza-guide.md` に、技の名前と CLI のコマンドの対応を載せる。
+- CLI のコマンド名、`approach` の値、設定のキーは変えない。名前は表示と文書だけで使う。
+- 比喩は PJR-QGP4 の範囲（dojo・kata・dō・守破離・稽古と、決めた名前）に限る。
+- `package.json` の `description` は agent の書き込み禁止対象のため、この todo では変えない。orchestrator が統合後に、表記の規則に従った英語の説明へ改める。
+- `npm run check` が通る。
 
 ## 3. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                       | 担当         | 状態 | メモ                             |
+| --- | ---------------------------------------------------------- | ------------ | ---- | -------------------------------- |
+| 1   | README・トップ・概要ガイド・ryu-guide・waza-guide を改める | DEV          | open | CLI の値は変えない               |
+| 2   | `package.json` の説明を改める                              | orchestrator | open | 保護された設定のため統合後に行う |
 
 ## 4. 対応結果
 
@@ -36,4 +44,5 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 5. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-qgp4-naming-spec-do]]（呼び方の決定）
+- [[prj-0001:pjr-nyzr-adoption-strategy]]（普及戦略）
