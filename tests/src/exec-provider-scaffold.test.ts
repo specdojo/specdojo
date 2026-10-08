@@ -11,6 +11,10 @@ import {
   runProviderScaffold,
   specdojoPackageRootDir,
 } from "../../src/exec-provider-scaffold.js";
+import {
+  PROTECTED_DIRECTORY_PREFIXES,
+  PROTECTED_EXACT_PATHS,
+} from "../../src/exec-agent-protected-config.js";
 
 async function makeClaudeTemplateFixture(packageRoot: string): Promise<void> {
   const templateDir = path.join(packageRoot, "templates", "claude");
@@ -68,6 +72,21 @@ describe("specdojoPackageRootDir", () => {
       "Edit(**)",
       "Bash(git add *)",
       "Bash(git commit *)",
+    ]);
+  });
+
+  it("ships an edit profile that covers the repository except runner-protected paths", async () => {
+    const settings = JSON.parse(
+      await readFile(
+        path.join(specdojoPackageRootDir(), "templates", "claude", "settings.edit.json"),
+        "utf8",
+      ),
+    ) as { permissions?: { allow?: string[]; deny?: string[] } };
+
+    expect(settings.permissions?.allow).toEqual(["Edit(**)"]);
+    expect(settings.permissions?.deny).toEqual([
+      ...PROTECTED_DIRECTORY_PREFIXES.map((prefix) => `Edit(${prefix}**)`),
+      ...[...PROTECTED_EXACT_PATHS].map((protectedPath) => `Edit(./${protectedPath})`),
     ]);
   });
 
