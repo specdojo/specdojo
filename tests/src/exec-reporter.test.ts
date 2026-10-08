@@ -468,6 +468,54 @@ describe("reporter structured output", () => {
       expect(facts.outcome).toBe("complete");
     });
 
+    it("accepts the script body run with only a --project option", () => {
+      const input = evidence();
+      input.validations = [
+        { source: "executor", command: "npm run check", status: "not_run", summary: "delegated" },
+        {
+          source: "executor",
+          command: "node --import tsx src/specdojo.ts catalog validate --project prj-0001",
+          status: "passed",
+          summary: "ok",
+        },
+        runner("npm run typecheck"),
+        runner("npm run lint:md"),
+        runner("npm run test:unit"),
+        runner("npm run test:integration"),
+      ];
+      const facts = deriveReporterFacts(input, {
+        packageScripts: {
+          ...packageScripts,
+          "validate:catalog": "tsx src/specdojo.ts catalog validate",
+        },
+      });
+      expect(facts.outcome).toBe("complete");
+    });
+
+    it("does not accept the script body run with other options", () => {
+      const input = evidence();
+      input.validations = [
+        { source: "executor", command: "npm run check", status: "not_run", summary: "delegated" },
+        {
+          source: "executor",
+          command: "node --import tsx src/specdojo.ts catalog validate --only one.yaml",
+          status: "passed",
+          summary: "ok",
+        },
+        runner("npm run typecheck"),
+        runner("npm run lint:md"),
+        runner("npm run test:unit"),
+        runner("npm run test:integration"),
+      ];
+      const facts = deriveReporterFacts(input, {
+        packageScripts: {
+          ...packageScripts,
+          "validate:catalog": "tsx src/specdojo.ts catalog validate",
+        },
+      });
+      expect(facts.outcome).toBe("blocked");
+    });
+
     it("still blocks npm run check when a component was not run by anyone", () => {
       const input = evidence();
       input.validations = [

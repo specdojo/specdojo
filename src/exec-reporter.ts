@@ -240,8 +240,11 @@ function compositeComponents(
 
 // executor は `npm run <name>` の代わりに script の中身（例: `node --import tsx src/specdojo.ts
 // catalog validate`）を直接実行して記録することがある。tsx の起動の書き方の違いだけをそろえて比べる。
+// 対象のプロジェクトを指定する `--project <id>` は検証の範囲を変えないため、比較では取り除く。
 function normalizeScriptBody(command: string): string {
-  return normalizeValidationCommand(command).replace(/^(?:node --import tsx|npx tsx) /, "tsx ");
+  return normalizeValidationCommand(command)
+    .replace(/^(?:node --import tsx|npx tsx) /, "tsx ")
+    .replace(/ --project(?:=| )[A-Za-z0-9_-]+(?= |$)/g, "");
 }
 
 // 構成コマンドは、それ自体が通っていれば満たす。通っていなければ、同等のコマンドの組、script の
