@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-qgp4-naming-spec-do
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: high
   owner: PO
   registered_at: "2026-10-08T03:44:06Z"
   due_on: null
+  completed_at: "2026-10-08T03:44:56Z"
+  conclusion: SpecDojo を仕様道（Spec-Dō、the way of specification）の道場と呼ぶ。仕様駆動開発とは名乗らない。表記・標語・比喩の範囲と、守破離と approach の対応を定めた
 ---
 
 # PJR-QGP4 SpecDojo の呼び方を仕様道（Spec-Dō）にする

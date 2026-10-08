@@ -29,3 +29,22 @@
     - field: registered
       from: ""
       to: "2026-10-08"
+- v: 1
+  id: reg_03fcb07fef3f480db3b6b741f51f850f
+  ts: "2026-10-08T03:44:56Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: 利用者が orchestrator との対話で仕様道を指示した
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-10-08"
+    - field: conclusion
+      from: "-"
+      to: SpecDojo を仕様道（Spec-Dō、the way of specification）の道場と呼ぶ。仕様駆動開発とは名乗らない。表記・標語・比喩の範囲と、守破離と approach の対応を定めた
+  previous_event_id: reg_7fe47c74749b493f85fda5f7890a0865
