@@ -12,7 +12,7 @@ specdojo:
   owner: DEV
   registered_at: "2026-10-08T12:52:00Z"
   due_on: null
-  block_reason: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=package.json; agent must record the required change in the result …"
+  block_reason: "integrate failed: project: git commit failed: error: unknown option '--reserve' / error: unknown option '--local' / error: unknown option '--strict-sync' / error: unknown option '--integration-branch'…"
 ---
 
 # PJR-6QDA 選択式の specdojo init で、オーケストレーターと agent の実行までの設定を行う
