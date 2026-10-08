@@ -16,6 +16,7 @@
     "docs/specdojo",
     "!docs/specdojo/**/generated/**",
     "templates",
+    ".github/agents/specdojo-orchestrator.md",
     "README.md",
     "CHANGELOG.md",
     "LICENSE"

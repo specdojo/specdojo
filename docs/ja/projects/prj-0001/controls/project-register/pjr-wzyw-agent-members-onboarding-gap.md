@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-wzyw-agent-members-onboarding-gap
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-08T12:38:03Z"
   due_on: null
+  completed_at: "2026-10-08T13:20:28Z"
+  conclusion: members_path がなくても .specdojo/agent-members.yaml の agent を読み込み、名簿の読み込みのエラーの原因を表示するようにした。codex・copilot・antigravity のテンプレートの案内を agent-members.yaml へ改め、スニペットを agent-members-snippet.yaml に改名した
 ---
 
 # PJR-WZYW agent の定義の分離が、新しい利用者の導入の経路に追従していない
