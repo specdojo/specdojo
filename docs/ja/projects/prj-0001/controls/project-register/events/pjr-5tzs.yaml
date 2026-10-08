@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_22bbefb974444e2eab13d9db2126aec6
+  ts: "2026-10-08T03:45:46Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-NYZR の段階 0
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 規模別の kata の組を用意する
+    - field: description
+      from: ""
+      to: "106 種の rulebook から選ぶ負担を減らすため、規模や用途別に 3〜5 種類から始める kata の組（例: 小規模の Web システムの基本設計の一式）を用意し、成果物カタログの初期化で選べるようにする。"
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-08"
