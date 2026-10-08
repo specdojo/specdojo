@@ -7,11 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: high
   owner: PO
   registered_at: "2026-10-07T23:16:08Z"
   due_on: null
+  completed_at: "2026-10-08T03:19:57Z"
+  conclusion: 選択肢 B。仕様と設計の基盤として、register を仕様の判断台帳として入口にし、kata・grade へ順に進める。最初に狙う利用者は設計書を作り保守する日本のチーム
 ---
 
 # PJR-NYZR SpecDojo の普及戦略を決める
