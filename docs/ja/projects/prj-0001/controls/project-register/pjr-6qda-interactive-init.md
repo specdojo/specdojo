@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-6qda-interactive-init
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-08T12:52:00Z"
   due_on: null
+  completed_at: "2026-10-08T14:23:06Z"
+  conclusion: specdojo init を追加した。質問（または --yes とオプション）で設定・登録簿・人の名簿・provider の scaffold・起動コマンドと agent の名簿・カタログ・devcontainer を作る。公開物で init が期待どおり動くことを確かめた
 ---
 
 # PJR-6QDA 選択式の specdojo init で、オーケストレーターと agent の実行までの設定を行う
