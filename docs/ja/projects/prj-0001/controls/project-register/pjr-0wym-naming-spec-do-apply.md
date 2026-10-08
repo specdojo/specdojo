@@ -36,7 +36,7 @@ specdojo:
 | No  | 作業                                                       | 担当         | 状態 | メモ                               |
 | --- | ---------------------------------------------------------- | ------------ | ---- | ---------------------------------- |
 | 1   | README・トップ・概要ガイド・ryu-guide・waza-guide を改める | DEV          | done | CLI の値は変えず表示と文書だけ変更 |
-| 2   | `package.json` の説明を改める                              | orchestrator | open | 保護された設定のため統合後に行う   |
+| 2   | `package.json` の説明を改める                              | orchestrator | done | 99a3483c4                          |
 
 ## 4. 対応結果
 
@@ -45,6 +45,8 @@ specdojo:
 - `docs/ja/specdojo/guides/ryu-guide.md` に、各 `approach` の流の名前と守破離の説明を記載した。
 - CLI のコマンド名、`approach` の値、設定のキーは変更していない。
 - 残課題は、orchestrator が統合後に行う `package.json` の英語 description 更新である。
+- orchestrator が `package.json` の `description` を、英語の表記の規則に従って "A dojo for Spec-Dō, the way of specification: decide with a register, write specs and designs with kata, and keep them alive with AI." に改めた（99a3483c4）。
+- README の「登録簿ひとつから始められます」は、PJR-XMQH のクイックスタートを作るときにまとめて見直す。
 
 ## 5. 関連ドキュメント
 
