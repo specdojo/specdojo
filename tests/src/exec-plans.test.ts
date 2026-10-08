@@ -733,6 +733,37 @@ describe("generateSinglePlan", () => {
     );
   }
 
+  it("catalog_path がない project の plan では catalog 検査を条件付きで案内する", async () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-plan-without-catalog-"));
+    const executionPath = join(root, "execution");
+
+    try {
+      const outPath = await generateSinglePlan({
+        executionPath,
+        projectId: "test",
+        catalogPath: "",
+        projectContext: [],
+        task: {
+          id: "T-TEST-freeform-010",
+          name: "カタログなしの作業",
+          owner: "DEV",
+          mode: "edit",
+          schedule_file: "",
+          fifo_rank: 0,
+          critical_first_rank: 0,
+        },
+      });
+
+      const plan = readFileSync(outPath, "utf8");
+      expect(plan).toContain("対象 project に `catalog_path` が設定されている");
+      expect(plan).toContain(
+        "条件を満たさない検査は実行せず、result や executor evidence の validations に `not_run` としても記録しない",
+      );
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
   it("対象タスクの plan を再生成し、他の plan や index には触れない", async () => {
     const root = mkdtempSync(join(tmpdir(), "specdojo-single-plan-"));
     const executionPath = join(root, "execution");
