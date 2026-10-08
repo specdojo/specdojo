@@ -55,3 +55,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_1824b19ccce0469c95cbf9e01509c329
+- v: 1
+  id: reg_af7a36e7a67a4eeb94ab86b3b11503eb
+  ts: "2026-10-08T22:01:22Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（codex-expert-executor / gemma26-reporter）の成果を orchestrator がレビューし、完了条件と照合した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-09"
+    - field: conclusion
+      from: "-"
+      to: claude の edit の既定をリポジトリ全体の Edit 許可にし、保護対象を deny で拒否した。deny と runner の保護対象の一致を unit test で固定した。
+  previous_event_id: reg_84a6f94f8937445a8eecfba0e9332ab6

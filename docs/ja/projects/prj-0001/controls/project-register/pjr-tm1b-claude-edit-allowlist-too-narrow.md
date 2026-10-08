@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-tm1b-claude-edit-allowlist-too-narrow
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-08T14:40:23Z"
   due_on: null
+  completed_at: "2026-10-08T22:01:22Z"
+  conclusion: claude の edit の既定をリポジトリ全体の Edit 許可にし、保護対象を deny で拒否した。deny と runner の保護対象の一致を unit test で固定した。
 ---
 
 # PJR-TM1B claude の provider の既定の書き込み許可が狭く、利用者のリポジトリの多くの作業ができない
