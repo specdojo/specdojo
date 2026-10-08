@@ -87,3 +87,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_ad75c11a5ee54720af3f41a027d4538c
+- v: 1
+  id: reg_3cc3e9db65c545eb81dfb30b5ff5bd2e
+  ts: "2026-10-08T16:59:31Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（codex-expert-executor / gemma26-reporter）の成果を orchestrator がレビューし、完了条件と記載内容（D0KF の既定など）をコードと照合した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-09"
+    - field: conclusion
+      from: "-"
+      to: CHANGELOG の v0.3.0 を最終化し、移行ガイドが破壊的変更をすべて扱うことを確認した。公開日の記入は公開当日に PO が行う。
+  previous_event_id: reg_0cd6534aaf114fe7aada0dcadbd236b0

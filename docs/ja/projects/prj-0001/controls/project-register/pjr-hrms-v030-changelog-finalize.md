@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-hrms-v030-changelog-finalize
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-08T12:08:02Z"
   due_on: null
+  completed_at: "2026-10-08T16:59:31Z"
+  conclusion: CHANGELOG の v0.3.0 を最終化し、移行ガイドが破壊的変更をすべて扱うことを確認した。公開日の記入は公開当日に PO が行う。
 ---
 
 # PJR-HRMS v0.3.0 の CHANGELOG と移行ガイドを最終化する
