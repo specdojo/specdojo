@@ -29,3 +29,16 @@
     - field: registered
       from: ""
       to: "2026-10-08"
+- v: 1
+  id: reg_1824b19ccce0469c95cbf9e01509c329
+  ts: "2026-10-08T21:50:41Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_c96a6a0bb6b54f43bc1e7464f1bda25a
