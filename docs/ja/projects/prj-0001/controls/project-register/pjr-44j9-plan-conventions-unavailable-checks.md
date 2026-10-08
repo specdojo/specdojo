@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-44j9-plan-conventions-unavailable-checks
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-08T14:21:59Z"
   due_on: null
+  completed_at: "2026-10-08T14:47:59Z"
+  conclusion: 共通規約の検査に適用の条件（package.json の依存の有無、catalog_path の設定など）を付け、条件に当たらない検査は実行も記録もしないようにした。公開物での claude の試しでは、別の問題（PJR-TM1B・PJR-A0NE）で止まった
 ---
 
 # PJR-44J9 exec plan の共通規約が、新しい利用者の環境で実行できない検査を求める
