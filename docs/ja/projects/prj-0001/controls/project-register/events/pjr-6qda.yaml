@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_d5ee0964fd73411c9110a477ed8be2f2
+  ts: "2026-10-08T12:52:00Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者の提案（2026-10-08）。v0.3.0 に入れる
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 選択式の specdojo init で、オーケストレーターと agent の実行までの設定を行う
+    - field: description
+      from: ""
+      to: 公開物での実地の確認で、オーケストレーターや exec を使うまでに、provider ごとの scaffold、起動コマンドと agent の名簿の手書き、人の名簿の作成など手作業が多いと分かった。質問に答えるだけで、これらの設定を済ませる選択式の init を v0.3.0 に入れる。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-08"
