@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: high
   owner: DEV
   registered_at: "2026-10-08T12:08:02Z"
   due_on: null
+  block_reason: rate limit reached
 ---
 
 # PJR-HRMS v0.3.0 の CHANGELOG と移行ガイドを最終化する
