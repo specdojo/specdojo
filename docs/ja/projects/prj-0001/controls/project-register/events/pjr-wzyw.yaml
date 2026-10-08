@@ -55,3 +55,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_17c2021082894f97afffcfa848b0f022
+- v: 1
+  id: reg_6c4fb61a24e246679ab4d28d44840c21
+  ts: "2026-10-08T13:20:28Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: "review: 差分と完了条件を確認"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-08"
+    - field: conclusion
+      from: "-"
+      to: members_path がなくても .specdojo/agent-members.yaml の agent を読み込み、名簿の読み込みのエラーの原因を表示するようにした。codex・copilot・antigravity のテンプレートの案内を agent-members.yaml へ改め、スニペットを agent-members-snippet.yaml に改名した
+  previous_event_id: reg_a94db375e0c3431a89d2ce353cebadaf
