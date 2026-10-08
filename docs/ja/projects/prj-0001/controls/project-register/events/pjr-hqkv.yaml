@@ -29,3 +29,32 @@
     - field: registered
       from: ""
       to: "2026-10-08"
+- v: 1
+  id: reg_cc1ca263a4534b8298a20df16224c16d
+  ts: "2026-10-08T22:00:33Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_d860f73768164fd082577b6655253999
+- v: 1
+  id: reg_a6b7b1a671ce4703b00057eb47983bb1
+  ts: "2026-10-08T22:00:34Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "checkpoint failed: Root index has staged changes; commit or unstage them first: docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-deliverable-32c25dd4476f/attempt-1/command.stderr.log docs/j…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "checkpoint failed: Root index has staged changes; commit or unstage them first: docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-deliverable-32c25dd4476f/attempt-1/command.stderr.log docs/j…"
+  previous_event_id: reg_cc1ca263a4534b8298a20df16224c16d
