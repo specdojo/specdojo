@@ -8,7 +8,7 @@
 | ---------------------------- | -------------------------------------------------- |
 | `orchestrator.md`            | `.specdojo/antigravity/orchestrator.md`            |
 | `exec-defaults-snippet.yaml` | `.specdojo/antigravity/exec-defaults-snippet.yaml` |
-| `pm-members-snippet.yaml`    | `.specdojo/antigravity/pm-members-snippet.yaml`    |
+| `agent-members-snippet.yaml` | `.specdojo/antigravity/agent-members-snippet.yaml` |
 
 `settings.global.json` はリポジトリへコピーされません。`--global` を明示した場合だけ、
 権限ルールをユーザー設定へマージするための原本として使われます。
@@ -57,4 +57,4 @@ agy --add-dir "$(pwd)" --model gemini-3.1-pro-high -i "$(cat .specdojo/antigravi
 
 ## executor / reporter として使う
 
-`exec-defaults-snippet.yaml` を `.specdojo/exec-defaults.yaml` の `providers` へ、`pm-members-snippet.yaml` を `pm-members.yaml` の `members` へ写します。モデル ID は推論強度を含むため、`--effort` を併用すると起動に失敗します。headless 実行に必要な command は上記のグローバル permission で許可し、`--dangerously-skip-permissions` は使いません。
+`exec-defaults-snippet.yaml` を `.specdojo/exec-defaults.yaml` の `providers` へ、`agent-members-snippet.yaml` の member 定義をリポジトリ共通の `.specdojo/agent-members.yaml` の `members` へ写します。agent は project ごとの `pm-members.yaml` へ書きません。モデル ID は推論強度を含むため、`--effort` を併用すると起動に失敗します。headless 実行に必要な command は上記のグローバル permission で許可し、`--dangerously-skip-permissions` は使いません。

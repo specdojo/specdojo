@@ -3,6 +3,7 @@ import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { load as loadYaml } from "js-yaml";
+import { specdojoPackageRootDir } from "../../src/package-paths.js";
 import {
   assertValidActor,
   getProjectCatalogPath,
@@ -175,6 +176,53 @@ const agentMember = `
 `;
 
 describe("split human and agent member registries", () => {
+  it("loads the repository agent registry when the project has no human roster", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-members-"));
+    write(join(root, ".specdojo", "agent-members.yaml"), `version: 1\nmembers:${agentMember}`);
+
+    const roster = loadMemberRoster(root, {});
+
+    expect(roster?.members.map((member) => member.nickname)).toEqual(["codex-executor"]);
+    expect(roster?.project_id).toBeUndefined();
+  });
+
+  it("loads a configured agent registry path when the project has no human roster", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-members-"));
+    write(
+      join(root, ".specdojo", "specdojo.config.json"),
+      JSON.stringify({
+        version: 1,
+        agent_members_path: ".specdojo/custom-agents.yaml",
+        projects: { "prj-test": {} },
+      }),
+    );
+    write(join(root, ".specdojo", "custom-agents.yaml"), `version: 1\nmembers:${agentMember}`);
+
+    const roster = loadMemberRoster(root, {});
+
+    expect(roster?.members.map((member) => member.nickname)).toEqual(["codex-executor"]);
+  });
+
+  it.each(["copilot", "antigravity"])(
+    "ships a schema-valid %s agent registry snippet",
+    (provider) => {
+      const root = mkdtempSync(join(tmpdir(), "specdojo-members-"));
+      const snippet = readFileSync(
+        join(specdojoPackageRootDir(), "templates", provider, "agent-members-snippet.yaml"),
+        "utf8",
+      );
+      write(join(root, ".specdojo", "agent-members.yaml"), snippet);
+
+      expect(loadMemberRoster(root, {})?.members.length).toBeGreaterThan(0);
+    },
+  );
+
+  it("keeps returning null when neither human nor agent registry exists", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-members-"));
+
+    expect(loadMemberRoster(root, {})).toBeNull();
+  });
+
   it("validates and combines the project human roster with the repository agent registry", () => {
     const root = mkdtempSync(join(tmpdir(), "specdojo-members-"));
     write(join(root, "members.yaml"), humanRoster);

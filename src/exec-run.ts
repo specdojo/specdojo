@@ -1273,11 +1273,7 @@ export function loadRosterForExecutionPath(executionPath: string): MemberRoster 
   for (const project of Object.values(config.projects)) {
     const projExecPath = resolve(rootDir, getProjectExecutionPath(project));
     if (projExecPath === executionPath) {
-      try {
-        return loadMemberRoster(rootDir, project);
-      } catch {
-        return null;
-      }
+      return loadMemberRoster(rootDir, project);
     }
   }
   return null;

@@ -366,7 +366,8 @@ export async function runProviderScaffold(
   process.stdout.write(
     "Next steps:\n" +
       "  1. Commit the scaffolded files (worktree runs read committed content).\n" +
-      `  2. Define providers.${provider}.command_template in .specdojo/exec-defaults.yaml (see templates/${provider}/README.md).\n`,
+      `  2. Define providers.${provider}.command_template in .specdojo/exec-defaults.yaml (see templates/${provider}/README.md).\n` +
+      "  3. Define agent members in .specdojo/agent-members.yaml (merge any agent-members-snippet.yaml members).\n",
   );
 }
 

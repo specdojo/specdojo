@@ -1,10 +1,12 @@
-# Antigravity CLI（agy）member 定義のスニペット。
-# 利用プロジェクトの pm-members.yaml の members へコピーして使う。
+# Antigravity CLI（agy）agent 定義のスニペット。
+# members の要素をリポジトリ共通の .specdojo/agent-members.yaml へコピーして使う。
+# project ごとの pm-members.yaml は人間専用なので、agent は記載しない。
 # 起動コマンドは member には書かず、.specdojo/exec-defaults.yaml の
 # providers.antigravity.command_template で定義する（exec-defaults-snippet.yaml を参照）。
 # モデルの差し替えは command_params.by_nickname で行う。
 # 既定では disabled にしてある。使う member だけ disabled を外す。
 
+version: 1
 members:
   - nickname: agy-executor
     disabled: true
@@ -17,6 +19,7 @@ members:
     mode: edit
     proficiency: normal
     persona: task-executor
+    capabilities: []
 
   - nickname: agy-expert-executor
     disabled: true
@@ -29,6 +32,7 @@ members:
     mode: edit
     proficiency: expert
     persona: task-executor
+    capabilities: []
 
   - nickname: agy-expert-review-executor
     disabled: true
@@ -41,6 +45,7 @@ members:
     mode: review
     proficiency: expert
     persona: reviewer
+    capabilities: []
 
   - nickname: agy-reporter
     disabled: true
@@ -53,3 +58,4 @@ members:
     mode: report
     proficiency: normal
     persona: reporter
+    capabilities: []

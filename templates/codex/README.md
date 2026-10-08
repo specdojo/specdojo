@@ -24,7 +24,7 @@ specdojo:
 利用プロジェクトのルートで scaffold コマンドを実行します。
 
 ```sh
-specdojo exec scaffold --provider codex
+specdojo config scaffold --provider codex
 ```
 
 コピー後に次を行います。
@@ -51,11 +51,12 @@ specdojo exec scaffold --provider codex
 
    この構成では Codex executor は `npm run test:unit` を実行し、親 runner が `npm run test:integration` の結果を evidence へ追加する。
 
-2. 対話セッション用のデフォルト（`.codex/config.toml`）は利用環境に合わせて作成する。モデルや `approval_policy` の好みを含むため、このテンプレートには含めていない。
-3. コピーしたファイルをコミットする。worktree はコミット済み内容から作られるため、未コミットだと agent 実行時に設定が読めない。
+2. SpecDojo が起動する agent をリポジトリ共通の `.specdojo/agent-members.yaml` の `members` へ定義する。project ごとの `pm-members.yaml` は人間専用なので、`type: agent` を書かない。
+3. 対話セッション用のデフォルト（`.codex/config.toml`）は利用環境に合わせて作成する。モデルや `approval_policy` の好みを含むため、このテンプレートには含めていない。
+4. コピーしたファイルと `.specdojo/agent-members.yaml` をコミットする。worktree はコミット済み内容から作られるため、未コミットだと agent 実行時に設定が読めない。
 
 ## 4. カスタマイズ
 
 - worker のモデル・reasoning effort は `command_params.by_proficiency` の1箇所で調整する。subagent（`agents/*.toml`）側の `model` / `model_reasoning_effort` は利用プランに合わせて調整する。
-- `codex-expert-executor` の result 更新禁止は pipeline の責務境界なので維持する。SpecDojo worker としての選択は `pm-members.yaml` の `stage_role: executor` で行い、custom subagent ファイルは起動コマンドから直接選択されない。
+- `codex-expert-executor` の result 更新禁止は pipeline の責務境界なので維持する。SpecDojo worker としての選択は `.specdojo/agent-members.yaml` の `stage_role: executor` で行い、custom subagent ファイルは起動コマンドから直接選択されない。
 - 権限設計の背景は `exec-config-guide.md` の `agent 権限とプロンプトインジェクション対策` を参照する。

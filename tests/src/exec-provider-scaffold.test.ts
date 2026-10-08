@@ -132,6 +132,27 @@ describe("listProviderTemplates", () => {
 });
 
 describe("buildProviderScaffoldPlan", () => {
+  it("copies provider agent member snippets under their agent registry name", async () => {
+    const packageRoot = specdojoPackageRootDir();
+    const dir = await mkdtemp(path.join(tmpdir(), "specdojo-test-"));
+    try {
+      const plan = await buildProviderScaffoldPlan({
+        packageRoot,
+        repoRoot: dir,
+        provider: "copilot",
+      });
+
+      expect(plan.entries.map((entry) => entry.destinationRelPath)).toContain(
+        ".specdojo/copilot/agent-members-snippet.yaml",
+      );
+      expect(plan.entries.map((entry) => entry.destinationRelPath)).not.toContain(
+        ".specdojo/copilot/pm-members-snippet.yaml",
+      );
+    } finally {
+      await rm(dir, { recursive: true, force: true });
+    }
+  });
+
   it("maps agents to .<provider>/agents and other files to .specdojo/<provider>, excluding README.md", async () => {
     const dir = await mkdtemp(path.join(tmpdir(), "specdojo-test-"));
     try {

@@ -83,6 +83,30 @@ describe("config onboarding commands", () => {
       rmSync(repo, { recursive: true, force: true });
     }
   });
+
+  it("scaffolds agent member snippets with the protected registry name and guidance", async () => {
+    const repo = mkdtempSync(join(tmpdir(), "specdojo-config-scaffold-"));
+    const output: string[] = [];
+    vi.spyOn(process.stdout, "write").mockImplementation((chunk) => {
+      output.push(String(chunk));
+      return true;
+    });
+
+    try {
+      mkdirSync(join(repo, ".git"));
+      process.chdir(repo);
+      await runConfigCommand(["scaffold", "--provider", "copilot"]);
+
+      expect(existsSync(join(repo, ".specdojo", "copilot", "agent-members-snippet.yaml"))).toBe(
+        true,
+      );
+      expect(existsSync(join(repo, ".specdojo", "copilot", "pm-members-snippet.yaml"))).toBe(false);
+      expect(output.join("")).toContain("Written: .specdojo/copilot/agent-members-snippet.yaml");
+      expect(output.join("")).toContain("Define agent members in .specdojo/agent-members.yaml");
+    } finally {
+      rmSync(repo, { recursive: true, force: true });
+    }
+  });
 });
 
 describe("config init .gitignore", () => {
