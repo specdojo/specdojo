@@ -29,3 +29,32 @@
     - field: registered
       from: ""
       to: "2026-10-08"
+- v: 1
+  id: reg_d944da9e80fa45fa8dcc6e3f0e95d90f
+  ts: "2026-10-08T14:36:37Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_8584de6dd4f84967a538c7915cfe4e07
+- v: 1
+  id: reg_64629ba281964c4d8bbd224954bf974d
+  ts: "2026-10-08T14:37:49Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: rate limit reached
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: rate limit reached
+  previous_event_id: reg_d944da9e80fa45fa8dcc6e3f0e95d90f
