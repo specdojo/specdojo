@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: high
   owner: DEV
   registered_at: "2026-10-08T03:45:28Z"
   due_on: null
+  block_reason: rate limit reached
 ---
 
 # PJR-XMQH 仕様の判断台帳としてのクイックスタートを作る
