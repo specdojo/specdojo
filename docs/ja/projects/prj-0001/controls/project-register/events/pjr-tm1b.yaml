@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_c96a6a0bb6b54f43bc1e7464f1bda25a
+  ts: "2026-10-08T14:40:23Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-P8TK の公開物での実地の確認（claude）で判明
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: claude の provider の既定の書き込み許可が狭く、利用者のリポジトリの多くの作業ができない
+    - field: description
+      from: ""
+      to: "公開物での実地の確認（2026-10-08）で、init が claude 用に作る .specdojo/claude/settings.edit.json の許可が Edit(docs/**)・Edit(src/**)・Edit(tests/**) だけのため、README.md への 1 行の追記もできず項目が waiting になった。ルートのファイルや app/・lib/ など別のディレクトリの成果物も編集できない。保護機構（agent-config-write の検査）との兼ね合いで、既定でどこまで書き込みを許すか（例: リポジトリ全体を許し、保護対象は deny と runner の検査で守る）を決める必要がある。利用者の判断を待つ。"
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-08"

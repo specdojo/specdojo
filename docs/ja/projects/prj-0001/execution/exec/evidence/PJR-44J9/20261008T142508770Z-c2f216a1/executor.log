@@ -1,0 +1,14 @@
+共通規約を修正しました。
+
+- `catalog_path`、依存パッケージ、npm script などに応じた検査条件を追加
+- 非適用の検査を validations に記録しない規則を明記
+- カタログなし project の回帰テストを追加
+- 個票の対応結果を更新
+- sandbox 側の非重複検査はすべて成功
+- result は executor stage の指示どおり未編集
+
+親 runner が unit test、typecheck、lint などを続けて実行します。
+
+<specdojo_executor_evidence>
+{"final_message":"共通規約の検査を利用環境に応じた条件付き実行へ変更し、カタログなし project の回帰テストと個票の対応結果を更新した。","validations":[{"command":"npx prettier --write docs/ja/specdojo/exec-templates/xep-common-conventions-template.md tests/src/exec-plans.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-44j9-plan-conventions-unavailable-checks.md","status":"passed","summary":"変更した3ファイルを整形した。"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"tsx CLI の IPC制約を回避する規定の代替起動方法で登録簿生成に成功した。"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"全カタログの検証に成功した。既存の未作成成果物に関する警告のみ。"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"2481件の文書インデックス生成に成功した。"},{"command":"npm run validate:history-links","status":"passed","summary":"履歴文書のリンク検証に成功した。"},{"command":"git diff --check","status":"passed","summary":"空白エラーや不正な差分は検出されなかった。"}]}
+</specdojo_executor_evidence>

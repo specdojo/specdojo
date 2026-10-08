@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-6qda-interactive-init
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-08T12:52:00Z"
   due_on: null
+  completed_at: "2026-10-08T14:23:06Z"
+  conclusion: specdojo init を追加した。質問（または --yes とオプション）で設定・登録簿・人の名簿・provider の scaffold・起動コマンドと agent の名簿・カタログ・devcontainer を作る。公開物で init が期待どおり動くことを確かめた
 ---
 
 # PJR-6QDA 選択式の specdojo init で、オーケストレーターと agent の実行までの設定を行う
@@ -46,17 +48,36 @@ specdojo:
 
 ## 3. 作業内容
 
-| No  | 作業                                             | 担当         | 状態 | メモ             |
-| --- | ------------------------------------------------ | ------------ | ---- | ---------------- |
-| 1   | `specdojo init` を実装し、テストと文書を更新する | DEV          | open | PJR-WZYW の後    |
-| 2   | 公開物（tarball）で init から exec までを試す    | orchestrator | open | 公開の判定基準 3 |
+| No  | 作業                                             | 担当         | 状態 | メモ                                   |
+| --- | ------------------------------------------------ | ------------ | ---- | -------------------------------------- |
+| 1   | `specdojo init` を実装し、テストと文書を更新する | DEV          | open | PJR-WZYW の後                          |
+| 2   | 公開物（tarball）で init から exec までを試す    | orchestrator | done | init は成功。exec は PJR-44J9 で止まる |
+
+### 2.1. review での追加の作業（2026-10-08）
+
+公開物（`npm pack` の tarball）を新しいリポジトリに入れ、`specdojo init --yes --provider codex --exec` から `exec run --register` までを試した。init と名簿の読み込みは成功したが、次の不具合が見つかった。
+
+- init が作る `.specdojo/exec-defaults.yaml` に、SpecDojo 本体の開発用の親検証（`lint-ts`・`lint-fm`・`lint-md`・`test-integration`・`validate-schema`・`typecheck`・`test-unit`）がそのまま入っている。新しい利用者のリポジトリにはこれらの npm script がないため、親検証がすべて失敗し、項目が waiting になった。
+- `config init` と `init` が作る `run.worktree_base` の既定値が `../app1-worktrees` で、利用者のリポジトリの名前と関係がない。
+- 担当（owner）が未定の項目は `exec run --register` で agent を自動では選ばない。init の最後の「次の一歩」は `npm run orch:<provider>` だけを案内しており、オーケストレーターを使わずに実行する場合の `--executor-by` / `--reporter-by` の指定が分からない。
+
+次のとおり直す。
+
+- init は `pipeline.parent_validations` に、利用者の `package.json` に対応する npm script（例: `lint-ts` なら `lint:ts`）がある ID だけを入れる。対応する script がなければ `pipeline.parent_validations` を作らない。入れた ID と、入れなかった理由を表示する。
+- `run.worktree_base` の既定値を、リポジトリのディレクトリ名から作る（例: `../<リポジトリ名>-worktrees`）。`config init` と `init` の両方に適用する。
+- init の最後の案内に、オーケストレーターを使わずに実行する場合の例（作成した executor と reporter の nickname を使った `exec run --register <id> --executor-by ... --reporter-by ...`）を加える。
+- unit test で、script がない場合に親検証を作らないこと、script がある ID だけを入れること、`worktree_base` の既定値がリポジトリ名から作られることを確かめる。
 
 ## 4. 対応結果
 
 - `specdojo init` を追加し、対話端末では project、register、人の名簿、provider、exec、成果物カタログ、Dev Container を順に選べるようにした。非対話環境では `--yes`、`--project`、`--provider`、`--exec`、`--catalog`、`--devcontainer` などで同じ設定を作り、省略した既定値を表示する。
 - `.specdojo/specdojo.config.json`、`.gitignore`、`pm-members.yaml`、provider scaffold と `orch:<provider>`、選択 provider の `.specdojo/agent-members.yaml` と `.specdojo/exec-defaults.yaml`、任意の register・catalog・Dev Container を一つの処理で用意する。既存ファイルは上書きせず、`--dry-run` は書き込まない。
 - 対話入力、非対話での exec 設定、agent command の解決、dry-run、複数 provider の絞り込みを unit test に追加した。Quick Start、コマンドリファレンス、CHANGELOG を更新した。
+- review の実地確認を受け、利用先の `package.json` に対応する npm script がある親検証だけを `pipeline.parent_validations` へ設定し、0 件なら設定自体を省略するようにした。採用した ID と省略理由も出力する。
+- `config init` と `init` の `run.worktree_base` は、実行したリポジトリのディレクトリ名から `../<リポジトリ名>-worktrees` を作るようにした。
+- 次の一歩に、選択した provider の executor / reporter nickname を使う `exec run --register <id> --executor-by ... --reporter-by ...` の例を追加した。
 - 残課題は、公開物の tarball を使い、実際の agent CLI の認証・利用枠を用意した環境で init から `exec run --register --dry-run` までを確認する作業である。これは作業 No. 2 として orchestrator が行う。
+- 公開物での確認（orchestrator、2026-10-08）: tarball を新しいリポジトリに入れ、`specdojo init --yes --provider codex --exec` を実行した。親検証は対応する npm script がないため作られず、`worktree_base` はリポジトリ名から `../dagashi-trial3-worktrees` となり、次の一歩に `--executor-by` / `--reporter-by` の例が表示された。続く `exec run --register` は作業（README の追記）を終えたが、共通規約が実行できない検査を求めるため waiting になった。これは init ではなく [[prj-0001:pjr-44j9-plan-conventions-unavailable-checks]] で扱う。
 
 ## 5. 関連ドキュメント
 

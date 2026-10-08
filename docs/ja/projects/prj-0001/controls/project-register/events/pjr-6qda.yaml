@@ -119,3 +119,48 @@
       from: in-progress
       to: review
   previous_event_id: reg_5361d47f9b6c49c9a05ca74ec5e6b86f
+- v: 1
+  id: reg_9369677afcbf4f08b4a892fcddda4b18
+  ts: "2026-10-08T14:02:36Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_aa79a9e317d34929aa5422b8b5a2a649
+- v: 1
+  id: reg_f61172933c174f65b1ba98f913c746b8
+  ts: "2026-10-08T14:16:02Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_9369677afcbf4f08b4a892fcddda4b18
+- v: 1
+  id: reg_024609bd35314f9aa8e83ef3f9462028
+  ts: "2026-10-08T14:23:06Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: "review: 差分と公開物での確認"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-08"
+    - field: conclusion
+      from: "-"
+      to: specdojo init を追加した。質問（または --yes とオプション）で設定・登録簿・人の名簿・provider の scaffold・起動コマンドと agent の名簿・カタログ・devcontainer を作る。公開物で init が期待どおり動くことを確かめた
+  previous_event_id: reg_f61172933c174f65b1ba98f913c746b8

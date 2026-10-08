@@ -29,3 +29,80 @@
     - field: registered
       from: ""
       to: "2026-10-08"
+- v: 1
+  id: reg_d944da9e80fa45fa8dcc6e3f0e95d90f
+  ts: "2026-10-08T14:36:37Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_8584de6dd4f84967a538c7915cfe4e07
+- v: 1
+  id: reg_64629ba281964c4d8bbd224954bf974d
+  ts: "2026-10-08T14:37:49Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: rate limit reached
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: rate limit reached
+  previous_event_id: reg_d944da9e80fa45fa8dcc6e3f0e95d90f
+- v: 1
+  id: reg_ad75c11a5ee54720af3f41a027d4538c
+  ts: "2026-10-08T16:50:41Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: rate limit reached
+      to: "-"
+  previous_event_id: reg_64629ba281964c4d8bbd224954bf974d
+- v: 1
+  id: reg_0cd6534aaf114fe7aada0dcadbd236b0
+  ts: "2026-10-08T16:58:12Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_ad75c11a5ee54720af3f41a027d4538c
+- v: 1
+  id: reg_3cc3e9db65c545eb81dfb30b5ff5bd2e
+  ts: "2026-10-08T16:59:31Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（codex-expert-executor / gemma26-reporter）の成果を orchestrator がレビューし、完了条件と記載内容（D0KF の既定など）をコードと照合した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-09"
+    - field: conclusion
+      from: "-"
+      to: CHANGELOG の v0.3.0 を最終化し、移行ガイドが破壊的変更をすべて扱うことを確認した。公開日の記入は公開当日に PO が行う。
+  previous_event_id: reg_0cd6534aaf114fe7aada0dcadbd236b0

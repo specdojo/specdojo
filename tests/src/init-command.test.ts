@@ -1,6 +1,6 @@
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { basename, join } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import yaml from "js-yaml";
 import { collectInitAnswers, runInit, type InitPrompter } from "../../src/init-command.js";
@@ -68,7 +68,11 @@ describe("specdojo init", () => {
 
   it("creates a non-interactive exec-ready configuration and resolves its agents", async () => {
     const repo = createRepo("specdojo-init-");
-    vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+    const output: string[] = [];
+    vi.spyOn(process.stdout, "write").mockImplementation((chunk) => {
+      output.push(String(chunk));
+      return true;
+    });
     try {
       process.chdir(repo);
       await runInit({
@@ -88,6 +92,7 @@ describe("specdojo init", () => {
         "030-project-management/pm-members.yaml",
       );
       expect(config.agent_members_path).toBe(".specdojo/agent-members.yaml");
+      expect(config.projects["prj-1234"].run?.worktree_base).toBe(`../${basename(repo)}-worktrees`);
       expect(
         existsSync(
           join(repo, "docs/ja/projects/prj-1234/controls/project-register/generated/pjr-index.md"),
@@ -101,6 +106,10 @@ describe("specdojo init", () => {
       expect(reporter?.stage_role).toBe("reporter");
 
       const defaults = loadExecDefaultsConfig(join(repo, ".specdojo/exec-defaults.yaml"));
+      expect(defaults.pipeline?.parent_validations).toBeUndefined();
+      expect(output.join("")).toContain(
+        "Omitted pipeline.parent_validations: no supported npm scripts were found in package.json.",
+      );
       expect(resolveMemberCommand(defaults, executor!)).toContain("codex exec");
       expect(resolveMemberCommand(defaults, reporter!)).toContain("codex exec");
 
@@ -108,6 +117,44 @@ describe("specdojo init", () => {
         scripts: Record<string, string>;
       };
       expect(packageJson.scripts["orch:codex"]).toContain("specdojo/codex/orchestrator.md");
+      expect(output.join("")).toContain(
+        "npx specdojo exec run --register <id> --executor-by codex-executor --reporter-by codex-reporter",
+      );
+    } finally {
+      rmSync(repo, { recursive: true, force: true });
+    }
+  });
+
+  it("includes only parent validations backed by package.json scripts", async () => {
+    const repo = createRepo("specdojo-init-validations-");
+    writeFileSync(
+      join(repo, "package.json"),
+      `${JSON.stringify(
+        {
+          name: "fixture",
+          private: true,
+          scripts: { "lint:ts": "eslint .", "test:unit": "vitest run" },
+        },
+        null,
+        2,
+      )}\n`,
+      "utf8",
+    );
+    const output: string[] = [];
+    vi.spyOn(process.stdout, "write").mockImplementation((chunk) => {
+      output.push(String(chunk));
+      return true;
+    });
+    try {
+      process.chdir(repo);
+      await runInit({ yes: true, provider: "codex", exec: true });
+
+      const defaults = loadExecDefaultsConfig(join(repo, ".specdojo/exec-defaults.yaml"));
+      expect(defaults.pipeline?.parent_validations).toEqual(["lint-ts", "test-unit"]);
+      expect(output.join("")).toContain("Included parent validation: lint-ts (npm run lint:ts)");
+      expect(output.join("")).toContain(
+        'Skipped parent validation: lint-fm (package.json script "lint:fm" was not found)',
+      );
     } finally {
       rmSync(repo, { recursive: true, force: true });
     }

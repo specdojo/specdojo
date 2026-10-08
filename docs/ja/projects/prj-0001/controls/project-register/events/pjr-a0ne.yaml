@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_b77acd1ac7124f749acdc949aef2d21d
+  ts: "2026-10-08T14:40:34Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-P8TK の公開物での実地の確認（claude）で判明
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 適用されない検査を executor が not_run と記録すると、作業が済んでいても止まる
+    - field: description
+      from: ""
+      to: "公開物での実地の確認（2026-10-08、claude）で、executor が共通規約の「適用条件を満たさない検査は記録しない」に従わず、prettier を「package.json にないので適用外」として not_run と記録し、runner の判定で waiting になった。agent が規約に従わないと止まるため、適用外を表す検証の状態（例: not_applicable）を加えて block しないようにするか、規約の伝え方を強めるかを決める。利用者の判断を待つ。"
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-08"

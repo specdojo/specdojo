@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-j29x-readme-dojo-vocabulary
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-08T13:52:50Z"
   due_on: null
+  completed_at: "2026-10-08T14:01:57Z"
+  conclusion: README・トップ・概要ガイドの標語を「決めて、書いて、鍛え続ける」に改め、README に道場の言葉の表と記帳・型と実戦・評定と講評の見出しを加えた。package.json の説明も合わせた
 ---
 
 # PJR-J29X README とトップに新しい標語と道場の言葉を反映する
@@ -39,14 +41,16 @@ specdojo:
 
 ## 3. 作業内容
 
-| No  | 作業                                  | 担当         | 状態 | メモ   |
-| --- | ------------------------------------- | ------------ | ---- | ------ |
-| 1   | README・トップ・概要ガイドを改める    | DEV          | open | -      |
-| 2   | `package.json` の説明を標語に合わせる | orchestrator | open | 統合後 |
+| No  | 作業                                  | 担当         | 状態 | メモ                                             |
+| --- | ------------------------------------- | ------------ | ---- | ------------------------------------------------ |
+| 1   | README・トップ・概要ガイドを改める    | DEV          | done | 標語と README 冒頭・見出しへ道場の言葉を反映した |
+| 2   | `package.json` の説明を標語に合わせる | orchestrator | done | keep sharpening に改めた                         |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+`README.md` の標語を「決めて、書いて、鍛え続ける。」へ改め、冒頭の説明、開始時の案内、道場の言葉の対応表、「できること」の見出しに記帳・型・実戦・評定・講評・流を反映した。`docs/ja/index.md` と `docs/ja/specdojo/guides/specdojo-overview-guide.md` の標語も同じ表現へ統一した。
+
+`package.json` の `description` は agent の書き込み禁止対象のため変更していない。作業項目 2 は統合後に orchestrator が対応する。
 
 ## 5. 関連ドキュメント
 
