@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: high
   owner: DEV
   registered_at: "2026-10-08T12:52:00Z"
   due_on: null
+  block_reason: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=package.json; agent must record the required change in the result …"
 ---
 
 # PJR-6QDA 選択式の specdojo init で、オーケストレーターと agent の実行までの設定を行う
@@ -53,7 +54,10 @@ specdojo:
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `specdojo init` を追加し、対話端末では project、register、人の名簿、provider、exec、成果物カタログ、Dev Container を順に選べるようにした。非対話環境では `--yes`、`--project`、`--provider`、`--exec`、`--catalog`、`--devcontainer` などで同じ設定を作り、省略した既定値を表示する。
+- `.specdojo/specdojo.config.json`、`.gitignore`、`pm-members.yaml`、provider scaffold と `orch:<provider>`、選択 provider の `.specdojo/agent-members.yaml` と `.specdojo/exec-defaults.yaml`、任意の register・catalog・Dev Container を一つの処理で用意する。既存ファイルは上書きせず、`--dry-run` は書き込まない。
+- 対話入力、非対話での exec 設定、agent command の解決、dry-run、複数 provider の絞り込みを unit test に追加した。Quick Start、コマンドリファレンス、CHANGELOG を更新した。
+- 残課題は、公開物の tarball を使い、実際の agent CLI の認証・利用枠を用意した環境で init から `exec run --register --dry-run` までを確認する作業である。これは作業 No. 2 として orchestrator が行う。
 
 ## 5. 関連ドキュメント
 
