@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-XMQH",
+  "run_id": "20261008T143602545Z-cad0104e",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "rate_limited",
+    "started_at": "2026-10-08T14:36:02.545Z",
+    "completed_at": "2026-10-08T14:36:19.911Z",
+    "exit_code": 1,
+    "attempts": 1
+  },
+  "changes": [],
+  "attempt_changes": [],
+  "diff_summary": {
+    "files_changed": 0,
+    "summary": ""
+  },
+  "validations": [],
+  "final_message": "",
+  "block_reason": "executor rate limit reached",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-XMQH/20261008T143602545Z-cad0104e/executor.log",
+      "bytes": 52181,
+      "truncated": false
+    }
+  ]
+}
