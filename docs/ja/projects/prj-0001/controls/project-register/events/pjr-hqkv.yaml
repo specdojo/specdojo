@@ -151,3 +151,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_745d00b1aa1d4c3d9d8e6ba62df10633
+- v: 1
+  id: reg_3da7e4cdec7948fcab971b8971be12ee
+  ts: "2026-10-08T22:52:55Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（codex-expert-executor / gemma26-reporter）の成果を orchestrator がレビューした。保護対象の package.json は利用者の承認のもと develop へ反映し、親検証の unit test の失敗（絶対パターンの返り値の差）は --resume-from executor で修正させた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-09"
+    - field: conclusion
+      from: "-"
+      to: 本体の fast-glob を依存なしの再帰走査に、docs-lint を tinyglobby に置き換えた。npm ls braces --omit=dev は空、npm audit --omit=dev は 0 件。
+  previous_event_id: reg_8b6d86f5839543c7b2eb5b78f64b9011
