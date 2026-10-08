@@ -3,8 +3,8 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync
 import { join, resolve } from "node:path";
 import { tmpdir } from "node:os";
 import { load } from "js-yaml";
-import fg from "fast-glob";
 import { lint } from "markdownlint/sync";
+import { globSync } from "tinyglobby";
 import { buildValidator, formatErrors } from "../helpers/schema.js";
 import { specdojoRootDir } from "../../src/specdojo-config.js";
 import { flattenTemplateFrontmatter } from "../../src/template-frontmatter.js";
@@ -15,6 +15,7 @@ import {
   type RegisterPaths,
   buildRegisterItemContent,
   extractTableHeading,
+  findMarkdownReferenceFiles,
   generatePjrId,
   generateDerivedViewFiles,
   injectRegisterRows,
@@ -76,9 +77,10 @@ const PJR_SUBSTITUTIONS: Array<[string, string]> = [
   ["_PROJECT_ID_", "prj-test-0001"],
 ];
 
-const PJR_FILES = fg
-  .sync("docs/ja/specdojo/templates/pjr-*-template.md", { onlyFiles: true })
-  .sort();
+const PJR_FILES = globSync("docs/ja/specdojo/templates/pjr-*-template.md", {
+  expandDirectories: false,
+  onlyFiles: true,
+}).sort();
 
 const DEFAULT_ADD_FIELDS: RegisterAddFields = {
   type: "todo",
@@ -92,6 +94,31 @@ const DEFAULT_ADD_FIELDS: RegisterAddFields = {
   completedAt: "-",
   conclusion: "-",
 };
+
+describe("findMarkdownReferenceFiles — 参照更新対象の列挙", () => {
+  it("docs/ja の Markdown を絶対パスの辞書順で返し generated と隠し項目を除く", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-reference-files-"));
+    try {
+      const files = ["docs/ja/z.md", "docs/ja/nested/a.md"];
+      for (const file of [
+        ...files,
+        "docs/ja/generated/ignored.md",
+        "docs/ja/nested/generated/ignored.md",
+        "docs/ja/.hidden/ignored.md",
+      ]) {
+        mkdirSync(join(root, file, ".."), { recursive: true });
+        writeFileSync(join(root, file), "# test\n", "utf8");
+      }
+      writeFileSync(join(root, "docs/ja/nested/not-markdown.txt"), "test\n", "utf8");
+
+      expect(findMarkdownReferenceFiles(root)).toEqual(
+        files.map((file) => join(root, file)).sort((left, right) => left.localeCompare(right)),
+      );
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+});
 
 describe("PJR-ID の乱数衝突救済", () => {
   it("既存 ID またはブロックリストに衝突した候補は再抽選する", () => {

@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import fastGlob from "fast-glob";
+import { glob } from "tinyglobby";
 import { remark } from "remark";
 import remarkFrontmatter from "remark-frontmatter";
 import remarkGfm from "remark-gfm";
@@ -144,9 +144,10 @@ describe("remarkNoUnescapedAnglePlaceholder", () => {
 
 describe("remarkNoUnescapedAnglePlaceholder against the real docs tree", () => {
   it("produces no false positives on the existing docs/ markdown", async () => {
-    const files = await fastGlob("docs/**/*.md", {
+    const files = await glob("docs/**/*.md", {
       cwd: repoRoot,
       absolute: true,
+      expandDirectories: false,
       // executor 実行中に scaffold される plan/result は runner 管理であり、対象成果物ではない。
       ignore: ["docs/**/execution/exec/{plans,results}/**"],
     });
