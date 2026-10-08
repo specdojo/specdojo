@@ -46,10 +46,10 @@ specdojo:
 
 ## 3. 作業内容
 
-| No  | 作業                                             | 担当         | 状態 | メモ             |
-| --- | ------------------------------------------------ | ------------ | ---- | ---------------- |
-| 1   | `specdojo init` を実装し、テストと文書を更新する | DEV          | open | PJR-WZYW の後    |
-| 2   | 公開物（tarball）で init から exec までを試す    | orchestrator | open | 公開の判定基準 3 |
+| No  | 作業                                             | 担当         | 状態 | メモ                                   |
+| --- | ------------------------------------------------ | ------------ | ---- | -------------------------------------- |
+| 1   | `specdojo init` を実装し、テストと文書を更新する | DEV          | open | PJR-WZYW の後                          |
+| 2   | 公開物（tarball）で init から exec までを試す    | orchestrator | done | init は成功。exec は PJR-44J9 で止まる |
 
 ### 2.1. review での追加の作業（2026-10-08）
 
@@ -75,6 +75,7 @@ specdojo:
 - `config init` と `init` の `run.worktree_base` は、実行したリポジトリのディレクトリ名から `../<リポジトリ名>-worktrees` を作るようにした。
 - 次の一歩に、選択した provider の executor / reporter nickname を使う `exec run --register <id> --executor-by ... --reporter-by ...` の例を追加した。
 - 残課題は、公開物の tarball を使い、実際の agent CLI の認証・利用枠を用意した環境で init から `exec run --register --dry-run` までを確認する作業である。これは作業 No. 2 として orchestrator が行う。
+- 公開物での確認（orchestrator、2026-10-08）: tarball を新しいリポジトリに入れ、`specdojo init --yes --provider codex --exec` を実行した。親検証は対応する npm script がないため作られず、`worktree_base` はリポジトリ名から `../dagashi-trial3-worktrees` となり、次の一歩に `--executor-by` / `--reporter-by` の例が表示された。続く `exec run --register` は作業（README の追記）を終えたが、共通規約が実行できない検査を求めるため waiting になった。これは init ではなく [[prj-0001:pjr-44j9-plan-conventions-unavailable-checks]] で扱う。
 
 ## 5. 関連ドキュメント
 
