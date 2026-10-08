@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-0wym-naming-spec-do-apply
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-08T03:45:19Z"
   due_on: null
+  completed_at: "2026-10-08T12:07:23Z"
+  conclusion: README・docs サイトのトップ・概要ガイド・ryu-guide・waza-guide・package.json の説明を、仕様道（Spec-Dō）の呼び方と技・流の名前に改めた。CLI の値は変えていない
 ---
 
 # PJR-0WYM README と概要の呼び方を仕様道（Spec-Dō）に改める

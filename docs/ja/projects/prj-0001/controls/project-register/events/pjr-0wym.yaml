@@ -87,3 +87,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_1cbc596441324d2db737a812a8b04236
+- v: 1
+  id: reg_a4c4b03c53904162b68a891a7db99c6f
+  ts: "2026-10-08T12:07:23Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: "review: 差分と完了条件を確認し、package.json を orchestrator が修正"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-08"
+    - field: conclusion
+      from: "-"
+      to: README・docs サイトのトップ・概要ガイド・ryu-guide・waza-guide・package.json の説明を、仕様道（Spec-Dō）の呼び方と技・流の名前に改めた。CLI の値は変えていない
+  previous_event_id: reg_d88d23bd7f454ea5b725e16e7e49d7a8
