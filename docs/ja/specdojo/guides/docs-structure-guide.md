@@ -359,7 +359,7 @@ product/
 
 ### 10.2. ディレクトリレイアウト
 
-3つのルートを互いに独立したディレクトリとして配置します。`app1/` と `app1-specdojo/` はそれぞれ別の Git リポジトリです。`app1-worktrees/` は両リポジトリの外に置く worktree 用の領域です。
+3つのルートを互いに独立したディレクトリとして配置します。`app1/` と `app1-specdojo/` はそれぞれ別の Git リポジトリです。`app1-specdojo-worktrees/` は両リポジトリの外に置く worktree 用の領域です。
 
 ```text
 workspace/
@@ -370,10 +370,10 @@ workspace/
 │   ├── .specdojo/
 │   ├── docs/ja/projects/
 │   └── package.json          # npm i -D specdojo で CLI を導入する
-└── app1-worktrees/          # task 単位の worktree 置き場
+└── app1-specdojo-worktrees/ # task 単位の worktree 置き場
 ```
 
-`.specdojo/specdojo.config.json` の project パスは `app1-specdojo/` を基準とし、`run.worktree_base` は `../app1-worktrees` とします。SpecDojo CLI の実行、プロジェクト成果物の解決、doc index の生成、運用記録の検証は `app1-specdojo/` 側で行います。
+`.specdojo/specdojo.config.json` の project パスは `app1-specdojo/` を基準とします。`config init` はリポジトリのディレクトリ名から `run.worktree_base` を作るため、この例では `../app1-specdojo-worktrees` になります。SpecDojo CLI の実行、プロジェクト成果物の解決、doc index の生成、運用記録の検証は `app1-specdojo/` 側で行います。
 
 ### 10.3. プロダクト文書の配置
 
@@ -513,7 +513,7 @@ git log <target-branch> -E --grep='^Refs: (prj-0001:)?PJR-XXXX$' --format='%H %s
 `repos` を宣言した project では、同じ task ID の下にリポジトリごとの worktree を作ります。プロジェクトリポジトリの worktree は予約名 `project`、プロダクトリポジトリの worktree は宣言した `name` のディレクトリに置きます。
 
 ```text
-app1-worktrees/
+app1-specdojo-worktrees/
 └── <task-id>/
     ├── project/   # app1-specdojo の worktree（agent の cwd）
     ├── app1/      # app1 の worktree

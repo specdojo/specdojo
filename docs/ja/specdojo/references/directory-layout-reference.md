@@ -47,7 +47,7 @@ workspace/
 │   └── docs/ja/
 │       ├── specdojo/                # 実践体系
 │       └── projects/<project-id>/   # プロジェクト文書と実行記録
-└── app1-worktrees/                  # task 単位の worktree 置き場
+└── app1-specdojo-worktrees/         # task 単位の worktree 置き場（config init がリポジトリ名から設定）
 ```
 
 以下のツリーは各リポジトリ内の配置を個別に示します。成果物と実装が常に同じ変更として動く同一リポジトリ構成を選ぶ場合は、両方のツリーを1つのリポジトリの `docs/ja/` 配下へ置けます。

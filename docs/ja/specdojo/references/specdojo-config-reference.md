@@ -39,7 +39,7 @@ SpecDojo Configuration Reference
       "project_register_path": "controls/project-register",
       "project_context": ["prj-overview"],
       "run": {
-        "worktree_base": "../app1-worktrees"
+        "worktree_base": "../app1-specdojo-worktrees"
       }
     }
   }
@@ -100,7 +100,7 @@ SpecDojo Configuration Reference
 | `worktree_base`          | `../worktrees` | `exec run --worktree` / `--auto` と `exec trial` が作る worktree の親です。リポジトリ外を指定します。         |
 | `register_date_timezone` | `UTC`          | 登録簿の「登録日」「完了日」を日時から暦日へ変換する IANA タイムゾーン名です。例は `Asia/Tokyo` です。        |
 
-`config init` は別リポジトリ構成の標準配置に合わせ、一般既定の `../worktrees` ではなく `../app1-worktrees` を `worktree_base` へ明示します。
+`config init` は一般既定の `../worktrees` ではなく、実行したリポジトリのディレクトリ名から作る `../<リポジトリ名>-worktrees` を `worktree_base` へ明示します。例えば `app1-specdojo/` で実行した場合は `../app1-specdojo-worktrees` です。
 
 `config init` は、設定した配置から生成物を除外する `.gitignore` の行も導きます。既定の行は `.specdojo/doc-index.json`、`docs/**/generated/*`、`!docs/**/generated/.gitkeep`、`docs/**/execution/exec/.locks/` です。`base_path` が `docs/` の外にある場合は `<base_path>/**/generated/*` などを追加し、`base_path` が無い場合は各パス設定から導いた行を追加します。リポジトリ外を指すパスは対象にしません。配置を変えた後は `config init` を再実行すると、足りない行だけが追記されます。
 
@@ -197,7 +197,7 @@ agent 実行を使う場合は、この project オブジェクトとは別に�
   "project_context": ["prj-overview"],
   "run": {
     "exec_defaults": ".specdojo/exec-defaults.yaml",
-    "worktree_base": "../app1-worktrees"
+    "worktree_base": "../app1-specdojo-worktrees"
   }
 }
 ```

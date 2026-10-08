@@ -8,6 +8,7 @@ import { runDevcontainerScaffold } from "./devcontainer-scaffold.js";
 import { runProviderScaffold } from "./exec-provider-scaffold.js";
 import { generateDerivedViewFiles, type RegisterPaths } from "./register.js";
 import {
+  defaultWorktreeBase,
   projectGitignoreLayout,
   specdojoRootDir,
   type ProjectMember,
@@ -23,6 +24,16 @@ import { specdojoPackageRootDir } from "./package-paths.js";
 
 const PROVIDERS = ["claude", "codex", "opencode", "antigravity", "copilot"] as const;
 type InitProvider = (typeof PROVIDERS)[number];
+
+const PARENT_VALIDATION_SCRIPTS = {
+  "lint-ts": "lint:ts",
+  "lint-fm": "lint:fm",
+  "lint-md": "lint:md",
+  "test-integration": "test:integration",
+  "validate-schema": "validate:schema",
+  typecheck: "typecheck",
+  "test-unit": "test:unit",
+} as const;
 
 export type InitOptions = {
   yes?: boolean;
@@ -205,7 +216,7 @@ export async function collectInitAnswers(
   }
 }
 
-function buildConfig(answers: InitAnswers): SpecDojoConfig {
+function buildConfig(answers: InitAnswers, repoRoot: string): SpecDojoConfig {
   const project: SpecDojoProjectConfig = {
     base_path: `docs/ja/projects/${answers.projectId}`,
     ...(answers.catalog ? { catalog_path: "010-deliverables-catalog" } : {}),
@@ -214,7 +225,7 @@ function buildConfig(answers: InitAnswers): SpecDojoConfig {
     project_context: ["prj-overview"],
     run: {
       ...(answers.exec ? { exec_defaults: ".specdojo/exec-defaults.yaml" } : {}),
-      worktree_base: "../app1-worktrees",
+      worktree_base: defaultWorktreeBase(repoRoot),
     },
   };
   return {
@@ -279,12 +290,58 @@ function loadInitTemplate(packageRoot: string, filename: string): Record<string,
   >;
 }
 
+function readPackageScripts(repoRoot: string): Readonly<Record<string, string>> {
+  const packageJsonPath = join(repoRoot, "package.json");
+  if (!existsSync(packageJsonPath)) return {};
+  try {
+    const parsed = JSON.parse(readFileSync(packageJsonPath, "utf8")) as { scripts?: unknown };
+    if (!parsed.scripts || typeof parsed.scripts !== "object" || Array.isArray(parsed.scripts)) {
+      return {};
+    }
+    return Object.fromEntries(
+      Object.entries(parsed.scripts).filter(
+        (entry): entry is [string, string] => typeof entry[1] === "string",
+      ),
+    );
+  } catch {
+    return {};
+  }
+}
+
+function selectParentValidations(repoRoot: string, configured: unknown): string[] {
+  const scripts = readPackageScripts(repoRoot);
+  const candidates = Array.isArray(configured)
+    ? configured.filter((entry): entry is string => typeof entry === "string")
+    : [];
+  const selected: string[] = [];
+  for (const id of candidates) {
+    const script = PARENT_VALIDATION_SCRIPTS[id as keyof typeof PARENT_VALIDATION_SCRIPTS];
+    if (script && Object.hasOwn(scripts, script)) {
+      selected.push(id);
+      process.stdout.write(`Included parent validation: ${id} (npm run ${script})\n`);
+    } else {
+      const reason = script
+        ? `package.json script "${script}" was not found`
+        : "validation ID is not supported by specdojo init";
+      process.stdout.write(`Skipped parent validation: ${id} (${reason})\n`);
+    }
+  }
+  if (selected.length === 0) {
+    process.stdout.write(
+      "Omitted pipeline.parent_validations: no supported npm scripts were found in package.json.\n",
+    );
+  }
+  return selected;
+}
+
+type ExecAgentNames = { executor: string; reporter: string };
+
 function writeExecConfiguration(
   repoRoot: string,
   packageRoot: string,
   providers: InitProvider[],
   dryRun: boolean,
-): void {
+): ExecAgentNames {
   const memberTemplate = loadInitTemplate(packageRoot, "init-agent-members.yaml") as {
     version: number;
     members: ProjectMember[];
@@ -303,6 +360,21 @@ function writeExecConfiguration(
     ),
   );
   const { providers: _providers, ...commonDefaults } = defaultsTemplate;
+  const commonPipeline =
+    commonDefaults.pipeline && typeof commonDefaults.pipeline === "object"
+      ? (commonDefaults.pipeline as Record<string, unknown>)
+      : {};
+  const { parent_validations: configuredParentValidations, ...otherPipeline } = commonPipeline;
+  const parentValidations = selectParentValidations(repoRoot, configuredParentValidations);
+  const configuredDefaults: Record<string, unknown> = { ...commonDefaults };
+  if (parentValidations.length > 0 || Object.keys(otherPipeline).length > 0) {
+    configuredDefaults.pipeline = {
+      ...otherPipeline,
+      ...(parentValidations.length > 0 ? { parent_validations: parentValidations } : {}),
+    };
+  } else {
+    delete configuredDefaults.pipeline;
+  }
   writeNewFile(
     repoRoot,
     ".specdojo/agent-members.yaml",
@@ -312,9 +384,26 @@ function writeExecConfiguration(
   writeNewFile(
     repoRoot,
     ".specdojo/exec-defaults.yaml",
-    yaml.dump({ ...commonDefaults, providers: providerDefaults }, { lineWidth: 120, noRefs: true }),
+    yaml.dump(
+      { ...configuredDefaults, providers: providerDefaults },
+      { lineWidth: 120, noRefs: true },
+    ),
     dryRun,
   );
+  const primaryProvider = providers[0];
+  const executor = members.find(
+    (member) =>
+      member.provider === primaryProvider &&
+      member.stage_role === "executor" &&
+      member.mode === "edit",
+  );
+  const reporter = members.find(
+    (member) => member.provider === primaryProvider && member.stage_role === "reporter",
+  );
+  if (!executor || !reporter) {
+    throw new Error("init-agent-members.yaml must define an edit executor and reporter");
+  }
+  return { executor: executor.nickname, reporter: reporter.nickname };
 }
 
 function scaffoldRegister(
@@ -438,7 +527,7 @@ export async function runInit(
     deps?.prompter ??
     (interactive ? createInterface({ input: process.stdin, output: process.stdout }) : undefined);
   const answers = await collectInitAnswers(options, prompter);
-  const config = buildConfig(answers);
+  const config = buildConfig(answers, repoRoot);
   const dryRun = !!options.dryRun;
 
   writeNewFile(
@@ -473,7 +562,9 @@ export async function runInit(
       showNextSteps: false,
     });
   }
-  if (answers.exec) writeExecConfiguration(repoRoot, packageRoot, answers.providers, dryRun);
+  const execAgents = answers.exec
+    ? writeExecConfiguration(repoRoot, packageRoot, answers.providers, dryRun)
+    : undefined;
   scaffoldCatalog(repoRoot, packageRoot, config, answers, dryRun);
   if (answers.devcontainer) {
     await runDevcontainerScaffold({
@@ -501,7 +592,10 @@ export async function runInit(
       (firstProvider
         ? `  1. Run npm run ${script} and create the first register item.\n`
         : "  1. Create the first register item.\n") +
-      "  2. Review and commit the files created by specdojo init.\n",
+      (execAgents
+        ? `  2. To run an item without the orchestrator: npx specdojo exec run --register <id> --executor-by ${execAgents.executor} --reporter-by ${execAgents.reporter}\n`
+        : "") +
+      `  ${execAgents ? "3" : "2"}. Review and commit the files created by specdojo init.\n`,
   );
 }
 

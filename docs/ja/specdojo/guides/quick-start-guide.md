@@ -34,19 +34,19 @@ SpecDojo CLI の初期設定から始め、register で課題と判断を整理�
 
 - **プロダクトリポジトリ** `app1/`: ソースコードと、仕様・設計などのプロダクトドキュメントを置きます。
 - **プロジェクトリポジトリ** `app1-specdojo/`: 登録簿・計画・実行記録などのプロジェクトドキュメントと実践体系を置きます。1つのプロジェクトリポジトリに、複数のプロジェクトを格納できます。
-- **worktree 用ディレクトリ** `app1-worktrees/`: タスクごとの変更を隔離して進めるために、Git worktree を作る場所です。
+- **worktree 用ディレクトリ** `app1-specdojo-worktrees/`: タスクごとの変更を隔離して進めるために、Git worktree を作る場所です。名前はプロジェクトリポジトリのディレクトリ名から決まります。
 
 ```text
 workspace/
 ├── app1/             # 既存または新規のプロダクトリポジトリ
 ├── app1-specdojo/    # プロジェクトリポジトリ
-└── app1-worktrees/   # task 単位の worktree 置き場
+└── app1-specdojo-worktrees/ # task 単位の worktree 置き場
 ```
 
 workspace 直下でプロジェクトリポジトリと worktree 用ディレクトリを作成し、`app1-specdojo/` に依存パッケージと SpecDojo の設定ファイルを用意します。
 
 ```bash
-mkdir app1-specdojo app1-worktrees
+mkdir app1-specdojo
 git -C app1-specdojo init
 cd app1-specdojo
 npm init -y
@@ -58,7 +58,9 @@ npx specdojo init
 `specdojo init` は、project ID と名前、人の nickname と表示名、利用する agent provider、
 exec・成果物カタログ・Dev Container の要否を順に質問します。選択に応じて設定、登録簿、人と
 agent の名簿、provider の scaffold、`package.json` の `orch:<provider>`、exec の起動設定を
-作成します。既存ファイルは上書きせず、作成内容は `--dry-run` で先に確認できます。
+作成します。exec の親検証は、対応する npm script が `package.json` にあるものだけを設定し、
+該当する script がなければ省略します。既存ファイルは上書きせず、作成内容は `--dry-run` で
+先に確認できます。
 
 CI や標準入力が端末でない環境では質問しません。次のようにオプションだけで同じ初期設定を
 行えます。省略値は画面に表示されます。
@@ -77,7 +79,9 @@ npx specdojo init --yes \
 ```
 
 初期化後は、表示された `npm run orch:<provider>` でオーケストレーターを起動し、最初の 1 件を
-起票します。作成された設定と文書は内容を確認して commit してください。
+起票します。オーケストレーターを使わない場合は、同じ案内に表示される
+`exec run --register <id> --executor-by <executor> --reporter-by <reporter>` で実行できます。
+作成された設定と文書は内容を確認して commit してください。
 
 `@specdojo/docs-lint` は SpecDojo 文書向けの remark プラグインと検証コマンドを提供します。
 最小構成では、リポジトリルートの `.remarkrc.yaml` から次のように公開 export を参照できます。
@@ -99,7 +103,7 @@ plugins:
 npx specdojo config init
 ```
 
-`specdojo config init` は `.specdojo/specdojo.config.json` が存在しない場合に雛形を作成し、既存ファイルは上書きしません。雛形は register だけを使える最小構成であり、project パスは `app1-specdojo/` のリポジトリルートを基準とし、`run.worktree_base` は兄弟ディレクトリの `../app1-worktrees` を指します。作成された設定を開き、対象プロジェクトの ID と各パスを実際の名前に合わせてください。catalog、schedule、exec へ進むときに追加するキーと既定値は [[specdojo:specdojo-config-reference|SpecDojo設定リファレンス]] で確認できます。
+`specdojo config init` は `.specdojo/specdojo.config.json` が存在しない場合に雛形を作成し、既存ファイルは上書きしません。雛形は register だけを使える最小構成であり、project パスはリポジトリルートを基準とし、`run.worktree_base` はディレクトリ名から作る `../<リポジトリ名>-worktrees` を指します。例えば `app1-specdojo/` では `../app1-specdojo-worktrees` です。作成された設定を開き、対象プロジェクトの ID と各パスを実際の名前に合わせてください。catalog、schedule、exec へ進むときに追加するキーと既定値は [[specdojo:specdojo-config-reference|SpecDojo設定リファレンス]] で確認できます。
 
 プロダクト文書は `app1/docs/ja/product/`、プロジェクト文書と SpecDojo の実践体系は `app1-specdojo/docs/ja/projects/` と `app1-specdojo/docs/ja/specdojo/` に置きます。現行実装では1つの項目で両リポジトリを自動統合できないため、プロダクト文書や実装も変更する項目は分けるか、人が統合を管理します。詳細は [ドキュメント構成ガイド](docs-structure-guide.md) の `別リポジトリ構成` を参照してください。
 

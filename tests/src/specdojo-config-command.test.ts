@@ -1,7 +1,7 @@
 import { Command } from "commander";
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { basename, join } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { resolveCatalogPath } from "../../src/catalog.js";
 import {
@@ -38,6 +38,8 @@ describe("config onboarding commands", () => {
       process.chdir(repo);
       await runConfigCommand(["init"]);
 
+      const worktreeBase = `../${basename(repo)}-worktrees`;
+
       const configPath = join(repo, ".specdojo", "specdojo.config.json");
       expect(JSON.parse(readFileSync(configPath, "utf8"))).toEqual({
         version: 1,
@@ -48,13 +50,13 @@ describe("config onboarding commands", () => {
             project_register_path: "controls/project-register",
             project_context: ["prj-overview"],
             run: {
-              worktree_base: "../app1-worktrees",
+              worktree_base: worktreeBase,
             },
           },
         },
       });
       expect(output.join("")).toContain("app1-specdojo/");
-      expect(output.join("")).toContain("../app1-worktrees");
+      expect(output.join("")).toContain(worktreeBase);
       expect(output.join("")).toContain("npx specdojo config scaffold --provider <name>");
       expect(output.join("")).toContain("npx specdojo register scaffold --project prj-0001");
       expect(output.join("")).toContain(SPECDOJO_CONFIG_REFERENCE_URL);
