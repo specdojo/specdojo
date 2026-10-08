@@ -20,15 +20,36 @@ specdojo:
 
 公開物での実地の確認で、オーケストレーターや exec を使うまでに、provider ごとの scaffold、起動コマンドと agent の名簿の手書き、人の名簿の作成など手作業が多いと分かった。質問に答えるだけで、これらの設定を済ませる選択式の init を v0.3.0 に入れる。
 
+根拠は [[prj-0001:pjr-p8tk-release-stabilization-criteria]] の「公開物での実地の確認の途中経過」。入口を register にする普及戦略（[[prj-0001:pjr-nyzr-adoption-strategy]]）の最初の一歩になる。名簿の読み込みの不具合 [[prj-0001:pjr-wzyw-agent-members-onboarding-gap]] を直した後に着手する。
+
 ## 2. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- 新しいコマンド `specdojo init` を加える。対話できる端末では、次を順に質問し、答えに応じて設定を作る。既存の `config init` の動きは変えない。
+
+| 質問                                                                                    | 答えに応じて行うこと                                                                                                                                                              |
+| --------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| プロジェクトの ID と名前                                                                | `.specdojo/specdojo.config.json` と `.gitignore`（`config init` と同じ内容）                                                                                                      |
+| 記帳（register）を用意するか（既定: はい）                                              | `register scaffold` と同じ登録簿                                                                                                                                                  |
+| あなたの nickname と表示名                                                              | schema を満たす人の名簿（`pm-members.yaml`）と `members_path`                                                                                                                     |
+| オーケストレーターに使う agent（claude・codex・opencode・antigravity・copilot、複数可） | provider ごとの `config scaffold` と `npm run orch:<provider>`                                                                                                                    |
+| 作業を agent に任せるか（実戦・exec）                                                   | 選んだ provider の起動コマンドを `.specdojo/exec-defaults.yaml` に、executor と reporter の member を `.specdojo/agent-members.yaml` に書く。値は同梱のテンプレートの推奨値を使う |
+| 成果物カタログを使うか（既定: 使わない。使う場合は small・medium・large）               | `catalog_path` などの設定のキーと `catalog scaffold --size`                                                                                                                       |
+| devcontainer を作るか（既定: いいえ）                                                   | `devcontainer scaffold`（選んだ provider を渡す）                                                                                                                                 |
+
+- 対話できない環境（標準入力が端末でない場合や CI）では質問せず、オプション（例: `--yes`、`--project`、`--provider claude,codex`、`--exec`、`--catalog small`、`--devcontainer`）だけで同じ設定を作れる。足りない値は既定値を使い、使った既定値を表示する。
+- `--dry-run` で作る予定のファイルと変更を表示し、何も書かない。既存のファイルは上書きせず、スキップしたことを表示する。
+- 外部の依存を追加せず、Node 標準（`node:readline/promises`）で実装する。
+- 最後に、次の一歩（例: `npm run orch:claude` で起動し、まず 1 件起票する）と、作ったファイルを commit する必要があることを表示する。
+- 作った設定で、名簿の読み込みと `exec run --register --dry-run` が agent を解決できることを、unit test または integration test で確かめる（対話は入力を差し替えて試す）。
+- quick-start ガイドとコマンドリファレンスに `specdojo init` を載せ、手作業の手順は「個別に設定する場合」として残す。CHANGELOG の v0.3.0 の追加機能に載せる。
+- `npm run check` が通る。
 
 ## 3. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                             | 担当         | 状態 | メモ             |
+| --- | ------------------------------------------------ | ------------ | ---- | ---------------- |
+| 1   | `specdojo init` を実装し、テストと文書を更新する | DEV          | open | PJR-WZYW の後    |
+| 2   | 公開物（tarball）で init から exec までを試す    | orchestrator | open | 公開の判定基準 3 |
 
 ## 4. 対応結果
 
@@ -36,4 +57,5 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 5. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-wzyw-agent-members-onboarding-gap]]（名簿の読み込みの不具合）
+- [[prj-0001:pjr-nyzr-adoption-strategy]]（普及戦略）
