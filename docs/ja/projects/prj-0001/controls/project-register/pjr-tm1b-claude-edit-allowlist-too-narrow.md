@@ -22,22 +22,33 @@ specdojo:
 
 ## 2. 影響範囲
 
-| 観点         | 影響   |
-| ------------ | ------ |
-| スコープ     | _TODO_ |
-| スケジュール | _TODO_ |
-| コスト       | _TODO_ |
-| 品質         | _TODO_ |
-| 関係者       | _TODO_ |
+| 観点         | 影響                                                                                                      |
+| ------------ | --------------------------------------------------------------------------------------------------------- |
+| スコープ     | claude の provider のテンプレート `templates/claude/settings.edit.json` と、その案内（exec-config-guide） |
+| スケジュール | v0.3.0 の公開を止める（判定基準 3・4）                                                                    |
+| コスト       | claude を選んだ利用者の多くの exec が waiting になる                                                      |
+| 品質         | `docs/`・`src/`・`tests/` 以外の成果物（README、ルートのファイル、`app/`・`lib/` など）を編集できない     |
+| 関係者       | claude の provider を使う利用者                                                                           |
 
 ## 3. 対応方針
 
-| 項目     | 内容   |
-| -------- | ------ |
-| 原因     | _TODO_ |
-| 対応策   | _TODO_ |
-| 依存事項 | _TODO_ |
-| 完了条件 | _TODO_ |
+| 項目     | 内容                                                                                                                                   |
+| -------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| 原因     | 書き込みの許可を SpecDojo 本体のディレクトリ構成に合わせた固定の一覧にしている                                                         |
+| 対応策   | 2026-10-09 に利用者が案 A を採用した。リポジトリ全体の編集を許し、保護対象は deny で明示して拒否する。下記の「完了条件の詳細」のとおり |
+| 依存事項 | なし。保護は claude の deny、runner の保護設定の検査、plan から作る commit 対象の制限の 3 重で守る                                     |
+| 完了条件 | 下記の「完了条件の詳細」を満たす                                                                                                       |
+
+### 3.1. 完了条件の詳細
+
+- `templates/claude/settings.edit.json` の `allow` をリポジトリ全体の編集（`Edit(**)`）にする。
+- 同じファイルの `deny` に、`src/exec-agent-protected-config.ts` の保護対象（`PROTECTED_DIRECTORY_PREFIXES` と `PROTECTED_EXACT_PATHS`）に対応する Edit の拒否を列挙する。ルート直下のファイルは他の階層の同名ファイルに当たらない書き方（例: `Edit(./package.json)`）にする。`node_modules/` も含める。
+- unit test で、テンプレートの `deny` が保護対象の定数をすべて網羅していることを確かめる。定数を足したのにテンプレートを直さないと失敗するようにする。
+- `settings.review.json` と `settings.report.json` は変えない。
+- exec-config-guide の claude の権限の説明に、既定の許可の範囲と、保護対象を deny と runner の検査で守ることを書く。
+- CHANGELOG の v0.3.0 の該当する区分に、利用者に見える変更として追記する。
+- 本リポジトリの `.specdojo/claude/settings.edit.json` は保護対象のため変更しない（必要なら人が別に反映する）。
+- `npm run check` が通る。
 
 ## 4. 対応結果
 
@@ -45,4 +56,5 @@ _TODO_: 解決内容、確認結果、再発防止策を記載する。未解決
 
 ## 5. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[specdojo:exec-config-guide]]（exec の設定）
+- [[prj-0001:pjr-p8tk-release-stabilization-criteria]]（公開の判定基準）
