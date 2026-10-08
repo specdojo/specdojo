@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_c882dce3842c4907865871c640a09ab4
+  ts: "2026-10-08T12:38:13Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-P8TK の公開物での実地の確認で観測
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 日本語のタイトルから作る個票のファイル名の topic が意味を失う
+    - field: description
+      from: ""
+      to: "register add で --topic を省き、タイトルが日本語の場合、topic が item や readme のように英字の部分だけから作られる（例: 「支払い方法をどこまで扱うか」→ pjr-55ww-item.md）。公開物での実地の確認（2026-10-08）で観測。日本語のタイトルでの既定の topic の作り方を見直す。"
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: low
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-08"
