@@ -67,12 +67,16 @@ provider、exec、成果物カタログの規模、Dev Container の順に質問
 | `--dry-run`             | 作成・変更予定だけを表示する                        | 書き込む        |
 
 `init` が作る `.specdojo/agent-members.yaml` と `.specdojo/exec-defaults.yaml` は、選択した
-provider だけを含みます。最後にオーケストレーターの起動コマンド、最初の起票、作成ファイルの commit を
-次の一歩として表示します。個別に設定する場合は、以下の `config init`、`config scaffold`、
-`register scaffold` などを利用します。
+provider だけを含みます。親 runner の検証は、対応する `package.json` の npm script が存在する
+ID だけを `pipeline.parent_validations` へ設定し、該当する script がなければこの設定を省略します。
+採用した ID と省略理由は実行時に表示します。最後にオーケストレーターの起動コマンド、最初の起票、
+オーケストレーターを使わない `--executor-by` / `--reporter-by` の実行例、作成ファイルの commit を
+次の一歩として表示します。`run.worktree_base` は `../<リポジトリ名>-worktrees` です。個別に設定する
+場合は、以下の `config init`、`config scaffold`、`register scaffold` などを利用します。
 
 `config init` は、register 単体で始められる `prj-0001` の最小設定を作成し、設定確認、任意の
-provider 設定、登録簿作成の順に次のコマンドを案内します。あわせて、生成物（`generated/` 配下、
+provider 設定、登録簿作成の順に次のコマンドを案内します。`run.worktree_base` は実行した
+リポジトリのディレクトリ名から `../<リポジトリ名>-worktrees` として設定します。あわせて、生成物（`generated/` 配下、
 `.specdojo/doc-index.json`、exec の実行ロック）を除外する行を `.gitignore` へ追記します。既存の行は
 変更せず、足りない行だけを追記するため、何度実行しても結果は変わりません。設定ファイルが既にある
 場合も `.gitignore` の確認だけは行います。追記した行と飛ばした行を表示し、追記があった場合は管理済みの

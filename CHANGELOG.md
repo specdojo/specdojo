@@ -35,7 +35,9 @@ SpecDojo の利用者に影響する変更を記録します。
 
 - 質問に答えるだけで project、register、人の名簿、provider のオーケストレーター設定、agent
   実行設定、任意の成果物カタログと Dev Container を用意する `specdojo init` を追加しました。
-  非対話オプション、既存ファイルの非上書き、`--dry-run` にも対応します（PJR-6QDA）。
+  非対話オプション、既存ファイルの非上書き、`--dry-run` にも対応します。親検証は利用先の
+  `package.json` に対応 script があるものだけを設定し、worktree 既定先はリポジトリ名から作ります
+  （PJR-6QDA）。
 - 1 つの登録簿項目で、プロジェクトリポジトリと N 個のプロダクトリポジトリを変更できるように
   しました。`specdojo.config.json` の project に `repos` を宣言すると、`exec run --worktree` が
   リポジトリごとの worktree を作り、`targets`・`paths` の `<repo>:<path>` を解決し、親検証を

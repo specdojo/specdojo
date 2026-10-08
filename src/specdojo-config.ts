@@ -211,6 +211,11 @@ export function specdojoRootDir(): string {
   return process.cwd();
 }
 
+/** Default worktree directory beside the repository, derived from its directory name. */
+export function defaultWorktreeBase(rootDir: string = specdojoRootDir()): string {
+  return `../${basename(resolve(rootDir))}-worktrees`;
+}
+
 export function loadEnv(): void {
   // Load .env from the repository root if present.
   // Safe if missing.
@@ -745,6 +750,7 @@ export function registerConfigCommands(program: Command): void {
         writeGitignoreForConfig(config, dryRun);
         return;
       }
+      const worktreeBase = defaultWorktreeBase();
       const template: SpecDojoConfig = {
         version: 1,
         current_project: "prj-0001",
@@ -754,7 +760,7 @@ export function registerConfigCommands(program: Command): void {
             project_register_path: "controls/project-register",
             project_context: ["prj-overview"],
             run: {
-              worktree_base: "../app1-worktrees",
+              worktree_base: worktreeBase,
             },
           },
         },
@@ -770,7 +776,7 @@ export function registerConfigCommands(program: Command): void {
       process.stdout.write(
         "Next steps:\n" +
           "  1. Keep this repository beside the product repository as app1-specdojo/.\n" +
-          "  2. Review the project ID and paths; worktrees default to ../app1-worktrees.\n" +
+          `  2. Review the project ID and paths; worktrees default to ${worktreeBase}.\n` +
           "  3. Optional agent setup: npx specdojo config scaffold --provider <name>\n" +
           "  4. Create a register: npx specdojo register scaffold --project prj-0001\n" +
           `  5. Before using catalog or schedule, add the required paths: ${SPECDOJO_CONFIG_REFERENCE_URL}\n` +
