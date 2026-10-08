@@ -420,13 +420,13 @@ agent が exec 実行時に読み込む provider 固有の設定（agent 定義�
 
 配置規則は provider 名から機械的に決まります（`agents/` 配下 → `.<provider>/agents/`、それ以外のファイル → `.specdojo/<provider>/`、`README.md` はコピーしません）。provider ごとの配布内容は次のとおりです。
 
-| provider    | 配布内容                                                                                                                                            | 配置先                                 |
-| ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
-| claude      | `agents/*.md`、`settings.edit.json` / `settings.review.json` / `settings.report.json`                                                               | `.claude/agents/`、`.specdojo/claude/` |
-| codex       | `agents/*.toml`（親 Codex が spawn する subagent 定義）                                                                                             | `.codex/agents/`                       |
-| opencode    | `agents/*.md`（permission frontmatter 込みの agent 定義）                                                                                           | `.opencode/agents/`                    |
-| copilot     | `pm-members-snippet.yaml`（member 定義）と `exec-defaults-snippet.yaml`（`providers.copilot` の command template・rate limit 検出）の参照スニペット | `.specdojo/copilot/`                   |
-| antigravity | `orchestrator.md`、member / provider 設定スニペット。`settings.global.json` は `--global` 用のマージ原本であり repository へは配置しない            | `.specdojo/antigravity/`               |
+| provider    | 配布内容                                                                                                                                              | 配置先                                 |
+| ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
+| claude      | `agents/*.md`、`settings.edit.json` / `settings.review.json` / `settings.report.json`                                                                 | `.claude/agents/`、`.specdojo/claude/` |
+| codex       | `agents/*.toml`（親 Codex が spawn する subagent 定義）                                                                                               | `.codex/agents/`                       |
+| opencode    | `agents/*.md`（permission frontmatter 込みの agent 定義）                                                                                             | `.opencode/agents/`                    |
+| copilot     | `agent-members-snippet.yaml`（agent 定義）と `exec-defaults-snippet.yaml`（`providers.copilot` の command template・rate limit 検出）の参照スニペット | `.specdojo/copilot/`                   |
+| antigravity | `orchestrator.md`、agent / provider 設定スニペット。`settings.global.json` は `--global` 用のマージ原本であり repository へは配置しない               | `.specdojo/antigravity/`               |
 
 導入手順とテンプレートに含めない手動設定（`opencode.json`、`.codex/config.toml` など）は各 `templates/<provider>/README.md` を参照します。
 

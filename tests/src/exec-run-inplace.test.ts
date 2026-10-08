@@ -279,6 +279,52 @@ afterEach(() => {
 });
 
 describe("exec run (in-place, default)", () => {
+  it("reports an agent registry schema error instead of replacing it with nickname not found", async () => {
+    const { repo } = setupRepository();
+    writeFileSync(
+      join(repo, ".specdojo", "agent-members.yaml"),
+      [
+        "version: 1",
+        "members:",
+        `  - nickname: ${FAKE_AGENT_NICKNAME}`,
+        "    display_name: Test Edit Agent",
+        "    roles: [DEV]",
+        "    type: agent",
+        "    provider: custom",
+        "    capabilities: []",
+        "    proficiency: normal",
+        "",
+      ].join("\n"),
+      "utf8",
+    );
+    const stdout: string[] = [];
+    vi.spyOn(process.stdout, "write").mockImplementation((chunk) => {
+      stdout.push(String(chunk));
+      return true;
+    });
+    try {
+      process.chdir(repo);
+      await runExec([
+        "run",
+        "--project",
+        "test",
+        "--task",
+        "T-TEST-doc-010",
+        "--by",
+        FAKE_AGENT_NICKNAME,
+      ]);
+
+      expect(process.exitCode).toBe(1);
+      expect(stdout.join("")).toContain("Schema validation failed:");
+      expect(stdout.join("")).toContain("agent-members.yaml");
+      expect(stdout.join("")).toContain("priority");
+      expect(stdout.join("")).not.toContain("nickname not found");
+    } finally {
+      process.chdir(originalCwd);
+      rmSync(repo, { recursive: true, force: true });
+    }
+  });
+
   it("returns routine skip without creating Job artifacts when the precondition output is empty", async () => {
     const { repo, executionPath } = setupRepository();
     writeFileSync(

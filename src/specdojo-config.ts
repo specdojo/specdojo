@@ -164,7 +164,7 @@ export type ProjectMember = {
 
 export type MemberRoster = {
   version: number;
-  project_id: string;
+  project_id?: string;
   members: ProjectMember[];
 };
 
@@ -457,33 +457,36 @@ export function loadMemberRoster(
   project: SpecDojoProjectConfig,
 ): MemberRoster | null {
   const membersPath = getProjectMembersPath(project);
-  if (!membersPath) return null;
+  let humanRoster: MemberRoster | undefined;
+  let humanFullPath: string | undefined;
+  if (membersPath) {
+    humanFullPath = resolve(baseDir, membersPath);
+    if (!existsSync(humanFullPath)) {
+      throw new Error(`members_path not found: ${humanFullPath}`);
+    }
 
-  const fullPath = resolve(baseDir, membersPath);
-  if (!existsSync(fullPath)) {
-    throw new Error(`members_path not found: ${fullPath}`);
-  }
+    const parsed = readYamlFile(humanFullPath) as MemberRoster;
+    if (!parsed || !Array.isArray(parsed.members)) {
+      throw new Error(`Invalid members file: ${humanFullPath} (expected { members: [...] })`);
+    }
 
-  const parsed = readYamlFile(fullPath) as MemberRoster;
-  if (!parsed || !Array.isArray(parsed.members)) {
-    throw new Error(`Invalid members file: ${fullPath} (expected { members: [...] })`);
+    const legacyAgent = parsed.members.find((member) => member?.type === "agent");
+    if (legacyAgent) {
+      throw new Error(
+        `Invalid members file: ${humanFullPath}: agent '${legacyAgent.nickname ?? "<unknown>"}' ` +
+          `must be moved to ${resolve(baseDir, configuredAgentMembersPath(baseDir))}. ` +
+          `Run: specdojo config migrate-members --dry-run`,
+      );
+    }
+    validateMemberFile("pm-members.schema.yaml", humanFullPath, parsed);
+    humanRoster = parsed;
   }
-
-  const legacyAgent = parsed.members.find((member) => member?.type === "agent");
-  if (legacyAgent) {
-    throw new Error(
-      `Invalid members file: ${fullPath}: agent '${legacyAgent.nickname ?? "<unknown>"}' ` +
-        `must be moved to ${resolve(baseDir, configuredAgentMembersPath(baseDir))}. ` +
-        `Run: specdojo config migrate-members --dry-run`,
-    );
-  }
-  validateMemberFile("pm-members.schema.yaml", fullPath, parsed);
 
   const agentMembersPath = configuredAgentMembersPath(baseDir);
   const agentFullPath = resolve(baseDir, agentMembersPath);
-  let agents: ProjectMember[] = [];
+  let agentRoster: AgentMemberRoster | undefined;
   if (existsSync(agentFullPath)) {
-    const agentRoster = readYamlFile(agentFullPath) as AgentMemberRoster;
+    agentRoster = readYamlFile(agentFullPath) as AgentMemberRoster;
     if (!agentRoster || !Array.isArray(agentRoster.members)) {
       throw new Error(`Invalid agent members file: ${agentFullPath} (expected { members: [...] })`);
     }
@@ -494,20 +497,28 @@ export function loadMemberRoster(
       );
     }
     validateMemberFile("agent-members.schema.yaml", agentFullPath, agentRoster);
-    agents = agentRoster.members;
   }
 
-  const seen = new Set<string>();
-  for (const member of [...parsed.members, ...agents]) {
-    if (seen.has(member.nickname)) {
+  if (!humanRoster && !agentRoster) return null;
+
+  const membersWithSources = [
+    ...(humanRoster?.members.map((member) => ({ member, source: humanFullPath as string })) ?? []),
+    ...(agentRoster?.members.map((member) => ({ member, source: agentFullPath })) ?? []),
+  ];
+  const seen = new Map<string, string>();
+  for (const { member, source } of membersWithSources) {
+    const previousSource = seen.get(member.nickname);
+    if (previousSource) {
       throw new Error(
-        `Duplicate member nickname '${member.nickname}' across ${fullPath} and ${agentFullPath}`,
+        `Duplicate member nickname '${member.nickname}' across ${previousSource} and ${source}`,
       );
     }
-    seen.add(member.nickname);
+    seen.set(member.nickname, source);
   }
 
-  return { ...parsed, members: [...parsed.members, ...agents] };
+  const members = membersWithSources.map(({ member }) => member);
+  if (humanRoster) return { ...humanRoster, members };
+  return { version: agentRoster?.version ?? 1, members };
 }
 
 const Ajv2020 = Ajv2020Module.default;

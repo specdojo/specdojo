@@ -50,7 +50,10 @@ specdojo:
 
 ## 4. 対応結果
 
--
+- `loadMemberRoster` が人間名簿と agent 名簿を独立に読み込み、project に `members_path` がなくても `.specdojo/agent-members.yaml`（または `agent_members_path`）から agent だけの名簿を返すようにした。両方の名簿がない場合は従来どおり `null` を返す。
+- `loadRosterForExecutionPath` が名簿読み込み時の例外を握りつぶさないようにし、`exec run`・`agent run`・schedule・grade など同じ読み込み経路を使う処理へ、ファイル不在・YAML/schema 違反・nickname 重複の原因がそのまま伝わるようにした。
+- copilot と antigravity の `pm-members-snippet.yaml` を `agent-members-snippet.yaml` へ改名し、provider README、Codex README、exec 設定ガイド、`config scaffold` の完了表示を `.specdojo/agent-members.yaml` へ agent 定義を置く案内に統一した。antigravity のスニペットには agent schema の必須フィールドも補った。
+- unit test に、`members_path` のない project で agent を読み込むケース、両名簿がない従来ケース、`exec run` が schema 違反を nickname 未検出へ置き換えないケース、scaffold の改名後の配置先と表示を追加した。
 
 ## 5. 関連ドキュメント
 

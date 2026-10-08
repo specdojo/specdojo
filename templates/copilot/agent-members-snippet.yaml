@@ -1,10 +1,12 @@
-# GitHub Copilot CLI member 定義のスニペット。
-# 利用プロジェクトの pm-members.yaml の members へコピーして使う。
+# GitHub Copilot CLI agent 定義のスニペット。
+# members の要素をリポジトリ共通の .specdojo/agent-members.yaml へコピーして使う。
+# project ごとの pm-members.yaml は人間専用なので、agent は記載しない。
 # 起動コマンドは member には書かず、.specdojo/exec-defaults.yaml の
 # providers.copilot.command_template で定義する（exec-defaults-snippet.yaml を参照）。
 # 設計の背景は exec-config-guide.md の
 # 「agent 権限とプロンプトインジェクション対策」を参照。
 
+version: 1
 members:
   - nickname: copilot-edit-agent
     disabled: true

@@ -15,7 +15,7 @@ specdojo:
 
 | パス                         | 利用プロジェクトでの配置先 | 説明                                                                                                              |
 | ---------------------------- | -------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| `pm-members-snippet.yaml`    | `.specdojo/copilot/`       | member 定義のスニペット。`pm-members.yaml` へコピーして使う参照用                                                 |
+| `agent-members-snippet.yaml` | `.specdojo/copilot/`       | agent 定義のスニペット。`.specdojo/agent-members.yaml` へ統合して使う参照用                                       |
 | `exec-defaults-snippet.yaml` | `.specdojo/copilot/`       | `providers.copilot`（command template・rate limit 検出）のスニペット。`exec-defaults.yaml` へコピーして使う参照用 |
 
 ## 3. 導入手順
@@ -23,13 +23,13 @@ specdojo:
 利用プロジェクトのルートで scaffold コマンドを実行します。
 
 ```sh
-specdojo exec scaffold --provider copilot
+specdojo config scaffold --provider copilot
 ```
 
 コピー後に次を行います。
 
 1. `.specdojo/copilot/exec-defaults-snippet.yaml` の `providers.copilot` を `.specdojo/exec-defaults.yaml` の `providers` へコピーする。
-2. `.specdojo/copilot/pm-members-snippet.yaml` の member 定義を `pm-members.yaml` の `members` へコピーし、使う場合は `disabled: false` にする。
+2. `.specdojo/copilot/agent-members-snippet.yaml` の member 定義をリポジトリ共通の `.specdojo/agent-members.yaml` の `members` へコピーし、使う場合は `disabled: false` にする。agent は project ごとの `pm-members.yaml` へ書かない。
 3. `copilot login` で認証する（premium request の課金が発生する）。
 4. 最初のタスクで permission ログを確認し、`shell(...)` パターンのマッチ粒度が不足していれば `--allow-tool` を追記する。
 

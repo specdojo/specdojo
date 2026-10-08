@@ -4,11 +4,12 @@ specdojo:
   type: exec-result
   task_id: PJR-WZYW
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: exec/plans/pjr-wzyw-20261008T125231Z-b2ce-plan.md
   started_at: "2026-10-08T12:52:31.326Z"
+  completed_at: "2026-10-08T13:03:58.931Z"
   agent: codex-expert-executor
 ---
 
@@ -16,16 +17,34 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- `members_path` が設定されていない `project` でも agent 名簿を読み込めるように、`src/specdojo-config.ts` を修正しました。
+- `exec run` 時の読み込みエラーについて、原因が利用者に伝わるよう `src/exec-run.ts` を修正しました。
+- テンプレートの更新に伴い、`templates/antigravity/` および `templates/copilot/` 内の `pm-members-snippet.yaml` を削除し、新たに `agent-members-snippet.yaml` を追加しました。
+- 関連する各種 README（`templates/antigravity/`, `templates/codex/`, `templates/copilot/`）の内容を更新しました。
+- 設定変更に伴い、`src/exec-provider-scaffold.ts` および関連するテストコードを更新しました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/guides/exec-config-guide.md`: `exec-config-guide.md` の更新
+- `src/exec-provider-scaffold.ts`: `src/exec-provider-scaffold.ts` の更新
+- `src/exec-run.ts`: `src/exec-run.ts` の更新
+- `src/specdojo-config.ts`: `src/specdojo-config.ts` の更新
+- `templates/antigravity/README.md`: `templates/antigravity/README.md` の更新
+- `templates/antigravity/pm-members-snippet.yaml`: reporter の説明がないため、変更差分を参照。
+- `templates/codex/README.md`: `templates/codex/README.md` の更新
+- `templates/copilot/README.md`: `templates/copilot/README.md` の更新
+- `templates/copilot/pm-members-snippet.yaml`: reporter の説明がないため、変更差分を参照。
+- `tests/src/exec-provider-scaffold.test.ts`: `tests/src/exec-provider-scaffold.test.ts` の更新
+- `tests/src/exec-run-inplace.test.ts`: `tests/src/exec-run-inplace.test.ts` の更新
+- `tests/src/specdojo-config-command.test.ts`: `tests/src/specdojo-config-command.test.ts` の更新
+- `tests/src/specdojo-config.test.ts`: `tests/src/specdojo-config.test[]` の更新
+- `templates/antigravity/agent-members-snippet.yaml`: reporter の説明がないため、変更差分を参照。
+- `templates/copilot/agent-members-snippet.yaml`: reporter の説明がないため、変更差分を参照。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 作業は完了しました。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`fully-guided` で rulebook / recipe / sample / template をどう使い分けたか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+1. `project` の `members_path` が欠損していても agent 名簿をロードできるよう `src/specdojo-config.ts` を改修。2. `exec run` 時のエラーメッセージを詳細化するため `src/exec-run.ts` を改修。3. テンプレート群における agent 名簿定義の推奨方式の変更（`pm-members-snippet.yaml` から `agent-members-snippet.yaml` へ）に伴うファイルの入れ替えと README の更新を実施。
