@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: high
   owner: DEV
   registered_at: "2026-10-08T14:21:59Z"
@@ -53,7 +53,10 @@ specdojo:
 
 ## 4. 対応結果
 
--
+- `xep-common-conventions-template.md` の検査規約に、依存パッケージ、npm script、project 設定、SpecDojo CLI の起動可否による適用条件を追加した。
+- Markdown lint は `markdownlint-cli` / `markdownlint` / `markdownlint-cli2` が対象リポジトリに導入されている場合だけ実行し、未導入の検査を `not_run` として validations に記録しないよう定めた。
+- `catalog validate` / `catalog build` は対象 project に `catalog_path` が設定されている場合だけ実行するよう定めた。register / schedule に関する検査と npm script による検査にも、それぞれ対応する設定の存在条件を追加した。
+- `catalog_path` がない project の生成 plan に、catalog 検査の適用条件と、非適用の検査を validations へ記録しない指示が含まれることを unit test に追加した。
 
 ## 5. 関連ドキュメント
 
