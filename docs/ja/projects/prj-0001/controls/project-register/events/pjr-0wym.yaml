@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_2ad311c96f4b4986bbec934c90027ba9
+  ts: "2026-10-08T03:45:20Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-QGP4 の決定の反映
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: README と概要の呼び方を仕様道（Spec-Dō）に改める
+    - field: description
+      from: ""
+      to: PJR-QGP4 の決定に従い、README・docs サイトのトップ・概要ガイド・package.json の説明の冒頭の文を「仕様道（Spec-Dō）の道場」に改め、標語と比喩の対応を載せる。仕様駆動開発とは名乗らず、関係として触れる。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-08"
