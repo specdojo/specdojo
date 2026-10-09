@@ -1,0 +1,12 @@
+対応完了しました。
+
+- v0.3.0 の grade を「部品のみ・試験的」と明記。
+- [CLI コマンドリファレンス](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-DJFT/docs/ja/specdojo/references/command-reference.md:646)へ1文書の最小評価手順を追加。
+- README、Quick Start、各ガイド、CHANGELOG、個票を更新。
+- `package.json` と `tools/grade/run-per-document.sh` は未変更。
+- `npm pack --dry-run` でスクリプトが公開物に含まれないことを確認。
+- 親 runner 管轄の検証は指示どおり実行していません。
+
+<specdojo_executor_evidence>
+{"final_message":"v0.3.0のgradeを部品のみの試験機能として文書化し、公開package向けの1文書評価手順を追加しました。","validations":[{"command":"npx prettier --write README.md CHANGELOG.md docs/ja/specdojo/references/command-reference.md docs/ja/specdojo/guides/routine-operation-guide.md docs/ja/specdojo/guides/review-guide.md docs/ja/specdojo/guides/quick-start-guide.md docs/ja/specdojo/standards/job-definition-standard.md docs/ja/projects/prj-0001/controls/project-register/pjr-djft-grade-run-per-document-sh.md","status":"passed","summary":"変更したMarkdownはすべて整形済みです。"},{"command":"npm pack --dry-run --ignore-scripts --json --cache \"$npm_cache_dir\"","status":"passed","summary":"package対象462ファイルを確認し、更新した案内文書は含まれ、tools/grade/run-per-document.shは含まれませんでした。"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿生成に成功しました。"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"カタログ検証に成功しました。既存の参照先文書不在に関する警告のみです。"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"文書索引2506件を生成しました。"},{"command":"npm run validate:history-links","status":"passed","summary":"履歴リンク検証に成功しました。"},{"command":"git diff --check","status":"passed","summary":"差分に空白エラーはありません。"}]}
+</specdojo_executor_evidence>

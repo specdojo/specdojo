@@ -186,7 +186,7 @@ npx specdojo register build --project prj-0001
 
 - 型と実戦: 設計書を増やしたくなったら、成果物カタログ（`dct-<domain>.yaml`）で作る成果物を宣言し、型に沿って作ります。手順は以降の `CLIを初期設定する` と `成果物カタログからscheduleへ展開する` を参照してください。
 - 実戦（exec）: 起票した todo や issue を AI に実行させるには、[exec設定ガイド](exec-config-guide.md) で agent を設定し、`npx specdojo exec run --project prj-0001 --register PJR-XXXX` を実行します。
-- 評定（grade）と講評（review）: 成果物の品質評価と完了判断は [レビューガイド](review-guide.md) を参照してください。
+- 評定（grade）と講評（review）: 成果物の品質評価と完了判断は [レビューガイド](review-guide.md) を参照してください。v0.3.0 の grade は試験的で、npm package では `grade list` / `plan` / `apply` / `validate` / `result` などの部品を利用できます。通しの実行に使う本体リポジトリの開発用 `tools/grade/run-per-document.sh` は package に含まれず、成果物の grade には project の `catalog_path` が必要です。
 - 記帳の種別と状態遷移は [登録簿運用ガイド](register-operation-guide.md) を参照してください。
 
 ## 2. CLIを初期設定する
@@ -504,7 +504,7 @@ members:
 
 </details>
 
-先に `sch-strategy-launch.yaml` の `approach_rules` へ成果物ごとの intent を宣言し、必要な Kata を `specdojo grade` で評価します。次のコマンドで strategy の差分を確認して生成します。`<role>` は `pm-roles.yaml` に定義された主担当ロールへ置き換えてください。
+先に `sch-strategy-launch.yaml` の `approach_rules` へ成果物ごとの intent を宣言し、必要な Kata を `specdojo grade` で評価します。v0.3.0 の npm package では grade の通しの実行は提供せず、試験的な `grade plan` / `agent run` / `grade apply` などの部品を組み合わせます。1 文書の手順は [CLI コマンドリファレンス](../references/command-reference.md#81-npm-package-で-1-文書を評価する)を参照してください。次のコマンドで strategy の差分を確認して生成します。`<role>` は `pm-roles.yaml` に定義された主担当ロールへ置き換えてください。
 
 ```bash
 npx specdojo schedule strategy generate --project <project-id> --track launch \
@@ -609,7 +609,7 @@ npx specdojo exec refresh --project <project-id>
 
 成果物の変更は作業ツリーに、実行結果は `<execution_path>/exec/results/` に記録されます。agent による自動実行や並列実行へ進む場合は、[exec設定ガイド](exec-config-guide.md) で設定してから [Schedule実行運用ガイド](schedule-operation-guide.md) を参照してください。
 
-`mode: review` のタスクを実行すると、runner は review plan の生成前に対象成果物を grade します。grade は成果物の品質を観点ごとに評価し、review はその評価結果を付け直さず、変更内容・実行記録・`done_criteria` を照合してタスクの完了可否を判断します。review result の verdict と finding の読み方、成果物を `ready` にする human finalize との境界は [レビューガイド](review-guide.md) を参照してください。
+`mode: review` のタスクを実行すると、runner は review plan の生成前に対象成果物を grade します。ただし、この自動 grade は npm package に含まれない本体リポジトリ開発用の `tools/grade/run-per-document.sh` を使うため、v0.3.0 の公開物では実行されません。公開物では、`catalog_path` を設定したうえで grade の部品を使って成果物を事前評価します。grade は成果物の品質を観点ごとに評価し、review はその評価結果を付け直さず、変更内容・実行記録・`done_criteria` を照合してタスクの完了可否を判断します。review result の verdict と finding の読み方、成果物を `ready` にする human finalize との境界は [レビューガイド](review-guide.md) を参照してください。
 
 agent に review を実行させる場合は、`exec run --plan` で executor と reporter を指定して 2 段で実行します。
 

@@ -109,6 +109,8 @@ Job Definition Standard
 
 ## 5. 記述例
 
+次の grade Job は SpecDojo 本体リポジトリを保守するための例です。`tools/grade/run-per-document.sh` は本体リポジトリの開発用で npm package には含まれません。v0.3.0 の公開物における grade は試験的で、利用者は `grade list` / `plan` / `apply` / `validate` / `result` などの部品を組み合わせます。成果物の grade には project の `catalog_path` が必要です。
+
 ```yaml
 task:
   mode: command

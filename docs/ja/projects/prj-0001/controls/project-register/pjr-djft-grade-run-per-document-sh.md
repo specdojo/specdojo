@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: high
   owner: DEV
   registered_at: "2026-10-09T03:55:04Z"
@@ -51,7 +51,11 @@ specdojo:
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- 案 A に従い、v0.3.0 の grade は部品のみを提供する試験的機能であることを README、Quick Start、review / routine guide、CLI コマンドリファレンス、Job 定義標準、CHANGELOG に明記した。
+- `tools/grade/run-per-document.sh` は SpecDojo 本体リポジトリの開発用で npm package に含まれないこと、公開物では `grade list` / `plan` / `apply` / `validate` / `result` などを利用できること、成果物の grade には project の `catalog_path` が必要なことを案内した。
+- CLI コマンドリファレンスに、`grade plan` で 1 文書の executor plan を生成し、`agent run` で marker を保存し、`grade apply --analysis-from` で反映する最小手順を追加した。オプションは `src/agent.ts` と `src/grade.ts` のコマンド定義に照合した。
+- npm package の dry-run で、更新した利用者向け文書が package に含まれ、`tools/grade/run-per-document.sh` は含まれないことを確認した。Markdown の Prettier 整形、登録簿生成、カタログ検証、文書索引生成、履歴リンク検証も完了した。
+- 再発防止として、npm package の入口である README と v0.3.0 の CHANGELOG、grade の正本説明である CLI コマンドリファレンスのすべてに公開境界を残した。`tools/grade/run-per-document.sh` と `package.json` の `files` は変更していない。
 
 ## 5. 関連ドキュメント
 
