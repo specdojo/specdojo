@@ -547,16 +547,17 @@ export function recordExecutorEvidence(input: RecordExecutorEvidenceInput): {
       runnerManagedPrefixes.every((prefix) => !change.path.startsWith(prefix)),
   );
   const changesBeforeEvidence = repoChanges.map(({ path, status }) => ({ path, status }));
-  const attemptChanges =
-    input.changesBeforeAttempt && input.status === "rate_limited"
-      ? repoChanges
-          .filter(
-            (change) =>
-              input.changesBeforeAttempt?.get(change.path) !==
-              changeFingerprint(change.root, change.local),
-          )
-          .map(({ path, status }) => ({ path, status }))
-      : undefined;
+  // The attempt delta is needed both for interrupted-run target coverage and for telling the
+  // reporter which filtered runner-owned records the executor itself changed on a successful run.
+  const attemptChanges = input.changesBeforeAttempt
+    ? repoChanges
+        .filter(
+          (change) =>
+            input.changesBeforeAttempt?.get(change.path) !==
+            changeFingerprint(change.root, change.local),
+        )
+        .map(({ path, status }) => ({ path, status }))
+    : undefined;
   const diffStat = [
     gitOutput(input.worktreePath, ["diff", "--stat", "HEAD", "--"]).trimEnd(),
     productDiffStat(productWorktrees),
