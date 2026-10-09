@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f1a3f3da68194c8c92069bbd8dd8de4b
+  ts: "2026-10-09T19:58:13Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: exec と同様に orchestrator からもプロダクトリポジトリを扱えるようにするため起票
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: orchestrator の起動に宣言済みのプロダクトリポジトリへのアクセスを付ける
+    - field: description
+      from: ""
+      to: orch:* の起動コマンドは repos を読まないため、orchestrator から app1/ を参照・変更できない。exec と同じく宣言済みのリポジトリだけを provider ごとの方法で許可する。
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-10-10"
+    - field: due
+      from: ""
+      to: "2026-10-31"
