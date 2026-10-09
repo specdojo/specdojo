@@ -88,6 +88,10 @@ npm package から利用する場合は、起動前に provider の設定と npm
 npx specdojo config scaffold --provider <name>
 ```
 
+scaffold が追加する `orch:*` は `specdojo orchestrator launch` を経由します。起動時に対象 project の `repos` を解決し、宣言済みのプロダクトリポジトリ本体だけを provider の追加ルートとして許可します。`repos` が無い場合の provider コマンドは従来どおりです。npm script に追加引数を渡す場合は `npm run orch:<name> -- <引数>` とし、その引数は provider CLI へそのまま渡されます。
+
+OpenCode は起動引数に追加ルートの指定を持たないため、選択した orchestrator agent の `permission.external_directory` を実行時の inline config で上書きします。全外部ディレクトリを拒否してから宣言済みルートだけを許可し、同じルートの `permission.edit` も許可します。設定ファイル自体は変更しません。
+
 Antigravity CLI の無人実行に必要な permission rule は、利用者のすべてのリポジトリに効くグローバル設定です。通常の scaffold では変更されないため、明示的に dry-run で追加 rule を確認してから適用します。既存設定は保持され、実適用前にバックアップされます。
 
 ```bash

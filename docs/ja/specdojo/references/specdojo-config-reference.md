@@ -161,6 +161,8 @@ agent の起動コマンドには、provider ごとにプロダクト worktree �
 | `copilot`     | `--add-dir <path>`（リポジトリの数だけ）                         | 書き込みはテンプレートの `--allow-tool write` に従う                                                                  |
 | `opencode`    | なし                                                             | 作業ディレクトリ外は agent 定義の `permission.external_directory` で拒否される。許可には agent 定義の変更が必要になる |
 
+対話型オーケストレーターは `specdojo orchestrator launch` が同じ `repos` を読み、プロダクトリポジトリ本体のルートを許可します。Claude Code、Codex、Antigravity、GitHub Copilot は上表と同じ引数規則です。OpenCode は起動時の inline config で、選択 agent の `permission.external_directory` を「全拒否、宣言済みルートだけ許可」に差し替え、宣言済みルートの `permission.edit` も許可します。この設定はオーケストレーターのプロセスだけに適用され、agent 定義や利用者の設定ファイルは書き換えません。`repos` を省略した project では追加の引数・設定を渡しません。
+
 agent 実行の前後で行う保護設定（`package.json`、CI 設定など）と Git 状態（HEAD・ローカル設定）の検査は、プロダクト worktree にも同じ一覧で行います。evidence の変更ファイルは、プロダクト側を `<name>:<path>` で記録します。
 
 プロダクトリポジトリの変更は、`exec run --worktree` の統合段で runner がリポジトリごとに commit し、宣言順のプロダクト、最後にプロジェクトの順で統合します。統合の順序、失敗時の部分状態、再開は [[specdojo:docs-structure-guide|ドキュメント構成ガイド]] の「複数リポジトリの worktree と統合順序」と「複数リポジトリの統合の失敗と再開」を参照してください。`exec worktree commit` はプロダクト側を統合しないため、プロダクト worktree に未 commit の変更か exec branch の commit が残るタスクは、プロジェクト側の commit の前に停止します。撤去は、全リポジトリの worktree が撤去できることを確かめてからまとめて行います。

@@ -507,8 +507,8 @@ function shellQuote(value: string): string {
 
 /**
  * Provider arguments that add the product worktrees as extra roots with write access. The agent
- * keeps the project worktree as cwd. Returns [] for providers without a launch flag (opencode
- * restricts external directories in the agent definition, which the runner cannot change).
+ * keeps the project worktree as cwd. Returns [] for providers without a launch flag. OpenCode's
+ * orchestrator entry injects `permission.external_directory` through its runtime config instead.
  */
 export function agentExtraRootArguments(
   provider: AgentProvider | undefined,

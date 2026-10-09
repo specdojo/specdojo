@@ -95,6 +95,8 @@ specdojo サブコマンドと引数へマッピング（必要なら --help で
 
 `specdojo-orchestrator` は各 CLI の agent 選択機構で起動する。設定ファイルの配置は `設定ファイル構成` のとおりで、非対話起動の具体的なフラグは共通設定の各子設計（[Claude Code エージェント設定](sysd-claude-agent-settings.md) / [Codex エージェント設定](sysd-codex-agent-settings.md) / [GitHub Copilot エージェント設定](sysd-github-copilot-agent-settings.md) / [OpenCode エージェント設定（Ollama）](sysd-opencode-agent-settings.md)）に従う。edit / review agent と異なり、本エージェントは対話セッションで使うことを主用途とする。
 
+利用リポジトリへ `config scaffold` が追加する npm script は `specdojo orchestrator launch` を入口とする。入口は対象 project を共通の解決順序で選び、`repos` に宣言したプロダクトリポジトリ本体だけを provider の許可対象へ加えてから CLI を起動する。Claude Code、Codex、Antigravity、GitHub Copilot の引数規則は exec の追加ルートと共通化する。OpenCode は選択 agent の `permission.external_directory` を起動時の inline config で「全拒否、宣言済みルートだけ許可」にし、同じルートの `permission.edit` も許可する。永続設定や agent 定義は変更しない。
+
 ### 6.1. npm スクリプト
 
 `package.json` に対話起動用の npm スクリプトを `orch:` 接頭辞で用意する。Claude / Codex はモデル別に用意し、`:work` 付きは固定 worktree で起動する。

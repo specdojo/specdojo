@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: high
   owner: ARC
   registered_at: "2026-10-09T19:58:13Z"
@@ -62,7 +62,12 @@ orch:* の起動コマンドは repos を読まないため、orchestrator か�
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- `specdojo orchestrator launch` を追加し、`--project`、`SPECDOJO_PROJECT`、`current_project`、`projects` の先頭の順で対象 project を解決するようにした。対象 project の `repos[].path` だけを絶対パスへ解決し、Claude Code、Codex、Antigravity、GitHub Copilot には exec と共通の `agentExtraRootArguments` で許可を追加する。
+- OpenCode は公式の `OPENCODE_CONFIG_CONTENT` を使い、選択した orchestrator agent の `permission.external_directory` を「全拒否、宣言済みルートだけ許可」にし、同じルートの `permission.edit` も許可して起動する。既存 inline config の他項目と永続設定は変更しない。
+- `config scaffold` が追加する全 provider の `orch:*` を新しい入口へ切り替えた。コマンドには絶対パスを埋め込まず、`--` 以降の利用者引数を provider CLI へそのまま渡す。`repos` が無い場合は provider に渡すコマンドと引数を変更しない。
+- unit test に provider ごとの起動コマンド、追加引数、OpenCode の許可、`repos` が無い場合、project 解決順、未宣言ルートを含めないことを追加した。
+- [[specdojo:command-reference|CLIコマンドリファレンス]]、[[specdojo:specdojo-config-reference|SpecDojo設定リファレンス]]、[[specdojo:docs-structure-guide|ドキュメント構成ガイド]]、オーケストレーター運用ガイド、システム設計、CHANGELOG を更新した。
+- 再発防止として、scaffold の生成コマンドと provider 別の許可 plan を unit test で固定した。保護設定の `package.json` と orchestrator 本文・ラッパーは変更していない。
 
 ## 5. 関連ドキュメント
 

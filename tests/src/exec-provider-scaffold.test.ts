@@ -523,9 +523,11 @@ describe("runProviderScaffold", () => {
       }
 
       const pkg = JSON.parse(await readFile(path.join(repoRoot, "package.json"), "utf8"));
-      expect(pkg.scripts["orch:opus"]).toBe("claude --agent specdojo-orchestrator --model opus");
+      expect(pkg.scripts["orch:opus"]).toBe(
+        "specdojo orchestrator launch --provider claude -- --agent specdojo-orchestrator --model opus",
+      );
       expect(pkg.scripts["orch:sonnet"]).toBe(
-        "claude --agent specdojo-orchestrator --model sonnet",
+        "specdojo orchestrator launch --provider claude -- --agent specdojo-orchestrator --model sonnet",
       );
       expect(pkg.scripts.test).toBe("echo test");
     } finally {
@@ -560,7 +562,7 @@ describe("runProviderScaffold", () => {
         // 利用者が書き換えたスクリプトは、テンプレートを配置し直すときも保つ。
         expect(pkgForced.scripts["orch:opus"]).toBe("custom");
         expect(pkgForced.scripts["orch:sonnet"]).toBe(
-          "claude --agent specdojo-orchestrator --model sonnet",
+          "specdojo orchestrator launch --provider claude -- --agent specdojo-orchestrator --model sonnet",
         );
       } finally {
         vi.restoreAllMocks();
@@ -612,7 +614,7 @@ describe("runProviderScaffold", () => {
       const content = await readFile(path.join(repoRoot, "package.json"), "utf8");
       expect(content).toMatch(/^\{\n {4}"name"/);
       expect(JSON.parse(content).scripts["orch:opus"]).toBe(
-        "claude --agent specdojo-orchestrator --model opus",
+        "specdojo orchestrator launch --provider claude -- --agent specdojo-orchestrator --model opus",
       );
     } finally {
       await rm(dir, { recursive: true, force: true });
