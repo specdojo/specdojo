@@ -149,11 +149,13 @@ import {
   type JobRunRecord,
 } from "./job.js";
 import {
+  appendGitFailureLog,
   findExecWorktree,
   gitEnvironment,
   gitOutput,
   gitResult,
   resolveWorktreeBase,
+  summarizeGitHookFailure,
   worktreeNameFromTaskId,
   type ExecWorktree,
   type ProductWorktree,
@@ -1938,6 +1940,17 @@ async function prepareSingleTask(
     resultPath,
     claimEventPath,
   ];
+  const checkpointFailureLogPath = pipelineRunId
+    ? integrateLogPath(
+        pipelineStateLocation({
+          repoRoot,
+          worktreePath: repoRoot,
+          executionPath,
+          taskId: task.id,
+          runId: pipelineRunId,
+        }).path,
+      )
+    : undefined;
   let worktree: ExecWorktree;
   try {
     worktree = checkpointAndEnsureWorktree({
@@ -1947,6 +1960,7 @@ async function prepareSingleTask(
       checkpointPaths,
       commitMessage: `exec(${task.id}): prepare execution`,
       products,
+      failureLogPath: checkpointFailureLogPath,
     });
   } catch (error) {
     // We claimed this task in this call (skipClaim is false); the checkpoint failed, so release the
@@ -2522,12 +2536,14 @@ async function runPreparedTask(
               message: mergeMessage,
               targets: taskTargetsAtHead(context, prepared.worktree, prepared.task.id),
               scopeLogPath: integrateLogPath(pipelineStatePath),
+              failureLogPath: integrateLogPath(pipelineStatePath),
             });
             commitWorktreeChanges({
               context,
               worktree: prepared.worktree,
               taskId: prepared.task.id,
               scopeLogPath: integrateLogPath(pipelineStatePath),
+              failureLogPath: integrateLogPath(pipelineStatePath),
               productsIntegratedByCaller: true,
             });
           } catch (error) {
@@ -2567,6 +2583,7 @@ async function runPreparedTask(
                 context,
                 worktree: prepared.worktree,
                 taskId: prepared.task.id,
+                failureLogPath: integrateLogPath(pipelineStatePath),
                 productsIntegratedByCaller: true,
               });
             },
@@ -4662,6 +4679,7 @@ async function runAgentPipeline(params: {
   resumeHandoff?: readonly string[];
   providerConcurrencyGate?: ProviderConcurrencyGate;
   productWorktrees?: readonly ProductWorktree[];
+  runId?: string;
 }): Promise<{
   exitCode: 0 | 1;
   runResult: RunResult;
@@ -4682,7 +4700,7 @@ async function runAgentPipeline(params: {
     execDefaults,
   } = params;
   const startedAt = new Date().toISOString();
-  const runId = `${new Date().toISOString().replace(/[-:.]/g, "")}-${randomHex(4)}`;
+  const runId = params.runId ?? `${new Date().toISOString().replace(/[-:.]/g, "")}-${randomHex(4)}`;
   const stateLocation = pipelineStateLocation({
     repoRoot,
     worktreePath: cwd,
@@ -5204,6 +5222,7 @@ function commitRegisterState(
   message: string,
   ticketPath?: string | null,
   additionalPaths: readonly string[] = [],
+  failureLogPath?: string,
 ): void {
   const paths = [
     ...new Set([
@@ -5218,8 +5237,23 @@ function commitRegisterState(
     const staged = gitResult(repoRoot, ["diff", "--cached", "--quiet", "--", ...paths]);
     if (staged.status === 0) return;
     if (staged.status !== 1) throw new Error("Failed to inspect staged register-state changes.");
-    gitOutput(repoRoot, ["commit", "-m", message, "--", ...paths]);
-    stabilizeCommitTargets(repoRoot, remainingPaths);
+    const commit = gitResult(repoRoot, ["commit", "-m", message, "--", ...paths]);
+    if (commit.status !== 0) {
+      const output = [commit.stdout, commit.stderr]
+        .filter((part): part is string => typeof part === "string" && part.length > 0)
+        .join("\n");
+      appendGitFailureLog(failureLogPath, [
+        `=== ${new Date().toISOString()} git commit register state ===`,
+        `exit: ${commit.status ?? "unknown"}`,
+        "--- stdout ---",
+        typeof commit.stdout === "string" ? commit.stdout : "",
+        "--- stderr ---",
+        typeof commit.stderr === "string" ? commit.stderr : "",
+        "",
+      ]);
+      throw new Error(`git commit failed: ${summarizeGitHookFailure(output)}`);
+    }
+    stabilizeCommitTargets(repoRoot, remainingPaths, undefined, failureLogPath);
   } catch (error) {
     unstageCommitTargets(repoRoot, [...paths, ...remainingPaths()]);
     throw error;
@@ -5753,6 +5787,7 @@ async function finalizeRegisterWorktreeRun(params: {
           message: productMessage,
           targets: taskTargetsAtHead(wtContext, worktree, stem),
           scopeLogPath: integrateLogPath(params.pipelineStatePath),
+          failureLogPath: integrateLogPath(params.pipelineStatePath),
         });
         commitWorktreeChanges({
           context: wtContext,
@@ -5760,6 +5795,7 @@ async function finalizeRegisterWorktreeRun(params: {
           taskId: stem,
           message: subject,
           scopeLogPath: integrateLogPath(params.pipelineStatePath),
+          failureLogPath: integrateLogPath(params.pipelineStatePath),
           productsIntegratedByCaller: true,
         });
       } catch (error) {
@@ -5840,6 +5876,7 @@ async function finalizeRegisterWorktreeRun(params: {
             `exec(register ${item.id}): review`,
             worktreeTicketPath,
             [...(params.pipelineStatePath ? [params.pipelineStatePath] : []), ...tracePaths],
+            integrateLogPath(params.pipelineStatePath),
           );
         },
         mergeProject: () =>
@@ -5972,6 +6009,9 @@ async function runSingleRegisterItemWorktree(
     context.roster?.members.find((m) => m.nickname === actor && m.type === "agent")?.provider;
   const stem = buildInPlaceStem(pjrId.toLowerCase());
   const worktreeTaskId = qualifyTaskId(projectId, item.id);
+  const pipelineRunId = pipelineAgents
+    ? `${new Date().toISOString().replace(/[-:.]/g, "")}-${randomHex(4)}`
+    : undefined;
   // PJR-98G4: repos を宣言した project では、プロダクトの worktree も同じタスクの下に作る。
   const products = configuredProductRepos(schedulePath);
 
@@ -6043,6 +6083,17 @@ async function runSingleRegisterItemWorktree(
       supersededPaths,
     );
     const checkpointPaths = checkpointRel.map((rel) => resolve(repoRoot, rel));
+    const checkpointFailureLogPath = pipelineRunId
+      ? integrateLogPath(
+          pipelineStateLocation({
+            repoRoot,
+            worktreePath: repoRoot,
+            executionPath,
+            taskId: item.id,
+            runId: pipelineRunId,
+          }).path,
+        )
+      : undefined;
     try {
       const worktree = checkpointAndEnsureWorktree({
         context: wtContext,
@@ -6051,6 +6102,7 @@ async function runSingleRegisterItemWorktree(
         checkpointPaths,
         commitMessage: `exec(register ${item.id}): start`,
         products,
+        failureLogPath: checkpointFailureLogPath,
       });
       const setupAction = worktree.created ? "setup" : "reuse";
       process.stdout.write(
@@ -6077,7 +6129,12 @@ async function runSingleRegisterItemWorktree(
         ticketPath,
         reason: `checkpoint failed: ${error instanceof Error ? error.message : String(error)}`,
         actor,
-        bookkeepingPaths: checkpointPaths,
+        bookkeepingPaths: [
+          ...checkpointPaths,
+          ...(checkpointFailureLogPath && existsSync(checkpointFailureLogPath)
+            ? [checkpointFailureLogPath]
+            : []),
+        ],
       });
     }
   };
@@ -6118,6 +6175,7 @@ async function runSingleRegisterItemWorktree(
       execDefaults: context.execDefaults,
       providerConcurrencyGate: context.providerConcurrencyGate,
       productWorktrees: worktree.repos,
+      runId: pipelineRunId,
     });
     agentResult = pipelineOutcome.runResult;
     stderr = pipelineOutcome.blockReason ?? "";

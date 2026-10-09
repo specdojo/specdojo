@@ -189,6 +189,7 @@ function prepare(
   worktreeTaskId: string = taskId,
   planContent?: string,
   resultContent?: string,
+  failureLogPath?: string,
 ): ExecWorktree {
   const { planPath, resultPath, claimEventPath } = scaffoldTask(
     fixture,
@@ -202,6 +203,7 @@ function prepare(
     base: fixture.worktreeBase,
     checkpointPaths: [planPath, resultPath, claimEventPath],
     commitMessage: `exec(${taskId}): prepare execution`,
+    failureLogPath,
   });
 }
 
@@ -290,10 +292,23 @@ describe("exec worktree ops", () => {
     writeFile(join(fixture.repo, "README.md"), "staged by user\n");
     git(fixture.repo, "add", "README.md");
     const hookPath = join(fixture.repo, ".git", "hooks", "pre-commit");
-    writeFile(hookPath, "#!/bin/sh\nexit 1\n");
+    writeFile(
+      hookPath,
+      [
+        "#!/bin/sh",
+        "printf 'api_key=raw-checkpoint-secret\\n' >&2",
+        "printf 'FAIL  tests/src/doc-index.test.ts > project register references\\n' >&2",
+        "printf 'Test Files  1 failed | 120 passed (121)\\n' >&2",
+        "exit 1",
+        "",
+      ].join("\n"),
+    );
     chmodSync(hookPath, 0o755);
+    const failureLogPath = join(fixture.repo, "execution", "exec", "evidence", "checkpoint.log");
 
-    expect(() => prepare(fixture, taskId)).toThrow(/Checkpoint commit failed/);
+    expect(() => prepare(fixture, taskId, taskId, undefined, undefined, failureLogPath)).toThrow(
+      /Checkpoint commit failed.*FAIL  tests\/src\/doc-index\.test\.ts/s,
+    );
 
     expect(git(fixture.repo, "diff", "--cached", "--name-only")).toBe("README.md");
     const worktree = findExecWorktree(fixture.repo, taskId);
@@ -306,6 +321,10 @@ describe("exec worktree ops", () => {
         `execution/exec/results/${taskId}-result.md`,
       ]),
     );
+    const failureLog = readFileSync(failureLogPath, "utf8");
+    expect(failureLog).toContain("api_key=[REDACTED]");
+    expect(failureLog).toContain("Test Files  1 failed | 120 passed (121)");
+    expect(failureLog).not.toContain("raw-checkpoint-secret");
   });
 
   it("checkpoints, commits, and merges a task so its deliverable lands on root", () => {
@@ -487,6 +506,9 @@ describe("exec worktree ops", () => {
         "  printf '\\033[31m╭── hook output ──╮\\033[0m\\n' >&2",
         "  printf '┃ typecheck ❯\\n' >&2",
         "  printf '┃ src/a.ts(1,1): error TS2322: intentional merge failure\\n' >&2",
+        "  printf '┃ api_key=raw-hook-secret\\n' >&2",
+        "  printf '┃ FAIL  tests/src/doc-index.test.ts > project register references\\n' >&2",
+        "  printf '┃ Test Files  1 failed | 120 passed (121)\\n' >&2",
         "  printf '╰─────────────────╯\\n' >&2",
         "  exit 1",
         "fi",
@@ -521,6 +543,9 @@ describe("exec worktree ops", () => {
     const failureLog = readFileSync(failureLogPath, "utf8");
     expect(failureLog).toContain("\u001b[31m╭── hook output ──╮\u001b[0m");
     expect(failureLog).toContain("src/a.ts(1,1): error TS2322: intentional merge failure");
+    expect(failureLog).toContain("api_key=[REDACTED]");
+    expect(failureLog).toContain("FAIL  tests/src/doc-index.test.ts");
+    expect(failureLog).not.toContain("raw-hook-secret");
     expect(failureLog).toContain("--- merge --abort ---\nexit: 0");
   });
 

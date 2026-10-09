@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-10-08T12:32:32Z"
@@ -54,7 +54,23 @@ exec run --parallel で 3 件を並べて流したとき、PJR-PG6W の統合段
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- 原因は `lefthook.yml` の `parallel: true` で `test` と `register-build` / `index-build` が
+  同時に動く一方、`tests/src/doc-index.test.ts` の「prj-0001 project register references」が
+  `process.cwd()` の実リポジトリを走査し、`generated/pjr-index.md` を読み込んでいたことである。
+  hook の生成処理が同じファイルを書き換える途中にテストが読む競合があり、単独の exec 実行でも
+  hook 内部の並列処理だけで発生しうる状態だった。
+- 該当テストは、追跡対象の `docs/` を一時ディレクトリへ複製し、必要な
+  `generated/pjr-index.md` を fixture 内に作って検査する形へ変更した。実リポジトリの生成物を
+  読み書きしないため、hook の `register-build` / `index-build` と同時に動いても結果が変わらない。
+  ほかの生成物を読むテストも確認し、対象となる各テスト自身が一時ディレクトリで生成・検査して
+  いることを確認した。競合源をテスト側で除いたため、保護対象の `lefthook.yml` は変更していない。
+- checkpoint と統合段の task / product / register-state commit、post-hook amend、merge が失敗した
+  場合に、stdout / stderr の全文を共通の秘匿処理後に run の `integrate.log` へ保存するようにした。
+  checkpoint は pipeline の run ID を commit 前に確定し、失敗ログを同じ evidence run
+  ディレクトリへ残す。失敗理由の要約には先頭側のステップとエラーに加え、末尾側の `FAIL`、
+  `Test Files`、`Tests` 行を最大3行残す。
+- unit test で全文保存・秘匿・末尾要約を、integration test で merge hook の実出力保存と秘匿を
+  固定した。共通の検証一式は executor 終了後に親 runner が実行する。
 
 ## 5. 関連ドキュメント
 

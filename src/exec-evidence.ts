@@ -1,6 +1,6 @@
 import { readFileSync, renameSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, sep } from "node:path";
-import { ensureDir, safeSlug } from "./exec-shared.js";
+import { ensureDir, redactSensitiveText, safeSlug } from "./exec-shared.js";
 import { gitOutput } from "./exec-worktree.js";
 import type { AgentStageRole } from "./exec-types.js";
 
@@ -182,16 +182,7 @@ function boundedLog(value: string): { content: string; truncated: boolean } {
   };
 }
 
-/** Redacts common credential forms before agent output is persisted as evidence or a log excerpt. */
-export function redactSensitiveText(value: string): string {
-  return value
-    .replace(/\bBearer\s+[A-Za-z0-9._~+/=-]+/giu, "Bearer [REDACTED]")
-    .replace(/\b(sk-(?:proj-)?[A-Za-z0-9_-]{8,}|gh[opsu]_[A-Za-z0-9_]{8,})\b/gu, "[REDACTED]")
-    .replace(
-      /\b(api[_-]?key|access[_-]?token|auth(?:orization)?|password|passwd|secret)\b(\s*[:=]\s*)([^\s,;]+)/giu,
-      "$1$2[REDACTED]",
-    );
-}
+export { redactSensitiveText } from "./exec-shared.js";
 
 function boundedText(value: unknown, limit: number): string {
   return truncate(redactSensitiveText(typeof value === "string" ? value.trim() : ""), limit);

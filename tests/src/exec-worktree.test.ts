@@ -1,8 +1,9 @@
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
+  appendGitFailureLog,
   formatGitCommandFailure,
   formatWorktreeBuildFailure,
   generateWorktreeArtifacts,
@@ -357,6 +358,46 @@ describe("summarizeGitHookFailure", () => {
     expect(summarizeGitHookFailure(output)).toBe(
       "typecheck: src/example.ts(4,2): error TS2322: Type 'number' is not assignable to type 'string'.",
     );
+  });
+
+  it("keeps Vitest failure names and totals from the end of long hook output", () => {
+    const output = [
+      "┃ test ❯",
+      "┃ unknown option '--reserve'",
+      ...Array.from({ length: 50 }, (_, index) => `middle output ${index}`),
+      "┃ FAIL  tests/src/doc-index.test.ts > project register references",
+      "┃ Test Files  1 failed | 120 passed (121)",
+      "┃ Tests  1 failed | 2038 passed (2039)",
+    ].join("\n");
+
+    const summary = summarizeGitHookFailure(output);
+
+    expect(summary).toContain("test: unknown option '--reserve'");
+    expect(summary).toContain("FAIL  tests/src/doc-index.test.ts");
+    expect(summary).toContain("Test Files  1 failed | 120 passed (121)");
+    expect(summary).toContain("Tests  1 failed | 2038 passed (2039)");
+  });
+
+  it("persists complete redacted hook output in the run log", () => {
+    const dir = mkdtempSync(join(tmpdir(), "specdojo-git-failure-log-"));
+    try {
+      const logPath = join(dir, "evidence", "task", "run", "integrate.log");
+      appendGitFailureLog(logPath, [
+        "--- stdout ---",
+        "hook started; api_key=raw-secret-value",
+        "--- stderr ---",
+        "FAIL  tests/src/doc-index.test.ts",
+        "Test Files  1 failed | 120 passed (121)",
+      ]);
+
+      const log = readFileSync(logPath, "utf8");
+      expect(log).toContain("hook started; api_key=[REDACTED]");
+      expect(log).toContain("FAIL  tests/src/doc-index.test.ts");
+      expect(log).toContain("Test Files  1 failed | 120 passed (121)");
+      expect(log).not.toContain("raw-secret-value");
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
   });
 });
 

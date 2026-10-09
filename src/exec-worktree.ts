@@ -1,7 +1,7 @@
 import { spawnSync } from "node:child_process";
-import { existsSync, lstatSync, mkdirSync, unlinkSync } from "node:fs";
+import { appendFileSync, existsSync, lstatSync, mkdirSync, unlinkSync } from "node:fs";
 import { dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
-import { stripTerminalControlSequences } from "./exec-shared.js";
+import { redactSensitiveText, stripTerminalControlSequences } from "./exec-shared.js";
 import { gitEnvironment } from "./git-environment.js";
 
 export { GIT_LOCAL_ENV_VARS, gitEnvironment } from "./git-environment.js";
@@ -237,8 +237,9 @@ export function formatGitCommandFailure(args: readonly string[], stderr: string)
   return cause ? `${label} failed: ${cause}${detail}` : `${label} failed${detail}`;
 }
 
-// lefthook などの hook 出力から、block reason に載せる「失敗ステップ名 + 最初のエラー行」
-// を取り出す。罫線や ANSI 制御は監査ログには残す一方、短い理由には混ぜない。
+// lefthook などの hook 出力から、block reason に載せる失敗ステップ名と最初のエラー行を
+// 取り出し、Vitest の失敗テスト名・集計があれば末尾から補う。罫線や ANSI 制御は監査ログには
+// 残す一方、短い理由には混ぜない。
 export function summarizeGitHookFailure(output: string): string {
   const lines = stripTerminalControlSequences(output)
     .split(/\r?\n/)
@@ -269,13 +270,30 @@ export function summarizeGitHookFailure(output: string): string {
     .slice(stepIndex >= 0 ? stepIndex + 1 : 0)
     .find((line) => line !== step && !isDecoration(line) && !/[❯▶]\s*$/u.test(line));
 
-  if (step && errorLine) return `${step}: ${errorLine}`;
-  if (step) return step;
-  return (
-    lines.find((line) => /(?:\bCONFLICT\b|\bfatal:|\berror:|\bfailed\b)/i.test(line)) ??
-    lines.find((line) => !isDecoration(line)) ??
-    lines[0]!
-  );
+  const primary =
+    step && errorLine
+      ? `${step}: ${errorLine}`
+      : step ||
+        (lines.find((line) => /(?:\bCONFLICT\b|\bfatal:|\berror:|\bfailed\b)/i.test(line)) ??
+          lines.find((line) => !isDecoration(line)) ??
+          lines[0]!);
+  const tail = lines
+    .filter((line) => /^(?:FAIL\b|Test Files\b|Tests\b)/iu.test(line))
+    .filter((line) => line !== errorLine && !primary.includes(line))
+    .slice(-3);
+  const summary = [primary, ...tail].join("; ");
+  const limit = 400;
+  if (summary.length <= limit) return summary;
+  const marker = " … ";
+  const retained = limit - marker.length;
+  return `${summary.slice(0, Math.ceil(retained / 2))}${marker}${summary.slice(-Math.floor(retained / 2))}`;
+}
+
+/** Appends redacted Git/hook diagnostics to a run-scoped evidence log. */
+export function appendGitFailureLog(path: string | undefined, lines: readonly string[]): void {
+  if (!path) return;
+  mkdirSync(dirname(path), { recursive: true });
+  appendFileSync(path, redactSensitiveText(`${lines.join("\n")}\n`), "utf8");
 }
 
 // message は block reason 向けに要約する一方、調査に必要な stderr 全文は失わない。

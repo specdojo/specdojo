@@ -125,6 +125,10 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 不具合修正
 
+- pre-commit hook が生成コマンドと全テストを並列実行したとき、実リポジトリの生成済み登録簿を
+  読むテストが書き換えと競合して一時的に失敗する問題を、テスト fixture へ隔離して修正しました。
+  checkpoint と統合段の commit / merge が失敗した場合は、秘匿処理した stdout / stderr の全文を
+  run の `integrate.log` へ保存し、短い失敗理由にも Vitest の `FAIL`・集計行を残します（PJR-Q7GJ）。
 - `exec run` の worktree checkpoint が、root に無関係な staged 変更があるだけで停止する問題を修正しました。checkpoint 対象と重なる場合だけ停止し、commit hook などで checkpoint または register の runner commit が失敗した場合は、runner 対象だけを unstage して既存の staged 変更を保持します（PJR-PJBN）。
 - Claude の edit executor がルート直下の成果物や `app/`・`lib/` などを編集できない問題を修正しました。既定でリポジトリ全体への編集を許可し、agent 設定・CI 設定・`package.json` などの保護対象は Claude の deny と runner の検査で拒否します（PJR-TM1B）。
 - `exec run --resume` で reporter 段または統合段から再開するとき、統合先で直した不具合が
@@ -182,9 +186,6 @@ SpecDojo の利用者に影響する変更を記録します。
   `validate` / `result` などの部品を利用できますが、通しの実行に使う SpecDojo 本体リポジトリの
   開発用スクリプト `tools/grade/run-per-document.sh` は package に含まれません。成果物の grade
   には project の `catalog_path` が必要です（PJR-DJFT）。
-- 統合の commit で pre-commit hook の全テストが一時的に失敗することがあります。同じ worktree で
-  再実行すると成功しており、`exec run --resume` で統合を再開できます。並列実行時と単独実行時の
-  両方で観測されており、原因は未特定です（PJR-Q7GJ）。
 - docs-site に high 1 件、moderate 1 件の脆弱性が残っています。mermaid 12 が依存する chevrotain 11 が `lodash-es` 4.17.23 を固定している問題と、vite 経由の `esbuild` に起因するものであり、いずれも上流の対応待ちです（PJR-XMMA）。
 - docs-lint に moderate 1 件の脆弱性が残っています。`markdownlint-cli` 0.49.1 が `js-yaml` を
   `~5.2.1` に固定しているためで、上流の対応待ちです（PJR-7GAK）。

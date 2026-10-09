@@ -42,6 +42,7 @@ import { rebuildRegisterTicketFromEvents, unionRegisterEventLogs } from "./regis
 import { displayIdFromRegisterEventFilename, REGISTER_EVENTS_DIRNAME } from "./register-events.js";
 import { displayIdFromTicketFilename } from "./register-item.js";
 import {
+  appendGitFailureLog,
   ensureExecWorktree,
   execBranchExists,
   findExecWorktree,
@@ -650,6 +651,7 @@ export function stabilizeCommitTargets(
   repoRoot: string,
   listRemainingPaths: () => string[],
   maxAttempts = MAX_COMMIT_STABILIZATION_ATTEMPTS,
+  failureLogPath?: string,
 ): void {
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
     const paths = listRemainingPaths();
@@ -667,7 +669,23 @@ export function stabilizeCommitTargets(
     }
     if (staged.status !== 1) throw new Error("Failed to inspect post-hook worktree changes.");
 
-    gitOutput(repoRoot, ["commit", "--amend", "--no-edit", "--", ...paths]);
+    const commitArgs = ["commit", "--amend", "--no-edit", "--", ...paths];
+    const commit = gitResult(repoRoot, commitArgs);
+    if (commit.status !== 0) {
+      const output = [commit.stdout, commit.stderr]
+        .filter((part): part is string => typeof part === "string" && part.length > 0)
+        .join("\n");
+      appendGitFailureLog(failureLogPath, [
+        `=== ${new Date().toISOString()} git commit --amend ===`,
+        `exit: ${commit.status ?? "unknown"}`,
+        "--- stdout ---",
+        typeof commit.stdout === "string" ? commit.stdout : "",
+        "--- stderr ---",
+        typeof commit.stderr === "string" ? commit.stderr : "",
+        "",
+      ]);
+      throw new Error(`git commit --amend failed: ${summarizeGitHookFailure(output)}`);
+    }
   }
 
   const dirty = listRemainingPaths();
@@ -701,6 +719,8 @@ export function commitWorktreeChanges(params: {
   // commit-scope の警告を追記する evidence 側のログ（run ディレクトリの integrate.log）。
   // worktree 内の evidence 配下を指す場合は、同じ commit に含まれる。
   scopeLogPath?: string;
+  // commit hook 失敗の秘匿済み stdout / stderr を保存する run 単位のログ。
+  failureLogPath?: string;
   // 呼び出し側（exec run の統合段）がプロダクトリポジトリの commit と統合を行う場合に true。
   // false（手動の `exec worktree commit` など）では、プロダクトに未統合の変更が残るタスクの
   // プロジェクト側だけを commit しない。統合後の撤去でプロダクトの変更を失わないため。
@@ -746,14 +766,35 @@ export function commitWorktreeChanges(params: {
     return { targets: paths, committed: false };
   }
   if (staged.status !== 1) throw new Error("Failed to inspect staged worktree changes.");
-  gitOutput(worktree.path, [
+  const commitArgs = [
     "commit",
     "-m",
     params.message?.trim() || `exec(${taskId}): apply task changes`,
     "--",
     ...paths,
-  ]);
-  stabilizeCommitTargets(worktree.path, () => commitTargetPaths(context, worktree, taskId));
+  ];
+  const commit = gitResult(worktree.path, commitArgs);
+  if (commit.status !== 0) {
+    const output = [commit.stdout, commit.stderr]
+      .filter((part): part is string => typeof part === "string" && part.length > 0)
+      .join("\n");
+    appendGitFailureLog(params.failureLogPath, [
+      `=== ${new Date().toISOString()} git commit task changes ===`,
+      `exit: ${commit.status ?? "unknown"}`,
+      "--- stdout ---",
+      typeof commit.stdout === "string" ? commit.stdout : "",
+      "--- stderr ---",
+      typeof commit.stderr === "string" ? commit.stderr : "",
+      "",
+    ]);
+    throw new Error(`git commit failed: ${summarizeGitHookFailure(output)}`);
+  }
+  stabilizeCommitTargets(
+    worktree.path,
+    () => commitTargetPaths(context, worktree, taskId),
+    undefined,
+    params.failureLogPath,
+  );
   return { targets: paths, committed: true };
 }
 
@@ -1025,22 +1066,18 @@ export function mergeWorktreeIntoCurrent(params: {
               .filter((part): part is string => typeof part === "string" && part.length > 0)
               .join(abortResult.stdout && abortResult.stderr ? "\n" : "")
           : "";
-        appendFileSync(
-          params.failureLogPath,
-          [
-            `=== ${new Date().toISOString()} git ${mergeArgs.join(" ")} ===`,
-            `exit: ${mergeResult.status ?? "unknown"}`,
-            "--- stdout ---",
-            typeof mergeResult.stdout === "string" ? mergeResult.stdout : "",
-            "--- stderr ---",
-            typeof mergeResult.stderr === "string" ? mergeResult.stderr : "",
-            "--- merge --abort ---",
-            abortResult ? `exit: ${abortResult.status ?? "unknown"}` : "not required",
-            abortOutput,
-            "",
-          ].join("\n"),
-          "utf8",
-        );
+        appendGitFailureLog(params.failureLogPath, [
+          `=== ${new Date().toISOString()} git ${mergeArgs.join(" ")} ===`,
+          `exit: ${mergeResult.status ?? "unknown"}`,
+          "--- stdout ---",
+          typeof mergeResult.stdout === "string" ? mergeResult.stdout : "",
+          "--- stderr ---",
+          typeof mergeResult.stderr === "string" ? mergeResult.stderr : "",
+          "--- merge --abort ---",
+          abortResult ? `exit: ${abortResult.status ?? "unknown"}` : "not required",
+          abortOutput,
+          "",
+        ]);
       }
 
       const summary = summarizeGitHookFailure(mergeOutput);
@@ -1319,6 +1356,7 @@ export function checkpointAndEnsureWorktree(params: {
   checkpointPaths: string[];
   commitMessage: string;
   products?: readonly ProductRepo[];
+  failureLogPath?: string;
 }): ExecWorktree {
   const products = params.products ?? [];
   const worktree = checkpointAndEnsureProjectWorktree(params, projectRepoDirName(products));
@@ -1340,6 +1378,7 @@ function checkpointAndEnsureProjectWorktree(
     base: string;
     checkpointPaths: string[];
     commitMessage: string;
+    failureLogPath?: string;
   },
   repoDirName: string | undefined,
 ): ExecWorktree {
@@ -1405,14 +1444,24 @@ function checkpointAndEnsureProjectWorktree(
         // hook（lefthook 等）の生出力には ANSI エスケープや制御文字が含まれうる。この detail は
         // register 経路で pjr-index の結論列・result の理由欄へ伝播するため、ここで除去して
         // 表示崩れを防ぐ（register 側の sanitize と二重だが、非 register の呼び出し元も守る）。
-        const detail = [committed.stdout, committed.stderr]
+        const output = [committed.stdout, committed.stderr]
           .map((part) =>
             typeof part === "string" ? stripTerminalControlSequences(part).trim() : "",
           )
           .filter(Boolean)
           .join("\n");
+        appendGitFailureLog(params.failureLogPath, [
+          `=== ${new Date().toISOString()} git commit checkpoint ===`,
+          `exit: ${committed.status ?? "unknown"}`,
+          "--- stdout ---",
+          typeof committed.stdout === "string" ? committed.stdout : "",
+          "--- stderr ---",
+          typeof committed.stderr === "string" ? committed.stderr : "",
+          "",
+        ]);
         throw new Error(
-          `Checkpoint commit failed (${params.commitMessage}); staged changes rolled back (likely a failing git hook):\n${detail}`,
+          `Checkpoint commit failed (${params.commitMessage}); staged changes rolled back ` +
+            `(likely a failing git hook): ${summarizeGitHookFailure(output)}`,
         );
       }
     } else if (checkpoint.status !== 0) {
