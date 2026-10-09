@@ -55,3 +55,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_9935515c075047ce9d6820892cec9876
+- v: 1
+  id: reg_17329c876bb5430399d4d5540dea8b93
+  ts: "2026-10-09T12:57:36Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: CLI と案内文書は exec run --register（codex-expert-executor / gemma26-reporter）で対応し、保護対象のオーケストレーターの定義は利用者の承認のもと orchestrator が feature ブランチで書いた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-09"
+    - field: conclusion
+      from: "-"
+      to: topic を作れないタイトルでは警告を出して --topic と register update --topic を案内するようにした。オーケストレーターの定義にも、日本語のタイトルでは英語の --topic を渡す手順を加えた（feature/prj-0001/orchestrator-topic-guidance、548a14a87）。
+  previous_event_id: reg_2dbd126535e74abdb2bcba0de2ec4e94

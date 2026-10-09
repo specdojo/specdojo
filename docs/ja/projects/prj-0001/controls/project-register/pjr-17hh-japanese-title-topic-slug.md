@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-17hh-japanese-title-topic-slug
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: low
   owner: DEV
   registered_at: "2026-10-08T12:38:12Z"
   due_on: null
+  completed_at: "2026-10-09T12:57:36Z"
+  conclusion: topic を作れないタイトルでは警告を出して --topic と register update --topic を案内するようにした。オーケストレーターの定義にも、日本語のタイトルでは英語の --topic を渡す手順を加えた（feature/prj-0001/orchestrator-topic-guidance、548a14a87）。
 ---
 
 # PJR-17HH 日本語のタイトルから作る個票のファイル名の topic が意味を失う
