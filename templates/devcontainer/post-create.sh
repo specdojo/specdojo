@@ -39,17 +39,21 @@ if [ -n "$GIT_CONFIG_FILE" ] && [ "$GIT_CONFIG_FILE" != "$HOST_GIT_CONFIG" ]; th
 fi
 
 WORKSPACE_DIR="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+WORKSPACE_PARENT="$(dirname "$WORKSPACE_DIR")"
+SAFE_DIRECTORY_SCOPE="${WORKSPACE_PARENT}/*"
 
-# Keep safe.directory entries unique to avoid unbounded growth across rebuilds.
+# Trust repositories and worktrees under the mounted workspace parent. Keep entries unique to avoid
+# unbounded growth across rebuilds.
 SAFE_DIRS="$(git config --global --get-all safe.directory 2>/dev/null || true)"
 if [ -n "$SAFE_DIRS" ]; then
   git config --global --unset-all safe.directory || true
   while IFS= read -r dir; do
     [ -n "$dir" ] || continue
     git config --global --add safe.directory "$dir"
-  done < <(printf '%s\n%s\n' "$SAFE_DIRS" "$WORKSPACE_DIR" | awk '!seen[$0]++')
+  done < <(printf '%s\n%s\n%s\n' "$SAFE_DIRS" "$WORKSPACE_DIR" "$SAFE_DIRECTORY_SCOPE" | awk '!seen[$0]++')
 else
   git config --global --add safe.directory "$WORKSPACE_DIR"
+  git config --global --add safe.directory "$SAFE_DIRECTORY_SCOPE"
 fi
 
 git config --global core.quotepath false

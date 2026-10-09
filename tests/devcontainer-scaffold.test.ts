@@ -39,6 +39,9 @@ describe("runDevcontainerScaffold", () => {
       if (file.endsWith("devcontainer.json")) {
         return Promise.resolve(
           JSON.stringify({
+            workspaceMount:
+              "source=${localWorkspaceFolder}/..,target=/workspaces/specdojo-workspace,type=bind,consistency=cached",
+            workspaceFolder: "/workspaces/specdojo-workspace/${localWorkspaceFolderBasename}",
             features: {},
             mounts: [
               "source=specdojo-git,target=/home/node/.config/git,type=volume",
@@ -134,6 +137,12 @@ describe("runDevcontainerScaffold", () => {
     expect(writeFileMock).toHaveBeenCalledTimes(2);
     const jsonCall = findWriteCall("devcontainer.json");
     const json = JSON.parse(String(jsonCall[1]));
+    expect(json.workspaceMount).toBe(
+      "source=${localWorkspaceFolder}/..,target=/workspaces/specdojo-workspace,type=bind,consistency=cached",
+    );
+    expect(json.workspaceFolder).toBe(
+      "/workspaces/specdojo-workspace/${localWorkspaceFolderBasename}",
+    );
     expect(json.features).not.toHaveProperty(
       "ghcr.io/rocker-org/devcontainer-features/apt-packages:1",
     );
@@ -143,6 +152,51 @@ describe("runDevcontainerScaffold", () => {
     expect(json.mounts).toContain(
       "source=repo-specdojo-gh,target=/home/node/.config/gh,type=volume",
     );
+  });
+
+  it("should mount the workspace parent and trust its repositories and worktrees", async () => {
+    const actualFs = await vi.importActual<typeof fs>("node:fs");
+    const devcontainerTemplate = actualFs.readFileSync(
+      path.join(process.cwd(), "templates/devcontainer/devcontainer.json"),
+      "utf8",
+    );
+    const postCreateTemplate = actualFs.readFileSync(
+      path.join(process.cwd(), "templates/devcontainer/post-create.sh"),
+      "utf8",
+    );
+    readFileMock.mockImplementation(async (p) => {
+      const file = String(p);
+      if (file.endsWith("devcontainer.json")) {
+        return Promise.resolve(devcontainerTemplate);
+      }
+      if (file.endsWith("post-create.sh")) return Promise.resolve(postCreateTemplate);
+      return Promise.resolve("");
+    });
+
+    await runDevcontainerScaffold({
+      packageRoot,
+      repoRoot,
+      providers: [],
+      editors: [],
+      ollama: false,
+      cron: false,
+      tmux: false,
+      force: false,
+      dryRun: false,
+    });
+
+    const json = JSON.parse(String(findWriteCall("devcontainer.json")[1]));
+    expect(json.workspaceMount).toBe(
+      "source=${localWorkspaceFolder}/..,target=/workspaces/specdojo-workspace,type=bind,consistency=cached",
+    );
+    expect(json.workspaceFolder).toBe(
+      "/workspaces/specdojo-workspace/${localWorkspaceFolderBasename}",
+    );
+    const script = String(findWriteCall("post-create.sh")[1]);
+    expect(script).toContain('WORKSPACE_PARENT="$(dirname "$WORKSPACE_DIR")"');
+    expect(script).toContain('SAFE_DIRECTORY_SCOPE="${WORKSPACE_PARENT}/*"');
+    expect(script).toContain('"$WORKSPACE_DIR" "$SAFE_DIRECTORY_SCOPE"');
+    expect(script).toContain('git config --global --add safe.directory "$SAFE_DIRECTORY_SCOPE"');
   });
 
   it("should add tmux and cron features", async () => {

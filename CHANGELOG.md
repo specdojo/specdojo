@@ -126,6 +126,9 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 不具合修正
 
+- `devcontainer scaffold` が利用リポジトリの親ディレクトリをマウントし、別リポジトリ構成の
+  `repos` と `worktree_base` をコンテナから利用できるようにしました。親配下の Git リポジトリと
+  worktree も `safe.directory` の対象になります（PJR-P08H）。
 - 日本語主体のタイトルで `register add` の `--topic` を省略したとき、`item` や混在する英単語だけの意味の薄い topic が作られる場合に警告し、起票時の指定方法と `register update --topic` による変更方法を案内するようにしました。日本語タイトルには英語の topic を指定する運用もガイドに明記しました（PJR-17HH）。
 
 - pre-commit hook が生成コマンドと全テストを並列実行したとき、実リポジトリの生成済み登録簿を
