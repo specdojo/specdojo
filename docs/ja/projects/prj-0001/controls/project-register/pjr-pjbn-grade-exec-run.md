@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: in-progress
+  item_status: waiting
   priority: high
   owner: DEV
   registered_at: "2026-10-08T22:09:37Z"
+  block_reason: "agent exited with non-zero code: parent validation failed: test-integration"
 ---
 
 # PJR-PJBN 定期実行の grade がメインの作業ツリーにステージ済みのファイルを残し、exec run が止まる
@@ -56,7 +57,12 @@ cron の routine run --due で動く grade のジョブが evidence をメイン
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- worktree 作成前の root index 検査を checkpoint 対象パスとの重複検査へ変更した。無関係な staged パスは警告へ列挙して保持し、対象の plan、result、event、登録簿記帳と重なる staged パスだけをエラーにする。
+- checkpoint commit の失敗時に行っていた index 全体の reset を、checkpoint 対象だけの `git reset --quiet -- <paths>` へ変更した。
+- runner が staged 変更を残す経路を調査し、`commitRegisterItemChanges` と register 状態 commit が `stageCommitTargets` の後の commit または hook 失敗時に unstage していない経路を特定した。両経路を例外時の対象限定 unstage で修正し、既存の無関係な staged 変更を保持するようにした。
+- 開始前と実行後の未追跡パスは、`git status --porcelain=v1 -z --untracked-files=all` により双方ともファイル単位で取得されていた。未追跡ディレクトリ内で実行中に増えたファイルだけが commit 対象になる統合テストを追加し、この前提を固定した。
+- 無関係な staged パスを保持した checkpoint 成功、checkpoint 対象との重複拒否、checkpoint commit 失敗後の対象限定 unstage、register commit 失敗後の既存 staged 変更保持を自動テストへ追加した。
+- 定期実行の出力を自動 commit する変更は行っていない。運用説明は [[specdojo:exec-operation-guide|exec運用ガイド]]、利用者向け変更履歴は `CHANGELOG.md` の v0.3.0 不具合修正へ反映した。
 
 ## 5. 関連ドキュメント
 
