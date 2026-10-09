@@ -38,6 +38,8 @@ SpecDojo は、仕様道（Spec-Dō）の道場です。
 
 `grade` は成果物の品質を共通の観点で評価し、`review` はその結果と実行記録・完了条件を照合して、タスクを完了してよいかを判断します。品質の finding とタスクの未充足事項を混同せず、最終的な `ready` への確定は人が行います。
 
+v0.3.0 の `grade` は試験的な機能です。npm package では `grade list` / `plan` / `apply` / `validate` / `result` などの部品を利用できますが、これらを通しで実行する SpecDojo 本体リポジトリの開発用スクリプト `tools/grade/run-per-document.sh` は package に含まれません。成果物を評価するには、project の `catalog_path` も設定してください。1 文書を部品で評価する手順は [CLI コマンドリファレンス](docs/ja/specdojo/references/command-reference.md#81-npm-package-で-1-文書を評価する)を参照してください。
+
 日本語ドキュメントは [SpecDojo ドキュメントサイト](https://specdojo.github.io/specdojo/ja/) で公開しています。
 
 ## この README の役割

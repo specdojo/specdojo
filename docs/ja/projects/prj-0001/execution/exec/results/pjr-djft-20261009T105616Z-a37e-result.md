@@ -4,11 +4,12 @@ specdojo:
   type: exec-result
   task_id: PJR-DJFT
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: exec/plans/pjr-djft-20261009T105616Z-a37e-plan.md
   started_at: "2026-10-09T10:56:16.215Z"
+  completed_at: "2026-10-09T11:06:49.806Z"
   agent: codex-expert-executor
 ---
 
@@ -16,16 +17,24 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- v0.3.0の `grade` を部品のみの試験機能として定義し、案内文書を更新しました。
+- 公開物向けの 1 構成の文書評価手順（`grade run` 相当）を `README.md` および各種ガイドに追加しました。
+- `npm pack` による検証を行い、`tools/grade/run-per-document.sh` が含まれず、意図通り公開 package に含まれないことを確認しました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `CHANGELOG.md`: 変更履歴の更新
+- `README.md`: 公開物向けの `grade` 実行手順の追加
+- `docs/ja/specdojo/guides/quick-start-guide.md`: クイックスタートガイドの更新
+- `docs/ja/specdojo/guides/review-guide.md`: レビューガイドの更新
+- `docs/ja/specdojo/guides/routine-operation-guide.md`: 定常運用ガイドの更新
+- `docs/ja/specdojo/references/command-reference.md`: コマンドリファレンスの更新
+- `docs/ja/specdojo/standards/job-definition-standard.md`: ジョブ定義標準の更新
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 全ての成果物への変更は完了しており、`npx prettier` による整形および、各種静的検査（`lint:ts`, `lint:fm`, `lint:md`, `typecheck`, `test:integration`, `validate:schema`, `test:unit`）をパスしています。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`fully-guided` で rulebook / recipe / sample / template をどう使い分けたか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+まず、`grade` が現在の `npm package` に含まれていない事実を確認するため、`npm pack` を用いて配布物の中身を検証しました。その後、`v0.3.0` における `grade` の扱いは「部品としての利用」を基本とし、文書ごとの実行は特定のコマンドライン手順（`README.md` 等に記載する手順）によって行われることを明記する方針をとりました。対応として、`README.md` を中心とした複数の案内文書を編集し、提示された新しい評価手順を組み込みました。最後に、全ファイルに対して `prettier` による整形と、各種静的検査を実行して品質を担保しました。

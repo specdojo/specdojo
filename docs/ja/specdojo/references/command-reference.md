@@ -559,6 +559,8 @@ specdojo exec trial adopt --project prj-0001 --comparison <comparison-id> --tria
 
 `grade` は kata（rulebook / recipe / sample / template）または成果物を、review と同じ共通 viewpoint・category rubric で継続評価します。agent に直接ファイル探索やスコア計算をさせず、plan 生成と反映を分離します。
 
+v0.3.0 の `grade` は試験的な機能です。npm package で利用できるのは `grade list` / `plan` / `apply` / `validate` / `result` などの部品で、通しの実行を担う `grade run` はありません。`tools/grade/run-per-document.sh` は SpecDojo 本体リポジトリの開発用であり、npm package には含まれません。成果物を `--target deliverable` で評価するには、対象 project に `catalog_path` を設定する必要があります。
+
 | コマンド                 | 用途                                                           |
 | ------------------------ | -------------------------------------------------------------- |
 | `grade list`             | 選択した文書のパスを1行1件で出力し、plan は保存しない          |
@@ -567,6 +569,7 @@ specdojo exec trial adopt --project prj-0001 --comparison <comparison-id> --tria
 | `grade translation-plan` | 正本の英語 finding から日本語表示用の翻訳 plan を作る          |
 | `grade localize`         | 訳文を件別検証し、合格した finding の `message_ja` を更新する  |
 | `grade validate`         | サイドカーの内容ハッシュと finding 件数を検証する              |
+| `grade result`           | 保存済み grade result を Markdown 文書のパスで表示する         |
 | `grade migrate`          | インライン grade / finding をサイドカーへ一括移行する          |
 
 ```bash
@@ -641,9 +644,33 @@ finding の忠実性照合では、message に限り、Unicode の正準等価�
 
 複数対象は、生成された executor plan を順に処理し、executor 応答を保存して直ちに `grade apply --path <document> --analysis-from <executor-output>` で反映します。agent 起動は `agent run`、応答の保存と受け渡しは呼び出し側が担い、`grade` は plan の生成と結果の検証・反映に限定されます。この単位で処理すると、後続文書が失敗しても適用済みの grade は保持されます。保存済み executor plan は `exec trial` などで同じ入力を複数 agent へ渡す用途にも利用できます。
 
-### 8.1. 文書単位の grade pipeline
+### 8.1. npm package で 1 文書を評価する
 
-文書ごとに grade pipeline を実行する場合は、リポジトリルートから `tools/grade/run-per-document.sh` を実行します。既定の `--stages 1` は codex 単段、`--stages 3` は互換用の従来構成です。`--target kata` では `--kind` に `rulebook` / `recipe` / `sample` / `template` のいずれか、または `all` を指定します。`--target deliverable` では成果物カタログの Markdown 成果物を対象にし、`--kind` は使いません。`--path` を繰り返すと明示した文書だけを処理できます。`--embed-documents` を指定すると、各段の `grade plan` に同名のオプションを渡します。選択値は Run state に保存するため、同じ `run-id` の再開時に切り替えることはできません。`--changed-only`、`--dependency-changed`、`--rulebook-changed`、`--unreviewed`、`--ungraded`、`--incomplete`、`--rubric-outdated` は `grade list` の選択結果を利用し、複数指定時は各結果の和集合を処理します。いずれも指定しない場合だけ、対象範囲の全件を処理します。既定 target は `kata`、既定 kind は `rulebook` です。
+npm package の部品だけで 1 文書を評価する最小手順は、plan の生成、executor agent の実行、marker の反映です。先に `.specdojo/agent-members.yaml` と agent の実行設定を用意してください。`grade plan` の出力に表示された executor plan のパスを `<executor-plan.md>` に指定し、同じ executor nickname を `agent run` と `grade apply` の `--by` に渡します。
+
+```bash
+# 1. 1 文書だけを対象に executor plan を生成する
+npx specdojo grade plan --target deliverable --project <project-id> \
+  --path <document.md>
+
+# 2. 表示された executor plan を agent に渡し、marker を含む最終応答を保存する
+npx specdojo agent run --project <project-id> --plan <executor-plan.md> \
+  --by <executor-nickname> --out <executor-output.txt>
+
+# 3. marker を GradeSubmission へ機械変換して grade result に反映する
+npx specdojo grade apply --target deliverable --project <project-id> \
+  --path <document.md> --analysis-from <executor-output.txt> \
+  --by <executor-nickname>
+
+# 4. 保存結果の内容ハッシュと finding 件数を検証する
+npx specdojo grade validate --target deliverable --project <project-id>
+```
+
+成果物を扱うこの例では project の `catalog_path` が必要です。Kata を評価する場合は、各コマンドの `--target deliverable` を `--target kata` に置き換えます。複数文書の列挙、再試行、翻訳、途中状態の管理は利用者側で組み合わせる必要があります。
+
+### 8.2. SpecDojo 本体リポジトリの文書単位 grade pipeline
+
+この節は npm package の利用手順ではなく、SpecDojo 本体リポジトリを保守する開発者向けです。`tools/grade/run-per-document.sh` は npm package の `files` に含まれないため、公開物の利用者は実行できません。本体リポジトリで文書ごとに grade pipeline を実行する場合は、リポジトリルートからこのスクリプトを実行します。既定の `--stages 1` は codex 単段、`--stages 3` は互換用の従来構成です。`--target kata` では `--kind` に `rulebook` / `recipe` / `sample` / `template` のいずれか、または `all` を指定します。`--target deliverable` では成果物カタログの Markdown 成果物を対象にし、`--kind` は使いません。`--path` を繰り返すと明示した文書だけを処理できます。`--embed-documents` を指定すると、各段の `grade plan` に同名のオプションを渡します。選択値は Run state に保存するため、同じ `run-id` の再開時に切り替えることはできません。`--changed-only`、`--dependency-changed`、`--rulebook-changed`、`--unreviewed`、`--ungraded`、`--incomplete`、`--rubric-outdated` は `grade list` の選択結果を利用し、複数指定時は各結果の和集合を処理します。いずれも指定しない場合だけ、対象範囲の全件を処理します。既定 target は `kata`、既定 kind は `rulebook` です。
 
 ```bash
 # 対象と agent / reference の確認だけを行う

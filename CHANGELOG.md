@@ -177,6 +177,10 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 既知の問題
 
+- v0.3.0 の grade は試験的な機能です。npm package では `grade list` / `plan` / `apply` /
+  `validate` / `result` などの部品を利用できますが、通しの実行に使う SpecDojo 本体リポジトリの
+  開発用スクリプト `tools/grade/run-per-document.sh` は package に含まれません。成果物の grade
+  には project の `catalog_path` が必要です（PJR-DJFT）。
 - 統合の commit で pre-commit hook の全テストが一時的に失敗することがあります。同じ worktree で
   再実行すると成功しており、`exec run --resume` で統合を再開できます。並列実行時と単独実行時の
   両方で観測されており、原因は未特定です（PJR-Q7GJ）。

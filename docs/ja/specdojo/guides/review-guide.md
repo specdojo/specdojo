@@ -237,9 +237,11 @@ edit plan で観点別の自己レビューを行わないのは、各観点を�
 
 `specdojo exec run` は、`mode: review` のタスクの plan を生成する前に、runner 自身が評価対象へ grade を実行します。executor（review を行う agent）には grade を実行させません。評価の独立性を保つためです。
 
+この自動 grade は SpecDojo 本体リポジトリにある開発用の `tools/grade/run-per-document.sh` を使います。スクリプトは npm package に含まれないため、v0.3.0 の公開物では自動 grade を利用できません。公開物の grade は試験的で、利用者は `grade list` / `plan` / `apply` / `validate` / `result` などの部品を使って事前に評価します。成果物の grade には project の `catalog_path` が必要です。1 文書の手順は [CLI コマンドリファレンス](../references/command-reference.md#81-npm-package-で-1-文書を評価する)を参照してください。
+
 - 評価対象は成果物です。`approach` が `rulebook-maintenance` / `recipe-maintenance` / `sample-maintenance` / `template-maintenance` の場合は、見直した実践の型そのものが評価対象になります（`--target kata`）。
 - 評価対象の `content_hash` が既存の評価結果サイドカーの `content_hash` と一致する場合は、grade を再実行せず既存の評価結果を使います。どちらの場合も評価は 1 回です。
-- grade は `tools/grade/run-per-document.sh` を評価対象 1 件に絞って実行します。スクリプトがないリポジトリ、評価対象を解決できない場合、`--dry-run` の場合は実行しません。
+- 本体リポジトリでは grade を `tools/grade/run-per-document.sh` で評価対象 1 件に絞って実行します。npm package の利用先を含むスクリプトがないリポジトリ、評価対象を解決できない場合、`--dry-run` の場合は実行しません。
 - grade が失敗しても review は止めません。実行の結果と評価結果の鮮度を review plan に示し、review が verdict（`grade-stale` / `grade-unavailable` など）として記録します。
 
 ### 3.3. review plan の生成
