@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: in-progress
   priority: high
   owner: ARC
   registered_at: "2026-10-09T19:58:02Z"
