@@ -32,3 +32,16 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_05b99fcd3a8348dc8a6f72bbfc8f5000
+  ts: "2026-10-09T11:18:44Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_788039c20a2c4f4c86a0888d7d255a70
