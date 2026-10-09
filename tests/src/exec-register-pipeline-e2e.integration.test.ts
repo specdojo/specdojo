@@ -764,7 +764,7 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
         const evidence = JSON.parse(
           readFileSync(join(evidenceDir, runDirs[0], "evidence.json"), "utf8"),
         ) as { attempt_changes?: unknown };
-        expect(evidence.attempt_changes).toBeUndefined();
+        expect(evidence.attempt_changes).toEqual([]);
 
         expect(process.exitCode ?? 0).toBe(0);
       });

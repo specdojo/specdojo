@@ -150,6 +150,9 @@ SpecDojo の利用者に影響する変更を記録します。
   で成功していれば block しないようにしました（PJR-979N、PJR-SDWF）。
 - reporter が説明した変更ファイルの件数や順序に依存せず、変更パス、outcome、`block_reason` を
   evidence から機械生成するようにしました（PJR-GBEV、PJR-0ECY）。
+- runner が適用外と判定した検証と、executor が変更した runner 管理記録を reporter へ明示し、
+  矛盾する確認依頼を防ぎました。引数付きの `npm run` も、script が存在すれば適用外の申告を
+  反証します（PJR-2GFH）。
 - grade が未完了または途中で打ち切られたときに成功扱いになる問題を修正しました
   （PJR-QJAD、PJR-9PZ7）。
 - agent の一時ファイルが commit や統合前検査へ混入する問題を、commit 対象を限定して

@@ -1,0 +1,12 @@
+実装を完了しました。
+
+- reporter に runner の適用外判定と管理記録変更を通知
+- 引数付き `npm run` の適用外申告を正しく反証
+- 成功時も `attempt_changes` を記録
+- unit/integration test、運用ガイド、CHANGELOG、個票を更新
+- 親 runner 対象外の検証はすべて成功
+- result は pipeline 指示どおり未編集
+
+<specdojo_executor_evidence>
+{"final_message":"`runner_context` による申し送り整合化、成功時の `attempt_changes` 記録、引数付き npm script の適用判定を実装し、テスト・運用ガイド・CHANGELOG・個票を更新した。","validations":[{"command":"npx prettier --write src/exec-reporter.ts tests/src/exec-reporter.test.ts docs/ja/specdojo/guides/exec-operation-guide.md CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-2gfh-exec-handoff-clarity.md","status":"passed","summary":"対象ファイルを整形した。"},{"command":"npx prettier --write src/exec-evidence.ts tests/src/exec-register-pipeline-e2e.integration.test.ts","status":"passed","summary":"追加変更を整形した。"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"`npx tsx` の既知の IPC EPERM を回避する指定で登録簿派生ビューを生成した。"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"終了コード 0。既存の文書未検出警告のみ。"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"2513 件の索引を生成した。"},{"command":"npm run validate:history-links","status":"passed","summary":"履歴リンク検証が終了コード 0 で完了した。"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし。"},{"command":"npm run check","status":"not_run","summary":"固定許可リストの typecheck・lint・schema・unit/integration test は親 runner に委譲し、残りの catalog・history 検証は executor で成功した。"}]}
+</specdojo_executor_evidence>

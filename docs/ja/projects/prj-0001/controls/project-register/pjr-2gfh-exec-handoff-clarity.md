@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-10-09T11:49:21Z"
@@ -49,7 +49,9 @@ specdojo:
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- reporter 専用の bounded evidence に `runner_context` を追加し、runner が機械的に適用外と判断した検証と、executor の試行中に変更された runner 管理記録を渡すようにした。reporter の指示では、前者の実行を申し送りで求めず、後者が `changed_files` にないことだけを理由に確認を求めないよう明記した。runner が result に自動追記する「適用外の検証（runner の判定）」は維持している。
+- npm script の適用条件確認では `npm run <name> -- <args>` と `npm run <name> <args>` から `<name>` を抽出し、存在する script の `not_applicable` 申告を反証するようにした。委譲・合成コマンドの判定では従来の完全一致を保ち、引数付きコマンドを引数なしの親検証と同一視しない。
+- 成功した executor でも開始前との差分を `attempt_changes` に保存するようにし、`tests/src/exec-reporter.test.ts` と `tests/src/exec-register-pipeline-e2e.integration.test.ts` で reporter 入力、指示文、機械判定、試行差分の記録を検証するようにした。検証は executor と親 runner の分担に従い、親 runner 対象外の検査を executor で、unit test などの固定許可リスト検証を親 runner で実行する。
 
 ## 5. 関連ドキュメント
 

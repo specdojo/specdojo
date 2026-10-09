@@ -256,6 +256,61 @@ describe("reporter structured output", () => {
     expect(input.changes).toHaveLength(8);
   });
 
+  it("supplies runner not-applicable judgements to the reporter and forbids contradictory handoff", () => {
+    const input = evidence();
+    input.validations = [
+      {
+        source: "executor",
+        command: "npx specdojo catalog validate --project prj-0001",
+        status: "not_run",
+        summary: "適用条件を確認していない",
+      },
+    ];
+    const selected = evidenceForReporter(input, {
+      repoRoot: "/repo",
+      worktreePath: "/worktrees/task",
+      executionPath: "/repo/runtime/custom",
+      factOptions: {
+        packageDependencies: new Set(["specdojo"]),
+        specdojoConfig: {
+          version: 1,
+          current_project: "prj-0001",
+          projects: { "prj-0001": {} },
+        },
+      },
+    });
+
+    expect(selected.runner_context?.mechanically_not_applicable).toEqual([
+      {
+        command: "npx specdojo catalog validate --project prj-0001",
+        reason: "project 'prj-0001' に catalog_path が設定されていない",
+      },
+    ]);
+    const prompt = buildReporterPrompt({ plan: "# Plan", evidence: selected, mode: "edit" });
+    expect(prompt).toContain('"mechanically_not_applicable"');
+    expect(prompt).toContain("do not ask for\na command in mechanically_not_applicable to be run");
+  });
+
+  it("tells the reporter when the executor changed a filtered runner-managed record", () => {
+    const input = evidence();
+    const ticket = { path: "records/register/pjr-ab12-test.md", status: "M" };
+    input.changes = [...input.changes, ticket];
+    input.attempt_changes = [{ path: "docs/test.md", status: "M" }, ticket];
+    const selected = evidenceForReporter(input, {
+      repoRoot: "/repo",
+      worktreePath: "/worktrees/task",
+      executionPath: "/repo/runtime/custom",
+      registerPaths: ["/repo/records/register"],
+    });
+
+    expect(selected.changes).toEqual([{ path: "docs/test.md", status: "M" }]);
+    expect(selected.runner_context?.runner_managed_attempt_changes).toEqual([ticket]);
+    const prompt = buildReporterPrompt({ plan: "# Plan", evidence: selected, mode: "edit" });
+    expect(prompt).toContain('"runner_managed_attempt_changes"');
+    expect(prompt).toContain("intentionally absent from changed_files");
+    expect(prompt).toContain("do not request confirmation solely because");
+  });
+
   it("blocks mechanically on runner validation failure even when prose is valid", () => {
     const input = evidence();
     input.validations.push({
@@ -493,6 +548,61 @@ describe("reporter structured output", () => {
     ).toMatchObject({
       outcome: "blocked",
       block_reason: `executor validation failed or not run: ${validation.command}`,
+    });
+  });
+
+  it.each(["npm run lint:md -- docs/test.md", "npm run lint:md docs/test.md"])(
+    "blocks not_applicable for an existing script invoked with arguments: %s",
+    (command) => {
+      const input = evidence();
+      input.validations = [
+        {
+          source: "executor",
+          command,
+          status: "not_applicable",
+          summary: "適用外",
+          reason: "lint:md script はない",
+        },
+      ];
+
+      expect(
+        deriveReporterFacts(input, {
+          packageScripts: { "lint:md": "markdownlint docs" },
+          packageDependencies: new Set(),
+        }),
+      ).toMatchObject({
+        outcome: "blocked",
+        block_reason: `executor validation failed or not run: ${command}`,
+      });
+    },
+  );
+
+  it("keeps argument-bearing npm commands distinct for delegated-validation matching", () => {
+    const input = evidence();
+    input.validations = [
+      {
+        source: "executor",
+        command: "npm run test:unit -- tests/src/exec-reporter.test.ts",
+        status: "not_run",
+        summary: "runner に委譲",
+      },
+      {
+        id: "test-unit",
+        source: "runner",
+        command: "npm run test:unit",
+        status: "passed",
+        summary: "exit 0",
+      },
+    ];
+
+    expect(
+      deriveReporterFacts(input, {
+        packageScripts: { "test:unit": "vitest run --config vitest.unit.config.ts" },
+      }),
+    ).toMatchObject({
+      outcome: "blocked",
+      block_reason:
+        "executor validation failed or not run: npm run test:unit -- tests/src/exec-reporter.test.ts",
     });
   });
 

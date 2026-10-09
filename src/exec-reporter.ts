@@ -54,6 +54,14 @@ export type ReporterFactOptions = {
   specdojoConfig?: SpecDojoConfig | null;
 };
 
+export type ReporterEvidence = ExecEvidence & {
+  /** Runner-derived facts supplied only to the reporter; they are not persisted in evidence.json. */
+  runner_context?: {
+    mechanically_not_applicable: Array<{ command: string; reason: string }>;
+    runner_managed_attempt_changes: Array<{ path: string; status: string }>;
+  };
+};
+
 export type ReporterEvidenceScope = {
   /** Root of the primary project repository. */
   repoRoot: string;
@@ -65,6 +73,8 @@ export type ReporterEvidenceScope = {
   resultPath?: string;
   /** Resolved project register and derived-view paths in the primary repository. */
   registerPaths?: readonly string[];
+  /** Injectable repository facts used by tests and non-default runners. */
+  factOptions?: ReporterFactOptions;
 };
 
 function repoRelativePath(root: string, path: string): string {
@@ -106,26 +116,47 @@ function isRunnerManagedChange(
 export function evidenceForReporter(
   evidence: ExecEvidence,
   scope: ReporterEvidenceScope,
-): ExecEvidence {
+): ReporterEvidence {
   const changes = evidence.changes.filter((change) => !isRunnerManagedChange(change, scope));
   const attemptChanges = evidence.attempt_changes?.filter(
     (change) => !isRunnerManagedChange(change, scope),
   );
+  // `attempt_changes` excludes lifecycle changes that existed before the executor started. Its
+  // removed entries therefore tell the reporter that the executor really touched runner-owned
+  // bookkeeping, without putting those paths back into the authoritative deliverable list.
+  const runnerManagedAttemptChanges = (evidence.attempt_changes ?? []).filter((change) =>
+    isRunnerManagedChange(change, scope),
+  );
+  const mechanicallyNotApplicable = evidence.validations.flatMap((validation) => {
+    if (validation.source === "runner" || validation.status !== "not_run") return [];
+    const reason = mechanicallyNotApplicableReason(validation.command, scope.factOptions);
+    return reason === undefined ? [] : [{ command: validation.command, reason }];
+  });
   const filtered =
     changes.length !== evidence.changes.length ||
     attemptChanges?.length !== evidence.attempt_changes?.length;
-  if (!filtered) return evidence;
-
+  const selected: ReporterEvidence = filtered
+    ? {
+        ...evidence,
+        changes,
+        ...(attemptChanges ? { attempt_changes: attemptChanges } : {}),
+        diff_summary: {
+          files_changed: changes.length,
+          summary: changes
+            .map((change) => `${change.status} ${change.path}`)
+            .join("\n")
+            .slice(0, MAX_TEXT_LENGTH),
+        },
+      }
+    : evidence;
+  if (mechanicallyNotApplicable.length === 0 && runnerManagedAttemptChanges.length === 0) {
+    return selected;
+  }
   return {
-    ...evidence,
-    changes,
-    ...(attemptChanges ? { attempt_changes: attemptChanges } : {}),
-    diff_summary: {
-      files_changed: changes.length,
-      summary: changes
-        .map((change) => `${change.status} ${change.path}`)
-        .join("\n")
-        .slice(0, MAX_TEXT_LENGTH),
+    ...selected,
+    runner_context: {
+      mechanically_not_applicable: mechanicallyNotApplicable,
+      runner_managed_attempt_changes: runnerManagedAttemptChanges,
     },
   };
 }
@@ -249,6 +280,13 @@ function scriptNameOf(command: string): string | undefined {
   return /^npm run ([A-Za-z0-9:_.-]+)$/.exec(command)?.[1];
 }
 
+// 適用条件の反証では npm が解決する script 名だけを取り出す。後続引数の有無は script の
+// 存在を変えない。一方、委譲・合成コマンドの同一性判定は scriptNameOf の完全一致を保つ。
+function invokedScriptNameOf(command: string): string | undefined {
+  if (command === "npm test") return "test";
+  return /^npm run ([A-Za-z0-9:_.-]+)(?:\s|$)/u.exec(command)?.[1];
+}
+
 function npxPackageNameOf(command: string): string | undefined {
   return /^npx\s+((?:@[A-Za-z0-9_.-]+\/)?[A-Za-z0-9_.-]+)(?:\s|$)/u.exec(command)?.[1];
 }
@@ -322,7 +360,7 @@ export function mechanicallyNotApplicableReason(
     return specdojo.applicable === false ? specdojo.reason : undefined;
   }
 
-  const scriptName = scriptNameOf(normalized);
+  const scriptName = invokedScriptNameOf(normalized);
   if (scriptName !== undefined && scripts[scriptName] === undefined) {
     return `package.json に npm script '${scriptName}' がない`;
   }
@@ -344,7 +382,7 @@ function isValidNotApplicableValidation(
   const normalized = normalizeValidationCommand(command);
   const specdojo = specdojoCommandApplicability(normalized, config);
   if (specdojo.recognized) return specdojo.applicable !== true;
-  const scriptName = scriptNameOf(normalized);
+  const scriptName = invokedScriptNameOf(normalized);
   if (scriptName !== undefined && scripts[scriptName] !== undefined) return false;
   const packageName = npxPackageNameOf(normalized);
   return packageName === undefined || !dependencies.has(packageName);
@@ -708,7 +746,7 @@ export function parseReporterOutput(
 
 export function buildReporterPrompt(opts: {
   plan: string;
-  evidence: ExecEvidence;
+  evidence: ReporterEvidence;
   mode: TaskMode;
   validationError?: string;
 }): string {
@@ -741,7 +779,12 @@ descriptions by path: order does not matter, missing descriptions use a default 
 absent from evidence are discarded. Do not include statuses. An empty changes list requires an
 empty changed_files list. Validation entries with source="runner" were executed by the parent
 process and remain authoritative machine facts. Do not turn them into outcome or block_reason
-fields.${reviewGuidance}${correction}
+fields. When runner_context is present, it contains additional authoritative facts: do not ask for
+a command in mechanically_not_applicable to be run, because the runner already determined that it
+does not apply and will preserve that handoff itself. Paths in runner_managed_attempt_changes were
+materially changed during the executor attempt but are intentionally absent from changed_files;
+do not request confirmation solely because the executor mentions one of those changes while the
+path is absent from changed_files.${reviewGuidance}${correction}
 <specdojo_plan>
 ${opts.plan.trimEnd()}
 </specdojo_plan>
