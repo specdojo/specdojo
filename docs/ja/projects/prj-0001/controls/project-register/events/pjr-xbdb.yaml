@@ -58,3 +58,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_0ea9e0e107944444a62122d5bfef6c3d
+- v: 1
+  id: reg_9c954f7d849e4e7ca019593151c5ce5f
+  ts: "2026-10-09T13:41:22Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（codex-expert-executor / gemma26-reporter）の成果を orchestrator がレビューし、完了条件と照合した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-09"
+    - field: conclusion
+      from: "-"
+      to: 生成する post-create を、~/.emacs・~/.emacs.el・~/.emacs.d/init.el・~/.config/emacs/init.el のいずれかがあれば何もせず、なければ ~/.emacs.d の有無で実際に読まれる場所へ置くように直した。一時的な HOME で 3 通りを unit test で確かめた。
+  previous_event_id: reg_d65065934f3443bf9f0771fbcaef0871

@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-xbdb-devcontainer-emacs-init-location
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-09T13:28:55Z"
+  completed_at: "2026-10-09T13:41:21Z"
+  conclusion: 生成する post-create を、~/.emacs・~/.emacs.el・~/.emacs.d/init.el・~/.config/emacs/init.el のいずれかがあれば何もせず、なければ ~/.emacs.d の有無で実際に読まれる場所へ置くように直した。一時的な HOME で 3 通りを unit test で確かめた。
 ---
 
 # PJR-XBDB devcontainer scaffold の Emacs の設定が ~/.emacs.d があると読まれない
