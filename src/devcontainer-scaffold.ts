@@ -101,10 +101,19 @@ echo "$MARKSMAN_SHA256  /tmp/marksman" | sha256sum -c -
 sudo install -m 0755 /tmp/marksman /usr/local/bin/marksman
 rm -f /tmp/marksman
 
-# Keep dotfiles authoritative: install the bundled defaults only when neither supported init file exists.
-if [ ! -f "$HOME/.emacs.d/init.el" ] && [ ! -f "$HOME/.config/emacs/init.el" ]; then
-  mkdir -p "$HOME/.config/emacs"
-  cp .devcontainer/emacs/init.el "$HOME/.config/emacs/init.el"
+# Keep dotfiles authoritative: install the bundled defaults only when no supported init file exists.
+if [ ! -f "$HOME/.emacs" ] && \\
+   [ ! -f "$HOME/.emacs.el" ] && \\
+   [ ! -f "$HOME/.emacs.d/init.el" ] && \\
+   [ ! -f "$HOME/.config/emacs/init.el" ]; then
+  if [ -d "$HOME/.emacs.d" ]; then
+    EMACS_INIT="$HOME/.emacs.d/init.el"
+  else
+    EMACS_INIT="$HOME/.config/emacs/init.el"
+  fi
+  mkdir -p "$(dirname "$EMACS_INIT")"
+  cp .devcontainer/emacs/init.el "$EMACS_INIT"
+  echo "Installed Emacs init: $EMACS_INIT"
 fi`);
     }
   }

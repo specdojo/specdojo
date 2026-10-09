@@ -53,7 +53,10 @@ devcontainer scaffold --editor emacs の post-create は、init.el がどこに�
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- post-create は `~/.emacs`、`~/.emacs.el`、`~/.emacs.d/init.el`、`~/.config/emacs/init.el` のいずれかがあれば利用者設定を優先し、テンプレートを配置しないようにした。
+- 設定ファイルが無く、空の `~/.emacs.d` がある場合は `~/.emacs.d/init.el` へ、それ以外は `~/.config/emacs/init.el` へ配置し、実際の配置先を出力するようにした。
+- unit test で一時的な `HOME` に生成後の post-create を実行し、空のホーム、空の `~/.emacs.d`、既存の `~/.emacs` の3ケースを検証するようにした。
+- [[specdojo:command-reference]]、[[specdojo:remote-host-development-guide]]、`CHANGELOG.md` の案内を新しい配置規則へ更新した。
 
 ## 5. 関連ドキュメント
 

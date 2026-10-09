@@ -915,7 +915,7 @@ OpenCode の API key は `/home/node/.local/share/opencode/auth.json` に入り�
 
 `--editor emacs` を指定すると、端末版 Emacs、ripgrep、TypeScript・Markdown・YAML・Bash 用の LSP サーバーと `.devcontainer/emacs/init.el` を追加します。初期設定は Emacs 組み込み機能だけを使い、`C-h` の後退、UTF-8、行番号、対応する括弧、端末マウス、作業ツリー外のバックアップ・自動保存、対応ファイルでの Eglot 自動接続を設定します。
 
-post-create は `~/.emacs.d/init.el` と `~/.config/emacs/init.el` の両方が無い場合だけ、生成したテンプレートを後者へコピーします。dotfiles が設定を先に配置した場合は上書きしません。初回のコンテナ作成前に既定値を変える場合は `.devcontainer/emacs/init.el` を編集してください。作成後はコピー先を編集します。コピー先を削除しない限り、再度 post-create を実行してもテンプレートの変更は反映されません。
+post-create は `~/.emacs`、`~/.emacs.el`、`~/.emacs.d/init.el`、`~/.config/emacs/init.el` のいずれも無い場合だけ、生成したテンプレートを配置します。`~/.emacs.d` ディレクトリがあれば `~/.emacs.d/init.el` へ、なければ `~/.config/emacs/init.el` へコピーし、配置先を出力します。dotfiles が設定を先に配置した場合は上書きしません。初回のコンテナ作成前に既定値を変える場合は `.devcontainer/emacs/init.el` を編集してください。作成後は出力されたコピー先を編集します。コピー先を削除しない限り、再度 post-create を実行してもテンプレートの変更は反映されません。
 
 ## 16. 関連ガイド
 

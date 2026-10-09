@@ -253,11 +253,103 @@ describe("runDevcontainerScaffold", () => {
     expect(shCall[1]).toContain("yaml-language-server@1.24.0");
     expect(shCall[1]).toContain("bash-language-server@5.8.1");
     expect(shCall[1]).toContain('MARKSMAN_VERSION="2026-02-08"');
+    expect(shCall[1]).toContain('[ ! -f "$HOME/.emacs" ]');
+    expect(shCall[1]).toContain('[ ! -f "$HOME/.emacs.el" ]');
     expect(shCall[1]).toContain('[ ! -f "$HOME/.emacs.d/init.el" ]');
     expect(shCall[1]).toContain('[ ! -f "$HOME/.config/emacs/init.el" ]');
 
     const initCall = findWriteCall("init.el");
     expect(initCall[1]).toBe(";;; bundled Emacs defaults");
+  });
+
+  it("should install the Emacs init where Emacs will load it without overwriting user config", async () => {
+    await runDevcontainerScaffold({
+      packageRoot,
+      repoRoot,
+      providers: [],
+      editors: ["emacs"],
+      ollama: false,
+      cron: false,
+      tmux: false,
+      force: false,
+      dryRun: false,
+    });
+
+    const script = String(findWriteCall("post-create.sh")[1]);
+    const actualFs = await vi.importActual<typeof fs>("node:fs");
+    const temporaryRoot = actualFs.mkdtempSync(path.join(os.tmpdir(), "specdojo-emacs-home-"));
+    const fakeBin = path.join(temporaryRoot, "bin");
+    actualFs.mkdirSync(fakeBin);
+    actualFs.writeFileSync(path.join(fakeBin, "sudo"), "#!/usr/bin/env bash\nexit 0\n", {
+      mode: 0o755,
+    });
+    actualFs.writeFileSync(path.join(fakeBin, "curl"), "#!/usr/bin/env bash\nexit 0\n", {
+      mode: 0o755,
+    });
+    actualFs.writeFileSync(path.join(fakeBin, "dpkg"), "#!/usr/bin/env bash\necho amd64\n", {
+      mode: 0o755,
+    });
+    actualFs.writeFileSync(path.join(fakeBin, "sha256sum"), "#!/usr/bin/env bash\nexit 0\n", {
+      mode: 0o755,
+    });
+    actualFs.writeFileSync(path.join(fakeBin, "npm"), "#!/usr/bin/env bash\nexit 0\n", {
+      mode: 0o755,
+    });
+    actualFs.writeFileSync(path.join(fakeBin, "rm"), "#!/usr/bin/env bash\nexit 0\n", {
+      mode: 0o755,
+    });
+
+    const cases = [
+      {
+        name: "an empty home",
+        prepare: (_home: string) => undefined,
+        installedPath: ".config/emacs/init.el",
+      },
+      {
+        name: "an existing .emacs.d directory",
+        prepare: (home: string) => actualFs.mkdirSync(path.join(home, ".emacs.d")),
+        installedPath: ".emacs.d/init.el",
+      },
+      {
+        name: "an existing .emacs file",
+        prepare: (home: string) => actualFs.writeFileSync(path.join(home, ".emacs"), "user config"),
+        installedPath: undefined,
+      },
+    ];
+
+    try {
+      for (const testCase of cases) {
+        const home = path.join(temporaryRoot, testCase.name.replaceAll(" ", "-"));
+        const workspace = path.join(home, "workspace");
+        actualFs.mkdirSync(path.join(workspace, ".devcontainer", "emacs"), { recursive: true });
+        actualFs.writeFileSync(
+          path.join(workspace, ".devcontainer", "emacs", "init.el"),
+          ";;; bundled Emacs defaults",
+        );
+        testCase.prepare(home);
+
+        const result = spawnSync("bash", ["-c", script], {
+          cwd: workspace,
+          encoding: "utf8",
+          env: { ...process.env, HOME: home, PATH: `${fakeBin}:${process.env.PATH ?? ""}` },
+        });
+
+        expect(result.status, `${testCase.name}: ${result.stderr}`).toBe(0);
+        const configInit = path.join(home, ".config", "emacs", "init.el");
+        const legacyInit = path.join(home, ".emacs.d", "init.el");
+        if (testCase.installedPath) {
+          const installedPath = path.join(home, testCase.installedPath);
+          expect(actualFs.readFileSync(installedPath, "utf8")).toBe(";;; bundled Emacs defaults");
+          expect(result.stdout).toContain(`Installed Emacs init: ${installedPath}`);
+        } else {
+          expect(actualFs.existsSync(configInit)).toBe(false);
+          expect(actualFs.existsSync(legacyInit)).toBe(false);
+          expect(result.stdout).not.toContain("Installed Emacs init:");
+        }
+      }
+    } finally {
+      actualFs.rmSync(temporaryRoot, { recursive: true, force: true });
+    }
   });
 
   it("should load the bundled Emacs init without errors when Emacs is available", async () => {

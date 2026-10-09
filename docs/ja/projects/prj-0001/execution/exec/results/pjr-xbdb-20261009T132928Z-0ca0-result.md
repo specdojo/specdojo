@@ -4,11 +4,12 @@ specdojo:
   type: exec-result
   task_id: PJR-XBDB
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: exec/plans/pjr-xbdb-20261009T132928Z-0ca0-plan.md
   started_at: "2026-10-09T13:29:28.959Z"
+  completed_at: "2026-10-09T13:38:40.686Z"
   agent: codex-expert-executor
 ---
 
@@ -16,16 +17,22 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- devcontainer scaffold における Emacs 設定の配置ルールを修正しました。
+- `~/.emacs.d` が存在する場合でも、`~/.config/emacs/init.el` が適切に読み込まれるよう、設定の配置先と検証用コードを調整しました。
+- TypeScript 実装の修正、統合テストの更新、関連する案内文書および `CHANGELOG.md` の更新を行いました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `CHANGELOG.md`: 変更履歴の更新
+- `docs/ja/specdojo/guides/remote-host-development-guide.md`: リモートホスト開発ガイドの更新
+- `docs/ja/specdojo/references/command-reference.md`: コマンドリファレンスの更新
+- `src/devcontainer-scaffold.ts`: devcontainer scaffold のロジック修正
+- `tests/devcontainer-scaffold.test.ts`: scaffold 機能のテストコード更新
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- result ファイル `docs/ja/projects/prj-0001/execution/exec/results/pjr-xbdb-20261009T132928Z-0ca0-result.md` を、実施内容に基づいて更新してください。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`fully-guided` で rulebook / recipe / sample / template をどう使い分けたか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+Emacs の設定ファイルが `~/.emacs.d` にディレクトリが存在する場合に無視される問題を解消するため、`devcontainer-scaffold.ts` 内で生成されるパスのロジックを修正しました。具体的には、`~/.config/emacs/init.el` への配置を確実に行うための検証ロジックを含め、実装・テスト・ドキュメントの各レイヤーで変更を適用しました。
