@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_89e0f18f531b408b9e0cd23c18f2241b
+  ts: "2026-10-09T19:58:02Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: exec と orchestrator の両経路でプロダクトリポジトリへアクセスする前提として起票
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: devcontainer scaffold が親ディレクトリをマウントせずプロダクトリポジトリが見えない
+    - field: description
+      from: ""
+      to: templates/devcontainer/devcontainer.json に workspaceMount が無く、生成したコンテナからは app1-specdojo/ しか見えない。../app1 と ../app1-specdojo-worktrees を使えるよう、親ディレクトリをマウントする。
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-10-10"
+    - field: due
+      from: ""
+      to: "2026-10-31"
