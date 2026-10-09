@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-djft-grade-run-per-document-sh
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-09T03:55:04Z"
+  completed_at: "2026-10-09T11:08:07Z"
+  conclusion: v0.3.0 の grade を試験的と明記し、run-per-document.sh が package に含まれないこと、catalog_path が要ることを README・CHANGELOG・案内文書へ書いた。部品だけで 1 文書を評価する手順を command-reference に示した。
 ---
 
 # PJR-DJFT 公開物では grade を通しで実行できない（run-per-document.sh が同梱されない）

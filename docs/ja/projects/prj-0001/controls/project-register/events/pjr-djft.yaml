@@ -58,3 +58,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_19164eab60be4769ad0a278d568ea264
+- v: 1
+  id: reg_08d1410edc4f45b0a815e65e38ab8c15
+  ts: "2026-10-09T11:08:07Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（codex-expert-executor / gemma26-reporter）の成果を orchestrator がレビューし、手順のオプションを CLI の help と照合した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-09"
+    - field: conclusion
+      from: "-"
+      to: v0.3.0 の grade を試験的と明記し、run-per-document.sh が package に含まれないこと、catalog_path が要ることを README・CHANGELOG・案内文書へ書いた。部品だけで 1 文書を評価する手順を command-reference に示した。
+  previous_event_id: reg_fff74dd7d9254793bd4ae9e31b78038f
