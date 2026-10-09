@@ -755,6 +755,46 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
     expect(markdownlintErrors(content)).toEqual([]);
   });
 
+  it("adds mechanically inapplicable not_run validations to the result handoff", async () => {
+    const { resultPath } = await scaffoldResult({
+      executionPath,
+      taskId: "prj-overview",
+      mode: "edit",
+      projectId: "prj-0001",
+      planRef: "exec/plans/prj-overview-plan.md",
+      agent: "pipeline-executor",
+      startedAt: "2026-08-10T07:00:00.000Z",
+    });
+    const evidence = reporterEvidence([]);
+    evidence.validations = [
+      {
+        source: "executor",
+        command: "npm run command-that-does-not-exist",
+        status: "not_run",
+        summary: "script がないため未実行",
+      },
+    ];
+
+    await renderReporterResult(
+      resultPath,
+      {
+        schema_version: 1,
+        mode: "edit",
+        summary: ["適用条件を確認した。"],
+        changed_files: [],
+        handoff: [],
+        approach: "evidence を照合した。",
+      },
+      evidence,
+    );
+
+    const content = readFileSync(resultPath, "utf8");
+    expect(content).toContain(
+      "適用外の検証（runner の判定）: `npm run command-that-does-not-exist`（package.json に npm script 'command-that-does-not-exist' がない）",
+    );
+    expect(markdownlintErrors(content)).toEqual([]);
+  });
+
   it("renders the review judgement sections and verdict from reporter output", async () => {
     const { resultPath } = await scaffoldResult({
       executionPath,

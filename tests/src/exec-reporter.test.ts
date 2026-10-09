@@ -355,6 +355,105 @@ describe("reporter structured output", () => {
     ).toMatchObject({ outcome: "complete", block_reason: "" });
   });
 
+  it.each(["not_applicable", "not_run"] as const)(
+    "accepts catalog validate as %s when the target project has no catalog_path",
+    (status) => {
+      const input = evidence();
+      input.validations = [
+        {
+          source: "executor",
+          command: "npx specdojo catalog validate --project prj-0001",
+          status,
+          summary: "catalog_path がないため適用外",
+          ...(status === "not_applicable" ? { reason: "catalog_path が設定されていない" } : {}),
+        },
+      ];
+
+      expect(
+        deriveReporterFacts(input, {
+          packageDependencies: new Set(["specdojo"]),
+          specdojoConfig: {
+            version: 1,
+            current_project: "prj-0001",
+            projects: { "prj-0001": {} },
+          },
+        }),
+      ).toMatchObject({ outcome: "complete", block_reason: "" });
+    },
+  );
+
+  it.each(["not_applicable", "not_run"] as const)(
+    "blocks catalog validate reported as %s when the target project has catalog_path",
+    (status) => {
+      const input = evidence();
+      input.validations = [
+        {
+          source: "executor",
+          command: "npx specdojo catalog validate --project prj-0001",
+          status,
+          summary: "適用外として報告",
+          ...(status === "not_applicable" ? { reason: "catalog_path がない" } : {}),
+        },
+      ];
+
+      expect(
+        deriveReporterFacts(input, {
+          packageDependencies: new Set(["specdojo"]),
+          specdojoConfig: {
+            version: 1,
+            current_project: "prj-0001",
+            projects: { "prj-0001": { catalog_path: "catalog" } },
+          },
+        }),
+      ).toMatchObject({
+        outcome: "blocked",
+        block_reason:
+          "executor validation failed or not run: npx specdojo catalog validate --project prj-0001",
+      });
+    },
+  );
+
+  it("accepts not_run for an npx package that is not installed", () => {
+    const input = evidence();
+    input.validations = [
+      {
+        source: "executor",
+        command: "npx prettier --write docs/test.md",
+        status: "not_run",
+        summary: "prettier は未導入",
+      },
+    ];
+
+    expect(
+      deriveReporterFacts(input, {
+        packageDependencies: new Set(),
+        specdojoConfig: null,
+      }),
+    ).toMatchObject({ outcome: "complete", block_reason: "" });
+  });
+
+  it("blocks not_run for an npx package that is installed", () => {
+    const input = evidence();
+    input.validations = [
+      {
+        source: "executor",
+        command: "npx prettier --write docs/test.md",
+        status: "not_run",
+        summary: "未実行",
+      },
+    ];
+
+    expect(
+      deriveReporterFacts(input, {
+        packageDependencies: new Set(["prettier"]),
+        specdojoConfig: null,
+      }),
+    ).toMatchObject({
+      outcome: "blocked",
+      block_reason: "executor validation failed or not run: npx prettier --write docs/test.md",
+    });
+  });
+
   it.each([
     {
       command: "npm test",
