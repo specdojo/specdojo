@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-2gfh-exec-handoff-clarity
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-09T11:49:21Z"
+  completed_at: "2026-10-09T12:32:13Z"
+  conclusion: runner の適用外の判定と、executor が変えた runner 管理の記録を reporter の入力（runner_context）へ渡し、矛盾した申し送りと不要な確認依頼を止めた。引数付きの npm run も not_applicable の反証の対象にした。
 ---
 
 # PJR-2GFH 公開物の試用で見えた申し送りと反証の細かな問題

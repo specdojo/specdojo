@@ -58,3 +58,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_1ba04c23e11e47989ac421804be7bfe3
+- v: 1
+  id: reg_d0ba47822e9843988957f7df70de58e3
+  ts: "2026-10-09T12:32:13Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（codex-expert-executor / gemma26-reporter）の成果を orchestrator がレビューし、完了条件と照合した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-09"
+    - field: conclusion
+      from: "-"
+      to: runner の適用外の判定と、executor が変えた runner 管理の記録を reporter の入力（runner_context）へ渡し、矛盾した申し送りと不要な確認依頼を止めた。引数付きの npm run も not_applicable の反証の対象にした。
+  previous_event_id: reg_c43576feef244d4887462fc29fafd5b6
