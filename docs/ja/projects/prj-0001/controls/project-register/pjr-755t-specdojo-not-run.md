@@ -57,7 +57,11 @@ specdojo:
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- runner の検証判定へ、npm script の不在、`npx` package の未導入、SpecDojo サブコマンドの設定上の適用条件を判定する共通処理を追加した。
+- `catalog validate` は `specdojo` の導入有無ではなく対象 project の `catalog_path` で判定する。`catalog_path` がなければ理由付きの `not_applicable` と `not_run` の双方を block せず、設定済みなら双方を block する。適用条件が未定義または設定から判定できない SpecDojo サブコマンドの `not_run` は従来どおり block する。
+- 機械的に適用外と確定した `not_run` は edit result の申し送りへ「適用外の検証（runner の判定）」として理由とともに出すようにした。
+- 未導入／導入済み Prettier と `catalog_path` の有無を組み合わせた unit test、runner 判定による申し送りの描画 test を追加した。
+- 共通規約、exec 設定ガイド、exec 運用ガイド、CHANGELOG を新しい判定範囲に合わせて更新した。
 
 ## 5. 関連ドキュメント
 

@@ -8,7 +8,7 @@ import {
   failedParentValidationReason,
 } from "./exec-parent-validation.js";
 import type { TaskMode } from "./exec-types.js";
-import { specdojoRootDir } from "./specdojo-config.js";
+import { specdojoRootDir, type SpecDojoConfig } from "./specdojo-config.js";
 import { REVIEW_VERDICTS, describeInvalidReviewVerdict, isReviewVerdict } from "./review-types.js";
 import type { ReviewVerdict } from "./review-types.js";
 
@@ -45,6 +45,13 @@ export type ReporterFacts = {
   outcome: "complete" | "blocked";
   changed_files: Array<{ path: string; status: string }>;
   block_reason: string;
+};
+
+export type ReporterFactOptions = {
+  packageScripts?: Readonly<Record<string, string>>;
+  packageDependencies?: ReadonlySet<string>;
+  /** Configuration used to decide whether a SpecDojo subcommand applies to its target project. */
+  specdojoConfig?: SpecDojoConfig | null;
 };
 
 export type ReporterEvidenceScope = {
@@ -129,10 +136,7 @@ export function evidenceForReporter(
  */
 export function deriveReporterFacts(
   evidence: ExecEvidence,
-  options: {
-    packageScripts?: Readonly<Record<string, string>>;
-    packageDependencies?: ReadonlySet<string>;
-  } = {},
+  options: ReporterFactOptions = {},
 ): ReporterFacts {
   const changedFiles = evidence.changes.map(({ path, status }) => ({ path, status }));
   if (evidence.stage.status !== "succeeded" || evidence.stage.exit_code !== 0) {
@@ -180,6 +184,8 @@ export function deriveReporterFacts(
   ]);
   const packageScripts = options.packageScripts ?? defaultPackageScripts();
   const packageDependencies = options.packageDependencies ?? defaultPackageDependencies();
+  const specdojoConfig =
+    options.specdojoConfig === undefined ? defaultSpecdojoConfig() : options.specdojoConfig;
   const isDelegatedValidationSatisfied = (command: string): boolean => {
     const normalized = normalizeValidationCommand(command);
     if (runnerPassedCommands.has(normalized)) return true;
@@ -200,9 +206,18 @@ export function deriveReporterFacts(
         validation.reason,
         packageScripts,
         packageDependencies,
+        specdojoConfig,
       );
     }
-    return !(validation.status === "not_run" && isDelegatedValidationSatisfied(validation.command));
+    return !(
+      validation.status === "not_run" &&
+      (isDelegatedValidationSatisfied(validation.command) ||
+        mechanicallyNotApplicableReason(validation.command, {
+          packageScripts,
+          packageDependencies,
+          specdojoConfig,
+        }) !== undefined)
+    );
   });
   if (executorValidationFailures.length > 0) {
     return {
@@ -238,14 +253,97 @@ function npxPackageNameOf(command: string): string | undefined {
   return /^npx\s+((?:@[A-Za-z0-9_.-]+\/)?[A-Za-z0-9_.-]+)(?:\s|$)/u.exec(command)?.[1];
 }
 
+type SpecdojoCommandApplicability =
+  | { recognized: false }
+  | { recognized: true; applicable: true }
+  | { recognized: true; applicable: false; reason: string }
+  | { recognized: true; applicable: undefined };
+
+function specdojoCommandArgs(command: string): string | undefined {
+  const normalized = normalizeValidationCommand(command);
+  return (
+    /^(?:npx\s+)?specdojo\s+(.+)$/u.exec(normalized)?.[1] ??
+    /^(?:(?:node --import tsx|npx tsx|tsx)\s+(?:\.\/)?src\/specdojo\.ts|node\s+(?:\.\/)?dist\/specdojo\.js)\s+(.+)$/u.exec(
+      normalized,
+    )?.[1]
+  );
+}
+
+function projectOptionOf(args: string): string | undefined {
+  return /(?:^|\s)--project(?:=|\s+)([A-Za-z0-9_-]+)(?=\s|$)/u.exec(args)?.[1];
+}
+
+function specdojoCommandApplicability(
+  command: string,
+  config: SpecDojoConfig | null,
+): SpecdojoCommandApplicability {
+  const args = specdojoCommandArgs(command);
+  if (args === undefined) return { recognized: false };
+  if (!/^catalog\s+validate(?:\s|$)/u.test(args)) {
+    return { recognized: true, applicable: undefined };
+  }
+
+  const configuredProjectId = config?.current_project;
+  const projectId =
+    projectOptionOf(args) ??
+    (typeof configuredProjectId === "string" ? configuredProjectId : undefined);
+  const project = projectId ? config?.projects[projectId] : undefined;
+  if (!project || typeof project !== "object" || Array.isArray(project)) {
+    return { recognized: true, applicable: undefined };
+  }
+  if (typeof project.catalog_path === "string" && project.catalog_path.trim()) {
+    return { recognized: true, applicable: true };
+  }
+  if (project.catalog_path !== undefined) {
+    return { recognized: true, applicable: undefined };
+  }
+  return {
+    recognized: true,
+    applicable: false,
+    reason: `project '${projectId}' に catalog_path が設定されていない`,
+  };
+}
+
+/**
+ * Returns the runner-owned reason when a command is mechanically known not to apply. Unknown
+ * applicability deliberately returns undefined so an ordinary `not_run` continues to block.
+ */
+export function mechanicallyNotApplicableReason(
+  command: string,
+  options: ReporterFactOptions = {},
+): string | undefined {
+  const normalized = normalizeValidationCommand(command);
+  const scripts = options.packageScripts ?? defaultPackageScripts();
+  const dependencies = options.packageDependencies ?? defaultPackageDependencies();
+  const config =
+    options.specdojoConfig === undefined ? defaultSpecdojoConfig() : options.specdojoConfig;
+  const specdojo = specdojoCommandApplicability(normalized, config);
+  if (specdojo.recognized) {
+    return specdojo.applicable === false ? specdojo.reason : undefined;
+  }
+
+  const scriptName = scriptNameOf(normalized);
+  if (scriptName !== undefined && scripts[scriptName] === undefined) {
+    return `package.json に npm script '${scriptName}' がない`;
+  }
+  const packageName = npxPackageNameOf(normalized);
+  if (packageName !== undefined && !dependencies.has(packageName)) {
+    return `package.json の dependencies / devDependencies に '${packageName}' がない`;
+  }
+  return undefined;
+}
+
 function isValidNotApplicableValidation(
   command: string,
   reason: string | undefined,
   scripts: Readonly<Record<string, string>>,
   dependencies: ReadonlySet<string>,
+  config: SpecDojoConfig | null,
 ): boolean {
   if (!reason?.trim()) return false;
   const normalized = normalizeValidationCommand(command);
+  const specdojo = specdojoCommandApplicability(normalized, config);
+  if (specdojo.recognized) return specdojo.applicable !== true;
   const scriptName = scriptNameOf(normalized);
   if (scriptName !== undefined && scripts[scriptName] !== undefined) return false;
   const packageName = npxPackageNameOf(normalized);
@@ -310,6 +408,7 @@ let cachedPackageManifest:
       dependencies: ReadonlySet<string>;
     }
   | undefined;
+let cachedSpecdojoConfig: SpecDojoConfig | null | undefined;
 
 function defaultPackageManifest(): {
   scripts: Readonly<Record<string, string>>;
@@ -326,6 +425,28 @@ function defaultPackageScripts(): Readonly<Record<string, string>> {
 
 function defaultPackageDependencies(): ReadonlySet<string> {
   return defaultPackageManifest().dependencies;
+}
+
+function defaultSpecdojoConfig(): SpecDojoConfig | null {
+  if (cachedSpecdojoConfig !== undefined) return cachedSpecdojoConfig;
+  const configPath = join(specdojoRootDir(), ".specdojo", "specdojo.config.json");
+  if (!existsSync(configPath)) {
+    cachedSpecdojoConfig = null;
+    return cachedSpecdojoConfig;
+  }
+  try {
+    const parsed = JSON.parse(readFileSync(configPath, "utf8")) as Partial<SpecDojoConfig>;
+    cachedSpecdojoConfig =
+      parsed.version === 1 &&
+      typeof parsed.projects === "object" &&
+      parsed.projects !== null &&
+      !Array.isArray(parsed.projects)
+        ? (parsed as SpecDojoConfig)
+        : null;
+  } catch {
+    cachedSpecdojoConfig = null;
+  }
+  return cachedSpecdojoConfig;
 }
 
 export function readPackageScripts(packageJsonPath: string): Readonly<Record<string, string>> {

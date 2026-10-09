@@ -7,6 +7,7 @@ import { formatMarkdownFile } from "./exec-format.js";
 import type { Approach, ExecResultMeta, TaskMode, TaskOrigin } from "./exec-types.js";
 import {
   deriveReporterFacts,
+  mechanicallyNotApplicableReason,
   type ReporterOutput,
   type ReviewReporterOutput,
 } from "./exec-reporter.js";
@@ -422,6 +423,14 @@ function renderEditReporterBody(
       const reason = reporterInlineText(validation.reason ?? "") || "理由なし";
       return `適用外の検証: \`${command}\`（${reason}）`;
     });
+  const runnerJudgedNotApplicableNotes = evidence.validations
+    .filter((validation) => validation.source !== "runner" && validation.status === "not_run")
+    .flatMap((validation) => {
+      const reason = mechanicallyNotApplicableReason(validation.command);
+      if (reason === undefined) return [];
+      const command = reporterInlineText(validation.command).replace(/`/g, "'");
+      return [`適用外の検証（runner の判定）: \`${command}\`（${reporterInlineText(reason)}）`];
+    });
   return [
     "# Edit Result",
     "",
@@ -440,6 +449,7 @@ function renderEditReporterBody(
         ...output.handoff,
         ...unchangedTargetNotes,
         ...notApplicableValidationNotes,
+        ...runnerJudgedNotApplicableNotes,
         ...humanValidationNotes,
       ],
       "なし",

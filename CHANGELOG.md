@@ -75,7 +75,9 @@ SpecDojo の利用者に影響する変更を記録します。
   保存され、要約には出力の先頭と末尾が残ります（PJR-R8WR）。
 - executor evidence の検証状態に、理由必須の `not_applicable` を追加しました。適用外の検査は
   result の申し送りへ残しつつ block せず、存在する npm script や導入済み package に対する
-  誤申告は機械的に block します（PJR-A0NE）。
+  誤申告は機械的に block します。SpecDojo サブコマンドは package の有無ではなく project 設定の
+  適用条件で判定し、未導入 package・未定義 npm script・設定上適用外のコマンドを `not_run` とした
+  場合も runner が適用外として result へ記録します（PJR-A0NE、PJR-755T）。
 - `exec run --register` の実行場所を `run.register_execution` で設定できるようにし、`--in-place` を
   追加しました。設定がない既存 project の既定は従来どおり in-place です（PJR-D0KF）。
 - `register` の記帳コマンドに `--commit` を追加しました。記帳用の実行枠を取得し、対象を
