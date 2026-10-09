@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-a0ne-not-applicable-check-blocks
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-08T14:40:34Z"
   due_on: null
+  completed_at: "2026-10-09T03:48:19Z"
+  conclusion: 検証の状態 not_applicable（理由必須）を加え、package.json に script や依存がある検査の申告と理由のない申告は機械的に block するようにした。適用外の検査は result の申し送りへ出る。共通規約も not_applicable と理由を書く形に改めた。
 ---
 
 # PJR-A0NE 適用されない検査を executor が not_run と記録すると、作業が済んでいても止まる

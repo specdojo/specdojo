@@ -55,3 +55,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_236c976618af4f03bc8f7b4a09da67c3
+- v: 1
+  id: reg_f86d757a13cd4ff096c65817ec60eca1
+  ts: "2026-10-09T03:48:19Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（codex-expert-executor / gemma26-reporter）の成果を orchestrator がレビューし、完了条件と照合した。引数付きの npm run は反証の対象外という残余がある
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-09"
+    - field: conclusion
+      from: "-"
+      to: 検証の状態 not_applicable（理由必須）を加え、package.json に script や依存がある検査の申告と理由のない申告は機械的に block するようにした。適用外の検査は result の申し送りへ出る。共通規約も not_applicable と理由を書く形に改めた。
+  previous_event_id: reg_d7efcf01e84848bc9b8046667ce56d03
