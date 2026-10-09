@@ -1,0 +1,172 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-17HH",
+  "run_id": "20261009T121951551Z-cc6acc78",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-09T12:19:51.551Z",
+    "completed_at": "2026-10-09T12:26:20.803Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "CHANGELOG.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-17hh-japanese-title-topic-slug.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/register-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/register.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register-commands.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 5,
+    "summary": "CHANGELOG.md                                       |  2 +\n .../pjr-17hh-japanese-title-topic-slug.md          |  5 ++-\n .../ja/specdojo/guides/register-operation-guide.md |  5 ++-\n src/register.ts                                    | 28 +++++++++++-\n tests/src/register-commands.test.ts                | 52 ++++++++++++++++++++++\n 5 files changed, 89 insertions(+), 3 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write src/register.ts tests/src/register-commands.test.ts docs/ja/specdojo/guides/register-operation-guide.md CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-17hh-japanese-title-topic-slug.md",
+      "status": "passed",
+      "summary": "変更対象を整形し、後続編集分も再整形しました。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register add --project prj-0001 --type todo --title '支払い方法をどこまで扱うか' --id PJR-HHHH --registered 2026-10-09T00:00:00Z --dry-run",
+      "status": "passed",
+      "summary": "topic は item、警告には --topic と register update --topic の案内が出ました。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register add --project prj-0001 --type todo --title '支払い方法を README に記載する' --id PJR-HHHH --registered 2026-10-09T00:00:00Z --dry-run",
+      "status": "passed",
+      "summary": "topic は readme となり、意味が薄い可能性を警告しました。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register add --project prj-0001 --type todo --title 'Clarify supported payment methods' --id PJR-HHHH --registered 2026-10-09T00:00:00Z --dry-run",
+      "status": "passed",
+      "summary": "英語タイトルの topic は従来どおり生成され、警告はありませんでした。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register add --project prj-0001 --type todo --title 'item' --id PJR-HHHH --registered 2026-10-09T00:00:00Z --dry-run",
+      "status": "passed",
+      "summary": "英語タイトル item は fallback と区別され、警告はありませんでした。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:orchestrator-sync",
+      "status": "passed",
+      "summary": "既存の SSOT と10個の同期対象は一致しています。今回の案内自体は書き込み保護により未反映です。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "履歴リンク検査が成功しました。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "既存の参照不足警告はありますが、検証は成功しました。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿の派生ビュー生成が成功しました。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "2515件の文書インデックス生成が成功しました。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーはありません。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run check",
+      "status": "not_run",
+      "summary": "親 runner が担当する typecheck、lint、schema、unit/integration test を含むため一括実行していません。残る sandbox-safe 構成検査は個別に実行しました。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv4.1.11 \u001b[39m\u001b[90m/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-17HH\u001b[39m\n\n \u001b[32m✓\u001b[39m tests/tools/open-agent-worktree.integration.test.ts \u001b[2m(\u001b[22m\u001b[2m2 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 107\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/src/deliverable-trash.integration.test.ts \u001b[2m(\u001b[22m\u001b[2m4 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 86\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/src/\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.3.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-17HH/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-17HH/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.3.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv4.1.11 \u001b[39m\u001b[90m/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-17HH\u001b[39m\n\n \u001b[32m✓\u001b[39m tests/src/grade.test.ts \u001b[2m(\u001b[22m\u001b[2m69 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 868\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/src/exec-plans.test.ts \u001b[2m(\u001b[22m\u001b[2m67 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 1197\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/src/exec-results.test.ts \u001b[2m(\u001b[22m\u001b[2m40 tests\u001b[22m\u001b[2m)\u001b[22\n… output omitted …\nrated Markdown: ja/removed.md\n\n\u001b[90mstderr\u001b[2m | tests/packages/docs-site/gen-mermaid-svg.test.ts\u001b[2m > \u001b[22m\u001b[2mMermaid SVG generation basics\u001b[2m > \u001b[22m\u001b[2mignores generated Markdown and removes any stale manifest entry\n\u001b[22m\u001b[39m[mermaid] skipping missing or generated Markdown: ja/generated/invalid.md\n\nWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating."
+    }
+  ],
+  "final_message": "topic 警告ロジック、unit test、運用ガイド、CHANGELOG、個票を更新しました。オーケストレーター SSOT とラッパーは `.agents/` の書き込み保護により未反映で、個票に申し送りを記録しています。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-17HH/20261009T121951551Z-cc6acc78/executor.log",
+      "bytes": 3103,
+      "truncated": false
+    }
+  ]
+}

@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: low
   owner: DEV
   registered_at: "2026-10-08T12:38:12Z"
@@ -50,7 +50,10 @@ register add で --topic を省き、タイトルが日本語の場合、topic �
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- `register add` が `--topic` を省略した場合に、既定値が `item` になるタイトルと、文字・数字の過半が非 ASCII で ASCII 語が 1 語だけのタイトルを検出し、作成を続けながら `--topic` と `register update --topic` を案内する警告を出すようにした。
+- 日本語だけのタイトル、日本語に英単語が 1 語混じるタイトル、英語だけのタイトルについて、生成される topic と警告の有無を確認する unit test を追加した。
+- 登録簿運用ガイドと CHANGELOG に、日本語タイトルでは内容を表す英語の topic を指定する案内と今回の修正内容を追記した。
+- オーケストレーター SSOT の `.agents/specdojo-orchestrator.agent.md` は executor の書き込み保護対象だったため変更できなかった。SSOT とラッパーの同期は、書き込み可能な環境で SSOT に同じ案内を加え、`npm run orchestrator:sync` を実行する必要がある。
 
 ## 5. 関連ドキュメント
 

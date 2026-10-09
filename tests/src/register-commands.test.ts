@@ -235,6 +235,58 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
     });
   });
 
+  it.each([
+    {
+      title: "支払い方法をどこまで扱うか",
+      topic: "item",
+      warning: true,
+    },
+    {
+      title: "支払い方法を README に記載する",
+      topic: "readme",
+      warning: true,
+    },
+    {
+      title: "Clarify supported payment methods",
+      topic: "clarify-supported-payment-methods",
+      warning: false,
+    },
+    {
+      title: "item",
+      topic: "item",
+      warning: false,
+    },
+  ])(
+    "add は省略した topic をタイトルから $topic として作り、必要な場合だけ警告する",
+    async ({ title, topic, warning }) => {
+      await withRepo(async ({ registerDir }) => {
+        const stdout = vi.spyOn(process.stdout, "write").mockReturnValue(true);
+
+        await runRegister([
+          "add",
+          "--type",
+          "todo",
+          "--title",
+          title,
+          "--id",
+          "PJR-AB12",
+          "--registered",
+          "2026-08-01T00:00:00Z",
+        ]);
+
+        expect(existsSync(join(registerDir, `pjr-ab12-${topic}.md`))).toBe(true);
+        const output = stdout.mock.calls.map(([message]) => String(message)).join("");
+        if (warning) {
+          expect(output).toContain(`Warning: derived topic "${topic}" may not describe the title.`);
+          expect(output).toContain("Specify --topic");
+          expect(output).toContain("register update --topic");
+        } else {
+          expect(output).not.toContain("Warning: derived topic");
+        }
+      });
+    },
+  );
+
   it("add は既存 ID と衝突する場合に stderr へ理由を出して失敗する", async () => {
     await withRepo(async ({ registerDir }) => {
       writeFileSync(join(registerDir, "pjr-index.md"), buildIndex([]), "utf8");
