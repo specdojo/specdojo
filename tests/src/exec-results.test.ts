@@ -714,6 +714,47 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
     expect(markdownlintErrors(content)).toEqual([]);
   });
 
+  it("adds not_applicable validations and their reasons to the result handoff", async () => {
+    const { resultPath } = await scaffoldResult({
+      executionPath,
+      taskId: "prj-overview",
+      mode: "edit",
+      projectId: "prj-0001",
+      planRef: "exec/plans/prj-overview-plan.md",
+      agent: "pipeline-executor",
+      startedAt: "2026-08-10T07:00:00.000Z",
+    });
+    const evidence = reporterEvidence([]);
+    evidence.validations = [
+      {
+        source: "executor",
+        command: "npx prettier --write docs/test.md",
+        status: "not_applicable",
+        summary: "適用外",
+        reason: "prettier が package.json の依存にない",
+      },
+    ];
+
+    await renderReporterResult(
+      resultPath,
+      {
+        schema_version: 1,
+        mode: "edit",
+        summary: ["適用条件を確認した。"],
+        changed_files: [],
+        handoff: [],
+        approach: "evidence を照合した。",
+      },
+      evidence,
+    );
+
+    const content = readFileSync(resultPath, "utf8");
+    expect(content).toContain(
+      "適用外の検証: `npx prettier --write docs/test.md`（prettier が package.json の依存にない）",
+    );
+    expect(markdownlintErrors(content)).toEqual([]);
+  });
+
   it("renders the review judgement sections and verdict from reporter output", async () => {
     const { resultPath } = await scaffoldResult({
       executionPath,

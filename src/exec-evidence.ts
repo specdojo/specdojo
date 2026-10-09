@@ -18,8 +18,10 @@ export type EvidenceValidation = {
   /** Repository the runner ran the validation in (`project` or a declared product repository). */
   repo?: string;
   command: string;
-  status: "passed" | "failed" | "not_run" | "requires_human";
+  status: "passed" | "failed" | "not_run" | "not_applicable" | "requires_human";
   summary: string;
+  /** Why an executor validation does not apply. Required when status is `not_applicable`. */
+  reason?: string;
 };
 
 export type EvidenceTargetCoverage = {
@@ -240,6 +242,7 @@ export function parseExecutorReport(stdout: string): {
         (status !== "passed" &&
           status !== "failed" &&
           status !== "not_run" &&
+          status !== "not_applicable" &&
           status !== "requires_human")
       ) {
         continue;
@@ -249,6 +252,9 @@ export function parseExecutorReport(stdout: string): {
         command,
         status,
         summary: boundedText(candidate.summary, MAX_VALIDATION_SUMMARY_LENGTH),
+        ...(status === "not_applicable"
+          ? { reason: boundedText(candidate.reason, MAX_VALIDATION_SUMMARY_LENGTH) }
+          : {}),
       });
     }
   }

@@ -335,6 +335,68 @@ describe("reporter structured output", () => {
     expect(deriveReporterFacts(input)).toMatchObject({ outcome: "complete", block_reason: "" });
   });
 
+  it("does not block a reasoned not_applicable validation", () => {
+    const input = evidence();
+    input.validations = [
+      {
+        source: "executor",
+        command: "npx prettier --write docs/test.md",
+        status: "not_applicable",
+        summary: "適用外",
+        reason: "prettier が package.json の依存にない",
+      },
+    ];
+
+    expect(
+      deriveReporterFacts(input, {
+        packageScripts: {},
+        packageDependencies: new Set(),
+      }),
+    ).toMatchObject({ outcome: "complete", block_reason: "" });
+  });
+
+  it.each([
+    {
+      command: "npm test",
+      reason: "test script はない",
+      packageScripts: { test: "vitest run" },
+      packageDependencies: new Set<string>(),
+    },
+    {
+      command: "npx prettier --write docs/test.md",
+      reason: "prettier は未導入",
+      packageScripts: {},
+      packageDependencies: new Set(["prettier"]),
+    },
+    {
+      command: "npx prettier --write docs/test.md",
+      reason: "",
+      packageScripts: {},
+      packageDependencies: new Set<string>(),
+    },
+  ])("blocks an invalid not_applicable claim for $command", (validation) => {
+    const input = evidence();
+    input.validations = [
+      {
+        source: "executor",
+        command: validation.command,
+        status: "not_applicable",
+        summary: "適用外",
+        reason: validation.reason,
+      },
+    ];
+
+    expect(
+      deriveReporterFacts(input, {
+        packageScripts: validation.packageScripts as Readonly<Record<string, string>>,
+        packageDependencies: validation.packageDependencies,
+      }),
+    ).toMatchObject({
+      outcome: "blocked",
+      block_reason: `executor validation failed or not run: ${validation.command}`,
+    });
+  });
+
   it.each([
     { command: "npm test", status: "failed" as const, summary: "1 failed" },
     { command: "npm run lint:md", status: "not_run" as const, summary: "not delegated" },

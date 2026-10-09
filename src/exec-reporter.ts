@@ -129,7 +129,10 @@ export function evidenceForReporter(
  */
 export function deriveReporterFacts(
   evidence: ExecEvidence,
-  options: { packageScripts?: Readonly<Record<string, string>> } = {},
+  options: {
+    packageScripts?: Readonly<Record<string, string>>;
+    packageDependencies?: ReadonlySet<string>;
+  } = {},
 ): ReporterFacts {
   const changedFiles = evidence.changes.map(({ path, status }) => ({ path, status }));
   if (evidence.stage.status !== "succeeded" || evidence.stage.exit_code !== 0) {
@@ -176,6 +179,7 @@ export function deriveReporterFacts(
       .map((validation) => normalizeValidationCommand(validation.command)),
   ]);
   const packageScripts = options.packageScripts ?? defaultPackageScripts();
+  const packageDependencies = options.packageDependencies ?? defaultPackageDependencies();
   const isDelegatedValidationSatisfied = (command: string): boolean => {
     const normalized = normalizeValidationCommand(command);
     if (runnerPassedCommands.has(normalized)) return true;
@@ -187,13 +191,19 @@ export function deriveReporterFacts(
       )
     );
   };
-  const executorValidationFailures = evidence.validations.filter(
-    (validation) =>
-      validation.source !== "runner" &&
-      validation.status !== "passed" &&
-      validation.status !== "requires_human" &&
-      !(validation.status === "not_run" && isDelegatedValidationSatisfied(validation.command)),
-  );
+  const executorValidationFailures = evidence.validations.filter((validation) => {
+    if (validation.source === "runner") return false;
+    if (validation.status === "passed" || validation.status === "requires_human") return false;
+    if (validation.status === "not_applicable") {
+      return !isValidNotApplicableValidation(
+        validation.command,
+        validation.reason,
+        packageScripts,
+        packageDependencies,
+      );
+    }
+    return !(validation.status === "not_run" && isDelegatedValidationSatisfied(validation.command));
+  });
   if (executorValidationFailures.length > 0) {
     return {
       outcome: "blocked",
@@ -222,6 +232,24 @@ function normalizeValidationCommand(command: string): string {
 function scriptNameOf(command: string): string | undefined {
   if (command === "npm test") return "test";
   return /^npm run ([A-Za-z0-9:_.-]+)$/.exec(command)?.[1];
+}
+
+function npxPackageNameOf(command: string): string | undefined {
+  return /^npx\s+((?:@[A-Za-z0-9_.-]+\/)?[A-Za-z0-9_.-]+)(?:\s|$)/u.exec(command)?.[1];
+}
+
+function isValidNotApplicableValidation(
+  command: string,
+  reason: string | undefined,
+  scripts: Readonly<Record<string, string>>,
+  dependencies: ReadonlySet<string>,
+): boolean {
+  if (!reason?.trim()) return false;
+  const normalized = normalizeValidationCommand(command);
+  const scriptName = scriptNameOf(normalized);
+  if (scriptName !== undefined && scripts[scriptName] !== undefined) return false;
+  const packageName = npxPackageNameOf(normalized);
+  return packageName === undefined || !dependencies.has(packageName);
 }
 
 // package.json の script が npm script の呼び出しを `&&` でつないだだけの合成なら、直下の構成
@@ -276,16 +304,40 @@ function isComponentSatisfied(
   return [...passed].some((candidate) => normalizeScriptBody(candidate) === normalizedBody);
 }
 
-let cachedPackageScripts: Readonly<Record<string, string>> | undefined;
+let cachedPackageManifest:
+  | {
+      scripts: Readonly<Record<string, string>>;
+      dependencies: ReadonlySet<string>;
+    }
+  | undefined;
+
+function defaultPackageManifest(): {
+  scripts: Readonly<Record<string, string>>;
+  dependencies: ReadonlySet<string>;
+} {
+  if (cachedPackageManifest) return cachedPackageManifest;
+  cachedPackageManifest = readPackageManifest(join(specdojoRootDir(), "package.json"));
+  return cachedPackageManifest;
+}
 
 function defaultPackageScripts(): Readonly<Record<string, string>> {
-  if (cachedPackageScripts) return cachedPackageScripts;
-  cachedPackageScripts = readPackageScripts(join(specdojoRootDir(), "package.json"));
-  return cachedPackageScripts;
+  return defaultPackageManifest().scripts;
+}
+
+function defaultPackageDependencies(): ReadonlySet<string> {
+  return defaultPackageManifest().dependencies;
 }
 
 export function readPackageScripts(packageJsonPath: string): Readonly<Record<string, string>> {
-  if (!existsSync(packageJsonPath)) return {};
+  return readPackageManifest(packageJsonPath).scripts;
+}
+
+function readPackageManifest(packageJsonPath: string): {
+  scripts: Readonly<Record<string, string>>;
+  dependencies: ReadonlySet<string>;
+} {
+  const empty = { scripts: {}, dependencies: new Set<string>() };
+  if (!existsSync(packageJsonPath)) return empty;
   let parsed: unknown;
   try {
     parsed = JSON.parse(readFileSync(packageJsonPath, "utf8"));
@@ -293,16 +345,32 @@ export function readPackageScripts(packageJsonPath: string): Readonly<Record<str
     process.stderr.write(
       `warning: cannot read package scripts from ${packageJsonPath}: ${String(error)}\n`,
     );
-    return {};
+    return empty;
   }
-  if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) return {};
-  const scripts = (parsed as { scripts?: unknown }).scripts;
-  if (typeof scripts !== "object" || scripts === null || Array.isArray(scripts)) return {};
-  return Object.fromEntries(
-    Object.entries(scripts).filter(
-      (entry): entry is [string, string] => typeof entry[1] === "string",
-    ),
+  if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) return empty;
+  const manifest = parsed as {
+    scripts?: unknown;
+    dependencies?: unknown;
+    devDependencies?: unknown;
+  };
+  const scripts =
+    typeof manifest.scripts === "object" &&
+    manifest.scripts !== null &&
+    !Array.isArray(manifest.scripts)
+      ? Object.fromEntries(
+          Object.entries(manifest.scripts).filter(
+            (entry): entry is [string, string] => typeof entry[1] === "string",
+          ),
+        )
+      : {};
+  const dependencyEntries = [manifest.dependencies, manifest.devDependencies].flatMap((section) =>
+    typeof section === "object" && section !== null && !Array.isArray(section)
+      ? Object.entries(section).filter(
+          (entry): entry is [string, string] => typeof entry[1] === "string",
+        )
+      : [],
   );
+  return { scripts, dependencies: new Set(dependencyEntries.map(([name]) => name)) };
 }
 
 export const REPORTER_OUTPUT_SCHEMA = {

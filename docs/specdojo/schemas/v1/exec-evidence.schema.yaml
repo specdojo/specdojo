@@ -120,13 +120,19 @@ properties:
           maxLength: 500
         status:
           type: string
-          enum: [passed, failed, not_run, requires_human]
+          enum: [passed, failed, not_run, not_applicable, requires_human]
           description: >
             Executor validations may use requires_human only for checks that cannot run in the
             agent sandbox. The runner preserves those checks as human handoff items without
-            treating them as validation failures.
+            treating them as validation failures. Executor validations may use not_applicable
+            only when the repository does not meet the check's applicability conditions, and
+            must explain why in reason.
         summary:
           type: string
+          maxLength: 1000
+        reason:
+          type: string
+          minLength: 1
           maxLength: 1000
       allOf:
         - if:
@@ -136,6 +142,13 @@ properties:
                 const: runner
           then:
             required: [id]
+        - if:
+            required: [status]
+            properties:
+              status:
+                const: not_applicable
+          then:
+            required: [reason]
   target_coverage:
     description: >
       Per-target disposition reported by an executor. On resume the runner requires complete

@@ -757,7 +757,7 @@ describe("generateSinglePlan", () => {
       const plan = readFileSync(outPath, "utf8");
       expect(plan).toContain("対象 project に `catalog_path` が設定されている");
       expect(plan).toContain(
-        "条件を満たさない検査は実行せず、result や executor evidence の validations に `not_run` としても記録しない",
+        "条件を満たさない検査は実行せず、executor evidence の validations に `not_applicable` と非適用の理由を `reason` へ記録する",
       );
     } finally {
       rmSync(root, { recursive: true, force: true });
