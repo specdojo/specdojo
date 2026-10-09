@@ -82,6 +82,24 @@ fi
 git config --global core.quotepath false
 git config --global core.autocrlf input
 
+# Install the bundled Emacs defaults (the same template that `specdojo devcontainer scaffold
+# --editor emacs` generates) only when no user init file exists, so dotfiles stay authoritative.
+# Emacs ignores ~/.config/emacs when ~/.emacs.d exists, even without an init.el inside, and Emacs
+# itself creates ~/.emacs.d on first start. Place the file where Emacs will actually read it.
+EMACS_TEMPLATE="$WORKSPACE_DIR/templates/devcontainer/emacs/init.el"
+if [ -f "$EMACS_TEMPLATE" ] &&
+  [ ! -e "$HOME/.emacs" ] && [ ! -e "$HOME/.emacs.el" ] &&
+  [ ! -e "$HOME/.emacs.d/init.el" ] && [ ! -e "$HOME/.config/emacs/init.el" ]; then
+  if [ -d "$HOME/.emacs.d" ]; then
+    EMACS_INIT_DIR="$HOME/.emacs.d"
+  else
+    EMACS_INIT_DIR="$HOME/.config/emacs"
+  fi
+  mkdir -p "$EMACS_INIT_DIR"
+  cp "$EMACS_TEMPLATE" "$EMACS_INIT_DIR/init.el"
+  echo "Installed the SpecDojo Emacs defaults: $EMACS_INIT_DIR/init.el"
+fi
+
 claude --version || true
 codex --version || true
 opencode --version || true
