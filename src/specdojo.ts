@@ -22,6 +22,7 @@ import { registerAgentCommands } from "./agent.js";
 import { registerKataCommands } from "./kata-command.js";
 import { registerDevcontainerCommands } from "./devcontainer-command.js";
 import { registerInitCommand } from "./init-command.js";
+import { registerOrchestratorCommands } from "./orchestrator.js";
 
 /**
  * bin は dist/specdojo.js を指すため、開発チェックアウトで `npm run build` を忘れると
@@ -69,6 +70,7 @@ async function main(): Promise<void> {
   registerAgentCommands(program);
   registerKataCommands(program);
   registerDevcontainerCommands(program);
+  registerOrchestratorCommands(program);
 
   await program.parseAsync(process.argv);
 }

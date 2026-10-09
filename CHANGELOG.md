@@ -33,6 +33,7 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 追加機能
 
+- `specdojo orchestrator launch` を追加し、対象 project の `repos` に宣言したプロダクトリポジトリだけを対話型オーケストレーターから参照・変更できるようにしました。`config scaffold` が追加する `orch:*` はこの入口を使います。Claude Code、Codex、Antigravity、GitHub Copilot は exec と同じ追加ルート引数を、OpenCode は実行時の `permission.external_directory` を利用します（PJR-ZGJ4）。
 - 質問に答えるだけで project、register、人の名簿、provider のオーケストレーター設定、agent
   実行設定、任意の成果物カタログと Dev Container を用意する `specdojo init` を追加しました。
   非対話オプション、既存ファイルの非上書き、`--dry-run` にも対応します。親検証は利用先の

@@ -8,20 +8,26 @@ export { specdojoPackageRootDir } from "./package-paths.js";
 
 export const ORCHESTRATOR_NPM_SCRIPTS: Record<string, Record<string, string>> = {
   claude: {
-    "orch:opus": "claude --agent specdojo-orchestrator --model opus",
-    "orch:sonnet": "claude --agent specdojo-orchestrator --model sonnet",
+    "orch:opus":
+      "specdojo orchestrator launch --provider claude -- --agent specdojo-orchestrator --model opus",
+    "orch:sonnet":
+      "specdojo orchestrator launch --provider claude -- --agent specdojo-orchestrator --model sonnet",
   },
   codex: {
-    "orch:codex": 'codex "$(cat .specdojo/codex/orchestrator.md)"',
+    "orch:codex":
+      'specdojo orchestrator launch --provider codex -- "$(cat .specdojo/codex/orchestrator.md)"',
   },
   antigravity: {
-    "orch:agy": 'agy --add-dir "$(pwd)" -i "$(cat .specdojo/antigravity/orchestrator.md)"',
+    "orch:agy":
+      'specdojo orchestrator launch --provider antigravity -- --add-dir "$(pwd)" -i "$(cat .specdojo/antigravity/orchestrator.md)"',
   },
   opencode: {
-    "orch:opencode": "opencode --agent specdojo-orchestrator",
+    "orch:opencode":
+      "specdojo orchestrator launch --provider opencode -- --agent specdojo-orchestrator",
   },
   copilot: {
-    "orch:copilot": "copilot --agent specdojo-orchestrator",
+    "orch:copilot":
+      "specdojo orchestrator launch --provider copilot -- --agent specdojo-orchestrator",
   },
 };
 

@@ -355,7 +355,7 @@ product/
 | プロダクト文書または実装を1つの登録簿項目で変更する                     | project に `repos` を宣言し、`exec run --worktree` で全リポジトリを統合する |
 | SpecDojo 自身の開発のように、成果物と実装が常に同じ変更・履歴として動く | 例外として同一リポジトリ構成を選べる                                        |
 
-プロダクトリポジトリ（`app1/` など）を変更する項目は、`.specdojo/specdojo.config.json` の project に `repos` を宣言してから実行します。宣言の書き方は [[specdojo:specdojo-config-reference|specdojo.config.json リファレンス]] の「`repos`のキー」を参照してください。宣言できるプロダクトリポジトリの数に上限はなく、1つの項目でプロジェクトリポジトリと複数のプロダクトリポジトリを変更できます。宣言していないリポジトリは exec の管理外であり、`app1-specdojo/` の agent から直接更新しません。
+プロダクトリポジトリ（`app1/` など）を変更する項目は、`.specdojo/specdojo.config.json` の project に `repos` を宣言してから実行します。宣言の書き方は [[specdojo:specdojo-config-reference|specdojo.config.json リファレンス]] の「`repos`のキー」を参照してください。宣言できるプロダクトリポジトリの数に上限はなく、1つの項目でプロジェクトリポジトリと複数のプロダクトリポジトリを変更できます。宣言済みのリポジトリは exec のタスク対象にでき、`specdojo orchestrator launch` で起動したオーケストレーターも参照・変更できます。宣言していないリポジトリは exec とオーケストレーターの管理外であり、`app1-specdojo/` の agent から直接更新しません。
 
 ### 10.2. ディレクトリレイアウト
 
@@ -400,7 +400,7 @@ workspace/
 
 - プロダクト文書の doc id による参照。プロダクト側の `targets` はパスで指定します。
 - `exec worktree commit` / `merge` によるプロダクト側の統合。分割コマンドはプロジェクト側だけを統合し、プロダクト worktree に変更が残るタスクは commit の前に停止します。プロダクト側を含めた統合は `exec run --worktree` で行います。
-- opencode の agent からプロダクト worktree への書き込み。opencode は agent 定義の `permission.external_directory` で作業ディレクトリ外を拒否するため、runner が起動引数で許可を加えられません。
+- exec が起動する opencode agent からプロダクト worktree への書き込み。opencode は agent 定義の `permission.external_directory` で作業ディレクトリ外を拒否するため、runner が起動引数で許可を加えられません。対話型オーケストレーターは `specdojo orchestrator launch` が起動時の inline config へ宣言済みルートだけを注入するため、この制約の対象外です。
 - 宣言していないリポジトリの変更。`app1/` を agent のサンドボックス外から直接更新したり、手動の Git 操作で exec の管理外の worktree を作ったりしません。
 
 `repos` を宣言しない project（同一リポジトリ構成を含む）の worktree の配置、commit、統合は従来と変わりません。

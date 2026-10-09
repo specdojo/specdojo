@@ -15,7 +15,7 @@ CLI Command Reference
 
 **対象範囲**
 
-- `specdojo` CLI の主要コマンド（init / config / kata / catalog / deliverable / schedule / register / exec / agent / grade / index / watch / build / routine）
+- `specdojo` CLI の主要コマンド（init / config / kata / catalog / deliverable / schedule / register / exec / agent / orchestrator / grade / index / watch / build / routine）
 
 **ここで引けるもの**
 
@@ -29,7 +29,7 @@ CLI Command Reference
 
 | オプション        | 用途                                               | 主な対象                                   |
 | ----------------- | -------------------------------------------------- | ------------------------------------------ |
-| `--project <id>`  | 対象 project を明示する                            | project に紐づくコマンド                   |
+| `--project <id>`  | 対象 project を明示する                            | project に紐づくコマンド、`orchestrator`   |
 | `--dry-run`       | 書き込みや実行を行わず予定内容を表示する           | scaffold / build / run / worktree / kata   |
 | `--force`         | 既存ファイルの上書きや通常拒否される操作を明示する | scaffold / schedule build / release / kata |
 | `--scope <scope>` | build / watch の対象範囲を絞る                     | `build` / `watch`                          |
@@ -858,7 +858,20 @@ specdojo agent run --plan <plan.md> --by <nickname> --dry-run
 
 `exec run` と違い、`agent run` は claim や result の記帳を行いません。状態遷移を伴う実行は `exec run` を使い、`agent run` は plan と応答だけを扱う用途に限定します。
 
-## 15. devcontainer
+## 15. orchestrator
+
+`orchestrator launch` は、対象 project の `repos` に宣言したプロダクトリポジトリを provider CLI の許可対象に加えて、対話型オーケストレーターを起動します。`config scaffold` が追加する `orch:*` npm script はこの入口を使うため、scaffold 時点の絶対パスを `package.json` へ書き込みません。
+
+```bash
+specdojo orchestrator launch --provider claude --project prj-0001 -- \
+  --agent specdojo-orchestrator --model sonnet
+```
+
+対象 project は `--project`、`SPECDOJO_PROJECT`、`current_project`、`projects` の先頭の順で解決します。`--` より後ろの引数は provider CLI へそのまま渡します。`repos` が無い場合、provider CLI へ渡すコマンドと引数は従来と変わりません。
+
+Claude Code、Codex、Antigravity、GitHub Copilot には exec と同じ追加ルート引数を渡します。OpenCode は、起動時の `OPENCODE_CONFIG_CONTENT` に選択 agent の `permission.external_directory` を注入し、全外部ディレクトリを拒否したうえで宣言済みのリポジトリだけを許可します。外部パスへ既存の `permission.edit` が一致しないため、同じ宣言済みルートの編集許可も注入します。既存の inline config の他項目は保持します。未宣言のリポジトリは、どの provider でも許可対象になりません。
+
+## 16. devcontainer
 
 `devcontainer` は、利用リポジトリの `.devcontainer/` 環境を構築するためのサブコマンドです。VS Code Dev Container などで、オーケストレーターを起動するための分離されたコンテナ環境を生成します。
 
@@ -919,7 +932,7 @@ OpenCode の API key は `/home/node/.local/share/opencode/auth.json` に入り�
 
 post-create は `~/.emacs`、`~/.emacs.el`、`~/.emacs.d/init.el`、`~/.config/emacs/init.el` のいずれも無い場合だけ、生成したテンプレートを配置します。`~/.emacs.d` ディレクトリがあれば `~/.emacs.d/init.el` へ、なければ `~/.config/emacs/init.el` へコピーし、配置先を出力します。dotfiles が設定を先に配置した場合は上書きしません。初回のコンテナ作成前に既定値を変える場合は `.devcontainer/emacs/init.el` を編集してください。作成後は出力されたコピー先を編集します。コピー先を削除しない限り、再度 post-create を実行してもテンプレートの変更は反映されません。
 
-## 16. 関連ガイド
+## 17. 関連ガイド
 
 | 詳細                     | 参照先                                                                      |
 | ------------------------ | --------------------------------------------------------------------------- |
