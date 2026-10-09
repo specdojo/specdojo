@@ -79,8 +79,11 @@ specdojo register scaffold --project <project-id>
 登録は `register add` で行います。ID は省略すると自動採番されます。
 
 ```bash
-specdojo register add --project <project-id> --type todo --title "在庫初期データの登録"
+specdojo register add --project <project-id> --type todo \
+  --title "在庫初期データの登録" --topic inventory-seed
 ```
+
+タイトルが日本語の場合は、内容を表す英語の `--topic` を小文字・ハイフン区切りで指定します。省略して `item` や日本語タイトル中の英単語だけが topic になった場合、`register add` は作成を続けたうえで警告します。警告後も、`register update --topic` で個票名と文書 ID を変更できます。
 
 `--priority` は次の目安で付けます（省略時は `medium`）。
 

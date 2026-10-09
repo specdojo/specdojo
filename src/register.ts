@@ -468,6 +468,27 @@ function slugify(text: string): string {
   );
 }
 
+// 日本語主体のタイトルから ASCII の断片だけを topic にすると、個票名から内容を
+// 推測できなくなる。区切り記号は数えず、文字・数字の過半が非 ASCII で、抽出できた
+// ASCII 語が 1 語だけの場合を「意味を失う可能性がある既定 topic」とみなす。
+function derivedTopicNeedsWarning(title: string, topic: string): boolean {
+  const asciiWords = title.match(/[a-z0-9]+/giu) ?? [];
+  if (topic === "item" && asciiWords.length === 0) return true;
+  if (asciiWords.length !== 1) return false;
+
+  const lettersAndNumbers = [...title].filter((char) => /[\p{L}\p{N}]/u.test(char));
+  const asciiCount = lettersAndNumbers.filter((char) => /[a-z0-9]/iu.test(char)).length;
+  return lettersAndNumbers.length - asciiCount > asciiCount;
+}
+
+function printDerivedTopicWarning(topic: string): void {
+  process.stdout.write(
+    `Warning: derived topic "${topic}" may not describe the title. ` +
+      "Specify --topic with a lowercase, hyphen-separated English slug, or change it later " +
+      "with register update --topic.\n",
+  );
+}
+
 // ================================
 // Ticket Generation
 // ================================
@@ -2418,7 +2439,10 @@ export function registerRegisterCommands(program: Command): void {
   addRegisterCommitOptions(addCmd);
   addCmd.action(async (opts) => {
     await runRegisterMutation("add", opts, ({ paths, assertCommitTargetsClean }) => {
-      const topic = opts.topic?.trim() || slugify(opts.title);
+      const explicitTopic = opts.topic?.trim();
+      const topic = explicitTopic || slugify(opts.title);
+      const warnAboutDerivedTopic =
+        explicitTopic === undefined && derivedTopicNeedsWarning(opts.title, topic);
       if (!REGISTER_TOPIC_RE.test(topic)) {
         throw new Error(
           `Invalid topic: "${topic}". Must use lowercase letters, numbers, and single hyphens`,
@@ -2474,6 +2498,7 @@ export function registerRegisterCommands(program: Command): void {
           `Would create ${registerEventFilePath(paths.projectRegisterPath, displayId)}:\n` +
             `${appendRegisterEvent(undefined, addEvent)}\n`,
         );
+        if (warnAboutDerivedTopic) printDerivedTopicWarning(topic);
         return { id: displayId, title: opts.title };
       }
 
@@ -2499,6 +2524,7 @@ export function registerRegisterCommands(program: Command): void {
           process.stdout.write(`Generated: ${view.path}\n`);
         }
       }
+      if (warnAboutDerivedTopic) printDerivedTopicWarning(topic);
       return { id: displayId, title: opts.title };
     });
   });
