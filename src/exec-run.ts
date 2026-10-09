@@ -1033,11 +1033,16 @@ credentials or a host-side operation. Do not use it for a check that could run b
 report that as \`not_run\`. A \`requires_human\` check is carried into the result as a human handoff
 and does not block pipeline completion.
 
+Use validation status \`not_applicable\` when the repository does not meet a check's applicability
+conditions, and include a non-empty \`reason\`. The runner carries it into the result without
+blocking completion, but rejects the claim when the named npm script or npx package is present in
+the repository's package.json.
+
 End the final response with exactly one machine-readable report using this envelope. Do not place
 Markdown fences around the JSON.
 
 <specdojo_executor_evidence>
-{"final_message":"concise outcome","validations":[{"command":"exact command","status":"passed|failed|not_run|requires_human","summary":"concise result or required human check"}]${targetCoverageExample}}
+{"final_message":"concise outcome","validations":[{"command":"exact command","status":"passed|failed|not_run|not_applicable|requires_human","summary":"concise result or required human check","reason":"required when status is not_applicable"}]${targetCoverageExample}}
 </specdojo_executor_evidence>
 `;
 }

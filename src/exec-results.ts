@@ -413,6 +413,15 @@ function renderEditReporterBody(
       const summary = reporterInlineText(validation.summary) || "要約なし";
       return `人の確認が必要: \`${command}\`（${summary}）`;
     });
+  const notApplicableValidationNotes = evidence.validations
+    .filter(
+      (validation) => validation.source !== "runner" && validation.status === "not_applicable",
+    )
+    .map((validation) => {
+      const command = reporterInlineText(validation.command).replace(/`/g, "'");
+      const reason = reporterInlineText(validation.reason ?? "") || "理由なし";
+      return `適用外の検証: \`${command}\`（${reason}）`;
+    });
   return [
     "# Edit Result",
     "",
@@ -427,7 +436,12 @@ function renderEditReporterBody(
     "## 3. 申し送り",
     "",
     reporterBulletList(
-      [...output.handoff, ...unchangedTargetNotes, ...humanValidationNotes],
+      [
+        ...output.handoff,
+        ...unchangedTargetNotes,
+        ...notApplicableValidationNotes,
+        ...humanValidationNotes,
+      ],
       "なし",
     ),
     "",

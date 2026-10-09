@@ -58,7 +58,10 @@ specdojo:
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- executor evidence と公開 schema に、理由必須の `not_applicable` を追加した。
+- runner の機械判定は、理由付きの `not_applicable` を block せず、理由欠落、存在する npm script、`dependencies` / `devDependencies` にある package の `npx` 実行を適用外とした申告を block するようにした。
+- `not_applicable` のコマンドと理由を edit result の申し送りへ機械的に追記するようにした。親 runner の検証判定は既存どおり executor の申告から独立している。
+- exec plan の共通規約、executor prompt、exec 設定・運用ガイド、CHANGELOG を新しい状態と判定に合わせ、evidence の解析・schema、機械判定、result 生成の unit test を追加した。
 
 ## 5. 関連ドキュメント
 

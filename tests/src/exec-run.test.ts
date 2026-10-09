@@ -190,7 +190,15 @@ describe("extractBlockReason", () => {
     expect(prompt).toContain("`requires_human`");
     expect(prompt).toContain("cannot run from the agent sandbox");
     expect(prompt).toContain("Do not use it for a check that could run but was skipped");
-    expect(prompt).toContain('"status":"passed|failed|not_run|requires_human"');
+    expect(prompt).toContain('"status":"passed|failed|not_run|not_applicable|requires_human"');
+  });
+
+  it("not_applicable に理由を要求し、機械的な反証を伝える", () => {
+    const prompt = buildExecutorPrompt("# Plan\n");
+
+    expect(prompt).toContain("`not_applicable`");
+    expect(prompt).toContain("non-empty `reason`");
+    expect(prompt).toContain("npm script or npx package is present");
   });
 
   it("再開 executor に既存差分と全 target の構造化確認を要求する", () => {

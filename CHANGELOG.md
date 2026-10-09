@@ -73,6 +73,9 @@ SpecDojo の利用者に影響する変更を記録します。
   認証情報、ホスト側の操作など sandbox から実行できない確認を、機械判定で block せず result の
   申し送りへ残せます（PJR-BK4K）。失敗した親検証の stdout / stderr は秘匿処理後に evidence へ
   保存され、要約には出力の先頭と末尾が残ります（PJR-R8WR）。
+- executor evidence の検証状態に、理由必須の `not_applicable` を追加しました。適用外の検査は
+  result の申し送りへ残しつつ block せず、存在する npm script や導入済み package に対する
+  誤申告は機械的に block します（PJR-A0NE）。
 - `exec run --register` の実行場所を `run.register_execution` で設定できるようにし、`--in-place` を
   追加しました。設定がない既存 project の既定は従来どおり in-place です（PJR-D0KF）。
 - `register` の記帳コマンドに `--commit` を追加しました。記帳用の実行枠を取得し、対象を

@@ -70,6 +70,34 @@ describe("executor evidence", () => {
     ]);
   });
 
+  it("preserves the required reason for a not_applicable validation", () => {
+    const stdout = [
+      "<specdojo_executor_evidence>",
+      JSON.stringify({
+        final_message: "適用条件を確認した",
+        validations: [
+          {
+            command: "npx prettier --write docs/test.md",
+            status: "not_applicable",
+            summary: "検査は適用外",
+            reason: "prettier が package.json の依存にない",
+          },
+        ],
+      }),
+      "</specdojo_executor_evidence>",
+    ].join("\n");
+
+    expect(parseExecutorReport(stdout).validations).toEqual([
+      {
+        source: "executor",
+        command: "npx prettier --write docs/test.md",
+        status: "not_applicable",
+        summary: "検査は適用外",
+        reason: "prettier が package.json の依存にない",
+      },
+    ]);
+  });
+
   it("validates every resumed plan target against cumulative changes or an unchanged reason", () => {
     const { evidence } = buildExecutorEvidence({
       taskId: "T-TEST-doc-010",
@@ -238,6 +266,19 @@ describe("executor evidence", () => {
     addFormats(ajv);
     const validate = ajv.compile(schema);
     expect(validate(evidence), JSON.stringify(validate.errors)).toBe(true);
+    expect(
+      validate({
+        ...evidence,
+        validations: [
+          {
+            source: "executor",
+            command: "npx prettier --write artifact.md",
+            status: "not_applicable",
+            summary: "適用外",
+          },
+        ],
+      }),
+    ).toBe(false);
   });
 
   it("stores a bounded protection reason as a machine-readable evidence fact", () => {
