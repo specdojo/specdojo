@@ -58,3 +58,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_2101c18b499d48e1a4fb5892006f6fff
+- v: 1
+  id: reg_2030f8996c4648d286946999d798a097
+  ts: "2026-10-09T20:31:31Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register の結果を差分で確認し、完了条件を満たすと判断した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-10"
+    - field: conclusion
+      from: "-"
+      to: devcontainer scaffold が親ディレクトリを /workspaces/specdojo-workspace へマウントし、workspaceFolder をプロジェクトリポジトリへ向けるようにした。post-create は親配下を safe.directory（`<親>`/*、Git 2.46 以降で有効。テンプレートの typescript-node:22 は trixie で満たす）へ登録する。unit test と command-reference・remote-host-development-guide・CHANGELOG を更新した。
+  previous_event_id: reg_9fc527c6c9f243bca77fed916a430904

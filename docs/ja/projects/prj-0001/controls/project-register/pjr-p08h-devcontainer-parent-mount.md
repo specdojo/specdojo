@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-p08h-devcontainer-parent-mount
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: ARC
   registered_at: "2026-10-09T19:58:02Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-09T20:31:31Z"
+  conclusion: devcontainer scaffold が親ディレクトリを /workspaces/specdojo-workspace へマウントし、workspaceFolder をプロジェクトリポジトリへ向けるようにした。post-create は親配下を safe.directory（`<親>`/*、Git 2.46 以降で有効。テンプレートの typescript-node:22 は trixie で満たす）へ登録する。unit test と command-reference・remote-host-development-guide・CHANGELOG を更新した。
 ---
 
 # PJR-P08H devcontainer scaffold が親ディレクトリをマウントせずプロダクトリポジトリが見えない
