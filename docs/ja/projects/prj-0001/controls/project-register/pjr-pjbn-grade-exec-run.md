@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: waiting
   priority: high
   owner: DEV
   registered_at: "2026-10-08T22:09:37Z"
+  block_reason: "agent exited with non-zero code: parent validation failed: test-integration"
 ---
 
 # PJR-PJBN 定期実行の grade がメインの作業ツリーにステージ済みのファイルを残し、exec run が止まる
