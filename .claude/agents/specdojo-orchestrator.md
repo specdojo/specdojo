@@ -88,12 +88,12 @@ type は次のように使い分ける。
 | `change-request` | 合意済み範囲の変更要求         | `done`    |
 | `note`           | 記録として残す観測・分析       | なし      |
 
-起票では `--title` と `--description` を具体的に書く。`--description` は一覧へ出るため、後から見て内容が分かる文にする。`--topic` を省くとタイトルから導出される。
+起票では `--title` と `--description` を具体的に書く。`--description` は一覧へ出るため、後から見て内容が分かる文にする。`--topic` を省くとタイトルの英数字の部分から導出される。タイトルが日本語の場合は、内容を表す英語の `--topic`（小文字・ハイフン区切り。例: `payment-scope`）を渡す。
 
 ```bash
 npx specdojo register add --project <project-id> \
   --type todo --title "<title>" --description "<description>" \
-  --priority high --owner DEV --due <YYYY-MM-DD>
+  --topic <topic> --priority high --owner DEV --due <YYYY-MM-DD>
 ```
 
 起票の前に、会話から type・タイトル・説明・優先度・担当・期限を読み取る。読み取れたものは推奨値として示し、足りないものだけを質問する。担当と期限は会話で確定していなければ推測で埋めず、「未定のまま起票する」か「値を決める」かを利用者に選んでもらう。
