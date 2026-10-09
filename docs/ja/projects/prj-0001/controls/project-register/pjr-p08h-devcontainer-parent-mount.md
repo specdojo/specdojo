@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: high
   owner: ARC
   registered_at: "2026-10-09T19:58:02Z"
@@ -58,7 +58,11 @@ templates/devcontainer/devcontainer.json に workspaceMount が無く、生成�
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- 解決内容: `devcontainer scaffold` のテンプレートへ、`${localWorkspaceFolder}/..` を `/workspaces/specdojo-workspace` に bind mount する `workspaceMount` と、`${localWorkspaceFolderBasename}` を使う `workspaceFolder` を追加した。これにより、別リポジトリ構成の `../app1` と `../app1-specdojo-worktrees` を生成コンテナから参照できる。
+- Git 設定: 生成する `post-create.sh` が、プロジェクトリポジトリに加えてマウントした親ディレクトリ配下を `safe.directory` の対象にするよう更新した。既存の登録値と合わせて重複を除去するため、再構築を繰り返しても設定は増殖しない。
+- 確認結果: `devcontainer.json` の生成値と `post-create.sh` の親ディレクトリ設定を実テンプレートから検証する unit test を追加した。あわせて JSON の読み込み、`bash -n templates/devcontainer/post-create.sh`、所有者が異なると仮定した一時 Git リポジトリで親ディレクトリの `safe.directory` 指定が有効になることを確認した。
+- 文書化: [[specdojo:remote-host-development-guide|常時稼働ホスト運用ガイド]] と [[specdojo:command-reference|CLIコマンドリファレンス]] に、親ディレクトリをマウントする理由と、同じ親にある他のファイルもコンテナから見える注意点を追記し、CHANGELOG に修正内容を記録した。
+- 再発防止策: scaffold の unit test が同梱する実テンプレートを読み、`workspaceMount`、`workspaceFolder`、親ディレクトリの `safe.directory` 設定を検証するようにした。
 
 ## 5. 関連ドキュメント
 

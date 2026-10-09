@@ -60,6 +60,8 @@ npx specdojo devcontainer scaffold --provider claude,codex
 
 既存の `.devcontainer/` は通常実行では上書きしません。置き換える場合だけ `--force` を指定します。生成設定は provider の設定ディレクトリを名前付きボリュームへ保存し、ホストの認証情報・秘密鍵・`.env` は既定でマウントしません。Ollama 接続、コンテナ内の cron、コンテナ内の tmux が必要な場合だけ `--ollama`、`--cron`、`--tmux` を追加します。本書の構成図のようにホスト側の tmux でコンテナ自体を包む場合、`--tmux` は不要です。
 
+生成する `devcontainer.json` は、利用リポジトリ単体ではなく、その親ディレクトリを `/workspaces/specdojo-workspace` へマウントします。別リポジトリ構成では `repos` の参照先（例: `../app1`）と `worktree_base`（例: `../app1-specdojo-worktrees`）が利用リポジトリの外にあるためです。これらの Git リポジトリと worktree は `safe.directory` の対象になります。一方、同じ親ディレクトリに置いたその他のファイルもコンテナから見えるため、秘密情報などコンテナへ公開しないファイルは別の場所へ置いてください。
+
 端末版 Emacs と TypeScript・Markdown・YAML・Bash の LSP 環境を追加する場合は `--editor emacs` を指定します。
 
 ```bash

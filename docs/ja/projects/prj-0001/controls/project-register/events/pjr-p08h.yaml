@@ -32,3 +32,29 @@
     - field: due
       from: ""
       to: "2026-10-31"
+- v: 1
+  id: reg_2101c18b499d48e1a4fb5892006f6fff
+  ts: "2026-10-09T20:00:07Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_89e0f18f531b408b9e0cd23c18f2241b
+- v: 1
+  id: reg_9fc527c6c9f243bca77fed916a430904
+  ts: "2026-10-09T20:10:54Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_2101c18b499d48e1a4fb5892006f6fff
