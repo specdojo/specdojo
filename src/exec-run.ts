@@ -184,6 +184,7 @@ import {
   stabilizeCommitTargets,
   stageCommitTargets,
   taskTargetsAtHead,
+  unstageCommitTargets,
   WorktreeRemovedBranchDeletionError,
   worktreeStatusPaths,
 } from "./exec-worktree-ops.js";
@@ -4877,16 +4878,21 @@ export function commitRegisterItemChanges(
   const paths = remainingPaths();
   if (paths.length === 0) return { committed: false };
 
-  stageCommitTargets(repoRoot, paths);
-  const staged = gitResult(repoRoot, ["diff", "--cached", "--quiet", "--", ...paths]);
-  if (staged.status === 0) return { committed: false };
-  if (staged.status !== 1) throw new Error("Failed to inspect staged register changes.");
+  try {
+    stageCommitTargets(repoRoot, paths);
+    const staged = gitResult(repoRoot, ["diff", "--cached", "--quiet", "--", ...paths]);
+    if (staged.status === 0) return { committed: false };
+    if (staged.status !== 1) throw new Error("Failed to inspect staged register changes.");
 
-  const subject = commitSubject(`exec(register ${item.id}): `, item.title);
-  gitOutput(repoRoot, ["commit", "-m", subject, "--", ...paths]);
-  stabilizeCommitTargets(repoRoot, remainingPaths);
-  const sha = gitOutput(repoRoot, ["rev-parse", "--short", "HEAD"]).trim();
-  return { committed: true, sha };
+    const subject = commitSubject(`exec(register ${item.id}): `, item.title);
+    gitOutput(repoRoot, ["commit", "-m", subject, "--", ...paths]);
+    stabilizeCommitTargets(repoRoot, remainingPaths);
+    const sha = gitOutput(repoRoot, ["rev-parse", "--short", "HEAD"]).trim();
+    return { committed: true, sha };
+  } catch (error) {
+    unstageCommitTargets(repoRoot, [...paths, ...remainingPaths()]);
+    throw error;
+  }
 }
 
 function repoRelativePath(repoRoot: string, path: string): string {
@@ -5206,12 +5212,18 @@ function commitRegisterState(
     ]),
   ];
   if (paths.length === 0) return;
-  stageCommitTargets(repoRoot, paths);
-  const staged = gitResult(repoRoot, ["diff", "--cached", "--quiet", "--", ...paths]);
-  if (staged.status === 0) return;
-  if (staged.status !== 1) throw new Error("Failed to inspect staged register-state changes.");
-  gitOutput(repoRoot, ["commit", "-m", message, "--", ...paths]);
-  stabilizeCommitTargets(repoRoot, () => registerStatePaths(repoRoot, registerPaths, ticketPath));
+  const remainingPaths = (): string[] => registerStatePaths(repoRoot, registerPaths, ticketPath);
+  try {
+    stageCommitTargets(repoRoot, paths);
+    const staged = gitResult(repoRoot, ["diff", "--cached", "--quiet", "--", ...paths]);
+    if (staged.status === 0) return;
+    if (staged.status !== 1) throw new Error("Failed to inspect staged register-state changes.");
+    gitOutput(repoRoot, ["commit", "-m", message, "--", ...paths]);
+    stabilizeCommitTargets(repoRoot, remainingPaths);
+  } catch (error) {
+    unstageCommitTargets(repoRoot, [...paths, ...remainingPaths()]);
+    throw error;
+  }
 }
 
 function registerPathsInsideWorktree(

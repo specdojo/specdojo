@@ -87,6 +87,8 @@ register 実行は exec events を記録しないため、schedule の Ready・C
 
 `exec run --register ... --register-commit` は、各IDのcommit後にhookによる整形差分を同じcommitへ収束させ、対象差分が残っていないことを検証します。登録簿・派生ビュー・当該plan/resultはrunner管理パスとして扱い、その他の実行前からある利用者変更はcommitしません。過去の未commit plan/resultを検出した場合は、現在のIDへ混ぜず警告します。
 
+worktree の checkpoint 作成時に root の index に staged 変更がある場合、checkpoint 対象の plan、result、event、登録簿記帳と重なるパスだけを停止理由にします。重ならない staged 変更はパスを警告へ表示して保持したまま実行を続けます。checkpoint または register の runner commit が失敗した場合も、runner が対象にしたパスだけを unstage し、無関係な staged 変更は変更しません。
+
 register 実行の場所は `.specdojo/exec-defaults.yaml` の `run.register_execution`（`worktree` / `in-place`）で選びます。設定がない既存リポジトリは互換性のため in-place のままです。CLI の `--worktree` / `--in-place` は設定を上書きし、両方を同時に指定するとエラーになります。
 
 通常は、失敗時の変更を隔離でき、`--resume` / `--force-restart` を使える worktree を選びます。worktree の準備時間が作業時間に見合わない、変更対象が小さく、失敗時に作業ツリーへ残る差分をその場で整理できる場合だけ `--in-place` を使います。in-place では `--resume` / `--force-restart` / `--join` と `--parallel` は使えません。`--register-commit` は in-place だけで意味を持ち、worktree は常に checkpoint と統合 commit を作ります。

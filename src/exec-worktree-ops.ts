@@ -566,6 +566,14 @@ export function stageCommitTargets(repoRoot: string, paths: readonly string[]): 
   gitOutput(repoRoot, ["add", "-A", "--", ...stageable]);
 }
 
+// runner が stage した対象だけを index から戻す。利用者や別処理が stage 済みの無関係な
+// パスは保持し、commit / hook の失敗を後続の exec run へ持ち越さない。
+export function unstageCommitTargets(repoRoot: string, paths: readonly string[]): void {
+  const unique = [...new Set(paths)];
+  if (unique.length === 0) return;
+  gitOutput(repoRoot, ["reset", "--quiet", "--", ...unique]);
+}
+
 // markdownlint-cli の終了コード。1 だけが記法違反を表し、それ以外は実行環境の問題である。
 const MARKDOWNLINT_EXIT_LINT_ERRORS = 1;
 
@@ -1350,16 +1358,28 @@ function checkpointAndEnsureProjectWorktree(
     if (currentBranch(context.repoRoot) === branch) {
       throw new Error(`Prepare must run from a branch other than ${branch}.`);
     }
-    const staged = gitResult(context.repoRoot, ["diff", "--cached", "--quiet"]);
-    if (staged.status === 1) {
-      const stagedFiles = gitOutput(context.repoRoot, ["diff", "--cached", "--name-only"]).trim();
+    const paths = params.checkpointPaths.map((path) => repoRelative(context.repoRoot, path));
+    const stagedFiles = zeroSeparatedPaths(context.repoRoot, [
+      "diff",
+      "--cached",
+      "--no-renames",
+      "--name-only",
+      "-z",
+    ]);
+    const checkpointPaths = new Set(paths);
+    const overlapping = stagedFiles.filter((path) => checkpointPaths.has(path));
+    if (overlapping.length > 0) {
       throw new Error(
-        `Root index has staged changes; commit or unstage them first:\n${stagedFiles}`,
+        `Root index has staged checkpoint changes; commit or unstage them first:\n${overlapping.join("\n")}`,
       );
     }
-    if (staged.status !== 0) throw new Error("Failed to inspect staged changes in root worktree.");
+    if (stagedFiles.length > 0) {
+      process.stderr.write(
+        `Warning: root index has unrelated staged changes; preserving them while preparing the checkpoint:\n` +
+          `${stagedFiles.map((path) => `  ${path}`).join("\n")}\n`,
+      );
+    }
 
-    const paths = params.checkpointPaths.map((path) => repoRelative(context.repoRoot, path));
     const worktree = ensureExecWorktree({
       repoRoot: context.repoRoot,
       worktreeBase: base,
@@ -1379,10 +1399,9 @@ function checkpointAndEnsureProjectWorktree(
       ]);
       if (committed.status !== 0) {
         // A failing git hook (pre-commit / commit-msg) aborts the commit but leaves the staged
-        // paths in the index. Unstage everything so the residue does not trip the staged-changes
-        // guard for every subsequent task and abort the whole loop. The index was verified clean
-        // above, so a full reset only drops what this checkpoint (and its hooks) staged.
-        gitResult(worktree.path, ["reset", "--quiet"]);
+        // paths in the index. Unstage only this checkpoint so a hook or caller's unrelated staged
+        // paths remain intact.
+        unstageCommitTargets(worktree.path, paths);
         // hook（lefthook 等）の生出力には ANSI エスケープや制御文字が含まれうる。この detail は
         // register 経路で pjr-index の結論列・result の理由欄へ伝播するため、ここで除去して
         // 表示崩れを防ぐ（register 側の sanitize と二重だが、非 register の呼び出し元も守る）。
