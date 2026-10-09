@@ -90,10 +90,11 @@ SpecDojo の利用者に影響する変更を記録します。
 - 試験的な機能として `devcontainer scaffold` を追加しました。provider の CLI、Ollama、cron、
   tmux を選び、利用リポジトリごとに設定・認証情報を分離した環境を生成できます。Codex の
   sandbox 用 seccomp 設定、OpenCode と GitHub CLI の named volume、既存 dotfiles を上書きしない
-  Emacs・Eglot のテンプレートにも対応しました。Codex は公式 installer（失敗時は npm）、OpenCode
+  Emacs・Eglot のテンプレートにも対応しました。空の `~/.emacs.d` がある場合も Emacs が読み込む
+  `~/.emacs.d/init.el` へテンプレートを配置します。Codex は公式 installer（失敗時は npm）、OpenCode
   は `opencode-ai` で導入します。Codex sandbox と Emacs は生成物の unit test まで完了していますが、
   生成した Dev Container での実機確認は公開前の人の確認事項です
-  （PJR-2H5F、PJR-KEQQ、PJR-EZAF、PJR-J7WE）。
+  （PJR-2H5F、PJR-KEQQ、PJR-EZAF、PJR-J7WE、PJR-XBDB）。
 - docs サイトは実行記録をナビゲーションと検索の対象外にし、パス単位でサイドバーを
   分割しました。package 内の kata を一時配置して、eject していない文書も表示します
   （PJR-E8FY、PJR-QQXP、PJR-SJ3X）。

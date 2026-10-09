@@ -66,7 +66,7 @@ npx specdojo devcontainer scaffold --provider claude,codex
 npx specdojo devcontainer scaffold --provider claude,codex --editor emacs
 ```
 
-生成される `.devcontainer/emacs/init.el` は、`~/.emacs.d/init.el` と `~/.config/emacs/init.el` の両方が無い場合だけ後者へコピーされます。初回作成前の既定値は生成されたテンプレートで変更でき、作成後はコピー先を編集します。dotfiles が設定を配置していれば上書きされません。
+生成される `.devcontainer/emacs/init.el` は、`~/.emacs`、`~/.emacs.el`、`~/.emacs.d/init.el`、`~/.config/emacs/init.el` のいずれも無い場合だけコピーされます。空の `~/.emacs.d` があればその中の `init.el` へ、なければ `~/.config/emacs/init.el` へ配置し、配置先を出力します。初回作成前の既定値は生成されたテンプレートで変更でき、作成後は出力されたコピー先を編集します。dotfiles が設定を配置していれば上書きされません。
 
 ## 3. 構成例
 
