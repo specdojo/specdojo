@@ -1,13 +1,32 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "permissions": {
-    "allow": [
-      "Edit(docs/**)",
-      "Edit(src/**)",
-      "Edit(tests/**)",
-      "Edit(tools/grade/**)",
-      "Edit(packages/docs-site/.vitepress/**)",
-      "Edit(README.md)"
+    "allow": ["Edit(**)"],
+    "deny": [
+      "Edit(node_modules/**)",
+      "Edit(.specdojo/**)",
+      "Edit(.agents/rules/**)",
+      "Edit(.agents/skills/**)",
+      "Edit(.claude/**)",
+      "Edit(.codex/**)",
+      "Edit(.opencode/**)",
+      "Edit(.github/agents/**)",
+      "Edit(.github/workflows/**)",
+      "Edit(.gitlab/ci/**)",
+      "Edit(.circleci/**)",
+      "Edit(.azure-pipelines/**)",
+      "Edit(.jenkins/**)",
+      "Edit(./package.json)",
+      "Edit(./AGENTS.md)",
+      "Edit(./CLAUDE.md)",
+      "Edit(./GEMINI.md)",
+      "Edit(./lefthook.yml)",
+      "Edit(./.lefthook.yml)",
+      "Edit(./.gitlab-ci.yml)",
+      "Edit(./.gitlab-ci.yaml)",
+      "Edit(./azure-pipelines.yml)",
+      "Edit(./azure-pipelines.yaml)",
+      "Edit(./Jenkinsfile)"
     ]
   }
 }
