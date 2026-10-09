@@ -55,3 +55,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_afa8d875244a4cff9d9b0a1aa61dd944
+- v: 1
+  id: reg_a57e4cd065584562a57e0d94d0060362
+  ts: "2026-10-09T12:08:15Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（codex-expert-executor / gemma26-reporter）の成果を orchestrator がレビューした。過去の PJR-0FCT でも同じ doc-index のテストが落ちており、原因の特定と整合する
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-09"
+    - field: conclusion
+      from: "-"
+      to: hook の並列の生成（register-build・index-build）と、実リポジトリの generated/pjr-index.md を読む doc-index のテストの競合を原因と特定し、テストを一時ディレクトリの fixture へ移した。commit・merge の失敗時は hook の出力の全文を integrate.log へ保存し、要約に FAIL と集計の行を残す。
+  previous_event_id: reg_ce5cbb5fbeeb42f4afa4014b05ea304b

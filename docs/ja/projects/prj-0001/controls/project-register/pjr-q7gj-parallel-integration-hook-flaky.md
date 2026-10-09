@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-q7gj-parallel-integration-hook-flaky
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-08T12:32:32Z"
   due_on: null
+  completed_at: "2026-10-09T12:08:15Z"
+  conclusion: hook の並列の生成（register-build・index-build）と、実リポジトリの generated/pjr-index.md を読む doc-index のテストの競合を原因と特定し、テストを一時ディレクトリの fixture へ移した。commit・merge の失敗時は hook の出力の全文を integrate.log へ保存し、要約に FAIL と集計の行を残す。
 ---
 
 # PJR-Q7GJ 並列実行で統合の commit のフックのテストが一時的に失敗する
