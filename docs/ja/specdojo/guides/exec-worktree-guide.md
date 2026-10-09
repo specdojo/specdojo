@@ -126,13 +126,13 @@ specdojo exec worktree prepare \
 2. プロジェクトロックを取得します。
 3. plan、result、claim event を確認します。
 4. plan がなければ `exec plan` 相当で生成します。
-5. root index に stage 済み変更がないことを確認します。
+5. root index の stage 済み変更が checkpoint 対象と重複しないことを確認します。
 6. 現在の統合先 HEAD から exec branch と worktree を作成します。
 7. root と、tracked `package-lock.json` を持つ独立 package で `npm ci` を実行します。
 8. worktree 内で `specdojo build` を実行し、生成物を用意します。
 9. plan、result、claim event を worktree へ複製し、exec branch へ checkpoint commit します。
 
-root にある無関係な未commit変更は checkpoint commit に含めません。ただし、stage 済み変更がある場合は停止します。checkpoint は exec branch だけに置かれるため、統合先の first-parent に `prepare execution` commit は増えません。root 側の plan、result、claim event は未commitのまま残り、task が `doing` であることは統合先からも見えます。これらの root 側の複製は `worktree merge` が統合の直前に解放し（HEAD の状態へ戻し）、merge が exec branch の commit 済み内容を持ち込みます。merge が失敗した場合は複製を元に戻します。
+root にある無関係な未commit変更は checkpoint commit に含めません。stage 済み変更はパスを警告へ表示して保持し、plan、result、claim event などの checkpoint 対象と重複する場合だけ停止します。checkpoint commit が hook などで失敗した場合は、checkpoint 対象だけを unstage し、無関係な stage 済み変更は変更しません。checkpoint は exec branch だけに置かれるため、統合先の first-parent に `prepare execution` commit は増えません。root 側の plan、result、claim event は未commitのまま残り、task が `doing` であることは統合先からも見えます。これらの root 側の複製は `worktree merge` が統合の直前に解放し（HEAD の状態へ戻し）、merge が exec branch の commit 済み内容を持ち込みます。merge が失敗した場合は複製を元に戻します。
 
 作成または再利用した task worktree では、tracked `package-lock.json` ごとに `npm ci --include=dev` を実行し、root と独立 package の `node_modules` を worktree 内へ実体として配置します。依存関係を元 worktree と共有しないため、agent の sandbox は task worktree 内だけへの書き込みで build、typecheck、依存更新を実行できます。
 

@@ -1,0 +1,13 @@
+実装を完了しました。
+
+- 無関係な staged 変更を保持したまま checkpoint を続行
+- checkpoint 対象との重複時のみ停止
+- commit 失敗時は runner 対象だけを unstage
+- register commit の staged 残留経路を修正
+- 回帰テスト、運用ガイド、CHANGELOG、個票の対応結果を更新
+- index は変更していません
+- test・typecheck・lint・schema は後続の親 runner が実行します
+
+<specdojo_executor_evidence>
+{"final_message":"checkpoint と register commit の対象限定 unstage を実装し、無関係な staged 変更による exec 停止を解消しました。回帰テストと関連文書も更新済みです。","validations":[{"command":"npx prettier --write src/exec-worktree-ops.ts src/exec-run.ts tests/src/exec-worktree-ops.integration.test.ts tests/src/exec-register-multiple-ids.integration.test.ts docs/ja/specdojo/guides/exec-operation-guide.md CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-pjbn-grade-exec-run.md","status":"passed","summary":"変更対象を整形し、全ファイルが変更不要の状態になりました。"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"register 派生ビューを正常に生成しました。"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"catalog 検証は既存の欠落文書警告のみで正常終了しました。"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"文書 index を正常に再生成しました。"},{"command":"npm run validate:history-links","status":"passed","summary":"履歴リンク検証が正常終了しました。"},{"command":"git diff --check","status":"passed","summary":"差分に空白エラーはありません。"}]}
+</specdojo_executor_evidence>

@@ -30,6 +30,7 @@ import {
   releaseRootWorkingCopies,
   removeWorktree,
   selectStageablePaths,
+  worktreeStatusPaths,
   WorktreeRemovedBranchDeletionError,
   type WorktreeOpsContext,
 } from "../../src/exec-worktree-ops.js";
@@ -251,6 +252,62 @@ afterEach(() => {
 });
 
 describe("exec worktree ops", () => {
+  it("allows unrelated staged root changes and preserves them while checkpointing", () => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-010";
+    writeFile(join(fixture.repo, "README.md"), "staged by user\n");
+    git(fixture.repo, "add", "README.md");
+
+    const worktree = prepare(fixture, taskId);
+
+    expect(git(fixture.repo, "diff", "--cached", "--name-only")).toBe("README.md");
+    expect(git(worktree.path, "log", "-1", "--pretty=%s")).toBe(
+      `exec(${taskId}): prepare execution`,
+    );
+  });
+
+  it("rejects a staged root change that overlaps a checkpoint path", () => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-010";
+    const paths = scaffoldTask(fixture, taskId);
+    git(fixture.repo, "add", `execution/exec/plans/${taskId}-plan.md`);
+
+    expect(() =>
+      checkpointAndEnsureWorktree({
+        context: fixture.context,
+        worktreeTaskId: taskId,
+        base: fixture.worktreeBase,
+        checkpointPaths: [paths.planPath, paths.resultPath, paths.claimEventPath],
+        commitMessage: `exec(${taskId}): prepare execution`,
+      }),
+    ).toThrow(/Root index has staged checkpoint changes/);
+    expect(findExecWorktree(fixture.repo, taskId)).toBeNull();
+  });
+
+  it("unstages checkpoint paths after commit failure without changing the root index", () => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-010";
+    writeFile(join(fixture.repo, "README.md"), "staged by user\n");
+    git(fixture.repo, "add", "README.md");
+    const hookPath = join(fixture.repo, ".git", "hooks", "pre-commit");
+    writeFile(hookPath, "#!/bin/sh\nexit 1\n");
+    chmodSync(hookPath, 0o755);
+
+    expect(() => prepare(fixture, taskId)).toThrow(/Checkpoint commit failed/);
+
+    expect(git(fixture.repo, "diff", "--cached", "--name-only")).toBe("README.md");
+    const worktree = findExecWorktree(fixture.repo, taskId);
+    expect(worktree).not.toBeNull();
+    expect(git(worktree!.path, "diff", "--cached", "--name-only")).toBe("");
+    expect(worktreeStatusPaths(worktree!.path)).toEqual(
+      expect.arrayContaining([
+        `execution/exec/events/20260613T000000Z_agent_${taskId}_claim.json`,
+        `execution/exec/plans/${taskId}-plan.md`,
+        `execution/exec/results/${taskId}-result.md`,
+      ]),
+    );
+  });
+
   it("checkpoints, commits, and merges a task so its deliverable lands on root", () => {
     const fixture = setupRepository();
     const taskId = "T-T-doc-010";
