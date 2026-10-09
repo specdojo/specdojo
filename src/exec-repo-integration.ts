@@ -15,6 +15,7 @@ import {
   type WorktreeOpsContext,
 } from "./exec-worktree-ops.js";
 import {
+  appendGitFailureLog,
   gitOutput,
   gitResult,
   listRegisteredWorktrees,
@@ -131,7 +132,7 @@ export type ProductCommitOutcome = {
 /** Commit the commit targets of one product worktree onto its exec branch. */
 export function commitProductWorktree(
   product: ProductWorktree,
-  params: { message: string; targetPaths?: readonly string[] },
+  params: { message: string; targetPaths?: readonly string[]; failureLogPath?: string },
 ): ProductCommitOutcome {
   const targetPaths = params.targetPaths ?? [];
   const { targets, outOfScope } = partitionProductCommitTargets(product, targetPaths);
@@ -149,11 +150,22 @@ export function commitProductWorktree(
     // hook が失敗すると stage が残る。範囲を限った reset で後続の検査を誤らせない。
     gitResult(product.path, ["reset", "--quiet", "--", ...targets]);
     const output = [gitText(commit.stdout), gitText(commit.stderr)].filter(Boolean).join("\n");
+    appendGitFailureLog(params.failureLogPath, [
+      `=== ${new Date().toISOString()} ${product.name}: git commit ===`,
+      `exit: ${commit.status ?? "unknown"}`,
+      "--- stdout ---",
+      gitText(commit.stdout),
+      "--- stderr ---",
+      gitText(commit.stderr),
+      "",
+    ]);
     throw new Error(`${product.name}: commit failed: ${summarizeGitHookFailure(output)}`);
   }
   stabilizeCommitTargets(
     product.path,
     () => partitionProductCommitTargets(product, targetPaths).targets,
+    undefined,
+    params.failureLogPath,
   );
   return { repo: product.name, targets, outOfScope, committed: true };
 }
@@ -168,6 +180,7 @@ export function commitProductWorktrees(params: {
   message: string;
   targets?: readonly string[];
   scopeLogPath?: string;
+  failureLogPath?: string;
 }): ProductCommitOutcome[] {
   const products = params.worktree.repos ?? [];
   if (products.length === 0) return [];
@@ -178,6 +191,7 @@ export function commitProductWorktrees(params: {
     const outcome = commitProductWorktree(product, {
       message: params.message,
       targetPaths: targetPaths.get(product.name),
+      failureLogPath: params.failureLogPath,
     });
     if (outcome.targets.length > 0) {
       process.stdout.write(
@@ -397,12 +411,6 @@ export function projectMergeBlockers(params: {
 
 // ── プロダクトの merge ─────────────────────────────────────────────────────
 
-function appendFailureLog(path: string | undefined, lines: string[]): void {
-  if (!path) return;
-  mkdirSync(dirname(path), { recursive: true });
-  appendFileSync(path, `${lines.join("\n")}\n`, "utf8");
-}
-
 /**
  * Merge the product exec branch into its integration target with a merge commit and return the
  * merge commit. When the target is checked out (normally the product's main checkout), a regular
@@ -424,11 +432,14 @@ export function mergeProductIntoTarget(params: {
     if (result.status === 0) return gitOutput(checkout, ["rev-parse", "HEAD"]).trim();
     const output = [gitText(result.stdout), gitText(result.stderr)].filter(Boolean).join("\n");
     const abort = mergeInProgress(checkout) ? abortMerge(checkout) : undefined;
-    appendFailureLog(params.failureLogPath, [
+    appendGitFailureLog(params.failureLogPath, [
       header,
       `git -C ${checkout} merge --no-ff ${product.branch}`,
       `exit: ${result.status ?? "unknown"}`,
-      output,
+      "--- stdout ---",
+      gitText(result.stdout),
+      "--- stderr ---",
+      gitText(result.stderr),
       "--- merge --abort ---",
       abort ? `exit: ${abort.status ?? "unknown"}` : "not required",
       "",
@@ -447,7 +458,7 @@ export function mergeProductIntoTarget(params: {
   if (merged.kind !== "clean") {
     const detail =
       merged.kind === "conflicts" ? `conflicts: ${merged.paths.join(", ")}` : merged.detail;
-    appendFailureLog(params.failureLogPath, [header, `merge-tree: ${detail}`, ""]);
+    appendGitFailureLog(params.failureLogPath, [header, `merge-tree: ${detail}`, ""]);
     throw new Error(`merge into ${target} failed: ${detail}`);
   }
   const parent = gitOutput(product.repoRoot, ["rev-parse", `refs/heads/${target}`]).trim();
@@ -472,7 +483,7 @@ export function mergeProductIntoTarget(params: {
   ]);
   if (update.status !== 0) {
     const detail = gitText(update.stderr).trim() || `exit ${update.status ?? "unknown"}`;
-    appendFailureLog(params.failureLogPath, [header, `update-ref: ${detail}`, ""]);
+    appendGitFailureLog(params.failureLogPath, [header, `update-ref: ${detail}`, ""]);
     throw new Error(`failed to update ${target}: ${detail}`);
   }
   return commit;

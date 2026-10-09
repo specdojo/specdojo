@@ -243,7 +243,7 @@ register 項目の統合で競合したのが項目自身の記帳ファイル�
 - 個票は exec branch 側を基準にし、統合先だけにあるイベントが変えた `type` / `priority` / `owner` / `due` をイベントから再構築します。同じフィールドを後から exec branch 側のイベントが変えている場合は、exec branch 側を残します。タイトル・説明（本文）、状態遷移に伴うフィールド、登録日時はイベントから元の値を復元できないため再構築しません。
 - plan・result・登録簿（`pjr-index.md`）は exec branch 側（再開後の最新の記帳）の内容で解決します。
 
-上記以外の競合または commit hook の失敗で merge commit を作れなかった場合は、runner が `git merge --abort` を実行して統合先を開始前の状態へ戻します。Schedule タスクは `blocked`、register 項目は `waiting` へ遷移し、再開に使う exec branch と worktree は保持します。register の `wait` commit は abort 後に作るため、統合先へ `MERGE_HEAD` を残したまま部分 commit を試みません。block reason には hook の罫線や色を除いた失敗ステップ名と最初のエラー行を記録し、executor/reporter pipeline では生の stdout / stderr と abort 結果を同じ run の `integrate.log` に保存します。
+上記以外の競合または commit hook の失敗で merge commit を作れなかった場合は、runner が `git merge --abort` を実行して統合先を開始前の状態へ戻します。Schedule タスクは `blocked`、register 項目は `waiting` へ遷移し、再開に使う exec branch と worktree は保持します。register の `wait` commit は abort 後に作るため、統合先へ `MERGE_HEAD` を残したまま部分 commit を試みません。block reason には hook の罫線や色を除いた失敗ステップ名、最初のエラー行、Vitest の末尾にある `FAIL`・`Test Files`・`Tests` の集計行を記録します。executor/reporter pipeline では checkpoint と統合段の commit / merge が失敗したときの stdout / stderr 全文と abort 結果を秘匿処理し、同じ run の `integrate.log` に保存します。
 
 register 項目を `waiting` へ遷移したあとは、`wait` commit と、その時点までに統合先へ入った変更を exec branch へ通常 merge します。root の `wait` commit に保存済みの個票・イベント・plan・result は、worktree に残る同内容の未 commit 変更を解放してから merge し、これらの記帳パスの競合だけを `wait` commit 側で解決します。それ以外の競合は自動解決せずに同期 merge を中断します。これにより、再開時の merge-base を進めながら、別項目が統合先へ追加した成果を exec branch 側の削除として扱わないようにします。
 
