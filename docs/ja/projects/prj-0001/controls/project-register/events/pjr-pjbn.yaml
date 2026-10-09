@@ -90,3 +90,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_b854624213d14843a0659c061f99b8b8
+- v: 1
+  id: reg_619ab32e56204103809949d14980265a
+  ts: "2026-10-09T11:37:54Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（codex-expert-executor / gemma26-reporter）の成果を orchestrator がレビューした。integration test の失敗は --resume-from executor で直させた。10/9 朝に JBR の evidence がステージされた具体的な経路は再現で確定していない
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-09"
+    - field: conclusion
+      from: "-"
+      to: worktree 作成前の検査を checkpoint の対象との重なりに絞り、失敗時の reset を対象のパスに限った。runner の commit または hook が失敗したときにステージを残す 2 経路を特定し、対象だけを戻すように直した。
+  previous_event_id: reg_957c9aa3ba504fde842e4079f67c33e0

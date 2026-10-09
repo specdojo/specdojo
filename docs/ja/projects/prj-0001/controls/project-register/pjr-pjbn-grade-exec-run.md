@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-pjbn-grade-exec-run
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-08T22:09:37Z"
+  completed_at: "2026-10-09T11:37:54Z"
+  conclusion: worktree 作成前の検査を checkpoint の対象との重なりに絞り、失敗時の reset を対象のパスに限った。runner の commit または hook が失敗したときにステージを残す 2 経路を特定し、対象だけを戻すように直した。
 ---
 
 # PJR-PJBN 定期実行の grade がメインの作業ツリーにステージ済みのファイルを残し、exec run が止まる
