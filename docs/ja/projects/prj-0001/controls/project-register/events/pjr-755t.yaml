@@ -58,3 +58,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_3f8e797988514dbb845d82cbd04ae0bb
+- v: 1
+  id: reg_0e8ff3f64c104382ab145f403054e581
+  ts: "2026-10-09T11:01:26Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（codex-expert-executor / gemma26-reporter）の成果を orchestrator がレビューし、完了条件と照合した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-09"
+    - field: conclusion
+      from: "-"
+      to: specdojo の検査は設定で適用を判定し（catalog validate は catalog_path の有無）、依存の有無で反証しないようにした。機械的に適用外と分かる not_run は runner の判定として申し送りへ出し、block しない。
+  previous_event_id: reg_160eabd19c424ec88d5cb220890b4064

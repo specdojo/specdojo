@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-755t-specdojo-not-run
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-09T03:54:26Z"
+  completed_at: "2026-10-09T11:01:26Z"
+  conclusion: specdojo の検査は設定で適用を判定し（catalog validate は catalog_path の有無）、依存の有無で反証しないようにした。機械的に適用外と分かる not_run は runner の判定として申し送りへ出し、block しない。
 ---
 
 # PJR-755T 適用外の検査の判定が specdojo のサブコマンドを誤って反証し、not_run の記録も救えない
