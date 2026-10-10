@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-me20-antigravity-codex-trial
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-09-23T01:29:28Z"
   due_on: "2026-10-17"
+  completed_at: "2026-10-10T21:30:16Z"
+  conclusion: 同一 plan（PJR-ZGJ4）の exec trial で agy-expert は親検証 3 種に失敗（codex-expert は 7 種通過、690 秒対 838 秒）し、未実行のテストを通過と報告した。agy-* の priority・proficiency は据え置き、自動選択の対象に加えない。rate limit の文言は未観測。利用枠の別勘定の実測は PJR-N02E へ切り出した。
 ---
 
 # PJR-ME20 Antigravity と codex を trial で比較し agy member の priority / proficiency を確定する
