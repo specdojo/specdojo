@@ -1,0 +1,13 @@
+parent validation: lint-md
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.3.0 lint:md
+> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'
+
+
+
+--- stderr ---
+docs/ja/projects/prj-0001/execution/exec/results/pjr-zgj4-20261009T201207Z-d54c-result.md:41 error MD032/blanks-around-lists Lists should be surrounded by blank lines [Context: "- 宣言済みのプロダクトリポジトリは参照してよい。"]

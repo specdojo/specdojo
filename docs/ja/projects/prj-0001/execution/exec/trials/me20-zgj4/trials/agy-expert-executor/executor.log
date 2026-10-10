@@ -1,0 +1,16 @@
+The orchestrator CLI entrypoint implementation has been successfully completed according to the plan for **PJR-ZGJ4**.
+
+Here is a summary of the actions taken:
+- Added a new `specdojo orch <provider> [args...]` command in `src/orch-command.ts`. This command reads the declared product repositories (via `repos`) for the target project and adds access permission arguments to the orchestrator launch using the `agentExtraRootArguments` logic from `src/exec-task-repos.ts`.
+- Replaced the hardcoded provider launch commands in `src/exec-provider-scaffold.ts`'s `ORCHESTRATOR_NPM_SCRIPTS` so they now spawn via the unified `specdojo orch` entry point.
+- Validated functionality via the newly introduced unit test `tests/src/orch-command.test.ts`. All test cases (provider behavior, fallback for no repositories, user argument propagation) passed.
+- For `opencode`, documented the known constraint (directories cannot be passed at launch via arguments, they must be manually allowed through `external_directory` in `.specdojo/opencode/orchestrator.md`).
+- Added documentation for the new command in `command-reference.md`, `specdojo-config-reference.md` and updated `docs-structure-guide.md` to indicate that declared repositories are accessible via both `exec` and orchestrator paths.
+- Updated `CHANGELOG.md` to state the new feature release.
+- Updated the individual ticket `docs/ja/projects/prj-0001/controls/project-register/pjr-zgj4-orchestrator-product-repo-access.md` with the response summary.
+- The plan's required result `docs/ja/projects/prj-0001/execution/exec/results/pjr-zgj4-20261009T201207Z-d54c-result.md` has been filled in with the necessary implementation details and the suggested rules for the `.agents/specdojo-orchestrator.agent.md`.
+- Static analysis checks and document index/catalog builds were executed and passed cleanly.
+
+<specdojo_executor_evidence>
+{"final_message":"Implemented specdojo orch command for orchestrator product repo access, added tests, updated docs and changelog, and filled result.","validations":[{"command":"npx tsx src/specdojo.ts index build","status":"passed","summary":"Index built successfully","reason":""},{"command":"npx tsx src/specdojo.ts catalog validate","status":"passed","summary":"Catalog validated successfully","reason":""}]}
+</specdojo_executor_evidence>
