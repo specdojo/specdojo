@@ -1,8 +1,12 @@
 name: Deploy VitePress site to GitHub Pages
 
+# サイトはリリースした版の文書を公開する。main への昇格では更新せず、specdojo のリリースタグ
+# （v*）の push か手動実行で更新する。
 on:
   push:
-    branches: [main]
+    tags:
+      - "v*"
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -14,10 +18,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-node@v5
         with:
           node-version: 24
+
+      - name: Verify the release ref
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin main
+          if ! git merge-base --is-ancestor "$GITHUB_SHA" origin/main; then
+            echo "$GITHUB_REF_NAME ($GITHUB_SHA) is not on main. Deploy a commit that has been promoted to main." >&2
+            exit 1
+          fi
 
       - name: Install Japanese fonts for mermaid
         run: sudo apt-get update && sudo apt-get install -y fonts-noto-cjk
@@ -41,7 +57,11 @@ jobs:
           echo "PUPPETEER_SKIP_DOWNLOAD=true" >> "$GITHUB_ENV"
           echo "PUPPETEER_EXECUTABLE_PATH=$chrome_path" >> "$GITHUB_ENV"
 
+      # 既定のヒープ（環境により約 2 GB）では VitePress のビルドがメモリ不足で落ちる
+      # （2026-10-11、2,536 文書で確認。4 GB で通過）。
       - name: Build VitePress site
+        env:
+          NODE_OPTIONS: --max-old-space-size=4096
         run: npm run docs:build
 
       - name: Upload artifact

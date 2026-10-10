@@ -109,23 +109,40 @@ Antigravity CLI（`agy`）は `post-create.sh` が `~/.local/bin` に導入し�
 
 ## 5. npm への公開
 
-`main` へ昇格すると GitHub Actions が起動し、Trusted Publishing（OIDC）で npm へ登録します。ただし**そのままでは公開されません**。staged publishing を使っており、公開は maintainer の承認が要ります。
+`main` への昇格と公開は別の操作です。昇格しただけでは何も公開されません。公開とサイトの更新は、`main` 上の commit に付けたタグの push で GitHub Actions が起動し、Trusted Publishing（OIDC）で npm へ登録します。ただし**そのままでは公開されません**。staged publishing を使っており、公開は maintainer の承認が要ります。
+
+| タグ                   | 起動する workflow                    | 対象                                |
+| ---------------------- | ------------------------------------ | ----------------------------------- |
+| `v<version>`           | `publish-specdojo.yml`、`deploy.yml` | `specdojo` と GitHub Pages のサイト |
+| `docs-lint-v<version>` | `publish-docs-lint.yml`              | `@specdojo/docs-lint`               |
+| `docs-site-v<version>` | `publish-docs-site.yml`              | `@specdojo/docs-site`               |
+
+各 workflow は、タグが `main` 上の commit を指すこと、タグの版が対象の `package.json` の版と一致することを確かめ、満たさなければ失敗します。手動実行（workflow_dispatch）でも、`main` 上の commit であることは確かめます。
 
 ### 5.1. 手順
 
-version は `develop` 上で上げます。`main` への直接 push は `protect-main` hook が禁止するため、Pull Request で昇格します。
+version は `develop` 上で上げます。`npm version` が作るタグは `develop` の commit を指すため、`--no-git-tag-version` を付けてタグを作らせません。`main` への直接 push は `protect-main` hook が禁止するため、Pull Request で昇格します。
 
 ```sh
 git switch project/prj-0001/develop
 git merge origin/main          # 前回昇格分の取り込み。省くと履歴が分岐する
-npm version patch              # または minor。0.x では minor が破壊的変更を表す
+npm version minor --no-git-tag-version   # または patch。0.x では minor が破壊的変更を表す
 npm run build
 npm pack --dry-run             # 同梱範囲の確認
-git push origin project/prj-0001/develop --follow-tags
+git commit -am "chore(release): <version> に上げる"
+git push origin project/prj-0001/develop
 gh pr create --base main --head project/prj-0001/develop --title "<version> を main へ昇格する"
 ```
 
 merge 方式は **Create a merge commit** です。squash merge と rebase merge はリポジトリ設定で無効にしています。
+
+merge したあと、公開すると決めた時点で、`main` の昇格 merge commit にタグを付けて push します。
+
+```sh
+git fetch origin
+git tag -a v<version> origin/main -m "v<version>"
+git push origin v<version>
+```
 
 ### 5.2. 承認して公開する
 
@@ -141,13 +158,15 @@ npm stage reject <stage-id>     # 取りやめる
 
 `npm stage download` で公開前に実物を検査できます。agent が編集した成果物を配る以上、この確認の機会を残すために staged publishing を選んでいます。
 
-`@specdojo/docs-lint` も同じ手順です。`packages/docs-lint/**` の変更で `publish-docs-lint.yml` が起動します。
+`@specdojo/docs-lint` と `@specdojo/docs-site` も同じ手順です。それぞれ `docs-lint-v<version>`、`docs-site-v<version>` のタグで起動します。
 
 ### 5.3. 注意
 
 - **workflow の success は公開を意味しません。** 承認するまで `npm view <package> version` は前の版を返します。
+- サイト（`deploy.yml`）は `v<version>` のタグで更新されるため、npm の承認より先に新しい版の文書が公開されます。タグの push から承認までの間を空けないでください。
+- GitHub Pages の `github-pages` environment に deployment branch の制限がある場合は、`v*` のタグを許可に加えます。加えないと deploy が environment の保護規則で拒否されます。
 - staged 版も公開版と同じ版番号空間を使います。`0.3.0` を staged にしたら、同じ `0.3.0` で publish し直せません。取りやめる場合は `npm stage reject` します。
-- 承認前に修正が必要になった場合は、reject してから版を上げ直します。
+- 承認前に修正が必要になった場合は、reject してから版を上げ直します。タグも新しい版で付け直します。
 
 ## 6. 推奨しない使い方
 
