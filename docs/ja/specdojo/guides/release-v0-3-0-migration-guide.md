@@ -248,10 +248,14 @@ npm run docs:build
 です。次は maintainer が行います。
 
 1. develop から main への Pull Request で変更内容と検証結果を確認し、承認後に merge する。
-2. main の publish workflow が作成した staged release を `npm stage list specdojo` で確認する。
-3. `npm stage download <stage-id>` で tarball を取得し、`CHANGELOG.md` と必要な package 内容を
+   merge だけでは公開もサイトの更新も起きない。
+2. 公開すると決めた時点で、main の昇格 merge commit に `v0.3.0` tag を付けて push する。
+   tag の push で publish workflow とサイトの deploy が起動する。
+3. publish workflow が作成した staged release を `npm stage list specdojo` で確認する。
+4. `npm stage download <stage-id>` で tarball を取得し、`CHANGELOG.md` と必要な package 内容を
    含むことを確認する。
-4. 2FA を使って `npm stage approve <stage-id>` を実行し、公開を確定する。
-5. `v0.3.0` tag と GitHub Release を作成し、公開された package の版と一致することを確認する。
+5. 2FA を使って `npm stage approve <stage-id>` を実行し、公開を確定する。
+6. GitHub Release を作成し、公開された package の版と一致することを確認する。
 
-main への merge、npm の staged release の承認、tag と GitHub Release の作成は自動実行しません。
+main への merge、tag の作成と push、npm の staged release の承認、GitHub Release の作成は
+自動実行しません。
