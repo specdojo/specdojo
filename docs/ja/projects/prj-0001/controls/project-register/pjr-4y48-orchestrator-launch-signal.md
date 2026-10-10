@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-4y48-orchestrator-launch-signal
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: ARC
   registered_at: "2026-10-10T01:05:02Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-10T01:16:46Z"
+  conclusion: orchestrator launch は子の実行中に SIGINT/SIGQUIT を無視し、SIGTERM/SIGHUP を子へ転送する。終了コードは子の終了コード、シグナル終了なら 128 + シグナル番号。子の終了後にハンドラを外す。偽の provider で、SIGINT では子の正常終了まで待ち（code 0）、SIGTERM では転送して 143 で終わることを確認した。
 ---
 
 # PJR-4Y48 orchestrator launch が Ctrl-C で先に終了し provider の CLI が取り残される

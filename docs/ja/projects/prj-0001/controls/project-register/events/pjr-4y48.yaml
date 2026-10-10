@@ -58,3 +58,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_da67ff2e8b774dfb8f81d9e60f755c79
+- v: 1
+  id: reg_2f0600763b124cbcb8fd4f9fb90b5ec8
+  ts: "2026-10-10T01:16:46Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register の結果を差分と実プロセスの再現手順で確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-10"
+    - field: conclusion
+      from: "-"
+      to: orchestrator launch は子の実行中に SIGINT/SIGQUIT を無視し、SIGTERM/SIGHUP を子へ転送する。終了コードは子の終了コード、シグナル終了なら 128 + シグナル番号。子の終了後にハンドラを外す。偽の provider で、SIGINT では子の正常終了まで待ち（code 0）、SIGTERM では転送して 143 で終わることを確認した。
+  previous_event_id: reg_f13cf5f2673f4a91b69eab8897cf6dfe
