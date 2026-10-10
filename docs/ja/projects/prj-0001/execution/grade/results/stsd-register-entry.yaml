@@ -5,8 +5,8 @@ path: docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md
 target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 69
-graded_at: "2026-10-08T16:07:33.717Z"
+score: 68
+graded_at: "2026-10-10T16:02:18.576Z"
 graded_by: agy-expert-executor
 content_hash: 48c647b4efecd15bfe8dcfe583519d02eea22fa18c70c886d97ce88f85fcbb19
 source_hashes:
@@ -20,11 +20,11 @@ categories:
   purpose:
     score: 88
   operations:
-    score: 88
+    score: 75
   planning:
     score: 75
   business:
-    score: 67
+    score: 75
   consistency:
     score: 38
   architecture:
@@ -58,8 +58,8 @@ viewpoints:
     level: 3
     score: 75
   vp-ba-requirements-completeness:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ba-stakeholder-clarity:
     level: 4
     score: 100
@@ -103,8 +103,8 @@ viewpoints:
     level: 3
     score: 75
   vp-ops-release-readiness:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-ops-operability:
     level: 2
     score: 50
@@ -119,7 +119,7 @@ viewpoints:
     score: 50
 finding_counts:
   blocker: 0
-  major: 14
+  major: 15
   minor: 8
   note: 0
 findings:
@@ -172,17 +172,6 @@ findings:
   - id: F007
     severity: major
     rule: vp-arc-cross-document-consistency
-    line: 56
-    anchor: "[*] --> open : 個票起票 / type と登録日時を個票へ記録した"
-    message: >-
-      `docs/ja/specdojo/rulebooks/pjr-rulebook.md` 5.3.3 は `open` からの直接終端を許可し、`src/register.ts` も任意の活動中状態から close
-      を受け付けるが、本書は `done`・`decided` への遷移を `review` からしか定義していない。
-    message_ja: >-
-      `docs/ja/specdojo/rulebooks/pjr-rulebook.md` 5.3.3 は `open` からの直接終端を許可し、`src/register.ts` も任意の活動中状態から close
-      を受け付けるが、本書は `done`・`decided` への遷移を `review` からしか定義していない。
-  - id: F008
-    severity: major
-    rule: vp-arc-cross-document-consistency
     line: 44
     anchor: 一つの状態に接続する遷移が 6 を超えるため、業務フェーズで三図に分ける。共有する状態は各図で同じ表示名と `state_id` を使う。
     message: >-
@@ -191,7 +180,7 @@ findings:
     message_ja: >-
       `docs/ja/specdojo/guides/register-operation-guide.md` 2.1 は担当・期限が未定のままでも運用できるとしているが、本書は担当と期限の反映を `in-progress`
       の成立条件にしている。
-  - id: F009
+  - id: F008
     severity: major
     rule: vp-arc-cross-document-consistency
     line: 45
@@ -202,18 +191,18 @@ findings:
     message_ja: >-
       `docs/ja/specdojo/guides/register-operation-guide.md` 2.1 は待機理由を `block_reason` に記録し `conclusion`
       を変更しないと定めているが、本書は結論欄または本文を記録先としている。
-  - id: F010
+  - id: F009
     severity: major
     rule: vp-arc-cross-document-consistency
-    line: 137
-    anchor: ""
+    line: 56
+    anchor: "[*] --> open : 個票起票 / type と登録日時を個票へ記録した"
     message: >-
-      `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-stsd.yaml` は `bdd-register-entry` を
-      `depends_on` に宣言しているが、本書の `based_on` は空で、依存成果物も未作成のままである。
+      `docs/ja/specdojo/rulebooks/pjr-rulebook.md` 5.3.3 は `open` からの直接終端を許可し、`src/register.ts` も任意の活動中状態から close
+      を受け付けるが、本書は `done`・`decided` への遷移を `review` からしか定義していない。
     message_ja: >-
-      `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-stsd.yaml` は `bdd-register-entry` を
-      `depends_on` に宣言しているが、本書の `based_on` は空で、依存成果物も未作成のままである。
-  - id: F011
+      `docs/ja/specdojo/rulebooks/pjr-rulebook.md` 5.3.3 は `open` からの直接終端を許可し、`src/register.ts` も任意の活動中状態から close
+      を受け付けるが、本書は `done`・`decided` への遷移を `review` からしか定義していない。
+  - id: F010
     severity: major
     rule: vp-arc-cross-document-consistency
     line: 134
@@ -224,7 +213,7 @@ findings:
     message_ja: >-
       `src/register.ts` の `register reopen —status` は終端状態から `open`・`in-progress`・`waiting`・`review` への直接遷移を許可するが、本書は
       `T-15`〜`T-18` を `open` のみに限定し、直接指定を後続遷移との同時記録として扱っている。
-  - id: F012
+  - id: F011
     severity: minor
     rule: vp-arc-cross-document-consistency
     line: 136
@@ -235,6 +224,17 @@ findings:
     message_ja: >-
       `src/register.ts` は `note` に対する `close`・`reject`・`defer` を既に拒否しているため、「拒否する検証は確認できていない」という _UNDECIDED_
       を現行制約へ更新する必要がある。
+  - id: F012
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 137
+    anchor: ""
+    message: >-
+      `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-stsd.yaml` は `bdd-register-entry` を
+      `depends_on` に宣言しているが、本書の `based_on` は空で、依存成果物も未作成のままである。
+    message_ja: >-
+      `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-stsd.yaml` は `bdd-register-entry` を
+      `depends_on` に宣言しているが、本書の `based_on` は空で、依存成果物も未作成のままである。
   - id: F013
     severity: major
     rule: vp-arc-technical-constraints
@@ -307,12 +307,19 @@ findings:
     message_ja: 文書成熟度の `status` と処理状態の `item_status` を明確に区別し、追記型 event は個票内ではなく `events/pjr-XXXX.yaml` に保存されることを正確に記述する必要がある。
   - id: F021
     severity: major
+    rule: vp-ops-release-readiness
+    line: 130
+    anchor: ""
+    message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+    message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+  - id: F022
+    severity: major
     rule: vp-ops-operability
     line: 45
     anchor: ""
     message: 待機理由は `block_reason`、再開条件は本文の所定箇所へ記録し、終端時の `conclusion` を待機操作で変更しない運用へ統一する必要がある。
     message_ja: 待機理由は `block_reason`、再開条件は本文の所定箇所へ記録し、終端時の `conclusion` を待機操作で変更しない運用へ統一する必要がある。
-  - id: F022
+  - id: F023
     severity: major
     rule: vp-qe-config-validity
     line: 124

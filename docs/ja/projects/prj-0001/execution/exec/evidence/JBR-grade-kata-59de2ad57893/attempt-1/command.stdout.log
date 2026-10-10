@@ -1,0 +1,54 @@
+
+> specdojo@0.3.0 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-kata-59de2ad57893 project=prj-0001 target=kata kind=all changed_only=true ungraded=true incomplete=true rubric_outdated=true embed_documents=false max_stage_failures=3 stages=1 documents=15 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-kata-59de2ad57893
+stage=1 executor=agy-expert-executor reporter=machine reference=none
+translation_by=gemma26-translator
+document start: docs/ja/specdojo/recipes/stsd-recipe.md
+document complete: docs/ja/specdojo/recipes/stsd-recipe.md
+document start: docs/ja/specdojo/rulebooks/tsd-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/tsd-rulebook.md
+document start: docs/ja/specdojo/rulebooks/tsp-index-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/tsp-index-rulebook.md
+document start: docs/ja/specdojo/rulebooks/uis-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/uis-rulebook.md
+document start: docs/ja/specdojo/rulebooks/utc-index-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/utc-index-rulebook.md
+document start: docs/ja/specdojo/rulebooks/utc-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/utc-rulebook.md
+document start: docs/ja/specdojo/samples/atc-index-sample.md
+document complete: docs/ja/specdojo/samples/atc-index-sample.md
+document start: docs/ja/specdojo/samples/atc-sample.md
+document complete: docs/ja/specdojo/samples/atc-sample.md
+document start: docs/ja/specdojo/samples/bac-sample.md
+document complete: docs/ja/specdojo/samples/bac-sample.md
+document start: docs/ja/specdojo/samples/bds-sample.md
+document complete: docs/ja/specdojo/samples/bds-sample.md
+document start: docs/ja/specdojo/samples/bps-sample.md
+document complete: docs/ja/specdojo/samples/bps-sample.md
+document start: docs/ja/specdojo/samples/br-sample.md
+document complete: docs/ja/specdojo/samples/br-sample.md
+document start: docs/ja/specdojo/samples/ccd-sample.md
+document complete: docs/ja/specdojo/samples/ccd-sample.md
+document start: docs/ja/specdojo/samples/cdfd-overview-sample.md
+document complete: docs/ja/specdojo/samples/cdfd-overview-sample.md
+document start: docs/ja/specdojo/samples/cdfd-sample.md
+document complete: docs/ja/specdojo/samples/cdfd-sample.md
+grade pipeline complete: selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-kata-59de2ad57893/results.tsv
+recorded_at	document	stage	status	duration_seconds	verdict	score	findings	executor	reporter	reference	consecutive_failures	max_failures
+2026-10-10T21:01:45Z	docs/ja/specdojo/recipes/stsd-recipe.md	1	passed	86	needs-work	92	5	agy-expert-executor	machine	none		
+2026-10-10T21:02:44Z	docs/ja/specdojo/rulebooks/tsd-rulebook.md	1	passed	57	needs-work	93	2	agy-expert-executor	machine	none		
+2026-10-10T21:03:45Z	docs/ja/specdojo/rulebooks/tsp-index-rulebook.md	1	passed	59	needs-work	91	4	agy-expert-executor	machine	none		
+2026-10-10T21:04:54Z	docs/ja/specdojo/rulebooks/uis-rulebook.md	1	passed	67	needs-work	83	5	agy-expert-executor	machine	none		
+2026-10-10T21:06:01Z	docs/ja/specdojo/rulebooks/utc-index-rulebook.md	1	passed	65	needs-work	96	1	agy-expert-executor	machine	none		
+2026-10-10T21:07:09Z	docs/ja/specdojo/rulebooks/utc-rulebook.md	1	passed	66	needs-work	96	1	agy-expert-executor	machine	none		
+2026-10-10T21:09:13Z	docs/ja/specdojo/samples/atc-index-sample.md	1	passed	122	needs-work	36	24	agy-expert-executor	machine	none		
+2026-10-10T21:10:33Z	docs/ja/specdojo/samples/atc-sample.md	1	passed	78	fail	29	28	agy-expert-executor	machine	none		
+2026-10-10T21:12:09Z	docs/ja/specdojo/samples/bac-sample.md	1	passed	94	needs-work	59	22	agy-expert-executor	machine	none		
+2026-10-10T21:13:23Z	docs/ja/specdojo/samples/bds-sample.md	1	passed	72	fail	30	24	agy-expert-executor	machine	none		
+2026-10-10T21:15:13Z	docs/ja/specdojo/samples/bps-sample.md	1	passed	108	pass	95	6	agy-expert-executor	machine	none		
+2026-10-10T21:16:59Z	docs/ja/specdojo/samples/br-sample.md	1	passed	104	pass	92	4	agy-expert-executor	machine	none		
+2026-10-10T21:18:06Z	docs/ja/specdojo/samples/ccd-sample.md	1	passed	65	needs-work	80	4	agy-expert-executor	machine	none		
+2026-10-10T21:19:39Z	docs/ja/specdojo/samples/cdfd-overview-sample.md	1	passed	91	needs-work	74	11	agy-expert-executor	machine	none		
+2026-10-10T21:21:21Z	docs/ja/specdojo/samples/cdfd-sample.md	1	passed	100	pass	95	3	agy-expert-executor	machine	none		

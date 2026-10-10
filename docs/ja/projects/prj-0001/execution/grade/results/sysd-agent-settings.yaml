@@ -5,47 +5,47 @@ path: docs/ja/product/040-system-design/sysd-agent-settings.md
 target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 75
-graded_at: "2026-09-27T21:37:17.707Z"
-graded_by: codex-expert-executor
-content_hash: 438490f057d962ee7b6eee44dc4d8d218c14578a592e4d15b4d7f6bf2bcbe2f3
+score: 66
+graded_at: "2026-10-10T16:09:09.018Z"
+graded_by: agy-expert-executor
+content_hash: fcdb84f4ffd29a2119ae5aab0a3195a97a33b2e7cdc70c794e5e61ad2dee48c9
 source_hashes:
   catalog-entry: 7d98f6c1c49cc784622e978419675008f08bc64a708b8a701395803a327a54e7
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
   deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
-  dependency:sysd-cross-cutting-policy: d9215630b5b9505eb05ae82225d1c3578d06e11d724852874456a5826b9e9010
-  members: ec838bbb5673ba76f1a15672e094c00088dcb686a2a67225ca8411c0dc5e90d3
+  dependency:sysd-cross-cutting-policy: bca41820969b2dcdea1ce393322b1db29279f2135f145be62dcaa7f60fc6238b
+  members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
   schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
 categories:
   purpose:
-    score: 75
+    score: 50
   operations:
-    score: 88
+    score: 81
   planning:
-    score: 83
+    score: 75
   business:
     score: 58
   consistency:
     score: 63
   architecture:
-    score: 100
+    score: 83
   usability:
-    score: 88
+    score: 69
   implementation:
-    score: 88
+    score: 75
   quality:
     score: 56
 viewpoints:
   vp-po-purpose-alignment:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-po-decision-readiness:
     level: 2
     score: 50
   vp-po-publication-accountability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-pm-plan-feasibility:
     level: 3
     score: 75
@@ -53,8 +53,8 @@ viewpoints:
     level: 3
     score: 75
   vp-pm-control-reporting:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ba-business-value:
     level: 2
     score: 50
@@ -68,17 +68,17 @@ viewpoints:
     level: 2
     score: 50
   vp-arc-technical-constraints:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-conciseness:
     level: 3
     score: 75
   vp-arc-single-responsibility:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-implementation-readiness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-dev-change-impact:
     level: 3
     score: 75
@@ -95,14 +95,14 @@ viewpoints:
     level: 3
     score: 75
   vp-ux-readability:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-ux-user-flow:
     level: 3
     score: 75
   vp-ux-language-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ops-release-readiness:
     level: 3
     score: 75
@@ -120,170 +120,238 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 8
-  minor: 10
+  major: 10
+  minor: 16
   note: 0
 findings:
   - id: F001
     severity: major
-    rule: vp-po-decision-readiness
-    line: 7
-    anchor: >-
-      対象は`specdojo exec
-      run`による非対話実行と、対話型オーケストレーターからSpecDojoを操作する構成である。provider固有の認証・モデル・権限・agent定義は子設計、CLI更新操作は`opr-agent-cli-update`へ委ねる。
-    message: 非対話runnerと対話型orchestratorを併用する採用理由、代替案との比較、影響範囲、未決事項が示されておらず、POが設計方針を承認するための判断材料が不足しています。
+    rule: vp-po-purpose-alignment
+    line: 17
+    anchor: ""
+    message: >-
+      The necessity, expected effects, and alignment with the overall project purpose of the execution model combining
+      non-interactive CLI and interactive orchestrator are missing.
+    message_ja: 非対話型の CLI と対話型のオーケストレーターを組み合わせた実行モデルの必要性、期待される効果、およびプロジェクト全体の目的との整合性が欠落しています。
   - id: F002
-    severity: minor
-    rule: vp-pm-plan-feasibility
-    line: 40
-    anchor: >-
-      | 子設計                                                                    | 対象               |
-      固有責務                                |
-    message: 子設計一覧は作業対象を分割できる一方、依存順、担当Role code、完了確認点がないため、実装計画へ接続できるカタログまたはScheduleへの参照を追加してください。
+    severity: major
+    rule: vp-po-decision-readiness
+    line: 17
+    anchor: ""
+    message: 非対話runnerと対話型orchestratorを併用する採用理由、代替案との比較、影響範囲、未決事項が示されておらず、POが設計方針を承認するための判断材料が不足しています。
+    message_ja: 非対話runnerと対話型orchestratorを併用する採用理由、代替案との比較、影響範囲、未決事項が示されておらず、POが設計方針を承認するための判断材料が不足しています。
   - id: F003
     severity: minor
-    rule: vp-pm-dependency-risk
-    line: 53
-    anchor: >-
-      | 種別       | 参照先                                                               | 確認事項                            
-      |
-    message: 関連文書一覧では`sysd-cross-cutting-policy`という上流依存と、子設計・Job・運用手順などの下流影響先が区別されていないため、依存方向と変更時の確認対象を明示してください。
+    rule: vp-po-publication-accountability
+    line: 13
+    anchor: "| SpecDojo CLI        | task状態、依存、plan・result・eventを管理する           | 成果物内容の判断・編集         |"
+    message: The final decision accountability and the intended audience for publication are not specified.
+    message_ja: 最終的な意思決定の責任と、公開の対象読者が指定されていません。
   - id: F004
-    severity: major
-    rule: vp-ba-business-value
-    line: 7
-    anchor: >-
-      対象は`specdojo exec
-      run`による非対話実行と、対話型オーケストレーターからSpecDojoを操作する構成である。provider固有の認証・モデル・権限・agent定義は子設計、CLI更新操作は`opr-agent-cli-update`へ委ねる。
-    message: 非対話実行と対話型orchestratorが応える対象者、業務課題、放置時の影響、期待効果がなく、主要な設計方針を業務価値へ対応付けられません。
+    severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 50
+    anchor: ""
+    message: 子設計一覧は作業対象を分割できる一方、依存順、担当Role code、完了確認点がないため、実装計画へ接続できるカタログまたはScheduleへの参照を追加してください。
+    message_ja: 子設計一覧は作業対象を分割できる一方、依存順、担当Role code、完了確認点がないため、実装計画へ接続できるカタログまたはScheduleへの参照を追加してください。
   - id: F005
-    severity: major
-    rule: vp-ba-requirements-completeness
-    line: 7
-    anchor: >-
-      対象は`specdojo exec
-      run`による非対話実行と、対話型オーケストレーターからSpecDojoを操作する構成である。provider固有の認証・モデル・権限・agent定義は子設計、CLI更新操作は`opr-agent-cli-update`へ委ねる。
-    message: 対象範囲と委譲先だけで、設計トピックの採用理由・制約がどの業務要件に対応するか、および利用者視点の受入条件を確認できません。
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 63
+    anchor: ""
+    message: 関連文書一覧では`sysd-cross-cutting-policy`という上流依存と、子設計・Job・運用手順などの下流影響先が区別されていないため、依存方向と変更時の確認対象を明示してください。
+    message_ja: 関連文書一覧では`sysd-cross-cutting-policy`という上流依存と、子設計・Job・運用手順などの下流影響先が区別されていないため、依存方向と変更時の確認対象を明示してください。
   - id: F006
     severity: minor
-    rule: vp-ba-stakeholder-clarity
-    line: 7
-    anchor: >-
-      対象は`specdojo exec
-      run`による非対話実行と、対話型オーケストレーターからSpecDojoを操作する構成である。provider固有の認証・モデル・権限・agent定義は子設計、CLI更新操作は`opr-agent-cli-update`へ委ねる。
-    message: CLI・agent・runner・orchestratorの構成上の役割は分かりますが、本書を利用するDEV・QE・OPSおよび設計確認者の責務が明示されていません。
+    rule: vp-pm-control-reporting
+    line: 13
+    anchor: "| SpecDojo CLI        | task状態、依存、plan・result・eventを管理する           | 成果物内容の判断・編集         |"
+    message: >-
+      The mechanism or roles for reporting progress, risks, changes, and decisions related to this design are not
+      specified.
+    message_ja: この設計に関する進捗、リスク、変更、および意思決定を報告するためのメカニズムや役割が指定されていません。
   - id: F007
     severity: major
+    rule: vp-ba-business-value
+    line: 17
+    anchor: ""
+    message: 非対話実行と対話型orchestratorが応える対象者、業務課題、放置時の影響、期待効果がなく、主要な設計方針を業務価値へ対応付けられません。
+    message_ja: 非対話実行と対話型orchestratorが応える対象者、業務課題、放置時の影響、期待効果がなく、主要な設計方針を業務価値へ対応付けられません。
+  - id: F008
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 17
+    anchor: ""
+    message: 対象範囲と委譲先だけで、設計トピックの採用理由・制約がどの業務要件に対応するか、および利用者視点の受入条件を確認できません。
+    message_ja: 対象範囲と委譲先だけで、設計トピックの採用理由・制約がどの業務要件に対応するか、および利用者視点の受入条件を確認できません。
+  - id: F009
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 17
+    anchor: ""
+    message: CLI・agent・runner・orchestratorの構成上の役割は分かりますが、本書を利用するDEV・QE・OPSおよび設計確認者の責務が明示されていません。
+    message_ja: CLI・agent・runner・orchestratorの構成上の役割は分かりますが、本書を利用するDEV・QE・OPSおよび設計確認者の責務が明示されていません。
+  - id: F010
+    severity: major
     rule: vp-arc-cross-document-consistency
-    line: 34
+    line: 44
     anchor: >-
-      agent が親 runner・Git hook・CI・agent 指示の内容を変更できないよう、`package.json`、lefthook 設定、`.specdojo/**`、commitlint 設定、CI
-      設定、agent 指示ディレクトリ、root の指示ファイルは provider 共通の固定保護パスとする。runner は agent 終了直後かつ親検証前に起動前との差分を検査し、worktree の commit 前には未
-      commit 差分と branch 上の commit 済み差分を再検査する。違反時は対象パスを標準エラーへ出力して block し、branch / worktree を保持する。provider 固有の permission
-      / sandbox は第一層として維持するが、この判定の入力には使わない。
+      | [OpenCodeエージェント設定](sysd-opencode-agent-settings.md)               | OpenCode / Ollama  |
+      ローカルLLM、agent定義、起動設定        |
     message: >-
       固定保護パスに agent 指示ディレクトリと root 指示ファイルを含めているが、正本 `sysd-cross-cutting-policy` の `scp-SEC-002`
       にはこれらがなく保護範囲が一致しないため、正本側へ統合して本書は Rule ID 参照にしてください。
-  - id: F008
+    message_ja: >-
+      固定保護パスに agent 指示ディレクトリと root 指示ファイルを含めているが、正本 `sysd-cross-cutting-policy` の `scp-SEC-002`
+      にはこれらがなく保護範囲が一致しないため、正本側へ統合して本書は Rule ID 参照にしてください。
+  - id: F011
+    severity: minor
+    rule: vp-arc-technical-constraints
+    line: 46
+    anchor: >-
+      | [Antigravity CLIエージェント設定](sysd-antigravity-agent-settings.md)     | Antigravity CLI    | 認証、モデル、指示読込、起動設定       
+      |
+    message: >-
+      External dependencies, environment requirements (e.g. Node version), and resource constraints for the runner are
+      not explicitly defined.
+    message_ja: ランナーの外部依存関係、環境要件（例：Node のバージョン）、およびリソースの制約が明示的に定義されていません。
+  - id: F012
     severity: minor
     rule: vp-arc-conciseness
-    line: 34
+    line: 44
     anchor: >-
-      agent が親 runner・Git hook・CI・agent 指示の内容を変更できないよう、`package.json`、lefthook 設定、`.specdojo/**`、commitlint 設定、CI
-      設定、agent 指示ディレクトリ、root の指示ファイルは provider 共通の固定保護パスとする。runner は agent 終了直後かつ親検証前に起動前との差分を検査し、worktree の commit 前には未
-      commit 差分と branch 上の commit 済み差分を再検査する。違反時は対象パスを標準エラーへ出力して block し、branch / worktree を保持する。provider 固有の permission
-      / sandbox は第一層として維持するが、この判定の入力には使わない。
+      | [OpenCodeエージェント設定](sysd-opencode-agent-settings.md)               | OpenCode / Ollama  |
+      ローカルLLM、agent定義、起動設定        |
     message: 固定保護パスと検査手順、および続く Git 環境・状態ガードの段落は `scp-SEC-002` と `scp-GIT-004` の詳細再掲なので, hub では共通設計上の要点と Rule ID への参照に縮約してください。
-  - id: F009
+    message_ja: 固定保護パスと検査手順、および続く Git 環境・状態ガードの段落は `scp-SEC-002` と `scp-GIT-004` の詳細再掲なので, hub では共通設計上の要点と Rule ID への参照に縮約してください。
+  - id: F013
+    severity: minor
+    rule: vp-arc-single-responsibility
+    line: 46
+    anchor: >-
+      | [Antigravity CLIエージェント設定](sysd-antigravity-agent-settings.md)     | Antigravity CLI    | 認証、モデル、指示読込、起動設定       
+      |
+    message: >-
+      Detailed implementation of git environment variable removal and commit validation logic should be delegated to
+      cross-cutting policy or specific child design to maintain the single responsibility of a hub.
+    message_ja: git 環境変数の削除とコミット検証ロジックの詳細な実装は、ハブの単一責任を維持するために、横断的なポリシーまたは特定のサブデザインに委ねるべきです。
+  - id: F014
+    severity: minor
+    rule: vp-dev-implementation-readiness
+    line: 42
+    anchor: >-
+      | [Claude Codeエージェント設定](sysd-claude-agent-settings.md)              | Claude Code        |
+      認証、モデル、agent定義、起動設定       |
+    message: >-
+      The schemas, exact formats, and validation rules for the configuration files (e.g. `.specdojo/exec-defaults.yaml`)
+      are missing, which are needed for implementation.
+    message_ja: 実装に必要な構成ファイル（例：`.specdojo/exec-defaults.yaml`）のスキーマ、正確な形式、および検証ルールが欠落しています。
+  - id: F015
     severity: minor
     rule: vp-dev-change-impact
-    line: 53
-    anchor: >-
-      | 種別       | 参照先                                                               | 確認事項                            
-      |
+    line: 63
+    anchor: ""
     message: 関連文書は列挙されていますが、共通実行モデルや責務境界の変更がどの実装ファイル、設定schema、子設計へ波及するかを追跡できる対応付けがありません。
-  - id: F010
+    message_ja: 関連文書は列挙されていますが、共通実行モデルや責務境界の変更がどの実装ファイル、設定schema、子設計へ波及するかを追跡できる対応付けがありません。
+  - id: F016
     severity: major
     rule: vp-dev-testability
-    line: 60
-    anchor: >-
-      | 検証       | `tests/src/exec-*.test.ts`                                           |
-      member選択、worktree、retry、resume  |
+    line: 70
+    anchor: ""
     message: "`tests/src/exec-*.test.ts`という広いglobだけでは実装変更後に実行すべきtest file・case・コマンド・期待結果を特定できないため、設計制約ごとの検証方法を対応付けてください。"
-  - id: F011
+    message_ja: "`tests/src/exec-*.test.ts`という広いglobだけでは実装変更後に実行すべきtest file・case・コマンド・期待結果を特定できないため、設計制約ごとの検証方法を対応付けてください。"
+  - id: F017
     severity: major
     rule: vp-qe-done-criteria
-    line: 7
-    anchor: >-
-      対象は`specdojo exec
-      run`による非対話実行と、対話型オーケストレーターからSpecDojoを操作する構成である。provider固有の認証・モデル・権限・agent定義は子設計、CLI更新操作は`opr-agent-cli-update`へ委ねる。
+    line: 17
+    anchor: ""
     message: 対象範囲と委譲先だけで、対応する業務要件、実行モデルの採用理由、代替案との比較や承認上の判断材料がなく、DC-001 と DC-002 を確認できません。
-  - id: F012
+    message_ja: 対象範囲と委譲先だけで、対応する業務要件、実行モデルの採用理由、代替案との比較や承認上の判断材料がなく、DC-001 と DC-002 を確認できません。
+  - id: F018
     severity: major
     rule: vp-qe-done-criteria
-    line: 60
-    anchor: >-
-      | 検証       | `tests/src/exec-*.test.ts`                                           |
-      member選択、worktree、retry、resume  |
+    line: 70
+    anchor: ""
     message: 検証先が `tests/src/exec-*.test.ts` という広い glob と論点名だけで、設計制約ごとのテストおよび期待結果を追跡できず、DC-004 を確認できません。
-  - id: F013
+    message_ja: 検証先が `tests/src/exec-*.test.ts` という広い glob と論点名だけで、設計制約ごとのテストおよび期待結果を追跡できず、DC-004 を確認できません。
+  - id: F019
     severity: major
     rule: vp-qe-verifiability
-    line: 60
-    anchor: >-
-      | 検証       | `tests/src/exec-*.test.ts`                                           |
-      member選択、worktree、retry、resume  |
+    line: 70
+    anchor: ""
     message: >-
       `tests/src/exec-*.test.ts` だけでは member 選択、worktree、retry、resume の各制約を検証する test
       file・case・期待状態を特定できないため、制約ごとの検証先と合否条件を対応付けてください。
-  - id: F014
+    message_ja: >-
+      `tests/src/exec-*.test.ts` だけでは member 選択、worktree、retry、resume の各制約を検証する test
+      file・case・期待状態を特定できないため、制約ごとの検証先と合否条件を対応付けてください。
+  - id: F020
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 18
-    anchor: >-
-      責務分離、member選択、設定解決、利用制限、イベント、worktreeの規範は`sysd-cross-cutting-policy`のRule
-      IDを参照する。事故予防が必要な順序と失敗経路は`sysd-critical-flows`を参照する。
+    line: 28
+    anchor: → 検証・result確定
     message: 横断規範は「Rule IDを参照する」と記載されているものの、責務分離・member選択・設定解決・利用制限・イベント・worktree に対応する具体的な Rule ID が列挙されていません。
-  - id: F015
+    message_ja: 横断規範は「Rule IDを参照する」と記載されているものの、責務分離・member選択・設定解決・利用制限・イベント・worktree に対応する具体的な Rule ID が列挙されていません。
+  - id: F021
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 40
-    anchor: >-
-      | 子設計                                                                    | 対象               |
-      固有責務                                |
+    line: 50
+    anchor: ""
     message: 子設計一覧に rulebook 必須の選択条件列がなく、対象 provider 名以外に各子設計を選ぶ条件を hub 上で比較できません。
-  - id: F016
+    message_ja: 子設計一覧に rulebook 必須の選択条件列がなく、対象 provider 名以外に各子設計を選ぶ条件を hub 上で比較できません。
+  - id: F022
+    severity: major
+    rule: vp-ux-readability
+    line: 17
+    anchor: ""
+    message: >-
+      The document fails to clearly explain why this specific combined execution model was chosen, making it difficult
+      for first-time readers to understand the primary rationale and architectural intent.
+    message_ja: この特定の組み合わせた実行モデルがなぜ選ばれたのかが明確に説明されておらず、初めて読む人が主要な根拠と設計の意図を理解することが困難になっています。
+  - id: F023
     severity: minor
     rule: vp-ux-user-flow
-    line: 18
-    anchor: >-
-      責務分離、member選択、設定解決、利用制限、イベント、worktreeの規範は`sysd-cross-cutting-policy`のRule
-      IDを参照する。事故予防が必要な順序と失敗経路は`sysd-critical-flows`を参照する。
+    line: 28
+    anchor: → 検証・result確定
     message: 横断ルールへの文書単位の案内しかなく具体的な Rule ID やアンカーがないため、利用者が各責務・制約の規範へ直接到達できるリンクを追加してください。
-  - id: F017
+    message_ja: 横断ルールへの文書単位の案内しかなく具体的な Rule ID やアンカーがないため、利用者が各責務・制約の規範へ直接到達できるリンクを追加してください。
+  - id: F024
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 13
+    anchor: "| SpecDojo CLI        | task状態、依存、plan・result・eventを管理する           | 成果物内容の判断・編集         |"
+    message: Inconsistent terminology between "外部エージェントCLI" (line 13) and "agent" (line 24, 44), which should be unified.
+    message_ja: Inconsistent terminology between "外部エージェントCLI" (line 13) and "agent" (line 24, 44), which should be unified.
+  - id: F025
     severity: minor
     rule: vp-ops-release-readiness
-    line: 3
-    anchor: >-
-      SpecDojo
-      CLIと外部エージェントCLIを組み合わせた実行モデルの入口を定義する。本書は共通の目的・責務境界と子設計への導線を保持し、横断的な必須ルールは`sysd-cross-cutting-policy`を正本とする。
+    line: 13
+    anchor: "| SpecDojo CLI        | task状態、依存、plan・result・eventを管理する           | 成果物内容の判断・編集         |"
     message: draftからreadyへ昇格するための確認条件、承認Role、未解決指摘の扱いが本文または参照先として示されていません。
-  - id: F018
+    message_ja: draftからreadyへ昇格するための確認条件、承認Role、未解決指摘の扱いが本文または参照先として示されていません。
+  - id: F026
     severity: minor
     rule: vp-ops-operability
-    line: 53
-    anchor: >-
-      | 種別       | 参照先                                                               | 確認事項                            
-      |
+    line: 63
+    anchor: ""
     message: CLI更新手順への導線はありますが、block・resume、利用制限、Git状態違反時の確認担当と障害対応手順が関連文書として示されていません。
+    message_ja: CLI更新手順への導線はありますが、block・resume、利用制限、Git状態違反時の確認担当と障害対応手順が関連文書として示されていません。
+level_corrections:
+  - viewpoint: vp-qe-done-criteria
+    original_level: 2
+    corrected_level: 1
 done_criteria:
-  satisfied: 2
+  satisfied: 0
   total: 5
   unsatisfied:
     DC-001:
       - BA
     DC-002:
       - PO
+    DC-003:
+      - ARC
     DC-004:
       - QE
+    DC-005:
+      - DEV
   detail_ref: sysd-agent-settings-grade-criteria

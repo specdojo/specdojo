@@ -6,7 +6,7 @@ target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 63
-graded_at: "2026-10-08T16:14:41.085Z"
+graded_at: "2026-10-09T16:02:20.342Z"
 graded_by: agy-expert-executor
 content_hash: 122a31bab81314a9f48992acb49cfcc55cf3d4233e9491dac0cb1833283203c9
 source_hashes:
@@ -15,7 +15,7 @@ source_hashes:
   deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
   dependency:sysd-agent-settings: fcdb84f4ffd29a2119ae5aab0a3195a97a33b2e7cdc70c794e5e61ad2dee48c9
   dependency:sysd-antigravity-agent-settings: ade83ab86eecf2ce4f88cc1219bea911534c633f15a5abe677a7eb397ad41027
-  dependency:sysd-claude-agent-settings: dd9bde86b280585274d7f770c08ad6d3e14ccdf57389052ddd2d3e25234937f2
+  dependency:sysd-claude-agent-settings: 656016bd0ef2d40684c65b13b89811990720553d1a7286a335eb777df5a443ab
   dependency:sysd-codex-agent-settings: 42a2cd4f17db9160725236e0e253365b83ba8383f39c224e60b1de5a8f56eeaf
   dependency:sysd-github-copilot-agent-settings: 3e7cc787e2b9c1e0978b891463416a1c906e896afd4bf7fcbde48f85303427fb
   dependency:sysd-opencode-agent-settings: 6e1d7d6cdacbea0f8b5042901d4e8a88096dd00eb27591882b1765e062f3d871

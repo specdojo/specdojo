@@ -2,7 +2,7 @@
 id: tsd-index-grade-criteria
 document: tsd-index
 path: docs/ja/product/030-architecture/020-infrastructure/tsd-index.md
-graded_at: "2026-10-08T16:17:51.554Z"
+graded_at: "2026-10-10T16:06:45.424Z"
 graded_by: agy-expert-executor
 content_hash: 865c78a040e444d78e0098701fe700d905bd94693ef7e0124d1d580c6ff48ed3
 summary:
@@ -16,32 +16,32 @@ criteria:
       - BA
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
-    reason: Missing selection reasons and constraints for each technology, and their alignment with business requirements.
+    reason: Missing reasons for technology selection and constraints aligned with business requirements.
   - id: DC-002
     text: 技術スタック選定を承認できること
     roles:
       - PO
     viewpoint: vp-po-decision-readiness
     status: unsatisfied
-    reason: Lacks selection reasons, prerequisites, and impact analysis required for PO approval.
+    reason: Lacks impact analysis and pending issues necessary for PO to approve the technology stack.
   - id: DC-003
     text: 技術的制約・ライセンス・バージョン方針が識別できること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
-    reason: Missing technical constraints, licenses, and version update policies.
+    reason: Technical constraints, licenses, and versioning policies are not identified.
   - id: DC-004
     text: テストフレームワーク・CI/CD環境の参照として使えること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
     status: unsatisfied
-    reason: Test framework (e.g., Vitest) is missing, and there are no references to CI/CD validation commands.
+    reason: Test framework (Vitest) and detailed CI/CD workflow references are missing.
   - id: DC-005
     text: 開発環境構築・ライブラリ選定の参照として使えること
     roles:
       - DEV
     viewpoint: vp-dev-implementation-readiness
     status: unsatisfied
-    reason: Dependency versions are inconsistent with package.json, making it unsafe for development environment setup.
+    reason: Listed versions diverge from the actual package.json, making it unsafe for development environment setup.

@@ -3,88 +3,285 @@ version: 1
 document: specdojo:sf-rulebook
 path: docs/ja/specdojo/rulebooks/sf-rulebook.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 71
-graded_at: "2026-09-03T09:54:00.148Z"
-graded_by: gemma-expert-executor
+score: 36
+graded_at: "2026-10-09T21:07:19.342Z"
+graded_by: agy-expert-executor
 content_hash: c3a3891186dd9c2df7048e93ce0b03099a8c8fc9d385b14161f0f5b71b857045
 categories:
-  consistency:
-    score: 50
-  usability:
-    score: 58
+  purpose:
+    score: 25
+  operations:
+    score: 44
+  planning:
+    score: 25
+  business:
+    score: 25
   architecture:
-    score: 100
-  quality:
     score: 75
+  usability:
+    score: 42
+  implementation:
+    score: 25
+  quality:
+    score: 25
+  consistency:
+    score: 25
 viewpoints:
-  vp-arc-cross-document-consistency:
-    level: 2
-    score: 50
+  vp-po-purpose-alignment:
+    level: 1
+    score: 25
+  vp-po-decision-readiness:
+    level: 1
+    score: 25
+  vp-po-publication-accountability:
+    level: 1
+    score: 25
+  vp-pm-plan-feasibility:
+    level: 1
+    score: 25
+  vp-pm-dependency-risk:
+    level: 1
+    score: 25
+  vp-pm-control-reporting:
+    level: 1
+    score: 25
+  vp-ba-business-value:
+    level: 1
+    score: 25
+  vp-ba-requirements-completeness:
+    level: 1
+    score: 25
+  vp-ba-stakeholder-clarity:
+    level: 1
+    score: 25
+  vp-arc-technical-constraints:
+    level: 1
+    score: 25
   vp-arc-conciseness:
     level: 3
     score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 1
+    score: 25
+  vp-dev-change-impact:
+    level: 1
+    score: 25
+  vp-dev-testability:
+    level: 1
+    score: 25
   vp-qe-verifiability:
+    level: 1
+    score: 25
+  vp-qe-omissions-consistency:
+    level: 1
+    score: 25
+  vp-qe-kata-conformance:
+    level: 1
+    score: 25
+  vp-ux-readability:
+    level: 1
+    score: 25
+  vp-ux-language-consistency:
+    level: 1
+    score: 25
+  vp-ops-release-readiness:
+    level: 1
+    score: 25
+  vp-ops-operability:
+    level: 1
+    score: 25
+  vp-ops-agent-boundary:
     level: 4
     score: 100
-  vp-qe-omissions-consistency:
-    level: 2
-    score: 50
-  vp-qe-kata-conformance:
-    level: 2
-    score: 50
-  vp-ux-readability:
-    level: 2
-    score: 50
-  vp-ux-language-consistency:
-    level: 2
-    score: 50
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 0
-  major: 5
+  major: 21
   minor: 1
   note: 0
 findings:
-  - id: F003
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 1
-    message: メタデータ定義（10行目）の domain 固定という指定と、本行およびサンプルでの data という記述が矛盾している。
-    anchor: "# システム化機能一覧（System Function List, SFL）作成ルール"
-  - id: F005
-    severity: major
-    rule: vp-ux-readability
-    line: 1
-    message: type 値の矛盾および指定サンプルの不整合により、正しくどのような成果物を作成すべきか判断できず、読者を混乱させる。
-    anchor: "# システム化機能一覧（System Function List, SFL）作成ルール"
-  - id: F006
-    severity: major
-    rule: vp-ux-language-consistency
-    line: 1
-    message: メタデータの type フィールドにおいて, 定義値 (domain) と解説・サンプル値 (data) が統一されていない。
-    anchor: "# システム化機能一覧（System Function List, SFL）作成ルール"
-  - id: F002
-    severity: minor
-    rule: vp-arc-conciseness
-    line: 1
-    message: IDの正規表現定義が 17 行目と重複しているため、統合して簡潔に記述すべきである。
-    anchor: "# システム化機能一覧（System Function List, SFL）作成ルール"
   - id: F001
     severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 1
-    message: 指定サンプル sf-sample.md が, 本ルールで定義されている「1行1機能の表形式」に従わず, 個別機能の詳細定義文書となっており矛盾している。
-    anchor: "# システム化機能一覧（System Function List, SFL）作成ルール"
+    rule: vp-po-purpose-alignment
+    line: 4
+    anchor: ""
+    message: >-
+      The document lacks clear definitions of the project purpose, necessity, expected effects of the SFL, and its
+      relationship to upper-level documents like requirements.
+    message_ja: ドキュメントには、プロジェクトの目的、必要性、SFLの期待される効果、および要件などの上位ドキュメントとの関係についての明確な定義が不足しています。
+  - id: F002
+    severity: major
+    rule: vp-po-decision-readiness
+    line: 4
+    anchor: ""
+    message: There are no defined criteria for PO approval, handling of unresolved issues, or the impact scope of the SFL.
+    message_ja: POによる承認基準、未解決事項の扱い、またはSFLの影響範囲が定義されていません。
+  - id: F003
+    severity: major
+    rule: vp-po-publication-accountability
+    line: 4
+    anchor: ""
+    message: >-
+      The accountability for publication, target audience, and policies for handling sensitive or private information
+      are not described.
+    message_ja: 公開の責任、対象読者、および機密情報やプライベートな情報の取り扱いに関するポリシーが記載されていません。
   - id: F004
     severity: major
+    rule: vp-pm-plan-feasibility
+    line: 27
+    anchor: "- 機能名・概要は業務観点で記述し、実装技術や画面遷移手順など実装詳細は含めない。"
+    message: >-
+      The rulebook does not provide role codes, done criteria, or schedule milestones to turn each function definition
+      into a manageable task.
+    message_ja: ルールブックには、各機能定義を管理可能なタスクに変換するための、ロールコード、done criteria、またはスケジュールのマイルストーンが提供されていません。
+  - id: F005
+    severity: major
+    rule: vp-pm-dependency-risk
+    line: 27
+    anchor: "- 機能名・概要は業務観点で記述し、実装技術や画面遷移手順など実装詳細は含めない。"
+    message: Dependencies, downstream impacts (e.g., UI or DB design), and risk management policies are not identified.
+    message_ja: 依存関係、下流への影響（UIやDBの設計など）、およびリスク管理ポリシーが特定されていません。
+  - id: F006
+    severity: major
+    rule: vp-pm-control-reporting
+    line: 27
+    anchor: "- 機能名・概要は業務観点で記述し、実装技術や画面遷移手順など実装詳細は含めない。"
+    message: The process for progress reporting, issue tracking, and handling change requests is not separated or defined.
+    message_ja: 進捗報告、課題の追跡、および変更要求の処理プロセスが分離または定義されていません。
+  - id: F007
+    severity: major
+    rule: vp-ba-business-value
+    line: 4
+    anchor: ""
+    message: >-
+      The connection between the functions and specific business issues, expected values, or business success criteria
+      is missing.
+    message_ja: 機能と、特定のビジネス上の課題、期待される価値、またはビジネスの成功基準との接続が欠落しています。
+  - id: F008
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 27
+    anchor: "- 機能名・概要は業務観点で記述し、実装技術や画面遷移手順など実装詳細は含めない。"
+    message: >-
+      Scope boundaries (in-scope and out-of-scope) and user-centric acceptance criteria are not defined with sufficient
+      granularity.
+    message_ja: スコープの境界（インスコープとアウトオブスコープ）およびユーザー中心の受け入れ基準が、十分な粒度で定義されていません。
+  - id: F009
+    severity: major
+    rule: vp-ba-stakeholder-clarity
+    line: 27
+    anchor: "- 機能名・概要は業務観点で記述し、実装技術や画面遷移手順など実装詳細は含めない。"
+    message: The stakeholders, users, reviewers, and specific items requiring agreement are not clearly stated.
+    message_ja: ステークホルダー、ユーザー、レビュアー、および合意を必要とする特定の事項が明確に述べられていません。
+  - id: F010
+    severity: major
+    rule: vp-arc-technical-constraints
+    line: 31
+    anchor: ""
+    message: >-
+      There is no clear structure to define technical constraints, external system dependencies, or architectural
+      guidelines.
+    message_ja: 技術的な制約、外部システムへの依存関係、またはアーキテクチャのガイドラインを定義する明確な構造がありません。
+  - id: F011
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 22
+    anchor: "一覧ハブには `sf-index`、個別機能には `sf-<機能名>` を付与してください（例: `sf-product-register`）。"
+    message: IDの正規表現定義が 17 行目と重複しているため、統合して簡潔に記述すべきである。
+    message_ja: IDの正規表現定義が 17 行目と重複しているため、統合して簡潔に記述すべきである。
+  - id: F012
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 31
+    anchor: ""
+    message: >-
+      The input requirements, constraints, and Done Criteria necessary to start detailed design or implementation are
+      not specified.
+    message_ja: 詳細設計や実装を開始するために必要な入力要件、制約、およびDone Criteriaが指定されていません。
+  - id: F013
+    severity: major
+    rule: vp-dev-change-impact
+    line: 31
+    anchor: ""
+    message: >-
+      The rulebook does not define how to identify the impact of SFL changes on downstream artifacts or existing
+      systems.
+    message_ja: ルールブックには、SFLの変更が下流の成果物や既存のシステムに与える影響を特定する方法が定義されていません。
+  - id: F014
+    severity: major
+    rule: vp-dev-testability
+    line: 74
+    anchor: ""
+    message: >-
+      Procedures for validating the SFL consistency or format (e.g., lint commands) and expected test results are
+      missing.
+    message_ja: SFLの一貫性やフォーマット（例：lintコマンド）を検証するための手順や、期待されるテスト結果が欠落しています。
+  - id: F015
+    severity: major
+    rule: vp-qe-verifiability
+    line: 31
+    anchor: ""
+    message: >-
+      Objective Pass/Fail criteria for verifying whether each function meets the quality standards or acceptance
+      conditions are absent.
+    message_ja: 各機能が品質基準や受け入れ条件を満たしているかどうかを検証するための、客観的な合否基準がありません。
+  - id: F016
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 11
+    anchor: "| title      | 機能一覧名                    | ○    |"
+    message: メタデータ定義（10行目）の domain 固定という指定と、本行およびサンプルでの data という記述が矛盾している。
+    message_ja: メタデータ定義（10行目）の domain 固定という指定と、本行およびサンプルでの data という記述が矛盾している。
+  - id: F017
+    severity: major
     rule: vp-qe-kata-conformance
-    line: 1
+    line: 2
+    anchor: ""
+    message: 指定サンプル sf-sample.md が, 本ルールで定義されている「1行1機能の表形式」に従わず, 個別機能の詳細定義文書となっており矛盾している。
+    message_ja: 指定サンプル sf-sample.md が, 本ルールで定義されている「1行1機能の表形式」に従わず, 個別機能の詳細定義文書となっており矛盾している。
+  - id: F018
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 2
+    anchor: ""
     message: 指定サンプル sf-sample.md の構成が本ルールの定義（機能一覧表の作成）と完全に乖離しており、適用方法が不明確である。
-    anchor: "# システム化機能一覧（System Function List, SFL）作成ルール"
+    message_ja: 指定サンプル sf-sample.md の構成が本ルールの定義（機能一覧表の作成）と完全に乖離しており、適用方法が不明確である。
+  - id: F019
+    severity: major
+    rule: vp-ux-readability
+    line: 2
+    anchor: ""
+    message: type 値の矛盾および指定サンプルの不整合により、正しくどのような成果物を作成すべきか判断できず、読者を混乱させる。
+    message_ja: type 値の矛盾および指定サンプルの不整合により、正しくどのような成果物を作成すべきか判断できず、読者を混乱させる。
+  - id: F020
+    severity: major
+    rule: vp-ux-language-consistency
+    line: 11
+    anchor: "| title      | 機能一覧名                    | ○    |"
+    message: メタデータの type フィールドにおいて, 定義値 (domain) と解説・サンプル値 (data) が統一されていない。
+    message_ja: メタデータの type フィールドにおいて, 定義値 (domain) と解説・サンプル値 (data) が統一されていない。
+  - id: F021
+    severity: major
+    rule: vp-ops-release-readiness
+    line: 6
+    anchor: ""
+    message: >-
+      The preconditions for transitioning the SFL to a ready state and the criteria for release approval are not
+      specified.
+    message_ja: SFLを準備完了状態に移行するための前提条件と、リリース承認の基準が指定されていません。
+  - id: F022
+    severity: major
+    rule: vp-ops-operability
+    line: 74
+    anchor: ""
+    message: >-
+      Operational guidelines for continuous updates, change management, and contact points during the project are
+      missing.
+    message_ja: 継続的なアップデート、変更管理、およびプロジェクト期間中の連絡先に関する運用ガイドラインが欠落しています。

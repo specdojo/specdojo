@@ -6,7 +6,7 @@ target: kata
 rubric: grade-rubric-v2
 verdict: pass
 score: 97
-graded_at: "2026-10-08T21:01:52.982Z"
+graded_at: "2026-10-09T21:02:20.799Z"
 graded_by: agy-expert-executor
 content_hash: 95105c117df50ea0d2cef0f9306e0215107fe2d3ed8a86452aa5245c84d36fc4
 categories:
@@ -101,44 +101,46 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 8
+  minor: 9
   note: 0
 findings:
   - id: F001
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 36
-    anchor: "### 4.1. 実行主体"
+    line: 27
+    anchor: 1. `project_id`、成果物 ID、`based_on` を確定します。
     message: 全体の作成手順において、rulebook で必須とされる title の設定手順が漏れている。
     message_ja: 全体の作成手順において、rulebook で必須とされる title の設定手順が漏れている。
   - id: F002
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 36
-    anchor: "### 4.1. 実行主体"
+    line: 27
+    anchor: 1. `project_id`、成果物 ID、`based_on` を確定します。
     message: メタ項目の設定手順において、rulebook で必須とされる `title` が漏れている。
     message_ja: メタ項目の設定手順において、rulebook で必須とされる `title` が漏れている。
   - id: F003
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 36
-    anchor: "### 4.1. 実行主体"
+    line: 27
+    anchor: 1. `project_id`、成果物 ID、`based_on` を確定します。
     message: メタ項目の設定手順において、rulebook で必須とされる `status` が漏れている。
     message_ja: メタ項目の設定手順において、rulebook で必須とされる `status` が漏れている。
   - id: F004
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 45
-    anchor: "- `type: agent`、`provider`、`command`、`mode`、`stage_role` が名簿に残っていませんか。"
-    message: "`members` の問いにおいて、必須項目である `display_name` の確認が漏れている。"
-    message_ja: "`members` の問いにおいて、必須項目である `display_name` の確認が漏れている。"
+    line: 27
+    anchor: 1. `project_id`、成果物 ID、`based_on` を確定します。
+    message: メタ項目の設定手順において、rulebook で必須とされる `version` の設定手順が漏れている。
+    message_ja: メタ項目の設定手順において、rulebook で必須とされる `version` の設定手順が漏れている。
   - id: F005
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 48
-    anchor: "- 既存 agent の移行には `specdojo config migrate-members --dry-run` を先に使いましたか。"
-    message: 書き方において、`stage_role` の設定基準や nickname の許容文字に関する rulebook 記載の具体ルールが記述されていない。
-    message_ja: 書き方において、`stage_role` の設定基準や nickname の許容文字に関する rulebook 記載の具体ルールが記述されていない。
+    line: 27
+    anchor: 1. `project_id`、成果物 ID、`based_on` を確定します。
+    message: >-
+      The procedure for setting metadata omits the required fields `type: project` and `rulebook` specified in the
+      rulebook.
+    message_ja: "メタデータを設定する手順において、rulebookで指定されている必須フィールドの `type: project` および `rulebook` が省略されています。"
   - id: F006
     severity: minor
     rule: vp-qe-omissions-consistency
@@ -158,5 +160,12 @@ findings:
     rule: vp-qe-omissions-consistency
     line: 36
     anchor: "### 4.1. 実行主体"
-    message: メタ項目の設定手順において、rulebook で必須とされる `version` の設定手順が漏れている。
-    message_ja: メタ項目の設定手順において、rulebook で必須とされる `version` の設定手順が漏れている。
+    message: "`members` の問いにおいて、必須項目である `display_name` の確認が漏れている。"
+    message_ja: "`members` の問いにおいて、必須項目である `display_name` の確認が漏れている。"
+  - id: F009
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 39
+    anchor: "- 人物が交代しても意味が変わらない nickname になっていますか。"
+    message: 書き方において、`stage_role` の設定基準や nickname の許容文字に関する rulebook 記載の具体ルールが記述されていない。
+    message_ja: 書き方において、`stage_role` の設定基準や nickname の許容文字に関する rulebook 記載の具体ルールが記述されていない。

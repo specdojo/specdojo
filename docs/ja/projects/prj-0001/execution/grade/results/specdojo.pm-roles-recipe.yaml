@@ -5,8 +5,8 @@ path: docs/ja/specdojo/recipes/pm-roles-recipe.md
 target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 79
-graded_at: "2026-10-08T21:03:33.771Z"
+score: 70
+graded_at: "2026-10-09T21:04:15.268Z"
 graded_by: agy-expert-executor
 content_hash: 897c3eeb2e66cbbee4594b3ef0e7bdadee0997940d55ac085bad54dc38ecbdc2
 categories:
@@ -19,15 +19,15 @@ categories:
   business:
     score: 100
   architecture:
-    score: 83
+    score: 75
   usability:
     score: 100
   implementation:
-    score: 75
+    score: 63
   quality:
-    score: 58
+    score: 42
   consistency:
-    score: 50
+    score: 25
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
@@ -54,8 +54,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-technical-constraints:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -63,8 +63,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-dev-change-impact:
     level: 4
     score: 100
@@ -72,14 +72,14 @@ viewpoints:
     level: 3
     score: 75
   vp-qe-verifiability:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-ux-readability:
     level: 4
     score: 100

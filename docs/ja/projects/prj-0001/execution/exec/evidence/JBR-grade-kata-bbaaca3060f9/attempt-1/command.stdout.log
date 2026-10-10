@@ -1,0 +1,54 @@
+
+> specdojo@0.3.0 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-kata-bbaaca3060f9 project=prj-0001 target=kata kind=all changed_only=true ungraded=true incomplete=true rubric_outdated=true embed_documents=false max_stage_failures=3 stages=1 documents=15 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-kata-bbaaca3060f9
+stage=1 executor=agy-expert-executor reporter=machine reference=none
+translation_by=gemma26-translator
+document start: docs/ja/specdojo/recipes/pm-members-recipe.md
+document complete: docs/ja/specdojo/recipes/pm-members-recipe.md
+document start: docs/ja/specdojo/recipes/pm-roles-recipe.md
+document complete: docs/ja/specdojo/recipes/pm-roles-recipe.md
+document start: docs/ja/specdojo/recipes/prj-success-criteria-and-acceptance-criteria-recipe.md
+document complete: docs/ja/specdojo/recipes/prj-success-criteria-and-acceptance-criteria-recipe.md
+document start: docs/ja/specdojo/rulebooks/sf-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/sf-rulebook.md
+document start: docs/ja/specdojo/rulebooks/sld-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/sld-rulebook.md
+document start: docs/ja/specdojo/rulebooks/stc-index-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/stc-index-rulebook.md
+document start: docs/ja/specdojo/rulebooks/stc-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/stc-rulebook.md
+document start: docs/ja/specdojo/rulebooks/stsd-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/stsd-rulebook.md
+document start: docs/ja/specdojo/rulebooks/sysd-critical-flows-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/sysd-critical-flows-rulebook.md
+document start: docs/ja/specdojo/rulebooks/sysd-cross-cutting-policy-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/sysd-cross-cutting-policy-rulebook.md
+document start: docs/ja/specdojo/rulebooks/sysd-index-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/sysd-index-rulebook.md
+document start: docs/ja/specdojo/rulebooks/sysd-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/sysd-rulebook.md
+document start: docs/ja/specdojo/rulebooks/tml-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/tml-rulebook.md
+document start: docs/ja/specdojo/rulebooks/trc-requirements-to-specs-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/trc-requirements-to-specs-rulebook.md
+document start: docs/ja/specdojo/rulebooks/tsd-index-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/tsd-index-rulebook.md
+grade pipeline complete: selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-kata-bbaaca3060f9/results.tsv
+recorded_at	document	stage	status	duration_seconds	verdict	score	findings	executor	reporter	reference	consecutive_failures	max_failures
+2026-10-09T21:02:47Z	docs/ja/specdojo/recipes/pm-members-recipe.md	1	passed	146	pass	97	9	agy-expert-executor	machine	none		
+2026-10-09T21:04:17Z	docs/ja/specdojo/recipes/pm-roles-recipe.md	1	passed	88	needs-work	70	8	agy-expert-executor	machine	none		
+2026-10-09T21:05:41Z	docs/ja/specdojo/recipes/prj-success-criteria-and-acceptance-criteria-recipe.md	1	passed	83	pass	96	3	agy-expert-executor	machine	none		
+2026-10-09T21:07:56Z	docs/ja/specdojo/rulebooks/sf-rulebook.md	1	passed	134	needs-work	36	22	agy-expert-executor	machine	none		
+2026-10-09T21:09:44Z	docs/ja/specdojo/rulebooks/sld-rulebook.md	1	passed	106	needs-work	72	9	agy-expert-executor	machine	none		
+2026-10-09T21:11:21Z	docs/ja/specdojo/rulebooks/stc-index-rulebook.md	1	passed	96	needs-work	89	4	agy-expert-executor	machine	none		
+2026-10-09T21:12:25Z	docs/ja/specdojo/rulebooks/stc-rulebook.md	1	passed	62	needs-work	94	1	agy-expert-executor	machine	none		
+2026-10-09T21:14:10Z	docs/ja/specdojo/rulebooks/stsd-rulebook.md	1	passed	103	pass	97	2	agy-expert-executor	machine	none		
+2026-10-09T21:15:44Z	docs/ja/specdojo/rulebooks/sysd-critical-flows-rulebook.md	1	passed	93	needs-work	83	11	agy-expert-executor	machine	none		
+2026-10-09T21:16:45Z	docs/ja/specdojo/rulebooks/sysd-cross-cutting-policy-rulebook.md	1	passed	59	needs-work	94	2	agy-expert-executor	machine	none		
+2026-10-09T21:18:00Z	docs/ja/specdojo/rulebooks/sysd-index-rulebook.md	1	passed	73	needs-work	93	4	agy-expert-executor	machine	none		
+2026-10-09T21:19:02Z	docs/ja/specdojo/rulebooks/sysd-rulebook.md	1	passed	61	pass	93	3	agy-expert-executor	machine	none		
+2026-10-09T21:20:47Z	docs/ja/specdojo/rulebooks/tml-rulebook.md	1	passed	103	needs-work	79	7	agy-expert-executor	machine	none		
+2026-10-09T21:22:30Z	docs/ja/specdojo/rulebooks/trc-requirements-to-specs-rulebook.md	1	passed	101	needs-work	88	5	agy-expert-executor	machine	none		
+2026-10-09T21:23:55Z	docs/ja/specdojo/rulebooks/tsd-index-rulebook.md	1	passed	83	pass	99	1	agy-expert-executor	machine	none		

@@ -3,29 +3,75 @@ version: 1
 document: specdojo:ccd-sample
 path: docs/ja/specdojo/samples/ccd-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 75
-graded_at: "2026-09-04T22:16:44.056Z"
-graded_by: gemma-expert-executor
+score: 80
+graded_at: "2026-10-10T21:18:04.697Z"
+graded_by: agy-expert-executor
 content_hash: 90808f2bc0a26d89402e55d4fd4de7b5a66e22016645cfb620b7b5b0f3d980a0
 categories:
-  consistency:
-    score: 63
-  usability:
-    score: 83
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
   architecture:
     score: 100
+  usability:
+    score: 75
+  implementation:
+    score: 100
   quality:
-    score: 63
+    score: 75
+  consistency:
+    score: 25
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -38,9 +84,18 @@ viewpoints:
     level: 1
     score: 25
   vp-ux-readability:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -52,27 +107,31 @@ finding_counts:
   minor: 1
   note: 0
 findings:
-  - id: F003
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 16
-    message: 概念クラス図のサンプルとして不適切な「必須観点（判定基準、責任者など）」が記述されており、成果物の責務と矛盾している。
-    anchor: "- 必須観点: 対象、条件、判定基準、責任者"
   - id: F001
     severity: major
     rule: vp-qe-omissions-consistency
-    line: 18
+    line: 26
+    anchor: "## 5. 未解決事項"
     message: rulebook が定義する成果物の具体例（Mermaid 構文によるクラス図）が完全に欠落している。
-    anchor: "## 4. 最小記述例"
+    message_ja: rulebook が定義する成果物の具体例（Mermaid 構文によるクラス図）が完全に欠落している。
   - id: F002
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 24
+    anchor: "| 主な内容     | 商品・在庫・発注・店舗などの概念と属性、関連（継承/親子/参照） など | 要点のみ記載                         |"
+    message: 概念クラス図のサンプルとして不適切な「必須観点（判定基準、責任者など）」が記述されており、成果物の責務と矛盾している。
+    message_ja: 概念クラス図のサンプルとして不適切な「必須観点（判定基準、責任者など）」が記述されており、成果物の責務と矛盾している。
+  - id: F003
     severity: major
     rule: vp-qe-kata-conformance
-    line: 18
+    line: 26
+    anchor: "## 5. 未解決事項"
     message: 概念クラス図のサンプルでありながら、肝心の Mermaid CCD 記述例（図）が一切含まれておらず、完成例として機能していない。
-    anchor: "## 4. 最小記述例"
+    message_ja: 概念クラス図のサンプルでありながら、肝心の Mermaid CCD 記述例（図）が一切含まれておらず、完成例として機能していない。
   - id: F004
     severity: major
     rule: vp-ux-readability
-    line: 18
+    line: 26
+    anchor: "## 5. 未解決事項"
     message: 具体的な概念クラス図の記述が存在しないため、読者がどのような成果物を目指すべきか理解できない。
-    anchor: "## 4. 最小記述例"
+    message_ja: 具体的な概念クラス図の記述が存在しないため、読者がどのような成果物を目指すべきか理解できない。

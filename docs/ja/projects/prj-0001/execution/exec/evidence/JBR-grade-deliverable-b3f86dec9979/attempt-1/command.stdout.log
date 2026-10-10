@@ -1,0 +1,39 @@
+
+> specdojo@0.3.0 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-deliverable-b3f86dec9979 project=prj-0001 target=deliverable kind=none changed_only=true ungraded=true incomplete=true rubric_outdated=true embed_documents=false max_stage_failures=3 stages=1 documents=10 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-deliverable-b3f86dec9979
+stage=1 executor=agy-expert-executor reporter=machine reference=none
+translation_by=gemma26-translator
+document start: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server-usage.md
+document complete: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server-usage.md
+document start: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md
+document complete: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md
+document start: docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md
+document complete: docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md
+document start: docs/ja/product/030-architecture/020-infrastructure/tsd-omlx-opencode.md
+document complete: docs/ja/product/030-architecture/020-infrastructure/tsd-omlx-opencode.md
+document start: docs/ja/product/030-architecture/020-infrastructure/tsd-omlx.md
+document complete: docs/ja/product/030-architecture/020-infrastructure/tsd-omlx.md
+document start: docs/ja/product/040-system-design/sysd-agent-settings.md
+document complete: docs/ja/product/040-system-design/sysd-agent-settings.md
+document start: docs/ja/product/040-system-design/sysd-antigravity-agent-settings.md
+document complete: docs/ja/product/040-system-design/sysd-antigravity-agent-settings.md
+document start: docs/ja/product/040-system-design/sysd-claude-agent-settings.md
+document complete: docs/ja/product/040-system-design/sysd-claude-agent-settings.md
+document start: docs/ja/product/040-system-design/sysd-codex-agent-settings.md
+document complete: docs/ja/product/040-system-design/sysd-codex-agent-settings.md
+document start: docs/ja/product/040-system-design/sysd-critical-flows.md
+document complete: docs/ja/product/040-system-design/sysd-critical-flows.md
+grade pipeline complete: selected=10 processed=10 completed_now=10 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-deliverable-b3f86dec9979/results.tsv
+recorded_at	document	stage	status	duration_seconds	verdict	score	findings	executor	reporter	reference	consecutive_failures	max_failures
+2026-10-09T16:02:22Z	docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server-usage.md	1	passed	124	needs-work	63	22	agy-expert-executor	machine	none		
+2026-10-09T16:04:26Z	docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md	1	passed	122	needs-work	71	22	agy-expert-executor	machine	none		
+2026-10-09T16:06:29Z	docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md	1	passed	121	needs-work	48	24	agy-expert-executor	machine	none		
+2026-10-09T16:07:58Z	docs/ja/product/030-architecture/020-infrastructure/tsd-omlx-opencode.md	1	passed	87	needs-work	56	19	agy-expert-executor	machine	none		
+2026-10-09T16:09:26Z	docs/ja/product/030-architecture/020-infrastructure/tsd-omlx.md	1	passed	86	needs-work	53	21	agy-expert-executor	machine	none		
+2026-10-09T16:11:48Z	docs/ja/product/040-system-design/sysd-agent-settings.md	1	passed	140	needs-work	66	26	agy-expert-executor	machine	none		
+2026-10-09T16:13:40Z	docs/ja/product/040-system-design/sysd-antigravity-agent-settings.md	1	passed	110	needs-work	67	25	agy-expert-executor	machine	none		
+2026-10-09T16:15:33Z	docs/ja/product/040-system-design/sysd-claude-agent-settings.md	1	passed	111	needs-work	56	30	agy-expert-executor	machine	none		
+2026-10-09T16:17:22Z	docs/ja/product/040-system-design/sysd-codex-agent-settings.md	1	passed	107	needs-work	41	33	agy-expert-executor	machine	none		
+2026-10-09T16:19:23Z	docs/ja/product/040-system-design/sysd-critical-flows.md	1	passed	120	needs-work	71	20	agy-expert-executor	machine	none		

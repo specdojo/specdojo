@@ -1,0 +1,258 @@
+```json
+{
+  "schema_version": 1,
+  "mode": "edit",
+  "summary": [
+    "15件の対象文書に対して品質評価を実行しました。全件が正常に処理され、未完了の段や中断はありません。",
+    "評価結果の分布は以下の通りです：\n- `pass`: 3件\n- `needs-work`: 10件\n- `fail`: 2件",
+    "`failed` の段はなく、`retry_exhausted` となった文書もありません。",
+    "スコア分布に極端な偏りは見られませんが、サンプル文書において `fail` または低スコア（30点前後）となる傾向があり、評価設定の妥当性について検討の余地があると考えられます。"
+  ],
+  "changed_files": [
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/stsd-register-entry-461ba77e06-done-criteria.yaml",
+      "summary": "評価基準の中間更新"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/stsd-routine-run-72deff80c2-done-criteria.yaml",
+      "summary": "評価基準の中間更新"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/sysd-agent-settings-2403b993e9-done-criteria.yaml",
+      "summary": "評価基準の中間更新"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/sysd-antigravity-agent-settings-e0daf68b06-done-criteria.yaml",
+      "summary": "評価基準の中間更新"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/sysd-claude-agent-settings-f502b91867-done-criteria.yaml",
+      "summary": "評価基準の中間更新"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/sysd-codex-agent-settings-209779c515-done-criteria.yaml",
+      "summary": "評価基準の中間更新"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/sysd-critical-flows-a985cc0d3a-done-criteria.yaml",
+      "summary": "評価基準の中間更新"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/sysd-cross-cutting-policy-bd811cf36f-done-criteria.yaml",
+      "summary": "評価基準の中間更新"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/sysd-github-copilot-agent-settings-caeaa1d83f-done-criteria.yaml",
+      "summary": "評価基準の中間更新"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/tsd-home-mac-dev-server-39e4cdf49b-done-criteria.yaml",
+      "summary": "評価基準の中間更新"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/tsd-home-mac-dev-server-usage-cd996e0bcb-done-criteria.yaml",
+      "summary": "評価基準の中間更新"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/tsd-index-f8017f063b-done-criteria.yaml",
+      "summary": "評価基準の中間更新"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/tsd-ollama-1333c3ab83-done-criteria.yaml",
+      "summary": "評価基準の中間更新"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/tsd-omlx-f7cad9fd9b-done-criteria.yaml",
+      "summary": "評価基準の中間更新"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/tsd-omlx-opencode-824c965487-done-criteria.yaml",
+      "summary": "評価基準の中間更新"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.atc-index-sample.yaml",
+      "summary": "評価結果の書き込み"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.atc-sample.yaml",
+      "summary": "評価結果の書き込み"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.bac-sample.yaml",
+      "summary": "評価結果の書き込み"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.bds-sample.yaml",
+      "summary": "評価結果の書き込み"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.bps-sample.yaml",
+      "summary": "評価結果の書き込み"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.br-sample.yaml",
+      "summary": "評価結果の書き込み"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.ccd-sample.yaml",
+      "summary": "評価結果の書き込み"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.cdfd-overview-sample.yaml",
+      "summary": "評価結果の書き込み"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.cdfd-sample.yaml",
+      "summary": "評価結果の書き込み"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-members-recipe.yaml",
+      "summary": "評価結果の書き込み"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-roles-recipe.yaml",
+      "summary": "評価結果の書き込み"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-success-criteria-and-acceptance-criteria-recipe.yaml",
+      "summary": "評価結果の書き込み"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.sf-rulebook.yaml",
+      "summary": "評価結果の書き込み"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.sld-rulebook.yaml",
+      "summary": "評価結果の書き込み"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.stc-index-rulebook.yaml",
+      "summary": "評価結果の書き込み"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.stc-rulebook.yaml",
+      "summary": "評価結果の書き込み"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.stsd-recipe.yaml",
+      "summary": "評価結果の書き込み"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.stsd-rulebook.yaml",
+      "summary": "評価結果の書き込み"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.sysd-critical-flows-rulebook.yaml",
+      "summary": "評価結果の書き込み"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.sysd-cross-cutting-policy-rulebook.yaml",
+      "summary": "評価結果の書き込み"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.sysd-index-rulebook.yaml",
+      "summary": "評価結果の書き込み"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.sysd-rulebook.yaml",
+      "summary": "評価結果の書き込み"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.tml-rulebook.yaml",
+      "summary": "評価結果の書き込み"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.trc-requirements-to-specs-rulebook.yaml",
+      "summary": "評価結果の書き込み"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.tsd-index-rulebook.yaml",
+      "summary": "評価結果の書き込み"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.tsd-rulebook.yaml",
+      "summary": "評価結果の書き込み"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.tsp-index-rulebook.yaml",
+      "summary": "評価結果の書き込み"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.uis-rulebook.yaml",
+      "summary": "評価結果の書き込み"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.utc-index-rulebook.yaml",
+      "summary": "評価結果の書き込み"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.utc-rulebook.yaml",
+      "summary": "評価結果の書き込み"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/stsd-register-entry.yaml",
+      "summary": "評価結果の書き込み"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/stsd-routine-run.yaml",
+      "summary": "評価結果の書き込み"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/sysd-agent-settings.yaml",
+      "summary": "評価結果の書き込み"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/sysd-antigravity-agent-settings.yaml",
+      "summary": "評価結果の書き込み"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/sysd-claude-agent-settings.yaml",
+      "summary": "評価結果の書き込み"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/sysd-codex-agent-settings.yaml",
+      "summary": "評価結果の書き込み"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/sysd-critical-flows.yaml",
+      "summary": "評価結果の書き込み"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/sysd-cross-cutting-policy.yaml",
+      "summary": "評価結果の書き込み"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/sysd-github-copilot-agent-settings.yaml",
+      "summary": "評価結果の書き込み"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/tsd-home-mac-dev-server-usage.yaml",
+      "summary": "評価結果の書き込み"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/tsd-home-mac-dev-server.yaml",
+      "summary": "評価結果の書き込み"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/tsd-index.yaml",
+      "summary": "評価結果の書き込み"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/tsd-ollama.yaml",
+      "summary": "評価結果の書き込み"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/tsd-omlx-opencode.yaml",
+      "summary": "評価結果の書き込み"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/tsd-omlx.yaml",
+      "summary": "評価結果の書き込み"
+    }
+  ],
+  "handoff": [
+    "全件の品質評価（Grade）が完了したため、低スコアとなった文書および `fail` と判定された文書の内容を確認し、改善策を検討してください。"
+  ],
+  "approach": "runner が実行した `tools/grade/run-per-document.sh` の stdout に出力された `results.tsv` を解析し、完了ステータス、verdict、score の分布を確認しました。終了コード 0 であり、全 15 件が処理済みであることを確認しました。"
+}
+```

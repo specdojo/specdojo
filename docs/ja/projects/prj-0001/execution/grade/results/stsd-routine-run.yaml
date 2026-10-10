@@ -5,8 +5,8 @@ path: docs/ja/product/010-business-specs/020-data-model/stsd-routine-run.md
 target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 50
-graded_at: "2026-10-08T16:09:08.630Z"
+score: 64
+graded_at: "2026-10-10T16:03:38.698Z"
 graded_by: agy-expert-executor
 content_hash: ac79a57bfeaac8af23f280fbbc1262aeba79f678bef2fe196354a1575adaa07f
 source_hashes:
@@ -18,42 +18,42 @@ source_hashes:
   schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
 categories:
   purpose:
-    score: 50
-  operations:
     score: 63
+  operations:
+    score: 75
   planning:
-    score: 25
+    score: 50
   business:
     score: 58
   consistency:
-    score: 25
+    score: 50
   architecture:
-    score: 75
+    score: 83
   usability:
     score: 88
   implementation:
-    score: 25
+    score: 50
   quality:
-    score: 31
+    score: 50
 viewpoints:
   vp-po-purpose-alignment:
     level: 3
     score: 75
   vp-po-decision-readiness:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-po-publication-accountability:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-pm-dependency-risk:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-pm-control-reporting:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ba-business-value:
     level: 3
     score: 75
@@ -64,11 +64,11 @@ viewpoints:
     level: 3
     score: 75
   vp-arc-cross-document-consistency:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-arc-technical-constraints:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -76,23 +76,23 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-dev-change-impact:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-dev-testability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-done-criteria:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-verifiability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-omissions-consistency:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ux-readability:
     level: 3
     score: 75
@@ -103,11 +103,11 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-release-readiness:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ops-operability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -263,17 +263,17 @@ findings:
   - id: F018
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 103
-    anchor: ""
-    message: "`stsd-recipe.md` の仕上げチェックは今後の検討メモに `_TODO_` を残さないことを求めているため、依存文書の作成または追跡可能な未決事項への置換が必要である。"
-    message_ja: "`stsd-recipe.md` の仕上げチェックは今後の検討メモに `_TODO_` を残さないことを求めているため、依存文書の作成または追跡可能な未決事項への置換が必要である。"
-  - id: F019
-    severity: minor
-    rule: vp-qe-omissions-consistency
     line: 44
     anchor: "### 3.1. 初回実行と結果反映（T-01〜T-05）"
     message: "`never` と `running` は実装上のコードを持たないにもかかわらず値に指定されており、ルールブックの「コードを持たない場合は `-`」に反している。"
     message_ja: "`never` と `running` は実装上のコードを持たないにもかかわらず値に指定されており、ルールブックの「コードを持たない場合は `-`」に反している。"
+  - id: F019
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 103
+    anchor: ""
+    message: "`stsd-recipe.md` の仕上げチェックは今後の検討メモに `_TODO_` を残さないことを求めているため、依存文書の作成または追跡可能な未決事項への置換が必要である。"
+    message_ja: "`stsd-recipe.md` の仕上げチェックは今後の検討メモに `_TODO_` を残さないことを求めているため、依存文書の作成または追跡可能な未決事項への置換が必要である。"
   - id: F020
     severity: minor
     rule: vp-ux-readability

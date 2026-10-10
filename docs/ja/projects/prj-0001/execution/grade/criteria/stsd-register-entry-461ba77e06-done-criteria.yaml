@@ -2,7 +2,7 @@
 id: stsd-register-entry-grade-criteria
 document: stsd-register-entry
 path: docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md
-graded_at: "2026-10-08T16:07:33.717Z"
+graded_at: "2026-10-10T16:02:18.576Z"
 graded_by: agy-expert-executor
 content_hash: 48c647b4efecd15bfe8dcfe583519d02eea22fa18c70c886d97ce88f85fcbb19
 summary:
@@ -16,34 +16,32 @@ criteria:
       - BA
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
-    reason: The current status transitions do not correctly cover all edge cases such as direct termination from open state.
+    reason: 現行運用で成立する直接終端などの全遷移が定義されておらず、正確性に欠けるため。
   - id: DC-002
     text: 状態遷移の業務的妥当性を承認できること
     roles:
       - PO
     viewpoint: vp-po-purpose-alignment
     status: unsatisfied
-    reason: >-
-      Assumptions about transition behaviors are unresolved and do not provide sufficient clarity for the product
-      owner's approval.
+    reason: 未解決の ASSUMPTION（再開時や却下時の遷移仕様の CLI との差異など）が残っており、PO が承認を判断できないため。
   - id: DC-003
     text: 状態遷移実装の基礎として参照できること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
-    reason: Technical constraints like item_status mapping are inconsistent with current CLI behaviors and schemas.
+    reason: item_status 等の現行制約との対応や、コマンドと状態の整合が取れていないため。
   - id: DC-004
     text: 状態ベースのテスト設計に活用できること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
     status: unsatisfied
-    reason: Acceptance criteria lack testable and measurable assertions for automated validation.
+    reason: 全許可・禁止遷移などの検証対象や期待結果が定義されておらず、テスト設計に活用できないため。
   - id: DC-005
     text: 状態管理実装の参照として使えること
     roles:
       - DEV
     viewpoint: vp-dev-implementation-readiness
     status: unsatisfied
-    reason: Missing explicit command parameters and frontmatter keys required for development and implementation readiness.
+    reason: 実装可能な遷移行列として CLI コマンドやスキーマの現行制約との整合が取れていないため。

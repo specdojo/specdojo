@@ -3,29 +3,72 @@ version: 1
 document: specdojo:sysd-index-rulebook
 path: docs/ja/specdojo/rulebooks/sysd-index-rulebook.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 87
-graded_at: "2026-09-03T12:06:46.238Z"
-graded_by: gemma-expert-executor
+score: 93
+graded_at: "2026-10-09T21:17:58.091Z"
+graded_by: agy-expert-executor
 content_hash: a5cbbee6f8e6b639d8b4364eaaf6dfacc3b6dd98d236c4692d6d7aadaa4482ef
 categories:
-  consistency:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
+  architecture:
     score: 100
   usability:
     score: 83
-  architecture:
+  implementation:
     score: 100
   quality:
-    score: 75
+    score: 83
+  consistency:
+    score: 100
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
-  vp-arc-single-responsibility:
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -43,32 +86,57 @@ viewpoints:
   vp-ux-language-consistency:
     level: 3
     score: 75
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 0
   major: 1
-  minor: 2
+  minor: 3
   note: 0
 findings:
   - id: F001
     severity: major
     rule: vp-qe-kata-conformance
-    line: 1
+    line: 2
+    anchor: ""
     message: >-
       指定されているサンプル specdojo:sysd-index-sample が、本書の「5. 本文構成（標準テンプレ）」で定義されている必須見出し構成と順序に全く準拠しておらず、 rulebook
       の適用例として機能していない。
-    anchor: "# システム設計-全体構成 作成ルール"
+    message_ja: >-
+      指定されているサンプル specdojo:sysd-index-sample が、本書の「5. 本文構成（標準テンプレ）」で定義されている必須見出し構成と順序に全く準拠しておらず、 rulebook
+      の適用例として機能していない。
   - id: F002
     severity: minor
     rule: vp-ux-readability
-    line: 1
+    line: 153
+    anchor: ""
     message: 見出し 「## 5. 関連ドキュメント導線）」 の末尾に不要な閉じ括弧がある。
-    anchor: "# システム設計-全体構成 作成ルール"
+    message_ja: 見出し 「## 5. 関連ドキュメント導線）」 の末尾に不要な閉じ括弧がある。
   - id: F003
     severity: minor
+    rule: vp-ux-readability
+    line: 238
+    anchor: ""
+    message: >-
+      The table in section "8.5. 関連ドキュメント導線（例）" is broken by an empty line, causing the second half to not render
+      properly as a table.
+    message_ja: >-
+      The table in section "8.5. 関連ドキュメント導線（例）" is broken by an empty line, causing the second half to not render
+      properly as a table.
+  - id: F004
+    severity: minor
     rule: vp-ux-language-consistency
-    line: 1
+    line: 234
+    anchor: "| 品質   | nfr-index           | 非機能要件との整合確認 | 可用性・性能の判断基準 |"
     message: 表内の「種別」列で「アーキ」「品質」などの略称が使われており、2.1節で定義した標準的な識別子（C4 / NFR / OPD / DEC）と表記が統一されていない。
-    anchor: "# システム設計-全体構成 作成ルール"
+    message_ja: 表内の「種別」列で「アーキ」「品質」などの略称が使われており、2.1節で定義した標準的な識別子（C4 / NFR / OPD / DEC）と表記が統一されていない。
