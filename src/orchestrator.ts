@@ -1,4 +1,5 @@
 import { spawn, type SpawnOptions } from "node:child_process";
+import { constants as osConstants } from "node:os";
 import { resolve } from "node:path";
 import { type Command } from "commander";
 import { agentExtraRootArguments, resolveProductRepos } from "./exec-task-repos.js";
@@ -24,6 +25,11 @@ export interface OrchestratorLaunch {
   args: string[];
   cwd: string;
   env: NodeJS.ProcessEnv;
+}
+
+interface OrchestratorSignalProcess {
+  on(signal: NodeJS.Signals, listener: () => void): unknown;
+  off(signal: NodeJS.Signals, listener: () => void): unknown;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -198,6 +204,7 @@ function parseProvider(value: string): OrchestratorProvider {
 export async function runOrchestratorLaunch(
   launch: OrchestratorLaunch,
   spawnProcess: typeof spawn = spawn,
+  signalProcess: OrchestratorSignalProcess = process,
 ): Promise<number> {
   return await new Promise<number>((resolveExit, reject) => {
     const spawnOptions: SpawnOptions = {
@@ -206,9 +213,40 @@ export async function runOrchestratorLaunch(
       stdio: "inherit",
     };
     const child = spawnProcess(launch.command, launch.args, spawnOptions);
-    child.once("error", reject);
+    const signalHandlers: Array<[NodeJS.Signals, () => void]> = [];
+    let settled = false;
+
+    const addSignalHandler = (signal: NodeJS.Signals, handler: () => void): void => {
+      signalHandlers.push([signal, handler]);
+      signalProcess.on(signal, handler);
+    };
+    const cleanupSignalHandlers = (): void => {
+      for (const [signal, handler] of signalHandlers) {
+        signalProcess.off(signal, handler);
+      }
+    };
+    const settle = (callback: () => void): void => {
+      if (settled) return;
+      settled = true;
+      cleanupSignalHandlers();
+      callback();
+    };
+
+    addSignalHandler("SIGINT", () => undefined);
+    addSignalHandler("SIGQUIT", () => undefined);
+    for (const signal of ["SIGTERM", "SIGHUP"] as const) {
+      addSignalHandler(signal, () => {
+        child.kill(signal);
+      });
+    }
+
+    child.once("error", (error) => {
+      settle(() => reject(error));
+    });
     child.once("exit", (code, signal) => {
-      resolveExit(code ?? (signal ? 1 : 0));
+      settle(() => {
+        resolveExit(code ?? (signal ? 128 + osConstants.signals[signal] : 0));
+      });
     });
   });
 }

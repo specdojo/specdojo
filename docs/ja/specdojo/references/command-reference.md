@@ -869,6 +869,8 @@ specdojo orchestrator launch --provider claude --project prj-0001 -- \
 
 対象 project は `--project`、`SPECDOJO_PROJECT`、`current_project`、`projects` の先頭の順で解決します。`--` より後ろの引数は provider CLI へそのまま渡します。`repos` が無い場合、provider CLI へ渡すコマンドと引数は従来と変わりません。
 
+provider CLI の実行中、起動元は `SIGINT` と `SIGQUIT` を無視して子プロセスの終了を待ちます。端末での Ctrl-C は provider CLI に直接届くため、入力の取り消しとして扱う CLI が起動元だけを終了させることはありません。`SIGTERM` と `SIGHUP` は子プロセスへ転送し、子の終了後に同じ終了コードを返します。子がシグナルで終了した場合は `128 + シグナル番号` を返します。
+
 Claude Code、Codex、Antigravity、GitHub Copilot には exec と同じ追加ルート引数を渡します。OpenCode は、起動時の `OPENCODE_CONFIG_CONTENT` に選択 agent の `permission.external_directory` を注入し、全外部ディレクトリを拒否したうえで宣言済みのリポジトリだけを許可します。外部パスへ既存の `permission.edit` が一致しないため、同じ宣言済みルートの編集許可も注入します。既存の inline config の他項目は保持します。未宣言のリポジトリは、どの provider でも許可対象になりません。
 
 ## 16. devcontainer

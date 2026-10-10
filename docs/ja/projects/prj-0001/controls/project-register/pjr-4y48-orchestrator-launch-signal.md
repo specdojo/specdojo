@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: high
   owner: ARC
   registered_at: "2026-10-10T01:05:02Z"
@@ -57,7 +57,10 @@ specdojo orchestrator launch は SIGINT の既定動作で即座に終了し、C
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- `runOrchestratorLaunch` が子プロセスの実行中だけ `SIGINT` と `SIGQUIT` を無視し、`SIGTERM` と `SIGHUP` を子へ転送するようにした。子の終了または起動エラー時には追加した全ハンドラを解除する。
+- 子が終了コードで終わった場合はその値を維持し、シグナルで終わった場合は `128 + シグナル番号` を返すようにした。
+- unit test でシグナルの無視・転送、子の終了待機、終了コードの変換、正常終了時と起動エラー時のハンドラ解除を固定し、再発を防止した。
+- [[specdojo:command-reference|CLIコマンドリファレンス]] と CHANGELOG にシグナルの扱いを追記した。
 
 ## 5. 関連ドキュメント
 
