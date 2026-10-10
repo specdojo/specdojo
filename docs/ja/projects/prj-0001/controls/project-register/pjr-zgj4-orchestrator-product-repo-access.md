@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-zgj4-orchestrator-product-repo-access
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: ARC
   registered_at: "2026-10-09T19:58:13Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-10T01:17:00Z"
+  conclusion: specdojo orchestrator launch を追加し、orch:* を経由させた。repos に宣言したリポジトリ本体だけを exec と同じ規則（agentExtraRootArguments）で許可し、opencode は OPENCODE_CONFIG_CONTENT で external_directory と edit を注入する（agent 定義の規則は残ることを opencode debug agent で確認）。シグナル処理は PJR-4Y48 で修正。orchestrator 本文に宣言済みリポジトリの扱いを加えた（60b57173f）。
 ---
 
 # PJR-ZGJ4 orchestrator の起動に宣言済みのプロダクトリポジトリへのアクセスを付ける
