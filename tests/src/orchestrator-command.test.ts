@@ -1,11 +1,35 @@
+import { type spawn } from "node:child_process";
+import { EventEmitter } from "node:events";
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { constants as osConstants, tmpdir } from "node:os";
 import { join } from "node:path";
-import { tmpdir } from "node:os";
-import { afterEach, describe, expect, it } from "vitest";
-import { buildOrchestratorLaunch, resolveOrchestratorLaunch } from "../../src/orchestrator.js";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import {
+  buildOrchestratorLaunch,
+  resolveOrchestratorLaunch,
+  runOrchestratorLaunch,
+  type OrchestratorLaunch,
+} from "../../src/orchestrator.js";
 
 const originalCwd = process.cwd();
 const originalProject = process.env.SPECDOJO_PROJECT;
+
+const testLaunch: OrchestratorLaunch = {
+  command: "provider-cli",
+  args: ["--interactive"],
+  cwd: "/workspace/project",
+  env: { PATH: "/bin" },
+};
+
+function launchTestProcess() {
+  const child = Object.assign(new EventEmitter(), {
+    kill: vi.fn(() => true),
+  });
+  const spawnProcess = vi.fn(() => child) as unknown as typeof spawn;
+  const signalProcess = new EventEmitter();
+  const result = runOrchestratorLaunch(testLaunch, spawnProcess, signalProcess);
+  return { child, spawnProcess, signalProcess, result };
+}
 
 afterEach(() => {
   process.chdir(originalCwd);
@@ -190,5 +214,66 @@ describe("resolveOrchestratorLaunch", () => {
       process.chdir(originalCwd);
       rmSync(root, { recursive: true, force: true });
     }
+  });
+});
+
+describe("runOrchestratorLaunch", () => {
+  const signals = ["SIGINT", "SIGQUIT", "SIGTERM", "SIGHUP"] as const;
+
+  it("ignores SIGINT and SIGQUIT until the child exits and removes every handler", async () => {
+    const { child, spawnProcess, signalProcess, result } = launchTestProcess();
+    let resolved: number | undefined;
+    void result.then((code) => {
+      resolved = code;
+    });
+
+    expect(spawnProcess).toHaveBeenCalledWith("provider-cli", ["--interactive"], {
+      cwd: "/workspace/project",
+      env: { PATH: "/bin" },
+      stdio: "inherit",
+    });
+    for (const signal of signals) expect(signalProcess.listenerCount(signal)).toBe(1);
+
+    signalProcess.emit("SIGINT");
+    signalProcess.emit("SIGQUIT");
+    await Promise.resolve();
+
+    expect(resolved).toBeUndefined();
+    expect(child.kill).not.toHaveBeenCalled();
+
+    child.emit("exit", 23, null);
+
+    await expect(result).resolves.toBe(23);
+    for (const signal of signals) expect(signalProcess.listenerCount(signal)).toBe(0);
+  });
+
+  it("forwards SIGTERM and SIGHUP and maps the child's signal exit code", async () => {
+    const { child, signalProcess, result } = launchTestProcess();
+    let resolved: number | undefined;
+    void result.then((code) => {
+      resolved = code;
+    });
+
+    signalProcess.emit("SIGTERM");
+    signalProcess.emit("SIGHUP");
+    await Promise.resolve();
+
+    expect(child.kill).toHaveBeenNthCalledWith(1, "SIGTERM");
+    expect(child.kill).toHaveBeenNthCalledWith(2, "SIGHUP");
+    expect(resolved).toBeUndefined();
+
+    child.emit("exit", null, "SIGTERM");
+
+    await expect(result).resolves.toBe(128 + osConstants.signals.SIGTERM);
+    for (const signal of signals) expect(signalProcess.listenerCount(signal)).toBe(0);
+  });
+
+  it("removes every handler when the child fails to start", async () => {
+    const { child, signalProcess, result } = launchTestProcess();
+
+    child.emit("error", new Error("spawn failed"));
+
+    await expect(result).rejects.toThrow("spawn failed");
+    for (const signal of signals) expect(signalProcess.listenerCount(signal)).toBe(0);
   });
 });

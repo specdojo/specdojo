@@ -1,0 +1,13 @@
+対応完了しました。
+
+- 親プロセスのシグナル無視・転送と終了コード変換を実装
+- unit test を追加
+- コマンドリファレンス、CHANGELOG、個票の対応結果を更新
+- 登録簿ステータスと result は未変更
+- 文書生成・カタログ検証・整形・差分検査は成功
+
+`typecheck`、lint、unit/integration test、schema 検証は親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"final_message":"orchestrator launch のシグナル処理、unit test、関連文書と個票を更新した","validations":[{"command":"npx prettier --write src/orchestrator.ts tests/src/orchestrator-command.test.ts docs/ja/specdojo/references/command-reference.md CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-4y48-orchestrator-launch-signal.md","status":"passed","summary":"変更した TypeScript と Markdown は整形済み"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿を再生成し、PJR-4Y48 の in-progress 状態を維持した"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"全カタログが OK。既存の未作成成果物に関する警告のみ"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"2527件の文書索引を生成した"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>
