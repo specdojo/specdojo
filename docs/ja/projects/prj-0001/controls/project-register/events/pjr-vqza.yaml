@@ -32,3 +32,32 @@
     - field: due
       from: ""
       to: "2026-10-31"
+- v: 1
+  id: reg_65ed1914fc784297871d7c141dad8a4d
+  ts: "2026-10-11T22:30:30Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_e30f9da01fba4191bc668632f524fd1f
+- v: 1
+  id: reg_62b091a79dc2410b977068c920b299a6
+  ts: "2026-10-11T22:43:11Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: test-integration"
+  previous_event_id: reg_65ed1914fc784297871d7c141dad8a4d
