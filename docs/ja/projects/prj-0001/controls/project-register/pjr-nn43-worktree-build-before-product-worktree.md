@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-nn43-worktree-build-before-product-worktree
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-11T08:58:38Z"
+  completed_at: "2026-10-11T11:09:38Z"
+  conclusion: プロダクトの worktree を project 側の build より先に作る順序に改め、統合テストを 2 件追加した
 ---
 
 # PJR-NN43 repos を持つ project の worktree 実行がプロダクトの worktree 作成前の build で失敗する
