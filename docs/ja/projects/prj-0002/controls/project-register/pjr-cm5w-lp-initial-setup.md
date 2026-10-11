@@ -11,7 +11,7 @@ specdojo:
   priority: high
   owner: DEV
   registered_at: "2026-10-11T10:25:32Z"
-  block_reason: "checkpoint failed: Worktree preparation failed: specdojo build exited with 1 in /workspaces/specdojo-workspace/worktrees/prj-0002-PJR-CM5W/project. Generated docs are gitignored and must be rebuilt pe…"
+  block_reason: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=specdojo-lp:package.json; agent must record the required change in…"
 ---
 
 # PJR-CM5W specdojo-lp に Astro と Tailwind CSS の初期構成を作る
