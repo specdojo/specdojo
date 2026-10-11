@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0002:pjr-g4qn-lp-tech-stack-evaluation
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0002:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: ARC
   registered_at: "2026-10-11T08:27:47Z"
+  completed_at: "2026-10-11T09:18:34Z"
+  conclusion: 推奨案 B（Astro + Tailwind CSS）を示し、PJR-FV3W で採用された
 ---
 
 # PJR-G4QN ランディングページの技術スタックの候補を比較評価する

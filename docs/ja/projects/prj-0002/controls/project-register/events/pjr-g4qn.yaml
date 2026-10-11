@@ -109,3 +109,22 @@
       from: "parent validation failed: test-integration, typecheck, test-unit"
       to: "-"
   previous_event_id: reg_fc44c78edc1e46a3afa6c5185950df66
+- v: 1
+  id: reg_db611b9919ea463fa208f61e47509563
+  ts: "2026-10-11T09:18:34Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: 評価表と推奨案が完了条件を満たし、PJR-FV3W の判断材料として使われたため
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-11"
+    - field: conclusion
+      from: "-"
+      to: 推奨案 B（Astro + Tailwind CSS）を示し、PJR-FV3W で採用された
+  previous_event_id: reg_f6d2af906a354d81851b53f7bc0a97f9
