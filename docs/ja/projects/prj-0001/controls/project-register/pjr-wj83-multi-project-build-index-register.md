@@ -7,11 +7,10 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: waiting
+  item_status: in-progress
   priority: high
   owner: DEV
   registered_at: "2026-10-11T11:09:50Z"
-  block_reason: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/execution/exec/evidence/PJR-WJ83/20261011T111029494Z-edce8a61/evidence.json 27ms (unchanged); FAIL  tests/src/build-comm…"
 ---
 
 # PJR-WJ83 project が複数あると specdojo build の index build が他 project の登録簿の欠落で失敗する
@@ -41,7 +40,11 @@ specdojo:
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+| 項目       | 内容                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 解決内容   | `src/build-command.ts` に `resolveRegisterProjectIds` を追加した。`--project` なしの `specdojo build` では、`project_register_path` を持つすべての project について `register build --project <id>` を順に実行してから index build へ進む。`--project` を明示した場合は、従来どおりその project だけを対象にする。exec / catalog / dashboard の段は従来どおり 1 project を対象にする。                                                  |
+| 確認結果   | 単体テスト `tests/src/build-command.test.ts` で対象 project の解決と段の並びを確認する。統合テスト `tests/src/build-command.integration.test.ts` では、project を 2 つ持ち生成物のない fixture で、`specdojo build`（`--project` なし）と exec の worktree 準備（`generateWorktreeArtifacts`）が両 project の `generated/pjr-index.md` を生成して通ることを確認する。テストは親 runner の `test:unit` / `test:integration` で実行する。 |
+| 再発防止策 | 2 project の fixture を使う統合テストを追加し、index build が要求する登録簿の生成範囲と build の対象範囲がずれた場合に検知できるようにした。                                                                                                                                                                                                                                                                                            |
 
 ## 5. 関連ドキュメント
 
