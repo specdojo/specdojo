@@ -23,14 +23,29 @@ specdojo:
 
 _ASSUMPTION_: LP の言語は、ドキュメントサイトに合わせて日本語のみとする。
 
+### 1.1. 改訂（2026-10-12）
+
+利用者のレビューを受け、「始める」セクションを対話型オーケストレーター中心に改める。やりたいことを会話で伝えるだけで始められることを主な経路とし、CLI のコマンドは参考としてタブを切り替えたときに表示する。会話の流れは specdojo の README の「会話で操作する」に合わせ、例に使う provider は Claude Code とする。
+
+| 手順                        | 会話タブ（既定で表示）                                                                                   | コマンドタブ（参考）                 |
+| --------------------------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------ |
+| 1. 導入                     | `npm install --save-dev specdojo` と `npx specdojo config init`                                          | 同じ                                 |
+| 2. オーケストレーターの配置 | `npx specdojo config scaffold --provider claude`                                                         | 不要（会話タブのみの手順と明記する） |
+| 3. 起動                     | `npm run orch:opus`。他の provider（opencode・codex・antigravity）の起動は表か注記で補う                 | 不要                                 |
+| 4. 起票                     | 「最初の作業を todo として起票して」などの会話例と、オーケストレーターがコマンドを示して承認を求める流れ | `register scaffold` → `register add` |
+| 5. 一覧                     | 「一覧を作って」「今の状況は？」などの会話例                                                             | `register build`                     |
+
 ## 2. 完了条件
 
 - LP の構成（セクションの並びと各セクションの目的）が、本個票の対応結果に記載されている。
 - 原稿が `specdojo-lp:src/pages/index.astro` に反映されている。原稿は少なくとも次を含む。
   - SpecDojo が何を解決するか。
   - register の考え方（issue / decision / todo を起票して記録を集める）。
-  - 導入から `register build` までの手順と、詳しい文書への案内。
-- 原稿に載せるコマンド（`npx specdojo config init` → `register scaffold` → `register add` → `register build`）の引数が、CLI の `--help` と command-reference に一致している。
+  - 導入から一覧の生成までの手順と、詳しい文書への案内。
+- 「始める」セクションは、対話型オーケストレーターとの会話を主な経路とする。手順は概要の改訂の表に従い、会話の例は specdojo の README の「会話で操作する」と矛盾しない。状態を変える操作は承認を得てから実行し、`git push` などは行わないことを短く添える。
+- CLI のコマンドは参考として扱い、タブを切り替えたときだけ表示する。会話タブを既定で表示する。
+- タブは `role="tablist"`・`role="tab"`・`role="tabpanel"` と `aria-selected` を持ち、キーボード（左右キー）で切り替えられる。JavaScript が無効な環境では、両方のタブの内容を表示する。
+- 原稿に載せるコマンド（`npx specdojo config init`、`config scaffold --provider claude`、`register scaffold`、`register add`、`register build`）の引数と、起動用 script 名（`orch:opus` など）が、CLI の `--help`、command-reference、README に一致している。
 - 詳しい文書へのリンクは、公開中のドキュメントサイト（<https://specdojo.github.io/specdojo/ja/>）の実在するページを指している。
 - マスコット（PJR-FSMC）の配置場所は仮の枠のみとし、デザインは PJR-CM5W で定義したテーマの class を使う。
 - `specdojo-lp` で `npm run build` が成功する。agent の sandbox では npm を実行できないため、executor は evidence の `validations` でこの検証を `requires_human` と記録し、ビルドは orchestrator が sandbox の外で確認する。
@@ -39,11 +54,12 @@ _ASSUMPTION_: LP の言語は、ドキュメントサイトに合わせて日本
 
 ## 3. 作業内容
 
-| No  | 作業                                           | 担当 | 状態 | メモ                                            |
-| --- | ---------------------------------------------- | ---- | ---- | ----------------------------------------------- |
-| 1   | LP の構成を決め、個票に記載する                | UX   | done | -                                               |
-| 2   | 原稿を書き、コマンドとリンクが正しいか確認する | UX   | done | -                                               |
-| 3   | `index.astro` に原稿を反映し、ビルドを確認する | DEV  | done | ビルドは orchestrator が sandbox の外で確認した |
+| No  | 作業                                                                 | 担当 | 状態 | メモ                                            |
+| --- | -------------------------------------------------------------------- | ---- | ---- | ----------------------------------------------- |
+| 1   | LP の構成を決め、個票に記載する                                      | UX   | done | -                                               |
+| 2   | 原稿を書き、コマンドとリンクが正しいか確認する                       | UX   | done | -                                               |
+| 3   | `index.astro` に原稿を反映し、ビルドを確認する                       | DEV  | done | ビルドは orchestrator が sandbox の外で確認した |
+| 4   | 「始める」をオーケストレーター中心に改め、コマンドをタブで切り替える | UX   | open | 概要の改訂（2026-10-12）に従う                  |
 
 ## 4. 対応結果
 
