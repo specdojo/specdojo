@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0002:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: high
   owner: ARC
   registered_at: "2026-10-11T08:27:47Z"
+  block_reason: "checkpoint failed: Worktree preparation failed: specdojo build exited with 1 in /workspaces/specdojo-workspace/worktrees/prj-0002-PJR-G4QN/project. Generated docs are gitignored and must be rebuilt pe…"
 ---
 
 # PJR-G4QN ランディングページの技術スタックの候補を比較評価する
