@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_143a3be3c78d4d6d96eb65e1b7e675c0
+  ts: "2026-10-11T06:37:19Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: ランディングページで register の使い始めをやさしく解説するため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: ランディングページの構成と原稿を作る
+    - field: description
+      from: ""
+      to: すぐに register を使い始められるよう、やさしく解説する構成と原稿を作り、詳細は VitePress のドキュメントへ案内する
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: UX
+    - field: registered
+      from: ""
+      to: "2026-10-11"
+    - field: due
+      from: ""
+      to: _TODO_
