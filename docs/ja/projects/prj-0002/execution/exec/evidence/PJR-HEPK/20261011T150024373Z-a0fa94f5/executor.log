@@ -1,0 +1,27 @@
+I rewrote the LP page (`specdojo-lp:src/pages/index.astro`) with the structure and copy from the ticket, but the Astro build has not been run. Running npm in the LP repo needs approval in this sandbox, so `npm run build` still has to be run outside it.
+
+**Why I rewrote it:** the ticket (`pjr-hepk-lp-content.md`) already said the content had been put into `index.astro`, but the file was still the placeholder page. The earlier run's changes appear not to have been kept, so I wrote the page again following the ticket's section 4.1.
+
+**What the page now contains:**
+- **Header:** the service name and a link to the docs site.
+- **Hero:** the tagline "決めて、書いて、鍛え続ける。", a button to the 5-step section, and a link to Quick Start. The mascot spot is only a dashed placeholder box marked `data-placeholder="mascot"`.
+- **Three problems:** decisions are scattered, nobody can trace "why", and AI has to be given the background every time.
+- **How register works:** you file issue / decision / todo items, each item's Markdown file is the source of record, and the lists are generated from those files.
+- **Five steps to start:** install, then `npx specdojo config init`, `register scaffold --project prj-0001`, `register add --project prj-0001 --type issue --title "..."`, and `register build --project prj-0001`.
+- **Next steps:** links to Quick Start, the register operation guide, the command reference and the overview guide.
+- **Footer:** copyright and a docs-site link.
+- **Styling:** only the theme classes from PJR-CM5W's `global.css`.
+
+**Checks I did:**
+- **Command options:** checked against `src/specdojo-config.ts` and `src/register.ts`. `config init` takes no arguments and creates `prj-0001` with the register at `controls/project-register`. `register add` requires `--type` and `--title`. They also match the command reference and the Quick Start guide.
+- **Doc links:** all five pages (the `ja/` top page, Quick Start, register operation guide, command reference, overview guide) load on the public docs site.
+- **Ticket:** I left it unchanged because its structure, description of the work and remaining issues already match the new page. Task 3 stays open because the build is unconfirmed. I did not touch the result file, the register status or Git.
+- **Other checks:**
+  - The LP repo has no Prettier, so formatting was skipped.
+  - I changed nothing under `docs/`, so `specdojo index build` doesn't apply.
+  - prj-0002 has no `catalog_path`, so `catalog validate` doesn't apply.
+  - The parent runner runs its listed checks itself after this stage.
+
+<specdojo_executor_evidence>
+{"final_message":"Rewrote specdojo-lp:src/pages/index.astro with the LP structure and copy from the PJR-HEPK ticket (header, hero with a mascot placeholder, problems, how register works, 5 steps to start, next-step links, footer). Command options were checked against the CLI source and the command reference, and all 5 doc links load on the public docs site. The ticket already matched and was left unchanged. The LP build still needs to be run outside the sandbox.","validations":[{"command":"npm run build (in specdojo-lp)","status":"requires_human","summary":"Running npm in the LP repo needs approval in the agent sandbox, so it was not run. Run `npm run build` in specdojo-lp outside the sandbox and confirm dist/index.html is produced."},{"command":"npx prettier --write specdojo-lp:src/pages/index.astro","status":"not_applicable","summary":"Prettier is not a dependency of specdojo-lp","reason":"specdojo-lp package.json does not list prettier in dependencies or devDependencies"},{"command":"specdojo index build","status":"not_applicable","summary":"No files under docs/ were changed","reason":"Only specdojo-lp:src/pages/index.astro was edited; no project docs changed"},{"command":"specdojo catalog validate","status":"not_applicable","summary":"prj-0002 has no catalog_path","reason":"The ticket states prj-0002 does not set `catalog_path`, so catalog validate does not apply"},{"command":"WebFetch of 5 docs-site URLs","status":"passed","summary":"ja/, quick-start-guide, register-operation-guide, command-reference and specdojo-overview-guide all load with the expected titles"}]}
+</specdojo_executor_evidence>

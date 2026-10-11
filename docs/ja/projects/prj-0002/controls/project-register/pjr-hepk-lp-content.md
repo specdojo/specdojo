@@ -40,11 +40,11 @@ _ASSUMPTION_: LP の言語は、ドキュメントサイトに合わせて日本
 
 ## 3. 作業内容
 
-| No  | 作業                                           | 担当 | 状態 | メモ                                                                     |
-| --- | ---------------------------------------------- | ---- | ---- | ------------------------------------------------------------------------ |
-| 1   | LP の構成を決め、個票に記載する                | UX   | done | -                                                                        |
-| 2   | 原稿を書き、コマンドとリンクが正しいか確認する | UX   | done | -                                                                        |
-| 3   | `index.astro` に原稿を反映し、ビルドを確認する | DEV  | open | 反映済み。`npm run build` は agent の sandbox で実行が承認されず、未確認 |
+| No  | 作業                                           | 担当 | 状態 | メモ                                            |
+| --- | ---------------------------------------------- | ---- | ---- | ----------------------------------------------- |
+| 1   | LP の構成を決め、個票に記載する                | UX   | done | -                                               |
+| 2   | 原稿を書き、コマンドとリンクが正しいか確認する | UX   | done | -                                               |
+| 3   | `index.astro` に原稿を反映し、ビルドを確認する | DEV  | done | ビルドは orchestrator が sandbox の外で確認した |
 
 ## 4. 対応結果
 
@@ -79,9 +79,18 @@ LP は 1 ページで、上から次の順に並べる。
   - <https://specdojo.github.io/specdojo/ja/specdojo/guides/specdojo-overview-guide.html>
 - マスコットは、ヒーロー右側に `data-placeholder="mascot"` の点線の枠だけを置いた。色・文字・角丸・影は PJR-CM5W の `global.css` で定義したテーマの class（`bg-primary-container`、`text-headline-medium`、`rounded-extra-large`、`shadow-elevation-1` など）だけを使った。
 
-### 4.3. 残課題
+### 4.3. 統合の経緯
 
-- `specdojo-lp` での `npm run build` の成功を確認する（agent の sandbox では実行が承認されなかった）。
+exec run は 2 回とも、成果物ではなく executor 検証の記録形式の判定で `waiting` に止まった。利用者の承認を得て、orchestrator が runner の代わりに統合した。
+
+- 1 回目は、`npm --prefix specdojo-lp run build` を `not_run` と記録し、`catalog validate` を `not_applicable` と記録したため止まった。プロダクトリポジトリの検証は not_run の委譲先として満たせない（prj-0001 の PJR-2GZE）。
+- 完了条件に検証の扱いを書き足し、`--force-restart` で再実行した。ビルドは `requires_human` と記録されたが、prettier と `catalog validate` の `not_applicable` の理由が判定の条件を満たさず、再び止まった（prj-0001 の PJR-WP44）。
+- runner の親検証 7 種（lint-ts、lint-fm、lint-md、test-integration、validate-schema、typecheck、test-unit）は 2 回目ですべて passed だった。
+- orchestrator が worktree と、統合後の `specdojo-lp` の `main` で `npm run build` を実行し、`dist/index.html` が出力されること、見出しが本書の構成のとおりに並ぶことを確認した（2026-10-12）。
+- `specdojo-lp` では exec ブランチに原稿を commit し（cb7e4bb）、`main` へ `--no-ff` で merge した（ba8f1e8）。plan と result は runner の `wait` 記帳で `project/prj-0002/develop` に入っており、evidence は orchestrator が worktree から移した。
+
+### 4.4. 残課題
+
 - Cloudflare への配置とマスコットの絵は本項目に含めない（マスコットは PJR-FSMC）。
 
 ## 5. 関連ドキュメント
