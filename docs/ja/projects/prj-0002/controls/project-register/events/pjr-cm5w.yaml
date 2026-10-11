@@ -61,3 +61,35 @@
       from: "-"
       to: "checkpoint failed: Worktree preparation failed: specdojo build exited with 1 in /workspaces/specdojo-workspace/worktrees/prj-0002-PJR-CM5W/project. Generated docs are gitignored and must be rebuilt pe…"
   previous_event_id: reg_aa1097d99cf8422aae2659dfdab52192
+- v: 1
+  id: reg_8907a3d3135449f19979f09cc8975b4f
+  ts: "2026-10-11T10:46:07Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "checkpoint failed: Worktree preparation failed: specdojo build exited with 1 in /workspaces/specdojo-workspace/worktrees/prj-0002-PJR-CM5W/project. Generated docs are gitignored and must be rebuilt pe…"
+      to: "-"
+  previous_event_id: reg_2fad1a5ba329407a877e180b62143c3d
+- v: 1
+  id: reg_cce767a800404656b9a36e4ad940c150
+  ts: "2026-10-11T10:46:41Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "checkpoint failed: Worktree preparation failed: specdojo build exited with 1 in /workspaces/specdojo-workspace/worktrees/prj-0002-PJR-CM5W/project. Generated docs are gitignored and must be rebuilt pe…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "checkpoint failed: Worktree preparation failed: specdojo build exited with 1 in /workspaces/specdojo-workspace/worktrees/prj-0002-PJR-CM5W/project. Generated docs are gitignored and must be rebuilt pe…"
+  previous_event_id: reg_8907a3d3135449f19979f09cc8975b4f
