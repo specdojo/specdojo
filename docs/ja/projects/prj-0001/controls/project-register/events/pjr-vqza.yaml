@@ -61,3 +61,35 @@
       from: "-"
       to: "agent exited with non-zero code: parent validation failed: test-integration"
   previous_event_id: reg_65ed1914fc784297871d7c141dad8a4d
+- v: 1
+  id: reg_1b4a641621d845358937fe26184d7ba5
+  ts: "2026-10-11T23:26:18Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: test-integration"
+      to: "-"
+  previous_event_id: reg_62b091a79dc2410b977068c920b299a6
+- v: 1
+  id: reg_3628a37a935c49658497c15785df533d
+  ts: "2026-10-11T23:42:12Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: test-integration"
+  previous_event_id: reg_1b4a641621d845358937fe26184d7ba5
