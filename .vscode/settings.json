@@ -240,5 +240,18 @@
   "terminal.integrated.enablePersistentSessions": true,
   "terminal.integrated.persistentSessionReviveProcess": "never",
   "terminal.integrated.hideOnStartup": "whenEmpty",
-  "git.detectWorktrees": true
+  "git.detectWorktrees": false,
+  "files.watcherExclude": {
+    "**/node_modules/**": true,
+    "**/.vitepress/cache/**": true,
+    "**/.vitepress/dist/**": true,
+    "**/execution/exec/evidence/**": true,
+    "**/logs/**": true
+  },
+  "search.exclude": {
+    "**/.vitepress/cache/**": true,
+    "**/.vitepress/dist/**": true,
+    "**/execution/exec/evidence/**": true,
+    "**/logs/**": true
+  }
 }
