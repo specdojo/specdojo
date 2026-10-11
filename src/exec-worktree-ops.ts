@@ -54,6 +54,7 @@ import {
   summarizeGitHookFailure,
   worktreeNameFromTaskId,
   type ExecWorktree,
+  type ProductWorktree,
 } from "./exec-worktree.js";
 
 const DEFAULT_LOCK_TIMEOUT_MS = 10_000;
@@ -1349,6 +1350,11 @@ function restoreToHead(repoRoot: string, relPath: string): void {
 // `<base>/<task-name>/project/` and each product gets `<base>/<task-name>/<repo>/`. The checkpoint
 // commit stays in the project repository; product exec branches start from their integration
 // target.
+//
+// PJR-NN43: `specdojo build` in the project worktree loads the config, which checks that every
+// `repos[].path` (`../<repo>` beside `project/`) exists. The product worktrees are therefore
+// created before the project build (and before the checkpoint commit, whose hooks may load the
+// config as well).
 export function checkpointAndEnsureWorktree(params: {
   context: WorktreeOpsContext;
   worktreeTaskId: string;
@@ -1359,16 +1365,17 @@ export function checkpointAndEnsureWorktree(params: {
   failureLogPath?: string;
 }): ExecWorktree {
   const products = params.products ?? [];
-  const worktree = checkpointAndEnsureProjectWorktree(params, projectRepoDirName(products));
-  if (products.length === 0) return worktree;
-  return {
-    ...worktree,
-    repos: ensureProductWorktrees({
+  let repos: ProductWorktree[] = [];
+  const worktree = checkpointAndEnsureProjectWorktree(params, projectRepoDirName(products), () => {
+    if (products.length === 0) return;
+    repos = ensureProductWorktrees({
       products,
       worktreeBase: params.base,
       taskId: params.worktreeTaskId,
-    }),
-  };
+    });
+  });
+  if (products.length === 0) return worktree;
+  return { ...worktree, repos };
 }
 
 function checkpointAndEnsureProjectWorktree(
@@ -1381,14 +1388,30 @@ function checkpointAndEnsureProjectWorktree(
     failureLogPath?: string;
   },
   repoDirName: string | undefined,
+  ensureSiblingWorktrees: () => void,
 ): ExecWorktree {
   const { context, worktreeTaskId, base } = params;
   const branch = `exec/${worktreeNameFromTaskId(worktreeTaskId)}`;
+  // The project build runs only after the sibling product worktrees exist (see above).
+  const ensureProjectWorktree = (): ExecWorktree => {
+    const worktree = ensureExecWorktree({
+      repoRoot: context.repoRoot,
+      worktreeBase: base,
+      taskId: worktreeTaskId,
+      repoDirName,
+      generateArtifacts: () => undefined,
+    });
+    ensureSiblingWorktrees();
+    generateWorktreeArtifacts(worktree.path);
+    return worktree;
+  };
 
   const existing = findExecWorktree(context.repoRoot, worktreeTaskId);
   if (existing) {
     // 依存と違い、生成物は前回実行時のまま古くなる。生成段階を持たない版が作成した
     // worktree では存在すらしない。再利用時も作り直し、生成物起因の検証失敗を避ける。
+    // 前回の準備がプロダクト worktree の作成前に失敗した場合に備え、先にそれらを揃える。
+    ensureSiblingWorktrees();
     generateWorktreeArtifacts(existing.path);
     return existing;
   }
@@ -1419,12 +1442,7 @@ function checkpointAndEnsureProjectWorktree(
       );
     }
 
-    const worktree = ensureExecWorktree({
-      repoRoot: context.repoRoot,
-      worktreeBase: base,
-      taskId: worktreeTaskId,
-      repoDirName,
-    });
+    const worktree = ensureProjectWorktree();
     for (const path of paths) copyCheckpointPath(context.repoRoot, worktree.path, path);
     stageCommitTargets(worktree.path, paths);
     const checkpoint = gitResult(worktree.path, ["diff", "--cached", "--quiet", "--", ...paths]);
@@ -1470,10 +1488,5 @@ function checkpointAndEnsureProjectWorktree(
     return worktree;
   }
 
-  return ensureExecWorktree({
-    repoRoot: context.repoRoot,
-    worktreeBase: base,
-    taskId: worktreeTaskId,
-    repoDirName,
-  });
+  return ensureProjectWorktree();
 }

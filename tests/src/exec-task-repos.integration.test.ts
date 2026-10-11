@@ -287,6 +287,60 @@ describe("multi-repository task worktrees", () => {
     expect(git(join(taskDir, "app2"), "log", "-1", "--pretty=%s")).toBe("release commit");
   });
 
+  it("builds the project worktree only after the sibling product worktrees exist", () => {
+    const fixture = setup();
+    // Stand-in for `specdojo build`: like the config loader, it fails while a repos[].path
+    // (`../app1`, `../app2` beside the project worktree) is missing.
+    writeFile(join(fixture.repo, ".specdojo", "specdojo.config.json"), "{}\n");
+    writeFile(
+      join(fixture.repo, "dist", "specdojo.js"),
+      [
+        'const { existsSync, appendFileSync } = require("node:fs");',
+        'const { resolve } = require("node:path");',
+        'for (const name of ["app1", "app2"]) {',
+        '  if (!existsSync(resolve("..", name))) {',
+        "    process.stderr.write(`repos[].path does not exist: ../${name}\\n`);",
+        "    process.exit(1);",
+        "  }",
+        "}",
+        'appendFileSync(resolve("..", "build.log"), `${process.argv[2]}\\n`);',
+        "",
+      ].join("\n"),
+    );
+    writeFile(join(fixture.repo, "package.json"), '{"type":"commonjs"}\n');
+    git(fixture.repo, "add", ".specdojo", "dist", "package.json");
+    git(fixture.repo, "commit", "-m", "add build stand-in");
+
+    const worktree = prepare(fixture);
+
+    const taskDir = join(fixture.worktreeBase, TASK_DIR_NAME);
+    expect(worktree.repos?.map((product) => product.path)).toEqual([
+      join(taskDir, "app1"),
+      join(taskDir, "app2"),
+    ]);
+    expect(readFileSync(join(taskDir, "build.log"), "utf8")).toBe("build\n");
+    expect(git(worktree.path, "log", "-1", "--pretty=%s")).toBe(
+      `exec(${TASK_ID}): prepare execution`,
+    );
+  });
+
+  it("creates missing product worktrees before rebuilding a reused project worktree", () => {
+    const fixture = setup();
+    prepare(fixture);
+    const taskDir = join(fixture.worktreeBase, TASK_DIR_NAME);
+    // A previous prepare that stopped before the product worktrees were created.
+    for (const product of fixture.products) removeRegisteredWorktrees(product.repoRoot);
+    expect(existsSync(join(taskDir, "app1"))).toBe(false);
+
+    const reused = prepare(fixture);
+
+    expect(reused.created).toBe(false);
+    expect(reused.repos?.map((product) => [product.path, product.created])).toEqual([
+      [join(taskDir, "app1"), true],
+      [join(taskDir, "app2"), true],
+    ]);
+  });
+
   it("reuses every worktree of the task on a second prepare", () => {
     const fixture = setup();
     prepare(fixture);

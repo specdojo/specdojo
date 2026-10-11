@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: high
   owner: DEV
   registered_at: "2026-10-11T08:58:38Z"
@@ -40,7 +40,12 @@ repos を宣言した project で exec run --worktree を行うと、project/ �
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+| 項目       | 内容                                                                                                                                                                                                                                                                                                                                              |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 解決内容   | `src/exec-worktree-ops.ts` の `checkpointAndEnsureWorktree` で、`project/` の worktree 作成時は生成段階を保留し、兄弟のプロダクト worktree（`ensureProductWorktrees`）を作った後に `generateWorktreeArtifacts` を実行する順序へ改めた。プロダクト worktree は checkpoint commit より前に揃うため、commit 時の hook が設定を読む場合も失敗しない。 |
+| 再利用時   | 既存の `project/` worktree を再利用する場合も、先にプロダクト worktree を作成（または再利用）してから build する。プロダクト worktree の作成前に失敗した前回の準備からも再実行で回復できる。                                                                                                                                                      |
+| 確認結果   | `tests/src/exec-task-repos.integration.test.ts` に、`../app1`・`../app2` が無いと失敗する build の代替（`dist/specdojo.js`）を持つ project で準備が checkpoint commit まで通ること、プロダクト worktree が欠けた状態からの再準備でそれらが作成されることの統合テストを追加した。                                                                  |
+| 再発防止策 | 統合テストで、プロダクト worktree の存在を前提とする build が準備段階で通ることを継続的に検証する。                                                                                                                                                                                                                                               |
 
 ## 5. 関連ドキュメント
 
