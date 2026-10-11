@@ -19,6 +19,13 @@ specdojo:
 
 文書だけを変える prj-0002 の作業で specdojo 本体の全テストが親の検証として走らないよう、親の検証を lint 程度に絞った prj-0002 専用の exec 既定設定を用意する
 
+あわせて、CLI の起動方法も扱う。2026-10-11 の PJR-CM5W の実行で、次の事実を観測した。
+
+- specdojo 本体の checkout（`specdojo-prj-0002`）には `node_modules/.bin/specdojo` がない。パッケージは自分自身を `bin` へリンクしないためである。
+- このため、そこで `npx specdojo` を実行すると、npx は checkout 自体を `~/.npm/_npx/<hash>/node_modules/specdojo` へ導入し、その複製を実行する。
+- この複製は導入した時点のコードのまま残る。`project/prj-0002/develop` に修正を取り込んでも反映されず、修正前の CLI が worktree 準備を実行して失敗した。
+- 回避策として、本体 checkout の `dist/specdojo.js` を `node` で直接起動して実行した。exec 既定設定とあわせて、prj-0002 で使う CLI の起動方法を決める。
+
 ## 2. 完了条件
 
 - _TODO_: 完了と判断できる具体的な条件を記載する。
