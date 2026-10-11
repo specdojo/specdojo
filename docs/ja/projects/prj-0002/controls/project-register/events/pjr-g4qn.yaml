@@ -93,3 +93,19 @@
       from: "-"
       to: "parent validation failed: test-integration, typecheck, test-unit"
   previous_event_id: reg_e416055cbbd043ac9d826c77a9b6e626
+- v: 1
+  id: reg_f6d2af906a354d81851b53f7bc0a97f9
+  ts: "2026-10-11T09:15:17Z"
+  action: review
+  actor: orchestrator
+  from_status: waiting
+  to_status: review
+  reason: agent の成果物は完了条件を満たす。親の検証は worktree の依存と生成物の不足で失敗したため、整えて手で再実行し typecheck・test:unit・test:integration の通過を確認した
+  changes:
+    - field: status
+      from: waiting
+      to: review
+    - field: block_reason
+      from: "parent validation failed: test-integration, typecheck, test-unit"
+      to: "-"
+  previous_event_id: reg_fc44c78edc1e46a3afa6c5185950df66

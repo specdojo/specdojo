@@ -7,11 +7,10 @@ specdojo:
   part_of:
     - prj-0002:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: high
   owner: ARC
   registered_at: "2026-10-11T08:27:47Z"
-  block_reason: "parent validation failed: test-integration, typecheck, test-unit"
 ---
 
 # PJR-G4QN ランディングページの技術スタックの候補を比較評価する
