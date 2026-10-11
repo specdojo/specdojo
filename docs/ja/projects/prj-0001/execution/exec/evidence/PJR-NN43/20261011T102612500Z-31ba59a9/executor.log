@@ -1,0 +1,21 @@
+I've fixed the prepare order so the product worktrees exist before the project's `specdojo build` runs. I haven't run the new integration tests or the type check myself; the parent runner runs those (`test-integration`, `typecheck` and the other checks) after I exit.
+
+**The fix (`src/exec-worktree-ops.ts`)**
+- When `project/` is created, `checkpointAndEnsureWorktree` now holds back the build step. It creates the product worktrees (`ensureProductWorktrees`) first, then runs the build (`generateWorktreeArtifacts`), then makes the checkpoint commit. Hooks that read the config at commit time also see the product directories this way.
+- When an existing `project/` worktree is reused, the product worktrees are created or reused before the build too. A re-run now recovers from an earlier prepare that stopped before the product worktrees were made, which is how this bug left things.
+- Projects without `repos` behave as before, apart from the build now running just after setup instead of inside it.
+
+**Tests added (`tests/src/exec-task-repos.integration.test.ts`)**
+- A stand-in for `specdojo build` (`dist/specdojo.js`) that fails if `../app1` or `../app2` is missing, the way the config loader does. The test checks that prepare reaches the checkpoint commit and the build runs exactly once.
+- A test that deletes the product worktrees and re-runs prepare. It checks that both are recreated (`created: true`) while `project/` is reused.
+
+**Ticket (`pjr-nn43-...md`)**: I filled in the 「対応結果」 section (fix, what was checked, prevention). I didn't change the status fields or the index.
+
+**Checks I ran**
+- `npx prettier --write` on all three changed files.
+- `register build` and `catalog validate` (both `--project prj-0001`) passed. The catalog check printed only existing `based_on` warnings.
+- `npm run -s validate:history-links` passed; the changed ticket is `valid`.
+
+<specdojo_executor_evidence>
+{"final_message":"Reordered checkpointAndEnsureWorktree so product worktrees are created (or reused) before the project worktree's specdojo build and the checkpoint commit, including the reuse path. Added two integration tests (build stand-in that requires ../app1 and ../app2; recovery after product worktrees go missing). Filled in the ticket's 対応結果 section. Changed files: src/exec-worktree-ops.ts, tests/src/exec-task-repos.integration.test.ts, docs/ja/projects/prj-0001/controls/project-register/pjr-nn43-worktree-build-before-product-worktree.md. Parent runner runs test-integration and typecheck.","validations":[{"command":"npx prettier --write src/exec-worktree-ops.ts tests/src/exec-task-repos.integration.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-nn43-worktree-build-before-product-worktree.md","status":"passed","summary":"Formatted; test file and ticket reformatted, source unchanged"},{"command":"npx tsx src/specdojo.ts register build --project prj-0001","status":"passed","summary":"Register views regenerated without errors"},{"command":"npx tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"All catalogs OK; only pre-existing based_on WARN lines, no errors"},{"command":"npm run -s validate:history-links","status":"passed","summary":"No history-link violations; the changed ticket is valid"}]}
+</specdojo_executor_evidence>

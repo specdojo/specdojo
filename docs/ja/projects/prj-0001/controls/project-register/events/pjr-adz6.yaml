@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_c001ce7c05ad49c0ae6627085c29034c
+  ts: "2026-10-11T08:39:34Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: prj-0002 の PJR-G4QN を pipeline 指定なしで起動した際、翻訳専用の agent が選ばれたため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: register の実行で pipeline 用でない agent が自動で選ばれる
+    - field: description
+      from: ""
+      to: exec run --register を --executor-by/--reporter-by なしで起動すると、owner の role で agent が見つからない場合に stage_role を持たない翻訳専用の agent（gemma26-translator）が選ばれる
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-11"
+    - field: due
+      from: ""
+      to: _TODO_

@@ -1,16 +1,17 @@
 import { type Command } from "commander";
 import { spawnSync } from "node:child_process";
 import { loadConfig, loadEnv, specdojoRootDir } from "./specdojo-config.js";
-import type { SpecDojoProjectConfig } from "./specdojo-config.js";
+import type { SpecDojoConfig, SpecDojoProjectConfig } from "./specdojo-config.js";
 import { selfRunArgs } from "./spawn-self.js";
 
 // ================================
 // Types
 // ================================
 
-type BuildScope = "exec" | "catalog" | "register" | "yaml-pages" | "dashboard" | "index" | "all";
+export type BuildScope =
+  "exec" | "catalog" | "register" | "yaml-pages" | "dashboard" | "index" | "all";
 
-type StepDef = {
+export type StepDef = {
   scope: Exclude<BuildScope, "all">;
   label: string;
   subArgs: string[];
@@ -49,11 +50,39 @@ function isStepApplicable(
   }
 }
 
-function resolveSteps(
+/**
+ * register build の対象 project を決める。index build はリポジトリ内のすべての登録簿の
+ * generated/pjr-index.md を要求する一方、生成物は git 管理外で新しい worktree には無い。
+ * そのため `--project` を明示しない build では、登録簿を持つ全 project を対象にする。
+ * `--project` を明示した場合は、従来どおりその project だけを対象にする。
+ */
+export function resolveRegisterProjectIds(
+  config: SpecDojoConfig | null,
+  projectId: string | undefined,
+  isProjectExplicit: boolean,
+): string[] {
+  if (!config) return [];
+  if (isProjectExplicit) {
+    const project = projectId ? config.projects[projectId] : undefined;
+    return projectId && isStepApplicable("register", project) ? [projectId] : [];
+  }
+  return Object.keys(config.projects)
+    .filter((id) => isStepApplicable("register", config.projects[id]))
+    .sort();
+}
+
+export function resolveSteps(
   scope: BuildScope,
   projectArgs: string[],
   project: SpecDojoProjectConfig | undefined,
+  registerProjectIds: readonly string[],
 ): StepDef[] {
+  const registerSteps: StepDef[] = registerProjectIds.map((id) => ({
+    scope: "register",
+    label: registerProjectIds.length > 1 ? `register build (${id})` : "register build",
+    subArgs: ["register", "build", "--project", id],
+  }));
+
   const candidates: StepDef[] = [
     {
       scope: "exec",
@@ -65,11 +94,7 @@ function resolveSteps(
       label: "catalog build",
       subArgs: ["catalog", "build", ...projectArgs],
     },
-    {
-      scope: "register",
-      label: "register build",
-      subArgs: ["register", "build", ...projectArgs],
-    },
+    ...registerSteps,
     {
       scope: "yaml-pages",
       label: "yaml-pages build",
@@ -92,7 +117,8 @@ function resolveSteps(
 
   const active = scope === "all" ? candidates : candidates.filter((s) => s.scope === scope);
 
-  return active.filter((s) => isStepApplicable(s.scope, project));
+  // register の対象は registerProjectIds で解決済み。他の段は従来どおり 1 project で判定する。
+  return active.filter((s) => s.scope === "register" || isStepApplicable(s.scope, project));
 }
 
 // ================================
@@ -150,7 +176,12 @@ export function registerBuildCommand(program: Command): void {
       }
 
       const projectArgs = projectId ? ["--project", projectId] : [];
-      const steps = resolveSteps(scope, projectArgs, project);
+      const registerProjectIds = resolveRegisterProjectIds(
+        config,
+        projectId,
+        !!opts.project?.trim(),
+      );
+      const steps = resolveSteps(scope, projectArgs, project, registerProjectIds);
 
       if (steps.length === 0) {
         logError(
