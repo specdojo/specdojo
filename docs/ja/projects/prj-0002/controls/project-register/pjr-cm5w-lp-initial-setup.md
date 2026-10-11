@@ -34,7 +34,7 @@ PJR-FV3W の決定に従い、specdojo-lp に静的出力の Astro と Tailwind 
 | --- | ------------------------------------------------------- | ---- | ---- | -------------------------------------------------------- |
 | 1   | Astro（静的出力）と Tailwind CSS を導入する             | DEV  | done | 構成ファイルを作成。`package-lock.json` は統合先から取込 |
 | 2   | Material 3 の指針を Tailwind CSS のテーマとして定義する | DEV  | done | `src/styles/global.css` の `@theme` に定義               |
-| 3   | 仮のトップページと README を用意し、ビルドを確認する    | DEV  | open | ページと README は作成済み。`npm run build` の確認が未了 |
+| 3   | 仮のトップページと README を用意し、ビルドを確認する    | DEV  | done | ビルドは orchestrator が統合後の `main` で確認した       |
 
 ## 4. 対応結果
 
@@ -60,10 +60,19 @@ PJR-FV3W の決定に従い、specdojo-lp に静的出力の Astro と Tailwind 
 - 角丸: extra-small（4px）・small（8px）・medium（12px）・large（16px）・extra-large（28px）。full は Tailwind CSS 標準の `rounded-full` を使う。
 - 影の段階: elevation level 1 から 5 を `shadow-elevation-1` から `shadow-elevation-5` として定義した。
 
-### 4.2. 残課題
+### 4.2. 統合と確認
 
-- `specdojo-lp:package.json` は保護対象の設定ファイルのため、agent ではなく人が適用する。再開時点では `package.json` と `package-lock.json`（lockfileVersion 3）が統合先からの取り込みで作業ツリーにあり、依存の内容は Astro 7.3.8、Tailwind CSS 4.3.3、`@tailwindcss/vite` 4.3.3 で一致している。
-- 作業環境の sandbox では npm を実行できないため、`npm ci` と `npm run build` は未実行である。`specdojo-lp` で両方を実行し、`dist/index.html` が出力されることを人が確認する必要がある。
+executor の成果のうち、次の 2 つは runner が commit できないため、orchestrator が `specdojo-lp` の `main` へ適用した。いずれも executor が作った内容から変えていない。
+
+- `package.json` は agent の保護対象のため、orchestrator が適用し、`npm install` で `package-lock.json` を生成した（`specdojo-lp` の c005e5f、merge 49af08d）。
+- 最上位の新規ファイル `.gitignore`・`README.md`・`astro.config.mjs`・`tsconfig.json` は register 由来の commit 範囲の外にあるため、orchestrator が適用した（`specdojo-lp` の 137bf89、merge e4d9889）。
+
+その後、統合を再開し、runner が残りの成果を統合した（`specdojo-lp` の 9d0f4f3）。統合前の親検証 7 種はすべて passed だった。
+
+統合後の `specdojo-lp` の `main` で `npm ci` と `npm run build` を実行し、`dist/index.html` が出力されることを確認した。生成した CSS には Material 3 の色の変数（`--color-primary` など）が含まれ、ページは `bg-surface-container`・`text-title-large` などのテーマの class を使っている。仮のトップページは `npm run preview` で利用者が表示を確認した（2026-10-11）。
+
+### 4.3. 残課題
+
 - 色はベースライン配色の仮の値である。ブランドの基調色が決まったら、Material Color Utilities で生成した値に差し替える。ダークテーマは未定義である。
 - Cloudflare への配置、本番の原稿（PJR-HEPK）、マスコット（PJR-FSMC）は本項目に含めていない。
 
