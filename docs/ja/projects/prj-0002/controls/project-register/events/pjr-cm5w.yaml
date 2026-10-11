@@ -32,3 +32,32 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_aa1097d99cf8422aae2659dfdab52192
+  ts: "2026-10-11T10:41:29Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_c283c4ec7c2c4ab98f56af3efcab31c0
+- v: 1
+  id: reg_2fad1a5ba329407a877e180b62143c3d
+  ts: "2026-10-11T10:42:03Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "checkpoint failed: Worktree preparation failed: specdojo build exited with 1 in /workspaces/specdojo-workspace/worktrees/prj-0002-PJR-CM5W/project. Generated docs are gitignored and must be rebuilt pe…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "checkpoint failed: Worktree preparation failed: specdojo build exited with 1 in /workspaces/specdojo-workspace/worktrees/prj-0002-PJR-CM5W/project. Generated docs are gitignored and must be rebuilt pe…"
+  previous_event_id: reg_aa1097d99cf8422aae2659dfdab52192
