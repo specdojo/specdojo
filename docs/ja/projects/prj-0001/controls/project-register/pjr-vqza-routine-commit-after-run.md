@@ -44,30 +44,48 @@ routine が起動する Job（grade など）は本体の作業場所で出力�
 | 既存の規範との整合           | 自分が内容を書いた変更は feature ブランチという方針に近い                                                                                              | runner 相当の機械的な記帳は develop へ直接 commit してよいという方針（register の記帳）に近い                                                                |
 | commit 前の hook             | worktree でも hook は動く                                                                                                                              | 作業場所で hook が動く。重い hook が Job の後処理を長引かせないか確認が要る                                                                                  |
 
-_ASSUMPTION_: 現時点の見立てでは D のほうが現状の運用（手動 commit の自動化）に近いが、実行中の干渉を lock で解消できることが前提になる。B は干渉を構造的に避けられるが、worktree の I/O と merge の運用が増える。どちらにするかは本項目の作業で決める。
+### 1.3. 決定（2026-10-12）
+
+利用者の判断により、B を基にした次の方式を採る。D（統合先へ直接 commit し、lock で直列化する方式）は採らない。grade の出力は LLM の判断（score・verdict・finding）を含み、[[specdojo:git-branching-standard]] の「レビューで誤りを発見できる変更は層 2」に当たるため、統合前にレビューする。commit は人や orchestrator ではなく runner が行う。
+
+| 段        | 担当         | 内容                                                                                                                                                                          |
+| --------- | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1. 実行   | runner       | routine が起動する Job を exec の worktree（`exec/<project-id>-<run-id>`）で実行する。本体の作業場所の HEAD とは分ける                                                        |
+| 2. commit | runner       | Job Run の出力（grade の criteria・results、Job Run の plan・result・evidence、`jobs/runs/*.json`）を exec ブランチへ commit する                                             |
+| 3. review | review agent | schedule の review と同じ形で `mode: review` の plan と result を生成する。Job Run の出力（score の変化、finding、失敗した文書）を Job の完了条件と照合し、verdict を記録する |
+| 4. 統合   | runner       | verdict が `complete` または `complete-with-findings` のときだけ、統合先へ `--no-ff` で merge する。それ以外は worktree を残して `waiting` とし、人が判断する                 |
+
+本体の作業場所では Job を実行しないため、実行中の commit が Job を失敗させる問題は lock を使わず構造的に解消する。exec ブランチから runner が統合するため、規範上は層 1（exec が自動実行する変更）に当たり、`git-branching-standard` の層 3 は変更しない。
 
 ## 2. 完了条件
 
-- B と D の比較の結果と採用した方式が、本個票の対応結果に理由とともに記載されている。
-- grade の 2 つの routine（成果物・kata）の実行後に、Job の出力が人手を介さず commit される。commit の対象はその Job Run の出力だけで、利用者の未 commit の変更を含まない。
-- commit メッセージは `chore(routine): …` の形式に揃い、Job Run ID と Run の状態（succeeded / failed）が本文から分かる。
-- Job の実行中に作業場所で行われた commit が、Job を `agent-git-state-write` で失敗させない（lock による直列化、または worktree による隔離のいずれかで防ぐ）。
-- 失敗した Job Run の出力をどう扱うか（commit する・隔離する・残さない）が決まり、その扱いが実装されている。
-- [[specdojo:routine-operation-guide]] に、実行後の commit の動きと、手で commit しなくてよくなったことが記載されている。
-- 単体テストと統合テストで、出力だけが commit されること、実行中の commit との干渉の扱いを確認している。
+- `commit` を有効にした routine の Job は、本体の作業場所ではなく exec の worktree で実行される。2 つの grade の routine（成果物・kata）で有効にしている。
+- Job Run の出力は runner が exec ブランチへ commit する。commit の対象はその Job Run の出力だけで、commit メッセージは `chore(routine): …` の形式に揃え、Job Run ID と Run の状態（succeeded / failed）を本文に含む。
+- commit の後、schedule の review と同じ仕組み（`mode: review` の plan・result、verdict、改善指示）で Job Run の review を実行する。review agent は出力を修正しない。
+- verdict が `complete` / `complete-with-findings` の場合だけ runner が統合先へ `--no-ff` で merge し、worktree を撤去する。それ以外の verdict と、Job Run が失敗した場合は、worktree を残して統合せず、その状態と理由を routine の記録（`last_result` など）と review result に残す。
+- 統合されなかった Run を人が確認したあと、統合する・破棄する操作の手順が [[specdojo:routine-operation-guide]] に記載されている。
+- `git-branching-standard` の層の定義は変更しない（routine の出力は exec ブランチ経由の層 1 として扱う）。
+- [[specdojo:routine-operation-guide]] に、worktree での実行、runner による commit、review、統合の流れが記載されている。
+- 単体テストと統合テストで、出力だけが exec ブランチへ commit されること、verdict に応じて統合する・しないが分かれること、本体の作業場所の HEAD が Job の実行中に変わらないことを確認している。
+- 統合テストで子プロセスとして CLI を起動する場合は、一時ディレクトリから `--import tsx` を解決できないため、既存の統合テストと同じく実リポジトリの `node_modules/.bin/tsx` を絶対パスで起動する。
 
 ## 3. 作業内容
 
-| No  | 作業                                                       | 担当 | 状態 | メモ |
-| --- | ---------------------------------------------------------- | ---- | ---- | ---- |
-| 1   | B と D を比較し、採用する方式と失敗した Run の扱いを決める | ARC  | open | -    |
-| 2   | Job の実行と commit の干渉を防ぐ方法を設計する             | ARC  | open | -    |
-| 3   | 実行後の commit を実装し、テストを追加する                 | DEV  | open | -    |
-| 4   | routine 運用ガイドを更新する                               | ARC  | open | -    |
+| No  | 作業                                                                                | 担当 | 状態 | メモ                     |
+| --- | ----------------------------------------------------------------------------------- | ---- | ---- | ------------------------ |
+| 1   | B と D を比較し、採用する方式と失敗した Run の扱いを決める                          | ARC  | done | 概要の決定（2026-10-12） |
+| 2   | Job を exec の worktree で実行し、runner が exec ブランチへ commit する仕組みを作る | DEV  | open | -                        |
+| 3   | Job Run の review を schedule の review と同じ形で実行し、verdict で統合を分ける    | DEV  | open | -                        |
+| 4   | テストを追加する                                                                    | DEV  | open | -                        |
+| 5   | routine 運用ガイドと設計書を更新する                                                | ARC  | open | -                        |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 4.1. 1 回目の実行（破棄）
+
+2026-10-12 の 1 回目の exec run（codex-expert-executor / gemma26-reporter）は D 方式（統合先への直接 commit と lifecycle lock による直列化、`git-branching-standard` の層 3 への追加）で実装した。追加した統合テスト 2 件が子プロセスで `--import tsx` を解決できず失敗し、`waiting` で止まった。テストは orchestrator が修正して通ったが、利用者が統合前のレビューを求めて方式を B ベースへ改めたため、実装は統合せず `--force-restart` で破棄した。
+
+_TODO_: 完了時に、実施内容・成果物・残課題を記載する。
 
 ## 5. 関連ドキュメント
 
