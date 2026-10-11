@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_947f4ac150c945f9af4e54dc670b1079
+  ts: "2026-10-11T06:37:27Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: ランディングページのマスコットキャラクターを用意するため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: マスコットキャラクター（道着を着たカワウソ）を作る
+    - field: description
+      from: ""
+      to: ランディングページに載せる、道着を着たカワウソのマスコットキャラクターを作る。作り方は未定
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: UX
+    - field: registered
+      from: ""
+      to: "2026-10-11"
+    - field: due
+      from: ""
+      to: _TODO_
