@@ -218,3 +218,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_1d75d55fd0bd4435be15bbdac3402ef0
+- v: 1
+  id: reg_3f7ac59af2d34cb7a668f4a465c172d4
+  ts: "2026-10-11T14:33:28Z"
+  action: close
+  actor: naoji3x
+  from_status: review
+  to_status: done
+  reason: exec run --register で実装し、保護対象と commit 範囲外の設定は orchestrator が main へ適用して統合。main で npm run build を確認し、利用者が preview で表示を確認
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-11"
+    - field: conclusion
+      from: "-"
+      to: specdojo-lp に Astro 7 と Tailwind CSS 4 の静的構成と Material 3 のテーマ、仮のトップページを用意し、ビルドと表示を確認した
+  previous_event_id: reg_072cdfa2bef2449e9628e9fc2d406006

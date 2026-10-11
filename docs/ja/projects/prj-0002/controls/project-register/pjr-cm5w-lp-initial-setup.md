@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0002:pjr-cm5w-lp-initial-setup
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0002:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-11T10:25:32Z"
+  completed_at: "2026-10-11T14:33:28Z"
+  conclusion: specdojo-lp に Astro 7 と Tailwind CSS 4 の静的構成と Material 3 のテーマ、仮のトップページを用意し、ビルドと表示を確認した
 ---
 
 # PJR-CM5W specdojo-lp に Astro と Tailwind CSS の初期構成を作る
