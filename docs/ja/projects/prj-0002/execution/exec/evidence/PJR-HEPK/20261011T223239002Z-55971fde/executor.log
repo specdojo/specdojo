@@ -1,0 +1,38 @@
+LP の「始める」セクションを会話中心に書き直し、個票も更新しました。LP のビルドは確認できていません。sandbox ではビルドを実行できないため、`npm run build` は sandbox の外で人が確認する必要があります（`requires_human`）。
+
+**変更したファイル**
+- `specdojo-lp:src/pages/index.astro`
+- `docs/ja/projects/prj-0002/controls/project-register/pjr-hepk-lp-content.md`（個票）
+
+**LP の「始める」セクション**
+- **タブの構成:** 「会話で始める」を既定で表示し、「コマンドで始める（参考）」はタブを切り替えたときだけ表示します。
+- **会話タブ:** 導入 → オーケストレーターの配置 → 起動 → 起票 → 一覧、の 5 つの手順です。
+  - 起動の手順に、provider ごとの起動 script（`orch:opus` / `orch:opencode` / `orch:codex` / `orch:agy`）の表を付けました。
+  - 起票と一覧は、あなたが頼み、オーケストレーターが「次を実行します。よろしいですか。」とコマンドを示し、あなたが承認する流れで、README の「会話で操作する」と同じ形です。
+- **コマンドタブ:** オーケストレーターの配置と起動は「コマンドで進める場合は不要」と明記しました。起票は `register scaffold` と `register add --type todo`、一覧は `register build` です。
+- **注意書き:** 状態を変える操作は承認を得てから実行し、`git push` や破壊的な操作は行わないことを、セクションの冒頭に短く書きました。
+- **リンク:** 会話タブの末尾からオーケストレーター運用ガイドへ案内しています。公開ページが表示されることを確認しました。
+- **タブの動き:**
+  - `role="tablist"` / `role="tab"` / `role="tabpanel"` と `aria-selected` を付け、左右キー（Home / End も）で切り替えられます。
+  - JavaScript が無効な環境では、タブを出さずに両方の内容を見出し付きで表示します。
+- **デザイン:** 色や文字などは PJR-CM5W で定義したテーマの class だけを使いました。
+
+**突き合わせた内容**
+- 起動 script の名前は、`src/exec-provider-scaffold.ts` の `ORCHESTRATOR_NPM_SCRIPTS` と README の表に一致します。
+- `config scaffold --provider claude` は、`--help` の選択肢と一致します。
+
+**個票の更新**
+- 作業内容の No.4 を `done` にしました。
+- 構成の表の手順 5 の説明を、会話を主な経路とする内容に改めました。
+- 対応結果に「改訂の実施内容（2026-10-12）」を追加し、後ろの節番号を 1 つずつ繰り下げました。
+
+**実施した検査**
+- 個票に Prettier をかけました（変更なし）。
+- markdownlint はエラーなしでした。
+- `specdojo index build` は成功しました（2578 件）。
+- `.astro` ファイルの整形は、LP に Prettier が入っていないため行っていません。
+- `catalog validate` は個票の指示どおり実行しておらず、evidence にも載せていません。
+
+<specdojo_executor_evidence>
+{"final_message":"LP の「始める」セクションを、既定で表示する会話タブと参考のコマンドタブに分けて書き直した（specdojo-lp:src/pages/index.astro）。手順は 5 つ（導入・オーケストレーターの配置・起動・起票・一覧）で、会話例は README の「会話で操作する」に合わせ、承認と git push についての注意も添えた。タブは ARIA 属性を持ち左右キーで切り替えられ、JavaScript が無効なら両方を表示する。個票の作業内容 No.4 を done にし、構成の表と改訂の実施内容を更新した。LP のビルドは sandbox の外で人が確認する必要がある。","validations":[{"command":"npx prettier --write docs/ja/projects/prj-0002/controls/project-register/pjr-hepk-lp-content.md","status":"passed","summary":"unchanged"},{"command":"npx markdownlint docs/ja/projects/prj-0002/controls/project-register/pjr-hepk-lp-content.md","status":"passed","summary":"no errors"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"Built index: 2578 entries"},{"command":"npm --prefix specdojo-lp run build","status":"requires_human","summary":"sandbox では specdojo-lp のビルドを実行できない。sandbox の外で specdojo-lp の npm run build を実行し、dist/index.html が出力されること、タブが切り替わること、JavaScript が無効なとき両方のパネルが表示されることを確認する"}]}
+</specdojo_executor_evidence>
