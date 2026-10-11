@@ -61,3 +61,35 @@
       from: "-"
       to: "agent exited with non-zero code: parent validation failed: test-integration"
   previous_event_id: reg_9b6e16dc877540cca3a504ea5b7a4651
+- v: 1
+  id: reg_aaba0f813e8d459a97b7fab0553aa189
+  ts: "2026-10-11T14:55:13Z"
+  action: start
+  actor: claude-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: test-integration"
+      to: "-"
+  previous_event_id: reg_730383b5c74f423d872758ef5ebf3998
+- v: 1
+  id: reg_b72db9fbfe834151acdf697ce7ec75ff
+  ts: "2026-10-11T14:57:50Z"
+  action: wait
+  actor: claude-reporter
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: executor validation failed or not run: specdojo catalog validate, npm --prefix specdojo-lp run build"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: executor validation failed or not run: specdojo catalog validate, npm --prefix specdojo-lp run build"
+  previous_event_id: reg_aaba0f813e8d459a97b7fab0553aa189

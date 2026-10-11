@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: UX
   registered_at: "2026-10-11T06:37:19Z"
-  block_reason: "agent exited with non-zero code: parent validation failed: test-integration"
+  block_reason: "agent exited with non-zero code: executor validation failed or not run: specdojo catalog validate, npm --prefix specdojo-lp run build"
 ---
 
 # PJR-HEPK ランディングページの構成と原稿を作る
@@ -39,15 +39,49 @@ _ASSUMPTION_: LP の言語は、ドキュメントサイトに合わせて日本
 
 ## 3. 作業内容
 
-| No  | 作業                                           | 担当 | 状態 | メモ |
-| --- | ---------------------------------------------- | ---- | ---- | ---- |
-| 1   | LP の構成を決め、個票に記載する                | UX   | open | -    |
-| 2   | 原稿を書き、コマンドとリンクが正しいか確認する | UX   | open | -    |
-| 3   | `index.astro` に原稿を反映し、ビルドを確認する | DEV  | open | -    |
+| No  | 作業                                           | 担当 | 状態 | メモ                                                                     |
+| --- | ---------------------------------------------- | ---- | ---- | ------------------------------------------------------------------------ |
+| 1   | LP の構成を決め、個票に記載する                | UX   | done | -                                                                        |
+| 2   | 原稿を書き、コマンドとリンクが正しいか確認する | UX   | done | -                                                                        |
+| 3   | `index.astro` に原稿を反映し、ビルドを確認する | DEV  | open | 反映済み。`npm run build` は agent の sandbox で実行が承認されず、未確認 |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 4.1. LP の構成
+
+LP は 1 ページで、上から次の順に並べる。
+
+| No  | セクション                               | 目的                                                                                                                               |
+| --- | ---------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | ヘッダー                                 | サービス名と、ドキュメントサイトへの入口を常に見せる。                                                                             |
+| 2   | ヒーロー（決めて、書いて、鍛え続ける。） | SpecDojo を一文で伝え、「5 つの手順で始める」と Quick Start への導線を置く。右側にマスコットの仮の枠を置く。                       |
+| 3   | こんなことはありませんか                 | 判断が散らばる・「なぜ」をたどれない・AI に前提を渡せない、の 3 つの困りごとから、SpecDojo が何を解決するかを示す。                |
+| 4   | register の考え方                        | issue / decision / todo を起票し、個票（Markdown）を正本として記録を集め、一覧は個票から生成されることを説明する。                 |
+| 5   | 5 つの手順で始める                       | 導入から `config init`、`register scaffold`、`register add`、`register build` までを、コマンドつきで LP だけで体験させる。         |
+| 6   | 次の一歩                                 | decision から change-request までの流れを Quick Start へ、詳細を登録簿運用ガイド・コマンドリファレンス・全体概要ガイドへ案内する。 |
+| 7   | フッター                                 | 著作権表示とドキュメントサイトへのリンクを置く。                                                                                   |
+
+### 4.2. 実施内容
+
+- 上記の構成で原稿を書き、`specdojo-lp:src/pages/index.astro` の仮ページを差し替えた。
+- 原稿のコマンドは次のとおりで、CLI の `--help` と [[specdojo:command-reference]] の `init / config / project` と `register` の表に一致することを確認した。
+  - `npx specdojo config init`（引数なし。`prj-0001` の最小設定を作る）
+  - `npx specdojo register scaffold --project prj-0001`
+  - `npx specdojo register add --project prj-0001 --type issue --title "初期スコープが決まっていない"`
+  - `npx specdojo register build --project prj-0001`
+- 導入手順（`mkdir` から `npm install --save-dev specdojo` まで）と、登録簿・一覧の配置先は [[specdojo:quick-start-guide]] に合わせた。登録簿の配置先は `config init` の雛形（`project_register_path: controls/project-register`）とも一致する。
+- 詳しい文書へのリンクは、公開中のドキュメントサイトで次の 5 ページが表示されることを確認した。
+  - <https://specdojo.github.io/specdojo/ja/>
+  - <https://specdojo.github.io/specdojo/ja/specdojo/guides/quick-start-guide.html>
+  - <https://specdojo.github.io/specdojo/ja/specdojo/guides/register-operation-guide.html>
+  - <https://specdojo.github.io/specdojo/ja/specdojo/references/command-reference.html>
+  - <https://specdojo.github.io/specdojo/ja/specdojo/guides/specdojo-overview-guide.html>
+- マスコットは、ヒーロー右側に `data-placeholder="mascot"` の点線の枠だけを置いた。色・文字・角丸・影は PJR-CM5W の `global.css` で定義したテーマの class（`bg-primary-container`、`text-headline-medium`、`rounded-extra-large`、`shadow-elevation-1` など）だけを使った。
+
+### 4.3. 残課題
+
+- `specdojo-lp` での `npm run build` の成功を確認する（agent の sandbox では実行が承認されなかった）。
+- Cloudflare への配置とマスコットの絵は本項目に含めない（マスコットは PJR-FSMC）。
 
 ## 5. 関連ドキュメント
 
