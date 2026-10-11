@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-wj83-multi-project-build-index-register
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-11T11:09:50Z"
+  completed_at: "2026-10-11T12:38:51Z"
+  conclusion: "--project なしの specdojo build が全 project の登録簿を生成するよう修正し、prj-0002 の worktree 準備で通過を確認した"
 ---
 
 # PJR-WJ83 project が複数あると specdojo build の index build が他 project の登録簿の欠落で失敗する
