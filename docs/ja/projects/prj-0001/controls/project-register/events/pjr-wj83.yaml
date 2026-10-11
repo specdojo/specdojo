@@ -77,3 +77,16 @@
       from: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/execution/exec/evidence/PJR-WJ83/20261011T111029494Z-edce8a61/evidence.json 27ms (unchanged); FAIL  tests/src/build-comm…"
       to: "-"
   previous_event_id: reg_55419770678b4848aaf1b531c9614d88
+- v: 1
+  id: reg_1aac97291ace4f17abefcb7b39bb5748
+  ts: "2026-10-11T11:29:40Z"
+  action: review
+  actor: claude-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_19029ce0494149e99fd810f6db119895
