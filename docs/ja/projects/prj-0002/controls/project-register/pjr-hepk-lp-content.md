@@ -59,7 +59,7 @@ _ASSUMPTION_: LP の言語は、ドキュメントサイトに合わせて日本
 | 1   | LP の構成を決め、個票に記載する                                      | UX   | done | -                                               |
 | 2   | 原稿を書き、コマンドとリンクが正しいか確認する                       | UX   | done | -                                               |
 | 3   | `index.astro` に原稿を反映し、ビルドを確認する                       | DEV  | done | ビルドは orchestrator が sandbox の外で確認した |
-| 4   | 「始める」をオーケストレーター中心に改め、コマンドをタブで切り替える | UX   | open | 概要の改訂（2026-10-12）に従う                  |
+| 4   | 「始める」をオーケストレーター中心に改め、コマンドをタブで切り替える | UX   | done | ビルドは orchestrator が sandbox の外で確認する |
 
 ## 4. 対応結果
 
@@ -73,7 +73,7 @@ LP は 1 ページで、上から次の順に並べる。
 | 2   | ヒーロー（決めて、書いて、鍛え続ける。） | SpecDojo を一文で伝え、「5 つの手順で始める」と Quick Start への導線を置く。右側にマスコットの仮の枠を置く。                       |
 | 3   | こんなことはありませんか                 | 判断が散らばる・「なぜ」をたどれない・AI に前提を渡せない、の 3 つの困りごとから、SpecDojo が何を解決するかを示す。                |
 | 4   | register の考え方                        | issue / decision / todo を起票し、個票（Markdown）を正本として記録を集め、一覧は個票から生成されることを説明する。                 |
-| 5   | 5 つの手順で始める                       | 導入から `config init`、`register scaffold`、`register add`、`register build` までを、コマンドつきで LP だけで体験させる。         |
+| 5   | 5 つの手順で始める                       | 導入から起票・一覧までを、オーケストレーターとの会話で LP だけで体験させる。CLI のコマンドは参考としてタブで切り替えて見せる。     |
 | 6   | 次の一歩                                 | decision から change-request までの流れを Quick Start へ、詳細を登録簿運用ガイド・コマンドリファレンス・全体概要ガイドへ案内する。 |
 | 7   | フッター                                 | 著作権表示とドキュメントサイトへのリンクを置く。                                                                                   |
 
@@ -94,7 +94,18 @@ LP は 1 ページで、上から次の順に並べる。
   - <https://specdojo.github.io/specdojo/ja/specdojo/guides/specdojo-overview-guide.html>
 - マスコットは、ヒーロー右側に `data-placeholder="mascot"` の点線の枠だけを置いた。色・文字・角丸・影は PJR-CM5W の `global.css` で定義したテーマの class（`bg-primary-container`、`text-headline-medium`、`rounded-extra-large`、`shadow-elevation-1` など）だけを使った。
 
-### 4.3. 統合の経緯
+### 4.3. 改訂の実施内容（2026-10-12）
+
+- 「5 つの手順で始める」を、既定で表示する「会話で始める」タブと、参考の「コマンドで始める（参考）」タブに分けた。手順は概要の改訂の表に従い、導入・オーケストレーターの配置・起動・起票・一覧の 5 つとした。
+- 会話の例は、specdojo の `README.md` の「会話で操作する」に合わせた。起票はあなたの依頼、オーケストレーターの「次を実行します。よろしいですか。」とコマンドの提示、あなたの承認の順で示し、一覧も同じ流れで示した。「今の状況は？」は一覧の手順の説明文で添えた。
+- 状態を変える操作は承認を得てから実行し、`git push` や破壊的な操作は行わないことを、セクションの冒頭に短く書いた。
+- コマンドタブでは、オーケストレーターの配置と起動を「コマンドで進める場合は不要（会話で進める場合だけの手順）」と明記した。起票は `register scaffold` と `register add`（`--type todo`）、一覧は `register build` とした。
+- 起動の手順に provider ごとの表を置き、`orch:opus`（`orch:sonnet` も追加される）、`orch:opencode`、`orch:codex`、`orch:agy` を示した。script 名は `src/exec-provider-scaffold.ts` の `ORCHESTRATOR_NPM_SCRIPTS` と `README.md` の表に一致する。`config scaffold --provider` の引数は `--help` の選択肢（antigravity / claude / codex / copilot / opencode）に含まれる。
+- 会話タブの末尾から、公開中の オーケストレーター運用ガイド（<https://specdojo.github.io/specdojo/ja/specdojo/guides/orchestrator-operation-guide.html>）へ案内した。ページが表示されることを確認した。
+- タブは `role="tablist"`・`role="tab"`・`role="tabpanel"` と `aria-selected`・`aria-controls`・`aria-labelledby` を持ち、左右キー（と Home / End）で切り替えられる。タブの一覧は `hidden` で出力し、インラインの script が表示してから非選択のパネルを隠す。JavaScript が無効な環境では、タブを出さずに両方のパネルを見出しつきで表示する。
+- 色・文字・角丸・影は PJR-CM5W の `global.css` で定義したテーマの class だけを使った。
+
+### 4.4. 統合の経緯
 
 exec run は 2 回とも、成果物ではなく executor 検証の記録形式の判定で `waiting` に止まった。利用者の承認を得て、orchestrator が runner の代わりに統合した。
 
@@ -104,7 +115,7 @@ exec run は 2 回とも、成果物ではなく executor 検証の記録形式�
 - orchestrator が worktree と、統合後の `specdojo-lp` の `main` で `npm run build` を実行し、`dist/index.html` が出力されること、見出しが本書の構成のとおりに並ぶことを確認した（2026-10-12）。
 - `specdojo-lp` では exec ブランチに原稿を commit し（cb7e4bb）、`main` へ `--no-ff` で merge した（ba8f1e8）。plan と result は runner の `wait` 記帳で `project/prj-0002/develop` に入っており、evidence は orchestrator が worktree から移した。
 
-### 4.4. 残課題
+### 4.5. 残課題
 
 - Cloudflare への配置とマスコットの絵は本項目に含めない（マスコットは PJR-FSMC）。
 
