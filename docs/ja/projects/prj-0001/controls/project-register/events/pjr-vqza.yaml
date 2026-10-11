@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_e30f9da01fba4191bc668632f524fd1f
+  ts: "2026-10-11T22:15:35Z"
+  action: add
+  actor: naoji3x
+  from_status: null
+  to_status: open
+  reason: 利用者の依頼（10/12 の定期 grade の出力の手動 commit を受けて）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 定期実行の出力を実行後に commit する
+    - field: description
+      from: ""
+      to: routine が起動する Job（grade など）は本体の作業場所で出力を作るが commit せず、人や orchestrator が後から手で記録している。実行後に出力を commit する仕組みを、ブランチを切る方式と統合先へ直接 commit する方式を比較して決め、実装する
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-10-12"
+    - field: due
+      from: ""
+      to: "2026-10-31"
