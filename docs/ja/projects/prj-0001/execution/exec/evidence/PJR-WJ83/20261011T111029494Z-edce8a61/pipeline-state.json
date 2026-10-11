@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-WJ83",
+  "run_id": "20261011T111029494Z-edce8a61",
+  "updated_at": "2026-10-11T11:29:41.075Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "claude-expert-executor",
+      "attempts": 1,
+      "started_at": "2026-10-11T11:11:31.917Z",
+      "completed_at": "2026-10-11T11:15:13.534Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-WJ83/20261011T111029494Z-edce8a61/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "claude-reporter",
+      "attempts": 1,
+      "started_at": "2026-10-11T11:17:56.228Z",
+      "completed_at": "2026-10-11T11:18:04.281Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-wj83-20261011T111029Z-155e-result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "claude-reporter",
+      "attempts": 2,
+      "started_at": "2026-10-11T11:28:17.728Z",
+      "completed_at": "2026-10-11T11:29:41.075Z",
+      "artifact_ref": null,
+      "repos": {
+        "project": {
+          "status": "failed",
+          "commit": null,
+          "merged_at": null,
+          "error": "git commit failed: format: docs/ja/projects/prj-0001/execution/exec/evidence/PJR-WJ83/20261011T111029494Z-edce8a61/evidence.json 27ms (unchanged); FAIL  tests/src/build-command.integration.test.ts > specdojo build without --project > lets exec worktree preparation generate artifacts for the same two-project fixture; Test Files  1 failed | 140 passed (141); Tests  2 failed | 2138 passed (2140)"
+        }
+      }
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/exec/plans/pjr-wj83-20261011T111029Z-155e-plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-wj83-20261011T111029Z-155e-result.md"
+  }
+}

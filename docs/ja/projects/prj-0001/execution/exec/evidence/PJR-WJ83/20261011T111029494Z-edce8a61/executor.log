@@ -1,0 +1,24 @@
+`--project` を付けない `specdojo build` が、登録簿を持つすべての project の register build を行ってから index build へ進むように直しました。ただし、追加したテストはまだ一度も実行していません（実行は parent runner の `test:unit` / `test:integration` 待ち）。今回の修正で 2 project の構成が通ることも、まだ実地では確かめられていません。
+
+**変更内容**
+- `src/build-command.ts`
+  - `resolveRegisterProjectIds` を追加しました。`--project` がないときは `project_register_path` を持つ全 project を ID 順に対象にし、`--project` を明示したときは従来どおりその project だけを対象にします。
+  - `resolveSteps` を書き換え、対象 project ごとに `register build --project <id>` を並べるようにしました。exec / catalog / dashboard の段は、従来どおり 1 project だけを対象にしています。
+  - exec の worktree 準備も内部で同じ `specdojo build` を呼ぶため、この修正で一緒に直る想定です。
+- `tests/src/build-command.test.ts`（新規、単体テスト）: 対象 project の決め方と、段の並び・引数を確認します。
+- `tests/src/build-command.integration.test.ts`（新規、統合テスト）: 生成物のない 2 project の fixture で次の 2 点を確認します。
+  - `specdojo build`（`--project` なし）が終了コード 0 で終わり、両 project の `generated/pjr-index.md` と `.specdojo/doc-index.json` ができること。
+  - exec の worktree 準備（`generateWorktreeArtifacts`）が同じ fixture で失敗しないこと。
+- 個票 `pjr-wj83-multi-project-build-index-register.md`: 「対応結果」に解決内容・確認方法・再発防止策を書きました。ステータス項目は変えていません。
+
+**検証**
+- このリポジトリは project が 1 つしかないため、実際の build では 2 project の場合は確かめられていません。`build --dry-run`（`--project` あり・なし）と通しの `build` が成功し、修正前と同じ動きであることだけ確認しました。
+- `/tmp` に fixture を手で作ろうとしましたが、ファイル作成の許可が下りず手元では試せませんでした。
+- 統合テストは、fixture から `node_modules` と `src` へのシンボリックリンクで、このリポジトリの CLI を起動する作りです。
+
+**確認してほしい点**
+- 個票の原因欄には「`current_project`（無ければ先頭の project）」とありますが、実際のコードは `current_project` を見ておらず、`SPECDOJO_PROJECT` か先頭の project を使っています。今回の範囲外なので、この部分は変えていません。
+
+<specdojo_executor_evidence>
+{"final_message":"`--project` なしの `specdojo build` が、`project_register_path` を持つ全 project の register build を index build の前に行うよう `src/build-command.ts` を修正した（`--project` 明示時は従来どおり 1 project）。単体テスト `tests/src/build-command.test.ts` と、2 project の fixture で build と worktree 準備を確認する統合テスト `tests/src/build-command.integration.test.ts` を追加したが、どちらもまだ実行していない（parent runner の `test:unit` / `test:integration` 待ち）。個票の「対応結果」も更新した。","validations":[{"command":"npx prettier --write src/build-command.ts tests/src/build-command.test.ts tests/src/build-command.integration.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-wj83-multi-project-build-index-register.md","status":"passed","summary":"Formatted all changed files"},{"command":"npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-wj83-multi-project-build-index-register.md","status":"passed","summary":"No markdownlint errors"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"Exit 0, no errors; only pre-existing `based_on` warnings"},{"command":"node --import tsx src/specdojo.ts build --dry-run","status":"passed","summary":"Single-project repo resolves the same 6 steps as before, with or without `--project`"},{"command":"node --import tsx src/specdojo.ts build","status":"passed","summary":"Full build including register build and index build completed in 9.1s"}]}
+</specdojo_executor_evidence>
