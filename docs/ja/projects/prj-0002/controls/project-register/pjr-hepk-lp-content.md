@@ -34,7 +34,8 @@ _ASSUMPTION_: LP の言語は、ドキュメントサイトに合わせて日本
 - 原稿に載せるコマンド（`npx specdojo config init` → `register scaffold` → `register add` → `register build`）の引数が、CLI の `--help` と command-reference に一致している。
 - 詳しい文書へのリンクは、公開中のドキュメントサイト（<https://specdojo.github.io/specdojo/ja/>）の実在するページを指している。
 - マスコット（PJR-FSMC）の配置場所は仮の枠のみとし、デザインは PJR-CM5W で定義したテーマの class を使う。
-- `specdojo-lp` で `npm run build` が成功する。
+- `specdojo-lp` で `npm run build` が成功する。agent の sandbox では npm を実行できないため、executor は evidence の `validations` でこの検証を `requires_human` と記録し、ビルドは orchestrator が sandbox の外で確認する。
+- prj-0002 は `catalog_path` を設定していないため、`specdojo catalog validate` は実行しない（evidence にも記録しない）。
 - Cloudflare への配置とマスコットの絵は、本項目に含めない。
 
 ## 3. 作業内容
