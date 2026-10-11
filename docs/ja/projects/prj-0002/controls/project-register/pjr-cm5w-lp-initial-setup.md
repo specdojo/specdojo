@@ -7,11 +7,10 @@ specdojo:
   part_of:
     - prj-0002:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: high
   owner: DEV
   registered_at: "2026-10-11T10:25:32Z"
-  block_reason: "checkpoint failed: Worktree preparation failed: specdojo build exited with 1 in /workspaces/specdojo-workspace/worktrees/prj-0002-PJR-CM5W/project. Generated docs are gitignored and must be rebuilt pe…"
 ---
 
 # PJR-CM5W specdojo-lp に Astro と Tailwind CSS の初期構成を作る
