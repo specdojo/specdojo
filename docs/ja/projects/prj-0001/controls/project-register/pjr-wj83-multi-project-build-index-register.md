@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: waiting
   priority: high
   owner: DEV
   registered_at: "2026-10-11T11:09:50Z"
+  block_reason: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/execution/exec/evidence/PJR-WJ83/20261011T111029494Z-edce8a61/evidence.json 27ms (unchanged); FAIL  tests/src/build-comm…"
 ---
 
 # PJR-WJ83 project が複数あると specdojo build の index build が他 project の登録簿の欠落で失敗する

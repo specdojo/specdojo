@@ -32,3 +32,32 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_704af3c2716648ad89e7cf5537d427a5
+  ts: "2026-10-11T11:10:30Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_c07f567da67c4c7081fca19f6aea684c
+- v: 1
+  id: reg_55419770678b4848aaf1b531c9614d88
+  ts: "2026-10-11T11:19:26Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/execution/exec/evidence/PJR-WJ83/20261011T111029494Z-edce8a61/evidence.json 27ms (unchanged); FAIL  tests/src/build-comm…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/execution/exec/evidence/PJR-WJ83/20261011T111029494Z-edce8a61/evidence.json 27ms (unchanged); FAIL  tests/src/build-comm…"
+  previous_event_id: reg_704af3c2716648ad89e7cf5537d427a5
