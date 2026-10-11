@@ -18,6 +18,22 @@
         "register_date_timezone": "Asia/Tokyo",
         "exec_defaults": ".specdojo/exec-defaults.yaml"
       }
+    },
+    "prj-0002": {
+      "base_path": "docs/ja/projects/prj-0002",
+      "project_register_path": "controls/project-register",
+      "project_context": ["prj-overview"],
+      "repos": [
+        {
+          "name": "specdojo-lp",
+          "path": "../specdojo-lp",
+          "integration_branch": "main"
+        }
+      ],
+      "run": {
+        "register_date_timezone": "Asia/Tokyo",
+        "exec_defaults": ".specdojo/exec-defaults.yaml"
+      }
     }
   }
 }
