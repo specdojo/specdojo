@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-CM5W",
+  "run_id": "20261011T132112456Z-e6a81a61",
+  "updated_at": "2026-10-11T13:41:41.803Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "claude-expert-executor",
+      "attempts": 1,
+      "started_at": "2026-10-11T13:21:12.456Z",
+      "completed_at": "2026-10-11T13:22:44.256Z",
+      "artifact_ref": "docs/ja/projects/prj-0002/execution/exec/evidence/PJR-CM5W/20261011T132112456Z-e6a81a61/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "claude-reporter",
+      "attempts": 1,
+      "started_at": "2026-10-11T13:25:58.519Z",
+      "completed_at": "2026-10-11T13:26:08.249Z",
+      "artifact_ref": "docs/ja/projects/prj-0002/execution/exec/results/pjr-cm5w-20261011T123541Z-7a2d-result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "claude-reporter",
+      "attempts": 2,
+      "started_at": "2026-10-11T13:41:33.579Z",
+      "completed_at": "2026-10-11T13:41:41.803Z",
+      "artifact_ref": null,
+      "repos": {
+        "specdojo-lp": {
+          "status": "merged",
+          "commit": "9d0f4f379fb00b57d4aa52fcc05babfe271734b6",
+          "merged_at": "2026-10-11T13:41:41.442Z"
+        },
+        "project": {
+          "status": "merged",
+          "commit": null,
+          "merged_at": "2026-10-11T13:41:41.444Z"
+        }
+      }
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0002/execution/exec/plans/pjr-cm5w-20261011T123541Z-7a2d-plan.md",
+    "result_ref": "docs/ja/projects/prj-0002/execution/exec/results/pjr-cm5w-20261011T123541Z-7a2d-result.md"
+  }
+}

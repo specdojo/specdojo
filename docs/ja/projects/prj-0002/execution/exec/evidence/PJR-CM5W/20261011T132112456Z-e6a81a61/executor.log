@@ -1,0 +1,26 @@
+Executor の作業は終わりましたが、タスク完了の条件がまだ1つ確認できていません。sandbox で npm を実行できず、`npm ci` と `npm run build` を動かしていないため、`dist/index.html` が出力されるかは未確認です。人が `specdojo-lp` で両方を実行して確かめる必要があります。
+
+**前回の失敗（保護ファイルの変更）について**
+- 今回、`specdojo-lp:package.json` は編集していません。
+- この再開の開始時点で、`package.json` と `package-lock.json` はすでに作業ツリーにありました。git ログ上は「統合先を取り込むマージ」で入ったものです。
+- sandbox では specdojo-lp で git を実行できないため、差分がないことは git では確かめられていません。
+
+**specdojo-lp の中身の確認（編集はしていません）**
+- 静的出力の Astro と Tailwind CSS が設定されています（`astro.config.mjs` に `output: "static"`）。依存は Astro 7.3.8、Tailwind CSS 4.3.3、`@tailwindcss/vite` 4.3.3 で、npm の lockfile もあります。
+- `src/styles/global.css` に、Material 3 の色の役割・文字の段階・角丸・影の段階がテーマとして定義されています。
+- 仮のトップページ `src/pages/index.astro` が、テーマの色と文字の段階を使っています。
+- `README.md` に開発とビルドの手順が書かれています。
+
+**変更したファイル**
+- `docs/ja/projects/prj-0002/controls/project-register/pjr-cm5w-lp-initial-setup.md`（個票）
+  - 作業 No.1 のメモ「`package-lock.json` は未生成」を、統合先から取り込み済みという現状に直しました。
+  - 残課題に、`package.json` は保護対象なので人が適用すること、lockfile は取り込み済みで依存の内容が一致していること、build は人が確認すること、を書きました。
+
+**実行した検査**
+- 個票の Prettier 整形：変更なし。
+- `catalog validate`：OK。WARN はすべて prj-0001 側の既存のものです。
+- `index build`：成功。追跡対象のファイルに差分は出ていません。
+
+<specdojo_executor_evidence>
+{"final_message":"再開した実行。成果物は確認しましたが、ビルドは確認できていません。保護ファイル specdojo-lp:package.json は編集していません。package.json と package-lock.json（lockfileVersion 3）は再開の開始時点ですでに作業ツリーにあり、git ログ上は統合先を取り込むマージで入ったものです。sandbox では specdojo-lp で git を実行できないため、差分がないことは確かめていません。中身を見て完了条件を満たすと判断したもの（編集なし）：specdojo-lp:astro.config.mjs（output static と Tailwind の Vite プラグイン）、specdojo-lp:src/styles/global.css（Material 3 の色の役割・文字の段階・角丸・影の段階の @theme）、specdojo-lp:src/layouts/BaseLayout.astro、specdojo-lp:src/pages/index.astro（テーマの色と文字の段階を使う仮のトップページ）、specdojo-lp:README.md（開発とビルドの手順）、specdojo-lp:tsconfig.json、specdojo-lp:.gitignore。編集したのは個票 pjr-cm5w-lp-initial-setup.md だけで、作業 No.1 のメモ（lockfile は統合先から取り込み）と残課題（package.json は人が適用、build は人が確認）を直しました。未確認：npm が sandbox で許可されていないため npm ci と npm run build を実行しておらず、dist/index.html が出力されるかは確認できていません。人が specdojo-lp で npm ci && npm run build を実行し、dist/index.html を確認する必要があります。","validations":[{"command":"npx prettier --write docs/ja/projects/prj-0002/controls/project-register/pjr-cm5w-lp-initial-setup.md","status":"passed","summary":"整形結果は変更なし"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"OK: dct-index.yaml（WARN はすべて prj-0001 側の既存のもの）"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"Built index: 2572 entries"},{"command":"npm ci && npm run build (in specdojo-lp)","status":"requires_human","summary":"sandbox で npm の実行が許可されていません。specdojo-lp で依存を導入して build し、dist/index.html が出力されることを人が確認してください"}]}
+</specdojo_executor_evidence>
